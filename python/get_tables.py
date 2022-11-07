@@ -1,30 +1,92 @@
 import utils_noroot as utnr
 import os
 import argparse
+import ROOT
+
+from rk.selection import selection as rksl
+from rk.mva       import mva_man
 
 #-------------------
 class data:
     log     = utnr.getLogger(__name__)
     cal_dir = os.environ['CALDIR']
+    dat_dir = os.environ['DATDIR']
 
     l_all_trig = ['ETOS', 'GTIS']
     l_all_year = ['2011', '2012', '2015', '2016', '2017', '2018']
     l_all_brem = [0, 1, 2]
+    dat_vers   = 'v10.11tf'
+    fraction   = 0.1
+    bdt_dir    = '/publicfs/ucas/user/campoverde/Data/RK/MVA/electron/bdt_v10.14.a0v2ss'
+    b_mass     = 'B_const_mass_M[0]'
+    j_mass     = 'Jpsi_M'
 
     version    = None
     l_trig     = None 
     l_year     = None 
     l_brem     = None 
 #-------------------
-def get_df(data=None):
-    return None
+def get_df(year, trig, is_data=None):
+    if is_data not in [True, False]:
+        data.log.error(f'Dataset type not specified')
+        raise
+
+    proc = 'data_ee' if is_data else 'ctrl_ee'
+    utnr.make_dir_path('cached')
+    cache_path = f'cached/{year}_{trig}_{proc}.root'
+    if os.path.isfile(cache_path):
+        data.log.visible(f'Found cached file: {cache_path}[tree]')
+        rdf = ROOT.RDataFrame('tree', cache_path)
+        return rdf
+
+    data_path = f'{data.dat_dir}/{proc}/{data.dat_vers}/{year}.root'
+    rdf = ROOT.RDataFrame('KEE', data_path)
+
+    if data.fraction < 1.0:
+        nentries = rdf.Count().GetValue()
+        nkeep    = int(data.fraction * nentries)
+
+        data.log.visible(f'Using {nkeep}/{nentries} entries')
+        rdf = rdf.Range(nkeep)
+
+    rdf = apply_selection(rdf, trig, year, proc)
+
+    data.log.visible(f'Caching: {cache_path}[tree]')
+    rdf.Snapshot('tree', cache_path)
+
+    return rdf
+#-------------------
+def add_bdt(rdf, trig):
+    rdf = rdf.Define('b_mass', data.b_mass)
+    rdf = rdf.Define('j_mass', data.j_mass)
+    rdf = rdf.Define('nbrem' , 'L1_BremMultiplicity + L2_BremMultiplicity')
+
+    d_data        = rdf.AsNumpy(['b_mass', 'j_mass', 'nbrem'])
+    man           = mva_man(rdf, data.bdt_dir, trig)
+    d_data['BDT'] = man.get_scores()
+
+    return ROOT.RDF.MakeNumpyDataFrame(d_data)
+#-------------------
+def apply_selection(rdf, trig, year, proc):
+    d_cut = rksl('all_gorder', trig, year, proc, q2bin='jpsi')
+
+    bdt_cut = d_cut['bdt']
+    del(d_cut['bdt'])
+
+    for key, cut in d_cut.items():
+        rdf=rdf.Filter(cut, key)
+
+    rdf = add_bdt(rdf, trig)
+    rdf = rdf.Filter(bdt_cut, 'BDT')
+
+    return rdf
 #-------------------
 def fit(df, fix=None):
     return {'delta_m' : 1, 'sigma_m' : 2, 'mu' : 3}
 #-------------------
 def get_table(trig=None, year=None, brem=None):
-    df_sim    = get_df(data=False)
-    df_dat    = get_df(data=True)
+    df_sim    = get_df(year, trig, is_data=False)
+    df_dat    = get_df(year, trig, is_data= True)
 
     d_sim_par = fit(df_sim, fix=     None)
     d_dat_par = fit(df_dat, fix=d_sim_par)
@@ -66,4 +128,5 @@ if __name__ == '__main__':
         map_path = f'{data.cal_dir}/qsq/{data.version}/{year}.json'
         data.log.visible(f'Saving to: {map_path}')
         utnr.dump_json(d_table, map_path)
+#-------------------
 
