@@ -16,14 +16,30 @@ class data:
     l_year     = None 
     l_brem     = None 
 #-------------------
-def get_table(trig=None, year=None, brem=None):
-    return {'a' : 1}
+def get_df(data=None):
+    return None
 #-------------------
-def save_table(trig=None, year=None, brem=None):
-    d_scale=get_table(trig=trig, year=year, brem=brem)
-    map_path = f'{data.cal_dir}/qsq/{data.version}/{year}.json'
-    data.log.visible(f'Saving to: {map_path}')
-    utnr.dump_json(d_scale, map_path)
+def fit(df, fix=None):
+    return {'delta_m' : 1, 'sigma_m' : 2, 'mu' : 3}
+#-------------------
+def get_table(trig=None, year=None, brem=None):
+    df_sim    = get_df(data=False)
+    df_dat    = get_df(data=True)
+
+    d_sim_par = fit(df_sim, fix=     None)
+    d_dat_par = fit(df_dat, fix=d_sim_par)
+
+    delta_m = d_dat_par['delta_m']
+    sigma_m = d_dat_par['sigma_m']
+    mu_MC   = d_sim_par['mu']
+
+    d_table = {}
+
+    d_table[f'{trig} delta_m {brem} gamma'] = delta_m
+    d_table[f'{trig} s_sigma {brem} gamma'] = sigma_m
+    d_table[f'{trig} mu_MC {brem} gamma'  ] = mu_MC 
+
+    return d_table
 #-------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
@@ -40,8 +56,14 @@ def get_args():
 #-------------------
 if __name__ == '__main__':
     get_args()
-    for trig in data.l_trig:
-        for year in data.l_year:
+    for year in data.l_year:
+        d_table = {}
+        for trig in data.l_trig:
             for brem in data.l_brem:
-                save_table(trig=trig, year=year, brem=brem)
+                d_scale = get_table(trig=trig, year=year, brem=brem)
+                d_table.update(d_scale)
+
+        map_path = f'{data.cal_dir}/qsq/{data.version}/{year}.json'
+        data.log.visible(f'Saving to: {map_path}')
+        utnr.dump_json(d_table, map_path)
 
