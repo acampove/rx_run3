@@ -105,6 +105,13 @@ def get_pdf(is_signal=None):
 
     return pdf
 #-------------------
+def reset_sig_pars(pdf, d_val):
+    l_par = pdf.get_params()
+    for par in l_par:
+        name = par.name
+        val  = d_val[name]
+        par.set_value(val)
+#-------------------
 def get_signal_pdf():
     if data.sig_pdf is not None:
         return data.sig_pdf
@@ -176,9 +183,16 @@ def fix_pdf(pdf, d_fix):
     return pdf
 #-------------------
 def fit(df, d_fix=None, identifier='unnamed'):
-    is_signal = True if d_fix is None else False
+    jsn_path  = f'{data.plt_dir}/{identifier}.json'
 
+    is_signal = True if d_fix is None else False
+    #Signal fits won't converge easily cache the good ones
     pdf = get_pdf(is_signal)
+    if is_signal and os.path.isfile(jsn_path):
+        data.log.info(f'Loading cached simulation parameters: {jsn_path}')
+        d_par = utnr.load_json(jsn_path)
+        reset_sig_pars(pdf, d_par)
+
     pdf = fix_pdf(pdf, d_fix)
     dat = df.AsNumpy(['j_mass'])['j_mass']
     dat = dat[~numpy.isnan(dat)]
@@ -194,6 +208,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
     result_to_latex(res, tex_path)
 
     d_par = { name : d_val['value'] for name, d_val in res.params.items() }
+    utnr.dump_json(d_par, jsn_path)
 
     return d_par
 #-------------------
@@ -222,8 +237,6 @@ def get_table(trig=None, year=None, brem=None):
     df_dat    = get_df(year, trig, brem, is_data= True)
 
     d_sim_par = fit(df_sim, d_fix=     None, identifier=f'sim_{trig}_{year}_{brem}')
-
-    exit()
     d_fix_par = get_fix_pars(d_sim_par)
     d_dat_par = fit(df_dat, d_fix=d_fix_par, identifier=f'dat_{trig}_{year}_{brem}')
 
