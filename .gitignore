@@ -1,6 +1,8 @@
 *.swp
 *.pyc
 *.root
+*.png
+*.tex
 
 __pycache__
 
