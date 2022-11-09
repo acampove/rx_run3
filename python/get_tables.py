@@ -1,9 +1,15 @@
-import utils_noroot as utnr
+import utils_noroot                as utnr
+import matplotlib.pyplot           as plt
 import os
+import zfit
+import numpy
 import argparse
 import ROOT
 
+from zutils.plot  import plot      as zfp
 from rk.selection import selection as rksl
+from zutils.utils import result_to_latex 
+from fitter       import zfitter
 from rk.mva       import mva_man
 
 #-------------------
@@ -14,19 +20,24 @@ class data:
 
     l_all_trig = ['ETOS', 'GTIS']
     l_all_year = ['2011', '2012', '2015', '2016', '2017', '2018']
-    l_all_brem = [0, 1, 2]
+    l_all_brem = ['0', '1', '2']
     dat_vers   = 'v10.11tf'
     fraction   = 0.1
     bdt_dir    = '/publicfs/ucas/user/campoverde/Data/RK/MVA/electron/bdt_v10.14.a0v2ss'
     b_mass     = 'B_const_mass_M[0]'
     j_mass     = 'Jpsi_M'
+    plt_dir    = utnr.make_dir_path('plots/fits')
 
     version    = None
     l_trig     = None 
     l_year     = None 
     l_brem     = None 
+
+    obs        = zfit.Space('j_mass', limits=(2450, 3600))
+    sig_pdf    = None
+    bkg_pdf    = None
 #-------------------
-def get_df(year, trig, is_data=None):
+def get_df(year, trig, brem, is_data=None):
     if is_data not in [True, False]:
         data.log.error(f'Dataset type not specified')
         raise
@@ -37,22 +48,26 @@ def get_df(year, trig, is_data=None):
     if os.path.isfile(cache_path):
         data.log.visible(f'Found cached file: {cache_path}[tree]')
         rdf = ROOT.RDataFrame('tree', cache_path)
-        return rdf
+    else:
+        data_path = f'{data.dat_dir}/{proc}/{data.dat_vers}/{year}.root'
+        rdf = ROOT.RDataFrame('KEE', data_path)
 
-    data_path = f'{data.dat_dir}/{proc}/{data.dat_vers}/{year}.root'
-    rdf = ROOT.RDataFrame('KEE', data_path)
+        if data.fraction < 1.0:
+            nentries = rdf.Count().GetValue()
+            nkeep    = int(data.fraction * nentries)
 
-    if data.fraction < 1.0:
-        nentries = rdf.Count().GetValue()
-        nkeep    = int(data.fraction * nentries)
+            data.log.visible(f'Using {nkeep}/{nentries} entries')
+            rdf = rdf.Range(nkeep)
 
-        data.log.visible(f'Using {nkeep}/{nentries} entries')
-        rdf = rdf.Range(nkeep)
+        rdf = apply_selection(rdf, trig, year, proc)
 
-    rdf = apply_selection(rdf, trig, year, proc)
+        data.log.visible(f'Caching: {cache_path}[tree]')
+        rdf.Snapshot('tree', cache_path)
 
-    data.log.visible(f'Caching: {cache_path}[tree]')
-    rdf.Snapshot('tree', cache_path)
+    if brem == 2:
+        rdf = rdf.Filter(f'nbrem>=     2')
+    else:
+        rdf = rdf.Filter(f'nbrem=={brem}')
 
     return rdf
 #-------------------
@@ -81,18 +96,139 @@ def apply_selection(rdf, trig, year, proc):
 
     return rdf
 #-------------------
-def fit(df, fix=None):
-    return {'delta_m' : 1, 'sigma_m' : 2, 'mu' : 3}
+def get_pdf(is_signal=None):
+    if is_signal not in [True, False]:
+        data.log.error('Signal flag not specified')
+        raise
+
+    pdf = get_signal_pdf() if is_signal else get_full_pdf()
+
+    return pdf
+#-------------------
+def get_signal_pdf():
+    if data.sig_pdf is not None:
+        return data.sig_pdf
+
+    mu    = zfit.Parameter('mu', 3060,  3050, 3080)
+    sg    = zfit.Parameter('sg',   20,    10,   50)
+
+    ap_r  = zfit.Parameter('ap_r',  1.0,  -10.0, 10.0)
+    pw_r  = zfit.Parameter('pw_r',  1.0,    0.1, 10.0)
+    sig_r = zfit.pdf.CrystalBall(obs=data.obs, mu=mu, sigma=sg, alpha=ap_r, n=pw_r, name='CBR')
+
+    ap_l  = zfit.Parameter('ap_l', -1.0,  -10.0, 10.0)
+    pw_l  = zfit.Parameter('pw_l',  1.0,    0.1,  10.)
+    sig_l = zfit.pdf.CrystalBall(obs=data.obs, mu=mu, sigma=sg, alpha=ap_l, n=pw_l, name='CBL')
+
+    ncbr  = zfit.Parameter('ncbr',  10,   0,  1000000)
+    sig_r = sig_r.create_extended(ncbr)
+
+    ncbl  = zfit.Parameter('ncbl',  10,   0,  1000000)
+    sig_l = sig_l.create_extended(ncbl)
+
+    sig   = zfit.pdf.SumPDF([sig_r, sig_l])
+    
+    data.sig_pdf = sig
+    
+    return sig
+#-------------------
+def get_bkg_pdf():
+    if data.bkg_pdf is not None:
+        return data.bkg_pdf
+
+    lam = zfit.Parameter('lam', -0.001, -0.1, -0.001)
+    bkg = zfit.pdf.Exponential(lam=lam, obs=data.obs, name='Combinatorial')
+
+    nbk = zfit.Parameter(f'nbk', 100, 0.1, 200000)
+    bkg = bkg.create_extended(nbk)
+
+    data.bkg_pdf = bkg
+
+    return bkg
+#-------------------
+def get_full_pdf(): 
+    sig = get_signal_pdf()
+    bkg = get_bkg_pdf()
+
+    pdf = zfit.pdf.SumPDF([sig, bkg])
+
+    return pdf
+#-------------------
+def fix_pdf(pdf, d_fix):
+    if d_fix is None:
+        return pdf
+
+    l_par = list(pdf.get_params(floating=True))
+
+    data.log.info('-----------------')
+    data.log.info('Fixing parameters')
+    data.log.info('-----------------')
+    for par in l_par:
+        if par.name not in d_fix:
+            continue
+
+        fix_val = d_fix[par.name]
+        par.assign(fix_val)
+        par.floating=False
+
+        data.log.info(f'{par.name:<20}{"->":<10}{fix_val:<20.3e}')
+
+    return pdf
+#-------------------
+def fit(df, d_fix=None, identifier='unnamed'):
+    is_signal = True if d_fix is None else False
+
+    pdf = get_pdf(is_signal)
+    pdf = fix_pdf(pdf, d_fix)
+    dat = df.AsNumpy(['j_mass'])['j_mass']
+    dat = dat[~numpy.isnan(dat)]
+
+    obj=zfitter(pdf, dat)
+    res=obj.fit()
+    res.freeze()
+
+    plot_fit(dat, pdf, res, identifier)
+
+    tex_path = f'{data.plt_dir}/{identifier}.tex'
+    data.log.visible(f'Saving to: {tex_path}')
+    result_to_latex(res, tex_path)
+
+    d_par = { name : d_val['value'] for name, d_val in res.params.items() }
+
+    return d_par
+#-------------------
+def plot_fit(dat, pdf, res, identifier):
+    obj   = zfp(data=dat, model=pdf, result=res)
+    obj.plot(d_leg={}, plot_range=(2450, 3600))
+
+    obj.axs[1].plot([2450, 3600], [0, 0], linestyle='--', color='black')
+
+    plot_path = f'{data.plt_dir}/{identifier}.png'
+    data.log.visible(f'Saving to: {plot_path}')
+    plt.savefig(plot_path, bbox_inches='tight')
+#-------------------
+def get_fix_pars(d_par):
+    d_fix = dict(d_par)
+
+    del(d_fix[  'mu'])
+    del(d_fix[  'sg'])
+    del(d_fix['ncbr'])
+    del(d_fix['ncbl'])
+
+    return d_fix
 #-------------------
 def get_table(trig=None, year=None, brem=None):
-    df_sim    = get_df(year, trig, is_data=False)
-    df_dat    = get_df(year, trig, is_data= True)
+    df_sim    = get_df(year, trig, brem, is_data=False)
+    df_dat    = get_df(year, trig, brem, is_data= True)
 
-    d_sim_par = fit(df_sim, fix=     None)
-    d_dat_par = fit(df_dat, fix=d_sim_par)
+    d_sim_par = fit(df_sim, d_fix=     None, identifier=f'sim_{trig}_{year}_{brem}')
 
-    delta_m = d_dat_par['delta_m']
-    sigma_m = d_dat_par['sigma_m']
+    exit()
+    d_fix_par = get_fix_pars(d_sim_par)
+    d_dat_par = fit(df_dat, d_fix=d_fix_par, identifier=f'dat_{trig}_{year}_{brem}')
+
+    delta_m = d_dat_par['mu'] - d_dat_par['mu']
+    sigma_m = d_dat_par['sg'] / d_dat_par['sg']
     mu_MC   = d_sim_par['mu']
 
     d_table = {}
