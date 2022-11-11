@@ -14,30 +14,30 @@ from rk.mva       import mva_man
 
 #-------------------
 class data:
-    log        = utnr.getLogger(__name__)
-    cal_dir    = os.environ['CALDIR']
-    dat_dir    = os.environ['DATDIR']
+    log      = utnr.getLogger(__name__)
+    cal_dir  = os.environ['CALDIR']
+    dat_dir  = os.environ['DATDIR']
 
-    l_all_trig = ['ETOS', 'GTIS']
-    l_all_year = ['2011', '2012', '2015', '2016', '2017', '2018']
-    l_all_brem = ['0', '1', '2']
+    l_trig   = ['ETOS', 'GTIS']
+    l_year   = ['2011', '2012', '2015', '2016', '2017', '2018']
+    l_brem   = ['0', '1', '2']
 
-    dat_vers   = 'v10.11tf'
-    fraction   = 0.1
-    bdt_dir    = '/publicfs/ucas/user/campoverde/Data/RK/MVA/electron/bdt_v10.14.a0v2ss'
-    b_mass     = 'B_const_mass_M[0]'
-    j_mass     = 'Jpsi_M'
-    plt_dir    = utnr.make_dir_path('plots/fits')
+    dat_vers = 'v10.11tf'
+    fraction = 1.0
+    bdt_dir  = '/publicfs/ucas/user/campoverde/Data/RK/MVA/electron/bdt_v10.14.a0v2ss'
+    b_mass   = 'B_const_mass_M[0]'
+    j_mass   = 'Jpsi_M'
+    plt_dir  = utnr.make_dir_path('plots/fits')
 
-    version    = None
-    l_trig     = None 
-    l_year     = None 
-    l_brem     = None 
-    sim_only   = None
+    version  = None
+    trig     = None 
+    year     = None 
+    brem     = None 
+    sim_only = None
 
-    obs        = zfit.Space('j_mass', limits=(2450, 3600))
-    sig_pdf    = None
-    bkg_pdf    = None
+    obs      = zfit.Space('j_mass', limits=(2450, 3600))
+    sig_pdf  = None
+    bkg_pdf  = None
 
     d_sig_ini        =   {}
     d_sig_ini['mu'  ]= 3060
@@ -293,29 +293,23 @@ def get_table(trig=None, year=None, brem=None):
 def get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
     parser.add_argument('-v', '--vers' , type =str, help='Version for output maps', required=True)
-    parser.add_argument('-t', '--trig' , nargs='+', help='Triggers'          , choices=data.l_all_trig, default=data.l_all_trig)
-    parser.add_argument('-y', '--year' , nargs='+', help='Years'             , choices=data.l_all_year, default=data.l_all_year)
-    parser.add_argument('-b', '--brem' , nargs='+', help='Brem categories'   , choices=data.l_all_brem, default=data.l_all_brem)
+    parser.add_argument('-t', '--trig' , type =str, help='Trigger'           , choices=data.l_trig)
+    parser.add_argument('-y', '--year' , type =str, help='Year'              , choices=data.l_year)
+    parser.add_argument('-b', '--brem' , type =str, help='Brem category'     , choices=data.l_brem)
     parser.add_argument('-s', '--sim'  ,            help='Do only simulation', action='store_true')
     args = parser.parse_args()
 
     data.version  = args.vers
-    data.l_trig   = args.trig
-    data.l_year   = args.year
-    data.l_brem   = args.brem
+    data.trig     = args.trig
+    data.year     = args.year
+    data.brem     = args.brem
     data.sim_only = args.sim
 #-------------------
 if __name__ == '__main__':
     get_args()
-    for year in data.l_year:
-        d_table = {}
-        for trig in data.l_trig:
-            for brem in data.l_brem:
-                d_scale = get_table(trig=trig, year=year, brem=brem)
-                d_table.update(d_scale)
-
-        map_path = f'{data.cal_dir}/qsq/{data.version}/{year}.json'
-        data.log.visible(f'Saving to: {map_path}')
-        utnr.dump_json(d_table, map_path)
+    d_table  = get_table(trig=data.trig, year=data.year, brem=data.brem)
+    map_path = f'{data.cal_dir}/qsq/{data.version}/{data.trig}_{data.year}_{data.brem}.json'
+    data.log.visible(f'Saving to: {map_path}')
+    utnr.dump_json(d_table, map_path)
 #-------------------
 
