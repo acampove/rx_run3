@@ -14,13 +14,14 @@ from rk.mva       import mva_man
 
 #-------------------
 class data:
-    log     = utnr.getLogger(__name__)
-    cal_dir = os.environ['CALDIR']
-    dat_dir = os.environ['DATDIR']
+    log        = utnr.getLogger(__name__)
+    cal_dir    = os.environ['CALDIR']
+    dat_dir    = os.environ['DATDIR']
 
     l_all_trig = ['ETOS', 'GTIS']
     l_all_year = ['2011', '2012', '2015', '2016', '2017', '2018']
     l_all_brem = ['0', '1', '2']
+
     dat_vers   = 'v10.11tf'
     fraction   = 0.1
     bdt_dir    = '/publicfs/ucas/user/campoverde/Data/RK/MVA/electron/bdt_v10.14.a0v2ss'
@@ -32,10 +33,21 @@ class data:
     l_trig     = None 
     l_year     = None 
     l_brem     = None 
+    sim_only   = None
 
     obs        = zfit.Space('j_mass', limits=(2450, 3600))
     sig_pdf    = None
     bkg_pdf    = None
+
+    d_sig_ini        =   {}
+    d_sig_ini['mu'  ]= 3060
+    d_sig_ini['sg'  ]=   20
+    d_sig_ini['ap_r']=  1.0
+    d_sig_ini['pw_r']=  1.0
+    d_sig_ini['ap_l']= -1.0
+    d_sig_ini['pw_l']=  1.0
+    d_sig_ini['ncbr']=   10
+    d_sig_ini['ncbl']=   10
 #-------------------
 def get_df(year, trig, brem, is_data=None):
     if is_data not in [True, False]:
@@ -105,33 +117,51 @@ def get_pdf(is_signal=None):
 
     return pdf
 #-------------------
+def float_pars(pdf):
+    l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
+    data.log.info('Floating parameters:')
+    for par in l_par:
+        par.floating = True
+        if par.name in data.d_sig_ini:
+            val = data.d_sig_ini[par.name]
+            par.set_value(val)
+
+        data.log.info(f'{"":<4}{par.name:<20}{par.value():<20.3f}')
+#-------------------
 def reset_sig_pars(pdf, d_val):
-    l_par = pdf.get_params()
+    l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
+    data.log.info('Setting initial values:')
     for par in l_par:
         name = par.name
+        if name not in d_val:
+            continue
+
         val  = d_val[name]
         par.set_value(val)
+        data.log.info(f'{name:<20}{"->":<10}{val:<10.3}')
 #-------------------
 def get_signal_pdf():
     if data.sig_pdf is not None:
         return data.sig_pdf
 
-    mu    = zfit.Parameter('mu', 3060,  3050, 3080)
-    sg    = zfit.Parameter('sg',   20,    10,   50)
+    mu    = zfit.Parameter('mu', 3060,  3040, 3080)
+    sg    = zfit.Parameter('sg',   20,    10,   60)
 
     ap_r  = zfit.Parameter('ap_r',  1.0,  -10.0, 10.0)
     pw_r  = zfit.Parameter('pw_r',  1.0,    0.1, 10.0)
-    sig_r = zfit.pdf.CrystalBall(obs=data.obs, mu=mu, sigma=sg, alpha=ap_r, n=pw_r, name='CBR')
+    sig_r = zfit.pdf.CrystalBall(obs=data.obs, mu=mu, sigma=sg, alpha=ap_r, n=pw_r)
 
     ap_l  = zfit.Parameter('ap_l', -1.0,  -10.0, 10.0)
     pw_l  = zfit.Parameter('pw_l',  1.0,    0.1,  10.)
-    sig_l = zfit.pdf.CrystalBall(obs=data.obs, mu=mu, sigma=sg, alpha=ap_l, n=pw_l, name='CBL')
+    sig_l = zfit.pdf.CrystalBall(obs=data.obs, mu=mu, sigma=sg, alpha=ap_l, n=pw_l)
 
     ncbr  = zfit.Parameter('ncbr',  10,   0,  1000000)
     sig_r = sig_r.create_extended(ncbr)
+    #sig_r.name='CBR'
 
     ncbl  = zfit.Parameter('ncbl',  10,   0,  1000000)
-    sig_l = sig_l.create_extended(ncbl)
+    sig_l = sig_l.create_extended(ncbl) 
+    #sig_l.name='CBL'
 
     sig   = zfit.pdf.SumPDF([sig_r, sig_l])
     
@@ -146,7 +176,7 @@ def get_bkg_pdf():
     lam = zfit.Parameter('lam', -0.001, -0.1, -0.001)
     bkg = zfit.pdf.Exponential(lam=lam, obs=data.obs, name='Combinatorial')
 
-    nbk = zfit.Parameter(f'nbk', 100, 0.1, 200000)
+    nbk = zfit.Parameter(f'nbk', 100, 0.0, 200000)
     bkg = bkg.create_extended(nbk)
 
     data.bkg_pdf = bkg
@@ -184,21 +214,26 @@ def fix_pdf(pdf, d_fix):
 #-------------------
 def fit(df, d_fix=None, identifier='unnamed'):
     jsn_path  = f'{data.plt_dir}/{identifier}.json'
-
     is_signal = True if d_fix is None else False
-    #Signal fits won't converge easily cache the good ones
+
     pdf = get_pdf(is_signal)
-    if is_signal and os.path.isfile(jsn_path):
-        data.log.info(f'Loading cached simulation parameters: {jsn_path}')
-        d_par = utnr.load_json(jsn_path)
-        reset_sig_pars(pdf, d_par)
+    if is_signal:
+        float_pars(pdf)
+        if os.path.isfile(jsn_path):
+            data.log.info(f'Loading cached simulation parameters: {jsn_path}')
+            d_par = utnr.load_json(jsn_path)
+            reset_sig_pars(pdf, d_par)
 
     pdf = fix_pdf(pdf, d_fix)
     dat = df.AsNumpy(['j_mass'])['j_mass']
     dat = dat[~numpy.isnan(dat)]
 
     obj=zfitter(pdf, dat)
-    res=obj.fit()
+    if is_signal:
+        res=obj.fit(ntries=10, pval_threshold=0.05)
+    else:
+        res=obj.fit()
+
     res.freeze()
 
     plot_fit(dat, pdf, res, identifier)
@@ -237,14 +272,17 @@ def get_table(trig=None, year=None, brem=None):
     df_dat    = get_df(year, trig, brem, is_data= True)
 
     d_sim_par = fit(df_sim, d_fix=     None, identifier=f'sim_{trig}_{year}_{brem}')
+    if data.sim_only:
+        return {}
+
     d_fix_par = get_fix_pars(d_sim_par)
     d_dat_par = fit(df_dat, d_fix=d_fix_par, identifier=f'dat_{trig}_{year}_{brem}')
 
-    delta_m = d_dat_par['mu'] - d_dat_par['mu']
-    sigma_m = d_dat_par['sg'] / d_dat_par['sg']
-    mu_MC   = d_sim_par['mu']
+    delta_m   = d_dat_par['mu'] - d_dat_par['mu']
+    sigma_m   = d_dat_par['sg'] / d_dat_par['sg']
+    mu_MC     = d_sim_par['mu']
 
-    d_table = {}
+    d_table   = {}
 
     d_table[f'{trig} delta_m {brem} gamma'] = delta_m
     d_table[f'{trig} s_sigma {brem} gamma'] = sigma_m
@@ -255,15 +293,17 @@ def get_table(trig=None, year=None, brem=None):
 def get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
     parser.add_argument('-v', '--vers' , type =str, help='Version for output maps', required=True)
-    parser.add_argument('-t', '--trig' , nargs='+', help='Triggers'       , choices=data.l_all_trig, default=data.l_all_trig)
-    parser.add_argument('-y', '--year' , nargs='+', help='Years'          , choices=data.l_all_year, default=data.l_all_year)
-    parser.add_argument('-b', '--brem' , nargs='+', help='Brem categories', choices=data.l_all_brem, default=data.l_all_brem)
+    parser.add_argument('-t', '--trig' , nargs='+', help='Triggers'          , choices=data.l_all_trig, default=data.l_all_trig)
+    parser.add_argument('-y', '--year' , nargs='+', help='Years'             , choices=data.l_all_year, default=data.l_all_year)
+    parser.add_argument('-b', '--brem' , nargs='+', help='Brem categories'   , choices=data.l_all_brem, default=data.l_all_brem)
+    parser.add_argument('-s', '--sim'  ,            help='Do only simulation', action='store_true')
     args = parser.parse_args()
 
-    data.version= args.vers
-    data.l_trig = args.trig
-    data.l_year = args.year
-    data.l_brem = args.brem
+    data.version  = args.vers
+    data.l_trig   = args.trig
+    data.l_year   = args.year
+    data.l_brem   = args.brem
+    data.sim_only = args.sim
 #-------------------
 if __name__ == '__main__':
     get_args()
