@@ -27,10 +27,10 @@ def main():
                     index+= 1
                     continue
 
-                data.log.info(f'TRIG={trig}')
-                data.log.info(f'YEAR={year}')
-                data.log.info(f'BREM={brem}')
-                data.log.info(f'NJOB={njob}')
+                print(f'TRIG={trig}')
+                print(f'YEAR={year}')
+                print(f'BREM={brem}')
+                print(f'NJOB={njob}')
 
                 return
 #-----------------------------
