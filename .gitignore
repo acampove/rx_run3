@@ -3,6 +3,7 @@
 *.root
 *.png
 *.tex
+*.log
 *.json
 
 __pycache__
