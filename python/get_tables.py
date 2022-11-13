@@ -27,13 +27,12 @@ class data:
     bdt_dir  = '/publicfs/ucas/user/campoverde/Data/RK/MVA/electron/bdt_v10.14.a0v2ss'
     b_mass   = 'B_const_mass_M[0]'
     j_mass   = 'Jpsi_M'
-    plt_dir  = utnr.make_dir_path('plots/fits')
 
-    version  = None
     trig     = None 
     year     = None 
     brem     = None 
     sim_only = None
+    plt_dir  = None 
 
     obs      = zfit.Space('j_mass', limits=(2450, 3600))
     sig_pdf  = None
@@ -214,6 +213,11 @@ def fix_pdf(pdf, d_fix):
 #-------------------
 def fit(df, d_fix=None, identifier='unnamed'):
     jsn_path  = f'{data.plt_dir}/{identifier}.json'
+    if os.path.isfile(jsn_path):
+        data.log.info(f'Fit file found: {jsn_path}')
+        d_par = utnr.load_json(jsn_path)
+        return d_par
+
     is_signal = True if d_fix is None else False
 
     pdf = get_pdf(is_signal)
@@ -267,49 +271,34 @@ def get_fix_pars(d_par):
 
     return d_fix
 #-------------------
-def get_table(trig=None, year=None, brem=None):
+def make_table(trig=None, year=None, brem=None):
     df_sim    = get_df(year, trig, brem, is_data=False)
     df_dat    = get_df(year, trig, brem, is_data= True)
-
     d_sim_par = fit(df_sim, d_fix=     None, identifier=f'sim_{trig}_{year}_{brem}')
+
     if data.sim_only:
-        return {}
+        return 
 
     d_fix_par = get_fix_pars(d_sim_par)
-    d_dat_par = fit(df_dat, d_fix=d_fix_par, identifier=f'dat_{trig}_{year}_{brem}')
-
-    delta_m   = d_dat_par['mu'] - d_dat_par['mu']
-    sigma_m   = d_dat_par['sg'] / d_dat_par['sg']
-    mu_MC     = d_sim_par['mu']
-
-    d_table   = {}
-
-    d_table[f'{trig} delta_m {brem} gamma'] = delta_m
-    d_table[f'{trig} s_sigma {brem} gamma'] = sigma_m
-    d_table[f'{trig} mu_MC {brem} gamma'  ] = mu_MC 
-
-    return d_table
+    _         = fit(df_dat, d_fix=d_fix_par, identifier=f'dat_{trig}_{year}_{brem}')
 #-------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
-    parser.add_argument('-v', '--vers' , type =str, help='Version for output maps', required=True)
-    parser.add_argument('-t', '--trig' , type =str, help='Trigger'           , choices=data.l_trig)
-    parser.add_argument('-y', '--year' , type =str, help='Year'              , choices=data.l_year)
-    parser.add_argument('-b', '--brem' , type =str, help='Brem category'     , choices=data.l_brem)
-    parser.add_argument('-s', '--sim'  ,            help='Do only simulation', action='store_true')
+    parser.add_argument('-v', '--vers' , type =str, help='Version, used for naming of output directory', required=True)
+    parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , choices=data.l_trig)
+    parser.add_argument('-y', '--year' , type =str, help='Year'                                        , choices=data.l_year)
+    parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , choices=data.l_brem)
+    parser.add_argument('-s', '--sim'  ,            help='Do only simulation'                          , action='store_true')
     args = parser.parse_args()
 
-    data.version  = args.vers
     data.trig     = args.trig
     data.year     = args.year
     data.brem     = args.brem
     data.sim_only = args.sim
+    data.plt_dir  = utnr.make_dir_path(f'plots/fits/{args.vers}')
 #-------------------
 if __name__ == '__main__':
     get_args()
-    d_table  = get_table(trig=data.trig, year=data.year, brem=data.brem)
-    map_path = f'{data.cal_dir}/qsq/{data.version}/{data.trig}_{data.year}_{data.brem}.json'
-    data.log.visible(f'Saving to: {map_path}')
-    utnr.dump_json(d_table, map_path)
+    make_table(trig=data.trig, year=data.year, brem=data.brem)
 #-------------------
 
