@@ -30,7 +30,7 @@ cd       $JOBDIR
 
 OFILE=q2syst_%{ClusterId}_%{ProcId}
 MEMORY=4000
-VERS=v2
+VERS=$1
 
 echo "NJOB=$NJOB"
 
