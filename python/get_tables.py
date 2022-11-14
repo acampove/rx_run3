@@ -143,8 +143,8 @@ def get_signal_pdf():
     if data.sig_pdf is not None:
         return data.sig_pdf
 
-    mu    = zfit.Parameter('mu', 3060,  3040, 3090)
-    sg    = zfit.Parameter('sg',   20,    10,   60)
+    mu    = zfit.Parameter('mu', 3060,  3040, 3100)
+    sg    = zfit.Parameter('sg',   20,    10,  100)
 
     ap_r  = zfit.Parameter('ap_r',  1.0,  -10.0, 10.0)
     pw_r  = zfit.Parameter('pw_r',  1.0,    0.1, 10.0)
@@ -238,6 +238,11 @@ def fit(df, d_fix=None, identifier='unnamed'):
     else:
         res=obj.fit()
 
+    if res.status != 0:
+        self.log.error(f'Finished with status: {res.status}')
+        print(res)
+        raise
+
     res.freeze()
 
     plot_fit(dat, pdf, res, identifier)
@@ -245,6 +250,9 @@ def fit(df, d_fix=None, identifier='unnamed'):
     tex_path = f'{data.plt_dir}/{identifier}.tex'
     data.log.visible(f'Saving to: {tex_path}')
     result_to_latex(res, tex_path)
+
+    pkl_path = f'{data.plt_dir}/{identifier}.pkl'
+    utnr.dump_pickle(res, pkl_path)
 
     d_par = { name : d_val['value'] for name, d_val in res.params.items() }
     utnr.dump_json(d_par, jsn_path)
