@@ -203,7 +203,7 @@ def fix_pdf(pdf, d_fix):
         if par.name not in d_fix:
             continue
 
-        fix_val = d_fix[par.name]
+        fix_val, _ = d_fix[par.name]
         par.assign(fix_val)
         par.floating=False
 
@@ -243,6 +243,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
         print(res)
         raise
 
+    res.hesse(name='hesse_np')
     res.freeze()
 
     plot_fit(dat, pdf, res, identifier)
@@ -254,7 +255,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
     pkl_path = f'{data.plt_dir}/{identifier}.pkl'
     utnr.dump_pickle(res, pkl_path)
 
-    d_par = { name : d_val['value'] for name, d_val in res.params.items() }
+    d_par = { name : [d_val['value'], d_val['hesse_np']['error']] for name, d_val in res.params.items() }
     utnr.dump_json(d_par, jsn_path)
 
     return d_par
