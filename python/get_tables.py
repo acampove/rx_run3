@@ -143,7 +143,7 @@ def get_signal_pdf():
     if data.sig_pdf is not None:
         return data.sig_pdf
 
-    mu    = zfit.Parameter('mu', 3060,  3040, 3080)
+    mu    = zfit.Parameter('mu', 3060,  3040, 3090)
     sg    = zfit.Parameter('sg',   20,    10,   60)
 
     ap_r  = zfit.Parameter('ap_r',  1.0,  -10.0, 10.0)
