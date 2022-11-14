@@ -51,7 +51,7 @@ def merge(year):
             d_map.update(d_tmp)
 
     map_dir  = utnr.make_dir_path(f'{data.caldir}/qsq/{data.ot_ver}')
-    map_path = f'{map_dir}/{year}.root'
+    map_path = f'{map_dir}/{year}.json'
 
     data.log.visible(f'Saving to: {map_path}')
     utnr.dump_json(d_map, map_path)
