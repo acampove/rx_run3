@@ -239,7 +239,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
         res=obj.fit()
 
     if res.status != 0:
-        self.log.error(f'Finished with status: {res.status}')
+        data.log.error(f'Finished with status: {res.status}')
         print(res)
         raise
 
