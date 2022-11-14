@@ -13,8 +13,11 @@ class data:
     l_year = ['2011', '2012', '2015', '2016', '2017', '2018']
     l_par  = ['delta_m', 'mu_MC', 's_sigma']
 
-    plot_dir = utnr.make_dir_path('plots/comparison/')
+    plot_dir = utnr.make_dir_path('plots/comparison')
     l_vers   = None
+
+    d_range_tos = {'delta_m' : (-10, 5), 'mu_MC' : (3068, 3085), 's_sigma' : (1.00, 1.25) }
+    d_range_tis = {'delta_m' : (-20, 5), 'mu_MC' : (3050, 3085), 's_sigma' : (1.00, 1.25) }
 #-----------------------------------------
 def get_pars(vers, trig, brem, year):
     cal_dir = os.environ['CALDIR']
@@ -73,8 +76,12 @@ def main():
                 for version, df_v in df_f.groupby('version'):
                     ax=df_v.plot(x='brem', y='par_val', ax=ax, label=version)
 
+                miny, maxy = data.d_range_tos[par] if trig == 'ETOS' else data.d_range_tis[par]
+                ax.set_ylim(miny, maxy)
+
                 plt_path = f'{data.plot_dir}/{year}_{trig}_{par}.png'
                 data.log.visible(f'Saving to: {plt_path}')
+                plt.grid()
                 plt.title(f'{trig}; {year}')
                 plt.ylabel(par)
                 plt.savefig(plt_path)
