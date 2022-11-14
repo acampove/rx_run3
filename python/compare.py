@@ -16,8 +16,8 @@ class data:
     plot_dir = utnr.make_dir_path('plots/comparison')
     l_vers   = None
 
-    d_range_tos = {'delta_m' : (-10, 5), 'mu_MC' : (3068, 3085), 's_sigma' : (1.00, 1.25) }
-    d_range_tis = {'delta_m' : (-20, 5), 'mu_MC' : (3050, 3085), 's_sigma' : (1.00, 1.25) }
+    d_range_tos = {'delta_m' : (-10, 10), 'mu_MC' : (3068, 3085), 's_sigma' : (1.00, 1.25) }
+    d_range_tis = {'delta_m' : (-20, 10), 'mu_MC' : (3050, 3085), 's_sigma' : (1.00, 1.25) }
 #-----------------------------------------
 def get_pars(vers, trig, brem, year):
     cal_dir = os.environ['CALDIR']
