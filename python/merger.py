@@ -1,7 +1,10 @@
 import argparse
+import math 
 import os
 
 import utils_noroot as utnr
+
+from jacobi import propagate
 
 #----------------------------
 class data:
@@ -24,21 +27,25 @@ def get_args():
     data.ot_ver = args.output
 #----------------------------
 def get_map(year, trig, brem):
-    sim_map_path = f'plots/fits/{data.in_ver}/sim_{trig}_{year}_{brem}.json'
-    dat_map_path = f'plots/fits/{data.in_ver}/dat_{trig}_{year}_{brem}.json'
+    sim_map_path       = f'plots/fits/{data.in_ver}/sim_{trig}_{year}_{brem}.json'
+    dat_map_path       = f'plots/fits/{data.in_ver}/dat_{trig}_{year}_{brem}.json'
 
-    d_sim_par    = utnr.load_json(sim_map_path)
-    d_dat_par    = utnr.load_json(dat_map_path)
+    d_sim_par          = utnr.load_json(sim_map_path)
+    d_dat_par          = utnr.load_json(dat_map_path)
 
-    delta_m      = float(d_dat_par['mu']) - float(d_sim_par['mu'])
-    sigma_m      = float(d_dat_par['sg']) / float(d_sim_par['sg'])
-    mu_MC        = float(d_sim_par['mu'])
+    f_dat_mu, e_dat_mu = tuple(map(float, d_dat_par['mu']))
+    f_sim_mu, e_sim_mu = tuple(map(float, d_sim_par['mu']))
 
-    d_table   = {}
+    f_dat_sg, e_dat_sg = tuple(map(float, d_dat_par['sg']))
+    f_sim_sg, e_sim_sg = tuple(map(float, d_sim_par['sg']))
 
-    d_table[f'{trig} delta_m {brem} gamma'] = delta_m
-    d_table[f'{trig} s_sigma {brem} gamma'] = sigma_m
-    d_table[f'{trig} mu_MC {brem} gamma'  ] = mu_MC
+    f_delta_m, v_delta_m = propagate(lambda x, y: x - y, f_dat_mu, e_dat_mu ** 2, f_sim_mu, e_sim_mu ** 2) 
+    f_sigma_m, v_sigma_m = propagate(lambda x, y: x / y, f_dat_sg, e_dat_sg ** 2, f_sim_sg, e_sim_sg ** 2) 
+
+    d_table                                 = {}
+    d_table[f'{trig} delta_m {brem} gamma'] = [f_delta_m.tolist(), math.sqrt(v_delta_m)]
+    d_table[f'{trig} s_sigma {brem} gamma'] = [f_sigma_m.tolist(), math.sqrt(v_sigma_m)]
+    d_table[f'{trig} mu_MC {brem} gamma'  ] = [f_sim_mu          ,           e_sim_mu  ]
 
     return d_table
 #----------------------------
