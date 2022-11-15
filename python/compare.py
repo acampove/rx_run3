@@ -31,11 +31,12 @@ def get_pars(vers, trig, brem, year):
             del(d_res[key])
             continue
 
-        val = d_res[key]
-        var = mtch.group(1)
+        obj        = d_res[key]
+        [val, err] = obj if isinstance(obj, list) else [obj, 0]
+        var        = mtch.group(1)
 
         del(d_res[key])
-        d_res[var] = val
+        d_res[var] = [val, err]
 
     d_res = dict(sorted(d_res.items()))
 
@@ -46,14 +47,14 @@ def get_rows(trig, brem, year):
     for vers in data.l_vers:
         d_par=get_pars(vers, trig, brem, year)
 
-        for var, val in d_par.items():
-            row=[year, brem, trig, var, val, vers]
+        for var, [val, err] in d_par.items():
+            row=[year, brem, trig, var, val, err, vers]
             l_row.append(row)
 
     return l_row
 #-----------------------------------------
 def get_df():
-    df = pnd.DataFrame(columns=['year', 'brem', 'trig', 'par_name', 'par_val', 'version'])
+    df = pnd.DataFrame(columns=['year', 'brem', 'trig', 'par_name', 'par_val', 'par_err', 'version'])
     for trig in data.l_trig:
         for brem in data.l_brem:
             for year in data.l_year:
@@ -74,7 +75,7 @@ def main():
 
                 ax = None
                 for version, df_v in df_f.groupby('version'):
-                    ax=df_v.plot(x='brem', y='par_val', ax=ax, label=version)
+                    ax=df_v.plot(x='brem', y='par_val', yerr='par_err', ax=ax, label=version)
 
                 miny, maxy = data.d_range_tos[par] if trig == 'ETOS' else data.d_range_tis[par]
                 ax.set_ylim(miny, maxy)
