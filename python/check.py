@@ -38,6 +38,7 @@ def get_rdf(year, trig, brem, mc=None):
     rdf = rdf.Define('yearLabbel',     year)
     rdf = rdf.Define('Jpsi_M'    , 'j_mass')
     rdf = rdf.Redefine('nbrem'   , 'if (nbrem > 1) return 2; else return int(nbrem);')
+    rdf = rdf.Filter(f'nbrem == {brem}')
 
     rdf.treename = trig
     rdf.filepath = file_path
@@ -58,6 +59,9 @@ def check(year, trig, brem):
 
     plot_path = f'{data.plot_dir}/{trig}_{year}_{brem}.png'
     plt.legend()
+    plt.title(f'{year}, {trig}, brem={brem}')
+    plt.xlabel('$m(e^+,e^-)[MeV]$')
+    plt.ylabel('Normalized')
     plt.savefig(plot_path)
     plt.close('all')
 #------------------------------------
