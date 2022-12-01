@@ -14,13 +14,13 @@ class data:
     l_year     = None
     l_trig     = None
     l_brem     = None
+    cal_vers   = None 
 
     l_all_year = ['2011', '2012', '2015', '2016', '2017', '2018']
     l_all_trig = ['ETOS', 'GTIS']
     l_all_brem = ['0', '1', '2']
 
     cal_dir    = os.environ['CALDIR']
-    cal_vers   = 'v2.nom'
     plot_dir   = utnr.make_dir_path('plots/check/smearing')
 #------------------------------------
 def get_rdf(year, trig, brem, mc=None):
@@ -84,11 +84,13 @@ def get_args():
     parser.add_argument('-t', '--trig' , nargs='+', help='Trigger'               , default=data.l_all_trig, choices=data.l_all_trig)
     parser.add_argument('-y', '--year' , nargs='+', help='Year'                  , default=data.l_all_year, choices=data.l_all_year)
     parser.add_argument('-b', '--brem' , nargs='+', help='Bremstrahlung category', default=data.l_all_brem, choices=data.l_all_brem)
+    parser.add_argument('-v', '--vers' , type =str, help='Version of scales, e.g. v1.nom', required=True, choices=['v1.nom', 'v2.nom'])
     args = parser.parse_args()
 
-    data.l_year = args.year
-    data.l_trig = args.trig
-    data.l_brem = args.brem
+    data.l_year   = args.year
+    data.l_trig   = args.trig
+    data.l_brem   = args.brem
+    data.cal_vers = args.vers
 #------------------------------------
 if __name__ == '__main__':
     get_args()
