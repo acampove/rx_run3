@@ -19,7 +19,7 @@ class data:
     dat_dir  = os.environ['DATDIR']
 
     l_trig   = ['ETOS', 'GTIS']
-    l_year   = ['2011', '2012', '2015', '2016', '2017', '2018']
+    l_year   = ['2011', '2012', '2015', '2016', '2017', '2018', 'r1', 'r2p1']
     l_brem   = ['0', '1', '2']
 
     dat_vers = 'v10.11tf'
@@ -48,6 +48,39 @@ class data:
     d_sig_ini['ncbr']=   10
     d_sig_ini['ncbl']=   10
 #-------------------
+def get_years(dset):
+    if   dset == 'r1':
+        l_year = ['2011', '2012'] 
+    elif dset == 'r2p1':
+        l_year = ['2015', '2016'] 
+    else:
+        l_year = [dset] 
+
+    return l_year
+#-------------------
+def get_cached_paths(dset, trig, proc):
+    l_year = get_years(dset)
+    l_path = [ f'cached/{year}_{trig}_{proc}.root' for year in l_year ]
+
+    all_found = True 
+    for path in l_path:
+        if not os.path.isfile(path):
+            all_found=False
+            break
+
+    return l_path, all_found
+#-------------------
+def get_input_paths(proc, dset):
+    l_year = get_years(dset)
+
+    l_path = [f'{data.dat_dir}/{proc}/{data.dat_vers}/{year}.root' for year in l_year ]
+    for path in l_path:
+        if not os.path.isfile(path):
+            data.log.error(f'File {path} not found')
+            raise FileNotFoundError
+
+    return l_path
+#-------------------
 def get_df(year, trig, brem, is_data=None):
     if is_data not in [True, False]:
         data.log.error(f'Dataset type not specified')
@@ -55,25 +88,26 @@ def get_df(year, trig, brem, is_data=None):
 
     proc = 'data_ee' if is_data else 'ctrl_ee'
     utnr.make_dir_path('cached')
-    cache_path = f'cached/{year}_{trig}_{proc}.root'
-    if os.path.isfile(cache_path):
-        data.log.visible(f'Found cached file: {cache_path}[tree]')
-        rdf = ROOT.RDataFrame('tree', cache_path)
-    else:
-        data_path = f'{data.dat_dir}/{proc}/{data.dat_vers}/{year}.root'
-        rdf = ROOT.RDataFrame('KEE', data_path)
+    l_cache_path, all_exist = get_cached_paths(year, trig, proc)
+    if not all_exist:
+        l_data_path = get_input_paths(proc, year)
+        for data_path, cache_path in zip(l_data_path, l_cache_path):
+            rdf = ROOT.RDataFrame('KEE', data_path)
 
-        if data.fraction < 1.0:
-            nentries = rdf.Count().GetValue()
-            nkeep    = int(data.fraction * nentries)
+            if data.fraction < 1.0:
+                nentries = rdf.Count().GetValue()
+                nkeep    = int(data.fraction * nentries)
 
-            data.log.visible(f'Using {nkeep}/{nentries} entries')
-            rdf = rdf.Range(nkeep)
+                data.log.visible(f'Using {nkeep}/{nentries} entries')
+                rdf = rdf.Range(nkeep)
 
-        rdf = apply_selection(rdf, trig, year, proc)
+            rdf = apply_selection(rdf, trig, year, proc)
 
-        data.log.visible(f'Caching: {cache_path}[tree]')
-        rdf.Snapshot('tree', cache_path)
+            data.log.visible(f'Caching: {data_path}[KEE] -> {cache_path}[tree]')
+            rdf.Snapshot('tree', cache_path)
+
+    data.log.visible(f'Found cached files: {l_cache_path}[tree]')
+    rdf = ROOT.RDataFrame('tree', l_cache_path)
 
     if brem == 2:
         rdf = rdf.Filter(f'nbrem>=     2')
