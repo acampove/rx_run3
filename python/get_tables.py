@@ -268,7 +268,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
 
     obj=zfitter(pdf, dat)
     if is_signal:
-        res=obj.fit(ntries=20, pval_threshold=0.05)
+        res=obj.fit(ntries=30, pval_threshold=0.05)
     else:
         res=obj.fit()
 
