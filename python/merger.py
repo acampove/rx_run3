@@ -11,20 +11,23 @@ class data:
     log    = utnr.getLogger(__name__)
     in_ver = None
     ot_ver = None
-    caldir = os.environ['CALDIR']
+    l_year = None
 
-    l_year = ['2011', '2012', '2015', '2016', '2017', '2018']
-    l_trig = ['ETOS', 'GTIS']
-    l_brem = [0, 1, 2]
+    caldir     = os.environ['CALDIR']
+    l_all_year = ['2011', '2012', '2015', '2016', '2017', '2018'] + ['r1', 'r2p1']
+    l_trig     = ['ETOS', 'GTIS']
+    l_brem     = [0, 1, 2]
 #----------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
-    parser.add_argument('-i', '--input' , type=str, help='Input version')
-    parser.add_argument('-o', '--output', type=str, help='Output version')
+    parser.add_argument('-i', '--input' ,  type=str, help='Input version')
+    parser.add_argument('-o', '--output',  type=str, help='Output version')
+    parser.add_argument('-y', '--year'  , nargs='+', help='Years/datasets', default=data.l_all_year, choices=data.l_all_year)
     args = parser.parse_args()
 
     data.in_ver = args.input
     data.ot_ver = args.output
+    data.l_year = args.year
 #----------------------------
 def get_map(year, trig, brem):
     sim_map_path       = f'plots/fits/{data.in_ver}/sim_{trig}_{year}_{brem}.json'
@@ -63,7 +66,10 @@ def merge(year):
     data.log.visible(f'Saving to: {map_path}')
     utnr.dump_json(d_map, map_path)
 #----------------------------
-if __name__ == '__main__':
+def main():
     get_args()
     [merge(year) for year in data.l_year]
+#----------------------------
+if __name__ == '__main__':
+    main()
 
