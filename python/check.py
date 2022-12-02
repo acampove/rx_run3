@@ -84,7 +84,7 @@ def get_args():
     parser.add_argument('-t', '--trig' , nargs='+', help='Trigger'               , default=data.l_all_trig, choices=data.l_all_trig)
     parser.add_argument('-y', '--year' , nargs='+', help='Year'                  , default=data.l_all_year, choices=data.l_all_year)
     parser.add_argument('-b', '--brem' , nargs='+', help='Bremstrahlung category', default=data.l_all_brem, choices=data.l_all_brem)
-    parser.add_argument('-v', '--vers' , type =str, help='Version of scales, e.g. v1.nom', required=True, choices=['v1.nom', 'v2.nom'])
+    parser.add_argument('-v', '--vers' , type =str, help='Version of scales, e.g. v1.nom', required=True, choices=['v1.nom', 'v2.nom', 'v3.nom'])
     args = parser.parse_args()
 
     data.l_year   = args.year
