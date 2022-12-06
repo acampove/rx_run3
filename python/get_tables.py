@@ -21,6 +21,7 @@ class data:
     l_trig   = ['ETOS', 'GTIS']
     l_year   = ['2011', '2012', '2015', '2016', '2017', '2018', 'r1', 'r2p1']
     l_brem   = ['0', '1', '2']
+    l_sys    = ['nom', 'nspd']
 
     dat_vers = 'v10.11tf'
     fraction = 1.0
@@ -40,13 +41,13 @@ class data:
 
     d_sig_ini        =   {}
     d_sig_ini['mu'  ]= 3060
-    d_sig_ini['sg'  ]=   20
+    d_sig_ini['sg'  ]= 20.0
     d_sig_ini['ap_r']=  1.0
-    d_sig_ini['pw_r']=  1.0
+    d_sig_ini['pw_r']=  2.0
     d_sig_ini['ap_l']= -1.0
-    d_sig_ini['pw_l']=  1.0
-    d_sig_ini['ncbr']=   10
-    d_sig_ini['ncbl']=   10
+    d_sig_ini['pw_l']=  2.0
+    d_sig_ini['ncbr']=    1
+    d_sig_ini['ncbl']=    1
 #-------------------
 def get_years(dset):
     if   dset == 'r1':
@@ -121,7 +122,7 @@ def add_bdt(rdf, trig):
     rdf = rdf.Define('j_mass', data.j_mass)
     rdf = rdf.Define('nbrem' , 'L1_BremMultiplicity + L2_BremMultiplicity')
 
-    d_data        = rdf.AsNumpy(['b_mass', 'j_mass', 'nbrem'])
+    d_data        = rdf.AsNumpy(['b_mass', 'j_mass', 'nbrem', 'nSPDHits'])
     man           = mva_man(rdf, data.bdt_dir, trig)
     d_data['BDT'] = man.get_scores()
 
@@ -268,16 +269,20 @@ def fit(df, d_fix=None, identifier='unnamed'):
 
     obj=zfitter(pdf, dat)
     if is_signal:
-        res=obj.fit(ntries=30, pval_threshold=0.05)
+        res=obj.fit(ntries=30, pval_threshold=0.04)
     else:
         res=obj.fit()
 
-    if res.status != 0:
+    if   res is None:
+        plot_fit(dat, pdf, res, identifier)
+        data.log.error(f'Fit failed')
+        raise
+    elif res.status != 0:
         data.log.error(f'Finished with status: {res.status}')
         print(res)
         raise
 
-    res.hesse(name='hesse_np')
+    res.hesse()
     res.freeze()
 
     plot_fit(dat, pdf, res, identifier)
@@ -289,7 +294,8 @@ def fit(df, d_fix=None, identifier='unnamed'):
     pkl_path = f'{data.plt_dir}/{identifier}.pkl'
     utnr.dump_pickle(res, pkl_path)
 
-    d_par = { name : [d_val['value'], d_val['hesse_np']['error']] for name, d_val in res.params.items() }
+    d_par = { name : [d_val['value'], d_val['hesse']['error']] for name, d_val in res.params.items() }
+
     utnr.dump_json(d_par, jsn_path)
 
     return d_par
@@ -314,10 +320,29 @@ def get_fix_pars(d_par):
 
     return d_fix
 #-------------------
+def add_nspd_col(df):
+    arr_nspd = df.AsNumpy(['nSPDHits'])['nSPDHits']
+    q1 = numpy.quantile(arr_nspd, 1./3)
+    q2 = numpy.quantile(arr_nspd, 2./3)
+
+    df = df.Define('nspd', f'float res=-1; if (nSPDHits<{q1}) res = 1; else if (nSPDHits < {q2}) res = 2; else res = 3; return res;')
+
+    return df
+#-------------------
 def make_table(trig=None, year=None, brem=None):
     df_sim    = get_df(year, trig, brem, is_data=False)
     df_dat    = get_df(year, trig, brem, is_data= True)
-    d_sim_par = fit(df_sim, d_fix=     None, identifier=f'sim_{trig}_{year}_{brem}')
+
+    d_sim_par = {}
+    if data.sys == 'nspd':
+        df_sim    = add_nspd_col(df_sim)
+        for i_nspd in [1,2,3]:
+            df_sim_nspd = df_sim.Filter(f'nspd == {i_nspd}')
+            d_tmp       = fit(df_sim_nspd, d_fix=None, identifier=f'sim_{trig}_{year}_{brem}_{i_nspd}')
+            d_tmp       = { f'{key}_{i_nspd}' : val for key, val in d_tmp.items() }
+            d_sim_par.update(d_tmp)
+    elif data.sys == 'nom':
+        d_sim_par = fit(df_sim, d_fix=None, identifier=f'sim_{trig}_{year}_{brem}')
 
     if data.sim_only:
         return 
@@ -332,12 +357,14 @@ def get_args():
     parser.add_argument('-y', '--year' , type =str, help='Year'                                        , choices=data.l_year)
     parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , choices=data.l_brem)
     parser.add_argument('-s', '--sim'  ,            help='Do only simulation'                          , action='store_true')
+    parser.add_argument('-x', '--sys'  , type =str, help='Systematic variabion'                        , choices=data.l_sys) 
     args = parser.parse_args()
 
     data.trig     = args.trig
     data.year     = args.year
     data.brem     = args.brem
     data.sim_only = args.sim
+    data.sys      = args.sys
     data.plt_dir  = utnr.make_dir_path(f'plots/fits/{args.vers}')
 #-------------------
 if __name__ == '__main__':
