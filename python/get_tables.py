@@ -46,11 +46,11 @@ class data:
     d_sig_ini['mu'  ]= 3060
     d_sig_ini['sg'  ]= 20.0
     d_sig_ini['ap_r']=  1.0
-    d_sig_ini['pw_r']=  2.0
+    d_sig_ini['pw_r']=  1.0
     d_sig_ini['ap_l']= -1.0
-    d_sig_ini['pw_l']=  2.0
-    d_sig_ini['ncbr']=    1
-    d_sig_ini['ncbl']=    1
+    d_sig_ini['pw_l']=  1.0
+    d_sig_ini['ncbr']=  1000 
+    d_sig_ini['ncbl']=  1000  
 #-------------------
 def get_years(dset):
     if   dset == 'r1':
@@ -167,7 +167,7 @@ def float_pars(pdf):
             val = data.d_sig_ini[par.name]
             par.set_value(val)
 
-        data.log.info(f'{"":<4}{par.name:<20}{par.value():<20.3f}')
+        data.log.info(f'{"":<4}{par.name:<20}{par.value():>20.3f}')
 #-------------------
 def reset_sig_pars(pdf, d_val):
     l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
@@ -216,18 +216,22 @@ def get_cb_pdf(prefix):
     return sig
 #-------------------
 def get_signal_pdf(split_by_nspd = False, prefix=None):
-    prefix = f'_{prefix}' if prefix is not None else ''
+    if data.sig_pdf is not None:
+        return data.sig_pdf 
 
     if split_by_nspd:
-        pdf_1 = get_signal_pdf(prefix='1')
-        pdf_2 = get_signal_pdf(prefix='2')
-        pdf_3 = get_signal_pdf(prefix='3')
+        pdf_1 = get_cb_pdf(prefix='_1')
+        pdf_2 = get_cb_pdf(prefix='_2')
+        pdf_3 = get_cb_pdf(prefix='_3')
 
         sig   = get_nspd_signal([pdf_1, pdf_2, pdf_3])
+    else:
+        prefix = f'_{prefix}' if prefix is not None else ''
+        sig    = get_cb_pdf(prefix)
 
-        return sig
+    data.sig_pdf = sig
 
-    return get_cb_pdf(prefix)
+    return sig
 #-------------------
 def get_bkg_pdf():
     if data.bkg_pdf is not None:
@@ -244,18 +248,13 @@ def get_bkg_pdf():
     return bkg
 #-------------------
 def get_full_pdf(split_by_nspd): 
-    if data.sig_pdf is None:
-        sig          = get_signal_pdf(split_by_nspd)
-        data.sig_pdf = sig
-    else:
-        sig          = data.sig_pdf
-
+    sig = get_signal_pdf(split_by_nspd)
     bkg = get_bkg_pdf()
     pdf = zfit.pdf.SumPDF([sig, bkg])
 
-    data.log.info(f'Signal    : {sig}')
-    data.log.info(f'Background: {bkg}')
-    data.log.info(f'Model     : {pdf}')
+    data.log.debug(f'Signal    : {sig}')
+    data.log.debug(f'Background: {bkg}')
+    data.log.debug(f'Model     : {pdf}')
 
     return pdf
 #-------------------
@@ -278,7 +277,7 @@ def fix_pdf(pdf, d_fix):
         par.assign(fix_val)
         par.floating=False
 
-        data.log.info(f'{par.name:<20}{"->":<10}{fix_val:<20.3e}')
+        data.log.info(f'{par.name:<20}{"->":<10}{fix_val:>20.3e}')
 
     return pdf
 #-------------------
@@ -391,11 +390,11 @@ def make_table(trig=None, year=None, brem=None):
         df_sim    = add_nspd_col(df_sim)
         for i_nspd in [1,2,3]:
             df_sim_nspd = df_sim.Filter(f'nspd == {i_nspd}')
-            d_tmp       = fit(df_sim_nspd, d_fix=None, identifier=f'sim_{trig}_{year}_{brem}_{i_nspd}')
-            d_tmp       = { f'{key}_{i_nspd}' : val for key, val in d_tmp.items() }
-            d_sim_par.update(d_tmp)
+            d_tmp_1     = fit(df_sim_nspd, d_fix=None, identifier=f'sim_{trig}_{year}_{brem}_{i_nspd}_{data.sys}')
+            d_tmp_2     = { f'{key}_{i_nspd}' : val for key, val in d_tmp_1.items() }
+            d_sim_par.update(d_tmp_2)
     elif data.sys == 'nom':
-        d_sim_par = fit(df_sim, d_fix=None, identifier=f'sim_{trig}_{year}_{brem}')
+        d_sim_par = fit(df_sim, d_fix=None, identifier=f'sim_{trig}_{year}_{brem}_{data.sys}')
     else:
         data.log.error(f'Invalid systematic: {data.sys}')
         raise
