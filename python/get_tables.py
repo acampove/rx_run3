@@ -39,6 +39,9 @@ class data:
     sig_pdf  = None
     bkg_pdf  = None
 
+    mu       = zfit.Parameter('mu', 3060,  3040, 3100)
+    sg       = zfit.Parameter('sg',   20,    10,  100)
+
     d_sig_ini        =   {}
     d_sig_ini['mu'  ]= 3060
     d_sig_ini['sg'  ]= 20.0
@@ -142,12 +145,16 @@ def apply_selection(rdf, trig, year, proc):
 
     return rdf
 #-------------------
-def get_pdf(is_signal=None):
+def get_pdf(is_signal=None, split_by_nspd=None):
     if is_signal not in [True, False]:
         data.log.error('Signal flag not specified')
         raise
 
-    pdf = get_signal_pdf() if is_signal else get_full_pdf()
+    if split_by_nspd not in [True, False]:
+        data.log.error('split_by_nspd flag not specified')
+        raise
+
+    pdf = get_signal_pdf() if is_signal else get_full_pdf(split_by_nspd)
 
     return pdf
 #-------------------
@@ -174,34 +181,53 @@ def reset_sig_pars(pdf, d_val):
         par.set_value(val)
         data.log.info(f'{name:<20}{"->":<10}{val:<10.3}')
 #-------------------
-def get_signal_pdf():
-    if data.sig_pdf is not None:
-        return data.sig_pdf
+def get_nspd_signal(l_pdf):
+    fr1   = zfit.Parameter("fr1_nspd", 0.5,  0.0, 2./3.)
+    fr2   = zfit.Parameter("fr2_nspd", 1./3., 0.0, 1.0, floating=False)
 
-    mu    = zfit.Parameter('mu', 3060,  3040, 3100)
-    sg    = zfit.Parameter('sg',   20,    10,  100)
+    pdf   = zfit.pdf.SumPDF(pdfs=l_pdf, fracs=[fr1, fr2])
 
-    ap_r  = zfit.Parameter('ap_r',  1.0,  -10.0, 10.0)
-    pw_r  = zfit.Parameter('pw_r',  1.0,    0.1, 10.0)
-    sig_r = zfit.pdf.CrystalBall(obs=data.obs, mu=mu, sigma=sg, alpha=ap_r, n=pw_r)
+    nsg   = zfit.Parameter("nsg", 10000, 0, 100000)
+    epdf  = pdf.create_extended(nsg)
 
-    ap_l  = zfit.Parameter('ap_l', -1.0,  -10.0, 10.0)
-    pw_l  = zfit.Parameter('pw_l',  1.0,    0.1,  10.)
-    sig_l = zfit.pdf.CrystalBall(obs=data.obs, mu=mu, sigma=sg, alpha=ap_l, n=pw_l)
+    return epdf
+#-------------------
+def get_cb_pdf(prefix):
+    ap_r  = zfit.Parameter(f'ap_r{prefix}',  1.0,  -10.0, 10.0)
+    pw_r  = zfit.Parameter(f'pw_r{prefix}',  1.0,    0.1, 10.0)
+    sig_r = zfit.pdf.CrystalBall(obs=data.obs, mu=data.mu, sigma=data.sg, alpha=ap_r, n=pw_r)
 
-    ncbr  = zfit.Parameter('ncbr',  10,   0,  1000000)
-    sig_r = sig_r.create_extended(ncbr)
-    #sig_r.name='CBR'
+    ap_l  = zfit.Parameter(f'ap_l{prefix}', -1.0,  -10.0, 10.0)
+    pw_l  = zfit.Parameter(f'pw_l{prefix}',  1.0,    0.1,  10.)
+    sig_l = zfit.pdf.CrystalBall(obs=data.obs, mu=data.mu, sigma=data.sg, alpha=ap_l, n=pw_l)
 
-    ncbl  = zfit.Parameter('ncbl',  10,   0,  1000000)
-    sig_l = sig_l.create_extended(ncbl) 
-    #sig_l.name='CBL'
+    if prefix == '':
+        ncbr  = zfit.Parameter(f'ncbr{prefix}',  10,   0,  1000000)
+        sig_r = sig_r.create_extended(ncbr)
 
-    sig   = zfit.pdf.SumPDF([sig_r, sig_l])
-    
-    data.sig_pdf = sig
-    
+        ncbl  = zfit.Parameter(f'ncbl{prefix}',  10,   0,  1000000)
+        sig_l = sig_l.create_extended(ncbl) 
+
+        sig   = zfit.pdf.SumPDF([sig_r, sig_l])
+    else:
+        fr    = zfit.Parameter(f'fr_cb{prefix}', 0.5,  0.0, 1)
+        sig   = zfit.pdf.SumPDF([sig_r, sig_l], fracs=[fr])
+
     return sig
+#-------------------
+def get_signal_pdf(split_by_nspd = False, prefix=None):
+    prefix = f'_{prefix}' if prefix is not None else ''
+
+    if split_by_nspd:
+        pdf_1 = get_signal_pdf(prefix='1')
+        pdf_2 = get_signal_pdf(prefix='2')
+        pdf_3 = get_signal_pdf(prefix='3')
+
+        sig   = get_nspd_signal([pdf_1, pdf_2, pdf_3])
+
+        return sig
+
+    return get_cb_pdf(prefix)
 #-------------------
 def get_bkg_pdf():
     if data.bkg_pdf is not None:
@@ -217,11 +243,19 @@ def get_bkg_pdf():
 
     return bkg
 #-------------------
-def get_full_pdf(): 
-    sig = get_signal_pdf()
-    bkg = get_bkg_pdf()
+def get_full_pdf(split_by_nspd): 
+    if data.sig_pdf is None:
+        sig          = get_signal_pdf(split_by_nspd)
+        data.sig_pdf = sig
+    else:
+        sig          = data.sig_pdf
 
+    bkg = get_bkg_pdf()
     pdf = zfit.pdf.SumPDF([sig, bkg])
+
+    data.log.info(f'Signal    : {sig}')
+    data.log.info(f'Background: {bkg}')
+    data.log.info(f'Model     : {pdf}')
 
     return pdf
 #-------------------
@@ -236,9 +270,11 @@ def fix_pdf(pdf, d_fix):
     data.log.info('-----------------')
     for par in l_par:
         if par.name not in d_fix:
+            data.log.info(f'{par.name:<20}{"->":<10}{"floating":<20}')
             continue
+        else:
+            fix_val, _ = d_fix[par.name]
 
-        fix_val, _ = d_fix[par.name]
         par.assign(fix_val)
         par.floating=False
 
@@ -255,7 +291,14 @@ def fit(df, d_fix=None, identifier='unnamed'):
 
     is_signal = True if d_fix is None else False
 
-    pdf = get_pdf(is_signal)
+    if   identifier.endswith('_nspd'):
+        pdf = get_pdf(is_signal, split_by_nspd= True)
+    elif identifier.endswith( '_nom'):
+        pdf = get_pdf(is_signal, split_by_nspd=False)
+    else:
+        data.log.error(f'Invalid identifier: {identifier}')
+        raise
+
     if is_signal:
         float_pars(pdf)
         if os.path.isfile(jsn_path):
@@ -312,11 +355,21 @@ def plot_fit(dat, pdf, res, identifier):
 #-------------------
 def get_fix_pars(d_par):
     d_fix = dict(d_par)
+    for parname in d_par: 
+        if parname.startswith('mu') or parname.startswith('sg'):
+            del(d_fix[parname])
 
-    del(d_fix[  'mu'])
-    del(d_fix[  'sg'])
-    del(d_fix['ncbr'])
-    del(d_fix['ncbl'])
+    if data.sys == 'nspd':
+        for index in [1,2,3]:
+            ryld = d_fix[f'ncbr_{index}'][0]
+            lyld = d_fix[f'ncbl_{index}'][0]
+            d_fix[f'fr_cb_{index}'] = [ryld / (ryld + lyld), 0]
+
+            del(d_fix[f'ncbr_{index}'])
+            del(d_fix[f'ncbl_{index}'])
+    else:
+        del(d_fix['ncbr'])
+        del(d_fix['ncbl'])
 
     return d_fix
 #-------------------
@@ -343,12 +396,15 @@ def make_table(trig=None, year=None, brem=None):
             d_sim_par.update(d_tmp)
     elif data.sys == 'nom':
         d_sim_par = fit(df_sim, d_fix=None, identifier=f'sim_{trig}_{year}_{brem}')
+    else:
+        data.log.error(f'Invalid systematic: {data.sys}')
+        raise
 
     if data.sim_only:
         return 
 
     d_fix_par = get_fix_pars(d_sim_par)
-    _         = fit(df_dat, d_fix=d_fix_par, identifier=f'dat_{trig}_{year}_{brem}')
+    _         = fit(df_dat, d_fix=d_fix_par, identifier=f'dat_{trig}_{year}_{brem}_{data.sys}')
 #-------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
