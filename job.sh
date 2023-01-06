@@ -31,8 +31,9 @@ cd       $JOBDIR
 OFILE=q2syst_%{ClusterId}_%{ProcId}
 MEMORY=4000
 VERS=$1
+SYST=$2
 
 echo "NJOB=$NJOB"
 
-hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu %{ProcId} $VERS -mem $MEMORY bash/submit_q2sys.sh
+hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu %{ProcId} $VERS $SYST -mem $MEMORY bash/submit_q2sys.sh
 
