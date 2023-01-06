@@ -24,7 +24,6 @@ class data:
     l_sys    = ['nom', 'nspd']
 
     dat_vers = 'v10.11tf'
-    fraction = 1.0
     bdt_dir  = '/publicfs/ucas/user/campoverde/Data/RK/MVA/electron/bdt_v10.14.a0v2ss'
     b_mass   = 'B_const_mass_M[0]'
     j_mass   = 'Jpsi_M'
@@ -34,8 +33,10 @@ class data:
     brem     = None 
     sim_only = None
     plt_dir  = None 
+    fraction = None
 
-    obs      = zfit.Space('j_mass', limits=(2450, 3600))
+    zfit.settings.changed_warnings.hesse_name = False
+    obs      = zfit.Space('Jpsi_M', limits=(2450, 3600))
     sig_pdf  = None
     bkg_pdf  = None
 
@@ -120,12 +121,37 @@ def get_df(year, trig, brem, is_data=None):
 
     return rdf
 #-------------------
+def get_branches(rdf):
+    v_col = rdf.GetColumnNames()
+    l_col = [ str(col.c_str()) for col in v_col ]
+
+    l_branch = []
+    l_branch.append('b_mass')
+    l_branch.append('Jpsi_M')
+    l_branch.append('nSPDHits')
+
+    l_branch.append('nbrem')
+    l_branch.append('L1_HasBremAdded')
+    l_branch.append('L2_HasBremAdded')
+    
+    l_branch.append('L1_P')
+    l_branch.append('L2_P')
+
+    if 'Jpsi_TRUEID' in l_col:
+        l_branch.append('Jpsi_TRUEID')
+        l_branch.append('L1_TRUEID')
+        l_branch.append('L2_TRUEID')
+
+    return l_branch
+#-------------------
 def add_bdt(rdf, trig):
     rdf = rdf.Define('b_mass', data.b_mass)
-    rdf = rdf.Define('j_mass', data.j_mass)
     rdf = rdf.Define('nbrem' , 'L1_BremMultiplicity + L2_BremMultiplicity')
+    rdf = rdf.Redefine('L1_HasBremAdded', 'int(L1_HasBremAdded)')
+    rdf = rdf.Redefine('L2_HasBremAdded', 'int(L2_HasBremAdded)')
 
-    d_data        = rdf.AsNumpy(['b_mass', 'j_mass', 'nbrem', 'nSPDHits'])
+    l_branch      = get_branches(rdf)
+    d_data        = rdf.AsNumpy(l_branch)
     man           = mva_man(rdf, data.bdt_dir, trig)
     d_data['BDT'] = man.get_scores()
 
@@ -306,7 +332,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
             reset_sig_pars(pdf, d_par)
 
     pdf = fix_pdf(pdf, d_fix)
-    dat = df.AsNumpy(['j_mass'])['j_mass']
+    dat = df.AsNumpy(['Jpsi_M'])['Jpsi_M']
     dat = dat[~numpy.isnan(dat)]
 
     obj=zfitter(pdf, dat)
@@ -324,7 +350,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
         print(res)
         raise
 
-    res.hesse()
+    res.hesse(method='minuit_hesse')
     res.freeze()
 
     plot_fit(dat, pdf, res, identifier)
@@ -413,6 +439,7 @@ def get_args():
     parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , choices=data.l_brem)
     parser.add_argument('-s', '--sim'  ,            help='Do only simulation'                          , action='store_true')
     parser.add_argument('-x', '--sys'  , type =str, help='Systematic variabion'                        , choices=data.l_sys) 
+    parser.add_argument('-f', '--frac' , type =float, help='Fraction of data to process, for tests'    , default=1.0) 
     args = parser.parse_args()
 
     data.trig     = args.trig
@@ -420,6 +447,7 @@ def get_args():
     data.brem     = args.brem
     data.sim_only = args.sim
     data.sys      = args.sys
+    data.fraction = args.frac
     data.plt_dir  = utnr.make_dir_path(f'plots/fits/{args.vers}')
 #-------------------
 if __name__ == '__main__':
