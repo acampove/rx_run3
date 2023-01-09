@@ -10,13 +10,19 @@ from rk.dilep_reso import plot_reso
 #---------------------------------------------
 class data:
     log     = utnr.getLogger(__name__)
-    out_dir = 'output/resolution'
+    out_dir = None 
 #---------------------------------------------
-def get_data():
-    dat_dir   = os.environ['DATDIR']
-    file_path = f'{dat_dir}/ctrl_ee/v10.11tf/2018.root'
+def get_data(mc=None, trig='ETOS', year='2018'):
+    dat_dir = os.environ['DATDIR']
 
-    rdf = ROOT.RDataFrame('KEE', file_path)
+    if mc:
+        data.out_dir = 'output/resolution/mc'
+        file_path = f'cached/{year}_{trig}_ctrl_ee.root'
+    else:
+        data.out_dir = 'output/resolution/data'
+        file_path = f'cached/{year}_{trig}_data_ee.root'
+
+    rdf = ROOT.RDataFrame('tree', file_path)
 
     return rdf
 #---------------------------------------------
@@ -40,8 +46,7 @@ def dump_to_json(d_res, d_par, brem):
     utnr.dump_json(d_par, f'{data.out_dir}/json/par_brem_{brem}.json')
 #---------------------------------------------
 def main():
-    rdf     = get_data()
-
+    rdf = get_data(mc=True)
     get_resolution(rdf, 0)
 #---------------------------------------------
 if __name__ == '__main__':
