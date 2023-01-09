@@ -3,6 +3,7 @@ import utils_noroot as utnr
 import numpy
 import ROOT
 import os
+import argparse
 
 from rk.dilep_reso import calculator as calc_reso
 from rk.dilep_reso import plot_reso
@@ -12,6 +13,8 @@ from rk.boundaries import boundaries
 class data:
     log     = utnr.getLogger(__name__)
     out_dir = None 
+    brem    = None
+    sim     = None
 #---------------------------------------------
 def get_data(mc=None, trig='ETOS', year='2018'):
     dat_dir = os.environ['DATDIR']
@@ -51,8 +54,8 @@ def get_resolution(rdf, brem):
     d_bin['p1']   = arr_bin.tolist()
     d_bin['p2']   = arr_bin.tolist()
 
-    d_par         = get_pars(brem) if not rdf.is_mc else {}
-    obj           = calc_reso(rdf, binning=d_bin, fit=True, d_par=d_par)
+    d_par         = {} if rdf.is_mc else get_pars(brem)
+    obj           = calc_reso(rdf, binning=d_bin, fit=True, d_par=d_par, signal='cb')
     obj.plot_dir  = f'{data.out_dir}/plots'
     d_res, d_par  = obj.get_resolution(brem=brem)
 
@@ -65,9 +68,27 @@ def dump_to_json(d_res, d_par, brem):
     utnr.dump_json(d_res, f'{data.out_dir}/json/res_brem_{brem}.json')
     utnr.dump_json(d_par, f'{data.out_dir}/json/par_brem_{brem}.json')
 #---------------------------------------------
+def get_args():
+    parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
+    parser.add_argument('-b', '--brem', type=int, help='Brem category' , choices=[0, 1, 2], required=True)
+    parser.add_argument('-s', '--sim' , help='Will only do MC fit', action='store_true')
+
+    args = parser.parse_args()
+
+    data.brem = args.brem
+    data.sim  = args.sim
+#---------------------------------------------
 def main():
+    get_args()
+
+    rdf = get_data(mc=True)
+    get_resolution(rdf, data.brem)
+
+    if data.sim:
+        return
+
     rdf = get_data(mc=False)
-    get_resolution(rdf, 0)
+    get_resolution(rdf, data.brem)
 #---------------------------------------------
 if __name__ == '__main__':
     main()
