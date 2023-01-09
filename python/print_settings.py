@@ -3,8 +3,8 @@ import utils_noroot as utnr
 
 #-----------------------------
 class data:
-    log  = utnr.getLogger(__name__)
-    ijob = None
+    log    = utnr.getLogger(__name__)
+    ijob   = None
 
     l_trig = ['ETOS', 'GTIS']
     l_year = ['2011', '2012', '2015', '2016', '2017', '2018'] + ['r1', 'r2p1']
