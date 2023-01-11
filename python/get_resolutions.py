@@ -1,4 +1,3 @@
-
 import utils_noroot as utnr
 import numpy
 import ROOT
@@ -48,14 +47,25 @@ def get_pars(brem):
 
     return d_data_ref
 #---------------------------------------------
+def get_pdf_name(brem):
+    if   brem == 0:
+        return 'dscb'
+    elif brem == 1:
+        return 'johnson'
+    elif brem == 2:
+        return 'johnson'
+    else:
+        data.log.error(f'Invalid brem: {brem}')
+        raise
+#---------------------------------------------
 def get_resolution(rdf, brem):
-    arr_bin       = numpy.array([10**4.0, 10**4.2, 10**4.3, 10**4.4])#, 10**4.4, 10**4.5, 10**4.6, 10**4.7, 10**5 ])
+    arr_bin       = numpy.array([0., 15000., 19000., 25000., 30000., 50000, 100000])
     d_bin         = {}
     d_bin['p1']   = arr_bin.tolist()
     d_bin['p2']   = arr_bin.tolist()
 
     d_par         = {} if rdf.is_mc else get_pars(brem)
-    obj           = calc_reso(rdf, binning=d_bin, fit=True, d_par=d_par, signal='cb')
+    obj           = calc_reso(rdf, binning=d_bin, fit=True, d_par=d_par, signal=get_pdf_name(brem))
     obj.plot_dir  = f'{data.out_dir}/plots'
     d_res, d_par  = obj.get_resolution(brem=brem)
 
