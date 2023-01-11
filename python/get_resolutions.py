@@ -42,7 +42,6 @@ def get_pars(brem):
 
         del(d_par['mu'])
         del(d_par['sg'])
-        del(d_par['nsg'])
 
     d_data_ref = { boundaries(bounds) : d_par for bounds, d_par in d_data.items()}
 
