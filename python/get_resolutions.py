@@ -14,6 +14,7 @@ class data:
     out_dir = None 
     brem    = None
     sim     = None
+    l_ibin  = None
 #---------------------------------------------
 def get_data(mc=None, trig='ETOS', year='2018'):
     dat_dir = os.environ['DATDIR']
@@ -65,7 +66,7 @@ def get_resolution(rdf, brem):
     d_bin['p2']   = arr_bin.tolist()
 
     d_par         = {} if rdf.is_mc else get_pars(brem)
-    obj           = calc_reso(rdf, binning=d_bin, fit=True, d_par=d_par, signal=get_pdf_name(brem))
+    obj           = calc_reso(rdf, binning=d_bin, fit=True, d_par=d_par, signal=get_pdf_name(brem), l_ibin=data.l_ibin)
     obj.plot_dir  = f'{data.out_dir}/plots'
     d_res, d_par  = obj.get_resolution(brem=brem)
 
@@ -82,22 +83,18 @@ def get_args():
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
     parser.add_argument('-b', '--brem', type=int, help='Brem category' , choices=[0, 1, 2], required=True)
     parser.add_argument('-s', '--sim' , help='Will only do MC fit', action='store_true')
+    parser.add_argument('-i', '--ibin', nargs='+', help='List of bins (integers) to fit', default=[])
 
     args = parser.parse_args()
 
-    data.brem = args.brem
-    data.sim  = args.sim
+    data.brem   = args.brem
+    data.sim    = args.sim
+    data.l_ibin = args.ibin
 #---------------------------------------------
 def main():
     get_args()
 
-    rdf = get_data(mc=True)
-    get_resolution(rdf, data.brem)
-
-    if data.sim:
-        return
-
-    rdf = get_data(mc=False)
+    rdf = get_data(mc=data.sim)
     get_resolution(rdf, data.brem)
 #---------------------------------------------
 if __name__ == '__main__':
