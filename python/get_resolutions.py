@@ -5,7 +5,6 @@ import os
 import argparse
 
 from rk.dilep_reso import calculator as calc_reso
-from rk.dilep_reso import plot_reso
 from rk.boundaries import boundaries
 
 #---------------------------------------------
@@ -79,7 +78,7 @@ def dump_to_json(d_res, d_par, brem):
     utnr.dump_json(d_par, f'{data.out_dir}/json/par_brem_{brem}.json')
 #---------------------------------------------
 def get_args():
-    parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
+    parser = argparse.ArgumentParser(description='Used to fit data and MC to extract resolution parameters for mee in bins of the electron momentum')
     parser.add_argument('-b', '--brem', type=int, help='Brem category' , choices=[0, 1, 2], required=True)
     parser.add_argument('-s', '--sim' , help='Will only do MC fit', action='store_true')
     parser.add_argument('-i', '--ibin', nargs='+', help='List of bins (integers) to fit', default=[])
