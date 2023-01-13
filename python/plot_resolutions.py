@@ -10,7 +10,8 @@ class data:
     d_prange= { 0 : ( 10,  35), 1 : ( 20,  60), 2 : ( 30,  65) }
     d_rrange= { 0 : (120, 155), 1 : (130, 165), 2 : (115, 175) }
 
-    plot_dir = utnr.make_dir_path('output/resolution/plots')
+    plot_dir = utnr.make_dir_path(f'output/resolution/plots/{version}')
+    log      = utnr.getLogger(__name__)
 #----------------------------
 def par_to_res(d_par):
     d_res = {}
