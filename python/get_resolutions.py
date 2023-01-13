@@ -11,6 +11,8 @@ from rk.boundaries import boundaries
 class data:
     log     = utnr.getLogger(__name__)
     out_dir = None 
+
+    vers    = None
     brem    = None
     sim     = None
     l_ibin  = None
@@ -32,7 +34,7 @@ def get_data(mc=None, trig='ETOS', year='2018'):
 #---------------------------------------------
 def get_pars(brem):
     out_dir   = 'output/resolution/mc'
-    json_path = f'{out_dir}/json/par_brem_{brem}.json'
+    json_path = f'{out_dir}/json/{data.vers}/par_brem_{brem}.json'
 
     d_data = utnr.load_json(json_path)
     for sbin, d_par in d_data.items():
@@ -65,7 +67,7 @@ def get_resolution(rdf, brem):
 
     d_par         = {} if rdf.is_mc else get_pars(brem)
     obj           = calc_reso(rdf, binning=d_bin, fit=True, d_par=d_par, signal=get_pdf_name(brem), l_ibin=data.l_ibin)
-    obj.plot_dir  = f'{data.out_dir}/plots'
+    obj.plot_dir  = f'{data.out_dir}/plots/{data.vers}'
     d_res, d_par  = obj.get_resolution(brem=brem)
 
     dump_to_json(d_res, d_par, brem)
@@ -73,12 +75,27 @@ def get_resolution(rdf, brem):
 def dump_to_json(d_res, d_par, brem):
     d_res = { str(key) : val for key, val in d_res.items() }
     d_par = { str(key) : val for key, val in d_par.items() }
-    
-    utnr.dump_json(d_res, f'{data.out_dir}/json/res_brem_{brem}.json')
-    utnr.dump_json(d_par, f'{data.out_dir}/json/par_brem_{brem}.json')
+
+    res_path = f'{data.out_dir}/json/{data.vers}/res_brem_{brem}.json'
+    par_path = f'{data.out_dir}/json/{data.vers}/par_brem_{brem}.json'
+    if data.l_ibin == []:
+        data.log.info('Saving to JSON information for all bins')
+        utnr.dump_json(d_res, res_path)
+        utnr.dump_json(d_par, res_path)
+    else:
+        data.log.info(f'Updating parameters for bins: {data.l_ibin}')
+        d_res_old = utnr.load_json(res_path)
+        d_par_old = utnr.load_json(res_path)
+
+        d_res_old.update(d_res)
+        d_par_old.update(d_par)
+
+        utnr.dump_json(d_res_old, res_path)
+        utnr.dump_json(d_par_old, res_path)
 #---------------------------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to fit data and MC to extract resolution parameters for mee in bins of the electron momentum')
+    parser.add_argument('-v', '--vers', type=str, help='Version'       , required=True)
     parser.add_argument('-b', '--brem', type=int, help='Brem category' , choices=[0, 1, 2], required=True)
     parser.add_argument('-s', '--sim' , help='Will only do MC fit', action='store_true')
     parser.add_argument('-i', '--ibin', nargs='+', help='List of bins (integers) to fit', default=[])
@@ -87,6 +104,7 @@ def get_args():
 
     data.brem   = args.brem
     data.sim    = args.sim
+    data.vers   = args.vers
     data.l_ibin = args.ibin
 #---------------------------------------------
 def main():
