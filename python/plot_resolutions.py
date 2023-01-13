@@ -38,33 +38,10 @@ def plot_reso(kind, brem, src):
 
     rk_plot_reso(d_res_str, data.plot_dir, suffix=f'{kind}_{brem}_{src}', title=f'Brem {brem}; From: {src},{kind}', rng=zrange)
 #----------------------------
-def get_ratio(d_dt_str, d_mc_str):
-    d_rat_str = {}
-    for key in d_dt_str.keys():
-        val_dt = d_dt_str[key]
-        val_mc = d_mc_str[key]
-
-        d_rat_str[key] = val_dt / val_mc
-
-    return d_rat_str
-#----------------------------
 def plot_ratio(brem, src):
-    mc_path  = f'output/resolution/mc/json/{data.version}/{src}_brem_{brem}.json'
-    dt_path  = f'output/resolution/data/json/{data.version}/{src}_brem_{brem}.json'
-
-    d_mc_str = utnr.load_json(mc_path)
-    d_dt_str = utnr.load_json(dt_path)
-
-    if src == 'par':
-        d_mc_str = par_to_res(d_mc_str)
-        d_dt_str = par_to_res(d_dt_str)
-    else:
-        d_mc_str = d_mc_str
-        d_dt_str = d_dt_str
-
-    zrange = (0, 2)
-
-    d_rat_str = get_ratio(d_dt_str, d_mc_str) 
+    json_path = f'output/resolution/ratio/{data.version}/{src}_brem_{brem}.json'
+    d_rat_str = utnr.load_json(json_path)
+    zrange    = (0, 2)
 
     rk_plot_reso(d_rat_str, data.plot_dir, suffix=f'rat_{brem}_{src}', title=f'Brem {brem}; From: {src}, ratio', rng=zrange)
 #----------------------------
