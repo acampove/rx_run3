@@ -1,5 +1,9 @@
 import utils_noroot as utnr
 import argparse
+import ROOT
+import numpy
+
+from rk.boundaries import boundaries
 
 #-------------------------------------
 class data:
@@ -57,12 +61,45 @@ def get_args():
     data.version = args.vers
     data.out_dir = utnr.make_dir_path(f'output/resolution/ratio/{data.version}')
 #-------------------------------------
+def convert_to_hist(d_rat_str):
+    s_bound = set()
+    for sbound, _ in d_rat_str.items():
+        bnd = boundaries(sbound)
+        (p1, p2), _ = bnd.data
+        s_bound.add(p1)
+        s_bound.add(p2)
+
+    l_bound = list(s_bound)
+    nbin    = len(l_bound) - 1
+    l_bound.sort()
+    arr_bound = numpy.array(l_bound)
+
+    hist = ROOT.TH2F('hist', '', nbin, arr_bound, nbin, arr_bound)
+
+    for sbound, ratio in d_rat_str.items():
+        bnd = boundaries(sbound)
+        (p1, p2), (q1, q2) = bnd.data
+
+        pval = 0.5 * (p1 + p2)
+        qval = 0.5 * (q1 + q2)
+
+        hist.Fill(pval, qval, ratio)
+
+    return hist
+#-------------------------------------
 def main():
     get_args()
+    ofile = ROOT.TFile(f'{data.out_dir}/file.root', 'recreate')
     for kind in data.l_kind:
         for brem in data.l_brem:
             d_rat_str = get_ratio(kind, brem)
             utnr.dump_json(d_rat_str, f'{data.out_dir}/{kind}_brem_{brem}.json')
+
+            h_rat = convert_to_hist(d_rat_str)
+            h_rat.SetName(f'h_{kind}_brem_{brem}')
+            h_rat.Write()
+
+    ofile.Close()
 #-------------------------------------
 if __name__ == '__main__':
     main()
