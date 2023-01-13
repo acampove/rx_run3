@@ -85,13 +85,13 @@ def dump_to_json(d_res, d_par, brem):
     else:
         data.log.info(f'Updating parameters for bins: {data.l_ibin}')
         d_res_old = utnr.load_json(res_path)
-        d_par_old = utnr.load_json(res_path)
+        d_par_old = utnr.load_json(par_path)
 
         d_res_old.update(d_res)
         d_par_old.update(d_par)
 
         utnr.dump_json(d_res_old, res_path)
-        utnr.dump_json(d_par_old, res_path)
+        utnr.dump_json(d_par_old, par_path)
 #---------------------------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to fit data and MC to extract resolution parameters for mee in bins of the electron momentum')
