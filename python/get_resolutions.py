@@ -12,29 +12,44 @@ class data:
     log     = utnr.getLogger(__name__)
     out_dir = None 
 
+    dset    = None
+    trig    = None
     vers    = None
     brem    = None
     sim     = None
     l_ibin  = None
 #---------------------------------------------
-def get_data(mc=None, trig='ETOS', year='2018'):
-    dat_dir = os.environ['DATDIR']
-
+def get_data_path(mc=None, year=None):
     if mc:
-        data.out_dir = 'output/resolution/mc'
-        file_path = f'cached/{year}_{trig}_ctrl_ee.root'
+        file_path = f'cached/{year}_{data.trig}_ctrl_ee.root'
     else:
-        data.out_dir = 'output/resolution/data'
-        file_path = f'cached/{year}_{trig}_data_ee.root'
+        file_path = f'cached/{year}_{data.trig}_data_ee.root'
 
-    rdf = ROOT.RDataFrame('tree', file_path)
+    return file_path
+#---------------------------------------------
+def get_data(mc=None):
+    if   data.dset == 'r1': 
+        y1 = get_data_path(mc=mc, year='2011')
+        y2 = get_data_path(mc=mc, year='2012')
+
+        s_dset = {y1, y2}
+    elif data.dset == 'r2p1': 
+        y1 = get_data_path(mc=mc, year='2011')
+        y2 = get_data_path(mc=mc, year='2012')
+
+        s_dset = {y1, y2}
+    else:
+        y1 = get_data_path(mc=mc, year=data.dset)
+        s_dset = {y1}
+
+    rdf = ROOT.RDataFrame('tree', s_dset)
     rdf.is_mc = mc
 
     return rdf
 #---------------------------------------------
 def get_pars(brem):
     out_dir   = 'output/resolution/mc'
-    json_path = f'{out_dir}/json/{data.vers}/par_brem_{brem}.json'
+    json_path = f'{out_dir}/json/{data.vers}/{data.trig}_{data.dset}/par_brem_{brem}.json'
 
     d_data = utnr.load_json(json_path)
     for sbin, d_par in d_data.items():
@@ -67,7 +82,7 @@ def get_resolution(rdf, brem):
 
     d_par         = {} if rdf.is_mc else get_pars(brem)
     obj           = calc_reso(rdf, binning=d_bin, fit=True, d_par=d_par, signal=get_pdf_name(brem), l_ibin=data.l_ibin)
-    obj.plot_dir  = f'{data.out_dir}/plots/{data.vers}'
+    obj.plot_dir  = f'{data.out_dir}/plots/{data.vers}/{data.trig}_{data.dset}'
     d_res, d_par  = obj.get_resolution(brem=brem)
 
     dump_to_json(d_res, d_par, brem)
@@ -76,12 +91,12 @@ def dump_to_json(d_res, d_par, brem):
     d_res = { str(key) : val for key, val in d_res.items() }
     d_par = { str(key) : val for key, val in d_par.items() }
 
-    res_path = f'{data.out_dir}/json/{data.vers}/res_brem_{brem}.json'
-    par_path = f'{data.out_dir}/json/{data.vers}/par_brem_{brem}.json'
+    res_path = f'{data.out_dir}/json/{data.vers}/{data.trig}_{data.dset}/res_brem_{brem}.json'
+    par_path = f'{data.out_dir}/json/{data.vers}/{data.trig}_{data.dset}/par_brem_{brem}.json'
     if data.l_ibin == []:
         data.log.info('Saving to JSON information for all bins')
         utnr.dump_json(d_res, res_path)
-        utnr.dump_json(d_par, res_path)
+        utnr.dump_json(d_par, par_path)
     else:
         data.log.info(f'Updating parameters for bins: {data.l_ibin}')
         d_res_old = utnr.load_json(res_path)
@@ -95,17 +110,22 @@ def dump_to_json(d_res, d_par, brem):
 #---------------------------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to fit data and MC to extract resolution parameters for mee in bins of the electron momentum')
+    parser.add_argument('-d', '--dset', type=str, help='Dataset'       , required=True, choices= ['r1', 'r2p1', '2017', '2018'])
+    parser.add_argument('-t', '--trig', type=str, help='Trigger'       , required=True, choices= ['ETOS', 'GTIS'])
+    parser.add_argument('-b', '--brem', type=int, help='Brem category' , required=True, choices= [0, 1, 2])
     parser.add_argument('-v', '--vers', type=str, help='Version'       , required=True)
-    parser.add_argument('-b', '--brem', type=int, help='Brem category' , choices=[0, 1, 2], required=True)
     parser.add_argument('-s', '--sim' , help='Will only do MC fit', action='store_true')
     parser.add_argument('-i', '--ibin', nargs='+', help='List of bins (integers) to fit', default=[])
 
     args = parser.parse_args()
 
+    data.dset   = args.dset
+    data.trig   = args.trig
+    data.vers   = args.vers
     data.brem   = args.brem
     data.sim    = args.sim
-    data.vers   = args.vers
     data.l_ibin = args.ibin
+    data.out_dir= 'output/resolution/mc' if data.sim else 'output/resolution/data'
 #---------------------------------------------
 def main():
     get_args()
