@@ -9,6 +9,8 @@ from rk.boundaries import boundaries
 class data:
     out_dir = None
     version = None
+    dset    = None
+    trig    = None
 
     l_kind  = ['par', 'res']
     l_brem  = [ 0, 1, 2 ]
@@ -36,8 +38,8 @@ def calculate_ratio(d_dt_str, d_mc_str):
     return d_rat_str
 #-------------------------------------
 def get_ratio(kind, brem):
-    mc_path  = f'output/resolution/mc/json/{data.version}/{kind}_brem_{brem}.json'
-    dt_path  = f'output/resolution/data/json/{data.version}/{kind}_brem_{brem}.json'
+    mc_path  = f'output/resolution/mc/json/{data.version}/{data.trig}_{data.dset}/{kind}_brem_{brem}.json'
+    dt_path  = f'output/resolution/data/json/{data.version}/{data.trig}_{data.dset}/{kind}_brem_{brem}.json'
 
     d_mc_str = utnr.load_json(mc_path)
     d_dt_str = utnr.load_json(dt_path)
@@ -56,9 +58,13 @@ def get_ratio(kind, brem):
 def get_args():
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
     parser.add_argument('-v', '--vers', help='Version of fits', type=str, required=True) 
+    parser.add_argument('-d', '--dset', help='Dataset'        , type=str, required=True, choices=['r1', 'r2p1', '2017', '2018']) 
+    parser.add_argument('-t', '--trig', help='Trigger'        , type=str, required=True, choices=['ETOS', 'GTIS']) 
     args = parser.parse_args()
 
     data.version = args.vers
+    data.dset    = args.dset
+    data.trig    = args.trig
     data.out_dir = utnr.make_dir_path(f'output/resolution/ratio/{data.version}')
 #-------------------------------------
 def convert_to_hist(d_rat_str):
@@ -89,11 +95,11 @@ def convert_to_hist(d_rat_str):
 #-------------------------------------
 def main():
     get_args()
-    ofile = ROOT.TFile(f'{data.out_dir}/file.root', 'recreate')
+    ofile = ROOT.TFile(f'{data.out_dir}/{data.dset}_{data.trig}.root', 'recreate')
     for kind in data.l_kind:
         for brem in data.l_brem:
             d_rat_str = get_ratio(kind, brem)
-            utnr.dump_json(d_rat_str, f'{data.out_dir}/{kind}_brem_{brem}.json')
+            utnr.dump_json(d_rat_str, f'{data.out_dir}/{data.trig}_{data.dset}/{kind}_brem_{brem}.json')
 
             h_rat = convert_to_hist(d_rat_str)
             h_rat.SetName(f'h_{kind}_brem_{brem}')
