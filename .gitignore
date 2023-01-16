@@ -4,6 +4,7 @@
 *.png
 *.pkl
 *.tex
+*.txt
 *.log
 *.json
 
