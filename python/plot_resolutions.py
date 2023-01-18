@@ -103,7 +103,6 @@ def get_args():
     data.l_dset  = args.dset
     data.l_trig  = args.trig
     data.l_kind  = args.kind
-
 #----------------------------
 def main():
     get_args()
