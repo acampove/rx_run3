@@ -56,8 +56,11 @@ def get_pars(brem):
         if 'inf' in sbin:
             continue
 
-        del(d_par['mu'])
-        del(d_par['sg'])
+        if d_par == {}:
+            d_par = None
+        else:
+            del(d_par['mu'])
+            del(d_par['sg'])
 
     d_data_ref = { boundaries(bounds) : d_par for bounds, d_par in d_data.items()}
 
