@@ -34,8 +34,8 @@ def get_data(mc=None):
 
         s_dset = {y1, y2}
     elif data.dset == 'r2p1': 
-        y1 = get_data_path(mc=mc, year='2011')
-        y2 = get_data_path(mc=mc, year='2012')
+        y1 = get_data_path(mc=mc, year='2015')
+        y2 = get_data_path(mc=mc, year='2016')
 
         s_dset = {y1, y2}
     else:
@@ -78,7 +78,11 @@ def get_pdf_name(brem):
         raise
 #---------------------------------------------
 def get_resolution(rdf, brem):
-    arr_bin       = numpy.array([0., 15000., 19000., 25000., 30000., 50000, 100000])
+    if data.trig == 'ETOS':
+        arr_bin = numpy.array([0., 15000., 19000., 25000., 30000., 50000, 100000])
+    else:
+        arr_bin = numpy.array([0., 11000., 15000., 21000., 30000, 100000])
+
     d_bin         = {}
     d_bin['p1']   = arr_bin.tolist()
     d_bin['p2']   = arr_bin.tolist()
