@@ -14,9 +14,9 @@ class data:
     l_brem  = None
 
     l_all_kind = ['data', 'mc']
-    l_all_brem = [ 0, 1, 2 ]
-    l_all_dset = [ 'r1', 'r2p1', '2017', '2018' ]
-    l_all_trig = [ 'ETOS', 'GTIS' ]
+    l_all_brem = ['0', '1', '2' ]
+    l_all_dset = ['r1', 'r2p1', '2017', '2018' ]
+    l_all_trig = ['ETOS', 'GTIS' ]
 
     l_src   = ['par', 'res']
     d_prange= { '0' : ( 10,  35), '1' : ( 20,  60), '2' : ( 30,  65) }
