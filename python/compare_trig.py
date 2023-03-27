@@ -10,14 +10,13 @@ class data:
     log    = utnr.getLogger(__name__)
     l_trig = ['ETOS', 'GTIS']
     l_brem = ['0', '1', '2']
-    l_year = ['2011', '2012', '2015', '2016', '2017', '2018']
+    l_year = ['r1', 'r2p1', '2017', '2018']
     l_par  = ['delta_m', 'mu_MC', 's_sigma']
 
-    plot_dir = utnr.make_dir_path('plots/comparison')
-    l_vers   = None
+    plot_dir = None 
+    version  = None
 
-    d_range_tos = {'delta_m' : (-10, 10), 'mu_MC' : (3068, 3085), 's_sigma' : (1.00, 1.25) }
-    d_range_tis = {'delta_m' : (-20, 10), 'mu_MC' : (3050, 3085), 's_sigma' : (1.00, 1.25) }
+    d_range  = {'delta_m' : (-20, 20), 'mu_MC' : (3050, 3085), 's_sigma' : (0.90, 1.30) }
 #-----------------------------------------
 def get_pars(vers, trig, brem, year):
     cal_dir = os.environ['CALDIR']
@@ -44,17 +43,17 @@ def get_pars(vers, trig, brem, year):
 #-----------------------------------------
 def get_rows(trig, brem, year):
     l_row = []
-    for vers in data.l_vers:
+    for vers in [data.version]:
         d_par=get_pars(vers, trig, brem, year)
 
         for var, [val, err] in d_par.items():
-            row=[year, brem, trig, var, val, err, vers]
+            row=[year, brem, trig, var, val, err]
             l_row.append(row)
 
     return l_row
 #-----------------------------------------
 def get_df():
-    df = pnd.DataFrame(columns=['year', 'brem', 'trig', 'par_name', 'par_val', 'par_err', 'version'])
+    df = pnd.DataFrame(columns=['year', 'brem', 'trig', 'par_name', 'par_val', 'par_err'])
     for trig in data.l_trig:
         for brem in data.l_brem:
             for year in data.l_year:
@@ -70,30 +69,30 @@ def main():
         for trig in data.l_trig:
             for par in data.l_par:
                 df_f = df  [  df.year     == year]
-                df_f = df_f[df_f.trig     == trig]
                 df_f = df_f[df_f.par_name ==  par]
 
                 ax = None
-                for version, df_v in df_f.groupby('version'):
-                    ax=df_v.plot(x='brem', y='par_val', yerr='par_err', ax=ax, label=version)
+                for trigger, df_t in df_f.groupby('trig'):
+                    ax=df_t.plot(x='brem', y='par_val', yerr='par_err', ax=ax, label=trigger, capsize=4)
 
-                miny, maxy = data.d_range_tos[par] if trig == 'ETOS' else data.d_range_tis[par]
+                miny, maxy = data.d_range[par]
                 ax.set_ylim(miny, maxy)
 
-                plt_path = f'{data.plot_dir}/{year}_{trig}_{par}.png'
+                plt_path = f'{data.plot_dir}/{year}_{par}.png'
                 data.log.visible(f'Saving to: {plt_path}')
                 plt.grid()
-                plt.title(f'{trig}; {year}')
+                plt.title(f'{data.version}; {year}')
                 plt.ylabel(par)
                 plt.savefig(plt_path)
                 plt.close('all')
 #-----------------------------------------
 def get_args():
-    parser = argparse.ArgumentParser(description='Used to perform comparisons between versions of q2 smearing factors')
-    parser.add_argument('-v', '--versions' , nargs='+', help='Versions to compare')
+    parser = argparse.ArgumentParser(description='Used to perform comparison between triggeers of q2 smearing factors')
+    parser.add_argument('-v', '--version' , type=str, help='Version of scale factor')
     args = parser.parse_args()
 
-    data.l_vers = args.versions
+    data.version  = args.version
+    data.plot_dir = utnr.make_dir_path(f'plots/comparison_trigger/{data.version}')
 #-----------------------------------------
 if __name__ == '__main__':
     get_args()
