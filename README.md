@@ -1,3 +1,7 @@
+# q2 systematics
+
+This project is used to assess the systematics associated to q2 smearing. 
+
 # Installation
 
 Make a virtual environment like:
@@ -6,22 +10,14 @@ Make a virtual environment like:
 mamba create -n q2_systematics root=6.28 python=3.9
 ```
 
-# q2 systematics
-
-This project is used to assess the systematics associated to q2 smearing. The environment used to run is in 
-`yml/environment_droplet.yml` 
-To setup the environment do:
-
-```bash
-conda env create -f environment_droplet.yml
-```
+# Usage
 
 ## Nominal and nSPD binning systematics
 
 In order to get the smearing factors run:
 
 ```bash
-python python/get_tables.py -v vx -t [ETOS,GTIS] -y [2011,2012...] -b [0,1,2] -x [nom, nspd]
+get_tables -v vx -t [ETOS,GTIS] -y [2011,2012...] -b [0,1,2] -x [nom, nspd]
 ```
 
 with `vx` as the name of the directory where output will go. Other options for running over specific years can be checked with:
