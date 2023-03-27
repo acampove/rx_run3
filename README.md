@@ -23,7 +23,7 @@ get_tables -v vx -t [ETOS,GTIS] -y [2011,2012...] -b [0,1,2] -x [nom, nspd]
 with `vx` as the name of the directory where output will go. Other options for running over specific years can be checked with:
 
 ```bash
-python python/get_tables.py -h
+get_tables -h
 ```
 The code will:
 
@@ -37,7 +37,7 @@ The code will:
 Run:
 
 ```bash
-python python/get_resolutions.py -d 2017 -t GTIS -b 0 -v v8 -s
+get_resolutions -d 2017 -t GTIS -b 0 -v v8 -s
 ```
 
 to run the fits to the simulation, for a given dataset, trigger and brem category, for data drop `-s`. 

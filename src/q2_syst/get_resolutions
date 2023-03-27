@@ -13,6 +13,7 @@ from rk.boundaries import boundaries
 class data:
     log     = utnr.getLogger(__name__)
     out_dir = None 
+    cas_dir = os.environ['CASDIR']
 
     dset    = None
     trig    = None
@@ -23,9 +24,9 @@ class data:
 #---------------------------------------------
 def get_data_path(mc=None, year=None):
     if mc:
-        file_path = f'cached/{year}_{data.trig}_ctrl_ee.root'
+        file_path = f'{data.cas_dir}/q2_systematics/{year}_{data.trig}_ctrl_ee.root'
     else:
-        file_path = f'cached/{year}_{data.trig}_data_ee.root'
+        file_path = f'{data.cas_dir}/q2_systematics/{year}_{data.trig}_data_ee.root'
 
     return file_path
 #---------------------------------------------

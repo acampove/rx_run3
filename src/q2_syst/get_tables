@@ -19,6 +19,8 @@ class data:
     log      = utnr.getLogger(__name__)
     cal_dir  = os.environ['CALDIR']
     dat_dir  = os.environ['DATDIR']
+    cas_dir  = os.environ['CASDIR']
+    mva_dir  = os.environ['MVADIR']
 
     l_trig   = ['ETOS', 'GTIS']
     l_year   = ['2011', '2012', '2015', '2016', '2017', '2018', 'r1', 'r2p1']
@@ -26,7 +28,7 @@ class data:
     l_sys    = ['nom', 'nspd']
 
     dat_vers = 'v10.11tf'
-    bdt_dir  = '/publicfs/ucas/user/campoverde/Data/RK/MVA/electron/bdt_v10.14.a0v2ss'
+    bdt_dir  = f'{mva_dir}/electron/bdt_v10.14.a0v2ss'
     b_mass   = 'B_const_mass_M[0]'
     j_mass   = 'Jpsi_M'
 
@@ -66,8 +68,9 @@ def get_years(dset):
     return l_year
 #-------------------
 def get_cached_paths(dset, trig, proc):
-    l_year = get_years(dset)
-    l_path = [ f'cached/{year}_{trig}_{proc}.root' for year in l_year ]
+    l_year    = get_years(dset)
+    cache_dir = f'{data.cas_dir}/q2_systematics'
+    l_path    = [ f'{cache_dir}/{year}_{trig}_{proc}.root' for year in l_year ]
 
     all_found = True 
     for path in l_path:
