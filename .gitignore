@@ -187,3 +187,5 @@ pyrightconfig.json
 
 __pycache__
 
+!requirements.txt
+

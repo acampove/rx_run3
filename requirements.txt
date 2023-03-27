@@ -1,0 +1,8 @@
+generic-analysis-scripts>=0.0.8
+rx-tools>=0.0.4
+matplotlib
+pandas
+numpy
+zfit
+jacobi
+
