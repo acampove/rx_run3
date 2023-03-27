@@ -1,8 +1,16 @@
 # q2 systematics
 
-This project is used to assess the systematics associated to q2 smearing. In order to get the smearing factors run:
+This project is used to assess the systematics associated to q2 smearing. The environment used to run is in 
+`yml/environment_droplet.yml` 
+To setup the environment do:
+
+```bash
+conda env create -f environment_droplet.yml
+```
 
 ## Nominal and nSPD binning systematics
+
+In order to get the smearing factors run:
 
 ```bash
 python python/get_tables.py -v vx -t [ETOS,GTIS] -y [2011,2012...] -b [0,1,2] -x [nom, nspd]
@@ -28,15 +36,25 @@ Run:
 python python/get_resolutions.py -d 2017 -t GTIS -b 0 -v v8 -s
 ```
 
+to run the fits to the simulation, for a given dataset, trigger and brem category, for data drop `-s`. 
+The version is only used to name the output directory.
+
 ## Jobs
 
 However, to speed things up, one can send the jobs to the cluster to run in parallel for each dataset with:
 
 ```bash
-./job.sh vx
+./job.sh vx q2sys [nom, nspd]
+```
+for nominal and `nSPD` systematics and:
+
+```bash
+./job.sh vx q2mom [0,1]
 ```
 
-## Getting the calibration files
+for the momentum dependent $q^2$ smearing, for simulation or data (1, 0).
+
+## Getting the calibration files for nom and nSPD
 
 the outputs will need to be merged with:
 
@@ -45,6 +63,22 @@ python python/merge.py -i vx -o vy
 ```
 
 where `vx` is the version described before and `vy` is the version of the calibration files. Comparisons between versions can be got with:
+
+## Getting the calibration files for momentum dependence systematics
+
+Run:
+
+```bash
+python python/dump_ratios.py -v vx
+```
+
+to produce JSON files and ROOT files with the $\sigma_{data}/\sigma_{MC}$ ratios. 
+
+## Plot resolution maps
+
+```bash
+python python/plot_resolutions.py -v vx
+```
 
 ## Making comparison plots
 
