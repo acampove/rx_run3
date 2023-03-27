@@ -1,3 +1,11 @@
+# Installation
+
+Make a virtual environment like:
+
+```bash
+mamba create -n q2_systematics root=6.28 python=3.9
+```
+
 # q2 systematics
 
 This project is used to assess the systematics associated to q2 smearing. The environment used to run is in 
