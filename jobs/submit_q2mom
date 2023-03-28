@@ -9,7 +9,7 @@ VERS=$2
 ISSM=$3
 CACHE_NAME=settings_$IJOB.txt
 
-print_settings -d -i $IJOB > $CACHE_NAME 
+print_q2_settings -d -i $IJOB > $CACHE_NAME 
 
 DSET=$(cat $CACHE_NAME | grep YEAR | awk -F '=' '{print$2}')
 TRIG=$(cat $CACHE_NAME | grep TRIG | awk -F '=' '{print$2}')

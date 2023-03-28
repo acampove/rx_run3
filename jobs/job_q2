@@ -3,13 +3,15 @@
 #-------------------------------------------------------------------
 get_args()
 {
-    while getopts k:v:t: option
+    REAL=0
+    while getopts k:v:t:r: option
     do
 	case "${option}"
 	    in
 	    k)KIND=${OPTARG};;
 	    v)VERS=${OPTARG};;
 	    t)THIRD=${OPTARG};;
+	    r)REAL=${OPTARG};;
 	esac
     done
 }
@@ -27,13 +29,17 @@ prepare()
     JOBDIR=$JOBDIR"_"$DATE
 
     mkdir -p $JOBDIR
-    CDIR=$(pwd -P)
     cd $JOBDIR
-    
+
     OFILE=$KIND_%{ClusterId}_%{ProcId}
     MEMORY=4000
+
+    if [[ $REAL -ne 1 ]];then
+	NJOB=1
+    fi
     
     echo "NJOB=$NJOB"
+    echo "JOBDIR=$JOBDIR"
 }
 #-------------------------------------------------------------------
 submit()
