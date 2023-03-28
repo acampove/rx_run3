@@ -12,7 +12,7 @@ from rk.boundaries import boundaries
 #---------------------------------------------
 class data:
     log     = utnr.getLogger(__name__)
-    out_dir = None 
+    qsqsys  = os.environ['QSQSYS']
     cas_dir = os.environ['CASDIR']
 
     dset    = None
@@ -51,7 +51,7 @@ def get_data(mc=None):
     return rdf
 #---------------------------------------------
 def get_pars(brem):
-    out_dir   = 'output/resolution/mc'
+    out_dir   = '{data.qsqsys}/get_q2_resolutions/mc'
     json_path = f'{out_dir}/json/{data.vers}/{data.trig}_{data.dset}/par_brem_{brem}.json'
 
     d_data = utnr.load_json(json_path)
@@ -135,7 +135,7 @@ def get_args():
     data.brem   = args.brem
     data.sim    = args.sim
     data.l_ibin = args.ibin
-    data.out_dir= 'output/resolution/mc' if data.sim else 'output/resolution/data'
+    data.out_dir= f'{data.qsqsys}/get_q2_resolutions/mc' if data.sim else f'{data.qsqsys}/get_q2_resolutions/data'
 #---------------------------------------------
 def main():
     get_args()
