@@ -2,14 +2,14 @@
 
 source $HOME/.bashrc
 conda_init
-conda activate py3p10
+conda activate q2_syst 
 
 IJOB=$1
 VERS=$2
 ISSM=$3
 CACHE_NAME=settings_$IJOB.txt
 
-python python/print_settings.py -d -i $IJOB > $CACHE_NAME 
+print_settings -d -i $IJOB > $CACHE_NAME 
 
 DSET=$(cat $CACHE_NAME | grep YEAR | awk -F '=' '{print$2}')
 TRIG=$(cat $CACHE_NAME | grep TRIG | awk -F '=' '{print$2}')
@@ -19,9 +19,9 @@ echo "$DSET, $TRIG, $BREM, $VERS, $ISSM"
 
 if [[ $ISSM -eq 1 ]];then
     echo "Doing simulation"
-    python python/get_resolutions.py -d $DSET -t $TRIG -b $BREM -v $VERS -s
+    get_q2_resolutions -d $DSET -t $TRIG -b $BREM -v $VERS -s
 else
     echo "Doing data"
-    python python/get_resolutions.py -d $DSET -t $TRIG -b $BREM -v $VERS
+    get_q2_resolutions -d $DSET -t $TRIG -b $BREM -v $VERS
 fi
 
