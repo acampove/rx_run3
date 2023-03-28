@@ -51,7 +51,7 @@ def get_data(mc=None):
     return rdf
 #---------------------------------------------
 def get_pars(brem):
-    out_dir   = '{data.qsqsys}/get_q2_resolutions/mc'
+    out_dir   = f'{data.qsqsys}/get_q2_resolutions/mc'
     json_path = f'{out_dir}/json/{data.vers}/{data.trig}_{data.dset}/par_brem_{brem}.json'
 
     d_data = utnr.load_json(json_path)
@@ -124,7 +124,7 @@ def get_args():
     parser.add_argument('-t', '--trig', type=str, help='Trigger'       , required=True, choices= ['ETOS', 'GTIS'])
     parser.add_argument('-b', '--brem', type=int, help='Brem category' , required=True, choices= [0, 1, 2])
     parser.add_argument('-v', '--vers', type=str, help='Version'       , required=True)
-    parser.add_argument('-s', '--sim' , help='Will only do MC fit', action='store_true')
+    parser.add_argument('-s', '--sim' , help='Will only do MC fit'     , action='store_true')
     parser.add_argument('-i', '--ibin', nargs='+', help='List of bins (integers) to fit', default=[])
 
     args = parser.parse_args()
