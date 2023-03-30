@@ -3,6 +3,7 @@
 import utils_noroot                as utnr
 import matplotlib.pyplot           as plt
 import os
+import re
 import zfit
 import numpy
 import argparse
@@ -39,6 +40,7 @@ class data:
     sim_only = None
     plt_dir  = None 
     fraction = None
+    d_sim_par= None
 
     zfit.settings.changed_warnings.hesse_name = False
     obs      = zfit.Space('Jpsi_M', limits=(2450, 3600))
@@ -47,6 +49,9 @@ class data:
 
     mu       = zfit.Parameter('mu', 3060,  3040, 3100)
     sg       = zfit.Parameter('sg',   20,    10,  100)
+
+    dmu      = zfit.Parameter('dmu', 0, 0.0, 50.0)
+    rsg      = zfit.Parameter('rsg', 1, 0.7,  1.4)
 
     d_sig_ini        =   {}
     d_sig_ini['mu'  ]= 3060
@@ -224,26 +229,47 @@ def get_nspd_signal(l_pdf):
 
     return epdf
 #-------------------
-def get_cb_pdf(prefix):
+def get_cb_pdf():
+    ap_r  = zfit.Parameter('ap_r',  1.0,  -10.0, 10.0)
+    pw_r  = zfit.Parameter('pw_r',  1.0,    0.1, 10.0)
+    sig_r = zfit.pdf.CrystalBall(obs=data.obs, mu=data.mu, sigma=data.sg, alpha=ap_r, n=pw_r)
+
+    ap_l  = zfit.Parameter('ap_l', -1.0,  -10.0, 10.0)
+    pw_l  = zfit.Parameter('pw_l',  1.0,    0.1,  10.)
+    sig_l = zfit.pdf.CrystalBall(obs=data.obs, mu=data.mu, sigma=data.sg, alpha=ap_l, n=pw_l)
+
+    ncbr  = zfit.Parameter('ncbr',  10,   0,  1000000)
+    sig_r = sig_r.create_extended(ncbr)
+
+    ncbl  = zfit.Parameter('ncbl',  10,   0,  1000000)
+    sig_l = sig_l.create_extended(ncbl) 
+
+    sig   = zfit.pdf.SumPDF([sig_r, sig_l])
+
+    return sig
+#-------------------
+def get_nspd_data_pars(preffix=''):
+    sim_mu = zfit.param.ConstantParameter('sim_mu{preffix}', data.d_sim_par['mu{preffix}'])
+    sim_sg = zfit.param.ConstantParameter('sim_sg{preffix}', data.d_sim_par['sg{preffix}'])
+
+    dat_mu = zfit.ComposedParameter('dat_mu{preffix}', lambda d_par : d_par['dmu'] + d_par['sim_mu{preffix}'], {'dmu' : data.dmu, 'sim_mu{preffix}' : sim_mu1} )
+    dat_sg = zfit.ComposedParameter('dat_sg{preffix}', lambda d_par : d_par['rsg'] * d_par['sim_sg{preffix}'], {'rsg' : data.rsg, 'sim_sg{preffix}' : sim_sg1} )
+
+    return dat_mu, dat_sg
+#-------------------
+def get_cb_nspd_pdf(prefix=''):
+    mu,sg = get_nspd_data_pars(preffix)
+
     ap_r  = zfit.Parameter(f'ap_r{prefix}',  1.0,  -10.0, 10.0)
     pw_r  = zfit.Parameter(f'pw_r{prefix}',  1.0,    0.1, 10.0)
-    sig_r = zfit.pdf.CrystalBall(obs=data.obs, mu=data.mu, sigma=data.sg, alpha=ap_r, n=pw_r)
+    sig_r = zfit.pdf.CrystalBall(obs=data.obs, mu=mu, sigma=sg, alpha=ap_r, n=pw_r)
 
     ap_l  = zfit.Parameter(f'ap_l{prefix}', -1.0,  -10.0, 10.0)
     pw_l  = zfit.Parameter(f'pw_l{prefix}',  1.0,    0.1,  10.)
-    sig_l = zfit.pdf.CrystalBall(obs=data.obs, mu=data.mu, sigma=data.sg, alpha=ap_l, n=pw_l)
+    sig_l = zfit.pdf.CrystalBall(obs=data.obs, mu=mu, sigma=sg, alpha=ap_l, n=pw_l)
 
-    if prefix == '':
-        ncbr  = zfit.Parameter(f'ncbr{prefix}',  10,   0,  1000000)
-        sig_r = sig_r.create_extended(ncbr)
-
-        ncbl  = zfit.Parameter(f'ncbl{prefix}',  10,   0,  1000000)
-        sig_l = sig_l.create_extended(ncbl) 
-
-        sig   = zfit.pdf.SumPDF([sig_r, sig_l])
-    else:
-        fr    = zfit.Parameter(f'fr_cb{prefix}', 0.5,  0.0, 1)
-        sig   = zfit.pdf.SumPDF([sig_r, sig_l], fracs=[fr])
+    fr    = zfit.Parameter(f'fr_cb{prefix}', 0.5,  0.0, 1)
+    sig   = zfit.pdf.SumPDF([sig_r, sig_l], fracs=[fr])
 
     return sig
 #-------------------
@@ -252,14 +278,10 @@ def get_signal_pdf(split_by_nspd = False, prefix=None):
         return data.sig_pdf 
 
     if split_by_nspd:
-        pdf_1 = get_cb_pdf(prefix='_1')
-        pdf_2 = get_cb_pdf(prefix='_2')
-        pdf_3 = get_cb_pdf(prefix='_3')
-
-        sig   = get_nspd_signal([pdf_1, pdf_2, pdf_3])
+        l_pdf = [ get_cb_nspd_pdf(prefix=f'_{i_nspd}') for i_nspd in [1, 2, 3] ]
+        sig   = get_nspd_signal(l_pdf)
     else:
-        prefix = f'_{prefix}' if prefix is not None else ''
-        sig    = get_cb_pdf(prefix)
+        sig    = get_cb_pdf()
 
     data.sig_pdf = sig
 
@@ -300,6 +322,9 @@ def fix_pdf(pdf, d_fix):
     data.log.info('Fixing parameters')
     data.log.info('-----------------')
     for par in l_par:
+        if re.match(r'mu_[1,2,3]', par.name) or re.match(r'sg_[1,2,3]', par.name):
+            continue
+
         if par.name not in d_fix:
             data.log.info(f'{par.name:<20}{"->":<10}{"floating":<20}')
             continue
@@ -433,6 +458,8 @@ def make_table(trig=None, year=None, brem=None):
 
     if data.sim_only:
         return 
+
+    data.d_sim_par = d_sim_par
 
     d_fix_par = get_fix_pars(d_sim_par)
     _         = fit(df_dat, d_fix=d_fix_par, identifier=f'dat_{trig}_{year}_{brem}_{data.sys}')
