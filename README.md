@@ -59,6 +59,21 @@ job_q2 -v vx -k q2mom -t (0,1)       [-r 1]
 for the momentum dependent $q^2$ smearing, for simulation or data (1, 0). The simulation (`-t 1`) have to be submitted before the data
 (`-t 0`) jobs.
 
+## Failed fits
+
+In case of failed fits do:
+
+### Momentum dependence systematics
+
+The fits are checked by placing the plots in beamer slides. You will know from them the brem category, year and trigger, as well as 
+the bin for which the fit failed. The fits are redone using:
+
+```bash
+get_q2_resolutions -d r1 -t GTIS -b 0 -v v7 -s -i 17
+```
+
+where `-i 17` targets only the given bin.
+
 ## Getting the calibration files for nom and nSPD
 
 The outputs will need to be merged with:
