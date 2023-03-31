@@ -6,6 +6,7 @@ import os
 import re
 import zfit
 import numpy
+import pprint
 import argparse
 import ROOT
 
@@ -406,12 +407,26 @@ def fit(df, d_fix=None, identifier='unnamed'):
     pkl_path = f'{data.plt_dir}/{identifier}.pkl'
     utnr.dump_pickle(res, pkl_path)
 
-    d_par = { name : [d_val['value'], d_val['hesse']['error']] for name, d_val in res.params.items() }
+    d_par = res_to_dpar(res)
 
     utnr.dump_json(d_par, jsn_path)
 
     return d_par
 #-------------------
+def res_to_dpar(self, res):
+    try:
+        d_par = { name : [d_val['value'], d_val['hesse']['error']] for name, d_val in res.params.items() }
+    except:
+        log.error('Cannot read:')
+        for name, d_val in res.params.items():
+            log.info(name)
+            pprint.pprint(d_val)
+
+        raise
+
+    return d_par
+#-------------------
+
 def plot_fit(dat, pdf, res, identifier):
     obj   = zfp(data=dat, model=pdf, result=res)
     obj.plot(d_leg={}, plot_range=(2450, 3600))
