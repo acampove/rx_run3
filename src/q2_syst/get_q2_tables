@@ -320,7 +320,7 @@ def fix_pdf(pdf, d_fix):
             continue
 
         if par.name not in d_fix:
-            data.log.info(f'{par.name:<20}{"->":<10}{"floating":>20}')
+            data.log.visible(f'{par.name:<20}{"->":<10}{"floating":>20}')
             continue
         else:
             fix_val, _ = d_fix[par.name]
