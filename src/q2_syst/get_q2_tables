@@ -362,7 +362,6 @@ def fit(df, d_fix=None, identifier='unnamed'):
         data.log.error(f'Invalid identifier: {identifier}')
         raise
 
-
     if is_signal:
         float_pars(pdf)
         if os.path.isfile(jsn_path):
@@ -407,26 +406,20 @@ def fit(df, d_fix=None, identifier='unnamed'):
     pkl_path = f'{data.plt_dir}/{identifier}.pkl'
     utnr.dump_pickle(res, pkl_path)
 
-    d_par = res_to_dpar(res)
+    d_par = res_to_dpar(res, identifier)
 
     utnr.dump_json(d_par, jsn_path)
 
     return d_par
 #-------------------
-def res_to_dpar(self, res):
-    try:
+def res_to_dpar(res, identifier):
+    if identifier.startswith('data_'):
         d_par = { name : [d_val['value'], d_val['hesse']['error']] for name, d_val in res.params.items() }
-    except:
-        log.error('Cannot read:')
-        for name, d_val in res.params.items():
-            log.info(name)
-            pprint.pprint(d_val)
-
-        raise
+    else:
+        d_par = { name : [d_val['value'],                       0] for name, d_val in res.params.items() }
 
     return d_par
 #-------------------
-
 def plot_fit(dat, pdf, res, identifier):
     obj   = zfp(data=dat, model=pdf, result=res)
     obj.plot(d_leg={}, plot_range=(2450, 3600))
