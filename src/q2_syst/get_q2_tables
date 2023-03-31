@@ -9,6 +9,7 @@ import numpy
 import argparse
 import ROOT
 
+from logzero      import logger    as log
 from zutils.plot  import plot      as zfp
 from rk.selection import selection as rksl
 from zutils.utils import result_to_latex 
@@ -41,6 +42,7 @@ class data:
     plt_dir  = None 
     fraction = None
     d_sim_par= None
+    skip_fit = None
 
     zfit.settings.changed_warnings.hesse_name = False
     obs      = zfit.Space('Jpsi_M', limits=(2450, 3600))
@@ -182,19 +184,6 @@ def apply_selection(rdf, trig, year, proc):
 
     return rdf
 #-------------------
-def get_pdf(is_signal=None, split_by_nspd=None):
-    if is_signal not in [True, False]:
-        data.log.error('Signal flag not specified')
-        raise
-
-    if split_by_nspd not in [True, False]:
-        data.log.error('split_by_nspd flag not specified')
-        raise
-
-    pdf = get_signal_pdf() if is_signal else get_full_pdf(split_by_nspd)
-
-    return pdf
-#-------------------
 def float_pars(pdf):
     l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
     data.log.info('Floating parameters:')
@@ -249,16 +238,20 @@ def get_cb_pdf():
     return sig
 #-------------------
 def get_nspd_data_pars(preffix=''):
-    sim_mu = zfit.param.ConstantParameter('sim_mu{preffix}', data.d_sim_par['mu{preffix}'])
-    sim_sg = zfit.param.ConstantParameter('sim_sg{preffix}', data.d_sim_par['sg{preffix}'])
+    sim_mu = zfit.param.ConstantParameter(f'sim_mu{preffix}', data.d_sim_par[f'mu{preffix}'][0])
+    sim_sg = zfit.param.ConstantParameter(f'sim_sg{preffix}', data.d_sim_par[f'sg{preffix}'][0])
 
-    dat_mu = zfit.ComposedParameter('dat_mu{preffix}', lambda d_par : d_par['dmu'] + d_par['sim_mu{preffix}'], {'dmu' : data.dmu, 'sim_mu{preffix}' : sim_mu1} )
-    dat_sg = zfit.ComposedParameter('dat_sg{preffix}', lambda d_par : d_par['rsg'] * d_par['sim_sg{preffix}'], {'rsg' : data.rsg, 'sim_sg{preffix}' : sim_sg1} )
+    dat_mu = zfit.ComposedParameter(f'dat_mu{preffix}', 
+                                    lambda d_par : d_par['dmu'] + d_par[f'sim_mu{preffix}'], 
+                                    {'dmu' : data.dmu, f'sim_mu{preffix}' : sim_mu} )
+    dat_sg = zfit.ComposedParameter(f'dat_sg{preffix}', 
+                                    lambda d_par : d_par['rsg'] * d_par[f'sim_sg{preffix}'], 
+                                    {'rsg' : data.rsg, f'sim_sg{preffix}' : sim_sg} )
 
     return dat_mu, dat_sg
 #-------------------
 def get_cb_nspd_pdf(prefix=''):
-    mu,sg = get_nspd_data_pars(preffix)
+    mu,sg = get_nspd_data_pars(prefix)
 
     ap_r  = zfit.Parameter(f'ap_r{prefix}',  1.0,  -10.0, 10.0)
     pw_r  = zfit.Parameter(f'pw_r{prefix}',  1.0,    0.1, 10.0)
@@ -326,7 +319,7 @@ def fix_pdf(pdf, d_fix):
             continue
 
         if par.name not in d_fix:
-            data.log.info(f'{par.name:<20}{"->":<10}{"floating":<20}')
+            data.log.info(f'{par.name:<20}{"->":<10}{"floating":>20}')
             continue
         else:
             fix_val, _ = d_fix[par.name]
@@ -335,6 +328,19 @@ def fix_pdf(pdf, d_fix):
         par.floating=False
 
         data.log.info(f'{par.name:<20}{"->":<10}{fix_val:>20.3e}')
+
+    return pdf
+#-------------------
+def get_pdf(is_signal=None, split_by_nspd=None):
+    if is_signal     not in [True, False]:
+        data.log.error('Signal flag not specified')
+        raise
+
+    if split_by_nspd not in [True, False]:
+        data.log.error('split_by_nspd flag not specified')
+        raise
+
+    pdf = get_signal_pdf() if is_signal else get_full_pdf(split_by_nspd)
 
     return pdf
 #-------------------
@@ -355,6 +361,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
         data.log.error(f'Invalid identifier: {identifier}')
         raise
 
+
     if is_signal:
         float_pars(pdf)
         if os.path.isfile(jsn_path):
@@ -362,17 +369,23 @@ def fit(df, d_fix=None, identifier='unnamed'):
             d_par = utnr.load_json(jsn_path)
             reset_sig_pars(pdf, d_par)
 
-    pdf = fix_pdf(pdf, d_fix)
     dat = df.AsNumpy(['Jpsi_M'])['Jpsi_M']
     dat = dat[~numpy.isnan(dat)]
+    pdf = fix_pdf(pdf, d_fix)
 
     obj=zfitter(pdf, dat)
-    if is_signal:
+    if data.skip_fit:
+        log.info('Skipping fit')
+        res=None
+    elif is_signal:
         res=obj.fit(ntries=30, pval_threshold=0.04)
     else:
         res=obj.fit()
 
-    if   res is None:
+    if data.skip_fit:
+        plot_fit(dat, pdf, res, identifier)
+        return
+    elif res is None:
         plot_fit(dat, pdf, res, identifier)
         data.log.error(f'Fit failed')
         raise
@@ -460,7 +473,6 @@ def make_table(trig=None, year=None, brem=None):
         return 
 
     data.d_sim_par = d_sim_par
-
     d_fix_par = get_fix_pars(d_sim_par)
     _         = fit(df_dat, d_fix=d_fix_par, identifier=f'dat_{trig}_{year}_{brem}_{data.sys}')
 #-------------------
@@ -473,6 +485,7 @@ def get_args():
     parser.add_argument('-s', '--sim'  ,            help='Do only simulation'                          , action='store_true')
     parser.add_argument('-x', '--sys'  , type =str, help='Systematic variabion'                        , choices=data.l_sys) 
     parser.add_argument('-f', '--frac' , type =float, help='Fraction of data to process, for tests'    , default=1.0) 
+    parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action='store_true') 
     args = parser.parse_args()
 
     data.trig     = args.trig
@@ -481,6 +494,7 @@ def get_args():
     data.sim_only = args.sim
     data.sys      = args.sys
     data.fraction = args.frac
+    data.skip_fit = args.skip_fit
     data.plt_dir  = utnr.make_dir_path(f'{data.qsq_dir}/get_q2_tables/fits/{args.vers}')
 #-------------------
 if __name__ == '__main__':
