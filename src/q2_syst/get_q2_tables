@@ -19,6 +19,8 @@ from rk.mva       import mva_man
 
 #-------------------
 class data:
+    zfit.settings.changed_warnings.hesse_name = False
+
     log      = utnr.getLogger(__name__)
     cal_dir  = os.environ['CALDIR']
     dat_dir  = os.environ['DATDIR']
@@ -44,11 +46,12 @@ class data:
     fraction = None
     d_sim_par= None
     skip_fit = None
+    nevs_data= None
 
-    zfit.settings.changed_warnings.hesse_name = False
-    obs      = zfit.Space('Jpsi_M', limits=(2450, 3600))
-    sig_pdf  = None
-    bkg_pdf  = None
+    obs          = zfit.Space('Jpsi_M', limits=(2450, 3600))
+    sig_pdf_splt = None
+    sig_pdf_merg = None
+    bkg_pdf      = None
 
     mu       = zfit.Parameter('mu', 3060,  3040, 3100)
     sg       = zfit.Parameter('sg',   20,    10,  100)
@@ -209,13 +212,14 @@ def reset_sig_pars(pdf, d_val):
         data.log.info(f'{name:<20}{"->":<10}{val:<10.3}')
 #-------------------
 def get_nspd_signal(l_pdf):
-    fr1   = zfit.Parameter("fr1_nspd", 0.5,  0.0, 2./3.)
-    fr2   = zfit.Parameter("fr2_nspd", 1./3., 0.0, 1.0, floating=False)
+    nsg   = data.nevs_data / 3.
 
-    pdf   = zfit.pdf.SumPDF(pdfs=l_pdf, fracs=[fr1, fr2])
-
-    nsg   = zfit.Parameter("nsg", 10000, 0, 100000)
-    epdf  = pdf.create_extended(nsg)
+    nsg_1 = zfit.Parameter("nsg_1", nsg, nsg - 0.1 * nsg, nsg + 0.1 * nsg)
+    nsg_2 = zfit.Parameter("nsg_2", nsg, nsg - 0.1 * nsg, nsg + 0.1 * nsg)
+    nsg_3 = zfit.Parameter("nsg_3", nsg, nsg - 0.1 * nsg, nsg + 0.1 * nsg)
+    l_nsg = [nsg_1, nsg_2, nsg_3]
+    l_epdf= [ pdf.create_extended(nsg) for pdf, nsg in zip(l_pdf, l_nsg) ]
+    epdf  = zfit.pdf.SumPDF(pdfs=l_epdf)
 
     return epdf
 #-------------------
@@ -268,18 +272,18 @@ def get_cb_nspd_pdf(prefix=''):
     return sig
 #-------------------
 def get_signal_pdf(split_by_nspd = False, prefix=None):
-    if data.sig_pdf is not None:
-        return data.sig_pdf 
+    if   data.sig_pdf_splt is not None and     split_by_nspd:
+        return data.sig_pdf_splt
+    elif data.sig_pdf_merg is not None and not split_by_nspd:
+        return data.sig_pdf_merg
 
     if split_by_nspd:
         l_pdf = [ get_cb_nspd_pdf(prefix=f'_{i_nspd}') for i_nspd in [1, 2, 3] ]
-        sig   = get_nspd_signal(l_pdf)
+        data.sig_pdf_splt = get_nspd_signal(l_pdf)
     else:
-        sig    = get_cb_pdf()
+        data.sig_pdf_merg = get_cb_pdf()
 
-    data.sig_pdf = sig
-
-    return sig
+    return data.sig_pdf_splt if split_by_nspd else data.sig_pdf_merg 
 #-------------------
 def get_bkg_pdf():
     if data.bkg_pdf is not None:
@@ -355,8 +359,10 @@ def fit(df, d_fix=None, identifier='unnamed'):
     is_signal = True if d_fix is None else False
 
     if   identifier.endswith('_nspd'):
+        data.log.info(f'Splitting by nSPD: {identifier}')
         pdf = get_pdf(is_signal, split_by_nspd= True)
     elif identifier.endswith( '_nom'):
+        data.log.info(f'Not splitting by nSPD: {identifier}')
         pdf = get_pdf(is_signal, split_by_nspd=False)
     else:
         data.log.error(f'Invalid identifier: {identifier}')
@@ -382,20 +388,24 @@ def fit(df, d_fix=None, identifier='unnamed'):
     else:
         res=obj.fit()
 
-    if data.skip_fit:
+    if   data.skip_fit:
         plot_fit(dat, pdf, res, identifier)
         return
     elif res is None:
         plot_fit(dat, pdf, res, identifier)
         data.log.error(f'Fit failed')
+        print(res)
         raise
-    elif res.status != 0:
-        data.log.error(f'Finished with status: {res.status}')
+    elif res.status != 0 or not res.valid:
+        plot_fit(dat, pdf, res, identifier)
+        data.log.error(f'Finished with status/validity: {res.status}/{res.valid}')
         print(res)
         raise
 
     res.hesse(method='minuit_hesse')
     res.freeze()
+
+    print(res)
 
     plot_fit(dat, pdf, res, identifier)
 
@@ -422,7 +432,7 @@ def res_to_dpar(res, identifier):
 #-------------------
 def plot_fit(dat, pdf, res, identifier):
     obj   = zfp(data=dat, model=pdf, result=res)
-    obj.plot(d_leg={}, plot_range=(2450, 3600))
+    obj.plot(d_leg={}, plot_range=(2450, 3600), ext_text=f'#events={dat.size}')
 
     obj.axs[1].plot([2450, 3600], [0, 0], linestyle='--', color='black')
 
@@ -481,6 +491,8 @@ def make_table(trig=None, year=None, brem=None):
         return 
 
     data.d_sim_par = d_sim_par
+    data.nevs_data = df_dat.Count().GetValue()
+
     d_fix_par = get_fix_pars(d_sim_par)
     _         = fit(df_dat, d_fix=d_fix_par, identifier=f'dat_{trig}_{year}_{brem}_{data.sys}')
 #-------------------
