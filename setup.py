@@ -4,7 +4,7 @@ import glob
 
 setup(
     name                ='q2_syst',
-    version             ='0.0.2',
+    version             ='0.0.3',
     description         ='Project used to calculate q2 smearing factors and the systematics',
     long_description    ='',
     scripts             = glob.glob('jobs/*') + glob.glob('src/q2_syst/*'),
