@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+
 from rk.dilep_reso import plot_reso as rk_plot_reso
 
 import utils_noroot as utnr
+import os
 import argparse
 import numpy
 import math
@@ -8,6 +11,7 @@ import math
 #----------------------------
 class data:
     version = None 
+    inp_dir = None
     l_kind  = None
     l_dset  = None
     l_trig  = None
@@ -51,7 +55,7 @@ def mask_empty(d_data):
     return d_data_masked
 #----------------------------
 def plot_reso(kind, brem, src, trig, dset):
-    par_path  = f'output/resolution/{kind}/json/{data.version}/{trig}_{dset}/{src}_brem_{brem}.json'
+    par_path  = f'{data.inp_dir}/get_q2_resolutions/{kind}/json/{data.version}/{trig}_{dset}/{src}_brem_{brem}.json'
     d_par_str = utnr.load_json(par_path)
 
     if src == 'par':
@@ -62,16 +66,16 @@ def plot_reso(kind, brem, src, trig, dset):
         zrange    = data.d_rrange[brem]
 
     d_res_str = mask_empty(d_res_str)
-    plot_dir  = utnr.make_dir_path(f'output/resolution/plots/{data.version}/{trig}_{dset}')
+    plot_dir  = utnr.make_dir_path(f'{data.inp_dir}/get_q2_resolutions/plots/{data.version}/{trig}_{dset}')
     rk_plot_reso(d_res_str, plot_dir, suffix=f'{kind}_{brem}_{src}', title=f'Brem {brem}; From: {src},{kind}', rng=zrange)
 #----------------------------
 def plot_ratio(brem, src, trig, dset):
-    json_path = f'output/resolution/ratio/{data.version}/{trig}_{dset}/{src}_brem_{brem}.json'
+    json_path = f'{data.inp_dir}/get_q2_resolutions/ratio/{data.version}/{trig}_{dset}/{src}_brem_{brem}.json'
     d_rat_str = utnr.load_json(json_path)
     zrange    = (0, 2)
 
     d_rat_str = mask_empty(d_rat_str)
-    plot_dir  = utnr.make_dir_path(f'output/resolution/plots/{data.version}/{trig}_{dset}')
+    plot_dir  = utnr.make_dir_path(f'{data.inp_dir}/get_q2_resolutions/plots/{data.version}/{trig}_{dset}')
     rk_plot_reso(d_rat_str, plot_dir, suffix=f'rat_{brem}_{src}', title=f'Brem {brem}; From: {src}, ratio', rng=zrange)
 #----------------------------
 def plot_all_reso():
@@ -103,6 +107,7 @@ def get_args():
     data.l_dset  = args.dset
     data.l_trig  = args.trig
     data.l_kind  = args.kind
+    data.inp_dir = os.environ['QSQSYS']
 #----------------------------
 def main():
     get_args()
