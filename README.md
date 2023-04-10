@@ -12,6 +12,51 @@ mamba create -n q2_systematics root=6.28 python=3.9
 
 # Usage
 
+The outputs will go to the directory pointed by the enviroment variable `QSQSYS` and the directory structure should look like:
+
+```bash
+├── get_q2_resolutions
+│   ├── data
+│   │   ├── json
+│   │   │   └── v1.mom
+│   │   └── plots
+│   │       └── v1.mom
+│   ├── mc
+│   │   ├── json
+│   │   │   └── v1.mom
+│   │   └── plots
+│   │       └── v1.mom
+│   ├── plots
+│   │   └── v1.mom
+│   │       ├── ETOS_2017
+│   │       ├── ETOS_2018
+│   │       ├── ETOS_r1
+│   │       ├── ETOS_r2p1
+│   │       ├── GTIS_2017
+│   │       ├── GTIS_2018
+│   │       ├── GTIS_r1
+│   │       └── GTIS_r2p1
+│   └── ratio
+│       └── v1.mom
+│           ├── ETOS_2017
+│           ├── ETOS_2018
+│           ├── ETOS_r1
+│           ├── ETOS_r2p1
+│           ├── GTIS_2017
+│           ├── GTIS_2018
+│           ├── GTIS_r1
+│           └── GTIS_r2p1
+├── get_q2_tables
+│   └── fits
+│       ├── v1.nom
+│       ├── v1.nspd
+│       └── v2.nspd
+└── version_comparison
+    └── v2pnom_v3pnom
+```
+
+once the scripts have been ran.
+
 ## Nominal and nSPD binning systematics
 
 In order to get the smearing factors run:
