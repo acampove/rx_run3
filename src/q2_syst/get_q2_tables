@@ -9,6 +9,7 @@ import numpy
 import pprint
 import argparse
 import ROOT
+import read_selection as rs
 
 from logzero      import logger    as log
 from zutils.plot  import plot      as zfp
@@ -130,11 +131,45 @@ def get_df(year, trig, brem, is_data=None):
 
     data.log.visible(f'Found cached files: {l_cache_path}[tree]')
     rdf = ROOT.RDataFrame('tree', l_cache_path)
+    check_nopid(rdf, trig, year)
 
     if brem == 2:
         rdf = rdf.Filter(f'nbrem>=     2')
     else:
         rdf = rdf.Filter(f'nbrem=={brem}')
+
+    rdf = add_weights(rdf, trig, year, is_data)
+
+    return rdf
+#-------------------
+def check_nopid(rdf, trig, year):
+    '''Checks that PID cut has not been added
+    '''
+    pid_cut = rs.get('pid', trig, q2bin='none', year=year)
+
+    rdf_org = rdf.Range(1000)
+    rdf_cut = rdf.Filter(pid_cut, 'PID')
+
+    norg = rdf_org.Count().GetValue()
+    ncut = rdf_cut.Count().GetValue()
+
+    if norg == ncut:
+        data.log.error(f'PID cut already applied')
+        rep = rdf_cut.Report()
+        rep.Print()
+        raise
+#-------------------
+def add_weights(rdf, trig, year, is_data):
+    if is_data:
+        pid_cut = rs.get('pid', trig, q2bin='none', year=year)
+        rdf     = rdf.Define('weight', pid_cut)
+    else:
+        rdf     = add_cal_wgt(rdf, trig, year, 'weight')
+
+    return rdf
+#-------------------
+def add_cal_wgt(rdf, trig, year, weight):
+    rdf = rdf.Define(weight, '1')
 
     return rdf
 #-------------------
