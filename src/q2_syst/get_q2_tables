@@ -34,7 +34,7 @@ class data:
     l_brem   = ['0', '1', '2']
     l_sys    = ['nom', 'nspd']
 
-    dat_vers = 'v10.11tf'
+    dat_vers = 'v10.18is'
     bdt_dir  = f'{mva_dir}/electron/bdt_v10.14.a0v2ss'
     b_mass   = 'B_const_mass_M[0]'
     j_mass   = 'Jpsi_M'
@@ -82,8 +82,11 @@ def get_years(dset):
 #-------------------
 def get_cached_paths(dset, trig, proc):
     l_year    = get_years(dset)
-    cache_dir = f'{data.cas_dir}/q2_systematics'
-    l_path    = [ f'{cache_dir}/{year}_{trig}_{proc}.root' for year in l_year ]
+    cache_dir = f'{data.cas_dir}/tools/apply_selection/q2_smear'
+    l_path    = []
+    for year in l_year:
+        wc      = f'{cache_dir}/{proc}/{data.dat_vers}/{year}_{trig}/*.root'
+        l_path += utnr.glob_wc(wc, allow_empty=False)
 
     all_found = True 
     for path in l_path:
@@ -109,7 +112,7 @@ def get_df(year, trig, brem, is_data=None):
         data.log.error(f'Dataset type not specified')
         raise
 
-    proc = 'data_ee' if is_data else 'ctrl_ee'
+    proc = 'data' if is_data else 'ctrl'
     utnr.make_dir_path('cached')
     l_cache_path, all_exist = get_cached_paths(year, trig, proc)
     if not all_exist:
@@ -129,10 +132,11 @@ def get_df(year, trig, brem, is_data=None):
             data.log.visible(f'Caching: {data_path}[KEE] -> {cache_path}[tree]')
             rdf.Snapshot('tree', cache_path)
 
-    data.log.visible(f'Found cached files: {l_cache_path}[tree]')
-    rdf = ROOT.RDataFrame('tree', l_cache_path)
+    data.log.visible(f'Found cached files: {l_cache_path}:{trig}')
+    rdf = ROOT.RDataFrame(trig, l_cache_path)
     check_nopid(rdf, trig, year)
 
+    rdf = rdf.Define('nbrem', 'L1_BremMultiplicity + L2_BremMultiplicity')
     if brem == 2:
         rdf = rdf.Filter(f'nbrem>=     2')
     else:
