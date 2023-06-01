@@ -5,8 +5,10 @@ import matplotlib.pyplot           as plt
 import os
 import re
 import zfit
+import hist
 import numpy
 import pprint
+import mplhep
 import argparse
 import ROOT
 import read_selection as rs
@@ -414,8 +416,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
             d_par = utnr.load_json(jsn_path)
             reset_sig_pars(pdf, d_par)
 
-    dat = df.AsNumpy(['Jpsi_M'])['Jpsi_M']
-    dat = dat[~numpy.isnan(dat)]
+    dat = get_data(df, pdf)
     pdf = fix_pdf(pdf, d_fix)
 
     obj=zfitter(pdf, dat)
@@ -460,6 +461,46 @@ def fit(df, d_fix=None, identifier='unnamed'):
     utnr.dump_json(d_par, jsn_path)
 
     return d_par
+#-------------------
+def get_data(rdf, pdf):
+    val     = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
+    wgt     = rdf.AsNumpy(['weight'])['weight']
+
+    arr_pnt = numpy.array([val, wgt]).T
+    arr_flg = numpy.isnan(arr_pnt).any(axis=1)
+    arr_pnt = arr_pnt[~arr_flg]
+    val, wgt= arr_pnt.T
+
+    obs     = pdf.space
+    arr_wgt = numpy.asarray(wgt).astype('float32')
+    arr_val = numpy.asarray(val).astype('float32')
+    dat     = zfit.Data.from_numpy(obs=obs, array=arr_val, weights=arr_wgt)
+
+    plot_data(arr_val, arr_wgt, obs)
+
+    return dat
+#-------------------
+def plot_data(arr_mas, arr_wgt, obs, nbins=30):
+    [[lower]], [[upper]] = obs.limits
+
+    data_hist = hist.Hist.new.Regular(nbins, lower, upper, name='', underflow=False, overflow=False)
+    data_hist = data_hist.Weight()
+    data_hist.fill(arr_mas, weight=arr_wgt)
+
+    errorbars = mplhep.histplot(
+        data_hist,
+        yerr=True,
+        color="black",
+        histtype="errorbar",
+    )
+
+    title=f'Entries={arr_wgt.size:.0f}; Sum={numpy.sum(arr_wgt):.0f}'
+
+    plt_path = f'{data.plt_dir}/data.png'
+    data.log.visible(f'Saving to: {plt_path}')
+    plt.title(title)
+    plt.savefig(plt_path)
+    plt.close('all')
 #-------------------
 def res_to_dpar(res, identifier):
     if identifier.startswith('data_'):
