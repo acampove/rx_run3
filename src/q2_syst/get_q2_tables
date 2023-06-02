@@ -115,36 +115,28 @@ def get_df(year, trig, brem, is_data=None):
         raise
 
     proc = 'data' if is_data else 'ctrl'
-    utnr.make_dir_path('cached')
     l_cache_path, all_exist = get_cached_paths(year, trig, proc)
     if not all_exist:
-        l_data_path = get_input_paths(proc, year)
-        for data_path, cache_path in zip(l_data_path, l_cache_path):
-            rdf = ROOT.RDataFrame('KEE', data_path)
+        data.log.error(f'Not found all files')
+        raise
 
-            if data.fraction < 1.0:
-                nentries = rdf.Count().GetValue()
-                nkeep    = int(data.fraction * nentries)
-
-                data.log.visible(f'Using {nkeep}/{nentries} entries')
-                rdf = rdf.Range(nkeep)
-
-            rdf = apply_selection(rdf, trig, year, proc)
-
-            data.log.visible(f'Caching: {data_path}[KEE] -> {cache_path}[tree]')
-            rdf.Snapshot('tree', cache_path)
-
-    data.log.visible(f'Found cached files: {l_cache_path}:{trig}')
+    data.log.debug(f'Found cached files: {l_cache_path}:{trig}')
     rdf = ROOT.RDataFrame(trig, l_cache_path)
+    rdf = get_range_rdf(rdf)
     check_nopid(rdf, trig, year)
 
-    rdf = rdf.Define('nbrem', 'L1_BremMultiplicity + L2_BremMultiplicity')
-    if brem == 2:
-        rdf = rdf.Filter(f'nbrem>=     2')
-    else:
-        rdf = rdf.Filter(f'nbrem=={brem}')
-
+    rdf = apply_selection(rdf, trig, year, brem, proc)
     rdf = add_weights(rdf, trig, year, is_data)
+
+    return rdf
+#-------------------
+def get_range_rdf(rdf):
+    if data.fraction < 1.0:
+        nentries = rdf.Count().GetValue()
+        nkeep    = int(data.fraction * nentries)
+
+        data.log.visible(f'Using {nkeep}/{nentries} entries')
+        rdf = rdf.Range(nkeep)
 
     return rdf
 #-------------------
@@ -172,10 +164,13 @@ def add_weights(rdf, trig, year, is_data):
     else:
         rdf     = add_cal_wgt(rdf, trig, year, 'weight')
 
+    rdf = rdf.Redefine('weight', 'float(weight)')
+
     return rdf
 #-------------------
 def add_cal_wgt(rdf, trig, year, weight):
-    rdf = rdf.Define(weight, '1')
+    pid_cut = rs.get('pid', trig, q2bin='none', year=year)
+    rdf     = rdf.Define('weight', pid_cut)
 
     return rdf
 #-------------------
@@ -215,17 +210,19 @@ def add_bdt(rdf, trig):
 
     return ROOT.RDF.MakeNumpyDataFrame(d_data)
 #-------------------
-def apply_selection(rdf, trig, year, proc):
-    d_cut = rksl('all_gorder', trig, year, proc, q2bin='jpsi')
+def apply_selection(rdf, trig, year, brem, proc):
+    qsq_cut = rs.get('q2', trig, q2bin='jpsi', year=year)
+    rdf     = rdf.Define('nbrem', 'L1_BremMultiplicity + L2_BremMultiplicity')
+    if brem == 2:
+        brm_cut = f'nbrem>=2'
+    else:
+        brm_cut = f'nbrem=={brem}'
 
-    bdt_cut = d_cut['bdt']
-    del(d_cut['bdt'])
+    rdf = rdf.Filter(brm_cut, brm_cut)
+    rdf = rdf.Filter(qsq_cut, qsq_cut)
+    rep = rdf.Report()
 
-    for key, cut in d_cut.items():
-        rdf=rdf.Filter(cut, key)
-
-    rdf = add_bdt(rdf, trig)
-    rdf = rdf.Filter(bdt_cut, 'BDT')
+    rep.Print()
 
     return rdf
 #-------------------
@@ -274,12 +271,12 @@ def get_cb_pdf():
     sig_l = zfit.pdf.CrystalBall(obs=data.obs, mu=data.mu, sigma=data.sg, alpha=ap_l, n=pw_l)
 
     ncbr  = zfit.Parameter('ncbr',  10,   0,  1000000)
-    sig_r = sig_r.create_extended(ncbr)
+    sig_r = sig_r.create_extended(ncbr, name='CB1')
 
     ncbl  = zfit.Parameter('ncbl',  10,   0,  1000000)
-    sig_l = sig_l.create_extended(ncbl) 
+    sig_l = sig_l.create_extended(ncbl, name='CB2') 
 
-    sig   = zfit.pdf.SumPDF([sig_r, sig_l])
+    sig   = zfit.pdf.SumPDF([sig_r, sig_l], name='Signal')
 
     return sig
 #-------------------
@@ -330,11 +327,11 @@ def get_bkg_pdf():
     if data.bkg_pdf is not None:
         return data.bkg_pdf
 
-    lam = zfit.Parameter('lam', -0.001, -0.1, -0.001)
-    bkg = zfit.pdf.Exponential(lam=lam, obs=data.obs, name='Combinatorial')
+    lam = zfit.Parameter('lam', -0.001, -0.1, -0.0001)
+    bkg = zfit.pdf.Exponential(lam=lam, obs=data.obs, name='')
 
     nbk = zfit.Parameter(f'nbk', 100, 0.0, 200000)
-    bkg = bkg.create_extended(nbk)
+    bkg = bkg.create_extended(nbk, name='Combinatorial')
 
     data.bkg_pdf = bkg
 
@@ -343,7 +340,7 @@ def get_bkg_pdf():
 def get_full_pdf(split_by_nspd): 
     sig = get_signal_pdf(split_by_nspd)
     bkg = get_bkg_pdf()
-    pdf = zfit.pdf.SumPDF([sig, bkg])
+    pdf = zfit.pdf.SumPDF([sig, bkg], name='Model')
 
     data.log.debug(f'Signal    : {sig}')
     data.log.debug(f'Background: {bkg}')
@@ -416,20 +413,21 @@ def fit(df, d_fix=None, identifier='unnamed'):
             d_par = utnr.load_json(jsn_path)
             reset_sig_pars(pdf, d_par)
 
-    dat = get_data(df, pdf)
+    dat = get_data(df, pdf, is_signal, identifier)
     pdf = fix_pdf(pdf, d_fix)
+    obj = zfitter(pdf, dat)
 
-    obj=zfitter(pdf, dat)
-    if data.skip_fit:
+    if   data.skip_fit:
         log.info('Skipping fit')
         res=None
     elif is_signal:
-        res=obj.fit(ntries=30, pval_threshold=0.04)
+        res=obj.fit(ntries=10, pval_threshold=0.04)
     else:
         res=obj.fit()
 
+    plot_fit(dat, pdf, res, identifier)
+
     if   data.skip_fit:
-        plot_fit(dat, pdf, res, identifier)
         return
     elif res is None:
         plot_fit(dat, pdf, res, identifier)
@@ -441,17 +439,14 @@ def fit(df, d_fix=None, identifier='unnamed'):
         data.log.error(f'Finished with status/validity: {res.status}/{res.valid}')
         print(res)
         raise
-
-    res.hesse(method='minuit_hesse')
-    res.freeze()
-
-    print(res)
-
-    plot_fit(dat, pdf, res, identifier)
+    else:
+        res.error()
+        res.freeze()
+        print(res)
 
     tex_path = f'{data.plt_dir}/{identifier}.tex'
     data.log.visible(f'Saving to: {tex_path}')
-    result_to_latex(res, tex_path)
+    result_to_latex(res, tex_path, method='minos')
 
     pkl_path = f'{data.plt_dir}/{identifier}.pkl'
     utnr.dump_pickle(res, pkl_path)
@@ -462,57 +457,54 @@ def fit(df, d_fix=None, identifier='unnamed'):
 
     return d_par
 #-------------------
-def get_data(rdf, pdf):
-    val     = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
-    wgt     = rdf.AsNumpy(['weight'])['weight']
-
-    arr_pnt = numpy.array([val, wgt]).T
-    arr_flg = numpy.isnan(arr_pnt).any(axis=1)
-    arr_pnt = arr_pnt[~arr_flg]
-    val, wgt= arr_pnt.T
+def get_data(rdf, pdf, is_signal, identifier):
+    arr_val = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
+    arr_wgt = rdf.AsNumpy(['weight'])['weight']
 
     obs     = pdf.space
-    arr_wgt = numpy.asarray(wgt).astype('float32')
-    arr_val = numpy.asarray(val).astype('float32')
     dat     = zfit.Data.from_numpy(obs=obs, array=arr_val, weights=arr_wgt)
 
-    plot_data(arr_val, arr_wgt, obs)
+    plot_data(arr_val, arr_wgt, obs, is_signal, identifier)
 
     return dat
 #-------------------
-def plot_data(arr_mas, arr_wgt, obs, nbins=30):
+def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier, nbins=100):
+    plt.close('all')
     [[lower]], [[upper]] = obs.limits
 
+    fig, ax   = plt.subplots(figsize=(15, 10))
     data_hist = hist.Hist.new.Regular(nbins, lower, upper, name='', underflow=False, overflow=False)
     data_hist = data_hist.Weight()
     data_hist.fill(arr_mas, weight=arr_wgt)
 
     errorbars = mplhep.histplot(
         data_hist,
-        yerr=True,
-        color="black",
-        histtype="errorbar",
+        yerr    = True,
+        color   = 'black',
+        histtype= 'errorbar',
+        ax      = ax
     )
 
-    title=f'Entries={arr_wgt.size:.0f}; Sum={numpy.sum(arr_wgt):.0f}'
+    title=f'Entries={arr_wgt.size:.0f}; Sum={numpy.sum(arr_wgt):.0f}; {identifier}'
 
-    plt_path = f'{data.plt_dir}/data.png'
+    if is_signal:
+        plt_path = f'{data.plt_dir}/ctrl_{identifier}.png'
+    else:
+        plt_path = f'{data.plt_dir}/data_{identifier}.png'
+
     data.log.visible(f'Saving to: {plt_path}')
     plt.title(title)
     plt.savefig(plt_path)
     plt.close('all')
 #-------------------
 def res_to_dpar(res, identifier):
-    if identifier.startswith('data_'):
-        d_par = { name : [d_val['value'], d_val['hesse']['error']] for name, d_val in res.params.items() }
-    else:
-        d_par = { name : [d_val['value'],                       0] for name, d_val in res.params.items() }
+    d_par = { name : [d_val['value'], 0.5 * (d_val['errors']['lower'] + d_val['errors']['upper']) ] for name, d_val in res.params.items() }
 
     return d_par
 #-------------------
 def plot_fit(dat, pdf, res, identifier):
     obj   = zfp(data=dat, model=pdf, result=res)
-    obj.plot(d_leg={}, plot_range=(2450, 3600), ext_text=f'#events={dat.size}')
+    obj.plot(d_leg={}, plot_range=(2450, 3600), ext_text=f'#events={dat.nevents.numpy()}')
 
     obj.axs[1].plot([2450, 3600], [0, 0], linestyle='--', color='black')
 
@@ -597,8 +589,12 @@ def get_args():
     data.skip_fit = args.skip_fit
     data.plt_dir  = utnr.make_dir_path(f'{data.qsq_dir}/get_q2_tables/fits/{args.vers}')
 #-------------------
-if __name__ == '__main__':
+def main():
+    plt.style.use(mplhep.style.LHCb2)
+
     get_args()
     make_table(trig=data.trig, year=data.year, brem=data.brem)
 #-------------------
+if __name__ == '__main__':
+    main()
 
