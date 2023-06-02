@@ -6,11 +6,13 @@ import os
 import re
 import zfit
 import hist
+import utils
 import numpy
 import pprint
 import mplhep
 import argparse
 import ROOT
+import logging
 import read_selection as rs
 
 from logzero      import logger    as log
@@ -19,6 +21,7 @@ from rk.selection import selection as rksl
 from zutils.utils import result_to_latex 
 from fitter       import zfitter
 from rk.mva       import mva_man
+from rk.wgt_mgr   import wgt_mgr
 
 #-------------------
 class data:
@@ -35,6 +38,7 @@ class data:
     l_year   = ['2011', '2012', '2015', '2016', '2017', '2018', 'r1', 'r2p1']
     l_brem   = ['0', '1', '2']
     l_sys    = ['nom', 'nspd']
+    l_cali   = ['000', 'nom']
 
     dat_vers = 'v10.18is'
     bdt_dir  = f'{mva_dir}/electron/bdt_v10.14.a0v2ss'
@@ -50,6 +54,7 @@ class data:
     d_sim_par= None
     skip_fit = None
     nevs_data= None
+    cal_sys  = None
 
     obs          = zfit.Space('Jpsi_M', limits=(2450, 3600))
     sig_pdf_splt = None
@@ -169,10 +174,74 @@ def add_weights(rdf, trig, year, is_data):
     return rdf
 #-------------------
 def add_cal_wgt(rdf, trig, year, weight):
-    pid_cut = rs.get('pid', trig, q2bin='none', year=year)
-    rdf     = rdf.Define('weight', pid_cut)
+    rdf.filepath = 'no-path'
+    rdf.treename = trig 
+    rdf.trigger  = trig 
+    rdf.year     = year
+
+    d_set            = {}
+    d_set['val_dir'] = f'{data.plt_dir}/cal_wgt'
+    d_set['replica'] = 0
+    d_set['bts_ver'] ='10'
+    d_set['bts_sys'] ='nom'
+    d_set['pid_sys'] = data.cal_sys 
+    d_set['trk_sys'] = data.cal_sys 
+    d_set['gen_sys'] = data.cal_sys 
+    d_set['lzr_sys'] = data.cal_sys 
+    d_set['hlt_sys'] = data.cal_sys 
+    d_set['rec_sys'] = data.cal_sys 
+
+    obj         = wgt_mgr(d_set)
+    obj.log_lvl = logging.WARNING
+    rsl         = obj.get_reader('sel', rdf)
+
+    gen_syst, lzr_syst, hlt_syst, rec_syst = get_wgt_syst(trig)
+
+    arr_pid     = rsl('pid', data.cal_sys)
+    arr_trk     = rsl('trk', data.cal_sys)
+    arr_gen     = rsl('gen', gen_syst)
+    arr_lzr     = rsl('lzr', lzr_syst)
+    arr_hlt     = rsl('hlt', hlt_syst)
+    arr_rec     = rsl('rec', rec_syst)
+
+    arr_cal = arr_pid * arr_trk * arr_gen * arr_lzr * arr_hlt * arr_rec
+
+    rdf = utils.add_df_column(rdf, arr_cal,  weight, d_opt={'exclude_re' : 'tmva_.*'})
 
     return rdf
+#-------------------
+def get_wgt_syst(trigger):
+    '''Will return systematic for L0 and GEN weights corresponding to _cal_sys [nom, 000]
+    '''
+    if   data.cal_sys == 'nom':
+        gen_syst = 'MTOS'
+    elif data.cal_sys == '000':
+        gen_syst = '000'
+    else:
+        data.log.error(f'Invalid systematic: {data.cal_sys}')
+        raise
+
+    if   data.cal_sys == '000':
+        lzr_syst = '000'
+    elif trigger == 'MTOS':
+        lzr_syst = 'L0MuonTIS'
+    elif trigger == 'ETOS':
+        lzr_syst = 'L0ElectronTIS'
+    elif trigger == 'GTIS':
+        lzr_syst = 'L0TIS_EMMH.L0HadronElEL.L0ElectronTIS'
+    else:
+        log.error(f'Invalid HLT tag: {trigger}')
+        raise
+
+    if   data.cal_sys == 'nom':
+        hlt_syst = trigger 
+    elif data.cal_sys == '000':
+        gen_syst = '000'
+    else:
+        log.error(f'Invalid systematic: {data.cal_sys}')
+        raise
+
+    return gen_syst, lzr_syst, hlt_syst, hlt_syst
 #-------------------
 def get_branches(rdf):
     v_col = rdf.GetColumnNames()
@@ -571,9 +640,10 @@ def make_table(trig=None, year=None, brem=None):
 def get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
     parser.add_argument('-v', '--vers' , type =str, help='Version, used for naming of output directory', required=True)
-    parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , choices=data.l_trig)
-    parser.add_argument('-y', '--year' , type =str, help='Year'                                        , choices=data.l_year)
-    parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , choices=data.l_brem)
+    parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , required=True, choices=data.l_trig)
+    parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True, choices=data.l_year)
+    parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True, choices=data.l_brem)
+    parser.add_argument('-c', '--cali' , type =str, help='Calibration weight systematics'              , default='nom', choices=data.l_cali)
     parser.add_argument('-s', '--sim'  ,            help='Do only simulation'                          , action='store_true')
     parser.add_argument('-x', '--sys'  , type =str, help='Systematic variabion'                        , choices=data.l_sys) 
     parser.add_argument('-f', '--frac' , type =float, help='Fraction of data to process, for tests'    , default=1.0) 
@@ -585,6 +655,7 @@ def get_args():
     data.brem     = args.brem
     data.sim_only = args.sim
     data.sys      = args.sys
+    data.cal_sys  = args.cali
     data.fraction = args.frac
     data.skip_fit = args.skip_fit
     data.plt_dir  = utnr.make_dir_path(f'{data.qsq_dir}/get_q2_tables/fits/{args.vers}')
