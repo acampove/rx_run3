@@ -114,7 +114,7 @@ def get_input_paths(proc, dset):
 
     return l_path
 #-------------------
-def get_df(year, trig, brem, is_data=None):
+def get_df(year, trig, brem, identifier, is_data=None):
     if is_data not in [True, False]:
         data.log.error(f'Dataset type not specified')
         raise
@@ -131,7 +131,7 @@ def get_df(year, trig, brem, is_data=None):
     check_nopid(rdf, trig, year)
 
     rdf = apply_selection(rdf, trig, year, brem, proc)
-    rdf = add_weights(rdf, trig, year, is_data)
+    rdf = add_weights(rdf, trig, year, is_data, identifier)
 
     return rdf
 #-------------------
@@ -162,25 +162,25 @@ def check_nopid(rdf, trig, year):
         rep.Print()
         raise
 #-------------------
-def add_weights(rdf, trig, year, is_data):
+def add_weights(rdf, trig, year, is_data, identifier):
     if is_data:
         pid_cut = rs.get('pid', trig, q2bin='none', year=year)
         rdf     = rdf.Define('weight', pid_cut)
     else:
-        rdf     = add_cal_wgt(rdf, trig, year, 'weight')
+        rdf     = add_cal_wgt(rdf, trig, year, 'weight', identifier)
 
     rdf = rdf.Redefine('weight', 'float(weight)')
 
     return rdf
 #-------------------
-def add_cal_wgt(rdf, trig, year, weight):
+def add_cal_wgt(rdf, trig, year, weight, identifier):
     rdf.filepath = 'no-path'
     rdf.treename = trig 
     rdf.trigger  = trig 
     rdf.year     = year
 
     d_set            = {}
-    d_set['val_dir'] = f'{data.plt_dir}/cal_wgt'
+    d_set['val_dir'] = f'{data.plt_dir}/cal_wgt_{identifier}'
     d_set['replica'] = 0
     d_set['bts_ver'] ='10'
     d_set['bts_sys'] ='nom'
@@ -611,8 +611,10 @@ def add_nspd_col(df):
     return df
 #-------------------
 def make_table(trig=None, year=None, brem=None):
-    df_sim    = get_df(year, trig, brem, is_data=False)
-    df_dat    = get_df(year, trig, brem, is_data= True)
+    identifier= f'{trig}_{year}_{brem}_{data.sys}'
+
+    df_sim    = get_df(year, trig, brem, f'sim_{identifier}', is_data=False)
+    df_dat    = get_df(year, trig, brem, f'dat_{identifier}', is_data= True)
 
     d_sim_par = {}
     if   data.sys == 'nspd':
@@ -623,7 +625,7 @@ def make_table(trig=None, year=None, brem=None):
             d_tmp_2     = { f'{key}_{i_nspd}' : val for key, val in d_tmp_1.items() }
             d_sim_par.update(d_tmp_2)
     elif data.sys == 'nom':
-        d_sim_par = fit(df_sim, d_fix=None, identifier=f'sim_{trig}_{year}_{brem}_{data.sys}')
+        d_sim_par = fit(df_sim, d_fix=None, identifier=f'sim_{identifier}')
     else:
         data.log.error(f'Invalid systematic: {data.sys}')
         raise
