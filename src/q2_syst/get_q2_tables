@@ -50,7 +50,7 @@ class data:
     brem     = None 
     sim_only = None
     plt_dir  = None 
-    fraction = None
+    nentries = None
     d_sim_par= None
     skip_fit = None
     nevs_data= None
@@ -136,12 +136,10 @@ def get_df(year, trig, brem, identifier, is_data=None):
     return rdf
 #-------------------
 def get_range_rdf(rdf):
-    if data.fraction < 1.0:
-        nentries = rdf.Count().GetValue()
-        nkeep    = int(data.fraction * nentries)
-
-        data.log.visible(f'Using {nkeep}/{nentries} entries')
-        rdf = rdf.Range(nkeep)
+    if data.nentries > 0:
+        ntotal = rdf.Count().GetValue()
+        data.log.visible(f'Using {data.nentries}/{ntotal} entries')
+        rdf = rdf.Range(data.nentries)
 
     return rdf
 #-------------------
@@ -648,7 +646,7 @@ def get_args():
     parser.add_argument('-c', '--cali' , type =str, help='Calibration weight systematics'              , default='nom', choices=data.l_cali)
     parser.add_argument('-s', '--sim'  ,            help='Do only simulation'                          , action='store_true')
     parser.add_argument('-x', '--sys'  , type =str, help='Systematic variabion'                        , choices=data.l_sys) 
-    parser.add_argument('-f', '--frac' , type =float, help='Fraction of data to process, for tests'    , default=1.0) 
+    parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1) 
     parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action='store_true') 
     args = parser.parse_args()
 
@@ -658,7 +656,7 @@ def get_args():
     data.sim_only = args.sim
     data.sys      = args.sys
     data.cal_sys  = args.cali
-    data.fraction = args.frac
+    data.nentries = args.nent
     data.skip_fit = args.skip_fit
     data.plt_dir  = utnr.make_dir_path(f'{data.qsq_dir}/get_q2_tables/fits/{args.vers}')
 #-------------------
