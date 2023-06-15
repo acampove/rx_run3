@@ -14,27 +14,30 @@ class data:
     in_ver = None
     ot_ver = None
     l_year = None
+    l_trig = None
     caldir = None 
     syst   = None
 
     input_dir  = f'{os.environ["QSQSYS"]}/get_q2_tables'
     l_all_year = ['2017', '2018'] + ['r1', 'r2p1']
+    l_all_trig = ['ETOS', 'GTIS']
     l_all_syst = ['nom']
-    l_trig     = ['ETOS', 'GTIS']
     l_brem     = [0, 1, 2]
 #----------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
-    parser.add_argument('-i', '--input' ,  type=str, help='Input version')
-    parser.add_argument('-o', '--output',  type=str, help='Output version')
+    parser.add_argument('-i', '--input' ,  type=str, help='Input version', required=True)
+    parser.add_argument('-o', '--output',  type=str, help='Output version', required=True)
     parser.add_argument('-y', '--year'  , nargs='+', help='Years/datasets', default=data.l_all_year, choices=data.l_all_year)
+    parser.add_argument('-t', '--trig'  , nargs='+', help='Trigger'       , default=data.l_all_trig, choices=data.l_all_trig)
     parser.add_argument('-s', '--syst'  , nargs='+', help='Systematics'   , default=data.l_all_syst, choices=data.l_all_syst)
-    parser.add_argument('-d', '--cdir'  ,  type=str, help='Calibration directory, where maps are copied', default='tmp')
+    parser.add_argument('-d', '--cdir'  ,  type=str, help='Calibration directory, where maps are copied', default='/tmp')
     args = parser.parse_args()
 
     data.in_ver = args.input
     data.ot_ver = args.output
     data.l_year = args.year
+    data.l_trig = args.trig
     data.l_syst = args.syst
     data.caldir = args.cdir
 #----------------------------
