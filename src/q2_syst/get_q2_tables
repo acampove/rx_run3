@@ -501,7 +501,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
         data.log.error(f'Fit failed')
         print(res)
         raise
-    elif res.status != 0 or not res.valid:
+    elif res.status != 0:
         plot_fit(dat, pdf, res, identifier)
         data.log.error(f'Finished with status/validity: {res.status}/{res.valid}')
         print(res)
