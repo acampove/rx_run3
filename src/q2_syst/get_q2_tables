@@ -565,7 +565,7 @@ def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier, nbins=100):
     plt.close('all')
 #-------------------
 def res_to_dpar(res, identifier):
-    d_par = { name : [d_val['value'], 0.5 * (d_val['errors']['lower'] + d_val['errors']['upper']) ] for name, d_val in res.params.items() }
+    d_par = { name : [d_val['value'], 0.5 * (d_val['errors']['upper'] - d_val['errors']['lower']) ] for name, d_val in res.params.items() }
 
     return d_par
 #-------------------
