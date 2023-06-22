@@ -101,7 +101,7 @@ def plot(arr_smr, arr_org, pdf, title, name):
     plt.hist(arr_org, data.nbins, range=(data.min_mass, data.max_mass), histtype='step', label='Original', density=True)
     plt.hist(arr_smr, data.nbins, range=(data.min_mass, data.max_mass), histtype='step', label='Smeared' , density=True)
 
-    plot_path = f'{data.plot_dir}/{name}.png'
+    plot_path = f'{data.plot_dir}/{name}'
     log.info(f'Saving to: {plot_path}')
 
     plt.legend()
