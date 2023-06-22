@@ -81,6 +81,8 @@ def plot(arr_smr, arr_org, pdf, title, name):
     arr_x = numpy.linspace(data.min_mass, data.max_mass, 400)
     arr_y = data.pdf.pdf(arr_x)
     plt.plot(arr_x, arr_y, '-', label='Model')
+    plt.hist(arr_org, 50, range=(data.min_mass, data.max_mass), histtype='step', label='Original')
+    plt.hist(arr_smr, 50, range=(data.min_mass, data.max_mass), histtype='step', label='Smeared' )
 
     plt.legend()
     plt.savefig('plot.png')
