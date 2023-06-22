@@ -4,6 +4,9 @@ import os
 import ROOT
 import numpy
 import pprint
+import mplhep
+import logging
+import logzero
 import argparse
 import utils_noroot      as utnr
 import matplotlib.pyplot as plt
@@ -49,8 +52,9 @@ def get_rdf(trig, year, nbrem):
     rdf=rdf.Filter(f'nbrem == {nbrem}', 'BREM')
     rdf=rdf.Filter(pid_cut, 'PID')
 
-    rep=rdf.Report()
-    rep.Print()
+    if data.debug:
+        rep=rdf.Report()
+        rep.Print()
 
     rdf.treename = trig
 
@@ -70,8 +74,8 @@ def get_pdf(trig, year, nbrem):
     sim_res = utnr.load_pickle(sim_res_path)
     dat_res = utnr.load_pickle(dat_res_path)
 
-    d_sim_par = get_res_val(sim_res, ['ap_l', 'pw_l', 'ap_r', 'pw_r'])
-    d_dat_par = get_res_val(dat_res, ['mu', 'sg', 'ncbr', 'ncbl'])
+    d_sim_par = get_res_val(sim_res, ['ap_l', 'pw_l', 'ap_r', 'pw_r', 'ncbr', 'ncbl'])
+    d_dat_par = get_res_val(dat_res, ['mu', 'sg'])
     d_par     = d_sim_par | d_dat_par
 
     s_param   = data.pdf.get_params()
@@ -84,7 +88,6 @@ def get_pdf(trig, year, nbrem):
 
         val = d_par[par.name]
         par.set_value(val)
-        par.floating = False
         log.debug(f'{par.name:<20}{"->":<20}{val:20.3f}')
 
     return data.pdf
@@ -94,15 +97,20 @@ def plot(arr_smr, arr_org, pdf, title, name):
     arr_y = data.pdf.pdf(arr_x)
 
     plt.subplots(figsize=(10,7))
-    plt.plot(arr_x, arr_y, '-', label='Model')
+    plt.plot(arr_x, arr_y, '-', label='Data', color='black')
     plt.hist(arr_org, data.nbins, range=(data.min_mass, data.max_mass), histtype='step', label='Original', density=True)
     plt.hist(arr_smr, data.nbins, range=(data.min_mass, data.max_mass), histtype='step', label='Smeared' , density=True)
 
-    plt.legend()
-    plt.savefig('plot.png')
-    plt.close('all')
+    plot_path = f'{data.plot_dir}/{name}.png'
+    log.info(f'Saving to: {plot_path}')
 
-    exit()
+    plt.legend()
+    plt.grid()
+    plt.title(title)
+    plt.xlabel('$M(J/\psi)$')
+    plt.ylabel('Normalized')
+    plt.savefig(plot_path)
+    plt.close('all')
 #-----------------------------------
 def validate(trig, year, nbrem):
     rdf = get_rdf(trig, year, nbrem)
@@ -124,6 +132,7 @@ def get_args():
     parser.add_argument('-y', '--year' , nargs='+', help='Years'        , choices=data.l_all_year, default=data.l_all_year)
     parser.add_argument('-t', '--trig' , nargs='+', help='Triggers'     , choices=data.l_all_trig, default=data.l_all_trig)
     parser.add_argument('-b', '--brem' , nargs='+', help='Brem category', choices=data.l_all_brem, default=data.l_all_brem)
+    parser.add_argument('-d', '--debug', help='Will run in debug mode'  , action='store_true')
     parser.add_argument('-e', '--nevs' , type =int, help='Number of entries to run over', default=-1)
     args = parser.parse_args()
 
@@ -140,6 +149,15 @@ def get_args():
     mdl           = q2model()
     data.pdf      = mdl.get_pdf(is_signal=True, split_by_nspd=False)
     [[data.min_mass]], [[data.max_mass]] = data.pdf.space.limits
+
+    plt.style.use(mplhep.style.LHCb2)
+
+    data.debug = args.debug
+    if args.debug:
+        log.setLevel(logzero.DEBUG)
+    else:
+        q2smr.log.setLevel(logging.WARNING)
+        log.setLevel(logzero.INFO)
 
     data.plot_dir = utnr.make_dir_path(f'{data.qsq_dir}/validate_smear/{data.vers}')
 #-----------------------------------
@@ -161,3 +179,4 @@ def main():
 if __name__ == '__main__':
     get_args()
     main()
+
