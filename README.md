@@ -153,3 +153,10 @@ compare_q2 -v v1 v2 v3...
 
 where the versions are the versions of the calibration files (e.g. v1.nom).
 
+## Validation
+
+To overlay the signal component in the fit to the data with the simulation before and after the smearing do:
+
+```bash
+validate_smear -v v3.nom
+```
