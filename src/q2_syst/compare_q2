@@ -25,7 +25,7 @@ class data:
 
     qsq_dir  = os.environ['QSQSYS']
 
-    d_range_tos = {'delta_m' : (-10, 10), 'mu_MC' : (3068, 3089), 's_sigma' : (0.75, 1.25) }
+    d_range_tos = {'delta_m' : (-20, 10), 'mu_MC' : (3050, 3089), 's_sigma' : (0.75, 1.25) }
     d_range_tis = {'delta_m' : (-20, 10), 'mu_MC' : (3050, 3089), 's_sigma' : (0.75, 1.25) }
 
     d_title = {'delta_m' : '$\Delta M$', 'mu_MC' : '$\mu_{MC}$', 's_sigma' : '$s_{\sigma}$'}
