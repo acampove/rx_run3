@@ -7,24 +7,35 @@ import argparse
 import pandas            as pnd
 import utils_noroot      as utnr
 import matplotlib.pyplot as plt
+
+from logzero import logger as log
+
 #-----------------------------------------
 class data:
-    log    = utnr.getLogger(__name__)
-    l_trig = ['ETOS', 'GTIS']
-    l_brem = ['0', '1', '2']
-    l_year = ['2011', '2012', '2015', '2016', '2017', '2018']
-    l_par  = ['delta_m', 'mu_MC', 's_sigma']
+    l_all_trig = ['ETOS', 'GTIS']
+    l_all_brem = ['0', '1', '2']
+    l_all_year = ['2011', '2012', '2015', '2016', '2017', '2018']
 
-    qsq_dir  = os.environ['QSQSYS']
+    l_par    = ['delta_m', 'mu_MC', 's_sigma']
     plot_dir = None
     l_vers   = None
+    l_year   = None
+    l_brem   = None
+    l_trig   = None
 
-    d_range_tos = {'delta_m' : (-10, 10), 'mu_MC' : (3068, 3085), 's_sigma' : (1.00, 1.25) }
-    d_range_tis = {'delta_m' : (-20, 10), 'mu_MC' : (3050, 3085), 's_sigma' : (1.00, 1.25) }
+    qsq_dir  = os.environ['QSQSYS']
+
+    d_range_tos = {'delta_m' : (-10, 10), 'mu_MC' : (3068, 3089), 's_sigma' : (0.75, 1.25) }
+    d_range_tis = {'delta_m' : (-20, 10), 'mu_MC' : (3050, 3089), 's_sigma' : (0.75, 1.25) }
+
+    d_title = {'delta_m' : '$\Delta M$', 'mu_MC' : '$\mu_{MC}$', 's_sigma' : '$s_{\sigma}$'}
 #-----------------------------------------
 def get_pars(vers, trig, brem, year):
-    cal_dir = os.environ['CALDIR']
-    d_par   = utnr.load_json(f'{cal_dir}/qsq/{vers}/{year}.json')
+    cal_dir   = os.environ['CALDIR']
+    json_path = f'{cal_dir}/qsq/{vers}/{year}.json'
+    log.debug(f'Loading: {json_path}')
+
+    d_par   = utnr.load_json(json_path)
     regex   = f'{trig}\s([\w,_]+)\s{brem}\sgamma'
     d_res   = dict(d_par)
 
@@ -78,25 +89,40 @@ def main():
 
                 ax = None
                 for version, df_v in df_f.groupby('version'):
-                    ax=df_v.plot(x='brem', y='par_val', yerr='par_err', ax=ax, label=version)
+                    try:
+                        ax=df_v.plot(x='brem', y='par_val', yerr='par_err', ax=ax, label=version)
+                    except:
+                        print(df_v)
+                        raise
 
                 miny, maxy = data.d_range_tos[par] if trig == 'ETOS' else data.d_range_tis[par]
                 ax.set_ylim(miny, maxy)
 
                 plt_path = f'{data.plot_dir}/{year}_{trig}_{par}.png'
-                data.log.visible(f'Saving to: {plt_path}')
+                log.visible(f'Saving to: {plt_path}')
                 plt.grid()
                 plt.title(f'{trig}; {year}')
-                plt.ylabel(par)
+
+                title = data.d_title[par]
+                plt.ylabel( title, fontsize=15)
+                plt.xlabel('Brem', fontsize=15)
+
+                plt.tight_layout()
                 plt.savefig(plt_path)
                 plt.close('all')
 #-----------------------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to perform comparisons between versions of q2 smearing factors')
-    parser.add_argument('-v', '--versions' , nargs='+', help='Versions to compare')
+    parser.add_argument('-v', '--vers' , nargs='+', help='Versions to compare', required=True)
+    parser.add_argument('-y', '--year' , nargs='+', help='Years'        , choices=data.l_all_year, default=data.l_all_year)
+    parser.add_argument('-t', '--trig' , nargs='+', help='Triggers'     , choices=data.l_all_trig, default=data.l_all_trig)
+    parser.add_argument('-b', '--brem' , nargs='+', help='Brem category', choices=data.l_all_brem, default=data.l_all_brem)
     args = parser.parse_args()
 
-    data.l_vers = args.versions
+    data.l_year = args.year
+    data.l_trig = args.trig
+    data.l_brem = args.brem
+    data.l_vers = args.vers
 
     vers = '_'.join(data.l_vers)
     vers = vers.replace('.', 'p')
