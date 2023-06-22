@@ -2,6 +2,7 @@
 
 import os
 import ROOT
+import utils
 import numpy
 import pprint
 import mplhep
@@ -12,8 +13,9 @@ import utils_noroot      as utnr
 import matplotlib.pyplot as plt
 import read_selection    as rs
 
-from q2_syst.model import model   as q2model
+from rk.wgt_mgr    import wgt_mgr
 from rk.q2smear    import q2smear as q2smr
+from q2_syst.model import model   as q2model
 from logzero       import logger  as log
 
 #-----------------------------------
@@ -36,9 +38,60 @@ class data:
     l_all_trig = ['ETOS', 'GTIS']
     l_all_brem = ['0', '1', '2']
     l_all_year = ['2011', '2012', '2015', '2016', '2017', '2018']
+#-------------------
+def get_wgt_syst(trigger):
+    '''Will return systematic for L0 and GEN weights corresponding to _cal_sys [nom, 000]
+    '''
+    gen_syst = 'MTOS'
+
+    if   trigger == 'MTOS':
+        lzr_syst = 'L0MuonTIS'
+    elif trigger == 'ETOS':
+        lzr_syst = 'L0ElectronTIS'
+    elif trigger == 'GTIS':
+        lzr_syst = 'L0TIS_EMMH.L0HadronElEL.L0ElectronTIS'
+    else:
+        log.error(f'Invalid HLT tag: {trigger}')
+        raise
+
+    hlt_syst = trigger 
+
+    return gen_syst, lzr_syst, hlt_syst, hlt_syst
 #-----------------------------------
-def add_cal_wgt(rdf):
-    rdf = rdf.Define('weight', '1')
+def add_cal_wgt(rdf, trig, year, brem):
+    identifier   = f'{trig}_{year}_{brem}'
+    rdf.filepath = 'no-path'
+    rdf.treename = trig 
+    rdf.trigger  = trig 
+    rdf.year     = year
+
+    d_set            = {}
+    d_set['val_dir'] = f'{data.plot_dir}/cal_wgt_{identifier}'
+    d_set['replica'] = 0
+    d_set['bts_ver'] ='10'
+    d_set['bts_sys'] ='nom'
+    d_set['pid_sys'] ='nom' 
+    d_set['trk_sys'] ='nom' 
+    d_set['gen_sys'] ='nom' 
+    d_set['lzr_sys'] ='nom' 
+    d_set['hlt_sys'] ='nom' 
+    d_set['rec_sys'] ='nom' 
+
+    obj         = wgt_mgr(d_set)
+    obj.log_lvl = logging.WARNING
+    rsl         = obj.get_reader('sel', rdf)
+
+    gen_syst, lzr_syst, hlt_syst, rec_syst = get_wgt_syst(trig)
+
+    arr_pid     = rsl('pid', 'nom')
+    arr_trk     = rsl('trk', 'nom')
+    arr_gen     = rsl('gen', gen_syst)
+    arr_lzr     = rsl('lzr', lzr_syst)
+    arr_hlt     = rsl('hlt', hlt_syst)
+    arr_rec     = rsl('rec', rec_syst)
+
+    arr_cal = arr_pid * arr_trk * arr_gen * arr_lzr * arr_hlt * arr_rec
+    rdf     = utils.add_df_column(rdf, arr_cal,  'weight', d_opt={'exclude_re' : 'tmva_.*'})
 
     return rdf
 #-----------------------------------
@@ -69,10 +122,12 @@ def get_rdf(trig, year, nbrem):
     rdf=rdf.Filter(f'nbrem == {nbrem}', 'BREM')
 
     if not data.wgts:
+        log.warning('Using PID weights from simulation only')
         pid_cut = rs.get('pid', trig, 'jpsi', year)
         rdf=rdf.Define('weight', f'float({pid_cut} == 1)')
     else:
-        rdf=add_cal_wgt(rdf)
+        log.info('Calculating calibration weights')
+        rdf=add_cal_wgt(rdf, trig, year, nbrem)
 
     if data.debug:
         rep=rdf.Report()
@@ -94,6 +149,7 @@ def get_res_val(res, l_par):
     return {name : val for name, val in d_par_val.items() if name in l_par}
 #-----------------------------------
 def get_pdf(trig, year, nbrem):
+    log.info('Getting PDF')
     dat_res_path = f'{data.qsq_dir}/get_q2_tables/fits/{data.vers}/dat_{trig}_{year}_{nbrem}_nom.pkl'
     sim_res_path = f'{data.qsq_dir}/get_q2_tables/fits/{data.vers}/sim_{trig}_{year}_{nbrem}_nom.pkl'
 
