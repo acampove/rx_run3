@@ -25,6 +25,9 @@ class data:
     cal_dir= None
     nevs   = None
 
+    plot_dir= None
+    diag_dir= None
+
     l_year = None
     l_trig = None
     l_brem = None
@@ -33,6 +36,22 @@ class data:
     l_all_trig = ['ETOS', 'GTIS']
     l_all_brem = ['0', '1', '2']
     l_all_year = ['2011', '2012', '2015', '2016', '2017', '2018']
+#-----------------------------------
+def add_cal_wgt(rdf):
+    rdf = rdf.Define('weight', '1')
+
+    return rdf
+#-----------------------------------
+def plot_wgt(rdf, title, name):
+    arr_wgt = rdf.AsNumpy(['weight'])['weight']
+    mean    = numpy.mean(arr_wgt)
+
+    plt.hist(arr_wgt, 40, range=(0, 2.0), histtype='step', density=True)
+    plt.xlabel('Weight')
+    plt.ylabel('Normalized')
+    plt.title(f'$\mu={mean:.3f}$; {title}')
+    plt.savefig(f'{data.diag_dir}/{name}.png')
+    plt.close('all')
 #-----------------------------------
 def get_rdf(trig, year, nbrem):
     data_wc = f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.18is/{year}_{trig}/*.root'
@@ -45,18 +64,27 @@ def get_rdf(trig, year, nbrem):
         log.warning(f'Picking up {data.nevs}/{total} events')
         rdf = rdf.Range(data.nevs)
 
-    pid_cut = rs.get('pid', trig, 'jpsi', year)
-
     rdf=rdf.Define('brem_mult', 'L1_BremMultiplicity + L2_BremMultiplicity')
     rdf=rdf.Define('nbrem'    , 'brem_mult < 2 ? brem_mult : 2')
     rdf=rdf.Filter(f'nbrem == {nbrem}', 'BREM')
-    rdf=rdf.Filter(pid_cut, 'PID')
+
+    if not data.wgts:
+        pid_cut = rs.get('pid', trig, 'jpsi', year)
+        rdf=rdf.Define('weight', f'float({pid_cut} == 1)')
+    else:
+        rdf=add_cal_wgt(rdf)
 
     if data.debug:
         rep=rdf.Report()
         rep.Print()
 
     rdf.treename = trig
+
+    name    = f'wgt_{trig}_{year}_{nbrem}.png' 
+    title   = f'Trig: {trig}; Year: {year}; Brem: {nbrem}; Vers: {data.vers}'
+    plot_wgt(rdf, title, name)
+
+    exit()
 
     return rdf
 #-----------------------------------
@@ -133,11 +161,13 @@ def get_args():
     parser.add_argument('-t', '--trig' , nargs='+', help='Triggers'     , choices=data.l_all_trig, default=data.l_all_trig)
     parser.add_argument('-b', '--brem' , nargs='+', help='Brem category', choices=data.l_all_brem, default=data.l_all_brem)
     parser.add_argument('-d', '--debug', help='Will run in debug mode'  , action='store_true')
+    parser.add_argument('-w', '--wgts' , help='Will use calibration weights on simulation, instead of PID cut', action='store_true')
     parser.add_argument('-e', '--nevs' , type =int, help='Number of entries to run over', default=-1)
     args = parser.parse_args()
 
     data.vers   = args.vers
     data.nevs   = args.nevs
+    data.wgts   = args.wgts
     data.l_year = args.year
     data.l_trig = args.trig
     data.l_brem = args.brem
@@ -160,6 +190,7 @@ def get_args():
         log.setLevel(logzero.INFO)
 
     data.plot_dir = utnr.make_dir_path(f'{data.qsq_dir}/validate_smear/{data.vers}')
+    data.diag_dir = utnr.make_dir_path(f'{data.qsq_dir}/validate_smear/{data.vers}/diagnostics')
 #-----------------------------------
 def get_env_var(varname):
     try:
