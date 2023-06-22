@@ -12,6 +12,7 @@ class data:
     vers   = None
     qsq_dir= None
     cas_dir= None
+    nevs   = None
 
     l_year = None
     l_trig = None
@@ -27,8 +28,12 @@ def get_rdf(trig, year):
     log.debug(f'Loading files in: {data_wc}')
     
     rdf = ROOT.RDataFrame(trig, data_wc)
+    if data.nevs > 0:
+        total = rdf.Count().GetValue()
+        log.warning(f'Picking up {data.nevs}/{total} events')
+        rdf = rdf.Range(data.nevs)
 
-    rdf.Display().Print()
+    return rdf
 #-----------------------------------
 def get_pdf(trig, year):
     return
@@ -48,9 +53,11 @@ def get_args():
     parser.add_argument('-y', '--year' , nargs='+', help='Years'        , choices=data.l_all_year, default=data.l_all_year)
     parser.add_argument('-t', '--trig' , nargs='+', help='Triggers'     , choices=data.l_all_trig, default=data.l_all_trig)
     parser.add_argument('-b', '--brem' , nargs='+', help='Brem category', choices=data.l_all_brem, default=data.l_all_brem)
+    parser.add_argument('-e', '--nevs' , type =int, help='Number of entries to run over', default=-1)
     args = parser.parse_args()
 
     data.vers   = args.vers
+    data.nevs   = args.nevs
     data.l_year = args.year
     data.l_trig = args.trig
     data.l_brem = args.brem
