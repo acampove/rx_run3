@@ -2,14 +2,15 @@
 
 import os
 import ROOT
+import numpy
 import pprint
 import argparse
-import utils_noroot as utnr
-
-from logzero import logger as log
+import utils_noroot      as utnr
+import matplotlib.pyplot as plt
 
 from q2_syst.model import model   as q2model
 from rk.q2smear    import q2smear as q2smr
+from logzero       import logger  as log
 
 #-----------------------------------
 class data:
@@ -77,8 +78,15 @@ def get_pdf(trig, year, nbrem):
     return data.pdf
 #-----------------------------------
 def plot(arr_smr, arr_org, pdf, title, name):
+    arr_x = numpy.linspace(data.min_mass, data.max_mass, 400)
+    arr_y = data.pdf.pdf(arr_x)
+    plt.plot(arr_x, arr_y, '-', label='Model')
+
+    plt.legend()
+    plt.savefig('plot.png')
+    plt.close('all')
+
     exit()
-    return
 #-----------------------------------
 def validate(trig, year, nbrem):
     rdf = get_rdf(trig, year)
@@ -114,6 +122,8 @@ def get_args():
 
     mdl           = q2model()
     data.pdf      = mdl.get_pdf(is_signal=True, split_by_nspd=False)
+    [[data.min_mass]], [[data.max_mass]] = data.pdf.space.limits
+
     data.plot_dir = utnr.make_dir_path(f'{data.qsq_dir}/validate_smear/{data.vers}')
 #-----------------------------------
 def get_env_var(varname):
