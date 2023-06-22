@@ -50,7 +50,7 @@ def plot_wgt(rdf, title, name):
     plt.xlabel('Weight')
     plt.ylabel('Normalized')
     plt.title(f'$\mu={mean:.3f}$; {title}')
-    plt.savefig(f'{data.diag_dir}/{name}.png')
+    plt.savefig(f'{data.diag_dir}/{name}')
     plt.close('all')
 #-----------------------------------
 def get_rdf(trig, year, nbrem):
@@ -83,8 +83,6 @@ def get_rdf(trig, year, nbrem):
     name    = f'wgt_{trig}_{year}_{nbrem}.png' 
     title   = f'Trig: {trig}; Year: {year}; Brem: {nbrem}; Vers: {data.vers}'
     plot_wgt(rdf, title, name)
-
-    exit()
 
     return rdf
 #-----------------------------------
@@ -120,14 +118,14 @@ def get_pdf(trig, year, nbrem):
 
     return data.pdf
 #-----------------------------------
-def plot(arr_smr, arr_org, pdf, title, name):
+def plot_dist(arr_smr, arr_org, arr_wgt, pdf, title, name):
     arr_x = numpy.linspace(data.min_mass, data.max_mass, 400)
     arr_y = data.pdf.pdf(arr_x)
 
     plt.subplots(figsize=(10,7))
     plt.plot(arr_x, arr_y, '-', label='Data', color='black')
-    plt.hist(arr_org, data.nbins, range=(data.min_mass, data.max_mass), histtype='step', label='Original', density=True)
-    plt.hist(arr_smr, data.nbins, range=(data.min_mass, data.max_mass), histtype='step', label='Smeared' , density=True)
+    plt.hist(arr_org, data.nbins, weights=arr_wgt, range=(data.min_mass, data.max_mass), histtype='step', label='Original', density=True)
+    plt.hist(arr_smr, data.nbins, weights=arr_wgt, range=(data.min_mass, data.max_mass), histtype='step', label='Smeared' , density=True)
 
     plot_path = f'{data.plot_dir}/{name}'
     log.info(f'Saving to: {plot_path}')
@@ -149,10 +147,11 @@ def validate(trig, year, nbrem):
     smr     = q2smr(rdf, q2dir)
     arr_smr = smr.get_q2_smear(0)
     arr_org = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
+    arr_wgt = rdf.AsNumpy(['weight'])['weight']
     title   = f'Trig: {trig}; Year: {year}; Brem: {nbrem}; Vers: {data.vers}'
     name    = f'{trig}_{year}_{nbrem}.png' 
 
-    plot(arr_smr, arr_org, pdf, title, name)
+    plot_dist(arr_smr, arr_org, arr_wgt, pdf, title, name)
 #-----------------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to compare smeared MC with fitted data') 
