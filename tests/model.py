@@ -6,7 +6,6 @@ from zutils.plot   import plot   as zfp
 from q2_syst.model import model  as q2model
 from fitter        import zfitter
 
-
 #-------------------------------
 def plot_model(pdf, name):
     dir_name = 'tests/model'
@@ -39,7 +38,7 @@ def test_1():
 
     plot_model(pdf, 'test_1')
     log.info(f'Passed test_1')
-    obj.__del__()
+    obj.clean_pars()
 #-------------------------------
 def test_2():
     obj=q2model()
@@ -47,7 +46,7 @@ def test_2():
 
     plot_model(pdf, 'test_2')
     log.info(f'Passed test_2')
-    obj.__del__()
+    obj.clean_pars()
 #-------------------------------
 def test_3():
     d_sim_par = get_sim_par()
@@ -57,7 +56,7 @@ def test_3():
 
     plot_model(pdf, 'test_3')
     log.info(f'Passed test_3')
-    obj.__del__()
+    obj.clean_pars()
 #-------------------------------
 def main():
     test_1()
