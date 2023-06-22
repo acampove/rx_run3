@@ -131,7 +131,7 @@ class model:
     
         return bkg
     #--------------------------------------
-    def __del__(self):
+    def clean_pars(self):
         log.debug('Deallocating PDF')
         d_par = zfit.Parameter._existing_params
         l_key = list(d_par.keys())
