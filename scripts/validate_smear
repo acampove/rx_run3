@@ -7,6 +7,7 @@ import pprint
 import argparse
 import utils_noroot      as utnr
 import matplotlib.pyplot as plt
+import read_selection    as rs
 
 from q2_syst.model import model   as q2model
 from rk.q2smear    import q2smear as q2smr
@@ -24,13 +25,14 @@ class data:
     l_year = None
     l_trig = None
     l_brem = None
+    nbins  = 100 
 
     l_all_trig = ['ETOS', 'GTIS']
     l_all_brem = ['0', '1', '2']
     l_all_year = ['2011', '2012', '2015', '2016', '2017', '2018']
 #-----------------------------------
-def get_rdf(trig, year):
-    data_wc = f'{data.cas_dir}/tools/apply_selection/q2_smear/data/v10.18is/{year}_{trig}/*.root'
+def get_rdf(trig, year, nbrem):
+    data_wc = f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.18is/{year}_{trig}/*.root'
 
     log.debug(f'Loading files in: {data_wc}')
     
@@ -39,6 +41,16 @@ def get_rdf(trig, year):
         total = rdf.Count().GetValue()
         log.warning(f'Picking up {data.nevs}/{total} events')
         rdf = rdf.Range(data.nevs)
+
+    pid_cut = rs.get('pid', trig, 'jpsi', year)
+
+    rdf=rdf.Define('brem_mult', 'L1_BremMultiplicity + L2_BremMultiplicity')
+    rdf=rdf.Define('nbrem'    , 'brem_mult < 2 ? brem_mult : 2')
+    rdf=rdf.Filter(f'nbrem == {nbrem}', 'BREM')
+    rdf=rdf.Filter(pid_cut, 'PID')
+
+    rep=rdf.Report()
+    rep.Print()
 
     rdf.treename = trig
 
@@ -80,9 +92,11 @@ def get_pdf(trig, year, nbrem):
 def plot(arr_smr, arr_org, pdf, title, name):
     arr_x = numpy.linspace(data.min_mass, data.max_mass, 400)
     arr_y = data.pdf.pdf(arr_x)
+
+    plt.subplots(figsize=(10,7))
     plt.plot(arr_x, arr_y, '-', label='Model')
-    plt.hist(arr_org, 50, range=(data.min_mass, data.max_mass), histtype='step', label='Original')
-    plt.hist(arr_smr, 50, range=(data.min_mass, data.max_mass), histtype='step', label='Smeared' )
+    plt.hist(arr_org, data.nbins, range=(data.min_mass, data.max_mass), histtype='step', label='Original', density=True)
+    plt.hist(arr_smr, data.nbins, range=(data.min_mass, data.max_mass), histtype='step', label='Smeared' , density=True)
 
     plt.legend()
     plt.savefig('plot.png')
@@ -91,10 +105,11 @@ def plot(arr_smr, arr_org, pdf, title, name):
     exit()
 #-----------------------------------
 def validate(trig, year, nbrem):
-    rdf = get_rdf(trig, year)
+    rdf = get_rdf(trig, year, nbrem)
     pdf = get_pdf(trig, year, nbrem)
 
     q2dir   = f'{data.cal_dir}/qsq/{data.vers}'
+
     smr     = q2smr(rdf, q2dir)
     arr_smr = smr.get_q2_smear(0)
     arr_org = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
