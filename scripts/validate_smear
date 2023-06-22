@@ -22,6 +22,8 @@ class data:
     l_all_brem = ['0', '1', '2']
     l_all_year = ['2011', '2012', '2015', '2016', '2017', '2018']
 #-----------------------------------
+def build_pdf():
+#-----------------------------------
 def get_rdf(trig, year):
     data_wc = f'{data.cas_dir}/tools/apply_selection/q2_smear/data/v10.18is/{year}_{trig}/*.root'
 
@@ -35,17 +37,23 @@ def get_rdf(trig, year):
 
     return rdf
 #-----------------------------------
-def get_pdf(trig, year):
-    return
-#-----------------------------------
-def plot(rdf, pdf):
-    return
-#-----------------------------------
-def validate(trig, year):
-    rdf = get_rdf(trig, year)
-    pdf = get_pdf(trig, year)
+def get_pdf(trig, year, nbrem):
+    res_path = f'{data.qsq_dir}/get_q2_tables/fits/{data.vers}/dat_{trig}_{year}_{nbrem}_nom.pkl'
 
-    plot(rdf, pdf)
+    res = utnr.load_pickle(res_path)
+
+    print(res)
+
+    return res
+#-----------------------------------
+def plot(rdf, pdf, nbrem):
+    return
+#-----------------------------------
+def validate(trig, year, nbrem):
+    rdf = get_rdf(trig, year)
+    pdf = get_pdf(trig, year, nbrem)
+
+    plot(rdf, pdf, nbrem)
 #-----------------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to compare smeared MC with fitted data') 
@@ -64,6 +72,7 @@ def get_args():
 
     data.qsq_dir = get_env_var('QSQSYS')
     data.cas_dir = get_env_var('CASDIR')
+    data.pdf     = build_pdf()
 
     data.plot_dir = utnr.make_dir_path(f'{data.qsq_dir}/validate_smear/{data.vers}')
 #-----------------------------------
@@ -79,7 +88,8 @@ def get_env_var(varname):
 def main():
     for year in data.l_year:
         for trig in data.l_trig:
-            validate(trig, year)
+            for brem in data.l_brem:
+                validate(trig, year, brem)
 #-----------------------------------
 if __name__ == '__main__':
     get_args()
