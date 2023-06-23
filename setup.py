@@ -9,6 +9,7 @@ setup(
     long_description    ='',
     scripts             = glob.glob('jobs/*') + glob.glob('scripts/*'),
     package_dir         = {'' : 'src'},
+    packages            = ['q2_data'],
     install_requires    = open('requirements.txt').read().splitlines(),
 )
 
