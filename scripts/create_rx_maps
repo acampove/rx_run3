@@ -35,8 +35,11 @@ def make_json(version, filename):
     df_a.index  = data.l_year
     df_r        = df_a.applymap(get_data)
     df_t        = df_r.transpose()
+    df_i        = df_t.rename(index=lambda name: name.replace('ETOS', 'GTIS'))
+    df_b        = pnd.concat([df_t, df_i])
+
     for year in data.l_year:
-        df_y   = df_t[year]
+        df_y   = df_b[year]
         d_data = df_y.to_dict()
         json_path = f'{data.cal_dir}/qsq/{version}/{year}.json'
         log.info(f'Saving to: {json_path}')
