@@ -82,6 +82,8 @@ def get_version(version):
         version = 'RX $B^{+}$'
     elif version == 'vs.nom':
         version = 'RX $B^{0}$'
+    elif version == 'vk.nom':
+        version = '$R_{K}$'
     else:
         version = version
     
