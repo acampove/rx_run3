@@ -29,14 +29,49 @@ def get_data(content):
 
     return [float(val), float(err)]
 #-----------------------------------------------------------
+def preprocess_rk_df(df):
+    df['mu_MC 0 gamma'] = '3070.0 ± 0.0'
+    df['mu_MC 1 gamma'] = '3070.0 ± 0.0'
+    df['mu_MC 2 gamma'] = '3070.0 ± 0.0'
+
+    l_df = []
+    for trig in ['eTOS', 'TIS']:
+        df_o = df.filter(like = trig, axis=0)
+        df_o = df_o.rename(index  =lambda name: name.replace(f'_{trig}', ''))
+
+        trig_name = {'eTOS' : 'ETOS', 'TIS' : 'GTIS'}[trig]
+        df_o = df_o.rename(columns=lambda name: f'{trig_name} {name}')
+        l_df.append(df_o)
+
+    df = pnd.concat(l_df, axis=1)
+    df = df.T
+
+    df['2011'] = df.r1p0
+    df['2012'] = df.r1p0
+    df['2015'] = df.r2p1
+    df['2016'] = df.r2p1
+
+    df = df.drop(columns=['r1p0', 'r2p1'])
+    df = df.T
+    df = df.sort_index()
+
+    return df
+#-----------------------------------------------------------
 def make_json(version, filename):
     csv_path    = files('q2_data').joinpath(filename)
     df_a        = pnd.read_csv(csv_path)
+    
+    if version == 'vk.nom':
+        df_a = preprocess_rk_df(df_a)
+
     df_a.index  = data.l_year
     df_r        = df_a.applymap(get_data)
     df_t        = df_r.transpose()
-    df_i        = df_t.rename(index=lambda name: name.replace('ETOS', 'GTIS'))
-    df_b        = pnd.concat([df_t, df_i])
+    if version != 'vk.nom':
+        df_i    = df_t.rename(index=lambda name: name.replace('ETOS', 'GTIS'))
+        df_b    = pnd.concat([df_t, df_i])
+    else:
+        df_b    = df_t
 
     for year in data.l_year:
         df_y   = df_b[year]
@@ -51,6 +86,7 @@ def get_args():
 #-----------------------------------------------------------
 if __name__ == '__main__':
     get_args()
-    make_json('vp.nom', 'kp_q2_pars.csv')
-    make_json('vs.nom', 'ks_q2_pars.csv')
+    make_json('vk.nom', 'rk_kp_q2_pars.csv')
+    make_json('vp.nom', 'rx_kp_q2_pars.csv')
+    make_json('vs.nom', 'rx_ks_q2_pars.csv')
 
