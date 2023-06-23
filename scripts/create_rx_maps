@@ -30,6 +30,7 @@ def get_data(content):
     return [float(val), float(err)]
 #-----------------------------------------------------------
 def preprocess_rk_df(df):
+    log.warning(f'Adding fake mu_MC column to RK table')
     df['mu_MC 0 gamma'] = '3070.0 ± 0.0'
     df['mu_MC 1 gamma'] = '3070.0 ± 0.0'
     df['mu_MC 2 gamma'] = '3070.0 ± 0.0'
