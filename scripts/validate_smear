@@ -174,9 +174,16 @@ def get_pdf(trig, year, nbrem):
 
     return data.pdf
 #-----------------------------------
+def get_efficiency(arr_qsq):
+
+#-----------------------------------
 def plot_dist(arr_smr, arr_org, arr_wgt, pdf, title, name):
     arr_x = numpy.linspace(data.min_mass, data.max_mass, 400)
     arr_y = data.pdf.pdf(arr_x)
+
+    eff_smr = get_efficiency(arr_smr)
+    eff_org = get_efficiency(arr_org)
+    header  = f'$\varepsilon_{org}={eff_org:.3f}$\n$\varepsilon_{smr}={eff_smr:.3f}$'
 
     plt.subplots(figsize=(10,7))
     plt.plot(arr_x, arr_y, '-', label='Data', color='black')
@@ -186,7 +193,7 @@ def plot_dist(arr_smr, arr_org, arr_wgt, pdf, title, name):
     plot_path = f'{data.plot_dir}/{name}'
     log.info(f'Saving to: {plot_path}')
 
-    plt.legend()
+    plt.legend(title=header)
     plt.grid()
     plt.title(title)
     plt.xlabel('$M(J/\psi)$')
