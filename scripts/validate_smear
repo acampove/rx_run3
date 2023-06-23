@@ -6,6 +6,7 @@ import utils
 import numpy
 import pprint
 import mplhep
+import numexpr
 import logging
 import logzero
 import argparse
@@ -174,21 +175,30 @@ def get_pdf(trig, year, nbrem):
 
     return data.pdf
 #-----------------------------------
-def get_efficiency(arr_qsq):
+def get_efficiency(arr_qsq, trig, year):
+    cut = rs.get('q2', trig, 'jpsi', year)
+    cut = cut.replace('&&', '&')
 
+    arr_flg = numexpr.evaluate(cut, {'Jpsi_M' : arr_qsq})
+    arr_pas = arr_qsq[arr_flg]
+
+    return arr_pas.size / arr_qsq.size
 #-----------------------------------
-def plot_dist(arr_smr, arr_org, arr_wgt, pdf, title, name):
+def plot_dist(arr_smr, arr_org, arr_wgt, pdf, trig, year, nbrem):
     arr_x = numpy.linspace(data.min_mass, data.max_mass, 400)
     arr_y = data.pdf.pdf(arr_x)
 
-    eff_smr = get_efficiency(arr_smr)
-    eff_org = get_efficiency(arr_org)
-    header  = f'$\varepsilon_{org}={eff_org:.3f}$\n$\varepsilon_{smr}={eff_smr:.3f}$'
+    eff_smr = get_efficiency(arr_smr, trig, year)
+    eff_org = get_efficiency(arr_org, trig, year)
+    header  = f'Eff:{eff_org:.3f} -> {eff_smr:.3f}'
 
     plt.subplots(figsize=(10,7))
     plt.plot(arr_x, arr_y, '-', label='Data', color='black')
     plt.hist(arr_org, data.nbins, weights=arr_wgt, range=(data.min_mass, data.max_mass), histtype='step', label='Original', density=True)
     plt.hist(arr_smr, data.nbins, weights=arr_wgt, range=(data.min_mass, data.max_mass), histtype='step', label='Smeared' , density=True)
+
+    title   = f'Trig: {trig}; Year: {year}; Brem: {nbrem}; Vers: {data.vers}'
+    name    = f'{trig}_{year}_{nbrem}.png' 
 
     plot_path = f'{data.plot_dir}/{name}'
     log.info(f'Saving to: {plot_path}')
@@ -211,10 +221,8 @@ def validate(trig, year, nbrem):
     arr_smr = smr.get_q2_smear(0)
     arr_org = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
     arr_wgt = rdf.AsNumpy(['weight'])['weight']
-    title   = f'Trig: {trig}; Year: {year}; Brem: {nbrem}; Vers: {data.vers}'
-    name    = f'{trig}_{year}_{nbrem}.png' 
 
-    plot_dist(arr_smr, arr_org, arr_wgt, pdf, title, name)
+    plot_dist(arr_smr, arr_org, arr_wgt, pdf, trig, year, nbrem)
 #-----------------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to compare smeared MC with fitted data') 
