@@ -3,6 +3,6 @@ rx-tools>=0.0.4
 matplotlib
 pandas
 numpy
-zfit==0.13.1
+zfit>=0.14.0
 jacobi
 
