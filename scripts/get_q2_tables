@@ -55,8 +55,8 @@ class data:
     skip_fit = None
     nevs_data= None
     cal_sys  = None
+    obs      = None
 
-    obs          = zfit.Space('Jpsi_M', limits=(2450, 3600))
     sig_pdf_splt = None
     sig_pdf_merg = None
     bkg_pdf      = None
@@ -234,7 +234,7 @@ def get_wgt_syst(trigger):
     if   data.cal_sys == 'nom':
         hlt_syst = trigger 
     elif data.cal_sys == '000':
-        gen_syst = '000'
+        hlt_syst = '000'
     else:
         log.error(f'Invalid systematic: {data.cal_sys}')
         raise
@@ -278,7 +278,6 @@ def add_bdt(rdf, trig):
     return ROOT.RDF.MakeNumpyDataFrame(d_data)
 #-------------------
 def apply_selection(rdf, trig, year, brem, proc):
-    qsq_cut = rs.get('q2', trig, q2bin='jpsi', year=year)
     rdf     = rdf.Define('nbrem', 'L1_BremMultiplicity + L2_BremMultiplicity')
     if brem == 2:
         brm_cut = f'nbrem>=2'
@@ -286,7 +285,6 @@ def apply_selection(rdf, trig, year, brem, proc):
         brm_cut = f'nbrem=={brem}'
 
     rdf = rdf.Filter(brm_cut, brm_cut)
-    rdf = rdf.Filter(qsq_cut, qsq_cut)
     rep = rdf.Report()
 
     rep.Print()
@@ -492,24 +490,31 @@ def fit(df, d_fix=None, identifier='unnamed'):
     else:
         res=obj.fit()
 
-    plot_fit(dat, pdf, res, identifier)
+    plot_fit(dat, pdf, res, identifier, add_pars=None)
 
     if   data.skip_fit:
         return
     elif res is None:
-        plot_fit(dat, pdf, res, identifier)
+        plot_fit(dat, pdf, res, identifier, add_pars=None)
+        plot_fit(dat, pdf, res, identifier, add_pars='all')
+
         data.log.error(f'Fit failed')
         print(res)
         raise
     elif res.status != 0:
-        plot_fit(dat, pdf, res, identifier)
+        plot_fit(dat, pdf, res, identifier, add_pars=None)
+        plot_fit(dat, pdf, res, identifier, add_pars='all')
+
         data.log.error(f'Finished with status/validity: {res.status}/{res.valid}')
         print(res)
         raise
     else:
-        res.error()
+        with zfit.run.set_autograd_mode(False):
+            res.hesse(method='minuit_hesse')
         res.freeze()
         print(res)
+
+    plot_fit(dat, pdf, res, identifier, add_pars='all')
 
     tex_path = f'{data.plt_dir}/{identifier}.tex'
     data.log.visible(f'Saving to: {tex_path}')
@@ -518,7 +523,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
     pkl_path = f'{data.plt_dir}/{identifier}.pkl'
     utnr.dump_pickle(res, pkl_path)
 
-    d_par = res_to_dpar(res, identifier)
+    d_par = { name : [ d_val['value'], d_val['hesse']['error'] ] for name, d_val in res.params.items() }
 
     utnr.dump_json(d_par, jsn_path)
 
@@ -534,6 +539,12 @@ def get_data(rdf, pdf, is_signal, identifier):
     plot_data(arr_val, arr_wgt, obs, is_signal, identifier)
 
     return dat
+#-------------------
+def get_obs_range():
+    if data.brem == '0':
+        return [2200, 3300]
+    else:
+        return [2200, 3800]
 #-------------------
 def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier, nbins=100):
     plt.close('all')
@@ -564,18 +575,17 @@ def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier, nbins=100):
     plt.savefig(plt_path)
     plt.close('all')
 #-------------------
-def res_to_dpar(res, identifier):
-    d_par = { name : [d_val['value'], 0.5 * (d_val['errors']['upper'] - d_val['errors']['lower']) ] for name, d_val in res.params.items() }
+#TODO: Save two plots, one with pars on plot and another without using add_pars argument
+def plot_fit(dat, pdf, res, identifier, add_pars=None):
+    obj=zfp(data=dat, model=pdf, result=res)
+    obj.plot(d_leg={}, plot_range=get_obs_range(), ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
+    obj.axs[1].plot(get_obs_range(), [0, 0], linestyle='--', color='black')
 
-    return d_par
-#-------------------
-def plot_fit(dat, pdf, res, identifier):
-    obj   = zfp(data=dat, model=pdf, result=res)
-    obj.plot(d_leg={}, plot_range=(2450, 3600), ext_text=f'#events={dat.nevents.numpy()}')
+    if add_pars is not None:
+        plot_path = f'{data.plt_dir}/{identifier}_pars.png'
+    else:
+        plot_path = f'{data.plt_dir}/{identifier}.png'
 
-    obj.axs[1].plot([2450, 3600], [0, 0], linestyle='--', color='black')
-
-    plot_path = f'{data.plt_dir}/{identifier}.png'
     data.log.visible(f'Saving to: {plot_path}')
     plt.savefig(plot_path, bbox_inches='tight')
 #-------------------
@@ -659,6 +669,7 @@ def get_args():
     data.nentries = args.nent
     data.skip_fit = args.skip_fit
     data.plt_dir  = utnr.make_dir_path(f'{data.qsq_dir}/get_q2_tables/fits/{args.vers}')
+    data.obs      = zfit.Space('Jpsi_M', limits=get_obs_range())
 #-------------------
 def main():
     plt.style.use(mplhep.style.LHCb2)
