@@ -44,6 +44,7 @@ class data:
     bdt_dir  = f'{mva_dir}/electron/bdt_v10.14.a0v2ss'
     b_mass   = 'B_const_mass_M[0]'
     j_mass   = 'Jpsi_M'
+    nbins    = 60
 
     trig     = None 
     year     = None 
@@ -546,12 +547,12 @@ def get_obs_range():
     else:
         return [2200, 3800]
 #-------------------
-def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier, nbins=100):
+def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier):
     plt.close('all')
     [[lower]], [[upper]] = obs.limits
 
     fig, ax   = plt.subplots(figsize=(15, 10))
-    data_hist = hist.Hist.new.Regular(nbins, lower, upper, name='', underflow=False, overflow=False)
+    data_hist = hist.Hist.new.Regular(data.nbins, lower, upper, name='', underflow=False, overflow=False)
     data_hist = data_hist.Weight()
     data_hist.fill(arr_mas, weight=arr_wgt)
 
@@ -578,7 +579,7 @@ def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier, nbins=100):
 #TODO: Save two plots, one with pars on plot and another without using add_pars argument
 def plot_fit(dat, pdf, res, identifier, add_pars=None):
     obj=zfp(data=dat, model=pdf, result=res)
-    obj.plot(d_leg={}, plot_range=get_obs_range(), ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
+    obj.plot(nbins=data.nbins, d_leg={}, plot_range=get_obs_range(), ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
     obj.axs[1].plot(get_obs_range(), [0, 0], linestyle='--', color='black')
 
     if add_pars is not None:
