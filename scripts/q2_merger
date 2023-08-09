@@ -117,7 +117,7 @@ def merge(year):
     map_path = f'{map_dir}/{year}.json'
 
     data.log.visible(f'Saving to: {map_path}')
-    utnr.dump_json(d_map, map_path)
+    utnr.dump_json(d_map, map_path, sort_keys=True)
 #----------------------------
 def main():
     get_args()
