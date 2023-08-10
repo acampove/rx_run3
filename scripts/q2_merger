@@ -27,6 +27,8 @@ class data:
     l_all_trig = ['ETOS', 'GTIS']
     l_all_syst = ['nom']
     l_brem     = [0, 1, 2]
+    cal_dir    = os.environ['CALDIR']
+    job_dir    = os.environ['JOBDIR']
 #----------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
@@ -35,8 +37,8 @@ def get_args():
     parser.add_argument('-y', '--year'  , nargs='+', help='Years/datasets', default=data.l_all_year, choices=data.l_all_year)
     parser.add_argument('-t', '--trig'  , nargs='+', help='Trigger'       , default=data.l_all_trig, choices=data.l_all_trig)
     parser.add_argument('-s', '--syst'  , nargs='+', help='Systematics'   , default=data.l_all_syst, choices=data.l_all_syst)
-    parser.add_argument('-d', '--cdir'  ,  type=str, help='Calibration directory, where maps are copied', default='/tmp')
     parser.add_argument('-a', '--avrg'  ,  type=int, help='Will average parameters over TIS and TOS', default=1, choices=[0, 1])
+    parser.add_argument('-f', '--fake_run', type=int, help='If 0 will send maps to $CALDIR, if 1 will send maps to $JOBDIR', default=1, choices=[0, 1])
     args = parser.parse_args()
 
     data.in_ver = args.input
@@ -44,7 +46,7 @@ def get_args():
     data.l_year = args.year
     data.l_trig = args.trig
     data.l_syst = args.syst
-    data.caldir = args.cdir
+    data.caldir = data.cal_dir if args.fake_run == 0 else data.job_dir
     data.average= args.avrg
 #----------------------------
 def get_map(year, trig, brem, syst):
