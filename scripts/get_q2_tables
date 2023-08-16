@@ -576,7 +576,6 @@ def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier):
     plt.savefig(plt_path)
     plt.close('all')
 #-------------------
-#TODO: Save two plots, one with pars on plot and another without using add_pars argument
 def plot_fit(dat, pdf, res, identifier, add_pars=None):
     obj=zfp(data=dat, model=pdf, result=res)
     obj.plot(nbins=data.nbins, d_leg={}, plot_range=get_obs_range(), ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
