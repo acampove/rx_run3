@@ -5,6 +5,7 @@ import numpy
 import ROOT
 import os
 import argparse
+import version_management as vmg
 
 from rk.dilep_reso import calculator as calc_reso
 from rk.boundaries import boundaries
@@ -23,10 +24,12 @@ class data:
     l_ibin  = None
 #---------------------------------------------
 def get_data_path(mc=None, year=None):
+    qsq_dir = vmg.get_last_version(dir_path=f'{data.cas_dir}/q2_systematics', version_only=False)
+
     if mc:
-        file_path = f'{data.cas_dir}/q2_systematics/{year}_{data.trig}_ctrl_ee.root'
+        file_path = f'{qsq_dir}/{year}_{data.trig}_ctrl_ee.root'
     else:
-        file_path = f'{data.cas_dir}/q2_systematics/{year}_{data.trig}_data_ee.root'
+        file_path = f'{qsq_dir}/{year}_{data.trig}_data_ee.root'
 
     return file_path
 #---------------------------------------------
