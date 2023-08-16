@@ -9,8 +9,8 @@ import utils_noroot as utnr
 
 from jacobi import propagate
 
-from stats.average import average    as sta_avg
-
+from stats.average import average              as sta_avg
+from stats.utils   import error_to_covariance  as sta_ecv
 #----------------------------
 class data:
     log    = utnr.getLogger(__name__)
@@ -18,6 +18,7 @@ class data:
     ot_ver = None
     l_year = None
     l_trig = None
+    l_brem = None
     caldir = None 
     syst   = None
     average= None 
@@ -25,8 +26,8 @@ class data:
     input_dir  = f'{os.environ["QSQSYS"]}/get_q2_tables'
     l_all_year = ['2017', '2018'] + ['r1', 'r2p1']
     l_all_trig = ['ETOS', 'GTIS']
-    l_all_syst = ['nom']
-    l_brem     = [0, 1, 2]
+    l_all_syst = ['nom', 'nspd']
+    l_all_brem = ['0', '1', '2']
     cal_dir    = os.environ['CALDIR']
     job_dir    = os.environ['JOBDIR']
 #----------------------------
@@ -36,6 +37,7 @@ def get_args():
     parser.add_argument('-o', '--output',  type=str, help='Output version', required=True)
     parser.add_argument('-y', '--year'  , nargs='+', help='Years/datasets', default=data.l_all_year, choices=data.l_all_year)
     parser.add_argument('-t', '--trig'  , nargs='+', help='Trigger'       , default=data.l_all_trig, choices=data.l_all_trig)
+    parser.add_argument('-b', '--brem'  , nargs='+', help='Brem category' , default=data.l_all_brem, choices=data.l_all_brem)
     parser.add_argument('-s', '--syst'  , nargs='+', help='Systematics'   , default=data.l_all_syst, choices=data.l_all_syst)
     parser.add_argument('-a', '--avrg'  ,  type=int, help='Will average parameters over TIS and TOS', default=1, choices=[0, 1])
     parser.add_argument('-f', '--fake_run', type=int, help='If 0 will send maps to $CALDIR, if 1 will send maps to $JOBDIR', default=1, choices=[0, 1])
@@ -45,13 +47,14 @@ def get_args():
     data.ot_ver = args.output
     data.l_year = args.year
     data.l_trig = args.trig
+    data.l_brem = args.brem
     data.l_syst = args.syst
     data.caldir = data.cal_dir if args.fake_run == 0 else data.job_dir
     data.average= args.avrg
 #----------------------------
-def get_map(year, trig, brem, syst):
-    sim_map_path       = f'{data.input_dir}/fits/{data.in_ver}/sim_{trig}_{year}_{brem}_{syst}.json'
-    dat_map_path       = f'{data.input_dir}/fits/{data.in_ver}/dat_{trig}_{year}_{brem}_{syst}.json'
+def get_nom_map(year, trig, brem):
+    sim_map_path       = f'{data.input_dir}/fits/{data.in_ver}/sim_{trig}_{year}_{brem}_nom.json'
+    dat_map_path       = f'{data.input_dir}/fits/{data.in_ver}/dat_{trig}_{year}_{brem}_nom.json'
 
     d_sim_par          = utnr.load_json(sim_map_path)
     d_dat_par          = utnr.load_json(dat_map_path)
@@ -69,6 +72,48 @@ def get_map(year, trig, brem, syst):
     d_table[f'{trig} delta_m {brem} gamma'] = [f_delta_m.tolist(), math.sqrt(v_delta_m)]
     d_table[f'{trig} s_sigma {brem} gamma'] = [f_sigma_m.tolist(), math.sqrt(v_sigma_m)]
     d_table[f'{trig} mu_MC {brem} gamma'  ] = [f_sim_mu          ,           e_sim_mu  ]
+
+    return d_table
+#----------------------------
+def get_nsp_map(year, trig, brem):
+    dat_map_path       = f'{data.input_dir}/fits/{data.in_ver}/dat_{trig}_{year}_{brem}_nspd.json'
+
+    d_dat_par          = utnr.load_json(dat_map_path)
+
+    [dl_mu_val, dl_mu_err] = d_dat_par['dmu']
+    [rt_sg_val, rt_sg_err] = d_dat_par['rsg']
+
+    l_mu_mc_val = []
+    l_mu_mc_err = []
+    for i_nspd in [1, 2, 3]:
+        sim_map_path = f'{data.input_dir}/fits/{data.in_ver}/sim_{trig}_{year}_{brem}_{i_nspd}_nspd.json'
+        d_sim_par    = utnr.load_json(sim_map_path)
+        [mu_mc_val, mu_mc_err] = d_sim_par['mu']
+
+        l_mu_mc_val.append(mu_mc_val)
+        l_mu_mc_err.append(mu_mc_err)
+
+    l_mu_mc_cov = sta_ecv(l_mu_mc_err)
+
+    mu_mc_val, mu_mc_var = propagate(lambda x: (x[0] + x[1] + x[2])/3., l_mu_mc_val, l_mu_mc_cov) 
+    mu_mc_val=mu_mc_val.tolist()
+    mu_mc_err = math.sqrt(mu_mc_var)
+
+    d_table                                 = {}
+    d_table[f'{trig} delta_m {brem} gamma'] = [dl_mu_val, dl_mu_err]
+    d_table[f'{trig} s_sigma {brem} gamma'] = [rt_sg_val, rt_sg_err]
+    d_table[f'{trig} mu_MC {brem} gamma'  ] = [mu_mc_val, mu_mc_err]
+
+    return d_table
+#----------------------------
+def get_map(year, trig, brem, syst):
+    if   syst == 'nom':
+        d_table = get_nom_map(year, trig, brem)
+    elif syst == 'nspd':
+        d_table = get_nsp_map(year, trig, brem)
+    else:
+        data.log.error(f'Invalid systematic: {syst}')
+        raise ValueError
 
     return d_table
 #----------------------------
@@ -110,8 +155,10 @@ def merge(year):
                 d_tmp=get_map(year, trig, brem, syst)
                 d_map.update(d_tmp)
 
-    if data.average == 1:
+    if   data.average == 1 and len(data.l_trig) == 2:
         d_map=average_tis_tos(d_map)
+    elif data.average == 1 and len(data.l_trig) == 1:
+        data.log.warning(f'Cannot average over multiple trigger categories, using only: {data.l_trig}')
     else:
         data.log.warning(f'Not averaging scales')
 
