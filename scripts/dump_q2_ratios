@@ -14,12 +14,11 @@ class data:
     out_dir = None
     inp_dir = None
     version = None 
-    l_kind  = None
     l_dset  = None
     l_trig  = None
     l_brem  = None
+    l_par   = ['rsg', 'dmu', 'mMC']
 
-    l_all_kind = ['par', 'res']
     l_all_brem = [ 0, 1, 2 ]
     l_all_dset = [ 'r1', 'r2p1', '2017', '2018' ]
     l_all_trig = [ 'ETOS', 'GTIS' ]
@@ -27,17 +26,19 @@ class data:
 
     log = utnr.getLogger(__name__)
 #----------------------------
-def par_to_res(d_par):
+def par_to_res(par, d_par):
+    name  = {'rsg' : 'sg', 'dmu' : 'mu', 'mMC' : 'mu'}[par]
     d_res = {}
     for sbin, d_fit_par in d_par.items():
         if 'inf' in sbin: 
             continue
-        if d_fit_par == {}:
-            sg = numpy.nan
-        else:
-            [sg, _] = d_fit_par['sg']
 
-        d_res[sbin] = sg
+        if d_fit_par == {}:
+            val = numpy.nan
+        else:
+            [val, _] = d_fit_par[name]
+
+        d_res[sbin] = val 
 
     return d_res
 #-------------------------------------
@@ -52,39 +53,37 @@ def divide(num, den):
     else:
         raise ValueError
 #-------------------------------------
-def calculate_ratio(d_dt_str, d_mc_str):
+def calculate_par(par, d_dt_str, d_mc_str):
     d_rat_str = {}
     for key in d_dt_str.keys():
         val_dt = d_dt_str[key]
         val_mc = d_mc_str[key]
 
-        try:
+        if   par == 'mMC':
+            d_rat_str[key] = val_mc
+        elif par == 'dmu':
+            d_rat_str[key] = val_dt - val_mc
+        elif par == 'rsg':
             d_rat_str[key] = divide(val_dt, val_mc)
-        except ValueError:
-            data.log.error(f'Cannot divide resolutions for {key}')
-            data.log.error(f'Data: {val_dt}')
-            data.log.error(f'MC  : {val_mc}')
+        else:
+            data.log.error(f'Invalid parameter: {par}')
             raise ValueError
 
     return d_rat_str
 #-------------------------------------
-def get_ratio(kind, brem, trig, dset):
-    mc_path  = f'{data.inp_dir}/get_q2_resolutions/mc/json/{data.version}/{trig}_{dset}/{kind}_brem_{brem}.json'
-    dt_path  = f'{data.inp_dir}/get_q2_resolutions/data/json/{data.version}/{trig}_{dset}/{kind}_brem_{brem}.json'
+def get_par(par, brem, trig, dset):
+    mc_path  = f'{data.inp_dir}/get_q2_resolutions/mc/json/{data.version}/{trig}_{dset}/par_brem_{brem}.json'
+    dt_path  = f'{data.inp_dir}/get_q2_resolutions/data/json/{data.version}/{trig}_{dset}/par_brem_{brem}.json'
 
     d_mc_str = utnr.load_json(mc_path)
     d_dt_str = utnr.load_json(dt_path)
 
-    if kind == 'par':
-        d_mc_str = par_to_res(d_mc_str)
-        d_dt_str = par_to_res(d_dt_str)
-    else:
-        d_mc_str = d_mc_str
-        d_dt_str = d_dt_str
+    d_mc_str = par_to_res(par, d_mc_str)
+    d_dt_str = par_to_res(par, d_dt_str)
 
-    d_rat_str = calculate_ratio(d_dt_str, d_mc_str)
+    d_par_str= calculate_par(par, d_dt_str, d_mc_str)
 
-    return d_rat_str
+    return d_par_str
 #-------------------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to create ratio histograms and JSON files of data and MC resolutions')
@@ -92,14 +91,12 @@ def get_args():
     parser.add_argument('-b', '--brem', nargs='+', help='Brem category'  , default=data.l_all_brem) 
     parser.add_argument('-d', '--dset', nargs='+', help='Dataset'        , default=data.l_all_dset) 
     parser.add_argument('-t', '--trig', nargs='+', help='Trigger'        , default=data.l_all_trig) 
-    parser.add_argument('-k', '--kind', nargs='+', help='From fit or RMS', default=data.l_all_kind) 
     args = parser.parse_args()
 
     data.version = args.vers
     data.l_brem  = args.brem
     data.l_dset  = args.dset
     data.l_trig  = args.trig
-    data.l_kind  = args.kind
 
     data.out_dir = utnr.make_dir_path(f'{os.environ["QSQSYS"]}/get_q2_resolutions/ratio/{data.version}')
     data.inp_dir = os.environ['QSQSYS']
@@ -137,13 +134,13 @@ def main():
             map_path = f'{data.out_dir}/{dset}_{trig}.root'
             data.log.visible(f'Saving to: {map_path}')
             ofile = ROOT.TFile(map_path, 'recreate')
-            for kind in data.l_kind:
+            for par in data.l_par:
                 for brem in data.l_brem:
-                    d_rat_str = get_ratio(kind, brem, trig, dset)
-                    utnr.dump_json(d_rat_str, f'{data.out_dir}/{trig}_{dset}/{kind}_brem_{brem}.json')
+                    d_rat_str = get_par(par, brem, trig, dset)
+                    utnr.dump_json(d_rat_str, f'{data.out_dir}/{trig}_{dset}/par_brem_{brem}.json')
 
                     h_rat = convert_to_hist(d_rat_str)
-                    h_rat.SetName(f'h_{kind}_brem_{brem}')
+                    h_rat.SetName(f'h_{par}_brem_{brem}')
                     h_rat.Write()
             ofile.Close()
 #-------------------------------------
