@@ -137,7 +137,9 @@ def main():
             for par in data.l_par:
                 for brem in data.l_brem:
                     d_rat_str = get_par(par, brem, trig, dset)
-                    utnr.dump_json(d_rat_str, f'{data.out_dir}/{trig}_{dset}/par_brem_{brem}.json')
+                    par_path = f'{data.out_dir}/{trig}_{dset}/{par}_brem_{brem}.json'
+                    data.log.visible(f'Saving to: {par_path}')
+                    utnr.dump_json(d_rat_str, par_path)
 
                     h_rat = convert_to_hist(d_rat_str)
                     h_rat.SetName(f'h_{par}_brem_{brem}')
