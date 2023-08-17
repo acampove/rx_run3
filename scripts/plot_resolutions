@@ -22,7 +22,7 @@ class data:
     l_all_dset = ['r1', 'r2p1', '2017', '2018' ]
     l_all_trig = ['ETOS', 'GTIS' ]
 
-    l_src   = ['par', 'res']
+    l_par   = ['rsg', 'dmu', 'mMC']
     d_prange= { '0' : ( 10,  35), '1' : ( 20,  60), '2' : ( 30,  65) }
     d_rrange= { '0' : (120, 155), '1' : (130, 165), '2' : (115, 175) }
 
@@ -54,44 +54,50 @@ def mask_empty(d_data):
 
     return d_data_masked
 #----------------------------
-def plot_reso(kind, brem, src, trig, dset):
-    par_path  = f'{data.inp_dir}/get_q2_resolutions/{kind}/json/{data.version}/{trig}_{dset}/{src}_brem_{brem}.json'
+def plot_reso(kind, brem, par, trig, dset):
+    par_path  = f'{data.inp_dir}/get_q2_resolutions/{kind}/json/{data.version}/{trig}_{dset}/{par}_brem_{brem}.json'
+    data.log.info(f'Picking up parameters from: {par_path}')
     d_par_str = utnr.load_json(par_path)
 
-    if src == 'par':
-        d_res_str = par_to_res(d_par_str)
-        zrange    = data.d_prange[brem]
-    else:
-        d_res_str = d_par_str
-        zrange    = data.d_rrange[brem]
+    d_res_str = par_to_res(d_par_str)
+    zrange    = data.d_prange[brem]
 
     d_res_str = mask_empty(d_res_str)
     plot_dir  = utnr.make_dir_path(f'{data.inp_dir}/get_q2_resolutions/plots/{data.version}/{trig}_{dset}')
-    rk_plot_reso(d_res_str, plot_dir, suffix=f'{kind}_{brem}_{src}', title=f'Brem {brem}; From: {src},{kind}', rng=zrange)
+    rk_plot_reso(d_res_str, plot_dir, suffix=f'{kind}_{brem}_{par}', title=f'Brem {brem}; From: {par},{kind}', rng=zrange)
 #----------------------------
-def plot_ratio(brem, src, trig, dset):
-    json_path = f'{data.inp_dir}/get_q2_resolutions/ratio/{data.version}/{trig}_{dset}/{src}_brem_{brem}.json'
+def plot_ratio(brem, par, trig, dset):
+    json_path = f'{data.inp_dir}/get_q2_resolutions/ratio/{data.version}/{trig}_{dset}/{par}_brem_{brem}.json'
+    data.log.info(f'Picking up parameters from: {json_path}')
     d_rat_str = utnr.load_json(json_path)
-    zrange    = (0, 2)
+    if   par == 'rsg':
+        zrange    = 0.7, 1.3
+    elif par == 'dmu':
+        zrange    = -10, 0 
+    elif par == 'mMC':
+        zrange    = 3070, 3090 
+    else:
+        data.log.error(f'Invalid parameter: {par}')
+        raise ValueError
 
     d_rat_str = mask_empty(d_rat_str)
     plot_dir  = utnr.make_dir_path(f'{data.inp_dir}/get_q2_resolutions/plots/{data.version}/{trig}_{dset}')
-    rk_plot_reso(d_rat_str, plot_dir, suffix=f'rat_{brem}_{src}', title=f'Brem {brem}; From: {src}, ratio', rng=zrange)
+    rk_plot_reso(d_rat_str, plot_dir, suffix=f'rat_{brem}_{par}', title=f'Brem {brem}; From: {par}, ratio', rng=zrange)
 #----------------------------
 def plot_all_reso():
     for kind in data.l_kind:
         for brem in data.l_brem:
-            for src in data.l_src:
+            for par in data.l_par:
                 for trig in data.l_trig:
                     for dset in data.l_dset:
-                        plot_reso(kind, brem, src, trig, dset)
+                        plot_reso(kind, brem, par, trig, dset)
 #----------------------------
 def plot_all_ratios():
     for brem in data.l_brem:
-        for src in data.l_src:
+        for par in data.l_par:
             for trig in data.l_trig:
                 for dset in data.l_dset:
-                    plot_ratio(brem, src, trig, dset)
+                    plot_ratio(brem, par, trig, dset)
 #----------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to plot 2D maps of resolutions in data, MC and also their ratio')
