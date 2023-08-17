@@ -17,7 +17,7 @@ class data:
     l_dset  = None
     l_trig  = None
     l_brem  = None
-    l_par   = ['rsg', 'dmu', 'mMC', 'mDT']
+    l_par   = ['rsg', 'dmu', 'mMC']
 
     l_all_brem = [ 0, 1, 2 ]
     l_all_dset = [ 'r1', 'r2p1', '2017', '2018' ]
@@ -61,8 +61,6 @@ def calculate_par(par, d_dt_str, d_mc_str):
 
         if   par == 'mMC':
             d_rat_str[key] = val_mc
-        elif par == 'mDT':
-            d_rat_str[key] = val_dt
         elif par == 'dmu':
             d_rat_str[key] = val_dt - val_mc
         elif par == 'rsg':
