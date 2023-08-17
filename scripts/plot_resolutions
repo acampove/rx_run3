@@ -22,7 +22,7 @@ class data:
     l_all_dset = ['r1', 'r2p1', '2017', '2018' ]
     l_all_trig = ['ETOS', 'GTIS' ]
 
-    l_par   = ['rsg', 'dmu', 'mMC']
+    l_par   = ['rsg', 'dmu', 'mMC', 'mDT']
     d_prange= { '0' : ( 10,  35), '1' : ( 20,  60), '2' : ( 30,  65) }
     d_rrange= { '0' : (120, 155), '1' : (130, 165), '2' : (115, 175) }
 
@@ -74,8 +74,8 @@ def plot_ratio(brem, par, trig, dset):
         zrange    = 0.7, 1.3
     elif par == 'dmu':
         zrange    = -10, 0 
-    elif par == 'mMC':
-        zrange    = 3070, 3090 
+    elif par in ['mMC', 'mDT']:
+        zrange    = 3050, 3090 
     else:
         data.log.error(f'Invalid parameter: {par}')
         raise ValueError
@@ -85,6 +85,7 @@ def plot_ratio(brem, par, trig, dset):
     rk_plot_reso(d_rat_str, plot_dir, suffix=f'rat_{brem}_{par}', title=f'Brem {brem}; From: {par}, ratio', rng=zrange)
 #----------------------------
 def plot_all_reso():
+    return
     for kind in data.l_kind:
         for brem in data.l_brem:
             for par in data.l_par:
