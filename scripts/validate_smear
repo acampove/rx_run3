@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
 import os
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning, module="tensorflow_addons")
+
 import ROOT
 import utils
 import numpy
@@ -97,14 +101,17 @@ def add_cal_wgt(rdf, trig, year, brem):
     return rdf
 #-----------------------------------
 def plot_wgt(rdf, title, name):
-    arr_wgt = rdf.AsNumpy(['weight'])['weight']
-    mean    = numpy.mean(arr_wgt)
+    plot_path = f'{data.diag_dir}/{name}'
+    arr_wgt   = rdf.AsNumpy(['weight'])['weight']
+    mean      = numpy.mean(arr_wgt)
+
+    log.visible(f'Saving to: {plot_path}')
 
     plt.hist(arr_wgt, 40, range=(0, 2.0), histtype='step', density=True)
     plt.xlabel('Weight')
     plt.ylabel('Normalized')
     plt.title(f'$\mu={mean:.3f}$; {title}')
-    plt.savefig(f'{data.diag_dir}/{name}')
+    plt.savefig(plot_path)
     plt.close('all')
 #-----------------------------------
 def get_rdf(trig, year, nbrem):
@@ -151,8 +158,10 @@ def get_res_val(res, l_par):
 #-----------------------------------
 def get_pdf(trig, year, nbrem):
     log.info('Getting PDF')
-    dat_res_path = f'{data.qsq_dir}/get_q2_tables/fits/{data.vers}/dat_{trig}_{year}_{nbrem}_nom.pkl'
-    sim_res_path = f'{data.qsq_dir}/get_q2_tables/fits/{data.vers}/sim_{trig}_{year}_{nbrem}_nom.pkl'
+
+    vers         = data.vers.replace('.mom', '.nom')
+    dat_res_path = f'{data.qsq_dir}/get_q2_tables/fits/{vers}/dat_{trig}_{year}_{nbrem}_nom.pkl'
+    sim_res_path = f'{data.qsq_dir}/get_q2_tables/fits/{vers}/sim_{trig}_{year}_{nbrem}_nom.pkl'
 
     sim_res = utnr.load_pickle(sim_res_path)
     dat_res = utnr.load_pickle(dat_res_path)
@@ -184,6 +193,16 @@ def get_efficiency(arr_qsq, trig, year):
 
     return arr_pas.size / arr_qsq.size
 #-----------------------------------
+def normalize_weights(arr_mass, arr_wgt):
+    l_count, l_bin = numpy.histogram(arr_mass, bins=100, range=(1000, 4000), weights=arr_wgt)
+    ncount         = sum(l_count)
+    print(ncount)
+    width          = l_bin[1] - l_bin[0]
+    area           = ncount * width
+    arr_wgt        = arr_wgt / area
+
+    return arr_wgt
+#-----------------------------------
 def plot_dist(arr_smr, arr_org, arr_wgt, pdf, trig, year, nbrem):
     arr_x = numpy.linspace(data.min_mass, data.max_mass, 400)
     arr_y = data.pdf.pdf(arr_x)
@@ -192,10 +211,21 @@ def plot_dist(arr_smr, arr_org, arr_wgt, pdf, trig, year, nbrem):
     eff_org = get_efficiency(arr_org, trig, year)
     header  = f'Eff:{eff_org:.3f} -> {eff_smr:.3f}'
 
+    arr_wgt = normalize_weights(arr_org, arr_wgt)
+
     plt.subplots(figsize=(10,7))
     plt.plot(arr_x, arr_y, '-', label='Data', color='black')
-    plt.hist(arr_org, data.nbins, weights=arr_wgt, range=(data.min_mass, data.max_mass), histtype='step', label='Original', density=True)
-    plt.hist(arr_smr, data.nbins, weights=arr_wgt, range=(data.min_mass, data.max_mass), histtype='step', label='Smeared' , density=True)
+    l_count, l_bin, _ = plt.hist(arr_org, data.nbins, weights=arr_wgt, range=(data.min_mass, data.max_mass), histtype='step', label='Original')
+
+    ncount = sum(l_count)
+    width  = l_bin[1] - l_bin[0]
+
+    print(ncount * width)
+
+    exit()
+
+
+    plt.hist(arr_smr, data.nbins, weights=arr_wgt, range=(data.min_mass, data.max_mass), histtype='step', label='Smeared' )
 
     title   = f'Trig: {trig}; Year: {year}; Brem: {nbrem}; Vers: {data.vers}'
     name    = f'{trig}_{year}_{nbrem}.png' 
@@ -217,7 +247,8 @@ def validate(trig, year, nbrem):
 
     q2dir   = f'{data.cal_dir}/qsq/{data.vers}'
 
-    smr     = q2smr(rdf, q2dir)
+    smr         = q2smr(rdf, q2dir)
+    smr.out_dir = data.plot_dir  
     arr_smr = smr.get_q2_smear(0)
     arr_org = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
     arr_wgt = rdf.AsNumpy(['weight'])['weight']
@@ -257,7 +288,6 @@ def get_args():
     if args.debug:
         log.setLevel(logzero.DEBUG)
     else:
-        q2smr.log.setLevel(logging.WARNING)
         log.setLevel(logzero.INFO)
 
     data.plot_dir = utnr.make_dir_path(f'{data.qsq_dir}/validate_smear/{data.vers}')
