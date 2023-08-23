@@ -53,8 +53,8 @@ def get_args():
     data.average= args.avrg
 #----------------------------
 def get_nom_map(year, trig, brem):
-    sim_map_path       = f'{data.input_dir}/fits/{data.in_ver}/sim_{trig}_{year}_{brem}_nom.json'
-    dat_map_path       = f'{data.input_dir}/fits/{data.in_ver}/dat_{trig}_{year}_{brem}_nom.json'
+    sim_map_path       = f'{data.input_dir}/fits/{data.in_ver}.nom/sim_{trig}_{year}_{brem}_nom.json'
+    dat_map_path       = f'{data.input_dir}/fits/{data.in_ver}.nom/dat_{trig}_{year}_{brem}_nom.json'
 
     d_sim_par          = utnr.load_json(sim_map_path)
     d_dat_par          = utnr.load_json(dat_map_path)
@@ -76,7 +76,7 @@ def get_nom_map(year, trig, brem):
     return d_table
 #----------------------------
 def get_nsp_map(year, trig, brem):
-    dat_map_path       = f'{data.input_dir}/fits/{data.in_ver}/dat_{trig}_{year}_{brem}_nspd.json'
+    dat_map_path       = f'{data.input_dir}/fits/{data.in_ver}.lsh/dat_{trig}_{year}_{brem}_nspd.json'
 
     d_dat_par          = utnr.load_json(dat_map_path)
 
@@ -86,7 +86,7 @@ def get_nsp_map(year, trig, brem):
     l_mu_mc_val = []
     l_mu_mc_err = []
     for i_nspd in [1, 2, 3]:
-        sim_map_path = f'{data.input_dir}/fits/{data.in_ver}/sim_{trig}_{year}_{brem}_{i_nspd}_nspd.json'
+        sim_map_path = f'{data.input_dir}/fits/{data.in_ver}.lsh/sim_{trig}_{year}_{brem}_{i_nspd}_nspd.json'
         d_sim_par    = utnr.load_json(sim_map_path)
         [mu_mc_val, mu_mc_err] = d_sim_par['mu']
 
@@ -146,14 +146,13 @@ def average_tis_tos(d_map):
 
     return d_avg_map
 #----------------------------
-def merge(year):
+def merge(year, syst):
     d_map = {}
 
     for trig in data.l_trig:
         for brem in data.l_brem:
-            for syst in data.l_syst:
-                d_tmp=get_map(year, trig, brem, syst)
-                d_map.update(d_tmp)
+            d_tmp=get_map(year, trig, brem, syst)
+            d_map.update(d_tmp)
 
     if   data.average == 1 and len(data.l_trig) == 2:
         d_map=average_tis_tos(d_map)
@@ -162,7 +161,8 @@ def merge(year):
     else:
         data.log.warning(f'Not averaging scales')
 
-    map_dir  = utnr.make_dir_path(f'{data.caldir}/qsq/{data.ot_ver}')
+    syst     = {'nom' : 'nom', 'nspd' : 'lsh'}[syst]
+    map_dir  = utnr.make_dir_path(f'{data.caldir}/qsq/{data.ot_ver}.{syst}')
     map_path = f'{map_dir}/{year}.json'
 
     data.log.visible(f'Saving to: {map_path}')
@@ -170,7 +170,9 @@ def merge(year):
 #----------------------------
 def main():
     get_args()
-    [merge(year) for year in data.l_year]
+    for year in data.l_year:
+        for syst in data.l_syst:
+            merge(year, syst)
 #----------------------------
 if __name__ == '__main__':
     main()
