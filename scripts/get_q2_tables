@@ -668,7 +668,9 @@ def get_args():
     data.cal_sys  = args.cali
     data.nentries = args.nent
     data.skip_fit = args.skip_fit
-    data.plt_dir  = utnr.make_dir_path(f'{data.qsq_dir}/get_q2_tables/fits/{args.vers}')
+
+    syst          = {'nom' : 'nom', 'nspd' : 'lsh'}[data.sys]
+    data.plt_dir  = utnr.make_dir_path(f'{data.qsq_dir}/get_q2_tables/fits/{args.vers}.{syst}')
     data.obs      = zfit.Space('Jpsi_M', limits=get_obs_range())
 #-------------------
 def main():
