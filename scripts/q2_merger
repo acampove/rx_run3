@@ -175,7 +175,22 @@ def merge(year, syst):
 
     df = dic_to_df(d_map)
 
+    make_table(df, brem=0)
+    make_table(df, brem=1)
+    make_table(df, brem=2)
     plot_pars(df)
+#----------------------------
+def make_table(df, brem=None):
+    df = df[df.brem == brem]
+    df = df.drop(['brem'], axis=1)
+    df = df.sort_values(by=['quantity', 'trigger'])
+    df = df.rename(columns={'trigger' : 'Trigger', 'quantity' : 'Quantity', 'value' : 'Value', 'error' : 'Error'})
+    df = df.replace({'AVRG'    : 'Average'    , 'ETOS'  : 'eTOS'        , 'GTIS'    : 'gTIS!'})
+    df = df.replace({'delta_m' : '$\Delta\mu$', 'mu_MC' : '$\mu^{reco}$', 's_sigma' : '$s_{\sigma}$'})
+
+    table_path = f'./pars_brem_{brem}.tex'
+    data.log.visible(f'Saving to: {table_path}')
+    utnr.df_to_tex(df, table_path, d_format={'Value' : '{:.3f}', 'Error' : '{:.3f}'}, caption=None)
 #----------------------------
 def plot_pars(df):
     g_df_q = df.groupby('quantity')
