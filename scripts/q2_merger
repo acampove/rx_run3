@@ -5,7 +5,9 @@ import numpy
 import math 
 import os
 
-import utils_noroot as utnr
+import pandas            as pnd
+import utils_noroot      as utnr
+import matplotlib.pyplot as plt
 
 from jacobi import propagate
 
@@ -135,14 +137,16 @@ def average_tis_tos(d_map):
             continue
 
         k_tis = k_tos.replace('ETOS', 'GTIS')
+        k_avg = k_tos.replace('ETOS', 'AVRG')
 
         l_tis = d_map[k_tis]
         l_tos = d_map[k_tos]
 
         l_avg = average(l_tis, l_tos)
 
-        d_avg_map[k_tis] = l_avg
-        d_avg_map[k_tos] = l_avg
+        d_avg_map[k_avg] = l_avg
+        d_avg_map[k_tos] = l_tos
+        d_avg_map[k_tis] = l_tis 
 
     return d_avg_map
 #----------------------------
@@ -153,6 +157,7 @@ def merge(year, syst):
         for brem in data.l_brem:
             d_tmp=get_map(year, trig, brem, syst)
             d_map.update(d_tmp)
+
 
     if   data.average == 1 and len(data.l_trig) == 2:
         d_map=average_tis_tos(d_map)
@@ -167,6 +172,45 @@ def merge(year, syst):
 
     data.log.visible(f'Saving to: {map_path}')
     utnr.dump_json(d_map, map_path, sort_keys=True)
+
+    df = dic_to_df(d_map)
+
+    plot_pars(df)
+#----------------------------
+def plot_pars(df):
+    g_df_q = df.groupby('quantity')
+
+    d_trg_lab = {'AVRG': 'Average', 'ETOS' : 'eTOS', 'GTIS' : 'gTIS!'}
+    d_qnt_lab = {'delta_m' : '$\Delta\mu$[MeV]', 'mu_MC' : '$\mu^{reco}$[MeV]', 's_sigma' : '$s_{\sigma}$[MeV]'}
+    for quantity, df_q in g_df_q:
+        g_df_t = df_q.groupby('trigger')
+        ax = None
+        for trigger, df_q_t in g_df_t:
+            ax = df_q_t.plot(x='brem', y='value', yerr='error', label=d_trg_lab[trigger], ax=ax)
+
+        plot_path = f'{quantity}.png'
+        data.log.visible(f'Saving to: {plot_path}')
+        plt.ylabel(d_qnt_lab[quantity])
+        plt.grid()
+        plt.savefig(plot_path)
+        plt.close('all')
+#----------------------------
+def dic_to_df(d_map):
+    '''
+    Will transform a dictionary between a strign and a list of two floats into a pandas dataframe
+    '''
+    df = pnd.DataFrame(columns=['trigger', 'quantity', 'brem', 'value', 'error'])
+
+    for trig in ['ETOS', 'GTIS', 'AVRG']:
+        for brem in [0, 1, 2]:
+            for quant in ['delta_m', 'mu_MC', 's_sigma']:
+                key      = f'{trig} {quant} {brem} gamma'
+                val, err = d_map[key]
+
+                row   = [trig, quant, brem, val, err]
+                utnr.add_row_to_df(df, row, index=None)
+
+    return df
 #----------------------------
 def main():
     get_args()
