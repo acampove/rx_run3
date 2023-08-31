@@ -196,7 +196,6 @@ def get_efficiency(arr_qsq, trig, year):
 def normalize_weights(arr_mass, arr_wgt):
     l_count, l_bin = numpy.histogram(arr_mass, bins=100, range=(1000, 4000), weights=arr_wgt)
     ncount         = sum(l_count)
-    print(ncount)
     width          = l_bin[1] - l_bin[0]
     area           = ncount * width
     arr_wgt        = arr_wgt / area
@@ -211,21 +210,12 @@ def plot_dist(arr_smr, arr_org, arr_wgt, pdf, trig, year, nbrem):
     eff_org = get_efficiency(arr_org, trig, year)
     header  = f'Eff:{eff_org:.3f} -> {eff_smr:.3f}'
 
-    arr_wgt = normalize_weights(arr_org, arr_wgt)
+    #arr_wgt = normalize_weights(arr_org, arr_wgt)
 
     plt.subplots(figsize=(10,7))
     plt.plot(arr_x, arr_y, '-', label='Data', color='black')
-    l_count, l_bin, _ = plt.hist(arr_org, data.nbins, weights=arr_wgt, range=(data.min_mass, data.max_mass), histtype='step', label='Original')
-
-    ncount = sum(l_count)
-    width  = l_bin[1] - l_bin[0]
-
-    print(ncount * width)
-
-    exit()
-
-
-    plt.hist(arr_smr, data.nbins, weights=arr_wgt, range=(data.min_mass, data.max_mass), histtype='step', label='Smeared' )
+    plt.hist(arr_org, data.nbins, weights=arr_wgt, range=(data.min_mass, data.max_mass), histtype='step', label='Original', density=True)
+    plt.hist(arr_smr, data.nbins, weights=arr_wgt, range=(data.min_mass, data.max_mass), histtype='step', label='Smeared' , density=True)
 
     title   = f'Trig: {trig}; Year: {year}; Brem: {nbrem}; Vers: {data.vers}'
     name    = f'{trig}_{year}_{nbrem}.png' 
