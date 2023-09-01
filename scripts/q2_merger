@@ -11,8 +11,9 @@ import matplotlib.pyplot as plt
 
 from jacobi import propagate
 
-from stats.average import average              as sta_avg
-from stats.utils   import error_to_covariance  as sta_ecv
+from matplotlib.ticker import MaxNLocator
+from stats.average     import average              as sta_avg
+from stats.utils       import error_to_covariance  as sta_ecv
 #----------------------------
 class data:
     log    = utnr.getLogger(__name__)
@@ -24,6 +25,7 @@ class data:
     caldir = None 
     syst   = None
     average= None 
+    val_dir= None
 
     input_dir  = f'{os.environ["QSQSYS"]}/get_q2_tables'
     l_all_year = ['2017', '2018'] + ['r1', 'r2p1']
@@ -158,7 +160,6 @@ def merge(year, syst):
             d_tmp=get_map(year, trig, brem, syst)
             d_map.update(d_tmp)
 
-
     if   data.average == 1 and len(data.l_trig) == 2:
         d_map=average_tis_tos(d_map)
     elif data.average == 1 and len(data.l_trig) == 1:
@@ -188,7 +189,7 @@ def make_table(df, brem=None):
     df = df.replace({'AVRG'    : 'Average'    , 'ETOS'  : 'eTOS'        , 'GTIS'    : 'gTIS!'})
     df = df.replace({'delta_m' : '$\Delta\mu$', 'mu_MC' : '$\mu^{reco}$', 's_sigma' : '$s_{\sigma}$'})
 
-    table_path = f'./pars_brem_{brem}.tex'
+    table_path = f'{data.val_dir}/pars_brem_{brem}.tex'
     data.log.visible(f'Saving to: {table_path}')
     utnr.df_to_tex(df, table_path, d_format={'Value' : '{:.3f}', 'Error' : '{:.3f}'}, caption=None)
 #----------------------------
@@ -202,10 +203,12 @@ def plot_pars(df):
         ax = None
         for trigger, df_q_t in g_df_t:
             ax = df_q_t.plot(x='brem', y='value', yerr='error', label=d_trg_lab[trigger], ax=ax)
+            ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
-        plot_path = f'{quantity}.png'
+        plot_path = f'{data.val_dir}/{quantity}.png'
         data.log.visible(f'Saving to: {plot_path}')
         plt.ylabel(d_qnt_lab[quantity])
+        plt.xlabel('Bremsstrahlung category')
         plt.grid()
         plt.savefig(plot_path)
         plt.close('all')
@@ -231,6 +234,8 @@ def main():
     get_args()
     for year in data.l_year:
         for syst in data.l_syst:
+            qsq_dir      = os.environ['QSQSYS']
+            data.val_dir = f'{qsq_dir}/validate_smear/{data.in_ver}.{syst}/parameters'
             merge(year, syst)
 #----------------------------
 if __name__ == '__main__':
