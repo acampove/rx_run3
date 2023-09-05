@@ -176,7 +176,8 @@ def save_binning(brem):
     line+= '\\bottomrule\n'
     line+= '\\end{tabular}'
 
-    tex_path = f'{data.out_dir}/plots/{data.vers}/binning.tex'
+    tex_dir  = utnr.make_dir_path(f'{data.out_dir}/plots/{data.vers}')
+    tex_path = f'{tex_dir}/binning.tex'
     log.info(f'Saving to: {tex_path}')
     with open(tex_path, 'w') as ofile:
         ofile.write(line)
