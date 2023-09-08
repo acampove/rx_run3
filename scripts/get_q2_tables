@@ -6,6 +6,7 @@ import os
 import re
 import zfit
 import hist
+import glob
 import utils
 import numpy
 import pprint
@@ -38,6 +39,7 @@ class data:
     l_year   = ['2011', '2012', '2015', '2016', '2017', '2018', 'r1', 'r2p1']
     l_brem   = ['0', '1', '2']
     l_sys    = ['nom', 'nspd']
+    l_sam    = ['simulation', 'data', 'both']
     l_cali   = ['000', 'nom']
 
     dat_vers = 'v10.18is'
@@ -49,7 +51,6 @@ class data:
     trig     = None 
     year     = None 
     brem     = None 
-    sim_only = None
     plt_dir  = None 
     nentries = None
     d_sim_par= None
@@ -65,7 +66,7 @@ class data:
     mu       = zfit.Parameter('mu', 3060,  3040, 3100)
     sg       = zfit.Parameter('sg',   20,    10,  100)
 
-    dmu      = zfit.Parameter('dmu', 0, 0.0, 50.0)
+    dmu      = zfit.Parameter('dmu', 0, -50.0, 50.0)
     rsg      = zfit.Parameter('rsg', 1, 0.7,  1.4)
 
     d_sig_ini        =   {}
@@ -94,6 +95,7 @@ def get_cached_paths(dset, trig, proc):
     l_path    = []
     for year in l_year:
         wc      = f'{cache_dir}/{proc}/{data.dat_vers}/{year}_{trig}/*.root'
+        data.log.info(f'Using files in: {wc}')
         l_path += utnr.glob_wc(wc, allow_empty=False)
 
     all_found = True 
@@ -116,6 +118,12 @@ def get_input_paths(proc, dset):
     return l_path
 #-------------------
 def get_df(year, trig, brem, identifier, is_data=None):
+    if data.sam == 'simulation' and is_data:
+        return
+
+    if data.sam == 'data' and not is_data:
+        return
+
     if is_data not in [True, False]:
         data.log.error(f'Dataset type not specified')
         raise
@@ -169,6 +177,8 @@ def add_weights(rdf, trig, year, is_data, identifier):
         rdf     = add_cal_wgt(rdf, trig, year, 'weight', identifier)
 
     rdf = rdf.Redefine('weight', 'float(weight)')
+    wgt = rdf.Sum('weight').GetValue()
+    data.log.visible(f'Sum of weights: {wgt}')
 
     return rdf
 #-------------------
@@ -316,11 +326,10 @@ def reset_sig_pars(pdf, d_val):
         data.log.info(f'{name:<20}{"->":<10}{val:<10.3}')
 #-------------------
 def get_nspd_signal(l_pdf):
-    nsg   = data.nevs_data / 3.
+    nsg_1 = zfit.Parameter('nsg_1', 1000, 0, data.nevs_data)
+    nsg_2 = zfit.Parameter('nsg_2', 1000, 0, data.nevs_data)
+    nsg_3 = zfit.Parameter('nsg_3', 1000, 0, data.nevs_data)
 
-    nsg_1 = zfit.Parameter("nsg_1", nsg, nsg - 0.1 * nsg, nsg + 0.1 * nsg)
-    nsg_2 = zfit.Parameter("nsg_2", nsg, nsg - 0.1 * nsg, nsg + 0.1 * nsg)
-    nsg_3 = zfit.Parameter("nsg_3", nsg, nsg - 0.1 * nsg, nsg + 0.1 * nsg)
     l_nsg = [nsg_1, nsg_2, nsg_3]
     l_epdf= [ pdf.create_extended(nsg) for pdf, nsg in zip(l_pdf, l_nsg) ]
     epdf  = zfit.pdf.SumPDF(pdfs=l_epdf)
@@ -618,28 +627,54 @@ def add_nspd_col(df):
 
     return df
 #-------------------
-def make_table(trig=None, year=None, brem=None):
-    identifier= f'{trig}_{year}_{brem}_{data.sys}'
+def get_sim_pars_cache(trig=None, year=None, brem=None):
+    json_wc = f'{data.plt_dir}/sim_{trig}_{year}_{brem}*.json'
+    l_json_path = glob.glob(json_wc)
+    if len(l_json_path) == 0:
+        data.log.error(f'No file found in: {json_wc}')
+        raise
+    elif len(l_json_path) == 1:
+        d_par = utnr.load_json(l_json_path[0])
+    else:
+        d_par = {}
+        for i_nspd, json_path in enumerate(l_json_path):
+            data.log.info(f'Loading parameters from: {json_path}')
+            d_par_x = utnr.load_json(json_path)
+            d_par_r = {f'{key}_{i_nspd + 1}' : val for key, val in d_par_x.items()}
+            d_par.update(d_par_r)
 
-    df_sim    = get_df(year, trig, brem, f'sim_{identifier}', is_data=False)
-    df_dat    = get_df(year, trig, brem, f'dat_{identifier}', is_data= True)
-
-    d_sim_par = {}
+    return d_par
+#-------------------
+def get_sim_pars_fits(df):
+    d_par = {}
     if   data.sys == 'nspd':
-        df_sim    = add_nspd_col(df_sim)
+        df = add_nspd_col(df)
         for i_nspd in [1,2,3]:
-            df_sim_nspd = df_sim.Filter(f'nspd == {i_nspd}')
+            df_sim_nspd = df.Filter(f'nspd == {i_nspd}')
             d_tmp_1     = fit(df_sim_nspd, d_fix=None, identifier=f'sim_{trig}_{year}_{brem}_{i_nspd}_{data.sys}')
             d_tmp_2     = { f'{key}_{i_nspd}' : val for key, val in d_tmp_1.items() }
-            d_sim_par.update(d_tmp_2)
+            d_par.update(d_tmp_2)
     elif data.sys == 'nom':
-        d_sim_par = fit(df_sim, d_fix=None, identifier=f'sim_{identifier}')
+        d_par = fit(df, d_fix=None, identifier=f'sim_{identifier}')
     else:
         data.log.error(f'Invalid systematic: {data.sys}')
         raise
+    
+    return d_par
+#-------------------
+def make_table(trig=None, year=None, brem=None):
+    identifier= f'{trig}_{year}_{brem}_{data.sys}'
+    df_sim    = get_df(year, trig, brem, f'sim_{identifier}', is_data=False)
+    df_dat    = get_df(year, trig, brem, f'dat_{identifier}', is_data= True)
 
-    if data.sim_only:
-        return 
+    if data.sam == 'data':
+        d_sim_par = get_sim_pars_cache(trig, year, brem)
+    else:
+        d_sim_par = get_sim_pars_fits(df_sim)
+
+    if data.sam == 'simulation':
+        data.log.info(f'Done with simulation and returning')
+        return
 
     data.d_sim_par = d_sim_par
     data.nevs_data = df_dat.Count().GetValue()
@@ -654,8 +689,8 @@ def get_args():
     parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True, choices=data.l_year)
     parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True, choices=data.l_brem)
     parser.add_argument('-c', '--cali' , type =str, help='Calibration weight systematics'              , default='nom', choices=data.l_cali)
-    parser.add_argument('-s', '--sim'  ,            help='Do only simulation'                          , action='store_true')
     parser.add_argument('-x', '--sys'  , type =str, help='Systematic variabion'                        , choices=data.l_sys) 
+    parser.add_argument('-s', '--sam'  , type =str, help='Sample'                                      , choices=data.l_sam, default='both') 
     parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1) 
     parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action='store_true') 
     args = parser.parse_args()
@@ -663,8 +698,8 @@ def get_args():
     data.trig     = args.trig
     data.year     = args.year
     data.brem     = args.brem
-    data.sim_only = args.sim
     data.sys      = args.sys
+    data.sam      = args.sam
     data.cal_sys  = args.cali
     data.nentries = args.nent
     data.skip_fit = args.skip_fit
