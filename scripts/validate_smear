@@ -115,7 +115,7 @@ def plot_wgt(rdf, title, name):
     plt.close('all')
 #-----------------------------------
 def get_rdf(trig, year, nbrem):
-    data_wc = f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.18is/{year}_{trig}/*.root'
+    data_wc = f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.21p2/{year}_{trig}/*.root'
 
     log.debug(f'Loading files in: {data_wc}')
     
