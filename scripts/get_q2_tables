@@ -645,13 +645,13 @@ def get_sim_pars_cache(trig=None, year=None, brem=None):
 
     return d_par
 #-------------------
-def get_sim_pars_fits(df):
+def get_sim_pars_fits(df, identifier):
     d_par = {}
     if   data.sys == 'nspd':
         df = add_nspd_col(df)
         for i_nspd in [1,2,3]:
             df_sim_nspd = df.Filter(f'nspd == {i_nspd}')
-            d_tmp_1     = fit(df_sim_nspd, d_fix=None, identifier=f'sim_{trig}_{year}_{brem}_{i_nspd}_{data.sys}')
+            d_tmp_1     = fit(df_sim_nspd, d_fix=None, identifier=f'sim_{identifier}_{i_nspd}')
             d_tmp_2     = { f'{key}_{i_nspd}' : val for key, val in d_tmp_1.items() }
             d_par.update(d_tmp_2)
     elif data.sys == 'nom':
@@ -670,7 +670,7 @@ def make_table(trig=None, year=None, brem=None):
     if data.sam == 'data':
         d_sim_par = get_sim_pars_cache(trig, year, brem)
     else:
-        d_sim_par = get_sim_pars_fits(df_sim)
+        d_sim_par = get_sim_pars_fits(df_sim, identifier)
 
     if data.sam == 'simulation':
         data.log.info(f'Done with simulation and returning')
