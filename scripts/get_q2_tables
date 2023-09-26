@@ -42,7 +42,7 @@ class data:
     l_sam    = ['simulation', 'data', 'both']
     l_cali   = ['000', 'nom']
 
-    dat_vers = 'v10.18is'
+    dat_vers = 'v10.21p2'
     bdt_dir  = f'{mva_dir}/electron/bdt_v10.14.a0v2ss'
     b_mass   = 'B_const_mass_M[0]'
     j_mass   = 'Jpsi_M'
