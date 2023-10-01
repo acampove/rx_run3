@@ -173,12 +173,39 @@ def add_weights(rdf, trig, year, is_data, identifier):
     if is_data:
         pid_cut = rs.get('pid', trig, q2bin='none', year=year)
         rdf     = rdf.Define('weight', pid_cut)
-    else:
+    elif year not in ['r1', 'r2p1']:
         rdf     = add_cal_wgt(rdf, trig, year, 'weight', identifier)
+    else:
+        rdf     = add_cal_wgt_dset(rdf, trig, year, identifier)
 
     rdf = rdf.Redefine('weight', 'float(weight)')
     wgt = rdf.Sum('weight').GetValue()
     data.log.visible(f'Sum of weights: {wgt}')
+
+    return rdf
+#-------------------
+def add_cal_wgt_dset(rdf, trig, dset, identifier):
+    if  dset == 'r1':
+        yr_1 = '2011'
+        yr_2 = '2012'
+    elif dset == 'r2p1':
+        yr_1 = '2015'
+        yr_2 = '2016'
+    else:
+        data.log.error(f'Invalid dataset: {dset}')
+        raise
+
+    rdf_1 = rdf.Filter(f'yearLabbel == {yr_1}')
+    rdf_2 = rdf.Filter(f'yearLabbel == {yr_2}')
+
+    rdf_1 = add_cal_wgt(rdf_1, trig, yr_1, 'weight', identifier)
+    rdf_2 = add_cal_wgt(rdf_2, trig, yr_2, 'weight', identifier)
+
+    arr_wgt_1 = rdf_1.AsNumpy(['weight'])['weight']
+    arr_wgt_2 = rdf_2.AsNumpy(['weight'])['weight']
+    arr_wgt   = numpy.concatenate([arr_wgt_1, arr_wgt_2], axis=0)
+
+    rdf       = utils.add_df_columns(rdf, {'weight' : arr_wgt})
 
     return rdf
 #-------------------
