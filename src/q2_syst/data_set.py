@@ -63,15 +63,15 @@ class data_set:
             raise
 
         if self._is_mc   not in [True, False]:
-            sel.log.error(f'Invalid value for is_mc: {self._is_mc}')
+            self.log.error(f'Invalid value for is_mc: {self._is_mc}')
             raise ValueError
 
         if self._trigger not in ['ETOS', 'GTIS']:
-            sel.log.error(f'Invalid value for trigger: {self._trigger}')
+            self.log.error(f'Invalid value for trigger: {self._trigger}')
             raise ValueError
 
         if self._dset    not in ['r1', 'r2p1', '2017', '2018']:
-            sel.log.error(f'Invalid value for dset: {self._dset}')
+            self.log.error(f'Invalid value for dset: {self._dset}')
             raise ValueError
 
         self._initialized = True
@@ -178,7 +178,7 @@ class data_set:
         rdf.year     = year
     
         d_set            = {}
-        d_set['val_dir'] = f'{self._plt_dir}/cal_wgt_{self._trigger}_{year}'
+        d_set['val_dir'] = f'{self._plt_dir}/{year}'
         d_set['replica'] = 0
         d_set['bts_ver'] ='10'
         d_set['bts_sys'] ='nom'
