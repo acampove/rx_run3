@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 
 import os
-import zfit
 import ROOT
+import zfit
 import numpy
 import argparse
 import utils_noroot       as utnr
 import version_management as vmg
 
-from logzero       import logger as log 
-from rk.dilep_reso import calculator as calc_reso
-from rk.boundaries import boundaries
+from logzero          import logger     as log 
+from rk.dilep_reso    import calculator as calc_reso
+from rk.boundaries    import boundaries
+from q2_syst.data_set import data_set
 
 #---------------------------------------------
 class data:
@@ -24,6 +25,7 @@ class data:
     vers    = None
     sim     = None
     l_ibin  = None
+    out_dir = None
 #---------------------------------------------
 def delete_all_pars():
     d_par = zfit.Parameter._existing_params
@@ -31,36 +33,6 @@ def delete_all_pars():
 
     for key in l_key:
         del(d_par[key])
-#---------------------------------------------
-def get_data_path(mc=None, year=None, trig=None):
-    qsq_dir = vmg.get_last_version(dir_path=f'{data.cas_dir}/q2_systematics', version_only=False)
-
-    if mc:
-        file_path = f'{qsq_dir}/{year}_{trig}_ctrl_ee.root'
-    else:
-        file_path = f'{qsq_dir}/{year}_{trig}_data_ee.root'
-
-    return file_path
-#---------------------------------------------
-def get_data(mc=None, trig=None):
-    if   data.dset == 'r1': 
-        y1 = get_data_path(mc=mc, year='2011', trig=trig)
-        y2 = get_data_path(mc=mc, year='2012', trig=trig)
-
-        s_dset = {y1, y2}
-    elif data.dset == 'r2p1': 
-        y1 = get_data_path(mc=mc, year='2015', trig=trig)
-        y2 = get_data_path(mc=mc, year='2016', trig=trig)
-
-        s_dset = {y1, y2}
-    else:
-        y1 = get_data_path(mc=mc, year=data.dset, trig=trig)
-        s_dset = {y1}
-
-    rdf = ROOT.RDataFrame('tree', s_dset)
-    rdf.is_mc = mc
-
-    return rdf
 #---------------------------------------------
 def get_pars(brem, trig):
     out_dir   = f'{data.qsqsys}/get_q2_resolutions/mc'
@@ -189,7 +161,10 @@ def main():
         for trig in data.l_trig:
             log.info(f'Running for brem/trig: {brem}/{trig}')
 
-            rdf = get_data(mc=data.sim, trig=trig)
+            odf = data_set(is_mc=data.sim, trigger=trig, dset=data.dset)
+            odf.plt_dir =  f'{data.out_dir}/plots/{data.vers}/{trig}_{data.dset}/cal_wgt' 
+            rdf = odf.get_rdf()
+            rdf.is_mc = data.sim
 
             get_resolution(rdf, brem, trig)
             delete_all_pars()
