@@ -9,20 +9,17 @@ import hist
 import glob
 import utils
 import numpy
-import pprint
 import mplhep
 import argparse
 import ROOT
 import logging
-import read_selection as rs
 
 from logzero      import logger    as log
 from zutils.plot  import plot      as zfp
-from rk.selection import selection as rksl
 from zutils.utils import result_to_latex 
 from fitter       import zfitter
-from rk.mva       import mva_man
-from rk.wgt_mgr   import wgt_mgr
+
+from q2_syst.data_set import data_set
 
 #-------------------
 class data:
@@ -42,7 +39,6 @@ class data:
     l_sam    = ['simulation', 'data', 'both']
     l_cali   = ['000', 'nom']
 
-    dat_vers = 'v10.21p2'
     bdt_dir  = f'{mva_dir}/electron/bdt_v10.14.a0v2ss'
     b_mass   = 'B_const_mass_M[0]'
     j_mass   = 'Jpsi_M'
@@ -79,206 +75,6 @@ class data:
     d_sig_ini['ncbr']=  1000 
     d_sig_ini['ncbl']=  1000  
 #-------------------
-def get_years(dset):
-    if   dset == 'r1':
-        l_year = ['2011', '2012'] 
-    elif dset == 'r2p1':
-        l_year = ['2015', '2016'] 
-    else:
-        l_year = [dset] 
-
-    return l_year
-#-------------------
-def get_cached_paths(dset, trig, proc):
-    l_year    = get_years(dset)
-    cache_dir = f'{data.cas_dir}/tools/apply_selection/q2_smear'
-    l_path    = []
-    for year in l_year:
-        wc      = f'{cache_dir}/{proc}/{data.dat_vers}/{year}_{trig}/*.root'
-        data.log.info(f'Using files in: {wc}')
-        l_path += utnr.glob_wc(wc, allow_empty=False)
-
-    all_found = True 
-    for path in l_path:
-        if not os.path.isfile(path):
-            all_found=False
-            break
-
-    return l_path, all_found
-#-------------------
-def get_input_paths(proc, dset):
-    l_year = get_years(dset)
-
-    l_path = [f'{data.dat_dir}/{proc}/{data.dat_vers}/{year}.root' for year in l_year ]
-    for path in l_path:
-        if not os.path.isfile(path):
-            data.log.error(f'File {path} not found')
-            raise FileNotFoundError
-
-    return l_path
-#-------------------
-def get_df(year, trig, brem, identifier, is_data=None):
-    if data.sam == 'simulation' and is_data:
-        return
-
-    if data.sam == 'data' and not is_data:
-        return
-
-    if is_data not in [True, False]:
-        data.log.error(f'Dataset type not specified')
-        raise
-
-    proc = 'data' if is_data else 'ctrl'
-    l_cache_path, all_exist = get_cached_paths(year, trig, proc)
-    if not all_exist:
-        data.log.error(f'Not found all files')
-        raise
-
-    data.log.debug(f'Found cached files: {l_cache_path}:{trig}')
-    rdf = ROOT.RDataFrame(trig, l_cache_path)
-    rdf = get_range_rdf(rdf)
-    check_nopid(rdf, trig, year)
-
-    rdf = apply_selection(rdf, trig, year, brem, proc)
-    rdf = add_weights(rdf, trig, year, is_data, identifier)
-
-    return rdf
-#-------------------
-def get_range_rdf(rdf):
-    if data.nentries > 0:
-        ntotal = rdf.Count().GetValue()
-        data.log.visible(f'Using {data.nentries}/{ntotal} entries')
-        rdf = rdf.Range(data.nentries)
-
-    return rdf
-#-------------------
-def check_nopid(rdf, trig, year):
-    '''Checks that PID cut has not been added
-    '''
-    pid_cut = rs.get('pid', trig, q2bin='none', year=year)
-
-    rdf_org = rdf.Range(1000)
-    rdf_cut = rdf.Filter(pid_cut, 'PID')
-
-    norg = rdf_org.Count().GetValue()
-    ncut = rdf_cut.Count().GetValue()
-
-    if norg == ncut:
-        data.log.error(f'PID cut already applied')
-        rep = rdf_cut.Report()
-        rep.Print()
-        raise
-#-------------------
-def add_weights(rdf, trig, year, is_data, identifier):
-    if is_data:
-        pid_cut = rs.get('pid', trig, q2bin='none', year=year)
-        rdf     = rdf.Define('weight', pid_cut)
-    elif year not in ['r1', 'r2p1']:
-        rdf     = add_cal_wgt(rdf, trig, year, 'weight', identifier)
-    else:
-        rdf     = add_cal_wgt_dset(rdf, trig, year, identifier)
-
-    rdf = rdf.Redefine('weight', 'float(weight)')
-    wgt = rdf.Sum('weight').GetValue()
-    data.log.visible(f'Sum of weights: {wgt}')
-
-    return rdf
-#-------------------
-def add_cal_wgt_dset(rdf, trig, dset, identifier):
-    if  dset == 'r1':
-        yr_1 = '2011'
-        yr_2 = '2012'
-    elif dset == 'r2p1':
-        yr_1 = '2015'
-        yr_2 = '2016'
-    else:
-        data.log.error(f'Invalid dataset: {dset}')
-        raise
-
-    rdf_1 = rdf.Filter(f'yearLabbel == {yr_1}')
-    rdf_2 = rdf.Filter(f'yearLabbel == {yr_2}')
-
-    rdf_1 = add_cal_wgt(rdf_1, trig, yr_1, 'weight', identifier)
-    rdf_2 = add_cal_wgt(rdf_2, trig, yr_2, 'weight', identifier)
-
-    arr_wgt_1 = rdf_1.AsNumpy(['weight'])['weight']
-    arr_wgt_2 = rdf_2.AsNumpy(['weight'])['weight']
-    arr_wgt   = numpy.concatenate([arr_wgt_1, arr_wgt_2], axis=0)
-
-    rdf       = utils.add_df_columns(rdf, {'weight' : arr_wgt})
-
-    return rdf
-#-------------------
-def add_cal_wgt(rdf, trig, year, weight, identifier):
-    rdf.filepath = 'no-path'
-    rdf.treename = trig 
-    rdf.trigger  = trig 
-    rdf.year     = year
-
-    d_set            = {}
-    d_set['val_dir'] = f'{data.plt_dir}/cal_wgt_{identifier}'
-    d_set['replica'] = 0
-    d_set['bts_ver'] ='10'
-    d_set['bts_sys'] ='nom'
-    d_set['pid_sys'] = data.cal_sys 
-    d_set['trk_sys'] = data.cal_sys 
-    d_set['gen_sys'] = data.cal_sys 
-    d_set['lzr_sys'] = data.cal_sys 
-    d_set['hlt_sys'] = data.cal_sys 
-    d_set['rec_sys'] = data.cal_sys 
-
-    obj         = wgt_mgr(d_set)
-    obj.log_lvl = logging.WARNING
-    rsl         = obj.get_reader('sel', rdf)
-
-    gen_syst, lzr_syst, hlt_syst, rec_syst = get_wgt_syst(trig)
-
-    arr_pid     = rsl('pid', data.cal_sys)
-    arr_trk     = rsl('trk', data.cal_sys)
-    arr_gen     = rsl('gen', gen_syst)
-    arr_lzr     = rsl('lzr', lzr_syst)
-    arr_hlt     = rsl('hlt', hlt_syst)
-    arr_rec     = rsl('rec', rec_syst)
-
-    arr_cal = arr_pid * arr_trk * arr_gen * arr_lzr * arr_hlt * arr_rec
-
-    rdf = utils.add_df_column(rdf, arr_cal,  weight, d_opt={'exclude_re' : 'tmva_.*'})
-
-    return rdf
-#-------------------
-def get_wgt_syst(trigger):
-    '''Will return systematic for L0 and GEN weights corresponding to _cal_sys [nom, 000]
-    '''
-    if   data.cal_sys == 'nom':
-        gen_syst = 'MTOS'
-    elif data.cal_sys == '000':
-        gen_syst = '000'
-    else:
-        data.log.error(f'Invalid systematic: {data.cal_sys}')
-        raise
-
-    if   data.cal_sys == '000':
-        lzr_syst = '000'
-    elif trigger == 'MTOS':
-        lzr_syst = 'L0MuonTIS'
-    elif trigger == 'ETOS':
-        lzr_syst = 'L0ElectronTIS'
-    elif trigger == 'GTIS':
-        lzr_syst = 'L0TIS_EMMH.L0HadronElEL.L0ElectronTIS'
-    else:
-        log.error(f'Invalid HLT tag: {trigger}')
-        raise
-
-    if   data.cal_sys == 'nom':
-        hlt_syst = trigger 
-    elif data.cal_sys == '000':
-        hlt_syst = '000'
-    else:
-        log.error(f'Invalid systematic: {data.cal_sys}')
-        raise
-
-    return gen_syst, lzr_syst, hlt_syst, hlt_syst
-#-------------------
 def get_branches(rdf):
     v_col = rdf.GetColumnNames()
     l_col = [ str(col.c_str()) for col in v_col ]
@@ -301,33 +97,6 @@ def get_branches(rdf):
         l_branch.append('L2_TRUEID')
 
     return l_branch
-#-------------------
-def add_bdt(rdf, trig):
-    rdf = rdf.Define('b_mass', data.b_mass)
-    rdf = rdf.Define('nbrem' , 'L1_BremMultiplicity + L2_BremMultiplicity')
-    rdf = rdf.Redefine('L1_HasBremAdded', 'int(L1_HasBremAdded)')
-    rdf = rdf.Redefine('L2_HasBremAdded', 'int(L2_HasBremAdded)')
-
-    l_branch      = get_branches(rdf)
-    d_data        = rdf.AsNumpy(l_branch)
-    man           = mva_man(rdf, data.bdt_dir, trig)
-    d_data['BDT'] = man.get_scores()
-
-    return ROOT.RDF.MakeNumpyDataFrame(d_data)
-#-------------------
-def apply_selection(rdf, trig, year, brem, proc):
-    rdf     = rdf.Define('nbrem', 'L1_BremMultiplicity + L2_BremMultiplicity')
-    if brem == 2:
-        brm_cut = f'nbrem>=2'
-    else:
-        brm_cut = f'nbrem=={brem}'
-
-    rdf = rdf.Filter(brm_cut, brm_cut)
-    rep = rdf.Report()
-
-    rep.Print()
-
-    return rdf
 #-------------------
 def float_pars(pdf):
     l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
@@ -691,8 +460,16 @@ def get_sim_pars_fits(df, identifier):
 #-------------------
 def make_table(trig=None, year=None, brem=None):
     identifier= f'{trig}_{year}_{brem}_{data.sys}'
-    df_sim    = get_df(year, trig, brem, f'sim_{identifier}', is_data=False)
-    df_dat    = get_df(year, trig, brem, f'dat_{identifier}', is_data= True)
+
+    odf_sim   = data_set(is_mc= True, trigger=trig, dset=year)
+    odf_sim.plt_dir = f'{data.plt_dir}/cal_wgt_sim_{identifier}'
+    df_sim    = odf_sim.get_rdf()
+    df_sim    = df_sim.Filter(f'nbrem == {brem}')
+
+    odf_dat   = data_set(is_mc=False, trigger=trig, dset=year)
+    odf_dat.plt_dir = f'{data.plt_dir}/dat_plt_{identifier}'
+    df_dat    = odf_dat.get_rdf()
+    df_dat    = df_dat.Filter(f'nbrem == {brem}')
 
     if data.sam == 'data':
         d_sim_par = get_sim_pars_cache(trig, year, brem)
