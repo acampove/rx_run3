@@ -233,7 +233,7 @@ class data_set:
     
         self.log.info('Adding weights column')
 
-        regex = '(tmva_.*|B_Hlt.*)'
+        regex = '(tmva_.*|B_Hlt.*|B_DTFM.*)'
         rdf   = utils.add_df_column(rdf, arr_wgt,  'weight', d_opt={'exclude_re' : regex})
     
         return rdf
