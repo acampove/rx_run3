@@ -204,7 +204,7 @@ class data_set:
     
         arr_cal = arr_pid * arr_trk * arr_gen * arr_lzr * arr_hlt * arr_rec
 
-        regex = '(tmva_.*|B_Hlt.*)'
+        regex = '(tmva_.*|B_Hlt.*|B_DTFM.*)'
         rdf   = utils.add_df_column(rdf, arr_cal,  'weight', d_opt={'exclude_re' : regex})
     
         return rdf
