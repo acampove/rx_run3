@@ -447,7 +447,7 @@ def get_sim_pars_fits(df, identifier):
         df = add_nspd_col(df)
         for i_nspd in [1,2,3]:
             df_sim_nspd = df.Filter(f'nspd == {i_nspd}')
-            d_tmp_1     = fit(df_sim_nspd, d_fix=None, identifier=f'sim_{identifier}_{i_nspd}')
+            d_tmp_1     = fit(df_sim_nspd, d_fix=None, identifier=f'sim_{i_nspd}_{identifier}')
             d_tmp_2     = { f'{key}_{i_nspd}' : val for key, val in d_tmp_1.items() }
             d_par.update(d_tmp_2)
     elif data.sys == 'nom':
