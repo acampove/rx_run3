@@ -290,9 +290,13 @@ class data_set:
 
         cut_str = '||'.join(l_cut_str)
 
-        self.log.debug(f'Using BDT cut: {cut_str}')
+        self.log.info(f'Using BDT cut: {cut_str}')
 
-        rdf = rdf.Filter(cut_str)
+        rdf = rdf.Filter(cut_str, 'BDT')
+
+        rep = rdf.Report()
+
+        rep.Print()
 
         return rdf
     #-------------------
