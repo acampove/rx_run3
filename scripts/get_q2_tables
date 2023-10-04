@@ -265,7 +265,7 @@ def get_pars(res, identifier):
     except:
         data.log.error(f'Cannot extract {identifier} parameters from:')
         print(res)
-        pprint(res.parsms)
+        pprint(res.params)
         raise
 
     return d_par
