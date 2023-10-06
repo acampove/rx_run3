@@ -124,7 +124,7 @@ where `-i 17` targets only the given bin.
 The outputs will need to be merged with:
 
 ```bash
-q2_merger -s nom -i vx -o vy -y 2018 -d $CALDIR
+q2_merger -s nom -i vx -o vy -y 2018
 ```
 
 where `vx` is the version described before and `vy` is the version of the calibration files, if the year is not specified it will run over everything and send it to `$CALDIR`. Comparisons between versions can be got with:
