@@ -280,6 +280,26 @@ class data_set:
         else:
             self.log.info(f'Dataset has {nentries} entries')
     #-------------------
+    def _apply_selection(self, rdf):
+        l_year    = self._get_years()
+        l_cut_str = []
+        for year in l_year:
+            bdt_cut = rs.get('bdt', self._trigger, q2bin='none', year=year)
+            cut_str = f'({bdt_cut} == 1  && yearLabbel == {year})'
+            l_cut_str.append(cut_str)
+
+        cut_str = '||'.join(l_cut_str)
+
+        self.log.info(f'Using BDT cut: {cut_str}')
+
+        rdf = rdf.Filter(cut_str, 'BDT')
+
+        rep = rdf.Report()
+
+        rep.Print()
+
+        return rdf
+    #-------------------
     def get_rdf(self):
         self._initialize()
 
@@ -294,6 +314,7 @@ class data_set:
             self.log.debug(f'{cache_path}')
 
         rdf = ROOT.RDataFrame(self._trigger, l_cache_path)
+        rdf = self._apply_selection(rdf)
         rdf = self._get_range_rdf(rdf)
 
         for year in l_year:

@@ -8,6 +8,7 @@ import zfit
 import hist
 import glob
 import utils
+import pprint
 import numpy
 import mplhep
 import argparse
@@ -258,6 +259,17 @@ def get_pdf(is_signal=None, split_by_nspd=None):
 
     return pdf
 #-------------------
+def get_pars(res, identifier):
+    try:
+        d_par = { name : [ d_val['value'], d_val['hesse']['error'] ] for name, d_val in res.params.items() }
+    except:
+        data.log.error(f'Cannot extract {identifier} parameters from:')
+        print(res)
+        pprint(res.params)
+        raise
+
+    return d_par
+#-------------------
 def fit(df, d_fix=None, identifier='unnamed'):
     jsn_path  = f'{data.plt_dir}/{identifier}.json'
     if os.path.isfile(jsn_path):
@@ -292,7 +304,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
         log.info('Skipping fit')
         res=None
     elif is_signal:
-        res=obj.fit(ntries=10, pval_threshold=0.04)
+        res=obj.fit(ntries=30, pval_threshold=0.04)
     else:
         res=obj.fit()
 
@@ -329,7 +341,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
     pkl_path = f'{data.plt_dir}/{identifier}.pkl'
     utnr.dump_pickle(res, pkl_path)
 
-    d_par = { name : [ d_val['value'], d_val['hesse']['error'] ] for name, d_val in res.params.items() }
+    d_par = get_pars(res, identifier)
 
     utnr.dump_json(d_par, jsn_path)
 
