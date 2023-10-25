@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import re 
 import argparse 
@@ -8,7 +10,7 @@ import matplotlib.pyplot as plt
 #-----------------------------------------
 class data:
     log    = utnr.getLogger(__name__)
-    l_trig = ['ETOS', 'GTIS']
+    l_trig = ['ETOS', 'GTIS', 'AVRG']
     l_brem = ['0', '1', '2']
     l_year = ['r1', 'r2p1', '2017', '2018']
     l_par  = ['delta_m', 'mu_MC', 's_sigma']
@@ -16,7 +18,9 @@ class data:
     plot_dir = None 
     version  = None
 
-    d_range  = {'delta_m' : (-20, 20), 'mu_MC' : (3050, 3085), 's_sigma' : (0.90, 1.30) }
+    d_range  = {'delta_m' : (-20, +20), 'mu_MC' : (3050, 3100), 's_sigma' : (0.90, 1.30) }
+    d_trigger= {'AVRG' : 'Average', 'ETOS' : 'eTOS', 'GTIS' : 'gTIS!'}
+    d_yname  = {'mu_MC': r'$\mu_{MC}$', 'delta_m' : r'$\Delta M$', 's_sigma' : r'$s_{\sigma}$'}
 #-----------------------------------------
 def get_pars(vers, trig, brem, year):
     cal_dir = os.environ['CALDIR']
@@ -73,16 +77,21 @@ def main():
 
                 ax = None
                 for trigger, df_t in df_f.groupby('trig'):
-                    ax=df_t.plot(x='brem', y='par_val', yerr='par_err', ax=ax, label=trigger, capsize=4)
+                    ax=df_t.plot(x='brem', y='par_val', yerr='par_err', ax=ax, capsize=4, label=data.d_trigger[trigger])
+
+                if par == 'mu_MC':
+                    ax.axhline(y=3097, color='red')
 
                 miny, maxy = data.d_range[par]
                 ax.set_ylim(miny, maxy)
 
                 plt_path = f'{data.plot_dir}/{year}_{par}.png'
                 data.log.visible(f'Saving to: {plt_path}')
+
                 plt.grid()
                 plt.title(f'{data.version}; {year}')
-                plt.ylabel(par)
+                plt.ylabel(data.d_yname[par])
+                plt.xlabel('Bremsstrahlung')
                 plt.savefig(plt_path)
                 plt.close('all')
 #-----------------------------------------
