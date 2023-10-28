@@ -42,7 +42,7 @@ class data:
 
     l_all_trig = ['ETOS', 'GTIS']
     l_all_brem = ['0', '1', '2']
-    l_all_year = ['2011', '2012', '2015', '2016', '2017', '2018']
+    l_all_year = ['r1', 'r2p1', '2017', '2018']
 #-------------------
 def get_wgt_syst(trigger):
     '''Will return systematic for L0 and GEN weights corresponding to _cal_sys [nom, 000]
@@ -114,12 +114,33 @@ def plot_wgt(rdf, title, name):
     plt.savefig(plot_path)
     plt.close('all')
 #-----------------------------------
-def get_rdf(trig, year, nbrem):
-    data_wc = f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.21p2/{year}_{trig}/*.root'
+def get_data_paths(year, trig):
+    if year == 'r1':
+        l_data_wc = [
+                f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.21p2/2011_{trig}/*.root',
+                f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.21p2/2012_{trig}/*.root'
+                ]
+    elif year == 'r2p1':
+        l_data_wc = [
+                f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.21p2/2015_{trig}/*.root',
+                f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.21p2/2016_{trig}/*.root'
+                ]
+    elif year in ['2017', '2018']:
+        l_data_wc = [f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.21p2/{year}_{trig}/*.root']
+    else:
+        data.log.error(f'Invalid year: {year}')
+        raise
 
-    log.debug(f'Loading files in: {data_wc}')
+    for data_wc in l_data_wc:
+        log.debug(f'Loading files in: {data_wc}')
+
+    return l_data_wc
+#-----------------------------------
+def get_rdf(trig, year, nbrem):
+    l_data_wc = get_data_paths(year, trig)
+    bdt_cut   = rs.get('bdt', trig, q2bin='none', year='none')
     
-    rdf = ROOT.RDataFrame(trig, data_wc)
+    rdf = ROOT.RDataFrame(trig, l_data_wc)
     if data.nevs > 0:
         total = rdf.Count().GetValue()
         log.warning(f'Picking up {data.nevs}/{total} events')
@@ -128,6 +149,7 @@ def get_rdf(trig, year, nbrem):
     rdf=rdf.Define('brem_mult', 'L1_BremMultiplicity + L2_BremMultiplicity')
     rdf=rdf.Define('nbrem'    , 'brem_mult < 2 ? brem_mult : 2')
     rdf=rdf.Filter(f'nbrem == {nbrem}', 'BREM')
+    rdf=rdf.Filter(bdt_cut            ,  'BDT')
 
     if not data.wgts:
         log.warning('Using PID weights from simulation only')
