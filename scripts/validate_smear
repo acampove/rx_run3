@@ -31,6 +31,7 @@ class data:
     cas_dir= None
     cal_dir= None
     nevs   = None
+    mcvers = None 
 
     plot_dir= None
     diag_dir= None
@@ -117,16 +118,16 @@ def plot_wgt(rdf, title, name):
 def get_data_paths(year, trig):
     if year == 'r1':
         l_data_wc = [
-                f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.21p2/2011_{trig}/*.root',
-                f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.21p2/2012_{trig}/*.root'
+                f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/{data.mcvers}/2011_{trig}/*.root',
+                f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/{data.mcvers}/2012_{trig}/*.root'
                 ]
     elif year == 'r2p1':
         l_data_wc = [
-                f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.21p2/2015_{trig}/*.root',
-                f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.21p2/2016_{trig}/*.root'
+                f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/{data.mcvers}/2015_{trig}/*.root',
+                f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/{data.mcvers}/2016_{trig}/*.root'
                 ]
     elif year in ['2017', '2018']:
-        l_data_wc = [f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/v10.21p2/{year}_{trig}/*.root']
+        l_data_wc = [f'{data.cas_dir}/tools/apply_selection/q2_smear/ctrl/{data.mcvers}/{year}_{trig}/*.root']
     else:
         data.log.error(f'Invalid year: {year}')
         raise
@@ -270,6 +271,7 @@ def validate(trig, year, nbrem):
 def get_args():
     parser = argparse.ArgumentParser(description='Used to compare smeared MC with fitted data') 
     parser.add_argument('-v', '--vers' , type=str, help='Version of smearing parameters and corresponding fits', required=True)
+    parser.add_argument('-s', '--simv' , type=str, help='Version of MC used to smear while validating'         , required=True)
     parser.add_argument('-y', '--year' , nargs='+', help='Years'        , choices=data.l_all_year, default=data.l_all_year)
     parser.add_argument('-t', '--trig' , nargs='+', help='Triggers'     , choices=data.l_all_trig, default=data.l_all_trig)
     parser.add_argument('-b', '--brem' , nargs='+', help='Brem category', choices=data.l_all_brem, default=data.l_all_brem)
@@ -280,6 +282,7 @@ def get_args():
     args = parser.parse_args()
 
     data.vers   = args.vers
+    data.mcvers = args.simv
     data.nevs   = args.nevs
     data.wgts   = args.wgts
     data.l_year = args.year
