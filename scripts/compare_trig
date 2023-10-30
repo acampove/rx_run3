@@ -9,13 +9,14 @@ import utils_noroot      as utnr
 import matplotlib.pyplot as plt
 #-----------------------------------------
 class data:
-    log    = utnr.getLogger(__name__)
-    l_trig = ['ETOS', 'GTIS', 'AVRG']
-    l_brem = ['0', '1', '2']
-    l_year = ['r1', 'r2p1', '2017', '2018']
-    l_par  = ['delta_m', 'mu_MC', 's_sigma']
+    log      = utnr.getLogger(__name__)
+    l_trig   = ['ETOS', 'GTIS', 'AVRG']
+    l_brem   = ['0', '1', '2']
+    l_year   = ['r1', 'r2p1', '2017', '2018']
+    l_par    = ['delta_m', 'mu_MC', 's_sigma']
 
     plot_dir = None 
+    qsq_dir  = os.environ['QSQSYS']
     version  = None
 
     d_range  = {'delta_m' : (-20, +20), 'mu_MC' : (3050, 3100), 's_sigma' : (0.90, 1.30) }
@@ -101,7 +102,7 @@ def get_args():
     args = parser.parse_args()
 
     data.version  = args.version
-    data.plot_dir = utnr.make_dir_path(f'plots/comparison_trigger/{data.version}')
+    data.plot_dir = utnr.make_dir_path(f'{data.qsq_dir}/get_q2_tables/fits/{data.version}/comparison_trigger')
 #-----------------------------------------
 if __name__ == '__main__':
     get_args()
