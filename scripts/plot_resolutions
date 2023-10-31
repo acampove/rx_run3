@@ -71,11 +71,11 @@ def plot_ratio(brem, par, trig, dset):
     data.log.info(f'Picking up parameters from: {json_path}')
     d_rat_str = utnr.load_json(json_path)
     if   par == 'rsg':
-        zrange    = 0.7, 1.3
+        zrange    = 0.5, 1.5
     elif par == 'dmu':
-        zrange    = -10, 0 
+        zrange    = -30, +30
     elif par in ['mMC', 'mDT']:
-        zrange    = 3050, 3090 
+        zrange    = 3030, 3110
     else:
         data.log.error(f'Invalid parameter: {par}')
         raise ValueError
