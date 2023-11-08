@@ -158,5 +158,5 @@ where the versions are the versions of the calibration files (e.g. v1.nom).
 To overlay the signal component in the fit to the data with the simulation before and after the smearing do:
 
 ```bash
-validate_smear -v v14.nom -y r1 -w -s v10.21p2
+validate_smear -v v14.nom -y 2011 -w -s v10.21p2
 ```
