@@ -185,7 +185,7 @@ def make_table(df, brem=None):
     df = df[df.brem == brem]
     df = df.drop(['brem'], axis=1)
     df = df.sort_values(by=['quantity', 'trigger'])
-    df = df.rename(columns={'trigger' : 'Trigger', 'quantity' : 'Quantity', 'value' : 'Value', 'error' : 'Error'})
+    df = df.rename(columns={'trigger' : 'Trigger', 'quantity' : 'Quantity', 'value' : 'Value [MeV]', 'error' : 'Error [MeV]'})
     df = df.replace({'AVRG'    : 'Average'    , 'ETOS'  : 'eTOS'        , 'GTIS'    : 'gTIS!'})
     df = df.replace({'delta_m' : '$\Delta\mu$', 'mu_MC' : '$\mu^{reco}$', 's_sigma' : '$s_{\sigma}$'})
 
@@ -235,7 +235,7 @@ def main():
     for year in data.l_year:
         for syst in data.l_syst:
             qsq_dir      = os.environ['QSQSYS']
-            data.val_dir = f'{qsq_dir}/validate_smear/{data.in_ver}.{syst}/parameters'
+            data.val_dir = f'{qsq_dir}/validate_smear/{data.in_ver}.{syst}/parameters/{year}'
             merge(year, syst)
 #----------------------------
 if __name__ == '__main__':
