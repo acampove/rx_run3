@@ -1,4 +1,4 @@
-generic-analysis-scripts>=0.0.8
+rx_scripts>=0.2.7
 rx-tools>=0.0.4
 matplotlib
 pandas
