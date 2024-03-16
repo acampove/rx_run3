@@ -7,11 +7,14 @@ import logging
 import version_management as vmg
 import utils_noroot       as utnr
 import read_selection     as rs
+import rk.calc_utility    as rkcu
 
 from rk.wgt_mgr   import wgt_mgr
+from log_store    import log_store
+
 #----------------------------------------------
 class data_set:
-    log = utnr.getLogger(__name__)
+    log = log_store.add_logger('q2_systematics:data_set')
     #----------------------------------------------
     def __init__(self, is_mc=None, trigger=None, dset=None):
         self._dset        = dset 
@@ -89,7 +92,7 @@ class data_set:
     def _get_range_rdf(self, rdf):
         if self._nentries > 0:
             ntotal = rdf.Count().GetValue()
-            self.log.visible(f'Using {self._nentries}/{ntotal} entries')
+            self.log.info(f'Using {self._nentries}/{ntotal} entries')
             rdf = rdf.Range(self._nentries)
     
         return rdf
@@ -152,7 +155,7 @@ class data_set:
     
         rdf = rdf.Redefine('weight', 'float(weight)')
         wgt = rdf.Sum('weight').GetValue()
-        self.log.visible(f'Sum of weights: {wgt}')
+        self.log.info(f'Sum of weights: {wgt}')
     
         return rdf
     #-------------------
@@ -188,6 +191,7 @@ class data_set:
         d_set['lzr_sys'] = self._cal_sys 
         d_set['hlt_sys'] = self._cal_sys 
         d_set['rec_sys'] = self._cal_sys 
+        d_set['dcm_sys'] = '000' 
     
         obj         = wgt_mgr(d_set)
         obj.log_lvl = logging.WARNING
@@ -314,8 +318,11 @@ class data_set:
             self.log.debug(f'{cache_path}')
 
         rdf = ROOT.RDataFrame(self._trigger, l_cache_path)
-        rdf = self._apply_selection(rdf)
         rdf = self._get_range_rdf(rdf)
+        rdf = self._apply_selection(rdf)
+        rdf.q2   = 'jpsi' #q2 weights are always calculated with normalization mode
+        rdf.trig = self._trigger 
+        rdf    = rkcu.addDiffVars(rdf)
 
         for year in l_year:
             self._check_nopid(rdf, year)
