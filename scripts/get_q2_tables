@@ -265,7 +265,7 @@ def get_pars(res, identifier):
     except:
         data.log.error(f'Cannot extract {identifier} parameters from:')
         print(res)
-        pprint(res.params)
+        pprint.pprint(res.params)
         raise
 
     return d_par
@@ -308,8 +308,6 @@ def fit(df, d_fix=None, identifier='unnamed'):
     else:
         res=obj.fit()
 
-    plot_fit(dat, pdf, res, identifier, add_pars=None)
-
     if   data.skip_fit:
         return
     elif res is None:
@@ -327,11 +325,13 @@ def fit(df, d_fix=None, identifier='unnamed'):
         print(res)
         raise
     else:
+        log.info(f'Using minuit hesse for errors')
         with zfit.run.set_autograd_mode(False):
             res.hesse(method='minuit_hesse')
         res.freeze()
-        print(res)
 
+    log.info(f'Found parameters:')
+    print(res)
     plot_fit(dat, pdf, res, identifier, add_pars='all')
 
     tex_path = f'{data.plt_dir}/{identifier}.tex'
