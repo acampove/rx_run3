@@ -134,12 +134,12 @@ def get_nspd_signal(l_pdf):
     return epdf
 #-------------------
 def get_cb_pdf():
-    ap_r  = zfit.Parameter('ap_r',  1.0,  -10.0, 10.0)
-    pw_r  = zfit.Parameter('pw_r',  1.0,    0.1, 10.0)
+    ap_r  = zfit.Parameter('ap_r',  1.0,  -3.0,   3.0)
+    pw_r  = zfit.Parameter('pw_r',  1.0,   0.1,  20.0)
     sig_r = zfit.pdf.CrystalBall(obs=data.obs, mu=data.mu, sigma=data.sg, alpha=ap_r, n=pw_r)
 
-    ap_l  = zfit.Parameter('ap_l', -1.0,  -10.0, 10.0)
-    pw_l  = zfit.Parameter('pw_l',  1.0,    0.1,  10.)
+    ap_l  = zfit.Parameter('ap_l', -1.0,   -3.0,  3.0)
+    pw_l  = zfit.Parameter('pw_l',  1.0,    0.1, 20.0)
     sig_l = zfit.pdf.CrystalBall(obs=data.obs, mu=data.mu, sigma=data.sg, alpha=ap_l, n=pw_l)
 
     ncbr  = zfit.Parameter('ncbr',  10,   0,  1000000)
