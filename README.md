@@ -139,13 +139,15 @@ dump_q2_ratios -v vx
 
 to produce JSON files and ROOT files with the $\sigma_{data}/\sigma_{MC}$ ratios. 
 
-## Plot resolution maps
+## Plots
+
+### Plot resolution maps
 
 ```bash
 plot_resolutions -v vx
 ```
 
-## Making comparison plots
+### Compare versions
 
 ```bash
 compare_q2 -v v1 v2 v3...
@@ -153,7 +155,13 @@ compare_q2 -v v1 v2 v3...
 
 where the versions are the versions of the calibration files (e.g. v1.nom).
 
-## Validation
+### Compare triggers
+
+```bash
+compare_trig -v v15.nom
+```
+
+### Validation
 
 To overlay the signal component in the fit to the data with the simulation before and after the smearing do:
 
