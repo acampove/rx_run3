@@ -1,3 +1,5 @@
+[[_TOC_]]
+
 # q2 systematics
 
 This project is used to assess the systematics associated to q2 smearing. 
