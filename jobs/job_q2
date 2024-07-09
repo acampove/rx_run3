@@ -9,6 +9,7 @@ display_help()
     echo "-v: Version of the output"
     echo "-d: Flag specifying simulation 0 or data 1"
     echo "-r: Real run (1) or test run (0 default) "
+    echo "-s: Systematic nom or nspd, only needed if running with kind=q2sys"
     echo "-t: Trigger"
     echo "-y: Year or dataset"
     echo "-b: Bremsstrahlung category"
@@ -20,7 +21,7 @@ get_args()
     TRIG='all'
     YEAR='all'
     BREM='all'
-    while getopts :hf:k:v:d:r:t:y:b: option
+    while getopts :hf:k:v:d:r:s:t:y:b: option
     do
 	case "${option}"
 	    in
@@ -28,6 +29,7 @@ get_args()
 	    v)VERS=${OPTARG};;
 	    d)DATA=${OPTARG};;
 	    r)REAL=${OPTARG};;
+	    s)SYST=${OPTARG};;
 	    #---------------
 	    t)TRIG=${OPTARG};;
 	    y)YEAR=${OPTARG};;
@@ -76,12 +78,17 @@ submit()
 {
     if   [[ $REAL -eq 0 ]];then
 	echo "This is a test, not submitting job"
+	echo "VERS:$VERS"
+	echo "KIND:$KIND"
+	echo "SYST:$SYST"
+	echo "TRIG:$TRIG"
+	echo "YEAR:$YEAR"
+	echo "BREM:$BREM"
     elif [[ "$KIND" == "q2sys" ]];then
-	SYST=$THIRD
 	SUBMIT=$(which submit_q2sys)
 	hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu %{ProcId} $VERS $SYST $TRIG $YEAR $BREM -mem $MEMORY $SUBMIT 
     elif [[ "$KIND" == "q2mom" ]];then
-	ISSM=$THIRD
+	ISSM=$KIND
 	SUBMIT=$(which submit_q2mom)
 	hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu %{ProcId} $VERS $ISSM $TRIG $YEAR $BREM -mem $MEMORY $SUBMIT 
     else
