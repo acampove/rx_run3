@@ -9,27 +9,27 @@ class data:
     ijob   = None
 
     l_trig = ['ETOS', 'GTIS']
-    l_year = ['2011', '2012', '2015', '2016', '2017', '2018'] 
     l_dset = ['r1', 'r2p1', '2017', '2018']
     l_brem = ['0', '1', '2']
 #-----------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to print settings used to run q2 systematics jobs')
-    parser.add_argument('-i', '--index', type=int, help='Job index', required=True)
-    parser.add_argument('-d', '--dset' ,           help='Use datasets (merged years) instead of years', action='store_true')
+    parser.add_argument('-i', '--index', type=int , help='Job index', required=True)
+    parser.add_argument('-d', '--dset' , nargs='+', help='Dasets to use'            , default=data.l_dset, choices=data.l_dset + ['all'])
+    parser.add_argument('-t', '--trig' , nargs='+', help='Triggers to use'          , default=data.l_trig, choices=data.l_trig + ['all'])
+    parser.add_argument('-b', '--brem' , nargs='+', help='Bremsstranlung categories', default=data.l_brem, choices=data.l_brem + ['all'])
     args = parser.parse_args()
 
-    data.ijob = args.index
-    data.dset = args.dset
+    data.ijob   = args.index 
+    data.l_dset = data.l_dset if args.dset == ['all'] else args.dset
+    data.l_trig = data.l_trig if args.trig == ['all'] else args.trig
+    data.l_brem = data.l_brem if args.brem == ['all'] else args.brem
 #-----------------------------
 def main():
     index = 0
-
-    l_sample = data.l_dset if data.dset else data.l_year
-
-    njob  = len(data.l_trig) * len(l_sample) * len(data.l_brem)
+    njob  = len(data.l_trig) * len(data.l_dset) * len(data.l_brem)
     for trig in data.l_trig:
-        for year in l_sample:
+        for year in data.l_dset:
             for brem in data.l_brem:
                 if index != data.ijob:
                     index+= 1
