@@ -95,9 +95,11 @@ The version is only used to name the output directory.
 However, to speed things up, one can send the jobs to the cluster to run in parallel for each dataset with:
 
 ```bash
-job_q2 -v vx -k q2sys -t (nom, nspd) [-r 1]
+job_q2 -k q2sys -v v17 -r 1 -t ETOS -y r2p1 -s nom
 ```
-for nominal and `nSPD` systematics and:
+
+would send a job for the nominal factors for r2p1 and ETOS. `-r 1` would do real jobs rather than tests
+and the outputs would go to `v17` directory.
 
 ```bash
 job_q2 -v vx -k q2mom -t (0,1)       [-r 1]
