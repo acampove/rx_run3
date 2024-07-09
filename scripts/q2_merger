@@ -152,6 +152,22 @@ def average_tis_tos(d_map):
 
     return d_avg_map
 #----------------------------
+def make_links(map_path, dset):
+    if dset not in ['r1', 'r2p1', 'r2p2']:
+        return
+
+    d_year = {'r1' : [2011, 2012], 'r2p1' : [2015, 2016], 'r2p2' : [2017, 2018]}
+    l_year = d_year[dset]
+    for year in l_year:
+        link_path = map_path.replace(f'{dset}.json', f'{year}.json')
+        if os.path.islink(link_path):
+            os.unlink(link_path)
+
+        if os.path.exists(link_path):
+            os.remove(link_path)
+
+        os.symlink(map_path, link_path)
+#----------------------------
 def merge(year, syst):
     d_map = {}
 
@@ -173,6 +189,8 @@ def merge(year, syst):
 
     data.log.visible(f'Saving to: {map_path}')
     utnr.dump_json(d_map, map_path, sort_keys=True)
+
+    make_links(map_path, year)
 
     df = dic_to_df(d_map)
 
