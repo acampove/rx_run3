@@ -1,5 +1,0 @@
-#!/bin/bash
-
-get_resolutions -d   r1 -t GTIS -b 0 -v v7 -s -i 17
-get_resolutions -d 2018 -t GTIS -b 0 -v v7 -s -i 8
-
