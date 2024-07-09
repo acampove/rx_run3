@@ -40,9 +40,6 @@ get_args()
 #-------------------------------------------------------------------
 prepare()
 {
-    source $HOME/.bashrc
-    conda_init
-    conda activate q2_syst 
     print_q2_settings -i 0 -d > .settings.log
 
     NJOB=$(cat .settings.log | grep NJOB | awk -F '=' '{print$2}')
