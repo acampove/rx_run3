@@ -7,8 +7,8 @@ display_help()
     echo ""
     echo "-k: Kind of job, q2sys or q2nom"
     echo "-v: Version of the output"
-    echo "-d: Flag specifying simulation 0 or data 1"
     echo "-r: Real run (1) or test run (0 default) "
+    echo "-d: Flag specifying simulation 0 or data 1, only needed if kind=q2mom"
     echo "-s: Systematic nom or nspd, only needed if running with kind=q2sys"
     echo "-t: Trigger"
     echo "-y: Year or dataset"
@@ -88,7 +88,7 @@ submit()
 	SUBMIT=$(which submit_q2sys)
 	hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu %{ProcId} $VERS $SYST $TRIG $YEAR $BREM -mem $MEMORY $SUBMIT 
     elif [[ "$KIND" == "q2mom" ]];then
-	ISSM=$KIND
+	ISSM=$((1 - DATA))
 	SUBMIT=$(which submit_q2mom)
 	hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu %{ProcId} $VERS $ISSM $TRIG $YEAR $BREM -mem $MEMORY $SUBMIT 
     else
