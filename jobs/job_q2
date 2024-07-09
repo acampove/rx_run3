@@ -7,14 +7,20 @@ display_help()
     echo ""
     echo "-k: Kind of job, q2sys or q2nom"
     echo "-v: Version of the output"
-    echo "-t: Flag specifying simulation 0 or data 1"
+    echo "-d: Flag specifying simulation 0 or data 1"
     echo "-r: Real run (1) or test run (0 default) "
+    echo "-t: Trigger"
+    echo "-y: Year or dataset"
+    echo "-b: Bremsstrahlung category"
 }
 #-------------------------------------------------------------------
 get_args()
 {
     REAL=0
-    while getopts :hf:k:v:t:r: option
+    TRIG='all'
+    YEAR='all'
+    BREM='all'
+    while getopts :hf:k:v:d:r:t:y:b: option
     do
 	case "${option}"
 	    in
@@ -22,6 +28,11 @@ get_args()
 	    v)VERS=${OPTARG};;
 	    d)DATA=${OPTARG};;
 	    r)REAL=${OPTARG};;
+	    #---------------
+	    t)TRIG=${OPTARG};;
+	    y)YEAR=${OPTARG};;
+	    b)BREM=${OPTARG};;
+	    #---------------
             h)  
                 display_help
                 exit 0
@@ -36,11 +47,15 @@ get_args()
                 ;; 
 	esac
     done
+
+    IFS=',' read -ra TRIG <<< "$TRIG"
+    IFS=',' read -ra YEAR <<< "$YEAR"
+    IFS=',' read -ra BREM <<< "$BREM"
 }
 #-------------------------------------------------------------------
 prepare()
 {
-    print_q2_settings -i 0 -d > .settings.log
+    print_q2_settings -i 0 -t $TRIG -d $YEAR -b $BREM > .settings.log
 
     NJOB=$(cat .settings.log | grep NJOB | awk -F '=' '{print$2}')
     JOBDIR=/publicfs/ucas/user/campoverde/Jobs/$KIND
@@ -53,17 +68,15 @@ prepare()
     OFILE=$KIND_%{ClusterId}_%{ProcId}
     MEMORY=4000
 
-    if [[ $REAL -ne 1 ]];then
-	NJOB=1
-    fi
-    
     echo "NJOB=$NJOB"
     echo "JOBDIR=$JOBDIR"
 }
 #-------------------------------------------------------------------
 submit()
 {
-    if   [[ "$KIND" == "q2sys" ]];then
+    if   [[ $REAL -eq 0 ]];then
+	echo "This is a test, not submitting job"
+    elif [[ "$KIND" == "q2sys" ]];then
 	SYST=$THIRD
 	SUBMIT=$(which submit_q2sys)
 	hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu %{ProcId} $VERS $SYST -mem $MEMORY $SUBMIT 
