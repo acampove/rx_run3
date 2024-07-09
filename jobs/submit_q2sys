@@ -2,14 +2,18 @@
 
 source $HOME/.bashrc
 conda_init
-conda activate q2_syst 
+conda activate rk 
 
 IJOB=$1
 VERS=$2
 SYST=$3
+TRIG=$4
+YEAR=$5
+BREM=$6
+
 CACHE_NAME=settings_$IJOB.txt
 
-print_q2_settings -i $IJOB -d > $CACHE_NAME 
+print_q2_settings -i $IJOB -t $TRIG -d $YEAR -b $BREM > $CACHE_NAME 
 
 TRIG=$(cat $CACHE_NAME | grep TRIG | awk -F '=' '{print$2}')
 YEAR=$(cat $CACHE_NAME | grep YEAR | awk -F '=' '{print$2}')

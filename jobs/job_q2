@@ -79,11 +79,11 @@ submit()
     elif [[ "$KIND" == "q2sys" ]];then
 	SYST=$THIRD
 	SUBMIT=$(which submit_q2sys)
-	hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu %{ProcId} $VERS $SYST -mem $MEMORY $SUBMIT 
+	hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu %{ProcId} $VERS $SYST $TRIG $YEAR $BREM -mem $MEMORY $SUBMIT 
     elif [[ "$KIND" == "q2mom" ]];then
 	ISSM=$THIRD
 	SUBMIT=$(which submit_q2mom)
-	hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu %{ProcId} $VERS $ISSM -mem $MEMORY $SUBMIT 
+	hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu %{ProcId} $VERS $ISSM $TRIG $YEAR $BREM -mem $MEMORY $SUBMIT 
     else
 	echo "Invalid job type: $KIND"
 	kill -INT $$
