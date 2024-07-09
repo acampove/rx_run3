@@ -1,17 +1,39 @@
 #!/bin/bash
 
 #-------------------------------------------------------------------
+display_help()
+{
+    echo "Script used to send jobs to do q2 calibration fits"
+    echo ""
+    echo "-k: Kind of job, q2sys or q2nom"
+    echo "-v: Version of the output"
+    echo "-t: Flag specifying simulation 0 or data 1"
+    echo "-r: Real run (1) or test run (0 default) "
+}
+#-------------------------------------------------------------------
 get_args()
 {
     REAL=0
-    while getopts k:v:t:r: option
+    while getopts :hf:k:v:t:r: option
     do
 	case "${option}"
 	    in
 	    k)KIND=${OPTARG};;
 	    v)VERS=${OPTARG};;
-	    t)THIRD=${OPTARG};;
+	    d)DATA=${OPTARG};;
 	    r)REAL=${OPTARG};;
+            h)  
+                display_help
+                exit 0
+                ;;  
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;; 
 	esac
     done
 }
