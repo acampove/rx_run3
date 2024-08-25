@@ -1,0 +1,12 @@
+[production]
+wg       ='rd'
+analysis ='rd_ap_2024'
+
+[sample]
+eventtype= '94000000'
+polarity = ['magup', 'magdown']
+datatype = 2024
+version  = 'v1r1364'
+
+[splitting]
+groups   = 100

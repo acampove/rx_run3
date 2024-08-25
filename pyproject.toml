@@ -1,0 +1,14 @@
+[project]
+name        = 'data_checks'
+version     = '0.0.1'
+dependencies= ['rx_scripts', 'apd'] 
+
+[project.optional-dependencies]
+dev  = []
+
+[tools.setuptools.packages.find]
+where=['src']
+
+[tools.setuptools.package-data]
+data_checks_data=['*.toml']
+
