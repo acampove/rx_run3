@@ -12,11 +12,15 @@ def set_log():
     log_store.set_level('rx_scripts:atr_mgr:mgr', 30)
 #--------------------------------------
 def test_simple():
-    rdf=ROOT.RDataFrame('Hlt2RD_B0ToKpKmEE', data.file_path)
-    rdf.name = 'simple_test'
+    rdf          = ROOT.RDataFrame('Hlt2RD_BuToKpEE', data.file_path)
+    rdf.l_branch = ['K_PROBNN_K', 'B_M']
+    rdf.name     = 'Hlt2RD_B0ToKpKmEE'
 
     obj=selector(rdf=rdf, cfg_nam='dt_2024_turbo')
     rdf=obj.run()
+
+    rep=rdf.Report()
+    rep.Print()
 #--------------------------------------
 def main():
     set_log()
