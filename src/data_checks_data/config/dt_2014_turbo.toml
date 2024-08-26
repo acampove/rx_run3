@@ -64,3 +64,7 @@ lines_calib_mm_cut= [
 lines_phys_mm_cut= [
     'Hlt2RD_LbToLMuMu_LL']
 
+
+[saving]
+compression=0
+max_events=1000
