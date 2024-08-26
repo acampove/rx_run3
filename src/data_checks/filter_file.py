@@ -24,6 +24,7 @@ class FilterFile:
         self._cfg_dat     = None 
         self._l_line_name = None
         self._store_branch= None
+        self._has_lumitree= None
 
         self._initialized = False
     #--------------------------------------
@@ -54,7 +55,7 @@ class FilterFile:
         '''
         Will return all the HLT line names from config
         '''
-        d_l_name = self._cfg_dat['branches']
+        d_l_name = self._cfg_dat['hlt_lines']
         l_name   = list()
         for val in d_l_name.values():
             l_name += val
@@ -72,6 +73,8 @@ class FilterFile:
         l_key = ifile.GetListOfKeys()
         l_nam = [ key.GetName() for key in l_key]
         ifile.Close()
+
+        self._has_lumitree = 'lumiTree' in l_nam
 
         l_hlt = [ hlt           for hlt in l_nam if hlt.startswith('Hlt2RD_') ]
         nline = len(l_hlt)
@@ -187,40 +190,25 @@ class FilterFile:
 
         return True 
     #--------------------------------------
-    def _range_rdf(self, rdf):
-        '''
-        Will use part of the tree only if max_events specified in saving section of config
-        and if number is bigger than zero
-        '''
-        if self._nevts is None or self._nevts < 0:
-            return rdf
-
-        rdf = rdf.Range(self._nevts)
-
-        return rdf
-    #--------------------------------------
     def _get_rdf(self, line_name):
         '''
         Will build a dataframe from a given HLT line and return the dataframe
         _get_branches decides what branches are kept
         '''
         rdf      = ROOT.RDataFrame(f'{line_name}/DecayTree', self._file_path)
-        rdf      = self._range_rdf(rdf)
-
+        rdf.lumi = False
         rdf      = self._attach_branches(rdf, line_name) 
         l_branch = rdf.l_branch
         ninit    = rdf.ninit
         nfnal    = rdf.nfnal
 
         norg     = rdf.Count().GetValue()
-        obj      = selector(rdf=rdf, cfg_nam=self._cfg_nam) 
-        rdf      = obj.run()
+        if not rdf.lumi:
+            obj  = selector(rdf=rdf, cfg_nam=self._cfg_nam) 
+            rdf  = obj.run()
         nfnl     = rdf.Count().GetValue()
 
         log.debug(f'{line_name:<50}{ninit:<10}{"->":5}{nfnal:<10}{norg:<10}{"->":5}{nfnl:<10}')
-
-        rdf.l_branch = l_branch
-        rdf.name     = line_name
 
         return rdf
     #--------------------------------------
@@ -262,6 +250,18 @@ class FilterFile:
 
             rdf.Snapshot(tree_name, file_name, l_branch, opts)
     #--------------------------------------
+    def _add_lumi_rdf(self, l_rdf):
+        if not self._has_lumitree:
+            return l_rdf
+
+        rdf          = ROOT.RDataFrame('lumiTree', self._file_path)
+        rdf.lumi     = True
+        rdf.name     = 'lumiTree'
+        rdf.l_branch = rdf.GetColumnNames() 
+        l_rdf.append(rdf)
+
+        return l_rdf 
+    #--------------------------------------
     @utnr.timeit
     def run(self):
         '''
@@ -273,6 +273,7 @@ class FilterFile:
         log.debug(f'{"Line":<50}{"BOrg":<10}{"":5}{"BFnl":<10}{"#Org":<10}{"":5}{"#Fnl":<10}')
         log.debug(100 * '-')
         l_rdf = [ self._get_rdf(tree_name) for tree_name in self._l_line_name ]
+        l_rdf = self._add_lumi_rdf(l_rdf)
 
         self._save_file(l_rdf)
 #--------------------------------------
