@@ -97,7 +97,7 @@ class ntuple_filter:
         self._initialize()
 
         for root_path in self._l_root_path:
-            obj=FilterFile(file_path=path)
+            obj=FilterFile(file_path=root_path, cfg_nam=self._cfg_nam)
             obj.run()
 #----------------------------------------------------------------
 
