@@ -7,8 +7,11 @@ dependencies= ['tqdm', 'rx_scripts', 'apd']
 dev  = []
 
 [tools.setuptools.packages.find]
-where=['src']
+where   = ['src']
 
 [project.scripts]
 save_pfns='data_checks_scripts.save_pfns:main'
+
+[tool.setuptools.package-data]
+'data_checks_data' = ['*.json', '*.toml']
 
