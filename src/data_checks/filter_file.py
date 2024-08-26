@@ -140,7 +140,16 @@ class FilterFile:
         if '_POSITION_STATEAT_' in name:
             return False
 
+        if 'CutBasedIncl' in name:
+            return False
+
         if '_VTXISO_' in name:
+            return False
+
+        if '_InclDet' in name:
+            return False
+
+        if '_RICH_THRESHOLD_' in name:
             return False
 
         if name.startswith('B_Hlt1'):
@@ -156,6 +165,15 @@ class FilterFile:
             return False
 
         if name.startswith('B_K2Pi_DTF_'):
+            return False
+
+        if name.startswith('Hlt2') and not name.startswith('Hlt2RD'):
+            return False
+
+        if name.startswith('Hlt1Di'):
+            return False
+
+        if name.startswith('Hlt1BGI'):
             return False
 
         return True 
