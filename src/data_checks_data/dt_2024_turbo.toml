@@ -44,6 +44,7 @@ starts_with=[
 	'Lb_Hlt1',
 	'Jpsi_Hlt1',
 	'B_K2Pi_DTF_',
+	'K_',
 	'Hlt1Di',
 	'Hlt1BGI',
     ]
