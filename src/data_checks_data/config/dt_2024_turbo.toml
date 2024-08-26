@@ -11,7 +11,7 @@ version  = 'v1r1364'
 [splitting]
 groups   = 100
 
-[branches]
+[hlt_lines]
 lines_phys_ee_mva= [
     'Hlt2RD_BuToKpEE_MVA',
     'Hlt2RD_B0ToKpPimEE_MVA',
@@ -65,8 +65,8 @@ lines_phys_mm_cut= [
     'Hlt2RD_LbToLMuMu_LL']
 
 [selection]
-prescale=10
-cuts=true
+prescale=100
+cuts    =[]
 
 [saving]
 max_events  =-1
