@@ -1,12 +1,13 @@
-
 import os
 import toml
+import tqdm
 import ROOT
 import pprint
-import utils_noroot as utnr
+import utils_noroot          as utnr
+import data_checks.utilities as utdc
 
-from importlib.resources import files
-from log_store           import log_store
+from data_checks.selector  import selector
+from log_store             import log_store
 
 log=log_store.add_logger('data_checks:FilterFile')
 #--------------------------------------
@@ -30,7 +31,8 @@ class FilterFile:
         if self._initialized:
             return
 
-        self._load_config()
+        self._cfg_dat = utdc.load_config(self._cfg_nam)
+
         self._set_tree_names()
         self._set_save_pars()
 
@@ -52,7 +54,7 @@ class FilterFile:
         '''
         Will return all the HLT line names from config
         '''
-        d_l_name = self._cfg_dat['filtering']
+        d_l_name = self._cfg_dat['branches']
         l_name   = list()
         for val in d_l_name.values():
             l_name += val
@@ -81,19 +83,6 @@ class FilterFile:
         nline = len(l_flt)
         log.info(f'Found {nline} lines in file that match config')
         self._l_line_name = l_flt
-    #--------------------------------------
-    def _load_config(self):
-        '''
-        Will load TOML file with configuration and set config in self._cfg attribute
-        '''
-        cfg_path = files('data_checks_data').joinpath(f'config/{self._cfg_nam}.toml')
-        if not os.path.isfile(cfg_path):
-            log.error(f'Cannot find config: {cfg_path}')
-            raise FileNotFoundError
-
-        log.debug(f'Loading: {cfg_path}')
-
-        self._cfg_dat = toml.load(cfg_path)
     #--------------------------------------
     def _keep_branch(self, name):
         has_ccbar_const = ('DTF_PV_Jpsi_' in name) or ('DTF_PV_Psi2S' in name)
@@ -210,55 +199,6 @@ class FilterFile:
 
         return rdf
     #--------------------------------------
-    def _filter_rdf(self, rdf):
-        '''
-        Apply selection
-        '''
-        rdf_org = rdf
-        if 'EE'         in rdf_org.name:
-            rdf = rdf.Filter('L1_PID_E  > 2.0', 'lep_1_pid_e')
-            rdf = rdf.Filter('L2_PID_E  > 2.0', 'lep_1_pid_e')
-
-        if 'K_PROBNN_K' in rdf_org.l_branch:
-            rdf     = rdf.Filter('K_PROBNN_K> 0.1', 'had_probn_k')
-
-        rdf.name     = rdf_org.name
-        rdf.l_branch = rdf_org.l_branch
-
-        rdf = self._apply_mass_cut(rdf)
-
-        rdf.name     = rdf_org.name
-        rdf.l_branch = rdf_org.l_branch
-
-        rep = rdf.Report()
-        rep.Print()
-
-        return rdf
-    #--------------------------------------
-    def _apply_mass_cut(self, rdf):
-        rdf_org = rdf
-        if ('Lb_M' in rdf_org.l_branch) and ('EE'   in rdf_org.name):
-            rdf = rdf.Filter('Lb_M > 4500', 'Lb mass dn')
-            rdf = rdf.Filter('Lb_M < 6000', 'Lb mass up')
-
-        if ('Lb_M' in rdf_org.l_branch) and ('MuMu' in rdf_org.name):
-            rdf = rdf.Filter('Lb_M > 5000', 'Lb mass dn')
-            rdf = rdf.Filter('Lb_M < 6000', 'Lb mass up')
-
-        if ('B_M'  in rdf_org.l_branch) and ('EE'   in rdf_org.name):
-            rdf = rdf.Filter('B_M  > 4500', 'mass_dn')
-            rdf = rdf.Filter('B_M  < 6000', 'mass_up')
-
-        if ('B_M'  in rdf_org.l_branch) and ('MuMu' in rdf_org.name):
-            rdf = rdf.Filter('B_M  > 5000', 'mass_dn')
-            rdf = rdf.Filter('B_M  < 6000', 'mass_up')
-
-        if 'Kst_M' in rdf_org.l_branch:
-            rdf = rdf.Filter('Kst_M >  700', 'Kst mass dn')
-            rdf = rdf.Filter('Kst_M < 1100', 'Kst mass up')
-
-        return rdf
-    #--------------------------------------
     def _get_rdf(self, line_name):
         '''
         Will build a dataframe from a given HLT line and return the dataframe
@@ -273,7 +213,8 @@ class FilterFile:
         nfnal    = rdf.nfnal
 
         norg     = rdf.Count().GetValue()
-        rdf      = self._filter_rdf(rdf)
+        obj      = selector(rdf=rdf, cfg_nam=self._cfg_nam) 
+        rdf      = obj.run()
         nfnl     = rdf.Count().GetValue()
 
         log.debug(f'{line_name:<50}{ninit:<10}{"->":5}{nfnal:<10}{norg:<10}{"->":5}{nfnl:<10}')
@@ -315,12 +256,13 @@ class FilterFile:
         opts.fMode= 'update'
         opts.fCompressionLevel=self._cfg_dat['saving']['compression']
 
-        for rdf in l_rdf:
+        for rdf in tqdm.tqdm(l_rdf, ascii=' -'):
             tree_name = rdf.name
             l_branch  = rdf.l_branch
 
             rdf.Snapshot(tree_name, file_name, l_branch, opts)
     #--------------------------------------
+    @utnr.timeit
     def run(self):
         '''
         Will run filtering of files
