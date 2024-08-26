@@ -8,6 +8,46 @@ polarity = ['magup', 'magdown']
 datatype = 2024
 version  = 'v1r1364'
 
+[drop_branches]
+includes=[
+    '_cone_indx_',
+    '_DTF_PV_B_mass_const_',
+    '_DTF_noPV_',
+    'ChargedIso',
+    'NeutralIso',
+    'SMOG2',
+    '_KE2EK_',
+    '_EE2KK_',
+    '_EE2PiPi_',
+    '_K2P_',
+    '_K2Pi_',
+    '_KP2PK_',
+    '_KMu2MuK_',
+    '_P2K_',
+    '_MuMu2KK_',
+    '_MuMu2PiPi_',
+    '_MuMuK2KKPi_',
+    '_MuMuK2PiPiPi_',
+    '_POS_COV_MATRIX_',
+    '_MOM_POS_COV_MATRIX_',
+    '_MOM_COV_MATRIX_',
+    '_POSITION_STATEAT_',
+    'CutBasedIncl',
+    '_VTXISO_',
+    '_InclDet',
+    '_RICH_THRESHOLD_',
+    ]
+
+starts_with=[
+	'B_Hlt1',
+	'Lz_Hlt1',
+	'Lb_Hlt1',
+	'Jpsi_Hlt1',
+	'B_K2Pi_DTF_',
+	'Hlt1Di',
+	'Hlt1BGI',
+    ]
+
 [hlt_lines]
 lines_phys_ee_mva= [
     'Hlt2RD_BuToKpEE_MVA',
@@ -45,7 +85,7 @@ lines_calib_mm_mva= [
 
 lines_phys_ee_cut= [
     'Hlt2RD_BuToKpEE',
-    'Hlt2RD_B0ToKpKmEE',
+    'Hlt2RD_B0ToKpPimEE',
     'Hlt2RD_LbToLEE_LL']
 
 lines_calib_ee_cut= [
@@ -59,6 +99,8 @@ lines_calib_mm_cut= [
     'Hlt2RD_LbToPKJpsi_JpsiToMuMu']
 
 lines_phys_mm_cut= [
+    'Hlt2RD_BuToKpMuMu',
+    'Hlt2RD_B0ToKpPimMuMu',
     'Hlt2RD_LbToLMuMu_LL']
 
 [selection]
@@ -68,4 +110,4 @@ cuts    =[]
 [saving]
 max_events  =-1
 compression =2
-store_branch=false
+store_branch=true
