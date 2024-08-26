@@ -6,7 +6,7 @@ def set_log():
     log_store.set_level('data_checks:ntuple_filter', 10)
 #---------------------------------------
 def test_simple():
-    obj=ntuple_filter(cfg_nam='dt_2014_turbo', index=1)
+    obj=ntuple_filter(cfg_nam='dt_2024_turbo', index=1)
     obj.filter()
 #---------------------------------------
 def  main():
