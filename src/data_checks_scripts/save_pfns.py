@@ -29,7 +29,7 @@ def save_pfns():
     l_path  = obj(**d_samp)
     l_path.sort()
 
-    pfn_path= files('data_checks_data').joinpath(f'pfns/{data.config}.json')
+    pfn_path= files('data_checks_data').joinpath(f'{data.config}.json')
     log.info(f'Saving to: {pfn_path}')
     utnr.dump_json(l_path, pfn_path)
 #------------------------------------
@@ -39,3 +39,4 @@ def main():
 #------------------------------------
 if __name__ == '__main__':
     main()
+
