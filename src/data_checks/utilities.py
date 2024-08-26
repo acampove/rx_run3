@@ -16,7 +16,7 @@ def load_config(cfg_nam):
     -----------------
     d_config (dict): Dictionary with configuration
     '''
-    cfg_path = files('data_checks_data').joinpath(f'config/{cfg_nam}.toml')
+    cfg_path = files('data_checks_data').joinpath(f'{cfg_nam}.toml')
     if not os.path.isfile(cfg_path):
         log.error(f'Cannot find config: {cfg_path}')
         raise FileNotFoundError
