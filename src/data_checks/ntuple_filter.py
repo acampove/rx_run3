@@ -3,11 +3,12 @@ import os
 import apd
 import toml
 import math
+import utils_noroot          as utnr
+import data_checks.utilities as utdc
 
 from data_checks.filter_file import FilterFile
 from log_store               import log_store
 from importlib.resources     import files
-
 
 log=log_store.add_logger('data_checks:ntuple_filter')
 #----------------------------------------------------------------
@@ -36,21 +37,10 @@ class ntuple_filter:
         if self._initialized:
             return
 
-        self._load_config()
+        self._cfg_dat = utdc.load_config(self._cfg_nam)
         self._set_paths()
 
         self._initialized = True 
-    #---------------------------------------------
-    def _load_config(self):
-        '''
-        Will load TOML file with configuration and set config in self._cfg attribute
-        '''
-        cfg_path = files('data_checks_data').joinpath(f'config/{self._cfg_nam}.toml')
-        if not os.path.isfile(cfg_path):
-            log.error(f'Cannot find config: {cfg_path}')
-            raise FileNotFoundError
-
-        self._cfg_dat = toml.load(cfg_path)
     #---------------------------------------------
     def _set_paths(self):
         '''
