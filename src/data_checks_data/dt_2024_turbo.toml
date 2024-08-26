@@ -8,9 +8,6 @@ polarity = ['magup', 'magdown']
 datatype = 2024
 version  = 'v1r1364'
 
-[splitting]
-groups   = 100
-
 [hlt_lines]
 lines_phys_ee_mva= [
     'Hlt2RD_BuToKpEE_MVA',
