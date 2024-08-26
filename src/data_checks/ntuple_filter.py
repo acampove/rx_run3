@@ -16,16 +16,18 @@ class ntuple_filter:
     1. Picking a subset of the trees.
     2. Picking a subset of the branches.
     '''
-    def __init__(self, cfg_nam=None, index=None):
+    def __init__(self, cfg_nam=None, index=None, ngroup=None):
         '''
         Parameters
         ---------------------
         cfg_nam (str): Name of config file used to specify input sample
-        index   (int): Index of subsample to process, they start at zero up to ngroups - 1
+        index   (int): Index of subsample to process, they start at zero up to ngroup - 1
+        ngroup  (int): Number of groups into which to split filter
         '''
 
         self._cfg_nam= cfg_nam
         self._index  = index
+        self._ngroup = ngroup 
 
         self._cfg_dat= None
 
@@ -57,18 +59,17 @@ class ntuple_filter:
         Takes a list of PFNs and returns the list of PFNs
         associated to `self._index` group out of `ngroup`
         '''
-        ngroup = self._cfg_dat['splitting']['groups']
         nfiles = len(l_path)
 
-        if nfiles < ngroup:
-            log.error(f'Number of files is smaller than number of groups: {nfiles} < {ngroup}')
+        if nfiles < self._ngroup:
+            log.error(f'Number of files is smaller than number of groups: {nfiles} < {self._ngroup}')
             raise
 
-        log.info(f'Will split {nfiles} files into {ngroup} groups')
+        log.info(f'Will split {nfiles} files into {self._ngroup} groups')
 
-        group_size = math.floor(nfiles/ngroup)
+        group_size = math.floor(nfiles/self._ngroup)
         index_1    = group_size * (self._index + 0)
-        index_2    = group_size * (self._index + 1) if self._index + 1 < ngroup else None
+        index_2    = group_size * (self._index + 1) if self._index + 1 < self._ngroup else None
 
         log.info(f'Using range: {index_1}-{index_2}')
 
