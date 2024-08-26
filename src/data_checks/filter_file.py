@@ -16,11 +16,13 @@ class FilterFile:
     '''
     #--------------------------------------
     def __init__(self, file_path=None, cfg_nam=None):
-        self._file_path = file_path 
-        self._cfg_nam   = cfg_nam
+        self._file_path   = file_path 
+        self._cfg_nam     = cfg_nam
 
+        self._nevts       = None 
         self._cfg_dat     = None 
         self._l_line_name = None
+        self._store_branch= None
 
         self._initialized = False
     #--------------------------------------
@@ -30,8 +32,21 @@ class FilterFile:
 
         self._load_config()
         self._set_tree_names()
+        self._set_save_pars()
 
         self._initialized = True 
+    #--------------------------------------
+    def _set_save_pars(self):
+        try:
+            self._nevts = self._cfg_dat['saving']['max_events'] 
+            log.info(f'Filtering dataframe with {self._nevts} entries')
+        except KeyError:
+            log.debug('Not filtering, max_events not specified')
+
+        try:
+            self._store_branch = self._cfg_dat['saving']['store_branch'] 
+        except KeyError:
+            log.debug('Not storing branches')
     #--------------------------------------
     def _get_names_from_config(self):
         '''
@@ -75,6 +90,8 @@ class FilterFile:
         if not os.path.isfile(cfg_path):
             log.error(f'Cannot find config: {cfg_path}')
             raise FileNotFoundError
+
+        log.debug(f'Loading: {cfg_path}')
 
         self._cfg_dat = toml.load(cfg_path)
     #--------------------------------------
@@ -172,18 +189,106 @@ class FilterFile:
 
         if name.startswith('Hlt1Di'):
             return False
+        
+        if name.startswith('Hlt1') and ('Track' not in name):
+            return False
 
         if name.startswith('Hlt1BGI'):
             return False
 
         return True 
     #--------------------------------------
+    def _range_rdf(self, rdf):
+        '''
+        Will use part of the tree only if max_events specified in saving section of config
+        and if number is bigger than zero
+        '''
+        if self._nevts is None or self._nevts < 0:
+            return rdf
+
+        rdf = rdf.Range(self._nevts)
+
+        return rdf
+    #--------------------------------------
+    def _filter_rdf(self, rdf):
+        '''
+        Apply selection
+        '''
+        rdf_org = rdf
+        if 'EE'         in rdf_org.name:
+            rdf = rdf.Filter('L1_PID_E  > 2.0', 'lep_1_pid_e')
+            rdf = rdf.Filter('L2_PID_E  > 2.0', 'lep_1_pid_e')
+
+        if 'K_PROBNN_K' in rdf_org.l_branch:
+            rdf     = rdf.Filter('K_PROBNN_K> 0.1', 'had_probn_k')
+
+        rdf.name     = rdf_org.name
+        rdf.l_branch = rdf_org.l_branch
+
+        rdf = self._apply_mass_cut(rdf)
+
+        rdf.name     = rdf_org.name
+        rdf.l_branch = rdf_org.l_branch
+
+        rep = rdf.Report()
+        rep.Print()
+
+        return rdf
+    #--------------------------------------
+    def _apply_mass_cut(self, rdf):
+        rdf_org = rdf
+        if ('Lb_M' in rdf_org.l_branch) and ('EE'   in rdf_org.name):
+            rdf = rdf.Filter('Lb_M > 4500', 'Lb mass dn')
+            rdf = rdf.Filter('Lb_M < 6000', 'Lb mass up')
+
+        if ('Lb_M' in rdf_org.l_branch) and ('MuMu' in rdf_org.name):
+            rdf = rdf.Filter('Lb_M > 5000', 'Lb mass dn')
+            rdf = rdf.Filter('Lb_M < 6000', 'Lb mass up')
+
+        if ('B_M'  in rdf_org.l_branch) and ('EE'   in rdf_org.name):
+            rdf = rdf.Filter('B_M  > 4500', 'mass_dn')
+            rdf = rdf.Filter('B_M  < 6000', 'mass_up')
+
+        if ('B_M'  in rdf_org.l_branch) and ('MuMu' in rdf_org.name):
+            rdf = rdf.Filter('B_M  > 5000', 'mass_dn')
+            rdf = rdf.Filter('B_M  < 6000', 'mass_up')
+
+        if 'Kst_M' in rdf_org.l_branch:
+            rdf = rdf.Filter('Kst_M >  700', 'Kst mass dn')
+            rdf = rdf.Filter('Kst_M < 1100', 'Kst mass up')
+
+        return rdf
+    #--------------------------------------
     def _get_rdf(self, line_name):
         '''
         Will build a dataframe from a given HLT line and return the dataframe
-        Branches are dropped by only keeping branches in _keep_branch function
+        _get_branches decides what branches are kept
         '''
-        rdf   = ROOT.RDataFrame(f'{line_name}/DecayTree', self._file_path)
+        rdf      = ROOT.RDataFrame(f'{line_name}/DecayTree', self._file_path)
+        rdf      = self._range_rdf(rdf)
+
+        rdf      = self._attach_branches(rdf, line_name) 
+        l_branch = rdf.l_branch
+        ninit    = rdf.ninit
+        nfnal    = rdf.nfnal
+
+        norg     = rdf.Count().GetValue()
+        rdf      = self._filter_rdf(rdf)
+        nfnl     = rdf.Count().GetValue()
+
+        log.debug(f'{line_name:<50}{ninit:<10}{"->":5}{nfnal:<10}{norg:<10}{"->":5}{nfnl:<10}')
+
+        rdf.l_branch = l_branch
+        rdf.name     = line_name
+
+        return rdf
+    #--------------------------------------
+    def _attach_branches(self, rdf, line_name):
+        '''
+        Will check branches in rdf
+        Branches are dropped by only keeping branches in _keep_branch function
+        line_name used to name file where branches will be saved.
+        '''
         v_col = rdf.GetColumnNames()
         l_col = [ col.c_str() for col in v_col ]
 
@@ -191,14 +296,15 @@ class FilterFile:
         l_flt = [ flt         for flt in l_col if self._keep_branch(flt) ]
         nfnal = len(l_flt)
 
-        log.debug(f'{line_name:<50}{ninit:<10}{"--->":10}{nfnal:<10}')
-
-        utnr.dump_json(l_flt, f'./{line_name}.json')
-
+        rdf.ninit    = ninit
+        rdf.nfnal    = nfnal
         rdf.l_branch = l_flt
         rdf.name     = line_name
 
-        return rdf
+        if self._store_branch:
+            utnr.dump_json(l_flt, f'./{line_name}.json')
+
+        return rdf 
     #--------------------------------------
     def _save_file(self, l_rdf):
         '''
@@ -207,6 +313,7 @@ class FilterFile:
         file_name = os.path.basename(self._file_path)
         opts      = ROOT.RDF.RSnapshotOptions()
         opts.fMode= 'update'
+        opts.fCompressionLevel=self._cfg_dat['saving']['compression']
 
         for rdf in l_rdf:
             tree_name = rdf.name
@@ -220,7 +327,33 @@ class FilterFile:
         '''
         self._initialize()
 
+        log.debug(100 * '-')
+        log.debug(f'{"Line":<50}{"BOrg":<10}{"":5}{"BFnl":<10}{"#Org":<10}{"":5}{"#Fnl":<10}')
+        log.debug(100 * '-')
         l_rdf = [ self._get_rdf(tree_name) for tree_name in self._l_line_name ]
 
         self._save_file(l_rdf)
 #--------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
