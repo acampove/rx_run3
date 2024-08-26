@@ -88,6 +88,9 @@ class FilterFile:
         self._l_line_name = l_flt
     #--------------------------------------
     def _keep_branch(self, name):
+        '''
+        Will take the name of a branch and return True (keep) or False (drop)
+        '''
         has_ccbar_const = ('DTF_PV_Jpsi_' in name) or ('DTF_PV_Psi2S' in name)
         if ('_DTF_PV_' in name) and not has_ccbar_const:
             return False
@@ -110,12 +113,28 @@ class FilterFile:
 
         return True 
     #--------------------------------------
+    def _rename_kaon_branches(self, rdf):
+        '''
+        Will define K_ = H_ for kaon branches. K_ branches will be dropped later
+        '''
+
+        v_name = rdf.GetColumnNames()
+        l_name = [ name.c_str() for name in v_name ]
+        l_kaon = [ name         for name in l_name if name.startswith('K_') ]
+
+        for old in l_kaon: 
+            new = 'H_' + old[2:]
+            rdf = rdf.Define(new, old)
+
+        return rdf
+    #--------------------------------------
     def _get_rdf(self, line_name):
         '''
         Will build a dataframe from a given HLT line and return the dataframe
         _get_branches decides what branches are kept
         '''
         rdf      = ROOT.RDataFrame(f'{line_name}/DecayTree', self._file_path)
+        rdf      = self._rename_kaon_branches(rdf)
         rdf.lumi = False
         rdf      = self._attach_branches(rdf, line_name) 
         l_branch = rdf.l_branch
