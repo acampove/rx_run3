@@ -66,5 +66,6 @@ lines_phys_mm_cut= [
 
 
 [saving]
-compression=0
-max_events=1000
+max_events  =-1
+compression =2
+store_branch=false
