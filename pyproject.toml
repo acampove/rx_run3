@@ -9,6 +9,6 @@ dev  = []
 [tools.setuptools.packages.find]
 where=['src']
 
-[tools.setuptools.package-data]
-data_checks_data=['*.toml']
+[project.scripts]
+save_pfns='data_checks_scripts.save_pfns:main'
 
