@@ -92,101 +92,21 @@ class FilterFile:
         if ('_DTF_PV_' in name) and not has_ccbar_const:
             return False
 
-        if '_cone_indx_' in name:
-            return False
-
-        if '_DTF_PV_B_mass_const_' in name:
-            return False
-
-        if '_DTF_noPV_' in name:
-            return False
-
-        if 'ChargedIso' in name:
-            return False
-
-        if 'NeutralIso' in name:
-            return False
-
-        if 'SMOG2'      in name:
-            return False
-
-        if '_K2P_'  in name:
-            return False
-
-        if '_K2Pi_' in name:
-            return False
-
-        if '_KP2PK_' in name:
-            return False
-
-        if '_KMu2MuK_' in name:
-            return False
-
-        if '_P2K_' in name:
-            return False
-
-        if '_MuMu2KK_' in name:
-            return False
-
-        if '_MuMu2PiPi_' in name:
-            return False
-
-        if '_MuMuK2KKPi_' in name:
-            return False
-
-        if '_MuMuK2PiPiPi_' in name:
-            return False
-
-        if '_POS_COV_MATRIX_' in name:
-            return False
-
-        if '_MOM_POS_COV_MATRIX_' in name:
-            return False
-
-        if '_MOM_COV_MATRIX_' in name:
-            return False
-
-        if '_POSITION_STATEAT_' in name:
-            return False
-
-        if 'CutBasedIncl' in name:
-            return False
-
-        if '_VTXISO_' in name:
-            return False
-
-        if '_InclDet' in name:
-            return False
-
-        if '_RICH_THRESHOLD_' in name:
-            return False
-
-        if name.startswith('B_Hlt1'):
-            return False
-
-        if name.startswith('Lz_Hlt1'):
-            return False
-
-        if name.startswith('Lb_Hlt1'):
-            return False
-
-        if name.startswith('Jpsi_Hlt1'):
-            return False
-
-        if name.startswith('B_K2Pi_DTF_'):
-            return False
-
         if name.startswith('Hlt2') and not name.startswith('Hlt2RD'):
             return False
 
-        if name.startswith('Hlt1Di'):
-            return False
-        
         if name.startswith('Hlt1') and ('Track' not in name):
             return False
 
-        if name.startswith('Hlt1BGI'):
-            return False
+        l_svar = self._cfg_dat['drop_branches']['starts_with']
+        for svar in l_svar:
+            if name.startswith(svar):
+                return False
+
+        l_ivar = self._cfg_dat['drop_branches']['includes'   ]
+        for ivar in l_ivar:
+            if ivar in name:
+                return False
 
         return True 
     #--------------------------------------
