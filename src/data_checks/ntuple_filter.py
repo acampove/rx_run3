@@ -1,14 +1,12 @@
-
 import os
-import apd
 import toml
 import math
 import utils_noroot          as utnr
 import data_checks.utilities as utdc
 
-from data_checks.filter_file import FilterFile
 from log_store               import log_store
 from importlib.resources     import files
+from data_checks.filter_file import FilterFile
 
 log=log_store.add_logger('data_checks:ntuple_filter')
 #----------------------------------------------------------------
@@ -44,15 +42,13 @@ class ntuple_filter:
     #---------------------------------------------
     def _set_paths(self):
         '''
-        Uses apd to retrieve list of PFNs corresponding to `self._index` group
+        Loads groups of paths to ROOT files in EOS
         '''
-        d_samp= self._cfg_dat['sample']
-        d_prod= self._cfg_dat['production']
 
-        obj    = apd.get_analysis_data(**d_prod)
-        l_path = obj(**d_samp)
-        l_path.sort()
-        l_path = self._get_group(l_path)
+        json_path = files('data_checks_data').joinpath(f'{self._cfg_nam}.json')
+        l_path    = utnr.load_json(json_path)
+        l_path    = [ path.replace('root://eoslhcb.cern.ch/', '') for path in l_path ]
+        l_path    = self._get_group(l_path)
 
         self._l_root_path = l_path
     #---------------------------------------------
@@ -90,49 +86,4 @@ class ntuple_filter:
             obj=FilterFile(file_path=root_path, cfg_nam=self._cfg_nam)
             obj.run()
 #----------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
