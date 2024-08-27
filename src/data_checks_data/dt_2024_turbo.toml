@@ -115,6 +115,7 @@ prescale=100
 cuts    =[]
 
 [saving]
+out_dir     ='/home/acampove/data/aprod/tst'
 max_events  =-1
 compression =2
-store_branch=true
+store_branch=false
