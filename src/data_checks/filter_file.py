@@ -200,13 +200,11 @@ class FilterFile:
         '''
         Will save all ROOT dataframes to a file
         '''
-        file_name = os.path.basename(self._file_path)
         opts      = ROOT.RDF.RSnapshotOptions()
         opts.fMode= 'update'
         opts.fCompressionLevel=self._cfg_dat['saving']['compression']
 
-        out_dir   = self._cfg_dat['saving']['out_dir']
-        file_path = f'{out_dir}/{file_name}'
+        file_path = self._cfg_dat['saving']['out_path']
         for rdf in tqdm.tqdm(l_rdf, ascii=' -'):
             tree_name = rdf.name
             l_branch  = rdf.l_branch
@@ -232,6 +230,7 @@ class FilterFile:
         '''
         self._initialize()
 
+        log.info(f'Filtering: {self._file_path}')
         log.debug(100 * '-')
         log.debug(f'{"Line":<50}{"BOrg":<10}{"":5}{"BFnl":<10}{"#Org":<10}{"":5}{"#Fnl":<10}')
         log.debug(100 * '-')
