@@ -3,3 +3,25 @@
 This project is used to carry out checks on Run3 data.
 
 
+# Filtering ntuples
+
+## Preparing environment
+
+First create a virtual environment with the project:
+
+```bash
+. /cvmfs/lhcb.cern.ch/lib/LbEnv
+lb-conda-dev virtual-env default dcheck
+
+pip install -e /home/acampove/Packages/RK/scripts
+pip install -e /home/acampove/Packages/RK/data_checks
+```
+
+Make a tarball with the virtual environment and upload it to the grid:
+
+```
+tar -zcf dcheck.tar dcheck
+
+dirac-dms-add-file LFN:/lhcb/user/a/acampove/run3/venv/001/dcheck.tar /home/acampove/Test/venv/dcheck.tar CERN-USER
+```
+
