@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+#--------------------------------------
+set_vars()
+{
+    echo "Turning off multithreading"
+    export MKL_NUM_THREADS=1
+    export NUMEXPR_NUM_THREADS=1
+    export OMP_NUM_THREADS=1
+    export OPENBLAS_NUM_THREADS=1
+}
+#--------------------------------------
+rename_paths()
+{
+    ENVNAME=dcheck
+    ORGPATH=/home/acampove/Test/venv
+
+    for FILEPATH in $(grep --files-with-matches --binary-files=without-match -r $ORGPATH/$ENVNAME $PWD/$ENVNAME);do
+	echo $ORGPATH "--->"
+	echo $PWD     "  in  "  $FILEPATH
+	echo ""
+	sed -i "s|$ORGPATH|$PWD|g" $FILEPATH
+    done
+}
+#--------------------------------------
+CONFIG=$1
+NGROUP=$2
+IGROUP=$3
+
+set_vars
+rename_paths
+
+dcheck/run python filter_ntuples -c $CONFIG -n $NGROUP -i $IGROUP 
+
