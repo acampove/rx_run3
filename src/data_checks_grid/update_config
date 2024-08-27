@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+#---------------------------------
+display_help()
+{
+    echo "Script used to upload TOML config file to the grid"
+    echo ""
+    echo "-f: Path to file to upload"
+}
+#---------------------------------
+get_opts()
+{
+    if [[ $# -eq 0 ]]; then
+        display_help
+        exit 1
+    fi  
+
+    while getopts :hf:f: option; do 
+        case "${option}" in
+            h)  
+                display_help
+                exit 0
+                ;;  
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;  
+            f)  CONF=${OPTARG};;
+        esac
+    done
+}
+#---------------------------------
+initialize()
+{
+    if [[ ! -f $CONF ]];then
+	echo "Config file $CONF not found"
+	exit 1
+    fi
+
+    FILENAME=$(basename $CONF)
+    LFN=/lhcb/user/a/acampove/run3/ntupling/config/$FILENAME
+}
+#---------------------------------
+check_env()
+{
+    which dirac-dms-lfn-replicas > /dev/null
+
+    if [[ $? -ne 0 ]];then
+	echo "Not in an environment with dirac, run lb-dirac bash"
+	exit 1
+    fi
+
+    dirac-proxy-info -v > /dev/null
+
+    if [[ $? -ne 0 ]];then
+	echo "Grid proxy not found"
+	exit 1
+    fi
+}
+#---------------------------------
+check_existing()
+{
+    dirac-dms-lfn-replicas $LFN > /dev/null
+    if [[ $? -eq 0 ]];then
+	echo "LFN found: $LFN"
+	exit 1
+    fi
+
+}
+#---------------------------------
+get_opts "$@"
+initialize
+check_env
+check_existing
+
+dirac-dms-add-file LFN:$LFN $CONF CERN-USER
