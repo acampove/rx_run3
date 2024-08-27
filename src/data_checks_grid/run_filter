@@ -30,5 +30,5 @@ IGROUP=$3
 set_vars
 rename_paths
 
-dcheck/run python filter_ntuples -c $CONFIG -n $NGROUP -i $IGROUP 
+dcheck/run bash -c "filter_ntuples -c $CONFIG -n $NGROUP -i $IGROUP" 
 
