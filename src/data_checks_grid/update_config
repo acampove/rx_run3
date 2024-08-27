@@ -69,7 +69,6 @@ check_existing()
 	echo "LFN found: $LFN"
 	exit 1
     fi
-
 }
 #---------------------------------
 get_opts "$@"
