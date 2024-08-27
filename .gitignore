@@ -178,4 +178,6 @@ pyrightconfig.json
 *.swp
 *.root
 Hlt2RD*.json
+*.lfns
+sandbox*/
 
