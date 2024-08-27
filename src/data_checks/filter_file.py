@@ -128,13 +128,35 @@ class FilterFile:
 
         return rdf
     #--------------------------------------
+    def _rename_mapped_branches(self, rdf):
+        '''
+        Will define branches from mapping in config. Original branches will be dropped later
+        '''
+        v_name = rdf.GetColumnNames()
+        l_name = [ name.c_str() for name in v_name ]
+
+        d_name = self._cfg_dat['rename']
+        for org, new in d_name.items(): 
+            if org not in l_name:
+                continue
+
+            rdf = rdf.Define(new, org)
+
+        return rdf
+    #--------------------------------------
+    def _rename_branches(self, rdf):
+        rdf = self._rename_kaon_branches(rdf)
+        rdf = self._rename_mapped_branches(rdf)
+
+        return rdf
+    #--------------------------------------
     def _get_rdf(self, line_name):
         '''
         Will build a dataframe from a given HLT line and return the dataframe
         _get_branches decides what branches are kept
         '''
         rdf      = ROOT.RDataFrame(f'{line_name}/DecayTree', self._file_path)
-        rdf      = self._rename_kaon_branches(rdf)
+        rdf      = self._rename_branches(rdf)
         rdf.lumi = False
         rdf      = self._attach_branches(rdf, line_name) 
         l_branch = rdf.l_branch
@@ -216,26 +238,4 @@ class FilterFile:
 
         self._save_file(l_rdf)
 #--------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
