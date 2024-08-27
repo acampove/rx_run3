@@ -24,7 +24,7 @@ def get_args():
 def main():
     get_args()
 
-    obj=ntuple_filter(cfg_nam=data.config, index=data.gindex, groups=data.ngroup)
+    obj=ntuple_filter(cfg_nam=data.config, index=data.gindex, ngroup=data.ngroup)
     obj.filter()
 #----------------------------------------
 if __name__ == '__main__':
