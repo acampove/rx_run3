@@ -1,7 +1,7 @@
 [project]
 name        = 'data_checks'
 version     = '0.0.1'
-dependencies= ['tqdm', 'rx_scripts', 'apd'] 
+dependencies= ['tqdm', 'rx_scripts', 'apd', 'xrootd'] 
 
 [project.optional-dependencies]
 dev  = []
