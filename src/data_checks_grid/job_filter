@@ -15,6 +15,7 @@ from tqdm    import trange
 class data:
     snd_dir = None 
     njobs   = None
+    name    = None
     conf    = None
     venv    = None
     mode    = None
@@ -25,13 +26,14 @@ def get_job(jobid):
     j.setDestination('LCG.CERN.cern')
     j.setExecutable('run_filter', arguments=f'{data.conf} {data.njobs} {jobid}')
     j.setInputSandbox([f'LFN:/lhcb/user/a/acampove/run3/venv/{data.venv}/dcheck.tar'])
-    j.setOutputData(['*.root'])
-    j.setName(f'filter_{data.conf}_{jobid:03}')
+    j.setOutputData(['*.root'], outputPath=f'{data.name}_{data.conf}')
+    j.setName(f'{data.name}_{data.conf}_{jobid:03}')
 
     return j
 #---------------------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to send filtering jobs to the grid')
+    parser.add_argument('-n', '--name' , type =str, help='Name of job, to identify it' , required=True)
     parser.add_argument('-c', '--conf' , type =str, help='Name of config file'         , required=True)
     parser.add_argument('-j', '--njobs', type =int, help='Number of grid jobs'         , required=True)
     parser.add_argument('-e', '--venv' , type =str, help='Index of virtual environment', required=True)
@@ -40,6 +42,7 @@ def get_args():
     args = parser.parse_args()
 
     data.snd_dir = f'{os.getcwd()}/sandbox_{args.conf}'
+    data.name    = args.name
     data.conf    = args.conf
     data.njobs   = args.njobs
     data.venv    = args.venv
@@ -62,6 +65,9 @@ def main():
             jobid = -1
 
         l_jobid.append(jobid)
+
+        if 'test' in data.name:
+            break
 
         if data.mode == 'local':
             break
