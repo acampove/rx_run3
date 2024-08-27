@@ -49,7 +49,6 @@ class ntuple_filter:
 
         json_path = files('data_checks_data').joinpath(f'{self._cfg_nam}.json')
         l_path    = utnr.load_json(json_path)
-        l_path    = [ path.replace('root://eoslhcb.cern.ch/', '') for path in l_path ]
         l_path    = self._get_group(l_path)
 
         self._l_root_path = l_path
