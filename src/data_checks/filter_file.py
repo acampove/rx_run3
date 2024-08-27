@@ -205,11 +205,13 @@ class FilterFile:
         opts.fMode= 'update'
         opts.fCompressionLevel=self._cfg_dat['saving']['compression']
 
+        out_dir   = self._cfg_dat['saving']['out_dir']
+        file_path = f'{out_dir}/{file_name}'
         for rdf in tqdm.tqdm(l_rdf, ascii=' -'):
             tree_name = rdf.name
             l_branch  = rdf.l_branch
 
-            rdf.Snapshot(tree_name, file_name, l_branch, opts)
+            rdf.Snapshot(tree_name, file_path, l_branch, opts)
     #--------------------------------------
     def _add_lumi_rdf(self, l_rdf):
         if not self._has_lumitree:
