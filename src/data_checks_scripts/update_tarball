@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+check()
+{
+    if [[ $? -ne 0 ]];then
+	echo "Failed: $1"
+	exit 1
+    fi
+}
+
+rm -rf dchecks.tar
+check "Remove tarball"
+
+pip install /home/acampove/Packages/RK/scripts
+check "Install scripts"
+
+pip install /home/acampove/Packages/RK/data_checks/
+check "Install data_checks"
+
+tar -czf dcheck.tar dcheck/
+check "Tar data_checks"

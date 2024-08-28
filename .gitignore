@@ -181,3 +181,4 @@ Hlt2RD*.json
 *.lfns
 sandbox*/
 
+Local_*_JobDir/
