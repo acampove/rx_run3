@@ -17,6 +17,7 @@ class data:
     job_dir = None
     des_dir = None
     test    = None
+    log_lvl = None
 #--------------------------------------------------
 def _download(pfn=None):
     log.debug(f'Downloading: {pfn}')
@@ -41,7 +42,8 @@ def _get_pfns():
     _check_status(status, '_get_pfns')
 
     l_pfn = [f'{data.server}/{file_dir}/{entry.name}' for entry in listing ]
-    l_pfn = random.sample(l_pfn, data.nfile)
+    if data.nfile > 0:
+        l_pfn = random.sample(l_pfn, data.nfile)
 
     npfn=len(l_pfn)
     if npfn == 0:
@@ -52,7 +54,7 @@ def _get_pfns():
 
     return l_pfn
 #--------------------------------------------------
-def get_args():
+def _get_args():
     parser = argparse.ArgumentParser(description='Script used to download ntuples from EOS')
     parser.add_argument('-j', '--jobn' , type=str, help='Job name, used to find directory', required=True)
     parser.add_argument('-n', '--nfile', type=int, help='Number of files to download, chosen randomly', required=True)
@@ -65,11 +67,16 @@ def get_args():
     data.des_dir = args.dest
     data.nfile   = args.nfile
     data.test    = args.test
-
-    log.setLevel(args.log)
+    data.log_lvl = args.log
+#--------------------------------------------------
+def _initialize():
+    log.setLevel(data.log_lvl)
+    os.makedirs(data.des_dir, exist_ok=True)
 #--------------------------------------------------
 def main():
-    get_args()
+    _get_args()
+    _initialize()
+
     l_pfn = _get_pfns()
     for pfn in l_pfn:
         _download(pfn=pfn)
