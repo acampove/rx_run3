@@ -10,8 +10,9 @@ dev  = []
 where   = ['src']
 
 [project.scripts]
-save_pfns='data_checks_scripts.save_pfns:main'
-filter_ntuples='data_checks_scripts.filter_ntuples:main'
+save_pfns            ='data_checks_scripts.save_pfns:main'
+filter_ntuples       ='data_checks_scripts.filter_ntuples:main'
+run3_download_ntuples='data_checks_scripts.run3_download_ntuples:main'
 
 [tool.setuptools.package-data]
 'data_checks_data' = ['*.json', '*.toml']
