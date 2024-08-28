@@ -1,3 +1,5 @@
+[[_TOC_]]
+
 # Description
 
 This project is used to carry out checks on Run3 data.
@@ -19,9 +21,57 @@ pip install -e /home/acampove/Packages/RK/data_checks
 
 Make a tarball with the virtual environment and upload it to the grid:
 
-```
+```bash
 tar -zcf dcheck.tar dcheck
 
 dirac-dms-add-file LFN:/lhcb/user/a/acampove/run3/venv/001/dcheck.tar /home/acampove/Test/venv/dcheck.tar CERN-USER
 ```
 
+## Updating code and virtual environment
+
+If the code changes, the venv needs to change. To do that run:
+
+```bash
+update_tarball
+```
+
+in the directory where the environment (and tarball) is. The new tarball will need to be sent to the grid again with:
+
+```bash
+dirac-dms-add-file LFN:/lhcb/user/a/acampove/run3/venv/002/dcheck.tar /home/acampove/Test/venv/dcheck.tar CERN-USER
+```
+
+## Updating config file
+
+The configuration and the code are separate. The configuuration file is updated with:
+
+```bash
+update_config -f /path/to/toml/file.toml
+```
+
+This script needs to be ran in a shell with access to both dirac (do `lb-dirac bash`) and with a valid grid token.
+
+# Submitting jobs
+
+The instructions below need to be done outside the virtual environment in an environment with access to `dirac` and in the `data_checks_grid`
+directory.
+
+First run a test job with:
+
+```bash
+./job_filter -c dt_2024_turbo -j 1211 -e 003 -m local -n test_flt
+```
+
+where `-j` specifies the number of jobs. For tests, this is the number of files to process, thus, the test job does only one file. 
+The `-n` flag is the name of the job, for tests it will do/send only one job if either:
+
+1. Its name has the substring `test`.
+1. It is a local job.
+
+Thus one can do local or grid tests running over a single file.
+
+For real jobs:
+
+```bash
+./job_filter -c dt_2024_turbo -j 200 -e 003 -m wms -n flt_001
+```
