@@ -21,7 +21,7 @@ pip install -e /home/acampove/Packages/RK/data_checks
 
 Make a tarball with the virtual environment and upload it to the grid:
 
-```
+```bash
 tar -zcf dcheck.tar dcheck
 
 dirac-dms-add-file LFN:/lhcb/user/a/acampove/run3/venv/001/dcheck.tar /home/acampove/Test/venv/dcheck.tar CERN-USER
@@ -35,7 +35,11 @@ If the code changes, the venv needs to change. To do that run:
 update_tarball
 ```
 
-in the directory where the environment (and tarball) is.
+in the directory where the environment (and tarball) is. The new tarball will need to be sent to the grid again with:
+
+```bash
+dirac-dms-add-file LFN:/lhcb/user/a/acampove/run3/venv/002/dcheck.tar /home/acampove/Test/venv/dcheck.tar CERN-USER
+```
 
 ## Updating config file
 
@@ -46,3 +50,11 @@ update_config -f /path/to/toml/file.toml
 ```
 
 This script needs to be ran in a shell with access to both dirac (do `lb-dirac bash`) and with a valid grid token.
+
+# Submitting jobs
+
+First run a test job with:
+
+```
+
+```
