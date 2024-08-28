@@ -16,3 +16,6 @@ filter_ntuples='data_checks_scripts.filter_ntuples:main'
 [tool.setuptools.package-data]
 'data_checks_data' = ['*.json', '*.toml']
 
+[tool.setuptools]
+script-files=['src/data_checks_scripts/update_tarball', 'src/data_checks_scripts/update_config']
+
