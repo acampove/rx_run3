@@ -4,9 +4,10 @@ from log_store                 import log_store
 #---------------------------------------
 def set_log():
     log_store.set_level('data_checks:ntuple_filter', 10)
+    log_store.set_level('rx_scripts:atr_mgr:mgr'   , 30)
 #---------------------------------------
 def test_simple():
-    obj=ntuple_filter(cfg_nam='dt_2024_turbo', index=1, groups=100)
+    obj=ntuple_filter(dataset='dt_2024_turbo', cfg_ver='comp', index=1, ngroup=1211)
     obj.filter()
 #---------------------------------------
 def  main():
@@ -15,3 +16,4 @@ def  main():
 #---------------------------------------
 if __name__  == '__main__':
     main()
+

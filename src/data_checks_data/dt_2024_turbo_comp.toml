@@ -83,7 +83,7 @@ prescale=30
 cuts    =[]
 
 [saving]
-out_path    ='./data_2024.root'
 max_events  =-1
 compression =2
 store_branch=false
+
