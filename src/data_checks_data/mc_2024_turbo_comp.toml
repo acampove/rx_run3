@@ -3,10 +3,8 @@ working_group= 'rd'
 analysis     = 'rd_ap_2024'
 
 [sample]
-eventtype= '12153001'
-polarity = ['magdown']
-version  = 'v1r1364'
-name     = 'mc_bu_jpsik_ee_12153001_nu4p3_magdown_turcal_hlt1,2,tupling'
+version = 'v1r1364'
+name_rx = '^mc_(bu|bd|bs|lb)_.*_turbo_.*tupling$' 
 
 [drop_branches]
 includes=[

@@ -1,0 +1,187 @@
+{
+    "mc_bd_jpsikst_mm_11144001_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231379/0000/00231379_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsikst_mm_11144001_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231383/0000/00231383_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsikst_mm_11144001_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231387/0000/00231387_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsikst_mm_11144001_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231391/0000/00231391_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsiks_mm_11144103_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231395/0000/00231395_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsiks_mm_11144103_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231399/0000/00231399_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsiks_mm_11144103_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231403/0000/00231403_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsiks_mm_11144103_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231407/0000/00231407_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsikst_ee_11154001_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231411/0000/00231411_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsikst_ee_11154001_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231415/0000/00231415_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsikst_ee_11154001_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231419/0000/00231419_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsikst_ee_11154001_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231423/0000/00231423_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsiks_ee_11154100_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231427/0000/00231427_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsiks_ee_11154100_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231431/0000/00231431_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsiks_ee_11154100_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231435/0000/00231435_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsiks_ee_11154100_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231439/0000/00231439_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsix_mm_11442001_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231441/0000/00231441_00000001_1.tuple.root"
+    ],
+    "mc_bd_jpsix_mm_11442001_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231443/0000/00231443_00000001_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231443/0000/00231443_00000002_1.tuple.root"
+    ],
+    "mc_bd_jpsix_mm_11442001_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231445/0000/00231445_00000001_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231445/0000/00231445_00000002_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231445/0000/00231445_00000003_1.tuple.root"
+    ],
+    "mc_bd_jpsix_mm_11442001_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231447/0000/00231447_00000001_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231447/0000/00231447_00000002_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231447/0000/00231447_00000003_1.tuple.root"
+    ],
+    "mc_bu_jpsik_mm_12143001_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231451/0000/00231451_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsik_mm_12143001_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231459/0000/00231459_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsikpipi_mm_12145090_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231463/0000/00231463_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsikpipi_mm_12145090_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231467/0000/00231467_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsikpipi_mm_12145090_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231471/0000/00231471_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsikpipi_mm_12145090_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231475/0000/00231475_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsik_ee_12153001_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231479/0000/00231479_00000001_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231479/0000/00231479_00000002_1.tuple.root"
+    ],
+    "mc_bu_jpsik_ee_12153001_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231483/0000/00231483_00000001_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231483/0000/00231483_00000002_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231483/0000/00231483_00000003_1.tuple.root"
+    ],
+    "mc_bu_jpsik_ee_12153001_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231487/0000/00231487_00000001_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231487/0000/00231487_00000002_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231487/0000/00231487_00000003_1.tuple.root"
+    ],
+    "mc_bu_jpsik_ee_12153001_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231491/0000/00231491_00000001_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231491/0000/00231491_00000002_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231491/0000/00231491_00000003_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231491/0000/00231491_00000004_1.tuple.root"
+    ],
+    "mc_bu_jpsipi_ee_12153020_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231493/0000/00231493_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsipi_ee_12153020_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231495/0000/00231495_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsipi_ee_12153020_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231497/0000/00231497_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsipi_ee_12153020_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231499/0000/00231499_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsikpipi_ee_12155020_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231503/0000/00231503_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsikpipi_ee_12155020_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231508/0000/00231508_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsikpipi_ee_12155020_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231512/0000/00231512_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsikpipi_ee_12155020_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231517/0000/00231517_00000001_1.tuple.root"
+    ],
+    "mc_bs_jpsiphi_mm_13144001_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231521/0000/00231521_00000001_1.tuple.root"
+    ],
+    "mc_bs_jpsiphi_mm_13144001_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231524/0000/00231524_00000001_1.tuple.root"
+    ],
+    "mc_bs_jpsiphi_mm_13144001_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231528/0000/00231528_00000001_1.tuple.root"
+    ],
+    "mc_bs_jpsiphi_mm_13144001_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231533/0000/00231533_00000001_1.tuple.root"
+    ],
+    "mc_bs_jpsiphi_ee_13154001_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231536/0000/00231536_00000001_1.tuple.root"
+    ],
+    "mc_bs_jpsiphi_ee_13154001_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231540/0000/00231540_00000001_1.tuple.root"
+    ],
+    "mc_bs_jpsiphi_ee_13154001_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231544/0000/00231544_00000001_1.tuple.root"
+    ],
+    "mc_bs_jpsiphi_ee_13154001_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231547/0000/00231547_00000001_1.tuple.root"
+    ],
+    "mc_lb_jpsipk_mm_15144001_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231551/0000/00231551_00000001_1.tuple.root"
+    ],
+    "mc_lb_jpsipk_mm_15144001_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231555/0000/00231555_00000001_1.tuple.root"
+    ],
+    "mc_lb_jpsipk_mm_15144001_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231559/0000/00231559_00000001_1.tuple.root"
+    ],
+    "mc_lb_jpsipk_mm_15144001_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231564/0000/00231564_00000001_1.tuple.root"
+    ],
+    "mc_lb_jpsipk_ee_15154001_nu1p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231569/0000/00231569_00000001_1.tuple.root"
+    ],
+    "mc_lb_jpsipk_ee_15154001_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231572/0000/00231572_00000001_1.tuple.root"
+    ],
+    "mc_lb_jpsipk_ee_15154001_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231576/0000/00231576_00000001_1.tuple.root"
+    ],
+    "mc_lb_jpsipk_ee_15154001_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231581/0000/00231581_00000001_1.tuple.root"
+    ],
+    "mc_lb_jpsilz_mm_15144100_nu7p6_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231585/0000/00231585_00000001_1.tuple.root",
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231585/0000/00231585_00000002_1.tuple.root"
+    ],
+    "mc_bu_jpsik_mm_12143001_nu4p3_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231963/0000/00231963_00000001_1.tuple.root"
+    ],
+    "mc_bu_jpsik_mm_12143001_nu5p7_magdown_turbo_hlt1,2,tupling": [
+        "root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/expected-2024.Q1.2/TUPLE.ROOT/00231975/0000/00231975_00000001_1.tuple.root"
+    ]
+}
