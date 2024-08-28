@@ -43,7 +43,7 @@ dirac-dms-add-file LFN:/lhcb/user/a/acampove/run3/venv/002/dcheck.tar /home/acam
 The configuration and the code are separate. The configuuration file is updated with:
 
 ```bash
-update_config -f /path/to/toml/file.toml
+source update_config -f /home/acampove/Packages/RK/data_checks/src/data_checks_data/dt_2024_turbo_004.toml
 ```
 
 This script needs to be ran in a shell with access to both dirac (do `lb-dirac bash`) and with a valid grid token.
