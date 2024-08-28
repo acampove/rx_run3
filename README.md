@@ -53,8 +53,25 @@ This script needs to be ran in a shell with access to both dirac (do `lb-dirac b
 
 # Submitting jobs
 
+The instructions below need to be done outside the virtual environment in an environment with access to `dirac` and in the `data_checks_grid`
+directory.
+
 First run a test job with:
 
+```bash
+./job_filter -c dt_2024_turbo -j 1211 -e 003 -m local -n test_flt
 ```
 
+where `-j` specifies the number of jobs. For tests, this is the number of files to process, thus, the test job does only one file. 
+The `-n` flag is the name of the job, for tests it will do/send only one job if either:
+
+1. Its name has the substring `test`.
+1. It is a local job.
+
+Thus one can do local or grid tests running over a single file.
+
+For real jobs:
+
+```bash
+./job_filter -c dt_2024_turbo -j 200 -e 003 -m wms -n flt_001
 ```
