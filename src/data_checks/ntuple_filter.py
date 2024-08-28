@@ -16,16 +16,18 @@ class ntuple_filter:
     1. Picking a subset of the trees.
     2. Picking a subset of the branches.
     '''
-    def __init__(self, cfg_nam=None, index=None, ngroup=None):
+    def __init__(self, dataset=None, cfg_ver=None, index=None, ngroup=None):
         '''
         Parameters
         ---------------------
-        cfg_nam (str): Name of config file used to specify input sample
+        dataset (str): Dataset used, e.g. dt_2024_turbo
+        cfg_ver (str): Type of configuration, e.g. comp (comparison)
         index   (int): Index of subsample to process, they start at zero up to ngroup - 1
         ngroup  (int): Number of groups into which to split filter
         '''
 
-        self._cfg_nam= cfg_nam
+        self._dataset= dataset
+        self._cfg_ver= cfg_ver
         self._index  = index
         self._ngroup = ngroup 
 
@@ -37,6 +39,7 @@ class ntuple_filter:
         if self._initialized:
             return
 
+        self._cfg_nam = f'{self._dataset}_{self._cfg_ver}'
         self._cfg_dat = utdc.load_config(self._cfg_nam)
         self._set_paths()
 
@@ -47,7 +50,7 @@ class ntuple_filter:
         Loads groups of paths to ROOT files in EOS
         '''
 
-        json_path = files('data_checks_data').joinpath(f'{self._cfg_nam}.json')
+        json_path = files('data_checks_data').joinpath(f'{self._dataset}.json')
         l_path    = utnr.load_json(json_path)
         l_path    = self._get_group(l_path)
 
