@@ -4,10 +4,7 @@
 
 This project is used to carry out checks on Run3 data.
 
-
-# Filtering ntuples
-
-## Preparing environment
+# Preparing environment
 
 First create a virtual environment with the project:
 
