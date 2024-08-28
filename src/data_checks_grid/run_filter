@@ -23,12 +23,13 @@ rename_paths()
     done
 }
 #--------------------------------------
-CONFIG=$1
-NGROUP=$2
-IGROUP=$3
+DSET=$1
+CONF=$2
+NJOB=$3
+IJOB=$4
 
 set_vars
 rename_paths
 
-dcheck/run bash -c "filter_ntuples -c $CONFIG -n $NGROUP -i $IGROUP" 
+dcheck/run bash -c "filter_ntuples -d $DSET -c $CONF -n $NJOB -i $IJOB" 
 

@@ -14,8 +14,9 @@ from tqdm    import trange
 #---------------------------------------
 class data:
     snd_dir = None 
-    njobs   = None
+    njob    = None
     name    = None
+    dset    = None
     conf    = None
     venv    = None
     mode    = None
@@ -24,9 +25,9 @@ def get_job(jobid):
     j = Job()
     j.setCPUTime(36000)
     j.setDestination('LCG.CERN.cern')
-    j.setExecutable('run_filter', arguments=f'{data.conf} {data.njobs} {jobid}')
+    j.setExecutable('run_filter', arguments=f'{data.dset} {data.conf} {data.njob} {jobid}')
     j.setInputSandbox([f'LFN:/lhcb/user/a/acampove/run3/venv/{data.venv}/dcheck.tar'])
-    j.setOutputData(['*.root'], outputPath=f'{data.name}_{data.conf}', outputSE=['LCG.Beijing.cn'])
+    j.setOutputData(['*.root'], outputPath=f'{data.name}_{data.conf}')
     j.setName(f'{data.name}_{data.conf}_{jobid:03}')
 
     return j
@@ -34,17 +35,19 @@ def get_job(jobid):
 def get_args():
     parser = argparse.ArgumentParser(description='Used to send filtering jobs to the grid')
     parser.add_argument('-n', '--name' , type =str, help='Name of job, to identify it' , required=True)
-    parser.add_argument('-c', '--conf' , type =str, help='Name of config file'         , required=True)
-    parser.add_argument('-j', '--njobs', type =int, help='Number of grid jobs'         , required=True)
+    parser.add_argument('-c', '--conf' , type =str, help='Type of filter, e.g. comp'   , required=True)
+    parser.add_argument('-d', '--dset' , type =str, help='Dataset, e.g. dt_2024_turbo' , required=True)
+    parser.add_argument('-j', '--njob' , type =int, help='Number of grid jobs'         , required=True)
     parser.add_argument('-e', '--venv' , type =str, help='Index of virtual environment', required=True)
     parser.add_argument('-m', '--mode' , type =str, help='Run locally or in the grid'  , required=True, choices=['local', 'wms'])
 
     args = parser.parse_args()
 
-    data.snd_dir = f'{os.getcwd()}/sandbox_{args.name}_{args.conf}'
+    data.snd_dir = f'{os.getcwd()}/sandbox_{args.name}_{args.dset}_{args.conf}'
     data.name    = args.name
     data.conf    = args.conf
-    data.njobs   = args.njobs
+    data.dset    = args.dset
+    data.njob    = args.njob 
     data.venv    = args.venv
     data.mode    = args.mode
 #---------------------------------------
@@ -55,7 +58,7 @@ def main():
     dirac = Dirac()
 
     l_jobid = []
-    for jobid in trange(data.njobs, ascii=' -'):
+    for jobid in trange(data.njob, ascii=' -'):
         job    = get_job(jobid)
         d_info = dirac.submitJob(job, mode=data.mode)
 
