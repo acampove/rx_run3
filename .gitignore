@@ -180,5 +180,5 @@ pyrightconfig.json
 Hlt2RD*.json
 *.lfns
 sandbox*/
-
+tmp/
 Local_*_JobDir/
