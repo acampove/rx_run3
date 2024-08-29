@@ -59,7 +59,7 @@ directory.
 First run a test job with:
 
 ```bash
-./job_filter -c dt_2024_turbo -j 1211 -e 003 -m local -n test_flt
+./job_filter -d dt_2024_turbo -c comp -j 1211 -e 003 -m local -n test_flt
 ```
 
 where `-j` specifies the number of jobs. For tests, this is the number of files to process, thus, the test job does only one file. 
