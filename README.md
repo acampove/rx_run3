@@ -43,11 +43,16 @@ dirac-dms-add-file LFN:/lhcb/user/a/acampove/run3/venv/002/dcheck.tar /home/acam
 The configuration and the code are separate. The configuuration file is updated with:
 
 ```bash
-./update_config -f /home/acampove/Packages/RK/data_checks/src/data_checks_data/dt_2024_turbo_004.toml -u 1
+update_config -f /home/acampove/Packages/RK/data_checks/src/data_checks_data/dt_2024_turbo_004.toml -u 1
 ```
 
 The `-u` flag will update the config file if its LFN is alrdeady in the grid.
-This script needs to be ran in a shell with access to both dirac (do `lb-dirac bash`) and with a valid grid token.
+The script runs with:
+
+1. The LHCb environment set up.
+1. With a valid grid token.
+1. Within the working virtual environment. 
+`lb-dirac` and the script need to be used. No conflict between the VENV and the LHCb environments seems to happen.
 
 # Save lists of PFNs
 
