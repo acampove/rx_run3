@@ -49,7 +49,16 @@ The configuration and the code are separate. The configuuration file is updated 
 The `-u` flag will update the config file if its LFN is alrdeady in the grid.
 This script needs to be ran in a shell with access to both dirac (do `lb-dirac bash`) and with a valid grid token.
 
-# 
+# Save lists of PFNs
+
+The PFNs to be processed will be stored once with the AP api and will be read as package data when processing ntuples. 
+The list of PFNs is created with, e.g.:
+
+```bash
+save_pfns -c dt_2024_turbo_comp
+```
+
+where `-c` will correspond to the config file.
 
 # Submitting jobs
 
