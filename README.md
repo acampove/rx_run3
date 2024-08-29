@@ -73,7 +73,7 @@ Thus one can do local or grid tests running over a single file.
 For real jobs:
 
 ```bash
-./job_filter -c dt_2024_turbo -j 200 -e 003 -m wms -n flt_001
+./job_filter -d dt_2024_turbo -c comp -j 200 -e 003 -m wms -n flt_001
 ```
 
 # Downloading ntuples
