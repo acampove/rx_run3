@@ -38,7 +38,48 @@ class selector:
     def _apply_selection(self):
         self._apply_prescale()
         self._apply_mass_cut()
+        self._apply_truth()
         self._apply_pid()
+    #--------------------------------------
+    def _apply_truth(self):
+        '''
+        Will apply truth matching using the BKGCAT 
+        This will only kick in if both requested and if the sample is MC
+        '''
+        if 'truth' not in self._cfg_dat['selection']['cuts']:
+            log.debug('Not applying truth matching')
+            return
+
+        log.debug('Applying truth matching')
+
+        rdf = self._rdf
+
+        bkgcat = self._get_bkgcat_name()
+        cut    = f'({bkgcat} == 0) || ({bkgcat} == 10) || ({bkgcat} == 50)'
+        log.debug(f'Using truth matching cut: {cut}')
+
+        rdf    = rdf.Filter(cut, 'truth')
+
+        self._rdf = rdf
+    #--------------------------------------
+    def _get_bkgcat_name(self):
+        '''
+        Will return name of branch in tree, holding the background category for the B meson, i.e.:
+
+        X_BKGCAT
+        '''
+        v_col  = self._rdf.GetColumnNames()
+        l_col  = [ col.c_str() for col in v_col ]
+        l_bkg  = [ col         for col in l_col if col.endswith('BKGCAT') ]
+
+        try:
+            [name] = [ col         for col in l_col if col in ['Lb_BKGCAT', 'B_BKGCAT'] ]
+        except:
+            log.error(f'Could not find one and only one BKGCAT branch for B meson, found:')
+            pprint.pprint(l_bkg)
+            raise
+
+        return name
     #--------------------------------------
     def _apply_pid(self):
         '''
