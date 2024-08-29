@@ -16,7 +16,8 @@ class FilterFile:
     Class used to pick a ROOT file path and produce a smaller version
     '''
     #--------------------------------------
-    def __init__(self, file_path=None, cfg_nam=None):
+    def __init__(self, kind=None, file_path=None, cfg_nam=None):
+        self._kind        = kind
         self._file_path   = file_path 
         self._cfg_nam     = cfg_nam
 
@@ -209,7 +210,7 @@ class FilterFile:
             tree_name = rdf.name
             l_branch  = rdf.l_branch
 
-            rdf.Snapshot(tree_name, file_name, l_branch, opts)
+            rdf.Snapshot(tree_name, f'{self._kind}_{file_name}', l_branch, opts)
     #--------------------------------------
     def _add_lumi_rdf(self, l_rdf):
         if not self._has_lumitree:
