@@ -47,22 +47,53 @@ class ntuple_filter:
     #---------------------------------------------
     def _set_paths(self):
         '''
-        Loads groups of paths to ROOT files in EOS
+        Loads dictionary with:
+
+        kind_of_file -> [PFNs] 
+
+        correspondence
         '''
 
-        json_path = files('data_checks_data').joinpath(f'{self._dataset}.json')
-        l_path    = utnr.load_json(json_path)
-        l_path    = self._get_group(l_path)
+        json_path = files('data_checks_data').joinpath(f'{self._dataset}_{self._cfg_ver}.json')
+        d_path    = utnr.load_json(json_path)
+        d_path    = self._reformat(d_path)
+        d_path    = self._get_group(d_path)
 
-        self._l_root_path = l_path
+        self._d_root_path = d_path
     #---------------------------------------------
-    def _get_group(self, l_path):
+    def _reformat(self, d_path):
         '''
-        Takes a list of PFNs and returns the list of PFNs
-        associated to `self._index` group out of `ngroup`
-        '''
-        nfiles = len(l_path)
+        Takes dictionary: 
 
+        sample_kind -> [PFNs]
+
+        Returns dictionary
+
+        PFN -> sample_kind
+
+        Plus remove commas, etc from sample_kind
+        '''
+        log.debug('Reformating')
+
+        d_path_ref = dict()
+        for key, l_path in d_path.items():
+            key   = key.replace(',', '_')
+            d_tmp = { path : key for path in l_path }
+            d_path_ref.update(d_tmp)
+
+        return d_path_ref
+    #---------------------------------------------
+    def _get_group(self, d_path):
+        '''
+        Takes a dictionary mapping:
+
+        PFN -> sample_kind
+
+        and the total number of PFNs. Returns same dictionary for ith group out of ngroups
+        '''
+        log.debug('Getting PFN group')
+
+        nfiles = len(d_path)
         if nfiles < self._ngroup:
             log.error(f'Number of files is smaller than number of groups: {nfiles} < {self._ngroup}')
             raise
@@ -74,10 +105,12 @@ class ntuple_filter:
         index_2    = group_size * (self._index + 1) if self._index + 1 < self._ngroup else None
 
         log.info(f'Using range: {index_1}-{index_2}')
+        l_pfn      = [pfn for pfn in d_path]
+        l_pfn.sort()
+        l_pfn      = l_pfn[index_1:index_2]
+        d_group    = { pfn : d_path[pfn] for pfn in l_pfn}
 
-        l_path_group = l_path[index_1:index_2]
-
-        return l_path_group
+        return d_group 
     #---------------------------------------------
     def filter(self):
         '''
@@ -85,8 +118,8 @@ class ntuple_filter:
         '''
         self._initialize()
 
-        for root_path in self._l_root_path:
-            obj=FilterFile(file_path=root_path, cfg_nam=self._cfg_nam)
+        for pfn, kind in self._d_root_path.items():
+            obj=FilterFile(kind=kind, file_path=pfn, cfg_nam=self._cfg_nam)
             obj.run()
 #----------------------------------------------------------------
 
