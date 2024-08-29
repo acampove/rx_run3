@@ -78,7 +78,7 @@ lines_phys_mm_cut= [
 
 [selection]
 prescale=1
-cuts    =[]
+cuts    =['truth']
 
 [saving]
 max_events  =-1
