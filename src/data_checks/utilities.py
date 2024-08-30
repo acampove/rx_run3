@@ -39,7 +39,7 @@ def _load_local_config(cfg_nam):
 
     log.warning('Loading local config file')
 
-    return cfg_path
+    return toml.load(cfg_path)
 #--------------------------------------
 @utnr.timeit
 @cache
