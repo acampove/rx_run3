@@ -116,6 +116,12 @@ class selector:
 
         self._rdf = rdf
     #-------------------------------------------------------------------
+    def _print_info(self, rdf):
+        log_lvl = log.level
+        if log_lvl < 20:
+            rep = rdf.Report()
+            rep.Print()
+    #-------------------------------------------------------------------
     def run(self):
         '''
         Will return ROOT dataframe after selection
@@ -126,6 +132,8 @@ class selector:
         self._apply_selection()
 
         rdf = self._atr_mgr.add_atr(self._rdf)
+
+        self._print_info(rdf)
 
         return rdf
 #-------------------------------------------------------------------
