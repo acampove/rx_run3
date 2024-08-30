@@ -6,10 +6,13 @@ import utils_noroot as utnr
 from log_store import log_store
 
 #----------------------------------------
-def test_load_config():
-    d_cfg = ut.load_config('dt_2024_turbo')
+def test_load_grid_config():
+    d_cfg = ut.load_config('dt_2024_turbo_comp')
+#----------------------------------------
+def test_load_local_config():
+    ut.local_config=True
 
-    pprint.pprint(d_cfg)
+    d_cfg = ut.load_config('dt_2024_turbo_comp')
 #----------------------------------------
 def set_log():
     log_store.set_level('data_checks:utilities', 10)
@@ -18,7 +21,8 @@ def main():
     utnr.timer_on=True
     set_log()
 
-    test_load_config()
+    test_load_grid_config()
+    test_load_local_config()
 #----------------------------------------
 if __name__ == '__main__':
     main()
