@@ -6,10 +6,9 @@ none   = '(1)'
 b_mass = 'B_M      > 4800 && B_M      < 6000'
 j_mass = 'Jpsi_M   > 2800 && Jpsi_M   < 3300'
 PIDep  = 'L1_PID_E >    1 && L2_PID_E > 1'
-#KpProbN= 'H_PROBNN_K     > 0.05'
 KpGhost= 'H_TRGHOSTPROB  < 0.5'
 L1Ghost= 'L1_TRGHOSTPROB < 0.5'
-L2Ghost= 'L1_TRGHOSTPROB < 0.5'
+L2Ghost= 'L2_TRGHOSTPROB < 0.5'
 
 [define_vars]
 xbrem = 'L1_HASBREM + L2_HASBREM'
@@ -31,7 +30,7 @@ labels =['$M(J/\psi)[MeV]$', '']
 [plots.B_const_mass_M]
 binning=[4800, 5800, 100]
 yscale ='linear'
-labels =['$M(B_{DFT}^+)[MeV]$', '']
+labels =['$M_{DTF}(B^+)[MeV]$', '']
 
 [plots.xbrem]
 binning=[   0,    3,   3]
@@ -80,5 +79,5 @@ labels =['$Prob^{ghost}(e^-)$', '']
 
 
 [saving]
-plt_dir='/home/acampove/Packages/RK/data_checks/plots'
+plt_dir='/home/acampove/Packages/RK/data_checks/plots/bukee'
 
