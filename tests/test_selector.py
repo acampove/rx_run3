@@ -3,6 +3,7 @@ from log_store            import log_store
 
 import ROOT
 
+log=log_store.add_logger('data_checks:test_selector')
 #--------------------------------------
 class data:
     dt_path = '/home/acampove/data/aprod/downloads/flt_27_08_2024_dt_2024_turbo/00231366_00000001_1.ftuple.root'
@@ -30,9 +31,21 @@ def test_mc():
     obj=selector(rdf=rdf, cfg_nam='cuts_EE_2024', is_mc=True)
     rdf=obj.run()
 #--------------------------------------
+def test_cfl():
+    rdf= ROOT.RDataFrame('Hlt2RD_BuToKpEE', data.mc_path)
+
+    obj  =selector(rdf=rdf, cfg_nam='cuts_EE_2024', is_mc=True)
+    d_rdf=obj.run(as_cutflow=True)
+
+    for key, rdf in d_rdf.items():
+        num = rdf.Count().GetValue()
+
+        log.info(f'{key:<20}{num:<20}')
+#--------------------------------------
 def main():
     set_log()
 
+    test_cfl()
     test_dt()
     test_mc()
 #--------------------------------------
