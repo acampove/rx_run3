@@ -3,8 +3,8 @@ prescale=1
 
 [selection.cuts]
 none   = '(1)'
-b_mass = 'B_M      > 4800 && B_M      < 6000'
-j_mass = 'Jpsi_M   > 2800 && Jpsi_M   < 3300'
+b_mass = 'B_const_mass_M  > 5000 && B_const_mass_M < 5800'
+j_mass = 'Jpsi_M   > 2800        && Jpsi_M   < 3300'
 PIDep  = 'L1_PID_E >    1 && L2_PID_E > 1'
 KpGhost= 'H_TRGHOSTPROB  < 0.5'
 L1Ghost= 'L1_TRGHOSTPROB < 0.5'
