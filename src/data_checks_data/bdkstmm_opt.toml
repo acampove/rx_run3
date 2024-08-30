@@ -3,8 +3,9 @@ prescale=1
 
 [selection.cuts]
 none   = '(1)'
-b_mass = 'B_M      > 5000 && B_M      < 5600'
+b_mass = 'B_const_mass_M > 5000 && B_const_mass_M < 5600'
 j_mass = 'Jpsi_M   > 2900 && Jpsi_M   < 3300'
+k_mass = 'Kst_M    >  800 && Kst_M   < 1000'
 H1Ghost= 'H1_TRGHOSTPROB < 0.5'
 H2Ghost= 'H2_TRGHOSTPROB < 0.5'
 L1Ghost= 'L1_TRGHOSTPROB < 0.5'
@@ -32,7 +33,7 @@ yscale ='linear'
 labels =['$M(K^(*0))[MeV]$', '']
 
 [plots.B_const_mass_M]
-binning=[4800, 5800, 100]
+binning=[5000, 5600, 100]
 yscale ='linear'
 labels =['$M_{DTF}(B_d)[MeV]$', '']
 
