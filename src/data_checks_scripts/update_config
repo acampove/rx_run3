@@ -50,14 +50,14 @@ initialize()
 #---------------------------------
 check_env()
 {
-    which dirac-dms-lfn-replicas > /dev/null
+    which lb-dirac > /dev/null
 
     if [[ $? -ne 0 ]];then
-	echo "Not in an environment with dirac, run lb-dirac bash"
+	echo "Not in an environment with LHCb software"
 	exit 1
     fi
 
-    dirac-proxy-info -v > /dev/null
+    lhcb-proxy-info -v > /dev/null
 
     if [[ $? -ne 0 ]];then
 	echo "Grid proxy not found"
@@ -67,14 +67,16 @@ check_env()
 #---------------------------------
 check_existing()
 {
-    dirac-dms-lfn-replicas $LFN > /dev/null
+    lb-dirac dirac-dms-lfn-replicas $LFN > /dev/null
     if   [[ $? -eq 0 ]] && [[ $UPDT -eq 1 ]];then
 	echo "LFN found, removing: $LFN"
-	dirac-dms-remove-files $LFN
+	lb-dirac dirac-dms-remove-files $LFN
     elif [[ $? -eq 0 ]] && [[ $UPDT -eq 0 ]];then
 	echo "LFN found: $LFN"
 	exit 1
     fi
+
+    echo "No replica found for $LFN"
 }
 #---------------------------------
 SE=CERN-USER
@@ -83,4 +85,5 @@ initialize
 check_env
 check_existing
 
-dirac-dms-add-file LFN:$LFN $CONF $SE 
+lb-dirac dirac-dms-add-file LFN:$LFN $CONF $SE 
+echo "Uploaded config to: $LFN [$SE]"
