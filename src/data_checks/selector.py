@@ -1,3 +1,4 @@
+import pprint
 import data_checks.utilities as utdc
 
 from log_store  import log_store
@@ -10,19 +11,19 @@ class selector:
     Class used to apply selections to ROOT dataframes
     '''
     #-------------------------------------------------------------------
-    def __init__(self, rdf=None, cfg_nam=None):
+    def __init__(self, rdf=None, cfg_nam=None, is_mc=None):
         '''
         rdf          : ROOT dataframe
         cfg_nam (str): Name without extension of toml config file
+        is_mc (bool) : MC or real data?
         '''
 
         self._rdf       = rdf
         self._cfg_nam   = cfg_nam
-        self._l_branch  = rdf.l_branch
-        self._line_name = rdf.name
+        self._is_mc     = is_mc
 
-        self._cfg_dat   = None 
         self._atr_mgr   = None
+        self._d_sel     = None
 
         self._initialized=False
     #-------------------------------------------------------------------
@@ -30,37 +31,54 @@ class selector:
         if self._initialized:
             return
 
+        if self._is_mc not in [True, False]:
+            log.error(f'Invalid value for is_mc: {self._is_mc}')
+            raise ValueError
+
         self._atr_mgr = amgr(self._rdf)
-        self._cfg_dat = utdc.load_config(self._cfg_nam)
+
+        cfg_dat       = utdc.load_config(self._cfg_nam)
+        self._d_sel   = cfg_dat['selection']
+        self._fix_bkgcat()
 
         self._initialized=True
     #-------------------------------------------------------------------
     def _apply_selection(self):
-        self._apply_prescale()
-        self._apply_mass_cut()
-        self._apply_truth()
-        self._apply_pid()
-    #--------------------------------------
-    def _apply_truth(self):
         '''
-        Will apply truth matching using the BKGCAT 
-        This will only kick in if both requested and if the sample is MC
+        Loop over cuts and apply selection
         '''
-        if 'truth' not in self._cfg_dat['selection']['cuts']:
-            log.debug('Not applying truth matching')
-            return
-
-        log.debug('Applying truth matching')
-
         rdf = self._rdf
-
-        bkgcat = self._get_bkgcat_name()
-        cut    = f'({bkgcat} == 0) || ({bkgcat} == 10) || ({bkgcat} == 50)'
-        log.debug(f'Using truth matching cut: {cut}')
-
-        rdf    = rdf.Filter(cut, 'truth')
+        log.debug(20 * '-')
+        log.debug('Applying selection:')
+        log.debug(20 * '-')
+        for key, cut in self._d_sel['cuts'].items():
+            log.debug(f'{"":<4}{key}')
+            rdf = rdf.Filter(cut, key)
 
         self._rdf = rdf
+    #--------------------------------------
+    def _fix_bkgcat(self):
+        '''
+        If data, will set cut to (1).
+        If MC, will find BKGCAT branch in dataframe (e.g. Lb_BKGCAT)
+        Will rename BKGCAT in cuts dictionary, such that truth matching cut can be applied
+        '''
+
+        if 'BKGCAT' not in self._d_sel['cuts']:
+            log.debug('Not renaming BKGCAT')
+            return
+
+        log.debug('Fixing BKGCAT')
+        if not self._is_mc:
+            self._d_sel['cuts']['BKGCAT'] = '(1)'
+            return
+
+        bkgcat_cut = self._d_sel['cuts']['BKGCAT']
+        bkgcat_var = self._get_bkgcat_name()
+        bkgcat_cut = bkgcat_cut.replace('BKGCAT', bkgcat_var)
+
+        log.debug(f'Using truth matching cut: {bkgcat_cut}')
+        self._d_sel['cuts']['BKGCAT'] = bkgcat_cut
     #--------------------------------------
     def _get_bkgcat_name(self):
         '''
@@ -80,61 +98,17 @@ class selector:
             raise
 
         return name
-    #--------------------------------------
-    def _apply_pid(self):
-        '''
-        Will apply PID and set self._rdf as filtered one
-        '''
-        if 'pid' not in self._cfg_dat['selection']['cuts']:
-            return
-
-        log.debug('Applying PID cuts')
-
-        rdf = self._rdf
-        if 'EE'         in self._line_name:
-            rdf = rdf.Filter('L1_PID_E  > 2.0', 'lep_1_pid_e')
-            rdf = rdf.Filter('L2_PID_E  > 2.0', 'lep_1_pid_e')
-
-        if 'K_PROBNN_K' in self._l_branch:
-            rdf = rdf.Filter('K_PROBNN_K> 0.1', 'had_probn_k')
-
-        self._rdf = rdf
-    #--------------------------------------
-    def _apply_mass_cut(self):
-        if 'mass' not in self._cfg_dat['selection']['cuts']:
-            return
-
-        log.debug('Applying mass cuts')
-
-        rdf = self._rdf
-        if ('Lb_M' in self._l_branch) and ('EE'   in self._line_name):
-            rdf = rdf.Filter('Lb_M > 4500', 'Lb mass dn')
-            rdf = rdf.Filter('Lb_M < 6000', 'Lb mass up')
-
-        if ('Lb_M' in self._l_branch) and ('MuMu' in self._line_name):
-            rdf = rdf.Filter('Lb_M > 5000', 'Lb mass dn')
-            rdf = rdf.Filter('Lb_M < 6000', 'Lb mass up')
-
-        if ('B_M'  in self._l_branch) and ('EE'   in self._line_name):
-            rdf = rdf.Filter('B_M  > 4500', 'mass_dn')
-            rdf = rdf.Filter('B_M  < 6000', 'mass_up')
-
-        if ('B_M'  in self._l_branch) and ('MuMu' in self._line_name):
-            rdf = rdf.Filter('B_M  > 5000', 'mass_dn')
-            rdf = rdf.Filter('B_M  < 6000', 'mass_up')
-
-        if 'Kst_M' in self._l_branch:
-            rdf = rdf.Filter('Kst_M >  700', 'Kst mass dn')
-            rdf = rdf.Filter('Kst_M < 1100', 'Kst mass up')
-
-        self._rdf = rdf
     #-------------------------------------------------------------------
-    def _apply_prescale(self):
-        if 'prescale' not in self._cfg_dat['selection']:
+    def _prescale(self):
+        '''
+        Will pick up a random subset of entries from the dataframe if 'prescale=factor' found in selection section
+        '''
+
+        if 'prescale' not in self._d_sel:
             log.debug('Not prescaling')
             return
 
-        prs = self._cfg_dat['selection']['prescale']
+        prs = self._d_sel['prescale']
         log.debug(f'Prescaling by a factor of: {prs}')
 
         rdf = self._rdf.Define('prs', f'gRandom->Integer({prs})')
@@ -147,6 +121,7 @@ class selector:
         Will return ROOT dataframe after selection
         '''
         self._initialize()
+        self._prescale()
 
         self._apply_selection()
 
