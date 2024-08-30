@@ -2,5 +2,83 @@
 prescale=1
 
 [selection.cuts]
-PIDe  ='L1_PID_E > 3 && L2_PID_E > 3'
+none   = '(1)'
+b_mass = 'B_M      > 4800 && B_M      < 6000'
+j_mass = 'Jpsi_M   > 2800 && Jpsi_M   < 3300'
+PIDep  = 'L1_PID_E >    1 && L2_PID_E > 1'
+#KpProbN= 'H_PROBNN_K     > 0.05'
+KpGhost= 'H_TRGHOSTPROB  < 0.5'
+L1Ghost= 'L1_TRGHOSTPROB < 0.5'
+L2Ghost= 'L1_TRGHOSTPROB < 0.5'
+
+[define_vars]
+xbrem = 'L1_HASBREM + L2_HASBREM'
+maxlpt= 'TMath::Max(L1_PT, L2_PT)'
+minlpt= 'TMath::Min(L1_PT, L2_PT)'
+
+[plots]
+
+[plots.B_M]
+binning=[4800, 6000, 100]
+yscale ='log'
+labels =['$M(B^+)[MeV]$', '']
+
+[plots.Jpsi_M]
+binning=[2800, 3300, 100]
+yscale ='linear'
+labels =['$M(J/\psi)[MeV]$', '']
+
+[plots.B_const_mass_M]
+binning=[4800, 5800, 100]
+yscale ='linear'
+labels =['$M(B_{DFT}^+)[MeV]$', '']
+
+[plots.xbrem]
+binning=[   0,    3,   3]
+yscale ='log'
+labels =['$n_{\gamma}$', '']
+
+[plots.maxlpt]
+binning=[   0, 2000, 100]
+yscale ='log'
+labels =['$\max p_T(\ell)[MeV]$', '']
+
+[plots.minlpt]
+binning=[   0, 2000, 100]
+yscale ='log'
+labels =['$\min p_T(\ell)[MeV]$', '']
+
+[plots.H_PT]
+binning=[   0, 2000, 100]
+yscale ='log'
+labels =['$p_T(K^+)[MeV]$', '']
+
+[plots.H_PID_E]
+binning=[  -5,    2, 100]
+yscale ='log'
+labels =['$PID_e(K^+)$', '']
+
+[plots.H_PROBNN_K]
+binning=[   0,    1, 100]
+yscale ='log'
+labels =['$Prob_{K}^{NN}(K^+)$', '']
+
+[plots.H_TRGHOSTPROB]
+binning=[   0,    1, 100]
+yscale ='log'
+labels =['$Prob^{ghost}(K^+)$', '']
+
+[plots.L1_TRGHOSTPROB]
+binning=[   0,    1, 100]
+yscale ='log'
+labels =['$Prob^{ghost}(e^+)$', '']
+
+[plots.L2_TRGHOSTPROB]
+binning=[   0,    1, 100]
+yscale ='log'
+labels =['$Prob^{ghost}(e^-)$', '']
+
+
+[saving]
+plt_dir='/home/acampove/Packages/RK/data_checks/plots'
 
