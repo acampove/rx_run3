@@ -21,7 +21,7 @@ class data:
             'Hlt2RD_BuToKpEE', 
             'Hlt2RD_BuToKpMuMu', 
             'Hlt2RD_B0ToKpPimEE', 
-            'Hlt2RD_B0ToKpPimMuMu'
+            'Hlt2RD_B0ToKpPimMuMu',
             'Hlt2RD_LbToLEE_LL',
             'Hlt2RD_LbToLMuMu_LL',
             ]
@@ -29,7 +29,8 @@ class data:
     dat_dir = None
     log_lvl = None
     plt_dir = None
-    cfg     = None 
+    cfg_dat = None 
+    cfg_nam = None 
 #-------------------------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Used to plot yields of cut based vs MVA based lines vs luminosity')
@@ -62,7 +63,7 @@ def _get_paths():
     return l_path
 #-------------------------------------
 def _define_vars(rdf):
-    d_def = data.cfg['define_vars']
+    d_def = data.cfg_dat['define_vars']
     for name, expr in d_def.items():
         rdf = rdf.Define(name, expr)
 
@@ -75,13 +76,10 @@ def _get_rdf(trig):
     nev = rdf.Count().GetValue()
     log.debug(f'Found {nev} entries in: {trig}')
 
-    obj   = selector(rdf=rdf, cfg_nam='cuts_EE_2024_opt', is_mc=True)
+    obj   = selector(rdf=rdf, cfg_nam=data.cfg_nam, is_mc=True)
     d_rdf = obj.run(as_cutflow=True)
 
     return d_rdf
-#-------------------------------------
-def _plot_yield():
-    pass
 #-------------------------------------
 def _plot_run_number(rdf):
     arr_rn = rdf.AsNumpy(['RUNNUMBER'])['RUNNUMBER']
@@ -93,9 +91,9 @@ def _plot_run_number(rdf):
 def _plot_var(d_rdf, var):
     plt.figure(var)
     for name, rdf in d_rdf.items():
-        minx, maxx, bins = data.cfg['plots'][var]['binning']
-        yscale           = data.cfg['plots'][var]['yscale' ]
-        [xname, yname]   = data.cfg['plots'][var]['labels' ]
+        minx, maxx, bins = data.cfg_dat['plots'][var]['binning']
+        yscale           = data.cfg_dat['plots'][var]['yscale' ]
+        [xname, yname]   = data.cfg_dat['plots'][var]['labels' ]
 
         arr_mass = rdf.AsNumpy([var])[var]
         plt.hist(arr_mass, bins=bins, range=[minx, maxx], histtype='step', label=name)
@@ -121,11 +119,16 @@ def _plot(rdf):
     _plot_mass(rdf)
     _plot_yield(rdf)
 #-------------------------------------
-def _initialize():
-    ut.local_config=True
-    data.cfg = ut.load_config('cuts_EE_2024_opt')
+def _initialize(trig):
+    data.cfg_nam = {
+            'Hlt2RD_BuToKpEE'      : 'bukee_opt',
+            'Hlt2RD_B0ToKpPimMuMu' : 'bdkstmm_opt',
+            }[trig]
 
-    plt_dir = data.cfg['saving']['plt_dir']
+    ut.local_config=True
+    data.cfg_dat = ut.load_config(data.cfg_nam)
+
+    plt_dir = data.cfg_dat['saving']['plt_dir']
     os.makedirs(plt_dir, exist_ok=True)
     ut.local_config=True
 
@@ -136,11 +139,11 @@ def _initialize():
 def main():
     _get_args()
     _set_logs()
-    _initialize()
 
     for trig in data.l_trig:
+        _initialize(trig)
         d_rdf = _get_rdf(trig)
-        for var in data.cfg['plots']:
+        for var in data.cfg_dat['plots']:
             _plot_var(d_rdf, var)
 #-------------------------------------
 if __name__ == '__main__':
