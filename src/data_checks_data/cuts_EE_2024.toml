@@ -1,0 +1,7 @@
+[selection]
+prescale=1
+
+[selection.cuts]
+BKGCAT='BKGCAT == 0 || BKGCAT == 10 || BKGCAT == 50'
+PIDe  ='L1_PID_E > 3 && L2_PID_E > 3'
+
