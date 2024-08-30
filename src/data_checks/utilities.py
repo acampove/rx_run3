@@ -10,6 +10,7 @@ from log_store           import log_store
 log=log_store.add_logger('data_checks:utilities')
 local_config=False
 
+@cache
 #--------------------------------------
 def load_config(cfg_nam):
     '''
@@ -42,7 +43,6 @@ def _load_local_config(cfg_nam):
     return toml.load(cfg_path)
 #--------------------------------------
 @utnr.timeit
-@cache
 def _load_grid_config(cfg_nam):
     '''
     Will use XROOTD to pick up file from grid
