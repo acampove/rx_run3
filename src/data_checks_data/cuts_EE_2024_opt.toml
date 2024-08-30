@@ -1,0 +1,6 @@
+[selection]
+prescale=1
+
+[selection.cuts]
+PIDe  ='L1_PID_E > 3 && L2_PID_E > 3'
+
