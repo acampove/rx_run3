@@ -22,6 +22,7 @@ class FilterFile:
         self._cfg_nam     = cfg_nam
 
         self._nevts       = None 
+        self._is_mc       = None
         self._cfg_dat     = None 
         self._l_line_name = None
         self._store_branch= None
@@ -35,10 +36,23 @@ class FilterFile:
 
         self._cfg_dat = utdc.load_config(self._cfg_nam)
 
+        self._check_mcdt()
         self._set_tree_names()
         self._set_save_pars()
 
         self._initialized = True 
+    #--------------------------------------
+    def _check_mcdt(self):
+        '''
+        Will set self._is_mc flag based on config name
+        '''
+        if   self._cfg_nam.startswith('dt_'):
+            self._is_mc = False
+        elif self._cfg_nam.startswith('mc_'):
+            self._is_mc = True 
+        else:
+            log.error(f'Cannot determine Data/MC from config name: {self.cfg_nam}')
+            raise
     #--------------------------------------
     def _set_save_pars(self):
         try:
@@ -166,7 +180,7 @@ class FilterFile:
 
         norg     = rdf.Count().GetValue()
         if not rdf.lumi:
-            obj  = selector(rdf=rdf, cfg_nam=self._cfg_nam) 
+            obj  = selector(rdf=rdf, cfg_nam=self._cfg_nam, is_mc=self._is_mc) 
             rdf  = obj.run()
         nfnl     = rdf.Count().GetValue()
 
