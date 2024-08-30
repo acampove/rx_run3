@@ -49,11 +49,17 @@ starts_with=[
 	'B_DTF_PV_Psi2S_mass_const_M',
     ]
 
+
 [rename]
 B_DTF_PV_Jpsi_mass_const_M ='B_const_mass_M'
 B_DTF_PV_Psi2S_mass_const_M='B_const_mass_psi2S_M'
-L1_PID_E='L1_PIDe'
-L2_PID_E='L2_PIDe'
+L1_PID_E                   ='L1_PIDe'
+L2_PID_E                   ='L2_PIDe'
+K_PROBNN_K                 ='H_ProbNNk'
+K_TRGHOSTPROB              ='K_TRGHOSTPROB'
+L1_TRGHOSTPROB             ='L1_TRGHOSTPROB'
+L2_TRGHOSTPROB             ='L2_TRGHOSTPROB'
+
 
 [hlt_lines]
 lines_phys_ee_mva= [
