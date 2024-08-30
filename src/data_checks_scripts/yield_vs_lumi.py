@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 
+import os
 import tqdm
 import glob
 import ROOT
+import mplhep
 import pandas            as pnd
 import argparse
 import matplotlib.pyplot as plt
+import data_checks.utilities as ut
 
-from functools import cache
-from log_store import log_store
+from data_checks.selector import selector 
+from functools            import cache
+from log_store            import log_store
 
 log=log_store.add_logger('data_checks:yield_vs_lumi')
 #-------------------------------------
@@ -23,6 +27,9 @@ class data:
             ]
 
     dat_dir = None
+    log_lvl = None
+    plt_dir = None
+    cfg     = None 
 #-------------------------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Used to plot yields of cut based vs MVA based lines vs luminosity')
@@ -33,8 +40,12 @@ def _get_args():
 
     data.l_trig = args.trig
     data.dat_dir= args.dir
-
-    log.setLevel(args.log)
+    data.log_lvl= args.log
+#-------------------------------------
+def _set_logs():
+    log_store.set_level('data_checks:yield_vs_lumi', data.log_lvl)
+    if data.log_lvl == 10:
+        log_store.set_level('data_checks:selector', 10)
 #-------------------------------------
 @cache
 def _get_paths():
@@ -50,13 +61,24 @@ def _get_paths():
 
     return l_path
 #-------------------------------------
+def _define_vars(rdf):
+    d_def = data.cfg['define_vars']
+    for name, expr in d_def.items():
+        rdf = rdf.Define(name, expr)
+
+    return rdf
+#-------------------------------------
 def _get_rdf(trig):
     l_path = _get_paths()
     rdf = ROOT.RDataFrame(trig, l_path)
+    rdf = _define_vars(rdf)
     nev = rdf.Count().GetValue()
     log.debug(f'Found {nev} entries in: {trig}')
 
-    return rdf
+    obj   = selector(rdf=rdf, cfg_nam='cuts_EE_2024_opt', is_mc=True)
+    d_rdf = obj.run(as_cutflow=True)
+
+    return d_rdf
 #-------------------------------------
 def _plot_yield():
     pass
@@ -68,24 +90,59 @@ def _plot_run_number(rdf):
     plt.hist(arr_rn, bins=100)
     plt.show()
 #-------------------------------------
-def _plot_mass(rdf):
-    arr_mass = rdf.AsNumpy(['B_const_mass_M'])['B_const_mass_M']
-    plt.hist(arr_mass, bins=100, range=[5100, 6000])
-    plt.axvline(x=5280, color='r', label='$B^+$', linestyle=':')
+def _plot_var(d_rdf, var):
+    plt.figure(var)
+    for name, rdf in d_rdf.items():
+        minx, maxx, bins = data.cfg['plots'][var]['binning']
+        yscale           = data.cfg['plots'][var]['yscale' ]
+        [xname, yname]   = data.cfg['plots'][var]['labels' ]
+
+        arr_mass = rdf.AsNumpy([var])[var]
+        plt.hist(arr_mass, bins=bins, range=[minx, maxx], histtype='step', label=name)
+        plt.yscale(yscale)
+        plt.xlabel(xname)
+        plt.ylabel(yname)
+
+    if var in ['B_const_mass_M', 'B_M']:
+        plt.axvline(x=5280, color='r', label='$B^+$', linestyle=':')
+    elif var == 'Jpsi_M':
+        plt.axvline(x=3096, color='r', label='$J/\psi$', linestyle=':')
+
     plt.legend()
-    plt.show()
+
+    plot_path = f'{data.plt_dir}/{var}.png'
+    log.info(f'Saving to: {plot_path}')
+    plt.tight_layout()
+    plt.savefig(plot_path)
+    plt.close()
 #-------------------------------------
 def _plot(rdf):
     _plot_run_number(rdf)
     _plot_mass(rdf)
     _plot_yield(rdf)
 #-------------------------------------
+def _initialize():
+    ut.local_config=True
+    data.cfg = ut.load_config('cuts_EE_2024_opt')
+
+    plt_dir = data.cfg['saving']['plt_dir']
+    os.makedirs(plt_dir, exist_ok=True)
+    ut.local_config=True
+
+    data.plt_dir = plt_dir
+
+    plt.style.use(mplhep.style.LHCb2)
+#-------------------------------------
 def main():
     _get_args()
+    _set_logs()
+    _initialize()
 
     for trig in data.l_trig:
-        rdf = _get_rdf(trig)
-        _plot()
+        d_rdf = _get_rdf(trig)
+        for var in data.cfg['plots']:
+            _plot_var(d_rdf, var)
 #-------------------------------------
 if __name__ == '__main__':
     main()
+
