@@ -9,9 +9,9 @@ class data:
 #--------------------------------------
 def set_log():
     log_store.set_level('rx_scripts:atr_mgr:mgr', 30)
+    log_store.set_level('data_checks:selector'  , 30)
     log_store.set_level('data_checks:utilities' , 30)
     log_store.set_level('data_checks:FilterFile', 10)
-    log_store.set_level('data_checks:selector'  , 10)
 #--------------------------------------
 def test_dt():
     obj=FilterFile(kind='any_kind', file_path=data.dt_path, cfg_nam='dt_2024_turbo_comp')
