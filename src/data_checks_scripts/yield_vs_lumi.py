@@ -75,24 +75,17 @@ def _plot_mass(rdf):
     plt.legend()
     plt.show()
 #-------------------------------------
-def _get_info(path):
-    ifile  = ROOT.TFile(path)
-    l_key  = ifile.GetListOfKeys()
-    l_tre  = [ key.ReadObj() for key in l_key if 'Hlt2' in key.GetName() ]
-    d_info = { tre.GetName() : tre.GetEntries() for tre in l_tre }
-    ifile.Close()
-
-    return d_info
+def _plot(rdf):
+    _plot_run_number(rdf)
+    _plot_mass(rdf)
+    _plot_yield(rdf)
 #-------------------------------------
 def main():
     _get_args()
 
     for trig in data.l_trig:
         rdf = _get_rdf(trig)
-
-        _plot_run_number(rdf)
-        _plot_yield()
-        _plot_mass(rdf)
+        _plot()
 #-------------------------------------
 if __name__ == '__main__':
     main()
