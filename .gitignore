@@ -182,3 +182,5 @@ Hlt2RD*.json
 sandbox*/
 tmp/
 Local_*_JobDir/
+*.png
+
