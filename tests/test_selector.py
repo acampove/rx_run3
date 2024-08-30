@@ -1,6 +1,7 @@
 from data_checks.selector import selector 
 from log_store            import log_store
 
+import data_checks.utilities as ut
 import ROOT
 
 log=log_store.add_logger('data_checks:test_selector')
@@ -32,6 +33,7 @@ def test_mc():
     rdf=obj.run()
 #--------------------------------------
 def test_cfl():
+    ut.local_config=True
     rdf= ROOT.RDataFrame('Hlt2RD_BuToKpEE', data.mc_path)
 
     obj  =selector(rdf=rdf, cfg_nam='cuts_EE_2024', is_mc=True)
