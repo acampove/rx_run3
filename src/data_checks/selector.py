@@ -24,6 +24,7 @@ class selector:
 
         self._atr_mgr   = None
         self._d_sel     = None
+        self._d_rdf     = dict()
 
         self._initialized=False
     #-------------------------------------------------------------------
@@ -46,6 +47,8 @@ class selector:
     def _apply_selection(self):
         '''
         Loop over cuts and apply selection
+        Save intermediate dataframes to self._d_rdf
+        Save final datafrme to self._rdf
         '''
         rdf = self._rdf
         log.debug(20 * '-')
@@ -54,6 +57,7 @@ class selector:
         for key, cut in self._d_sel['cuts'].items():
             log.debug(f'{"":<4}{key}')
             rdf = rdf.Filter(cut, key)
+            self._d_rdf[key] = rdf 
 
         self._rdf = rdf
     #--------------------------------------
@@ -122,19 +126,28 @@ class selector:
             rep = rdf.Report()
             rep.Print()
     #-------------------------------------------------------------------
-    def run(self):
+    def run(self, as_cutflow=False):
         '''
-        Will return ROOT dataframe after selection
+        Will return ROOT dataframe(s) 
+
+        Parameters
+        -------------------
+        as_cutflow (bool): If true will return {cut_name -> rdf} dictionary 
+        with cuts applied one after the other. If False (default), it will only return
+        the dataframe after the full selection
         '''
         self._initialize()
         self._prescale()
 
         self._apply_selection()
 
-        rdf = self._atr_mgr.add_atr(self._rdf)
+        self._d_rdf = { key : self._atr_mgr.add_atr(rdf) for key, rdf in self._d_rdf.items() }
 
-        self._print_info(rdf)
+        self._print_info(self._rdf)
 
-        return rdf
+        if as_cutflow:
+            return self._d_rdf
+        else:
+            return self._rdf
 #-------------------------------------------------------------------
 
