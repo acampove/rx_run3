@@ -21,6 +21,14 @@ def test_with_path():
     trf=txt_trf(txt_path=data.txt, cfg_path=data.cfg)
     trf.save_as(out_path=data.out)
 #-------------------------------------------------------------
+def test_settings():
+    data.out = '/tmp/dmu_test/settings' 
+    cfg      = files('dmu_data').joinpath('text/transform_set.toml')
+    txt      = files('dmu_data').joinpath('text/transform_set.txt')
+
+    trf=txt_trf(txt_path=txt, cfg_path=cfg)
+    trf.save_as(out_path=data.out)
+#-------------------------------------------------------------
 def initialize():
     logging.basicConfig()
     log=logging.getLogger('tests:text:transformer')
@@ -37,6 +45,7 @@ def initialize():
 def main():
     initialize()
 
+    test_settings()
     test_with_path()
     test_with_path_ext()
 #-------------------------------------------------------------
