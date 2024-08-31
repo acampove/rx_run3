@@ -8,10 +8,17 @@ log=None
 class data:
     cfg=None
     txt=None
-    out=None
 #-------------------------------------------------------------
-def test_simple():
-    trf = txt_trf(txt_path=data.txt, cfg_path=data.cfg)
+def test_with_path_ext():
+    data.out = '/tmp/dmu_test/with_path_ext.txt' 
+
+    trf=txt_trf(txt_path=data.txt, cfg_path=data.cfg)
+    trf.save_as(out_path=data.out)
+#-------------------------------------------------------------
+def test_with_path():
+    data.out = '/tmp/dmu_test/with_path' 
+
+    trf=txt_trf(txt_path=data.txt, cfg_path=data.cfg)
     trf.save_as(out_path=data.out)
 #-------------------------------------------------------------
 def initialize():
@@ -23,11 +30,15 @@ def initialize():
 
     data.txt = files('dmu_data').joinpath('text/transform.txt')
     data.cfg = files('dmu_data').joinpath('text/transform.toml')
+
+    log_trf=logging.getLogger('dmu:text:transformer')
+    log_trf.setLevel(10)
 #-------------------------------------------------------------
 def main():
     initialize()
 
-    test_simple()
+    test_with_path()
+    test_with_path_ext()
 #-------------------------------------------------------------
 if __name__ == '__main__':
     main()
