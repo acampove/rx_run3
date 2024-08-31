@@ -30,7 +30,7 @@ Which will apppend to a given line a set of lines, the config lines could look l
 
 ```toml
 [settings]
-as_substring=True
+as_substring=true
 format      ='--> {} <--'
 
 [append]
