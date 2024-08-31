@@ -1,4 +1,4 @@
-[[_TOC_]]
+[_TOC_]
 
 # D(ata) M(anipulation) U(tilities)
 
