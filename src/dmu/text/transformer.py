@@ -94,21 +94,47 @@ class transformer:
         return l_line
     #-----------------------------------------
     def _apply_append(self, l_line):
+        '''
+        Will take list of lines
+        and return list of lines with extra lines appended
+        according to config file
+        '''
         d_append = self._cfg['trf']['append']
+
         for target, l_to_be_added in d_append.items():
             l_to_be_added = self._format_lines(l_to_be_added)
             arr_line      = numpy.array(self._l_line)
-            arr_index,    = numpy.where(arr_line == target)
+            arr_index,    = numpy.where(self._find_append_index(arr_line, target))
 
             if arr_index.size  == 0:
                 pprint.pprint(self._l_line)
-                raise RuntimeError(f'No instance of {target} found in {self._txt_path}')
+                raise RuntimeError(f'No instance of \"{target}\" found in \"{self._txt_path}\"')
 
             for index in arr_index:
                 log.debug(f'Inserting at {index}')
                 l_line[index+1:index+1] = l_to_be_added
 
         return l_line
+    #-----------------------------------------
+    def _find_append_index(self, l_line, target):
+        '''
+        Returns list of flags denoting if target was or not fouund in list l_line
+        target can be exact or included in the l_line elements
+        '''
+        is_subst = False
+        try:
+            is_subst = self._cfg['settings']['as_substring']
+        except:
+            pass
+
+        if not is_subst:
+            log.debug(f'Searching exact matches')
+            l_flag = [ target == element for element in l_line ]
+        else:
+            log.debug(f'Searching with substrings')
+            l_flag = [ target in element for element in l_line ]
+
+        return l_flag
     #-----------------------------------------
     def _format_lines(self, l_line):
         '''
