@@ -29,9 +29,41 @@ Currently the supported transformations are:
 Which will apppend to a given line a set of lines, the config lines could look like:
 
 ```toml
+[settings]
+as_substring=True
+format      ='--> {} <--'
+
 [append]
 'primes are'=['2', '3', '5']
 'days are'=['Monday', 'Tuesday', 'Wednesday']
 ```
 
+`as_substring` is a flag that will allow matches if the line in the text file only contains the key in the config
+e.g.:
+
+```
+the                                                                                                                                          
+first                                                                                                                                        
+primes are:                                                                                                                                  
+and                                                                                                                                          
+the first                                                                                                                                    
+days are:
+```
+
+`format` will format the lines to be inserted, e.g.:
+
+```
+the                                                                                                                                          
+first                                                                                                                                        
+primes are:                                                                                                                                  
+--> 2 <--                                                                                                                                    
+--> 3 <--                                                                                                                                    
+--> 5 <--                                                                                                                                    
+and                                                                                                                                          
+the first                                                                                                                                    
+days are:                                                                                                                                    
+--> Monday <--                                                                                                                               
+--> Tuesday <--                                                                                                                              
+--> Wednesday <--
+```
 
