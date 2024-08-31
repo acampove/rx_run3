@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
-from dmu.text import transformer as txt_trf
+from dmu.text.transformer import transformer as txt_trf
+import argparse
 
 #---------------------------------
 class data:
     txt = None
-    cfg = None
     out = None
+    cfg = None
 #---------------------------------
 def get_args():
     parser=argparse.ArgumentParser(description='Will transform a text file following a set of rules')
@@ -17,13 +18,14 @@ def get_args():
 
     data.txt = args.input
     data.out = args.output
-    data.cft = args.config
+    data.cfg = args.config
 #---------------------------------
 def main():
     get_args()
 
-    #trf = txt_trf(txt_path=data.txt, cfg_path=data.cfg)
-    #trf.save_as(data.out)
+    trf = txt_trf(txt_path=data.txt, cfg_path=data.cfg)
+    trf.save_as(data.out)
 #---------------------------------
-if __main__ == '__main__':
+if __name__ == '__main__':
     main()
+
