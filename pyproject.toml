@@ -10,7 +10,7 @@ dev  = []
 where   = ['src']
 
 [project.scripts]
-transform_text='dmu_scripts.text.transform_text.py:main'
+transform_text='dmu_scripts.text.transform_text:main'
 
 [tool.setuptools.package-data]
 dmu_data=['text/*.txt', 'text/*.toml']
