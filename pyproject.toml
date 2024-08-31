@@ -1,7 +1,7 @@
 [project]
 name        = 'data_manipulation_utilities'
 version     = '0.0.1'
-dependencies= []
+dependencies= ['toml', 'numpy']
 
 [project.optional-dependencies]
 dev  = []
