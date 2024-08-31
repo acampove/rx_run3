@@ -1,0 +1,19 @@
+[project]
+name        = 'data_manipulation_utilities'
+version     = '0.0.1'
+dependencies= []
+
+[project.optional-dependencies]
+dev  = []
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
+[project.scripts]
+transform_text='dmu_scripts.text.transform_text.py:main'
+
+[tool.setuptools.package-data]
+dmu_data=['text/*.txt', 'text/*.toml']
+
+[tool.setuptools]
+
