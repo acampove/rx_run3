@@ -1,5 +1,3 @@
-[_TOC_]
-
 # D(ata) M(anipulation) U(tilities)
 
 These are tools that can be used for different data analysis tasks.
