@@ -94,10 +94,11 @@ class transformer:
         return l_line
     #-----------------------------------------
     def _apply_append(self, l_line):
-        d_append = self._cfg['append']
+        d_append = self._cfg['trf']['append']
         for target, l_to_be_added in d_append.items():
-            arr_line   = numpy.array(self._l_line)
-            arr_index, = numpy.where(arr_line == target)
+            l_to_be_added = self._format_lines(l_to_be_added)
+            arr_line      = numpy.array(self._l_line)
+            arr_index,    = numpy.where(arr_line == target)
 
             if arr_index.size  == 0:
                 pprint.pprint(self._l_line)
@@ -108,6 +109,22 @@ class transformer:
                 l_line[index+1:index+1] = l_to_be_added
 
         return l_line
+    #-----------------------------------------
+    def _format_lines(self, l_line):
+        '''
+        If format was specified in the settings section, will format the
+        elements of the input list of lines
+        '''
+        if 'settings' not in self._cfg:
+            return l_line
+
+        if 'format'   not in self._cfg['settings']:
+            return l_line
+
+        fmt         = self._cfg['settings']['format']
+        l_formatted = [ fmt.format(line) for line in l_line ]
+
+        return l_formatted
     #-----------------------------------------
     def save_as(self, out_path=None):
         '''
@@ -121,7 +138,7 @@ class transformer:
         log.info(20 * '-')
         log.info('Applying transformations')
         log.info(20 * '-')
-        for trf in  self._cfg:
+        for trf in  self._cfg['trf']:
             self._l_line = self._transform(self._l_line, trf)
 
         out_path = self._get_out_path(out_path)
