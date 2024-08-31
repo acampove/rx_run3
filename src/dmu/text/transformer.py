@@ -110,9 +110,10 @@ class transformer:
                 pprint.pprint(self._l_line)
                 raise RuntimeError(f'No instance of \"{target}\" found in \"{self._txt_path}\"')
 
-            for index in arr_index:
-                log.debug(f'Inserting at {index}')
-                l_line[index+1:index+1] = l_to_be_added
+            for index in arr_index: 
+                org_line      = l_line[index]
+                ext_line      = '\n'.join(l_to_be_added)
+                l_line[index] = f'{org_line}\n{ext_line}'
 
         return l_line
     #-----------------------------------------
@@ -128,10 +129,10 @@ class transformer:
             pass
 
         if not is_subst:
-            log.debug(f'Searching exact matches')
+            log.debug(f'Searching exact matches for target: {target}')
             l_flag = [ target == element for element in l_line ]
         else:
-            log.debug(f'Searching with substrings')
+            log.debug(f'Searching with substrings for target: {target}')
             l_flag = [ target in element for element in l_line ]
 
         return l_flag
