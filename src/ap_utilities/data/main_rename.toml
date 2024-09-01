@@ -1,0 +1,15 @@
+[settings]
+as_substring=true
+format      ='                    "{}",'
+
+[trf]
+[trf.append]
+Hlt2RD_BuToHpMuMu_Incl  =[   'Hlt2RD_BuToKpMuMu_MVA',    'Hlt2RD_BuToKpMuMu_SameSign_MVA'] 
+Hlt2RD_B0ToKpPimMuMu    =['Hlt2RD_B0ToKpPimMuMu_MVA', 'Hlt2RD_B0ToKpPimMuMu_SameSign_MVA']
+Hlt2RD_LbToLMuMu_LL     =[   'Hlt2RD_LbTopKMuMu_MVA',    'Hlt2RD_LbTopKMuMu_SameSign_MVA']
+'"Bs_JPsiPhi_MM": set(['=[  'Hlt2RD_BsToPhiMuMu_MVA',   'Hlt2RD_BsToPhiMuMu_SameSign_MVA']
+
+Hlt2RD_BuToKpEE         =[   'Hlt2RD_BuToKpEE_MVA',      'Hlt2RD_BuToKpEE_SameSign_MVA',    'Hlt2RD_BuToKpEE_MVA_misid',    'Hlt2RD_BuToKpEE_MVA_cal']
+Hlt2RD_B0ToKpPimEE      =['Hlt2RD_B0ToKpPimEE_MVA',   'Hlt2RD_B0ToKpPimEE_SameSign_MVA', 'Hlt2RD_B0ToKpPimEE_MVA_misid', 'Hlt2RD_B0ToKpPimEE_MVA_cal']
+Hlt2RD_LbToLEE_LL       =[   'Hlt2RD_LbTopKEE_MVA',      'Hlt2RD_LbTopKEE_SameSign_MVA',    'Hlt2RD_LbTopKEE_MVA_misid']
+'"Bs_JPsiPhi_EE": set(['=[  'Hlt2RD_BsToPhiEE_MVA',     'Hlt2RD_BsToPhiEE_SameSign_MVA',   'Hlt2RD_BsToPhiEE_MVA_misid']
