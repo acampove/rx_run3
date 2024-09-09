@@ -88,9 +88,6 @@ lines_phys_mm_cut= [
 [selection]
 prescale=1
 [selection.cuts]
-[selection.cuts.mc]
-BKGCAT = 'BKGCAT == 0 || BKGCAT == 10 || BKGCAT == 50'
-
 [selection.cuts.bukee]
 b_mass = 'B_const_mass_M  > 5000 && B_const_mass_M < 5800'
 j_mass = 'Jpsi_M   > 2800        && Jpsi_M   < 3300'
