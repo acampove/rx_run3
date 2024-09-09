@@ -1,38 +1,40 @@
 import os
-import toml
 import tqdm
 import ROOT
-import pprint
 import utils_noroot          as utnr
 import data_checks.utilities as utdc
 
 from data_checks.selector  import selector
 from log_store             import log_store
 
-log=log_store.add_logger('data_checks:FilterFile')
-#--------------------------------------
+log = log_store.add_logger('data_checks:FilterFile')
+# --------------------------------------
 class FilterFile:
     '''
     Class used to pick a ROOT file path and produce a smaller version
     '''
-    #--------------------------------------
+    # --------------------------------------
     def __init__(self, kind=None, file_path=None, cfg_nam=None):
         self._kind        = kind
-        self._file_path   = file_path 
+        self._file_path   = file_path
         self._cfg_nam     = cfg_nam
 
-        self._nevts       = None 
+        self._nevts       = None
         self._is_mc       = None
-        self._cfg_dat     = None 
+        self._cfg_dat     = None
         self._l_line_name = None
         self._store_branch= None
         self._has_lumitree= None
 
         self._initialized = False
-    #--------------------------------------
+    # --------------------------------------
     def _initialize(self):
         if self._initialized:
             return
+
+        if self._file_path is None:
+            log.error('File path not set')
+            raise FileNotFoundError
 
         self._cfg_dat = utdc.load_config(self._cfg_nam)
 
@@ -40,8 +42,8 @@ class FilterFile:
         self._set_tree_names()
         self._set_save_pars()
 
-        self._initialized = True 
-    #--------------------------------------
+        self._initialized = True
+    # --------------------------------------
     def _check_mcdt(self):
         '''
         Will set self._is_mc flag based on config name
@@ -49,23 +51,23 @@ class FilterFile:
         if   self._cfg_nam.startswith('dt_'):
             self._is_mc = False
         elif self._cfg_nam.startswith('mc_'):
-            self._is_mc = True 
+            self._is_mc = True
         else:
             log.error(f'Cannot determine Data/MC from config name: {self.cfg_nam}')
             raise
-    #--------------------------------------
+    # --------------------------------------
     def _set_save_pars(self):
         try:
-            self._nevts = self._cfg_dat['saving']['max_events'] 
+            self._nevts = self._cfg_dat['saving']['max_events']
             log.info(f'Filtering dataframe with {self._nevts} entries')
         except KeyError:
             log.debug('Not filtering, max_events not specified')
 
         try:
-            self._store_branch = self._cfg_dat['saving']['store_branch'] 
+            self._store_branch = self._cfg_dat['saving']['store_branch']
         except KeyError:
             log.debug('Not storing branches')
-    #--------------------------------------
+    # --------------------------------------
     def _get_names_from_config(self):
         '''
         Will return all the HLT line names from config
@@ -79,7 +81,7 @@ class FilterFile:
         log.debug(f'Found {nline} lines in config')
 
         return l_name
-    #--------------------------------------
+    # --------------------------------------
     def _set_tree_names(self):
         '''
         Will set the list of line names `self._l_line_name`
@@ -101,7 +103,7 @@ class FilterFile:
         nline = len(l_flt)
         log.info(f'Found {nline} lines in file that match config')
         self._l_line_name = l_flt
-    #--------------------------------------
+    # --------------------------------------
     def _keep_branch(self, name):
         '''
         Will take the name of a branch and return True (keep) or False (drop)
@@ -126,8 +128,8 @@ class FilterFile:
             if ivar in name:
                 return False
 
-        return True 
-    #--------------------------------------
+        return True
+    # --------------------------------------
     def _rename_kaon_branches(self, rdf):
         '''
         Will define K_ = H_ for kaon branches. K_ branches will be dropped later
@@ -137,12 +139,12 @@ class FilterFile:
         l_name = [ name.c_str() for name in v_name ]
         l_kaon = [ name         for name in l_name if name.startswith('K_') ]
 
-        for old in l_kaon: 
+        for old in l_kaon:
             new = 'H_' + old[2:]
             rdf = rdf.Define(new, old)
 
         return rdf
-    #--------------------------------------
+    # --------------------------------------
     def _rename_mapped_branches(self, rdf):
         '''
         Will define branches from mapping in config. Original branches will be dropped later
@@ -151,20 +153,20 @@ class FilterFile:
         l_name = [ name.c_str() for name in v_name ]
 
         d_name = self._cfg_dat['rename']
-        for org, new in d_name.items(): 
+        for org, new in d_name.items():
             if org not in l_name:
                 continue
 
             rdf = rdf.Define(new, org)
 
         return rdf
-    #--------------------------------------
+    # --------------------------------------
     def _rename_branches(self, rdf):
         rdf = self._rename_kaon_branches(rdf)
         rdf = self._rename_mapped_branches(rdf)
 
         return rdf
-    #--------------------------------------
+    # --------------------------------------
     def _get_rdf(self, line_name):
         '''
         Will build a dataframe from a given HLT line and return the dataframe
@@ -173,21 +175,21 @@ class FilterFile:
         rdf      = ROOT.RDataFrame(f'{line_name}/DecayTree', self._file_path)
         rdf      = self._rename_branches(rdf)
         rdf.lumi = False
-        rdf      = self._attach_branches(rdf, line_name) 
+        rdf      = self._attach_branches(rdf, line_name)
         l_branch = rdf.l_branch
         ninit    = rdf.ninit
         nfnal    = rdf.nfnal
 
         norg     = rdf.Count().GetValue()
         if not rdf.lumi:
-            obj  = selector(rdf=rdf, cfg_nam=self._cfg_nam, is_mc=self._is_mc) 
+            obj  = selector(rdf=rdf, cfg_nam=self._cfg_nam, is_mc=self._is_mc)
             rdf  = obj.run()
         nfnl     = rdf.Count().GetValue()
 
         log.debug(f'{line_name:<50}{ninit:<10}{"->":5}{nfnal:<10}{norg:<10}{"->":5}{nfnl:<10}')
 
         return rdf
-    #--------------------------------------
+    # --------------------------------------
     def _attach_branches(self, rdf, line_name):
         '''
         Will check branches in rdf
@@ -209,15 +211,15 @@ class FilterFile:
         if self._store_branch:
             utnr.dump_json(l_flt, f'./{line_name}.json')
 
-        return rdf 
-    #--------------------------------------
+        return rdf
+    # --------------------------------------
     def _save_file(self, l_rdf):
         '''
         Will save all ROOT dataframes to a file
         '''
-        opts      = ROOT.RDF.RSnapshotOptions()
-        opts.fMode= 'update'
-        opts.fCompressionLevel=self._cfg_dat['saving']['compression']
+        opts                   = ROOT.RDF.RSnapshotOptions()
+        opts.fMode             = 'update'
+        opts.fCompressionLevel = self._cfg_dat['saving']['compression']
 
         file_name = os.path.basename(self._file_path)
         for rdf in tqdm.tqdm(l_rdf, ascii=' -'):
@@ -225,7 +227,7 @@ class FilterFile:
             l_branch  = rdf.l_branch
 
             rdf.Snapshot(tree_name, f'{self._kind}_{file_name}', l_branch, opts)
-    #--------------------------------------
+    # --------------------------------------
     def _add_lumi_rdf(self, l_rdf):
         if not self._has_lumitree:
             return l_rdf
@@ -233,11 +235,11 @@ class FilterFile:
         rdf          = ROOT.RDataFrame('lumiTree', self._file_path)
         rdf.lumi     = True
         rdf.name     = 'lumiTree'
-        rdf.l_branch = rdf.GetColumnNames() 
+        rdf.l_branch = rdf.GetColumnNames()
         l_rdf.append(rdf)
 
-        return l_rdf 
-    #--------------------------------------
+        return l_rdf
+    # --------------------------------------
     @utnr.timeit
     def run(self):
         '''
@@ -253,5 +255,4 @@ class FilterFile:
         l_rdf = self._add_lumi_rdf(l_rdf)
 
         self._save_file(l_rdf)
-#--------------------------------------
-
+# --------------------------------------
