@@ -38,6 +38,12 @@ in the directory where the environment (and tarball) is. The new tarball will ne
 dirac-dms-add-file LFN:/lhcb/user/a/acampove/run3/venv/002/dcheck.tar /home/acampove/Test/venv/dcheck.tar CERN-USER
 ```
 
+in order to find out what versions of the tarball are in the grid do:
+
+```bash
+dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/a/acampove/run3/venv
+```
+
 ## Updating config file
 
 The configuration and the code are separate. The configuuration file is updated with:
