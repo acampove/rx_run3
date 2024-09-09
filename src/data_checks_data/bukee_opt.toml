@@ -11,9 +11,9 @@ L1Ghost= 'L1_TRGHOSTPROB < 0.5'
 L2Ghost= 'L2_TRGHOSTPROB < 0.5'
 
 [define_vars]
-xbrem = 'L1_HASBREM + L2_HASBREM'
-maxlpt= 'TMath::Max(L1_PT, L2_PT)'
-minlpt= 'TMath::Min(L1_PT, L2_PT)'
+xbrem  = 'L1_HASBREM + L2_HASBREM'
+maxlpt = 'TMath::Max(L1_PT, L2_PT)'
+minlpt = 'TMath::Min(L1_PT, L2_PT)'
 
 [plots]
 
