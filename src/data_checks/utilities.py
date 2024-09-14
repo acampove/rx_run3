@@ -7,11 +7,11 @@ from functools           import cache
 from importlib.resources import files
 from log_store           import log_store
 
-log=log_store.add_logger('data_checks:utilities')
-local_config=False
+log = log_store.add_logger('data_checks:utilities')
+local_config = False
 
 @cache
-#--------------------------------------
+# --------------------------------------
 def load_config(cfg_nam):
     '''
     Parameters
@@ -28,7 +28,7 @@ def load_config(cfg_nam):
         val = _load_local_config(cfg_nam)
 
     return val
-#--------------------------------------
+# --------------------------------------
 def _load_local_config(cfg_nam):
     '''
     Will pick up config file from installed project
@@ -41,7 +41,7 @@ def _load_local_config(cfg_nam):
     log.warning('Loading local config file')
 
     return toml.load(cfg_path)
-#--------------------------------------
+# --------------------------------------
 @utnr.timeit
 def _load_grid_config(cfg_nam):
     '''
@@ -62,5 +62,4 @@ def _load_grid_config(cfg_nam):
 
         toml_str  = file_content.decode('utf-8')
         return toml.loads(toml_str)
-#--------------------------------------
-
+# --------------------------------------
