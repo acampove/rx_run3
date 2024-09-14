@@ -1,7 +1,8 @@
 from data_checks.filter_file import FilterFile
 from log_store               import log_store
 
-import utils_noroot as utnr
+import utils_noroot          as utnr
+import data_checks.utilities as ut
 
 
 # --------------------------------------
@@ -11,7 +12,7 @@ class data:
 # --------------------------------------
 def set_log():
     log_store.set_level('rx_scripts:atr_mgr:mgr', 30)
-    log_store.set_level('data_checks:selector'  , 30)
+    log_store.set_level('data_checks:selector'  , 10)
     log_store.set_level('data_checks:utilities' , 30)
     log_store.set_level('data_checks:FilterFile', 10)
 # --------------------------------------
@@ -24,10 +25,12 @@ def test_mc():
     obj.run()
 # --------------------------------------
 def main():
-    utnr.timer_on = False
+    utnr.timer_on   = False
+    ut.local_config = True
 
     set_log()
     test_mc()
+    return
     test_dt()
 # --------------------------------------
 
