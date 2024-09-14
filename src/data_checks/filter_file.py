@@ -136,8 +136,12 @@ class FilterFile:
         l_name = [ name.c_str() for name in v_name ]
         l_kaon = [ name         for name in l_name if name.startswith('K_') ]
 
+        log.info(110 * '-')
+        log.debug('Renaming kaon branches:')
+        log.info(110 * '-')
         for old in l_kaon:
             new = 'H_' + old[2:]
+            log.debug(f'{old:<50}{"->":10}{new:<50}')
             rdf = rdf.Define(new, old)
 
         return rdf
@@ -150,10 +154,14 @@ class FilterFile:
         l_name = [ name.c_str() for name in v_name ]
 
         d_name = self._cfg_dat['rename']
+        log.info(110 * '-')
+        log.debug('Renaming mapped branches:')
+        log.info(110 * '-')
         for org, new in d_name.items():
             if org not in l_name:
                 continue
 
+            log.debug(f'{org:<50}{"->":10}{new:<50}')
             rdf = rdf.Define(new, org)
 
         return rdf
@@ -169,6 +177,13 @@ class FilterFile:
         Will build a dataframe from a given HLT line and return the dataframe
         _get_branches decides what branches are kept
         '''
+
+        log.info(30 * '')
+        log.info(30 * '')
+        log.info(30 * '-')
+        log.info(30 * '')
+        log.info(f'Processing line: {line_name}')
+        log.info(30 * '-')
         rdf      = RDataFrame(f'{line_name}/DecayTree', self._file_path)
         rdf      = self._rename_branches(rdf)
         rdf.lumi = False
@@ -183,7 +198,9 @@ class FilterFile:
             rdf  = obj.run()
         nfnl     = rdf.Count().GetValue()
 
-        log.debug(f'{line_name:<50}{ninit:<10}{"->":5}{nfnal:<10}{norg:<10}{"->":5}{nfnl:<10}')
+        log.info(100 * '-')
+        log.info(f'{line_name:<50}{ninit:<10}{"->":5}{nfnal:<10}{norg:<10}{"->":5}{nfnl:<10}')
+        log.info(100 * '-')
 
         rdf.name     = line_name
         rdf.l_branch = l_branch
@@ -251,9 +268,9 @@ class FilterFile:
         self._initialize()
 
         log.info(f'Filtering: {self._file_path}')
-        log.debug(100 * '-')
-        log.debug(f'{"Line":<50}{"BOrg":<10}{"":5}{"BFnl":<10}{"#Org":<10}{"":5}{"#Fnl":<10}')
-        log.debug(100 * '-')
+        log.info(100 * '-')
+        log.info(f'{"Line":<50}{"BOrg":<10}{"":5}{"BFnl":<10}{"#Org":<10}{"":5}{"#Fnl":<10}')
+        log.info(100 * '-')
         l_rdf = [ self._get_rdf(tree_name) for tree_name in self._l_line_name ]
         l_rdf = self._add_lumi_rdf(l_rdf)
 
