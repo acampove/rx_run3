@@ -22,6 +22,7 @@ class selector:
         self._cfg_nam   = cfg_nam
         self._is_mc     = is_mc
 
+        self._proc      = None
         self._atr_mgr   = None
         self._d_sel     = None
         self._d_rdf     = dict()
@@ -38,12 +39,54 @@ class selector:
 
         self._atr_mgr = amgr(self._rdf)
 
+        self._set_process()
+
         log.debug(f'Using config: {self._cfg_nam}')
         cfg_dat       = utdc.load_config(self._cfg_nam)
         self._d_sel   = cfg_dat['selection']
         self._fix_bkgcat()
 
         self._initialized = True
+    # -------------------------------------------------------------------
+    def _set_process(self):
+        '''
+        Will set the attribute self._proc based on the name of the HLT line in the dataframe
+        The attribute is used to apply a selection based on the config files content
+        '''
+        hlt_line = self._rdf.name
+        d_line_proc = {
+            'Hlt2RD_BuToKpEE'                          : 'bukee',
+            'Hlt2RD_BuToKpEE_MVA'                      : 'bukee',
+            # ---
+            'Hlt2RD_BuToKpMuMu'                        : 'bukmm',
+            'Hlt2RD_BuToKpMuMu_MVA'                    : 'bukmm',
+            # ---
+            'Hlt2RD_B0ToKpPimMuMu'                     : 'bdkstmm',
+            'Hlt2RD_B0ToKpPimMuMu_MVA'                 : 'bdkstmm',
+            'Hlt2RD_BdToKstJpsi_KstToKpPim_JpsiToMuMu' : 'bdkstmm',
+            # ---
+            'Hlt2RD_B0ToKpPimEE'                       : 'bdkstee',
+            'Hlt2RD_B0ToKpPimEE_MVA'                   : 'bdkstee',
+            'Hlt2RD_BuToKpJpsi_JpsiToEE'               : 'bdkstee',
+            'Hlt2RD_BdToKstJpsi_KstToKpPim_JpsiToEE'   : 'bdkstee',
+            # ---
+            'Hlt2RD_LbToLEE_LL'                        : 'lbpkee',
+            'Hlt2RD_LbToLEE_LL_MVA'                    : 'lbpkee',
+            'Hlt2RD_LbToPKJpsi_JpsiToEE'               : 'lbpkee',
+            # ---
+            'Hlt2RD_LbToLMuMu_LL'                      : 'lbpkmm',
+            'Hlt2RD_LbToLMuMu_LL_MVA'                  : 'lbpkmm',
+            'Hlt2RD_LbToPKJpsi_JpsiToMuMu'             : 'lbpkmm',
+        }
+
+        if hlt_line not in d_line_proc:
+            log.debug(f'Line not implemented for selection: {hlt_line}')
+            return
+
+        proc = d_line_proc[hlt_line]
+        log.debug(f'Found process {proc} for line {hlt_line}')
+
+        self._proc = proc
     # -------------------------------------------------------------------
     def _apply_selection(self):
         '''
@@ -55,10 +98,36 @@ class selector:
         log.debug(20 * '-')
         log.debug('Applying selection:')
         log.debug(20 * '-')
-        for key, cut in self._d_sel['cuts'].items():
-            log.debug(f'{"":<4}{key}')
-            rdf = rdf.Filter(cut, key)
+        # Key is the cut name (e.g. BKGCAT) for MC: Value is the cut itself
+        # Key is the process (e.g. bukee) for data: Value is the dictionary with cuts
+        d_cut    = self._d_sel['cuts']
+        skip_cut = True
+        for key, cut in d_cut.items():
+            if isinstance(cut, str):
+                log.debug(f'{"":<4}{key}')
+                rdf = rdf.Filter(cut, key)
+                continue
+
+            # Skip selection if this block of cuts does not
+            # correspond to current tree
+            if self._proc != key:
+                continue
+
+            skip_cut = False
+            if len(cut) == 0:
+                log.debug(f'Empty selection for process: {self._proc}')
+
+            for name, cut_val in cut.items():
+                rdf      = rdf.Filter(cut_val, f'{name}:{key}')
+
             self._d_rdf[key] = rdf
+
+        if skip_cut:
+            log.info(40 * '-')
+            log.warning(f'Process \"{self._proc}\" not found among:')
+            for proc in d_cut:
+                log.info(f'    \"{proc}\"')
+            log.info(40 * '-')
 
         self._rdf = rdf
     # --------------------------------------
