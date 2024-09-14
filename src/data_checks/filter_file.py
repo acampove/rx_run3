@@ -1,9 +1,9 @@
 import os
 import tqdm
-import ROOT
 import utils_noroot          as utnr
 import data_checks.utilities as utdc
 
+from ROOT                  import RDataFrame, TFile, RDF
 from data_checks.selector  import selector
 from log_store             import log_store
 
@@ -15,26 +15,21 @@ class FilterFile:
     '''
     # --------------------------------------
     def __init__(self, kind=None, file_path=None, cfg_nam=None):
-        self._kind        = kind
-        self._file_path   = file_path
-        self._cfg_nam     = cfg_nam
+        self._kind         = kind
+        self._file_path    = file_path
+        self._cfg_nam      = cfg_nam
 
-        self._nevts       = None
-        self._is_mc       = None
-        self._cfg_dat     = None
-        self._l_line_name = None
-        self._store_branch= None
-        self._has_lumitree= None
+        self._nevts        = None
+        self._is_mc        = None
+        self._l_line_name  = None
+        self._store_branch = None
+        self._has_lumitree = None
 
-        self._initialized = False
+        self._initialized  = False
     # --------------------------------------
     def _initialize(self):
         if self._initialized:
             return
-
-        if self._file_path is None:
-            log.error('File path not set')
-            raise FileNotFoundError
 
         self._cfg_dat = utdc.load_config(self._cfg_nam)
 
@@ -48,12 +43,14 @@ class FilterFile:
         '''
         Will set self._is_mc flag based on config name
         '''
-        if   self._cfg_nam.startswith('dt_'):
+        if   self._cfg_nam is None:
+            raise ValueError('cfg_nam is set to None')
+        elif self._cfg_nam.startswith('dt_'):
             self._is_mc = False
         elif self._cfg_nam.startswith('mc_'):
             self._is_mc = True
         else:
-            log.error(f'Cannot determine Data/MC from config name: {self.cfg_nam}')
+            log.error(f'Cannot determine Data/MC from config name: {self._cfg_nam}')
             raise
     # --------------------------------------
     def _set_save_pars(self):
@@ -86,7 +83,7 @@ class FilterFile:
         '''
         Will set the list of line names `self._l_line_name`
         '''
-        ifile = ROOT.TFile.Open(self._file_path)
+        ifile = TFile.Open(self._file_path)
         l_key = ifile.GetListOfKeys()
         l_nam = [ key.GetName() for key in l_key]
         ifile.Close()
@@ -172,21 +169,24 @@ class FilterFile:
         Will build a dataframe from a given HLT line and return the dataframe
         _get_branches decides what branches are kept
         '''
-        rdf      = ROOT.RDataFrame(f'{line_name}/DecayTree', self._file_path)
+        rdf      = RDataFrame(f'{line_name}/DecayTree', self._file_path)
         rdf      = self._rename_branches(rdf)
         rdf.lumi = False
         rdf      = self._attach_branches(rdf, line_name)
         l_branch = rdf.l_branch
         ninit    = rdf.ninit
         nfnal    = rdf.nfnal
-
         norg     = rdf.Count().GetValue()
+
         if not rdf.lumi:
             obj  = selector(rdf=rdf, cfg_nam=self._cfg_nam, is_mc=self._is_mc)
             rdf  = obj.run()
         nfnl     = rdf.Count().GetValue()
 
         log.debug(f'{line_name:<50}{ninit:<10}{"->":5}{nfnal:<10}{norg:<10}{"->":5}{nfnl:<10}')
+
+        rdf.name     = line_name
+        rdf.l_branch = l_branch
 
         return rdf
     # --------------------------------------
@@ -217,7 +217,7 @@ class FilterFile:
         '''
         Will save all ROOT dataframes to a file
         '''
-        opts                   = ROOT.RDF.RSnapshotOptions()
+        opts                   = RDF.RSnapshotOptions()
         opts.fMode             = 'update'
         opts.fCompressionLevel = self._cfg_dat['saving']['compression']
 
@@ -229,10 +229,13 @@ class FilterFile:
             rdf.Snapshot(tree_name, f'{self._kind}_{file_name}', l_branch, opts)
     # --------------------------------------
     def _add_lumi_rdf(self, l_rdf):
+        '''
+        Take list of ROOT dataframes and append a dataframe for luminosity information
+        '''
         if not self._has_lumitree:
             return l_rdf
 
-        rdf          = ROOT.RDataFrame('lumiTree', self._file_path)
+        rdf          = RDataFrame('lumiTree', self._file_path)
         rdf.lumi     = True
         rdf.name     = 'lumiTree'
         rdf.l_branch = rdf.GetColumnNames()
