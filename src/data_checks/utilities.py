@@ -34,11 +34,12 @@ def _load_local_config(cfg_nam):
     Will pick up config file from installed project
     '''
     cfg_path = files('data_checks_data').joinpath(f'{cfg_nam}.toml')
+    cfg_path = str(cfg_path)
     if not os.path.isfile(cfg_path):
         log.error(f'Config path not found: {cfg_path}')
         raise FileNotFoundError
 
-    log.warning('Loading local config file')
+    log.warning(f'Loading local config file: {cfg_path}')
 
     return toml.load(cfg_path)
 # --------------------------------------
