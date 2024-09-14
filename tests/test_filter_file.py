@@ -29,9 +29,8 @@ def main():
     ut.local_config = True
 
     set_log()
-    test_mc()
-    return
     test_dt()
+    test_mc()
 # --------------------------------------
 
 
