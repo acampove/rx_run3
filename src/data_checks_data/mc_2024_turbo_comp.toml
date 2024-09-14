@@ -37,18 +37,17 @@ includes=[
     ]
 
 starts_with=[
-	'B_Hlt1',
-	'Lz_Hlt1',
-	'Lb_Hlt1',
-	'Jpsi_Hlt1',
-	'B_K2Pi_DTF_',
-	'K_',
-	'Hlt1Di',
-	'Hlt1BGI',
-	'B_DTF_PV_Jpsi_mass_const_M',
-	'B_DTF_PV_Psi2S_mass_const_M',
+    'B_Hlt1',
+    'Lz_Hlt1',
+    'Lb_Hlt1',
+    'Jpsi_Hlt1',
+    'B_K2Pi_DTF_',
+    'K_',
+    'Hlt1Di',
+    'Hlt1BGI',
+    'B_DTF_PV_Jpsi_mass_const_M',
+    'B_DTF_PV_Psi2S_mass_const_M',
     ]
-
 
 [rename]
 B_DTF_PV_Jpsi_mass_const_M ='B_const_mass_M'
@@ -56,9 +55,9 @@ B_DTF_PV_Psi2S_mass_const_M='B_const_mass_psi2S_M'
 L1_PID_E                   ='L1_PIDe'
 L2_PID_E                   ='L2_PIDe'
 K_PROBNN_K                 ='H_ProbNNk'
-K_TRGHOSTPROB              ='K_TRGHOSTPROB'
-L1_TRGHOSTPROB             ='L1_TRGHOSTPROB'
-L2_TRGHOSTPROB             ='L2_TRGHOSTPROB'
+K_TRGHOSTPROB              ='H_TRACK_GhostProb'
+L1_TRGHOSTPROB             ='L1_TRACK_GhostProb'
+L2_TRGHOSTPROB             ='L2_TRACK_GhostProb'
 
 
 [hlt_lines]
