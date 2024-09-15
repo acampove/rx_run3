@@ -136,9 +136,9 @@ class FilterFile:
         l_name = [ name.c_str() for name in v_name ]
         l_kaon = [ name         for name in l_name if name.startswith('K_') ]
 
-        log.info(110 * '-')
+        log.debug(110 * '-')
         log.debug('Renaming kaon branches:')
-        log.info(110 * '-')
+        log.debug(110 * '-')
         for old in l_kaon:
             new = 'H_' + old[2:]
             log.debug(f'{old:<50}{"->":10}{new:<50}')
@@ -154,9 +154,9 @@ class FilterFile:
         l_name = [ name.c_str() for name in v_name ]
 
         d_name = self._cfg_dat['rename']
-        log.info(110 * '-')
+        log.debug(110 * '-')
         log.debug('Renaming mapped branches:')
-        log.info(110 * '-')
+        log.debug(110 * '-')
         for org, new in d_name.items():
             if org not in l_name:
                 continue
