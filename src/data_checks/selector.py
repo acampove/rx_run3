@@ -98,19 +98,13 @@ class selector:
         log.debug(20 * '-')
         log.debug('Applying selection:')
         log.debug(20 * '-')
-        # Key is the cut name (e.g. BKGCAT) for MC: Value is the cut itself
-        # Key is the process (e.g. bukee) for data: Value is the dictionary with cuts
+
         d_cut    = self._d_sel['cuts']
         skip_cut = True
         for key, cut in d_cut.items():
-            if isinstance(cut, str):
-                log.debug(f'{"":<4}{key}')
-                rdf = rdf.Filter(cut, key)
-                continue
-
             # Skip selection if this block of cuts does not
             # correspond to current tree
-            if self._proc != key:
+            if self._proc != key and key != 'any':
                 continue
 
             skip_cut = False
@@ -118,7 +112,7 @@ class selector:
                 log.debug(f'Empty selection for process: {self._proc}')
 
             for name, cut_val in cut.items():
-                rdf      = rdf.Filter(cut_val, f'{name}:{key}')
+                rdf = rdf.Filter(cut_val, f'{name}:{key}')
 
             self._d_rdf[key] = rdf
 
@@ -137,23 +131,20 @@ class selector:
         If MC, will find BKGCAT branch in dataframe (e.g. Lb_BKGCAT)
         Will rename BKGCAT in cuts dictionary, such that truth matching cut can be applied
         '''
+        if not self._is_mc:
+            return
 
-        if 'BKGCAT' not in self._d_sel['cuts']:
+        if 'BKGCAT' not in self._d_sel['cuts']['any']:
             log.debug('Not renaming BKGCAT')
-
             return
 
         log.debug('Fixing BKGCAT')
-        if not self._is_mc:
-            self._d_sel['cuts']['BKGCAT'] = '(1)'
-            return
-
-        bkgcat_cut = self._d_sel['cuts']['BKGCAT']
+        bkgcat_cut = self._d_sel['cuts']['any']['BKGCAT']
         bkgcat_var = self._get_bkgcat_name()
         bkgcat_cut = bkgcat_cut.replace('BKGCAT', bkgcat_var)
 
         log.debug(f'Using truth matching cut: {bkgcat_cut}')
-        self._d_sel['cuts']['BKGCAT'] = bkgcat_cut
+        self._d_sel['cuts']['any']['BKGCAT'] = bkgcat_cut
     # --------------------------------------
     def _get_bkgcat_name(self):
         '''
