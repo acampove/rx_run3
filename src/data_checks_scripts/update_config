@@ -5,7 +5,6 @@ display_help()
 {
     echo "Script used to upload TOML config file to the grid"
     echo ""
-    echo "-f: Path to file to upload"
     echo "-u: Will update (1) or not (0) the LFN, if it already exists"
 }
 #---------------------------------
@@ -31,21 +30,9 @@ get_opts()
                 display_help
                 exit 1
                 ;;  
-            f)  CONF=${OPTARG};;
             u)  UPDT=${OPTARG};;
         esac
     done
-}
-#---------------------------------
-initialize()
-{
-    if [[ ! -f $CONF ]];then
-        echo "Config file $CONF not found"
-        exit 1
-    fi
-
-    FILENAME=$(basename $CONF)
-    LFN=/lhcb/user/a/acampove/run3/ntupling/config/$FILENAME
 }
 #---------------------------------
 check_env()
@@ -69,21 +56,37 @@ check_existing()
 {
     lb-dirac dirac-dms-lfn-replicas $LFN > /dev/null
     if   [[ $? -eq 0 ]] && [[ $UPDT -eq 1 ]];then
-        echo "LFN found, removing: $LFN"
+        echo "LFN found, removing: \"$LFN\""
         lb-dirac dirac-dms-remove-files $LFN
     elif [[ $? -eq 0 ]] && [[ $UPDT -eq 0 ]];then
-        echo "LFN found: $LFN"
+        echo "LFN found: \"$LFN\""
+        exit 1
+    elif [[ $? -ne 0 ]];then
+        echo "No replica found for \"$LFN\""
+    else
+        echo "Replica finding process exited with status $? and the updating flag was $UPDT"
         exit 1
     fi
+}
+#---------------------------------
+update()
+{
+    CONF=$1
+    echo ""
+    echo ""
+    echo "Uploading $CONF"
+    FILENAME=$(basename $CONF)
+    LFN=/lhcb/user/a/acampove/run3/ntupling/config/$FILENAME
+    check_existing
 
-    echo "No replica found for $LFN"
+    lb-dirac dirac-dms-add-file LFN:$LFN $CONF $SE 
+    echo "Uploaded config to: $LFN [$SE]"
 }
 #---------------------------------
 SE=CERN-USER
 get_opts "$@"
-initialize
 check_env
-check_existing
 
-lb-dirac dirac-dms-add-file LFN:$LFN $CONF $SE 
-echo "Uploaded config to: $LFN [$SE]"
+update /home/acampove/Packages/RK/data_checks/src/data_checks_data/mc_2024_turbo_comp.toml
+update /home/acampove/Packages/RK/data_checks/src/data_checks_data/dt_2024_turbo_comp.toml
+
