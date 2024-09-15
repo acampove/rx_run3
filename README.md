@@ -45,7 +45,7 @@ dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/a/acampove/run3/venv
 The configuration and the code are separate. The configuuration file is updated with:
 
 ```bash
-update_config -f /home/acampove/Packages/RK/data_checks/src/data_checks_data/dt_2024_turbo_004.toml -u 1
+update_config -u 1
 ```
 
 The `-u` flag will update the config file if its LFN is alrdeady in the grid.
