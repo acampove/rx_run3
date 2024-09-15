@@ -91,50 +91,37 @@ lines_phys_mm_cut= [
 [selection]
 prescale=1
 [selection.cuts]
-[selection.cuts.bukee]
-b_mass = 'B_const_mass_M  > 5000 && B_const_mass_M < 5800'
-j_mass = 'Jpsi_M   > 2800        && Jpsi_M   < 3300'
-PIDep  = 'L1_PID_E >    1 && L2_PID_E > 1'
-KpGhost= 'H_TRGHOSTPROB  < 0.5'
+[selection.cuts.any]
+j_mass = '((Jpsi_M * Jpsi_M > 9920000.0) && (Jpsi_M * Jpsi_M < 16400000.0) || (Jpsi_M * Jpsi_M > 6000000.0) && (Jpsi_M * Jpsi_M < 12960000.0))'
 L1Ghost= 'L1_TRGHOSTPROB < 0.5'
 L2Ghost= 'L2_TRGHOSTPROB < 0.5'
+
+[selection.cuts.bukee]
+b_mass = 'B_const_mass_M  > 5000 && B_const_mass_M < 5800'
+PIDep  = 'L1_PID_E >    1 && L2_PID_E > 1'
+KpGhost= 'H_TRGHOSTPROB  < 0.5'
 
 [selection.cuts.bukmm]
 b_mass = 'B_M      > 4800 && B_M      < 6000'
-j_mass = 'Jpsi_M   > 2800 && Jpsi_M   < 3300'
 KpGhost= 'H_TRGHOSTPROB  < 0.5'
-L1Ghost= 'L1_TRGHOSTPROB < 0.5'
-L2Ghost= 'L2_TRGHOSTPROB < 0.5'
 
 [selection.cuts.bdkstee]
 b_mass = 'B_const_mass_M > 5000 && B_const_mass_M < 5800'
-j_mass = 'Jpsi_M   > 2800 && Jpsi_M   < 3300'
 k_mass = 'Kst_M    >  800 && Kst_M   < 1000'
 H1Ghost= 'H1_TRGHOSTPROB < 0.5'
 H2Ghost= 'H2_TRGHOSTPROB < 0.5'
-L1Ghost= 'L1_TRGHOSTPROB < 0.5'
-L2Ghost= 'L2_TRGHOSTPROB < 0.5'
 
 [selection.cuts.bdkstmm]
 b_mass = 'B_const_mass_M > 5000 && B_const_mass_M < 5600'
-j_mass = 'Jpsi_M   > 2900 && Jpsi_M   < 3300'
 k_mass = 'Kst_M    >  800 && Kst_M   < 1000'
 H1Ghost= 'H1_TRGHOSTPROB < 0.5'
 H2Ghost= 'H2_TRGHOSTPROB < 0.5'
-L1Ghost= 'L1_TRGHOSTPROB < 0.5'
-L2Ghost= 'L2_TRGHOSTPROB < 0.5'
 
 [selection.cuts.lbpkee]
 b_mass = 'B_const_mass_M > 5000 && B_const_mass_M < 5800'
-j_mass = 'Jpsi_M   > 2900 && Jpsi_M   < 3300'
-L1Ghost= 'L1_TRGHOSTPROB < 0.5'
-L2Ghost= 'L2_TRGHOSTPROB < 0.5'
 
 [selection.cuts.lbpkmm]
 b_mass = 'B_const_mass_M > 5000 && B_const_mass_M < 5600'
-j_mass = 'Jpsi_M   > 2900 && Jpsi_M   < 3300'
-L1Ghost= 'L1_TRGHOSTPROB < 0.5'
-L2Ghost= 'L2_TRGHOSTPROB < 0.5'
 
 [saving]
 max_events  =-1
