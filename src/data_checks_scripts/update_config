@@ -23,7 +23,7 @@ get_opts()
                 display_help
                 exit 0
                 ;;  
-           \?)  echo "Invalid option: -${OPTARG}"
+            \?)  echo "Invalid option: -${OPTARG}"
                 display_help
                 exit 1
                 ;;  
@@ -40,8 +40,8 @@ get_opts()
 initialize()
 {
     if [[ ! -f $CONF ]];then
-	echo "Config file $CONF not found"
-	exit 1
+        echo "Config file $CONF not found"
+        exit 1
     fi
 
     FILENAME=$(basename $CONF)
@@ -53,15 +53,15 @@ check_env()
     which lb-dirac > /dev/null
 
     if [[ $? -ne 0 ]];then
-	echo "Not in an environment with LHCb software"
-	exit 1
+        echo "Not in an environment with LHCb software"
+        exit 1
     fi
 
     lhcb-proxy-info -v > /dev/null
 
     if [[ $? -ne 0 ]];then
-	echo "Grid proxy not found"
-	exit 1
+        echo "Grid proxy not found"
+        exit 1
     fi
 }
 #---------------------------------
@@ -69,11 +69,11 @@ check_existing()
 {
     lb-dirac dirac-dms-lfn-replicas $LFN > /dev/null
     if   [[ $? -eq 0 ]] && [[ $UPDT -eq 1 ]];then
-	echo "LFN found, removing: $LFN"
-	lb-dirac dirac-dms-remove-files $LFN
+        echo "LFN found, removing: $LFN"
+        lb-dirac dirac-dms-remove-files $LFN
     elif [[ $? -eq 0 ]] && [[ $UPDT -eq 0 ]];then
-	echo "LFN found: $LFN"
-	exit 1
+        echo "LFN found: $LFN"
+        exit 1
     fi
 
     echo "No replica found for $LFN"
