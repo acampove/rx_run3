@@ -29,16 +29,12 @@ dirac-dms-add-file LFN:/lhcb/user/a/acampove/run3/venv/001/dcheck.tar /home/acam
 If the code changes, the venv needs to change. To do that run:
 
 ```bash
-update_tarball
+update_tarball [-v 009]
 ```
 
-in the directory where the environment (and tarball) is. The new tarball will need to be sent to the grid again with:
-
-```bash
-dirac-dms-add-file LFN:/lhcb/user/a/acampove/run3/venv/002/dcheck.tar /home/acampove/Test/venv/dcheck.tar CERN-USER
-```
-
-in order to find out what versions of the tarball are in the grid do:
+Where `-v` will be used to pass the version of the tarball in order to upload it to the grid. 
+This argument is optional and if not passed the tarball won't be uploaded.
+In order to find out what versions of the tarball are in the grid do:
 
 ```bash
 dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/a/acampove/run3/venv
@@ -49,7 +45,7 @@ dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/a/acampove/run3/venv
 The configuration and the code are separate. The configuuration file is updated with:
 
 ```bash
-update_config -f /home/acampove/Packages/RK/data_checks/src/data_checks_data/dt_2024_turbo_004.toml -u 1
+update_config -u 1
 ```
 
 The `-u` flag will update the config file if its LFN is alrdeady in the grid.
