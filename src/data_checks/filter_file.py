@@ -230,6 +230,24 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
+    def _tree_name_from_line_name(self, line_name):
+        '''
+        Given a line name, it will check the config file to return KEE or KMM
+        to decide where the tree will be saved.
+        '''
+        d_cfg  = self._cfg_dat['saving']['tree_name']
+        l_elec = d_cfg['KEE']
+        l_muon = d_cfg['KMM']
+
+        if line_name in l_elec:
+            return 'KEE'
+
+        if line_name in l_muon:
+            return 'KMM'
+
+        log.error(f'Line \"{line_name}\" not belonging to electron or muon channel')
+        raise ValueError
+    # --------------------------------------
     def _save_file(self, l_rdf):
         '''
         Will save all ROOT dataframes to a file
@@ -239,26 +257,19 @@ class FilterFile:
         opts.fCompressionLevel = self._cfg_dat['saving']['compression']
 
         file_name = os.path.basename(self._file_path)
+        odir_name = file_name.replace('.root', '').replace('.', '_')
+        os.makedirs(odir_name, exist_ok=True)
+
         for rdf in tqdm.tqdm(l_rdf, ascii=' -'):
-            tree_name = rdf.name
+            line_name = rdf.name
             l_branch  = rdf.l_branch
+            tree_name = self._tree_name_from_line_name(line_name)
 
-            rdf.Snapshot(tree_name, f'{self._kind}_{file_name}', l_branch, opts)
-    # --------------------------------------
-    def _add_lumi_rdf(self, l_rdf):
-        '''
-        Take list of ROOT dataframes and append a dataframe for luminosity information
-        '''
-        if not self._has_lumitree:
-            return l_rdf
+            rdf.Snapshot(tree_name, f'{odir_name}/{line_name}.root', l_branch, opts)
 
-        rdf          = RDataFrame('lumiTree', self._file_path)
-        rdf.lumi     = True
-        rdf.name     = 'lumiTree'
-        rdf.l_branch = rdf.GetColumnNames()
-        l_rdf.append(rdf)
-
-        return l_rdf
+            if not self._is_mc:
+                lumi_rdf = RDataFrame('lumiTree', self._file_path)
+                lumi_rdf.Snapshot('lumiTree', f'{odir_name}/{line_name}.root', [], opts)
     # --------------------------------------
     @utnr.timeit
     def run(self):
@@ -272,7 +283,6 @@ class FilterFile:
         log.info(f'{"Line":<50}{"BOrg":<10}{"":5}{"BFnl":<10}{"#Org":<10}{"":5}{"#Fnl":<10}')
         log.info(100 * '-')
         l_rdf = [ self._get_rdf(tree_name) for tree_name in self._l_line_name ]
-        l_rdf = self._add_lumi_rdf(l_rdf)
 
         self._save_file(l_rdf)
 # --------------------------------------
