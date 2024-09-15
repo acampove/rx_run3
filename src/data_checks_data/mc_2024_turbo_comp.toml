@@ -86,6 +86,7 @@ lines_phys_mm_cut= [
 [selection]
 prescale=1
 [selection.cuts]
+[selection.cuts.any]
 BKGCAT='BKGCAT == 0 || BKGCAT == 10 || BKGCAT == 50'
 
 [saving]
