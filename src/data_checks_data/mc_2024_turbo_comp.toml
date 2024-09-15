@@ -3,8 +3,10 @@ working_group= 'rd'
 analysis     = 'rd_ap_2024'
 
 [sample]
-version = 'v1r1364'
-name_rx = '^mc_(bu|bd|bs|lb)_.*_turbo_.*tupling$' 
+version  = 'v1r1364'
+name_rx  = '^mc_(bu|bd|bs|lb)_.*_turbo_.*tupling$' 
+
+
 
 [drop_branches]
 includes=[
@@ -14,13 +16,11 @@ includes=[
     'ChargedIso',
     'NeutralIso',
     'SMOG2',
-    '_KE2EK_',
     '_EE2KK_',
     '_EE2PiPi_',
     '_K2P_',
     '_K2Pi_',
     '_KP2PK_',
-    '_KMu2MuK_',
     '_P2K_',
     '_MuMu2KK_',
     '_MuMu2PiPi_',
@@ -31,7 +31,6 @@ includes=[
     '_MOM_COV_MATRIX_',
     '_POSITION_STATEAT_',
     'CutBasedIncl',
-    '_VTXISO_',
     '_InclDet',
     '_RICH_THRESHOLD_',
     ]
@@ -50,15 +49,18 @@ starts_with=[
     ]
 
 [rename]
-B_DTF_PV_Jpsi_mass_const_M ='B_const_mass_M'
-B_DTF_PV_Psi2S_mass_const_M='B_const_mass_psi2S_M'
-L1_PID_E                   ='L1_PIDe'
-L2_PID_E                   ='L2_PIDe'
-K_PROBNN_K                 ='H_ProbNNk'
-K_TRGHOSTPROB              ='H_TRACK_GhostProb'
-L1_TRGHOSTPROB             ='L1_TRACK_GhostProb'
-L2_TRGHOSTPROB             ='L2_TRACK_GhostProb'
-
+B_DTF_PV_Jpsi_mass_const_M  ='B_const_mass_M'
+Lb_DTF_PV_Jpsi_mass_const_M ='B_const_mass_M'
+B_DTF_PV_Psi2S_mass_const_M ='B_const_mass_psi2S_M'
+Lb_DTF_PV_Psi2S_mass_const_M='B_const_mass_psi2S_M'
+L1_PID_E                    ='L1_PIDe'
+L2_PID_E                    ='L2_PIDe'
+K_PROBNN_K                  ='H_ProbNNk'
+K_TRGHOSTPROB               ='H_TRACK_GhostProb'
+H1_PROBNN_K                 ='H1_ProbNNk'
+H2_PROBNN_K                 ='H2_ProbNNk'
+L1_TRGHOSTPROB              ='L1_TRACK_GhostProb'
+L2_TRGHOSTPROB              ='L2_TRACK_GhostProb'
 
 [hlt_lines]
 lines_phys_ee_mva= [
@@ -87,12 +89,14 @@ lines_phys_mm_cut= [
 prescale=1
 [selection.cuts]
 [selection.cuts.any]
-BKGCAT='BKGCAT == 0 || BKGCAT == 10 || BKGCAT == 50'
+BKGCAT ='BKGCAT == 0 || BKGCAT == 10 || BKGCAT == 50'
+L1Ghost= 'L1_TRGHOSTPROB < 0.5'
+L2Ghost= 'L2_TRGHOSTPROB < 0.5'
 
 [saving]
 max_events  =-1
 compression =2
-store_branch=true
+store_branch=false
 [saving.tree_name]
 KEE= [
     'Hlt2RD_BuToKpEE_MVA',
@@ -111,3 +115,4 @@ KMM= [
     'Hlt2RD_BuToKpMuMu',
     'Hlt2RD_B0ToKpPimMuMu',
     'Hlt2RD_LbToLMuMu_LL']
+

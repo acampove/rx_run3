@@ -3,10 +3,10 @@ working_group= 'rd'
 analysis     = 'rd_ap_2024'
 
 [sample]
+version  = 'v1r1364'
 eventtype= '94000000'
 polarity = ['magup', 'magdown']
 datatype = 2024
-version  = 'v1r1364'
 
 [drop_branches]
 includes=[
@@ -16,13 +16,11 @@ includes=[
     'ChargedIso',
     'NeutralIso',
     'SMOG2',
-    '_KE2EK_',
     '_EE2KK_',
     '_EE2PiPi_',
     '_K2P_',
     '_K2Pi_',
     '_KP2PK_',
-    '_KMu2MuK_',
     '_P2K_',
     '_MuMu2KK_',
     '_MuMu2PiPi_',
@@ -33,7 +31,6 @@ includes=[
     '_MOM_COV_MATRIX_',
     '_POSITION_STATEAT_',
     'CutBasedIncl',
-    '_VTXISO_',
     '_InclDet',
     '_RICH_THRESHOLD_',
     ]
