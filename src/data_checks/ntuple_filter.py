@@ -1,5 +1,3 @@
-import os
-import toml
 import math
 import utils_noroot          as utnr
 import data_checks.utilities as utdc
@@ -8,8 +6,8 @@ from log_store               import log_store
 from importlib.resources     import files
 from data_checks.filter_file import FilterFile
 
-log=log_store.add_logger('data_checks:ntuple_filter')
-#----------------------------------------------------------------
+log = log_store.add_logger('data_checks:ntuple_filter')
+# ----------------------------------------------------------------
 class ntuple_filter:
     '''
     Class used to filter ntuples from analysis productions. Filtering means:
@@ -26,15 +24,15 @@ class ntuple_filter:
         ngroup  (int): Number of groups into which to split filter
         '''
 
-        self._dataset= dataset
-        self._cfg_ver= cfg_ver
-        self._index  = index
-        self._ngroup = ngroup 
+        self._dataset = dataset
+        self._cfg_ver = cfg_ver
+        self._index   = index
+        self._ngroup  = ngroup
 
-        self._cfg_dat= None
+        self._cfg_dat = None
 
         self._initialized = False
-    #---------------------------------------------
+    # ---------------------------------------------
     def _initialize(self):
         if self._initialized:
             return
@@ -43,13 +41,13 @@ class ntuple_filter:
         self._cfg_dat = utdc.load_config(self._cfg_nam)
         self._set_paths()
 
-        self._initialized = True 
-    #---------------------------------------------
+        self._initialized = True
+    # ---------------------------------------------
     def _set_paths(self):
         '''
         Loads dictionary with:
 
-        kind_of_file -> [PFNs] 
+        kind_of_file -> [PFNs]
 
         correspondence
         '''
@@ -60,10 +58,10 @@ class ntuple_filter:
         d_path    = self._get_group(d_path)
 
         self._d_root_path = d_path
-    #---------------------------------------------
+    # ---------------------------------------------
     def _reformat(self, d_path):
         '''
-        Takes dictionary: 
+        Takes dictionary:
 
         sample_kind -> [PFNs]
 
@@ -82,7 +80,7 @@ class ntuple_filter:
             d_path_ref.update(d_tmp)
 
         return d_path_ref
-    #---------------------------------------------
+    # ---------------------------------------------
     def _get_group(self, d_path):
         '''
         Takes a dictionary mapping:
@@ -110,8 +108,8 @@ class ntuple_filter:
         l_pfn      = l_pfn[index_1:index_2]
         d_group    = { pfn : d_path[pfn] for pfn in l_pfn}
 
-        return d_group 
-    #---------------------------------------------
+        return d_group
+    # ---------------------------------------------
     def filter(self):
         '''
         Runs filtering
@@ -119,7 +117,6 @@ class ntuple_filter:
         self._initialize()
 
         for pfn, kind in self._d_root_path.items():
-            obj=FilterFile(kind=kind, file_path=pfn, cfg_nam=self._cfg_nam)
+            obj = FilterFile(kind=kind, file_path=pfn, cfg_nam=self._cfg_nam)
             obj.run()
-#----------------------------------------------------------------
-
+# ----------------------------------------------------------------
