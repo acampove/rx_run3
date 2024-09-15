@@ -4,6 +4,8 @@ from log_store                 import log_store
 # ---------------------------------------
 def set_log():
     log_store.set_level('data_checks:ntuple_filter', 10)
+    log_store.set_level('data_checks:FilterFile'   , 10)
+    log_store.set_level('data_checks:selector'     , 10)
     log_store.set_level('rx_scripts:atr_mgr:mgr'   , 30)
 # ---------------------------------------
 def test_dt():
