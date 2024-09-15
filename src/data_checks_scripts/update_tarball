@@ -1,5 +1,35 @@
 #!/usr/bin/env bash
 
+#--------------------------------
+display_help()
+{
+    echo "Usage: Used to update tarball with virtual environment and optionally upload it to the grid"
+    echo ""
+    echo "-h: Help"
+    echo "-v: Version of tarball, optional, if not passed, wont upload it"
+}
+#--------------------------------
+get_args()
+{
+    while getopts :hf:v: option; do 
+        case "${option}" in
+            h)  
+                display_help
+                exit 0
+                ;;  
+            \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;  
+            v)  VERS=${OPTARG};;
+        esac
+    done
+}
+#--------------------------------
 check()
 {
     if [[ $? -ne 0 ]];then
@@ -7,26 +37,49 @@ check()
         exit 1
     fi
 }
+#--------------------------------
+upload()
+{
+    if [[ -z $VERS ]];then
+        echo "Version of tarball not passed, won't upload it"
+        exit 0
+    fi
 
-if [[ ! -f dcheck/run ]];then
-    echo "dcheck/run not found"
-    exit 1
-fi
+    SOURCE=/home/acampove/Test/venv/dcheck.tar 
+    TARGET="dirac-dms-add-file LFN:/lhcb/user/a/acampove/run3/venv/$VERS/dcheck.tar"
 
-source dcheck/bin/activate
+    echo "Uploading tarball fot $TARGET"
+    lb-dirac $TARGET $SOURCE CERN-USER
+}
+#--------------------------------
+update()
+{
+    echo "Updating tarball"
 
-rm -rf dchecks.tar
-check "Remove tarball"
+    if [[ ! -f dcheck/run ]];then
+        echo "dcheck/run not found"
+        exit 1
+    fi
 
-pip install /home/acampove/Packages/RK/scripts > /dev/null
-echo "Running: pip install /home/acampove/Packages/RK/scripts"
-check "Install scripts"
+    source dcheck/bin/activate
 
-pip install /home/acampove/Packages/RK/data_checks/ > /dev/null
-echo "Running: pip install /home/acampove/Packages/RK/data_checks" 
-check "Install data_checks"
+    rm -rf dchecks.tar
+    check "Remove tarball"
 
-tar -czf dcheck.tar dcheck
-echo "Running: tar -czf dcheck.tar dcheck"
-check "Tar data_checks"
+    pip install /home/acampove/Packages/RK/scripts > /dev/null
+    echo "Running: pip install /home/acampove/Packages/RK/scripts"
+    check "Install scripts"
+
+    pip install /home/acampove/Packages/RK/data_checks/ > /dev/null
+    echo "Running: pip install /home/acampove/Packages/RK/data_checks" 
+    check "Install data_checks"
+
+    tar -czf dcheck.tar dcheck
+    echo "Running: tar -czf dcheck.tar dcheck"
+    check "Tar data_checks"
+}
+#--------------------------------
+get_args "$@"
+update
+upload
 
