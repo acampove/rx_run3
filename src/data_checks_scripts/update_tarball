@@ -3,19 +3,30 @@
 check()
 {
     if [[ $? -ne 0 ]];then
-	echo "Failed: $1"
-	exit 1
+        echo "Failed: $1"
+        exit 1
     fi
 }
+
+if [[ ! -f dcheck/run ]];then
+    echo "dcheck/run not found"
+    exit 1
+fi
+
+source dcheck/bin/activate
 
 rm -rf dchecks.tar
 check "Remove tarball"
 
-pip install /home/acampove/Packages/RK/scripts
+pip install /home/acampove/Packages/RK/scripts > /dev/null
+echo "Running: pip install /home/acampove/Packages/RK/scripts"
 check "Install scripts"
 
-pip install /home/acampove/Packages/RK/data_checks/
+pip install /home/acampove/Packages/RK/data_checks/ > /dev/null
+echo "Running: pip install /home/acampove/Packages/RK/data_checks" 
 check "Install data_checks"
 
-tar -czf dcheck.tar dcheck/
+tar -czf dcheck.tar dcheck
+echo "Running: tar -czf dcheck.tar dcheck"
 check "Tar data_checks"
+
