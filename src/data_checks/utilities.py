@@ -3,14 +3,12 @@ import toml
 import utils_noroot as utnr
 
 from XRootD              import client
-from functools           import cache
 from importlib.resources import files
 from log_store           import log_store
 
 log = log_store.add_logger('data_checks:utilities')
 local_config = False
 
-@cache
 # --------------------------------------
 def load_config(cfg_nam):
     '''
