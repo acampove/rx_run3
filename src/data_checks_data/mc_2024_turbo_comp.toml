@@ -93,4 +93,21 @@ BKGCAT='BKGCAT == 0 || BKGCAT == 10 || BKGCAT == 50'
 max_events  =-1
 compression =2
 store_branch=true
+[saving.tree_name]
+KEE= [
+    'Hlt2RD_BuToKpEE_MVA',
+    'Hlt2RD_B0ToKpPimEE_MVA',
+    'Hlt2RD_LbTopKEE_MVA',
+    'Hlt2RD_BsToPhiEE_MVA',
+    'Hlt2RD_BuToKpEE',
+    'Hlt2RD_B0ToKpPimEE',
+    'Hlt2RD_LbToLEE_LL']
 
+KMM= [
+    'Hlt2RD_BuToKpMuMu_MVA',
+    'Hlt2RD_B0ToKpPimMuMu_MVA',
+    'Hlt2RD_LbTopKMuMu_MVA',
+    'Hlt2RD_BsToPhiMuMu_MVA',
+    'Hlt2RD_BuToKpMuMu',
+    'Hlt2RD_B0ToKpPimMuMu',
+    'Hlt2RD_LbToLMuMu_LL']
