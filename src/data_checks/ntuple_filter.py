@@ -98,7 +98,7 @@ class ntuple_filter:
 
         log.info(f'Will split {nfiles} files into {self._ngroup} groups')
 
-        group_size = math.floor(nfiles/self._ngroup)
+        group_size = math.floor(nfiles / self._ngroup)
         index_1    = group_size * (self._index + 0)
         index_2    = group_size * (self._index + 1) if self._index + 1 < self._ngroup else None
 
