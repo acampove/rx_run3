@@ -257,19 +257,18 @@ class FilterFile:
         opts.fCompressionLevel = self._cfg_dat['saving']['compression']
 
         file_name = os.path.basename(self._file_path)
-        odir_name = file_name.replace('.root', '').replace('.', '_')
-        os.makedirs(odir_name, exist_ok=True)
+        preffix   = file_name.replace('.root', '').replace('.', '_')
 
         for rdf in tqdm.tqdm(l_rdf, ascii=' -'):
             line_name = rdf.name
             l_branch  = rdf.l_branch
             tree_name = self._tree_name_from_line_name(line_name)
 
-            rdf.Snapshot(tree_name, f'{odir_name}/{self._kind}_{line_name}.root', l_branch, opts)
+            rdf.Snapshot(tree_name, f'{self._kind}_{preffix}_{line_name}.root', l_branch, opts)
 
             if not self._is_mc:
                 lumi_rdf = RDataFrame('lumiTree', self._file_path)
-                lumi_rdf.Snapshot('lumiTree', f'{odir_name}/{self._kind}_{line_name}.root', [], opts)
+                lumi_rdf.Snapshot('lumiTree', f'{self._kind}_{preffix}_{line_name}.root', [], opts)
     # --------------------------------------
     @utnr.timeit
     def run(self):
