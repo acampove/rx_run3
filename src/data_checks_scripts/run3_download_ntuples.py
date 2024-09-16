@@ -12,15 +12,16 @@ import argparse
 log = log_store.add_logger('data_checks:run3_download_ntuples')
 # --------------------------------------------------
 class data:
-    server  = 'root://eoslhcb.cern.ch/'
-    eos_clt = clt.FileSystem(server)
-    eos_dir = '/eos/lhcb/grid/user/lhcb/user/a/acampove'
-    job_dir = None
-    des_dir = None
-    test    = None
-    log_lvl = None
-    ran_pfn = None
-    nfile   = None
+    eos_dir : str        = '/eos/lhcb/grid/user/lhcb/user/a/acampove'
+    server  : str        = 'root://eoslhcb.cern.ch/'
+    des_dir : str | None = None
+    job_dir : str | None = None
+    test    : int | None = None
+    ran_pfn : int | None = None
+    nfile   : int | None = None
+    log_lvl : int | None = None
+
+    eos_clt              = clt.FileSystem(server)
 # --------------------------------------------------
 def _download(pfn=None):
     if data.test == 1:
@@ -29,13 +30,13 @@ def _download(pfn=None):
     file_name        = os.path.basename(pfn)
     out_path         = f'{data.des_dir}/{file_name}'
     if os.path.isfile(out_path):
-        log.debug(f'Skipping downloaded file')
+        log.debug('Skipping downloaded file')
         return
 
     log.debug(f'Downloading: {pfn} -> {out_path}')
 
-    xrd_client       = clt.FileSystem(pfn)
-    status, response = xrd_client.copy(pfn, out_path)
+    xrd_client = clt.FileSystem(pfn)
+    status, _  = xrd_client.copy(pfn, out_path)
     _check_status(status, '_download')
 # --------------------------------------------------
 def _check_status(status, kind):
@@ -79,8 +80,8 @@ def _get_pfns():
 def _get_args():
     parser = argparse.ArgumentParser(description='Script used to download ntuples from EOS')
     parser.add_argument('-j', '--jobn' , type=str, help='Job name, used to find directory', required=True)
-    parser.add_argument('-n', '--nfile', type=int, help='Number of files to download', default=-1, required=False)
-    parser.add_argument('-d', '--dest' , type=str, help='Directory where files will be placed', required=True)
+    parser.add_argument('-n', '--nfile', type=int, help='Number of files to download', default=-1)
+    parser.add_argument('-d', '--dest' , type=str, help='Output directory, will be CWD/job_name if not pased')
     parser.add_argument('-t', '--test' , type=int, help='Runs a test run with 1, default=0', default=0, choices=[0, 1])
     parser.add_argument('-l', '--log'  , type=int, help='Log level, default 20', choices=[10, 20, 30, 40], default=20)
     parser.add_argument('-r', '--ran'  , type=int, help='When picking a subset of files, with -n, \
@@ -94,8 +95,18 @@ def _get_args():
     data.log_lvl = args.log
     data.ran_pfn = args.ran
 # --------------------------------------------------
+def _set_destination():
+    if data.des_dir is not None:
+        log.debug(f'Destination directory already specified as {data.des_dir}, not setting it')
+        return
+
+    data.des_dir = f'{os.getcwd()}/{data.job_dir}'
+    log.info(f'Destination directory not found, using {data.des_dir}')
+# --------------------------------------------------
 def _initialize():
     log.setLevel(data.log_lvl)
+
+    _set_destination()
     os.makedirs(data.des_dir, exist_ok=True)
 # --------------------------------------------------
 def main():
