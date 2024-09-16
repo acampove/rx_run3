@@ -100,4 +100,6 @@ Run:
 run3_download_ntuples -j flt_27_08_2024_dt_2024_turbo -n 3 -d $PWD/files
 ```
 
-in an environment with a valid grid token. `-j` is the name of the job and the downloaded will download `3` files.
+in an environment with a valid grid token. `-j` is the name of the job and the command will download `3` files. 
+To download all the files use `-n  -1`. 
+To download a random subset of files use `-r 1`.
