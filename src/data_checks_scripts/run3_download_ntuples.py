@@ -1,13 +1,20 @@
+'''
+Script used to download filtered ntuples
+from the grid
+'''
+
 #!/usr/bin/env python3
+
+import os
+import random
+import argparse
+
+import tqdm
 
 from XRootD              import client as clt
 from XRootD.client.flags import DirListFlags
 from log_store           import log_store
 
-import os
-import tqdm
-import random
-import argparse
 
 log = log_store.add_logger('data_checks:run3_download_ntuples')
 # --------------------------------------------------
@@ -79,13 +86,12 @@ def _get_pfns():
 # --------------------------------------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Script used to download ntuples from EOS')
-    parser.add_argument('-j', '--jobn' , type=str, help='Job name, used to find directory', required=True)
+    parser.add_argument('-j', '--jobn' , type=str, help='Job name, used to find directory, e.g. flt_001', required=True)
     parser.add_argument('-n', '--nfile', type=int, help='Number of files to download', default=-1)
     parser.add_argument('-d', '--dest' , type=str, help='Output directory, will be CWD/job_name if not pased')
     parser.add_argument('-t', '--test' , type=int, help='Runs a test run with 1, default=0', default=0, choices=[0, 1])
     parser.add_argument('-l', '--log'  , type=int, help='Log level, default 20', choices=[10, 20, 30, 40], default=20)
-    parser.add_argument('-r', '--ran'  , type=int, help='When picking a subset of files, with -n, \
-                        pick them randomly (1) or the first files (0 default)', choices=[0, 1], default=0)
+    parser.add_argument('-r', '--ran'  , type=int, help='When picking a subset of files, with -n, pick them randomly (1) or the first files (0 default)', choices=[0, 1], default=0)
     args = parser.parse_args()
 
     data.job_dir = args.jobn
@@ -110,6 +116,9 @@ def _initialize():
     os.makedirs(data.des_dir, exist_ok=True)
 # --------------------------------------------------
 def main():
+    '''
+    start here
+    '''
     _get_args()
     _initialize()
 
