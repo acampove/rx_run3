@@ -10,6 +10,8 @@ import argparse
 
 from dataclasses import dataclass
 
+import tqdm
+
 from log_store import log_store
 
 log = log_store.add_logger('rx:data_checks:link_merge')
@@ -21,6 +23,7 @@ class Data:
     '''
     job     : str
     dry     : int
+    Max     : int
     inp_dir : str = '/publicfs/lhcb/user/campoverde/Data/RK'
     rgx     : str = r'(dt|mc)_(\d{4}).*ftuple_Hlt2RD_(.*)\.root'
 # ---------------------------------
@@ -32,10 +35,12 @@ def _get_args():
     parser.add_argument('-j', '--job', type=str, help='Job name, e.g. flt_001', required=True)
     parser.add_argument('-d', '--dry', type=int, help='Dry run if 1 (default)', choices=[0, 1], default=1)
     parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30], default=20)
+    parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs', default=-1)
     args = parser.parse_args()
 
     Data.job = args.job
     Data.dry = args.dry
+    Data.Max = args.max
 
     log.setLevel(args.lvl)
 # ---------------------------------
@@ -74,7 +79,23 @@ def _split_paths(l_path):
 
         d_info_path[info].append(path)
 
+    d_info_path = _truncate_paths(d_info_path) 
+
     return d_info_path
+# ---------------------------------
+def _truncate_paths(d_path):
+    '''
+    Will limit the number of paths in the values if Data.Max is larger than zero
+    '''
+
+    if Data.Max < 0:
+        return d_path
+
+    log.warning(f'Truncating to {Data.Max} paths')
+
+    d_path_trunc = { key : val[:Data.Max] for key, val in d_path.items() }
+
+    return d_path_trunc
 # ---------------------------------
 def _info_from_path(path):
     '''
@@ -152,7 +173,7 @@ def _link_paths(info, l_path):
     os.makedirs(target_dir, exist_ok=True)
     log.debug(f'Linking to: {target_dir}')
 
-    for source_path in l_path:
+    for source_path in tqdm.tqdm(l_path, ascii=' -'):
         name = os.path.basename(source_path)
         target_path = f'{target_dir}/{name}'
 
@@ -160,8 +181,16 @@ def _link_paths(info, l_path):
         if not Data.dry:
             _do_link_paths(src=source_path, tgt=target_path)
 # ---------------------------------
-def _do_link_paths(src=None, tgt=None):
-    return
+def _do_link_paths(src : str | None = None, tgt : str | None = None):
+    '''
+    Will check if target link exists, will delete it if it does
+    Will make link
+    '''
+
+    if os.path.exists(tgt):
+        os.unlink(tgt)
+
+    os.symlink(src, tgt)
 # ---------------------------------
 def _merge_paths(kind, l_path):
     '''
