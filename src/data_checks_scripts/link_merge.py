@@ -12,6 +12,7 @@ from dataclasses import dataclass
 
 import tqdm
 
+from ROOT      import TFileMerger
 from log_store import log_store
 
 log = log_store.add_logger('rx:data_checks:link_merge')
@@ -163,6 +164,7 @@ def _link_paths(info, l_path):
     '''
     Makes symbolic links of list of paths of a specific kind
     info is a tuple with = (sample, channel, kind, year) information
+    Will return directory where linked files are
     '''
     npath = len(l_path)
     log.info(f'Linking {npath} paths {info}')
@@ -180,6 +182,8 @@ def _link_paths(info, l_path):
         log.debug(f'{source_path:<50}{"->":10}{target_path:<50}')
         if not Data.dry:
             _do_link_paths(src=source_path, tgt=target_path)
+
+    return target_dir
 # ---------------------------------
 def _do_link_paths(src : str | None = None, tgt : str | None = None):
     '''
@@ -192,13 +196,24 @@ def _do_link_paths(src : str | None = None, tgt : str | None = None):
 
     os.symlink(src, tgt)
 # ---------------------------------
-def _merge_paths(kind, l_path):
+def _merge_paths(target, l_path):
     '''
     Merge ROOT files of a specific kind
     '''
     npath = len(l_path)
-    log.info(f'Merging {npath} paths {kind}')
+    log.info(f'Merging {npath} paths {target}')
     log.info('')
+
+    fm = TFileMerger(isLocal=True)
+    for path in tqdm.tqdm(l_path, ascii=' -'):
+        fm.AddFile(path, cpProgress=False)
+
+    fm.OutputFile(target)
+    status = fm.Merge()
+
+    if not status:
+        log.error(f'Could not create merged file: {target}')
+        raise
 # ---------------------------------
 def main():
     '''
@@ -208,8 +223,9 @@ def main():
     l_path = _get_paths()
     d_path = _split_paths(l_path)
     for kind, l_path in d_path.items():
-        _link_paths(kind, l_path)
-        _merge_paths(kind, l_path)
+        target_dir = _link_paths(kind, l_path)
+        target     = f'{target_dir}.root'
+        _merge_paths(target, l_path)
 # ---------------------------------
 if __name__ == '__main__':
     main()
