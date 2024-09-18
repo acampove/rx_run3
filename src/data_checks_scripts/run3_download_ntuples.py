@@ -29,9 +29,9 @@ class Data:
     # Need this class to store data
 
     eos_dir : str        = '/eos/lhcb/grid/user/lhcb/user/a/acampove'
+    dst_dir : str        = '/publicfs/lhcb/user/campoverde/Data/RK/.run3'
     server  : str        = 'root://eoslhcb.cern.ch/'
     nthread : int        = 1
-    des_dir : str | None = None
     job_dir : str | None = None
     test    : int | None = None
     ran_pfn : int | None = None
@@ -45,7 +45,7 @@ def _download(pfn=None):
         return
 
     file_name        = os.path.basename(pfn)
-    out_path         = f'{Data.des_dir}/{file_name}'
+    out_path         = f'{Data.dst_dir}/{file_name}'
     if os.path.isfile(out_path):
         log.debug('Skipping downloaded file')
         return
@@ -106,7 +106,7 @@ def _get_args():
     parser = argparse.ArgumentParser(description='Script used to download ntuples from EOS')
     parser.add_argument('-j', '--jobn' , type=str, help='Job name, used to find directory, e.g. flt_001', required=True)
     parser.add_argument('-n', '--nfile', type=int, help='Number of files to download', default=-1)
-    parser.add_argument('-d', '--dest' , type=str, help='Output directory, will be CWD/job_name if not pased')
+    parser.add_argument('-d', '--dest' , type=str, help=f'Destination directory, default {Data.dst_dir}', default=Data.dst_dir)
     parser.add_argument('-t', '--test' , type=int, help='Runs a test run with 1, default=0', default=0, choices=[0, 1])
     parser.add_argument('-l', '--log'  , type=int, help='Log level, default 20', choices=[10, 20, 30, 40], default=20)
     parser.add_argument('-r', '--ran'  , type=int, help='When picking a subset of files, with -n, pick them randomly (1) or the first files (0 default)', choices=[0, 1], default=0)
@@ -114,20 +114,12 @@ def _get_args():
     args = parser.parse_args()
 
     Data.job_dir = args.jobn
-    Data.des_dir = args.dest
+    Data.dst_dir = args.dest
     Data.nfile   = args.nfile
     Data.test    = args.test
     Data.log_lvl = args.log
     Data.ran_pfn = args.ran
     Data.nthread = args.mth
-# --------------------------------------------------
-def _set_destination():
-    if Data.des_dir is not None:
-        log.debug(f'Destination directory already specified as {Data.des_dir}, not setting it')
-        return
-
-    Data.des_dir = f'{os.getcwd()}/{Data.job_dir}'
-    log.info(f'Destination directory not found, using {Data.des_dir}')
 # --------------------------------------------------
 def _split_pfns(l_pfn):
     '''
@@ -147,8 +139,7 @@ def _split_pfns(l_pfn):
 def _initialize():
     log.setLevel(Data.log_lvl)
 
-    _set_destination()
-    os.makedirs(Data.des_dir, exist_ok=True)
+    os.makedirs(Data.dst_dir, exist_ok=True)
 # --------------------------------------------------
 def main():
     '''
