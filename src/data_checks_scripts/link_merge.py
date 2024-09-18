@@ -20,7 +20,8 @@ class Data:
     Class used to hold shared data
     '''
     job     : str
-    inp_dir : str = '/publicfs/lhcb/user/campoverde/Data/RK/'
+    dry     : int
+    inp_dir : str = '/publicfs/lhcb/user/campoverde/Data/RK'
     rgx     : str = r'(dt|mc)_(\d{4}).*ftuple_Hlt2RD_(.*)\.root'
 # ---------------------------------
 def _get_args():
@@ -28,10 +29,15 @@ def _get_args():
     Parse arguments
     '''
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
-    parser.add_argument('-j', '--job', type=str, help='Job name, e.g. flt_001', required=True) 
+    parser.add_argument('-j', '--job', type=str, help='Job name, e.g. flt_001', required=True)
+    parser.add_argument('-d', '--dry', type=int, help='Dry run if 1 (default)', choices=[0, 1], default=1)
+    parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
     Data.job = args.job
+    Data.dry = args.dry
+
+    log.setLevel(args.lvl)
 # ---------------------------------
 def _get_paths():
     '''
@@ -132,12 +138,30 @@ def _kind_from_decay(decay):
     log.error(f'Unrecognized decay: {decay}')
     raise ValueError
 # ---------------------------------
-def _link_paths(kind, l_path):
+def _link_paths(info, l_path):
     '''
     Makes symbolic links of list of paths of a specific kind
+    info is a tuple with = (sample, channel, kind, year) information
     '''
     npath = len(l_path)
-    log.info(f'Linking {npath} paths {kind}')
+    log.info(f'Linking {npath} paths {info}')
+
+    sam, chan, kind, year = info
+
+    target_dir  = f'{Data.inp_dir}/{sam}_{chan}_{kind}/{year}'
+    os.makedirs(target_dir, exist_ok=True)
+    log.debug(f'Linking to: {target_dir}')
+
+    for source_path in l_path:
+        name = os.path.basename(source_path)
+        target_path = f'{target_dir}/{name}'
+
+        log.debug(f'{source_path:<50}{"->":10}{target_path:<50}')
+        if not Data.dry:
+            _do_link_paths(src=source_path, tgt=target_path)
+# ---------------------------------
+def _do_link_paths(src=None, tgt=None):
+    return
 # ---------------------------------
 def _merge_paths(kind, l_path):
     '''
