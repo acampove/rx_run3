@@ -107,5 +107,7 @@ To download a random subset of files use `-r 1`.
 A real donwload would look like:
 
 ```bash
-run3_download_ntuples -j test_flt_comp -d $PWD/files
+run3_download_ntuples -j flt_001 -d $PWD/files -m 40
 ```
+
+Where `-m` denotes the number of threads used to download, `-j` the name of the job and `-d` the destination of the ntuples.
