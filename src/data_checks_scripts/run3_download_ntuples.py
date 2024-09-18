@@ -109,6 +109,7 @@ def _get_args():
     parser.add_argument('-t', '--test' , type=int, help='Runs a test run with 1, default=0', default=0, choices=[0, 1])
     parser.add_argument('-l', '--log'  , type=int, help='Log level, default 20', choices=[10, 20, 30, 40], default=20)
     parser.add_argument('-r', '--ran'  , type=int, help='When picking a subset of files, with -n, pick them randomly (1) or the first files (0 default)', choices=[0, 1], default=0)
+    parser.add_argument('-m', '--mth'  , type=int, help=f'Number of threads to use for downloading, default {Data.nthread}', default=Data.nthread)
     args = parser.parse_args()
 
     Data.job_dir = args.jobn
@@ -117,6 +118,7 @@ def _get_args():
     Data.test    = args.test
     Data.log_lvl = args.log
     Data.ran_pfn = args.ran
+    Data.nthread = args.mth
 # --------------------------------------------------
 def _set_destination():
     if Data.des_dir is not None:
@@ -132,7 +134,6 @@ def _split_pfns(l_pfn):
     to be distributed among nthread threads
     '''
 
-    Data.nthread = 10
     npfn         = len(l_pfn)
     thread_size  = math.floor(npfn / Data.nthread)
 
