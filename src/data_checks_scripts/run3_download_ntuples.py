@@ -9,10 +9,10 @@ import os
 import math
 import random
 import argparse
-import threading
 
+from concurrent.futures  import ThreadPoolExecutor
 from dataclasses         import dataclass
-from XRootD              import client as clt
+from XRootD              import client              as clt
 from XRootD.client.flags import DirListFlags
 from log_store           import log_store
 
@@ -56,9 +56,10 @@ def _download(pfn=None):
     status, _  = xrd_client.copy(pfn, out_path)
     _check_status(status, '_download')
 # --------------------------------------------------
-def _download_group(l_pfn=None):
+def _download_group(l_pfn=None, pbar=None):
     for pfn in l_pfn:
         _download(pfn)
+        pbar.update(1)
 # --------------------------------------------------
 def _check_status(status, kind):
     if status.ok:
@@ -137,6 +138,8 @@ def _split_pfns(l_pfn):
     npfn         = len(l_pfn)
     thread_size  = math.floor(npfn / Data.nthread)
 
+    log.debug(f'Splitting into {Data.nthread} threads with max size {thread_size} ')
+
     l_l_pfn = [ l_pfn[i_pfn : i_pfn + thread_size ] for i_pfn in range(0, npfn, thread_size)]
 
     return l_l_pfn
@@ -156,9 +159,10 @@ def main():
 
     l_pfn   = _get_pfns()
     l_l_pfn = _split_pfns(l_pfn)
-    for l_pfn in tqdm.tqdm(l_l_pfn, ascii=' -'):
-        tr = threading.Thread(target=_download_group, args=(l_pfn,))
-        tr.start()
+    with ThreadPoolExecutor(max_workers=Data.nthread) as executor:
+        for l_pfn in l_l_pfn:
+            pbar = tqdm.tqdm(total=len(l_pfn))
+            executor.submit(_download_group, l_pfn, pbar)
 # --------------------------------------------------
 
 
