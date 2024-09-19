@@ -107,7 +107,23 @@ To download a random subset of files use `-r 1`.
 A real donwload would look like:
 
 ```bash
-run3_download_ntuples -j flt_001 -d $PWD/files -m 40
+run3_download_ntuples -j flt_001 -m 40
 ```
 
-Where `-m` denotes the number of threads used to download, `-j` the name of the job and `-d` the destination of the ntuples.
+Where `-m` denotes the number of threads used to download, `-j` the name of the job.
+
+# Linking and merging
+
+Once the ntuples are downloaded these need to be linked and merged with:
+
+```bash
+link_merge -j flt_002 -v v1
+```
+
+where `-j` is the name of the job and the files are linked to a directory named as `-v v1`. For tests run:
+
+```bash
+link_merge -j flt_002 -d 1 -m 10 -v v1
+```
+
+which will do the same with at most `10` files, can use debug messages with `-l 10`.
