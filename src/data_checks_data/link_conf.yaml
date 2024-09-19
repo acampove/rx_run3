@@ -2,13 +2,28 @@ evt_proc:
     # ------Resonant RK
     12143001       : ctrl_mm
     12143020       : psi2_mm
-    12113002       : sign_mm
+    #
     12153001       : ctrl_ee
     12153012       : psi2_ee
-    12123003       : sign_ee
-    # ------Resonant RK*
+    #
+    11144001       : bdks_jpsi_mm
+    #
     12155100       : bpks_jpsi_ee
     11154001       : bdks_jpsi_ee
+    13154001       : bsph_jpsi_ee
+    #
+    12145090       : bpk1_jpsi_mm
+    13144001       : bsph_jpsi_mm
+    15144100       : lblz_jpsi_mm
+    #
+    12155020       : bpkpipi_jpsi_ee
+    #
+    11144103       : bpKS_jpsi_mm
+    #
+    11154100       : bdKS_jpsi_ee
+    # ------Signal
+    12113002       : sign_mm
+    12123003       : sign_ee
     # ------Inclusive
     11442001       : bdXcHs_mm
     12442001       : bpXcHs_mm
