@@ -88,7 +88,7 @@ def _split_paths(l_path):
 
         d_info_path[info].append(path)
 
-    d_info_path = _truncate_paths(d_info_path) 
+    d_info_path = _truncate_paths(d_info_path)
 
     return d_info_path
 # ---------------------------------
