@@ -27,7 +27,7 @@ class Data:
     Max     : int
     ver     : str
     inp_dir : str = '/publicfs/lhcb/user/campoverde/Data/RK'
-    rgx     : str = r'(dt|mc)_(\d{4}).*ftuple_Hlt2RD_(.*)\.root'
+    dt_rgx  : str = r'dt_(\d{4}).*ftuple_Hlt2RD_(.*)\.root'
 # ---------------------------------
 def _get_args():
     '''
@@ -109,13 +109,34 @@ def _info_from_path(path):
     '''
 
     name = os.path.basename(path)
-    mtc  = re.match(Data.rgx, name)
+    if   name.startswith('dt_'):
+        info = _info_from_data_path(path)
+    elif name.startswith('mc_'):
+        info = _info_from_mc_path(path)
+    else:
+        log.error(f'File name is not for data or MC: {name}')
+        raise ValueError
+
+    return info
+# ---------------------------------
+def _info_from_mc_path(path):
+    '''
+    Will return information from path to file
+    '''
+    return
+# ---------------------------------
+def _info_from_data_path(path):
+    '''
+    Will get info from data path
+    '''
+    name = os.path.basename(path)
+    mtc  = re.match(Data.dt_rgx, name)
     if not mtc:
         log.error(f'Cannot find kind in {name} using {Data.rgx}')
         raise ValueError
 
     try:
-        [dtmc, year, decay] = mtc.groups()
+        [year, decay] = mtc.groups()
     except ValueError as exc:
         log.error(f'Expected three elements in: {mtc.groups()}')
         raise ValueError from exc
@@ -128,11 +149,9 @@ def _info_from_path(path):
         log.error(f'Cannot find channel in {decay}')
         raise ValueError
 
-    dtmc = 'data' if dtmc == 'dt' else dtmc
+    kind = _kind_from_decay(decay)
 
-    kind = _kind_from_decay(decay) 
-
-    return dtmc, chan, kind, year
+    return 'data', chan, kind, year
 # ---------------------------------
 def _kind_from_decay(decay):
     '''
