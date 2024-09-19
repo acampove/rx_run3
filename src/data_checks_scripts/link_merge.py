@@ -25,6 +25,7 @@ class Data:
     job     : str
     dry     : int
     Max     : int
+    ver     : str
     inp_dir : str = '/publicfs/lhcb/user/campoverde/Data/RK'
     rgx     : str = r'(dt|mc)_(\d{4}).*ftuple_Hlt2RD_(.*)\.root'
 # ---------------------------------
@@ -37,11 +38,13 @@ def _get_args():
     parser.add_argument('-d', '--dry', type=int, help='Dry run if 1 (default)', choices=[0, 1], default=1)
     parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30], default=20)
     parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs', default=-1)
+    parser.add_argument('-v', '--ver', type=str, help='Version used to name outputs', required=True)
     args = parser.parse_args()
 
     Data.job = args.job
     Data.dry = args.dry
     Data.Max = args.max
+    Data.ver = args.ver
 
     log.setLevel(args.lvl)
 # ---------------------------------
@@ -171,7 +174,7 @@ def _link_paths(info, l_path):
 
     sam, chan, kind, year = info
 
-    target_dir  = f'{Data.inp_dir}/{sam}_{chan}_{kind}/{year}'
+    target_dir  = f'{Data.inp_dir}/{sam}_{chan}_{kind}/{Data.ver}/{year}'
     os.makedirs(target_dir, exist_ok=True)
     log.debug(f'Linking to: {target_dir}')
 
