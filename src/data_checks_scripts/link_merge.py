@@ -8,9 +8,12 @@ import os
 import glob
 import argparse
 
-from dataclasses import dataclass
+from dataclasses         import dataclass
+from functools           import cache
+from importlib.resources import files
 
 import tqdm
+import yaml
 
 from ROOT      import TFileMerger
 from log_store import log_store
@@ -28,6 +31,7 @@ class Data:
     ver     : str
     inp_dir : str = '/publicfs/lhcb/user/campoverde/Data/RK'
     dt_rgx  : str = r'dt_(\d{4}).*ftuple_Hlt2RD_(.*)\.root'
+    mc_rgx  : str = r'mc_.*_(\d{8})_nu.*tuple_Hlt2RD_(.*)\.root'
 # ---------------------------------
 def _get_args():
     '''
@@ -123,7 +127,23 @@ def _info_from_mc_path(path):
     '''
     Will return information from path to file
     '''
-    return
+    name = os.path.basename(path)
+    mtch = re.match(Data.mc_rgx, name)
+    if not mtch:
+        log.error(f'Cannot extract information from MC file: {name} using {Data.mc_rgx}')
+        raise ValueError
+
+    [evt_type, line] = mtch.groups()
+
+    d_proc_evt = _get_proc_evt()
+    if evt_type not in d_proc_evt:
+        log.error(f'Event type {evt_type} not found')
+        raise ValueError
+
+    proc = d_proc_evt[evt_type]
+
+    #TODO: Do not hardcode year
+    return proc, line, 'ana', '2024'
 # ---------------------------------
 def _info_from_data_path(path):
     '''
@@ -152,6 +172,23 @@ def _info_from_data_path(path):
     kind = _kind_from_decay(decay)
 
     return 'data', chan, kind, year
+# ---------------------------------
+@cache
+def _get_proc_evt():
+    '''
+    Will load and return dictionary containing
+    {event_type : process}
+    '''
+
+    file_path = files('data_checks_data').joinpath('evt_proc.yaml')
+    if not os.path.isfile(file_path):
+        log.error(f'YAML file with event type process correspondence not found: {file_path}')
+        raise FileNotFoundError
+
+    with open(file_path, encoding='utf-8') as ifile:
+        d_evt_proc = yaml.safe_load(ifile)
+
+    return d_evt_proc
 # ---------------------------------
 def _kind_from_decay(decay):
     '''
