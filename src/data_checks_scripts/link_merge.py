@@ -6,6 +6,7 @@ Script used to link ntuples properly and merge them
 import re
 import os
 import glob
+import pprint
 import argparse
 
 from dataclasses         import dataclass
@@ -134,10 +135,13 @@ def _info_from_mc_path(path):
         raise ValueError
 
     [evt_type, line] = mtch.groups()
+    evt_type = int(evt_type)
 
     d_proc_evt = _get_proc_evt()
     if evt_type not in d_proc_evt:
-        log.error(f'Event type {evt_type} not found')
+        log.error(f'Event type {evt_type} not found, in:')
+        pprint.pprint(d_proc_evt)
+
         raise ValueError
 
     proc = d_proc_evt[evt_type]
@@ -181,6 +185,7 @@ def _get_proc_evt():
     '''
 
     file_path = files('data_checks_data').joinpath('link_conf.yaml')
+    log.debug(f'Loading config from: {file_path}')
     if not os.path.isfile(file_path):
         log.error(f'YAML file with event type process correspondence not found: {file_path}')
         raise FileNotFoundError
