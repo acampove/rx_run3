@@ -180,13 +180,15 @@ def _get_proc_evt():
     {event_type : process}
     '''
 
-    file_path = files('data_checks_data').joinpath('evt_proc.yaml')
+    file_path = files('data_checks_data').joinpath('link_conf.yaml')
     if not os.path.isfile(file_path):
         log.error(f'YAML file with event type process correspondence not found: {file_path}')
         raise FileNotFoundError
 
     with open(file_path, encoding='utf-8') as ifile:
-        d_evt_proc = yaml.safe_load(ifile)
+        d_cfg = yaml.safe_load(ifile)
+
+    d_evt_proc = d_cfg['evt_proc']
 
     return d_evt_proc
 # ---------------------------------
@@ -268,11 +270,10 @@ def _merge_paths(target, l_path):
         fm.AddFile(path, cpProgress=False)
 
     fm.OutputFile(target)
-    status = fm.Merge()
+    success = fm.Merge()
 
-    if not status:
-        log.error(f'Could not create merged file: {target}')
-        raise
+    if not success:
+        raise ValueError(f'Could not create merged file: {target}')
 # ---------------------------------
 def main():
     '''
