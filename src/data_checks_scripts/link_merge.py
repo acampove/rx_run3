@@ -26,6 +26,9 @@ class Data:
     '''
     Class used to hold shared data
     '''
+    # pylint: disable = invalid-name
+    # Need to call var Max instead of max
+
     job     : str
     dry     : int
     Max     : int
@@ -156,7 +159,7 @@ def _info_from_data_path(path):
     name = os.path.basename(path)
     mtc  = re.match(Data.dt_rgx, name)
     if not mtc:
-        log.error(f'Cannot find kind in {name} using {Data.rgx}')
+        log.error(f'Cannot find kind in {name} using {Data.dt_rgx}')
         raise ValueError
 
     try:
@@ -185,6 +188,7 @@ def _get_proc_evt():
     '''
 
     file_path = files('data_checks_data').joinpath('link_conf.yaml')
+    file_path = str(file_path)
     log.debug(f'Loading config from: {file_path}')
     if not os.path.isfile(file_path):
         log.error(f'YAML file with event type process correspondence not found: {file_path}')
@@ -203,7 +207,7 @@ def _kind_from_decay(decay):
     Will return kind of sample associated, e.g. analysis, calibration, same sign...
     '''
 
-    # TODO: This needs a config file 
+    # TODO: This needs a config file
     if decay in ['B0ToKpPimEE', 'B0ToKpPimMuMu']:
         return 'ana_cut_bd'
 
