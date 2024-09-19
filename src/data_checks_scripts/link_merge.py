@@ -43,7 +43,7 @@ def _get_args():
     '''
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
     parser.add_argument('-j', '--job', type=str, help='Job name, e.g. flt_001', required=True)
-    parser.add_argument('-d', '--dry', type=int, help='Dry run if 1 (default)', choices=[0, 1], default=1)
+    parser.add_argument('-d', '--dry', type=int, help='Dry run if 1', choices=[0, 1], default=0)
     parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30], default=20)
     parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs', default=-1)
     parser.add_argument('-v', '--ver', type=str, help='Version used to name outputs', required=True)
