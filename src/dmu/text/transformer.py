@@ -5,17 +5,17 @@ import numpy
 import pprint
 import logging
 
-log=logging.getLogger('dmu:text:transformer')
-#-------------------------------------------------------------------------------------------
+log = logging.getLogger('dmu:text:transformer')
+# -------------------------------------------------------------------------------------------
 class transformer:
     '''
     Class used to apply transformations to text files
     '''
-    #-----------------------------------------
+    # -----------------------------------------
     def __init__(self, txt_path=None, cfg_path=None):
         '''
         txt_path (str): Path to text file to be transformed, can have any extension, py, txt, log, etc
-        cfg_path (str): Path to TOML file holding configuration needed for transformations 
+        cfg_path (str): Path to TOML file holding configuration needed for transformations
         '''
         self._txt_path = txt_path
         self._cfg_path = cfg_path
@@ -24,8 +24,8 @@ class transformer:
         self._l_line   = None
         self._cfg      = None
 
-        self._initialized=False
-    #-----------------------------------------
+        self._initialized = False
+    # -----------------------------------------
     def _initialize(self):
         if self._initialized:
             return
@@ -36,7 +36,7 @@ class transformer:
         self._cfg = toml.load(self._cfg_path)
 
         self._initialized=True
-    #-----------------------------------------
+    # -----------------------------------------
     def _check_file(self, file_path):
         '''
         Will raise exception if path not found
@@ -47,7 +47,7 @@ class transformer:
             raise FileNotFoundError(f'File not found: {file_path}')
 
         log.debug(f'Found: {file_path}')
-    #-----------------------------------------
+    # -----------------------------------------
     def _load_input(self):
         '''
         Will open  self._txt_path and put the lines in self._l_line
@@ -57,7 +57,7 @@ class transformer:
 
             nline = len(self._l_line)
             log.info(f'Found {nline} lines in {self._txt_path}')
-    #-----------------------------------------
+    # -----------------------------------------
     def _get_out_path(self, out_path):
         '''
         Will return name of output file
@@ -81,8 +81,8 @@ class transformer:
         file_name  = '.'.join(l_part)
         file_dir   = os.path.dirname(self._txt_path)
 
-        return f'{file_dir}/{file_name}'    
-    #-----------------------------------------
+        return f'{file_dir}/{file_name}'
+    # -----------------------------------------
     def _transform(self, l_line, trf):
         log.info(f'{"":<4}{trf}')
 
@@ -92,7 +92,7 @@ class transformer:
             raise ValueError(f'Invalid transformation: {trf}')
 
         return l_line
-    #-----------------------------------------
+    # -----------------------------------------
     def _apply_append(self, l_line):
         '''
         Will take list of lines
@@ -110,13 +110,13 @@ class transformer:
                 pprint.pprint(self._l_line)
                 raise RuntimeError(f'No instance of \"{target}\" found in \"{self._txt_path}\"')
 
-            for index in arr_index: 
+            for index in arr_index:
                 org_line      = l_line[index]
                 ext_line      = '\n'.join(l_to_be_added)
                 l_line[index] = f'{org_line}\n{ext_line}'
 
         return l_line
-    #-----------------------------------------
+    # -----------------------------------------
     def _find_append_index(self, l_line, target):
         '''
         Returns list of flags denoting if target was or not fouund in list l_line
@@ -136,7 +136,7 @@ class transformer:
             l_flag = [ target in element for element in l_line ]
 
         return l_flag
-    #-----------------------------------------
+    # -----------------------------------------
     def _format_lines(self, l_line):
         '''
         If format was specified in the settings section, will format the
@@ -152,7 +152,7 @@ class transformer:
         l_formatted = [ fmt.format(line) for line in l_line ]
 
         return l_formatted
-    #-----------------------------------------
+    # -----------------------------------------
     def save_as(self, out_path=None):
         '''
         Saves text file after transformation to `out_path`
@@ -173,4 +173,4 @@ class transformer:
         with open(out_path, 'w') as ofile:
             text = '\n'.join(self._l_line)
             ofile.write(text)
-#-------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------
