@@ -19,7 +19,7 @@ minlpt = 'TMath::Min(L1_PT, L2_PT)'
 
 [plots.B_M]
 binning=[4800, 6000, 100]
-yscale ='log'
+yscale ='linear'
 labels =['$M(B^+)[MeV]$', '']
 
 [plots.Jpsi_M]
