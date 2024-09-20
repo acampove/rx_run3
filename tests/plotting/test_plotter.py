@@ -5,8 +5,10 @@ Unit test for plotter class in dmu.plotting
 from importlib.resources import files
 from dataclasses         import dataclass
 
+import matplotlib.pyplot as plt
 import yaml
 import numpy
+import mplhep
 
 from ROOT import RDF
 
@@ -64,6 +66,8 @@ def main():
     '''
     Tests start here
     '''
+    plt.style.use(mplhep.style.LHCb2)
+
     _test_simple()
 #---------------------------------------
 
