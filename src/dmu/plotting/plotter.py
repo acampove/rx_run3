@@ -38,13 +38,16 @@ class Plotter:
         plt_dir = self._d_cfg['saving']['plt_dir']
         os.makedirs(plt_dir, exist_ok=True)
 
-        for name, rdf in self._d_rdf.items():
-            minx, maxx, bins = self._d_cfg['plots'][var]['binning']
-            yscale           = self._d_cfg['plots'][var]['yscale' ]
-            [xname, yname]   = self._d_cfg['plots'][var]['labels' ]
+        minx, maxx, bins = self._d_cfg['plots'][var]['binning']
+        yscale           = self._d_cfg['plots'][var]['yscale' ]
+        [xname, yname]   = self._d_cfg['plots'][var]['labels' ]
 
+        l_bc_all = []
+        for name, rdf in self._d_rdf.items():
             arr_mass = rdf.AsNumpy([var])[var]
-            plt.hist(arr_mass, bins=bins, range=(minx, maxx), histtype='step', label=name)
+            l_bc, _, _ = plt.hist(arr_mass, bins=bins, range=(minx, maxx), histtype='step', label=name)
+            l_bc_all  += l_bc.tolist()
+
             plt.yscale(yscale)
             plt.xlabel(xname)
             plt.ylabel(yname)
@@ -53,6 +56,12 @@ class Plotter:
             plt.axvline(x=5280, color='r', label=r'$B^+$'   , linestyle=':')
         elif var == 'Jpsi_M':
             plt.axvline(x=3096, color='r', label=r'$J/\psi$', linestyle=':')
+
+        if yscale == 'linear':
+            plt.ylim(bottom=0)
+
+        max_y = max(l_bc_all)
+        plt.ylim(top=1.2 * max_y)
 
         plt.legend()
 
@@ -67,6 +76,6 @@ class Plotter:
         Will run plotting
         '''
         for var in self._d_cfg['plots']:
-            log.info(f'Plotting: {var}')
+            log.debug(f'Plotting: {var}')
             self._plot_var(var)
 # --------------------------------------------
