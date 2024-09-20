@@ -27,12 +27,37 @@ class Data:
     Class meant to store shared data
     '''
     l_dst   : list
+    l_sam   : list
+
     log_lvl : int
     cfg_nam : str
     cfg_dat : dict
 
     year = 2024
     vers = 'v1'
+# -------------------------------------
+def _dst_sam_from_arg(l_dst):
+    '''
+    Will take a list of strings as:
+
+    sample_identifier:name
+
+    and will return a tuple with the identifier and the names
+    '''
+
+    l_idn = []
+    l_nam = []
+    for dst in l_dst:
+        try:
+            [idn, nam] = dst.split(':')
+        except ValueError:
+            log.error(f'Cannot find identifier and name in: {dst}')
+            raise
+
+        l_idn.append(idn)
+        l_nam.append(nam)
+
+    return l_idn, l_nam
 # -------------------------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Used to plot yields of cut based vs MVA based lines vs luminosity')
@@ -41,9 +66,9 @@ def _get_args():
     parser.add_argument('-l', '--log' , type =int, help='Log level', default=20)
     args = parser.parse_args()
 
-    Data.l_dst   = args.dst
-    Data.cfg_nam = args.cfg
-    Data.log_lvl = args.log
+    Data.l_dst, Data.l_sam = _dst_sam_from_arg(args.dst)
+    Data.cfg_nam           = args.cfg
+    Data.log_lvl           = args.log
 # -------------------------------------
 def _define_vars(rdf):
     d_def = Data.cfg_dat['define_vars']
@@ -83,7 +108,7 @@ def main():
     Data.cfg_dat = ut.load_config(Data.cfg_nam)
     log_store.set_level('data_checks:plot_vars', Data.log_lvl)
 
-    d_rdf = { dset : _get_rdf(dset) for dset in Data.l_dst }
+    d_rdf = { samp : _get_rdf(dset) for samp, dset in zip(Data.l_sam, Data.l_dst) }
 
     ptr   = Plotter(d_rdf=d_rdf, cfg=Data.cfg_dat)
     ptr.run()
