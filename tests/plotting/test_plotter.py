@@ -2,8 +2,10 @@
 Unit test for plotter class in dmu.plotting
 '''
 
-from dataclasses  import dataclass
+from importlib.resources import files
+from dataclasses         import dataclass
 
+import yaml
 import numpy
 
 from ROOT import RDF
@@ -15,7 +17,7 @@ class Data:
     '''
     Class used to store shared data
     '''
-    nentries = 10
+    nentries = 10000
 #---------------------------------------
 def _get_rdf(kind):
     '''
@@ -37,7 +39,15 @@ def _get_rdf(kind):
     return rdf
 #---------------------------------------
 def _load_config(kind=None):
-    return {'vars' : ['x', 'y']}
+    '''
+    Will load config file from dmu_data and return dictionary with config
+    '''
+
+    cfg_path = files('dmu_data').joinpath(f'plotting/tests/{kind}.yaml')
+    with open(cfg_path, encoding='utf-8') as ifile:
+        cfg = yaml.safe_load(ifile)
+
+    return cfg
 #---------------------------------------
 def _test_simple():
     '''
