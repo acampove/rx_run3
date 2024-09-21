@@ -19,17 +19,18 @@ class Mva:
     Class used to train classifier
     '''
     # ---------------------------------------------
-    def __init__(self, dt=None, mc=None, cfg : dict | None = None):
+    def __init__(self, bkg=None, sig=None, cfg : dict | None = None):
         '''
-        dt (ROOT dataframe): Holds real data
-        mc (ROOT dataframe): Holds simulation
+        bkg (ROOT dataframe): Holds real data
+        sig (ROOT dataframe): Holds simulation
         cfg (dict)         : Dictionary storing configuration for training
         '''
-        self._rdf_dt = dt
-        self._rdf_mc = mc
+        self._rdf_bkg = bkg
+        self._rdf_sig = sig
         self._cfg    = cfg if cfg is not None else {}
 
-        self._l_ft_name = ['x', 'y']
+        self._l_ft_name = None
+        self._model     = None
 
         self._initialized = False
     # ---------------------------------------------
@@ -37,10 +38,28 @@ class Mva:
         if self._initialized:
             return
 
-        mod = self._train()
+        self._l_ft_name = self._cfg['training']['features']
+
+        mod = self._get_model()
         self._save_model(mod)
+        self._model = mod
 
         self._initialized = True
+    # ---------------------------------------------
+    def _get_model(self):
+        '''
+        Will return model, either from earlier training, or will train all over again
+        '''
+        model_path = self._cfg['saving']['path']
+        if not os.path.isfile(model_path):
+            log.info('Model not found, training')
+            model = self._train()
+            return model
+
+        log.info('Model found, loading')
+        model = joblib.load(model_path)
+
+        return model
     # ---------------------------------------------
     def _save_model(self, model):
         model_path = self._cfg['saving']['path']
@@ -59,13 +78,13 @@ class Mva:
         Returns pandas dataframe with features
         '''
 
-        d_ft_dt = self._rdf_dt.AsNumpy(self._l_ft_name)
-        d_ft_mc = self._rdf_mc.AsNumpy(self._l_ft_name)
+        d_ft_bkg = self._rdf_bkg.AsNumpy(self._l_ft_name)
+        d_ft_sig = self._rdf_sig.AsNumpy(self._l_ft_name)
 
-        df_dt = pnd.DataFrame(d_ft_dt)
-        df_mc = pnd.DataFrame(d_ft_mc)
+        df_bkg = pnd.DataFrame(d_ft_bkg)
+        df_sig = pnd.DataFrame(d_ft_sig)
 
-        df    = pnd.concat([df_dt, df_mc], axis=0)
+        df    = pnd.concat([df_bkg, df_sig], axis=0)
 
         log.info(f'Using features with shape: {df.shape}')
 
@@ -75,9 +94,9 @@ class Mva:
         '''
         Returns labels, 0 for background, 1 for signal
         '''
-        n_dt  = self._rdf_dt.Count().GetValue()
-        n_mc  = self._rdf_mc.Count().GetValue()
-        l_flg = n_dt * [0] + n_mc * [1]
+        n_bkg  = self._rdf_bkg.Count().GetValue()
+        n_sig  = self._rdf_sig.Count().GetValue()
+        l_flg = n_bkg * [0] + n_sig * [1]
 
         arr_flg = numpy.array(l_flg)
 
@@ -107,7 +126,7 @@ class Mva:
         Returns ROOT dataframe with classifier branch added
 
         mva_col (str) : Name of branch where score is stored
-        kind    (str) : Data (dt) or simulation (mc) dataframe
+        kind    (str) : Data (bkg) or simulation (sig) dataframe
         '''
 
         self._initialize()
