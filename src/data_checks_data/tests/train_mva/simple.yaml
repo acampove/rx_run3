@@ -2,4 +2,4 @@ training :
     nfold    : 10
     features : [x, y]
 saving:
-    path : 'tests/mva/model.pkl'
+    path : 'tests/train_mva/model.pkl'
