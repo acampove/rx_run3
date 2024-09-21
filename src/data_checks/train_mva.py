@@ -87,13 +87,18 @@ class TrainMva:
             model.fit(df_ft_tr, l_lab_tr)
             l_model.append(model)
 
+            l_lab_prob_trn   = model.predict_proba(df_ft_tr)
+            l_lab_true_trn   = l_lab[l_itr]
+            arr_sig_trn, arr_bkg_trn = self._split_scores(prob=l_lab_prob_trn, true=l_lab_true_trn)
+
             df_ft_ts         = df_ft.iloc[l_its]
-            l_lab_prob       = model.predict_proba(df_ft_ts)
-            l_lab_true       = l_lab[l_its]
+            l_lab_prob_tst   = model.predict_proba(df_ft_ts)
+            l_lab_true_tst   = l_lab[l_its]
 
-            arr_sig, arr_bkg = self._split_scores(prob=l_lab_prob, true=l_lab_true)
+            arr_sig_tst, arr_bkg_tst = self._split_scores(prob=l_lab_prob_tst, true=l_lab_true_tst)
 
-            self._plot_scores(arr_sig, arr_bkg, ifold)
+            self._plot_scores(arr_sig_trn, arr_sig_tst, arr_bkg_trn, arr_bkg_tst, ifold)
+
             ifold+=1
 
         return l_model
@@ -130,7 +135,7 @@ class TrainMva:
         log.info(f'Saving model to: {model_path}')
         joblib.dump(model, model_path)
     # ---------------------------------------------
-    def _plot_scores(self, arr_sig, arr_bkg, ifold):
+    def _plot_scores(self, arr_sig_trn, arr_sig_tst, arr_bkg_trn, arr_bkg_tst, ifold):
         '''
         Will plot an array of scores, associated to a given fold
         '''
@@ -143,12 +148,12 @@ class TrainMva:
         plot_dir = os.path.dirname(plot_path)
         os.makedirs(plot_dir, exist_ok=True)
 
-        title = f'#Signal: {arr_sig.size}; #Background: {arr_bkg.size}'
+        plt.hist(arr_sig_trn, alpha   =   0.3, bins=50, range=(0,1), color='b', density=True, label='Signal Train')
+        plt.hist(arr_sig_tst, histtype='step', bins=50, range=(0,1), color='b', density=True, label='Signal Test')
 
-        plt.hist(arr_sig, histtype='step', bins=50, range=(0,1), label='Signal')
-        plt.hist(arr_bkg, histtype='step', bins=50, range=(0,1), label='Background')
+        plt.hist(arr_bkg_trn, alpha   =   0.3, bins=50, range=(0,1), color='r', density=True, label='Background Train')
+        plt.hist(arr_bkg_tst, histtype='step', bins=50, range=(0,1), color='r', density=True, label='Background Test')
 
-        plt.title(title)
         plt.legend()
         plt.savefig(plot_path)
         plt.close()
