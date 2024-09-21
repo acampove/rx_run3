@@ -1,7 +1,9 @@
 '''
 Module with Mva class
 '''
+import os
 
+import joblib
 import pandas as pnd
 import numpy
 
@@ -36,8 +38,21 @@ class Mva:
             return
 
         mod = self._train()
+        self._save_model(mod)
 
         self._initialized = True
+    # ---------------------------------------------
+    def _save_model(self, model):
+        model_path = self._cfg['saving']['path']
+        if os.path.isfile(model_path):
+            log.info(f'Model found in {model_path}, not saving')
+            return
+
+        dir_name = os.path.dirname(model_path)
+        os.makedirs(dir_name, exist_ok=True)
+
+        log.info(f'Saving model to: {model_path}')
+        joblib.dump(model, model_path)
     # ---------------------------------------------
     def _get_features(self):
         '''
