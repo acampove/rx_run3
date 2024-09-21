@@ -2,14 +2,16 @@
 Unit test for LogStore class
 '''
 
-from dmu.logging.LogStore import LogStore 
+import logging
+
+from dmu.logging.log_store import LogStore
 
 # --------------------------------
 def test_show():
     '''
     Test for show_loggers
     '''
-    LogStore.set_level('sho_1', logzero.WARNING)
+    LogStore.set_level('sho_1', logging.WARNING)
 
     LogStore.add_logger('sho_1')
     LogStore.add_logger('sho_2')

@@ -46,10 +46,10 @@ class LogStore:
         if   name is None:
             raise ValueError('Logger name missing')
 
-        if name in log_store.d_logger:
+        if name in LogStore.d_logger:
             raise ValueError(f'Logger name {name} already found')
 
-        level  = log_store.log_level if name not in log_store.d_levels else log_store.d_levels[name]
+        level  = LogStore.log_level if name not in LogStore.d_levels else LogStore.d_levels[name]
 
         logger = logging.getLogger(name=name)
         logger.setLevel(level)
@@ -65,7 +65,7 @@ class LogStore:
 
         logger.addHandler(hnd)
 
-        log_store.d_logger[name] = logger
+        LogStore.d_logger[name] = logger
 
         return logger
     #--------------------------
@@ -79,12 +79,12 @@ class LogStore:
         value (int): 10 debug, 20 info, 30 warning
         '''
 
-        if name in log_store.d_logger:
-            lgr=log_store.d_logger[name]
+        if name in LogStore.d_logger:
+            lgr=LogStore.d_logger[name]
             lgr.handlers[0].setLevel(value)
             lgr.setLevel(value)
         else:
-            log_store.d_levels[name] = value
+            LogStore.d_levels[name] = value
     #--------------------------
     @staticmethod
     def show_loggers():
@@ -94,7 +94,7 @@ class LogStore:
         print(80 * '-')
         print(f'{"Name":<60}{"Level":<20}')
         print(80 * '-')
-        for name, logger in log_store.d_logger.items():
+        for name, logger in LogStore.d_logger.items():
             print(f'{name:<60}{logger.level:<20}')
     #--------------------------
     @staticmethod
@@ -102,7 +102,7 @@ class LogStore:
         '''
         Will set all loggers to this level (int)
         '''
-        for name, logger in log_store.d_logger.items():
+        for name, logger in LogStore.d_logger.items():
             logger.setLevel(level)
             print(f'{name:<60}{"->":20}{logger.level:<20}')
 #------------------------------------------------------------
