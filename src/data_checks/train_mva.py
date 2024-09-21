@@ -1,5 +1,5 @@
 '''
-Module with Mva class
+Module with TrainMva class
 '''
 import os
 
@@ -12,11 +12,11 @@ from sklearn.model_selection import cross_val_score, StratifiedKFold
 
 from log_store       import log_store
 
-log = log_store.add_logger('data_checks:mva')
+log = log_store.add_logger('data_checks:train_mva')
 # ---------------------------------------------
-class Mva:
+class TrainMva:
     '''
-    Class used to train classifier
+    Interface to scikit learn used to train classifier
     '''
     # ---------------------------------------------
     def __init__(self, bkg=None, sig=None, cfg : dict | None = None):
@@ -31,20 +31,6 @@ class Mva:
 
         self._l_ft_name = None
         self._model     = None
-
-        self._initialized = False
-    # ---------------------------------------------
-    def _initialize(self):
-        if self._initialized:
-            return
-
-        self._l_ft_name = self._cfg['training']['features']
-
-        mod = self._get_model()
-        self._save_model(mod)
-        self._model = mod
-
-        self._initialized = True
     # ---------------------------------------------
     def _get_model(self):
         '''
@@ -121,15 +107,14 @@ class Mva:
 
         return model
     # ---------------------------------------------
-    def get_rdf(self, mva_col=None, kind=None):
+    def run(self):
         '''
-        Returns ROOT dataframe with classifier branch added
-
-        mva_col (str) : Name of branch where score is stored
-        kind    (str) : Data (bkg) or simulation (sig) dataframe
+        Will do the training
         '''
 
-        self._initialize()
+        self._l_ft_name = self._cfg['training']['features']
 
-        return
+        mod = self._get_model()
+        self._save_model(mod)
+        self._model = mod
 # ---------------------------------------------
