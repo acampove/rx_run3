@@ -6,11 +6,13 @@ import os
 import joblib
 import pandas as pnd
 import numpy
+import matplotlib.pyplot as plt
 
 from sklearn.ensemble        import GradientBoostingClassifier
-from sklearn.model_selection import cross_val_score, StratifiedKFold
+from sklearn.model_selection import StratifiedKFold
 
-from log_store       import log_store
+from log_store               import log_store
+from dmu.plotting.plotter    import Plotter
 
 log = log_store.add_logger('data_checks:train_mva')
 # ---------------------------------------------
@@ -30,34 +32,7 @@ class TrainMva:
         self._cfg    = cfg if cfg is not None else {}
 
         self._l_ft_name = None
-        self._model     = None
-    # ---------------------------------------------
-    def _get_model(self):
-        '''
-        Will return model, either from earlier training, or will train all over again
-        '''
-        model_path = self._cfg['saving']['path']
-        if not os.path.isfile(model_path):
-            log.info('Model not found, training')
-            model = self._train()
-            return model
-
-        log.info('Model found, loading')
-        model = joblib.load(model_path)
-
-        return model
-    # ---------------------------------------------
-    def _save_model(self, model):
-        model_path = self._cfg['saving']['path']
-        if os.path.isfile(model_path):
-            log.info(f'Model found in {model_path}, not saving')
-            return
-
-        dir_name = os.path.dirname(model_path)
-        os.makedirs(dir_name, exist_ok=True)
-
-        log.info(f'Saving model to: {model_path}')
-        joblib.dump(model, model_path)
+        self._l_model   = None
     # ---------------------------------------------
     def _get_features(self):
         '''
@@ -70,7 +45,7 @@ class TrainMva:
         df_bkg = pnd.DataFrame(d_ft_bkg)
         df_sig = pnd.DataFrame(d_ft_sig)
 
-        df    = pnd.concat([df_bkg, df_sig], axis=0)
+        df     = pnd.concat([df_bkg, df_sig], axis=0)
 
         log.info(f'Using features with shape: {df.shape}')
 
@@ -82,30 +57,109 @@ class TrainMva:
         '''
         n_bkg  = self._rdf_bkg.Count().GetValue()
         n_sig  = self._rdf_sig.Count().GetValue()
-        l_flg = n_bkg * [0] + n_sig * [1]
+        l_lab = n_bkg * [0] + n_sig * [1]
 
-        arr_flg = numpy.array(l_flg)
+        arr_lab = numpy.array(l_lab)
 
-        log.info(f'Using labels with shape: {arr_flg.shape}')
+        log.info(f'Using labels with shape: {arr_lab.shape}')
 
-        return arr_flg
+        return arr_lab
     # ---------------------------------------------
-    def _train(self):
+    def _get_model(self):
         '''
-        Will create model, train it and return it
+        Will create models, train them and return them
         '''
         df_ft = self._get_features()
-        l_flg = self._get_labels()
+        l_lab = self._get_labels()
         nfold = self._cfg['training']['nfold']
+        kfold = StratifiedKFold(n_splits=nfold, shuffle=True)
 
-        model = GradientBoostingClassifier()
-        kfold = StratifiedKFold(n_splits=nfold)
-        cvscr = cross_val_score(model, df_ft, l_flg, cv=kfold)
+        l_model=[]
+        ifold=0
+        for l_itr, l_its in kfold.split(df_ft, l_lab):
+            model    = GradientBoostingClassifier()
+            df_ft_tr = df_ft.iloc[l_itr]
+            l_lab_tr = l_lab[l_itr]
 
-        model.fit(df_ft, l_flg)
-        model.scores = cvscr
+            log.debug(f'Training feature shape: {df_ft_tr.shape}')
+            log.debug(f'Training label size: {len(l_lab_tr)}')
 
-        return model
+            model.fit(df_ft_tr, l_lab_tr)
+            l_model.append(model)
+
+            df_ft_ts         = df_ft.iloc[l_its]
+            l_lab_prob       = model.predict_proba(df_ft_ts)
+            l_lab_true       = l_lab[l_its]
+
+            arr_sig, arr_bkg = self._split_scores(prob=l_lab_prob, true=l_lab_true)
+
+            self._plot_scores(arr_sig, arr_bkg, ifold)
+            ifold+=1
+
+        return l_model
+    # ---------------------------------------------
+    def _split_scores(self, prob=None, true=None):
+        '''
+        Will split the testing scores (predictions) based on the training scores
+
+        tst is a list of lists as [p_bkg, p_sig]
+        '''
+
+        l_sig = [ prb[1] for prb, lab in zip(prob, true) if lab == 1]
+        l_bkg = [ prb[1] for prb, lab in zip(prob, true) if lab == 0]
+
+        arr_sig = numpy.array(l_sig)
+        arr_bkg = numpy.array(l_bkg)
+
+        return arr_sig, arr_bkg
+    # ---------------------------------------------
+    def _save_model(self, model, ifold):
+        '''
+        Saves a model, associated to a specific fold
+        '''
+        model_path = self._cfg['saving']['path']
+        if os.path.isfile(model_path):
+            log.info(f'Model found in {model_path}, not saving')
+            return
+
+        dir_name = os.path.dirname(model_path)
+        os.makedirs(dir_name, exist_ok=True)
+
+        model_path = model_path.replace('.pkl', f'_{ifold:03}.pkl')
+
+        log.info(f'Saving model to: {model_path}')
+        joblib.dump(model, model_path)
+    # ---------------------------------------------
+    def _plot_scores(self, arr_sig, arr_bkg, ifold):
+        '''
+        Will plot an array of scores, associated to a given fold
+        '''
+        if 'score_path' not in self._cfg['plotting']:
+            log.warning('Scores path not passed, not plotting scores')
+            return
+
+        plot_path= self._cfg['plotting']['score_path']
+        plot_path= plot_path.replace('.png', f'_{ifold:03}.png')
+        plot_dir = os.path.dirname(plot_path)
+        os.makedirs(plot_dir, exist_ok=True)
+
+        title = f'#Signal: {arr_sig.size}; #Background: {arr_bkg.size}'
+
+        plt.hist(arr_sig, histtype='step', bins=50, range=(0,1), label='Signal')
+        plt.hist(arr_bkg, histtype='step', bins=50, range=(0,1), label='Background')
+
+        plt.title(title)
+        plt.legend()
+        plt.savefig(plot_path)
+        plt.close()
+    # ---------------------------------------------
+    def _plot_features(self):
+        '''
+        Will plot the features, based on the settings in the config
+        '''
+        d_cfg = self._cfg['plotting']['features']
+        ptr   = Plotter(d_rdf = {'Signal' : self._rdf_sig, 'Background' : self._rdf_bkg}, cfg=d_cfg)
+        ptr.run()
     # ---------------------------------------------
     def run(self):
         '''
@@ -114,7 +168,9 @@ class TrainMva:
 
         self._l_ft_name = self._cfg['training']['features']
 
-        mod = self._get_model()
-        self._save_model(mod)
-        self._model = mod
+        self._plot_features()
+
+        l_mod = self._get_model()
+        for ifold, mod in enumerate(l_mod):
+            self._save_model(mod, ifold)
 # ---------------------------------------------
