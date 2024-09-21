@@ -66,18 +66,20 @@ class TrainMva:
         return arr_lab
     # ---------------------------------------------
     def _get_model(self):
+        # pylint: disable = too-many-locals
         '''
         Will create models, train them and return them
         '''
         df_ft = self._get_features()
         l_lab = self._get_labels()
         nfold = self._cfg['training']['nfold']
+        hyper = self._cfg['training']['hyper']
         kfold = StratifiedKFold(n_splits=nfold, shuffle=True)
 
         l_model=[]
         ifold=0
         for l_itr, l_its in kfold.split(df_ft, l_lab):
-            model    = GradientBoostingClassifier()
+            model    = GradientBoostingClassifier(**hyper)
             df_ft_tr = df_ft.iloc[l_itr]
             l_lab_tr = l_lab[l_itr]
 
@@ -155,6 +157,9 @@ class TrainMva:
         plt.hist(arr_bkg_tst, histtype='step', bins=50, range=(0,1), color='r', density=True, label='Background Test')
 
         plt.legend()
+        plt.title(f'Fold: {ifold}')
+        plt.xlabel('Signal probability')
+        plt.ylabel('Normalized')
         plt.savefig(plot_path)
         plt.close()
     # ---------------------------------------------
