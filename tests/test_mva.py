@@ -40,7 +40,19 @@ def _get_rdf(kind : str | None = None):
     return rdf
 # -------------------------------
 def _get_config():
-    return {'training' : {'nfold' : 10}}
+    d_cfg = {
+            'training' : 
+            {
+                'nfold' : 10
+                },
+            'saving' :
+            {
+                'path': 'tests/mva/model.pkl'
+                }
+            }
+
+
+    return d_cfg
 # -------------------------------
 def _test_train():
     '''
