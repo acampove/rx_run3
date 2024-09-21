@@ -1,5 +1,28 @@
 training :
     nfold    : 10
-    features : [x, y]
+    features : [w, x, y, z]
 saving:
     path : 'tests/train_mva/model.pkl'
+plotting:
+    score_path   : 'tests/train_mva/scores.png'
+    features:
+        saving:
+            plt_dir : 'tests/train_mva/features'
+        plots:
+          w : 
+            binning : [-4, 4, 100]
+            yscale  : 'linear' 
+            labels  : ['w', '']
+          x : 
+            binning : [-4, 4, 100]
+            yscale  : 'linear' 
+            labels  : ['x', '']
+          y : 
+            binning : [-4, 4, 100]
+            yscale  : 'linear' 
+            labels  : ['y', '']
+          z : 
+            binning : [-4, 4, 100]
+            yscale  : 'linear' 
+            labels  : ['z', '']
+   
