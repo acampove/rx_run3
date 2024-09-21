@@ -2,6 +2,54 @@
 
 These are tools that can be used for different data analysis tasks.
 
+# Logging
+
+The `LogStore` class is an interface to the `logging` module. It is aimed at making it easier to include
+a good enough logging tool. It can be used as:
+
+```python
+from dmu.logging.log_store import LogStore
+
+log = LogStore.add_logger('msg')
+LogStore.set_level('msg', 10)
+
+log.debug('debug')
+log.info('info')
+log.warning('warning')
+log.error('error')
+log.critical('critical')
+```
+
+# Plotting from ROOT dataframes
+
+Given a set of ROOT dataframes and a configuration dictionary, one can plot distributions with:
+
+```python
+from dmu.plotting.plotter import Plotter
+
+ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
+ptr.run()
+```
+
+where the config dictionary `cfg_dat` in YAML would look like:
+
+```yaml
+saving:
+    plt_dir : tests/plotting/simple
+
+plots:
+    x : 
+        binning : [-5.0, 8.0, 40]
+        yscale  : 'linear' 
+        labels  : ['x', 'Entries']
+    y : 
+        binning : [-5.0, 8.0, 40]
+        yscale  : 'linear' 
+        labels  : ['y', 'Entries']
+```
+
+it's up to the user to build this dictionary and load it.
+
 # Text manipulation
 
 ## Transformations
