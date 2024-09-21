@@ -21,7 +21,7 @@ class Data:
     '''
     Class storing shared data
     '''
-    nentries = 1000
+    nentries = 10000
 # -------------------------------
 def _get_rdf(kind : str | None = None):
     '''
@@ -29,11 +29,15 @@ def _get_rdf(kind : str | None = None):
     '''
     d_data = {}
     if   kind == 'sig':
-        d_data['x'] = numpy.random.uniform(0, 1, size=Data.nentries)
+        d_data['w'] = numpy.random.normal(0, 1, size=Data.nentries)
+        d_data['x'] = numpy.random.normal(0, 1, size=Data.nentries)
         d_data['y'] = numpy.random.normal(0, 1, size=Data.nentries)
+        d_data['z'] = numpy.random.normal(0, 1, size=Data.nentries)
     elif kind == 'bkg':
-        d_data['x'] = numpy.random.exponential(1, size=Data.nentries)
+        d_data['w'] = numpy.random.normal(1, 1, size=Data.nentries)
+        d_data['x'] = numpy.random.normal(1, 1, size=Data.nentries)
         d_data['y'] = numpy.random.normal(1, 1, size=Data.nentries)
+        d_data['z'] = numpy.random.normal(1, 1, size=Data.nentries)
     else:
         log.error(f'Invalid kind: {kind}')
         raise ValueError
@@ -65,6 +69,8 @@ def main():
     '''
     Script starts here
     '''
+    log_store.set_level('data_checks:train_mva', 10)
+
     _test_train()
 # -------------------------------
 if __name__ == '__main__':
