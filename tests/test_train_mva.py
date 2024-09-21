@@ -10,11 +10,11 @@ import numpy
 import yaml
 from ROOT import RDF 
 
-from log_store       import log_store
-from data_checks.mva import Mva
+from log_store             import log_store
+from data_checks.train_mva import TrainMva
 
 
-log = log_store.add_logger('data_checks:test_mva')
+log = log_store.add_logger('data_checks:test_train_mva')
 # -------------------------------
 @dataclass
 class Data:
@@ -43,7 +43,7 @@ def _get_rdf(kind : str | None = None):
     return rdf
 # -------------------------------
 def _get_config():
-    cfg_path = files('data_checks_data').joinpath('tests/mva/simple.yaml')
+    cfg_path = files('data_checks_data').joinpath('tests/train_mva/simple.yaml')
     cfg_path = str(cfg_path)
     with open(cfg_path, encoding='utf-8') as ifile:
         d_cfg = yaml.safe_load(ifile)
@@ -56,11 +56,10 @@ def _test_train():
     '''
     rdf_sig = _get_rdf(kind='sig')
     rdf_bkg = _get_rdf(kind='bkg')
-    cfg    = _get_config()
+    cfg     = _get_config()
 
-    obj    = Mva(rdf_sig, rdf_bkg, cfg)
-    rdf_bkg = obj.get_rdf(mva_col='BDT', kind='bkg')
-    rdf_sig = obj.get_rdf(mva_col='BDT', kind='sig')
+    obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
+    obj.run()
 # -------------------------------
 def main():
     '''
