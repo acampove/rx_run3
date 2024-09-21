@@ -2,9 +2,12 @@
 Unit test for Mva class
 '''
 
-from dataclasses     import dataclass
+
+from dataclasses         import dataclass
+from importlib.resources import files
 
 import numpy
+import yaml
 from ROOT import RDF 
 
 from log_store       import log_store
@@ -25,10 +28,10 @@ def _get_rdf(kind : str | None = None):
     Return ROOT dataframe with toy data
     '''
     d_data = {}
-    if   kind == 'mc':
+    if   kind == 'sig':
         d_data['x'] = numpy.random.uniform(0, 1, size=Data.nentries)
         d_data['y'] = numpy.random.normal(0, 1, size=Data.nentries)
-    elif kind == 'dt':
+    elif kind == 'bkg':
         d_data['x'] = numpy.random.exponential(1, size=Data.nentries)
         d_data['y'] = numpy.random.normal(1, 1, size=Data.nentries)
     else:
@@ -40,17 +43,10 @@ def _get_rdf(kind : str | None = None):
     return rdf
 # -------------------------------
 def _get_config():
-    d_cfg = {
-            'training' : 
-            {
-                'nfold' : 10
-                },
-            'saving' :
-            {
-                'path': 'tests/mva/model.pkl'
-                }
-            }
-
+    cfg_path = files('data_checks_data').joinpath('tests/mva/simple.yaml')
+    cfg_path = str(cfg_path)
+    with open(cfg_path, encoding='utf-8') as ifile:
+        d_cfg = yaml.safe_load(ifile)
 
     return d_cfg
 # -------------------------------
@@ -58,13 +54,13 @@ def _test_train():
     '''
     Test training
     '''
-    rdf_mc = _get_rdf(kind='mc')
-    rdf_dt = _get_rdf(kind='dt')
+    rdf_sig = _get_rdf(kind='sig')
+    rdf_bkg = _get_rdf(kind='bkg')
     cfg    = _get_config()
 
-    obj    = Mva(rdf_mc, rdf_dt, cfg)
-    rdf_dt = obj.get_rdf(mva_col='BDT', kind='dt')
-    rdf_mc = obj.get_rdf(mva_col='BDT', kind='mc')
+    obj    = Mva(rdf_sig, rdf_bkg, cfg)
+    rdf_bkg = obj.get_rdf(mva_col='BDT', kind='bkg')
+    rdf_sig = obj.get_rdf(mva_col='BDT', kind='sig')
 # -------------------------------
 def main():
     '''
