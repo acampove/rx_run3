@@ -12,10 +12,10 @@ from sklearn.ensemble        import GradientBoostingClassifier
 from sklearn.metrics         import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 
-from log_store               import log_store
+from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter    import Plotter
 
-log = log_store.add_logger('data_checks:train_mva')
+log = LogStore.add_logger('data_checks:train_mva')
 # ---------------------------------------------
 class TrainMva:
     '''
