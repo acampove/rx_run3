@@ -11,7 +11,7 @@ from ROOT import RDF
 
 from dmu.logging.log_store import LogStore
 
-log = LogStore.add_logger('dmu:ml:utilities')
+log = LogStore.add_logger('dmu:testing:utilities')
 # -------------------------------
 @dataclass
 class Data:
