@@ -9,10 +9,11 @@ from dmu.logging.log_store import LogStore
 log = LogStore.add_logger('dmu:ml:CVClassifier')
 # ---------------------------------------
 class CVClassifier(GradientBoostingClassifier):
-    # pylint: disable = too-many-ancestors, abstract-method
     '''
     Derived class meant to implement features needed for cross-validation
     '''
+    # pylint: disable = too-many-ancestors, abstract-method
+    # ----------------------------------
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -50,4 +51,8 @@ class CVClassifier(GradientBoostingClassifier):
         msg+= 40 * '-'
 
         return msg
+    # ----------------------------------
+    def fit(self, *args, **kwargs):
+        log.debug('Fitting')
+        super().fit(*args, **kwargs)
 # ---------------------------------------
