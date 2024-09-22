@@ -15,7 +15,6 @@ def test_simple():
     model              = cls(**hyper)
     model['dset_hash'] = '123'
     model['sset_hash'] = '123'
-    model['random_sd'] = '123'
 # -------------------------------------------------
 def main():
     '''
