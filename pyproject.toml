@@ -13,7 +13,6 @@ where   = ['src']
 transform_text='dmu_scripts.text.transform_text:main'
 
 [tool.setuptools.package-data]
-dmu_data=['text/*.txt', 'text/*.toml']
+dmu_data=['text/*.txt', 'text/*.toml', 'ml/*/*.yaml', 'plotting/*/*.yaml']
 
 [tool.setuptools]
-
