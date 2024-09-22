@@ -4,14 +4,14 @@ Unit test for Mva class
 
 
 from dataclasses         import dataclass
-from importlib.resources import files
 
 import numpy
-import yaml
 from ROOT import RDF
 
 from dmu.logging.log_store import LogStore
 from dmu.ml.train_mva      import TrainMva
+
+import dmu.testing.utilities as ut
 
 log = LogStore.add_logger('dmu:ml:test_train_mva')
 # -------------------------------
@@ -45,21 +45,13 @@ def _get_rdf(kind : str | None = None):
 
     return rdf
 # -------------------------------
-def _get_config():
-    cfg_path = files('dmu_data').joinpath('ml/tests/train_mva.yaml')
-    cfg_path = str(cfg_path)
-    with open(cfg_path, encoding='utf-8') as ifile:
-        d_cfg = yaml.safe_load(ifile)
-
-    return d_cfg
-# -------------------------------
 def _test_train():
     '''
     Test training
     '''
     rdf_sig = _get_rdf(kind='sig')
     rdf_bkg = _get_rdf(kind='bkg')
-    cfg     = _get_config()
+    cfg     = ut.get_config('ml/tests/train_mva.yaml')
 
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run()
