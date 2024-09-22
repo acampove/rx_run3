@@ -8,7 +8,7 @@ import pandas as pnd
 import numpy
 import matplotlib.pyplot as plt
 
-from sklearn.ensemble        import GradientBoostingClassifier
+from sklearn.ensemble        import GradientBoostingClassifier  as cls
 from sklearn.metrics         import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 
@@ -80,7 +80,7 @@ class TrainMva:
         l_model=[]
         ifold=0
         for l_itr, l_its in kfold.split(df_ft, l_lab):
-            model    = GradientBoostingClassifier(**hyper)
+            model    = cls(**hyper)
             df_ft_tr = df_ft.iloc[l_itr]
             l_lab_tr = l_lab[l_itr]
 
