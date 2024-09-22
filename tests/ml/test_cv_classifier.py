@@ -15,6 +15,7 @@ from dmu.ml.cv_classifier  import CVSameData
 import dmu.testing.utilities as ut
 
 
+log = LogStore.add_logger('dmu.test.ml.test_cv_classifier')
 # -------------------------------------------------
 def _get_train_input():
     '''
@@ -99,6 +100,26 @@ def test_predict():
     except CVSameData:
         pass
 # -------------------------------------------------
+def test_properties():
+    '''
+    Will test if properties (hashes/feature names, etc) can be retrieved
+    '''
+
+    cfg   = ut.get_config('ml/tests/train_mva.yaml')
+    hyper = cfg['training']['hyper']
+
+    df_ft, l_lab = _get_train_input()
+
+    model= cls(**hyper)
+    model.fit(df_ft, l_lab)
+
+    l_feat = model.features
+    s_hash = model.hashes
+    nhash  = len(s_hash)
+
+    log.info(f'Found features: {l_feat}')
+    log.info(f'Found hashes: {nhash}')
+# -------------------------------------------------
 def main():
     '''
     Tests start here
@@ -106,6 +127,7 @@ def main():
     LogStore.set_level('dmu:ml:CVClassifier', 10)
 
     test_save_load()
+    test_properties()
     test_fit()
     test_predict()
 # -------------------------------------------------
