@@ -8,13 +8,12 @@ from importlib.resources import files
 
 import numpy
 import yaml
-from ROOT import RDF 
+from ROOT import RDF
 
-from log_store             import log_store
-from data_checks.train_mva import TrainMva
+from dmu.logging.log_store import LogStore
+from dmu.ml.train_mva      import TrainMva
 
-
-log = log_store.add_logger('data_checks:test_train_mva')
+log = LogStore.add_logger('dmu:ml:test_train_mva')
 # -------------------------------
 @dataclass
 class Data:
@@ -47,7 +46,7 @@ def _get_rdf(kind : str | None = None):
     return rdf
 # -------------------------------
 def _get_config():
-    cfg_path = files('data_checks_data').joinpath('tests/train_mva/simple.yaml')
+    cfg_path = files('dmu_data').joinpath('ml/tests/train_mva.yaml')
     cfg_path = str(cfg_path)
     with open(cfg_path, encoding='utf-8') as ifile:
         d_cfg = yaml.safe_load(ifile)
@@ -69,7 +68,7 @@ def main():
     '''
     Script starts here
     '''
-    log_store.set_level('data_checks:train_mva', 10)
+    LogStore.set_level('data_checks:train_mva', 10)
 
     _test_train()
 # -------------------------------
