@@ -8,6 +8,7 @@ import pandas as pnd
 import numpy
 import matplotlib.pyplot as plt
 
+from pandas.core.common import random_state
 from sklearn.metrics         import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 
@@ -75,7 +76,9 @@ class TrainMva:
         l_lab = self._get_labels()
         nfold = self._cfg['training']['nfold']
         hyper = self._cfg['training']['hyper']
-        kfold = StratifiedKFold(n_splits=nfold, shuffle=True)
+        rdmst = self._cfg['training']['rdm_stat']
+
+        kfold = StratifiedKFold(n_splits=nfold, shuffle=True, random_state=rdmst)
 
         l_model=[]
         ifold=0
