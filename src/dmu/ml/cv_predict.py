@@ -5,6 +5,11 @@ import pandas as pnd
 
 from ROOT import RDataFrame
 
+import dmu.ml.utilities as ut
+
+from dmu.logging.log_store import LogStore
+
+log = LogStore.add_logger('dmu:ml:cv_predict')
 # ---------------------------------------
 class CVPredict:
     '''
@@ -25,17 +30,42 @@ class CVPredict:
         self._l_model = models
         self._rdf     = rdf
     # --------------------------------------------
-    def predict(self):
+    def _get_df(self):
         '''
-        Will return array of prediction probabilities for the signal category
+        Will make ROOT rdf into dataframe and return it
         '''
-
         model = self._l_model[0]
         l_ft  = model.features
         d_data= self._rdf.AsNumpy(l_ft)
         df_ft = pnd.DataFrame(d_data)
 
-        l_prb = model.predict_proba(df_ft)
+        return df_ft
+    # --------------------------------------------
+    def _non_overlapping_hashes(self, model, df_ft):
+        '''
+        Will return True if hashes of model and data do not overlap
+        '''
 
-        return l_prb
+        s_mod_hash = model.hashes
+        s_dff_hash = ut.get_hashes(df_ft)
+
+        s_int = s_mod_hash.intersection(s_dff_hash)
+        if len(s_int) == 0:
+            log.debug('No intersecting hashes found between model and data')
+            return True
+
+        return False
+    # --------------------------------------------
+    def predict(self):
+        '''
+        Will return array of prediction probabilities for the signal category
+        '''
+        df_ft = self._get_df()
+        model = self._l_model[0]
+
+        if self._non_overlapping_hashes(model, df_ft):
+            l_prb = model.predict_proba(df_ft)
+            return l_prb
+
+        return
 # ---------------------------------------
