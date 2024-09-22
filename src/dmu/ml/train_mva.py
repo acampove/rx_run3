@@ -93,7 +93,7 @@ class TrainMva:
             model.fit(df_ft_tr, l_lab_tr)
             l_model.append(model)
 
-            l_lab_prob_tr   = model.predict_proba(df_ft_tr)
+            l_lab_prob_tr   = model.predict_proba(df_ft_tr, on_training_ok=True)
             l_lab_true_tr   = l_lab[l_itr]
             arr_sig_tr, arr_bkg_tr = self._split_scores(prob=l_lab_prob_tr, true=l_lab_true_tr)
 
