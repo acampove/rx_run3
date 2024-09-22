@@ -1,55 +1,70 @@
-from dmu.text.transformer import transformer as txt_trf
-from importlib.resources  import files
+'''
+Module holding unit tests for text transforming tools
+'''
 
-import logging
+from importlib.resources   import files
+from dataclasses           import dataclass
 
-log=None
-#-------------------------------------------------------------
-class data:
-    cfg=None
-    txt=None
-#-------------------------------------------------------------
-def test_with_path_ext():
-    data.out = '/tmp/dmu_test/with_path_ext.txt' 
+import pytest
 
-    trf=txt_trf(txt_path=data.txt, cfg_path=data.cfg)
-    trf.save_as(out_path=data.out)
-#-------------------------------------------------------------
-def test_with_path():
-    data.out = '/tmp/dmu_test/with_path' 
+from dmu.text.transformer  import transformer as txt_trf
+from dmu.logging.log_store import LogStore
 
-    trf=txt_trf(txt_path=data.txt, cfg_path=data.cfg)
-    trf.save_as(out_path=data.out)
-#-------------------------------------------------------------
-def test_settings():
-    data.out = '/tmp/dmu_test/settings' 
-    cfg      = files('dmu_data').joinpath('text/transform_set.toml')
-    txt      = files('dmu_data').joinpath('text/transform_set.txt')
 
-    trf=txt_trf(txt_path=txt, cfg_path=cfg)
-    trf.save_as(out_path=data.out)
-#-------------------------------------------------------------
+log=LogStore.add_logger('dmu:tests:test_transformer')
+# -------------------------------------------------------------
+@dataclass
+class Data:
+    '''
+    Class used to store shared variables
+    '''
+    cfg : str
+    txt : str
+    out : str
+@pytest.fixture(scope='module', autouse=True)
+# -------------------------------------------------------------
 def initialize():
-    logging.basicConfig()
-    log=logging.getLogger('tests:text:transformer')
+    '''
+    Will initialize variables, etc
+    '''
     log.setLevel(10)
 
     log.info('Loading inputs')
 
-    data.txt = files('dmu_data').joinpath('text/transform.txt')
-    data.cfg = files('dmu_data').joinpath('text/transform.toml')
+    Data.txt = files('dmu_data').joinpath('text/transform.txt')
+    Data.cfg = files('dmu_data').joinpath('text/transform.toml')
 
-    log_trf=logging.getLogger('dmu:text:transformer')
-    log_trf.setLevel(10)
-#-------------------------------------------------------------
+    LogStore.set_level('dmu:text:transformer', 10)
+# -------------------------------------------------------------
+def test_with_path_ext():
+    '''
+    Testing save_as
+    '''
+    Data.out = '/tmp/dmu_test/with_path_ext.txt'
+
+    trf=txt_trf(txt_path=Data.txt, cfg_path=Data.cfg)
+    trf.save_as(out_path=Data.out)
+# -------------------------------------------------------------
+def test_with_path():
+    Data.out = '/tmp/dmu_test/with_path'
+
+    trf=txt_trf(txt_path=Data.txt, cfg_path=Data.cfg)
+    trf.save_as(out_path=Data.out)
+# -------------------------------------------------------------
+def test_settings():
+    Data.out = '/tmp/dmu_test/settings'
+    cfg      = files('dmu_data').joinpath('text/transform_set.toml')
+    txt      = files('dmu_data').joinpath('text/transform_set.txt')
+
+    trf=txt_trf(txt_path=txt, cfg_path=cfg)
+    trf.save_as(out_path=Data.out)
+# -------------------------------------------------------------
 def main():
     initialize()
 
     test_settings()
     test_with_path()
     test_with_path_ext()
-#-------------------------------------------------------------
+# -------------------------------------------------------------
 if __name__ == '__main__':
     main()
-
-
