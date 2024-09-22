@@ -1,13 +1,11 @@
 '''
 Module holding cv_classifier class
 '''
-import hashlib
-
-import pandas as pnd
 
 from sklearn.ensemble        import GradientBoostingClassifier
 
 from dmu.logging.log_store import LogStore
+import dmu.ml.utilities    as ut
 
 log = LogStore.add_logger('dmu:ml:CVClassifier')
 
@@ -49,34 +47,6 @@ class CVClassifier(GradientBoostingClassifier):
 
         return msg
     # ----------------------------------
-    def _get_hashes(self, df_ft):
-        '''
-        Will return hashes for each row in the feature dataframe
-        '''
-        if not isinstance(df_ft, pnd.DataFrame):
-            log.error('Features need to be in a pandas dataframe')
-            raise ValueError
-
-        s_hash = { self._hash_from_row(row) for _, row in df_ft.iterrows() }
-
-        return s_hash
-    # ----------------------------------
-    def _hash_from_row(self, row):
-        '''
-        Will return a hash from a pandas dataframe row
-        corresponding to an event
-        '''
-        l_val   = [ str(val) for val in row ]
-        row_str = ','.join(l_val)
-        row_str = row_str.encode('utf-8')
-
-        hsh = hashlib.sha256()
-        hsh.update(row_str)
-
-        hsh_val = hsh.digest()
-
-        return hsh_val
-    # ----------------------------------
     def fit(self, *args, **kwargs):
         '''
         Runs the training of the model
@@ -86,7 +56,7 @@ class CVClassifier(GradientBoostingClassifier):
         df_ft           = args[0]
         self._l_ft_name = list(df_ft.columns)
 
-        self._s_hash = self._get_hashes(df_ft)
+        self._s_hash = ut.get_hashes(df_ft)
         log.debug(f'Saving {len(self._s_hash)} hashes')
 
         super().fit(*args, **kwargs)
@@ -103,7 +73,7 @@ class CVClassifier(GradientBoostingClassifier):
         if len(self._s_hash) == 0:
             raise ValueError('Found no hashes in model')
 
-        s_hash  = self._get_hashes(df_ft)
+        s_hash  = ut.get_hashes(df_ft)
         s_inter = self._s_hash.intersection(s_hash)
 
         nh1 = len(self._s_hash)
