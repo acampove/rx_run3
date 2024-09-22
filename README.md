@@ -2,6 +2,63 @@
 
 These are tools that can be used for different data analysis tasks.
 
+# Machine learning
+
+## Classification
+
+To train models to classify data between signal and background, starting from ROOT dataframes do:
+
+```python
+from dmu.ml.train_mva      import TrainMva
+
+rdf_sig = _get_rdf(kind='sig')
+rdf_bkg = _get_rdf(kind='bkg')
+cfg     = _get_config()
+
+obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
+obj.run()
+```
+
+where the settings for the training go in a config dictionary, which when written to YAML looks like:
+
+```yaml
+training :
+    nfold    : 10
+    features : [w, x, y, z]
+    hyper    :
+      loss              : log_loss
+      n_estimators      : 100
+      max_depth         : 3
+      learning_rate     : 0.1
+      min_samples_split : 2 
+saving:
+    path : 'tests/ml/train_mva/model.pkl'
+plotting:
+    val_dir : 'tests/ml/train_mva'
+    features:
+        saving:
+            plt_dir : 'tests/ml/train_mva/features'
+        plots:
+          w : 
+            binning : [-4, 4, 100]
+            yscale  : 'linear' 
+            labels  : ['w', '']
+          x : 
+            binning : [-4, 4, 100]
+            yscale  : 'linear' 
+            labels  : ['x', '']
+          y : 
+            binning : [-4, 4, 100]
+            yscale  : 'linear' 
+            labels  : ['y', '']
+          z : 
+            binning : [-4, 4, 100]
+            yscale  : 'linear' 
+            labels  : ['z', '']
+```
+
+the `TrainMva` is just a wrapper to `scikit-learn`.
+
 # Logging
 
 The `LogStore` class is an interface to the `logging` module. It is aimed at making it easier to include
