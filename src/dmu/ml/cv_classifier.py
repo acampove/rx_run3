@@ -27,9 +27,16 @@ class CVClassifier(GradientBoostingClassifier):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self._s_hash = set()
-
-        self._data = {}
+        self._s_hash    = set()
+        self._data      = {}
+        self._l_ft_name = None
+    # ----------------------------------
+    @property
+    def features(self):
+        '''
+        Returns list of feature names used in training dataset
+        '''
+        return self._l_ft_name
     # ----------------------------------
     def __str__(self):
         nhash = len(self._s_hash)
@@ -76,7 +83,9 @@ class CVClassifier(GradientBoostingClassifier):
         '''
         log.debug('Fitting')
 
-        df_ft        = args[0]
+        df_ft           = args[0]
+        self._l_ft_name = list(df_ft.columns)
+
         self._s_hash = self._get_hashes(df_ft)
         log.debug(f'Saving {len(self._s_hash)} hashes')
 
@@ -104,13 +113,16 @@ class CVClassifier(GradientBoostingClassifier):
         if nh3 > 0:
             raise CVSameData(f'Found non empty intersection of size: {nh1} ^ {nh2} = {nh3}')
     # ----------------------------------
-    def predict_proba(self, X):
+    def predict_proba(self, X, on_training_ok=False):
         '''
         Takes pandas dataframe with features
         Will first check hashes to make sure none of the events/samples
         used for the training of this model are in the prediction
+
+        on_training_ok (bool): True if the dataset is expected to contain samples used for training, default is False
         '''
-        self._check_hashes(X)
+        if not on_training_ok:
+            self._check_hashes(X)
 
         return super().predict_proba(X)
 # ---------------------------------------
