@@ -1,7 +1,7 @@
 [project]
 name        = 'data_checks'
 version     = '0.0.1'
-dependencies= ['joblib', 'scikit-learn', 'xgboost', 'mplhep', 'tqdm', 'rx_scripts', 'apd', 'xrootd', 'matplotlib', 'data_manipulation_utilities']
+dependencies= ['mplhep', 'tqdm', 'rx_scripts', 'apd', 'xrootd', 'matplotlib', 'data_manipulation_utilities']
 
 [project.optional-dependencies]
 dev  = []
