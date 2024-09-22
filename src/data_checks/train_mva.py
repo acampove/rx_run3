@@ -9,6 +9,7 @@ import numpy
 import matplotlib.pyplot as plt
 
 from sklearn.ensemble        import GradientBoostingClassifier
+from sklearn.metrics         import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 
 from log_store               import log_store
@@ -89,17 +90,22 @@ class TrainMva:
             model.fit(df_ft_tr, l_lab_tr)
             l_model.append(model)
 
-            l_lab_prob_trn   = model.predict_proba(df_ft_tr)
-            l_lab_true_trn   = l_lab[l_itr]
-            arr_sig_trn, arr_bkg_trn = self._split_scores(prob=l_lab_prob_trn, true=l_lab_true_trn)
+            l_lab_prob_tr   = model.predict_proba(df_ft_tr)
+            l_lab_true_tr   = l_lab[l_itr]
+            arr_sig_tr, arr_bkg_tr = self._split_scores(prob=l_lab_prob_tr, true=l_lab_true_tr)
 
             df_ft_ts         = df_ft.iloc[l_its]
-            l_lab_prob_tst   = model.predict_proba(df_ft_ts)
-            l_lab_true_tst   = l_lab[l_its]
 
-            arr_sig_tst, arr_bkg_tst = self._split_scores(prob=l_lab_prob_tst, true=l_lab_true_tst)
+            l_lab_prob_ts    = model.predict_proba(df_ft_ts)
+            l_lab_true_ts    = l_lab[l_its]
+            arr_sig_ts, arr_bkg_ts = self._split_scores(prob=l_lab_prob_ts, true=l_lab_true_ts)
 
-            self._plot_scores(arr_sig_trn, arr_sig_tst, arr_bkg_trn, arr_bkg_tst, ifold)
+            self._plot_scores(arr_sig_tr, arr_sig_ts, arr_bkg_tr, arr_bkg_ts, ifold)
+
+            l_sig_prob_ts = [ prob[1] for prob in l_lab_prob_ts]
+            l_sig_prob_tr = [ prob[1] for prob in l_lab_prob_tr]
+
+            self._plot_roc(l_lab_true_ts, l_sig_prob_ts, l_lab_true_tr, l_sig_prob_tr, ifold)
 
             ifold+=1
 
@@ -138,17 +144,17 @@ class TrainMva:
         joblib.dump(model, model_path)
     # ---------------------------------------------
     def _plot_scores(self, arr_sig_trn, arr_sig_tst, arr_bkg_trn, arr_bkg_tst, ifold):
+        # pylint: disable = too-many-arguments
         '''
         Will plot an array of scores, associated to a given fold
         '''
-        if 'score_path' not in self._cfg['plotting']:
+        if 'val_dir' not in self._cfg['plotting']:
             log.warning('Scores path not passed, not plotting scores')
             return
 
-        plot_path= self._cfg['plotting']['score_path']
-        plot_path= plot_path.replace('.png', f'_{ifold:03}.png')
-        plot_dir = os.path.dirname(plot_path)
-        os.makedirs(plot_dir, exist_ok=True)
+        val_dir  = self._cfg['plotting']['val_dir']
+        val_dir  = f'{val_dir}/fold_{ifold:03}'
+        os.makedirs(val_dir, exist_ok=True)
 
         plt.hist(arr_sig_trn, alpha   =   0.3, bins=50, range=(0,1), color='b', density=True, label='Signal Train')
         plt.hist(arr_sig_tst, histtype='step', bins=50, range=(0,1), color='b', density=True, label='Signal Test')
@@ -160,7 +166,34 @@ class TrainMva:
         plt.title(f'Fold: {ifold}')
         plt.xlabel('Signal probability')
         plt.ylabel('Normalized')
-        plt.savefig(plot_path)
+        plt.savefig(f'{val_dir}/scores.png')
+        plt.close()
+    # ---------------------------------------------
+    def _plot_roc(self, l_lab_ts, l_prb_ts, l_lab_tr, l_prb_tr, ifold):
+        '''
+        Takes the labels and the probabilities and plots ROC
+        curve for given fold
+        '''
+        # pylint: disable = too-many-arguments
+        val_dir  = self._cfg['plotting']['val_dir']
+        val_dir  = f'{val_dir}/fold_{ifold:03}'
+        os.makedirs(val_dir, exist_ok=True)
+
+        xval_ts, yval_ts, _ = roc_curve(l_lab_ts, l_prb_ts)
+        xval_ts             = 1 - xval_ts
+        area_ts             = auc(xval_ts, yval_ts)
+
+        xval_tr, yval_tr, _ = roc_curve(l_lab_tr, l_prb_tr)
+        xval_tr             = 1 - xval_tr
+        area_tr             = auc(xval_tr, yval_tr)
+
+        plt.plot(xval_ts, yval_ts, color='b', label=f'Test: {area_ts:.3f}')
+        plt.plot(xval_tr, yval_tr, color='r', label=f'Train: {area_tr:.3f}')
+        plt.xlabel('Signal efficiency')
+        plt.ylabel('Background efficiency')
+        plt.title(f'Fold: {ifold}')
+        plt.legend()
+        plt.savefig(f'{val_dir}/roc.png')
         plt.close()
     # ---------------------------------------------
     def _plot_features(self):
