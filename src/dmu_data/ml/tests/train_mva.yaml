@@ -1,6 +1,7 @@
 training :
     nfold    : 10
     features : [w, x, y, z]
+    rdm_stat : 1
     hyper    :
       loss              : log_loss
       n_estimators      : 100
