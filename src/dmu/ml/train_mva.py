@@ -8,10 +8,10 @@ import pandas as pnd
 import numpy
 import matplotlib.pyplot as plt
 
-from sklearn.ensemble        import GradientBoostingClassifier  as cls
 from sklearn.metrics         import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 
+from dmu.ml.cv_classifier    import CVClassifier as cls
 from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter    import Plotter
 
