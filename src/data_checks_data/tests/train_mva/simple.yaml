@@ -9,7 +9,7 @@ training :
 saving:
     path : 'tests/train_mva/model.pkl'
 plotting:
-    score_path   : 'tests/train_mva/scores.png'
+    val_dir : 'tests/train_mva'
     features:
         saving:
             plt_dir : 'tests/train_mva/features'
