@@ -1,13 +1,19 @@
+'''
+Module used to hold transformer class
+'''
 
 import os
+import pprint
+
 import toml
 import numpy
-import pprint
-import logging
 
-log = logging.getLogger('dmu:text:transformer')
+from dmu.logging.log_store import LogStore
+
+log = LogStore.add_logger('dmu:text:transformer')
 # -------------------------------------------------------------------------------------------
 class transformer:
+    # pyling disable = invalid-name
     '''
     Class used to apply transformations to text files
     '''
