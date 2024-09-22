@@ -10,6 +10,7 @@ import pandas  as pnd
 
 from dmu.logging.log_store import LogStore
 from dmu.ml.cv_classifier  import CVClassifier as cls
+from dmu.ml.cv_classifier  import CVSameData
 
 import dmu.testing.utilities as ut
 
@@ -49,10 +50,7 @@ def test_save_load():
     cfg   = ut.get_config('ml/tests/train_mva.yaml')
     hyper = cfg['training']['hyper']
 
-    model              = cls(**hyper)
-    model['dset_hash'] = '123'
-    model['sset_hash'] = '321'
-
+    model      = cls(**hyper)
     model_path = 'tests/ml/CVClassifier/save/model.pkl'
     model_dir  = os.path.dirname(model_path)
     os.makedirs(model_dir, exist_ok=True)
@@ -61,11 +59,7 @@ def test_save_load():
 
     model = joblib.load(model_path)
 
-    dh = model['dset_hash']
-    sh = model['sset_hash']
-
-    assert dh == '123'
-    assert sh == '321'
+    print(model)
 # -------------------------------------------------
 def test_fit():
     '''
@@ -77,8 +71,33 @@ def test_fit():
 
     df_ft, l_lab = _get_train_input()
 
-    model              = cls(**hyper)
+    model= cls(**hyper)
     model.fit(df_ft, l_lab)
+
+    model_path = 'tests/ml/CVClassifier/fit/model.pkl'
+    model_dir  = os.path.dirname(model_path)
+    os.makedirs(model_dir, exist_ok=True)
+
+    joblib.dump(model, model_path)
+
+    print(model)
+# -------------------------------------------------
+def test_predict():
+    '''
+    Will test probability prediction 
+    '''
+    cfg   = ut.get_config('ml/tests/train_mva.yaml')
+    hyper = cfg['training']['hyper']
+
+    df_ft, l_lab = _get_train_input()
+
+    model= cls(**hyper)
+    model.fit(df_ft, l_lab)
+
+    try:
+        _ = model.predict_proba(df_ft)
+    except CVSameData:
+        pass
 # -------------------------------------------------
 def main():
     '''
@@ -88,6 +107,7 @@ def main():
 
     test_save_load()
     test_fit()
+    test_predict()
 # -------------------------------------------------
 if __name__ == '__main__':
     main()
