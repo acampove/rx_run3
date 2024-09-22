@@ -51,11 +51,19 @@ def test_non_overlap():
     '''
     Tests prediction when input dataset is different from training one
     '''
-    l_model = _get_models()
     rdf     = ut.get_rdf(kind='sig')
 
+    l_model = _get_models()
     cvp     = CVPredict(models=l_model, rdf=rdf)
-    arr_scr = cvp.predict()
+    cvp.predict()
+#--------------------------------------------------------------------
+def test_overlap():
+    '''
+    Tests prediction when input dataset is same as training one
+    '''
+    l_model = _get_models()
+    cvp     = CVPredict(models=l_model, rdf=Data.rdf_sig)
+    cvp.predict()
 #--------------------------------------------------------------------
 def main():
     '''
@@ -64,6 +72,7 @@ def main():
     _initialize()
 
     test_non_overlap()
+    test_overlap()
 #--------------------------------------------------------------------
 if __name__ == '__main__':
     main()
