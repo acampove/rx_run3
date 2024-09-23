@@ -81,6 +81,28 @@ The hashes of the training samples are stored in the pickled model itself; which
 If a sample exist, that was used in the training of _every_ model, no model can be chosen for the prediction and an
 `CVSameData` exception will be risen.
 
+# Rdataframes
+
+These are utility functions meant to be used with ROOT dataframes.
+
+## Adding a column from a numpy array
+
+For this do:
+
+```python
+import dmu.rdataframe.utilities as ut
+
+arr_val = numpy.array([10, 20, 30])
+rdf     = ut.add_column(rdf, arr_val, 'values')
+```
+
+thed `add_column` function will check for:
+
+1. Presence of a column with the same name
+2. Same size for array and existing dataframe
+
+and return a dataframe with the added column
+
 # Logging
 
 The `LogStore` class is an interface to the `logging` module. It is aimed at making it easier to include
