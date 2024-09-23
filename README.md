@@ -57,7 +57,29 @@ plotting:
             labels  : ['z', '']
 ```
 
-the `TrainMva` is just a wrapper to `scikit-learn`.
+the `TrainMva` is just a wrapper to `scikit-learn` that enables cross-validation (and therefore that explains the `nfolds` setting).
+
+## Application
+
+Given the models already trained, one can use them with:
+
+```python
+#Build predictor with list of models and ROOT dataframe with data
+cvp     = CVPredict(models=l_model, rdf=rdf)
+
+#This will return an array of probabilibies
+arr_prb = cvp.predict()
+```
+
+If the entries in the input dataframe were used for the training of some of the models, the model that was not used
+will be _automatically_ picked for the prediction of a specific sample.
+
+The picking process happens through the comparison of hashes between the samples in `rdf` and the training samples.
+The hashes of the training samples are stored in the pickled model itself; which therefore is a reimplementation of 
+`GradientBoostClassifier`, here called `CVClassifier`.
+
+If a sample exist, that was used in the training of _every_ model, no model can be chosen for the prediction and an
+`CVSameData` exception will be risen.
 
 # Logging
 
