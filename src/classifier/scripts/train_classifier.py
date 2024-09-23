@@ -6,7 +6,8 @@ Script in charge of training classifier
 import os
 import argparse
 
-from dataclasses import dataclass
+from importlib.resources import files
+from dataclasses         import dataclass
 
 import yaml
 from ROOT                  import RDataFrame
@@ -30,7 +31,7 @@ def _load_config():
     Will load YAML file config
     '''
 
-    cfg_path = files('classifier_data').joinpath(f'{Data.cfg_name}.yaml')
+    cfg_path = files('classifier').joinpath(f'data/{Data.cfg_name}.yaml')
     if not os.path.isfile(cfg_path):
         raise FileNotFoundError(f'Could not find: {cfg_path}')
 
@@ -43,9 +44,12 @@ def _get_args():
     '''
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
     parser.add_argument('-c', '--cfg_name' , type=str, help='Kind of config file', required=True)
+    parser.add_argument('-l', '--log_level', type=int, help='Logging level', default=10, choices=[10, 20, 30])
     args = parser.parse_args()
 
     Data.cfg_name = args.cfg_name
+
+    log.setLevel(args.log_level)
 #---------------------------------
 def _get_rdf(kind=None):
     '''
@@ -55,8 +59,8 @@ def _get_rdf(kind=None):
     ---------------------
     kind (str): kind of dataset to find in config input section
     '''
-    tree_name = Data.cfg_dict['input'][kind]['tree_name']
-    file_path = Data.cfg_dict['input'][kind]['file_path']
+    tree_name = Data.cfg_dict['dataset']['paths'][kind]['tree_name']
+    file_path = Data.cfg_dict['dataset']['paths'][kind]['file_path']
 
     rdf = RDataFrame(tree_name, file_path)
     rdf = _apply_selection(rdf, kind)
@@ -69,9 +73,12 @@ def _apply_selection(rdf, kind):
     Will load selection from config
     Will return dataframe after selection
     '''
+
+    log.info('Applying selection')
     d_cut = Data.cfg_dict['dataset']['selection'][kind]
     for name, cut in d_cut.items():
-        rdf = rdf.Filter(name, cut)
+        log.debug(f'---> {name}')
+        rdf = rdf.Filter(cut, name)
 
     log.info(f'Cutflow for: {kind}')
     rep = rdf.Report()
