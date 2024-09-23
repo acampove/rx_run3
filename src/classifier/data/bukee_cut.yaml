@@ -1,0 +1,52 @@
+dataset :
+    selection:
+        kind :
+          bkg :
+            mass : 'B_M > 5400'
+          sig :
+            mass : 'B_const_mass_M[0] > 5100 && B_const_mass_M < 5400'
+    paths:
+        kind   :
+          sig :
+            file_path : '/publicfs/ucas/user/campoverde/Data/RK/ctrl_BuToKpEE_ana_ee/v1/2024.root'
+            tree_name : 'KEE'
+          bkg :
+            file_path : '/publicfs/ucas/user/campoverde/Data/RK/data_ana_cut_bp_ee/v1/2024.root'
+            tree_name : 'KEE'
+    define : 
+      min_ll_pt : 'TMath::Min(L1_PT, L2_PT)'
+      max_ll_pt : 'TMath::Max(L1_PT, L2_PT)'
+training :
+    nfold    : 10
+    features : [B_PT, B_ETA, min_ll_pt, max_ll_pt]
+    hyper    :
+      loss              : log_loss
+      n_estimators      : 100
+      max_depth         : 3
+      learning_rate     : 0.1
+      min_samples_split : 2 
+saving:
+    path : 'output/bukee_model.pkl'
+plotting:
+    val_dir : 'output/bukee_model'
+    features:
+        saving:
+            plt_dir : 'output/bukee_model/features'
+        plots:
+          B_PT : 
+            binning : [0, 50000, 100]
+            yscale  : 'log' 
+            labels  : ['$p_T(B^+)$', '']
+          B_ETA : 
+            binning : [0, 5, 100]
+            yscale  : 'linear' 
+            labels  : ['$\eta(B^+)$', '']
+          min_ll_pt: 
+            binning : [0, 20000, 100]
+            yscale  : 'linear' 
+            labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
+          max_ll_pt: 
+            binning : [0, 20000, 100]
+            yscale  : 'linear' 
+            labels  : ['$\max(p_T(e^+), p_T(e^-))$', '']
+
