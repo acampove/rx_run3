@@ -13,6 +13,6 @@ where   = ['src']
 train_classifier='classifier.scripts.train_classifier:main'
 
 [tool.setuptools.package-data]
-classifier_data=['classifier/data/*.yaml']
+classifier=['data/*.yaml']
 
 [tool.setuptools]
