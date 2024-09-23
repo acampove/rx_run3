@@ -8,7 +8,6 @@ import pandas as pnd
 import numpy
 import matplotlib.pyplot as plt
 
-from pandas.core.common import random_state
 from sklearn.metrics         import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 
@@ -190,11 +189,18 @@ class TrainMva:
         xval_tr             = 1 - xval_tr
         area_tr             = auc(xval_tr, yval_tr)
 
+        min_x = 0
+        min_y = 0
+        if 'min' in self._cfg['plotting']['roc']:
+            [min_x, min_y] = self._cfg['plotting']['roc']['min']
+
         plt.plot(xval_ts, yval_ts, color='b', label=f'Test: {area_ts:.3f}')
         plt.plot(xval_tr, yval_tr, color='r', label=f'Train: {area_tr:.3f}')
         plt.xlabel('Signal efficiency')
         plt.ylabel('Background efficiency')
         plt.title(f'Fold: {ifold}')
+        plt.xlim(min_x, 1)
+        plt.ylim(min_y, 1)
         plt.legend()
         plt.savefig(f'{val_dir}/roc.png')
         plt.close()
