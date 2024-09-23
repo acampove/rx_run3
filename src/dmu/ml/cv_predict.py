@@ -67,6 +67,9 @@ class CVPredict:
         s_dat_hash = set(df_ft.index)
 
         d_prob        = {}
+
+        ntotal = len(s_dat_hash)
+        log.debug(f'Total size: {ntotal}')
         for model in self._l_model:
             s_mod_hash = model.hashes
             s_hash     = s_dat_hash.difference(s_mod_hash)
@@ -76,6 +79,9 @@ class CVPredict:
 
             d_prob_tmp = dict(zip(l_hash, l_prob))
             d_prob.update(d_prob_tmp)
+
+            ngroup = len(l_prob)
+            log.debug(f'Hash group size: {ngroup}')
 
         ndata = len(df_ft)
         nprob = len(d_prob)
