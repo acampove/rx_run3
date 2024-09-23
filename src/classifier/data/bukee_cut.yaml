@@ -1,9 +1,9 @@
 dataset :
     selection:
         bkg :
-            mass : 'B_M > 5400'
+            mass : 'B_const_mass_M > 5500'
         sig :
-            mass : 'B_const_mass_M > 5100 && B_const_mass_M < 5400'
+            mass : 'B_const_mass_M > 5100 && B_const_mass_M < 5600'
     paths:
         sig :
             file_path : '/publicfs/ucas/user/campoverde/Data/RK/ctrl_BuToKpEE_ana_ee/v1/2024.root'
@@ -16,6 +16,7 @@ dataset :
       max_ll_pt : 'TMath::Max(L1_PT, L2_PT)'
 training :
     nfold    : 10
+    rdm_stat : 1
     features : [B_PT, B_ETA, min_ll_pt, max_ll_pt]
     hyper    :
       loss              : log_loss
@@ -36,15 +37,19 @@ plotting:
             yscale  : 'log' 
             labels  : ['$p_T(B^+)$', '']
           B_ETA : 
-            binning : [0, 5, 100]
+            binning : [0, 6, 100]
             yscale  : 'linear' 
             labels  : ['$\eta(B^+)$', '']
           min_ll_pt: 
             binning : [0, 20000, 100]
-            yscale  : 'linear' 
+            yscale  : 'log' 
             labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
           max_ll_pt: 
             binning : [0, 20000, 100]
-            yscale  : 'linear' 
+            yscale  : 'log' 
             labels  : ['$\max(p_T(e^+), p_T(e^-))$', '']
+          B_const_mass_M: 
+            binning : [4800, 6000, 100]
+            yscale  : 'linear' 
+            labels  : ['$M_{DTF}(B^+)$', '']
 
