@@ -51,10 +51,42 @@ class CVPredict:
 
         s_int = s_mod_hash.intersection(s_dff_hash)
         if len(s_int) == 0:
-            log.debug('No intersecting hashes found between model and data')
             return True
 
         return False
+    # --------------------------------------------
+    def _predict_with_overlap(self, df_ft):
+        '''
+        Takes pandas dataframe with features
+
+        Will return prediction probabilities when there is an overlap
+        of data and model hashes
+        '''
+        df_ft = ut.index_with_hashes(df_ft)
+
+        s_dat_hash = set(df_ft.index)
+
+        d_prob        = {}
+        for model in self._l_model:
+            s_mod_hash = model.hashes
+            s_hash     = s_dat_hash.difference(s_mod_hash)
+            l_hash     = list(s_hash)
+            df_ft_group= df_ft.loc[df_ft.index.isin(s_hash)]
+            l_prob     = model.predict_proba(df_ft_group)
+
+            d_prob_tmp = dict(zip(l_hash, l_prob))
+            d_prob.update(d_prob_tmp)
+
+        ndata = len(df_ft)
+        nprob = len(d_prob)
+
+        if ndata != nprob:
+            log.error(f'Dataset size ({ndata}) and probabilities size ({nprob}) differ')
+            raise ValueError
+
+        l_prob = [ d_prob[hsh] for hsh in df_ft.index ]
+
+        return l_prob
     # --------------------------------------------
     def predict(self):
         '''
@@ -64,8 +96,11 @@ class CVPredict:
         model = self._l_model[0]
 
         if self._non_overlapping_hashes(model, df_ft):
+            log.debug('No intersecting hashes found between model and data')
             l_prb = model.predict_proba(df_ft)
-            return l_prb
+        else:
+            log.info('Intersecting hashes found between model and data')
+            l_prb = self._predict_with_overlap(df_ft)
 
-        return
+        return l_prb
 # ---------------------------------------
