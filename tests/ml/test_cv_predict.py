@@ -5,7 +5,6 @@ Contains unit tests for CVPredict class
 import glob
 
 import joblib
-import pytest
 
 from dmu.logging.log_store import LogStore
 from dmu.ml.train_mva      import TrainMva
