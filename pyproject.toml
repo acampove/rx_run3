@@ -1,0 +1,18 @@
+[project]
+name        = 'rx_classifier'
+version     = '0.0.1'
+dependencies= ['data_manipulation_utilities']
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
+[project.scripts]
+train_classifier='classifier.scripts.train_classifier:main'
+
+[tool.setuptools.package-data]
+classifier_data=['classifier/data/*.yaml']
+
+[tool.setuptools]
