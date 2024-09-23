@@ -15,24 +15,11 @@ import dmu.testing.utilities as ut
 
 log = LogStore.add_logger('dmu:ml:tests:cv_predict')
 #--------------------------------------------------------------------
-class Data:
-    '''
-    Will store data to be shared
-    '''
-    rdf_sig = None
-    rdf_bkg = None
-#--------------------------------------------------------------------
-@pytest.fixture(scope='module', autouse=True)
-def _initialize():
-    Data.rdf_sig = ut.get_rdf(kind='sig')
-    Data.rdf_bkg = ut.get_rdf(kind='bkg')
-
-    LogStore.set_level('dmu:ml:cv_predict', 10)
-#--------------------------------------------------------------------
-def _get_models():
+def _get_models(rdf_sig, rdf_bkg):
     '''
     Will train and return models
     '''
+
     cfg                   = ut.get_config('ml/tests/train_mva.yaml')
     pkl_path              = 'tests/ml/cv_predict/model.pkl'
     plt_dir               = 'tests/ml/cv_predict'
@@ -40,7 +27,7 @@ def _get_models():
     cfg['plotting']['val_dir'] = plt_dir
     cfg['plotting']['features']['saving']['plt_dir'] = plt_dir
 
-    obj= TrainMva(sig=Data.rdf_sig, bkg=Data.rdf_bkg, cfg=cfg)
+    obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run()
 
     pkl_wc     = pkl_path.replace('.pkl', '_*.pkl')
@@ -53,9 +40,13 @@ def test_non_overlap():
     '''
     Tests prediction when input dataset is different from training one
     '''
-    rdf     = ut.get_rdf(kind='sig')
 
-    l_model = _get_models()
+    LogStore.set_level('dmu:ml:cv_predict', 10)
+    rdf_sig = ut.get_rdf(kind='sig')
+    rdf_bkg = ut.get_rdf(kind='bkg')
+    l_model = _get_models(rdf_sig, rdf_bkg)
+
+    rdf     = ut.get_rdf(kind='sig')
     cvp     = CVPredict(models=l_model, rdf=rdf)
     cvp.predict()
 #--------------------------------------------------------------------
@@ -63,15 +54,19 @@ def test_overlap():
     '''
     Tests prediction when input dataset is same as training one
     '''
-    l_model = _get_models()
-    cvp     = CVPredict(models=l_model, rdf=Data.rdf_sig)
+    LogStore.set_level('dmu:ml:cv_predict', 10)
+
+    rdf_sig = ut.get_rdf(kind='sig')
+    rdf_bkg = ut.get_rdf(kind='bkg')
+    l_model = _get_models(rdf_sig, rdf_bkg)
+
+    cvp     = CVPredict(models=l_model, rdf=rdf_sig)
     cvp.predict()
 #--------------------------------------------------------------------
 def main():
     '''
     Tests start here
     '''
-    _initialize()
 
     test_non_overlap()
     test_overlap()
