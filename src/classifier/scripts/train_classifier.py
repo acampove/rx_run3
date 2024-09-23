@@ -9,6 +9,8 @@ import argparse
 from importlib.resources import files
 from dataclasses         import dataclass
 
+import matplotlib.pyplot as plt
+import mplhep
 import yaml
 from ROOT                  import RDataFrame
 from dmu.logging.log_store import LogStore
@@ -23,8 +25,9 @@ class Data:
     Class meant to hold data to be shared
     '''
 
-    cfg_dict : dict
-    cfg_name : str
+    cfg_dict    : dict
+    cfg_name    : str
+    max_entries : int
 #---------------------------------
 def _load_config():
     '''
@@ -43,11 +46,13 @@ def _get_args():
     Use argparser to put options in Data class
     '''
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
-    parser.add_argument('-c', '--cfg_name' , type=str, help='Kind of config file', required=True)
-    parser.add_argument('-l', '--log_level', type=int, help='Logging level', default=10, choices=[10, 20, 30])
+    parser.add_argument('-c', '--cfg_name'   , type=str, help='Kind of config file', required=True)
+    parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=10, choices=[10, 20, 30])
+    parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1) 
     args = parser.parse_args()
 
-    Data.cfg_name = args.cfg_name
+    Data.cfg_name    = args.cfg_name
+    Data.max_entries = args.max_entries
 
     log.setLevel(args.log_level)
 #---------------------------------
@@ -64,6 +69,24 @@ def _get_rdf(kind=None):
 
     rdf = RDataFrame(tree_name, file_path)
     rdf = _apply_selection(rdf, kind)
+    rdf = _define_columns(rdf)
+
+    if Data.max_entries > 0:
+        log.warning(f'Limiting {kind} dataset to {Data.max_entries} entries')
+        rdf = rdf.Range(Data.max_entries)
+
+    return rdf
+#---------------------------------
+def _define_columns(rdf):
+    '''
+    Will define variables
+    '''
+    d_var = Data.cfg_dict['dataset']['define']
+
+    log.info('Defining variables')
+    for name, expr in d_var.items():
+        log.debug(f'---> {name}')
+        rdf = rdf.Define(name, expr)
 
     return rdf
 #---------------------------------
@@ -90,6 +113,8 @@ def main():
     '''
     Script starts here
     '''
+
+    plt.style.use(mplhep.style.LHCb2)
 
     _get_args()
     _load_config()
