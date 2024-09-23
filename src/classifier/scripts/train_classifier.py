@@ -68,8 +68,8 @@ def _get_rdf(kind=None):
     file_path = Data.cfg_dict['dataset']['paths'][kind]['file_path']
 
     rdf = RDataFrame(tree_name, file_path)
-    rdf = _apply_selection(rdf, kind)
     rdf = _define_columns(rdf)
+    rdf = _apply_selection(rdf, kind)
 
     if Data.max_entries > 0:
         log.warning(f'Limiting {kind} dataset to {Data.max_entries} entries')
