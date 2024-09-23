@@ -30,60 +30,75 @@ training :
 saving:
     path : 'output/bukee_model.pkl'
 plotting:
+    roc :
+      min : [0.5, 0.5]
     val_dir : 'output/bukee_model'
     features:
         saving:
             plt_dir : 'output/bukee_model/features'
         plots:
           Jpsi_CHI2DOF:
+            normalized : true
             binning : [0, 1, 100]
             yscale  : 'linear' 
             labels  : ['$\chi^2/Ndof(J/\psi^+)$', '']
           B_BPVDIRA:
+            normalized : true
             binning : [0.9995, 1, 100]
             yscale  : 'log' 
             labels  : ['DIRA$(B^+)$', '']
           B_ENDVERTEX_CHI2DOF:
+            normalized : true
             binning : [0, 10, 100]
             yscale  : 'log' 
             labels  : ['$\chi^2_{vtx}/Ndof(B^+)$', '']
           B_BPVCHI2DOF:
+            normalized : true
             binning : [0, 1, 100]
             yscale  : 'linear' 
             labels  : ['$\chi^2/Ndof(B^+)$', '']
           B_PT : 
+            normalized : true
             binning : [0, 50000, 100]
             yscale  : 'log' 
             labels  : ['$p_T(B^+)$', '']
           H_PT : 
+            normalized : true
             binning : [0, 50000, 100]
             yscale  : 'log' 
             labels  : ['$p_T(K^+)$', '']
           H_ETA : 
+            normalized : true
             binning : [0, 7, 100]
             yscale  : 'linear' 
             labels  : ['$\eta(K^+)$', '']
           B_ETA : 
+            normalized : true
             binning : [0, 7, 100]
             yscale  : 'linear' 
             labels  : ['$\eta(B^+)$', '']
           min_ll_pt: 
+            normalized : true
             binning : [0, 20000, 100]
             yscale  : 'log' 
             labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
           min_ll_eta: 
+            normalized : true
             binning : [0, 6, 100]
             yscale  : 'linear' 
             labels  : ['$\min(\eta(e^+), \eta(e^-))$', '']
           max_ll_eta: 
+            normalized : true
             binning : [0, 6, 100]
             yscale  : 'linear' 
             labels  : ['$\max(\eta(e^+), \eta(e^-))$', '']
           max_ll_pt: 
+            normalized : true
             binning : [0, 20000, 100]
             yscale  : 'log' 
             labels  : ['$\max(p_T(e^+), p_T(e^-))$', '']
           mass_dtf: 
+            normalized : true
             binning : [4800, 6000, 100]
             yscale  : 'linear' 
             labels  : ['$M_{DTF}(B^+)$', '']
