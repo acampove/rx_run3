@@ -38,14 +38,20 @@ class Plotter:
         plt_dir = self._d_cfg['saving']['plt_dir']
         os.makedirs(plt_dir, exist_ok=True)
 
-        minx, maxx, bins = self._d_cfg['plots'][var]['binning']
-        yscale           = self._d_cfg['plots'][var]['yscale' ]
-        [xname, yname]   = self._d_cfg['plots'][var]['labels' ]
+        d_cfg = self._d_cfg['plots'][var]
+
+        minx, maxx, bins = d_cfg['binning']
+        yscale           = d_cfg['yscale' ]
+        [xname, yname]   = d_cfg['labels' ]
+
+        normalized=False
+        if 'normalized' in d_cfg:
+            normalized = d_cfg['normalized']
 
         l_bc_all = []
         for name, rdf in self._d_rdf.items():
             arr_mass = rdf.AsNumpy([var])[var]
-            l_bc, _, _ = plt.hist(arr_mass, bins=bins, range=(minx, maxx), histtype='step', label=name)
+            l_bc, _, _ = plt.hist(arr_mass, bins=bins, range=(minx, maxx), density=normalized, histtype='step', label=name)
             l_bc_all  += l_bc.tolist()
 
             plt.yscale(yscale)
