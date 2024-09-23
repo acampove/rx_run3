@@ -13,11 +13,16 @@ from dmu.logging.log_store import LogStore
 log = LogStore.add_logger('dmu:rdataframe:utilities')
 
 # ---------------------------------------------------------------------
-def add_column(rdf : RDataFrame, arr_val : numpy.ndarray, name : str):
+def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str):
     '''
     Will take a dataframe, an array of numbers and a string
     Will add the array as a colunm to the dataframe
     '''
+
+    if not isinstance(arr_val, numpy.ndarray):
+        log.error('Input array needs to be an instance of numpy.ndarray')
+        raise ValueError
+
     v_col = rdf.GetColumnNames()
     l_col = [ col.c_str() for col in v_col ]
 
