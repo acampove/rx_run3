@@ -20,9 +20,11 @@ def test_add_column():
 
     rdf = RDF.FromNumpy(d_data)
 
-    arr_val = [10, 20, 30]
+    arr_val = numpy.array([10, 20, 30])
 
     rdf = ut.add_column(rdf, arr_val, 'values')
+
+    rdf.Display().Print()
 # -------------------------------------------------
 def main():
     '''
