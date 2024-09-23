@@ -26,6 +26,8 @@ class Data:
 def _initialize():
     Data.rdf_sig = ut.get_rdf(kind='sig')
     Data.rdf_bkg = ut.get_rdf(kind='bkg')
+
+    LogStore.set_level('dmu:ml:cv_predict', 10)
 #--------------------------------------------------------------------
 def _get_models():
     '''
