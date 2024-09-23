@@ -1,16 +1,14 @@
 dataset :
     selection:
-        kind :
-          bkg :
+        bkg :
             mass : 'B_M > 5400'
-          sig :
-            mass : 'B_const_mass_M[0] > 5100 && B_const_mass_M < 5400'
+        sig :
+            mass : 'B_const_mass_M > 5100 && B_const_mass_M < 5400'
     paths:
-        kind   :
-          sig :
+        sig :
             file_path : '/publicfs/ucas/user/campoverde/Data/RK/ctrl_BuToKpEE_ana_ee/v1/2024.root'
             tree_name : 'KEE'
-          bkg :
+        bkg :
             file_path : '/publicfs/ucas/user/campoverde/Data/RK/data_ana_cut_bp_ee/v1/2024.root'
             tree_name : 'KEE'
     define : 
