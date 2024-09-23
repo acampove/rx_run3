@@ -9,10 +9,12 @@ import argparse
 from dataclasses import dataclass
 
 import yaml
-from ROOT import RDataFrame
+from ROOT                  import RDataFrame
+from dmu.logging.log_store import LogStore
 
 from dmu.ml.train_mva import TrainMva
 
+log = LogStore.add_logger('rx_classifier:train_classifier')
 #---------------------------------
 @dataclass
 class Data:
@@ -53,10 +55,27 @@ def _get_rdf(kind=None):
     ---------------------
     kind (str): kind of dataset to find in config input section
     '''
-    tree_name = Data.cfg['input'][kind]['tree_name']
-    file_path = Data.cfg['input'][kind]['file_path']
+    tree_name = Data.cfg_dict['input'][kind]['tree_name']
+    file_path = Data.cfg_dict['input'][kind]['file_path']
 
     rdf = RDataFrame(tree_name, file_path)
+    rdf = _apply_selection(rdf, kind)
+
+    return rdf
+#---------------------------------
+def _apply_selection(rdf, kind):
+    '''
+    Will take ROOT dataframe and kind (bkg or sig)
+    Will load selection from config
+    Will return dataframe after selection
+    '''
+    d_cut = Data.cfg_dict['dataset']['selection'][kind]
+    for name, cut in d_cut.items():
+        rdf = rdf.Filter(name, cut)
+
+    log.info(f'Cutflow for: {kind}')
+    rep = rdf.Report()
+    rep.Print()
 
     return rdf
 #---------------------------------
