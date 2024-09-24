@@ -1,12 +1,12 @@
-application :
+samples:
     sample_1 : 
       tree_name : KEE
       file_path : '/publicfs/ucas/user/campoverde/Data/RK/ctrl_BuToKpEE_ana_ee/v1/2024.root'
     sample_2 : 
       tree_name : KEE
       file_path : '/publicfs/ucas/user/campoverde/Data/RK/data_ana_cut_bp_ee/v1/2024.root'
-    saving :
-      score : BDT # Place where the classifier signal probability will go 
-      ohers : ['B_const_mass_M']
-loading:
-    path : 'output/cut_ctrl_2024/bukee_model.pkl'
+saving :
+    score  : BDT # Place where the classifier signal probability will go 
+    others : ['B_const_mass_M']
+    out_dir: 'output/application/cut_ctrl_2024'
+model  : 'output/cut_ctrl_2024/bukee_model.pkl'
