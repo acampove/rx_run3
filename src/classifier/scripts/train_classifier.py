@@ -45,7 +45,7 @@ def _get_args():
     '''
     Use argparser to put options in Data class
     '''
-    parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
+    parser = argparse.ArgumentParser(description='Used to train classifier based on config file')
     parser.add_argument('-c', '--cfg_name'   , type=str, help='Kind of config file', required=True)
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=10, choices=[10, 20, 30])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1) 
