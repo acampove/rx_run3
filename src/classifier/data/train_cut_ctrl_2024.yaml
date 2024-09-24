@@ -11,14 +11,14 @@ dataset :
         bkg :
             file_path : '/publicfs/ucas/user/campoverde/Data/RK/data_ana_cut_bp_ee/v1/2024.root'
             tree_name : 'KEE'
-    define : 
+    define :
       mass_dtf   : 'B_const_mass_M'
       min_ll_pt  : 'TMath::Min(L1_PT, L2_PT)'
       max_ll_pt  : 'TMath::Max(L1_PT, L2_PT)'
       min_ll_eta : 'TMath::Min(L1_ETA, L2_ETA)'
       max_ll_eta : 'TMath::Max(L1_ETA, L2_ETA)'
 training :
-    nfold    : 10 
+    nfold    : 10
     rdm_stat : 1
     features : [B_PT, B_ETA, 'Jpsi_CHI2DOF', 'H_ETA', min_ll_pt, max_ll_pt, max_ll_eta, min_ll_eta, 'H_PT', 'B_BPVCHI2DOF', 'B_BPVDIRA', 'B_ENDVERTEX_CHI2DOF']
     hyper    :
@@ -26,80 +26,79 @@ training :
       n_estimators      : 100
       max_depth         : 3
       learning_rate     : 0.1
-      min_samples_split : 2 
+      min_samples_split : 2
 saving:
-    path : 'output/bukee_model.pkl'
+    path : 'output/cut_ctrl_2024/bukee_model.pkl'
 plotting:
     roc :
       min : [0.5, 0.5]
-    val_dir : 'output/bukee_model'
+    val_dir : 'output/cut_ctrl_2024/bukee_model'
     features:
         saving:
-            plt_dir : 'output/bukee_model/features'
+            plt_dir : 'output/cut_ctrl_2024/bukee_model/features'
         plots:
           Jpsi_CHI2DOF:
             normalized : true
             binning : [0, 1, 100]
-            yscale  : 'linear' 
+            yscale  : 'linear'
             labels  : ['$\chi^2/Ndof(J/\psi^+)$', '']
           B_BPVDIRA:
             normalized : true
             binning : [0.9995, 1, 100]
-            yscale  : 'log' 
+            yscale  : 'log'
             labels  : ['DIRA$(B^+)$', '']
           B_ENDVERTEX_CHI2DOF:
             normalized : true
             binning : [0, 10, 100]
-            yscale  : 'log' 
+            yscale  : 'log'
             labels  : ['$\chi^2_{vtx}/Ndof(B^+)$', '']
           B_BPVCHI2DOF:
             normalized : true
             binning : [0, 1, 100]
-            yscale  : 'linear' 
+            yscale  : 'linear'
             labels  : ['$\chi^2/Ndof(B^+)$', '']
-          B_PT : 
+          B_PT :
             normalized : true
             binning : [0, 50000, 100]
-            yscale  : 'log' 
+            yscale  : 'log'
             labels  : ['$p_T(B^+)$', '']
-          H_PT : 
+          H_PT :
             normalized : true
             binning : [0, 50000, 100]
-            yscale  : 'log' 
+            yscale  : 'log'
             labels  : ['$p_T(K^+)$', '']
-          H_ETA : 
+          H_ETA :
             normalized : true
             binning : [0, 7, 100]
-            yscale  : 'linear' 
+            yscale  : 'linear'
             labels  : ['$\eta(K^+)$', '']
-          B_ETA : 
+          B_ETA :
             normalized : true
             binning : [0, 7, 100]
-            yscale  : 'linear' 
+            yscale  : 'linear'
             labels  : ['$\eta(B^+)$', '']
-          min_ll_pt: 
+          min_ll_pt:
             normalized : true
             binning : [0, 20000, 100]
-            yscale  : 'log' 
+            yscale  : 'log'
             labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
-          min_ll_eta: 
+          min_ll_eta:
             normalized : true
             binning : [0, 6, 100]
-            yscale  : 'linear' 
+            yscale  : 'linear'
             labels  : ['$\min(\eta(e^+), \eta(e^-))$', '']
-          max_ll_eta: 
+          max_ll_eta:
             normalized : true
             binning : [0, 6, 100]
-            yscale  : 'linear' 
+            yscale  : 'linear'
             labels  : ['$\max(\eta(e^+), \eta(e^-))$', '']
-          max_ll_pt: 
+          max_ll_pt:
             normalized : true
             binning : [0, 20000, 100]
-            yscale  : 'log' 
+            yscale  : 'log'
             labels  : ['$\max(p_T(e^+), p_T(e^-))$', '']
-          mass_dtf: 
+          mass_dtf:
             normalized : true
             binning : [4800, 6000, 100]
-            yscale  : 'linear' 
+            yscale  : 'linear'
             labels  : ['$M_{DTF}(B^+)$', '']
-
