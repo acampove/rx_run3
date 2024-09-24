@@ -59,9 +59,10 @@ class CVPredict:
         '''
         Takes pandas dataframe with features
 
-        Will return prediction probabilities when there is an overlap
+        Will return numpy array of prediction probabilities when there is an overlap
         of data and model hashes
         '''
+        # pylint: disable = too-many-locals
         df_ft = ut.index_with_hashes(df_ft)
 
         s_dat_hash = set(df_ft.index)
@@ -90,9 +91,10 @@ class CVPredict:
             log.error(f'Dataset size ({ndata}) and probabilities size ({nprob}) differ')
             raise ValueError
 
-        l_prob = [ d_prob[hsh] for hsh in df_ft.index ]
+        l_prob   = [ d_prob[hsh] for hsh in df_ft.index ]
+        arr_prob = numpy.ndarray(l_prob)
 
-        return l_prob
+        return arr_prob
     # --------------------------------------------
     def predict(self):
         '''
