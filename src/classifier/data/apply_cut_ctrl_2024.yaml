@@ -5,6 +5,12 @@ samples:
     sample_2 : 
       tree_name : KEE
       file_path : '/publicfs/ucas/user/campoverde/Data/RK/data_ana_cut_bp_ee/v1/2024.root'
+define :
+    mass_dtf   : 'B_const_mass_M'
+    min_ll_pt  : 'TMath::Min(L1_PT, L2_PT)'
+    max_ll_pt  : 'TMath::Max(L1_PT, L2_PT)'
+    min_ll_eta : 'TMath::Min(L1_ETA, L2_ETA)'
+    max_ll_eta : 'TMath::Max(L1_ETA, L2_ETA)'
 saving :
     score  : BDT # Place where the classifier signal probability will go 
     others : ['B_const_mass_M']
