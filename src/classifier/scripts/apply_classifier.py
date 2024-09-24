@@ -10,7 +10,9 @@ from importlib.resources import files
 from dataclasses         import dataclass
 
 import joblib
+import numpy
 import yaml
+
 from ROOT                  import RDataFrame
 from dmu.ml.cv_predict     import CVPredict
 from dmu.logging.log_store import LogStore
@@ -95,9 +97,11 @@ def _apply_classifier(name, rdf):
     '''
     cvp     = CVPredict(models=Data.l_model, rdf=rdf)
     arr_prb = cvp.predict()
+    l_sig   = [ prb[1] for prb in arr_prb ]
+    arr_sig = numpy.array(l_sig)
 
     name    = Data.cfg_dict['saving']['score']
-    rdf     = ut.add_column(rdf, arr_prb, name)
+    rdf     = ut.add_column(rdf, arr_sig, name)
 
     return rdf
 #---------------------------------
@@ -126,6 +130,8 @@ def _save_rdf(tname, fname, rdf):
     l_var   = Data.cfg_dict['saving']['others'] + [cls_var]
     out_dir = Data.cfg_dict['saving']['out_dir']
     out_path= f'{out_dir}/{fname}.root'
+
+    log.info(f'Saving to: {out_path}/{tname}')
 
     rdf.Snapshot(tname, out_path, l_var)
 #---------------------------------
