@@ -2,6 +2,7 @@
 Module holding CVPredict class
 '''
 import pandas as pnd
+import numpy
 
 from ROOT import RDataFrame
 
