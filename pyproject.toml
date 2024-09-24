@@ -11,6 +11,7 @@ where   = ['src']
 
 [project.scripts]
 train_classifier='classifier.scripts.train_classifier:main'
+apply_classifier='classifier.scripts.apply_classifier:main'
 
 [tool.setuptools.package-data]
 classifier=['data/*.yaml']
