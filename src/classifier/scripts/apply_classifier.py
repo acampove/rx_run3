@@ -9,8 +9,6 @@ import argparse
 from importlib.resources import files
 from dataclasses         import dataclass
 
-import matplotlib.pyplot as plt
-import mplhep
 import joblib
 import yaml
 from ROOT                  import RDataFrame
@@ -29,6 +27,7 @@ class Data:
     cfg_name    : str
     cfg_dict    : dict
     max_entries : int
+    l_model     : list
 #---------------------------------
 def _get_args():
     '''
@@ -57,6 +56,19 @@ def _load_config():
     with open(cfg_path, encoding='utf-8') as ifile:
         Data.cfg_dict = yaml.safe_load(ifile)
 #---------------------------------
+def _add_variables(rdf):
+    '''
+    Will define extra columns in ROOT dataframe
+    according to config
+    '''
+    d_var_def = Data.cfg_dict['define']
+
+    log.info('Defining variables')
+    for name, expr in d_var_def.items():
+        rdf = rdf.Define(name, expr)
+
+    return rdf
+#---------------------------------
 def _get_rdf():
     '''
     Returns a dictionary of dataframes built from paths in config
@@ -70,6 +82,7 @@ def _get_rdf():
         file_path = d_info['file_path']
 
         rdf = RDataFrame(tree_name, file_path)
+        rdf = _add_variables(rdf)
 
         d_rdf[name] = rdf
 
@@ -80,8 +93,7 @@ def _apply_classifier(name, rdf):
     Takes name of dataset and corresponding ROOT dataframe
     return dataframe with a classifier probability column added
     '''
-    l_model = _get_models()
-    cvp     = CVPredict(models=l_model, rdf=rdf)
+    cvp     = CVPredict(models=Data.l_model, rdf=rdf)
     arr_prb = cvp.predict()
 
     name    = Data.cfg_dict['saving']['score']
@@ -89,23 +101,21 @@ def _apply_classifier(name, rdf):
 
     return rdf
 #---------------------------------
-def _get_models():
+def _load_models():
     '''
-    Will return classifier models in a list
+    Will load classifier models in Data.l_model
     '''
 
     log.info('Getting models')
 
-    model_path = Data.cfg_dict['saving']['model']
+    model_path = Data.cfg_dict['model']
     model_wc   = model_path.replace('.pkl', '_*.pkl')
     l_path     = glob.glob(model_wc)
     if len(l_path) == 0:
         log.error(f'No file found in: {model_wc}')
         raise ValueError
 
-    l_model = [ joblib.load(path) for path in l_path ]
-
-    return l_model
+    Data.l_model = [ joblib.load(path) for path in l_path ]
 #---------------------------------
 def _save_rdf(tname, fname, rdf):
     '''
@@ -124,16 +134,15 @@ def main():
     Script starts here
     '''
 
-    plt.style.use(mplhep.style.LHCb2)
-
     _get_args()
     _load_config()
+    _load_models()
 
     d_rdf = _get_rdf()
 
     log.info('Applying classifier')
     for fname, rdf in d_rdf.items():
-        tname = Data.cfg_dict['samples']['name']['tree_name']
+        tname = Data.cfg_dict['samples'][fname]['tree_name']
         log.info(f'---> {fname}/{tname}')
         rdf = _apply_classifier(fname, rdf)
         _save_rdf(tname, fname, rdf)
