@@ -2,16 +2,43 @@
 Module containing utility functions to be used with ROOT dataframes
 '''
 
+import hashlib
+
 import numpy
 
-from ROOT import RDataFrame
-
-import ROOT
+from ROOT import RDataFrame, gROOT, Numba
 
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:rdataframe:utilities')
 
+# ---------------------------------------------------------------------
+def _hash_from_numpy(arr_val):
+    '''
+    Will take a numpy array
+    Will return the hash of a numpy array
+    '''
+
+    arr_bytes = arr_val.tobytes()
+    hsh       = hashlib.sha256()
+    hsh.update(arr_bytes)
+    val = hsh.hexdigest()
+
+    return val
+# ---------------------------------------------------------------------
+def _define_arr_getter(arr_val, hash_arr):
+    '''
+    Takes numpy array and corresponding hash
+
+    Defines in Numba namespace a function to pick values from that array
+    '''
+
+    if hasattr(Numba, hash_arr):
+        return
+
+    @Numba.Declare(['int'], 'float', name=hash_arr)
+    def get_array_value(index):
+        return arr_val[index]
 # ---------------------------------------------------------------------
 def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str):
     '''
@@ -39,11 +66,10 @@ def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str):
 
     log.debug(f'Adding column {name}')
 
-    @ROOT.Numba.Declare(['int'], 'float')
-    def get_val(index):
-        return arr_val[index]
+    hash_arr = _hash_from_numpy(arr_val)
+    _define_arr_getter(arr_val, hash_arr)
 
-    rdf = rdf.Define(name, 'Numba::get_val(rdfentry_)')
+    rdf = rdf.Define(name, f'Numba::{hash_arr}(rdfentry_)')
 
     return rdf
 # ---------------------------------------------------------------------
