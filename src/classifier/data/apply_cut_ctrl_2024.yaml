@@ -1,8 +1,8 @@
 samples:
-    sample_1 : 
+    mc_ctrl : 
       tree_name : KEE
       file_path : '/publicfs/ucas/user/campoverde/Data/RK/ctrl_BuToKpEE_ana_ee/v1/2024.root'
-    sample_2 : 
+    dt_ctrl : 
       tree_name : KEE
       file_path : '/publicfs/ucas/user/campoverde/Data/RK/data_ana_cut_bp_ee/v1/2024.root'
 define :
