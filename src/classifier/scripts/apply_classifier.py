@@ -129,6 +129,8 @@ def _save_rdf(tname, fname, rdf):
     cls_var = Data.cfg_dict['saving']['score']
     l_var   = Data.cfg_dict['saving']['others'] + [cls_var]
     out_dir = Data.cfg_dict['saving']['out_dir']
+
+    os.makedirs(out_dir, exist_ok=True)
     out_path= f'{out_dir}/{fname}.root'
 
     log.info(f'Saving to: {out_path}/{tname}')
