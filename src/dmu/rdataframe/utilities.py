@@ -36,7 +36,7 @@ def _define_arr_getter(arr_val, hash_arr):
     if hasattr(Numba, hash_arr):
         return
 
-    @Numba.Declare(['int'], 'float', name=hash_arr)
+    @Numba.Declare(['int'], 'float', name=f'fun_{hash_arr}')
     def get_array_value(index):
         return arr_val[index]
 # ---------------------------------------------------------------------
@@ -69,7 +69,7 @@ def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str):
     hash_arr = _hash_from_numpy(arr_val)
     _define_arr_getter(arr_val, hash_arr)
 
-    rdf = rdf.Define(name, f'Numba::{hash_arr}(rdfentry_)')
+    rdf = rdf.Define(name, f'Numba::fun_{hash_arr}(rdfentry_)')
 
     return rdf
 # ---------------------------------------------------------------------
