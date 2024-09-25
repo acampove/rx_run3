@@ -64,6 +64,8 @@ the `TrainMva` is just a wrapper to `scikit-learn` that enables cross-validation
 Given the models already trained, one can use them with:
 
 ```python
+from dmu.ml.cv_predict     import CVPredict
+
 #Build predictor with list of models and ROOT dataframe with data
 cvp     = CVPredict(models=l_model, rdf=rdf)
 
