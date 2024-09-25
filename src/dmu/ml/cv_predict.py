@@ -93,7 +93,7 @@ class CVPredict:
             raise ValueError
 
         l_prob   = [ d_prob[hsh] for hsh in df_ft.index ]
-        arr_prob = numpy.ndarray(l_prob)
+        arr_prob = numpy.array(l_prob)
 
         return arr_prob
     # --------------------------------------------
