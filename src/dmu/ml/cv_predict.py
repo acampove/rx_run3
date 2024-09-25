@@ -76,9 +76,9 @@ class CVPredict:
         for model in tqdm.tqdm(self._l_model, ascii=' -'):
             s_mod_hash = model.hashes
             s_hash     = s_dat_hash.difference(s_mod_hash)
-            l_hash     = list(s_hash)
             df_ft_group= df_ft.loc[df_ft.index.isin(s_hash)]
             l_prob     = model.predict_proba(df_ft_group)
+            l_hash     = list(df_ft_group.index)
 
             d_prob_tmp = dict(zip(l_hash, l_prob))
             d_prob.update(d_prob_tmp)
