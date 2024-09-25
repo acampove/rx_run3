@@ -3,6 +3,7 @@ Module holding CVPredict class
 '''
 import pandas as pnd
 import numpy
+import tqdm
 
 from ROOT import RDataFrame
 
@@ -72,7 +73,7 @@ class CVPredict:
 
         ntotal = len(s_dat_hash)
         log.debug(f'Total size: {ntotal}')
-        for model in self._l_model:
+        for model in tqdm.tqdm(self._l_model, ascii=' -'):
             s_mod_hash = model.hashes
             s_hash     = s_dat_hash.difference(s_mod_hash)
             l_hash     = list(s_hash)
