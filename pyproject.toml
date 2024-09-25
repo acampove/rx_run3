@@ -1,10 +1,10 @@
 [project]
 name        = 'data_manipulation_utilities'
 version     = '0.0.1'
-dependencies= ['pytest', 'joblib', 'scikit-learn', 'toml', 'numpy', 'matplotlib', 'mplhep']
+dependencies= ['tqdm', 'joblib', 'scikit-learn', 'toml', 'numpy', 'matplotlib', 'mplhep']
 
 [project.optional-dependencies]
-dev  = []
+dev  = ['pytest']
 
 [tools.setuptools.packages.find]
 where   = ['src']
