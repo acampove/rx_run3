@@ -88,6 +88,9 @@ def _get_rdf():
         if Data.max_entries > 0:
             rdf = rdf.Range(Data.max_entries)
 
+        nentries = rdf.Count().GetValue()
+        log.info(f'Using {nentries} entries for sample {name}')
+
         d_rdf[name] = rdf
 
     return d_rdf
