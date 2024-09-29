@@ -111,7 +111,10 @@ def test_properties():
 
     l_feat = model.features
     s_hash = model.hashes
+    d_cfg  = model.cfg
     nhash  = len(s_hash)
+
+    assert cfg == d_cfg
 
     log.info(f'Found features: {l_feat}')
     log.info(f'Found hashes: {nhash}')
