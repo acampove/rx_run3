@@ -31,7 +31,7 @@ class CVClassifier(GradientBoostingClassifier):
 
         self._cfg = cfg
 
-        d_hyp = self._cfg['hyper']
+        d_hyp = self._cfg['training']['hyper']
         super().__init__(**d_hyp)
 
         self._s_hash    = set()
@@ -53,7 +53,7 @@ class CVClassifier(GradientBoostingClassifier):
         return self._s_hash
     # ----------------------------------
     @property
-    def config(self):
+    def cfg(self):
         '''
         Will return dictionary with configuration
         '''
