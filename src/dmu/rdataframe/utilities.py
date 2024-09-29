@@ -6,7 +6,7 @@ import hashlib
 
 import numpy
 
-from ROOT import RDataFrame, gROOT, Numba
+from ROOT import RDataFrame, Numba
 
 from dmu.logging.log_store import LogStore
 
