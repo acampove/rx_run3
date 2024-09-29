@@ -49,9 +49,8 @@ def test_save_load():
     Used to save and load class
     '''
     cfg   = ut.get_config('ml/tests/train_mva.yaml')
-    hyper = cfg['training']['hyper']
 
-    model      = cls(**hyper)
+    model      = cls(cfg=cfg)
     model_path = 'tests/ml/CVClassifier/save/model.pkl'
     model_dir  = os.path.dirname(model_path)
     os.makedirs(model_dir, exist_ok=True)
@@ -68,11 +67,10 @@ def test_fit():
     '''
 
     cfg   = ut.get_config('ml/tests/train_mva.yaml')
-    hyper = cfg['training']['hyper']
 
     df_ft, l_lab = _get_train_input()
 
-    model= cls(**hyper)
+    model= cls(cfg=cfg)
     model.fit(df_ft, l_lab)
 
     model_path = 'tests/ml/CVClassifier/fit/model.pkl'
@@ -88,11 +86,10 @@ def test_predict():
     Will test probability prediction 
     '''
     cfg   = ut.get_config('ml/tests/train_mva.yaml')
-    hyper = cfg['training']['hyper']
 
     df_ft, l_lab = _get_train_input()
 
-    model= cls(**hyper)
+    model= cls(cfg=cfg)
     model.fit(df_ft, l_lab)
 
     try:
@@ -106,11 +103,10 @@ def test_properties():
     '''
 
     cfg   = ut.get_config('ml/tests/train_mva.yaml')
-    hyper = cfg['training']['hyper']
 
     df_ft, l_lab = _get_train_input()
 
-    model= cls(**hyper)
+    model= cls(cfg=cfg)
     model.fit(df_ft, l_lab)
 
     l_feat = model.features
