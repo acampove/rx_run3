@@ -74,7 +74,6 @@ class TrainMva:
         df_ft = self._get_features()
         l_lab = self._get_labels()
         nfold = self._cfg['training']['nfold']
-        hyper = self._cfg['training']['hyper']
         rdmst = self._cfg['training']['rdm_stat']
 
         kfold = StratifiedKFold(n_splits=nfold, shuffle=True, random_state=rdmst)
@@ -82,7 +81,7 @@ class TrainMva:
         l_model=[]
         ifold=0
         for l_itr, l_its in kfold.split(df_ft, l_lab):
-            model    = cls(**hyper)
+            model    = cls(cfg = self._cfg)
             df_ft_tr = df_ft.iloc[l_itr]
             l_lab_tr = l_lab[l_itr]
 
