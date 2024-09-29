@@ -33,7 +33,7 @@ def _define_arr_getter(arr_val, hash_arr):
     Defines in Numba namespace a function to pick values from that array
     '''
 
-    if hasattr(Numba, hash_arr):
+    if hasattr(Numba, f'fun_{hash_arr}'):
         return
 
     @Numba.Declare(['int'], 'float', name=f'fun_{hash_arr}')
