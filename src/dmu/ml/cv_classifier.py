@@ -22,8 +22,17 @@ class CVClassifier(GradientBoostingClassifier):
     '''
     # pylint: disable = too-many-ancestors, abstract-method
     # ----------------------------------
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, cfg : dict | None = None):
+        '''
+        cfg (dict) : Dictionary with configuration, specially the hyperparameters set in the `hyper` field
+        '''
+        if cfg is None:
+            raise ValueError('No configuration was passed')
+
+        self._cfg = cfg
+
+        d_hyp = self._cfg['hyper']
+        super().__init__(**d_hyp)
 
         self._s_hash    = set()
         self._data      = {}
@@ -42,6 +51,14 @@ class CVClassifier(GradientBoostingClassifier):
         Will return set with hashes of training data
         '''
         return self._s_hash
+    # ----------------------------------
+    @property
+    def config(self):
+        '''
+        Will return dictionary with configuration
+        '''
+
+        return self._cfg
     # ----------------------------------
     def __str__(self):
         nhash = len(self._s_hash)
