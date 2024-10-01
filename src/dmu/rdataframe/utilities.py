@@ -3,6 +3,7 @@ Module containing utility functions to be used with ROOT dataframes
 '''
 
 import hashlib
+from dataclasses import dataclass
 
 import numpy
 
@@ -12,6 +13,14 @@ from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:rdataframe:utilities')
 
+# ---------------------------------------------------------------------
+@dataclass
+class Data:
+    '''
+    Class meant to store data that is shared
+    '''
+    l_good_type = ['bool', 'int32', 'uint32', 'int64', 'uint64', 'float32', 'float64']
+    d_cast_type = {'bool': 'int32'}
 # ---------------------------------------------------------------------
 def _hash_from_numpy(arr_val):
     '''
@@ -40,20 +49,39 @@ def _define_arr_getter(arr_val, hash_arr):
     def get_array_value(index):
         return arr_val[index]
 # ---------------------------------------------------------------------
-def _arr_type_is_known(arr_val):
+def _arr_type_is_known(name, arr_val):
     '''
-    Takes numpy array returns True if array stores known types
+    Takes 
+    name of column
+    numpy array  with numerical values
+
+    returns True if array stores known types
     Otherwise it returns false
     '''
 
-    l_known_type = ['int32', 'uint32', 'int64', 'uint64', 'float32', 'float64']
-
     str_type = arr_val.dtype.__str__()
-    is_known = str_type in l_known_type
+    is_known = str_type in Data.l_good_type
     if not is_known:
-        log.warning(f'Found unknown type: {str_type}')
+        log.warning(f'Found unknown type {str_type} in column {name}')
 
     return is_known
+# ---------------------------------------------------------------------
+def _cast_to_valid_type(arr_val):
+    '''
+    Takes array of known types
+    Returns array of acceptable (when saving data to RDataframe) types, e.g. bool -> int
+    '''
+
+    src_type = arr_val.dtype.__str__()
+    if src_type not in Data.l_good_type:
+        raise ValueError(f'Type {src_type} not valid')
+
+    if src_type not in Data.d_cast_type:
+        return arr_val
+
+    trg_type = Data.d_cast_type[src_type]
+
+    return arr_val.astype(trg_type)
 # ---------------------------------------------------------------------
 def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str, mode : bool | str = 'dict'):
     '''
@@ -91,7 +119,8 @@ def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str, mod
         rdf = rdf.Define(name, f'Numba::fun_{hash_arr}(rdfentry_)')
     elif mode == 'dict':
         d_data_ini   = rdf.AsNumpy()
-        d_data       = { key : val for key, val in d_data_ini.items() if _arr_type_is_known(val) } 
+        d_data_knw   = { key : val                      for key, val in d_data_ini.items() if _arr_type_is_known(key, val) } 
+        d_data       = { key : _cast_to_valid_type(val) for key, val in d_data_knw.items() } 
         d_data[name] = arr_val
         rdf          = RDF.FromNumpy(d_data)
     else:
