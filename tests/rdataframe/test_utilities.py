@@ -26,6 +26,7 @@ def test_add_column(itry):
             }
 
     rdf = RDF.FromNumpy(d_data)
+    rdf = rdf.Define('z', 'ROOT::RVec<int>({1, 2, 3})')
 
     arr_val = numpy.array([10, 20, 30])
 
