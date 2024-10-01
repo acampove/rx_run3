@@ -40,6 +40,21 @@ def _define_arr_getter(arr_val, hash_arr):
     def get_array_value(index):
         return arr_val[index]
 # ---------------------------------------------------------------------
+def _arr_type_is_known(arr_val):
+    '''
+    Takes numpy array returns True if array stores known types
+    Otherwise it returns false
+    '''
+
+    l_known_type = ['int32', 'uint32', 'int64', 'uint64', 'float32', 'float64']
+
+    str_type = arr_val.dtype.__str__()
+    is_known = str_type in l_known_type
+    if not is_known:
+        log.warning(f'Found unknown type: {str_type}')
+
+    return is_known
+# ---------------------------------------------------------------------
 def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str, mode : bool | str = 'dict'):
     '''
     Will take a dataframe, an array of numbers and a string
@@ -75,7 +90,8 @@ def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str, mod
         _define_arr_getter(arr_val, hash_arr)
         rdf = rdf.Define(name, f'Numba::fun_{hash_arr}(rdfentry_)')
     elif mode == 'dict':
-        d_data       = rdf.AsNumpy()
+        d_data_ini   = rdf.AsNumpy()
+        d_data       = { key : val for key, val in d_data_ini.items() if _arr_type_is_known(val) } 
         d_data[name] = arr_val
         rdf          = RDF.FromNumpy(d_data)
     else:
