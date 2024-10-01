@@ -6,7 +6,7 @@ import hashlib
 
 import numpy
 
-from ROOT import RDataFrame, Numba
+from ROOT import RDataFrame, RDF, Numba
 
 from dmu.logging.log_store import LogStore
 
@@ -40,10 +40,14 @@ def _define_arr_getter(arr_val, hash_arr):
     def get_array_value(index):
         return arr_val[index]
 # ---------------------------------------------------------------------
-def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str):
+def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str, mode : bool | str = 'dict'):
     '''
     Will take a dataframe, an array of numbers and a string
     Will add the array as a colunm to the dataframe
+
+    mode (str) : Way in which branch is created
+        numba : Will create a function that returns value, fast but causes crashes
+        dict  : Will dump data in memory as a dictionary and add another entry, then create a dataframe. Slow, but safer
     '''
 
     if not isinstance(arr_val, numpy.ndarray):
@@ -66,10 +70,16 @@ def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str):
 
     log.debug(f'Adding column {name}')
 
-    hash_arr = _hash_from_numpy(arr_val)
-    _define_arr_getter(arr_val, hash_arr)
-
-    rdf = rdf.Define(name, f'Numba::fun_{hash_arr}(rdfentry_)')
+    if mode == 'numba':
+        hash_arr = _hash_from_numpy(arr_val)
+        _define_arr_getter(arr_val, hash_arr)
+        rdf = rdf.Define(name, f'Numba::fun_{hash_arr}(rdfentry_)')
+    elif mode == 'dict':
+        d_data       = rdf.AsNumpy()
+        d_data[name] = arr_val
+        rdf          = RDF.FromNumpy(d_data)
+    else:
+        raise ValueError(f'Invalid mode: {mode}')
 
     return rdf
 # ---------------------------------------------------------------------
