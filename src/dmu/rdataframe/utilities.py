@@ -19,8 +19,8 @@ class Data:
     '''
     Class meant to store data that is shared
     '''
-    l_good_type = ['bool', 'int32', 'uint32', 'int64', 'uint64', 'float32', 'float64']
-    d_cast_type = {'bool': 'int32'}
+    l_good_type = [int, numpy.bool_, numpy.int32, numpy.uint32, numpy.int64, numpy.uint64, numpy.float32, numpy.float64]
+    d_cast_type = {'bool': numpy.int32}
 # ---------------------------------------------------------------------
 def _hash_from_numpy(arr_val):
     '''
@@ -59,8 +59,22 @@ def _arr_type_is_known(name, arr_val):
     Otherwise it returns false
     '''
 
-    str_type = arr_val.dtype.__str__()
-    is_known = str_type in Data.l_good_type
+    if len(arr_val) == 0:
+        return True
+
+    elm = arr_val[0]
+
+    # If this is a vector, drop it.
+    elm_type = type(elm)
+    str_type = str(elm_type) 
+    if str_type.startswith('RVec<'):
+        return False
+
+    # If the array has a bool, it contains bools and therefore is a known type
+    if (elm is True) or (elm is False):
+        return True 
+
+    is_known = elm_type in Data.l_good_type
     if not is_known:
         log.warning(f'Found unknown type {str_type} in column {name}')
 
@@ -71,15 +85,24 @@ def _cast_to_valid_type(arr_val):
     Takes array of known types
     Returns array of acceptable (when saving data to RDataframe) types, e.g. bool -> int
     '''
+    if len(arr_val) == 0:
+        return arr_val 
 
-    src_type = arr_val.dtype.__str__()
+    # If this is an array of bools, it will contain a bool.
+    # Cast as smallest int possible and return
+    elm = arr_val[0]
+    if elm in [True, False]:
+        return arr_val.astype(numpy.int32)
+
+    src_type = type(elm)
+    str_type = str(src_type) 
     if src_type not in Data.l_good_type:
-        raise ValueError(f'Type {src_type} not valid')
+        raise ValueError(f'Type {str_type} not valid')
 
-    if src_type not in Data.d_cast_type:
+    if str_type not in Data.d_cast_type:
         return arr_val
 
-    trg_type = Data.d_cast_type[src_type]
+    trg_type = Data.d_cast_type[str_type]
 
     return arr_val.astype(trg_type)
 # ---------------------------------------------------------------------
