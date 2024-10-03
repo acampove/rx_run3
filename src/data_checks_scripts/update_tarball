@@ -7,11 +7,13 @@ display_help()
     echo ""
     echo "-h: Help"
     echo "-v: Version of tarball, optional, if not passed, wont upload it"
+    echo "-s: Will skip uploading tarball, but it will (re)build it."
 }
 #--------------------------------
 get_args()
 {
-    while getopts :hf:v: option; do 
+    SKIP_UPLOAD=0
+    while getopts :hf:v:s: option; do 
         case "${option}" in
             h)  
                 display_help
@@ -26,6 +28,7 @@ get_args()
                 exit 1
                 ;;  
             v)  VERS=${OPTARG};;
+            s)  SKIP_UPLOAD=${OPTARG};;
         esac
     done
 }
@@ -40,6 +43,11 @@ check()
 #--------------------------------
 upload()
 {
+    if [[ $SKIP_UPLOAD -eq 1 ]];then
+        echo "Skipping upload"
+        return
+    fi
+
     if [[ -z $VERS ]];then
         echo "Version of tarball not passed, won't upload it"
         exit 0
@@ -52,34 +60,91 @@ upload()
     lb-dirac $TARGET $SOURCE CERN-USER
 }
 #--------------------------------
-update()
+initialize()
 {
-    echo "Updating tarball"
-
-    if [[ ! -f dcheck/run ]];then
-        echo "dcheck/run not found"
+    which lb-conda-dev > /dev/null
+    if [[ $? -ne 0 ]];then
+        echo "No lb-conda-dev found"
         exit 1
     fi
 
-    source dcheck/bin/activate
+    if [[ -z $VENVS ]];then
+        echo "VENVS environment variable not set"
+        exit 1
+    fi
+
+    set_pkg_path data_manipulation_utilities 
+    DMANUT=$TMP
+    echo "data_manipulation_utilities --->  $DMANUT"
+
+    set_pkg_path rx_scripts  
+    SCRIPTS=$TMP
+    echo  "rx_scripts --->  $SCRIPTS"
+
+    set_pkg_path data_checks 
+    DCHECKS=$TMP
+    echo "data_checks --->  $DCHECKS"
+}
+#--------------------------------
+set_pkg_path()
+{
+    PKGNAME=$1
+
+    TMP=$(pip show $PKGNAME | grep "Editable project location" | awk -F ': ' '{print$2}' | sed 's|/src||g')
+
+    if [[ $? -ne 0 ]];then
+        echo "Could not find path to package $PKGNAME"
+        exit 1
+    fi
+
+    if [[ ! -d $TMP ]];then
+        echo "Path to package $PKGNAME not found: $TMP"
+        exit 1
+    fi
+}
+#--------------------------------
+make_tarball()
+{
+    cd $VENVS
 
     rm -rf dchecks.tar
-    check "Remove tarball"
+    check "Remove tarball, if found"
 
-    pip install /home/acampove/Packages/RK/scripts > /dev/null
-    echo "Running: pip install /home/acampove/Packages/RK/scripts"
-    check "Install scripts"
+    if [[ ! -f $VENVS/dcheck/run ]];then
+        echo "Environment not found, creating it"
+        lb-conda-dev virtual-env default dcheck
+    else
+        echo "Environment found, updating tarball"
+    fi
 
-    pip install /home/acampove/Packages/RK/data_checks/ > /dev/null
-    echo "Running: pip install /home/acampove/Packages/RK/data_checks" 
-    check "Install data_checks"
+    install_pkgs
 
     tar -czf dcheck.tar dcheck
     echo "Running: tar -czf dcheck.tar dcheck"
     check "Tar data_checks"
+
+    cd -
+}
+#--------------------------------
+install_pkgs()
+{
+    source dcheck/bin/activate
+
+    pip install $DMANUT > /dev/null
+    echo "Running: pip install $DMANUT" 
+    check "Install data_manipulation_utilities"
+
+    pip install $SCRIPTS > /dev/null
+    echo "Running: pip install $SCRIPTS"
+    check "Install scripts"
+
+    pip install $DCHECKS > /dev/null
+    echo "Running: pip install $DCHECKS" 
+    check "Install data_checks"
 }
 #--------------------------------
 get_args "$@"
-update
+initialize
+make_tarball
 upload
 
