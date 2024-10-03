@@ -6,30 +6,28 @@ This project is used to carry out checks on Run3 data.
 
 # Preparing environment
 
-First create a virtual environment with the project:
+First set the `VENVS` environment variable:
+
+```bash
+export VENVS=/some/path/
+```
+
+where the virtual environment will reside. Then setup the LHCb software and build the tarball with the environment
 
 ```bash
 . /cvmfs/lhcb.cern.ch/lib/LbEnv
-lb-conda-dev virtual-env default dcheck
 
-pip install -e /home/acampove/Packages/RK/scripts
-pip install -e /home/acampove/Packages/RK/data_checks
+update_tarball -v 001 -s 1
 ```
 
-Make a tarball with the virtual environment and upload it to the grid:
-
-```bash
-tar -zcf dcheck.tar dcheck
-
-dirac-dms-add-file LFN:/lhcb/user/a/acampove/run3/venv/001/dcheck.tar /home/acampove/Test/venv/dcheck.tar CERN-USER
-```
+to upload it to the grid as version `001` one would run wit `-s 0`
 
 ## Updating code and virtual environment
 
 If the code changes, the venv needs to change. To do that run:
 
 ```bash
-update_tarball [-v 009]
+update_tarball -v 002
 ```
 
 Where `-v` will be used to pass the version of the tarball in order to upload it to the grid. 
@@ -104,7 +102,7 @@ in an environment with a valid grid token. `-j` is the name of the job and the c
 To download all the files do not pass any number, default is `-1`. 
 To download a random subset of files use `-r 1`.
 
-A real donwload would look like:
+A real download would look like:
 
 ```bash
 run3_download_ntuples -j flt_001 -m 40
@@ -132,7 +130,7 @@ which will do the same with at most `10` files, can use debug messages with `-l 
 
 For this run:
 
-```
+```bash
 plot_vars -c bukee_opt -d data_ana_cut_bp_ee:Data ctrl_BuToKpEE_ana_ee:Simulation
 ```
 
