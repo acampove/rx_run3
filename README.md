@@ -127,3 +127,16 @@ link_merge -j flt_002 -d 1 -m 10 -v v1
 ```
 
 which will do the same with at most `10` files, can use debug messages with `-l 10`.
+
+# Making basic plots
+
+For this run:
+
+```
+plot_vars -c bukee_opt -d data_ana_cut_bp_ee:Data ctrl_BuToKpEE_ana_ee:Simulation
+```
+
+which will run the plotting of the variables in a config specified by `bukee_opt` where also axis, names, ranges, etc are
+specified. This config is in `data_checks_data`.
+The script above will overlay data and MC.
+

@@ -18,12 +18,12 @@ minlpt = 'TMath::Min(L1_PT, L2_PT)'
 [plots]
 
 [plots.B_M]
-binning=[4800, 6000, 100]
-yscale ='log'
+binning=[4500, 6000, 100]
+yscale ='linear'
 labels =['$M(B^+)[MeV]$', '']
 
 [plots.Jpsi_M]
-binning=[2800, 3300, 100]
+binning=[2400, 3300, 100]
 yscale ='linear'
 labels =['$M(J/\psi)[MeV]$', '']
 
@@ -34,22 +34,22 @@ labels =['$M_{DTF}(B^+)[MeV]$', '']
 
 [plots.xbrem]
 binning=[   0,    3,   3]
-yscale ='log'
+yscale ='linear'
 labels =['$n_{\gamma}$', '']
 
 [plots.maxlpt]
-binning=[   0, 2000, 100]
-yscale ='log'
-labels =['$\max p_T(\ell)[MeV]$', '']
+binning=[   0, 20000, 100]
+yscale ='linear'
+labels =['$\max p_T(\ell, \ell)[MeV]$', '']
 
 [plots.minlpt]
-binning=[   0, 2000, 100]
-yscale ='log'
-labels =['$\min p_T(\ell)[MeV]$', '']
+binning=[   0, 20000, 100]
+yscale ='linear'
+labels =['$\min p_T(\ell, \ell)[MeV]$', '']
 
 [plots.H_PT]
-binning=[   0, 2000, 100]
-yscale ='log'
+binning=[   0, 20000, 100]
+yscale ='linear'
 labels =['$p_T(K^+)[MeV]$', '']
 
 [plots.H_PID_E]
