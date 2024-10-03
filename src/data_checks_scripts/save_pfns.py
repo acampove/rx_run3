@@ -13,19 +13,24 @@ import data_checks.utilities as utdc
 log=log_store.add_logger('data_checks:save_pfns')
 #------------------------------------
 class data:
-    config = None
-    log_lvl= None
+    config      = None
+    log_lvl     = None
+    local_config=False
 #------------------------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Will use apd to save a list of paths to ROOT files in EOS')
     parser.add_argument('-c', '--config' , type=str, help='Name of config file, without TOML extension')
     parser.add_argument('-l', '--log_lvl', type=int, help='Logging level', default=20, choices=[10, 20, 30, 40])
+    parser.add_argument('-L', '--loc_cfg', type=int, help='Will pick up local (1) or remote (0, default) version of TOML config', default=0, choices=[0, 1])
     args = parser.parse_args()
 
-    data.config = args.config
-    data.log_lvl= args.log_lvl
+    data.config       = args.config
+    data.log_lvl      = args.log_lvl
+    data.local_config = args.loc_cfg
 #------------------------------------
 def get_pfns():
+    utdc.local_config = data.local_config
+
     cfg_dat = utdc.load_config(data.config)
     d_prod  = cfg_dat['production']
 
