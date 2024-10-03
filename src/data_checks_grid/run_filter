@@ -13,13 +13,12 @@ set_vars()
 rename_paths()
 {
     ENVNAME=dcheck
-    ORGPATH=/home/acampove/Test/venv
 
-    for FILEPATH in $(grep --files-with-matches --binary-files=without-match -r $ORGPATH/$ENVNAME $PWD/$ENVNAME);do
-	echo $ORGPATH "--->"
+    for FILEPATH in $(grep --files-with-matches --binary-files=without-match -r $VENVS/$ENVNAME $PWD/$ENVNAME);do
+	echo $VENVS "--->"
 	echo $PWD     "  in  "  $FILEPATH
 	echo ""
-	sed -i "s|$ORGPATH|$PWD|g" $FILEPATH
+	sed -i "s|$VENVS|$PWD|g" $FILEPATH
     done
 }
 #--------------------------------------
