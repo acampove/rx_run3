@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
+import os
+import argparse
+
 from DIRAC.Interfaces.API.Dirac import Dirac
 from DIRAC.Interfaces.API.Job   import Job
 from DIRAC                      import initialize
 from DIRAC                      import gLogger
-
-import os
-import argparse
 
 from tqdm    import trange
 
@@ -19,12 +19,13 @@ class data:
     conf    = None
     venv    = None
     mode    = None
+    epat    = os.environ['VENVS'] 
 # ---------------------------------------
 def get_job(jobid):
     j = Job()
     j.setCPUTime(36000)
     j.setDestination('LCG.CERN.cern')
-    j.setExecutable('run_filter', arguments=f'{data.dset} {data.conf} {data.njob} {jobid}')
+    j.setExecutable('run_filter', arguments=f'{data.dset} {data.conf} {data.njob} {jobid} {data.epat}')
     j.setInputSandbox([f'LFN:/lhcb/user/a/acampove/run3/venv/{data.venv}/dcheck.tar'])
     j.setOutputData(['*.root'], outputPath=data.name)
     j.setName(f'{data.name}_{jobid:03}')
