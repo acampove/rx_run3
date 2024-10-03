@@ -50,6 +50,12 @@ check_env()
         echo "Grid proxy not found"
         exit 1
     fi
+
+    DCHECK=$(pip show data_checks | grep "Editable project location" | awk -F ': ' '{print$2}' | sed 's|/src||g')
+    if [[ ! -d $DCHECK ]];then
+        echo "Cannot find directory with data_checks project"
+        exit 1
+    fi
 }
 #---------------------------------
 check_existing()
@@ -72,6 +78,11 @@ check_existing()
 update()
 {
     CONF=$1
+    if [[ ! -f $CONF ]];then
+        echo "Cannot find $CONF"
+        exit 1
+    fi
+
     echo ""
     echo ""
     echo "Uploading $CONF"
@@ -87,6 +98,6 @@ SE=CERN-USER
 get_opts "$@"
 check_env
 
-update /home/acampove/Packages/RK/data_checks/src/data_checks_data/mc_2024_turbo_comp.toml
-update /home/acampove/Packages/RK/data_checks/src/data_checks_data/dt_2024_turbo_comp.toml
+update $DCHECK/src/data_checks_data/mc_2024_turbo_comp.toml
+update $DCHECK/src/data_checks_data/dt_2024_turbo_comp.toml
 
