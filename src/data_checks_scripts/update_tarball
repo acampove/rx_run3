@@ -63,10 +63,13 @@ upload()
 initialize()
 {
     which lb-conda-dev > /dev/null
-    if [[ $? -ne 0 ]];then
-        echo "No lb-conda-dev found"
-        exit 1
-    fi
+    check "No lb-conda-dev found"
+
+    which lb-dirac     > /dev/null
+    check "No lb-dirac found"
+
+    lhcb-proxy-info    > /dev/null
+    check "Invalid grid proxy"
 
     if [[ -z $VENVS ]];then
         echo "VENVS environment variable not set"
