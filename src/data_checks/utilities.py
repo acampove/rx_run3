@@ -47,9 +47,9 @@ def _load_grid_config(cfg_nam):
     Will use XROOTD to pick up file from grid
     '''
     xrd_path = f'root://x509up_u1000@eoslhcb.cern.ch//eos/lhcb/grid/user/lhcb/user/a/acampove/run3/ntupling/config/{cfg_nam}.toml'
-    log.debug(f'Loading: {xrd_path}')
+    log.info(f'Loading: {xrd_path}')
     with client.File() as ifile:
-        status, into = ifile.open(xrd_path)
+        status, _ = ifile.open(xrd_path)
         if not status.ok:
             log.error(status.message)
             raise
