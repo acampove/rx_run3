@@ -48,8 +48,7 @@ starts_with=[
 	'Hlt1Di',
 	'Hlt1BGI',
 	'B_DTF_PV_Jpsi_mass_const_M',
-	'B_DTF_PV_Psi2S_mass_const_M',
-    ]
+	'B_DTF_PV_Psi2S_mass_const_M']
 
 [rename]
 B_DTF_PV_Jpsi_mass_const_M  ='B_const_mass_M'
