@@ -58,8 +58,10 @@ def print_pfn_info(d_pfn):
 #------------------------------------
 def get_dt_pfns(ap_obj):
     cfg_dat = utdc.load_config(data.config)
-    d_samp  = cfg_dat['sample']
-    l_path  = ap_obj(**d_samp)
+    l_samp  = cfg_dat['sample']['names']
+    l_path  = []
+    for samp in l_samp:
+        l_path += ap_obj(name=samp)
 
     return {data.config : l_path}
 #------------------------------------

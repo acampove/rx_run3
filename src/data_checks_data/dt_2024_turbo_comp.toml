@@ -3,10 +3,13 @@ working_group= 'rd'
 analysis     = 'btoxll_mva_2024'
 
 [sample]
-version  = 'v1r1803'
-eventtype= '94000000'
-polarity = ['magup', 'magdown']
-datatype = 2024
+names        = [
+    'data_24_magdown_turbo_24c1',
+    'data_24_magdown_turbo_24c2',
+    'data_24_magdown_turbo_24c3',
+    'data_24_magup_turbo_24c1',
+    'data_24_magup_turbo_24c2',
+    'data_24_magup_turbo_24c3']
 
 [drop_branches]
 includes=[
