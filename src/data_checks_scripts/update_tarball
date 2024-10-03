@@ -53,10 +53,10 @@ upload()
         exit 0
     fi
 
-    SOURCE=/home/acampove/Test/venv/dcheck.tar 
+    SOURCE=$VENVS/dcheck.tar 
     TARGET="dirac-dms-add-file LFN:/lhcb/user/a/acampove/run3/venv/$VERS/dcheck.tar"
 
-    echo "Uploading tarball fot $TARGET"
+    echo "Uploading tarball for $TARGET"
     lb-dirac $TARGET $SOURCE CERN-USER
 }
 #--------------------------------
