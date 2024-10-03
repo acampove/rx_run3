@@ -1,9 +1,9 @@
 [production]
 working_group= 'rd'
-analysis     = 'rd_ap_2024'
+analysis     = 'btoxll_mva_2024'
 
 [sample]
-version  = 'v1r1364'
+version  = 'v1r1803'
 eventtype= '94000000'
 polarity = ['magup', 'magdown']
 datatype = 2024
@@ -37,15 +37,15 @@ includes=[
 
 starts_with=[
     'B_Hlt1',
-	  'Lz_Hlt1',
-	  'Lb_Hlt1',
-	  'Jpsi_Hlt1',
-	  'B_K2Pi_DTF_',
-	  'K_',
-	  'Hlt1Di',
-	  'Hlt1BGI',
-	  'B_DTF_PV_Jpsi_mass_const_M',
-	  'B_DTF_PV_Psi2S_mass_const_M',
+	'Lz_Hlt1',
+	'Lb_Hlt1',
+	'Jpsi_Hlt1',
+	'B_K2Pi_DTF_',
+	'K_',
+	'Hlt1Di',
+	'Hlt1BGI',
+	'B_DTF_PV_Jpsi_mass_const_M',
+	'B_DTF_PV_Psi2S_mass_const_M',
     ]
 
 [rename]
@@ -55,6 +55,7 @@ B_DTF_PV_Psi2S_mass_const_M ='B_const_mass_psi2S_M'
 Lb_DTF_PV_Psi2S_mass_const_M='B_const_mass_psi2S_M'
 L1_PID_E                    ='L1_PIDe'
 L2_PID_E                    ='L2_PIDe'
+K_PID_E                     ='H_PIDe'
 K_PROBNN_K                  ='H_ProbNNk'
 K_TRGHOSTPROB               ='H_TRACK_GhostProb'
 H1_PROBNN_K                 ='H1_ProbNNk'
@@ -89,36 +90,34 @@ lines_phys_mm_cut= [
 prescale=1
 [selection.cuts]
 [selection.cuts.any]
-j_mass = '((Jpsi_M * Jpsi_M > 9920000.0) && (Jpsi_M * Jpsi_M < 16400000.0) || (Jpsi_M * Jpsi_M > 6000000.0) && (Jpsi_M * Jpsi_M < 12960000.0))'
 L1Ghost= 'L1_TRGHOSTPROB < 0.5'
 L2Ghost= 'L2_TRGHOSTPROB < 0.5'
 
 [selection.cuts.bukee]
-b_mass = 'B_const_mass_M  > 5000 && B_const_mass_M < 5800'
-PIDep  = 'L1_PID_E >    1 && L2_PID_E > 1'
+b_mass = 'B_const_mass_M > 4500 && B_const_mass_M < 6000'
 KpGhost= 'H_TRGHOSTPROB  < 0.5'
 
 [selection.cuts.bukmm]
-b_mass = 'B_M      > 4800 && B_M      < 6000'
+b_mass = 'B_const_mass_M > 5000 && B_const_mass_M < 5800'
 KpGhost= 'H_TRGHOSTPROB  < 0.5'
 
 [selection.cuts.bdkstee]
-b_mass = 'B_const_mass_M > 5000 && B_const_mass_M < 5800'
+b_mass = 'B_const_mass_M > 4500 && B_const_mass_M < 6000'
 k_mass = 'Kst_M    >  800 && Kst_M   < 1000'
 H1Ghost= 'H1_TRGHOSTPROB < 0.5'
 H2Ghost= 'H2_TRGHOSTPROB < 0.5'
 
 [selection.cuts.bdkstmm]
-b_mass = 'B_const_mass_M > 5000 && B_const_mass_M < 5600'
+b_mass = 'B_const_mass_M > 5000 && B_const_mass_M < 5800'
 k_mass = 'Kst_M    >  800 && Kst_M   < 1000'
 H1Ghost= 'H1_TRGHOSTPROB < 0.5'
 H2Ghost= 'H2_TRGHOSTPROB < 0.5'
 
 [selection.cuts.lbpkee]
-b_mass = 'B_const_mass_M > 5000 && B_const_mass_M < 5800'
+b_mass = 'B_const_mass_M > 4500 && B_const_mass_M < 6000'
 
 [selection.cuts.lbpkmm]
-b_mass = 'B_const_mass_M > 5000 && B_const_mass_M < 5600'
+b_mass = 'B_const_mass_M > 5000 && B_const_mass_M < 5800'
 
 [saving]
 max_events  =-1
