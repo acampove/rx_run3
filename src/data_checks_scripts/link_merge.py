@@ -82,9 +82,8 @@ def _split_paths(l_path):
     npath = len(l_path)
     log.info(f'Splitting {npath} paths into categories')
 
-
     d_info_path = {}
-    for path in l_path:
+    for path in tqdm.tqdm(l_path, ascii=' -'):
         info = _info_from_path(path)
         if info not in d_info_path:
             d_info_path[info] = []
@@ -92,6 +91,10 @@ def _split_paths(l_path):
         d_info_path[info].append(path)
 
     d_info_path = _truncate_paths(d_info_path)
+
+    log.info('Found samples:')
+    for info in d_info_path:
+        log.info(info)
 
     return d_info_path
 # ---------------------------------
