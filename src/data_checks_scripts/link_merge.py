@@ -16,7 +16,7 @@ from importlib.resources import files
 import tqdm
 import yaml
 
-from ROOT      import TFileMerger
+from ROOT      import TFileMerger, TTree
 from log_store import log_store
 
 log = log_store.add_logger('rx:data_checks:link_merge')
@@ -34,7 +34,7 @@ class Data:
     Max     : int
     ver     : str
     inp_dir : str = '/publicfs/lhcb/user/campoverde/Data/RK'
-    dt_rgx  : str = r'dt_(\d{4}).*ftuple_Hlt2RD_(.*)\.root'
+    dt_rgx  : str = r'dt_(\d{4}).*tuple_Hlt2RD_(.*)\.root'
     mc_rgx  : str = r'mc_.*_(\d{8})_nu.*tuple_Hlt2RD_(.*)\.root'
 # ---------------------------------
 def _get_args():
@@ -211,6 +211,7 @@ def _kind_from_decay(decay):
     if decay in ['B0ToKpPimEE', 'B0ToKpPimMuMu']:
         return 'ana_cut_bd'
 
+
     if decay in ['BuToKpEE', 'BuToKpMuMu']:
         return 'ana_cut_bp'
 
@@ -224,7 +225,10 @@ def _kind_from_decay(decay):
     if decay in ['BuToKpEE_MVA', 'BuToKpMuMu_MVA']:
         return 'ana_mva_bp'
 
-    if decay in ['LbToLEE_LL_MVA', 'LbToLMuMu_LL_MVA']:
+    if decay in ['BsToPhiMuMu_MVA', 'BsToPhiEE_MVA']:
+        return 'ana_mva_bs'
+
+    if decay in ['LbTopKEE_MVA', 'LbTopKMuMu_MVA']:
         return 'ana_mva_lb'
 
     log.error(f'Unrecognized decay: {decay}')
@@ -270,10 +274,17 @@ def _merge_paths(target, l_path):
     '''
     Merge ROOT files of a specific kind
     '''
+    if os.path.isfile(target):
+        log.warning(f'Target found, not merging: {target}')
+        return
+
     npath = len(l_path)
     log.info(f'Merging {npath} paths {target}')
     log.info('')
 
+    # Allow trees to got up to 200 Gb when merging
+    # https://root-forum.cern.ch/t/root-6-04-14-hadd-100gb-and-rootlogon/24581/3
+    TTree.SetMaxTreeSize(200_000_000_000)
     fm = TFileMerger(isLocal=True)
     for path in tqdm.tqdm(l_path, ascii=' -'):
         fm.AddFile(path, cpProgress=False)
