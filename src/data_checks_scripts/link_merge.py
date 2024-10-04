@@ -214,13 +214,13 @@ def _kind_from_decay(decay):
     if decay in ['B0ToKpPimEE', 'B0ToKpPimMuMu']:
         return 'ana_cut_bd'
 
-
     if decay in ['BuToKpEE', 'BuToKpMuMu']:
         return 'ana_cut_bp'
 
     if decay in ['LbToLEE_LL', 'LbToLMuMu_LL']:
         return 'ana_cut_lb'
 
+    # -------------------------------
 
     if decay in ['B0ToKpPimEE_MVA', 'B0ToKpPimMuMu_MVA']:
         return 'ana_mva_bd'
@@ -228,11 +228,11 @@ def _kind_from_decay(decay):
     if decay in ['BuToKpEE_MVA', 'BuToKpMuMu_MVA']:
         return 'ana_mva_bp'
 
-    if decay in ['BsToPhiMuMu_MVA', 'BsToPhiEE_MVA']:
-        return 'ana_mva_bs'
-
     if decay in ['LbTopKEE_MVA', 'LbTopKMuMu_MVA']:
         return 'ana_mva_lb'
+
+    if decay in ['BsToPhiMuMu_MVA', 'BsToPhiEE_MVA']:
+        return 'ana_mva_bs'
 
     log.error(f'Unrecognized decay: {decay}')
     raise ValueError
@@ -286,9 +286,9 @@ def _merge_paths(target, l_path):
     log.info(f'Merging {npath} paths {target}')
     log.info('')
 
-    # Allow trees to got up to 200 Gb when merging
+    # Allow trees to got up to 1Tb when merging
     # https://root-forum.cern.ch/t/root-6-04-14-hadd-100gb-and-rootlogon/24581/3
-    TTree.SetMaxTreeSize(200_000_000_000)
+    TTree.SetMaxTreeSize(1000_000_000_000)
     fm = TFileMerger(isLocal=True)
     for path in tqdm.tqdm(l_path, ascii=' -'):
         fm.AddFile(path, cpProgress=False)
