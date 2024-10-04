@@ -246,6 +246,10 @@ def _link_paths(info, l_path):
     sam, chan, kind, year = info
 
     target_dir  = f'{Data.inp_dir}/{sam}_{chan}_{kind}/{Data.ver}/{year}'
+    if os.path.isfile(f'{target_dir}.root'):
+        log.warning(f'Merged file exists, not linking: {target_dir}.root')
+        return
+
     os.makedirs(target_dir, exist_ok=True)
     log.debug(f'Linking to: {target_dir}')
 
@@ -274,9 +278,6 @@ def _merge_paths(target, l_path):
     '''
     Merge ROOT files of a specific kind
     '''
-    if os.path.isfile(target):
-        log.warning(f'Target found, not merging: {target}')
-        return
 
     npath = len(l_path)
     log.info(f'Merging {npath} paths {target}')
@@ -304,7 +305,10 @@ def main():
     d_path = _split_paths(l_path)
     for kind, l_path in d_path.items():
         target_dir = _link_paths(kind, l_path)
-        target     = f'{target_dir}.root'
+        if target_dir is None:
+            continue
+
+        target = f'{target_dir}.root'
         _merge_paths(target, l_path)
 # ---------------------------------
 if __name__ == '__main__':
