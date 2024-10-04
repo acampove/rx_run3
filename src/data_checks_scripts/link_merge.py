@@ -298,6 +298,28 @@ def _merge_paths(target, l_path):
 
     if not success:
         raise ValueError(f'Could not create merged file: {target}')
+
+    _delete_tmp_files()
+# ---------------------------------
+def _delete_tmp_files():
+    '''
+    Delete files in /tmp that TFileMerger makes
+    In order to prevent storage to run out
+    '''
+
+    log.info('Removing temporary files')
+
+    l_path   = glob.glob('/tmp/ROOTMERGE*.root')
+    nremoved = 0
+    for path in l_path:
+        try:
+            os.remove(path)
+        except:
+            pass
+
+        nremoved += 1
+
+    log.info(f'Removed {nremoved} files')
 # ---------------------------------
 def main():
     '''
@@ -307,6 +329,10 @@ def main():
     l_path = _get_paths()
     d_path = _split_paths(l_path)
     for kind, l_path in d_path.items():
+        if 'ana_mva_bs' in kind:
+            log.warning(f'Skipping {kind}')
+            continue
+
         target_dir = _link_paths(kind, l_path)
         if target_dir is None:
             continue
