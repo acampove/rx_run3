@@ -12,6 +12,7 @@ import argparse
 from dataclasses         import dataclass
 from functools           import cache
 from importlib.resources import files
+from dmu.rfile.rfprinter import RFPrinter
 
 import tqdm
 import yaml
@@ -251,6 +252,7 @@ def _link_paths(info, l_path):
     target_dir  = f'{Data.inp_dir}/{sam}_{chan}_{kind}/{Data.ver}/{year}'
     if os.path.isfile(f'{target_dir}.root'):
         log.warning(f'Merged file exists, not linking: {target_dir}.root')
+        _save_summary(f'{target_dir}.root')
         return
 
     os.makedirs(target_dir, exist_ok=True)
@@ -321,6 +323,13 @@ def _delete_tmp_files():
 
     log.info(f'Removed {nremoved} files')
 # ---------------------------------
+def _save_summary(target):
+    '''
+    Make text file with summary of file, e.g. 2024.root -> 2024.txt
+    '''
+    prt = RFPrinter(path=target)
+    prt.save()
+# ---------------------------------
 def main():
     '''
     Script starts here
@@ -339,6 +348,7 @@ def main():
 
         target = f'{target_dir}.root'
         _merge_paths(target, l_path)
+        _save_summary(target)
 # ---------------------------------
 if __name__ == '__main__':
     main()
