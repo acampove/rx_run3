@@ -153,6 +153,20 @@ plots:
 
 it's up to the user to build this dictionary and load it.
 
+# Manipulating ROOT files
+
+## Printing contents
+
+The following lines will create a `file.txt` with the contents of `file.root`, the text file will be in the same location as the
+ROOT file.
+
+```python
+from dmu.rfile.rfprinter import RFPrinter
+
+obj = RFPrinter(path='/path/to/file.root')
+obj.save()
+```
+
 # Text manipulation
 
 ## Transformations
