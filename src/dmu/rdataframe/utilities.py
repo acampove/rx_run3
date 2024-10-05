@@ -2,74 +2,72 @@
 Module containing utility functions to be used with ROOT dataframes
 '''
 
-import hashlib
+import re
+import awkward as ak
+
+from dataclasses import dataclass
 
 import numpy
 
-from ROOT import RDataFrame, Numba
+from ROOT import RDataFrame 
 
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:rdataframe:utilities')
 
 # ---------------------------------------------------------------------
-def _hash_from_numpy(arr_val):
+@dataclass
+class Data:
     '''
-    Will take a numpy array
-    Will return the hash of a numpy array
+    Class meant to store data that is shared
     '''
-
-    arr_bytes = arr_val.tobytes()
-    hsh       = hashlib.sha256()
-    hsh.update(arr_bytes)
-    val = hsh.hexdigest()
-
-    return val
+    l_good_type = [int, numpy.bool_, numpy.int32, numpy.uint32, numpy.int64, numpy.uint64, numpy.float32, numpy.float64]
+    d_cast_type = {'bool': numpy.int32}
 # ---------------------------------------------------------------------
-def _define_arr_getter(arr_val, hash_arr):
-    '''
-    Takes numpy array and corresponding hash
-
-    Defines in Numba namespace a function to pick values from that array
-    '''
-
-    if hasattr(Numba, f'fun_{hash_arr}'):
-        return
-
-    @Numba.Declare(['int'], 'float', name=f'fun_{hash_arr}')
-    def get_array_value(index):
-        return arr_val[index]
-# ---------------------------------------------------------------------
-def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str):
+def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str, d_opt : dict | None = None): 
     '''
     Will take a dataframe, an array of numbers and a string
     Will add the array as a colunm to the dataframe
+
+    d_opt (dict) : Used to configure adding columns
+         exclude_re : Regex with patter of column names that we won't pick
     '''
 
-    if not isinstance(arr_val, numpy.ndarray):
-        log.error('Input array needs to be an instance of numpy.ndarray')
-        raise ValueError
+    d_opt = {} if d_opt is None else d_opt
+    if arr_val is None:
+        raise ValueError('Array of values not introduced')
 
-    v_col = rdf.GetColumnNames()
-    l_col = [ col.c_str() for col in v_col ]
+    if 'exclude_re' not in d_opt:
+        d_opt['exclude_re'] = None 
 
-    nval  = len(arr_val)
-    nent  = rdf.Count().GetValue()
+    v_col_org = rdf.GetColumnNames()
+    l_col_org = [name.c_str() for name in v_col_org ]
+    l_col     = []
 
-    if nval != nent:
-        log.error(f'Size of dataframe and input array differ, array/dataframe: {nval}/{nent}')
-        raise ValueError
+    tmva_rgx  = r'tmva_\d+_\d+'
 
-    if name in l_col:
-        log.error(f'Column name {name} already found in dataframe')
-        raise ValueError
+    for col in l_col_org:
+        user_rgx = d_opt['exclude_re']
+        if user_rgx is not None and re.match(user_rgx, col):
+            log.debug(f'Dropping: {col}')
+            continue
 
-    log.debug(f'Adding column {name}')
+        if                          re.match(tmva_rgx, col):
+            log.debug(f'Dropping: {col}')
+            continue
 
-    hash_arr = _hash_from_numpy(arr_val)
-    _define_arr_getter(arr_val, hash_arr)
+        log.debug(f'Picking: {col}')
+        l_col.append(col)
 
-    rdf = rdf.Define(name, f'Numba::fun_{hash_arr}(rdfentry_)')
+    data  = ak.from_rdataframe(rdf, columns=l_col)
+    d_data= { col : data[col] for col in l_col }
+
+    if arr_val.dtype == 'object':
+        arr_val = arr_val.astype(float)
+
+    d_data[name] = arr_val
+
+    rdf = ak.to_rdataframe(d_data)
 
     return rdf
 # ---------------------------------------------------------------------
