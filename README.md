@@ -152,17 +152,18 @@ definitions:
 #Settings to make histograms for differen variables
 plots:
     x :
-        binning : [-5.0, 8.0, 40]
-        yscale  : 'linear'
-        labels  : ['x', 'Entries']
+        binning    : [-5.0, 8.0, 40]
+        yscale     : 'linear'
+        labels     : ['x', 'Entries']
     y :
-        binning : [-5.0, 8.0, 40]
-        yscale  : 'linear'
-        labels  : ['y', 'Entries']
+        binning    : [-5.0, 8.0, 40]
+        yscale     : 'linear'
+        labels     : ['y', 'Entries']
     z :
-        binning : [-5.0, 8.0, 40]
-        yscale  : 'linear'
-        labels  : ['x + y', 'Entries']
+        binning    : [-5.0, 8.0, 40]
+        yscale     : 'linear'
+        labels     : ['x + y', 'Entries']
+        normalized : true #This should normalize to the area
 ```
 
 it's up to the user to build this dictionary and load it.
