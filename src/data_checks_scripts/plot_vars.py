@@ -4,7 +4,6 @@ Script used to make diagnostic plots from filtered ntuples
 
 #!/usr/bin/env python3
 
-import os
 import argparse
 
 from dataclasses import dataclass
@@ -74,20 +73,19 @@ def _get_args():
     Data.cfg_nam           = args.cfg
     Data.log_lvl           = args.log
 # -------------------------------------
-def _get_rdf(dset):
+def _get_rdf(path_wc):
     '''
-    Will take label of dataset, e.g. ctrl_BuToKpEE_ana_ee
+    Takes wildcard to ROOT files used as input
     Will return ROOT dataframe
     '''
-    tree_name = 'KMM' if 'MuMu' in dset else 'KEE'
-    pfs_dir   = os.environ['PFSDIR']
-    fpath     = f'{pfs_dir}/Data/RK/{dset}/{Data.vers}/{Data.year}.root'
 
-    log.debug(f'Loading: {fpath}/{tree_name}')
+    tree_name = Data.cfg_dat['input']['tree_name']
 
-    rdf    = RDataFrame(tree_name, fpath)
+    log.debug(f'Loading: {path_wc}/{tree_name}')
+
+    rdf    = RDataFrame(tree_name, path_wc)
     nev    = rdf.Count().GetValue()
-    log.debug(f'Found {nev} entries in: {fpath}')
+    log.debug(f'Found {nev} entries in: {path_wc}')
 
     return rdf
 # -------------------------------------
@@ -102,7 +100,8 @@ def main():
     Data.cfg_dat = ut.load_config(Data.cfg_nam)
     log_store.set_level('data_checks:plot_vars', Data.log_lvl)
 
-    d_rdf = { samp : _get_rdf(dset) for samp, dset in zip(Data.l_sam, Data.l_dst) }
+    d_inp = Data.cfg_dat['input']
+    d_rdf = { samp : _get_rdf(dset) for samp, dset in d_inp.items()}
 
     ptr   = Plotter(d_rdf=d_rdf, cfg=Data.cfg_dat)
     ptr.run()
