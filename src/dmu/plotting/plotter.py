@@ -59,7 +59,7 @@ class Plotter:
 
         d_def = self._d_cfg['definitions']
 
-        log.info('Defining extera variables')
+        log.info('Defining extra variables')
         for name, expr in d_def.items():
             log.debug(f'{name:<30}{expr:<150}')
             rdf = rdf.Define(name, expr)
