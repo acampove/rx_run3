@@ -1,0 +1,20 @@
+input:
+    file_wc:
+        MVA : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/r_fits/v7/data/v2/2024_ETOS/*.root
+        Cut : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/r_fits/v7/data/v2/2024_ETOS/*.root 
+    treename: ETOS
+
+selection:
+    max_ran_entries : 1000_000
+
+definitions:
+    run : 'RUNNUMBER'
+
+plots:
+    run:
+        binning : [0, 0, 100]
+        yscale  : 'linear'
+        labels  : ['Run Number', '']
+
+saving:
+    plt_dir : '/publicfs/ucas/user/campoverde/Packages/RK/data_checks/plots/hlt_comparison'
