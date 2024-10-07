@@ -33,8 +33,8 @@ class Data:
     cfg_nam : str
     cfg_dat : dict
 
-    year = 2024
-    vers = 'v1'
+    year    : str
+    vers    : str
 # -------------------------------------
 def _dst_sam_from_arg(l_dst):
     '''
@@ -61,12 +61,16 @@ def _dst_sam_from_arg(l_dst):
 # -------------------------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Used to plot yields of cut based vs MVA based lines vs luminosity')
-    parser.add_argument('-d', '--dst' , nargs='+', help='Type of dataset to plot, e.g. data_ana_cut_bp_ee', required=True)
+    parser.add_argument('-y', '--year', type =str, help='Year corresponding to dataset'                      , required=True)
+    parser.add_argument('-v', '--vers', type =str, help='Version of dataset'                                 , required=True)
+    parser.add_argument('-d', '--dst' , nargs='+', help='Type of dataset to plot, e.g. data_ana_cut_bp_ee'   , required=True)
     parser.add_argument('-c', '--cfg' , type =str, help='Name of config file specifying what to plot and how', required=True)
     parser.add_argument('-l', '--log' , type =int, help='Log level', default=20)
     args = parser.parse_args()
 
     Data.l_dst, Data.l_sam = _dst_sam_from_arg(args.dst)
+    Data.year              = args.year
+    Data.vers              = args.vers
     Data.cfg_nam           = args.cfg
     Data.log_lvl           = args.log
 # -------------------------------------
