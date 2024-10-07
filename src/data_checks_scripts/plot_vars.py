@@ -74,15 +74,6 @@ def _get_args():
     Data.cfg_nam           = args.cfg
     Data.log_lvl           = args.log
 # -------------------------------------
-def _define_vars(rdf):
-    d_def = Data.cfg_dat['define_vars']
-    log.info('Defining variables')
-    for name, expr in d_def.items():
-        log.debug(f'{name} <- {expr}')
-        rdf = rdf.Define(name, expr)
-
-    return rdf
-# -------------------------------------
 def _get_rdf(dset):
     '''
     Will take label of dataset, e.g. ctrl_BuToKpEE_ana_ee
@@ -95,7 +86,6 @@ def _get_rdf(dset):
     log.debug(f'Loading: {fpath}/{tree_name}')
 
     rdf    = RDataFrame(tree_name, fpath)
-    rdf    = _define_vars(rdf)
     nev    = rdf.Count().GetValue()
     log.debug(f'Found {nev} entries in: {fpath}')
 
