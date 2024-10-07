@@ -64,6 +64,10 @@ H1_PROBNN_K                 ='H1_ProbNNk'
 H2_PROBNN_K                 ='H2_ProbNNk'
 L1_TRGHOSTPROB              ='L1_TRACK_GhostProb'
 L2_TRGHOSTPROB              ='L2_TRACK_GhostProb'
+L1_PID_MU                   ='L1_PIDmu'
+L2_PID_MU                   ='L2_PIDmu'
+L1_ISMUON                   ='L1_isMuon'
+L2_ISMUON                   ='L2_isMuon'
 
 [hlt_lines]
 lines_phys_ee_mva= [
