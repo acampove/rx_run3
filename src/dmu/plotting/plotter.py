@@ -112,6 +112,14 @@ class Plotter:
 
         return rdf
     #-------------------------------------
+    def _find_bounds(self, d_data):
+        '''
+        Will take dictionary between kinds of data and numpy array
+        Will return tuple with bounds, where 95% of the data is found
+        '''
+
+        return 0, 0
+    #-------------------------------------
     def _plot_var(self, var):
         '''
         Will plot a variable from a dictionary of dataframes
@@ -131,9 +139,16 @@ class Plotter:
         if 'normalized' in d_cfg:
             normalized = d_cfg['normalized']
 
-        l_bc_all = []
+        d_data = {}
         for name, rdf in self._d_rdf.items():
-            arr_val    = rdf.AsNumpy([var])[var]
+            d_data[name] = rdf.AsNumpy([var])[var]
+
+        if minx == maxx:
+            log.info(f'Bounds not set for {var}, will calculated them')
+            minx, maxx = self._find_bounds(d_data)
+
+        l_bc_all = []
+        for name, arr_val in d_data.items():
             l_bc, _, _ = plt.hist(arr_val, bins=bins, range=(minx, maxx), density=normalized, histtype='step', label=name)
             l_bc_all  += numpy.array(l_bc).tolist()
 
