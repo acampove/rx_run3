@@ -152,7 +152,7 @@ definitions:
 #Settings to make histograms for differen variables
 plots:
     x :
-        binning    : [-5.0, 8.0, 40]
+        binning    : [0.98, 0.98, 40] # Here bounds agree => tool will calculate bounds making sure that they are the 2% and 98% quantile
         yscale     : 'linear'
         labels     : ['x', 'Entries']
     y :
