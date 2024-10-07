@@ -15,65 +15,76 @@ minlpt = 'TMath::Min(L1_PT, L2_PT)'
 [plots]
 
 [plots.B_M]
-binning=[4500, 6000, 100]
-yscale ='linear'
-labels =['$M(B^+)[MeV]$', '']
+binning   =[4500, 6000, 100]
+yscale    ='linear'
+labels    =['$M(B^+)[MeV]$', '']
+normalized=true
 
 [plots.Jpsi_M]
-binning=[2400, 3300, 100]
-yscale ='linear'
-labels =['$M(J/\psi)[MeV]$', '']
+binning   =[2400, 3300, 100]
+yscale    ='linear'
+labels    =['$M(J/\psi)[MeV]$', '']
+normalized=true
 
 [plots.B_const_mass_M]
-binning=[4800, 5800, 100]
-yscale ='linear'
-labels =['$M_{DTF}(B^+)[MeV]$', '']
+binning   =[4800, 5800, 100]
+yscale    ='linear'
+labels    =['$M_{DTF}(B^+)[MeV]$', '']
+normalized=true
 
 [plots.xbrem]
-binning=[   0,    3,   3]
-yscale ='linear'
-labels =['$n_{\gamma}$', '']
+binning   =[   0,    3,   3]
+yscale    ='linear'
+labels    =['$n_{\gamma}$', '']
+normalized=true
 
 [plots.maxlpt]
-binning=[   0, 20000, 100]
-yscale ='linear'
-labels =['$\max p_T(\ell, \ell)[MeV]$', '']
+binning   =[   0, 20000, 100]
+yscale    ='linear'
+labels    =['$\max p_T(\ell, \ell)[MeV]$', '']
+normalized=true
 
 [plots.minlpt]
-binning=[   0, 20000, 100]
-yscale ='linear'
-labels =['$\min p_T(\ell, \ell)[MeV]$', '']
+binning   =[   0, 20000, 100]
+yscale    ='linear'
+labels    =['$\min p_T(\ell, \ell)[MeV]$', '']
+normalized=true
 
 [plots.H_PT]
-binning=[   0, 20000, 100]
-yscale ='linear'
-labels =['$p_T(K^+)[MeV]$', '']
+binning   =[   0, 20000, 100]
+yscale    ='linear'
+labels    =['$p_T(K^+)[MeV]$', '']
+normalized=true
 
 [plots.H_PID_E]
-binning=[  -5,    2, 100]
-yscale ='log'
-labels =['$PID_e(K^+)$', '']
+binning   =[  -5,    2, 100]
+yscale    ='log'
+labels    =['$PID_e(K^+)$', '']
+normalized=true
 
 [plots.H_PROBNN_K]
-binning=[   0,    1, 100]
-yscale ='log'
-labels =['$Prob_{K}^{NN}(K^+)$', '']
+binning   =[   0,    1, 100]
+yscale    ='log'
+labels    =['$Prob_{K}^{NN}(K^+)$', '']
+normalized=true
 
 [plots.H_TRGHOSTPROB]
-binning=[   0,    1, 100]
-yscale ='log'
-labels =['$Prob^{ghost}(K^+)$', '']
+binning   =[   0,    1, 100]
+yscale    ='log'
+labels    =['$Prob^{ghost}(K^+)$', '']
+normalized=true
 
 [plots.L1_TRGHOSTPROB]
-binning=[   0,    1, 100]
-yscale ='log'
-labels =['$Prob^{ghost}(e^+)$', '']
+binning   =[   0,    1, 100]
+yscale    ='log'
+labels    =['$Prob^{ghost}(e^+)$', '']
+normalized=true
 
 [plots.L2_TRGHOSTPROB]
-binning=[   0,    1, 100]
-yscale ='log'
-labels =['$Prob^{ghost}(e^-)$', '']
-
+binning   =[   0,    1, 100]
+yscale    ='log'
+labels    =['$Prob^{ghost}(e^-)$', '']
+normalized=true
 
 [saving]
 plt_dir='/publicfs/ucas/user/campoverde/Packages/RK/data_checks/plots/bukee'
