@@ -1,3 +1,5 @@
+[[__TOC__]]
+
 # Description
 
 These are YAML and TOML config files used for different reasons:
