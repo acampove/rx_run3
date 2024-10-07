@@ -86,3 +86,14 @@ def test_high_stat():
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
+#---------------------------------------
+def test_no_bounds():
+    '''
+    Test for case where plot bounds are not explicitly passed 
+    '''
+    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+
+    cfg_dat = _load_config(test='no_bounds')
+
+    ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
+    ptr.run()
