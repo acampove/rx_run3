@@ -2,7 +2,6 @@
 max_ran_entries=50_000
 
 [selection.cuts]
-j_mass = 'Jpsi_M   > 2800        && Jpsi_M   < 3300'
 KpGhost= 'H_TRGHOSTPROB  < 0.5'
 L1Ghost= 'L1_TRGHOSTPROB < 0.5'
 L2Ghost= 'L2_TRGHOSTPROB < 0.5'
@@ -39,20 +38,20 @@ labels    =['$n_{\gamma}$', '']
 normalized=true
 
 [plots.maxlpt]
-binning   =[   0, 20000, 100]
-yscale    ='linear'
+binning   =[   0, 15000, 100]
+yscale    ='log'
 labels    =['$\max p_T(\ell, \ell)[MeV]$', '']
 normalized=true
 
 [plots.minlpt]
-binning   =[   0, 20000, 100]
-yscale    ='linear'
+binning   =[   0, 10000, 100]
+yscale    ='log'
 labels    =['$\min p_T(\ell, \ell)[MeV]$', '']
 normalized=true
 
 [plots.H_PT]
 binning   =[   0, 20000, 100]
-yscale    ='linear'
+yscale    ='log'
 labels    =['$p_T(K^+)[MeV]$', '']
 normalized=true
 
@@ -60,6 +59,18 @@ normalized=true
 binning   =[  -5,    2, 100]
 yscale    ='log'
 labels    =['$PID_e(K^+)$', '']
+normalized=true
+
+[plots.L1_PIDe]
+binning   =[  -5,    5, 100]
+yscale    ='linear'
+labels    =['$PID_e(L1)$', '']
+normalized=true
+
+[plots.L2_PIDe]
+binning   =[  -5,    5, 100]
+yscale    ='linear'
+labels    =['$PID_e(L2)$', '']
 normalized=true
 
 [plots.H_PROBNN_K]
