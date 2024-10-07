@@ -3,10 +3,10 @@ saving:
 
 plots:
     x : 
-        binning : [0, 0, 40]
+        binning : [1, 1, 40]
         yscale  : 'linear' 
         labels  : ['x', 'Entries']
     y : 
-        binning : [0, 0, 40]
+        binning : [1, 1, 40]
         yscale  : 'linear' 
         labels  : ['y', 'Entries']
