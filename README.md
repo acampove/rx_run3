@@ -137,18 +137,32 @@ ptr.run()
 where the config dictionary `cfg_dat` in YAML would look like:
 
 ```yaml
+selection:
+    #Will do at most 50K random entries. Will only happen if the dataset has more than 50K entries
+    max_ran_entries : 50000
+    cuts:
+    #Will only use entries with z > 0 
+      z : 'z > 0'
 saving:
-    plt_dir : tests/plotting/simple
-
+    #Will save lots to this directory 
+    plt_dir : tests/plotting/high_stat
+definitions:
+    #Will define extra variables 
+    z : 'x + y'
+#Settings to make histograms for differen variables
 plots:
-    x : 
+    x :
         binning : [-5.0, 8.0, 40]
-        yscale  : 'linear' 
+        yscale  : 'linear'
         labels  : ['x', 'Entries']
-    y : 
+    y :
         binning : [-5.0, 8.0, 40]
-        yscale  : 'linear' 
+        yscale  : 'linear'
         labels  : ['y', 'Entries']
+    z :
+        binning : [-5.0, 8.0, 40]
+        yscale  : 'linear'
+        labels  : ['x + y', 'Entries']
 ```
 
 it's up to the user to build this dictionary and load it.
