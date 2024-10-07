@@ -1,14 +1,13 @@
 [selection]
-prescale=1
+max_ran_entries=50_000
 
 [selection.cuts]
-none   = '(1)'
 j_mass = 'Jpsi_M   > 2800        && Jpsi_M   < 3300'
 KpGhost= 'H_TRGHOSTPROB  < 0.5'
 L1Ghost= 'L1_TRGHOSTPROB < 0.5'
 L2Ghost= 'L2_TRGHOSTPROB < 0.5'
 
-[define_vars]
+[definitions]
 xbrem  = 'L1_HASBREM + L2_HASBREM'
 maxlpt = 'TMath::Max(L1_PT, L2_PT)'
 minlpt = 'TMath::Min(L1_PT, L2_PT)'
@@ -77,4 +76,4 @@ labels =['$Prob^{ghost}(e^-)$', '']
 
 
 [saving]
-plt_dir='/home/acampove/Packages/RK/data_checks/plots/bukee'
+plt_dir='/publicfs/ucas/user/campoverde/Packages/RK/data_checks/plots/bukee'
