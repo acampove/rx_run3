@@ -112,13 +112,25 @@ class Plotter:
 
         return rdf
     #-------------------------------------
-    def _find_bounds(self, d_data):
+    def _find_bounds(self, d_data : dict, qnt : float = 0.98):
         '''
         Will take dictionary between kinds of data and numpy array
         Will return tuple with bounds, where 95% of the data is found
         '''
+        l_max = []
+        l_min = []
 
-        return 0, 0
+        for arr_val in d_data.values():
+            maxv = numpy.quantile(arr_val,     qnt)
+            minv = numpy.quantile(arr_val, 1 - qnt)
+
+            l_max.append(maxv)
+            l_min.append(minv)
+
+        minx = min(l_min)
+        maxx = max(l_max)
+
+        return minx, maxx
     #-------------------------------------
     def _plot_var(self, var):
         '''
@@ -145,7 +157,7 @@ class Plotter:
 
         if minx == maxx:
             log.info(f'Bounds not set for {var}, will calculated them')
-            minx, maxx = self._find_bounds(d_data)
+            minx, maxx = self._find_bounds(d_data = d_data, qnt=minx)
 
         l_bc_all = []
         for name, arr_val in d_data.items():
