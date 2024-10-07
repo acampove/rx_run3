@@ -131,7 +131,7 @@ which will do the same with at most `10` files, can use debug messages with `-l 
 For this run:
 
 ```bash
-plot_vars -c bukee_opt -d data_ana_cut_bp_ee:Data ctrl_BuToKpEE_ana_ee:Simulation
+plot_vars -y 2024 -v v2 -c bukee_opt -d data_ana_cut_bp_ee:Data ctrl_BuToKpEE_ana_ee:Simulation
 ```
 
 which will run the plotting of the variables in a config specified by `bukee_opt` where also axis, names, ranges, etc are
