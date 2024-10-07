@@ -40,11 +40,11 @@ class Plotter:
 
         returns preprocessed dataframe
         '''
+
+        rdf = self._define_vars(rdf)
         if 'selection' in self._d_cfg:
             rdf = self._apply_selection(rdf)
             rdf = self._max_ran_entries(rdf)
-
-        rdf = self._define_vars(rdf)
 
         return rdf
     #-------------------------------------
