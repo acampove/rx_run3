@@ -3,6 +3,7 @@ Module containing plotter class
 '''
 
 import os
+import math
 
 import numpy
 import matplotlib.pyplot as plt
@@ -24,8 +25,92 @@ class Plotter:
         cfg   (dict): Dictionary with configuration, e.g. binning, ranges, etc
         '''
 
-        self._d_rdf = d_rdf if d_rdf is not None else {}
-        self._d_cfg = cfg   if cfg   is not None else {}
+        if not isinstance(  cfg, dict):
+            raise ValueError('Config dictionary not passed')
+
+        if not isinstance(d_rdf, dict):
+            raise ValueError('Dataframe dictionary not passed')
+
+        self._d_cfg = cfg
+        self._d_rdf = { name : self._preprocess_rdf(rdf) for name, rdf in d_rdf.items()}
+    #-------------------------------------
+    def _preprocess_rdf(self, rdf):
+        '''
+        rdf (RDataFrame): ROOT dataframe
+
+        returns preprocessed dataframe
+        '''
+        if 'selection' in self._d_cfg:
+            rdf = self._apply_selection(rdf)
+            rdf = self._max_ran_entries(rdf)
+
+        rdf = self._define_vars(rdf)
+
+        return rdf
+    #-------------------------------------
+    def _define_vars(self, rdf):
+        '''
+        Will define extra columns in dataframe and return updated dataframe
+        '''
+
+        if 'definitions' not in self._d_cfg:
+            log.debug('No definitions section found, returning same RDF')
+            return rdf
+
+        d_def = self._d_cfg['definitions']
+
+        log.info('Defining extera variables')
+        for name, expr in d_def.items():
+            log.debug(f'{name:<30}{expr:<150}')
+            rdf = rdf.Define(name, expr)
+
+        return rdf
+    #-------------------------------------
+    def _apply_selection(self, rdf):
+        '''
+        Will take dataframe, apply selection and return dataframe
+        '''
+        if 'cuts' not in self._d_cfg['selection']:
+            log.debug('Cuts not found in selection section, not applying any cuts')
+            return rdf
+
+        d_cut = self._d_cfg['selection']['cuts']
+
+        log.info('Applying cuts')
+        for name, cut in d_cut.items():
+            log.debug(f'{name:<50}{cut:<150}')
+            rdf = rdf.Filter(cut, name)
+
+        return rdf
+    #-------------------------------------
+    def _max_ran_entries(self, rdf):
+        '''
+        Will take dataframe and randomly drop events
+        '''
+
+        if 'max_ran_entries' not in self._d_cfg['selection']:
+            log.debug('Cuts not found in selection section, not applying any cuts')
+            return rdf
+
+        tot_entries = rdf.Count().GetValue()
+        max_entries = self._d_cfg['selection']['max_ran_entries']
+
+        if tot_entries < max_entries:
+            log.debug(f'Not dropping dandom entries: {tot_entries} < {max_entries}')
+            return rdf
+
+        prescale = math.floor(tot_entries / max_entries)
+        if prescale < 2:
+            log.debug(f'Not dropping random entries, prescale is below 2: {tot_entries}/{max_entries}')
+            return rdf
+
+        rdf = rdf.Filter(f'rdfentry_ % {prescale} == 0', 'max_ran_entries')
+
+        fnl_entries = rdf.Count().GetValue()
+
+        log.info(f'Dropped entries randomly: {tot_entries} -> {fnl_entries}')
+
+        return rdf
     #-------------------------------------
     def _plot_var(self, var):
         '''
@@ -94,6 +179,7 @@ class Plotter:
         '''
         Will run plotting
         '''
+
         for var in self._d_cfg['plots']:
             log.debug(f'Plotting: {var}')
             plt.figure(var)
