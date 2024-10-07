@@ -4,13 +4,18 @@ selection:
       v : 'v > 0'
 saving:
     plt_dir : tests/plotting/high_stat
-
+definitions:
+    z : 'x + y'
 plots:
-    x : 
+    x :
         binning : [-5.0, 8.0, 40]
-        yscale  : 'linear' 
+        yscale  : 'linear'
         labels  : ['x', 'Entries']
-    y : 
+    y :
         binning : [-5.0, 8.0, 40]
-        yscale  : 'linear' 
+        yscale  : 'linear'
         labels  : ['y', 'Entries']
+    z :
+        binning : [-5.0, 8.0, 40]
+        yscale  : 'linear'
+        labels  : ['x + y', 'Entries']
