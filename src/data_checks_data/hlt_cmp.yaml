@@ -1,7 +1,7 @@
 input:
     file_wc:
+        Cut : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/r_fits/v7/data/v1/2024_ETOS/*.root 
         MVA : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/r_fits/v7/data/v2/2024_ETOS/*.root
-        Cut : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/r_fits/v7/data/v2/2024_ETOS/*.root 
     tree_name: ETOS
 
 selection:
@@ -12,7 +12,7 @@ definitions:
 
 plots:
     run:
-        binning : [0, 0, 100]
+        binning : [1, 1, 100]
         yscale  : 'linear'
         labels  : ['Run Number', '']
 
