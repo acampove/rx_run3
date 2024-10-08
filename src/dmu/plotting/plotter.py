@@ -155,9 +155,12 @@ class Plotter:
         for name, rdf in self._d_rdf.items():
             d_data[name] = rdf.AsNumpy([var])[var]
 
-        if minx == maxx:
+        if maxx <= minx + 1e-5:
             log.info(f'Bounds not set for {var}, will calculated them')
             minx, maxx = self._find_bounds(d_data = d_data, qnt=minx)
+            log.info(f'Using bounds [{minx:.3e}, {maxx:.3e}]')
+        else:
+            log.debug(f'Using bounds [{minx:.3e}, {maxx:.3e}]')
 
         l_bc_all = []
         for name, arr_val in d_data.items():
