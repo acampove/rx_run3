@@ -1,29 +1,45 @@
-import data_checks.utilities as ut
-import pprint
+'''
+Module with unit tests for utilities functions
+'''
 
-import utils_noroot as utnr
-
+import pytest
 from log_store import log_store
 
-#----------------------------------------
-def test_load_grid_config():
-    d_cfg = ut.load_config('dt_2024_turbo_comp')
-#----------------------------------------
-def test_load_local_config():
-    ut.local_config=True
+import data_checks.utilities as ut
 
-    d_cfg = ut.load_config('dt_2024_turbo_comp')
 #----------------------------------------
-def set_log():
+class Data:
+    '''
+    Class holding shared attributes
+    '''
+
+    l_arg_kind = [
+            ('dt_2024_turbo_comp', 'toml', True),
+            ('dt_2024_turbo_comp', 'toml', False),
+            ('hlt_cmp'           , 'yaml', True)]
+#----------------------------------------
+@pytest.fixture
+def _initialize():
     log_store.set_level('data_checks:utilities', 10)
 #----------------------------------------
-def main():
-    utnr.timer_on=True
-    set_log()
+@pytest.mark.parametrize('is_local', [True, False])
+def test_simple(is_local : bool):
+    '''
+    Test that it can read grid and local config
+    '''
+    ut.local_config=is_local
 
-    test_load_grid_config()
-    test_load_local_config()
+    d_cfg = ut.load_config('dt_2024_turbo_comp')
+
+    assert isinstance(d_cfg, dict)
 #----------------------------------------
-if __name__ == '__main__':
-    main()
+@pytest.mark.parametrize('name, kind, is_local', Data.l_arg_kind)
+def test_kind(name : str , kind :str, is_local : bool):
+    '''
+    Test that it can load yaml and toml locally and from grid
+    '''
+    ut.local_config=is_local
 
+    d_cfg = ut.load_config(name, kind)
+    assert isinstance(d_cfg, dict)
+#----------------------------------------
