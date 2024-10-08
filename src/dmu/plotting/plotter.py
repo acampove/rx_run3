@@ -220,14 +220,30 @@ class Plotter:
         elif var == 'Jpsi_M':
             plt.axvline(x=3096, color='r', label=r'$J/\psi$', linestyle=':')
     # --------------------------------------------
+    def _get_fig_size(self):
+        '''
+        Will read size list from config dictionary if found
+        other wise will return None
+        '''
+        if 'general' not in self._d_cfg:
+            return None
+
+        if 'size' not in self._d_cfg['general']:
+            return None
+
+        fig_size = self._d_cfg['general']['size']
+
+        return fig_size
+    # --------------------------------------------
     def run(self):
         '''
         Will run plotting
         '''
 
+        fig_size = self._get_fig_size()
         for var in self._d_cfg['plots']:
             log.debug(f'Plotting: {var}')
-            plt.figure(var)
+            plt.figure(var, figsize=fig_size)
             self._plot_var(var)
             self._plot_lines(var)
             self._save_plot(var)
