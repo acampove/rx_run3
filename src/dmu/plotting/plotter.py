@@ -112,23 +112,38 @@ class Plotter:
 
         return rdf
     #-------------------------------------
+    def _check_quantile(self, qnt : float):
+        '''
+        Will check validity of quantile
+        '''
+
+        if 0.5 < qnt <= 1.0:
+            return
+
+        raise ValueError(f'Invalid quantile: {qnt:.3e}, value needs to be in (0.5, 1.0] interval')
+    #-------------------------------------
     def _find_bounds(self, d_data : dict, qnt : float = 0.98):
         '''
         Will take dictionary between kinds of data and numpy array
         Will return tuple with bounds, where 95% of the data is found
         '''
+        self._check_quantile(qnt)
+
         l_max = []
         l_min = []
 
         for arr_val in d_data.values():
-            maxv = numpy.quantile(arr_val,     qnt)
             minv = numpy.quantile(arr_val, 1 - qnt)
+            maxv = numpy.quantile(arr_val,     qnt)
 
             l_max.append(maxv)
             l_min.append(minv)
 
         minx = min(l_min)
         maxx = max(l_max)
+
+        if minx >= maxx:
+            raise ValueError(f'Could not calculate bounds correctly: [{minx:.3e}, {maxx:.3e}]')
 
         return minx, maxx
     #-------------------------------------
