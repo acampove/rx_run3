@@ -65,7 +65,7 @@ def main():
     Data.cfg_dat = ut.load_config(Data.cfg_nam, kind='yaml')
     log_store.set_level('data_checks:plot_vars', Data.log_lvl)
 
-    d_inp = Data.cfg_dat['input']
+    d_inp = Data.cfg_dat['input']['file_wc']
     d_rdf = { samp : _get_rdf(dset) for samp, dset in d_inp.items()}
 
     ptr   = Plotter(d_rdf=d_rdf, cfg=Data.cfg_dat)
