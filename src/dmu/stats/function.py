@@ -3,7 +3,10 @@ Module containing the Function class
 '''
 import os
 import json
+import numpy
+import scipy
 
+from scipy.interpolate     import interp1d
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:stats:function')
@@ -24,6 +27,8 @@ class Function:
 
         self._l_x = x
         self._l_y = y
+
+        self._interpolator : scipy.interpolate._interpolate.interp1d = None
     #------------------------------------------------
     def __eq__(self, other):
         if not isinstance(other, Function):
@@ -32,27 +37,32 @@ class Function:
 
         return self.__dict__ == other.__dict__
     #------------------------------------------------
-    def _json_encoder(self, obj):
-        '''
-        Takes Function object
-        Returns dictionary of attributes for encoding
-        '''
-        return obj.__dict__
+    def __str__(self):
+        npoints = len(self._l_x)
+        max_x   = max(self._l_x)
+        min_x   = min(self._l_x)
+
+        max_y   = max(self._l_y)
+        min_y   = min(self._l_y)
+
+        line = f'\n{"Points":<20}{npoints:<20}\n'
+        line+= '-------------------------\n'
+        line+= f'{"x-max":<20}{max_x:<20}\n'
+        line+= f'{"x-min":<20}{min_x:<20}\n'
+        line+= f'{"y-max":<20}{max_y:<20}\n'
+        line+= f'{"y-min":<20}{min_y:<20}'
+
+        return line
     #------------------------------------------------
-    def save(self, path : str):
+    def __call__(self, xval : float | numpy.ndarray | list) -> numpy.ndarray :
         '''
-        Saves current object to JSON
-
-        path (str): Path to file, needs to end in .json
+        Class taking value of x coordinates as a float, numpy array or list
+        It will interpolate y value and return value
         '''
+        self._make_interpolator()
+        self._check_xval_validity(xval)
 
-        if not path.endswith('.json'):
-            raise ValueError(f'Output path does not end in .json: {path}')
-
-        with open(path, 'w', encoding='utf-8') as ofile:
-            json.dump(self, ofile, indent=4, default=self._json_encoder)
-
-        log.info(f'Saved to: {path}')
+        return self._interpolator(xval)
     #------------------------------------------------
     @staticmethod
     def json_decoder(d_attr):
@@ -89,20 +99,59 @@ class Function:
 
         return fun
     #------------------------------------------------
-    def __str__(self):
-        npoints = len(self._l_x)
-        max_x   = max(self._l_x)
-        min_x   = min(self._l_x)
+    def _make_interpolator(self):
+        '''
+        If not found, will make interpolator and put it in self._interpolator
+        '''
+        if self._interpolator is not None:
+            return
 
-        max_y   = max(self._l_y)
-        min_y   = min(self._l_y)
+        log.debug('Making interpolator')
 
-        line = f'\n{"Points":<20}{npoints:<20}\n'
-        line+= '-------------------------\n'
-        line+= f'{"x-max":<20}{max_x:<20}\n'
-        line+= f'{"x-min":<20}{min_x:<20}\n'
-        line+= f'{"y-max":<20}{max_y:<20}\n'
-        line+= f'{"y-min":<20}{min_y:<20}'
+        self._interpolator = interp1d(self._l_x, self._l_y)
+    #------------------------------------------------
+    def _check_xval_validity(self, xval : float | numpy.ndarray | list):
+        '''
+        Will check that xval is an acceptable value for the function to be evaluated at
+        '''
 
-        return line
+        if isinstance(xval, list):
+            xval = numpy.array(xval)
+
+        if not isinstance(xval, (float, numpy.ndarray)):
+            raise ValueError(f'x value is not a float or numpy array: {xval}')
+
+        check_within_bounds_vect = numpy.vectorize(self._check_within_bounds)
+        check_within_bounds_vect(xval)
+    #------------------------------------------------
+    def _check_within_bounds(self, xval : float):
+        '''
+        Check that xval is within bounds of function
+        '''
+
+        if xval < min(self._l_x) or xval > max(self._l_x):
+            print(self)
+            raise ValueError(f'x value outside bounds: {xval}')
+    #------------------------------------------------
+    def _json_encoder(self, obj):
+        '''
+        Takes Function object
+        Returns dictionary of attributes for encoding
+        '''
+        return obj.__dict__
+    #------------------------------------------------
+    def save(self, path : str):
+        '''
+        Saves current object to JSON
+
+        path (str): Path to file, needs to end in .json
+        '''
+
+        if not path.endswith('.json'):
+            raise ValueError(f'Output path does not end in .json: {path}')
+
+        with open(path, 'w', encoding='utf-8') as ofile:
+            json.dump(self, ofile, indent=4, default=self._json_encoder)
+
+        log.info(f'Saved to: {path}')
     #------------------------------------------------
