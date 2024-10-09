@@ -19,7 +19,7 @@ class Function:
     Class meant to represent a 1D function created from (x, y) coordinates
     '''
     #------------------------------------------------
-    def __init__(self, x : list | numpy.ndarray, y : list | numpy.ndarray):
+    def __init__(self, x : list | numpy.ndarray, y : list | numpy.ndarray, kind : str = 'cubic'):
         '''
         x (list) : List with x coordinates
         y (list) : List with y coordinates
@@ -33,15 +33,25 @@ class Function:
 
         self._l_x = x
         self._l_y = y
+        self._kind= kind
 
         self._interpolator : scipy.interpolate._interpolate.interp1d = None
     #------------------------------------------------
-    def __eq__(self, other):
-        if not isinstance(other, Function):
+    def __eq__(self, othr):
+        if not isinstance(othr, Function):
             log.warning('Comparison not done with instance of Function')
             return False
 
-        return self.__dict__ == other.__dict__
+        d_self = self.__dict__
+        d_othr = othr.__dict__
+
+        if '_interpolator' in d_self:
+            del d_self['_interpolator']
+
+        if '_interpolator' in d_othr:
+            del d_othr['_interpolator']
+
+        return d_self == d_othr
     #------------------------------------------------
     def __str__(self):
         npoints = len(self._l_x)
@@ -83,10 +93,11 @@ class Function:
         if '_l_y' not in d_attr:
             raise KeyError('Y values not found')
 
-        x = d_attr['_l_x']
-        y = d_attr['_l_y']
+        x    = d_attr['_l_x' ]
+        y    = d_attr['_l_y' ]
+        kind = d_attr['_kind']
 
-        return Function(x=x, y=y)
+        return Function(x=x, y=y, kind=kind)
     #------------------------------------------------
     @staticmethod
     def load(path : str):
@@ -130,7 +141,7 @@ class Function:
 
         log.debug('Making interpolator')
 
-        self._interpolator = interp1d(self._l_x, self._l_y)
+        self._interpolator = interp1d(self._l_x, self._l_y, kind=self._kind)
     #------------------------------------------------
     def _check_xval_validity(self, xval : float | numpy.ndarray | list):
         '''
@@ -160,7 +171,12 @@ class Function:
         Takes Function object
         Returns dictionary of attributes for encoding
         '''
-        return obj.__dict__
+        d_data = obj.__dict__
+
+        if '_interpolator' in d_data:
+            del d_data['_interpolator']
+
+        return d_data
     #------------------------------------------------
     def save(self, path : str):
         '''
