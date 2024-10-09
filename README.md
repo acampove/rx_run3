@@ -2,6 +2,37 @@
 
 These are tools that can be used for different data analysis tasks.
 
+# Math
+
+## Functions
+
+The project contains the `Function` class that can be used to:
+
+- Store `(x,y)` coordinates.
+- Evaluate the function by interpolating
+- Storing the function as a JSON file
+- Loading the function from the JSON file
+
+It can be used as:
+
+```python
+import numpy
+from dmu.stats.function    import Function
+
+x    = numpy.linspace(0, 5, num=10)
+y    = numpy.sin(x)
+
+path = './function.json'
+
+fun  = Function(x=x.tolist(), y=y.tolist())
+fun.save(path = path)
+
+fun  = Function.load(path)
+
+xval = numpy.lispace(0, 5, num=100)
+yval = fun(xval)
+```
+
 # Machine learning
 
 ## Classification
