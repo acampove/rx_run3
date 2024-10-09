@@ -18,7 +18,7 @@ class Data:
     l_arg_eval = [
             0.2,
             [0.1, 0.2, 0.3],
-            numpy.linspace(0, 5, num=200)]
+            numpy.linspace(0, 9, num=200)]
 #----------------------------------------------------
 @pytest.fixture
 def _initialize():
@@ -97,7 +97,7 @@ def test_eval(xval):
     Will test () operator
     '''
 
-    x = numpy.linspace(0, 5, num=10)
+    x = numpy.linspace(0, 9, num=10)
     y = numpy.sin(x)
 
     fun  = Function(x=x, y=y)
@@ -119,13 +119,13 @@ def test_load_eval(xval):
     Will test () operator on loaded function
     '''
 
-    x    = numpy.linspace(0, 5, num=10)
+    x    = numpy.linspace(0, 9, num=10)
     y    = numpy.sin(x)
 
     out_dir_path = _make_out_dir('load_eval')
     path = f'{out_dir_path}/function.json'
 
-    fun  = Function(x=x.tolist(), y=y.tolist())
+    fun  = Function(x=x, y=y)
     fun.save(path = path)
 
     fun  = Function.load(path)
@@ -139,3 +139,40 @@ def test_load_eval(xval):
     plt.savefig(f'{out_dir_path}/function.png')
     plt.close()
 #----------------------------------------------------
+def _shuffle(x, y):
+    '''
+    Will randomly shuffle (x, y) points and return shuffled x and y vectors
+    '''
+    x_y  = numpy.array([x , y]).T
+    numpy.random.shuffle(x_y)
+    x_y  = x_y.T
+    x    = x_y[0]
+    y    = x_y[1]
+
+    return x, y
+#----------------------------------------------------
+@pytest.mark.parametrize('xval', Data.l_arg_eval)
+def test_unsorted(xval):
+    '''
+    Will test () operator on loaded function
+    '''
+    x    = numpy.linspace(0, 9, num=10)
+    y    = numpy.sin(x)
+    x, y = _shuffle(x, y)
+
+    out_dir_path = _make_out_dir('unsorted')
+    path = f'{out_dir_path}/function.json'
+
+    fun  = Function(x=x, y=y)
+    fun.save(path = path)
+
+    fun  = Function.load(path)
+    yval = fun(xval)
+    if yval.size < 20:
+        return
+
+    plt.scatter(xval, yval, label='Function')
+    plt.scatter(   x,    y, label=    'Data')
+    plt.legend()
+    plt.savefig(f'{out_dir_path}/function.png')
+    plt.close()
