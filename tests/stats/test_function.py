@@ -113,3 +113,29 @@ def test_eval(xval):
     plt.savefig(f'{out_dir_path}/function.png')
     plt.close()
 #----------------------------------------------------
+@pytest.mark.parametrize('xval', Data.l_arg_eval)
+def test_load_eval(xval):
+    '''
+    Will test () operator on loaded function
+    '''
+
+    x    = numpy.linspace(0, 5, num=10)
+    y    = numpy.sin(x)
+
+    out_dir_path = _make_out_dir('load_eval')
+    path = f'{out_dir_path}/function.json'
+
+    fun  = Function(x=x.tolist(), y=y.tolist())
+    fun.save(path = path)
+
+    fun  = Function.load(path)
+    yval = fun(xval)
+    if yval.size < 20:
+        return
+
+    plt.scatter(xval, yval, label='Function')
+    plt.scatter(   x,    y, label=    'Data')
+    plt.legend()
+    plt.savefig(f'{out_dir_path}/function.png')
+    plt.close()
+#----------------------------------------------------
