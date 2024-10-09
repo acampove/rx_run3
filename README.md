@@ -24,7 +24,9 @@ y    = numpy.sin(x)
 
 path = './function.json'
 
-fun  = Function(x=x.tolist(), y=y.tolist())
+# By default the interpolation is 'cubic', this uses scipy's interp1d
+# refer to that documentation for more information on this.
+fun  = Function(x=x, y=y, kind='cubic')
 fun.save(path = path)
 
 fun  = Function.load(path)
