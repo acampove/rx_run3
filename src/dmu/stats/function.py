@@ -3,6 +3,9 @@ Module containing the Function class
 '''
 import os
 import json
+
+from typing import Any
+
 import numpy
 import scipy
 
@@ -16,11 +19,14 @@ class Function:
     Class meant to represent a 1D function created from (x, y) coordinates
     '''
     #------------------------------------------------
-    def __init__(self, x : list, y : list):
+    def __init__(self, x : list | numpy.ndarray, y : list | numpy.ndarray):
         '''
         x (list) : List with x coordinates
         y (list) : List with y coordinates
         '''
+
+        x = self._array_to_list(x)
+        y = self._array_to_list(y)
 
         if len(x) != len(y):
             raise ValueError('X and Y coordinates have different lengths')
@@ -98,6 +104,22 @@ class Function:
         log.info(f'Loaded from: {path}')
 
         return fun
+    #------------------------------------------------
+    def _array_to_list(self, x : Any):
+        '''
+        Transform from ndarray to list
+        Return x if already list
+        Raise otherwise
+        '''
+        if isinstance(x, list):
+            log.debug('Already found list')
+            return x
+
+        if isinstance(x, numpy.ndarray):
+            log.debug('Transforming argument to list')
+            return x.tolist()
+
+        raise ValueError('Object introduced is neither a list nor a numpy array')
     #------------------------------------------------
     def _make_interpolator(self):
         '''
