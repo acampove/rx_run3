@@ -34,6 +34,8 @@ class Function:
         if npoint < 4:
             raise ValueError('Need at least four points, found {npoint}')
 
+        x, y = self._remove_duplicates(x=x, y=y)
+
         self._max_entries = 400
         self._l_x = x
         self._l_y = y
@@ -157,6 +159,27 @@ class Function:
 
         self._l_x = arr_x.tolist()
         self._l_y = arr_y.tolist()
+    #------------------------------------------------
+    def _remove_duplicates(self, x : list, y : list):
+        '''
+        Takes two lists with the same sizes and remove (x, y) points with repeated
+        x coordinates.
+        Return tuple with x and y after removal
+        '''
+
+        norg  = len(x)
+
+        d_tmp = dict(zip(x, y))
+
+        x = list(d_tmp.keys())
+        y = list(d_tmp.values())
+
+        nfnl  = len(x)
+
+        if norg != nfnl:
+            log.warning(f'Found duplicates: {norg} -> {nfnl}')
+
+        return x, y
     #------------------------------------------------
     def _check_xval_validity(self, xval : float | numpy.ndarray | list):
         '''

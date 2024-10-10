@@ -46,6 +46,17 @@ def test_simple():
     fun = Function(x=x, y=y)
     print(fun)
 #----------------------------------------------------
+def test_repeated():
+    '''
+    Will test creation of function
+    '''
+
+    x = [0, 1, 2, 2, 3]
+    y = [0, 1, 2, 2, 3]
+
+    fun = Function(x=x, y=y)
+    print(fun)
+#----------------------------------------------------
 def test_equal():
     '''
     Will test == overiding
