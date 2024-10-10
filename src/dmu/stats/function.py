@@ -102,11 +102,18 @@ class Function:
         if '_l_y' not in d_attr:
             raise KeyError('Y values not found')
 
+        if '_tag' not in d_attr:
+            raise KeyError('tag not found')
+
         x    = d_attr['_l_x' ]
         y    = d_attr['_l_y' ]
         kind = d_attr['_kind']
+        tag  = d_attr['_tag' ]
 
-        return Function(x=x, y=y, kind=kind)
+        fun  = Function(x=x, y=y, kind=kind)
+        fun.tag = tag
+
+        return fun
     #------------------------------------------------
     @property
     def tag(self):

@@ -48,20 +48,24 @@ def test_simple():
 #----------------------------------------------------
 def test_tag():
     '''
-    Will test adding tag to function 
+    Will test adding tag to function
     '''
 
     out_dir_path = _make_out_dir('save_tag')
     x = [0, 1, 2, 3]
     y = [0, 1, 2, 3]
 
-    tag     = 'this_is_a_tag'
+    tag       = 'this_is_a_tag'
+    path      = f'{out_dir_path}/function.json'
 
-    fun     = Function(x=x, y=y)
-    fun.tag = tag
-    fun.save(path = f'{out_dir_path}/function.json')
+    fun_1     = Function(x=x, y=y)
+    fun_1.tag = tag
+    fun_1.save(path = path)
 
-    assert tag == fun.tag
+    fun_2 = Function.load(path)
+
+    assert tag == fun_1.tag
+    assert tag == fun_2.tag
 #----------------------------------------------------
 def test_save_plot():
     '''
