@@ -7,7 +7,6 @@ import json
 from typing import Any
 
 import numpy
-import scipy
 
 from scipy.interpolate     import interp1d
 from dmu.logging.log_store import LogStore
@@ -31,11 +30,18 @@ class Function:
         if len(x) != len(y):
             raise ValueError('X and Y coordinates have different lengths')
 
+        npoint = len(x)
+        if npoint < 4:
+            raise ValueError('Need at least four points, found {npoint}')
+
+        self._max_entries = 400
         self._l_x = x
         self._l_y = y
         self._kind= kind
 
-        self._interpolator : scipy.interpolate._interpolate.interp1d = None
+        self._interpolator = interp1d(self._l_x, self._l_y, kind=self._kind)
+
+        self._update_data()
     #------------------------------------------------
     def __eq__(self, othr):
         if not isinstance(othr, Function):
@@ -75,7 +81,6 @@ class Function:
         Class taking value of x coordinates as a float, numpy array or list
         It will interpolate y value and return value
         '''
-        self._make_interpolator()
         self._check_xval_validity(xval)
 
         return self._interpolator(xval)
@@ -132,16 +137,26 @@ class Function:
 
         raise ValueError('Object introduced is neither a list nor a numpy array')
     #------------------------------------------------
-    def _make_interpolator(self):
+    def _update_data(self):
         '''
-        If not found, will make interpolator and put it in self._interpolator
+        If number of entries in dataset is larger than _max_entries:
+
+        Use interpolator to scan function and get new (x, y) pairs.
         '''
-        if self._interpolator is not None:
+        norg = len(self._l_x)
+        if norg <= self._max_entries:
             return
 
-        log.debug('Making interpolator')
+        log.info(f'Trimming dataset: {norg} -> {self._max_entries}')
 
-        self._interpolator = interp1d(self._l_x, self._l_y, kind=self._kind)
+        min_x = min(self._l_x)
+        max_x = max(self._l_x)
+
+        arr_x = numpy.linspace(min_x, max_x, self._max_entries)
+        arr_y = self(arr_x)
+
+        self._l_x = arr_x.tolist()
+        self._l_y = arr_y.tolist()
     #------------------------------------------------
     def _check_xval_validity(self, xval : float | numpy.ndarray | list):
         '''
@@ -192,4 +207,4 @@ class Function:
             json.dump(self, ofile, indent=4, default=self._json_encoder)
 
         log.info(f'Saved to: {path}')
-    #------------------------------------------------
+#------------------------------------------------
