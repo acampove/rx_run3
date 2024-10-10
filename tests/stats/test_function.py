@@ -96,7 +96,8 @@ def test_save():
     y = [0, 1, 2, 3]
 
     fun=Function(x=x, y=y)
-    fun.save(path = f'{out_dir_path}/function.json')
+    fun.save(path = f'{out_dir_path}/function_1.json')
+    fun.save(path = f'{out_dir_path}/function_2.json')
 #----------------------------------------------------
 def test_load():
     '''
