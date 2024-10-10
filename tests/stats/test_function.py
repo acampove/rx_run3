@@ -176,3 +176,20 @@ def test_unsorted(xval):
     plt.legend()
     plt.savefig(f'{out_dir_path}/function.png')
     plt.close()
+#----------------------------------------------------
+def test_large_load():
+    '''
+    Test loading function
+    '''
+    out_dir_path = _make_out_dir('large_load')
+    x = numpy.linspace(0, 1, 100_000)
+    y = numpy.linspace(0, 1, 100_000)
+
+    path = f'{out_dir_path}/function.json'
+
+    fun_1=Function(x=x, y=y)
+    fun_1.save(path = path)
+
+    fun_2=Function.load(path)
+
+    assert fun_1 == fun_2
