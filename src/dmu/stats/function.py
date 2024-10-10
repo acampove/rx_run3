@@ -7,6 +7,7 @@ import json
 from typing import Any
 
 import numpy
+import matplotlib.pyplot as plt
 
 from scipy.interpolate     import interp1d
 from dmu.logging.log_store import LogStore
@@ -216,7 +217,16 @@ class Function:
 
         return d_data
     #------------------------------------------------
-    def save(self, path : str):
+    def _save_plot(self, path : str):
+        '''
+        Takes path to PNG, saves scatter plot of l_y vs l_x
+        '''
+
+        plt.plot(self._l_x, self._l_y)
+        plt.savefig(path)
+        plt.close()
+    #------------------------------------------------
+    def save(self, path : str, plot : bool = False):
         '''
         Saves current object to JSON
 
@@ -228,6 +238,10 @@ class Function:
 
         with open(path, 'w', encoding='utf-8') as ofile:
             json.dump(self, ofile, indent=4, default=self._json_encoder)
+
+        if plot:
+            path = path.replace('.json', '.png')
+            self._save_plot(path)
 
         log.info(f'Saved to: {path}')
 #------------------------------------------------

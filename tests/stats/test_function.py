@@ -46,6 +46,17 @@ def test_simple():
     fun = Function(x=x, y=y)
     print(fun)
 #----------------------------------------------------
+def test_save_plot():
+    '''
+    Test saving plot feature
+    '''
+    out_dir_path = _make_out_dir('save_plot')
+    x = [0, 1, 2, 3]
+    y = [0, 1, 2, 3]
+
+    fun=Function(x=x, y=y)
+    fun.save(path = f'{out_dir_path}/function.json', plot = True)
+#----------------------------------------------------
 def test_repeated():
     '''
     Will test creation of function
