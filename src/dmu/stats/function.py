@@ -238,6 +238,9 @@ class Function:
         if not path.endswith('.json'):
             raise ValueError(f'Output path does not end in .json: {path}')
 
+        dir_name = os.path.dirname(path)
+        os.makedirs(dir_name, exist_ok=True)
+
         with open(path, 'w', encoding='utf-8') as ofile:
             json.dump(self, ofile, indent=4, default=self._json_encoder)
 
