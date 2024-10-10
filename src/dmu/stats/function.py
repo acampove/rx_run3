@@ -225,6 +225,8 @@ class Function:
         plt.plot(self._l_x, self._l_y)
         plt.savefig(path)
         plt.close()
+
+        log.info(f'Saved to: {path}')
     #------------------------------------------------
     def save(self, path : str, plot : bool = False):
         '''
