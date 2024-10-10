@@ -24,5 +24,6 @@ def test_define():
     df = _get_df()
 
     df = df.define('c', 'a + b')
+    df = df.define('d', '((a > 1) & (b < 6)) * 0.1')
 
     print(df)
