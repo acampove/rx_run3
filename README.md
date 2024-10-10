@@ -138,6 +138,27 @@ thed `add_column` function will check for:
 
 and return a dataframe with the added column
 
+# Dataframes
+
+Polars is very fast, however the interface of polars is not simple. Therefore this project has a derived class
+called `DataFrame`, which implements a more user-friendly interface. It can be used as:
+
+```python
+from dmu.dataframe.dataframe import DataFrame
+
+df = DataFrame({
+'a': [1, 2, 3],
+'b': [4, 5, 6]
+})
+
+
+# Defining a new column
+df = df.define('c', 'a + b')
+
+```
+
+The remaining functionality is identical to `polars`.
+
 # Logging
 
 The `LogStore` class is an interface to the `logging` module. It is aimed at making it easier to include
