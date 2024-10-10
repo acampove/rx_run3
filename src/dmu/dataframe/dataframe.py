@@ -32,7 +32,5 @@ class DataFrame(pl.DataFrame):
         except TypeError as exc:
             raise TypeError(f'Cannot define {expr} -> {name}') from exc
 
-        df.__class__ = DataFrame
-
-        return df
+        return DataFrame(df)
 # ------------------------------------------
