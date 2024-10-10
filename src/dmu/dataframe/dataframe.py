@@ -22,9 +22,17 @@ class DataFrame(pl.DataFrame):
         '''
 
         for col in self.columns:
-            expr = expr.replace(col,  f'pl.col("{col}")')
+            expr = expr.replace(col, f' {col} ')
 
-        self = self.with_columns(eval(expr).alias(name))
+        for col in self.columns:
+            expr = expr.replace(f' {col} ',  f' pl.col("{col}") ')
 
-        return self
+        try:
+            df = self.with_columns(eval(expr).alias(name))
+        except TypeError as exc:
+            raise TypeError(f'Cannot define {expr} -> {name}') from exc
+
+        df.__class__ = DataFrame
+
+        return df
 # ------------------------------------------
