@@ -46,6 +46,23 @@ def test_simple():
     fun = Function(x=x, y=y)
     print(fun)
 #----------------------------------------------------
+def test_tag():
+    '''
+    Will test adding tag to function 
+    '''
+
+    out_dir_path = _make_out_dir('save_tag')
+    x = [0, 1, 2, 3]
+    y = [0, 1, 2, 3]
+
+    tag     = 'this_is_a_tag'
+
+    fun     = Function(x=x, y=y)
+    fun.tag = tag
+    fun.save(path = f'{out_dir_path}/function.json')
+
+    assert tag == fun.tag
+#----------------------------------------------------
 def test_save_plot():
     '''
     Test saving plot feature

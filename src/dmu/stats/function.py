@@ -41,6 +41,7 @@ class Function:
         self._l_x = x
         self._l_y = y
         self._kind= kind
+        self._tag = 'no_tag'
 
         self._interpolator = interp1d(self._l_x, self._l_y, kind=self._kind)
 
@@ -106,6 +107,20 @@ class Function:
         kind = d_attr['_kind']
 
         return Function(x=x, y=y, kind=kind)
+    #------------------------------------------------
+    @property
+    def tag(self):
+        '''
+        Returns string simbolyzing tag of function
+        '''
+        return self._tag
+
+    @tag.setter
+    def tag(self, value : str):
+        '''
+        This sets the _tag property of the function
+        '''
+        self._tag = value
     #------------------------------------------------
     @staticmethod
     def load(path : str):
