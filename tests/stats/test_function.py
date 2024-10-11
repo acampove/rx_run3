@@ -250,4 +250,6 @@ def test_eval_off():
 
     z = numpy.linspace(-1, 10, num=100)
     with pytest.raises(FunOutOfBounds):
-        _ = fun(z)
+        _ = fun(z, off_bounds_raise=True)
+
+    _ = fun(z, off_bounds_raise=False)
