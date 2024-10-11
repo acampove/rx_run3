@@ -6,7 +6,7 @@ import numpy
 import pytest
 import matplotlib.pyplot as plt
 
-from dmu.stats.function    import Function
+from dmu.stats.function    import FunOutOfBounds, Function
 from dmu.logging.log_store import LogStore
 
 log_store = LogStore.add_logger('dmu:tests:test_function')
@@ -239,3 +239,15 @@ def test_large_load():
     fun_2=Function.load(path)
 
     assert fun_1 == fun_2
+#----------------------------------------------------
+def test_eval_off():
+    '''
+    Will test () operator with data outside bounds
+    '''
+    x   = numpy.linspace(0, 9, num=10)
+    y   = numpy.sin(x)
+    fun = Function(x=x, y=y)
+
+    z = numpy.linspace(-1, 10, num=100)
+    with pytest.raises(FunOutOfBounds):
+        _ = fun(z)
