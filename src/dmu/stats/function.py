@@ -125,7 +125,7 @@ class Function:
             org = xval[indx]
             mod = xmod[indx]
 
-            log.info(f'{org:<20.3e}{"-->":<20}{mod:<20.3}')
+            log.info(f'{org:<20.5e}{"-->":<20}{mod:<20.5}')
 
         return xmod
     #------------------------------------------------
