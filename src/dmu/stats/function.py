@@ -85,14 +85,49 @@ class Function:
 
         return line
     #------------------------------------------------
-    def __call__(self, xval : float | numpy.ndarray | list) -> numpy.ndarray :
+    def __call__(self, xval : float | numpy.ndarray | list, off_bounds_raise : bool = False) -> numpy.ndarray:
         '''
         Class taking value of x coordinates as a float, numpy array or list
         It will interpolate y value and return value
         '''
+        if not off_bounds_raise:
+            xval = self._push_in_bounds(xval)
+
         self._check_xval_validity(xval)
 
         return self._interpolator(xval)
+    #------------------------------------------------
+    def _push_in_bounds(self, xval : float | numpy.ndarray | list) -> numpy.ndarray:
+        '''
+        If the xval container, has elements above (below) the upper (lower) bound, these events will be set to the closest bound
+        '''
+
+        xval = numpy.array(xval).flatten().astype(float)
+
+        max_x = max(self._l_x)
+        min_x = min(self._l_x)
+
+        if ((min_x <= xval) & (xval <= max_x)).all():
+            log.debug('Input array within bounds, will not push elements')
+            return xval
+
+
+        xmod = numpy.clip(xval, min_x, max_x)
+
+        arr_diff = xval != xmod
+        arr_indx = numpy.where(arr_diff)[0]
+        ndiff    = numpy.sum(arr_diff)
+        arr_indx = arr_indx[:20]
+
+        log.warning(f'Sending {ndiff} entries inside bounds [{min_x:.3e}, {max_x:.3e}]')
+
+        for indx in arr_indx:
+            org = xval[indx]
+            mod = xmod[indx]
+
+            log.info(f'{org:<20.3e}{"-->":<20}{mod:<20.3}')
+
+        return xmod
     #------------------------------------------------
     @staticmethod
     def json_decoder(d_attr):
