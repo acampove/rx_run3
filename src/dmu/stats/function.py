@@ -14,6 +14,11 @@ from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:stats:function')
 #---------------------------------------------------------
+class FunOutOfBounds(Exception):
+    '''
+    Will be raised when function defined between [a, b] is evaluated outside
+    '''
+#---------------------------------------------------------
 class Function:
     '''
     Class meant to represent a 1D function created from (x, y) coordinates
@@ -225,7 +230,7 @@ class Function:
 
         if xval < min(self._l_x) or xval > max(self._l_x):
             print(self)
-            raise ValueError(f'x value outside bounds: {xval}')
+            raise FunOutOfBounds(f'x value outside bounds: {xval}')
     #------------------------------------------------
     def _json_encoder(self, obj):
         '''
