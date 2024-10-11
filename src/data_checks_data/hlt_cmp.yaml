@@ -9,7 +9,8 @@ selection:
 
 definitions:
     run : 'RUNNUMBER'
-
+general:
+    size : [20, 10]
 plots:
     run:
         binning : [1, 1, 100]
