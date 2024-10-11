@@ -69,7 +69,14 @@ H_BPVIPCHI2                 ='H_IPCHI2_OWNPV'
 Jpsi_BPVIPCHI2              ='Jpsi_IPCHI2_OWNPV'
 L1_BPVIPCHI2                ='L1_IPCHI2_OWNPV'
 L2_BPVIPCHI2                ='L2_IPCHI2_OWNPV'
+Jpsi_BPVDIRA                ='Jpsi_DIRA_OWNPV'
 B_BPVDIRA                   ='B_DIRA_OWNPV'
+B_BPVIPCHI2                 ='B_IPCHI2_OWNPV'
+B_END_VZ                    ='B_ENDVERTEX_Z'
+B_CHI2                      ='B_ENDVERTEX_CHI2' 
+L1_ENERGY                   ='L1_PE'
+L2_ENERGY                   ='L2_PE'
+L2_HASBREM                  ='L2_BremMultiplicity'
 
 
 [hlt_lines]
