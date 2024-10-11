@@ -62,6 +62,12 @@ H1_PROBNN_K                 ='H1_ProbNNk'
 H2_PROBNN_K                 ='H2_ProbNNk'
 L1_TRGHOSTPROB              ='L1_TRACK_GhostProb'
 L2_TRGHOSTPROB              ='L2_TRACK_GhostProb'
+B_BPVFDCHI2                 = 'B_FDCHI2_OWNPV'
+H_BPVIPCHI2                 = 'H_IPCHI2_OWNPV'
+Jpsi_BPVIPCHI2              = 'Jpsi_IPCHI2_OWNPV'
+L1_BPVIPCHI2                = 'L1_IPCHI2_OWNPV'
+L2_BPVIPCHI2                = 'L2_IPCHI2_OWNPV'
+B_BPVDIRA                   = 'B_DIRA_OWNPV'
 
 [hlt_lines]
 lines_phys_ee_mva= [
