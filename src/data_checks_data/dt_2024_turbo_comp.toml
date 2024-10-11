@@ -74,6 +74,7 @@ Jpsi_BPVIPCHI2              ='Jpsi_IPCHI2_OWNPV'
 L1_BPVIPCHI2                ='L1_IPCHI2_OWNPV'
 L2_BPVIPCHI2                ='L2_IPCHI2_OWNPV'
 B_BPVDIRA                   ='B_DIRA_OWNPV'
+Jpsi_BPVDIRA                ='Jpsi_DIRA_OWNPV'
 
 [hlt_lines]
 lines_phys_ee_mva= [
