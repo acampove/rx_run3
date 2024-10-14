@@ -20,7 +20,19 @@ dataset :
 training :
     nfold    : 10
     rdm_stat : 1
-    features : [B_PT, B_ETA, 'Jpsi_CHI2DOF', 'H_ETA', min_ll_pt, max_ll_pt, max_ll_eta, min_ll_eta, 'H_PT', 'B_BPVCHI2DOF', 'B_BPVDIRA', 'B_ENDVERTEX_CHI2DOF']
+    features : 
+        - B_PT
+        - B_ETA
+        - Jpsi_CHI2DOF
+        - H_ETA
+        - min_ll_pt
+        - max_ll_pt
+        - max_ll_eta
+        - min_ll_eta
+        - H_PT
+        - B_BPVCHI2DOF
+        - B_BPVDIRA
+        - B_ENDVERTEX_CHI2DOF
     hyper    :
       loss              : log_loss
       n_estimators      : 100
