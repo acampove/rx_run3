@@ -4,19 +4,20 @@ Script used to make diagnostic plots from filtered ntuples
 
 #!/usr/bin/env python3
 
+import copy
 import argparse
 
 from dataclasses import dataclass
 
 import mplhep
 import matplotlib.pyplot as plt
+import read_selection    as rs
 
 from ROOT                 import RDataFrame
 from log_store            import log_store
 from dmu.plotting.plotter import Plotter
 
 import data_checks.utilities as ut
-
 
 log=log_store.add_logger('data_checks:plot_vars')
 # -------------------------------------
@@ -38,7 +39,7 @@ def _get_args():
     Data.cfg_nam           = args.cfg
     Data.log_lvl           = args.log
 # -------------------------------------
-def _get_rdf(path_wc):
+def _get_rdf(path_wc : str, skip_bdt : bool) -> RDataFrame:
     '''
     Takes wildcard to ROOT files used as input
     Will return ROOT dataframe
@@ -90,11 +91,13 @@ def main():
     Data.cfg_dat = ut.load_config(Data.cfg_nam, kind='yaml')
     log_store.set_level('data_checks:plot_vars', Data.log_lvl)
 
-    d_inp = Data.cfg_dat['input']['file_wc']
-    d_rdf = { samp : _get_rdf(dset) for samp, dset in d_inp.items()}
+    for skip_bdt in [True, False]:
+        d_inp = Data.cfg_dat['input']['file_wc']
+        d_rdf = { samp : _get_rdf(dset, skip_bdt) for samp, dset in d_inp.items()}
 
-    ptr   = Plotter(d_rdf=d_rdf, cfg=Data.cfg_dat)
-    ptr.run()
+        cfg   = _get_config(skip_bdt)
+        ptr   = Plotter(d_rdf, cfg)
+        ptr.run()
 # -------------------------------------
 if __name__ == '__main__':
     main()
