@@ -1,11 +1,11 @@
 input:
     file_wc:
-        Cut : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/r_fits/v7/data/v1/2024_ETOS/*.root 
-        MVA : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/r_fits/v7/data/v2/2024_ETOS/*.root
+        Cut : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/r_fits/v9/data/v1/2024_ETOS/*.root 
+        MVA : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/r_fits/v9/data/v2/2024_ETOS/*.root
     tree_name: ETOS
 
 selection:
-    max_ran_entries : 1000_000
+    max_ran_entries : 10_000_000
 
 definitions:
     run : 'RUNNUMBER'
