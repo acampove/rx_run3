@@ -17,7 +17,7 @@ class Plotter:
     Class used to plot columns in ROOT dataframes
     '''
     # --------------------------------------------
-    def __init__(self, d_rdf : dict | None = None, cfg : dict | None = None):
+    def __init__(self, d_rdf : dict, cfg : dict):
         '''
         Parameters:
 
