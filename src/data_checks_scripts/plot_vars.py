@@ -48,11 +48,36 @@ def _get_rdf(path_wc):
 
     log.debug(f'Loading: {path_wc}/{tree_name}')
 
+    bdt    = rs.get('bdt' , 'ETOS', 'none', '2024') if not skip_bdt else '(1)'
+    mas    = rs.get('mass', 'ETOS', 'jpsi', '2024')
+
     rdf    = RDataFrame(tree_name, path_wc)
+    rdf    = rdf.Define('BDT_prc', '1')
+    rdf    = rdf.Filter(mas, 'mass')
+    rdf    = rdf.Filter(bdt, 'BDT' )
+    rep    = rdf.Report()
+    rep.Print()
+
     nev    = rdf.Count().GetValue()
     log.debug(f'Found {nev} entries in: {path_wc}')
 
     return rdf
+# -------------------------------------
+def _get_config(skip_bdt : bool) -> dict:
+    '''
+    Will pick skip_bdt flag and override plotting directory
+    returns updated config
+    '''
+
+    cfg     = copy.deepcopy(Data.cfg_dat)
+    plt_dir = cfg['saving']['plt_dir']
+
+    if skip_bdt:
+        cfg['saving']['plt_dir'] = f'{plt_dir}/no_bdt'
+    else:
+        cfg['saving']['plt_dir'] = f'{plt_dir}/with_bdt'
+
+    return cfg
 # -------------------------------------
 def main():
     '''
