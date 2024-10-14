@@ -1,6 +1,7 @@
 '''
 Unit test for Mva class
 '''
+import pytest
 
 from dmu.logging.log_store import LogStore
 from dmu.ml.train_mva      import TrainMva
@@ -8,6 +9,11 @@ from dmu.ml.train_mva      import TrainMva
 import dmu.testing.utilities as ut
 
 log = LogStore.add_logger('dmu:ml:test_train_mva')
+
+# -------------------------------
+@pytest.fixture
+def _initialize():
+    LogStore.set_level('data_checks:train_mva', 10)
 # -------------------------------
 def test_train():
     '''
@@ -20,13 +26,3 @@ def test_train():
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run()
 # -------------------------------
-def main():
-    '''
-    Script starts here
-    '''
-    LogStore.set_level('data_checks:train_mva', 10)
-
-    test_train()
-# -------------------------------
-if __name__ == '__main__':
-    main()
