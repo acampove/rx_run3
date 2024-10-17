@@ -58,12 +58,13 @@ def _get_args():
     Will parse arguments
     '''
     parser = argparse.ArgumentParser(description='Used to connect through SSH to servers specified by ~/.config/connect/servers.yaml')
-    parser.add_argument('--name' , type=str, help='Name of task')
+    parser.add_argument('-n', '--name' , type=str, help='Name of task')
+    parser.add_argument('-p', '--print', type=str, help='Prints config settings and exits')
     args   = parser.parse_args()
 
     Data.name = args.name
+    Data.prnt = args.print
 #---------------------------------------
-@cache
 def _load_config():
     home_dir    = os.environ['HOME']
     config_path = f'{home_dir}/.config/dmu/ssh/servers.yaml'
