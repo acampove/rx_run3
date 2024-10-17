@@ -6,10 +6,8 @@ import os
 import argparse
 import subprocess
 
-from functools import cache
-
 import yaml
-from dmu.logging.log_store import LogStore 
+from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:scripts:connect')
 #---------------------------------------
