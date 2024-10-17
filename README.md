@@ -63,7 +63,7 @@ training :
       n_estimators      : 100
       max_depth         : 3
       learning_rate     : 0.1
-      min_samples_split : 2 
+      min_samples_split : 2
 saving:
     path : 'tests/ml/train_mva/model.pkl'
 plotting:
@@ -72,21 +72,21 @@ plotting:
         saving:
             plt_dir : 'tests/ml/train_mva/features'
         plots:
-          w : 
+          w :
             binning : [-4, 4, 100]
-            yscale  : 'linear' 
+            yscale  : 'linear'
             labels  : ['w', '']
-          x : 
+          x :
             binning : [-4, 4, 100]
-            yscale  : 'linear' 
+            yscale  : 'linear'
             labels  : ['x', '']
-          y : 
+          y :
             binning : [-4, 4, 100]
-            yscale  : 'linear' 
+            yscale  : 'linear'
             labels  : ['y', '']
-          z : 
+          z :
             binning : [-4, 4, 100]
-            yscale  : 'linear' 
+            yscale  : 'linear'
             labels  : ['z', '']
 ```
 
@@ -110,7 +110,7 @@ If the entries in the input dataframe were used for the training of some of the 
 will be _automatically_ picked for the prediction of a specific sample.
 
 The picking process happens through the comparison of hashes between the samples in `rdf` and the training samples.
-The hashes of the training samples are stored in the pickled model itself; which therefore is a reimplementation of 
+The hashes of the training samples are stored in the pickled model itself; which therefore is a reimplementation of
 `GradientBoostClassifier`, here called `CVClassifier`.
 
 If a sample exist, that was used in the training of _every_ model, no model can be chosen for the prediction and an
@@ -195,13 +195,13 @@ selection:
     #Will do at most 50K random entries. Will only happen if the dataset has more than 50K entries
     max_ran_entries : 50000
     cuts:
-    #Will only use entries with z > 0 
+    #Will only use entries with z > 0
       z : 'z > 0'
 saving:
-    #Will save lots to this directory 
+    #Will save lots to this directory
     plt_dir : tests/plotting/high_stat
 definitions:
-    #Will define extra variables 
+    #Will define extra variables
     z : 'x + y'
 #Settings to make histograms for differen variables
 plots:
@@ -276,28 +276,45 @@ format      ='--> {} <--'
 e.g.:
 
 ```
-the                                                                                                                                          
-first                                                                                                                                        
-primes are:                                                                                                                                  
-and                                                                                                                                          
-the first                                                                                                                                    
+the
+first
+primes are:
+and
+the first
 days are:
 ```
 
 `format` will format the lines to be inserted, e.g.:
 
 ```
-the                                                                                                                                          
-first                                                                                                                                        
-primes are:                                                                                                                                  
---> 2 <--                                                                                                                                    
---> 3 <--                                                                                                                                    
---> 5 <--                                                                                                                                    
-and                                                                                                                                          
-the first                                                                                                                                    
-days are:                                                                                                                                    
---> Monday <--                                                                                                                               
---> Tuesday <--                                                                                                                              
+the
+first
+primes are:
+--> 2 <--
+--> 3 <--
+--> 5 <--
+and
+the first
+days are:
+--> Monday <--
+--> Tuesday <--
 --> Wednesday <--
+```
+
+# Future tools
+
+## coned
+
+Utility used to edit SSH connection list, it should have the following behavior:
+
+```bash
+#Prints all connections
+coned -p
+
+#Adds a task name to a given server
+coned -a server_name server_index task
+
+#Removes a task name from a given server
+coned -d server_name server_index task
 ```
 
