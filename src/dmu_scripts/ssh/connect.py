@@ -18,6 +18,7 @@ class Data:
     '''
     prnt : str
     name : str
+    srvr : str
     cfg  : dict
 #----------------------------
 def _print_configs():
@@ -77,12 +78,33 @@ def _load_config():
     with open(config_path, encoding='utf-8') as ifile:
         Data.cfg = yaml.safe_load(ifile)
 #---------------------------------------
-def _get_options() -> list:
+def _get_options() -> list | None:
     '''
-    Will return options for SSH
+    Will return server for SSH, i.e. user@host
     '''
+    try:
+        [server] = [ server for server in Data.cfg if Data.srvr in server ]
+    except ValueError:
+        log.warning(f'Server identified as {Data.srvr} not uniquely identified')
+        return
 
-    return []
+    d_sid = Data.cfg[server]
+
+    found=False
+    sid  =None
+    for sid, l_name in d_sid.items():
+        if Data.name in l_name:
+            found = True
+            break
+
+    if not found:
+        log.warning(f'Session {Data.name} not found among:')
+        pprint.pprint(d_sid)
+        return
+
+    server = server.replace('SID', sid)
+
+    return [server]
 #---------------------------------------
 def _connect():
     '''
@@ -90,6 +112,9 @@ def _connect():
     '''
 
     options = _get_options()
+    if options is None:
+        return
+
     #_run_command(cmd = 'ssh', options = options, raise_on_fail=True)
 #---------------------------------------
 def main():
