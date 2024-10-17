@@ -3,6 +3,7 @@ Script used to implement connection to servers
 '''
 
 import os
+import pprint
 import argparse
 import subprocess
 
