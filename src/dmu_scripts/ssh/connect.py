@@ -86,7 +86,7 @@ def _load_config():
     with open(config_path, encoding='utf-8') as ifile:
         Data.cfg = yaml.safe_load(ifile)
 #---------------------------------------
-def _get_options() -> list | None:
+def _get_options() -> list[str] | None:
     '''
     Will return server for SSH, i.e. user@host
     '''
@@ -111,6 +111,8 @@ def _get_options() -> list | None:
         return
 
     server = server.replace('SID', sid)
+
+    log.debug(f'Using server: {server}')
 
     return [server]
 #---------------------------------------
