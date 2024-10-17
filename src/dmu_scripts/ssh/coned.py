@@ -8,14 +8,13 @@ import argparse
 import yaml
 from dmu.logging.log_store import LogStore
 
-log = LogStore.add_logger('dmu:scripts:ssh_mgr')
+log = LogStore.add_logger('dmu:scripts:coned')
 #---------------------------------------
 class Data:
     '''
     Class used to store shared data
     '''
     prnt : bool
-    name : str
     srvr : str
     logl : int
     cfg  : dict
@@ -31,19 +30,17 @@ def _print_configs():
 def _initialize():
     _load_config()
 
-    LogStore.set_level('dmu:scripts:connect', Data.logl)
+    LogStore.set_level('dmu:scripts:coned', Data.logl)
 #----------------------------
 def _get_args():
     '''
     Will parse arguments
     '''
-    parser = argparse.ArgumentParser(description='Used to connect through SSH to servers specified by ~/.config/connect/servers.yaml')
-    parser.add_argument('-n', '--name'   , type=str, help='Name of task'                                      )
+    parser = argparse.ArgumentParser(description='Used to edit and print server list specified by ~/.config/connect/servers.yaml')
     parser.add_argument('-l', '--log_lvl', type=int, help='Logging level', default=20, choices=[10,20,30])
     parser.add_argument('-p', '--print'  , help='Prints config settings and exits', action='store_true')
     args   = parser.parse_args()
 
-    Data.name = args.name
     Data.prnt = args.print
     Data.logl = args.log_lvl
 #---------------------------------------
