@@ -19,6 +19,7 @@ class Data:
     prnt : str
     name : str
     srvr : str
+    logl : int
     cfg  : dict
 #----------------------------
 def _print_configs():
@@ -33,6 +34,11 @@ def _print_configs():
 
     else:
         raise ValueError(f'Invalid print quantity: {Data.prnt}')
+#----------------------------
+def _initialize():
+    _load_config()
+
+    LogStore.set_level('dmu:scripts:connect', Data.logl)
 #----------------------------
 def _run_command(cmd : str, options : list , raise_on_fail : bool) -> None:
     '''
@@ -60,14 +66,16 @@ def _get_args():
     Will parse arguments
     '''
     parser = argparse.ArgumentParser(description='Used to connect through SSH to servers specified by ~/.config/connect/servers.yaml')
-    parser.add_argument('-n', '--name'  , type=str, help='Name of task'                                      , required=True)
-    parser.add_argument('-s', '--server', type=str, help='Substring that will uniquely determine server name', required=True)
-    parser.add_argument('-p', '--print' , type=str, help='Prints config settings and exits')
+    parser.add_argument('-n', '--name'   , type=str, help='Name of task'                                      , required=True)
+    parser.add_argument('-s', '--server' , type=str, help='Substring that will uniquely determine server name', required=True)
+    parser.add_argument('-l', '--log_lvl', type=int, help='Logging level', default=20, choices=[10,20,30])
+    parser.add_argument('-p', '--print'  , type=str, help='Prints config settings and exits')
     args   = parser.parse_args()
 
     Data.name = args.name
     Data.prnt = args.print
     Data.srvr = args.server
+    Data.logl = args.log_lvl
 #---------------------------------------
 def _load_config():
     home_dir    = os.environ['HOME']
@@ -122,7 +130,7 @@ def main():
     Starts here
     '''
     _get_args()
-    _load_config()
+    _initialize()
 
     if Data.prnt is not None:
         _print_configs()
