@@ -6,6 +6,7 @@ import os
 import pprint
 import argparse
 import subprocess
+from typing import Union
 
 import yaml
 from dmu.logging.log_store import LogStore
@@ -88,7 +89,7 @@ def _load_config():
     with open(config_path, encoding='utf-8') as ifile:
         Data.cfg = yaml.safe_load(ifile)
 #---------------------------------------
-def _get_options() -> list[str] | None:
+def _get_options() -> Union[None, list[str]]:
     '''
     Will return server for SSH, i.e. user@host
     '''
@@ -96,7 +97,7 @@ def _get_options() -> list[str] | None:
         [server] = [ server for server in Data.cfg if Data.srvr in server ]
     except ValueError:
         log.warning(f'Server identified as {Data.srvr} not uniquely identified')
-        return
+        return None
 
     d_sid = Data.cfg[server]
 
@@ -110,7 +111,7 @@ def _get_options() -> list[str] | None:
     if not found:
         log.warning(f'Session {Data.name} not found among:')
         pprint.pprint(d_sid)
-        return
+        return None
 
     server = server.replace('SID', sid)
 
