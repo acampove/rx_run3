@@ -16,7 +16,7 @@ class Data:
     '''
     Class used to store shared data
     '''
-    prnt : str
+    prnt : str | None
     name : str
     srvr : str
     logl : int
@@ -54,11 +54,13 @@ def _run_command(cmd : str, options : list , raise_on_fail : bool) -> None:
     log.debug('-' * 30)
     log.debug('-' * 30)
 
-    with open('/tmp/rk_ext_output.log', 'w', encoding='utf-8') as ofile:
+    log_path = '/tmp/dmu_ssh_connect.log'
+    with open(log_path, 'w', encoding='utf-8') as ofile:
         stat = subprocess.run([cmd] + options, stdout=ofile, stderr=ofile, check=False)
 
     if stat.returncode != 0 and raise_on_fail:
         log.error(f'Failed: {cmd:<10}{str(options):<50}')
+        log.error(f'Logs sent to: {log_path}')
         raise ValueError(f'Process returned exit status: {stat.returncode}')
 #---------------------------------------
 def _get_args():
@@ -125,7 +127,7 @@ def _connect():
     if options is None:
         return
 
-    #_run_command(cmd = 'ssh', options = options, raise_on_fail=True)
+    _run_command(cmd = 'ssh', options = options, raise_on_fail=True)
 #---------------------------------------
 def main():
     '''
