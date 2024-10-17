@@ -11,7 +11,7 @@ where   = ['src']
 
 [project.scripts]
 transform_text='dmu_scripts.text.transform_text:main'
-connect       ='dmu_scripts.ssh.connect:main'
+coned         ='dmu_scripts.ssh.coned:main'
 
 [tool.setuptools.package-data]
 dmu_data=['text/*.txt', 'text/*.toml', 'ml/*/*.yaml', 'plotting/*/*.yaml']
