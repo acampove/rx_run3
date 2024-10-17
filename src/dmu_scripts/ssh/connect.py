@@ -78,7 +78,6 @@ def _get_options() -> list:
     '''
     Will return options for SSH
     '''
-    _load_config()
 
     return []
 #---------------------------------------
@@ -95,6 +94,12 @@ def main():
     Starts here
     '''
     _get_args()
+    _load_config()
+
+    if Data.prnt is not None:
+        _print_configs()
+        return
+
     _connect()
 #---------------------------------------
 if __name__ == '__main__':
