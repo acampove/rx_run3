@@ -15,8 +15,22 @@ class Data:
     '''
     Class used to store shared data
     '''
+    prnt : str
     name : str
     cfg  : dict
+#----------------------------
+def _print_configs():
+    '''
+    Prints configuration
+    '''
+
+    if Data.prnt == 'servers':
+        log.info('Severs:')
+        for server in Data.cfg:
+            log.info(server)
+
+    else:
+        raise ValueError(f'Invalid print quantity: {Data.prnt}')
 #----------------------------
 def _run_command(cmd : str, options : list , raise_on_fail : bool) -> None:
     '''
