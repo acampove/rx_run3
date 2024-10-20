@@ -4,6 +4,21 @@ These are tools that can be used for different data analysis tasks.
 
 # Math
 
+## Arrays
+
+### Scaling by non-integer
+
+Given an array representing a distribution, the following lines will increase its size
+by `fscale`, where this number is a float, e.g. 3.4.
+
+```python
+from dmu.arrays.utilities import repeat_arr
+
+arr_val = repeat_arr(arr_val = arr_inp, ftimes = fscale)
+```
+
+in such a way that the output array will be `fscale` larger than the input one, but will keep the same distribution.
+
 ## Functions
 
 The project contains the `Function` class that can be used to:
