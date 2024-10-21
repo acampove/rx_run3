@@ -89,7 +89,7 @@ def test_high_stat():
 #---------------------------------------
 def test_no_bounds():
     '''
-    Test for case where plot bounds are not explicitly passed 
+    Test for case where plot bounds are not explicitly passed
     '''
     d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
 
@@ -100,7 +100,7 @@ def test_no_bounds():
 #---------------------------------------
 def test_fig_size():
     '''
-    Test for fig size setting 
+    Test for fig size setting
     '''
     d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
 
@@ -111,7 +111,7 @@ def test_fig_size():
 #---------------------------------------
 def test_title():
     '''
-    Test for title 
+    Test for title
     '''
     d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
 
