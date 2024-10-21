@@ -166,6 +166,10 @@ class Plotter:
         if 'normalized' in d_cfg:
             normalized = d_cfg['normalized']
 
+        title = ''
+        if 'title'      in d_cfg:
+            title = d_cfg['title']
+
         d_data = {}
         for name, rdf in self._d_rdf.items():
             d_data[name] = rdf.AsNumpy([var])[var]
@@ -191,6 +195,7 @@ class Plotter:
 
         max_y = max(l_bc_all)
         plt.ylim(top=1.2 * max_y)
+        plt.title(title)
     # --------------------------------------------
     def _save_plot(self, var):
         '''
