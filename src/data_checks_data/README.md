@@ -22,6 +22,8 @@ Should be used with:
 plot_vars -y 2024 -v v2 -c bukee_opt -d data_ana_cut_bp_ee:Data ctrl_BuToKpEE_ana_ee:Simulation
 ```
 
-## Plotting after selections
+## Plotting before and after selections
 
-**hlt_cmp.yaml**: Used to make comparisons between cut based and mva based lines 
+**hlt_cmp.yaml**: Used to plot run number after full selection with and without BDT 
+**hlt_cmp_raw.yaml**: Used to plot run number before selection, out of DaVinci 
+
