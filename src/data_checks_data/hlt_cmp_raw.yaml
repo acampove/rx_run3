@@ -1,0 +1,19 @@
+input:
+    file_wc:
+        Cut : /publicfs/ucas/user/campoverde/Data/RK/data_ana_cut_bp_ee/v2/2024.root
+        MVA : /publicfs/ucas/user/campoverde/Data/RK/data_ana_mva_bp_ee/v2/2024.root
+    tree_name: KEE 
+selection:
+    max_ran_entries : 100_000
+
+definitions:
+    run : 'RUNNUMBER'
+general:
+    size : [20, 10]
+plots:
+    run:
+        binning : [1, 1, 100]
+        yscale  : 'linear'
+        labels  : ['Run Number', '']
+saving:
+    plt_dir : '/publicfs/ucas/user/campoverde/Packages/RK/data_checks/plots/hlt_comparison_raw'
