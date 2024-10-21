@@ -1,7 +1,7 @@
 input:
     file_wc:
-        Cut : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/r_fits/v9/data/v1/2024_ETOS/*.root 
-        MVA : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/r_fits/v9/data/v2/2024_ETOS/*.root
+        Cut : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/r_fits/v9/data/mva/2024_ETOS/*.root 
+        MVA : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/r_fits/v9/data/cut/2024_ETOS/*.root
     tree_name: ETOS
 
 selection:
