@@ -39,26 +39,31 @@ def _get_args():
     Data.cfg_nam           = args.cfg
     Data.log_lvl           = args.log
 # -------------------------------------
-def _get_rdf(path_wc : str, skip_bdt : bool) -> RDataFrame:
-    '''
-    Takes wildcard to ROOT files used as input
-    Will return ROOT dataframe
-    '''
-
-    tree_name = Data.cfg_dat['input']['tree_name']
-
-    log.debug(f'Loading: {path_wc}/{tree_name}')
-
+def _filter_rdf(rdf : RDataFrame, skip_bdt : bool) -> RDataFrame:
+    if Data.cfg_nam in ['hlt_cmp_raw']:
+        log.warning(f'Not applying any selection for {Data.cfg_nam}')
+        return rdf
     bdt    = rs.get('bdt' , 'ETOS', 'none', '2024') if not skip_bdt else '(1)'
     mas    = rs.get('mass', 'ETOS', 'jpsi', '2024')
-
-    rdf    = RDataFrame(tree_name, path_wc)
     rdf    = rdf.Define('BDT_prc', '1')
     rdf    = rdf.Filter(mas, 'mass')
     rdf    = rdf.Filter(bdt, 'BDT' )
     rep    = rdf.Report()
     rep.Print()
 
+    return rdf
+# -------------------------------------
+def _get_rdf(path_wc : str, skip_bdt : bool) -> RDataFrame:
+    '''
+    Takes wildcard to ROOT files used as input
+    Will return ROOT dataframe
+    '''
+    tree_name = Data.cfg_dat['input']['tree_name']
+
+    log.debug(f'Loading: {path_wc}/{tree_name}')
+
+    rdf    = RDataFrame(tree_name, path_wc)
+    rdf    = _filter_rdf(rdf, skip_bdt)
     nev    = rdf.Count().GetValue()
     log.debug(f'Found {nev} entries in: {path_wc}')
 
