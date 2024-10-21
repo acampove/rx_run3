@@ -224,6 +224,7 @@ plots:
         binning    : [0.98, 0.98, 40] # Here bounds agree => tool will calculate bounds making sure that they are the 2% and 98% quantile
         yscale     : 'linear'
         labels     : ['x', 'Entries']
+        title      : 'some title can be added for different variable plots'
     y :
         binning    : [-5.0, 8.0, 40]
         yscale     : 'linear'
