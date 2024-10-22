@@ -178,5 +178,6 @@ pyrightconfig.json
 *.swp
 *.png
 *.pkl
+*.root
 
 tests/*/*/*.json
