@@ -3,7 +3,9 @@ strategy      :
           ntries        : 4
           pvalue        : 0.05
           ignore_status : true
-      steps   : [1e3, 1e4]
+      steps   :
+          nsteps   : [1e3, 1e4]
+          nsigma   : [5.0, 2.0]
 ranges        : 
       - [0, 10]
 constraints   :
