@@ -1,7 +1,7 @@
 [project]
 name        = 'data_manipulation_utilities'
 version     = '0.0.1'
-dependencies= ['PyYAML', 'scipy', 'awkward', 'tqdm', 'joblib', 'scikit-learn', 'toml', 'numpy', 'matplotlib', 'mplhep', 'polars', 'pandas']
+dependencies= ['zfit', 'PyYAML', 'scipy', 'awkward', 'tqdm', 'joblib', 'scikit-learn', 'toml', 'numpy', 'matplotlib', 'mplhep', 'polars', 'pandas']
 
 [project.optional-dependencies]
 dev  = ['pytest']
