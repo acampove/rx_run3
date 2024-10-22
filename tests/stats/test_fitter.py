@@ -153,8 +153,10 @@ def test_steps():
 
     cfg = {
             'strategy' : {
-                'nsteps' : [1000, 5000],
-                'nsigma' : [ 5.0,  2.0],
+                'steps' : {
+                    'nsteps' : [1000, 5000],
+                    'nsigma' : [ 5.0,  2.0],
+                    }
                 }
             }
 
