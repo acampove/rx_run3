@@ -36,6 +36,7 @@ strategy      :
       steps   :
           nsteps   : [1e3, 1e4] #Number of entries to use
           nsigma   : [5.0, 2.0] #Number of sigmas for the range of the parameter, for each step
+          yields   : ['ny1', 'ny2'] # in the fitting model ny1 and ny2 are the names of yields parameters, all the yield need to go in this list
 # The lines below will split the range of the data [0-10] into two subranges, such that the NLL is built
 # only in those ranges. The ranges need to be tuples
 ranges        : 
