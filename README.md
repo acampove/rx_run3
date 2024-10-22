@@ -4,6 +4,75 @@ These are tools that can be used for different data analysis tasks.
 
 # Math
 
+## Fits
+
+The `Fitter` class is a wrapper to zfit, use to make fitting easier.
+
+### Simplest fit
+
+```python
+obj = Fitter(pdf, dat)
+res = obj.fit()
+```
+
+where the `PDF` is a zfit object and the data is either a numpy array, a pandas dataframe or a zfit dataset. 
+
+### Retries 
+
+In some cases the fit has to be retried multiple times 
+
+```python
+obj = Fitter(pdf, Data.arr)
+res = obj.fit(ntries=10, pval_threshold=0.05)
+```
+
+above, the fit is tried 10 times or until the p-value is above 0.05. 
+
+### Constraints
+
+One can pass Gaussian constraints easily with: 
+
+```python
+obj=Fitter(pdf, Data.arr)
+res=obj.fit(d_const={'mu' : (0, 0.1), 'sg' : (1, 0.01)})
+res.hesse()
+```
+
+Where the parameters are `mu` and `sg`. This does not support correlations yet, the constrains are independent.
+
+### Ranges
+
+One can also fit dataset in different ranges
+
+```python
+obs   = zfit.Space('x', limits=(0, 10))
+lb    = zfit.Parameter('lb', -1,  -2, 0)
+model = zfit.pdf.Exponential(obs=obs, lam=lb)
+
+data  = numpy.random.exponential(5, size=10000)
+data  = data[(data < 10)]
+data  = data[(data < 2) | ((data > 4) & (data < 6)) |  ((data > 8) & (data < 10)) ]
+
+obj   = Fitter(model, data)
+rng   = [(0,2), (4, 6), (8, 10)]
+res   = obj.fit(ranges=rng)
+```
+
+in the example above, the likelihood is built from three intervals in the observable.
+
+### Weights
+
+A fit to a weighted dataset would be done with:
+
+```python
+arr = rdf.AsNumpy(['m'])['m']
+wgt = numpy.random.binomial(1, 0.5, size=arr.size)
+dat = zfit.data.from_numpy(array=arr, weights=wgt, obs=pdf.space)
+
+obj=Fitter(pdf, dat)
+res=obj.fit()
+```
+
 ## Arrays
 
 ### Scaling by non-integer
