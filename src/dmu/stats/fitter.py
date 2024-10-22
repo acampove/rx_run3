@@ -2,12 +2,13 @@
 Module holding zfitter class
 '''
 
+from typing                   import Union
 
 import numpy
 import zfit
 import pandas as pd
+import pprint
 
-from typing                   import Union
 from scipy                    import stats
 from zfit.minimizers.strategy import FailMinimizeNaN
 from zfit.result              import FitResult
@@ -64,8 +65,8 @@ class Fitter:
             self._data_in = pd.DataFrame(self._data_in)
             data_np = self._data_in.to_numpy()
         else:
-            log.error(f'Data is not a numpy array, zfit.Data or pandas.DataFrame')
-            raise
+            data_type = str(type(self._data_in))
+            raise ValueError(f'Data is not a numpy array, zfit.Data or pandas.DataFrame, but {data_type}')
 
         data_np       = self._check_numpy_data(data_np)
         self._data_np = data_np
