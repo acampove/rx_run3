@@ -241,16 +241,45 @@ class Fitter:
 
         return ranges
     #------------------------------
+    def _get_subdataset(self, cfg : dict) -> Data:
+        if 'nentries' not in cfg:
+            return self._data_zf
+
+        nentries_out = cfg['nentries']
+        arr_inp      = self._data_zf.to_numpy().flatten()
+        nentries_inp = len(arr_inp)
+        if nentries_inp <= nentries_out:
+            log.warning(f'Input dataset in smaller than output dataset, {nentries_inp} < {nentries_out}')
+            return self._data_zf
+
+        has_weights = self._data_zf.weights is not None
+
+        if has_weights:
+            arr_wgt = self._data_zf.weights.numpy()
+            arr_inp = numpy.array([arr_inp, arr_wgt]).T
+
+        arr_out = numpy.random.choice(arr_inp, size=nentries_out, replace=False)
+        if has_weights:
+            arr_out = arr_out.T[0]
+            arr_wgt = arr_out.T[1]
+        else:
+            arr_wgt = None
+
+        data = zfit.data.from_numpy(array=arr_out, weights=arr_wgt, obs=self._data_zf.obs)
+
+        return data
+    #------------------------------
     def _get_nll(self, cfg : dict):
         constraints = self._get_constraints(cfg)
         ranges      = self._get_ranges(cfg)
+        data_zf     = self._get_subdataset(cfg)
 
         if self._pdf.is_extended:
             log.info('Using Extended Unbinned Likelihood')
-            l_nll = [ zfit.loss.ExtendedUnbinnedNLL(model=self._pdf, data=self._data_zf, constraints=constraints, fit_range=frange) for frange in ranges ]
+            l_nll = [ zfit.loss.ExtendedUnbinnedNLL(model=self._pdf, data=data_zf, constraints=constraints, fit_range=frange) for frange in ranges ]
         else:
             log.info('Using Non-Extended Unbinned Likelihood')
-            l_nll = [ zfit.loss.UnbinnedNLL        (model=self._pdf, data=self._data_zf, constraints=constraints, fit_range=frange) for frange in ranges ]
+            l_nll = [ zfit.loss.UnbinnedNLL        (model=self._pdf, data=data_zf, constraints=constraints, fit_range=frange) for frange in ranges ]
 
         nll = sum(l_nll[1:], l_nll[0])
 
