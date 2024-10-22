@@ -12,18 +12,17 @@ from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:statistics:fitter')
 #------------------------------
-class ZfitterGofError(Exception):
+class FitterGofError(Exception):
     '''
     Exception used when GoF cannot be calculated
     '''
 #------------------------------
-class ZfitterFailedFit(Exception):
+class FitterFailedFit(Exception):
     '''
     Exception used when fitter fails
     '''
 #------------------------------
-class zfitter:
-    log=log_store.add_logger('rx_scripts:zfitter')
+class fitter:
     #------------------------------
     def __init__(self, pdf, data):
         self._data_in = data
@@ -56,7 +55,7 @@ class zfitter:
             self._data_in = pd.DataFrame(self._data_in)
             data_np = self._data_in.to_numpy()
         else:
-            self.log.error(f'Data is not a numpy array, zfit.Data or pandas.DataFrame')
+            log.error(f'Data is not a numpy array, zfit.Data or pandas.DataFrame')
             raise
 
         data_np       = self._check_numpy_data(data_np)
@@ -73,10 +72,10 @@ class zfitter:
         elif len(shp) == 2:
             _, jval = shp
             if jval != 1:
-                self.log.error(f'Invalid data shape: {shp}')
+                log.error(f'Invalid data shape: {shp}')
                 raise
         else:
-            self.log.error(f'Invalid data shape: {shp}')
+            log.error(f'Invalid data shape: {shp}')
             raise
 
         ival = data.shape[0]
@@ -87,7 +86,7 @@ class zfitter:
         fval = data.shape[0]
 
         if ival != fval:
-            self.log.warning(f'Data was trimmed for inf and nan: {ival} -> {fval}')
+            log.warning(f'Data was trimmed for inf and nan: {ival} -> {fval}')
 
         return data
     #------------------------------
@@ -116,11 +115,11 @@ class zfitter:
         return nbins, min_x, max_x
     #------------------------------
     def _calc_gof(self):
-        self.log.debug('Calculating GOF')
+        log.debug('Calculating GOF')
         nbins, min_x, max_x = self._get_binning()
 
-        self.log.debug(f'Nbins: {nbins}')
-        self.log.debug(f'Range: [{min_x:.3f}, {max_x:.3f}]')
+        log.debug(f'Nbins: {nbins}')
+        log.debug(f'Range: [{min_x:.3f}, {max_x:.3f}]')
 
         arr_data, _ = numpy.histogram(self._data_np, bins = nbins, range=(min_x, max_x))
         arr_data    = arr_data.astype(float)
@@ -133,14 +132,14 @@ class zfitter:
         sum_chi2    = numpy.sum(arr_chi2)
         pvalue      = 1 - stats.chi2.cdf(sum_chi2, self._ndof)
 
-        self.log.debug(f'{"Data":<20}{"Model":<20}{"chi2":<20}')
+        log.debug(f'{"Data":<20}{"Model":<20}{"chi2":<20}')
         if pvalue < self._pval_threshold:
             for data, modl, chi2 in zip(arr_data, arr_modl, arr_chi2):
-                self.log.debug(f'{data:<20.0f}{modl:<20.3f}{chi2:<20.3f}')
+                log.debug(f'{data:<20.0f}{modl:<20.3f}{chi2:<20.3f}')
 
-        self.log.debug(f'Chi2: {sum_chi2:.3f}')
-        self.log.debug(f'Ndof: {self._ndof}')
-        self.log.debug(f'pval: {pvalue:<.3e}')
+        log.debug(f'Chi2: {sum_chi2:.3f}')
+        log.debug(f'Ndof: {self._ndof}')
+        log.debug(f'pval: {pvalue:<.3e}')
 
         return (sum_chi2, self._ndof, pvalue)
     #------------------------------
@@ -166,7 +165,7 @@ class zfitter:
             ival = par.value()
             fval = numpy.random.uniform(par.lower, par.upper)
             par.set_value(fval)
-            self.log.debug(f'{par.name:<20}{ival:<15.3f}{"->":<10}{fval:<15.3f}{"in":<5}{par.lower:<15.3e}{par.upper:<15.3e}')
+            log.debug(f'{par.name:<20}{ival:<15.3f}{"->":<10}{fval:<15.3f}{"in":<5}{par.lower:<15.3e}{par.upper:<15.3e}')
     #------------------------------
     def _set_pdf_pars(self, res):
         '''
@@ -178,41 +177,41 @@ class zfitter:
 
         d_val = { par.name : dc['value'] for par, dc in res.params.items()}
 
-        self.log.debug('Setting PDF parameters to best result')
+        log.debug('Setting PDF parameters to best result')
         for par in l_par:
             if par.name not in d_val:
-                self.log.debug(f'Skipping {par.name} = {par.value().numpy():.3e}')
+                log.debug(f'Skipping {par.name} = {par.value().numpy():.3e}')
                 continue
 
             val = d_val[par.name]
-            self.log.debug(f'{"":<4}{par.name:<20}{"->":<10}{val:<20.3e}')
+            log.debug(f'{"":<4}{par.name:<20}{"->":<10}{val:<20.3e}')
             par.set_value(val)
     #------------------------------
     def _get_constraints(self, d_const):
         if len(d_const) == 0:
-            self.log.debug('Not using any constraint')
+            log.debug('Not using any constraint')
             return
 
         s_par = self._pdf.get_params(floating=True)
         d_par = { par.name : par for par in s_par}
 
-        self.log.info('Adding constraints:')
+        log.info('Adding constraints:')
         l_const = []
         for par_name, (par_mu, par_sg) in d_const.items():
             if par_name not in d_par:
-                self.log.error(f'Parameter {par_name} not found among floating parameters of model:')
-                self.log.error(s_par)
+                log.error(f'Parameter {par_name} not found among floating parameters of model:')
+                log.error(s_par)
                 raise
             else:
                 par = d_par[par_name]
 
             if par_sg == 0:
                 par.floating = False
-                self.log.info(f'{"":<4}{par_name:<15}{par_mu:<15.3e}{par_sg:<15.3e}')
+                log.info(f'{"":<4}{par_name:<15}{par_mu:<15.3e}{par_sg:<15.3e}')
                 continue
 
             const = zfit.constraint.GaussianConstraint(params=par, observation=float(par_mu), uncertainty=float(par_sg))
-            self.log.info(f'{"":<4}{par_name:<25}{par_mu:<15.3e}{par_sg:<15.3e}')
+            log.info(f'{"":<4}{par_name:<25}{par_mu:<15.3e}{par_sg:<15.3e}')
             l_const.append(const)
 
         return l_const
@@ -221,17 +220,17 @@ class zfitter:
         if ranges is None:
             ranges = [None]
         else:
-            self.log.info('-' * 30)
-            self.log.info(f'{"Low edge":>15}{"High edge":>15}')
-            self.log.info('-' * 30)
+            log.info('-' * 30)
+            log.info(f'{"Low edge":>15}{"High edge":>15}')
+            log.info('-' * 30)
             for rng in ranges:
-                self.log.info(f'{rng[0]:>15.3e}{rng[1]:>15.3e}')
+                log.info(f'{rng[0]:>15.3e}{rng[1]:>15.3e}')
 
         if self._pdf.is_extended:
-            self.log.info('Using Extended Unbinned Likelihood')
+            log.info('Using Extended Unbinned Likelihood')
             l_nll = [ zfit.loss.ExtendedUnbinnedNLL(model=self._pdf, data=self._data_zf, constraints=constraints, fit_range=frange) for frange in ranges ]
         else:
-            self.log.info('Using Non-Extended Unbinned Likelihood')
+            log.info('Using Non-Extended Unbinned Likelihood')
             l_nll = [ zfit.loss.UnbinnedNLL        (model=self._pdf, data=self._data_zf, constraints=constraints, fit_range=frange) for frange in ranges ]
 
         nll = sum(l_nll[1:], l_nll[0])
@@ -261,7 +260,7 @@ class zfitter:
         l_const = self._get_constraints(d_const)
         nll     = self._get_nll(constraints=l_const, ranges=ranges)
 
-        self.log.info(f'{"chi2":<10}{"pval":<10}{"stat":<10}')
+        log.info(f'{"chi2":<10}{"pval":<10}{"stat":<10}')
         if ntries is None:
             res = self._minimize(nll, l_print_par)
             return res
@@ -271,9 +270,9 @@ class zfitter:
         for i_try in range(ntries):
             try:
                 res = self._minimize(nll, l_print_par)
-            except (zfit.minimizers.strategy.FailMinimizeNaN, ZfitterGofError, RuntimeError):
+            except (zfit.minimizers.strategy.FailMinimizeNaN, FitterGofError, RuntimeError):
                 self._reshuffle_pdf_pars()
-                self.log.warning(f'Fit {i_try:03}/{ntries:03} failed due to exception')
+                log.warning(f'Fit {i_try:03}/{ntries:03} failed due to exception')
                 continue
             except:
                 raise
@@ -283,7 +282,7 @@ class zfitter:
 
             if not ignore_status and bad_fit:
                 self._reshuffle_pdf_pars()
-                self.log.info(f'Fit {i_try:03}/{ntries:03} failed, status/validity: {res.status}/{res.valid}')
+                log.info(f'Fit {i_try:03}/{ntries:03} failed, status/validity: {res.status}/{res.valid}')
                 continue
 
             chi2, _, pval = res.gof
@@ -291,32 +290,32 @@ class zfitter:
             d_pval_res[chi2]=res
 
             if pval > pval_threshold:
-                self.log.info(f'Reached {pval:.3f} (> {pval_threshold:.3f}) threshold after {i_try + 1} attempts')
+                log.info(f'Reached {pval:.3f} (> {pval_threshold:.3f}) threshold after {i_try + 1} attempts')
                 return res
 
             self._reshuffle_pdf_pars()
 
         nsucc = len(d_pval_res)
         if last_res is None:
-            self.log.error('All tries failed')
-            raise ZfitterFailedFit
+            log.error('All tries failed')
+            raise FitterFailedFit
         elif nsucc == 0:
-            self.log.warning(f'None of the {ntries} fits succeeded, returning last result')
+            log.warning(f'None of the {ntries} fits succeeded, returning last result')
             self._set_pdf_pars(last_res)
 
             return last_res
         else:
-            self.log.info(f'Fits that succeeded: {nsucc}')
+            log.info(f'Fits that succeeded: {nsucc}')
 
         l_pval_res    = list(d_pval_res.items())
         l_pval_res.sort()
         max_pval, res = l_pval_res[0]
 
-        self.log.debug('Picking out first fit from, Chi2:')
+        log.debug('Picking out first fit from, Chi2:')
         for chi2, _ in l_pval_res:
-            self.log.debug(f'{chi2:.3f}')
+            log.debug(f'{chi2:.3f}')
 
-        self.log.info(f'Did not reach {pval_threshold} (> {max_pval:.3f}) threshold after {i_try + 1} attempts, using fit with chi2={max_pval:.3f}')
+        log.info(f'Did not reach {pval_threshold} (> {max_pval:.3f}) threshold after {i_try + 1} attempts, using fit with chi2={max_pval:.3f}')
 
         self._set_pdf_pars(res)
 
@@ -349,8 +348,8 @@ class zfitter:
         l_form = [f'{val:<10.3f}' for val in l_value]
         parval = ''.join(l_form)
 
-        self.log.info(header)
-        self.log.info(parval)
+        log.info(header)
+        log.info(parval)
     #------------------------------
     def _minimize(self, nll, l_print_par):
         mnm = zfit.minimize.Minuit()
@@ -359,13 +358,13 @@ class zfitter:
         try:
             gof = self._calc_gof()
         except:
-            raise ZfitterGofError('Cannot calculate GOF')
+            raise FitterGofError('Cannot calculate GOF')
 
         res.gof        = gof
         chi2, _, pval  = gof
         stat           = res.status
 
-        self.log.info(f'{chi2:<10.3f}{pval:<10.3e}{stat:<10}')
+        log.info(f'{chi2:<10.3f}{pval:<10.3e}{stat:<10}')
 
         self._print_pars(l_print_par)
 
