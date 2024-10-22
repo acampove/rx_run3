@@ -386,16 +386,18 @@ class Fitter:
     #------------------------------
     def _fit_in_steps(self, cfg : dict) -> FitResult:
         l_nsample = cfg['strategy']['steps']
+        l_nsigma  = cfg['strategy']['nsigma']
 
         res = None
-        for nsample in l_nsample:
+        for nsample, nsigma in zip(l_nsample, l_nsigma):
             log.info(f'Fitting with {nsample} samples')
             cfg_step             = dict(cfg)
             cfg_step['nentries'] = nsample
 
             nll    = self._get_nll(cfg = cfg_step)
             res, _ = self._minimize(nll, cfg_step)
-            self._update_par_bounds(res)
+            res.hesse(method='minuit_hesse')
+            self._update_par_bounds(res, nsigma=nsigma)
 
         if res is None:
             nsteps = len(l_nsample)
