@@ -33,7 +33,7 @@ class Data:
 
     pdf     = None
     obs     = zfit.Space('m', limits=(-7.5, +7.5))
-    arr     = numpy.random.normal(0, 1, size=100)
+    arr     = numpy.random.normal(0, 1, size=10000)
     df      = pnd.DataFrame({'x' : arr})
     zf      = zfit.data.from_numpy(obs=obs, array=arr)
 
@@ -145,21 +145,20 @@ def test_wgt():
 
     assert res.valid
 #-------------------------------------
-@pytest.mark.skip(reason='Not ready yet')
-def test_strategy():
+def test_steps():
     '''
-    Test different fitting strategies
+    Tests the steps fitting strategy
     '''
     pdf = _get_pdf()
-    dat = _get_data()
 
     cfg = {
             'strategy' : {
-                'steps' : [1e3, 1e4]
+                'steps' : [1000, 5000],
+                'nsigma': [ 5.0,  2.0],
                 }
             }
 
-    obj = Fitter(pdf, dat)
+    obj = Fitter(pdf, Data.arr)
     res = obj.fit(cfg)
 
     assert res.valid
