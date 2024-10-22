@@ -4,7 +4,9 @@ Module containing unit tests for Fitter class
 
 import os
 from dataclasses import dataclass
+from functools   import cache
 
+import ROOT
 import zfit
 import numpy
 import pytest
@@ -55,17 +57,14 @@ def _get_data(path):
 
     return rdf
 #-------------------------------------
+@cache
 def _get_pdf():
-    if Data.pdf is not None:
-        return Data.pdf
-
-    mu  = zfit.Parameter(f'mu', 1.0, -5, 5)
-    sg  = zfit.Parameter(f'sg', 1.3,  0, 5)
+    mu  = zfit.Parameter('mu', 1.0, -5, 5)
+    sg  = zfit.Parameter('sg', 1.3,  0, 5)
+    nev = zfit.Parameter('nev', 100,  0, 10_000_000)
 
     pdf = zfit.pdf.Gauss(obs=Data.obs, mu=mu, sigma=sg)
-
-    nev      = zfit.Parameter(f'nev', 100,  0, 10000000)
-    Data.pdf = pdf.create_extended(nev)
+    pdf = pdf.create_extended(nev)
 
     return pdf
 #-------------------------------------
@@ -93,7 +92,7 @@ def test_simple(dat):
     '''
     Simples fitting test
     '''
-    pdf = get_pdf()
+    pdf = _get_pdf()
     obj = Fitter(pdf, dat)
     res = obj.fit()
 
@@ -103,7 +102,7 @@ def test_constrain():
     '''
     Fits with constraints to parameters
     '''
-    pdf = get_pdf()
+    pdf = _get_pdf()
     obj=Fitter(pdf, Data.arr)
 
     res=obj.fit()
