@@ -11,6 +11,8 @@ The `Fitter` class is a wrapper to zfit, use to make fitting easier.
 ### Simplest fit
 
 ```python
+from dmu.stats.fitter      import Fitter
+
 obj = Fitter(pdf, dat)
 res = obj.fit()
 ```
