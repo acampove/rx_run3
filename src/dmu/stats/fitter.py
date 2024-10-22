@@ -23,6 +23,10 @@ class FitterFailedFit(Exception):
     '''
 #------------------------------
 class fitter:
+    '''
+    Class meant to be an interface to underlying fitters
+    '''
+    # pylint: disable=too-many-instance-attributes
     #------------------------------
     def __init__(self, pdf, data):
         self._data_in = data
@@ -237,6 +241,55 @@ class fitter:
 
         return nll
     #------------------------------
+    def _print_pars(self, l_par_name):
+        '''
+        Will print current values of parameters in l_par_name
+
+        Parameters
+        -------------
+        l_par_name (list): List of names (str) of the parameters to print
+
+        Returns
+        -------------
+        Nothing
+        '''
+
+        if len(l_par_name) == 0:
+            return
+
+        d_par_val = { name : par.value().numpy() for name, par in self._d_par.items() if name in l_par_name}
+
+        l_name = list(d_par_val.keys())
+        l_value= list(d_par_val.values())
+
+        l_form = [   f'{var:<10}' for var in l_name]
+        header = ''.join(l_form)
+
+        l_form = [f'{val:<10.3f}' for val in l_value]
+        parval = ''.join(l_form)
+
+        log.info(header)
+        log.info(parval)
+    #------------------------------
+    def _minimize(self, nll, l_print_par):
+        mnm = zfit.minimize.Minuit()
+        res = mnm.minimize(nll)
+
+        try:
+            gof = self._calc_gof()
+        except:
+            raise FitterGofError('Cannot calculate GOF')
+
+        res.gof        = gof
+        chi2, _, pval  = gof
+        stat           = res.status
+
+        log.info(f'{chi2:<10.3f}{pval:<10.3e}{stat:<10}')
+
+        self._print_pars(l_print_par)
+
+        return res
+    #------------------------------
     def fit(self, ntries=None, ignore_status=False, pval_threshold = 0.05, d_const={}, ranges=None, l_print_par=[]):
         '''
         Will run the fit for the model and data passed.
@@ -318,55 +371,6 @@ class fitter:
         log.info(f'Did not reach {pval_threshold} (> {max_pval:.3f}) threshold after {i_try + 1} attempts, using fit with chi2={max_pval:.3f}')
 
         self._set_pdf_pars(res)
-
-        return res
-    #------------------------------
-    def _print_pars(self, l_par_name):
-        '''
-        Will print current values of parameters in l_par_name
-
-        Parameters
-        -------------
-        l_par_name (list): List of names (str) of the parameters to print
-
-        Returns
-        -------------
-        Nothing
-        '''
-
-        if len(l_par_name) == 0:
-            return
-
-        d_par_val = { name : par.value().numpy() for name, par in self._d_par.items() if name in l_par_name}
-
-        l_name = list(d_par_val.keys())
-        l_value= list(d_par_val.values())
-
-        l_form = [   f'{var:<10}' for var in l_name]
-        header = ''.join(l_form)
-
-        l_form = [f'{val:<10.3f}' for val in l_value]
-        parval = ''.join(l_form)
-
-        log.info(header)
-        log.info(parval)
-    #------------------------------
-    def _minimize(self, nll, l_print_par):
-        mnm = zfit.minimize.Minuit()
-        res = mnm.minimize(nll)
-
-        try:
-            gof = self._calc_gof()
-        except:
-            raise FitterGofError('Cannot calculate GOF')
-
-        res.gof        = gof
-        chi2, _, pval  = gof
-        stat           = res.status
-
-        log.info(f'{chi2:<10.3f}{pval:<10.3e}{stat:<10}')
-
-        self._print_pars(l_print_par)
 
         return res
 #------------------------------
