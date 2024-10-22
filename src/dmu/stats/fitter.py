@@ -387,6 +387,7 @@ class Fitter:
     def _fit_in_steps(self, cfg : dict) -> FitResult:
         l_nsample = cfg['strategy']['steps']['nsteps']
         l_nsigma  = cfg['strategy']['steps']['nsigma']
+        l_yield   = cfg['strategy']['steps']['yields']
 
         res = None
         for nsample, nsigma in zip(l_nsample, l_nsigma):
@@ -397,7 +398,11 @@ class Fitter:
             nll    = self._get_nll(cfg = cfg_step)
             res, _ = self._minimize(nll, cfg_step)
             res.hesse(method='minuit_hesse')
-            self._update_par_bounds(res, nsigma=nsigma)
+            self._update_par_bounds(res, nsigma=nsigma, yields=l_yield)
+
+        log.info('Fitting full sample')
+        nll    = self._get_nll(cfg = cfg)
+        res, _ = self._minimize(nll, cfg)
 
         if res is None:
             nsteps = len(l_nsample)
@@ -419,9 +424,9 @@ class Fitter:
 
         return d_par
     #------------------------------
-    def _update_par_bounds(self, res : FitResult, nsigma : float) -> None:
+    def _update_par_bounds(self, res : FitResult, nsigma : float, yields : list[str]) -> None:
         s_shape_par = self._pdf.get_params(is_yield=False, floating=True)
-        d_shp_par   = { par.name : par for par in s_shape_par}
+        d_shp_par   = { par.name : par for par in s_shape_par if par.name not in yields}
         d_fit_par   = self._result_to_value_error(res)
 
         log.info(60 * '-')
@@ -429,6 +434,7 @@ class Fitter:
         log.info(60 * '-')
         for name, [val, err] in d_fit_par.items():
             if name not in d_shp_par:
+                log.debug(f'Skipping {name} parameter')
                 continue
 
             shape       = d_shp_par[name]
