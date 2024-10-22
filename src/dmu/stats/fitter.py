@@ -403,6 +403,7 @@ class Fitter:
         log.info('Fitting full sample')
         nll    = self._get_nll(cfg = cfg)
         res, _ = self._minimize(nll, cfg)
+        res.hesse(method='minuit_hesse')
 
         if res is None:
             nsteps = len(l_nsample)
