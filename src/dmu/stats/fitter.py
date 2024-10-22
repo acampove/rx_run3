@@ -11,6 +11,7 @@ from typing                   import Union
 from scipy                    import stats
 from zfit.minimizers.strategy import FailMinimizeNaN
 from zfit.result              import FitResult
+from zfit.core.data           import Data
 from dmu.logging.log_store    import LogStore
 
 log = LogStore.add_logger('dmu:statistics:fitter')
@@ -361,16 +362,16 @@ class Fitter:
         self._initialize()
 
         cfg = {} if cfg is None else cfg
-        nll = self._get_nll(cfg = cfg)
 
         log.info(f'{"chi2":<10}{"pval":<10}{"stat":<10}')
         if 'strategy' not in cfg:
+            nll    = self._get_nll(cfg = cfg)
             res, _ = self._minimize(nll, cfg)
-            return res
-
-        if 'retry' in cfg['strategy']:
-            d_pval_res, last_res = self._fit_retries(nll, cfg)
+        elif 'retry' in cfg['strategy']:
+            d_pval_res, last_res = self._fit_retries(cfg)
             res = self._pick_best_fit(d_pval_res, last_res)
+        elif 'steps' in cfg['strategy']:
+            res = self._fit_in_steps(cfg)
         else:
             raise ValueError('Unsupported fitting strategy')
 
