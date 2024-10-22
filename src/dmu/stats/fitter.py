@@ -385,7 +385,7 @@ class Fitter:
         return res
     #------------------------------
     def _fit_in_steps(self, cfg : dict) -> FitResult:
-        l_nsample = cfg['strategy']['steps']
+        l_nsample = cfg['strategy']['nsteps']
         l_nsigma  = cfg['strategy']['nsigma']
 
         res = None
