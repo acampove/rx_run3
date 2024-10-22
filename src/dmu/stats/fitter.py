@@ -2,12 +2,12 @@
 Module holding zfitter class
 '''
 
+import pprint
 from typing                   import Union
 
 import numpy
 import zfit
 import pandas as pd
-import pprint
 
 from scipy                    import stats
 from zfit.minimizers.strategy import FailMinimizeNaN
@@ -385,8 +385,8 @@ class Fitter:
         return res
     #------------------------------
     def _fit_in_steps(self, cfg : dict) -> FitResult:
-        l_nsample = cfg['strategy']['nsteps']
-        l_nsigma  = cfg['strategy']['nsigma']
+        l_nsample = cfg['strategy']['steps']['nsteps']
+        l_nsigma  = cfg['strategy']['steps']['nsigma']
 
         res = None
         for nsample, nsigma in zip(l_nsample, l_nsigma):
