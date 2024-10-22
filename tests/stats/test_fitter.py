@@ -12,16 +12,11 @@ import numpy
 import pytest
 import pandas              as pnd
 
-from ROOT                  import RDF, RDataFrame, gInterpreter
+from ROOT                  import RDF, gInterpreter
 from dmu.stats.fitter      import Fitter
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:logging:test_fitter')
-#-------------------------------------
-@pytest.fixture
-def _initialize():
-    LogStore.set_level('dmu:logging:Fitter', 10)
-    os.makedirs(Data.plt_dir, exist_ok=True)
 #-------------------------------------
 @dataclass
 class Data:
@@ -31,13 +26,23 @@ class Data:
     nsample = 50000
     plt_dir = 'tests/Fitter/plots'
 
+    arr_sig = numpy.random.normal(5.0, 0.5, size=10_000)
+    arr_bkg = numpy.random.exponential(scale=10, size=10_000)
+    arr_tot = numpy.concatenate((arr_sig, arr_bkg))
+    numpy.random.shuffle(arr_tot)
+
     pdf     = None
-    obs     = zfit.Space('m', limits=(-7.5, +7.5))
-    arr     = numpy.random.normal(0, 1, size=10000)
-    df      = pnd.DataFrame({'x' : arr})
+    arr     = arr_tot
+    obs     = zfit.Space('m', limits=(0, 10))
+    df      = pnd.DataFrame({'x' : arr_tot})
     zf      = zfit.data.from_numpy(obs=obs, array=arr)
 
     l_arg_simple = [arr, df, zf]
+#-------------------------------------
+@pytest.fixture
+def _initialize():
+    LogStore.set_level('dmu:logging:Fitter', 10)
+    os.makedirs(Data.plt_dir, exist_ok=True)
 #-------------------------------------
 @cache
 def _get_data():
@@ -54,12 +59,18 @@ def _get_data():
 #-------------------------------------
 @cache
 def _get_pdf():
-    mu  = zfit.Parameter('mu', 1.0, -5, 5)
-    sg  = zfit.Parameter('sg', 1.3,  0, 5)
-    nev = zfit.Parameter('nev', 100,  0, 10_000_000)
+    mu  = zfit.Parameter('mu', 5.0,  0, 10)
+    sg  = zfit.Parameter('sg', 0.3,  0,  5)
+    sig = zfit.pdf.Gauss(obs=Data.obs, mu=mu, sigma=sg)
+    nsg = zfit.Parameter('nsg', 100,  0, 10_000_000)
+    sig = sig.create_extended(nsg)
 
-    pdf = zfit.pdf.Gauss(obs=Data.obs, mu=mu, sigma=sg)
-    pdf = pdf.create_extended(nev)
+    lb  = zfit.Parameter("lb", -0.1,  -0.3, 0)
+    bkg = zfit.pdf.Exponential(obs=Data.obs, lam=lb)
+    nbg = zfit.Parameter('nbk', 100,  0, 10_000_000)
+    bkg = bkg.create_extended(nbg)
+
+    pdf = zfit.pdf.SumPDF([sig, bkg])
 
     return pdf
 #-------------------------------------
@@ -154,13 +165,15 @@ def test_steps():
     cfg = {
             'strategy' : {
                 'steps' : {
-                    'nsteps' : [1000, 5000],
-                    'nsigma' : [ 5.0,  2.0],
+                    'nsteps' : [ 1000,  5000],
+                    'nsigma' : [  5.0,   2.0],
+                    'yields' : ['nsg', 'nbk'],
                     }
                 }
             }
 
     obj = Fitter(pdf, Data.arr)
     res = obj.fit(cfg)
+    print(res)
 
     assert res.valid
