@@ -352,7 +352,7 @@ class Fitter:
 
         return res
     #------------------------------
-    def fit(self, cfg : dict):
+    def fit(self, cfg : Union[dict, None] = None):
         '''
         Runs the fit using the configuration specified by the cfg dictionary
 
@@ -360,16 +360,19 @@ class Fitter:
         '''
         self._initialize()
 
+        cfg = {} if cfg is None else cfg
         nll = self._get_nll(cfg = cfg)
 
         log.info(f'{"chi2":<10}{"pval":<10}{"stat":<10}')
-        if 'retry' not in cfg['strategy']:
+        if 'strategy' not in cfg:
             res, _ = self._minimize(nll, cfg)
             return res
 
-        d_pval_res, last_res = self._fit_retries(nll, cfg)
-
-        res = self._pick_best_fit(d_pval_res, last_res)
+        if 'retry' in cfg['strategy']:
+            d_pval_res, last_res = self._fit_retries(nll, cfg)
+            res = self._pick_best_fit(d_pval_res, last_res)
+        else:
+            raise ValueError('Unsupported fitting strategy')
 
         return res
 #------------------------------
