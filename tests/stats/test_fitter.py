@@ -39,12 +39,8 @@ class Data:
 
     l_arg_simple = [arr, df, zf]
 #-------------------------------------
-def _get_data(path):
-    if os.path.isfile(path):
-        rdf=RDataFrame('tree', path)
-
-        return rdf
-
+@cache
+def _get_data():
     gInterpreter.ProcessLine('TRandom3 r(1);')
 
     d_val      = {}
@@ -53,7 +49,6 @@ def _get_data(path):
 
     rdf = RDF.FromNumpy(d_val)
     rdf = rdf.Define('m', 'r.Gaus(x, 2 + y/4.)')
-    rdf.Snapshot('tree', path)
 
     return rdf
 #-------------------------------------
@@ -138,9 +133,7 @@ def test_wgt():
     '''
     Test fit to weighted dataset
     '''
-    dat_dir = _make_dir_path('tests/Fitter/splitter/')
-
-    rdf = _get_data(f'{dat_dir}/Data.root')
+    rdf = _get_data()
     arr = rdf.AsNumpy(['m'])['m']
     wgt = numpy.random.binomial(1, 0.5, size=arr.size)
 
@@ -150,5 +143,18 @@ def test_wgt():
     obj=Fitter(pdf, dat)
     res=obj.fit()
     res.hesse(method='minuit_hesse')
+
+    assert res.valid
+#-------------------------------------
+@pytest.mark.skip(reason='Not ready yet')
+def test_strategy():
+    '''
+    Test different fitting strategies
+    '''
+    pdf = _get_pdf()
+    dat = _get_data()
+
+    obj = Fitter(pdf, dat)
+    res = obj.fit(strategy={})
 
     assert res.valid
