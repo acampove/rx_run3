@@ -432,8 +432,8 @@ class Fitter:
                 continue
 
             shape       = d_shp_par[name]
-            shape.lower = val - err
-            shape.upper = val + err
+            shape.lower = val - nsigma * err
+            shape.upper = val + nsigma * err
 
             log.info(f'{name:<20}{val - err:<20.3e}{val + err:<20.3e}')
     #------------------------------
