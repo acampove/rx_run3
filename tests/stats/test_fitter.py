@@ -153,7 +153,13 @@ def test_strategy():
     pdf = _get_pdf()
     dat = _get_data()
 
+    cfg = {
+            'strategy' : {
+                'steps' : [1e3, 1e4]
+                }
+            }
+
     obj = Fitter(pdf, dat)
-    res = obj.fit(strategy={'steps' : [1e3, 1e4]})
+    res = obj.fit(cfg)
 
     assert res.valid
