@@ -383,6 +383,53 @@ class Fitter:
 
         return res
     #------------------------------
+    def _fit_in_steps(self, cfg : dict) -> FitResult:
+        l_nsample = cfg['strategy']['steps']
+
+        res = None
+        for nsample in l_nsample:
+            log.info(f'Fitting with {nsample} samples')
+            cfg_step             = dict(cfg)
+            cfg_step['nentries'] = nsample
+
+            nll    = self._get_nll(cfg = cfg_step)
+            res, _ = self._minimize(nll, cfg_step)
+            self._update_par_bounds(res)
+
+        if res is None:
+            nsteps = len(l_nsample)
+            raise ValueError(f'No fit out of {nsteps} was done')
+
+        return res
+    #------------------------------
+    def _result_to_value_error(self, res : FitResult) -> dict[str, list[float]]:
+        d_par = {}
+        for par, d_val in res.params.items():
+            val = d_val['value']
+            err = d_val['hesse']['error']
+
+            d_par[par.name] = [val, err]
+
+        return d_par
+    #------------------------------
+    def _update_par_bounds(self, res : FitResult) -> None:
+        s_shape_par = self._pdf.get_params(is_yield=False, floating=True)
+        d_shp_par   = { par.name : par for par in s_shape_par}
+        d_fit_par   = self._result_to_value_error(res)
+
+        log.info(60 * '-')
+        log.info(f'{"Parameter":<20}{"Low bound":<20}{"High bound":<20}')
+        log.info(60 * '-')
+        for name, [val, err] in d_fit_par.items():
+            if name not in d_shp_par:
+                continue
+
+            shape       = d_shp_par[name]
+            shape.lower = val - err
+            shape.upper = val + err
+
+            log.info(f'{name:<20}{val - err:<20.3e}{val + err:<20.3e}')
+    #------------------------------
     def fit(self, cfg : Union[dict, None] = None):
         '''
         Runs the fit using the configuration specified by the cfg dictionary
