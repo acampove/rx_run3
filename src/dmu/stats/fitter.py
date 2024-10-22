@@ -22,7 +22,7 @@ class FitterFailedFit(Exception):
     Exception used when fitter fails
     '''
 #------------------------------
-class fitter:
+class Fitter:
     '''
     Class meant to be an interface to underlying fitters
     '''
