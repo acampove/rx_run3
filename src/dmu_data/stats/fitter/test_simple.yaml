@@ -1,0 +1,12 @@
+strategy      :
+      retry   :
+          ntries        : 4
+          pvalue        : 0.05
+          ignore_status : true
+      steps   : [1e3, 1e4]
+ranges        : 
+      - [0, 10]
+constraints   :
+      mu : [5.0, 1.0]
+      sg : [1.0, 0.1]
+print_pars    : ['mu', 'sg']
