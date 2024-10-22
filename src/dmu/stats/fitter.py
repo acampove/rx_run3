@@ -408,14 +408,18 @@ class Fitter:
     def _result_to_value_error(self, res : FitResult) -> dict[str, list[float]]:
         d_par = {}
         for par, d_val in res.params.items():
-            val = d_val['value']
-            err = d_val['hesse']['error']
+            try:
+                val = d_val['value']
+                err = d_val['hesse']['error']
+            except KeyError as exc:
+                pprint.pprint(d_val)
+                raise KeyError(f'Cannot extract value, hesse or error from dictionary above') from exc
 
             d_par[par.name] = [val, err]
 
         return d_par
     #------------------------------
-    def _update_par_bounds(self, res : FitResult) -> None:
+    def _update_par_bounds(self, res : FitResult, nsigma : float) -> None:
         s_shape_par = self._pdf.get_params(is_yield=False, floating=True)
         d_shp_par   = { par.name : par for par in s_shape_par}
         d_fit_par   = self._result_to_value_error(res)
