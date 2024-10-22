@@ -325,11 +325,12 @@ class Fitter:
 
         return res, gof
     #------------------------------
-    def _fit_retries(self, nll, cfg : dict) -> tuple[dict, FitResult]:
+    def _fit_retries(self, cfg : dict) -> tuple[dict, FitResult]:
         ntries       = cfg['strategy']['retry']['ntries']
         pvalue_thresh= cfg['strategy']['retry']['pvalue_thresh']
         ignore_status= cfg['strategy']['retry']['ignore_status']
 
+        nll        = self._get_nll(cfg = cfg)
         d_pval_res = {}
         last_res   = None
         for i_try in range(ntries):
