@@ -63,25 +63,6 @@ def _get_pdf():
 
     return pdf
 #-------------------------------------
-def _make_dir_path(path : str) -> str:
-    '''
-    Takes path to directory, makes directory, returns path
-    '''
-
-    os.makedirs(path, exist_ok=True)
-
-    return path
-#-------------------------------------
-def test_ntries():
-    '''
-    Test fitting with multiple tries
-    '''
-    pdf = _get_pdf()
-    obj = Fitter(pdf, Data.arr)
-    res = obj.fit(ntries=10, pval_threshold=0.99)
-
-    assert res.valid
-#-------------------------------------
 @pytest.mark.parametrize('dat', Data.l_arg_simple)
 def test_simple(dat):
     '''
@@ -93,19 +74,41 @@ def test_simple(dat):
 
     assert res.valid
 #-------------------------------------
+def test_retry():
+    '''
+    Test fitting with multiple tries
+    '''
+    cfg = {'strategy' :
+           {'retry' :
+            {
+                'ntries'        : 10,
+                'pvalue_thresh' : 0.05,
+                'ignore_status' : False
+            }
+            }
+           }
+
+    pdf = _get_pdf()
+    obj = Fitter(pdf, Data.arr)
+    res = obj.fit(cfg)
+
+    assert res.valid
+#-------------------------------------
 def test_constrain():
     '''
     Fits with constraints to parameters
     '''
+    cfg = {
+            'constraints'   : {
+                'mu' : [5.0, 1.0],
+                'sg' : [1.0, 0.1],
+                }
+            }
+
     pdf = _get_pdf()
     obj=Fitter(pdf, Data.arr)
+    res=obj.fit(cfg)
 
-    res=obj.fit()
-    res.hesse()
-    assert res.valid
-
-    res=obj.fit(d_const={'mu' : (0, 0.1), 'sg' : (1, 0.01), 'nev' : (100, 0)})
-    res.hesse()
     assert res.valid
 #-------------------------------------
 def test_ranges():
@@ -114,18 +117,15 @@ def test_ranges():
     '''
     obs   = zfit.Space('x', limits=(0, 10))
     lb    = zfit.Parameter("lb", -1,  -2, 0)
-    model = zfit.pdf.Exponential(obs=obs, lam=lb)
-
-    nev   = zfit.Parameter('nev', 100, 0, 100000)
-    epdf  = model.create_extended(nev)
+    pdf   = zfit.pdf.Exponential(obs=obs, lam=lb)
 
     data  = numpy.random.exponential(5, size=10000)
     data  = data[(data < 10)]
     data  = data[(data < 2) | ((data > 4) & (data < 6)) |  ((data > 8) & (data < 10)) ]
 
-    obj   = Fitter(epdf, data)
-    rng   = [(0,2), (4, 6), (8, 10)]
-    res   = obj.fit(ranges=rng)
+    cfg   = {'ranges': [(0, 2), (4, 6), (8, 10)]}
+    obj   = Fitter(pdf, data)
+    res   = obj.fit(cfg)
 
     assert res.valid
 #-------------------------------------
@@ -142,7 +142,6 @@ def test_wgt():
 
     obj=Fitter(pdf, dat)
     res=obj.fit()
-    res.hesse(method='minuit_hesse')
 
     assert res.valid
 #-------------------------------------
@@ -155,6 +154,6 @@ def test_strategy():
     dat = _get_data()
 
     obj = Fitter(pdf, dat)
-    res = obj.fit(strategy={})
+    res = obj.fit(strategy={'steps' : [1e3, 1e4]})
 
     assert res.valid
