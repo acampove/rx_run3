@@ -15,62 +15,37 @@ obj = Fitter(pdf, dat)
 res = obj.fit()
 ```
 
-where the `PDF` is a zfit object and the data is either a numpy array, a pandas dataframe or a zfit dataset. 
+### Customizations 
+In order to customize the way the fitting is done one would pass a configuration dictionary to the `fit(cfg=config)`
+function. This dictionary can be represented in YAML as:
 
-### Retries 
-
-In some cases the fit has to be retried multiple times 
-
-```python
-obj = Fitter(pdf, Data.arr)
-res = obj.fit(ntries=10, pval_threshold=0.05)
-```
-
-above, the fit is tried 10 times or until the p-value is above 0.05. 
-
-### Constraints
-
-One can pass Gaussian constraints easily with: 
-
-```python
-obj=Fitter(pdf, Data.arr)
-res=obj.fit(d_const={'mu' : (0, 0.1), 'sg' : (1, 0.01)})
-res.hesse()
-```
-
-Where the parameters are `mu` and `sg`. This does not support correlations yet, the constrains are independent.
-
-### Ranges
-
-One can also fit dataset in different ranges
-
-```python
-obs   = zfit.Space('x', limits=(0, 10))
-lb    = zfit.Parameter('lb', -1,  -2, 0)
-model = zfit.pdf.Exponential(obs=obs, lam=lb)
-
-data  = numpy.random.exponential(5, size=10000)
-data  = data[(data < 10)]
-data  = data[(data < 2) | ((data > 4) & (data < 6)) |  ((data > 8) & (data < 10)) ]
-
-obj   = Fitter(model, data)
-rng   = [(0,2), (4, 6), (8, 10)]
-res   = obj.fit(ranges=rng)
-```
-
-in the example above, the likelihood is built from three intervals in the observable.
-
-### Weights
-
-A fit to a weighted dataset would be done with:
-
-```python
-arr = rdf.AsNumpy(['m'])['m']
-wgt = numpy.random.binomial(1, 0.5, size=arr.size)
-dat = zfit.data.from_numpy(array=arr, weights=wgt, obs=pdf.space)
-
-obj=Fitter(pdf, dat)
-res=obj.fit()
+```yaml
+# The strategies below are exclusive, only can should be used at a time
+strategy      :
+      # This strategy will fit multiple times and retry the fit until either
+      # ntries is exhausted or the pvalue is reached.
+      retry   :
+          ntries        : 4    #Number of tries
+          pvalue        : 0.05 #Pvalue threshold, if the fit is better than this, the loop ends
+          ignore_status : true #Will pick invalid fits if this is true, otherwise only valid fits will be counted
+      # This will fit smaller datasets and get the value of the shape parameters to allow
+      # these shapes to float only around this value and within nsigma
+      # Fit can be carried out multiple times with larger and larger samples to tighten parameters
+      steps   :
+          nsteps   : [1e3, 1e4] #Number of entries to use
+          nsigma   : [5.0, 2.0] #Number of sigmas for the range of the parameter, for each step
+# The lines below will split the range of the data [0-10] into two subranges, such that the NLL is built
+# only in those ranges. The ranges need to be tuples
+ranges        : 
+      - !!python/tuple [0, 3]
+      - !!python/tuple [6, 9]
+#The lines below will allow using contraints for each parameter, where the first element is the mean and the second
+#the width of a Gaussian constraint. No correlations are implemented, yet.
+constraints   :
+      mu : [5.0, 1.0]
+      sg : [1.0, 0.1]
+#After each fit, the parameters spciefied below will be printed, for debugging purposes
+print_pars    : ['mu', 'sg']
 ```
 
 ## Arrays
