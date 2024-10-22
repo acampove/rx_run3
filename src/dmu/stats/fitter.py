@@ -35,9 +35,9 @@ class Fitter:
         self._data_in = data
         self._pdf     = pdf
 
-        self._data_zf : zfit.data.Data 
+        self._data_zf : zfit.data.Data
         self._data_np : numpy.ndarray
-        self._obs     : zfit.Space 
+        self._obs     : zfit.Space
         self._d_par   : dict
 
         self._ndof           = 10
@@ -195,16 +195,17 @@ class Fitter:
             log.debug(f'{"":<4}{par.name:<20}{"->":<10}{val:<20.3e}')
             par.set_value(val)
     #------------------------------
-    def _get_constraints(self, d_const : dict[str, list[float, float]]) -> list[zfit.constraint.GaussianConstraint]:
+    def _get_constraints(self, cfg : dict) -> list[zfit.constraint.GaussianConstraint]:
         '''
         Takes dictionary of constraints as floats, returns list of GaussianConstraint objects
         '''
-        if len(d_const) == 0:
+        if 'constraints' not in cfg:
             log.debug('Not using any constraint')
             return []
 
-        s_par = self._pdf.get_params(floating=True)
-        d_par = { par.name : par for par in s_par}
+        d_const = cfg['constraints']
+        s_par   = self._pdf.get_params(floating=True)
+        d_par   = { par.name : par for par in s_par}
 
         log.info('Adding constraints:')
         l_const = []
