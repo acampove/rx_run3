@@ -16,12 +16,12 @@ log = log_store.add_logger('data_checks:utilities')
 local_config = False
 
 # --------------------------------------
-def load_config(cfg_nam : str, kind :str ='toml'):
+def load_config(cfg_nam : str, kind :str ='yaml'):
     '''
     Parameters
     -----------------
     cfg_nam (str): Name of config file, without extension
-    kind    (str): Type of file, e.g. toml (default), yaml, etc
+    kind    (str): Type of file, e.g. yaml (default), toml, etc
 
     Returns
     -----------------
