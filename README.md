@@ -364,11 +364,9 @@ days are:
 --> Wednesday <--
 ```
 
-# Future tools
-
 ## coned
 
-Utility used to edit SSH connection list, it should have the following behavior:
+Utility used to edit SSH connection list, has the following behavior:
 
 ```bash
 #Prints all connections
@@ -381,3 +379,32 @@ coned -a server_name server_index task
 coned -d server_name server_index task
 ```
 
+the list of servers with tasks and machines is specified in a YAML file that can look like:
+
+```yaml
+ihep:
+    '001' : 
+        - checks
+        - extractor
+        - dsmanager
+        - classifier
+    '002' :
+        - checks
+        - hqm2
+        - dotfiles
+        - data_checks
+    '003' :
+        - setup
+        - ntupling
+        - preselection
+    '004' :
+        - scripts
+        - tools
+        - dmu
+        - ap
+lxplus:
+    '984' :
+        - ap
+```
+
+and should be placed in `$HOME/.config/dmu/ssh/servers.yaml`
