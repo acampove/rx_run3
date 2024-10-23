@@ -227,11 +227,14 @@ class FilterFile:
         '''
         Will define list of columns with a target head (e.g. B_some_name) from some original head (e.g. Lb_some_name)
         '''
+
+        log.debug(f'Original: {org_head}')
+        log.debug(f'Target:   {trg_head}')
         log.debug(155 * '-')
         log.debug(f'{"Original":<70}{"--->":<15}{"New":<70}')
         log.debug(155 * '-')
         for org_name in l_name:
-            tmp_name = org_name.lstrip(org_head)
+            tmp_name = org_name.removeprefix(org_head)
             trg_name = f'{trg_head}{tmp_name}'
 
             log.debug(f'{org_name:<70}{"--->":<15}{trg_name:<70}')
