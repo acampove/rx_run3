@@ -10,68 +10,16 @@ sample:
     - data_24_magup_turbo_24c1
     - data_24_magup_turbo_24c2
     - data_24_magup_turbo_24c3
-drop_branches:
-  includes:
-    - NeutralIso
-    - SMOG2
-    - _EE2KK_
-    - _EE2PiPi_
-    - _K2P_
-    - _K2Pi_
-    - _KP2PK_
-    - _P2K_
-    - _DTF_
-    - _MuMu2KK_
-    - _MuMu2PiPi_
-    - _MuMuK2KKPi_
-    - _MuMuK2PiPiPi_
-    - _POS_COV_MATRIX_
-    - _MOM_POS_COV_MATRIX_
-    - _MOM_COV_MATRIX_
-    - _POSITION_STATEAT_
-    - CutBasedIncl
-    - _InclDet
-    - _RICH_THRESHOLD_
-    - _Hlt1Beam
-    - _Hlt1BGI
-    - _Hlt1D2K
-    - _Hlt1D2P
-    - _Hlt1Det
-    - _Hlt1DiElectron
-    - _Hlt1DiMuon
-    - _Hlt1DiPhoton
-    - _Hlt1Displaced
-    - _Hlt1Dst2
-    - _Hlt1Error
-    - _Hlt1GEC
-    - _Hlt1KsToPiPi
-    - _Hlt1LambdaLL
-    - _Hlt1LowPtDiMuon
-    - _Hlt1LowPtMuon
-    - _Hlt1Material
-    - _Hlt1MicroBias
-    - _Hlt1NoBias
-    - _Hlt1ODIN
-    - _Hlt1OneMuon
-    - _Hlt1Passthrough
-    - _Hlt1Pi02GammaGamma
-    - _Hlt1RICH1
-    - _Hlt1RICH2
-    - _Hlt1SingleHighPt
-    - _Hlt1SMOG
-    - _Hlt1TAEPassthrough
-    - _Hlt1Velo
-    - _Hlt1XiOmegaLLL
-  starts_with:
-    - Hlt1
-    - B_K2Pi_DTF_
-    - K_
+redefine_head:
+  Lb_ : B_
+  Lz_ : B_
 define:
+  #These defitions are done on top of the names stemming from the changes caused by `redefine_head`
   nTracks                           : nBackTracks + nDownstreamTracks + nLongTracks + nTTracks + nUpstreamTracks + nVeloTracks
   B_VTXISODCHI2ONETRACK             : B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
   B_VTXISODCHI2MASSONETRACK         : B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
-  B_VTXISODCHI2TWOTRACK             : B_VTXISO_B_TwoTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
-  B_VTXISODCHI2MASSTWOTRACK         : B_VTXISO_B_TwoTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
+  B_VTXISODCHI2TWOTRACK             : B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2
+  B_VTXISODCHI2MASSTWOTRACK         : B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
 rename:
   B_DTF_PV_Jpsi_mass_const_M        : B_const_mass_M
   Lb_DTF_PV_Jpsi_mass_const_M       : B_const_mass_M
@@ -154,6 +102,65 @@ rename:
   L2_PE                             : L2_ENERGY
   L1_BremMultiplicity               : L1_HASBREM
   L2_BremMultiplicity               : L2_HASBREM
+drop_branches:
+  # This should happend AFTER the redefinitions, renaming and definitions are done
+  includes:
+    - NeutralIso
+    - SMOG2
+    - _EE2KK_
+    - _EE2PiPi_
+    - _K2P_
+    - _K2Pi_
+    - _KP2PK_
+    - _P2K_
+    - _DTF_
+    - _MuMu2KK_
+    - _MuMu2PiPi_
+    - _MuMuK2KKPi_
+    - _MuMuK2PiPiPi_
+    - _POS_COV_MATRIX_
+    - _MOM_POS_COV_MATRIX_
+    - _MOM_COV_MATRIX_
+    - _POSITION_STATEAT_
+    - CutBasedIncl
+    - _InclDet
+    - _RICH_THRESHOLD_
+    - _Hlt1Beam
+    - _Hlt1BGI
+    - _Hlt1D2K
+    - _Hlt1D2P
+    - _Hlt1Det
+    - _Hlt1DiElectron
+    - _Hlt1DiMuon
+    - _Hlt1DiPhoton
+    - _Hlt1Displaced
+    - _Hlt1Dst2
+    - _Hlt1Error
+    - _Hlt1GEC
+    - _Hlt1KsToPiPi
+    - _Hlt1LambdaLL
+    - _Hlt1LowPtDiMuon
+    - _Hlt1LowPtMuon
+    - _Hlt1Material
+    - _Hlt1MicroBias
+    - _Hlt1NoBias
+    - _Hlt1ODIN
+    - _Hlt1OneMuon
+    - _Hlt1Passthrough
+    - _Hlt1Pi02GammaGamma
+    - _Hlt1RICH1
+    - _Hlt1RICH2
+    - _Hlt1SingleHighPt
+    - _Hlt1SMOG
+    - _Hlt1TAEPassthrough
+    - _Hlt1Velo
+    - _Hlt1XiOmegaLLL
+  starts_with:
+    - Hlt1
+    - B_K2Pi_DTF_
+    - K_
+    - Lb_
+    - Lz_
 hlt_lines:
   lines_phys_ee_mva:
     - Hlt2RD_BuToKpEE_MVA
