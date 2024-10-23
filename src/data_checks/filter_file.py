@@ -18,18 +18,19 @@ class FilterFile:
     '''
     Class used to pick a ROOT file path and produce a smaller version
     '''
+    # pylint: disable=too-many-instance-attributes
     # --------------------------------------
-    def __init__(self, kind=None, file_path=None, cfg_nam=None):
+    def __init__(self, kind : str, file_path : str, cfg_nam : str):
         self._kind         = kind
         self._file_path    = file_path
         self._cfg_nam      = cfg_nam
 
         self._cfg_dat      : dict
-        self._nevts        : int 
-        self._is_mc        : bool 
-        self._l_line_name  : list[str] 
+        self._nevts        : int
+        self._is_mc        : bool
+        self._l_line_name  : list[str]
         self._store_branch : bool
-        self._has_lumitree : bool 
+        self._has_lumitree : bool
 
         self._initialized  = False
     # --------------------------------------
@@ -143,7 +144,7 @@ class FilterFile:
         l_kaon = [ name         for name in l_name if name.startswith('K_') ]
 
         log.debug(110 * '-')
-        log.debug('Renaming kaon branches:')
+        log.info('Renaming kaon branches:')
         log.debug(110 * '-')
         for old in l_kaon:
             new = 'H_' + old[2:]
@@ -161,7 +162,7 @@ class FilterFile:
 
         d_name = self._cfg_dat['rename']
         log.debug(110 * '-')
-        log.debug('Renaming mapped branches:')
+        log.info('Renaming mapped branches:')
         log.debug(110 * '-')
         for org, new in d_name.items():
             if org not in l_name:
@@ -187,7 +188,9 @@ class FilterFile:
             log.debug('Not defining any variables')
             return rdf
 
+        log.debug(110 * '-')
         log.info('Defining variables')
+        log.debug(110 * '-')
         for name, expr in self._cfg_dat['define'].items():
             log.debug(f'{name:<20}{expr:<150}')
 
@@ -201,12 +204,12 @@ class FilterFile:
         _get_branches decides what branches are kept
         '''
 
-        log.info(30 * '')
-        log.info(30 * '')
-        log.info(30 * '-')
-        log.info(30 * '')
+        log.debug(30 * '')
+        log.debug(30 * '')
+        log.debug(30 * '-')
+        log.debug(30 * '')
         log.info(f'Processing line: {line_name}')
-        log.info(30 * '-')
+        log.debug(30 * '-')
         rdf      = RDataFrame(f'{line_name}/DecayTree', self._file_path)
         rdf      = self._rename_branches(rdf)
         rdf      = self._define_branches(rdf)
@@ -222,9 +225,9 @@ class FilterFile:
             rdf  = obj.run()
         nfnl     = rdf.Count().GetValue()
 
-        log.info(100 * '-')
-        log.info(f'{line_name:<50}{ninit:<10}{"->":5}{nfnal:<10}{norg:<10}{"->":5}{nfnl:<10}')
-        log.info(100 * '-')
+        log.debug(100 * '-')
+        log.debug(f'{line_name:<50}{ninit:<10}{"->":5}{nfnal:<10}{norg:<10}{"->":5}{nfnl:<10}')
+        log.debug(100 * '-')
 
         rdf.name     = line_name
         rdf.l_branch = l_branch
