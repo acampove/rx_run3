@@ -12,10 +12,6 @@ sample:
     - data_24_magup_turbo_24c3
 drop_branches:
   includes:
-    - _cone_indx_
-    - _DTF_PV_B_mass_const_
-    - _DTF_noPV_
-    - ChargedIso
     - NeutralIso
     - SMOG2
     - _EE2KK_
@@ -24,6 +20,7 @@ drop_branches:
     - _K2Pi_
     - _KP2PK_
     - _P2K_
+    - _DTF_
     - _MuMu2KK_
     - _MuMu2PiPi_
     - _MuMuK2KKPi_
@@ -35,65 +32,128 @@ drop_branches:
     - CutBasedIncl
     - _InclDet
     - _RICH_THRESHOLD_
+    - _Hlt1Beam
+    - _Hlt1BGI
+    - _Hlt1D2K
+    - _Hlt1D2P
+    - _Hlt1Det
+    - _Hlt1DiElectron
+    - _Hlt1DiMuon
+    - _Hlt1DiPhoton
+    - _Hlt1Displaced
+    - _Hlt1Dst2
+    - _Hlt1Error
+    - _Hlt1GEC
+    - _Hlt1KsToPiPi
+    - _Hlt1LambdaLL
+    - _Hlt1LowPtDiMuon
+    - _Hlt1LowPtMuon
+    - _Hlt1Material
+    - _Hlt1MicroBias
+    - _Hlt1NoBias
+    - _Hlt1ODIN
+    - _Hlt1OneMuon
+    - _Hlt1Passthrough
+    - _Hlt1Pi02GammaGamma
+    - _Hlt1RICH1
+    - _Hlt1RICH2
+    - _Hlt1SingleHighPt
+    - _Hlt1SMOG
+    - _Hlt1TAEPassthrough
+    - _Hlt1Velo
+    - _Hlt1XiOmegaLLL
   starts_with:
-    - B_Hlt1
-    - Lz_Hlt1
-    - Lb_Hlt1
-    - Jpsi_Hlt1
+    - Hlt1
     - B_K2Pi_DTF_
     - K_
-    - Hlt1Di
-    - Hlt1BGI
-    - B_DTF_PV_Jpsi_mass_const_M
-    - B_DTF_PV_Psi2S_mass_const_M
 define:
-  nTracks: nBackTracks + nDownstreamTracks + nLongTracks + nTTracks + nUpstreamTracks + nVeloTracks
+  nTracks                           : nBackTracks + nDownstreamTracks + nLongTracks + nTTracks + nUpstreamTracks + nVeloTracks
+  B_VTXISODCHI2ONETRACK             : B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
+  B_VTXISODCHI2MASSONETRACK         : B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
+  B_VTXISODCHI2TWOTRACK             : B_VTXISO_B_TwoTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
+  B_VTXISODCHI2MASSTWOTRACK         : B_VTXISO_B_TwoTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
 rename:
-  B_DTF_PV_Jpsi_mass_const_M   : B_const_mass_M
-  Lb_DTF_PV_Jpsi_mass_const_M  : B_const_mass_M
-  B_DTF_PV_Psi2S_mass_const_M  : B_const_mass_psi2S_M
-  Lb_DTF_PV_Psi2S_mass_const_M : B_const_mass_psi2S_M
-  L1_PID_E                     : L1_PIDe
-  L2_PID_E                     : L2_PIDe
-  K_PID_E                      : H_PIDe
-  K_PROBNN_K                   : H_ProbNNk
-  K_TRGHOSTPROB                : H_TRACK_GhostProb
-  H1_PROBNN_K                  : H1_ProbNNk
-  H2_PROBNN_K                  : H2_ProbNNk
-  L1_TRGHOSTPROB               : L1_TRACK_GhostProb
-  L2_TRGHOSTPROB               : L2_TRACK_GhostProb
-  L1_PID_MU                    : L1_PIDmu
-  L2_PID_MU                    : L2_PIDmu
-  L1_ISMUON                    : L1_isMuon
-  L2_ISMUON                    : L2_isMuon
-  B_BPVFDCHI2                  : B_FDCHI2_OWNPV
-  H_BPVIPCHI2                  : H_IPCHI2_OWNPV
-  Jpsi_BPVIPCHI2               : Jpsi_IPCHI2_OWNPV
-  L1_BPVIPCHI2                 : L1_IPCHI2_OWNPV
-  L2_BPVIPCHI2                 : L2_IPCHI2_OWNPV
-  Jpsi_BPVDIRA                 : Jpsi_DIRA_OWNPV
-  B_BPVDIRA                    : B_DIRA_OWNPV
-  B_BPVIPCHI2                  : B_IPCHI2_OWNPV
-  B_END_VZ                     : B_ENDVERTEX_Z
-  B_CHI2                       : B_ENDVERTEX_CHI2
-  L1_ENERGY                    : L1_PE
-  L2_ENERGY                    : L2_PE
-  L2_HASBREM                   : L2_BremMultiplicity
-  B_FDCHI2_OWNPV               : B_BPVFDCHI2
-  B_IPCHI2_OWNPV               : B_BPVIPCHI2
-  Jpsi_FDCHI2_OWNPV            : Jpsi_BPVFDCHI2
-  Jpsi_IPCHI2_OWNPV            : Jpsi_BPVIPCHI2
-  H_IPCHI2_OWNPV               : H_BPVIPCHI2
-  L1_IPCHI2_OWNPV              : L1_BPVIPCHI2
-  L2_IPCHI2_OWNPV              : L2_BPVIPCHI2
-  B_DIRA_OWNPV                 : B_BPVDIRA
-  Jpsi_DIRA_OWNPV              : Jpsi_BPVDIRA
-  B_ENDVERTEX_Z                : B_END_VZ
-  B_ENDVERTEX_CHI2             : B_CHI2
-  L1_PE                        : L1_ENERGY
-  L2_PE                        : L2_ENERGY
-  L1_BremMultiplicity          : L1_HASBREM
-  L2_BremMultiplicity          : L2_HASBREM
+  B_DTF_PV_Jpsi_mass_const_M        : B_const_mass_M
+  Lb_DTF_PV_Jpsi_mass_const_M       : B_const_mass_M
+  B_DTF_PV_Psi2S_mass_const_M       : B_const_mass_psi2S_M
+  Lb_DTF_PV_Psi2S_mass_const_M      : B_const_mass_psi2S_M
+  #
+  B_DTF_PV_Jpsi_mass_const_PX       : B_const_mass_PX
+  Lb_DTF_PV_Jpsi_mass_const_PX      : B_const_mass_PX
+  B_DTF_PV_Psi2S_mass_const_PX      : B_const_mass_psi2S_PX
+  Lb_DTF_PV_Psi2S_mass_const_PX     : B_const_mass_psi2S_PX
+  #
+  B_DTF_PV_Jpsi_mass_const_PY       : B_const_mass_PY
+  Lb_DTF_PV_Jpsi_mass_const_PY      : B_const_mass_PY
+  B_DTF_PV_Psi2S_mass_const_PY      : B_const_mass_psi2S_PY
+  Lb_DTF_PV_Psi2S_mass_const_PY     : B_const_mass_psi2S_PY
+  #
+  B_DTF_PV_Jpsi_mass_const_PZ       : B_const_mass_PZ
+  Lb_DTF_PV_Jpsi_mass_const_PZ      : B_const_mass_PZ
+  B_DTF_PV_Psi2S_mass_const_PZ      : B_const_mass_psi2S_PZ
+  Lb_DTF_PV_Psi2S_mass_const_PZ     : B_const_mass_psi2S_PZ
+  #---------
+  B_DTF_noPV_Jpsi_mass_const_M      : B_nopv_const_mass_M
+  Lb_DTF_noPV_Jpsi_mass_const_M     : B_nopv_const_mass_M
+  B_DTF_noPV_Psi2S_mass_const_M     : B_nopv_const_mass_psi2S_M
+  Lb_DTF_noPV_Psi2S_mass_const_M    : B_nopv_const_mass_psi2S_M
+  #
+  B_DTF_noPV_Jpsi_mass_const_PX     : B_nopv_const_mass_PX
+  Lb_DTF_noPV_Jpsi_mass_const_PX    : B_nopv_const_mass_PX
+  B_DTF_noPV_Psi2S_mass_const_PX    : B_nopv_const_mass_psi2S_PX
+  Lb_DTF_noPV_Psi2S_mass_const_PX   : B_nopv_const_mass_psi2S_PX
+  #
+  B_DTF_noPV_Jpsi_mass_const_PY     : B_nopv_const_mass_PY
+  Lb_DTF_noPV_Jpsi_mass_const_PY    : B_nopv_const_mass_PY
+  B_DTF_noPV_Psi2S_mass_const_PY    : B_nopv_const_mass_psi2S_PY
+  Lb_DTF_noPV_Psi2S_mass_const_PY   : B_nopv_const_mass_psi2S_PY
+  #
+  B_DTF_noPV_Jpsi_mass_const_PZ     : B_nopv_const_mass_PZ
+  Lb_DTF_noPV_Jpsi_mass_const_PZ    : B_nopv_const_mass_PZ
+  B_DTF_noPV_Psi2S_mass_const_PZ    : B_nopv_const_mass_psi2S_PZ
+  Lb_DTF_noPV_Psi2S_mass_const_PZ   : B_nopv_const_mass_psi2S_PZ
+  #---------
+  L1_PID_E                          : L1_PIDe
+  L2_PID_E                          : L2_PIDe
+  K_PID_E                           : H_PIDe
+  K_PROBNN_K                        : H_ProbNNk
+  K_TRGHOSTPROB                     : H_TRACK_GhostProb
+  H1_PROBNN_K                       : H1_ProbNNk
+  H2_PROBNN_K                       : H2_ProbNNk
+  L1_TRGHOSTPROB                    : L1_TRACK_GhostProb
+  L2_TRGHOSTPROB                    : L2_TRACK_GhostProb
+  L1_PID_MU                         : L1_PIDmu
+  L2_PID_MU                         : L2_PIDmu
+  L1_ISMUON                         : L1_isMuon
+  L2_ISMUON                         : L2_isMuon
+  B_BPVFDCHI2                       : B_FDCHI2_OWNPV
+  H_BPVIPCHI2                       : H_IPCHI2_OWNPV
+  Jpsi_BPVIPCHI2                    : Jpsi_IPCHI2_OWNPV
+  L1_BPVIPCHI2                      : L1_IPCHI2_OWNPV
+  L2_BPVIPCHI2                      : L2_IPCHI2_OWNPV
+  Jpsi_BPVDIRA                      : Jpsi_DIRA_OWNPV
+  B_BPVDIRA                         : B_DIRA_OWNPV
+  B_BPVIPCHI2                       : B_IPCHI2_OWNPV
+  B_END_VZ                          : B_ENDVERTEX_Z
+  B_CHI2                            : B_ENDVERTEX_CHI2
+  L1_ENERGY                         : L1_PE
+  L2_ENERGY                         : L2_PE
+  L2_HASBREM                        : L2_BremMultiplicity
+  B_FDCHI2_OWNPV                    : B_BPVFDCHI2
+  B_IPCHI2_OWNPV                    : B_BPVIPCHI2
+  Jpsi_FDCHI2_OWNPV                 : Jpsi_BPVFDCHI2
+  Jpsi_IPCHI2_OWNPV                 : Jpsi_BPVIPCHI2
+  H_IPCHI2_OWNPV                    : H_BPVIPCHI2
+  L1_IPCHI2_OWNPV                   : L1_BPVIPCHI2
+  L2_IPCHI2_OWNPV                   : L2_BPVIPCHI2
+  B_DIRA_OWNPV                      : B_BPVDIRA
+  Jpsi_DIRA_OWNPV                   : Jpsi_BPVDIRA
+  B_ENDVERTEX_Z                     : B_END_VZ
+  B_ENDVERTEX_CHI2                  : B_CHI2
+  L1_PE                             : L1_ENERGY
+  L2_PE                             : L2_ENERGY
+  L1_BremMultiplicity               : L1_HASBREM
+  L2_BremMultiplicity               : L2_HASBREM
 hlt_lines:
   lines_phys_ee_mva:
     - Hlt2RD_BuToKpEE_MVA
