@@ -211,6 +211,7 @@ class FilterFile:
         log.info(f'Processing line: {line_name}')
         log.debug(30 * '-')
         rdf      = RDataFrame(f'{line_name}/DecayTree', self._file_path)
+        rdf      = self._define_heads(rdf)
         rdf      = self._rename_branches(rdf)
         rdf      = self._define_branches(rdf)
         rdf.lumi = False
@@ -240,9 +241,7 @@ class FilterFile:
         Branches are dropped by only keeping branches in _keep_branch function
         line_name used to name file where branches will be saved.
         '''
-        v_col = rdf.GetColumnNames()
-        l_col = [ col.c_str() for col in v_col ]
-
+        l_col = self._get_column_names(rdf)
         ninit = len(l_col)
         l_flt = [ flt         for flt in l_col if self._keep_branch(flt) ]
         nfnal = len(l_flt)
