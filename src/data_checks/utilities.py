@@ -16,7 +16,7 @@ log = log_store.add_logger('data_checks:utilities')
 local_config = False
 
 # --------------------------------------
-def load_config(cfg_nam : str, kind :str ='yaml'):
+def load_config(cfg_nam : str, kind :str ='yaml') -> dict:
     '''
     Parameters
     -----------------
@@ -34,7 +34,7 @@ def load_config(cfg_nam : str, kind :str ='yaml'):
 
     return val
 # --------------------------------------
-def _load_local_config(cfg_nam : str, kind : str):
+def _load_local_config(cfg_nam : str, kind : str) -> dict:
     '''
     Will pick up config file from installed project
     '''
@@ -57,7 +57,7 @@ def _load_local_config(cfg_nam : str, kind : str):
     return data
 # --------------------------------------
 @utnr.timeit
-def _load_grid_config(cfg_nam :str, kind : str):
+def _load_grid_config(cfg_nam :str, kind : str) -> dict:
     '''
     Will use XROOTD to pick up file from grid
     '''
