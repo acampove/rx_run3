@@ -271,7 +271,7 @@ class FilterFile:
         nfnl     = rdf.Count().GetValue()
 
         log.debug(100 * '-')
-        log.debug(f'{line_name:<50}{ninit:<10}{"->":5}{nfnal:<10}{norg:<10}{"->":5}{nfnl:<10}')
+        log.info(f'{line_name:<50}{ninit:<10}{"->":5}{nfnal:<10}{norg:<10}{"->":5}{nfnl:<10}')
         log.debug(100 * '-')
 
         rdf.name     = line_name
