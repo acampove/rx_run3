@@ -204,6 +204,35 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
+    def _define_heads(self, rdf : RDataFrame) -> RDataFrame:
+        '''
+        Will take dataframe and define columns starting with head in _l_head to B_
+        Returns dataframe
+        '''
+        d_redef = self._cfg_dat['redefine_head']
+        l_name  = self._get_column_names(rdf)
+        for org_head, trg_head in d_redef.items():
+            l_to_redefine = [ name for name in l_name if name.startswith(org_head) ]
+            rdf = self._define_head(rdf, l_to_redefine, org_head, trg_head)
+
+        return rdf
+    # --------------------------------------
+    def _define_head(self, rdf : RDataFrame, l_name : list, org_head : str, trg_head : str):
+        '''
+        Will define list of columns with a target head (e.g. B_some_name) from some original head (e.g. Lb_some_name)
+        '''
+        log.debug(155 * '-')
+        log.debug(f'{"Original":<70}{"--->":<15}{"New":<70}')
+        log.debug(155 * '-')
+        for org_name in l_name:
+            tmp_name = org_name.lstrip(org_head)
+            trg_name = f'{trg_head}{tmp_name}'
+
+            log.debug(f'{org_name:<70}{"--->":<15}{trg_name:<70}')
+            rdf      = rdf.Define(trg_name, org_name)
+
+        return rdf
+    # --------------------------------------
     def _get_rdf(self, line_name):
         '''
         Will build a dataframe from a given HLT line and return the dataframe
