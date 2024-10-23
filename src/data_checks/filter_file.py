@@ -209,10 +209,16 @@ class FilterFile:
         Will take dataframe and define columns starting with head in _l_head to B_
         Returns dataframe
         '''
+        log.info('Defining heads')
+
         d_redef = self._cfg_dat['redefine_head']
         l_name  = self._get_column_names(rdf)
         for org_head, trg_head in d_redef.items():
             l_to_redefine = [ name for name in l_name if name.startswith(org_head) ]
+            if len(l_to_redefine) == 0:
+                log.debug(f'Head {org_head} not found, skipping')
+                continue
+
             rdf = self._define_head(rdf, l_to_redefine, org_head, trg_head)
 
         return rdf
