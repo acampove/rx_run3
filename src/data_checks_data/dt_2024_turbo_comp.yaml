@@ -103,6 +103,8 @@ rename:
 drop_branches:
   # This should happend AFTER the redefinitions, renaming and definitions are done
   includes:
+    - _Lb_
+    - _Lz_
     - NeutralIso
     - SMOG2
     - _EE2KK_
@@ -158,7 +160,6 @@ drop_branches:
     - B_K2Pi_DTF_
     - K_
     - Lb_
-    - Lz_
 hlt_lines:
   lines_phys_ee_mva:
     - Hlt2RD_BuToKpEE_MVA
