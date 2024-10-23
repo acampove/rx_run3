@@ -198,7 +198,7 @@ class FilterFile:
         log.info('Defining variables')
         log.debug(110 * '-')
         for name, expr in self._cfg_dat['define'].items():
-            log.debug(f'{name:<20}{expr:<150}')
+            log.debug(f'{name:<50}{expr:<200}')
 
             rdf = rdf.Define(name, expr)
 
