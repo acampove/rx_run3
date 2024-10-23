@@ -144,7 +144,7 @@ class FilterFile:
         l_kaon = [ name         for name in l_name if name.startswith('K_') ]
 
         log.debug(110 * '-')
-        log.info('Renaming kaon branches:')
+        log.info('Renaming kaon branches')
         log.debug(110 * '-')
         for old in l_kaon:
             new = 'H_' + old[2:]
@@ -162,7 +162,7 @@ class FilterFile:
 
         d_name = self._cfg_dat['rename']
         log.debug(110 * '-')
-        log.info('Renaming mapped branches:')
+        log.info('Renaming mapped branches')
         log.debug(110 * '-')
         for org, new in d_name.items():
             if org not in l_name:
@@ -304,10 +304,10 @@ class FilterFile:
         '''
         self._initialize()
 
-        log.info(f'Filtering: {self._file_path}')
-        log.info(100 * '-')
-        log.info(f'{"Line":<50}{"BOrg":<10}{"":5}{"BFnl":<10}{"#Org":<10}{"":5}{"#Fnl":<10}')
-        log.info(100 * '-')
+        log.debug(f'Filtering: {self._file_path}')
+        log.debug(100 * '-')
+        log.debug(f'{"Line":<50}{"BOrg":<10}{"":5}{"BFnl":<10}{"#Org":<10}{"":5}{"#Fnl":<10}')
+        log.debug(100 * '-')
         l_rdf = [ self._get_rdf(tree_name) for tree_name in self._l_line_name ]
 
         self._save_file(l_rdf)
