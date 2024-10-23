@@ -14,7 +14,7 @@ class Data:
     '''
     Data class with shared attributes
     '''
-    dt_path = '/home/acampove/cernbox/Run3/analysis_productions/Data/mag_down/c1.root'
+    dt_path = '/home/acampove/cernbox/Run3/analysis_productions/Data/mag_down/c2.root'
     mc_path = '/home/acampove/cernbox/Run3/analysis_productions/MC/BdKsmumu.root'
 # --------------------------------------
 def initialize():
