@@ -1,11 +1,16 @@
+'''
+Module containing FilterFile class
+'''
+
 import os
 import tqdm
 import utils_noroot          as utnr
-import data_checks.utilities as utdc
 
 from ROOT                  import RDataFrame, TFile, RDF
-from data_checks.selector  import selector
 from log_store             import log_store
+
+import data_checks.utilities as utdc
+from data_checks.selector  import selector
 
 log = log_store.add_logger('data_checks:FilterFile')
 # --------------------------------------
