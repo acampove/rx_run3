@@ -3,6 +3,7 @@ Script used to implement connection to servers
 '''
 
 import os
+import copy
 import argparse
 
 import yaml
@@ -65,7 +66,7 @@ def _load_config():
 #---------------------------------------
 def _dump_config(cfg : dict):
     if cfg == Data.cfg:
-        log.debug(f'Config was not modified, will not save it')
+        log.debug('Config was not modified, will not save it')
         return
 
     home_dir    = os.environ['HOME']
@@ -84,7 +85,7 @@ def _dump_config(cfg : dict):
 def _get_updated_config() -> dict:
     log.debug('Getting updated config')
 
-    cfg = dict(Data.cfg)
+    cfg = copy.deepcopy(Data.cfg)
     cfg = _add_task(cfg)
     cfg = _remove_task(cfg)
 
@@ -138,7 +139,14 @@ def _remove_task(cfg : dict) -> dict:
     return cfg
 #---------------------------------------
 def _trim_config(cfg : dict, machine : str, server : str) -> dict:
-    log.debug(f'Trimming {machine}:{server}')
+    if cfg[server][machine] == []:
+        log.debug(f'Trimming {server}:{machine}')
+        del cfg[server][machine]
+
+    if cfg[server] == {}:
+        log.debug(f'Trimming {server}')
+        del cfg[server]
+
     return cfg
 #---------------------------------------
 def main():
