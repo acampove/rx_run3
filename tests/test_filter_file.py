@@ -25,9 +25,9 @@ def initialize():
     ut.local_config = True
 
     log_store.set_level('rx_scripts:atr_mgr:mgr', 30)
-    log_store.set_level('data_checks:selector'  , 10)
+    log_store.set_level('data_checks:selector'  , 20)
     log_store.set_level('data_checks:utilities' , 30)
-    log_store.set_level('data_checks:FilterFile', 10)
+    log_store.set_level('data_checks:FilterFile', 20)
 # --------------------------------------
 def test_dt():
     '''
