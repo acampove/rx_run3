@@ -167,9 +167,26 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
-    def _rename_branches(self, rdf):
+    def _rename_branches(self, rdf : RDataFrame) -> RDataFrame:
         rdf = self._rename_kaon_branches(rdf)
         rdf = self._rename_mapped_branches(rdf)
+
+        return rdf
+    # --------------------------------------
+    def _define_branches(self, rdf : RDataFrame) -> RDataFrame:
+        '''
+        Will take dataframe and define columns if "define" field found in config
+        Returns dataframe
+        '''
+        if 'define' not in self._cfg_dat:
+            log.debug('Not defining any variables')
+            return rdf
+
+        log.info('Defining variables')
+        for name, expr in self._cfg_dat['define'].items():
+            log.debug(f'{name:<20}{expr:<150}')
+
+            rdf = rdf.Define(name, expr)
 
         return rdf
     # --------------------------------------
@@ -187,6 +204,7 @@ class FilterFile:
         log.info(30 * '-')
         rdf      = RDataFrame(f'{line_name}/DecayTree', self._file_path)
         rdf      = self._rename_branches(rdf)
+        rdf      = self._define_branches(rdf)
         rdf.lumi = False
         rdf      = self._attach_branches(rdf, line_name)
         l_branch = rdf.l_branch
