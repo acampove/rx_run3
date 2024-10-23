@@ -4,7 +4,7 @@ version     = '0.0.1'
 dependencies= ['mplhep', 'tqdm', 'rx_scripts', 'apd', 'xrootd', 'matplotlib', 'data_manipulation_utilities']
 
 [project.optional-dependencies]
-dev  = []
+dev  = ['pytest']
 
 [tools.setuptools.packages.find]
 where   = ['src']
