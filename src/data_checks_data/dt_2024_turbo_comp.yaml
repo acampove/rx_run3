@@ -11,8 +11,22 @@ sample:
     - data_24_magup_turbo_24c2
     - data_24_magup_turbo_24c3
 redefine_head:
-  Lb_ : B_
-  Lz_ : B_
+  # This is needed due to the way the isolation head is defined for
+  # cut based and mva based lines:
+  # https://gitlab.cern.ch/lhcb/Moore/-/blob/2024-patches/Hlt/Hlt2Conf/python/Hlt2Conf/lines/rd/b_to_xll_hlt2_mva.py
+  Lb_HEAD_CC_Lb_: B_HEAD_CC_B_
+  Lb_HEAD_NC_Lb_: B_HEAD_NC_B_
+  Lb_VTXISO_Lb_ : B_VTXISO_B_
+
+  B_HEAD_CC_bp_ : B_HEAD_CC_B_
+  B_HEAD_NC_bp_ : B_HEAD_NC_B_
+  B_VTXISO_bp_  : B_VTXISO_B_
+
+  B_HEAD_CC_bd_ : B_HEAD_CC_B_
+  B_HEAD_NC_bd_ : B_HEAD_NC_B_
+  B_VTXISO_bd_  : B_VTXISO_B_
+  # Lb and Bx samples will have branches starting with B, simpler
+  Lb_           : B_
 define:
   #These defitions are done on top of the names stemming from the changes caused by `redefine_head`
   nTracks                           : nBackTracks + nDownstreamTracks + nLongTracks + nTTracks + nUpstreamTracks + nVeloTracks
