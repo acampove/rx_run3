@@ -108,6 +108,10 @@ set_pkg_path()
 #--------------------------------
 make_tarball()
 {
+    if [[ ! -d $VENVS ]];then
+        mkdir -p $VENVS
+    fi
+
     cd $VENVS
 
     rm -rf dchecks.tar
