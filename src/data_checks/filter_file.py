@@ -134,14 +134,22 @@ class FilterFile:
 
         return True
     # --------------------------------------
+    def _get_column_names(self, rdf : RDataFrame) -> list[str]:
+        '''
+        Takes dataframe, returns list of column names as strings
+        '''
+        v_name = rdf.GetColumnNames()
+        l_name = [ name.c_str() for name in v_name ]
+
+        return l_name
+    # --------------------------------------
     def _rename_kaon_branches(self, rdf):
         '''
         Will define K_ = H_ for kaon branches. K_ branches will be dropped later
         '''
 
-        v_name = rdf.GetColumnNames()
-        l_name = [ name.c_str() for name in v_name ]
-        l_kaon = [ name         for name in l_name if name.startswith('K_') ]
+        l_name = self._get_column_names(rdf)
+        l_kaon = [ name for name in l_name if name.startswith('K_') ]
 
         log.debug(110 * '-')
         log.info('Renaming kaon branches')
@@ -157,9 +165,7 @@ class FilterFile:
         '''
         Will define branches from mapping in config. Original branches will be dropped later
         '''
-        v_name = rdf.GetColumnNames()
-        l_name = [ name.c_str() for name in v_name ]
-
+        l_name = self._get_column_names(rdf)
         d_name = self._cfg_dat['rename']
         log.debug(110 * '-')
         log.info('Renaming mapped branches')
