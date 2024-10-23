@@ -19,11 +19,12 @@ class FilterFile:
         self._file_path    = file_path
         self._cfg_nam      = cfg_nam
 
-        self._nevts        = None
-        self._is_mc        = None
-        self._l_line_name  = None
-        self._store_branch = None
-        self._has_lumitree = None
+        self._cfg_dat      : dict
+        self._nevts        : int 
+        self._is_mc        : bool 
+        self._l_line_name  : list[str] 
+        self._store_branch : bool
+        self._has_lumitree : bool 
 
         self._initialized  = False
     # --------------------------------------
@@ -146,7 +147,7 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
-    def _rename_mapped_branches(self, rdf):
+    def _rename_mapped_branches(self, rdf : RDataFrame) -> RDataFrame:
         '''
         Will define branches from mapping in config. Original branches will be dropped later
         '''
