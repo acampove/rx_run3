@@ -84,7 +84,6 @@ rename:
   B_CHI2                            : B_ENDVERTEX_CHI2
   L1_ENERGY                         : L1_PE
   L2_ENERGY                         : L2_PE
-  L2_HASBREM                        : L2_BremMultiplicity
   B_FDCHI2_OWNPV                    : B_BPVFDCHI2
   B_IPCHI2_OWNPV                    : B_BPVIPCHI2
   Jpsi_FDCHI2_OWNPV                 : Jpsi_BPVFDCHI2
@@ -98,13 +97,30 @@ rename:
   B_ENDVERTEX_CHI2                  : B_CHI2
   L1_PE                             : L1_ENERGY
   L2_PE                             : L2_ENERGY
-  L1_BremMultiplicity               : L1_HASBREM
-  L2_BremMultiplicity               : L2_HASBREM
+  L1_HASBREMADDED                   : L1_BremMultiplicity
+  L2_HASBREMADDED                   : L2_BremMultiplicity
 drop_branches:
   # This should happend AFTER the redefinitions, renaming and definitions are done
   includes:
+    # Kinematics
+    - _DOCA
+    # Isolation heads
     - _Lb_
+    - _bp_
+    - _bd_
     - _Lz_
+    # Coordinate in X,Y,Z of the best PV? Never used this
+    - _BPV
+    # Drop covariance matrices
+    - _COV_MATRIX
+    #Track's cluster, calo, RICH PID, 
+    - _CLUSTER
+    - _Calo
+    - _RICH_DLL_
+    - _RICH_SCALED_DLL_
+    - _STATEAT_
+    - _THREE_
+    #
     - NeutralIso
     - SMOG2
     - _EE2KK_
@@ -156,11 +172,84 @@ drop_branches:
     - _Hlt1Velo
     - _Hlt1XiOmegaLLL
   starts_with:
+    # Occupacy
+    - nBackTracks
+    - nDownstreamTracks
+    - nLongTracks
+    - nTTracks
+    - nUpstreamTracks
+    - nVeloTracks
+    # B
+    - B_ID
+    - B_KEY
+    - B_VPVFDI
+    - B_VPVFDV
+    - B_END_V
+    - B_AL
+    - B_BPVFDVEC
+    - B_MAX
+    - B_MIN
+    # B isolation
+    - B_VTXISO_B_
+    - bp_cone_indx
+    - bd_cone_indx
+    # Jpsi
+    - Jpsi_Max
+    - Jpsi_Min
+    # Lepton 
+    - L1_HCAL 
+    - L2_HCAL 
+    - L1_PP
+    - L2_PP
+    # Hadron
+    - H_BREM
+    - H_ECAL
+    - H_ELECTRON
+    - H_MUON
+    - H_PP
+    # Hlt not for B 
     - Hlt1
+    - Jpsi_Hlt1
+    - Hlt2
+    # Hlt1 for tracks not needed, will use Hlt1 for B
+    - H_Hlt1
+    - L1_Hlt1
+    - L2_Hlt1
+    # Others
     - B_K2Pi_DTF_
     - K_
     - Lb_
+    - BUNCHCROSSING
+  #Will drop branches matching wild card
+  wild_card:
+    # Number of track hits
+    - H_N*HITS
+    - L1_N*HITS
+    - L2_N*HITS
+    # Rich
+    - L*_RICH*_GAS_USED 
+    # PID 
+    - L*_ECALPID*
+    - L*_ELECTRON*
+    # Lepton brem
+    - L*_BREMHYPO*
+    - L*_HASBREM*
+    - H_HASBREM*
+    # DETA and DPHI vectors of isolation track positions?
+    - B_HEAD_CC_B_ChargedIso_DR2_*_D*
+    - B_HEAD_CC_B_ChargedIso_DR2_*_Max_P
+    - B_HEAD_CC_B_ChargedIso_DR2_*_Max_PT
+    - B_HEAD_CC_B_ChargedIso_DR2_*_Min_P
+    - B_HEAD_CC_B_ChargedIso_DR2_*_Min_PT
+    - B_HEAD_CC_B_ChargedIso_DR2_*_PASY
+    - B_HEAD_CC_B_ChargedIso_DR2_*_PTASY
+    - B_HEAD_CC_B_ChargedIso_DR2_*_PXASY
+    - B_HEAD_CC_B_ChargedIso_DR2_*_PYASY
+    - B_HEAD_CC_B_ChargedIso_DR2_*_PZASY
 hlt_lines:
+  lines_phys_ee_mva:
+    - Hlt2RD_BuToKpEE_MVA
+hlt_lines_all:
   lines_cali_ee_mva:
     - Hlt2RD_BuToKpEE_MVA_cal
     - Hlt2RD_B0ToKpPimEE_MVA_cal
