@@ -291,7 +291,10 @@ class FilterFile:
     def _attach_branches(self, rdf, line_name):
         '''
         Will check branches in rdf
-        Branches are dropped by only keeping branches in _keep_branch function
+        Branches are dropped by:
+            - keeping branches in _keep_branch function
+            - Removing wildcarded branches in _wild_card_filter functio
+
         line_name used to name file where branches will be saved.
         '''
         l_col = self._get_column_names(rdf)
