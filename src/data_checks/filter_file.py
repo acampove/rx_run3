@@ -56,9 +56,11 @@ class FilterFile:
 
         if self._cfg_nam.startswith('dt_'):
             self._is_mc = False
+            return
 
         if self._cfg_nam.startswith('mc_'):
             self._is_mc = True
+            return
 
         raise ValueError(f'Cannot determine Data/MC from config name: {self._cfg_nam}')
     # --------------------------------------
