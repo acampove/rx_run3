@@ -338,6 +338,7 @@ class FilterFile:
         '''
         opts                   = RDF.RSnapshotOptions()
         opts.fMode             = 'update'
+        opts.fOverwriteIfExists= True
         opts.fCompressionLevel = self._cfg_dat['saving']['compression']
 
         file_name = os.path.basename(self._file_path)
