@@ -300,23 +300,18 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
-    def _tree_name_from_line_name(self, line_name):
+    def _tree_name_from_line_name(self, line_name : str) -> str:
         '''
         Given a line name, it will check the config file to return KEE or KMM
         to decide where the tree will be saved.
         '''
         d_cfg  = self._cfg_dat['saving']['tree_name']
-        l_elec = d_cfg['KEE']
-        l_muon = d_cfg['KMM']
+        for tree_name, l_line_line in d_cfg.items():
+            if line_name in l_line_line:
+                log.debug(f'Using tree name {tree_name} for line {line_name}')
+                return tree_name
 
-        if line_name in l_elec:
-            return 'KEE'
-
-        if line_name in l_muon:
-            return 'KMM'
-
-        log.error(f'Line \"{line_name}\" not belonging to electron or muon channel')
-        raise ValueError
+        raise ValueError(f'No tree name found for line \"{line_name}\"')
     # --------------------------------------
     def _save_file(self, l_rdf):
         '''
