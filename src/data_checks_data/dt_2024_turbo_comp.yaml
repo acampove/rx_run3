@@ -103,7 +103,12 @@ drop_branches:
   # This should happend AFTER the redefinitions, renaming and definitions are done
   includes:
     # Kinematics
+    - _MAXDOCA
+    - _MAXSDOCA
     - _DOCA
+    - _SDOCA
+    - _SUM_PT
+    - _ALLPV_
     # Isolation heads
     - _Lb_
     - _bp_
@@ -196,6 +201,7 @@ drop_branches:
     # Jpsi
     - Jpsi_Max
     - Jpsi_Min
+    - Jpsi_ALV
     # Lepton 
     - L1_HCAL 
     - L2_HCAL 
@@ -220,20 +226,26 @@ drop_branches:
     - K_
     - Lb_
     - BUNCHCROSSING
+  ends_with:
+    - _KEY
+    - _PARTICLE_ID
+    - _SUM_PT
   #Will drop branches matching wild card
   wild_card:
-    # Number of track hits
+    # Leptons 
     - H_N*HITS
-    - L1_N*HITS
-    - L2_N*HITS
-    # Rich
+    - L*_N*HITS
+    - L*_PT_WITH_BREM
+    - L*_MUONCATBOOST 
     - L*_RICH*_GAS_USED 
-    # PID 
     - L*_ECALPID*
     - L*_ELECTRON*
-    # Lepton brem
     - L*_BREMHYPO*
     - L*_HASBREM*
+    - L*MUONLLBG
+    - L*MUONLLMU
+    # Hadrons
+    - H_RICH*_GAS_USED 
     - H_HASBREM*
     # DETA and DPHI vectors of isolation track positions?
     - B_HEAD_CC_B_ChargedIso_DR2_*_D*
