@@ -36,27 +36,23 @@ define:
   B_VTXISODCHI2MASSTWOTRACK         : B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
 rename:
   B_DTF_PV_Jpsi_mass_const_M        : B_const_mass_M
-  B_DTF_PV_Psi2S_mass_const_M       : B_const_mass_psi2S_M
-  #
   B_DTF_PV_Jpsi_mass_const_PX       : B_const_mass_PX
-  B_DTF_PV_Psi2S_mass_const_PX      : B_const_mass_psi2S_PX
-  #
   B_DTF_PV_Jpsi_mass_const_PY       : B_const_mass_PY
-  B_DTF_PV_Psi2S_mass_const_PY      : B_const_mass_psi2S_PY
-  #
   B_DTF_PV_Jpsi_mass_const_PZ       : B_const_mass_PZ
+  #
+  B_DTF_PV_Psi2S_mass_const_M       : B_const_mass_psi2S_M
+  B_DTF_PV_Psi2S_mass_const_PX      : B_const_mass_psi2S_PX
+  B_DTF_PV_Psi2S_mass_const_PY      : B_const_mass_psi2S_PY
   B_DTF_PV_Psi2S_mass_const_PZ      : B_const_mass_psi2S_PZ
   #---------
   B_DTF_noPV_Jpsi_mass_const_M      : B_nopv_const_mass_M
-  B_DTF_noPV_Psi2S_mass_const_M     : B_nopv_const_mass_psi2S_M
-  #
   B_DTF_noPV_Jpsi_mass_const_PX     : B_nopv_const_mass_PX
-  B_DTF_noPV_Psi2S_mass_const_PX    : B_nopv_const_mass_psi2S_PX
-  #
   B_DTF_noPV_Jpsi_mass_const_PY     : B_nopv_const_mass_PY
-  B_DTF_noPV_Psi2S_mass_const_PY    : B_nopv_const_mass_psi2S_PY
-  #
   B_DTF_noPV_Jpsi_mass_const_PZ     : B_nopv_const_mass_PZ
+  #
+  B_DTF_noPV_Psi2S_mass_const_M     : B_nopv_const_mass_psi2S_M
+  B_DTF_noPV_Psi2S_mass_const_PX    : B_nopv_const_mass_psi2S_PX
+  B_DTF_noPV_Psi2S_mass_const_PY    : B_nopv_const_mass_psi2S_PY
   B_DTF_noPV_Psi2S_mass_const_PZ    : B_nopv_const_mass_psi2S_PZ
   #---------
   L1_PID_E                          : L1_PIDe
@@ -304,7 +300,7 @@ drop_branches:
     - B_HEAD_CC_B_ChargedIso_DR2_*_PZASY
 hlt_lines_test:
   lines_phys_ee_mva:
-    - Hlt2RD_BsToPhiEE_MVA 
+    - Hlt2RD_B0ToKpPimEE_MVA
 hlt_lines:
   lines_cali_ee_mva:
     - Hlt2RD_BuToKpEE_MVA_cal
