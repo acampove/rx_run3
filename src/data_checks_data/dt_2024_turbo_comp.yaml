@@ -45,6 +45,8 @@ rename:
   B_DTF_PV_Psi2S_mass_const_PY      : B_const_mass_psi2S_PY
   B_DTF_PV_Psi2S_mass_const_PZ      : B_const_mass_psi2S_PZ
   #---------
+  #Needed due to broken PV constraints
+  #---------
   B_DTF_noPV_Jpsi_mass_const_M      : B_nopv_const_mass_M
   B_DTF_noPV_Jpsi_mass_const_PX     : B_nopv_const_mass_PX
   B_DTF_noPV_Jpsi_mass_const_PY     : B_nopv_const_mass_PY
@@ -54,6 +56,15 @@ rename:
   B_DTF_noPV_Psi2S_mass_const_PX    : B_nopv_const_mass_psi2S_PX
   B_DTF_noPV_Psi2S_mass_const_PY    : B_nopv_const_mass_psi2S_PY
   B_DTF_noPV_Psi2S_mass_const_PZ    : B_nopv_const_mass_psi2S_PZ
+  #---------
+  #Needed to do Jpsi mass fits with B mass constraint
+  #---------
+  Jpsi_DTF_PV_B_mass_const_M        : Jpsi_B_const_mass_M         
+  Jpsi_DTF_PV_B_mass_const_P        : Jpsi_B_const_mass_P   
+  Jpsi_DTF_PV_B_mass_const_PT       : Jpsi_B_const_mass_PT 
+  Jpsi_DTF_PV_B_mass_const_PX       : Jpsi_B_const_mass_PX 
+  Jpsi_DTF_PV_B_mass_const_PY       : Jpsi_B_const_mass_PY 
+  Jpsi_DTF_PV_B_mass_const_PZ       : Jpsi_B_const_mass_PZ 
   #---------
   L1_PID_E                          : L1_PIDe
   L2_PID_E                          : L2_PIDe
