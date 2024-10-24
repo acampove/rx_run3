@@ -91,29 +91,31 @@ def get_mc_pfns(ap_obj):
 
     return d_path
 #------------------------------------
-def save_pfns(d_path):
+def _save_pfns(d_path):
     '''
     Save dictionary of samplename -> PFNs to JSON
     '''
-    pfn_path= files('data_checks_data').joinpath(f'{data.config}.json')
+    pfn_path= files('data_checks_data').joinpath(f'{Data.config}.json')
     log.info(f'Saving to: {pfn_path}')
     utnr.dump_json(d_path, pfn_path)
 #------------------------------------
-def set_log():
-    log_store.set_level('data_checks:save_pfns', data.log_lvl)
-    if data.log_lvl == 10:
-        log_store.set_level('data_checks:utilities', data.log_lvl)
+def _set_log():
+    log_store.set_level('data_checks:save_pfns', Data.log_lvl)
+    if Data.log_lvl == 10:
+        log_store.set_level('data_checks:utilities', Data.log_lvl)
 
         logging.basicConfig()
         log_apd=logging.getLogger('apd')
-        log_apd.setLevel(data.log_lvl)
+        log_apd.setLevel(Data.log_lvl)
 #------------------------------------
 def main():
-    get_args()
-    set_log()
-    d_pfn=get_pfns()
-    save_pfns(d_pfn)
+    '''
+    Script starts here
+    '''
+    _get_args()
+    _set_log()
+    d_pfn=_get_pfns()
+    _save_pfns(d_pfn)
 #------------------------------------
 if __name__ == '__main__':
     main()
-
