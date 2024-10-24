@@ -361,7 +361,8 @@ class FilterFile:
 
             if not self._is_mc:
                 lumi_rdf = RDataFrame('lumiTree', self._file_path)
-                lumi_rdf.Snapshot('lumiTree', f'{self._kind}_{preffix}_{line_name}.root', [], opts)
+                l_name   = self._get_column_names(lumi_rdf)
+                lumi_rdf.Snapshot('lumiTree', f'{self._kind}_{preffix}_{line_name}.root', l_name, opts)
     # --------------------------------------
     @utnr.timeit
     def run(self):
