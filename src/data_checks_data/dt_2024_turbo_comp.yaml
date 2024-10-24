@@ -10,6 +10,7 @@ sample:
     - data_24_magup_turbo_24c1
     - data_24_magup_turbo_24c2
     - data_24_magup_turbo_24c3
+    - data_24_magup_turbo_24c4
 redefine_head:
   # This is needed due to the way the isolation head is defined for
   # cut based and mva based lines:
