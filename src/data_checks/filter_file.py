@@ -112,16 +112,6 @@ class FilterFile:
         '''
         Will take the name of a branch and return True (keep) or False (drop)
         '''
-        has_ccbar_const = ('DTF_PV_Jpsi_' in name) or ('DTF_PV_Psi2S' in name)
-        if ('_DTF_PV_' in name) and not has_ccbar_const:
-            return False
-
-        if name.startswith('Hlt2') and not name.startswith('Hlt2RD'):
-            return False
-
-        if name.startswith('Hlt1') and ('Track' not in name):
-            return False
-
         l_svar = self._cfg_dat['drop_branches']['starts_with']
         for svar in l_svar:
             if name.startswith(svar):
