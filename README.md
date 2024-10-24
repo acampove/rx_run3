@@ -311,11 +311,11 @@ which would produce a `/pat/to/file.txt` file witht the contents, which would lo
 
 ```
 Directory/Treename
-    B_CHI2                                                                                              Double_t                                
-    B_CHI2DOF                                                                                           Double_t                                
-    B_DIRA_OWNPV                                                                                        Float_t                                 
-    B_ENDVERTEX_CHI2                                                                                    Double_t                                
-    B_ENDVERTEX_CHI2DOF                                                                                 Double_t                                
+    B_CHI2                        Double_t                                
+    B_CHI2DOF                     Double_t                                
+    B_DIRA_OWNPV                  Float_t                                 
+    B_ENDVERTEX_CHI2              Double_t                                
+    B_ENDVERTEX_CHI2DOF           Double_t                                
 ```
 
 # Text manipulation
