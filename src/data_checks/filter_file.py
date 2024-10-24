@@ -280,10 +280,16 @@ class FilterFile:
         l_wild_card = self._cfg_dat['drop_branches']['wild_card']
 
         l_to_drop = []
+        ndrop     = 0
         for wild_card in l_wild_card:
-            l_to_drop += fnmatch.filter(l_name, wild_card)
+            l_found    = fnmatch.filter(l_name, wild_card)
+            if not l_found:
+                log.warning(f'No branches dropped for wildcard {wild_card}')
+                continue
 
-        ndrop = len(l_to_drop)
+            ndrop     += len(l_found)
+            l_to_drop += l_found
+
         log.debug(f'Dropping {ndrop} wildcard branches')
 
         return [ name for name in l_name if name not in l_to_drop ]
