@@ -118,6 +118,11 @@ class FilterFile:
             if name.startswith(svar):
                 return False
 
+        l_svar = self._cfg_dat['drop_branches']['ends_with']
+        for svar in l_svar:
+            if name.endswith(svar):
+                return False
+
         l_ivar = self._cfg_dat['drop_branches']['includes'   ]
         for ivar in l_ivar:
             if ivar in name:
