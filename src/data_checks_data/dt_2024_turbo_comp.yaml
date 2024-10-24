@@ -353,7 +353,7 @@ selection:
   prescale: 1
   cuts:
     any:
-      llmass : Jpsi_M > 2500 && Jpsi_M < 3300
+      llmass : (Jpsi_M > 2500 && Jpsi_M < 3300) || ((Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000))
       L1Ghost: L1_TRGHOSTPROB < 0.5
       L2Ghost: L2_TRGHOSTPROB < 0.5
     bukee:
