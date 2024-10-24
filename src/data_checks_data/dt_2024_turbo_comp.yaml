@@ -200,13 +200,21 @@ drop_branches:
     - bp_cone_indx
     - bd_cone_indx
     # Jpsi
-    - Jpsi_Max
     - Jpsi_Min
+    - Jpsi_MIN
+    - Jpsi_Max
+    - Jpsi_MAX
     - Jpsi_ALV
     # Phi 
     - Phi_Max
     - Phi_Min
     - Phi_ALV
+    # Kst 
+    - Kst_Min
+    - Kst_MIN
+    - Kst_Max
+    - Kst_MAX
+    - Kst_ALV
     # Lz 
     - Lz_Max
     - Lz_Min
@@ -241,6 +249,7 @@ drop_branches:
     - Hlt1
     - Jpsi_Hlt1
     - Phi_Hlt1
+    - Kst_Hlt1
     - Lz_Hlt1
     - Hlt2
     # Hlt1 for tracks not needed, will use Hlt1 for B
