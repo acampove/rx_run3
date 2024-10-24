@@ -58,21 +58,23 @@ def _get_pfns() -> dict:
 
     return d_pfn
 #------------------------------------
-def _print_pfn_info(d_pfn):
+def _print_pfn_info(d_pfn : dict[str, list[str]]) -> None:
     nsample=0
-    for l_sam in d_pfn.values():
+    for prod, l_sam in d_pfn.items():
         nsample += len(l_sam)
+        log.info(f'{prod:<50}{nsample:<20}')
 
     log.info(f'Found {nsample} PFNs')
 #------------------------------------
-def _get_dt_pfns(ap_obj):
-    cfg_dat = utdc.load_config(Data.config)
-    l_samp  = cfg_dat['sample']['names']
-    l_path  = []
-    for samp in l_samp:
-        l_path += ap_obj(name=samp)
+def _get_dt_pfns(ap_obj) -> dict[str,list[str]]:
+    '''
+    Takes AP object and returns dictionary between name of production and list of PFNs
+    '''
+    cfg_dat  = utdc.load_config(Data.config)
+    l_samp   = cfg_dat['sample']['names']
+    d_sample = {samp : ap_obj(name=samp) for samp in l_samp}
 
-    return {Data.config : l_path}
+    return d_sample
 #------------------------------------
 def _get_mc_pfns(ap_obj):
     '''
