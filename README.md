@@ -35,7 +35,7 @@ This argument is optional and if not passed the tarball won't be uploaded.
 In order to find out what versions of the tarball are in the grid do:
 
 ```bash
-dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/a/acampove/run3/venv
+lb-dirac dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/a/acampove/run3/venv
 ```
 
 ## Updating config file
