@@ -247,12 +247,6 @@ class FilterFile:
         _get_branches decides what branches are kept
         '''
 
-        log.debug(30 * '')
-        log.debug(30 * '')
-        log.debug(30 * '-')
-        log.debug(30 * '')
-        log.info(f'Processing line: {line_name}')
-        log.debug(30 * '-')
         rdf      = RDataFrame(f'{line_name}/DecayTree', self._file_path)
         rdf      = self._define_heads(rdf)
         rdf      = self._rename_branches(rdf)
@@ -269,9 +263,11 @@ class FilterFile:
             rdf  = obj.run()
         nfnl     = rdf.Count().GetValue()
 
-        log.debug(100 * '-')
-        log.info(f'{line_name:<50}{ninit:<10}{"->":5}{nfnal:<10}{norg:<10}{"->":5}{nfnl:<10}')
-        log.debug(100 * '-')
+        log.info(45 * '-')
+        log.info(f'{"Line    ":<20}{"     ":5}{line_name:<20}')
+        log.info(f'{"Branches":<20}{ninit:<10}{"->":5}{nfnal:<20}')
+        log.info(f'{"Entries ":<20}{norg:<10}{"->":5}{nfnl:<20}')
+        log.info(45 * '-')
 
         rdf.name     = line_name
         rdf.l_branch = l_branch
