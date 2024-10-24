@@ -22,7 +22,7 @@ def initialize():
     Will set loggers, etc
     '''
     log.info('Initializing')
-    ut.local_config = True
+    ut.local_config = False
 
     log_store.set_level('rx_scripts:atr_mgr:mgr', 30)
     log_store.set_level('data_checks:selector'  , 20)
