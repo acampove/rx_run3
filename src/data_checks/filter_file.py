@@ -289,7 +289,7 @@ class FilterFile:
         for wild_card in l_wild_card:
             l_found    = fnmatch.filter(l_name, wild_card)
             if not l_found:
-                log.warning(f'No branches dropped for wildcard {wild_card}')
+                log.debug(f'No branches dropped for wildcard {wild_card}')
                 continue
 
             ndrop     += len(l_found)
