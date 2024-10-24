@@ -312,15 +312,7 @@ drop_branches:
 hlt_lines_test:
   lines_phys_ee_mva:
     - Hlt2RD_B0ToKpPimEE_MVA
-hlt_lines:
-  lines_cali_ee_mva:
-    - Hlt2RD_BuToKpEE_MVA_cal
-    - Hlt2RD_B0ToKpPimEE_MVA_cal
-  lines_msid_ee_mva:
-    - Hlt2RD_BuToKpEE_MVA_misid
-    - Hlt2RD_B0ToKpPimEE_MVA_misid
-    - Hlt2RD_LbTopKEE_MVA_misid
-    - Hlt2RD_BsToPhiEE_MVA_misid
+hlt_lines_low_priority:  &low_priority
   lines_ss_ee_mva:
     - Hlt2RD_BuToKpEE_SameSign_MVA
     - Hlt2RD_B0ToKpPimEE_SameSign_MVA
@@ -331,24 +323,38 @@ hlt_lines:
     - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
     - Hlt2RD_LbTopKMuMu_SameSign_MVA
     - Hlt2RD_BsToPhiMuMu_SameSign_MVA
+  lines_msid_ee_mva:
+    - Hlt2RD_LbTopKEE_MVA_misid
+    - Hlt2RD_BsToPhiEE_MVA_misid
   lines_phys_ee_mva:
-    - Hlt2RD_BuToKpEE_MVA
-    - Hlt2RD_B0ToKpPimEE_MVA
     - Hlt2RD_LbTopKEE_MVA
     - Hlt2RD_BsToPhiEE_MVA
-  lines_phys_mm_mva:
-    - Hlt2RD_BuToKpMuMu_MVA
-    - Hlt2RD_B0ToKpPimMuMu_MVA
-    - Hlt2RD_LbTopKMuMu_MVA
-    - Hlt2RD_BsToPhiMuMu_MVA
   lines_phys_ee_cut:
     - Hlt2RD_BuToKpEE
     - Hlt2RD_B0ToKpPimEE
     - Hlt2RD_LbToLEE_LL
+  lines_phys_mm_mva:
+    - Hlt2RD_LbTopKMuMu_MVA
+    - Hlt2RD_BsToPhiMuMu_MVA
   lines_phys_mm_cut:
+    - Hlt2RD_LbToLMuMu_LL
     - Hlt2RD_BuToKpMuMu
     - Hlt2RD_B0ToKpPimMuMu
-    - Hlt2RD_LbToLMuMu_LL
+hlt_lines_high_priority: &high_priority
+  lines_cali_ee_mva:
+    - Hlt2RD_BuToKpEE_MVA_cal
+    - Hlt2RD_B0ToKpPimEE_MVA_cal
+  lines_msid_ee_mva:
+    - Hlt2RD_BuToKpEE_MVA_misid
+    - Hlt2RD_B0ToKpPimEE_MVA_misid
+  lines_phys_ee_mva:
+    - Hlt2RD_BuToKpEE_MVA
+    - Hlt2RD_B0ToKpPimEE_MVA
+  lines_phys_mm_mva:
+    - Hlt2RD_BuToKpMuMu_MVA
+    - Hlt2RD_B0ToKpPimMuMu_MVA
+hlt_lines:
+  <<: *high_priority
 selection:
   prescale: 1
   cuts:
