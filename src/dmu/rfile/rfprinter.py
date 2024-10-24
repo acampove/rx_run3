@@ -56,7 +56,7 @@ class RFPrinter:
             leaf  = branch.GetLeaf(bname)
             btype = leaf.GetTypeName()
 
-            l_line.append(f'{"":4}{bname:40}{btype:40}')
+            l_line.append(f'{"":4}{bname:<100}{btype:<40}')
 
         return l_line
     #-----------------------------------------
