@@ -161,6 +161,24 @@ drop_branches:
     - K_
     - Lb_
 hlt_lines:
+  lines_cali_ee_mva:
+    - Hlt2RD_BuToKpEE_MVA_cal
+    - Hlt2RD_B0ToKpPimEE_MVA_cal
+  lines_msid_ee_mva:
+    - Hlt2RD_BuToKpEE_MVA_misid
+    - Hlt2RD_B0ToKpPimEE_MVA_misid
+    - Hlt2RD_LbTopKEE_MVA_misid
+    - Hlt2RD_BsToPhiEE_MVA_misid
+  lines_ss_ee_mva:
+    - Hlt2RD_BuToKpEE_SameSign_MVA
+    - Hlt2RD_B0ToKpPimEE_SameSign_MVA
+    - Hlt2RD_LbTopKEE_SameSign_MVA
+    - Hlt2RD_BsToPhiEE_SameSign_MVA
+  lines_ss_mm_mva:
+    - Hlt2RD_BuToKpMuMu_SameSign_MVA
+    - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
+    - Hlt2RD_LbTopKMuMu_SameSign_MVA
+    - Hlt2RD_BsToPhiMuMu_SameSign_MVA
   lines_phys_ee_mva:
     - Hlt2RD_BuToKpEE_MVA
     - Hlt2RD_B0ToKpPimEE_MVA
@@ -226,3 +244,21 @@ saving:
       - Hlt2RD_BuToKpMuMu
       - Hlt2RD_B0ToKpPimMuMu
       - Hlt2RD_LbToLMuMu_LL
+    KSS_ee:
+      - Hlt2RD_BuToKpEE_SameSign_MVA
+      - Hlt2RD_B0ToKpPimEE_SameSign_MVA
+      - Hlt2RD_LbTopKEE_SameSign_MVA
+      - Hlt2RD_BsToPhiEE_SameSign_MVA
+    KSS_mm:
+      - Hlt2RD_BuToKpMuMu_SameSign_MVA
+      - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
+      - Hlt2RD_LbTopKMuMu_SameSign_MVA
+      - Hlt2RD_BsToPhiMuMu_SameSign_MVA
+    KMI_ee:
+      - Hlt2RD_BuToKpEE_MVA_misid
+      - Hlt2RD_B0ToKpPimEE_MVA_misid
+      - Hlt2RD_LbTopKEE_MVA_misid
+      - Hlt2RD_BsToPhiEE_MVA_misid
+    KCL_ee:
+      - Hlt2RD_BuToKpEE_MVA_cal
+      - Hlt2RD_B0ToKpPimEE_MVA_cal
