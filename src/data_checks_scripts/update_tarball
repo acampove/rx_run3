@@ -78,15 +78,18 @@ initialize()
 
     set_pkg_path data_manipulation_utilities 
     DMANUT=$TMP
-    echo "data_manipulation_utilities --->  $DMANUT"
+    TMPLOG=/tmp/dchecks_data.log
+    echo "data_manipulation_utilities --->  $DMANUT" > $TMPLOG
 
     set_pkg_path rx_scripts  
     SCRIPTS=$TMP
-    echo  "rx_scripts --->  $SCRIPTS"
+    echo  "rx_scripts --->  $SCRIPTS"               >> $TMPLOG
 
     set_pkg_path data_checks 
     DCHECKS=$TMP
-    echo "data_checks --->  $DCHECKS"
+    echo "data_checks --->  $DCHECKS"               >> $TMPLOG
+
+    column -t $TMPLOG
 }
 #--------------------------------
 set_pkg_path()
