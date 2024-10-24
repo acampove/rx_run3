@@ -3,6 +3,7 @@ Module containing FilterFile class
 '''
 
 import os
+import fnmatch
 import tqdm
 import utils_noroot          as utnr
 
@@ -269,6 +270,24 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
+    def _wild_card_filter(self, l_name : list[str]) -> list[str]:
+        '''
+        Takes list of branch names
+        removes only the ones matching wild card
+        returns remaining list
+        '''
+
+        l_wild_card = self._cfg_dat['drop_branches']['wild_card']
+
+        l_to_drop = []
+        for wild_card in l_wild_card:
+            l_to_drop += fnmatch.filter(l_name, wild_card)
+
+        ndrop = len(l_to_drop)
+        log.debug(f'Dropping {ndrop} wildcard branches')
+
+        return [ name for name in l_name if name not in l_to_drop ]
+    # --------------------------------------
     def _attach_branches(self, rdf, line_name):
         '''
         Will check branches in rdf
@@ -277,7 +296,8 @@ class FilterFile:
         '''
         l_col = self._get_column_names(rdf)
         ninit = len(l_col)
-        l_flt = [ flt         for flt in l_col if self._keep_branch(flt) ]
+        l_flt = [ flt for flt in l_col if self._keep_branch(flt) ]
+        l_flt = self._wild_card_filter(l_flt)
         nfnal = len(l_flt)
 
         rdf.ninit    = ninit
