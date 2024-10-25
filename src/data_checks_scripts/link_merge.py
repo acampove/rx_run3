@@ -175,6 +175,9 @@ def _info_from_data_path(path):
         log.error(f'Expected three elements in: {mtc.groups()}')
         raise ValueError from exc
 
+    if len(year) == 2:
+        year = f'20{year}'
+
     if 'MuMu' in decay:
         chan = 'mm'
     elif 'EE' in decay:
@@ -246,7 +249,7 @@ def _link_paths(info, l_path):
         return
 
     os.makedirs(target_dir, exist_ok=True)
-    log.debug(f'Linking to: {target_dir}')
+    log.info(f'Linking to: {target_dir}')
 
     for source_path in tqdm.tqdm(l_path, ascii=' -'):
         name = os.path.basename(source_path)
