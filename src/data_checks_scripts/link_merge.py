@@ -35,7 +35,7 @@ class Data:
     Max     : int
     ver     : str
     inp_dir : str = '/publicfs/lhcb/user/campoverde/Data/RK'
-    dt_rgx  : str = r'dt_(\d{4}).*tuple_Hlt2RD_(.*)\.root'
+    dt_rgx  : str = r'(?:dt|data)_(\d{4}|\d{2}).*tuple_Hlt2RD_(.*)\.root'
     mc_rgx  : str = r'mc_.*_(\d{8})_nu.*tuple_Hlt2RD_(.*)\.root'
 # ---------------------------------
 def _get_args():
@@ -122,7 +122,7 @@ def _info_from_path(path):
     '''
 
     name = os.path.basename(path)
-    if   name.startswith('dt_'):
+    if   name.startswith('dt_') or name.startswith('data_'):
         info = _info_from_data_path(path)
     elif name.startswith('mc_'):
         info = _info_from_mc_path(path)
