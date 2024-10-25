@@ -101,7 +101,7 @@ run3_download_ntuples -j flt_004 -n 3 [-d $PWD/files]
 where:
 
 `-j`: Is the name of the job, which has to coincide with the directory name, where the ntuples are in EOS, e.g. `/eos/lhcb/grid/user/lhcb/user/a/acampove/flt_004`.   
-`-n`: Number of ntuples to download, if not pased, will download everything. 
+`-n`: Number of ntuples to download, if not pased, will download everything.    
 `-d`: Directory where output ntuples will go, if not passed, directory pointed by `DOWNLOAD_NTUPPATH` will be used.
 
 
