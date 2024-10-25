@@ -9,6 +9,7 @@ import glob
 import pprint
 import argparse
 
+from typing              import Union
 from dataclasses         import dataclass
 from functools           import cache
 from importlib.resources import files
@@ -34,7 +35,7 @@ class Data:
     dry     : int
     Max     : int
     ver     : str
-    cfg_dat : dict 
+    cfg_dat : dict
 
     inp_dir = '/publicfs/lhcb/user/campoverde/Data/RK'
     dt_rgx  = r'(?:dt|data)_(\d{4}|\d{2}).*tuple_Hlt2RD_(.*)\.root'
@@ -231,7 +232,7 @@ def _load_config():
     with open(conf_path, encoding='utf-8') as ifile:
         Data.cfg_dat = yaml.safe_load(ifile)
 # ---------------------------------
-def _link_paths(info, l_path):
+def _link_paths(info : tuple[str], l_path : list[str]) -> Union[str, None]:
     '''
     Makes symbolic links of list of paths of a specific kind
     info is a tuple with = (sample, channel, kind, year) information
@@ -246,18 +247,20 @@ def _link_paths(info, l_path):
     if os.path.isfile(f'{target_dir}.root'):
         log.warning(f'Merged file exists, not linking: {target_dir}.root')
         _save_summary(f'{target_dir}.root')
-        return
+        return None
 
     os.makedirs(target_dir, exist_ok=True)
     log.info(f'Linking to: {target_dir}')
+    if Data.dry:
+        log.warning('Dry run, not linking')
+        return None
 
     for source_path in tqdm.tqdm(l_path, ascii=' -'):
         name = os.path.basename(source_path)
         target_path = f'{target_dir}/{name}'
 
         log.debug(f'{source_path:<50}{"->":10}{target_path:<50}')
-        if not Data.dry:
-            _do_link_paths(src=source_path, tgt=target_path)
+        _do_link_paths(src=source_path, tgt=target_path)
 
     return target_dir
 # ---------------------------------
@@ -266,7 +269,6 @@ def _do_link_paths(src : str | None = None, tgt : str | None = None):
     Will check if target link exists, will delete it if it does
     Will make link
     '''
-
     if os.path.exists(tgt):
         os.unlink(tgt)
 
@@ -276,9 +278,13 @@ def _merge_paths(target, l_path):
     '''
     Merge ROOT files of a specific kind
     '''
-
     npath = len(l_path)
     log.info(f'Merging {npath} paths {target}')
+
+    if Data.dry:
+        log.warning('Dry run, not merging')
+        return
+
     log.info('')
 
     # Allow trees to got up to 1Tb when merging
@@ -320,6 +326,9 @@ def _save_summary(target):
     '''
     Make text file with summary of file, e.g. 2024.root -> 2024.txt
     '''
+    if Data.dry:
+        return
+
     prt = RFPrinter(path=target)
     prt.save()
 # ---------------------------------
