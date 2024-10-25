@@ -34,9 +34,11 @@ class Data:
     dry     : int
     Max     : int
     ver     : str
-    inp_dir : str = '/publicfs/lhcb/user/campoverde/Data/RK'
-    dt_rgx  : str = r'(?:dt|data)_(\d{4}|\d{2}).*tuple_Hlt2RD_(.*)\.root'
-    mc_rgx  : str = r'mc_.*_(\d{8})_nu.*tuple_Hlt2RD_(.*)\.root'
+    cfg_dat : dict 
+
+    inp_dir = '/publicfs/lhcb/user/campoverde/Data/RK'
+    dt_rgx  = r'(?:dt|data)_(\d{4}|\d{2}).*tuple_Hlt2RD_(.*)\.root'
+    mc_rgx  = r'mc_.*_(\d{8})_nu.*tuple_Hlt2RD_(.*)\.root'
 # ---------------------------------
 def _get_args():
     '''
@@ -212,32 +214,19 @@ def _kind_from_decay(decay):
     Will return kind of sample associated, e.g. analysis, calibration, same sign...
     '''
 
-    # TODO: This needs a config file
-    if decay in ['B0ToKpPimEE', 'B0ToKpPimMuMu']:
-        return 'ana_cut_bd'
+    if decay not in Data.cfg_dat['decays']:
+        raise ValueError(f'Unrecognized decay: {decay}')
 
-    if decay in ['BuToKpEE', 'BuToKpMuMu']:
-        return 'ana_cut_bp'
+    return Data.cfg_dat['decays'][decay]
+# ---------------------------------
+def _load_config():
+    conf_path = files('data_checks_data').joinpath('link_conf.yaml')
+    conf_path = str(conf_path)
+    if not os.path.isfile(conf_path):
+        raise FileNotFoundError(f'Cannot find {conf_path}')
 
-    if decay in ['LbToLEE_LL', 'LbToLMuMu_LL']:
-        return 'ana_cut_lb'
-
-    # -------------------------------
-
-    if decay in ['B0ToKpPimEE_MVA', 'B0ToKpPimMuMu_MVA']:
-        return 'ana_mva_bd'
-
-    if decay in ['BuToKpEE_MVA', 'BuToKpMuMu_MVA']:
-        return 'ana_mva_bp'
-
-    if decay in ['LbTopKEE_MVA', 'LbTopKMuMu_MVA']:
-        return 'ana_mva_lb'
-
-    if decay in ['BsToPhiMuMu_MVA', 'BsToPhiEE_MVA']:
-        return 'ana_mva_bs'
-
-    log.error(f'Unrecognized decay: {decay}')
-    raise ValueError
+    with open(conf_path, encoding='utf-8') as ifile:
+        Data.cfg_dat = yaml.safe_load(ifile)
 # ---------------------------------
 def _link_paths(info, l_path):
     '''
@@ -336,6 +325,8 @@ def main():
     Script starts here
     '''
     _get_args()
+    _load_config()
+
     l_path = _get_paths()
     d_path = _split_paths(l_path)
     for kind, l_path in d_path.items():
