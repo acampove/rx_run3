@@ -94,6 +94,7 @@ def _split_paths(l_path):
     d_info_path = _truncate_paths(d_info_path)
 
     log.info('Found samples:')
+    d_info_path = dict(sorted(d_info_path.items()))
     for info in d_info_path:
         log.info(info)
 
@@ -338,10 +339,6 @@ def main():
     l_path = _get_paths()
     d_path = _split_paths(l_path)
     for kind, l_path in d_path.items():
-        if 'ana_mva_bs' in kind:
-            log.warning(f'Skipping {kind}')
-            continue
-
         target_dir = _link_paths(kind, l_path)
         if target_dir is None:
             continue
