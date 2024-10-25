@@ -3,8 +3,6 @@ Script used to download filtered ntuples
 from the grid
 '''
 
-#!/usr/bin/env python3
-
 import os
 import math
 import random
@@ -28,19 +26,19 @@ class Data:
     # pylint: disable = too-many-instance-attributes
     # Need this class to store data
 
-    eos_dir : str        = '/eos/lhcb/grid/user/lhcb/user/a/acampove'
-    dst_dir : str        = '/publicfs/lhcb/user/campoverde/Data/RK/.run3'
-    server  : str        = 'root://eoslhcb.cern.ch/'
-    nthread : int        = 1
-    job_dir : str | None = None
-    test    : int | None = None
-    ran_pfn : int | None = None
-    nfile   : int | None = None
-    log_lvl : int | None = None
+    job_dir : str
+    test    : int
+    ran_pfn : int
+    nfile   : int
+    log_lvl : int
 
-    eos_clt              = clt.FileSystem(server)
+    eos_dir = '/eos/lhcb/grid/user/lhcb/user/a/acampove'
+    dst_dir = '/publicfs/lhcb/user/campoverde/Data/RK/.run3'
+    server  = 'root://eoslhcb.cern.ch/'
+    eos_clt = clt.FileSystem(server)
+    nthread = 1
 # --------------------------------------------------
-def _download(pfn=None):
+def _download(pfn : str) -> None:
     if Data.test == 1:
         return
 
@@ -56,7 +54,7 @@ def _download(pfn=None):
     status, _  = xrd_client.copy(pfn, out_path)
     _check_status(status, '_download')
 # --------------------------------------------------
-def _download_group(l_pfn=None, pbar=None):
+def _download_group(l_pfn : list[str], pbar : tqdm.std.tqdm):
     for pfn in l_pfn:
         _download(pfn)
         pbar.update(1)
@@ -65,8 +63,7 @@ def _check_status(status, kind):
     if status.ok:
         log.debug(f'Successfully ran: {kind}')
     else:
-        log.error(f'Failed to run {kind}: {status.message}')
-        raise
+        raise ValueError(f'Failed to run {kind}: {status.message}')
 # --------------------------------------------------
 def _get_pfn_sublist(l_pfn):
     '''
@@ -95,8 +92,7 @@ def _get_pfns():
 
     npfn = len(l_pfn)
     if npfn == 0:
-        log.error(f'Found no PFNs in {file_dir}')
-        raise
+        raise ValueError(f'Found no PFNs in {file_dir}')
 
     log.info(f'Found {npfn} PFNs in {file_dir}')
 
@@ -155,7 +151,5 @@ def main():
             pbar = tqdm.tqdm(total=len(l_pfn))
             executor.submit(_download_group, l_pfn, pbar)
 # --------------------------------------------------
-
-
 if __name__ == '__main__':
     main()
