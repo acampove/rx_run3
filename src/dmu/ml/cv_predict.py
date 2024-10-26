@@ -1,6 +1,8 @@
 '''
 Module holding CVPredict class
 '''
+from typing import Optional
+
 import pandas as pnd
 import numpy
 import tqdm
@@ -18,7 +20,7 @@ class CVPredict:
     Class used to get classification probabilities from ROOT
     dataframe and a set of models. The models were trained with CVClassifier
     '''
-    def __init__(self, models : list | None = None, rdf : RDataFrame | None = None):
+    def __init__(self, models : Optional[list] = None, rdf : Optional[RDataFrame] = None):
         '''
         Will take a list of CVClassifier models and a ROOT dataframe
         '''
