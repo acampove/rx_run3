@@ -62,13 +62,3 @@ def test_overlap():
     cvp     = CVPredict(models=l_model, rdf=rdf_sig)
     cvp.predict()
 #--------------------------------------------------------------------
-def main():
-    '''
-    Tests start here
-    '''
-
-    test_non_overlap()
-    test_overlap()
-#--------------------------------------------------------------------
-if __name__ == '__main__':
-    main()
