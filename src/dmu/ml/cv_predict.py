@@ -43,6 +43,11 @@ class CVPredict:
         d_data= self._rdf.AsNumpy(l_ft)
         df_ft = pnd.DataFrame(d_data)
 
+        nfeat = len(l_ft)
+        log.info(f'Found {nfeat} features')
+        for name in l_ft:
+            log.debug(name)
+
         return df_ft
     # --------------------------------------------
     def _non_overlapping_hashes(self, model, df_ft):
