@@ -27,28 +27,27 @@ class Data:
     # Need this class to store data
 
     job_dir : str
-    test    : int
-    ran_pfn : int
     nfile   : int
     log_lvl : int
+    dst_dir : str
 
+    ran_pfn : int
+    test    = False
     eos_dir = '/eos/lhcb/grid/user/lhcb/user/a/acampove'
-    dst_dir = '/publicfs/lhcb/user/campoverde/Data/RK/.run3'
     server  = 'root://eoslhcb.cern.ch/'
     eos_clt = clt.FileSystem(server)
     nthread = 1
 # --------------------------------------------------
 def _download(pfn : str) -> None:
-    if Data.test == 1:
-        return
-
     file_name        = os.path.basename(pfn)
-    out_path         = f'{Data.dst_dir}/{file_name}'
+    out_path         = f'{Data.dst_dir}/{Data.job_dir}/{file_name}'
     if os.path.isfile(out_path):
         log.debug('Skipping downloaded file')
         return
 
     log.debug(f'Downloading: {pfn} -> {out_path}')
+    if Data.test:
+        return
 
     xrd_client = clt.FileSystem(pfn)
     status, _  = xrd_client.copy(pfn, out_path)
@@ -102,8 +101,8 @@ def _get_args():
     parser = argparse.ArgumentParser(description='Script used to download ntuples from EOS')
     parser.add_argument('-j', '--jobn' , type=str, help='Job name, used to find directory, e.g. flt_001', required=True)
     parser.add_argument('-n', '--nfile', type=int, help='Number of files to download', default=-1)
-    parser.add_argument('-d', '--dest' , type=str, help=f'Destination directory, default {Data.dst_dir}', default=Data.dst_dir)
-    parser.add_argument('-t', '--test' , type=int, help='Runs a test run with 1, default=0', default=0, choices=[0, 1])
+    parser.add_argument('-d', '--dest' , type=str, help='Destination directory will override whatever is in DOWNLOAD_NTUPPATH')
+    parser.add_argument('-t', '--test' , help='Runs a test run', action='store_true')
     parser.add_argument('-l', '--log'  , type=int, help='Log level, default 20', choices=[10, 20, 30, 40], default=20)
     parser.add_argument('-r', '--ran'  , type=int, help='When picking a subset of files, with -n, pick them randomly (1) or the first files (0 default)', choices=[0, 1], default=0)
     parser.add_argument('-m', '--mth'  , type=int, help=f'Number of threads to use for downloading, default {Data.nthread}', default=Data.nthread)
@@ -119,7 +118,7 @@ def _get_args():
 # --------------------------------------------------
 def _split_pfns(l_pfn):
     '''
-    Takes a list of strings and splits it into many lists 
+    Takes a list of strings and splits it into many lists
     to be distributed among nthread threads
     '''
 
@@ -135,7 +134,13 @@ def _split_pfns(l_pfn):
 def _initialize():
     log.setLevel(Data.log_lvl)
 
-    os.makedirs(Data.dst_dir, exist_ok=True)
+    if Data.dst_dir is None:
+        if 'DOWNLOAD_NTUPPATH' not in os.environ:
+            raise ValueError('DOWNLOAD_NTUPPATH not set and -d option not pased')
+
+        Data.dst_dir = os.environ['DOWNLOAD_NTUPPATH']
+
+    os.makedirs(f'{Data.dst_dir}/{Data.job_dir}', exist_ok=True)
 # --------------------------------------------------
 def main():
     '''

@@ -9,6 +9,7 @@ import glob
 import pprint
 import argparse
 
+from typing              import Union
 from dataclasses         import dataclass
 from functools           import cache
 from importlib.resources import files
@@ -34,9 +35,11 @@ class Data:
     dry     : int
     Max     : int
     ver     : str
-    inp_dir : str = '/publicfs/lhcb/user/campoverde/Data/RK'
-    dt_rgx  : str = r'dt_(\d{4}).*tuple_Hlt2RD_(.*)\.root'
-    mc_rgx  : str = r'mc_.*_(\d{8})_nu.*tuple_Hlt2RD_(.*)\.root'
+    cfg_dat : dict
+
+    inp_dir = '/publicfs/lhcb/user/campoverde/Data/RK'
+    dt_rgx  = r'(?:dt|data)_(\d{4}|\d{2}).*tuple_Hlt2RD_(.*)\.root'
+    mc_rgx  = r'mc_.*_(\d{8})_nu.*tuple_Hlt2RD_(.*)\.root'
 # ---------------------------------
 def _get_args():
     '''
@@ -94,6 +97,7 @@ def _split_paths(l_path):
     d_info_path = _truncate_paths(d_info_path)
 
     log.info('Found samples:')
+    d_info_path = dict(sorted(d_info_path.items()))
     for info in d_info_path:
         log.info(info)
 
@@ -121,7 +125,7 @@ def _info_from_path(path):
     '''
 
     name = os.path.basename(path)
-    if   name.startswith('dt_'):
+    if   name.startswith('dt_') or name.startswith('data_'):
         info = _info_from_data_path(path)
     elif name.startswith('mc_'):
         info = _info_from_mc_path(path)
@@ -172,6 +176,9 @@ def _info_from_data_path(path):
         log.error(f'Expected three elements in: {mtc.groups()}')
         raise ValueError from exc
 
+    if len(year) == 2:
+        year = f'20{year}'
+
     if 'MuMu' in decay:
         chan = 'mm'
     elif 'EE' in decay:
@@ -211,34 +218,21 @@ def _kind_from_decay(decay):
     Will return kind of sample associated, e.g. analysis, calibration, same sign...
     '''
 
-    # TODO: This needs a config file
-    if decay in ['B0ToKpPimEE', 'B0ToKpPimMuMu']:
-        return 'ana_cut_bd'
+    if decay not in Data.cfg_dat['decays']:
+        raise ValueError(f'Unrecognized decay: {decay}')
 
-    if decay in ['BuToKpEE', 'BuToKpMuMu']:
-        return 'ana_cut_bp'
-
-    if decay in ['LbToLEE_LL', 'LbToLMuMu_LL']:
-        return 'ana_cut_lb'
-
-    # -------------------------------
-
-    if decay in ['B0ToKpPimEE_MVA', 'B0ToKpPimMuMu_MVA']:
-        return 'ana_mva_bd'
-
-    if decay in ['BuToKpEE_MVA', 'BuToKpMuMu_MVA']:
-        return 'ana_mva_bp'
-
-    if decay in ['LbTopKEE_MVA', 'LbTopKMuMu_MVA']:
-        return 'ana_mva_lb'
-
-    if decay in ['BsToPhiMuMu_MVA', 'BsToPhiEE_MVA']:
-        return 'ana_mva_bs'
-
-    log.error(f'Unrecognized decay: {decay}')
-    raise ValueError
+    return Data.cfg_dat['decays'][decay]
 # ---------------------------------
-def _link_paths(info, l_path):
+def _load_config():
+    conf_path = files('data_checks_data').joinpath('link_conf.yaml')
+    conf_path = str(conf_path)
+    if not os.path.isfile(conf_path):
+        raise FileNotFoundError(f'Cannot find {conf_path}')
+
+    with open(conf_path, encoding='utf-8') as ifile:
+        Data.cfg_dat = yaml.safe_load(ifile)
+# ---------------------------------
+def _link_paths(info : tuple[str], l_path : list[str]) -> Union[str, None]:
     '''
     Makes symbolic links of list of paths of a specific kind
     info is a tuple with = (sample, channel, kind, year) information
@@ -253,18 +247,20 @@ def _link_paths(info, l_path):
     if os.path.isfile(f'{target_dir}.root'):
         log.warning(f'Merged file exists, not linking: {target_dir}.root')
         _save_summary(f'{target_dir}.root')
-        return
+        return None
 
     os.makedirs(target_dir, exist_ok=True)
-    log.debug(f'Linking to: {target_dir}')
+    log.info(f'Linking to: {target_dir}')
+    if Data.dry:
+        log.warning('Dry run, not linking')
+        return None
 
     for source_path in tqdm.tqdm(l_path, ascii=' -'):
         name = os.path.basename(source_path)
         target_path = f'{target_dir}/{name}'
 
         log.debug(f'{source_path:<50}{"->":10}{target_path:<50}')
-        if not Data.dry:
-            _do_link_paths(src=source_path, tgt=target_path)
+        _do_link_paths(src=source_path, tgt=target_path)
 
     return target_dir
 # ---------------------------------
@@ -273,7 +269,6 @@ def _do_link_paths(src : str | None = None, tgt : str | None = None):
     Will check if target link exists, will delete it if it does
     Will make link
     '''
-
     if os.path.exists(tgt):
         os.unlink(tgt)
 
@@ -283,9 +278,13 @@ def _merge_paths(target, l_path):
     '''
     Merge ROOT files of a specific kind
     '''
-
     npath = len(l_path)
     log.info(f'Merging {npath} paths {target}')
+
+    if Data.dry:
+        log.warning('Dry run, not merging')
+        return
+
     log.info('')
 
     # Allow trees to got up to 1Tb when merging
@@ -327,6 +326,9 @@ def _save_summary(target):
     '''
     Make text file with summary of file, e.g. 2024.root -> 2024.txt
     '''
+    if Data.dry:
+        return
+
     prt = RFPrinter(path=target)
     prt.save()
 # ---------------------------------
@@ -335,13 +337,11 @@ def main():
     Script starts here
     '''
     _get_args()
+    _load_config()
+
     l_path = _get_paths()
     d_path = _split_paths(l_path)
     for kind, l_path in d_path.items():
-        if 'ana_mva_bs' in kind:
-            log.warning(f'Skipping {kind}')
-            continue
-
         target_dir = _link_paths(kind, l_path)
         if target_dir is None:
             continue
