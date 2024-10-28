@@ -197,6 +197,16 @@ class Plotter:
         plt.ylim(top=1.2 * max_y)
         plt.title(title)
     # --------------------------------------------
+    def _print_weights(self, arr_wgt : Union[numpy.ndarray, None], var : str, sample : str) -> None:
+        if arr_wgt is None:
+            log.debug(f'Not using weights for {sample}:{var}')
+            return
+
+        num_wgt = len(arr_wgt)
+        sum_wgt = numpy.sum(arr_wgt)
+
+        log.debug(f'Using weights [{num_wgt},{sum_wgt}] for {var}')
+    # --------------------------------------------
     def _save_plot(self, var):
         '''
         Will save to PNG:
