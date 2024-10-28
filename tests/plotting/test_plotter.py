@@ -21,7 +21,7 @@ class Data:
     Class used to store shared data
     '''
 #---------------------------------------
-@pytest.fixture
+@pytest.fixture(scope='session', autouse=True)
 def _initialize():
     '''
     This needs to be ran before any test
@@ -49,6 +49,7 @@ def _get_rdf(kind : str, test : str):
     else:
         raise ValueError(f'Invalid class: {kind}')
 
+    d_data['weight'] = numpy.random.normal(0.5, 0.1, size=nentries)
     rdf = RDF.FromNumpy(d_data)
 
     return rdf
@@ -116,6 +117,17 @@ def test_title():
     d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
 
     cfg_dat = _load_config(test='title')
+
+    ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
+    ptr.run()
+#---------------------------------------
+def test_weights():
+    '''
+    Tests plotting with weights
+    '''
+    d_rdf =  { kind : _get_rdf(kind=kind, test='weights') for kind in ['class A', 'class B'] }
+
+    cfg_dat = _load_config(test='weights')
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
