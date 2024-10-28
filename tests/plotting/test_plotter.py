@@ -13,7 +13,8 @@ import mplhep
 
 from ROOT import RDF
 
-from dmu.plotting.plotter import Plotter
+from dmu.plotting.plotter  import Plotter
+from dmu.logging.log_store import LogStore
 #---------------------------------------
 @dataclass
 class Data:
@@ -27,6 +28,8 @@ def _initialize():
     This needs to be ran before any test
     '''
     plt.style.use(mplhep.style.LHCb2)
+
+    LogStore.set_level('dmu:plotting:Plotter', 10)
 #---------------------------------------
 def _get_rdf(kind : str, test : str):
     '''
