@@ -372,16 +372,23 @@ class FilterFile:
             file_path = f'{self._kind}_{preffix}_{line_name}.root'
             rdf.Snapshot(tree_name, file_path, l_branch, opts)
 
+            log.debug(f'Saved: {file_path}:{tree_name}')
+
             self._save_contents(file_path)
 
             if not self._is_mc:
+                log.debug('Saving lumitree')
                 lumi_rdf = RDataFrame('lumiTree', self._file_path)
                 l_name   = self._get_column_names(lumi_rdf)
                 lumi_rdf.Snapshot('lumiTree', f'{self._kind}_{preffix}_{line_name}.root', l_name, opts)
+                log.debug('Saved lumitree')
     # --------------------------------------
     def _save_contents(self, file_path : str) -> None:
         if not self._dump_contents:
+            log.debug('Not saving branch list')
             return
+
+        log.debug('Saving branch list')
 
         obj = RFPrinter(path = file_path)
         obj.save()
