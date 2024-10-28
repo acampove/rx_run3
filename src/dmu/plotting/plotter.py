@@ -4,20 +4,22 @@ Module containing plotter class
 
 import os
 import math
+from typing import Union
 
 import numpy
 import matplotlib.pyplot as plt
 
-from log_store import log_store
+from ROOT                  import RDataFrame
+from dmu.logging.log_store import LogStore
 
-log = log_store.add_logger('dmu:plotting:Plotter')
+log = LogStore.add_logger('dmu:plotting:Plotter')
 # --------------------------------------------
 class Plotter:
     '''
     Class used to plot columns in ROOT dataframes
     '''
     # --------------------------------------------
-    def __init__(self, d_rdf : dict, cfg : dict):
+    def __init__(self, d_rdf=None, cfg=None):
         '''
         Parameters:
 
