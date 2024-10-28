@@ -34,7 +34,8 @@ class Plotter:
             raise ValueError('Dataframe dictionary not passed')
 
         self._d_cfg = cfg
-        self._d_rdf = { name : self._preprocess_rdf(rdf) for name, rdf in d_rdf.items()}
+        self._d_rdf : dict[str, RDataFrame]    = { name : self._preprocess_rdf(rdf) for name, rdf in d_rdf.items()}
+        self._d_wgt : Union[dict[str, Union[numpy.ndarray, None]], None]
     #-------------------------------------
     def _preprocess_rdf(self, rdf):
         '''
@@ -149,6 +150,33 @@ class Plotter:
 
         return minx, maxx
     #-------------------------------------
+    def _get_weights(self, var) -> Union[dict[str, Union[numpy.ndarray, None]], None]:
+        d_cfg = self._d_cfg['plots'][var]
+        if 'weights' not in d_cfg:
+            return None
+
+        if hasattr(self, '_d_wgt'):
+            return self._d_wgt
+
+        wgt_name = d_cfg['weights']
+        d_weight = {sam_name : self._read_weights(wgt_name, rdf) for sam_name, rdf in self._d_rdf.items()}
+
+        self._d_wgt = d_weight
+
+        return d_weight
+    #-------------------------------------
+    def _read_weights(self, name : str, rdf : RDataFrame) -> Union[numpy.ndarray, None]:
+        v_col = rdf.GetColumnNames()
+        l_col = [ col.c_str() for col in v_col ]
+
+        if name not in l_col:
+            log.debug(f'Weight {name} not found')
+            return None
+
+        arr_wgt = rdf.AsNumpy([name])[name]
+
+        return arr_wgt
+    #-------------------------------------
     def _plot_var(self, var):
         '''
         Will plot a variable from a dictionary of dataframes
@@ -184,8 +212,12 @@ class Plotter:
             log.debug(f'Using bounds [{minx:.3e}, {maxx:.3e}]')
 
         l_bc_all = []
+        d_wgt    = self._get_weights(var)
         for name, arr_val in d_data.items():
-            l_bc, _, _ = plt.hist(arr_val, bins=bins, range=(minx, maxx), density=normalized, histtype='step', label=name)
+            arr_wgt    = d_wgt[name] if d_wgt is not None else None
+
+            self._print_weights(arr_wgt, var, name)
+            l_bc, _, _ = plt.hist(arr_val, weights=arr_wgt, bins=bins, range=(minx, maxx), density=normalized, histtype='step', label=name)
             l_bc_all  += numpy.array(l_bc).tolist()
 
             plt.yscale(yscale)
@@ -207,7 +239,7 @@ class Plotter:
         num_wgt = len(arr_wgt)
         sum_wgt = numpy.sum(arr_wgt)
 
-        log.debug(f'Using weights [{num_wgt},{sum_wgt}] for {var}')
+        log.debug(f'Using weights [{num_wgt},{sum_wgt:.0f}] for {var}')
     # --------------------------------------------
     def _save_plot(self, var):
         '''
