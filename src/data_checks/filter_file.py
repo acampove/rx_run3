@@ -33,7 +33,7 @@ class FilterFile:
         self._l_line_name  : list[str]
         self._store_branch : bool
         self._has_lumitree : bool
-        self._dump_contents: bool
+        self._dump_contents: bool = False
 
         self._initialized  = False
     # --------------------------------------
