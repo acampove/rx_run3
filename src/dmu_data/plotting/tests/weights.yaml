@@ -1,13 +1,13 @@
 saving:
-    plt_dir : tests/plotting/simple
+    plt_dir : tests/plotting/weights
 plots:
-    x : 
+    x :
         weights : weights
         binning : [-5.0, 8.0, 40]
-        yscale  : 'linear' 
+        yscale  : 'linear'
         labels  : ['x', 'Entries']
-    y : 
+    y :
         weights : weights
         binning : [-5.0, 8.0, 40]
-        yscale  : 'linear' 
+        yscale  : 'linear'
         labels  : ['y', 'Entries']
