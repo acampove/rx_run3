@@ -338,14 +338,8 @@ hlt_lines_very_low_priority:  &very_low_priority
   lines_msid_ee_mva:
     - Hlt2RD_LbTopKEE_MVA_misid
     - Hlt2RD_BsToPhiEE_MVA_misid
-hlt_lines_low_priority:  &low_priority
   lines_phys_ee_cut:
-    - Hlt2RD_BuToKpEE
-    - Hlt2RD_B0ToKpPimEE
     - Hlt2RD_LbToLEE_LL
-  lines_phys_mm_cut:
-    - Hlt2RD_BuToKpMuMu
-    - Hlt2RD_B0ToKpPimMuMu
     - Hlt2RD_LbToLMuMu_LL
   lines_phys_mm_mva:
     - Hlt2RD_LbTopKMuMu_MVA
@@ -353,6 +347,13 @@ hlt_lines_low_priority:  &low_priority
   lines_phys_ee_mva:
     - Hlt2RD_LbTopKEE_MVA
     - Hlt2RD_BsToPhiEE_MVA
+hlt_lines_low_priority:  &low_priority
+  lines_phys_ee_cut:
+    - Hlt2RD_BuToKpEE
+    - Hlt2RD_B0ToKpPimEE
+  lines_phys_mm_cut:
+    - Hlt2RD_BuToKpMuMu
+    - Hlt2RD_B0ToKpPimMuMu
 hlt_lines_high_priority: &high_priority
   lines_cali_ee_mva:
     - Hlt2RD_BuToKpEE_MVA_cal
