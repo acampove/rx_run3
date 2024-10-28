@@ -8,12 +8,13 @@ import tqdm
 import utils_noroot          as utnr
 
 from ROOT                  import RDataFrame, TFile, RDF
-from log_store             import log_store
+from dmu.logging.log_store import LogStore 
+from dmu.rfile.rfprinter   import RFPrinter
 
 import data_checks.utilities as utdc
 from data_checks.selector  import selector
 
-log = log_store.add_logger('data_checks:FilterFile')
+log = LogStore.add_logger('data_checks:FilterFile')
 # --------------------------------------
 class FilterFile:
     '''
@@ -32,6 +33,7 @@ class FilterFile:
         self._l_line_name  : list[str]
         self._store_branch : bool
         self._has_lumitree : bool
+        self._dump_contents: bool
 
         self._initialized  = False
     # --------------------------------------
@@ -46,6 +48,20 @@ class FilterFile:
         self._set_save_pars()
 
         self._initialized = True
+    # --------------------------------------
+    @property
+    def dump_contents(self) -> bool:
+        '''
+        Flag indicating if a text file with the file contents will be saved or only the ROOT file
+        '''
+        return self._dump_contents
+
+    @dump_contents.setter
+    def dump_contents(self, value) -> None:
+        if not isinstance(value, bool):
+            raise ValueError('Value is not a bool: {value}')
+
+        self._dump_contents = value
     # --------------------------------------
     def _check_mcdt(self):
         '''
@@ -353,12 +369,22 @@ class FilterFile:
             l_branch  = rdf.l_branch
             tree_name = self._tree_name_from_line_name(line_name)
 
-            rdf.Snapshot(tree_name, f'{self._kind}_{preffix}_{line_name}.root', l_branch, opts)
+            file_path = f'{self._kind}_{preffix}_{line_name}.root'
+            rdf.Snapshot(tree_name, file_path, l_branch, opts)
+
+            self._save_contents(file_path)
 
             if not self._is_mc:
                 lumi_rdf = RDataFrame('lumiTree', self._file_path)
                 l_name   = self._get_column_names(lumi_rdf)
                 lumi_rdf.Snapshot('lumiTree', f'{self._kind}_{preffix}_{line_name}.root', l_name, opts)
+    # --------------------------------------
+    def _save_contents(self, file_path : str) -> None:
+        if not self._dump_contents:
+            return
+
+        obj = RFPrinter(path = file_path)
+        obj.save()
     # --------------------------------------
     @utnr.timeit
     def run(self):
