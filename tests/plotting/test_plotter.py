@@ -52,7 +52,7 @@ def _get_rdf(kind : str, test : str):
     else:
         raise ValueError(f'Invalid class: {kind}')
 
-    d_data['weight'] = numpy.random.normal(0.5, 0.1, size=nentries)
+    d_data['weights'] = numpy.random.normal(0.5, 0.1, size=nentries)
     rdf = RDF.FromNumpy(d_data)
 
     return rdf
