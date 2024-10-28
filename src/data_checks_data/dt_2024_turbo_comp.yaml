@@ -247,29 +247,23 @@ drop_branches:
     # Lepton 
     - L1_HCAL 
     - L2_HCAL 
-    - L1_PP
-    - L2_PP
     # Hadron
     - H_BREM
     - H_ECAL
     - H_ELECTRON
     - H_MUON
-    - H_PP
     - P_BREM
     - P_ECAL
     - P_ELECTRON
     - P_MUON
-    - P_PP
     - H1_BREM
     - H1_ECAL
     - H1_ELECTRON
     - H1_MUON
-    - H1_PP
     - H2_BREM
     - H2_ECAL
     - H2_ELECTRON
     - H2_MUON
-    - H2_PP
     # Hlt not for B 
     - Hlt1
     - Jpsi_Hlt1
