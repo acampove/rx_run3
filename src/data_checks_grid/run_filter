@@ -39,3 +39,5 @@ rename_paths
 
 dcheck/run bash -c "filter_ntuples -d $DSET -c $CONF -n $NJOB -i $IJOB" 
 
+echo "Sandbox: "
+ls
