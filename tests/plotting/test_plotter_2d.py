@@ -61,7 +61,7 @@ def _load_config(test : str):
 
     return cfg
 #---------------------------------------
-@pytest.mark.parametrize('name', ['2d_weighted', '2d_unweighted'])
+@pytest.mark.parametrize('name', ['2d'])
 def test_simple(name : str):
     '''
     Tests for 2D plots
