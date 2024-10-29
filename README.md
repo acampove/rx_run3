@@ -241,10 +241,12 @@ log.critical('critical')
 
 # Plotting from ROOT dataframes
 
+## 1D plots
+
 Given a set of ROOT dataframes and a configuration dictionary, one can plot distributions with:
 
 ```python
-from dmu.plotting.plotter import Plotter
+from dmu.plotting.plotter import Plotter1D as Plotter
 
 ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
 ptr.run()
@@ -284,6 +286,38 @@ plots:
 ```
 
 it's up to the user to build this dictionary and load it.
+
+## 2D plots
+
+For the 2D case it would look like:
+
+```python
+from dmu.plotting.plotter import Plotter2D as Plotter
+
+ptr=Plotter(rdf=rdf, cfg=cfg_dat)
+ptr.run()
+```
+
+where one would introduce only one dataframe instead of a dictionary, given that overlaying 2D plots is not possible. 
+The config would look like:
+
+```yaml
+saving:
+    plt_dir : tests/plotting/2d_weighted
+general:
+    size : [20, 10]
+plots_2d:
+    # x and y are names of the columns in the dataframe
+    - [x, y]
+weights : weights #This is the name of the column storing the weights, it is optional
+axes:
+    x :
+        binning : [-5.0, 8.0, 40]
+        label   : 'x'
+    y :
+        binning : [-5.0, 8.0, 40]
+        label   : 'y'
+```
 
 # Manipulating ROOT files
 
