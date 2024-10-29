@@ -2,11 +2,12 @@
 Module containing Plotter2D class
 '''
 
-from typing import Union
-
+import hist
 import numpy
+import mplhep
 import matplotlib.pyplot as plt
 
+from hist                  import Hist
 from ROOT                  import RDataFrame
 from dmu.logging.log_store import LogStore
 from dmu.plotting.plotter  import Plotter
@@ -32,13 +33,37 @@ class Plotter2D(Plotter):
         if not isinstance(rdf, RDataFrame):
             raise ValueError('Dataframe dictionary not passed')
 
-        self._rdf   = rdf
-        self._d_cfg = cfg
+        self._rdf   : RDataFrame = rdf
+        self._d_cfg : dict       = cfg
 
         self._wgt : numpy.ndarray
     # --------------------------------------------
+    def _get_axis(self, var : str):
+        [minx, maxx, nbins] = self._d_cfg['axes'][var]['binning']
+        label               = self._d_cfg['axes'][var][  'label']
+
+        axis = hist.axis.Regular(nbins, minx, maxx, name=label, label=label)
+
+        return axis
+    # --------------------------------------------
+    def _get_data(self, varx : str, vary : str) -> tuple[numpy.ndarray, numpy.ndarray]:
+        d_data = self._rdf.AsNumpy([varx, vary])
+        arr_x  = d_data[varx]
+        arr_y  = d_data[vary]
+
+        return arr_x, arr_y
+    # --------------------------------------------
     def _plot_vars(self, varx : str, vary : str) -> None:
         log.info(f'Plotting {varx} vs {vary}')
+
+        ax_x         = self._get_axis(varx)
+        ax_y         = self._get_axis(vary)
+        arr_x, arr_y = self._get_data(varx, vary)
+
+        hst = Hist(ax_x, ax_y)
+        hst.fill(arr_x, arr_y)
+
+        mplhep.hist2dplot(hst)
     # --------------------------------------------
     def run(self):
         '''
