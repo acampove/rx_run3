@@ -1,18 +1,18 @@
 dataset :
     selection:
         bkg :
-            mass : 'mass_dtf > 5500'
+            mass : 'mass > 5500'
         sig :
-            mass : 'mass_dtf > 5100 && mass_dtf < 5600'
+            mass : 'mass > 5100 && mass < 5600'
     paths:
         sig :
-            file_path : '/publicfs/ucas/user/campoverde/Data/RK/ctrl_BuToKpEE_ana_ee/v1/2024.root'
+            file_path : /publicfs/ucas/user/campoverde/Data/RK/ctrl_BuToKpEE_ana_ee/v2/2024.root
             tree_name : 'KEE'
         bkg :
-            file_path : '/publicfs/ucas/user/campoverde/Data/RK/data_ana_cut_bp_ee/v1/2024.root'
+            file_path : /publicfs/ucas/user/campoverde/Data/RK/data_ana_cut_bp_ee/v4/2024.root
             tree_name : 'KEE'
     define :
-      mass_dtf   : 'B_const_mass_M'
+      mass       : 'B_nopv_const_mass_M'
       min_ll_pt  : 'TMath::Min(L1_PT, L2_PT)'
       max_ll_pt  : 'TMath::Max(L1_PT, L2_PT)'
       min_ll_eta : 'TMath::Min(L1_ETA, L2_ETA)'
@@ -40,7 +40,7 @@ training :
       learning_rate     : 0.1
       min_samples_split : 2
 saving:
-    path : 'output/cut_ctrl_2024/bukee_model.pkl'
+    path : 'output/cut_ctrl_2024/v2/bukee_model.pkl'
 plotting:
     roc :
       min : [0.5, 0.5]
@@ -109,7 +109,7 @@ plotting:
             binning : [0, 20000, 100]
             yscale  : 'log'
             labels  : ['$\max(p_T(e^+), p_T(e^-))$', '']
-          mass_dtf:
+          mass:
             normalized : true
             binning : [4800, 6000, 100]
             yscale  : 'linear'
