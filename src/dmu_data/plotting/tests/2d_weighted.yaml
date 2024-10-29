@@ -3,8 +3,8 @@ saving:
 general:
     size : [20, 10]
 plots_2d:
-    - [x, y]
-weights : weights
+    - [x, y, weights, 'xy_w']
+    - [x, y,    null, 'xy_r']
 axes:
     x :
         binning : [-5.0, 8.0, 40]
