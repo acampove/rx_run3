@@ -7,9 +7,7 @@ plots_2d:
 axes :
     x : 
         binning : [-5.0, 8.0, 40]
-        yscale  : 'linear' 
-        labels  : ['x', 'Entries']
+        label   : 'x'
     y : 
         binning : [-5.0, 8.0, 40]
-        yscale  : 'linear' 
-        labels  : ['y', 'Entries']
+        label   : 'y'
