@@ -87,27 +87,27 @@ plotting:
             normalized : true
             binning : [0, 50000, 100]
             yscale  : 'log'
-            labels  : ['$p_T(B^+)$', '']
+            labels  : ['$p_T(J/\psi)$', '']
           Jpsi_IPCHI2_OWNPV:
             normalized : true
             binning : [0, 20, 100]
             yscale  : 'linear'
-            labels  : ['$IP_{\chi^2}(J/\psi^+)$', '']
+            labels  : ['$IP_{\chi^2}(J/\psi)$', '']
           Jpsi_FDCHI2_OWNPV:
             normalized : true
             binning : [0, 20, 100]
             yscale  : 'linear'
-            labels  : ['$FD_{\chi^2}(J/\psi^+)$', '']
+            labels  : ['$FD_{\chi^2}(J/\psi)$', '']
           Jpsi_CHI2DOF:
             normalized : true
             binning : [0, 10, 100]
             yscale  : 'linear'
-            labels  : ['$\chi^2/dof(J/\psi^+)$', '']
+            labels  : ['$\chi^2/dof(J/\psi)$', '']
           Jpsi_DIRA_OWNPV:
             normalized : true
             binning : [0.9995, 1, 100]
             yscale  : 'log'
-            labels  : ['DIRA$(J/\psi^+)$', '']
+            labels  : ['DIRA$(J/\psi)$', '']
       #
           min_ll_pt:
             normalized : true
