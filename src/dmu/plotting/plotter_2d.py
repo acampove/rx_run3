@@ -56,8 +56,7 @@ class Plotter2D(Plotter):
             log.debug('Skipping weights')
             return None
 
-        log.debug('Adding weights')
-        wgt_name = self._d_cfg['weights']
+        log.debug(f'Adding weights form column {wgt_name}')
         arr_wgt  = self._rdf.AsNumpy([wgt_name])[wgt_name]
 
         return arr_wgt
