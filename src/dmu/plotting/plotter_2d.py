@@ -1,6 +1,7 @@
 '''
 Module containing Plotter2D class
 '''
+from types import Union
 
 import hist
 import numpy
@@ -53,6 +54,16 @@ class Plotter2D(Plotter):
 
         return arr_x, arr_y
     # --------------------------------------------
+    def _get_dataset_weights(self) -> Union[numpy.ndarray, None]:
+        if 'weights' not in self._d_cfg:
+            return None
+
+        log.debug('Adding weights')
+        wgt_name = self._d_cfg['weights']
+        arr_wgt  = self._rdf.AsNumpy([wgt_name])[wgt_name]
+
+        return arr_wgt
+    # --------------------------------------------
     def _plot_vars(self, varx : str, vary : str) -> None:
         log.info(f'Plotting {varx} vs {vary}')
 
@@ -60,8 +71,9 @@ class Plotter2D(Plotter):
         ax_y         = self._get_axis(vary)
         arr_x, arr_y = self._get_data(varx, vary)
 
-        hst = Hist(ax_x, ax_y)
-        hst.fill(arr_x, arr_y)
+        arr_w = self._get_dataset_weights()
+        hst   = Hist(ax_x, ax_y)
+        hst.fill(arr_x, arr_y, weight=arr_w)
 
         mplhep.hist2dplot(hst)
     # --------------------------------------------
