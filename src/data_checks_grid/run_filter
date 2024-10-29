@@ -37,7 +37,7 @@ VENV=$5
 set_vars
 rename_paths
 
-dcheck/run bash -c "filter_ntuples -d $DSET -c $CONF -n $NJOB -i $IJOB"
+dcheck/run bash -c "filter_ntuples -d $DSET -c $CONF -n $NJOB -i $IJOB" -l 10
 
 echo "Sandbox: "
 ls
