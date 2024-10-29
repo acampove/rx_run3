@@ -51,8 +51,9 @@ class Plotter2D(Plotter):
 
         return arr_x, arr_y
     # --------------------------------------------
-    def _get_dataset_weights(self) -> Union[numpy.ndarray, None]:
-        if 'weights' not in self._d_cfg:
+    def _get_dataset_weights(self, wgt_name : Union[str, None]) -> Union[numpy.ndarray, None]:
+        if wgt_name is None:
+            log.debug('Skipping weights')
             return None
 
         log.debug('Adding weights')
@@ -61,14 +62,14 @@ class Plotter2D(Plotter):
 
         return arr_wgt
     # --------------------------------------------
-    def _plot_vars(self, varx : str, vary : str) -> None:
-        log.info(f'Plotting {varx} vs {vary}')
+    def _plot_vars(self, varx : str, vary : str, wgt_name : str) -> None:
+        log.info(f'Plotting {varx} vs {vary} with weights {wgt_name}')
 
         ax_x         = self._get_axis(varx)
         ax_y         = self._get_axis(vary)
         arr_x, arr_y = self._get_data(varx, vary)
 
-        arr_w = self._get_dataset_weights()
+        arr_w = self._get_dataset_weights(wgt_name)
         hst   = Hist(ax_x, ax_y)
         hst.fill(arr_x, arr_y, weight=arr_w)
 
@@ -80,9 +81,8 @@ class Plotter2D(Plotter):
         '''
 
         fig_size = self._get_fig_size()
-        for [varx, vary] in self._d_cfg['plots_2d']:
-            plot_name = f'{varx}_{vary}'
+        for [varx, vary, wgt_name, plot_name] in self._d_cfg['plots_2d']:
             plt.figure(plot_name, figsize=fig_size)
-            self._plot_vars(varx, vary)
+            self._plot_vars(varx, vary, wgt_name)
             self._save_plot(plot_name)
 # --------------------------------------------
