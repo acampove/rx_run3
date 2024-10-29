@@ -1,9 +1,17 @@
 '''
 Module containing tests for 2D plotter class
 '''
+from importlib.resources      import files
 
+import yaml
+import numpy
+import mplhep
 import pytest
-from dmu.plotting.plotter_2d  import Plotter
+import matplotlib.pyplot as plt
+
+from ROOT                     import RDF
+from dmu.logging.log_store    import LogStore
+from dmu.plotting.plotter_2d  import Plotter2D as Plotter
 
 #---------------------------------------
 @pytest.fixture(scope='session', autouse=True)
@@ -55,10 +63,10 @@ def _load_config(test : str):
 #---------------------------------------
 def test_simple():
     '''
-    Tests for 2D plots 
+    Tests for 2D plots
     '''
     rdf     = _get_rdf(kind='class A', test='weights')
-    cfg_dat = _load_config(test='simple')
+    cfg_dat = _load_config(test='2d')
 
     ptr=Plotter(rdf=rdf, cfg=cfg_dat)
     ptr.run()
