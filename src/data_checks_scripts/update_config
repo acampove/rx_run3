@@ -99,3 +99,4 @@ get_opts "$@"
 check_env
 
 update $DCHECK/src/data_checks_data/dt_2024_turbo_comp.yaml
+update $DCHECK/src/data_checks_data/mc_2024_turbo_comp.yaml
