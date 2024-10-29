@@ -13,8 +13,8 @@ import mplhep
 
 from ROOT import RDF
 
-from dmu.plotting.plotter  import Plotter
-from dmu.logging.log_store import LogStore
+from dmu.plotting.plotter_1d import Plotter1D as Plotter
+from dmu.logging.log_store   import LogStore
 #---------------------------------------
 @dataclass
 class Data:
