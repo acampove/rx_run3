@@ -1,7 +1,7 @@
 '''
 Module containing Plotter2D class
 '''
-from types import Union
+from typing import Union
 
 import hist
 import numpy
