@@ -2,6 +2,7 @@ dataset :
     selection:
         bkg :
             mass : 'mass > 5500'
+            run  : RUNNUMBER > 295000
         sig :
             mass : 'mass > 5100 && mass < 5600'
     paths:
