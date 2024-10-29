@@ -119,13 +119,18 @@ class FilterFile:
 
         l_hlt = [ hlt           for hlt in l_nam if hlt.startswith('Hlt2RD_') ]
         nline = len(l_hlt)
-        log.debug(f'Found {nline} lines in file')
+        log.info(f'Found {nline} lines in file:')
+        for line in l_hlt:
+            log.debug(f'{"":<10}{line:<30}')
 
         l_tree_name = self._get_names_from_config()
         l_flt = [ flt           for flt in l_hlt if flt in l_tree_name  ]
 
         nline = len(l_flt)
         log.info(f'Found {nline} lines in file that match config')
+        for line in l_flt:
+            log.debug(f'{"":<10}{line:<30}')
+
         self._l_line_name = l_flt
     # --------------------------------------
     def _keep_branch(self, name):
