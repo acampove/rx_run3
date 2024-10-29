@@ -61,12 +61,13 @@ def _load_config(test : str):
 
     return cfg
 #---------------------------------------
-def test_simple():
+@pytest.mark.parametrize('name', ['2d_weighted', '2d_unweighted'])
+def test_simple(name : str):
     '''
     Tests for 2D plots
     '''
     rdf     = _get_rdf(kind='class A', test='weights')
-    cfg_dat = _load_config(test='2d')
+    cfg_dat = _load_config(test=name)
 
     ptr=Plotter(rdf=rdf, cfg=cfg_dat)
     ptr.run()
