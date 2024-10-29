@@ -11,7 +11,7 @@ import dmu.testing.utilities as ut
 log = LogStore.add_logger('dmu:ml:test_train_mva')
 
 # -------------------------------
-@pytest.fixture
+@pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('data_checks:train_mva', 10)
 # -------------------------------
