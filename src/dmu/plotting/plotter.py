@@ -16,17 +16,10 @@ log = LogStore.add_logger('dmu:plotting:Plotter')
 # --------------------------------------------
 class Plotter:
     '''
-    Class used to plot columns in ROOT dataframes
+    Base class of Plotter1D and Plotter2D
     '''
-    # --------------------------------------------
+    #-------------------------------------
     def __init__(self, d_rdf=None, cfg=None):
-        '''
-        Parameters:
-
-        d_rdf (dict): Dictionary mapping the kind of sample with the ROOT dataframe
-        cfg   (dict): Dictionary with configuration, e.g. binning, ranges, etc
-        '''
-
         if not isinstance(  cfg, dict):
             raise ValueError('Config dictionary not passed')
 
@@ -114,41 +107,31 @@ class Plotter:
         log.info(f'Dropped entries randomly: {tot_entries} -> {fnl_entries}')
 
         return rdf
-    #-------------------------------------
-    def _check_quantile(self, qnt : float):
-        '''
-        Will check validity of quantile
-        '''
-
-        if 0.5 < qnt <= 1.0:
+    # --------------------------------------------
+    def _print_weights(self, arr_wgt : Union[numpy.ndarray, None], var : str, sample : str) -> None:
+        if arr_wgt is None:
+            log.debug(f'Not using weights for {sample}:{var}')
             return
 
-        raise ValueError(f'Invalid quantile: {qnt:.3e}, value needs to be in (0.5, 1.0] interval')
-    #-------------------------------------
-    def _find_bounds(self, d_data : dict, qnt : float = 0.98):
+        num_wgt = len(arr_wgt)
+        sum_wgt = numpy.sum(arr_wgt)
+
+        log.debug(f'Using weights [{num_wgt},{sum_wgt:.0f}] for {var}')
+    # --------------------------------------------
+    def _get_fig_size(self):
         '''
-        Will take dictionary between kinds of data and numpy array
-        Will return tuple with bounds, where 95% of the data is found
+        Will read size list from config dictionary if found
+        other wise will return None
         '''
-        self._check_quantile(qnt)
+        if 'general' not in self._d_cfg:
+            return None
 
-        l_max = []
-        l_min = []
+        if 'size' not in self._d_cfg['general']:
+            return None
 
-        for arr_val in d_data.values():
-            minv = numpy.quantile(arr_val, 1 - qnt)
-            maxv = numpy.quantile(arr_val,     qnt)
+        fig_size = self._d_cfg['general']['size']
 
-            l_max.append(maxv)
-            l_min.append(minv)
-
-        minx = min(l_min)
-        maxx = max(l_max)
-
-        if minx >= maxx:
-            raise ValueError(f'Could not calculate bounds correctly: [{minx:.3e}, {maxx:.3e}]')
-
-        return minx, maxx
+        return fig_size
     #-------------------------------------
     def _get_weights(self, var) -> Union[dict[str, Union[numpy.ndarray, None]], None]:
         d_cfg = self._d_cfg['plots'][var]
@@ -164,7 +147,7 @@ class Plotter:
         self._d_wgt = d_weight
 
         return d_weight
-    #-------------------------------------
+    # --------------------------------------------
     def _read_weights(self, name : str, rdf : RDataFrame) -> Union[numpy.ndarray, None]:
         v_col = rdf.GetColumnNames()
         l_col = [ col.c_str() for col in v_col ]
@@ -177,70 +160,6 @@ class Plotter:
 
         return arr_wgt
     #-------------------------------------
-    def _plot_var(self, var):
-        '''
-        Will plot a variable from a dictionary of dataframes
-        Parameters
-        --------------------
-        var   (str)  : name of column
-        '''
-        # pylint: disable=too-many-locals
-
-        d_cfg = self._d_cfg['plots'][var]
-
-        minx, maxx, bins = d_cfg['binning']
-        yscale           = d_cfg['yscale' ]
-        [xname, yname]   = d_cfg['labels' ]
-
-        normalized=False
-        if 'normalized' in d_cfg:
-            normalized = d_cfg['normalized']
-
-        title = ''
-        if 'title'      in d_cfg:
-            title = d_cfg['title']
-
-        d_data = {}
-        for name, rdf in self._d_rdf.items():
-            d_data[name] = rdf.AsNumpy([var])[var]
-
-        if maxx <= minx + 1e-5:
-            log.info(f'Bounds not set for {var}, will calculated them')
-            minx, maxx = self._find_bounds(d_data = d_data, qnt=minx)
-            log.info(f'Using bounds [{minx:.3e}, {maxx:.3e}]')
-        else:
-            log.debug(f'Using bounds [{minx:.3e}, {maxx:.3e}]')
-
-        l_bc_all = []
-        d_wgt    = self._get_weights(var)
-        for name, arr_val in d_data.items():
-            arr_wgt    = d_wgt[name] if d_wgt is not None else None
-
-            self._print_weights(arr_wgt, var, name)
-            l_bc, _, _ = plt.hist(arr_val, weights=arr_wgt, bins=bins, range=(minx, maxx), density=normalized, histtype='step', label=name)
-            l_bc_all  += numpy.array(l_bc).tolist()
-
-            plt.yscale(yscale)
-            plt.xlabel(xname)
-            plt.ylabel(yname)
-
-        if yscale == 'linear':
-            plt.ylim(bottom=0)
-
-        max_y = max(l_bc_all)
-        plt.ylim(top=1.2 * max_y)
-        plt.title(title)
-    # --------------------------------------------
-    def _print_weights(self, arr_wgt : Union[numpy.ndarray, None], var : str, sample : str) -> None:
-        if arr_wgt is None:
-            log.debug(f'Not using weights for {sample}:{var}')
-            return
-
-        num_wgt = len(arr_wgt)
-        sum_wgt = numpy.sum(arr_wgt)
-
-        log.debug(f'Using weights [{num_wgt},{sum_wgt:.0f}] for {var}')
-    # --------------------------------------------
     def _save_plot(self, var):
         '''
         Will save to PNG:
@@ -257,43 +176,4 @@ class Plotter:
         plt.tight_layout()
         plt.savefig(plot_path)
         plt.close(var)
-    # --------------------------------------------
-    def _plot_lines(self, var : str):
-        '''
-        Will plot vertical lines for some variables
-
-        var (str) : name of variable
-        '''
-        if var in ['B_const_mass_M', 'B_M']:
-            plt.axvline(x=5280, color='r', label=r'$B^+$'   , linestyle=':')
-        elif var == 'Jpsi_M':
-            plt.axvline(x=3096, color='r', label=r'$J/\psi$', linestyle=':')
-    # --------------------------------------------
-    def _get_fig_size(self):
-        '''
-        Will read size list from config dictionary if found
-        other wise will return None
-        '''
-        if 'general' not in self._d_cfg:
-            return None
-
-        if 'size' not in self._d_cfg['general']:
-            return None
-
-        fig_size = self._d_cfg['general']['size']
-
-        return fig_size
-    # --------------------------------------------
-    def run(self):
-        '''
-        Will run plotting
-        '''
-
-        fig_size = self._get_fig_size()
-        for var in self._d_cfg['plots']:
-            log.debug(f'Plotting: {var}')
-            plt.figure(var, figsize=fig_size)
-            self._plot_var(var)
-            self._plot_lines(var)
-            self._save_plot(var)
 # --------------------------------------------
