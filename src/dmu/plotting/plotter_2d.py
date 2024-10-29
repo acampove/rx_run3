@@ -31,9 +31,6 @@ class Plotter2D(Plotter):
         if not isinstance(cfg, dict):
             raise ValueError('Config dictionary not passed')
 
-        if not isinstance(rdf, RDataFrame):
-            raise ValueError('Dataframe not passed')
-
         self._rdf   : RDataFrame = rdf
         self._d_cfg : dict       = cfg
 
