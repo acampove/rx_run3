@@ -8,7 +8,7 @@ import tqdm
 import utils_noroot          as utnr
 
 from ROOT                  import RDataFrame, TFile, RDF
-from dmu.logging.log_store import LogStore 
+from dmu.logging.log_store import LogStore
 from dmu.rfile.rfprinter   import RFPrinter
 
 import data_checks.utilities as utdc
