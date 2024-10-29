@@ -19,9 +19,9 @@ rename_paths()
 
     for FILEPATH in $(grep --files-with-matches --binary-files=without-match -r $VENV/$ENVNAME $PWD/$ENVNAME);do
         echo ""
-        echo $VENV 
+        echo $VENV
         echo "--->      in  "  $FILEPATH
-        echo $PWD     
+        echo $PWD
         echo ""
         sed -i "s|$VENV|$PWD|g" $FILEPATH
     done
@@ -37,7 +37,7 @@ VENV=$5
 set_vars
 rename_paths
 
-dcheck/run bash -c "filter_ntuples -d $DSET -c $CONF -n $NJOB -i $IJOB" 
+dcheck/run bash -c "filter_ntuples -d $DSET -c $CONF -n $NJOB -i $IJOB"
 
 echo "Sandbox: "
 ls
