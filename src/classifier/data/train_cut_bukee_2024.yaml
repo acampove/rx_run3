@@ -16,24 +16,31 @@ dataset :
       mass       : 'B_nopv_const_mass_M'
       min_ll_pt  : 'TMath::Min(L1_PT , L2_PT)'
       max_ll_pt  : 'TMath::Max(L1_PT , L2_PT)'
-      min_ll_eta : 'TMath::Min(L1_ETA, L2_ETA)'
-      max_ll_eta : 'TMath::Max(L1_ETA, L2_ETA)'
+      min_ll_ipc : 'TMath::Min(L1_IPCHI2_OWNPV, L2_IPCHI2_OWNPV)'
+      max_ll_ipc : 'TMath::Max(L1_IPCHI2_OWNPV, L2_IPCHI2_OWNPV)'
 training :
     nfold    : 10
     rdm_stat : 1
     features : 
         - B_PT
-        - B_ETA
+        - B_IPCHI2_OWNPV
+        - B_FDCHI2
+        - B_ENDVERTEX_CHI2DOF
+        - B_BPVDIRA
+    #
+        - Jpsi_PT
+        - Jpsi_IPCHI2_OWNPV
+        - Jpsi_FDCHI2
         - Jpsi_CHI2DOF
-        - H_ETA
+        - Jpsi_DIRA
+    #
         - min_ll_pt
         - max_ll_pt
-        - max_ll_eta
-        - min_ll_eta
-        - H_PT
-        - B_BPVCHI2DOF
-        - B_BPVDIRA
-        - B_ENDVERTEX_CHI2DOF
+        - max_ll_ipc
+        - min_ll_ipc
+    #
+        - H_PT 
+        - H_IPCHI2_OWNPV 
     hyper    :
       loss              : log_loss
       n_estimators      : 100
@@ -50,66 +57,90 @@ plotting:
         saving:
             plt_dir : 'output/cut_ctrl_2024/bukee_model/features'
         plots:
-          Jpsi_CHI2DOF:
-            normalized : true
-            binning : [0, 1, 100]
-            yscale  : 'linear'
-            labels  : ['$\chi^2/Ndof(J/\psi^+)$', '']
-          B_BPVDIRA:
-            normalized : true
-            binning : [0.9995, 1, 100]
-            yscale  : 'log'
-            labels  : ['DIRA$(B^+)$', '']
-          B_ENDVERTEX_CHI2DOF:
-            normalized : true
-            binning : [0, 10, 100]
-            yscale  : 'log'
-            labels  : ['$\chi^2_{vtx}/Ndof(B^+)$', '']
-          B_BPVCHI2DOF:
-            normalized : true
-            binning : [0, 1, 100]
-            yscale  : 'linear'
-            labels  : ['$\chi^2/Ndof(B^+)$', '']
           B_PT :
             normalized : true
             binning : [0, 50000, 100]
             yscale  : 'log'
             labels  : ['$p_T(B^+)$', '']
-          H_PT :
+          B_IPCHI2_OWNPV :
+            normalized : true
+            binning : [0, 20, 100]
+            yscale  : 'log'
+            labels  : ['$IP_{\chi^2}(B^+)$', '']
+          B_FDCHI2_OWNPV :
+            normalized : true
+            binning : [0, 10000, 100]
+            yscale  : 'log'
+            labels  : ['$FD_{\chi^2}(B^+)$', '']
+          B_ENDVERTEX_CHI2DOF:
+            normalized : true
+            binning : [0, 10, 100]
+            yscale  : 'log'
+            labels  : ['$\chi^2/dof(B^+)$', '']
+          B_BPVDIRA:
+            normalized : true
+            binning : [0.9995, 1, 100]
+            yscale  : 'log'
+            labels  : ['DIRA$(B^+)$', '']
+      #
+          Jpsi_PT :
             normalized : true
             binning : [0, 50000, 100]
             yscale  : 'log'
-            labels  : ['$p_T(K^+)$', '']
-          H_ETA :
+            labels  : ['$p_T(B^+)$', '']
+          Jpsi_IPCHI2_OWNPV:
             normalized : true
-            binning : [0, 7, 100]
+            binning : [0, 20, 100]
             yscale  : 'linear'
-            labels  : ['$\eta(K^+)$', '']
-          B_ETA :
+            labels  : ['$IP_{\chi^2}(J/\psi^+)$', '']
+          Jpsi_FDCHI2_OWNPV:
             normalized : true
-            binning : [0, 7, 100]
+            binning : [0, 20, 100]
             yscale  : 'linear'
-            labels  : ['$\eta(B^+)$', '']
+            labels  : ['$FD_{\chi^2}(J/\psi^+)$', '']
+          Jpsi_CHI2DOF:
+            normalized : true
+            binning : [0, 10, 100]
+            yscale  : 'linear'
+            labels  : ['$\chi^2/dof(J/\psi^+)$', '']
+          Jpsi_DIRA_OWNPV:
+            normalized : true
+            binning : [0.9995, 1, 100]
+            yscale  : 'log'
+            labels  : ['DIRA$(J/\psi^+)$', '']
+      #
           min_ll_pt:
             normalized : true
             binning : [0, 20000, 100]
             yscale  : 'log'
             labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
-          min_ll_eta:
-            normalized : true
-            binning : [0, 6, 100]
-            yscale  : 'linear'
-            labels  : ['$\min(\eta(e^+), \eta(e^-))$', '']
-          max_ll_eta:
-            normalized : true
-            binning : [0, 6, 100]
-            yscale  : 'linear'
-            labels  : ['$\max(\eta(e^+), \eta(e^-))$', '']
           max_ll_pt:
             normalized : true
             binning : [0, 20000, 100]
             yscale  : 'log'
             labels  : ['$\max(p_T(e^+), p_T(e^-))$', '']
+          min_ll_ipc:
+            normalized : true
+            binning : [0,  500, 100]
+            yscale  : 'log'
+            labels  : ['$\min(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
+          max_ll_ipc:
+            normalized : true
+            binning : [0, 3000, 100]
+            yscale  : 'log'
+            labels  : ['$\max(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
+      #
+          H_PT :
+            normalized : true
+            binning : [0, 50000, 100]
+            yscale  : 'log'
+            labels  : ['$p_T(K^+)$', '']
+          H_IPCHI2_OWNPV:
+            normalized : true
+            binning : [0, 2000, 100]
+            yscale  : 'log'
+            labels  : ['$IP_{\chi^2}(K^+)$', '']
+      #
           mass:
             normalized : true
             binning : [4800, 6000, 100]
