@@ -303,13 +303,15 @@ The config would look like:
 
 ```yaml
 saving:
-    plt_dir : tests/plotting/2d_weighted
+    plt_dir : tests/plotting/2d
 general:
     size : [20, 10]
 plots_2d:
-    # x and y are names of the columns in the dataframe
-    - [x, y]
-weights : weights #This is the name of the column storing the weights, it is optional
+    # Column x and y
+    # Name of column where weights are, null for not weights
+    # Name of output plot, e.g. xy_x.png
+    - [x, y, weights, 'xy_w']
+    - [x, y,    null, 'xy_r']
 axes:
     x :
         binning : [-5.0, 8.0, 40]
