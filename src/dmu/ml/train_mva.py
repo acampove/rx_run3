@@ -12,8 +12,8 @@ from sklearn.metrics         import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 
 from dmu.ml.cv_classifier    import CVClassifier as cls
+from dmu.plotting.plotter_1d import Plotter1D    as Plotter
 from dmu.logging.log_store   import LogStore
-from dmu.plotting.plotter    import Plotter
 
 log = LogStore.add_logger('data_checks:train_mva')
 # ---------------------------------------------
@@ -145,7 +145,7 @@ class TrainMva:
         joblib.dump(model, model_path)
     # ---------------------------------------------
     def _plot_scores(self, arr_sig_trn, arr_sig_tst, arr_bkg_trn, arr_bkg_tst, ifold):
-        # pylint: disable = too-many-arguments
+        # pylint: disable = too-many-arguments, too-many-positional-arguments
         '''
         Will plot an array of scores, associated to a given fold
         '''
@@ -170,12 +170,17 @@ class TrainMva:
         plt.savefig(f'{val_dir}/scores.png')
         plt.close()
     # ---------------------------------------------
-    def _plot_roc(self, l_lab_ts, l_prb_ts, l_lab_tr, l_prb_tr, ifold):
+    def _plot_roc(self,
+                  l_lab_ts : list[float],
+                  l_prb_ts : list[float],
+                  l_lab_tr : list[float],
+                  l_prb_tr : list[float],
+                  ifold    : int):
         '''
         Takes the labels and the probabilities and plots ROC
         curve for given fold
         '''
-        # pylint: disable = too-many-arguments
+        # pylint: disable = too-many-arguments, too-many-positional-arguments
         val_dir  = self._cfg['plotting']['val_dir']
         val_dir  = f'{val_dir}/fold_{ifold:03}'
         os.makedirs(val_dir, exist_ok=True)
