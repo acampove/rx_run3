@@ -25,7 +25,7 @@ def patch_and_tag(df : pnd.DataFrame, value : float = 0) -> pnd.DataFrame:
         log.debug('No NaNs found')
         return df
 
-    log.warning(f'Found {nnan} NaNs, patching them')
+    log.warning(f'Found {nnan} NaNs, patching them with {value}')
 
     df_pa = df.fillna(value)
 
