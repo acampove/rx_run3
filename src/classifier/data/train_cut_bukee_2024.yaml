@@ -47,14 +47,14 @@ training :
       learning_rate     : 0.1
       min_samples_split : 2
 saving:
-    path : 'output/cut_ctrl_2024/v2/bukee_model.pkl'
+    path : 'output/cut_ctrl_2024/v1/model.pkl'
 plotting:
     roc :
       min : [0.5, 0.5]
-    val_dir : 'output/cut_ctrl_2024/bukee_model'
+    val_dir : 'output/cut_ctrl_2024/v1/plots'
     features:
         saving:
-            plt_dir : 'output/cut_ctrl_2024/bukee_model/features'
+            plt_dir : 'output/cut_ctrl_2024/v1/plots/features'
         plots:
             B_PT :
               normalized : true

@@ -55,14 +55,14 @@ training :
       learning_rate     : 0.1
       min_samples_split : 2
 saving:
-    path : 'output/cut_bdksee_2024/v2/model.pkl'
+    path : 'output/cut_bdksee_2024/v1/model.pkl'
 plotting:
     roc :
       min : [0.5, 0.5]
-    val_dir : 'output/cut_bdksee_2024/v2/plots'
+    val_dir : 'output/cut_bdksee_2024/v1/plots'
     features:
         saving:
-            plt_dir : 'output/cut_bdksee_2024/v2/plots/features'
+            plt_dir : 'output/cut_bdksee_2024/v1/plots/features'
         plots:
             B_PT :
               normalized : true
