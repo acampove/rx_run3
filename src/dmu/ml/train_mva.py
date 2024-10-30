@@ -240,7 +240,7 @@ class TrainMva:
 
         self._plot_features()
 
-        l_mod = self._get_model()
+        l_mod = self._get_models()
         for ifold, mod in enumerate(l_mod):
             self._save_model(mod, ifold)
 # ---------------------------------------------
