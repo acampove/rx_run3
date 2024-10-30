@@ -2,12 +2,14 @@
 Module containing utility functions needed by unit tests
 '''
 
+from typing              import Union
 from dataclasses         import dataclass
 from importlib.resources import files
 
+import pandas as pnd
 import numpy
 import yaml
-from ROOT import RDF
+from ROOT import RDF, RDataFrame
 
 from dmu.logging.log_store import LogStore
 
@@ -20,7 +22,17 @@ class Data:
     '''
     nentries = 3000
 # -------------------------------
-def get_rdf(kind : str | None = None):
+def _double_rdf_from_data(d_data : dict) -> RDataFrame:
+    df_1   = pnd.DataFrame(d_data)
+    df_2   = pnd.DataFrame(d_data)
+
+    df     = pnd.concat([df_1, df_2], axis=0)
+    d_data = df.to_dict()
+    rdf    = RDF.FromNumpy(d_data)
+
+    return rdf
+# -------------------------------
+def get_rdf(kind : Union[str,None] = None, repeated : bool =False):
     '''
     Return ROOT dataframe with toy data
     '''
@@ -39,11 +51,14 @@ def get_rdf(kind : str | None = None):
         log.error(f'Invalid kind: {kind}')
         raise ValueError
 
-    rdf = RDF.FromNumpy(d_data)
+    if repeated:
+        rdf = _double_rdf_from_data(d_data)
+    else:
+        rdf = RDF.FromNumpy(d_data)
 
     return rdf
 # -------------------------------
-def get_config(name : str | None = None):
+def get_config(name : Union[str,None] = None):
     '''
     Takes path to the YAML config file, after `dmu_data`
     Returns dictionary with config
