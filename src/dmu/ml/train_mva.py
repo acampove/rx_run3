@@ -104,47 +104,56 @@ class TrainMva:
 
         l_model=[]
         ifold=0
-        for l_itr, l_its in kfold.split(df_ft, l_lab):
-            model    = cls(cfg = self._cfg)
-            df_ft_tr = df_ft.iloc[l_itr]
-            l_lab_tr = l_lab[l_itr]
-
-            log.debug(f'Training feature shape: {df_ft_tr.shape}')
-            log.debug(f'Training label size: {len(l_lab_tr)}')
-
-            model.fit(df_ft_tr, l_lab_tr)
+        for arr_itr, arr_its in kfold.split(self._df_ft, self._l_lab):
+            log.debug(20 * '-')
+            log.debug(f'Fold: {ifold}')
+            log.debug(20 * '-')
+            model = self._get_model(arr_itr)
             l_model.append(model)
 
-            l_lab_prob_tr   = model.predict_proba(df_ft_tr, on_training_ok=True)
-            l_lab_true_tr   = l_lab[l_itr]
-            arr_sig_tr, arr_bkg_tr = self._split_scores(prob=l_lab_prob_tr, true=l_lab_true_tr)
+            arr_sig_sig_tr, arr_sig_bkg_tr, arr_sig_all_tr, arr_lab_tr = self._get_scores(model, arr_itr, on_training_ok= True)
+            arr_sig_sig_ts, arr_sig_bkg_ts, arr_sig_all_ts, arr_lab_ts = self._get_scores(model, arr_its, on_training_ok=False)
 
-            df_ft_ts         = df_ft.iloc[l_its]
+            self._plot_scores(arr_sig_sig_tr, arr_sig_sig_ts, arr_sig_bkg_tr, arr_sig_bkg_ts, ifold)
 
-            l_lab_prob_ts    = model.predict_proba(df_ft_ts)
-            l_lab_true_ts    = l_lab[l_its]
-            arr_sig_ts, arr_bkg_ts = self._split_scores(prob=l_lab_prob_ts, true=l_lab_true_ts)
-
-            self._plot_scores(arr_sig_tr, arr_sig_ts, arr_bkg_tr, arr_bkg_ts, ifold)
-
-            l_sig_prob_ts = [ prob[1] for prob in l_lab_prob_ts]
-            l_sig_prob_tr = [ prob[1] for prob in l_lab_prob_tr]
-
-            self._plot_roc(l_lab_true_ts, l_sig_prob_ts, l_lab_true_tr, l_sig_prob_tr, ifold)
+            self._plot_roc(arr_lab_ts, arr_sig_all_ts, arr_lab_tr, arr_sig_all_tr, ifold)
 
             ifold+=1
 
         return l_model
     # ---------------------------------------------
-    def _split_scores(self, prob=None, true=None):
+    def _get_scores(self, model : cls, arr_index : numpy.ndarray, on_training_ok : bool) -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, numpy.ndarray]:
+        '''
+        Returns a tuple of four arrays
+
+        arr_sig : Signal probabilities for signal
+        arr_bkg : Signal probabilities for background 
+        arr_all : Signal probabilities for both
+        arr_lab : Labels for both
+        '''
+        nentries = len(arr_index)
+        log.debug(f'Getting {nentries} signal probabilities')
+
+        df_ft    = self._df_ft.iloc[arr_index]
+        arr_prob = model.predict_proba(df_ft, on_training_ok=on_training_ok)
+        arr_lab  = self._l_lab[arr_index]
+
+        l_all    = [ sig_prob for [_, sig_prob] in arr_prob ]
+        arr_all  = numpy.array(l_all)
+
+        arr_sig, arr_bkg= self._split_scores(arr_prob=arr_prob, arr_label=arr_lab)
+
+        return arr_sig, arr_bkg, arr_all, arr_lab
+    # ---------------------------------------------
+    def _split_scores(self, arr_prob : numpy.ndarray, arr_label : numpy.ndarray) -> tuple[numpy.ndarray, numpy.ndarray]:
         '''
         Will split the testing scores (predictions) based on the training scores
 
         tst is a list of lists as [p_bkg, p_sig]
         '''
 
-        l_sig = [ prb[1] for prb, lab in zip(prob, true) if lab == 1]
-        l_bkg = [ prb[1] for prb, lab in zip(prob, true) if lab == 0]
+        l_sig = [ prb[1] for prb, lab in zip(arr_prob, arr_label) if lab == 1]
+        l_bkg = [ prb[1] for prb, lab in zip(arr_prob, arr_label) if lab == 0]
 
         arr_sig = numpy.array(l_sig)
         arr_bkg = numpy.array(l_bkg)
