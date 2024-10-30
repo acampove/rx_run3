@@ -17,7 +17,7 @@ log=LogStore.add_logger('dmu:test:rdataframe:utilities')
 # -------------------------------------------------
 def test_add_column(itry):
     '''
-    Will test adding a numpy array to a ROOT dataframe 
+    Will test adding a numpy array to a ROOT dataframe
     '''
     log.info(f'This is try: {itry}')
     d_data = {
@@ -35,3 +35,19 @@ def test_add_column(itry):
 
     rdf.Display().Print()
 # -------------------------------------------------
+def test_misalignment():
+    '''
+    Will test with inputs where columns have different sizes
+    '''
+    d_data = {
+            'x' : numpy.array([1, 2, 3]),
+            'y' : numpy.array([4, 5, 6]),
+            }
+
+    rdf     = RDF.FromNumpy(d_data)
+    arr_val = numpy.array([10, 20])
+
+    with pytest.raises(ValueError):
+        rdf = ut.add_column(rdf, arr_val, 'z')
+
+    rdf.Display().Print()
