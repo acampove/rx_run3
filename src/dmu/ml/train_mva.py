@@ -173,6 +173,8 @@ class TrainMva:
         '''
         Will plot an array of scores, associated to a given fold
         '''
+        log.debug(f'Plotting scores for {ifold} fold')
+
         if 'val_dir' not in self._cfg['plotting']:
             log.warning('Scores path not passed, not plotting scores')
             return
@@ -205,6 +207,8 @@ class TrainMva:
         curve for given fold
         '''
         # pylint: disable = too-many-arguments, too-many-positional-arguments
+        log.debug(f'Plotting ROC curve for {ifold} fold')
+
         val_dir  = self._cfg['plotting']['val_dir']
         val_dir  = f'{val_dir}/fold_{ifold:03}'
         os.makedirs(val_dir, exist_ok=True)
