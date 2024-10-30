@@ -7,7 +7,8 @@ This project is meant to be used to make classifiers
 For that run:
 
 ```bash
-train_classifier -c bukee_cut
+train_classifier -c train_cut_bukee_2024
+train_classifier -c train_cut_bdksee_2024
 ```
 
 Which will train a classifier using the settings in the `bukee_cut.yaml` file.
