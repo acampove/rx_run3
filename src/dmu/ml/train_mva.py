@@ -39,13 +39,13 @@ class TrainMva:
 
         self._rdf_bkg = bkg
         self._rdf_sig = sig
-        self._cfg    = cfg if cfg is not None else {}
+        self._cfg     = cfg if cfg is not None else {}
 
-        self._l_ft_name = None
-        self._l_model   = None
+        self._l_model   : cls
 
-        self._df_ft = self._get_features()
-        self._l_lab = self._get_labels()
+        self._l_ft_name = self._cfg['training']['features']
+        self._df_ft     = self._get_features()
+        self._l_lab     = self._get_labels()
     # ---------------------------------------------
     def _get_features(self):
         '''
@@ -125,7 +125,7 @@ class TrainMva:
         Returns a tuple of four arrays
 
         arr_sig : Signal probabilities for signal
-        arr_bkg : Signal probabilities for background 
+        arr_bkg : Signal probabilities for background
         arr_all : Signal probabilities for both
         arr_lab : Labels for both
         '''
@@ -256,9 +256,6 @@ class TrainMva:
         '''
         Will do the training
         '''
-
-        self._l_ft_name = self._cfg['training']['features']
-
         self._plot_features()
 
         l_mod = self._get_models()
