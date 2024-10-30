@@ -1,6 +1,6 @@
 training :
     nfold    : 3 
-    features : [w, x, y, z]
+    features : [x, y, z]
     rdm_stat : 1
     hyper    :
       loss              : log_loss
