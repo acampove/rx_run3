@@ -8,8 +8,6 @@ import pandas as pnd
 import numpy
 import matplotlib.pyplot as plt
 
-from ROOT import RDataFrame
-
 from sklearn.metrics         import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 
@@ -30,10 +28,10 @@ class TrainMva:
         sig (ROOT dataframe): Holds simulation
         cfg (dict)          : Dictionary storing configuration for training
         '''
-        if not isinstance(bkg, RDataFrame):
+        if bkg is None:
             raise ValueError('Background dataframe is not a ROOT dataframe')
 
-        if not isinstance(sig, RDataFrame):
+        if sig is None:
             raise ValueError('Signal dataframe is not a ROOT dataframe')
 
         if not isinstance(cfg, dict):
