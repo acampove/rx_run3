@@ -20,6 +20,13 @@ def patch_and_tag(df : pnd.DataFrame, value : float = 0) -> pnd.DataFrame:
     Returns array of indices where the replacement happened
     '''
     l_nan = df.index[df.isna().any(axis=1)].tolist()
+    nnan  = len(l_nan)
+    if nnan == 0:
+        log.debug('No NaNs found')
+        return df
+
+    log.warning(f'Found {nnan} NaNs, patching them')
+
     df_pa = df.fillna(value)
 
     df_pa.attrs['patched_indices'] = numpy.array(l_nan)
