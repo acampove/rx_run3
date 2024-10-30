@@ -1,18 +1,25 @@
 samples:
-    mc_ctrl : 
-      tree_name : KEE
-      file_path : '/publicfs/ucas/user/campoverde/Data/RK/ctrl_BuToKpEE_ana_ee/v1/2024.root'
-    dt_ctrl : 
-      tree_name : KEE
-      file_path : '/publicfs/ucas/user/campoverde/Data/RK/data_ana_cut_bp_ee/v1/2024.root'
+    sig :
+      file_path : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/bdt_train/v3/bdks_jpsi_B0ToKpPimEE_ana/v2/2024_ETOS/*.root
+      tree_name : ETOS 
+    bkg :
+      file_path : /publicfs/lhcb/user/campoverde/Data/cache/tools/apply_selection/bdt_train/v3/data_ana_mva_bd/v4/2024_ETOS/*.root
+      tree_name : ETOS 
 define :
-    mass_dtf   : 'B_const_mass_M'
-    min_ll_pt  : 'TMath::Min(L1_PT, L2_PT)'
-    max_ll_pt  : 'TMath::Max(L1_PT, L2_PT)'
-    min_ll_eta : 'TMath::Min(L1_ETA, L2_ETA)'
-    max_ll_eta : 'TMath::Max(L1_ETA, L2_ETA)'
+    mass        : 'B_nopv_const_mass_M[0]'
+    min_ll_pt   : 'TMath::Min(L1_PT , L2_PT)'
+    max_ll_pt   : 'TMath::Max(L1_PT , L2_PT)'
+    min_hh_pt   : 'TMath::Min(H1_PT , H2_PT)'
+    max_hh_pt   : 'TMath::Max(H1_PT , H2_PT)'
+    min_ll_ipc  : 'TMath::Min(L1_IPCHI2_OWNPV, L2_IPCHI2_OWNPV)'
+    max_ll_ipc  : 'TMath::Max(L1_IPCHI2_OWNPV, L2_IPCHI2_OWNPV)'
 saving :
     score  : BDT # Place where the classifier signal probability will go 
     others : ['B_const_mass_M']
     out_dir: 'output/application/cut_ctrl_2024'
-model  : 'output/cut_ctrl_2024/bukee_model.pkl'
+model  : /publicfs/ucas/user/campoverde/Data/RK/MVA/run3/v3/bdkstee/model.pkl    
+    
+    
+    
+    
+    
