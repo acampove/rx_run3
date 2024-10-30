@@ -14,6 +14,7 @@ from sklearn.model_selection import StratifiedKFold
 
 from ROOT import RDataFrame
 
+import dmu.ml.utilities    as ut
 from dmu.ml.cv_classifier    import CVClassifier as cls
 from dmu.plotting.plotter_1d import Plotter1D    as Plotter
 from dmu.logging.log_store   import LogStore
@@ -68,7 +69,26 @@ class TrainMva:
         return df, numpy.array(l_lab)
     # ---------------------------------------------
     def _cleanup(self, df : pnd.DataFrame) -> pnd.DataFrame:
-        return df
+        l_hash = ut.get_hashes(df, rvalue='list')
+        s_hash = set(l_hash)
+
+        ninit = len(l_hash)
+        nfinl = len(s_hash)
+
+        if ninit == nfinl:
+            log.debug('No cleaning needed for dataframe')
+            return df
+
+        log.warning(f'Repeated entries found, cleaning up: {ninit} -> {nfinl}')
+
+        df['hash_index'] = l_hash
+        df               = df.set_index('hash_index', drop=True)
+        df_clean         = df[~df.index.duplicated(keep='first')]
+
+        if not isinstance(df_clean, pnd.DataFrame):
+            raise ValueError('Cleaning did not return pandas dataframe')
+
+        return df_clean
     # ---------------------------------------------
     def _get_model(self, arr_index : numpy.ndarray) -> cls:
         model = cls(cfg = self._cfg)
