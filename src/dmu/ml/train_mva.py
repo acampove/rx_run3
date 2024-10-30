@@ -52,7 +52,10 @@ class TrainMva:
         self._df_ft, self._l_lab = self._get_inputs()
     # ---------------------------------------------
     def _get_inputs(self) -> tuple[pnd.DataFrame, numpy.ndarray]:
+        log.info('Getting signal')
         df_sig, arr_lab_sig = self._get_sample_inputs(self._rdf_sig, label = 1)
+
+        log.info('Getting background')
         df_bkg, arr_lab_bkg = self._get_sample_inputs(self._rdf_bkg, label = 0)
 
         df      = pnd.concat([df_sig, df_bkg], axis=0)
@@ -60,7 +63,7 @@ class TrainMva:
 
         return df, arr_lab
     # ---------------------------------------------
-    def _get_sample_inputs(self, rdf : RDataFrame, label : int) -> Union[pnd.DataFrame, numpy.ndarray]:
+    def _get_sample_inputs(self, rdf : RDataFrame, label : int) -> tuple[pnd.DataFrame, numpy.ndarray]:
         d_ft = rdf.AsNumpy(self._l_ft_name)
         df   = pnd.DataFrame(d_ft)
         df   = self._cleanup(df)
@@ -69,6 +72,25 @@ class TrainMva:
         return df, numpy.array(l_lab)
     # ---------------------------------------------
     def _cleanup(self, df : pnd.DataFrame) -> pnd.DataFrame:
+        df = self._remove_repeated(df)
+        df = self._remove_nans(df)
+
+        return df
+    # ---------------------------------------------
+    def _remove_nans(self, df : pnd.DataFrame) -> pnd.DataFrame:
+        if not df.isna().any().any():
+            log.debug('No NaNs found in dataframe')
+            return df
+
+        ninit = len(df)
+        df    = df.dropna()
+        nfinl = len(df)
+
+        log.warning(f'NaNs found, cleaning dataset: {ninit} -> {nfinl}')
+
+        return df
+    # ---------------------------------------------
+    def _remove_repeated(self, df : pnd.DataFrame) -> pnd.DataFrame:
         l_hash = ut.get_hashes(df, rvalue='list')
         s_hash = set(l_hash)
 
