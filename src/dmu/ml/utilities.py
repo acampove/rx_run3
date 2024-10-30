@@ -3,6 +3,7 @@ Module containing utility functions for ML tools
 '''
 
 import hashlib
+from typing import Union
 
 import pandas as pnd
 
@@ -11,15 +12,12 @@ from dmu.logging.log_store import LogStore
 log = LogStore.add_logger('dmu:ml:utilities')
 
 # ----------------------------------
-def get_hashes(df_ft, rvalue='set'):
+def get_hashes(df_ft : pnd.DataFrame, rvalue : str ='set') -> Union[set, list]:
     '''
     Will return hashes for each row in the feature dataframe
 
     rvalue (str): Return value, can be a set or a list
     '''
-    if not isinstance(df_ft, pnd.DataFrame):
-        log.error('Features need to be in a pandas dataframe')
-        raise ValueError
 
     if   rvalue == 'set':
         res = { hash_from_row(row) for _, row in df_ft.iterrows() }
