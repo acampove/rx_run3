@@ -11,7 +11,56 @@ from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:ml:utilities')
 
+# ---------------------------------------------
+# Cleanup of dataframe with features
+# ---------------------------------------------
+def cleanup(df : pnd.DataFrame) -> pnd.DataFrame:
+    '''
+    Takes pandas dataframe with features for classification
+    Removes repeated entries and entries with nans
+    Returns dataframe
+    '''
+    df = _remove_repeated(df)
+    df = _remove_nans(df)
+
+    return df
+# ---------------------------------------------
+def _remove_nans(df : pnd.DataFrame) -> pnd.DataFrame:
+    if not df.isna().any().any():
+        log.debug('No NaNs found in dataframe')
+        return df
+
+    ninit = len(df)
+    df    = df.dropna()
+    nfinl = len(df)
+
+    log.warning(f'NaNs found, cleaning dataset: {ninit} -> {nfinl}')
+
+    return df
+# ---------------------------------------------
+def _remove_repeated(df : pnd.DataFrame) -> pnd.DataFrame:
+    l_hash = get_hashes(df, rvalue='list')
+    s_hash = set(l_hash)
+
+    ninit = len(l_hash)
+    nfinl = len(s_hash)
+
+    if ninit == nfinl:
+        log.debug('No cleaning needed for dataframe')
+        return df
+
+    log.warning(f'Repeated entries found, cleaning up: {ninit} -> {nfinl}')
+
+    df['hash_index'] = l_hash
+    df               = df.set_index('hash_index', drop=True)
+    df_clean         = df[~df.index.duplicated(keep='first')]
+
+    if not isinstance(df_clean, pnd.DataFrame):
+        raise ValueError('Cleaning did not return pandas dataframe')
+
+    return df_clean
 # ----------------------------------
+# ---------------------------------------------
 def get_hashes(df_ft : pnd.DataFrame, rvalue : str ='set') -> Union[set, list]:
     '''
     Will return hashes for each row in the feature dataframe

@@ -66,51 +66,10 @@ class TrainMva:
     def _get_sample_inputs(self, rdf : RDataFrame, label : int) -> tuple[pnd.DataFrame, numpy.ndarray]:
         d_ft = rdf.AsNumpy(self._l_ft_name)
         df   = pnd.DataFrame(d_ft)
-        df   = self._cleanup(df)
+        df   = ut.cleanup(df)
         l_lab= len(df) * [label]
 
         return df, numpy.array(l_lab)
-    # ---------------------------------------------
-    def _cleanup(self, df : pnd.DataFrame) -> pnd.DataFrame:
-        df = self._remove_repeated(df)
-        df = self._remove_nans(df)
-
-        return df
-    # ---------------------------------------------
-    def _remove_nans(self, df : pnd.DataFrame) -> pnd.DataFrame:
-        if not df.isna().any().any():
-            log.debug('No NaNs found in dataframe')
-            return df
-
-        ninit = len(df)
-        df    = df.dropna()
-        nfinl = len(df)
-
-        log.warning(f'NaNs found, cleaning dataset: {ninit} -> {nfinl}')
-
-        return df
-    # ---------------------------------------------
-    def _remove_repeated(self, df : pnd.DataFrame) -> pnd.DataFrame:
-        l_hash = ut.get_hashes(df, rvalue='list')
-        s_hash = set(l_hash)
-
-        ninit = len(l_hash)
-        nfinl = len(s_hash)
-
-        if ninit == nfinl:
-            log.debug('No cleaning needed for dataframe')
-            return df
-
-        log.warning(f'Repeated entries found, cleaning up: {ninit} -> {nfinl}')
-
-        df['hash_index'] = l_hash
-        df               = df.set_index('hash_index', drop=True)
-        df_clean         = df[~df.index.duplicated(keep='first')]
-
-        if not isinstance(df_clean, pnd.DataFrame):
-            raise ValueError('Cleaning did not return pandas dataframe')
-
-        return df_clean
     # ---------------------------------------------
     def _get_model(self, arr_index : numpy.ndarray) -> cls:
         model = cls(cfg = self._cfg)
