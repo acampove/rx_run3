@@ -24,18 +24,30 @@ class TrainMva:
     Interface to scikit learn used to train classifier
     '''
     # ---------------------------------------------
-    def __init__(self, bkg=None, sig=None, cfg : dict | None = None):
+    def __init__(self, bkg=None, sig=None, cfg=None):
         '''
         bkg (ROOT dataframe): Holds real data
         sig (ROOT dataframe): Holds simulation
         cfg (dict)          : Dictionary storing configuration for training
         '''
+        if not isinstance(bkg, RDataFrame):
+            raise ValueError('Background dataframe is not a ROOT dataframe')
+
+        if not isinstance(sig, RDataFrame):
+            raise ValueError('Signal dataframe is not a ROOT dataframe')
+
+        if not isinstance(cfg, dict):
+            raise ValueError('Config dictionary is not a dictionary')
+
         self._rdf_bkg = bkg
         self._rdf_sig = sig
         self._cfg    = cfg if cfg is not None else {}
 
         self._l_ft_name = None
         self._l_model   = None
+
+        self._df_ft = self._get_features()
+        self._l_lab = self._get_labels()
     # ---------------------------------------------
     def _get_features(self):
         '''
