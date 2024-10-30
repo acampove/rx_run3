@@ -8,6 +8,8 @@ import pandas as pnd
 import numpy
 import matplotlib.pyplot as plt
 
+from ROOT import RDataFrame
+
 from sklearn.metrics         import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 
@@ -171,10 +173,10 @@ class TrainMva:
         plt.close()
     # ---------------------------------------------
     def _plot_roc(self,
-                  l_lab_ts : list[float],
-                  l_prb_ts : list[float],
-                  l_lab_tr : list[float],
-                  l_prb_tr : list[float],
+                  l_lab_ts : numpy.ndarray,
+                  l_prb_ts : numpy.ndarray,
+                  l_lab_tr : numpy.ndarray,
+                  l_prb_tr : numpy.ndarray,
                   ifold    : int):
         '''
         Takes the labels and the probabilities and plots ROC
