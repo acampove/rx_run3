@@ -6,10 +6,11 @@ from typing              import Union
 from dataclasses         import dataclass
 from importlib.resources import files
 
+from ROOT import RDF
+
 import pandas as pnd
 import numpy
 import yaml
-from ROOT import RDF, RDataFrame
 
 from dmu.logging.log_store import LogStore
 
