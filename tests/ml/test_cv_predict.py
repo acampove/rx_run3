@@ -62,3 +62,16 @@ def test_overlap():
     cvp     = CVPredict(models=l_model, rdf=rdf_sig)
     cvp.predict()
 #--------------------------------------------------------------------
+def test_cleanup():
+    '''
+    Tests prediction when input dataset needs to be cleaned 
+    '''
+
+    LogStore.set_level('dmu:ml:cv_predict', 10)
+    rdf_sig = ut.get_rdf(kind='sig', add_nans=True)
+    rdf_bkg = ut.get_rdf(kind='bkg', repeated=True)
+    l_model = _get_models(rdf_sig, rdf_bkg)
+
+    rdf     = ut.get_rdf(kind='sig')
+    cvp     = CVPredict(models=l_model, rdf=rdf)
+    cvp.predict()
