@@ -37,3 +37,14 @@ def test_repeated():
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run()
 # -------------------------------
+def test_nans():
+    '''
+    Tests training when inputs have NaNs
+    '''
+    rdf_sig = ut.get_rdf(kind='sig', add_nans=True)
+    rdf_bkg = ut.get_rdf(kind='bkg')
+    cfg     = ut.get_config('ml/tests/train_mva.yaml')
+
+    obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
+    obj.run()
+# -------------------------------
