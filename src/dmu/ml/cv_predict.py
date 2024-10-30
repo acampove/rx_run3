@@ -42,6 +42,7 @@ class CVPredict:
         l_ft  = model.features
         d_data= self._rdf.AsNumpy(l_ft)
         df_ft = pnd.DataFrame(d_data)
+        df_ft = ut.cleanup(df_ft)
 
         nfeat = len(l_ft)
         log.info(f'Found {nfeat} features')
