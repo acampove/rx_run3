@@ -104,7 +104,7 @@ class TrainMva:
         ifold=0
         for arr_itr, arr_its in kfold.split(self._df_ft, self._l_lab):
             log.debug(20 * '-')
-            log.debug(f'Fold: {ifold}')
+            log.info(f'Training fold: {ifold}')
             log.debug(20 * '-')
             model = self._get_model(arr_itr)
             l_model.append(model)
