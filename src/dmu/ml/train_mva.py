@@ -80,13 +80,23 @@ class TrainMva:
 
         return arr_lab
     # ---------------------------------------------
-    def _get_model(self):
+    def _get_model(self, arr_index : numpy.ndarray) -> cls:
+        model = cls(cfg = self._cfg)
+        df_ft = self._df_ft.iloc[arr_index]
+        l_lab = self._l_lab[arr_index]
+
+        log.debug(f'Training feature shape: {df_ft.shape}')
+        log.debug(f'Training label size: {len(l_lab)}')
+
+        model.fit(df_ft, l_lab)
+
+        return model
+    # ---------------------------------------------
+    def _get_models(self):
         # pylint: disable = too-many-locals
         '''
         Will create models, train them and return them
         '''
-        df_ft = self._get_features()
-        l_lab = self._get_labels()
         nfold = self._cfg['training']['nfold']
         rdmst = self._cfg['training']['rdm_stat']
 
