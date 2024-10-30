@@ -3,6 +3,7 @@ Contains unit tests for CVPredict class
 '''
 
 import glob
+import pytest
 
 import joblib
 
@@ -13,6 +14,11 @@ from dmu.ml.cv_predict     import CVPredict
 import dmu.testing.utilities as ut
 
 log = LogStore.add_logger('dmu:ml:tests:cv_predict')
+#--------------------------------------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _set_logs():
+    LogStore.set_level('dmu:ml:cv_predict', 10)
+    LogStore.set_level('dmu:ml:utilities' , 10)
 #--------------------------------------------------------------------
 def _get_models(rdf_sig, rdf_bkg):
     '''
@@ -62,9 +68,9 @@ def test_overlap():
     cvp     = CVPredict(models=l_model, rdf=rdf_sig)
     cvp.predict()
 #--------------------------------------------------------------------
-def test_cleanup():
+def test_patch_and_tag():
     '''
-    Tests prediction when input dataset needs to be cleaned 
+    Tests prediction when input dataset needs to be cleaned
     '''
 
     LogStore.set_level('dmu:ml:cv_predict', 10)
@@ -72,6 +78,8 @@ def test_cleanup():
     rdf_bkg = ut.get_rdf(kind='bkg', repeated=True)
     l_model = _get_models(rdf_sig, rdf_bkg)
 
-    rdf     = ut.get_rdf(kind='sig')
+    log.info('Predicting')
+
+    rdf     = ut.get_rdf(kind='sig', add_nans=True)
     cvp     = CVPredict(models=l_model, rdf=rdf)
     cvp.predict()
