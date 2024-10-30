@@ -22,18 +22,22 @@ class Data:
     '''
     nentries = 3000
 # -------------------------------
-def _double_rdf_from_data(d_data : dict) -> RDataFrame:
+def _double_data(d_data : dict) -> dict:
     df_1   = pnd.DataFrame(d_data)
     df_2   = pnd.DataFrame(d_data)
 
     df     = pnd.concat([df_1, df_2], axis=0)
 
     d_data = { name : df[name].to_numpy() for name in df.columns }
-    rdf    = RDF.FromNumpy(d_data)
 
-    return rdf
+    return d_data
 # -------------------------------
-def get_rdf(kind : Union[str,None] = None, repeated : bool =False):
+def _add_nans(d_data : dict) -> dict:
+    return d_data
+# -------------------------------
+def get_rdf(kind : Union[str,None] = None,
+            repeated : bool        = False,
+            add_nans : bool        = False):
     '''
     Return ROOT dataframe with toy data
     '''
@@ -53,9 +57,12 @@ def get_rdf(kind : Union[str,None] = None, repeated : bool =False):
         raise ValueError
 
     if repeated:
-        rdf = _double_rdf_from_data(d_data)
-    else:
-        rdf = RDF.FromNumpy(d_data)
+        d_data = _double_data(d_data)
+
+    if add_nans:
+        d_data = _add_nans(d_data)
+
+    rdf = RDF.FromNumpy(d_data)
 
     return rdf
 # -------------------------------
