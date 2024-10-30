@@ -33,6 +33,8 @@ class CVPredict:
 
         self._l_model = models
         self._rdf     = rdf
+
+        self._arr_patch : numpy.ndarray
     # --------------------------------------------
     def _get_df(self):
         '''
@@ -42,7 +44,10 @@ class CVPredict:
         l_ft  = model.features
         d_data= self._rdf.AsNumpy(l_ft)
         df_ft = pnd.DataFrame(d_data)
-        df_ft = ut.cleanup(df_ft)
+        df_ft = ut.patch_and_tag(df_ft)
+
+        if 'patched_indices' in df_ft.attrs:
+            self._arr_patch = df_ft.attrs['patched_indices']
 
         nfeat = len(l_ft)
         log.info(f'Found {nfeat} features')
@@ -106,7 +111,17 @@ class CVPredict:
 
         return arr_prob
     # --------------------------------------------
-    def predict(self):
+    def _patch_probabilities(self, arr_prb : numpy.ndarray) -> numpy.ndarray:
+        if not hasattr(self, '_arr_patch'):
+            return arr_prb
+
+        nentries = len(self._arr_patch)
+        log.warning(f'Patching {nentries} probabilities')
+        arr_prb[self._arr_patch] = -1
+
+        return arr_prb
+    # --------------------------------------------
+    def predict(self) -> numpy.ndarray:
         '''
         Will return array of prediction probabilities for the signal category
         '''
@@ -115,10 +130,12 @@ class CVPredict:
 
         if self._non_overlapping_hashes(model, df_ft):
             log.debug('No intersecting hashes found between model and data')
-            l_prb = model.predict_proba(df_ft)
+            arr_prb = model.predict_proba(df_ft)
         else:
             log.info('Intersecting hashes found between model and data')
-            l_prb = self._predict_with_overlap(df_ft)
+            arr_prb = self._predict_with_overlap(df_ft)
 
-        return l_prb
+        arr_prb = self._patch_probabilities(arr_prb)
+
+        return arr_prb
 # ---------------------------------------
