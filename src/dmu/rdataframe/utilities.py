@@ -9,7 +9,7 @@ from dataclasses import dataclass
 
 import numpy
 
-from ROOT import RDataFrame 
+from ROOT import RDataFrame
 
 from dmu.logging.log_store import LogStore
 
@@ -24,7 +24,7 @@ class Data:
     l_good_type = [int, numpy.bool_, numpy.int32, numpy.uint32, numpy.int64, numpy.uint64, numpy.float32, numpy.float64]
     d_cast_type = {'bool': numpy.int32}
 # ---------------------------------------------------------------------
-def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str, d_opt : dict | None = None): 
+def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str, d_opt : dict | None = None):
     '''
     Will take a dataframe, an array of numbers and a string
     Will add the array as a colunm to the dataframe
@@ -38,7 +38,7 @@ def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str, d_o
         raise ValueError('Array of values not introduced')
 
     if 'exclude_re' not in d_opt:
-        d_opt['exclude_re'] = None 
+        d_opt['exclude_re'] = None
 
     v_col_org = rdf.GetColumnNames()
     l_col_org = [name.c_str() for name in v_col_org ]
