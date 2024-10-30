@@ -24,15 +24,14 @@ training :
     features : 
         - B_PT
         - B_IPCHI2_OWNPV
-        - B_FDCHI2
-        - B_ENDVERTEX_CHI2DOF
-        - B_BPVDIRA
+        - B_FDCHI2_OWNPV
+        - B_ENDVERTEX_CHI2DOF 
+        - B_DIRA_OWNPV
     #
         - Jpsi_PT
-        - Jpsi_IPCHI2_OWNPV
-        - Jpsi_FDCHI2
+        - Jpsi_DIRA_OWNPV
         - Jpsi_CHI2DOF
-        - Jpsi_DIRA
+        - Jpsi_IPCHI2_OWNPV
     #
         - min_ll_pt
         - max_ll_pt
@@ -59,7 +58,7 @@ plotting:
         plots:
             B_PT :
               normalized : true
-              binning : [0, 50000, 100]
+              binning : [0, 30000, 100]
               yscale  : 'log'
               labels  : ['$p_T(B^+)$', '']
             B_IPCHI2_OWNPV :
@@ -77,12 +76,12 @@ plotting:
               binning : [0, 10, 100]
               yscale  : 'log'
               labels  : ['$\chi^2/dof(B^+)$', '']
-            B_BPVDIRA:
+            B_DIRA_OWNPV:
               normalized : true
               binning : [0.9995, 1, 100]
               yscale  : 'log'
               labels  : ['DIRA$(B^+)$', '']
-      #
+            
             Jpsi_PT :
               normalized : true
               binning : [0, 50000, 100]
@@ -90,28 +89,23 @@ plotting:
               labels  : ['$p_T(J/\psi)$', '']
             Jpsi_IPCHI2_OWNPV:
               normalized : true
-              binning : [0, 20, 100]
-              yscale  : 'linear'
+              binning : [0, 500, 100]
+              yscale  : 'log'
               labels  : ['$IP_{\chi^2}(J/\psi)$', '']
-            Jpsi_FDCHI2_OWNPV:
-              normalized : true
-              binning : [0, 20, 100]
-              yscale  : 'linear'
-              labels  : ['$FD_{\chi^2}(J/\psi)$', '']
             Jpsi_CHI2DOF:
               normalized : true
               binning : [0, 10, 100]
-              yscale  : 'linear'
+              yscale  : 'log'
               labels  : ['$\chi^2/dof(J/\psi)$', '']
             Jpsi_DIRA_OWNPV:
               normalized : true
-              binning : [0.9995, 1, 100]
+              binning : [0.99,  1, 100]
               yscale  : 'log'
               labels  : ['DIRA$(J/\psi)$', '']
       #
             min_ll_pt:
               normalized : true
-              binning : [0, 20000, 100]
+              binning : [0, 10000, 100]
               yscale  : 'log'
               labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
             max_ll_pt:
