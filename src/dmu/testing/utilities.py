@@ -33,6 +33,13 @@ def _double_data(d_data : dict) -> dict:
     return d_data
 # -------------------------------
 def _add_nans(d_data : dict) -> dict:
+    df_good   = pnd.DataFrame(d_data)
+    df_bad    = pnd.DataFrame(d_data)
+    df_bad[:] = numpy.nan
+
+    df        = pnd.concat([df_good, df_bad])
+    d_data    = { name : df[name].to_numpy() for name in df.columns }
+
     return d_data
 # -------------------------------
 def get_rdf(kind : Union[str,None] = None,
