@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 from sklearn.metrics         import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 
+from ROOT import RDataFrame
+
 from dmu.ml.cv_classifier    import CVClassifier as cls
 from dmu.plotting.plotter_1d import Plotter1D    as Plotter
 from dmu.logging.log_store   import LogStore
@@ -44,39 +46,28 @@ class TrainMva:
         self._l_model   : cls
 
         self._l_ft_name = self._cfg['training']['features']
-        self._df_ft     = self._get_features()
-        self._l_lab     = self._get_labels()
+
+        self._df_ft, self._l_lab = self._get_inputs()
     # ---------------------------------------------
-    def _get_features(self):
-        '''
-        Returns pandas dataframe with features
-        '''
+    def _get_inputs(self) -> tuple[pnd.DataFrame, numpy.ndarray]:
+        df_sig, l_lab_sig = self._get_sample_inputs(self._rdf_sig, label = 1)
+        df_bkg, l_lab_bkg = self._get_sample_inputs(self._rdf_bkg, label = 0)
 
-        d_ft_bkg = self._rdf_bkg.AsNumpy(self._l_ft_name)
-        d_ft_sig = self._rdf_sig.AsNumpy(self._l_ft_name)
+        df    = pnd.concat([df_sig, df_bkg], axis=0)
+        l_lab = l_lab_sig + l_lab_bkg
 
-        df_bkg = pnd.DataFrame(d_ft_bkg)
-        df_sig = pnd.DataFrame(d_ft_sig)
+        return df, numpy.array(l_lab)
+    # ---------------------------------------------
+    def _get_sample_inputs(self, rdf : RDataFrame, label : int):
+        d_ft = rdf.AsNumpy(self._l_ft_name)
+        df   = pnd.DataFrame(d_ft)
+        df   = self._cleanup(df)
+        l_lab= len(df) * [label]
 
-        df     = pnd.concat([df_bkg, df_sig], axis=0)
-
-        log.info(f'Using features with shape: {df.shape}')
-
+        return df, l_lab
+    # ---------------------------------------------
+    def _cleanup(self, df : pnd.DataFrame) -> pnd.DataFrame:
         return df
-    # ---------------------------------------------
-    def _get_labels(self):
-        '''
-        Returns labels, 0 for background, 1 for signal
-        '''
-        n_bkg  = self._rdf_bkg.Count().GetValue()
-        n_sig  = self._rdf_sig.Count().GetValue()
-        l_lab = n_bkg * [0] + n_sig * [1]
-
-        arr_lab = numpy.array(l_lab)
-
-        log.info(f'Using labels with shape: {arr_lab.shape}')
-
-        return arr_lab
     # ---------------------------------------------
     def _get_model(self, arr_index : numpy.ndarray) -> cls:
         model = cls(cfg = self._cfg)
