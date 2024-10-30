@@ -5,12 +5,26 @@ Module containing utility functions for ML tools
 import hashlib
 from typing import Union
 
+import numpy
 import pandas as pnd
 
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:ml:utilities')
+# ---------------------------------------------
+# Patch dataframe with features
+# ---------------------------------------------
+def patch_and_tag(df : pnd.DataFrame, value : float = 0) -> pnd.DataFrame:
+    '''
+    Takes panda dataframe, replaces NaNs with value introduced, by default 0
+    Returns array of indices where the replacement happened
+    '''
+    l_nan = df.index[df.isna().any(axis=1)].tolist()
+    df_pa = df.fillna(value)
 
+    df_pa.attrs['patched_indices'] = numpy.array(l_nan)
+
+    return df_pa
 # ---------------------------------------------
 # Cleanup of dataframe with features
 # ---------------------------------------------
