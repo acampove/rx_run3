@@ -2,6 +2,7 @@
 Module with TrainMva class
 '''
 import os
+from typing import Union
 
 import joblib
 import pandas as pnd
@@ -50,21 +51,21 @@ class TrainMva:
         self._df_ft, self._l_lab = self._get_inputs()
     # ---------------------------------------------
     def _get_inputs(self) -> tuple[pnd.DataFrame, numpy.ndarray]:
-        df_sig, l_lab_sig = self._get_sample_inputs(self._rdf_sig, label = 1)
-        df_bkg, l_lab_bkg = self._get_sample_inputs(self._rdf_bkg, label = 0)
+        df_sig, arr_lab_sig = self._get_sample_inputs(self._rdf_sig, label = 1)
+        df_bkg, arr_lab_bkg = self._get_sample_inputs(self._rdf_bkg, label = 0)
 
-        df    = pnd.concat([df_sig, df_bkg], axis=0)
-        l_lab = l_lab_sig + l_lab_bkg
+        df      = pnd.concat([df_sig, df_bkg], axis=0)
+        arr_lab = numpy.concatenate([arr_lab_sig, arr_lab_bkg])
 
-        return df, numpy.array(l_lab)
+        return df, arr_lab
     # ---------------------------------------------
-    def _get_sample_inputs(self, rdf : RDataFrame, label : int):
+    def _get_sample_inputs(self, rdf : RDataFrame, label : int) -> Union[pnd.DataFrame, numpy.ndarray]:
         d_ft = rdf.AsNumpy(self._l_ft_name)
         df   = pnd.DataFrame(d_ft)
         df   = self._cleanup(df)
         l_lab= len(df) * [label]
 
-        return df, l_lab
+        return df, numpy.array(l_lab)
     # ---------------------------------------------
     def _cleanup(self, df : pnd.DataFrame) -> pnd.DataFrame:
         return df
