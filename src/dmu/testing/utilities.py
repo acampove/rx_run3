@@ -27,7 +27,8 @@ def _double_rdf_from_data(d_data : dict) -> RDataFrame:
     df_2   = pnd.DataFrame(d_data)
 
     df     = pnd.concat([df_1, df_2], axis=0)
-    d_data = df.to_dict()
+
+    d_data = { name : df[name].to_numpy() for name in df.columns }
     rdf    = RDF.FromNumpy(d_data)
 
     return rdf
