@@ -71,33 +71,31 @@ class CVPredict:
 
         return False
     # --------------------------------------------
-    def _predict_with_overlap(self, df_ft):
+    def _predict_with_overlap(self, df_ft : pnd.DataFrame) -> numpy.ndarray:
         '''
         Takes pandas dataframe with features
 
         Will return numpy array of prediction probabilities when there is an overlap
         of data and model hashes
         '''
-        # pylint: disable = too-many-locals
         df_ft      = ut.index_with_hashes(df_ft)
-        ntotal     = len(df_ft)
         d_prob     = {}
-        log.debug(f'Total size: {ntotal}')
+        ntotal     = len(df_ft)
+        log.debug(30 * '-')
+        log.info(f'Total size: {ntotal}')
+        log.debug(30 * '-')
         for model in tqdm.tqdm(self._l_model, ascii=' -'):
             d_prob_tmp = self._evaluate_model(model, df_ft)
             d_prob.update(d_prob_tmp)
 
-        ndata = len(df_ft)
-        nprob = len(d_prob)
-
+        ndata  = len(df_ft)
+        nprob  = len(d_prob)
         if ndata != nprob:
-            log.error(f'Dataset size ({ndata}) and probabilities size ({nprob}) differ')
-            raise ValueError
+            log.warning(f'Dataset size ({ndata}) and probabilities size ({nprob}) differ, likely there are repeated entries')
 
-        l_prob   = [ d_prob[hsh] for hsh in df_ft.index ]
-        arr_prob = numpy.array(l_prob)
+        l_prob = [ d_prob[hsh] for hsh in df_ft.index ]
 
-        return arr_prob
+        return numpy.array(l_prob)
     # --------------------------------------------
     def _evaluate_model(self, model : CVClassifier, df_ft : pnd.DataFrame) -> dict[str, float]:
         '''
