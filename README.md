@@ -154,6 +154,16 @@ plotting:
 
 the `TrainMva` is just a wrapper to `scikit-learn` that enables cross-validation (and therefore that explains the `nfolds` setting).
 
+### Caveats
+
+When training on real data, several things might go wrong and the code will try to deal with them in the following ways:
+
+- **Repeated entries**: Entire rows with features might appear multiple times. When doing cross-validation, this might mean that two identical entries
+will end up in different folds. The tool checks for wether a model is evaluated for an entry that was used for training and raise an exception. Thus, repeated
+entries will be removed before training.
+
+- **NaNs**: Entries with NaNs will break the training with the scikit GradientBoostClassifier base class. Thus, we also remove them from the training.
+
 ## Application
 
 Given the models already trained, one can use them with:
@@ -177,6 +187,14 @@ The hashes of the training samples are stored in the pickled model itself; which
 
 If a sample exist, that was used in the training of _every_ model, no model can be chosen for the prediction and an
 `CVSameData` exception will be risen.
+
+### Caveats
+
+When evaluating the model with real data, problems might occur, we deal with them as follows:
+
+- **Repeated entries**: When there are repeated features in the dataset to be evaluated we assign the same probabilities, no filtering is used.
+- **NaNs**: Entries with NaNs will break the evaluation. These entries will be _patched_  with zeros and evaluated. However, before returning, the probabilities will be
+saved as -1. I.e. entries with NaNs will have probabilities of -1.
 
 # Rdataframes
 
