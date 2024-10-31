@@ -89,7 +89,7 @@ def _get_rdf():
             rdf = rdf.Range(Data.max_entries)
 
         nentries = rdf.Count().GetValue()
-        log.info(f'Using {nentries} entries for sample {name}')
+        log.warning(f'Using {nentries} entries for sample {name}')
 
         d_rdf[name] = rdf
 
@@ -102,6 +102,7 @@ def _apply_classifier(name, rdf):
     '''
     cvp     = CVPredict(models=Data.l_model, rdf=rdf)
     arr_prb = cvp.predict()
+
     l_sig   = [ prb[1] for prb in arr_prb ]
     arr_sig = numpy.array(l_sig)
 
@@ -109,6 +110,9 @@ def _apply_classifier(name, rdf):
     rdf     = ut.add_column(rdf, arr_sig, name)
 
     return rdf
+#---------------------------------
+def _set_loggers():
+    LogStore.set_level('dmu:ml:cv_predict', 20)
 #---------------------------------
 def _load_models():
     '''
@@ -131,8 +135,7 @@ def _save_rdf(tname, fname, rdf):
     Will take ROOT dataframe treename and file name (no extension)
     Will save taking a snapshot
     '''
-    cls_var = Data.cfg_dict['saving']['score']
-    l_var   = Data.cfg_dict['saving']['others'] + [cls_var]
+    l_var   = Data.cfg_dict['saving']['branches']
     out_dir = Data.cfg_dict['saving']['out_dir']
 
     os.makedirs(out_dir, exist_ok=True)
@@ -140,7 +143,10 @@ def _save_rdf(tname, fname, rdf):
 
     log.info(f'Saving to: {out_path}/{tname}')
 
-    rdf.Snapshot(tname, out_path, l_var)
+    if l_var is None:
+        rdf.Snapshot(tname, out_path)
+    else:
+        rdf.Snapshot(tname, out_path, l_var)
 #---------------------------------
 def main():
     '''
@@ -150,6 +156,7 @@ def main():
     _get_args()
     _load_config()
     _load_models()
+    _set_loggers()
 
     d_rdf = _get_rdf()
 
