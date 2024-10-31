@@ -105,15 +105,20 @@ class CVPredict:
         s_mod_hash = model.hashes
 
         s_dif_hash = s_dat_hash - s_mod_hash
+
+        ndif = len(s_dif_hash)
+        ndat = len(s_dat_hash)
+        nmod = len(s_mod_hash)
+        log.debug(f'{ndif:<20}{"=":10}{ndat:<20}{"-":10}{nmod:<20}')
+
         df_ft_group= df_ft.loc[df_ft.index.isin(s_dif_hash)]
 
         l_prob = model.predict_proba(df_ft_group)
         l_hash = list(df_ft_group.index)
-
         d_prob = dict(zip(l_hash, l_prob))
-
-        ngroup = len(l_prob)
-        log.info(f'Hash group size: {ngroup}')
+        nfeat  = len(df_ft_group)
+        nprob  = len(l_prob)
+        log.debug(f'{nfeat:<10}{"->":10}{nprob:<10}')
 
         return d_prob
     # --------------------------------------------
