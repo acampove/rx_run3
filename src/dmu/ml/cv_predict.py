@@ -9,7 +9,8 @@ import tqdm
 
 from ROOT import RDataFrame
 
-import dmu.ml.utilities as ut
+import dmu.ml.utilities     as ut
+import dmu.ml.cv_classifier as CVClassifier
 
 from dmu.logging.log_store import LogStore
 
@@ -78,26 +79,13 @@ class CVPredict:
         of data and model hashes
         '''
         # pylint: disable = too-many-locals
-        df_ft = ut.index_with_hashes(df_ft)
-
-        s_dat_hash = set(df_ft.index)
-
-        d_prob        = {}
-
-        ntotal = len(s_dat_hash)
+        df_ft      = ut.index_with_hashes(df_ft)
+        ntotal     = len(df_ft)
+        d_prob     = {}
         log.debug(f'Total size: {ntotal}')
         for model in tqdm.tqdm(self._l_model, ascii=' -'):
-            s_mod_hash = model.hashes
-            s_hash     = s_dat_hash.difference(s_mod_hash)
-            df_ft_group= df_ft.loc[df_ft.index.isin(s_hash)]
-            l_prob     = model.predict_proba(df_ft_group)
-            l_hash     = list(df_ft_group.index)
-
-            d_prob_tmp = dict(zip(l_hash, l_prob))
+            d_prob_tmp = self._evaluate_model(model, df_ft)
             d_prob.update(d_prob_tmp)
-
-            ngroup = len(l_prob)
-            log.debug(f'Hash group size: {ngroup}')
 
         ndata = len(df_ft)
         nprob = len(d_prob)
@@ -110,6 +98,26 @@ class CVPredict:
         arr_prob = numpy.array(l_prob)
 
         return arr_prob
+    # --------------------------------------------
+    def _evaluate_model(self, model : CVClassifier, df_ft : pnd.DataFrame) -> dict[str, float]:
+        '''
+        Evaluate the dataset for one of the folds, by taking the model and the full dataset
+        '''
+        s_dat_hash = set(df_ft.index)
+        s_mod_hash = model.hashes
+
+        s_dif_hash = s_dat_hash - s_mod_hash
+        df_ft_group= df_ft.loc[df_ft.index.isin(s_dif_hash)]
+
+        l_prob = model.predict_proba(df_ft_group)
+        l_hash = list(df_ft_group.index)
+
+        d_prob = dict(zip(l_hash, l_prob))
+
+        ngroup = len(l_prob)
+        log.info(f'Hash group size: {ngroup}')
+
+        return d_prob
     # --------------------------------------------
     def _patch_probabilities(self, arr_prb : numpy.ndarray) -> numpy.ndarray:
         if not hasattr(self, '_arr_patch'):
