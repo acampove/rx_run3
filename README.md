@@ -2,6 +2,44 @@
 
 These are tools that can be used for different data analysis tasks.
 
+# Physics
+
+## Truth matching
+
+In order to compare the truth matching efficiency and distributions after it is performed in several samples, run:
+
+```bash
+check_truth -c configuration.yaml
+```
+
+where the config file, can look like:
+
+```yaml
+# ---------
+max_entries : 1000
+samples:
+  # Below are the samples for which the methods will be compared
+  sample_a:
+    file_path : /path/to/root/files/*.root 
+    tree_path : TreeName 
+    methods :
+        #Below we specify the ways truth matching will be carried out
+        bkg_cat : B_BKGCAT == 0 || B_BKGCAT == 10 || B_BKGCAT == 50
+        true_id : TMath::Abs(B_TRUEID) == 521 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 521 
+    plot:
+      # Below are the options used by Plottter1D (see plotting documentation below)
+      definitions:
+          mass : B_nopv_const_mass_M[0]
+      plots:
+          mass :
+              binning    : [5000, 6000, 40]
+              yscale     : 'linear'
+              labels     : ['$M_{DTF-noPV}(B^+)$', 'Entries']
+              normalized : true
+      saving:
+        plt_dir : /path/to/directory/with/plots 
+```
+
 # Math
 
 ## Fits
