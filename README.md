@@ -264,7 +264,7 @@ log.critical('critical')
 Given a set of ROOT dataframes and a configuration dictionary, one can plot distributions with:
 
 ```python
-from dmu.plotting.plotter import Plotter1D as Plotter
+from dmu.plotting.plotter_1d import Plotter1D as Plotter
 
 ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
 ptr.run()
@@ -310,7 +310,7 @@ it's up to the user to build this dictionary and load it.
 For the 2D case it would look like:
 
 ```python
-from dmu.plotting.plotter import Plotter2D as Plotter
+from dmu.plotting.plotter_2d import Plotter2D as Plotter
 
 ptr=Plotter(rdf=rdf, cfg=cfg_dat)
 ptr.run()
