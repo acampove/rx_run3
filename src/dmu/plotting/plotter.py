@@ -195,6 +195,17 @@ class Plotter:
 
         return arr_wgt
     #-------------------------------------
+    def _get_plot_name(self, var : str) -> str:
+        if 'plots_2d' in self._d_cfg:
+            #For 2D plots the name will always be specified in the config
+            return var
+
+        if 'name' not in self._d_cfg['plots'][var]:
+            # For 1D plots the name can be taken from variable name itself or specified
+            return var
+
+        return self._d_cfg['plots'][var]['name']
+    #-------------------------------------
     def _save_plot(self, var):
         '''
         Will save to PNG:
@@ -206,7 +217,9 @@ class Plotter:
         plt_dir = self._d_cfg['saving']['plt_dir']
         os.makedirs(plt_dir, exist_ok=True)
 
-        plot_path = f'{plt_dir}/{var}.png'
+        name = self._get_plot_name(var)
+
+        plot_path = f'{plt_dir}/{name}.png'
         log.info(f'Saving to: {plot_path}')
         plt.tight_layout()
         plt.savefig(plot_path)
