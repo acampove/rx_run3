@@ -2,6 +2,7 @@
 Script meant to do truth matching checks
 '''
 import os
+import copy
 import argparse
 
 import yaml
@@ -59,20 +60,38 @@ def _check(cfg : dict) -> None:
     log.info(110 * '-')
 
     for sample_name in cfg['samples']:
-        d_rdf     = {}
         file_path = cfg['samples'][sample_name]['file_path']
         tree_path = cfg['samples'][sample_name]['tree_path']
         rdf = _get_rdf(file_path, tree_path)
         rdf = _preprocess_rdf(rdf, cfg)
 
-        for name, cut in cfg['samples'][sample_name]['methods'].items():
-            rdf_truth = _check_kind(rdf, sample_name, name, cut)
-            d_rdf[name] = rdf_truth
+        d_cut_true = {}
+        d_cut_fake = {}
+        for method, cut in cfg['samples'][sample_name]['methods'].items():
+            _check_kind(rdf, sample_name, method, cut)
+
+            d_cut_true[method] = cut
+            d_cut_fake[method] = f'({cut}) == 0'
         log.info('')
 
-        cfg_plt = cfg['samples'][sample_name]['plot']
-        ptr=Plotter(d_rdf=d_rdf, cfg=cfg_plt)
-        ptr.run()
+        _plot_distributions(cfg, sample_name, rdf, d_cut_true, kind='true')
+        _plot_distributions(cfg, sample_name, rdf, d_cut_fake, kind='fake')
+# ----------------------------------
+def _plot_distributions(cfg : dict, sample_name : str, rdf : RDataFrame, d_cut : dict[str,str], kind : str) -> None:
+    cfg_plt = cfg['samples'][sample_name]['plot']
+    cfg_plt = _add_suffix(cfg_plt, kind)
+    d_rdf   = { method : rdf.Filter(cut) for method, cut in d_cut.items() }
+
+    ptr=Plotter(d_rdf=d_rdf, cfg=cfg_plt)
+    ptr.run()
+# ----------------------------------
+def _add_suffix(cfg : dict, kind : str) -> dict:
+    cfg           = copy.deepcopy(cfg)
+    d_var         = cfg['plots']
+    d_var_renamed = { f'{var_name}_{kind}' : settings for var_name, settings in d_var.items() }
+    cfg['plots']  = d_var_renamed
+
+    return cfg
 # ----------------------------------
 def _check_kind(rdf : RDataFrame, sample : str, name : str, cut : str) -> RDataFrame:
     nini = rdf.Count().GetValue()
@@ -81,8 +100,6 @@ def _check_kind(rdf : RDataFrame, sample : str, name : str, cut : str) -> RDataF
     eff  = nfnl / nini * 100
 
     log.info(f'{sample:<20}{name:<20}{nini:<15}{"":<15}{nfnl:<15}{"-->":15}{eff:10.2f}')
-
-    return rdf
 # ----------------------------------
 def main():
     '''
