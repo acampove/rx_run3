@@ -88,8 +88,8 @@ def _plot_distributions(cfg : dict, sample_name : str, rdf : RDataFrame, d_cut :
 def _add_suffix(cfg : dict, kind : str) -> dict:
     cfg           = copy.deepcopy(cfg)
     d_var         = cfg['plots']
-    d_var_renamed = { f'{var_name}_{kind}' : settings for var_name, settings in d_var.items() }
-    cfg['plots']  = d_var_renamed
+    for var in d_var:
+        d_var[var]['name'] = f'{var}_{kind}'
 
     return cfg
 # ----------------------------------
