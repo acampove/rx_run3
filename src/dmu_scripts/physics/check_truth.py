@@ -76,23 +76,25 @@ def _check(cfg : dict) -> None:
             d_cut_fake[method] = f'({cut}) == 0'
         log.info('')
 
-        _plot_distributions(cfg, sample_name, rdf, d_cut_true, kind='true')
-        _plot_distributions(cfg, sample_name, rdf, d_cut_fake, kind='fake')
+        _plot_distributions(cfg, sample_name, rdf, d_cut_true, kind='matched')
+        _plot_distributions(cfg, sample_name, rdf, d_cut_fake, kind='anti_matched')
 # ----------------------------------
 def _plot_distributions(cfg : dict, sample_name : str, rdf : RDataFrame, d_cut : dict[str,str], kind : str) -> None:
+    cfg     = copy.deepcopy(cfg)
     cfg_plt = cfg['samples'][sample_name]['plot']
-    cfg_plt = _add_suffix(cfg_plt, kind, sample_name)
+    cfg_plt = _add_suffix(cfg_plt, sample_name, kind)
     d_rdf   = { method : rdf.Filter(cut) for method, cut in d_cut.items() }
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_plt)
     ptr.run()
 # ----------------------------------
 def _add_suffix(cfg : dict, sample_name : str, kind : str) -> dict:
-    cfg           = copy.deepcopy(cfg)
-    d_var         = cfg['plots']
+    d_var = cfg['plots']
     for var in d_var:
         d_var[var]['name']  = f'{var}_{kind}'
         d_var[var]['title'] = f'{sample_name}; {kind}'
+
+    cfg['plots'] = d_var
 
     return cfg
 # ----------------------------------
