@@ -6,6 +6,8 @@ import copy
 import argparse
 
 import yaml
+import mplhep
+import matplotlib.pyplot as plt
 
 from ROOT import RDataFrame
 
@@ -79,17 +81,18 @@ def _check(cfg : dict) -> None:
 # ----------------------------------
 def _plot_distributions(cfg : dict, sample_name : str, rdf : RDataFrame, d_cut : dict[str,str], kind : str) -> None:
     cfg_plt = cfg['samples'][sample_name]['plot']
-    cfg_plt = _add_suffix(cfg_plt, kind)
+    cfg_plt = _add_suffix(cfg_plt, kind, sample_name)
     d_rdf   = { method : rdf.Filter(cut) for method, cut in d_cut.items() }
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_plt)
     ptr.run()
 # ----------------------------------
-def _add_suffix(cfg : dict, kind : str) -> dict:
+def _add_suffix(cfg : dict, sample_name : str, kind : str) -> dict:
     cfg           = copy.deepcopy(cfg)
     d_var         = cfg['plots']
     for var in d_var:
-        d_var[var]['name'] = f'{var}_{kind}'
+        d_var[var]['name']  = f'{var}_{kind}'
+        d_var[var]['title'] = f'{sample_name}; {kind}'
 
     return cfg
 # ----------------------------------
@@ -108,6 +111,8 @@ def main():
     _set_logs()
     args = _get_args()
     cfg  = _get_config(args)
+    plt.style.use(mplhep.style.LHCb2)
+
     _check(cfg)
 # ----------------------------------
 if __name__ == '__main__':
