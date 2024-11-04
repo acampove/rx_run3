@@ -10,6 +10,8 @@ from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:stats:utilities')
 #-------------------------------------------------------
+#Zfit/print_pdf
+#-------------------------------------------------------
 def _get_const(par : zfit.Parameter, d_const : dict[str, list[float]]) -> str:
     '''
     Takes zfit parameter and dictionary of constraints
@@ -105,3 +107,4 @@ def print_pdf(pdf : zfit.pdf.BasePDF, d_const : dict[str,list[float]], txt_path 
             log.debug(msg)
         else:
             raise ValueError(f'Invalid level: {level}')
+#-------------------------------------------------------
