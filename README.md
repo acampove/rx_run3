@@ -57,17 +57,16 @@ print_pdf(pdf)
 this should produce an output that will look like:
 
 ```
-18:18:59 - utilities.py:105 - PDF: SumPDF
-18:18:59 - utilities.py:105 - OBS: <zfit Space obs=('m',), axes=(0,), limits=(array([[-10.]]), array([[10.]])), binned=False>
-18:18:59 - utilities.py:105 - Name                                                        Value            Low           HighFloating               Constraint
-18:18:59 - utilities.py:105 - --------------------
-18:18:59 - utilities.py:105 - fr1                                                     5.000e-01      0.000e+00      1.000e+00    1                     none
-18:18:59 - utilities.py:105 - fr2                                                     5.000e-01      0.000e+00      1.000e+00    1                     none
-18:18:59 - utilities.py:105 - mu1                                                     4.000e-01     -5.000e+00      5.000e+00    1                     none
-18:18:59 - utilities.py:105 - mu2                                                     4.000e-01     -5.000e+00      5.000e+00    1                     none
-18:18:59 - utilities.py:105 - sg1                                                     1.300e+00      0.000e+00      5.000e+00    1                     none
-18:18:59 - utilities.py:105 - sg2                                                     1.300e+00      0.000e+00      5.000e+00    1                     none
-18:18:59 - utilities.py:105 -
+PDF: SumPDF
+OBS: <zfit Space obs=('m',), axes=(0,), limits=(array([[-10.]]), array([[10.]])), binned=False>
+Name                                                        Value            Low           HighFloating               Constraint
+--------------------
+fr1                                                     5.000e-01      0.000e+00      1.000e+00    1                     none
+fr2                                                     5.000e-01      0.000e+00      1.000e+00    1                     none
+mu1                                                     4.000e-01     -5.000e+00      5.000e+00    1                     none
+mu2                                                     4.000e-01     -5.000e+00      5.000e+00    1                     none
+sg1                                                     1.300e+00      0.000e+00      5.000e+00    1                     none
+sg2                                                     1.300e+00      0.000e+00      5.000e+00    1                     none
 ```
 
 
