@@ -53,6 +53,25 @@ def test_print_pdf():
     Tests for PDF printer
     '''
     pdf = _get_pdf(kind='composed_nonextended')
+
+    d_const = {'mu1' : [0.0, 0.1], 'sg1' : [1.0, 0.1]}
+    #-----------------
     print_pdf(pdf)
-    print_pdf(pdf, blind=['sg.*', 'mu.*'])
-    print_pdf(pdf, txt_path = 'tests/stats/utilities/print_pdf/pdf.txt')
+
+    print_pdf(pdf,
+              blind   = ['sg.*', 'mu.*'])
+
+    print_pdf(pdf,
+              d_const = d_const,
+              blind   = ['sg.*', 'mu.*'])
+    #-----------------
+    print_pdf(pdf,
+              txt_path = 'tests/stats/utilities/print_pdf/pdf.txt')
+
+    print_pdf(pdf,
+              blind    =['sg.*', 'mu.*'],
+              txt_path = 'tests/stats/utilities/print_pdf/pdf_blind.txt')
+
+    print_pdf(pdf,
+              d_const  = d_const,
+              txt_path = 'tests/stats/utilities/print_pdf/pdf_const.txt')
