@@ -458,6 +458,7 @@ class Fitter:
         if 'strategy' not in cfg:
             nll    = self._get_nll(cfg = cfg)
             res, _ = self._minimize(nll, cfg)
+            res.hesse(method='minuit_hesse')
         elif 'retry' in cfg['strategy']:
             d_pval_res, last_res = self._fit_retries(cfg)
             res = self._pick_best_fit(d_pval_res, last_res)
@@ -465,6 +466,7 @@ class Fitter:
             res = self._fit_in_steps(cfg)
         else:
             raise ValueError('Unsupported fitting strategy')
+
 
         return res
 #------------------------------
