@@ -20,12 +20,12 @@ max_entries : 1000
 samples:
   # Below are the samples for which the methods will be compared
   sample_a:
-    file_path : /path/to/root/files/*.root 
-    tree_path : TreeName 
+    file_path : /path/to/root/files/*.root
+    tree_path : TreeName
     methods :
         #Below we specify the ways truth matching will be carried out
         bkg_cat : B_BKGCAT == 0 || B_BKGCAT == 10 || B_BKGCAT == 50
-        true_id : TMath::Abs(B_TRUEID) == 521 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 521 
+        true_id : TMath::Abs(B_TRUEID) == 521 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 521
     plot:
       # Below are the options used by Plottter1D (see plotting documentation below)
       definitions:
@@ -37,10 +37,74 @@ samples:
               labels     : ['$M_{DTF-noPV}(B^+)$', 'Entries']
               normalized : true
       saving:
-        plt_dir : /path/to/directory/with/plots 
+        plt_dir : /path/to/directory/with/plots
 ```
 
 # Math
+
+## PDFs
+
+### Printing PDFs
+
+One can print a zfit PDF by doing:
+
+```python
+from dmu.stats.utilities   import print_pdf
+
+print_pdf(pdf)
+```
+
+this should produce an output that will look like:
+
+```
+18:18:59 - utilities.py:105 - PDF: SumPDF
+18:18:59 - utilities.py:105 - OBS: <zfit Space obs=('m',), axes=(0,), limits=(array([[-10.]]), array([[10.]])), binned=False>
+18:18:59 - utilities.py:105 - Name                                                        Value            Low           HighFloating               Constraint
+18:18:59 - utilities.py:105 - --------------------
+18:18:59 - utilities.py:105 - fr1                                                     5.000e-01      0.000e+00      1.000e+00    1                     none
+18:18:59 - utilities.py:105 - fr2                                                     5.000e-01      0.000e+00      1.000e+00    1                     none
+18:18:59 - utilities.py:105 - mu1                                                     4.000e-01     -5.000e+00      5.000e+00    1                     none
+18:18:59 - utilities.py:105 - mu2                                                     4.000e-01     -5.000e+00      5.000e+00    1                     none
+18:18:59 - utilities.py:105 - sg1                                                     1.300e+00      0.000e+00      5.000e+00    1                     none
+18:18:59 - utilities.py:105 - sg2                                                     1.300e+00      0.000e+00      5.000e+00    1                     none
+18:18:59 - utilities.py:105 -
+```
+
+
+showing basic information on the observable, the parameter ranges and values, whether they are Gaussian constrained and floating or not.
+One can add other options too:
+
+```python
+from dmu.stats.utilities   import print_pdf
+
+# Constraints, uncorrelated for now
+d_const = {'mu1' : [0.0, 0.1], 'sg1' : [1.0, 0.1]}
+#-----------------
+# simplest printing to screen
+print_pdf(pdf)
+
+# Will not show certain parameters
+print_pdf(pdf,
+          blind   = ['sg.*', 'mu.*'])
+
+# Will add constraints
+print_pdf(pdf,
+          d_const = d_const,
+          blind   = ['sg.*', 'mu.*'])
+#-----------------
+# Same as above but will dump to a text file instead of screen
+#-----------------
+print_pdf(pdf,
+          txt_path = 'tests/stats/utilities/print_pdf/pdf.txt')
+
+print_pdf(pdf,
+          blind    =['sg.*', 'mu.*'],
+          txt_path = 'tests/stats/utilities/print_pdf/pdf_blind.txt')
+
+print_pdf(pdf,
+              d_const  = d_const,
+              txt_path = 'tests/stats/utilities/print_pdf/pdf_const.txt')
+```
 
 ## Fits
 
@@ -55,7 +119,7 @@ obj = Fitter(pdf, dat)
 res = obj.fit()
 ```
 
-### Customizations 
+### Customizations
 In order to customize the way the fitting is done one would pass a configuration dictionary to the `fit(cfg=config)`
 function. This dictionary can be represented in YAML as:
 
@@ -77,7 +141,7 @@ strategy      :
           yields   : ['ny1', 'ny2'] # in the fitting model ny1 and ny2 are the names of yields parameters, all the yield need to go in this list
 # The lines below will split the range of the data [0-10] into two subranges, such that the NLL is built
 # only in those ranges. The ranges need to be tuples
-ranges        : 
+ranges        :
       - !!python/tuple [0, 3]
       - !!python/tuple [6, 9]
 #The lines below will allow using contraints for each parameter, where the first element is the mean and the second
@@ -355,7 +419,7 @@ ptr=Plotter(rdf=rdf, cfg=cfg_dat)
 ptr.run()
 ```
 
-where one would introduce only one dataframe instead of a dictionary, given that overlaying 2D plots is not possible. 
+where one would introduce only one dataframe instead of a dictionary, given that overlaying 2D plots is not possible.
 The config would look like:
 
 ```yaml
@@ -404,11 +468,11 @@ which would produce a `/pat/to/file.txt` file witht the contents, which would lo
 
 ```
 Directory/Treename
-    B_CHI2                        Double_t                                
-    B_CHI2DOF                     Double_t                                
-    B_DIRA_OWNPV                  Float_t                                 
-    B_ENDVERTEX_CHI2              Double_t                                
-    B_ENDVERTEX_CHI2DOF           Double_t                                
+    B_CHI2                        Double_t
+    B_CHI2DOF                     Double_t
+    B_DIRA_OWNPV                  Float_t
+    B_ENDVERTEX_CHI2              Double_t
+    B_ENDVERTEX_CHI2DOF           Double_t
 ```
 
 # Text manipulation
@@ -495,7 +559,7 @@ the list of servers with tasks and machines is specified in a YAML file that can
 
 ```yaml
 ihep:
-    '001' : 
+    '001' :
         - checks
         - extractor
         - dsmanager
