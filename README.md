@@ -101,8 +101,8 @@ print_pdf(pdf,
           txt_path = 'tests/stats/utilities/print_pdf/pdf_blind.txt')
 
 print_pdf(pdf,
-              d_const  = d_const,
-              txt_path = 'tests/stats/utilities/print_pdf/pdf_const.txt')
+          d_const  = d_const,
+          txt_path = 'tests/stats/utilities/print_pdf/pdf_const.txt')
 ```
 
 ## Fits
