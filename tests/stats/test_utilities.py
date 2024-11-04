@@ -2,13 +2,14 @@
 Module with unit tests for functions in dmu.stat.utilities
 '''
 import zfit
+from zfit.core.basepdf import ZfitPDF
 
 from dmu.logging.log_store import LogStore
 from dmu.stats.utilities   import print_pdf
 
 log = LogStore.add_logger('dmu:tests:stats:test_utilities')
 #----------------------------------
-def _get_pdf_simple():
+def _get_pdf_simple() -> ZfitPDF:
     obs = zfit.Space('m',    limits=(-10, 10))
     mu  = zfit.Parameter("mu", 0.4,   -5,     5)
     sg  = zfit.Parameter("sg", 1.3,  0.5,     2)
@@ -21,7 +22,7 @@ def _get_pdf_simple():
 
     return epdf
 #----------------------------------
-def _get_pdf_composed_nonextended():
+def _get_pdf_composed_nonextended() -> ZfitPDF:
     obs = zfit.Space('m', limits=(-10, 10))
     mu1 = zfit.Parameter("mu1", 0.4, -5, 5)
     sg1 = zfit.Parameter("sg1", 1.3,  0, 5)
@@ -38,7 +39,7 @@ def _get_pdf_composed_nonextended():
 
     return pdf
 #----------------------------------
-def _get_pdf(kind : str ='simple') -> zfit.pdf.BasePDF:
+def _get_pdf(kind : str ='simple') -> ZfitPDF:
     if   kind == 'simple':
         return _get_pdf_simple()
 
