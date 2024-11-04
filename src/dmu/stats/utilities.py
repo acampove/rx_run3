@@ -44,7 +44,7 @@ def _blind_vars(s_par : set, l_blind : Union[list[str], None] = None) -> set[zfi
 
     return s_par_blind
 #-------------------------------------------------------
-def print_pdf(pdf : zfit.pdf.BasePDF, d_const : dict[str,list[float]], txt_path : Union[str,None], level : int = 20, blind=None):
+def print_pdf(pdf : zfit.pdf.BasePDF, d_const : Union[None, dict[str,list[float]]] = None, txt_path : Union[str,None] = None, level : int = 20, blind=None):
     '''
     Function used to print zfit PDFs
 
