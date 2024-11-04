@@ -4,7 +4,7 @@ strategy      :
       # ntries is exhausted or the pvalue is reached.
       retry   :
           ntries        : 4    #Number of tries
-          pvalue        : 0.05 #Pvalue threshold, if the fit is better than this, the loop ends
+          pvalue_thresh : 0.05 #Pvalue threshold, if the fit is better than this, the loop ends
           ignore_status : true #Will pick invalid fits if this is true, otherwise only valid fits will be counted
       # This will fit smaller datasets and get the value of the shape parameters to allow
       # these shapes to float only around this value and within nsigma
