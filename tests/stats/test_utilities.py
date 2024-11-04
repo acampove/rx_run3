@@ -55,3 +55,4 @@ def test_print_pdf():
     pdf = _get_pdf(kind='composed_nonextended')
     print_pdf(pdf)
     print_pdf(pdf, blind=['sg.*', 'mu.*'])
+    print_pdf(pdf, txt_path = 'tests/stats/utilities/print_pdf/pdf.txt')
