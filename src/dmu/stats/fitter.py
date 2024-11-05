@@ -270,16 +270,27 @@ class Fitter:
 
         return data
     #------------------------------
+    def _get_binned_observable(self, nbins : int):
+        obs = self._pdf.space
+        [[minx]], [[maxx]] = obs.limits
+
+        binning = zfit.binned.RegularBinning(nbins, minx, maxx, name=obs.label)
+        obs_bin = zfit.Space(obs.label, binning=binning)
+
+        return obs_bin
+    #------------------------------
     def _get_nll(self, data_zf, constraints, frange, cfg):
         is_binned = False
-        if 'likelihood' not in cfg or 'binned' not in cfg['likelihood']:
+        if 'likelihood' not in cfg or 'nbins' not in cfg['likelihood']:
             log.warning('Binning or not of likelihood not specified, will default to unbinned')
         else:
-            is_binned = cfg['likelihood']['binned']
-            log.debug(f'Binned likelihood: {is_binned}')
+            nbins = cfg['likelihood']['nbins']
+            log.debug(f'Binned likelihood with {nbins} bins')
 
         if is_binned:
-            pdf = zfit.pdf.BinnedFromUnbinnedPDF(self._pdf, self._pdf.space)
+            obs     = self._get_binned_observable(nbins)
+            pdf     = zfit.pdf.BinnedFromUnbinnedPDF(self._pdf, obs)
+            data_zf = data_zf.to_binned(obs)
         else:
             pdf = self._pdf
 
