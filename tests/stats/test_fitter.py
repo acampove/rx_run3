@@ -23,7 +23,7 @@ class Data:
     '''
     Data class used to store share data
     '''
-    nsample = 50000
+    nsample = 100_000
     plt_dir = 'tests/Fitter/plots'
 
     arr_sig = numpy.random.normal(5.0, 0.5, size=10_000)
