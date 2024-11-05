@@ -280,36 +280,31 @@ class Fitter:
         return obs_bin
     #------------------------------
     def _get_nll(self, data_zf, constraints, frange, cfg):
-        is_binned = False
-        if 'likelihood' not in cfg or 'nbins' not in cfg['likelihood']:
-            log.warning('Binning or not of likelihood not specified, will default to unbinned')
+        nbins     = cfg['likelihood']['nbins']
+        if nbins is None: 
+            log.info('No binning was specified, will do unbinned fit')
+            pdf = self._pdf
         else:
-            nbins = cfg['likelihood']['nbins']
-            log.debug(f'Binned likelihood with {nbins} bins')
-
-        if is_binned:
             obs     = self._get_binned_observable(nbins)
             pdf     = zfit.pdf.BinnedFromUnbinnedPDF(self._pdf, obs)
             data_zf = data_zf.to_binned(obs)
-        else:
-            pdf = self._pdf
 
-        if not self._pdf.is_extended and not is_binned:
+        if not self._pdf.is_extended and nbins is None:
             nll = zfit.loss.UnbinnedNLL(        model=pdf, data=data_zf, constraints=constraints, fit_range=frange)
             return nll
 
-        if     self._pdf.is_extended and not is_binned:
+        if     self._pdf.is_extended and nbins is None:
             nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=data_zf, constraints=constraints, fit_range=frange)
             return nll
 
         if frange is not None:
             raise ValueError('Fit range cannot be defined for binned likelihoods')
 
-        if not self._pdf.is_extended and     is_binned:
+        if not self._pdf.is_extended:
             nll = zfit.loss.BinnedNLL(          model=pdf, data=data_zf, constraints=constraints)
             return nll
 
-        if     self._pdf.is_extended and     is_binned:
+        if     self._pdf.is_extended:
             nll = zfit.loss.ExtendedBinnedNLL(  model=pdf, data=data_zf, constraints=constraints)
             return nll
 
