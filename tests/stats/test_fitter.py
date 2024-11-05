@@ -45,7 +45,7 @@ def _initialize():
     os.makedirs(Data.plt_dir, exist_ok=True)
 #-------------------------------------
 @cache
-def _get_data():
+def _get_weighted_data():
     gInterpreter.ProcessLine('TRandom3 r(1);')
 
     d_val      = {}
@@ -144,7 +144,7 @@ def test_wgt():
     '''
     Test fit to weighted dataset
     '''
-    rdf = _get_data()
+    rdf = _get_weighted_data()
     arr = rdf.AsNumpy(['m'])['m']
     wgt = numpy.random.binomial(1, 0.5, size=arr.size)
 
