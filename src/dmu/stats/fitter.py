@@ -279,8 +279,17 @@ class Fitter:
 
         return obs_bin
     #------------------------------
+    def _get_nbins(self, cfg):
+        if 'likelihood' not in cfg:
+            return
+
+        if 'nbins' not in cfg['likelihood']:
+            return
+
+        return cfg['likelihood']['nbins']
+    #------------------------------
     def _get_nll(self, data_zf, constraints, frange, cfg):
-        nbins     = cfg['likelihood']['nbins']
+        nbins     = self._get_nbins(cfg) 
         if nbins is None: 
             log.info('No binning was specified, will do unbinned fit')
             pdf = self._pdf
