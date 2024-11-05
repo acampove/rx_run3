@@ -294,7 +294,7 @@ class Fitter:
             log.info('No binning was specified, will do unbinned fit')
             pdf = self._pdf
         else:
-            log.info('Using {nbins} bins for fit')
+            log.info(f'Using {nbins} bins for fit')
             obs     = self._get_binned_observable(nbins)
             pdf     = zfit.pdf.BinnedFromUnbinnedPDF(self._pdf, obs)
             data_zf = data_zf.to_binned(obs)
