@@ -150,6 +150,8 @@ constraints   :
       sg : [1.0, 0.1]
 #After each fit, the parameters spciefied below will be printed, for debugging purposes
 print_pars    : ['mu', 'sg']
+likelihood :
+    nbins : 100 #If specified, will do binned likelihood fit instead of unbinned
 ```
 
 ## Arrays
