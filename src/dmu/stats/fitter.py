@@ -270,7 +270,7 @@ class Fitter:
 
         return data
     #------------------------------
-    def _get_nll(self, cfg : dict):
+    def _get_full_nll(self, cfg : dict):
         constraints = self._get_constraints(cfg)
         ranges      = self._get_ranges(cfg)
         data_zf     = self._get_subdataset(cfg)
@@ -331,7 +331,7 @@ class Fitter:
         pvalue_thresh= cfg['strategy']['retry']['pvalue_thresh']
         ignore_status= cfg['strategy']['retry']['ignore_status']
 
-        nll        = self._get_nll(cfg = cfg)
+        nll        = self._get_full_nll(cfg = cfg)
         d_pval_res = {}
         last_res   = None
         for i_try in range(ntries):
@@ -395,13 +395,13 @@ class Fitter:
             cfg_step             = dict(cfg)
             cfg_step['nentries'] = nsample
 
-            nll    = self._get_nll(cfg = cfg_step)
+            nll    = self._get_full_nll(cfg = cfg_step)
             res, _ = self._minimize(nll, cfg_step)
             res.hesse(method='minuit_hesse')
             self._update_par_bounds(res, nsigma=nsigma, yields=l_yield)
 
         log.info('Fitting full sample')
-        nll    = self._get_nll(cfg = cfg)
+        nll    = self._get_full_nll(cfg = cfg)
         res, _ = self._minimize(nll, cfg)
         res.hesse(method='minuit_hesse')
 
@@ -456,7 +456,7 @@ class Fitter:
 
         log.info(f'{"chi2":<10}{"pval":<10}{"stat":<10}')
         if 'strategy' not in cfg:
-            nll    = self._get_nll(cfg = cfg)
+            nll    = self._get_full_nll(cfg = cfg)
             res, _ = self._minimize(nll, cfg)
             res.hesse(method='minuit_hesse')
         elif 'retry' in cfg['strategy']:
