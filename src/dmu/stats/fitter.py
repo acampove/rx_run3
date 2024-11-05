@@ -270,19 +270,46 @@ class Fitter:
 
         return data
     #------------------------------
+    def _get_nll(self, data_zf, constraints, frange, cfg):
+        is_binned = False
+        if 'likelihood' not in cfg or 'binned' not in cfg['likelihood']:
+            log.warning('Binning or not of likelihood not specified, will default to unbinned')
+        else:
+            is_binned = cfg['likelihood']['binned']
+            log.debug(f'Binned likelihood: {is_binned}')
+
+        if is_binned:
+            pdf = zfit.pdf.BinnedFromUnbinnedPDF(self._pdf, self._pdf.space)
+        else:
+            pdf = self._pdf
+
+        if not self._pdf.is_extended and not is_binned:
+            nll = zfit.loss.UnbinnedNLL(        model=pdf, data=data_zf, constraints=constraints, fit_range=frange)
+            return nll
+
+        if     self._pdf.is_extended and not is_binned:
+            nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=data_zf, constraints=constraints, fit_range=frange)
+            return nll
+
+        if frange is not None:
+            raise ValueError('Fit range cannot be defined for binned likelihoods')
+
+        if not self._pdf.is_extended and     is_binned:
+            nll = zfit.loss.BinnedNLL(          model=pdf, data=data_zf, constraints=constraints)
+            return nll
+
+        if     self._pdf.is_extended and     is_binned:
+            nll = zfit.loss.ExtendedBinnedNLL(  model=pdf, data=data_zf, constraints=constraints)
+            return nll
+
+        raise ValueError('Likelihood was neither Binned nor Unbinned nor Extended nor non-extended')
+    #------------------------------
     def _get_full_nll(self, cfg : dict):
         constraints = self._get_constraints(cfg)
         ranges      = self._get_ranges(cfg)
         data_zf     = self._get_subdataset(cfg)
-
-        if self._pdf.is_extended:
-            log.info('Using Extended Unbinned Likelihood')
-            l_nll = [ zfit.loss.ExtendedUnbinnedNLL(model=self._pdf, data=data_zf, constraints=constraints, fit_range=frange) for frange in ranges ]
-        else:
-            log.info('Using Non-Extended Unbinned Likelihood')
-            l_nll = [ zfit.loss.UnbinnedNLL        (model=self._pdf, data=data_zf, constraints=constraints, fit_range=frange) for frange in ranges ]
-
-        nll = sum(l_nll[1:], l_nll[0])
+        l_nll       = [ self._get_nll(data_zf, constraints, frange, cfg) for frange in ranges ]
+        nll         = sum(l_nll[1:], l_nll[0])
 
         return nll
     #------------------------------

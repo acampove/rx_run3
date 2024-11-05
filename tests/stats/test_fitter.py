@@ -177,3 +177,16 @@ def test_steps():
     print(res)
 
     assert res.valid
+#-------------------------------------
+@pytest.mark.parametrize('binning', [True, False])
+def test_binning(binning : bool):
+    '''
+    Test fitting binnin specified
+    '''
+    cfg = {'likelihood' : {'binned' : binning}}
+
+    pdf = _get_pdf()
+    obj = Fitter(pdf, Data.arr)
+    res = obj.fit(cfg)
+
+    assert res.valid
