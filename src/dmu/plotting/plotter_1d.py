@@ -25,6 +25,14 @@ class Plotter1D(Plotter):
 
         super().__init__(d_rdf=d_rdf, cfg=cfg)
     #-------------------------------------
+    def _get_labels(self, var : str) -> tuple[str,str]:
+        if 'labels' not in self._d_cfg['plots'][var]:
+            return var, 'Entries'
+
+        xname, yname = self._d_cfg['plots'][var]['labels' ]
+
+        return xname, yname
+    #-------------------------------------
     def _plot_var(self, var):
         '''
         Will plot a variable from a dictionary of dataframes
@@ -38,7 +46,7 @@ class Plotter1D(Plotter):
 
         minx, maxx, bins = d_cfg['binning']
         yscale           = d_cfg['yscale' ]
-        [xname, yname]   = d_cfg['labels' ]
+        xname, yname     = self._get_labels(var)
 
         normalized=False
         if 'normalized' in d_cfg:
