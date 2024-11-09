@@ -5,8 +5,6 @@ plots:
     x : 
         binning : [-5.0, 8.0, 40]
         yscale  : 'linear' 
-        labels  : ['x', 'Entries']
     y : 
         binning : [-5.0, 8.0, 40]
         yscale  : 'linear' 
-        labels  : ['y', 'Entries']
