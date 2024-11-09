@@ -45,7 +45,7 @@ class Plotter1D(Plotter):
         d_cfg = self._d_cfg['plots'][var]
 
         minx, maxx, bins = d_cfg['binning']
-        yscale           = d_cfg['yscale' ]
+        yscale           = d_cfg['yscale' ] if 'yscale' in d_cfg else 'linear'
         xname, yname     = self._get_labels(var)
 
         normalized=False

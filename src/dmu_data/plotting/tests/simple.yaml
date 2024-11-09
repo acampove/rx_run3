@@ -4,7 +4,5 @@ saving:
 plots:
     x : 
         binning : [-5.0, 8.0, 40]
-        yscale  : 'linear' 
     y : 
         binning : [-5.0, 8.0, 40]
-        yscale  : 'linear' 
