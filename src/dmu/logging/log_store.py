@@ -3,6 +3,7 @@ Module holding LogStore
 '''
 
 import logging
+import logzero
 
 #------------------------------------------------------------
 class StoreFormater(logging.Formatter):
@@ -34,6 +35,7 @@ class LogStore:
     d_levels      = {}
     log_level     = logging.INFO
     is_configured = False
+    backend       = 'logging'
     #--------------------------
     @staticmethod
     def add_logger(name=None):
@@ -51,7 +53,28 @@ class LogStore:
 
         level  = LogStore.log_level if name not in LogStore.d_levels else LogStore.d_levels[name]
 
+        if   LogStore.backend == 'logging':
+            logger = LogStore._get_logging_logger(name, level)
+        elif LogStore.backend == 'logzero':
+            logger = LogStore._get_logzero_logger(name, level)
+        else:
+            raise ValueError(f'Invalid backend: {LogStore.backend}')
+
+        LogStore.d_logger[name] = logger
+
+        return logger
+    #--------------------------
+    @staticmethod
+    def _get_logzero_logger(name : str, level : int):
+        log = logzero.setup_logger(name=name)
+        log.setLevel(level)
+
+        return log
+    #--------------------------
+    @staticmethod
+    def _get_logging_logger(name : str, level : int):
         logger = logging.getLogger(name=name)
+
         logger.setLevel(level)
 
         hnd= logging.StreamHandler()
@@ -64,8 +87,6 @@ class LogStore:
             logger.handlers.clear()
 
         logger.addHandler(hnd)
-
-        LogStore.d_logger[name] = logger
 
         return logger
     #--------------------------

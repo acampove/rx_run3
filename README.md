@@ -350,6 +350,7 @@ a good enough logging tool. It can be used as:
 ```python
 from dmu.logging.log_store import LogStore
 
+LogStore.backend = 'logging' # This line is optional, the default backend is logging, but logzero is also supported
 log = LogStore.add_logger('msg')
 LogStore.set_level('msg', 10)
 
