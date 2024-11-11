@@ -3,27 +3,47 @@ Unit test for LogStore class
 '''
 
 import logging
+from dataclasses import dataclass
 
+import pytest
 from dmu.logging.log_store import LogStore
 
 # --------------------------------
-def test_show():
+@dataclass
+class Data:
+    '''
+    Class used to store shared data
+    '''
+    l_backend = ['logging', 'logzero']
+    l_level   = [10, 20, 30, 40, 50]
+# --------------------------------
+@pytest.mark.parametrize('backend', Data.l_backend)
+def test_show(backend : str):
     '''
     Test for show_loggers
     '''
-    LogStore.set_level('sho_1', logging.WARNING)
+    LogStore.backend = backend
 
-    LogStore.add_logger('sho_1')
-    LogStore.add_logger('sho_2')
+    name_war = f'show_warning_{backend}'
+    name_def = f'show_default_{backend}'
+
+    LogStore.set_level(name_war, logging.WARNING)
+
+    LogStore.add_logger(name_war)
+    LogStore.add_logger(name_def)
 
     LogStore.show_loggers()
 # --------------------------------
-def test_messages():
+@pytest.mark.parametrize('backend', Data.l_backend)
+def test_messages(backend : str):
     '''
     Tests each level
     '''
-    log = LogStore.add_logger('msg')
-    LogStore.set_level('msg', 10)
+    LogStore.backend = backend
+
+    name = f'messages_{backend}'
+    log = LogStore.add_logger(name)
+    LogStore.set_level(name, 10)
 
     log.debug('debug')
     log.info('info')
@@ -31,31 +51,38 @@ def test_messages():
     log.error('error')
     log.critical('critical')
 # --------------------------------
-def test_level():
+@pytest.mark.parametrize('backend', Data.l_backend)
+@pytest.mark.parametrize('level'  , Data.l_level)
+def test_level(backend : str, level : int):
     '''
     Test for level setting
     '''
-    LogStore.add_logger('lvl_10')
-    LogStore.add_logger('lvl_20')
+    LogStore.backend = backend
 
-    LogStore.set_level('lvl_10', 10)
-    LogStore.set_level('lvl_20', 20)
+    name = f'level_{backend}_{level}'
 
-    LogStore.add_logger('lvl_30')
-    LogStore.add_logger('lvl_40')
-
-    LogStore.set_level('lvl_30', 30)
-    LogStore.set_level('lvl_40', 40)
+    LogStore.add_logger(name)
+    LogStore.set_level(name, level)
 
     LogStore.show_loggers()
 # --------------------------------
-def main():
+@pytest.mark.parametrize('level', Data.l_level)
+def test_logzero(level : int):
     '''
-    Tests start here
+    Tests logzero
     '''
-    test_messages()
-    test_level()
-    test_show()
-# --------------------------------
-if __name__ == '__main__':
-    main()
+    LogStore.backend = 'logzero'
+
+    name = f'logzero_{level}'
+    log  = LogStore.add_logger(name)
+    LogStore.set_level(name, level)
+
+    print(30 * '-')
+    print(f'Level: {level}')
+    print(30 * '-')
+    log.debug('debug')
+    log.info('info')
+    log.warning('warning')
+    log.error('error')
+    log.critical('critical')
+    print(30 * '-')
