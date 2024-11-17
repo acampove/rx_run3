@@ -446,6 +446,18 @@ axes:
 
 # Manipulating ROOT files
 
+## Getting trees from file
+
+The lines below will return a dictionary with trees from the handle to a ROOT file:
+
+```python
+import dmu.rfile.utilities   as rfut
+
+ifile  = TFile("/path/to/root/file.root")
+
+d_tree = rfut.get_trees_from_file(ifile)
+```
+
 ## Printing contents
 
 The following lines will create a `file.txt` with the contents of `file.root`, the text file will be in the same location as the
