@@ -1,12 +1,12 @@
 '''
 Module containing utility functions needed by unit tests
 '''
-
+import os
 from typing              import Union
 from dataclasses         import dataclass
 from importlib.resources import files
 
-from ROOT import RDF
+from ROOT import RDF, TFile, RDataFrame
 
 import pandas as pnd
 import numpy
@@ -89,3 +89,31 @@ def get_config(name : Union[str,None] = None):
 
     return d_cfg
 # -------------------------------
+def _get_rdf(nentries : int) -> RDataFrame:
+    rdf = RDataFrame(nentries)
+    rdf = rdf.Define('x', '0')
+    rdf = rdf.Define('y', '1')
+    rdf = rdf.Define('z', '2')
+
+    return rdf
+# -------------------------------
+def get_file_with_trees(path : str) -> TFile:
+    '''
+    Picks full path to toy ROOT file, in the form of /a/b/c/file.root
+    returns handle to it
+    '''
+    dir_name    = os.path.dirname(path)
+    os.makedirs(dir_name, exist_ok=True)
+
+    snap        = RDF.RSnapshotOptions()
+    snap.fMode  = 'recreate'
+
+    l_tree_name = ['odir/idir/a', 'dir/b', 'c']
+    l_nevt      = [    100, 200, 300]
+
+    l_rdf = [ _get_rdf(nevt) for nevt in l_nevt ]
+    for rdf, tree_name in zip(l_rdf, l_tree_name):
+        rdf.Snapshot(tree_name, path, ['x', 'y', 'z'], snap)
+        snap.fMode  = 'update'
+
+    return TFile(path)
