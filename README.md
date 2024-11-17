@@ -478,7 +478,7 @@ This is mostly needed from the command line and can be done with:
 print_trees -p /path/to/file.root
 ```
 
-which would produce a `/pat/to/file.txt` file witht the contents, which would look like:
+which would produce a `/pat/to/file.txt` file with the contents, which would look like:
 
 ```
 Directory/Treename
