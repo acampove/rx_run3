@@ -489,6 +489,39 @@ Directory/Treename
     B_ENDVERTEX_CHI2DOF           Double_t
 ```
 
+## Comparing ROOT files 
+
+Given two ROOT files the command below:
+
+```bash
+compare_root_files -f file_1.root file_2.root
+```
+
+will check if:
+
+1. The files have the same trees. If not it will print which files are in the first file but not in the second
+and vice versa.
+1. The trees have the same branches. The same checks as above will be carried out here.
+1. The branches of the corresponding trees have the same values.
+
+the output will also go to a `summary.yaml` file that will look like:
+
+```yaml
+'Branches that differ for tree: Hlt2RD_BToMuE/DecayTree':
+  - L2_BREMHYPOENERGY
+  - L2_ECALPIDMU
+  - L1_IS_NOT_H
+'Branches that differ for tree: Hlt2RD_LbToLMuMu_LL/DecayTree':
+  - P_CaloNeutralHcal2EcalEnergyRatio
+  - P_BREMENERGY
+  - Pi_IS_NOT_H
+  - P_BREMPIDE
+Trees only in file_1.root: []
+Trees only in file_2.root:
+  - Hlt2RD_BuToKpEE_MVA_misid/DecayTree
+  - Hlt2RD_BsToPhiMuMu_MVA/DecayTree
+```
+
 # Text manipulation
 
 ## Transformations
