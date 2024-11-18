@@ -1,10 +1,14 @@
+'''
+Module containing selector class 
+'''
+
 import pprint
-import data_checks.utilities as utdc
+import post_ap.utilities as utdc
 
-from log_store  import log_store
 from atr_mgr    import mgr as amgr
+from dmu.logging.log_store import LogStore
 
-log = log_store.add_logger('data_checks:selector')
+log = LogStore.add_logger('post_ap:selector')
 # -------------------------------------------------------------------
 class selector:
     '''
