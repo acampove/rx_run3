@@ -51,9 +51,9 @@ check_env()
         exit 1
     fi
 
-    DCHECK=$(pip show data_checks | grep "Editable project location" | awk -F ': ' '{print$2}' | sed 's|/src||g')
+    DCHECK=$(pip show post_ap | grep "Editable project location" | awk -F ': ' '{print$2}' | sed 's|/src||g')
     if [[ ! -d $DCHECK ]];then
-        echo "Cannot find directory with data_checks project"
+        echo "Cannot find directory with post_ap project"
         exit 1
     fi
 }
@@ -98,5 +98,5 @@ SE=CERN-USER
 get_opts "$@"
 check_env
 
-update $DCHECK/src/data_checks_data/dt_2024_turbo_comp.yaml
-update $DCHECK/src/data_checks_data/mc_2024_turbo_comp.yaml
+update $DCHECK/src/post_ap_data/dt_2024_turbo_comp.yaml
+update $DCHECK/src/post_ap_data/mc_2024_turbo_comp.yaml
