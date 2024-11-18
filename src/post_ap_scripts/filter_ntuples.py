@@ -5,9 +5,10 @@ Script used to filter ntuples produced by AP
 
 import argparse
 
-from log_store                 import log_store
-from data_checks.ntuple_filter import ntuple_filter
+from dmu.logging.log_store     import LogStore
+from post_ap.ntuple_filter import ntuple_filter
 
+log=LogStore.add_logger('dmu:post_ap_scripts:filter_ntuples')
 #----------------------------------------
 class Data:
     '''
@@ -20,9 +21,9 @@ class Data:
     log_lv  : int
 #----------------------------------------
 def _set_log():
-    log_store.set_level('rx_scripts:atr_mgr:mgr',             30)
-    log_store.set_level('data_checks:FilterFile'   , Data.log_lv)
-    log_store.set_level('data_checks:ntuple_filter', Data.log_lv)
+    LogStore.set_level('rx_scripts:atr_mgr:mgr',             30)
+    LogStore.set_level('post_ap:FilterFile'   , Data.log_lv)
+    LogStore.set_level('post_ap:ntuple_filter', Data.log_lv)
 #----------------------------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Will produce a smaller ntuple from a large one, for a given group of files')
