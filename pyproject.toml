@@ -1,5 +1,5 @@
 [project]
-name        = 'data_checks'
+name        = 'post_ap'
 version     = '0.0.1'
 dependencies= ['mplhep', 'tqdm', 'rx_scripts', 'apd', 'xrootd', 'matplotlib', 'data_manipulation_utilities']
 
@@ -10,16 +10,16 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
-save_pfns            ='data_checks_scripts.save_pfns:main'
-ntup_info            ='data_checks_scripts.ntup_info:main'
-plot_vars            ='data_checks_scripts.plot_vars:main'
-link_merge           ='data_checks_scripts.link_merge:main'
-filter_ntuples       ='data_checks_scripts.filter_ntuples:main'
-run3_download_ntuples='data_checks_scripts.run3_download_ntuples:main'
+save_pfns            ='post_ap_scripts.save_pfns:main'
+ntup_info            ='post_ap_scripts.ntup_info:main'
+plot_vars            ='post_ap_scripts.plot_vars:main'
+link_merge           ='post_ap_scripts.link_merge:main'
+filter_ntuples       ='post_ap_scripts.filter_ntuples:main'
+run3_download_ntuples='post_ap_scripts.run3_download_ntuples:main'
 
 [tool.setuptools.package-data]
-'data_checks_data' = ['*.json', '*.toml']
+'post_ap_data' = ['*.json', '*.toml']
 
 [tool.setuptools]
-script-files=['src/data_checks_scripts/update_tarball', 'src/data_checks_scripts/update_config']
+script-files=['src/post_ap_scripts/update_tarball', 'src/post_ap_scripts/update_config']
 
