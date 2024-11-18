@@ -85,9 +85,9 @@ initialize()
     SCRIPTS=$TMP
     echo  "rx_scripts --->  $SCRIPTS"               >> $TMPLOG
 
-    set_pkg_path data_checks 
+    set_pkg_path post_ap 
     DCHECKS=$TMP
-    echo "data_checks --->  $DCHECKS"               >> $TMPLOG
+    echo "post_ap --->  $DCHECKS"               >> $TMPLOG
 
     column -t $TMPLOG
 }
@@ -131,7 +131,7 @@ make_tarball()
 
     tar -czf dcheck.tar dcheck
     echo "Running: tar -czf dcheck.tar dcheck"
-    check "Tar data_checks"
+    check "Tar post_ap"
 
     cd -
 }
@@ -150,11 +150,10 @@ install_pkgs()
 
     pip install $DCHECKS > /dev/null
     echo "Running: pip install $DCHECKS" 
-    check "Install data_checks"
+    check "Install post_ap"
 }
 #--------------------------------
 get_args "$@"
 initialize
 make_tarball
 upload
-
