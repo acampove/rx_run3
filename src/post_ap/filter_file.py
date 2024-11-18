@@ -5,10 +5,11 @@ Module containing FilterFile class
 import os
 import fnmatch
 import tqdm
-import utils_noroot          as utnr
 
 from ROOT                  import RDataFrame, TFile, RDF
 from dmu.logging.log_store import LogStore
+
+import dmu.generic.utilities as gut
 from dmu.rfile.rfprinter   import RFPrinter
 
 import post_ap.utilities as utdc
@@ -340,7 +341,7 @@ class FilterFile:
         rdf.name     = line_name
 
         if self._store_branch:
-            utnr.dump_json(l_flt, f'./{line_name}.json')
+            gut.dump_json(l_flt, f'./{line_name}.json')
 
         return rdf
     # --------------------------------------
@@ -398,7 +399,7 @@ class FilterFile:
         obj = RFPrinter(path = file_path)
         obj.save()
     # --------------------------------------
-    @utnr.timeit
+    @gut.timeit
     def run(self):
         '''
         Will run filtering of files
