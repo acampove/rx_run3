@@ -346,12 +346,39 @@ arr_val = numpy.array([10, 20, 30])
 rdf     = ut.add_column(rdf, arr_val, 'values')
 ```
 
-thed `add_column` function will check for:
+the `add_column` function will check for:
 
 1. Presence of a column with the same name
 2. Same size for array and existing dataframe
 
 and return a dataframe with the added column
+
+## Attaching attributes
+
+**Use case** When performing operations in dataframes, like `Filter`, `Range` etc; a new instance of the dataframe
+will be created. One might want to attach attributes to the dataframe, like the name of the file or the tree, etc.
+Those attributes will thus be dropped. In order to deal with this one can do:
+
+```python
+from dmu.rdataframe.atr_mgr import AtrMgr
+# Pick up the attributes
+obj = AtrMgr(rdf)
+
+# Do things to dataframe
+rdf = rdf.Filter(x, y)
+rdf = rdf.Define('a', 'b')
+
+# Put back the attributes
+rdf = obj.add_atr(rdf)
+```
+
+The attributes can also be saved to JSON with:
+
+```python
+obj = AtrMgr(rdf)
+...
+obj.to_json('/path/to/file.json')
+```
 
 # Dataframes
 
