@@ -17,3 +17,9 @@ def test_timeit():
 
     fun()
 # -------------------------
+def test_dump_json():
+    '''
+    Tests dump_json
+    '''
+    gut.dump_json([1,2,3,4], '/tmp/list.json')
+# -------------------------
