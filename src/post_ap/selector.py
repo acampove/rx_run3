@@ -5,8 +5,9 @@ Module containing selector class
 import pprint
 from typing                import Union
 from ROOT                  import RDataFrame
-from atr_mgr               import mgr        as amgr
-from dmu.logging.log_store import LogStore
+
+from dmu.rdataframe.atr_mgr import AtrMgr
+from dmu.logging.log_store  import LogStore
 
 import post_ap.utilities as utdc
 
@@ -43,7 +44,7 @@ class selector:
             log.error(f'Invalid value for is_mc: {self._is_mc}')
             raise ValueError
 
-        self._atr_mgr = amgr(self._rdf)
+        self._atr_mgr = AtrMgr(self._rdf)
 
         self._set_process()
 
