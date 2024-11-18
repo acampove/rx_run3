@@ -1,6 +1,0 @@
-[selection]
-prescale=1
-
-[selection.cuts]
-BKGCAT='BKGCAT == 0 || BKGCAT == 10 || BKGCAT == 50'
-
