@@ -11,10 +11,10 @@ from ROOT                  import RDataFrame, TFile, RDF
 from dmu.logging.log_store import LogStore
 from dmu.rfile.rfprinter   import RFPrinter
 
-import data_checks.utilities as utdc
-from data_checks.selector  import selector
+import post_ap.utilities as utdc
+from post_ap.selector  import selector
 
-log = LogStore.add_logger('data_checks:FilterFile')
+log = LogStore.add_logger('post_ap:FilterFile')
 # --------------------------------------
 class FilterFile:
     '''
