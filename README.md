@@ -2,6 +2,38 @@
 
 These are tools that can be used for different data analysis tasks.
 
+# Generic
+
+This section describes generic tools that could not be put in a specific category, but tend to be useful.
+
+## Timer
+
+In order to benchmark functions do:
+
+```python
+import dmu.generic.utilities as gut
+
+# Needs to be turned on, it's off by default
+gut.TIMER_ON=True
+@gut.timeit
+def fun():
+    sleep(3)
+
+fun()
+```
+
+## JSON dumper
+
+The following lines will dump data (dictionaries, lists, etc) to a JSON file:
+
+```python
+import dmu.generic.utilities as gut
+
+data = [1,2,3,4]
+
+gut.dump_json(data, '/tmp/list.json')
+```
+
 # Physics
 
 ## Truth matching
