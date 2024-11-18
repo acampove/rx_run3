@@ -18,4 +18,4 @@ plots:
         labels  : ['Run Number', '']
 
 saving:
-    plt_dir : '/publicfs/ucas/user/campoverde/Packages/RK/data_checks/plots/hlt_comparison'
+    plt_dir : '/publicfs/ucas/user/campoverde/Packages/RK/post_ap/plots/hlt_comparison'
