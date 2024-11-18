@@ -18,10 +18,10 @@ from dmu.rfile.rfprinter import RFPrinter
 import tqdm
 import yaml
 
-from ROOT      import TFileMerger, TTree
-from log_store import log_store
+from ROOT                   import TFileMerger, TTree
+from dmu.logging.log_store  import LogStore
 
-log = log_store.add_logger('rx:data_checks:link_merge')
+log = LogStore.add_logger('post_ap:link_merge')
 # ---------------------------------
 @dataclass
 class Data:
@@ -198,7 +198,7 @@ def _get_proc_evt():
     {event_type : process}
     '''
 
-    file_path = files('data_checks_data').joinpath('link_conf.yaml')
+    file_path = files('post_ap_data').joinpath('link_conf.yaml')
     file_path = str(file_path)
     log.debug(f'Loading config from: {file_path}')
     if not os.path.isfile(file_path):
@@ -224,7 +224,7 @@ def _kind_from_decay(decay):
     return Data.cfg_dat['decays'][decay]
 # ---------------------------------
 def _load_config():
-    conf_path = files('data_checks_data').joinpath('link_conf.yaml')
+    conf_path = files('post_ap_data').joinpath('link_conf.yaml')
     conf_path = str(conf_path)
     if not os.path.isfile(conf_path):
         raise FileNotFoundError(f'Cannot find {conf_path}')
