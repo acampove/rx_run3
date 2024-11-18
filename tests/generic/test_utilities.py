@@ -7,6 +7,9 @@ import dmu.generic.utilities as gut
 
 # -------------------------
 def test_timeit():
+    '''
+    Will test timer
+    '''
     gut.TIMER_ON=True
     @gut.timeit
     def fun():
