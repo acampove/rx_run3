@@ -7,12 +7,12 @@ from importlib.resources import files
 
 import toml
 import yaml
-import utils_noroot as utnr
+import dmu.generic.utilities as gut
 
 from XRootD              import client
-from log_store           import log_store
+from dmu.logging.log_store import LogStore
 
-log = log_store.add_logger('data_checks:utilities')
+log = LogStore.add_logger('post_ap:utilities')
 local_config = False
 
 # --------------------------------------
@@ -38,7 +38,7 @@ def _load_local_config(cfg_nam : str, kind : str) -> dict:
     '''
     Will pick up config file from installed project
     '''
-    cfg_path = files('data_checks_data').joinpath(f'{cfg_nam}.{kind}')
+    cfg_path = files('post_ap_data').joinpath(f'{cfg_nam}.{kind}')
     cfg_path = str(cfg_path)
     if not os.path.isfile(cfg_path):
         log.error(f'Config path not found: {cfg_path}')
@@ -56,7 +56,7 @@ def _load_local_config(cfg_nam : str, kind : str) -> dict:
 
     return data
 # --------------------------------------
-@utnr.timeit
+@gut.timeit
 def _load_grid_config(cfg_nam :str, kind : str) -> dict:
     '''
     Will use XROOTD to pick up file from grid
