@@ -1,13 +1,6 @@
 [project]
 name        = 'post_ap'
 description = 'Project with code used to ease data manipulation tasks'
-long_description = '''
-Project which can:
-
-- Ease and automate fitting tasks
-- Ease and make plotting tasks more flexible 
-- Automate handling of ROOT files
-'''
 version     = '0.0.1'
 dependencies= ['mplhep', 'tqdm', 'rx_scripts', 'apd', 'xrootd', 'matplotlib', 'data_manipulation_utilities']
 
