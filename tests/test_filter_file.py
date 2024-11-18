@@ -5,10 +5,10 @@ File containing tests for FilterFile class
 import pytest
 from dmu.logging.log_store import LogStore
 
-import data_checks.utilities as ut
-from data_checks.filter_file import FilterFile
+import post_ap.utilities as ut
+from post_ap.filter_file import FilterFile
 
-log = LogStore.add_logger('data_checks:test_filter_file')
+log = LogStore.add_logger('post_ap:test_filter_file')
 # --------------------------------------
 class Data:
     '''
@@ -27,9 +27,9 @@ def _initialize():
     log.info('Initializing')
 
     LogStore.set_level('rx_scripts:atr_mgr:mgr', 30)
-    LogStore.set_level('data_checks:selector'  , 20)
-    LogStore.set_level('data_checks:utilities' , 30)
-    LogStore.set_level('data_checks:FilterFile', 20)
+    LogStore.set_level('post_ap:selector'  , 20)
+    LogStore.set_level('post_ap:utilities' , 30)
+    LogStore.set_level('post_ap:FilterFile', 20)
 # --------------------------------------
 @pytest.mark.parametrize('local_config', Data.l_args_config)
 def test_dt(local_config : bool):
