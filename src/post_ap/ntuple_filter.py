@@ -34,7 +34,9 @@ class ntuple_filter:
         self._index   = index
         self._ngroup  = ngroup
 
-        self._cfg_dat = None
+        self._cfg_nam     : str
+        self._cfg_dat     : dict
+        self._d_root_path : dict[str,str]
 
         self._initialized = False
     # ---------------------------------------------
