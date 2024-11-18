@@ -3,10 +3,9 @@ Module containing utility functions to be used with ROOT dataframes
 '''
 
 import re
-import awkward as ak
-
 from dataclasses import dataclass
 
+import awkward as ak
 import numpy
 
 from ROOT import RDataFrame
