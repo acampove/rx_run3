@@ -1,8 +1,9 @@
 '''
 Module containing generic utility functions
 '''
-
+import os
 import time
+import json
 import inspect
 
 from typing import Callable
@@ -50,4 +51,19 @@ def timeit(f):
 
         return result
     return wrap
+# --------------------------------
+def dump_json(data, path : str, sort_keys : bool = False):
+    '''
+    Saves data as JSON
+
+    Parameters
+    data     : dictionary, list, etc
+    path     : Path to JSON file where to save it
+    sort_keys: Will set sort_keys argument of json.dump function 
+    '''
+    dir_name = os.path.dirname(path)
+    os.makedirs(dir_name, exist_ok=True)
+
+    with open(path, 'w', encoding='utf-8') as ofile:
+        json.dump(data, ofile, indent=4, sort_keys=sort_keys)
 # --------------------------------
