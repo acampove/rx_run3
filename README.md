@@ -67,7 +67,7 @@ where `-c` will correspond to the config file.
 
 # Submitting jobs
 
-The instructions below need to be done outside the virtual environment in an environment with access to `dirac` and in the `data_checks_grid`
+The instructions below need to be done outside the virtual environment in an environment with access to `dirac` and in the `post_ap_grid`
 directory.
 
 First run a test job with:
@@ -142,6 +142,6 @@ plot_vars -y 2024 -v v2 -c bukee_opt -d data_ana_cut_bp_ee:Data ctrl_BuToKpEE_an
 ```
 
 which will run the plotting of the variables in a config specified by `bukee_opt` where also axis, names, ranges, etc are
-specified. This config is in `data_checks_data`.
+specified. This config is in `post_ap_data`.
 The script above will overlay data and MC.
 
