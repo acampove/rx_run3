@@ -1,12 +1,16 @@
+'''
+Module with definition of ntuple_filter class
+'''
+import os
 import math
-import utils_noroot          as utnr
-import data_checks.utilities as utdc
-
-from log_store               import log_store
+import json
 from importlib.resources     import files
-from data_checks.filter_file import FilterFile
+from dmu.logging.log_store   import LogStore
 
-log = log_store.add_logger('data_checks:ntuple_filter')
+import post_ap.utilities   as utdc
+from   post_ap.filter_file     import FilterFile
+
+log = LogStore.add_logger('post_ap:ntuple_filter')
 # ----------------------------------------------------------------
 class ntuple_filter:
     '''
