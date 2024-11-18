@@ -1,32 +1,51 @@
-from data_checks.selector import selector
-from log_store            import log_store
-from ROOT                 import RDataFrame
+'''
+Module with tests for selector class
+'''
+import dataclasses
 
-import data_checks.utilities as ut
+from dmu.logging.log_store import LogStore
+from ROOT                  import RDataFrame
+from post_ap.selector      import selector
 
-log = log_store.add_logger('data_checks:test_selector')
+log = LogStore.add_logger('post_ap:test_selector')
 # --------------------------------------
-class data:
+@dataclass
+class Data:
+    '''
+    Class used to store shared attributes
+    '''
     dt_path = '/home/acampove/data/aprod/downloads/flt_27_08_2024_dt_2024_turbo/00231366_00000001_1.ftuple.root'
     mc_path = '/home/acampove/data/aprod/downloads/flt_29_08_2024_mc_2024_turbo_comp/bukee/mc_bu_jpsik_ee_12153001_nu4p3_magdown_turbo_hlt1_2_tupling_00231483_00000002_1.tuple.root'
 # --------------------------------------
-def set_log():
-    log_store.set_level('data_checks:selector'  , 10)
-    log_store.set_level('rx_scripts:atr_mgr:mgr', 30)
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('post_ap:selector'  , 10)
+    LogStore.set_level('rx_scripts:atr_mgr:mgr', 30)
 # --------------------------------------
 def test_mc():
-    rdf = RDataFrame('Hlt2RD_BuToKpEE', data.mc_path)
+    '''
+    Test selection in MC
+    '''
+    rdf = RDataFrame('Hlt2RD_BuToKpEE', Data.mc_path)
     obj = selector(rdf=rdf, cfg_nam='cuts_EE_2024', is_mc=True)
     rdf = obj.run()
 # --------------------------------------
 def test_dt():
-    rdf = RDataFrame('Hlt2RD_BuToKpEE', data.dt_path)
+    '''
+    Test selection in data
+    '''
+
+    rdf = RDataFrame('Hlt2RD_BuToKpEE', Data.dt_path)
 
     obj = selector(rdf=rdf, cfg_nam='cuts_EE_2024', is_mc=False)
     rdf = obj.run()
 # --------------------------------------
 def test_cfl():
-    rdf = RDataFrame('Hlt2RD_BuToKpEE', data.mc_path)
+    '''
+    Test retrieving multiple dataframes, one after each cut 
+    '''
+
+    rdf = RDataFrame('Hlt2RD_BuToKpEE', Data.mc_path)
 
     obj   = selector(rdf=rdf, cfg_nam='cuts_EE_2024', is_mc=True)
     d_rdf = obj.run(as_cutflow=True)
@@ -36,15 +55,3 @@ def test_cfl():
 
         log.info(f'{key:<20}{num:<20}')
 # --------------------------------------
-def main():
-    set_log()
-    ut.local_config = True
-
-    test_cfl()
-    test_dt()
-    test_mc()
-# --------------------------------------
-
-
-if __name__ == '__main__':
-    main()
