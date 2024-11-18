@@ -3,9 +3,9 @@ Module with unit tests for utilities functions
 '''
 
 import pytest
-from log_store import log_store
 
-import data_checks.utilities as ut
+from dmu.logging.log_store import LogStore
+import post_ap.utilities as ut
 
 #----------------------------------------
 class Data:
@@ -20,7 +20,7 @@ class Data:
 #----------------------------------------
 @pytest.fixture
 def _initialize():
-    log_store.set_level('data_checks:utilities', 10)
+    LogStore.set_level('post_ap:utilities', 10)
 #----------------------------------------
 @pytest.mark.parametrize('is_local', [True, False])
 def test_simple(is_local : bool):
