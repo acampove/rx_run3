@@ -6,15 +6,15 @@ Script used to save PFNs
 import re
 import logging
 import argparse
-
-from importlib.resources import files
-from log_store           import log_store
+from importlib.resources    import files
 
 import apd
-import utils_noroot          as utnr
-import data_checks.utilities as utdc
+import dmu.generic.utilities as gut
+from dmu.logging.log_store  import LogStore
 
-log=log_store.add_logger('data_checks:save_pfns')
+import post_ap.utilities as utdc
+
+log=LogStore.add_logger('post_ap:save_pfns')
 #------------------------------------
 class Data:
     '''
@@ -106,14 +106,14 @@ def _save_pfns(d_path):
     '''
     Save dictionary of samplename -> PFNs to JSON
     '''
-    pfn_path= files('data_checks_data').joinpath(f'{Data.config}.json')
+    pfn_path= files('post_ap_data').joinpath(f'{Data.config}.json')
     log.info(f'Saving to: {pfn_path}')
-    utnr.dump_json(d_path, pfn_path)
+    gut.dump_json(d_path, pfn_path)
 #------------------------------------
 def _set_log():
-    log_store.set_level('data_checks:save_pfns', Data.log_lvl)
+    log_store.set_level('post_ap:save_pfns', Data.log_lvl)
     if Data.log_lvl == 10:
-        log_store.set_level('data_checks:utilities', Data.log_lvl)
+        log_store.set_level('post_ap:utilities', Data.log_lvl)
 
         logging.basicConfig()
         log_apd=logging.getLogger('apd')
