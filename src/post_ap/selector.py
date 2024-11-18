@@ -3,6 +3,9 @@ Module containing selector class
 '''
 
 import pprint
+from typing import Union
+
+from ROOT import RDataFrame
 import post_ap.utilities as utdc
 
 from atr_mgr    import mgr as amgr
@@ -194,7 +197,7 @@ class selector:
             rep = rdf.Report()
             rep.Print()
     # -------------------------------------------------------------------
-    def run(self, as_cutflow=False):
+    def run(self, as_cutflow=False) -> Union[RDataFrame, dict[str,RDataFrame]]:
         '''
         Will return ROOT dataframe(s)
 
