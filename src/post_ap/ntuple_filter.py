@@ -89,7 +89,7 @@ class ntuple_filter:
         '''
         log.debug('Reformating')
 
-        d_path_ref = dict()
+        d_path_ref = {} 
         for key, l_path in d_path.items():
             key   = key.replace(',', '_')
             d_tmp = { path : key for path in l_path }
@@ -109,8 +109,7 @@ class ntuple_filter:
 
         nfiles = len(d_path)
         if nfiles < self._ngroup:
-            log.error(f'Number of files is smaller than number of groups: {nfiles} < {self._ngroup}')
-            raise
+            raise ValueError(f'Number of files is smaller than number of groups: {nfiles} < {self._ngroup}')
 
         log.info(f'Will split {nfiles} files into {self._ngroup} groups')
 
@@ -119,7 +118,7 @@ class ntuple_filter:
         index_2    = group_size * (self._index + 1) if self._index + 1 < self._ngroup else None
 
         log.info(f'Using range: {index_1}-{index_2}')
-        l_pfn      = [pfn for pfn in d_path]
+        l_pfn      = list(d_path)
         l_pfn.sort()
         l_pfn      = l_pfn[index_1:index_2]
         d_group    = { pfn : d_path[pfn] for pfn in l_pfn}
