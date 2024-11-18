@@ -3,13 +3,12 @@ Module containing selector class
 '''
 
 import pprint
-from typing import Union
-
-from ROOT import RDataFrame
-import post_ap.utilities as utdc
-
-from atr_mgr    import mgr as amgr
+from typing                import Union
+from ROOT                  import RDataFrame
+from atr_mgr               import mgr        as amgr
 from dmu.logging.log_store import LogStore
+
+import post_ap.utilities as utdc
 
 log = LogStore.add_logger('post_ap:selector')
 # -------------------------------------------------------------------
