@@ -1,6 +1,7 @@
 [project]
 name        = 'data_manipulation_utilities'
 version     = '0.0.1'
+readme      = 'README.md'
 dependencies= [
 'zfit', 
 'PyYAML', 
