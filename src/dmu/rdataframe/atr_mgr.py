@@ -26,10 +26,19 @@ class AtrMgr:
     def _store_atr(self, rdf : RDataFrame):
         self.d_in_atr = self._get_atr(rdf)
     #------------------------
+    def _skip_attr(self, name : str) -> bool:
+        if name.startswith('__') and name.endswith('__'):
+            return True
+
+        return False
+    #------------------------
     def _get_atr(self, rdf : RDataFrame):
         l_atr = dir(rdf)
         d_atr = {}
         for atr in l_atr:
+            if self._skip_attr(atr):
+                continue
+
             val = getattr(rdf, atr)
             d_atr[atr] = val
 
