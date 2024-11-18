@@ -9,17 +9,17 @@ import glob
 import pprint
 import argparse
 
-from typing              import Union
-from dataclasses         import dataclass
-from functools           import cache
-from importlib.resources import files
-from dmu.rfile.rfprinter import RFPrinter
+from typing                 import Union
+from dataclasses            import dataclass
+from functools              import cache
+from importlib.resources    import files
+from dmu.rfile.rfprinter    import RFPrinter
+from dmu.logging.log_store  import LogStore
 
 import tqdm
 import yaml
 
 from ROOT                   import TFileMerger, TTree
-from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('post_ap:link_merge')
 # ---------------------------------
