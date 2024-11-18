@@ -1,5 +1,5 @@
 '''
-Module containing selector class 
+Module containing selector class
 '''
 
 import pprint
@@ -18,21 +18,21 @@ class selector:
     Class used to apply selections to ROOT dataframes
     '''
     # -------------------------------------------------------------------
-    def __init__(self, rdf=None, cfg_nam=None, is_mc=None):
+    def __init__(self, rdf : RDataFrame, cfg_nam : str, is_mc : bool):
         '''
-        rdf          : ROOT dataframe
-        cfg_nam (str): Name without extension of toml config file
-        is_mc (bool) : MC or real data?
+        rdf    : ROOT dataframe
+        cfg_nam: Name without extension of toml config file
+        is_mc  : MC or real data?
         '''
 
         self._rdf       = rdf
         self._cfg_nam   = cfg_nam
         self._is_mc     = is_mc
 
-        self._proc      = None
-        self._atr_mgr   = None
-        self._d_sel     = None
-        self._d_rdf     = dict()
+        self._proc      : str
+        self._atr_mgr   : AtrMgr
+        self._d_sel     : dict
+        self._d_rdf     : dict[str,   RDataFrame]
 
         self._initialized = False
     # -------------------------------------------------------------------
@@ -111,7 +111,7 @@ class selector:
         for key, cut in d_cut.items():
             # Skip selection if this block of cuts does not
             # correspond to current tree
-            if self._proc != key and key != 'any':
+            if key not in ['any', self._proc]:
                 continue
 
             skip_cut = False
