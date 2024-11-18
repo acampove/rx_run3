@@ -9,6 +9,7 @@ from dataclasses import dataclass
 
 import mplhep
 import matplotlib.pyplot as plt
+# TODO: do we need read_selection here? Then we need to depend on rx_selection
 import read_selection    as rs
 
 from ROOT                   import RDataFrame
