@@ -3,7 +3,7 @@ name        = 'post_ap'
 description = 'Project with code used to ease data manipulation tasks'
 version     = '0.0.1'
 readme      = 'README.md'
-dependencies= ['mplhep', 'tqdm', 'rx_scripts', 'apd', 'xrootd', 'matplotlib', 'data_manipulation_utilities']
+dependencies= ['mplhep', 'tqdm', 'apd', 'xrootd', 'matplotlib', 'data_manipulation_utilities']
 
 [project.optional-dependencies]
 dev  = ['pytest']
