@@ -59,12 +59,21 @@ class ntuple_filter:
         correspondence
         '''
 
-        json_path = files('data_checks_data').joinpath(f'{self._dataset}_{self._cfg_ver}.json')
-        d_path    = utnr.load_json(json_path)
+        json_path = files('post_ap_data').joinpath(f'{self._dataset}_{self._cfg_ver}.json')
+        json_path = str(json_path)
+
+        d_path    = self._load_json(json_path)
         d_path    = self._reformat(d_path)
         d_path    = self._get_group(d_path)
 
         self._d_root_path = d_path
+    # ---------------------------------------------
+    def _load_json(self, json_path : str) -> dict:
+        if not os.path.isfile(json_path):
+            raise FileNotFoundError(f'File not found: {json_path}')
+
+        with open(json_path, encoding='utf-8') as ifile:
+            return json.load(ifile)
     # ---------------------------------------------
     def _reformat(self, d_path):
         '''
