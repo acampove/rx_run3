@@ -2,8 +2,6 @@
 Script used to make diagnostic plots from filtered ntuples
 '''
 
-#!/usr/bin/env python3
-
 import copy
 import argparse
 
@@ -13,13 +11,13 @@ import mplhep
 import matplotlib.pyplot as plt
 import read_selection    as rs
 
-from ROOT                 import RDataFrame
-from log_store            import log_store
-from dmu.plotting.plotter import Plotter
+from ROOT                   import RDataFrame
+from dmu.logging.log_store  import LogStore
+from dmu.plotting.plotter   import Plotter
 
-import data_checks.utilities as ut
+import post_ap.utilities as ut
 
-log=log_store.add_logger('data_checks:plot_vars')
+log=LogStore.add_logger('post_ap:plot_vars')
 # -------------------------------------
 @dataclass
 class Data:
@@ -94,7 +92,7 @@ def main():
 
     ut.local_config=True
     Data.cfg_dat = ut.load_config(Data.cfg_nam, kind='yaml')
-    log_store.set_level('data_checks:plot_vars', Data.log_lvl)
+    log_store.set_level('post_ap:plot_vars', Data.log_lvl)
 
     for skip_bdt in [True, False]:
         d_inp = Data.cfg_dat['input']['file_wc']
