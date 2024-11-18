@@ -18,14 +18,15 @@ class ntuple_filter:
     1. Picking a subset of the trees.
     2. Picking a subset of the branches.
     '''
-    def __init__(self, dataset=None, cfg_ver=None, index=None, ngroup=None):
+    # ---------------------------------------------
+    def __init__(self, dataset: str, cfg_ver : str, index : int, ngroup : int):
         '''
         Parameters
         ---------------------
-        dataset (str): Dataset used, e.g. dt_2024_turbo
-        cfg_ver (str): Type of configuration, e.g. comp (comparison)
-        index   (int): Index of subsample to process, they start at zero up to ngroup - 1
-        ngroup  (int): Number of groups into which to split filter
+        dataset: Dataset used, e.g. dt_2024_turbo
+        cfg_ver: Type of configuration, e.g. comp (comparison)
+        index  : Index of subsample to process, they start at zero up to ngroup - 1
+        ngroup : Number of groups into which to split filter
         '''
 
         self._dataset = dataset
