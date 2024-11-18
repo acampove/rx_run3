@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 '''
 Script used to save PFNs
 '''
@@ -111,9 +110,9 @@ def _save_pfns(d_path):
     gut.dump_json(d_path, pfn_path)
 #------------------------------------
 def _set_log():
-    log_store.set_level('post_ap:save_pfns', Data.log_lvl)
+    LogStore.set_level('post_ap:save_pfns', Data.log_lvl)
     if Data.log_lvl == 10:
-        log_store.set_level('post_ap:utilities', Data.log_lvl)
+        LogStore.set_level('post_ap:utilities', Data.log_lvl)
 
         logging.basicConfig()
         log_apd=logging.getLogger('apd')
