@@ -8,15 +8,15 @@ import math
 import random
 import argparse
 
-from concurrent.futures  import ThreadPoolExecutor
-from dataclasses         import dataclass
-from XRootD              import client              as clt
-from XRootD.client.flags import DirListFlags
-from log_store           import log_store
+from concurrent.futures     import ThreadPoolExecutor
+from dataclasses            import dataclass
+from XRootD                 import client              as clt
+from XRootD.client.flags    import DirListFlags
+from dmu.logging.log_store  import LogStore
 
 import tqdm
 
-log = log_store.add_logger('data_checks:run3_download_ntuples')
+log = LogStore.add_logger('post_ap:run3_download_ntuples')
 # --------------------------------------------------
 @dataclass
 class Data:
