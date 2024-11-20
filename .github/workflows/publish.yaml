@@ -22,7 +22,11 @@ jobs:
     - name: Test
       run: |
           pip install .[dev]
-          pytest
+          pytest tests/arrays
+          pytest tests/generic
+          pytest tests/logging
+          pytest tests/stats
+          pytest tests/text
     #-----------
     - name: Build a binary wheel and a source tarball
       run: python3 -m build
