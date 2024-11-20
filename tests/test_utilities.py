@@ -14,8 +14,8 @@ class Data:
     '''
 
     l_arg_kind = [
-            ('dt_2024_turbo_comp', 'toml', True),
-            ('dt_2024_turbo_comp', 'toml', False),
+            ('dt_2024_turbo_comp', 'yaml', True),
+            ('dt_2024_turbo_comp', 'yaml', False),
             ('hlt_cmp'           , 'yaml', True)]
 #----------------------------------------
 @pytest.fixture
