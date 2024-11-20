@@ -1,6 +1,6 @@
 [project]
 name        = 'data_manipulation_utilities'
-version     = '0.0.4'
+version     = '0.0.5'
 readme      = 'README.md'
 dependencies= [
 'zfit', 
@@ -36,3 +36,4 @@ compare_root_files='dmu_scripts.rfile.compare_root_files:main'
 dmu_data=['text/*.txt', 'text/*.toml', 'ml/*/*.yaml', 'plotting/*/*.yaml']
 
 [tool.setuptools]
+script-files=['src/dmu_scripts/git/publish']
