@@ -17,6 +17,7 @@ jobs:
     - name: Create and activate Conda environment
       run: |
         conda create -n myenv python=3.10 -y
+        conda init
         conda activate myenv
         conda install -y -c conda-forge pytest build root
     #-----------
