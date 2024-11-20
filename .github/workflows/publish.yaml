@@ -19,6 +19,7 @@ jobs:
       run: |
         conda config --set channel_priority strict
         conda create -c conda-forge --name git_test root
+        conda init
         conda activate git_test 
     #-----------
     - name: Test
