@@ -18,6 +18,7 @@ jobs:
     - name: Install dependencies
       run: |
         conda install conda-forge::gxx
+        conda install conda-forge::cppyy
         conda install conda-forge::root
     #-----------
     - name: Test
