@@ -1,9 +1,10 @@
 [project]
 name        = 'data_manipulation_utilities'
-version     = '0.0.2'
+version     = '0.0.3'
 readme      = 'README.md'
 dependencies= [
 'zfit', 
+'logzero',
 'PyYAML', 
 'scipy', 
 'awkward', 
