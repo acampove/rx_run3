@@ -23,14 +23,9 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-    - name: Install pytest 
-      run: >-
-        python3 -m
-        pip install
-        pytest
-        --user
     - name: Test
       run: |
+          pip install .[dev]
           pytest
   publish-to-pypi:
     name: >-
