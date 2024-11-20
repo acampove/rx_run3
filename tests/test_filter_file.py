@@ -46,8 +46,6 @@ def test_mc():
     '''
     Run test on MC
     '''
-    initialize()
-
     obj = FilterFile(kind='any_kind', file_path=Data.mc_path, cfg_nam='mc_2024_turbo_comp')
     obj.run()
 # --------------------------------------
