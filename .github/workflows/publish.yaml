@@ -17,7 +17,9 @@ jobs:
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install dependencies
       run: |
-        conda install conda-forge::root
+        conda config --set channel_priority strict
+        conda create -c conda-forge --name git_test root
+        conda activate git_test 
     #-----------
     - name: Test
       run: |
