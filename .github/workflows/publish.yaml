@@ -23,6 +23,9 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
+    - name: Test
+      run: |
+          pytest
   publish-to-pypi:
     name: >-
       Publish Python 🐍 distribution 📦 to PyPI
