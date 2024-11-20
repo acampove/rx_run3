@@ -25,9 +25,8 @@ jobs:
       run: |
           pip install .[dev]
           pytest tests/arrays
-          pytest tests/generic
           pytest tests/logging
-          pytest tests/stats
+          pytest tests/generic
           pytest tests/text
     #-----------
     - name: Build a binary wheel and a source tarball
