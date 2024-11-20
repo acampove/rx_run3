@@ -41,8 +41,7 @@ def _load_local_config(cfg_nam : str, kind : str) -> dict:
     cfg_path = files('post_ap_data').joinpath(f'{cfg_nam}.{kind}')
     cfg_path = str(cfg_path)
     if not os.path.isfile(cfg_path):
-        log.error(f'Config path not found: {cfg_path}')
-        raise FileNotFoundError
+        raise FileNotFoundError(f'Config path not found: {cfg_path}')
 
     log.warning(f'Loading local config file: {cfg_path}')
 
