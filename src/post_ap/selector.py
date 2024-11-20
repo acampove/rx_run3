@@ -32,7 +32,7 @@ class selector:
         self._proc      : str
         self._atr_mgr   : AtrMgr
         self._d_sel     : dict
-        self._d_rdf     : dict[str,   RDataFrame]
+        self._d_rdf     : dict[str,   RDataFrame] = {}
 
         self._initialized = False
     # -------------------------------------------------------------------
@@ -212,12 +212,12 @@ class selector:
 
         self._apply_selection()
 
-        self._d_rdf = { key : self._atr_mgr.add_atr(rdf) for key, rdf in self._d_rdf.items() }
+        d_rdf = { key : self._atr_mgr.add_atr(rdf) for key, rdf in self._d_rdf.items() }
 
         self._print_info(self._rdf)
 
         if as_cutflow:
-            return self._d_rdf
+            return d_rdf
 
         return self._rdf
 # -------------------------------------------------------------------
