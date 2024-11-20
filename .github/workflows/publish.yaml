@@ -1,25 +1,27 @@
 name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
 on: push
 jobs:
-  build:
-    name: Build distribution 📦
+  build-linux:
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    #-----------
-    - name: Set up Miniconda
-      uses: conda-incubator/setup-miniconda@v2
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
       with:
-        miniconda-version: "latest"
-        auto-activate-base: false
-
-    - name: Create and activate Conda environment
+        python-version: '3.10'
+    - name: Add conda to system path
       run: |
-        conda create -n myenv python=3.10 -y
-        conda init
-        conda activate myenv
-        conda install -y -c conda-forge pytest build root
+        echo $CONDA/bin >> $GITHUB_PATH
+    - name: Install dependencies
+      run: |
+        conda install root
+    #-----------
+    - name: Test
+      run: |
+          pip install .[dev]
+          pytest
     #-----------
     - name: Build a binary wheel and a source tarball
       run: python3 -m build
@@ -29,11 +31,6 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-    #-----------
-    - name: Test
-      run: |
-          pip install .[dev]
-          pytest
   publish-to-pypi:
     name: >-
       Publish Python 🐍 distribution 📦 to PyPI
