@@ -2,7 +2,9 @@
 
 This project holds code needed to transform the AP used by the RD group into something that makes ntuples with MVA HLT triggers.
 
-## Add MVA lines to `Config.py`
+## Specific to MVA lines in the RD group
+
+### Add lines to `Config.py`
 
 To do that run:
 
@@ -12,7 +14,7 @@ transform_text -i Config.py -c conf_rename.toml
 
 which will create an `output.py` file with the replacements specified in `hlt_rename.toml`.
 
-## Add MVA lines to `main.py`
+### Add lines to `main.py`
 
 To do that run:
 
