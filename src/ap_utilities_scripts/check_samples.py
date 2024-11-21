@@ -17,7 +17,6 @@ class Data:
     '''
 
     input_path  : str
-    output_path : str
     nthread     : int
     log_lvl     : int
 # --------------------------------
@@ -29,7 +28,6 @@ def _parse_args() -> None:
     args = parser.parse_args()
 
     Data.input_path  = args.input
-    Data.output_path = args.input.replace('.yaml', '_found.yaml')
     Data.nthread     = args.nthread
     Data.log_lvl     = args.log_lvl
 # --------------------------------
@@ -47,7 +45,7 @@ def main():
     _set_logs()
 
     obj=BkkChecker(Data.input_path)
-    obj.save(path=Data.output_path, nthreads=Data.nthread)
+    obj.save(nthreads=Data.nthread)
 # --------------------------------
 if __name__ == '__main__':
     main()
