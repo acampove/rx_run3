@@ -32,7 +32,7 @@ class BkkChecker:
         self._nu_path      : str = d_cfg['settings']['nu_path']
         self._polarity     : str = d_cfg['settings']['polarity']
         self._generator    : str = d_cfg['settings']['generator']
-        self._sim_version  : str = d_cfg['settings']['sim_version']
+        self._sim_version  : str = d_cfg['settings']['sim_vers']
     # -------------------------
     def _nfiles_line_from_stdout(self, stdout : str) -> str:
         l_line = stdout.split('\n')
@@ -77,12 +77,12 @@ class BkkChecker:
     def _get_samples_with_threads(self, nthreads : int) -> list[str]:
         l_found : list[bool] = []
         with ThreadPoolExecutor(max_workers=nthreads) as executor:
-            l_result = [ executor.submit(self._was_found, sample) for sample in self._l_sample ]
+            l_result = [ executor.submit(self._was_found, event_type) for event_type in self._l_event_type ]
             l_found  = [result.result() for result in l_result ]
 
-        l_sample = [ sample for sample, found in zip(self._l_sample, l_found) if found ]
+        l_event_type = [ event_type for event_type, found in zip(self._l_event_type, l_found) if found ]
 
-        return l_sample
+        return l_event_type
     # -------------------------
     def save(self, path : str, nthreads : int = 1) -> None:
         '''
