@@ -24,6 +24,8 @@ class BkkChecker:
         Takes the path to a YAML file with the list of samples
         '''
 
+        self._year = '2024'
+
         with open(path, encoding='utf-8') as ifile:
             self._l_sample = yaml.safe_load(ifile)
     # -------------------------
@@ -57,9 +59,9 @@ class BkkChecker:
         return int(nsample)
     # -------------------------
     def _was_found(self, sample : list[str]) -> bool:
-        sample_id, event_type, mc_path, polarity, _, _, nu_path, _, sim_version, generator = sample
+        _, event_type, mc_path, polarity, _, _, nu_path, _, sim_version, generator = sample
 
-        sample_path = f'/MC/{sample_id}/Beam6800GeV-{mc_path}-{polarity}-{nu_path}-25ns-{generator}/{sim_version}/HLT2-2024.W31.34/{event_type}/DST'
+        sample_path = f'/MC/{self._year}/Beam6800GeV-{mc_path}-{polarity}-{nu_path}-25ns-{generator}/{sim_version}/HLT2-2024.W31.34/{event_type}/DST'
 
         log.info(f'{"":<4}{sample_path:<100}')
 
