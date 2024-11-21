@@ -7,7 +7,8 @@ import re
 import subprocess
 import yaml
 
-from dmu.logging.log_store import LogStore
+from concurrent.futures     import ThreadPoolExecutor
+from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('ap_utilities:Bookkeeping.bkk_checker')
 # ---------------------------------
@@ -68,13 +69,27 @@ class BkkChecker:
 
         return nfile != 0
     # -------------------------
-    def save(self, path : str) -> None:
+    def _get_samples_with_threads(self, nthreads : int) -> list[str]:
+        l_found : list[bool] = []
+        with ThreadPoolExecutor(max_workers=nthreads) as executor:
+            l_result = [ executor.submit(self._was_found, sample) for sample in self._l_sample ]
+            l_found  = [result.result() for result in l_result ]
+
+        l_sample = [ sample for sample, found in zip(self._l_sample, l_found) if found ]
+
+        return l_sample
+    # -------------------------
+    def save(self, path : str, nthreads : int = 1) -> None:
         '''
         Will save list of found samples to given path
         '''
 
         log.info('Filtering input')
-        l_sample = [ sample for sample in self._l_sample if self._was_found(sample) ]
+        if nthreads == 1:
+            l_sample = [ sample for sample in self._l_sample if self._was_found(sample) ]
+        else:
+            log.info(f'Using {nthreads} threads')
+            l_sample = self._get_samples_with_threads(nthreads)
 
         dir_name = os.path.dirname(path)
         os.makedirs(dir_name, exist_ok=True)

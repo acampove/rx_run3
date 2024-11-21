@@ -11,7 +11,7 @@ from ap_utilities.bookkeeping.bkk_checker import BkkChecker
 # ----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    LogStore.set_level('ap_utilities:Bookkeeping.bkk_checker', 20)
+    LogStore.set_level('ap_utilities:Bookkeeping.bkk_checker', 10)
 # ----------------------------------------
 def test_simple():
     '''
@@ -21,4 +21,13 @@ def test_simple():
 
     obj=BkkChecker(samples_path)
     obj.save(path='/tmp/ap_utilities/existing_samples.yaml')
+# ----------------------------------------
+def test_multithreaded():
+    '''
+    Will save list of samples to YAML using 4 threads
+    '''
+    samples_path = files('ap_utilities_data').joinpath('rd_samples.yaml')
+
+    obj=BkkChecker(samples_path)
+    obj.save(path='/tmp/ap_utilities/existing_samples.yaml', nthreads=4)
 # ----------------------------------------
