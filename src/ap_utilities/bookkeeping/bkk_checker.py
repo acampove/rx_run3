@@ -4,6 +4,9 @@ Module with BkkChecker class
 
 import yaml
 
+from dmu.logging.log_store import LogStore
+
+log=LogStore.add_logger('ap_utilities:Bookkeeping.bkk_checker')
 # ---------------------------------
 class BkkChecker:
     '''
@@ -23,6 +26,7 @@ class BkkChecker:
         '''
         Will save list of found samples to given path
         '''
+        log.info(f'Saving to: {path}')
 # ---------------------------------
 
 #for sample in l_sample:
