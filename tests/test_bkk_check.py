@@ -18,6 +18,7 @@ def test_simple():
     Will save list of samples to YAML
     '''
     samples_path = files('ap_utilities_data').joinpath('rd_samples.yaml')
+    samples_path = str(samples_path)
 
     obj=BkkChecker(samples_path)
     obj.save(path='/tmp/ap_utilities/existing_samples.yaml')
@@ -27,6 +28,7 @@ def test_multithreaded():
     Will save list of samples to YAML using 4 threads
     '''
     samples_path = files('ap_utilities_data').joinpath('rd_samples.yaml')
+    samples_path = str(samples_path)
 
     obj=BkkChecker(samples_path)
     obj.save(path='/tmp/ap_utilities/existing_samples.yaml', nthreads=8)

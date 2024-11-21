@@ -4,10 +4,10 @@ Module with BkkChecker class
 
 import os
 import re
+from concurrent.futures     import ThreadPoolExecutor
+
 import subprocess
 import yaml
-
-from concurrent.futures     import ThreadPoolExecutor
 from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('ap_utilities:Bookkeeping.bkk_checker')
@@ -17,7 +17,7 @@ class BkkChecker:
     Class meant to check if samples exist in Bookkeeping using multithreading.
     This is useful with large lists of samples, due to low performance of Dirac
     '''
-    # pylint disable=too-few-public-methods
+    # pylint: disable=too-few-public-methods
     # -------------------------
     def __init__(self, path : str):
         '''
@@ -51,10 +51,10 @@ class BkkChecker:
 
         nsample = mtch.group(1)
         if nsample == 'None':
-            log.info('Found zero files')
+            log.debug('Found zero files')
             return 0
 
-        log.info(f'Found {nsample} files')
+        log.debug(f'Found {nsample} files')
 
         return int(nsample)
     # -------------------------
@@ -63,7 +63,7 @@ class BkkChecker:
 
         sample_path = f'/MC/{self._year}/Beam6800GeV-{mc_path}-{polarity}-{nu_path}-25ns-{generator}/{sim_version}/HLT2-2024.W31.34/{event_type}/DST'
 
-        log.info(f'{"":<4}{sample_path:<100}')
+        log.debug(f'{"":<4}{sample_path:<100}')
 
         cmd_bkk = ['dirac-bookkeeping-get-stats', '-B' , sample_path]
         result  = subprocess.run(cmd_bkk, capture_output=True, text=True, check=False)
@@ -88,10 +88,16 @@ class BkkChecker:
 
         log.info('Filtering input')
         if nthreads == 1:
+            log.info('Using single thread')
             l_sample = [ sample for sample in self._l_sample if self._was_found(sample) ]
         else:
             log.info(f'Using {nthreads} threads')
             l_sample = self._get_samples_with_threads(nthreads)
+
+        nfound = len(l_sample)
+        npased = len(self._l_sample)
+
+        log.info(f'Found: {nfound}/{npased}')
 
         dir_name = os.path.dirname(path)
         os.makedirs(dir_name, exist_ok=True)
