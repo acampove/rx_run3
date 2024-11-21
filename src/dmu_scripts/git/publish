@@ -73,6 +73,7 @@ push_all()
 {
     for REMOTE in $(git remote);do
         echo "Pushing tags and commits to remote: $REMOTE"
+        git add pyproject.toml
         git commit -m "Publication commit"
 
         git push -u $REMOTE HEAD
