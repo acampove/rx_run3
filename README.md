@@ -2,6 +2,31 @@
 
 These are tools that can be used for different data analysis tasks.
 
+# GIT
+
+## Pushing
+
+From the root directory of a version controlled project (i.e. a directory with the `.git` subdirectory) 
+using a `pyproject.toml` file, run:
+
+```bash
+publish
+```
+
+such that:
+
+1. The `pyproject.toml` file is checked and the version of the project is extracted.
+1. If a tag named as the version exists move to the steps below. 
+1. If it does not, make a new tag with the name as the version
+
+Then, for each remote it pushes the tags and the commits. 
+
+*Why?* 
+
+1. Tags should be named as the project's version
+1. As soon as a new version is created, that version needs to be tagged.
+1. In GitHub, one can configure actions to publish projects when the commits are tagged.
+
 # Generic
 
 This section describes generic tools that could not be put in a specific category, but tend to be useful.
