@@ -24,15 +24,15 @@ class BkkChecker:
         Takes the path to a YAML file with the list of samples
         '''
         with open(path, encoding='utf-8') as ifile:
-            d_cfg              = yaml.safe_load(ifile)
-            self._l_event_type = d_cfg['event_type']
+            self._d_cfg        = yaml.safe_load(ifile)
+            self._l_event_type = self._d_cfg['event_type']
 
-        self._year         : str = d_cfg['settings']['year']
-        self._mc_path      : str = d_cfg['settings']['mc_path']
-        self._nu_path      : str = d_cfg['settings']['nu_path']
-        self._polarity     : str = d_cfg['settings']['polarity']
-        self._generator    : str = d_cfg['settings']['generator']
-        self._sim_version  : str = d_cfg['settings']['sim_vers']
+        self._year         : str = self._d_cfg['settings']['year']
+        self._mc_path      : str = self._d_cfg['settings']['mc_path']
+        self._nu_path      : str = self._d_cfg['settings']['nu_path']
+        self._polarity     : str = self._d_cfg['settings']['polarity']
+        self._generator    : str = self._d_cfg['settings']['generator']
+        self._sim_version  : str = self._d_cfg['settings']['sim_vers']
     # -------------------------
     def _nfiles_line_from_stdout(self, stdout : str) -> str:
         l_line = stdout.split('\n')
@@ -106,7 +106,8 @@ class BkkChecker:
         os.makedirs(dir_name, exist_ok=True)
 
         with open(path, 'w', encoding='utf-8') as ofile:
-            yaml.safe_dump(l_event_type, ofile)
+            self._d_cfg['event_type'] = l_event_type
+            yaml.safe_dump(self._d_cfg, ofile)
 
         log.info(f'Saving to: {path}')
 # ---------------------------------
