@@ -79,7 +79,7 @@ class BkkChecker:
     def _get_samples_with_threads(self, nthreads : int) -> dict[str,str]:
         l_found : list[bool] = []
         with ThreadPoolExecutor(max_workers=nthreads) as executor:
-            l_result = [ executor.submit(self._was_found, event_type) for event_type in self._d_event_type ]
+            l_result = [ executor.submit(self._was_found, event_type) for event_type in self._d_event_type.values() ]
             l_found  = [result.result() for result in l_result ]
 
         d_event_type = {}
