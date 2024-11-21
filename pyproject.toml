@@ -1,0 +1,16 @@
+[project]
+name        = 'ap_utilities'
+description = 'Utilities needed for analysis productions in LHCb'
+version     = '0.0.1'
+readme      = 'README.md'
+dependencies= ['PyYAML']
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
+[tool.setuptools.package-data]
+'ap_utilities_data' = ['*.json', '*.toml']
+
