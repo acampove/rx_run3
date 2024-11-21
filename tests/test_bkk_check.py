@@ -29,5 +29,5 @@ def test_multithreaded():
     samples_path = files('ap_utilities_data').joinpath('rd_samples.yaml')
 
     obj=BkkChecker(samples_path)
-    obj.save(path='/tmp/ap_utilities/existing_samples.yaml', nthreads=4)
+    obj.save(path='/tmp/ap_utilities/existing_samples.yaml', nthreads=8)
 # ----------------------------------------
