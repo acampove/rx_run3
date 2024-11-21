@@ -23,11 +23,16 @@ class BkkChecker:
         '''
         Takes the path to a YAML file with the list of samples
         '''
-
-        self._year = '2024'
-
         with open(path, encoding='utf-8') as ifile:
-            self._l_sample = yaml.safe_load(ifile)
+            d_cfg              = yaml.safe_load(ifile)
+            self._l_event_type = d_cfg['event_type']
+
+        self._year         : str = d_cfg['settings']['year']
+        self._mc_path      : str = d_cfg['settings']['mc_path']
+        self._nu_path      : str = d_cfg['settings']['nu_path']
+        self._polarity     : str = d_cfg['settings']['polarity']
+        self._generator    : str = d_cfg['settings']['generator']
+        self._sim_version  : str = d_cfg['settings']['sim_version']
     # -------------------------
     def _nfiles_line_from_stdout(self, stdout : str) -> str:
         l_line = stdout.split('\n')
@@ -58,10 +63,8 @@ class BkkChecker:
 
         return int(nsample)
     # -------------------------
-    def _was_found(self, sample : list[str]) -> bool:
-        _, event_type, mc_path, polarity, _, _, nu_path, _, sim_version, generator = sample
-
-        sample_path = f'/MC/{self._year}/Beam6800GeV-{mc_path}-{polarity}-{nu_path}-25ns-{generator}/{sim_version}/HLT2-2024.W31.34/{event_type}/DST'
+    def _was_found(self, event_type : str) -> bool:
+        sample_path = f'/MC/{self._year}/Beam6800GeV-{self._mc_path}-{self._polarity}-{self._nu_path}-25ns-{self._generator}/{self._sim_version}/HLT2-{self._mc_path}/{event_type}/DST'
 
         log.debug(f'{"":<4}{sample_path:<100}')
 
@@ -89,13 +92,13 @@ class BkkChecker:
         log.info('Filtering input')
         if nthreads == 1:
             log.info('Using single thread')
-            l_sample = [ sample for sample in self._l_sample if self._was_found(sample) ]
+            l_event_type = [ event_type for event_type in self._l_event_type if self._was_found(event_type) ]
         else:
             log.info(f'Using {nthreads} threads')
-            l_sample = self._get_samples_with_threads(nthreads)
+            l_event_type = self._get_samples_with_threads(nthreads)
 
-        nfound = len(l_sample)
-        npased = len(self._l_sample)
+        nfound = len(l_event_type)
+        npased = len(self._l_event_type)
 
         log.info(f'Found: {nfound}/{npased}')
 
@@ -103,7 +106,7 @@ class BkkChecker:
         os.makedirs(dir_name, exist_ok=True)
 
         with open(path, 'w', encoding='utf-8') as ofile:
-            yaml.safe_dump(l_sample, ofile)
+            yaml.safe_dump(l_event_type, ofile)
 
         log.info(f'Saving to: {path}')
 # ---------------------------------
