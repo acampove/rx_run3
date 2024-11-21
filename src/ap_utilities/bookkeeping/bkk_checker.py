@@ -34,6 +34,8 @@ class BkkChecker:
         self._polarity     : str = self._d_cfg['settings']['polarity']
         self._generator    : str = self._d_cfg['settings']['generator']
         self._sim_version  : str = self._d_cfg['settings']['sim_vers']
+        self._ctags        : str = self._d_cfg['settings']['ctags']
+        self._dtags        : str = self._d_cfg['settings']['dtags']
     # -------------------------
     def _nfiles_line_from_stdout(self, stdout : str) -> str:
         l_line = stdout.split('\n')
@@ -93,7 +95,8 @@ class BkkChecker:
     def _save_to_text(self, d_event_type : dict[str,str]) -> None:
         text = ''
         for nick_name, evt_type in d_event_type.items():
-            text += f'("{nick_name}", "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "sim10-2024.Q3.4-v1.3-mu100", "dddb-20240427", "{self._nu_path}", "Nu6p3", "{self._sim_version}", "{self._generator}" ),\n'
+            nu_name = self._nu_path.replace('.', 'p')
+            text   += f'("{nick_name}", "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", "{self._sim_version}", "{self._generator}" ),\n'
 
         output_path = self._input_path.replace('.yaml', '.txt')
 
