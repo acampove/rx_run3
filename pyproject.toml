@@ -9,7 +9,10 @@ dependencies= ['PyYAML', 'data-manipulation-utilities']
 dev  = ['pytest']
 
 [tools.setuptools.packages.find]
-where   = ['src']
+where= ['src']
+
+[project.scripts]
+check_samples ='ap_utilities_scripts.check_samples:main'
 
 [tool.setuptools.package-data]
 'ap_utilities_data' = ['*.json', '*.toml']
