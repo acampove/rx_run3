@@ -2,7 +2,7 @@ settings:
   year     : 2024
   mc_path  : 2024.W31.34
   polarity : MagUp
-  nu       : Nu6.3
+  nu_path  : Nu6.3
   sim_vers : Sim10d
   generator: Pythia8
 event_type :
