@@ -25,8 +25,9 @@ class BkkChecker:
         '''
         with open(path, encoding='utf-8') as ifile:
             self._d_cfg        = yaml.safe_load(ifile)
-            self._l_event_type = self._d_cfg['event_type']
+            self._d_event_type = self._d_cfg['event_type']
 
+        self._input_path   : str = path
         self._year         : str = self._d_cfg['settings']['year']
         self._mc_path      : str = self._d_cfg['settings']['mc_path']
         self._nu_path      : str = self._d_cfg['settings']['nu_path']
@@ -74,40 +75,49 @@ class BkkChecker:
 
         return nfile != 0
     # -------------------------
-    def _get_samples_with_threads(self, nthreads : int) -> list[str]:
+    def _get_samples_with_threads(self, nthreads : int) -> dict[str,str]:
         l_found : list[bool] = []
         with ThreadPoolExecutor(max_workers=nthreads) as executor:
-            l_result = [ executor.submit(self._was_found, event_type) for event_type in self._l_event_type ]
+            l_result = [ executor.submit(self._was_found, event_type) for event_type in self._d_event_type ]
             l_found  = [result.result() for result in l_result ]
 
-        l_event_type = [ event_type for event_type, found in zip(self._l_event_type, l_found) if found ]
+        d_event_type = {}
+        for nick_name, found in zip(self._d_event_type, l_found):
+            if not found:
+                continue
 
-        return l_event_type
+            d_event_type[nick_name] = self._d_event_type[nick_name]
+
+        return d_event_type
     # -------------------------
-    def save(self, path : str, nthreads : int = 1) -> None:
+    def _save_to_text(self, d_event_type : dict[str,str]) -> None:
+        text = ''
+        for nick_name, evt_type in d_event_type.items():
+            text += f'("{nick_name}", "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "sim10-2024.Q3.4-v1.3-mu100", "dddb-20240427", "{self._nu_path}", "Nu6p3", "{self._sim_version}", "{self._generator}" ),\n'
+
+        output_path = self._input_path.replace('.yaml', '.txt')
+
+        log.info(f'Saving to: {output_path}')
+        with open(output_path, 'w', encoding='utf-8') as ofile:
+            ofile.write(text)
+    # -------------------------
+    def save(self, nthreads : int = 1) -> None:
         '''
-        Will save list of found samples to given path
+        Will check if samples exist in grid
+        Will save list of found samples to text file with same name as input YAML, but with txt extension
         '''
 
         log.info('Filtering input')
         if nthreads == 1:
             log.info('Using single thread')
-            l_event_type = [ event_type for event_type in self._l_event_type if self._was_found(event_type) ]
+            d_event_type = { nick_name : event_type for nick_name, event_type in self._d_event_type.items() if self._was_found(event_type) }
         else:
             log.info(f'Using {nthreads} threads')
-            l_event_type = self._get_samples_with_threads(nthreads)
+            d_event_type = self._get_samples_with_threads(nthreads)
 
-        nfound = len(l_event_type)
-        npased = len(self._l_event_type)
+        nfound = len(d_event_type)
+        npased = len(self._d_event_type)
 
         log.info(f'Found: {nfound}/{npased}')
-
-        dir_name = os.path.dirname(path)
-        os.makedirs(dir_name, exist_ok=True)
-
-        with open(path, 'w', encoding='utf-8') as ofile:
-            self._d_cfg['event_type'] = l_event_type
-            yaml.safe_dump(self._d_cfg, ofile)
-
-        log.info(f'Saving to: {path}')
+        self._save_to_text(d_event_type)
 # ---------------------------------
