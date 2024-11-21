@@ -7,26 +7,20 @@ This project holds code needed to transform the AP used by the RD group into som
 Given a set of MC samples specified in a YAML file like:
 
 ```YAML
-- - Bu_KMM
-    - '12113002'
-    - 2024.W31.34
-    - MagUp
-    - sim10-2024.Q3.4-v1.3-mu100
-    - dddb-20240427
-    - Nu6.3
-    - Nu6p3
-    - Sim10d
-    - Pythia8
-- - Bu_KMM_PHSP
-    - '12113004'
-    - 2024.W31.34
-    - MagUp
-    - sim10-2024.Q3.4-v1.3-mu100
-    - dddb-20240427
-    - Nu6.3
-    - Nu6p3
-    - Sim10d
-    - Pythia8
+settings:
+  year      : 2024
+  mc_path   : 2024.W31.34
+  polarity  : MagUp
+  nu_path   : Nu6.3
+  sim_vers  : Sim10d
+  generator : Pythia8
+  ctags     : sim10-2024.Q3.4-v1.3-mu100
+  dtags     : dddb-20240427
+event_type :
+  B2K1          : 12425000  
+  B2K2          : 12425011  
+  Bu2Kstee      : 12123445  
+  Bd2Kpiee      : 11124037  
 ```
 
 run:
