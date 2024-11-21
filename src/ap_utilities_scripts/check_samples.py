@@ -32,7 +32,7 @@ def _parse_args() -> None:
     Data.log_lvl     = args.log_lvl
 # --------------------------------
 def _set_logs() -> None:
-    log.info(f'Running with log level: {Data.log_lvl}')
+    log.debug(f'Running with log level: {Data.log_lvl}')
 
     LogStore.set_level('ap_utilities:Bookkeeping.bkk_checker', Data.log_lvl)
     LogStore.set_level('ap_utilities_scripts:check_samples'  , Data.log_lvl)
