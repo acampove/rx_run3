@@ -21,7 +21,7 @@ def test_simple():
     samples_path = str(samples_path)
 
     obj=BkkChecker(samples_path)
-    obj.save(path='/tmp/ap_utilities/existing_samples.yaml')
+    obj.save()
 # ----------------------------------------
 def test_multithreaded():
     '''
@@ -31,5 +31,5 @@ def test_multithreaded():
     samples_path = str(samples_path)
 
     obj=BkkChecker(samples_path)
-    obj.save(path='/tmp/ap_utilities/existing_samples.yaml', nthreads=8)
+    obj.save(nthreads=8)
 # ----------------------------------------
