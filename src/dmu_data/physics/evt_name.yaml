@@ -4,7 +4,7 @@
 '10000021': incl_b=Biased_1DisplVert
 '10000022': incl_b=Biased_LifetimeAll5ps
 '10000023': incl_b=Biased_2DisplVert
-'10000027 ': incl_b,powheg
+'10000027': incl_b,powheg
 '10000030': incl_b=HardQCDScatter,TightCut
 '10002203': incl_b=KKgammaX,updated
 '10002213': incl_b=KpigammaX,updated
@@ -101,7 +101,7 @@
 '11102031': Bd_pp=DecProdCut
 '11102201': Bd_Kstgamma=DecProdCut
 '11102202': Bd_Kstgamma=HighPtGamma,DecProdCut
-'11102203  ': Bd_Kstgamma=TightCut,PHSP
+'11102203': Bd_Kstgamma=TightCut,PHSP
 '11102204': Bd_Kstgamma=TightCut,gam_PTabove1.8
 '11102211': Bd_KstPi0gamma,Kpi=DecProdCut
 '11102221': Bd_rhogamma,pipi=DecProdCut
@@ -142,7 +142,7 @@
 '11102434': Bd_K+pi-pi0=TighterCuts,sqDalitz
 '11102441': Bd_Ksteta,gg=DecProdCut
 '11102452': Bd_KstEta=TightCut,Kst982width100,HighPtEta
-'11102453': 'Bd_Kstpi0=TightCut,Kst982width100,HighPtPi0 '
+'11102453': Bd_Kstpi0=TightCut,Kst982width100,HighPtPi0
 '11102454': Bd_K+pi-pi0,K+pi-=Kst,DecProdCut
 '11102461': Bd_rhoeta,gg=DecProdCut
 '11102501': Bd_etaKS,gg=DecProdCut
@@ -166,7 +166,7 @@
 '11104041': Bd_Kst0rho0,K+pi-pi+pi-=DecProdCut
 '11104042': Bd_Kst0rho0,K+pi-pi+pi-=DecProdCut,eqPol
 '11104043': Bd_Kst0rho0,K+pi-pi+pi-=DecProdCut,AmpsFromRun1
-'11104045 ': Bd_a1+pi-,rho0pi=DecProdCut
+'11104045': Bd_a1+pi-,rho0pi=DecProdCut
 '11104051': Bd_rho0rho0=DecProdCut
 '11104052': Bd_rho0rho0=DecProdCut,Transverse
 '11104053': Bd_pi+pi-pi+pi-=DecProdCut,PHSP,Charmless
@@ -219,7 +219,7 @@
 '11104162': Bd_Kspp=sqDalitz
 '11104163': Bd_Kspp=sqDalitz,tightCut
 '11104164': Bd_Kspp=sqDalitz,DecProdCut
-'11104165': 'Bd_KSpp=sqDalitz,ppref,DecProdCut '
+'11104165': Bd_KSpp=sqDalitz,ppref,DecProdCut
 '11104170': Bd_LambdaLambda
 '11104171': Bd_LambdaLambdabar=tightCut
 '11104181': Bd_KstK,KSpi=DecProdCut
@@ -236,10 +236,10 @@
 '11104313': Bd_etapKs,pi+pi-g=DecProdCut,CPV,PHSP
 '11104321': Bd_phiphiKs,pi0pi0=DecProdCut
 '11104341': Bd_Sigmappi-=phsp,DecProdCut
-'11104350  ': Bd_KsK+K-gamma=TightCut,PHSP
-'11104351  ': 'Bd_KsK+K-gamma=TightCut,mKshhCut,PHSP '
-'11104360  ': Bd_Kspi+pi-gamma=TightCut,PHSP
-'11104372': 'Bd_KsPhigamma=TightCut,KSVtxCut '
+'11104350': Bd_KsK+K-gamma=TightCut,PHSP
+'11104351': Bd_KsK+K-gamma=TightCut,mKshhCut,PHSP
+'11104360': Bd_Kspi+pi-gamma=TightCut,PHSP
+'11104372': Bd_KsPhigamma=TightCut,KSVtxCut
 '11104401': Bd_Ksteta,pi+pi-pi0=DecProdCut
 '11104410': Bd_etaprho0,etapi+pi-,gg,pi+pi-=DecProdCut,PHSP
 '11104411': Bd_Kstetap,etapipi=DecProdCut
@@ -287,10 +287,10 @@
 '11104522': Bd_etaKs,pi+pi-pi0=TightCut
 '11104530': Bd_Lambdap-rho+,Lambdagamma=DecProdCut
 '11104540': Bd_Xi0Xi0,Lambdapi0=DecProdCut
-'11104550 ': Bd_Kst0pp,KSpi0=DecProdCut
+'11104550': Bd_Kst0pp,KSpi0=DecProdCut
 '11104560': Bd_Kspi+pi-pi0=DecProdCut,PHSP
-'11104562': 'Bd_Kspi+pi-pi0=TightCut,mKshhCut,PHSP '
-'11104563': 'Bd_Kspi+pi-eta=TightCut,mKshhCut,PHSP '
+'11104562': Bd_Kspi+pi-pi0=TightCut,mKshhCut,PHSP
+'11104563': Bd_Kspi+pi-eta=TightCut,mKshhCut,PHSP
 '11104573': Bd_Kspi+pi-pi0=TightCut,mKshhCut,PHSP,KSVtxCut,HighPtPi0
 '11104574': Bd_Kspi+pi-eta=TightCut,mKshhCut,PHSP,KSVtxCut,HighPtEta
 '11104580': Bd_KsEtapi0,pipipi0,gg=TightCut,KSVtxCut
@@ -298,13 +298,13 @@
 '11104601': Bd_omegaetap,pipig=DecProdCut
 '11104701': Bd_Kstetap,KSpi,pi+pi-g=DecProdCut
 '11104710': Bd_Kspi+pi-pi0gamma=DecProdCut,PHSP
-'11104711': 'Bd_Kspi+pi-pi0gamma=TightCut,mKshhCut,PHSP '
+'11104711': Bd_Kspi+pi-pi0gamma=TightCut,mKshhCut,PHSP
 '11104720': Bd_KsOmegapi0,pipipi0,gg=TightCut,KSVtxCut
 '11104722': Bd_KsOmegagamma,pipipi0,gg=TightCut,KSVtxCut
-'11104732': 'Bd_KsEtagamma,pipipi0,gg=TightCut,KSVtxCut '
+'11104732': Bd_KsEtagamma,pipipi0,gg=TightCut,KSVtxCut
 '11106000': Bd_pi+pi-pi+pi-Kst=PHSP,DecProdCut
 '11106101': Bd_Kspipipipi=PHSP,PartRecCut
-'11106110 ': Bd_OmegaOmega,Lambda0K=DecProdCut
+'11106110': Bd_OmegaOmega,Lambda0K=DecProdCut
 '11106111': Bd_LambdabarLambdapbarp=HELAMP,TightCut
 '11106120': Bd_XipXim,Lambda0pi=DecProdCut
 '11106121': Bd_LambdabarLambdaKK=HELAMP,TightCut
@@ -325,14 +325,14 @@
 '11110008': Bd_Ksttautau,3pimu=DecProdCut,TightCut,tauolacleo
 '11110009': Bd_Ksttautau,3pimu=DecProdCut,TightCut,tauolacleointricate
 '11110010': Bd_Ksttaumu,3pi=DecProdCut,tauolababar,phsp
-'11110011 ': 'Bd_Ksttaumu,3pi=DecProdCut,tauolababar '
+'11110011': Bd_Ksttaumu,3pi=DecProdCut,tauolababar
 '11110012': Bd_Ksttaumu,3pi=DecProdCut,tauolacleo
 '11110013': Bd_Ksttaumu,3pi=DecProdCut,tauolacleointricate
 '11110014': Bd_tautau,mu3pi=DecProdCut,TightCut,tauolababar
 '11112001': Bd_mumu=DecProdCut
 '11112002': Bd_pmu=PHSP,DecProdCut
 '11112011': Bd_emu=DecProdCut
-'11112200 ': Bd_gammamumu=MNT,DecProdCut
+'11112200': Bd_gammamumu=MNT,DecProdCut
 '11112201': Bd_gammamumu=ISR,DecProdCut
 '11112202': Bd_gammamumu=FSR,DecProdCut
 '11112203': Bd_gammamumu=ISRandFSR,DecProdCut
@@ -343,7 +343,7 @@
 '11112410': Bd_KSmumu,pi0pi0=DecProdCut
 '11112411': Bd_KSmumu,pi0pi0=OnePi0ReqInAcc
 '11112422': Bd_pimumu=DecProdCut
-'11113000 ': Bd_Ksttaumu,3pipi0=DecProdCut,TightCut,tauola8,phsp
+'11113000': Bd_Ksttaumu,3pipi0=DecProdCut,TightCut,tauola8,phsp
 '11114000': Bd_Kpimumu=DecProdCut
 '11114001': Bd_Kstmumu=DecProdCut
 '11114002': Bd_Kstmumu=btosllball05,DecProdCut
@@ -361,20 +361,20 @@
 '11114014': Bd_Kstmumu,flatq2=DecProdCut,MomCut
 '11114015': Bd_Kpimumu,XLL=DecProdCut
 '11114016': Bd_Kpimumu,XLL=DecProdCut,NoMinPCut
-'11114017 ': Bd_phimumu=DecProdCut
+'11114017': Bd_phimumu=DecProdCut
 '11114018': Bd_ppbarmumu=DecProdCut
-'11114019 ': Bd_phimumu=PHSP,DecProdCut
+'11114019': Bd_phimumu=PHSP,DecProdCut
 '11114020': B0_a1a2mumumumu,ma1=2.5GeV,ta1=0ps,ma2=1GeV,ta2=0fs,DecProdCut
 '11114021': B0_a1a2mumumumu,ma1=1GeV,ta1=0ps,ma2=2.5GeV,ta2=0fs,DecProdCut
 '11114022': Bd_rhomumu=MS,DecProdCut
-'11114023 ': Bd_rhomumu=MSC7wrong,DecProdCut
-'11114024 ': Bd_rhomumu=MSC10wrong,DecProdCut
-'11114025 ': Bd_rhomumu=PHSP,DecProdCut
+'11114023': Bd_rhomumu=MSC7wrong,DecProdCut
+'11114024': Bd_rhomumu=MSC10wrong,DecProdCut
+'11114025': Bd_rhomumu=PHSP,DecProdCut
 '11114026': B0_a1a2mumumumu,ma1=1.75GeV,ta1=0ps,ma2=3GeV,ta2=0fs,DecProdCut
 '11114027': B0_a1a2mumumumu,ma1=1GeV,ta1=10ps,ma2=2.5GeV,ta2=0fs,DecProdCut
 '11114028': B0_a1a2mumumumu,ma1=1GeV,ta1=100ps,ma2=2.5GeV,ta2=0fs,DecProdCut
 '11114029': B0_a1a2mumumumu,ma1=2.5GeV,ta1=100ps,ma2=1.0GeV,ta2=0fs,DecProdCut
-'11114030 ': Bd_omegamumu=MS,DecProdCut
+'11114030': Bd_omegamumu=MS,DecProdCut
 '11114031': B0_a1a2mumumumu,ma1=1.75GeV,ta1=1000ps,ma2=3.0GeV,ta2=0fs,DecProdCut
 '11114032': Bd_KstInflaton2MuMu=DecProdCut
 '11114034': B0_a1a2mumumumu,ma1=1.75GeV,ta1=10ps,ma2=3GeV,ta2=0fs,DecProdCut
@@ -382,18 +382,18 @@
 '11114036': Bd_aa2mumumumu,m=1GeV,t=1fs,DecProdCut
 '11114037': Bd_pipimumu=FOURBODYPHSP,DecProdCut
 '11114040': B0_a1a2mumumumu,ma1=1.75GeV,ta1=1ps,ma2=3GeV,ta2=0fs,DecProdCut
-'11114041 ': Bd_4mu=PHSP,DecProdCut
-'11114042 ': Bd_4mu=NVN,DecProdCut
+'11114041': Bd_4mu=PHSP,DecProdCut
+'11114042': Bd_4mu=NVN,DecProdCut
 '11114044': Bd_MuPiMajoranaNeutrino2MuPi,m=1500MeV,t=10ps,DecProdCut
 '11114045': Bd_MuPiMajoranaNeutrino2MuPi,m=4000MeV,t=10ps,DecProdCut
 '11114046': Bd_MuPiMajoranaNeutrino2MuPi,m=2000MeV,t=10ps,DecProdCut
 '11114047': Bd_MuPiMajoranaNeutrino2MuPi,m=3000MeV,t=100ps,DecProdCut
 '11114048': Bd_MuPiMajoranaNeutrino2MuPi,m=3000MeV,t=1ps,DecProdCut
 '11114049': Bd_MuPiMajoranaNeutrino2MuPi,m=3000MeV,t=10ps,DecProdCut
-'11114051 ': Bd_4mu=Gorbunov01,DecProdCut
-'11114052 ': Bd_4mu=Gorbunov0001,DecProdCut
-'11114053 ': Bd_4mu=Geq01,DecProdCut
-'11114054 ': Bd_4mu=Geq0001,DecProdCut
+'11114051': Bd_4mu=Gorbunov01,DecProdCut
+'11114052': Bd_4mu=Gorbunov0001,DecProdCut
+'11114053': Bd_4mu=Geq01,DecProdCut
+'11114054': Bd_4mu=Geq0001,DecProdCut
 '11114055': Bd_KstarDarkBoson2MuMu,m=220MeV,t=100ps,DecProdCut
 '11114056': Bd_KstarDarkBoson2MuMu,m=235MeV,t=100ps,DecProdCut
 '11114057': Bd_KstarDarkBoson2MuMu,m=214MeV,t=100ps,DecProdCut
@@ -432,7 +432,7 @@
 '11114101': Bd_KSmumu=DecProdCut
 '11114102': Bd_KSmumu,pipi=btosllball05,DecProdCut
 '11114110': Bd_KSpipimumu=DecProdCut,LSFLAT
-'11114400 ': Bd_omega2pipipi_mumu=MS,DecProdCut
+'11114400': Bd_omega2pipipi_mumu=MS,DecProdCut
 '11114401': Bd_omegamumu,pipipi0=PHSP,DecProdCut
 '11114403': Bd_omegamumu,pipipi0=PHSP,TightCut
 '11114900': Bd_KstarDarkBoson2MuMu,m=500MeV,t=3ns,TightCut
@@ -450,20 +450,20 @@
 '11116090': B0_mmmmmm=PHSP,DecProdCut
 '11116101': Bd_KSPS,4mu=DecProdCut
 '11122001': Bd_ee=DecProdCut
-'11122200 ': Bd_gammaee=MNT,DecProdCut
+'11122200': Bd_gammaee=MNT,DecProdCut
 '11122400': Bd_piee=DecProdCut
 '11122410': Bd_pi0pi0,2gammaDalitz=DecProdCut
-'11123000 ': 'Bd_Ksttaue,3pi=DecProdCut,tauolababar '
-'11123400 ': Bd_Ksttaue,3pipi0=DecProdCut,TightCut,tauola8,phsp
+'11123000': Bd_Ksttaue,3pi=DecProdCut,tauolababar
+'11123400': Bd_Ksttaue,3pipi0=DecProdCut,TightCut,tauola8,phsp
 '11124001': Bd_Kstee=DecProdCut
 '11124002': Bd_Kstee=btosllball05,DecProdCut
 '11124003': Bd_Kstee,phsp=DecProdCut
 '11124004': Bd_Kstee=MS,DecProdCut
 '11124005': Bd_Kstee,phsp=DecProdCut,TightCut150MeV
 '11124006': Bd_Kstee,phsp=DecProdCut,TightCut450MeV
-'11124007 ': Bd_Kstee,flatq2=DecProdCut
-'11124008 ': Bd_Kstee,flatq2=DecProdCut,MomCut
-'11124009 ': Bd_Kstee,flatq2=DecProdCut,MomCut,TightCut600MeV
+'11124007': Bd_Kstee,flatq2=DecProdCut
+'11124008': Bd_Kstee,flatq2=DecProdCut,MomCut
+'11124009': Bd_Kstee,flatq2=DecProdCut,MomCut,TightCut600MeV
 '11124010': Bd_omegaee,pipi=DecProdCut
 '11124022': Bd_rhoee=MS,DecProdCut
 '11124037': Bd_Kpiee=DecProdCut
@@ -488,7 +488,7 @@
 '11134040': Bd_JpsiKst,pipi=DecProdCut
 '11134050': Bd_chic0Kst,pipi=DecProdCut
 '11134060': Bd_chic2Kst,pipi=DecProdCut
-'11134070 ': Bd_etacKst,pp,Kpi=DecProdCut
+'11134070': Bd_etacKst,pp,Kpi=DecProdCut
 '11134080': Bd_etacKK,pp=DecProdCut
 '11134090': Bd_JpsiKK,pp=DecProdCut
 '11134263': Bd_hcKpi,pp=TightCut
@@ -517,8 +517,8 @@
 '11144009': Bd_Jpsirho0,mm,oneMuonInAcc=TightCuts
 '11144011': Bd_psi2SKst,mm=DecProdCut
 '11144015': B0_Jpsirho,4mu=DecProdCut
-'11144016 ': B0_Jpsimumu=phsp,DecProdCut
-'11144017 ': B0_Jpsimumu=ball,DecProdCut
+'11144016': B0_Jpsimumu=phsp,DecProdCut
+'11144017': B0_Jpsimumu=ball,DecProdCut
 '11144021': Bd_psi2Srho0,mmpipi=DecProdCut
 '11144030': Bd_psi2See,mumu=DecProdCut
 '11144042': Bd_JpsiKpi,mm=XLL,DecProdCut
@@ -558,9 +558,9 @@
 '11144460': Bd_Jpsietap,mm,etapipi=DecProdCut
 '11144461': Bd_Jpsietap,mm,etapipi=TightCut,LowPt
 '11144470': Bd_Psi2Spi0Kpi,mm=DecProdCut,PHSP
-'11144480 ': Bd_Psi2SrhoK,mm=DecProdCut
-'11144501': 'Bd_JpsiKSeta,mm,gg=phsp,TightCut '
-'11145092 ': Bd_JpsiD0,mm,Kpi=DecProdCut
+'11144480': Bd_Psi2SrhoK,mm=DecProdCut
+'11144501': Bd_JpsiKSeta,mm,gg=phsp,TightCut
+'11145092': Bd_JpsiD0,mm,Kpi=DecProdCut
 '11146000': Bd_psi2SKst,Jpsipipi,mm=DecProdCut
 '11146001': Bd_X3872Kpi,Jpsimumu=DecProdCut
 '11146010': Bd_psi2SKpi,Jpsipipi,mm=DecProdCut
@@ -589,7 +589,7 @@
 '11146400': Bd_Jpsipipipi0Kpi,mm=DecProdCut,PHSP
 '11146401': Bd_Psi2Spi0Kpi,Jpsipipi,mm=DecProdCut,PHSP
 '11146410': Bd_Psi2SrhoK,Jpsipipi,mm=DecProdCut
-'11146501': 'Bd_JpsiKSeta,mm,3pi=phsp,TightCut '
+'11146501': Bd_JpsiKSeta,mm,3pi=phsp,TightCut
 '11154001': Bd_JpsiKst,ee=DecProdCut
 '11154011': Bd_psi2SKst,ee=DecProdCut
 '11154020': Bd_Jpsirho0,ee=DecProdCut
@@ -669,8 +669,8 @@
 '11164089': Bd_D0KK,KK=sqDalitz,DecProdCut
 '11164091': Bd_Dst-pi+,D0pi=DecProdCut
 '11164092': Bd_Dst-K+,D0pi=DecProdCut
-'11164093': 'Bd_Lambdacp,pbarKpi=DecProdCut '
-'11164094': 'Bd_Lcpbar,pKpi=DecProdCut '
+'11164093': Bd_Lambdacp,pbarKpi=DecProdCut
+'11164094': Bd_Lcpbar,pKpi=DecProdCut
 '11164095': Bd_Ds2573K,D0K,Kpi=DecProdCut
 '11164096': Bd_Dst-pi+,D0pi,KK=DecProdCut
 '11164097': Bd_Dst-pi+,D0pi,pipi=DecProdCut
@@ -730,10 +730,10 @@
 '11164449': Bd_Dst0Kpi,D0pi0,Kpi=DecProdCut
 '11164450': Bd_Dpi,Kpipipi0=phsp,DecProdCut
 '11164451': Bd_DK,Kpipipi0=phsp,DecProdCut
-'11164452  ': Bd_Dspi,phirho=SVV,DecProdCut
-'11164453  ': Bd_DsK,phirho=SVV,DecProdCut
+'11164452': Bd_Dspi,phirho=SVV,DecProdCut
+'11164453': Bd_DsK,phirho=SVV,DecProdCut
 '11164454': Bd_Dpi,phirho=SVV,DecProdCut
-'11164455  ': Bd_DK,phirho=SVV,DecProdCut
+'11164455': Bd_DK,phirho=SVV,DecProdCut
 '11164461': Bd_Dst-Kst+,D0pi-,Kpi=DecProdCut
 '11164465': Bd_D0KK,Kpipi0=DecProdCut
 '11164466': Bd_D0pipi,Kpipi0=DecProdCut
@@ -744,10 +744,10 @@
 '11164491': Bd_D0ppbar,Kpipi0=DecProdCut
 '11164495': Bd_Ds2536K,Dst0K,D0pi0,Kpi=DecProdCut,PHSP
 '11164496': Bd_Ds2536Kst+,Dst0K,Kpi0,D0pi0=DecProdCut,PHSP
-'11164501': 'Bd_D0ppbar,KSpi0=DecProdCut '
+'11164501': Bd_D0ppbar,KSpi0=DecProdCut
 '11164511': Bd_D0Kst0,KSpi=DecProdCut
 '11164521': Bd_Dst0KS,D0pi0=DecProdCut
-'11164522 ': Bd_etacKS,KKpi0=DecProdCut
+'11164522': Bd_etacKS,KKpi0=DecProdCut
 '11164561': Bd_D0pipi,KSpi0=DecProdCut
 '11164601': Bd_Dst0pipi,D0=sqDalitz,DecProdCut
 '11164611': Bd_Dst0Kpi,D0=sqDalitz,DecProdCut
@@ -764,9 +764,9 @@
 '11166006': Bd_Sigmacppi-=phsp,DecProdCut
 '11166007': Bd_Lcpipip,pKpi=TightCutForStripping
 '11166009': Bd_Dphipi,Kpi=DecProdCut
-'11166010 ': Bd_D-a1+,D0pi-
-'11166018 ': B0_DsmL0barp,pKpi=DecProdCut
-'11166021 ': Bd_Dst-a1+,D0pi=DecProdCut
+'11166010': Bd_D-a1+,D0pi-
+'11166018': B0_DsmL0barp,pKpi=DecProdCut
+'11166021': Bd_Dst-a1+,D0pi=DecProdCut
 '11166030': Bd_Lcpbarpbarp,TightCut
 '11166031': Bd_Dst-K1+,D0pi=DecProdCut
 '11166041': Bd_Da1,Kpipi,KKpi=DecProdCut,pCut1600MeV
@@ -821,8 +821,8 @@
 '11166119': Bd_D0KK,KSpipi=BsqDalitz,DDalitz,TightCut
 '11166120': Bd_D0KK,KSKK=BsqDalitz,DDalitz,TightCut
 '11166121': Bd_D0rho0,KSpipi=DecProdCut
-'11166122 ': Bd_D0rho0,KSpipi=TightCut
-'11166123 ': Bd_D0rho0,KSpipi=TightCut,LooserCuts
+'11166122': Bd_D0rho0,KSpipi=TightCut
+'11166123': Bd_D0rho0,KSpipi=TightCut,LooserCuts
 '11166125': Bd_D-Kst+,Kpipi,KSpi=DecProdCut
 '11166126': Bd_DKSpi,Kpipi=DecProdCut
 '11166127': Bd_Ds-Kst+,KKpi,KSpi=DecProdCut
@@ -842,7 +842,7 @@
 '11166154': Bd_LambdabarpDm,KKpi=HELAMP,TightCut
 '11166161': Bd_D-KSpi,Kpipi=sqDalitz,DecProdCut
 '11166162': Bd_D-KSK,Kpipi=sqDalitz,DecProdCut
-'11166163 ': Bd_D0rho0,KSKK=TightCut
+'11166163': Bd_D0rho0,KSKK=TightCut
 '11166164': Bd_LambdabarpDsm,KKpi=HELAMP,TightCut
 '11166170': Bd_Dst-KSpi,D0pi,Kpi=sqDalitz,DecProdCut
 '11166171': Bd_Dst-KSpi,D0pi,Kpi=DecProdCut
@@ -918,7 +918,7 @@
 '11166761': Bd_Dst-KSpi,Kpipi=sqDalitz,DecProdCut
 '11166762': Bd_Dst-KSK,Kpipi=sqDalitz,DecProdCut
 '11168000': Bd_Dstpipipipipi,D0pi,Kpi=TightCut
-'11168021 ': Bd_Dst-a1+,D0pi,K3pi=DecProdCut
+'11168021': Bd_Dst-a1+,D0pi,K3pi=DecProdCut
 '11168100': Bd_DstKst,D0pi,KSpipi,KSpi=DecProdCut,HELAMP001
 '11168101': Bd_DstKst,D0pi,KSpipi,KSpi=DecProdCut,HELAMP010
 '11168102': Bd_DstKst,D0pi,KSpipi,KSpi=DecProdCut,HELAMP100
@@ -964,8 +964,8 @@
 '11196022': Bd_D0Dpi,KPi,KPiPi=sqDalitz,DecProdCut
 '11196023': Bd_D0Dspi,KPi,KKPi=sqDalitz,DecProdCut
 '11196024': Bd_D0Dstpi,KPi,D0Pi=sqDalitz,DecProdCut
-'11196025': 'Bd_LambdacLambdac,Exclusive,pKpi=DecProdCut_pCut1600MeV '
-'11196026': 'Bd_XicXic,Exclusive,pKpi=DecProdCut_pCut1600MeV '
+'11196025': Bd_LambdacLambdac,Exclusive,pKpi=DecProdCut_pCut1600MeV
+'11196026': Bd_XicXic,Exclusive,pKpi=DecProdCut_pCut1600MeV
 '11196028': Bd_D0D0bar,Kpipipi=AmpGen,Cut=DecProdCut,pCut1600MeV
 '11196030': Bd_D0D0Kst0,KPi,KPi,KPi=sqDalitz,DecProdCut
 '11196031': Bd_DstD0K,D0Pi,KPi=sqDalitz,DecProdCut
@@ -1023,8 +1023,8 @@
 '11198000': Bd_DDKst0,Kpipi,Kpi=DecProdCut
 '11198001': Bd_DDstKst0,Kpipi,Kpi=DecProdCut
 '11198002': Bd_DstDstKst0,Kpi=DecProdCut
-'11198003': 'Bd_DstD0K,D0pi_K3pi,Kpi=phsp,DecProdCut '
-'11198004': 'Bd_DstD0K,D0pi_Kpi,K3pi=phsp,DecProdCut '
+'11198003': Bd_DstD0K,D0pi_K3pi,Kpi=phsp,DecProdCut
+'11198004': Bd_DstD0K,D0pi_Kpi,K3pi=phsp,DecProdCut
 '11198005': Bd_DDstKst0,Kpipi,Kpi=TightCut
 '11198006': Bd_DDKst0,Kpipi,Kpipi=TightCut
 '11198007': Bd_D0DK,K3Pi,KPiPi=TightCut
@@ -1041,17 +1041,17 @@
 '11198023': Bd_DstDstKst0,Kpi,Kpi=TightCutNG
 '11198025': Bd_D0Dspi,K3Pi,KKPi=sqDalitz,TightCut
 '11198030': Bd_D0DK,K3Pi,KPiPi=DecProdCut
-'11198033': 'Bd_DstD0K,D0pi_K3pi,Kpi=sqDalitz,DecProdCut '
-'11198034': 'Bd_DstD0K,D0pi_Kpi,K3pi=sqDalitz,DecProdCut '
+'11198033': Bd_DstD0K,D0pi_K3pi,Kpi=sqDalitz,DecProdCut
+'11198034': Bd_DstD0K,D0pi_Kpi,K3pi=sqDalitz,DecProdCut
 '11198035': Bd_D0Dspi,K3Pi,KKPi=sqDalitz13,TightCut
 '11198040': Bd_D0DK,K3Pi,KPiPi=sqDalitz,DecProdCut
-'11198043': 'Bd_DstD0K,D0pi_K3pi,Kpi=sqDalitz13,DecProdCut '
-'11198044': 'Bd_DstD0K,D0pi_Kpi,K3pi=sqDalitz13,DecProdCut '
+'11198043': Bd_DstD0K,D0pi_K3pi,Kpi=sqDalitz13,DecProdCut
+'11198044': Bd_DstD0K,D0pi_Kpi,K3pi=sqDalitz13,DecProdCut
 '11198045': Bd_D0Dspi,K3Pi,KKPi=sqDalitz23,TightCut
 '11198050': Bd_D0DK,K3Pi,KPiPi=sqDalitz13,DecProdCut
 '11198053': Bd_DstD0K,D0pi_K3pi,Kpi=sqDalitz21,DecProdCut
 '11198054': Bd_DstD0K,D0pi_Kpi,K3pi=sqDalitz21,DecProdCut
-'11198055': 'Bd_LcLcKpi,pKpi,pKpi=PHSP,DecProdCut '
+'11198055': Bd_LcLcKpi,pKpi,pKpi=PHSP,DecProdCut
 '11198060': Bd_DstDs,D0K3pi,DsKpipi=DecProdCut
 '11198061': Bd_Dst-Ds+,D0pi,Kpipipi,pipipi=TightCut
 '11198063': B0DmDs2460p,Ds2460_Dspipi=TightCut
@@ -1063,7 +1063,7 @@
 '11198081': Bd_DDKpi,Kpipi=DecProdCut
 '11198090': Bd_Ds2536D,DKpi,Kpipi=DecProdCut
 '11198093': Bd_DstD0K,D0pi_K3pi,Kpi=sqDalitz23,DecProdCut
-'11198094': 'Bd_DstD0K,D0pi_Kpi,K3pi=sqDalitz23,DecProdCut '
+'11198094': Bd_DstD0K,D0pi_Kpi,K3pi=sqDalitz23,DecProdCut
 '11198098': Bd_D0D0Kpi,K3PiandKPi=TightCut,PHSP
 '11198099': Bd_D0D0Kpi,K3Pi=TightCut,AMPGEN
 '11198100': Bd_LcLcKS0,pKpi,pipi=PHSP,DecProdCut
@@ -1098,9 +1098,9 @@
 '11204000': Bd_pi+pi-pi+pi-=DecProdCut,PHSP,Charmless,Cocktail
 '11204277': Bd_Kpipipigamma=HighPTGamma,TightCut
 '11204278': Bd_PhiKst0,KKKpigamma=HighPTGamma,TightCut
-'11204300 ': Bd_Kspi+pi-gamma=TightCut,K1cocktail
-'11204301 ': 'Bd_Kspi+pi-gamma=TightCut,mKshhCut,K1cocktail '
-'11204302 ': Bd_Kspi+pi-gamma=TightCut,mKshhCut,KSVtxCut,K1cocktail
+'11204300': Bd_Kspi+pi-gamma=TightCut,K1cocktail
+'11204301': Bd_Kspi+pi-gamma=TightCut,mKshhCut,K1cocktail
+'11204302': Bd_Kspi+pi-gamma=TightCut,mKshhCut,KSVtxCut,K1cocktail
 '11204410': Bd_K1phi,Kpipi0=mK1270,DecProdCut
 '11204420': Bd_Kst0rho0pi0,Kpipipipi0=HighPtPi0,TightCut
 '11204421': Bd_PhiKst0pi0,KKKpipi0=HighPtPi0,TightCut
@@ -1110,7 +1110,7 @@
 '11244203': Bd_chicKst,JpsigKpi,mm=TightCuts
 '11244204': Bd_chicKst,JpsigKpi,mm=TightCutGY
 '11244215': Bd_chicpipi,Jpsig,mm=TightCuts
-'11244400': 'Bd_JpsiKpipi0=TightCut '
+'11244400': Bd_JpsiKpipi0=TightCut
 '11244502': Bd_JpsiKspipi,mm,pipi=DecProdCut,pCut1600MeV
 '11246001': Bd_JpsiKKKpi,mm=DecProdCut
 '11246011': Bd_Jpsipipipipi,mm=DecProdCut
@@ -1119,7 +1119,7 @@
 '11246042': Bd_Chi3915Kpi,JpsiPiPi,mm=DecProdCut,PHSP
 '11246103': Bd_JpsiKspipi,mm=DecProdCut,pCut1600MeV
 '11246110': Bd_JpsiKspi+pi-,mm,K1cocktail=DecProdCut
-'11246121': 'Bd_JpsiKspipi,mm-=TightCut,KSVtxCut,K1cocktail '
+'11246121': Bd_JpsiKspipi,mm-=TightCut,KSVtxCut,K1cocktail
 '11246130': Bd_ccKS,Jpsipipi,mm=TightCut
 '11246162': Bd_JpsiKsPhi,mm=TightCut,KSVtxCut,cocktail
 '11246400': Bd_X3940Kpi,JpsiOmega,mm=DecProdCut,PHSP
@@ -1167,16 +1167,16 @@
 '11268001': Bd_Dst-pipipi,D0pi,K3pi=TightCut
 '11268100': Bd_Dst-Kpipi,D0pi-,KSpipi=TightCut,PHSP
 '11268110': Bd_Dst-pipipi,D0pi-,KSpipi=TightCut,PHSP
-'11274030 ': Bd_Lambdacmu,pKpi=DecProdCut
+'11274030': Bd_Lambdacmu,pKpi=DecProdCut
 '11294100': Bd_DDK0,3piX=cocktail,TightCut
 '11294500': Bd_DDKp,3piX=cocktail,TightCut
 '11296012': Bd_DsD=DDALITZ,DecProdCut_pCut1600MeV
 '11296013': Bd_DD=DDALITZ,DecProdCut_pCut1600MeV
 '11296020': Bd_DsDst
 '11296021': Bd_DsD,KKpi=DDalitz,DecProdCut,pCut1600MeV
-'11296029': 'Bd_XicXic,intermediates,pKpi=DecProdCut_pCut1600MeV '
+'11296029': Bd_XicXic,intermediates,pKpi=DecProdCut_pCut1600MeV
 '11296030': Bd_LambdacLambdac,Intermediate=DecProdCut_pCut1600MeV
-'11296031': 'Bd_LcXic,intermediates,pKpi=DecProdCut_pCut1600MeV '
+'11296031': Bd_LcXic,intermediates,pKpi=DecProdCut_pCut1600MeV
 '11296203': Bd_DsstD=DDALITZ,DecProdCut_pCut1600MeV
 '11296210': Bd_X38721++Kpi,D0barDst0,D0D0barGamma,Kpi=DecProdCut
 '11296401': Bd_DsDst=DDALITZ,DecProdCut_pCut1600MeV
@@ -1192,7 +1192,7 @@
 '11304163': Bd_KpiKs=sqDalitz,tightCut
 '11304165': Bd_KpiKs=sqDalitz,TightCut
 '11312400': Bd_piemu=DecProdCut
-'11314000': 'Bd_Kstemu=DecProdCut '
+'11314000': Bd_Kstemu=DecProdCut
 '11314001': Bd_Kstemu=DecProdCut,PHSP
 '11314002': Bd_rhoemu,pipi=DecProdCut
 '11314023': Bd_Kpiemu=DecProdCut
@@ -1302,11 +1302,11 @@
 '11494600': Bd_DstDsX,Ds2Xa1=TightCut
 '11494601': Bd_excitedDstDsX,Ds2Xa1=TightCut
 '11496001': Bd_DD,3body=cocktail,TracksInAcc
-'11496002': 'Bd_Dst+D0KX=TightCuts,mD0D0 '
-'11496003': 'Bd_Dst+D0KX=TightCuts2,mD0D0 '
+'11496002': Bd_Dst+D0KX=TightCuts,mD0D0
+'11496003': Bd_Dst+D0KX=TightCuts2,mD0D0
 '11496400': Bd_D0XcIncl,Kpi,3piIncl=TightCut
 '11496402': Bd_DpXcIncl,Kpi,3piIncl=TightCut
-'11496501': 'Bd_D0D0KSX=TightCuts2,mD0D0 '
+'11496501': Bd_D0D0KSX=TightCuts2,mD0D0
 '11502000': B0_PsiDMLambda1520,Lambda1520_pK=FullGenEvtCut,mPsiDM=940MeV
 '11502001': B0_PsiDMLambda1520,Lambda1520_pK=FullGenEvtCut,mPsiDM=1500MeV
 '11502002': B0_PsiDMLambda1520,Lambda1520_pK=FullGenEvtCut,mPsiDM=2000MeV
@@ -1338,7 +1338,7 @@
 '11514071': Bd_Kpitaue,mu=DecProdCut
 '11514408': Bd_mutau,pipipipi0nu=DecProdCut,tightcut,pi0notreqinacc,tauola
 '11514432': Bd_Kpitautau,mupi=TracksInAcc
-'11522011 ': Bd_pienu=DecProdCut
+'11522011': Bd_pienu=DecProdCut
 '11522012': Bd_pienu=DecProdCut,M4.5GeV,EvtGenCut
 '11522022': Bd_pienu=TightCut,M4.5GeV
 '11522023': Bd_pienu=TightCut,M3.5GeV
@@ -1350,7 +1350,7 @@
 '11536016': Bd_DstTauNu=DecProdCut,pythiaminus
 '11538000': Bd_psi2SKst,tautau,3pi3pi=DecProdCut,TightCut,tauolababar
 '11563000': Bd_D-taunu,Kpipi,3pinu,tauolababar=DecProdCut
-'11563001': 'Bd_D-taunu,Kpipi,3pipi0nu,tauola,chargedInAcc=DecProdCut '
+'11563001': Bd_D-taunu,Kpipi,3pipi0nu,tauola,chargedInAcc=DecProdCut
 '11563002': Bd_D-taunu,Kpipi,3pinu,tauolababar=TightCut
 '11563003': Bd_D-taunu,Kpipi,3pipi0nu,tauola=TightCut
 '11563010': Bd_DstTauNu=DecProdCut,inclusive_tau_decays
@@ -1360,7 +1360,7 @@
 '11563410': Bd_Dst-taunu,D-pi0,D-gamma,Kpipi,3pinu,tauolababar,chargedInAcc=DecProdCut
 '11563411': Bd_Dst-taunu,D-pi0,D-gamma,Kpipi,3pinu,tauolababar=TightCut
 '11563421': Bd_Dst-taunu,D-pi0,D-gamma,Kpipi,3pipi0nu,tauola=TightCut
-'11563422': 'Bd_Dst-taunu,D-pi0,D-gamma,Kpipi,3pipi0nu,tauola,chargedInAcc=DecProdCut '
+'11563422': Bd_Dst-taunu,D-pi0,D-gamma,Kpipi,3pipi0nu,tauola,chargedInAcc=DecProdCut
 '11564000': B0_PsiDMSigmac2455,Sigmac2455_piLambdac,Lambdac_pKpi=TightCut,mPsiDM=940MeV
 '11564001': B0_PsiDMSigmac2455,Sigmac2455_piLambdac,Lambdac_pKpi=TightCut,mPsiDM=1500MeV
 '11564002': B0_PsiDMSigmac2455,Sigmac2455_piLambdac,Lambdac_pKpi=TightCut,mPsiDM=2000MeV
@@ -1379,15 +1379,15 @@
 '11572410': Bd_Dst-TauNu,3pipi0,munu=DecProdCut,TightCut
 '11574000': Bd_D-TauNu,munu,3pinu=DecProdCut,TightCut
 '11574001': Bd_DstTauNu,mununu=DecProdCut
-'11574002 ': Bd_D0pimunu,Kmunu=TightCut
-'11574003 ': Bd_Dmmunu,Kstmunu=TightCut
+'11574002': Bd_D0pimunu,Kmunu=TightCut
+'11574003': Bd_Dmmunu,Kstmunu=TightCut
 '11574004': Bd_D0pimunu,Kpi=DecProdCut,cocktail
 '11574010': Bd_Dst+taunu,mununu=TightCuts
-'11574011': 'Bd_Dst+taunu,D0pi+,mununu=RDstar,TightCut '
+'11574011': Bd_Dst+taunu,D0pi+,mununu=RDstar,TightCut
 '11574020': Bd_Dst+munu=TightCuts
-'11574021': 'Bd_Dst+munu,D0pi+=RDstar,TightCut '
-'11574030 ': Bd_Dmunu,Kstmunu=DecProdCut
-'11574040 ': Bd_DsKstmunu,munu=DecProdCut
+'11574021': Bd_Dst+munu,D0pi+=RDstar,TightCut
+'11574030': Bd_Dmunu,Kstmunu=DecProdCut
+'11574040': Bd_DsKstmunu,munu=DecProdCut
 '11574050': Bd_Dstpi,D0pi,Kmunu=DecProdCut
 '11574051': Bd_Dpi,Kpimunu=DecProdCut
 '11574052': Bd_Dmunu,KpimunuCocktail=KpimumuInAcc
@@ -1429,7 +1429,7 @@
 '11576503': Bd_Dstmunu=cocktail,D0_KSeta,eta_pipipi0=TightCut
 '11584000': B0_Denu,Kstenu,Kpi=DecProdCut,TightCut
 '11584011': Bd_Dst+taunu,D+pi,enunu=RDplusCut
-'11584020 ': Bd_Denu,Kstenu=DecProdCut
+'11584020': Bd_Denu,Kstenu=DecProdCut
 '11584021': Bd_Denu,Kstenu=VisibleInAcceptance,HighVisMass
 '11584022': Bd_Denu,Kstenu=VisibleInAcceptance,HighVisMass,EvtGenDecayWithCut
 '11584023': Bd_Denu,Kpienu=VisibleInAcceptance,HighVisMass,EvtGenDecayWithCut,BESIIIModel
@@ -1456,7 +1456,7 @@
 '11676010': Bd_Dststmunu,Dst+=CocktailHigher,TightCut
 '11676011': Bd_Dststmunu,Dst+=CocktailHigher,TightCut,tighter
 '11676012': Bd_Dststmunu,Dst+=CocktailHigher,RDstar,TightCut
-'11676042 ': Bd_Dphimunu,Kpimunu=KKmumuInAcc
+'11676042': Bd_Dphimunu,Kpimunu=KKmumuInAcc
 '11676430': Bd_Dstmunu,Kpipipipi0=PHSP,DecProdCut
 '11686000': Bd_Dststenu,Dst+=CocktailHigher,TightCut,tighter
 '11694052': Bd_DDKst,munu,munu=DecProdCut
@@ -1475,7 +1475,7 @@
 '11698402': Bd_DstDst0Kst,D0pi,Kpi=TightCut
 '11698403': Bd_DstD0Kst,D0pi,Kpi=TightCut
 '11713020': Bd_Ksttautau,3pimu=DecProdCut,TightCut2,tauolababar
-'11714000': 'Bd_Ksttaumu,mu=DecProdCut '
+'11714000': Bd_Ksttaumu,mu=DecProdCut
 '11714001': Bd_Ksttaumu,mu=DecProdCut,phsp
 '11714010': Bd_tautau,mu3pi=DecProdCut,TightCut
 '11714020': Bd_MuXMajoranaNeutrino2MuMuNu,m=4000MeV,t=100ps,SS,DecProdCut
@@ -1483,7 +1483,7 @@
 '11714022': Bd_MuXMajoranaNeutrino2EENu,m=4000MeV,t=100ps,SS,DecProdCut
 '11714442': Bd_Kpitaumu,pi=TracksInAcc
 '11716000': Bd_Ksttautau,3pimu=DecProdCut,TightCut
-'11716010 ': 'Bd_Ksttaumu,3pi=DecProdCut '
+'11716010': Bd_Ksttaumu,3pi=DecProdCut
 '11716400': Bd_Ksttautau,3pipi0mu=DecProdCut,TightCut
 '11716402': Bd_Ksttautau,3pipi0mu=DecProdCut,TightCut,tauolababar
 '11724442': Bd_Kpitaue,pi=TracksInAcc
@@ -1711,10 +1711,10 @@
 '12103202': Bu_phiKgamma=HighPtGamma,DecProdCut
 '12103211': Bu_etapK,rhogamma=DecProdCut
 '12103212': Bu_etapK,pipigamma=PHSP,DecProdCut
-'12103213 ': Bu_EtapK,rhogamma=DecProdCut
+'12103213': Bu_EtapK,rhogamma=DecProdCut
 '12103214': Bu_etappi+,pi+pi-g=DecProdCut,PHSP
 '12103221': Bu_K1410gamma,Kstpi,Kpi=DecProdCut
-'12103230 ': Bu_Kst1680gamma,K+K-K+=PHSP,DecProdCut
+'12103230': Bu_Kst1680gamma,K+K-K+=PHSP,DecProdCut
 '12103240': Bu_Kpipigamma=HighPtGamma,TightCut,mKpipiFlat
 '12103250': Bu_ppKgamma=DecProdCut
 '12103260': Bu_pppigamma=DecProdCut
@@ -1737,7 +1737,7 @@
 '12103421': Bu_Kstpipi,Kpi0=DecProdCut
 '12103422': Bu_Kst0rho+,K+pi-pi+pi0=DecProdCut,PHSP,Charmless
 '12103423': Bu_rho0Kst+,K+pi-pi+pi0=DecProdCut,PHSP,Charmless
-'12103430 ': 'Bu_KEtapi0,pipipi0,gg=TightCut '
+'12103430': Bu_KEtapi0,pipipi0,gg=TightCut
 '12103431': Bu_Kstpp,Kpi0=DecProdCut
 '12103441': Bu_KKpipi0=DecProdCut,PHSP
 '12103442': Bu_KKKpi0=DecProdCut,PHSP
@@ -1783,9 +1783,9 @@
 '12103511': Bu_KstPi0,Kst=KSpi,DecProdCut
 '12103521': Bu_Ksteta,Kst=KSpi,DecProdCut
 '12103600': Bu_K1gamma,omegaK,pipipi0=mK1270,HighPtGamma,DecProdCut
-'12103626  ': Bu_KOmegagamma,pipipi0,gg=TightCut
+'12103626': Bu_KOmegagamma,pipipi0,gg=TightCut
 '12103636': Bu_KEtagamma,pipipi0,gg=TightCut
-'12103654': 'Bu_KOmegapi0,pipipi0,gg=TightCut '
+'12103654': Bu_KOmegapi0,pipipi0,gg=TightCut
 '12105001': Bu_pi+pi+pi+pi-pi-=PHSP,DecProdCut
 '12105011': Bu_K+pi+pi+pi-pi-=PHSP,DecProdCut
 '12105014': Bu_phiphiK=DecProdCut
@@ -1808,7 +1808,7 @@
 '12105120': Bu_Kst+K+K-,Kspi=DecProdCut
 '12105130': Bu_Kst+pi+K-,Kspi=DecProdCut
 '12105140': Bu_KSKSpi=DecProdCut
-'12105150 ': Bu_Kst+pp,KSpi=DecProdCut
+'12105150': Bu_Kst+pp,KSpi=DecProdCut
 '12105151': Bu_Kspipipi=MassWindowCut,DecProdCut
 '12105152': Bu_KsKppipi=MassWindowCut,DecProdCut
 '12105153': Bu_KsKmpipi=MassWindowCut,DecProdCut
@@ -1827,9 +1827,9 @@
 '12105182': Bu_Kstpipi,KSpi=TightCut
 '12105190': Bu_Kst+rho0,KSpi+pi+pi-=TightCut
 '12105300': Bu_phiphiKst+,K+pi0=DecProdCut
-'12105310 ': 'Bu_Kspi+pi-pi+gamma=TightCut,PHSP '
-'12105311 ': 'Bu_Kspi+pi-pi+gamma=TightCut,mKshhCut,PHSP '
-'12105312': 'Bu_Kspi+pi-pi+gamma=DecProdCut,PHSP '
+'12105310': Bu_Kspi+pi-pi+gamma=TightCut,PHSP
+'12105311': Bu_Kspi+pi-pi+gamma=TightCut,mKshhCut,PHSP
+'12105312': Bu_Kspi+pi-pi+gamma=DecProdCut,PHSP
 '12105313': Bu_EtapKst+,rhogamma,Kspi=DecProdCut
 '12105314': Bu_Kspipipigamma=PHSP,PartRecCut
 '12105315': Bu_EtapKst+,rhogamma,Kspi=PartRecCut
@@ -2003,7 +2003,7 @@
 '12115001': Bu_Kpipimumu=DecProdCut
 '12115002': Bu_pipipimumu=DecProdCut
 '12115003': Bu_3Kmumu=DecProdCut
-'12115004 ': B+_K+1a2mumumumu,ma1=1.0GeV,ta1=0ps,ma2=2.5GeV,ta2=0fs,DecProdCut
+'12115004': B+_K+1a2mumumumu,ma1=1.0GeV,ta1=0ps,ma2=2.5GeV,ta2=0fs,DecProdCut
 '12115005': B+_K+a1a2mumumumu,ma1=1.75GeV,ta1=0ps,ma2=3.0GeV,ta2=0fs,DecProdCut
 '12115006': B+_K+a1a2mumumumu,ma1=2.5GeV,ta1=0ps,ma2=1.0GeV,ta2=0fs,DecProdCut
 '12115007': B+_K+1a2mumumumu,ma1=1.0GeV,ta1=10ps,ma2=2.5GeV,ta2=0fs,DecProdCut
@@ -2060,10 +2060,10 @@
 '12117065': B+_K+a2a1a1a1mmmmmmK_1.25GeV_3.50GeV_1ps=DecProdCut
 '12117066': B+_K+a2a1a1a1mmmmmmK_1.25GeV_3.50GeV_10ps=DecProdCut
 '12117067': B+_K+a2a1a1a1mmmmmmK_1.25GeV_3.50GeV_100ps=DecProdCut
-'12117089 ': B+_K+a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=1000ps,ma2=2.5GeV,ta2=0fs,DecProdCut
+'12117089': B+_K+a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=1000ps,ma2=2.5GeV,ta2=0fs,DecProdCut
 '12117090': B+_K+a1a2a1a1mumumumumumu,ma1=0.5GeV,ta1=1000ps,ma2=1.5GeV,ta2=0fs,DecProdCut
 '12117091': B+_K+a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=100ps,ma2=3.0GeV,ta2=0fs,DecProdCut
-'12117092 ': B+_K+a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=100ps,ma2=2.5GeV,ta2=0fs,DecProdCut
+'12117092': B+_K+a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=100ps,ma2=2.5GeV,ta2=0fs,DecProdCut
 '12117093': B+_K+a1a2a1a1mumumumumumu,ma1=0.5GeV,ta1=100ps,ma2=1.5GeV,ta2=0fs,DecProdCut
 '12117094': B+_K+a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=10ps,ma2=3.0GeV,ta2=0fs,DecProdCut
 '12117095': B+_K+a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=10ps,ma2=2.5GeV,ta2=0fs,DecProdCut
@@ -2126,9 +2126,9 @@
 '12135020': Bu_etacpi+rho0,pp=DecProdCut
 '12135030': Bu_Jpsipi+rho0,pp=DecProdCut
 '12135040': Bu_etacK+rho0,pp=DecProdCut
-'12135041 ': Bu_JpsiphiK,pp=DecProdCut
-'12135050 ': Bu_etacphiK,pp=DecProdCut
-'12135052 ': Bu_etacphiK,pipi=DecProdCut
+'12135041': Bu_JpsiphiK,pp=DecProdCut
+'12135050': Bu_etacphiK,pp=DecProdCut
+'12135052': Bu_etacphiK,pipi=DecProdCut
 '12135053': Bu_etacphiK,KK=DecProdCut
 '12135100': Bu_JpsiK,KSK-pi+=DecProdCut
 '12135101': Bu_JpsiK,KSK+pi-=DecProdCut
@@ -2140,11 +2140,11 @@
 '12135107': Bu_Chic1K,KSK+pi-=DecProdCut
 '12135110': Bu_LambdabarpJpsi,ppbar=HELAMP,TightCut
 '12135401': Bu_JpsiphiK,pppi0KK=DecProdCut
-'12137001 ': Bu_etacphiK,KKpipi=DecProdCut
+'12137001': Bu_etacphiK,KKpipi=DecProdCut
 '12137002': Bu_etacphiK,pipipipi=DecProdCut
 '12137003': Bu_etacphiK,pipipp=DecProdCut
 '12137004': Bu_etacphiK,KKKK=DecProdCut
-'12137101 ': Bu_etacphiK,KsKpi=DecProdCut
+'12137101': Bu_etacphiK,KsKpi=DecProdCut
 '12143001': Bu_JpsiK,mm=DecProdCut
 '12143002': Bu_JpsiK,mm=NoCut
 '12143007': Bu_JpsiK,mm=LargeLifetime
@@ -2152,7 +2152,7 @@
 '12143020': Bu_psi2SK,mm=DecProdCut
 '12143031': Bu_psi2SPi,mm=DecProdCut
 '12143200': Bu_chic1K,mm=DecProdCut
-'12143211 ': Bu_psi2SK,chic1g,Jpsig,mm=TightCuts
+'12143211': Bu_psi2SK,chic1g,Jpsig,mm=TightCuts
 '12143221': Bu_X3823K,chic1g,Jpsig,mm=TightCuts
 '12143401': Bu_JpsiKst,mm,Kpi0=DecProdCut
 '12143402': Bu_JpsiKst,mm,Kpi0=TightCut
@@ -2185,22 +2185,22 @@
 '12145052': Bu_phiKmumu,KK=DecProdCut
 '12145055': Bu_Jpsiphipi,mmKK,WithMinP=DecProdCut
 '12145060': Bu_JpsiKmumu,mm=DecProdCut
-'12145061': 'Bu_X4350,Jpsiphi=DecProdCut,InAcc '
-'12145062': 'Bu_X4160,Jpsiphi=DecProdCut,InAcc '
-'12145063': 'Bu_X4140,Jpsiphi=DecProdCut,InAcc '
-'12145064': 'Bu_X4274,Jpsiphi=DecProdCut,InAcc '
-'12145065': 'Bu_X4500,Jpsiphi=DecProdCut,InAcc '
-'12145066': 'Bu_X4700,Jpsiphi=DecProdCut,InAcc '
+'12145061': Bu_X4350,Jpsiphi=DecProdCut,InAcc
+'12145062': Bu_X4160,Jpsiphi=DecProdCut,InAcc
+'12145063': Bu_X4140,Jpsiphi=DecProdCut,InAcc
+'12145064': Bu_X4274,Jpsiphi=DecProdCut,InAcc
+'12145065': Bu_X4500,Jpsiphi=DecProdCut,InAcc
+'12145066': Bu_X4700,Jpsiphi=DecProdCut,InAcc
 '12145067': Bu_KOmegaJpsi,mm=LSFLAT,DecProdCut
 '12145068': Bu_KOmegaJpsi,mm=PHSP,DecProdCut
 '12145069': Bu_chic1K,Jpsimumu=DecProdCut
 '12145070': Bu_JpsiKpipi,mm=phsp,DecProdCut
 '12145071': Bu_psi2SKpipi,mm=phsp,DecProdCut
-'12145072 ': Bu_Kpipipsi2S,mumu=DecProdCut,LSFLAT
+'12145072': Bu_Kpipipsi2S,mumu=DecProdCut,LSFLAT
 '12145081': Bu_psi2SphiK,mmKK=DecProdCut
 '12145090': Bu_KpipiJpsi,mumu=DecProdCut,LSFLAT
 '12145091': Bu_KpipiJpsi,mumu=DecProdCut,PHSP
-'12145092 ': 'Bu_JpsiD+,mm,Kpipi=DecProdCut '
+'12145092': Bu_JpsiD+,mm,Kpipi=DecProdCut
 '12145095': B+_K+JpsimmKK=DecProdCut
 '12145101': Bu_JpsiKst,mm=DecProdCut
 '12145102': Bu_JpsiKst,mm,pipipi=DecProdCut
@@ -2208,9 +2208,9 @@
 '12145120': Bu_psi2SKst,mm=DecProdCut
 '12145121': Bu_psi2SKS0pi,mm=DecProdCut
 '12145122': Bu_LambdabarpJpsi,mm=HELAMP,TightCut
-'12145150 ': Bu_JpsiKSpi,mm=DecProdCut
-'12145151': 'Bu_JpsiKSpi,mm=XLL,DecProdCut '
-'12145152': 'Bu_JpsiKSpi,mm=XLL,TightCut,KSVtxCut '
+'12145150': Bu_JpsiKSpi,mm=DecProdCut
+'12145151': Bu_JpsiKSpi,mm=XLL,DecProdCut
+'12145152': Bu_JpsiKSpi,mm=XLL,TightCut,KSVtxCut
 '12145201': Bu_X4260K,X3872g,Jpsirho,mm=DecProdCut
 '12145210': Bu_Hybrid,Chic1pipi,mm=DecProdCut
 '12145220': Bu_chic1pipiK,mm=DecProdCut
@@ -2251,13 +2251,13 @@
 '12153012': Bu_psi2SK,ee=DecProdCut
 '12153020': Bu_JpsiPi,ee=DecProdCut
 '12153030': Bu_psi2SPi,ee=DecProdCut
-'12153201 ': Bu_JpsiK,eegamma=DecProdCut
+'12153201': Bu_JpsiK,eegamma=DecProdCut
 '12153400': Bu_Jpsirho+,ee,gg=DecProdCut
 '12153410': Bu_psi2Srho+,ee,gg=DecProdCut
 '12153420': Bu_JpsiKst,ee,Kpi0=DecProdCut
 '12153430': Bu_psi2SKst,ee,Kpi0=DecProdCut
-'12155000 ': Bu_JpsiphiK,eepipi=DecProdCut
-'12155010 ': Bu_Kpipipsi2S,ee=DecProdCut,LSFLAT
+'12155000': Bu_JpsiphiK,eepipi=DecProdCut
+'12155010': Bu_Kpipipsi2S,ee=DecProdCut,LSFLAT
 '12155020': Bu_KpipiJpsi,ee=DecProdCut,LSFLAT
 '12155021': Bu_KpipiJpsi,ee=DecProdCut,PHSP
 '12155030': Bu_psi2SK,Jpsipipi,ee=DecProdCut
@@ -2267,7 +2267,7 @@
 '12155110': Bu_psi2SKst,ee=DecProdCut
 '12155111': Bu_JpsipLambda,ee=DecProdCut
 '12160400': Bu_DststTauNu,3pipi0,3pinu=cocktail,TightCut,tauolababar
-'12161601 ': Bu_Dst0Pi,D0gamma,Kspipipi0=TightCut,PHSP
+'12161601': Bu_Dst0Pi,D0gamma,Kspipipi0=TightCut,PHSP
 '12163001': Bu_D0pi,Kpi=DecProdCut
 '12163002': Bu_D0pi,KpiFLATLT=DecProdCut
 '12163011': Bu_D0K,Kpi=DecProdCut
@@ -2280,7 +2280,7 @@
 '12163202': Bu_D0pi,KSeta,gg=DecProdCut
 '12163211': Bu_Dstgamma,D0pi,Kpi=DecProdCut
 '12163230': Bu_Dst0pi,D0gamma,Kpi=DecProdCut
-'12163231 ': Bu_Dst0K,D0gamma,Kpi=DecProdCut
+'12163231': Bu_Dst0K,D0gamma,Kpi=DecProdCut
 '12163234': Bu_Dst0pi,D0gamma,Kpi=TightCut,Modified
 '12163235': Bu_Dst0K,D0gamma,Kpi=TightCut,LooserCuts
 '12163236': Bu_Dst0pi,D0gamma,Kpi=TightCut,LooserCuts
@@ -2289,7 +2289,7 @@
 '12163401': Bu_D0K,Kpipi0=DecProdCut
 '12163411': Bu_D0pi,Kpipi0=DecProdCut
 '12163413': Bu_Dspi0,Ds=KKpi,DecProdCut
-'12163422 ': Bu_Dst0Kst+,D0pi0,Kpi=DecProdCut
+'12163422': Bu_Dst0Kst+,D0pi0,Kpi=DecProdCut
 '12163430': Bu_Dst0pi,D0pi0,Kpi=DecProdCut
 '12163432': Bu_Dst0K,D0pi0,Kpi=DecProdCut
 '12163433': Bu_Dst0rho+,D0pi0,Kpi=DecProdCut
@@ -2319,7 +2319,7 @@
 '12163501': Bu_D0rho+,Kspi=DecProdCut
 '12163511': Bu_D0pi,Kspi=DecProdCut
 '12163512': Bu_D0K,Kspi=DecProdCut
-'12163600 ': Bu_Dst0rho+,D0gamma,Kpi=DecProdCut
+'12163600': Bu_Dst0rho+,D0gamma,Kpi=DecProdCut
 '12163601': Bu_Dst0Kst+,D0gamma,Kpi=DecProdCut
 '12163631': Bu_Dsstpi0,Dsgamma,KKpi=DecProdCut
 '12164000': Bu_Sigmacpipip,Lcpi=NoCut
@@ -2331,8 +2331,8 @@
 '12165002': Bu_D0K,KKpipi=DecProdCut,Mint
 '12165003': Bu_D0K,KsPhi=DecProdCut
 '12165004': Bu_D0Pi,KsPhi=DecProdCut
-'12165005 ': Bu_D0pipipi,Kpi=DecProdCut
-'12165006 ': Bu_D0Kpipi,pipi=DecProdCut
+'12165005': Bu_D0pipipi,Kpi=DecProdCut
+'12165006': Bu_D0Kpipi,pipi=DecProdCut
 '12165007': Bu_D0K,KKpipi=DecProdCut,AmpGen
 '12165009': Bu_Dphipi,Kpi=DecProdCut
 '12165011': Bu_D0K,pipipipi=DecProdCut
@@ -2543,7 +2543,7 @@
 '12165730': Bu_Dst0rho+,D0gamma,KSKK=TightCut,NoNeutralCut
 '12165740': Bu_Dst0Kst-,D0gamma,KSpipipi0=TightCut,PHSP
 '12165750': Bu_Dst0Pi,D0gamma,Kspipipi0=TightCut,tighter,PHSP
-'12165751 ': Bu_Dst0K,D0gamma,Kspipipi0=TightCut,PHSP
+'12165751': Bu_Dst0K,D0gamma,Kspipipi0=TightCut,PHSP
 '12165760': Bu_Dst0K,D0pi0,KSKK=TightCut,NoNeutralCut
 '12165761': Bu_Dst0K,D0pi0,KSpipi=TightCut,NoNeutralCut
 '12165762': Bu_Dst0pi,D0pi0,KSKK=TightCut,NoNeutralCut
@@ -2597,9 +2597,9 @@
 '12175101': Bu_Lambdacbarppi,Lambdabarmunu=HELAMP,TightCut
 '12183004': Bu_D0pi,Kenu=DecProdCut,TightCut
 '12185000': Bu_Dee,Kpipi=DecProdCut
-'12185007 ': Bu_D0Kpipi,pienu=DecProdCut
+'12185007': Bu_D0Kpipi,pienu=DecProdCut
 '12185008': Bu_D0pipipi,Kenu=TightCut
-'12185009 ': Bu_D0pipipi,Kenu=DecProdCut
+'12185009': Bu_D0pipipi,Kenu=DecProdCut
 '12185011': Bu_DeeSS,Kpipi=DecProdCut
 '12185022': Bu_Dstee,D0pi,Kpi=DecProdCut
 '12185033': Bu_DsteeSS,D0pi,Kpi=DecProdCut
@@ -2637,11 +2637,11 @@
 '12195053': Bu_D0Ds,KK,piKpi=DecProdCut
 '12197001': Bu_DDK=DecProdCut
 '12197002': Bu_DDpi=DecProdCut
-'12197003': 'Bu_LcLcK,pKpi,pKPi=PHSP,DecProdCut '
-'12197004': 'Bu_LcXicPi,pKpi,pKPi=PHSP,DecProdCut '
+'12197003': Bu_LcLcK,pKpi,pKPi=PHSP,DecProdCut
+'12197004': Bu_LcXicPi,pKpi,pKPi=PHSP,DecProdCut
 '12197005': Bu_DDpi,KPiPi,KPiPi=sqDalitz,DecProdCut
-'12197006': 'Bu_LcLcPi,pKpi,pKPi=PHSP,DecProdCut '
-'12197007': 'Bu_DsLcp,KKpi,pKPi=PHSP,DecProdCut '
+'12197006': Bu_LcLcPi,pKpi,pKPi=PHSP,DecProdCut
+'12197007': Bu_DsLcp,KKpi,pKPi=PHSP,DecProdCut
 '12197008': Bu_D0D0K,K3Pi,KPi=TightCut
 '12197009': Bu_D0D0K,K3Pi,KPi=DecProdCut
 '12197010': Bu_D0D0pi,K3Pi,KPi=TightCut
@@ -2653,7 +2653,7 @@
 '12197016': Bu_DstDstpi=TightCut
 '12197017': Bu_DstDstpi,D0Pi,D0Pi=sqDalitz,TightCut
 '12197018': Bu_D0D0pi,K3Pi,KPi=sqDalitz,TightCut
-'12197019': 'Bu_D0D0K,K3Pi,KPi=sqDalitz,DecProdCut '
+'12197019': Bu_D0D0K,K3Pi,KPi=sqDalitz,DecProdCut
 '12197020': Bu_DD0Kst0,Kpipi,Kpi,Kpi=DecProdCut
 '12197021': Bu_DstD0Kst0,Kpi,Kpi=DecProdCut
 '12197022': Bu_DstD0Kst0,Kpi,Kpi=TightCut
@@ -2673,7 +2673,7 @@
 '12197036': Bu_DsDpi,KKPi,KPiPi=sqDalitz,DecProdCut
 '12197037': Bu_DstDsK,D0Pi,KKPi=sqDalitz,DecProdCut
 '12197038': Bu_DstDspi,D0Pi,KKPi=sqDalitz,DecProdCut
-'12197039': 'Bu_D0D0K,K3Pi,KPi=sqDalitz13,DecProdCut '
+'12197039': Bu_D0D0K,K3Pi,KPi=sqDalitz13,DecProdCut
 '12197040': Bu_D0D0pi,K3Pi,KPi=sqDalitz13,TightCut
 '12197041': Bu_DstDstK,D0Pi,D0Pi=sqDalitz13,DecProdCut
 '12197042': Bu_DstDstpi,D0Pi,D0Pi=sqDalitz13,DecProdCut
@@ -2683,7 +2683,7 @@
 '12197046': Bu_DDK,KPiPi,KPiPi=sqDalitz,DecProdCut
 '12197047': Bu_DsDsK,KKPi,KKPi=sqDalitz,DecProdCut
 '12197048': Bu_DstDstpi,D0Pi,D0Pi=sqDalitz13,TightCut
-'12197049': 'Bu_D0D0K,K3Pi,KPi=sqDalitz23,DecProdCut '
+'12197049': Bu_D0D0K,K3Pi,KPi=sqDalitz23,DecProdCut
 '12197050': Bu_D0D0pi,K3Pi,KPi=sqDalitz23,TightCut
 '12197051': Bu_DstDstK,D0Pi,D0Pi=sqDalitz23,DecProdCut
 '12197052': Bu_DstDstpi,D0Pi,D0Pi=sqDalitz23,DecProdCut
@@ -2703,7 +2703,7 @@
 '12197066': Bu_DDK,KPiPi,KPiPi=sqDalitz23,DecProdCut
 '12197067': Bu_DsDsK,KKPi,KKPi=sqDalitz23,DecProdCut
 '12197068': Bu_DsDspi,KKPi,KKPi=sqDalitz13,DecProdCut
-'12197069': 'Bu_D0D0K,KPi,K3Pi=sqDalitz,DecProdCut '
+'12197069': Bu_D0D0K,KPi,K3Pi=sqDalitz,DecProdCut
 '12197070': Bu_D0D0pi,KPi,K3Pi=sqDalitz,TightCut
 '12197071': Bu_Dst-D+pi+=TightCut
 '12197072': Bu_Dst-D+pi+,D0Pi,KPiPi=sqDalitz,TightCut
@@ -2713,7 +2713,7 @@
 '12197076': Bu_Dst+D-pi+,D0Pi,KPiPi=sqDalitz13,TightCut
 '12197077': Bu_Dst+D-pi+,D0Pi,KPiPi=sqDalitz23,TightCut
 '12197078': Bu_DsDspi,KKPi,KKPi=sqDalitz23,DecProdCut
-'12197079': 'Bu_D0D0K,KPi,K3Pi=sqDalitz13,DecProdCut '
+'12197079': Bu_D0D0K,KPi,K3Pi=sqDalitz13,DecProdCut
 '12197080': Bu_D0D0pi,KPi,K3Pi=sqDalitz13,TightCut
 '12197081': Bu_Dst+D-pi+=TightCut
 '12197082': Bu_DstD0Kpi,Kpi=PHSP,TightCut
@@ -2721,7 +2721,7 @@
 '12197084': BpD0barDs2460p,Ds2460_Dspipi=TightCut
 '12197085': BpD0barDs2536p,Ds2536_Dspipi=TightCut
 '12197088': Bu_D0D0pi,KPi,K3Pi=sqDalitz23,TightCut
-'12197089': 'Bu_D0D0K,KPi,K3Pi=sqDalitz23,DecProdCut '
+'12197089': Bu_D0D0K,KPi,K3Pi=sqDalitz23,DecProdCut
 '12197090': Bu_Ds+D-pi+,KKPi,KPiPi=DecProdCut,treeLevel
 '12197091': Bu_Ds+D-pi+,KKPi,KPiPi=sqDalitz,DecProdCut,treeLevel
 '12197092': Bu_Ds+D-pi+,KKPi,KPiPi=sqDalitz13,DecProdCut,treeLevel
@@ -2742,7 +2742,7 @@
 '12197141': Bu_DstD0KS,D0Pi,KPi,PiPi=sqDalitz23,DecProdCut
 '12197150': Bu_D0Ds,KSpipi,KKpi=TightCut,Ddalitz
 '12197160': Bu_DstD0KS,D0Pi,KPi,KPi,PiPi=DecProdCut
-'12197205': 'Bu_LcXicprimePi,pKPi,Xicgamma=PHSP,DecProdCut '
+'12197205': Bu_LcXicprimePi,pKPi,Xicgamma=PHSP,DecProdCut
 '12197220': Bu_Dst0DstKst0,D0gamma,D0pi,Kpi=TightCut
 '12197221': Bu_Dst0DstKpi,D0gamma,D0pi=TightCut
 '12197280': Bu_DstDspi,D0Pi,KKPi,Dpi,nrDsstar=DecProdCut,WithMinP
@@ -2753,7 +2753,7 @@
 '12197421': Bu_Dst0DstKpi,D0pi0,D0pi=TightCut
 '12197422': Bu_DstDst0Kst0,Kpi,Kpi=TightCut
 '12197423': Bu_DstDst0Kst0,Kpi,Kpi=TightCutNG
-'12197430': 'Bu_LcLcKpi0,pKpi,pKpi=PHSP,DecProdCut '
+'12197430': Bu_LcLcKpi0,pKpi,pKpi=PHSP,DecProdCut
 '12199000': Bu_Dst+D-pi+,D0Pi,K3Pi,KPiPi=TightCut
 '12199001': Bu_Dst+D-K,K2pi,D0pi_K3pi=phsp,DecProdCut
 '12199002': Bu_Dst-D+K,K2pi,D0pi_K3pi=phsp,DecProdCut
@@ -2795,9 +2795,9 @@
 '12199051': Bu_Dst+D-K,K2pi,D0pi_K3pi=sqDalitz21,DecProdCut
 '12199052': Bu_Dst-D+K,K2pi,D0pi_K3pi=sqDalitz21,DecProdCut
 '12199061': Bu_D0D0K,K3Pi,K3Pi=DecProdCut
-'12199062': 'Bu_D0D0K,K3Pi,K3Pi=sqDalitz,DecProdCut '
-'12199063': 'Bu_D0D0K,K3Pi,K3Pi=sqDalitz13,DecProdCut '
-'12199064': 'Bu_D0D0K,K3Pi,K3Pi=sqDalitz23,DecProdCut '
+'12199062': Bu_D0D0K,K3Pi,K3Pi=sqDalitz,DecProdCut
+'12199063': Bu_D0D0K,K3Pi,K3Pi=sqDalitz13,DecProdCut
+'12199064': Bu_D0D0K,K3Pi,K3Pi=sqDalitz23,DecProdCut
 '12199071': Bu_D0D0pi,K3Pi,K3Pi=TightCut
 '12199072': Bu_D0D0pi,K3Pi,K3Pi=sqDalitz,TightCut
 '12199073': Bu_D0D0pi,K3Pi,K3Pi=sqDalitz13,TightCut
@@ -2869,9 +2869,9 @@
 '12245011': Bu_Jpsipipipi,mm=DecProdCut
 '12245021': Bu_JpsiKpipi,mm=DecProdCut
 '12245033': Bu_X3872K,psig,mm=TightCuts
-'12245042': 'Bu_psi3823K,Jpsipipi=TightCut '
-'12245043': 'Bu_psi3823K,PHSP,Jpsipipi=TightCut '
-'12245054': 'Bu_JpsiKpipi,mm,K1cocktail=DecProdCut '
+'12245042': Bu_psi3823K,Jpsipipi=TightCut
+'12245043': Bu_psi3823K,PHSP,Jpsipipi=TightCut
+'12245054': Bu_JpsiKpipi,mm,K1cocktail=DecProdCut
 '12245061': Bu_jpsikkk,Kstar=TightCut
 '12245071': Bu_psi2SKpipi,mm=resCocktail,TightCut
 '12245073': Bu_JpsiKpipi,mm=DecProdCut,K1cocktail
@@ -3006,8 +3006,8 @@
 '12297412': Bu_D0DKst0,3piXmisid=cocktail,TightCut
 '12299000': Bu_DstD0,D0pi+,Kpipipi,Kpipipi=DecProdCut,D0IncoherentSum
 '12299015': Bu_D0DKst0,3pi=cocktail,TightCut
-'12303227 ': Bu_Kst1680gamma,Kstpi,Krho=DecProdCut
-'12307000': 'Bu_D+D-KX=TightCuts,mD+D- '
+'12303227': Bu_Kst1680gamma,Kstpi,Krho=DecProdCut
+'12307000': Bu_D+D-KX=TightCuts,mD+D-
 '12312033': Bu_MuMajoranaNeutrino2MuX,m=2000MeV,t=100ps,OS,TightCut
 '12312034': Bu_MuMajoranaNeutrino2MuX,m=1600MeV,t=100ps,OS,TightCut
 '12312035': Bu_MuMajoranaNeutrino2MuX,m=1600MeV,t=1000ps,OS,TightCut
@@ -3016,8 +3016,8 @@
 '12312044': Bu_MuMajoranaNeutrino2MuX,m=1600MeV,t=100ps,SS,TightCut
 '12312045': Bu_MuMajoranaNeutrino2MuX,m=1600MeV,t=1000ps,SS,TightCut
 '12312046': Bu_MuMajoranaNeutrino2MuX,m=2000MeV,t=1000ps,SS,TightCut
-'12313000': 'Bu_Kemu=DecProdCut '
-'12313001': 'Bu_Kemu=DecProdCut,PHSP '
+'12313000': Bu_Kemu=DecProdCut
+'12313001': Bu_Kemu=DecProdCut,PHSP
 '12313012': Bu_Kemu=PHSP,DecProdCut
 '12313023': Bu_piemu=DecProdCut
 '12313400': Bu_Kpiemu=DecProdCut
@@ -3097,7 +3097,7 @@
 '12397285': Bu_DsDsstK,KKPi,KKPi=PHSP,TightCut,Modified
 '12397289': Bu_DsstDsK,KKPi,KKPi=PHSP,TightCut,Modified
 '12397411': Bu_DstDst0,Kpipipi=DecProdCut
-'12401228 ': Bu_K3stgamma,Kstpi,K2stpi=DecProdCut
+'12401228': Bu_K3stgamma,Kstpi,K2stpi=DecProdCut
 '12405501': Bu_Lambdabarpeta,pipiX=HELAMP,TightCut
 '12405511': Bu_Lambdabarpetap,pipiX=HELAMP,TightCut
 '12425000': Bu_K1ee=DecProdCut
@@ -3112,7 +3112,7 @@
 '12445000': Bu_Psi2SKX=TightCut
 '12445022': Bu_CharmoniumKX,mumu,PPTcuts=TightCut
 '12445023': Bu_CharmoniumPiPiX,mumu=TightCut,ForB2RhoMuNu
-'12445401': 'Bu_Jpsipipipi,mm,inclusive=DecProdCut '
+'12445401': Bu_Jpsipipipi,mm,inclusive=DecProdCut
 '12462600': Bu_Dst0X,2body
 '12463201': Bu_Dsstgamma,Dsgamma,KKpi=DecProdCut
 '12463411': Bu_Dst0K,Kpi=DecProdCut
@@ -3127,12 +3127,12 @@
 '12467401': Bu_D-3piX,Kpipi=TightCut
 '12469400': Bu_Dst3piX,D0pi,K3pi=TightCut
 '12495400': Bu_D0D0KX=TightCuts
-'12495401': 'Bu_D0D0KX=TightCuts,mD0D0 '
+'12495401': Bu_D0D0KX=TightCuts,mD0D0
 '12495402': Bu_DstDst0=DecProdCut
-'12495403': 'Bu_D0D0KX=TightCuts2,mD0D0 '
+'12495403': Bu_D0D0KX=TightCuts2,mD0D0
 '12495410': Bu_D0XcIncl,Kpi,3piIncl=TightCut
 '12495600': B+_excitedDstDsX,Ds2Xa1=TightCut
-'12497101': 'Bu_Dst+D0KSX=TightCuts2,mD0D0 '
+'12497101': Bu_Dst+D0KSX=TightCuts2,mD0D0
 '12497402': Bu_DpXcIncl,Kpi,3piIncl=TightCut
 '12503200': Bu_TauNu=DecProdCut
 '12505001': Bu_rho0TauNu=DecProdCut
@@ -3157,10 +3157,10 @@
 '12513012': Bu_phimunu=TightCut,BToVlnuBall
 '12513020': Bu_3munu=DecProdCut
 '12513021': Bu2MuMuMuNuM=DN,DecProdCut
-'12513022 ': Bu2MuMuENuE=DN,DecProdCut
+'12513022': Bu2MuMuENuE=DN,DecProdCut
 '12513023': Bu2EEMuNuM=DN,DecProdCut
 '12513032': Bu_Ktautau,mumu=DecProdCut
-'12513040': 'Bu_Ktaumu,mu=DecProdCut '
+'12513040': Bu_Ktaumu,mu=DecProdCut
 '12513050': Bu_ppmunu=DecProdCut
 '12513051': Bu_ppmunu=DecProdCutpQCD
 '12513060': Bu_pptaunu,mununu=DecProdCut
@@ -3185,21 +3185,21 @@
 '12513402': Bu_omegamunu=InAcc,HighVisMass,EvtGenCut
 '12513404': Bu_etamunu,pipiX=TightCut,ISGW2
 '12513409': Bu_etamunu=InAcc,HighVisMass,EvtGenCut
-'12523000 ': Bu2EEENuE=DN,DecProdCut
+'12523000': Bu2EEENuE=DN,DecProdCut
 '12523010': Bu_pipienu=DecProdCut
 '12523011': Bu_rhoenu,pipi=DecProdCut
 '12523210': Bu_etaenu,pipigamma=DecProdCut
 '12523211': Bu_etapenu,pipigamma=DecProdCut
-'12523410 ': Bu_omegaenu,pipipi=DecProdCut
+'12523410': Bu_omegaenu,pipipi=DecProdCut
 '12545070': Bu_JpsiKpipi,mm,munu=phsp,TightCut
 '12562000': Bu_D0taunu,Kpi,3pinu,tauolababar=DecProdCut
 '12562001': Bu_D0taunu,Kpi,3pinu,tauolababar=TightCut
-'12562010': 'Bu_D0taunu,Kpi,3pipi0nu,tauola,chargedInAcc=DecProdCut '
-'12562011': 'Bu_D0taunu,Kpi,3pipi0nu,tauola=TightCut '
+'12562010': Bu_D0taunu,Kpi,3pipi0nu,tauola,chargedInAcc=DecProdCut
+'12562011': Bu_D0taunu,Kpi,3pipi0nu,tauola=TightCut
 '12562410': Bu_Dst0taunu,D0pi0,D0gamma,Kpi,3pinu,tauolababar,chargedInAcc=DecProdCut
 '12562411': Bu_Dst0taunu,D0pi0,D0gamma,Kpi,3pinu,tauolababar=TightCut
 '12562421': Bu_Dst0taunu,D0pi0,D0gamma,Kpi,3pipi0nu,tauola=TightCut
-'12562422': 'Bu_Dst0taunu,D0pi0,D0gamma,Kpi,3pipi0nu,tauola,chargedInAcc=DecProdCut '
+'12562422': Bu_Dst0taunu,D0pi0,D0gamma,Kpi,3pipi0nu,tauola,chargedInAcc=DecProdCut
 '12565002': Bu_antiD0TauNu=DecProdCut
 '12565010': Bplus_PsiDMLambdac2595,Lambdac2595_pipiLambdacplus,Lambdacplus_pKpi=FullGenEvtCut,mPsiDM=940MeV
 '12565011': Bplus_PsiDMLambdac2595,Lambdac2595_pipiLambdacplus,Lambdacplus_pKpi=FullGenEvtCut,mPsiDM=1500MeV
@@ -3216,14 +3216,14 @@
 '12572000': Bu_D0ppmunu=TightCut
 '12572001': Bu_D0ppmunu=TightCut2
 '12573000': Bu_D0taunu,mununu=TightCuts
-'12573001': 'Bu_D0taunu,mununu=RDstar,TightCut '
+'12573001': Bu_D0taunu,mununu=RDstar,TightCut
 '12573002': Bu_Dststppmunu=TightCut
 '12573004': Bu_Dstppmunu=TightCut
 '12573010': Bu_D0munu=TightCuts
-'12573012': 'Bu_D0munu=RDstar,TightCut '
+'12573012': Bu_D0munu=RDstar,TightCut
 '12573021': Bu_Dst0taunu,mununu=TightCut
 '12573031': Bu_Dst0munu=TightCut
-'12573040 ': Bu_D0munu,Kmunu=DecProdCut
+'12573040': Bu_D0munu,Kmunu=DecProdCut
 '12573050': Bu_D0pi,Kmunu=DecProdCut
 '12573060': Bu_D0munu,Kenu=DecProdCut
 '12573061': Bu_D0munu,Kenu=VisibleInAcceptance,HighVisMass
@@ -3268,7 +3268,7 @@
 '12583050': Bu_D0pi,pienu=DecProdCut,ptCut200MeV
 '12583424': Bu_Dst0enu,D0pi0,Kenu=DecProdCut,TightCut
 '12583425': Bu_Dst0pi,D0pi0,Kenu=DecProdCut,TightCut
-'12585040 ': Bu_Dpienu,Kpienu=DecProdCut
+'12585040': Bu_Dpienu,Kpienu=DecProdCut
 '12585041': Bu_Dpienu,Kpienu=TightCut
 '12585042': Bu_Dpienu,Kpienu=VisibleInAcceptance,HighVisMass,EvtGenDecayWithCut
 '12585050': Bu_Dpipi,Kpienu=DecProdCut
@@ -3304,8 +3304,8 @@
 '12713400': Bu_MuXMajoranaNeutrino2MuMuNu,m=4000MeV,t=100ps,SS,DecProdCut
 '12713401': Bu_MuXMajoranaNeutrino2MuENu,m=4000MeV,t=100ps,SS,DecProdCut
 '12713402': Bu_MuXMajoranaNeutrino2EENu,m=4000MeV,t=100ps,SS,DecProdCut
-'12715000': 'Bu_Ktaumu,3pi=DecProdCut '
-'12725000': 'Bu_Ktaue,3pi=DecProdCut '
+'12715000': Bu_Ktaumu,3pi=DecProdCut
+'12725000': Bu_Ktaue,3pi=DecProdCut
 '12763000': Bu_Dsppbar,taunu=DecProdCut
 '12773000': Bu_D+ppbar,Xmunu=DecProdCut
 '12773023': Bu_MuXMajoranaNeutrino2MuMuNu,m=1600MeV,t=100ps,SS,DecProdCut
@@ -3314,8 +3314,8 @@
 '12773026': Bu_MuXMajoranaNeutrino2MuMuNu,m=3000MeV,t=100ps,SS,DecProdCut
 '12773027': Bu_MuXMajoranaNeutrino2MuENu,m=3000MeV,t=100ps,SS,DecProdCut
 '12773028': Bu_MuXMajoranaNeutrino2EENu,m=3000MeV,t=100ps,SS,DecProdCut
-'12773400': 'Bu_Dst0taunu,D0pi0,mununu=RDstar,TightCut '
-'12773410': 'Bu_Dst0munu,D0pi0=RDstar,TightCut '
+'12773400': Bu_Dst0taunu,D0pi0,mununu=RDstar,TightCut
+'12773410': Bu_Dst0munu,D0pi0=RDstar,TightCut
 '12773420': Bu_MuXMajoranaNeutrino2MuMuNu,m=2000MeV,t=100ps,SS,DecProdCut
 '12773421': Bu_MuXMajoranaNeutrino2MuENu,m=2000MeV,t=100ps,SS,DecProdCut
 '12773422': Bu_MuXMajoranaNeutrino2EENu,m=2000MeV,t=100ps,SS,DecProdCut
@@ -3478,9 +3478,9 @@
 '13100003': Bs_tautau,pipipinu=DecProdCut,tightcut,tauolacleointricate
 '13100004': BsJpsiKK,mm=DecProdCut
 '13100008': Bs_Kst0Phi,KsPi0K+K-=DecProdCut
-'13100211 ': Bs_gammagamma=DecProdCut
-'13100212 ': Bs_gammagamma=GenCuts
-'13100213 ': Bs_gammagamma=PhotonProdCut
+'13100211': Bs_gammagamma=DecProdCut
+'13100212': Bs_gammagamma=GenCuts
+'13100213': Bs_gammagamma=PhotonProdCut
 '13102002': Bs_K+K-=CPV,DecProdCut
 '13102003': Bs_K+K-=CPV,tightCut
 '13102004': Bs_K+K-=CPV2017,DecProdCut
@@ -3501,8 +3501,8 @@
 '13102232': Bs_KKgamma=phsp,HighPtGamma,DecProdCut
 '13102240': Bs_Kstgamma=HighPtGamma,DecProdCut
 '13102250': Bs_etaprimetautau,3pi3pi=DecProdCut,TightCut,tauola5
-'13102254': 'Bs_KK1250gamma=PHSP,TightCut  '
-'13102263': 'Bs_Phigamma=PHSP,TightCut  '
+'13102254': Bs_KK1250gamma=PHSP,TightCut
+'13102263': Bs_Phigamma=PHSP,TightCut
 '13102264': Bs_Phigamma=TightCut,gam_PTabove1.8
 '13102401': Bs_rho+K-=DecProdCut
 '13102402': Bs_K-K+pi0=PHSP
@@ -3524,7 +3524,7 @@
 '13102464': Bs_PhiEta,gg=DecProdCut
 '13102465': Bs_Phipi0,gg=DecProdCut
 '13102601': Bs_f1420gamma,KKpi0=HighPtGamma,DecProdCut
-'13102611': 'Bs_K+K-pi0gamma=phi1680,TightCut '
+'13102611': Bs_K+K-pi0gamma=phi1680,TightCut
 '13102631': Bs_phigamma,pipipi0=HighPtGamma,DecProdCut
 '13104001': Bs_Kst0Kst0=DecProdCut
 '13104002': Bs_Kst0Kst0=LargeCPV,DecProdCut
@@ -3606,8 +3606,8 @@
 '13104250': Bs_phiphietap,rhog=DecProdCut
 '13104301': Bs_phiKSgamma,KKpipi=DecProdCut
 '13104312': Bs_KstKSgamma,Kpipipi=DecProdCut
-'13104322  ': Bs_KsK+pi-gamma=TightCut,PHSP
-'13104323  ': Bs_KsK+pi-gamma=TightCut,mKshhCut,PHSP
+'13104322': Bs_KsK+pi-gamma=TightCut,PHSP
+'13104323': Bs_KsK+pi-gamma=TightCut,mKshhCut,PHSP
 '13104371': Bs_SigmapbarK-,Lambdagamma=DecProdCut
 '13104401': Bs_phiphi,KK,pipipi=DecProdCut
 '13104411': Bs_phieta,KK,pipipi=DecProdCut
@@ -3618,7 +3618,7 @@
 '13104510': Bs_KsK+pi-pi0=DecProdCut,PHSP
 '13104512': Bs_KsK+pi-pi0=TightCut,mKshhCut,PHSP
 '13104513': Bs_KsK+pi-eta=TightCut,mKshhCut,PHSP
-'13104522 ': Bs_KsK+pi-pi0=TightCut,mKshhCut,PHSP,KSVtxCut,HighPtPi0
+'13104522': Bs_KsK+pi-pi0=TightCut,mKshhCut,PHSP,KSVtxCut,HighPtPi0
 '13104523': Bs_KsK+pi-eta=TightCut,mKshhCut,PHSP,KSVtxCut,HighPtEta
 '13104530': Bs_Xi0Xi0,Lambdapi0=DecProdCut
 '13104561': Bs_Lambdap-Kst,K+pi0+=DecProdCut
@@ -3630,7 +3630,7 @@
 '13106101': Bs_Kspipipipi=PHSP,PartRecCut
 '13106102': Bs_XipXim,Lambda0pi=DecProdCut
 '13106111': Bs_LambdabarLambdapbarp=HELAMP,TightCut
-'13106120 ': Bs_OmegaOmega,Lambda0K=DecProdCut
+'13106120': Bs_OmegaOmega,Lambda0K=DecProdCut
 '13106121': Bs_LambdabarLambdapipi=HELAMP,TightCut
 '13106131': Bs_LambdabarLambdaphi=HELAMP,TightCut
 '13106132': Bs_LambdabarLambdaKK=HELAMP,TightCut
@@ -3648,7 +3648,7 @@
 '13112001': Bs_mumu=DecProdCut
 '13112002': Bs_pmu=PHSP,DecProdCut
 '13112011': Bs_emu=DecProdCut
-'13112200 ': Bs_gammamumu=MNT,DecProdCut
+'13112200': Bs_gammamumu=MNT,DecProdCut
 '13112201': Bs_gammamumu=ISR,DecProdCut
 '13112202': Bs_gammamumu=FSR,DecProdCut
 '13112203': Bs_gammamumu=ISRandFSR,DecProdCut
@@ -3656,13 +3656,13 @@
 '13112205': Bs_gammamumu=ISR,MassCut
 '13112206': Bs_gammamumu=ISR,MassCut4
 '13112211': Bs_gammaemu=ISRandFSR,DecProdCut
-'13114001 ': Bs_phimumu=DecProdCut
-'13114002 ': Bs_phimumu=MS,DecProdCut
-'13114003 ': Bs_phimumu=MSC7wrong,DecProdCut
-'13114004 ': Bs_phimumu=MSC10wrong,DecProdCut
-'13114005 ': Bs_phimumu=PHSP,DecProdCut
+'13114001': Bs_phimumu=DecProdCut
+'13114002': Bs_phimumu=MS,DecProdCut
+'13114003': Bs_phimumu=MSC7wrong,DecProdCut
+'13114004': Bs_phimumu=MSC10wrong,DecProdCut
+'13114005': Bs_phimumu=PHSP,DecProdCut
 '13114006': Bs_phimumu=Ball,DecProdCut
-'13114007 ': Bs_KKmumu=phsp,DecProdCut
+'13114007': Bs_KKmumu=phsp,DecProdCut
 '13114008': Bs_f0mumu,pipi=DecProdCut
 '13114010': Bs_mumuKK,mm=DecProdCut
 '13114011': Bs_f0mumu=MS,DecProdCut
@@ -3671,15 +3671,15 @@
 '13114014': Bs_pipimumu=DecProdCut
 '13114016': Bs_pipimumu=FOURBODYPHSP,DecProdCut
 '13114017': Bs_phimumu=Ball,NoCut
-'13114020 ': Bs_mumumumu=PHSP,DecProdCut
-'13114021 ': Bs_mumumumu=NVN,DecProdCut
-'13114022 ': Bs_mumumumu=JpsiPhi,DecProdCut
+'13114020': Bs_mumumumu=PHSP,DecProdCut
+'13114021': Bs_mumumumu=NVN,DecProdCut
+'13114022': Bs_mumumumu=JpsiPhi,DecProdCut
 '13114024': Bs_mumumumu=PHSP
-'13114025 ': Bs_phimumu,mm=MS,DecProdCut
-'13114031 ': Bs_4mu=Gorbunov01,DecProdCut
-'13114032 ': Bs_4mu=Gorbunov0001,DecProdCut
-'13114033 ': Bs_4mu=Geq01,DecProdCut
-'13114034 ': Bs_4mu=Geq0001,DecProdCut
+'13114025': Bs_phimumu,mm=MS,DecProdCut
+'13114031': Bs_4mu=Gorbunov01,DecProdCut
+'13114032': Bs_4mu=Gorbunov0001,DecProdCut
+'13114033': Bs_4mu=Geq01,DecProdCut
+'13114034': Bs_4mu=Geq0001,DecProdCut
 '13114035': Bs_aa2mumumumu,m=1GeV,t=1fs,DecProdCut
 '13114040': Bs_fprime2mumu,KK=PHSP,DecProdCut
 '13114042': Bs0_a1a2mmmm_0.25GeV_0.40GeV_10ps=DecProdCut
@@ -3707,17 +3707,17 @@
 '13114621': Bs_etapmumu,omegag=MS,DecProdCut
 '13116001': Bs_phiPS,4mu=DecProdCut
 '13116002': Bs_f0PS,4mu=DecProdCut
-'13116003 ': Bs0_a1a2a1a1mumumumumumu,ma1=0.5GeV,ta1=0ps,ma2=1.5GeV,ta2=0fs,DecProdCut
+'13116003': Bs0_a1a2a1a1mumumumumumu,ma1=0.5GeV,ta1=0ps,ma2=1.5GeV,ta2=0fs,DecProdCut
 '13116004': Bs0_a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=0ps,ma2=2.5GeV,ta2=0fs,DecProdCut
 '13116005': Bs0_a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=0ps,ma2=3.0GeV,ta2=0fs,DecProdCut
 '13116006': Bs0_a1a2a1a1mumumumumumu,ma1=0.5GeV,ta1=10ps,ma2=1.5GeV,ta2=0fs,DecProdCut
 '13116007': Bs0_a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=10ps,ma2=2.5GeV,ta2=0fs,DecProdCut
-'13116008 ': Bs0_a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=10ps,ma2=3.0GeV,ta2=0fs,DecProdCut
-'13116009 ': Bs0_a1a2a1a1mumumumumumu,ma1=0.5GeV,ta1=100ps,ma2=1.5GeV,ta2=0fs,DecProdCut
-'13116010 ': Bs_6mu=PHSP,DecProdCut
+'13116008': Bs0_a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=10ps,ma2=3.0GeV,ta2=0fs,DecProdCut
+'13116009': Bs0_a1a2a1a1mumumumumumu,ma1=0.5GeV,ta1=100ps,ma2=1.5GeV,ta2=0fs,DecProdCut
+'13116010': Bs_6mu=PHSP,DecProdCut
 '13116011': Bs0_a1a2a1a1mumumumumumu,ma1=0.5GeV,ta1=1ps,ma2=1.5GeV,ta2=0fs,DecProdCut
-'13116012 ': Bs0_a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=100ps,ma2=3.0GeV,ta2=0fs,DecProdCut
-'13116013 ': Bs0_a1a2a1a1mumumumumumu,ma1=0.5GeV,ta1=1000ps,ma2=1.5GeV,ta2=0fs,DecProdCut
+'13116012': Bs0_a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=100ps,ma2=3.0GeV,ta2=0fs,DecProdCut
+'13116013': Bs0_a1a2a1a1mumumumumumu,ma1=0.5GeV,ta1=1000ps,ma2=1.5GeV,ta2=0fs,DecProdCut
 '13116014': Bs0_a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=1000ps,ma2=2.5GeV,ta2=0fs,DecProdCut
 '13116050': Bs0_a2a1a1a1mmmmmm_0.25GeV_4.25GeV_0ps=DecProdCut
 '13116051': Bs0_a2a1a1a1mmmmmm_0.25GeV_4.25GeV_1ps=DecProdCut
@@ -3728,9 +3728,9 @@
 '13116062': Bs0_a2a1a1a1mmmmmm_1.25GeV_3.50GeV_100ps=DecProdCut
 '13116095': Bs0_mmmmmm=PHSP,DecProdCut
 '13116099': Bs0_a1a2a1a1mumumumumumu,ma1=1.0GeV,ta1=100ps,ma2=2.5GeV,ta2=0fs,DecProdCut
-'13118000 ': Bs_8mu=PHSP,DecProdCut
+'13118000': Bs_8mu=PHSP,DecProdCut
 '13122001': Bs_ee=DecProdCut
-'13122200 ': Bs_gammaee=MNT,DecProdCut
+'13122200': Bs_gammaee=MNT,DecProdCut
 '13124006': Bs_phiee=Ball,DecProdCut
 '13124007': Bs_phiee=Ball,NoCut
 '13124017': Bs_KKee=DecProdCut
@@ -3802,8 +3802,8 @@
 '13144030': Bs_Jpsipipi,mm
 '13144031': Bs_Jpsipipi,mm=DecProdCut
 '13144032': Bs_Jpsiphi,4mu=v2,DecProdCut
-'13144033 ': Bs_Jpsimumu=ball,DecProdCut
-'13144034 ': Bs_Jpsimumu=phsp,DecProdCut
+'13144033': Bs_Jpsimumu=ball,DecProdCut
+'13144034': Bs_Jpsimumu=phsp,DecProdCut
 '13144041': Bs_JpsiKK,mm=DecProdCut
 '13144042': Bs_psi2SKK,mm=FullPHSP,DecProdCut
 '13144043': Bs_JpsiKK,mm=XLL,DecProdCut
@@ -3813,7 +3813,7 @@
 '13144055': Bs_psi2Spipi,mm
 '13144061': Bs_Jpsippbar=DecProdCut
 '13144071': Bs_JpsiKpi=DecProdCut
-'13144081 ': Bs_psi2SKpi,mm=DecProdCut
+'13144081': Bs_psi2SKpi,mm=DecProdCut
 '13144090': Bs_Jpsifprime2,mumuKK=PHSP,DecProdCut
 '13144101': Bs_JpsiKS,mm=DecProdCut
 '13144102': Bs_JpsiKS,mm=CPV,DecProdCut
@@ -3897,7 +3897,7 @@
 '13164079': Bs_D0KK,KK=sqDalitz,DecProdCut
 '13164081': Bs_Dst-pi+,D0pi=DecProdCut
 '13164091': Bs_Dst-K+,D0pi=DecProdCut
-'13164094': 'Bs_Lcpbar,pKpi=DecProdCut '
+'13164094': Bs_Lcpbar,pKpi=DecProdCut
 '13164101': Bs_Dspi,Kspi=DecProdCut
 '13164111': Bs_D0Ks,Kpi=DecProdCut
 '13164121': Bs_D0Ks,pipi=DecProdCut
@@ -3972,7 +3972,7 @@
 '13164469': Bs_Dst0phi,D0pi0,Kpipi0=DecProdCut,HELAMP001
 '13164471': Bs_Ds2317pi,KKpi=DecProdCut,TightCut
 '13164473': Bs_Dspi0pi,KKpi=TightCut,PHSP
-'13164477 ': Bs_DsKst,KKpi,Kpi0=CPV,DDalitz,DecProdCut
+'13164477': Bs_DsKst,KKpi,Kpi0=CPV,DDalitz,DecProdCut
 '13164481': Bs_DsKst,KKpi,Kpi0=DecProdCut
 '13164485': Bs_Ds2536pi,Dst0K,D0pi0,Kpi=DecProdCut,SVS,VVS_SWAVE
 '13164486': Bs_Ds2536pi,Dst0K,D0pi0,Kpi=DecProdCut,SVS,VVS_DWAVE
@@ -4016,28 +4016,28 @@
 '13166033': Bs_Ds1stpi,DKpi,Kpipi=DecProdCut
 '13166043': Bs_Ds3stpi,DKpi,Kpipi=DecProdCut
 '13166053': Bs_Ds2536pi,DKpi,Kpipi=DecProdCut
-'13166060 ': Bs_LambdacbarpK-pi+,pbarKpi=DecProdCut
-'13166061 ': Bs_LambdacpbarK+pi+S,pbarKpi=DecProdCut,mS=1500MeV
+'13166060': Bs_LambdacbarpK-pi+,pbarKpi=DecProdCut
+'13166061': Bs_LambdacpbarK+pi+S,pbarKpi=DecProdCut,mS=1500MeV
 '13166062': Bs0Ds2536mpip,Ds2536_Dspipi=TightCut
 '13166077': Bs_D0KK,Kpipipi=BssqDalitz,DAmpGen,TightCut
 '13166078': Bs_D0KK,piKpipi=BssqDalitz,DAmpGen,TightCut
 '13166079': Bs_D0KK,pipipipi=BssqDalitz,DPHSP,TightCut
 '13166097': Bs_D0KK,KKpipi=BssqDalitz,DAmpGen,TightCut
 '13166101': Bs_D0Kst,KSpipi=DecProdCut
-'13166102 ': Bs_D0Kst,KSpipi=TightCut,PHSP
-'13166103 ': Bs_D0Kst,KSpipi=B-SVS,D-PHSP,TightCut
+'13166102': Bs_D0Kst,KSpipi=TightCut,PHSP
+'13166103': Bs_D0Kst,KSpipi=B-SVS,D-PHSP,TightCut
 '13166104': Bs_D0Kst,KSpipi=B-SVS,D-PHSP,TightCut,LooserCuts
 '13166111': Bs_D-KSpi,Kpipi=sqDalitz,DecProdCut
 '13166112': Bs_D-KSK,Kpipi=sqDalitz,DecProdCut
 '13166113': Bs_D0phi,KSpipi=DecProdCut
 '13166114': Bs_D0phi,KSKK=DecProdCut
-'13166115 ': Bs_LambdacbarLambdapi+,pbarKpi=DecProdCut,ppi=DecProdCut
-'13166116 ': Bs_LambdacbarLambdabarpi+S,pbarKpi=DecProdCut,ppi=DecProdCut,mS=1500MeV
+'13166115': Bs_LambdacbarLambdapi+,pbarKpi=DecProdCut,ppi=DecProdCut
+'13166116': Bs_LambdacbarLambdabarpi+S,pbarKpi=DecProdCut,ppi=DecProdCut,mS=1500MeV
 '13166119': Bs_D0KK,KSpipi=BssqDalitz,DDalitz,TightCut
 '13166120': Bs_D0KK,KSKK=BssqDalitz,DDalitz,TightCut
 '13166121': Bs_LambdabarpDsm,KKpi=HELAMP,TightCut
-'13166122 ': Bs_D0Kst,KSKK=TightCut,PHSP
-'13166123 ': Bs_D0Kst,KSKK=B-SVS,D-PHSP,TightCut
+'13166122': Bs_D0Kst,KSKK=TightCut,PHSP
+'13166123': Bs_D0Kst,KSKK=B-SVS,D-PHSP,TightCut
 '13166124': Bs_D0Kst,KSKK=B-SVS,D-PHSP,TightCut,LooserCuts
 '13166131': Bs_D0Kspipi,Kpi=DecProdCut
 '13166140': Bs_D0Kpi,KSpipi=sqDalitz,TightCut
@@ -4078,7 +4078,7 @@
 '13166335': Bs_Dst0KK,D0gamma,KSKK=BssqDalitz,DDalitz,TightCut
 '13166340': Bs_Dsstpi,Dsgamma,KspipiK=TightCut
 '13166341': Bs_DsstK,Dsgamma,KspipiK=TightCut
-'13166400 ': Bs_Ds2536K,Dst0K,D0pi0,K3pi=DecProdCut
+'13166400': Bs_Ds2536K,Dst0K,D0pi0,K3pi=DecProdCut
 '13166471': Bs_Dst0Kpi,D0pi0,Kpipipi=BssqDalitz,DAmpGen,TightCut
 '13166472': Bs_Dst0Kpi,D0pi0,piKpipi=BssqDalitz,DAmpGen,TightCut
 '13166473': Bs_Dst0Kpi,D0pi0,pipipipi=BssqDalitz,DPHSP,TightCut
@@ -4120,13 +4120,13 @@
 '13194013': Bs_D0D0bar,pipi,Cut=DecProdCut,pCut1600MeV
 '13196000': Bs_DstD0K,D0Pi,KPi=DecProdCut
 '13196001': Bs_D0D0phi,Kpi=DecProdCut
-'13196002': 'Bs_D0DsK,Kpi,Kpipi=DecProdCut '
+'13196002': Bs_D0DsK,Kpi,Kpipi=DecProdCut
 '13196004': Bs_D0D0bar,Kpipipi=AmpGen,Cut=DecProdCut,pCut1600MeV
 '13196010': Bs_DstD0K,D0Pi,KPi=sqDalitz,DecProdCut
 '13196014': Bs_Ds+Dst-,D+_KKpi,Dst-_D0pi,D0_Kpi=DecProdCut_pCut1600MeV
 '13196020': Bs_DstD0K,D0Pi,KPi=sqDalitz13,DecProdCut
 '13196021': Bs_D0D0phi,KPi,KPi,KK=sqDalitz,DecProdCut
-'13196022': 'Bs_D0DsK,Kpi,Kpipi=sqDalitz,DecProdCut '
+'13196022': Bs_D0DsK,Kpi,Kpipi=sqDalitz,DecProdCut
 '13196023': Bs_D0DK,KPi,KPiPi=sqDalitz,DecProdCut
 '13196024': Bs_D0DK,KPi,KPiPi=DecProdCut
 '13196025': Bs_D0Dspi,KPi,KKPi=sqDalitz,DecProdCut
@@ -4149,8 +4149,8 @@
 '13196064': Bs_DsDs,3pi3pi=bothDDALITZ,DecProdCut_pCut1600MeV
 '13196065': Bs_DsDs,KpipiKpipi=bothDDALITZ,DecProdCut_pCut1600MeV
 '13196080': Bs_psi3770KK,D0D0bar,Kpi=DecProdCut
-'13196090': 'Bs_LambdacLambdac,Exclusive,pKpi=DecProdCut_pCut1600MeV '
-'13196091': 'Bs_XicXic,Exclusive,pKpi=DecProdCut_pCut1600MeV '
+'13196090': Bs_LambdacLambdac,Exclusive,pKpi=DecProdCut_pCut1600MeV
+'13196091': Bs_XicXic,Exclusive,pKpi=DecProdCut_pCut1600MeV
 '13196092': Bs_LcXic,pKpi,pKpi=DecProdCut_pCut1600MeV
 '13196101': Bs_D0D0KS,KPi,KPi,PiPi=DecProdCut
 '13196111': Bs_D0D0KS,KPi,KPi,PiPi=sqDalitz,DecProdCut
@@ -4160,9 +4160,9 @@
 '13196401': Bs_Dst0D0phi,D0pi0,Kpi=DecProdCut
 '13196510': Bs_LcLcKS0pi0,pKpi,pKpi=PHSP,DecProdCut
 '13196511': Bs_LcLcKS0pi0pi0,pKpi,pKpi=PHSP,DecProdCut
-'13198000': 'Bs_DDPhi,Kpipi=DecProdCut '
-'13198001': 'Bs_DDstPhi,Kpipi=DecProdCut '
-'13198002': 'Bs_DstDstPhi,Kpi,Kpi=DecProdCut '
+'13198000': Bs_DDPhi,Kpipi=DecProdCut
+'13198001': Bs_DDstPhi,Kpipi=DecProdCut
+'13198002': Bs_DstDstPhi,Kpi,Kpi=DecProdCut
 '13198003': Bs_D0D0phi,K3Pi=TightCut,AMPGEN
 '13198004': Bs_D0D0phi,K3PiandKPi=TightCut,PHSP
 '13198010': Bs_DDphi,KPiPi,KPiPi,KK=sqDalitz,DecProdCut
@@ -4209,7 +4209,7 @@
 '13246103': Bs_JpsiKspipi,mm=DecProdCut,pCut1600MeV
 '13246104': Bs_Jpsieta1405,KSKpi,mm=DecProdCut,pCut1600MeV
 '13246105': Bs_JpsiKSKpi,mm=DecProdCut,pCut1600MeV
-'13246116': 'Bs_JpsiKsKpi,mm=TightCut,KSVtxCut,cocktail '
+'13246116': Bs_JpsiKsKpi,mm=TightCut,KSVtxCut,cocktail
 '13246202': Bs_JpsietapKK,mm,rhog,pipi=TightCuts
 '13246452': Bs_JpsietapKK,mm,pipieta,gg=TightCuts
 '13254200': Bs_chicphi,JpsigKK,ee=TightCuts
@@ -4255,7 +4255,7 @@
 '13266021': Bs_D-Kpipi,pipiK=DecProdCut
 '13266031': Bs_DsKpipi,3pi=DecProdCut_pCut1600MeV
 '13266038': Bs_DsKpipi,pipipi=TightCut
-'13266040 ': Bs_D0Kpi,K3pi=sqDalitz,DecProdCut
+'13266040': Bs_D0Kpi,K3pi=sqDalitz,DecProdCut
 '13266058': Bs_DsKpipi,Kpipi=TightCut
 '13266068': Bs_Dspipipi,KKpi=TightCut
 '13266069': Bs_Dspipipi,KKpi=TightCut,DsPt1400
@@ -4294,9 +4294,9 @@
 '13296031': Bs_DsDs,3pi3pi=DDALITZ,DecProdCut_pCut1600MeV
 '13296041': Bs_LambdacLambdac=DecProdCut_pCut1600MeV
 '13296051': Bs_DsDs,Kpipi3pi=DDALITZ,DecProdCut_pCut1600MeV
-'13296059': 'Bs_XicXic,intermediates,pKpi=DecProdCut_pCut1600MeV '
+'13296059': Bs_XicXic,intermediates,pKpi=DecProdCut_pCut1600MeV
 '13296060': Bs_LambdacLambdac,Intermediate=DecProdCut_pCut1600MeV
-'13296061': 'Bs_LcXic,intermediates,pKpi=DecProdCut_pCut1600MeV '
+'13296061': Bs_LcXic,intermediates,pKpi=DecProdCut_pCut1600MeV
 '13296205': Bs_DsstDsst=DDALITZ,DecProdCut_pCut1600MeV
 '13296206': Bs_DsstDs=DDALITZ,DecProdCut_pCut1600MeV
 '13296210': Bs_X38721++KK,D0barDst0,D0D0barGamma,Kpi=DecProdCut
@@ -4310,7 +4310,7 @@
 '13304106': Bs_KsKpi=sqDalitz,TightCut
 '13304402': Bs_phietap,KK=PhiInAcc
 '13314000': Bs_phiemu=Ball,DecProdCut
-'13314001': 'Bs_phiemu=DecProdCut,PHSP '
+'13314001': Bs_phiemu=DecProdCut,PHSP
 '13314012': Bs_Kpiemu=DecProdCut
 '13314023': Bs_phiemu,KK=PHSP,DecProdCut
 '13314034': Bs_f0emu,pipi=DecProdCut
@@ -4374,7 +4374,7 @@
 '13444001': Bs_JpsiKst,mm=DecProdCut
 '13444022': Bs_CharmoniumKX,mumu,PPTcuts=TightCut
 '13444023': Bs_CharmoniumPiPiX,mumu=TightCut,ForB2RhoMuNu
-'13444401 ': Bs_JpsiKKeta,mm=TightCut
+'13444401': Bs_JpsiKKeta,mm=TightCut
 '13454001': Bs_JpsiX,ee=JpsiInAcc
 '13464601': Bs_Dsstrho,phirho=SVV,DecProdCut
 '13466000': Bs_D0Kpi,4h=cocktail,5hinAcc
@@ -4405,7 +4405,7 @@
 '13512004': Bs_K+pi-,mm=TightCut
 '13512010': Bs_Kmunu=DecProdCut
 '13512011': Bs_Kmunu=DecProdCut,M4.5GeV
-'13512030 ': Bs_Ktaunu,mununu=DecProdCut
+'13512030': Bs_Ktaunu,mununu=DecProdCut
 '13512400': Bs_Kstmunu,Kpi0=DecProdCut
 '13512410': Bs_K2stmunu,Kpi0=DecProdCut
 '13512420': Bs_K1430munu,Kpi0=DecProdCut
@@ -4450,13 +4450,13 @@
 '13566001': Bs_DsTauNu=DecProdCut
 '13574000': Bs_Dsmunu,TauNu=DecProdCut,TightCut
 '13574005': Bs_D0Kmunu,Kpi=DecProdCut,cocktail
-'13574010 ': Bs_Dsmunu,Kstmunu=DecProdCut
-'13574020 ': Bs_DKstmunu,munu=DecProdCut
-'13574030 ': Bs_DKstmunu,taunu,mununu=DecProdCut
+'13574010': Bs_Dsmunu,Kstmunu=DecProdCut
+'13574020': Bs_DKstmunu,munu=DecProdCut
+'13574030': Bs_DKstmunu,taunu,mununu=DecProdCut
 '13574040': Bs_D0Kst0,Kmunu,Kpi=DecProdCut
 '13574052': Bs_Dsststmunu,D+=DecProdCut
-'13574063 ': Bs_D0Klnu,Klnu=DecProdCut
-'13574064 ': Bs_D0Kmunu,Kmunu=DecProdCut
+'13574063': Bs_D0Klnu,Klnu=DecProdCut
+'13574064': Bs_D0Kmunu,Kmunu=DecProdCut
 '13574065': Bs_D0Kmunu,pimunu=KpimumuInAcc
 '13574080': Bs_Dsmunu,Kstenu=DecProdCut
 '13574081': Bs_Dsenu,Kstmunu=DecProdCut
@@ -4479,29 +4479,29 @@
 '13574212': Bs_Dsstmunu,Dsgamma,phimunu=DecProdCut,HighVisMass,EvtGenDecayWithCut
 '13574410': Bs_Dsmunu,etapi,pipipi0,gg=DecProdCut,DsmuInAcc
 '13574420': Bs_Dsmunu,etaprimepi,pipieta,gg=DecProdCut,DsmuInAcc
-'13574430 ': Bs_DKstmunu,pi0munu=DecProdCut
+'13574430': Bs_DKstmunu,pi0munu=DecProdCut
 '13574440': Bs_Dsststmunu,D0=cocktail,LHCbAcceptance
 '13574442': Bs_Dsststmunu,D0=cocktail,hqet2,isgw2,LHCbAcceptance
-'13574452 ': Bs_Dsststmunu,D0=TightCut
-'13574462 ': Bs_D0Kmunu,Kmunu=TightCut
+'13574452': Bs_Dsststmunu,D0=TightCut
+'13574462': Bs_D0Kmunu,Kmunu=TightCut
 '13574474': Bs_Dspimunu,piKK=DecProdCut,cocktail
 '13574600': Bs_DsstDsst,gDsgDs,phipimunuX=cocktail,DecProdCut
 '13574611': Bs_DsstDsst,DsgammaDsgamma,KKpimunuX=cocktail,LHCbAcceptance
 '13574612': Bs_DsstDsst,DsgammaDsgamma,KKpimunuX=cocktail,mu3hInAcc
-'13576000 ': 'Bs_DKstmunu,Kstmunu=DecProdCut '
+'13576000': Bs_DKstmunu,Kstmunu=DecProdCut
 '13576010': Bs_Dststmunu,KD0,4h=cocktail,mu4hinAcc
 '13576011': Bs_Ds2536munu,DKpi=ISGW2,TightCut
 '13576020': Bs_LcpKmunu,pKmunu=TightCut
-'13576100': 'Bs_Ds1munu,Ds1=DpKS0,TightCut '
-'13576110 ': Bs_DKstmunu,KSmunu=DecProdCut
-'13576160': 'Bs_Ds1munu,Ds1=DstKS0,TightCut '
+'13576100': Bs_Ds1munu,Ds1=DpKS0,TightCut
+'13576110': Bs_DKstmunu,KSmunu=DecProdCut
+'13576160': Bs_Ds1munu,Ds1=DstKS0,TightCut
 '13576300': Bs_Dsmunu,KSKpipi=DecProdCut,cocktail,hqet2,DsmuInAcc
 '13584000': Bs_Dsenu,phienu=DecProdCut,HighVisMass,EvtGenDecayWithCut
-'13584063 ': Bs_D0Kenu,Kenu=DecProdCut
+'13584063': Bs_D0Kenu,Kenu=DecProdCut
 '13584200': Bs_Dsstenu,Dsgamma,phienu=DecProdCut,HighVisMass,EvtGenDecayWithCut
 '13594223': Bs_DsstDsst,DsgammaDsgamma,KKp,Xmunu=cocktail,mu3hInAcc,TightCut
 '13594613': Bs_DsstDsst,DsgammaDsgamma,KKpimunuX=cocktail,mu3hInAcc,TightCut
-'13596000': 'Bs_D0DsK,Kmunu,KKpi=DecProdCut '
+'13596000': Bs_D0DsK,Kmunu,KKpi=DecProdCut
 '13596242': Bs_DsDs,phimunu,phimunu=KKmumuInAcc
 '13606400': Bs_tautau,3pi,3pipi0=DecProdCut,TightCut
 '13614041': Bs_phitautau,mumuCocktail=TightCut
@@ -4537,7 +4537,7 @@
 '13774051': Bs_Ds2536munu,KKpi=DecProdCut
 '13774060': Bs_Dstaunu=cocktail,DsmuInAcc
 '13774062': Bs_Dstaunu=cocktail,LHCbAcceptance
-'13774072 ': Bs_DKpimunu,munuCocktail=DecProdCut
+'13774072': Bs_DKpimunu,munuCocktail=DecProdCut
 '13774206': Bs_Dsmunu=cocktail,hqet2,mu3hInAcc
 '13774210': Bs_DsX,KKpi=cocktail,TightCut,ACPKKCuts
 '13774221': Bs_Dsmunu=Ds+Dsst=hqet2,mu3hInAcc
@@ -4772,7 +4772,7 @@
 '14145204': Bc_Bdstarpi+,Bdgamma,JpsiKstar=BcVegPy,DecProdCut
 '14145210': Bc_BstKst,JpsiKgamma,Kpi=BcVegPy,DecProdCut
 '14145290': Bc2st_Bcstpipi,Bcgamma,Jpsipi,mm=DecProdCut,BcVegPy
-'14145400 ': Bc_Bsrho+,Jpsiphi=BcVegPy,DecProdCut
+'14145400': Bc_Bsrho+,Jpsiphi=BcVegPy,DecProdCut
 '14147000': Bc_Jpsipipipipipi,mm=BcVegPy,DecProdCut
 '14147010': Bc_jpsipipipipipi,mm=BcVegPy,DecProdCut,BCVHAD
 '14147011': Bc_jpsikkpipipi,mm=BcVegPy,DecProdCut,BCVHAD
@@ -4798,9 +4798,9 @@
 '14163011': Bc_D0pi,Kpi=BcVegPy,DecProdCut
 '14163022': Bc_D0K,Kpi=BcVegPy,DecProdCut
 '14163201': Bc_Ds1gamma,Dst0K,D0gamma,Kpi=DecProdCut
-'14163210': 'Bc_DsstGamma,DsG,KKpi=BcVegPy,TightCut '
+'14163210': Bc_DsstGamma,DsG,KKpi=BcVegPy,TightCut
 '14163221': Bc_Dst0K,D0gamma,Kpi=DecProdCut
-'14163233': 'Bc_DstGamma,D0pi,Kpi=BcVegPy,TightCut '
+'14163233': Bc_DstGamma,D0pi,Kpi=BcVegPy,TightCut
 '14163421': Bc_Dst0K,D0pi0,Kpi=DecProdCut
 '14163601': Bc_Ds1gamma,Dst0K,D0pi0,Kpi=DecProdCut
 '14163610': Bc_Dstpi0,D0pi,Kpi,gg=BcVegPy,TightCut
@@ -4811,7 +4811,7 @@
 '14165007': Bc_BdK+_Dpi=BcVegPy,DecProdCut
 '14165011': Bc_Bspi,Dspi=BcVegPy,DecProdCut
 '14165021': Bc_BuK-pi+_D0pi=BcVegPy,DecProdCut
-'14165032 ': Bc_D0pi,Kpipipi=BcVegPy,DecProdCut
+'14165032': Bc_D0pi,Kpipipi=BcVegPy,DecProdCut
 '14165040': Bc_Bupipi,D0pi,Kpi=BcVegPy,DecProdCut
 '14165041': Bc_Bupipi,D0pi,piK=BcVegPy,DecProdCut
 '14165042': Bc_BuRho,D0pi,Kpi=BcVegPy,DecProdCut
@@ -4868,7 +4868,7 @@
 '14165406': Bc_PhiDsst,KK,Dspi0,pipipi=DecProdCut,BcVegPy,HELAMP001
 '14165407': Bc_PhiDsst,KK,Dspi0,pipipi=DecProdCut,BcVegPy,HELAMP010
 '14165408': Bc_PhiDsst,KK,Dspi0,pipipi=DecProdCut,BcVegPy,HELAMP100
-'14165409 ': Bc_Bsrho+,Dspi=BcVegPy,DecProdCut
+'14165409': Bc_Bsrho+,Dspi=BcVegPy,DecProdCut
 '14165410': Bc_Kst0Dst,Kpi,Dpi0,piKpi=DDalitz,BcVegPy,DecProdCut,HELAMP001
 '14165411': Bc_Kst0Dst,Kpi,Dpi0,piKpi=DDalitz,BcVegPy,DecProdCut,HELAMP010
 '14165412': Bc_Kst0Dst,Kpi,Dpi0,piKpi=DDalitz,BcVegPy,DecProdCut,HELAMP100
@@ -5078,7 +5078,7 @@
 '14312015': Bc_MuMajoranaNeutrino2MuX,m=2000MeV,t=1000ps,SS,DecProdCut
 '14312016': Bc_MuMajoranaNeutrino2MuX,m=2000MeV,t=1000ps,OS,DecProdCut
 '14347100': Bc_BsKst+,Jpsiphi,Kspi+=BcVegPy,DecProdCut
-'14367100  ': Bc_BsKst+,Dspi,Kspi+=BcVegPy,DecProdCut
+'14367100': Bc_BsKst+,Dspi,Kspi+=BcVegPy,DecProdCut
 '14372021': Bc_MuMajoranaNeutrino2MuX,m=3000MeV,t=10ps,SS,DecProdCut
 '14372022': Bc_MuMajoranaNeutrino2MuX,m=3000MeV,t=10ps,OS,DecProdCut
 '14372023': Bc_MuMajoranaNeutrino2MuX,m=3000MeV,t=100ps,SS,DecProdCut
@@ -5162,10 +5162,10 @@
 '14543006': Bc_Jpsimunu,mm=BcVegPy,ffEbert,DiLeptonInAcc
 '14543007': Bc_JpsiMuNu,mm=BcVegPy,ffKiselev
 '14543009': Bc_Jpsimunu,mm=BcVegPy,BcDaughtersInLHCbAndMassCut,M4.5GeV
-'14543010 ': Bc_JpsiMuNu,mm=BcVegPy,ffEbert
+'14543010': Bc_JpsiMuNu,mm=BcVegPy,ffEbert
 '14543011': Bc_JpsiTauNu,mununu=DecProdCut
 '14543012': Bc_JpsiTauNu,mununu=BcVegPy,ffKiselev,DiLeptonInAcc
-'14543013 ': Bc_JpsiMuNu,mm=BcVegPy,ffEbert,TightCut
+'14543013': Bc_JpsiMuNu,mm=BcVegPy,ffEbert,TightCut
 '14543020': Bc_psi2SMuNu,mm=BcVegPy,ffEbert,DecProdCut
 '14543021': Bc_etacmunu,pp=BcVegPy,DecProdCut
 '14543022': Bc_Jpsimunu,pp=BcVegPy,DecProdCut
@@ -5189,15 +5189,15 @@
 '14545003': Bc_JpsiTauNu=TightDecProdCut
 '14545004': Bc_JpsiTauNu=DecProdCut,ffKiselev
 '14545005': Bc_JpsiTauNu=DecProdCut,ffEbert
-'14545006 ': Bc+_Bsmu+nu,Jpsiphi=BcVegPy,DecProdCut
+'14545006': Bc+_Bsmu+nu,Jpsiphi=BcVegPy,DecProdCut
 '14545007': Bc_Bsenu,Jpsiphi=BcVegPy,DecProdCut
 '14545010': Bc_JpsiTauNu,Kpipinu=DecProdCut
 '14545011': Bc_JpsiTauNu,Kpipinu=DecProdCut,ffEbert
 '14545012': Bc_JpsiTauNu,Kpipinu=DecProdCut,ffKiselev
 '14545021': Bc_psi2Smunu,pp=BcVegPy,TightCut
 '14545030': Bc_Bsmunu,Jpsiphi=BcVegPy,DecProdCut
-'14545200 ': Bc_Bsstmunu,Bsgamma,Jpsiphi=BcVegPy,DecProdCut
-'14545201 ': Bc_Bsstenu,Bsgamma,Jpsiphi=BcVegPy,DecProdCut
+'14545200': Bc_Bsstmunu,Bsgamma,Jpsiphi=BcVegPy,DecProdCut
+'14545201': Bc_Bsstenu,Bsgamma,Jpsiphi=BcVegPy,DecProdCut
 '14545401': Bc_JpsiTauNu,pipipipi0nu=DecProdCut
 '14545402': Bc_JpsiTauNu,pipipipi0nu=DecProdCut,ffKiselev
 '14545403': Bc_JpsiTauNu,pipipipi0nu=DecProdCut,ffEbert
@@ -5218,21 +5218,21 @@
 '14573033': Bc_D0munu=BcVegPy,TightDecProdCut,ffISGW2
 '14573042': Bc_D0munu,Kmunu=BcVegPy,DecProdCut,ffEbert
 '14573102': Bc_Dst0munu=BcVegPy,DecProdCut
-'14573212': 'Bc_Dst0munu,D0gamma,Kpi=BcVegPy,DecProdCut,ffKiselev '
-'14573213': 'Bc_Dst0munu,D0gamma,Kpi=BcVegPy,TightDecProdCut,ffKiselev '
-'14573222': 'Bc_Dst0munu,D0gamma,Kpi=BcVegPy,DecProdCut,ffEbert '
-'14573223': 'Bc_Dst0munu,D0gamma,Kpi=BcVegPy,TightDecProdCut,ffEbert '
-'14573233': 'Bc_Dst0munu,D0gamma,Kpi=BcVegPy,TightDecProdCut,ffISGW2 '
+'14573212': Bc_Dst0munu,D0gamma,Kpi=BcVegPy,DecProdCut,ffKiselev
+'14573213': Bc_Dst0munu,D0gamma,Kpi=BcVegPy,TightDecProdCut,ffKiselev
+'14573222': Bc_Dst0munu,D0gamma,Kpi=BcVegPy,DecProdCut,ffEbert
+'14573223': Bc_Dst0munu,D0gamma,Kpi=BcVegPy,TightDecProdCut,ffEbert
+'14573233': Bc_Dst0munu,D0gamma,Kpi=BcVegPy,TightDecProdCut,ffISGW2
 '14573412': Bc_Dst0munu,D0pi0,Kpi=BcVegPy,DecProdCut,ffKiselev
 '14573413': Bc_Dst0munu,D0pi0,Kpi=BcVegPy,TightDecProdCut,ffKiselev
 '14573422': Bc_Dst0munu,D0pi0,Kpi=BcVegPy,DecProdCut,ffEbert
 '14573423': Bc_Dst0munu,D0pi0,Kpi=BcVegPy,TightDecProdCut,ffEbert
 '14573433': Bc_Dst0munu,D0pi0,Kpi=BcVegPy,TightDecProdCut,ffISGW2
-'14575001 ': Bc+_Bsmu+nu,Ds-pi+=BcVegPy,DecProdCut
+'14575001': Bc+_Bsmu+nu,Ds-pi+=BcVegPy,DecProdCut
 '14575010': Bc_Bsmunu,Dspi=BcVegPy,DecProdCut
-'14575200 ': Bc_Bsstmunu,Bsgamma,Dspi=BcVegPy,DecProdCut
+'14575200': Bc_Bsstmunu,Bsgamma,Dspi=BcVegPy,DecProdCut
 '14575600': Bc_KBs,Dsmunu,3h=cocktail,mu4hinAcc
-'14585000 ': Bc_Bsenu,Dspi=BcVegPy,DecProdCut
+'14585000': Bc_Bsenu,Dspi=BcVegPy,DecProdCut
 '14585200': Bc_Bsstenu,Bsgamma,Dspi=BcVegPy,DecProdCut
 '14643047': Bc_JpsiTauNu,mununu=BcVegPy,ffKiselev
 '14643048': Bc_JpsiTauNu,mununu=BcVegPy,ffEbert
@@ -5323,7 +5323,7 @@
 '15104013': Lb_pKKK_PHSP=DecProdCut
 '15104020': Lb_pKphi,KK=phsp,DecProdCut
 '15104021': Lb_Lambda1520phi,KK=DecProdCut
-'15104030': 'Lb_Kstppi,Kpi=PHSP,DecProdCut '
+'15104030': Lb_Kstppi,Kpi=PHSP,DecProdCut
 '15104040': Lb_dppipi=DecProdCut
 '15104050': Lb_ppbarppi=DecProdCut
 '15104060': Lb_ppbarpK=DecProdCut
@@ -5337,12 +5337,12 @@
 '15104113': Lb_Ksppi=sqDalitz,tightCut
 '15104114': Lb_Ksppi=sqDalitz,DecProdCut
 '15104115': Lb_KSppi=sqDalitz,ppiref,DecProdCut
-'15104121': 'Lb_Lambdapipi=phsp,DecProdCut '
-'15104122': 'Lb_Lambdapipi=sqDalitz '
+'15104121': Lb_Lambdapipi=phsp,DecProdCut
+'15104122': Lb_Lambdapipi=sqDalitz
 '15104123': Lb_Lambdapipi=sqDalitz,tightCut
 '15104124': Lb_Lambdapipi=sqDalitz,DecProdCut
 '15104125': Lb_Lambdapipi=sqDalitz,pipiref,DecProdCut
-'15104130': 'Lb_LambdacK,pKS=DecProdCut '
+'15104130': Lb_LambdacK,pKS=DecProdCut
 '15104131': Lb_LambdaKK=phsp,DecProdCut
 '15104132': Lb_LambdaKK=sqDalitz,DecProdCut
 '15104141': Lb_Lambdapp=phsp,DecProdCut
@@ -5364,7 +5364,7 @@
 '15104350': Lb_Sigma0KK,Lambdag,ppi=phsp,DecProdCut
 '15104370': Lb_Ksppi-gamma=DecProdCut,PHSP
 '15104371': Lb_Ksppi-gamma=TightCut,PHSP
-'15104372': 'Lb_Ksppi-gamma=TightCut,mKshhCut,PHSP '
+'15104372': Lb_Ksppi-gamma=TightCut,mKshhCut,PHSP
 '15104401': Lb_pKeta,pi+pi-pi0=DecProdCut
 '15104411': Lb_pKetap,etapipi=DecProdCut
 '15104421': Lb_ppiKpipi0,phsp=DecProdCut
@@ -5375,12 +5375,12 @@
 '15104511': Lb_etaLambda,pi+pi-pi0=DecProdCut
 '15104512': Lb_etapLambda,etapipi=TightCut
 '15104522': Lb_etaLambda,pi+pi-pi0=TightCut
-'15104531': 'Lb_Lambdarho+pi-,pi+pi0=phsp,DecProdCut '
-'15104541': 'Lb_Lambdarho+K-,pi+pi0=phsp,DecProdCut '
-'15104551': 'Lb_LambdaKst+pi-,K+pi0=phsp,DecProdCut '
-'15104561': 'Lb_LambdaKst+K-,K+pi0=phsp,DecProdCut '
+'15104531': Lb_Lambdarho+pi-,pi+pi0=phsp,DecProdCut
+'15104541': Lb_Lambdarho+K-,pi+pi0=phsp,DecProdCut
+'15104551': Lb_LambdaKst+pi-,K+pi0=phsp,DecProdCut
+'15104561': Lb_LambdaKst+K-,K+pi0=phsp,DecProdCut
 '15104570': Lb_Ksppi-pi0=DecProdCut,PHSP
-'15104571': 'Lb_Ksppi-pi0=TightCut,mKshhCut,PHSP '
+'15104571': Lb_Ksppi-pi0=TightCut,mKshhCut,PHSP
 '15104581': Lb_pKSrho-=DecProdCut
 '15104582': Lb_pKSKst-=DecProdCut
 '15104590': Lb_ppiKst0,KSpi0=DecProdCut
@@ -5394,36 +5394,36 @@
 '15106103': Lb_LLpmK,L_ppi=TightCut
 '15112001': Lb_Kmu=PHSP,DecProdCut
 '15113000': Lb_Lambda1520mutau,pK,pipipinu=DecProdCut,tauolababar
-'15113001 ': Lb_mutaupK,pipipinu=DecProdCut,tauolababar
+'15113001': Lb_mutaupK,pipipinu=DecProdCut,tauolababar
 '15114000': Lb_Lambda1520mumu=phsp
 '15114001': Lb_Lambda1520mumu=phsp,DecProdCut
 '15114011': Lb_pKmumu=phsp,DecProdCut
 '15114012': Lb_pKmumu=XLL,DecProdCut
 '15114013': Lb_pKmumu=phsp,LHCbAcceptance
 '15114021': Lb_ppimumu=DecProdCut
-'15114022': 'Lb_N1520mumu,ppi=phsp,DecProdCut '
+'15114022': Lb_N1520mumu,ppi=phsp,DecProdCut
 '15114100': Lb_Lambdamumu=phsp
 '15114101': Lb_Lambdamumu=phsp,DecProdCut
 '15114102': Lb_Lambdamumu=LQCD,DecProdCut
 '15114113': Lb_Lambdaemu=phsp,DecProdCut
 '15114220': Lb_pKmumugamma=phsp,DecProdCut
 '15114300': Lb_Sigma0mumu,Lambdagamma,ppi=phsp,DecProdCut
-'15114401  ': Lb_pKstmm,Kpi0=phsp,DecProdCut
+'15114401': Lb_pKstmm,Kpi0=phsp,DecProdCut
 '15114420': Lb_pKmumupi0=phsp,DecProdCut
 '15114700': Lb_Lambdast1405mumu,Sigmapi,Lambdagamma=phsp,DecProdCut
 '15114701': Lb_Lambdast1520mumu,Sigmapi,Lambdagamma=phsp,DecProdCut
 '15114702': Lb_Lambdast1600mumu,Sigmapi,Lambdagamma=phsp,DecProdCut
 '15124001': Lb_Lambda1520ee=phsp,DecProdCut
 '15124011': Lb_pKee=phsp,DecProdCut
-'15124012': 'Lb_pKee=XLL,DecProdCut '
+'15124012': Lb_pKee=XLL,DecProdCut
 '15124021': Lb_ppiee=DecProdCut
-'15124022': 'Lb_N1520ee,ppi=phsp,DecProdCut '
+'15124022': Lb_N1520ee,ppi=phsp,DecProdCut
 '15124101': Lb_Lambdaee=phsp,DecProdCut
 '15124102': Lb_Lambdaee=LQCD,DecProdCut
 '15124211': Lb_EtappK,e+e-g=DecProdCut
 '15124220': Lb_pKeegamma=phsp,DecProdCut
 '15124300': Lb_Sigma0ee,Lambdagamma,ppi=phsp,DecProdCut
-'15124401  ': Lb_pKstee,Kpi0=phsp,DecProdCut
+'15124401': Lb_pKstee,Kpi0=phsp,DecProdCut
 '15124420': Lb_pKeepi0=phsp,DecProdCut
 '15124700': Lb_Lambdast1405ee,Sigmapi,Lambdagamma=phsp,DecProdCut
 '15124701': Lb_Lambdast1520ee,Sigmapi,Lambdagamma=phsp,DecProdCut
@@ -5431,37 +5431,37 @@
 '15134010': Lb_etacpK,pp=phsp,DecProdCut
 '15134020': Lb_JpsipK,pp=phsp,DecProdCut
 '15142800': Lb_JpsiLambda,mm,n0pi0=phsp,DecProdCut
-'15144001 ': 'Lb_JpsipK,mm=phsp,DecProdCut '
+'15144001': Lb_JpsipK,mm=phsp,DecProdCut
 '15144002': Lb_JpsipK,mm=phsp,LHCbAcceptance
 '15144003': Lb_pKmumu=phsp,Highq2,TightCut
-'15144011 ': 'Lb_psi2SpK,mm=phsp,DecProdCut '
-'15144021': 'Lb_Jpsippi,mm=phsp,DecProdCut '
-'15144022': 'Lb_JpsiN1520,mmppi=phsp,DecProdCut '
-'15144032': 'Lb_psi2Sppi,mm=phsp,DecProdCut '
-'15144033': 'Lb_psi2SN1520,mmppi=phsp,DecProdCut '
+'15144011': Lb_psi2SpK,mm=phsp,DecProdCut
+'15144021': Lb_Jpsippi,mm=phsp,DecProdCut
+'15144022': Lb_JpsiN1520,mmppi=phsp,DecProdCut
+'15144032': Lb_psi2Sppi,mm=phsp,DecProdCut
+'15144033': Lb_psi2SN1520,mmppi=phsp,DecProdCut
 '15144040': Lb_Lambda1520Jpsi,mm=DecProdCut
-'15144052 ': 'Lb_JpsipK,mm=XLL,DecProdCut '
-'15144053 ': Lb_JpsipK,mm=XLL,JpsiXLL,DecProdCut
-'15144059 ': 'Lb_JpsipK,mm=XLL2,DecProdCut '
+'15144052': Lb_JpsipK,mm=XLL,DecProdCut
+'15144053': Lb_JpsipK,mm=XLL,JpsiXLL,DecProdCut
+'15144059': Lb_JpsipK,mm=XLL2,DecProdCut
 '15144062': Lb_JpsiKp,mumu,PPTcuts=TightCut
 '15144070': Lb_Lambda1520psi2S,mm=DecProdCut
 '15144100': Lb_JpsiLambda,mm=phsp
 '15144103': Lb_JpsiLambda,mm=phsp,DecProdCut
 '15144105': Lb_JpsiLambda,mm=phsp,DecProdCut,TightCut
 '15144106': Lb_JpsiLambda,mm=phsp,DecProdCut,TightCut,OnlyT
-'15144111 ': Lb_psi2SLambda,mm=phsp,DecProdCut
-'15144200 ': 'Lb_chic1pK,Jpsig,mm=PHSP,DecProdCut '
-'15144201 ': 'Lb_chic2pK,Jpsig,mm=PHSP,DecProdCut '
-'15144211 ': 'Lb_JpsipKgamma,mm=phsp,DecProdCut '
+'15144111': Lb_psi2SLambda,mm=phsp,DecProdCut
+'15144200': Lb_chic1pK,Jpsig,mm=PHSP,DecProdCut
+'15144201': Lb_chic2pK,Jpsig,mm=PHSP,DecProdCut
+'15144211': Lb_JpsipKgamma,mm=phsp,DecProdCut
 '15144300': Lb_JpsiSigma0,mm,Lambdagamma,ppi=phsp,DecProd
 '15144311': Lb_chic1Lambda,Jpsig,mm=PHSP,DecProdCut
 '15144320': Lb_psi2SSigma0,mm,Lambdagamma,ppi=phsp,DecProdCut
 '15144401': Lb_JpsipKst,mm,Kpi0=phsp,DecProdCut
-'15144420': 'Lb_psi2SpKpi0,mm=phsp,DecProdCut '
-'15144421 ': 'Lb_JpsipKpi0,mm=phsp,DecProdCut '
-'15144500 ': 'Lb_JpsiLambdaeta,mm,gg=phsp,DecProdCut '
-'15144501': 'Lb_JpsiLambdaeta,mm,gg=phsp,TightCut '
-'15144510 ': Lb_psi2SLambdapi0,mm=phsp,DecProdCut
+'15144420': Lb_psi2SpKpi0,mm=phsp,DecProdCut
+'15144421': Lb_JpsipKpi0,mm=phsp,DecProdCut
+'15144500': Lb_JpsiLambdaeta,mm,gg=phsp,DecProdCut
+'15144501': Lb_JpsiLambdaeta,mm,gg=phsp,TightCut
+'15144510': Lb_psi2SLambdapi0,mm=phsp,DecProdCut
 '15144520': Lb_JpsiLambdapi0,mm=phsp,DecProdCut
 '15144700': Lb_JpsiLambdast1405,mm,Sigmapi,Lambdagamma=phsp,DecProdCut
 '15144701': Lb_JpsiLambdast1520,mm,Sigmapi,Lambdagamma=phsp,DecProdCut
@@ -5482,31 +5482,31 @@
 '15146123': Lb_JpsiKspK,mm=DecProdCut
 '15146133': Lb_JpsiLambdaphi,mm=phsp,DecProdCut
 '15146135': Lb_JpsiLambdaphi,mm=phsp,DecProdCut,TightCut
-'15146140 ': 'Lb_JpsiXiK,mm=phsp,DecProdCut '
+'15146140': Lb_JpsiXiK,mm=phsp,DecProdCut
 '15146162': Lb_X38721++Lambda,Jpsirho,pipi,mm=DecProdCut,pCut1600MeV
 '15146164': Lb_psi2SLambda,Jpsipipi,mm=VVPIPI,DecProdCut,pCut1600MeV
 '15146180': Lb_JpsiLambda1520,mm,Lambdapipi,ppi=DecProdCut
 '15146304': Lb_JpsiLambdaetap,mm,grho,pipi=phsp,DecProdCut
-'15146500': 'Lb_JpsiLambdaeta,mm,3pi=phsp,DecProdCut '
-'15146501': 'Lb_JpsiLambdaeta,mm,3pi=phsp,TightCut '
-'15146503': 'Lb_JpsiLambdaetap,mm,pipi,gg=phsp,DecProdCut '
-'15154001 ': 'Lb_JpsipK,ee=phsp,DecProdCut '
-'15154002 ': Lb_JpsipK,ee=XLL,DecProdCut
-'15154011 ': 'Lb_psi2SpK,ee=phsp,DecProdCut '
-'15154021': 'Lb_Jpsippi,ee=phsp,DecProdCut '
-'15154022': 'Lb_JpsiN1520,eeppi=phsp,DecProdCut '
-'15154032': 'Lb_psi2Sppi,ee=phsp,DecProdCut '
-'15154033': 'Lb_psi2SN1520,eeppi=phsp,DecProdCut '
+'15146500': Lb_JpsiLambdaeta,mm,3pi=phsp,DecProdCut
+'15146501': Lb_JpsiLambdaeta,mm,3pi=phsp,TightCut
+'15146503': Lb_JpsiLambdaetap,mm,pipi,gg=phsp,DecProdCut
+'15154001': Lb_JpsipK,ee=phsp,DecProdCut
+'15154002': Lb_JpsipK,ee=XLL,DecProdCut
+'15154011': Lb_psi2SpK,ee=phsp,DecProdCut
+'15154021': Lb_Jpsippi,ee=phsp,DecProdCut
+'15154022': Lb_JpsiN1520,eeppi=phsp,DecProdCut
+'15154032': Lb_psi2Sppi,ee=phsp,DecProdCut
+'15154033': Lb_psi2SN1520,eeppi=phsp,DecProdCut
 '15154040': Lb_Lambda1520Jpsi,ee=DecProdCut
 '15154050': Lb_Lambda1520psi2S,ee=DecProdCut
 '15154105': Lb_JpsiLambda,ee=phsp,DecProdCut
 '15154115': Lb_psi2SLambda,ee=phsp,DecProdCut
 '15154116': Lb_psi2SLambda,ee=phsp,TightCut
-'15154211 ': 'Lb_JpsipKgamma,ee=phsp,DecProdCut '
+'15154211': Lb_JpsipKgamma,ee=phsp,DecProdCut
 '15154300': Lb_JpsiSigma0,ee,Lambdagamma,ppi=phsp,DecProdCut
 '15154301': Lb_psi2SSigma0,ee,Lambdagamma,ppi=phsp,DecProdCut
 '15154401': Lb_JpsipKst,ee,Kpi0=phsp,DecProdCut
-'15154421 ': 'Lb_JpsipKpi0,ee=phsp,DecProdCut '
+'15154421': Lb_JpsipKpi0,ee=phsp,DecProdCut
 '15154700': Lb_JpsiLambdast1405,ee,Sigmapi,Lambdagamma=phsp,DecProdCut
 '15154701': Lb_JpsiLambdast1520,ee,Sigmapi,Lambdagamma=phsp,DecProdCut
 '15154702': Lb_JpsiLambdast1600,ee,Sigmapi,Lambdagamma=phsp,DecProdCut
@@ -5516,8 +5516,8 @@
 '15156100': Lb_psi2SLambda,Jpsipipi,ee=DecProdCut
 '15163001': Lb_D0dp,Kpi=DecProdCut
 '15164001': Lb_Lambdacpi=DecProdCut
-'15164002 ': Lb_Lcpi,ppipi=PHSP,DecProdCut
-'15164003 ': Lb_Lcpi,pKK=PHSP,DecProdCut
+'15164002': Lb_Lcpi,ppipi=PHSP,DecProdCut
+'15164003': Lb_Lcpi,pKK=PHSP,DecProdCut
 '15164005': Lb_Lcpi,Lambda1520pi,pK=DecProdCut
 '15164010': Lb_Lambdacpi,pKpi=PHSP
 '15164011': Lb_D0ppi,Kpi=DecProdCut
@@ -5529,8 +5529,8 @@
 '15164023': Lb_D0pK,Kpi=DecProdCut_pCut1600MeV
 '15164024': Lb_D0pK,Kpi=sqDalitz,DecProdCut,pCut1600MeV
 '15164031': Lb_LambdacK=DecProdCut
-'15164032 ': Lb_LcK,ppipi=PHSP,DecProdCut
-'15164033 ': Lb_LcK,pKK=PHSP,DecProdCut
+'15164032': Lb_LcK,ppipi=PHSP,DecProdCut
+'15164033': Lb_LcK,pKK=PHSP,DecProdCut
 '15164040': Lb_Lcpi,pKpi=TightCut
 '15164041': Lb_Dsp,K+K-pi-=DecProdCut
 '15164051': Lb_D0ppi,pipi=sqDalitz,DecProdCut
@@ -5549,10 +5549,10 @@
 '15164121': Lb_antiD0Lambda,Kpippi=DecProdCut
 '15164122': Lb_antiD0Lambda,KKppi=DecProdCut
 '15164123': Lb_antiD0Lambda,pipippi=DecProdCut
-'15164130': 'Lb_Lambdacpi,Lambdapi=DecProdCut '
-'15164131': 'Lb_LambdacK,Lambdapi=DecProdCut '
-'15164132': 'Lb_Lambdacpi,LambdaK=DecProdCut '
-'15164133': 'Lb_LambdacK,LambdaK=DecProdCut '
+'15164130': Lb_Lambdacpi,Lambdapi=DecProdCut
+'15164131': Lb_LambdacK,Lambdapi=DecProdCut
+'15164132': Lb_Lambdacpi,LambdaK=DecProdCut
+'15164133': Lb_LambdacK,LambdaK=DecProdCut
 '15164141': Lb_D0Lambda,Kpippi=DecProdCut_pCut1600MeV
 '15164142': Lb_D0Lambda,KKppi=DecProdCut_pCut1600MeV
 '15164143': Lb_D0Lambda,pipippi=DecProdCut_pCut1600MeV
@@ -5603,7 +5603,7 @@
 '15166118': Lb_D0ppi,KSKK=LbsqDalitz,DDalitz,TightCut
 '15166119': Lb_D0pK,KSpipi=LbsqDalitz,DDalitz,TightCut
 '15166120': Lb_D0pK,KSKK=LbsqDalitz,DDalitz,TightCut
-'15166121 ': Lb_LcKst,pKpi=DecProdCut
+'15166121': Lb_LcKst,pKpi=DecProdCut
 '15166130': Lb_D0Lambda,K3pippi=phsp,DecProdCut_pCut1600MeV
 '15166274': Lb_Dst0ppi,D0gamma,Kpipipi=LbsqDalitz,DAmpGen,TightCut
 '15166275': Lb_Dst0ppi,D0gamma,piKpipi=LbsqDalitz,DAmpGen,TightCut
@@ -5637,17 +5637,17 @@
 '15168100': Lb_LLpmDsp,L_ppi,Dsp_KKpi=TightCut
 '15174001': Lb_Dsmu,KKpi=phsp,DecProdCut
 '15174011': Lb_D+mu,Kpipi=phsp,DecProdCut
-'15174020': 'Lb_Pc4312++pi,Jpsip=DecProdCut '
-'15174021': 'Lb_Pc4440++pi,Jpsip=DecProdCut '
-'15174022': 'Lb_Pc4457++pi,Jpsip=DecProdCut '
-'15174023': 'Lb_Zc3900++pi,Jpsip=DecProdCut '
-'15174024': 'Lb_Zc4200++pi,Jpsip=DecProdCut '
-'15174025': 'Lb_Zc4430++pi,Jpsip=DecProdCut '
+'15174020': Lb_Pc4312++pi,Jpsip=DecProdCut
+'15174021': Lb_Pc4440++pi,Jpsip=DecProdCut
+'15174022': Lb_Pc4457++pi,Jpsip=DecProdCut
+'15174023': Lb_Zc3900++pi,Jpsip=DecProdCut
+'15174024': Lb_Zc4200++pi,Jpsip=DecProdCut
+'15174025': Lb_Zc4430++pi,Jpsip=DecProdCut
 '15174090': Lb_X+K-,Jpsip,mumu=phsp,DecProdCut
 '15174091': Lb_X+K-,Jpsip,mumu=hel,DecProdCut
-'15176066 ': Lb_LcJpsipi,pKpimumupi=DecProdCut
-'15176067 ': Lb_LcJpsipi,pKpimumupi=TightCut
-'15196000': 'Lb_pDsD0,KKpi,Kpi=DecProdCut '
+'15176066': Lb_LcJpsipi,pKpimumupi=DecProdCut
+'15176067': Lb_LcJpsipi,pKpimumupi=TightCut
+'15196000': Lb_pDsD0,KKpi,Kpi=DecProdCut
 '15196001': Lb_D0Dsp,KPi,KKPi=PHSP,TightCut
 '15196002': Lb_D0Dsp,KPi,KKPi=sqDalitz12,TightCut
 '15196003': Lb_D0Dsp,KPi,KKPi=sqDalitz13,TightCut
@@ -5663,12 +5663,12 @@
 '15196090': Lb_X+K-,LcD0,pKpi,Kpi=phsp,DecProdCut
 '15196091': Lb_X+K-,LcD0,pKpi,Kpi=hel,DecProdCut
 '15196100': Lb_D0D0Lambda,KPi,KPi,PPi,TightCut
-'15196101': 'Lb_Xic3080D0,D0Lambda,KPi,KPi,PPi=TightCut '
+'15196101': Lb_Xic3080D0,D0Lambda,KPi,KPi,PPi=TightCut
 '15196110': Lb_psi3770Lambda,D0D0bar,Kpi=DecProdCut
-'15196120': 'Lb_LcDs,pKS=DecProdCut '
-'15196121': 'Lb_LcDs,pKS=TightCut '
-'15196130': 'Lb_LcDs,Lambdapi=DecProdCut '
-'15196131': 'Lb_LcDs,Lambdapi=TightCut '
+'15196120': Lb_LcDs,pKS=DecProdCut
+'15196121': Lb_LcDs,pKS=TightCut
+'15196130': Lb_LcDs,Lambdapi=DecProdCut
+'15196131': Lb_LcDs,Lambdapi=TightCut
 '15196810': Lb_LcLcn,pKpi,pKpi=PHSP,DecProdCut
 '15198001': Lb_LcDstKst0,pKpi,Kpi=DecProdCut
 '15198002': Lb_ScppDK,Lcpi,Kpipi=DecProdCut
@@ -5691,20 +5691,20 @@
 '15204101': Lb_LambdaKK=phsp,TightTightCut
 '15204102': Lb_LambdaKpi=phsp,TightTightCut
 '15204103': Lb_Lambdapipi=phsp,TightTightCut
-'15204374': 'Lb_Ksppi-gamma=TightCut,mKshhCut,KSVtxCut,cocktail '
-'15244201 ': 'Lb_chic1pK,Jpsig,mm=TightCut '
-'15244202 ': 'Lb_chicpK,Jpsig,mm=TightCut '
-'15244203 ': 'Lb_chicpk,Jpsig,mm=TightCut '
-'15244211 ': 'Lb_psi2SpK,chicg,Jpsig,mm=PHSP,DecProdCut '
-'15244221 ': 'Lb_chicppi,Jpsig,mm=TightCut '
-'15246001 ': 'Lb_JpsipipipK=TightCut '
-'15246104': 'Lb_JpsiKsppi,mm=TightCut,KSVtxCut,cocktail '
+'15204374': Lb_Ksppi-gamma=TightCut,mKshhCut,KSVtxCut,cocktail
+'15244201': Lb_chic1pK,Jpsig,mm=TightCut
+'15244202': Lb_chicpK,Jpsig,mm=TightCut
+'15244203': Lb_chicpk,Jpsig,mm=TightCut
+'15244211': Lb_psi2SpK,chicg,Jpsig,mm=PHSP,DecProdCut
+'15244221': Lb_chicppi,Jpsig,mm=TightCut
+'15246001': Lb_JpsipipipK=TightCut
+'15246104': Lb_JpsiKsppi,mm=TightCut,KSVtxCut,cocktail
 '15246105': Lb_JpsiKsppi,mm=TightCut,KSVtxCut,pKst892,Pc4100cocktail
 '15246173': Lb_JpsiSigma1385pi,mm,Lambdapi,ppi=phsp,DecProdCut
 '15264000': Lb_Dsp
 '15264010': Lb_Lambdacpi,pKpi
 '15264011': Lb_Lambdacpi,pKpi=DecProdCut
-'15264110 ': Lb_Dsp_KSK=DecProdCut
+'15264110': Lb_Dsp_KSK=DecProdCut
 '15264400': Lb_Lcpipi0pi0,Lc_pkpi=DecProdCut
 '15266000': Lb_LambdacPiPiPi=DecProdCut
 '15266001': Lb_LambdacKPiPi=DecProdCut
@@ -5724,10 +5724,10 @@
 '15266030': Lb_D0pK,K3pi=sqDalitz,DecProdCut
 '15266031': Lb_D0ppi,K3pi=sqDalitz,DecProdCut
 '15266040': Lb_LcKpipi,pKpi=DecProdCut
-'15266041 ': Lb_Lc3pi,pKpi=DecProdCut
-'15266055': 'Lb_Lc3pi,pKpi=TightCut '
-'15266068': 'Lb_LcKstK,pKpi=DecProdCut '
-'15266069': 'Lb_Lca1,pKpi=DecProdCut '
+'15266041': Lb_Lc3pi,pKpi=DecProdCut
+'15266055': Lb_Lc3pi,pKpi=TightCut
+'15266068': Lb_LcKstK,pKpi=DecProdCut
+'15266069': Lb_Lca1,pKpi=DecProdCut
 '15266080': Lb_Lc3pi,pPhi-res=inAcc,TightCut
 '15266096': Lb_Lc3pi,pKpi-res=TightCut
 '15266097': Lb_Lc3pi,pKpi-res=inAcc,TightCut
@@ -5736,8 +5736,8 @@
 '15266120': Lb_Lc3pi,L0pi-res=HELAMP,inAcc,VxtCut,TightCut
 '15266400': Lb_ScKKpi,Lcpi,pKpi=DecProdCut
 '15266410': Lb_Lcpipipipi0,Lc_pkpi=DecProdCut
-'15268001 ': 'Lb_LcKKpipipi,pKpi=DecProdCut '
-'15268011 ': Lb_LcKKKKpi,pKpi,KKpi=DecProdCut
+'15268001': Lb_LcKKpipipi,pKpi=DecProdCut
+'15268011': Lb_LcKKKKpi,pKpi,KKpi=DecProdCut
 '15268012': Lb_LcphiKKpi,pKpi,KK=DecProdCut
 '15268118': Lb_LcpiLLbar,pKpi=DecProdCut
 '15295002': Lb_Lc2593D,Lcpipi,ppiK=DecProdCut,cocktail,inclusive
@@ -5760,8 +5760,8 @@
 '15298006': Lb_Sigmac++Dst-K,Lcpi_pKpi,D0pi_Kpi=DecProdCut
 '15298013': Lb_LcDspipi,pKpi,KKpi=DecProdCut
 '15298014': Lb_LcDsKK,pKpi,KKpi=DecProdCut
-'15298015 ': 'Lb_LcDspipi,pKpi,KKpi=TightCut,LowLcpipiMass2680MeV,EvtGenCut '
-'15298016': 'Lb_LcDs2460,pKpi,Dspipi,KKpi=DecProdCut '
+'15298015': Lb_LcDspipi,pKpi,KKpi=TightCut,LowLcpipiMass2680MeV,EvtGenCut
+'15298016': Lb_LcDs2460,pKpi,Dspipi,KKpi=DecProdCut
 '15298020': Lb_LcDsphi,pKpi,KKpi,KK=DecProdCut
 '15298111': Lb_LcDKst0,3piX=cocktail,TightCut
 '15298600': Lb_Lc2625Ds,Ds2hhhNneutrals=DecProdCut,TightCut
@@ -5772,17 +5772,17 @@
 '15298606': Lb_Lc2593Ds,Ds2hhhNneutrals=DecProdCut,LooseCut
 '15298607': Lb_Sigmac2455Ds,Ds2hhhNneutrals=DecProdCut,LooseCut
 '15298608': Lb_Sigmac2455starDs,Ds2hhhNneutrals=DecProdCut,LooseCut
-'15304110 ': Lb_LambdaKpi=phsp,DecProdCut
+'15304110': Lb_LambdaKpi=phsp,DecProdCut
 '15304111': Lb_LambdaKpi=sqDalitz,DecProdCut
 '15314000': Lb_Lambda1520emu,pK=DecProdCut
 '15314030': Lb_emupK=DecProdCut
 '15336011': Lb_etacpK,hhhh=phsp,DecProdCut
 '15336110': Lb_etacpK,KsKpi=phsp,DecProdCut
 '15344400': Lb_JpsiSigma+pi=TightCut
-'15364010 ': Lb_Lcpi,pKpi=DecProdCut
-'15364011 ': Lb_LcK,pKpi=DecProdCut
+'15364010': Lb_Lcpi,pKpi=DecProdCut
+'15364011': Lb_LcK,pKpi=DecProdCut
 '15364211': Lb_Dsstp,K+K-pi-=DecProdCut
-'15364310 ': Lb_Dsstp_KSK=DecProdCut
+'15364310': Lb_Dsstp_KSK=DecProdCut
 '15364400': Lb_Dst0ppi,D0,pipi=sqDalitz,DecProdCut
 '15364401': Lb_Dst0ppi,D0,KK=sqDalitz,DecProdCut
 '15364410': Lb_Dst0pK,D0,pipi=sqDalitz,DecProdCut
@@ -5790,7 +5790,7 @@
 '15366000': Lb_Lcppbarpi,pKpi=DecProdCut
 '15366001': Lb_LcKKpi,pKpi=DecProdCut
 '15366002': Lb_LcKKpi,pKpi=DecProdCut2
-'15366013 ': Lb_DspKpi,KKpi=DecProdCut
+'15366013': Lb_DspKpi,KKpi=DecProdCut
 '15366023': Lb_D0X,X=cocktail,D0=PHSP,DecProdCut
 '15366131': Lb_LcpbarLambda,pKpi,ppi=DecProdCut
 '15395000': Lb_Lc2625D,Lcpipi,ppiK=DecProdCut,inclusive
@@ -5879,7 +5879,7 @@
 '15564014': Lambda0_PsiDMDpi,D_pipiK=FullGenEvtCut,mPsiDM=3000MeV
 '15564015': Lambda0_PsiDMDpi,D_pipiK=FullGenEvtCut,mPsiDM=3500MeV
 '15565097': Lb_Lambdac2595taunu,Lambdac2595_pipiLc,Lc_pKpi
-'15566080': 'Lb_Lctaunu,pphi,tau3pi=DecProdCut,tauolababar '
+'15566080': Lb_Lctaunu,pphi,tau3pi=DecProdCut,tauolababar
 '15566090': Lb_Lctaunu,pphi,tau3pipi0=DecProdCut
 '15566100': Lb_Lctaunu,L0pi,tau3pi=HELAMP,VxtCut,TightCut,tauolababar
 '15566110': Lb_Lctaunu,pKS,tau3pi=VxtCut,TightCut,tauolababar
@@ -5968,7 +5968,7 @@
 '15574240': Lb_Lcmunu,pKKpi0=DecProdCut
 '15574400': Lb_D0pmunu,D0=Kmunupi0,DecProdCut
 '15574401': Lb_D0ptaunu,D0=Kmunupi0,taumununu,DecProdCut
-'15575000 ': Lb_n0Dpmunu,Dp=Kpipi,TightCut
+'15575000': Lb_n0Dpmunu,Dp=Kpipi,TightCut
 '15575070': Lb_n0Dstmunu,Dst=D0pi,TightCut
 '15575800': Lb_Lc2860munu,Dst+n=TightCut
 '15576000': Lb_Lc2593munu,Lcpipi,ppiK=TightCut
@@ -6051,7 +6051,7 @@
 '15676012': Lb_Lc2765munu,Sigcstpi,Lcpi,pKpi=LHCbAcceptance
 '15676013': Lb_Lc2880munu,Sigcstpi,Lcpi,pKpi=LHCbAcceptance
 '15676100': Lb_Lcpipimunu,Lambdapi=TightCut
-'15678100 ': Lb_Lcpipimunu,Lc_L3pi=TightCut
+'15678100': Lb_Lcpipimunu,Lc_L3pi=TightCut
 '15694000': Lb_LcDs,pKpi,taumunu=TightCut
 '15694314': Lb_DsstLcX,DsgammamunuX,KKpi=cocktail,mu3hInAcc,TightCut
 '15696042': Lb_LambdacDs,pKmunu,phimunu=KKmumuInAcc
@@ -6140,7 +6140,7 @@
 '15966000': Lb_D0X,X=cocktail,D0=MINT,DecProdCut
 '15973002': Lb_Lc2593taunu,Sigmacpi,Lcpi=NoCut
 '15973003': Lb_Lc2593taunu,Sigmacpi,Lcpi=DecProdCut
-'15976000': 'Lb_Dst+Lc,LcD=cocktail,D+mu=RDplusCut,TightCut '
+'15976000': Lb_Dst+Lc,LcD=cocktail,D+mu=RDplusCut,TightCut
 '15996200': Lb_LcDs,Xmunu,KKpi=LHCbAcceptance
 '15996201': Lb_LcDs,pKpi,Xmunu=LHCbAcceptance
 '15998000': Lb_LcD,LcD=cocktail,LcmuTightCut
@@ -6158,7 +6158,7 @@
 '16103031': Xib_Kpip=sqDalitz,DecProdCut
 '16103032': Xib_pipip=sqDalitz,DecProdCut
 '16103033': Omegab_pipip=sqDalitz,DecProdCut
-'16103034': 'Omegab_KKp=sqDalitz,OmegabIsXib,DecProdCut '
+'16103034': Omegab_KKp=sqDalitz,OmegabIsXib,DecProdCut
 '16103035': Omegab_Kpip=sqDalitz,OmegabIsXib,DecProdCut
 '16103036': Xibprime_Xib0pi-,Sp-K+=DecProdCut,mS=1875MeV
 '16103037': Xibprime_Xib0pi-,LambdaLambdap-K+=DecProdCut
@@ -6173,8 +6173,8 @@
 '16103332': Omegab_OmegaGamma=LHCbAcceptance
 '16103333': Xibm_Sigma0Km,SigmaToLambdaGamma=DecProdCut
 '16103334': Xibm_Sigma0Pim,SigmaToLambdaGamma=DecProdCut
-'16103430': 'Xib_Delta+K-K-,p+pi0=phsp,DecProdCut '
-'16103431': 'Xib_Kst-K-p+,K-pi0=phsp,DecProdCut '
+'16103430': Xib_Delta+K-K-,p+pi0=phsp,DecProdCut
+'16103431': Xib_Kst-K-p+,K-pi0=phsp,DecProdCut
 '16103432': Omegab_Delta+K-K-,p+pi0_PPChange=phsp,DecProdCut
 '16103433': Omegab_Kst-K-p+,K-pi0_PPChange=phsp,DecProdCut
 '16103801': Xibst-_Xib0pi-,Xi0np-K+=DecProdCut
@@ -6184,7 +6184,7 @@
 '16104040': Xib0_pKpipi_PHSP=DecProdCut
 '16104041': Xib0_pKKpi_PHSP=DecProdCut
 '16104042': Xib0_pKKK_PHSP=DecProdCut
-'16104043': 'Xib0_Delta++K-K-,p+pi+=PHSP,DecProdCut '
+'16104043': Xib0_Delta++K-K-,p+pi+=PHSP,DecProdCut
 '16104044': Xib0_anti-KstK-p+,pi+K-=PHSP,DecProdCut
 '16104063': Xibc_Delta0Kst=DecProdCut,m=6.9GeV,t=0.4ps
 '16104141': Xib0_KSppi=sqDalitz,DecProdCut
@@ -6236,7 +6236,7 @@
 '16125130': Xib_Xiee,Lambdapi=phsp,TightCut
 '16125131': Omegab_Omegaee,LambdaK=phsp,TightCut
 '16144010': Xib5945_Xib-pi+,SJpsip-=DecProdCut,mS=1400MeV
-'16144040 ': 'Xib0_JpsipK,mm=phsp,DecProdCut '
+'16144040': Xib0_JpsipK,mm=phsp,DecProdCut
 '16144060': Xibc_pKJpsi,mm=DecProdCut
 '16144061': Xibc_pKJpsi,mm=DecProdCut,m=6.9GeV,t=0.4ps
 '16144140': Xib0_JpsiLambda,mm=phsp,DecProdCut
@@ -6291,7 +6291,7 @@
 '16147131': Xibmprime6456_BmL0,Bm=JpsiKmPipPim,L0=ppi,TightCut
 '16147133': Xib_JpsiXiPhi,mm,Lambdapi=DecProdCut
 '16154541': Xib0_JpsiXi0,ee,Lambdapi0=phsp,TightCut
-'16154542 ': Xib0_JpsiXi0,ee,Lambdapi0=phsp,DecProdCut
+'16154542': Xib0_JpsiXi0,ee,Lambdapi0=phsp,DecProdCut
 '16154543': Xib0_psi2SXi0,ee,Lambdapi0=phsp,DecProdCut
 '16154544': Xib0_psi2SXi0,ee,Lambdapi0=phsp,TightCut
 '16155130': Xib_JpsiXi,ee,Lambdapi=TightCut
@@ -6368,12 +6368,12 @@
 '16166017': Lbstar5920_Lbpipi,Lcpi=TightCut
 '16166018': Xibst0_Xibpi,Xic0pi,pKKpi=TightCut
 '16166019': Xib5945_Xibpi,Xib_Lc2595barS,Lc2595bar_Lcbarpipi,Lcbar_pbarKpi,mS1875=DecProdCut
-'16166030': 'Xib-_Xic0pipipi,Xi-pipipi=DecProdCut '
+'16166030': Xib-_Xic0pipipi,Xi-pipipi=DecProdCut
 '16166040': Xib0_SigmacKpi,Lambdacpi,pKpi=sqDalitz,DecProdCut
 '16166041': Xib0_Sigmacpipi,Lambdacpi,pKpi=sqDalitz,DecProdCut
 '16166042': Xib0_SigmacKK,Lambdacpi,pKpi=sqDalitz,DecProdCut
 '16166043': Xib0_D+pK-pi-=phsp
-'16166044': 'Xib0_Xic+pipipi,Xi0pipipi=DecProdCut '
+'16166044': Xib0_Xic+pipipi,Xi0pipipi=DecProdCut
 '16166045': Xib0_Xic0pipi=DecProdCut
 '16166060': Xibc_LambdabKpi,Lambdacpi=DecProdCut
 '16166140': Xib0_D0Lambda,K3pippi=phsp,DecProdCut_pCut1600MeV
@@ -6429,16 +6429,16 @@
 '16265401': Xibstar_Xibminuspi0,Xic0pi=DecProdCut
 '16265431': Omegab_Omegac0rho_PPChange,tau=250fs=DecProdCut
 '16266010': Xibst0_Xibminuspi,Xic0pi=DecProdCut
-'16266040 ': Xibstar6327_LbKpi,Lb=Lcpi,TightCut
+'16266040': Xibstar6327_LbKpi,Lb=Lcpi,TightCut
 '16266041': Xib0_LambdacKpipi=DecProdCut_pCut1600MeV
-'16266042 ': Xibstar6330_LbKpi,Lb=Lcpi,TightCut
+'16266042': Xibstar6330_LbKpi,Lb=Lcpi,TightCut
 '16266043': Xibstar6515_LbKpi,Lb=Lcpi,TightCut
 '16266044': Xibstar6592_LbKpi,Lb=Lcpi,TightCut
 '16266161': Xibc_LbKs=DecProdCut,m=6.9GeV,t=0.4ps
 '16267031': Xib_Lb3pi,pKpi=TightCut
 '16268010': Xibst0_Xibpi,Xic03pi,pKKpi=TightCut
-'16268040 ': Xibstar6327_LbKpi,Lb=Lcpipipi,TightCut
-'16268041 ': Xibstar6330_LbKpi,Lb=Lcpipipi,TightCut
+'16268040': Xibstar6327_LbKpi,Lb=Lcpipipi,TightCut
+'16268041': Xibstar6330_LbKpi,Lb=Lcpipipi,TightCut
 '16268042': Xibstar6515_LbKpi,Lb=Lcpipipi,TightCut
 '16268043': Xibstar6592_LbKpi,Lb=Lcpipipi,TightCut
 '16275061': Xibc_XicJpsi,pKpi-res,mm=DecProdCut,m=6.9GeV,t=0.4ps
@@ -6451,12 +6451,12 @@
 '16276063': Xibc_Xic0Jpsi,pKKpi-res,mm=DecProdCut,m=6.9GeV,t=0.4ps,pKKpimumu=TightCut
 '16295030': Xib_Xic0pi,Lcpi,pKpi-res=LHCbAcceptance
 '16295060': Xibc_LcD0,pKpi-res,Kpi=DecProdCut,m=6.9GeV,t=0.4ps
-'16296040': 'Xib0_Xic+Ds,pKpi,KKpi=DecProdCut '
+'16296040': Xib0_Xic+Ds,pKpi,KKpi=DecProdCut
 '16297030': Xib-_XicDs,pKKpi,KKpi=DecProdCut
 '16303430': Xib_Delta+h-h-,p+pi0=phsp,DecProdCut
-'16303431': 'Xib_Kst-h-p+,K-pi0=phsp,DecProdCut '
+'16303431': Xib_Kst-h-p+,K-pi0=phsp,DecProdCut
 '16303432': Xib_N+h-h-,p+pi0=phsp,DecProdCut
-'16303433': 'Xib_rho-h-p+,pi-pi0=phsp,DecProdCut '
+'16303433': Xib_rho-h-p+,pi-pi0=phsp,DecProdCut
 '16303434': Omegab_Delta+h-h-,p+pi0_PPChange=phsp,DecProdCut
 '16303435': Omegab_Kst-h-p+,K-pi0_PPChange=phsp,DecProdCut
 '16303436': Omegab_N+h-h-,p+pi0_PPChange=phsp,DecProdCut
@@ -6477,8 +6477,8 @@
 '16467003': XibStar6450_LbK,Lc3pi-MaxWidth100MeV=TightCut
 '16467004': XibStar6360_LbK,Lc3pi-MaxWidth100MeV=TightCut
 '16467032': Xib_Xic03pi,pKKpi=TightCut
-'16468040 ': Xibstar6330_LbKpi,Lb=cocktail,DecProdCut
-'16468041 ': Xibstar6327_LbKpi,Lb=cocktail,DecProdCut
+'16468040': Xibstar6330_LbKpi,Lb=cocktail,DecProdCut
+'16468041': Xibstar6327_LbKpi,Lb=cocktail,DecProdCut
 '16468042': Xibstar6515_LbKpi,Lb=cocktail,DecProdCut
 '16468043': Xibstar6592_LbKpi,Lb=cocktail,DecProdCut
 '16502040': Xib0_PsiDMKpi=TightCut,mPsiDM=940MeV
@@ -6497,8 +6497,8 @@
 '16503005': Sigmabstar_Lambda0pi,Lambda0_PsiDMpipi=TightCut,mPsiDM=3500MeV
 '16503006': Sigmabstar_Lambda0pi,Lambda0_PsiDMpipi=TightCut,mPsiDM=4000MeV
 '16503007': Sigmabstar_Lambda0pi,Lambda0_PsiDMpipi=TightCut,mPsiDM=4400MeV
-'16515000 ': 'Sigmab_Lbpi,Lb_pKtaumu,mu=DecProdCut '
-'16515020  ': 'Sigmab+_Lbpi+,Lb_pKtaumu,mu=DecProdCut '
+'16515000': Sigmab_Lbpi,Lb_pKtaumu,mu=DecProdCut
+'16515020': Sigmab+_Lbpi+,Lb_pKtaumu,mu=DecProdCut
 '16565000': Sigmabstar_Lambda0pi,Lambda0_PsiDMDK,D_pipiK=TightCut,mPsiDM=940MeV
 '16565001': Sigmabstar_Lambda0pi,Lambda0_PsiDMDK,D_pipiK=TightCut,mPsiDM=1500MeV
 '16565002': Sigmabstar_Lambda0pi,Lambda0_PsiDMDK,D_pipiK=TightCut,mPsiDM=2000MeV
@@ -6524,7 +6524,7 @@
 '16574040': Xib0_Xic+munu,ppiK=TightCut
 '16574050': Xib0_Xic+munu,pKmunu=DecProdCut
 '16574051': Xib0_Xic+taunu,pKmunu,taumununu=DecProdCut
-'16575060 ': Xibc_Lambdabmunu,Lambdacpi=DecProdCut
+'16575060': Xibc_Lambdabmunu,Lambdacpi=DecProdCut
 '16575130': Omegab_Omegacpi,Omegamunu=TightCut
 '16575131': Omegab_Omegacpi,Ximunu=TightCut
 '16576060': Xibc_LambdabKmunu,Lambdacpi=DecProdCut
@@ -6556,7 +6556,7 @@
 '16876060': Xibc0_Xibpi,Xicmunu=TightCut
 '17113080': Bs2st_BuK,Kmutau=KKmuInAcc
 '17114080': Bs2st_BuK,Kmumu=KKmuInAcc
-'17143211': 'Bst_Bugamma,JpsiK,mm=DecProdCut '
+'17143211': Bst_Bugamma,JpsiK,mm=DecProdCut
 '17144081': Bs2st_BuK,JpsiK,mm=DecProdCut
 '17144224': Bsst_Bsgamma,Jpsiphi,mm=TightCut
 '17144252': Bsprime1_Bsgamma,Jpsiphi,mm=DecProdCut
@@ -6576,8 +6576,8 @@
 '17145049': Xbs_JpsiKKpi,mumu=DecProdCut,belowBK,m=5580MeV
 '17146051': Bs1_Bspipi,Jpsiphi,mm=DecProdCut
 '17146052': Bs1_Bspipi,Jpsiphi,mm=DDalitz,DecProdCut
-'17163211': 'Bst_Bugamma,Dpi,Kpi=DecProdCut '
-'17164201 ': 'Bdst_Bdgamma,Dpi,Kpipi=DecProdCut '
+'17163211': Bst_Bugamma,Dpi,Kpi=DecProdCut
+'17164201': Bdst_Bdgamma,Dpi,Kpipi=DecProdCut
 '17164221': Bsst_Bs0gamma,Dspi,KKpi=DecProdCut
 '17164252': Bsprime1_Bsgamma,Dspi,KKpi=DecProdCut
 '17164253': Bsprime1_Bsgamma,Dspi,KKpi=TightCut
@@ -6599,11 +6599,11 @@
 '17444080': Bs2st_BstK,BuK,JpsiK
 '17444081': Bs2st_BstK,BuK,JpsiK=DecProdCut
 '17444082': Bsstst_BuK,JpsiK,mm=DecProdCut
-'17444230 ': B10_Bstpi,JpsiK
-'17444231 ': B10_Bstpi,JpsiK=DecProdCut
-'17444232 ': Bststprime10_Bstpi,JpsiK=DecProdCut
-'17444233 ': Bstst10_Bstpi,JpsiK=DecProdCut
-'17444234 ': Bstst00_Bpi,JpsiK=DecProdCut
+'17444230': B10_Bstpi,JpsiK
+'17444231': B10_Bstpi,JpsiK=DecProdCut
+'17444232': Bststprime10_Bstpi,JpsiK=DecProdCut
+'17444233': Bstst10_Bstpi,JpsiK=DecProdCut
+'17444234': Bstst00_Bpi,JpsiK=DecProdCut
 '17444250': Bs1_BstK,JpsiK
 '17444251': Bs1_BstK,JpsiK=DecProdCut
 '17444260': B2st0_Bstpi,Bupi,JpsiK
@@ -6718,14 +6718,14 @@
 '18412413': incl_Upsilon2S,Upsilon1Seta=Pwave,DecProdCut,fix
 '18412431': incl_Upsilon4S,Upsilon1Seta=Pwave,DecProdCut,fix
 '18412432': incl_Upsilon4S,Upsilon1Seta=Swave,DecProdCut,fix
-'18444201 ': 'Upsilon_JpsiJpsigamma,mm=DecProdCut '
+'18444201': Upsilon_JpsiJpsigamma,mm=DecProdCut
 '18912031': incl_Upsilon4S,Upsilon1Somega=Phsp,DecProdCut,fix
 '18912032': incl_Upsilon4S,Upsilon1Setap=Swave,DecProdCut,fix
 '18912033': incl_Upsilon4S,Upsilon1Setap=Pwave,DecProdCut,fix
 '19942000': incl_b=2xJpsi
 '20000000': incl_c
 '20000010': incl_c=Biased2CinAcc
-'20000011 ': incl_c,powheg
+'20000011': incl_c,powheg
 '20000030': incl_c=HardQCDScatter,TightCut
 '20011000': incl_c=MuonHighPT
 '20011001': incl_c=MuonHighPTNoBForceC
@@ -6753,7 +6753,7 @@
 '21103021': D+_etaprimepi,pipi=TightCut
 '21103023': D+_pi-pi+pi+=res,TightCut3
 '21103030': D+_K-pi+pi+=phsp
-'21103040': 'D+_K-pi+pi+=res,DecProdCut,DpPtCut=8GeV,epos '
+'21103040': D+_K-pi+pi+=res,DecProdCut,DpPtCut=8GeV,epos
 '21103100': D+_Kspi+=phsp,DecProdCut
 '21103101': D+_Kspi+=phsp,TightCut,ACPKKCuts
 '21103110': D+_KsK+=phsp,DecProdCut
@@ -6763,8 +6763,8 @@
 '21103221': D+_etaprimeK,rhogamma=DecProdCut
 '21103230': D+_pietap,pipig=TightCut
 '21103231': D+_pieta,pipig=TightCut
-'21103240': 'D+_etapi,pipigamma=DecProdCut '
-'21103270': 'D+_etaK,pipigamma=TightCut '
+'21103240': D+_etapi,pipigamma=DecProdCut
+'21103270': D+_etaK,pipigamma=TightCut
 '21103280': D+_etapi,pipigamma=TightCut
 '21103403': D_phipipi0,KK=TightCut,FromB
 '21103404': D_phipipi0,KK=TightCut,FromD
@@ -6889,7 +6889,7 @@
 '22162006': D0_Kpi=DecProdCut,D0PtCut=12GeV
 '22162010': D0_Kpi=DecProdCut,NoPileUp,pthatmin15
 '22162200': D0_phigamma,KK
-'22162201 ': D0_phigamma,KK=DecProdCut
+'22162201': D0_phigamma,KK=DecProdCut
 '22162212': D0_Kstgamma,Kpi=DecProdCut
 '22164000': D0_Kst0Kst0=DecProdCut
 '22164110': D0_KSKS=DecProdCut
@@ -6952,24 +6952,24 @@
 '23103211': Ds+_etaprimepi,rhogamma=TightCut
 '23103221': Ds+_etaprimeK,rhogamma=TightCut
 '23103230': Ds+_etapi,pipigamma=DecProdCut
-'23103240': 'Ds+_etaK,pipigamma=DecProdCut '
-'23103270': 'Ds+_etaK,pipigamma=TightCut '
+'23103240': Ds+_etaK,pipigamma=DecProdCut
+'23103270': Ds+_etaK,pipigamma=TightCut
 '23103280': Ds+_etapi,pipigamma=TightCut
 '23103290': Ds+_pietap,pipigamma=TightCut
 '23103403': Ds_phipipi0,KK=TightCut,FromB
 '23103404': Ds_phipipi0,KK=TightCut,FromD
 '23103420': Ds_etapi,pipi=TightCut
-'23103431 ': Ds+_etapi,pipipi0,gg=TightCut
-'23103440 ': Ds+_phipi,pipipi0,gg=DecProdCut
+'23103431': Ds+_etapi,pipipi0,gg=TightCut
+'23103440': Ds+_phipi,pipipi0,gg=DecProdCut
 '23103441': Ds+_phipi,pipipi0,gg=TightCut
 '23103450': Ds+_etaprimepi,pipieta,gg=DecProdCut
 '23103460': Ds+_etapi,pipipi0,gg=DecProdCut
 '23103471': Ds+_omegapi,pipipi0,gg=DecProdCut
-'23103472 ': Ds+_omegapi,pipipi0,gg=TightCut
+'23103472': Ds+_omegapi,pipipi0,gg=TightCut
 '23103480': Ds+_omegaK,pipipi0,gg=DecProdCut
-'23103490 ': Ds+_pipipipi0,gg=DecProdCut
-'23103491 ': Ds+_pipipipi0,gg=TightCut
-'23105130 ': Ds_phipi,KsKs=TightCut
+'23103490': Ds+_pipipipi0,gg=DecProdCut
+'23103491': Ds+_pipipipi0,gg=TightCut
+'23105130': Ds_phipi,KsKs=TightCut
 '23113000': Ds_pi+mumu=DecProdCut
 '23113001': Ds_K+mumu=DecProdCut
 '23113002': Ds_phiK,mm=DecProdCut
@@ -7028,8 +7028,8 @@
 '23173003': Ds_phipi,mm=FromD
 '23175000': Ds_pi+etap,pipimumu=DecProdCut
 '23175001': Ds_3piphi,mumu=DecProdCut
-'23203490 ': Ds+_pipipipi0,gg=Cocktail,DecProdCut
-'23203491 ': Ds+_pipipipi0,gg=Cocktail,TightCut
+'23203490': Ds+_pipipipi0,gg=Cocktail,DecProdCut
+'23203491': Ds+_pipipipi0,gg=Cocktail,TightCut
 '23203492': Ds+_pipipipi0,gg=Cocktail,ExtraModes,TightCut
 '23203500': Ds_KSpipi0=res,DecProdCut
 '23263001': incl_Ds=DecProdCut
@@ -7059,12 +7059,12 @@
 '23513070': Ds_pipimu+nu_mu=phsp,DecProdCut
 '23513071': Ds_piKmu+nu_mu=phsp,DecProdCut
 '23513072': Ds_KKmu+nu_mu=phsp,DecProdCut
-'23513200 ': Ds_etamunu,gmm=DecProdCut
-'23513201 ': Ds_etamunu,gmm=Eta2MuMuGamma,DecProdCut
-'23513203 ': Ds_etamunu,gmm=Eta2MuMuGamma,TightCut
+'23513200': Ds_etamunu,gmm=DecProdCut
+'23513201': Ds_etamunu,gmm=Eta2MuMuGamma,DecProdCut
+'23513203': Ds_etamunu,gmm=Eta2MuMuGamma,TightCut
 '23513204': Ds_taunu,etamu,pipigamma=DecProdCut
 '23513205': Ds_taunu,etaprimemu,rhogamma=DecProdCut
-'23513206 ': Ds_etamunu,gmm=Eta2MuMuGamma,TightCut,MassCut
+'23513206': Ds_etamunu,gmm=Eta2MuMuGamma,TightCut,MassCut
 '23513210': Ds_phimunu,gmm=DecProdCut
 '23513400': Ds_taunu,etamu,pipipi0,gg=DecProdCut
 '23513401': Ds_taunu,etaprimemu,pipieta,gg=DecProdCut
@@ -7081,7 +7081,7 @@
 '23903000': incl_b=Ds,KKpi,3pi=DDALITZ,DecProdCut,ExtraParticles
 '23903003': inclb_Ds,KKpi,Hc,3pi=DDALITZ,DecProdCut,ExtraParticlesFromSameB
 '23960000': Ds+,incl
-'24102000': 'Jpsi_pp=DecProdCut '
+'24102000': Jpsi_pp=DecProdCut
 '24102002': incl_Jpsi,pp=Pt0.9GeV
 '24102003': incl_Jpsi,pp=Pt1.8GeV
 '24102011': incl_etac,pp=TightCut
@@ -7115,7 +7115,7 @@
 '24142013': exclu_Jpsi,mm=incoherent_starlight_evtGen_longitudinal_large_window
 '24152000': incl_Jpsi,ee=NoCut
 '24152001': incl_Jpsi,ee=DecProdCut
-'24152002 ': exclu_Jpsi,ee=coherent_starlight_evtGen_transverse
+'24152002': exclu_Jpsi,ee=coherent_starlight_evtGen_transverse
 '24164000': Jpsi_Dspi,KKpi=DecProdCut
 '24164001': Jpsi_DsK,KKpi=DecProdCut
 '24164002': Jpsi_D+pi,Kpipi=DecProdCut
@@ -7176,7 +7176,7 @@
 '25103090': Lc_ppipi=phsp,TightCut,NotFromB
 '25103091': Lc_ppipi=phsp,TightCut,OnlyFromB
 '25103100': Lc_KSp=DecProdCut
-'25103101': 'Lc_KSp=TightCut '
+'25103101': Lc_KSp=TightCut
 '25103102': Lc_Lambdapi=HELAMP,TightCut
 '25103110': Lc_Lambdapi=DecProdCut
 '25103120': Lc_LambdaK=DecProdCut
@@ -7184,7 +7184,7 @@
 '25103201': Lc_etaprimep,rho0g,pipi=DecProdCut
 '25103221': Lc_etaprimep,rhogamma=TightCut
 '25103232': Lc_Sigmapipi,pgamma=DecProdCut
-'25103270': 'Lc_etap,pipigamma=TightCut '
+'25103270': Lc_etap,pipigamma=TightCut
 '25103300': Lc_Sigmapi=DecProdCut
 '25103310': Lc_SigmaK=DecProdCut
 '25103401': Lc_pKKpi0=DecProdCut
@@ -7193,7 +7193,7 @@
 '25103420': Lc_etaprimeSigma,pipietappi0,gggg=DecProdCut
 '25103430': Lc_etap,pipipi0,gg=DecProdCut
 '25103440': Lc_etaprimep,pipieta,gg=DecProdCut
-'25103600 ': Lc_etaSigma,pipigppi0,gg=DecProdCut
+'25103600': Lc_etaSigma,pipigppi0,gg=DecProdCut
 '25103610': Lc_etaprimeSigma,rho0gppi0,pipigg=DecProdCut
 '25105100': Lc_Lambdapipipi=DecProdCut
 '25105101': Lc_XiKpi=DecProdCut
@@ -7214,7 +7214,7 @@
 '25113032': Lc_pmumu,phsp=OS,TightCut,FromB
 '25113033': Lc+_p+mumu=phsp,TightCut
 '25113041': Lc_prho,mumu=TightCut
-'25113200': 'Lc_etap,mumugamma=TightCut '
+'25113200': Lc_etap,mumugamma=TightCut
 '25113400': Lc_pmumupi,phsp=OS,TightCut
 '25113401': Lc_pmumupi,phsp=OS,TightCut,FromB
 '25113411': Lc_pphipi,mumu=TightCut
@@ -7233,7 +7233,7 @@
 '25123413': Lc_prhopi,ee=TightCut
 '25163000': Lc2880,D0p+,Kpi=TightCut
 '25203000': Lc_pKpi-res=LHCbAcceptance
-'25203001': 'Lc_pKK=phsp,TightCut '
+'25203001': Lc_pKK=phsp,TightCut
 '25203002': Lc+_pKpi-res=TightCut,Prompt,CharmOnly
 '25203041': Xic_pKK=phsp,TightCut
 '25313000': Lc_pemu=OS,DecProdCut
@@ -7286,7 +7286,7 @@
 '26104984': Omegac0_XimKp,L0pi,ppi=phsp,DecProdCut,tau=274fs
 '26104985': Omegac0_OmegamPip,L0K,ppi=phsp,DecProdCut,tau=274fs
 '26104986': Xic0_OmegamKp,L0K,ppi=phsp,DecProdCut
-'26104989 ': 'Xic0_Xipi,L0pi,ppi=phsp,TightCut,OnlyT '
+'26104989': Xic0_Xipi,L0pi,ppi=phsp,TightCut,OnlyT
 '26105190': Xic_LambdaKpipi=DecProdCut
 '26105191': Xic_Xipipi=DecProdCut
 '26105192': Xic_LambdaKpipi=TightCut
@@ -7295,7 +7295,7 @@
 '26105198': Xic_Xipipi=TightCut
 '26105199': Xic_Xipipi=Downstream,AMPGEN,TightCut
 '26105990': Xic_OmegaKpi,LambdaK=phsp,TightCut
-'26105991': 'Xicp_Xipipi,L0pi,ppi=phsp,TightCut,OnlyT '
+'26105991': Xicp_Xipipi,L0pi,ppi=phsp,TightCut,OnlyT
 '26106081': Omegac_Omegapipipi=phsp,DecProdCut
 '26106180': Xic_Xipipipi,Lambdapi=DecProdCut
 '26106182': Xic0_OmegaKpi-pi+=HELAMP,TightCut
@@ -7304,13 +7304,13 @@
 '26106185': Xic0_XiKSK=TightCut
 '26106186': Omegac_XiKpipi=TightCut
 '26143010': incl_X+_Jpsip,mumu=phsp,DecProdCut
-'26143011': 'Pc4312,Jpsip=DecProdCut,InAcc '
-'26143012': 'Pc4440,Jpsip=DecProdCut,InAcc '
-'26143013': 'Pc4457,Jpsip=DecProdCut,InAcc '
-'26143014': 'Zc3900,Jpsipi=DecProdCut,InAcc '
-'26143015': 'Zc4200,Jpsipi=DecProdCut,InAcc '
-'26143016': 'Zc4430,Jpsipi=DecProdCut,InAcc '
-'26143018': 'Pc4150,Jpsip=DecProdCut,InAcc '
+'26143011': Pc4312,Jpsip=DecProdCut,InAcc
+'26143012': Pc4440,Jpsip=DecProdCut,InAcc
+'26143013': Pc4457,Jpsip=DecProdCut,InAcc
+'26143014': Zc3900,Jpsipi=DecProdCut,InAcc
+'26143015': Zc4200,Jpsipi=DecProdCut,InAcc
+'26143016': Zc4430,Jpsipi=DecProdCut,InAcc
+'26143018': Pc4150,Jpsip=DecProdCut,InAcc
 '26144100': incl_X_JpsiLambda,mumu=phsp,DecProdCut
 '26144101': Pcs4254,JpsiLambda=DecProdCut,InAcc
 '26163051': Xicc+_D0p,Kpi=GenXicc,DecProdCut,WithMinPT
@@ -7343,7 +7343,7 @@
 '26165010': Xicc+_D0pKpi,Kpi=PPchange,DecProdCut,WithMinPT
 '26165015': Xicc+_D+pK,Kpipi=res,PPchange,DecProdCut,WithMinPT
 '26165050': Xicc_D0pKpi,Kpi=DecProdCut,WithMinPTv2
-'26165051': 'Xicc_D+pK,Kpipi=DecProdCut,WithMinPTv2 '
+'26165051': Xicc_D+pK,Kpipi=DecProdCut,WithMinPTv2
 '26165052': Xicc_LcKpi,pKpi=DecProdCut,WithMinPTv2
 '26165053': Xicc_D0pKpi,Kpi=DecProdCutv2
 '26165054': Xicc_D+pK,Kpipi=DecProdCutv2
@@ -7478,32 +7478,32 @@
 '26266051': Xicc++_LcKpipi,pKpi-res=GenXicc,DecProdCut,WithMinPT3900,MinDaughterPT200
 '26266052': Xicc++_LcKpipi,pKpi-res=GenXicc,DecProdCut,t=256fs,WithMinPT3,MinDaughterPT200
 '26298042': X_Sc++Sc~0,piLc,pKpi-res=TightCut,Prompt,CharmOnly
-'26302021 ': Hc++_pp=DecProdCut,m=3220MeV,t=0.2ps,PPChange
-'26302022 ': Hc++_pp=DecProdCut,m=2800MeV,t=0.2ps,PPChange
+'26302021': Hc++_pp=DecProdCut,m=3220MeV,t=0.2ps,PPChange
+'26302022': Hc++_pp=DecProdCut,m=2800MeV,t=0.2ps,PPChange
 '26303011': Hc+_ppK=DecProdCut,m=3220MeV,t=0.2ps,PPChange
 '26303012': Hc+_ppK=DecProdCut,m=2800MeV,t=0.2ps,PPChange
 '26374001': Sc0_Lcpi,pemu=TightCut
 '26374021': Sc++_Lcpi,pemu=TightCut
 '26374031': Scst0_Lcpi,pemu=TightCut
 '26374041': Scst++_Lcpi,pemu=TightCut
-'26514180 ': Xic0_Ximmunu,L0pi,ppi=pshp,TightCut
-'26514181 ': Xic0_Ximmunu,L0pi,ppi=pshp,TightCut,LLL_DDL
-'26514182 ': Xic0_Ximmunu,L0pi,ppi=pshp,TightCut,DDD
+'26514180': Xic0_Ximmunu,L0pi,ppi=pshp,TightCut
+'26514181': Xic0_Ximmunu,L0pi,ppi=pshp,TightCut,LLL_DDL
+'26514182': Xic0_Ximmunu,L0pi,ppi=pshp,TightCut,DDD
 '26514184': Omegac0_Omegammunu,L0K,ppi=pshp,TightCut
 '26514187': Omegac0_Ximmunu,L0pi,ppi=pshp,TightCut
 '26514585': Omegac0_Omegammunupi0,L0K,ppi=pshp,TightCut
 '26515190': Xicp_Ximmunupi,L0pi,ppi=pshp,TightCut
-'26516182 ': Xic0_Ximmunupipi,L0pi,ppi=pshp,TightCut
+'26516182': Xic0_Ximmunupipi,L0pi,ppi=pshp,TightCut
 '26516186': Omegac0_Omegammunupipi,L0K,ppi=pshp,TightCut
-'26574260 ': Xicc++_Xicprimemunu,pKpi-res=GenXicc,phsp,DecProdCut,XiccMinPT
+'26574260': Xicc++_Xicprimemunu,pKpi-res=GenXicc,phsp,DecProdCut,XiccMinPT
 '26575050': Xicc+_Xic0munu,pKKpi=pshp,GenXicc,DecProdCut,WithMinPT,MinDaughterPT200
 '26575061': Omegacc+_Xic0munu,pKKpi=pshp,GenXicc,DecProdCut,WithMinPT,MinDaughterPT200
 '26575062': Omegacc+_Omegac0munu,pKKpi=pshp,GenXicc,DecProdCut,WithMinPT,MinDaughterPT200
 '26575150': Xicc+_Omegac0munu,Omegapi,LambdaK=GenXicc,DecProdCut
 '26576150': Omegaccc_Omegaccmunu,Omegac0munu,Omegapi,LambdaK=GenXicc,DecProdCut
-'26614581 ': Xic0_Ximmunupi0,L0pi,ppi=pshp,TightCut
-'26614582 ': Xic0_Ximmunupi0,L0pi,ppi=pshp,TightCut,LLL_DDL
-'26615191 ': Xicp_Ximmunupip,L0pi,ppi=pshp,TightCut,LLL_DDL
+'26614581': Xic0_Ximmunupi0,L0pi,ppi=pshp,TightCut
+'26614582': Xic0_Ximmunupi0,L0pi,ppi=pshp,TightCut,LLL_DDL
+'26615191': Xicp_Ximmunupip,L0pi,ppi=pshp,TightCut,LLL_DDL
 '26674060': Xicc++_Xicmunu,pKpi-res=GenXicc,DecProdCut,t=256fs,WithMinPT,MinDaughterPT200
 '26674061': Xicc++_Lcmunu,pKpi=pshp,GenXicc,DecProdCut,t=256fs,WithMinPT,MinDaughterPT200
 '27103020': Dsst_KKpi=TightCut
@@ -7550,7 +7550,7 @@
 '27163179': Dst_D0pi,Kpi=TightCut2,FSRinc
 '27163200': Dst_D0pi,rhogamma=DecProdCut
 '27163201': Dst_D0pi,KKgamma=DecProdCut
-'27163202 ': Dst_D0pi,Kpigamma=DecProdCut
+'27163202': Dst_D0pi,Kpigamma=DecProdCut
 '27163203': Dst_D0pi,KKgamma=TightCut
 '27163204': Dst_D0pi,Kpigamma=TightCut
 '27163206': Dst_D0pi,KKgamma=TightCut,tighter
@@ -7746,7 +7746,7 @@
 '27462411': Dst0_D0pi0_D0gamma,Kpi=DecProdCut
 '27462412': Dst0_D0pi0_D0gamma,Kpi=DStarZeroCut
 '27465006': Dst_D0pi,Kpipipi=TightCut
-'27465200 ': Dst_D0pi,Kpietapr=DecProdCut
+'27465200': Dst_D0pi,Kpietapr=DecProdCut
 '27495730': Ds2st_2710=DecProdCut
 '27495731': Ds2st_2860=DecProdCut
 '27572000': Dst_D0pi,Kstmunu
@@ -7847,21 +7847,21 @@
 '28144002': incl_psi2S,Jpsipipi=VVpipi,DecProdCut
 '28144004': psi2S,Jpsipipi=VVpipi,DecProdCut
 '28144005': psi2S,Jpsipipi=DecProdCut
-'28144006': 'X4140,Jpsiphi=DecProdCut,InAcc '
-'28144007': 'X4274,Jpsiphi=DecProdCut,InAcc '
-'28144008': 'X4500,Jpsiphi=DecProdCut,InAcc '
-'28144009': 'X4700,Jpsiphi=DecProdCut,InAcc '
+'28144006': X4140,Jpsiphi=DecProdCut,InAcc
+'28144007': X4274,Jpsiphi=DecProdCut,InAcc
+'28144008': X4500,Jpsiphi=DecProdCut,InAcc
+'28144009': X4700,Jpsiphi=DecProdCut,InAcc
 '28144011': incl_X38721++,Jpsirho,mm=DecProdCut
 '28144012': incl_X38721++,Jpsirho,mm=NoCut
 '28144022': hc_etacmumu,pp
 '28144040': hc_etacmumu,pp,aschic1=DecProdCut
 '28144041': chic1_Jpsimumu,mumu
-'28144042': 'chic1_Jpsimumu=TightCut '
+'28144042': chic1_Jpsimumu=TightCut
 '28144043': chic1_Jpsimumu,pp=DecProdCut
 '28144051': chic2_Jpsimumu,mumu
-'28144052': 'chic2_Jpsimumu=TightCut '
-'28144060': 'X4350,Jpsiphi=DecProdCut,InAcc '
-'28144061': 'X4160,Jpsiphi=DecProdCut,InAcc '
+'28144052': chic2_Jpsimumu=TightCut
+'28144060': X4350,Jpsiphi=DecProdCut,InAcc
+'28144061': X4160,Jpsiphi=DecProdCut,InAcc
 '28144252': X3872_chic1pipi,Jpsigamma=TightCut
 '28144253': Y4260_X3872gamma,Jpsirho=TightCut
 '28146040': hc_etacmumu,phiphi,aschic1=DecProdCut
@@ -7963,8 +7963,8 @@
 '31111201': tau_mugamma=DecProdCut
 '31113001': tau_mumumu=DecProdCut
 '31113003': tau_mumumu=FromB
-'31113006 ': tau+_p+mu+mu-=DecProdCut
-'31113007 ': tau+_anti-p-mu+mu+=DecProdCut
+'31113006': tau+_p+mu+mu-=DecProdCut
+'31113007': tau+_anti-p-mu+mu+=DecProdCut
 '31113008': tau+_p+mu+mu-=FromB
 '31113009': tau+_anti-p-mu+mu+=FromB
 '31113010': tau_mu-pi+pi-=DecProdCut
@@ -7987,10 +7987,10 @@
 '32101401': Sigma+_ppi0=TightCut
 '32103001': Hs+_pppi=DecProdCut,m=2050MeV,t=100ps,PPChange
 '32103002': Hs+_pppi=DecProdCut,m=2030MeV,t=100ps,PPChange
-'32113001 ': Sigma+_pmumu=phsp,DecProdCut
-'32123000 ': Sigma+_pee=TightCut
+'32113001': Sigma+_pmumu=phsp,DecProdCut
+'32123000': Sigma+_pee=TightCut
 '32123200': Sigma+_ppi0,eegamma=DecProdCut
-'32313001 ': Sigma+_pmumu=DecProdCut
+'32313001': Sigma+_pmumu=DecProdCut
 '33000000': minbias=BiasedLambdaPt300MeV
 '33000001': minbias=BiasedLambdabarPbarPt300MeV
 '33102100': incl_Lambda,ppi
@@ -8006,12 +8006,12 @@
 '33512008': Lambda_pmunuSHD=TightCut
 '34000000': minbias=BiasedKsPt350MeV
 '34100201': KS_gammagamma
-'34102100 ': Ks_pipi
+'34102100': Ks_pipi
 '34102104': Ks_pipi=TightCut
 '34102106': Ks_pipi=TightCut,pt1.5GeV
 '34102108': Ks_pipi=TightCut,rho
 '34102408': KS_pippimpi0=TightCut
-'34112100 ': Ks_mumu
+'34112100': Ks_mumu
 '34112105': Ks_mumu=TightCut,pt1.5GeV
 '34112106': Ks_mumu=TightCut
 '34112201': KS_mumugamma
@@ -8025,7 +8025,7 @@
 '34114003': KS_eemumu=DecProdCut
 '34114020': KS_pipimumu=TightCut,rho
 '34114021': KS_pipimumu=TightCut,rhoPTheta
-'34114100 ': KS_4mu
+'34114100': KS_4mu
 '34114101': KS_4mu=DecProdCut
 '34114102': KS_4mu=TightCut,rho
 '34114121': KS_eemumu=TightCut,rho
@@ -8065,7 +8065,7 @@
 '36103102': Omega_LambdaK=HELAMP,TightCut
 '36103103': Omega_Lambdapi-=DecProdCut
 '36105100': Omega_XiPiPi=DecProdCut
-'36115120 ': Omega-_Xi-mumu=phsp,DecProdCut
+'36115120': Omega-_Xi-mumu=phsp,DecProdCut
 '36515100': Omega_XiStarmunu=DecProdCut
 '37103000': K+_pipipi=DecProdCut
 '37103001': K+_pipipi=TightCut
@@ -8091,7 +8091,7 @@
 '39000000': minbias=BiasedPhiPt300MeV
 '39102420': etaprime_pipieta,gammagamma=TightCut
 '39102421': etaprime_pipieta,gammagamma=pt2GeV
-'39104100 ': phi_KsKs=TightCut
+'39104100': phi_KsKs=TightCut
 '39112000': incl_phi,mumu=DecProdCut
 '39112230': eta_mumugamma=TightCut
 '39112231': eta_mumugamma=TightCut,gamma
@@ -8281,7 +8281,7 @@
 '40114050': Higgs_ZZ_mumumumu
 '40124000': Higgs_ZZ_eeee
 '40124010': Higgs_ZZ_mumuee
-'40506001 ': exclu_tautau,3pi3pi=two_photon_starlight_evtGen_tauolababar
+'40506001': exclu_tautau,3pi3pi=two_photon_starlight_evtGen_tauolababar
 '40512000': exclu_tautau,mm=two_photon_starlight_evtGen
 '40512010': exclu_tautau,mue=two_photon_starlight_evtGen
 '40513000': exclu_tautau,3pimu=two_photon_starlight_evtGen_tauolababar
@@ -8341,8 +8341,8 @@
 '42100211': Z_gammagamma=DecProdCut
 '42100212': Z_gammagamma=DecProdCut_update
 '42100220': Z_pigamma=NoCut
-'42100221': 'Z_pigamma=DecProdCut '
-'42100222': 'Z_pigamma=DecProdCut_update '
+'42100221': Z_pigamma=DecProdCut
+'42100222': Z_pigamma=DecProdCut_update
 '42100230': Z_pipi=NoCut
 '42100231': Z_pipi=DecProdCut
 '42100232': Z_pipi=DecProdCut_update
@@ -8412,7 +8412,7 @@
 '42142200': Z_Jpsigamma=NoCut
 '42142201': Z_Jpsigamma=DecProdCut
 '42142202': Z_Jpsigamma=DecProdCut_update
-'42143001 ': 'W_Jpsipi=DecProdCut '
+'42143001': W_Jpsipi=DecProdCut
 '42150000': Z_bb,2binAcc
 '42162200': Z_D0gamma=NoCut
 '42162201': Z_D0gamma=DecProdCut
@@ -8421,15 +8421,15 @@
 '42162204': Z_D0gamma=DecProdCut_update
 '42163200': W_Dsgamma=NoCut
 '42163201': W_Dsgamma=DecProdCut
-'42163202': 'W_Dsgamma=NoCutnew '
-'42163203': 'W_Dsgamma=DecProdCutnew '
-'42163204': 'W_Dsgamma=DecProdCut_update '
-'42163211': 'W_D+gamma_K-Pi+Pi+=DecProdCut '
-'42163212': 'W_D+gamma_K-Pi+Pi+=DecProdCut_update '
-'42171201': 'W,B+,Jpsi,mumu,gamma=DecProdCut '
-'42171202': 'W,B+,Jpsi,mumu,gamma=DecProdCut_update '
-'42275001 ': 'W_JpsiDs=DecProdCut '
-'42277001 ': 'W_JpsiPhiDs=DecProdCut '
+'42163202': W_Dsgamma=NoCutnew
+'42163203': W_Dsgamma=DecProdCutnew
+'42163204': W_Dsgamma=DecProdCut_update
+'42163211': W_D+gamma_K-Pi+Pi+=DecProdCut
+'42163212': W_D+gamma_K-Pi+Pi+=DecProdCut_update
+'42171201': W,B+,Jpsi,mumu,gamma=DecProdCut
+'42171202': W,B+,Jpsi,mumu,gamma=DecProdCut_update
+'42275001': W_JpsiDs=DecProdCut
+'42277001': W_JpsiPhiDs=DecProdCut
 '42300000': W_taunutau
 '42300001': W_taunutau=Mu
 '42300002': W_taunutau=e

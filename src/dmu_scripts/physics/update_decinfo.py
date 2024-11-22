@@ -49,7 +49,10 @@ def _val_from_line(file_path : str, line : str) -> str:
         log.warning(f'Cannot extract value from \"{line}\" in file {file_path}')
         return 'not_found'
 
-    return mtch.group(1)
+    value = mtch.group(1)
+    value = value.replace(' ', '')
+
+    return value
 # ------------------------------
 def _get_evt_name(file_path : str) -> tuple[str,str]:
     with open(file_path, encoding='utf-8') as ifile:
