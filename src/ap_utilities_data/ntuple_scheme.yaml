@@ -3,7 +3,7 @@
 # -----------------------------------------
 paths:
   pipeline_dir : /eos/lhcb/wg/dpa/wp2/ci
-  analysis     : rd_ap_2024
+  analysis_dir : rd_ap_2024
 # -----------------------------------------
 # Below we define groups of trigger lines
 # -----------------------------------------
@@ -36,75 +36,76 @@ analyses:
 # -----------------------------------------
 # Below we use the lists
 # -----------------------------------------
-Bu_K1ee_eq_DPC:
-  - rx_electrons
-Bu_K2stee_Kpipi_eq_mK1430_DPC:
-  - rx_electrons
-Bu_Kstee_Kpi0_eq_btosllball05_DPC: 
-  - rx_electrons
-  - b_to_vee
-Bd_Kpiee_eq_DPC:
-  - rx_electrons
-#----------
-# Exclusive ccbar PRec
-#----------
-Bu_JpsiKst_ee_Kpi0_eq_DPC:
-  - rx_electrons
-  - rjpsi_electrons
-Bu_psi2SKst_ee_Kpi0_eq_DPC:
-  - rx_electrons
-  - rjpsi_electrons
-Bd_psi2SKst_ee_eq_DPC:
-  - rx_electrons
-  - rjpsi_electrons
-#----------
-# Cascade decays
-#----------
-Bu_D0pi_Kenu_eq_DPC_TightCut:
-  - rx_electrons
-Bu_D0enu_Kpi_eq_DPC_TightCut:
-  - rx_electrons
-Bu_D0enu_Kenu_eq_DPC_ptCut200MeV_visMass4GeV:
-  - rx_electrons
-#----------
-# Hadronic mis-ID, B-> hhh
-#----------
-Bu_KplpiplKmn_eq_sqDalitz_DPC:
-  - rx_electrons
-Bu_KplKplKmn_eq_sqDalitz_DPC:
-  - rx_electrons
-Bu_piplpimnKpl_eq_sqDalitz_DPC: 
-  - rx_electrons
-#----------
-# Cocktail electron
-#----------
-Bd_JpsiX_ee_eq_JpsiInAcc:
-  - rjpsi_electrons
-  - rx_vll_electrons
-Bu_JpsiX_ee_eq_JpsiInAcc:
-  - rjpsi_electrons
-  - rx_vll_electrons
-Bs_JpsiX_ee_eq_JpsiInAcc:
-  - rjpsi_electrons
-  - rx_vll_electrons
-Lb_JpsiX_ee_eq_JpsiInAcc:
-  - rjpsi_electrons
-  - rx_vll_electrons
-#----------
-# Cocktail muon
-#----------
-Bd_JpsiX_mm_eq_JpsiInAcc:
-  - rjpsi_muons    
-  - rx_vll_muons
-Bu_JpsiX_mm_eq_JpsiInAcc:
-  - rjpsi_muons    
-  - rx_vll_muons
-Bs_JpsiX_mm_eq_JpsiInAcc:
-  - rjpsi_muons    
-  - rx_vll_muons
-Lb_JpsiX_mm_eq_JpsiInAcc:
-  - rjpsi_muons    
-  - rx_vll_muons
-Lb_JpsipKX_mm_eq_JpsiInAcc:
-  - rjpsi_muons    
-  - rx_vll_muons
+samples:
+  Bu_K1ee_eq_DPC:
+    - rx_electrons
+  Bu_K2stee_Kpipi_eq_mK1430_DPC:
+    - rx_electrons
+  Bu_Kstee_Kpi0_eq_btosllball05_DPC: 
+    - rx_electrons
+    - b_to_vee
+  Bd_Kpiee_eq_DPC:
+    - rx_electrons
+  #----------
+  # Exclusive ccbar PRec
+  #----------
+  Bu_JpsiKst_ee_Kpi0_eq_DPC:
+    - rx_electrons
+    - rjpsi_electrons
+  Bu_psi2SKst_ee_Kpi0_eq_DPC:
+    - rx_electrons
+    - rjpsi_electrons
+  Bd_psi2SKst_ee_eq_DPC:
+    - rx_electrons
+    - rjpsi_electrons
+  #----------
+  # Cascade decays
+  #----------
+  Bu_D0pi_Kenu_eq_DPC_TightCut:
+    - rx_electrons
+  Bu_D0enu_Kpi_eq_DPC_TightCut:
+    - rx_electrons
+  Bu_D0enu_Kenu_eq_DPC_ptCut200MeV_visMass4GeV:
+    - rx_electrons
+  #----------
+  # Hadronic mis-ID, B-> hhh
+  #----------
+  Bu_KplpiplKmn_eq_sqDalitz_DPC:
+    - rx_electrons
+  Bu_KplKplKmn_eq_sqDalitz_DPC:
+    - rx_electrons
+  Bu_piplpimnKpl_eq_sqDalitz_DPC: 
+    - rx_electrons
+  #----------
+  # Cocktail electron
+  #----------
+  Bd_JpsiX_ee_eq_JpsiInAcc:
+    - rjpsi_electrons
+    - rx_vll_electrons
+  Bu_JpsiX_ee_eq_JpsiInAcc:
+    - rjpsi_electrons
+    - rx_vll_electrons
+  Bs_JpsiX_ee_eq_JpsiInAcc:
+    - rjpsi_electrons
+    - rx_vll_electrons
+  Lb_JpsiX_ee_eq_JpsiInAcc:
+    - rjpsi_electrons
+    - rx_vll_electrons
+  #----------
+  # Cocktail muon
+  #----------
+  Bd_JpsiX_mm_eq_JpsiInAcc:
+    - rjpsi_muons    
+    - rx_vll_muons
+  Bu_JpsiX_mm_eq_JpsiInAcc:
+    - rjpsi_muons    
+    - rx_vll_muons
+  Bs_JpsiX_mm_eq_JpsiInAcc:
+    - rjpsi_muons    
+    - rx_vll_muons
+  Lb_JpsiX_mm_eq_JpsiInAcc:
+    - rjpsi_muons    
+    - rx_vll_muons
+  Lb_JpsipKX_mm_eq_JpsiInAcc:
+    - rjpsi_muons    
+    - rx_vll_muons
