@@ -3,20 +3,20 @@ name        = 'data_manipulation_utilities'
 version     = '0.0.6'
 readme      = 'README.md'
 dependencies= [
-'zfit', 
+'zfit',
 'logzero',
-'PyYAML', 
-'scipy', 
-'awkward', 
-'tqdm', 
-'joblib', 
-'scikit-learn', 
-'toml', 
-'numpy', 
-'matplotlib', 
-'mplhep', 
+'PyYAML',
+'scipy',
+'awkward',
+'tqdm',
+'joblib',
+'scikit-learn',
+'toml',
+'numpy',
+'matplotlib',
+'mplhep',
 'hist[plot]',
-'polars', 
+'polars',
 'pandas']
 
 [project.optional-dependencies]
@@ -29,6 +29,7 @@ where   = ['src']
 transform_text    ='dmu_scripts.text.transform_text:main'
 coned             ='dmu_scripts.ssh.coned:main'
 check_truth       ='dmu_scripts.physics.check_truth:main'
+update_decinfo    ='dmu_scripts.physics.update_decinfo:main'
 print_trees       ='dmu_scripts.rfile.print_trees:main'
 compare_root_files='dmu_scripts.rfile.compare_root_files:main'
 
