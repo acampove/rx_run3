@@ -1,9 +1,13 @@
 '''
 Script used to validate ntuples produced by AP pipelines
 '''
-import argparse
+import os
 
-from dataclasses import dataclass
+import argparse
+from importlib.resources import files
+from dataclasses         import dataclass
+
+import yaml
 
 # -------------------------------
 @dataclass
@@ -14,6 +18,7 @@ class Data:
 
     pipeline_id : int
     config_name : str
+    cfg         : dict
 # -------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Makes a list of PFNs for a specific set of eventIDs in case we need to reprocess them')
@@ -24,8 +29,22 @@ def _parse_args() -> None:
     Data.pipeline_id = args.pipeline
     Data.config_name = args.config
 # -------------------------------
+def _load_config() -> None:
+    config_path = files('ap_utilities_data').joinpath(f'{Data.config_name}.yaml')
+    config_path = str(config_path)
+
+    if not os.path.isfile(config_path):
+        raise FileNotFoundError(f'Could not find: {config_path}')
+
+    with open(config_path, encoding='utf-8') as ifile:
+        Data.cfg = yaml.safe_load(ifile)
+
+    import pprint
+
+    pprint.pprint(Data.cfg)
+# -------------------------------
 def _validate() -> None:
-    ...
+    _load_config()
 # -------------------------------
 def main():
     '''
