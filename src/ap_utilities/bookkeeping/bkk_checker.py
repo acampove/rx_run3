@@ -23,8 +23,8 @@ class BkkChecker:
         Takes the path to a YAML file with the list of samples
         '''
         with open(path, encoding='utf-8') as ifile:
-            self._d_cfg        = yaml.safe_load(ifile)
-            self._d_event_type = self._d_cfg['event_type']
+            self._d_cfg                    = yaml.safe_load(ifile)
+            self._l_event_type : list[str] = self._d_cfg['event_type']
 
         self._input_path   : str = path
         self._year         : str = self._d_cfg['settings']['year']
@@ -76,24 +76,19 @@ class BkkChecker:
 
         return nfile != 0
     # -------------------------
-    def _get_samples_with_threads(self, nthreads : int) -> dict[str,str]:
+    def _get_samples_with_threads(self, nthreads : int) -> list[str]:
         l_found : list[bool] = []
         with ThreadPoolExecutor(max_workers=nthreads) as executor:
-            l_result = [ executor.submit(self._was_found, event_type) for event_type in self._d_event_type.values() ]
+            l_result = [ executor.submit(self._was_found, event_type) for event_type in self._l_event_type ]
             l_found  = [result.result() for result in l_result ]
 
-        d_event_type = {}
-        for nick_name, found in zip(self._d_event_type, l_found):
-            if not found:
-                continue
+        l_event_type = [ event_type for event_type, found in zip(self._l_event_type, l_found) if found ]
 
-            d_event_type[nick_name] = self._d_event_type[nick_name]
-
-        return d_event_type
+        return l_event_type
     # -------------------------
-    def _save_to_text(self, d_event_type : dict[str,str]) -> None:
+    def _save_to_text(self, l_event_type : list[str]) -> None:
         text = ''
-        for nick_name, evt_type in d_event_type.items():
+        for evt_type in l_event_type:
             nu_name = self._nu_path.replace('.', 'p')
             text   += f'("{nick_name}", "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", "{self._sim_version}", "{self._generator}" ),\n'
 
@@ -112,14 +107,14 @@ class BkkChecker:
         log.info('Filtering input')
         if nthreads == 1:
             log.info('Using single thread')
-            d_event_type = { nick_name : event_type for nick_name, event_type in self._d_event_type.items() if self._was_found(event_type) }
+            l_event_type = [ event_type for event_type in self._l_event_type if self._was_found(event_type) ]
         else:
             log.info(f'Using {nthreads} threads')
-            d_event_type = self._get_samples_with_threads(nthreads)
+            l_event_type = self._get_samples_with_threads(nthreads)
 
-        nfound = len(d_event_type)
-        npased = len(self._d_event_type)
+        nfound = len(l_event_type)
+        npased = len(self._l_event_type)
 
         log.info(f'Found: {nfound}/{npased}')
-        self._save_to_text(d_event_type)
+        self._save_to_text(l_event_type)
 # ---------------------------------
