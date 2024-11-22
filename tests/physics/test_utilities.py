@@ -23,13 +23,13 @@ class Data:
             '10002203',
             '10002213',
             ]
-
-    l_style = ['literal', 'safe_1']
 # --------------------------------------------------
 @pytest.mark.parametrize('event_type', Data.l_event_type)
-@pytest.mark.parametrize(     'style', Data.l_style)
-def test_read_decay_name(event_type : str, style : str) -> None:
+def test_read_decay_name(event_type : str) -> None:
     '''
     Tests reading of decay name from YAML using event type
     '''
-    phut.read_decay_name(event_type=event_type, style=style)
+    literal = phut.read_decay_name(event_type=event_type, style='literal')
+    safe_1  = phut.read_decay_name(event_type=event_type, style= 'safe_1')
+
+    print(f'{literal:<50}{safe_1:<50}')
