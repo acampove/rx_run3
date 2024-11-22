@@ -2,10 +2,12 @@
 Module containing utility functions
 '''
 from importlib.resources import files
+from functools           import cache
 
 import yaml
 
 # ---------------------------------
+@cache
 def _get_evt_name() -> dict[str,str]:
     file_path = files('dmu_data').joinpath('physics/evt_name.yaml')
     file_path = str(file_path)
