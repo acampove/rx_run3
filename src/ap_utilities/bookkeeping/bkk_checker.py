@@ -7,6 +7,8 @@ from concurrent.futures     import ThreadPoolExecutor
 
 import subprocess
 import yaml
+
+import dmu.physics.utilities as phut
 from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('ap_utilities:Bookkeeping.bkk_checker')
@@ -89,7 +91,8 @@ class BkkChecker:
     def _save_to_text(self, l_event_type : list[str]) -> None:
         text = ''
         for evt_type in l_event_type:
-            nu_name = self._nu_path.replace('.', 'p')
+            nu_name   = self._nu_path.replace('.', 'p')
+            nick_name = phut.read_decay_name(evt_type)
             text   += f'("{nick_name}", "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", "{self._sim_version}", "{self._generator}" ),\n'
 
         output_path = self._input_path.replace('.yaml', '.txt')
