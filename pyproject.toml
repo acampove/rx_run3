@@ -12,8 +12,9 @@ dev  = ['pytest']
 where= ['src']
 
 [project.scripts]
-check_samples ='ap_utilities_scripts.check_samples:main'
+check_samples      ='ap_utilities_scripts.check_samples:main'
+validate_ap_tuples ='ap_utilities_scripts.validate_ap_tuples:main'
 
 [tool.setuptools.package-data]
-'ap_utilities_data' = ['*.json', '*.toml']
+'ap_utilities_data' = ['*.json', '*.toml', '*.yaml']
 
