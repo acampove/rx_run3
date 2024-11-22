@@ -1,4 +1,10 @@
 # -----------------------------------------
+# Needed to find where files are in EOS
+# -----------------------------------------
+paths:
+  pipeline_dir : /eos/lhcb/wg/dpa/wp2/ci
+  analysis     : rd_ap_2024
+# -----------------------------------------
 # Below we define groups of trigger lines
 # -----------------------------------------
 analyses:
