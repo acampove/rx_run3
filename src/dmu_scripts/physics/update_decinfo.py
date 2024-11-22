@@ -21,7 +21,7 @@ class Data:
     Class used to store shared data
     '''
     dec_path : str
-    regex    : str = r'# [a-zA-Z]+: (.*)'
+    regex    : str = r'#[\s]*[a-zA-Z]+:[\s]*(.*)'
 # ------------------------------
 def _setup() -> None:
     if 'DECPATH' not in os.environ:
@@ -30,18 +30,21 @@ def _setup() -> None:
     Data.dec_path = os.environ['DECPATH']
 # ------------------------------
 def _line_from_list(file_path : str, contains : str, l_line : list[str]) -> str:
-    try:
-        [value] = [line for line in l_line if contains in line]
-    except ValueError:
+    l_value = [ line for line in l_line if contains in line ]
+
+    if len(l_value) == 0:
         log.warning(f'Could not extract {contains} line in: {file_path}')
         return 'not_found'
 
-    return value
+    return l_value[0]
 # ------------------------------
 def _val_from_line(file_path : str, line : str) -> str:
+    if line == 'not_found':
+        return line
+
     mtch = re.match(Data.regex, line)
     if not mtch:
-        log.warning(f'Cannot extract value from {line} in file {file_path}')
+        log.warning(f'Cannot extract value from \"{line}\" in file {file_path}')
         return 'not_found'
 
     return mtch.group(1)
@@ -61,7 +64,6 @@ def _get_evt_name(file_path : str) -> tuple[str,str]:
 def _read_info() -> dict[str,str]:
     dec_file_wc = f'{Data.dec_path}/dkfiles/*.dec'
     l_dec_file  = glob.glob(dec_file_wc)
-    l_dec_file  = l_dec_file[:20]
     nfiles      = len(l_dec_file)
     if nfiles == 0:
         raise ValueError(f'No dec file foudn in {dec_file_wc}')
@@ -69,14 +71,20 @@ def _read_info() -> dict[str,str]:
     log.info(f'Found {nfiles} decay files')
 
     l_evt_name = [ _get_evt_name(file_path) for file_path in tqdm.tqdm(l_dec_file, ascii=' -') ]
-    d_evt_name = dict(l_evt_name)
-
-    info_size = len(d_evt_name)
-
-    if info_size != nfiles:
-        raise ValueError(f'Number of files and size of dictionary differ: {nfiles}/{info_size}')
+    d_evt_name = _dict_from_tup_list(l_evt_name)
 
     return d_evt_name
+# ------------------------------
+def _dict_from_tup_list(l_evt_name : list[tuple[str,str]]) -> dict[str,str]:
+    d_res = {}
+    for key, val in l_evt_name:
+        if key in d_res:
+            old_val = d_res[key]
+            log.warning(f'Key {key} with value {old_val} already found, overriding with {val}')
+
+        d_res[key] = val
+
+    return d_res
 # ------------------------------
 def _dump_info(d_evt_name : dict[str,str]) -> None:
     ...
