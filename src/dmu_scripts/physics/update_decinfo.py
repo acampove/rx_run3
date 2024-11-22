@@ -9,8 +9,10 @@ import os
 import re
 import glob
 from dataclasses           import dataclass
+from importlib.resources   import files
 
 import tqdm
+import yaml
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu_scripts:physics:update_decinfo')
@@ -87,7 +89,12 @@ def _dict_from_tup_list(l_evt_name : list[tuple[str,str]]) -> dict[str,str]:
     return d_res
 # ------------------------------
 def _dump_info(d_evt_name : dict[str,str]) -> None:
-    ...
+    yaml_path = files('dmu_data').joinpath('physics/evt_name.yaml')
+    yaml_path = str(yaml_path)
+
+    log.info(f'Saving to: {yaml_path}')
+    with open(yaml_path, 'w', encoding='utf-8') as ofile:
+        yaml.dump(d_evt_name, ofile)
 # ------------------------------
 def main():
     '''
