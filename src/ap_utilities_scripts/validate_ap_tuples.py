@@ -12,7 +12,7 @@ from dataclasses         import dataclass
 
 import tqdm
 import yaml
-from ROOT                  import TFile
+from ROOT                  import TFile, TDirectoryFile, TTree
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('ap_utilities_scripts:validate_ap_tuples')
@@ -28,6 +28,7 @@ class Data:
 
     d_tree_miss : ClassVar[dict[str, list[str]]] = {}
     d_tree_found: ClassVar[dict[str, list[str]]] = {}
+    d_tree_entries : ClassVar[dict[str, dict[str,int]]] = {}
 # -------------------------------
 def _check_path(path : str) -> None:
     found = os.path.isdir(path) or os.path.isfile(path)
@@ -121,6 +122,20 @@ def _lines_from_samples(l_samp : list[str]) -> set[str]:
 def _validate_root_file(root_path : str) -> None:
     _validate_trees(root_path)
 # -------------------------------
+def _is_valid_dir(sample : str, file_dir : TDirectoryFile) -> bool:
+    if not hasattr(file_dir, 'DecayTree') or not isinstance(file_dir.DecayTree, TTree):
+        Data.d_tree_entries[sample] = {file_dir.GetName : 0}
+        return False
+
+    nentries = file_dir.DecayTree.GetEntries()
+    if nentries == 0:
+        Data.d_tree_entries[sample] = {file_dir.GetName : 0}
+        return False
+
+    Data.d_tree_entries[sample] = {file_dir.GetName() : nentries}
+
+    return True
+# -------------------------------
 def _validate_trees(root_path : str) -> None:
     sample    = _sample_from_root(root_path)
     l_samp    = Data.cfg['samples'][sample]
@@ -130,7 +145,7 @@ def _validate_trees(root_path : str) -> None:
     rfile     = TFile(root_path)
     l_key     = rfile.GetListOfKeys()
     l_dir     = [ key.ReadObj() for key in l_key if key.ReadObj().InheritsFrom('TDirectoryFile') ]
-    s_name    = { fdir.GetName() for fdir in l_dir }
+    s_name    = { fdir.GetName() for fdir in l_dir if _is_valid_dir(sample, fdir)}
 
     s_missing = s_line - s_name
     if s_name != s_line:
@@ -173,6 +188,7 @@ def _save_report() -> None:
     d_rep = {
             'missing_trees' : Data.d_tree_miss,
             'found_trees'   : Data.d_tree_found,
+            'tree_entries'  : Data.d_tree_entries,
             }
 
     with open('report.yaml', 'w', encoding='utf-8') as ofile:
