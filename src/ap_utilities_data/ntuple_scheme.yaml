@@ -5,132 +5,69 @@ paths:
   pipeline_dir : /eos/lhcb/wg/dpa/wp2/ci
   analysis_dir : rd_ap_2024
 # -----------------------------------------
-# Below we define groups of trigger lines
-# -----------------------------------------
-analyses:
-  rx_electrons:
-    - Hlt2RD_BuToKpEE
-    - Hlt2RD_B0ToKpKmEE
-    - Hlt2RD_B0ToKpPimEE
-    - Hlt2RD_LambdabToPKEE
-    - Hlt2RD_BuToKpEE_MVA
-    - Hlt2RD_B0ToKpPimEE_MVA
-    - Hlt2RD_BsToPhiEE_MVA
-    - Hlt2RD_LbTopKEE_MVA
-  b_to_vee:
-    - Hlt2RD_B0ToKpKmEE
-    - Hlt2RD_B0ToKpPimEE
-    - Hlt2RD_BuToKSPipEE_DD
-    - Hlt2RD_BuToKSPipEE_LL
-  rjpsi_electrons:
-    - Hlt2RD_BuToKpEE_MVA
-    - Hlt2RD_B0ToKpPimEE_MVA
-    - Hlt2RD_BuToKpEE
-    - Hlt2RD_B0ToKpKmEE
-    - Hlt2RD_B0ToKpPimEE
-    - Hlt2RD_LambdabToPKEE
-    - Hlt2RD_BdToKstJpsi_KstToKpPim_JpsiToEE
-    - Hlt2RD_BsToPhiJpsi_PhiToKK_JpsiToEE
-    - Hlt2RD_BuToKpJpsi_JpsiToEE
-    - Hlt2RD_LbToPKJpsi_JpsiToEE
-  rjpsi_muons:
-    - Hlt2RD_BuToKpMuMu_MVA
-    - Hlt2RD_B0ToKpPimMuMu_MVA
-    - Hlt2RD_BuToHpMuMu_Incl
-    - Hlt2RD_B0ToKpKmMuMu
-    - Hlt2RD_B0ToKpPimMuMu
-    - Hlt2RD_LambdabToPKMuMu
-    - Hlt2RD_BdToKstJpsi_KstToKpPim_JpsiToMuMu
-    - Hlt2RD_BsToPhiJpsi_PhiToKK_JpsiToMuMu
-    - Hlt2RD_BuToKpJpsi_JpsiToMuMu
-    - Hlt2RD_LbToPKJpsi_JpsiToMuMu
-  rx_vll_electrons:
-    - Hlt2RD_LbToLEE_DD
-    - Hlt2RD_LbToLEE_LL
-    - Hlt2RD_BuToKSPipEE_DD
-    - Hlt2RD_BuToKSPipEE_LL
-    - Hlt2RD_BdToKSEE_LL
-    - Hlt2RD_BdToKSEE_DD
-  rx_vll_muons:
-    - Hlt2RD_LbToLMuMu_DD
-    - Hlt2RD_LbToLMuMu_LL
-    - Hlt2RD_BuToKSPipMuMu_DD
-    - Hlt2RD_BuToKSPipMuMu_LL
-    - Hlt2RD_BdToKSMuMu_DD
-    - Hlt2RD_BdToKSMuMu_LL
-# -----------------------------------------
-# Below we use the lists
+# Each key corresponds to a MC sample, the value is a list of lines that must be found
+# as a tree in the file. If any, then the sample is not signal for any of the HLT2 lines
+# therefore no tree (equivalent to a line) is required to be made
 # -----------------------------------------
 samples:
   Bu_K1ee_eq_DPC:
-    - rx_electrons
+    - any 
   Bu_K2stee_Kpipi_eq_mK1430_DPC:
-    - rx_electrons
+    - any 
   Bu_Kstee_Kpi0_eq_btosllball05_DPC: 
-    - rx_electrons
-    - b_to_vee
+    - any 
   Bd_Kpiee_eq_DPC:
-    - rx_electrons
+    - Hlt2RD_B0ToKpPimEE
+    - Hlt2RD_B0ToKpPimEE_MVA
   #----------
   # Exclusive ccbar PRec
   #----------
   Bu_JpsiKst_ee_Kpi0_eq_DPC:
-    - rx_electrons
-    - rjpsi_electrons
+    - any 
   Bu_psi2SKst_ee_Kpi0_eq_DPC:
-    - rx_electrons
-    - rjpsi_electrons
+    - any 
   Bd_psi2SKst_ee_eq_DPC:
-    - rx_electrons
-    - rjpsi_electrons
+    - Hlt2RD_B0ToKpPimEE
+    - Hlt2RD_B0ToKpPimEE_MVA
   #----------
   # Cascade decays
   #----------
   Bu_D0pi_Kenu_eq_DPC_TightCut:
-    - rx_electrons
+    - any 
   Bu_D0enu_Kpi_eq_DPC_TightCut:
-    - rx_electrons
+    - any 
   Bu_D0enu_Kenu_eq_DPC_ptCut200MeV_visMass4GeV:
-    - rx_electrons
+    - any 
   #----------
   # Hadronic mis-ID, B-> hhh
   #----------
   Bu_KplpiplKmn_eq_sqDalitz_DPC:
-    - rx_electrons
+    - any 
   Bu_KplKplKmn_eq_sqDalitz_DPC:
-    - rx_electrons
+    - any 
   Bu_piplpimnKpl_eq_sqDalitz_DPC: 
-    - rx_electrons
+    - any 
   #----------
   # Cocktail electron
   #----------
   Bd_JpsiX_ee_eq_JpsiInAcc:
-    - rjpsi_electrons
-    - rx_vll_electrons
+    - any 
   Bu_JpsiX_ee_eq_JpsiInAcc:
-    - rjpsi_electrons
-    - rx_vll_electrons
+    - any 
   Bs_JpsiX_ee_eq_JpsiInAcc:
-    - rjpsi_electrons
-    - rx_vll_electrons
+    - any 
   Lb_JpsiX_ee_eq_JpsiInAcc:
-    - rjpsi_electrons
-    - rx_vll_electrons
+    - any 
   #----------
   # Cocktail muon
   #----------
   Bd_JpsiX_mm_eq_JpsiInAcc:
-    - rjpsi_muons    
-    - rx_vll_muons
+    - any 
   Bu_JpsiX_mm_eq_JpsiInAcc:
-    - rjpsi_muons    
-    - rx_vll_muons
+    - any 
   Bs_JpsiX_mm_eq_JpsiInAcc:
-    - rjpsi_muons    
-    - rx_vll_muons
+    - any 
   Lb_JpsiX_mm_eq_JpsiInAcc:
-    - rjpsi_muons    
-    - rx_vll_muons
+    - any 
   Lb_JpsipKX_mm_eq_JpsiInAcc:
-    - rjpsi_muons    
-    - rx_vll_muons
+    - any 
