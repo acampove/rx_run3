@@ -6,6 +6,7 @@ import glob
 import shutil
 import argparse
 from typing              import Union
+from typing              import ClassVar
 from importlib.resources import files
 from dataclasses         import dataclass
 
@@ -24,6 +25,9 @@ class Data:
     pipeline_id : int
     config_name : str
     cfg         : dict
+
+    d_tree_miss : ClassVar[dict[str, list[str]]] = {}
+    d_tree_found: ClassVar[dict[str, list[str]]] = {}
 # -------------------------------
 def _check_path(path : str) -> None:
     found = os.path.isdir(path) or os.path.isfile(path)
@@ -130,11 +134,20 @@ def _validate_trees(root_path : str) -> None:
 
     s_missing = s_line - s_name
     if s_name != s_line:
-        log.warning(f'File: {root_path}')
-        log.warning(f'Missing : {s_missing}')
+        log.debug(f'File: {root_path}')
+        log.debug(f'Missing : {s_missing}')
 
     ntree     = len(l_dir)
     log.debug(f'Found {ntree} trees for sample {sample}')
+
+    if len(s_missing) != 0:
+        _save_trees(sample, s_missing, Data.d_tree_miss )
+
+    _save_trees(sample,    s_name, Data.d_tree_found)
+# -------------------------------
+def _save_trees(sample : str, s_tree_name : set[str], d_data : dict[str, list[str]]):
+    l_tree_name = list(s_tree_name)
+    d_data.update({sample : l_tree_name})
 # -------------------------------
 def _validate_job(job_path : str) -> None:
     '''
@@ -156,12 +169,22 @@ def _validate() -> None:
     for out_path in tqdm.tqdm(l_out_path, ascii=' -'):
         _validate_job(out_path)
 # -------------------------------
+def _save_report() -> None:
+    d_rep = {
+            'missing_trees' : Data.d_tree_miss,
+            'found_trees'   : Data.d_tree_found,
+            }
+
+    with open('report.yaml', 'w', encoding='utf-8') as ofile:
+        yaml.safe_dump(d_rep, ofile)
+# -------------------------------
 def main():
     '''
     Script starts here
     '''
     _parse_args()
     _validate()
+    _save_report()
 # -------------------------------
 if __name__ == '__main__':
     main()
