@@ -154,9 +154,9 @@ def _validate_trees(root_path : str) -> None:
         return
 
     s_missing = s_expected - s_found
-    if s_found != s_expected:
-        log.debug(f'File: {root_path}')
-        log.debug(f'Missing : {s_missing}')
+    if len(s_missing) > 0:
+        log.warning(f'File: {root_path}')
+        log.warning(f'Missing : {s_missing}')
         _save_trees(sample, s_missing, Data.d_tree_miss )
 
     _save_trees(sample, s_found, Data.d_tree_found)
