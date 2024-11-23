@@ -7,7 +7,6 @@ import shutil
 import argparse
 from typing              import Union
 from typing              import ClassVar
-from importlib.resources import files
 from dataclasses         import dataclass
 
 import tqdm
@@ -23,11 +22,11 @@ class Data:
     Class holding shared attributes
     '''
     pipeline_id : int
-    config_name : str
+    config_path : str
     cfg         : dict
 
-    d_tree_miss : ClassVar[dict[str, list[str]]] = {}
-    d_tree_found: ClassVar[dict[str, list[str]]] = {}
+    d_tree_miss    : ClassVar[dict[str, list[str]]]     = {}
+    d_tree_found   : ClassVar[dict[str, list[str]]]     = {}
     d_tree_entries : ClassVar[dict[str, dict[str,int]]] = {}
 # -------------------------------
 def _check_path(path : str) -> None:
@@ -38,23 +37,20 @@ def _check_path(path : str) -> None:
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Makes a list of PFNs for a specific set of eventIDs in case we need to reprocess them')
     parser.add_argument('-p','--pipeline', type=int, help='Pipeline ID', required=True)
-    parser.add_argument('-c','--config'  , type=str, help='Name of config file, without extension', required=True)
+    parser.add_argument('-f','--cfg_path', type=str, help='Path to config file with the description of how to validate', required=True)
     parser.add_argument('-l','--log_lvl' , type=int, help='Logging level', default=20, choices=[10,20,30])
     args = parser.parse_args()
 
     Data.pipeline_id = args.pipeline
-    Data.config_name = args.config
+    Data.config_path = args.cfg_path
 
     LogStore.set_level('ap_utilities_scripts:validate_ap_tuples', args.log_lvl)
 # -------------------------------
 def _load_config() -> None:
-    config_path = files('ap_utilities_data').joinpath(f'{Data.config_name}.yaml')
-    config_path = str(config_path)
+    if not os.path.isfile(Data.config_path):
+        raise FileNotFoundError(f'Could not find: {Data.config_path}')
 
-    if not os.path.isfile(config_path):
-        raise FileNotFoundError(f'Could not find: {config_path}')
-
-    with open(config_path, encoding='utf-8') as ifile:
+    with open(Data.config_path, encoding='utf-8') as ifile:
         Data.cfg = yaml.safe_load(ifile)
 # -------------------------------
 def _get_out_paths() -> list[str]:
