@@ -21,7 +21,6 @@ class Data:
     '''
     Class holding shared attributes
     '''
-
     pipeline_id : int
     config_name : str
     cfg         : dict
@@ -35,10 +34,13 @@ def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Makes a list of PFNs for a specific set of eventIDs in case we need to reprocess them')
     parser.add_argument('-p','--pipeline', type=int, help='Pipeline ID', required=True)
     parser.add_argument('-c','--config'  , type=str, help='Name of config file, without extension', required=True)
+    parser.add_argument('-l','--log_lvl' , type=int, help='Logging level', default=20, choices=[10,20,30])
     args = parser.parse_args()
 
     Data.pipeline_id = args.pipeline
     Data.config_name = args.config
+
+    LogStore.set_level('ap_utilities_scripts:validate_ap_tuples', args.log_lvl)
 # -------------------------------
 def _load_config() -> None:
     config_path = files('ap_utilities_data').joinpath(f'{Data.config_name}.yaml')
@@ -137,7 +139,6 @@ def main():
     '''
     Script starts here
     '''
-    LogStore.set_level('ap_utilities_scripts:validate_ap_tuples', 10)
 
     _parse_args()
     _validate()
