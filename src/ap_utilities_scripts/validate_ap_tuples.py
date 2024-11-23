@@ -112,53 +112,54 @@ def _copy_path(source : str) -> str:
 
     return target
 # -------------------------------
-def _lines_from_samples(l_samp : list[str]) -> set[str]:
-    l_line = []
-    for samp in l_samp:
-        l_line += Data.cfg['analyses'][samp]
-
-    return set(l_line)
-# -------------------------------
 def _validate_root_file(root_path : str) -> None:
     _validate_trees(root_path)
 # -------------------------------
+def _add_to_dictionary(d_data : dict, identifier : str, key : str, value : int) -> None:
+    if identifier not in d_data:
+        d_data[identifier] = {}
+
+    if key in d_data[identifier]:
+        log.warning(f'Overriding key {key} at {identifier}')
+
+    d_data[identifier][key] = value
+# -------------------------------
 def _is_valid_dir(sample : str, file_dir : TDirectoryFile) -> bool:
     if not hasattr(file_dir, 'DecayTree') or not isinstance(file_dir.DecayTree, TTree):
-        Data.d_tree_entries[sample] = {file_dir.GetName : 0}
+        _add_to_dictionary(Data.d_tree_entries, sample, key=file_dir.GetName(), value=0)
         return False
 
     nentries = file_dir.DecayTree.GetEntries()
     if nentries == 0:
-        Data.d_tree_entries[sample] = {file_dir.GetName : 0}
+        _add_to_dictionary(Data.d_tree_entries, sample, key=file_dir.GetName(), value=0)
         return False
 
-    Data.d_tree_entries[sample] = {file_dir.GetName() : nentries}
+    _add_to_dictionary(Data.d_tree_entries, sample, key=file_dir.GetName(), value=nentries)
 
     return True
 # -------------------------------
 def _validate_trees(root_path : str) -> None:
     sample    = _sample_from_root(root_path)
-    l_samp    = Data.cfg['samples'][sample]
-    s_line    = _lines_from_samples(l_samp)
+    l_expected= Data.cfg['samples'][sample]
+    s_expected= set(l_expected)
 
     root_path = _copy_path(root_path)
     rfile     = TFile(root_path)
     l_key     = rfile.GetListOfKeys()
     l_dir     = [ key.ReadObj() for key in l_key if key.ReadObj().InheritsFrom('TDirectoryFile') ]
-    s_name    = { fdir.GetName() for fdir in l_dir if _is_valid_dir(sample, fdir)}
+    s_found   = { fdir.GetName() for fdir in l_dir if _is_valid_dir(sample, fdir)}
 
-    s_missing = s_line - s_name
-    if s_name != s_line:
+    if s_expected == {'any'} and len(s_found) > 0:
+        _save_trees(sample, s_found, Data.d_tree_found)
+        return
+
+    s_missing = s_expected - s_found
+    if s_found != s_expected:
         log.debug(f'File: {root_path}')
         log.debug(f'Missing : {s_missing}')
-
-    ntree     = len(l_dir)
-    log.debug(f'Found {ntree} trees for sample {sample}')
-
-    if len(s_missing) != 0:
         _save_trees(sample, s_missing, Data.d_tree_miss )
 
-    _save_trees(sample,    s_name, Data.d_tree_found)
+    _save_trees(sample, s_found, Data.d_tree_found)
 # -------------------------------
 def _save_trees(sample : str, s_tree_name : set[str], d_data : dict[str, list[str]]):
     l_tree_name = list(s_tree_name)
