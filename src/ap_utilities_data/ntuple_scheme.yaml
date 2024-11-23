@@ -33,6 +33,20 @@ analyses:
     - Hlt2RD_BsToPhiJpsi_PhiToKK_JpsiToEE
     - Hlt2RD_BuToKpJpsi_JpsiToEE
     - Hlt2RD_LbToPKJpsi_JpsiToEE
+  rx_vll_electrons:
+    - Hlt2RD_LbToLEE_DD
+    - Hlt2RD_LbToLEE_LL
+    - Hlt2RD_BuToKSPipEE_DD
+    - Hlt2RD_BuToKSPipEE_LL
+    - Hlt2RD_BdToKSEE_LL
+    - Hlt2RD_BdToKSEE_DD
+  rx_vll_muons:
+    - Hlt2RD_LbToLMuMu_DD
+    - Hlt2RD_LbToLMuMu_LL
+    - Hlt2RD_BuToKSPipMuMu_DD
+    - Hlt2RD_BuToKSPipMuMu_LL
+    - Hlt2RD_BdToKSMuMu_DD
+    - Hlt2RD_BdToKSMuMu_LL
 # -----------------------------------------
 # Below we use the lists
 # -----------------------------------------
