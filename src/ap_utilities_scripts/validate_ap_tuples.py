@@ -107,19 +107,40 @@ def _copy_path(source : str) -> str:
 
     return target
 # -------------------------------
+def _lines_from_samples(l_samp : list[str]) -> set[str]:
+    l_line = []
+    for samp in l_samp:
+        l_line += Data.cfg['analyses'][samp]
+
+    return set(l_line)
+# -------------------------------
 def _validate_root_file(root_path : str) -> None:
-    sample = _sample_from_root(root_path)
-    l_samp = Data.cfg['samples'][sample]
+    _validate_trees(root_path)
+# -------------------------------
+def _validate_trees(root_path : str) -> None:
+    sample    = _sample_from_root(root_path)
+    l_samp    = Data.cfg['samples'][sample]
+    s_line    = _lines_from_samples(l_samp)
 
     root_path = _copy_path(root_path)
     rfile     = TFile(root_path)
     l_key     = rfile.GetListOfKeys()
     l_dir     = [ key.ReadObj() for key in l_key if key.ReadObj().InheritsFrom('TDirectoryFile') ]
-    ntree     = len(l_dir)
+    s_name    = { fdir.GetName() for fdir in l_dir }
 
+    s_missing = s_line - s_name
+    if s_name != s_line:
+        log.warning(f'File: {root_path}')
+        log.warning(f'Missing : {s_missing}')
+
+    ntree     = len(l_dir)
     log.debug(f'Found {ntree} trees for sample {sample}')
 # -------------------------------
 def _validate_job(job_path : str) -> None:
+    '''
+    Picks path to directory with ROOT and zip file
+    Runs validation
+    '''
     root_path = _get_file_path(job_path, ending='_2.tuple.root')
     log_path  = _get_file_path(job_path, ending=         '.zip')
 
@@ -139,7 +160,6 @@ def main():
     '''
     Script starts here
     '''
-
     _parse_args()
     _validate()
 # -------------------------------
