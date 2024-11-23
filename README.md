@@ -1,6 +1,7 @@
 # ap_utilities
 
 This project holds code needed to transform the AP used by the RD group into something that makes ntuples with MVA HLT triggers.
+For documentation specific to MVA lines of the RD group, check [this](doc/mva_lines.md)
 
 ## Check for samples existence 
 
@@ -37,23 +38,59 @@ To run this one has to be in an environment with:
 1. Access to DIRAC.
 1. A valid grid token.
 
-## Specific to MVA lines in the RD group
+## Validate outputs of pipelines
 
-### Add lines to `Config.py`
+In order to do this:
 
-To do that run:
+### Mount EOS in laptop
 
 ```bash
-transform_text -i Config.py -c conf_rename.toml
+# install SSHF
+...
+# Check that it's installed
+which sshfs
+
+# Make directory to mount EOS
+
+APDIR=/eos/lhcb/wg/dpa/wp2/ci/
+sudo mkdir -p $APDIR
+sudo chown $USER:$USER $APDIR 
+
+# Mount EOS
+sshfs -o idmap=user USERNAME@lxplus.cern.ch:$MNT_DIR $MNT_DIR
 ```
 
-which will create an `output.py` file with the replacements specified in `hlt_rename.toml`.
-
-### Add lines to `main.py`
-
-To do that run:
+### Run Validation
 
 ```bash
-transform_text -i main.py  -c main_rename.toml
+# This project is in pip
+pip install ap_utilities
+
+validata_ap_tuples -p PIPELINE -f ntuple_scheme.yaml
+```
+
+where `PIPELINE` is the pipeline number, needed to find the ROOT files in EOS. `-f` passes the file with the
+description of what is expected to be found, for example:
+
+```yaml
+# -----------------------------------------
+# Needed to find where files are in EOS
+# -----------------------------------------
+paths:
+  pipeline_dir : /eos/lhcb/wg/dpa/wp2/ci
+  analysis_dir : rd_ap_2024
+# -----------------------------------------
+# Each key corresponds to a MC sample, the value is a list of lines that must be found
+# as a tree in the file. If any, then the sample is not signal for any of the HLT2 lines
+# therefore no tree (equivalent to a line) is required to be made
+# -----------------------------------------
+samples:
+  # These is a sample without a dedicated trigger
+  Bu_K1ee_eq_DPC:
+    - any 
+  # This is a sample with two triggers targetting it
+  Bd_Kpiee_eq_DPC:
+    - Hlt2RD_B0ToKpPimEE
+    - Hlt2RD_B0ToKpPimEE_MVA
 ```
 
