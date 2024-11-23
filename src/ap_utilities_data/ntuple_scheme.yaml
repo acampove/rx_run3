@@ -33,6 +33,17 @@ analyses:
     - Hlt2RD_BsToPhiJpsi_PhiToKK_JpsiToEE
     - Hlt2RD_BuToKpJpsi_JpsiToEE
     - Hlt2RD_LbToPKJpsi_JpsiToEE
+  rjpsi_muons:
+    - Hlt2RD_BuToKpMuMu_MVA
+    - Hlt2RD_B0ToKpPimMuMu_MVA
+    - Hlt2RD_BuToHpMuMu_Incl
+    - Hlt2RD_B0ToKpKmMuMu
+    - Hlt2RD_B0ToKpPimMuMu
+    - Hlt2RD_LambdabToPKMuMu
+    - Hlt2RD_BdToKstJpsi_KstToKpPim_JpsiToMuMu
+    - Hlt2RD_BsToPhiJpsi_PhiToKK_JpsiToMuMu
+    - Hlt2RD_BuToKpJpsi_JpsiToMuMu
+    - Hlt2RD_LbToPKJpsi_JpsiToMuMu
   rx_vll_electrons:
     - Hlt2RD_LbToLEE_DD
     - Hlt2RD_LbToLEE_LL
