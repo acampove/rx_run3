@@ -107,7 +107,7 @@ def _copy_path(source : str) -> str:
     target_dir = os.path.dirname(target)
     os.makedirs(target_dir, exist_ok=True)
 
-    log.info(f'{source} --> {target}')
+    log.debug(f'{source} --> {target}')
     shutil.copy(source, target)
 
     return target
