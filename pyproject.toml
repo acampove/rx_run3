@@ -14,6 +14,7 @@ where= ['src']
 [project.scripts]
 check_samples      ='ap_utilities_scripts.check_samples:main'
 validate_ap_tuples ='ap_utilities_scripts.validate_ap_tuples:main'
+make_fields        ='ap_utilities_scripts.make_fields:main'
 
 [tool.setuptools.package-data]
 'ap_utilities_data' = ['*.json', '*.toml', '*.yaml']
