@@ -2,19 +2,25 @@
 Script used to extract decay fields by reading MCDecayTree.py, it uses as input Renato -> DecFiles naming dictionary
 '''
 import re
+import argparse
 from typing import Union
 
 import yaml
-from dmu.logging.log_store import LogStore
+from dmu.logging.log_store           import LogStore
+from ap_utilities.mcdecay.nicknames  import Nicknames
 
-log=LogStore.add_logger('test_mctree')
+log=LogStore.add_logger('ap_utilities:mcdecay:nicknames')
 # ----------------------------
 class Data:
+    '''
+    Class storing shared attributes
+    '''
     mode_regex   : str = r'\s+modename\s*=\s*(".*")\s*'
     fields_regex : str = r'\s*FIELDS\s*=\s*{\s*'
     decay_regex  : str = r'\s*"(.*)"\s*:\s*"(.*).*",?'
-
     d_mode_nick  : dict[str,str]
+    samples_path : str
+    out_path     : str  = 'decays.yaml'
 # ----------------------------
 def _get_lines() -> list[str]:
     with open('MCDecayTree.py', encoding='utf-8') as ifile:
@@ -114,23 +120,30 @@ def _post_process(path : str) -> None:
         text = '\n'.join(l_line_form)
         ofile.write(text)
 # ----------------------------
-def _load_nicknames() -> None:
-    with open('nickname.yaml', encoding='utf-8') as ifile:
-        Data.d_mode_nick = yaml.safe_load(ifile)
+def _parse_args() -> None:
+    parser = argparse.ArgumentParser(description='This script will pick up the info.yaml with the old naming and produce a YAML with a dictionary from old sample naming to new one')
+    parser.add_argument('-s','--samples', type=str, help='Path to info.yaml with old naming', required=True)
+    args = parser.parse_args()
+
+    Data.samples_path = args.samples
 # ----------------------------
 def main():
     '''
     Script starts here
     '''
-    _load_nicknames()
+    _parse_args()
+
+    obj = Nicknames(Data.samples_path)
+    Data.d_mode_nick = obj.get_nicknames()
 
     l_line = _get_lines()
     d_group= _get_groups(l_line)
 
-    with open('decays.yaml', 'w', encoding='utf-8') as ofile:
+    log.info(f'Saving decays list to: {Data.out_path}')
+    with open(Data.out_path, 'w', encoding='utf-8') as ofile:
         yaml.safe_dump(d_group, ofile, width=200)
 
-    _post_process('decays.yaml')
+    _post_process(Data.out_path)
 # ----------------------------
 if __name__ == '__main__':
     main()
