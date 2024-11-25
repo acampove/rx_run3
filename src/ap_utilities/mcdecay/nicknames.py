@@ -11,7 +11,7 @@ class Nicknames:
     '''
     def __init__(self, path : str):
         self._path  = path
-        self._regex = r'\s*\(\s*(\".*\")\s*,\s*\"(.*)\"\s*,\s*"2024.*\)'
+        self._regex = r'#?\s*\(\s*(\".*\")\s*,\s*\"(.*)\"\s*,\s*"2024.*\)'
     # ----------------------------------
     def _is_good_line(self, line : str) -> bool:
         if 'ddb-' in line and 'sim' in line:
