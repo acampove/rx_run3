@@ -25,9 +25,9 @@ class BkkChecker:
         Takes the path to a YAML file with the list of samples
         '''
         with open(path, encoding='utf-8') as ifile:
-            self._d_cfg                       = yaml.safe_load(ifile)
-            self._l_event_type_single : list[str] = self._d_cfg['event_type'          ]
-            self._l_event_type_double : list[str] = self._d_cfg['event_type_split_sim']
+            self._d_cfg                           = yaml.safe_load(ifile)
+            self._l_event_type_single : list[str] = self._get_types('event_type')
+            self._l_event_type_double : list[str] = self._get_types('event_type_split_sim')
 
             self._l_event_type = self._l_event_type_single + self._l_event_type_double
 
@@ -43,6 +43,18 @@ class BkkChecker:
 
         # For split-sim samples the sim substring looks like Sim10d-SplitSim02
         self._split_sim_suffix = 'SplitSim02'
+    # -------------------------
+    def _get_types(self, kind : str) -> list[str]:
+        if kind not in self._d_cfg:
+            raise ValueError(f'Cannot find kind of event type: {kind}')
+
+        l_event_type = self._d_cfg[kind]
+        s_event_type = set(l_event_type)
+
+        if len(l_event_type) != len(s_event_type):
+            raise ValueError('Duplicate event types found')
+
+        return l_event_type
     # -------------------------
     def _nfiles_line_from_stdout(self, stdout : str) -> str:
         l_line = stdout.split('\n')
