@@ -74,15 +74,34 @@ class BkkChecker:
         return int(nsample)
     # -------------------------
     def _was_found(self, event_type : str) -> bool:
-        sample_path = f'/MC/{self._year}/Beam6800GeV-{self._mc_path}-{self._polarity}-{self._nu_path}-25ns-{self._generator}/{self._sim_version}/HLT2-{self._mc_path}/{event_type}/DST'
+        bkk_simple = self._get_bkk(event_type, is_split_sim=False)
+        found      = self._find_bkk(bkk_simple)
+
+        if event_type not in self._l_event_type_double:
+            return found
+
+        bkk_split  = self._get_bkk(event_type, is_split_sim=True)
+        found_ss   = self._find_bkk(bkk_split)
+
+        # Event type will only be found, if both split sim and normal samples are found
+
+        return found and found_ss
+    # -------------------------
+    def _get_bkk(self, event_type : str, is_split_sim : bool) -> str:
+        sim_name    = self._sim_version if not is_split_sim else f'{self._sim_version}-{self._split_sim_suffix}'
+        sample_path = f'/MC/{self._year}/Beam6800GeV-{self._mc_path}-{self._polarity}-{self._nu_path}-25ns-{self._generator}/{sim_name}/HLT2-{self._mc_path}/{event_type}/DST'
 
         log.debug(f'{"":<4}{sample_path:<100}')
 
-        cmd_bkk = ['dirac-bookkeeping-get-stats', '-B' , sample_path]
+        return sample_path
+    # -------------------------
+    def _find_bkk(self, bkk : str) -> bool:
+        cmd_bkk = ['dirac-bookkeeping-get-stats', '-B' , bkk]
         result  = subprocess.run(cmd_bkk, capture_output=True, text=True, check=False)
         nfile   = self._nfiles_from_stdout(result.stdout)
+        found   = nfile != 0
 
-        return nfile != 0
+        return found
     # -------------------------
     def _get_samples_with_threads(self, nthreads : int) -> list[str]:
         l_found : list[bool] = []
