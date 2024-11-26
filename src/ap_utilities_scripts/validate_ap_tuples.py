@@ -173,12 +173,13 @@ def _validate_trees(root_path : str) -> None:
     l_dir     = [ key.ReadObj() for key in l_key if key.ReadObj().InheritsFrom('TDirectoryFile') ]
     s_found   = { fdir.GetName() for fdir in l_dir if _is_valid_reco_dir(sample, fdir)}
 
+    Data.d_mcdt[sample] = _check_mcdt_entries(sample, l_dir)
+
     if s_expected == {'any'} and len(s_found) > 0:
         _save_trees(sample, s_found, Data.d_tree_found)
         return
 
     s_missing = s_expected - s_found
-    Data.d_mcdt[sample] = _check_mcdt_entries(sample, l_dir)
 
     if len(s_missing) > 0:
         log.warning(f'File: {root_path}')
