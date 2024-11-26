@@ -151,8 +151,7 @@ def _check_mcdt_entries(sample : str, l_dir : list[TDirectoryFile]) -> Union[boo
     If the MCDecayTree is not found return None, if it is found and the entries agree with what is in d_sample_entries
     return True, if they do not agree, return false
     '''
-    tree_name = f'{sample}_MCDecayTree'
-    l_mcdir   = [ directory for directory in l_dir if directory.GetName() == tree_name ]
+    l_mcdir   = [ directory for directory in l_dir if directory.GetName() == sample ]
 
     if len(l_mcdir) == 0:
         return None
