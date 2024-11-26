@@ -69,7 +69,7 @@ class LogInfo:
 
         nentries = self._entries_from_line(l_entries[0])
 
-        log.info(f'Found {nentries} entries')
+        log.debug(f'Found {nentries} entries')
 
         return nentries
 # ---------------------------------------------
