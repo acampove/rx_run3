@@ -10,3 +10,5 @@ class Data:
 def test_simple():
     obj = LogInfo(zip_path = Data.log_path)
     nentries = obj.get_ran_entries()
+
+    assert nentries == 13759
