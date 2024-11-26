@@ -40,6 +40,9 @@ class BkkChecker:
         self._sim_version  : str = self._d_cfg['settings']['sim_vers']
         self._ctags        : str = self._d_cfg['settings']['ctags']
         self._dtags        : str = self._d_cfg['settings']['dtags']
+
+        # For split-sim samples the sim substring looks like Sim10d-SplitSim02
+        self._split_sim_suffix = 'SplitSim02'
     # -------------------------
     def _nfiles_line_from_stdout(self, stdout : str) -> str:
         l_line = stdout.split('\n')
