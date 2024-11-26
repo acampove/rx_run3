@@ -13,6 +13,7 @@ import tqdm
 import yaml
 from ROOT                  import TFile, TDirectoryFile, TTree
 from dmu.logging.log_store import LogStore
+from ap_utilities.log_info import LogInfo
 
 log = LogStore.add_logger('ap_utilities_scripts:validate_ap_tuples')
 # -------------------------------
@@ -25,9 +26,11 @@ class Data:
     config_path : str
     cfg         : dict
 
-    d_tree_miss    : ClassVar[dict[str, list[str]]]     = {}
-    d_tree_found   : ClassVar[dict[str, list[str]]]     = {}
-    d_tree_entries : ClassVar[dict[str, dict[str,int]]] = {}
+    d_tree_miss      : ClassVar[dict[str, list[str]]]         = {}
+    d_tree_found     : ClassVar[dict[str, list[str]]]         = {}
+    d_tree_entries   : ClassVar[dict[str, dict[str,int]]]     = {}
+    d_mcdt           : ClassVar[dict[str, Union[bool, None]]] = {}
+    d_sample_entries : ClassVar[dict[str,int]]                = {}
 # -------------------------------
 def _check_path(path : str) -> None:
     found = os.path.isdir(path) or os.path.isfile(path)
@@ -69,8 +72,8 @@ def _get_out_paths() -> list[str]:
     nsample   = len(l_sample)
     njobs     = len(Data.cfg['samples'])
 
-    #if nsample != njobs:
-    #    raise ValueError(f'Number of samples and jobs in {sample_wc} differ: {nsample} -> {njobs}')
+    if nsample != njobs:
+        log.warning(f'Number of samples and jobs in {sample_wc} differ: {nsample} -> {njobs}')
 
     return l_sample
 # -------------------------------
@@ -84,12 +87,15 @@ def _get_file_path(job_path : str, ending : str) -> Union[str,None]:
 
     return file_path
 # -------------------------------
-def _sample_from_root(root_path : str) -> str:
+def _sample_from_path(path : str) -> str:
+    '''
+    Picks up path to file, returns sample associated to path
+    '''
     l_samp = Data.cfg['samples']
     try:
-        [samp] = [ sample for sample in l_samp if sample in root_path ]
+        [samp] = [ sample for sample in l_samp if sample in path ]
     except ValueError as exc:
-        raise ValueError(f'Not found one and only one sample corresponding to: {root_path}') from exc
+        raise ValueError(f'Not found one and only one sample corresponding to: {path}') from exc
 
     return samp
 # -------------------------------
@@ -134,8 +140,25 @@ def _is_valid_dir(sample : str, file_dir : TDirectoryFile) -> bool:
 
     return True
 # -------------------------------
+def _check_mcdt_entries(sample : str, l_dir : list[TDirectoryFile]) -> Union[bool,None]:
+    '''
+    Given a sample and a list of directories with a tree each
+    If the MCDecayTree is not found return None, if it is found and the entries agree with what is in d_sample_entries
+    return True, if they do not agree, return false
+    '''
+    tree_name = f'{sample}_MCDecayTree'
+    l_mcdir   = [ directory for directory in l_dir if directory.GetName() == tree_name ]
+
+    if len(l_mcdir) == 0:
+        return None
+
+    tree     = l_mcdir[0].MCDecayTree
+    nentries = tree.GetEntries()
+
+    return nentries == Data.d_sample_entries[sample]
+# -------------------------------
 def _validate_trees(root_path : str) -> None:
-    sample    = _sample_from_root(root_path)
+    sample    = _sample_from_path(root_path)
     l_expected= Data.cfg['samples'][sample]
     s_expected= set(l_expected)
 
@@ -150,6 +173,8 @@ def _validate_trees(root_path : str) -> None:
         return
 
     s_missing = s_expected - s_found
+    Data.d_mcdt[sample] = _check_mcdt_entries(sample, l_dir)
+
     if len(s_missing) > 0:
         log.warning(f'File: {root_path}')
         log.warning(f'Missing : {s_missing}')
@@ -160,6 +185,12 @@ def _validate_trees(root_path : str) -> None:
 def _save_trees(sample : str, s_tree_name : set[str], d_data : dict[str, list[str]]):
     l_tree_name = list(s_tree_name)
     d_data.update({sample : l_tree_name})
+# -------------------------------
+def _update_sample_stats(log_path : str) -> None:
+    sample = _sample_from_path(log_path)
+
+    obj    = LogInfo(zip_path = log_path)
+    Data.d_sample_entries[sample] = obj.get_ran_entries()
 # -------------------------------
 def _validate_job(job_path : str) -> None:
     '''
@@ -172,6 +203,7 @@ def _validate_job(job_path : str) -> None:
     if log_path is None or root_path is None:
         return
 
+    _update_sample_stats(log_path)
     _validate_root_file(root_path)
 # -------------------------------
 def _validate() -> None:
