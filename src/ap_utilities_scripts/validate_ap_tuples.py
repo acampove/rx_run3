@@ -126,7 +126,12 @@ def _add_to_dictionary(d_data : dict, identifier : str, key : str, value : int) 
 
     d_data[identifier][key] = value
 # -------------------------------
-def _is_valid_dir(sample : str, file_dir : TDirectoryFile) -> bool:
+def _is_valid_reco_dir(sample : str, file_dir : TDirectoryFile) -> bool:
+    if hasattr(file_dir, 'MCDecayTree'):
+        nentries = file_dir.MCDecayTree.GetEntries()
+        _add_to_dictionary(Data.d_tree_entries, sample, key=file_dir.GetName(), value=nentries)
+        return False
+
     if not hasattr(file_dir, 'DecayTree') or not isinstance(file_dir.DecayTree, TTree):
         _add_to_dictionary(Data.d_tree_entries, sample, key=file_dir.GetName(), value=0)
         return False
@@ -166,7 +171,7 @@ def _validate_trees(root_path : str) -> None:
     rfile     = TFile(root_path)
     l_key     = rfile.GetListOfKeys()
     l_dir     = [ key.ReadObj() for key in l_key if key.ReadObj().InheritsFrom('TDirectoryFile') ]
-    s_found   = { fdir.GetName() for fdir in l_dir if _is_valid_dir(sample, fdir)}
+    s_found   = { fdir.GetName() for fdir in l_dir if _is_valid_reco_dir(sample, fdir)}
 
     if s_expected == {'any'} and len(s_found) > 0:
         _save_trees(sample, s_found, Data.d_tree_found)
