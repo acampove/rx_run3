@@ -116,9 +116,16 @@ class BkkChecker:
     def _save_to_text(self, l_event_type : list[str]) -> None:
         text = ''
         for evt_type in l_event_type:
-            nu_name   = self._nu_path.replace('.', 'p')
-            nick_name = phut.read_decay_name(evt_type)
-            text   += f'("{nick_name}", "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", "{self._sim_version}", "{self._generator}" ),\n'
+            nu_name         = self._nu_path.replace('.', 'p')
+            nick_name_org   = phut.read_decay_name(evt_type)
+            sim_version     = f'"{self._sim_version}"'
+            nick_name       = f'"{nick_name_org}"'
+            text           += f'({nick_name:<60}, "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", {sim_version:<20}, "{self._generator}" ),\n'
+
+            if evt_type in self._l_event_type_double:
+                nick_name   = f'"{nick_name_org}_SS"'
+                sim_version = f'"{self._sim_version}-{self._split_sim_suffix}"'
+                text       += f'({nick_name:<60}, "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", {sim_version:<20}, "{self._generator}" ),\n'
 
         output_path = self._input_path.replace('.yaml', '.txt')
 
