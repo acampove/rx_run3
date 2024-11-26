@@ -223,10 +223,11 @@ def _save_report() -> None:
             'missing_trees' : Data.d_tree_miss,
             'found_trees'   : Data.d_tree_found,
             'tree_entries'  : Data.d_tree_entries,
+            'mcdecaytree'   : Data.d_mcdt,
             }
 
     with open('report.yaml', 'w', encoding='utf-8') as ofile:
-        yaml.safe_dump(d_rep, ofile)
+        yaml.safe_dump(d_rep, ofile, sort_keys=False)
 # -------------------------------
 def main():
     '''
