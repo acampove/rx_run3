@@ -18,11 +18,12 @@ settings:
   ctags     : sim10-2024.Q3.4-v1.3-mu100
   dtags     : dddb-20240427
 event_type :
-  - '12425000'
-  - '12425011'
-  - '12123445'
-  - '11124037'
-  - '12153420'
+  - '12113002'
+  - '12113004'
+event_type_split_sim:
+  # These event types are associated with two samples and should be saved twice in the text file
+  - '11102202'
+  - '11102211'
 ```
 
 run:
