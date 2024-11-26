@@ -25,8 +25,11 @@ class BkkChecker:
         Takes the path to a YAML file with the list of samples
         '''
         with open(path, encoding='utf-8') as ifile:
-            self._d_cfg                    = yaml.safe_load(ifile)
-            self._l_event_type : list[str] = self._d_cfg['event_type']
+            self._d_cfg                       = yaml.safe_load(ifile)
+            self._l_event_type_single : list[str] = self._d_cfg['event_type'          ]
+            self._l_event_type_double : list[str] = self._d_cfg['event_type_split_sim']
+
+            self._l_event_type = self._l_event_type_single + self._l_event_type_double
 
         self._input_path   : str = path
         self._year         : str = self._d_cfg['settings']['year']
