@@ -226,7 +226,7 @@ def _save_report() -> None:
             'valid mcdecaytree': Data.d_mcdt,
             }
 
-    with open('report.yaml', 'w', encoding='utf-8') as ofile:
+    with open(f'report_{Data.pipeline_id}.yaml', 'w', encoding='utf-8') as ofile:
         yaml.safe_dump(d_rep, ofile, sort_keys=False)
 # -------------------------------
 def main():
