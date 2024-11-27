@@ -8,6 +8,7 @@ import argparse
 from typing              import Union
 from typing              import ClassVar
 from dataclasses         import dataclass
+from concurrent.futures  import ThreadPoolExecutor
 
 import tqdm
 import yaml
@@ -24,6 +25,7 @@ class Data:
     '''
     pipeline_id : int
     config_path : str
+    nthread     : int
     cfg         : dict
 
     d_tree_miss      : ClassVar[dict[str, list[str]]]         = {}
@@ -42,10 +44,12 @@ def _parse_args() -> None:
     parser.add_argument('-p','--pipeline', type=int, help='Pipeline ID', required=True)
     parser.add_argument('-f','--cfg_path', type=str, help='Path to config file with the description of how to validate', required=True)
     parser.add_argument('-l','--log_lvl' , type=int, help='Logging level', default=20, choices=[10,20,30])
+    parser.add_argument('-t','--nthread' , type=int, help='Number of threads', default=1) 
     args = parser.parse_args()
 
     Data.pipeline_id = args.pipeline
     Data.config_path = args.cfg_path
+    Data.nthread     = args.nthread
 
     LogStore.set_level('ap_utilities_scripts:validate_ap_tuples', args.log_lvl)
 # -------------------------------
@@ -215,8 +219,9 @@ def _validate() -> None:
     _load_config()
     l_out_path = _get_out_paths()
 
-    for out_path in tqdm.tqdm(l_out_path, ascii=' -'):
-        _validate_job(out_path)
+    with ThreadPoolExecutor(max_workers=Data.nthread) as executor:
+        for out_path in l_out_path:
+            executor.submit(_validate_job, out_path)
 # -------------------------------
 def _save_report() -> None:
     d_rep = {
