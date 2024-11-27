@@ -284,7 +284,13 @@ def _get_mcdt_dataframe() -> pnd.DataFrame:
         l_root_stat.append(miss_root)
         l_log_stat.append(miss_log)
 
-    return pnd.DataFrame({'Sample' : l_sample, 'Found' : l_found, 'Expected' : l_expected, 'log' : l_log_stat, 'root' : l_root_stat})
+    df = pnd.DataFrame({'Sample' : l_sample, 'Found' : l_found, 'Expected' : l_expected, 'Has log' : l_log_stat, 'Has tree' : l_root_stat})
+
+    df['Difference [%]'] = 100 * (df.Expected - df.Found) / df.Expected
+
+    df = df.sort_values(by='Difference [%]', ascending=False)
+
+    return df
 # -------------------------------
 def _save_report() -> None:
     d_rep = {
