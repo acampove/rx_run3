@@ -286,7 +286,7 @@ def _get_mcdt_dataframe() -> pnd.DataFrame:
 
     df = pnd.DataFrame({'Sample' : l_sample, 'Found' : l_found, 'Expected' : l_expected, 'Has log' : l_log_stat, 'Has tree' : l_root_stat})
 
-    df['Difference [%]'] = 100 * (df.Expected - df.Found) / df.Expected
+    df['Difference [%]'] = 100 * (df.Expected - df.Found).abs() / df.Expected
 
     df = df.sort_values(by='Difference [%]', ascending=False)
 
