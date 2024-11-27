@@ -1,7 +1,7 @@
 [project]
 name        = 'ap_utilities'
 description = 'Utilities needed for analysis productions in LHCb'
-version     = '0.1.2'
+version     = '0.1.3'
 readme      = 'README.md'
 dependencies= ['PyYAML', 'data-manipulation-utilities>=0.0.9']
 
