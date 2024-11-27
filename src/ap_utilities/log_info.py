@@ -106,6 +106,10 @@ class LogInfo:
         '''
         Returns entries that DaVinci ran over to get MCDecayTree
         '''
+        # If not clipped, long names will cause failure
+        # due to clipping in logs
+        alg_name = alg_name[:30]
+
         l_line            = self._get_dv_lines()
         if l_line is None:
             return fall_back
