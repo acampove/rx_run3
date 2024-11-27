@@ -6,6 +6,7 @@ import re
 import glob
 import zipfile
 import functools
+from typing import Union
 
 from dmu.logging.log_store import LogStore
 
@@ -38,7 +39,11 @@ class LogInfo:
         return log_path
     # ---------------------------------------------
     @functools.lru_cache()
-    def _get_dv_lines(self) -> list[str]:
+    def _get_dv_lines(self) -> Union[list[str],None]:
+        if not os.path.isfile(self._zip_path):
+            log.warning(f'Cannot find: {self._zip_path}')
+            return None
+
         with zipfile.ZipFile(self._zip_path, 'r') as zip_ref:
             zip_ref.extractall(self._out_path)
 
@@ -49,16 +54,17 @@ class LogInfo:
 
         return l_line
     # ---------------------------------------------
-    def _entries_from_line(self, line : str) -> int:
+    def _entries_from_line(self, line : str) -> Union[int,None]:
         mtch = re.match(self._entries_regex, line)
         if not mtch:
-            raise ValueError(f'Cannot extract number of entries from line \"{line}\" using regex \"{self._entries_regex}\"')
+            log.warning(f'Cannot extract number of entries from line \"{line}\" using regex \"{self._entries_regex}\"')
+            return None
 
         entries = mtch.group(1)
 
         return int(entries)
     # ---------------------------------------------
-    def _get_line_with_entries(self, l_line : list[str], alg_name : str) -> str:
+    def _get_line_with_entries(self, l_line : list[str], alg_name : str) -> Union[str,None]:
         algo_index = None
         for i_line, line in enumerate(l_line):
             if alg_name in line and 'Number of counters' in line:
@@ -66,17 +72,26 @@ class LogInfo:
                 break
 
         if algo_index is None:
-            raise ValueError(f'Cannot find line with \"Number of counters\" and \"{alg_name}\" in {self._log_path}')
+            log.warning(f'Cannot find line with \"Number of counters\" and \"{alg_name}\" in {self._log_path}')
+            return None
 
         return l_line[algo_index + 2]
     # ---------------------------------------------
-    def get_mcdt_entries(self, alg_name : str) -> int:
+    def get_mcdt_entries(self, alg_name : str, fall_back : int = -1) -> int:
         '''
         Returns entries that DaVinci ran over to get MCDecayTree
         '''
         l_line            = self._get_dv_lines()
+        if l_line is None:
+            return fall_back
+
         line_with_entries = self._get_line_with_entries(l_line, alg_name)
+        if line_with_entries is None:
+            return fall_back
+
         nentries          = self._entries_from_line(line_with_entries)
+        if nentries is None:
+            return fall_back
 
         log.debug(f'Found {nentries} entries')
 
