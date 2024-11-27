@@ -149,7 +149,7 @@ def _is_valid_reco_dir(sample : str, file_dir : TDirectoryFile) -> bool:
 
     return True
 # -------------------------------
-def _check_mcdt_entries(sample : str, l_dir : list[TDirectoryFile]) -> Union[bool,None]:
+def _check_mcdt_entries(sample : str, l_dir : list[TDirectoryFile]) -> Union[dict[str,int],None]:
     '''
     Given a sample and a list of directories with a tree each
     If the MCDecayTree is not found return None, if it is found and the entries agree with what is in d_sample_entries
@@ -161,9 +161,10 @@ def _check_mcdt_entries(sample : str, l_dir : list[TDirectoryFile]) -> Union[boo
         return None
 
     tree     = l_mcdir[0].MCDecayTree
-    nentries = tree.GetEntries()
+    nfound   = tree.GetEntries()
+    nexpected= Data.d_sample_entries[sample]
 
-    return nentries == Data.d_sample_entries[sample]
+    return {'Expected' : nexpected, 'Found' : nfound}
 # -------------------------------
 def _validate_trees(root_path : str) -> None:
     sample    = _sample_from_path(root_path)
