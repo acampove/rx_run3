@@ -10,7 +10,7 @@ class Data:
     Class storing shared data
     '''
     log_mcdt            = '/home/acampove/cernbox/dev/tests/ap_utilities/log_info/mcdt.zip'
-    log_fallback_noline = '/eos/lhcb/wg/dpa/wp2/ci/8725/rd_ap_2024/160558/160558#MC_24_W31_34_MagUp_Nu6p3_Sim10d_Pythia8_12123003_Bu_Kee_eq_btosllball05_DPC/00006789.zip'
+    log_fallback_noline = '/home/acampove/cernbox/dev/tests/ap_utilities/log_info/noline.zip'
 # ----------------------------
 def test_mcdt():
     '''
@@ -35,6 +35,6 @@ def test_fallback_noline():
     Tests if the statistics used for MCDecayTree are read correctly
     '''
     obj = LogInfo(zip_path = Data.log_fallback_noline)
-    nentries = obj.get_mcdt_entries('Bu_Kee_eq_btosllball05_DPC')
+    nentries = obj.get_mcdt_entries('Xib_psi2SXi_ee_Lambdapi_eq_TightCut')
 
-    assert nentries == -1
+    assert nentries == 13603
