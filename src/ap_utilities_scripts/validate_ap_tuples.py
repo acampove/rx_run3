@@ -229,9 +229,9 @@ def _validate() -> None:
 # -------------------------------
 def _save_report() -> None:
     d_rep = {
-            'missing_trees' : Data.d_tree_miss,
-            'found_trees'   : Data.d_tree_found,
-            'tree_entries'  : Data.d_tree_entries,
+            'missing_trees'    : Data.d_tree_miss,
+            'found_trees'      : Data.d_tree_found,
+            'tree_entries'     : Data.d_tree_entries,
             'valid mcdecaytree': Data.d_mcdt,
             }
 
