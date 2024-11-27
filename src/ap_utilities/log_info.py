@@ -64,18 +64,43 @@ class LogInfo:
 
         return int(entries)
     # ---------------------------------------------
-    def _get_line_with_entries(self, l_line : list[str], alg_name : str) -> Union[str,None]:
-        algo_index = None
+    def _all_in_line(self, line : str, l_substr : list[str]) -> bool:
+        found = True
+        for substr in l_substr:
+            found = found and substr in line
+
+        return found
+    # ---------------------------------------------
+    def _index_at_first_instance(self, l_line : list[str], l_substr : list[str]) -> Union[int,None]:
+        index = None
         for i_line, line in enumerate(l_line):
-            if alg_name in line and 'Number of counters' in line:
-                algo_index = i_line
+            if self._all_in_line(line, l_substr):
+                index = i_line
                 break
 
+        return index
+    # ---------------------------------------------
+    def _get_line_with_entries(self, l_line : list[str], alg_name : str) -> Union[str,None]:
+        algo_index = self._index_at_first_instance(l_line, l_substr=[alg_name, 'Number of counters'])
         if algo_index is None:
             log.warning(f'Cannot find line with \"Number of counters\" and \"{alg_name}\" in {self._log_path}')
             return None
 
-        return l_line[algo_index + 2]
+        l_line = l_line[algo_index:]
+
+        atrm_index = self._index_at_first_instance(l_line, l_substr=['ApplicationMgr'])
+        if atrm_index is None:
+            log.warning('Cannot find line with ApplicationMgr')
+            return None
+
+        l_line = l_line[:atrm_index]
+
+        none_index = self._index_at_first_instance(l_line, l_substr=[' | "# non-empty events for field'])
+        if none_index is None:
+            log.warning('Cannot find line with non empty events line')
+            return None
+
+        return l_line[none_index]
     # ---------------------------------------------
     def get_mcdt_entries(self, alg_name : str, fall_back : int = -1) -> int:
         '''
