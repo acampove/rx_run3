@@ -20,13 +20,12 @@ class LogInfo:
     # ---------------------------------------------
     def __init__(self, zip_path : str):
         self._zip_path = zip_path
-        self._out_path = '/tmp/log_info'
         self._log_wc   = 'DaVinci_*.log'
+
+        self._out_path : str
         self._log_path : str
 
         self._entries_regex : str = r'\s*\|\s*"#\snon-empty events for field .*"\s*\|\s*(\d+)\s*\|.*'
-
-        os.makedirs(self._out_path, exist_ok=True)
     # ---------------------------------------------
     def _get_log_path(self) -> str:
         path_wc = f'{self._out_path}/*/{self._log_wc}'
@@ -108,7 +107,9 @@ class LogInfo:
         '''
         # If not clipped, long names will cause failure
         # due to clipping in logs
-        alg_name = alg_name[:30]
+        alg_name       = alg_name[:30]
+        self._out_path = f'/tmp/log_info_{alg_name}'
+        os.makedirs(self._out_path, exist_ok=True)
 
         l_line            = self._get_dv_lines()
         if l_line is None:
