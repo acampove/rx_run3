@@ -108,7 +108,7 @@ class LogInfo:
         # If not clipped, long names will cause failure
         # due to clipping in logs
         alg_name       = alg_name[:30]
-        self._out_path = f'/tmp/log_info_{alg_name}'
+        self._out_path = f'/tmp/log_info/{alg_name}'
         os.makedirs(self._out_path, exist_ok=True)
 
         l_line            = self._get_dv_lines()
