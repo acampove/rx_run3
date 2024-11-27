@@ -12,6 +12,8 @@ from concurrent.futures  import ThreadPoolExecutor, as_completed
 
 import tqdm
 import yaml
+import pandas as pnd
+
 from ROOT                  import TFile, TDirectoryFile, TTree
 from dmu.logging.log_store import LogStore
 from ap_utilities.log_info import LogInfo
@@ -227,16 +229,34 @@ def _validate() -> None:
         for _ in tqdm.tqdm(as_completed(l_feat), total=npath, ascii=' -'):
             ...
 # -------------------------------
+def _get_mcdt_dataframe() -> pnd.DataFrame:
+    l_sample   = []
+    l_found    = []
+    l_expected = []
+
+    for sample, d_stat in Data.d_mcdt.items():
+        expected = d_stat['Expected']
+        found    = d_stat['Found'   ]
+
+        l_sample.append(sample)
+        l_found.append(found)
+        l_expected.append(expected)
+
+    return pnd.DataFrame({'Sample' : l_sample, 'Found' : l_found, 'Expected' : l_expected})
+# -------------------------------
 def _save_report() -> None:
     d_rep = {
             'missing_trees'    : Data.d_tree_miss,
             'found_trees'      : Data.d_tree_found,
             'tree_entries'     : Data.d_tree_entries,
-            'valid mcdecaytree': Data.d_mcdt,
             }
 
     with open(f'report_{Data.pipeline_id}.yaml', 'w', encoding='utf-8') as ofile:
         yaml.safe_dump(d_rep, ofile, sort_keys=False)
+
+    df = _get_mcdt_dataframe()
+    with open(f'mcdt_{Data.pipeline_id}.md', 'w', encoding='utf-8') as ofile:
+        df.to_markdown(ofile, index=False)
 # -------------------------------
 def main():
     '''
