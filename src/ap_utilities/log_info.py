@@ -23,7 +23,7 @@ class LogInfo:
         self._log_wc   = 'DaVinci_*.log'
         self._log_path : str
 
-        self._entries_regex : str = r'\s*\|\s*Sum of all Algorithms\s*\|\s*(\d+)\s*\|.*'
+        self._entries_regex : str = r'\s*\|\s*"#\snon-empty events for field .*"\s*\|\s*(\d+)\s*\|.*'
 
         os.makedirs(self._out_path, exist_ok=True)
     # ---------------------------------------------
@@ -58,16 +58,25 @@ class LogInfo:
 
         return int(entries)
     # ---------------------------------------------
-    def get_ran_entries(self) -> int:
-        '''
-        Returns entries that DaVinci ran over
-        '''
-        l_line    = self._get_dv_lines()
-        l_entries = [ line for line in l_line if 'Sum of all Algorithms' in line ]
-        if len(l_entries) != 1:
-            raise ValueError(f'Not one and only one line with sum of all algorithms found in {self._log_path}')
+    def _get_line_with_entries(self, l_line : list[str], alg_name : str) -> str:
+        algo_index = None
+        for i_line, line in enumerate(l_line):
+            if alg_name in line and 'Number of counters' in line:
+                algo_index = i_line
+                break
 
-        nentries = self._entries_from_line(l_entries[0])
+        if algo_index is None:
+            raise ValueError(f'Cannot find line with \"Number of counters\" and \"{alg_name}\" in {self._log_path}')
+
+        return l_line[algo_index + 2]
+    # ---------------------------------------------
+    def get_mcdt_entries(self, alg_name : str) -> int:
+        '''
+        Returns entries that DaVinci ran over to get MCDecayTree
+        '''
+        l_line            = self._get_dv_lines()
+        line_with_entries = self._get_line_with_entries(l_line, alg_name)
+        nentries          = self._entries_from_line(line_with_entries)
 
         log.debug(f'Found {nentries} entries')
 
