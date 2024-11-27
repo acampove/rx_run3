@@ -238,6 +238,9 @@ def _get_mcdt_dataframe() -> pnd.DataFrame:
         expected = d_stat['Expected']
         found    = d_stat['Found'   ]
 
+        if found != expected:
+            sample = f'<span style="color: red;">{sample}</span> '
+
         l_sample.append(sample)
         l_found.append(found)
         l_expected.append(expected)
