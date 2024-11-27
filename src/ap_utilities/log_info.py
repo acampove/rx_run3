@@ -14,7 +14,7 @@ log = LogStore.add_logger('ap_utilities:log_info')
 # ---------------------------------------------
 class LogInfo:
     '''
-    Class taking a zip file with logging information from AP pipelines 
+    Class taking a zip file with logging information from AP pipelines
     and extracting information like the number of entries that it ran over
     '''
     # ---------------------------------------------
