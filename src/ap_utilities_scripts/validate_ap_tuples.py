@@ -8,7 +8,7 @@ import argparse
 from typing              import Union
 from typing              import ClassVar
 from dataclasses         import dataclass
-from concurrent.futures  import ThreadPoolExecutor
+from concurrent.futures  import ThreadPoolExecutor, as_completed
 
 import tqdm
 import yaml
@@ -44,7 +44,7 @@ def _parse_args() -> None:
     parser.add_argument('-p','--pipeline', type=int, help='Pipeline ID', required=True)
     parser.add_argument('-f','--cfg_path', type=str, help='Path to config file with the description of how to validate', required=True)
     parser.add_argument('-l','--log_lvl' , type=int, help='Logging level', default=20, choices=[10,20,30])
-    parser.add_argument('-t','--nthread' , type=int, help='Number of threads', default=1) 
+    parser.add_argument('-t','--nthread' , type=int, help='Number of threads', default=1)
     args = parser.parse_args()
 
     Data.pipeline_id = args.pipeline
@@ -86,7 +86,7 @@ def _get_file_path(job_path : str, ending : str) -> Union[str,None]:
     try:
         [file_path] = glob.glob(path_wc)
     except ValueError:
-        log.warning(f'Cannot find one and only one file in: {path_wc}')
+        log.debug(f'Cannot find one and only one file in: {path_wc}')
         return None
 
     return file_path
@@ -218,10 +218,13 @@ def _validate_job(job_path : str) -> None:
 def _validate() -> None:
     _load_config()
     l_out_path = _get_out_paths()
+    npath      = len(l_out_path)
 
     with ThreadPoolExecutor(max_workers=Data.nthread) as executor:
-        for out_path in l_out_path:
-            executor.submit(_validate_job, out_path)
+        l_feat = [ executor.submit(_validate_job, out_path) for out_path in l_out_path ]
+
+        for _ in tqdm.tqdm(as_completed(l_feat), total=npath, ascii=' -'):
+            ...
 # -------------------------------
 def _save_report() -> None:
     d_rep = {
