@@ -202,7 +202,7 @@ def _update_sample_stats(log_path : str) -> None:
     sample = _sample_from_path(log_path)
 
     obj    = LogInfo(zip_path = log_path)
-    Data.d_sample_entries[sample] = obj.get_ran_entries()
+    Data.d_sample_entries[sample] = obj.get_mcdt_entries(sample)
 # -------------------------------
 def _validate_job(job_path : str) -> None:
     '''
