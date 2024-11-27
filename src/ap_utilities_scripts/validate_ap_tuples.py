@@ -239,9 +239,20 @@ def _validate_job(job_path : str) -> None:
 def _validate() -> None:
     _load_config()
     l_out_path = _get_out_paths()
-    npath      = len(l_out_path)
 
+    npath = len(l_out_path)
     log.info(f'Checking {npath} jobs')
+
+    if Data.nthread > 1:
+        _validate_with_multithreading(l_out_path)
+        return
+
+    log.info('Using single thread')
+    for out_path in tqdm.tqdm(l_out_path, ascii=' -'):
+        _validate_job(out_path)
+# -------------------------------
+def _validate_with_multithreading(l_out_path : list[str]) -> None:
+    npath = len(l_out_path)
     with ThreadPoolExecutor(max_workers=Data.nthread) as executor:
         l_feat = [ executor.submit(_validate_job, out_path) for out_path in l_out_path ]
 
