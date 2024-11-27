@@ -202,10 +202,10 @@ def _save_trees(sample : str, s_tree_name : set[str], d_data : dict[str, list[st
     d_data.update({sample : l_tree_name})
 # -------------------------------
 def _update_sample_stats(log_path : str) -> None:
-    sample = _sample_from_path(log_path)
+    sample   = _sample_from_path(log_path)
+    obj      = LogInfo(zip_path = log_path)
 
-    obj    = LogInfo(zip_path = log_path)
-    Data.d_sample_entries[sample] = obj.get_mcdt_entries(sample)
+    Data.d_sample_entries[sample] = obj.get_mcdt_entries(sample, fall_back=-1)
 # -------------------------------
 def _check_job(sample : str, log_path : Union[str,None], root_path : Union[str,None]):
     if log_path is None:
