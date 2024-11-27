@@ -275,9 +275,6 @@ def _get_mcdt_dataframe() -> pnd.DataFrame:
         miss_root= Data.d_root_stat[sample]
         miss_log = Data.d_log_stat[sample]
 
-        if found != expected:
-            sample = f'<span style="color: red;">{sample}</span> '
-
         l_sample.append(sample)
         l_found.append(found)
         l_expected.append(expected)
