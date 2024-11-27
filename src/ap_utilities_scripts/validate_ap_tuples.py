@@ -35,6 +35,9 @@ class Data:
     d_tree_entries   : ClassVar[dict[str, dict[str,int]]] = {}
     d_mcdt           : ClassVar[dict[str, dict[str,int]]] = {}
     d_sample_entries : ClassVar[dict[str,int]]            = {}
+    l_missing_job    : ClassVar[list[str]]                = []
+    d_log_stat       : ClassVar[dict[str,int]]            = {}
+    d_root_stat      : ClassVar[dict[str,int]]            = {}
 # -------------------------------
 def _check_path(path : str) -> None:
     found = os.path.isdir(path) or os.path.isfile(path)
@@ -204,15 +207,30 @@ def _update_sample_stats(log_path : str) -> None:
     obj    = LogInfo(zip_path = log_path)
     Data.d_sample_entries[sample] = obj.get_mcdt_entries(sample)
 # -------------------------------
+def _check_job(sample : str, log_path : Union[str,None], root_path : Union[str,None]):
+    if log_path is None:
+        Data.d_log_stat[sample] = -1
+    else:
+        Data.d_log_stat[sample] = +1
+
+    if root_path is None:
+        Data.d_root_stat[sample] = -1
+    else:
+        Data.d_root_stat[sample] = +1
+# -------------------------------
 def _validate_job(job_path : str) -> None:
     '''
     Picks path to directory with ROOT and zip file
     Runs validation
     '''
+
     root_path = _get_file_path(job_path, ending='_2.tuple.root')
     log_path  = _get_file_path(job_path, ending=         '.zip')
 
+    sample    = _sample_from_path(job_path)
+    _check_job(sample, log_path, root_path)
     if log_path is None or root_path is None:
+        Data.l_missing_job.append(job_path)
         return
 
     _update_sample_stats(log_path)
@@ -223,6 +241,7 @@ def _validate() -> None:
     l_out_path = _get_out_paths()
     npath      = len(l_out_path)
 
+    log.info(f'Checking {npath} jobs')
     with ThreadPoolExecutor(max_workers=Data.nthread) as executor:
         l_feat = [ executor.submit(_validate_job, out_path) for out_path in l_out_path ]
 
@@ -233,10 +252,17 @@ def _get_mcdt_dataframe() -> pnd.DataFrame:
     l_sample   = []
     l_found    = []
     l_expected = []
+    l_log_stat = []
+    l_root_stat= []
+
+    nsample = len(Data.d_mcdt)
+    log.info(f'Found {nsample} samples with MCDT')
 
     for sample, d_stat in Data.d_mcdt.items():
         expected = d_stat['Expected']
         found    = d_stat['Found'   ]
+        miss_root= Data.d_root_stat[sample]
+        miss_log = Data.d_log_stat[sample]
 
         if found != expected:
             sample = f'<span style="color: red;">{sample}</span> '
@@ -244,18 +270,21 @@ def _get_mcdt_dataframe() -> pnd.DataFrame:
         l_sample.append(sample)
         l_found.append(found)
         l_expected.append(expected)
+        l_root_stat.append(miss_root)
+        l_log_stat.append(miss_log)
 
-    return pnd.DataFrame({'Sample' : l_sample, 'Found' : l_found, 'Expected' : l_expected})
+    return pnd.DataFrame({'Sample' : l_sample, 'Found' : l_found, 'Expected' : l_expected, 'log' : l_log_stat, 'root' : l_root_stat})
 # -------------------------------
 def _save_report() -> None:
     d_rep = {
             'missing_trees'    : Data.d_tree_miss,
             'found_trees'      : Data.d_tree_found,
             'tree_entries'     : Data.d_tree_entries,
+            'missing_jobs'     : Data.l_missing_job,
             }
 
     with open(f'report_{Data.pipeline_id}.yaml', 'w', encoding='utf-8') as ofile:
-        yaml.safe_dump(d_rep, ofile, sort_keys=False)
+        yaml.safe_dump(d_rep, ofile, sort_keys=False, indent=2, default_flow_style=False)
 
     df = _get_mcdt_dataframe()
     with open(f'mcdt_{Data.pipeline_id}.md', 'w', encoding='utf-8') as ofile:
