@@ -28,11 +28,11 @@ class Data:
     nthread     : int
     cfg         : dict
 
-    d_tree_miss      : ClassVar[dict[str, list[str]]]         = {}
-    d_tree_found     : ClassVar[dict[str, list[str]]]         = {}
-    d_tree_entries   : ClassVar[dict[str, dict[str,int]]]     = {}
-    d_mcdt           : ClassVar[dict[str, Union[bool, None]]] = {}
-    d_sample_entries : ClassVar[dict[str,int]]                = {}
+    d_tree_miss      : ClassVar[dict[str, list[str]]]     = {}
+    d_tree_found     : ClassVar[dict[str, list[str]]]     = {}
+    d_tree_entries   : ClassVar[dict[str, dict[str,int]]] = {}
+    d_mcdt           : ClassVar[dict[str, dict[str,int]]] = {}
+    d_sample_entries : ClassVar[dict[str,int]]            = {}
 # -------------------------------
 def _check_path(path : str) -> None:
     found = os.path.isdir(path) or os.path.isfile(path)
