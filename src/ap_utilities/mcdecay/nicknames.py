@@ -2,7 +2,7 @@
 Script used to create YAML file with dictionary between Renato's nicknames and DecFiles based nicknames
 '''
 import re
-import dmu.physics.utilities as phut
+import ap_utilities.physics.utilities as aput
 
 # ----------------------------------
 class Nicknames:
@@ -44,7 +44,7 @@ class Nicknames:
         d_data = {}
         for line in l_line:
             name, evt_type = self._info_from_line(line)
-            nick_name      = phut.read_decay_name(event_type=evt_type, style= 'safe_1')
+            nick_name      = aput.read_decay_name(event_type=evt_type, style= 'safe_1')
 
             d_data[name] = nick_name
 
