@@ -67,11 +67,14 @@ sshfs -o idmap=user USERNAME@lxplus.cern.ch:$MNT_DIR $MNT_DIR
 # This project is in pip
 pip install ap_utilities
 
-validata_ap_tuples -p PIPELINE -f ntuple_scheme.yaml
+validate_ap_tuples -p PIPELINE -f ntuple_scheme.yaml -t 5
 ```
 
-where `PIPELINE` is the pipeline number, needed to find the ROOT files in EOS. `-f` passes the file with the
-description of what is expected to be found, for example:
+where:
+-l: Logging level, by default 20 (info), but it can be 10 (debug) or 30 (warning)
+-t: Is the number of threads to use, if not passed, it will use one.
+-p: Is the pipeline number, needed to find the ROOT files in EOS
+-f: passes the file with the configuration 
 
 ```yaml
 # -----------------------------------------
