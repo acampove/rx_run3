@@ -10,6 +10,7 @@ settings_common: &common
 # -------------------------------------------
 sections:
   one:
+    suffix : _first
     settings:
       <<: *common
     evt_type:
@@ -23,6 +24,7 @@ sections:
       - '11102211'
       - '11102202'
   three:
+    suffix : _third
     settings:
       <<        : *common
       generator : BcVegPyPythia8
