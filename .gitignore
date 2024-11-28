@@ -179,5 +179,5 @@ pyrightconfig.json
 *.txt
 report*.yaml
 
-info.yaml
-validation.yaml
+info_*.yaml
+validation_*.yaml
