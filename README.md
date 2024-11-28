@@ -4,23 +4,7 @@ For documentation specific to MVA lines of the RD group, check [this](doc/mva_li
 
 ## Decay nicknames
 
-### Table with nicknames and event types
-
-The following lines:
-
-```bash
-export DECPATH=/home/acampove/Packages/DecFiles
-
-update_decinfo
-```
-
-will:
-
-1. Set the path to the [DecFiles](https://gitlab.cern.ch/lhcb-datapkg/Gen/DecFiles)
-root directory such that `update_decinfo` can use it.
-1. Read the event types and nicknames and save them to a YAML file
-
-### Accessing table
+### Accessing table with DecFiles sample nicknames
 
 These nicknames can be accessed from python scripts with:
 
@@ -33,6 +17,22 @@ literal = aput.read_decay_name(event_type=event_type, style='literal')
 # To get representation with special symbols like "," or "-" replaced
 safe_1  = aput.read_decay_name(event_type=event_type, style= 'safe_1')
 ```
+
+### Update table with nicknames and event types
+
+This is most likely not needed, unless a new sample has been created and a new nickname needs to be added. The following lines:
+
+```bash
+export DECPATH=/home/acampove/Packages/DecFiles
+
+update_decinfo
+```
+
+will:
+
+1. Set the path to the [DecFiles](https://gitlab.cern.ch/lhcb-datapkg/Gen/DecFiles)
+root directory such that `update_decinfo` can use it.
+1. Read the event types and nicknames and save them to a YAML file
 
 ## Check for samples existence 
 
