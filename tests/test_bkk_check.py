@@ -43,7 +43,8 @@ def test_multithreaded():
     samples_path = str(samples_path)
 
     d_cfg = _sections_from_path(samples_path)
-    for name, d_section in d_cfg.items():
+    d_sections = d_cfg['sections']
+    for name, d_section in d_sections.items():
         log.info(f'Processing section: {name}')
         obj=BkkChecker(name, d_section)
         obj.save(nthreads=8)
