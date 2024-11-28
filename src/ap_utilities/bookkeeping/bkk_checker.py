@@ -3,7 +3,6 @@ Module with BkkChecker class
 '''
 
 import re
-import os
 from concurrent.futures     import ThreadPoolExecutor
 
 import subprocess
@@ -21,41 +20,26 @@ class BkkChecker:
     '''
     # pylint: disable=too-few-public-methods
     # -------------------------
-    def __init__(self, path : str):
+    def __init__(self, name : str, d_section : dict):
         '''
-        Takes the path to a YAML file with the list of samples
+        Takes:
+
+        name     : Name of section, needed to dump output
+        d_Section: A dictionary representing sections of samples
         '''
-        with open(path, encoding='utf-8') as ifile:
-            self._d_cfg                           = yaml.safe_load(ifile)
-            self._l_event_type_single : list[str] = self._get_types('event_type')
-            self._l_event_type_double : list[str] = self._get_types('event_type_split_sim')
 
-            self._l_event_type = self._l_event_type_single + self._l_event_type_double
+        self._name         : str = name
 
-        self._input_path   : str = path
-        self._year         : str = self._d_cfg['settings']['year']
-        self._mc_path      : str = self._d_cfg['settings']['mc_path']
-        self._nu_path      : str = self._d_cfg['settings']['nu_path']
-        self._polarity     : str = self._d_cfg['settings']['polarity']
-        self._generator    : str = self._d_cfg['settings']['generator']
-        self._sim_version  : str = self._d_cfg['settings']['sim_vers']
-        self._ctags        : str = self._d_cfg['settings']['ctags']
-        self._dtags        : str = self._d_cfg['settings']['dtags']
+        self._year         : str = d_section['settings']['year']
+        self._mc_path      : str = d_section['settings']['mc_path']
+        self._nu_path      : str = d_section['settings']['nu_path']
+        self._polarity     : str = d_section['settings']['polarity']
+        self._generator    : str = d_section['settings']['generator']
+        self._sim_version  : str = d_section['settings']['sim_vers']
+        self._ctags        : str = d_section['settings']['ctags']
+        self._dtags        : str = d_section['settings']['dtags']
 
-        # For split-sim samples the sim substring looks like Sim10d-SplitSim02
-        self._split_sim_suffix = 'SplitSim02'
-    # -------------------------
-    def _get_types(self, kind : str) -> list[str]:
-        if kind not in self._d_cfg:
-            raise ValueError(f'Cannot find kind of event type: {kind}')
-
-        l_event_type = self._d_cfg[kind]
-        s_event_type = set(l_event_type)
-
-        if len(l_event_type) != len(s_event_type):
-            raise ValueError('Duplicate event types found')
-
-        return l_event_type
+        self._l_event_type : list[str] = d_section['evt_type']
     # -------------------------
     def _nfiles_line_from_stdout(self, stdout : str) -> str:
         l_line = stdout.split('\n')
