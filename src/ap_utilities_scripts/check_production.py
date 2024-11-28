@@ -77,6 +77,14 @@ def _list_to_set(l_line : list[str], msg_repeated : Union[None,str]=None) -> set
 
     return s_line
 # -------------------------
+def _print_set(s_data : set[str], msg : Union[str,None] = None) -> None:
+    if len(s_data) == 0:
+        return
+
+    log.warning(msg)
+    for value in s_data:
+        log.info(value)
+# -------------------------
 def _check_mcdt() -> None:
     d_mcdt        = _load_yaml('tupling/config/mcfuntuple.yaml')
     l_mcdt_sample = list(d_mcdt)
@@ -88,7 +96,12 @@ def _check_mcdt() -> None:
     s_info_sample = _list_to_set(l_info_sample, msg_repeated='Found repeated entries in info.yaml')
 
     if s_mcdt_sample != s_info_sample:
-        print(f'Samples in mcfuntuple and info.yaml are different')
+        log.warning('Samples in mcfuntuple and info.yaml are different')
+        s_mcdt_only = s_mcdt_sample - s_info_sample
+        s_info_only = s_info_sample - s_mcdt_sample
+
+        _print_set(s_mcdt_only, msg='MCDecayTree only')
+        _print_set(s_info_only, msg='info.yaml only')
 # -------------------------
 def main():
     '''
