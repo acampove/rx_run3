@@ -9,8 +9,8 @@ from concurrent.futures     import ThreadPoolExecutor
 import subprocess
 import yaml
 
-import dmu.physics.utilities as phut
-from dmu.logging.log_store  import LogStore
+import ap_utilities.decays.utilities as aput
+from ap_utilities.logging.log_store  import LogStore
 
 log=LogStore.add_logger('ap_utilities:Bookkeeping.bkk_checker')
 # ---------------------------------
@@ -130,7 +130,7 @@ class BkkChecker:
         text = ''
         for evt_type in l_event_type:
             nu_name         = self._nu_path.replace('.', 'p')
-            nick_name_org   = phut.read_decay_name(evt_type, style='safe_1')
+            nick_name_org   = aput.read_decay_name(evt_type, style='safe_1')
             sim_version     = f'"{self._sim_version}"'
             nick_name       = f'"{nick_name_org}"'
             text           += f'({nick_name:<60}, "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", {sim_version:<20}, "{self._generator}" ),\n'
@@ -150,7 +150,7 @@ class BkkChecker:
     def _save_validation_config(self, l_event_type : list[str]) -> None:
         d_data = {'samples' : {}}
         for event_type in l_event_type:
-            nick_name = phut.read_decay_name(event_type, style='safe_1')
+            nick_name = aput.read_decay_name(event_type, style='safe_1')
             d_data['samples'][nick_name] = ['any']
 
         output_dir  = os.path.dirname(self._input_path)
