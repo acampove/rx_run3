@@ -5,7 +5,7 @@ from importlib.resources import files
 
 import pytest
 
-from dmu.logging.log_store                import LogStore
+from ap_utilities.logging.log_store                import LogStore
 from ap_utilities.bookkeeping.bkk_checker import BkkChecker
 
 # ----------------------------------------
