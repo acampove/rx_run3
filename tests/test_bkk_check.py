@@ -28,8 +28,12 @@ def test_simple():
     samples_path = files('ap_utilities_data').joinpath('rd_samples.yaml')
     samples_path = str(samples_path)
 
-    obj=BkkChecker(samples_path)
-    obj.save()
+    d_cfg      = _sections_from_path(samples_path)
+    d_sections = d_cfg['sections']
+    for name, d_section in d_sections.items():
+        log.info(f'Processing section: {name}')
+        obj=BkkChecker(name, d_section)
+        obj.save()
 # ----------------------------------------
 def test_multithreaded():
     '''
@@ -38,6 +42,9 @@ def test_multithreaded():
     samples_path = files('ap_utilities_data').joinpath('rd_samples.yaml')
     samples_path = str(samples_path)
 
-    obj=BkkChecker(samples_path)
-    obj.save(nthreads=8)
+    d_cfg = _sections_from_path(samples_path)
+    for name, d_section in d_cfg.items():
+        log.info(f'Processing section: {name}')
+        obj=BkkChecker(name, d_section)
+        obj.save(nthreads=8)
 # ----------------------------------------
