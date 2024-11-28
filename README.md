@@ -4,6 +4,9 @@ For documentation specific to MVA lines of the RD group, check [this](doc/mva_li
 
 ## Environment and installation
 
+### With access to grid
+
+This is needed to run the scripts that check the bookkeeping path for samples existence.
 To run this one has to be in an environment with:
 
 1. Access to DIRAC.
@@ -22,6 +25,16 @@ lb-dirac bash
 ```bash
 pip install ap-utilities
 ```
+### Without access to grid
+
+Otherwise, one can just:
+
+- Install this project:
+```bash
+pip install ap-utilities
+````
+
+and use the project
 
 ## Decay nicknames
 
@@ -102,6 +115,12 @@ check_samples -i samples.yaml -n 6
 to check if the samples exist using 6 threads (default is 1). The script will produce 
 `info_SECTION_NAME.yaml` and `validation_SECTION_NAME.yaml`, which will correspond to each sections up there
 i.e. `one`, `two` and `three`. 
+
+Once this has been done, the lines needed for the `info.yaml` can be obtained by concatenating the partial outputs with:
+
+```bash
+cat info_*.yaml > samples.yaml
+```
 
 **Important**: Given that most settings are the same between sections, one can use anchors and aliases to override
 only what is different between them.
