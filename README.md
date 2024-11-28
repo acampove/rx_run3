@@ -1,7 +1,38 @@
 # ap_utilities
 
-This project holds code needed to transform the AP used by the RD group into something that makes ntuples with MVA HLT triggers.
 For documentation specific to MVA lines of the RD group, check [this](doc/mva_lines.md)
+
+## Decay nicknames
+
+### Table with nicknames and event types
+
+The following lines:
+
+```bash
+export DECPATH=/home/acampove/Packages/DecFiles
+
+update_decinfo
+```
+
+will:
+
+1. Set the path to the [DecFiles](https://gitlab.cern.ch/lhcb-datapkg/Gen/DecFiles)
+root directory such that `update_decinfo` can use it.
+1. Read the event types and nicknames and save them to a YAML file
+
+### Accessing table
+
+These nicknames can be accessed from python scripts with:
+
+```python
+import ap_utilities.physics.utilities as aput
+
+# To get exactly what was saved
+literal = aput.read_decay_name(event_type=event_type, style='literal')
+
+# To get representation with special symbols like "," or "-" replaced
+safe_1  = aput.read_decay_name(event_type=event_type, style= 'safe_1')
+```
 
 ## Check for samples existence 
 
