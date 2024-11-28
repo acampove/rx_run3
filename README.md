@@ -68,7 +68,7 @@ will:
 root directory such that `update_decinfo` can use it.
 1. Read the event types and nicknames and save them to a YAML file
 
-## Check for samples existence 
+## Check for samples existence
 
 Given a set of MC samples specified in a YAML file like:
 
@@ -147,6 +147,21 @@ sudo chown $USER:$USER $APDIR
 # Mount EOS
 sshfs -o idmap=user USERNAME@lxplus.cern.ch:$MNT_DIR $MNT_DIR
 ```
+
+### Checks prior to submit MR or run pipelines
+
+In order to do these checks run:
+
+```bash
+check_production -p /home/acampove/Packages/AnalysisProductions/rd_ap_2024
+```
+
+Where the path is the path to the production directory. This script will check:
+
+1. If the samples (by nickname) in `info.yaml` are different. Same nicknames are not expected.
+1. If the entries in `mcfuntuple.yaml` are different.
+1. If there are samples in `info.yaml` are not found in `mcfuntuple.yaml`. In which case `MCDecayTree` will not be
+made.
 
 ### Run Validation
 
