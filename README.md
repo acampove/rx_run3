@@ -2,8 +2,6 @@
 
 These are tools that can be used for different data analysis tasks.
 
-For LHCb specific tools (not useful for people outside LHCb) see [this](doc/lhcb.md)
-
 # GIT
 
 ## Pushing
