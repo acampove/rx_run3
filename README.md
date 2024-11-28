@@ -2,6 +2,27 @@
 
 For documentation specific to MVA lines of the RD group, check [this](doc/mva_lines.md)
 
+## Environment and installation
+
+To run this one has to be in an environment with:
+
+1. Access to DIRAC.
+- Setup the LHCb environment with
+```bash
+. /cvmfs/lhcb.cern.ch/lib/LbEnv 
+
+# Token valid fro 100 hours
+lhcb-proxy-init -v 100:00
+```
+- Access a shell with dirac:
+```bash
+lb-dirac bash
+```
+- Install this project:
+```bash
+pip install ap-utilities
+```
+
 ## Decay nicknames
 
 ### Accessing table with DecFiles sample nicknames
@@ -39,7 +60,7 @@ root directory such that `update_decinfo` can use it.
 Given a set of MC samples specified in a YAML file like:
 
 ```YAML
-settings:
+settings_common: &common
   year      : 2024
   mc_path   : 2024.W31.34
   polarity  : MagUp
@@ -48,13 +69,28 @@ settings:
   generator : Pythia8
   ctags     : sim10-2024.Q3.4-v1.3-mu100
   dtags     : dddb-20240427
-event_type :
-  - '12113002'
-  - '12113004'
-event_type_split_sim:
-  # These event types are associated with two samples and should be saved twice in the text file
-  - '11102202'
-  - '11102211'
+# -------------------------------------------
+sections:
+  one:
+    settings:
+      <<: *common
+    evt_type:
+      - '11102211'
+      - '11102202'
+  two:
+    settings:
+      <<        : *common
+      sim_vers  : Sim10d-SplitSim02
+    evt_type:
+      - '11102211'
+      - '11102202'
+  three:
+    settings:
+      <<        : *common
+      generator : BcVegPyPythia8
+    evt_type:
+      - '14143013'
+      - '14113032'
 ```
 
 run:
@@ -63,12 +99,13 @@ run:
 check_samples -i samples.yaml -n 6
 ```
 
-to check if the samples exist using 6 threads (default is 1)  and store them in `samples_found.yaml`
+to check if the samples exist using 6 threads (default is 1). The script will produce 
+`info_SECTION_NAME.yaml` and `validation_SECTION_NAME.yaml`, which will correspond to each sections up there
+i.e. `one`, `two` and `three`. 
 
-To run this one has to be in an environment with:
+**Important**: Given that most settings are the same between sections, one can use anchors and aliases to override
+only what is different between them.
 
-1. Access to DIRAC.
-1. A valid grid token.
 
 ## Validate outputs of pipelines
 
