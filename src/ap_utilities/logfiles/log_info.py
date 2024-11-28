@@ -8,7 +8,7 @@ import zipfile
 import functools
 from typing import Union
 
-from dmu.logging.log_store import LogStore
+from ap_utilities.logging.log_store import LogStore
 
 log = LogStore.add_logger('ap_utilities:log_info')
 # ---------------------------------------------
