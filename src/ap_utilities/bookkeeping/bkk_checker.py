@@ -155,6 +155,8 @@ class BkkChecker:
 
         output_dir  = os.path.dirname(self._input_path)
         output_path = f'{output_dir}/validation.yaml'
+
+        log.info(f'Saving to: {output_path}')
         with open(output_path, 'w', encoding='utf-8') as ofile:
             yaml.safe_dump(d_data, ofile, width=200)
     # -------------------------
