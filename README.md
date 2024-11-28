@@ -95,3 +95,4 @@ samples:
     - Hlt2RD_B0ToKpPimEE_MVA
 ```
 
+a few examples of config files can be found [here](https://github.com/acampove/config_files/tree/main/ap_utilities/validate_ap)
