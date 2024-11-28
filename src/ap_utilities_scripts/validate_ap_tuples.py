@@ -14,9 +14,9 @@ import tqdm
 import yaml
 import pandas as pnd
 
-from ROOT                  import TFile, TDirectoryFile, TTree
-from dmu.logging.log_store import LogStore
-from ap_utilities.log_info import LogInfo
+from ROOT                            import TFile, TDirectoryFile, TTree
+from ap_utilities.logging.log_store  import LogStore
+from ap_utilities.log_info           import LogInfo
 
 log = LogStore.add_logger('ap_utilities_scripts:validate_ap_tuples')
 # -------------------------------

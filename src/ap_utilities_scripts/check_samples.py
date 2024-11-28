@@ -4,8 +4,7 @@ Script used to check which MC samples are found in grid
 import argparse
 
 from dataclasses                          import dataclass
-from dmu.logging.log_store  import LogStore
-
+from ap_utilities.logging.log_store       import LogStore
 from ap_utilities.bookkeeping.bkk_checker import BkkChecker
 
 log=LogStore.add_logger('ap_utilities_scripts:check_samples')

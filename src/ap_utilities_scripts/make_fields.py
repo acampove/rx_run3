@@ -6,7 +6,7 @@ import argparse
 from typing import Union
 
 import yaml
-from dmu.logging.log_store           import LogStore
+from ap_utilities.logging.log_store  import LogStore
 from ap_utilities.mcdecay.nicknames  import Nicknames
 
 log=LogStore.add_logger('ap_utilities:mcdecay:nicknames')
