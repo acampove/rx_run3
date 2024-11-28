@@ -3,7 +3,7 @@ Script with tests for LogInfo class
 '''
 import pytest
 
-from ap_utilities.log_info import LogInfo
+from ap_utilities.logfiles.log_info import LogInfo
 
 # ----------------------------
 class Data:
