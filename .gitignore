@@ -178,3 +178,6 @@ pyrightconfig.json
 *.md
 *.txt
 report*.yaml
+
+info.yaml
+validation.yaml
