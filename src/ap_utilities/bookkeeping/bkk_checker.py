@@ -28,6 +28,7 @@ class BkkChecker:
         d_Section: A dictionary representing sections of samples
         '''
 
+        self._suffix       : str = '' if 'suffix' not in d_section else d_section['suffix']
         self._name         : str = name
 
         self._year         : str = d_section['settings']['year']
@@ -106,7 +107,7 @@ class BkkChecker:
         for evt_type in l_event_type:
             nu_name         = self._nu_path.replace('.', 'p')
             nick_name_org   = aput.read_decay_name(evt_type, style='safe_1')
-            nick_name       = f'"{nick_name_org}"'
+            nick_name       = f'"{nick_name_org}{self._suffix}"'
             sim_vers        = f'"{self._sim_version}"'
             text           += f'({nick_name:<60}, "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", {sim_vers:<20}, "{self._generator}" ),\n'
 
