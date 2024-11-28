@@ -106,16 +106,11 @@ class BkkChecker:
         for evt_type in l_event_type:
             nu_name         = self._nu_path.replace('.', 'p')
             nick_name_org   = aput.read_decay_name(evt_type, style='safe_1')
-            sim_version     = f'"{self._sim_version}"'
             nick_name       = f'"{nick_name_org}"'
-            text           += f'({nick_name:<60}, "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", {sim_version:<20}, "{self._generator}" ),\n'
+            sim_vers        = f'"{self._sim_version}"'
+            text           += f'({nick_name:<60}, "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", {sim_vers:<20}, "{self._generator}" ),\n'
 
-            if evt_type in self._l_event_type_double:
-                nick_name   = f'"{nick_name_org}_SS"'
-                sim_version = f'"{self._sim_version}-{self._split_sim_suffix}"'
-                text       += f'({nick_name:<60}, "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", {sim_version:<20}, "{self._generator}" ),\n'
-
-        output_path = 'info.yaml'
+        output_path = f'info_{self._name}.yaml'
         log.info(f'Saving to: {output_path}')
         with open(output_path, 'w', encoding='utf-8') as ofile:
             ofile.write(text)
@@ -126,7 +121,7 @@ class BkkChecker:
             nick_name = aput.read_decay_name(event_type, style='safe_1')
             d_data['samples'][nick_name] = ['any']
 
-        output_path = 'validation.yaml'
+        output_path = f'validation_{self._name}.yaml'
         log.info(f'Saving to: {output_path}')
         with open(output_path, 'w', encoding='utf-8') as ofile:
             yaml.safe_dump(d_data, ofile, width=200)
