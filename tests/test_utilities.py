@@ -3,7 +3,7 @@ Module with functions used to test functions in physics/utilities.py
 '''
 import pytest
 
-import ap_utilities.physics.utilities as phut
+import ap_utilities.decays.utilities as aput
 
 # --------------------------------------------------
 class Data:
@@ -32,7 +32,7 @@ def test_read_decay_name(event_type : str) -> None:
     '''
     Tests reading of decay name from YAML using event type
     '''
-    literal = phut.read_decay_name(event_type=event_type, style='literal')
-    safe_1  = phut.read_decay_name(event_type=event_type, style= 'safe_1')
+    literal = aput.read_decay_name(event_type=event_type, style='literal')
+    safe_1  = aput.read_decay_name(event_type=event_type, style= 'safe_1')
 
     print(f'{literal:<50}{safe_1:<50}')
