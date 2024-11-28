@@ -3,6 +3,7 @@ Module with BkkChecker class
 '''
 
 import re
+import os
 from concurrent.futures     import ThreadPoolExecutor
 
 import subprocess
@@ -125,11 +126,11 @@ class BkkChecker:
 
         return l_event_type
     # -------------------------
-    def _save_to_text(self, l_event_type : list[str]) -> None:
+    def _save_info_yaml(self, l_event_type : list[str]) -> None:
         text = ''
         for evt_type in l_event_type:
             nu_name         = self._nu_path.replace('.', 'p')
-            nick_name_org   = phut.read_decay_name(evt_type)
+            nick_name_org   = phut.read_decay_name(evt_type, style='safe_1')
             sim_version     = f'"{self._sim_version}"'
             nick_name       = f'"{nick_name_org}"'
             text           += f'({nick_name:<60}, "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", {sim_version:<20}, "{self._generator}" ),\n'
@@ -139,11 +140,23 @@ class BkkChecker:
                 sim_version = f'"{self._sim_version}-{self._split_sim_suffix}"'
                 text       += f'({nick_name:<60}, "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", {sim_version:<20}, "{self._generator}" ),\n'
 
-        output_path = self._input_path.replace('.yaml', '.txt')
+        output_dir  = os.path.dirname(self._input_path)
+        output_path = f'{output_dir}/info.yaml'
 
         log.info(f'Saving to: {output_path}')
         with open(output_path, 'w', encoding='utf-8') as ofile:
             ofile.write(text)
+    # -------------------------
+    def _save_validation_config(self, l_event_type : list[str]) -> None:
+        d_data = {'samples' : {}}
+        for event_type in l_event_type:
+            nick_name = phut.read_decay_name(event_type, style='safe_1')
+            d_data['samples'][nick_name] = ['any']
+
+        output_dir  = os.path.dirname(self._input_path)
+        output_path = f'{output_dir}/validation.yaml'
+        with open(output_path, 'w', encoding='utf-8') as ofile:
+            yaml.safe_dump(d_data, ofile, width=200)
     # -------------------------
     def save(self, nthreads : int = 1) -> None:
         '''
@@ -163,5 +176,6 @@ class BkkChecker:
         npased = len(self._l_event_type)
 
         log.info(f'Found: {nfound}/{npased}')
-        self._save_to_text(l_event_type)
+        self._save_info_yaml(l_event_type)
+        self._save_validation_config(l_event_type)
 # ---------------------------------
