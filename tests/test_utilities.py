@@ -12,19 +12,40 @@ class Data:
     '''
 
     l_event_type = [
-            '10000000',
-            '10000010',
-            '10000020',
-            '10000021',
-            '10000022',
-            '10000023',
-            '10000027',
-            '10000030',
-            '10002203',
-            '10002213',
-            '11100001',
-            '11100003',
-            '11100006',
+        '10000000',
+        '10000010',
+        '10000020',
+        '10000021',
+        '10000022',
+        '10000023',
+        '10000027',
+        '10000030',
+        '10002203',
+        '10002213',
+        '11100001',
+        '11100003',
+        '11100006',
+        ]
+
+    l_nickname = [
+        'tau_5mu_eq_DPC',
+        'tau_Kphinu_KK_eq_DPC',
+        'tau_mugamma_eq_DPC',
+        'tau_mumnKplKmn_eq_DPC',
+        'tau_mumnpiplpimn_eq_DPC',
+        'tau_mumue_eq_OS_DPC',
+        'tau_mumue_eq_OS_FromB_TightCut',
+        'tau_mumue_eq_SS_DPC',
+        'tau_mumue_eq_SS_FromB_TightCut',
+        'tau_mumumu_eq_DPC',
+        'tau_mumumu_eq_FromB',
+        'tau_muphi_KK_eq_DPC',
+        'tau_muphi_KK_eq_FromB',
+        'tau_muplpimnpimn_eq_DPC',
+        'tau_nupiplpi0_eegamma_eq_DPC',
+        'tau_pimnpiplpimnnu_eq_DPC',
+        'tau_pimnpiplpimnpi0nu_eq_DPC',
+        'tau_piphinu_KK_eq_DPC',
             ]
 # --------------------------------------------------
 @pytest.mark.parametrize('event_type', Data.l_event_type)
