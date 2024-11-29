@@ -32,10 +32,12 @@ class Data:
             }
 
     d_repl_par = {
-            'psi(2S)'  :   'psi_2S_',
-            'psi(1S)'  :   'psi_1S_',
-            'K*(892)'  :   'K*_892_',
-            'phi(1020)': 'phi_1020_',
+            'psi(2S)'    :   'psi_2S_',
+            'psi(1S)'    :   'psi_1S_',
+            'K*(892)'    :   'K*_892_',
+            'phi(1020)'  : 'phi_1020_',
+            'K_1(1270)'  : 'K_1_1270_',
+            'K_2*(1430)' : 'K_2*_1430_',
             }
 
     d_repl_spa = {
@@ -47,6 +49,54 @@ class Data:
 
     l_event_type : list[str]
     d_decay      : dict[str,str]
+
+    d_nicknames = {
+            'pi0' : 'pi0',
+            'pi+' : 'pip',
+            'pi-' : 'pim',
+
+            'K+'  : 'Kp',
+            'K-'  : 'Km',
+
+            'e+'  : 'Ep',
+            'e-'  : 'Em',
+
+            'mu+' : 'Mp',
+            'mu-' : 'Mm',
+
+            'p+'  : 'Pp',
+            'p~-' : 'Pm',
+            'K_S0': 'KS',
+
+            'D0'    : 'D',
+            'D~0'   : 'D',
+            'nu_tau': 'nu',
+            'nu_mu' : 'nu',
+            'nu_e'  : 'nu',
+
+            'B+'  : 'Bu',
+            'B-'  : 'Bu',
+            'B0'  : 'Bd',
+            'X0'  :  'X',
+            'B_s0': 'Bs',
+            'phi' : 'phi',
+            'eta' : 'eta',
+
+            'Beauty'    : 'B',
+            'K_1+'      : 'K1',
+            'K_1(1270)' : 'K1',
+            'phi(1020)' : 'phi',
+            'gamma'     : 'gm',
+            'K*(892)0'  : 'Kst',
+            'K*(892)+'  : 'Kstp',
+            'J/psi(1S)' : 'Jpsi',
+            'psi(2S)'   : 'psi2S',
+            'Lambda_b0' : 'Lb',
+            'Lambda_c-' : 'Lc',
+            'Lambda0'   : 'Lz',
+            'Lambda~0'  : 'Lz',
+            'anti-Lambda_c-' : 'Lc',
+            }
 # ---------------------------
 def _load_decays() -> None:
     dec_path = files('ap_utilities_data').joinpath('evt_dec.yaml')
@@ -117,12 +167,15 @@ def _particles_from_decay(decay : str) -> list[str]:
 # ---------------------------
 def _skip_decay(event_type : str, decay : str) -> bool:
     if event_type in Data.l_skip_type:
+        log.debug(f'Skipping decay: {decay}')
         return True
 
     if '{,gamma}' in decay:
+        log.warning(f'Skipping decay: {decay}')
         return True
 
     if 'nos' in decay:
+        log.warning(f'Skipping decay: {decay}')
         return True
 
     return False
@@ -184,8 +237,38 @@ def _rename_repeated(l_par : list[str]) -> list[str]:
 
     return l_par_renamed
 # ---------------------------
+def _nickname_from_particle(name : str) -> str:
+    name, ipar = _remove_index(name)
+    name       = name.replace('anti-', '')
+
+    if name not in Data.d_nicknames:
+        log.warning(f'Nickname for {name} not found')
+        return name
+
+    nick = Data.d_nicknames[name]
+    if ipar > 1:
+        nick = f'{nick}_{ipar}'
+
+    nick = nick.replace('anti-', '')
+
+    return nick
+# ---------------------------
+def _fix_names(decay):
+    '''
+    Decay fileld in decay files is not properly written, need to fix here, before using decay 
+    '''
+    decay = decay.replace('K_1+', 'K_1(1270)+')
+    decay = decay.replace('K*+' ,   'K*(892)+')
+    decay = decay.replace('K*0' ,   'K*(892)0')
+    decay = decay.replace('My_' ,           '')
+
+    return decay
+# ---------------------------
 def _get_decays(event_type : str) -> Union[None,dict[str,str]]:
+    log.info(event_type)
     decay = Data.d_decay[event_type]
+    decay = _fix_names(decay)
+
     if _skip_decay(event_type, decay):
         return None
 
@@ -196,7 +279,8 @@ def _get_decays(event_type : str) -> Union[None,dict[str,str]]:
 
     d_dec = {}
     for i_par, par in enumerate(l_par):
-        d_dec[par] = _get_hatted_decay(par, i_par, decay)
+        nickname        = _nickname_from_particle(par)
+        d_dec[nickname] = _get_hatted_decay(par, i_par, decay)
 
     return d_dec
 # ---------------------------
@@ -212,9 +296,9 @@ def main():
             continue
 
         for key, val in d_tmp.items():
-            print(f'{key:<20}{val:<100}')
+            log.info(f'{key:<20}{val:<100}')
 
-        print('')
+        log.info('')
 # ---------------------------
 if __name__ == '__main__':
     main()
