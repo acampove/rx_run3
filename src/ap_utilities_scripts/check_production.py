@@ -11,6 +11,7 @@ from collections import Counter
 import argparse
 import yaml
 
+import ap_utilities.decays.utilities as aput
 from ap_utilities.logging.log_store import LogStore
 
 log = LogStore.add_logger('ap_utilities:check_production')
@@ -82,8 +83,12 @@ def _print_set(s_data : set[str], msg : Union[str,None] = None) -> None:
         return
 
     log.warning(msg)
-    for value in s_data:
-        log.info(value)
+    for nickname in s_data:
+        if nickname.endswith('_SS'):
+            nickname = nickname[:-3]
+
+        event_type = aput.read_event_type(nickname=nickname, style= 'safe_1')
+        log.info(f'{event_type:<15}{nickname:<70}')
 # -------------------------
 def _check_mcdt() -> None:
     d_mcdt        = _load_yaml('tupling/config/mcfuntuple.yaml')
