@@ -43,7 +43,7 @@ and use the project
 These nicknames can be accessed from python scripts with:
 
 ```python
-import ap_utilities.physics.utilities as aput
+import ap_utilities.decays.utilities as aput
 
 # To get exactly what was saved
 literal = aput.read_decay_name(event_type=event_type, style='literal')
