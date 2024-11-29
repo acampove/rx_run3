@@ -16,6 +16,18 @@ def _get_evt_name() -> dict[str,str]:
 
     return d_data
 # ---------------------------------
+@cache
+def _get_name_evt(style : str) -> dict[str,str]:
+    if style != 'safe_1':
+        raise NotImplementedError(f'Style {style} not supported')
+
+    file_path = files('ap_utilities_data').joinpath('name_evt.yaml')
+    file_path = str(file_path)
+    with open(file_path, encoding='utf-8') as ifile:
+        d_data = yaml.safe_load(ifile)
+
+    return d_data
+# ---------------------------------
 def format_nickname(nickname : str, style : str) -> str:
     '''
     Function taking decays nickname and returning formatted version
@@ -60,6 +72,29 @@ def read_decay_name(event_type : str, style : str = 'safe_1') -> str:
 
     value = d_evt_name[event_type]
     value = format_nickname(value, style)
+
+    return value
+# ---------------------------------
+def read_event_type(nickname : str, style : str = 'safe_1') -> str:
+    '''
+    Takes nickname, and style strings, returns corresponding event type 
+
+    Styles:
+
+    literal         : No change is made to nickname
+    safe_1 (default): With following replacements:
+        . -> p
+        = -> _eq_
+        - -> mn
+        + -> pl
+        , -> _
+    '''
+    d_name_evt = _get_name_evt(style)
+
+    if nickname not in d_name_evt:
+        raise ValueError(f'Event type {nickname} not found')
+
+    value = d_name_evt[nickname]
 
     return value
 # ---------------------------------
