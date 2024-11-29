@@ -50,6 +50,9 @@ literal = aput.read_decay_name(event_type=event_type, style='literal')
 
 # To get representation with special symbols like "," or "-" replaced
 safe_1  = aput.read_decay_name(event_type=event_type, style= 'safe_1')
+
+# To get event type back from nickname, only safe_1 implemented for now
+event_type = aput.read_event_type(nickname=nickname, style= 'safe_1')
 ```
 
 ### Update table with nicknames and event types
