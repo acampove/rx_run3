@@ -84,6 +84,9 @@ def _print_set(s_data : set[str], msg : Union[str,None] = None) -> None:
 
     log.warning(msg)
     for nickname in s_data:
+        # split sim samples are named with a _SS suffix
+        # which is not part of the DecFiles naming, need to remove it here
+        # to find actual event type
         if nickname.endswith('_SS'):
             nickname = nickname[:-3]
 
