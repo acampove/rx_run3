@@ -137,11 +137,12 @@ def _get_decays(event_type : str) -> Union[None,dict[str,str]]:
 
     decay = _reformat_decay(decay)
     l_par = _particles_from_decay(decay)
+    l_par = _rename_repeated(l_par)
     decay = _reformat_back_decay(decay)
 
     d_dec = {}
-    for par in l_par:
-        d_dec[par] = _get_hatted_decay(par, decay)
+    for i_par, par in enumerate(l_par):
+        d_dec[par] = _get_hatted_decay(par, i_par, decay)
 
     return d_dec
 # ---------------------------
