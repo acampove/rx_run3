@@ -16,7 +16,7 @@ def _get_evt_name() -> dict[str,str]:
 
     return d_data
 # ---------------------------------
-def _format_nickname(nickname : str, style : str) -> str:
+def format_nickname(nickname : str, style : str) -> str:
     if style == 'literal':
         return nickname
 
@@ -53,7 +53,7 @@ def read_decay_name(event_type : str, style : str = 'safe_1') -> str:
         raise ValueError(f'Event type {event_type} not found')
 
     value = d_evt_name[event_type]
-    value = _format_nickname(value, style)
+    value = format_nickname(value, style)
 
     return value
 # ---------------------------------
