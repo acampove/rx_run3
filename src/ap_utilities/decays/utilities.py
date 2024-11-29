@@ -17,6 +17,12 @@ def _get_evt_name() -> dict[str,str]:
     return d_data
 # ---------------------------------
 def format_nickname(nickname : str, style : str) -> str:
+    '''
+    Function taking decays nickname and returning formatted version
+
+    nickaname: Name to be formatted
+    style    : How to format name, supported: literal, safe_1
+    '''
     if style == 'literal':
         return nickname
 
