@@ -6,7 +6,6 @@ https://gitlab.cern.ch/lhcb-datapkg/Gen/DecFiles
 and store it in current project as data
 '''
 import os
-import re
 import glob
 from dataclasses           import dataclass
 from importlib.resources   import files
@@ -23,7 +22,6 @@ class Data:
     Class used to store shared data
     '''
     dec_path : str
-    regex    : str = r'#[\s]*[a-zA-Z]+:[\s]*(.*)'
 # ------------------------------
 def _setup() -> None:
     if 'DECPATH' not in os.environ:
@@ -44,29 +42,28 @@ def _val_from_line(file_path : str, line : str) -> str:
     if line == 'not_found':
         return line
 
-    mtch = re.match(Data.regex, line)
-    if not mtch:
-        log.warning(f'Cannot extract value from \"{line}\" in file {file_path}')
-        return 'not_found'
+    l_part = line.split(':')
+    if len(l_part) != 2:
+        raise ValueError(f'In {file_path}, expected two elements separated by colon, found: \"{line}\"')
 
-    value = mtch.group(1)
-    value = value.replace(' ', '')
+    part   = l_part[1]
+    part   = part.rstrip().lstrip()
 
-    return value
+    return part
 # ------------------------------
-def _get_evt_name(file_path : str) -> tuple[str,str]:
+def _get_evt_info(kind : str, file_path : str) -> tuple[str,str]:
     with open(file_path, encoding='utf-8') as ifile:
         l_line = ifile.read().splitlines()
 
     evt_line = _line_from_list(file_path, 'EventType', l_line)
-    nam_line = _line_from_list(file_path, 'NickName' , l_line)
+    kin_line = _line_from_list(file_path,       kind , l_line)
 
     evt_type = _val_from_line(file_path, evt_line)
-    nickname = _val_from_line(file_path, nam_line)
+    info     = _val_from_line(file_path, kin_line)
 
-    return evt_type, nickname
+    return evt_type, info
 # ------------------------------
-def _read_info() -> dict[str,str]:
+def _read_info(kind : str) -> dict[str,str]:
     dec_file_wc = f'{Data.dec_path}/dkfiles/*.dec'
     l_dec_file  = glob.glob(dec_file_wc)
     nfiles      = len(l_dec_file)
@@ -75,10 +72,10 @@ def _read_info() -> dict[str,str]:
 
     log.info(f'Found {nfiles} decay files')
 
-    l_evt_name = [ _get_evt_name(file_path) for file_path in tqdm.tqdm(l_dec_file, ascii=' -') ]
-    d_evt_name = _dict_from_tup_list(l_evt_name)
+    l_evt_info = [ _get_evt_info(kind, file_path) for file_path in tqdm.tqdm(l_dec_file, ascii=' -') ]
+    d_evt_info = _dict_from_tup_list(l_evt_info)
 
-    return d_evt_name
+    return d_evt_info
 # ------------------------------
 def _dict_from_tup_list(l_evt_name : list[tuple[str,str]]) -> dict[str,str]:
     d_res = {}
@@ -91,21 +88,24 @@ def _dict_from_tup_list(l_evt_name : list[tuple[str,str]]) -> dict[str,str]:
 
     return d_res
 # ------------------------------
-def _dump_info(d_evt_name : dict[str,str]) -> None:
-    yaml_path = files('dmu_data').joinpath('physics/evt_name.yaml')
+def _dump_info(name : str, d_evt_info: dict[str,str]) -> None:
+    yaml_path = files('ap_utilities_data').joinpath(f'{name}.yaml')
     yaml_path = str(yaml_path)
 
     log.info(f'Saving to: {yaml_path}')
     with open(yaml_path, 'w', encoding='utf-8') as ofile:
-        yaml.dump(d_evt_name, ofile)
+        yaml.dump(d_evt_info, ofile, width=500)
 # ------------------------------
 def main():
     '''
     Script starts here
     '''
     _setup()
-    d_evt_name = _read_info()
-    _dump_info(d_evt_name)
+    d_evt_name = _read_info(kind =   'NickName')
+    _dump_info('evt_name', d_evt_name)
+
+    d_evt_dec  = _read_info(kind = 'Descriptor')
+    _dump_info('evt_dec' , d_evt_dec )
 # ------------------------------
 if __name__ == '__main__':
     main()
