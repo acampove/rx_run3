@@ -127,8 +127,62 @@ def _skip_decay(event_type : str, decay : str) -> bool:
 
     return False
 # ---------------------------
-def _get_hatted_decay( particle : str, decay : str) -> str:
+def _remove_index(particle : str) -> tuple[str,int]:
+    mtch = re.match(r'(.*)_(\d+)$', particle)
+    if not mtch:
+        return particle, 1
+
+    particle = mtch.group(1)
+    npar     = mtch.group(2)
+    npar     = int(npar)
+
+    return particle, npar
+# ---------------------------
+def _get_hatted_decay( particle : str, i_par : int, decay : str) -> str:
+    decay = decay.replace(' '   , '  ')
+    decay = decay.replace('   ' , '  ')
+    decay = decay.replace('    ', '  ')
+
+    if i_par == 0:
+        return decay
+
+    particle, ipar = _remove_index(particle)
+
+    decay = _replace_nth_particle(decay, particle, ipar)
+
     return decay
+# ---------------------------
+def _replace_nth_particle(decay : str, particle:str, ipar:int) -> str:
+    src    = f' {particle}'
+    tgt    = f'^{particle}'
+
+    l_part = decay.split(src)
+    npart  = len(l_part)
+    if npart == 1:
+        raise ValueError(f'Cannot find {particle} in {decay}')
+
+    if npart == 2:
+        decay = decay.replace(src, tgt)
+
+    return src.join(l_part[:ipar]) + tgt + src.join(l_part[ipar:])
+# ---------------------------
+def _rename_repeated(l_par : list[str]) -> list[str]:
+    d_par_freq = {}
+    for par in l_par:
+        if par not in d_par_freq:
+            d_par_freq[par] = 1
+            continue
+
+        d_par_freq[par]+= 1
+
+    l_par_renamed = []
+    for par, freq in d_par_freq.items():
+        if freq == 1:
+            l_par_renamed.append(par)
+        else:
+            l_par_renamed += [ f'{par}_{i_par}' for i_par in range(1, freq + 1) ]
+
+    return l_par_renamed
 # ---------------------------
 def _get_decays(event_type : str) -> Union[None,dict[str,str]]:
     decay = Data.d_decay[event_type]
