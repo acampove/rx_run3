@@ -1,8 +1,8 @@
 '''
 Script used to build decay fields from YAML file storing event type -> decay correspondence
 '''
+import re
 import argparse
-import pprint
 from typing                         import Union
 from importlib.resources            import files
 
@@ -84,7 +84,15 @@ def _reformat_back_decay(decay : str) -> str:
     for org, new in Data.d_repl_par.items():
         decay = decay.replace(new, org)
 
+    # Decay cannot have space here, other spaces are allowed
     decay = decay.replace('] CC', ']CC')
+
+    decay = decay.replace('[ '  ,   '[')
+    decay = decay.replace('[  ' ,   '[')
+    decay = decay.replace('  ]' ,   ']')
+
+    decay = decay.replace('(  ' ,   '(')
+    decay = decay.replace('  )' ,   ')')
 
     return decay
 # ---------------------------
@@ -151,7 +159,6 @@ def main():
         for key, val in d_tmp.items():
             print(f'{key:<20}{val:<100}')
 
-        return
         print('')
 # ---------------------------
 if __name__ == '__main__':
