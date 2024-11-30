@@ -24,6 +24,7 @@ class Data:
     regex_info  : str = r'"([\w,_,.,-]+)"'
     d_samples   : dict[str, set[str]]            = {}
     d_report    : dict[str, dict[str,list[str]]] = {}
+    l_info      : list[list[str]]                = []
 # --------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='')
@@ -48,18 +49,30 @@ def _get_lines(name : str) -> list[str]:
 
     return l_line
 # -------------------------
-def _sample_from_line(line : str) -> Union[None,str]:
+def _sample_from_line(line : str) -> Union[None,list[str]]:
+    '''
+    Takes line from info.yaml
+    Returns a list of strings, each with configuration for an MC sample, if line is not present, returns None
+    '''
     l_match = re.findall(Data.regex_info, line)
     if len(l_match) != 10:
         return None
 
-    sample = l_match[0]
+    return l_match
+# -------------------------
+def _sample_from_info(l_info_line : str) -> list[list[str]]:
+    '''
+    Takes list of lines in info.yaml
+    Returns list of sets of strings defining MC samples
+    '''
+    l_retval   = [ _sample_from_line(line) for line     in l_info_line                        ]
+    l_l_config = [ l_config                for l_config in l_retval    if l_config is not None]
 
-    return sample
+    return l_l_config
 # -------------------------
 def _samples_from_info_lines( l_line : list[str]) -> list[str]:
-    l_sample = [ _sample_from_line(line) for line   in l_line                        ]
-    l_sample = [                  sample for sample in l_sample if sample is not None]
+    l_retval  = [ _sample_from_line(line) for line   in l_line                        ]
+    l_sample  = [ retval[0]               for retval in l_retval if retval is not None]
 
     return l_sample
 # -------------------------
@@ -94,8 +107,10 @@ def _list_to_set(l_line : list[str], msg_repeated : Union[None,str]=None) -> set
     return s_line
 # -------------------------
 def _load_samples() -> None:
-    l_line        = _get_lines('info.yaml')
-    l_info_sample = _samples_from_info_lines(l_line)
+    l_info_line   = _get_lines('info.yaml')
+    Data.l_info   = _sample_from_info(l_info_line)
+
+    l_info_sample = _samples_from_info_lines(l_info_line)
     s_info_sample = _list_to_set(l_info_sample, msg_repeated='Found repeated entries in info.yaml')
 
     d_mcdt        = _load_yaml('tupling/config/mcfuntuple.yaml')
