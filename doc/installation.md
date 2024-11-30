@@ -1,6 +1,17 @@
 ## Environment and installation
 
-### With access to grid
+### Without access to DIRAC 
+
+One can just:
+
+- Install this project:
+```bash
+pip install ap-utilities
+````
+
+But one would not be able to check for samples existence this way.
+
+### With access to DIRAC 
 
 This is needed to run the scripts that check the bookkeeping path for samples existence.
 To run this one has to be in an environment with:
@@ -21,14 +32,4 @@ lb-dirac bash
 ```bash
 pip install ap-utilities
 ```
-### Without access to grid
-
-Otherwise, one can just:
-
-- Install this project:
-```bash
-pip install ap-utilities
-````
-
-and use the project
 
