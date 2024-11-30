@@ -3,18 +3,15 @@
 - For instructions on how to install this project, check [this](doc/installation.md)   
 - For documentation specific to MVA lines of the RD group, check [this](doc/mva_lines.md)   
 
-## Decays from event types
+## How to add a decay 
 
-Given a text file with the list of decay files, one in each line, run:
-
-```bash
-make_fields -i decays.txt
-```
-
-to get a `decays.yaml` file with:
+### Add the decay matching lines 
+This is done in `rd_ap_2024/tupling/config/mcfuntuple.yaml`. Each section in this file looks like:
 
 ```yaml
+# This is a nickname for the sample
 Bd_Denu_Kstenu_eq_VisibleInAcceptance_HighVisMass_EGDWC:
+# This is the decay descriptor and how to match particles to branch names
   Bd   : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
   D    : '[B0  ==>  ^(  D-  ==>   (  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
   Em   : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+  pi-  )  ^e-  anti-nu_e  )   e+  nu_e  ]CC'
@@ -23,60 +20,10 @@ Bd_Denu_Kstenu_eq_VisibleInAcceptance_HighVisMass_EGDWC:
   Kst  : '[B0  ==>   (  D-  ==>  ^(  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
   nu   : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )   e+ ^nu_e  ]CC'
   pim  : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+ ^pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
-Bd_K1gamma_Kpipi0_eq_mK1270_HighPtGamma_DPC:
-  Bd   : '[  B0  ==>   (  K_1(1270)0  ==>   (  X0  ==>   K+  pi-  pi0  ))   gamma]CC'
-  K1   : '[  B0  ==>  ^(  K_1(1270)0  ==>   (  X0  ==>   K+  pi-  pi0  ))   gamma]CC'
-  Kp   : '[  B0  ==>   (  K_1(1270)0  ==>   (  X0  ==>  ^K+  pi-  pi0  ))   gamma]CC'
-  X    : '[  B0  ==>   (  K_1(1270)0  ==>  ^(  X0  ==>   K+  pi-  pi0  ))   gamma]CC'
-  gm   : '[  B0  ==>   (  K_1(1270)0  ==>   (  X0  ==>   K+  pi-  pi0  ))  ^gamma]CC'
-  pi0  : '[  B0  ==>   (  K_1(1270)0  ==>   (  X0  ==>   K+  pi- ^pi0  ))   gamma]CC'
-  pim  : '[  B0  ==>   (  K_1(1270)0  ==>   (  X0  ==>   K+ ^pi-  pi0  ))   gamma]CC'
-Bd_KstPi0gamma_Kpi_eq_DPC:
-  Bd   : '[B0  ==>   (  K*(892)0  ==>  K+  pi-  )   pi0  gamma  ]CC'
-  Kp   : '[B0  ==>   (  K*(892)0  ==> ^K+  pi-  )   pi0  gamma  ]CC'
-  Kst  : '[B0  ==>  ^(  K*(892)0  ==>  K+  pi-  )   pi0  gamma  ]CC'
-  gm   : '[B0  ==>   (  K*(892)0  ==>  K+  pi-  )   pi0 ^gamma  ]CC'
-  pi0  : '[B0  ==>   (  K*(892)0  ==>  K+  pi-  )  ^pi0  gamma  ]CC'
-  pim  : '[B0  ==>   (  K*(892)0  ==>  K+ ^pi-  )   pi0  gamma  ]CC'
 ```
 
-Which is needed to fill the `mcfuntuple.yaml`. This should speed things up in case many samples are needed
-
-## Decay nicknames
-
-### Accessing table with DecFiles sample nicknames
-
-These nicknames can be accessed from python scripts with:
-
-```python
-import ap_utilities.decays.utilities as aput
-
-# To get exactly what was saved
-literal = aput.read_decay_name(event_type=event_type, style='literal')
-
-# To get representation with special symbols like "," or "-" replaced
-safe_1  = aput.read_decay_name(event_type=event_type, style= 'safe_1')
-
-# To get event type back from nickname, only safe_1 implemented for now
-event_type = aput.read_event_type(nickname=nickname, style= 'safe_1')
-```
-
-### Update table with nicknames and event types
-
-This is most likely not needed, unless a new sample has been created and a new nickname needs to be added. The following lines:
-
-```bash
-export DECPATH=/home/acampove/Packages/DecFiles
-
-update_decinfo
-```
-
-will:
-
-1. Set the path to the [DecFiles](https://gitlab.cern.ch/lhcb-datapkg/Gen/DecFiles)
-root directory such that `update_decinfo` can use it.
-1. Read the event types and nicknames and save them to a YAML file
-1. Read the event types and decay strings and save them to a YAML file
+- To get the sample nickname follow [this](doc/nicknames.md)
+- To get the descriptors one can either write them down in the case of a few samples or run follow [these](docs/descriptors.md) instructions in case of multiple.
 
 ## Check for samples existence
 
