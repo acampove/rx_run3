@@ -25,8 +25,9 @@ Bd_Denu_Kstenu_eq_VisibleInAcceptance_HighVisMass_EGDWC:
 - To get the sample nickname follow [this](doc/nicknames.md)
 - To get the descriptors one can either write them down in the case of a few samples or run follow [these](docs/descriptors.md) instructions in case of multiple.
 
-## Check for samples existence
+### Add the list of samples 
 
+The list goes in `rd_ap_2024/info.yaml`. For this, the [installation](doc/installation.md#with-access-to-dirac) that allows access to DIRAC is needed. 
 Given a set of MC samples specified in a YAML file like:
 
 ```YAML
@@ -69,19 +70,16 @@ run:
 check_samples -i samples.yaml -n 6
 ```
 
-to check if the samples exist using 6 threads (default is 1). The script will produce 
-`info_SECTION_NAME.yaml` and `validation_SECTION_NAME.yaml`, which will correspond to each sections up there
-i.e. `one`, `two` and `three`. 
+to check if the samples exist using 6 threads (default is 1). The script will produce:
+
+- `info_SECTION_NAME.yaml`: Where `SECTION_NAME` corresponds to each section above, i.e. `one`, `two`, `three`
+- `validation_SECTION_NAME.yaml`: Which will be needed for validation later.
 
 Once this has been done, the lines needed for the `info.yaml` can be obtained by concatenating the partial outputs with:
 
 ```bash
 cat info_*.yaml > samples.yaml
 ```
-
-**Important**: Given that most settings are the same between sections, one can use anchors and aliases to override
-only what is different between them.
-
 
 ## Validate outputs of pipelines
 
