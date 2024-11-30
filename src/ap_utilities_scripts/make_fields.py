@@ -221,19 +221,25 @@ def _get_hatted_decay( particle : str, i_par : int, decay : str) -> str:
     return decay
 # ---------------------------
 def _move_hat(decay : str) -> str:
+    '''
+    Up to this point, hats are just behind every particle, including intermediates
+    This function will move the hats before parenthesis
+    '''
     org_decay = decay
     ihat      = decay.index('^')
     decay     = decay[:ihat]
     decay     = decay.rstrip()
     elm       = decay[-1]
 
+    # Is first non-empty char before hat an opening parenthesis?
+    # If not return
     if elm != '(':
         return org_decay
 
+    # Otherwise remove hat from where it is and move it to right place
     ipar      = len(decay) - 1
     org_decay = org_decay.replace('^', ' ')
-
-    decay = org_decay[:ipar - 1] + '^' + org_decay[ipar:]
+    decay     = org_decay[:ipar - 1] + '^' + org_decay[ipar:]
 
     return decay
 # ---------------------------
