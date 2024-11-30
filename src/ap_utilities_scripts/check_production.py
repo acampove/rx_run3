@@ -23,8 +23,8 @@ class Data:
     l_skip_subs : Union[list[str],None]
     regex_info  : str = r'"([\w,_,.,-]+)"'
     d_samples   : dict[str, set[str]]            = {}
-    d_report    : dict[str, dict[str,list[str]]] = {}
     l_info      : list[list[str]]                = []
+    d_report    : dict                           = {'missing' : {}}
 # --------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='')
@@ -143,7 +143,7 @@ def _check_samples(name_1 : str, name_2 : str) -> None:
         d_sample[f'only {name_1}'] = _get_difference(s_sample_1, s_sample_2)
         d_sample[f'only {name_2}'] = _get_difference(s_sample_2, s_sample_1)
 
-    Data.d_report[f'{name_1}_{name_2}'] = d_sample
+    Data.d_report['missing'][f'{name_1}_{name_2}'] = d_sample
 # -------------------------
 def _compare_groups() -> None:
     _check_samples('info.yaml'      , 'mcfuntuple.yaml')
