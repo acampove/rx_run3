@@ -81,29 +81,24 @@ Once this has been done, the lines needed for the `info.yaml` can be obtained by
 cat info_*.yaml > samples.yaml
 ```
 
-## Validate outputs of pipelines
+### Updating `tupling/config/samples.yaml`
 
-In order to do this:
+This file lists the samples together with the _analyses_ like in:
 
-### Mount EOS in laptop
-
-```bash
-# install SSHF
-...
-# Check that it's installed
-which sshfs
-
-# Make directory to mount EOS
-
-APDIR=/eos/lhcb/wg/dpa/wp2/ci/
-sudo mkdir -p $APDIR
-sudo chown $USER:$USER $APDIR 
-
-# Mount EOS
-sshfs -o idmap=user USERNAME@lxplus.cern.ch:$MNT_DIR $MNT_DIR
+```yaml
+Bc_Dsst2573mumu_KKpi_eq_BcVegPy_DPC: # This is a sample
+- Bc_lines                           # This is an analysis
+Bc_Jpsipi_mm_eq_WeightedBcVegPy_DPC:
+- Bc_lines
+Bc_pimumu_eq_PHSP_BcVegPy_DPC:
+- Bc_lines
 ```
 
-### Checks prior to submit MR or run pipelines
+Where the _analyses_ are sets of HLT2 lines described in `tupling/config/analyses.yaml`.
+
+## Checks 
+
+### Before pipelines 
 
 In order to do these checks run:
 
@@ -121,7 +116,10 @@ made.
 The second argument is a list of strings representing samples. Here they represent inclusive samples, which should
 be skipped; this argument is optional.
 
-### Run Validation
+### After pipelines
+
+This is done in an environment with access to EOS. To gain EOS access from outside of LXPLUS (e.g. a laptop) follow 
+[these](doc/mounting_eos.md) instructions. After that do:
 
 ```bash
 # This project is in pip
