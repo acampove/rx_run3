@@ -190,7 +190,11 @@ def _skip_decay(event_type : str, decay : str) -> bool:
         return True
 
     if 'nos' in decay:
-        log.warning(f'Skipping {event_type} decay: {decay}')
+        nickname = aput.read_decay_name(event_type=event_type, style= 'safe_1')
+        log.warning('Skipping decay:')
+        log.warning(f'{"":<4}{nickname}')
+        log.warning(f'{"":<4}{event_type}')
+        log.warning(f'{"":<4}{decay}')
         return True
 
     return False
