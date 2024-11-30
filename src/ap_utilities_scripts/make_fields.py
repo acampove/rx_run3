@@ -355,7 +355,24 @@ def _get_decays() -> dict[str, dict[str,str]]:
 
     return d_decay
 # ---------------------------
+def _remove_ending_spaces(line : str) -> str:
+    '''
+    In the lines with a quote at the end, do:
+
+    ']   ' -> ']'
+    '''
+    if '\'' not in line:
+        return line
+
+    line = line.rstrip()
+    line = line.rstrip('\'')
+    line = line.rstrip()
+
+    return f'{line}' + '\''
+# ---------------------------
 def _format_yaml_line(line : str) -> str:
+    line = _remove_ending_spaces(line)
+
     mtch = re.match(Data.dec_head_rgx, line)
     if not mtch:
         return line
