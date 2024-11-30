@@ -11,7 +11,6 @@ from collections import Counter
 import argparse
 import yaml
 
-import ap_utilities.decays.utilities as aput
 from ap_utilities.logging.log_store import LogStore
 
 log = LogStore.add_logger('ap_utilities:check_production')
@@ -23,6 +22,8 @@ class Data:
     prod_path   : str
     l_skip_subs : Union[list[str],None]
     regex_info  : str = r'"([\w,_,.,-]+)"'
+    d_samples   : dict[str, set[str]]            = {}
+    d_report    : dict[str, dict[str,list[str]]] = {}
 # --------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='')
