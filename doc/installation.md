@@ -1,0 +1,34 @@
+## Environment and installation
+
+### With access to grid
+
+This is needed to run the scripts that check the bookkeeping path for samples existence.
+To run this one has to be in an environment with:
+
+1. Access to DIRAC.
+- Setup the LHCb environment with
+```bash
+. /cvmfs/lhcb.cern.ch/lib/LbEnv 
+
+# Token valid fro 100 hours
+lhcb-proxy-init -v 100:00
+```
+- Access a shell with dirac:
+```bash
+lb-dirac bash
+```
+- Install this project:
+```bash
+pip install ap-utilities
+```
+### Without access to grid
+
+Otherwise, one can just:
+
+- Install this project:
+```bash
+pip install ap-utilities
+````
+
+and use the project
+
