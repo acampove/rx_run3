@@ -23,7 +23,7 @@ Bd_Denu_Kstenu_eq_VisibleInAcceptance_HighVisMass_EGDWC:
 ```
 
 - To get the sample nickname follow [this](doc/nicknames.md)
-- To get the descriptors one can either write them down in the case of a few samples or run follow [these](docs/descriptors.md) instructions in case of multiple.
+- To get the descriptors one can either write them down in the case of a few samples or run follow [these](doc/descriptors.md) instructions in case of multiple.
 
 ### Add the list of samples 
 
