@@ -114,7 +114,36 @@ Where the path is the path to the production directory. This script will check:
 made.
 
 The second argument is a list of strings representing samples. Here they represent inclusive samples, which should
-be skipped; this argument is optional.
+be skipped; this argument is optional. 
+
+This script will produce `report.yaml`, which looks like:
+
+```yaml
+# Print nicknames of samples going above 100 characters
+long_nicknames: ['105', 'some_long_sample_name']
+missing:
+  info.yaml_mcfuntuple.yaml:
+    only info.yaml:
+      - Bd_KstPi0gamma_Kpi_eq_DPC_SS
+      - Bd_Ksteta_gg_eq_DPC_SS
+    only mcfuntuple.yaml:
+      - Bd_KplKmn_eq_DPC
+      - Bd_Kplpimn_eq_CPV2017_DPC
+  info.yaml_samples.yaml:
+    only info.yaml:
+      - Bd_Denu_Kstenu_eq_VIA_HVM_EGDWC
+      - Bd_Dmunu_Kstmunu_eq_DPC
+    only samples.yaml:
+      - Bd_KplKmn_eq_DPC
+      - Bd_Kplpimn_eq_CPV2017_DPC
+  mcfuntuple.yaml_samples.yaml:
+    only mcfuntuple.yaml:
+      - Bd_Denu_Kstenu_eq_VIA_HVM_EGDWC
+      - Bd_Dmunu_Kstmunu_eq_DPC
+    only samples.yaml:
+      - Dst_D0pi_KK_TightCut
+      - Dst_D0pi_KPi_TightCut
+```
 
 ### After pipelines
 
