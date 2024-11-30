@@ -154,6 +154,19 @@ def _save_report():
     with open('report.yaml', 'w', encoding='utf-8') as ofile:
         yaml.safe_dump(Data.d_report, ofile, width=200)
 # -------------------------
+def _check_name_lenghts() -> None:
+    l_long_nickname = []
+    for [nickname, evt_type, mc_path, polarity, _, _, _, nuval, sim_version, generator] in Data.l_info:
+        mc_path  = mc_path.replace('.', '_')
+        job_name = f'MC_{mc_path}_{polarity}_{nuval}_{sim_version}_{generator}_{evt_type}_{nickname}'
+        size     = len(job_name)
+        if size > 100:
+            log.warning(f'{size:<20}{nickname:<100}')
+            size = str(size)
+            l_long_nickname.append([nickname, size])
+
+    Data.d_report['long_nicknames'] = l_long_nickname
+# -------------------------
 def main():
     '''
     Start of execution
@@ -161,6 +174,7 @@ def main():
     _parse_args()
     _load_samples()
     _compare_groups()
+    _check_name_lenghts()
 
     _save_report()
 # -------------------------
