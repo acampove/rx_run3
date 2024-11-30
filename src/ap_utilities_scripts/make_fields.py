@@ -220,6 +220,23 @@ def _get_hatted_decay( particle : str, i_par : int, decay : str) -> str:
 
     return decay
 # ---------------------------
+def _move_hat(decay : str) -> str:
+    org_decay = decay
+    ihat      = decay.index('^')
+    decay     = decay[:ihat]
+    decay     = decay.rstrip()
+    elm       = decay[-1]
+
+    if elm != '(':
+        return org_decay
+
+    ipar      = len(decay) - 1
+    org_decay = org_decay.replace('^', ' ')
+
+    decay = org_decay[:ipar - 1] + '^' + org_decay[ipar:]
+
+    return decay
+# ---------------------------
 def _replace_nth_particle(decay : str, particle:str, ipar:int) -> str:
     src    = f' {particle}'
     tgt    = f'^{particle}'
@@ -231,8 +248,12 @@ def _replace_nth_particle(decay : str, particle:str, ipar:int) -> str:
 
     if npart == 2:
         decay = decay.replace(src, tgt)
+    else:
+        decay = src.join(l_part[:ipar]) + tgt + src.join(l_part[ipar:])
 
-    return src.join(l_part[:ipar]) + tgt + src.join(l_part[ipar:])
+    decay = _move_hat(decay)
+
+    return decay
 # ---------------------------
 def _rename_repeated(l_par : list[str]) -> list[str]:
     d_par_freq = {}
