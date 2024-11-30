@@ -11,6 +11,7 @@ from collections import Counter
 import argparse
 import yaml
 
+import ap_utilities.io.utilities    as iout 
 from ap_utilities.logging.log_store import LogStore
 
 log = LogStore.add_logger('ap_utilities:check_production')
@@ -151,8 +152,12 @@ def _compare_groups() -> None:
     _check_samples('mcfuntuple.yaml', 'samples.yaml'   )
 # -------------------------
 def _save_report():
-    with open('report.yaml', 'w', encoding='utf-8') as ofile:
+    out_path = 'report.yaml'
+
+    with open(out_path, 'w', encoding='utf-8') as ofile:
         yaml.safe_dump(Data.d_report, ofile, width=200)
+
+    iout.reformat_yaml(path = out_path)
 # -------------------------
 def _check_name_lenghts() -> None:
     l_long_nickname = []
