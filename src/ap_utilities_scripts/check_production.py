@@ -93,49 +93,61 @@ def _list_to_set(l_line : list[str], msg_repeated : Union[None,str]=None) -> set
 
     return s_line
 # -------------------------
-def _print_set(s_data : set[str], msg : Union[str,None] = None) -> None:
-    if len(s_data) == 0:
-        return
+def _load_samples() -> None:
+    l_line        = _get_lines('info.yaml')
+    l_info_sample = _samples_from_info_lines(l_line)
+    s_info_sample = _list_to_set(l_info_sample, msg_repeated='Found repeated entries in info.yaml')
 
-    l_data = list(s_data)
-    l_data.sort()
-
-    log.warning(msg)
-    for nickname in l_data:
-        # split sim samples are named with a _SS suffix
-        # which is not part of the DecFiles naming, need to remove it here
-        # to find actual event type
-        if nickname.endswith('_SS'):
-            nickname_slc = nickname[:-3]
-        else:
-            nickname_slc = nickname
-
-        event_type = aput.read_event_type(nickname=nickname_slc, style= 'safe_1')
-        log.info(f'{event_type:<15}{nickname:<70}')
-# -------------------------
-def _check_mcdt() -> None:
     d_mcdt        = _load_yaml('tupling/config/mcfuntuple.yaml')
     l_mcdt_sample = list(d_mcdt)
     s_mcdt_sample = _list_to_set(l_mcdt_sample, msg_repeated='Found repeated entries in mcfuntuple')
 
-    l_line = _get_lines('info.yaml')
-    l_info_sample = _samples_from_info_lines(l_line)
-    s_info_sample = _list_to_set(l_info_sample, msg_repeated='Found repeated entries in info.yaml')
+    d_samp        = _load_yaml('tupling/config/samples.yaml')
+    l_samp_sample = list(d_samp)
+    s_samp_sample = _list_to_set(l_samp_sample, msg_repeated='Found repeated entries in samples.yaml')
 
-    if s_mcdt_sample != s_info_sample:
-        log.warning('Samples in mcfuntuple and info.yaml are different')
-        s_mcdt_only = s_mcdt_sample - s_info_sample
-        s_info_only = s_info_sample - s_mcdt_sample
+    Data.d_samples['info.yaml'      ] = s_info_sample
+    Data.d_samples['mcfuntuple.yaml'] = s_mcdt_sample
+    Data.d_samples['samples.yaml'   ] = s_samp_sample
+# -------------------------
+def _get_difference(s_val1 : set[str], s_val2 : set[str]) -> list[str]:
+    s_diff = s_val1 - s_val2
+    l_diff = list(s_diff)
+    l_diff.sort()
 
-        _print_set(s_mcdt_only, msg='MCDecayTree only')
-        _print_set(s_info_only, msg='info.yaml only')
+    return l_diff
+# -------------------------
+def _check_samples(name_1 : str, name_2 : str) -> None:
+    s_sample_1 = Data.d_samples[name_1]
+    s_sample_2 = Data.d_samples[name_2]
+
+    d_sample   = {}
+    if s_sample_1 != s_sample_2:
+        log.warning(f'Samples in {name_1} and {name_2} are different')
+
+        d_sample[f'only {name_1}'] = _get_difference(s_sample_1, s_sample_2)
+        d_sample[f'only {name_2}'] = _get_difference(s_sample_2, s_sample_1)
+
+    Data.d_report[f'{name_1}_{name_2}'] = d_sample
+# -------------------------
+def _compare_groups() -> None:
+    _check_samples('info.yaml'      , 'mcfuntuple.yaml')
+    _check_samples('info.yaml'      , 'samples.yaml'   )
+    _check_samples('mcfuntuple.yaml', 'samples.yaml'   )
+# -------------------------
+def _save_report():
+    with open('report.yaml', 'w', encoding='utf-8') as ofile:
+        yaml.safe_dump(Data.d_report, ofile, width=200)
 # -------------------------
 def main():
     '''
     Start of execution
     '''
     _parse_args()
-    _check_mcdt()
+    _load_samples()
+    _compare_groups()
+
+    _save_report()
 # -------------------------
 if __name__ == '__main__':
     main()
