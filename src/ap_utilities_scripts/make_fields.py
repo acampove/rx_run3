@@ -24,6 +24,8 @@ class Data:
             '11442001',
             '13442001',
             '15444001',
+            '15442001',
+            '12873002',
             ]
 
     d_repl_sym = {
@@ -54,6 +56,7 @@ class Data:
             'pi0' : 'pi0',
             'pi+' : 'pip',
             'pi-' : 'pim',
+            'X'   : 'X',
 
             'K+'  : 'Kp',
             'K-'  : 'Km',
@@ -64,11 +67,17 @@ class Data:
             'mu+' : 'Mp',
             'mu-' : 'Mm',
 
+            'tau+': 'taup',
+            'tau-': 'taum',
+
             'p+'  : 'Pp',
             'p~-' : 'Pm',
             'K_S0': 'KS',
 
+            'D-'    : 'D',
             'D0'    : 'D',
+            'D_s-'  : 'D',
+            'D_s*-' : 'D',
             'D~0'   : 'D',
             'nu_tau': 'nu',
             'nu_mu' : 'nu',
@@ -82,19 +91,21 @@ class Data:
             'phi' : 'phi',
             'eta' : 'eta',
 
-            'Beauty'    : 'B',
-            'K_1+'      : 'K1',
-            'K_1(1270)' : 'K1',
-            'phi(1020)' : 'phi',
-            'gamma'     : 'gm',
-            'K*(892)0'  : 'Kst',
-            'K*(892)+'  : 'Kstp',
-            'J/psi(1S)' : 'Jpsi',
-            'psi(2S)'   : 'psi2S',
-            'Lambda_b0' : 'Lb',
-            'Lambda_c-' : 'Lc',
-            'Lambda0'   : 'Lz',
-            'Lambda~0'  : 'Lz',
+            'K_2*(1430)+'    : 'K2',
+            'Beauty'         : 'B',
+            'K_1+'           : 'K1',
+            'K_1(1270)0'     : 'K1',
+            'K_1(1270)+'     : 'K1',
+            'phi(1020)'      : 'phi',
+            'gamma'          : 'gm',
+            'K*(892)0'       : 'Kst',
+            'K*(892)+'       : 'Kstp',
+            'J/psi(1S)'      : 'Jpsi',
+            'psi(2S)'        : 'psi2S',
+            'Lambda_b0'      : 'Lb',
+            'Lambda_c-'      : 'Lc',
+            'Lambda0'        : 'Lz',
+            'Lambda~0'       : 'Lz',
             'anti-Lambda_c-' : 'Lc',
             }
 # ---------------------------
@@ -171,11 +182,11 @@ def _skip_decay(event_type : str, decay : str) -> bool:
         return True
 
     if '{,gamma}' in decay:
-        log.warning(f'Skipping decay: {decay}')
+        log.warning(f'Skipping {event_type} decay: {decay}')
         return True
 
     if 'nos' in decay:
-        log.warning(f'Skipping decay: {decay}')
+        log.warning(f'Skipping {event_type} decay: {decay}')
         return True
 
     return False
@@ -237,12 +248,12 @@ def _rename_repeated(l_par : list[str]) -> list[str]:
 
     return l_par_renamed
 # ---------------------------
-def _nickname_from_particle(name : str) -> str:
+def _nickname_from_particle(name : str, event_type : str) -> str:
     name, ipar = _remove_index(name)
     name       = name.replace('anti-', '')
 
     if name not in Data.d_nicknames:
-        log.warning(f'Nickname for {name} not found')
+        log.warning(f'Nickname for {name} not found in {event_type}')
         return name
 
     nick = Data.d_nicknames[name]
@@ -255,7 +266,7 @@ def _nickname_from_particle(name : str) -> str:
 # ---------------------------
 def _fix_names(decay):
     '''
-    Decay fileld in decay files is not properly written, need to fix here, before using decay 
+    Decay fileld in decay files is not properly written, need to fix here, before using decay
     '''
     decay = decay.replace('K_1+', 'K_1(1270)+')
     decay = decay.replace('K*+' ,   'K*(892)+')
@@ -264,8 +275,7 @@ def _fix_names(decay):
 
     return decay
 # ---------------------------
-def _get_decays(event_type : str) -> Union[None,dict[str,str]]:
-    log.info(event_type)
+def _get_decay(event_type : str) -> Union[None,dict[str,str]]:
     decay = Data.d_decay[event_type]
     decay = _fix_names(decay)
 
@@ -279,10 +289,21 @@ def _get_decays(event_type : str) -> Union[None,dict[str,str]]:
 
     d_dec = {}
     for i_par, par in enumerate(l_par):
-        nickname        = _nickname_from_particle(par)
+        nickname        = _nickname_from_particle(par, event_type)
         d_dec[nickname] = _get_hatted_decay(par, i_par, decay)
 
     return d_dec
+# ---------------------------
+def _get_decays() -> dict[str, dict[str,str]]:
+    d_decay = {}
+    for event_type in Data.l_event_type:
+        d_tmp = _get_decay(event_type)
+        if d_tmp is None:
+            continue
+
+        d_decay[event_type] = d_tmp
+
+    return d_decay
 # ---------------------------
 def main():
     '''
@@ -290,15 +311,10 @@ def main():
     '''
     _parse_args()
     _load_decays()
-    for event_type in Data.l_event_type:
-        d_tmp = _get_decays(event_type)
-        if d_tmp is None:
-            continue
+    d_decay = _get_decays()
+    with open('decays.yaml', 'w', encoding='utf-8') as ofile:
+        yaml.safe_dump(d_decay, ofile)
 
-        for key, val in d_tmp.items():
-            log.info(f'{key:<20}{val:<100}')
-
-        log.info('')
 # ---------------------------
 if __name__ == '__main__':
     main()
