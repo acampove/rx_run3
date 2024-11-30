@@ -105,16 +105,17 @@ def _print_set(s_data : set[str], msg : Union[str,None] = None) -> None:
         # which is not part of the DecFiles naming, need to remove it here
         # to find actual event type
         if nickname.endswith('_SS'):
-            nickname = nickname[:-3]
+            nickname_slc = nickname[:-3]
+        else:
+            nickname_slc = nickname
 
-        event_type = aput.read_event_type(nickname=nickname, style= 'safe_1')
+        event_type = aput.read_event_type(nickname=nickname_slc, style= 'safe_1')
         log.info(f'{event_type:<15}{nickname:<70}')
 # -------------------------
 def _check_mcdt() -> None:
     d_mcdt        = _load_yaml('tupling/config/mcfuntuple.yaml')
     l_mcdt_sample = list(d_mcdt)
     s_mcdt_sample = _list_to_set(l_mcdt_sample, msg_repeated='Found repeated entries in mcfuntuple')
-
 
     l_line = _get_lines('info.yaml')
     l_info_sample = _samples_from_info_lines(l_line)
