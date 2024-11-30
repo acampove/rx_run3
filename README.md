@@ -128,11 +128,11 @@ pip install ap_utilities
 validate_ap_tuples -p PIPELINE -f ntuple_scheme.yaml -t 5
 ```
 
-where:   
--l: Logging level, by default 20 (info), but it can be 10 (debug) or 30 (warning)   
--t: Is the number of threads to use, if not passed, it will use one.   
--p: Is the pipeline number, needed to find the ROOT files in EOS   
--f: passes the file with the configuration   
+Where:   
+`-l`: Logging level, by default 20 (info), but it can be 10 (debug) or 30 (warning)   
+`-t`: Is the number of threads to use, if not passed, it will use one.   
+`-p`: Is the pipeline number, needed to find the ROOT files in EOS   
+`-f`: passes the file with the configuration   
 
 ```yaml
 # -----------------------------------------
