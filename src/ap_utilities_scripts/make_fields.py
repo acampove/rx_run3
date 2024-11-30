@@ -7,6 +7,7 @@ from typing                         import Union
 from importlib.resources            import files
 
 import yaml
+import ap_utilities.decays.utilities as aput
 from ap_utilities.logging.log_store import LogStore
 
 log = LogStore.add_logger('ap_utilities:make_fields')
@@ -151,6 +152,8 @@ def _reformat_back_decay(decay : str) -> str:
     decay = decay.replace('[ '  ,   '[')
     decay = decay.replace('[  ' ,   '[')
     decay = decay.replace('  ]' ,   ']')
+    decay = decay.replace('  [' ,   '[')
+    decay = decay.replace(' ['  ,   '[')
 
     decay = decay.replace('(  ' ,   '(')
     decay = decay.replace('  )' ,   ')')
@@ -264,7 +267,18 @@ def _nickname_from_particle(name : str, event_type : str) -> str:
 
     return nick
 # ---------------------------
-def _fix_names(decay):
+def _replace_beauty(decay : str, event_type : str) -> str:
+    if event_type == '11102453':
+        bname = 'B0'
+    else:
+        log.warning(f'Cannot identify B meson type for {event_type}')
+        bname = 'Beauty'
+
+    decay = decay.replace('Beauty', bname)
+
+    return decay
+# ---------------------------
+def _fix_names(decay : str, event_type : str) -> str:
     '''
     Decay fileld in decay files is not properly written, need to fix here, before using decay
     '''
@@ -273,11 +287,14 @@ def _fix_names(decay):
     decay = decay.replace('K*0' ,   'K*(892)0')
     decay = decay.replace('My_' ,           '')
 
+    if 'Beauty' in decay:
+        decay = _replace_beauty(decay, event_type)
+
     return decay
 # ---------------------------
 def _get_decay(event_type : str) -> Union[None,dict[str,str]]:
     decay = Data.d_decay[event_type]
-    decay = _fix_names(decay)
+    decay = _fix_names(decay, event_type)
 
     if _skip_decay(event_type, decay):
         return None
@@ -301,7 +318,8 @@ def _get_decays() -> dict[str, dict[str,str]]:
         if d_tmp is None:
             continue
 
-        d_decay[event_type] = d_tmp
+        decname = aput.read_decay_name(event_type=event_type, style= 'safe_1')
+        d_decay[decname] = d_tmp
 
     return d_decay
 # ---------------------------
@@ -313,8 +331,7 @@ def main():
     _load_decays()
     d_decay = _get_decays()
     with open('decays.yaml', 'w', encoding='utf-8') as ofile:
-        yaml.safe_dump(d_decay, ofile)
-
+        yaml.safe_dump(d_decay, ofile, width=80)
 # ---------------------------
 if __name__ == '__main__':
     main()
