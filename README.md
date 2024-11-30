@@ -196,7 +196,7 @@ sshfs -o idmap=user USERNAME@lxplus.cern.ch:$MNT_DIR $MNT_DIR
 In order to do these checks run:
 
 ```bash
-check_production -p /home/acampove/Packages/AnalysisProductions/rd_ap_2024
+check_production -p /home/acampove/Packages/AnalysisProductions/rd_ap_2024 -s psiX cocktail minbias
 ```
 
 Where the path is the path to the production directory. This script will check:
@@ -205,6 +205,9 @@ Where the path is the path to the production directory. This script will check:
 1. If the entries in `mcfuntuple.yaml` are different.
 1. If there are samples in `info.yaml` are not found in `mcfuntuple.yaml`. In which case `MCDecayTree` will not be
 made.
+
+The second argument is a list of strings representing samples. Here they represent inclusive samples, which should
+be skipped; this argument is optional.
 
 ### Run Validation
 
