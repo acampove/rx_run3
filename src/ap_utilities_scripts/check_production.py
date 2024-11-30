@@ -96,8 +96,11 @@ def _print_set(s_data : set[str], msg : Union[str,None] = None) -> None:
     if len(s_data) == 0:
         return
 
+    l_data = list(s_data)
+    l_data.sort()
+
     log.warning(msg)
-    for nickname in s_data:
+    for nickname in l_data:
         # split sim samples are named with a _SS suffix
         # which is not part of the DecFiles naming, need to remove it here
         # to find actual event type
