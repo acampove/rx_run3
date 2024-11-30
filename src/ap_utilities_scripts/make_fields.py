@@ -7,6 +7,7 @@ from typing                         import Union
 from importlib.resources            import files
 
 import yaml
+
 import ap_utilities.decays.utilities as aput
 from ap_utilities.logging.log_store import LogStore
 
@@ -148,13 +149,11 @@ def _reformat_back_decay(decay : str) -> str:
 
     # Decay cannot have space here, other spaces are allowed
     decay = decay.replace('] CC', ']CC')
-
     decay = decay.replace('[ '  ,   '[')
     decay = decay.replace('[  ' ,   '[')
     decay = decay.replace('  ]' ,   ']')
     decay = decay.replace('  [' ,   '[')
     decay = decay.replace(' ['  ,   '[')
-
     decay = decay.replace('(  ' ,   '(')
     decay = decay.replace('  )' ,   ')')
 
@@ -331,7 +330,7 @@ def main():
     _load_decays()
     d_decay = _get_decays()
     with open('decays.yaml', 'w', encoding='utf-8') as ofile:
-        yaml.safe_dump(d_decay, ofile, width=80)
+        yaml.safe_dump(d_decay, ofile, width=200)
 # ---------------------------
 if __name__ == '__main__':
     main()
