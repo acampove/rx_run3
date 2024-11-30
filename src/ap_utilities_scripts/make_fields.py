@@ -17,6 +17,8 @@ class Data:
     '''
     Class storing shared data
     '''
+    dec_head_rgx = r'\s+(\w+):'
+
     l_skip_type= [
             '12952000',
             '11453001',
@@ -322,15 +324,40 @@ def _get_decays() -> dict[str, dict[str,str]]:
 
     return d_decay
 # ---------------------------
+def _format_yaml_line(line : str) -> str:
+    mtch = re.match(Data.dec_head_rgx, line)
+    if not mtch:
+        return line
+
+    head     = mtch.group(1)
+    head_pad = f'{head:5}'
+
+    line = line.replace(f'{head}:', f'{head_pad}:')
+
+    return line
+# ---------------------------
+def _save_decays(path : str, d_decay : dict[str,dict[str,str]]) -> None:
+    with open(path, 'w', encoding='utf-8') as ofile:
+        yaml.safe_dump(d_decay, ofile, width=200)
+
+    with open(path, encoding='utf-8') as ifile:
+        l_line = ifile.read().splitlines()
+
+    l_line = [ _format_yaml_line(line) for line in l_line ]
+
+    text = '\n'.join(l_line)
+    with open(path, 'w', encoding='utf-8') as ofile:
+        ofile.write(text)
+# ---------------------------
 def main():
     '''
     Script starts here
     '''
     _parse_args()
     _load_decays()
+
     d_decay = _get_decays()
-    with open('decays.yaml', 'w', encoding='utf-8') as ofile:
-        yaml.safe_dump(d_decay, ofile, width=200)
+    _save_decays('decays.yaml', d_decay)
 # ---------------------------
 if __name__ == '__main__':
     main()
