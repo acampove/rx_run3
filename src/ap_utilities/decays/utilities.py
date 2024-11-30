@@ -41,13 +41,17 @@ def format_nickname(nickname : str, style : str) -> str:
     if style != 'safe_1':
         raise ValueError(f'Invalid style: {style}')
 
-    nickname = nickname.replace(                 '.',     'p')
-    nickname = nickname.replace(                 '-',    'mn')
-    nickname = nickname.replace(                 '+',    'pl')
-    nickname = nickname.replace(                 '=',  '_eq_')
-    nickname = nickname.replace(                 ',',     '_')
-    nickname = nickname.replace(        'DecProdCut',   'DPC')
-    nickname = nickname.replace('EvtGenDecayWithCut', 'EGDWC')
+    nickname = nickname.replace(                  '.',     'p')
+    nickname = nickname.replace(                  '-',    'mn')
+    nickname = nickname.replace(                  '+',    'pl')
+    nickname = nickname.replace(                  '=',  '_eq_')
+    nickname = nickname.replace(                  ',',     '_')
+    nickname = nickname.replace(         'DecProdCut',   'DPC')
+    nickname = nickname.replace( 'EvtGenDecayWithCut', 'EGDWC')
+    nickname = nickname.replace('VisibleInAcceptance',   'VIA')
+    nickname = nickname.replace(        'HighVisMass',   'HVM')
+    nickname = nickname.replace(       'OppositeSign',    'OS')
+    nickname = nickname.replace(           'TightCut',    'TC')
 
     return nickname
 # ---------------------------------
