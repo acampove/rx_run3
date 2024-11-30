@@ -182,3 +182,4 @@ report*.yaml
 info_*.yaml
 info.yaml
 validation_*.yaml
+decays.yaml
