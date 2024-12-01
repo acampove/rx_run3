@@ -356,7 +356,7 @@ def _get_decay(event_type : str, decname : str) -> Union[None,dict[str,str]]:
     l_par = _particles_from_decay(decay)
     l_par = _rename_repeated(l_par)
     decay = _reformat_back_decay(decay)
-    decay = _check_unhatted_decay(decay)
+    decay = _check_unhatted_decay(decay, event_type)
 
     d_dec = {}
     for i_par, par in enumerate(l_par):
@@ -372,12 +372,12 @@ def _check_closed(decay : str, left : str, right : str) -> None:
     if nlft != nrgt:
         log.error(f'Failed closure {left}{right} in {decay}')
 # ---------------------------
-def _check_unhatted_decay(decay : str) -> str:
+def _check_unhatted_decay(decay : str, event_type : str) -> str:
     '''
     Final check of decay, will apply fixes if needed
     '''
     if not decay.endswith('CC'):
-        log.warning(f'Decay {decay} had no conjugate adding it')
+        log.warning(f'Decay {decay}/{event_type} had no conjugate adding it')
         return f'{decay}CC'
 
     _check_closed(decay, '(', ')')
