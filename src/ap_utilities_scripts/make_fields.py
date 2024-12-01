@@ -134,7 +134,7 @@ def _parse_args() -> None:
     with open(input_path, encoding='utf-8') as ifile:
         Data.l_event_type = ifile.read().splitlines()
 
-    LogStore.set_level('ap_utilities:make_fields' args.log_lvl)
+    LogStore.set_level('ap_utilities:make_fields', args.log_lvl)
 # ---------------------------
 def _reformat_decay(decay : str) -> str:
     # Symbol renaming needed, e.g. -> ==>, cc -> CC
