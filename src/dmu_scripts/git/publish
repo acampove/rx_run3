@@ -76,6 +76,7 @@ push_all()
         git add pyproject.toml
         git commit -m "Publication commit"
 
+        git pull    $REMOTE HEAD
         git push -u $REMOTE HEAD
         git push    $REMOTE --tags
     done
