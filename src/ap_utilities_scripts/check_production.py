@@ -61,7 +61,7 @@ def _sample_from_line(line : str) -> Union[None,list[str]]:
 
     return l_match
 # -------------------------
-def _sample_from_info(l_info_line : str) -> list[list[str]]:
+def _sample_from_info(l_info_line : list[str]) -> list[list[str]]:
     '''
     Takes list of lines in info.yaml
     Returns list of sets of strings defining MC samples
