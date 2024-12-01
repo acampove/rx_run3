@@ -191,6 +191,12 @@ def _particles_from_decay(decay : str) -> list[str]:
     l_part = [ part for part in l_part if part != ''         ]
     l_part = [ _replace_back(part) for part in l_part ]
 
+    # Anti-neutrinos and neutrinos will use nu(_index) branch names
+    # Need this to make sure neutrinos appear as repeated
+    l_part = [ part.rstrip('~') for part in l_part ]
+
+    log.debug(f'Found particles: {l_part}')
+
     return l_part
 # ---------------------------
 def _skip_decay(event_type : str, decay : str) -> bool:
