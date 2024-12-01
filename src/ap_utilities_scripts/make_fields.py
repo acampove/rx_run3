@@ -146,7 +146,10 @@ def _reformat_decay(decay : str) -> str:
     for org, new in Data.d_repl_spa.items():
         decay = decay.replace(org, new)
 
-    decay = re.sub(r'anti-(\w+)', r'\1~', decay)
+    # Underscores are part of neutrino names
+    # Particles otherwise only use letters
+    # Numbers should be excluded, due to anti-D0 -> D~0
+    decay = re.sub(r'anti-([a-zA-Z,_]+)', r'\1~', decay)
 
     return decay
 # ---------------------------
