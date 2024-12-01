@@ -114,7 +114,7 @@ class Data:
             'Lambda0'        : 'Lz',
             'Lambda~0'       : 'Lz',
             'Lambda_c-'      : 'Lc',
-            'Lambda_c+'      : 'Lc',
+            'Lambda_c~-'     : 'Lc',
             }
 # ---------------------------
 def _load_decays() -> None:
