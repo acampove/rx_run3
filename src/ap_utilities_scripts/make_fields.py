@@ -308,7 +308,10 @@ def _nickname_from_particle(name : str, event_type : str, decname : str) -> str:
 
     return nick
 # ---------------------------
-def _replace_beauty(decay : str, event_type : str) -> str:
+def _fix_beauty(decay : str, event_type : str) -> str:
+    if 'Beauty' not in decay:
+        return decay
+
     if event_type == '11102453':
         bname = 'B0'
     else:
@@ -319,17 +322,22 @@ def _replace_beauty(decay : str, event_type : str) -> str:
 
     return decay
 # ---------------------------
+def _fix_phi(decay : str) -> str:
+    rgx   = r'phi(?!\s*\(\s*1020\s*\)\s*)'
+    decay = re.sub(rgx, 'phi(1020)', decay)
+
+    return decay
+# ---------------------------
 def _fix_names(decay : str, event_type : str) -> str:
     '''
     Decay fileld in decay files is not properly written, need to fix here, before using decay
     '''
-    decay = decay.replace('K_1+', 'K_1(1270)+')
-    decay = decay.replace('K*+' ,   'K*(892)+')
-    decay = decay.replace('K*0' ,   'K*(892)0')
-    decay = decay.replace('My_' ,           '')
-
-    if 'Beauty' in decay:
-        decay = _replace_beauty(decay, event_type)
+    decay = decay.replace('K_1+' ,  'K_1(1270)+')
+    decay = decay.replace('K*+'  ,    'K*(892)+')
+    decay = decay.replace('K*0'  ,    'K*(892)0')
+    decay = decay.replace('My_'  ,            '')
+    decay = _fix_phi(decay)
+    decay = _fix_beauty(decay, event_type)
 
     return decay
 # ---------------------------
