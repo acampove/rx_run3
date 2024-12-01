@@ -204,6 +204,10 @@ def _skip_decay(event_type : str, decay : str) -> bool:
     return False
 # ---------------------------
 def _remove_index(particle : str) -> tuple[str,int]:
+    '''
+    Takes string representing particle and index of occurence
+    Returns particle name and index in a tuple
+    '''
     mtch = re.match(r'(.*)_(\d+)$', particle)
     if not mtch:
         return particle, 1
