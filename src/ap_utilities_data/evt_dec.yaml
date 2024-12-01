@@ -2595,7 +2595,7 @@
 '12175087': '[B+ -> (D*(2010)+ -> (D0 -> K- pi+) pi+) mu+ mu-]cc'
 '12175098': '[B+ -> (D*(2010)- -> (D0bar -> K+ pi-) pi-) mu+ mu+]cc'
 '12175101': '[ B+ -> (anti-Lambda_c- -> (Lambda~0 -> p~- pi+) mu- anti-nu_mu) p+ pi+]cc'
-'12183004': '[B+ -> My_anti-D0 pi+]cc'
+'12183004': '[B+ -> (D~0 ==>  K+  e- nu_e~) pi+]cc'
 '12185000': '[B+ -> (D+ -> K- pi+ pi+) e+ e-]cc'
 '12185007': '[B+ -> (D~0 -> pi+ e- anti-nu_e) K+ pi- pi+]cc'
 '12185008': '[B+ -> (anti-D0 -> K+ e- nu_e~) pi+ pi+ pi-]cc'
