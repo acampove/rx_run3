@@ -84,7 +84,7 @@ class Data:
             'D0~'    : 'D',
             'D~0'    : 'D',
             'D_s-'   : 'D',
-            'D_s*-'  : 'D',
+            'D*_s-'  : 'D',
             'nu_tau' : 'nu',
             'nu_mu'  : 'nu',
             'nu_e'   : 'nu',
