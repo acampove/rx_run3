@@ -21,7 +21,6 @@ class Data:
     Class storing shared attributes
     '''
     prod_path   : str
-    l_skip_subs : Union[list[str],None]
     regex_info  : str = r'"([\w,_,.,-]+)"'
     d_samples   : dict[str, set[str]]            = {}
     l_info      : list[list[str]]                = []
@@ -30,11 +29,9 @@ class Data:
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('-p', '--prod_path', type=str , help='Path to directory with production, rd_ap_2024'          , required= True)
-    parser.add_argument('-s', '--skip_subs', nargs='+', help='If nickname contains this substring, it will be skipped', required=False)
     args = parser.parse_args()
 
     Data.prod_path   = args.prod_path
-    Data.l_skip_subs = args.skip_subs
 # -------------------------
 def _load_yaml(name : str) -> dict:
     path = f'{Data.prod_path}/{name}'
@@ -84,18 +81,7 @@ def _print_repeated(l_line : list[str]) -> None:
     for repeated, count in l_repeated:
         log.info(f'{repeated:<40}{count:<10}')
 # -------------------------
-def _skip_sample(nickname : str) -> bool:
-    if Data.l_skip_subs is None:
-        return False
-
-    for subs in Data.l_skip_subs:
-        if subs in nickname:
-            return True
-
-    return False
-# -------------------------
 def _list_to_set(l_line : list[str], msg_repeated : Union[None,str]=None) -> set[str]:
-    l_line = [ line for line in l_line if not _skip_sample(line) ]
     s_line = set(l_line)
     nlist  = len(l_line)
     nset   = len(s_line)

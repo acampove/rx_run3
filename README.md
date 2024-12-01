@@ -103,7 +103,7 @@ Where the _analyses_ are sets of HLT2 lines described in `tupling/config/analyse
 In order to do these checks run:
 
 ```bash
-check_production -p /home/acampove/Packages/AnalysisProductions/rd_ap_2024 -s psiX cocktail minbias
+check_production -p /home/acampove/Packages/AnalysisProductions/rd_ap_2024
 ```
 
 Where the path is the path to the production directory. This script will check:
