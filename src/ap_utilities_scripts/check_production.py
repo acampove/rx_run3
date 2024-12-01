@@ -98,13 +98,13 @@ def _load_samples() -> None:
     Data.l_info   = _sample_from_info(l_info_line)
 
     l_info_sample = _samples_from_info_lines(l_info_line)
-    s_info_sample = _list_to_set(l_info_sample, msg_repeated='Found repeated entries in info.yaml')
+    s_info_sample = _list_to_set(l_info_sample)
 
     d_mcdt        = _load_yaml('tupling/config/mcfuntuple.yaml')
     l_mcdt_sample = list(d_mcdt)
     s_mcdt_sample = _list_to_set(l_mcdt_sample, msg_repeated='Found repeated entries in mcfuntuple')
 
-    d_samp        = _load_yaml('tupling/config/samples.yaml')
+    d_samp        = _load_yaml('tupling/config/samples_turbo_lines_mapping.yaml')
     l_samp_sample = list(d_samp)
     s_samp_sample = _list_to_set(l_samp_sample, msg_repeated='Found repeated entries in samples.yaml')
 
