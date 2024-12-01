@@ -5435,7 +5435,7 @@
 '15144002': '[Lambda_b0 -> p+ K- (J/psi(1S) -> mu+ mu-)]cc'
 '15144003': '[ ( Lambda_b0  ->   p+ K- (mPsi -> mu+ mu-) )]CC'
 '15144011': '[Lambda_b0 -> p+ K- (psi(2S) -> mu+ mu-)]cc'
-'15144021': '[Lambda_b0 -> p+ pi-) (J/psi(1S) -> mu+ mu-)]cc'
+'15144021': '[Lambda_b0 -> p+ pi- (J/psi(1S) -> mu+ mu-)]cc'
 '15144022': '[Lambda_b0 -> (J/psi(1S) => mu+ mu-) (N(1520)0 -> p+ pi-)]cc'
 '15144032': '[Lambda_b0 -> p+ pi- (psi(2S) => mu+ mu-)]cc'
 '15144033': '[Lambda_b0 -> (psi(2S) => mu+ mu-) (N(1520)0 -> p+ pi-)]cc'
