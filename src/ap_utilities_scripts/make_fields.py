@@ -281,6 +281,10 @@ def _replace_nth_particle(decay : str, particle:str, ipar:int) -> str:
     return decay
 # ---------------------------
 def _rename_repeated(l_par : list[str]) -> list[str]:
+    '''
+    Takes names of particles
+    Returns names of particles, if particles appear more than once, append _x to name
+    '''
     d_par_freq = {}
     for par in l_par:
         if par not in d_par_freq:
