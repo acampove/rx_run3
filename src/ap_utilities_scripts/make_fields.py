@@ -362,6 +362,13 @@ def _get_decay(event_type : str, decname : str) -> Union[None,dict[str,str]]:
 
     return d_dec
 # ---------------------------
+def _check_closed(decay : str, left : str, right : str) -> None:
+    nlft = decay.count( left)
+    nrgt = decay.count(right)
+
+    if nlft != nrgt:
+        log.error(f'Failed closure {left}{right} in {decay}')
+# ---------------------------
 def _check_unhatted_decay(decay : str) -> str:
     '''
     Final check of decay, will apply fixes if needed
@@ -369,6 +376,9 @@ def _check_unhatted_decay(decay : str) -> str:
     if not decay.endswith('CC'):
         log.warning(f'Decay {decay} had no conjugate adding it')
         return f'{decay}CC'
+
+    _check_closed(decay, '(', ')')
+    _check_closed(decay, '[', ']')
 
     return decay
 # ---------------------------
