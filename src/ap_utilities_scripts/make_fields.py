@@ -304,8 +304,6 @@ def _nickname_from_particle(name : str, event_type : str, decname : str) -> str:
     if ipar > 1:
         nick = f'{nick}_{ipar}'
 
-    nick = nick.replace('anti-', '')
-
     return nick
 # ---------------------------
 def _fix_beauty(decay : str, event_type : str) -> str:
