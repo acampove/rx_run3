@@ -126,12 +126,15 @@ def _load_decays() -> None:
 # ---------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
-    parser.add_argument('-i', '--input' , type=str, help='Path to textfile with event types')
+    parser.add_argument('-i', '--input'   , type=str, help='Path to textfile with event types')
+    parser.add_argument('-l', '--log_lvl' , type=int, help='Logging level', choices=[10,20,30], default=20)
     args = parser.parse_args()
 
     input_path = args.input
     with open(input_path, encoding='utf-8') as ifile:
         Data.l_event_type = ifile.read().splitlines()
+
+    LogStore.set_level('ap_utilities:make_fields' args.log_lvl)
 # ---------------------------
 def _reformat_decay(decay : str) -> str:
     # Symbol renaming needed, e.g. -> ==>, cc -> CC
