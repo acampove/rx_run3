@@ -1,6 +1,6 @@
 ## Decays from event types
 
-Given a text file with the list of decay files, one in each line, run:
+Given a text file with the event types, one in each line, run:
 
 ```bash
 make_fields -i decays.txt
