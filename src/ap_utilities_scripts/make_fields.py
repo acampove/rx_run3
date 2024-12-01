@@ -335,11 +335,12 @@ def _fix_phi(decay : str) -> str:
 # ---------------------------
 def _fix_names(decay : str, event_type : str) -> str:
     '''
-    Decay fileld in decay files is not properly written, need to fix here, before using decay
+    Decay field in decay files is not properly written, need to fix here, before using decay
     '''
     decay = decay.replace('K_1+' ,  'K_1(1270)+')
     decay = decay.replace('K*+'  ,    'K*(892)+')
     decay = decay.replace('K*0'  ,    'K*(892)0')
+    decay = decay.replace('D_s*' ,        'D*_s')
     decay = decay.replace('My_'  ,            '')
     decay = _fix_phi(decay)
     decay = _fix_beauty(decay, event_type)
