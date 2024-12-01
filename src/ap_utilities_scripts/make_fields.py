@@ -353,6 +353,7 @@ def _get_decay(event_type : str, decname : str) -> Union[None,dict[str,str]]:
     l_par = _particles_from_decay(decay)
     l_par = _rename_repeated(l_par)
     decay = _reformat_back_decay(decay)
+    decay = _check_unhatted_decay(decay)
 
     d_dec = {}
     for i_par, par in enumerate(l_par):
@@ -360,6 +361,16 @@ def _get_decay(event_type : str, decname : str) -> Union[None,dict[str,str]]:
         d_dec[nickname] = _get_hatted_decay(par, i_par, decay)
 
     return d_dec
+# ---------------------------
+def _check_unhatted_decay(decay : str) -> str:
+    '''
+    Final check of decay, will apply fixes if needed
+    '''
+    if not decay.endswith('CC'):
+        log.warning(f'Decay {decay} had no conjugate adding it')
+        return f'{decay}CC'
+
+    return decay
 # ---------------------------
 def _get_decays() -> dict[str, dict[str,str]]:
     d_decay = {}
