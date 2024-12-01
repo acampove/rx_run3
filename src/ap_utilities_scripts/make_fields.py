@@ -291,12 +291,12 @@ def _rename_repeated(l_par : list[str]) -> list[str]:
 
     return l_par_renamed
 # ---------------------------
-def _nickname_from_particle(name : str, event_type : str) -> str:
+def _nickname_from_particle(name : str, event_type : str, decname : str) -> str:
     name, ipar = _remove_index(name)
     name       = name.replace('anti-', '')
 
     if name not in Data.d_nicknames:
-        log.warning(f'Nickname for {name} not found in {event_type}')
+        log.warning(f'Nickname for {name} not found in {decname}/{event_type}')
         return name
 
     nick = Data.d_nicknames[name]
@@ -332,7 +332,7 @@ def _fix_names(decay : str, event_type : str) -> str:
 
     return decay
 # ---------------------------
-def _get_decay(event_type : str) -> Union[None,dict[str,str]]:
+def _get_decay(event_type : str, decname : str) -> Union[None,dict[str,str]]:
     decay = Data.d_decay[event_type]
     decay = _fix_names(decay, event_type)
 
@@ -346,7 +346,7 @@ def _get_decay(event_type : str) -> Union[None,dict[str,str]]:
 
     d_dec = {}
     for i_par, par in enumerate(l_par):
-        nickname        = _nickname_from_particle(par, event_type)
+        nickname        = _nickname_from_particle(par, event_type, decname)
         d_dec[nickname] = _get_hatted_decay(par, i_par, decay)
 
     return d_dec
@@ -354,11 +354,11 @@ def _get_decay(event_type : str) -> Union[None,dict[str,str]]:
 def _get_decays() -> dict[str, dict[str,str]]:
     d_decay = {}
     for event_type in Data.l_event_type:
-        d_tmp = _get_decay(event_type)
+        decname = aput.read_decay_name(event_type=event_type, style= 'safe_1')
+        d_tmp   = _get_decay(event_type, decname)
         if d_tmp is None:
             continue
 
-        decname = aput.read_decay_name(event_type=event_type, style= 'safe_1')
         d_decay[decname] = d_tmp
 
     return d_decay
