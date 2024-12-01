@@ -293,6 +293,7 @@ def _rename_repeated(l_par : list[str]) -> list[str]:
 # ---------------------------
 def _nickname_from_particle(name : str, event_type : str, decname : str) -> str:
     name, ipar = _remove_index(name)
+    # Nicknames will be the same for particles and antiparticles
     name       = name.replace('anti-', '')
 
     if name not in Data.d_nicknames:
