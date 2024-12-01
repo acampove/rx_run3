@@ -3259,7 +3259,7 @@
 '12583001': '[B+ -> (My_anti-D0 -> X) X]cc'
 '12583005': '[B+ -> (D~0 -> K+ e- anti-nu_e) pi+]cc'
 '12583006': '[B+ -> K+ (D~0 -> K+ e- anti-nu_e)]cc'
-'12583013': '[B+ -> My_anti-D0 e+ nu_e]cc'
+'12583013': '[B+ -> (D~0 -> K+ pi-) e+ nu_e]cc'
 '12583020': '[B+ -> (D~0 -> K+ e- anti-nu_e) e+ nu_e]cc'
 '12583022': '[B+ -> (D~0 -> K+ e- anti-nu_e) e+ nu_e]cc'
 '12583023': '[B+ -> (D~0 -> K+ e- anti-nu_e) e+ nu_e]cc'
