@@ -8095,8 +8095,8 @@
 '39102421': '[eta'' -> (eta -> gamma gamma) pi+ pi-]'
 '39104100': '[phi -> (K_S0 -> pi+ pi-) (K_S0 -> pi+ pi-)]'
 '39112000': '[phi(1020) => mu+ mu-]CC'
-'39112230': '[eta -> mu+ mu- gamma]'
-'39112231': '[eta -> mu+ mu- gamma]'
+'39112230': '[eta -> mu+ mu- gamma]CC'
+'39112231': '[eta -> mu+ mu- gamma]CC'
 '39114001': phi(1020) => mu+ mu- mu+ mu-
 '39114002': phi(1020) => mu+ mu- e+ e-
 '39114031': eta => mu+ mu- mu+ mu-
