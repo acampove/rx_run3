@@ -146,6 +146,8 @@ def _reformat_decay(decay : str) -> str:
     for org, new in Data.d_repl_spa.items():
         decay = decay.replace(org, new)
 
+    decay = re.sub(r'anti-(\w+)', r'\1~', decay)
+
     return decay
 # ---------------------------
 def _reformat_back_decay(decay : str) -> str:
