@@ -2,9 +2,16 @@
 
 This project is used to carry out checks on Run3 data. Check [this](doc/install.md) for installation instructions.
 
-## Updating config file
+## Specifying configuration for filtering and slimming 
 
-The configuration and the code are separate. The configuration file is updated with:
+For this to work, configs need to be uploaded to the grid with the scripts below. The scripts need
+to know the place in the grid where the user LFNs live. For that, the following line needs to be issued:
+
+```bash
+export LXNAME=$USER # This is the username when running in LXPLUS
+```
+
+The configuration file is updated with:
 
 ```bash
 update_config -u 1
