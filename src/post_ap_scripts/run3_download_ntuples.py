@@ -33,7 +33,8 @@ class Data:
 
     ran_pfn : int
     test    = False
-    eos_dir = '/eos/lhcb/grid/user/lhcb/user/a/acampove'
+    lxname  = os.environ['LXNAME']
+    eos_dir = f'/eos/lhcb/grid/user/lhcb/user/{lxname[0]}/{lxname}'
     server  = 'root://eoslhcb.cern.ch/'
     eos_clt = clt.FileSystem(server)
     nthread = 1

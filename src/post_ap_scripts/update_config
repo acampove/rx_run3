@@ -87,7 +87,7 @@ update()
     echo ""
     echo "Uploading $CONF"
     FILENAME=$(basename $CONF)
-    LFN=/lhcb/user/a/acampove/run3/ntupling/config/$FILENAME
+    LFN=/lhcb/user/${LXNAME:0:1}/$LXNAME/run3/ntupling/config/$FILENAME
     check_existing
 
     lb-dirac dirac-dms-add-file LFN:$LFN $CONF $SE 

@@ -16,6 +16,12 @@ log = LogStore.add_logger('post_ap:utilities')
 local_config = False
 
 # --------------------------------------
+class Data:
+    '''
+    Data meant to hold shared attributes
+    '''
+    lx_user : str = os.environ['LXNAME']
+# --------------------------------------
 def load_config(cfg_nam : str, kind :str ='yaml') -> dict:
     '''
     Parameters
@@ -60,7 +66,7 @@ def _load_grid_config(cfg_nam :str, kind : str) -> dict:
     '''
     Will use XROOTD to pick up file from grid
     '''
-    xrd_path = f'root://x509up_u1000@eoslhcb.cern.ch//eos/lhcb/grid/user/lhcb/user/a/acampove/run3/ntupling/config/{cfg_nam}.{kind}'
+    xrd_path = f'root://x509up_u1000@eoslhcb.cern.ch//eos/lhcb/grid/user/lhcb/user/{Data.lx_user[0]}/{Data.lx_user}/run3/ntupling/config/{cfg_nam}.{kind}'
     log.info(f'Loading: {xrd_path}')
     with client.File() as ifile:
         status, _ = ifile.open(xrd_path)
