@@ -1,6 +1,13 @@
 # Description
 
 This project is used to carry out checks on Run3 data. Check [this](doc/install.md) for installation instructions.
+Regardless, the code will need the following variable to be defined:
+
+```bash
+export LXNAME=$USER # This is the username when running in LXPLUS
+```
+
+such that the code that is ran, will be taken from a tarball in the grid, and it will be associated to a specific user.
 
 ## Updating config file
 
