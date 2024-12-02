@@ -1,6 +1,6 @@
 [project]
 name        = 'data_manipulation_utilities'
-version     = '0.1.2'
+version     = '0.1.3'
 readme      = 'README.md'
 dependencies= [
 'zfit',
@@ -16,7 +16,6 @@ dependencies= [
 'matplotlib',
 'mplhep',
 'hist[plot]',
-'polars',
 'pandas']
 
 [project.optional-dependencies]
