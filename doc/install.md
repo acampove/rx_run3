@@ -1,0 +1,49 @@
+# Installation
+
+In order to use this project one needs access to the grid and therefore DIRAC. For this do:
+
+```bash
+. /cvmfs/lhcb.cern.ch/lib/LbEnv
+```
+
+to setup the LHCb software, then:
+
+```bash
+lhcb-proxy-init -v 100:00
+```
+
+to make a token that lasts 100 hours.
+
+## For users
+
+This project lives in `pypi`, install it with:
+
+```bash
+pip install post_ap
+```
+
+this should install the project in `$HOME/.local`, given that we are not working in a virtual environment or conda.
+
+## Development 
+
+First set the `VENVS` environment variable:
+
+```bash
+export VENVS=/some/path/
+export LXNAME=$USER # This is the username when running in LXPLUS
+```
+
+where the virtual environment will reside. Then setup the LHCb software and build the tarball with the environment
+
+```bash
+update_tarball -v 001 -s 1
+```
+
+to upload it to the grid. For this one needs to know the version with which to upload it. To find which versions have
+already been uploaded run:
+
+```bash
+lb-dirac dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
+```
+
+this will dump a text file with the list of LFNs in that particular path. Then one would pick the next name in the list.
