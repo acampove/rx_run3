@@ -5,6 +5,8 @@ Regardless, the code will need the following variable to be defined:
 
 ```bash
 export LXNAME=$USER # This is the username when running in LXPLUS
+# This is the value of VENVS used to create the virtual environment that will be used
+export VENVS=/afs/ihep.ac.cn/users/c/campoverde/VENVS
 ```
 
 such that the code that is ran, will be taken from a tarball in the grid, and it will be associated to a specific user.
