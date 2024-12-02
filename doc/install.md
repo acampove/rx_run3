@@ -26,7 +26,8 @@ this should install the project in `$HOME/.local`, given that we are not working
 
 ## Development 
 
-First set the `VENVS` environment variable:
+Once the code is ready to be used, i.e. it has been tested locally one needs to pack it into a tarball and upload it
+to the grid. First set the `VENVS` environment variable:
 
 ```bash
 export VENVS=/some/path/
