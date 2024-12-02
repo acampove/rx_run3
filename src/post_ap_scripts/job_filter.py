@@ -26,7 +26,7 @@ class Data:
     conf    = None
     venv    = None
     mode    = None
-    epat    = os.environ['VENVS']
+    epat        : str 
     runner_path : str
 # ---------------------------------------
 def _get_job(jobid):
@@ -70,6 +70,7 @@ def _initialize() -> None:
 
     runner_path      = files('post_ap_grid').joinpath('run_filter')
     Data.runner_path = str(runner_path)
+    Data.epat        = os.environ['VENVS']
 # ---------------------------------------
 def main():
     '''
