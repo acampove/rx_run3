@@ -4,12 +4,19 @@ In order to use this project one needs access to the grid and therefore DIRAC. F
 
 ```bash
 . /cvmfs/lhcb.cern.ch/lib/LbEnv
+
+# Open a new shell, let's call it, dirac_shell
+lb-dirac
+
+# Make sure that machine will find locally installed binaries
+export PATH+=:$HOME/.local/bin
 ```
 
 to setup the LHCb software, then:
 
 ```bash
-lhcb-proxy-init -v 100:00
+# From withint he dirac_shell
+dirac-proxy-init -v 100:00
 ```
 
 to make a token that lasts 100 hours.
