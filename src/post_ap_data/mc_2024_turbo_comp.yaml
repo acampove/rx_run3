@@ -3,7 +3,7 @@ production:
   analysis: btoxll_mva_2024_nopid
 sample:
   version: v1r2093 
-  name_rx: ^mc_(bu|bd|bs|lb)_.*_turbo_.*tupling$
+  name_rx: ^mc.*(bu|bd|bs|lb).*tuple$
 redefine_head:
   # This is needed due to the way the isolation head is defined for
   # cut based and mva based lines:

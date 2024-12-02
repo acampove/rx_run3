@@ -9,9 +9,16 @@ export LXNAME=$USER # This is the username when running in LXPLUS
 
 such that the code that is ran, will be taken from a tarball in the grid, and it will be associated to a specific user.
 
-## Updating config file
+## Specifying configuration for filtering and slimming 
 
-The configuration and the code are separate. The configuration file is updated with:
+For this to work, configs need to be uploaded to the grid with the scripts below. The scripts need
+to know the place in the grid where the user LFNs live. For that, the following line needs to be issued:
+
+```bash
+export LXNAME=$USER # This is the username when running in LXPLUS
+```
+
+The configuration file is updated with:
 
 ```bash
 update_config -u 1
@@ -37,6 +44,15 @@ save_pfns -c dt_2024_turbo_comp
 where `-c` will correspond to the config file.
 
 # Submitting jobs
+
+---
+All the jobs below require code that lives in a virtual environment, there should be multiple versions of this
+environment and the latest one should be obtained by running:
+
+```bash
+lb-dirac dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
+```
+---
 
 The instructions below need to be done outside the virtual environment in an environment with access to `dirac` and in the `post_ap_grid`
 directory.
