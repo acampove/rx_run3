@@ -1,6 +1,6 @@
 # Description
 
-This project is used to carry out checks on Run3 data. Check [this](doc/installation.md) for installation instructions.
+This project is used to carry out checks on Run3 data. Check [this](doc/install.md) for installation instructions.
 
 ## Updating config file
 
