@@ -27,16 +27,21 @@ This project lives in `pypi`, install it with:
 
 ```bash
 pip install post_ap
+
+# This is the value of VENVS used to create the virtual environment that will be used
+export VENVS=/afs/ihep.ac.cn/users/c/campoverde/VENVS
 ```
 
 this should install the project in `$HOME/.local`, given that we are not working in a virtual environment or conda.
 
-## Development 
+## Development
 
 Once the code is ready to be used, i.e. it has been tested locally one needs to pack it into a tarball and upload it
 to the grid. First set the `VENVS` environment variable:
 
 ```bash
+# If you are making the environment, you will need to keep this path around
+# It will be needed when you submit the jobs
 export VENVS=/some/path/
 export LXNAME=$USER # This is the username when running in LXPLUS
 ```
@@ -47,7 +52,7 @@ where the virtual environment will reside. Then setup the LHCb software and buil
 # This will skip uploading to the Grid
 update_tarball -v 001 -s 1
 
-# This will build and upload to the grid 
+# This will build and upload to the grid
 update_tarball -v 001
 ```
 
