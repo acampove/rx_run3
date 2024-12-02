@@ -10,7 +10,7 @@ The configuration and the code are separate. The configuration file is updated w
 update_config -u 1
 ```
 
-The `-u` flag will update the config file if its LFN is alrdeady in the grid.
+The `-u` flag will update the config file if its LFN is already in the grid.
 The script runs with:
 
 1. The LHCb environment set up.
