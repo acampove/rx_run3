@@ -31,6 +31,15 @@ where `-c` will correspond to the config file.
 
 # Submitting jobs
 
+---
+All the jobs below require code that lives in a virtual environment, there should be multiple versions of this
+environment and the latest one should be obtained by running:
+
+```bash
+lb-dirac dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
+```
+---
+
 The instructions below need to be done outside the virtual environment in an environment with access to `dirac` and in the `post_ap_grid`
 directory.
 
