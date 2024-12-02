@@ -1,8 +1,8 @@
 production:
   working_group: rd
-  analysis: rd_ap_2024
+  analysis: btoxll_mva_2024_nopid
 sample:
-  version: v1r1364
+  version: v1r2093 
   name_rx: ^mc_(bu|bd|bs|lb)_.*_turbo_.*tupling$
 redefine_head:
   # This is needed due to the way the isolation head is defined for
