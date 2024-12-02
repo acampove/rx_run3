@@ -9,7 +9,7 @@ from importlib.resources import files
 
 from DIRAC.Interfaces.API.Dirac import Dirac
 from DIRAC.Interfaces.API.Job   import Job
-from DIRAC                      import initialize
+from DIRAC                      import initialize as initialize_dirac
 from DIRAC                      import gLogger
 
 from tqdm    import trange
@@ -40,7 +40,7 @@ def _get_job(jobid):
 
     return j
 # ---------------------------------------
-def _get_args():
+def _get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Used to send filtering jobs to the grid')
     parser.add_argument('-n', '--name' , type =str, help='Name of job, to identify it' , required=True)
     parser.add_argument('-c', '--conf' , type =str, help='Type of filter, e.g. comp'   , required=True)
@@ -52,6 +52,10 @@ def _get_args():
 
     args = parser.parse_args()
 
+    return args
+# ---------------------------------------
+def _initialize() -> None:
+    args         = _get_args()
     Data.snd_dir = f'{os.getcwd()}/sandbox_{args.name}_{args.dset}_{args.conf}'
     Data.name    = args.name
     Data.conf    = args.conf
@@ -59,12 +63,10 @@ def _get_args():
     Data.njob    = args.njob
     Data.venv    = args.venv
     Data.mode    = args.mode
-# ---------------------------------------
-def _initialize() -> None:
-    _get_args()
+
     os.makedirs(Data.snd_dir, exist_ok=False)
     gLogger.setLevel('warning')
-    initialize()
+    initialize_dirac()
 
     runner_path      = files('post_ap_grid').joinpath('run_filter')
     Data.runner_path = str(runner_path)
