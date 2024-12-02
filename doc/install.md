@@ -36,7 +36,11 @@ export LXNAME=$USER # This is the username when running in LXPLUS
 where the virtual environment will reside. Then setup the LHCb software and build the tarball with the environment
 
 ```bash
+# This will skip uploading to the Grid
 update_tarball -v 001 -s 1
+
+# This will build and upload to the grid 
+update_tarball -v 001
 ```
 
 to upload it to the grid. For this one needs to know the version with which to upload it. To find which versions have
