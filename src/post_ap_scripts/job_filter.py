@@ -66,12 +66,14 @@ def _initialize() -> None:
     gLogger.setLevel('warning')
     initialize()
 
-    Data.runner_path = files('post_ap_grid').joinpath('run_filter')
+    runner_path      = files('post_ap_grid').joinpath('run_filter')
+    Data.runner_path = str(runner_path)
 # ---------------------------------------
 def main():
     '''
     Script starts here
     '''
+    _initialize()
     l_jobid = []
     dirac = Dirac()
     for jobid in trange(Data.njob, ascii=' -'):
