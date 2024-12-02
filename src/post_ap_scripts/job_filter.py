@@ -26,7 +26,7 @@ class Data:
     conf    = None
     venv    = None
     mode    = None
-    epat        : str 
+    epat        : str
     runner_path : str
 # ---------------------------------------
 def _get_job(jobid):
