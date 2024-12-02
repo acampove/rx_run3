@@ -9,6 +9,18 @@ export LXNAME=$USER # This is the username when running in LXPLUS
 
 such that the code that is ran, will be taken from a tarball in the grid, and it will be associated to a specific user.
 
+and instead of running in a virtual environment one will have to run in an environment with DIRAC with:
+
+```bash
+. /cvmfs/lhcb.cern.ch/lib/LbEnv
+
+# This will open a new shell
+lb-dirac
+
+# And you will work here
+export PATH+=:$HOME/.local/bin
+```
+
 ## Specifying configuration for filtering and slimming 
 
 For this to work, configs need to be uploaded to the grid with the scripts below. The scripts need
