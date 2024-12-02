@@ -1,46 +1,10 @@
-[[_TOC_]]
-
 # Description
 
-This project is used to carry out checks on Run3 data.
-
-# Preparing environment
-
-First set the `VENVS` environment variable:
-
-```bash
-export VENVS=/some/path/
-```
-
-where the virtual environment will reside. Then setup the LHCb software and build the tarball with the environment
-
-```bash
-. /cvmfs/lhcb.cern.ch/lib/LbEnv
-
-update_tarball -v 001 -s 1
-```
-
-to upload it to the grid as version `001` one would run wit `-s 0`
-
-## Updating code and virtual environment
-
-If the code changes, the venv needs to change. To do that run:
-
-```bash
-update_tarball -v 002
-```
-
-Where `-v` will be used to pass the version of the tarball in order to upload it to the grid. 
-This argument is optional and if not passed the tarball won't be uploaded.
-In order to find out what versions of the tarball are in the grid do:
-
-```bash
-lb-dirac dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/a/acampove/run3/venv
-```
+This project is used to carry out checks on Run3 data. Check [this](doc/installation.md) for installation instructions.
 
 ## Updating config file
 
-The configuration and the code are separate. The configuuration file is updated with:
+The configuration and the code are separate. The configuration file is updated with:
 
 ```bash
 update_config -u 1
