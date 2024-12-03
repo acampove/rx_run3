@@ -62,13 +62,10 @@ upload()
 #--------------------------------
 initialize()
 {
-    which lb-conda-dev > /dev/null
+    which lb-conda-dev        > /dev/null 2>&1
     check "No lb-conda-dev found"
 
-    which lb-dirac     > /dev/null
-    check "No lb-dirac found"
-
-    lhcb-proxy-info    > /dev/null
+    dirac-proxy-info          > /dev/null 2>&1
     check "Invalid grid proxy"
 
     if [[ -z $VENVS ]];then
