@@ -193,6 +193,7 @@ class FilterFile:
         log.debug(110 * '-')
         for org, new in d_name.items():
             if org not in l_name:
+                log.debug(f'Skipping: {org}')
                 continue
 
             log.debug(f'{org:<50}{"->":10}{new:<50}')
