@@ -1,50 +1,21 @@
 # Description
 
-This project is used to carry out checks on Run3 data. Check [this](doc/install.md) for installation instructions.
-Regardless, the code will need the following variable to be defined:
-
-```bash
-export LXNAME=$USER # This is the username when running in LXPLUS
-# This is the value of VENVS used to create the virtual environment that will be used
-export VENVS=/afs/ihep.ac.cn/users/c/campoverde/VENVS
-```
-
-such that the code that is ran, will be taken from a tarball in the grid, and it will be associated to a specific user.
-
-and instead of running in a virtual environment one will have to run in an environment with DIRAC with:
-
-```bash
-. /cvmfs/lhcb.cern.ch/lib/LbEnv
-
-# This will open a new shell
-lb-dirac
-
-# And you will work here
-export PATH+=:$HOME/.local/bin
-```
+This project is used to carry out checks on Run3 data. Check [this](doc/install.md) for installation instructions
+and for instructions on how to setup an environment to use this project.
 
 ## Specifying configuration for filtering and slimming 
 
 For this to work, configs need to be uploaded to the grid with the scripts below. The scripts need
-to know the place in the grid where the user LFNs live. For that, the following line needs to be issued:
+to know the place in the grid where the user LFNs live. 
+
+Once the config files have been updated, they have to be uploaded to the grid with:
 
 ```bash
-export LXNAME=$USER # This is the username when running in LXPLUS
-```
-
-The configuration file is updated with:
-
-```bash
-update_config -u 1
+update_config -u 1 -p /path/to/config.yaml
 ```
 
 The `-u` flag will update the config file if its LFN is already in the grid.
-The script runs with:
-
-1. The LHCb environment set up.
-1. With a valid grid token.
-1. Within the working virtual environment. 
-`lb-dirac` and the script need to be used. No conflict between the VENV and the LHCb environments seems to happen.
+THe `-p` flat passes the path to the config to be uploaded.
 
 # Save lists of PFNs
 
@@ -64,7 +35,7 @@ All the jobs below require code that lives in a virtual environment, there shoul
 environment and the latest one should be obtained by running:
 
 ```bash
-lb-dirac dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
+dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
 ```
 ---
 
@@ -74,7 +45,7 @@ directory.
 First run a test job with:
 
 ```bash
-./job_filter -d dt_2024_turbo -c comp -j 1211 -e 003 -m local -n test_flt
+job_filter -d dt_2024_turbo -c comp -j 1211 -e 003 -m local -n test_flt
 ```
 
 where `-j` specifies the number of jobs. For tests, this is the number of files to process, thus, the test job does only one file. 
@@ -88,7 +59,7 @@ Thus one can do local or grid tests running over a single file.
 For real jobs:
 
 ```bash
-./job_filter -d dt_2024_turbo -c comp -j 200 -e 003 -m wms -n flt_001
+job_filter -d dt_2024_turbo -c comp -j 200 -e 003 -m wms -n flt_001
 ```
 
 # Downloading ntuples
