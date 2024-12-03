@@ -21,13 +21,13 @@ class Data:
     '''
     Class used to hold shared attributes
     '''
-    snd_dir     : str 
-    njob        : int 
+    snd_dir     : str
+    njob        : int
     name        : str
-    dset        : str 
-    conf        : str 
-    venv        : str 
-    mode        : str 
+    dset        : str
+    conf        : str
+    venv        : str
+    mode        : str
     epat        : str
     runner_path : str
 # ---------------------------------------
