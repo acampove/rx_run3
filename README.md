@@ -3,10 +3,10 @@
 This project is used to carry out checks on Run3 data. Check [this](doc/install.md) for installation instructions
 and for instructions on how to setup an environment to use this project.
 
-## Specifying configuration for filtering and slimming 
+## Specifying configuration for filtering and slimming
 
 For this to work, configs need to be uploaded to the grid with the scripts below. The scripts need
-to know the place in the grid where the user LFNs live. 
+to know the place in the grid where the user LFNs live.
 
 Once the config files have been updated, they have to be uploaded to the grid with:
 
@@ -19,7 +19,7 @@ The `-p` flat passes the path to the config to be uploaded.
 
 # Save lists of PFNs
 
-The PFNs to be processed will be stored once with the AP api and will be read as package data when processing ntuples. 
+The PFNs to be processed will be stored once with the AP api and will be read as package data when processing ntuples.
 The list of PFNs is created with, e.g.:
 
 ```bash
@@ -74,8 +74,8 @@ run3_download_ntuples -j flt_004 -n 3 [-d $PWD/files]
 
 where:
 
-`-j`: Is the name of the job, which has to coincide with the directory name, where the ntuples are in EOS, e.g. `/eos/lhcb/grid/user/lhcb/user/a/acampove/flt_004`.   
-`-n`: Number of ntuples to download, if not pased, will download everything.    
+`-j`: Is the name of the job, which has to coincide with the directory name, where the ntuples are in EOS, e.g. `/eos/lhcb/grid/user/lhcb/user/a/acampove/flt_004`.
+`-n`: Number of ntuples to download, if not pased, will download everything.
 `-d`: Directory where output ntuples will go, if not passed, directory pointed by `DOWNLOAD_NTUPPATH` will be used.
 
 
