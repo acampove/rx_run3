@@ -20,7 +20,8 @@ class Data:
     '''
     Data meant to hold shared attributes
     '''
-    lx_user : str = os.environ['LXNAME']
+    lx_user   : str = os.environ['LXNAME']
+    conf_path : str = os.environ['CONFPATH']
 # --------------------------------------
 def load_config(cfg_nam : str, kind :str ='yaml') -> dict:
     '''
@@ -44,7 +45,7 @@ def _load_local_config(cfg_nam : str, kind : str) -> dict:
     '''
     Will pick up config file from installed project
     '''
-    cfg_path = files('post_ap_data').joinpath(f'{cfg_nam}.{kind}')
+    cfg_path = f'{Data.conf_path}/post_ap/{cfg_nam}.{kind}'
     cfg_path = str(cfg_path)
     if not os.path.isfile(cfg_path):
         raise FileNotFoundError(f'Config path not found: {cfg_path}')
