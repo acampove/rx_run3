@@ -7,7 +7,6 @@ display_help()
     echo ""
     echo "-h: Help"
     echo "-v: Version of tarball, optional, if not passed, wont upload it"
-    echo "-s: Will skip uploading tarball, but it will (re)build it."
 }
 #--------------------------------
 get_args()
