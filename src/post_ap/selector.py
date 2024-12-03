@@ -65,6 +65,11 @@ class selector:
             'Hlt2RD_BuToKpEE'                          : 'bukee',
             'Hlt2RD_BuToKpEE_MVA'                      : 'bukee',
             # ---
+            'Hlt2RD_BuToKpEE_MVA_noPID'                : 'bukee',
+            'Hlt2RD_BuToKpMuMu_MVA_noPID'              : 'bukmm',
+            'Hlt2RD_B0ToKpPimEE_MVA_noPID'             : 'bdkstee',
+            'Hlt2RD_B0ToKpPimMuMu_MVA_noPID'           : 'bdkstmm',
+            # ---
             'Hlt2RD_BuToKpMuMu'                        : 'bukmm',
             'Hlt2RD_BuToKpMuMu_MVA'                    : 'bukmm',
             # ---
