@@ -29,7 +29,7 @@ def _initialize():
     LogStore.set_level('rx_scripts:atr_mgr:mgr', 30)
     LogStore.set_level('post_ap:selector'  , 20)
     LogStore.set_level('post_ap:utilities' , 30)
-    LogStore.set_level('post_ap:FilterFile', 20)
+    LogStore.set_level('post_ap:FilterFile', 10)
 # --------------------------------------
 @pytest.mark.parametrize('local_config', Data.l_args_config)
 def test_dt(local_config : bool):
