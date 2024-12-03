@@ -6,6 +6,7 @@ display_help()
     echo "Script used to upload TOML config file to the grid"
     echo ""
     echo "-u: Will update (1) or not (0) the LFN, if it already exists"
+    echo "-p: Path to config file to upload to the grid" 
 }
 #---------------------------------
 get_opts()
@@ -16,7 +17,7 @@ get_opts()
     fi  
 
     UPDT=0
-    while getopts :hf:f:u: option; do 
+    while getopts :hf:p:u: option; do 
         case "${option}" in
             h)  
                 display_help
@@ -31,6 +32,7 @@ get_opts()
                 exit 1
                 ;;  
             u)  UPDT=${OPTARG};;
+            p)  CFGP=${OPTARG};;
         esac
     done
 }
@@ -59,6 +61,14 @@ check_env()
     DCHECK=$(pip show post_ap | grep "Editable project location" | awk -F ': ' '{print$2}' | sed 's|/src||g')
     if [[ ! -d $DCHECK ]];then
         echo "Cannot find directory with post_ap project"
+        exit 1
+    fi
+}
+#---------------------------------
+check_cfg()
+{
+    if [[ ! -f $CFGP ]];then
+        echo "Cannot find \"$CFGP\""
         exit 1
     fi
 }
@@ -101,7 +111,6 @@ update()
 #---------------------------------
 SE=CERN-USER
 get_opts "$@"
+check_cfg
 check_env
-
-update $DCHECK/src/post_ap_data/dt_2024_turbo_comp.yaml
-update $DCHECK/src/post_ap_data/mc_2024_turbo_comp.yaml
+update $CFGP 
