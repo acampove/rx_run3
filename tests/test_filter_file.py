@@ -15,7 +15,7 @@ class Data:
     Data class with shared attributes
     '''
     dt_path = '/home/acampove/cernbox/Run3/analysis_productions/Data/mag_down/c2.root'
-    mc_path = '/home/acampove/cernbox/Run3/analysis_productions/MC/BdKsmumu.root'
+    mc_path = '/home/acampove/cernbox/Run3/analysis_productions/MC/local_tests/mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple.root'
 
     l_args_config = [True, False]
 # --------------------------------------
