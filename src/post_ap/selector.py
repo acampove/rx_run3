@@ -102,13 +102,19 @@ class selector:
 
         self._proc = proc
     # -------------------------------------------------------------------
-    def _apply_selection(self):
+    def _apply_selection(self) -> None:
         '''
         Loop over cuts and apply selection
         Save intermediate dataframes to self._d_rdf
         Save final datafrme to self._rdf
         '''
+        # Skip selection if selection has not been implemented for current line
+        if self._proc is None:
+            log.warning('Not applying selection')
+            return
+
         rdf = self._rdf
+
         log.debug(20 * '-')
         log.debug('Applying selection:')
         log.debug(20 * '-')
@@ -116,12 +122,11 @@ class selector:
         d_cut    = self._d_sel['cuts']
         skip_cut = True
         for key, cut in d_cut.items():
-            # Skip selection if selection has not been implemented for current line
-            if self._proc is None:
-                continue
-
             # Skip selection if this block of cuts does not
             # correspond to current tree
+            # any: Apply these cuts to any sample
+            # proc: Apply only if key == proc
+            # This code will at most match two entried of d_cut
 
             if key not in ['any', self._proc]:
                 continue
