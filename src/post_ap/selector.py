@@ -94,7 +94,7 @@ class selector:
         }
 
         if hlt_line not in d_line_proc:
-            log.debug(f'Line not implemented for selection: {hlt_line}')
+            log.warning(f'Line not implemented for selection: {hlt_line}')
             return
 
         proc = d_line_proc[hlt_line]
