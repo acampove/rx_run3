@@ -66,6 +66,7 @@ def _initialize() -> None:
     Data.dset    = args.dset
     Data.njob    = args.njob
     Data.venv    = args.venv
+    Data.user    = args.user
     Data.mode    = args.mode
 
     ut.local_config= args.lcl_cfg
