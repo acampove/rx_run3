@@ -37,6 +37,11 @@ get_opts()
 #---------------------------------
 check_env()
 {
+    if [[ -z $LXNAME ]];then
+        echo "LXNAME variable not set"
+        exit 1
+    fi
+
     which dirac-dms-lfn-replicas > /dev/null
 
     if [[ $? -ne 0 ]];then
