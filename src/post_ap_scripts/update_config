@@ -44,7 +44,7 @@ check_env()
         exit 1
     fi
 
-    lhcb-proxy-info -v > /dev/null
+    dirac-proxy-info -v > /dev/null
 
     if [[ $? -ne 0 ]];then
         echo "Grid proxy not found"
