@@ -1,27 +1,83 @@
 # Installation
 
-In order to use this project one needs access to the grid and therefore DIRAC. For this do:
+## Environment with DIRAC
+
+In order to use this project one needs access to the grid and therefore DIRAC. 
+The easiest thing currently to achieve this is:
+
+- Create an rc file with a basic environment
+- Create a few functions to load this environment
+
+### RC with environment
+
+The file will be stored in `~/.bashrc_dirac` and will look like:
 
 ```bash
-. /cvmfs/lhcb.cern.ch/lib/LbEnv
+#!/usr/bin/env bash
 
-# Open a new shell, let's call it, dirac_shell
-lb-dirac
-
-# Make sure that machine will find locally installed binaries
+export PS1='\u@\h\$ '
 export PATH+=:$HOME/.local/bin
+# This will be your username in LXPLUS
+export LXNAME=acampove
+
+# This should be the directory containing the post_ap directory, which contains YAML confg files
+# needed to configure this project later
+export CONFPATH=/home/acampove/Packages/config_files/
+```
+### Helper Functions 
+
+In the `.bashrc` you should add:
+
+```bash
+#------------------------------------------------------------------
+lb_dirac()
+{
+    # Will create a shell with dirac and some basic environment specified by .bashrc_dirac
+    
+    which lb-dirac > /dev/null 2>&1
+
+    if [[ $? -ne 0 ]];then
+        echo "Cannot find lb-dirac, LHCb software not set, setting it"
+        setLbEnv
+    fi
+
+    if [[ ! -f $HOME/.bashrc_dirac ]];then
+        echo "Cannnot find ~/.bashrc_dirac"
+        exit 1
+    fi
+
+    lb-dirac bash -c "source ~/.bashrc_dirac && exec bash --norc"
+}
+#------------------------------------------------------------------
+setLbEnv()
+{
+    # This function will setup the LHCb environment
+
+    LBENV_PATH=/cvmfs/lhcb.cern.ch/lib/LbEnv
+
+    if [[ ! -f $LBENV_PATH ]]; then
+        echo "Cannot find $LBENV_PATH"
+        kill INT $$
+    fi
+
+    . $LBENV_PATH
+}
 ```
 
-to setup the LHCb software, then:
+### Setup environment
+
+Once this is in place, in a fresh terminal do
 
 ```bash
-# From withint he dirac_shell
+lhcb_dirac
+
+# This should create a grid token 
 dirac-proxy-init -v 100:00
 ```
 
-to make a token that lasts 100 hours.
+this will create a shell with DIRAC, where you will work.
 
-## For users
+## Installing project
 
 This project lives in `pypi`, install it with:
 
@@ -32,21 +88,11 @@ pip install post_ap
 export VENVS=/afs/ihep.ac.cn/users/c/campoverde/VENVS
 ```
 
-this should install the project in `$HOME/.local`, given that we are not working in a virtual environment or conda.
+this should install the project in `$HOME/.local`.
 
-## Development
+## Updating code
 
-Once the code is ready to be used, i.e. it has been tested locally one needs to pack it into a tarball and upload it
-to the grid. First set the `VENVS` environment variable:
-
-```bash
-# If you are making the environment, you will need to keep this path around
-# It will be needed when you submit the jobs
-export VENVS=/some/path/
-export LXNAME=$USER # This is the username when running in LXPLUS
-```
-
-where the virtual environment will reside. Then setup the LHCb software and build the tarball with the environment
+If you change the code, the version of the code running in the grid will have to be updated with:
 
 ```bash
 # This will skip uploading to the Grid
@@ -56,11 +102,11 @@ update_tarball -v 001 -s 1
 update_tarball -v 001
 ```
 
-to upload it to the grid. For this one needs to know the version with which to upload it. To find which versions have
+For this one needs to know the version with which to upload it. To find which versions have
 already been uploaded run:
 
 ```bash
-lb-dirac dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
+dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
 ```
 
 this will dump a text file with the list of LFNs in that particular path. Then one would pick the next name in the list.
