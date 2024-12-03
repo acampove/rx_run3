@@ -42,10 +42,13 @@ def test_dt(local_config : bool):
     obj.dump_contents = True
     obj.run()
 # --------------------------------------
-def test_mc():
+@pytest.mark.parametrize('local_config', Data.l_args_config)
+def test_mc(local_config: bool):
     '''
     Run test on MC
     '''
+    ut.local_config = local_config
+
     obj = FilterFile(kind='any_kind', file_path=Data.mc_path, cfg_nam='mc_2024_turbo_comp')
     obj.run()
 # --------------------------------------
