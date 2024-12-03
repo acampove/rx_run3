@@ -3,7 +3,6 @@ Module with utility functions
 '''
 
 import os
-from importlib.resources import files
 
 import toml
 import yaml
