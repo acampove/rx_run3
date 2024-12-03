@@ -33,11 +33,12 @@ CONF=$2
 NJOB=$3
 IJOB=$4
 VENV=$5
+UNAM=$6
 
 set_vars
 rename_paths
 
-dcheck/run bash -c "filter_ntuples -d $DSET -c $CONF -n $NJOB -i $IJOB" -l 10
+dcheck/run bash -c "export LXNAME=$UNAM && filter_ntuples -d $DSET -c $CONF -n $NJOB -i $IJOB -l 10"
 
 echo "Sandbox: "
 ls
