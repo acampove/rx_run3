@@ -37,7 +37,7 @@ get_opts()
 #---------------------------------
 check_env()
 {
-    which lb-dirac > /dev/null
+    which dirac-dms-lfn-replicas > /dev/null
 
     if [[ $? -ne 0 ]];then
         echo "Not in an environment with LHCb software"
@@ -60,10 +60,10 @@ check_env()
 #---------------------------------
 check_existing()
 {
-    lb-dirac dirac-dms-lfn-replicas $LFN > /dev/null
+    dirac-dms-lfn-replicas $LFN > /dev/null
     if   [[ $? -eq 0 ]] && [[ $UPDT -eq 1 ]];then
         echo "LFN found, removing: \"$LFN\""
-        lb-dirac dirac-dms-remove-files $LFN
+        dirac-dms-remove-files $LFN
     elif [[ $? -eq 0 ]] && [[ $UPDT -eq 0 ]];then
         echo "LFN found: \"$LFN\""
         exit 1
@@ -90,7 +90,7 @@ update()
     LFN=/lhcb/user/${LXNAME:0:1}/$LXNAME/run3/ntupling/config/$FILENAME
     check_existing
 
-    lb-dirac dirac-dms-add-file LFN:$LFN $CONF $SE 
+    dirac-dms-add-file LFN:$LFN $CONF $SE 
     echo "Uploaded config to: $LFN [$SE]"
 }
 #---------------------------------
