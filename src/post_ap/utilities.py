@@ -19,8 +19,8 @@ class Data:
     '''
     Data meant to hold shared attributes
     '''
-    lx_user   : str = os.environ['LXNAME']
-    conf_path : str = os.environ['CONFPATH']
+    lx_user   : str
+    conf_path : str
 # --------------------------------------
 def load_config(cfg_nam : str, kind :str ='yaml') -> dict:
     '''
@@ -90,3 +90,13 @@ def _load_grid_config(cfg_nam :str, kind : str) -> dict:
 
         return data
 # --------------------------------------
+def _initialize():
+    if 'LXNAME' not in os.environ:
+        raise ValueError('Cannot find LXNAME in environment')
+
+    Data.lx_user = os.environ['LXNAME']
+
+    if 'CONFPATH' in os.environ:
+        Data.conf_path = os.environ['CONFPATH']
+# --------------------------------------
+_initialize()
