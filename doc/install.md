@@ -96,7 +96,7 @@ If you change the code, the version of the code running in the grid will have to
 
 ```bash
 # This will skip uploading to the Grid
-update_tarball -v 001 -s 1
+update_tarball
 
 # This will build and upload to the grid
 update_tarball -v 001
