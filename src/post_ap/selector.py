@@ -63,6 +63,7 @@ class selector:
         hlt_line = self._rdf.name
         d_line_proc = {
             'Hlt2RD_BuToKpEE'                          : 'bukee',
+            'Hlt2RD_BuToKpEE_cal'                      : 'bukee',
             'Hlt2RD_BuToKpEE_MVA'                      : 'bukee',
             # ---
             'Hlt2RD_BuToKpEE_MVA_noPID'                : 'bukee',
@@ -78,6 +79,7 @@ class selector:
             'Hlt2RD_BdToKstJpsi_KstToKpPim_JpsiToMuMu' : 'bdkstmm',
             # ---
             'Hlt2RD_B0ToKpPimEE'                       : 'bdkstee',
+            'Hlt2RD_B0ToKpPimEE_cal'                   : 'bdkstee',
             'Hlt2RD_B0ToKpPimEE_MVA'                   : 'bdkstee',
             'Hlt2RD_BuToKpJpsi_JpsiToEE'               : 'bdkstee',
             'Hlt2RD_BdToKstJpsi_KstToKpPim_JpsiToEE'   : 'bdkstee',
