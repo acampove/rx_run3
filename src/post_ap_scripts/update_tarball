@@ -78,10 +78,6 @@ initialize()
     TMPLOG=/tmp/dchecks_data.log
     echo "data_manipulation_utilities --->  $DMANUT" > $TMPLOG
 
-    set_pkg_path rx_scripts  
-    SCRIPTS=$TMP
-    echo  "rx_scripts --->  $SCRIPTS"               >> $TMPLOG
-
     set_pkg_path post_ap 
     DCHECKS=$TMP
     echo "post_ap --->  $DCHECKS"               >> $TMPLOG
@@ -140,10 +136,6 @@ install_pkgs()
     pip install $DMANUT > /dev/null
     echo "Running: pip install $DMANUT" 
     check "Install data_manipulation_utilities"
-
-    pip install $SCRIPTS > /dev/null
-    echo "Running: pip install $SCRIPTS"
-    check "Install scripts"
 
     pip install $DCHECKS > /dev/null
     echo "Running: pip install $DCHECKS" 
