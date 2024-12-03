@@ -89,7 +89,7 @@ class ntuple_filter:
         '''
         log.debug('Reformating')
 
-        d_path_ref = {} 
+        d_path_ref = {}
         for key, l_path in d_path.items():
             key   = key.replace(',', '_')
             d_tmp = { path : key for path in l_path }
