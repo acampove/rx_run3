@@ -61,6 +61,7 @@ class selector:
         The attribute is used to apply a selection based on the config files content
         '''
         hlt_line = self._rdf.name
+        # TODO: This should be part of the config file
         d_line_proc = {
             'Hlt2RD_BuToKpEE'                          : 'bukee',
             'Hlt2RD_BuToKpEE_cal'                      : 'bukee',
