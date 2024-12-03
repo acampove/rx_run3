@@ -47,10 +47,11 @@ directory.
 First run a test job with:
 
 ```bash
-job_filter -d dt_2024_turbo -c comp -j 1211 -e 003 -m local -n test_flt
+job_filter -d dt_2024_turbo -c comp -j 1211 -e 003 -m local -n test_flt -u acampove
 ```
 
-where `-j` specifies the number of jobs. For tests, this is the number of files to process, thus, the test job does only one file. 
+where `-u` specifies the user who authored the environment that the job will use.
+The flag `-j` specifies the number of jobs. For tests, this is the number of files to process, thus, the test job does only one file.
 The `-n` flag is the name of the job, for tests it will do/send only one job if either:
 
 1. Its name has the substring `test`.
@@ -61,7 +62,7 @@ Thus one can do local or grid tests running over a single file.
 For real jobs:
 
 ```bash
-job_filter -d dt_2024_turbo -c comp -j 200 -e 003 -m wms -n flt_001
+job_filter -d dt_2024_turbo -c comp -j 200 -e 003 -m wms -n flt_001 -u acampove
 ```
 
 # Downloading ntuples
