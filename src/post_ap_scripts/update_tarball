@@ -99,7 +99,7 @@ install_pkg()
     check "Could not install $NAME"
 
     VERSION=$(pip show $NAME | grep Version)
-    check "Installed $NAME: $VERSION"
+    echo "Installed $NAME: $VERSION"
 }
 #--------------------------------
 get_args "$@"
