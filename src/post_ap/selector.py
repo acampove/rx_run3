@@ -116,8 +116,13 @@ class selector:
         d_cut    = self._d_sel['cuts']
         skip_cut = True
         for key, cut in d_cut.items():
+            # Skip selection if selection has not been implemented for current line
+            if self._proc is None:
+                continue
+
             # Skip selection if this block of cuts does not
             # correspond to current tree
+
             if key not in ['any', self._proc]:
                 continue
 
