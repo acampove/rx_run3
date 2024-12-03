@@ -97,13 +97,13 @@ class ntuple_filter:
 
         return d_path_ref
     # ---------------------------------------------
-    def _get_group(self, d_path):
+    def _get_group(self, d_path : dict[str,str]) -> dict[str,str]:
         '''
         Takes a dictionary mapping:
 
         PFN -> sample_kind
 
-        and the total number of PFNs. Returns same dictionary for ith group out of ngroups
+        Returns same dictionary for ith group out of ngroups
         '''
         log.debug('Getting PFN group')
 
