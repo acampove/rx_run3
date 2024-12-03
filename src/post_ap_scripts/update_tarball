@@ -12,8 +12,7 @@ display_help()
 #--------------------------------
 get_args()
 {
-    SKIP_UPLOAD=0
-    while getopts :hf:v:s: option; do 
+    while getopts :hf:v: option; do 
         case "${option}" in
             h)  
                 display_help
@@ -27,8 +26,7 @@ get_args()
                 display_help
                 exit 1
                 ;;  
-            v)  VERS=${OPTARG};;
-            s)  SKIP_UPLOAD=${OPTARG};;
+            v)  VENV_VERS=${OPTARG};;
         esac
     done
 }
@@ -43,18 +41,13 @@ check()
 #--------------------------------
 upload()
 {
-    if [[ $SKIP_UPLOAD -eq 1 ]];then
-        echo "Skipping upload"
-        return
-    fi
-
-    if [[ -z $VERS ]];then
+    if [[ -z $VENV_VERS ]];then
         echo "Version of tarball not passed, won't upload it"
         exit 0
     fi
 
     SOURCE=$VENVS/dcheck.tar 
-    TARGET=LFN:/lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv/$VERS/dcheck.tar
+    TARGET=LFN:/lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv/$VENV_VERS/dcheck.tar
 
     echo "Uploading tarball for $TARGET"
     dirac-dms-add-file $TARGET $SOURCE CERN-USER
@@ -72,46 +65,14 @@ initialize()
         echo "VENVS environment variable not set"
         exit 1
     fi
-
-    set_pkg_path data_manipulation_utilities 
-    DMANUT=$TMP
-    TMPLOG=/tmp/dchecks_data.log
-    echo "data_manipulation_utilities --->  $DMANUT" > $TMPLOG
-
-    set_pkg_path post_ap 
-    DCHECKS=$TMP
-    echo "post_ap --->  $DCHECKS"               >> $TMPLOG
-
-    column -t $TMPLOG
-}
-#--------------------------------
-set_pkg_path()
-{
-    PKGNAME=$1
-
-    TMP=$(pip show $PKGNAME | grep "Editable project location" | awk -F ': ' '{print$2}' | sed 's|/src||g')
-
-    if [[ $? -ne 0 ]];then
-        echo "Could not find path to package $PKGNAME"
-        exit 1
-    fi
-
-    if [[ ! -d $TMP ]];then
-        echo "Path to package $PKGNAME not found: $TMP"
-        exit 1
-    fi
 }
 #--------------------------------
 make_tarball()
 {
-    if [[ ! -d $VENVS ]];then
-        mkdir -p $VENVS
-    fi
-
+    mkdir -p $VENVS
     cd $VENVS
 
     rm -rf dchecks.tar
-    check "Remove tarball, if found"
 
     if [[ ! -f $VENVS/dcheck/run ]];then
         echo "Environment not found, creating it"
@@ -120,26 +81,26 @@ make_tarball()
         echo "Environment found, updating tarball"
     fi
 
-    install_pkgs
+    source dcheck/bin/activate
+    install_pkg data_manipulation_utilities
+    install_pkg post_ap 
 
     tar -czf dcheck.tar dcheck
     echo "Running: tar -czf dcheck.tar dcheck"
     check "Tar post_ap"
 
-    cd -
+    cd - > /dev/null 2>&1
 }
 #--------------------------------
-install_pkgs()
+install_pkg()
 {
-    source dcheck/bin/activate
+    NAME=$1
 
-    pip install $DMANUT > /dev/null
-    echo "Running: pip install $DMANUT" 
-    check "Install data_manipulation_utilities"
+    pip install $NAME > /dev/null 2>&1
+    check "Could not install $NAME"
 
-    pip install $DCHECKS > /dev/null
-    echo "Running: pip install $DCHECKS" 
-    check "Install post_ap"
+    VERSION=$(pip show $NAME | grep Version)
+    check "Installed $NAME: $VERSION"
 }
 #--------------------------------
 get_args "$@"
