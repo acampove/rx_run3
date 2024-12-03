@@ -14,22 +14,24 @@ from DIRAC                      import gLogger
 
 from tqdm    import trange
 
+import post_ap.utilities as ut
+
 # ---------------------------------------
 class Data:
     '''
     Class used to hold shared attributes
     '''
-    snd_dir = None
-    njob    = None
-    name    : str
-    dset    = None
-    conf    = None
-    venv    = None
-    mode    = None
+    snd_dir     : str 
+    njob        : int 
+    name        : str
+    dset        : str 
+    conf        : str 
+    venv        : str 
+    mode        : str 
     epat        : str
     runner_path : str
 # ---------------------------------------
-def _get_job(jobid):
+def _get_job(jobid : int) -> Job:
     j = Job()
     j.setCPUTime(36000)
     j.setDestination('LCG.CERN.cern')
@@ -47,8 +49,8 @@ def _get_args() -> argparse.Namespace:
     parser.add_argument('-d', '--dset' , type =str, help='Dataset, e.g. dt_2024_turbo' , required=True)
     parser.add_argument('-j', '--njob' , type =int, help='Number of grid jobs'         , required=True)
     parser.add_argument('-e', '--venv' , type =str, help='Index of virtual environment', required=True)
-    parser.add_argument('-m', '--mode' , type =str, help='Run locally or in the grid'  , required=True,
-                        choices=['local', 'wms'])
+    parser.add_argument('-L', '--lcl_cfg', help='If used, will pick local config file' , action='store_true')
+    parser.add_argument('-m', '--mode' , type =str, help='Run locally or in the grid'  , required=True, choices=['local', 'wms'])
 
     args = parser.parse_args()
 
@@ -63,6 +65,8 @@ def _initialize() -> None:
     Data.njob    = args.njob
     Data.venv    = args.venv
     Data.mode    = args.mode
+
+    ut.local_config= args.lcl_cfg
 
     os.makedirs(Data.snd_dir, exist_ok=False)
     gLogger.setLevel('warning')
