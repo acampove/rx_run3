@@ -29,7 +29,7 @@ class selector:
         self._cfg_nam   = cfg_nam
         self._is_mc     = is_mc
 
-        self._proc      : str
+        self._proc      : Union[str,None] = None
         self._atr_mgr   : AtrMgr
         self._d_sel     : dict
         self._d_rdf     : dict[str,   RDataFrame] = {}
