@@ -1,7 +1,7 @@
 [project]
 name        = 'post_ap'
 description = 'Project with code used to ease data manipulation tasks'
-version     = '0.0.4'
+version     = '0.0.5'
 readme      = 'README.md'
 dependencies= ['mplhep', 'tqdm', 'apd', 'xrootd', 'matplotlib', 'data_manipulation_utilities>0.1.2']
 
