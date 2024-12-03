@@ -54,10 +54,10 @@ upload()
     fi
 
     SOURCE=$VENVS/dcheck.tar 
-    TARGET="dirac-dms-add-file LFN:/lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv/$VERS/dcheck.tar"
+    TARGET=LFN:/lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv/$VERS/dcheck.tar
 
     echo "Uploading tarball for $TARGET"
-    lb-dirac $TARGET $SOURCE CERN-USER
+    dirac-dms-add-file $TARGET $SOURCE CERN-USER
 }
 #--------------------------------
 initialize()
