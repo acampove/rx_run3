@@ -3,8 +3,8 @@ Module containing selector class
 '''
 
 import pprint
-from typing                import Union
-from ROOT                  import RDataFrame
+from typing                 import Union
+from ROOT                   import RDataFrame
 
 from dmu.rdataframe.atr_mgr import AtrMgr
 from dmu.logging.log_store  import LogStore
