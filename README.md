@@ -15,7 +15,7 @@ update_config -u 1 -p /path/to/config.yaml
 ```
 
 The `-u` flag will update the config file if its LFN is already in the grid.
-THe `-p` flat passes the path to the config to be uploaded.
+The `-p` flat passes the path to the config to be uploaded.
 
 # Save lists of PFNs
 
