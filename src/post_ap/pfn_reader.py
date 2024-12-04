@@ -52,7 +52,7 @@ class PFNReader:
 
         Returns:
 
-        Dictionary matching sample name and list of samples
+        Dictionary matching sample name and list of ROOT files
         '''
         wg         = self._cfg['working_group']
         apo        = apd.get_analysis_data(analysis=production, working_group=wg)
