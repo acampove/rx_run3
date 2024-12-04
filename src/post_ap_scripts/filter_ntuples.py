@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 '''
 Script used to filter ntuples produced by AP
 '''
