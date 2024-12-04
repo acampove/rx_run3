@@ -1,12 +1,12 @@
 '''
 File containing tests for FilterFile class
 '''
-
+import os
 import pytest
-from dmu.logging.log_store import LogStore
 
-import post_ap.utilities as ut
-from post_ap.filter_file import FilterFile
+from importlib.resources   import files
+from dmu.logging.log_store import LogStore
+from post_ap.filter_file   import FilterFile
 
 log = LogStore.add_logger('post_ap:test_filter_file')
 # --------------------------------------
