@@ -25,30 +25,28 @@ def _initialize():
     Will set loggers, etc
     '''
     log.info('Initializing')
+    config_path               = files('post_ap_data').joinpath('v1.yaml')
+    os.environ['CONFIG_PATH'] = str(config_path)
 
-    LogStore.set_level('rx_scripts:atr_mgr:mgr', 30)
-    LogStore.set_level('post_ap:selector'  , 20)
-    LogStore.set_level('post_ap:utilities' , 30)
-    LogStore.set_level('post_ap:FilterFile', 10)
+    LogStore.set_level('dmu:rdataframe:atr_mgr', 30)
+    LogStore.set_level('post_ap:selector'      , 20)
+    LogStore.set_level('post_ap:utilities'     , 30)
+    LogStore.set_level('post_ap:FilterFile'    , 10)
 # --------------------------------------
-@pytest.mark.parametrize('local_config', Data.l_args_config)
-def test_dt(local_config : bool):
+def test_dt():
     '''
     Run test on data
     '''
-    ut.local_config = local_config
 
-    obj = FilterFile(kind='any_kind', file_path=Data.dt_path, cfg_nam='dt_2024_turbo_comp')
+    obj = FilterFile(sample_name='any_kind', file_path=Data.mc_path)
     obj.dump_contents = True
     obj.run()
 # --------------------------------------
-@pytest.mark.parametrize('local_config', Data.l_args_config)
-def test_mc(local_config: bool):
+def test_mc():
     '''
     Run test on MC
     '''
-    ut.local_config = local_config
 
-    obj = FilterFile(kind='any_kind', file_path=Data.mc_path, cfg_nam='mc_2024_turbo_comp')
+    obj = FilterFile(sample_name='any_kind', file_path=Data.mc_path)
     obj.run()
 # --------------------------------------

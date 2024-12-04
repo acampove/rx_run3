@@ -27,7 +27,6 @@ class Selector:
         self._rdf       = rdf
         self._is_mc     = is_mc
 
-        self._sel_kind  : Union[str,None] = None
         self._atr_mgr   : AtrMgr
         self._d_sel     : dict
         self._d_rdf     : dict[str,   RDataFrame] = {}
@@ -43,21 +42,20 @@ class Selector:
             raise ValueError
 
         self._atr_mgr  = AtrMgr(self._rdf)
-        self._sel_kind = self._rdf.sel_kind
         cfg_dat        = utdc.load_config()
         self._d_sel    = cfg_dat['transformations']['selection']
         self._fix_bkgcat()
 
         self._initialized = True
     # -------------------------------------------------------------------
-    def _apply_selection(self) -> None:
+    def _apply_selection(self, sel_kind : str) -> None:
         '''
         Loop over cuts and apply selection
         Save intermediate dataframes to self._d_rdf
         Save final datafrme to self._rdf
         '''
         # Skip selection if selection has not been implemented for current line
-        if self._sel_kind is None:
+        if sel_kind is None:
             log.warning('Not applying selection')
             return
 
@@ -76,12 +74,12 @@ class Selector:
             # sel_kind: Apply only if key == sel_kind
             # This code will at most match two entried of d_cut
 
-            if key not in ['any', self._sel_kind]:
+            if key not in ['any', sel_kind]:
                 continue
 
             skip_cut = False
             if len(cut) == 0:
-                log.debug(f'Empty selection for sel_kindess: {self._sel_kind}')
+                log.debug(f'Empty selection for sel_kindess: {sel_kind}')
 
             for name, cut_val in cut.items():
                 rdf = rdf.Filter(cut_val, f'{name}:{key}')
@@ -90,9 +88,9 @@ class Selector:
 
         if skip_cut:
             log.info(40 * '-')
-            log.warning(f'sel_kindess \"{self._sel_kind}\" not found among:')
-            for sel_kind in d_cut:
-                log.info(f'    \"{sel_kind}\"')
+            log.warning(f'sel_kind \"{sel_kind}\" not found among:')
+            for kind in d_cut:
+                log.info(f'    \"{kind}\"')
             log.info(40 * '-')
 
         self._rdf = rdf
@@ -162,12 +160,13 @@ class Selector:
             rep = rdf.Report()
             rep.Print()
     # -------------------------------------------------------------------
-    def run(self, as_cutflow=False) -> Union[RDataFrame, dict[str,RDataFrame]]:
+    def run(self, sel_kind : str, as_cutflow=False) -> Union[RDataFrame, dict[str,RDataFrame]]:
         '''
         Will return ROOT dataframe(s)
 
         Parameters
         -------------------
+        sel_kind         : Type of selection, found in transformations/selection section of config 
         as_cutflow (bool): If true will return {cut_name -> rdf} dictionary
         with cuts applied one after the other. If False (default), it will only return
         the dataframe after the full selection
@@ -175,7 +174,7 @@ class Selector:
         self._initialize()
         self._prescale()
 
-        self._apply_selection()
+        self._apply_selection(sel_kind)
 
         d_rdf = { key : self._atr_mgr.add_atr(rdf) for key, rdf in self._d_rdf.items() }
 
