@@ -57,7 +57,7 @@ class Selector:
         Save final datafrme to self._rdf
         '''
         # Skip selection if selection has not been implemented for current line
-        if self._proc is None:
+        if self._sel_kind is None:
             log.warning('Not applying selection')
             return
 
@@ -73,15 +73,15 @@ class Selector:
             # Skip selection if this block of cuts does not
             # correspond to current tree
             # any: Apply these cuts to any sample
-            # proc: Apply only if key == proc
+            # sel_kind: Apply only if key == sel_kind
             # This code will at most match two entried of d_cut
 
-            if key not in ['any', self._proc]:
+            if key not in ['any', self._sel_kind]:
                 continue
 
             skip_cut = False
             if len(cut) == 0:
-                log.debug(f'Empty selection for process: {self._proc}')
+                log.debug(f'Empty selection for sel_kindess: {self._sel_kind}')
 
             for name, cut_val in cut.items():
                 rdf = rdf.Filter(cut_val, f'{name}:{key}')
@@ -90,9 +90,9 @@ class Selector:
 
         if skip_cut:
             log.info(40 * '-')
-            log.warning(f'Process \"{self._proc}\" not found among:')
-            for proc in d_cut:
-                log.info(f'    \"{proc}\"')
+            log.warning(f'sel_kindess \"{self._sel_kind}\" not found among:')
+            for sel_kind in d_cut:
+                log.info(f'    \"{sel_kind}\"')
             log.info(40 * '-')
 
         self._rdf = rdf
