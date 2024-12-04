@@ -147,12 +147,26 @@ class Selector:
             return
 
         prs = self._d_sel['prescale']
-        log.debug(f'Prescaling by a factor of: {prs}')
+        log.warning(f'Prescaling by a factor of: {prs}')
 
         rdf = self._rdf.Define('prs', f'gRandom->Integer({prs})')
         rdf = rdf.Filter('prs==0')
 
         self._rdf = rdf
+    # -------------------------------------------------------------------
+    def _evt_max(self):
+        '''
+        Will limit running to the first "evt_max" entries from the selection section 
+        '''
+
+        if 'evt_max' not in self._d_sel:
+            log.debug('Not limitting number of entries')
+            return
+
+        mevt = self._d_sel['evt_max']
+        log.warning(f'Limitting to first: {mevt}')
+
+        self._rdf = self._rdf.Range(mevt)
     # -------------------------------------------------------------------
     def _print_info(self, rdf):
         log_lvl = log.level
@@ -173,6 +187,7 @@ class Selector:
         '''
         self._initialize()
         self._prescale()
+        self._evt_max()
 
         self._apply_selection(sel_kind)
 
