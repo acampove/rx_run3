@@ -17,20 +17,36 @@ class Data:
     '''
     Class used to store shared attributes
     '''
-    dt_path = '/home/acampove/data/aprod/downloads/flt_27_08_2024_dt_2024_turbo/00231366_00000001_1.ftuple.root'
-    mc_path = '/home/acampove/data/aprod/downloads/flt_29_08_2024_mc_2024_turbo_comp/bukee/mc_bu_jpsik_ee_12153001_nu4p3_magdown_turbo_hlt1_2_tupling_00231483_00000002_1.tuple.root'
+    mc_path : str
+    dt_path : str
 # --------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    LogStore.set_level('post_ap:selector'  , 10)
-    LogStore.set_level('rx_scripts:atr_mgr:mgr', 30)
+    config_path               = files('post_ap_data').joinpath('v1.yaml')
+    os.environ['CONFIG_PATH'] = str(config_path)
+
+    LogStore.set_level('post_ap:selector'      , 10)
+    LogStore.set_level('dmu:rdataframe:atr_mgr', 30)
+
+    cern_box     = os.environ['CERNBOX']
+    Data.mc_path = f'{cern_box}/Run3/analysis_productions/MC/local_tests/mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple.root'
+    Data.dt_path = f'{cern_box}/Run3/analysis_productions/MC/local_tests/mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple.root'
+# --------------------------------------
+def _rename_branches(rdf : RDataFrame) -> RDataFrame:
+    rdf = rdf.Define('B_const_mass_M', 'B_DTF_Jpsi_MASS')
+
+    return rdf
 # --------------------------------------
 def test_mc():
     '''
     Test selection in MC
     '''
-    rdf = RDataFrame('Hlt2RD_BuToKpEE', Data.mc_path)
-    obj = selector(rdf=rdf, cfg_nam='cuts_EE_2024', is_mc=True)
+
+    rdf          = RDataFrame('Hlt2RD_B0ToKpKmMuMu/DecayTree', Data.mc_path)
+    rdf          = _rename_branches(rdf)
+    rdf.sel_kind = 'bukmm'
+
+    obj = Selector(rdf=rdf, is_mc=True)
     rdf = obj.run()
 # --------------------------------------
 def test_dt():
@@ -38,9 +54,11 @@ def test_dt():
     Test selection in data
     '''
 
-    rdf = RDataFrame('Hlt2RD_BuToKpEE', Data.dt_path)
+    rdf          = RDataFrame('Hlt2RD_B0ToKpKmMuMu/DecayTree', Data.dt_path)
+    rdf          = _rename_branches(rdf)
+    rdf.sel_kind = 'bukmm'
 
-    obj = selector(rdf=rdf, cfg_nam='cuts_EE_2024', is_mc=False)
+    obj = Selector(rdf=rdf, is_mc=False)
     rdf = obj.run()
 # --------------------------------------
 def test_cfl():
@@ -48,9 +66,11 @@ def test_cfl():
     Test retrieving multiple dataframes, one after each cut 
     '''
 
-    rdf = RDataFrame('Hlt2RD_BuToKpEE', Data.mc_path)
+    rdf          = RDataFrame('Hlt2RD_B0ToKpKmMuMu/DecayTree', Data.mc_path)
+    rdf          = _rename_branches(rdf)
+    rdf.sel_kind = 'bukmm'
 
-    obj   = selector(rdf=rdf, cfg_nam='cuts_EE_2024', is_mc=True)
+    obj   = Selector(rdf=rdf, is_mc=True)
     d_rdf = obj.run(as_cutflow=True)
 
     for key, rdf in d_rdf.items():
