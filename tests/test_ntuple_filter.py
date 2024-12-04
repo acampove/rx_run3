@@ -5,7 +5,7 @@ This script containts tests for the ntuple_filter class
 from dmu.logging.log_store import LogStore
 import pytest
 
-from post_ap.ntuple_filter import ntuple_filter
+from post_ap.ntuple_filter import NtupleFilter 
 
 log = LogStore.add_logger('post_ap:test_ntuple_filter')
 # ---------------------------------------
@@ -24,12 +24,12 @@ def test_dt():
     '''
     Will test filtering of data
     '''
-    obj = ntuple_filter(dataset='dt_2024_turbo', cfg_ver='comp', index=1, ngroup=1211)
+    obj = NtupleFilter(production='rd_ap_2024', nickname='data', index=1, ngroup=1211)
     obj.filter()
 # ---------------------------------------
 def test_mc():
     '''
     Will test filtering of MC 
     '''
-    obj = ntuple_filter(dataset='mc_2024_turbo', cfg_ver='comp', index=1, ngroup=71)
+    obj = NtupleFilter(production='btoxll_mva_2024_nopid', nickname='data', index=1, ngroup=1211)
     obj.filter()
