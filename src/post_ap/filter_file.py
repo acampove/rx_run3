@@ -71,18 +71,13 @@ class FilterFile:
         '''
         Will set self._is_mc flag based on config name
         '''
-        if self._cfg_nam is None:
-            raise ValueError('cfg_nam is set to None')
 
-        if self._cfg_nam.startswith('dt_'):
-            self._is_mc = False
-            return
-
-        if self._cfg_nam.startswith('mc_'):
+        if   self._sample_name.startswith('mc_'):
             self._is_mc = True
-            return
-
-        raise ValueError(f'Cannot determine Data/MC from config name: {self._cfg_nam}')
+        elif self._sample_name.startswith('data_'):
+            self._is_mc = False
+        else:
+            raise ValueError(f'Cannot determine Data/MC from sample name: {self._sample_name}')
     # --------------------------------------
     def _set_save_pars(self):
         try:
