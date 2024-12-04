@@ -469,4 +469,3 @@ transformations:
       KCL_ee:
         - Hlt2RD_BuToKpEE_MVA_cal
         - Hlt2RD_B0ToKpPimEE_MVA_cal
-
