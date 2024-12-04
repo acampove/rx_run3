@@ -8,7 +8,8 @@ from importlib.resources     import files
 from dmu.logging.log_store   import LogStore
 
 import post_ap.utilities   as utdc
-from   post_ap.filter_file     import FilterFile
+from   post_ap.filter_file   import FilterFile
+from   post_ap.pfn_reader    import PFNReader
 
 log = LogStore.add_logger('post_ap:ntuple_filter')
 # ----------------------------------------------------------------
