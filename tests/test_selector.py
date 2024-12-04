@@ -42,24 +42,22 @@ def test_mc():
     Test selection in MC
     '''
 
-    rdf          = RDataFrame('Hlt2RD_B0ToKpKmMuMu/DecayTree', Data.mc_path)
-    rdf          = _rename_branches(rdf)
-    rdf.sel_kind = 'bukmm'
+    rdf = RDataFrame('Hlt2RD_B0ToKpKmMuMu/DecayTree', Data.mc_path)
+    rdf = _rename_branches(rdf)
 
     obj = Selector(rdf=rdf, is_mc=True)
-    rdf = obj.run()
+    rdf = obj.run(sel_kind = 'bukmm')
 # --------------------------------------
 def test_dt():
     '''
     Test selection in data
     '''
 
-    rdf          = RDataFrame('Hlt2RD_B0ToKpKmMuMu/DecayTree', Data.dt_path)
-    rdf          = _rename_branches(rdf)
-    rdf.sel_kind = 'bukmm'
+    rdf = RDataFrame('Hlt2RD_B0ToKpKmMuMu/DecayTree', Data.dt_path)
+    rdf = _rename_branches(rdf)
 
     obj = Selector(rdf=rdf, is_mc=False)
-    rdf = obj.run()
+    rdf = obj.run(sel_kind = 'bukmm')
 # --------------------------------------
 def test_cfl():
     '''
@@ -68,10 +66,9 @@ def test_cfl():
 
     rdf          = RDataFrame('Hlt2RD_B0ToKpKmMuMu/DecayTree', Data.mc_path)
     rdf          = _rename_branches(rdf)
-    rdf.sel_kind = 'bukmm'
 
     obj   = Selector(rdf=rdf, is_mc=True)
-    d_rdf = obj.run(as_cutflow=True)
+    d_rdf = obj.run(sel_kind = 'bukmm', as_cutflow=True)
 
     for key, rdf in d_rdf.items():
         num = rdf.Count().GetValue()
