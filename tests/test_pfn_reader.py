@@ -16,9 +16,8 @@ class Data:
     '''
     gut.TIMER_ON=True
     l_arg_simple : list[tuple[str,str,int]] = [
-            ('btoxll_mva_2024_nopid', 'simulation',   44),
-            (           'rd_ap_2024',       'data',   -1),
-            ]
+            ('btoxll_mva_2024_nopid', 'simulation',   6),
+            (           'rd_ap_2024',       'data',   8)]
 # -----------------------------
 def _get_cfg() -> dict:
     config_path = files('post_ap_data').joinpath('v1.yaml')
@@ -36,9 +35,6 @@ def test_simple(production : str, nickname : str, expected : int):
     cfg    = _get_cfg()
 
     reader = PFNReader(cfg=cfg)
-    l_pfn  = reader.get_pfns(production=production, nickname=nickname)
+    d_pfn  = reader.get_pfns(production=production, nickname=nickname)
 
-    if expected < 0:
-        return
-
-    assert len(l_pfn) == expected
+    assert len(d_pfn) == expected

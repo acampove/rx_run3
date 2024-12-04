@@ -21,8 +21,9 @@ class PFNReader:
         '''
         self._cfg = cfg
     #------------------------------------
-    def _paths_from_collection(self, collection : SampleCollection, l_sample : list[str], version : str) -> list[str]:
-        l_pfn = []
+    def _paths_from_collection(self, collection : SampleCollection, l_sample : list[str], version : str) -> dict[str,list[str]]:
+        d_pfn = {}
+        npfn  = 0
         for d_info in collection:
             sample_name = d_info['name']
             sample_vers = d_info['version']
@@ -33,12 +34,16 @@ class PFNReader:
             if sample_name not in l_sample:
                 continue
 
-            sam   = collection.filter(name=sample_name)
-            l_pfn+= sam.PFNs()
+            sam                = collection.filter(name=sample_name)
+            l_pfn              = sam.PFNs()
+            npfn              += len(l_pfn)
+            d_pfn[sample_name] = l_pfn
 
-        return l_pfn
+        log.info(f'Found {npfn} PFNs')
+
+        return d_pfn
     # ---------------------------------------
-    def get_pfns(self, production : str, nickname : str) -> list[str]:
+    def get_pfns(self, production : str, nickname : str) -> dict[str,list[str]]:
         '''
         Parameters:
 
@@ -47,7 +52,7 @@ class PFNReader:
 
         Returns:
 
-        List of PFNs for given production and sample nickname
+        Dictionary matching sample name and list of samples
         '''
         wg         = self._cfg['working_group']
         apo        = apd.get_analysis_data(analysis=production, working_group=wg)
@@ -58,10 +63,10 @@ class PFNReader:
         l_sample   = self._cfg['productions'][production]['samples'][nickname]
         version    = self._cfg['productions'][production]['version']
 
-        l_path     = self._paths_from_collection(collection, l_sample, version)
+        d_path     = self._paths_from_collection(collection, l_sample, version)
 
-        npfn = len(l_path)
-        log.info(f'Found {npfn} PFNs')
+        nsamp = len(d_path)
+        log.info(f'Found {nsamp} samples')
 
-        return l_path
+        return d_path
 # ---------------------------------------
