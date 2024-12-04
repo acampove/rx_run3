@@ -285,7 +285,7 @@ class FilterFile:
         norg     = rdf.Count().GetValue()
 
         if not rdf.lumi:
-            obj  = selector(rdf=rdf, cfg_nam=self._cfg_nam, is_mc=self._is_mc)
+            obj  = Selector(rdf=rdf, is_mc=self._is_mc)
             rdf  = obj.run()
         nfnl     = rdf.Count().GetValue()
 
@@ -390,7 +390,7 @@ class FilterFile:
                 log.debug('Saving lumitree')
                 lumi_rdf = RDataFrame('lumiTree', self._file_path)
                 l_name   = self._get_column_names(lumi_rdf)
-                lumi_rdf.Snapshot('lumiTree', f'{self._kind}_{preffix}_{line_name}.root', l_name, opts)
+                lumi_rdf.Snapshot('lumiTree', f'{self._sample_name}_{preffix}_{line_name}.root', l_name, opts)
                 log.debug('Saved lumitree')
     # --------------------------------------
     def _save_contents(self, file_path : str) -> None:
