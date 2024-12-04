@@ -376,7 +376,7 @@ class FilterFile:
             l_branch  = rdf.l_branch
             tree_name = self._tree_name_from_line_name(line_name)
 
-            file_path = f'{self._kind}_{preffix}_{line_name}.root'
+            file_path = f'{line_name}.root'
             rdf.Snapshot(tree_name, file_path, l_branch, opts)
 
             log.debug(f'Saved: {file_path}:{tree_name}')
