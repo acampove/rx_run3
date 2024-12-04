@@ -21,9 +21,9 @@ class Data:
     log_lv  : int
 #----------------------------------------
 def _set_log():
-    LogStore.set_level('rx_scripts:atr_mgr:mgr',             30)
-    LogStore.set_level('post_ap:FilterFile'   , Data.log_lv)
-    LogStore.set_level('post_ap:ntuple_filter', Data.log_lv)
+    LogStore.set_level('dmu:rdataframe:atr_mgr',          30)
+    LogStore.set_level('post_ap:FilterFile'    , Data.log_lv)
+    LogStore.set_level('post_ap:ntuple_filter' , Data.log_lv)
 #----------------------------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Will produce a smaller ntuple from a large one, for a given group of files')
