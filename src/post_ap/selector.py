@@ -42,64 +42,13 @@ class Selector:
             log.error(f'Invalid value for is_mc: {self._is_mc}')
             raise ValueError
 
-        self._atr_mgr = AtrMgr(self._rdf)
-
-        self._set_process()
-
-        log.debug(f'Using config: {self._cfg_nam}')
-        cfg_dat       = utdc.load_config(self._cfg_nam)
-        self._d_sel   = cfg_dat['selection']
+        self._atr_mgr  = AtrMgr(self._rdf)
+        self._sel_kind = self._rdf.sel_kind
+        cfg_dat        = utdc.load_config()
+        self._d_sel    = cfg_dat['transformations']['selection']
         self._fix_bkgcat()
 
         self._initialized = True
-    # -------------------------------------------------------------------
-    def _set_process(self):
-        '''
-        Will set the attribute self._proc based on the name of the HLT line in the dataframe
-        The attribute is used to apply a selection based on the config files content
-        '''
-        hlt_line = self._rdf.name
-        # TODO: This should be part of the config file
-        d_line_proc = {
-            'Hlt2RD_BuToKpEE'                          : 'bukee',
-            'Hlt2RD_BuToKpEE_cal'                      : 'bukee',
-            'Hlt2RD_BuToKpEE_MVA'                      : 'bukee',
-            # ---
-            'Hlt2RD_BuToKpEE_MVA_noPID'                : 'bukee',
-            'Hlt2RD_BuToKpMuMu_MVA_noPID'              : 'bukmm',
-            'Hlt2RD_B0ToKpPimEE_MVA_noPID'             : 'bdkstee',
-            'Hlt2RD_B0ToKpPimMuMu_MVA_noPID'           : 'bdkstmm',
-            # ---
-            'Hlt2RD_BuToKpMuMu'                        : 'bukmm',
-            'Hlt2RD_BuToKpMuMu_MVA'                    : 'bukmm',
-            # ---
-            'Hlt2RD_B0ToKpPimMuMu'                     : 'bdkstmm',
-            'Hlt2RD_B0ToKpPimMuMu_MVA'                 : 'bdkstmm',
-            'Hlt2RD_BdToKstJpsi_KstToKpPim_JpsiToMuMu' : 'bdkstmm',
-            # ---
-            'Hlt2RD_B0ToKpPimEE'                       : 'bdkstee',
-            'Hlt2RD_B0ToKpPimEE_cal'                   : 'bdkstee',
-            'Hlt2RD_B0ToKpPimEE_MVA'                   : 'bdkstee',
-            'Hlt2RD_BuToKpJpsi_JpsiToEE'               : 'bdkstee',
-            'Hlt2RD_BdToKstJpsi_KstToKpPim_JpsiToEE'   : 'bdkstee',
-            # ---
-            'Hlt2RD_LbToLEE_LL'                        : 'lbpkee',
-            'Hlt2RD_LbToLEE_LL_MVA'                    : 'lbpkee',
-            'Hlt2RD_LbToPKJpsi_JpsiToEE'               : 'lbpkee',
-            # ---
-            'Hlt2RD_LbToLMuMu_LL'                      : 'lbpkmm',
-            'Hlt2RD_LbToLMuMu_LL_MVA'                  : 'lbpkmm',
-            'Hlt2RD_LbToPKJpsi_JpsiToMuMu'             : 'lbpkmm',
-        }
-
-        if hlt_line not in d_line_proc:
-            log.warning(f'Line not implemented for selection: {hlt_line}')
-            return
-
-        proc = d_line_proc[hlt_line]
-        log.debug(f'Found process {proc} for line {hlt_line}')
-
-        self._proc = proc
     # -------------------------------------------------------------------
     def _apply_selection(self) -> None:
         '''
