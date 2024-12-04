@@ -15,7 +15,7 @@ import post_ap.utilities as ut
 def _initialize():
     LogStore.set_level('post_ap:utilities', 10)
 
-    config_path = files('post_ap_data').joinpath('hlt_cmp.yaml')
+    config_path               = files('post_ap_data').joinpath('v1.yaml')
     os.environ['CONFIG_PATH'] = str(config_path)
 #----------------------------------------
 def test_simple():
