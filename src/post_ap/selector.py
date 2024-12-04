@@ -13,23 +13,21 @@ import post_ap.utilities as utdc
 
 log = LogStore.add_logger('post_ap:selector')
 # -------------------------------------------------------------------
-class selector:
+class Selector:
     '''
     Class used to apply selections to ROOT dataframes
     '''
     # -------------------------------------------------------------------
-    def __init__(self, rdf : RDataFrame, cfg_nam : str, is_mc : bool):
+    def __init__(self, rdf : RDataFrame, is_mc : bool):
         '''
         rdf    : ROOT dataframe
-        cfg_nam: Name without extension of toml config file
         is_mc  : MC or real data?
         '''
 
         self._rdf       = rdf
-        self._cfg_nam   = cfg_nam
         self._is_mc     = is_mc
 
-        self._proc      : Union[str,None] = None
+        self._sel_kind  : Union[str,None] = None
         self._atr_mgr   : AtrMgr
         self._d_sel     : dict
         self._d_rdf     : dict[str,   RDataFrame] = {}
