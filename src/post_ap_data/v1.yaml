@@ -372,7 +372,7 @@ transformations:
     <<: *high_priority
     <<: *low_priority
   selection:
-    prescale: 1
+    evt_max : 1000
     cuts:
       any:
         L1Ghost: L1_TRGHOSTPROB < 0.5
