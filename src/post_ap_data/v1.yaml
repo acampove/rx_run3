@@ -399,14 +399,14 @@ transformations:
   categories:
     bukee:
       - Hlt2RD_BuToKpEE
-      - Hlt2RD_BuToKpEE_cal
       - Hlt2RD_BuToKpEE_MVA
+      - Hlt2RD_BuToKpEE_MVA_cal
       - Hlt2RD_BuToKpEE_MVA_misid
       - Hlt2RD_BuToKpEE_MVA_noPID
     bdkstee:
       - Hlt2RD_B0ToKpPimEE
-      - Hlt2RD_B0ToKpPimEE_cal
       - Hlt2RD_B0ToKpPimEE_MVA
+      - Hlt2RD_B0ToKpPimEE_MVA_cal
       - Hlt2RD_B0ToKpPimEE_MVA_misid
       - Hlt2RD_BuToKpJpsi_JpsiToEE
       - Hlt2RD_BdToKstJpsi_KstToKpPim_JpsiToEE
