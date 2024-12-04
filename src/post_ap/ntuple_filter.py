@@ -4,7 +4,6 @@ Module with definition of ntuple_filter class
 import os
 import math
 import json
-from importlib.resources     import files
 from dmu.logging.log_store   import LogStore
 
 import post_ap.utilities   as utdc
@@ -13,7 +12,7 @@ from   post_ap.pfn_reader    import PFNReader
 
 log = LogStore.add_logger('post_ap:ntuple_filter')
 # ----------------------------------------------------------------
-class ntuple_filter:
+class NtupleFilter:
     '''
     Class used to filter ntuples from analysis productions. Filtering means:
     1. Picking a subset of the trees.
@@ -24,10 +23,10 @@ class ntuple_filter:
         '''
         Parameters
         ---------------------
-        dataset: Dataset used, e.g. dt_2024_turbo
-        cfg_ver: Type of configuration, e.g. comp (comparison)
-        index  : Index of subsample to process, they start at zero up to ngroup - 1
-        ngroup : Number of groups into which to split filter
+        production : Taken from AP, e.g. rd_ap_2024 
+        nickname   : Found in productions/[]/samples/X. Represents group of jobs e.g. simulation, data 
+        index      : Index of subsample to process, they start at zero up to ngroup - 1
+        ngroup     : Number of groups into which to split filter
         '''
 
         self._prod    = production
@@ -49,6 +48,15 @@ class ntuple_filter:
 
         self._initialized = True
     # ---------------------------------------------
+    def _invert_dictionary(self, d_pfn : dict[str,list[str]]) -> dict[str,str]:
+        d_inv_pfn = {}
+        for kind, l_pfn in d_pfn.items():
+            d_tmp = { pfn : kind for pfn in l_pfn }
+
+            d_inv_pfn.update(d_tmp)
+
+        return d_inv_pfn
+    # ---------------------------------------------
     def _set_paths(self):
         '''
         Loads dictionary with:
@@ -60,6 +68,7 @@ class ntuple_filter:
 
         reader = PFNReader(cfg=self._cfg_dat)
         d_pfn  = reader.get_pfns(production=self._prod, nickname=self._nick)
+        d_pfn  = self._invert_dictionary(d_pfn)
         d_path = self._get_group(d_pfn)
 
         self._d_root_path = d_path
