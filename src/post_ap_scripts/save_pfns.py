@@ -38,9 +38,7 @@ def _get_pfns() -> dict:
     '''
     Returns dictionary of PFS
     '''
-    utdc.local_config = Data.local_config
-
-    cfg_dat = utdc.load_config(Data.config)
+    cfg_dat = utdc.load_config()
     d_prod  = cfg_dat['production']
 
     log.debug('Reading paths from APD')
@@ -69,7 +67,7 @@ def _get_dt_pfns(ap_obj) -> dict[str,list[str]]:
     '''
     Takes AP object and returns dictionary between name of production and list of PFNs
     '''
-    cfg_dat  = utdc.load_config(Data.config)
+    cfg_dat  = utdc.load_config()
     l_samp   = cfg_dat['sample']['names']
     d_sample = {samp : ap_obj(name=samp) for samp in l_samp}
 
@@ -79,7 +77,7 @@ def _get_mc_pfns(ap_obj):
     '''
     Reads from AP object sample info and returns samplename -> PFNs dictionary
     '''
-    cfg_dat   = utdc.load_config(Data.config)
+    cfg_dat   = utdc.load_config()
     regex     = cfg_dat['sample']['name_rx']
     version   = cfg_dat['sample']['version']
     pattern   = re.compile(regex)
