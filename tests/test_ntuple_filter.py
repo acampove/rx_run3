@@ -1,7 +1,9 @@
 '''
 This script containts tests for the ntuple_filter class
 '''
+import os
 
+from importlib.resources   import files
 from dmu.logging.log_store import LogStore
 import pytest
 
@@ -19,6 +21,9 @@ def initialize():
     LogStore.set_level('post_ap:FilterFile'    , 10)
     LogStore.set_level('post_ap:selector'      , 10)
     LogStore.set_level('dmu:rdataframe:atr_mgr', 30)
+
+    config_path               = files('post_ap_data').joinpath('v1.yaml')
+    os.environ['CONFIG_PATH'] = str(config_path)
 # ---------------------------------------
 def test_dt():
     '''
