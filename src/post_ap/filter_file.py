@@ -266,7 +266,7 @@ class FilterFile:
     # --------------------------------------
     def _get_sel_kind(self, line_name : str) -> str:
         d_cat : dict[str,list[str]] = self._d_trans['categories']
-        for cat, l_line_name in d_cat:
+        for cat, l_line_name in d_cat.items():
             if line_name in l_line_name:
                 return cat
 
