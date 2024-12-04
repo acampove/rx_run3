@@ -1,13 +1,14 @@
 '''
 Module with tests for selector class
 '''
-from dataclasses import dataclass
+import os
+from dataclasses         import dataclass
+from importlib.resources import files
 
 import pytest
 from dmu.logging.log_store import LogStore
 from ROOT                  import RDataFrame
-
-from post_ap.selector      import selector
+from post_ap.selector      import Selector
 
 log = LogStore.add_logger('post_ap:test_selector')
 # --------------------------------------
