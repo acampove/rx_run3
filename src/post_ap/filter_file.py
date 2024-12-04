@@ -83,13 +83,13 @@ class FilterFile:
     # --------------------------------------
     def _set_save_pars(self):
         try:
-            self._nevts = self._cfg_dat['saving']['max_events']
+            self._nevts = self._d_trans['saving']['max_events']
             log.info(f'Filtering dataframe with {self._nevts} entries')
         except KeyError:
             log.debug('Not filtering, max_events not specified')
 
         try:
-            self._store_branch = self._cfg_dat['saving']['store_branch']
+            self._store_branch = self._d_trans['saving']['store_branch']
         except KeyError:
             log.debug('Not storing branches')
     # --------------------------------------
@@ -97,7 +97,7 @@ class FilterFile:
         '''
         Will return all the HLT line names from config
         '''
-        d_l_name = self._cfg_dat['hlt_lines']
+        d_l_name = self._d_trans['hlt_lines']
         l_name   = []
         for val in d_l_name.values():
             l_name += val
@@ -138,17 +138,17 @@ class FilterFile:
         '''
         Will take the name of a branch and return True (keep) or False (drop)
         '''
-        l_svar = self._cfg_dat['drop_branches']['starts_with']
+        l_svar = self._d_trans['drop_branches']['starts_with']
         for svar in l_svar:
             if name.startswith(svar):
                 return False
 
-        l_svar = self._cfg_dat['drop_branches']['ends_with']
+        l_svar = self._d_trans['drop_branches']['ends_with']
         for svar in l_svar:
             if name.endswith(svar):
                 return False
 
-        l_ivar = self._cfg_dat['drop_branches']['includes'   ]
+        l_ivar = self._d_trans['drop_branches']['includes'   ]
         for ivar in l_ivar:
             if ivar in name:
                 return False
@@ -187,7 +187,7 @@ class FilterFile:
         Will define branches from mapping in config. Original branches will be dropped later
         '''
         l_name = self._get_column_names(rdf)
-        d_name = self._cfg_dat['rename']
+        d_name = self._d_trans['rename']
         log.debug(110 * '-')
         log.info('Renaming mapped branches')
         log.debug(110 * '-')
@@ -212,14 +212,14 @@ class FilterFile:
         Will take dataframe and define columns if "define" field found in config
         Returns dataframe
         '''
-        if 'define' not in self._cfg_dat:
+        if 'define' not in self._d_trans:
             log.debug('Not defining any variables')
             return rdf
 
         log.debug(110 * '-')
         log.info('Defining variables')
         log.debug(110 * '-')
-        for name, expr in self._cfg_dat['define'].items():
+        for name, expr in self._d_trans['define'].items():
             log.debug(f'{name:<50}{expr:<200}')
 
             rdf = rdf.Define(name, expr)
@@ -233,7 +233,7 @@ class FilterFile:
         '''
         log.info('Defining heads')
 
-        d_redef = self._cfg_dat['redefine_head']
+        d_redef = self._d_trans['redefine_head']
         l_name  = self._get_column_names(rdf)
         for org_head, trg_head in d_redef.items():
             l_to_redefine = [ name for name in l_name if name.startswith(org_head) ]
@@ -304,7 +304,7 @@ class FilterFile:
         returns remaining list
         '''
 
-        l_wild_card = self._cfg_dat['drop_branches']['wild_card']
+        l_wild_card = self._d_trans['drop_branches']['wild_card']
 
         l_to_drop = []
         ndrop     = 0
@@ -351,7 +351,7 @@ class FilterFile:
         Given a line name, it will check the config file to return KEE or KMM
         to decide where the tree will be saved.
         '''
-        d_cfg  = self._cfg_dat['saving']['tree_name']
+        d_cfg  = self._d_trans['saving']['tree_name']
         for tree_name, l_line_line in d_cfg.items():
             if line_name in l_line_line:
                 log.debug(f'Using tree name {tree_name} for line {line_name}')
@@ -366,7 +366,7 @@ class FilterFile:
         opts                   = RDF.RSnapshotOptions()
         opts.fMode             = 'update'
         opts.fOverwriteIfExists= True
-        opts.fCompressionLevel = self._cfg_dat['saving']['compression']
+        opts.fCompressionLevel = self._d_trans['saving']['compression']
 
         file_name = os.path.basename(self._file_path)
         preffix   = file_name.replace('.root', '').replace('.', '_')
