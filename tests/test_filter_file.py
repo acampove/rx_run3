@@ -37,8 +37,9 @@ def test_dt():
     '''
     Run test on data
     '''
+    sample_name = 'mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple'
 
-    obj = FilterFile(sample_name='any_kind', file_path=Data.mc_path)
+    obj = FilterFile(sample_name=sample_name, file_path=Data.mc_path)
     obj.dump_contents = True
     obj.run()
 # --------------------------------------
@@ -46,7 +47,8 @@ def test_mc():
     '''
     Run test on MC
     '''
+    sample_name = 'mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple'
 
-    obj = FilterFile(sample_name='any_kind', file_path=Data.mc_path)
+    obj = FilterFile(sample_name=sample_name, file_path=Data.mc_path)
     obj.run()
 # --------------------------------------
