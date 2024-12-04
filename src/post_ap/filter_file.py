@@ -13,7 +13,7 @@ import dmu.generic.utilities as gut
 from dmu.rfile.rfprinter   import RFPrinter
 
 import post_ap.utilities as utdc
-from post_ap.selector  import selector
+from post_ap.selector  import Selector
 
 log = LogStore.add_logger('post_ap:FilterFile')
 # --------------------------------------
