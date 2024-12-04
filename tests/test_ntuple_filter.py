@@ -36,5 +36,5 @@ def test_mc():
     '''
     Will test filtering of MC 
     '''
-    obj = NtupleFilter(production='btoxll_mva_2024_nopid', nickname='data', index=1, ngroup=1211)
+    obj = NtupleFilter(production='btoxll_mva_2024_nopid', nickname='simulation', index=1, ngroup=44)
     obj.filter()
