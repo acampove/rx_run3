@@ -382,7 +382,6 @@ transformations:
         KpGhost: H_TRGHOSTPROB  < 0.5
       bukmm:
         b_mass: B_const_mass_M > 4000 && B_const_mass_M < 5800
-        KpGhost: H_TRGHOSTPROB  < 0.5
       bdkstee:
         b_mass: B_const_mass_M > 4000 && B_const_mass_M < 6000
         k_mass: Kst_M    >  800 && Kst_M   < 1000
