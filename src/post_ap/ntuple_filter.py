@@ -137,6 +137,6 @@ class NtupleFilter:
         self._initialize()
 
         for pfn, kind in self._d_root_path.items():
-            obj = FilterFile(kind=kind, file_path=pfn)
+            obj = FilterFile(sample_name=kind, file_path=pfn)
             obj.run()
 # ----------------------------------------------------------------
