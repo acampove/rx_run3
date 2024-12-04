@@ -401,7 +401,16 @@ transformations:
       - Hlt2RD_BuToKpEE
       - Hlt2RD_BuToKpEE_cal
       - Hlt2RD_BuToKpEE_MVA
+      - Hlt2RD_BuToKpEE_MVA_misid
       - Hlt2RD_BuToKpEE_MVA_noPID
+    bdkstee:
+      - Hlt2RD_B0ToKpPimEE
+      - Hlt2RD_B0ToKpPimEE_cal
+      - Hlt2RD_B0ToKpPimEE_MVA
+      - Hlt2RD_B0ToKpPimEE_MVA_misid
+      - Hlt2RD_BuToKpJpsi_JpsiToEE
+      - Hlt2RD_BdToKstJpsi_KstToKpPim_JpsiToEE
+      - Hlt2RD_B0ToKpPimEE_MVA_noPID
     bukmm:
       - Hlt2RD_BuToKpMuMu
       - Hlt2RD_BuToKpMuMu_MVA
@@ -411,16 +420,10 @@ transformations:
       - Hlt2RD_B0ToKpPimMuMu_MVA
       - Hlt2RD_BdToKstJpsi_KstToKpPim_JpsiToMuMu
       - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
-    bdkstee:
-      - Hlt2RD_B0ToKpPimEE
-      - Hlt2RD_B0ToKpPimEE_cal
-      - Hlt2RD_B0ToKpPimEE_MVA
-      - Hlt2RD_BuToKpJpsi_JpsiToEE
-      - Hlt2RD_BdToKstJpsi_KstToKpPim_JpsiToEE
-      - Hlt2RD_B0ToKpPimEE_MVA_noPID
     lbpkee:
       - Hlt2RD_LbToLEE_LL
       - Hlt2RD_LbToLEE_LL_MVA
+      - Hlt2RD_LbToLEE_LL_MVA_misid
       - Hlt2RD_LbToPKJpsi_JpsiToEE
     lbpkmm:
       - Hlt2RD_LbToLMuMu_LL
