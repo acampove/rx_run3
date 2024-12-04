@@ -20,7 +20,7 @@ class ntuple_filter:
     2. Picking a subset of the branches.
     '''
     # ---------------------------------------------
-    def __init__(self, dataset: str, cfg_ver : str, index : int, ngroup : int):
+    def __init__(self, production : str, nickname : str, index : int, ngroup : int):
         '''
         Parameters
         ---------------------
@@ -30,12 +30,11 @@ class ntuple_filter:
         ngroup : Number of groups into which to split filter
         '''
 
-        self._dataset = dataset
-        self._cfg_ver = cfg_ver
+        self._prod    = production
+        self._nick    = nickname
         self._index   = index
         self._ngroup  = ngroup
 
-        self._cfg_nam     : str
         self._cfg_dat     : dict
         self._d_root_path : dict[str,str]
 
@@ -45,8 +44,7 @@ class ntuple_filter:
         if self._initialized:
             return
 
-        self._cfg_nam = f'{self._dataset}_{self._cfg_ver}'
-        self._cfg_dat = utdc.load_config(self._cfg_nam)
+        self._cfg_dat = utdc.load_config()
         self._set_paths()
 
         self._initialized = True
@@ -60,12 +58,9 @@ class ntuple_filter:
         correspondence
         '''
 
-        json_path = files('post_ap_data').joinpath(f'{self._dataset}_{self._cfg_ver}.json')
-        json_path = str(json_path)
-
-        d_path    = self._load_json(json_path)
-        d_path    = self._reformat(d_path)
-        d_path    = self._get_group(d_path)
+        reader = PFNReader(cfg=self._cfg_dat)
+        d_pfn  = reader.get_pfns(production=self._prod, nickname=self._nick)
+        d_path = self._get_group(d_pfn)
 
         self._d_root_path = d_path
     # ---------------------------------------------
@@ -133,6 +128,6 @@ class ntuple_filter:
         self._initialize()
 
         for pfn, kind in self._d_root_path.items():
-            obj = FilterFile(kind=kind, file_path=pfn, cfg_nam=self._cfg_nam)
+            obj = FilterFile(kind=kind, file_path=pfn)
             obj.run()
 # ----------------------------------------------------------------
