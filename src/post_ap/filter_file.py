@@ -264,6 +264,14 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
+    def _get_sel_kind(self, line_name : str) -> str:
+        d_cat : dict[str,list[str]] = self._d_trans['categories']
+        for cat, l_line_name in d_cat:
+            if line_name in l_line_name:
+                return cat
+
+        raise ValueError(f'Cannot find category for line {line_name}')
+    # --------------------------------------
     def _get_rdf(self, line_name : str) -> RDataFrame:
         '''
         Will build a dataframe from a given HLT line and return the dataframe
@@ -282,9 +290,11 @@ class FilterFile:
         norg     = rdf.Count().GetValue()
 
         if not rdf.lumi:
-            obj  = Selector(rdf=rdf, is_mc=self._is_mc)
-            rdf  = obj.run()
-        nfnl     = rdf.Count().GetValue()
+            sel_kin = self._get_sel_kind(line_name)
+            obj     = Selector(rdf=rdf, is_mc=self._is_mc)
+            rdf     = obj.run(sel_kind=sel_kin)
+
+        nfnl = rdf.Count().GetValue()
 
         log.info(45 * '-')
         log.info(f'{"Line    ":<20}{"     ":5}{line_name:<20}')
