@@ -32,6 +32,7 @@ class FilterFile:
         self._file_path    = file_path
 
         self._cfg_dat      : dict
+        self._d_trans      : dict
         self._nevts        : int
         self._is_mc        : bool
         self._l_line_name  : list[str]
@@ -46,6 +47,7 @@ class FilterFile:
             return
 
         self._cfg_dat = utdc.load_config()
+        self._d_trans = self._cfg_dat['transformations']
 
         self._check_mcdt()
         self._set_tree_names()
