@@ -91,12 +91,12 @@ class FilterFile:
         except KeyError:
             log.debug('Not storing branches')
     # --------------------------------------
-    def _get_names_from_config(self):
+    def _get_names_from_config(self) -> list[str]:
         '''
         Will return all the HLT line names from config
         '''
         d_l_name = self._cfg_dat['hlt_lines']
-        l_name   = list()
+        l_name   = []
         for val in d_l_name.values():
             l_name += val
 
@@ -105,7 +105,7 @@ class FilterFile:
 
         return l_name
     # --------------------------------------
-    def _set_tree_names(self):
+    def _set_tree_names(self) -> None:
         '''
         Will set the list of line names `self._l_line_name`
         '''
@@ -132,7 +132,7 @@ class FilterFile:
 
         self._l_line_name = l_flt
     # --------------------------------------
-    def _keep_branch(self, name):
+    def _keep_branch(self, name : str) -> bool:
         '''
         Will take the name of a branch and return True (keep) or False (drop)
         '''
@@ -162,7 +162,7 @@ class FilterFile:
 
         return l_name
     # --------------------------------------
-    def _rename_kaon_branches(self, rdf):
+    def _rename_kaon_branches(self, rdf : RDataFrame) -> RDataFrame:
         '''
         Will define K_ = H_ for kaon branches. K_ branches will be dropped later
         '''
@@ -243,7 +243,7 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
-    def _define_head(self, rdf : RDataFrame, l_name : list, org_head : str, trg_head : str):
+    def _define_head(self, rdf : RDataFrame, l_name : list, org_head : str, trg_head : str) -> RDataFrame:
         '''
         Will define list of columns with a target head (e.g. B_some_name) from some original head (e.g. Lb_some_name)
         '''
@@ -262,7 +262,7 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
-    def _get_rdf(self, line_name):
+    def _get_rdf(self, line_name : str) -> RDataFrame:
         '''
         Will build a dataframe from a given HLT line and return the dataframe
         _get_branches decides what branches are kept
@@ -319,7 +319,7 @@ class FilterFile:
 
         return [ name for name in l_name if name not in l_to_drop ]
     # --------------------------------------
-    def _attach_branches(self, rdf, line_name):
+    def _attach_branches(self, rdf : RDataFrame, line_name : str) -> RDataFrame:
         '''
         Will check branches in rdf
         Branches are dropped by:
@@ -357,7 +357,7 @@ class FilterFile:
 
         raise ValueError(f'No tree name found for line \"{line_name}\"')
     # --------------------------------------
-    def _save_file(self, l_rdf):
+    def _save_file(self, l_rdf : list[RDataFrame]) -> None:
         '''
         Will save all ROOT dataframes to a file
         '''
@@ -399,7 +399,7 @@ class FilterFile:
         obj.save()
     # --------------------------------------
     @gut.timeit
-    def run(self):
+    def run(self) -> None:
         '''
         Will run filtering of files
         '''
