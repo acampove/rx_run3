@@ -23,10 +23,13 @@ class FilterFile:
     '''
     # pylint: disable=too-many-instance-attributes
     # --------------------------------------
-    def __init__(self, kind : str, file_path : str, cfg_nam : str):
-        self._kind         = kind
+    def __init__(self, sample_name : str, file_path : str):
+        '''
+        sample_name : Sample name, e.g. mc_..., data_...
+        file_path   : PFN or path to ROOT file
+        '''
+        self._sample_name  = sample_name
         self._file_path    = file_path
-        self._cfg_nam      = cfg_nam
 
         self._cfg_dat      : dict
         self._nevts        : int
@@ -42,7 +45,7 @@ class FilterFile:
         if self._initialized:
             return
 
-        self._cfg_dat = utdc.load_config(self._cfg_nam)
+        self._cfg_dat = utdc.load_config()
 
         self._check_mcdt()
         self._set_tree_names()
