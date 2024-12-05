@@ -421,7 +421,10 @@ class FilterFile:
         log.debug(f'Saving metadata to {file_path}')
 
         df_cf = self._d_df_cf[line_name]
+        self._cfg_dat['input']   = self._file_path
+        self._cfg_dat['output']  = file_path
         self._cfg_dat['cutflow'] = df_cf.to_dict()
+
         cfg_str = json.dumps(self._cfg_dat)
         meta    = TNamed('metadata', cfg_str)
 
