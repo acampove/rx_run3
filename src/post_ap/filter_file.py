@@ -5,6 +5,7 @@ Module containing FilterFile class
 import os
 import json
 import fnmatch
+import copy
 import tqdm
 import pandas as pnd
 
@@ -420,12 +421,14 @@ class FilterFile:
     def _add_metadata(self, file_path : str, line_name : str) -> None:
         log.debug(f'Saving metadata to {file_path}')
 
-        df_cf = self._d_df_cf[line_name]
-        self._cfg_dat['input']   = self._file_path
-        self._cfg_dat['output']  = file_path
-        self._cfg_dat['cutflow'] = df_cf.to_dict()
+        cfg_dat = copy.deepcopy(self._cfg_dat)
 
-        cfg_str = json.dumps(self._cfg_dat)
+        df_cf              = self._d_df_cf[line_name]
+        cfg_dat['input']   = self._file_path
+        cfg_dat['output']  = file_path
+        cfg_dat['cutflow'] = df_cf.to_dict()
+
+        cfg_str = json.dumps(cfg_dat)
         meta    = TNamed('metadata', cfg_str)
 
         ifile   = TFile.Open(file_path, 'update')
