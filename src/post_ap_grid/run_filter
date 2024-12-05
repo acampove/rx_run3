@@ -8,6 +8,9 @@ set_vars()
     export NUMEXPR_NUM_THREADS=1
     export OMP_NUM_THREADS=1
     export OPENBLAS_NUM_THREADS=1
+
+    echo "Setting paths to sandbox files"
+    export PFN_PATH=$PWD/pfns.json
 }
 #--------------------------------------
 rename_paths()
@@ -45,13 +48,12 @@ if [[ ! -f $CONF ]];then
     exit 1
 fi
 
-if [[ ! -f pfns.json ]];then
-    echo "Cannot find JSON file with PFNs in:"
+if [[ ! -f $PFN_PATH ]];then
     ls
     exit 1
 fi
 
-dcheck/run bash -c "export CONFIG_PATH=$CONF && export LXNAME=$UNAM && filter_ntuples -p $PROD -n $SAMP -g $NJOB -i $IJOB -l 10"
+dcheck/run bash -c "export PFN_PATH=$PFN_PATH && export CONFIG_PATH=$CONF && export LXNAME=$UNAM && filter_ntuples -p $PROD -n $SAMP -g $NJOB -i $IJOB -l 10"
 
 echo "Sandbox: "
 ls
