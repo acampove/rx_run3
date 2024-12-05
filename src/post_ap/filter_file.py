@@ -387,7 +387,7 @@ class FilterFile:
 
         return f'{name_id}_{line_name}.root'
     # --------------------------------------
-    def _save_file(self, l_rdf : list[RDataFrame]) -> None:
+    def _save_file(self, d_rdf : dict[str,RDataFrame]) -> None:
         '''
         Will save all ROOT dataframes to a file
         '''
@@ -396,11 +396,9 @@ class FilterFile:
         opts.fOverwriteIfExists= True
         opts.fCompressionLevel = self._d_trans['saving']['compression']
 
-        for rdf in tqdm.tqdm(l_rdf, ascii=' -'):
-            line_name = rdf.name
+        for line_name, rdf in tqdm.tqdm(d_rdf.items(), ascii=' -'):
             l_branch  = rdf.l_branch
             tree_name = self._tree_name_from_line_name(line_name)
-
             file_path = self._get_out_file_name(line_name)
 
             rdf.Snapshot(tree_name, file_path, l_branch, opts)
@@ -454,7 +452,7 @@ class FilterFile:
         log.debug(100 * '-')
         log.debug(f'{"Line":<50}{"BOrg":<10}{"":5}{"BFnl":<10}{"#Org":<10}{"":5}{"#Fnl":<10}')
         log.debug(100 * '-')
-        l_rdf = [ self._get_rdf(tree_name) for tree_name in self._l_line_name ]
+        d_rdf = { tree_name : self._get_rdf(tree_name) for tree_name in self._l_line_name }
 
-        self._save_file(l_rdf)
+        self._save_file(d_rdf)
 # --------------------------------------
