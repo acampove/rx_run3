@@ -44,8 +44,23 @@ Thus one can do local or grid tests running over a single file.
 For real jobs:
 
 ```bash
-job_filter -d dt_2024_turbo -c comp -j 200 -e 003 -m wms -n flt_001 -u acampove
+job_filter -p rd_ap_2024 -s data -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j 1000 -e 022 -u acampove -m local
 ```
+
+where the options mean:
+
+```bash
+  -h, --help            show this help message and exit
+  -p PROD, --prod PROD  Name of production, e.g. rd_ap_2024, this shoudl be the same as in the config section.
+  -s SAMP, --samp SAMP  Sample nickname found in the config section `samples`
+  -c CONF, --conf CONF  Path to config file, which should be a YAML file and a few examples are linked below.
+  -j NJOB, --njob NJOB  Number of grid jobs, this will depend on the number of files, for data typically 11K, and 1000 jobs would suffice
+  -e VENV, --venv VENV  Index of virtual environment, e.g. 023
+  -u USER, --user USER  User associated to venv, currently acampove should be the only choice, but if you author your own virtual environment and upload it, then this should be your user name
+  -m {local,wms}, --mode {local,wms} Run locally (for tests) or in the grid
+```
+
+some config files can be found [here](https://github.com/acampove/config_files/tree/main/post_ap)
 
 # Downloading ntuples
 
