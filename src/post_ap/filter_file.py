@@ -383,11 +383,7 @@ class FilterFile:
         raise ValueError(f'No tree name found for line \"{line_name}\"')
     # --------------------------------------
     def _get_out_file_name(self, line_name : str) -> str:
-        file_name = os.path.basename(self._file_path)
-        base_name = file_name.replace('.root', '')
-        name_id   = base_name.split('.')[0]
-
-        return f'{name_id}_{line_name}.root'
+        return f'{self._sample_name}_{line_name}.root'
     # --------------------------------------
     def _save_file(self, d_rdf : dict[str,RDataFrame]) -> None:
         '''
