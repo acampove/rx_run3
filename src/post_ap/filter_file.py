@@ -379,7 +379,6 @@ class FilterFile:
         opts.fCompressionLevel = self._d_trans['saving']['compression']
 
         file_name = os.path.basename(self._file_path)
-        preffix   = file_name.replace('.root', '').replace('.', '_')
 
         for rdf in tqdm.tqdm(l_rdf, ascii=' -'):
             line_name = rdf.name
