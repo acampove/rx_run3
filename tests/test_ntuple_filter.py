@@ -10,6 +10,7 @@ import pytest
 from post_ap.ntuple_filter import NtupleFilter 
 
 log = LogStore.add_logger('post_ap:test_ntuple_filter')
+
 # ---------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -29,12 +30,18 @@ def test_dt():
     '''
     Will test filtering of data
     '''
-    obj = NtupleFilter(production='rd_ap_2024', nickname='data', index=1, ngroup=1211)
+    pfn_path_dt            = files('post_ap_data').joinpath('dt_2024_turbo_comp.json')
+    os.environ['PFN_PATH'] = str(pfn_path_dt)
+
+    obj = NtupleFilter(index=0, ngroup=1)
     obj.filter()
 # ---------------------------------------
 def test_mc():
     '''
     Will test filtering of MC 
     '''
-    obj = NtupleFilter(production='btoxll_mva_2024_nopid', nickname='simulation', index=1, ngroup=44)
+    pfn_path_mc            = files('post_ap_data').joinpath('mc_2024_turbo_comp.json')
+    os.environ['PFN_PATH'] = str(pfn_path_mc)
+
+    obj = NtupleFilter(index=0, ngroup=1)
     obj.filter()
