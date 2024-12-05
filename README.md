@@ -1,6 +1,14 @@
 # Description
 
-This project is used to carry out checks on Run3 data. Check [this](doc/install.md) for installation instructions
+This project is used to:
+
+- Filter, slim, trim the trees files from a given AP production
+- Rename branches
+- Download the outputs
+
+This is done using configurations in a YAML file and through DIRAC jobs.
+
+Check [this](doc/install.md) for installation instructions
 and for instructions on how to setup an environment to use this project.
 
 # Submitting jobs
