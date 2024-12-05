@@ -369,6 +369,12 @@ class FilterFile:
 
         raise ValueError(f'No tree name found for line \"{line_name}\"')
     # --------------------------------------
+    def _get_out_file_name(self, line_name : str) -> str:
+        file_name = os.path.basename(self._file_path)
+        base_name = file_name.replace('.root', '')
+
+        return f'{base_name}_{line_name}.root'
+    # --------------------------------------
     def _save_file(self, l_rdf : list[RDataFrame]) -> None:
         '''
         Will save all ROOT dataframes to a file
@@ -378,14 +384,13 @@ class FilterFile:
         opts.fOverwriteIfExists= True
         opts.fCompressionLevel = self._d_trans['saving']['compression']
 
-        file_name = os.path.basename(self._file_path)
-
         for rdf in tqdm.tqdm(l_rdf, ascii=' -'):
             line_name = rdf.name
             l_branch  = rdf.l_branch
             tree_name = self._tree_name_from_line_name(line_name)
 
-            file_path = f'{line_name}.root'
+            file_path = self._get_out_file_name(line_name) 
+
             rdf.Snapshot(tree_name, file_path, l_branch, opts)
 
             log.debug(f'Saved: {file_path}:{tree_name}')
