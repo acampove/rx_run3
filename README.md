@@ -15,7 +15,6 @@ and for instructions on how to setup an environment to use this project.
 
 ## Check latest version of virtual environment
 
----
 All the jobs below require code that lives in a virtual environment, there should be multiple versions of this
 environment and the latest one should be obtained by running:
 
@@ -24,8 +23,6 @@ dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
 ```
 
 currently, the latest. Unless you have made your own tarballs, `LXNAME=acampove`.
-
----
 
 ## Submit jobs
 
