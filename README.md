@@ -44,7 +44,13 @@ Thus one can do local or grid tests running over a single file.
 For real jobs:
 
 ```bash
-job_filter -p rd_ap_2024 -s data -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j 1000 -e 022 -u acampove -m local
+# Local will create a local sandbox, use wms to send to the grid
+
+# For data, there are about 11K ROOT files in the input, 1K jobs should be good enough 
+job_filter -p rd_ap_2024             -s       data -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j 1000 -e 023 -u acampove -m local
+
+# For MC using noPID samples, there are only 44 input ROOT files, therefore at most 44 jobs are possible
+job_filter -p -btoxll_mva_2024_nopid -s simulation -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j   44 -e 023 -u acampove -m local
 ```
 
 where the options mean:
