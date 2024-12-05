@@ -405,6 +405,9 @@ class FilterFile:
                 log.debug('Saved lumitree')
     # --------------------------------------
     def _save_contents(self, file_path : str) -> None:
+        '''
+        Saves textfile with list of branches
+        '''
         if not self._dump_contents:
             log.debug('Not saving branch list')
             return
