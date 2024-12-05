@@ -2,11 +2,12 @@
 Module containing FilterFile class
 '''
 
-import os
 import json
 import fnmatch
 import copy
 import tqdm
+from typing import Union
+
 import pandas as pnd
 
 from ROOT                  import RDataFrame, TFile, RDF, TNamed
@@ -405,17 +406,53 @@ class FilterFile:
 
             self._save_contents(file_path)
 
-            if not self._is_mc:
-                log.debug('Saving lumitree')
-                lumi_rdf = RDataFrame('lumiTree', self._file_path)
-                l_name   = self._get_column_names(lumi_rdf)
-                lumi_rdf.Snapshot('lumiTree', file_path, l_name, opts)
-                log.debug('Saved lumitree')
-
-
-            # TODO: pick MCDT for MC
+            tree_path = self._get_ext_tree_path()
+            if tree_path is not None:
+                self._save_extra_tree(tree_path, file_path, opts)
 
             self._add_metadata(file_path, line_name)
+    # --------------------------------------
+    def _save_extra_tree(self, tree_path : str, file_path : str, opts : RDF.RSnapshotOptions) -> None:
+        log.debug(f'Saving {tree_path}')
+
+        ext_rdf = RDataFrame(tree_path, self._file_path)
+        l_name   = self._get_column_names(ext_rdf)
+        ext_rdf.Snapshot(tree_path, file_path, l_name, opts)
+
+        log.debug(f'Saved {tree_path}')
+    # --------------------------------------
+    def _get_ext_tree_path(self) -> Union[str,None]:
+        '''
+        Will return path of tree that is not Hlt2 one
+        For data lumiTree, for MC MCDecayTree
+        '''
+        ifile = TFile.Open(self._file_path)
+        l_key = ifile.GetListOfKeys()
+        l_obj = [ key.ReadObj() for key in l_key ]
+
+        l_dir = [ obj for obj in l_obj if        obj.InheritsFrom('TDirectoryFile') ]
+        l_dir = [ obj for obj in l_dir if not str(obj.GetName()).startswith('Hlt2') ]
+
+        l_tre = [ obj for obj in l_obj if obj.InheritsFrom('TTree')          ]
+
+        if len(l_tre) == 1 and len(l_dir) == 0 and not self._is_mc:
+            tree = l_tre[0]
+            name = tree.GetName()
+            ifile.Close()
+
+            return name
+
+        if len(l_tre) == 0 and len(l_dir) == 1 and self._is_mc:
+            dirn = l_dir[0]
+            name = dirn.GetName()
+            ifile.Close()
+
+            return f'{name}/MCDecayTree'
+
+        log.warning('Cannot find one and only one extra tree in:')
+        ifile.ls()
+
+        return None
     # --------------------------------------
     def _add_metadata(self, file_path : str, line_name : str) -> None:
         log.debug(f'Saving metadata to {file_path}')
