@@ -83,7 +83,7 @@ def _get_pfns_path() -> str:
 
     ofile_path = '/tmp/pfns.json'
     with open(ofile_path, 'w', encoding='utf-8') as ofile:
-        json.dump(d_pfn, ofile)
+        json.dump(d_pfn, ofile, indent=4)
 
     return ofile_path
 # ---------------------------------------
