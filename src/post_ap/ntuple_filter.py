@@ -8,7 +8,6 @@ from dmu.logging.log_store   import LogStore
 
 import post_ap.utilities   as utdc
 from   post_ap.filter_file   import FilterFile
-from   post_ap.pfn_reader    import PFNReader
 
 log = LogStore.add_logger('post_ap:ntuple_filter')
 # ----------------------------------------------------------------
@@ -19,18 +18,14 @@ class NtupleFilter:
     2. Picking a subset of the branches.
     '''
     # ---------------------------------------------
-    def __init__(self, production : str, nickname : str, index : int, ngroup : int):
+    def __init__(self, index : int, ngroup : int):
         '''
         Parameters
         ---------------------
-        production : Taken from AP, e.g. rd_ap_2024 
-        nickname   : Found in productions/[]/samples/X. Represents group of jobs e.g. simulation, data 
         index      : Index of subsample to process, they start at zero up to ngroup - 1
         ngroup     : Number of groups into which to split filter
         '''
 
-        self._prod    = production
-        self._nick    = nickname
         self._index   = index
         self._ngroup  = ngroup
 
@@ -65,9 +60,10 @@ class NtupleFilter:
 
         correspondence
         '''
+        pfn_path = os.environ['PFN_PATH']
+        with open(pfn_path, encoding='utf-8') as ifile:
+            d_pfn = json.load(ifile)
 
-        reader = PFNReader(cfg=self._cfg_dat)
-        d_pfn  = reader.get_pfns(production=self._prod, nickname=self._nick)
         d_pfn  = self._invert_dictionary(d_pfn)
         d_path = self._get_group(d_pfn)
 
