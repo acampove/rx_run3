@@ -5,11 +5,13 @@ Module containing FilterFile class
 import os
 import fnmatch
 import tqdm
+import pandas as pnd
 
 from ROOT                  import RDataFrame, TFile, RDF
 from dmu.logging.log_store import LogStore
 
-import dmu.generic.utilities as gut
+import dmu.rdataframe.utilities as ut
+import dmu.generic.utilities    as gut
 from dmu.rfile.rfprinter   import RFPrinter
 
 import post_ap.utilities as utdc
@@ -39,6 +41,7 @@ class FilterFile:
         self._store_branch : bool
         self._has_lumitree : bool
         self._dump_contents: bool = False
+        self._df_cfl       : pnd 
 
         self._initialized  = False
     # --------------------------------------
@@ -294,6 +297,8 @@ class FilterFile:
             obj     = Selector(rdf=rdf, is_mc=self._is_mc)
             rdf     = obj.run(sel_kind=sel_kin)
 
+            self._store_cutflow(rdf)
+
         nfnl = rdf.Count().GetValue()
 
         log.info(45 * '-')
@@ -306,6 +311,12 @@ class FilterFile:
         rdf.l_branch = l_branch
 
         return rdf
+    # --------------------------------------
+    def _store_cutflow(self, rdf : RDataFrame) -> None:
+        rep = rdf.Report()
+        df  = ut.rdf_report_to_df(rep)
+
+        self._df_cfl = df
     # --------------------------------------
     def _wild_card_filter(self, l_name : list[str]) -> list[str]:
         '''
