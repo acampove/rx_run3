@@ -25,5 +25,5 @@ job_filter           ='post_ap_scripts.job_filter:main'
 'post_ap_grid' = ['run_filter']
 
 [tool.setuptools]
-script-files=['src/post_ap_scripts/update_tarball', 'src/post_ap_scripts/update_config']
+script-files=['src/post_ap_scripts/update_tarball']
 
