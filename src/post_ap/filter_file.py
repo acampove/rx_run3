@@ -88,7 +88,7 @@ class FilterFile:
     # --------------------------------------
     def _set_save_pars(self):
         try:
-            self._nevts = self._d_trans['saving']['max_events']
+            self._nevts = self._d_trans['saving']['evt_max']
             log.info(f'Filtering dataframe with {self._nevts} entries')
         except KeyError:
             log.debug('Not filtering, max_events not specified')
