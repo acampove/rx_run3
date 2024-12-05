@@ -10,20 +10,17 @@ from importlib.resources import files
 from DIRAC.Interfaces.API.Dirac import Dirac
 from DIRAC.Interfaces.API.Job   import Job
 from DIRAC                      import initialize as initialize_dirac
-from DIRAC                      import gLogger
 
 from tqdm    import trange
-
-import post_ap.utilities as ut
 
 # ---------------------------------------
 class Data:
     '''
     Class used to hold shared attributes
     '''
-    snd_dir     : str
+    prod        : str
+    samp        : str
     njob        : int
-    name        : str
     dset        : str
     conf        : str
     venv        : str
