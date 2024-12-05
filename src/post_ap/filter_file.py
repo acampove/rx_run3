@@ -407,10 +407,13 @@ class FilterFile:
 
             if not self._is_mc:
                 log.debug('Saving lumitree')
-                lumi_rdf = RDataFrame('lumiTree', file_path)
+                lumi_rdf = RDataFrame('lumiTree', self._file_path)
                 l_name   = self._get_column_names(lumi_rdf)
                 lumi_rdf.Snapshot('lumiTree', file_path, l_name, opts)
                 log.debug('Saved lumitree')
+
+
+            # TODO: pick MCDT for MC
 
             self._add_metadata(file_path, line_name)
     # --------------------------------------
