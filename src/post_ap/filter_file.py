@@ -3,6 +3,7 @@ Module containing FilterFile class
 '''
 
 import os
+import json
 import fnmatch
 import tqdm
 import pandas as pnd
@@ -41,7 +42,7 @@ class FilterFile:
         self._store_branch : bool
         self._has_lumitree : bool
         self._dump_contents: bool = False
-        self._d_df_cfl     : dict[str, pnd.DataFrame]
+        self._d_df_cf      : dict[str, pnd.DataFrame] = {}
 
         self._initialized  = False
     # --------------------------------------
@@ -419,9 +420,9 @@ class FilterFile:
     def _add_metadata(self, file_path : str, line_name : str) -> None:
         log.debug(f'Saving metadata to {file_path}')
 
-        df_cf = self._d_df_cfl[line_name]
-        cfg_dat['cutflow'] = df_cf.to_dict()
-        cfg_str = json.dumps(cfg_dat)
+        df_cf = self._d_df_cf[line_name]
+        self._cfg_dat['cutflow'] = df_cf.to_dict()
+        cfg_str = json.dumps(self._cfg_dat)
         meta    = TNamed('metadata', cfg_str)
 
         ifile   = TFile.Open(file_path, 'update')
