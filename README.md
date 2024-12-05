@@ -15,13 +15,13 @@ environment and the latest one should be obtained by running:
 dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
 ```
 
-currently, the latest
+currently, the latest. Unless you have made your own tarballs, `LXNAME=acampove`.
+
 ---
 
-The instructions below need to be done outside the virtual environment in an environment with access to `dirac` and in the `post_ap_grid`
-directory.
+## Submit jobs
 
-First run a test job with:
+Run a test job with:
 
 ```bash
 job_filter -d dt_2024_turbo -c comp -j 1211 -e 003 -m local -n test_flt -u acampove
