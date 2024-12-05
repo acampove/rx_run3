@@ -53,7 +53,7 @@ if [[ ! -f $PFN_PATH ]];then
     exit 1
 fi
 
-dcheck/run bash -c "export PFN_PATH=$PFN_PATH && export CONFIG_PATH=$CONF && export LXNAME=$UNAM && filter_ntuples -p $PROD -n $SAMP -g $NJOB -i $IJOB -l 10"
+dcheck/run bash -c "export PFN_PATH=$PFN_PATH && export CONFIG_PATH=$CONF && export LXNAME=$UNAM && filter_ntuples -p $PROD -s $SAMP -g $NJOB -i $IJOB -l 10"
 
 echo "Sandbox: "
 ls
