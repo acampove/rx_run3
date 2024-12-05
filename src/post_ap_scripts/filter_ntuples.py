@@ -46,7 +46,7 @@ def main():
     _get_args()
     _set_log()
 
-    obj=NtupleFilter(production=Data.prod, nickname=Data.samp, index=Data.gindex, ngroup=Data.ngroup)
+    obj=NtupleFilter(index=Data.gindex, ngroup=Data.ngroup)
     obj.filter()
 #----------------------------------------
 if __name__ == '__main__':
