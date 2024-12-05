@@ -4,12 +4,13 @@ Module containing utility functions to be used with ROOT dataframes
 
 import re
 from dataclasses import dataclass
+from typing      import Union
 
 import pandas  as pnd
 import awkward as ak
 import numpy
 
-from ROOT import RDataFrame, RCutFlowReport
+from ROOT import RDataFrame, RDF
 
 from dmu.logging.log_store import LogStore
 
@@ -24,7 +25,7 @@ class Data:
     l_good_type = [int, numpy.bool_, numpy.int32, numpy.uint32, numpy.int64, numpy.uint64, numpy.float32, numpy.float64]
     d_cast_type = {'bool': numpy.int32}
 # ---------------------------------------------------------------------
-def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str, d_opt : dict | None = None):
+def add_column(rdf : RDataFrame, arr_val : Union[numpy.ndarray,None], name : str, d_opt : Union[dict,None] = None):
     '''
     Will take a dataframe, an array of numbers and a string
     Will add the array as a colunm to the dataframe
@@ -71,7 +72,7 @@ def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str, d_o
 
     return rdf
 # ---------------------------------------------------------------------
-def rdf_report_to_df(rep : RCutFlowReport) -> pnd.DataFrame:
+def rdf_report_to_df(rep : RDF.RCutFlowReport) -> pnd.DataFrame:
     '''
     Takes the output of rdf.Report(), i.e. an RDataFrame cutflow report.
 
