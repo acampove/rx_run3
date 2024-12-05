@@ -25,7 +25,7 @@ def _initialize():
     Will set loggers, etc
     '''
     log.info('Initializing')
-    config_path               = files('post_ap_data').joinpath('v1.yaml')
+    config_path               = files('post_ap_data').joinpath('v2.yaml')
     os.environ['CONFIG_PATH'] = str(config_path)
 
     LogStore.set_level('dmu:rdataframe:atr_mgr', 30)
