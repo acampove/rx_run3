@@ -383,8 +383,9 @@ class FilterFile:
     def _get_out_file_name(self, line_name : str) -> str:
         file_name = os.path.basename(self._file_path)
         base_name = file_name.replace('.root', '')
+        name_id   = base_name.split('.')[0]
 
-        return f'{base_name}_{line_name}.root'
+        return f'{name_id}_{line_name}.root'
     # --------------------------------------
     def _save_file(self, l_rdf : list[RDataFrame]) -> None:
         '''
@@ -400,7 +401,7 @@ class FilterFile:
             l_branch  = rdf.l_branch
             tree_name = self._tree_name_from_line_name(line_name)
 
-            file_path = self._get_out_file_name(line_name) 
+            file_path = self._get_out_file_name(line_name)
 
             rdf.Snapshot(tree_name, file_path, l_branch, opts)
 
