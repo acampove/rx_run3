@@ -2,9 +2,9 @@
 File containing tests for FilterFile class
 '''
 import os
-import pytest
-
 from importlib.resources   import files
+
+import pytest
 from dmu.logging.log_store import LogStore
 from post_ap.filter_file   import FilterFile
 
@@ -14,8 +14,8 @@ class Data:
     '''
     Data class with shared attributes
     '''
-    dt_path = '/home/acampove/cernbox/Run3/analysis_productions/Data/mag_down/c2.root'
     mc_path = '/home/acampove/cernbox/Run3/analysis_productions/MC/local_tests/mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple.root'
+    dt_path = '/home/acampove/cernbox/Run3/analysis_productions/MC/local_tests/data_24_magdown_turbo_24c3.root'
 
     l_args_config = [True, False]
 # --------------------------------------
@@ -37,9 +37,9 @@ def test_dt():
     '''
     Run test on data
     '''
-    sample_name = 'mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple'
+    sample_name = 'data_24_magdown_turbo_24c3'
 
-    obj = FilterFile(sample_name=sample_name, file_path=Data.mc_path)
+    obj = FilterFile(sample_name=sample_name, file_path=Data.dt_path)
     obj.dump_contents = True
     obj.run()
 # --------------------------------------
@@ -50,5 +50,6 @@ def test_mc():
     sample_name = 'mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple'
 
     obj = FilterFile(sample_name=sample_name, file_path=Data.mc_path)
+    obj.dump_contents = True
     obj.run()
 # --------------------------------------
