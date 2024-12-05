@@ -2,7 +2,7 @@
 
 This project is used to:
 
-- Filter, slim, trim the trees files from a given AP production
+- Filter, slim, trim the trees from a given AP production
 - Rename branches
 - Download the outputs
 
