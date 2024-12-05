@@ -28,17 +28,23 @@ rename_paths()
     echo "Renamed paths"
 }
 #--------------------------------------
-DSET=$1
-CONF=$2
-NJOB=$3
-IJOB=$4
-VENV=$5
-UNAM=$6
+PROD=$1
+SAMP=$2
+CONF=$3
+NJOB=$4
+IJOB=$5
+VENV=$6
+UNAM=$7
 
 set_vars
 rename_paths
 
-dcheck/run bash -c "export LXNAME=$UNAM && filter_ntuples -d $DSET -c $CONF -n $NJOB -i $IJOB -l 10"
+if [[ ! -f $CONF ]];then
+    echo "Cannot find $CONF"
+    exit 1
+fi
+
+dcheck/run bash -c "export CONFIG_PATH=$CONF && export LXNAME=$UNAM && filter_ntuples -p $PROD -n $SAMP -g $NJOB -i $IJOB -l 10"
 
 echo "Sandbox: "
 ls
