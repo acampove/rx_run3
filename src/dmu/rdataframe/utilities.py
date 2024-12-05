@@ -5,10 +5,11 @@ Module containing utility functions to be used with ROOT dataframes
 import re
 from dataclasses import dataclass
 
+import pandas  as pnd
 import awkward as ak
 import numpy
 
-from ROOT import RDataFrame
+from ROOT import RDataFrame, RCutFlowReport
 
 from dmu.logging.log_store import LogStore
 
@@ -70,3 +71,24 @@ def add_column(rdf : RDataFrame, arr_val : numpy.ndarray | None, name : str, d_o
 
     return rdf
 # ---------------------------------------------------------------------
+def rdf_report_to_df(rep : RCutFlowReport) -> pnd.DataFrame:
+    '''
+    Takes the output of rdf.Report(), i.e. an RDataFrame cutflow report.
+
+    Produces a pandas dataframe with
+    '''
+    d_data = {'cut' : [], 'All' : [], 'Passed' : []}
+    for cut in rep:
+        name=cut.GetName()
+        pas =cut.GetPass()
+        tot =cut.GetAll()
+
+        d_data['cut'   ].append(name)
+        d_data['All'   ].append(tot)
+        d_data['Passed'].append(pas)
+
+    df = pnd.DataFrame(d_data)
+    df['Efficiency' ] = df['Passed'] / df['All']
+    df['Cummulative'] = df['Efficiency'].cumprod()
+
+    return df
