@@ -4,14 +4,17 @@ filtering jobs
 '''
 
 import os
+import json
 import argparse
 from importlib.resources import files
 
+import yaml
 from DIRAC.Interfaces.API.Dirac import Dirac
 from DIRAC.Interfaces.API.Job   import Job
 from DIRAC                      import initialize as initialize_dirac
 
 from tqdm    import trange
+from post_ap.pfn_reader import PFNReader
 
 # ---------------------------------------
 class Data:
@@ -29,11 +32,13 @@ class Data:
     user        : str
     runner_path : str
     conf_name   : str
+    pfn_path    : str
 # ---------------------------------------
 def _get_inputs() -> list[str]:
     return [
             f'LFN:/lhcb/user/{Data.user[0]}/{Data.user}/run3/venv/{Data.venv}/dcheck.tar',
             Data.conf,
+            Data.pfn_path,
     ]
 # ---------------------------------------
 def _get_job(jobid : int) -> Job:
@@ -69,17 +74,32 @@ def _check_config() -> None:
 
     Data.conf_name = os.path.basename(Data.conf).replace('.yaml', '')
 # ---------------------------------------
+def _get_pfns_path() -> str:
+    with open(Data.conf, encoding='utf-8') as ifile:
+        cfg = yaml.safe_load(ifile)
+
+    reader = PFNReader(cfg=cfg)
+    d_pfn  = reader.get_pfns(production=Data.prod, nickname=Data.samp)
+
+    ofile_path = '/tmp/pfns.json'
+    with open(ofile_path, 'w', encoding='utf-8') as ofile:
+        json.dump(d_pfn, ofile)
+
+    return ofile_path
+# ---------------------------------------
 def _initialize() -> None:
     args         = _get_args()
+    Data.prod    = args.proc
+    Data.samp    = args.samp
     Data.conf    = args.conf
     Data.njob    = args.njob
     Data.venv    = args.venv
     Data.user    = args.user
     Data.mode    = args.mode
     Data.epat    = os.environ['VENVS']
+    Data.pfn_path= _get_pfns_path()
 
     _check_config()
-
     initialize_dirac()
 
     runner_path      = files('post_ap_grid').joinpath('run_filter')
