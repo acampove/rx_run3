@@ -40,7 +40,14 @@ set_vars
 rename_paths
 
 if [[ ! -f $CONF ]];then
-    echo "Cannot find $CONF"
+    echo "Cannot find $CONF in:"
+    ls
+    exit 1
+fi
+
+if [[ ! -f pfns.json ]];then
+    echo "Cannot find JSON file with PFNs in:"
+    ls
     exit 1
 fi
 
