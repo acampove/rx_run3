@@ -51,3 +51,21 @@ def test_misalignment():
         rdf = ut.add_column(rdf, arr_val, 'z')
 
     rdf.Display().Print()
+# -------------------------------------------------
+def test_rdf_report_to_df():
+    '''
+    Will test with inputs where columns have different sizes
+    '''
+    d_data = {
+            'x' : numpy.random.uniform(0,1,1000),
+            'y' : numpy.random.uniform(0,1,1000),
+            }
+
+    rdf  = RDF.FromNumpy(d_data)
+    rdf  = rdf.Filter('x > 0.2', 'x')
+    rdf  = rdf.Filter('y > 0.2', 'y')
+
+    rep  = rdf.Report()
+    df   = ut.rdf_report_to_df(rep)
+
+    print(df)
