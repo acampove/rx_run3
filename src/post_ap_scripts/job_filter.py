@@ -89,7 +89,7 @@ def _get_pfns_path() -> str:
 # ---------------------------------------
 def _initialize() -> None:
     args         = _get_args()
-    Data.prod    = args.proc
+    Data.prod    = args.prod
     Data.samp    = args.samp
     Data.conf    = args.conf
     Data.njob    = args.njob
