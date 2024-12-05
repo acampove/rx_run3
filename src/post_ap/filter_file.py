@@ -314,7 +314,7 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
-    def _store_cutflow(self, rdf : RDataFrame, line_name : str) -> pnd.DataFrame:
+    def _store_cutflow(self, rdf : RDataFrame, line_name : str):
         rep = rdf.Report()
         df  = ut.rdf_report_to_df(rep)
 
