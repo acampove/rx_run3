@@ -32,19 +32,20 @@ To run the filtering, after properly installing the project, as shown [here](doc
 # Local will create a local sandbox, use wms to send to the grid
 
 # For data, there are about 11K ROOT files in the input, 11K jobs should do one file per job, with -t, only first job will be done
-job_filter -p rd_ap_2024             -s       data -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j 11000 -e 023 -u acampove -m local -t
+job_filter -n data_test_job -p rd_ap_2024             -s       data -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j 11000 -e 023 -u acampove -m local -t
 
 # For real jobs, 1K jobs should be enough
-job_filter -p rd_ap_2024             -s       data -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j 1000 -e 023 -u acampove -m local
+job_filter -n data_job      -p rd_ap_2024             -s       data -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j 1000 -e 023 -u acampove -m local
 
 # For MC using noPID samples, there are only 44 input ROOT files, therefore at most 44 jobs are possible
-job_filter -p -btoxll_mva_2024_nopid -s simulation -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j   44 -e 023 -u acampove -m local
+job_filter -n mc_job        -p -btoxll_mva_2024_nopid -s simulation -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j   44 -e 023 -u acampove -m local
 ```
 
 where the options mean:
 
 ```bash
   -h, --help            show this help message and exit
+  -n NAME  --name NAME  Name of job, needed for dirac naming and to name output
   -p PROD, --prod PROD  Name of production, e.g. rd_ap_2024, this shoudl be the same as in the config section.
   -s SAMP, --samp SAMP  Sample nickname found in the config section `samples`
   -c CONF, --conf CONF  Path to config file, which should be a YAML file and a few examples are linked below.
@@ -55,7 +56,8 @@ where the options mean:
   -t       --test       If used, will send only one job
 ```
 
-some config files can be found [here](https://github.com/acampove/config_files/tree/main/post_ap)
+Regarding the name, the output will go to a directory in EOS named `JOBNAME_SAMPLENAME`.
+Some config files can be found [here](https://github.com/acampove/config_files/tree/main/post_ap)
 
 # Downloading ntuples
 
