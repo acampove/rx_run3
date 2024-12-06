@@ -17,3 +17,7 @@ v1: Used to get data from RD AP from December 2024 and simulation from noPID pro
 **hlt_cmp.yaml**: Used to plot run number after full selection with and without BDT 
 **hlt_cmp_raw.yaml**: Used to plot run number before selection, out of DaVinci 
 
+## Information on LHCb
+
+These files look like `lhcb_year.yaml` and contain information about correspondences
+between blocks and runs or fills.
