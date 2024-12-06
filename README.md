@@ -65,7 +65,7 @@ Some config files can be found [here](https://github.com/acampove/config_files/t
 A test would look like:
 
 ```bash
-run3_download_ntuples -j flt_004 -n 3 [-d $PWD/files]
+run3_download_ntuples -j dec_06_2024_data -n 20 -r 1 -m 5 [-d $PWD/files]
 ```
 
 where:
@@ -77,7 +77,7 @@ where:
 A real download would look like:
 
 ```bash
-run3_download_ntuples -j flt_001 -m 40
+run3_download_ntuples -j dec_06_2024_data -m 40
 ```
 
 Where `-m` denotes the number of threads used to download, `-j` the name of the job.
