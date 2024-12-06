@@ -26,22 +26,7 @@ currently, the latest is 023. Unless you have made your own tarballs, `LXNAME=ac
 
 ## Submit jobs
 
-Run a test job with:
-
-```bash
-job_filter -d dt_2024_turbo -c comp -j 1211 -e 003 -m local -n test_flt -u acampove
-```
-
-where `-u` specifies the user who authored the environment that the job will use.
-The flag `-j` specifies the number of jobs. For tests, this is the number of files to process, thus, the test job does only one file.
-The `-n` flag is the name of the job, for tests it will do/send only one job if either:
-
-1. Its name has the substring `test`.
-1. It is a local job.
-
-Thus one can do local or grid tests running over a single file.
-
-For real jobs:
+To run the filtering, after properly installing the project, as shown [here](doc/install.md) do:
 
 ```bash
 # Local will create a local sandbox, use wms to send to the grid
@@ -90,5 +75,4 @@ run3_download_ntuples -j flt_001 -m 40
 ```
 
 Where `-m` denotes the number of threads used to download, `-j` the name of the job.
-
 
