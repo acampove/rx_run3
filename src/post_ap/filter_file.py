@@ -19,7 +19,8 @@ import dmu.generic.utilities    as gut
 from dmu.rfile.rfprinter   import RFPrinter
 
 import post_ap.utilities as utdc
-from post_ap.selector  import Selector
+from post_ap.selector        import Selector
+from post_ap.data_vars_adder import DataVarsAdder
 
 log = LogStore.add_logger('post_ap:FilterFile')
 # --------------------------------------
@@ -230,6 +231,10 @@ class FilterFile:
             log.debug(f'{name:<50}{expr:<200}')
 
             rdf = rdf.Define(name, expr)
+
+        if not self._is_mc:
+            obj = DataVarsAdder(rdf)
+            rdf = obj.get_rdf()
 
         return rdf
     # --------------------------------------
