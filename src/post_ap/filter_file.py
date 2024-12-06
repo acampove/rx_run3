@@ -4,10 +4,11 @@ Module containing FilterFile class
 
 import json
 import fnmatch
+import hashlib
 import copy
-import tqdm
 from typing import Union
 
+import tqdm
 import pandas as pnd
 
 from ROOT                  import RDataFrame, TFile, RDF, TNamed
@@ -384,7 +385,13 @@ class FilterFile:
         raise ValueError(f'No tree name found for line \"{line_name}\"')
     # --------------------------------------
     def _get_out_file_name(self, line_name : str) -> str:
-        return f'{self._sample_name}_{line_name}.root'
+        file_path = self._file_path.encode('utf-8')
+
+        hob = hashlib.sha256(file_path)
+        hsh = hob.hexdigest()
+        hsh = hsh[:10]
+
+        return f'{self._sample_name}_{line_name}_{hsh}.root'
     # --------------------------------------
     def _save_file(self, d_rdf : dict[str,RDataFrame]) -> None:
         '''
