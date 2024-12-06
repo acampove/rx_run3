@@ -35,6 +35,7 @@ class Data:
     runner_path : str
     conf_name   : str
     pfn_path    : str
+    test_job    : bool
 # ---------------------------------------
 def _get_inputs() -> list[str]:
     return [
@@ -65,6 +66,7 @@ def _get_args() -> argparse.Namespace:
     parser.add_argument('-e', '--venv' , type =str, help='Index of virtual environment', required=True)
     parser.add_argument('-u', '--user' , type =str, help='User associated to venv'     , required=True)
     parser.add_argument('-m', '--mode' , type =str, help='Run locally or in the grid'  , required=True, choices=['local', 'wms'])
+    parser.add_argument('-t', '--test' ,            help='Run locally or in the grid'  , action='store_true')
 
     args = parser.parse_args()
 
@@ -99,6 +101,7 @@ def _initialize() -> None:
     Data.user    = args.user
     Data.mode    = args.mode
     Data.epat    = os.environ['VENVS']
+    Data.test_job= args.test
     Data.pfn_path= _get_pfns_path()
 
     _check_config()
@@ -118,10 +121,12 @@ def main():
         job    = _get_job(jobid)
         dirac.submitJob(job, mode=Data.mode)
 
-        if 'test' in Data.conf_name:
+        if Data.test_job:
+            log.warning('Running a single test job')
             break
 
         if Data.mode == 'local':
+            log.warning('Running a single local job')
             break
 # ---------------------------------------
 if __name__ == '__main__':
