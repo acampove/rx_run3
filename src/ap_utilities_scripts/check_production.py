@@ -111,9 +111,13 @@ def _load_samples() -> None:
     l_samp_sample = list(d_samp)
     s_samp_sample = _list_to_set(l_samp_sample, msg_repeated='Found repeated entries in samples.yaml')
 
-    Data.d_samples['info.yaml'      ] = s_info_sample
-    Data.d_samples['mcfuntuple.yaml'] = s_mcdt_sample
-    Data.d_samples['samples.yaml'   ] = s_samp_sample
+    Data.d_samples['info'       ] = s_info_sample
+    Data.d_samples['mcfuntuple' ] = s_mcdt_sample
+    Data.d_samples['samples'    ] = s_samp_sample
+    Data.d_samples[Data.analysis] = _get_analysis_samples()
+# -------------------------
+def _get_analysis_samples() -> set[str]:
+    return set()
 # -------------------------
 def _get_difference(s_val1 : set[str], s_val2 : set[str]) -> list[str]:
     s_diff = s_val1 - s_val2
@@ -136,9 +140,11 @@ def _check_samples(name_1 : str, name_2 : str) -> None:
     Data.d_report['missing'][f'{name_1}_{name_2}'] = d_sample
 # -------------------------
 def _compare_groups() -> None:
-    _check_samples('info.yaml'      , 'mcfuntuple.yaml')
-    _check_samples('info.yaml'      , 'samples.yaml'   )
-    _check_samples('mcfuntuple.yaml', 'samples.yaml'   )
+    _check_samples('info'      ,  'mcfuntuple')
+    _check_samples('info'      ,  'samples'   )
+    _check_samples('mcfuntuple',  'samples'   )
+    # Check that for chosen analysis, all the samples have been added
+    _check_samples('info'      , Data.analysis)
 # -------------------------
 def _save_report():
     out_path = 'report.yaml'
