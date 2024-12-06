@@ -31,7 +31,10 @@ To run the filtering, after properly installing the project, as shown [here](doc
 ```bash
 # Local will create a local sandbox, use wms to send to the grid
 
-# For data, there are about 11K ROOT files in the input, 1K jobs should be good enough 
+# For data, there are about 11K ROOT files in the input, 11K jobs should do one file per job, with -t, only first job will be done
+job_filter -p rd_ap_2024             -s       data -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j 11000 -e 023 -u acampove -m local -t
+
+# For real jobs, 1K jobs should be enough
 job_filter -p rd_ap_2024             -s       data -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j 1000 -e 023 -u acampove -m local
 
 # For MC using noPID samples, there are only 44 input ROOT files, therefore at most 44 jobs are possible
@@ -49,6 +52,7 @@ where the options mean:
   -e VENV, --venv VENV  Index of virtual environment, e.g. 023
   -u USER, --user USER  User associated to venv, currently acampove should be the only choice, but if you author your own virtual environment and upload it, then this should be your user name
   -m {local,wms}, --mode {local,wms} Run locally (for tests) or in the grid
+  -t       --test       If used, will send only one job
 ```
 
 some config files can be found [here](https://github.com/acampove/config_files/tree/main/post_ap)
