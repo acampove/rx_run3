@@ -14,8 +14,10 @@ from DIRAC.Interfaces.API.Job   import Job
 from DIRAC                      import initialize as initialize_dirac
 
 from tqdm    import trange
-from post_ap.pfn_reader import PFNReader
+from post_ap.pfn_reader    import PFNReader
+from dmu.logging.log_store import LogStore
 
+log = LogStore.add_logger('post_ap:job_filter')
 # ---------------------------------------
 class Data:
     '''
