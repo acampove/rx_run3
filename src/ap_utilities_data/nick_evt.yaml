@@ -1,0 +1,22 @@
+settings_common: &common
+  year      : 2024
+  mc_path   : 2024.W31.34
+  polarity  : MagUp
+  nu_path   : Nu6.3
+  sim_vers  : Sim10d
+  generator : Pythia8
+  ctags     : sim10-2024.Q3.4-v1.3-mu100
+  dtags     : dddb-20240427
+# -------------------------------------------
+sections:
+  one:
+    suffix : _first
+    settings:
+      <<: *common
+    evt_type:
+      - '11102211'
+      - '11102202'
+    nickname:
+      - Bs_psi2Sphi_mm_eq_CPV_DPC
+      - Bu_D0enu_Kenu_eq_TC
+      - Bu_JpsiKst_ee_eq_DPC
