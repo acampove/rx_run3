@@ -30,7 +30,7 @@ class Data:
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('-p', '--prod_path', type=str , help='Path to directory with production, rd_ap_2024', required= True)
-    parser.add_argument('-a', '--analysis' , type=str , help='Type of analysis for which to check samples'  , required= True, choices=['rx'])
+    parser.add_argument('-a', '--analysis' , type=str , help='Type of analysis for which to check samples'  , required= True, choices=['rx', 'rk', 'rkst'])
     args = parser.parse_args()
 
     Data.prod_path = args.prod_path
