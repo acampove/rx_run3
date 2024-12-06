@@ -1,5 +1,5 @@
 '''
-Module with functions used to test functions in physics/utilities.py
+Module with functions used to test functions in decays/utilities.py
 '''
 import pytest
 
