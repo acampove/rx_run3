@@ -35,6 +35,20 @@ def test_simple():
         obj=BkkChecker(name, d_section)
         obj.save()
 # ----------------------------------------
+def test_nick_evt():
+    '''
+    Will test reading when there are both evt_type and nickname sections 
+    '''
+    samples_path = files('ap_utilities_data').joinpath('nick_evt.yaml')
+    samples_path = str(samples_path)
+
+    d_cfg        = _sections_from_path(samples_path)
+    d_sections   = d_cfg['sections']
+    for name, d_section in d_sections.items():
+        log.info(f'Processing section: {name}')
+        obj=BkkChecker(name, d_section)
+        obj.save()
+# ----------------------------------------
 def test_multithreaded():
     '''
     Will save list of samples to YAML using 4 threads
