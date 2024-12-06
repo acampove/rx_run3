@@ -40,7 +40,26 @@ class BkkChecker:
         self._ctags        : str = d_section['settings']['ctags']
         self._dtags        : str = d_section['settings']['dtags']
 
-        self._l_event_type : list[str] = d_section['evt_type']
+        self._l_event_type : list[str] = self._get_event_types(d_section)
+    # -------------------------
+    def _get_event_types(self, d_section : dict) -> list[str]:
+        l_evt  = self._list_from_dict(d_section, 'evt_type')
+        nevt = len(l_evt)
+        log.debug(f'Found {nevt} event types')
+
+        l_nick = self._list_from_dict(d_section, 'nickname')
+        nnick = len(l_nick)
+        log.debug(f'Found {nnick} nicknames')
+
+        l_evt += [ aput.read_event_type(nick) for nick in l_nick ]
+
+        return l_evt
+    # -------------------------
+    def _list_from_dict(self, d_section : dict, key : str) -> list[str]:
+        if key not in d_section:
+            return []
+
+        return d_section[key]
     # -------------------------
     def _nfiles_line_from_stdout(self, stdout : str) -> str:
         l_line = stdout.split('\n')
