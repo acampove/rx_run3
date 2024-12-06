@@ -116,10 +116,36 @@ def _load_samples() -> None:
     Data.d_samples['info'       ] = s_info_sample
     Data.d_samples['mcfuntuple' ] = s_mcdt_sample
     Data.d_samples['samples'    ] = s_samp_sample
-    Data.d_samples[Data.analysis] = _get_analysis_samples()
+    Data.d_samples[Data.analysis] = _get_analysis_nicknames()
 # -------------------------
-def _get_analysis_samples() -> set[str]:
-    return set()
+def _nickname_from_evt_type(evt_type : int) -> str:
+    etype    = str(evt_type)
+    nickname = aput.read_decay_name(event_type=etype, style= 'safe_1')
+
+    return nickname
+# -------------------------
+def _flatten_list(lst : list) -> list:
+    l_val = []
+    for item in lst:
+        if isinstance(item, list):
+            l_val.extend(_flatten_list(item))
+        else:
+            l_val.append(item)
+
+    return l_val
+# -------------------------
+def _get_analysis_nicknames() -> set[str]:
+    evt_path = files('ap_utilities_data').joinpath('analyses.yaml')
+    evt_path = str(evt_path)
+
+    with open(evt_path, encoding='utf-8') as ifile:
+        d_analysis = yaml.safe_load(ifile)
+
+    l_evt_type = d_analysis[Data.analysis]
+    l_evt_type = _flatten_list(l_evt_type)
+    l_nick_name= [ _nickname_from_evt_type(event_type) for event_type in l_evt_type ]
+
+    return set(l_nick_name)
 # -------------------------
 def _get_difference(s_val1 : set[str], s_val2 : set[str]) -> list[str]:
     s_diff = s_val1 - s_val2
