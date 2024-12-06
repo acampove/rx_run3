@@ -13,9 +13,10 @@ from DIRAC.Interfaces.API.Dirac import Dirac
 from DIRAC.Interfaces.API.Job   import Job
 from DIRAC                      import initialize as initialize_dirac
 
-from tqdm    import trange
-from post_ap.pfn_reader    import PFNReader
+from tqdm                  import trange
 from dmu.logging.log_store import LogStore
+
+from post_ap.pfn_reader    import PFNReader
 
 log = LogStore.add_logger('post_ap:job_filter')
 # ---------------------------------------
@@ -23,6 +24,7 @@ class Data:
     '''
     Class used to hold shared attributes
     '''
+    name        : str
     prod        : str
     samp        : str
     njob        : int
@@ -52,13 +54,14 @@ def _get_job(jobid : int) -> Job:
     j.setDestination('LCG.CERN.cern')
     j.setExecutable(Data.runner_path, arguments=f'{Data.prod} {Data.samp} {Data.conf_name}.yaml {Data.njob} {jobid} {Data.epat} {Data.user}')
     j.setInputSandbox(l_input)
-    j.setOutputData(['*.root'], outputPath=f'{Data.conf_name}_{Data.samp}')
-    j.setName(f'{Data.conf_name}_{Data.samp}_{jobid:03}')
+    j.setOutputData(['*.root'], outputPath=f'{Data.name}_{Data.samp}')
+    j.setName(Data.name)
 
     return j
 # ---------------------------------------
 def _get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Used to send filtering jobs to the grid')
+    parser.add_argument('-n', '--name' , type =str, help='Name of job in dirac'        , required=True)
     parser.add_argument('-p', '--prod' , type =str, help='Name of production'          , required=True)
     parser.add_argument('-s', '--samp' , type =str, help='Sample nickname'             , required=True)
     parser.add_argument('-c', '--conf' , type =str, help='Path to config file'         , required=True)
@@ -93,6 +96,7 @@ def _get_pfns_path() -> str:
 # ---------------------------------------
 def _initialize() -> None:
     args         = _get_args()
+    Data.name    = args.name
     Data.prod    = args.prod
     Data.samp    = args.samp
     Data.conf    = args.conf
