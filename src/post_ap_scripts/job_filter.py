@@ -66,7 +66,7 @@ def _get_args() -> argparse.Namespace:
     parser.add_argument('-e', '--venv' , type =str, help='Index of virtual environment', required=True)
     parser.add_argument('-u', '--user' , type =str, help='User associated to venv'     , required=True)
     parser.add_argument('-m', '--mode' , type =str, help='Run locally or in the grid'  , required=True, choices=['local', 'wms'])
-    parser.add_argument('-t', '--test' ,            help='Run locally or in the grid'  , action='store_true')
+    parser.add_argument('-t', '--test' ,            help='If use, will do only one job', action='store_true')
 
     args = parser.parse_args()
 
