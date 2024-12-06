@@ -2,6 +2,9 @@
 
 - For instructions on how to install this project, check [this](doc/installation.md)   
 - For documentation specific to MVA lines of the RD group, check [this](doc/mva_lines.md)   
+- For tools to deal with nicknames check [this](doc/nicknames.md)
+- For instructions to mount EOS in your laptop check [this](doc/mounting_eos.md)
+- For instructions on how to make the decay descriptor fields check [this](doc/descriptors.md)
 
 ## How to add a decay 
 
