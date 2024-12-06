@@ -21,3 +21,7 @@ v1: Used to get data from RD AP from December 2024 and simulation from noPID pro
 
 These files look like `lhcb_year.yaml` and contain information about correspondences
 between blocks and runs or fills.
+
+## JSON files with lists of PFNs
+
+These look like mc...json or dt...json and are used to store lists of PFNs, they are meant to be used by tests.
