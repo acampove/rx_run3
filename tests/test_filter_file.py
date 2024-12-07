@@ -2,7 +2,6 @@
 File containing tests for FilterFile class
 '''
 import os
-from importlib.resources   import files
 
 import pytest
 from dmu.logging.log_store import LogStore
