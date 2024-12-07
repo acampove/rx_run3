@@ -3,6 +3,7 @@ Module containing tests for DataVarsAdder class
 '''
 import os
 
+import pytest
 from ROOT import RDataFrame
 
 from post_ap.data_vars_adder import DataVarsAdder
@@ -20,12 +21,14 @@ def _get_rdf():
 
     return rdf
 # ---------------------------------------------
-def test_simple():
+@pytest.mark.parametrize('itry', [1,2])
+def test_simple(itry : int) -> None:
     '''
     Simplest test for adding data variables
     '''
 
-    rdf = _get_rdf()
+    print(itry)
 
+    rdf = _get_rdf()
     obj = DataVarsAdder(rdf)
     rdf = obj.get_rdf()
