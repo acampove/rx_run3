@@ -11,7 +11,7 @@ from typing import Union
 import tqdm
 import pandas as pnd
 
-from ROOT                  import RDataFrame, TFile, RDF, TNamed
+from ROOT                  import RDataFrame, TFile, RDF, TObjString 
 from dmu.logging.log_store import LogStore
 
 import dmu.rdataframe.utilities as ut
@@ -496,10 +496,10 @@ class FilterFile:
         cfg_dat['cutflow'] = df_cf.to_dict()
 
         cfg_str = json.dumps(cfg_dat)
-        meta    = TNamed('metadata', cfg_str)
+        meta    = TObjString(cfg_str)
 
         ifile   = TFile.Open(file_path, 'update')
-        meta.Write()
+        meta.Write('metadata')
         ifile.Close()
     # --------------------------------------
     def _save_contents(self, file_path : str) -> None:
