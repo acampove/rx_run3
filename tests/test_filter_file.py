@@ -14,8 +14,8 @@ class Data:
     '''
     Data class with shared attributes
     '''
-    mc_path = '/home/acampove/cernbox/Run3/analysis_productions/MC/local_tests/mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple.root'
-    dt_path = '/home/acampove/cernbox/Run3/analysis_productions/MC/local_tests/data_24_magdown_turbo_24c3.root'
+    mc_path = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc.root'
+    dt_path = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt.root'
 
     l_args_config = [True, False]
 # --------------------------------------
@@ -25,8 +25,7 @@ def _initialize():
     Will set loggers, etc
     '''
     log.info('Initializing')
-    config_path               = files('post_ap_data').joinpath('v2.yaml')
-    os.environ['CONFIG_PATH'] = str(config_path)
+    os.environ['CONFIG_PATH'] = '/home/acampove/Packages/config_files/post_ap/v2.yaml'
 
     LogStore.set_level('dmu:rdataframe:atr_mgr', 30)
     LogStore.set_level('post_ap:selector'      , 20)
