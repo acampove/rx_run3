@@ -21,6 +21,7 @@ from dmu.rfile.rfprinter   import RFPrinter
 import post_ap.utilities as utdc
 from post_ap.selector        import Selector
 from post_ap.data_vars_adder import DataVarsAdder
+from post_ap.kine_vars_adder import KinematicsVarsAdder
 
 log = LogStore.add_logger('post_ap:FilterFile')
 # --------------------------------------
@@ -233,8 +234,18 @@ class FilterFile:
             rdf = rdf.Define(name, expr)
 
         if not self._is_mc:
+            log.info('Adding data only variables')
             obj = DataVarsAdder(rdf)
             rdf = obj.get_rdf()
+
+        rdf = self._define_kinematics(rdf)
+
+        return rdf
+    # --------------------------------------
+    def _define_kinematics(self, rdf : RDataFrame) -> RDataFrame:
+        log.info('Adding kinematic variables')
+        obj = KinematicsVarsAdder(rdf)
+        rdf = obj.get_rdf()
 
         return rdf
     # --------------------------------------
