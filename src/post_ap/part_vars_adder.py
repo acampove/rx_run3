@@ -67,7 +67,6 @@ class ParticleVarsAdder:
         self._l_branch = self._get_branch_names()
         l_part         = self._get_particles()
 
-        log.info('Adding kinematic variables')
         for part in l_part:
             self._add_particle_variables(part)
 
