@@ -32,7 +32,7 @@ def test_simple(itry : int) -> None:
     rdf    = _get_rdf()
     obj    = DataVarsAdder(rdf)
     rdf    = obj.get_rdf()
-    l_name = obj.names
+    l_name = obj.names + ['RUNNUMBER', 'FillNumber']
 
     file_path = f'/tmp/var_adder_{itry:03}.root'
     log.info(f'Saving to: {file_path}')
