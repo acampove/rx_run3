@@ -12,6 +12,12 @@ These are YAML and TOML config files used for different reasons:
 These files look like `lhcb_year.yaml` and contain information about correspondences
 between blocks and runs or fills.
 
+- `good_runs_2024.yaml`: Containing the ranges of good runs for 2024, obtained with:
+
+```bash
+dirac-bookkeeping-get-run-ranges --Fast --Activity=Collision24 --DQFlag=OK --RunGap=1
+```
+
 ## For unit tests
 
 ### JSON files with lists of PFNs
