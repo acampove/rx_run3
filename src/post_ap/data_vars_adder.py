@@ -12,6 +12,33 @@ from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('post_ap:data_vars_adder')
 # -------------------------------------
+def _get_good_runs() -> tuple[numpy.ndarray, numpy.ndarray]:
+    runs_path = files('post_ap_data').joinpath('good_runs.yaml')
+    runs_path = str(runs_path)
+    with open(runs_path, encoding='utf-8') as ifile:
+        l_runs = yaml.safe_load(ifile)
+
+    l_low = []
+    l_hig = []
+    for l_run in l_runs:
+        low_run = l_run[0]
+        if   len(l_run) == 1:
+            hig_run = l_run[0]
+        elif len(l_run) == 2:
+            hig_run = l_run[1]
+        else:
+            raise ValueError(f'Found invalid run range: {l_run}')
+
+        l_low.append(low_run)
+        l_hig.append(hig_run)
+
+    arr_low = numpy.array(l_low)
+    arr_hig = numpy.array(l_hig)
+
+    return arr_low, arr_hig
+
+arr_low_run, arr_hig_run = _get_good_runs()
+# -------------------------------------
 @Numba.Declare(['int', 'int'], 'int')
 def get_block(run_number : int, fill_number : int) -> int:
     block_run = 298626 <=  run_number <= 301278
