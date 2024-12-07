@@ -1,6 +1,10 @@
 '''
 Module containing DataVarsAdder class
 '''
+from importlib.resources import files
+
+import yaml
+import numpy
 
 from ROOT import RDataFrame, Numba
 
