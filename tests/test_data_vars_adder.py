@@ -6,8 +6,10 @@ import os
 import pytest
 from ROOT import RDataFrame
 
+from dmu.logging.log_store   import LogStore
 from post_ap.data_vars_adder import DataVarsAdder
 
+log = LogStore.add_logger('post_ap:test_data_vars_adder')
 # ---------------------------------------------
 def _get_rdf():
     cernbox   = os.environ['CERNBOX']
@@ -27,8 +29,12 @@ def test_simple(itry : int) -> None:
     Simplest test for adding data variables
     '''
 
-    print(itry)
+    rdf    = _get_rdf()
+    obj    = DataVarsAdder(rdf)
+    rdf    = obj.get_rdf()
+    l_name = obj.names
 
-    rdf = _get_rdf()
-    obj = DataVarsAdder(rdf)
-    rdf = obj.get_rdf()
+    file_path = f'/tmp/var_adder_{itry:03}.root'
+    log.info(f'Saving to: {file_path}')
+
+    rdf.Snapshot('tree', file_path, l_name)
