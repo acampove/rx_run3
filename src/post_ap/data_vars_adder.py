@@ -73,6 +73,16 @@ class DataVarsAdder:
     def _add_dataq(self, rdf : RDataFrame, name : str) -> RDataFrame:
         log.info(f'Defining {name}')
 
+        rdf = rdf.Define(name, 'Numba::get_dataq(RUNNUMBER)')
+        self._l_name.append(name)
+
+        return rdf
+    # -------------------------------------
+    def _add_block(self, rdf : RDataFrame, name : str) -> RDataFrame:
+        log.info(f'Defining {name}')
+        rdf = rdf.Define(name, 'Numba::get_block(RUNNUMBER, FillNumber)')
+        self._l_name.append(name)
+
         return rdf
     # -------------------------------------
     @property
@@ -81,13 +91,6 @@ class DataVarsAdder:
         Returns names of added branches
         '''
         return self._l_name
-    # -------------------------------------
-    def _add_block(self, rdf : RDataFrame, name : str) -> RDataFrame:
-        log.info(f'Defining {name}')
-        rdf = rdf.Define(name, 'Numba::get_block(RUNNUMBER, FillNumber)')
-        self._l_name.append(name)
-
-        return rdf
     # -------------------------------------
     def get_rdf(self) -> RDataFrame:
         '''
