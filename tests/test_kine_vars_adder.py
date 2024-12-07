@@ -1,6 +1,8 @@
 '''
 Module testing KinematicsVarsAdder class
 '''
+import os
+
 from ROOT import RDataFrame
 
 from dmu.logging.log_store   import LogStore
