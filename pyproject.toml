@@ -21,7 +21,7 @@ run3_download_ntuples='post_ap_scripts.run3_download_ntuples:main'
 job_filter           ='post_ap_scripts.job_filter:main'
 
 [tool.setuptools.package-data]
-'post_ap_data' = ['*.json', '*.toml']
+'post_ap_data' = ['*.json', '*.yaml']
 'post_ap_grid' = ['run_filter']
 
 [tool.setuptools]
