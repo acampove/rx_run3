@@ -21,7 +21,7 @@ from dmu.rfile.rfprinter   import RFPrinter
 import post_ap.utilities as utdc
 from post_ap.selector        import Selector
 from post_ap.data_vars_adder import DataVarsAdder
-from post_ap.kine_vars_adder import KinematicsVarsAdder
+from post_ap.part_vars_adder import ParticleVarsAdder
 
 log = LogStore.add_logger('post_ap:FilterFile')
 # --------------------------------------
@@ -243,15 +243,16 @@ class FilterFile:
         return rdf
     # --------------------------------------
     def _define_kinematics(self, rdf : RDataFrame) -> RDataFrame:
-        if 'redefine_kinematics' not in self._d_trans:
-            log.info('Not redefining kinematic variables')
+        if 'particle_variables' not in self._d_trans:
+            log.info('Not defining particle variables')
 
             return rdf
 
-        l_var = self._d_trans['redefine_kinematics']
+        d_var = self._d_trans['particle_variables']
+        l_var = list(d_var)
 
-        log.info('Adding kinematic variables: {l_var}')
-        obj = KinematicsVarsAdder(rdf, variables=l_var)
+        log.info(f'Adding particle variables: {l_var}')
+        obj = ParticleVarsAdder(rdf, variables=d_var)
         rdf = obj.get_rdf()
 
         return rdf
