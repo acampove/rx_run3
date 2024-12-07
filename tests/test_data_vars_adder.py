@@ -11,7 +11,7 @@ from post_ap.data_vars_adder import DataVarsAdder
 
 log = LogStore.add_logger('post_ap:test_data_vars_adder')
 # ---------------------------------------------
-def _get_rdf():
+def _get_rdf() -> RDataFrame:
     cernbox   = os.environ['CERNBOX']
     file_path = f'{cernbox}/Run3/analysis_productions/for_local_tests/data.root'
     tree_path =  'Hlt2RD_BuToKpEE_MVA/DecayTree'
