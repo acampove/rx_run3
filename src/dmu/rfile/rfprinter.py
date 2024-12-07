@@ -54,7 +54,11 @@ class RFPrinter:
         for branch in l_branch:
             bname = branch.GetName()
             leaf  = branch.GetLeaf(bname)
-            btype = leaf.GetTypeName()
+            try:
+                btype = leaf.GetTypeName()
+            except:
+                log.warning(f'Cannot read {bname}')
+                continue
 
             l_line.append(f'{"":4}{bname:<100}{btype:<40}')
 
