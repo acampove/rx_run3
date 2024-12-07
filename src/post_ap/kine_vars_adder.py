@@ -15,6 +15,15 @@ class KinematicsVarsAdder:
         self._rdf              = rdf
         self._l_var            = variables
         self._l_not_a_particle = ['BUNCHCROSSING']
+        self._d_expr : dict[str,str]
+    # --------------------------------------------------
+    def _get_expressions(self) -> dict[str,str]:
+        d_expr = {
+        'P'  : 'TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) + TMath::Sq(PARTICLE_PZ) )',
+        'PT' : 'TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) )',
+        }
+
+        return d_expr
     # --------------------------------------------------
     def _get_particles(self) -> list[str]:
         v_name = self._rdf.GetColumnNames()
@@ -27,11 +36,30 @@ class KinematicsVarsAdder:
 
         return l_name
     # --------------------------------------------------
+    def _add_particle_variables(self, particle : str) -> None:
+        for variable in self._l_var:
+            if variable not in self._d_expr:
+                log.warning(f'Definition of {variable} not found, skipping')
+                continue
+
+            expr = self._d_expr[variable]
+            expr = expr.replace('PARTICLE', particle)
+            name = f'{particle}_{variable}'
+
+            self._rdf = self._rdf.Define(name, expr)
+            log.debug(f'{name:<15}{expr:<100}')
+    # --------------------------------------------------
     def get_rdf(self) -> RDataFrame:
         '''
         Will return dataframe with variables added
         '''
-        l_part = self._get_particles()
+        self._d_expr = self._get_expressions()
+        l_part       = self._get_particles()
+
+        log.info('Adding kinematic variables')
+        for part in l_part:
+            log.debug(f'    {part}')
+            self._add_particle_variables(part)
 
         return self._rdf
 # ------------------------------------------------------------------
