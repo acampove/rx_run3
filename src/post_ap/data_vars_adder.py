@@ -52,6 +52,10 @@ def get_block(run_number : int, fill_number : int) -> int:
 
     return -1
 # -------------------------------------
+@Numba.Declare(['int'], 'int')
+def get_dataq(run_number : int) -> int:
+    return 1
+# -------------------------------------
 class DataVarsAdder:
     '''
     Class used to add variables to dataframes that only make sense for data
