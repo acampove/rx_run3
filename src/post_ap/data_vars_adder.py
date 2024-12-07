@@ -63,9 +63,26 @@ class DataVarsAdder:
     # -------------------------------------
     def __init__(self, rdf : RDataFrame):
         self._rdf = rdf
+
+        self._l_name : list[str] = []
     # -------------------------------------
-    def _add_dataq(self, rdf : RDataFrame) -> RDataFrame:
-        log.info('Defining is_good_run')
+    def _add_dataq(self, rdf : RDataFrame, name : str) -> RDataFrame:
+        log.info(f'Defining {name}')
+
+        return rdf
+    # -------------------------------------
+    @property
+    def names(self) -> list[str]:
+        '''
+        Returns names of added branches
+        '''
+        return self._l_name
+    # -------------------------------------
+    def _add_block(self, rdf : RDataFrame, name : str) -> RDataFrame:
+        log.info(f'Defining {name}')
+        rdf = rdf.Define(name, 'Numba::get_block(RUNNUMBER, FillNumber)')
+        self._l_name.append(name)
+
         return rdf
     # -------------------------------------
     def get_rdf(self) -> RDataFrame:
@@ -73,8 +90,8 @@ class DataVarsAdder:
         Returns dataframe with all variables added (or booked in this case)
         '''
         rdf = self._rdf
-        rdf = rdf.Define('block', 'Numba::get_block(RUNNUMBER, FillNumber)')
-        rdf = self._add_dataq(rdf)
+        rdf = self._add_dataq(rdf, 'dataq')
+        rdf = self._add_block(rdf, 'block')
 
         return rdf
 # -------------------------------------
