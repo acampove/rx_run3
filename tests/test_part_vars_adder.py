@@ -7,14 +7,14 @@ import pytest
 from ROOT import RDataFrame
 
 from dmu.logging.log_store   import LogStore
-from post_ap.kine_vars_adder import KinematicsVarsAdder
+from post_ap.part_vars_adder import ParticleVarsAdder
 
-log = LogStore.add_logger('post_ap:test_kine_vars_adder')
+log = LogStore.add_logger('post_ap:test_part_vars_adder')
 
 # ---------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    LogStore.set_level('post_ap:kine_vars_adder', 10)
+    LogStore.set_level('post_ap:part_vars_adder', 10)
 # ---------------------------------------------
 def _get_rdf() -> RDataFrame:
     cernbox   = os.environ['CERNBOX']
@@ -38,11 +38,11 @@ def test_simple():
     }
 
     rdf = _get_rdf()
-    obj = KinematicsVarsAdder(rdf, variables = d_expr)
+    obj = ParticleVarsAdder(rdf, variables = d_expr)
     rdf = obj.get_rdf()
 
     l_name    = obj.names
-    file_path = '/tmp/kin_var_add.root'
+    file_path = '/tmp/par_var_add.root'
 
     log.info(f'Saving to: {file_path}')
     rdf.Snapshot('tree', file_path, l_name)

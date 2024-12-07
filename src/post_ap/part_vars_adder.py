@@ -1,17 +1,22 @@
 '''
-Module containing the KinematicsVarsAdder class
+Module containing the ParticleVarsAdder class
 '''
 
 from ROOT                    import RDataFrame
 from dmu.logging.log_store   import LogStore
 
-log = LogStore.add_logger('post_ap:kine_vars_adder')
+log = LogStore.add_logger('post_ap:part_vars_adder')
 # ------------------------------------------------------------------
-class KinematicsVarsAdder:
+class ParticleVarsAdder:
     '''
-    Class that adds kinematic variables to RDataFrame
+    Class that adds variables to RDataFrame. The variables are added to all the particles, which are
+    found based on which branches end with `_ID`.
     '''
     def __init__(self, rdf : RDataFrame, variables : dict[str,str]):
+        '''
+        rdf : Dataframe to which to add columns
+        variables : Dictionary, where the keys represent the variable, e.g. PT, and the values are the definisions.
+        '''
         self._rdf    = rdf
         self._d_expr = variables
 
