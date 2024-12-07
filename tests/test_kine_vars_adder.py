@@ -32,8 +32,13 @@ def test_simple():
     '''
     Simplest test of adding variables
     '''
+    d_expr = {
+    'P'  : 'TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) + TMath::Sq(PARTICLE_PZ) )',
+    'PT' : 'TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) )',
+    }
+
     rdf = _get_rdf()
-    obj = KinematicsVarsAdder(rdf, variables = ['PT', 'P'])
+    obj = KinematicsVarsAdder(rdf, variables = d_expr)
     rdf = obj.get_rdf()
 
     l_name    = obj.names
