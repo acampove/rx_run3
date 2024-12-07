@@ -33,7 +33,7 @@ class ParticleVarsAdder:
         return self._l_var_added
     # --------------------------------------------------
     def _get_particles(self) -> list[str]:
-        l_name = [ name         for name in self._l_branch if name.endswith('_ID') ]
+        l_name = [ name         for name in self._l_branch if name.endswith('_ID') and '_MC_' not in name ]
         l_name = [ name.replace('_ID', '') for name in l_name ]
         l_name = [ name for name in l_name if name not in self._l_not_a_particle]
 
