@@ -86,7 +86,7 @@ def get_block(run_number : int, fill_number : int) -> int:
 @Numba.Declare(['int'], 'int')
 def get_dataq(run_number : int) -> int:
     '''
-    Takes run number
+    Takes run number, returns 0 (bad run) or 1 (good run)
     '''
     for low_run, hig_run in zip(arr_low_run, arr_hig_run):
         if low_run <= run_number <= hig_run:
