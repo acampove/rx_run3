@@ -11,22 +11,13 @@ class KinematicsVarsAdder:
     '''
     Class that adds kinematic variables to RDataFrame
     '''
-    def __init__(self, rdf : RDataFrame, variables : list[str]):
-        self._rdf              = rdf
-        self._l_var            = variables
-        self._l_not_a_particle = ['BUNCHCROSSING']
+    def __init__(self, rdf : RDataFrame, variables : dict[str,str]):
+        self._rdf    = rdf
+        self._d_expr = variables
 
+        self._l_not_a_particle            = ['BUNCHCROSSING']
         self._l_branch    : list[str]
         self._l_var_added : list[str]     = []
-        self._d_expr      : dict[str,str]
-    # --------------------------------------------------
-    def _get_expressions(self) -> dict[str,str]:
-        d_expr = {
-        'P'  : 'TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) + TMath::Sq(PARTICLE_PZ) )',
-        'PT' : 'TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) )',
-        }
-
-        return d_expr
     # --------------------------------------------------
     @property
     def names(self) -> list[str]:
@@ -52,12 +43,7 @@ class KinematicsVarsAdder:
         return l_name
     # --------------------------------------------------
     def _add_particle_variables(self, particle : str) -> None:
-        for variable in self._l_var:
-            if variable not in self._d_expr:
-                log.warning(f'Definition of {variable} not found, skipping')
-                continue
-
-            expr = self._d_expr[variable]
+        for variable, expr in self._d_expr.items():
             expr = expr.replace('PARTICLE', particle)
             name = f'{particle}_{variable}'
 
@@ -73,7 +59,6 @@ class KinematicsVarsAdder:
         '''
         Will return dataframe with variables added
         '''
-        self._d_expr   = self._get_expressions()
         self._l_branch = self._get_branch_names()
         l_part         = self._get_particles()
 
