@@ -243,8 +243,15 @@ class FilterFile:
         return rdf
     # --------------------------------------
     def _define_kinematics(self, rdf : RDataFrame) -> RDataFrame:
-        log.info('Adding kinematic variables')
-        obj = KinematicsVarsAdder(rdf)
+        if 'redefine_kinematics' not in self._d_trans:
+            log.info('Not redefining kinematic variables')
+
+            return rdf
+
+        l_var = self._d_trans['redefine_kinematics']
+
+        log.info('Adding kinematic variables: {l_var}')
+        obj = KinematicsVarsAdder(rdf, variables=l_var)
         rdf = obj.get_rdf()
 
         return rdf
