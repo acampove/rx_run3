@@ -39,6 +39,7 @@ class Data:
     runner_path : str
     conf_name   : str
     pfn_path    : str
+    dryr        : bool
     test_job    : bool
     l_resu      : list[int]
 # ---------------------------------------
@@ -86,6 +87,7 @@ def _get_args() -> argparse.Namespace:
     parser.add_argument('-m', '--mode' , type =str, help='Run locally or in the grid'  , required=True, choices=['local', 'wms'])
     parser.add_argument('-r', '--resu' , nargs='+', help='List of jobs to resubmit, if not passed, it will send everything', default=[])
     parser.add_argument('-t', '--test' ,            help='If use, will do only one job', action='store_true')
+    parser.add_argument('-d', '--dryr' ,            help='Skips jobs submission'       , action='store_true')
 
     args = parser.parse_args()
 
@@ -128,6 +130,7 @@ def _initialize() -> None:
     Data.venv    = args.venv
     Data.user    = args.user
     Data.mode    = args.mode
+    Data.dryr    = args.dryr
     Data.epat    = os.environ['VENVS']
     Data.test_job= args.test
     Data.l_resu  = [ int(jobid) for jobid in args.resu ]
@@ -151,7 +154,8 @@ def main():
         if job is None:
             continue
 
-        dirac.submitJob(job, mode=Data.mode)
+        if not Data.dry_run:
+            dirac.submitJob(job, mode=Data.mode)
 
         if Data.test_job or Data.name.startswith('test'):
             log.warning('Running a single test job')
