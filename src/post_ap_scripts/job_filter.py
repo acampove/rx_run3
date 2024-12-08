@@ -154,7 +154,7 @@ def main():
         if job is None:
             continue
 
-        if not Data.dry_run:
+        if not Data.dryr:
             dirac.submitJob(job, mode=Data.mode)
 
         if Data.test_job or Data.name.startswith('test'):
