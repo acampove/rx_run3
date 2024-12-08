@@ -60,8 +60,8 @@ class PFNReader:
         if not isinstance(collection, SampleCollection):
             raise ValueError('Cannot retrieve a collection of samples for {production}:{nickname}')
 
-        l_sample   = self._cfg['productions'][production]['samples'][nickname]
-        version    = self._cfg['productions'][production]['version']
+        l_sample   = self._cfg['productions'][production]['samples' ][nickname]
+        version    = self._cfg['productions'][production]['versions'][nickname]
 
         d_path     = self._paths_from_collection(collection, l_sample, version)
 
