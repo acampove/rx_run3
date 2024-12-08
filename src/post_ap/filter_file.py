@@ -422,7 +422,7 @@ class FilterFile:
         file_name = file_name.replace('_24_w31_34_', '_')
         file_name = file_name.replace( '_sim10d_'  , '_')
         file_name = file_name.replace('_hlt1bug_'  , '_')
-        file_name = file_name.replace(  'pythia8'  , '_')
+        file_name = file_name.replace('_pythia8_'  , '_')
 
         return file_name
     # --------------------------------------
