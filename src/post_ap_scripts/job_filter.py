@@ -29,6 +29,7 @@ class Data:
     prod        : str
     samp        : str
     njob        : int
+    maxj        : int
     dset        : str
     conf        : str
     venv        : str
@@ -79,9 +80,9 @@ def _get_args() -> argparse.Namespace:
     parser.add_argument('-p', '--prod' , type =str, help='Name of production'          , required=True)
     parser.add_argument('-s', '--samp' , type =str, help='Sample nickname'             , required=True)
     parser.add_argument('-c', '--conf' , type =str, help='Path to config file'         , required=True)
-    parser.add_argument('-j', '--njob' , type =int, help='Number of grid jobs'         , required=True)
     parser.add_argument('-e', '--venv' , type =str, help='Index of virtual environment', required=True)
     parser.add_argument('-u', '--user' , type =str, help='User associated to venv'     , required=True)
+    parser.add_argument('-M', '--maxj' , type =int, help='Maximum number of jobs'      , default =500)
     parser.add_argument('-m', '--mode' , type =str, help='Run locally or in the grid'  , required=True, choices=['local', 'wms'])
     parser.add_argument('-r', '--resu' , nargs='+', help='List of jobs to resubmit, if not passed, it will send everything', default=[])
     parser.add_argument('-t', '--test' ,            help='If use, will do only one job', action='store_true')
@@ -115,7 +116,7 @@ def _initialize() -> None:
     Data.prod    = args.prod
     Data.samp    = args.samp
     Data.conf    = args.conf
-    Data.njob    = args.njob
+    Data.maxj    = args.maxj
     Data.venv    = args.venv
     Data.user    = args.user
     Data.mode    = args.mode
