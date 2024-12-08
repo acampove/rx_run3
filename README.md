@@ -15,14 +15,20 @@ and for instructions on how to setup an environment to use this project.
 
 ## Check latest version of virtual environment
 
-All the jobs below require code that lives in a virtual environment, there should be multiple versions of this
-environment and the latest one should be obtained by running:
+The jobs below will run with code from a virtual environment that is already in the grid. One should use the
+latest version of this environment. To know the latest versions, run:
 
 ```bash
-dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
+list_venvs
 ```
 
-currently, the latest is 023. Unless you have made your own tarballs, `LXNAME=acampove`.
+Unless you have made your own tarballs: 
+
+```bash
+export LXNAME=acampove
+```
+
+should have been ran before using `list_venvs`.
 
 ## Submit jobs
 
