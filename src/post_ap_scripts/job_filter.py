@@ -144,7 +144,7 @@ def main():
 
         dirac.submitJob(job, mode=Data.mode)
 
-        if Data.test_job:
+        if Data.test_job or Data.name.startswith('test'):
             log.warning('Running a single test job')
             break
 
