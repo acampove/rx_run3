@@ -6,6 +6,7 @@ filtering jobs
 import os
 import json
 import argparse
+from typing              import Union
 from importlib.resources import files
 
 import yaml
@@ -47,7 +48,19 @@ def _get_inputs() -> list[str]:
             Data.pfn_path,
     ]
 # ---------------------------------------
-def _get_job(jobid : int) -> Job:
+def _skip_job(jobid : int) -> bool:
+    if len(Data.l_resu) == 0:
+        return False
+
+    if jobid in Data.l_resu:
+        return False
+
+    return True
+# ---------------------------------------
+def _get_job(jobid : int) -> Union[Job,None]:
+    if _skip_job(jobid):
+        return None
+
     l_input = _get_inputs()
 
     j = Job()
@@ -126,6 +139,9 @@ def main():
     dirac = Dirac()
     for jobid in trange(Data.njob, ascii=' -'):
         job    = _get_job(jobid)
+        if job is None:
+            continue
+
         dirac.submitJob(job, mode=Data.mode)
 
         if Data.test_job:
