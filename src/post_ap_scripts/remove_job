@@ -3,12 +3,10 @@
 # -------------------------------
 display_help()
 {
-    echo "Script used to show latest versions of virtual environments. Needed to"
+    echo "Script used to remove LFNs associated to given job" 
     echo ""
-    echo "- Find out what version to use when updating environment"
-    echo "- Find out what version to use to send slimming jobs" 
-    echo ""
-    echo "-n: Number of lines to print, default 5"
+    echo "-n: Name of job, something like dec_08_2024" 
+    echo "-s: Name of sample (usually called nickname), e.g. data, simulation" 
 }
 # -------------------------------
 get_opts()
