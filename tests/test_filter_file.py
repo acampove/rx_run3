@@ -45,7 +45,7 @@ def test_mc():
     '''
     Run test on MC
     '''
-    sample_name = 'mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple'
+    sample_name = 'mc_24_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple'
 
     obj = FilterFile(sample_name=sample_name, file_path=Data.mc_path)
     obj.dump_contents = True
