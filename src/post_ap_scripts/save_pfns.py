@@ -58,8 +58,7 @@ def _get_pfns() -> dict[str,list[str]]:
     Returns dictionary of sample -> PFNs
     '''
     cfg_dat = utdc.load_config()
-    d_prod  = cfg_dat['productions'][Data.production]
-    reader  = PFNReader(cfg=d_prod)
+    reader  = PFNReader(cfg=cfg_dat)
     d_pfn   = reader.get_pfns(production=Data.production, nickname=Data.nickname)
 
     return d_pfn
@@ -68,7 +67,8 @@ def _save_pfns(d_path : dict[str, list[str]]) -> None:
     '''
     Save dictionary of samplename -> PFNs to JSON
     '''
-    pfn_path = f'{Data.production}_{Data.nickname}.json'
+
+    pfn_path = f'./{Data.production}_{Data.nickname}.json'
     log.info(f'Saving to: {pfn_path}')
     gut.dump_json(d_path, pfn_path)
 #------------------------------------
