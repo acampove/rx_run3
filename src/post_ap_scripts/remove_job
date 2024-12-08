@@ -59,8 +59,8 @@ remove_lfns()
 {
     LFN_PATH=/lhcb/user/${LXNAME:0:1}/$LXNAME/$JOB_NAME"_"$SAMPLE_NAME 
     dirac-dms-user-lfns -b $LFN_PATH > /dev/null 2>&1
-    LFN_LIST=lhcb-user-${LXNAME:0:1}-$LXNAME-run3-venv.lfns
-    NFILES=$(wc -l $LFN_LIST)
+    LFN_LIST=lhcb-user-${LXNAME:0:1}-$LXNAME"-"$JOB_NAME"_"$SAMPLE_NAME".lfns"
+    NFILES=$(cat $LFN_LIST | wc -l)
     if [[ $NFILES -eq 0 ]];then
         echo "No LFNs were found in $LFN_PATH"
         exit 1
