@@ -58,7 +58,7 @@ class PFNReader:
         apo        = apd.get_analysis_data(analysis=production, working_group=wg)
         collection = apo.all_samples()
         if not isinstance(collection, SampleCollection):
-            raise ValueError('Cannot retrieve a collection of saples for {production}:{nickname}')
+            raise ValueError('Cannot retrieve a collection of samples for {production}:{nickname}')
 
         l_sample   = self._cfg['productions'][production]['samples'][nickname]
         version    = self._cfg['productions'][production]['version']
