@@ -89,3 +89,17 @@ run3_download_ntuples -j dec_06_2024_data -m 40
 
 Where `-m` denotes the number of threads used to download, `-j` the name of the job.
 
+# Removing old outputs
+
+If outputs of old jobs need to be removed, it can be done with:
+
+```bash
+remove_job -n job_name -s sample_name
+```
+
+from the examples above this could look like:
+
+```bash
+remove_job -n dec_08_2024 -s simulation 
+```
+
