@@ -415,7 +415,16 @@ class FilterFile:
         hsh = hob.hexdigest()
         hsh = hsh[:10]
 
-        return f'{self._sample_name}_{line_name}_{hsh}.root'
+        file_name = f'{self._sample_name}_{line_name}_{hsh}.root'
+
+        # Long names make grid jobs fail, drop stuff not needed, stored in metadata string
+        file_name = file_name.replace(  '_tuple_'  , '_')
+        file_name = file_name.replace('_24_w31_34_', '_')
+        file_name = file_name.replace( '_sim10d_'  , '_')
+        file_name = file_name.replace('_hlt1bug_'  , '_')
+        file_name = file_name.replace(  'pythia8'  , '_')
+
+        return file_name
     # --------------------------------------
     def _save_file(self, d_rdf : dict[str,RDataFrame]) -> None:
         '''
