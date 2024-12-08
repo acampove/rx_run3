@@ -55,7 +55,7 @@ def _get_job(jobid : int) -> Job:
     j.setExecutable(Data.runner_path, arguments=f'{Data.prod} {Data.samp} {Data.conf_name}.yaml {Data.njob} {jobid} {Data.epat} {Data.user}')
     j.setInputSandbox(l_input)
     j.setOutputData(['*.root'], outputPath=f'{Data.name}_{Data.samp}')
-    j.setName(Data.name)
+    j.setName(f'{Data.name}_{jobid:03}')
 
     return j
 # ---------------------------------------
