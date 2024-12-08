@@ -97,12 +97,20 @@ def _check_config() -> None:
 
     Data.conf_name = os.path.basename(Data.conf).replace('.yaml', '')
 # ---------------------------------------
+def _pfns_to_njob(d_pfn : dict[str, list[str]]) -> int:
+    npfn = 0
+    for l_pfn in d_pfn.values():
+        npfn += len(l_pfn)
+
+    return npfn if npfn < Data.maxj else Data.maxj
+# ---------------------------------------
 def _get_pfns_path() -> str:
     with open(Data.conf, encoding='utf-8') as ifile:
         cfg = yaml.safe_load(ifile)
 
-    reader = PFNReader(cfg=cfg)
-    d_pfn  = reader.get_pfns(production=Data.prod, nickname=Data.samp)
+    reader    = PFNReader(cfg=cfg)
+    d_pfn     = reader.get_pfns(production=Data.prod, nickname=Data.samp)
+    Data.njob = _pfns_to_njob(d_pfn)
 
     ofile_path = '/tmp/pfns.json'
     with open(ofile_path, 'w', encoding='utf-8') as ofile:
