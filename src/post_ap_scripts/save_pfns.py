@@ -2,14 +2,15 @@
 Script used to save PFNs
 '''
 
+import os
 import re
 import logging
 import argparse
 from importlib.resources    import files
 
-import apd
 import dmu.generic.utilities as gut
 from dmu.logging.log_store  import LogStore
+from post_ap.pfn_reader     import PFNReader
 
 import post_ap.utilities as utdc
 
