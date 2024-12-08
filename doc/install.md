@@ -108,5 +108,3 @@ already been uploaded run:
 ```bash
 list_versions
 ```
-
-this will dump a text file with the list of LFNs in that particular path. Then one would pick the next name in the list.
