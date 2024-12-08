@@ -13,11 +13,6 @@ display_help()
 # -------------------------------
 get_opts()
 {
-    if [[ $# -eq 0 ]]; then
-        display_help
-        exit 1
-    fi  
-
     NLINES=5
     while getopts :hf:n: option; do 
         case "${option}" in
@@ -40,7 +35,7 @@ get_opts()
 # -------------------------------
 check_env()
 {
-    which dirac-dms-user-lfns > /dev/null 2&>1
+    which dirac-dms-user-lfns > /dev/null 2>&1
     if [[ $? -ne 0 ]];then
         echo "Dirac not available, run lb_dirac to be in the right environment"
         exit 1
@@ -54,7 +49,7 @@ check_env()
 # -------------------------------
 print_latest()
 {
-    dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
+    dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv > /dev/null 2>&1
     LFNNAME=lhcb-user-${LXNAME:0:1}-$LXNAME-run3-venv.lfns
     tail -n $NLINES $LFNNAME
     rm $LFNNAME
