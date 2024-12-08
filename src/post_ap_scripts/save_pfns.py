@@ -3,10 +3,8 @@ Script used to save PFNs
 '''
 
 import os
-import re
 import logging
 import argparse
-from importlib.resources    import files
 
 import dmu.generic.utilities as gut
 from dmu.logging.log_store  import LogStore
