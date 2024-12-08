@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+# -------------------------------
+display_help()
+{
+    echo "Script used to show latest versions of virtual environments. Needed to"
+    echo ""
+    echo "- Find out what version to use when updating environment"
+    echo "- Find out what version to use to send slimming jobs" 
+    echo ""
+    echo "-n: Number of lines to print, default 5"
+}
+# -------------------------------
+get_opts()
+{
+    if [[ $# -eq 0 ]]; then
+        display_help
+        exit 1
+    fi  
+
+    NLINES=5
+    while getopts :hf:n: option; do 
+        case "${option}" in
+            h)  
+                display_help
+                exit 0
+                ;;  
+            n)  NLINES=${OPTARG};;
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;  
+        esac
+    done
+}
+# -------------------------------
+check_env()
+{
+    which dirac-dms-user-lfns > /dev/null 2&>1
+    if [[ $? -ne 0 ]];then
+        echo "Dirac not available, run lb_dirac to be in the right environment"
+        exit 1
+    fi
+
+    if [[ -z $LXNAME ]];then
+        echo "LXNAME variable not set"
+        exit 1
+    fi
+}
+# -------------------------------
+print_latest()
+{
+    dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
+    LFNNAME=lhcb-user-${LXNAME:0:1}-$LXNAME-run3-venv.lfns
+    tail -n $NLINES $LFNNAME
+    rm $LFNNAME
+}
+# -------------------------------
+get_opts "$@"
+check_env
+print_latest
+
