@@ -31,14 +31,14 @@ To run the filtering, after properly installing the project, as shown [here](doc
 ```bash
 # Local will create a local sandbox, use wms to send to the grid
 
-# For data, there are about 11K ROOT files in the input, 11K jobs should do one file per job, with -t, only first job will be done
-job_filter -n data_test_job -p rd_ap_2024             -s       data -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j 11000 -e 023 -u acampove -m local -t
+# For data, this will process a single PFN locally
+job_filter -n test_job -p rd_ap_2024 -s       data -c /home/acampove/Packages/config_files/post_ap/v3.yaml -e 025 -u acampove -m local -t
 
-# For real jobs, 1K jobs should be enough
-job_filter -n data_job      -p rd_ap_2024             -s       data -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j 1000 -e 023 -u acampove -m local
+# For data, this will process all the PFNs in the grid 
+job_filter -n data_job -p rd_ap_2024 -s       data -c /home/acampove/Packages/config_files/post_ap/v3.yaml -e 025 -u acampove -m wms
 
-# For MC using noPID samples, there are only 44 input ROOT files, therefore at most 44 jobs are possible
-job_filter -n mc_job        -p -btoxll_mva_2024_nopid -s simulation -c /home/acampove/Packages/config_files/post_ap/v1.yaml -j   44 -e 023 -u acampove -m local
+# For MC, this will process all the PFNs in the grid 
+job_filter -n mc_job   -p rd_ap_2024 -s simulation -c /home/acampove/Packages/config_files/post_ap/v3.yaml -e 025 -u acampove -m wms
 ```
 
 where the options mean:
@@ -49,9 +49,10 @@ where the options mean:
   -p PROD, --prod PROD  Name of production, e.g. rd_ap_2024, this shoudl be the same as in the config section.
   -s SAMP, --samp SAMP  Sample nickname found in the config section `samples`
   -c CONF, --conf CONF  Path to config file, which should be a YAML file and a few examples are linked below.
-  -j NJOB, --njob NJOB  Number of grid jobs, this will depend on the number of files, for data typically 11K, and 1000 jobs would suffice
   -e VENV, --venv VENV  Index of virtual environment, e.g. 023
   -u USER, --user USER  User associated to venv, currently acampove should be the only choice, but if you author your own virtual environment and upload it, then this should be your user name
+  -d DRYR, --dryr DRYR  If used, submission will be skipped, needed for debugging.
+  -M MAXJ, --maxj MAXJ  Maximum number of jobs, default 500. If 1000 PFNs are found, will do 500 jobs, if 100 PFNs are found, will do 100 jobs
   -m {local,wms}, --mode {local,wms} Run locally (for tests) or in the grid
   -t       --test       If used, will send only one job
 ```
