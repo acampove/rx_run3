@@ -64,7 +64,7 @@ where the options mean:
 ```
 
 Regarding the name, the output will go to a directory in EOS named `JOBNAME_SAMPLENAME`, e.g. `test_001_data` if
-`-n test_001` is used on the data sample.
+`-n test_001` is used with `-s data` sample.
 Some config files can be found [here](https://github.com/acampove/config_files/tree/main/post_ap)
 
 # Downloading ntuples

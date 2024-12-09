@@ -106,7 +106,5 @@ For this one needs to know the version with which to upload it. To find which ve
 already been uploaded run:
 
 ```bash
-dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
+list_versions
 ```
-
-this will dump a text file with the list of LFNs in that particular path. Then one would pick the next name in the list.
