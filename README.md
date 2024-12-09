@@ -77,9 +77,20 @@ run3_download_ntuples -j dec_06_2024_data -n 20 -r 1 -m 5 [-d $PWD/files]
 
 where:
 
-`-j`: Is the name of the job, which has to coincide with the directory name, where the ntuples are in EOS, e.g. `/eos/lhcb/grid/user/lhcb/user/a/acampove/flt_004`.   
-`-n`: Number of ntuples to download, if not pased, will download everything.   
-`-d`: Directory where output ntuples will go, if not passed, directory pointed by `DOWNLOAD_NTUPPATH` will be used.   
+```bash
+options:
+  -h, --help            show this help message and exit
+  -j JOBN, --jobn JOBN  Job name, used to find directory, e.g. flt_001
+  -n NFILE, --nfile NFILE
+                        Number of files to download
+  -d DEST, --dest DEST  Destination directory will override whatever is in DOWNLOAD_NTUPPATH
+  -t, --test            Runs a test run
+  -l {10,20,30,40}, --log {10,20,30,40}
+                        Log level, default 20
+  -r {0,1}, --ran {0,1}
+                        When picking a subset of files, with -n, pick them randomly (1) or the first files (0 default)
+  -m MTH, --mth MTH     Number of threads to use for downloading, default 1
+```
 
 A real download would look like:
 
