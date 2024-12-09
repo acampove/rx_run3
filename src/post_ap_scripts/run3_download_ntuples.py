@@ -138,7 +138,7 @@ def _split_pfns(l_pfn):
     return l_l_pfn
 # --------------------------------------------------
 def _initialize():
-    log.setLevel(Data.log_lvl)
+    LogStore.set_level('post_ap:run3_download_ntuples', Data.log_lvl)
     Data.eos_dir = f'/eos/lhcb/grid/user/lhcb/user/{Data.lxname[0]}/{Data.lxname}'
 
     log.debug(f'Using EOS directory: {Data.eos_dir}')
