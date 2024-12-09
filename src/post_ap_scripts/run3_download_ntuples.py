@@ -44,10 +44,11 @@ def _download(pfn : str) -> None:
     file_name        = os.path.basename(pfn)
     out_path         = f'{Data.dst_dir}/{Data.job_dir}/{file_name}'
     if os.path.isfile(out_path):
-        log.debug('Skipping downloaded file')
+        log.debug(f'Skipping downloaded file: {pfn}')
         return
 
-    log.debug(f'Downloading: {pfn} -> {out_path}')
+    log.debug(f'   {pfn}'     )
+    log.debug(f'   {out_path}')
     if Data.drun:
         return
 
