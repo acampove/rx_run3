@@ -28,6 +28,13 @@ where:
     - Find place in EOS where to put outputs
 `Y:` Username in LXPLUS of user whose virtual environment will be used. If you haven't made any virtual environment, use `acampove`.
 
+It is recommended that you make a grid proxy afterwards with:
+
+```bash
+# Validity of 100 hours
+dirac-proxy-init -v 100:00
+```
+
 # Submitting jobs
 
 ## Check latest version of virtual environment
