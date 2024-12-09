@@ -79,7 +79,7 @@ def _get_pfn_sublist(l_pfn):
         log.debug('Downloading random {Data.nfile} files')
         l_pfn = random.sample(l_pfn, Data.nfile)
     else:
-        log.debug('Downloading first {Data.nfile} files')
+        log.debug(f'Downloading first {Data.nfile} files')
         l_pfn = l_pfn[:Data.nfile]
 
     return l_pfn
