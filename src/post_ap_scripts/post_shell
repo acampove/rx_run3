@@ -45,6 +45,19 @@ make_rcfile()
     echo "export CLXNAME=$CLXNAME"                >> $RCFILE
 }
 # ------------------------------------------------------------------
+check_vars()
+{
+    if [[ -z $ULXNAME ]];then
+        echo "ULXNAME was not set"
+        exit 1
+    fi
+
+    if [[ -z $CLXNAME ]];then
+        echo "CLXNAME was not set"
+        exit 1
+    fi
+}
+# ------------------------------------------------------------------
 lb_dirac()
 {
     # Will create a shell with dirac and some basic environment specified by .bashrc_dirac
@@ -79,5 +92,6 @@ lhcb_env()
 }
 # ------------------------------------------------------------------
 get_opts "$@"
+check_vars
 make_rcfile
 lb_dirac
