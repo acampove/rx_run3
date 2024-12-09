@@ -66,7 +66,7 @@ check_vars()
 # ------------------------------------------------------------------
 lb_dirac()
 {
-    # Will create a shell with dirac and some basic environment specified by .bashrc_dirac
+    # Will create a shell with dirac and some basic environment specified by rc file 
     
     which lb-dirac > /dev/null 2>&1
 
@@ -75,8 +75,8 @@ lb_dirac()
         lhcb_env
     fi
 
-    if [[ ! -f $HOME/.bashrc_dirac ]];then
-        echo "Cannnot find ~/.bashrc_dirac"
+    if [[ ! -f $RCFILE ]];then
+        echo "Cannot find $RCFILE"
         exit 1
     fi
 
