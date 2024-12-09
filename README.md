@@ -102,6 +102,7 @@ options:
   -n NFILE, --nfile NFILE
                         Number of files to download
   -d DEST, --dest DEST  Destination directory will override whatever is in DOWNLOAD_NTUPPATH
+  -e EOSN, --eosn EOSN  username from whom to download the ntuples, e.g. acampove
   -t, --test            Runs a test run
   -l {10,20,30,40}, --log {10,20,30,40}
                         Log level, default 20
@@ -113,10 +114,11 @@ options:
 A real download would look like:
 
 ```bash
-run3_download_ntuples -j dec_06_2024_data -m 40
+run3_download_ntuples -j dec_06_2024_data -m 40 -n username
 ```
 
 Where `-m` denotes the number of threads used to download, `-j` the name of the job.
+If `acampove` made these ntuples, they will go to his directory in EOS, thus `-n acampove` should be used.
 
 # Removing old outputs
 
