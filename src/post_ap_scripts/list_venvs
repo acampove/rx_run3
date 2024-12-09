@@ -41,16 +41,16 @@ check_env()
         exit 1
     fi
 
-    if [[ -z $LXNAME ]];then
-        echo "LXNAME variable not set"
+    if [[ -z $CLXNAME ]];then
+        echo "CLXNAME variable not set"
         exit 1
     fi
 }
 # -------------------------------
 print_latest()
 {
-    dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv > /dev/null 2>&1
-    LFNNAME=lhcb-user-${LXNAME:0:1}-$LXNAME-run3-venv.lfns
+    dirac-dms-user-lfns -w dcheck.tar -b /lhcb/user/${CLXNAME:0:1}/$CLXNAME/run3/venv > /dev/null 2>&1
+    LFNNAME=lhcb-user-${CLXNAME:0:1}-$CLXNAME-run3-venv.lfns
     tail -n $NLINES $LFNNAME
     rm $LFNNAME
 }
