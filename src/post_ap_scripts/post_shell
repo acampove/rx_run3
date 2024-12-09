@@ -13,12 +13,14 @@ display_help()
 get_opts()
 {
     TEST=1
-    while getopts :hf: option; do 
+    while getopts :hf:u:c: option; do 
         case "${option}" in
             h)  
                 display_help
                 exit 0
                 ;;  
+            u)  ULXNAME=${OPTARG};;
+            c)  CLXNAME=${OPTARG};;
            \?)  echo "Invalid option: -${OPTARG}"
                 display_help
                 exit 1
@@ -43,6 +45,10 @@ make_rcfile()
     echo "# This will be your username in LXPLUS" >> $RCFILE
     echo "export ULXNAME=$ULXNAME"                >> $RCFILE
     echo "export CLXNAME=$CLXNAME"                >> $RCFILE
+
+    echo "Using"
+    echo "  ULXNAME: $ULXNAME"
+    echo "  CLXNAME: $CLXNAME"
 }
 # ------------------------------------------------------------------
 check_vars()
