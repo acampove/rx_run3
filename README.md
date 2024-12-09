@@ -8,8 +8,25 @@ This project is used to:
 
 This is done using configurations in a YAML file and through DIRAC jobs.
 
-Check [this](doc/install.md) for installation instructions
-and for instructions on how to setup an environment to use this project.
+## Installation
+
+This project can be installed from pypi with:
+
+```bash
+pip install post_ap
+```
+
+in order for it to run one needs to setup a shell with the right environment, this is done with:
+
+```bash
+post_shell -u X -c Y
+```
+
+where:
+
+`X:` User name in LXPLUS or current user, needed to:
+    - Find place in EOS where to put outputs
+`Y:` Username in LXPLUS of user whose virtual environment will be used. If you haven't made any virtual environment, use `acampove`.
 
 # Submitting jobs
 
@@ -20,12 +37,6 @@ latest version of this environment. To know the latest versions, run:
 
 ```bash
 list_venvs
-```
-
-Unless you have made your own tarballs: 
-
-```bash
-export LXNAME=acampove
 ```
 
 should have been ran before using `list_venvs`.
