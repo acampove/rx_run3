@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ------------------------------------------------------------------
-diplay_help()
+display_help()
 {
     echo "Utility needed to setup shell environment where to use post_ap scripts"
     echo ""
