@@ -103,7 +103,7 @@ def _get_args():
     parser.add_argument('-j', '--jobn' , type=str, help='Job name, used to find directory, e.g. flt_001', required=True)
     parser.add_argument('-n', '--nfile', type=int, help='Number of files to download', default=-1)
     parser.add_argument('-d', '--dest' , type=str, help='Destination directory will override whatever is in DOWNLOAD_NTUPPATH')
-    parser.add_argument('-e', '--eosn' , type=str, help='Username associated to path in EOS from which ntuples will be downloaded')
+    parser.add_argument('-e', '--eosn' , type=str, help='Username associated to path in EOS from which ntuples will be downloaded', required=True)
     parser.add_argument('-t', '--test' , help='Runs a test run', action='store_true')
     parser.add_argument('-l', '--log'  , type=int, help='Log level, default 20', choices=[10, 20, 30, 40], default=20)
     parser.add_argument('-r', '--ran'  , type=int, help='When picking a subset of files, with -n, pick them randomly (1) or the first files (0 default)', choices=[0, 1], default=0)
