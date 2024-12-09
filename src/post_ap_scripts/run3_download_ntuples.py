@@ -7,6 +7,7 @@ import os
 import math
 import random
 import argparse
+from typing import Union
 
 from concurrent.futures     import ThreadPoolExecutor
 from dataclasses            import dataclass
@@ -29,12 +30,12 @@ class Data:
     job_dir : str
     nfile   : int
     log_lvl : int
-    dst_dir : str
+    dst_dir : Union[str, None]
     lxname  : str
     eos_dir : str
+    drun    : bool
 
     ran_pfn : int
-    test    = False
     server  = 'root://eoslhcb.cern.ch/'
     eos_clt = clt.FileSystem(server)
     nthread = 1
@@ -47,7 +48,7 @@ def _download(pfn : str) -> None:
         return
 
     log.debug(f'Downloading: {pfn} -> {out_path}')
-    if Data.test:
+    if Data.drun:
         return
 
     xrd_client = clt.FileSystem(pfn)
@@ -102,19 +103,20 @@ def _get_args():
     parser = argparse.ArgumentParser(description='Script used to download ntuples from EOS')
     parser.add_argument('-j', '--jobn' , type=str, help='Job name, used to find directory, e.g. flt_001', required=True)
     parser.add_argument('-n', '--nfile', type=int, help='Number of files to download', default=-1)
-    parser.add_argument('-d', '--dest' , type=str, help='Destination directory will override whatever is in DOWNLOAD_NTUPPATH')
+    parser.add_argument('-p', '--dest' , type=str, help='Destination directory will override whatever is in DOWNLOAD_NTUPPATH')
+    parser.add_argument('-d', '--dryr' , type=str, help='If used, it will skip downloads, but do everything else', action='store_true')
     parser.add_argument('-e', '--eosn' , type=str, help='Username associated to path in EOS from which ntuples will be downloaded', required=True)
-    parser.add_argument('-t', '--test' , help='Runs a test run', action='store_true')
     parser.add_argument('-l', '--log'  , type=int, help='Log level, default 20', choices=[10, 20, 30, 40], default=20)
     parser.add_argument('-r', '--ran'  , type=int, help='When picking a subset of files, with -n, pick them randomly (1) or the first files (0 default)', choices=[0, 1], default=0)
     parser.add_argument('-m', '--mth'  , type=int, help=f'Number of threads to use for downloading, default {Data.nthread}', default=Data.nthread)
+
     args = parser.parse_args()
 
     Data.job_dir = args.jobn
     Data.dst_dir = args.dest
     Data.nfile   = args.nfile
     Data.lxname  = args.eosn
-    Data.test    = args.test
+    Data.drun    = args.dryr
     Data.log_lvl = args.log
     Data.ran_pfn = args.ran
     Data.nthread = args.mth
