@@ -429,12 +429,10 @@ class FilterFile:
 
         for line_name, rdf in tqdm.tqdm(d_rdf.items(), ascii=' -'):
             l_branch  = rdf.l_branch
-            tree_name = self._tree_name_from_line_name(line_name)
             file_path = self._get_out_file_name(line_name)
 
-            rdf.Snapshot(tree_name, file_path, l_branch, opts)
-
-            log.debug(f'Saved: {file_path}:{tree_name}')
+            rdf.Snapshot('DecayTree', file_path, l_branch, opts)
+            log.debug(f'Saved: {file_path}')
 
             self._save_contents(file_path)
 
