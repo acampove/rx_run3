@@ -137,7 +137,12 @@ class FilterFile:
         l_flt = [ flt           for flt in l_hlt if flt in l_tree_name  ]
 
         nline = len(l_flt)
-        log.info(f'Found {nline} lines in file that match config')
+        if nline == 0:
+            log.warning(f'Found {nline} lines in file that match config')
+            ifile.ls()
+        else:
+            log.info(f'Found {nline} lines in file that match config')
+
         for line in l_flt:
             log.debug(f'{"":<10}{line:<30}')
 
