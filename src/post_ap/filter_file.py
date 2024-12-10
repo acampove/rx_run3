@@ -400,19 +400,6 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
-    def _tree_name_from_line_name(self, line_name : str) -> str:
-        '''
-        Given a line name, it will check the config file to return KEE or KMM
-        to decide where the tree will be saved.
-        '''
-        d_cfg  = self._d_trans['saving']['tree_name']
-        for tree_name, l_line_line in d_cfg.items():
-            if line_name in l_line_line:
-                log.debug(f'Using tree name {tree_name} for line {line_name}')
-                return tree_name
-
-        raise ValueError(f'No tree name found for line \"{line_name}\"')
-    # --------------------------------------
     def _get_out_file_name(self, line_name : str) -> str:
         file_path = self._file_path.encode('utf-8')
 
