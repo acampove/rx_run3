@@ -127,14 +127,14 @@ class FilterFile:
 
         self._has_lumitree = 'lumiTree' in l_nam
 
-        l_hlt = [ hlt           for hlt in l_nam if hlt.startswith('Hlt2RD_') ]
+        l_hlt = [ hlt for hlt in l_nam if self._is_reco_dir(hlt) ]
         nline = len(l_hlt)
         log.info(f'Found {nline} lines in file:')
         for line in l_hlt:
             log.debug(f'{"":<10}{line:<30}')
 
         l_tree_name = self._get_names_from_config()
-        l_flt = [ flt           for flt in l_hlt if flt in l_tree_name  ]
+        l_flt = [ flt for flt in l_hlt if flt in l_tree_name  ]
 
         nline = len(l_flt)
         if nline == 0:
@@ -453,6 +453,12 @@ class FilterFile:
 
         log.debug(f'Saved {tree_path}')
     # --------------------------------------
+    def _is_reco_dir(self, dir_name : str) -> bool:
+        is_turbo_reco = dir_name.startswith('Hlt2RD_')
+        is_spruc_reco = dir_name.startswith('SpruceRD_')
+
+        return is_turbo_reco or is_spruc_reco
+    # --------------------------------------
     def _get_ext_tree_path(self) -> Union[str,None]:
         '''
         Will return path of tree that is not Hlt2 one
@@ -462,8 +468,8 @@ class FilterFile:
         l_key = ifile.GetListOfKeys()
         l_obj = [ key.ReadObj() for key in l_key ]
 
-        l_dir = [ obj for obj in l_obj if        obj.InheritsFrom('TDirectoryFile') ]
-        l_dir = [ obj for obj in l_dir if not str(obj.GetName()).startswith('Hlt2') ]
+        l_dir = [ obj for obj in l_obj if   obj.InheritsFrom('TDirectoryFile') ]
+        l_dir = [ obj for obj in l_dir if not self._is_reco_dir(obj.GetName()) ]
 
         l_tre = [ obj for obj in l_obj if obj.InheritsFrom('TTree')          ]
 
