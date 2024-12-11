@@ -512,10 +512,7 @@ class FilterFile:
         '''
         self._initialize()
 
-        log.debug(f'Filtering: {self._file_path}')
-        log.debug(100 * '-')
-        log.debug(f'{"Line":<50}{"BOrg":<10}{"":5}{"BFnl":<10}{"#Org":<10}{"":5}{"#Fnl":<10}')
-        log.debug(100 * '-')
+        log.info(f'Filtering: {self._file_path}')
         d_rdf = { tree_name : self._get_rdf(tree_name) for tree_name in self._l_line_name }
 
         if not skip_saving:
