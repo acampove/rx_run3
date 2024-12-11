@@ -197,12 +197,6 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
-    def _rename_branches(self, rdf : RDataFrame) -> RDataFrame:
-        rdf = self._rename_kaon_branches(rdf)
-        rdf = self._rename_mapped_branches(rdf)
-
-        return rdf
-    # --------------------------------------
     def _define_branches(self, rdf : RDataFrame) -> RDataFrame:
         '''
         Will take dataframe and define columns if "define" field found in config
