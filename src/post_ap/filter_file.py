@@ -294,9 +294,9 @@ class FilterFile:
         log.info('')
 
         rdf      = RDataFrame(f'{line_name}/DecayTree', self._file_path)
+        rdf      = self._define_branches(rdf)
         rdf      = self._define_heads(rdf)
         rdf      = self._rename_branches(rdf)
-        rdf      = self._define_branches(rdf)
         rdf.lumi = False
         rdf      = self._attach_branches(rdf, line_name)
         l_branch = rdf.l_branch
