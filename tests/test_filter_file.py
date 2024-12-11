@@ -43,7 +43,7 @@ def test_dt(is_turbo : bool):
 
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents = True
-    obj.run()
+    obj.run(skip_saving=True)
 # --------------------------------------
 @pytest.mark.parametrize('is_turbo' , [True, False])
 def test_mc(is_turbo : bool):
@@ -55,5 +55,5 @@ def test_mc(is_turbo : bool):
 
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents = True
-    obj.run()
+    obj.run(skip_saving=True)
 # --------------------------------------
