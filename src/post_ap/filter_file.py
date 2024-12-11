@@ -363,6 +363,10 @@ class FilterFile:
 
         line_name used to name file where branches will be saved.
         '''
+        log.debug(110 * '-')
+        log.info('Getting list of branches to keep')
+        log.debug(110 * '-')
+
         l_col = self._get_column_names(rdf)
         ninit = len(l_col)
         l_flt = [ flt for flt in l_col if self._keep_branch(flt) ]
