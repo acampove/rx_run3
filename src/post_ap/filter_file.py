@@ -240,8 +240,7 @@ class FilterFile:
     # --------------------------------------
     def _define_heads(self, rdf : RDataFrame) -> RDataFrame:
         '''
-        Will take dataframe and define columns starting with head in _l_head to B_
-        Returns dataframe
+        In datafrme will define columns starting with head in _l_head to B_
         '''
         log.info('Defining heads')
 
