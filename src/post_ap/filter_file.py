@@ -496,9 +496,11 @@ class FilterFile:
         obj.save()
     # --------------------------------------
     @gut.timeit
-    def run(self) -> None:
+    def run(self, skip_saving : bool = False) -> None:
         '''
         Will run filtering of files
+
+        skip_saving: By default false, if true, it won't save the ROOT file, useful when testing
         '''
         self._initialize()
 
@@ -508,5 +510,6 @@ class FilterFile:
         log.debug(100 * '-')
         d_rdf = { tree_name : self._get_rdf(tree_name) for tree_name in self._l_line_name }
 
-        self._save_file(d_rdf)
+        if not skip_saving:
+            self._save_file(d_rdf)
 # --------------------------------------
