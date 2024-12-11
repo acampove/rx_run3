@@ -246,32 +246,32 @@ class FilterFile:
 
         d_redef = self._d_trans['redefine_head']
         l_name  = self._get_column_names(rdf)
-        for org_head, trg_head in d_redef.items():
-            l_to_redefine = [ name for name in l_name if name.startswith(org_head) ]
+        for old_head, new_head in d_redef.items():
+            l_to_redefine = [ name for name in l_name if name.startswith(old_head) ]
             if len(l_to_redefine) == 0:
-                log.debug(f'Head {org_head} not found, skipping')
+                log.debug(f'Head {old_head} not found, skipping')
                 continue
 
-            rdf = self._define_head(rdf, l_to_redefine, org_head, trg_head)
+            rdf = self._define_head(rdf, l_to_redefine, old_head, new_head)
 
         return rdf
     # --------------------------------------
-    def _define_head(self, rdf : RDataFrame, l_name : list, org_head : str, trg_head : str) -> RDataFrame:
+    def _define_head(self, rdf : RDataFrame, l_name : list, old_head : str, new_head : str) -> RDataFrame:
         '''
         Will define list of columns with a target head (e.g. B_some_name) from some original head (e.g. Lb_some_name)
         '''
 
-        log.debug(f'Original: {org_head}')
-        log.debug(f'Target:   {trg_head}')
+        log.debug(f'Old: {old_head}')
+        log.debug(f'New: {new_head}')
         log.debug(155 * '-')
-        log.debug(f'{"Original":<70}{"--->":<15}{"New":<70}')
+        log.debug(f'{"Old":<70}{"--->":<15}{"New":<70}')
         log.debug(155 * '-')
-        for org_name in l_name:
-            tmp_name = org_name.removeprefix(org_head)
-            trg_name = f'{trg_head}{tmp_name}'
+        for old_name in l_name:
+            tmp_name = old_name.removeprefix(old_head)
+            new_name = f'{new_head}{tmp_name}'
 
-            log.debug(f'{org_name:<70}{"--->":<15}{trg_name:<70}')
-            rdf      = rdf.Define(trg_name, org_name)
+            log.debug(f'{old_name:<70}{"--->":<15}{new_name:<70}')
+            rdf      = rdf.Define(new_name, old_name)
 
         return rdf
     # --------------------------------------
