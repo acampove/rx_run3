@@ -178,25 +178,7 @@ class FilterFile:
 
         return l_name
     # --------------------------------------
-    def _rename_kaon_branches(self, rdf : RDataFrame) -> RDataFrame:
-        '''
-        Will define K_ = H_ for kaon branches. K_ branches will be dropped later
-        '''
-
-        l_name = self._get_column_names(rdf)
-        l_kaon = [ name for name in l_name if name.startswith('K_') ]
-
-        log.debug(110 * '-')
-        log.info('Renaming kaon branches')
-        log.debug(110 * '-')
-        for old in l_kaon:
-            new = 'H_' + old[2:]
-            log.debug(f'{old:<50}{"->":10}{new:<50}')
-            rdf = rdf.Define(new, old)
-
-        return rdf
-    # --------------------------------------
-    def _rename_mapped_branches(self, rdf : RDataFrame) -> RDataFrame:
+    def _rename_branches(self, rdf : RDataFrame) -> RDataFrame:
         '''
         Will define branches from mapping in config. Original branches will be dropped later
         '''
