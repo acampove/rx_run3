@@ -399,6 +399,9 @@ class FilterFile:
         file_name = file_name.replace('_hlt1bug_'  , '_')
         file_name = file_name.replace('_pythia8_'  , '_')
 
+        # Remove commas, for sprucing
+        file_name = file_name.replace(        ','  ,  '')
+
         return file_name
     # --------------------------------------
     def _save_file(self, d_rdf : dict[str,RDataFrame]) -> None:
