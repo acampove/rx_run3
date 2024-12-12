@@ -80,18 +80,9 @@ VENV=$6
 UNAM=$7
 
 set_vars
+check_vars
 rename_paths
-
-if [[ ! -f $CONF ]];then
-    echo "Cannot find $CONF in:"
-    ls
-    exit 1
-fi
-
-if [[ ! -f $PFN_PATH ]];then
-    ls
-    exit 1
-fi
+untar_venv
 
 dcheck/run bash -c "export PFN_PATH=$PFN_PATH && export CONFIG_PATH=$CONF && export LXNAME=$UNAM && filter_ntuples -p $PROD -s $SAMP -g $NJOB -i $IJOB -l 10"
 
