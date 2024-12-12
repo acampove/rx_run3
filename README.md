@@ -46,10 +46,10 @@ from post_ap.pfn_reader        import PFNReader
 For this one would run a line like:
 
 ```bash
-job_filter_ganga -n job_name -N NJOBS -p PRODUCTION -s SAMPLE -c /path/to/config/file.yaml -b BACKEND -v VERSION_OF_ENV 
+job_filter_ganga -n job_name -p PRODUCTION -s SAMPLE -c /path/to/config/file.yaml -b BACKEND -v VERSION_OF_ENV 
 ```
-
-The code used to filter reside in the grid and the only thing the user has to do is to provide the latest version
+- The number of jobs will be equal to the number of PFNs, up to 500 jobs.
+- The code used to filter reside in the grid and the only thing the user has to do is to provide the latest version
 
 ## Check latest version of virtual environment
 
