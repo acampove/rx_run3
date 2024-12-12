@@ -30,4 +30,5 @@ script-files=[
 'src/post_ap_scripts/list_venvs',
 'src/post_ap_scripts/remove_job',
 'src/post_ap_scripts/post_shell',
+'src/post_ap_scripts/job_filter_ganga',
 ]
