@@ -4,38 +4,51 @@ This project is used to:
 
 - Filter, slim, trim the trees from a given AP production
 - Rename branches
-- Download the outputs
 
-This is done using configurations in a YAML file and through DIRAC jobs.
+This is done using configurations in a YAML file and through Ganga jobs.
 
 ## Installation
 
-This project can be installed from pypi with:
+This project cannot be installed and used from within a virtual environment. It depends on Ganga
+and therefore one has to be installed in `$HOME/.local/` for this do:
 
 ```bash
+. cvmfs/lhcb.cern.ch/lib/LbEnv
+
+# Will install a few projects on top of what is already in the LHCb environment
 pip install post_ap
+
+# Make a proxy that lasts 100 hours
+lhcb-proxy-init -v 100:00
 ```
 
-in order for it to run one needs to setup a shell with the right environment, this is done with:
+In order to make Ganga aware of the `post_ap` package do:
 
-```bash
-post_shell -u X -c Y
+```python
+import sys
+import os
+
+home_dir = os.environ['HOME']
+sys.path.append(f'{home_dir}/.local/lib/python3.12/site-packages')
 ```
 
-where:
+in `.ganga.py`, where the path will depend on the version of python used by the LHCb environment.
 
-`X:` User name in LXPLUS or current user, needed to:
-    - Find place in EOS where to put outputs
-`Y:` Username in LXPLUS of user whose virtual environment will be used. If you haven't made any virtual environment, use `acampove`.
-
-It is recommended that you make a grid proxy afterwards with:
+To check that this is working, open ganga and run:
 
 ```bash
-# Validity of 100 hours
-dirac-proxy-init -v 100:00
+from post_ap.pfn_reader        import PFNReader
 ```
 
 # Submitting jobs
+
+For this one would run a line like:
+
+```bash
+job_filter_ganga -n job_name -N NJOBS -p PRODUCTION -s SAMPLE -c /path/to/config/file.yaml -b BACKEND -v VERSION_OF_ENV 
+```
+
+The code used to filter reside in the grid and the only thing the user has to do is to provide the latest version
 
 ## Check latest version of virtual environment
 
@@ -43,94 +56,27 @@ The jobs below will run with code from a virtual environment that is already in 
 latest version of this environment. To know the latest versions, run:
 
 ```bash
+# In a separate terminal open a shell with access to dirac
+post_shell
+
+# Run this command for a list of environmets
 list_venvs
 ```
 
-should have been ran before using `list_venvs`.
+The `post_shell` terminal won't be used to send jobs.
 
-## Submit jobs
+## Config file
 
-To run the filtering, after properly installing the project, as shown [here](doc/install.md) do:
+Here is where all the configuration goes and an example of a config can be found [here](https://github.com/acampove/config_files/blob/main/post_ap/v3.yaml)
 
-```bash
-# Local will create a local sandbox, use wms to send to the grid
+## Optional
 
-# For data, this will process a single PFN locally
-job_filter -n test_job -p rd_ap_2024 -s       data -c /home/acampove/Packages/config_files/post_ap/v3.yaml -e 025 -u acampove -m local -t
-
-# For data, this will process all the PFNs in the grid 
-job_filter -n data_job -p rd_ap_2024 -s       data -c /home/acampove/Packages/config_files/post_ap/v3.yaml -e 025 -u acampove -m wms
-
-# For MC, this will process all the PFNs in the grid 
-job_filter -n mc_job   -p rd_ap_2024 -s simulation -c /home/acampove/Packages/config_files/post_ap/v3.yaml -e 025 -u acampove -m wms
-```
-
-where the options mean:
+- In order to improve the ganga experience use: 
 
 ```bash
-  -h, --help            show this help message and exit
-  -n NAME  --name NAME  Name of job, needed for dirac naming and to name output
-  -p PROD, --prod PROD  Name of production, e.g. rd_ap_2024, this shoudl be the same as in the config section.
-  -s SAMP, --samp SAMP  Sample nickname found in the config section `samples`
-  -c CONF, --conf CONF  Path to config file, which should be a YAML file and a few examples are linked below.
-  -e VENV, --venv VENV  Index of virtual environment, e.g. 023
-  -u USER, --user USER  User associated to venv, currently acampove should be the only choice, but if you author your own virtual environment and upload it, then this should be your user name
-  -d DRYR, --dryr DRYR  If used, submission will be skipped, needed for debugging.
-  -M MAXJ, --maxj MAXJ  Maximum number of jobs, default 500. If 1000 PFNs are found, will do 500 jobs, if 100 PFNs are found, will do 100 jobs
-  -m {local,wms}, --mode {local,wms} Run locally (for tests) or in the grid
-  -t       --test       If used, will send only one job
+# Minimizes messages when opening ganga
+# Does not start monitoring of jobs by default
+alias ganga='ganga --quiet --no-mon'
 ```
 
-Regarding the name, the output will go to a directory in EOS named `JOBNAME_SAMPLENAME`, e.g. `test_001_data` if
-`-n test_001` is used with `-s data` sample.
-Some config files can be found [here](https://github.com/acampove/config_files/tree/main/post_ap)
-
-# Downloading ntuples
-
-A test would look like:
-
-```bash
-run3_download_ntuples -j dec_06_2024_data -n 20 -r 1 -m 5 [-d $PWD/files]
-```
-
-where:
-
-```bash
-options:
-  -h, --help            show this help message and exit
-  -j JOBN, --jobn JOBN  Job name, used to find directory, e.g. flt_001
-  -n NFILE, --nfile NFILE
-                        Number of files to download
-  -d DEST, --dest DEST  Destination directory will override whatever is in DOWNLOAD_NTUPPATH
-  -e EOSN, --eosn EOSN  username from whom to download the ntuples, e.g. acampove
-  -t, --test            Runs a test run
-  -l {10,20,30,40}, --log {10,20,30,40}
-                        Log level, default 20
-  -r {0,1}, --ran {0,1}
-                        When picking a subset of files, with -n, pick them randomly (1) or the first files (0 default)
-  -m MTH, --mth MTH     Number of threads to use for downloading, default 1
-```
-
-A real download would look like:
-
-```bash
-run3_download_ntuples -j dec_06_2024_data -m 40 -n username
-```
-
-Where `-m` denotes the number of threads used to download, `-j` the name of the job.
-If `acampove` made these ntuples, they will go to his directory in EOS, thus `-n acampove` should be used.
-
-# Removing old outputs
-
-If outputs of old jobs need to be removed, it can be done with:
-
-```bash
-remove_job -n job_name -s sample_name
-```
-
-from the examples above this could look like:
-
-```bash
-remove_job -n dec_08_2024 -s simulation 
-```
-
+in the `$HOME/.bashrc` file. Monitoring can be turned on by hand as explained [here](https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FAQ/GangaLHCbFAQ#How_can_I_run_the_monitoring_loo)
