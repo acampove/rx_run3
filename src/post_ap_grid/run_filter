@@ -33,6 +33,29 @@ rename_paths()
     echo "Renamed paths"
 }
 #--------------------------------------
+check_vars()
+{
+    echo "Running with args: $@"
+
+    if [[ ! -f $TARP ]];then
+        echo "Cannot find \"$CONF\" in:"
+        ls
+        exit 1
+    fi
+
+    if [[ ! -f $CONF ]];then
+        echo "Cannot find \"$CONF\" in:"
+        ls
+        exit 1
+    fi
+
+    if [[ ! -f $PFN_PATH ]];then
+        echo "Cannot find \"$PFN_PATH\" in:"
+        ls
+        exit 1
+    fi
+}
+#--------------------------------------
 PROD=$1
 SAMP=$2
 CONF=$3
