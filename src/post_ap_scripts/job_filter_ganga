@@ -26,7 +26,6 @@ class Data:
     '''
     Class used to share data
     '''
-    user     : str
     name     : str
     prod     : str
     samp     : str
@@ -39,6 +38,7 @@ class Data:
     cfg      : dict
 
     env_path = '/home/acampove/VENVS'
+    user     = 'acampove'
     pfn_path = '/tmp/pfns.json'
     runner   = 'run_filter'
     platform = 'x86_64-centos7-gcc8-opt'
@@ -107,7 +107,6 @@ def _parse_args() -> None:
     parser.add_argument('-b' , '--back', type=str, help='Backend'            , choices=['Interactive', 'Local', 'Dirac'], default='Interactive')
     parser.add_argument('-t' , '--test',           help='Will run one job only if used'                       , action='store_true')
     parser.add_argument('-v' , '--venv', type=str, help='Version of virtual environment used to run filtering', required=True)
-    parser.add_argument('-u' , '--user', type=str, help='LXPLUS user name for author of environmet'           , default='acampove')
     args = parser.parse_args()
 
     Data.name = args.name
@@ -117,7 +116,6 @@ def _parse_args() -> None:
     Data.conf = args.conf
     Data.back = args.back
     Data.venv = args.venv
-    Data.user = args.user
     Data.test = args.test
 # -------------------------------------------------
 def _get_executable() -> Executable:
