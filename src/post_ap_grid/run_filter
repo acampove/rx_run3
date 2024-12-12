@@ -81,9 +81,9 @@ UNAM=$7
 
 set_vars
 check_vars
-rename_paths
 untar_venv
 
+rename_paths
 dcheck/run bash -c "export PFN_PATH=$PFN_PATH && export CONFIG_PATH=$CONF && export LXNAME=$UNAM && filter_ntuples -p $PROD -s $SAMP -g $NJOB -i $IJOB -l 10"
 
 echo "Sandbox: "
