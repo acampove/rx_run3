@@ -11,12 +11,14 @@ set_vars()
 
     echo "Setting paths to sandbox files"
     export PFN_PATH=$PWD/pfns.json
+
+    echo "Setting environment name"
+    export ENVNAME=dcheck
+    export TARP=dcheck.tar
 }
 #--------------------------------------
 rename_paths()
 {
-    ENVNAME=dcheck
-
     echo "Renaming paths, searching for $VENV/$ENVNAME, in:"
     ls $PWD/$ENVNAME
 
