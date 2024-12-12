@@ -52,9 +52,19 @@ def _initialize() -> None:
 
     _save_pfns()
 # -------------------------------------------------
+def _pfns_to_njob(d_pfn : dict[str, list[str]]) -> int:
+    npfn = 0
+    for l_pfn in d_pfn.values():
+        npfn += len(l_pfn)
+
+    return npfn if npfn < Data.maxj else Data.maxj
+# -------------------------------------------------
 def _save_pfns() -> None:
-    reader = PFNReader(cfg=Data.cfg)
-    d_pfn  = reader.get_pfns(production=Data.prod, nickname=Data.samp)
+    reader    = PFNReader(cfg=Data.cfg)
+    d_pfn     = reader.get_pfns(production=Data.prod, nickname=Data.samp)
+    Data.njob = _pfns_to_njob(d_pfn)
+
+    log.info(f'Will use {Data.njob} jobs')
 
     with open(Data.pfn_path, 'w', encoding='utf-8') as ofile:
         json.dump(d_pfn, ofile, indent=4)
