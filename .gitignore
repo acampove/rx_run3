@@ -185,3 +185,4 @@ Local_*_JobDir/
 *.png
 *.pkl
 *.txt
+job_filter_ganga.py
