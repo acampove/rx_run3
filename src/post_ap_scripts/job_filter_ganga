@@ -40,7 +40,9 @@ class Data:
 
     env_path = '/home/acampove/VENVS'
     pfn_path = '/tmp/pfns.json'
-    runner   = 'run_job'
+    runner   = 'run_filter'
+    platform = 'x86_64-centos7-gcc8-opt'
+    grid_site= 'LCG.CERN.cern'
 # -------------------------------------------------
 def _initialize() -> None:
     Data.env_lfn = f'LFN:/lhcb/user/{Data.user[0]}/{Data.user}/run3/venv/{Data.venv}/dcheck.tar'
