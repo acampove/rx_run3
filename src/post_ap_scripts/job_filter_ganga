@@ -101,7 +101,6 @@ def _get_backend() -> Union[Dirac, Interactive]:
 def _parse_args() -> None:
     parser=argparse.ArgumentParser(description='Script used to send ntuple filtering jobs to the Grid, through ganga')
     parser.add_argument('-n' , '--name', type=str, help='Job name'           , required=True)
-    parser.add_argument('-N' , '--njob', type=int, help='Number of jobs'     , required=True)
     parser.add_argument('-p' , '--prod', type=str, help='Production'         , required=True)
     parser.add_argument('-s' , '--samp', type=str, help='Sample'             , required=True)
     parser.add_argument('-c' , '--conf', type=str, help='Path to config file', required=True)
@@ -111,7 +110,6 @@ def _parse_args() -> None:
     args = parser.parse_args()
 
     Data.name = args.name
-    Data.njob = args.njob
     Data.prod = args.prod
     Data.samp = args.samp
     Data.conf = args.conf
