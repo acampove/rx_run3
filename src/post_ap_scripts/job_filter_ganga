@@ -37,6 +37,7 @@ class Data:
     test     : bool
     cfg      : dict
 
+    maxj     = 500
     env_path = '/home/acampove/VENVS'
     user     = 'acampove'
     pfn_path = '/tmp/pfns.json'
