@@ -14,6 +14,7 @@ display_help()
 get_opts()
 {
     NLINES=5
+    CLXNAME=acampove
     while getopts :hf:n: option; do 
         case "${option}" in
             h)  
@@ -38,11 +39,6 @@ check_env()
     which dirac-dms-user-lfns > /dev/null 2>&1
     if [[ $? -ne 0 ]];then
         echo "Dirac not available, run lb_dirac to be in the right environment"
-        exit 1
-    fi
-
-    if [[ -z $CLXNAME ]];then
-        echo "CLXNAME variable not set"
         exit 1
     fi
 }
