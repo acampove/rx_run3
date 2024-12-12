@@ -79,6 +79,12 @@ def _get_splitter_args() -> list[list]:
 
     return [ [Data.prod, Data.samp, conf, Data.njob, i_job, Data.env_path, Data.user] for i_job in range(njob) ]
 # -------------------------------------------------
+def _get_dirac_backend() -> Dirac:
+    backend = Dirac()
+    backend.settings['Destination'] = Data.grid_site
+
+    return backend
+# -------------------------------------------------
 def _get_backend() -> Union[Dirac, Interactive]:
     if Data.back == 'Interactive':
         return Interactive()
@@ -87,7 +93,7 @@ def _get_backend() -> Union[Dirac, Interactive]:
         return Local()
 
     if Data.back == 'Dirac':
-        return Dirac()
+        return _get_dirac_backend() 
 
     raise ValueError(f'Invalid backend: {Data.back}')
 # -------------------------------------------------
