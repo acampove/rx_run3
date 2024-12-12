@@ -121,8 +121,12 @@ def _parse_args() -> None:
     Data.test = args.test
 # -------------------------------------------------
 def _get_executable() -> Executable:
-    obj     = Executable()
-    obj.exe = File('test_runner')
+    runner_path = files('post_ap_grid').joinpath(Data.runner)
+    runner_path = str(runner_path)
+
+    obj          = Executable()
+    obj.exe      = File(runner_path)
+    obj.platform = Data.platform
 
     return obj
 # -------------------------------------------------
