@@ -1,0 +1,151 @@
+#!/usr/bin/env ganga
+
+'''
+Script used to submit fitering jobs using Ganga
+'''
+import os
+import json
+import argparse
+
+from typing      import Union
+from dataclasses import dataclass
+
+import yaml
+
+from GangaCore.GPI             import Job, Executable, DiracFile, LocalFile, Interactive, GenericSplitter, Dirac, Local, File
+from post_ap.pfn_reader        import PFNReader
+from dmu.logging.log_store     import LogStore
+
+log = LogStore.add_logger('submit_filter')
+
+# pylint: disable=line-too-long,too-many-instance-attributes
+# -------------------------------------------------
+@dataclass
+class Data:
+    '''
+    Class used to share data
+    '''
+    user     : str
+    name     : str
+    prod     : str
+    samp     : str
+    conf     : str
+    venv     : str
+    back     : str
+    env_lfn  : str
+    njob     : int
+    test     : bool
+    cfg      : dict
+
+    env_path = '/home/acampove/VENVS'
+    pfn_path = '/tmp/pfns.json'
+    runner   = 'run_job'
+# -------------------------------------------------
+def _initialize() -> None:
+    Data.env_lfn = f'LFN:/lhcb/user/{Data.user[0]}/{Data.user}/run3/venv/{Data.venv}/dcheck.tar'
+    with open(Data.conf, encoding='utf-8') as ifile:
+        Data.cfg = yaml.safe_load(ifile)
+
+    _save_pfns()
+# -------------------------------------------------
+def _save_pfns() -> None:
+    reader = PFNReader(cfg=Data.cfg)
+    d_pfn  = reader.get_pfns(production=Data.prod, nickname=Data.samp)
+
+    with open(Data.pfn_path, 'w', encoding='utf-8') as ofile:
+        json.dump(d_pfn, ofile, indent=4)
+# -------------------------------------------------
+def _get_splitter() -> GenericSplitter:
+    splitter           = GenericSplitter()
+    splitter.attribute = 'application.args'
+    splitter.values    = _get_splitter_args()
+
+    return splitter
+# -------------------------------------------------
+def _get_splitter_args() -> list[list]:
+    njob = Data.njob
+    # Regardless of how many jobs were specified
+    # Will run only one job if:
+    #
+    # 1. It runs locally
+    # 2. The test flag was passed
+    if Data.back in ['Interactive', 'Local'] or Data.test:
+        njob = 1
+
+    conf = os.path.basename(Data.conf)
+
+    return [ [Data.prod, Data.samp, conf, Data.njob, i_job, Data.env_path, Data.user] for i_job in range(njob) ]
+# -------------------------------------------------
+def _get_backend() -> Union[Dirac, Interactive]:
+    if Data.back == 'Interactive':
+        return Interactive()
+
+    if Data.back == 'Local':
+        return Local()
+
+    if Data.back == 'Dirac':
+        return Dirac()
+
+    raise ValueError(f'Invalid backend: {Data.back}')
+# -------------------------------------------------
+def _parse_args() -> None:
+    parser=argparse.ArgumentParser(description='Script used to send ntuple filtering jobs to the Grid, through ganga')
+    parser.add_argument('-n' , '--name', type=str, help='Job name'           , required=True)
+    parser.add_argument('-N' , '--njob', type=int, help='Number of jobs'     , required=True)
+    parser.add_argument('-p' , '--prod', type=str, help='Production'         , required=True)
+    parser.add_argument('-s' , '--samp', type=str, help='Sample'             , required=True)
+    parser.add_argument('-c' , '--conf', type=str, help='Path to config file', required=True)
+    parser.add_argument('-b' , '--back', type=str, help='Backend'            , choices=['Interactive', 'Local', 'Dirac'], default='Interactive')
+    parser.add_argument('-t' , '--test',           help='Will run one job only if used'                       , action='store_true')
+    parser.add_argument('-v' , '--venv', type=str, help='Version of virtual environment used to run filtering', required=True)
+    parser.add_argument('-u' , '--user', type=str, help='LXPLUS user name for author of environmet'           , default='acampove')
+    args = parser.parse_args()
+
+    Data.name = args.name
+    Data.njob = args.njob
+    Data.prod = args.prod
+    Data.samp = args.samp
+    Data.conf = args.conf
+    Data.back = args.back
+    Data.venv = args.venv
+    Data.user = args.user
+    Data.test = args.test
+# -------------------------------------------------
+def _get_executable() -> Executable:
+    obj     = Executable()
+    obj.exe = File('test_runner')
+
+    return obj
+# -------------------------------------------------
+def _get_output_files() -> list[Union[DiracFile,LocalFile]]:
+    if Data.back in ['Interactive', 'Local']:
+        return [LocalFile('*.root')]
+
+    if Data.back in ['Dirac']:
+        return [DiracFile('*.root')]
+
+    raise ValueError(f'Invalid backend: {Data.back}')
+# -------------------------------------------------
+def _get_job() -> Job:
+    job              = Job(name = Data.name)
+    job.application  = _get_executable()
+    job.inputfiles   = [ LocalFile(Data.conf), LocalFile(Data.pfn_path), DiracFile(Data.env_lfn) ]
+    job.splitter     = _get_splitter()
+    job.backend      = _get_backend()
+    job.outputfiles  = _get_output_files()
+
+    return job
+# -------------------------------------------------
+def main():
+    '''
+    Script starts here
+    '''
+    _parse_args()
+    _initialize()
+
+    job=_get_job()
+    job.prepare()
+    job.submit()
+# -------------------------------------------------
+if __name__ == 'GangaCore.GPI':
+    main()
