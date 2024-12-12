@@ -56,6 +56,21 @@ check_vars()
     fi
 }
 #--------------------------------------
+untar_venv()
+{
+    if [[ -d $ENVNAME ]];then
+        echo "Untarred directory with environment found, not untarring"
+        return
+    fi
+
+    if [[ ! -f $TARP ]];then
+        echo "Cannot find tarred virtual environment \"$TARP\""
+        exit 1
+    fi
+
+    tar -xf $TARP
+}
+#--------------------------------------
 PROD=$1
 SAMP=$2
 CONF=$3
