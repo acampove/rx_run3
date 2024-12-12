@@ -30,6 +30,7 @@ import os
 
 home_dir = os.environ['HOME']
 sys.path.append(f'{home_dir}/.local/lib/python3.12/site-packages')
+sys.path.append('/cvmfs/lhcb.cern.ch/lib/var/lib/LbEnv/3386/stable/linux-64/lib/python3.12/site-packages')
 ```
 
 in `.ganga.py`, where the path will depend on the version of python used by the LHCb environment.
