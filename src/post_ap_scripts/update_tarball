@@ -42,6 +42,25 @@ check()
     fi
 }
 #--------------------------------
+check_existing()
+{
+    LFN=$1
+
+    dirac-dms-lfn-replicas $LFN > /dev/null
+    if   [[ $? -eq 0 ]] && [[ $UPDATE -eq 1 ]];then
+        echo "LFN found, removing: \"$LFN\""
+        dirac-dms-remove-files $LFN
+    elif [[ $? -eq 0 ]] && [[ $UPDATE -eq 0 ]];then
+        echo "LFN found: \"$LFN\""
+        exit 1
+    elif [[ $? -ne 0 ]];then
+        echo "No replica found for \"$LFN\""
+    else
+        echo "Replica finding process exited with status $? and the updating flag was $UPDATE"
+        exit 1
+    fi
+}
+#---------------------------------
 upload()
 {
     if [[ -z $VENV_VERS ]];then
@@ -51,6 +70,8 @@ upload()
 
     SOURCE=$VENVS/dcheck.tar 
     TARGET=LFN:/lhcb/user/${CLXNAME:0:1}/$CLXNAME/run3/venv/$VENV_VERS/dcheck.tar
+
+    check_existing $TARGET
 
     echo "Uploading tarball for $TARGET"
     dirac-dms-add-file $TARGET $SOURCE CERN-USER
