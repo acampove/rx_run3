@@ -130,10 +130,10 @@ install_pkg()
 
     if [[ -z $VERS ]];then
         echo "Installing latest version of $NAME"
-        pip install $NAME        > /dev/null 2>&1
+        pip install --no-dependencies --force-reinstall $NAME        > /dev/null 2>&1
     else
         echo "Installing $VERS version of $NAME"
-        pip install $NAME==$VERS > /dev/null 2>&1
+        pip install --no-dependencies --force-reinstall $NAME==$VERS > /dev/null 2>&1
     fi
 
     check "Could not install $NAME"
