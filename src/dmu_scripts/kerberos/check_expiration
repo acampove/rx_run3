@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+: '
+This script is meant to check the expiration date of a grid certificate
+
+Usage:
+
+./check_expiration
+'
+
+check()
+{
+    PEMFILE=$1
+    if [[ ! -f $PEMFILE ]];then
+        echo "Cannot find PEM file: $PEMFILE"
+    fi
+
+    openssl x509 -enddate -noout -in $PEMFILE 
+}
+
+check usercert.pem

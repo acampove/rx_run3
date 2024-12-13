@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+: '
+This script is used to convert p12 grid certificate files into PEM files
+
+Usage:
+
+./convert_certificate cert.p12
+'
+
+CERTIFICATE=$1
+
+if [[ ! -f $CERTIFICATE  ]];then
+    echo "ERROR::Certificate \"$CERTIFICATE\" does not exist."
+    kill -INT $$
+fi
+
+openssl pkcs12 -in $CERTIFICATE -clcerts -nokeys -out usercert.pem
+openssl pkcs12 -in $CERTIFICATE -nocerts -out userkey.pem
+chmod 400 userkey.pem
+chmod 444 usercert.pem
+
