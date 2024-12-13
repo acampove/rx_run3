@@ -40,7 +40,7 @@ class FilterFile:
 
         self._cfg_dat      : dict
         self._d_trans      : dict
-        self._nevts        : int  = -1
+        self._max_save     : int  = -1
         self._is_mc        : bool
         self._l_line_name  : list[str]
         self._store_branch : bool
@@ -91,8 +91,8 @@ class FilterFile:
     # --------------------------------------
     def _set_save_pars(self):
         try:
-            self._nevts = self._d_trans['saving']['evt_max']
-            log.info(f'Filtering dataframe with {self._nevts} entries')
+            self._max_save = self._d_trans['saving']['evt_max']
+            log.warning(f'Saving dataframe with {self._max_save} entries')
         except KeyError:
             log.debug('Not filtering, max_events not specified')
 
@@ -436,8 +436,11 @@ class FilterFile:
         log.debug(f'Saving {tree_path}')
 
         ext_rdf = RDataFrame(tree_path, self._file_path)
-        if self._nevts > 0:
-            ext_rdf = ext_rdf.Range(self._nevts)
+        if self._max_save > 0:
+            log.warning(f'Saving extra {tree_path} with at most {self._max_save} entries')
+            ext_rdf = ext_rdf.Range(self._max_save)
+        else:
+            log.debug(f'Requested {self._max_save} entries => saving full {tree_path} tree')
 
         l_name   = self._get_column_names(ext_rdf)
         ext_rdf.Snapshot(tree_path, file_path, l_name, opts)
