@@ -404,15 +404,20 @@ class FilterFile:
 
         return file_name
     # --------------------------------------
-    def _save_file(self, d_rdf : dict[str,RDataFrame]) -> None:
-        '''
-        Will save all ROOT dataframes to a file
-        '''
+    def _get_snap_opts(self) -> RDF.SnapshotOptions:
         opts                   = RDF.RSnapshotOptions()
         opts.fMode             = 'update'
         opts.fOverwriteIfExists= True
         opts.fCompressionLevel = self._d_trans['saving']['compression']
 
+        return opts
+    # --------------------------------------
+    def _save_file(self, d_rdf : dict[str,RDataFrame]) -> None:
+        '''
+        Will save all ROOT dataframes to a file
+        '''
+
+        opts = self._get_snap_opts()
         for line_name, rdf in tqdm.tqdm(d_rdf.items(), ascii=' -'):
             l_branch  = rdf.l_branch
             file_path = self._get_out_file_name(line_name)
