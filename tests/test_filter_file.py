@@ -13,8 +13,7 @@ class Data:
     '''
     Data class with shared attributes
     '''
-    mc_turbo1 = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_turbo_001.root'
-    mc_turbo2 = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_turbo_002.root'
+    mc_turbo  = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_turbo.root'
     mc_spruce = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_spruce.root'
 
     dt_turbo  = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_turbo.root'
@@ -33,27 +32,27 @@ def _initialize():
     LogStore.set_level('dmu:rdataframe:atr_mgr', 30)
     LogStore.set_level('post_ap:selector'      , 20)
     LogStore.set_level('post_ap:utilities'     , 30)
-    LogStore.set_level('post_ap:FilterFile'    , 10)
+    LogStore.set_level('post_ap:FilterFile'    , 20)
 # --------------------------------------
-@pytest.mark.parametrize('is_turbo' , [True, False])
-def test_dt(is_turbo : bool):
+@pytest.mark.parametrize('kind' , ['turbo', 'spruce'])
+def test_dt(kind : bool):
     '''
     Run test on data
     '''
-    sample_name = 'data_xxx'
-    path        = Data.dt_turbo if is_turbo else Data.dt_spruce
+    sample_name = 'dt_'
+    path        = getattr(Data, f'{sample_name}{kind}')
 
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents = True
-    obj.run(skip_saving=True)
+    obj.run(skip_saving=False)
 # --------------------------------------
-@pytest.mark.parametrize('kind' , ['mc_turbo1', 'mc_turbo2', 'mc_spruce'])
+@pytest.mark.parametrize('kind' , ['turbo', 'spruce'])
 def test_mc(kind : str):
     '''
     Run test on MC
     '''
-    sample_name = 'mc_xxx'
-    path        = getattr(Data, kind)
+    sample_name = 'mc_'
+    path        = getattr(Data, f'{sample_name}{kind}')
 
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents = True
