@@ -1,8 +1,6 @@
 '''
 Script with tests for PFNReader class
 '''
-from importlib.resources import files
-
 import yaml
 import pytest
 import dmu.generic.utilities as gut
