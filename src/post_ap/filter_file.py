@@ -485,19 +485,20 @@ class FilterFile:
             name = tree.GetName()
             ifile.Close()
 
-            return name
+            return [name]
 
-        if len(l_tre) == 0 and len(l_dir) == 1 and self._is_mc:
-            dirn = l_dir[0]
-            name = dirn.GetName()
+        if len(l_tre) == 0 and len(l_dir) == 2     and self._is_mc:
+            l_name = [ dir_.GetName()        for dir_ in l_dir  ]
+            l_name = [ f'{name}/MCDecayTree' for name in l_name ]
+
             ifile.Close()
 
-            return f'{name}/MCDecayTree'
+            return l_name
 
         log.warning('Cannot find one and only one extra tree in:')
         ifile.ls()
 
-        return None
+        return []
     # --------------------------------------
     def _add_metadata(self, file_path : str, line_name : str) -> None:
         log.debug(f'Saving metadata to {file_path}')
