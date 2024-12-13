@@ -14,11 +14,11 @@ class Data:
     '''
     gut.TIMER_ON=True
     l_arg_simple : list[tuple[str,str,int]] = [
-            ('btoxll_mva_2024_nopid', 'simulation',   6),
-            (           'rd_ap_2024',       'data',   8)]
+            ('rd_ap_2024', 'simulation_turbo',   75),
+            ('rd_ap_2024',       'data_turbo',    8)]
 # -----------------------------
 def _get_cfg() -> dict:
-    config_path = files('post_ap_data').joinpath('v1.yaml')
+    config_path = '/home/acampove/Packages/config_files/post_ap/v3.yaml' 
     config_path = str(config_path)
 
     with open(config_path, encoding='utf-8') as ifile:
@@ -34,5 +34,6 @@ def test_simple(production : str, nickname : str, expected : int):
 
     reader = PFNReader(cfg=cfg)
     d_pfn  = reader.get_pfns(production=production, nickname=nickname)
+    npfn   = len(d_pfn)
 
-    assert len(d_pfn) == expected
+    assert npfn == expected
