@@ -7,11 +7,12 @@ display_help()
     echo ""
     echo "-h: Help"
     echo "-v: Version of tarball, optional, if not passed, wont upload it"
+    echo "-i: This will force the script to install this version, e.g. 0.2.4" 
 }
 #--------------------------------
 get_args()
 {
-    while getopts :hf:v: option; do 
+    while getopts :hf:v:i: option; do 
         case "${option}" in
             h)  
                 display_help
@@ -26,6 +27,7 @@ get_args()
                 exit 1
                 ;;  
             v)  VENV_VERS=${OPTARG};;
+            i)  POSA_VERS=${OPTARG};;
         esac
     done
 }
@@ -82,7 +84,7 @@ make_tarball()
 
     source dcheck/bin/activate
     install_pkg data_manipulation_utilities
-    install_pkg post_ap 
+    install_pkg post_ap                      $POSA_VERS
 
     tar -czf dcheck.tar dcheck
     echo "Running: tar -czf dcheck.tar dcheck"
@@ -94,8 +96,14 @@ make_tarball()
 install_pkg()
 {
     NAME=$1
+    VERS=$2
 
-    pip install $NAME > /dev/null 2>&1
+    if [[ -z $VERS ]];then
+        pip install $NAME        > /dev/null 2>&1
+    else
+        pip install $NAME==$VERS > /dev/null 2>&1
+    fi
+
     check "Could not install $NAME"
 
     VERSION=$(pip show $NAME | grep Version)
