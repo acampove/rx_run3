@@ -28,7 +28,7 @@ def _initialize():
     Will set loggers, etc
     '''
     log.info('Initializing')
-    os.environ['CONFIG_PATH'] = '/home/acampove/Packages/config_files/post_ap/v3.yaml'
+    os.environ['CONFIG_PATH'] = '/home/acampove/Packages/config_files/post_ap/v3_low_stats.yaml'
 
     LogStore.set_level('dmu:rdataframe:atr_mgr', 30)
     LogStore.set_level('post_ap:selector'      , 20)
