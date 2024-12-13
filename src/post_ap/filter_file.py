@@ -461,7 +461,7 @@ class FilterFile:
         raise ValueError(f'Unrecognized tree path: {tree_path}')
     # --------------------------------------
     def _is_reco_dir(self, dir_name : str) -> bool:
-        is_turbo_reco = dir_name.startswith('Hlt2RD_')
+        is_turbo_reco = dir_name.startswith('Hlt2')
         is_spruc_reco = dir_name.startswith('SpruceRD_')
 
         return is_turbo_reco or is_spruc_reco
@@ -495,8 +495,10 @@ class FilterFile:
 
             return l_name
 
-        log.warning('Cannot find one and only one extra tree in:')
-        ifile.ls()
+        log.warning(f'Cannot find right number of trees in {self._file_path}:')
+        for dir_ in l_dir:
+            name = dir_.GetName()
+            log.info(name)
 
         return []
     # --------------------------------------
