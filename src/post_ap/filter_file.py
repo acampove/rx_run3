@@ -442,10 +442,23 @@ class FilterFile:
         else:
             log.debug(f'Requested {self._max_save} entries => saving full {tree_path} tree')
 
-        l_name   = self._get_column_names(ext_rdf)
-        ext_rdf.Snapshot(tree_path, file_path, l_name, opts)
+        tree_name = self._get_extra_tree_name(tree_path)
+        l_name    = self._get_column_names(ext_rdf)
+        ext_rdf.Snapshot(tree_name, file_path, l_name, opts)
 
-        log.debug(f'Saved {tree_path}')
+        log.debug(f'Saved {tree_name}')
+    # --------------------------------------
+    def _get_extra_tree_name(self, tree_path : str) -> str:
+        if '/' not in tree_path:
+            return tree_path
+
+        if tree_path == 'MCDT/MCDecayTree':
+            return 'MCDecayTree'
+
+        if tree_path == 'MCDT_HEADONLY/MCDecayTree':
+            return 'MCDecayTree_HO'
+
+        raise ValueError(f'Unrecognized tree path: {tree_path}')
     # --------------------------------------
     def _is_reco_dir(self, dir_name : str) -> bool:
         is_turbo_reco = dir_name.startswith('Hlt2RD_')
