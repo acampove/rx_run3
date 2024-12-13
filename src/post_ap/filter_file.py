@@ -404,7 +404,7 @@ class FilterFile:
 
         return file_name
     # --------------------------------------
-    def _get_snap_opts(self) -> RDF.SnapshotOptions:
+    def _get_snap_opts(self) -> RDF.RSnapshotOptions:
         opts                   = RDF.RSnapshotOptions()
         opts.fMode             = 'update'
         opts.fOverwriteIfExists= True
