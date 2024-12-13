@@ -13,9 +13,11 @@ class Data:
     '''
     Data class with shared attributes
     '''
-    mc_turbo  = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_turbo.root'
-    dt_turbo  = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_turbo.root'
+    mc_turbo1 = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_turbo_001.root'
+    mc_turbo2 = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_turbo_002.root'
     mc_spruce = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_spruce.root'
+
+    dt_turbo  = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_turbo.root'
     dt_spruce = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_spruce.root'
 
     l_args_config = [True, False]
