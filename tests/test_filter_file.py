@@ -13,11 +13,11 @@ class Data:
     '''
     Data class with shared attributes
     '''
-    mc_turbo  = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_turbo.root'
-    mc_spruce = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_spruce.root'
+    mc_test_turbo    = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_turbo.root'
+    mc_test_spruce   = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_spruce.root'
 
-    dt_turbo  = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_turbo.root'
-    dt_spruce = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_spruce.root'
+    data_test_turbo  = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_turbo.root'
+    data_test_spruce = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_spruce.root'
 
     l_args_config = [True, False]
 # --------------------------------------
@@ -39,8 +39,8 @@ def test_dt(kind : bool):
     '''
     Run test on data
     '''
-    sample_name = 'dt_'
-    path        = getattr(Data, f'{sample_name}{kind}')
+    sample_name = 'data_test'
+    path        = getattr(Data, f'{sample_name}_{kind}')
 
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents = True
@@ -51,8 +51,8 @@ def test_mc(kind : str):
     '''
     Run test on MC
     '''
-    sample_name = 'mc_'
-    path        = getattr(Data, f'{sample_name}{kind}')
+    sample_name = 'mc_test'
+    path        = getattr(Data, f'{sample_name}_{kind}')
 
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents = True
