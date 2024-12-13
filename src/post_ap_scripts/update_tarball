@@ -45,6 +45,7 @@ check()
 check_existing()
 {
     LFN=$1
+    echo "Checking for existing TARBALL"
 
     dirac-dms-lfn-replicas $LFN > /dev/null
     if   [[ $? -eq 0 ]] && [[ $UPDATE -eq 1 ]];then
@@ -63,6 +64,8 @@ check_existing()
 #---------------------------------
 upload()
 {
+    echo "Uploading"
+
     if [[ -z $VENV_VERS ]];then
         echo "Version of tarball not passed, won't upload it"
         exit 0
@@ -79,11 +82,13 @@ upload()
 #--------------------------------
 initialize()
 {
+    echo "Initialling"
+
     which lb-conda-dev        > /dev/null 2>&1
     check "No lb-conda-dev found"
 
     dirac-proxy-info          > /dev/null 2>&1
-    check "Invalid grid proxy"
+    check "Invalid grid proxy, or cannot access dirac-proxy-info"
 
     if [[ -z $VENVS ]];then
         echo "VENVS environment variable not set"
@@ -93,6 +98,8 @@ initialize()
 #--------------------------------
 make_tarball()
 {
+    echo "Making tarball"
+
     mkdir -p $VENVS
     cd $VENVS
 
@@ -122,8 +129,10 @@ install_pkg()
     VERS=$2
 
     if [[ -z $VERS ]];then
+        echo "Installing latest version of $NAME"
         pip install $NAME        > /dev/null 2>&1
     else
+        echo "Installing $VERS version of $NAME"
         pip install $NAME==$VERS > /dev/null 2>&1
     fi
 
