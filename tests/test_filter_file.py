@@ -47,15 +47,15 @@ def test_dt(is_turbo : bool):
     obj.dump_contents = True
     obj.run(skip_saving=True)
 # --------------------------------------
-@pytest.mark.parametrize('is_turbo' , [True, False])
-def test_mc(is_turbo : bool):
+@pytest.mark.parametrize('kind' , ['mc_turbo1', 'mc_turbo2', 'mc_spruce'])
+def test_mc(kind : str):
     '''
     Run test on MC
     '''
     sample_name = 'mc_xxx'
-    path        = Data.mc_turbo if is_turbo else Data.mc_spruce
+    path        = getattr(Data, kind)
 
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents = True
-    obj.run(skip_saving=True)
+    obj.run(skip_saving=False)
 # --------------------------------------
