@@ -40,7 +40,7 @@ class FilterFile:
 
         self._cfg_dat      : dict
         self._d_trans      : dict
-        self._nevts        : int
+        self._nevts        : int  = -1
         self._is_mc        : bool
         self._l_line_name  : list[str]
         self._store_branch : bool
@@ -436,6 +436,9 @@ class FilterFile:
         log.debug(f'Saving {tree_path}')
 
         ext_rdf = RDataFrame(tree_path, self._file_path)
+        if self._nevts > 0:
+            ext_rdf = ext_rdf.Range(self._nevts)
+
         l_name   = self._get_column_names(ext_rdf)
         ext_rdf.Snapshot(tree_path, file_path, l_name, opts)
 
