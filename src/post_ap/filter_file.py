@@ -6,7 +6,6 @@ import json
 import fnmatch
 import hashlib
 import copy
-from typing import Union
 
 import tqdm
 import pandas as pnd
@@ -427,8 +426,8 @@ class FilterFile:
 
             self._save_contents(file_path)
 
-            tree_path = self._get_ext_tree_path()
-            if tree_path is not None:
+            l_tree_path = self._get_ext_tree_path()
+            for tree_path in l_tree_path:
                 self._save_extra_tree(tree_path, file_path, opts)
 
             self._add_metadata(file_path, line_name)
@@ -448,10 +447,10 @@ class FilterFile:
 
         return is_turbo_reco or is_spruc_reco
     # --------------------------------------
-    def _get_ext_tree_path(self) -> Union[str,None]:
+    def _get_ext_tree_path(self) -> list[str]:
         '''
-        Will return path of tree that is not Hlt2 one
-        For data lumiTree, for MC MCDecayTree
+        Will return paths of trees that are not Hlt2
+        For data lumiTree, for MC MCDecayTree head only and other
         '''
         ifile = TFile.Open(self._file_path)
         l_key = ifile.GetListOfKeys()
