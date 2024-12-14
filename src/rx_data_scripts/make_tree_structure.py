@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 '''
 Script used to link ntuples properly and merge them
 '''
