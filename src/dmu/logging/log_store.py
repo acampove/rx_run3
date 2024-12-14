@@ -40,18 +40,20 @@ class LogStore:
     backend       = 'logging'
     #--------------------------
     @staticmethod
-    def add_logger(name=None):
+    def add_logger(name : str, exists_ok : bool = False) -> Logger:
         '''
         Will use underlying logging library logzero/logging, etc to make logger
 
         name (str): Name of logger
         '''
 
-        if   name is None:
-            raise ValueError('Logger name missing')
-
-        if name in LogStore.d_logger:
+        if name in LogStore.d_logger and not exists_ok:
             raise ValueError(f'Logger name {name} already found')
+
+
+        if name in LogStore.d_logger and     exists_ok:
+            print(f'Logger {name} already found, reusing it')
+            return LogStore.d_logger[name]
 
         level  = LogStore.log_level if name not in LogStore.d_levels else LogStore.d_levels[name]
 
