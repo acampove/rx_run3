@@ -67,14 +67,14 @@ class LogStore:
         return logger
     #--------------------------
     @staticmethod
-    def _get_logzero_logger(name : str, level : int):
+    def _get_logzero_logger(name : str, level : int) -> Logger:
         log = logzero.setup_logger(name=name)
         log.setLevel(level)
 
         return log
     #--------------------------
     @staticmethod
-    def _get_logging_logger(name : str, level : int):
+    def _get_logging_logger(name : str, level : int) -> Logger:
         logger = logging.getLogger(name=name)
 
         logger.setLevel(level)
