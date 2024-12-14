@@ -1,0 +1,16 @@
+[project]
+name        = 'rx_run3'
+description = 'Project with code needed to do the simultaneous measurement of RK and RX with Run3 data' 
+version     = '0.0.1'
+readme      = 'README.md'
+dependencies= []
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
+[tool.setuptools.package-data]
+'rx_data' = ['*.json']
+
