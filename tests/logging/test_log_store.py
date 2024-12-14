@@ -86,3 +86,20 @@ def test_logzero(level : int):
     log.error('error')
     log.critical('critical')
     print(30 * '-')
+# --------------------------------
+def test_exists_ok_true():
+    '''
+    Tests exists_ok flag with value of True
+    '''
+    log_1  = LogStore.add_logger('exists_ok_true')
+    log_2  = LogStore.add_logger('exists_ok_true', exists_ok=True)
+
+    assert log_1 is log_2
+# --------------------------------
+def test_exists_ok_default():
+    '''
+    Tests exists_ok flag with default value
+    '''
+    LogStore.add_logger('exists_ok_default')
+    with pytest.raises(ValueError):
+        LogStore.add_logger('exists_ok_default')
