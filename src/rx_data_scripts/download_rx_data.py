@@ -149,7 +149,7 @@ def _initialize():
 
         Data.dst_dir = os.environ['DOWNLOAD_NTUPPATH']
 
-    os.makedirs(f'{Data.dst_dir}/{Data.job_dir}', exist_ok=True)
+    os.makedirs(f'{Data.dst_dir}/{Data.vers}', exist_ok=True)
 # --------------------------------------------------
 def main():
     '''
@@ -159,6 +159,7 @@ def main():
     _initialize()
 
     l_pfn   = _get_pfns()
+
     l_l_pfn = _split_pfns(l_pfn)
     with ThreadPoolExecutor(max_workers=Data.nthread) as executor:
         for l_pfn in l_l_pfn:
