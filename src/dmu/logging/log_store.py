@@ -3,6 +3,8 @@ Module holding LogStore
 '''
 
 import logging
+from logging import Logger
+
 import logzero
 
 #------------------------------------------------------------
@@ -31,8 +33,8 @@ class LogStore:
     Class used to make loggers, set log levels, print loggers, e.g. interface to logging/logzero, etc.
     '''
     #pylint: disable = invalid-name
-    d_logger      = {}
-    d_levels      = {}
+    d_logger      : dict[str,Logger] = {}
+    d_levels      : dict[str,   int] = {}
     log_level     = logging.INFO
     is_configured = False
     backend       = 'logging'
