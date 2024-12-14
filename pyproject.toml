@@ -1,6 +1,6 @@
 [project]
-name        = 'rx_run3'
-description = 'Project with code needed to do the simultaneous measurement of RK and RX with Run3 data' 
+name        = 'rx_data'
+description = 'Project with lists of LFNs and utilities needed to download filteres ntuples' 
 version     = '0.0.1'
 readme      = 'README.md'
 dependencies= []
@@ -12,5 +12,5 @@ dev  = ['pytest']
 where   = ['src']
 
 [tool.setuptools.package-data]
-'rx_data' = ['*.json']
+'rx_data_lfns' = ['*.json']
 
