@@ -68,60 +68,56 @@ def _check_status(status, kind):
     else:
         raise ValueError(f'Failed to run {kind}: {status.message}')
 # --------------------------------------------------
-def _get_pfn_sublist(l_pfn):
-    '''
-    Return (optionally random) subset of LFNs out of l_lfn
-    '''
-    if Data.nfile < 0:
-        log.debug('Negative number of files specified, will download everything')
-        return l_pfn
+def _get_pfn_subset(l_pfn : list[str]) -> list[str]:
 
-    if Data.ran_pfn:
-        log.debug('Downloading random {Data.nfile} files')
-        l_pfn = random.sample(l_pfn, Data.nfile)
-    else:
-        log.debug(f'Downloading first {Data.nfile} files')
-        l_pfn = l_pfn[:Data.nfile]
+    if not Data.ran_pfn:
+        log.warning(f'Picking up a subset of the first {Data.nfile} ntuples')
+        return l_pfn[:Data.nfile]
+
+    log.warning(f'Picking up a random subset of {Data.nfile} ntuples')
+
+    l_pfn = random.sample(l_pfn, Data.nfile)
 
     return l_pfn
 # --------------------------------------------------
-def _get_pfns():
-    file_dir = f'{Data.eos_dir}/{Data.job_dir}'
-    status, listing = Data.eos_clt.dirlist(file_dir, DirListFlags.STAT)
-    _check_status(status, '_get_pfns')
+def _get_pfns() -> list[str]:
+    json_wc = files('rx_data_lfns').joinpath(f'{Data.vers}/*.json')
+    json_wc = str(json_wc)
+    l_json  = glob.glob(json_wc)
 
-    l_pfn = [f'{Data.server}/{file_dir}/{entry.name}' for entry in listing ]
-    l_pfn = _get_pfn_sublist(l_pfn)
+    l_lfn   = []
+    for json_path in l_json:
+        with open(json_path, encoding='utf-8') as ifile:
+            l_lfn += json.load(ifile)
 
-    npfn = len(l_pfn)
-    if npfn == 0:
-        raise ValueError(f'Found no PFNs in {file_dir}')
+    nlfn    = len(l_lfn)
+    log.info(f'Found {nlfn} paths')
+    l_pfn   = [ f'{Data.pfn_preffix}/{LFN}' for LFN in l_lfn ]
 
-    log.info(f'Found {npfn} PFNs in {file_dir}')
+    if Data.nfile > 0:
+        l_pfn = _get_pfn_subset(l_pfn)
 
     return l_pfn
 # --------------------------------------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Script used to download ntuples from EOS')
-    parser.add_argument('-j', '--jobn' , type=str, help='Job name, used to find directory, e.g. flt_001', required=True)
+    parser.add_argument('-v', '--vers' , type=str, help='Version of LFNs'            , required=True)
     parser.add_argument('-n', '--nfile', type=int, help='Number of files to download', default=-1)
     parser.add_argument('-p', '--dest' , type=str, help='Destination directory will override whatever is in DOWNLOAD_NTUPPATH')
-    parser.add_argument('-e', '--eosn' , type=str, help='Username associated to path in EOS from which ntuples will be downloaded', required=True)
     parser.add_argument('-l', '--log'  , type=int, help='Log level, default 20', choices=[10, 20, 30, 40], default=20)
-    parser.add_argument('-r', '--ran'  , type=int, help='When picking a subset of files, with -n, pick them randomly (1) or the first files (0 default)', choices=[0, 1], default=0)
     parser.add_argument('-m', '--mth'  , type=int, help=f'Number of threads to use for downloading, default {Data.nthread}', default=Data.nthread)
-    parser.add_argument('-d', '--dryr' ,           help='If used, it will skip downloads, but do everything else', action='store_true')
+    parser.add_argument('-r', '--ran'  ,           help='When picking a subset of files, with -n, pick them randomly', action='store_true')
+    parser.add_argument('-d', '--dryr' ,           help='If used, it will skip downloads, but do everything else'    , action='store_true')
 
     args = parser.parse_args()
 
-    Data.job_dir = args.jobn
-    Data.dst_dir = args.dest
+    Data.vers    = args.vers
     Data.nfile   = args.nfile
-    Data.lxname  = args.eosn
-    Data.drun    = args.dryr
+    Data.dst_dir = args.dest
     Data.log_lvl = args.log
-    Data.ran_pfn = args.ran
     Data.nthread = args.mth
+    Data.ran_pfn = args.ran
+    Data.drun    = args.dryr
 # --------------------------------------------------
 def _split_pfns(l_pfn):
     '''
