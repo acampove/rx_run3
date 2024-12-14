@@ -5,17 +5,20 @@ from the grid
 
 import os
 import math
+import json
+import glob
 import random
 import argparse
-from typing import Union
 
+from typing                 import Union
+from importlib.resources    import files
 from concurrent.futures     import ThreadPoolExecutor
 from dataclasses            import dataclass
-from XRootD                 import client              as clt
-from XRootD.client.flags    import DirListFlags
-from dmu.logging.log_store  import LogStore
 
 import tqdm
+
+from XRootD                 import client   as clt
+from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('rx_data:download_rx_data')
 # --------------------------------------------------
