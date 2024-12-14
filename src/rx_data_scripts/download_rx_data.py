@@ -69,7 +69,6 @@ def _check_status(status, kind):
         raise ValueError(f'Failed to run {kind}: {status.message}')
 # --------------------------------------------------
 def _get_pfn_subset(l_pfn : list[str]) -> list[str]:
-
     if not Data.ran_pfn:
         log.warning(f'Picking up a subset of the first {Data.nfile} ntuples')
         return l_pfn[:Data.nfile]
