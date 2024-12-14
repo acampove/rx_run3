@@ -27,22 +27,20 @@ class Data:
     # pylint: disable = too-many-instance-attributes
     # Need this class to store data
 
-    job_dir : str
+    vers    : str
     nfile   : int
     log_lvl : int
     dst_dir : Union[str, None]
-    lxname  : str
     eos_dir : str
     drun    : bool
+    ran_pfn : bool
 
-    ran_pfn : int
-    server  = 'root://eoslhcb.cern.ch/'
-    eos_clt = clt.FileSystem(server)
-    nthread = 1
+    pfn_preffix = 'root://x509up_u1000@eoslhcb.cern.ch//eos/lhcb/grid/user'
+    nthread     = 1
 # --------------------------------------------------
 def _download(pfn : str) -> None:
     file_name        = os.path.basename(pfn)
-    out_path         = f'{Data.dst_dir}/{Data.job_dir}/{file_name}'
+    out_path         = f'{Data.dst_dir}/{Data.vers}/{file_name}'
     if os.path.isfile(out_path):
         log.debug(f'Skipping downloaded file: {pfn}')
         return
