@@ -21,6 +21,8 @@ from XRootD                 import client   as clt
 from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('rx_data:download_rx_data')
+
+# pylint: disable=line-too-long
 # --------------------------------------------------
 @dataclass
 class Data:
