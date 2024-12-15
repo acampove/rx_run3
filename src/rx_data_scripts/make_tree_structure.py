@@ -33,9 +33,6 @@ class Data:
     dry       : bool
     inp_path  : str
     out_path  : str
-
-    dt_rgx  = r'(data_\d{2}_.*)_(\w+RD_.*)_\w{10}\.root'
-    mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_\w{10}\.root'
 # ---------------------------------
 def _get_paths() -> list[str]:
     '''
@@ -65,7 +62,7 @@ def _split_paths(l_path : list[str]) -> dict[str,list[str]]:
 
     d_info_path = {}
     for path in tqdm.tqdm(l_path, ascii=' -'):
-        info = _info_from_path(path)
+        info = ut.info_from_path(path)
         if info not in d_info_path:
             d_info_path[info] = []
 
@@ -93,56 +90,6 @@ def _truncate_paths(d_path):
     d_path_trunc = { key : val[:Data.Max] for key, val in d_path.items() }
 
     return d_path_trunc
-# ---------------------------------
-def _info_from_path(path : str) -> tuple[str,str]:
-    '''
-    Will pick a path to a ROOT file
-    Will return tuple with information associated to file
-    This is needed to name output file and directories
-    '''
-
-    name = os.path.basename(path)
-    if   name.startswith('dt_') or name.startswith('data_'):
-        info = _info_from_data_path(path)
-    elif name.startswith('mc_'):
-        info = _info_from_mc_path(path)
-    else:
-        log.error(f'File name is not for data or MC: {name}')
-        raise ValueError
-
-    return info
-# ---------------------------------
-def _info_from_mc_path(path : str) -> tuple[str,str]:
-    '''
-    Will return information from path to file
-    '''
-    name = os.path.basename(path)
-    mtch = re.match(Data.mc_rgx, name)
-    if not mtch:
-        raise ValueError(f'Cannot extract information from MC file:\n\n{name}\n\nUsing {Data.mc_rgx}')
-
-    [sample, line] = mtch.groups()
-
-    return sample, line
-# ---------------------------------
-def _info_from_data_path(path : str) -> tuple[str,str]:
-    '''
-    Will get info from data path
-    '''
-    name = os.path.basename(path)
-    mtc  = re.match(Data.dt_rgx, name)
-    if not mtc:
-        raise ValueError(f'Cannot find kind in:\n\n{name}\n\nusing\n\n{Data.dt_rgx}')
-
-    try:
-        [sample, line] = mtc.groups()
-    except ValueError as exc:
-        raise ValueError(f'Expected three elements in: {mtc.groups()}') from exc
-
-    sample = sample.replace('_turbo_', '_')
-    sample = sample.replace('_full_' , '_')
-
-    return sample, line
 # ---------------------------------
 def _link_paths(sample : str, line : str, l_path : list[str]) -> Union[str, None]:
     '''
