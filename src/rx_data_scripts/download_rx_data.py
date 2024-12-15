@@ -184,7 +184,9 @@ def main():
     with ThreadPoolExecutor(max_workers=Data.nthread) as executor:
         for l_pfn in l_l_pfn:
             pbar = tqdm.tqdm(total=len(l_pfn))
-            executor.submit(_download_group, l_pfn, pbar)
+            future = executor.submit(_download_group, l_pfn, pbar)
+            if future.exception():
+                print(future.exception())
 # --------------------------------------------------
 if __name__ == '__main__':
     main()
