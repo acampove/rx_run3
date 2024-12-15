@@ -17,7 +17,6 @@ import tqdm
 # pylint: disable=line-too-long
 
 log   = LogStore.add_logger('rx_data:make_tree_structure')
-T4STR = Tuple[str,str,str,str]
 # ---------------------------------
 @dataclass
 class Data:
