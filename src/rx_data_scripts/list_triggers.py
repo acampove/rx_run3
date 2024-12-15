@@ -60,13 +60,16 @@ def _get_triggers() -> dict[str,int]:
         with open(path, encoding='utf-8') as ifile:
             l_lfn += json.load(ifile)
 
+    nlfn = len(l_lfn)
+    log.info(f'Found {nlfn} LFNs')
+
     d_trigger = {}
     for lfn in l_lfn:
         trigger = _trigger_from_lfn(lfn)
         if trigger not in d_trigger:
             d_trigger[trigger] = 1
         else:
-            d_trigger[trigger] =+1
+            d_trigger[trigger]+= 1
 
     return d_trigger
 # ----------------------------
