@@ -219,7 +219,7 @@ def _initialize(args : argparse.Namespace) -> None:
     Data.Max       = args.max
     Data.inp_path  = args.inp
 
-    log.setLevel(args.lvl)
+    LogStore.set_level('rx_data:make_tree_structure', args.lvl)
 
     Data.ver       = _version_from_input()
 # ---------------------------------
