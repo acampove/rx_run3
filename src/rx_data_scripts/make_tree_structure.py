@@ -20,7 +20,7 @@ import yaml
 
 # pylint: disable=line-too-long
 
-log   = LogStore.add_logger('post_ap:link_merge')
+log   = LogStore.add_logger('rx_data:make_tree_struc')
 T4STR = Tuple[str,str,str,str]
 # ---------------------------------
 @dataclass
