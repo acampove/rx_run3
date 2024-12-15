@@ -123,7 +123,7 @@ def _info_from_mc_path(path):
     name = os.path.basename(path)
     mtch = re.match(Data.mc_rgx, name)
     if not mtch:
-        log.error(f'Cannot extract information from MC file: {name} using {Data.mc_rgx}')
+        log.error(f'Cannot extract information from MC file:\n\n{name}\n\nUsing {Data.mc_rgx}')
         raise ValueError
 
     [evt_type, line] = mtch.groups()
