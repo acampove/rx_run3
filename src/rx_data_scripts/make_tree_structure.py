@@ -186,10 +186,14 @@ def _save_summary(target_dir : str) -> None:
         return
 
     l_file_path = glob.glob(f'{target_dir}/*.root')
+    if len(l_file_path) == 0:
+        log.warning(f'No ROOT file found in {target_dir}')
+        return
+
     target_file = l_file_path[0]
 
     prt = RFPrinter(path=target_file)
-    prt.save()
+    prt.save(raise_on_fail=False)
 # ---------------------------------
 def _get_args() -> argparse.Namespace:
     '''
