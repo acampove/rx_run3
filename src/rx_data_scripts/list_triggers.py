@@ -6,8 +6,10 @@ Script used to show a summary of triggers
 import json
 import glob
 import argparse
-from importlib.resources    import files
+
+from typing                 import Union
 from dataclasses            import dataclass
+from importlib.resources    import files
 
 import yaml
 from dmu.logging.log_store  import LogStore
@@ -23,7 +25,7 @@ class Data:
     '''
 
     version : str
-    outfile : str
+    outfile : Union[str,None]
 # ----------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used list triggers for a given version')
@@ -62,9 +64,10 @@ def _get_triggers() -> dict[str,int]:
     return d_trigger
 # ----------------------------
 def _save(d_trigger : dict[str,int]) -> None:
-    if not hasattr(Data, 'outfile'):
+    if Data.outfile is None:
         return
 
+    log.info(f'Saving trigger list to: {Data.outfile}')
     with open(Data.outfile, 'w', encoding='utf-8') as ofile:
         yaml.safe_dump(d_trigger, ofile)
 # ----------------------------
