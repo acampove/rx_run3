@@ -263,10 +263,9 @@ def _save_summary(target : str) -> None:
     prt = RFPrinter(path=target)
     prt.save()
 # ---------------------------------
-def _delete_tmp_files():
+def _get_args() -> argparse.Namespace:
     '''
-    Delete files in /tmp that TFileMerger makes
-    In order to prevent storage to run out
+    Parse arguments
     '''
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
     parser.add_argument('-i', '--inp', type=str, help='Path to directory with ROOT files to link', required=True)
@@ -277,19 +276,7 @@ def _delete_tmp_files():
     parser.add_argument('-d', '--dry',           help='Dry run if 1', action='store_true')
     args = parser.parse_args()
 
-    log.info('Removing temporary files')
-
-    l_path   = glob.glob('/tmp/ROOTMERGE*.root')
-    nremoved = 0
-    for path in l_path:
-        try:
-            os.remove(path)
-        except:
-            pass
-
-        nremoved += 1
-
-    log.info(f'Removed {nremoved} files')
+    return args
 # ---------------------------------
 def _save_summary(target):
     '''
