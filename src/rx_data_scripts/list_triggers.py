@@ -1,8 +1,8 @@
 '''
 Script used to show a summary of triggers
 '''
-import os
-import re
+# pylint: disable=line-too-long, import-error
+
 import json
 import glob
 import argparse
@@ -11,10 +11,10 @@ from dataclasses            import dataclass
 
 import yaml
 from dmu.logging.log_store  import LogStore
+from rx_data                import utilities as ut
 
 log = LogStore.add_logger('rx_data:list_triggers')
 
-# pylint: disable=line-too-long
 # ----------------------------
 @dataclass
 class Data:
@@ -24,8 +24,6 @@ class Data:
 
     version : str
     outfile : str
-    dt_rgx  = r'(data_\d{2}_.*)_(\w+RD_.*)_\w{10}\.root'
-    mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_\w{10}\.root'
 # ----------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used list triggers for a given version')
@@ -35,20 +33,6 @@ def _parse_args():
     args = parser.parse_args()
     Data.version = args.vers
     Data.outfile = args.outf
-# ----------------------------
-def _trigger_from_lfn(lfn : str) -> str:
-    file_name = os.path.basename(lfn)
-
-    mtch_mc = re.match(Data.mc_rgx, file_name)
-    mtch_dt = re.match(Data.dt_rgx, file_name)
-
-    if mtch_mc:
-        return mtch_mc.group(2)
-
-    if mtch_dt:
-        return mtch_dt.group(2)
-
-    raise ValueError(f'Cannot extract trigger name from: {file_name}')
 # ----------------------------
 def _get_triggers() -> dict[str,int]:
     lfn_wc = files('rx_data_lfns').joinpath(f'{Data.version}/*.json')
@@ -69,7 +53,7 @@ def _get_triggers() -> dict[str,int]:
 
     d_trigger = {}
     for lfn in l_lfn:
-        trigger = _trigger_from_lfn(lfn)
+        _, trigger = ut.info_from_path(lfn)
         if trigger not in d_trigger:
             d_trigger[trigger] = 1
         else:
