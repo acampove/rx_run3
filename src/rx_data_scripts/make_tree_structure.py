@@ -151,27 +151,7 @@ def _info_from_data_path(path):
         log.error(f'Cannot find channel in {decay}')
         raise ValueError
 
-    kind = _kind_from_decay(decay)
-
-    return 'data', chan, kind, year
-# ---------------------------------
-def _kind_from_decay(decay):
-    '''
-    Will take string symbolizing decay
-    Will return kind of sample associated, e.g. analysis, calibration, same sign...
-    '''
-
-    if decay not in Data.cfg_dat['decays']:
-        raise ValueError(f'Unrecognized decay: {decay}')
-
-    return Data.cfg_dat['decays'][decay]
-# ---------------------------------
-def _load_config() -> None:
-    if not os.path.isfile(Data.conf_path):
-        raise FileNotFoundError(f'Cannot find {Data.conf_path}')
-
-    with open(Data.conf_path, encoding='utf-8') as ifile:
-        Data.cfg_dat = yaml.safe_load(ifile)
+    return 'data', chan, decay, year
 # ---------------------------------
 def _link_paths(info : T4STR, l_path : list[str]) -> Union[str, None]:
     '''
@@ -252,14 +232,10 @@ def _initialize(args : argparse.Namespace) -> None:
     Data.dry       = args.dry
     Data.Max       = args.max
     Data.inp_path  = args.inp
-    Data.conf_path = args.cfg
 
     log.setLevel(args.lvl)
 
     Data.ver       = _version_from_input()
-
-    # Needs to happen at the end
-    _load_config()
 # ---------------------------------
 def main():
     '''
