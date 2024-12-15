@@ -278,22 +278,26 @@ def _get_args() -> argparse.Namespace:
 
     return args
 # ---------------------------------
-def _save_summary(target):
-    '''
-    Make text file with summary of file, e.g. 2024.root -> 2024.txt
-    '''
-    if Data.dry:
-        return
+def _initialize(args : argparse.Namespace) -> None:
+    Data.dry       = args.dry
+    Data.Max       = args.max
+    Data.ver       = args.ver
+    Data.inp_path  = args.inp
+    Data.conf_path = args.cfg
 
-    prt = RFPrinter(path=target)
-    prt.save()
+    log.setLevel(args.lvl)
+
+    # Needs to happen at the end
+    _load_config()
 # ---------------------------------
 def main():
     '''
     Script starts here
     '''
-    _get_args()
-    _load_config()
+    args = _get_args()
+    _initialize(args)
+
+    return
 
     l_path = _get_paths()
     d_path = _split_paths(l_path)
