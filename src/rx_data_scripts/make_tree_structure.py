@@ -39,7 +39,7 @@ class Data:
     inp_path  : str
 
     dt_rgx  = r'(?:dt|data)_(\d{4}|\d{2}).*tuple_Hlt2RD_(.*)\.root'
-    mc_rgx  = r'mc_.*_(\d{8})_nu.*tuple_Hlt2RD_(.*)\.root'
+    mc_rgx  = r'mc_.*_\d{8}_(.*)_(Hlt2RD_.*)_\w{10}\.root'
 # ---------------------------------
 def _get_paths() -> list[str]:
     '''
