@@ -270,7 +270,6 @@ def _get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
     parser.add_argument('-i', '--inp', type=str, help='Path to directory with ROOT files to link', required=True)
     parser.add_argument('-c', '--cfg', type=str, help='Path to configuration file'               , required=True)
-    parser.add_argument('-v', '--ver', type=str, help='Version used to name outputs'             , required=True)
     parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs'   , default=-1)
     parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30]          , default=20)
     parser.add_argument('-d', '--dry',           help='Dry run if 1', action='store_true')
@@ -278,14 +277,22 @@ def _get_args() -> argparse.Namespace:
 
     return args
 # ---------------------------------
+def _version_from_input() -> str:
+    version = os.path.basename(Data.inp_path)
+    if not re.match(r'v\d+', version):
+        raise ValueError(f'Cannot extract version from: {version}')
+
+    return version
+# ---------------------------------
 def _initialize(args : argparse.Namespace) -> None:
     Data.dry       = args.dry
     Data.Max       = args.max
-    Data.ver       = args.ver
     Data.inp_path  = args.inp
     Data.conf_path = args.cfg
 
     log.setLevel(args.lvl)
+
+    Data.ver       = _version_from_input()
 
     # Needs to happen at the end
     _load_config()
