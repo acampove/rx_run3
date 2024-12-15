@@ -181,14 +181,17 @@ def _do_link_paths(src : str, tgt : str) -> None:
 
     os.symlink(src, tgt)
 # ---------------------------------
-def _save_summary(target : str) -> None:
+def _save_summary(target_dir : str) -> None:
     '''
     Make text file with summary of file, e.g. 2024.root -> 2024.txt
     '''
     if Data.dry:
         return
 
-    prt = RFPrinter(path=target)
+    l_file_path = glob.glob(f'{target_dir}/*.root')
+    target_file = l_file_path[0]
+
+    prt = RFPrinter(path=target_file)
     prt.save()
 # ---------------------------------
 def _get_args() -> argparse.Namespace:
