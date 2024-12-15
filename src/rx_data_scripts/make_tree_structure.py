@@ -30,6 +30,7 @@ class Data:
     ver       : str
     dry       : bool
     inp_path  : str
+    out_path  : str
 
     dt_rgx  = r'(data_\d{2}_.*)_(\w+RD_.*)_\w{10}\.root'
     mc_rgx  = r'mc_.*_\d{8}_(.*)_(Hlt2RD_.*)_\w{10}\.root'
@@ -195,8 +196,9 @@ def _get_args() -> argparse.Namespace:
     Parse arguments
     '''
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
-    parser.add_argument('-i', '--inp', type=str, help='Path to directory with ROOT files to link', required=True)
-    parser.add_argument('-c', '--cfg', type=str, help='Path to configuration file'               , required=True)
+    parser.add_argument('-i', '--inp', type=str, help='Path to directory with ROOT files to link'        , required=True)
+    parser.add_argument('-o', '--out', type=str, help='Path to directory where tree structure will start', required=True)
+    parser.add_argument('-c', '--cfg', type=str, help='Path to configuration file'                       , required=True)
     parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs'   , default=-1)
     parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30]          , default=20)
     parser.add_argument('-d', '--dry',           help='Dry run if 1', action='store_true')
@@ -217,6 +219,7 @@ def _initialize(args : argparse.Namespace) -> None:
     Data.dry       = args.dry
     Data.Max       = args.max
     Data.inp_path  = args.inp
+    Data.out_path  = args.out
 
     LogStore.set_level('rx_data:make_tree_structure', args.lvl)
 
