@@ -40,3 +40,11 @@ def test_raise_on_fail():
     with pytest.raises(OSError) as exc_info:
         obj.save(raise_on_fail= True)
         assert exc_info.value.startswith('Cannot open:')
+# -------------------------------------------------
+def test_file_name():
+    '''
+    Test specifying summary file name 
+    '''
+
+    obj = RFPrinter(path=Data.file_path_simple)
+    obj.save(file_name='summary.txt')
