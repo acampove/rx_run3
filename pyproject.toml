@@ -14,6 +14,7 @@ where   = ['src']
 [project.scripts]
 download_rx_data   ='rx_data_scripts.download_rx_data:main'
 make_tree_structure='rx_data_scripts.make_tree_structure:main'
+list_samples       ='rx_data_scripts.list_samples:main'
 
 [tool.setuptools.package-data]
 'rx_data_lfns' = ['*.json']
