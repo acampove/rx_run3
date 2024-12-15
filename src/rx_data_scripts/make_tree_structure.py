@@ -123,23 +123,12 @@ def _info_from_mc_path(path):
     name = os.path.basename(path)
     mtch = re.match(Data.mc_rgx, name)
     if not mtch:
-        log.error(f'Cannot extract information from MC file:\n\n{name}\n\nUsing {Data.mc_rgx}')
-        raise ValueError
+        raise ValueError(f'Cannot extract information from MC file:\n\n{name}\n\nUsing {Data.mc_rgx}')
 
-    [evt_type, line] = mtch.groups()
-    evt_type = int(evt_type)
-
-    d_proc_evt = _get_proc_evt()
-    if evt_type not in d_proc_evt:
-        log.error(f'Event type {evt_type} not found, in:')
-        pprint.pprint(d_proc_evt)
-
-        raise ValueError
-
-    proc = d_proc_evt[evt_type]
+    [sample, line] = mtch.groups()
 
     #TODO: Do not hardcode year
-    return proc, line, 'ana', '2024'
+    return sample, line, 'ana', '2024'
 # ---------------------------------
 def _info_from_data_path(path):
     '''
