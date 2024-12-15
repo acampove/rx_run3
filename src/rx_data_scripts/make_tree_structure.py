@@ -57,7 +57,7 @@ def _get_paths() -> list[str]:
 
     return l_path
 # ---------------------------------
-def _split_paths(l_path):
+def _split_paths(l_path : list[str]) -> dict[str,list[str]]:
     '''
     Takes list of paths to ROOT files
     Splits them into categories and returns a dictionary:
