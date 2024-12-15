@@ -228,17 +228,15 @@ def main():
     args = _get_args()
     _initialize(args)
 
-    return
-
     l_path = _get_paths()
     d_path = _split_paths(l_path)
-    for kind, l_path in d_path.items():
-        target_dir = _link_paths(kind, l_path)
+
+    for (sample, line), l_path in d_path.items():
+        target_dir = _link_paths(sample, line, l_path)
         if target_dir is None:
             continue
 
-        target = f'{target_dir}.root'
-        _save_summary(target)
+        _save_summary(target_dir)
 # ---------------------------------
 if __name__ == '__main__':
     main()
