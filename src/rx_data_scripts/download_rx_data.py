@@ -150,7 +150,17 @@ def _initialize():
 
         Data.dst_dir = os.environ['DOWNLOAD_NTUPPATH']
 
-    os.makedirs(f'{Data.dst_dir}/{Data.vers}', exist_ok=True)
+    ntup_dir = f'{Data.dst_dir}/{Data.vers}'
+    try:
+        os.makedirs(ntup_dir, exist_ok=Data.force)
+    except FileExistsError as exc:
+        raise FileExistsError(f'''
+        Version of ntuples {Data.vers} already found in {ntup_dir}, either:
+
+        1. Partial download already happened and you are retrying, run with -f (--force) flag.
+        2. You are not running the latest version of and you need to run:
+                pip install --upgrade rx_data.
+                              ''') from exc
 # --------------------------------------------------
 def main():
     '''
