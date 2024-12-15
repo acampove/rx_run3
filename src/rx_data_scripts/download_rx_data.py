@@ -92,6 +92,9 @@ def _get_pfns() -> list[str]:
             l_lfn += json.load(ifile)
 
     nlfn    = len(l_lfn)
+    if nlfn == 0:
+        raise ValueError(f'Found {nlfn} LFNs for version {Data.vers}')
+
     log.info(f'Found {nlfn} paths')
     l_pfn   = [ f'{Data.pfn_preffix}/{LFN}' for LFN in l_lfn ]
 
