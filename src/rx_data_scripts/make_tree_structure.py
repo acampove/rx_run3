@@ -139,32 +139,26 @@ def _info_from_data_path(path : str) -> tuple[str,str]:
 
     return sample, line
 # ---------------------------------
-def _link_paths(info : T4STR, l_path : list[str]) -> Union[str, None]:
+def _link_paths(sample : str, line : str, l_path : list[str]) -> Union[str, None]:
     '''
     Makes symbolic links of list of paths of a specific kind
     info is a tuple with = (sample, channel, kind, year) information
     Will return directory where linked files are
     '''
     npath = len(l_path)
-    log.info(f'Linking {npath} paths {info}')
+    log.info(f'Linking {npath} paths for {sample}/{line}')
 
-    sam, chan, kind, year = info
-
-    target_dir  = f'{Data.inp_dir}/{sam}_{chan}_{kind}/{Data.ver}/{year}'
-    if os.path.isfile(f'{target_dir}.root'):
-        log.warning(f'Merged file exists, not linking: {target_dir}.root')
-        _save_summary(f'{target_dir}.root')
-        return None
-
+    target_dir  = f'{Data.out_path}/{Data.ver}'
     os.makedirs(target_dir, exist_ok=True)
+
     log.info(f'Linking to: {target_dir}')
     if Data.dry:
         log.warning('Dry run, not linking')
         return None
 
     for source_path in tqdm.tqdm(l_path, ascii=' -'):
-        name = os.path.basename(source_path)
-        target_path = f'{target_dir}/{name}'
+        file_name   = os.path.basename(source_path)
+        target_path = f'{target_dir}/{file_name}'
 
         log.debug(f'{source_path:<50}{"->":10}{target_path:<50}')
         _do_link_paths(src=source_path, tgt=target_path)
