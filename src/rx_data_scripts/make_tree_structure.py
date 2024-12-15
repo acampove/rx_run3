@@ -193,7 +193,7 @@ def _save_summary(target_dir : str) -> None:
     target_file = l_file_path[0]
 
     prt = RFPrinter(path=target_file)
-    prt.save(raise_on_fail=False)
+    prt.save(file_name='summary.txt', raise_on_fail=False)
 # ---------------------------------
 def _get_args() -> argparse.Namespace:
     '''
