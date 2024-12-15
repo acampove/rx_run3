@@ -148,10 +148,10 @@ def _link_paths(sample : str, line : str, l_path : list[str]) -> Union[str, None
     npath = len(l_path)
     log.info(f'Linking {npath} paths for {sample}/{line}')
 
-    target_dir  = f'{Data.out_path}/{Data.ver}'
+    target_dir  = f'{Data.out_path}/{Data.ver}/{sample}/{line}'
     os.makedirs(target_dir, exist_ok=True)
 
-    log.info(f'Linking to: {target_dir}')
+    log.debug(f'Linking to: {target_dir}')
     if Data.dry:
         log.warning('Dry run, not linking')
         return None
