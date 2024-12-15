@@ -161,27 +161,6 @@ def _info_from_data_path(path):
 
     return 'data', chan, kind, year
 # ---------------------------------
-@cache
-def _get_proc_evt():
-    '''
-    Will load and return dictionary containing
-    {event_type : process}
-    '''
-
-    file_path = files('post_ap_data').joinpath('link_conf.yaml')
-    file_path = str(file_path)
-    log.debug(f'Loading config from: {file_path}')
-    if not os.path.isfile(file_path):
-        log.error(f'YAML file with event type process correspondence not found: {file_path}')
-        raise FileNotFoundError
-
-    with open(file_path, encoding='utf-8') as ifile:
-        d_cfg = yaml.safe_load(ifile)
-
-    d_evt_proc = d_cfg['evt_proc']
-
-    return d_evt_proc
-# ---------------------------------
 def _kind_from_decay(decay):
     '''
     Will take string symbolizing decay
