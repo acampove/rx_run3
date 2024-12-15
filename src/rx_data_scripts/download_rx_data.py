@@ -39,6 +39,7 @@ class Data:
     eos_dir : str
     drun    : bool
     ran_pfn : bool
+    force   : bool
 
     pfn_preffix = 'root://x509up_u1000@eoslhcb.cern.ch//eos/lhcb/grid/user'
     nthread     = 1
@@ -112,6 +113,7 @@ def _get_args():
     parser.add_argument('-m', '--mth'  , type=int, help=f'Number of threads to use for downloading, default {Data.nthread}', default=Data.nthread)
     parser.add_argument('-r', '--ran'  ,           help='When picking a subset of files, with -n, pick them randomly', action='store_true')
     parser.add_argument('-d', '--dryr' ,           help='If used, it will skip downloads, but do everything else'    , action='store_true')
+    parser.add_argument('-f', '--force',           help='If used, it will download even if output already exists'    , action='store_true')
 
     args = parser.parse_args()
 
@@ -122,6 +124,7 @@ def _get_args():
     Data.nthread = args.mth
     Data.ran_pfn = args.ran
     Data.drun    = args.dryr
+    Data.force   = args.force
 # --------------------------------------------------
 def _split_pfns(l_pfn):
     '''
