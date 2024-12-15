@@ -41,25 +41,6 @@ class Data:
     dt_rgx  = r'(?:dt|data)_(\d{4}|\d{2}).*tuple_Hlt2RD_(.*)\.root'
     mc_rgx  = r'mc_.*_(\d{8})_nu.*tuple_Hlt2RD_(.*)\.root'
 # ---------------------------------
-def _get_args():
-    '''
-    Parse arguments
-    '''
-    parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
-    parser.add_argument('-j', '--job', type=str, help='Job name, e.g. flt_001', required=True)
-    parser.add_argument('-d', '--dry', type=int, help='Dry run if 1', choices=[0, 1], default=0)
-    parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30], default=20)
-    parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs', default=-1)
-    parser.add_argument('-v', '--ver', type=str, help='Version used to name outputs', required=True)
-    args = parser.parse_args()
-
-    Data.job = args.job
-    Data.dry = args.dry
-    Data.Max = args.max
-    Data.ver = args.ver
-
-    log.setLevel(args.lvl)
-# ---------------------------------
 def _get_paths():
     '''
     Returns list of paths to ROOT files corresponding to a given job
@@ -307,6 +288,14 @@ def _delete_tmp_files():
     Delete files in /tmp that TFileMerger makes
     In order to prevent storage to run out
     '''
+    parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
+    parser.add_argument('-i', '--inp', type=str, help='Path to directory with ROOT files to link', required=True)
+    parser.add_argument('-c', '--cfg', type=str, help='Path to configuration file'               , required=True)
+    parser.add_argument('-v', '--ver', type=str, help='Version used to name outputs'             , required=True)
+    parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs'   , default=-1)
+    parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30]          , default=20)
+    parser.add_argument('-d', '--dry',           help='Dry run if 1', action='store_true')
+    args = parser.parse_args()
 
     log.info('Removing temporary files')
 
