@@ -282,6 +282,8 @@ def _version_from_input() -> str:
     if not re.match(r'v\d+', version):
         raise ValueError(f'Cannot extract version from: {version}')
 
+    log.info(f'Using version {version}')
+
     return version
 # ---------------------------------
 def _initialize(args : argparse.Namespace) -> None:
