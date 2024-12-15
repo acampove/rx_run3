@@ -73,8 +73,8 @@ def _split_paths(l_path : list[str]) -> dict[str,list[str]]:
 
     log.info('Found samples:')
     d_info_path = dict(sorted(d_info_path.items()))
-    for info in d_info_path:
-        log.debug(info)
+    for sample, line in sorted(d_info_path):
+        log.debug(f'{sample:<50}{line:<30}')
 
     return d_info_path
 # ---------------------------------
