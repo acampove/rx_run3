@@ -75,18 +75,31 @@ class RFPrinter:
 
         log.info(f'Saved to: {self._text_path}')
     #-----------------------------------------
-    def save(self, to_screen=False):
-        '''
-        Will save a text file with the summary of the ROOT file contents
-
-        to_screen (bool) : If true, will print to screen, default=False
-        '''
+    def _get_info(self) -> list[str]:
         l_info = []
         log.info(f'Reading from : {self._root_path}')
         with TFile.Open(self._root_path) as ifile:
             l_tree = self._get_trees(ifile)
             for tree in l_tree:
                 l_info+= self._get_tree_info(tree)
+
+        return l_info
+    #-----------------------------------------
+    def save(self, to_screen : bool = False, raise_on_fail : bool = True) -> None:
+        '''
+        Will save a text file with the summary of the ROOT file contents
+
+        to_screen (bool) : If true, will print to screen, default=False
+        '''
+
+        try:
+            l_info = self._get_info()
+        except OSError as exc:
+            if raise_on_fail:
+                raise OSError(f'Cannot open: {self._root_path}') from exc
+
+            log.warning(f'Cannot open: {self._root_path}')
+            return
 
         self._save_info(l_info)
         if to_screen:
