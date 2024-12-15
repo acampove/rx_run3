@@ -7,7 +7,7 @@ import os
 import glob
 import argparse
 
-from typing                 import Union, Tuple
+from typing                 import Union
 from dataclasses            import dataclass
 from dmu.rfile.rfprinter    import RFPrinter
 from dmu.logging.log_store  import LogStore
