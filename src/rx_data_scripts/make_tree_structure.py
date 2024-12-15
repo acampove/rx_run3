@@ -8,7 +8,7 @@ import glob
 import pprint
 import argparse
 
-from typing                 import Union
+from typing                 import Union, Tuple
 from dataclasses            import dataclass
 from functools              import cache
 from importlib.resources    import files
@@ -18,9 +18,10 @@ from dmu.logging.log_store  import LogStore
 import tqdm
 import yaml
 
-from ROOT                   import TFileMerger, TTree
+# pylint: disable=line-too-long
 
-log = LogStore.add_logger('post_ap:link_merge')
+log   = LogStore.add_logger('post_ap:link_merge')
+T4STR = Tuple[str,str,str,str]
 # ---------------------------------
 @dataclass
 class Data:
