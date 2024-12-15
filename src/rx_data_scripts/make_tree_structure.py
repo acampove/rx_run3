@@ -132,8 +132,7 @@ def _info_from_data_path(path):
     name = os.path.basename(path)
     mtc  = re.match(Data.dt_rgx, name)
     if not mtc:
-        log.error(f'Cannot find kind in {name} using {Data.dt_rgx}')
-        raise ValueError
+        raise ValueError(f'Cannot find kind in:\n\n{name}\n\nusing\n\n{Data.dt_rgx}')
 
     try:
         [year, decay] = mtc.groups()
