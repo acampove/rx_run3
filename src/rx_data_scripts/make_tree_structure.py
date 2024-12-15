@@ -5,13 +5,10 @@ Script used to link ntuples properly and merge them
 import re
 import os
 import glob
-import pprint
 import argparse
 
 from typing                 import Union, Tuple
 from dataclasses            import dataclass
-from functools              import cache
-from importlib.resources    import files
 from dmu.rfile.rfprinter    import RFPrinter
 from dmu.logging.log_store  import LogStore
 
