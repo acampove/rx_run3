@@ -253,33 +253,15 @@ def _do_link_paths(src : str, tgt : str) -> None:
 
     os.symlink(src, tgt)
 # ---------------------------------
-def _merge_paths(target, l_path):
+def _save_summary(target : str) -> None:
     '''
-    Merge ROOT files of a specific kind
+    Make text file with summary of file, e.g. 2024.root -> 2024.txt
     '''
-    npath = len(l_path)
-    log.info(f'Merging {npath} paths {target}')
-
     if Data.dry:
-        log.warning('Dry run, not merging')
         return
 
-    log.info('')
-
-    # Allow trees to got up to 1Tb when merging
-    # https://root-forum.cern.ch/t/root-6-04-14-hadd-100gb-and-rootlogon/24581/3
-    TTree.SetMaxTreeSize(1000_000_000_000)
-    fm = TFileMerger(isLocal=True)
-    for path in tqdm.tqdm(l_path, ascii=' -'):
-        fm.AddFile(path, cpProgress=False)
-
-    fm.OutputFile(target)
-    success = fm.Merge()
-
-    if not success:
-        raise ValueError(f'Could not create merged file: {target}')
-
-    _delete_tmp_files()
+    prt = RFPrinter(path=target)
+    prt.save()
 # ---------------------------------
 def _delete_tmp_files():
     '''
@@ -334,7 +316,6 @@ def main():
             continue
 
         target = f'{target_dir}.root'
-        _merge_paths(target, l_path)
         _save_summary(target)
 # ---------------------------------
 if __name__ == '__main__':
