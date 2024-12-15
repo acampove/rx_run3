@@ -1,5 +1,5 @@
 '''
-Script used to show a summary of samples
+Script used to show a summary of triggers
 '''
 import os
 import re
@@ -11,7 +11,7 @@ from dataclasses            import dataclass
 
 from dmu.logging.log_store  import LogStore
 
-log = LogStore.add_logger('rx_data:list_samples')
+log = LogStore.add_logger('rx_data:list_triggers')
 
 # pylint: disable=line-too-long
 # ----------------------------
@@ -26,27 +26,27 @@ class Data:
     mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_\w{10}\.root'
 # ----------------------------
 def _parse_args():
-    parser = argparse.ArgumentParser(description='Script used list samples for a given version')
+    parser = argparse.ArgumentParser(description='Script used list triggers for a given version')
     parser.add_argument('-v', '--vers' , type=str, help='Version of LFNs', required=True)
 
     args = parser.parse_args()
     Data.version = args.vers
 # ----------------------------
-def _sample_from_lfn(lfn : str) -> str:
+def _trigger_from_lfn(lfn : str) -> str:
     file_name = os.path.basename(lfn)
 
     mtch_mc = re.match(Data.mc_rgx, file_name)
     mtch_dt = re.match(Data.dt_rgx, file_name)
 
     if mtch_mc:
-        return mtch_mc.group(1)
+        return mtch_mc.group(2)
 
     if mtch_dt:
-        return mtch_dt.group(1)
+        return mtch_dt.group(2)
 
-    raise ValueError(f'Cannot extract sample name from: {file_name}')
+    raise ValueError(f'Cannot extract trigger name from: {file_name}')
 # ----------------------------
-def _get_samples() -> dict[str,int]:
+def _get_triggers() -> dict[str,int]:
     lfn_wc = files('rx_data_lfns').joinpath(f'{Data.version}/*.json')
     lfn_wc = str(lfn_wc)
     l_path = glob.glob(lfn_wc)
@@ -60,15 +60,15 @@ def _get_samples() -> dict[str,int]:
         with open(path, encoding='utf-8') as ifile:
             l_lfn += json.load(ifile)
 
-    d_sample = {}
+    d_trigger = {}
     for lfn in l_lfn:
-        sample = _sample_from_lfn(lfn)
-        if sample not in d_sample:
-            d_sample[sample] = 1
+        trigger = _trigger_from_lfn(lfn)
+        if trigger not in d_trigger:
+            d_trigger[trigger] = 1
         else:
-            d_sample[sample] =+1
+            d_trigger[trigger] =+1
 
-    return d_sample
+    return d_trigger
 # ----------------------------
 def main():
     '''
@@ -76,12 +76,12 @@ def main():
     '''
 
     _parse_args()
-    d_sample = _get_samples()
+    d_trigger = _get_triggers()
 
     log.info(60 * '-')
-    log.info(f'{"Sample":<50}{"Files":<10}')
+    log.info(f'{"trigger":<50}{"Files":<10}')
     log.info(60 * '-')
-    for name, nfile in d_sample.items():
+    for name, nfile in d_trigger.items():
         log.info(f'{name:<50}{nfile:<10}')
 # ----------------------------
 if __name__ == '__main__':
