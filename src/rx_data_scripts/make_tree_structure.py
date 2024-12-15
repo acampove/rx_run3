@@ -41,11 +41,11 @@ class Data:
     dt_rgx  = r'(?:dt|data)_(\d{4}|\d{2}).*tuple_Hlt2RD_(.*)\.root'
     mc_rgx  = r'mc_.*_(\d{8})_nu.*tuple_Hlt2RD_(.*)\.root'
 # ---------------------------------
-def _get_paths():
+def _get_paths() -> list[str]:
     '''
     Returns list of paths to ROOT files corresponding to a given job
     '''
-    path_wc = f'{Data.inp_dir}/.run3/{Data.job}/*.root'
+    path_wc = f'{Data.inp_path}/*.root'
     l_path  = glob.glob(path_wc)
 
     npath   = len(l_path)
