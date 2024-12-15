@@ -211,7 +211,7 @@ def _load_config() -> None:
     with open(Data.conf_path, encoding='utf-8') as ifile:
         Data.cfg_dat = yaml.safe_load(ifile)
 # ---------------------------------
-def _link_paths(info : tuple[str], l_path : list[str]) -> Union[str, None]:
+def _link_paths(info : T4STR, l_path : list[str]) -> Union[str, None]:
     '''
     Makes symbolic links of list of paths of a specific kind
     info is a tuple with = (sample, channel, kind, year) information
@@ -243,7 +243,7 @@ def _link_paths(info : tuple[str], l_path : list[str]) -> Union[str, None]:
 
     return target_dir
 # ---------------------------------
-def _do_link_paths(src : str | None = None, tgt : str | None = None):
+def _do_link_paths(src : str, tgt : str) -> None:
     '''
     Will check if target link exists, will delete it if it does
     Will make link
