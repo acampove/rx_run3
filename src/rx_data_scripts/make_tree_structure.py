@@ -93,7 +93,7 @@ def _truncate_paths(d_path):
 
     return d_path_trunc
 # ---------------------------------
-def _info_from_path(path):
+def _info_from_path(path : str) -> tuple[str,str]:
     '''
     Will pick a path to a ROOT file
     Will return tuple with information associated to file
@@ -111,7 +111,7 @@ def _info_from_path(path):
 
     return info
 # ---------------------------------
-def _info_from_mc_path(path):
+def _info_from_mc_path(path : str) -> tuple[str,str]:
     '''
     Will return information from path to file
     '''
@@ -122,10 +122,9 @@ def _info_from_mc_path(path):
 
     [sample, line] = mtch.groups()
 
-    #TODO: Do not hardcode year
-    return sample, line, 'ana', '2024'
+    return sample, line
 # ---------------------------------
-def _info_from_data_path(path):
+def _info_from_data_path(path : str) -> tuple[str,str]:
     '''
     Will get info from data path
     '''
@@ -135,23 +134,11 @@ def _info_from_data_path(path):
         raise ValueError(f'Cannot find kind in:\n\n{name}\n\nusing\n\n{Data.dt_rgx}')
 
     try:
-        [year, decay] = mtc.groups()
+        [sample, line] = mtc.groups()
     except ValueError as exc:
-        log.error(f'Expected three elements in: {mtc.groups()}')
-        raise ValueError from exc
+        raise ValueError(f'Expected three elements in: {mtc.groups()}') from exc
 
-    if len(year) == 2:
-        year = f'20{year}'
-
-    if 'MuMu' in decay:
-        chan = 'mm'
-    elif 'EE' in decay:
-        chan = 'ee'
-    else:
-        log.error(f'Cannot find channel in {decay}')
-        raise ValueError
-
-    return 'data', chan, decay, year
+    return sample, line
 # ---------------------------------
 def _link_paths(info : T4STR, l_path : list[str]) -> Union[str, None]:
     '''
