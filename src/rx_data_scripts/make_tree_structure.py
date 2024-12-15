@@ -137,6 +137,9 @@ def _info_from_data_path(path : str) -> tuple[str,str]:
     except ValueError as exc:
         raise ValueError(f'Expected three elements in: {mtc.groups()}') from exc
 
+    sample = sample.replace('_turbo_', '_')
+    sample = sample.replace('_full_' , '_')
+
     return sample, line
 # ---------------------------------
 def _link_paths(sample : str, line : str, l_path : list[str]) -> Union[str, None]:
