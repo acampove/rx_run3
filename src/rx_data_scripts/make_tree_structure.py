@@ -31,13 +31,13 @@ class Data:
     # pylint: disable = invalid-name
     # Need to call var Max instead of max
 
-    job     : str
-    dry     : int
-    Max     : int
-    ver     : str
-    cfg_dat : dict
+    Max       : int
+    ver       : str
+    dry       : bool
+    cfg_dat   : dict
+    conf_path : str
+    inp_path  : str
 
-    inp_dir = '/publicfs/lhcb/user/campoverde/Data/RK'
     dt_rgx  = r'(?:dt|data)_(\d{4}|\d{2}).*tuple_Hlt2RD_(.*)\.root'
     mc_rgx  = r'mc_.*_(\d{8})_nu.*tuple_Hlt2RD_(.*)\.root'
 # ---------------------------------
