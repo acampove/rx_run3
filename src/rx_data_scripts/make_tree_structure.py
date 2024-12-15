@@ -31,11 +31,9 @@ class Data:
     Max       : int
     ver       : str
     dry       : bool
-    cfg_dat   : dict
-    conf_path : str
     inp_path  : str
 
-    dt_rgx  = r'(?:dt|data)_(\d{4}|\d{2}).*tuple_Hlt2RD_(.*)\.root'
+    dt_rgx  = r'(data_\d{2}_.*)_(\w+RD_.*)_\w{10}\.root'
     mc_rgx  = r'mc_.*_\d{8}_(.*)_(Hlt2RD_.*)_\w{10}\.root'
 # ---------------------------------
 def _get_paths() -> list[str]:
