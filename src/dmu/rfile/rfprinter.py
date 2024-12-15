@@ -79,8 +79,6 @@ class RFPrinter:
         '''
 
         text_path = self._get_summary_path(file_name)
-
-
         with open(text_path, 'w', encoding='utf-8') as ofile:
             for info in l_info:
                 ofile.write(f'{info}\n')
@@ -97,7 +95,7 @@ class RFPrinter:
 
         return l_info
     #-----------------------------------------
-    def save(self, file_name : Union[str,None], to_screen : bool = False, raise_on_fail : bool = True) -> None:
+    def save(self, file_name : Union[str,None] = None, to_screen : bool = False, raise_on_fail : bool = True) -> None:
         '''
         Will save a text file with the summary of the ROOT file contents
 
