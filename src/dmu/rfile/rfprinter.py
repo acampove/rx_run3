@@ -3,7 +3,8 @@ Module containing RFPrinter
 '''
 import os
 
-from ROOT import TFile
+from typing import Union
+from ROOT   import TFile
 
 from dmu.logging.log_store import LogStore
 
