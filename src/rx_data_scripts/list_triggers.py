@@ -9,6 +9,7 @@ import argparse
 from importlib.resources    import files
 from dataclasses            import dataclass
 
+import yaml
 from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('rx_data:list_triggers')
@@ -22,15 +23,18 @@ class Data:
     '''
 
     version : str
+    outfile : str
     dt_rgx  = r'(data_\d{2}_.*)_(\w+RD_.*)_\w{10}\.root'
     mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_\w{10}\.root'
 # ----------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used list triggers for a given version')
     parser.add_argument('-v', '--vers' , type=str, help='Version of LFNs', required=True)
+    parser.add_argument('-o', '--outf' , type=str, help='Name of file to save list as YAML, by default will not save anything')
 
     args = parser.parse_args()
     Data.version = args.vers
+    Data.outfile = args.outf
 # ----------------------------
 def _trigger_from_lfn(lfn : str) -> str:
     file_name = os.path.basename(lfn)
@@ -73,6 +77,13 @@ def _get_triggers() -> dict[str,int]:
 
     return d_trigger
 # ----------------------------
+def _save(d_trigger : dict[str,int]) -> None:
+    if not hasattr(Data, 'outfile'):
+        return
+
+    with open(Data.outfile, 'w', encoding='utf-8') as ofile:
+        yaml.safe_dump(d_trigger, ofile)
+# ----------------------------
 def main():
     '''
     Starts here
@@ -80,6 +91,8 @@ def main():
 
     _parse_args()
     d_trigger = _get_triggers()
+
+    _save(d_trigger)
 
     log.info(60 * '-')
     log.info(f'{"trigger":<50}{"Files":<10}')
