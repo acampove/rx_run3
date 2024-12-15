@@ -94,7 +94,14 @@ def _get_pfns() -> list[str]:
 
     nlfn    = len(l_lfn)
     if nlfn == 0:
-        raise ValueError(f'Found {nlfn} LFNs for version {Data.vers}')
+        raise ValueError(f'''
+        -------------------------------------------------------------------
+                         Found {nlfn} LFNs for version {Data.vers}, either:
+
+                         1. You wrote the wrong version.
+                         2. You forgot to run pip install --upgrade rx_data
+        -------------------------------------------------------------------
+                         ''')
 
     log.info(f'Found {nlfn} paths')
     l_pfn   = [ f'{Data.pfn_preffix}/{LFN}' for LFN in l_lfn ]
@@ -155,11 +162,13 @@ def _initialize():
         os.makedirs(ntup_dir, exist_ok=Data.force)
     except FileExistsError as exc:
         raise FileExistsError(f'''
+        -------------------------------------------------------------------
         Version of ntuples {Data.vers} already found in {ntup_dir}, either:
 
         1. Partial download already happened and you are retrying, run with -f (--force) flag.
         2. You are not running the latest version of and you need to run:
                 pip install --upgrade rx_data.
+        -------------------------------------------------------------------
                               ''') from exc
 # --------------------------------------------------
 def main():
