@@ -204,13 +204,11 @@ def _kind_from_decay(decay):
 
     return Data.cfg_dat['decays'][decay]
 # ---------------------------------
-def _load_config():
-    conf_path = files('post_ap_data').joinpath('link_conf.yaml')
-    conf_path = str(conf_path)
-    if not os.path.isfile(conf_path):
-        raise FileNotFoundError(f'Cannot find {conf_path}')
+def _load_config() -> None:
+    if not os.path.isfile(Data.conf_path):
+        raise FileNotFoundError(f'Cannot find {Data.conf_path}')
 
-    with open(conf_path, encoding='utf-8') as ifile:
+    with open(Data.conf_path, encoding='utf-8') as ifile:
         Data.cfg_dat = yaml.safe_load(ifile)
 # ---------------------------------
 def _link_paths(info : tuple[str], l_path : list[str]) -> Union[str, None]:
