@@ -225,6 +225,7 @@ def _initialize(args : argparse.Namespace) -> None:
     Data.out_path  = args.out
 
     LogStore.set_level('rx_data:make_tree_structure', args.lvl)
+    LogStore.set_level('dmu:rfprinter', 30)
 
     Data.ver       = _version_from_input()
 # ---------------------------------
