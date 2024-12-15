@@ -2,6 +2,8 @@
 Script used to link ntuples properly and merge them
 '''
 
+# pylint: disable=line-too-long, import-error
+
 import re
 import os
 import glob
@@ -12,9 +14,9 @@ from dataclasses            import dataclass
 from dmu.rfile.rfprinter    import RFPrinter
 from dmu.logging.log_store  import LogStore
 
-import tqdm
+from rx_data import utilities as ut
 
-# pylint: disable=line-too-long
+import tqdm
 
 log   = LogStore.add_logger('rx_data:make_tree_structure')
 # ---------------------------------
