@@ -23,7 +23,6 @@ class RFPrinter:
             raise FileNotFoundError(f'Cannot find {path}')
 
         self._root_path = path
-        self._text_path = path.replace('.root', '.txt')
     #-----------------------------------------
     def _get_trees(self, ifile):
         '''
@@ -65,16 +64,28 @@ class RFPrinter:
 
         return l_line
     #-----------------------------------------
-    def _save_info(self, l_info):
+    def _get_summary_path(self, file_name : Union[str,None]) -> str:
+        if file_name is None:
+            text_path = self._root_path.replace('.root', '.txt')
+            return text_path
+
+        root_dir = os.path.dirname(self._root_path)
+
+        return f'{root_dir}/{file_name}'
+    #-----------------------------------------
+    def _save_info(self, l_info : list[str], file_name : Union[str,None]) -> None:
         '''
         Takes list of strings, saves it to text file
         '''
 
-        with open(self._text_path, 'w', encoding='utf-8') as ofile:
+        text_path = self._get_summary_path(file_name)
+
+
+        with open(text_path, 'w', encoding='utf-8') as ofile:
             for info in l_info:
                 ofile.write(f'{info}\n')
 
-        log.info(f'Saved to: {self._text_path}')
+        log.info(f'Saved to: {text_path}')
     #-----------------------------------------
     def _get_info(self) -> list[str]:
         l_info = []
@@ -86,11 +97,13 @@ class RFPrinter:
 
         return l_info
     #-----------------------------------------
-    def save(self, to_screen : bool = False, raise_on_fail : bool = True) -> None:
+    def save(self, file_name : Union[str,None], to_screen : bool = False, raise_on_fail : bool = True) -> None:
         '''
         Will save a text file with the summary of the ROOT file contents
 
-        to_screen (bool) : If true, will print to screen, default=False
+        file_name    : If used, name the file with the summary this way. Othewise, use ROOT file with .txt extension
+        to_screen    : If true, will print to screen, default=False
+        raise_on_fail: If cannot open ROOT file, will raise exeption (default), otherwise will only show warning.
         '''
 
         try:
@@ -102,7 +115,7 @@ class RFPrinter:
             log.warning(f'Cannot open: {self._root_path}')
             return
 
-        self._save_info(l_info)
+        self._save_info(l_info, file_name=file_name)
         if to_screen:
             for info in l_info:
                 log.info(info)
