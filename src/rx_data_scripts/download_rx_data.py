@@ -153,7 +153,7 @@ def _get_args():
     Data.drun    = args.dryr
     Data.force   = args.force
 # --------------------------------------------------
-def _split_pfns(l_pfn):
+def _split_pfns(l_pfn : list[str]) -> list[list[str]]:
     '''
     Takes a list of strings and splits it into many lists
     to be distributed among nthread threads
