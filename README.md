@@ -54,6 +54,15 @@ and version `v1` to the specified path.
 - In order to prevent deleting the data, save it in a hiden folder, e.g. one starting with a period. Above it is `.data`.
 - This path is optional, one can export `DOWNLOAD_NTUPPATH` and the path will be picked up
 
+**Potential problems**:
+The download happens through XROOTD, which will try to pick a kerberos token. If authentication problems happen, do:
+
+```bash
+which kinit
+```
+
+and make sure that your kinit does not come from a virtual environment but it is the one in the LHCb stack or the native one.
+
 ## Building directory structure
 
 All the ntuples will be downloaded in a single directory.
