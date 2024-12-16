@@ -211,6 +211,9 @@ def main():
     l_pfn   = _get_pfns()
 
     l_l_pfn = _split_pfns(l_pfn)
+    ngroup  = len(l_l_pfn)
+
+    log.info(f'Downloading {ngroup} groups with {Data.nthread} threads')
     with ThreadPoolExecutor(max_workers=Data.nthread) as executor:
         for l_pfn in l_l_pfn:
             pbar = tqdm.tqdm(total=len(l_pfn))
