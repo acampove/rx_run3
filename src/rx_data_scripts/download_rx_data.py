@@ -213,9 +213,13 @@ def main():
 
     log.info(f'Downloading {ngroup} groups with {Data.nthread} threads')
     with ThreadPoolExecutor(max_workers=Data.nthread) as executor:
+        l_future = []
         for l_pfn in l_l_pfn:
             pbar = tqdm.tqdm(total=len(l_pfn))
             future = executor.submit(_download_group, l_pfn, pbar)
+            l_future.append(future)
+
+        for future in l_future:
             if future.exception():
                 print(future.exception())
 # --------------------------------------------------
