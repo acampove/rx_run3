@@ -50,8 +50,9 @@ download_rx_data -m 5 -p /path/to/downloaded/.data -v v1 -d -t triggers.yaml
 which will use 5 threads to download the ntuples associated to the triggers in `triggers.yaml`
 and version `v1` to the specified path.
 
-**IMPORTANT**: In order to prevent deleting the data, save it in a hiden folder, e.g. one starting with a period.
-Above it is `.data`.
+**IMPORTANT**: 
+- In order to prevent deleting the data, save it in a hiden folder, e.g. one starting with a period. Above it is `.data`.
+- This path is optional, one can export `DOWNLOAD_NTUPPATH` and the path will be picked up
 
 ## Building directory structure
 
