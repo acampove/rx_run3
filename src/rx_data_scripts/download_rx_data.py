@@ -56,8 +56,6 @@ def _download(pfn : str) -> None:
         log.debug(f'Skipping downloaded file: {pfn}')
         return
 
-    log.debug(f'   {pfn}'     )
-    log.debug(f'   {out_path}')
     if Data.drun:
         return
 
