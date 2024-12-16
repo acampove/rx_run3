@@ -162,9 +162,14 @@ def _split_pfns(l_pfn : list[str]) -> list[list[str]]:
     npfn         = len(l_pfn)
     thread_size  = math.floor(npfn / Data.nthread)
 
-    log.debug(f'Splitting into {Data.nthread} threads with max size {thread_size} ')
-
     l_l_pfn = [ l_pfn[i_pfn : i_pfn + thread_size ] for i_pfn in range(0, npfn, thread_size)]
+
+    log.debug(30 * '-')
+    log.debug(f'{"Thread":<10}{"PFNs":<20}')
+    log.debug(30 * '-')
+    for i_thread, l_pfn_thread in enumerate(l_l_pfn):
+        npfn = len(l_pfn_thread)
+        log.debug(f'{i_thread:<10}{npfn:<20}')
 
     return l_l_pfn
 # --------------------------------------------------
