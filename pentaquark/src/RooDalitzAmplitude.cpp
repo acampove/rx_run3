@@ -2729,14 +2729,3 @@ RooAbsReal * RooDalitzAmplitude::createSUM(RooAbsData & data, const RooLinkedLis
     return nll;
 }
 
-/*
-Double_t RooDalitzAmplitude::getpB(double mpp) const
-{
-  return sqrt((m2_bs-(m_jpsi+mpp)*(m_jpsi+mpp))*(m2_bs-(m_jpsi-mpp)*(m_jpsi-mpp)))/2./m_bs;
-}
-
-Double_t RooDalitzAmplitude::getpR(double mpp) const
-{
-  return sqrt(mpp*mpp-4*m2_pi)/2.;
-}
-*/
