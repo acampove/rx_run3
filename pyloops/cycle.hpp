@@ -1,6 +1,7 @@
 #ifndef ITER_CYCLE_H_
 #define ITER_CYCLE_H_
 
+#include "internal/iterator_wrapper.hpp"
 #include "internal/iterbase.hpp"
 
 #include <initializer_list>
@@ -8,68 +9,100 @@
 #include <utility>
 
 namespace iter {
-    namespace impl {
-        template < typename Container > class Cycler;
+  namespace impl {
+    template <typename Container>
+    class Cycler;
+
+    using CycleFn = IterToolFn<Cycler>;
+  }
+  inline constexpr impl::CycleFn cycle{};
+}
+
+template <typename Container>
+class iter::impl::Cycler {
+ private:
+  friend CycleFn;
+
+  Container container_;
+
+  Cycler(Container&& container)
+      : container_(std::forward<Container>(container)) {}
+
+ public:
+  Cycler(Cycler&&) = default;
+  template <typename ContainerT>
+  class Iterator {
+   private:
+    template <typename>
+    friend class Iterator;
+    IteratorWrapper<ContainerT> sub_iter_;
+    IteratorWrapper<ContainerT> sub_begin_;
+    IteratorWrapper<ContainerT> sub_end_;
+
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = iterator_traits_deref<ContainerT>;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
+
+    Iterator(IteratorWrapper<ContainerT>&& sub_iter,
+        IteratorWrapper<ContainerT>&& sub_end)
+        : sub_iter_{sub_iter},
+          sub_begin_{sub_iter},
+          sub_end_{std::move(sub_end)} {}
+
+    iterator_deref<ContainerT> operator*() {
+      return *sub_iter_;
     }
 
-    template < typename Container > impl::Cycler< Container > cycle(Container &&);
+    iterator_arrow<ContainerT> operator->() {
+      return apply_arrow(sub_iter_);
+    }
 
-    template < typename T > impl::Cycler< std::initializer_list< T > > cycle(std::initializer_list< T >);
-}   // namespace iter
+    Iterator& operator++() {
+      ++sub_iter_;
+      // reset to beginning upon reaching the sub_end_
+      if (!(sub_iter_ != sub_end_)) {
+        sub_iter_ = sub_begin_;
+      }
+      return *this;
+    }
 
-template < typename Container > class iter::impl::Cycler {
-  private:
-    friend Cycler                                                       iter::cycle< Container >(Container &&);
-    template < typename T > friend Cycler< std::initializer_list< T > > iter::cycle(std::initializer_list< T >);
+    Iterator operator++(int) {
+      auto ret = *this;
+      ++*this;
+      return ret;
+    }
 
-    Container container;
+    template <typename T>
+    bool operator!=(const Iterator<T>& other) const {
+      return sub_iter_ != other.sub_iter_;
+    }
 
-    Cycler(Container && in_container)
-        : container(std::forward< Container >(in_container)) {}
+    template <typename T>
+    bool operator==(const Iterator<T>& other) const {
+      return !(*this != other);
+    }
+  };
 
-  public:
-    Cycler(Cycler &&) = default;
-    class Iterator : public std::iterator< std::input_iterator_tag, iterator_traits_deref< Container > > {
-      private:
-        iterator_type< Container > sub_iter;
-        iterator_type< Container > begin;
-        iterator_type< Container > end;
+  Iterator<Container> begin() {
+    return {get_begin(container_), get_end(container_)};
+  }
 
-      public:
-        Iterator(const iterator_type< Container > & iter, iterator_type< Container > && in_end)
-            : sub_iter{iter}
-            , begin{iter}
-            , end{std::move(in_end)} {}
+  Iterator<Container> end() {
+    return {get_end(container_), get_end(container_)};
+  }
 
-        iterator_deref< Container > operator*() { return *this->sub_iter; }
+  Iterator<AsConst<Container>> begin() const {
+    return {get_begin(std::as_const(container_)),
+        get_end(std::as_const(container_))};
+  }
 
-        iterator_arrow< Container > operator->() { return apply_arrow(this->sub_iter); }
-
-        Iterator & operator++() {
-            ++this->sub_iter;
-            // reset to beginning upon reaching the end
-            if (!(this->sub_iter != this->end)) { this->sub_iter = this->begin; }
-            return *this;
-        }
-
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
-
-        bool operator!=(const Iterator & other) const { return this->sub_iter != other.sub_iter; }
-
-        bool operator==(const Iterator & other) const { return !(*this != other); }
-    };
-
-    Iterator begin() { return {std::begin(this->container), std::end(this->container)}; }
-
-    Iterator end() { return {std::end(this->container), std::end(this->container)}; }
+  Iterator<AsConst<Container>> end() const {
+    return {get_end(std::as_const(container_)),
+        get_end(std::as_const(container_))};
+  }
 };
-
-template < typename Container > iter::impl::Cycler< Container > iter::cycle(Container && container) { return {std::forward< Container >(container)}; }
-
-template < typename T > iter::impl::Cycler< std::initializer_list< T > > iter::cycle(std::initializer_list< T > il) { return {std::move(il)}; }
 
 #endif

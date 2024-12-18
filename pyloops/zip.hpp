@@ -1,118 +1,133 @@
 #ifndef ITER_ZIP_HPP_
 #define ITER_ZIP_HPP_
 
+#include "internal/iter_tuples.hpp"
 #include "internal/iterbase.hpp"
 
+#include <algorithm>
 #include <iterator>
 #include <tuple>
 #include <utility>
 
 namespace iter {
-    namespace impl {
-        template < typename... RestContainers > 
-        class Zipped;
+  namespace impl {
+    template <typename TupleType, std::size_t... Is>
+    class Zipped;
 
-        template < typename Container, typename... RestContainers > 
-        class Zipped< Container, RestContainers... >;
+    template <typename TupleType, std::size_t... Is>
+    Zipped<TupleType, Is...> zip_impl(TupleType&&, std::index_sequence<Is...>);
+  }
 
-        template <> 
-        class Zipped<>;
-    }   // namespace impl
+  template <typename... Containers>
+  auto zip(Containers&&... containers);
+}
 
-    template < typename... Containers > impl::Zipped< Containers... > zip(Containers &&...);
-}   // namespace iter
+template <typename TupleType, std::size_t... Is>
+class iter::impl::Zipped {
+ private:
+  TupleType containers_;
+  friend Zipped iter::impl::zip_impl<TupleType, Is...>(
+      TupleType&&, std::index_sequence<Is...>);
 
-// specialization for at least 1 template argument
-template < typename Container, typename... RestContainers > 
-class iter::impl::Zipped< Container, RestContainers... > 
-{
-    using ZipIterDeref = std::tuple< iterator_deref< Container >, iterator_deref< RestContainers >... >;
+  Zipped(TupleType&& containers) : containers_(std::move(containers)) {}
 
-    friend Zipped iter::zip< Container, RestContainers... > (Container &&, RestContainers &&...);
+ public:
+  Zipped(Zipped&&) = default;
 
-    template < typename... > friend class Zipped;
+  // template templates here because I need to defer evaluation in the const
+  // iteration case for types that don't have non-const begin() and end(). If I
+  // passed in the actual types of the tuples of iterators and the type for
+  // deref they'd need to be known in the function declarations below.
+  template <typename TupleTypeT, template <typename> class IteratorTuple,
+      template <typename> class TupleDeref>
+  class Iterator {
+    // see gcc bug 87651
+#if NO_GCC_FRIEND_ERROR
+   private:
+    template <typename, template <typename> class, template <typename> class>
+    friend class Iterator;
+#else
+   public:
+#endif
+    IteratorTuple<TupleTypeT> iters_;
 
-  private:
-    Container                   container;
-    Zipped< RestContainers... > rest_zipped;
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = TupleDeref<TupleTypeT>;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type;
 
-    Zipped(Container && in_container, RestContainers &&... rest): 
-        container  (std::forward< Container >(in_container)), 
-        rest_zipped{std::forward< RestContainers >(rest)...}
-    {}
+    Iterator(IteratorTuple<TupleTypeT>&& iters) : iters_(std::move(iters)) {}
 
-  public:
-    Zipped() = default;
-    Zipped(Zipped &&) = default;
-    class Iterator : public std::iterator< std::input_iterator_tag, ZipIterDeref > {
-      private:
-        using RestIter = typename Zipped< RestContainers... >::Iterator;
+    Iterator& operator++() {
+      absorb(++std::get<Is>(iters_)...);
+      return *this;
+    }
 
-        iterator_type< Container > iter;
-        RestIter                   rest_iter;
+    Iterator operator++(int) {
+      auto ret = *this;
+      ++*this;
+      return ret;
+    }
 
-      public:
-        constexpr static const bool is_base_iter = false;
-        Iterator(iterator_type< Container > && it, RestIter && rest)
-            : iter{std::move(it)}
-            , rest_iter{std::move(rest)} {}
+    template <typename T, template <typename> class IT,
+        template <typename> class TD>
+    bool operator!=(const Iterator<T, IT, TD>& other) const {
+      if constexpr (sizeof...(Is) == 0) {
+        return false;
+      } else {
+        return (... && (std::get<Is>(iters_) != std::get<Is>(other.iters_)));
+      }
+    }
 
-        Iterator & operator++() {
-            ++this->iter;
-            ++this->rest_iter;
-            return *this;
-        }
+    template <typename T, template <typename> class IT,
+        template <typename> class TD>
+    bool operator==(const Iterator<T, IT, TD>& other) const {
+      return !(*this != other);
+    }
 
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
+    TupleDeref<TupleTypeT> operator*() {
+      return {(*std::get<Is>(iters_))...};
+    }
 
-        bool operator!=(const Iterator & other) const { return this->iter != other.iter && (RestIter::is_base_iter || this->rest_iter != other.rest_iter); }
+    auto operator->() -> ArrowProxy<decltype(**this)> {
+      return {**this};
+    }
+  };
 
-        bool operator==(const Iterator & other) const { return !(*this != other); }
+  Iterator<TupleType, iterator_tuple_type, iterator_deref_tuple> begin() {
+    return {{get_begin(std::get<Is>(containers_))...}};
+  }
 
-        auto operator*() -> decltype(std::tuple_cat(std::tuple< iterator_deref< Container > >{*this->iter}, *this->rest_iter)) { return std::tuple_cat(std::tuple< iterator_deref< Container > >{*this->iter}, *this->rest_iter); }
+  Iterator<TupleType, iterator_tuple_type, iterator_deref_tuple> end() {
+    return {{get_end(std::get<Is>(containers_))...}};
+  }
 
-        auto operator-> () -> ArrowProxy< decltype(**this) > { return {**this}; }
-    };
+  Iterator<AsConst<TupleType>, const_iterator_tuple_type,
+      const_iterator_deref_tuple>
+  begin() const {
+    return {{get_begin(std::as_const(std::get<Is>(containers_)))...}};
+  }
 
-    Iterator begin() { return {std::begin(this->container), std::begin(this->rest_zipped)}; }
-
-    Iterator end() { return {std::end(this->container), std::end(this->rest_zipped)}; }
+  Iterator<AsConst<TupleType>, const_iterator_tuple_type,
+      const_iterator_deref_tuple>
+  end() const {
+    return {{get_end(std::as_const(std::get<Is>(containers_)))...}};
+  }
 };
 
-template <> class iter::impl::Zipped<> {
-  public:
-    Zipped(Zipped &&) = default;
-    class Iterator : public std::iterator< std::input_iterator_tag, std::tuple<> > {
-      public:
-        constexpr static const bool is_base_iter = true;
+template <typename TupleType, std::size_t... Is>
+iter::impl::Zipped<TupleType, Is...> iter::impl::zip_impl(
+    TupleType&& containers, std::index_sequence<Is...>) {
+  return {std::move(containers)};
+}
 
-        Iterator & operator++() { return *this; }
-
-        Iterator operator++(int) { return *this; }
-
-        // if this were to return true, there would be no need
-        // for the is_base_iter static class attribute.
-        // However, returning false causes an empty zip() call
-        // to reach the "end" immediately. Returning true here
-        // instead results in an infinite loop in the zip() case
-        bool operator!=(const Iterator &) const { return false; }
-
-        bool operator==(const Iterator & other) const { return !(*this != other); }
-
-        std::tuple<> operator*() { return std::tuple<>{}; }
-
-        auto operator-> () -> ArrowProxy< decltype(**this) > { return {**this}; }
-    };
-
-    Iterator begin() { return {}; }
-
-    Iterator end() { return {}; }
-};
-
-template < typename... Containers > iter::impl::Zipped< Containers... > iter::zip(Containers &&... containers) { return {std::forward< Containers >(containers)...}; }
+template <typename... Containers>
+auto iter::zip(Containers&&... containers) {
+  return impl::zip_impl(
+      std::tuple<Containers...>{std::forward<Containers>(containers)...},
+      std::index_sequence_for<Containers...>{});
+}
 
 #endif

@@ -4,119 +4,166 @@
 #include "internal/iteratoriterator.hpp"
 #include "internal/iterbase.hpp"
 
-#include <initializer_list>
 #include <iterator>
 #include <type_traits>
 #include <vector>
 
 namespace iter {
-    namespace impl {
-        template < typename Container > class Combinator;
+  namespace impl {
+    template <typename Container>
+    class Combinator;
+
+    using CombinationsFn = IterToolFnBindSizeTSecond<Combinator>;
+  }
+  inline constexpr impl::CombinationsFn combinations{};
+}
+
+template <typename Container>
+class iter::impl::Combinator {
+ private:
+  Container container_;
+  std::size_t length_;
+
+  friend CombinationsFn;
+
+  Combinator(Container&& container, std::size_t length)
+      : container_(std::forward<Container>(container)), length_{length} {}
+
+  template <typename T>
+  using IndexVector = std::vector<iterator_type<T>>;
+  template <typename T>
+  using CombIteratorDeref = IterIterWrapper<IndexVector<T>>;
+
+ public:
+  Combinator(Combinator&&) = default;
+  template <typename ContainerT>
+  class Iterator {
+   private:
+    template <typename>
+    friend class Iterator;
+    constexpr static const int COMPLETE = -1;
+    std::remove_reference_t<ContainerT>* container_p_;
+    CombIteratorDeref<ContainerT> indices_;
+    int steps_{};
+
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = CombIteratorDeref<ContainerT>;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
+
+    Iterator(ContainerT& container, std::size_t n)
+        : container_p_{&container}, indices_{n} {
+      if (n == 0) {
+        steps_ = COMPLETE;
+        return;
+      }
+      size_t inc = 0;
+      for (auto& iter : indices_.get()) {
+        auto it = get_begin(*container_p_);
+        dumb_advance(it, get_end(*container_p_), inc);
+        if (it != get_end(*container_p_)) {
+          iter = it;
+          ++inc;
+        } else {
+          steps_ = COMPLETE;
+          break;
+        }
+      }
     }
 
-    template < typename Container > impl::Combinator< Container > combinations(Container &&, std::size_t);
+    static Iterator zero_length_end(ContainerT& container) {
+      Iterator it{container, 0};
+      it.steps_ = 0;
+      return it;
+    }
 
-    template < typename T > impl::Combinator< std::initializer_list< T > > combinations(std::initializer_list< T >, std::size_t);
-}   // namespace iter
+    CombIteratorDeref<ContainerT>& operator*() {
+      return indices_;
+    }
 
-template < typename Container > class iter::impl::Combinator {
-  private:
-    Container   container;
-    std::size_t length;
+    CombIteratorDeref<ContainerT>* operator->() {
+      return &indices_;
+    }
 
-    friend Combinator                                                       iter::combinations< Container >(Container &&, std::size_t);
-    template < typename T > friend Combinator< std::initializer_list< T > > iter::combinations(std::initializer_list< T >, std::size_t);
+    Iterator& operator++() {
+      if (indices_.get().empty()) {
+        // zero-length case.
+        ++steps_;
+        return *this;
+      }
+      for (auto iter = indices_.get().rbegin(); iter != indices_.get().rend();
+           ++iter) {
+        ++(*iter);
 
-    Combinator(Container && in_container, std::size_t in_length)
-        : container(std::forward< Container >(in_container))
-        , length{in_length} {}
+        // what we have to check here is if the distance between
+        // the index and the end of indices_ is >= the distance
+        // between the item and end of item
+        auto dist = std::distance(indices_.get().rbegin(), iter);
 
-    using IndexVector       = std::vector< iterator_type< Container > >;
-    using CombIteratorDeref = IterIterWrapper< IndexVector >;
-
-  public:
-    Combinator(Combinator &&) = default;
-    class Iterator : public std::iterator< std::input_iterator_tag, CombIteratorDeref > {
-      private:
-        constexpr static const int                          COMPLETE = -1;
-        typename std::remove_reference< Container >::type * container_p;
-        CombIteratorDeref                                   indices;
-        int                                                 steps{};
-
-      public:
-        Iterator(Container & in_container, std::size_t n)
-            : container_p{&in_container}
-            , indices{n} {
-            if (n == 0) {
-                this->steps = COMPLETE;
-                return;
+        if (!(dumb_next(*iter, dist) != get_end(*container_p_))) {
+          if ((iter + 1) != indices_.get().rend()) {
+            size_t inc = 1;
+            for (auto down = iter;; --down) {
+              (*down) = dumb_next(*(iter + 1), 1 + inc);
+              ++inc;
+              if (down == indices_.get().rbegin()) break;
             }
-            size_t inc = 0;
-            for (auto & iter : this->indices.get()) {
-                auto it = std::begin(*this->container_p);
-                dumb_advance(it, std::end(*this->container_p), inc);
-                if (it != std::end(*this->container_p)) {
-                    iter = it;
-                    ++inc;
-                } else {
-                    this->steps = COMPLETE;
-                    break;
-                }
-            }
+          } else {
+            steps_ = COMPLETE;
+            break;
+          }
+        } else {
+          break;
         }
+        // we break because none of the rest of the items need
+        // to be incremented
+      }
+      if (steps_ != COMPLETE) {
+        ++steps_;
+      }
+      return *this;
+    }
 
-        CombIteratorDeref & operator*() { return this->indices; }
+    Iterator operator++(int) {
+      auto ret = *this;
+      ++*this;
+      return ret;
+    }
 
-        CombIteratorDeref * operator->() { return &this->indices; }
+    template <typename T>
+    bool operator!=(const Iterator<T>& other) const {
+      return !(*this == other);
+    }
 
-        Iterator & operator++() {
-            for (auto iter = indices.get().rbegin(); iter != indices.get().rend(); ++iter) {
-                ++(*iter);
+    template <typename T>
+    bool operator==(const Iterator<T>& other) const {
+      return steps_ == other.steps_;
+    }
+  };
 
-                // what we have to check here is if the distance between
-                // the index and the end of indices is >= the distance
-                // between the item and end of item
-                auto dist = std::distance(this->indices.get().rbegin(), iter);
+  Iterator<Container> begin() {
+    return {container_, length_};
+  }
 
-                if (!(dumb_next(*iter, dist) != std::end(*this->container_p))) {
-                    if ((iter + 1) != indices.get().rend()) {
-                        size_t inc = 1;
-                        for (auto down = iter; down != indices.get().rbegin() - 1; --down) {
-                            (*down) = dumb_next(*(iter + 1), 1 + inc);
-                            ++inc;
-                        }
-                    } else {
-                        this->steps = COMPLETE;
-                        break;
-                    }
-                } else {
-                    break;
-                }
-                // we break because none of the rest of the items need
-                // to be incremented
-            }
-            if (this->steps != COMPLETE) { ++this->steps; }
-            return *this;
-        }
+  Iterator<Container> end() {
+    if (length_ == 0) {
+      return Iterator<Container>::zero_length_end(container_);
+    }
+    return {container_, 0};
+  }
 
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
+  Iterator<AsConst<Container>> begin() const {
+    return {std::as_const(container_), length_};
+  }
 
-        bool operator!=(const Iterator & other) const { return !(*this == other); }
-
-        bool operator==(const Iterator & other) const { return this->steps == other.steps; }
-    };
-
-    Iterator begin() { return {this->container, this->length}; }
-
-    Iterator end() { return {this->container, 0}; }
+  Iterator<AsConst<Container>> end() const {
+    if (length_ == 0) {
+      return Iterator<AsConst<Container>>::zero_length_end(container_);
+    }
+    return {std::as_const(container_), 0};
+  }
 };
-
-template < typename Container > iter::impl::Combinator< Container > iter::combinations(Container && container, std::size_t length) { return {std::forward< Container >(container), length}; }
-
-template < typename T > iter::impl::Combinator< std::initializer_list< T > > iter::combinations(std::initializer_list< T > il, std::size_t length) { return {std::move(il), length}; }
 
 #endif

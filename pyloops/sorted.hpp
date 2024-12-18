@@ -5,50 +5,169 @@
 #include "internal/iterbase.hpp"
 
 #include <algorithm>
+#include <functional>
 #include <iterator>
 #include <vector>
 
 namespace iter {
-    namespace impl {
-        template < typename Container > class SortedView;
+  namespace impl {
+    template <typename Container, typename CompareFunc>
+    class SortedView;
+    using SortedFn = IterToolFnOptionalBindSecond<SortedView, std::less<>>;
+  }
+  inline constexpr impl::SortedFn sorted{};
+}
+
+template <typename Container, typename CompareFunc>
+class iter::impl::SortedView {
+ private:
+  template <typename ContainerT, typename = void>
+  class SortedItersHolder {
+   public:
+    using IterIterWrap =
+        IterIterWrapper<std::vector<iterator_type<ContainerT>>>;
+    using ItIt = iterator_type<IterIterWrap>;
+    using ConstItIt = void;
+
+   private:
+    ContainerT container_;
+    IterIterWrap sorted_iters_;
+
+   public:
+    SortedItersHolder(ContainerT&& container, CompareFunc compare_func)
+        : container_(std::forward<ContainerT>(container)) {
+      // Fill the sorted_iters_ vector with an iterator to each
+      // element in the container_
+      for (auto iter = get_begin(container_); iter != get_end(container_);
+           ++iter) {
+        sorted_iters_.get().push_back(iter);
+      }
+
+      // sort by comparing the elements that the iterators point to
+      std::sort(get_begin(sorted_iters_.get()), get_end(sorted_iters_.get()),
+          [compare_func](
+              iterator_type<Container> it1, iterator_type<Container> it2) {
+            return std::invoke(compare_func, *it1, *it2);
+          });
     }
 
-    template < typename Container, typename CompareFunc > impl::SortedView< Container > sorted(Container &&, CompareFunc);
-}   // namespace iter
-
-template < typename Container > class iter::impl::SortedView {
-  private:
-    using IterIterWrap = IterIterWrapper< std::vector< iterator_type< Container > > >;
-    using ItIt         = iterator_type< IterIterWrap >;
-
-    template < typename C, typename F > friend SortedView< C > iter::sorted(C &&, F);
-
-    Container    container;
-    IterIterWrap sorted_iters;
-
-    template < typename CompareFunc >
-    SortedView(Container && in_container, CompareFunc compare_func)
-        : container(std::forward< Container >(in_container)) {
-        // Fill the sorted_iters vector with an iterator to each
-        // element in the container
-        for (auto iter = std::begin(this->container); iter != std::end(this->container); ++iter) { this->sorted_iters.get().push_back(iter); }
-
-        // sort by comparing the elements that the iterators point to
-        std::sort(std::begin(sorted_iters.get()), std::end(sorted_iters.get()), [compare_func](const iterator_type< Container > & it1, const iterator_type< Container > & it2) { return compare_func(*it1, *it2); });
+    ItIt begin() {
+      return sorted_iters_.begin();
     }
 
-  public:
-    SortedView(SortedView &&) = default;
+    ItIt end() {
+      return sorted_iters_.end();
+    }
+  };
 
-    ItIt begin() { return std::begin(sorted_iters); }
+  template <typename ContainerT>
+  class SortedItersHolder<ContainerT,
+      std::void_t<decltype(std::begin(std::declval<AsConst<ContainerT>&>()))>> {
+   public:
+    using IterIterWrap =
+        IterIterWrapper<std::vector<iterator_type<ContainerT>>>;
+    using ItIt = iterator_type<IterIterWrap>;
 
-    ItIt end() { return std::end(sorted_iters); }
+    using ConstIterIterWrap =
+        IterIterWrapper<std::vector<iterator_type<AsConst<ContainerT>>>>;
+    using ConstItIt = iterator_type<ConstIterIterWrap>;
+
+   private:
+    ContainerT container_;
+    mutable CompareFunc compare_func_;
+    IterIterWrap sorted_iters_;
+    mutable ConstIterIterWrap const_sorted_iters_;
+
+    void populate_sorted_iters() const = delete;
+    void populate_sorted_iters() {
+      if (!sorted_iters_.empty()) {
+        return;
+      }
+      // Fill the sorted_iters_ vector with an iterator to each
+      // element in the container_
+      for (auto iter = get_begin(container_); iter != get_end(container_);
+           ++iter) {
+        sorted_iters_.get().push_back(iter);
+      }
+
+      // sort by comparing the elements that the iterators point to
+      std::sort(get_begin(sorted_iters_.get()), get_end(sorted_iters_.get()),
+          [this](iterator_type<ContainerT> it1, iterator_type<ContainerT> it2) {
+            return std::invoke(compare_func_, *it1, *it2);
+          });
+    }
+
+    void populate_const_sorted_iters() = delete;
+    void populate_const_sorted_iters() const {
+      if (!const_sorted_iters_.empty()) {
+        return;
+      }
+      for (auto iter = get_begin(std::as_const(container_));
+           iter != get_end(std::as_const(container_)); ++iter) {
+        const_sorted_iters_.get().push_back(iter);
+      }
+
+      // sort by comparing the elements that the iterators point to
+      std::sort(get_begin(const_sorted_iters_.get()),
+          get_end(const_sorted_iters_.get()),
+          [this](iterator_type<AsConst<ContainerT>> it1,
+              iterator_type<AsConst<ContainerT>> it2) {
+            return compare_func_(*it1, *it2);
+          });
+    }
+
+   public:
+    SortedItersHolder(ContainerT&& container, CompareFunc compare_func)
+        : container_(std::forward<ContainerT>(container)),
+          compare_func_(std::move(compare_func)) {}
+
+    ItIt begin() {
+      populate_sorted_iters();
+      return sorted_iters_.begin();
+    }
+
+    ItIt end() {
+      populate_sorted_iters();
+      return sorted_iters_.end();
+    }
+
+    ConstItIt begin() const {
+      populate_const_sorted_iters();
+      return const_sorted_iters_.begin();
+    }
+
+    ConstItIt end() const {
+      populate_const_sorted_iters();
+      return const_sorted_iters_.end();
+    }
+  };
+
+  friend SortedFn;
+
+  SortedItersHolder<Container> sorted_iters_holder_;
+
+  SortedView(Container&& container, CompareFunc compare_func)
+      : sorted_iters_holder_{
+            std::forward<Container>(container), std::move(compare_func)} {}
+
+ public:
+  SortedView(SortedView&&) = default;
+
+  typename SortedItersHolder<Container>::ItIt begin() {
+    return sorted_iters_holder_.begin();
+  }
+
+  typename SortedItersHolder<Container>::ItIt end() {
+    return sorted_iters_holder_.end();
+  }
+
+  typename SortedItersHolder<Container>::ConstItIt begin() const {
+    return sorted_iters_holder_.begin();
+  }
+
+  typename SortedItersHolder<Container>::ConstItIt end() const {
+    return sorted_iters_holder_.end();
+  }
 };
-
-template < typename Container, typename CompareFunc > iter::impl::SortedView< Container > iter::sorted(Container && container, CompareFunc compare_func) { return {std::forward< Container >(container), compare_func}; }
-
-namespace iter {
-    template < typename Container > auto sorted(Container && container) -> decltype(sorted(std::forward< Container >(container), std::less< impl::const_iterator_deref< Container > >())) { return sorted(std::forward< Container >(container), std::less< impl::const_iterator_deref< Container > >()); }
-}   // namespace iter
 
 #endif

@@ -6,120 +6,180 @@
 #include <utility>
 
 namespace iter {
-    namespace impl {
-        template < typename T > class RepeaterWithCount;
+  namespace impl {
+    template <typename T>
+    class RepeaterWithCount;
+  }
 
-        // forward isn't constexpr until c++14
-        template < typename T > constexpr T && forward(typename std::remove_reference< T >::type & t) { return static_cast< T && >(t); }
+  template <typename T>
+  constexpr impl::RepeaterWithCount<T> repeat(T&&, int);
+}
 
-        template < typename T > constexpr T && forward(typename std::remove_reference< T >::type && t) { return static_cast< T && >(t); }
-    }   // namespace impl
+template <typename T>
+class iter::impl::RepeaterWithCount {
+  // see stackoverflow.com/questions/32174186/ about why this isn't
+  // declaring just a specialization as friend
+  template <typename U>
+  friend constexpr RepeaterWithCount<U> iter::repeat(U&&, int);
 
-    template < typename T > constexpr impl::RepeaterWithCount< T > repeat(T &&, int);
-}   // namespace iter
+ private:
+  T elem_;
+  int count_;
 
-template < typename T > class iter::impl::RepeaterWithCount {
-    // see stackoverflow.com/questions/32174186/ about why this isn't
-    // declaring just a specialization as friend
-    template < typename U > friend constexpr RepeaterWithCount< U > iter::repeat(U &&, int);
+  constexpr RepeaterWithCount(T e, int c)
+      : elem_(std::forward<T>(e)), count_{c} {}
 
-  private:
-    T   elem;
-    int count;
+  using TPlain = typename std::remove_reference<T>::type;
 
-    constexpr RepeaterWithCount(T e, int c)
-        : elem(impl::forward< T >(e))
-        , count{c} {}
+ public:
+  RepeaterWithCount(RepeaterWithCount&&) = default;
 
-    using TPlain = typename std::remove_reference< T >::type;
+  class Iterator {
+   private:
+    const TPlain* elem_;
+    int count_;
 
-  public:
-    RepeaterWithCount(RepeaterWithCount &&) = default;
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = const TPlain;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
 
-    class Iterator : public std::iterator< std::input_iterator_tag, const TPlain > {
-      private:
-        const TPlain * elem;
-        int            count;
+    constexpr Iterator(const TPlain* e, int c) : elem_{e}, count_{c} {}
 
-      public:
-        constexpr Iterator(const TPlain * e, int c)
-            : elem{e}
-            , count{c} {}
-
-        Iterator & operator++() {
-            --this->count;
-            return *this;
-        }
-
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
-
-        constexpr bool operator!=(const Iterator & other) const { return !(*this == other); }
-
-        constexpr bool operator==(const Iterator & other) const { return this->count == other.count; }
-
-        constexpr const TPlain & operator*() const { return *this->elem; }
-
-        constexpr const TPlain * operator->() const { return this->elem; }
-    };
-
-    constexpr Iterator begin() const { return {&this->elem, this->count}; }
-
-    constexpr Iterator end() const { return {&this->elem, 0}; }
-};
-
-template < typename T > constexpr iter::impl::RepeaterWithCount< T > iter::repeat(T && e, int count) { return {impl::forward< T >(e), count < 0 ? 0 : count}; }
-
-namespace iter {
-    namespace impl {
-        template < typename T > class Repeater;
+    Iterator& operator++() {
+      --this->count_;
+      return *this;
     }
 
-    template < typename T > constexpr impl::Repeater< T > repeat(T &&);
-}   // namespace iter
+    Iterator operator++(int) {
+      auto ret = *this;
+      ++*this;
+      return ret;
+    }
 
-template < typename T > class iter::impl::Repeater {
-    template < typename U > friend constexpr Repeater< U > iter::repeat(U &&);
+    constexpr bool operator!=(const Iterator& other) const {
+      return !(*this == other);
+    }
 
-  private:
-    using TPlain = typename std::remove_reference< T >::type;
-    T elem;
+    constexpr bool operator==(const Iterator& other) const {
+      return this->count_ == other.count_;
+    }
 
-    constexpr Repeater(T e)
-        : elem(impl::forward< T >(e)) {}
+    constexpr const TPlain& operator*() const {
+      return *this->elem_;
+    }
 
-  public:
-    Repeater(Repeater &&) = default;
+    constexpr const TPlain* operator->() const {
+      return this->elem_;
+    }
+  };
 
-    class Iterator : public std::iterator< std::input_iterator_tag, const TPlain > {
-      private:
-        const TPlain * elem;
+  constexpr Iterator begin() const {
+    return {&this->elem_, this->count_};
+  }
 
-      public:
-        constexpr Iterator(const TPlain * e)
-            : elem{e} {}
+  constexpr Iterator end() const {
+    return {&this->elem_, 0};
+  }
 
-        constexpr const Iterator & operator++() const { return *this; }
+  constexpr Iterator rbegin() const {
+    return begin();
+  }
 
-        constexpr Iterator operator++(int) const { return *this; }
-
-        constexpr bool operator!=(const Iterator &) const { return true; }
-
-        constexpr bool operator==(const Iterator &) const { return false; }
-
-        constexpr const TPlain & operator*() const { return *this->elem; }
-
-        constexpr const TPlain * operator->() const { return this->elem; }
-    };
-
-    constexpr Iterator begin() const { return {&this->elem}; }
-
-    constexpr Iterator end() const { return {nullptr}; }
+  constexpr Iterator rend() const {
+    return end();
+  }
 };
 
-template < typename T > constexpr iter::impl::Repeater< T > iter::repeat(T && e) { return {impl::forward< T >(e)}; }
+template <typename T>
+constexpr iter::impl::RepeaterWithCount<T> iter::repeat(T&& e, int count_) {
+  return {std::forward<T>(e), count_ < 0 ? 0 : count_};
+}
+
+namespace iter {
+  namespace impl {
+    template <typename T>
+    class Repeater;
+  }
+
+  template <typename T>
+  constexpr impl::Repeater<T> repeat(T&&);
+}
+
+template <typename T>
+class iter::impl::Repeater {
+  template <typename U>
+  friend constexpr Repeater<U> iter::repeat(U&&);
+
+ private:
+  using TPlain = typename std::remove_reference<T>::type;
+  T elem_;
+
+  constexpr Repeater(T e) : elem_(std::forward<T>(e)) {}
+
+ public:
+  Repeater(Repeater&&) = default;
+
+  class Iterator {
+   private:
+    const TPlain* elem_;
+
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = const TPlain;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
+
+    constexpr Iterator(const TPlain* e) : elem_{e} {}
+
+    constexpr const Iterator& operator++() const {
+      return *this;
+    }
+
+    constexpr Iterator operator++(int) const {
+      return *this;
+    }
+
+    constexpr bool operator!=(const Iterator&) const {
+      return true;
+    }
+
+    constexpr bool operator==(const Iterator&) const {
+      return false;
+    }
+
+    constexpr const TPlain& operator*() const {
+      return *this->elem_;
+    }
+
+    constexpr const TPlain* operator->() const {
+      return this->elem_;
+    }
+  };
+
+  constexpr Iterator begin() const {
+    return {&this->elem_};
+  }
+
+  constexpr Iterator end() const {
+    return {nullptr};
+  }
+
+  constexpr Iterator rbegin() const {
+    return begin();
+  }
+
+  constexpr Iterator rend() const {
+    return end();
+  }
+};
+
+template <typename T>
+constexpr iter::impl::Repeater<T> iter::repeat(T&& e) {
+  return {std::forward<T>(e)};
+}
 
 #endif

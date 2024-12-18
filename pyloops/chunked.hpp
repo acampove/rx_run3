@@ -1,99 +1,135 @@
 #ifndef ITER_CHUNKED_HPP_
 #define ITER_CHUNKED_HPP_
 
+#include "internal/iterator_wrapper.hpp"
 #include "internal/iteratoriterator.hpp"
 #include "internal/iterbase.hpp"
 
 #include <algorithm>
 #include <functional>
-#include <initializer_list>
 #include <iterator>
+#include <memory>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
 namespace iter {
-    namespace impl {
-        template < typename Container > class Chunker;
+  namespace impl {
+    template <typename Container>
+    class Chunker;
+
+    using ChunkedFn = IterToolFnBindSizeTSecond<Chunker>;
+  }
+  inline constexpr impl::ChunkedFn chunked{};
+}
+
+template <typename Container>
+class iter::impl::Chunker {
+ private:
+  Container container_;
+  std::size_t chunk_size_;
+
+  Chunker(Container&& container, std::size_t sz)
+      : container_(std::forward<Container>(container)), chunk_size_{sz} {}
+
+  friend ChunkedFn;
+
+  template <typename T>
+  using IndexVector = std::vector<IteratorWrapper<T>>;
+  template <typename T>
+  using DerefVec = IterIterWrapper<IndexVector<T>>;
+
+ public:
+  Chunker(Chunker&&) = default;
+  template <typename ContainerT>
+  class Iterator {
+   private:
+    template <typename>
+    friend class Iterator;
+    std::shared_ptr<DerefVec<ContainerT>> chunk_ =
+        std::make_shared<DerefVec<ContainerT>>();
+    IteratorWrapper<ContainerT> sub_iter_;
+    IteratorWrapper<ContainerT> sub_end_;
+    std::size_t chunk_size_ = 0;
+
+    bool done() const {
+      return chunk_->empty();
     }
 
-    template < typename Container > impl::Chunker< Container > chunked(Container &&, std::size_t);
+    void refill_chunk() {
+      chunk_->get().clear();
+      std::size_t i{0};
+      while (i < chunk_size_ && sub_iter_ != sub_end_) {
+        chunk_->get().push_back(sub_iter_);
+        ++sub_iter_;
+        ++i;
+      }
+    }
 
-    template < typename T > impl::Chunker< std::initializer_list< T > > chunked(std::initializer_list< T >, std::size_t);
-}   // namespace iter
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = DerefVec<ContainerT>;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
 
-template < typename Container > class iter::impl::Chunker {
-  private:
-    Container   container;
-    std::size_t chunk_size;
+    Iterator(IteratorWrapper<ContainerT>&& sub_iter,
+        IteratorWrapper<ContainerT>&& sub_end, std::size_t s)
+        : sub_iter_{std::move(sub_iter)},
+          sub_end_{std::move(sub_end)},
+          chunk_size_{s} {
+      chunk_->get().reserve(chunk_size_);
+      refill_chunk();
+    }
 
-    Chunker(Container && c, std::size_t sz)
-        : container(std::forward< Container >(c))
-        , chunk_size{sz} {}
+    Iterator& operator++() {
+      refill_chunk();
+      return *this;
+    }
 
-    friend Chunker                                                       iter::chunked< Container >(Container &&, std::size_t);
-    template < typename T > friend Chunker< std::initializer_list< T > > iter::chunked(std::initializer_list< T >, std::size_t);
+    Iterator operator++(int) {
+      auto ret = *this;
+      ++*this;
+      return ret;
+    }
 
-    using IndexVector = std::vector< iterator_type< Container > >;
-    using DerefVec    = IterIterWrapper< IndexVector >;
+    template <typename T>
+    bool operator!=(const Iterator<T>& other) const {
+      return !(*this == other);
+    }
 
-  public:
-    Chunker(Chunker &&) = default;
-    class Iterator : public std::iterator< std::input_iterator_tag, DerefVec > {
-      private:
-        iterator_type< Container > sub_iter;
-        iterator_type< Container > sub_end;
-        DerefVec                   chunk;
-        std::size_t                chunk_size = 0;
+    template <typename T>
+    bool operator==(const Iterator<T>& other) const {
+      return done() == other.done()
+             && (done() || !(sub_iter_ != other.sub_iter_));
+    }
 
-        bool done() const { return this->chunk.empty(); }
+    DerefVec<ContainerT>& operator*() {
+      return *chunk_;
+    }
 
-        void refill_chunk() {
-            this->chunk.get().clear();
-            std::size_t i{0};
-            while (i < chunk_size && this->sub_iter != this->sub_end) {
-                chunk.get().push_back(this->sub_iter);
-                ++this->sub_iter;
-                ++i;
-            }
-        }
+    DerefVec<ContainerT>* operator->() {
+      return chunk_.get();
+    }
+  };
 
-      public:
-        Iterator(iterator_type< Container > && in_iter, iterator_type< Container > && in_end, std::size_t s)
-            : sub_iter{std::move(in_iter)}
-            , sub_end{std::move(in_end)}
-            , chunk_size{s} {
-            this->chunk.get().reserve(this->chunk_size);
-            this->refill_chunk();
-        }
+  Iterator<Container> begin() {
+    return {get_begin(container_), get_end(container_), chunk_size_};
+  }
 
-        Iterator & operator++() {
-            this->refill_chunk();
-            return *this;
-        }
+  Iterator<Container> end() {
+    return {get_end(container_), get_end(container_), chunk_size_};
+  }
 
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
+  Iterator<AsConst<Container>> begin() const {
+    return {get_begin(std::as_const(container_)),
+        get_end(std::as_const(container_)), chunk_size_};
+  }
 
-        bool operator!=(const Iterator & other) const { return !(*this == other); }
-
-        bool operator==(const Iterator & other) const { return this->done() == other.done() && (this->done() || !(this->sub_iter != other.sub_iter)); }
-
-        DerefVec & operator*() { return this->chunk; }
-
-        DerefVec * operator->() { return &this->chunk; }
-    };
-
-    Iterator begin() { return {std::begin(this->container), std::end(this->container), chunk_size}; }
-
-    Iterator end() { return {std::end(this->container), std::end(this->container), chunk_size}; }
+  Iterator<AsConst<Container>> end() const {
+    return {get_end(std::as_const(container_)),
+        get_end(std::as_const(container_)), chunk_size_};
+  }
 };
-
-template < typename Container > iter::impl::Chunker< Container > iter::chunked(Container && container, std::size_t chunk_size) { return {std::forward< Container >(container), chunk_size}; }
-
-template < typename T > iter::impl::Chunker< std::initializer_list< T > > iter::chunked(std::initializer_list< T > il, std::size_t chunk_size) { return {std::move(il), chunk_size}; }
 
 #endif

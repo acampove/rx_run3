@@ -1,6 +1,8 @@
 #ifndef ITER_PRODUCT_HPP_
 #define ITER_PRODUCT_HPP_
 
+#include "internal/iter_tuples.hpp"
+#include "internal/iterator_wrapper.hpp"
 #include "internal/iterbase.hpp"
 
 #include <array>
@@ -9,117 +11,223 @@
 #include <utility>
 
 namespace iter {
-    namespace impl {
-        template < typename... Containers > class Productor;
+  namespace impl {
+    template <typename TupleType, std::size_t... Is>
+    class Productor;
 
-        template < typename Container, typename... RestContainers > class Productor< Container, RestContainers... >;
+    template <typename TupleType, std::size_t... Is>
+    Productor<TupleType, Is...> product_impl(
+        TupleType&& containers, std::index_sequence<Is...>);
+  }
+}
 
-        template <> class Productor<>;
-    }   // namespace impl
+template <typename TupleType, std::size_t... Is>
+class iter::impl::Productor {
+  friend Productor iter::impl::product_impl<TupleType, Is...>(
+      TupleType&&, std::index_sequence<Is...>);
 
-    template < typename... Containers > impl::Productor< Containers... > product(Containers &&...);
-}   // namespace iter
+ private:
+  TupleType containers_;
 
-// specialization for at least 1 template argument
-template < typename Container, typename... RestContainers > class iter::impl::Productor< Container, RestContainers... > {
-    friend Productor iter::product< Container, RestContainers... >(Container &&, RestContainers &&...);
+  Productor(TupleType&& containers) : containers_(std::move(containers)) {}
 
-    template < typename... RC > friend class Productor;
+ public:
+  Productor(Productor&&) = default;
 
-    using ProdIterDeref = std::tuple< iterator_deref< Container >, iterator_deref< RestContainers >... >;
+ private:
+  template <typename IterTupType>
+  class IteratorData {
+    IteratorData() = delete;
+    static_assert(
+        std::tuple_size<std::decay_t<IterTupType>>::value == sizeof...(Is),
+        "tuple size != sizeof Is");
 
-  private:
-    Container                      container;
-    Productor< RestContainers... > rest_products;
-    Productor(Container && in_container, RestContainers &&... rest)
-        : container(std::forward< Container >(in_container))
-        , rest_products{std::forward< RestContainers >(rest)...} {}
+   public:
+    template <std::size_t Idx>
+    static bool equal(const IterTupType& lhs, const IterTupType& rhs) {
+      return !(std::get<Idx>(lhs) != std::get<Idx>(rhs));
+    }
 
-  public:
-    Productor(Productor &&) = default;
-    class Iterator : public std::iterator< std::input_iterator_tag, ProdIterDeref > {
-      private:
-        using RestIter = typename Productor< RestContainers... >::Iterator;
+    // returns true if incremented, false if wrapped around
+    template <std::size_t Idx>
+    static bool get_and_increment_with_wraparound(IterTupType& iters,
+        const IterTupType& begin_iters, const IterTupType& end_iters) {
+      // if already at the end, we're looking at an empty container
+      if (equal<Idx>(iters, end_iters)) {
+        return false;
+      }
 
-        iterator_type< Container > iter;
-        iterator_type< Container > begin;
+      ++std::get<Idx>(iters);
 
-        RestIter rest_iter;
-        RestIter rest_end;
+      if (equal<Idx>(iters, end_iters)) {
+        std::get<Idx>(iters) = std::get<Idx>(begin_iters);
+        return false;
+      }
 
-      public:
-        constexpr static const bool is_base_iter = false;
-        Iterator(const iterator_type< Container > & it, RestIter && rest, RestIter && in_rest_end)
-            : iter{it}
-            , begin{it}
-            , rest_iter{rest}
-            , rest_end{in_rest_end} {}
+      return true;
+    }
+    using IncFunc = bool (*)(
+        IterTupType&, const IterTupType&, const IterTupType&);
 
-        void reset() { this->iter = this->begin; }
+    constexpr static std::array<IncFunc, sizeof...(Is)> incrementers{
+        {get_and_increment_with_wraparound<Is>...}};
+  };
 
-        Iterator & operator++() {
-            ++this->rest_iter;
-            if (!(this->rest_iter != this->rest_end)) {
-                this->rest_iter.reset();
-                ++this->iter;
-            }
-            return *this;
+  // template templates here because I need to defer evaluation in the const
+  // iteration case for types that don't have non-const begin() and end(). If I
+  // passed in the actual types of the tuples of iterators and the type for
+  // deref they'd need to be known in the function declarations below.
+  template <typename TupleTypeT, template <typename> class IteratorTuple,
+      template <typename> class TupleDeref>
+  class IteratorTempl {
+#if NO_GCC_FRIEND_ERROR
+   private:
+    template <typename, template <typename> class, template <typename> class>
+    friend class IteratorTempl;
+#else
+   public:
+#endif
+
+    using IterTupType = IteratorTuple<TupleTypeT>;
+    IterTupType iters_;
+    IterTupType begin_iters_;
+    IterTupType end_iters_;
+
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = TupleDeref<TupleTypeT>;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type;
+
+    IteratorTempl(IteratorTuple<TupleTypeT>&& iters,
+        IteratorTuple<TupleTypeT>&& end_iters)
+        : iters_(std::move(iters)),
+          begin_iters_(iters_),
+          end_iters_(std::move(end_iters)) {}
+
+    IteratorTempl& operator++() {
+      static constexpr int NUM_ELEMENTS = sizeof...(Is);
+      bool performed_increment = false;
+      for (int i = NUM_ELEMENTS - 1; i >= 0; --i) {
+        if (IteratorData<IterTupType>::incrementers[i](
+                iters_, begin_iters_, end_iters_)) {
+          performed_increment = true;
+          break;
         }
+      }
+      if (!performed_increment) {
+        iters_ = end_iters_;
+      }
+      return *this;
+    }
 
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
+    IteratorTempl operator++(int) {
+      auto ret = *this;
+      ++*this;
+      return ret;
+    }
 
-        bool operator!=(const Iterator & other) const { return this->iter != other.iter && (RestIter::is_base_iter || this->rest_iter != other.rest_iter); }
+    template <typename T, template <typename> class IT,
+        template <typename> class TD>
+    bool operator!=(const IteratorTempl<T, IT, TD>& other) const {
+      if constexpr (sizeof...(Is) == 0) {
+        return false;
+      } else {
+        return (... && (std::get<Is>(iters_) != std::get<Is>(other.iters_)));
+      }
+    }
 
-        bool operator==(const Iterator & other) const { return !(*this != other); }
+    template <typename T, template <typename> class IT,
+        template <typename> class TD>
+    bool operator==(const IteratorTempl<T, IT, TD>& other) const {
+      return !(*this != other);
+    }
 
-        ProdIterDeref operator*() { return std::tuple_cat(std::tuple< iterator_deref< Container > >{*this->iter}, *this->rest_iter); }
+    TupleDeref<TupleTypeT> operator*() {
+      return {(*std::get<Is>(iters_))...};
+    }
 
-        ArrowProxy< ProdIterDeref > operator->() { return {**this}; }
-    };
+    auto operator->() -> ArrowProxy<decltype(**this)> {
+      return {**this};
+    }
+  };
 
-    Iterator begin() { return {std::begin(this->container), std::begin(this->rest_products), std::end(this->rest_products)}; }
+  using Iterator =
+      IteratorTempl<TupleType, iterator_tuple_type, iterator_deref_tuple>;
+  using ConstIterator = IteratorTempl<AsConst<TupleType>,
+      const_iterator_tuple_type, const_iterator_deref_tuple>;
 
-    Iterator end() { return {std::end(this->container), std::end(this->rest_products), std::end(this->rest_products)}; }
+ public:
+  Iterator begin() {
+    return {{get_begin(std::get<Is>(containers_))...},
+        {get_end(std::get<Is>(containers_))...}};
+  }
+
+  Iterator end() {
+    return {{get_end(std::get<Is>(containers_))...},
+        {get_end(std::get<Is>(containers_))...}};
+  }
+
+  ConstIterator begin() const {
+    return {{get_begin(std::as_const(std::get<Is>(containers_)))...},
+        {get_end(std::as_const(std::get<Is>(containers_)))...}};
+  }
+
+  ConstIterator end() const {
+    return {{get_end(std::as_const(std::get<Is>(containers_)))...},
+        {get_end(std::as_const(std::get<Is>(containers_)))...}};
+  }
 };
 
-template <> class iter::impl::Productor<> {
-  public:
-    Productor(Productor &&) = default;
-    class Iterator : public std::iterator< std::input_iterator_tag, std::tuple<> > {
-      public:
-        constexpr static const bool is_base_iter = true;
-
-        void reset() {}
-
-        Iterator & operator++() { return *this; }
-
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
-
-        // see note in zip about base case operator!=
-        bool operator!=(const Iterator &) const { return false; }
-
-        bool operator==(const Iterator & other) const { return !(*this != other); }
-
-        std::tuple<> operator*() const { return {}; }
-    };
-
-    Iterator begin() { return {}; }
-
-    Iterator end() { return {}; }
-};
-
-template < typename... Containers > iter::impl::Productor< Containers... > iter::product(Containers &&... containers) { return {std::forward< Containers >(containers)...}; }
+namespace iter::impl {
+  template <typename TupleType, std::size_t... Is>
+  Productor<TupleType, Is...> product_impl(
+      TupleType&& containers, std::index_sequence<Is...>) {
+    return {std::move(containers)};
+  }
+}
 
 namespace iter {
-    constexpr std::array< std::tuple<>, 1 > product() { return {{}}; }
-}   // namespace iter
+  template <typename... Containers>
+  decltype(auto) product(Containers&&... containers) {
+    return impl::product_impl(
+        std::tuple<Containers...>(std::forward<Containers>(containers)...),
+        std::index_sequence_for<Containers...>{});
+  }
+
+  constexpr std::array<std::tuple<>, 1> product() {
+    return {{}};
+  }
+}
+
+namespace iter::impl {
+  // rvalue must be copied, lvalue and const lvalue references can be bound
+  template <std::size_t... Is, typename Container>
+  decltype(auto) product_repeat(
+      std::index_sequence<Is...>, Container&& container) {
+    return product(((void)Is, Container(container))...);
+  }
+
+  template <std::size_t... Is, typename Container>
+  decltype(auto) product_repeat(
+      std::index_sequence<Is...>, Container& container) {
+    return product(((void)Is, container)...);
+  }
+
+  template <std::size_t... Is, typename Container>
+  decltype(auto) product_repeat(
+      std::index_sequence<Is...>, const Container& container) {
+    return product(((void)Is, container)...);
+  }
+}
+
+namespace iter {
+  template <std::size_t N, typename Container>
+  decltype(auto) product(Container&& container) {
+    return impl::product_repeat(
+        std::make_index_sequence<N>{}, std::forward<Container>(container));
+  }
+}
 
 #endif

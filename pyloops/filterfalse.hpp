@@ -4,55 +4,51 @@
 #include "filter.hpp"
 #include "internal/iterbase.hpp"
 
+#include <functional>
 #include <utility>
 
 namespace iter {
+  namespace impl {
+    // Callable object that reverses the boolean result of another
+    // callable, taking the object in a Container's iterator
+    template <typename FilterFunc>
+    class PredicateFlipper {
+     private:
+      FilterFunc filter_func_;
 
-    namespace detail {
+     public:
+      PredicateFlipper(FilterFunc filter_func)
+          : filter_func_(std::move(filter_func)) {}
 
-        // Callable object that reverses the boolean result of another
-        // callable, taking the object in a Container's iterator
-        template < typename FilterFunc, typename Container > class PredicateFlipper {
-          private:
-            FilterFunc filter_func;
+      // Calls the filter_func_
+      template <typename T>
+      bool operator()(const T& item) const {
+        return !bool(std::invoke(filter_func_, item));
+      }
 
-          public:
-            PredicateFlipper(FilterFunc in_filter_func)
-                : filter_func(in_filter_func) {}
+      // with non-const incase FilterFunc::operator() is non-const
+      template <typename T>
+      bool operator()(const T& item) {
+        return !bool(std::invoke(filter_func_, item));
+      }
+    };
 
-            PredicateFlipper()                         = delete;
-            PredicateFlipper(const PredicateFlipper &) = default;
+    template <typename FilterFunc, typename Container>
+    class FilterFalsed;
 
-            // Calls the filter_func
-            bool operator()(const impl::iterator_deref< Container > item) const { return !bool(filter_func(item)); }
+    using FilterFalseFn = IterToolFnOptionalBindFirst<FilterFalsed, BoolTester>;
+  }
+  inline constexpr impl::FilterFalseFn filterfalse{};
+}
 
-            // with non-const incase FilterFunc::operator() is non-const
-            bool operator()(const impl::iterator_deref< Container > item) { return !bool(filter_func(item)); }
-        };
-
-        // Reverses the bool() conversion result of anything that supports a
-        // bool conversion
-        template < typename Container > class BoolFlipper {
-          public:
-            bool operator()(const impl::iterator_deref< Container > item) const { return !bool(item); }
-        };
-    }   // namespace detail
-
-    // Creates a PredicateFlipper for the predicate function, which reverses
-    // the bool result of the function.  The PredicateFlipper is then passed
-    // to the normal filter() function
-    template < typename FilterFunc, typename Container > auto filterfalse(FilterFunc filter_func, Container && container) -> decltype(filter(detail::PredicateFlipper< FilterFunc, Container >(filter_func), std::forward< Container >(container))) { return filter(detail::PredicateFlipper< FilterFunc, Container >(filter_func), std::forward< Container >(container)); }
-
-    // Single argument version, uses a BoolFlipper to reverse the truthiness
-    // of an object
-    template < typename Container > auto filterfalse(Container && container) -> decltype(filter(detail::BoolFlipper< Container >(), std::forward< Container >(container))) { return filter(detail::BoolFlipper< Container >(), std::forward< Container >(container)); }
-
-    // specializations for initializer_lists
-    template < typename FilterFunc, typename T > auto filterfalse(FilterFunc filter_func, std::initializer_list< T > container) -> decltype(filter(detail::PredicateFlipper< FilterFunc, std::initializer_list< T > >(filter_func), std::move(container))) { return filter(detail::PredicateFlipper< FilterFunc, std::initializer_list< T > >(filter_func), std::move(container)); }
-
-    // Single argument version, uses a BoolFlipper to reverse the truthiness
-    // of an object
-    template < typename T > auto filterfalse(std::initializer_list< T > container) -> decltype(filter(detail::BoolFlipper< std::initializer_list< T > >(), std::move(container))) { return filter(detail::BoolFlipper< std::initializer_list< T > >(), std::move(container)); }
-}   // namespace iter
+// Delegates to Filtered with PredicateFlipper<FilterFunc>
+template <typename FilterFunc, typename Container>
+class iter::impl::FilterFalsed
+    : public Filtered<PredicateFlipper<FilterFunc>, Container> {
+  friend FilterFalseFn;
+  FilterFalsed(FilterFunc in_filter_func, Container&& in_container)
+      : Filtered<PredicateFlipper<FilterFunc>, Container>(
+            {in_filter_func}, std::forward<Container>(in_container)) {}
+};
 
 #endif

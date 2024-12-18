@@ -1,106 +1,140 @@
 #ifndef ITER_COMPRESS_H_
 #define ITER_COMPRESS_H_
 
+#include "internal/iterator_wrapper.hpp"
 #include "internal/iterbase.hpp"
 
-#include <initializer_list>
 #include <iterator>
 #include <utility>
 
 namespace iter {
-    namespace impl {
-        template < typename Container, typename Selector > class Compressed;
+  namespace impl {
+    template <typename Container, typename Selector>
+    class Compressed;
+  }
+
+  template <typename Container, typename Selector>
+  impl::Compressed<Container, Selector> compress(Container&&, Selector&&);
+}
+
+template <typename Container, typename Selector>
+class iter::impl::Compressed {
+ private:
+  Container container_;
+  Selector selectors_;
+
+  friend Compressed iter::compress<Container, Selector>(
+      Container&&, Selector&&);
+
+  Compressed(Container&& in_container, Selector&& in_selectors)
+      : container_(std::forward<Container>(in_container)),
+        selectors_(std::forward<Selector>(in_selectors)) {}
+
+ public:
+  Compressed(Compressed&&) = default;
+  template <typename ContainerT, typename SelectorT>
+  class Iterator {
+   private:
+    template <typename, typename>
+    friend class Iterator;
+    IteratorWrapper<ContainerT> sub_iter_;
+    IteratorWrapper<ContainerT> sub_end_;
+
+    IteratorWrapper<SelectorT> selector_iter_;
+    IteratorWrapper<SelectorT> selector_end_;
+
+    void increment_iterators() {
+      ++sub_iter_;
+      ++selector_iter_;
     }
 
-    template < typename Container, typename Selector > impl::Compressed< Container, Selector > compress(Container &&, Selector &&);
+    void skip_failures() {
+      while (sub_iter_ != sub_end_ && selector_iter_ != selector_end_
+             && !*selector_iter_) {
+        increment_iterators();
+      }
+    }
 
-    template < typename T, typename Selector > impl::Compressed< std::initializer_list< T >, Selector > compress(std::initializer_list< T >, Selector &&);
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = iterator_traits_deref<ContainerT>;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
 
-    template < typename Container, typename T > impl::Compressed< Container, std::initializer_list< T > > compress(Container &&, std::initializer_list< T >);
+    Iterator(IteratorWrapper<ContainerT>&& cont_iter,
+        IteratorWrapper<ContainerT>&& cont_end,
+        IteratorWrapper<SelectorT>&& sel_iter,
+        IteratorWrapper<SelectorT>&& sel_end)
+        : sub_iter_{std::move(cont_iter)},
+          sub_end_{std::move(cont_end)},
+          selector_iter_{std::move(sel_iter)},
+          selector_end_{std::move(sel_end)} {
+      skip_failures();
+    }
 
-    template < typename T, typename U > impl::Compressed< std::initializer_list< T >, std::initializer_list< U > > compress(std::initializer_list< T >, std::initializer_list< U >);
-}   // namespace iter
+    iterator_deref<ContainerT> operator*() {
+      return *sub_iter_;
+    }
 
-template < typename Container, typename Selector > class iter::impl::Compressed {
-  private:
-    Container container;
-    Selector  selectors;
+    iterator_arrow<ContainerT> operator->() {
+      return apply_arrow(sub_iter_);
+    }
 
-    friend Compressed iter::compress< Container, Selector >(Container &&, Selector &&);
+    Iterator& operator++() {
+      increment_iterators();
+      skip_failures();
+      return *this;
+    }
 
-    template < typename T, typename Sel > friend Compressed< std::initializer_list< T >, Sel > iter::compress(std::initializer_list< T >, Sel &&);
+    Iterator operator++(int) {
+      auto ret = *this;
+      ++*this;
+      return ret;
+    }
 
-    template < typename Con, typename T > friend Compressed< Con, std::initializer_list< T > > iter::compress(Con &&, std::initializer_list< T >);
+    template <typename T, typename U>
+    bool operator!=(const Iterator<T, U>& other) const {
+      return sub_iter_ != other.sub_iter_
+             && selector_iter_ != other.selector_iter_;
+    }
 
-    template < typename T, typename U > friend Compressed< std::initializer_list< T >, std::initializer_list< U > > iter::compress(std::initializer_list< T >, std::initializer_list< U >);
+    template <typename T, typename U>
+    bool operator==(const Iterator<T, U>& other) const {
+      return !(*this != other);
+    }
+  };
 
-    // Selector::Iterator type
-    using selector_iter_type = decltype(std::begin(selectors));
+  Iterator<Container, Selector> begin() {
+    return {get_begin(container_), get_end(container_), get_begin(selectors_),
+        get_end(selectors_)};
+  }
 
-    Compressed(Container && in_container, Selector && in_selectors)
-        : container(std::forward< Container >(in_container))
-        , selectors(std::forward< Selector >(in_selectors)) {}
+  Iterator<Container, Selector> end() {
+    return {get_end(container_), get_end(container_), get_end(selectors_),
+        get_end(selectors_)};
+  }
 
-  public:
-    Compressed(Compressed &&) = default;
-    class Iterator : public std::iterator< std::input_iterator_tag, iterator_traits_deref< Container > > {
-      private:
-        iterator_type< Container > sub_iter;
-        iterator_type< Container > sub_end;
+  Iterator<AsConst<Container>, AsConst<Selector>> begin() const {
+    return {get_begin(std::as_const(container_)),
+        get_end(std::as_const(container_)),
+        get_begin(std::as_const(selectors_)),
+        get_end(std::as_const(selectors_))};
+  }
 
-        selector_iter_type selector_iter;
-        selector_iter_type selector_end;
-
-        void increment_iterators() {
-            ++this->sub_iter;
-            ++this->selector_iter;
-        }
-
-        void skip_failures() {
-            while (this->sub_iter != this->sub_end && this->selector_iter != this->selector_end && !*this->selector_iter) { this->increment_iterators(); }
-        }
-
-      public:
-        Iterator(iterator_type< Container > && cont_iter, iterator_type< Container > && cont_end, selector_iter_type && sel_iter, selector_iter_type && sel_end)
-            : sub_iter{std::move(cont_iter)}
-            , sub_end{std::move(cont_end)}
-            , selector_iter{std::move(sel_iter)}
-            , selector_end{std::move(sel_end)} {
-            this->skip_failures();
-        }
-
-        iterator_deref< Container > operator*() { return *this->sub_iter; }
-
-        iterator_arrow< Container > operator->() { return apply_arrow(this->sub_iter); }
-
-        Iterator & operator++() {
-            this->increment_iterators();
-            this->skip_failures();
-            return *this;
-        }
-
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
-
-        bool operator!=(const Iterator & other) const { return this->sub_iter != other.sub_iter && this->selector_iter != other.selector_iter; }
-
-        bool operator==(const Iterator & other) const { return !(*this != other); }
-    };
-
-    Iterator begin() { return {std::begin(this->container), std::end(this->container), std::begin(this->selectors), std::end(this->selectors)}; }
-
-    Iterator end() { return {std::end(this->container), std::end(this->container), std::end(this->selectors), std::end(this->selectors)}; }
+  Iterator<AsConst<Container>, AsConst<Selector>> end() const {
+    return {get_end(std::as_const(container_)),
+        get_end(std::as_const(container_)),
+        get_end(std::as_const(selectors_)),
+        get_end(std::as_const(selectors_))};
+  }
 };
 
-template < typename Container, typename Selector > iter::impl::Compressed< Container, Selector > iter::compress(Container && container, Selector && selectors) { return {std::forward< Container >(container), std::forward< Selector >(selectors)}; }
-
-template < typename T, typename Selector > iter::impl::Compressed< std::initializer_list< T >, Selector > iter::compress(std::initializer_list< T > data, Selector && selectors) { return {std::move(data), std::forward< Selector >(selectors)}; }
-
-template < typename Container, typename T > iter::impl::Compressed< Container, std::initializer_list< T > > iter::compress(Container && container, std::initializer_list< T > selectors) { return {std::forward< Container >(container), std::move(selectors)}; }
-
-template < typename T, typename U > iter::impl::Compressed< std::initializer_list< T >, std::initializer_list< U > > iter::compress(std::initializer_list< T > data, std::initializer_list< U > selectors) { return {std::move(data), std::move(selectors)}; }
+template <typename Container, typename Selector>
+iter::impl::Compressed<Container, Selector> iter::compress(
+    Container&& container_, Selector&& selectors_) {
+  return {
+      std::forward<Container>(container_), std::forward<Selector>(selectors_)};
+}
 
 #endif

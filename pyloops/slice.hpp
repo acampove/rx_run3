@@ -1,100 +1,178 @@
 #ifndef ITER_SLICE_HPP_
 #define ITER_SLICE_HPP_
 
+#include "internal/iterator_wrapper.hpp"
 #include "internal/iterbase.hpp"
 
-#include <initializer_list>
 #include <iterator>
 #include <type_traits>
 
 namespace iter {
-    namespace impl {
-        template < typename Container, typename DifferenceType > class Sliced;
+  namespace impl {
+    template <typename Container, typename DifferenceType>
+    class Sliced;
+
+    struct SliceFn;
+  }
+}
+
+template <typename Container, typename DifferenceType>
+class iter::impl::Sliced {
+ private:
+  Container container_;
+  DifferenceType start_;
+  DifferenceType stop_;
+  DifferenceType step_;
+
+  friend SliceFn;
+
+  Sliced(Container&& container, DifferenceType start, DifferenceType stop,
+      DifferenceType step)
+      : container_(std::forward<Container>(container)),
+        start_{start < stop && step > 0 ? start : stop},
+        stop_{stop},
+        step_{step} {}
+
+ public:
+  Sliced(Sliced&&) = default;
+  template <typename ContainerT>
+  class Iterator {
+   private:
+    template <typename>
+    friend class Iterator;
+    IteratorWrapper<ContainerT> sub_iter_;
+    IteratorWrapper<ContainerT> sub_end_;
+    DifferenceType current_;
+    DifferenceType stop_;
+    DifferenceType step_;
+
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = iterator_traits_deref<ContainerT>;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = iterator_deref<ContainerT>;
+
+    Iterator(IteratorWrapper<ContainerT>&& sub_iter,
+        IteratorWrapper<ContainerT>&& sub_end, DifferenceType start,
+        DifferenceType stop, DifferenceType step)
+        : sub_iter_{std::move(sub_iter)},
+          sub_end_{std::move(sub_end)},
+          current_{start},
+          stop_{stop},
+          step_{step} {}
+
+    iterator_deref<ContainerT> operator*() {
+      return *sub_iter_;
     }
 
-    template < typename Container, typename DifferenceType > impl::Sliced< Container, DifferenceType > slice(Container && container, DifferenceType start, DifferenceType stop, DifferenceType step = 1);
-
-    template < typename Container, typename DifferenceType > impl::Sliced< Container, DifferenceType > slice(Container && container, DifferenceType stop);
-
-    template < typename T, typename DifferenceType > impl::Sliced< std::initializer_list< T >, DifferenceType > slice(std::initializer_list< T > il, DifferenceType start, DifferenceType stop, DifferenceType step = 1);
-
-    template < typename T, typename DifferenceType > impl::Sliced< std::initializer_list< T >, DifferenceType > slice(std::initializer_list< T > il, DifferenceType stop);
-}   // namespace iter
-
-template < typename Container, typename DifferenceType > class iter::impl::Sliced {
-  private:
-    Container      container;
-    DifferenceType start;
-    DifferenceType stop;
-    DifferenceType step;
-
-    friend Sliced iter::slice< Container, DifferenceType >(Container &&, DifferenceType, DifferenceType, DifferenceType);
-
-    friend Sliced iter::slice< Container, DifferenceType >(Container &&, DifferenceType);
-
-    Sliced(Container && in_container, DifferenceType in_start, DifferenceType in_stop, DifferenceType in_step)
-        : container(std::forward< Container >(in_container))
-        , start{in_start < in_stop && in_step > 0 ? in_start : in_stop}
-        , stop{in_stop}
-        , step{in_step} {}
-
-  public:
-    Sliced(Sliced &&) = default;
-    class Iterator : public std::iterator< std::input_iterator_tag, iterator_traits_deref< Container > > {
-      private:
-        iterator_type< Container > sub_iter;
-        iterator_type< Container > sub_end;
-        DifferenceType             current;
-        DifferenceType             stop;
-        DifferenceType             step;
-
-      public:
-        Iterator(iterator_type< Container > && si, iterator_type< Container > && se, DifferenceType in_start, DifferenceType in_stop, DifferenceType in_step)
-            : sub_iter{std::move(si)}
-            , sub_end{std::move(se)}
-            , current{in_start}
-            , stop{in_stop}
-            , step{in_step} {}
-
-        iterator_deref< Container > operator*() { return *this->sub_iter; }
-
-        iterator_arrow< Container > operator->() { return apply_arrow(this->sub_iter); }
-
-        Iterator & operator++() {
-            dumb_advance(this->sub_iter, this->sub_end, this->step);
-            this->current += this->step;
-            if (this->stop < this->current) { this->current = this->stop; }
-            return *this;
-        }
-
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
-
-        bool operator!=(const Iterator & other) const { return this->sub_iter != other.sub_iter && this->current != other.current; }
-
-        bool operator==(const Iterator & other) const { return !(*this != other); }
-    };
-
-    Iterator begin() {
-        auto it = std::begin(this->container);
-        dumb_advance(it, std::end(this->container), this->start);
-        return {std::move(it), std::end(this->container), this->start, this->stop, this->step};
+    iterator_arrow<ContainerT> operator->() {
+      return apply_arrow(sub_iter_);
     }
 
-    Iterator end() { return {std::end(this->container), std::end(this->container), this->stop, this->stop, this->step}; }
+    Iterator& operator++() {
+      dumb_advance(sub_iter_, sub_end_, step_);
+      current_ += step_;
+      if (stop_ < current_) {
+        current_ = stop_;
+      }
+      return *this;
+    }
+
+    Iterator operator++(int) {
+      auto ret = *this;
+      ++*this;
+      return ret;
+    }
+
+    template <typename T>
+    bool operator!=(const Iterator<T>& other) const {
+      return sub_iter_ != other.sub_iter_ && current_ != other.current_;
+    }
+
+    template <typename T>
+    bool operator==(const Iterator<T>& other) const {
+      return !(*this != other);
+    }
+  };
+
+  Iterator<Container> begin() {
+    auto it = get_begin(container_);
+    dumb_advance(it, get_end(container_), start_);
+    return {std::move(it), get_end(container_), start_, stop_, step_};
+  }
+
+  Iterator<Container> end() {
+    return {get_end(container_), get_end(container_), stop_, stop_, step_};
+  }
+
+  Iterator<AsConst<Container>> begin() const {
+    auto it = get_begin(std::as_const(container_));
+    dumb_advance(it, get_end(std::as_const(container_)), start_);
+    return {std::move(it), get_end(std::as_const(container_)), start_, stop_,
+        step_};
+  }
+
+  Iterator<AsConst<Container>> end() const {
+    return {get_end(std::as_const(container_)),
+        get_end(std::as_const(container_)), stop_, stop_, step_};
+  }
 };
 
-// Helper function to instantiate a Sliced
-template < typename Container, typename DifferenceType > iter::impl::Sliced< Container, DifferenceType > iter::slice(Container && container, DifferenceType start, DifferenceType stop, DifferenceType step) { return {std::forward< Container >(container), start, stop, step}; }
+struct iter::impl::SliceFn {
+ private:
+  template <typename DifferenceType>
+  class FnPartial : public Pipeable<FnPartial<DifferenceType>> {
+   public:
+    template <typename Container>
+    Sliced<Container, DifferenceType> operator()(Container&& container) const {
+      return {std::forward<Container>(container), start_, stop_, step_};
+    }
 
-// only give the end as an arg and assume step  is 1 and begin is 0
-template < typename Container, typename DifferenceType > iter::impl::Sliced< Container, DifferenceType > iter::slice(Container && container, DifferenceType stop) { return {std::forward< Container >(container), 0, stop, 1}; }
+   private:
+    friend SliceFn;
+    constexpr FnPartial(
+        DifferenceType start, DifferenceType stop, DifferenceType step) noexcept
+        : start_{start}, stop_{stop}, step_{step} {}
+    DifferenceType start_;
+    DifferenceType stop_;
+    DifferenceType step_;
+  };
 
-template < typename T, typename DifferenceType > iter::impl::Sliced< std::initializer_list< T >, DifferenceType > iter::slice(std::initializer_list< T > il, DifferenceType start, DifferenceType stop, DifferenceType step) { return {std::move(il), start, stop, step}; }
+ public:
+  template <typename Container, typename DifferenceType,
+      typename = std::enable_if_t<is_iterable<Container>>>
+  Sliced<Container, DifferenceType> operator()(Container&& container,
+      DifferenceType start, DifferenceType stop,
+      DifferenceType step = 1) const {
+    return {std::forward<Container>(container), start, stop, step};
+  }
 
-template < typename T, typename DifferenceType > iter::impl::Sliced< std::initializer_list< T >, DifferenceType > iter::slice(std::initializer_list< T > il, DifferenceType stop) { return {std::move(il), 0, stop, 1}; }
+  // only given the end, assume step_ is 1 and begin is 0
+  template <typename Container, typename DifferenceType,
+      typename = std::enable_if_t<is_iterable<Container>>>
+  iter::impl::Sliced<Container, DifferenceType> operator()(
+      Container&& container, DifferenceType stop) const {
+    return {std::forward<Container>(container), 0, stop, 1};
+  }
+
+  template <typename DifferenceType,
+      typename = std::enable_if_t<!is_iterable<DifferenceType>>>
+  constexpr FnPartial<DifferenceType> operator()(
+      DifferenceType stop) const noexcept {
+    return {0, stop, 1};
+  }
+
+  template <typename DifferenceType,
+      typename = std::enable_if_t<!is_iterable<DifferenceType>>>
+  constexpr FnPartial<DifferenceType> operator()(DifferenceType start,
+      DifferenceType stop, DifferenceType step = 1) const noexcept {
+    return {start, stop, step};
+  }
+};
+
+namespace iter {
+  inline constexpr impl::SliceFn slice{};
+}
 
 #endif

@@ -3,23 +3,27 @@
 
 #include "groupby.hpp"
 #include "imap.hpp"
-#include "internal/iterbase.hpp"
 
-#include <initializer_list>
 #include <iterator>
-#include <type_traits>
 #include <utility>
 
 namespace iter {
-    template < typename GroupByType > struct GroupFrontGetter {
-        auto operator()(impl::iterator_deref< GroupByType > gb) -> decltype(*std::begin(gb.second)) { return *std::begin(gb.second); }
+  namespace impl {
+    struct UniqueJustseenFn : PipeableAndBindOptionalSecond<UniqueJustseenFn, Identity> {
+     public:
+      using PipeableAndBindOptionalSecond<UniqueJustseenFn, Identity>::operator();
+      template <typename Container, typename KeyFunc>
+      auto operator()(Container&& container, KeyFunc key_fn) const {
+        // decltype(auto) return type in lambda so reference types are preserved
+        return imap(
+            [](auto&& group) -> decltype(auto) {
+              return *get_begin(group.second);
+            },
+            groupby(std::forward<Container>(container), key_fn));
+      }
     };
-
-    // gets first of each group.  since each group is decided based on equality
-    // with the previous item, this results in each item only appearing once
-    template < typename Container > auto unique_justseen(Container && container) -> decltype(imap(GroupFrontGetter< decltype(groupby(std::forward< Container >(container))) >{}, groupby(std::forward< Container >(container)))) { return imap(GroupFrontGetter< decltype(groupby(std::forward< Container >(container))) >{}, groupby(std::forward< Container >(container))); }
-
-    template < typename T > auto unique_justseen(std::initializer_list< T > il) -> decltype(imap(GroupFrontGetter< decltype(groupby(std::forward< std::initializer_list< T > >(il))) >{}, groupby(std::forward< std::initializer_list< T > >(il)))) { return imap(GroupFrontGetter< decltype(groupby(std::forward< std::initializer_list< T > >(il))) >{}, groupby(std::forward< std::initializer_list< T > >(il))); }
-}   // namespace iter
+  }
+  inline constexpr impl::UniqueJustseenFn unique_justseen{};
+}
 
 #endif

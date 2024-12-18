@@ -1,86 +1,126 @@
 #ifndef ITER_SLIDING_WINDOW_HPP_
 #define ITER_SLIDING_WINDOW_HPP_
 
+#include "internal/iterator_wrapper.hpp"
 #include "internal/iteratoriterator.hpp"
 #include "internal/iterbase.hpp"
 
 #include <deque>
 #include <iterator>
+#include <memory>
 #include <utility>
 
 namespace iter {
-    namespace impl {
-        template < typename Container > class WindowSlider;
+  namespace impl {
+    template <typename Container>
+    class WindowSlider;
+    using SlidingWindowFn = IterToolFnBindSizeTSecond<WindowSlider>;
+  }
+  inline constexpr impl::SlidingWindowFn sliding_window{};
+}
+
+template <typename Container>
+class iter::impl::WindowSlider {
+ private:
+  Container container_;
+  std::size_t window_size_;
+
+  friend SlidingWindowFn;
+
+  WindowSlider(Container&& container, std::size_t win_sz)
+      : container_(std::forward<Container>(container)), window_size_{win_sz} {}
+
+  template <typename T>
+  using IndexVector = std::deque<IteratorWrapper<T>>;
+  template <typename T>
+  using DerefVec = IterIterWrapper<IndexVector<T>>;
+
+ public:
+  WindowSlider(WindowSlider&&) = default;
+  template <typename ContainerT>
+  class Iterator {
+   private:
+    template <typename>
+    friend class Iterator;
+    std::shared_ptr<DerefVec<ContainerT>> window_ =
+        std::make_shared<DerefVec<ContainerT>>();
+    IteratorWrapper<ContainerT> sub_iter_;
+
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = DerefVec<ContainerT>;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
+
+    Iterator(IteratorWrapper<ContainerT>&& sub_iter,
+        IteratorWrapper<ContainerT>&& sub_end, std::size_t window_sz)
+        : sub_iter_(std::move(sub_iter)) {
+      std::size_t i{0};
+      while (i < window_sz && sub_iter_ != sub_end) {
+        window_->get().push_back(sub_iter_);
+        ++i;
+        if (i != window_sz) {
+          ++sub_iter_;
+        }
+      }
     }
 
-    template < typename Container > impl::WindowSlider< Container > sliding_window(Container &&, std::size_t);
+    template <typename T>
+    bool operator!=(const Iterator<T>& other) const {
+      return sub_iter_ != other.sub_iter_;
+    }
 
-    template < typename T > impl::WindowSlider< std::initializer_list< T > > sliding_window(std::initializer_list< T >, std::size_t);
-}   // namespace iter
+    template <typename T>
+    bool operator==(const Iterator<T>& other) const {
+      return !(*this != other);
+    }
 
-template < typename Container > class iter::impl::WindowSlider {
-  private:
-    Container   container;
-    std::size_t window_size;
+    DerefVec<ContainerT>& operator*() {
+      return *window_;
+    }
 
-    friend WindowSlider iter::sliding_window< Container >(Container &&, std::size_t);
+    DerefVec<ContainerT>* operator->() {
+      return window_.get();
+    }
 
-    template < typename T > friend WindowSlider< std::initializer_list< T > > iter::sliding_window(std::initializer_list< T >, std::size_t);
+    Iterator& operator++() {
+      ++sub_iter_;
+      window_->get().pop_front();
+      window_->get().push_back(sub_iter_);
+      return *this;
+    }
 
-    WindowSlider(Container && in_container, std::size_t win_sz)
-        : container(std::forward< Container >(in_container))
-        , window_size{win_sz} {}
+    Iterator operator++(int) {
+      auto ret = *this;
+      ++*this;
+      return ret;
+    }
+  };
 
-    using IndexVector = std::deque< iterator_type< Container > >;
-    using DerefVec    = IterIterWrapper< IndexVector >;
+  Iterator<Container> begin() {
+    return {
+        (window_size_ != 0 ? IteratorWrapper<Container>{get_begin(container_)}
+                           : IteratorWrapper<Container>{get_end(container_)}),
+        get_end(container_), window_size_};
+  }
 
-  public:
-    WindowSlider(WindowSlider &&) = default;
-    class Iterator : public std::iterator< std::input_iterator_tag, DerefVec > {
-      private:
-        iterator_type< Container > sub_iter;
-        DerefVec                   window;
+  Iterator<Container> end() {
+    return {get_end(container_), get_end(container_), window_size_};
+  }
 
-      public:
-        Iterator(iterator_type< Container > && in_iter, const iterator_type< Container > & in_end, std::size_t window_sz)
-            : sub_iter(std::move(in_iter)) {
-            std::size_t i{0};
-            while (i < window_sz && this->sub_iter != in_end) {
-                this->window.get().push_back(this->sub_iter);
-                ++i;
-                if (i != window_sz) { ++this->sub_iter; }
-            }
-        }
+  Iterator<AsConst<Container>> begin() const {
+    return {(window_size_ != 0 ? IteratorWrapper<AsConst<Container>>{get_begin(
+                                     std::as_const(container_))}
+                               : IteratorWrapper<AsConst<Container>>{get_end(
+                                     std::as_const(container_))}),
+        get_end(std::as_const(container_)), window_size_};
+  }
 
-        bool operator!=(const Iterator & other) const { return this->sub_iter != other.sub_iter; }
-
-        bool operator==(const Iterator & other) const { return !(*this != other); }
-
-        DerefVec & operator*() { return this->window; }
-
-        DerefVec * operator->() { return this->window; }
-
-        Iterator & operator++() {
-            ++this->sub_iter;
-            this->window.get().pop_front();
-            this->window.get().push_back(this->sub_iter);
-            return *this;
-        }
-
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
-    };
-
-    Iterator begin() { return {(this->window_size != 0 ? std::begin(this->container) : std::end(this->container)), std::end(this->container), this->window_size}; }
-
-    Iterator end() { return {std::end(this->container), std::end(this->container), this->window_size}; }
+  Iterator<AsConst<Container>> end() const {
+    return {get_end(std::as_const(container_)),
+        get_end(std::as_const(container_)), window_size_};
+  }
 };
-
-template < typename Container > iter::impl::WindowSlider< Container > iter::sliding_window(Container && container, std::size_t window_size) { return {std::forward< Container >(container), window_size}; }
-
-template < typename T > iter::impl::WindowSlider< std::initializer_list< T > > iter::sliding_window(std::initializer_list< T > il, std::size_t window_size) { return {std::move(il), window_size}; }
 
 #endif

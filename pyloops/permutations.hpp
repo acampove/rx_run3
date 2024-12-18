@@ -1,6 +1,7 @@
 #ifndef ITER_PERMUTATIONS_HPP_
 #define ITER_PERMUTATIONS_HPP_
 
+#include "internal/iterator_wrapper.hpp"
 #include "internal/iteratoriterator.hpp"
 #include "internal/iterbase.hpp"
 
@@ -11,79 +12,117 @@
 #include <vector>
 
 namespace iter {
-    namespace impl {
-        template < typename Container > class Permuter;
+  namespace impl {
+    template <typename Container>
+    class Permuter;
+    using PermutationsFn = IterToolFn<Permuter>;
+  }
+  inline constexpr impl::PermutationsFn permutations{};
+}
+
+template <typename Container>
+class iter::impl::Permuter {
+ private:
+  friend PermutationsFn;
+  Container container_;
+
+  template <typename T>
+  using IndexVector = std::vector<IteratorWrapper<T>>;
+  template <typename T>
+  using Permutable = IterIterWrapper<IndexVector<T>>;
+
+  Permuter(Container&& container)
+      : container_(std::forward<Container>(container)) {}
+
+ public:
+  Permuter(Permuter&&) = default;
+
+  template <typename ContainerT>
+  class Iterator {
+   private:
+    template <typename>
+    friend class Iterator;
+    static constexpr const int COMPLETE = -1;
+    static bool cmp_iters(IteratorWrapper<ContainerT> lhs,
+        IteratorWrapper<ContainerT> rhs) noexcept {
+      return *lhs < *rhs;
     }
-    template < typename Container > impl::Permuter< Container > permutations(Container &&);
 
-    template < typename T > impl::Permuter< std::initializer_list< T > > permutations(std::initializer_list< T >);
-}   // namespace iter
+    Permutable<ContainerT> working_set_;
+    int steps_{};
 
-template < typename Container > class iter::impl::Permuter {
-  private:
-    Container container;
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = Permutable<ContainerT>;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
 
-    using IndexVector = std::vector< iterator_type< Container > >;
-    using Permutable  = IterIterWrapper< IndexVector >;
+    Iterator(IteratorWrapper<ContainerT>&& sub_iter,
+        IteratorWrapper<ContainerT>&& sub_end)
+        : steps_{sub_iter != sub_end ? 0 : COMPLETE} {
+      // done like this instead of using vector ctor with
+      // two iterators because that causes a substitution
+      // failure when the iterator is minimal
+      while (sub_iter != sub_end) {
+        working_set_.get().push_back(sub_iter);
+        ++sub_iter;
+      }
+      std::sort(get_begin(working_set_.get()), get_end(working_set_.get()),
+          cmp_iters);
+    }
 
-    friend Permuter                                                       iter::permutations< Container >(Container &&);
-    template < typename T > friend Permuter< std::initializer_list< T > > iter::permutations(std::initializer_list< T >);
+    Permutable<ContainerT>& operator*() {
+      return working_set_;
+    }
 
-    Permuter(Container && in_container)
-        : container(std::forward< Container >(in_container)) {}
+    Permutable<ContainerT>* operator->() {
+      return &working_set_;
+    }
 
-  public:
-    Permuter(Permuter &&) = default;
+    Iterator& operator++() {
+      ++steps_;
+      if (!std::next_permutation(get_begin(working_set_.get()),
+              get_end(working_set_.get()), cmp_iters)) {
+        steps_ = COMPLETE;
+      }
+      return *this;
+    }
 
-    class Iterator : public std::iterator< std::input_iterator_tag, Permutable > {
-      private:
-        static constexpr const int COMPLETE = -1;
-        static bool                cmp_iters(const iterator_type< Container > & lhs, const iterator_type< Container > & rhs) noexcept { return *lhs < *rhs; }
+    Iterator operator++(int) {
+      auto ret = *this;
+      ++*this;
+      return ret;
+    }
 
-        Permutable working_set;
-        int        steps{};
+    template <typename T>
+    bool operator!=(const Iterator<T>& other) const {
+      return !(*this == other);
+    }
 
-      public:
-        Iterator(iterator_type< Container > && sub_iter, iterator_type< Container > && sub_end)
-            : steps{sub_iter != sub_end ? 0 : COMPLETE} {
-            // done like this instead of using vector ctor with
-            // two iterators because that causes a substitution
-            // failure when the iterator is minimal
-            while (sub_iter != sub_end) {
-                this->working_set.get().push_back(sub_iter);
-                ++sub_iter;
-            }
-            std::sort(std::begin(working_set.get()), std::end(working_set.get()), cmp_iters);
-        }
+    template <typename T>
+    bool operator==(const Iterator<T>& other) const {
+      return steps_ == other.steps_;
+    }
+  };
 
-        Permutable & operator*() { return this->working_set; }
+  Iterator<Container> begin() {
+    return {get_begin(container_), get_end(container_)};
+  }
 
-        Permutable * operator->() { return &this->working_set; }
+  Iterator<Container> end() {
+    return {get_end(container_), get_end(container_)};
+  }
 
-        Iterator & operator++() {
-            ++this->steps;
-            if (!std::next_permutation(std::begin(working_set.get()), std::end(working_set.get()), cmp_iters)) { this->steps = COMPLETE; }
-            return *this;
-        }
+  Iterator<AsConst<Container>> begin() const {
+    return {get_begin(std::as_const(container_)),
+        get_end(std::as_const(container_))};
+  }
 
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
-
-        bool operator!=(const Iterator & other) const { return !(*this == other); }
-
-        bool operator==(const Iterator & other) const { return this->steps == other.steps; }
-    };
-
-    Iterator begin() { return {std::begin(this->container), std::end(this->container)}; }
-
-    Iterator end() { return {std::end(this->container), std::end(this->container)}; }
+  Iterator<AsConst<Container>> end() const {
+    return {get_end(std::as_const(container_)),
+        get_end(std::as_const(container_))};
+  }
 };
-
-template < typename Container > iter::impl::Permuter< Container > iter::permutations(Container && container) { return {std::forward< Container >(container)}; }
-
-template < typename T > iter::impl::Permuter< std::initializer_list< T > > iter::permutations(std::initializer_list< T > il) { return {std::move(il)}; }
 
 #endif

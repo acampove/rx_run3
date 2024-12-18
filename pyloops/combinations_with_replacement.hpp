@@ -4,93 +4,145 @@
 #include "internal/iteratoriterator.hpp"
 #include "internal/iterbase.hpp"
 
-#include <initializer_list>
 #include <iterator>
 #include <type_traits>
 #include <vector>
 
 namespace iter {
-    namespace impl {
-        template < typename Container > class CombinatorWithReplacement;
+  namespace impl {
+    template <typename Container>
+    class CombinatorWithReplacement;
+    using CombinationsWithReplacementFn =
+        IterToolFnBindSizeTSecond<CombinatorWithReplacement>;
+  }
+  inline constexpr impl::CombinationsWithReplacementFn combinations_with_replacement{};
+}
+
+template <typename Container>
+class iter::impl::CombinatorWithReplacement {
+ private:
+  Container container_;
+  std::size_t length_;
+
+  friend CombinationsWithReplacementFn;
+
+  CombinatorWithReplacement(Container&& container, std::size_t n)
+      : container_(std::forward<Container>(container)), length_{n} {}
+
+  template <typename T>
+  using IndexVector = std::vector<iterator_type<T>>;
+  template <typename T>
+  using CombIteratorDeref = IterIterWrapper<IndexVector<T>>;
+
+ public:
+  CombinatorWithReplacement(CombinatorWithReplacement&&) = default;
+  template <typename ContainerT>
+  class Iterator {
+   private:
+    template <typename>
+    friend class Iterator;
+    constexpr static const int COMPLETE = -1;
+    std::remove_reference_t<ContainerT>* container_p_;
+    CombIteratorDeref<ContainerT> indices_;
+    int steps_;
+
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = CombIteratorDeref<ContainerT>;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
+
+    Iterator(ContainerT& in_container, std::size_t n)
+        : container_p_{&in_container},
+          indices_(n, get_begin(in_container)),
+          steps_{(get_begin(in_container) != get_end(in_container) && n)
+                     ? 0
+                     : COMPLETE} {}
+
+    static Iterator zero_length_end(ContainerT& container) {
+      Iterator it{container, 0};
+      it.steps_ = 0;
+      return it;
     }
 
-    template < typename Container > impl::CombinatorWithReplacement< Container > combinations_with_replacement(Container &&, std::size_t);
+    CombIteratorDeref<ContainerT>& operator*() {
+      return indices_;
+    }
 
-    template < typename T > impl::CombinatorWithReplacement< std::initializer_list< T > > combinations_with_replacement(std::initializer_list< T >, std::size_t);
-}   // namespace iter
+    CombIteratorDeref<ContainerT>* operator->() {
+      return &indices_;
+    }
 
-template < typename Container > class iter::impl::CombinatorWithReplacement {
-  private:
-    Container   container;
-    std::size_t length;
-
-    friend CombinatorWithReplacement                                                       iter::combinations_with_replacement< Container >(Container &&, std::size_t);
-    template < typename T > friend CombinatorWithReplacement< std::initializer_list< T > > iter::combinations_with_replacement(std::initializer_list< T >, std::size_t);
-
-    CombinatorWithReplacement(Container && in_container, std::size_t n)
-        : container(std::forward< Container >(in_container))
-        , length{n} {}
-
-    using IndexVector       = std::vector< iterator_type< Container > >;
-    using CombIteratorDeref = IterIterWrapper< IndexVector >;
-
-  public:
-    CombinatorWithReplacement(CombinatorWithReplacement &&) = default;
-    class Iterator : public std::iterator< std::input_iterator_tag, CombIteratorDeref > {
-      private:
-        constexpr static const int                          COMPLETE = -1;
-        typename std::remove_reference< Container >::type * container_p;
-        CombIteratorDeref                                   indices;
-        int                                                 steps;
-
-      public:
-        Iterator(Container & in_container, std::size_t n)
-            : container_p{&in_container}
-            , indices(n, std::begin(in_container))
-            , steps{(std::begin(in_container) != std::end(in_container) && n) ? 0 : COMPLETE} {}
-
-        CombIteratorDeref & operator*() { return this->indices; }
-
-        CombIteratorDeref * operator->() { return &this->indices; }
-
-        Iterator & operator++() {
-            for (auto iter = indices.get().rbegin(); iter != indices.get().rend(); ++iter) {
-                ++(*iter);
-                if (!(*iter != std::end(*this->container_p))) {
-                    if ((iter + 1) != indices.get().rend()) {
-                        for (auto down = iter; down != indices.get().rbegin() - 1; --down) { (*down) = dumb_next(*(iter + 1)); }
-                    } else {
-                        this->steps = COMPLETE;
-                        break;
-                    }
-                } else {
-                    // we break because none of the rest of the items
-                    // need to be incremented
-                    break;
-                }
+    Iterator& operator++() {
+      if (indices_.get().empty()) {
+        // zero-length case.
+        ++steps_;
+        return *this;
+      }
+      for (auto iter = indices_.get().rbegin(); iter != indices_.get().rend();
+           ++iter) {
+        ++(*iter);
+        if (!(*iter != get_end(*container_p_))) {
+          if ((iter + 1) != indices_.get().rend()) {
+            for (auto down = iter;; --down) {
+              (*down) = dumb_next(*(iter + 1));
+              if (down == indices_.get().rbegin()) break;
             }
-            if (this->steps != COMPLETE) { ++this->steps; }
-            return *this;
+          } else {
+            steps_ = COMPLETE;
+            break;
+          }
+        } else {
+          // we break because none of the rest of the items
+          // need to be incremented
+          break;
         }
+      }
+      if (steps_ != COMPLETE) {
+        ++steps_;
+      }
+      return *this;
+    }
 
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
+    Iterator operator++(int) {
+      auto ret = *this;
+      ++*this;
+      return ret;
+    }
 
-        bool operator!=(const Iterator & other) const { return !(*this == other); }
+    template <typename T>
+    bool operator!=(const Iterator<T>& other) const {
+      return !(*this == other);
+    }
 
-        bool operator==(const Iterator & other) const { return this->steps == other.steps; }
-    };
+    template <typename T>
+    bool operator==(const Iterator<T>& other) const {
+      return steps_ == other.steps_;
+    }
+  };
 
-    Iterator begin() { return {this->container, this->length}; }
+  Iterator<Container> begin() {
+    return {container_, length_};
+  }
 
-    Iterator end() { return {this->container, 0}; }
+  Iterator<Container> end() {
+    if (length_ == 0) {
+      return Iterator<Container>::zero_length_end(container_);
+    }
+    return {container_, 0};
+  }
+
+  Iterator<AsConst<Container>> begin() const {
+    return {std::as_const(container_), length_};
+  }
+
+  Iterator<AsConst<Container>> end() const {
+    if (length_ == 0) {
+      return Iterator<AsConst<Container>>::zero_length_end(container_);
+    }
+    return {std::as_const(container_), 0};
+  }
 };
-
-template < typename Container > iter::impl::CombinatorWithReplacement< Container > iter::combinations_with_replacement(Container && container, std::size_t length) { return {std::forward< Container >(container), length}; }
-
-template < typename T > iter::impl::CombinatorWithReplacement< std::initializer_list< T > > iter::combinations_with_replacement(std::initializer_list< T > il, std::size_t length) { return {std::move(il), length}; }
 
 #endif

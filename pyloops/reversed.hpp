@@ -1,115 +1,137 @@
 #ifndef ITER_REVERSE_HPP_
 #define ITER_REVERSE_HPP_
 
+#include "internal/iterator_wrapper.hpp"
 #include "internal/iterbase.hpp"
 
 #include <iterator>
 #include <utility>
 
 namespace iter {
-    namespace impl {
-        template < typename Container > class Reverser;
+  namespace impl {
+    template <typename Container>
+    using reverse_iterator_type =
+        decltype(std::rbegin(std::declval<Container&>()));
+    template <typename Container>
+    using reverse_iterator_end_type =
+        decltype(std::rend(std::declval<Container&>()));
 
-        template < typename T, std::size_t N > class Reverser< T[N] >;
-    }   // namespace impl
+    // If rbegin and rend return the same type, type will be
+    // reverse_iterator_type<Container>
+    // If rbegin and rend return different types, type will be
+    // IteratorWrapperImpl
+    template <typename Container, bool same_types>
+    struct ReverseIteratorWrapperImplType;
 
-    template < typename Container > impl::Reverser< Container > reversed(Container &&);
+    template <typename Container>
+    struct ReverseIteratorWrapperImplType<Container, true>
+        : type_is<reverse_iterator_type<Container>> {};
 
-    template < typename T, std::size_t N > impl::Reverser< T[N] > reversed(T (&)[N]);
-}   // namespace iter
+    template <typename Container>
+    struct ReverseIteratorWrapperImplType<Container, false>
+        : type_is<IteratorWrapperImpl<reverse_iterator_type<Container>,
+              reverse_iterator_end_type<Container>>> {};
 
-template < typename Container > class iter::impl::Reverser {
-  private:
-    Container       container;
-    friend Reverser iter::reversed< Container >(Container &&);
+    template <typename Container>
+    using ReverseIteratorWrapper =
+        typename ReverseIteratorWrapperImplType<Container,
+            std::is_same_v<impl::reverse_iterator_type<Container>,
+                                                    impl::
+                                                        reverse_iterator_end_type<Container>>>::
+            type;
 
-    Reverser(Container && in_container)
-        : container(std::forward< Container >(in_container)) {}
+    template <typename Container>
+    class Reverser;
 
-  public:
-    Reverser(Reverser &&) = default;
-    class Iterator : public std::iterator< std::input_iterator_tag, iterator_traits_deref< Container > > {
-      private:
-        reverse_iterator_type< Container > sub_iter;
+    using ReversedFn = IterToolFn<Reverser>;
+  }
+  inline constexpr impl::ReversedFn reversed{};
+}
 
-      public:
-        Iterator(reverse_iterator_type< Container > && iter)
-            : sub_iter{std::move(iter)} {}
+template <typename Container>
+class iter::impl::Reverser {
+ private:
+  Container container_;
+  friend ReversedFn;
 
-        reverse_iterator_deref< Container > operator*() { return *this->sub_iter; }
+  Reverser(Container&& container)
+      : container_(std::forward<Container>(container)) {}
 
-        reverse_iterator_arrow< Container > operator->() { return apply_arrow(this->sub_iter); }
+  template <typename T>
+  using reverse_iterator_deref =
+      decltype(*std::declval<reverse_iterator_type<T>&>());
 
-        Iterator & operator++() {
-            ++this->sub_iter;
-            return *this;
-        }
+  template <typename T>
+  using reverse_iterator_traits_deref =
+      std::remove_reference_t<reverse_iterator_deref<T>>;
 
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
+  template <typename T>
+  using reverse_iterator_arrow = detail::arrow<reverse_iterator_type<T>>;
 
-        bool operator!=(const Iterator & other) const { return this->sub_iter != other.sub_iter; }
+ public:
+  Reverser(Reverser&&) = default;
+  template <typename ContainerT>
+  class Iterator {
+   private:
+    template <typename>
+    friend class Iterator;
+    ReverseIteratorWrapper<ContainerT> sub_iter_;
 
-        bool operator==(const Iterator & other) const { return !(*this != other); }
-    };
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = reverse_iterator_traits_deref<ContainerT>;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
 
-    Iterator begin() { return {this->container.rbegin()}; }
+    Iterator(ReverseIteratorWrapper<ContainerT>&& sub_iter)
+        : sub_iter_{std::move(sub_iter)} {}
 
-    Iterator end() { return {this->container.rend()}; }
+    reverse_iterator_deref<ContainerT> operator*() {
+      return *sub_iter_;
+    }
+
+    reverse_iterator_arrow<ContainerT> operator->() {
+      return apply_arrow(sub_iter_);
+    }
+
+    Iterator& operator++() {
+      ++sub_iter_;
+      return *this;
+    }
+
+    Iterator operator++(int) {
+      auto ret = *this;
+      ++*this;
+      return ret;
+    }
+
+    template <typename T>
+    bool operator!=(const Iterator<T>& other) const {
+      return sub_iter_ != other.sub_iter_;
+    }
+
+    template <typename T>
+    bool operator==(const Iterator<T>& other) const {
+      return !(*this != other);
+    }
+  };
+
+  Iterator<Container> begin() {
+    return {std::rbegin(container_)};
+  }
+
+  Iterator<Container> end() {
+    return {std::rend(container_)};
+  }
+
+  Iterator<AsConst<Container>> begin() const {
+    return {std::rbegin(std::as_const(container_))};
+  }
+
+  Iterator<AsConst<Container>> end() const {
+    return {std::rend(std::as_const(container_))};
+  }
 };
-
-template < typename Container > iter::impl::Reverser< Container > iter::reversed(Container && container) { return {std::forward< Container >(container)}; }
-
-// specialization for statically allocated arrays
-
-template < typename T, std::size_t N > class iter::impl::Reverser< T[N] > {
-  private:
-    T *             array;
-    friend Reverser iter::reversed< T, N >(T (&)[N]);
-
-    // Value constructor for use only in the reversed function
-    Reverser(T * in_array)
-        : array{in_array} {}
-
-  public:
-    Reverser(Reverser &&) = default;
-
-    class Iterator : public std::iterator< std::input_iterator_tag, T > {
-      private:
-        T * sub_iter;
-
-      public:
-        Iterator(T * iter)
-            : sub_iter{iter} {}
-
-        T & operator*() { return *(this->sub_iter - 1); }
-
-        T * operator->() { return (this->sub_iter - 1); }
-
-        Iterator & operator++() {
-            --this->sub_iter;
-            return *this;
-        }
-
-        Iterator operator++(int) {
-            auto ret = *this;
-            ++*this;
-            return ret;
-        }
-
-        bool operator!=(const Iterator & other) const { return this->sub_iter != other.sub_iter; }
-
-        bool operator==(const Iterator & other) const { return !(*this != other); }
-    };
-
-    Iterator begin() { return {this->array + N}; }
-
-    Iterator end() { return {this->array}; }
-};
-
-template < typename T, std::size_t N > iter::impl::Reverser< T[N] > iter::reversed(T (&array)[N]) { return {array}; }
 
 #endif

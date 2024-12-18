@@ -2,6 +2,7 @@
 #define ITERTOOLS_ALL_HPP_
 
 #include "accumulate.hpp"
+#include "batched.hpp"
 #include "chain.hpp"
 #include "chunked.hpp"
 #include "combinations.hpp"
@@ -24,6 +25,7 @@
 #include "slice.hpp"
 #include "sliding_window.hpp"
 #include "sorted.hpp"
+#include "starmap.hpp"
 #include "takewhile.hpp"
 #include "unique_everseen.hpp"
 #include "unique_justseen.hpp"
