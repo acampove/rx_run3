@@ -3,7 +3,6 @@
 
 #include "FitterTool.hpp"
 #include "SPlot2.hpp"
-#include "BinnedLikelihood.h"
 
 #include "yamlcpp.h"
 #include <fmt_ostream.h>
@@ -566,8 +565,7 @@ inline void FitterTool::CreateNLL(RooArgSet & _nLL) {
             if( _fitInfo.second.dataset   == nullptr ) MessageSvc::Error("CreateNLL severe error, dataset   to make likelihood missing","","EXIT_FAILURE");
 
             if (_fitInfo.second.binned){
-                MessageSvc::Info("CreateNLL (binned from BinnedLikelihood::CreateNLL !NEW) calling", _fitInfo.first);
-                _fitInfo.second.nll = BinnedLikelihood::CreateNLL(*_fitInfo.second.fullmodel, *_fitInfo.second.datahist, *_fitInfo.second.var, _optList.subArgs());
+                MessageSvc::Error("Binned likelihood not implemented");
             }
             else{
                 MessageSvc::Info("CreateNLL (unbinned) calling", _fitInfo.first);
