@@ -1293,7 +1293,7 @@ void FitParameterPool::AddYieldFormula(const FitParameterConfig & _yieldKey, Roo
     MessageSvc::Line();
     MessageSvc::Info(Color::Cyan, "FitParameterPool", (TString) "AddYieldFormula with key " + _yieldKey.GetKey() + " and name", _yieldName, "= @0*@1", _nameVar1, _nameVar2);
     ThrowIfYieldExists(_yieldKey, "AddYieldFormula");
-    RooArgSet       _args(*_var1, *_var2, _yieldName);
+    RooArgSet       _args(*_var1, *_var2);
     RooFormulaVar * _par = new RooFormulaVar(_yieldName, "@0*@1", _args);
     AddYieldParameter(_yieldKey, _par);
     return;
@@ -1306,7 +1306,7 @@ void FitParameterPool::AddYieldFormula(const FitParameterConfig & _yieldKey, Roo
     MessageSvc::Line();
     MessageSvc::Info(Color::Cyan, "FitParameterPool", (TString) "AddYieldFormula with key " + _yieldKey.GetKey() + " and name", _yieldName, "= @0*@1", _nameVar1, _nameVar2);
     ThrowIfYieldExists(_yieldKey, "AddYieldFormula");
-    RooArgSet       _args(*_var1, *_var2, _yieldName);
+    RooArgSet       _args(*_var1, *_var2);
     RooFormulaVar * _par = new RooFormulaVar(_yieldName, (TString) fmt::format("@0*@1*{0}", to_string(_scale)), _args);
     AddYieldParameter(_yieldKey, _par);
     return;
@@ -1320,7 +1320,7 @@ void FitParameterPool::AddYieldFormula(const FitParameterConfig & _yieldKey, Roo
     MessageSvc::Line();
     MessageSvc::Info(Color::Cyan, "FitParameterPool", (TString) "AddYieldFormula with key " + _yieldKey.GetKey() + " and name", _yieldName, "= @0/@1*@2", _nameVar1, _nameVar2, _nameVar3);
     ThrowIfYieldExists(_yieldKey, "AddYieldFormula");
-    RooArgSet       _args(*_var1, *_var2, *_var3, _yieldName);
+    RooArgSet       _args(*_var1, *_var2, *_var3);
     RooFormulaVar * _par = new RooFormulaVar(_yieldName, "@0/@1*@2", _args);
     AddYieldParameter(_yieldKey, _par);
     return;
@@ -1335,7 +1335,7 @@ void FitParameterPool::AddYieldFormula(const FitParameterConfig & _yieldKey, Roo
     MessageSvc::Line();
     MessageSvc::Info(Color::Cyan, "FitParameterPool", (TString) "AddYieldFormula with key " + _yieldKey.GetKey() + " and name", _yieldName, "= @0/@1*@2/@3", _nameVar1, _nameVar2, _nameVar3, _nameVar4);
     ThrowIfYieldExists(_yieldKey, "AddYieldFormula");
-    RooArgSet       _args(*_var1, *_var2, *_var3, *_var4, _yieldName);
+    RooArgSet       _args(*_var1, *_var2, *_var3, *_var4);
     RooFormulaVar * _par = new RooFormulaVar(_yieldName, "@0/@1*@2/@3", _args);
     AddYieldParameter(_yieldKey, _par);
     return;
@@ -1351,7 +1351,7 @@ void FitParameterPool::AddYieldFormula(const FitParameterConfig & _yieldKey, Roo
     MessageSvc::Line();
     MessageSvc::Info(Color::Cyan, "FitParameterPool", (TString) "AddYieldFormula with key " + _yieldKey.GetKey() + " and name", _yieldName, "= @0/@1*@2/@3/@4", _nameVar1, _nameVar2, _nameVar3, _nameVar4, _nameVar5);
     ThrowIfYieldExists(_yieldKey, "AddYieldFormula");
-    RooArgSet       _args(*_var1, *_var2, *_var3, *_var4, *_var5, _yieldName);
+    RooArgSet       _args(*_var1, *_var2, *_var3, *_var4, *_var5);
     RooFormulaVar * _par = new RooFormulaVar(_yieldName, "@0/@1*@2/@3/@4", _args);
     AddYieldParameter(_yieldKey, _par);
     MessageSvc::Info("AddYieldFormula", _par);
@@ -1402,7 +1402,7 @@ void FitParameterPool::AddDoubleRatioYieldFormula(const FitParameterConfig & _yi
     MessageSvc::Line();
     MessageSvc::Info(Color::Cyan, "FitParameterPool", (TString) "AddDoubleRatioYieldFormula with key " + _yieldKey.GetKey() + " and name", _yieldName, "= @0*@1*@2", _nameVar1, _nameVar2, _nameVar3);
     ThrowIfYieldExists(_yieldKey, "AddDoubleRatioYieldFormula");
-    RooArgSet       _args(*_var1, *_var2, *_var3, _yieldName);
+    RooArgSet       _args(*_var1, *_var2, *_var3);
     RooFormulaVar * _par = new RooFormulaVar(_yieldName, "@0*@1*@2", _args);
     AddYieldParameter(_yieldKey, _par);
     return;
