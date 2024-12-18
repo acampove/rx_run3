@@ -1315,7 +1315,7 @@ void FitterTool::ConfigureMinimizer(RooMinimizer & _minimizer, TString _logFile)
     }
     // Choose the minimzer algorithm
     MessageSvc::Info("MinimizerType", m_minType);
-    _minimizer.setMinimizerType(m_minType);
+    _minimizer.setMinimizerType(m_minType.Data());
 
     // Change MINUIT fit strategy : 0,1,2 (2 robustness, 1)
     MessageSvc::Info("Strategy", to_string(m_strategyMINUIT));
