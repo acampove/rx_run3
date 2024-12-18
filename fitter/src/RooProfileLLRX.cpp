@@ -9,7 +9,6 @@
 #include "RooProfileLL.h" 
 #include "RooProfileLLRX.hpp" 
 #include "RooAbsReal.h" 
-#include "RooMinuit.h"
 #include "RooMinimizer.h"
 #include "RooMsgService.h"
 #include "RooRealVar.h"
