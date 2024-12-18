@@ -26,17 +26,77 @@ class RooRealSumPdf;
 class RooSUMVar : public RooAbsOptTestStatistic {
   public:
     // Constructors, assignment etc
-    RooSUMVar() { _first = kTRUE; }
-    RooSUMVar(const char * name, const char * title, RooAbsPdf & pdf, RooAbsData & data, const RooCmdArg & arg1 = RooCmdArg::none(), const RooCmdArg & arg2 = RooCmdArg::none(), const RooCmdArg & arg3 = RooCmdArg::none(), const RooCmdArg & arg4 = RooCmdArg::none(), const RooCmdArg & arg5 = RooCmdArg::none(), const RooCmdArg & arg6 = RooCmdArg::none(), const RooCmdArg & arg7 = RooCmdArg::none(), const RooCmdArg & arg8 = RooCmdArg::none(), const RooCmdArg & arg9 = RooCmdArg::none());
+    RooSumVar() { _first = kTrue; }
 
-    RooSUMVar(const char * name, const char * title, RooAbsPdf & pdf, RooAbsData & data, Bool_t extended, const char * rangeName = 0, const char * addCoefRangeName = 0, Int_t nCPU = 1, RooFit::MPSplit interleave = RooFit::BulkPartition, Bool_t verbose = kTRUE, Bool_t splitRange = kFALSE, Bool_t cloneData = kTRUE, Bool_t binnedL = kFALSE);
+    RooSUMVar(
+            const char * name, 
+            const char * title, 
+            RooAbsPdf  & pdf, 
+            RooAbsData & data, 
+            const RooCmdArg & arg1 = RooCmdArg::none(), 
+            const RooCmdArg & arg2 = RooCmdArg::none(), 
+            const RooCmdArg & arg3 = RooCmdArg::none(), 
+            const RooCmdArg & arg4 = RooCmdArg::none(), 
+            const RooCmdArg & arg5 = RooCmdArg::none(), 
+            const RooCmdArg & arg6 = RooCmdArg::none(), 
+            const RooCmdArg & arg7 = RooCmdArg::none(), 
+            const RooCmdArg & arg8 = RooCmdArg::none(), 
+            const RooCmdArg & arg9 = RooCmdArg::none());
 
-    RooSUMVar(const char * name, const char * title, RooAbsPdf & pdf, RooAbsData & data, const RooArgSet & projDeps, Bool_t extended = kFALSE, const char * rangeName = 0, const char * addCoefRangeName = 0, Int_t nCPU = 1, RooFit::MPSplit interleave = RooFit::BulkPartition, Bool_t verbose = kTRUE, Bool_t splitRange = kFALSE, Bool_t cloneData = kTRUE, Bool_t binnedL = kFALSE);
+    RooSUMVar(
+            const char * name, 
+            const char * title, 
+            RooAbsPdf  & pdf, 
+            RooAbsData & data, 
+            Bool_t extended, 
+            const char * rangeName        = 0, 
+            const char * addCoefRangeName = 0, 
+            RooFit::MPSplit interleave    = RooFit::BulkPartition, 
+            Int_t nCPU        = 1, 
+            Bool_t verbose    = kTRUE, 
+            Bool_t splitRange = kFALSE, 
+            Bool_t cloneData  = kTRUE, 
+            Bool_t binnedL    = kFALSE);
+
+    RooSUMVar(
+            const char * name, 
+            const char * title, 
+            RooAbsPdf       & pdf, 
+            RooAbsData      & data, 
+            const RooArgSet & projDeps, 
+            Bool_t extended               = kFALSE, 
+            const char * rangeName        = 0, 
+            const char * addCoefRangeName = 0, 
+            RooFit::MPSplit interleave    = RooFit::BulkPartition, 
+            Int_t nCPU        = 1, 
+            Bool_t verbose    = kTRUE, 
+            Bool_t splitRange = kFALSE, 
+            Bool_t cloneData  = kTRUE, 
+            Bool_t binnedL    = kFALSE);
 
     RooSUMVar(const RooSUMVar & other, const char * name = 0);
-    virtual TObject * clone(const char * newname) const { return new RooSUMVar(*this, newname); }
 
-    virtual RooAbsTestStatistic * create(const char * name, const char * title, RooAbsReal & pdf, RooAbsData & adata, const RooArgSet & projDeps, const char * rangeName, const char * addCoefRangeName = 0, Int_t nCPU = 1, RooFit::MPSplit interleave = RooFit::BulkPartition, Bool_t verbose = kTRUE, Bool_t splitRange = kFALSE, Bool_t binnedL = kFALSE) { return new RooSUMVar(name, title, (RooAbsPdf &) pdf, adata, projDeps, _extended, rangeName, addCoefRangeName, nCPU, interleave, verbose, splitRange, kFALSE, binnedL); }
+    virtual TObject * clone(const char * newname) const
+    { 
+        return new RooSUMVar(*this, newname); 
+    }
+
+    virtual RooAbsTestStatistic * create(
+            const char * name, 
+            const char * title, 
+            RooAbsReal & pdf, 
+            RooAbsData & adata, 
+            const RooArgSet & projDeps, 
+            const char * rangeName, 
+            const char * addCoefRangeName = 0, 
+            Int_t nCPU = 1, 
+            RooFit::MPSplit interleave = RooFit::BulkPartition, 
+            Bool_t verbose = kTRUE, 
+            Bool_t splitRange = kFALSE, 
+            Bool_t binnedL = kFALSE) 
+    { 
+        return new RooSUMVar(name, title, (RooAbsPdf &) pdf, adata, projDeps, _extended, rangeName, addCoefRangeName, nCPU, interleave, verbose, splitRange, kFALSE, binnedL); 
+    }
 
     virtual ~RooSUMVar();
 
