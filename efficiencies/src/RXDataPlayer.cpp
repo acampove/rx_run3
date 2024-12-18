@@ -27,7 +27,6 @@
 #include "TRatioPlot.h"
 #include "TTreeFormula.h"
 
-#include "ROOT/RMakeUnique.hxx"
 #include <ROOT/RDataFrame.hxx>
 
 RXDataPlayer::RXDataPlayer() {
