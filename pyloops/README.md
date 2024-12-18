@@ -1,0 +1,1 @@
+#Code fully stolen from https://github.com/ryanhaining/cppitertools v0.1 tag which is C++11 compatible.

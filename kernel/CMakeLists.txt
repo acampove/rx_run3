@@ -1,0 +1,16 @@
+set(PROJECT kernel)
+
+file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.hpp)
+
+file(GLOB HEADERS2 ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
+message(DEBUG "SRCS = ${SOURCES}")
+message(DEBUG "INCS = ${HEADERS}")
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
+
+ROOT_GENERATE_DICTIONARY(${PROJECT}Dict ${HEADERS} LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/LinkDef.h MODULE ${PROJECT})
+
+add_library(${PROJECT} SHARED ${SOURCES} ${PROJECT}Dict.cxx)
+
+target_link_libraries(${PROJECT} PUBLIC ${PKG_LIBRARIES} velo)
