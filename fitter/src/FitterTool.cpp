@@ -673,7 +673,6 @@ void FitterTool::FitTo(bool _saveResults) {
             if (_fitInfo.second.binned && m_sumW2Error == false   ) {
                 MessageSvc::Info("FitTo", (TString) "Binned DataHist", (TString) "Calling FitterTool::Fit() instead for binned datasets");
                 MessageSvc::Line();
-                //Binned MC fits done with the BinnedLikelihood fitter from DaYu ( FROM ROOT 6.24 onwards we don't needit anymore , but we can use )
                 /*
                     More goodies will be available 
                     BatchMode(bool on)	
