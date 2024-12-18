@@ -20,7 +20,7 @@ function(set_targets)
 endfunction()
 # ------------------------------------------------
 function(set_library_names)
-    set(LOCAL_LIBRARIES "roofit pentaquark velo kernel tuples efficiencies fitter toys")
+    set(LOCAL_LIBRARIES "roofit velo kernel tuples efficiencies fitter toys")
     separate_arguments(LOCAL_LIBRARIES)
 
     set(LIBRARIES ${LOCAL_LIBRARIES} PARENT_SCOPE)
