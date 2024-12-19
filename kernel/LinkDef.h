@@ -31,6 +31,9 @@
 
 #pragma link C++ defined_in "TruthMatchingSvc.hpp";
 
+#pragma link C++ class YamlCutReader;
+#pragma link C++ defined_in "YamlCutReader.hpp";
+
 #pragma link C++ class CutHolder+;
 #pragma link C++ defined_in "CutHolder.hpp";
 #pragma link C++ class CutHolderRKst+;
