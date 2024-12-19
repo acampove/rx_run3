@@ -1,4 +1,16 @@
 # ------------------------------------------------
+function(print_target_libraries)
+    message(DEBUG "Dependency libraries")
+    foreach(PKG ${PKG_LIBRARIES})
+        message(DEBUG ${PKG})
+    endforeach()
+
+    message(DEBUG "Project libraries")
+    foreach(REP ${REPO_LIBRARIES})
+        message(DEBUG ${REP})
+    endforeach()
+endfunction()
+# ------------------------------------------------
 function(make_targets)
     message(STATUS "Targets:")
     foreach(SRC ${CPPSRCS})
