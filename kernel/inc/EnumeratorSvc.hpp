@@ -107,7 +107,9 @@ namespace pyYear {
      * \enum Year
      * \brief Year of data taking
      */
-    enum class Year { All = 0, Y2011 = 1, Y2012 = 2, Run1 = 3, Y2015 = 4, Y2016 = 5, Run2p1 = 6, Y2017 = 7, Y2018 = 8, Run2p2 = 9, Run2 = 10, Error = 99 };
+    enum class Year { All = 0, Y2011 = 1, Y2012 = 2, Run1 = 3, Y2015 = 4, Y2016 = 5, Run2p1 = 6, Y2017 = 7, Y2018 = 8, Run2p2 = 9, Run2 = 10,
+                      Y2024 =20 , Y2024_Block1 = 21, Y2024_Block2 = 22, Y2024_Block3 = 23, Y2024_Block4 = 24, Y2024_Block5 = 25,Y2024_Block6 = 26,Y2024_Block7 = 27,Y2024_Block8 = 28,
+                      Error = 99 };
     const Year hash_year(const TString & _string);
     TString    to_string(const Year & _enum);
     TString    to_tex(const Year & _enum);

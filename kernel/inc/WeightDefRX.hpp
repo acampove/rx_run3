@@ -5,6 +5,8 @@
 
 #include "TCut.h"
 #include "TString.h"
+#include <tuple>
+#include <functional>
 
 using namespace std;
 
@@ -130,15 +132,15 @@ namespace WeightDefRX {
     );
 
     const map< tuple< TriggerConf, Trigger, Analysis >, TString > wL0 = {
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0I, Analysis::MM), TString(WeightDefRX::L0I_inc)},   //
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0I, Analysis::EE), TString(WeightDefRX::L0I_inc)},   //
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0L, Analysis::MM), TString(WeightDefRX::L0M_inc)},   //
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0L, Analysis::EE), TString(WeightDefRX::L0E_inc)},   //
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0H, Analysis::MM), TString(WeightDefRX::L0H_inc)},   //
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0H, Analysis::EE), TString(WeightDefRX::L0H_inc)},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0I, Analysis::MM), TString(WeightDefRX::L0I_inc.GetTitle())},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0I, Analysis::EE), TString(WeightDefRX::L0I_inc.GetTitle())},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0L, Analysis::MM), TString(WeightDefRX::L0M_inc.GetTitle())},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0L, Analysis::EE), TString(WeightDefRX::L0E_inc.GetTitle())},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0H, Analysis::MM), TString(WeightDefRX::L0H_inc.GetTitle())},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0H, Analysis::EE), TString(WeightDefRX::L0H_inc.GetTitle())},   //
 
-        {make_tuple(TriggerConf::Exclusive, Trigger::L0I, Analysis::MM), TString(WeightDefRX::L0I_inc)},   //
-        {make_tuple(TriggerConf::Exclusive, Trigger::L0I, Analysis::EE), TString(WeightDefRX::L0I_inc)},   //
+        {make_tuple(TriggerConf::Exclusive, Trigger::L0I, Analysis::MM), TString(WeightDefRX::L0I_inc.GetTitle())},   //
+        {make_tuple(TriggerConf::Exclusive, Trigger::L0I, Analysis::EE), TString(WeightDefRX::L0I_inc.GetTitle())},   //
         {make_tuple(TriggerConf::Exclusive, Trigger::L0L, Analysis::MM), TString(Form("(%s) * (%s)", WeightDefRX::L0M_inc.GetTitle(), WeightDefRX::L0I_not.GetTitle()))},
         {make_tuple(TriggerConf::Exclusive, Trigger::L0L, Analysis::EE), TString(Form("(%s) * (%s)", WeightDefRX::L0E_inc.GetTitle(), WeightDefRX::L0I_not.GetTitle()))},
         {make_tuple(TriggerConf::Exclusive, Trigger::L0H, Analysis::MM), TString(Form("(%s) * (%s) * (%s)", WeightDefRX::L0H_inc.GetTitle(), WeightDefRX::L0I_not.GetTitle(), WeightDefRX::L0M_not.GetTitle()))},
@@ -146,8 +148,8 @@ namespace WeightDefRX {
 
         {make_tuple(TriggerConf::Exclusive2, Trigger::L0I, Analysis::MM), TString(Form("(%s) * (%s)", WeightDefRX::L0I_inc.GetTitle(), WeightDefRX::L0M_not.GetTitle()))},
         {make_tuple(TriggerConf::Exclusive2, Trigger::L0I, Analysis::EE), TString(Form("(%s) * (%s)", WeightDefRX::L0I_inc.GetTitle(), WeightDefRX::L0E_not.GetTitle()))},
-        {make_tuple(TriggerConf::Exclusive2, Trigger::L0L, Analysis::MM), TString(WeightDefRX::L0M_inc)},   //
-        {make_tuple(TriggerConf::Exclusive2, Trigger::L0L, Analysis::EE), TString(WeightDefRX::L0E_inc)},   //
+        {make_tuple(TriggerConf::Exclusive2, Trigger::L0L, Analysis::MM), TString(WeightDefRX::L0M_inc.GetTitle())},   //
+        {make_tuple(TriggerConf::Exclusive2, Trigger::L0L, Analysis::EE), TString(WeightDefRX::L0E_inc.GetTitle())},   //
     };
 
     // Special hadnling of L0L corrections ( done using DiLepton system directly for L0L category on both muon and electrons)
@@ -166,32 +168,32 @@ namespace WeightDefRX {
     const TCut L0M_inc_comb_not_BS = "(1. - M_wL0L_comb_{B}_effCL_BS[{IDX}])/(1. - M_wL0L_comb_{B}_effMC_BS[{IDX}])";
     const TCut L0E_inc_comb_not_BS = "(1. - E_wL0L_comb_{B}_effCL_BS[{IDX}])/(1. - E_wL0L_comb_{B}_effMC_BS[{IDX}])";    
     const map< tuple< TriggerConf , Trigger, Analysis > ,TString > wL0comb = { 
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0I, Analysis::MM), TString(WeightDefRX::L0I_inc)},   //
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0I, Analysis::EE), TString(WeightDefRX::L0I_inc)},   //
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0L, Analysis::MM), TString(WeightDefRX::L0M_inc_comb)},   //
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0L, Analysis::EE), TString(WeightDefRX::L0E_inc_comb)},   //
-        {make_tuple(TriggerConf::Exclusive, Trigger::L0I, Analysis::MM), TString(WeightDefRX::L0I_inc)},   //
-        {make_tuple(TriggerConf::Exclusive, Trigger::L0I, Analysis::EE), TString(WeightDefRX::L0I_inc)},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0I, Analysis::MM), TString(WeightDefRX::L0I_inc.GetTitle() )},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0I, Analysis::EE), TString(WeightDefRX::L0I_inc.GetTitle() )},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0L, Analysis::MM), TString(WeightDefRX::L0M_inc_comb.GetTitle() )},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0L, Analysis::EE), TString(WeightDefRX::L0E_inc_comb.GetTitle() )},   //
+        {make_tuple(TriggerConf::Exclusive, Trigger::L0I, Analysis::MM), TString(WeightDefRX::L0I_inc.GetTitle() )},   //
+        {make_tuple(TriggerConf::Exclusive, Trigger::L0I, Analysis::EE), TString(WeightDefRX::L0I_inc.GetTitle() )},   //
         {make_tuple(TriggerConf::Exclusive, Trigger::L0L, Analysis::MM), TString(Form("(%s) * (%s)", WeightDefRX::L0M_inc_comb.GetTitle(), WeightDefRX::L0I_not.GetTitle()))},
         {make_tuple(TriggerConf::Exclusive, Trigger::L0L, Analysis::EE), TString(Form("(%s) * (%s)", WeightDefRX::L0E_inc_comb.GetTitle(), WeightDefRX::L0I_not.GetTitle()))},
         {make_tuple(TriggerConf::Exclusive2, Trigger::L0I, Analysis::MM), TString(Form("(%s) * (%s)", WeightDefRX::L0I_inc.GetTitle(), WeightDefRX::L0M_inc_comb_not.GetTitle()))},
         {make_tuple(TriggerConf::Exclusive2, Trigger::L0I, Analysis::EE), TString(Form("(%s) * (%s)", WeightDefRX::L0I_inc.GetTitle(), WeightDefRX::L0E_inc_comb_not.GetTitle()))},
-        {make_tuple(TriggerConf::Exclusive2, Trigger::L0L, Analysis::MM), TString(WeightDefRX::L0M_inc_comb)},   //
-        {make_tuple(TriggerConf::Exclusive2, Trigger::L0L, Analysis::EE), TString(WeightDefRX::L0E_inc_comb)},   //        
+        {make_tuple(TriggerConf::Exclusive2, Trigger::L0L, Analysis::MM), TString(WeightDefRX::L0M_inc_comb.GetTitle() )},   //
+        {make_tuple(TriggerConf::Exclusive2, Trigger::L0L, Analysis::EE), TString(WeightDefRX::L0E_inc_comb.GetTitle() )},   //        
     };
     const map< tuple< TriggerConf , Trigger, Analysis > ,TString > wL0comb_BS = { 
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0I, Analysis::MM), TString(WeightDefRX::L0I_inc_BS)},   //
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0I, Analysis::EE), TString(WeightDefRX::L0I_inc_BS)},   //
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0L, Analysis::MM), TString(WeightDefRX::L0M_inc_comb_BS)},   //
-        {make_tuple(TriggerConf::Inclusive, Trigger::L0L, Analysis::EE), TString(WeightDefRX::L0E_inc_comb_BS)},   //
-        {make_tuple(TriggerConf::Exclusive, Trigger::L0I, Analysis::MM), TString(WeightDefRX::L0I_inc_BS)},   //
-        {make_tuple(TriggerConf::Exclusive, Trigger::L0I, Analysis::EE), TString(WeightDefRX::L0I_inc_BS)},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0I, Analysis::MM), TString(WeightDefRX::L0I_inc_BS.GetTitle() )},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0I, Analysis::EE), TString(WeightDefRX::L0I_inc_BS.GetTitle() )},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0L, Analysis::MM), TString(WeightDefRX::L0M_inc_comb_BS.GetTitle() )},   //
+        {make_tuple(TriggerConf::Inclusive, Trigger::L0L, Analysis::EE), TString(WeightDefRX::L0E_inc_comb_BS.GetTitle() )},   //
+        {make_tuple(TriggerConf::Exclusive, Trigger::L0I, Analysis::MM), TString(WeightDefRX::L0I_inc_BS.GetTitle() )},   //
+        {make_tuple(TriggerConf::Exclusive, Trigger::L0I, Analysis::EE), TString(WeightDefRX::L0I_inc_BS.GetTitle() )},   //
         {make_tuple(TriggerConf::Exclusive, Trigger::L0L, Analysis::MM), TString(Form("(%s) * (%s)", WeightDefRX::L0M_inc_comb_BS.GetTitle(), WeightDefRX::L0I_not_BS.GetTitle()))},
         {make_tuple(TriggerConf::Exclusive, Trigger::L0L, Analysis::EE), TString(Form("(%s) * (%s)", WeightDefRX::L0E_inc_comb_BS.GetTitle(), WeightDefRX::L0I_not_BS.GetTitle()))},
         {make_tuple(TriggerConf::Exclusive2, Trigger::L0I, Analysis::MM), TString(Form("(%s) * (%s)", WeightDefRX::L0I_inc_BS.GetTitle(), WeightDefRX::L0M_inc_comb_not_BS.GetTitle()))},
         {make_tuple(TriggerConf::Exclusive2, Trigger::L0I, Analysis::EE), TString(Form("(%s) * (%s)", WeightDefRX::L0I_inc_BS.GetTitle(), WeightDefRX::L0E_inc_comb_not_BS.GetTitle()))},
-        {make_tuple(TriggerConf::Exclusive2, Trigger::L0L, Analysis::MM), TString(WeightDefRX::L0M_inc_comb_BS)},   //
-        {make_tuple(TriggerConf::Exclusive2, Trigger::L0L, Analysis::EE), TString(WeightDefRX::L0E_inc_comb_BS)},   //        
+        {make_tuple(TriggerConf::Exclusive2, Trigger::L0L, Analysis::MM), TString(WeightDefRX::L0M_inc_comb_BS.GetTitle())},   //
+        {make_tuple(TriggerConf::Exclusive2, Trigger::L0L, Analysis::EE), TString(WeightDefRX::L0E_inc_comb_BS.GetTitle())},   //        
     };    
     //Same as before but without multiplying by status ( OLD approach, totally dropped ( See the ReplaceAll in WeightHolderRX.cpp ))
     // const TCut L0M_inc_noStatus = Form("((1 - (1 - %s ) * (1 - %s )) / (1 - (1 - %s ) * (1 - %s )))",           //
@@ -239,30 +241,30 @@ namespace WeightDefRX {
     const TCut HLT_exc_BS = "( {HEAD}_wHLT_{L0}_excl_{B}_effCL_BS / {HEAD}_wHLT_{L0}_excl_{B}_effMC_BS )";
 
     const map< pair< TriggerConf, Trigger >, TString > wHLT = {
-        {{TriggerConf::Inclusive, Trigger::L0I}, TString(WeightDefRX::HLT_inc)},   //
-        {{TriggerConf::Inclusive, Trigger::L0L}, TString(WeightDefRX::HLT_inc)},   //
-        {{TriggerConf::Inclusive, Trigger::L0H}, TString(WeightDefRX::HLT_inc)},   //
+        {{TriggerConf::Inclusive, Trigger::L0I}, TString(WeightDefRX::HLT_inc.GetTitle())},   //
+        {{TriggerConf::Inclusive, Trigger::L0L}, TString(WeightDefRX::HLT_inc.GetTitle())},   //
+        {{TriggerConf::Inclusive, Trigger::L0H}, TString(WeightDefRX::HLT_inc.GetTitle())},   //
 
-        {{TriggerConf::Exclusive, Trigger::L0I}, TString(WeightDefRX::HLT_inc)},   //
-        {{TriggerConf::Exclusive, Trigger::L0L}, TString(WeightDefRX::HLT_inc)},   //
-        {{TriggerConf::Exclusive, Trigger::L0H}, TString(WeightDefRX::HLT_inc)},   //
+        {{TriggerConf::Exclusive, Trigger::L0I}, TString(WeightDefRX::HLT_inc.GetTitle())},   //
+        {{TriggerConf::Exclusive, Trigger::L0L}, TString(WeightDefRX::HLT_inc.GetTitle())},   //
+        {{TriggerConf::Exclusive, Trigger::L0H}, TString(WeightDefRX::HLT_inc.GetTitle())},   //
 
-        {{TriggerConf::Exclusive2, Trigger::L0I}, TString(WeightDefRX::HLT_inc)},   //
-        {{TriggerConf::Exclusive2, Trigger::L0L}, TString(WeightDefRX::HLT_inc)},   //
-        {{TriggerConf::Exclusive2, Trigger::L0H}, TString(WeightDefRX::HLT_inc)},   //
+        {{TriggerConf::Exclusive2, Trigger::L0I}, TString(WeightDefRX::HLT_inc.GetTitle())},   //
+        {{TriggerConf::Exclusive2, Trigger::L0L}, TString(WeightDefRX::HLT_inc.GetTitle())},   //
+        {{TriggerConf::Exclusive2, Trigger::L0H}, TString(WeightDefRX::HLT_inc.GetTitle())},   //
     };
     const map< pair< TriggerConf, Trigger >, TString > wHLT_BS = {
-        {{TriggerConf::Inclusive, Trigger::L0I}, TString(WeightDefRX::HLT_inc_BS)},   //
-        {{TriggerConf::Inclusive, Trigger::L0L}, TString(WeightDefRX::HLT_inc_BS)},   //
-        {{TriggerConf::Inclusive, Trigger::L0H}, TString(WeightDefRX::HLT_inc_BS)},   //
+        {{TriggerConf::Inclusive, Trigger::L0I}, TString(WeightDefRX::HLT_inc_BS.GetTitle())},   //
+        {{TriggerConf::Inclusive, Trigger::L0L}, TString(WeightDefRX::HLT_inc_BS.GetTitle())},   //
+        {{TriggerConf::Inclusive, Trigger::L0H}, TString(WeightDefRX::HLT_inc_BS.GetTitle())},   //
 
-        {{TriggerConf::Exclusive, Trigger::L0I}, TString(WeightDefRX::HLT_inc_BS)},   //
-        {{TriggerConf::Exclusive, Trigger::L0L}, TString(WeightDefRX::HLT_inc_BS)},   //
-        {{TriggerConf::Exclusive, Trigger::L0H}, TString(WeightDefRX::HLT_inc_BS)},   //
+        {{TriggerConf::Exclusive, Trigger::L0I}, TString(WeightDefRX::HLT_inc_BS.GetTitle())},   //
+        {{TriggerConf::Exclusive, Trigger::L0L}, TString(WeightDefRX::HLT_inc_BS.GetTitle())},   //
+        {{TriggerConf::Exclusive, Trigger::L0H}, TString(WeightDefRX::HLT_inc_BS.GetTitle())},   //
 
-        {{TriggerConf::Exclusive2, Trigger::L0I}, TString(WeightDefRX::HLT_inc_BS)},   //
-        {{TriggerConf::Exclusive2, Trigger::L0L}, TString(WeightDefRX::HLT_inc_BS)},   //
-        {{TriggerConf::Exclusive2, Trigger::L0H}, TString(WeightDefRX::HLT_inc_BS)},   //
+        {{TriggerConf::Exclusive2, Trigger::L0I}, TString(WeightDefRX::HLT_inc_BS.GetTitle())},   //
+        {{TriggerConf::Exclusive2, Trigger::L0L}, TString(WeightDefRX::HLT_inc_BS.GetTitle())},   //
+        {{TriggerConf::Exclusive2, Trigger::L0H}, TString(WeightDefRX::HLT_inc_BS.GetTitle())},   //
     };    
 
     const TCut RW1D = "wRW1D_{B}_MM_L0L";
