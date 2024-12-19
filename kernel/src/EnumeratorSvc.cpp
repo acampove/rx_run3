@@ -5,6 +5,7 @@
 #include "MessageSvc.hpp"
 
 #include "TString.h"
+#include <stdexcept>
 
 //======================== Projects
 const Prj pyPrj::hash_project(const TString & _string) {
@@ -155,16 +156,20 @@ TString pySample::to_string(const Sample & _enum) {
     MessageSvc::Error("EnumeratorSvc", (TString) "to_string for Sample failed", "EXIT_FAILURE");
     return "Error";
 }
-const Sample pySample::GetSignalSample(const Q2Bin & _q2bin) {
-    switch (_q2bin) {
-        case Q2Bin::All: return Sample::Empty; break;
-        case Q2Bin::Low: return Sample::LL; break;
-        case Q2Bin::Central: return Sample::LL; break;
-        case Q2Bin::High: return Sample::LL; break;
-        case Q2Bin::JPsi: return Sample::JPsi; break;
-        case Q2Bin::Psi: return Sample::Psi; break;
-        case Q2Bin::Gamma: return Sample::Gamma; break;
-        default: MessageSvc::Error("EnumeratorSvc", (TString) "GetSignalSample failed", "EXIT_FAILURE"); break;
+
+const Sample pySample::GetSignalSample(const Q2Bin & _q2bin) 
+{
+    switch (_q2bin) 
+    {
+        case Q2Bin::All:     return Sample::Empty;
+        case Q2Bin::Low:     return Sample::LL;   
+        case Q2Bin::Central: return Sample::LL;   
+        case Q2Bin::High:    return Sample::LL;   
+        case Q2Bin::JPsi:    return Sample::JPsi; 
+        case Q2Bin::Psi:     return Sample::Psi;  
+        case Q2Bin::Gamma:   return Sample::Gamma;
+        default:
+            throw std::invalid_argument("EnumeratorSvc", (TString) "GetSignalSample failed", "EXIT_FAILURE"); 
     }
 }
 
