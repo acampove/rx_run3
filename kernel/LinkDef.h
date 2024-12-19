@@ -125,6 +125,7 @@ Warning in <TStreamerInfo::Build>: pair<pair<FitParameterConfig,pyRatioType::Rat
 
 #pragma link C++ struct SplitInfo+;
 #pragma link C++ function Reweight2XJPs+;
+#pragma link C++ function ReadTupleListFile+;
 #pragma link C++ defined_in "HelperSvc.hpp";
 
 #pragma link C++ class IOSvc+;
