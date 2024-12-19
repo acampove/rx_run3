@@ -3,14 +3,14 @@
 //
 // 2018-11-15 : Renato Quagliani, Simone Bifani
 //-----------------------------------------------------------------------------
-#include "EfficiencyCalculator.hpp"
 #include "EnumeratorSvc.hpp"
 #include "EventType.hpp"
 #include "HelperSvc.hpp"
 #include "IOSvc.hpp"
 #include "ParserSvc.hpp"
 
-int main(int argc, char ** argv) {
+int main(int argc, char ** argv) 
+{
     auto tStart = chrono::high_resolution_clock::now();
     // Call our Parser for YAML file
     ParserSvc parser("");
