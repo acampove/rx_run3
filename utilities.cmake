@@ -17,14 +17,14 @@ function(make_targets)
         message(STATUS "   ${SRC}")
 
         get_filename_component(BARENAME ${SRC} NAME)
-        string(REPLACE ".cpp" ".out" OUTNAME ${BARENAME})
+        string(REPLACE ".cpp" "" EXENAME ${BARENAME})
 
         if(COMMAND cmake_policy)
             cmake_policy(SET CMP0003 NEW)
         endif(COMMAND cmake_policy)
 
-        add_executable(${OUTNAME} ${SRC})
-        target_link_libraries(${OUTNAME} PUBLIC ${PKG_LIBRARIES} ${REPO_LIBRARIES})
+        add_executable(${EXENAME} ${SRC})
+        target_link_libraries(${EXENAME} PUBLIC ${PKG_LIBRARIES} ${REPO_LIBRARIES})
     endforeach()
 endfunction()
 # ------------------------------------------------
