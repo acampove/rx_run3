@@ -252,15 +252,15 @@ TString pyYear::to_string(const Year & _enum) {
         case Year::Y2018: return "18"; break;
         case Year::Run2p2: return "R2p2"; break;
         case Year::Run2: return "R2"; break;
-        case Year::Y2024: return "24" , 
-        case Year::Y2024_Block1 : return "24b1", 
-        case Year::Y2024_Block2 : return "24b2", 
-        case Year::Y2024_Block3 : return "24b3", 
-        case Year::Y2024_Block4 : return "24b4", 
-        case Year::Y2024_Block5 : return "24b5",
-        case Year::Y2024_Block6 : return "24b6",
-        case Year::Y2024_Block7 : return "24b7",
-        case Year::Y2024_Block8 : return "24b8",        
+        case Year::Y2024: return "24"; break; 
+        case Year::Y2024_Block1 : return "24b1"; break; 
+        case Year::Y2024_Block2 : return "24b2"; break; 
+        case Year::Y2024_Block3 : return "24b3"; break; 
+        case Year::Y2024_Block4 : return "24b4"; break; 
+        case Year::Y2024_Block5 : return "24b5"; break; 
+        case Year::Y2024_Block6 : return "24b6"; break; 
+        case Year::Y2024_Block7 : return "24b7"; break; 
+        case Year::Y2024_Block8 : return "24b8"; break; 
         default: MessageSvc::Error("EnumeratorSvc", (TString) "to_string Year failed", "EXIT_FAILURE"); break;
     }
     MessageSvc::Error("EnumeratorSvc", (TString) "to_string Year failed", "EXIT_FAILURE");
