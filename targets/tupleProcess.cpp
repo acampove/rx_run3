@@ -2,7 +2,6 @@
 #include "ParserSvc.hpp"
 #include "IOSvc.hpp"
 #include "HelperProcessing.hpp"
-#include "PQWeights.hpp"
 /**
  * TupleProcess
  * tupleProcess.out --yaml yaml/tuples/config-TupleProcess-###.yaml
@@ -53,10 +52,6 @@ int main(int argc, char ** argv) {
         if( et.GetProject() != Prj::RK  ){
             //NO PQ attaching on RK tuples... must re-do MCDT if used, not used tuples anyway...
             ROOT::RDataFrame df("DecayTuple", "TupleProcess.root");
-            if( ! df.HasColumn("wdp")){
-                MessageSvc::Warning("Adding PQ weights to local TupleProcess.root file");
-                PQWeights::AppendPQWeights( et, "TupleProcess.root", addToMCDT);
-            }
         }
     }
     //run it regardless
