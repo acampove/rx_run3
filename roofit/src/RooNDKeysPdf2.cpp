@@ -1271,14 +1271,19 @@ RooDataSet* RooNDKeysPdf2::createDatasetFromHist(const RooArgList &varList, cons
    }
    assert(histndim == varVec.size());
 
-   if (histndim > 3 || histndim <= 0) {
+   if (histndim > 3 || histndim <= 0) 
+   {
       coutE(InputArguments) << "RooNDKeysPdf2::createDatasetFromHist(" << GetName()
                             << ") ERROR: input histogram dimension not between [1-3]: " << histndim << endl;
       assert(0);
    }
 
    /// dataset creation
-   RooDataSet *dataFromHist = new RooDataSet("datasetFromHist", "datasetFromHist", varsAndWeightSet, weight.GetName());
+   RooDataSet *dataFromHist = new RooDataSet(
+           "datasetFromHist", 
+           "datasetFromHist", 
+           varsAndWeightSet, 
+           weight.GetName());
 
    /// dataset filling
    for (int i = 1; i <= hist.GetXaxis()->GetNbins(); ++i) {
