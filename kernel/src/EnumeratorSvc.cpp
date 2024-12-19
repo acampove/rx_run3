@@ -169,7 +169,7 @@ const Sample pySample::GetSignalSample(const Q2Bin & _q2bin)
         case Q2Bin::Psi:     return Sample::Psi;  
         case Q2Bin::Gamma:   return Sample::Gamma;
         default:
-            throw std::invalid_argument("EnumeratorSvc", (TString) "GetSignalSample failed", "EXIT_FAILURE"); 
+            throw std::invalid_argument("GetSignalSample failed, invalid sample");
     }
 }
 
