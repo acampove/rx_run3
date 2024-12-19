@@ -1,7 +1,6 @@
 
 #include "CounterHelpers.hpp"
 #include "CutDefRX.hpp"
-#include "EfficiencyCalculator.hpp"
 #include "EfficiencySvc.hpp"
 #include "EnumeratorSvc.hpp"
 #include "EventType.hpp"
@@ -31,48 +30,6 @@ using namespace iter;
 using namespace std;
 #include "TInterpreter.h"
 #include "TInterpreterValue.h"
-
-// void ConfigureTuple(){
-//   SettingDef::IO::useEOS = true;
-//   SettingDef::Tuple::option           = "pro";
-//   SettingDef::Tuple::gngVer           = "10";
-//   SettingDef::Tuple::creVer           = "NONE";
-//   SettingDef::Tuple::proVer           = "BDT2-ECAL100_PIDDataSimRatio_PORT";
-//   SettingDef::Tuple::branches         = false;
-//   SettingDef::Tuple::aliases          = false;
-//   SettingDef::Tuple::frac             = -1;
-//   return; 
-// }
-// void ConfigureWeightsMapsLoading(){
-//   SettingDef::Weight::option             = "";
-//   SettingDef::Weight::config             = "B0_fit";
-//   SettingDef::Weight::pidVer             = "DataSimRatio_June01_BS";
-//   SettingDef::Weight::l0Ver              = "L0_PIDDataSimRatio_ECAL100_BS";
-//   SettingDef::Weight::hltVer             = "NominalChain_PIDDataSimRatio_ECAL100_BS";
-//   SettingDef::Weight::q2SmearFileTag     = "TailA2Scale";
-//   SettingDef::Weight::useBS              = false ;
-//   SettingDef::Weight::iBS                = -1;
-//   SettingDef::Weight::priorChain         = false ;
-//   SettingDef::Weight::usePIDPTElectron   = false ;
-//   SettingDef::Weight::useMCRatioPID      = false;
-//   SettingDef::Weight::useStatusL0Formula = false;
-//   SettingDef::Efficiency::option         = "OnTheFly";
-//   return;
-// }
-// /*
-// void ConfigureSampleLoading(){
-//   SettingDef::Config::sample= "Bu2KMM";
-//   SettingDef::Config::q2bin = "central";
-//   SettingDef::Cut::option   = "tmSig-MAXP-OneGhostNMatches-HLT1AllTrackL0AlignedTOS-vetoPsi-vetoJPs-HOP-cutECALDistance-noPID-ePID-q2SmearMCDTB0-noQ2";
-//   SettingDef::Cut::extraCut = "Bp_DTF_M > 5150 && Bp_DTF_M < 5850";
-// }
-// */
-// void ConfigureSampleLoading(){
-//   SettingDef::Config::sample= "Bu2KMM";
-//   SettingDef::Config::q2bin = "central";
-//   SettingDef::Cut::option   = "tmSig-MAXP-OneGhostNMatches-HLT1AllTrackL0AlignedTOS-vetoPsi-vetoJPs-HOP-cutECALDistance-noPID-ePID-q2SmearMCDTB0-noQ2";
-//   SettingDef::Cut::extraCut = "Bp_DTF_M > 5150 && Bp_DTF_M < 5850";
-// }
 
 int main(int argc, char ** argv) {
   //Histogramming stuff lambda simplify titling 
