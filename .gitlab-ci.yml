@@ -32,7 +32,7 @@ cache:
         - .cache/pip
 before_script:
     - source /cvmfs/lhcb.cern.ch/lib/LbEnv 
-    - eval "$(apd-login)"
+    # - eval "$(apd-login)" not really needed! 
     # For debugging
 stages : 
     - build_env 
