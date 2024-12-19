@@ -8,6 +8,7 @@
 #include "TH1D.h"
 #include "TH2Poly.h"
 #include "TObjString.h"
+#include "TString.h"
 #include <ROOT/RDF/HistoModels.hxx>
 #include <algorithm>
 #include <vector>
