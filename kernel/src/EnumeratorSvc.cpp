@@ -227,6 +227,15 @@ const Year pyYear::hash_year(const TString & _string) {
     if (_string == "18") return Year::Y2018;
     if (_string == "R2p2") return Year::Run2p2;
     if (_string == "R2") return Year::Run2;
+    if (_string == "24")   return Year::Y2024;
+    if (_string == "24b1") return Year::Y2024_Block1;
+    if (_string == "24b2") return Year::Y2024_Block2;
+    if (_string == "24b3") return Year::Y2024_Block3;
+    if (_string == "24b4") return Year::Y2024_Block4;
+    if (_string == "24b5") return Year::Y2024_Block5;
+    if (_string == "24b6") return Year::Y2024_Block6;
+    if (_string == "24b7") return Year::Y2024_Block7;
+    if (_string == "24b8") return Year::Y2024_Block8;
     MessageSvc::Error("EnumeratorSvc", (TString) "hash_year(\"", _string, "\") failed", "EXIT_FAILURE");
     return Year::Error;
 }
@@ -243,6 +252,15 @@ TString pyYear::to_string(const Year & _enum) {
         case Year::Y2018: return "18"; break;
         case Year::Run2p2: return "R2p2"; break;
         case Year::Run2: return "R2"; break;
+        case Year::Y2024: return "24"; break; 
+        case Year::Y2024_Block1 : return "24b1"; break; 
+        case Year::Y2024_Block2 : return "24b2"; break; 
+        case Year::Y2024_Block3 : return "24b3"; break; 
+        case Year::Y2024_Block4 : return "24b4"; break; 
+        case Year::Y2024_Block5 : return "24b5"; break; 
+        case Year::Y2024_Block6 : return "24b6"; break; 
+        case Year::Y2024_Block7 : return "24b7"; break; 
+        case Year::Y2024_Block8 : return "24b8"; break; 
         default: MessageSvc::Error("EnumeratorSvc", (TString) "to_string Year failed", "EXIT_FAILURE"); break;
     }
     MessageSvc::Error("EnumeratorSvc", (TString) "to_string Year failed", "EXIT_FAILURE");
@@ -260,6 +278,7 @@ int pyYear::to_int( const Year & year){
     if(year == Year::Y2016) return 16; 
     if(year == Year::Y2017) return 17; 
     if(year == Year::Y2018) return 18; 
+    if(year == Year::Y2024) return 24;
     MessageSvc::Warning("to_int(year), not supported run merged periods, returning -1");
     return -1;
 };
@@ -269,7 +288,8 @@ const Year pyYear::from_int( int year){
     if(year == 15) return Year::Y2015; 
     if(year == 16) return Year::Y2016; 
     if(year == 17) return Year::Y2017; 
-    if(year == 18) return Year::Y2018; 
+    if(year == 18) return Year::Y2018;
+    if(year == 24) return Year::Y2024; 
     MessageSvc::Warning("from_int(year), not supported run merged periods, returning ERROR");
     return Year::Error;
 };
