@@ -62,6 +62,13 @@ tests:kernel_pyload_create:
     script : 
       - ./myenv/run bash -c "python tests/test_kernel.py"
 
+tests:kernel_pyload_cutholder: 
+    stage : tests 
+    needs : 
+      - build_env:environment
+      - build_env:cpp 
+    script : 
+      - ./myenv/run bash -c "python tests/test_cutreader.py"
 
 # TODO : load the just-compiled c++ libs and test them in python?
 # tests:load_python: 
