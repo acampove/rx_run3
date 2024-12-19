@@ -1,0 +1,19 @@
+[project]
+name        = 'rx_common'
+description = 'Project used to find and load libraries in cal-rx-run3 c++ code'
+version     = '0.0.1'
+readme      = 'README.md'
+dependencies= []
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
+[project.scripts]
+
+[tool.setuptools.package-data]
+
+[tool.setuptools]
+script-files=[]
