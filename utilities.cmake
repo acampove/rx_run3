@@ -19,6 +19,10 @@ function(make_targets)
         get_filename_component(BARENAME ${SRC} NAME)
         string(REPLACE ".cpp" ".out" OUTNAME ${BARENAME})
 
+        if(COMMAND cmake_policy)
+            cmake_policy(SET CMP0003 NEW)
+        endif(COMMAND cmake_policy)
+
         add_executable(${OUTNAME} ${SRC})
         target_link_libraries(${OUTNAME} PUBLIC ${PKG_LIBRARIES} ${REPO_LIBRARIES})
     endforeach()
@@ -173,6 +177,7 @@ function(find_boost)
     message(DEBUG  "")
     message(DEBUG  "Detecting BOOST")
 
+    cmake_policy(SET CMP0167 NEW)
     find_package(Boost COMPONENTS system filesystem) 
     if (NOT Boost_FOUND)
         message(FATAL_ERROR "BOOST found ${Boost_FOUND}")
