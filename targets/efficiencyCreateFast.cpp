@@ -6,7 +6,6 @@
 
 #include "CounterHelpers.hpp"
 #include "CutDefRX.hpp"
-#include "EfficiencyCalculator.hpp"
 #include "EfficiencySvc.hpp"
 #include "EnumeratorSvc.hpp"
 #include "EventType.hpp"
