@@ -12,4 +12,4 @@ ROOT_GENERATE_DICTIONARY(${PROJECT}Dict ${HEADERS} LINKDEF ${CMAKE_CURRENT_SOURC
 
 add_library(${PROJECT} SHARED ${SOURCES} ${PROJECT}Dict.cxx)
 
-target_link_libraries(${PROJECT} PUBLIC ${PKG_LIBRARIES} kernel pentaquark)
+target_link_libraries(${PROJECT} PUBLIC ${PKG_LIBRARIES} kernel)
