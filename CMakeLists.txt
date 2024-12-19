@@ -5,7 +5,6 @@ cmake_policy(SET CMP0167 NEW)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
 set_project_vars()
 set_flags()
 
@@ -33,6 +32,7 @@ foreach(LIB ${LIBRARIES})
     list(APPEND REPO_LIBRARIES ${LIB})
 endforeach()
 
+print_target_libraries()
 make_targets()
 
 print_vars()
