@@ -2500,4 +2500,23 @@ ROOT::RDF::RNode Reweight2XJPs( ROOT::RDF::RNode myNode, TString _weightName ){
     return myNode;
 }
 
+
+std::vector<std::string> ReadTupleListFile(const std::string& filename){
+    std::vector<std::string> result;
+    std::ifstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "Error: Unable to open file " << filename << std::endl;
+        return result;
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        if (line.find(".root") != std::string::npos) {
+            result.push_back(line);
+        }
+    }
+    file.close();
+    return result;
+}
 #endif

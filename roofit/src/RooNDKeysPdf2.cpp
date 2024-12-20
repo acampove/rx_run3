@@ -1283,7 +1283,8 @@ RooDataSet* RooNDKeysPdf2::createDatasetFromHist(const RooArgList &varList, cons
            "datasetFromHist", 
            "datasetFromHist", 
            varsAndWeightSet, 
-           weight.GetName());
+           RooFit::WeightVar(weight.GetName()));
+           //weight.GetName());
 
    /// dataset filling
    for (int i = 1; i <= hist.GetXaxis()->GetNbins(); ++i) {

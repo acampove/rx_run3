@@ -25,6 +25,7 @@
 #include "TObject.h"
 #include "TString.h"
 #include "TTreeFormula.h"
+//Needed For Run3 extension!
 
 ClassImp(CutHolder)
 
@@ -70,7 +71,8 @@ ostream & operator<<(ostream & os, const CutHolder & _cutHolder) {
 bool CutHolder::Check() {
     for (auto _opt : TokenizeString(m_cutOption, SettingDef::separator)) {
         if (!CheckVectorContains(SettingDef::AllowedConf::CutOptions, _opt)) {
-            if (_opt.Contains("BREM")) continue;
+            if (_opt.Contains("yaml[") ) continue; //Don't bother about it.. the parenthesis will specify what to use as input yaml and field in yaml
+            if (_opt.Contains("BREM"))   continue;
             if (_opt.Contains("q2Gamma[")   || m_cutOption.Contains("q2Gamma[-")) continue;
             if (_opt.Contains("q2Psi[")     || m_cutOption.Contains("q2Psi[-")) continue;
             if (_opt.Contains("q2High[")    || m_cutOption.Contains("q2High[-")) continue;
@@ -131,6 +133,22 @@ void CutHolder::Init() {
 void CutHolder::CreateCut() {
     m_cut = TCut(NOCUT);
     m_cuts.clear();
+    if (m_cutOption.Contains("-yaml[")){
+        //Configuration time is responsible of handling the yaml of selections
+        //option is -yaml[YamlFile:SelectionBit]
+        MessageSvc::Warning("Feature .yaml CutHolder is NEW, please be patient if something is not working for now");
+        TString _yamlFileLoad = StripStringBetween( m_cutOption, "-yaml[", "]");
+        //This string must have fileName.yaml:selectionID to use
+        TObjArray * _strCollection = _yamlFileLoad.Tokenize(":");
+        TString _loadFile           = TString(((TObjString *) (*_strCollection).At(0))->String());
+        TString _selectionSetting   = TString(((TObjString *) (*_strCollection).At(1))->String());
+        YamlCutReader reader(_loadFile.Data());
+        // auto all_cuts = reader.GetSelections(_selectionSetting.Data());
+        m_cut = CleanCut(reader.GetSelection(_selectionSetting.Data()));
+        m_cuts["cutFULL"] = m_cut;
+        return;        
+    }
+
     if ((m_cutOption == "no") || (m_cutOption == "-no")) {
         m_cut = TCut(NOCUT);
     } else if (m_configHolder.IsRapidSim()) {

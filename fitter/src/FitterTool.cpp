@@ -2866,6 +2866,7 @@ vector< RooAbsReal * > FitterTool::GetParametersInComponent(const FitComponentAn
     TIterator *            _iter      = nullptr;
 
     _parSet = _componentAndYield.fitComponent.PDF()->getVariables();
+    //TODO : iterator of parameters will be simpler to adapt having range-based loops!!! Modern ROOT improvement! 
     auto * observable = _componentAndYield.fitComponent.Var();
     if (_parSet != nullptr) _iter = _parSet->createIterator();
     if (_iter != nullptr) {

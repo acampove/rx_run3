@@ -204,6 +204,8 @@ namespace pyTrack {
         DD    = 2,
         TAG   = 10,
         PRB   = 11,
+        PASS  = 12, 
+        FAIL  = 13,
         Error = 99
     };
     const Track hash_track(const TString & _string);

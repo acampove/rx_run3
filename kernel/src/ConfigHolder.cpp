@@ -51,6 +51,35 @@ ConfigHolder::ConfigHolder(const Prj & _project, const Analysis & _ana, TString 
     Init();
 }
 
+// ConfigHolder(const TString & _project, const TString & _ana, TString _sample, const TString & _q2bin, const TString & _year, const TString & _polarity, const TString & _trigger, const TString & _triggerConf, const Brem & _brem, const TString & _track);
+
+ConfigHolder::ConfigHolder( const TString  & _project, 
+                            const TString & _ana, 
+                            TString _sample,
+                            const TString & _q2bin, 
+                            const TString & _year, 
+                            const TString & _polarity, 
+                            const TString & _trigger, 
+                            const TString & _triggerConf, 
+                            const TString & _brem, 
+                            const TString & _track) {
+    if (SettingDef::debug.Contains("CO")) SetDebug(true);
+    if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "TStrings");
+
+
+    m_project     = _project!= "global" ? hash_project(_project)   : hash_project(SettingDef::Config::project);
+    m_ana         = _ana    != "global" ? hash_analysis(_ana)      : hash_analysis(SettingDef::Config::ana);
+    m_sample      = _sample;
+    m_q2bin       = _q2bin   != "global" ? hash_q2bin(_q2bin)      : hash_q2bin(SettingDef::Config::q2bin);
+    m_year        = _year    != "global" ? hash_year(_year)        : hash_year(SettingDef::Config::year);
+    m_polarity    = _polarity!= "global" ? hash_polarity(_polarity): hash_polarity(SettingDef::Config::polarity);
+    m_trigger     = _trigger != "global" ? hash_trigger(_trigger)  : hash_trigger(SettingDef::Config::trigger);
+    m_triggerConf = _triggerConf != "global"? hash_triggerconf(_triggerConf) : hash_triggerconf(SettingDef::Config::triggerConf);
+    m_brem        = _brem != "global" ?     hash_brem(_brem)       : hash_brem(SettingDef::Config::brem);
+    m_track       = _track!= "global" ?     hash_track(_track)     : hash_track(SettingDef::Config::track);
+    Init();
+}
+
 ConfigHolder::ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem) {
     MessageSvc::Line();
     MessageSvc::Line();
@@ -179,9 +208,7 @@ void ConfigHolder::Init() {
         MessageSvc::Debug("ConfigHolder", (TString) "Initialize ...");
         PrintInline();
     }
-
     if ((m_sample != "") && (!m_sample.Contains(to_string(Sample::Data))) && (!m_sample.Contains("Comb")) && !m_sample.Contains(to_string(m_ana))) MessageSvc::Error("Wrong sample", m_sample, "for ana", to_string(m_ana), "EXIT_FAILURE");
-
     Check();
     return;
 }

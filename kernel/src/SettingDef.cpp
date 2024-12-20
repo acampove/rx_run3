@@ -628,6 +628,10 @@ const vector< TString > SettingDef::AllowedConf::TrackCategories = {to_string(Tr
  * @param  PIDELECTRON2_PROB_0p5  = PIDe>2 & ProbNNe>0.50
  * @param  PIDELECTRON2_PROB_0p55 = PIDe>2 & ProbNNe>0.55
  * @param  PIDELECTRON2_PROB_0p6  = PIDe>2 & ProbNNe>0.60
+
+
+ * NEW FEATURES 2024 
+ * @param yaml[fileyaml:bitfield] = full dependency at run time of the cut-setup to use! Bypass everything else (needed in Run3)
  */
 
 const vector< TString > SettingDef::AllowedConf::CutOptions = {
@@ -737,6 +741,7 @@ const vector< TString > SettingDef::AllowedConf::CutOptions = {
     "PIDELECTRON7_PROB_0p5",
     "PIDELECTRON7_PROB_0p55",
     "PIDELECTRON7_PROB_0p6",
+    "yaml["
 };
 
 /**
