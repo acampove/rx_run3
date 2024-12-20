@@ -39,3 +39,6 @@ print_vars()
 print_array(${CMAKE_CXX_FLAGS}  "C++ flags")
 print_array(${CMAKE_C_FLAGS}    "C   flags")
 
+set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install)
+install(TARGETS ${LIBRARIES}) 
+
