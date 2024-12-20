@@ -39,12 +39,22 @@ def _line_from_list(file_path : str, contains : str, l_line : list[str]) -> str:
     return l_value[0]
 # ------------------------------
 def _val_from_line(file_path : str, line : str) -> str:
+    '''
+    Function taking a line from a specific file
+    It expects two values separated by a colon, it returns the second one
+    If not found, it returns, missing 
+    '''
     if line == 'not_found':
         return line
 
     l_part = line.split(':')
     if len(l_part) != 2:
-        raise ValueError(f'In {file_path}, expected two elements separated by colon, found: \"{line}\"')
+        log.warning('')
+        log.warning(f'In {file_path}')
+        log.warning( 'Expected two elements separated by colon, found:')
+        log.warning(f'\"{line}\"')
+        log.warning('')
+        return 'missing'
 
     part   = l_part[1]
     part   = part.rstrip().lstrip()
