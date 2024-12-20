@@ -41,7 +41,17 @@ class ConfigHolder : public TObject {
     ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem);   // TO BE DROPPED
 
     ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const TriggerConf & _triggerConf, const Brem & _brem, const Track & _track);
-
+    
+    ConfigHolder( const TString & _project,
+                  const TString & _ana,
+                  TString _sample="",
+                  const TString & _q2bin="global", 
+                  const TString & _year="global", 
+                  const TString & _polarity="global",
+                  const TString & _trigger="global",
+                  const TString & _triggerConf="global",
+                  const TString & _brem="global", 
+                  const TString & _track="global");
     /**
      * \brief Copy constructor
      */

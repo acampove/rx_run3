@@ -5,6 +5,7 @@
 #include "HelperSvc.hpp"
 
 #include "ConfigHolder.hpp"
+#include "YamlCutReader.hpp"
 
 /**
  * \class CutHolder

@@ -350,4 +350,10 @@ ROOT::RDF::RNode EvalSwapsByHand( ROOT::RDF::RNode df, const Prj & prj = Prj::RK
 
 ROOT::RDF::RNode Reweight2XJPs( ROOT::RDF::RNode df, TString _weightName );
 
+
+/**
+ * New functions for run3 better handling of inputs
+*/
+std::vector<std::string> ReadTupleListFile(const std::string& filename);
+
 #endif

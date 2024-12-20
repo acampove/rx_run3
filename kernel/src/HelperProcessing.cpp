@@ -1027,6 +1027,7 @@ RNode HelperProcessing::AppendPIDColumns( RNode df, ConfigHolder & _configHolder
                 return _P;
             }
         }
+        return 0.0000;
     };
     /*
         Convert HasBrem column from boolean to integer value

@@ -401,6 +401,8 @@ const Track pyTrack::hash_track(const TString & _string) {
     if (_string == "DD") return Track::DD;
     if (_string == "TAG") return Track::TAG;
     if (_string == "PRB") return Track::PRB;
+    if (_string == "PASS") return Track::PASS;
+    if (_string == "FAIL") return Track::FAIL;    
     MessageSvc::Error("EnumeratorSvc", (TString) "hash_track(\"", _string, "\") failed", "EXIT_FAILURE");
     return Track::Error;
 }
@@ -411,6 +413,8 @@ TString pyTrack::to_string(const Track & _enum) {
         case Track::DD: return "DD"; break;
         case Track::TAG: return "TAG"; break;
         case Track::PRB: return "PRB"; break;
+        case Track::PASS: return "PASS"; break;
+        case Track::FAIL: return "FAIL"; break;
         default: MessageSvc::Error("EnumeratorSvc", (TString) "to_string Track failed", "EXIT_FAILURE"); break;
     }
     MessageSvc::Error("EnumeratorSvc", (TString) "to_string Track failed", "EXIT_FAILURE");
