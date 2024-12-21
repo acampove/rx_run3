@@ -32,23 +32,55 @@ ClassImp(EventType)
 }
 
 EventType::EventType(TString _project, TString _ana, TString _sample, TString _q2bin, TString _year, TString _polarity, TString _trigger, TString _brem, TString _track, TString _cutOption, TString _weightOption, TString _tupleOption, bool _init)
-    : ConfigHolder(hash_project(_project), hash_analysis(_ana), _sample, hash_q2bin(_q2bin), hash_year(_year), hash_polarity(_polarity), hash_trigger(_trigger), hash_brem(_brem), hash_track(_track))
+    : ConfigHolder(
+            hash_project(_project), 
+            hash_analysis(_ana), 
+            _sample, 
+            hash_q2bin(_q2bin), 
+            hash_year(_year), 
+            hash_polarity(_polarity), 
+            hash_trigger(_trigger), 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            hash_brem(_brem), 
+            hash_track(_track))
     , m_cutHolder(*this, _cutOption)
     , m_weightHolder(*this, _weightOption)
-    , m_tupleHolder(*this, _tupleOption) {
-    if (SettingDef::debug.Contains("ET")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("EventType", (TString) "TString");
-    if (_init) Init();
+    , m_tupleHolder(*this, _tupleOption) 
+{
+    if (SettingDef::debug.Contains("ET")) 
+        SetDebug(true);
+
+    if (m_debug) 
+        MessageSvc::Debug("EventType", (TString) "TString");
+
+    if (_init) 
+        Init();
 }
 
 EventType::EventType(Prj _project, Analysis _ana, TString _sample, Q2Bin _q2bin, Year _year, Polarity _polarity, Trigger _trigger, Brem _brem, Track _track, TString _cutOption, TString _weightOption, TString _tupleOption, bool _init)
-    : ConfigHolder(_project, _ana, _sample, _q2bin, _year, _polarity, _trigger, _brem, _track)
+    : ConfigHolder(
+            _project, 
+            _ana, 
+            _sample, 
+            _q2bin, 
+            _year, 
+            _polarity, 
+            _trigger, 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            _brem, 
+            _track)
     , m_cutHolder(*this, _cutOption)
     , m_weightHolder(*this, _weightOption)
     , m_tupleHolder(*this, _tupleOption) {
-    if (SettingDef::debug.Contains("ET")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("EventType", (TString) "Enumerator");
-    if (_init) Init();
+
+    if (SettingDef::debug.Contains("ET")) 
+        SetDebug(true);
+
+    if (m_debug) 
+        MessageSvc::Debug("EventType", (TString) "Enumerator");
+
+    if (_init) 
+        Init();
 }
 
 EventType::EventType(const ConfigHolder & _configHolder, const CutHolder & _cutHolder, const WeightHolder & _weightHolder, const TupleHolder & _tupleHolder, bool _init)
