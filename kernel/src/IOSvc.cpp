@@ -214,10 +214,7 @@ TString IOSvc::GetTupleDir(TString _option, TString _project, TString _ana, TStr
             hash_q2bin(_q2bin), 
             hash_year(_year), 
             hash_polarity(SettingDef::Config::polarity), 
-            hash_trigger(_trigger), 
-            hash_triggerconf(SettingDef::Config::triggerConf), 
-            hash_brem(SettingDef::Config::brem), 
-            hash_track(SettingDef::Config::track));
+            hash_trigger(_trigger));
 
     return GetTupleDir(_option, ch); 
 }
