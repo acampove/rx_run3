@@ -1,10 +1,29 @@
 '''
 Module containing tests for TupleHolder
 '''
+from dataclasses import dataclass
 
+import pytest
 from rx_kernel.tuple_holder  import TupleHolder
 from rx_kernel.config_holder import ConfigHolder
 
+# -------------------------
+@dataclass
+class Data:
+    '''
+    Class used to share data between tests
+    '''
+    l_tuple_opt = [
+            'gng', 
+            'pro', 
+            'cre', 
+            'spl', 
+            'rap', 
+            'tmp', 
+            'chainexctrg',
+            'postap',
+            'ap'
+            ]
 # -------------------------
 def _get_config_holder():
     cfg = {
@@ -28,11 +47,12 @@ def test_default():
     obj = TupleHolder()
     obj.PrintInline()
 # -------------------------
-def test_2018():
+@pytest.mark.parametrize('option', Data.l_tuple_opt)
+def test_options(option : str):
     '''
-    Will test with 2018 configuration
+    Will test options 
     '''
     ch  = _get_config_holder()
-    obj = TupleHolder(ch,'')
+    obj = TupleHolder(ch, option)
     obj.PrintInline()
 # -------------------------
