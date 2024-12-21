@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+#include "TString.h"
+
 using namespace RooFit;
 
 // ROOT::Math::IntegratorOneDimOptions::SetDefaultIntegrator("VEGAS");
@@ -24,8 +26,8 @@ using namespace RooFit;
  * \class ConfigHolder
  * \brief Config info
  */
-class ConfigHolder : public TObject {
-
+class ConfigHolder : public TObject 
+{
   public:
     /**
      * \brief Default constructor
@@ -35,22 +37,51 @@ class ConfigHolder : public TObject {
     /**
      * \brief Constructor with Enumerator
      */
-    ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem, const Track & _track);
+    ConfigHolder(
+            const Prj      & _project, 
+            const Analysis & _ana, 
+            const TString  & _sample, 
+            const Q2Bin    & _q2bin, 
+            const Year     & _year, 
+            const Polarity & _polarity, 
+            const Trigger  & _trigger, 
+            const Brem     & _brem, 
+            const Track    & _track);
 
-    ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem);   // TO BE DROPPED
+    ConfigHolder(
+            const Prj & _project, 
+            const Analysis & _ana, 
+            const TString  & _sample, 
+            const Q2Bin & _q2bin, 
+            const Year & _year, 
+            const Polarity & _polarity, 
+            const Trigger & _trigger, 
+            const Brem & _brem);   // TO BE DROPPED
 
-    ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const TriggerConf & _triggerConf, const Brem & _brem, const Track & _track);
+    ConfigHolder(
+            const Prj & _project, 
+            const Analysis & _ana, 
+            const TString  & _sample, 
+            const Q2Bin & _q2bin, 
+            const Year & _year, 
+            const Polarity & _polarity, 
+            const Trigger & _trigger, 
+            const TriggerConf & _triggerConf, 
+            const Brem & _brem, 
+            const Track & _track);
     
-    ConfigHolder( const TString & _project,
-                  const TString & _ana,
-                  TString _sample="",
-                  const TString & _q2bin="global", 
-                  const TString & _year="global", 
-                  const TString & _polarity="global",
-                  const TString & _trigger="global",
-                  const TString & _triggerConf="global",
-                  const TString & _brem="global", 
-                  const TString & _track="global");
+    ConfigHolder( 
+            const TString & _project,
+            const TString & _ana,
+            const TString & _sample="",
+            const TString & _q2bin="global", 
+            const TString & _year="global", 
+            const TString & _polarity="global",
+            const TString & _trigger="global",
+            const TString & _triggerConf="global",
+            const TString & _brem="global", 
+            const TString & _track="global");
+
     /**
      * \brief Copy constructor
      */
@@ -60,7 +91,8 @@ class ConfigHolder : public TObject {
      * \brief Equality checkers
      */
     bool operator==(const ConfigHolder & _configHolder) const {
-        return ((GetProject() == _configHolder.GetProject()) &&           //
+        return (
+                (GetProject() == _configHolder.GetProject()) &&           //
                 (GetAna() == _configHolder.GetAna()) &&                   //
                 (GetSample() == _configHolder.GetSample()) &&             //
                 (GetQ2bin() == _configHolder.GetQ2bin()) &&               //
