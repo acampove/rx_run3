@@ -1,6 +1,3 @@
-#ifndef TUPLEHOLDER_CPP
-#define TUPLEHOLDER_CPP
-
 #include "TupleHolder.hpp"
 
 #include "SettingDef.hpp"
@@ -868,5 +865,3 @@ void TupleHolder::PrintInline() const noexcept {
 vector<TString> TupleHolder::GetFileNames() const { 
     return m_tupleReader.GetFileNames();
 }; 
-
-#endif
