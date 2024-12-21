@@ -16,8 +16,8 @@ namespace pyPrj {
      */
     enum class Prj { All = 0, RK = 1, RKst = 2, RPhi = 3, RL = 4, RKS = 5, Error = 99 };
     const Prj hash_project(const TString & _string);
-    TString   to_string(const Prj & _enum);
-    TString   to_tex(const Prj & _enum);
+    TString   to_string(   const Prj     & _enum  );
+    TString   to_tex(      const Prj     & _enum  );
 };   // namespace pyPrj
 using namespace pyPrj;
 
@@ -30,9 +30,9 @@ namespace pyAnalysis {
      * \brief Analysis type
      */
     enum class Analysis { All = 0, MM = 1, EE = 2, ME = 3, Error = 99 };
-    const Analysis hash_analysis(const TString & _string);
-    TString        to_string(const Analysis & _enum);
-    TString        to_tex(const Analysis & _enum);
+    const Analysis hash_analysis(const TString  & _string);
+    TString        to_string(    const Analysis & _enum);
+    TString        to_tex(       const Analysis & _enum);
 };   // namespace pyAnalysis
 using namespace pyAnalysis;
 
@@ -44,10 +44,19 @@ namespace pyQ2Bin {
      * \enum Q2Bin
      * \brief Q2Bin regions
      */
-    enum class Q2Bin { All = 0, Low = 1, Central = 2, High = 3, JPsi = 4, Psi = 5, Gamma = 6, Error = 99 };
+    enum class Q2Bin { 
+        All     = 0, 
+        Low     = 1, 
+        Central = 2, 
+        High    = 3, 
+        JPsi    = 4, 
+        Psi     = 5, 
+        Gamma   = 6, 
+        Error   = 99 };
+
     const Q2Bin hash_q2bin(const TString & _string);
-    TString     to_string(const Q2Bin & _enum);
-    TString     to_tex(const Q2Bin & _enum);
+    TString     to_string( const Q2Bin   & _enum);
+    TString     to_tex(    const Q2Bin   & _enum);
 };   // namespace pyQ2Bin
 using namespace pyQ2Bin;
 
@@ -59,40 +68,42 @@ namespace pySample {
      * \enum Sample
      * \brief Sample type (used to identify the TYPE in the Fitter)
      */
-    enum class Sample { Empty = 0, 
-                        LL = 10, 
-                        JPsi = 11, 
-                        Psi = 12, 
-                        Gamma = 13, 
-                        BdBu = 19, 
-                        Bd = 20, 
-                        Bs = 21, 
-                        Lb = 22, 
-                        Comb = 23, 
-                        PartReco = 24, 
-                        PartRecoH = 25, 
-                        PartRecoL = 26, 
-                        Leakage = 27, 
-                        MisID = 28, 
-                        Bs2Phi = 29, 
-                        HadSwap = 30, 
-                        Psi2JPsX = 31, 
-                        CombSS = 32, 
-                        Bd2Kst = 33, 
-                        Bu2Kst = 34, 
-                        DSLC = 35, 
-                        Psi2JPsPiPi  = 36, 
-                        KEtaPrime = 37,
-                        PartRecoK1 = 38, 
-                        PartRecoK2 = 39, 
-                        PartRecoHad = 41, 
-                        Data = 40, 
-                        DataDrivenEMisID = 42,
-                        TemplateMisID_PIDe3 = 43,
-                        DoubleMisID_PiPi = 44,
-                        DoubleMisID_KK = 45,
-                        Custom = 50, 
-                        Error = 99 };
+    enum class Sample { 
+        Empty               = 0, 
+        LL                  = 10, 
+        JPsi                = 11, 
+        Psi                 = 12, 
+        Gamma               = 13, 
+        BdBu                = 19, 
+        Bd                  = 20, 
+        Bs                  = 21, 
+        Lb                  = 22, 
+        Comb                = 23, 
+        PartReco            = 24, 
+        PartRecoH           = 25, 
+        PartRecoL           = 26, 
+        Leakage             = 27, 
+        MisID               = 28, 
+        Bs2Phi              = 29, 
+        HadSwap             = 30, 
+        Psi2JPsX            = 31, 
+        CombSS              = 32, 
+        Bd2Kst              = 33, 
+        Bu2Kst              = 34, 
+        DSLC                = 35, 
+        Psi2JPsPiPi         = 36, 
+        KEtaPrime           = 37,
+        PartRecoK1          = 38, 
+        PartRecoK2          = 39, 
+        PartRecoHad         = 41, 
+        Data                = 40, 
+        DataDrivenEMisID    = 42,
+        TemplateMisID_PIDe3 = 43,
+        DoubleMisID_PiPi    = 44,
+        DoubleMisID_KK      = 45,
+        Custom              = 50, 
+        Error               = 99 };
+
     const Sample hash_sample(const TString & _string);
     TString      to_string(const Sample & _enum);
     const Sample GetSignalSample(const Q2Bin & _q2bin);
@@ -107,9 +118,30 @@ namespace pyYear {
      * \enum Year
      * \brief Year of data taking
      */
-    enum class Year { All = 0, Y2011 = 1, Y2012 = 2, Run1 = 3, Y2015 = 4, Y2016 = 5, Run2p1 = 6, Y2017 = 7, Y2018 = 8, Run2p2 = 9, Run2 = 10,
-                      Y2024 =20 , Y2024_Block1 = 21, Y2024_Block2 = 22, Y2024_Block3 = 23, Y2024_Block4 = 24, Y2024_Block5 = 25,Y2024_Block6 = 26,Y2024_Block7 = 27,Y2024_Block8 = 28,
-                      Error = 99 };
+    enum class Year { 
+        All          = 0, 
+        Y2011        = 1, 
+        Y2012        = 2, 
+        Run1         = 3, 
+        Y2015        = 4, 
+        Y2016        = 5, 
+        Run2p1       = 6, 
+        Y2017        = 7, 
+        Y2018        = 8, 
+        Run2p2       = 9, 
+        Run2         = 10,
+        // --------------
+        Y2024        = 20, 
+        Y2024_Block1 = 21, 
+        Y2024_Block2 = 22, 
+        Y2024_Block3 = 23, 
+        Y2024_Block4 = 24, 
+        Y2024_Block5 = 25,
+        Y2024_Block6 = 26,
+        Y2024_Block7 = 27,
+        Y2024_Block8 = 28,
+        Error        = 99 };
+
     const Year hash_year(const TString & _string);
     TString    to_string(const Year & _enum);
     TString    to_tex(const Year & _enum);
@@ -284,7 +316,13 @@ namespace pyOpenMode {
      * \enum OpenMode
      * \brief OpenMode
      */
-    enum class OpenMode { NONE = 0, READ = 1, RECREATE = 2, UPDATE = 3, WARNING = 4, ERROR = 5 };
+    enum class OpenMode { 
+        NONE     = 0, 
+        READ     = 1, 
+        RECREATE = 2, 
+        UPDATE   = 3, 
+        WARNING  = 4, 
+        ERROR    = 5 };
     const OpenMode hash_openmode(const TString & _string);
     TString        to_string(const OpenMode & _enum);
 };   // namespace pyOpenMode
