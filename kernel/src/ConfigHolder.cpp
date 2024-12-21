@@ -40,7 +40,7 @@ ConfigHolder::ConfigHolder()
 ConfigHolder::ConfigHolder(
         const Prj      & _project, 
         const Analysis & _ana, 
-        TString        _sample, 
+        const TString  & _sample, 
         const Q2Bin    & _q2bin, 
         const Year     & _year, 
         const Polarity & _polarity, 
@@ -67,16 +67,17 @@ ConfigHolder::ConfigHolder(
     Init();
 }
 
-ConfigHolder::ConfigHolder( const TString & _project, 
-                            const TString & _ana, 
-                            TString _sample,
-                            const TString & _q2bin, 
-                            const TString & _year, 
-                            const TString & _polarity, 
-                            const TString & _trigger, 
-                            const TString & _triggerConf, 
-                            const TString & _brem, 
-                            const TString & _track) 
+ConfigHolder::ConfigHolder( 
+        const TString & _project, 
+        const TString & _ana, 
+        const TString & _sample,
+        const TString & _q2bin, 
+        const TString & _year, 
+        const TString & _polarity, 
+        const TString & _trigger, 
+        const TString & _triggerConf, 
+        const TString & _brem, 
+        const TString & _track) 
 {
     if (SettingDef::debug.Contains("CO")) SetDebug(true);
     if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "TStrings");
@@ -95,7 +96,16 @@ ConfigHolder::ConfigHolder( const TString & _project,
     Init();
 }
 
-ConfigHolder::ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem) {
+ConfigHolder::ConfigHolder(
+        const Prj & _project, 
+        const Analysis & _ana, 
+        const TString & _sample,
+        const Q2Bin & _q2bin, 
+        const Year & _year, 
+        const Polarity & _polarity, 
+        const Trigger & _trigger, 
+        const Brem & _brem) 
+{
     MessageSvc::Line();
     MessageSvc::Line();
     MessageSvc::Warning("ConfigHolder", (TString) "ConfigHolder with Track::All --- TO BE DROPPED");
@@ -115,9 +125,21 @@ ConfigHolder::ConfigHolder(const Prj & _project, const Analysis & _ana, TString 
     Init();
 }
 
-ConfigHolder::ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const TriggerConf & _triggerConf, const Brem & _brem, const Track & _track) {
+ConfigHolder::ConfigHolder(
+        const Prj & _project, 
+        const Analysis & _ana, 
+        const TString & _sample,
+        const Q2Bin & _q2bin, 
+        const Year & _year, 
+        const Polarity & _polarity, 
+        const Trigger & _trigger, 
+        const TriggerConf & _triggerConf, 
+        const Brem & _brem, 
+        const Track & _track) 
+{
     if (SettingDef::debug.Contains("CO")) SetDebug(true);
     if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "Enumerator");
+
     m_project     = _project;
     m_ana         = _ana;
     m_sample      = _sample;
@@ -131,9 +153,11 @@ ConfigHolder::ConfigHolder(const Prj & _project, const Analysis & _ana, TString 
     Init();
 }
 
-ConfigHolder::ConfigHolder(const ConfigHolder & _configHolder) {
+ConfigHolder::ConfigHolder(const ConfigHolder & _configHolder) 
+{
     if (SettingDef::debug.Contains("CO")) SetDebug(true);
     if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "ConfigHolder");
+
     m_project     = _configHolder.GetProject();
     m_ana         = _configHolder.GetAna();
     m_sample      = _configHolder.GetSample();
@@ -147,7 +171,8 @@ ConfigHolder::ConfigHolder(const ConfigHolder & _configHolder) {
     Init();
 }
 
-ostream & operator<<(ostream & os, const ConfigHolder & _configHolder) {
+ostream & operator<<(ostream & os, const ConfigHolder & _configHolder) 
+{
     os << WHITE;
     MessageSvc::Line(os);
     MessageSvc::Print((ostream &) os, "ConfigHolder");
@@ -167,7 +192,8 @@ ostream & operator<<(ostream & os, const ConfigHolder & _configHolder) {
     return os;
 }
 
-bool ConfigHolder::Check() {
+bool ConfigHolder::Check() 
+{
     if (!CheckSample({m_sample})) return false;
 
     // Parameter consistency checks .... to be expanded if some configuration is not fine
@@ -207,7 +233,8 @@ bool ConfigHolder::Check() {
     return true;
 }
 
-const bool ConfigHolder::CheckSample(const vector< TString > & _samples) const {
+const bool ConfigHolder::CheckSample(const vector< TString > & _samples) const 
+{
     for (const auto & _sample : _samples) {
         if (!CheckVectorContains(GetSamples(), _sample) && !(_sample == to_string(Sample::Empty))) {
             cout << RED << *this << RESET << endl;
@@ -287,7 +314,8 @@ const bool ConfigHolder::IsSignalMC() const
     return _return;
 }
 
-const bool ConfigHolder::IsSignalMCEfficiencySample() const {
+const bool ConfigHolder::IsSignalMCEfficiencySample() const 
+{
     if (!IsSignalMC()) return false;
     // else go ahead.... check the name of the tuple/Q2Bin/Analysis and Project switching.
     TString LL = m_ana == Analysis::EE ? "EE" : "MM";
@@ -675,21 +703,23 @@ TString ConfigHolder::GetTupleName(TString _option) const {
     return _name;
 }
 
-int ConfigHolder::GetNBodies(TString _option) const {
-  if( _option == "MCDT"){
-    MessageSvc::Warning("GetNBodies, Option MCDT not implemented, will be useful in the future since MCDT has different structure of final states than DT");
-  }else{ 
-    switch (m_project) {
-      case Prj::RKst: return 4; break;
-      case Prj::RK: return 3; break;
-      case Prj::RPhi: return 4; break;
-      case Prj::RL: return 4; break;
-       case Prj::RKS: return 4; break;
-    default: MessageSvc::Error("Wrong project", to_string(m_project), "EXIT_FAILURE"); break;
+int ConfigHolder::GetNBodies(TString _option) const 
+{
+    if( _option == "MCDT")
+    {
+        MessageSvc::Warning("GetNBodies, Option MCDT not implemented, will be useful in the future since MCDT has different structure of final states than DT");
+        return 0;
     }
-  }
-  
-  return 0;
+
+    switch (m_project) 
+    {
+        case Prj::RKst: return 4; break;
+        case Prj::RK: return 3; break;
+        case Prj::RPhi: return 4; break;
+        case Prj::RL: return 4; break;
+        case Prj::RKS: return 4; break;
+        default: MessageSvc::Error("Wrong project", to_string(m_project), "EXIT_FAILURE");
+    }
 }
 
 /**
