@@ -8,6 +8,7 @@
 #include "EventType.hpp"
 #include "FitConfiguration.hpp"
 #include "EfficiencyForFitHandler.hpp"
+
 namespace SettingDef {
 
     TString name = "";
@@ -805,7 +806,19 @@ const vector< TString > SettingDef::AllowedConf::WeightConfig = {"{B}", "Bp", "B
  * @param "spl" = SPlot
  * @param "rap" = RapidSim
  */
-const vector< TString > SettingDef::AllowedConf::TupleOptions = {"gng", "pro", "cre", "spl", "rap", "tmp", "chainexctrg"};
+const vector< TString > SettingDef::AllowedConf::TupleOptions = 
+{
+    "gng", 
+    "pro", 
+    "cre", 
+    "spl", 
+    "rap", 
+    "tmp", 
+    "chainexctrg",
+    // ---------------
+    "postap",
+    "ap"
+};
 
 /**
  * \brief Efficiency options ('-' separated)
