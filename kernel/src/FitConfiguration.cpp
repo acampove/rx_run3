@@ -878,10 +878,24 @@ TString FitConfiguration::GetSampleName(const Sample & _sample) const noexcept {
     return CleanString(_key);
 }
 
-ConfigHolder FitConfiguration::GetSignalConfigHolder() const noexcept {
-    if (m_componentsAndOptions.find(m_signalSample) == m_componentsAndOptions.end() && !m_hasBrem) MessageSvc::Error("GetSignalConfigHolder", (TString) "Cannot find", to_string(m_signalSample), "among FitComponents", "EXIT_FAILURE");
+ConfigHolder FitConfiguration::GetSignalConfigHolder() const noexcept 
+{
+    if (m_componentsAndOptions.find(m_signalSample) == m_componentsAndOptions.end() && !m_hasBrem) 
+        MessageSvc::Error("GetSignalConfigHolder", (TString) "Cannot find", to_string(m_signalSample), "among FitComponents", "EXIT_FAILURE");
+
     TString      _sampleID = GetSampleName(m_signalSample);
-    ConfigHolder _config(m_project, m_ana, _sampleID, m_q2bin, m_year, m_polarity, m_trigger, Brem::All, m_track);
+    ConfigHolder _config(
+            m_project, 
+            m_ana, 
+            _sampleID, 
+            m_q2bin, 
+            m_year, 
+            m_polarity, 
+            m_trigger, 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            Brem::All, 
+            m_track);
+
     return _config;
 }
 
