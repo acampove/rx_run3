@@ -19,9 +19,14 @@
 
 ClassImp(ConfigHolder)
 
-ConfigHolder::ConfigHolder() {
-    if (SettingDef::debug.Contains("CO")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "Default");
+ConfigHolder::ConfigHolder() 
+{
+    if (SettingDef::debug.Contains("CO")) 
+        SetDebug(true);
+
+    if (m_debug) 
+        MessageSvc::Debug("ConfigHolder", (TString) "Default");
+
     m_project     = hash_project(SettingDef::Config::project);
     m_ana         = hash_analysis(SettingDef::Config::ana);
     m_sample      = SettingDef::Config::sample;
@@ -216,27 +221,41 @@ const bool ConfigHolder::CheckSample(const vector< TString > & _samples) const {
     return true;
 }
 
-void ConfigHolder::Init() {
-    if (m_debug) {
+void ConfigHolder::Init() 
+{
+    if (m_debug) 
+    {
         MessageSvc::Debug("ConfigHolder", (TString) "Initialize ...");
         PrintInline();
     }
-    if ((m_sample != "") && (!m_sample.Contains(to_string(Sample::Data))) && (!m_sample.Contains("Comb")) && !m_sample.Contains(to_string(m_ana))) MessageSvc::Error("Wrong sample", m_sample, "for ana", to_string(m_ana), "EXIT_FAILURE");
+
+    auto fail_1 = (m_sample != "") && (!m_sample.Contains(to_string(Sample::Data))) && (!m_sample.Contains("Comb"));
+    auto fail_2 = !m_sample.Contains(to_string(m_ana));
+
+    if (fail_1 && fail_2) 
+        MessageSvc::Error("Wrong sample", m_sample, "for ana", to_string(m_ana), "EXIT_FAILURE");
+
     Check();
-    return;
 }
 
-const bool ConfigHolder::IsMC() const { return m_sample.BeginsWith("Bd2") || m_sample.BeginsWith("Bu2") || m_sample.BeginsWith("Bs2") || m_sample.BeginsWith("B2") || m_sample.BeginsWith("Lb2"); }
+const bool ConfigHolder::IsMC() const 
+{ 
+    return m_sample.BeginsWith("Bd2") || m_sample.BeginsWith("Bu2") || m_sample.BeginsWith("Bs2") || m_sample.BeginsWith("B2") || m_sample.BeginsWith("Lb2"); 
+}
 
-const bool ConfigHolder::IsSignalMC() const {
-    if (!IsMC()) return false;
+const bool ConfigHolder::IsSignalMC() const 
+{
+    if (!IsMC()) 
+        return false;
+
     vector< TString > _samples = {};
-    switch (m_project) {
+
+    switch (m_project) 
+    {
         case Prj::RKst:
             _samples = {"Bd2KstMM",       "Bd2KstEE",       "Bd2KstJPsMM",       "Bd2KstJPsEE",       "Bd2KstPsiMM",       "Bd2KstPsiEE",         //
                         "Bd2KstMMvNOFLT", "Bd2KstEEvNOFLT", "Bd2KstJPsMMvNOFLT", "Bd2KstJPsEEvNOFLT", "Bd2KstPsiMMvNOFLT", "Bd2KstPsiEEvNOFLT",   //
                         "Bd2KstEEvPS",    "Bd2KstEEvPSQ2",  "Bd2KstJPsEESS",                                                                      //
-                        // "Bd2KstSwapJPsMM", "Bd2KstSwapJPsEE", "Bd2KstSwapPsiEE", "Bd2KstSwapPsiEE" ,// The K<->Pi hack swapped types.
                         "Bd2KstGEE",      "Bd2KstGEEv08a",  "Bd2KstGEEv08d",     "Bd2KstGEEv08f",     "Bd2KstGEEv08h"};
             break;
         case Prj::RK:
@@ -245,15 +264,29 @@ const bool ConfigHolder::IsSignalMC() const {
                         "Bu2KMMvB0",     "Bu2KEEvMS",                                                               //
                         "Bu2KMMvL0",     "Bu2KEEvL0"};
             break;
-        case Prj::RPhi: _samples = {"Bs2PhiMM", "Bs2PhiEE", "Bs2PhiJPsMM", "Bs2PhiJPsEE", "Bs2PhiPsiMM", "Bs2PhiPsiEE"}; break;
-        case Prj::RL: _samples = {"Lb2LEE", "Lb2LJPsEE", "Lb2LJPsMM", "Lb2LMM", "Lb2LPsiEE", "Lb2LPsiMM"}; break;
-        case Prj::RKS: _samples = {"Bd2KSJPsMM"}; break;
-        default: MessageSvc::Error("Wrong project", to_string(m_project), "EXIT_FAILURE"); break;
+        case Prj::RPhi: 
+            _samples = {"Bs2PhiMM", "Bs2PhiEE", "Bs2PhiJPsMM", "Bs2PhiJPsEE", "Bs2PhiPsiMM", "Bs2PhiPsiEE"}; 
+            break;
+        case Prj::RL: 
+            _samples = {"Lb2LEE", "Lb2LJPsEE", "Lb2LJPsMM", "Lb2LMM", "Lb2LPsiEE", "Lb2LPsiMM"}; 
+            break;
+        case Prj::RKS: 
+            _samples = {"Bd2KSJPsMM"}; 
+            break;
+
+        default: 
+            MessageSvc::Error("Wrong project", to_string(m_project), "EXIT_FAILURE"); 
+            break;
     }
+
     CheckSample(_samples);    
+
     bool _return = find(_samples.begin(), _samples.end(), m_sample) != _samples.end();
+
     MessageSvc::Info("IsSignalMC (prj)", to_string(m_project));
+
     std::cout<<RED << "For Sample " << m_sample << " , Status = " << _return<< RESET << std::endl;
+
     return _return;
 }
 
