@@ -38,15 +38,16 @@ ConfigHolder::ConfigHolder()
 }
 
 ConfigHolder::ConfigHolder(
-        const Prj      & _project, 
-        const Analysis & _ana, 
-        const TString  & _sample, 
-        const Q2Bin    & _q2bin, 
-        const Year     & _year, 
-        const Polarity & _polarity, 
-        const Trigger  & _trigger, 
-        const Brem     & _brem, 
-        const Track    & _track) 
+        const Prj         & _project, 
+        const Analysis    & _ana, 
+        const TString     & _sample,
+        const Q2Bin       & _q2bin, 
+        const Year        & _year, 
+        const Polarity    & _polarity, 
+        const Trigger     & _trigger, 
+        const TriggerConf & _triggerConf, 
+        const Brem        & _brem, 
+        const Track       & _track) 
 {
     if (SettingDef::debug.Contains("CO")) 
         SetDebug(true);
