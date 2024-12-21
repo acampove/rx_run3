@@ -1,5 +1,4 @@
-#ifndef TUPLEREADER_HPP
-#define TUPLEREADER_HPP
+#pragma once
 
 #include "EnumeratorSvc.hpp"
 #include "HelperSvc.hpp"
@@ -21,7 +20,6 @@
 #include "TTreeReaderArray.h"
 #include "TTreeReaderValue.h"
 
-//#include "ROOT/RMakeUnique.hxx"
 #include <ROOT/RDataFrame.hxx>
 
 /**
@@ -266,5 +264,3 @@ class TupleReader {
 };
 
 ostream & operator<<(ostream & os, const TupleReader & _tupleReader);
-
-#endif
