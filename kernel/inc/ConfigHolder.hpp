@@ -1,5 +1,4 @@
-#ifndef CONFIGHOLDER_HPP
-#define CONFIGHOLDER_HPP
+#pragma once
 
 #include "EnumeratorSvc.hpp"
 
@@ -225,5 +224,3 @@ class ConfigHolder : public TObject {
 ostream & operator<<(ostream & os, const ConfigHolder & _configHolder);
 
 extern void ResetSettingDefConfig(ConfigHolder _config) noexcept;
-
-#endif
