@@ -6,26 +6,65 @@
 bool MessageSvc::SILENCED = false;
 
 
-void MessageSvc::Debug(TString _func, TString _string1 , TString _string2 , TString _string3 , TString _string4 , TString _string5 , TString _string6 , TString _string7 , TString _string8 ) {
+void MessageSvc::Debug(
+        TString _func, 
+        TString _string1 , 
+        TString _string2 , 
+        TString _string3 , 
+        TString _string4 , 
+        TString _string5 , 
+        TString _string6 , 
+        TString _string7 , 
+        TString _string8 ) 
+{
     cout << YELLOW;
     Print(cout, Message("DEBUG"), _func, _string1, _string2, _string3, _string4, _string5, _string6, _string7, _string8);
     cout << RESET;
 };
 
 
-void MessageSvc::Error(TString _func, TString _string1 , TString _string2 , TString _string3 , TString _string4 , TString _string5 , TString _string6 , TString _string7 , TString _string8 ) {
+void MessageSvc::Error(
+        TString _func    , 
+        TString _string1 , 
+        TString _string2 , 
+        TString _string3 , 
+        TString _string4 , 
+        TString _string5 , 
+        TString _string6 , 
+        TString _string7 , 
+        TString _string8 ) 
+{
     cerr << RED;
     cerr << endl;
+
     Print(cerr, Message("ERROR"), _func, _string1, _string2, _string3, _string4, _string5, _string6, _string7, _string8);
     cerr << RESET;
-    if ((_string1 == "logic_error") || (_string2 == "logic_error") || (_string3 == "logic_error") || (_string4 == "logic_error") || (_string5 == "logic_error") || (_string6 == "logic_error")) { throw logic_error(_func); }
-    if ((_string1 == "EXIT_FAILURE") || (_string2 == "EXIT_FAILURE") || (_string3 == "EXIT_FAILURE") || (_string4 == "EXIT_FAILURE") || (_string5 == "EXIT_FAILURE") || (_string6 == "EXIT_FAILURE")) exit(EXIT_FAILURE);
+
+    if ((_string1 == "logic_error" ) || (_string2 == "logic_error" ) || (_string3 == "logic_error" ) || (_string4 == "logic_error" ) || (_string5 == "logic_error" ) || (_string6 == "logic_error") ) 
+        throw logic_error(_func);
+
+    if ((_string1 == "EXIT_FAILURE") || (_string2 == "EXIT_FAILURE") || (_string3 == "EXIT_FAILURE") || (_string4 == "EXIT_FAILURE") || (_string5 == "EXIT_FAILURE") || (_string6 == "EXIT_FAILURE")) 
+        exit(EXIT_FAILURE);
 };
-void MessageSvc::Error(int _expression, TString _func, TString _string1 , TString _string2 , TString _string3 , TString _string4 , TString _string5 , TString _string6 , TString _string7 , TString _string8 ) {
-    if (_expression) {
-        Error(_func, _string1, _string2, _string3, _string4, _string5, _string6, _string7, _string8);
-        if ((_string1 == "assert") || (_string2 == "assert") || (_string3 == "assert") || (_string4 == "assert") || (_string5 == "assert") || (_string6 == "assert")) assert(_expression);
-    }
+
+void MessageSvc::Error(
+        int _expression, 
+        TString _func, 
+        TString _string1 , 
+        TString _string2 , 
+        TString _string3 , 
+        TString _string4 , 
+        TString _string5 , 
+        TString _string6 , 
+        TString _string7 , 
+        TString _string8 ) 
+{
+    if (! _expression) 
+        return;
+
+    Error(_func, _string1, _string2, _string3, _string4, _string5, _string6, _string7, _string8);
+    if ((_string1 == "assert") || (_string2 == "assert") || (_string3 == "assert") || (_string4 == "assert") || (_string5 == "assert") || (_string6 == "assert")) 
+        assert(_expression);
 };
 
 void MessageSvc::Info(Color _COLOR, TString _func, TString _string1 , TString _string2 , TString _string3 , TString _string4 , TString _string5 , TString _string6 , TString _string7 , TString _string8 ) {
