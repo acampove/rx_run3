@@ -25,8 +25,8 @@
  * \class TupleHolder
  * \brief Tuple info
  */
-class TupleHolder : public TObject {
-
+class TupleHolder : public TObject 
+{
   public:
     /**
      * \brief Default constructor
@@ -36,7 +36,7 @@ class TupleHolder : public TObject {
     /**
      * \brief Constructor with ConfigHolder and TString
      */
-    TupleHolder(const ConfigHolder & _configHolder, TString _tupleOption);
+    TupleHolder(const ConfigHolder & _configHolder, const TString &_tupleOption);
 
     /**
      * \brief Copy constructor
@@ -46,7 +46,11 @@ class TupleHolder : public TObject {
     /**
      * \brief Constructor with TString
      */
-    TupleHolder(const ConfigHolder & _configHolder, TString _fileName, TString _tupleName, TString _tupleOption);
+    TupleHolder(
+            const ConfigHolder & _configHolder, 
+            const TString      & _fileName, 
+            const TString      & _tupleName, 
+            const TString      & _tupleOption);
 
     /**
      * \brief Equality checkers
