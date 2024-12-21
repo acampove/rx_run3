@@ -80,84 +80,33 @@ ConfigHolder::ConfigHolder(
         const TString & _brem, 
         const TString & _track) 
 {
-    if (SettingDef::debug.Contains("CO")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "TStrings");
+    if (SettingDef::debug.Contains("CO")) 
+        SetDebug(true);
 
+    if (m_debug) 
+        MessageSvc::Debug("ConfigHolder", (TString) "TStrings");
 
-    m_project     = _project!= "global" ? hash_project(_project)   : hash_project(SettingDef::Config::project);
-    m_ana         = _ana    != "global" ? hash_analysis(_ana)      : hash_analysis(SettingDef::Config::ana);
+    m_project     = _project     != "global" ? hash_project(_project)         : hash_project(SettingDef::Config::project);
+    m_ana         = _ana         != "global" ? hash_analysis(_ana)            : hash_analysis(SettingDef::Config::ana);
+    m_q2bin       = _q2bin       != "global" ? hash_q2bin(_q2bin)             : hash_q2bin(SettingDef::Config::q2bin);
+    m_year        = _year        != "global" ? hash_year(_year)               : hash_year(SettingDef::Config::year);
+    m_polarity    = _polarity    != "global" ? hash_polarity(_polarity)       : hash_polarity(SettingDef::Config::polarity);
+    m_trigger     = _trigger     != "global" ? hash_trigger(_trigger)         : hash_trigger(SettingDef::Config::trigger);
+    m_triggerConf = _triggerConf != "global" ? hash_triggerconf(_triggerConf) : hash_triggerconf(SettingDef::Config::triggerConf);
+    m_brem        = _brem        != "global" ? hash_brem(_brem)               : hash_brem(SettingDef::Config::brem);
+    m_track       = _track       != "global" ? hash_track(_track)             : hash_track(SettingDef::Config::track);
+
     m_sample      = _sample;
-    m_q2bin       = _q2bin   != "global" ? hash_q2bin(_q2bin)      : hash_q2bin(SettingDef::Config::q2bin);
-    m_year        = _year    != "global" ? hash_year(_year)        : hash_year(SettingDef::Config::year);
-    m_polarity    = _polarity!= "global" ? hash_polarity(_polarity): hash_polarity(SettingDef::Config::polarity);
-    m_trigger     = _trigger != "global" ? hash_trigger(_trigger)  : hash_trigger(SettingDef::Config::trigger);
-    m_triggerConf = _triggerConf != "global"? hash_triggerconf(_triggerConf) : hash_triggerconf(SettingDef::Config::triggerConf);
-    m_brem        = _brem != "global" ?     hash_brem(_brem)       : hash_brem(SettingDef::Config::brem);
-    m_track       = _track!= "global" ?     hash_track(_track)     : hash_track(SettingDef::Config::track);
-    Init();
-}
-
-ConfigHolder::ConfigHolder(
-        const Prj & _project, 
-        const Analysis & _ana, 
-        const TString & _sample,
-        const Q2Bin & _q2bin, 
-        const Year & _year, 
-        const Polarity & _polarity, 
-        const Trigger & _trigger, 
-        const Brem & _brem) 
-{
-    MessageSvc::Line();
-    MessageSvc::Line();
-    MessageSvc::Warning("ConfigHolder", (TString) "ConfigHolder with Track::All --- TO BE DROPPED");
-    MessageSvc::Line();
-    MessageSvc::Line();
-    // *this = ConfigHolder(_project, _ana, _sample, _q2bin, _year, _polarity, _trigger, _brem, Track::All);
-    m_project     = _project;
-    m_ana         = _ana;
-    m_sample      = _sample;
-    m_q2bin       = _q2bin;
-    m_year        = _year;
-    m_polarity    = _polarity;
-    m_trigger     = _trigger;
-    m_brem        = _brem;
-    m_track       = Track::All;
-    m_triggerConf = hash_triggerconf(SettingDef::Config::triggerConf);
-    Init();
-}
-
-ConfigHolder::ConfigHolder(
-        const Prj & _project, 
-        const Analysis & _ana, 
-        const TString & _sample,
-        const Q2Bin & _q2bin, 
-        const Year & _year, 
-        const Polarity & _polarity, 
-        const Trigger & _trigger, 
-        const TriggerConf & _triggerConf, 
-        const Brem & _brem, 
-        const Track & _track) 
-{
-    if (SettingDef::debug.Contains("CO")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "Enumerator");
-
-    m_project     = _project;
-    m_ana         = _ana;
-    m_sample      = _sample;
-    m_q2bin       = _q2bin;
-    m_year        = _year;
-    m_polarity    = _polarity;
-    m_trigger     = _trigger;
-    m_brem        = _brem;
-    m_track       = _track;
-    m_triggerConf = _triggerConf;
     Init();
 }
 
 ConfigHolder::ConfigHolder(const ConfigHolder & _configHolder) 
 {
-    if (SettingDef::debug.Contains("CO")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "ConfigHolder");
+    if (SettingDef::debug.Contains("CO")) 
+        SetDebug(true);
+
+    if (m_debug) 
+        MessageSvc::Debug("ConfigHolder", (TString) "ConfigHolder");
 
     m_project     = _configHolder.GetProject();
     m_ana         = _configHolder.GetAna();
