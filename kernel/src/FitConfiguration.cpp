@@ -13,7 +13,17 @@
 ClassImp(FitConfiguration);
 
 FitConfiguration::FitConfiguration(const Prj & _prj, const Analysis & _ana, const Q2Bin & _q2Bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem, const Track & _track, const bool & _constrainedMass, const tuple< bool, int, double, double > & _configVarMC, const tuple< bool, int, double, double > & _configVarCL, const vector< TString > & _composition)
-    : ConfigHolder(_prj, _ana, "", _q2Bin, _year, _polarity, _trigger, _brem, _track)   // <- construct the class it inherits from (the ConfigHolder, A FitConfiguration doesn't need a Tuple/Weight/Cut !)
+    : ConfigHolder(
+            _prj, 
+            _ana, 
+            "", 
+            _q2Bin, 
+            _year, 
+            _polarity, 
+            _trigger, 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            _brem, 
+            _track)   // <- construct the class it inherits from (the ConfigHolder, A FitConfiguration doesn't need a Tuple/Weight/Cut !)
 {
     if (SettingDef::debug.Contains("FF")) SetDebug(true);
     if (m_debug) MessageSvc::Debug("FitConfiguration", (TString) "");
@@ -45,7 +55,17 @@ FitConfiguration::FitConfiguration(const Prj & _prj, const Analysis & _ana, cons
 }
 
 FitConfiguration::FitConfiguration(const Prj & _prj, const Analysis & _ana, const Q2Bin & _q2Bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem, const Track & _track, const TString & _varName, const tuple< bool, int, double, double > & _configVarMC, const tuple< bool, int, double, double > & _configVarCL, const vector< TString > & _composition)
-    : ConfigHolder(_prj, _ana, "", _q2Bin, _year, _polarity, _trigger, _brem, _track)   // <- construct the class it inherits from (the ConfigHolder, A FitConfiguration doesn't need a Tuple/Weight/Cut !)
+    : ConfigHolder(
+            _prj, 
+            _ana, 
+            "", 
+            _q2Bin, 
+            _year, 
+            _polarity, 
+            _trigger, 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            _brem, 
+            _track)   // <- construct the class it inherits from (the ConfigHolder, A FitConfiguration doesn't need a Tuple/Weight/Cut !)
 {
     if (SettingDef::debug.Contains("FF")) SetDebug(true);
     if (m_debug) MessageSvc::Debug("FitConfiguration", (TString) "varName");
@@ -76,7 +96,17 @@ FitConfiguration::FitConfiguration(const Prj & _prj, const Analysis & _ana, cons
 }
 
 FitConfiguration::FitConfiguration(const Prj & _prj, const Analysis & _ana, const Q2Bin & _q2Bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem, const Track & _track, const vector< TString > & _composition)
-    : ConfigHolder(_prj, _ana, "", _q2Bin, _year, _polarity, _trigger, _brem, _track)   // <- construct the class it inherits from (the ConfigHolder, A FitConfiguration doesn't need a Tuple/Weight/Cut !)
+    : ConfigHolder(
+            _prj, 
+            _ana, 
+            "", 
+            _q2Bin, 
+            _year, 
+            _polarity, 
+            _trigger, 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            _brem, 
+            _track)   // <- construct the class it inherits from (the ConfigHolder, A FitConfiguration doesn't need a Tuple/Weight/Cut !)
 {
     if (SettingDef::debug.Contains("FF")) SetDebug(true);
     if (m_debug) MessageSvc::Debug("FitConfiguration", (TString) "composition");
