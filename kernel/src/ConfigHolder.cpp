@@ -714,11 +714,13 @@ int ConfigHolder::GetNBodies(TString _option) const
     switch (m_project) 
     {
         case Prj::RKst: return 4; break;
-        case Prj::RK: return 3; break;
+        case Prj::RK:   return 3; break;
         case Prj::RPhi: return 4; break;
-        case Prj::RL: return 4; break;
-        case Prj::RKS: return 4; break;
-        default: MessageSvc::Error("Wrong project", to_string(m_project), "EXIT_FAILURE");
+        case Prj::RL:   return 4; break;
+        case Prj::RKS:  return 4; break;
+        default: 
+                       MessageSvc::Error("Wrong project", to_string(m_project), "EXIT_FAILURE");
+                       return 0;
     }
 }
 
