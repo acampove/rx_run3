@@ -8,59 +8,7 @@ from dmu.logging.log_store import LogStore
 from rx_common             import utilities as ut
 
 log=LogStore.add_logger('rx_common:kernel')
-# --------------------------------
-def main():
-    '''
-    Script starts here
-    '''
 
-    lib_path = ut.get_lib_path('kernel')
-    ut.load_library(lib_path)
-    ut.include_headers()
-# --------------------------------
-main()
-
-from ROOT import CutDefRK
-from ROOT import ConfigHolder
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+LIB_PATH = ut.get_lib_path('kernel')
+ut.load_library(LIB_PATH)
+ut.include_headers()
