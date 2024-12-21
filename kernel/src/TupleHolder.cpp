@@ -9,30 +9,45 @@
 
 ClassImp(TupleHolder)
 
-    TupleHolder::TupleHolder()
-    : m_configHolder() {
-    if (SettingDef::debug.Contains("TH")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("TupleHolder", (TString) "Default");
+TupleHolder::TupleHolder() : m_configHolder() 
+{
+    if (SettingDef::debug.Contains("TH")) 
+        SetDebug(true);
+
+    if (m_debug) 
+        MessageSvc::Debug("TupleHolder", (TString) "Default");
+
     m_tupleOption = SettingDef::Tuple::option;
     m_tupleName   = SettingDef::Tuple::tupleName;
     m_fileName    = SettingDef::Tuple::fileName;
+
     Check();
 }
 
-TupleHolder::TupleHolder(const ConfigHolder & _configHolder, TString _tupleOption)
-    : m_configHolder(_configHolder) {
-    if (SettingDef::debug.Contains("TH")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("TupleHolder", (TString) "ConfigHolder");
+TupleHolder::TupleHolder(
+        const ConfigHolder & _configHolder, 
+        const TString      & _tupleOption) : m_configHolder(_configHolder) 
+{
+    if (SettingDef::debug.Contains("TH")) 
+        SetDebug(true);
+
+    if (m_debug) 
+        MessageSvc::Debug("TupleHolder", (TString) "ConfigHolder");
+
     m_tupleOption = _tupleOption;
     m_tupleName   = SettingDef::Tuple::tupleName;
     m_fileName    = SettingDef::Tuple::fileName;
     Check();
 }
 
-TupleHolder::TupleHolder(const TupleHolder & _tupleHolder)
-    : m_configHolder(_tupleHolder.GetConfigHolder()) {
-    if (SettingDef::debug.Contains("TH")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("TupleHolder", (TString) "TupleHolder");
+TupleHolder::TupleHolder(const TupleHolder & _tupleHolder) : m_configHolder(_tupleHolder.GetConfigHolder()) 
+{
+    if (SettingDef::debug.Contains("TH")) 
+        SetDebug(true);
+
+    if (m_debug) 
+        MessageSvc::Debug("TupleHolder", (TString) "TupleHolder");
+
     m_tupleOption   = _tupleHolder.Option();
     m_tupleDir      = _tupleHolder.TupleDir();
     m_tupleName     = _tupleHolder.TupleName();
@@ -41,16 +56,26 @@ TupleHolder::TupleHolder(const TupleHolder & _tupleHolder)
     m_branches      = _tupleHolder.Branches();
     m_aliases       = _tupleHolder.Aliases();
     m_isInitialized = _tupleHolder.IsInitialized();
+
     Check();
 }
 
-TupleHolder::TupleHolder(const ConfigHolder & _configHolder, TString _fileName, TString _tupleName, TString _tupleOption)
-    : m_configHolder(_configHolder) {
-    if (SettingDef::debug.Contains("TH")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("TupleHolder", (TString) "TString");
+TupleHolder::TupleHolder(
+        const ConfigHolder & _configHolder, 
+        const TString      & _fileName, 
+        const TString      & _tupleName, 
+        const TString      & _tupleOption) : m_configHolder(_configHolder) 
+{
+    if (SettingDef::debug.Contains("TH")) 
+        SetDebug(true);
+
+    if (m_debug) 
+        MessageSvc::Debug("TupleHolder", (TString) "TString");
+
     m_tupleOption = _tupleOption;
     m_tupleName   = SettingDef::Tuple::tupleName;
     m_fileName    = SettingDef::Tuple::fileName;
+
     Check();    
     Init(true, _fileName, _tupleName);
 }
@@ -71,30 +96,41 @@ ostream & operator<<(ostream & os, const TupleHolder & _tupleHolder) {
     return os;
 }
 
-TupleHolder TupleHolder::GetMCDecayTupleHolder() {
+TupleHolder TupleHolder::GetMCDecayTupleHolder() 
+{
     MessageSvc::Info("TupleHolder", (TString) "GetMCDecayTupleHolder");
+
     TString _tupleName           = SettingDef::Tuple::tupleName;
     SettingDef::Tuple::tupleName = "MCDT";
     TupleHolder _tupleHolder     = TupleHolder(this->GetConfigHolder(), this->Option());
     SettingDef::Tuple::tupleName = _tupleName;
+
     return _tupleHolder;
 }
 
-bool TupleHolder::Check() {
-    if( m_tupleOption.Contains("pro[")){
+bool TupleHolder::Check() 
+{
+    if( m_tupleOption.Contains("pro["))
+    {
         MessageSvc::Warning("TupleHolder check, skipped, pro[XXX] specificed");
         return false; 
     }
-    if( m_tupleOption.Contains("cre[")){
+
+    if( m_tupleOption.Contains("cre["))
+    {
         MessageSvc::Warning("TupleHolder check, skipped, cre[XXX] specificed");
         return false; 
     }    
-    for (auto _opt : TokenizeString(m_tupleOption, SettingDef::separator)) {        
-        if (!CheckVectorContains(SettingDef::AllowedConf::TupleOptions, _opt)) {
+
+    for (auto _opt : TokenizeString(m_tupleOption, SettingDef::separator)) 
+    {        
+        if (!CheckVectorContains(SettingDef::AllowedConf::TupleOptions, _opt)) 
+        {
             cout << RED << *this << RESET << endl;
             MessageSvc::Error("TupleHolder", (TString) "\"" + _opt + "\"", "option not in SettingDef::AllowedConf::TupleOptions", "EXIT_FAILURE");
         }
     }
+
     return false;
 }
 
