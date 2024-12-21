@@ -1,5 +1,4 @@
-#ifndef TUPLEHOLDER_HPP
-#define TUPLEHOLDER_HPP
+#pragma once
 
 #include "EnumeratorSvc.hpp"
 #include "HelperSvc.hpp"
@@ -260,5 +259,3 @@ class TupleHolder : public TObject {
 };
 
 ostream & operator<<(ostream & os, const TupleHolder & _tupleHolder);
-
-#endif
