@@ -16,6 +16,7 @@
 
 ClassImp(ConfigHolder)
 
+
 ConfigHolder::ConfigHolder() 
 {
     if (SettingDef::debug.Contains("CO")) 
