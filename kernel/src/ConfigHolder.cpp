@@ -19,7 +19,7 @@
 
 ClassImp(ConfigHolder)
 
-    ConfigHolder::ConfigHolder() {
+ConfigHolder::ConfigHolder() {
     if (SettingDef::debug.Contains("CO")) SetDebug(true);
     if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "Default");
     m_project     = hash_project(SettingDef::Config::project);
@@ -35,9 +35,23 @@ ClassImp(ConfigHolder)
     Init();
 }
 
-ConfigHolder::ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem, const Track & _track) {
-    if (SettingDef::debug.Contains("CO")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "Enumerator");
+ConfigHolder::ConfigHolder(
+        const Prj      & _project, 
+        const Analysis & _ana, 
+        TString        _sample, 
+        const Q2Bin    & _q2bin, 
+        const Year     & _year, 
+        const Polarity & _polarity, 
+        const Trigger  & _trigger, 
+        const Brem     & _brem, 
+        const Track    & _track) 
+{
+    if (SettingDef::debug.Contains("CO")) 
+        SetDebug(true);
+
+    if (m_debug) 
+        MessageSvc::Debug("ConfigHolder", (TString) "Enumerator");
+
     m_project     = _project;
     m_ana         = _ana;
     m_sample      = _sample;
@@ -51,9 +65,7 @@ ConfigHolder::ConfigHolder(const Prj & _project, const Analysis & _ana, TString 
     Init();
 }
 
-// ConfigHolder(const TString & _project, const TString & _ana, TString _sample, const TString & _q2bin, const TString & _year, const TString & _polarity, const TString & _trigger, const TString & _triggerConf, const Brem & _brem, const TString & _track);
-
-ConfigHolder::ConfigHolder( const TString  & _project, 
+ConfigHolder::ConfigHolder( const TString & _project, 
                             const TString & _ana, 
                             TString _sample,
                             const TString & _q2bin, 
@@ -62,7 +74,8 @@ ConfigHolder::ConfigHolder( const TString  & _project,
                             const TString & _trigger, 
                             const TString & _triggerConf, 
                             const TString & _brem, 
-                            const TString & _track) {
+                            const TString & _track) 
+{
     if (SettingDef::debug.Contains("CO")) SetDebug(true);
     if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "TStrings");
 
