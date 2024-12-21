@@ -64,7 +64,7 @@ ConfigHolder::ConfigHolder(
     m_trigger     = _trigger;
     m_brem        = _brem;
     m_track       = _track;
-    m_triggerConf = hash_triggerconf(SettingDef::Config::triggerConf);
+    m_triggerConf = _triggerConf;
     Init();
 }
 
