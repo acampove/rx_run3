@@ -3,7 +3,7 @@ name        = 'rx_common'
 description = 'Project used to find and load libraries in cal-rx-run3 c++ code'
 version     = '0.0.1'
 readme      = 'README.md'
-dependencies= []
+dependencies= ['data-manipulation-utilities']
 
 [project.optional-dependencies]
 dev  = ['pytest']
