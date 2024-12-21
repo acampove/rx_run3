@@ -24,9 +24,25 @@ using namespace RooFit;
 */
 
 /**
- * \class ConfigHolder
- * \brief Config info
+ * @file ConfigHolder.hpp 
+ * @brief Header file for the Kernel module
+ * 
+ * This file contains the ConfigHolder class, which stores configuration 
  */
+
+/**
+ * @defgroup Kernel 
+ * @brief A module with basic functionlities to handle data
+ *
+ * @{
+ */
+
+/**
+ * @class ConfigHolder 
+ * @brief A simple container of configurations 
+ * 
+ */
+
 class ConfigHolder : public TObject 
 {
   public:
