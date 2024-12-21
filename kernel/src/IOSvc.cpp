@@ -205,7 +205,22 @@ TString IOSvc::GetTupleDir(TString _option, const ConfigHolder & _configHolder) 
     return _dir;
 }
 
-TString IOSvc::GetTupleDir(TString _option, TString _project, TString _ana, TString _q2bin, TString _year, TString _trigger) { return GetTupleDir(_option, ConfigHolder(hash_project(_project), hash_analysis(_ana), "", hash_q2bin(_q2bin), hash_year(_year), hash_polarity(SettingDef::Config::polarity), hash_trigger(_trigger), hash_brem(SettingDef::Config::brem), hash_track(SettingDef::Config::track))); }
+TString IOSvc::GetTupleDir(TString _option, TString _project, TString _ana, TString _q2bin, TString _year, TString _trigger) 
+{ 
+    ConfigHolder ch(
+            hash_project(_project), 
+            hash_analysis(_ana), 
+            "", 
+            hash_q2bin(_q2bin), 
+            hash_year(_year), 
+            hash_polarity(SettingDef::Config::polarity), 
+            hash_trigger(_trigger), 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            hash_brem(SettingDef::Config::brem), 
+            hash_track(SettingDef::Config::track));
+
+    return GetTupleDir(_option, ch); 
+}
 
 TString IOSvc::GetWeightDir(TString _option) {
     if (m_debug) MessageSvc::Debug("IOSvc", (TString) "GetWeightDir", _option);
