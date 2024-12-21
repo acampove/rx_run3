@@ -1,6 +1,3 @@
-#ifndef CONFIGHOLDER_CPP
-#define CONFIGHOLDER_CPP
-
 #include "ConfigHolder.hpp"
 
 #include "ConstDef.hpp"
@@ -763,5 +760,3 @@ void ResetSettingDefConfig(ConfigHolder _configHolder) noexcept {
     MessageSvc::Warning("ConfigHolder", _toPrint);
     return;
 }
-
-#endif
