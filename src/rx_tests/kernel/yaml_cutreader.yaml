@@ -1,0 +1,9 @@
+cuts:
+  mass : B_M > 5000 && B_M < 6000
+  pid  : L1_PIDe > 2 && L2_PIDe > 2
+selections:
+  full:
+    - mass
+    - pid
+  preselection:
+    - pid
