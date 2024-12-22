@@ -12,3 +12,5 @@ log=LogStore.add_logger('rx_common:kernel')
 LIB_PATH = ut.get_lib_path('kernel')
 ut.load_library(LIB_PATH)
 ut.include_headers()
+
+from rx_kernel.yaml_cutreader import YamlCutReader
