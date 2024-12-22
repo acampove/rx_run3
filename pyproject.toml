@@ -14,6 +14,7 @@ where   = ['src']
 [project.scripts]
 
 [tool.setuptools.package-data]
+'rx_tests' = ['kernel/*.yaml']
 
 [tool.setuptools]
 script-files=[]
