@@ -32,8 +32,8 @@ class Data:
             'ap'
             ]
 # -------------------------
-def _get_config_holder():
-    cfg = {
+def _get_config_holder(is_run3 : bool) -> ConfigHolder_cpp:
+    cfg_run12 = {
             'project' : 'RK',
             'analysis': 'EE',
             'sample'  : 'LPT',
@@ -44,6 +44,18 @@ def _get_config_holder():
             'trg_cfg' : 'exclusive',
             'brem'    : '0G',
             'track'   : 'LL'}
+
+    cfg_run3 = {
+            'project' : 'RK',
+            'analysis': 'EE',
+            'sample'  : 'data_24_magdown_24c4',
+            'q2bin'   : 'central',
+            'year'    : '18',
+            'polarity': 'MD',
+            'brem'    : '0G',
+            'track'   : 'LL'}
+
+    cfg = cfg_run3 if is_run3 else cfg_run12
 
     return ConfigHolder(cfg=cfg)
 # -------------------------
