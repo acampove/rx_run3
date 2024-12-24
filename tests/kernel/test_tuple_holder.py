@@ -66,23 +66,37 @@ def test_default():
     obj = TupleHolder()
     obj.PrintInline()
 # -------------------------
-@pytest.mark.parametrize('option', Data.l_tuple_opt)
-def test_options(option : str):
+@pytest.mark.parametrize('option' , Data.l_tuple_opt)
+@pytest.mark.parametrize('is_run3', [True, False])
+def test_options(option : str, is_run3 : bool):
     '''
     Will test options
     '''
-    ch  = _get_config_holder()
+    ch  = _get_config_holder(is_run3)
     obj = TupleHolder(ch, option)
     obj.PrintInline()
 # -------------------------
-def test_arg():
+@pytest.mark.parametrize('is_run3', [True, False])
+def test_arg(is_run3 : bool):
     '''
     Test for constructor with file and tuple args
     '''
-    file_path = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_turbo.root'
-    tree_path = 'DecayTree'
+    file_path = '/home/acampove/cernbox/Run3/filtering/data/dec_07_2024_data/data_24_magdown_turbo_24c1_Hlt2RD_B0ToKpPimEE_0062a7d56d.root'
+    tree_path = 'KEE'
 
-    ch  = _get_config_holder()
-    obj = TupleHolder(ch, file_path, tree_path, '')
+    ch  = _get_config_holder(is_run3)
+    obj = TupleHolder(ch, file_path, tree_path, 'pap')
     obj.PrintInline()
+
+    rdr = obj.GetTupleReader()
+    rdr.PrintInline()
 # -------------------------
+@pytest.mark.parametrize('is_run3', [True, False])
+def test_postap(is_run3 : bool):
+    '''
+    Test for constructor for post_ap ntuples 
+    '''
+
+    ch  = _get_config_holder(is_run3)
+    obj = TupleHolder(ch, '')
+    obj.PrintInline()
