@@ -4,6 +4,9 @@ Module where config holder is tested
 
 from rx_kernel.config_holder import ConfigHolder
 
+from ROOT import MessageSvc
+
+MessageSvc.Initialize(-1)
 # -----------------------------------
 def test_default():
     '''
