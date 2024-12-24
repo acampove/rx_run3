@@ -9,6 +9,11 @@ import pytest
 from rx_kernel.tuple_holder  import TupleHolder
 from rx_kernel.config_holder import ConfigHolder
 
+from ROOT import MessageSvc
+from ROOT import ConfigHolder as ConfigHolder_cpp
+
+
+MessageSvc.Initialize(-1)
 # -------------------------
 @dataclass
 class Data:
