@@ -14,6 +14,4 @@ LIB_PATH = ut.get_lib_path('kernel')
 ut.load_library(LIB_PATH)
 ut.include_headers()
 
-from ROOT                     import MessageSvc 
 
-MessageSvc.Initialize()
