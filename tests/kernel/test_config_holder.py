@@ -31,7 +31,27 @@ def test_string_run12():
             'trigger' : 'L0L',
             'trg_cfg' : 'exclusive',
             'brem'    : '0G',
-            'track'   : 'LL'}
+            'track'   : 'LL',
+            }
+
+    ch = ConfigHolder(cfg=cfg)
+    ch.Print()
+# -----------------------------------
+def test_string_run3():
+    '''
+    Simplest test constructor taking strings for Run3
+    '''
+
+    cfg = {
+            'project' : 'RK',
+            'analysis': 'EE',
+            'sample'  : 'data_24_magdown_24c4',
+            'q2bin'   : 'central',
+            'year'    : '24',
+            'polarity': 'MD',
+            'brem'    : '0G',
+            'track'   : 'LL',
+            }
 
     ch = ConfigHolder(cfg=cfg)
     ch.Print()
