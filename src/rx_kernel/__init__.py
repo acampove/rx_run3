@@ -7,10 +7,13 @@ from dmu.logging.log_store import LogStore
 
 from rx_common             import utilities as ut
 
+
 log=LogStore.add_logger('rx_common:kernel')
 
 LIB_PATH = ut.get_lib_path('kernel')
 ut.load_library(LIB_PATH)
 ut.include_headers()
 
-from rx_kernel.yaml_cutreader import YamlCutReader
+from ROOT                     import MessageSvc 
+
+MessageSvc.Initialize()
