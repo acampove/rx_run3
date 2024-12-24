@@ -8,7 +8,6 @@ from dataclasses import dataclass
 import pytest
 from rx_kernel.tuple_holder  import TupleHolder
 from rx_kernel.config_holder import ConfigHolder
-from rx_kernel.logging_svc   import LoggingSvc
 
 # -------------------------
 @dataclass
@@ -24,7 +23,7 @@ class Data:
             'rap',
             'tmp',
             'chainexctrg',
-            'postap',
+            'pap',
             'ap'
             ]
 # -------------------------
@@ -65,8 +64,6 @@ def test_arg():
     '''
     file_path = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_turbo.root'
     tree_path = 'DecayTree'
-
-    LoggingSvc.SetLevel('TupleHolder', 'debug')
 
     ch  = _get_config_holder()
     obj = TupleHolder(ch, file_path, tree_path, '')
