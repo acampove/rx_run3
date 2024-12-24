@@ -1,7 +1,7 @@
 '''
 Module containing tests for TupleHolder
 '''
-# pylint: disable=import-error
+# pylint: disable=import-error, wrong-import-order
 
 from dataclasses import dataclass
 
