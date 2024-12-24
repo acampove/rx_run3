@@ -16,10 +16,11 @@ def test_default():
     ch.Print()
 # -----------------------------------
 # -----------------------------------
-def test_string():
+def test_string_run12():
     '''
-    Simplest test of default constructor
+    Simplest test constructor taking strings for Run1 and Run2
     '''
+
     cfg = {
             'project' : 'RK',
             'analysis': 'EE',
