@@ -3,6 +3,7 @@ Module where config holder is tested
 '''
 
 from rx_kernel.config_holder import ConfigHolder
+from rx_kernel import allowed_conf
 
 from ROOT import MessageSvc
 
@@ -41,6 +42,8 @@ def test_string_run3():
     '''
     Simplest test constructor taking strings for Run3
     '''
+
+    allowed_conf.Initialize('/home/acampove/Tests/rx_samples')
 
     cfg = {
             'project' : 'RK',
