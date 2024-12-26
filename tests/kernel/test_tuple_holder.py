@@ -41,7 +41,7 @@ def _get_config_holder(is_run3 : bool) -> ConfigHolder_cpp:
     cfg_run12 = {
             'project' : 'RK',
             'analysis': 'EE',
-            'sample'  : 'LPT',
+            'sample'  : 'Bd2KstPsiEE',
             'q2bin'   : 'central',
             'year'    : '18',
             'polarity': 'MD',
@@ -55,7 +55,7 @@ def _get_config_holder(is_run3 : bool) -> ConfigHolder_cpp:
             'analysis': 'EE',
             'sample'  : 'data_24_magdown_24c4',
             'q2bin'   : 'central',
-            'year'    : '18',
+            'year'    : '24',
             'polarity': 'MD',
             'brem'    : '0G',
             'track'   : 'LL'}
