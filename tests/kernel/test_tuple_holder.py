@@ -82,7 +82,7 @@ def test_postap(is_run3 : bool):
     Test for constructor for post_ap ntuples 
     '''
 
-    ch  = _get_config_holder(is_run3)
+    ch  = ut.get_config_holder(is_run3=is_run3)
     obj = TupleHolder(ch, 'pap')
     obj.Init()
 
