@@ -7,6 +7,7 @@ from rx_kernel import allowed_conf
 
 import pytest
 from ROOT import MessageSvc
+from dmu.logging.log_store import LogStore
 
 MessageSvc.Initialize(-1)
 
@@ -14,6 +15,7 @@ MessageSvc.Initialize(-1)
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     allowed_conf.Initialize('/home/acampove/Tests/rx_samples')
+    LogStore.set_level('rx_common:config_holder', 10)
 # -----------------------------------
 def test_default():
     '''
