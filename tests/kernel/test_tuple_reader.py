@@ -18,19 +18,16 @@ class Data:
     '''
     Class used to share variables
     '''
-    file_name = '/tmp/tuple_reader_test.root'
-    tree_name = 'DecayTree'
+    cfg_inp  = {
+            'nfiles'  : 10,
+            'nentries': 100,
+            'data_dir': '/tmp/test_tuple_reader',
+            'sample'  : 'data_24_magdown_24c4',
+            'hlt2'    : 'Hlt2RD_BuToKpEE_MVA'}
 # -------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    if os.path.isfile(Data.file_name):
-        return
-
-    rdf = RDataFrame(100)
-    rdf = rdf.Define('a', '1')
-    rdf = rdf.Define('b', '2')
-
-    rdf.Snapshot(Data.tree_name, Data.file_name)
+    ut.make_inputs(Data.cfg_inp)
 # -------------------------------------
 def test_default():
     '''
