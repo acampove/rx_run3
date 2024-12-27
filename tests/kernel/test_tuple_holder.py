@@ -3,6 +3,7 @@ Module containing tests for TupleHolder
 '''
 # pylint: disable=import-error, wrong-import-order
 
+import os
 from dataclasses import dataclass
 
 import pytest
@@ -11,18 +12,26 @@ from rx_kernel.config_holder import ConfigHolder
 from rx_kernel               import allowed_conf
 
 from ROOT import MessageSvc
+from ROOT import RDataFrame
 from ROOT import ConfigHolder as ConfigHolder_cpp
 
 from dmu.logging.log_store import LogStore
 
-
 MessageSvc.Initialize(-1)
+
+log=LogStore.add_logger('rx_common:test_tuple_holder')
 # -------------------------
 @dataclass
 class Data:
     '''
     Class used to share data between tests
     '''
+    nfiles   = 10
+    nentries = 100
+    data_dir = '/tmp/test_tuple_holder'
+    sample   = 'data_24_magdown_24c4'
+    hlt2     = 'Hlt2RD_BuToKpEE_MVA'
+
     l_tuple_opt = [
             'gng',
             'pro',
