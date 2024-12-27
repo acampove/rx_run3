@@ -79,7 +79,7 @@ def load_library(lib_path : str) -> None:
     log.debug(f'Loading: {lib_path}')
     gSystem.Load(lib_path)
 # --------------------------------
-def make_inputs(cfg : dict[str, Union[int,str]]):
+def make_inputs():
     '''
     Utility function taking configuration dictionary 
     and making a set of ROOT files used for tests, the config looks like:
@@ -90,13 +90,13 @@ def make_inputs(cfg : dict[str, Union[int,str]]):
     'sample'  : 'data_24_magdown_24c4',
     'hlt2'    : 'Hlt2RD_BuToKpEE_MVA'
     '''
-    inp_dir = f'{cfg["data_dir"]}/{cfg["sample"]}/{cfg["hlt2"]}'
+    inp_dir = f'{Data.cfg_inp["data_dir"]}/{Data.cfg_inp["sample"]}/{Data.cfg_inp["hlt2"]}'
 
     log.info(f'Sending test inputs to: {inp_dir}')
 
     os.makedirs(inp_dir, exist_ok=True)
-    nfiles   = int(cfg['nfiles'  ])
-    nentries = int(cfg['nentries'])
+    nfiles   = int(Data.cfg_inp['nfiles'  ])
+    nentries = int(Data.cfg_inp['nentries'])
     for i_file in range(nfiles):
         _make_input(inp_dir, i_file, nentries)
 # -----------------------------------
