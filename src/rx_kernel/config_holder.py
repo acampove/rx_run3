@@ -2,21 +2,22 @@
 Module containing python interface to C++ ConfigHolder
 '''
 # pylint: disable=import-error, invalid-name
+import os
 
 from typing import Union
 
 from ROOT import ConfigHolder as ConfigHolder_cpp
 from ROOT import TString
+from ROOT import std
+
 # ------------------------------------------------------------------
-def _str_to_tstring(key : str, cfg : dict, fall_back : Union[str,None]) -> TString:
-    if key in cfg:
-        val = cfg[key]
-        return TString(val)
+def _check_datadir(cfg : dict) -> None:
+    if 'DATADIR' not in cfg:
+        raise KeyError('Setting not found: DATADIR')
 
-    if fall_back is not None:
-        return TString(fall_back)
-
-    raise ValueError(f'Required argument {key} not found')
+    data_dir = cfg['DATADIR']
+    if not os.path.isdir(data_dir):
+        raise FileNotFoundError(f'Cannot find: {data_dir}')
 # ------------------------------------------------------------------
 def ConfigHolder(cfg : Union[dict,None] = None) -> ConfigHolder_cpp:
     '''
