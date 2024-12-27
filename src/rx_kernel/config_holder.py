@@ -25,17 +25,19 @@ def ConfigHolder(cfg : Union[dict,None] = None) -> ConfigHolder_cpp:
     if cfg is None:
         return ConfigHolder_cpp()
 
-    obj = ConfigHolder_cpp(
-            _str_to_tstring('project' , cfg, fall_back =     None),
-            _str_to_tstring('analysis', cfg, fall_back =     None),
-            _str_to_tstring('sample'  , cfg, fall_back =       ''),
-            _str_to_tstring('q2bin'   , cfg, fall_back = 'global'),
-            _str_to_tstring('year'    , cfg, fall_back = 'global'),
-            _str_to_tstring('polarity', cfg, fall_back = 'global'),
-            _str_to_tstring('trigger' , cfg, fall_back = 'global'),
-            _str_to_tstring('trg_cfg' , cfg, fall_back = 'global'),
-            _str_to_tstring('brem'    , cfg, fall_back = 'global'),
-            _str_to_tstring('track'   , cfg, fall_back = 'global'))
+    _check_datadir(cfg)
+
+    cpp_cfg= std.map('TString, TString')()
+    for name, value in cfg.items():
+        name = TString(value)
+        value= TString(value)
+
+        if name == 'DATADIR':
+            os.environ[name] = value
+        else:
+            cpp_cfg[name]=value
+
+    obj = ConfigHolder_cpp(cpp_cfg)
 
     return obj
 # ------------------------------------------------------------------
