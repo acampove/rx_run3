@@ -125,6 +125,12 @@ def test_postap(is_run3 : bool):
 
     ch  = _get_config_holder(is_run3)
     obj = TupleHolder(ch, 'pap')
-    #trd = obj.GetTupleReader()
-    #tup = trd.Tuple()
-    #tup.Print()
+    obj.Init()
+
+    trd = obj.GetTupleReader()
+    trd.Init()
+    trd.PrintListOfFiles()
+    trd.PrintInline()
+
+    tup = trd.Tuple()
+    tup.Print()
