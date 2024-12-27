@@ -10,6 +10,9 @@ from ROOT import ConfigHolder as ConfigHolder_cpp
 from ROOT import TString
 from ROOT import std
 
+from dmu.logging.log_store import LogStore
+
+log = LogStore.add_logger('rx_common:config_holder')
 # ------------------------------------------------------------------
 def _check_datadir(cfg : dict) -> None:
     if 'DATADIR' not in cfg:
