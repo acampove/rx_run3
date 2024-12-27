@@ -25,7 +25,7 @@ def test_default():
     ch.Print()
 # -----------------------------------
 # -----------------------------------
-def test_string_run12():
+def test_run12():
     '''
     Simplest test constructor taking strings for Run1 and Run2
     '''
@@ -46,7 +46,7 @@ def test_string_run12():
     ch = ConfigHolder(cfg=cfg)
     ch.Print()
 # -----------------------------------
-def test_string_run3():
+def test_run3():
     '''
     Simplest test constructor taking strings for Run3
     '''
