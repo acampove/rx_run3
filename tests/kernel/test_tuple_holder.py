@@ -59,6 +59,9 @@ def _make_input(inp_dir : str, i_file : int) -> None:
     rdf = rdf.Define('b', '2')
 
     file_path = f'{inp_dir}/file_{i_file:03}.root'
+    if os.path.isfile(file_path):
+        return
+
     rdf.Snapshot('DecayTree', file_path)
 # -----------------------------------
 @pytest.fixture(scope='session', autouse=True)
