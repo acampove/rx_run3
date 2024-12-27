@@ -110,3 +110,61 @@ def _make_input(inp_dir : str, i_file : int, nentries : int) -> None:
         return
 
     rdf.Snapshot('DecayTree', file_path)
+# -------------------------
+def dict_to_map(d_data : dict[str,str]) -> std.map:
+    '''
+    Function taking a dictionary between strings
+    and returning a C++ map between TStrings
+    '''
+
+    cpp_data = std.map("TString, TString")()
+    for name, value in d_data.items():
+        name  = TString(name)
+        value = TString(value)
+
+        cpp_data[name] = value
+
+    return cpp_data
+# -------------------------
+def get_config_holder(is_run3 : bool):
+    '''
+    Function returns instance of C++ ConfigHolder.
+
+    is_run3: It will return the object for Run3 configs if true, otherwise, something that works for Run1/2
+    '''
+    cfg_run12 = {
+            'project' : 'RK',
+            'analysis': 'EE',
+            'sample'  : 'Bd2KstPsiEE',
+            'q2bin'   : 'central',
+            'year'    : '18',
+            'polarity': 'MD',
+            'trigger' : 'L0L',
+            'trg_cfg' : 'exclusive',
+            'brem'    : '0G',
+            'track'   : 'LL'}
+
+    cfg_run3 = {
+            'project'   : 'RK',
+            'analysis'  : 'EE',
+            'data_dir'  : Data.cfg_inp['data_dir'], 
+            'sample'    : Data.cfg_inp['sample'],
+            'hlt2'      : Data.cfg_inp['hlt2'], 
+            'tree_name' : 'DecayTree',
+            'trigger'   : '',
+            'q2bin'     : 'central',
+            'year'      : '24',
+            'polarity'  : 'MD',
+            'brem'      : '0G',
+            'track'     : 'LL'}
+
+    cfg = cfg_run3 if is_run3 else cfg_run12
+
+    load_libraries()
+
+
+    from ROOT import ConfigHolder as ConfigHolder_cpp
+
+    cpp_cfg = dict_to_map(cfg)
+
+    return ConfigHolder_cpp(cpp_cfg)
