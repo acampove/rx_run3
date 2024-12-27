@@ -37,10 +37,6 @@ class Data:
             'pap',
             'ap'
             ]
-# -----------------------------------
-@pytest.fixture(scope='session', autouse=True)
-def _initialize():
-    allowed_conf.Initialize('/home/acampove/Tests/rx_samples')
 
     cfg_inp  = {
             'nfiles'  : 10,
