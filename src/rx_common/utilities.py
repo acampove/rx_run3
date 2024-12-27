@@ -7,22 +7,43 @@ import os
 import re
 import glob
 from dataclasses           import dataclass
-from typing                import Union
 
 from dmu.logging.log_store import LogStore
-from ROOT                  import gSystem, gInterpreter, RDataFrame
+from ROOT                  import gSystem, gInterpreter, RDataFrame, std, TString
 
 log=LogStore.add_logger('rx_common:utilities')
+
 # --------------------------------
 @dataclass
 class Data:
     '''
     Class holding shared attributes
     '''
-    rgx_ldpath = r'.*-L(\/[a-z]+\/.*\/lib).*'
+    loaded : bool = False
+    rgx_ldpath    = r'.*-L(\/[a-z]+\/.*\/lib).*'
 
     os.environ['LDFLAGS'] = '-L/home/acampove/Packages/ewp-rkstz-master-analysis/analysis/install/lib'
     os.environ['INCPATH'] = '/home/acampove/Packages/ewp-rkstz-master-analysis/analysis/install/include'
+
+    cfg_inp  = {
+            'nfiles'  : 10,
+            'nentries': 100,
+            'data_dir': '/tmp/test_tuple_holder',
+            'sample'  : 'data_24_magdown_24c4',
+            'hlt2'    : 'Hlt2RD_BuToKpEE_MVA'}
+# --------------------------------
+def load_libraries():
+    '''
+    Will load C++ libraries and include header files from RX framework
+    '''
+    if Data.loaded:
+        return
+
+    LIB_PATH = get_lib_path('kernel')
+    load_library(LIB_PATH)
+    include_headers()
+
+    Data.loaded = True
 # --------------------------------
 def include_headers() -> None:
     '''
