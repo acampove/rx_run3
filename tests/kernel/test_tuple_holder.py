@@ -3,16 +3,15 @@ Module containing tests for TupleHolder
 '''
 # pylint: disable=import-error, wrong-import-order
 
-import os
 from dataclasses import dataclass
 
 import pytest
+from rx_common               import utilities as ut
 from rx_kernel.tuple_holder  import TupleHolder
 from rx_kernel.config_holder import ConfigHolder
 from rx_kernel               import allowed_conf
 
 from ROOT import MessageSvc
-from ROOT import RDataFrame
 from ROOT import ConfigHolder as ConfigHolder_cpp
 
 from dmu.logging.log_store import LogStore
