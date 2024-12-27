@@ -34,6 +34,7 @@ def test_default():
     Tests default constructor
     '''
     trd = TupleReader()
+    trd.PrintInline()
 # -------------------------------------
 def test_file_tuple():
     '''
@@ -45,4 +46,14 @@ def test_file_tuple():
     trd.Init()
     tup = trd.Tuple()
     tup.Print()
+# -------------------------------------
+def test_add_files():
+    '''
+    Will test TupleReader with wildcard defining paths to files
+    '''
+    file_path = f'{Data.cfg_inp["data_dir"]}/{Data.cfg_inp["sample"]}/{Data.cfg_inp["hlt2"]}/file_*.root'
+
+    trd=TupleReader('DecayTree')
+    trd.AddFiles(file_path)
+    trd.Init()
 # -------------------------------------
