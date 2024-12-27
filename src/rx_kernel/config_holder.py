@@ -15,10 +15,10 @@ from dmu.logging.log_store import LogStore
 log = LogStore.add_logger('rx_common:config_holder')
 # ------------------------------------------------------------------
 def _check_datadir(cfg : dict) -> None:
-    if 'DATADIR' not in cfg:
-        raise KeyError('Setting not found: DATADIR')
+    if 'data_dir' not in cfg:
+        raise KeyError('Setting not found: data_dir')
 
-    data_dir = cfg['DATADIR']
+    data_dir = cfg['data_dir']
     if not os.path.isdir(data_dir):
         raise FileNotFoundError(f'Cannot find: {data_dir}')
 # ------------------------------------------------------------------
