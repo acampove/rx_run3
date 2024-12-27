@@ -13,6 +13,8 @@ from rx_kernel               import allowed_conf
 from ROOT import MessageSvc
 from ROOT import ConfigHolder as ConfigHolder_cpp
 
+from dmu.logging.log_store import LogStore
+
 
 MessageSvc.Initialize(-1)
 # -------------------------
@@ -36,6 +38,8 @@ class Data:
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     allowed_conf.Initialize('/home/acampove/Tests/rx_samples')
+
+    LogStore.set_level('rx_common:config_holder', 10)
 # -------------------------
 def _get_config_holder(is_run3 : bool) -> ConfigHolder_cpp:
     cfg_run12 = {
