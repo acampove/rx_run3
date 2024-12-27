@@ -71,6 +71,7 @@ def _initialize():
     _make_inputs()
 
     LogStore.set_level('rx_common:config_holder', 10)
+    LogStore.set_level('rx_common:tuple_holder' , 10)
 # -------------------------
 def _get_config_holder(is_run3 : bool) -> ConfigHolder_cpp:
     cfg_run12 = {
@@ -86,17 +87,18 @@ def _get_config_holder(is_run3 : bool) -> ConfigHolder_cpp:
             'track'   : 'LL'}
 
     cfg_run3 = {
-            'project' : 'RK',
-            'analysis': 'EE',
-            'data_dir': Data.data_dir, 
-            'sample'  : Data.sample,
-            'hlt2'    : Data.hlt2, 
-            'trigger' : '',
-            'q2bin'   : 'central',
-            'year'    : '24',
-            'polarity': 'MD',
-            'brem'    : '0G',
-            'track'   : 'LL'}
+            'project'   : 'RK',
+            'analysis'  : 'EE',
+            'data_dir'  : Data.data_dir, 
+            'sample'    : Data.sample,
+            'hlt2'      : Data.hlt2, 
+            'tree_name' : 'DecayTree',
+            'trigger'   : '',
+            'q2bin'     : 'central',
+            'year'      : '24',
+            'polarity'  : 'MD',
+            'brem'      : '0G',
+            'track'     : 'LL'}
 
     cfg = cfg_run3 if is_run3 else cfg_run12
 
@@ -142,7 +144,6 @@ def test_postap(is_run3 : bool):
 
     ch  = _get_config_holder(is_run3)
     obj = TupleHolder(ch, 'pap')
-    obj.Init()
     #trd = obj.GetTupleReader()
     #tup = trd.Tuple()
     #tup.Print()
