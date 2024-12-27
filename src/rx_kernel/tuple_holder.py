@@ -16,15 +16,18 @@ def TupleHolder(*args) -> TupleHolder_cpp:
     '''
 
     if len(args) == 0:
+        log.debug('Using default constructor')
         return TupleHolder_cpp()
 
     if len(args) == 2:
+        log.debug('Using constructor with ConfigHolder and string option')
         [cfg, opt] = args
         opt = TString(opt)
 
         return TupleHolder_cpp(cfg, opt)
 
     if len(args) == 4:
+        log.debug('Using constructor with tree name and file path')
         [cfg, file_path, tree_path, opt] = args
 
         file_path = TString(file_path)
