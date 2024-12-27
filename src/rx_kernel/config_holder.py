@@ -33,12 +33,12 @@ def ConfigHolder(cfg : Union[dict,None] = None) -> ConfigHolder_cpp:
 
     cpp_cfg= std.map('TString, TString')()
     for name, value in cfg.items():
-        name = TString(value)
-        value= TString(value)
-
         if name == 'DATADIR':
             os.environ[name] = value
+            log.debug(f'Exporting variable: {name} -> {value}')
         else:
+            name = TString(value)
+            value= TString(value)
             cpp_cfg[name]=value
 
     obj = ConfigHolder_cpp(cpp_cfg)
