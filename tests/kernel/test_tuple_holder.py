@@ -48,8 +48,12 @@ def _initialize():
             'data_dir': '/tmp/test_tuple_holder',
             'sample'  : 'data_24_magdown_24c4',
             'hlt2'    : 'Hlt2RD_BuToKpEE_MVA'}
+# -----------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    allowed_conf.Initialize('/home/acampove/Tests/rx_samples')
 
-    ut.make_inputs(cfg_inp)
+    ut.make_inputs(Data.cfg_inp)
 
     LogStore.set_level('rx_common:config_holder', 10)
     LogStore.set_level('rx_common:tuple_holder' , 10)
@@ -70,9 +74,9 @@ def _get_config_holder(is_run3 : bool) -> ConfigHolder_cpp:
     cfg_run3 = {
             'project'   : 'RK',
             'analysis'  : 'EE',
-            'data_dir'  : Data.data_dir, 
-            'sample'    : Data.sample,
-            'hlt2'      : Data.hlt2, 
+            'data_dir'  : Data.cfg_inp['data_dir'], 
+            'sample'    : Data.cfg_inp['sample'],
+            'hlt2'      : Data.cfg_inp['hlt2'], 
             'tree_name' : 'DecayTree',
             'trigger'   : '',
             'q2bin'     : 'central',
