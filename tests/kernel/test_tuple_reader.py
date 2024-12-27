@@ -39,7 +39,9 @@ def test_file_tuple():
     '''
     This will test the constructor taking file path and tree name
     '''
-    trd = TupleReader(Data.tree_name, Data.file_name)
+    file_path = f'{Data.cfg_inp["data_dir"]}/{Data.cfg_inp["sample"]}/{Data.cfg_inp["hlt2"]}/file_000.root'
+
+    trd = TupleReader('DecayTree', file_path)
     trd.Init()
     tup = trd.Tuple()
     tup.Print()
