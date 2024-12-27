@@ -85,13 +85,14 @@ def _get_config_holder(is_run3 : bool) -> ConfigHolder_cpp:
     cfg_run3 = {
             'project' : 'RK',
             'analysis': 'EE',
-            'sample'  : 'data_24_magdown_24c4',
-            'hlt2'    : 'Hlt2RD_BuToKpEE_MVA',
+            'data_dir': Data.data_dir, 
+            'sample'  : Data.sample,
+            'hlt2'    : Data.hlt2, 
+            'trigger' : '',
             'q2bin'   : 'central',
             'year'    : '24',
             'polarity': 'MD',
             'brem'    : '0G',
-            'DATADIR' : '/publicfs/ucas/user/campoverde/Data/RX_run3/v1',
             'track'   : 'LL'}
 
     cfg = cfg_run3 if is_run3 else cfg_run12
