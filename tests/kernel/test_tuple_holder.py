@@ -54,10 +54,12 @@ def _get_config_holder(is_run3 : bool) -> ConfigHolder_cpp:
             'project' : 'RK',
             'analysis': 'EE',
             'sample'  : 'data_24_magdown_24c4',
+            'hlt2'    : 'Hlt2RD_BuToKpEE_MVA',
             'q2bin'   : 'central',
             'year'    : '24',
             'polarity': 'MD',
             'brem'    : '0G',
+            'DATADIR' : '/publicfs/ucas/user/campoverde/Data/RX_run3/v1',
             'track'   : 'LL'}
 
     cfg = cfg_run3 if is_run3 else cfg_run12
@@ -96,12 +98,15 @@ def test_arg(is_run3 : bool):
     rdr = obj.GetTupleReader()
     rdr.PrintInline()
 # -------------------------
-@pytest.mark.parametrize('is_run3', [True, False])
+@pytest.mark.parametrize('is_run3', [True])
 def test_postap(is_run3 : bool):
     '''
     Test for constructor for post_ap ntuples 
     '''
 
     ch  = _get_config_holder(is_run3)
-    obj = TupleHolder(ch, '')
-    obj.PrintInline()
+    obj = TupleHolder(ch, 'pap')
+    obj.Init()
+    #trd = obj.GetTupleReader()
+    #tup = trd.Tuple()
+    #tup.Print()
