@@ -49,7 +49,6 @@ def test_string_run3():
     Simplest test constructor taking strings for Run3
     '''
 
-
     cfg = {
             'project' : 'RK',
             'analysis': 'EE',
@@ -59,6 +58,8 @@ def test_string_run3():
             'polarity': 'MD',
             'brem'    : '0G',
             'track'   : 'LL',
+            'hlt2'    : 'Hlt2RD_B0ToKpPimEE',
+            'DATADIR' : '/path/to/data/directory',
             }
 
     ch = ConfigHolder(cfg=cfg)
