@@ -52,17 +52,18 @@ def test_run3():
     '''
 
     cfg = {
-            'project' : 'RK',
-            'analysis': 'EE',
-            'sample'  : 'data_24_magdown_24c4',
-            'hlt2'    : 'Hlt2RD_B0ToKpPimEE',
-            'q2bin'   : 'central',
-            'year'    : '24',
-            'polarity': 'MD',
-            'trigger' : '',   # This will be left empty for Run3, where the L0 trigger does not exist
-            'brem'    : '0G',
-            'track'   : 'LL',
-            'data_dir': '/publicfs/ucas/user/campoverde/Data/RX_run3/v1',
+            'project'  : 'RK',
+            'analysis' : 'EE',
+            'data_dir' : '/publicfs/ucas/user/campoverde/Data/RX_run3/v1',
+            'sample'   : 'data_24_magdown_24c4',
+            'hlt2'     : 'Hlt2RD_B0ToKpPimEE',
+            'tree_name': 'DecayTree',
+            'q2bin'    : 'central',
+            'year'     : '24',
+            'polarity' : 'MD',
+            'trigger'  : '',   # This will be left empty for Run3, where the L0 trigger does not exist
+            'brem'     : '0G',
+            'track'    : 'LL',
             }
 
     ch = ConfigHolder(cfg=cfg)
