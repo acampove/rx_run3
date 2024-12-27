@@ -1,10 +1,14 @@
 '''
 Module containing python interface to C++ TupleHolder
 '''
+# pylint: disable=invalid-name
+
 from ROOT   import TString
 from ROOT   import TupleHolder  as TupleHolder_cpp
 
-# pylint: disable=invalid-name
+from dmu.logging.log_store import LogStore
+
+log = LogStore.add_logger('rx_common:tuple_holder')
 # -----------------------------------------------------------
 def TupleHolder(*args) -> TupleHolder_cpp:
     '''
