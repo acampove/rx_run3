@@ -8,12 +8,9 @@ from dataclasses import dataclass
 import pytest
 from rx_common               import utilities as ut
 from rx_kernel.tuple_holder  import TupleHolder
-from rx_kernel.config_holder import ConfigHolder
 from rx_kernel               import allowed_conf
 
-from ROOT import MessageSvc
-from ROOT import ConfigHolder as ConfigHolder_cpp
-
+from ROOT                  import MessageSvc
 from dmu.logging.log_store import LogStore
 
 MessageSvc.Initialize(-1)
@@ -37,53 +34,15 @@ class Data:
             'pap',
             'ap'
             ]
-
-    cfg_inp  = {
-            'nfiles'  : 10,
-            'nentries': 100,
-            'data_dir': '/tmp/test_tuple_holder',
-            'sample'  : 'data_24_magdown_24c4',
-            'hlt2'    : 'Hlt2RD_BuToKpEE_MVA'}
 # -----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     allowed_conf.Initialize('/home/acampove/Tests/rx_samples')
 
-    ut.make_inputs(Data.cfg_inp)
+    ut.make_inputs()
 
     LogStore.set_level('rx_common:config_holder', 10)
     LogStore.set_level('rx_common:tuple_holder' , 10)
-# -------------------------
-def _get_config_holder(is_run3 : bool) -> ConfigHolder_cpp:
-    cfg_run12 = {
-            'project' : 'RK',
-            'analysis': 'EE',
-            'sample'  : 'Bd2KstPsiEE',
-            'q2bin'   : 'central',
-            'year'    : '18',
-            'polarity': 'MD',
-            'trigger' : 'L0L',
-            'trg_cfg' : 'exclusive',
-            'brem'    : '0G',
-            'track'   : 'LL'}
-
-    cfg_run3 = {
-            'project'   : 'RK',
-            'analysis'  : 'EE',
-            'data_dir'  : Data.cfg_inp['data_dir'], 
-            'sample'    : Data.cfg_inp['sample'],
-            'hlt2'      : Data.cfg_inp['hlt2'], 
-            'tree_name' : 'DecayTree',
-            'trigger'   : '',
-            'q2bin'     : 'central',
-            'year'      : '24',
-            'polarity'  : 'MD',
-            'brem'      : '0G',
-            'track'     : 'LL'}
-
-    cfg = cfg_run3 if is_run3 else cfg_run12
-
-    return ConfigHolder(cfg=cfg)
 # -------------------------
 def test_default():
     '''
