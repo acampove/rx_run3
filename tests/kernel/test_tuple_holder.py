@@ -44,9 +44,28 @@ class Data:
             'ap'
             ]
 # -----------------------------------
+def _make_inputs():
+    inp_dir = f'{Data.data_dir}/{Data.sample}/{Data.hlt2}'
+
+    log.info(f'Sending test inputs to: {inp_dir}')
+
+    os.makedirs(inp_dir, exist_ok=True)
+    for i_file in range(Data.nfiles):
+        _make_input(inp_dir, i_file)
+# -----------------------------------
+def _make_input(inp_dir : str, i_file : int) -> None:
+    rdf = RDataFrame(Data.nentries)
+    rdf = rdf.Define('a', '1')
+    rdf = rdf.Define('b', '2')
+
+    file_path = f'{inp_dir}/file_{i_file:03}.root'
+    rdf.Snapshot('DecayTree', file_path)
+# -----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     allowed_conf.Initialize('/home/acampove/Tests/rx_samples')
+
+    _make_inputs()
 
     LogStore.set_level('rx_common:config_holder', 10)
 # -------------------------
