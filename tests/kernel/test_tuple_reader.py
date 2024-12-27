@@ -2,12 +2,11 @@
 Module containing tests for TupleReader
 '''
 from dataclasses import dataclass
-import os
 import pytest
 
 from rx_kernel.tuple_reader import TupleReader
+from rx_common              import utilities   as ut
 
-from ROOT import RDataFrame
 from ROOT import MessageSvc
 
 
