@@ -9,6 +9,11 @@ def TupleReader(*args) -> TupleReader_cpp:
     if len(args) == 0:
         return TupleReader_cpp()
 
+    if len(args) == 1:
+        tree_name = TString(args[0])
+
+        return TupleReader_cpp(tree_name)
+
     if len(args) == 2:
         tree_name = TString(args[0])
         file_name = TString(args[1])
@@ -17,6 +22,3 @@ def TupleReader(*args) -> TupleReader_cpp:
 
     narg = len(args)
     raise ValueError(f'Found invalid number of arguments: {narg}')
-
-
-
