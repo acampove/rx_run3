@@ -33,9 +33,12 @@ def ConfigHolder(cfg : Union[dict,None] = None) -> ConfigHolder_cpp:
 
     cpp_cfg= std.map('TString, TString')()
     for name, value in cfg.items():
-        name = TString(value)
+        name = TString(name)
         value= TString(value)
         cpp_cfg[name]=value
+        log.debug(f'Setting: {name}')
+        log.debug(f'Value  : {value}')
+        log.debug('')
 
     obj = ConfigHolder_cpp(cpp_cfg)
 
