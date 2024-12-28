@@ -184,11 +184,12 @@ def get_config_holder(is_run3 : bool):
 
     cfg = cfg_run3 if is_run3 else cfg_run12
 
-    load_libraries()
-
+    initialize_project()
 
     from ROOT import ConfigHolder as ConfigHolder_cpp
 
     cpp_cfg = dict_to_map(cfg)
 
-    return ConfigHolder_cpp(cpp_cfg)
+    obj = ConfigHolder_cpp(cpp_cfg)
+
+    return obj
