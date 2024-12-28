@@ -27,7 +27,7 @@ class Data:
 # -------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    ut.make_inputs(Data.cfg_inp)
+    ut.make_inputs()
 # -------------------------------------
 def test_default():
     '''
