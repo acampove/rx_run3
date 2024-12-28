@@ -8,7 +8,6 @@ from dataclasses import dataclass
 import pytest
 from rx_common               import utilities as ut
 from rx_kernel.tuple_holder  import TupleHolder
-from rx_kernel               import allowed_conf
 
 from ROOT                  import MessageSvc
 from dmu.logging.log_store import LogStore
@@ -37,8 +36,6 @@ class Data:
 # -----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    allowed_conf.Initialize('/home/acampove/Tests/rx_samples')
-
     ut.make_inputs()
 
     LogStore.set_level('rx_common:config_holder', 10)
