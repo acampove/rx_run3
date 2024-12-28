@@ -2,9 +2,8 @@
 Module with functions needed to test YamlCutReader python interface
 '''
 
-from importlib.resources import files
-
-from rx_kernel import YamlCutReader
+from importlib.resources      import files
+from rx_kernel.yaml_cutreader import YamlCutReader
 # -----------------------------
 def test_default():
     '''
