@@ -21,8 +21,9 @@ class Data:
     '''
     Class used to share data between tests
     '''
+    l_input_path : list[str]
 
-    l_tuple_opt = [
+    l_tuple_opt  = [
             'gng',
             'pro',
             'cre',
@@ -36,7 +37,7 @@ class Data:
 # -----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    ut.make_inputs()
+    Data.l_input_path = ut.make_inputs()
 
     LogStore.set_level('rx_common:config_holder', 10)
     LogStore.set_level('rx_common:tuple_holder' , 10)
@@ -63,8 +64,8 @@ def test_arg(is_run3 : bool):
     '''
     Test for constructor with file and tuple args
     '''
-    file_path = '/home/acampove/cernbox/Run3/filtering/data/dec_07_2024_data/data_24_magdown_turbo_24c1_Hlt2RD_B0ToKpPimEE_0062a7d56d.root'
-    tree_path = 'KEE'
+    file_path = Data.l_input_path[0]
+    tree_path = 'DecayTree'
 
     ch  = ut.get_config_holder(is_run3)
     obj = TupleHolder(ch, file_path, tree_path, 'pap')
