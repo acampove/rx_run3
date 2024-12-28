@@ -39,8 +39,12 @@ def _load_libraries() -> None:
     Will load C++ libraries and include header files from RX framework
     '''
 
+    log.debug('Loading libraries')
     lib_path = get_lib_path('kernel')
     load_library(lib_path)
+
+
+    log.debug('Including headers')
     include_headers()
 # --------------------------------
 def initialize_project() -> None:
