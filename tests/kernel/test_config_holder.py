@@ -64,7 +64,11 @@ def test_run3():
             'trigger'  : '',   # This will be left empty for Run3, where the L0 trigger does not exist
             'brem'     : '0G',
             'track'    : 'LL',
+            'cut_opt'  : '',
+            'wgt_opt'  : '',
+            'tup_opt'  : '',
             }
+
 
     ch = ConfigHolder(cfg=cfg)
     ch.Print()
