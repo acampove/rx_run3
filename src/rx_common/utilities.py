@@ -19,9 +19,11 @@ class Data:
     '''
     Class holding shared attributes
     '''
-    loaded : bool = False
-    rgx_ldpath    = r'.*-L(\/[a-z]+\/.*\/lib).*'
+    initialized : bool = False
+    rgx_ldpath         = r'.*-L(\/[a-z]+\/.*\/lib).*'
 
+    # TODO: Do not hardcode this
+    yaml_config_path      = '/home/acampove/Tests/rx_samples'
     os.environ['LDFLAGS'] = '-L/home/acampove/Packages/ewp-rkstz-master-analysis/analysis/install/lib'
     os.environ['INCPATH'] = '/home/acampove/Packages/ewp-rkstz-master-analysis/analysis/install/include'
 
@@ -42,8 +44,24 @@ def load_libraries():
     LIB_PATH = get_lib_path('kernel')
     load_library(LIB_PATH)
     include_headers()
+# --------------------------------
+def initialize_project() -> None:
+    '''
+    This function will:
+    - Load libraries from underlying C++ project
+    - Include header files from same project
+    - Load configurations from YAML files, e.g. list of samples
+    '''
+    if Data.initialized:
+        return
 
-    Data.loaded = True
+    _load_libraries()
+
+    from rx_kernel import allowed_conf
+
+    allowed_conf.Initialize(Data.yaml_config_path)
+
+    Data.initialized = True
 # --------------------------------
 def include_headers() -> None:
     '''
