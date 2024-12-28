@@ -4,8 +4,6 @@ Module containing python interface to C++ ConfigHolder
 # pylint: disable=import-error, invalid-name
 import os
 
-from typing import Union
-
 from ROOT import ConfigHolder as ConfigHolder_cpp
 from ROOT import TString
 from ROOT import std
@@ -22,14 +20,27 @@ def _check_datadir(cfg : dict) -> None:
     if not os.path.isdir(data_dir):
         raise FileNotFoundError(f'Cannot find: {data_dir}')
 # ------------------------------------------------------------------
-def ConfigHolder(cfg : Union[dict,None] = None) -> ConfigHolder_cpp:
+def ConfigHolder(cfg : dict = None, is_run3 : bool = True) -> ConfigHolder_cpp:
     '''
     This function creates the ConfigHolder object and returns it
-    '''
-    if cfg is None:
-        return ConfigHolder_cpp()
 
-    _check_datadir(cfg)
+    Parameters
+    ------------------
+    cfg : Dictionary with configuration, which is optional.
+    is_run3: By default it is true, will enforce check of attributes neede for Run3
+    '''
+
+    if is_run3:
+        _check_datadir(cfg)
+        cfg['trigger'  ] = ''
+    else:
+        cfg['tree_name'] = ''
+        cfg['data_dir' ] = ''
+        cfg['sample'   ] = ''
+        cfg['hlt2'     ] = ''
+        cfg['cut_opt'  ] = ''
+        cfg['wgt_opt'  ] = ''
+        cfg['tup_opt'  ] = ''
 
     cpp_cfg= std.map('TString, TString')()
     for name, value in cfg.items():
