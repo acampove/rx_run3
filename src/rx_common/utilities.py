@@ -1,7 +1,7 @@
 '''
 Module with utility functions 
 '''
-# pylint: disable=import-error
+# pylint: disable=import-error, line-too-long
 
 import os
 import re
