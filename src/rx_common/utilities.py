@@ -98,7 +98,7 @@ def load_library(lib_path : str) -> None:
     log.debug(f'Loading: {lib_path}')
     gSystem.Load(lib_path)
 # --------------------------------
-def make_inputs():
+def make_inputs() -> list[str]:
     '''
     Utility function taking configuration dictionary
     and making a set of ROOT files used for tests, the config looks like:
@@ -108,6 +108,10 @@ def make_inputs():
     'data_dir': '/tmp/test_tuple_holder',
     'sample'  : 'data_24_magdown_24c4',
     'hlt2'    : 'Hlt2RD_BuToKpEE_MVA'
+
+    Returns
+    ---------------
+    List of paths to files created
     '''
     inp_dir = f'{Data.cfg_inp["data_dir"]}/{Data.cfg_inp["sample"]}/{Data.cfg_inp["hlt2"]}'
 
@@ -116,19 +120,26 @@ def make_inputs():
     os.makedirs(inp_dir, exist_ok=True)
     nfiles   = int(Data.cfg_inp['nfiles'  ])
     nentries = int(Data.cfg_inp['nentries'])
+
+    l_file_path = []
     for i_file in range(nfiles):
-        _make_input(inp_dir, i_file, nentries)
+        file_path = _make_input(inp_dir, i_file, nentries)
+        l_file_path.append(file_path)
+
+    return l_file_path
 # -----------------------------------
-def _make_input(inp_dir : str, i_file : int, nentries : int) -> None:
+def _make_input(inp_dir : str, i_file : int, nentries : int) -> str:
     rdf = RDataFrame(nentries)
     rdf = rdf.Define('a', '1')
     rdf = rdf.Define('b', '2')
 
     file_path = f'{inp_dir}/file_{i_file:03}.root'
     if os.path.isfile(file_path):
-        return
+        return file_path
 
     rdf.Snapshot('DecayTree', file_path)
+
+    return file_path
 # -------------------------
 def dict_to_map(d_data : dict[str,str]) -> std.map:
     '''
