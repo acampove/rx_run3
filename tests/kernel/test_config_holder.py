@@ -24,19 +24,19 @@ def test_run12():
     '''
 
     cfg = {
-            'project' : 'RK',
-            'analysis': 'EE',
-            'sample'  : 'LPT',
-            'q2bin'   : 'central',
-            'year'    : '24',
-            'polarity': 'MD',
-            'trigger' : 'L0L',
-            'trg_cfg' : 'exclusive',
-            'brem'    : '0G',
-            'track'   : 'LL',
+            'project'  : 'RK',
+            'analysis' : 'EE',
+            'sample'   : 'LPT',
+            'q2bin'    : 'central',
+            'year'     : '24',
+            'polarity' : 'MD',
+            'trigger'  : 'L0L',
+            'trg_cfg'  : 'exclusive',
+            'brem'     : '0G',
+            'track'    : 'LL',
             }
 
-    ch = ConfigHolder(cfg=cfg)
+    ch = ConfigHolder(cfg=cfg, is_run3=False)
     ch.Print()
 # -----------------------------------
 def test_run3():
@@ -54,7 +54,6 @@ def test_run3():
             'q2bin'    : 'central',
             'year'     : '24',
             'polarity' : 'MD',
-            'trigger'  : '',   # This will be left empty for Run3, where the L0 trigger does not exist
             'brem'     : '0G',
             'track'    : 'LL',
             'cut_opt'  : '',
