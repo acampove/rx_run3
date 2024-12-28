@@ -156,7 +156,11 @@ def get_config_holder(is_run3 : bool):
             'year'      : '24',
             'polarity'  : 'MD',
             'brem'      : '0G',
-            'track'     : 'LL'}
+            'track'     : 'LL',
+            'cut_opt'   : '',
+            'wgt_opt'   : '',
+            'tup_opt'   : '',
+            }
 
     cfg = cfg_run3 if is_run3 else cfg_run12
 
