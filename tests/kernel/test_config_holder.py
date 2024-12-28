@@ -17,13 +17,6 @@ def _initialize():
     allowed_conf.Initialize('/home/acampove/Tests/rx_samples')
     LogStore.set_level('rx_common:config_holder', 10)
 # -----------------------------------
-def test_default():
-    '''
-    Simplest test of default constructor
-    '''
-    ch = ConfigHolder()
-    ch.Print()
-# -----------------------------------
 # -----------------------------------
 def test_run12():
     '''
