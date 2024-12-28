@@ -54,7 +54,7 @@ def test_options(option : str, is_run3 : bool):
     '''
     Will test options
     '''
-    ch  = _get_config_holder(is_run3)
+    ch  = ut.get_config_holder(is_run3)
     obj = TupleHolder(ch, option)
     obj.PrintInline()
 # -------------------------
@@ -66,7 +66,7 @@ def test_arg(is_run3 : bool):
     file_path = '/home/acampove/cernbox/Run3/filtering/data/dec_07_2024_data/data_24_magdown_turbo_24c1_Hlt2RD_B0ToKpPimEE_0062a7d56d.root'
     tree_path = 'KEE'
 
-    ch  = _get_config_holder(is_run3)
+    ch  = ut.get_config_holder(is_run3)
     obj = TupleHolder(ch, file_path, tree_path, 'pap')
     obj.PrintInline()
 
