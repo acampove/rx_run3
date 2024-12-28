@@ -1,15 +1,14 @@
 '''
-Module with utility functions 
+Module with utility functions
 '''
 # pylint: disable=import-error, line-too-long
 
 import os
 import re
 import glob
-from dataclasses           import dataclass
-
-from dmu.logging.log_store import LogStore
-from ROOT                  import gSystem, gInterpreter, RDataFrame, std, TString
+from dataclasses             import dataclass
+from dmu.logging.log_store   import LogStore
+from ROOT                    import gSystem, gInterpreter, RDataFrame, std, TString
 
 log=LogStore.add_logger('rx_common:utilities')
 
@@ -101,7 +100,7 @@ def load_library(lib_path : str) -> None:
 # --------------------------------
 def make_inputs():
     '''
-    Utility function taking configuration dictionary 
+    Utility function taking configuration dictionary
     and making a set of ROOT files used for tests, the config looks like:
 
     'nfiles'  : 10,
@@ -167,11 +166,10 @@ def get_config_holder(is_run3 : bool):
     cfg_run3 = {
             'project'   : 'RK',
             'analysis'  : 'EE',
-            'data_dir'  : Data.cfg_inp['data_dir'], 
+            'data_dir'  : Data.cfg_inp['data_dir'],
             'sample'    : Data.cfg_inp['sample'],
-            'hlt2'      : Data.cfg_inp['hlt2'], 
+            'hlt2'      : Data.cfg_inp['hlt2'],
             'tree_name' : 'DecayTree',
-            'trigger'   : '',
             'q2bin'     : 'central',
             'year'      : '24',
             'polarity'  : 'MD',
