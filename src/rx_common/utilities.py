@@ -34,15 +34,13 @@ class Data:
             'sample'  : 'data_24_magdown_24c4',
             'hlt2'    : 'Hlt2RD_BuToKpEE_MVA'}
 # --------------------------------
-def load_libraries():
+def _load_libraries() -> None:
     '''
     Will load C++ libraries and include header files from RX framework
     '''
-    if Data.loaded:
-        return
 
-    LIB_PATH = get_lib_path('kernel')
-    load_library(LIB_PATH)
+    lib_path = get_lib_path('kernel')
+    load_library(lib_path)
     include_headers()
 # --------------------------------
 def initialize_project() -> None:
