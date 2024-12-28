@@ -9,5 +9,4 @@ from rx_common             import utilities as ut
 
 
 log=LogStore.add_logger('rx_common:kernel')
-ut.load_libraries()
-
+ut.initialize_project()
