@@ -182,12 +182,8 @@ def get_config_holder(is_run3 : bool):
 
     cfg = cfg_run3 if is_run3 else cfg_run12
 
-    initialize_project()
+    from rx_kernel.config_holder import ConfigHolder
 
-    from ROOT import ConfigHolder as ConfigHolder_cpp
-
-    cpp_cfg = dict_to_map(cfg)
-
-    obj = ConfigHolder_cpp(cpp_cfg)
+    obj = ConfigHolder(cfg, is_run3)
 
     return obj
