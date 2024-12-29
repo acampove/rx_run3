@@ -8,7 +8,7 @@ import re
 import glob
 from dataclasses             import dataclass
 from dmu.logging.log_store   import LogStore
-from ROOT                    import gSystem, gInterpreter, RDataFrame, std, TString
+from ROOT                    import gSystem, gInterpreter, std, TString
 
 log=LogStore.add_logger('rx_common:utilities')
 
@@ -90,56 +90,6 @@ def get_lib_path(lib_name : str) -> str:
         raise FileNotFoundError(f'Cannot find: {lib_path}')
 
     return lib_path
-# --------------------------------
-def load_library(lib_path : str) -> None:
-    '''
-    Takes path to library and loads it
-    '''
-    log.debug(f'Loading: {lib_path}')
-    gSystem.Load(lib_path)
-# --------------------------------
-def make_inputs() -> list[str]:
-    '''
-    Utility function taking configuration dictionary
-    and making a set of ROOT files used for tests, the config looks like:
-
-    'nfiles'  : 10,
-    'nentries': 100,
-    'data_dir': '/tmp/test_tuple_holder',
-    'sample'  : 'data_24_magdown_24c4',
-    'hlt2'    : 'Hlt2RD_BuToKpEE_MVA'
-
-    Returns
-    ---------------
-    List of paths to files created
-    '''
-    inp_dir = f'{Data.cfg_inp["data_dir"]}/{Data.cfg_inp["sample"]}/{Data.cfg_inp["hlt2"]}'
-
-    log.info(f'Sending test inputs to: {inp_dir}')
-
-    os.makedirs(inp_dir, exist_ok=True)
-    nfiles   = int(Data.cfg_inp['nfiles'  ])
-    nentries = int(Data.cfg_inp['nentries'])
-
-    l_file_path = []
-    for i_file in range(nfiles):
-        file_path = _make_input(inp_dir, i_file, nentries)
-        l_file_path.append(file_path)
-
-    return l_file_path
-# -----------------------------------
-def _make_input(inp_dir : str, i_file : int, nentries : int) -> str:
-    rdf = RDataFrame(nentries)
-    rdf = rdf.Define('a', '1')
-    rdf = rdf.Define('b', '2')
-
-    file_path = f'{inp_dir}/file_{i_file:03}.root'
-    if os.path.isfile(file_path):
-        return file_path
-
-    rdf.Snapshot('DecayTree', file_path)
-
-    return file_path
 # -------------------------
 def dict_to_map(d_data : dict[str,str]) -> std.map:
     '''
@@ -156,45 +106,3 @@ def dict_to_map(d_data : dict[str,str]) -> std.map:
 
     return cpp_data
 # -------------------------
-def get_config_holder(is_run3 : bool):
-    '''
-    Function returns instance of C++ ConfigHolder.
-
-    is_run3: It will return the object for Run3 configs if true, otherwise, something that works for Run1/2
-    '''
-    cfg_run12 = {
-            'project' : 'RK',
-            'analysis': 'EE',
-            'sample'  : 'Bd2KstPsiEE',
-            'q2bin'   : 'central',
-            'year'    : '18',
-            'polarity': 'MD',
-            'trigger' : 'L0L',
-            'trg_cfg' : 'exclusive',
-            'brem'    : '0G',
-            'track'   : 'LL'}
-
-    cfg_run3 = {
-            'project'   : 'RK',
-            'analysis'  : 'EE',
-            'data_dir'  : Data.cfg_inp['data_dir'],
-            'sample'    : Data.cfg_inp['sample'],
-            'hlt2'      : Data.cfg_inp['hlt2'],
-            'tree_name' : 'DecayTree',
-            'q2bin'     : 'central',
-            'year'      : '24',
-            'polarity'  : 'MD',
-            'brem'      : '0G',
-            'track'     : 'LL',
-            'cut_opt'   : '',
-            'wgt_opt'   : '',
-            'tup_opt'   : '',
-            }
-
-    cfg = cfg_run3 if is_run3 else cfg_run12
-
-    from rx_kernel.config_holder import ConfigHolder
-
-    obj = ConfigHolder(cfg, is_run3)
-
-    return obj
