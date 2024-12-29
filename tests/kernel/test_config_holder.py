@@ -26,7 +26,7 @@ def test_run12():
     cfg = {
             'project'  : 'RK',
             'analysis' : 'EE',
-            'sample'   : 'LPT',
+            'sample'   : 'Bd2K2EE',
             'q2bin'    : 'central',
             'year'     : '24',
             'polarity' : 'MD',
