@@ -19,6 +19,8 @@ class Data:
     '''
     nfiles   = 10
     nentries = 100
+
+    d_tree_name = {True : 'DecayTree', False : 'DT'}
 # -------------------------
 def _get_conf(is_run3 : bool) -> dict[str,str]:
     cfg_run12 = {
@@ -108,7 +110,7 @@ def _make_input(inp_dir : str, i_file : int, nentries : int) -> str:
     if os.path.isfile(file_path):
         return file_path
 
-    rdf.Snapshot('DecayTree', file_path)
+    rdf.Snapshot(tree_name, file_path)
 
     return file_path
 # -------------------------
