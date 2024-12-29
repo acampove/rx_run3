@@ -17,5 +17,5 @@ def test_config_constructor():
     Test of event type constructor with ConfigHolder arg 
     '''
     cpp_cfg = get_config_holder(is_run3=True)
-    evt     = EventType(cpp_cfg)
+    evt     = EventType(cpp_cfg, '', '', '')
     evt.Init()
