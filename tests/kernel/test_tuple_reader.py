@@ -1,13 +1,14 @@
 '''
 Module containing tests for TupleReader
 '''
+# pylint: disable=import-error, wrong-import-order
+
 from dataclasses import dataclass
 import pytest
 
-from rx_kernel.tuple_reader import TupleReader
-from rx_common              import utilities   as ut
-
-from ROOT import MessageSvc
+from rx_kernel                import MessageSvc
+from rx_kernel.tuple_reader   import TupleReader
+from rx_kernel.test_utilities import make_inputs
 
 
 MessageSvc.Initialize(-1)
@@ -27,7 +28,7 @@ class Data:
 # -------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    ut.make_inputs()
+    make_inputs(is_run3=True)
 # -------------------------------------
 def test_default():
     '''
