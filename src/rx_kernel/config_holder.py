@@ -20,6 +20,10 @@ def _check_datadir(cfg : dict) -> None:
     if not os.path.isdir(data_dir):
         raise FileNotFoundError(f'Cannot find: {data_dir}')
 # ------------------------------------------------------------------
+def _set_entry(name : str, cfg : dict[str,str]) -> None:
+    if name not in cfg:
+        cfg[name] = ''
+# ------------------------------------------------------------------
 def ConfigHolder(cfg : dict = None, is_run3 : bool = True) -> ConfigHolder_cpp:
     '''
     This function creates the ConfigHolder object and returns it
@@ -32,15 +36,15 @@ def ConfigHolder(cfg : dict = None, is_run3 : bool = True) -> ConfigHolder_cpp:
 
     if is_run3:
         _check_datadir(cfg)
-        cfg['trigger'  ] = ''
+        _set_entry('trigger'  , cfg)
     else:
-        cfg['tree_name'] = ''
-        cfg['data_dir' ] = ''
-        cfg['sample'   ] = ''
-        cfg['hlt2'     ] = ''
-        cfg['cut_opt'  ] = ''
-        cfg['wgt_opt'  ] = ''
-        cfg['tup_opt'  ] = ''
+        _set_entry('tree_name', cfg)
+        _set_entry('data_dir' , cfg)
+        _set_entry('sample'   , cfg)
+        _set_entry('hlt2'     , cfg)
+        _set_entry('cut_opt'  , cfg)
+        _set_entry('wgt_opt'  , cfg)
+        _set_entry('tup_opt'  , cfg)
 
     cpp_cfg= std.map('TString, TString')()
     for name, value in cfg.items():
