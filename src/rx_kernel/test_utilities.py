@@ -87,8 +87,9 @@ def make_inputs(is_run3 : bool) -> list[str]:
     List of paths to files created
     '''
 
-    cfg_inp = _get_conf(is_run3)
-    inp_dir = f'{cfg_inp["data_dir"]}/{cfg_inp["sample"]}/{cfg_inp["hlt2"]}'
+    cfg_inp   = _get_conf(is_run3)
+    inp_dir   = f'{cfg_inp["data_dir"]}/{cfg_inp["sample"]}/{cfg_inp["hlt2"]}'
+    tree_name = Data.d_tree_name[is_run3]
 
     log.info(f'Sending test inputs to: {inp_dir}')
 
