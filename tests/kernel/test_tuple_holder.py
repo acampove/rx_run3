@@ -3,25 +3,23 @@ Module containing tests for TupleHolder
 '''
 # pylint: disable=import-error, wrong-import-order
 
-from dataclasses import dataclass
+from dataclasses           import dataclass
+from dmu.logging.log_store import LogStore
 
 import pytest
-from rx_common               import utilities as ut
-from rx_kernel.tuple_holder  import TupleHolder
-
-from ROOT                  import MessageSvc
-from dmu.logging.log_store import LogStore
+from rx_kernel.tuple_holder   import TupleHolder
+from rx_kernel.test_utilities import get_config_holder, make_inputs
+from rx_kernel                import MessageSvc
 
 MessageSvc.Initialize(-1)
 
 log=LogStore.add_logger('rx_common:test_tuple_holder')
 # -------------------------
-@dataclass
 class Data:
     '''
     Class used to share data between tests
     '''
-    l_input_path : list[str]
+    d_input_path : dict[bool, list[str]]
 
     l_tuple_opt  = [
             'gng',
@@ -37,7 +35,9 @@ class Data:
 # -----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    Data.l_input_path = ut.make_inputs()
+    Data.d_input_path        = {}
+    Data.d_input_path[False] = make_inputs(is_run3=False)
+    Data.d_input_path[True ] = make_inputs(is_run3= True)
 
     LogStore.set_level('rx_common:config_holder', 10)
     LogStore.set_level('rx_common:tuple_holder' , 10)
