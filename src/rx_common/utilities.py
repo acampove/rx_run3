@@ -33,41 +33,41 @@ class Data:
             'sample'  : 'data_24_magdown_24c4',
             'hlt2'    : 'Hlt2RD_BuToKpEE_MVA'}
 # --------------------------------
-def _load_libraries() -> None:
+def _load_library(name : str) -> None:
     '''
     Will load C++ libraries and include header files from RX framework
     '''
 
-    log.debug('Loading libraries')
-    lib_path = get_lib_path('kernel')
-    load_library(lib_path)
-
-
-    log.debug('Including headers')
-    include_headers()
+    lib_path = get_lib_path(name)
+    log.debug(f'Loading: {lib_path}')
+    gSystem.Load(lib_path)
 # --------------------------------
-def initialize_project() -> None:
+def initialize_project(name : str) -> None:
     '''
     This function will:
     - Load libraries from underlying C++ project
     - Include header files from same project
     - Load configurations from YAML files, e.g. list of samples
+
+    Parameters
+    -----------------
+    name : Name of project, used for library picking, e.g. kernel
     '''
     if Data.initialized:
         return
 
-    _load_libraries()
+    _load_library(name)
+    _include_headers()
 
-    from rx_kernel import allowed_conf
-
-    allowed_conf.Initialize(Data.yaml_config_path)
 
     Data.initialized = True
 # --------------------------------
-def include_headers() -> None:
+def _include_headers() -> None:
     '''
     Will pick path to headers and include them
     '''
+    log.debug('Including headers')
+
     inc_path = os.environ['INCPATH']
     l_header = glob.glob(f'{inc_path}/*.hpp')
 
