@@ -20,6 +20,7 @@ class Data:
     Class used to share data between tests
     '''
     d_input_path : dict[bool, list[str]]
+    d_tree_name  : dict[bool, str]
 
     l_tuple_opt  = [
             'gng',
@@ -38,6 +39,10 @@ def _initialize():
     Data.d_input_path        = {}
     Data.d_input_path[False] = make_inputs(is_run3=False)
     Data.d_input_path[True ] = make_inputs(is_run3= True)
+
+    Data.d_tree_name         = {}
+    Data.d_tree_name[False]  = 'DT'
+    Data.d_tree_name[True ]  = 'DecayTree'
 
     LogStore.set_level('rx_common:config_holder', 10)
     LogStore.set_level('rx_common:tuple_holder' , 10)
@@ -65,7 +70,7 @@ def test_arg(is_run3 : bool):
     Test for constructor with file and tuple args
     '''
     file_path = Data.d_input_path[is_run3][0]
-    tree_path = 'DecayTree'
+    tree_path = Data.d_tree_name[is_run3]
 
     ch  = get_config_holder(is_run3)
     obj = TupleHolder(ch, file_path, tree_path, 'pap')
