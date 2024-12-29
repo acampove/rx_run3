@@ -1,5 +1,4 @@
-#ifndef TUPLEHOLDER_HPP
-#define TUPLEHOLDER_HPP
+#pragma once
 
 #include "EnumeratorSvc.hpp"
 #include "HelperSvc.hpp"
@@ -22,12 +21,14 @@
 
 #include "RooRealVar.h"
 
+typedef vector<TString> v_tstr;
+
 /**
  * \class TupleHolder
  * \brief Tuple info
  */
-class TupleHolder : public TObject {
-
+class TupleHolder : public TObject 
+{
   public:
     /**
      * \brief Default constructor
@@ -35,9 +36,11 @@ class TupleHolder : public TObject {
     TupleHolder();
 
     /**
-     * \brief Constructor with ConfigHolder and TString
+     * @brief Constructor with ConfigHolder and TString.
+     * @param _configHolder Instance of ConfigHolder, all the configuration will be taken from it
+     * @param _tupOption    String with extra configuration
      */
-    TupleHolder(const ConfigHolder & _configHolder, TString _tupleOption);
+    TupleHolder(const ConfigHolder & _configHolder, const TString &_tupleOption);
 
     /**
      * \brief Copy constructor
@@ -47,7 +50,11 @@ class TupleHolder : public TObject {
     /**
      * \brief Constructor with TString
      */
-    TupleHolder(const ConfigHolder & _configHolder, TString _fileName, TString _tupleName, TString _tupleOption);
+    TupleHolder(
+            const ConfigHolder & _configHolder, 
+            const TString      & _fileName, 
+            const TString      & _tupleName, 
+            const TString      & _tupleOption);
 
     /**
      * \brief Equality checkers
@@ -58,6 +65,7 @@ class TupleHolder : public TObject {
 
     /**
      * \brief Init Tuple
+     * @param  _force     [description]
      * @param  _fileName  [description]
      * @param  _tupleName [description]
      */
@@ -122,7 +130,7 @@ class TupleHolder : public TObject {
      */
     void SetOption(TString _tupleOption) {
         m_tupleOption = _tupleOption;
-        Check();
+        _Check();
         return;
     };
 
@@ -164,15 +172,17 @@ class TupleHolder : public TObject {
     const bool IsSampleInCreVer(TString _creVer, TString _prj, TString _ana, TString _q2bin, TString _year , TString _trigger, TString _triggerConf, TString _sample);
 
     /**
-     * \brief Set Aliases
-     * @param  _aliases [description]
+     * @brief Will set the aliases of the tuple reader instance.
+     * @param  _aliases This is a vector of pairs of strings, where the first one is the original
+     * name and the second one is the alias.\n 
+     * If the alias is empty, will use the attribute. Otherwise it will override it.
      */
-    void SetAliases(vector< pair< TString, TString > > _aliases = {});
+    void SetAliases(const vector< pair< TString, TString > > &_aliases = {});
 
     /**
-     * \brief Get Aliases
+     * @brief Get correspondence between branch names, needed for renaming.
      */
-    vector< pair< TString, TString > > GetAliases(TString _option);
+    vector< pair< TString, TString > > GetAliases(const TString &_option);
 
     const vector< pair< TString, TString > > Aliases() const { return m_aliases; };
 
@@ -200,9 +210,127 @@ class TupleHolder : public TObject {
 
     vector<TString> GetFileNames() const; 
 
+    /**
+     * @brief Prints tuple holder and config holder options
+     */
     void PrintInline() const noexcept;
 
   private:
+    /**
+     * Will fill m_branches with all the branch names in tree if both:
+     * - m_branches is empty
+     * - Branches were found in tree
+    */
+    void _SetAllBranchesFromTree();
+
+    /**
+     * @brief returns name of TTree for cre jobs 
+     */
+    TString _TupleNameForCRE();
+
+    /**
+     * @brief Retrieves name of sample after some renaming
+     */
+    TString _GetSampleName();
+
+    /**
+     * @brief For ganga files, this will rename sample name
+     * @return Nothing, it will modify in-place 
+     */
+    void _RenameGangaSampleName(TString &_sample);
+
+    /**
+     * @brief Will make TupleReader if tuple name and file name are non-empty
+     * @return True if the tuple and file names are specified and therefore the reader can be made, false otherwise.
+     */
+    bool _MakeReaderFromPaths();
+
+    /**
+     * @brief Will add list of files to reader, when the sample is Ganga
+     * @param _sample Sample name, will need to be renamed internally, has to be copied
+     * @param _type DT or MC, data or montecarlo
+     * @param _years years to loop over
+     * @param _polarities polarities to loop over
+     */
+    bool _AddGangaSamplesToReader(
+                  TString _sample, 
+            const TString &_type, 
+            const v_tstr  &_years,
+            const v_tstr  &_polarities);
+
+    /**
+     * @brief Helper function to make reader from production (?) samples
+     * @param _sample Sample name, will need to be renamed internally, has to be copied
+     * @param _type DT or MC, data or montecarlo
+     * @param _years years to loop over
+     * @param _polarities polarities to loop over
+     */
+    bool _AddProSamplesToReader(
+                  TString _sample, 
+            const TString &_type, 
+            const v_tstr  &_years,
+            const v_tstr  &_polarities);
+
+    /**
+     * @brief Helper function to make reader from created (?) samples
+     * @param _sample Sample name, will need to be renamed internally, has to be copied
+     * @param _type DT or MC, data or montecarlo
+     * @param _years years to loop over
+     * @param _polarities polarities to loop over
+     */
+    bool _AddCreSamplesToReader(
+                  TString _sample, 
+            const TString &_type, 
+            const v_tstr  &_years,
+            const v_tstr  &_polarities);
+
+    /**
+     * @brief Helper function to make reader from splot (?) samples
+     * @param _sample Sample name, will need to be renamed internally, has to be copied
+     * @param _type DT or MC, data or montecarlo
+     * @param _years years to loop over
+     * @param _polarities polarities to loop over
+     */
+    bool _AddSplSamplesToReader(
+                  TString _sample, 
+            const TString &_type, 
+            const v_tstr  &_years,
+            const v_tstr  &_polarities);
+
+    /**
+     * @brief Helper function to make reader from samples from post_ap, i.e. AP and filtering/slimming step in Run3
+     * @param _sample Sample name, will need to be renamed internally, has to be copied
+     * @param _type DT or MC, data or montecarlo
+     * @param _years years to loop over
+     * @param _polarities polarities to loop over
+     */
+    bool _AddPAPSamplesToReader(
+              TString _sample, 
+        const TString &_type, 
+        const v_tstr  &_years,
+        const v_tstr  &_polarities);
+
+    /**
+     * @brief Function used to check if samples were added, If samples were cached, check is skipped. 
+     * If samples are background MC, check only shows warning
+     * @param _addList True if samples were added, false otherwise
+     */
+    void _CheckAddedList(const bool &_addList);
+    /**
+     * Will initialize values of m_fileName and m_tupleName
+     *
+     * @param  _fileName  Name of file, e.g. file.root 
+     * @param  _tupleName Name of tree, e.g. DecayTree
+    */
+    void _SetFileTupleNames(const TString &_fileName, const TString &_tupleName);
+
+    /**
+     * @brief Will return the value that m_tupleName will take.
+     * @details This should depend on what constructor and what data period, (Run1/2/3) is used
+     */
+    TString _GetTuplePAPName();
+
+    //const ConfigHolder m_configHolder; // This should be const eventually, currently does not work for unknown reasons
     ConfigHolder m_configHolder = ConfigHolder();   // The underlying ConfigHolder
 
     TupleReader m_tupleReader = TupleReader();   //! The tuple Reader object , not persified, recreated on the fly
@@ -223,42 +351,60 @@ class TupleHolder : public TObject {
     /**
      * \brief Check allowed arguments
      */
-    bool Check();
-
-    bool m_debug = false;
-    /**
-     * \brief Activate debug
-     * @param  _debug [description]
-     */
-    void SetDebug(bool _debug) { m_debug = _debug; };
+    void _Check();
 
     bool m_isInitialized = false;   //! Initialization flag [false by default]
 
     /**
-     * \brief Create Tuple name
-     */
-    void CreateTupleName();
+     * Sets value of m_tupleName, i.e. location of tree in file, when 
+     * the files are "processed", i.e. m_tupleOption.Contains("pro") is true.
+    */
+    void _CreateTupleProcessName();
 
     /**
-     * \brief Create Tuple location
-     * @param  _fileName [description]
+     * Sets value of m_tupleName, i.e. location of tree in file, when 
+     * the files are from ganga, i.e. m_tupleOption.Contains("gng") is true.
      */
-    void CreateTupleDir(TString _fileName = "");
+    void _CreateTupleGangaName();
 
+    /**
+     * Sets value of m_tupleName, i.e. location of tree in file, when 
+     * the files are used for Rpk and RKShort (?)
+     */
+    void _CreateTupleRLRKSName();
+    /**
+     * @brief Returns path to file with aliases, e.g. X -> Y in order to rename branches
+     */
+    TString _GetAliasFile(const TString &_option);
+
+    /**
+     * @brief Set value of m_tupleDir, uses m_fileName to extract directory path
+     */
+    void _SetTupleDir();
+
+    /**
+     * @brief Will ask ConfigHolder attribute for the project and will check if, for the given aliases,
+     * it has to be skipped
+     * @param Name of branch that will be defined (alias) that might be skipped.
+     * @param String with definition for of alias argument
+     * @return true (skip), false (define the aliases)
+     */
+    bool _SkipAliasForProject(const TString & _alias, const TString & _expr);
+
+    /**
+     * @brief Will ask ConfigHolder attribute for the analysis and will check if, for the given aliases,
+     * it has to be skipped
+     * @param Name of branch that will be defined (alias) that might be skipped.
+     * @param String with definition for of alias argument
+     * @return true (skip), false (define the aliases)
+     */
+    bool _SKipAliasForAnalysis(const TString & _alias, const TString & _expr);
     /**
      * \brief Create TupleReader
-     * @param  _fileName  [description]
-     * @param  _tupleName [description]
      */
-    void CreateTupleReader(TString _fileName = "", TString _tupleName = "");
-
-    void UpdateBranches();
-
-    void UpdateAliases();
+    void _CreateTupleReader();
 
     ClassDef(TupleHolder, 1);
 };
 
 ostream & operator<<(ostream & os, const TupleHolder & _tupleHolder);
-
-#endif

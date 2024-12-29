@@ -37,11 +37,13 @@ ClassImp(CutHolder)
     Check();
 }
 
-CutHolder::CutHolder(const ConfigHolder & _configHolder, TString _cutOption)
-    : m_configHolder(_configHolder) {
-    if (SettingDef::debug.Contains("CH")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("CutHolder", (TString) "ConfigHolder");
+CutHolder::CutHolder(const ConfigHolder & _configHolder, const TString &_cutOption)
+    : m_configHolder(_configHolder) 
+{
+    MessageSvc::Debug("CutHolder", "Using CutHolder constructor with option: \"", _cutOption, "\"");
+
     m_cutOption = _cutOption;
+
     Check();
 }
 
@@ -67,6 +69,7 @@ ostream & operator<<(ostream & os, const CutHolder & _cutHolder) {
     os << RESET;
     return os;
 }
+
 
 bool CutHolder::Check() {
     for (auto _opt : TokenizeString(m_cutOption, SettingDef::separator)) {

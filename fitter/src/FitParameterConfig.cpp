@@ -22,7 +22,17 @@ FitParameterConfig::FitParameterConfig(const ConfigHolder & _configHolder, const
 }
 
 FitParameterConfig::FitParameterConfig(const Prj & _project, const Analysis & _ana, TString _decaySample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem, const Track & _track, const Sample & _componentSample, const bool forRatio)
-    : ConfigHolder(_project, _ana, _decaySample, _q2bin, _year, _polarity, _trigger, _brem, _track) {
+    : ConfigHolder(
+            _project, 
+            _ana, 
+            _decaySample, 
+            _q2bin, 
+            _year, 
+            _polarity, 
+            _trigger, 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            _brem, 
+            _track) {
     m_componentSample = _componentSample;
     m_ForRatio = forRatio;
 }
@@ -51,7 +61,17 @@ ostream & operator<<(ostream & os, const FitParameterConfig & _fitParameterConfi
 }
 
 ConfigHolder FitParameterConfig::GetConfigHolder() const {
-    ConfigHolder _configHolder = ConfigHolder(GetProject(), GetAna(), GetDecaySample(), GetQ2bin(), GetYear(), GetPolarity(), GetTrigger(), GetBrem());
+    ConfigHolder _configHolder = ConfigHolder(
+            GetProject(), 
+            GetAna(), 
+            GetDecaySample(), 
+            GetQ2bin(), 
+            GetYear(), 
+            GetPolarity(), 
+            GetTrigger(), 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            GetBrem());
+
     return _configHolder;
 }
 

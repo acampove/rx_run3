@@ -1,11 +1,9 @@
-#ifndef IOSVC_CPP
-#define IOSVC_CPP
-
 #include "IOSvc.hpp"
 #include "ConfigHolder.hpp"
 #include "HelperSvc.hpp"
 #include "SettingDef.hpp"
 #include "TFile.h"
+#include "TSystemFile.h"
 #include "TKey.h"
 #include "core.h"
 #include <TString.h>
@@ -19,21 +17,27 @@
 #include <sys/stat.h>
 #include <vector>
 #include "TSystem.h"
-int IOSvc::runCommand( std::string command ){     
+
+int IOSvc::runCommand( std::string command )
+{     
     TString _cmd( command);
     int status = system(_cmd.Data());
     return status;
 }
-int IOSvc::runCommand( TString command){
+
+int IOSvc::runCommand( TString command)
+{
     return runCommand( std::string( command.Data()));
 }
 
+TString IOSvc::GetDataDir(const TString &_option) 
+{
+    MessageSvc::Debug("GetDataDir", " option: ", _option);
 
-
-TString IOSvc::GetDataDir(TString _option) {
-    if (m_debug) MessageSvc::Debug("IOSvc", (TString) "GetDataDir", _option);
     TString _dir = SettingDef::IO::dataDir + "/" + _option;   //--> TODO: can-should be substituted by fmt::format("{0}/{1}", SettingDef::IO::dataDir, _option);
-    if (m_debug) MessageSvc::Debug("IOSvc", _dir);
+                                                              //
+    MessageSvc::Debug("GetDataDir", " directory: ", _dir);
+
     return _dir;
 }
 
@@ -127,20 +131,38 @@ TString IOSvc::GetTupleDirHead(TString _option) {
     return _dir;
 }
 
-TString IOSvc::GetTupleDir(TString _option, const ConfigHolder & _configHolder) {
+TString IOSvc::_GetPAPTupleDir(const ConfigHolder &_configHolder)
+{
+    auto _dir = _configHolder.GetDataDir();
+    if (_dir == "")
+        MessageSvc::Fatal(TString("_GetPAPTupleDir"), "Data directory not set");
+
+    MessageSvc::Debug("_GetPAPTupleDir", "Found datadir: ", _dir);
+
+    return _dir;
+}
+
+TString IOSvc::GetTupleDir(TString _option, const ConfigHolder & _configHolder) 
+{
+    if (_option.Contains("pap"))
+        return _GetPAPTupleDir(_configHolder);
+
     TString _project = to_string(_configHolder.GetProject());
     TString _ana     = to_string(_configHolder.GetAna());
     TString _q2bin   = to_string(_configHolder.GetQ2bin());
     TString _trigger = to_string(_configHolder.GetTrigger());
     TString _year    = to_string(_configHolder.GetYear());
 
-    if (m_debug) MessageSvc::Debug("IOSvc", (TString) "GetTupleDir", _option, _project, _ana, _q2bin, _trigger, _year);
+    MessageSvc::Debug("IOSvc", "GetTupleDir", _option, _project, _ana, _q2bin, _trigger, _year);
 
     TString _dir;
-    if (_option.Contains("gng")) {
+    if (_option.Contains("gng")) 
+    {
         _dir = SettingDef::IO::gangaDir + "/lists/v" + GetBaseVer(SettingDef::Tuple::gngVer);
-        if ((hash_project(_project) != Prj::RL) && (hash_project(_project) != Prj::RKS)) {
-            switch (hash_project(_project)) {
+        if ((hash_project(_project) != Prj::RL) && (hash_project(_project) != Prj::RKS)) 
+        {
+            switch (hash_project(_project)) 
+            {
                 case Prj::RKst: _dir += "/Bd2Kst"; break;
                 case Prj::RK: _dir += "/Bu2K"; break;
                 case Prj::RPhi: _dir += "/Bs2Phi"; break;
@@ -155,7 +177,9 @@ TString IOSvc::GetTupleDir(TString _option, const ConfigHolder & _configHolder) 
                 _dir += "LL";
             }
         }
-    } else {
+    } 
+    else 
+    {
         _dir = GetTupleDirHead(_option);
         if (_project != "") _dir += "/" + _project;
         if (_option.Contains("pro")){
@@ -196,16 +220,30 @@ TString IOSvc::GetTupleDir(TString _option, const ConfigHolder & _configHolder) 
         if (_option.Contains("eff")) _dir += "/Efficiency_" + _ana + "_" + SettingDef::Efficiency::ver + SettingDef::separator + "q2" + _q2bin;
     }
 
-    if (_option.Contains("out") && (SettingDef::Tuple::outVer != "")) {
+    if (_option.Contains("out") && (SettingDef::Tuple::outVer != "")) 
+    {
         _dir.ReplaceAll(SettingDef::Tuple::proVer, SettingDef::Tuple::outVer);
         _dir.ReplaceAll(SettingDef::Tuple::creVer, SettingDef::Tuple::outVer);
     }
 
-    if (m_debug) MessageSvc::Debug("IOSvc", _dir);
+    MessageSvc::Debug("IOSvc", _dir);
+
     return _dir;
 }
 
-TString IOSvc::GetTupleDir(TString _option, TString _project, TString _ana, TString _q2bin, TString _year, TString _trigger) { return GetTupleDir(_option, ConfigHolder(hash_project(_project), hash_analysis(_ana), "", hash_q2bin(_q2bin), hash_year(_year), hash_polarity(SettingDef::Config::polarity), hash_trigger(_trigger), hash_brem(SettingDef::Config::brem), hash_track(SettingDef::Config::track))); }
+TString IOSvc::GetTupleDir(TString _option, TString _project, TString _ana, TString _q2bin, TString _year, TString _trigger) 
+{ 
+    ConfigHolder ch(
+            hash_project(_project), 
+            hash_analysis(_ana), 
+            "", 
+            hash_q2bin(_q2bin), 
+            hash_year(_year), 
+            hash_polarity(SettingDef::Config::polarity), 
+            hash_trigger(_trigger));
+
+    return GetTupleDir(_option, ch); 
+}
 
 TString IOSvc::GetWeightDir(TString _option) {
     if (m_debug) MessageSvc::Debug("IOSvc", (TString) "GetWeightDir", _option);
@@ -230,45 +268,21 @@ TString IOSvc::GetWeightDir(TString _option) {
     return _dir;
 }
 
-bool IOSvc::IsFile(TString _filePath) {
-    if (_filePath.Contains("/eos/")) {
+bool IOSvc::IsFile(TString _filePath) 
+{
+    if (_filePath.Contains("/eos/"))
         return ExistFile(_filePath);
-    } else {
-        if (!ExistFile(_filePath)) {
-            return false;
-        } else {
-            // the _filePath exists , check if IsDir type!
-            struct stat buf;
-            stat(_filePath.Data(), &buf);
-            return S_ISREG(buf.st_mode);
-        }
-    }
-    return false;
+
+    if (!ExistFile(_filePath)) 
+        return false;
+
+    TSystemFile sf;
+
+    return ! sf.IsDirectory(_filePath);
 }
 
-bool IOSvc::ExistFile(TString _name) {
-  /*
-  if (_name.Contains("/eos/") && !IsBATCH("CERN")) {
-    //if you are not at CERN , the xrd stat is called
-    cout << WHITE;
-    //MessageSvc::Line();
-    // int _status = runCommand(EOS + " stat -f " + _name);
-    int _status = runCommand(XRD + " stat " + _name);
-    //MessageSvc::Line();
-    cout << RESET;
-    if (_status == 0) return true;
-    cout<<RED<< XRD << " stat " << _name << "returned status!=0"<< RESET<< endl;
-    return false;
-  }
-  ifstream _file(_name.Data());
-  return _file.good();
-  /*
-    Returns FALSE if one can access a file using the specified access mode.
-    The file name must not contain any special shell characters line ~ or $, in those cases first call ExpandPathName(). 
-    Attention, bizarre convention of return value!!
-    Reimplemented in TWinNTSystem, TUnixSystem, TAlienSystem, TXNetSystem, TWebSystem, TNetSystem, TGFALSystem, and TDCacheSystem.
-    See https://root.cern.ch/doc/master/classTSystem.html#a849c28ea0dd3b3aa3310a4d447c7b21a
-  */
+bool IOSvc::ExistFile(const TString &_name) 
+{
   return !gSystem->AccessPathName(_name, kFileExists);
 }
 
@@ -337,61 +351,102 @@ void IOSvc::CloseFile(TFile * _file) {
     return;
 }
 
-vector< TString > IOSvc::ParseFile(const TString _name) {
+// -----------------------------------------------
+
+vector< vector < TString > > IOSvc::ParseFile(const TString &_name, const TString &_delimiter) 
+{
+    if (_name.Contains("/eos")) 
+        return _ParseEOSFile(_name, _delimiter);
+
+    if (! IOSvc::ExistFile(_name) ) 
+        MessageSvc::Fatal("ParseFile:: ", "File does not exist:", _name);
+
+    return _ParseLocalFile(_name, _delimiter);
+}
+
+vector< vector < TString > > IOSvc::_ParseEOSFile(const TString &_name, const TString &_delimiter)
+{
+    MessageSvc::Debug("ParseEOSFile", "Parsing ", _name, " with delimiter ", _delimiter);
+    vector< TString > _allLines = _LinesFromEOSFile(_name);
+
+    auto _data = _FilesFromLines(_allLines, _delimiter);
+
+    return _data;
+}
+
+vector< vector < TString > > IOSvc::_ParseLocalFile(const TString &_name, const TString &_delimiter) 
+{
+    ifstream _file(_name);
+    if (! _file.is_open()) 
+        MessageSvc::Fatal("Unable to open file ", _name);
+
+    MessageSvc::Debug("Retrieving files from list in: ", _name);
+
+    string _line = "";
+
+    vector<TString> v_line;
+    while (getline(_file, _line)) 
+        v_line.push_back(_line);
+
+    _file.close();
+
+    auto _data = _FilesFromLines(v_line, _delimiter);
+
+    return _data;
+}
+
+vector< TString >           IOSvc::_LinesFromEOSFile(const TString &_name) 
+{
     vector< TString > _lines;
     TString           _fileName = _name;
-    if (_fileName.Contains("/eos") && !_name.Contains("root://eoslhcb.cern.ch/")) { _fileName = TString(fmt::format("root://eoslhcb.cern.ch/{0}", _fileName.Data())); }
+    if (_fileName.Contains("/eos") && !_name.Contains("root://eoslhcb.cern.ch/")) 
+    { 
+        _fileName = TString(fmt::format("root://eoslhcb.cern.ch/{0}", _fileName.Data())); 
+    }
+
     string buffer;
+
     // Use ROOT's TFile to load a remote filee (small one) into memory istream
     unique_ptr< TFile > ifile(TFile::Open(_fileName + "?filetype=raw"));
-    if (ifile && !ifile->IsZombie()) {
-        buffer.resize(ifile->GetSize());
-        ifile->ReadBuffer(&buffer[0], buffer.size());
-    } else {
-        MessageSvc::Error("Cannot open TFile as Raw", _fileName, "EXIT_FAILURE");
-    }
+    if ( ! ifile || ifile->IsZombie()) 
+        MessageSvc::Fatal("Cannot open TFile as Raw", _fileName);
+
+    buffer.resize(ifile->GetSize());
+    ifile->ReadBuffer(&buffer[0], buffer.size());
     TString _result(buffer);
+
     return TokenizeString(_result, "\n");
 }
 
-vector< vector< TString > > IOSvc::ParseFile(TString _name, TString _delimeter) {
-    vector< vector< TString > > _data;
-    if (_name.Contains("/eos")) {
-        vector< TString > _allLines = ParseFile(_name);
-        for (auto & _myline : _allLines) {
-            string _line = _myline.Data();
-            if (_line == "") continue;
-            if (((TString) _line).Contains("//")) continue;
-            vector< string > _vec;
-            boost::algorithm::split(_vec, _line, boost::is_any_of(_delimeter.Data()));
-            if (_vec.size() == 0) continue;
-            vector< TString > _svec;
-            for (auto & _v : _vec) _svec.push_back((TString) _v);
-            _data.push_back(_svec);
-        }
-        return _data;
+vector< vector <TString> > IOSvc::_FilesFromLines( const vector<TString> & _allLines, const TString &_delimiter)
+{
+    vector< vector <TString> > _data;
+
+    for (auto & _myline : _allLines) 
+    {
+        string _line = _myline.Data();
+        if (_line == "") 
+            continue;
+
+        if (((TString) _line).Contains("//")) 
+            continue;
+
+        vector< string > _vec;
+        boost::algorithm::split(_vec, _line, boost::is_any_of(_delimiter.Data()));
+        if (_vec.size() == 0) 
+            continue;
+
+        vector< TString > _svec;
+        for (auto & _v : _vec) 
+            _svec.push_back((TString) _v);
+
+        _data.push_back(_svec);
     }
-    if (IOSvc::ExistFile(_name)) {
-        ifstream _file(_name);
-        if (_file.is_open()) {
-            string _line = "";
-            while (getline(_file, _line)) {
-                if (_line == "") continue;
-                if (((TString) _line).Contains("//")) continue;
-                vector< string > _vec;
-                boost::algorithm::split(_vec, _line, boost::is_any_of(_delimeter.Data()));
-                if (_vec.size() == 0) continue;
-                vector< TString > _svec;
-                for (auto & _v : _vec) _svec.push_back((TString) _v);
-                _data.push_back(_svec);
-            }
-            _file.close();
-        } else
-            MessageSvc::Error("Unable to open file", _name, "EXIT_FAILURE");
-    } else
-        MessageSvc::Error("Not existing file", _name, "EXIT_FAILURE");
+
     return _data;
 }
+
+// -----------------------------------------------
 
 bool IOSvc::IsDir(TString _path) {
     if (_path.Contains("/eos/")) {
@@ -530,5 +585,3 @@ TString IOSvc::XRootDFileName(TString _fileName){
     }
     return _fileName;
 };
-
-#endif

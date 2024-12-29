@@ -20,9 +20,11 @@ class CutHolder : public TObject {
     CutHolder();
 
     /**
-     * \brief Constructor with WeightHolder and TString
+     * @brief               Constructor with WeightHolder and TString
+     * @param _configHolder Instance of ConfigHolder, all the configuration will be taken from it
+     * @param _cutOption    String with extra configuration, needed for Run1/2, not for Run3
      */
-    CutHolder(const ConfigHolder & _configHolder, TString _cutOption);
+    CutHolder(const ConfigHolder & _configHolder, const TString &_cutOption);
 
     /**
      * \brief Copy constructor

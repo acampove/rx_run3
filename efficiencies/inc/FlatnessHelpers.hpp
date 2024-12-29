@@ -118,7 +118,9 @@ struct Number {
         return Number(value, err, _name);
     }
     static Number Product(const Number & a, double scale) {
-        TString _name = TString("( ") + to_string(scale) + " * " + a.Name() + TString(" )");
+        auto str_scale = TString(to_string(scale).c_str());
+        TString _name  = TString("( ") + str_scale + " * " + a.Name() + TString(" )");
+
         return Number(a.Val() * scale, a.Err() * scale, _name);
     }
     static Number Product(const Number & a, const Number & b, double corr = 0.) {

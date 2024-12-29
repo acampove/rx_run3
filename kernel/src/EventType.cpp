@@ -13,7 +13,9 @@
 #include "ParserSvc.hpp"
 
 #include <iostream>
+#include <map>
 
+#include "TString.h"
 #include "TDirectory.h"
 #include "TH1.h"
 #include "TString.h"
@@ -31,24 +33,64 @@ ClassImp(EventType)
     if (m_debug) MessageSvc::Debug("EventType", (TString) "Default");
 }
 
+EventType::EventType(
+        const ConfigHolder &_conf, 
+        const TString      &_cut_opt,
+        const TString      &_wgt_opt,
+        const TString      &_tup_opt) : ConfigHolder(_conf), 
+    m_cutHolder   (_conf, _cut_opt), 
+    m_weightHolder(_conf, _wgt_opt), 
+    m_tupleHolder (_conf, _tup_opt) 
+{
+    MessageSvc::Debug("EventType", "Using map constructor");
+}
+
 EventType::EventType(TString _project, TString _ana, TString _sample, TString _q2bin, TString _year, TString _polarity, TString _trigger, TString _brem, TString _track, TString _cutOption, TString _weightOption, TString _tupleOption, bool _init)
-    : ConfigHolder(hash_project(_project), hash_analysis(_ana), _sample, hash_q2bin(_q2bin), hash_year(_year), hash_polarity(_polarity), hash_trigger(_trigger), hash_brem(_brem), hash_track(_track))
-    , m_cutHolder(*this, _cutOption)
+    : ConfigHolder(
+            hash_project(_project), 
+            hash_analysis(_ana), 
+            _sample, 
+            hash_q2bin(_q2bin), 
+            hash_year(_year), 
+            hash_polarity(_polarity), 
+            hash_trigger(_trigger), 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            hash_brem(_brem), 
+            hash_track(_track))
+    , m_cutHolder(   *this, _cutOption)
     , m_weightHolder(*this, _weightOption)
-    , m_tupleHolder(*this, _tupleOption) {
-    if (SettingDef::debug.Contains("ET")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("EventType", (TString) "TString");
-    if (_init) Init();
+    , m_tupleHolder( *this, _tupleOption) 
+{
+    MessageSvc::Debug("EventType", "Using string constructor");
+
+    if (_init) 
+        Init();
 }
 
 EventType::EventType(Prj _project, Analysis _ana, TString _sample, Q2Bin _q2bin, Year _year, Polarity _polarity, Trigger _trigger, Brem _brem, Track _track, TString _cutOption, TString _weightOption, TString _tupleOption, bool _init)
-    : ConfigHolder(_project, _ana, _sample, _q2bin, _year, _polarity, _trigger, _brem, _track)
+    : ConfigHolder(
+            _project, 
+            _ana, 
+            _sample, 
+            _q2bin, 
+            _year, 
+            _polarity, 
+            _trigger, 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            _brem, 
+            _track)
     , m_cutHolder(*this, _cutOption)
     , m_weightHolder(*this, _weightOption)
     , m_tupleHolder(*this, _tupleOption) {
-    if (SettingDef::debug.Contains("ET")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("EventType", (TString) "Enumerator");
-    if (_init) Init();
+
+    if (SettingDef::debug.Contains("ET")) 
+        SetDebug(true);
+
+    if (m_debug) 
+        MessageSvc::Debug("EventType", (TString) "Enumerator");
+
+    if (_init) 
+        Init();
 }
 
 EventType::EventType(const ConfigHolder & _configHolder, const CutHolder & _cutHolder, const WeightHolder & _weightHolder, const TupleHolder & _tupleHolder, bool _init)
@@ -113,33 +155,37 @@ ostream & operator<<(ostream & os, const EventType & _eventType) {
     return os;
 }
 
-void EventType::Init(bool _force, bool _tuple) {
-    if (m_cutHolder.IsOption("PIDMeerkat") && !m_weightHolder.IsOption("Meerkat")) m_weightHolder.SetOption(m_weightHolder.Option() + SettingDef::separator + "Meerkat");
-    if (_force || !IsInitialized()) {
-        if (m_tupleHolder.Option() != "") {
-            MessageSvc::Line();
-            MessageSvc::Info(Color::Cyan, "EventType", (TString) "Initialize ...");
-            PrintInline();
-            Check();
-            if (SettingDef::Tuple::tupleName == "MCT") { m_weightHolder.SetOptionMCT(); }
-            if (((SettingDef::Tuple::tupleName != "LT") && !SettingDef::Tuple::tupleName.Contains("Lumi"))) {
-                m_cutHolder.Init();
-                m_weightHolder.Init();
-            }
-            if (_tuple) {
-                m_tupleHolder.Init(_force);
-                if (GetTupleReader().GetAddTuple()) {
-                    if (SettingDef::Tuple::branches && (SettingDef::Tuple::branchList.size() != 0)) {
-                        MessageSvc::Info("GetBranches", (TString) GetTuple()->GetName(), "YAML", to_string(SettingDef::Tuple::branchList.size()));
-                        SetBranches(SettingDef::Tuple::branchList);
-                    }
-                }
-            }
-            m_isInitialized = true;
-            MessageSvc::Line();
-        }
+void EventType::Init(const bool &_force_initialization, const bool &_initialize_tuple_holder) 
+{
+    if (!_force_initialization && IsInitialized()) 
+        return;
+
+    if (m_cutHolder.IsOption("PIDMeerkat") && !m_weightHolder.IsOption("Meerkat")) 
+        m_weightHolder.SetOption(m_weightHolder.Option() + SettingDef::separator + "Meerkat");
+
+    if (m_tupleHolder.Option() == "") 
+        return;
+
+    MessageSvc::Line();
+    MessageSvc::Info("Init", "EventType", "Initializing EventType"); 
+    PrintInline();
+    Check();
+
+    if (SettingDef::Tuple::tupleName == "MCT") 
+        m_weightHolder.SetOptionMCT(); 
+
+    auto is_lumi_tree = (SettingDef::Tuple::tupleName != "LT") && !SettingDef::Tuple::tupleName.Contains("Lumi");
+    if ( is_lumi_tree ) 
+    {
+        m_cutHolder.Init();
+        m_weightHolder.Init();
     }
-    return;
+
+    if (_initialize_tuple_holder) 
+        m_tupleHolder.Init(_force_initialization);
+
+    m_isInitialized = true;
+    MessageSvc::Line();
 }
 
 void EventType::Check(ConfigHolder & _configHolder, CutHolder & _cutHolder, WeightHolder & _weightHolder) {

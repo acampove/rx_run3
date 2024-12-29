@@ -1,9 +1,8 @@
-#ifndef CONSTDEF_HPP
-#define CONSTDEF_HPP
+#pragma once
 
 #include "EnumeratorSvc.hpp"
 
-#include <fmt_ostream.h>
+#include "fmt_ostream.h"
 #include <map>
 #include <utility>
 
@@ -360,4 +359,3 @@ namespace PDG {
     }   // namespace Const
 }   // namespace PDG
 
-#endif

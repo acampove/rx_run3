@@ -1,8 +1,6 @@
-#ifndef ENUMERATORSVC_CPP
-#define ENUMERATORSVC_CPP
-
 #include "EnumeratorSvc.hpp"
 #include "MessageSvc.hpp"
+#include <ranges>
 
 #include "TString.h"
 #include <stdexcept>
@@ -215,19 +213,21 @@ TString pyQ2Bin::to_tex(const Q2Bin & _enum) {
 }
 
 //======================== Years
-const Year pyYear::hash_year(const TString & _string) {
-    if (_string == "") return Year::All;
-    if (_string == "11") return Year::Y2011;
-    if (_string == "12") return Year::Y2012;
-    if (_string == "R1") return Year::Run1;
-    if (_string == "15") return Year::Y2015;
-    if (_string == "16") return Year::Y2016;
+const Year pyYear::hash_year(const TString & _string) 
+{
+    if (_string ==     "") return Year::All;
+    if (_string ==   "11") return Year::Y2011;
+    if (_string ==   "12") return Year::Y2012;
+    if (_string ==   "R1") return Year::Run1;
+    if (_string ==   "15") return Year::Y2015;
+    if (_string ==   "16") return Year::Y2016;
     if (_string == "R2p1") return Year::Run2p1;
-    if (_string == "17") return Year::Y2017;
-    if (_string == "18") return Year::Y2018;
+    if (_string ==   "17") return Year::Y2017;
+    if (_string ==   "18") return Year::Y2018;
     if (_string == "R2p2") return Year::Run2p2;
-    if (_string == "R2") return Year::Run2;
-    if (_string == "24")   return Year::Y2024;
+    if (_string ==   "R2") return Year::Run2;
+    // ------------------------------------------------
+    if (_string ==   "24") return Year::Y2024;
     if (_string == "24b1") return Year::Y2024_Block1;
     if (_string == "24b2") return Year::Y2024_Block2;
     if (_string == "24b3") return Year::Y2024_Block3;
@@ -236,9 +236,26 @@ const Year pyYear::hash_year(const TString & _string) {
     if (_string == "24b6") return Year::Y2024_Block6;
     if (_string == "24b7") return Year::Y2024_Block7;
     if (_string == "24b8") return Year::Y2024_Block8;
-    MessageSvc::Error("EnumeratorSvc", (TString) "hash_year(\"", _string, "\") failed", "EXIT_FAILURE");
+
+    MessageSvc::Fatal(TString("EnumeratorSvc"), "hash_year(\"", _string, "\") failed");
+
     return Year::Error;
 }
+
+const bool pyYear::is_run3(const TString &_year)
+{
+    std::vector<TString> v_year_r12 = {"11", "12", "R1", "15", "16", "R2p1", "17", "18", "R2p2", "R2"};
+    std::vector<TString> v_year_rn3 = {"24b1", "24b2", "24b3", "24b4", "24b5", "24b6", "24b7", "24b8", "24"};
+
+    auto is_run12 = std::ranges::find(v_year_r12, _year) != v_year_r12.end();
+    auto is_run3  = std::ranges::find(v_year_rn3, _year) != v_year_rn3.end();
+
+    if (!is_run12 && !is_run3)
+        MessageSvc::Fatal(TString("is_run3"), "Year ", _year, " does not belong to either Run1/2/3");
+
+    return is_run3;
+}
+
 TString pyYear::to_string(const Year & _enum) {
     switch (_enum) {
         case Year::All: return ""; break;
@@ -324,7 +341,8 @@ const Trigger pyTrigger::hash_trigger(const TString & _string) {
     if (_string == "L0I") return Trigger::L0I;
     if (_string == "L0L") return Trigger::L0L;
     if (_string == "L0H") return Trigger::L0H;
-    MessageSvc::Error("EnumeratorSvc", (TString) "hash_trigger(\"", _string, "\") failed", "EXIT_FAILURE");
+    MessageSvc::Fatal(TString("EnumeratorSvc"), "hash_trigger(\"", _string, "\") failed");
+
     return Trigger::Error;
 }
 TString pyTrigger::to_string(const Trigger & _enum) {
@@ -516,4 +534,3 @@ TString pyRatioType::to_string(const RatioType & _enum) {
     MessageSvc::Error("EnumeratorSvc", (TString) "to_string RatioType failed", "EXIT_FAILURE");
     return "Error";
 }
-#endif

@@ -30,7 +30,7 @@ class IOSvc {
     static int runCommand( TString command );
 
 
-    static TString GetDataDir(TString _option);
+    static TString GetDataDir(const TString &_option);
 
     static TString GetIODir(TString _option);
 
@@ -66,9 +66,19 @@ class IOSvc {
 
     static TString GetWeightDir(TString _option);
 
+    /**
+     * @brief Checks if path is a file
+     * @param _filePath Path to file
+     * @return True if it is an existing file, False otherwise
+    */
     static bool IsFile(TString _filePath);
 
-    static bool ExistFile(TString _name);
+    /**
+     * @brief Check if file exists in current filesystem
+     * @param _name Path to file
+     * @return True or False
+    */
+    static bool ExistFile(const TString &_name);
 
     static void CopyFile(TString _input, TString _output);
 
@@ -79,13 +89,16 @@ class IOSvc {
     static void CloseFile(TFile * _file);
 
     /**
-     * \brief      Reads lines from a Raw File ( can be placed also on /eos/...)
-     * @param[in]  _name  The name of the file, if it has /eos , we do append root://eoslhcb.cern.ch//PATH
-     * @return    vector<TString> being the line-by-line outcome
-     */
-    static vector< TString > ParseFile(TString _name);
+     * @brief Parses a text file with list of ROOT files
+     *
+     * @param _name Path to text file containing list of files
+     * @param _delimiter 
+     *
+     * @return 
+    */
 
-    static vector< vector< TString > > ParseFile(TString _name, TString _delimeter);
+    static vector< vector < TString > > ParseFile(const TString &_name, const TString &_delimiter);
+    // -----------------------------------
 
     // Check If a given string is associated to a Directory
     static bool IsDir(TString _path);
@@ -114,6 +127,12 @@ class IOSvc {
     static TString XRootDFileName(TString _fileName);
 
   private:
+    static TString                      _GetPAPTupleDir  (const ConfigHolder &_configHolder);
+    static vector< TString >            _LinesFromEOSFile(const TString &_name);
+    static vector< vector < TString > > _ParseEOSFile    (const TString &_name             , const TString &_delimiter);
+    static vector< vector < TString > > _ParseLocalFile  (const TString &_name             , const TString &_delimeter);
+    static vector< vector < TString > > _FilesFromLines  (const vector<TString> & _allLines, const TString &_delimiter);
+
     static const bool m_debug = false;
 };
 

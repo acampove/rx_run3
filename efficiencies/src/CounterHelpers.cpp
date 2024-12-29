@@ -1,6 +1,3 @@
-#ifndef COUNTERHELPERS_CPP
-#define COUNTERHELPERS_CPP
-
 #include "CounterHelpers.hpp"
 #include "CutDefRX.hpp"
 #include "RXDataPlayer.hpp"
@@ -158,5 +155,3 @@ CounterWeights CounterHelpers::ProcessMCDecayTuple(const ConfigHolder & _baseCon
     MCDecayTuple.Close();
     return _MCDECAY_COUNTER;
 }
-
-#endif

@@ -1,62 +1,319 @@
-#ifndef MESSAGESVC_CPP
-#define MESSAGESVC_CPP
-
 #include "MessageSvc.hpp"
+#include "TSystem.h"
+#include <cstdlib>
 
 bool MessageSvc::SILENCED = false;
 
+// -----------------------------------------------------------------------
+MessageSvc::MessageSvc(const google::LogSeverity &glevel)
+{
+    google::InitGoogleLogging("");
+    google::SetStderrLogging(glevel);
+    google::InstallPrefixFormatter(&MessageSvc::PrefixFormatter);
+}
 
-void MessageSvc::Debug(TString _func, TString _string1 , TString _string2 , TString _string3 , TString _string4 , TString _string5 , TString _string6 , TString _string7 , TString _string8 ) {
-    cout << YELLOW;
-    Print(cout, Message("DEBUG"), _func, _string1, _string2, _string3, _string4, _string5, _string6, _string7, _string8);
-    cout << RESET;
-};
+MessageSvc::~MessageSvc()
+{
+    google::ShutdownGoogleLogging();
+}
 
+google::LogSeverity MessageSvc::LevelFromInt(const short &level)
+{
+    if (level < 0)
+        return google::INFO;
 
-void MessageSvc::Error(TString _func, TString _string1 , TString _string2 , TString _string3 , TString _string4 , TString _string5 , TString _string6 , TString _string7 , TString _string8 ) {
-    cerr << RED;
-    cerr << endl;
-    Print(cerr, Message("ERROR"), _func, _string1, _string2, _string3, _string4, _string5, _string6, _string7, _string8);
-    cerr << RESET;
-    if ((_string1 == "logic_error") || (_string2 == "logic_error") || (_string3 == "logic_error") || (_string4 == "logic_error") || (_string5 == "logic_error") || (_string6 == "logic_error")) { throw logic_error(_func); }
-    if ((_string1 == "EXIT_FAILURE") || (_string2 == "EXIT_FAILURE") || (_string3 == "EXIT_FAILURE") || (_string4 == "EXIT_FAILURE") || (_string5 == "EXIT_FAILURE") || (_string6 == "EXIT_FAILURE")) exit(EXIT_FAILURE);
-};
-void MessageSvc::Error(int _expression, TString _func, TString _string1 , TString _string2 , TString _string3 , TString _string4 , TString _string5 , TString _string6 , TString _string7 , TString _string8 ) {
-    if (_expression) {
-        Error(_func, _string1, _string2, _string3, _string4, _string5, _string6, _string7, _string8);
-        if ((_string1 == "assert") || (_string2 == "assert") || (_string3 == "assert") || (_string4 == "assert") || (_string5 == "assert") || (_string6 == "assert")) assert(_expression);
+    if (level > 3) 
+        LOG(FATAL) << "Invalid logging level " << level;
+
+    switch (level)
+    {
+        case 0:
+            return google::INFO;
+        case 1:
+            return google::WARNING;
+        case 2:
+            return google::ERROR;
+        case 3:
+            return google::FATAL;
     }
-};
+}
 
-void MessageSvc::Info(Color _COLOR, TString _func, TString _string1 , TString _string2 , TString _string3 , TString _string4 , TString _string5 , TString _string6 , TString _string7 , TString _string8 ) {
-    if( !MessageSvc::SILENCED){
-        cout << color_to_string(_COLOR);
-        Print(cout, Message("INFO"), _func, _string1, _string2, _string3, _string4, _string5, _string6, _string7, _string8);
-        cout << RESET;
+MessageSvc& MessageSvc::Initialize(const short &level)
+{
+    if (level < 0)
+    {
+        FLAGS_v           = std::abs(level); 
+        FLAGS_logbufsecs  = 0;
     }
-};
-void MessageSvc::Info(TString _func, TString _string1 , TString _string2 , TString _string3 , TString _string4 , TString _string5 , TString _string6 , TString _string7 , TString _string8 ) {
-    if( !MessageSvc::SILENCED){
 
-        cout << GREEN;
-        Print(cout, Message("INFO"), _func, _string1, _string2, _string3, _string4, _string5, _string6, _string7, _string8);
-        cout << RESET;
+    auto glevel = MessageSvc::LevelFromInt(level);
+
+    static MessageSvc msg(glevel);
+    return msg;
+}
+// -----------------------------------------------------------------------
+void MessageSvc::PrefixFormatter(std::ostream& stream, const google::LogMessage& message, void* /*data*/) 
+{
+    std::string name = google::GetLogSeverityName(message.severity());
+    auto color       = ColorFromLevel(name);
+
+    name.insert(name.begin(), 10 - name.size(), ' ');
+
+    stream << color << "["  << name;
+}
+
+std::string MessageSvc::ColorFromLevel(const std::string &level)
+{
+    if (level == "INFO")
+        return "\033[1;34m";
+
+    if (level == "WARNING")
+        return "\033[1;33m";
+
+    if (level == "ERROR")
+        return "\033[1;31m";
+
+    if (level == "FATAL")
+        return "\033[1;31m";
+
+    return "\033[0m";
+}
+
+// ---------------------------------------------------
+
+void MessageSvc::Debug(
+        TString  _func, 
+        TString  _string1 , 
+        TString  _string2 , 
+        TString  _string3 , 
+        TString  _string4 , 
+        TString  _string5 , 
+        TString  _string6 , 
+        TString  _string7 , 
+        TString  _string8 ,
+        const char *file  ,
+        const int  &line  ) 
+{
+    auto file_name = (TString) gSystem->BaseName(file);
+    auto message   = _string1 + _string2 + _string3 + _string4 + _string5 + _string6 + _string7 + _string8;
+
+    VLOG(1) << file_name << ":" << _func << ":" << line << "]" << "\033[0m" << "  " << message;
+};
+
+// -----------------------------------
+
+void MessageSvc::Debug(
+            TString        _func, 
+            const TObject  * robj,
+            TString        _option,
+            const char    * file,
+            const int     & line)
+{
+    auto file_name  = (TString) gSystem->BaseName(file);
+
+    VLOG(1) << file_name << ":" << _func << ":" << line << "]" << "\033[0m";
+    if (robj != nullptr) 
+    {
+        if (_option == "v") 
+            robj->Print("v");
+        else
+            robj->Print("");
     }
+    else
+        LOG(ERROR) << "Object is nullptr";
 };
-void MessageSvc::Info(TString _func, bool _property) {
-    if( !MessageSvc::SILENCED){
-        cout << GREEN;
-        Print(cout, Message("INFO"), _func, TString(_property ? "True" : "False"));
-        cout << RESET;
+
+// --------------------------------------------
+void MessageSvc::Info(
+        Color    _COLOR, 
+        TString  _func, 
+        TString  _string1 , 
+        TString  _string2 , 
+        TString  _string3 , 
+        TString  _string4 , 
+        TString  _string5 , 
+        TString  _string6 , 
+        TString  _string7 , 
+        TString  _string8 ,
+        const char *file  ,
+        const int  &line  ) 
+{
+    auto file_name = (TString) gSystem->BaseName(file);
+    auto message   = _string1 + _string2 + _string3 + _string4 + _string5 + _string6 + _string7 + _string8;
+
+    LOG(INFO) << file_name << ":" << _func << ":" << line << "]" << "\033[0m" << "  " << message;
+};
+
+void MessageSvc::Info(
+        TString  _func, 
+        TString  _string1 , 
+        TString  _string2 , 
+        TString  _string3 , 
+        TString  _string4 , 
+        TString  _string5 , 
+        TString  _string6 , 
+        TString  _string7 , 
+        TString  _string8 , 
+        const char *file  ,
+        const int  &line  ) 
+{
+    auto file_name = (TString) gSystem->BaseName(file);
+    auto message   = _string1 + _string2 + _string3 + _string4 + _string5 + _string6 + _string7 + _string8;
+
+    LOG(INFO) << file_name << ":" << _func << ":" << line << "]" << "\033[0m" << "  " << message;
+};
+
+
+void MessageSvc::Info(
+            TString        _func, 
+            const TObject * robj,
+            TString        _option,
+            const char    * file,
+            const int     & line)
+{
+    auto file_name  = (TString) gSystem->BaseName(file);
+
+    LOG(INFO) << file_name << ":" << _func << ":" << line << "]" << "\033[0m";
+    if (robj != nullptr) 
+    {
+        if (_option == "v") 
+            robj->Print("v");
+        else
+            robj->Print("");
     }
+    else
+        LOG(ERROR) << "Object is nullptr";
+};
+// --------------------------------------------
+
+void MessageSvc::Warning(
+        TString  _func, 
+        TString  _string1 , 
+        TString  _string2 , 
+        TString  _string3 , 
+        TString  _string4 , 
+        TString  _string5 , 
+        TString  _string6 , 
+        TString  _string7 , 
+        TString  _string8 , 
+        const char *file  ,
+        const int  &line  ) 
+{
+    auto file_name = (TString) gSystem->BaseName(file);
+    auto message   = _string1 + _string2 + _string3 + _string4 + _string5 + _string6 + _string7 + _string8;
+
+    LOG(WARNING) << file_name << ":" << _func << ":" << line << "]" << "\033[0m" << "  " << message;
 };
 
+void MessageSvc::Warning(
+            TString        _func, 
+            const TObject * robj,
+            TString        _option,
+            const char    * file,
+            const int     & line)
+{
+    auto file_name  = (TString) gSystem->BaseName(file);
 
-void MessageSvc::Warning(TString _func, TString _string1 , TString _string2 , TString _string3 , TString _string4 , TString _string5 , TString _string6 , TString _string7 , TString _string8 ) {
-    cout << MAGENTA;
-    Print(cout, Message("WARNING"), _func, _string1, _string2, _string3, _string4, _string5, _string6, _string7, _string8);
-    cout << RESET;
+    LOG(WARNING) << file_name << ":" << _func << ":" << line << "]" << "\033[0m";
+    if (robj != nullptr) 
+    {
+        if (_option == "v") 
+            robj->Print("v");
+        else
+            robj->Print("");
+    }
+    else
+        LOG(ERROR) << "Object is nullptr";
 };
+// ---------------------------------------------------
+
+void MessageSvc::Error(
+        TString  _func, 
+        TString  _string1 , 
+        TString  _string2 , 
+        TString  _string3 , 
+        TString  _string4 , 
+        TString  _string5 , 
+        TString  _string6 , 
+        TString  _string7 , 
+        TString  _string8 , 
+        const char *file  ,
+        const int  &line  ) 
+{
+    auto file_name = (TString) gSystem->BaseName(file);
+    auto message   = _string1 + _string2 + _string3 + _string4 + _string5 + _string6 + _string7 + _string8;
+
+    LOG(ERROR) << file_name << ":" << _func << ":" << line << "]" << "\033[0m" << "  " << message;
+};
+
+void MessageSvc::Error(
+        bool     _expression, 
+        TString  _func, 
+        TString  _string1 , 
+        TString  _string2 , 
+        TString  _string3 , 
+        TString  _string4 , 
+        TString  _string5 , 
+        TString  _string6 , 
+        TString  _string7 , 
+        TString  _string8 ,
+        const char *file  ,
+        const int  &line  ) 
+{
+    if (! _expression ) 
+        return;
+
+    auto file_name = (TString) gSystem->BaseName(file);
+    auto message   = _string1 + _string2 + _string3 + _string4 + _string5 + _string6 + _string7 + _string8;
+
+    LOG(ERROR) << file_name << ":" << _func << ":" << line << "]" << "\033[0m" << "  " << message;
+};
+
+// ---------------------------------------------------
+
+void MessageSvc::Fatal(
+        const TString  &_func, 
+        TString  _string1 , 
+        TString  _string2 , 
+        TString  _string3 , 
+        TString  _string4 , 
+        TString  _string5 , 
+        TString  _string6 , 
+        TString  _string7 , 
+        TString  _string8 , 
+        const char *file  ,
+        const int  &line  ) 
+{
+    auto file_name = (TString) gSystem->BaseName(file);
+    auto message   = _string1 + _string2 + _string3 + _string4 + _string5 + _string6 + _string7 + _string8;
+
+    LOG(FATAL) << file_name << " f1:" << _func << ":" << line << "]" << "\033[0m" << "  " << message;
+};
+
+void MessageSvc::Fatal(
+        const bool &_expression, 
+        TString  _func, 
+        TString  _string1 , 
+        TString  _string2 , 
+        TString  _string3 , 
+        TString  _string4 , 
+        TString  _string5 , 
+        TString  _string6 , 
+        TString  _string7 , 
+        TString  _string8 ,
+        const char *file  ,
+        const int  &line  ) 
+{
+    if (! _expression ) 
+        return;
+
+    auto file_name = (TString) gSystem->BaseName(file);
+    auto message   = _string1 + _string2 + _string3 + _string4 + _string5 + _string6 + _string7 + _string8;
+
+    LOG(FATAL) << file_name << " f2:" << _func << ":" << line << "]" << "\033[0m" << "  " << message;
+};
+
+// ---------------------------------------------------
 
 void MessageSvc::Print(TString _string1, TString _string2 , TString _string3 , TString _string4 , TString _string5 , TString _string6 , TString _string7 , TString _string8 , TString _string9 ) { Print(cout, _string1, _string2, _string3, _string4, _string5, _string6, _string7, _string8, _string9); };
 void MessageSvc::Print(ostream & os, TString _string1, TString _string2 , TString _string3 , TString _string4 , TString _string5 , TString _string6 , TString _string7 , TString _string8 , TString _string9 , TString _string10 ) {
@@ -171,4 +428,3 @@ TString MessageSvc::color_to_string(const Color & _enum) {
     return "";
 };
 
-#endif 

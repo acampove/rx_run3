@@ -1,5 +1,5 @@
-#ifndef EFFICIENCYFORFITHANDLER_HPP
-#define EFFICIENCYFORFITHANDLER_HPP
+#pragma once
+
 #include "EnumeratorSvc.hpp"
 
 namespace YAML{
@@ -130,5 +130,3 @@ class EfficiencyForFitHandler{
 EfficiencyForFitHandler GetEffContainer( const YAML::Node & _node);
 
 EfficiencyForFitHandler GetEffContainer( const TString & yaml_ConfigFile);
-
-#endif // !EFFICIENCYFORFITHANDLER_HPP

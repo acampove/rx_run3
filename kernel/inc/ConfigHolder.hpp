@@ -1,9 +1,11 @@
-#ifndef CONFIGHOLDER_HPP
-#define CONFIGHOLDER_HPP
+#pragma once
 
 #include "EnumeratorSvc.hpp"
+#include "SettingDef.hpp"
 
 #include <iostream>
+
+#include "TString.h"
 
 using namespace RooFit;
 
@@ -22,11 +24,27 @@ using namespace RooFit;
 */
 
 /**
- * \class ConfigHolder
- * \brief Config info
+ * @file ConfigHolder.hpp 
+ * @brief Header file for the Kernel module
+ * 
+ * This file contains the ConfigHolder class, which stores configuration 
  */
-class ConfigHolder : public TObject {
 
+/**
+ * @defgroup Kernel 
+ * @brief A module with basic functionlities to handle data
+ *
+ * @{
+ */
+
+/**
+ * @class ConfigHolder 
+ * @brief A simple container of configurations 
+ * 
+ */
+
+class ConfigHolder : public TObject 
+{
   public:
     /**
      * \brief Default constructor
@@ -34,24 +52,47 @@ class ConfigHolder : public TObject {
     ConfigHolder();
 
     /**
+     * @brief Getter method, used to retrieve option by name
+     */
+    TString GetConfig(const TString &opt_name) const;
+
+    /**
      * \brief Constructor with Enumerator
      */
-    ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem, const Track & _track);
-
-    ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem);   // TO BE DROPPED
-
-    ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const TriggerConf & _triggerConf, const Brem & _brem, const Track & _track);
+    ConfigHolder(
+            const Prj         & _project, 
+            const Analysis    & _ana, 
+            const TString     & _sample, 
+            const Q2Bin       & _q2bin, 
+            const Year        & _year, 
+            const Polarity    & _polarity, 
+            const Trigger     & _trigger, 
+            const TriggerConf & _triggerConf = hash_triggerconf(SettingDef::Config::triggerConf), 
+            const Brem        & _brem        = hash_brem(SettingDef::Config::brem), 
+            const Track       & _track       = Track::All);
     
-    ConfigHolder( const TString & _project,
-                  const TString & _ana,
-                  TString _sample="",
-                  const TString & _q2bin="global", 
-                  const TString & _year="global", 
-                  const TString & _polarity="global",
-                  const TString & _trigger="global",
-                  const TString & _triggerConf="global",
-                  const TString & _brem="global", 
-                  const TString & _track="global");
+    /**
+     * \brief Constructor with TString 
+     */
+    ConfigHolder( 
+            const TString     & _project,
+            const TString     & _ana,
+            const TString     & _sample      ="",
+            const TString     & _q2bin       ="global", 
+            const TString     & _year        ="global", 
+            const TString     & _polarity    ="global",
+            const TString     & _trigger     ="global",
+            const TString     & _triggerConf ="global",
+            const TString     & _brem        ="global", 
+            const TString     & _track       ="global");
+
+    /**
+     * @brief Constructor adding configuration through a map, specifying:\n
+     * name -> setting \n
+     * Meant to be used in python, where these pairs can be loaded from a YAML file
+     */
+    ConfigHolder(const std::map<TString, TString> &_conf);
+
     /**
      * \brief Copy constructor
      */
@@ -61,7 +102,8 @@ class ConfigHolder : public TObject {
      * \brief Equality checkers
      */
     bool operator==(const ConfigHolder & _configHolder) const {
-        return ((GetProject() == _configHolder.GetProject()) &&           //
+        return (
+                (GetProject() == _configHolder.GetProject()) &&           //
                 (GetAna() == _configHolder.GetAna()) &&                   //
                 (GetSample() == _configHolder.GetSample()) &&             //
                 (GetQ2bin() == _configHolder.GetQ2bin()) &&               //
@@ -90,6 +132,16 @@ class ConfigHolder : public TObject {
     const TriggerConf GetTriggerConf() const { return m_triggerConf; };
     const Brem        GetBrem() const { return m_brem; };
     const Track       GetTrack() const { return m_track; };
+    const TString     GetHlt2() const { return m_hlt2; };
+    /**
+     * @brief Will return directory where path to data is, this should look like\n\n
+     * /some/path/to/data/v1\n
+     */
+    const TString GetDataDir() const {return m_data_dir;};
+    /**
+     * @brief Will return tree name, e.g. DecayTree, MCDecayTree, etc which lives in the samples
+     */
+    const TString GetTreeName() const {return m_tree_name;};
 
     // void SetProject(const Prj & _project) { m_project = _project; };
     // void SetAna(const Analysis & _ana) { m_ana = _ana; };
@@ -111,6 +163,7 @@ class ConfigHolder : public TObject {
     const TString GetStringTriggerConf() const { return to_string(m_triggerConf); };
     const TString GetStringBrem() const { return to_string(m_brem); };
     const TString GetStringTrack() const { return to_string(m_track); };
+
 
     const TNamed GetNamedProject() const { return TNamed((TString) "Project", to_string(m_project)); };
     const TNamed GetNamedAna() const { return TNamed((TString) "Analysis", to_string(m_ana)); };
@@ -191,10 +244,19 @@ class ConfigHolder : public TObject {
 
     void PrintInline() const noexcept;
 
+    /**
+     * @brief Will check if the year used in config belongs to Run3 or not
+     */
+    const bool IsRun3() const;
+
   protected:                     // Protected : who inherits from ConfigHolder EventType / FitConfiguration / CutHolder /)
     Prj         m_project;       // Project definition [RKst,RK,RPhi]
     Analysis    m_ana;           // Ana definition (MM,EE)
     TString     m_sample;        // Tuple Name in TTree after processing Bd2KstEE, etc...
+    /**
+     * @brief Name of HLT2 trigger, used only for run3 and needed to find samples
+     */
+    TString     m_hlt2;          //
     Q2Bin       m_q2bin;         // Q2 bin name [low,central,high,jps,psi]
     Year        m_year;          // Data taking year [11,12,R1,15,15,R2]
     Polarity    m_polarity;      // Magnet Polarity [MD,MU]
@@ -202,6 +264,33 @@ class ConfigHolder : public TObject {
     TriggerConf m_triggerConf;   // Trigger types [Inclusive,Exclusive]
     Brem        m_brem;          // Brem Category [0G,1G,2G]
     Track       m_track;         // Track Type [LL,DD]
+    /**
+     * @brief Path to directory where data is, this is the path to the version directory
+     */
+    TString     m_data_dir;
+
+    /**
+     * @brief Tree name, in the ROOT files
+     */
+    TString     m_tree_name;
+
+    /**
+     * @brief Option for CutHolder, used to be second arg in constructor. In Run3 will be by default empty and
+     * taken from CutHolder
+     */
+    TString     m_cut_opt;
+
+    /**
+     * @brief Option for WeightHolder, used to be second arg in constructor. In Run3 will be by default empty and
+     * taken from CutHolder
+     */
+    TString     m_wgt_opt;
+
+    /**
+     * @brief Option for TupleHolder, used to be second arg in constructor. In Run3 will be by default empty and
+     * taken from CutHolder
+     */
+    TString     m_tup_opt;
 
   private:
     /**
@@ -225,5 +314,3 @@ class ConfigHolder : public TObject {
 ostream & operator<<(ostream & os, const ConfigHolder & _configHolder);
 
 extern void ResetSettingDefConfig(ConfigHolder _config) noexcept;
-
-#endif

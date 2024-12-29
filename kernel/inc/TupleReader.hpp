@@ -1,5 +1,4 @@
-#ifndef TUPLEREADER_HPP
-#define TUPLEREADER_HPP
+#pragma once
 
 #include "EnumeratorSvc.hpp"
 #include "HelperSvc.hpp"
@@ -21,7 +20,6 @@
 #include "TTreeReaderArray.h"
 #include "TTreeReaderValue.h"
 
-//#include "ROOT/RMakeUnique.hxx"
 #include <ROOT/RDataFrame.hxx>
 
 /**
@@ -45,7 +43,7 @@ class TupleReader {
     /**
      * \brief Constructor with TString
      */
-    TupleReader(TString _tupleName, TString _fileName = "");
+    TupleReader(const TString &_tupleName, const TString &_fileName = "");
 
     /**
      * \brief Constructor with TChain
@@ -129,16 +127,16 @@ class TupleReader {
     vector< vector< double > > GetVariableVector(vector< TString > & _variableNames, TCut _cut = "(1)", int _nCores = 1);
 
     /**
-     * Add tuple
-     * @param  _tuple [description]
+     * @brief Will take a TChain, unpack the paths to files and add it to current instance's TChain
+     * @param  _tuple Pointer to TChain, whose files need to be appended to m_tuple TChain 
      */
     void AddTuple(TChain * _tuple);
 
     /**
-     * Add file
-     * @param  _fileName [description]
+     * @brief Will take path to ROOT file and add it to member TChain if checks passed
+     * @param  Path to ROOT file 
      */
-    bool AddFile(TString _fileName);
+    bool AddFile(const TString &_fileName);
 
     /**
      * Add file
@@ -148,10 +146,10 @@ class TupleReader {
     bool AddFile(TString _fileName, TString _tupleName);
 
     /**
-     * Add files
-     * @param  _fileName [description]
+     * @brief Takes wildcard to ROOT files, it will be globed and the files will be added to member TChain 
+     * @param  Wildcard to ROOT files 
      */
-    void AddFiles(TString _fileName);
+    void AddFiles(const TString &_fileName);
 
     /**
      * Add file
@@ -161,10 +159,10 @@ class TupleReader {
     void AddFile(TString _fileName, int _iFile);
 
     /**
-     * Add list
-     * @param  _fileName [description]
+     * @brief Adds ROOT files to TupleReader object 
+     * @param  _fileName Path to text file where each line is the path to a ROOT file
      */
-    bool AddList(TString _fileName);
+    bool AddList(const TString &_fileName);
 
     /**
      * Add friend
@@ -227,6 +225,11 @@ class TupleReader {
 
     void PrintInline() const noexcept;
 
+    /**
+     * @brief Print list of files
+     */
+    void PrintListOfFiles() const noexcept;
+
   private:
     TChain * m_tuple = nullptr;
 
@@ -242,6 +245,7 @@ class TupleReader {
 
     bool m_fileRecover = false;
 
+    bool _CheckAddFile(const TString &_fileName);
     void SetFileRecover();
 
     bool m_useXrootD = true;
@@ -255,16 +259,15 @@ class TupleReader {
      */
     void SetDebug(bool _debug) { m_debug = _debug; };
 
-    bool m_isInitialized = false;   //! Initialization flag [false by default]
-
     /**
-     * Print list of files
+     * @brief If the tuple has friends, will check:\n
+     * - Does friend and main tree have same number of entries?
      */
-    void PrintListOfFiles() const noexcept;
+    void _CheckFriends();
+
+    bool m_isInitialized = false;   //! Initialization flag [false by default]
 
     void Size();
 };
 
 ostream & operator<<(ostream & os, const TupleReader & _tupleReader);
-
-#endif

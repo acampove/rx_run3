@@ -1,11 +1,10 @@
-#ifndef CONFIGHOLDER_CPP
-#define CONFIGHOLDER_CPP
-
 #include "ConfigHolder.hpp"
 
 #include "ConstDef.hpp"
 #include "SettingDef.hpp"
+#include <functional>
 
+#include "EnumeratorSvc.hpp"
 #include "HelperSvc.hpp"
 #include "MessageSvc.hpp"
 
@@ -19,9 +18,86 @@
 
 ClassImp(ConfigHolder)
 
-    ConfigHolder::ConfigHolder() {
-    if (SettingDef::debug.Contains("CO")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "Default");
+template <typename T>
+T _GetConfig(const std::map<TString,TString> &_conf, const TString &_name, std::function<T(TString)> hash_value, const TString &_default_value)
+{
+    auto found = _conf.find(_name) != _conf.end();
+    auto val   = found ? _conf.at(_name) : _default_value;
+
+    if (val == "unset")
+        MessageSvc::Fatal(TString("_GetConfig"), "Undefined value for ", _name);
+
+    auto str_val = hash_value(val);
+
+    return str_val;
+}
+
+// -----------------------------------------------------------
+ConfigHolder::ConfigHolder(const std::map<TString, TString> &_conf)
+{
+    MessageSvc::Debug("ConfigHolder", "Calling map constructor");
+
+    // In the _conf map, need to:
+    // - Check if a given setting exists.
+    // - If it does hash it with the hashing function provided, identiy lambda in case of no hashing
+    // - Pick default value (last arg) if not found.
+
+    // -------------------------
+    // These settings should always have a value
+    m_sample      = _GetConfig<TString>                   (_conf, "sample"   , [](TString val){return val;}, "unset"                         );
+    m_hlt2        = _GetConfig<TString>                   (_conf, "hlt2"     , [](TString val){return val;}, "unset"                         );
+    m_data_dir    = _GetConfig<TString>                   (_conf, "data_dir" , [](TString val){return val;}, "unset"                         );
+    m_tree_name   = _GetConfig<TString>                   (_conf, "tree_name", [](TString val){return val;}, "unset"                         );
+
+    m_cut_opt     = _GetConfig<TString>                   (_conf, "cut_opt"  , [](TString val){return val;}, "unset"                         );
+    m_wgt_opt     = _GetConfig<TString>                   (_conf, "wgt_opt"  , [](TString val){return val;}, "unset"                         );
+    m_tup_opt     = _GetConfig<TString>                   (_conf, "tup_opt"  , [](TString val){return val;}, "unset"                         );
+    // -------------------------
+    // These settings have defaults
+    m_project     = _GetConfig<pyPrj::Prj>                (_conf, "project" , hash_project                , SettingDef::Config::project     );
+    m_ana         = _GetConfig<pyAnalysis::Analysis>      (_conf, "analysis", hash_analysis               , SettingDef::Config::ana         );
+    m_q2bin       = _GetConfig<pyQ2Bin::Q2Bin>            (_conf, "q2bin"   , hash_q2bin                  , SettingDef::Config::q2bin       );
+    m_year        = _GetConfig<pyYear::Year>              (_conf, "year"    , hash_year                   , SettingDef::Config::year        );
+    m_polarity    = _GetConfig<pyPolarity::Polarity>      (_conf, "polarity", hash_polarity               , SettingDef::Config::polarity    );
+    m_trigger     = _GetConfig<pyTrigger::Trigger>        (_conf, "trigger" , hash_trigger                , SettingDef::Config::trigger     );
+    m_triggerConf = _GetConfig<pyTriggerConf::TriggerConf>(_conf, "trig_cfg", hash_triggerconf            , SettingDef::Config::triggerConf );
+    m_brem        = _GetConfig<pyBrem::Brem>              (_conf, "brem"    , hash_brem                   , SettingDef::Config::brem        );
+    m_track       = _GetConfig<pyTrack::Track>            (_conf, "track"   , hash_track                  , SettingDef::Config::track       );
+
+    Init();
+}
+
+ConfigHolder::ConfigHolder(const ConfigHolder & _configHolder) 
+{
+    MessageSvc::Debug("ConfigHolder", "Calling copy constructor");
+
+    m_sample      = _configHolder.GetConfig("sample");
+    m_hlt2        = _configHolder.GetConfig("hlt2");
+    m_data_dir    = _configHolder.GetConfig("data_dir");
+    m_tree_name   = _configHolder.GetConfig("tree_name");
+    // -----------------------
+    m_cut_opt     = _configHolder.GetConfig("cut_opt");
+    m_wgt_opt     = _configHolder.GetConfig("wgt_opt");
+    m_tup_opt     = _configHolder.GetConfig("tup_opt");
+    // -----------------------
+    m_project     = _configHolder.GetProject();
+    m_ana         = _configHolder.GetAna();
+    m_q2bin       = _configHolder.GetQ2bin();
+    m_year        = _configHolder.GetYear();
+    m_polarity    = _configHolder.GetPolarity();
+    m_trigger     = _configHolder.GetTrigger();
+    m_triggerConf = _configHolder.GetTriggerConf();
+    m_brem        = _configHolder.GetBrem();
+    m_track       = _configHolder.GetTrack();
+
+    MessageSvc::Debug("ConfigHolder", "Initializing from copy constructor");
+    Init();
+}
+
+ConfigHolder::ConfigHolder() 
+{
+    MessageSvc::Debug("ConfigHolder", "Calling default constructor");
+
     m_project     = hash_project(SettingDef::Config::project);
     m_ana         = hash_analysis(SettingDef::Config::ana);
     m_sample      = SettingDef::Config::sample;
@@ -32,77 +108,24 @@ ClassImp(ConfigHolder)
     m_brem        = hash_brem(SettingDef::Config::brem);
     m_track       = hash_track(SettingDef::Config::track);
     m_triggerConf = hash_triggerconf(SettingDef::Config::triggerConf);
+
     Init();
 }
 
-ConfigHolder::ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem, const Track & _track) {
-    if (SettingDef::debug.Contains("CO")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "Enumerator");
-    m_project     = _project;
-    m_ana         = _ana;
-    m_sample      = _sample;
-    m_q2bin       = _q2bin;
-    m_year        = _year;
-    m_polarity    = _polarity;
-    m_trigger     = _trigger;
-    m_brem        = _brem;
-    m_track       = _track;
-    m_triggerConf = hash_triggerconf(SettingDef::Config::triggerConf);
-    Init();
-}
+ConfigHolder::ConfigHolder(
+        const Prj         & _project, 
+        const Analysis    & _ana, 
+        const TString     & _sample,
+        const Q2Bin       & _q2bin, 
+        const Year        & _year, 
+        const Polarity    & _polarity, 
+        const Trigger     & _trigger, 
+        const TriggerConf & _triggerConf, 
+        const Brem        & _brem, 
+        const Track       & _track) 
+{
+    MessageSvc::Debug("ConfigHolder", "Calling enumerator constructor");
 
-// ConfigHolder(const TString & _project, const TString & _ana, TString _sample, const TString & _q2bin, const TString & _year, const TString & _polarity, const TString & _trigger, const TString & _triggerConf, const Brem & _brem, const TString & _track);
-
-ConfigHolder::ConfigHolder( const TString  & _project, 
-                            const TString & _ana, 
-                            TString _sample,
-                            const TString & _q2bin, 
-                            const TString & _year, 
-                            const TString & _polarity, 
-                            const TString & _trigger, 
-                            const TString & _triggerConf, 
-                            const TString & _brem, 
-                            const TString & _track) {
-    if (SettingDef::debug.Contains("CO")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "TStrings");
-
-
-    m_project     = _project!= "global" ? hash_project(_project)   : hash_project(SettingDef::Config::project);
-    m_ana         = _ana    != "global" ? hash_analysis(_ana)      : hash_analysis(SettingDef::Config::ana);
-    m_sample      = _sample;
-    m_q2bin       = _q2bin   != "global" ? hash_q2bin(_q2bin)      : hash_q2bin(SettingDef::Config::q2bin);
-    m_year        = _year    != "global" ? hash_year(_year)        : hash_year(SettingDef::Config::year);
-    m_polarity    = _polarity!= "global" ? hash_polarity(_polarity): hash_polarity(SettingDef::Config::polarity);
-    m_trigger     = _trigger != "global" ? hash_trigger(_trigger)  : hash_trigger(SettingDef::Config::trigger);
-    m_triggerConf = _triggerConf != "global"? hash_triggerconf(_triggerConf) : hash_triggerconf(SettingDef::Config::triggerConf);
-    m_brem        = _brem != "global" ?     hash_brem(_brem)       : hash_brem(SettingDef::Config::brem);
-    m_track       = _track!= "global" ?     hash_track(_track)     : hash_track(SettingDef::Config::track);
-    Init();
-}
-
-ConfigHolder::ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem) {
-    MessageSvc::Line();
-    MessageSvc::Line();
-    MessageSvc::Warning("ConfigHolder", (TString) "ConfigHolder with Track::All --- TO BE DROPPED");
-    MessageSvc::Line();
-    MessageSvc::Line();
-    // *this = ConfigHolder(_project, _ana, _sample, _q2bin, _year, _polarity, _trigger, _brem, Track::All);
-    m_project     = _project;
-    m_ana         = _ana;
-    m_sample      = _sample;
-    m_q2bin       = _q2bin;
-    m_year        = _year;
-    m_polarity    = _polarity;
-    m_trigger     = _trigger;
-    m_brem        = _brem;
-    m_track       = Track::All;
-    m_triggerConf = hash_triggerconf(SettingDef::Config::triggerConf);
-    Init();
-}
-
-ConfigHolder::ConfigHolder(const Prj & _project, const Analysis & _ana, TString _sample, const Q2Bin & _q2bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const TriggerConf & _triggerConf, const Brem & _brem, const Track & _track) {
-    if (SettingDef::debug.Contains("CO")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "Enumerator");
     m_project     = _project;
     m_ana         = _ana;
     m_sample      = _sample;
@@ -113,26 +136,42 @@ ConfigHolder::ConfigHolder(const Prj & _project, const Analysis & _ana, TString 
     m_brem        = _brem;
     m_track       = _track;
     m_triggerConf = _triggerConf;
+
     Init();
 }
 
-ConfigHolder::ConfigHolder(const ConfigHolder & _configHolder) {
-    if (SettingDef::debug.Contains("CO")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "ConfigHolder");
-    m_project     = _configHolder.GetProject();
-    m_ana         = _configHolder.GetAna();
-    m_sample      = _configHolder.GetSample();
-    m_q2bin       = _configHolder.GetQ2bin();
-    m_year        = _configHolder.GetYear();
-    m_polarity    = _configHolder.GetPolarity();
-    m_trigger     = _configHolder.GetTrigger();
-    m_brem        = _configHolder.GetBrem();
-    m_track       = _configHolder.GetTrack();
-    m_triggerConf = _configHolder.GetTriggerConf();
+ConfigHolder::ConfigHolder( 
+        const TString & _project, 
+        const TString & _ana, 
+        const TString & _sample,
+        const TString & _q2bin, 
+        const TString & _year, 
+        const TString & _polarity, 
+        const TString & _trigger, 
+        const TString & _triggerConf, 
+        const TString & _brem, 
+        const TString & _track) 
+{
+    MessageSvc::Debug("ConfigHolder", "Calling TString constructor");
+
+    m_project     = _project     != "global" ? hash_project(_project)         : hash_project(SettingDef::Config::project);
+    m_ana         = _ana         != "global" ? hash_analysis(_ana)            : hash_analysis(SettingDef::Config::ana);
+    m_q2bin       = _q2bin       != "global" ? hash_q2bin(_q2bin)             : hash_q2bin(SettingDef::Config::q2bin);
+    m_year        = _year        != "global" ? hash_year(_year)               : hash_year(SettingDef::Config::year);
+    m_polarity    = _polarity    != "global" ? hash_polarity(_polarity)       : hash_polarity(SettingDef::Config::polarity);
+    m_trigger     = _trigger     != "global" ? hash_trigger(_trigger)         : hash_trigger(SettingDef::Config::trigger);
+    m_triggerConf = _triggerConf != "global" ? hash_triggerconf(_triggerConf) : hash_triggerconf(SettingDef::Config::triggerConf);
+    m_brem        = _brem        != "global" ? hash_brem(_brem)               : hash_brem(SettingDef::Config::brem);
+    m_track       = _track       != "global" ? hash_track(_track)             : hash_track(SettingDef::Config::track);
+    m_sample      = _sample;
+
     Init();
 }
 
-ostream & operator<<(ostream & os, const ConfigHolder & _configHolder) {
+// -----------------------------------------------------------
+
+ostream & operator<<(ostream & os, const ConfigHolder & _configHolder) 
+{
     os << WHITE;
     MessageSvc::Line(os);
     MessageSvc::Print((ostream &) os, "ConfigHolder");
@@ -152,8 +191,54 @@ ostream & operator<<(ostream & os, const ConfigHolder & _configHolder) {
     return os;
 }
 
-bool ConfigHolder::Check() {
-    if (!CheckSample({m_sample})) return false;
+
+TString ConfigHolder::GetConfig(const TString &_opt_name) const
+{
+    if ( _opt_name == "Q2Bin" )
+        return pyQ2Bin::to_string(m_q2bin);
+    if ( _opt_name == "Project" )
+        return pyPrj::to_string(m_project);
+    if ( _opt_name == "Analysis" )
+        return pyAnalysis::to_string(m_ana);
+    if ( _opt_name == "Year" )
+        return pyYear::to_string(m_year);
+    if ( _opt_name == "Polarity" )
+        return pyPolarity::to_string(m_polarity);
+    if ( _opt_name == "Trigger" )
+        return pyTrigger::to_string(m_trigger);
+    if ( _opt_name == "TriggerConf" )
+        return pyTriggerConf::to_string(m_triggerConf);
+    if ( _opt_name == "Brem" )
+        return pyBrem::to_string(m_brem);
+    if ( _opt_name == "Track" )
+        return pyTrack::to_string(m_track);
+    // ------------------------------------
+    // Lines below are new for Run3
+    // ------------------------------------
+    if ( _opt_name == "data_dir" )
+        return m_data_dir;
+    if ( _opt_name == "sample" )
+        return m_sample;
+    if ( _opt_name == "hlt2" )
+        return m_hlt2;
+    if ( _opt_name == "tree_name" )
+        return m_tree_name;
+    // ------------------------------------
+    if ( _opt_name == "cut_opt" )
+        return m_cut_opt;
+    if ( _opt_name == "wgt_opt" )
+        return m_wgt_opt;
+    if ( _opt_name == "tup_opt" )
+        return m_tup_opt;
+
+    MessageSvc::Fatal(TString("GetConfig"), "Invalid option ", _opt_name);
+}
+
+bool ConfigHolder::Check() 
+{
+    MessageSvc::Debug("Check", "Performing checks"); 
+    if (!CheckSample({m_sample})) 
+        return false;
 
     // Parameter consistency checks .... to be expanded if some configuration is not fine
     if ((m_ana == Analysis::MM) && (m_brem != Brem::All)) {
@@ -192,38 +277,62 @@ bool ConfigHolder::Check() {
     return true;
 }
 
-const bool ConfigHolder::CheckSample(const vector< TString > & _samples) const {
-    for (const auto & _sample : _samples) {
-        if (!CheckVectorContains(GetSamples(), _sample) && !(_sample == to_string(Sample::Empty))) {
-            cout << RED << *this << RESET << endl;
-            MessageSvc::Error("ConfigHolder", (TString) "Sample::" + _sample + " not in SettingDef::AllowedConf::Samples" + to_string(m_project), "EXIT_FAILURE");
-            return false;
-        }
+const bool ConfigHolder::CheckSample(const vector< TString > & _samples) const 
+{
+    for (const auto & _sample : _samples) 
+    {
+        MessageSvc::Debug("CheckSample", "Checking sample ", _sample);
+        if (!CheckVectorContains(GetSamples(), _sample) && !(_sample == to_string(Sample::Empty))) 
+            MessageSvc::Fatal( TString("ConfigHolder"), "Sample::" + _sample + " not in SettingDef::AllowedConf::Samples", to_string(m_project));
     }
+
     return true;
 }
 
-void ConfigHolder::Init() {
-    if (m_debug) {
-        MessageSvc::Debug("ConfigHolder", (TString) "Initialize ...");
-        PrintInline();
-    }
-    if ((m_sample != "") && (!m_sample.Contains(to_string(Sample::Data))) && (!m_sample.Contains("Comb")) && !m_sample.Contains(to_string(m_ana))) MessageSvc::Error("Wrong sample", m_sample, "for ana", to_string(m_ana), "EXIT_FAILURE");
+void ConfigHolder::Init() 
+{
+    MessageSvc::Debug("Init", "Initializing"); 
+    PrintInline();
+
+    auto fail_1 = (m_sample != "") && (!m_sample.Contains(to_string(Sample::Data))) && (!m_sample.Contains("Comb"));
+
+    // If the sample does not contain EE/MM/EM (Analysis) fail, unless it we are running with Run3 
+    auto fail_2 = !m_sample.Contains(to_string(m_ana)) && ! IsRun3();
+
+    if (fail_1 && fail_2) 
+        MessageSvc::Fatal(TString("Init"), "Wrong sample \"", m_sample, "\" for ana \"", to_string(m_ana), "\"");
+
     Check();
-    return;
 }
 
-const bool ConfigHolder::IsMC() const { return m_sample.BeginsWith("Bd2") || m_sample.BeginsWith("Bu2") || m_sample.BeginsWith("Bs2") || m_sample.BeginsWith("B2") || m_sample.BeginsWith("Lb2"); }
+const bool ConfigHolder::IsRun3() const
+{
+    auto str_year = GetStringYear();
+    auto is_run3  = pyYear::is_run3(str_year);
 
-const bool ConfigHolder::IsSignalMC() const {
-    if (!IsMC()) return false;
+    MessageSvc::Debug("IsRun3", "Year \"", str_year, "\" is in Run3: ", is_run3 ? "Yes" : "No");
+
+    return is_run3;
+}
+
+const bool ConfigHolder::IsMC() const 
+{ 
+    return m_sample.BeginsWith("Bd2") || m_sample.BeginsWith("Bu2") || m_sample.BeginsWith("Bs2") || m_sample.BeginsWith("B2") || m_sample.BeginsWith("Lb2"); 
+}
+
+const bool ConfigHolder::IsSignalMC() const 
+{
+    if (!IsMC()) 
+        return false;
+
     vector< TString > _samples = {};
-    switch (m_project) {
+
+    switch (m_project) 
+    {
         case Prj::RKst:
             _samples = {"Bd2KstMM",       "Bd2KstEE",       "Bd2KstJPsMM",       "Bd2KstJPsEE",       "Bd2KstPsiMM",       "Bd2KstPsiEE",         //
                         "Bd2KstMMvNOFLT", "Bd2KstEEvNOFLT", "Bd2KstJPsMMvNOFLT", "Bd2KstJPsEEvNOFLT", "Bd2KstPsiMMvNOFLT", "Bd2KstPsiEEvNOFLT",   //
                         "Bd2KstEEvPS",    "Bd2KstEEvPSQ2",  "Bd2KstJPsEESS",                                                                      //
-                        // "Bd2KstSwapJPsMM", "Bd2KstSwapJPsEE", "Bd2KstSwapPsiEE", "Bd2KstSwapPsiEE" ,// The K<->Pi hack swapped types.
                         "Bd2KstGEE",      "Bd2KstGEEv08a",  "Bd2KstGEEv08d",     "Bd2KstGEEv08f",     "Bd2KstGEEv08h"};
             break;
         case Prj::RK:
@@ -232,19 +341,34 @@ const bool ConfigHolder::IsSignalMC() const {
                         "Bu2KMMvB0",     "Bu2KEEvMS",                                                               //
                         "Bu2KMMvL0",     "Bu2KEEvL0"};
             break;
-        case Prj::RPhi: _samples = {"Bs2PhiMM", "Bs2PhiEE", "Bs2PhiJPsMM", "Bs2PhiJPsEE", "Bs2PhiPsiMM", "Bs2PhiPsiEE"}; break;
-        case Prj::RL: _samples = {"Lb2LEE", "Lb2LJPsEE", "Lb2LJPsMM", "Lb2LMM", "Lb2LPsiEE", "Lb2LPsiMM"}; break;
-        case Prj::RKS: _samples = {"Bd2KSJPsMM"}; break;
-        default: MessageSvc::Error("Wrong project", to_string(m_project), "EXIT_FAILURE"); break;
+        case Prj::RPhi: 
+            _samples = {"Bs2PhiMM", "Bs2PhiEE", "Bs2PhiJPsMM", "Bs2PhiJPsEE", "Bs2PhiPsiMM", "Bs2PhiPsiEE"}; 
+            break;
+        case Prj::RL: 
+            _samples = {"Lb2LEE", "Lb2LJPsEE", "Lb2LJPsMM", "Lb2LMM", "Lb2LPsiEE", "Lb2LPsiMM"}; 
+            break;
+        case Prj::RKS: 
+            _samples = {"Bd2KSJPsMM"}; 
+            break;
+
+        default: 
+            MessageSvc::Error("Wrong project", to_string(m_project), "EXIT_FAILURE"); 
+            break;
     }
+
     CheckSample(_samples);    
+
     bool _return = find(_samples.begin(), _samples.end(), m_sample) != _samples.end();
+
     MessageSvc::Info("IsSignalMC (prj)", to_string(m_project));
+
     std::cout<<RED << "For Sample " << m_sample << " , Status = " << _return<< RESET << std::endl;
+
     return _return;
 }
 
-const bool ConfigHolder::IsSignalMCEfficiencySample() const {
+const bool ConfigHolder::IsSignalMCEfficiencySample() const 
+{
     if (!IsSignalMC()) return false;
     // else go ahead.... check the name of the tuple/Q2Bin/Analysis and Project switching.
     TString LL = m_ana == Analysis::EE ? "EE" : "MM";
@@ -407,12 +531,14 @@ const bool ConfigHolder::PortingEnabled() const{
     if( _inList && !IsSignalMC()     ) MessageSvc::Warning("Background sample Porting enabled for this sample", m_sample);
     return _inList;
 }
-const vector< TString > ConfigHolder::GetSamples() const {
+const vector< TString > ConfigHolder::GetSamples() const 
+{
     vector< TString > _samples = {};
     if (m_project != Prj::All)
         _samples = SettingDef::AllowedConf::Samples.at(m_project);
     else
         _samples = {SettingDef::Config::sample};
+
     return _samples;
 }
 
@@ -632,21 +758,25 @@ TString ConfigHolder::GetTupleName(TString _option) const {
     return _name;
 }
 
-int ConfigHolder::GetNBodies(TString _option) const {
-  if( _option == "MCDT"){
-    MessageSvc::Warning("GetNBodies, Option MCDT not implemented, will be useful in the future since MCDT has different structure of final states than DT");
-  }else{ 
-    switch (m_project) {
-      case Prj::RKst: return 4; break;
-      case Prj::RK: return 3; break;
-      case Prj::RPhi: return 4; break;
-      case Prj::RL: return 4; break;
-       case Prj::RKS: return 4; break;
-    default: MessageSvc::Error("Wrong project", to_string(m_project), "EXIT_FAILURE"); break;
+int ConfigHolder::GetNBodies(TString _option) const 
+{
+    if( _option == "MCDT")
+    {
+        MessageSvc::Warning("GetNBodies, Option MCDT not implemented, will be useful in the future since MCDT has different structure of final states than DT");
+        return 0;
     }
-  }
-  
-  return 0;
+
+    switch (m_project) 
+    {
+        case Prj::RKst: return 4; break;
+        case Prj::RK:   return 3; break;
+        case Prj::RPhi: return 4; break;
+        case Prj::RL:   return 4; break;
+        case Prj::RKS:  return 4; break;
+        default: 
+                       MessageSvc::Error("Wrong project", to_string(m_project), "EXIT_FAILURE");
+                       return 0;
+    }
 }
 
 /**
@@ -717,5 +847,3 @@ void ResetSettingDefConfig(ConfigHolder _configHolder) noexcept {
     MessageSvc::Warning("ConfigHolder", _toPrint);
     return;
 }
-
-#endif

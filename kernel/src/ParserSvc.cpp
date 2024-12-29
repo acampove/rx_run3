@@ -702,7 +702,17 @@ EventType ParserSvc::GetEventTypeYAML(YAML::Node _nodeYAML) {
     TString _brem  = _nodeYAML["brem"] ? _nodeYAML["brem"].as< TString >() : SettingDef::Config::brem;
     TString _track = _nodeYAML["track"] ? _nodeYAML["track"].as< TString >() : SettingDef::Config::track;
 
-    ConfigHolder _ch = ConfigHolder(hash_project(_prj), hash_analysis(_ana), _sample, hash_q2bin(_q2bin), hash_year(_year), hash_polarity(_polarity), hash_trigger(_trigger), hash_brem(_brem), hash_track(_track));
+    ConfigHolder _ch = ConfigHolder(
+            hash_project(_prj), 
+            hash_analysis(_ana), 
+            _sample, 
+            hash_q2bin(_q2bin), 
+            hash_year(_year), 
+            hash_polarity(_polarity), 
+            hash_trigger(_trigger), 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            hash_brem(_brem), 
+            hash_track(_track));
 
     TString _cutOption;
     if (_nodeYAML["cutOption"])
@@ -1176,9 +1186,18 @@ map< TString, pair< TupleHolder, vector< tuple< ConfigHolder, CutHolder, WeightH
         // Exclusive ALL for the Base ConfigHolder.
         auto _trconforiginal            = SettingDef::Config::triggerConf;
         SettingDef::Config::triggerConf = "exclusive";
-        ConfigHolder _baseConfigHolder(hash_project(SettingDef::Config::project), hash_analysis(_searchANA), _sampleName, _q2Bin, hash_year(SettingDef::Config::year), hash_polarity(SettingDef::Config::polarity),
-                                       Trigger::All,   // IMPORTANT, DO NOT CHANGE
-                                       Brem::All);     // IMPORTANT, DO NOT CHANGE
+        ConfigHolder _baseConfigHolder(
+                hash_project(SettingDef::Config::project), 
+                hash_analysis(_searchANA), 
+                _sampleName, 
+                _q2Bin, 
+                hash_year(SettingDef::Config::year), 
+                hash_polarity(SettingDef::Config::polarity),
+                Trigger::All,   // IMPORTANT, DO NOT CHANGE
+                hash_triggerconf(SettingDef::Config::triggerConf), 
+                Brem::All,
+                Track::All);     // IMPORTANT, DO NOT CHANGE
+
         SettingDef::Config::triggerConf = _trconforiginal;
         // 1 tuple holder to be splitted by trigger/brem categories
         TupleHolder * _tholder = nullptr;
@@ -1209,7 +1228,17 @@ map< TString, pair< TupleHolder, vector< tuple< ConfigHolder, CutHolder, WeightH
                 // overload system settings to "stream it inside EventType"
 
                 SettingDef::Config::triggerConf = trg_conf;
-                ConfigHolder config(hash_project(SettingDef::Config::project), hash_analysis(_searchANA), _sampleName, _q2Bin, hash_year(SettingDef::Config::year), hash_polarity(SettingDef::Config::polarity), hash_trigger(trg_cat), hash_brem(bremcat));
+                ConfigHolder config(
+                        hash_project(SettingDef::Config::project), 
+                        hash_analysis(_searchANA), 
+                        _sampleName, 
+                        _q2Bin, 
+                        hash_year(SettingDef::Config::year), 
+                        hash_polarity(SettingDef::Config::polarity), 
+                        hash_trigger(trg_cat), 
+                        hash_triggerconf(SettingDef::Config::triggerConf), 
+                        hash_brem(bremcat));
+
                 config.Init();
                 if (_Forefficiencies) {
                     // FOR EFFICIENCY PARSING !

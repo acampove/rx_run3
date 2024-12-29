@@ -4,7 +4,7 @@
 #include <TH1D.h>
 #include <THn.h>
 #include "MessageSvc.hpp"
-#include <fmt_ostream.h>
+#include "fmt_ostream.h"
 #include "yamlcpp.h"
 #include "ConstDef.hpp"
 #include "WeightHolder.hpp"

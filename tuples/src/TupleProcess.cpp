@@ -77,7 +77,17 @@ void TupleProcess::Init() {
 
         MessageSvc::Info("TupleProcess", (TString) "Initialize ...", m_fileName);
 
-        auto _configHolder = ConfigHolder(hash_project(SettingDef::Config::project), hash_analysis(SettingDef::Config::ana), SettingDef::Config::sample, hash_q2bin(SettingDef::Config::q2bin), hash_year(SettingDef::Config::year), hash_polarity(SettingDef::Config::polarity), hash_trigger(SettingDef::Config::trigger), hash_brem(SettingDef::Config::brem), hash_track(SettingDef::Config::track));
+        auto _configHolder = ConfigHolder(
+                hash_project(SettingDef::Config::project), 
+                hash_analysis(SettingDef::Config::ana), 
+                SettingDef::Config::sample, 
+                hash_q2bin(SettingDef::Config::q2bin), 
+                hash_year(SettingDef::Config::year), 
+                hash_polarity(SettingDef::Config::polarity), 
+                hash_trigger(SettingDef::Config::trigger), 
+                hash_triggerconf(SettingDef::Config::triggerConf), 
+                hash_brem(SettingDef::Config::brem), 
+                hash_track(SettingDef::Config::track));
 
         auto _weightHolder = WeightHolder(_configHolder, SettingDef::Weight::option);
 
