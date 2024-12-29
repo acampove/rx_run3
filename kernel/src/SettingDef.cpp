@@ -1,15 +1,19 @@
-#ifndef SETTINGDEF_CPP
-#define SETTINGDEF_CPP
-
 #include "SettingDef.hpp"
 
 #include "WeightDefRX.hpp"
+#include <algorithm>
+#include <iterator>
+#include <set>
 
 #include "EventType.hpp"
+#include "EnumeratorSvc.hpp"
 #include "FitConfiguration.hpp"
 #include "EfficiencyForFitHandler.hpp"
-namespace SettingDef {
 
+using namespace pyPrj;
+
+namespace SettingDef 
+{
     TString name = "";
 
     TString debug = "";
@@ -23,7 +27,6 @@ namespace SettingDef {
     TString separator = "-";
 
     TString blindString = "TheBlindingString";
-
 }   // namespace SettingDef
 
 //============== IO defaults ==================
@@ -107,18 +110,21 @@ bool              SettingDef::Tuple::dataFrame    = false;
 bool              SettingDef::Tuple::chainexctrg  = false;
 bool              SettingDef::Tuple::branches     = false;   // SetBranchStatus from cards
 vector< TString > SettingDef::Tuple::branchList   = {};
-bool              SettingDef::Tuple::aliases      = true;   // SetAlias from cards
+bool              SettingDef::Tuple::aliases      = false;   // SetAlias from cards
 double            SettingDef::Tuple::frac         = -1;
 bool              SettingDef::Tuple::datasetCache = false;
 bool              SettingDef::Tuple::noInit       = false; // Avoid TupleHolder::Init() to load TChains ( Used for BS-fit-loop to fasten the procedure when reloading from Disk the EventTypes private members )
 bool              SettingDef::Tuple::useURLS      = false; 
 vector< tuple< TString, vector< tuple< TString, int , double, double, TString , TString> > > > SettingDef::Tuple::isoBins = {};
 
-void SettingDef::Tuple::ConfigureNoTupleLoading(){
+void SettingDef::Tuple::ConfigureNoTupleLoading()
+{
     SettingDef::Tuple::noInit = true;
     SettingDef::Tuple::addTuple = false;    
 }
-void SettingDef::Tuple::ConfigureTupleLoading(){
+
+void SettingDef::Tuple::ConfigureTupleLoading()
+{
     SettingDef::Tuple::noInit = false;
     SettingDef::Tuple::addTuple = true;    
 }
@@ -199,7 +205,7 @@ bool SettingDef::Fit::useSPlot2  = false;   // If fitting for sPLot, with simult
 
 /*
     One of them to true, and a non-empy list of yamls will inject 
-    in the fitter the r-ratio systematic from the covariances we created
+    in the fitter the r-ratio systematic from the covariances we created 
 */
 bool SettingDef::Fit::rJPsiFit = false ;
 bool SettingDef::Fit::RPsiFit  = false  ;
@@ -268,78 +274,80 @@ const vector< TString > SettingDef::AllowedConf::Analyses = {to_string(Analysis:
  * @param "LPT"    = Data
  * @param "B","Lb" = MC
  */
-const map< Prj, vector< TString > > SettingDef::AllowedConf::Samples = {
-    // RUN ./scripts/testTupleLists.sh TO TEST IF ALL SAMPLES CAN BE LOADED
-    // ADD MISSING SAMPLES
-    // RUN testKernel.out TO SORT MC SAMPLES AND PASTE THE OUTPUT BELOW
-    {Prj::RKst,
-     {to_string(Sample::Empty),
-      // Data
-      to_string(Sample::Data), to_string(Sample::Data) + "_SBU", to_string(Sample::Data) + "_SBL", to_string(Sample::Data) + "SS", to_string(Sample::Data) + "SSHH",
-      // MC Bd
-      "Bd2D0XNuEE", "Bd2D0XNuMM", "Bd2DNuKstNuEE", "Bd2DNuKstNuMM", "Bd2DNuKstPiEE", "Bd2DPiEE", "Bd2DPiMM", "Bd2DstNuD0PiKPiEE", "Bd2DstNuDPiKPiEE", "Bd2DstNuDPiKPiMM", "Bd2KPiEE", "Bd2KPiEEvNoKst", "Bd2KPiJPsEE", "Bd2KPiJPsMM", "Bd2KPiMM", "Bd2KPiMMvNoKst", "Bd2KstEE", "Bd2KstEEvNOFLT", "Bd2KstEEvPS", "Bd2KstEEvPSQ2", "Bd2KstEtaEEG", "Bd2KstEtaEEGvQ2", "Bd2KstGEE", "Bd2KstGEEv08a", "Bd2KstGEEv08d", "Bd2KstGEEv08f", "Bd2KstGEEv08h", "Bd2KstJPsEE", "Bd2KstJPsEEvNOFLT", "Bd2KstJPsMM", "Bd2KstJPsMMvNOFLT", "Bd2KstMM", 
-      "Bd2KstMMvNOFLT", "Bd2KstPi0EEG", "Bd2KstPsiEE", "Bd2KPiPsiEE", "Bd2KstPsiEEvNOFLT", "Bd2KstPsiMM", "Bd2KPiPsiMM", "Bd2KstPsiMMvNOFLT", "Bd2XPsiEE",
-      "Bd2KstPsiPiPiJPsEE", "Bd2KstSwapJPsEE", "Bd2KstSwapJPsMM", "Bd2KstSwapPsiEE", "Bd2KstSwapPsiMM", "Bd2KstJPsEESS", 
-      // MC Bs
-      "Bs2KPiJPsEE", "Bs2KPiJPsMM", "Bs2KstJPsEE", "Bs2KstJPsMM", "Bs2KstPsiEE", "Bs2KstPsiMM", "Bs2PhiEE", "Bs2PhiJPsEE", "Bs2PhiPsiEE", "Bs2PhiMM", "Bs2PhiJPsMM", "Bs2PhiPsiMM", "Bs2XJPsEE", "Bs2XJPsMM", "Bs2KsKstJPsEE",
-      // MC Bu
-      "Bu2DKNuNuEE", "Bu2K1EE", "Bu2K1MM", "Bu2K2EE", "Bu2K2MM", "Bu2KEE", "Bu2KJPsEE", "Bu2KJPsMM", "Bu2KMM", "Bu2KPiPiEE", "Bu2KPiPiJPsEE", "Bu2KPiPiJPsMM", "Bu2KPiPiMM", "Bu2KPiPiPsiEE", "Bu2KPiPiPsiMM", "Bu2KPsiEE", "Bu2KPsiMM", 
-      "Bu2XJPsEE",
-      "Bu2XJPsMM",
-      "Bd2XJPsEE",
-      "Bd2XJPsMM",
-      "Bu2KPsiPiPiJPsEE",
-      // MC Lb
-      "Lb2XJPsEE", "Lb2XJPsMM", "Lb2pKEE", "Lb2pKJPsEE", "Lb2pKJPsMM", "Lb2pKMM", "Lb2pKPsiEE", "Lb2pKPsiMM", "Lb2LcPiEE","Lb2LcKEE","Lb2pKPiPiEE","Lb2pKKKEE",
-      // Photon conversions
-      "Bd2KstEtaGEE",
-      "Bu2D0PiEE","Bu2K1GammaEE","Bd2KstPiPiEE","Bu2D0RhoEE","Bu2D0KPiRhoEE"
-      }},
-    {Prj::RK,
-     {to_string(Sample::Empty),
-      // Data
-      to_string(Sample::Data), to_string(Sample::Data) + "_SBU", to_string(Sample::Data) + "_SBL", to_string(Sample::Data) + "SS",
-      // MC Bd
-      "Bd2K0EE", "Bd2K2EE", "Bd2KPiEE", "Bd2KPiEEvNoKst", "Bd2KPiMM", "Bd2KPiMMvNoKst", "Bd2KstEE", "Bd2KstJPsEE", "Bd2KstJPsMM", "Bd2KstMM", "Bd2KstPsiEE", "Bd2KPiPsiEE", "Bd2KstPsiMM", "Bd2KPiPsiMM", "Bd2XJPsEE", "Bd2XJPsMM", "Bd2XPsiEE",
-      // MC Bs
-      "Bs2XJPsEE", "Bs2XJPsMM", "Bu2KEtaPrimeGEE",
-      // MC Bu
-      "Bu2DKENuENuEE", "Bu2DKENuPiEE", "Bu2DKMuNuMuNuMM", "Bu2DKMuNuPiMM", "Bu2DKNuNuEE", "Bu2DKNuNuMM", "Bu2DKPiENuEE", "Bu2DKPiMuNuMM", "Bu2KEE", "Bu2KEEvL0", "Bu2KEEvMS", "Bu2KJPsEE", "Bu2KJPsEEv09c", "Bu2KJPsEESS", "Bu2KJPsMM", "Bu2KJPsMMv09b", "Bu2KJPsMMv09d", "Bu2KMM", "Bu2KMMvB0", "Bu2KMMvL0", "Bu2KPiPiOSEE", "Bu2KPiPiOSMM", "Bu2KPiPiSSEE", "Bu2KPiPiSSMM", "Bu2KPsiEE", "Bu2KPsiMM", "Bu2KPsiPiPiJPsEE", "Bu2KstEE", "Bu2KstEEvPS", "Bu2PiJPsEE", "Bu2PiJPsMM", "Bu2PiPsiEE", "Bu2PiPsiMM", "Bu2XJPsEE", "Bu2XJPsMM","Bu2KstMM",
-      // MC Lb
-      "Lb2XJPsEE", "Lb2XJPsMM", "Lb2pKEE", "Lb2pKJPsEE", "Lb2pKJPsMM", "Lb2pKMM", "Lb2pKPsiEE", "Lb2pKPsiMM", "Lb2LcPiEE","Lb2LcKEE","Lb2pKPiPiEE","Lb2pKKKEE",
-      // MC KEta for low q2 background 
-      "Bu2KEtaPrimeGEE", "Bd2KstEtaGEE", "Bu2KPiEE",
-      // Photon conversions
-      "Bd2KPiPi0EE", "Bd2KPiGammaEE", "Bd2KstPi0EE", "Bd2KstGammaHighEE", "Bd2KstPi0GammaEE","Bu2D0PiEE","Bu2K1GammaEE","Bd2Kst1410GammaEE","Bd2DPiEE","Bu2KPiPiOSEE","Bd2KstPiPiEE","Bu2D0RhoEE","Bu2D0KPiRhoEE"
-      }},
-    {Prj::RPhi,
-     {to_string(Sample::Empty),
-      // Data
-      to_string(Sample::Data), to_string(Sample::Data) + "_SBU", to_string(Sample::Data) + "_SBL", to_string(Sample::Data) + "SS", to_string(Sample::Data) + "SSHH",
-      // MC Bd
-      "Bd2KstEE", "Bd2KstJPsEE", "Bd2KstJPsMM", "Bd2KstMM", "Bd2PhiJPsEE", "Bd2PhiJPsMM",
-      // MC Bs
-      "Bs2PhiEE", "Bs2PhiJPsEE", "Bs2PhiJPsMM", "Bs2PhiMM", "Bs2PhiPsiEE", "Bs2PhiPsiMM",
-      // MC Lb
-      "Lb2pKEE", "Lb2pKJPsEE", "Lb2pKJPsMM", "Lb2pKMM", "Lb2pKPsiEE", "Lb2pKPsiMM"}},
-    {Prj::RL,
-     {to_string(Sample::Empty),
-      // Data
-      to_string(Sample::Data), to_string(Sample::Data) + "-SBU", to_string(Sample::Data) + "-SBL",
-      // MC Bd
-      "Bd2KSEE", "Bd2KSJPsEE", "Bd2KSJPsMM", "Bd2KSMM", "Bd2KSPsiEE", "Bd2KSPsiMM",
-      // MC Lb
-      "Lb2LEE", "Lb2LJPsEE", "Lb2LJPsMM", "Lb2LMM", "Lb2LPsiEE", "Lb2LPsiMM", "Lb2LME", "Lb2LJPsME", "Lb2LPsiME"}},
-    {Prj::RKS,
-     {to_string(Sample::Empty),
-      // Data
-      to_string(Sample::Data), to_string(Sample::Data) + "-SBU", to_string(Sample::Data) + "-SBL",
-      // MC Bd
-      "Bd2KSJPsMM",
-      // MC Bs
-      "Bs2KSJPsMM",
-      // MC Lb
-      "Lb2LJPsMM"}}};
+SettingDef::SampleList SettingDef::AllowedConf::Samples_run12 {};
+SettingDef::SampleList SettingDef::AllowedConf::Samples_run3  {};
+SettingDef::SampleList SettingDef::AllowedConf::Samples       {};
+
+void SettingDef::AllowedConf::Initialize(const std::string &conf_dir)
+{
+    MessageSvc::Debug("Initialize", "Loading samples");
+
+    auto &s12 = SettingDef::AllowedConf::Samples_run12;
+    auto &s3  = SettingDef::AllowedConf::Samples_run3 ;
+
+    _ReadSamplesFromYaml(conf_dir + "/sample_run12.yaml", s12);
+    _ReadSamplesFromYaml(conf_dir + "/sample_run3.yaml" , s3 );
+    SettingDef::AllowedConf::Samples = _MergeSamples(s12, s3);
+}
+
+SettingDef::SampleList& SettingDef::AllowedConf::_MergeSamples(const SettingDef::SampleList &s1, const SettingDef::SampleList &s2)
+{
+    std::set<Prj> s1_keys, s2_keys;
+
+    for ( const auto &entry : s1)
+        s1_keys.insert(entry.first);
+
+    for ( const auto &entry : s2)
+        s2_keys.insert(entry.first);
+
+    // Require analyses (RK, RKst...) to be the same
+    // Can use empty sample lists, this simplifies the code
+    if (s1_keys != s2_keys)
+        MessageSvc::Fatal( TString("_MergeSamples"), "Lists of samples have different analyses");
+
+    static SettingDef::SampleList s_res;
+    for (auto const &key : s1_keys)
+    {
+        auto v_samp1 = s1.at(key);
+        auto v_samp2 = s2.at(key);
+
+        vector<TString> v_concat = v_samp1;
+        v_concat.insert(v_concat.end(), v_samp2.begin(), v_samp2.end());
+
+        s_res[key] = v_concat;
+    }
+    MessageSvc::Debug("_MergeSamples", "Merged samples");
+
+    return s_res;
+}
+
+
+void SettingDef::AllowedConf::_ReadSamplesFromYaml(const std::string & config_path, SampleList &samples)
+{
+    MessageSvc::Debug("_ReadSamplesFromYaml", "Loading samples from: ", config_path);
+
+    YAML::Node config = YAML::LoadFile(config_path);
+    unsigned int nsample = 0;
+    for (const auto &entry : config)
+    {
+        vector<TString> v_sample;
+
+        auto analysis = entry.first.as<std::string>();
+
+        for (const auto &value : entry.second)
+        {
+            auto sample = value.as<std::string>();
+
+            v_sample.push_back(sample);
+            nsample++;
+        }
+
+        auto project = pyPrj::hash_project(analysis);
+
+        samples[project] = v_sample;
+    }
+    MessageSvc::Debug("_ReadSamplesFromYaml", "Loaded ", to_string(nsample), " samples");
+}
 
 /**
  * \brief SampleToTex conversion (underlying particles defined in StyleSvc::Tex)
@@ -780,11 +788,47 @@ const vector< TString > SettingDef::AllowedConf::CutOptions = {
  * @param "LUMI"       = Lumi scaling of samples-shapes
  * @param "MODEL"      = DecayModel reweighting
  * @param "RW1D"       = BKIN-MULT reweighting with 1D histograms instead of BDT (similar to muon BR ana)
-*/
-const vector< TString > SettingDef::AllowedConf::WeightOptions = {"no", "noBS","MCT", "NORM", "NORM60", "Meerkat", "COMB", "DIST", "BREM", "0G","1G","2G", "RW1D" , WeightDefRX::ID::TRK, WeightDefRX::ID::PID, WeightDefRX::ID::L0, WeightDefRX::ID::HLT, WeightDefRX::ID::BKIN, WeightDefRX::ID::MULT, WeightDefRX::ID::RECO, WeightDefRX::ID::BDT, WeightDefRX::ID::LB, WeightDefRX::ID::LB_KIN, WeightDefRX::ID::PTRECO, WeightDefRX::ID::SP, WeightDefRX::ID::BS, "fromLOI" , WeightDefRX::ID::ISMUON, "nTracks", "BETA" , "SMEAR","SMEARBP", "SMEARB0", "PORTBRANCH", "XJPSWeight", "LUMI",
-"SMEARBPN",
-"SMEARB0N", 
-"MODEL"};
+ */
+const vector< TString > SettingDef::AllowedConf::WeightOptions = {
+    "no",
+    "noBS",
+    "MCT",
+    "NORM",
+    "NORM60",
+    "Meerkat",
+    "COMB",
+    "DIST",
+    "BREM",
+    "0G",
+    "1G",
+    "2G",
+    "RW1D" ,
+    WeightDefRX::ID::TRK,
+    WeightDefRX::ID::PID,
+    WeightDefRX::ID::L0,
+    WeightDefRX::ID::HLT,
+    WeightDefRX::ID::BKIN,
+    WeightDefRX::ID::MULT,
+    WeightDefRX::ID::RECO,
+    WeightDefRX::ID::BDT,
+    WeightDefRX::ID::LB,
+    WeightDefRX::ID::LB_KIN,
+    WeightDefRX::ID::PTRECO,
+    WeightDefRX::ID::SP,
+    WeightDefRX::ID::BS,
+    WeightDefRX::ID::ISMUON,
+    "fromLOI" ,
+    "nTracks",
+    "BETA" ,
+    "SMEAR",
+    "SMEARBP",
+    "SMEARB0",
+    "PORTBRANCH",
+    "XJPSWeight",
+    "LUMI",
+    "SMEARBPN",
+    "SMEARB0N", 
+    "MODEL"};
 
 /**
  * \brief Weight configuration to select specific maps ('_' separated)
@@ -804,8 +848,22 @@ const vector< TString > SettingDef::AllowedConf::WeightConfig = {"{B}", "Bp", "B
  * @param "cre" = Create
  * @param "spl" = SPlot
  * @param "rap" = RapidSim
+ * @param "ap"  = Straight from AnalysisProductions 
+ * @param "pap" = After filtering step
  */
-const vector< TString > SettingDef::AllowedConf::TupleOptions = {"gng", "pro", "cre", "spl", "rap", "tmp", "chainexctrg"};
+const vector< TString > SettingDef::AllowedConf::TupleOptions = 
+{
+    "gng", 
+    "pro", 
+    "cre", 
+    "spl", 
+    "rap", 
+    "tmp", 
+    "chainexctrg",
+    // ---------------
+    "ap",
+    "pap"
+};
 
 /**
  * \brief Efficiency options ('-' separated)
@@ -1244,4 +1302,3 @@ TString gRX::TriggerConf() noexcept { return SettingDef::Config::triggerConf; }
 TString gRX::Brem()        noexcept { return SettingDef::Config::brem; }
 TString gRX::Track()       noexcept { return SettingDef::Config::track; }
 
-#endif

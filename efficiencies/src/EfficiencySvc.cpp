@@ -146,7 +146,18 @@ RooRealVar * LoadEfficiencyForFit(ConfigHolder & _configHolder, TString _mode) n
         // TMP HACK ....do this to work with your eos user area to efficiency grabbing and RD for tuples...
         // _dirName.ReplaceAll("eos/lhcb/wg/RD/RKstar", "eos/lhcb/user/r/rquaglia/ewp-rkstz");
         // cout<<"Peaking EFF from DIR " << _dirName<< RESET<< endl;
-        auto ch = ConfigHolder(_prj, _ana, _sample, _q2bin, _yy, _pol, _trg, Brem::All, _trk);
+        auto ch = ConfigHolder(
+                _prj, 
+                _ana, 
+                _sample, 
+                _q2bin, 
+                _yy, 
+                _pol, 
+                _trg, 
+                hash_triggerconf(SettingDef::Config::triggerConf), 
+                Brem::All, 
+                _trk);
+
         TString _fileName = _dirName + "/";
         TString _option = wOptionUse;
         
@@ -224,7 +235,18 @@ RooRealVar * LoadEfficiencyForFit(ConfigHolder & _configHolder, TString _mode) n
 
     // Build efficiency to use in the fit.
     RooRealVar * _efficiency = GetAverage(_effs, _errs, _weights);
-    ConfigHolder _co(_prj, _ana, _sample, _q2bin, _year, _polarity, _trg, Brem::All, _trk);
+    ConfigHolder _co(
+            _prj, 
+            _ana, 
+            _sample, 
+            _q2bin, 
+            _year, 
+            _polarity, 
+            _trg, 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            Brem::All, 
+            _trk);
+
     TString _name = "eff_" + _co.GetKey();
     TString _title = "eff_{" + to_string(_prj) + SettingDef::separator + to_string(_ana) + SettingDef::separator + to_string(_trg) + "}^{" + to_string(_q2bin) + "}";
     if(_mode == "RRATIO"){
@@ -1635,7 +1657,18 @@ TString RetrieveRootFileEfficiency(const Prj & _prj, const Analysis & _ana, cons
     _dirName += "/" + to_string(_yy) + to_string(_pol);
     auto original                   = SettingDef::Config::triggerConf;
     SettingDef::Config::triggerConf = to_string(triggerConf);
-    auto _ch                        = ConfigHolder(_prj, _ana, _sample, _q2Bin, _yy, _pol, _trg, Brem::All);
+    auto _ch                        = ConfigHolder(
+            _prj, 
+            _ana, 
+            _sample, 
+            _q2Bin, 
+            _yy, 
+            _pol, 
+            _trg, 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            Brem::All,
+            Track::All);
+
     _ch.Init();
     SettingDef::Config::triggerConf = original;
     TString _fileName               = _dirName + "/";

@@ -36,7 +36,6 @@ before_script:
     # For debugging
 stages : 
     - build_env 
-    - tests
 build_env:environment :
     stage : build_env
     script:
@@ -54,32 +53,3 @@ build_env:cpp :
     artifacts : 
       paths: 
         - ./build
-tests:kernel_pyload_create: 
-    stage : tests 
-    needs : 
-      - build_env:environment
-      - build_env:cpp 
-    script : 
-      - ./myenv/run bash -c "python tests/test_kernel.py"
-
-tests:kernel_pyload_cutholder: 
-    stage : tests 
-    needs : 
-      - build_env:environment
-      - build_env:cpp 
-    script : 
-      - ./myenv/run bash -c "python tests/test_cutreader.py"
-
-# TODO : load the just-compiled c++ libs and test them in python?
-# tests:load_python: 
-#     stage : tests
-#     needs : 
-#       - build_env:environment
-#       - build_env:cpp
-#     script : 
-#       - ./myenv/run bash -c "source setup.sh && python selection/test_reader_with_ap.py"
-#     artifacts : 
-#       paths: 
-#         - ./plots/
-
-

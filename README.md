@@ -11,8 +11,10 @@ this should work with mamba and micromamba too. Then build the libraries and exe
 
 ```bash
 make -p build
-cmake -B build
-make -C build
+# Compiles everything
+cmake --build   build 
+# Optional, it will install libraries in install directory
+cmake --install build
 ```
 
 ## Usage

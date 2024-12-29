@@ -13,7 +13,17 @@
 ClassImp(FitConfiguration);
 
 FitConfiguration::FitConfiguration(const Prj & _prj, const Analysis & _ana, const Q2Bin & _q2Bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem, const Track & _track, const bool & _constrainedMass, const tuple< bool, int, double, double > & _configVarMC, const tuple< bool, int, double, double > & _configVarCL, const vector< TString > & _composition)
-    : ConfigHolder(_prj, _ana, "", _q2Bin, _year, _polarity, _trigger, _brem, _track)   // <- construct the class it inherits from (the ConfigHolder, A FitConfiguration doesn't need a Tuple/Weight/Cut !)
+    : ConfigHolder(
+            _prj, 
+            _ana, 
+            "", 
+            _q2Bin, 
+            _year, 
+            _polarity, 
+            _trigger, 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            _brem, 
+            _track)   // <- construct the class it inherits from (the ConfigHolder, A FitConfiguration doesn't need a Tuple/Weight/Cut !)
 {
     if (SettingDef::debug.Contains("FF")) SetDebug(true);
     if (m_debug) MessageSvc::Debug("FitConfiguration", (TString) "");
@@ -45,7 +55,17 @@ FitConfiguration::FitConfiguration(const Prj & _prj, const Analysis & _ana, cons
 }
 
 FitConfiguration::FitConfiguration(const Prj & _prj, const Analysis & _ana, const Q2Bin & _q2Bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem, const Track & _track, const TString & _varName, const tuple< bool, int, double, double > & _configVarMC, const tuple< bool, int, double, double > & _configVarCL, const vector< TString > & _composition)
-    : ConfigHolder(_prj, _ana, "", _q2Bin, _year, _polarity, _trigger, _brem, _track)   // <- construct the class it inherits from (the ConfigHolder, A FitConfiguration doesn't need a Tuple/Weight/Cut !)
+    : ConfigHolder(
+            _prj, 
+            _ana, 
+            "", 
+            _q2Bin, 
+            _year, 
+            _polarity, 
+            _trigger, 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            _brem, 
+            _track)   // <- construct the class it inherits from (the ConfigHolder, A FitConfiguration doesn't need a Tuple/Weight/Cut !)
 {
     if (SettingDef::debug.Contains("FF")) SetDebug(true);
     if (m_debug) MessageSvc::Debug("FitConfiguration", (TString) "varName");
@@ -76,7 +96,17 @@ FitConfiguration::FitConfiguration(const Prj & _prj, const Analysis & _ana, cons
 }
 
 FitConfiguration::FitConfiguration(const Prj & _prj, const Analysis & _ana, const Q2Bin & _q2Bin, const Year & _year, const Polarity & _polarity, const Trigger & _trigger, const Brem & _brem, const Track & _track, const vector< TString > & _composition)
-    : ConfigHolder(_prj, _ana, "", _q2Bin, _year, _polarity, _trigger, _brem, _track)   // <- construct the class it inherits from (the ConfigHolder, A FitConfiguration doesn't need a Tuple/Weight/Cut !)
+    : ConfigHolder(
+            _prj, 
+            _ana, 
+            "", 
+            _q2Bin, 
+            _year, 
+            _polarity, 
+            _trigger, 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            _brem, 
+            _track)   // <- construct the class it inherits from (the ConfigHolder, A FitConfiguration doesn't need a Tuple/Weight/Cut !)
 {
     if (SettingDef::debug.Contains("FF")) SetDebug(true);
     if (m_debug) MessageSvc::Debug("FitConfiguration", (TString) "composition");
@@ -848,10 +878,24 @@ TString FitConfiguration::GetSampleName(const Sample & _sample) const noexcept {
     return CleanString(_key);
 }
 
-ConfigHolder FitConfiguration::GetSignalConfigHolder() const noexcept {
-    if (m_componentsAndOptions.find(m_signalSample) == m_componentsAndOptions.end() && !m_hasBrem) MessageSvc::Error("GetSignalConfigHolder", (TString) "Cannot find", to_string(m_signalSample), "among FitComponents", "EXIT_FAILURE");
+ConfigHolder FitConfiguration::GetSignalConfigHolder() const noexcept 
+{
+    if (m_componentsAndOptions.find(m_signalSample) == m_componentsAndOptions.end() && !m_hasBrem) 
+        MessageSvc::Error("GetSignalConfigHolder", (TString) "Cannot find", to_string(m_signalSample), "among FitComponents", "EXIT_FAILURE");
+
     TString      _sampleID = GetSampleName(m_signalSample);
-    ConfigHolder _config(m_project, m_ana, _sampleID, m_q2bin, m_year, m_polarity, m_trigger, Brem::All, m_track);
+    ConfigHolder _config(
+            m_project, 
+            m_ana, 
+            _sampleID, 
+            m_q2bin, 
+            m_year, 
+            m_polarity, 
+            m_trigger, 
+            hash_triggerconf(SettingDef::Config::triggerConf), 
+            Brem::All, 
+            m_track);
+
     return _config;
 }
 

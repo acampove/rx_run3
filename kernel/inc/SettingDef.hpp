@@ -1,5 +1,4 @@
-#ifndef SETTINGDEF_HPP
-#define SETTINGDEF_HPP
+#pragma once
 
 #include "EnumeratorSvc.hpp"
 #include "MessageSvc.hpp"
@@ -41,7 +40,6 @@ namespace SettingDef {
       public:
         static TString exe;
         static TString yaml;
-
         static TString repoDir;
         static TString anaDir;
 
@@ -341,32 +339,53 @@ namespace SettingDef {
         static map<TString, map< TString, double> >  ReductionFactor;
     };
 
+    typedef map<Prj, vector<TString>> SampleList;
     /**
      * \class AllowedConf
      * \brief Allowed settings
      */
-    class AllowedConf {
+    class AllowedConf 
+    {
+        public:
+            /**
+             * @brief Function used to initialize configuration from YAML files
+             * @param conf_dir Directory containing the following configuration files:\n
+             *    sample_run12.yaml \n
+             *    sample_run3.yaml  \n
+             */
+            static void Initialize(const std::string &conf_dir);
 
-      public:
-        static const vector< TString >             Projects;
-        static const vector< TString >             Analyses;
-        static const map< Prj, vector< TString > > Samples;
-        static const map< TString, TString >       TexSamples;   // Map for SampleToTex conversion
-        static const vector< TString >             Q2Bins;
-        static const vector< TString >             Years;
-        static const vector< TString >             Polarities;
-        static const vector< TString >             L0Categories;
-        static const vector< TString >             L0Configurations;
-        static const vector< TString >             BremCategories;
-        static const vector< TString >             TrackCategories;
+            static const vector< TString >             Projects;
+            static const vector< TString >             Analyses;
 
-        static const vector< TString > CutOptions;
-        static const vector< TString > WeightOptions;
-        static const vector< TString > WeightConfig;
-        static const vector< TString > TupleOptions;
-        static const vector< TString > EfficiencyOptions;
-        static const vector< TString > FitComponents;
-        static const vector< TString > FitOptions;
+            static SampleList Samples_run12;
+            static SampleList Samples_run3;
+            static SampleList Samples;
+
+            static const map< TString, TString >       TexSamples;   // Map for SampleToTex conversion
+            static const vector< TString >             Q2Bins;
+            static const vector< TString >             Years;
+            static const vector< TString >             Polarities;
+            static const vector< TString >             L0Categories;
+            static const vector< TString >             L0Configurations;
+            static const vector< TString >             BremCategories;
+            static const vector< TString >             TrackCategories;
+
+            static const vector< TString > CutOptions;
+            static const vector< TString > WeightOptions;
+            static const vector< TString > WeightConfig;
+            static const vector< TString > TupleOptions;
+            static const vector< TString > EfficiencyOptions;
+            static const vector< TString > FitComponents;
+            static const vector< TString > FitOptions;
+        private:
+            /**
+             * @brief Will take path to yaml config and use it to fill the list of samples
+             * @param conf_path Path to YAML file
+             * @param samples empty container of samples, i.e. "map<Prj, <vector<TString>>>"
+             */
+            static void _ReadSamplesFromYaml(const std::string &conf_path, SampleList &samples);
+            static SampleList& _MergeSamples(const SampleList &s1, const SampleList &s2);
     };
 
 };   // namespace SettingDef
@@ -404,4 +423,3 @@ namespace gRX {
     TString Track() noexcept;
 };   // namespace gRX
 
-#endif

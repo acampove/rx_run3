@@ -1,6 +1,3 @@
-#ifndef WEIGHTHOLDER_CPP
-#define WEIGHTHOLDER_CPP
-
 #include "WeightHolder.hpp"
 #include "WeightHolderRL.hpp"
 #include "WeightHolderRX.hpp"
@@ -27,59 +24,80 @@
 
 ClassImp(WeightHolder)
 
-    WeightHolder::WeightHolder()
-    : m_configHolder() {
-    if (SettingDef::debug.Contains("WH")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "Default");
+WeightHolder::WeightHolder() : m_configHolder() 
+{
+    MessageSvc::Debug("ConfigHolder", "Calling default constructor");
+
     m_weightOption = SettingDef::Weight::option;
     m_weightConfig = SettingDef::Weight::config;
+
     //Special routine to make it work with weightOption[weightConfig] or [weightConfig]weightOption bypassing globally configured one
-    if( m_weightOption.BeginsWith("[") || m_weightOption.EndsWith("]")){
+    if ( m_weightOption.BeginsWith("[") || m_weightOption.EndsWith("]"))
+    {
         MessageSvc::Warning("WeightHolder, forcing weightConfig from Weight Option using [XXX] begin/end with");
         m_weightConfig = StripStringBetween(m_weightOption, "[","]");
         //Weak check that the weightConfig contains at least one among the allowed ones in SettingDef
         bool valid = false ;
-        for( auto & wConfBitsAllow : SettingDef::AllowedConf::WeightConfig){
-            if( m_weightConfig.Contains(wConfBitsAllow)){ valid = true; break;}
+        for( auto & wConfBitsAllow : SettingDef::AllowedConf::WeightConfig)
+        {
+            if( m_weightConfig.Contains(wConfBitsAllow))
+            { 
+                valid = true; 
+                break;
+            }
         }
-        if( ! valid){
-            MessageSvc::Error("WeightHolder with custom wconfig not allowe", m_weightConfig, "EXIT_FAILURE");
-        }else{
-            MessageSvc::Warning("WeightHolder bypassing global settings via weightOption for weightConfig", m_weightConfig);
-        }
+
+        if ( ! valid)
+            MessageSvc::Fatal("WeightHolder", "WeightHolder with custom wconfig not allowed ", m_weightConfig);
+        else
+            MessageSvc::Warning("WeightHolder", "WeightHolder bypassing global settings via weightOption for weightConfig ", m_weightConfig);
+
         //clear the [XXX] from WeightOption
         m_weightOption =  m_weightOption.ReplaceAll(TString::Format("[%s]", m_weightConfig.Data()), "");
     }
 
-    Check();
+    _Check();
 }
 
-WeightHolder::WeightHolder(const ConfigHolder & _configHolder, TString _weightOption)
-    : m_configHolder(_configHolder) {
-    if (SettingDef::debug.Contains("WH")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("ConfigHolder", (TString) "ConfigHolder");
-    m_weightOption = _weightOption;
-    m_weightConfig = SettingDef::Weight::config;
+WeightHolder::WeightHolder(const ConfigHolder & _configHolder, const TString &_weightOption) : m_configHolder(_configHolder) 
+{
+    MessageSvc::Debug("ConfigHolder", "Calling constructor with ConfigHolder and option:\"", _weightOption, "\"");
 
+    m_weightOption = _weightOption;
+
+    _SetWeightConfig();
+
+    _Check();
+}
+
+void WeightHolder::_SetWeightConfig()
+{
     //Special routine to make it work with weightOption[weightConfig] or [weightConfig]weightOption bypassing globally configured one
-    if( m_weightOption.BeginsWith("[") || m_weightOption.EndsWith("]")){
-        MessageSvc::Warning("WeightHolder, forcing weightConfig from Weight Option using [XXX] begin/end with");
-        m_weightConfig = StripStringBetween(m_weightOption, "[","]");
-        //Weak check that the weightConfig contains at least one among the allowed ones in SettingDef
-        bool valid = false ;
-        for( auto & wConfBitsAllow : SettingDef::AllowedConf::WeightConfig){
-            if( m_weightConfig.Contains(wConfBitsAllow)){ valid = true; break;}
-        }
-        if( ! valid){
-            MessageSvc::Error("WeightHolder with custom wconfig not allowe", m_weightConfig, "EXIT_FAILURE");
-        }else{
-            MessageSvc::Warning("WeightHolder bypassing global settings via weightOption for weightConfig", m_weightConfig);
-        }
-        //clear the [XXX] from WeightOption
-        m_weightOption =  m_weightOption.ReplaceAll(TString::Format("[%s]", m_weightConfig.Data()), "");
+    if( ! m_weightOption.BeginsWith("[") && ! m_weightOption.EndsWith("]"))
+    {
+        m_weightConfig = SettingDef::Weight::config;
+        return;
     }
 
-    Check();
+    m_weightConfig = StripStringBetween(m_weightOption, "[","]");
+
+    //Weak check that the weightConfig contains at least one among the allowed ones in SettingDef
+    bool valid = false ;
+    for ( auto & wConfBitsAllow : SettingDef::AllowedConf::WeightConfig)
+    {
+        if( m_weightConfig.Contains(wConfBitsAllow))
+        { 
+            valid = true; 
+            break;
+        }
+    }
+
+    if ( !valid )
+        MessageSvc::Fatal(TString("WeightHolder"), "WeightHolder with custom wconfig not allowe", m_weightConfig);
+
+    MessageSvc::Warning("WeightHolder", "WeightHolder bypassing global settings via weightOption for weightConfig", m_weightConfig);
+    //clear the [XXX] from WeightOption
+    m_weightOption =  m_weightOption.ReplaceAll(TString::Format("[%s]", m_weightConfig.Data()), "");
 }
 
 WeightHolder::WeightHolder(const WeightHolder & _weightHolder)
@@ -90,7 +108,7 @@ WeightHolder::WeightHolder(const WeightHolder & _weightHolder)
     m_weightConfig = _weightHolder.Config();
     m_weight       = _weightHolder.Weight();
     m_weights      = _weightHolder.Weights();
-    Check();
+    _Check();
 }
 
 ostream & operator<<(ostream & os, const WeightHolder & _weightHolder) {
@@ -107,9 +125,12 @@ ostream & operator<<(ostream & os, const WeightHolder & _weightHolder) {
     return os;
 }
 
-bool WeightHolder::Check() {
-    for (auto _opt : TokenizeString(m_weightOption, SettingDef::separator)) {
-        if (!CheckVectorContains(SettingDef::AllowedConf::WeightOptions, _opt)) {
+bool WeightHolder::_Check() 
+{
+    for (auto _opt : TokenizeString(m_weightOption, SettingDef::separator)) 
+    {
+        if (!CheckVectorContains(SettingDef::AllowedConf::WeightOptions, _opt)) 
+        {
             cout << RED << *this << RESET << endl;
             MessageSvc::Error("WeightHolder", (TString) "\"" + _opt + "\"", "option not in SettingDef::AllowedConf::WeightOptions", "EXIT_FAILURE");
         }
@@ -1229,5 +1250,3 @@ vector< pair< TH1D *, vector < TH2D * > > > WeightHolder::GetWeightMapsBS(TStrin
 
     return _maps_BS;
 }
-
-#endif

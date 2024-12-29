@@ -1,5 +1,4 @@
-#ifndef HELPERSVC_HPP
-#define HELPERSVC_HPP
+#pragma once
 
 #include "SettingDef.hpp"
 #include "ConfigHolder.hpp"
@@ -14,17 +13,14 @@
 #include <vector>
 
 #include <boost/units/detail/utility.hpp>
-
-//#include "ROOT/RMakeUnique.hxx"
 #include <ROOT/RDataFrame.hxx>
 
-class TupleReader;
+#include "TString.h"
+#include "TChain.h"
+#include "TRandom3.h"
+#include "RooRealVar.h"
 
-class TRandom3;
-class TChain;
-class TString;
-class RooRealVar;
-class RooAbsReal;
+class TupleReader;
 
 const TCut    NOCUT    = "1";
 const TString NOWEIGHT = "1.";
@@ -355,5 +351,3 @@ ROOT::RDF::RNode Reweight2XJPs( ROOT::RDF::RNode df, TString _weightName );
  * New functions for run3 better handling of inputs
 */
 std::vector<std::string> ReadTupleListFile(const std::string& filename);
-
-#endif

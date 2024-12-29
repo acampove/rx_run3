@@ -1,47 +1,59 @@
-#ifndef TUPLEREADER_CPP
-#define TUPLEREADER_CPP
 
 #include "TupleReader.hpp"
-
 #include "SettingDef.hpp"
 #include <fstream>
 
 #include "core.h"
 #include "vec_extends.h"
 
-TupleReader::TupleReader() {
-    if (SettingDef::debug.Contains("TR")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("TupleReader", (TString) "Default");
+// -------------------------------------------
+
+TupleReader::TupleReader() 
+{
+    MessageSvc::Debug("TupleReader", "Using default constructor");
+
     SetFileRecover();
     m_addTuple = SettingDef::Tuple::addTuple;
     m_frac     = SettingDef::Tuple::frac;
 }
 
-TupleReader::TupleReader(TString _tupleName, TString _fileName) {
-    if (SettingDef::debug.Contains("TR")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("TupleReader", (TString) "TString");
+TupleReader::TupleReader(const TString &_tupleName, const TString &_fileName) 
+{
+    MessageSvc::Debug("TupleReader", "Calling constructor with file ", _fileName, " and tree ", _tupleName);
+
     SetFileRecover();
+
+    if (_tupleName == "")
+        MessageSvc::Fatal(TString("TupleReader"), "Cannot make chain with no tuple name");
+
     m_tuple = new TChain(_tupleName);
-    if (_fileName != "") AddFile(_fileName);
+
+    if (_fileName != "") 
+        AddFile(_fileName);
+
     m_tuple->SetBranchStatus("*",1);
+
     m_reader   = new TTreeReader(m_tuple);
     m_addTuple = SettingDef::Tuple::addTuple;
     m_frac     = SettingDef::Tuple::frac;
 }
 
-TupleReader::TupleReader(TChain * _tuple) {
-    if (SettingDef::debug.Contains("TR")) SetDebug(true);
-    if (m_debug) MessageSvc::Debug("TupleReader", (TString) "TChain");
+TupleReader::TupleReader(TChain * _tuple) 
+{
+    MessageSvc::Debug("TupleReader", "Using constructor taking TChain");
+
     SetFileRecover();
     m_tuple         = _tuple;
     m_reader        = new TTreeReader(m_tuple);
     m_addTuple      = SettingDef::Tuple::addTuple;
     m_frac          = SettingDef::Tuple::frac;
     m_isInitialized = true;
+
     m_fileNames.push_back(_tuple->GetCurrentFile()->GetName());
 }
 
-TupleReader::TupleReader(const TupleReader & _tupleReader) {
+TupleReader::TupleReader(const TupleReader & _tupleReader) 
+{
     if (SettingDef::debug.Contains("TR")) SetDebug(true);
     if (m_debug) MessageSvc::Debug("TupleReader", (TString) "TupleReader");
     SetFileRecover();
@@ -52,6 +64,8 @@ TupleReader::TupleReader(const TupleReader & _tupleReader) {
     m_fileNames     = _tupleReader.GetFileNames();
     m_isInitialized = _tupleReader.IsInitialized();
 }
+
+// -------------------------------------------
 
 ostream & operator<<(ostream & os, const TupleReader & _tupleReader) {
     os << WHITE;
@@ -70,46 +84,63 @@ ostream & operator<<(ostream & os, const TupleReader & _tupleReader) {
     return os;
 }
 
-void TupleReader::Init() {
-    MessageSvc::Info(Color::Cyan, "TupleReader", (TString) "Initialize ...");
-    if (m_debug) MessageSvc::Debug("TupleReader", (TString) m_tuple->GetName());
-    if (m_debug) PrintListOfFiles();
-    if (GetNFiles() == 0) {
-        cout << *this;
-        if (!SettingDef::Tuple::datasetCache) {
-            if (SettingDef::trowLogicError)
-                MessageSvc::Error("TupleReader", (TString) "Empty file list", "logic_error");
-            else{
-                if( SettingDef::Tuple::addTuple == true){
-                        MessageSvc::Error("TupleReader", (TString) "Empty file list", "EXIT_FAILURE");
-        	    }
-    	    }
-        } else {
-            MessageSvc::Error("TupleReader", (TString) "Empty file list");
-        }
+void TupleReader::Init() 
+{
+    MessageSvc::Info("Init", "TupleReader", "Initializing reader"); 
+
+    if (m_tuple == nullptr)
+        MessageSvc::Fatal(TString("Init"), "Tuple is a null pointer");
+
+    MessageSvc::Debug("Init", "TupleName:", m_tuple->GetName());
+    PrintListOfFiles();
+
+    if (GetNFiles() == 0)
+    {
+        if      (SettingDef::Tuple::datasetCache) 
+            MessageSvc::Error("TupleReader", "Empty file list");
+        else if (SettingDef::trowLogicError || SettingDef::Tuple::addTuple )
+            MessageSvc::Fatal("TupleReader", "Empty file list");
+
+        return;
     }
-    if (m_addTuple) {
-        if (m_tuple->GetEntries() == 0) {
-            cout << *this;
-            if (!SettingDef::Tuple::datasetCache) {
-                if (SettingDef::trowLogicError)
-                    MessageSvc::Error("TupleReader", (TString) "Empty tuple", "logic_error");
-                else
-                    MessageSvc::Error("TupleReader", (TString) "Empty tuple", "EXIT_FAILURE");
-            } else {
-                MessageSvc::Error("TupleReader", (TString) "Empty file list");
-            }
-        }
-        if (m_tuple->GetListOfFriends() != nullptr) {
-            if (m_tuple->GetListOfFriends()->GetSize() != 0) MessageSvc::Info("TupleReader", (TString) "Has friends");
-            if (m_tuple->GetEntries() != m_tuple->GetEntriesFriend()) MessageSvc::Error("TupleReader", (TString) "Different entries in Tuple and Friend", to_string(m_tuple->GetEntries()), "!=", to_string(m_tuple->GetEntriesFriend()), "EXIT_FAILURE");
-        }
-        // if (m_debug) Size();
-        m_isInitialized = true;
-        PrintInline();
-    }
-    return;
+
+    if (!m_addTuple) 
+        return;
+
+    if (m_tuple->GetEntries() == 0) 
+        MessageSvc::Fatal("TupleReader", "Empty tuple");
+
+    _CheckFriends();
+
+    m_isInitialized = true;
+    PrintInline();
+
+    MessageSvc::Debug("Init", "TupleReader", "Reader initialized"); 
 }
+
+void TupleReader::_CheckFriends()
+{
+    MessageSvc::Debug("_CheckFriends", "Checking for friend trees"); 
+
+    auto l_friends = m_tuple->GetListOfFriends();
+    if (l_friends == nullptr) 
+        return;
+
+    auto nfriends = l_friends->GetSize();
+    if (nfriends == 0) 
+        return;
+
+    MessageSvc::Info("TupleReader" , "Tuple has ", nfriends, " friends");
+
+    auto ntuple_nent   = to_string(m_tuple->GetEntries()      );
+    auto ntuple_friend = to_string(m_tuple->GetEntriesFriend());
+
+    if (ntuple_nent != ntuple_friend)
+        MessageSvc::Fatal("TupleReader",  "Different entries in Tuple and Friend ", ntuple_nent, " != ", ntuple_friend);
+
+    MessageSvc::Debug("_CheckFriends", "Check for friend trees finished"); 
+}
+
 
 void TupleReader::Close() {
     if ((m_reader != nullptr) || (m_tuple != nullptr)) MessageSvc::Info(Color::Cyan, "TupleReader", (TString) "Close ...");
@@ -212,170 +243,223 @@ void TupleReader::SetEntries(Long64_t _maxEntries) {
     m_tuple->SetEntries(_entries);
     return;
 }
+// ---------------------------------------------------
+void TupleReader::AddTuple(TChain * _tuple) 
+{
+    if (m_tuple == nullptr) 
+        return;
 
-void TupleReader::AddTuple(TChain * _tuple) {
-    if (m_tuple != nullptr) {
-        if (m_debug) MessageSvc::Debug("TupleReader", (TString) "AddTuple");
-        TObjArray * _fileElements = _tuple->GetListOfFiles();
-        if (_fileElements) {
-            TIter           _next(_fileElements);
-            TChainElement * _chainElement = nullptr;
-            while ((_chainElement = (TChainElement *) _next())) {
-                if (!AddFile(_chainElement->GetTitle())) break;
-            }
-        }
+    MessageSvc::Debug("TupleReader", "AddTuple");
+    TObjArray * _fileElements = _tuple->GetListOfFiles();
+
+    if (!_fileElements) 
+        return;
+
+    TIter           _next(_fileElements);
+    TChainElement * _chainElement = nullptr;
+    while ((_chainElement = (TChainElement *) _next())) 
+    {
+        if (!AddFile(_chainElement->GetTitle())) 
+            break;
     }
-    return;
 }
 
-bool TupleReader::AddFile(TString _fileName) {
-    if (m_tuple != nullptr) {
-        if ((m_frac != -1) && (m_tuple->GetEntries() > m_frac)) {
+bool TupleReader::AddFile(const TString &_fileName) 
+{
+    // If check fail, return
+    {
+        if (m_tuple == nullptr) 
+            return true;
+
+        if ((m_frac != -1) && (m_tuple->GetEntries() > m_frac)) 
+        {
             MessageSvc::Info("TupleReader", (TString) "Events loaded", to_string(m_tuple->GetEntries()), "> Events requested", to_string(m_frac), "... Stop AddFile");
             return false;
         }
-        if( CheckVectorContains( m_fileNames, _fileName)){
-            MessageSvc::Warning("TupleReader", (TString)"AddFile skip, already added");
+
+        if( CheckVectorContains( m_fileNames, _fileName))
+        {
+            MessageSvc::Warning("TupleReader", "AddFile skip, already added");
             return false;
         }
+
+        if (! IOSvc::ExistFile(GetXrootD(_fileName))) 
+        {
+            MessageSvc::Warning("TupleReader", "AddFile", _fileName, "does not exist");		
+            return false;
+        }
+    }
+
+    MessageSvc::Debug("TupleReader", "AddFile", _fileName);
+    if (!m_addTuple) 
+    {
         m_fileNames.push_back(_fileName);
-        if (true) MessageSvc::Debug("TupleReader", (TString) "AddFile", _fileName);
-        if (m_addTuple) {
-            if (IOSvc::ExistFile(GetXrootD(_fileName))) {
-                //
-                int _status = m_tuple->Add(GetXrootD(_fileName), -1);
-                if( _status == 0 ){
-                    // MessageSvc::Error("TupleReader::Add(FileName)", TString::Format("TTree not in file(%s)",_fileName.Data()), "EXIT_FAILURE");
-                    MessageSvc::Warning("TupleReader::Add(FileName)", TString::Format("TTree not in file(%s)",_fileName.Data()));
-                    m_fileNames.pop_back();
-                }
-            } else {
-                MessageSvc::Warning("TupleReader", (TString) "AddFile", _fileName, "does not exist");		
-                m_fileNames.pop_back();
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-bool TupleReader::AddFile(TString _fileName, TString _tupleName) {
-    if (_fileName == "") return false;
-    if (m_tuple != nullptr) {
-        if ((m_frac != -1) && (m_tuple->GetEntries() > m_frac)) {
-            MessageSvc::Info("TupleReader", (TString) "Events loaded", to_string(m_tuple->GetEntries()), "> Events requested", to_string(m_frac), "... Stop AddFile");
-            return false;
-        }
-        m_fileNames.push_back(_fileName);
-        if (m_debug) MessageSvc::Debug("TupleReader", (TString) "AddFile", _fileName, _tupleName);
-        if (m_addTuple) {
-            if (IOSvc::ExistFile(GetXrootD(_fileName))) {
-                int _status = m_tuple->AddFile(GetXrootD(_fileName), -1, _tupleName);
-                if( _status == 0 ){
-                    MessageSvc::Error("TupleReader::Add(FileName)", TString::Format("TTree not in file(%s)",_fileName.Data())); //, "EXIT_FAILURE");
-                    m_fileNames.pop_back();
-                }                
-            } else {
-                MessageSvc::Warning("TupleReader", (TString) "AddFile", _fileName, "does not exist");
-                m_fileNames.pop_back();
-            }
-        }
-    }
-    return true;
-}
-
-void TupleReader::AddFiles(TString _fileName) {
-    if (m_tuple != nullptr) {
-        auto   _start = chrono::high_resolution_clock::now();
-        glob_t _globResult;
-        glob(_fileName, GLOB_TILDE, nullptr, &_globResult);
-        if (m_debug) MessageSvc::Debug("TupleReader", (TString) "AddFiles", _fileName, to_string(_globResult.gl_pathc));
-        for (unsigned int i = 0; i < _globResult.gl_pathc; ++i) {
-            if (!AddFile(_globResult.gl_pathv[i])) break;
-        }
-        globfree(&_globResult);
-        auto _stop = chrono::high_resolution_clock::now();
-        MessageSvc::Warning("TupleReader", (TString) "AddFiles took", to_string(chrono::duration_cast< chrono::seconds >(_stop - _start).count()), "seconds");
-    }
-    return;
-}
-
-void TupleReader::AddFile(TString _fileName, int _iFile) {
-    if (m_tuple != nullptr) {
-        glob_t _globResult;
-        glob(_fileName, GLOB_TILDE, nullptr, &_globResult);
-        if (m_debug) MessageSvc::Debug("TupleReader", (TString) "AddFile", _fileName, to_string(_globResult.gl_pathc), to_string(_iFile));
-        if (_iFile < _globResult.gl_pathc)
-            AddFile(_globResult.gl_pathv[_iFile]);
-        else
-            MessageSvc::Error("TupleReader", (TString) "AddFile", _fileName, to_string(_iFile), "does not exist");
-        globfree(&_globResult);
-    }
-    return;
-}
-
-int TupleReader::GetNFiles(TString _fileName) {
-    int _nFiles = 0;
-    if (m_tuple != nullptr) {
-        glob_t _globResult;
-        glob(_fileName, GLOB_TILDE, nullptr, &_globResult);
-        if (m_debug) MessageSvc::Debug("TupleReader", (TString) "GetNFiles", _fileName, to_string(_globResult.gl_pathc));
-        _nFiles = _globResult.gl_pathc;
-        globfree(&_globResult);
-    }
-    return _nFiles;
-}
-
-bool TupleReader::AddList(TString _fileName) {
-    if (m_tuple != nullptr) {
-        if (!IOSvc::ExistFile(_fileName)) {
-            MessageSvc::Warning("TupleReader", (TString) "AddList", _fileName, "does not exist");
-            return false;
-        }
-        auto _start = chrono::high_resolution_clock::now();
-        if (m_debug) MessageSvc::Debug("TupleReader", (TString) "AddList", _fileName);
-        ifstream _list;
-        _list.open(_fileName, ifstream::in);
-        string _line;
-        int    _listSize = 0;
-        while (getline(_list, _line)) {
-            if (!_line.empty()) ++_listSize;
-        }
-        _list.close();
-        _list.open(_fileName, ifstream::in);
-        int _addSize = 0;
-        while (getline(_list, _line)) {
-            if (!_line.empty()) {
-                if (AddFile(_line)) ++_addSize;
-            }
-        }
-        _list.close();
-        auto _stop = chrono::high_resolution_clock::now();
-        MessageSvc::Warning("TupleReader", (TString) "ToAdd", to_string(_listSize));
-        MessageSvc::Warning("TupleReader", (TString) "Added", to_string(_addSize));
-        MessageSvc::Warning("TupleReader", (TString) "AddList took", to_string(chrono::duration_cast< chrono::seconds >(_stop - _start).count()), "seconds");
-        if (m_frac == -1) {
-            if (_listSize != _addSize) {
-                MessageSvc::Warning("TupleReader", (TString) "ToAdd != Added");
-                return false;
-            }
-        }
         return true;
     }
-    return false;
+
+    int _status = m_tuple->Add(GetXrootD(_fileName), -1);
+    if( _status != 0 )
+        m_fileNames.push_back(_fileName);
+    else
+        MessageSvc::Warning("TupleReader::Add(FileName)", TString::Format("TTree not in file(%s)",_fileName.Data()));
+
+    return true;
 }
 
-void TupleReader::AddFriend(TChain * _tuple) {
-    if (m_tuple != nullptr) {
-        if (m_debug) MessageSvc::Debug("TupleReader", (TString) "AddFriend");
-        TObjArray * _fileElements = _tuple->GetListOfFiles();
-        if (_fileElements) {
-            TIter           _next(_fileElements);
-            TChainElement * _chainElement = nullptr;
-            while ((_chainElement = (TChainElement *) _next())) AddFriend(_chainElement->GetTitle());
-        }
+bool TupleReader::_CheckAddFile(const TString &_fileName)
+{
+    if (m_tuple == nullptr) 
+    {
+        MessageSvc::Warning("_CheckAddFile", "Cannot add ", _fileName, " tuple pointer is null");
+        return false;
     }
-    return;
+
+    if (_fileName == "") 
+    {
+        MessageSvc::Warning("_CheckAddFile", "Cannot add file: \"", _fileName);
+        return false;
+    }
+
+    if ((m_frac != -1) && (m_tuple->GetEntries() > m_frac)) 
+    {
+        MessageSvc::Info("TupleReader", "Events loaded ", to_string(m_tuple->GetEntries()), " > Events requested ", to_string(m_frac), ". Not adding more files");
+        return false;
+    }
+}
+
+bool TupleReader::AddFile(TString _fileName, TString _tupleName) 
+{
+    auto status = _CheckAddFile(_fileName);
+    if (!status)
+        return false;
+
+    MessageSvc::Debug("TupleReader", "AddFile", _fileName, _tupleName);
+
+    if (!m_addTuple) 
+    {
+        m_fileNames.push_back(_fileName);
+        return true;
+    }
+
+    if (!IOSvc::ExistFile(GetXrootD(_fileName))) 
+    {
+        MessageSvc::Warning("TupleReader", "AddFile", _fileName, "does not exist");
+        return false;
+    }
+
+    int _status = m_tuple->AddFile(GetXrootD(_fileName), -1, _tupleName);
+    if( _status != 0 )
+        m_fileNames.push_back(_fileName);
+    else
+        MessageSvc::Error("TupleReader::Add(FileName)", TString::Format("TTree not in file(%s)",_fileName.Data())); //, "EXIT_FAILURE");
+
+    return true;
+}
+
+void TupleReader::AddFile(TString _fileName, int _iFile) 
+{
+    if (m_tuple == nullptr) 
+        return;
+
+    glob_t _globResult;
+    glob(_fileName, GLOB_TILDE, nullptr, &_globResult);
+    MessageSvc::Debug("TupleReader", "AddFile", _fileName, to_string(_globResult.gl_pathc), to_string(_iFile));
+
+    if (_iFile < _globResult.gl_pathc)
+        AddFile(_globResult.gl_pathv[_iFile]);
+    else
+        MessageSvc::Error("TupleReader", "AddFile", _fileName, to_string(_iFile), "does not exist");
+
+    globfree(&_globResult);
+}
+// ---------------------------------------------------
+
+void TupleReader::AddFiles(const TString &_file_wildcard) 
+{
+    if (m_tuple == nullptr) 
+        return;
+
+    auto   _start = chrono::high_resolution_clock::now();
+    glob_t _globResult;
+    glob(_file_wildcard, GLOB_TILDE, nullptr, &_globResult);
+    MessageSvc::Debug("TupleReader", "AddFiles", _file_wildcard, to_string(_globResult.gl_pathc));
+
+    for (unsigned int i = 0; i < _globResult.gl_pathc; ++i) 
+    {
+        if (!AddFile(_globResult.gl_pathv[i])) 
+            break;
+    }
+
+    globfree(&_globResult);
+    auto _stop = chrono::high_resolution_clock::now();
+    MessageSvc::Info("TupleReader", "AddFiles took ", to_string(chrono::duration_cast< chrono::seconds >(_stop - _start).count()), " seconds");
+}
+
+bool TupleReader::AddList(const TString &_fileName) 
+{
+    if (m_tuple == nullptr)
+        return false;
+
+    if (!IOSvc::ExistFile(_fileName)) 
+    {
+        MessageSvc::Warning("TupleReader", "AddList", _fileName, "does not exist");
+        return false;
+    }
+
+    auto _start = chrono::high_resolution_clock::now();
+    MessageSvc::Debug("TupleReader", "AddList", _fileName);
+
+    ifstream _list;
+
+    _list.open(_fileName, ifstream::in);
+    string _line;
+    int    _listSize = 0;
+
+    while (getline(_list, _line)) 
+    {
+        if (!_line.empty()) ++_listSize;
+    }
+    _list.close();
+
+    _list.open(_fileName, ifstream::in);
+    int _addSize = 0;
+    while (getline(_list, _line)) 
+    {
+        if (!_line.empty() && AddFile(_line)) 
+            ++_addSize;
+    }
+
+    _list.close();
+
+    auto _stop = chrono::high_resolution_clock::now();
+    MessageSvc::Warning("TupleReader", "ToAdd", to_string(_listSize));
+    MessageSvc::Warning("TupleReader", "Added", to_string(_addSize));
+    MessageSvc::Warning("TupleReader", "AddList took", to_string(chrono::duration_cast< chrono::seconds >(_stop - _start).count()), "seconds");
+
+    if (m_frac == -1 && _listSize != _addSize) 
+    {
+        MessageSvc::Warning("TupleReader", "ToAdd != Added");
+        return false;
+    }
+
+    return true;
+}
+
+void TupleReader::AddFriend(TChain * _tuple) 
+{
+    if (m_tuple == nullptr) 
+        return;
+
+    MessageSvc::Debug("TupleReader", "AddFriend");
+
+    TObjArray * _fileElements = _tuple->GetListOfFiles();
+    if (_fileElements) 
+    {
+        TIter           _next(_fileElements);
+        TChainElement * _chainElement = nullptr;
+        while ((_chainElement = (TChainElement *) _next())) 
+            AddFriend(_chainElement->GetTitle());
+    }
 }
 
 void TupleReader::AddFriend(TString _fileName, TString _tupleName) {
@@ -390,12 +474,35 @@ void TupleReader::AddFriend(TString _fileName, TString _tupleName) {
     return;
 }
 
-void TupleReader::PrintListOfFiles() const noexcept {
-    if (m_tuple != nullptr) {
-        MessageSvc::Debug("TupleReader", (TString) "PrintListOfFiles", to_string(m_fileNames.size()));
-        for (const auto & _file : m_fileNames) { MessageSvc::Debug(_file); }
+// ---------------------------------------------------
+
+int TupleReader::GetNFiles(TString _fileName) 
+{
+    int _nFiles = 0;
+    if (m_tuple == nullptr) 
+        return 0;
+
+    glob_t _globResult;
+    glob(_fileName, GLOB_TILDE, nullptr, &_globResult);
+    MessageSvc::Debug("TupleReader", "GetNFiles", _fileName, to_string(_globResult.gl_pathc));
+
+    _nFiles = _globResult.gl_pathc;
+    globfree(&_globResult);
+
+    return _nFiles;
+}
+
+void TupleReader::PrintListOfFiles() const noexcept 
+{
+    if (m_tuple == nullptr) 
+    {
+        MessageSvc::Warning("PrintListOfFiles", "Empty list of files");
+        return;
     }
-    return;
+
+    MessageSvc::Debug("TupleReader", "Number of files: ", to_string(m_fileNames.size()));
+    for (const auto & _file : m_fileNames) 
+        MessageSvc::Debug(_file); 
 }
 
 TString TupleReader::GetFileName(int _iFile) {
@@ -811,12 +918,12 @@ vector< vector< double > > TupleReader::GetVariableVector(vector< TString > & _v
     return _variablesContainer;
 }
 
-void TupleReader::PrintInline() const noexcept {
+void TupleReader::PrintInline() const noexcept 
+{
     TString _nfiles   = IsInitialized() ? to_string(GetNFiles()) : "---";
     TString _nentries = IsInitialized() ? to_string(Tuple()->GetEntriesFast()) : "---";
     TString _toPrint  = fmt::format("NFiles {0}, NEntries {1}", _nfiles, _nentries);
-    MessageSvc::Info(Color::Cyan, "TupleReader", _toPrint);
-    return;
+
+    MessageSvc::Info("PrintInline", _toPrint);
 }
 
-#endif

@@ -3,51 +3,55 @@
 
 
 #include "YamlCutReader.hpp"
+#include <stdexcept>
 
 ClassImp(YamlCutReader)
 
-YamlCutReader::YamlCutReader( const std::string & input_file_yaml){
+
+YamlCutReader::YamlCutReader( const std::string & input_file_yaml)
+{
     m_file_read= input_file_yaml;
-    Init();
+
+    try 
+    {
+        Init();
+    }
+    catch (const std::invalid_argument& e) 
+    {
+        std::cerr << "Error reading YAML file: " << e.what() << std::endl;
+        throw;
+    }
 }
 
-bool YamlCutReader::Init(){
-    try {
-        // Load the YAML file
-        YAML::Node config = YAML::LoadFile(m_file_read);
-        
-        // Parse "Categories"
-        if (config["Categories"]) {
-            for (const auto& category : config["Categories"]) {
-                std::string key = category.first.as<std::string>();
-                std::string value = category.second.as<std::string>();
-                m_cut_categories[key] = value;
-            }
-        } else {
-            std::cerr << "No 'categories' key found in the YAML file." << std::endl;
-            return false;
-        }
+void YamlCutReader::Init()
+{
+    // Load the YAML file
+    YAML::Node config = YAML::LoadFile(m_file_read);
+      
+    // Parse "Categories"
+    if ( ! config["cuts"]) 
+        throw std::invalid_argument("No 'cuts' key found in the YAML file.");
 
-        // Parse "Selections"
-        if (config["Selections"]) {
-            for (const auto& selection : config["Selections"]) {
-                std::string key = selection.first.as<std::string>();
-                std::vector<std::string> values;
-                for (const auto& item : selection.second) {
-                    values.push_back(item.as<std::string>());
-                }
-                m_cut_definitions[key] = values;
-            }
-        } else {
-            std::cerr << "No 'selections' key found in the YAML file." << std::endl;
-            return false;
-        }
+    // Parse "Selections"
+    if ( ! config["selections"]) 
+        throw std::invalid_argument("No 'selections' key found in the YAML file."); 
 
-        return true; // Successful parsing
+    for (const auto& category : config["cuts"]) 
+    {
+        std::string key       = category.first.as<std::string>();
+        std::string value     = category.second.as<std::string>();
+        m_cut_categories[key] = value;
+    }
 
-    } catch (const YAML::Exception& e) {
-        std::cerr << "Error parsing YAML file: " << e.what() << std::endl;
-        return false;
+    for (const auto& selection : config["Selections"]) 
+    {
+        std::string key = selection.first.as<std::string>();
+        std::vector<std::string> values;
+
+        for (const auto& item : selection.second) 
+            values.push_back(item.as<std::string>());
+
+        m_cut_definitions[key] = values;
     }
 } 
 

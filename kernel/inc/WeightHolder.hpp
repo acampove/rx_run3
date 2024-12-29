@@ -1,5 +1,4 @@
-#ifndef WEIGHTHOLDER_HPP
-#define WEIGHTHOLDER_HPP
+#pragma once
 
 #include "EnumeratorSvc.hpp"
 #include "HelperSvc.hpp"
@@ -20,8 +19,8 @@ class TH2Poly;
  * \class WeightHolder
  * \brief Weight info
  */
-class WeightHolder : public TObject {
-
+class WeightHolder : public TObject 
+{
   public:
     /**
      * \brief Default constructor
@@ -29,9 +28,11 @@ class WeightHolder : public TObject {
     WeightHolder();
 
     /**
-     * \brief Constructor with ConfigHolder and TString
+     * @brief Constructor with ConfigHolder and TString.
+     * @param _configHolder ConfigHolder option, storing configuration
+     * @param _weightOption String storing weight configuration
      */
-    WeightHolder(const ConfigHolder & _configHolder, TString _weightOption);
+    WeightHolder(const ConfigHolder & _configHolder, const TString &_weightOption);
 
     /**
      * \brief Copy constructor
@@ -91,7 +92,7 @@ class WeightHolder : public TObject {
      */
     void SetOption(TString _weightOption) {
         m_weightOption = _weightOption;
-        Check();
+        _Check();
         return;
     };
 
@@ -152,7 +153,12 @@ class WeightHolder : public TObject {
     /**
      * \brief Check allowed arguments
      */
-    bool Check();
+    bool _Check();
+
+    /**
+     * @brief By default sets m_weightConfig from default config. If weight option is enclosed in brackets, use what is within instead.
+     */
+    void _SetWeightConfig();
 
     bool m_debug = false;
     /**
@@ -170,5 +176,3 @@ class WeightHolder : public TObject {
 };
 
 ostream & operator<<(ostream & os, const WeightHolder & _weightHolder);
-
-#endif

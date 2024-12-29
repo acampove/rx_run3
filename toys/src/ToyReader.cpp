@@ -60,11 +60,18 @@ map< ConfigHolder, map<TString, double> > ToyReader::ParseConfigurationOverride(
         Trigger _trigger       = hash_trigger(TString(((TObjString *) (*_strCollection).At(3))->String()));
         Year _year             = hash_year(TString(((TObjString *) (*_strCollection).At(4))->String()));
 
-        ConfigHolder _configHolder = ConfigHolder(_project, _ana, "", _q2bin, _year, 
-                                                  hash_polarity(SettingDef::Config::polarity), 
-                                                  _trigger,
-                                                  hash_brem(SettingDef::Config::brem), 
-                                                  hash_track(SettingDef::Config::track));
+        ConfigHolder _configHolder = ConfigHolder(
+                _project, 
+                _ana, 
+                "", 
+                _q2bin, 
+                _year, 
+                hash_polarity(SettingDef::Config::polarity), 
+                _trigger,
+                hash_triggerconf(SettingDef::Config::triggerConf), 
+                hash_brem(SettingDef::Config::brem), 
+                hash_track(SettingDef::Config::track));
+
         std::map< TString, double > _scaleConfigs;
 
         auto _scalesNode = _iter->second;

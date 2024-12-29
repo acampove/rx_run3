@@ -1,5 +1,6 @@
-#ifndef EVENTTYPE_HPP
-#define EVENTTYPE_HPP
+#pragma once
+
+#include "TString.h"
 
 #include "EnumeratorSvc.hpp"
 #include "HelperSvc.hpp"
@@ -14,9 +15,10 @@ class TH1;
 class TH2;
 
 /**
- * \brief      A zipped version of an EventType. A full EventType can be constructed with this Zipped version
+ * @brief A zipped version of an EventType. A full EventType can be constructed with this Zipped version
  */
-struct ZippedEventType {
+struct ZippedEventType 
+{
     Prj         project;
     Analysis    ana;
     TString     sample;
@@ -35,20 +37,30 @@ struct ZippedEventType {
 };
 
 /**
- * \brief      Class describing 1 tuple + 1 cut + 1 weight for the analysis.
+ * @brief Class describing 1 tuple + 1 cut + 1 weight for the analysis.
  * It knows how to laod the cut, delegating it to the CutHolder
  * It knows how to load the tuple and the versioning of it , delegating it to the TupleHolder
  * It knows how to load the weight and the versioning of it, delegating it to the WeightHolder
  * It knows the basic underlying analysis switches forwarded to CutHolder, WeightHolder, TupleHolder to enable switches also for them
  * EventType can be used a fundamental building block of the analysis since it knows the cut, weight, tuple to use and allow to change versions of Cuts/weight/tuples to use in a flexible way.
  */
-class EventType : public ConfigHolder {
-
+class EventType : public ConfigHolder 
+{
   public:
     /**
      * \brief Default constructor, swallow configured SettingDef::Config flags known at build-object time
      */
     EventType();
+
+    /**
+     * @brief Constructor taking configuration through config holder 
+     * @param _cut/wgt/tup_opt Option passed to Config/Weight/TupleHolder object
+     */
+    EventType(
+            const ConfigHolder &_conf,
+            const TString      &_cut_opt,
+            const TString      &_wgt_opt,
+            const TString      &_tup_opt); 
 
     /**
      * \brief      Constructs the object.
@@ -138,11 +150,11 @@ class EventType : public ConfigHolder {
     // bool operator>(const EventType & _eventType) const;
 
     /**
-     * \brief      Initialize This EventType
+     * @brief      Initialize This EventType
      * @param[in]  _force  The force initialization re-do the initialization even if the status of init is True
      * @param[in]  _tuple  Initialize the TupleHolder
      */
-    void Init(bool _force = false, bool _tuple = true);
+    void Init(const bool &_force_initialization = false, const bool &_initialize_tuple_holder = true);
 
     /**
      * \brief      Check consistency of the EventType, flags etc, are they valid?
@@ -434,5 +446,3 @@ class EventType : public ConfigHolder {
 };
 
 ostream & operator<<(ostream & os, const EventType & _eventType);
-
-#endif

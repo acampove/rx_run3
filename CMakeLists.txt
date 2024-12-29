@@ -22,20 +22,23 @@ find_gsl()
 find_root()
 find_yamlcpp()
 find_boost()
+find_glog()
 
 message(STATUS "Libraries:")
 foreach(LIB ${LIBRARIES})
     message(STATUS "   ${LIB}")
     add_subdirectory(${LIB} ${CMAKE_BINARY_DIR}/${LIB})
-    include_directories(${LIB})
-    include_directories(${LIB}/src ${LIB}/inc)
+    include_directories(${LIB}/inc)
     list(APPEND REPO_LIBRARIES ${LIB})
 endforeach()
 
 print_target_libraries()
-make_targets()
+# make_targets()
 
 print_vars()
 print_array(${CMAKE_CXX_FLAGS}  "C++ flags")
 print_array(${CMAKE_C_FLAGS}    "C   flags")
+
+set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install)
+install(TARGETS ${LIBRARIES}) 
 

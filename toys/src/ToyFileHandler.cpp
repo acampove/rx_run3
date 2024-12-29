@@ -1,11 +1,8 @@
-#ifndef TOYFILEHANDLER_CPP
-#define TOYFILEHANDLER_CPP
-
 #include "ToyFileHandler.hpp"
 #include "IOSvc.hpp"
 #include "MessageSvc.hpp"
 #include "SettingDef.hpp"
-#include "HelperSvc.cpp"
+#include "HelperSvc.hpp"
 #include "core.h"
 #include <fmt_ostream.h>
 
@@ -279,5 +276,3 @@ ToyFileHandler::~ToyFileHandler() {
     IOSvc::CloseFile(m_configFile);
     IOSvc::CloseFile(m_tupleFile);
 }
-
-#endif
