@@ -96,12 +96,12 @@ def make_inputs(is_run3 : bool) -> list[str]:
 
     l_file_path = []
     for i_file in range(Data.nfiles):
-        file_path = _make_input(inp_dir, i_file, Data.nentries)
+        file_path = _make_input(tree_name, inp_dir, i_file, Data.nentries)
         l_file_path.append(file_path)
 
     return l_file_path
 # -------------------------
-def _make_input(inp_dir : str, i_file : int, nentries : int) -> str:
+def _make_input(tree_name : str, inp_dir : str, i_file : int, nentries : int) -> str:
     rdf = RDataFrame(nentries)
     rdf = rdf.Define('a', '1')
     rdf = rdf.Define('b', '2')
