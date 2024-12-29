@@ -55,7 +55,7 @@ def test_options(option : str, is_run3 : bool):
     '''
     Will test options
     '''
-    ch  = ut.get_config_holder(is_run3)
+    ch  = get_config_holder(is_run3)
     obj = TupleHolder(ch, option)
     obj.PrintInline()
 # -------------------------
@@ -64,23 +64,23 @@ def test_arg(is_run3 : bool):
     '''
     Test for constructor with file and tuple args
     '''
-    file_path = Data.l_input_path[0]
+    file_path = Data.d_input_path[is_run3][0]
     tree_path = 'DecayTree'
 
-    ch  = ut.get_config_holder(is_run3)
+    ch  = get_config_holder(is_run3)
     obj = TupleHolder(ch, file_path, tree_path, 'pap')
     obj.PrintInline()
 
     rdr = obj.GetTupleReader()
     rdr.PrintInline()
 # -------------------------
-@pytest.mark.parametrize('is_run3', [True])
+@pytest.mark.parametrize('is_run3', [True, False])
 def test_postap(is_run3 : bool):
     '''
-    Test for constructor for post_ap ntuples 
+    Test for constructor for post_ap ntuples
     '''
 
-    ch  = ut.get_config_holder(is_run3=is_run3)
+    ch  = get_config_holder(is_run3=is_run3)
     obj = TupleHolder(ch, 'pap')
     obj.Init()
 
