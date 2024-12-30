@@ -1779,38 +1779,3 @@ int main(int argc, char ** argv)
     return 0;
 }
 
-
-/*
-    How to analyze the efficiency ntuples from Bootstrapping results
-    ROOT::RDataFrame dfEff("efftuple", "test2.root");
-    // La covarianza di XX e YY può anche essere espressa come la differenza tra il valore atteso del loro prodotto e il prodotto dei loro valori attesi:
-    // 1/N * ( sum_{i} = xiyi - ( 1/N *  sum_{i=1}^{N} xi * ( sum_i+)))
-    std::vector<TString> efficiencies = { "eff_wBp_L0L" , "eff_wBp_L0I" , "eff_wB0_L0L", "eff_wB0_L0I"};
-    auto  evalCovariance = []( TString column1, TString column2 , ROOT::RDataFrame & dfIN  ){
-        auto sumXY    = dfIN.Define( "xy", []( double x, double y){ return x*y;}, {column1.Data(), column2.Data()} ).Sum<double>("xy");
-        auto sumX     = dfIN.Sum<double>( column1.Data());
-        auto sumY     = dfIN.Sum<double>( column2.Data());
-        auto nEntries = dfIN.Count();
-        auto norm = 1./ nEntries.GetValue();
-        double cov = norm  * sumXY.GetValue() -  norm * sumX.GetValue() *  norm * sumY.GetValue();
-        return  cov;
-    };
-   auto matrix = TMatrixDSym(4);
-   for( int i = 0; i < efficiencies.size() ; ++i){
-       for( int j = i; j < efficiencies.size(); ++j){
-            matrix( i,j) = evalCovariance( efficiencies[i], efficiencies[j], dfEff);
-       }
-   }
-   matrix.Print();
-   auto evalEff = [] ( TString column, ROOT::RDataFrame &dfIn){
-       auto mean  = dfIn.Mean<double>( column.Data());
-       auto stdev = dfIn.StdDev<double>( column.Data());
-       return make_pair( mean.GetValue(), stdev.GetValue());
-   };
-   for( int i = 0; i < efficiencies.size() ; ++i){
-       auto eff = evalEff( efficiencies[i], dfEff);
-       auto out = Form( "%s : %f +/- %f ( %f percent )", efficiencies[i].Data() , eff.first, eff.second, 100 * eff.second / eff.first);
-       cout<< out << endl;
-   }
-
-*/
