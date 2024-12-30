@@ -438,42 +438,49 @@ auto bookkepingName(
     return _bookkepingName;
 };
 
+//Add to the Interpreter of ROOT when parsing strings operation the MAXV call which is used for the L0-Comb Systematic formula 
+//MAXV( RVec<double> , RVec<double> ) is going to be used inside the Define("a","....MAXV"); See the ReplaceAll for the Weight at the end of the executable.
+ROOT::VecOps::RVec<double> MAXV( const ROOT::VecOps::RVec<double>  &a, const ROOT::VecOps::RVec<double>  & b )
+{
+     ROOT::VecOps::RVec<double> vecOut(a.size());
+     for( int i = 0 ; i < a.size() ; ++i)
+         vecOut[i] = a[i]>b[i] ? a[i] : b[i];    
+
+     return vecOut;                              
+}
+
+// Small helper function flattening  nested WeightOption - WeightConfig loop
+auto flatten_effStepType (const vector< EffSlot > & slots) 
+{
+    vector< pair< EffSlot, TString > > _slot_weightConfig;
+    for (auto & _effStepType : slots) 
+    {
+        for (auto & _weightConfiguration : _effStepType.weightConfigs()) 
+            _slot_weightConfig.push_back(make_pair(_effStepType, _weightConfiguration)); 
+    }
+
+    return _slot_weightConfig;
+}
+
+// Bookkeping naming schemes...
+// Boookkeping navigator methods.
+auto IDTRG(const ConfigHolder & _ConH_BASE) 
+{
+    auto trg      = _ConH_BASE.GetTrigger();
+    auto trg_conf = _ConH_BASE.GetTriggerConf();
+
+    return make_pair(trg, trg_conf);
+}
+
+auto IDWEIGHT(const EffSlot & _slot, const TString _weightConfiguration) 
+{ 
+    return make_pair(_slot.wOpt(), _weightConfiguration); 
+}
 
 int main(int argc, char ** argv) 
 {
-    //Add to the Interpreter of ROOT when parsing strings operation the MAXV call which is used for the L0-Comb Systematic formula 
-    //MAXV( RVec<double> , RVec<double> ) is going to be used inside the Define("a","....MAXV"); See the ReplaceAll for the Weight at the end of the executable.
-    gInterpreter->Declare("ROOT::VecOps::RVec<double> MAXV( const ROOT::VecOps::RVec<double>  &a, const ROOT::VecOps::RVec<double>  & b ){     "
-                          "     ROOT::VecOps::RVec<double> vecOut(a.size());                                                  "
-                          "     for( int i = 0 ; i < a.size() ; ++i){                                                         "
-                          "         vecOut[i] = a[i]>b[i] ? a[i] : b[i];                                                      "
-                          "     }                                                                                             "
-                          "     return vecOut;                                                                                "
-                          "};");
-    
     auto tStart = chrono::high_resolution_clock::now();
 
-    // Small helper function flattening  nested WeightOption - WeightConfig loop
-    auto flatten_effStepType = [&](const vector< EffSlot > & slots) 
-    {
-        vector< pair< EffSlot, TString > > _slot_weightConfig;
-        for (auto & _effStepType : slots) 
-        {
-            for (auto & _weightConfiguration : _effStepType.weightConfigs()) 
-                _slot_weightConfig.push_back(make_pair(_effStepType, _weightConfiguration)); 
-        }
-
-        return _slot_weightConfig;
-    };
-
-    // Bookkeping naming schemes...
-    // Boookkeping navigator methods.
-    auto IDTRG = [](const ConfigHolder & _ConH_BASE) {
-        auto trg      = _ConH_BASE.GetTrigger();
-        auto trg_conf = _ConH_BASE.GetTriggerConf();
-        return make_pair(trg, trg_conf);
-    };
-    auto IDWEIGHT = [](const EffSlot & _slot, const TString _weightConfiguration) { return make_pair(_slot.wOpt(), _weightConfiguration); };
     // Save expressions
     auto toNamed = [](const TString & savingname, const TString & expression) {
         TNamed f(savingname.Data(), expression.Data());
