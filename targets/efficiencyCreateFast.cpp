@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 
 #include "CounterHelpers.hpp"
+#include "EffSlot.hpp"
 #include "CutDefRX.hpp"
 #include "EfficiencySvc.hpp"
 #include "EnumeratorSvc.hpp"
