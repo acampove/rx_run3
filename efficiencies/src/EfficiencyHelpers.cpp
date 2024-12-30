@@ -137,3 +137,20 @@ auto EfficiencyHelpers::bookkepingName(
     return _bookkepingName;
 };
 
+vector< pair< string, string > > EfficiencyHelpers::GetVariablesForPlot(const vector< VariableBinning > & _vars) 
+{
+    vector< pair< string, string > > _variables_forPlot;
+    for (auto const & var : _vars) 
+    {
+        TString _varDefine = var.varID() + "_X";
+        _variables_forPlot.push_back(make_pair( _varDefine.Data(), var.varX().Data()));
+        if (var.is1D()) 
+            continue;
+
+        TString _varDefine2 = var.varID() + "_Y";
+        _variables_forPlot.push_back(make_pair(_varDefine2.Data(), var.varY().Data())); 
+    }
+
+    return _variables_forPlot;
+}
+

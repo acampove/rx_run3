@@ -263,22 +263,6 @@ inline void PrintMapS(const map< TString, TCut > & _map)
         std::cout << RED << el.first << " \t " << YELLOW << el.second << std::endl; 
 }
 
-vector< pair< string, string > > GetVariablesForPlot(const vector< VariableBinning > & _vars) 
-{
-    vector< pair< string, string > > _variables_forPlot;
-    for (auto const & var : _vars) 
-    {
-        TString _varDefine = var.varID() + "_X";
-        _variables_forPlot.push_back(make_pair( _varDefine.Data(), var.varX().Data()));
-        if (!var.is1D()) 
-        { 
-            TString _varDefine2 = var.varID() + "_Y";
-            _variables_forPlot.push_back(make_pair(_varDefine2.Data(), var.varY().Data())); 
-        }
-    }
-
-    return _variables_forPlot;
-}
 
 
 //Add to the Interpreter of ROOT when parsing strings operation the MAXV call which is used for the L0-Comb Systematic formula 
@@ -447,7 +431,7 @@ int main(int argc, char ** argv)
 
         
 
-        _variables_forPlot = GetVariablesForPlot(_variables);
+        _variables_forPlot = EfficiencyHelpers::GetVariablesForPlot(_variables);
         if (_variables_forPlot.size() == 0) { _variables_forPlot.push_back(make_pair("DUMMYBRANCH", "1.")); }
         int nOperations        = 0;
         int nOperationsMCDecay = 0;
@@ -1312,7 +1296,7 @@ int main(int argc, char ** argv)
             // Collect up the Variables to "Define"  columns for plotting BS-histos (sometimes aliases are requested)
             vector< pair< string, string > > _variables_forPlot = {};
             const vector< VariableBinning > _variables = GetVariableBinning(_tupleShared.GetConfigHolder().GetProject(), _tupleShared.GetConfigHolder().GetYear(), Trigger::L0L, TriggerConf::Exclusive);
-            _variables_forPlot = GetVariablesForPlot(_variables);
+            _variables_forPlot = EfficiencyHelpers::GetVariablesForPlot(_variables);
             auto aliases = to_string_pairs(GetAllAlias(static_cast< TTree * >(_tupleShared.GetTuple())));
             
             ROOT::RDataFrame  dfDecay(*_tupleShared.GetTuple());

@@ -47,4 +47,6 @@ class EfficiencyHelpers
                 bool clean         = false, 
                 bool rootfile      = false);
 
+
+        static vector< pair< string, string > > GetVariablesForPlot(const vector< VariableBinning > & _vars);
 };
