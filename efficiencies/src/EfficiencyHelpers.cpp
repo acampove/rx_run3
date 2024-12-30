@@ -1,5 +1,7 @@
 #include "EfficiencyHelpers.hpp"
 #include "VariableBinning.hpp"
+#include "ConfigHolder.hpp"
+#include "EffSlot.hpp"
 #include "MessageSvc.hpp"
 #include "TString.h"
 #include "TH2Poly.h"
@@ -79,4 +81,59 @@ void EfficiencyHelpers::LoadTH1DFlatness(
             {"normD_bkgcat_raw", (TH1D *) var.GetRawHisto1D(var.varID() + "_normD_bkgcat_raw", _normDenWeight + " | norm", 100)}};
     }
 }
+
+void EfficiencyHelpers::LoadTH1DModels(
+        map< TString, map< TString, ROOT::RDF::TH1DModel > > & _histo1D, 
+        const vector< VariableBinning > & _vars, 
+        TString _effWeight, 
+        TString _normNumWeight, 
+        TString _normDenWeight, 
+        bool    isBS) 
+{
+    MessageSvc::Debug("Booking TH1D Histos for flatness");
+
+    for (auto const & var : _vars) 
+    {
+        if (!var.is1D()) 
+        {
+            MessageSvc::Warning("LoadTH1DModels not supported for > 1D yet");
+            continue;
+        }
+
+        _histo1D[var.varID()] = 
+        {
+            {"sumW",      var.GetHisto1DModel(var.varID()    + "_sumW"     , _effWeight     + " | full"     )}, 
+            {"normN",     var.GetHisto1DModel(var.varID()    + "_normN"    , _normNumWeight + " | norm"     )}, 
+            {"normD",     var.GetHisto1DModel(var.varID()    + "_normD"    , _normDenWeight + " | norm"     )},
+            {"sumW_raw",  var.GetRawHisto1DModel(var.varID() + "_sumW_raw" , _effWeight     + " | full", 100)}, 
+            {"normN_raw", var.GetRawHisto1DModel(var.varID() + "_normN_raw", _normNumWeight + " | norm", 100)}, 
+            {"normD_raw", var.GetRawHisto1DModel(var.varID() + "_normD_raw", _normDenWeight + " | norm", 100)},
+        };
+    }
+}
+
+auto EfficiencyHelpers::bookkepingName(
+        const EffSlot      & _effStepType, 
+        const ConfigHolder & _ConH_BASE, 
+        const TString      & _weightConfiguration, 
+        bool clean, 
+        bool rootfile) 
+{
+    TString _bookkepingName = _effStepType.wOpt() + "_Efficiency_" + _ConH_BASE.GetKey("addtrgconf");
+    if (_effStepType.wOpt() != "no") 
+        _bookkepingName = _bookkepingName + "_" + _weightConfiguration; 
+
+    if (clean) 
+        _bookkepingName.ReplaceAll("-", "_"); 
+
+    if (rootfile) 
+    {
+        _bookkepingName = _effStepType.wOpt() + "_" + _ConH_BASE.GetSample() + "_Efficiency_" + _ConH_BASE.GetKey("addtrgconf");
+        if (_effStepType.wOpt() != "no") 
+            _bookkepingName = _bookkepingName + "_" + _weightConfiguration;
+
+        _bookkepingName += ".root";
+    }
+    return _bookkepingName;
+};
 

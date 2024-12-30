@@ -1,6 +1,8 @@
 #pragma once
 
 #include "VariableBinning.hpp"
+#include "ConfigHolder.hpp"
+#include "EffSlot.hpp"
 #include "TString.h"
 #include "TH2Poly.h"
 #include <vector> 
@@ -29,5 +31,20 @@ class EfficiencyHelpers
                 TString _effWeight, 
                 TString _normNumWeight, 
                 TString _normDenWeight);
+
+        static void LoadTH1DModels(
+                map< TString, map< TString, ROOT::RDF::TH1DModel > > & _histo1D, 
+                const vector< VariableBinning > & _vars, 
+                TString _effWeight, 
+                TString _normNumWeight, 
+                TString _normDenWeight, 
+                bool isBS = false);
+
+        static auto bookkepingName(
+                const EffSlot      & _effStepType, 
+                const ConfigHolder & _ConH_BASE, 
+                const TString      & _weightConfiguration, 
+                bool clean         = false, 
+                bool rootfile      = false);
 
 };
