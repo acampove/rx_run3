@@ -1321,16 +1321,6 @@ int main(int argc, char ** argv)
                 toNamed("weight_MCDECAY",   w_exprs.at("weightMCDecay")).Write();
                 toNamed("MCDecaySelection", w_exprs.at("MCDecaySelection")).Write();
                 
-                //   toNamedRooRealVar("norm_v"          ,  _Efficiencies.at("norm").EfficiencyVar).Write();
-                //   toNamedRooRealVar("eff_sel_v"       ,  _Efficiencies.at("sel").EfficiencyVar).Write();
-                //   toNamedRooRealVar("eff_sel_noNORM_v",  _Efficiencies.at("sel_noNORM").EfficiencyVar).Write();
-                //   toNamedRooRealVar("norm_v"          ,  _Efficiencies.at("norm").EfficiencyVar).Write();
-                //   toNamedRooRealVar("eff_sel_v"       ,  _Efficiencies.at("sel").EfficiencyVar).Write();
-                //   toNamedRooRealVar("eff_sel_noNORM_v",  _Efficiencies.at("sel_noNORM").EfficiencyVar).Write();
-                //   toNamedRooRealVar("norm_v"          ,  _Efficiencies.at("norm").EfficiencyVar).Write();
-                //   toNamedRooRealVar("eff_sel_v"       ,  _Efficiencies.at("sel").EfficiencyVar).Write();
-                //   toNamedRooRealVar("eff_sel_noNORM_v",  _Efficiencies.at("sel_noNORM").EfficiencyVar).Write();
-                
                 // Persist histograms flatness to disk
                 // if (USEMCDECAYTUPLE) {
                 auto & histoFlatness     = HISTOFLATNESS[_IDTRG][_IDWEI];
