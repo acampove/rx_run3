@@ -47,68 +47,6 @@ const vector< Q2Bin >    PROCESSABLE_Q2   = {Q2Bin::All, Q2Bin::Low, Q2Bin::Cent
  * @brief Custom class parsed for eficiency slot generations
  *
  */
-class EffSlot {
-  private:
-    TString           m_wOpt                 = "";   // to use
-    TString           m_cOpt                 = "";   // to append ( to baseline definition of a given sample )
-    TString           m_wOptNormN            = "";   // to use for NormN
-    TString           m_wOptNormD            = "";   // to use for NormD
-    TString           m_wOptMCDecay          = "";   // to use for MCDecayTuple
-    vector< TString > m_weightConfigurations = {};
-    TString           m_cutSetNorm           = "";   // the cut-set map to use for NormCUT    
-  public:
-    EffSlot() = default;
-    EffSlot(TString _wOpt, TString _cOpt, TString _wMCDecayOpt, TString _wOptNormN, TString _wOptNormD, TString _cutSetNormalization, vector< TString > _weightConfigurations)
-        : m_wOpt(_wOpt)
-        , m_cOpt(_cOpt)
-        , m_wOptMCDecay(_wMCDecayOpt)
-        , m_wOptNormN(_wOptNormN)
-        , m_wOptNormD(_wOptNormD)
-        , m_cutSetNorm(_cutSetNormalization)
-        , m_weightConfigurations(_weightConfigurations){};
-    void Print() const {
-        MessageSvc::Info("EffSlot");
-        cout << "\t wOpt       :    " << wOpt() << endl;
-        cout << "\t cOpt       :    " << cOpt() << endl;
-        cout << "\t wOptMCDecay:    " << wOptMCDecay() << endl;
-        cout << "\t wOptNormN  :    " << wOptNormN() << endl;
-        cout << "\t wOptNormD  :    " << wOptNormD() << endl;
-        cout << "\t cutSetNorm :    " << cutSetNorm() << endl;
-        cout << "\t weightConfs:   [";
-        int i = 0;
-        for (auto & cnorm : weightConfigs()) {
-            if (i == 0 && weightConfigs().size() !=1)
-                cout << " " << cnorm << "," << flush;
-            else if (i == 0 && weightConfigs().size() ==1 ){
-                cout << " " << cnorm << " ]" << flush;
-            }
-            else if (i != m_weightConfigurations.size() - 1)
-                cout << cnorm << " , " << flush;
-            else
-                cout << cnorm << " ] " << endl;
-            i++;
-        }
-        cout << endl;
-        return;
-    }
-    TString           wOpt() const { return m_wOpt; }
-    TString           cOpt() const { return m_cOpt; }
-    TString           wOptNormN() const { return m_wOptNormN; }
-    TString           wOptNormD() const { return m_wOptNormD; }
-    TString           wOptMCDecay() const { return m_wOptMCDecay; }
-    TString           cutSetNorm() const { return m_cutSetNorm; }
-    vector< TString > ListAndCutsNorm() const {
-        vector< TString > _listCuts;
-        TString           _raw = m_cutSetNorm;
-        if (_raw.Contains("&")) {
-            _listCuts = TokenizeString(_raw.ReplaceAll(" ", ""), "&");
-        } else {
-            _listCuts = {_raw.ReplaceAll(" ", "")};
-        }
-        return _listCuts;
-    }
-    vector< TString > weightConfigs() const { return m_weightConfigurations; }
-};
 
 vector< EffSlot > LoadEffScanOption(TString yaml_ConfigFile, TString q2, TString ana, TString sample, bool signal = true) {
     MessageSvc::Info("LoadEffScanOption", q2, ana, sample);
