@@ -1,7 +1,12 @@
-#include "EffSlot.h"
+#include "EffSlot.hpp"
+#include "MessageSvc.hpp"
+#include "HelperProcessing.hpp"
 
 #include "TString.h"
 #include <vector>
+#include <iostream>
+
+using namespace std;
 
 void EffSlot::Print() const 
 {

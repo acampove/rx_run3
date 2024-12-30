@@ -3,6 +3,8 @@
 #include "TString.h"
 #include <vector>
 
+using namespace std;
+
 class EffSlot 
 {
   private:
