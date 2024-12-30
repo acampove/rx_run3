@@ -5,7 +5,6 @@ Module used to put RX core utilities, written in c++ in namespace
 
 from dmu.logging.log_store import LogStore
 from rx_common             import utilities as ut
-from importlib.resources   import files
 
 
 log=LogStore.add_logger('rx_common:kernel')
@@ -18,5 +17,5 @@ from ROOT import MessageSvc
 
 MessageSvc.Initialize(0)
 
-config_dir = files('rx_config')
+config_dir = ut.get_config_dir()
 SettingDef.AllowedConf.Initialize(config_dir)
