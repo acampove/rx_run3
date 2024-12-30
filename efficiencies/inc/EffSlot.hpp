@@ -5,6 +5,10 @@
 
 using namespace std;
 
+/**
+ * @brief Custom class parsed for eficiency slot generations
+ *
+ */
 class EffSlot 
 {
   private:
