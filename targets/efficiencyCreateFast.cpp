@@ -212,7 +212,8 @@ void FillHisto2DPoly(TH2Poly & _histo, const vector< double > & _X, const vector
     }
 }
 
-TString build_product_weight_string(const vector< TString > & _string) {
+TString build_product_weight_string(const vector< TString > & _string) 
+{
     if (_string.size() == 0) return "1.";
     TString _final = "(" + _string.front();
     for (int i = 1; i < _string.size(); ++i) { _final += ")*(" + _string.at(i); }
@@ -220,7 +221,8 @@ TString build_product_weight_string(const vector< TString > & _string) {
     return _final;
 }
 
-inline void PrintAndTestMap(const map< TString, pair< TupleHolder, vector< tuple< ConfigHolder, CutHolder, WeightHolder > > > > & mymap) {
+inline void PrintAndTestMap(const map< TString, pair< TupleHolder, vector< tuple< ConfigHolder, CutHolder, WeightHolder > > > > & mymap) 
+{
     MessageSvc::Line();
     MessageSvc::Warning((TString) SettingDef::IO::exe, (TString) "Samples in map =", to_string(mymap.size()));
     vector< TString > all_sample_produced = {};
@@ -348,8 +350,6 @@ vector< pair< string, string > > GetVariablesForPlot(const vector< VariableBinni
 
     return _variables_forPlot;
 }
-
-
 
 auto bookkepingName(
         const EffSlot      & _effStepType, 
