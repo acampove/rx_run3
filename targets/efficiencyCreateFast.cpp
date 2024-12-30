@@ -396,7 +396,8 @@ typedef map< TString, map< TString, TH1D * > >        histoEffs1DTYPES_HISTO;
 typedef map< TString, histoEffs1DTYPES >       histoEffs1D;
 typedef map< TString, histoEffs1DTYPES_HISTO > histoEffs1D_HISTO;
 
-int main(int argc, char ** argv) {
+int main(int argc, char ** argv) 
+{
     //Add to the Interpreter of ROOT when parsing strings operation the MAXV call which is used for the L0-Comb Systematic formula 
     //MAXV( RVec<double> , RVec<double> ) is going to be used inside the Define("a","....MAXV"); See the ReplaceAll for the Weight at the end of the executable.
     gInterpreter->Declare("ROOT::VecOps::RVec<double> MAXV( const ROOT::VecOps::RVec<double>  &a, const ROOT::VecOps::RVec<double>  & b ){     "
@@ -410,22 +411,34 @@ int main(int argc, char ** argv) {
     auto tStart = chrono::high_resolution_clock::now();
 
     // Small helper function flattening  nested WeightOption - WeightConfig loop
-    auto flatten_effStepType = [&](const vector< EffSlot > & slots) {
+    auto flatten_effStepType = [&](const vector< EffSlot > & slots) 
+    {
         vector< pair< EffSlot, TString > > _slot_weightConfig;
-        for (auto & _effStepType : slots) {
-            for (auto & _weightConfiguration : _effStepType.weightConfigs()) { _slot_weightConfig.push_back(make_pair(_effStepType, _weightConfiguration)); }
+        for (auto & _effStepType : slots) 
+        {
+            for (auto & _weightConfiguration : _effStepType.weightConfigs()) 
+                _slot_weightConfig.push_back(make_pair(_effStepType, _weightConfiguration)); 
         }
+
         return _slot_weightConfig;
     };
+
     // Bookkeping naming schemes...
-    auto bookkepingName = [](const EffSlot & _effStepType, const ConfigHolder & _ConH_BASE, const TString & _weightConfiguration, bool clean = false, bool rootfile = false) {
+    auto bookkepingName = [](const EffSlot & _effStepType, const ConfigHolder & _ConH_BASE, const TString & _weightConfiguration, bool clean = false, bool rootfile = false) 
+    {
         TString _bookkepingName = _effStepType.wOpt() + "_Efficiency_" + _ConH_BASE.GetKey("addtrgconf");
-        if (_effStepType.wOpt() != "no") { _bookkepingName = _bookkepingName + "_" + _weightConfiguration; }
-        // clean it? ( "-"" -->  "_")
-        if (clean) { _bookkepingName.ReplaceAll("-", "_"); }
-        if (rootfile) {
+        if (_effStepType.wOpt() != "no") 
+            _bookkepingName = _bookkepingName + "_" + _weightConfiguration; 
+
+        if (clean) 
+            _bookkepingName.ReplaceAll("-", "_"); 
+
+        if (rootfile) 
+        {
             _bookkepingName = _effStepType.wOpt() + "_" + _ConH_BASE.GetSample() + "_Efficiency_" + _ConH_BASE.GetKey("addtrgconf");
-            if (_effStepType.wOpt() != "no") { _bookkepingName = _bookkepingName + "_" + _weightConfiguration; }
+            if (_effStepType.wOpt() != "no") 
+                _bookkepingName = _bookkepingName + "_" + _weightConfiguration;
+
             _bookkepingName += ".root";
         }
         return _bookkepingName;
