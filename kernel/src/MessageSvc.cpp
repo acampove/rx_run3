@@ -36,6 +36,8 @@ google::LogSeverity MessageSvc::LevelFromInt(const short &level)
         case 3:
             return google::FATAL;
     }
+
+    return google::INFO; //This will never happen, but it's added to silence compiler warning
 }
 
 MessageSvc& MessageSvc::Initialize(const short &level)
