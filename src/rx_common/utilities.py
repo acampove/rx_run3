@@ -6,6 +6,7 @@ Module with utility functions
 import os
 import re
 import glob
+from importlib.resources     import files
 from dataclasses             import dataclass
 from dmu.logging.log_store   import LogStore
 from ROOT                    import gSystem, gInterpreter, std, TString
@@ -32,6 +33,17 @@ class Data:
             'data_dir': '/tmp/test_tuple_holder',
             'sample'  : 'data_24_magdown_24c4',
             'hlt2'    : 'Hlt2RD_BuToKpEE_MVA'}
+# --------------------------------
+def get_config_dir() -> std.string:
+    '''
+    Will return path to directory where YAML configuration files are
+    '''
+    readm_path = files('rx_config').joinpath('README.md')
+    readm_path = str(readm_path)
+    config_dir = os.path.dirname(readm_path)
+    config_dir = std.string(config_dir)
+
+    return config_dir
 # --------------------------------
 def _load_library(name : str) -> None:
     '''
