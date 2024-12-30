@@ -325,6 +325,8 @@ bool TupleReader::_CheckAddFile(const TString &_fileName)
         MessageSvc::Info("TupleReader", "Events loaded ", to_string(m_tuple->GetEntries()), " > Events requested ", to_string(m_frac), ". Not adding more files");
         return false;
     }
+
+    return true;
 }
 
 bool TupleReader::AddFile(TString _fileName, TString _tupleName) 
