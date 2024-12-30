@@ -41,4 +41,4 @@ print_array(${CMAKE_C_FLAGS}    "C   flags")
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install)
 install(TARGETS ${LIBRARIES}) 
 
-make_targets()
+#make_targets()
