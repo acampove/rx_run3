@@ -2,10 +2,14 @@
 
 #include "VariableBinning.hpp"
 #include "ConfigHolder.hpp"
+#include "WeightHolder.hpp"
+#include "TupleHolder.hpp"
+#include "CutHolder.hpp"
 #include "EffSlot.hpp"
 #include "TString.h"
 #include "TH2Poly.h"
 #include <vector> 
+#include <string> 
 #include <map> 
 
 using namespace std;
@@ -49,4 +53,6 @@ class EfficiencyHelpers
 
 
         static vector< pair< string, string > > GetVariablesForPlot(const vector< VariableBinning > & _vars);
+
+        static void PrintAndTestMap(const map< TString, pair< TupleHolder, vector< tuple< ConfigHolder, CutHolder, WeightHolder > > > > & mymap);
 };
