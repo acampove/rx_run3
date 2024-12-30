@@ -413,7 +413,12 @@ typedef map< TString, histoEffs1DTYPES >       histoEffs1D;
 typedef map< TString, histoEffs1DTYPES_HISTO > histoEffs1D_HISTO;
 
 
-auto bookkepingName(const EffSlot & _effStepType, const ConfigHolder & _ConH_BASE, const TString & _weightConfiguration, bool clean = false, bool rootfile = false) 
+auto bookkepingName(
+        const EffSlot      & _effStepType, 
+        const ConfigHolder & _ConH_BASE, 
+        const TString      & _weightConfiguration, 
+        bool clean         = false, 
+        bool rootfile      = false) 
 {
     TString _bookkepingName = _effStepType.wOpt() + "_Efficiency_" + _ConH_BASE.GetKey("addtrgconf");
     if (_effStepType.wOpt() != "no") 
