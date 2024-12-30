@@ -2,7 +2,8 @@
 Module with functions testing AllowedConf class
 '''
 
-from rx_kernel import allowed_conf
+from rx_kernel           import allowed_conf
+from rx_common           import utilities as ut
 
 from ROOT import MessageSvc
 
@@ -12,4 +13,5 @@ def test_intialize():
     '''
     Will test initialization
     '''
-    allowed_conf.Initialize('/home/acampove/Tests/rx_samples')
+    config_dir = ut.get_config_dir()
+    allowed_conf.Initialize(config_dir.c_str())
