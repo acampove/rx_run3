@@ -396,6 +396,28 @@ typedef map< TString, map< TString, TH1D * > >        histoEffs1DTYPES_HISTO;
 typedef map< TString, histoEffs1DTYPES >       histoEffs1D;
 typedef map< TString, histoEffs1DTYPES_HISTO > histoEffs1D_HISTO;
 
+
+auto bookkepingName(const EffSlot & _effStepType, const ConfigHolder & _ConH_BASE, const TString & _weightConfiguration, bool clean = false, bool rootfile = false) 
+{
+    TString _bookkepingName = _effStepType.wOpt() + "_Efficiency_" + _ConH_BASE.GetKey("addtrgconf");
+    if (_effStepType.wOpt() != "no") 
+        _bookkepingName = _bookkepingName + "_" + _weightConfiguration; 
+
+    if (clean) 
+        _bookkepingName.ReplaceAll("-", "_"); 
+
+    if (rootfile) 
+    {
+        _bookkepingName = _effStepType.wOpt() + "_" + _ConH_BASE.GetSample() + "_Efficiency_" + _ConH_BASE.GetKey("addtrgconf");
+        if (_effStepType.wOpt() != "no") 
+            _bookkepingName = _bookkepingName + "_" + _weightConfiguration;
+
+        _bookkepingName += ".root";
+    }
+    return _bookkepingName;
+};
+
+
 int main(int argc, char ** argv) 
 {
     //Add to the Interpreter of ROOT when parsing strings operation the MAXV call which is used for the L0-Comb Systematic formula 
@@ -424,25 +446,6 @@ int main(int argc, char ** argv)
     };
 
     // Bookkeping naming schemes...
-    auto bookkepingName = [](const EffSlot & _effStepType, const ConfigHolder & _ConH_BASE, const TString & _weightConfiguration, bool clean = false, bool rootfile = false) 
-    {
-        TString _bookkepingName = _effStepType.wOpt() + "_Efficiency_" + _ConH_BASE.GetKey("addtrgconf");
-        if (_effStepType.wOpt() != "no") 
-            _bookkepingName = _bookkepingName + "_" + _weightConfiguration; 
-
-        if (clean) 
-            _bookkepingName.ReplaceAll("-", "_"); 
-
-        if (rootfile) 
-        {
-            _bookkepingName = _effStepType.wOpt() + "_" + _ConH_BASE.GetSample() + "_Efficiency_" + _ConH_BASE.GetKey("addtrgconf");
-            if (_effStepType.wOpt() != "no") 
-                _bookkepingName = _bookkepingName + "_" + _weightConfiguration;
-
-            _bookkepingName += ".root";
-        }
-        return _bookkepingName;
-    };
     // Boookkeping navigator methods.
     auto IDTRG = [](const ConfigHolder & _ConH_BASE) {
         auto trg      = _ConH_BASE.GetTrigger();
