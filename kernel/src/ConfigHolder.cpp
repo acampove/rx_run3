@@ -232,6 +232,8 @@ TString ConfigHolder::GetConfig(const TString &_opt_name) const
         return m_tup_opt;
 
     MessageSvc::Fatal(TString("GetConfig"), "Invalid option ", _opt_name);
+
+    return ""; //This will never happen, line above will throw exception, but added to silence compiler warning
 }
 
 bool ConfigHolder::Check() 
