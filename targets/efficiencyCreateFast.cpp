@@ -625,7 +625,7 @@ int main(int argc, char ** argv)
                 TString _effWeight      = _WeiH_NUMERATOR.Weight();
                 TString _normNumWeight  = _WeiH_NORMN.Weight();
                 TString _normDenWeight  = _WeiH_NORMD.Weight();
-                TString _bookkepingName = bookkepingName(_effStepType, _ConH_BASE, _weightConfiguration, true);
+                TString _bookkepingName = EfficiencyHelpers::bookkepingName(_effStepType, _ConH_BASE, _weightConfiguration, true);
                 // df.Define(....).Define(....selection).Filter(selection).Sum<double>(  weight)
                 auto _IDTRG = IDTRG(_ConH_BASE);
                 auto _IDWEI = IDWEIGHT(_effStepType, _weightConfiguration);
@@ -682,7 +682,7 @@ int main(int argc, char ** argv)
                 map< TString, map< TString, ROOT::RDF::TH1DModel > > HistoModels;
                 map< TString, map< TString, TH1D * > >               HistoToFill;
                 EfficiencyHelpers::LoadTH1DFlatness(HistoToFill, _vars, _effWeight, _normNumWeight, _normDenWeight);
-                LoadTH1DModels(HistoModels, _vars, _effWeight, _normNumWeight, _normDenWeight);
+                EfficiencyHelpers::LoadTH1DModels(HistoModels, _vars, _effWeight, _normNumWeight, _normDenWeight);
 
                 HISTOFLATNESS_RNDKILL[_IDTRG][_IDWEI] = HistoToFill;
                 if (_vars.size() != 0) {
@@ -1152,7 +1152,7 @@ int main(int argc, char ** argv)
                 double _efficieny_rnd    = ((SumW_rnd) * (NormNum_rnd) / (NormDen_rnd)) / (double) _TOTMCDECAYTUPLE;            // to update with multiple candidate killer in MCDecayTuple... maybe or maybe not
                 double _efficieny_bkgcat = ((SumW_bkgcat) * (NormNum_bkgcat / (NormDen_bkgcat))) / (double) _TOTMCDECAYTUPLE;   // to update with multiple candidate killer in MCDecayTuple... maybe or maybe not
 
-                TString _OUTFILEname = bookkepingName(_effStepType, _ConH_BASE, _weightConfiguration, false, true);
+                TString _OUTFILEname = EfficiencyHelpers::bookkepingName(_effStepType, _ConH_BASE, _weightConfiguration, false, true);
                 if (IOSvc::ExistFile(_OUTFILEname)) { MessageSvc::Error("Naming error (already done) for ", _OUTFILEname, "EXIT_FAILURE"); }
                 TFile *                           fileN = IOSvc::OpenFile(_OUTFILEname, OpenMode::RECREATE);
                 map< TString, EfficiencyContent > _Efficiencies;
@@ -1403,7 +1403,7 @@ int main(int argc, char ** argv)
                         }
                         auto _KEY = _ConH_BASE.GetKey("addtrgconf-nobrem-notrack") + "_" +_weightConfiguration;
                         _KEY = _KEY.ReplaceAll("-","_");
-                        TString _OUTFILEname = bookkepingName(_effStepType, _ConH_BASE, _weightConfiguration, false, true);
+                        TString _OUTFILEname = EfficiencyHelpers::bookkepingName(_effStepType, _ConH_BASE, _weightConfiguration, false, true);
                         MessageSvc::Info("loading file ", _OUTFILEname) ;
                         auto info  = EfficiencyInfos( _OUTFILEname, _KEY);
                         cout<< RED << "~~~~~~~~~~~~~~~~~~~~~ nodes wSlot ~~~~~~~~~~~~~~~~~~~~~" << RESET<< endl;                    
@@ -1446,7 +1446,7 @@ int main(int argc, char ** argv)
                         pair<Trigger,TriggerConf> MyID(_ConH_BASE.GetTrigger(), _ConH_BASE.GetTriggerConf());
                         if( _Variables.at( MyID).size() != 0){
                             map< TString, map< TString, ROOT::RDF::TH1DModel > > HistoModels;
-                            LoadTH1DModels(HistoModels, 
+                            EfficiencyHelpers::LoadTH1DModels(HistoModels, 
                                         _Variables.at(MyID), 
                                         weightBS_FULL, 
                                         weightBS_NORMN, 
@@ -1496,7 +1496,7 @@ int main(int argc, char ** argv)
                             auto _KEY = _ConH_BASE.GetKey("addtrgconf-nobrem-notrack") + "_" +_weightConfiguration;
                             _KEY = _KEY.ReplaceAll("-","_");
                             auto _slot =  SLOTID( _weightOption , _Trigger, _TriggerConf, _weightConfiguration);
-                            TString _OUTFILEname = bookkepingName(_effStepType, _ConH_BASE, _weightConfiguration, false, true);
+                            TString _OUTFILEname = EfficiencyHelpers::bookkepingName(_effStepType, _ConH_BASE, _weightConfiguration, false, true);
                             //--- UPDATE EXISTING TFILE 
                             TFile fileN(_OUTFILEname, "UPDATE");
                             if(! IOSvc::ExistFile(_OUTFILEname)) MessageSvc::Error("Cannot acces this file!", _OUTFILEname, "EXIT_FAILURE");
