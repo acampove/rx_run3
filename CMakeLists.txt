@@ -33,7 +33,7 @@ foreach(LIB ${LIBRARIES})
 endforeach()
 
 print_target_libraries()
-# make_targets()
+make_targets()
 
 print_vars()
 print_array(${CMAKE_CXX_FLAGS}  "C++ flags")
