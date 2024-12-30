@@ -345,37 +345,53 @@ void LoadTH1DFlatness(map< TString, map< TString, TH1D * > > & _histo1D, const v
     return;
 }
 
-void LoadTH1DModels(map< TString, map< TString, ROOT::RDF::TH1DModel > > & _histo1D, const vector< VariableBinning > & _vars, TString _effWeight, TString _normNumWeight, TString _normDenWeight, bool isBS = false) {
-    if (EffDebug()) MessageSvc::Debug("Booking TH1D Histos for flatness");
-    for (auto const & var : _vars) {
-        if (var.is1D()) {
-            _histo1D[var.varID()] = {
-                {"sumW",      var.GetHisto1DModel(var.varID() + "_sumW", _effWeight + " | full")}, 
-                {"normN",     var.GetHisto1DModel(var.varID() + "_normN", _normNumWeight + " | norm")}, 
-                {"normD",     var.GetHisto1DModel(var.varID() + "_normD", _normDenWeight + " | norm")},
-                {"sumW_raw",  var.GetRawHisto1DModel(var.varID() + "_sumW_raw", _effWeight + " | full", 100)}, 
-                {"normN_raw", var.GetRawHisto1DModel(var.varID() + "_normN_raw", _normNumWeight + " | norm", 100)}, 
-                {"normD_raw", var.GetRawHisto1DModel(var.varID() + "_normD_raw", _normDenWeight + " | norm", 100)},
-            };
-        } else {
+void LoadTH1DModels(
+        map< TString, map< TString, ROOT::RDF::TH1DModel > > & _histo1D, 
+        const vector< VariableBinning > & _vars, 
+        TString _effWeight, 
+        TString _normNumWeight, 
+        TString _normDenWeight, 
+        bool isBS = false) 
+{
+    if (EffDebug()) 
+        MessageSvc::Debug("Booking TH1D Histos for flatness");
+
+    for (auto const & var : _vars) 
+    {
+        if (!var.is1D()) 
+        {
             MessageSvc::Warning("LoadTH1DModels not supported for > 1D yet");
+            continue;
         }
+
+        _histo1D[var.varID()] = 
+        {
+            {"sumW",      var.GetHisto1DModel(var.varID()    + "_sumW"     , _effWeight     + " | full"     )}, 
+            {"normN",     var.GetHisto1DModel(var.varID()    + "_normN"    , _normNumWeight + " | norm"     )}, 
+            {"normD",     var.GetHisto1DModel(var.varID()    + "_normD"    , _normDenWeight + " | norm"     )},
+            {"sumW_raw",  var.GetRawHisto1DModel(var.varID() + "_sumW_raw" , _effWeight     + " | full", 100)}, 
+            {"normN_raw", var.GetRawHisto1DModel(var.varID() + "_normN_raw", _normNumWeight + " | norm", 100)}, 
+            {"normD_raw", var.GetRawHisto1DModel(var.varID() + "_normD_raw", _normDenWeight + " | norm", 100)},
+        };
     }
-    return;
-};
-vector< pair< string, string > > GetVariablesForPlot(const vector< VariableBinning > & _vars) {
+}
+
+vector< pair< string, string > > GetVariablesForPlot(const vector< VariableBinning > & _vars) 
+{
     vector< pair< string, string > > _variables_forPlot;
-    for (auto const & var : _vars) {
+    for (auto const & var : _vars) 
+    {
         TString _varDefine = var.varID() + "_X";
         _variables_forPlot.push_back(make_pair( _varDefine.Data(), var.varX().Data()));
-        // _variables_forPlot.push_back(make_pair(var.Label_X().first.Data(), var.varX().Data()));
-        if (!var.is1D()) { 
+        if (!var.is1D()) 
+        { 
             TString _varDefine2 = var.varID() + "_Y";
             _variables_forPlot.push_back(make_pair(_varDefine2.Data(), var.varY().Data())); 
         }
     }
+
     return _variables_forPlot;
-};
+}
 
 typedef pair< Trigger, TriggerConf > trigger_slice;
 typedef pair< TString, TString >     weight_weightConfig;
