@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 
 #include "CounterHelpers.hpp"
+#include "EfficiencyHelpers.hpp"
 #include "EffSlot.hpp"
 #include "CutDefRX.hpp"
 #include "EfficiencySvc.hpp"
@@ -32,10 +33,11 @@
 #include "HelperProcessing.hpp"
 #include "CustomActions.hpp"
 #include "Functors.hpp"
-using namespace iter;
-using namespace std;
 #include "TInterpreter.h"
 #include "TInterpreterValue.h"
+
+using namespace iter;
+using namespace std;
 
 typedef pair< Trigger, TriggerConf > trigger_slice;
 typedef pair< TString, TString >     weight_weightConfig;
@@ -63,10 +65,6 @@ const vector< Analysis > PROCESSABLE_ANA  = {Analysis::EE, Analysis::MM};
 const vector< Q2Bin >    PROCESSABLE_Q2   = {Q2Bin::All, Q2Bin::Low, Q2Bin::Central, Q2Bin::High, Q2Bin::JPsi, Q2Bin::Psi};
 
 
-/**
- * @brief Custom class parsed for eficiency slot generations
- *
- */
 
 vector< EffSlot > LoadEffScanOption(TString yaml_ConfigFile, TString q2, TString ana, TString sample, bool signal = true) {
     MessageSvc::Info("LoadEffScanOption", q2, ana, sample);
