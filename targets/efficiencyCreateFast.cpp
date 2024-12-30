@@ -221,34 +221,6 @@ TString build_product_weight_string(const vector< TString > & _string)
     return _final;
 }
 
-inline void PrintAndTestMap(const map< TString, pair< TupleHolder, vector< tuple< ConfigHolder, CutHolder, WeightHolder > > > > & mymap) 
-{
-    MessageSvc::Line();
-    MessageSvc::Warning((TString) SettingDef::IO::exe, (TString) "Samples in map =", to_string(mymap.size()));
-    vector< TString > all_sample_produced = {};
-    for (auto && _sample : mymap) {
-        MessageSvc::Line();
-        MessageSvc::Warning((TString) SettingDef::IO::exe, (TString) "Sample to process =", _sample.first, TString(fmt::format("(nEntries = {0}, nSplits = {1})", _sample.second.first.GetTuple()->GetEntries(), _sample.second.second.size())));
-        _sample.second.first.PrintInline();
-        vector< TString > _names_assigned = {};
-        for (auto & tp : _sample.second.second) {
-            TString _name = get< 0 >(tp).GetTupleName(get< 1 >(tp).Option() + "-" + get< 2 >(tp).Option() + "-" + _sample.second.first.Option());
-            MessageSvc::Warning((TString) SettingDef::IO::exe, (TString) "Booking", _name);
-            get< 0 >(tp).PrintInline();
-            get< 1 >(tp).PrintInline();
-            get< 2 >(tp).PrintInline();
-            if (find(_names_assigned.begin(), _names_assigned.end(), _name) != _names_assigned.end()) MessageSvc::Error((TString) SettingDef::IO::exe, _name, "already booked", "EXIT_FAILURE");
-            _names_assigned.push_back(_name);
-        }
-        all_sample_produced.insert(all_sample_produced.end(), _names_assigned.begin(), _names_assigned.end());
-    }
-    MessageSvc::Line();
-    MessageSvc::Warning((TString) SettingDef::IO::exe, (TString) "Map");
-    for (auto & ss : all_sample_produced) { MessageSvc::Warning((TString) SettingDef::IO::exe, (TString) "Sample", ss); }
-    MessageSvc::Line();
-    return;
-}
-
 inline void PrintMap(const map< TString, TString > & _map) 
 {
     std::cout << RED << "Label "
@@ -339,7 +311,7 @@ int main(int argc, char ** argv)
     SettingDef::trowLogicError          = true;
     auto              samples_toprocess = ParserSvc::GetListOfSamples(_yaml_ConfigFile, this_q2binSlice, this_analysis);
     SettingDef::trowLogicError          = false;
-    PrintAndTestMap(samples_toprocess);
+    EfficiencyHelpers::PrintAndTestMap(samples_toprocess);
 
     // Driver for usage of  MCDecayTuple denominator
     auto fUSEMCDECAYTUPLE = [&](const TupleHolder & hold) { return hold.GetConfigHolder().HasMCDecayTuple(); };
