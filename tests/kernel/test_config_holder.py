@@ -3,7 +3,6 @@ Module where config holder is tested
 '''
 
 from rx_kernel.config_holder import ConfigHolder
-from rx_kernel import allowed_conf
 
 import pytest
 from ROOT import MessageSvc
@@ -14,7 +13,6 @@ MessageSvc.Initialize(-1)
 # -----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    allowed_conf.Initialize('/home/acampove/Tests/rx_samples')
     LogStore.set_level('rx_common:config_holder', 10)
 # -----------------------------------
 # -----------------------------------
