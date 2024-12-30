@@ -8,8 +8,8 @@
 
 
 
-int main(int argc, char ** argv) {
-
+int main(int argc, char ** argv) 
+{
     auto tStart = chrono::high_resolution_clock::now();
 
     ParserSvc parser("");
