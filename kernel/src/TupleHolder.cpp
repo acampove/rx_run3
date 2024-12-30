@@ -305,8 +305,9 @@ TString TupleHolder::_GetTuplePAPName()
         return m_tupleName;
     }
 
-    if (m_tupleName == "")
-        MessageSvc::Fatal(TString("_GetTuplePAPName"), "Tuple name was not found for Run2 sample:", m_tupleName);
+    MessageSvc::Fatal(TString("_GetTuplePAPName"), "Tuple name was not found for Run2 sample:", m_tupleName);
+
+    return ""; //Line above will throw exception, this line will silence compiler warning
 }
 
 void TupleHolder::_SetFileTupleNames(const TString &_fileName, const TString &_tupleName)
