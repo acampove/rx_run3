@@ -1,10 +1,14 @@
 #include "EfficiencyHelpers.hpp"
 #include "VariableBinning.hpp"
 #include "ConfigHolder.hpp"
+#include "WeightHolder.hpp"
+#include "TupleHolder.hpp"
+#include "CutHolder.hpp"
 #include "EffSlot.hpp"
 #include "MessageSvc.hpp"
 #include "TString.h"
 #include "TH2Poly.h"
+#include <fmt_ostream.h>
 #include <vector> 
 #include <map> 
 
@@ -152,5 +156,39 @@ vector< pair< string, string > > EfficiencyHelpers::GetVariablesForPlot(const ve
     }
 
     return _variables_forPlot;
+}
+
+void EfficiencyHelpers::PrintAndTestMap(const map< TString, pair< TupleHolder, vector< tuple< ConfigHolder, CutHolder, WeightHolder > > > > & mymap) 
+{
+    MessageSvc::Line();
+    MessageSvc::Warning((TString) SettingDef::IO::exe, "Samples in map = ", to_string(mymap.size()));
+
+    vector< TString > all_sample_produced = {};
+    for (auto && _sample : mymap) 
+    {
+        MessageSvc::Line();
+        MessageSvc::Warning((TString) SettingDef::IO::exe, (TString) "Sample to process =", _sample.first, TString(fmt::format("(nEntries = {0}, nSplits = {1})", _sample.second.first.GetTuple()->GetEntries(), _sample.second.second.size())));
+        _sample.second.first.PrintInline();
+        vector< TString > _names_assigned = {};
+        for (auto & tp : _sample.second.second) 
+        {
+            TString _name = get< 0 >(tp).GetTupleName(get< 1 >(tp).Option() + "-" + get< 2 >(tp).Option() + "-" + _sample.second.first.Option());
+            MessageSvc::Warning((TString) SettingDef::IO::exe, (TString) "Booking", _name);
+            get< 0 >(tp).PrintInline();
+            get< 1 >(tp).PrintInline();
+            get< 2 >(tp).PrintInline();
+            if (find(_names_assigned.begin(), _names_assigned.end(), _name) != _names_assigned.end()) 
+                MessageSvc::Fatal((TString) SettingDef::IO::exe, _name, "already booked");
+
+            _names_assigned.push_back(_name);
+        }
+        all_sample_produced.insert(all_sample_produced.end(), _names_assigned.begin(), _names_assigned.end());
+    }
+    MessageSvc::Line();
+    MessageSvc::Warning((TString) SettingDef::IO::exe, (TString) "Map");
+    for (auto & ss : all_sample_produced) 
+        MessageSvc::Warning((TString) SettingDef::IO::exe, "Sample", ss); 
+
+    MessageSvc::Line();
 }
 
