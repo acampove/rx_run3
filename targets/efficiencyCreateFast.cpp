@@ -495,14 +495,17 @@ int main(int argc, char ** argv)
         vector<double> edges{ 0.1,0.98,1.1,1.8,2.5,3.2,3.9,4.6,5.3,6.0, 7.0,8.0, 11.0,12.5,15,16,17,18,19,20,22};
         return edges;
     };
+
     auto getBPTBinEdges=[](){
         vector<double> edges{0.0,2500.0,3500.0,4000.0,4500.0,5000.0,5500.0,6000.0,6500.0,7500.0,10000.0,12500.0,15000.0,40000.0};
         return edges;
     };
+
     auto getBETABinEdges=[](){
         vector<double> edges{1.4,1.8,2.2,2.6,3.0,3.4,3.8,4.2,4.6,5.0,5.4,5.8,6.2};
         return edges;
     };
+
     for (auto && s : samples_toprocess) {
         bool _useSignal = fUSESIGNALSLOT( s.second.first) ? true : false;
         bool USEMCDECAYTUPLE = fUSEMCDECAYTUPLE(s.second.first);
