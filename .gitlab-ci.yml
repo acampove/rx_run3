@@ -32,15 +32,12 @@ cache:
         - .cache/pip
 before_script:
     - source /cvmfs/lhcb.cern.ch/lib/LbEnv 
-    # - eval "$(apd-login)" not really needed! 
-    # For debugging
 stages : 
     - build_env 
 build_env:environment :
     stage : build_env
     script:
       - lb-conda-dev virtual-env default myenv
-      #note : this is a fast way to get locally a myenv as spinoff of virtual-env default from conda
     artifacts : 
       paths :
         - ./myenv
