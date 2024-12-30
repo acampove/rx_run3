@@ -37,6 +37,25 @@ using namespace std;
 #include "TInterpreter.h"
 #include "TInterpreterValue.h"
 
+typedef pair< Trigger, TriggerConf > trigger_slice;
+typedef pair< TString, TString >     weight_weightConfig;
+
+typedef map< TString, double >                          sumW_values;
+typedef map< TString, TString >                         expressions;
+typedef map< TString, ROOT::RDF::RResultPtr< double > > sumWeights;
+
+// juggler for columns  to enable rnd killing and bestbkgcat logics.
+typedef map< TString, ROOT::RDF::RResultPtr< vector< double > > >                  column_double;
+typedef map< TString, ROOT::RDF::RResultPtr< vector< bool > > >                    column_bool;
+typedef map< TString, ROOT::RDF::RResultPtr< vector< pair< Int_t, Long64_t > > > > column_uniqueIDs;
+typedef map< TString, ROOT::RDF::RResultPtr< vector< int > > >                     column_particleIDs;   // holder of vectors  Particle IDs...
+// jugglers for histograms storage for various variables
+typedef map< TString, ROOT::RDF::RResultPtr< TH1D > > histoEffs1DTYPES;   // holder of a single histogram [variable][histo]
+typedef map< TString, map< TString, TH1D * > >        histoEffs1DTYPES_HISTO;
+
+typedef map< TString, histoEffs1DTYPES >       histoEffs1D;
+typedef map< TString, histoEffs1DTYPES_HISTO > histoEffs1D_HISTO;
+
 const vector< Year >     PROCESSABLE_YEAR = {Year::Y2011, Year::Y2012, Year::Y2015, Year::Y2016, Year::Y2017, Year::Y2018};
 const vector< Prj >      PROCESSABLE_PRJ  = {Prj::RKst, Prj::RK, Prj::RPhi};
 const vector< Polarity > PROCESSABLE_POL  = {Polarity::MD, Polarity::MU};
@@ -332,24 +351,6 @@ vector< pair< string, string > > GetVariablesForPlot(const vector< VariableBinni
     return _variables_forPlot;
 }
 
-typedef pair< Trigger, TriggerConf > trigger_slice;
-typedef pair< TString, TString >     weight_weightConfig;
-
-typedef map< TString, double >                          sumW_values;
-typedef map< TString, TString >                         expressions;
-typedef map< TString, ROOT::RDF::RResultPtr< double > > sumWeights;
-
-// juggler for columns  to enable rnd killing and bestbkgcat logics.
-typedef map< TString, ROOT::RDF::RResultPtr< vector< double > > >                  column_double;
-typedef map< TString, ROOT::RDF::RResultPtr< vector< bool > > >                    column_bool;
-typedef map< TString, ROOT::RDF::RResultPtr< vector< pair< Int_t, Long64_t > > > > column_uniqueIDs;
-typedef map< TString, ROOT::RDF::RResultPtr< vector< int > > >                     column_particleIDs;   // holder of vectors  Particle IDs...
-// jugglers for histograms storage for various variables
-typedef map< TString, ROOT::RDF::RResultPtr< TH1D > > histoEffs1DTYPES;   // holder of a single histogram [variable][histo]
-typedef map< TString, map< TString, TH1D * > >        histoEffs1DTYPES_HISTO;
-
-typedef map< TString, histoEffs1DTYPES >       histoEffs1D;
-typedef map< TString, histoEffs1DTYPES_HISTO > histoEffs1D_HISTO;
 
 
 auto bookkepingName(
