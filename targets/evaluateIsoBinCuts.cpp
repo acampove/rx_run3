@@ -17,13 +17,36 @@ int main(int argc, char ** argv)
     if (parser.Run(argc, argv) != 0) return 1;
     gStyle->SetOptStat(111111); //enable over & under flow checker for histograms.
     ConfigHolder sharedConfig;
-    if (SettingDef::Fit::option.Contains("chainexctrg")) {
+
+    if (SettingDef::Fit::option.Contains("chainexctrg")) 
+    {
         MessageSvc::Warning("Merging Trigger Tuples (create tuple tuple::option)");
         SettingDef::Tuple::chainexctrg = true;
     }
 
-    ConfigHolder configMM(sharedConfig.GetProject(), Analysis::MM, sharedConfig.GetSample(), sharedConfig.GetQ2bin(), sharedConfig.GetYear(), sharedConfig.GetPolarity(), sharedConfig.GetTrigger(), sharedConfig.GetBrem(), sharedConfig.GetTrack());
-    ConfigHolder configEE(sharedConfig.GetProject(), Analysis::EE, sharedConfig.GetSample(), sharedConfig.GetQ2bin(), sharedConfig.GetYear(), sharedConfig.GetPolarity(), sharedConfig.GetTrigger(), sharedConfig.GetBrem(), sharedConfig.GetTrack());
+    ConfigHolder configMM(
+            sharedConfig.GetProject(), 
+            Analysis::MM, 
+            sharedConfig.GetSample(), 
+            sharedConfig.GetQ2bin(), 
+            sharedConfig.GetYear(), 
+            sharedConfig.GetPolarity(), 
+            sharedConfig.GetTrigger(), 
+            hash_triggerconf(SettingDef::Config::triggerConf),
+            sharedConfig.GetBrem(), 
+            sharedConfig.GetTrack());
+
+    ConfigHolder configEE(
+            sharedConfig.GetProject(), 
+            Analysis::EE, 
+            sharedConfig.GetSample(), 
+            sharedConfig.GetQ2bin(), 
+            sharedConfig.GetYear(), 
+            sharedConfig.GetPolarity(), 
+            sharedConfig.GetTrigger(), 
+            hash_triggerconf(SettingDef::Config::triggerConf),
+            sharedConfig.GetBrem(), 
+            sharedConfig.GetTrack());
 
     EventType eventTypeMM(configMM, CutHolder(configMM, SettingDef::Cut::option), WeightHolder(configMM, SettingDef::Weight::option), TupleHolder(configMM, SettingDef::Tuple::option), true);
     EventType eventTypeEE(configEE, CutHolder(configEE, SettingDef::Cut::option), WeightHolder(configEE, SettingDef::Weight::option), TupleHolder(configEE, SettingDef::Tuple::option), true);
