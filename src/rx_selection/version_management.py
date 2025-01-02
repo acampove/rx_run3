@@ -30,7 +30,11 @@ def get_numeric_version(version : str) -> int:
 
     return val
 #---------------------------------------
-def get_last_version(dir_path : str, version_only : bool = True, main_only : bool = False) -> str:
+def get_last_version(
+        dir_path     : str,
+        extension    : str,
+        version_only : bool = True,
+        main_only    : bool = False) -> str:
     '''
     Returns path or just version associated to latest version found in given path
 
@@ -39,12 +43,13 @@ def get_last_version(dir_path : str, version_only : bool = True, main_only : boo
     dir_path (str) : Path to directory where versioned subdirectories exist
     version_only (bool): Returns only vxxxx if True, otherwise, full path to directory
     main_only (bool): Returns vX where X is a number. Otherwise it will return vx.y in case version has subversion
+    extension (str) : Extension of text files for which the latest version will be found, e.g. yaml
 
     Return
     ---------------------
     String with name of latest version, e.g. v1
     '''
-    l_obj = glob.glob(f'{dir_path}/*')
+    l_obj = glob.glob(f'{dir_path}/*.{extension}')
 
     if len(l_obj) == 0:
         log.error(f'Nothing found in {dir_path}')
