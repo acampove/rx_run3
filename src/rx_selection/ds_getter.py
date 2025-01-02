@@ -263,11 +263,7 @@ class ds_getter:
         if not self._is_sim:
             return cf
 
-        if self._year in self._cfg['datasets']['run3']:
-            log.warning(f'Using a reconstruction efficiency of 1 for {self._year}')
-            ngen = nrec
-        else:
-            ngen = self._get_gen_nev()
+        ngen = self._get_gen_nev()
 
         cf['reco'] = efficiency(nrec, ngen - nrec, cut=truth_string)
 
