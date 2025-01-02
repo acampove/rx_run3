@@ -28,22 +28,21 @@ def get_last_version(
     ---------------------
     String with name of latest version, e.g. v1
     '''
-    l_obj = glob.glob(f'{dir_path}/*.{extension}')
+    file_wc = f'{dir_path}/*.{extension}'
+    l_obj   = glob.glob(file_wc)
 
     if len(l_obj) == 0:
-        log.error(f'Nothing found in {dir_path}')
-        raise ValueError
+        raise ValueError(f'Nothing found in {file_wc}')
 
-    d_dir_org = { os.path.basename(obj).replace('.', '') : obj      for obj            in l_obj             if os.path.isdir(obj) }
-    d_dir_num = { get_numeric_version(name)              : dir_path for name, dir_path in d_dir_org.items() }
+    d_file_org = { os.path.basename(obj).replace('.', '') : obj       for obj             in l_obj             if os.path.isfile(obj) }
+    d_file_num = { get_numeric_version(name)              : file_path for name, file_path in d_file_org.items() }
 
-    c_dir = sorted(d_dir_num.items())
+    c_file = sorted(d_file_num.items())
 
     try:
-        _, path = c_dir[-1]
-    except:
-        log.error(f'Cannot find path in: {dir_path}')
-        raise
+        _, path = c_file[-1]
+    except Exception as exc:
+        raise ValueError(f'Cannot find path in: {file_wc}') from exc
 
     name = os.path.basename(path)
     dirn = os.path.dirname(path)
@@ -53,71 +52,8 @@ def get_last_version(
         name= name[:ind]
 
     if version_only:
+        name = name.replace(f'.{extension}', '')
         return name
 
     return f'{dirn}/{name}'
-#---------------------------------------
-def get_latest_file(dir_path : str, wc : str) -> str:
-    '''
-    Will find latest file in a given directory
-
-    Parameters
-    --------------------
-    dir_path (str): Directory where files are found
-    wc (str): Wildcard associated to files, e.g. file_*.txt
-
-    Returns
-    --------------------
-    Path to latest file, according to version
-    '''
-    l_path = glob.glob(f'{dir_path}/{wc}')
-    if len(l_path) == 0:
-        log.error(f'Cannot find files in: {dir_path}/{wc}')
-        raise ValueError
-
-    l_path.sort()
-
-    return l_path[-1]
-#---------------------------------------
-def get_next_version(version : str) -> str:
-    '''
-    Pick up string symbolizing version and return next version
-    Parameters
-    -------------------------
-    version (str) : Of the form vx.y or vx where x and y are integers. It can also be a full path
-
-    Returns
-    -------------------------
-    String equal to the argument, but with the main version augmented by 1, e.g. vx+1.y
-
-    Examples:
-    -------------------------
-
-    get_next_version('v1.1') = 'v2.1'
-    get_next_version('v1'  ) = 'v2'
-    '''
-    if '/' in version:
-        path    = version
-        dirname = os.path.dirname(path)
-        version = os.path.basename(path)
-    else:
-        dirname = None
-
-    rgx = r'v(\d+)(\.\d+)?'
-
-    mtch = re.match(rgx, version)
-    if not mtch:
-        log.error(f'Cannot match {version} with {rgx}')
-        raise ValueError
-
-    ver_org = mtch.group(1)
-    ver_nxt = int(ver_org) + 1
-    ver_nxt = str(ver_nxt)
-
-    version = version.replace(f'v{ver_org}', f'v{ver_nxt}')
-
-    if dirname is not None:
-        version = f'{dirname}/{version}'
-
-    return version
 #---------------------------------------
