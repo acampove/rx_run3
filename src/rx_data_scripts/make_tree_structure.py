@@ -60,7 +60,7 @@ def _split_paths(l_path : list[str]) -> dict[str,list[str]]:
     log.info(f'Splitting {npath} paths into categories')
 
     d_info_path = {}
-    for path in tqdm.tqdm(l_path, ascii=' -'):
+    for path in l_path:
         info = ut.info_from_path(path)
         if info not in d_info_path:
             d_info_path[info] = []
@@ -107,7 +107,7 @@ def _link_paths(sample : str, line : str, l_path : list[str]) -> Union[str, None
         log.warning('Dry run, not linking')
         return None
 
-    for source_path in tqdm.tqdm(l_path, ascii=' -'):
+    for source_path in l_path:
         file_name   = os.path.basename(source_path)
         target_path = f'{target_dir}/{file_name}'
 
@@ -187,7 +187,7 @@ def main():
     l_path = _get_paths()
     d_path = _split_paths(l_path)
 
-    for (sample, line), l_path in d_path.items():
+    for (sample, line), l_path in tqdm.tqdm(d_path.items(), ascii=' -'):
         target_dir = _link_paths(sample, line, l_path)
         if target_dir is None:
             continue
