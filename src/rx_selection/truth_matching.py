@@ -19,7 +19,7 @@ def get_truth(event_type : Union[int,str]) -> str:
     if isinstance(event_type, int):
         event_type=str(event_type)
 
-    if     event_type.startswith('data_'):
+    if     event_type.startswith('data'):
         cut = '(1)'
     elif   event_type in ['12113001', '12113002']:
         #rare mumu
