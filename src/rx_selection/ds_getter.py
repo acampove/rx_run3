@@ -117,11 +117,6 @@ class ds_getter:
         cutflow.log.setLevel(logging.WARNING)
         efficiency.log.setLevel(logging.WARNING)
     # ------------------------------------
-    def _set_bdt_paths(self):
-        db                = dbpath(year=self._year)
-        self._bdt_dir_cmb = db('bdt_cmb')
-        self._bdt_dir_prc = db('bdt_prc')
-    # ------------------------------------
     @property
     def debug_mode(self) -> bool:
         '''
@@ -148,23 +143,6 @@ class ds_getter:
     def extra_bdts(self, value):
         self._d_ext_bdt= value
     # ------------------------------------
-    def _get_sample(self):
-        '''
-        Will return proces_chan for given kind of sample, e.g. ctrl_ee
-        '''
-        key = 'processes'
-        if key not in self._cfg:
-            log.error(f'Key {key} not found in:')
-            pprint.pprint(self._cfg)
-            raise KeyError
-
-        d_proc = self._cfg[key]
-
-        proc   = d_proc[self._kind]
-        chan   = 'mm' if self._trig == 'MTOS' else 'ee'
-
-        return f'{proc}_{chan}'
-    # ------------------------------------
     def _update_bdt_cut(self, cut : str, skip_cmb : bool, skip_prec : bool) -> str:
         '''
         Will pick BDT cut, cmb and prec. Will return only one of them, depending on which one is skipped
@@ -187,42 +165,15 @@ class ds_getter:
 
         return bdt_cmb if skip_prec else bdt_prc
     # ------------------------------------
-    def _filter_bdt(self, rdf, cut, skip_prec : bool, skip_cmb : bool):
+    def _filter_bdt(self, rdf : RDataFrame, cut : str) -> tuple[RDataFrame, str]:
         '''
         Will add BDT score column and apply a cut on it
         '''
-        if skip_prec and skip_cmb:
+        if self._skip_prc and self._skip_cmb:
             log.warning('Skipping both BDTs')
             return rdf, '(1)'
 
-        if not skip_cmb:
-            log.info(f'Picking up combinatorial BDT from: {self._bdt_dir_cmb}')
-            man_cmb=mva_man(rdf, self._bdt_dir_cmb, self._trig)
-            rdf    =man_cmb.add_scores('BDT_cmb')
-
-        if not skip_prec:
-            log.info(f'Picking up PRec BDT from: {self._bdt_dir_prc}')
-            man_prc=mva_man(rdf, self._bdt_dir_prc, self._trig)
-            rdf    =man_prc.add_scores('BDT_prc')
-
-        cut = self._update_bdt_cut(cut, skip_cmb, skip_prec)
-        log.info(f'Using bdt cut: \"{cut}\"')
-        rdf = rdf.Filter(cut, 'bdt')
-
-        return rdf, cut
-    # ------------------------------------
-    def _add_extra_bdts(self, rdf):
-        if not hasattr(self, '_d_ext_bdt'):
-            log.info('No extra BDT added')
-            return rdf
-
-        log.info('Adding extra BDTs')
-        for var, location in self._d_ext_bdt.items():
-            log.debug(f'---> {var}')
-            man =mva_man(rdf, location, self._trig)
-            rdf =man.add_scores(var)
-
-        return rdf
+        raise NotImplementedError(f'BDT filtering has not been implemented for cut: {cut}')
     # ------------------------------------
     def _skim_df(self, df):
         if self._part is None:
