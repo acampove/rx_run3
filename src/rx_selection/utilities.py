@@ -4,6 +4,8 @@ Module containing utility functions
 # pylint: disable=import-error
 
 import os
+import json
+
 import numpy
 
 from ROOT                   import RDataFrame
@@ -13,6 +15,15 @@ from dmu.logging.log_store  import LogStore
 log=LogStore.add_logger('rx_selection:utilities')
 
 
+#-------------------------------------------------------
+def dump_json(data, json_path : str, sort_keys : bool = False):
+    '''
+    Will take a data structure and dump it to a JSON file
+    '''
+    json_dir = os.path.dirname(json_path)
+    os.makedirs(json_dir, exist_ok=True)
+    with open(json_path, 'w', encoding='utf-8') as ofile:
+        json.dump(data, ofile, indent=4, sort_keys=sort_keys)
 #-------------------------------------------------------
 def add_to_dic_lst(dic : dict, key, val) -> None:
     '''
