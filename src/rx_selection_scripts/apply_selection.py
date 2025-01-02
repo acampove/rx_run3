@@ -30,7 +30,7 @@ def _get_args() -> argparse.Namespace:
     parser.add_argument('-p', '--ipath'  , type = str, help='Path to directory with subdirectories with samples'  , required=True)
     parser.add_argument('-s', '--sample' , type = str, help='Name of sample to process, e.g. data_24_magdown_24c2', required=True)
     parser.add_argument('-q', '--q2bin'  , type = str, help='q2 bin, e.g. central'                                , required=True)
-    parser.add_argument('-t', '--hlt2'   , type = str, help='Name of HLT2 trigger, e.g. Hlt2RD_B0ToKpPimMuMu'     , required=True)                           , required=True)
+    parser.add_argument('-t', '--hlt2'   , type = str, help='Name of HLT2 trigger, e.g. Hlt2RD_B0ToKpPimMuMu'     , required=True)
     parser.add_argument('-c', '--cutver' , type = str, help='Version of selection, by default, latest'            , default =  '')
     parser.add_argument('-r', '--remove' , nargs= '+', help='List of cuts to remove from the full selection'      , default =  [])
 
