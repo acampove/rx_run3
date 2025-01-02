@@ -327,23 +327,23 @@ class ds_getter:
 
         return nev
     # ------------------------------------
-    def _redefine(self, d_cut : dict[str,str], d_redefine : dict[str,str]) -> dict[str,str]:
+    def _redefine_cuts(self, d_cut : dict[str,str]) -> dict[str,str]:
         '''
-        Takes dictionary with selection and overrides with with entries in d_redefine
+        Takes dictionary with selection and overrides with with entries in self._d_redefine_cuts
         Returns redefined dictionary
         '''
-        for key, new_cut in d_redefine.items():
-            if key not in d_cut:
-                log.error(f'Cannot redefine {key}, not a valid cut, choose from: {d_cut.keys()}')
+        for cut_name, new_cut in self._d_redefine_cuts.items():
+            if cut_name not in d_cut:
+                log.error(f'Cannot redefine {cut_name}, not a valid cut, choose from: {d_cut.keys()}')
                 pprint.pprint(d_cut)
                 raise ValueError
 
-            old_cut    = d_cut[key]
-            d_cut[key] = new_cut
+            old_cut         = d_cut[cut_name]
+            d_cut[cut_name] = new_cut
 
             old_cut    = re.sub(' +', ' ', old_cut)
             new_cut    = re.sub(' +', ' ', new_cut)
-            log.info(f'{key:<15}{old_cut:<70}{"--->":10}{new_cut:<40}')
+            log.info(f'{cut_name:<15}{old_cut:<70}{"--->":10}{new_cut:<40}')
 
         return d_cut
     # ------------------------------------
