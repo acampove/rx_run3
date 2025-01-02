@@ -355,17 +355,17 @@ class ds_getter:
                 print(cf)
                 raise
 
-            if key == 'truth' and self._is_signal:
-                cf = self._add_reco(cf, pas, cut)
+            if cut_name == 'truth':
+                cf = self._add_reco_efficiency(cf, pas, cut)
             else:
-                cf[key]  = eff
+                cf[cut_name] = eff
 
             tot=pas
 
-        df          = self._redefine_mass(df)
-        df          = dfmgr.add_atr(df)
-        df.treename = self._trig
-        df.cf       = cf
+        rdf          = self._redefine_mass(rdf)
+        rdf          = dfmgr.add_atr(rdf)
+        rdf.treename = 'DecayTree'
+        rdf.cf       = cf
 
-        return df
+        return rdf
 # -----------------------------------------
