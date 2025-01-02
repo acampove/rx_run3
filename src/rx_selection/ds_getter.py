@@ -22,11 +22,12 @@ from dmu.logging.log_store  import LogStore
 
 from rk.dbase_paths        import dbase_paths as dbpath
 from rk.mva_man            import mva_man
+
 from rk.cutflow            import cutflow
 from rk.efficiency         import efficiency
 from rk.efficiency         import ZeroYields
 
-import rk_selection.selection   as rksl
+import rk_selection.selection      as sel
 from rx_selection import utilities as ut
 
 log=LogStore.add_logger('rx_selection:ds_getter')
@@ -420,7 +421,7 @@ class ds_getter:
 
         cf    = cutflow(d_meta = {'file' : df.filepath, 'tree' : df.treename})
         tot   = df.Count().GetValue()
-        d_cut = rksl.selection(self._sel,
+        d_cut = sel.selection(self._sel,
                                self._trig,
                                self._year,
                                self._sample,
