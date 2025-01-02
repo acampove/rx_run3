@@ -22,9 +22,9 @@ from dmu.rdataframe.atr_mgr import AtrMgr
 from dmu.logging.log_store  import LogStore
 
 
-from rk.cutflow            import cutflow
-from rk.efficiency         import efficiency
-from rk.efficiency         import ZeroYields
+from rx_selection            import cutflow 
+from rx_selection.efficiency import efficiency
+from rx_selection.efficiency import ZeroYields
 
 from rx_selection import selection as sel
 from rx_selection import utilities as ut
