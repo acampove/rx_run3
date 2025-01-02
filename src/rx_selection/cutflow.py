@@ -8,7 +8,7 @@ from collections import UserDict
 import pandas       as pnd
 
 from rk.differential_efficiency import defficiency
-from ndict                      import       ndict
+from ndict                      import ndict
 from dmu.logging.log_store      import LogStore
 
 from rx_selection.efficiency    import efficiency
@@ -20,11 +20,11 @@ class cutflow(UserDict):
     #-------------------------------
     def __init__(self, d_meta=None):
         self._d_meta      = d_meta
-        self._tot_eff     = 1. 
-        self._ful_eff     = None
+        self._tot_eff     = 1.
+        self._ful_eff     : efficiency
 
-        self._df_stat     = None
-        self._df_cuts     = None
+        self._df_stat     : pnd.DataFrame
+        self._df_cuts     : pnd.DataFrame
         self._hash        = None
 
         self._initialized = False
@@ -33,8 +33,7 @@ class cutflow(UserDict):
     #-------------------------------
     def __setitem__(self, cut, obj):
         if not isinstance(obj, (efficiency, defficiency)):
-            self.log.error(f'For cut {cut}, value has to be efficiency or differential efficiency, found: {type(obj)}')
-            raise
+            raise ValueError(f'For cut {cut}, value has to be efficiency or differential efficiency, found: {type(obj)}')
 
         self.data[cut] = obj
 
@@ -52,7 +51,7 @@ class cutflow(UserDict):
         ful_eff= None
         for label, obj in self.data.items():
             if isinstance(obj, defficiency):
-                eff = obj.efficiency() 
+                eff = obj.efficiency()
             else:
                 eff = obj
 
@@ -94,7 +93,7 @@ class cutflow(UserDict):
     def __hash__(self):
         self._initialize()
         if not hasattr(self, '_hash'):
-            return self._get_hash() 
+            return self._get_hash()
 
         if not isinstance(self._hash, int):
             self.log.error(f'Hash attribute is not an int: {self._hash}')
@@ -117,10 +116,9 @@ class cutflow(UserDict):
             l_cut_this = list(cfl.keys())
             if l_cut_last is not None:
                 if l_cut_last != l_cut_this:
-                    cutflow.log.error(f'Cutflows contain different cuts:')
                     cutflow.log.error(l_cut_last)
                     cutflow.log.error(l_cut_this)
-                    raise
+                    raise ValueError('Cutflows contain different cuts:')
 
             l_cut_last = l_cut_this
     #-------------------------------
@@ -130,8 +128,7 @@ class cutflow(UserDict):
         s_type = set(l_type)
         l_type = list(s_type)
         if len(l_type) != 1:
-            cutflow.log.error(f'Not one and only one type found: {l_type}')
-            raise
+            raise ValueError(f'Not one and only one type found: {l_type}')
 
         return l_type[0]
     #-------------------------------
@@ -154,7 +151,7 @@ class cutflow(UserDict):
                 cutflow.log.error(f'Invalid kind of efficiency: {type_eff}')
                 raise TypeError
 
-            cfl_avg[cut] = eff 
+            cfl_avg[cut] = eff
 
         return cfl_avg
     #-------------------------------
@@ -215,7 +212,10 @@ class cutflow(UserDict):
 
         return msg
     #-------------------------------
-    def to_json(self, path):
+    def to_json(self, path : str) -> None:
+        '''
+        Will save cutflow to JSON
+        '''
         d_eff = self.df_eff.to_dict()
         d_cut = self.df_cut.to_dict()
 
@@ -224,16 +224,15 @@ class cutflow(UserDict):
         if self._d_meta is not None:
             d_eff.update(self._d_meta)
 
-        utnr.dump_json(d_eff, path)
+        ut.dump_json(d_eff, path)
     #-------------------------------
     def __add__(self, other):
         self._initialize()
 
         if self.keys() != other.keys():
-            self.log.error(f'Cannot add cutflows with different cuts:')
             print(self.df_eff)
             print(other.df_eff)
-            raise
+            raise ValueError('Cannot add cutflows with different cuts:')
 
         res_cfl = cutflow()
 
@@ -251,50 +250,46 @@ class cutflow_manager():
     '''
     Class used to build cutflow objects. It takes care of switching between efficiencies, depending on the systematics
     '''
-    log=log_store.add_logger('rx_tools:cutflow:cutflow_manager')
+    log=LogStore.add_logger('rx_selection:cutflow:cutflow_manager')
     #----------------------------------
     def __init__(self):
         self._d_d_eff   = {}
         self._s_sys     = set()
         self._l_cut     = []
         self._has_dif   = False
-        self._s_dif_var = None
+        self._s_dif_var : set
     #----------------------------------
     def _check_nominal(self, d_eff, kind):
         '''
         Check if dictionary contains nominal efficiency
         '''
         if   isinstance(d_eff,  dict)                 and 'nom' not in d_eff:
-            self.log.error(f'Nominal efficiency not found for: {kind}')
             print(d_eff.keys())
-            raise
-        elif isinstance(d_eff, ndict) and not d_eff.has_val('nom', axis='x'):
-            self.log.error(f'Nominal efficiency not found for: {kind}')
+            raise ValueError(f'Nominal efficiency not found for: {kind}')
+
+        if isinstance(d_eff, ndict) and not d_eff.has_val('nom', axis='x'):
             print(d_eff)
-            raise
+            raise ValueError(f'Nominal efficiency not found for: {kind}')
     #----------------------------------
     def __setitem__(self, cut, d_eff):
         self._check_nominal(d_eff, cut)
         self._check_sys_lab(d_eff, cut)
 
         if cut in self._l_cut:
-            self.log.error(f'Kind {cut} already added')
-            raise
-        else:
-            self._l_cut.append(cut)
+            raise ValueError(f'Kind {cut} already added')
+
+        self._l_cut.append(cut)
 
         if   isinstance(d_eff, ndict) and not self._has_dif:
             self._has_dif   = True
             self._s_dif_var = d_eff.y_axis
             self._s_sys     = d_eff.x_axis.union(self._s_sys)
-        elif isinstance(d_eff,  dict): 
+        elif isinstance(d_eff,  dict):
             self._s_sys= set(d_eff.keys()).union(self._s_sys)
         elif isinstance(d_eff, ndict) and     self._has_dif:
-            self.log.error(f'Cannot pass multiple differential efficiencies')
-            raise
+            raise ValueError('Cannot pass multiple differential efficiencies')
         else:
-            self.log.error(f'Argument is neither dict nor ndict, but: {type(d_eff)}')
-            raise
+            raise ValueError(f'Argument is neither dict nor ndict, but: {type(d_eff)}')
 
         self._d_d_eff[cut] = d_eff
     #----------------------------------
@@ -332,22 +327,20 @@ class cutflow_manager():
             elif isinstance(d_eff, ndict):
                 d_d_eff[cut] = self._pad_eff_dif(d_eff)
             else:
-                self.log.error(f'Object is not a dict or ndict, but: {type(d_eff)}')
-                raise
+                raise ValueError(f'Object is not a dict or ndict, but: {type(d_eff)}')
 
         return d_d_eff
     #----------------------------------
     def _check_sys_lab(self, d_eff, cut):
         for key, eff in d_eff.items():
             try:
-                sys, var = key
-            except:
-                sys      = key
+                sys, _ = key
+            except ValueError:
+                sys    = key
 
             if sys != eff.label:
-                self.log.error(f'For cut {cut} systematic and efficiency label dissagree: {sys}/{eff.label}')
                 print(eff)
-                raise
+                raise ValueError(f'For cut {cut} systematic and efficiency label dissagree: {sys}/{eff.label}')
     #----------------------------------
     def _get_cf_int(self, sys, d_d_eff_pad):
         '''
@@ -363,7 +356,7 @@ class cutflow_manager():
     #----------------------------------
     def _get_cf_dif(self, sys, var, d_d_eff_pad):
         '''
-        Takes sys, var strings and {cut : {sys[,var] : [d]eff...}...}, 
+        Takes sys, var strings and {cut : {sys[,var] : [d]eff...}...},
         i.e. inner dict (with sys -> eff) or ndict (with sys, var -> deff)
 
         Returns cutflow for given sys, var combination.
@@ -375,6 +368,8 @@ class cutflow_manager():
                 eff = d_eff[sys]
             elif isinstance(d_eff, ndict):
                 eff = d_eff[sys, var]
+            else:
+                raise ValueError('Dictionary off efficiencies is neither dict nor ndict')
 
             cf[cut] = eff
 
@@ -399,5 +394,5 @@ class cutflow_manager():
                 for var in self._s_dif_var:
                     d_cf[sys, var] = self._get_cf_dif(sys, var, d_d_eff_pad)
 
-        return d_cf 
+        return d_cf
 #----------------------------------
