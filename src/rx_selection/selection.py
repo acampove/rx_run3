@@ -27,8 +27,8 @@ def selection(analysis : str, project : str, q2bin: str, process : str) -> dict[
     '''
     Picks up sample name, trigger, etc, returns dictionary with selection
 
-    analysis : RK or RKst
-    project  : EE or MM
+    analysis : EE or MM
+    project  : RK or RKst
     q2bin    : low, central, jpsi, psi2S or high
     event_type : Event type for MC, "data" for data
     '''
