@@ -4,31 +4,10 @@ Module containing functions used to find latest, next version, etc of a path.
 
 import glob
 import os
-import re
 
 from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('rx_selection:version_management')
-#---------------------------------------
-def get_numeric_version(version : str) -> int:
-    '''
-    Takes string with numbers at the end (padded or not)
-    Returns integer version of numbers
-    '''
-    #Skip these directories
-    if version in ['__pycache__']:
-        return -1
-
-    regex=r'[a-z]+(\d+)'
-    mtch =re.match(regex, version)
-    if not mtch:
-        log.debug(f'Cannot extract numeric version from: {version}')
-        return -1
-
-    str_val = mtch.group(1)
-    val     = int(str_val)
-
-    return val
 #---------------------------------------
 def get_last_version(
         dir_path     : str,
