@@ -5,8 +5,9 @@ Module containing CacheData class
 
 import os
 
-from dmu.logging.log_store import LogStore
+from importlib.resources import files
 
+from dmu.logging.log_store  import LogStore
 from rx_selection.ds_getter import ds_getter as dsg
 
 log = LogStore.add_logger('rx_selection:cache_data')
