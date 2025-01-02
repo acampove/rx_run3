@@ -257,7 +257,7 @@ class ds_getter:
 
         return d_cut
     # ------------------------------------
-    def _add_reco(self, cf : cutflow, nrec : int, truth_string : str) -> cutflow:
+    def _add_reco_efficiency(self, cf : cutflow, nrec : int, truth_string : str) -> cutflow:
         '''
         Takes cutflow and nreco to calculate the reco efficiency and add it to the cutflow
         Returns updated cutflow
