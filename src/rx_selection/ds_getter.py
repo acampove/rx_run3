@@ -55,24 +55,9 @@ class ds_getter:
         if self._initialized:
             return
 
-        self._cfg       = self._get_config()
-        self._decay     = self._get_decay()
-        self._is_sim    = self._kind in self._cfg['simulation']
-        self._is_signal = self._kind in self._cfg['signal']
+        self._is_sim    = not self._sample.startswith('data')
 
-        self._set_bdt_paths()
         self._set_logs()
-
-        self._sample = self._get_sample()
-
-        ut.check_included(self._year, self._cfg['datasets']['all'])
-        ut.check_included(self._kind, self._cfg['processes'])
-
-        try:
-            if self._part is not None:
-                _, _ = self._part
-        except ValueError as exc:
-            raise ValueError(f'Could not extract partitioning scheme from: {self._part}') from exc
 
         self._initialized = True
     # ------------------------------------
