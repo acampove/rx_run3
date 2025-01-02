@@ -79,6 +79,8 @@ class CacheData:
         dsg_cfg             = dict(self._cfg)
         dsg_cfg['redefine'] = { cut : '(1)' for cut in self._l_rem }
 
+        del dsg_cfg['remove']
+
         return dsg_cfg
     # ----------------------------------------
     def save(self) -> None:
