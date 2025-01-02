@@ -7,8 +7,8 @@ from collections import UserDict
 
 import pandas       as pnd
 
-from rk.differential_efficiency import defficiency
-from ndict                      import ndict
+from rx_selection.differential_efficiency import defficiency
+from rx_selection.ndict                   import ndict
 from dmu.logging.log_store      import LogStore
 
 from rx_selection.efficiency    import efficiency
