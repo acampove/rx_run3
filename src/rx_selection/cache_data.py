@@ -8,7 +8,8 @@ import os
 from importlib.resources import files
 
 from dmu.logging.log_store  import LogStore
-from rx_selection.ds_getter import ds_getter as dsg
+from rx_selection.ds_getter import ds_getter          as dsg
+from rx_selection           import version_management as vman
 
 log = LogStore.add_logger('rx_selection:cache_data')
 # ----------------------------------------
@@ -19,6 +20,8 @@ class CacheData:
     '''
     # ----------------------------------------
     def __init__(self, cfg : dict):
+        self._cfg    : dict      = cfg
+
         self._ipart  : int       = cfg['ipart']
         self._npart  : int       = cfg['npart']
 
@@ -72,6 +75,12 @@ class CacheData:
 
         return path, False
     # ----------------------------------------
+    def _get_dsg_cfg(self) -> dict:
+        dsg_cfg             = dict(self._cfg)
+        dsg_cfg['redefine'] = { cut : '(1)' for cut in self._l_rem }
+
+        return dsg_cfg
+    # ----------------------------------------
     def save(self) -> None:
         '''
         Will apply selection and save ROOT file
@@ -80,26 +89,17 @@ class CacheData:
         if is_cached:
             return
 
-        part       = (self._ipart, self._npart)
-        d_redefine = { cut : '(1)' for cut in self._l_skip_cut }
+        log.info(f'Path not cached, will create: {ntp_path}')
 
-        obj = dsg(
-                self._q2bin,
-                self._trig,
-                self._dset,
-                self._vers,
-                part,
-                self._proc,
-                self._selection)
+        dsg_cfg = self._get_dsg_cfg()
+        obj     = dsg(cfg=dsg_cfg)
+        rdf     = obj.get_df()
 
-        rdf = obj.get_df(
-                d_redefine= d_redefine,
-                skip_prec = self._skip_prc_bdt,
-                skip_cmb  = self._skip_cmb_bdt)
+        return
 
         cfl_path = ntp_path.replace('.root', '.json')
         log.info(f'Saving to: {cfl_path}')
-        log.info(f'Saving to: {ntp_path}:{self._trig}')
+        log.info(f'Saving to: {ntp_path}')
 
         rdf.cf.to_json(cfl_path)
 
