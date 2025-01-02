@@ -11,6 +11,7 @@ import re
 import glob
 import logging
 from importlib.resources import files
+from typing              import Union
 
 import pprint
 import yaml
@@ -48,6 +49,7 @@ class ds_getter:
 
         self._skip_cmb      = True
         self._skip_prc      = True
+        self._is_sim        : bool
 
         self._initialized   = False
     # ------------------------------------
