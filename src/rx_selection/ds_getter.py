@@ -348,6 +348,11 @@ class ds_getter:
 
             pas=rdf.Count().GetValue()
 
+            if cut_name == 'truth':
+                cf = self._add_reco_efficiency(cf, pas, cut)
+                tot= pas
+                continue
+
             try:
                 eff = efficiency(pas, tot - pas, cut=cut)
             except ZeroYields:
@@ -355,10 +360,7 @@ class ds_getter:
                 print(cf)
                 raise
 
-            if cut_name == 'truth':
-                cf = self._add_reco_efficiency(cf, pas, cut)
-            else:
-                cf[cut_name] = eff
+            cf[cut_name] = eff
 
             tot=pas
 
