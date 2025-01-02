@@ -26,7 +26,7 @@ from rk.cutflow            import cutflow
 from rk.efficiency         import efficiency
 from rk.efficiency         import ZeroYields
 
-import rk_selection.selection      as sel
+from rx_selection import selection as sel
 from rx_selection import utilities as ut
 
 log=LogStore.add_logger('rx_selection:ds_getter')
