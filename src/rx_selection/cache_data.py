@@ -95,7 +95,7 @@ class CacheData:
 
         dsg_cfg = self._get_dsg_cfg()
         obj     = dsg(cfg=dsg_cfg)
-        rdf     = obj.get_df()
+        rdf     = obj.get_rdf()
 
         return
 
