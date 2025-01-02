@@ -34,42 +34,20 @@ class ds_getter:
     '''
     Class used to provide dataframe after a given selection
     '''
-    # pylint: disable = too-many-instance-attributes
-    # pylint: disable = invalid-name
     # ------------------------------------
-    def __init__(self,
-                 q2bin : str,
-                 trig  : str,
-                 year  : str,
-                 version   : str,
-                 partition : tuple[int, int],
-                 kind      : str,
-                 sel       : str):
-        # pylint: disable = too-many-arguments, too-many-positional-arguments
-        self._q2bin      = q2bin
-        self._vers       = version
-        self._trig       = trig
-        self._sel        = sel
-        self._kind       = kind
-        self._year       = year
-        self._part       = partition
-        self._cfg        = {}
-        self._sample     = None
-        self._is_sim     : bool
-        self._d_ext_bdt  : dict[str,str]
-        self._remove_cuts= None
-        self._is_signal  : bool
-        self._decay      : str
+    def __init__(self, cfg : dict):
+        ipart                 = cfg['ipart'   ]
+        npart                 = cfg['npart'   ]
+        self._part            = [ipart, npart ]
+        self._q2bin           = cfg['q2bin'   ]
+        self._sample          = cfg['sample'  ]
+        self._project         = cfg['project' ]
+        self._d_redefine_cuts = cfg['redefine']
+        self._hlt2            = cfg['hlt2'    ]
+        self._cutver          = cfg['cutver'  ]
 
-        self._debug_mode = False
-        self._h_ipchi2   = '(1)' if year in ['2024'] else 'H_IPCHI2_OWNPV > 4'
-
-        self._bdt_dir_cmb : str
-        self._bdt_dir_prc : str
-
-        #Fake trigger needed to get nspd hits cut, tool needs a trigger
-        #but cut does not depend on trigger
-        self._dummy_trigger = 'ETOS'
+        self._skip_cmb      = True
+        self._skip_prc      = True
 
         self._initialized   = False
     # ------------------------------------
