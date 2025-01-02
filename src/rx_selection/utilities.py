@@ -12,6 +12,16 @@ from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('rx_selection:utilities')
 
+
+#-------------------------------------------------------
+def add_to_dic_lst(dic : dict, key, val) -> None:
+    '''
+    Takes a dictionary a key and a value, will add value to list mapped by key
+    '''
+    if key not in dic:
+        dic[key] = [val]
+    else:
+        dic[key].append(val)
 #-------------------------------------------------------
 def check_file(filepath : str) -> None:
     '''
