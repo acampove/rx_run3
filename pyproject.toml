@@ -6,6 +6,7 @@ readme      = 'README.md'
 dependencies= [
 'data-manipulation-utilities',
 'numpy',
+'jacobi',
 ]
 
 [project.optional-dependencies]
