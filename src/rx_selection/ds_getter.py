@@ -191,18 +191,6 @@ class ds_getter:
 
         return f'{proc}_{chan}'
     # ------------------------------------
-    def _add_reco_cuts(self, d_cut):
-        d_cut_extra = {}
-        for key, cut in d_cut.items():
-            if key != 'truth':
-                d_cut_extra[key] = cut
-                continue
-
-            d_cut_extra[key]        = cut
-            d_cut_extra['K_IPChi2'] = self._h_ipchi2
-
-        return d_cut_extra
-    # ------------------------------------
     def _update_bdt_cut(self, cut : str, skip_cmb : bool, skip_prec : bool) -> str:
         '''
         Will pick BDT cut, cmb and prec. Will return only one of them, depending on which one is skipped
