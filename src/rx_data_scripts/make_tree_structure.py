@@ -97,9 +97,9 @@ def _link_paths(sample : str, line : str, l_path : list[str]) -> Union[str, None
     Will return directory where linked files are
     '''
     npath = len(l_path)
-    log.info(f'Linking {npath} paths for {sample}/{line}')
+    log.debug(f'Linking {npath} paths for {sample}/{line}')
 
-    target_dir  = f'{Data.out_path}/{Data.ver}/{sample}/{line}'
+    target_dir  = f'{Data.out_path}/{Data.ver}/post_ap/{sample}/{line}'
     os.makedirs(target_dir, exist_ok=True)
 
     log.debug(f'Linking to: {target_dir}')
