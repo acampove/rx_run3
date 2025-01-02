@@ -10,7 +10,6 @@ import os
 import re
 import glob
 import logging
-from typing              import Optional
 from importlib.resources import files
 
 import pprint
@@ -21,9 +20,6 @@ from ROOT import RDataFrame
 from dmu.rdataframe.atr_mgr import AtrMgr
 from dmu.logging.log_store  import LogStore
 
-
-from rk.dbase_paths        import dbase_paths as dbpath
-from rk.mva_man            import mva_man
 
 from rk.cutflow            import cutflow
 from rk.efficiency         import efficiency
