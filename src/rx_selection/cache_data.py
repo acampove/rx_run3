@@ -18,41 +18,40 @@ class CacheData:
     It's mostly an interface to ds_getter
     '''
     # ----------------------------------------
-    def __init__(self, cfg : dict, ipart : int, npart : int):
-        self._cfg         = cfg
-        self._ipart       = ipart
-        self._npart       = npart
+    def __init__(self, cfg : dict):
+        self._ipart  : int       = cfg['ipart']
+        self._npart  : int       = cfg['npart']
 
-        self._proc        = cfg['proc']
-        self._vers        = cfg['vers']
-        self._dset        = cfg['dset']
-        self._trig        = cfg['trig']
-        self._q2bin       = cfg['q2bin']
-        self._preffix     = cfg['preffix']
-        self._selection   = cfg['selection']
-        self._truth_corr  = cfg['truth_corr']
-        self._l_skip_cut  = cfg['skip_cuts']
-        self._skip_cmb_bdt= cfg['skip_cmb_bdt']
-        self._skip_prc_bdt= cfg['skip_prc_bdt']
-
-        self._chan        : str
-        self._tree        : str
-        self._cache_dir   : str
-
-        self._setup_vars()
+        self._ipath  : str       = cfg['ipath' ]
+        self._sample : str       = cfg['sample']
+        self._l_rem  : list[str] = cfg['remove']
+        self._q2bin  : str       = cfg['q2bin' ]
+        self._cutver : str       = cfg['cutver']
+        self._hlt2   : str       = cfg['hlt2'  ]
     # ----------------------------------------
-    def _setup_vars(self) -> None:
-        if   self._trig in ['ETOS', 'GTIS']:
-            self._chan = 'ee'
-            self._tree = 'KEE'
-        elif self._trig in ['MTOS']:
-            self._chan = 'mm'
-            self._tree = 'KMM'
-        else:
-            log.error(f'Invalid trigger: {self._trig}')
-            raise ValueError
+    def _get_cut_version(self) -> str:
+        cutver = self._cutver
+        if cutver != '':
+            log.warning(f'Overriding cut version with: {cutver}')
+            return cutver
 
-        self._cache_dir = os.environ['CASDIR']
+        selection_wc = files('rx_selection_data').joinpath('*.yaml')
+        selection_wc = str(selection_wc)
+        selection_dir= os.path.dirname(selection_wc)
+        version      = vman.get_last_version(selection_dir, 'yaml')
+
+        log.debug('Using latest cut version: {version}')
+
+        return version
+    # ----------------------------------------
+    def _get_selection_name(self) -> str:
+        skipped_cuts   = '_'.join(self._l_rem)
+        cutver         = self._get_cut_version()
+        selection_name = f'NO_{skipped_cuts}_Q2_{self._q2bin}_VR_{cutver}'
+
+        log.debug(f'Using selection name: {selection_name}')
+
+        return selection_name
     # ----------------------------------------
     def _cache_path(self) -> tuple[str, bool]:
         '''
