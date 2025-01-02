@@ -1,7 +1,10 @@
 '''
 Module containing class that provides ROOT dataframe after a given selection
 '''
-# pylint: disable=import-error
+# pylint: disable = import-error
+# pylint: disable = too-many-instance-attributes
+# pylint: disable = invalid-name
+# pylint: disable = too-many-arguments, too-many-positional-arguments
 
 import os
 import re
@@ -14,7 +17,6 @@ import pprint
 import yaml
 
 from ROOT import RDataFrame
-
 
 from dmu.rdataframe.atr_mgr import AtrMgr
 from dmu.logging.log_store  import LogStore
