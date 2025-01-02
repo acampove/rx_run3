@@ -289,64 +289,64 @@ class ds_getter:
 
         return rdf
     # ----------------------------------------
-    def get_df(self,
-               remove_cuts: Optional[list[str]]     = None,
-               d_redefine : Optional[dict[str,str]] = None,
-               skip_cmb   : bool = False,
-               skip_prec  : bool = False):
+    def _get_analysis(self):
+        hlt2_nomva = self._hlt2.replace('_MVA', '')
+
+        if hlt2_nomva.endswith('EE'):
+            return 'EE'
+
+        if hlt2_nomva.endswith('MuMu'):
+            return 'MM'
+
+        raise ValueError(f'Usupported HLT2 trigger: {hlt2_nomva}')
+    # ----------------------------------------
+    def _redefine_cut(self, cut_name : str, cut_value : str) -> str:
+        '''
+        Takes cut, checks if it is meant to be redefined, returns updated value
+        '''
+        if cut_name not in self._d_redefine_cuts:
+            return cut_value
+
+        new_cut = self._d_redefine_cuts[cut_name]
+        cut     = new_cut
+
+        log.warning(f'{"Redefining":<10}{cut_name:<20}{"as":<20}{cut:<100}')
+
+        return cut
+    # ----------------------------------------
+    def get_rdf(self) -> RDataFrame:
         '''
         Returns ROOT dataframe after selection
-
-        Parameters:
-        ----------------------
-        remove_cuts (list) : list of strings associated to cuts to skip
-        d_redefine (dict)  : Dictionary {name : 'new cut'} used to redefine "name"
-        skip_prec  (bool)  : If true, will not calculate PRec BDT score
-        skip_cmb   (bool)  : If true, will not calculate cmb BDT score
         '''
 
-        remove_cuts = [] if remove_cuts is None else remove_cuts
         self._initialize()
 
-        self._remove_cuts = remove_cuts
+        rdf   = self._get_df_raw()
+        dfmgr = AtrMgr(rdf)
 
-        df    = self._get_df_raw()
-        dfmgr = AtrMgr(df)
+        cf    = cutflow(d_meta = {'file' : rdf.filepath, 'tree' : rdf.treename})
+        tot   = rdf.Count().GetValue()
+        d_cut = sel.selection(
+                analysis = self._get_analysis(),
+                project  = self._project,
+                q2bin    = self._q2bin,
+                process  = self._sample)
 
-        cf    = cutflow(d_meta = {'file' : df.filepath, 'tree' : df.treename})
-        tot   = df.Count().GetValue()
-        d_cut = sel.selection(self._sel,
-                               self._trig,
-                               self._year,
-                               self._sample,
-                               q2bin=self._q2bin,
-                               decay=self._decay)
+        d_cut = self._redefine_cuts(d_cut)
 
-        if not self._is_sim:
-            d_cut = dict( [('truth', '(1)')] + list(d_cut.items()) )
+        log.info(f'Applying selection version: {self._cutver}')
 
-        d_cut = self._add_reco_cuts(d_cut)
+        for cut_name, cut in d_cut.items():
+            cut = self._redefine_cut(cut_name, cut)
 
-        if d_redefine is not None:
-            d_cut = self._redefine(d_cut, d_redefine)
+            log.info(f'{"":<10}{cut_name:>20}')
 
-        log.info(f'Applying selection: {self._sel}')
-
-
-        for key, cut in d_cut.items():
-            if key in self._remove_cuts:
-                log.info(f'{"skip":<10}{key:>20}')
-                continue
-
-            log.info(f'{"":<10}{key:>20}')
-
-            if key == 'bdt':
-                df      = self._add_extra_bdts(df)
-                df, cut = self._filter_bdt(df, cut, skip_prec=skip_prec, skip_cmb=skip_cmb)
+            if cut_name == 'bdt':
+                rdf, cut = self._filter_bdt(rdf, cut)
             else:
-                df = df.Filter(cut, key)
+                rdf = rdf.Filter(cut, cut_name)
 
-            pas=df.Count().GetValue()
+            pas=rdf.Count().GetValue()
 
             try:
                 eff = efficiency(pas, tot - pas, cut=cut)
