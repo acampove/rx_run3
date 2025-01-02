@@ -227,17 +227,13 @@ class ds_getter:
 
         return df
     # ------------------------------------
-    def _get_gen_nev(self):
-        dat_dir   = os.environ['DATDIR']
-        file_path = f'{dat_dir}/{self._sample}/{self._vers}/{self._year}.root'
+    def _get_gen_nev(self) -> Union[int,None]:
+        if not self._is_sim:
+            return None
 
-        ut.check_file(file_path)
-        log.debug('Retrieving gen statistics:')
-        df  = RDataFrame('gen', file_path)
-        df  = self._skim_df(df)
-        nev = df.Count().GetValue()
+        log.warning('Reading number of entries from MCDecayTree not implemented')
 
-        return nev
+        return 1
     # ------------------------------------
     def _redefine_cuts(self, d_cut : dict[str,str]) -> dict[str,str]:
         '''
