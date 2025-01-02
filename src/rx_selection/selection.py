@@ -3,11 +3,14 @@ Module containing the selection function, which returns a dictionary of cuts
 '''
 # pylint: disable=too-many-positional-arguments, too-many-arguments
 
-from dataclasses import dataclass
+from dataclasses         import dataclass
+from importlib.resources import files
 
+import yaml
 from dmu.logging.log_store  import LogStore
 
-from rx_selection import truth_matching as tm
+from rx_selection import truth_matching     as tm
+from rx_selection import version_management as vman 
 
 log=LogStore.add_logger('rx_selection:selection')
 #-----------------------
