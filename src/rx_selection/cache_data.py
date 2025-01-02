@@ -59,33 +59,18 @@ class CacheData:
         Checks if ROOT file is already made
         Returns path and flag, signaling that the file exists or not
         '''
-        path_dir = f'{self._cache_dir}/tools/apply_selection/{self._preffix}/{self._proc}/{self._vers}/{self._dset}_{self._trig}'
+        selection_name = self._get_selection_name()
+        opath          = self._ipath.replace('post_ap', selection_name)
+
+        path_dir = f'{opath}/{self._sample}/{self._hlt2}'
         os.makedirs(path_dir, exist_ok=True)
 
-        path     = f'{path_dir}/{self._ipart}_{self._npart}.root'
+        path     = f'{path_dir}/{self._ipart:03}_{self._npart:03}.root'
         if os.path.isfile(path):
             log.info(f'Loading cached data: {path}')
             return path, True
 
         return path, False
-    # ----------------------------------------
-    def _get_tree_name(self) -> str:
-        '''
-        Will return KEE or KMM depending on L0 trigger
-        '''
-        if self._trig not in self._l_skip_cut:
-            return self._trig
-
-        if   self._trig == 'MTOS':
-            name = 'KMM'
-        elif self._trig in ['ETOS', 'GTIS']:
-            name = 'KEE'
-        else:
-            raise ValueError(f'Invalid/Unsupported trigger: {self._trig}')
-
-        log.info(f'Using non-trigger tree name: {name}')
-
-        return name
     # ----------------------------------------
     def save(self) -> None:
         '''
@@ -118,7 +103,5 @@ class CacheData:
 
         rdf.cf.to_json(cfl_path)
 
-        tree_name = self._get_tree_name()
-
-        rdf.Snapshot(tree_name, ntp_path)
+        rdf.Snapshot('DecayTree', ntp_path)
 # ----------------------------------------
