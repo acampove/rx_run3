@@ -3,6 +3,8 @@ Module containing the selection function, which returns a dictionary of cuts
 '''
 # pylint: disable=too-many-positional-arguments, too-many-arguments, import-error
 
+import os
+
 from dataclasses         import dataclass
 from importlib.resources import files
 
@@ -42,8 +44,9 @@ def selection(analysis : str, project : str, q2bin: str, process : str) -> dict[
     return d_cut
 #-----------------------
 def _get_selection(analysis : str, project : str, q2bin : str) -> dict[str,str]:
-    sel_dir = files('rx_selection_data')
-    sel_dir = str(sel_dir)
+    sel_wc = files('rx_selection_data').joinpath('*.yaml')
+    sel_wc = str(sel_wc)
+    sel_dir= os.path.dirname(sel_wc)
 
     yaml_path = vman.get_last_version(
             dir_path     = sel_dir,
