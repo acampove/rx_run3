@@ -51,9 +51,9 @@ class ndict(UserDict):
         return val in axis
     #--------------------------------
     def __str__(self, type_only=False):
-        msg = f'-' * 40
-        msg+= f'\nndict\n'
-        msg+= f'-' * 40
+        msg = '-' * 40
+        msg+= '\nndict\n'
+        msg+= '-' * 40
         for (xval, yval), value in self.data.items():
             tpval = str(type(value))
             value = str(value)
@@ -61,7 +61,7 @@ class ndict(UserDict):
                 msg += f'\n{xval:<20}{yval:<20}{"->"}{tpval:>30}\n'
             else:
                 msg += f'\n{xval:<20}{yval:<20}{"->"}{value:>30}\n'
-        msg+= f'-' * 40
+        msg+= '-' * 40
 
         return msg
     #--------------------------------
