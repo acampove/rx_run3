@@ -140,32 +140,21 @@ class ds_getter:
 
         return rdf
     # ------------------------------------
-    def _get_file_path(self) -> str:
-        dat_dir   = os.environ['DATDIR']
-        if not self._debug_mode:
-            file_path = f'{dat_dir}/{self._sample}/{self._vers}/{self._year}.root'
-            ut.check_file(file_path)
-            return file_path
+    def _get_files_path(self) -> list[str]:
+        files_wc = f'{self._ipath}/{self._sample}/{self._hlt2}/*.root'
+        l_path   = glob.glob(files_wc)
+        npath    = len(l_path)
+        if npath == 0:
+            raise FileNotFoundError('No files found in: {files_wc}')
 
-        log.warning('Running in debugging mode, using single file')
-        file_wc   = f'{dat_dir}/{self._sample}/{self._vers}/{self._year}/*.root'
-        l_path    = glob.glob(file_wc)
-        file_path = l_path[0]
-        ut.check_file(file_path)
+        log.info(f'Found {npath} files')
 
-        return file_path
+        return l_path
     # ------------------------------------
     def _get_df_raw(self) -> RDataFrame:
-        tree_path = 'DecayTree'
-        file_path = self._get_file_path()
+        l_file_path = self._get_files_path()
 
-        log.info('------------------------------------')
-        log.info( 'Retrieving dataframe for:')
-        log.info(f'{"File path  ":<20}{file_path:<100}')
-        log.info(f'{"Tree path  ":<20}{tree_path:<100}')
-        log.info('------------------------------------')
-
-        rdf = RDataFrame(tree_path, file_path)
+        rdf = RDataFrame('DecayTree', l_file_path)
         rdf = self._skim_df(rdf)
 
         rdf.filepath = file_path
