@@ -41,9 +41,9 @@ def check_file(filepath : str) -> None:
     if not os.path.isfile(filepath):
         raise FileNotFoundError(f'Cannot find {filepath}')
 #-------------------------------------------------
-def get_df_range(rdf : RDataFrame, index : int, npartition : int) -> RDataFrame:
+def get_rdf_range(rdf : RDataFrame, index : int, npartition : int) -> RDataFrame:
     '''
-    Will take a dataframe and return the index-th partition out of npartition(s)
+    Will take a ROOT dataframe and return the index-th partition out of npartition(s)
     '''
     atr_obj = AtrMgr(rdf)
 
