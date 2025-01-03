@@ -172,26 +172,6 @@ class ds_getter:
 
         return df
     # ------------------------------------
-    def _get_tree_path(self) -> str:
-        if   self._kind == 'cmb'            and self._trig in ['ETOS', 'GTIS']:
-            tree_path = 'KSS_ee'
-        elif self._kind == 'cmb'            and self._trig == 'MTOS':
-            tree_path = 'KSS_mm'
-        elif self._trig in ['ETOS', 'GTIS'] and self._kind.endswith('_cal'):
-            tree_path = 'KCL_ee'
-        elif self._trig in ['ETOS', 'GTIS'] and self._kind.endswith('_misid'):
-            tree_path = 'KMI_ee'
-        elif self._kind == 'cmb_em':
-            tree_path = 'KEM'
-        elif self._trig == 'MTOS':
-            tree_path = 'KMM'
-        elif self._trig in ['ETOS', 'GTIS']:
-            tree_path = 'KEE'
-        else:
-            raise ValueError(f'Cannot pick tree path, invalid kind/trigger: {self._kind}/{self._trig}')
-
-        return tree_path
-    # ------------------------------------
     def _get_file_path(self) -> str:
         dat_dir   = os.environ['DATDIR']
         if not self._debug_mode:
