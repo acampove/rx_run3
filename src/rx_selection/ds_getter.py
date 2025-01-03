@@ -188,7 +188,7 @@ class ds_getter:
         return file_path
     # ------------------------------------
     def _get_df_raw(self) -> RDataFrame:
-        tree_path = self._get_tree_path()
+        tree_path = 'DecayTree'
         file_path = self._get_file_path()
 
         log.info('------------------------------------')
