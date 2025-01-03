@@ -8,8 +8,6 @@ Module containing class that provides ROOT dataframe after a given selection
 
 import os
 import re
-import glob
-import logging
 from importlib.resources import files
 from typing              import Union
 
