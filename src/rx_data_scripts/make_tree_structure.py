@@ -15,7 +15,8 @@ from dmu.rfile.rfprinter    import RFPrinter
 from dmu.logging.log_store  import LogStore
 
 import tqdm
-from rx_data import utilities as ut
+
+from rx_data import PathSplitter
 
 log   = LogStore.add_logger('rx_data:make_tree_structure')
 # ---------------------------------
