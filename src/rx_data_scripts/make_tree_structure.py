@@ -26,9 +26,8 @@ class Data:
     Class used to hold shared data
     '''
     # pylint: disable = invalid-name
-    # Need to call var Max instead of max
 
-    Max       : int
+    max_files : int
     ver       : str
     dry       : bool
     inp_path  : str
