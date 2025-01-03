@@ -37,7 +37,7 @@ class cutflow(UserDict):
 
         self.data[cut] = obj
 
-        if self._ful_eff is None:
+        if not hasattr(self, '_ful_eff'):
             self._ful_eff  = obj.copy()
         else:
             self._ful_eff  = self._ful_eff * obj
