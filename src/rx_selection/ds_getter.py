@@ -203,26 +203,6 @@ class ds_getter:
 
         return cf
     # ------------------------------------
-    def _redefine_mass(self, rdf):
-        '''
-        Takes ROOT dataframe, for Run3 the const_mass branches are floats. This needs to be harmonized to make them RVec as in Run2.
-        Returns dataframe with redefined mass branches
-        '''
-
-        if self._year in ['2011', '2012', '2015', '2016', '2017', '2018']:
-            log.debug(f'Not redefining any mass column as RVecF for {self._year}')
-            return rdf
-
-        v_col = rdf.GetColumnNames()
-        l_col = [col.c_str() for col in v_col]
-        l_mas = [col         for col in l_col if '_const_mass_' in col]
-
-        for name in l_mas:
-            rdf = rdf.Redefine(name, f'float val = {name}; return ROOT::RVecF({{val}});')
-            log.debug(f'Redefining {name} as RVecF for {self._year}')
-
-        return rdf
-    # ----------------------------------------
     def _get_analysis(self):
         hlt2_nomva = self._hlt2.replace('_MVA', '')
 
@@ -298,7 +278,6 @@ class ds_getter:
 
             tot=pas
 
-        rdf          = self._redefine_mass(rdf)
         rdf          = dfmgr.add_atr(rdf)
         rdf.treename = 'DecayTree'
         rdf.cf       = cf
