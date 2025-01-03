@@ -2,26 +2,12 @@
 Module containing utility functions
 '''
 from importlib.resources import files
-from functools           import cache
 
 import yaml
 
 # ---------------------------------
-@cache
-def _get_evt_name() -> dict[str,str]:
-    file_path = files('ap_utilities_data').joinpath('evt_name.yaml')
-    file_path = str(file_path)
-    with open(file_path, encoding='utf-8') as ifile:
-        d_data = yaml.safe_load(ifile)
-
-    return d_data
-# ---------------------------------
-@cache
-def _get_name_evt(style : str) -> dict[str,str]:
-    if style != 'safe_1':
-        raise NotImplementedError(f'Style {style} not supported')
-
-    file_path = files('ap_utilities_data').joinpath('name_evt.yaml')
+def _load_data(file_name : str) -> dict:
+    file_path = files('ap_utilities_data').joinpath(file_name)
     file_path = str(file_path)
     with open(file_path, encoding='utf-8') as ifile:
         d_data = yaml.safe_load(ifile)
@@ -71,7 +57,7 @@ def read_decay_name(event_type : str, style : str = 'safe_1') -> str:
         + -> pl
         , -> _
     '''
-    d_evt_name = _get_evt_name()
+    d_evt_name = _load_data('evt_name.yaml')
 
     if event_type not in d_evt_name:
         raise ValueError(f'Event type {event_type} not found')
