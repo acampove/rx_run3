@@ -58,10 +58,14 @@ def _get_selection(analysis : str, project : str, q2bin : str) -> dict[str,str]:
         d_sel = yaml.safe_load(ifile)
 
     d_cut  = d_sel[project][analysis]
-    q2_cut = d_cut['q2'][q2bin]
-    del d_cut['q2']
+    q2_cut = d_cut['q2'  ][q2bin]
+    ms_cut = d_cut['mass'][q2bin]
 
-    d_cut['q2'] = q2_cut
+    del d_cut['q2'  ]
+    del d_cut['mass']
+
+    d_cut['q2'  ] = q2_cut
+    d_cut['mass'] = ms_cut
 
     return d_cut
 #-----------------------
