@@ -13,8 +13,14 @@ literal = aput.read_decay_name(event_type=event_type, style='literal')
 # To get representation with special symbols like "," or "-" replaced
 safe_1  = aput.read_decay_name(event_type=event_type, style= 'safe_1')
 
-# To get event type back from nickname, only safe_1 implemented for now
-event_type = aput.read_event_type(nickname=nickname, style= 'safe_1')
+# To get event type back from nickname, nickname HAS to be safe_1
+event_type = aput.read_event_type(nickname=nickname)
+
+# To get old nickname from new, nickname HAS to be safe_1 
+old_nickname = aput.old_from_new_nick(nickname=nickname)
+
+# To get new nickname from old, nickname is formatted by default as safe_1
+new_nickname = aput.new_from_old_nick(nickname=nickname, style='safe_1')
 ```
 
 ### Update table with nicknames and event types
