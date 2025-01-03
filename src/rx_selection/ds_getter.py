@@ -100,9 +100,9 @@ class ds_getter:
         Silence log messages of tools
         '''
 
-        AtrMgr.log.setLevel(logging.WARNING)
-        cutflow.log.setLevel(logging.WARNING)
-        efficiency.log.setLevel(logging.WARNING)
+        LogStore.set_level('dmu:rdataframe:atr_mgr' , 30)
+        LogStore.set_level('rx_selection:cutflow'   , 30)
+        LogStore.set_level('rx_selection:efficiency', 30)
     # ------------------------------------
     @property
     def debug_mode(self) -> bool:
