@@ -85,3 +85,10 @@ def test_read_event_type(new_nick: str) -> None:
     event_type = aput.read_event_type(nickname=new_nick)
     print(event_type)
 # --------------------------------------------------
+@pytest.mark.parametrize('new_nick', Data.l_new_nick)
+def test_new_from_old(new_nick : str) -> None:
+    '''
+    Will test function taking returning new nickname style
+    from old nickname style
+    '''
+    old_nick = aput.new_from_old_nick(new_nick)
