@@ -12,6 +12,7 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
+make_run3_yaml='rx_common_scripts.make_run3_yaml:main'
 
 [tool.setuptools.package-data]
 'rx_config' = ['*.yaml']
