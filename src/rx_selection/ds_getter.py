@@ -158,9 +158,6 @@ class ds_getter:
         rdf = RDataFrame('DecayTree', l_file_path)
         rdf = self._skim_df(rdf)
 
-        rdf.filepath = file_path
-        rdf.treename = tree_path
-
         return rdf
     # ------------------------------------
     def _get_gen_nev(self) -> Union[int,None]:
