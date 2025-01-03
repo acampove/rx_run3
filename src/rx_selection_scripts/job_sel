@@ -101,14 +101,13 @@ submit_ihep()
     OFILE=selection_%{ClusterId}_%{ProcId}
 
     echo "Running $NJOB jobs from: $PWD"
-    echo ""
     echo "Queue    =$QUEUE"
 
     #hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu $JOB_ARGS -wt $QUEU -- $SUBMITTER
+}
 #-----------------------------
 get_opts "$@"
 prepare
 set_job_args
 set_submitter
 submit_ihep
-
