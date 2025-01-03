@@ -23,7 +23,7 @@ from dmu.rdataframe.atr_mgr import AtrMgr
 from dmu.logging.log_store  import LogStore
 
 
-from rx_selection            import cutflow
+from rx_selection            import cutflow     as cfl
 from rx_selection.efficiency import efficiency
 from rx_selection.efficiency import ZeroYields
 
@@ -256,7 +256,7 @@ class ds_getter:
         rdf   = self._get_df_raw()
         dfmgr = AtrMgr(rdf)
 
-        cf    = cutflow(d_meta = {'file' : rdf.filepath, 'tree' : rdf.treename})
+        cf    = cfl.cutflow(d_meta = {'file' : rdf.filepath, 'tree' : rdf.treename})
         tot   = rdf.Count().GetValue()
         d_cut = sel.selection(
                 analysis = self._get_analysis(),
