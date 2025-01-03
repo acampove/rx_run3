@@ -3,6 +3,7 @@ Module containing class that provides ROOT dataframe after a given selection
 '''
 # pylint: disable = import-error
 # pylint: disable = too-many-instance-attributes
+# pylint: disable = line-too-long
 # pylint: disable = invalid-name
 # pylint: disable = too-many-arguments, too-many-positional-arguments
 
@@ -22,7 +23,7 @@ from dmu.rdataframe.atr_mgr import AtrMgr
 from dmu.logging.log_store  import LogStore
 
 
-from rx_selection            import cutflow 
+from rx_selection            import cutflow
 from rx_selection.efficiency import efficiency
 from rx_selection.efficiency import ZeroYields
 
@@ -177,9 +178,8 @@ class ds_getter:
         '''
         for cut_name, new_cut in self._d_redefine_cuts.items():
             if cut_name not in d_cut:
-                log.error(f'Cannot redefine {cut_name}, not a valid cut, choose from: {d_cut.keys()}')
                 pprint.pprint(d_cut)
-                raise ValueError
+                raise ValueError(f'Cannot redefine {cut_name}, not a valid cut, choose from: {d_cut.keys()}')
 
             old_cut         = d_cut[cut_name]
             d_cut[cut_name] = new_cut
