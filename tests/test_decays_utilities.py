@@ -47,6 +47,25 @@ class Data:
         'tau_pimnpiplpimnpi0nu_eq_DPC',
         'tau_piphinu_KK_eq_DPC',
             ]
+
+    l_old_nick = [
+            'Bd2D0XNuEE',
+            'Bd2D0XNuMM',
+            'Bd2DNuKstNuEE',
+            'Bd2DPiEE',
+            'Bd2DPiMM',
+            'Bd2DstNuDPiKPiEE',
+            'Bd2DstNuDPiKPiMM',
+            'Bd2KPiEE',
+            'Bd2KPiMM',
+            'Bd2KstEE',
+            'Bd2KstEE_central',
+            'Bd2KstEE_high',
+            'Bd2KstEE_low',
+            'Bd2KstEEvNOFLT',
+            'Bd2KstEEvPS',
+            'Bd2KstEta_EEG',
+            ]
 # --------------------------------------------------
 @pytest.mark.parametrize('event_type', Data.l_event_type)
 def test_read_decay_name(event_type : str) -> None:
