@@ -14,7 +14,6 @@ from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('rx_selection:utilities')
 
-
 #-------------------------------------------------------
 def dump_json(data, json_path : str, sort_keys : bool = False):
     '''
