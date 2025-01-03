@@ -49,47 +49,6 @@ def _get_paths() -> list[str]:
 
     return l_path
 # ---------------------------------
-def _split_paths(l_path : list[str]) -> dict[str,list[str]]:
-    '''
-    Takes list of paths to ROOT files
-    Splits them into categories and returns a dictionary:
-
-    category : [path_1, path_2, ...]
-    '''
-    npath = len(l_path)
-    log.info(f'Splitting {npath} paths into categories')
-
-    d_info_path = {}
-    for path in l_path:
-        info = ut.info_from_path(path)
-        if info not in d_info_path:
-            d_info_path[info] = []
-
-        d_info_path[info].append(path)
-
-    d_info_path = _truncate_paths(d_info_path)
-
-    log.info('Found samples:')
-    d_info_path = dict(sorted(d_info_path.items()))
-    for sample, line in sorted(d_info_path):
-        log.debug(f'{sample:<50}{line:<30}')
-
-    return d_info_path
-# ---------------------------------
-def _truncate_paths(d_path):
-    '''
-    Will limit the number of paths in the values if Data.Max is larger than zero
-    '''
-
-    if Data.Max < 0:
-        return d_path
-
-    log.warning(f'Truncating to {Data.Max} paths')
-
-    d_path_trunc = { key : val[:Data.Max] for key, val in d_path.items() }
-
-    return d_path_trunc
-# ---------------------------------
 def _link_paths(sample : str, line : str, l_path : list[str]) -> Union[str, None]:
     '''
     Makes symbolic links of list of paths of a specific kind
@@ -185,7 +144,9 @@ def main():
     _initialize(args)
 
     l_path = _get_paths()
-    d_path = _split_paths(l_path)
+
+    splt = PathSplitter(paths=l_path, max_files=Data.max_files)
+    d_path = splt.split()
 
     for (sample, line), l_path in tqdm.tqdm(d_path.items(), ascii=' -'):
         target_dir = _link_paths(sample, line, l_path)
