@@ -162,15 +162,15 @@ class ds_getter:
 
         raise NotImplementedError(f'BDT filtering has not been implemented for cut: {cut}')
     # ------------------------------------
-    def _skim_df(self, df):
+    def _skim_df(self, rdf : RDataFrame) -> RDataFrame:
         if self._part is None:
-            return df
+            return rdf
 
         islice, nslice = self._part
 
-        df = ut.get_df_range(df, islice, nslice)
+        rdf = ut.get_rdf_range(rdf, islice, nslice)
 
-        return df
+        return rdf
     # ------------------------------------
     def _get_file_path(self) -> str:
         dat_dir   = os.environ['DATDIR']
