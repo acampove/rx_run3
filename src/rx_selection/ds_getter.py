@@ -197,15 +197,13 @@ class ds_getter:
         log.info(f'{"Tree path  ":<20}{tree_path:<100}')
         log.info('------------------------------------')
 
-        df = RDataFrame(tree_path, file_path)
-        df = df.Define('sample', f'std::string("{self._decay}")')
-        df = self._skim_df(df)
+        rdf = RDataFrame(tree_path, file_path)
+        rdf = self._skim_df(rdf)
 
-        df.filepath = file_path
-        df.treename = tree_path
-        df.year     = self._year
+        rdf.filepath = file_path
+        rdf.treename = tree_path
 
-        return df
+        return rdf
     # ------------------------------------
     def _get_gen_nev(self) -> Union[int,None]:
         if not self._is_sim:
