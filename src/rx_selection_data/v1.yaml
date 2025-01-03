@@ -29,8 +29,7 @@ RKst:
     pid_pi    : (H2_PROBNN_PI * (1 - H2_PROBNN_P) * (1 - H2_ProbNNk) > 0.1) 
     jpsi_misid: (1)
     rich      : L1_PPHASRICH && L2_PPHASRICH && H1_PPHASRICH && H2_PPHASRICH
-    bdt       :
-      ETOS    : (1) 
+    bdt       : (1) 
     hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1) || (B_Hlt1TrackElectronMVADecision_TOS == 1)
     hlt2      : (1)
     cascade   : (1)
@@ -51,15 +50,14 @@ RKst:
     pid_pi    : (H2_PROBNN_PI * (1 - H2_PROBNN_P) * (1 - H2_ProbNNk) > 0.1) 
     jpsi_misid: (1)
     rich      : L1_PPHASRICH && L2_PPHASRICH && H1_PPHASRICH && H2_PPHASRICH
-    bdt       :
-      MTOS    : (1) 
+    bdt       : (1) 
     hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1) || (B_Hlt1TrackMuonMVADecision_TOS == 1)
     hlt2      : (1)
     mass:
-      central: (B_M                      > 4880) && (B_M                       < 6200)
-      jpsi   : (B_nopv_const_mass_M      > 5080) && (B_nopv_const_mass_M       < 5680)
-      psi2   : (B_nopv_const_mass_psi2S_M> 4800) && (B_nopv_const_mass_psi2S_M < 5680)
-      high   : (B_M                      > 4500) && (B_M                       < 6000)
+      central : (B_M                      > 4880) && (B_M                       < 6200)
+      jpsi    : (B_nopv_const_mass_M      > 5080) && (B_nopv_const_mass_M       < 5680)
+      psi2    : (B_nopv_const_mass_psi2S_M> 4800) && (B_nopv_const_mass_psi2S_M < 5680)
+      high    : (B_M                      > 4500) && (B_M                       < 6000)
     cascade   : (1)
     acceptance: L1_INMUON && L2_INMUON
     jpsi_misid: (1)
@@ -79,8 +77,7 @@ RK:
     pid_l     : L1_PROBNN_E > 0.2 && L2_PROBNN_E > 0.2 && L1_PIDe  > 3.000 && L2_PIDe  > 3.000
     pid_k     : H_PIDe <  0.000 && H_PID_K > 2.0
     jpsi_misid: (1)
-    bdt       :
-      ETOS    : BDT_cmb > 0.7 && BDT_prc > 0
+    bdt       : BDT_cmb > 0.7 && BDT_prc > 0
     q2:
     <<: *q2_common
     mass:
@@ -96,8 +93,7 @@ RK:
     pid_pi    : (H2_PROBNN_PI * (1 - H2_PROBNN_P) * (1 - H2_ProbNNk) > 0.1) 
     jpsi_misid: (1)
     rich      : L1_PPHASRICH && L2_PPHASRICH && H1_PPHASRICH && H2_PPHASRICH
-    bdt       :
-      MTOS    : (1) 
+    bdt       : (1) 
     hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1) || (B_Hlt1TrackMuonMVADecision_TOS == 1)
     hlt2      : (1)
     cascade   : (1)
