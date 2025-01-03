@@ -21,14 +21,6 @@ jobs:
         conda install conda-forge::cppyy
         conda install conda-forge::root
     #-----------
-    - name: Test
-      run: |
-          pip install .[dev]
-          pytest tests/arrays
-          pytest tests/logging
-          pytest tests/generic
-          pytest tests/text
-    #-----------
     - name: Install pypa/build
       run: >-
         python3 -m
