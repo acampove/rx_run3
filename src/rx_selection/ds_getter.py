@@ -185,6 +185,7 @@ class ds_getter:
 
             old_cut    = re.sub(' +', ' ', old_cut)
             new_cut    = re.sub(' +', ' ', new_cut)
+
             log.info(f'{cut_name:<15}{old_cut:<70}{"--->":10}{new_cut:<40}')
 
         return d_cut
@@ -224,7 +225,7 @@ class ds_getter:
         new_cut = self._d_redefine_cuts[cut_name]
         cut     = new_cut
 
-        log.warning(f'{"Redefining":<10}{cut_name:<20}{"as":<20}{cut:<100}')
+        log.warning(f'{cut_name:<20}{"->":<20}{cut:<100}')
 
         return cut
     # ----------------------------------------
