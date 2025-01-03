@@ -51,13 +51,20 @@ get_opts()
 # ----------------------------
 run()
 {
+    echo "DATADIR: $DATADIR"
+    echo "SAMPLE:  $SAMPLE"
+    echo "Q2BIN:   $Q2BIN"
+    echo "Trigger: $TRIGGER"
+    echo "PROJECT  $PROJECT"
     echo "Running: $IPART/$NPART"
+
     if [[ -z $REMOVED ]];then
         echo "Will not remove cuts"
         apply_selection -d $DATADIR -s $SAMPLE             -q $Q2BIN -t $TRIGGER -p $PROJECT -i $IPART -n $NPART
     else
         echo "Will remove cuts: $REMOVED"
         apply_selection -d $DATADIR -s $SAMPLE -r $REMOVED -q $Q2BIN -t $TRIGGER -p $PROJECT -i $IPART -n $NPART
+    fi
 }
 # ----------------------------
 
