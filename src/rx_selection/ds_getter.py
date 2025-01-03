@@ -157,6 +157,8 @@ class ds_getter:
 
         rdf = RDataFrame('DecayTree', l_file_path)
         rdf = self._skim_df(rdf)
+        rdf.filepath = str(l_file_path)
+        rdf.treename = 'DecayTree'
 
         return rdf
     # ------------------------------------
