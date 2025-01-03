@@ -12,7 +12,7 @@ class ndict(UserDict):
     Class used to map pairs of objects to a third object
     Can enforce that all keys have been used with check()
     '''
-    log = LogStore.add_logger('rx_selection:ndict') 
+    log = LogStore.add_logger('rx_selection:ndict')
     #--------------------------------
     def __init__(self):
         self._s_key_x = set()
@@ -47,7 +47,7 @@ class ndict(UserDict):
         else:
             self.log.error(f'Wrong axis: {axis}')
             raise
- 
+
         return val in axis
     #--------------------------------
     def __str__(self, type_only=False):
