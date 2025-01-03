@@ -52,6 +52,8 @@ def format_nickname(nickname : str, style : str) -> str:
     nickname = nickname.replace(        'HighVisMass',   'HVM')
     nickname = nickname.replace(       'OppositeSign',    'OS')
     nickname = nickname.replace(           'TightCut',    'TC')
+    nickname = nickname.replace('DiMuon_OppositeSign','DiM_OS')
+    nickname = nickname.replace('GeV'                ,     'G')
 
     return nickname
 # ---------------------------------
