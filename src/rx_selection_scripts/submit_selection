@@ -26,7 +26,7 @@ get_opts()
     while getopts :hf:d:s:r:q:t:p:i:n: option; do 
         case "${option}" in
             d)  DATADIR="${OPTARG}";;
-            s)  SAMPLE="${$OPTARG}";;
+            s)  SAMPLE="${OPTARG}";;
             r)  REMOVED="${OPTARG}";;
             q)  Q2BIN="${OPTARG}";;
             t)  TRIGGER="${OPTARG}";;
