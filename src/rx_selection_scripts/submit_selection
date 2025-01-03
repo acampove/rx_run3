@@ -47,6 +47,10 @@ get_opts()
                 ;;  
         esac
     done
+
+    if [[ ! -z $REMOVED ]];then
+        REMOVED=$(echo $REMOVED | sed 's|-| |g')
+    fi
 }
 # ----------------------------
 run()
