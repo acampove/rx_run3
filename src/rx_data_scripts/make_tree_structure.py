@@ -168,7 +168,7 @@ def _version_from_input() -> str:
 # ---------------------------------
 def _initialize(args : argparse.Namespace) -> None:
     Data.dry       = args.dry
-    Data.Max       = args.max
+    Data.max_files = args.max
     Data.inp_path  = args.inp
     Data.out_path  = args.out
 
