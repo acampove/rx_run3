@@ -27,16 +27,16 @@ class Data:
         '11100006',
         ]
 
-    l_nickname = [
+    l_new_nick = [
         'tau_5mu_eq_DPC',
         'tau_Kphinu_KK_eq_DPC',
         'tau_mugamma_eq_DPC',
         'tau_mumnKplKmn_eq_DPC',
         'tau_mumnpiplpimn_eq_DPC',
         'tau_mumue_eq_OS_DPC',
-        'tau_mumue_eq_OS_FromB_TightCut',
+        'tau_mumue_eq_OS_FromB_TC',
         'tau_mumue_eq_SS_DPC',
-        'tau_mumue_eq_SS_FromB_TightCut',
+        'tau_mumue_eq_SS_FromB_TC',
         'tau_mumumu_eq_DPC',
         'tau_mumumu_eq_FromB',
         'tau_muphi_KK_eq_DPC',
