@@ -104,3 +104,41 @@ def read_event_type(nickname : str, style : str = 'safe_1') -> str:
 
     return value
 # ---------------------------------
+def new_from_old_nick(nickname : str, style : str = 'safe_1') -> str:
+    '''
+    Function that takes a decay nick name using Run1/2 naming
+    and returns nicknames using Run3 naming
+    '''
+    d_old_evt = _load_data('old_name_evt.yaml')
+    if nickname not in d_old_evt:
+        raise ValueError(f'Old nickname {nickname} not found in: old_name_evt.yaml')
+
+    evt_type   = d_old_evt[nickname]
+
+    d_evt_name = _load_data('evt_name.yaml')
+    if evt_type not in d_evt_name:
+        raise ValueError(f'Event type {evt_type} not found in: evt_name.yaml')
+
+    new_nick   = d_evt_name[evt_type]
+    new_nick   = format_nickname(new_nick, style)
+
+    return new_nick
+# ---------------------------------
+def old_from_new_nick(nickname : str) -> str:
+    '''
+    Function that takes a decay nick name using Run3 naming with safe_1 style
+    and returns nicknames using Run1/2 naming
+    '''
+    d_name_evt = _load_data('name_evt.yaml')
+    if nickname not in d_name_evt:
+        raise ValueError(f'Nickname {nickname} not found in: name_evt.yaml')
+
+    evt_type   = d_name_evt[nickname]
+
+    d_evt_old  = _load_data('evt_old_name.yaml')
+    if evt_type not in d_evt_old:
+        raise ValueError(f'Event type {evt_type} not found in: evt_old_name.yaml')
+
+    old_nick   = d_evt_old[evt_type]
+
+    return old_nick
