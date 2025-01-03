@@ -55,7 +55,7 @@ def _get_args() -> argparse.Namespace:
     '''
     parser = argparse.ArgumentParser(description='Will make YAML files with specific formatting from lists of LFNs in project')
     parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs'   , default =-1)
-    parser.add_argument('-v', '--ver', type=int, help='Version of LFNs'                          , required=True)
+    parser.add_argument('-v', '--ver', type=str, help='Version of LFNs'                          , required=True)
     parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30]          , default =20)
     args = parser.parse_args()
 
