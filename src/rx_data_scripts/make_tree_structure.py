@@ -106,7 +106,7 @@ def _get_args() -> argparse.Namespace:
     '''
     Parse arguments
     '''
-    parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
+    parser = argparse.ArgumentParser(description='Makes directory structure from ROOT files through symbolic links')
     parser.add_argument('-i', '--inp', type=str, help='Path to directory with ROOT files to link'        , required=True)
     parser.add_argument('-o', '--out', type=str, help='Path to directory where tree structure will start', required=True)
     parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs'   , default=-1)
