@@ -11,7 +11,6 @@ import jacobi   as jac
 
 from dmu.logging.log_store  import LogStore
 
-log=LogStore.add_logger('rx_selection:efficiency')
 #-----------------------------------------
 class InconsistentEff(Exception):
     '''
