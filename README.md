@@ -48,13 +48,22 @@ In the cluster, one will need a dedicated directory for the log files, this is s
 export JOBDIR=/path/to/place/here/log/files/are
 ```
 
-then run:
+then run, for instance:
 
 ```bash
 job_sel -d /home/acampove/Data/rx_samples/v1/post_ap -s data_24_magdown_24c2 -q central -t Hlt2RD_B0ToKpPimMuMu -p RK -n 100 -r q2-bdt
 ```
 
-which will send 100 jobs to do the selection. The options are:
+which will apply the selection by: 
+
+- Picking up the data found in `/home/acampove/Data/rx_samples/v1/post_ap`
+- Applying the selection on the sample `data_24_magdown_24c2`
+- For the HLT2 trigger `Hlt2RD_B0ToKpPimMuMu`
+- For the project `RK`
+- Using 100 jobs
+- Skipping the `q2` and `bdt` cuts.
+
+The options are:
 
 ```bash
 Script used to setup mamba environment and run apply_selection script
