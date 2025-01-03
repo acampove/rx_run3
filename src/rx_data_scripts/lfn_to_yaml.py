@@ -5,6 +5,7 @@ into a yaml file ready to be plugged into the RX c++ framework
 # pylint: disable=line-too-long, import-error
 
 import glob
+import json
 import argparse
 
 from importlib.resources    import files
@@ -41,7 +42,7 @@ def _get_paths() -> list[str]:
 
     for file in l_file:
         with open(file, encoding='utf-8') as ifile:
-            l_path_file = ifile.read().splitlines()
+            l_path_file = json.load(ifile)
             nlfn        = len(l_path_file)
             log.debug(f'Adding {nlfn} LFNs')
             l_path     += l_path_file
