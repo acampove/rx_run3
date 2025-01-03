@@ -77,11 +77,11 @@ def test_read_decay_name(event_type : str) -> None:
 
     print(f'{literal:<50}{safe_1:<50}')
 # --------------------------------------------------
-@pytest.mark.parametrize('nickname', Data.l_nickname)
-def test_read_event_type(nickname: str) -> None:
+@pytest.mark.parametrize('new_nick', Data.l_new_nick)
+def test_read_event_type(new_nick: str) -> None:
     '''
-    Tests reading of event type from YAML using nickname 
+    Tests reading of event type from YAML using new_nick 
     '''
-    event_type = aput.read_event_type(nickname=nickname, style= 'safe_1')
+    event_type = aput.read_event_type(nickname=new_nick)
     print(event_type)
 # --------------------------------------------------
