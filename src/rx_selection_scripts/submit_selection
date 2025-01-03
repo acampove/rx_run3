@@ -66,7 +66,7 @@ run()
         echo "Will not remove cuts"
         apply_selection -d $DATADIR -s $SAMPLE             -q $Q2BIN -t $TRIGGER -p $PROJECT -i $IPART -n $NPART
     else
-        echo "Will remove cuts: $REMOVED"
+        echo "Will remove cuts: \"$REMOVED\""
         apply_selection -d $DATADIR -s $SAMPLE -r $REMOVED -q $Q2BIN -t $TRIGGER -p $PROJECT -i $IPART -n $NPART
     fi
 }
