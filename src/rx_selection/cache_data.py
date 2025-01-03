@@ -97,8 +97,6 @@ class CacheData:
         obj     = dsg(cfg=dsg_cfg)
         rdf     = obj.get_rdf()
 
-        return
-
         cfl_path = ntp_path.replace('.root', '.json')
         log.info(f'Saving to: {cfl_path}')
         log.info(f'Saving to: {ntp_path}')
