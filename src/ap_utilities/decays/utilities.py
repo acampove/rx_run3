@@ -81,21 +81,12 @@ def read_decay_name(event_type : str, style : str = 'safe_1') -> str:
 
     return value
 # ---------------------------------
-def read_event_type(nickname : str, style : str = 'safe_1') -> str:
+def read_event_type(nickname : str) -> str:
     '''
-    Takes nickname, and style strings, returns corresponding event type 
-
-    Styles:
-
-    literal         : No change is made to nickname
-    safe_1 (default): With following replacements:
-        . -> p
-        = -> _eq_
-        - -> mn
-        + -> pl
-        , -> _
+    Takes nickname after reformatting, i.e. replacement of commans, equals, etc.
+    Returns corresponding event type 
     '''
-    d_name_evt = _get_name_evt(style)
+    d_name_evt = _load_data('name_evt.yaml')
 
     if nickname not in d_name_evt:
         raise ValueError(f'Event type {nickname} not found')
