@@ -46,6 +46,7 @@ class ds_getter:
         self._d_redefine_cuts = cfg['redefine']
         self._hlt2            = cfg['hlt2'    ]
         self._cutver          = cfg['cutver'  ]
+        self._ipath           = cfg['ipath'   ]
 
         self._skip_cmb      = True
         self._skip_prc      = True
