@@ -64,24 +64,6 @@ class ds_getter:
 
         self._initialized = True
     # ------------------------------------
-    def _get_decay(self) -> str:
-        '''
-        For a given kind of sample (used for naming directories where trees are)
-        Return the decay, used to pick up YAML files with selection
-        '''
-
-        # Run1/2
-        if self._kind in ['cmb', 'data', 'ctrl', 'sign']:
-            decay = 'bukCHAN'
-        # Run 3
-        else:
-            decay = self._cfg['decays'][self._kind]
-
-        chan = 'mm' if self._trig == 'MTOS' else 'ee'
-        decay= decay.replace('CHAN', chan)
-
-        return decay
-    # ------------------------------------
     def _get_config(self):
         '''
         Load YAML config and returns dictionary
@@ -104,21 +86,6 @@ class ds_getter:
         LogStore.set_level('dmu:rdataframe:atr_mgr' , 30)
         LogStore.set_level('rx_selection:cutflow'   , 30)
         LogStore.set_level('rx_selection:efficiency', 30)
-    # ------------------------------------
-    @property
-    def debug_mode(self) -> bool:
-        '''
-        Flag indicating if this tool will be ran
-        for debugging purposes
-        '''
-        return self._debug_mode
-
-    @debug_mode.setter
-    def debug_mode(self, value) -> None:
-        if not isinstance(value, bool):
-            raise ValueError(f'Argument was  not a bool: {value}')
-
-        self._debug_mode = value
     # ------------------------------------
     @property
     def extra_bdts(self):
