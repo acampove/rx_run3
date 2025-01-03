@@ -88,14 +88,6 @@ RK:
   - Bd2KstPiPiEE
   - Bu2D0RhoEE
   - Bu2D0KPiRhoEE
-RKS:
-  - Empty
-  - Data
-  - Data-SBU
-  - Data-SBL
-  - Bd2KSJPsMM
-  - Bs2KSJPsMM
-  - Lb2LJPsMM
 RKst:
   - Empty
   - Data
@@ -205,6 +197,14 @@ RKst:
   - Bd2KstPiPiEE
   - Bu2D0RhoEE
   - Bu2D0KPiRhoEE
+RKS:
+  - Empty
+  - Data
+  - Data-SBU
+  - Data-SBL
+  - Bd2KSJPsMM
+  - Bs2KSJPsMM
+  - Lb2LJPsMM
 RL:
   - Empty
   - Data
