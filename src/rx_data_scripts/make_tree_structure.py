@@ -15,6 +15,7 @@ from dmu.rfile.rfprinter    import RFPrinter
 from dmu.logging.log_store  import LogStore
 
 import tqdm
+import ap_utilities.decays.utilities as aput
 
 from rx_data.path_splitter import PathSplitter
 
@@ -149,6 +150,12 @@ def main():
     d_path = splt.split()
 
     for (sample, line), l_path in tqdm.tqdm(d_path.items(), ascii=' -'):
+        try:
+            sample     = aput.name_from_lower_case(sample)
+        except ValueError as exc:
+            log.warning(exc)
+            continue
+
         target_dir = _link_paths(sample, line, l_path)
         if target_dir is None:
             continue
