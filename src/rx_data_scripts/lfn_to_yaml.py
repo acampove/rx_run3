@@ -10,8 +10,9 @@ import argparse
 
 from importlib.resources    import files
 from dataclasses            import dataclass
-from dmu.logging.log_store  import LogStore
 
+import yaml
+from dmu.logging.log_store  import LogStore
 from rx_data.path_splitter import PathSplitter
 
 log = LogStore.add_logger('rx_data:make_tree_structure')
@@ -25,6 +26,7 @@ class Data:
 
     max_files : int
     lfn_vers  : str
+    l_project = ['RK', 'RKst']
 # ---------------------------------
 def _get_paths() -> list[str]:
     '''
@@ -67,6 +69,26 @@ def _initialize(args : argparse.Namespace) -> None:
 
     LogStore.set_level('rx_data:lfn_to_yaml', args.lvl)
 # ---------------------------------
+def _save(d_path : dict) -> None:
+    for key in d_path:
+        print(key)
+
+    return
+    with open('samples.yaml', 'w', encoding='utf-8') as ofile:
+        yaml.safe_dump(d_path, ofile)
+# ---------------------------------
+def _reformat_paths(d_path : dict[tuple[str,str],list[str]]) -> dict[str,dict[str,list[str]]]:
+    d_sample = {}
+    for (sample, trigger), l_path in d_path.items():
+        if sample not in d_sample:
+            d_sample[sample] = {}
+
+        d_sample[sample][trigger] = l_path
+
+    return d_sample
+# ---------------------------------
+def _filter_samples()
+# ---------------------------------
 def main():
     '''
     Script starts here
@@ -77,6 +99,11 @@ def main():
     l_path = _get_paths()
     splt   = PathSplitter(paths=l_path, max_files=Data.max_files)
     d_path = splt.split()
+
+    d_sample = _reformat_paths(d_path)
+    d_sample = _filter_samples(d_sample)
+
+    _save(d_sample)
 # ---------------------------------
 if __name__ == '__main__':
     main()
