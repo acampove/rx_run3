@@ -20,3 +20,16 @@ this is done with:
 make_run3_yaml
 ```
 
+These samples can be fed to the c++ code with:
+
+- Text files with lists of LFNs
+- YAML file with information on how the LFNs are associated to different
+projects and samples.
+
+Both of them can be made with:
+
+```bash
+lfn_to_yaml -v v1 -l 10
+```
+
+which will dump the inputs in the current directory.
