@@ -1,6 +1,7 @@
 '''
 Module containing utility functions
 '''
+from functools           import cache
 from importlib.resources import files
 
 import yaml
@@ -48,6 +49,7 @@ def _apply_format(d_format : dict[str,str], name : str) -> str:
 
     return name
 # ---------------------------------
+@cache
 def _load_data(file_name : str) -> dict:
     file_path = files('ap_utilities_data').joinpath(file_name)
     file_path = str(file_path)
