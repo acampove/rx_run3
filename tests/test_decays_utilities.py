@@ -58,6 +58,8 @@ class Data:
             'bd_dstplmunu_eq_phsp_tc',
             'bd_kpimumu_eq_dpc',
             'bd_kpimumu_eq_dpc',
+            'bu_kee_eq_btosllball05_dpc_spr',
+            'bd_kstee_eq_btosllball05_dpc_ss',
             'bd_kstee_eq_btosllball05_dpc',
             'bd_kstee_eq_btosllball05_dpc',
             'bd_kstee_eq_btosllball05_dpc',
@@ -127,4 +129,4 @@ def test_name_from_lower_case(lower_case : str) -> None:
     case name
     '''
     name = aput.name_from_lower_case(lower_case)
-    print(f'{lower_case:<30}{"->":<20}{name:<30}')
+    print(f'{lower_case:<40}{"->":<20}{name:<30}')
