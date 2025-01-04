@@ -43,6 +43,22 @@ class Data:
             'Bd_Ksteta_eplemng_eq_Dalitz_DPC',
             ]
 
+    l_lower_case = [
+            'bd_dmnpipl_eq_dpc',
+            'bd_dmnpipl_eq_dpc',
+            'bd_dstplenu_eq_phsp_tc',
+            'bd_dstplmunu_eq_phsp_tc',
+            'bd_kpimumu_eq_dpc',
+            'bd_kpimumu_eq_dpc',
+            'bd_kstee_eq_btosllball05_dpc',
+            'bd_kstee_eq_btosllball05_dpc',
+            'bd_kstee_eq_btosllball05_dpc',
+            'bd_kstee_eq_btosllball05_dpc',
+            'bd_kstee_eq_dpc',
+            'bd_kstee_flatq2_eq_dpc_momcut',
+            'bd_ksteta_eplemng_eq_dalitz_dpc',
+            ]
+
     l_old_nick = [
             'Bd2DNuKstNuEE',
             'Bd2DPiEE',
