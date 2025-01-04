@@ -128,14 +128,15 @@ def _path_from_list(l_lfn : list[str], sample : str, hlt : str) -> str:
     Makes list of LFNs and returns path to it.
     '''
 
-    json_path = f'{Data.out_dir}/{sample}_{hlt}.json'
-    json_dir  = os.path.dirname(json_path)
+    txt_path = f'{Data.out_dir}/{sample}_{hlt}.txt'
+    txt_dir  = os.path.dirname(txt_path)
 
-    os.makedirs(json_dir, exist_ok=True)
-    with open(json_path, 'w', encoding='utf-8') as ofile:
-        json.dump(l_lfn, ofile, indent=4)
+    os.makedirs(txt_dir, exist_ok=True)
+    text = '\n'.join(l_lfn)
+    with open(txt_path, 'w', encoding='utf-8') as ofile:
+        ofile.write(text)
 
-    return json_path
+    return txt_path
 # ---------------------------------
 def _lfns_path_from_sample(sample : str) -> dict[str,str]:
     '''
