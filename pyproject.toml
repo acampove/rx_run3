@@ -17,6 +17,7 @@ where   = ['src']
 
 [project.scripts]
 make_run3_yaml='rx_common_scripts.make_run3_yaml:main'
+lfn_to_yaml='rx_common_scripts.lfn_to_yaml:main'
 
 [tool.setuptools.package-data]
 'rx_config' = ['*.yaml']
