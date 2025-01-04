@@ -7,24 +7,25 @@ These nicknames can be accessed from python scripts with:
 ```python
 import ap_utilities.decays.utilities as aput
 
-# To get exactly what was saved
-literal = aput.read_decay_name(event_type=event_type, style='literal')
+# TO get a formatted nickname for the sample from the event type
+nickname = aput.read_decay_name(event_type=event_type)
 
-# To get representation with special symbols like "," or "-" replaced
-safe_1  = aput.read_decay_name(event_type=event_type, style= 'safe_1')
-
-# To get event type back from nickname, nickname HAS to be safe_1
+# To get event type back from nickname
 event_type = aput.read_event_type(nickname=nickname)
 
-# To get old nickname from new, nickname HAS to be safe_1 
+# To get old nickname from new one. The old one is the one used by RX in Run1/2
 old_nickname = aput.old_from_new_nick(nickname=nickname)
 
-# To get new nickname from old, nickname is formatted by default as safe_1
-new_nickname = aput.new_from_old_nick(nickname=nickname, style='safe_1')
+# To get new nickname from old one
+new_nickname = aput.new_from_old_nick(nickname=nickname)
 
-# TO get original (with Run3 style safe_1) nickname from lowercase nickname
+# To get original nickname from lowercase nickname
 original_nickname = aput.name_from_lower_case(lower_case)
 ```
+
+the reason for `name_from_lower_case` to exist is that the `AnalysisProductions` currently make the
+names of the samples lower-case, which alters the samples' names when these are parsed from the job name.
+The function allows to retrieve back the old naming.
 
 ### Update table with nicknames and event types
 
@@ -42,4 +43,19 @@ will:
 root directory such that `update_decinfo` can use it.
 1. Read the event types and nicknames and save them to a YAML file
 1. Read the event types and decay strings and save them to a YAML file
+
+### Update YAML files with formatted sample names
+
+When the formatting rules change, the yaml files:
+
+```bash
+evt_form.yaml
+form_evt.yaml
+lower_original.yaml
+```
+will all have to be updated with:
+
+```bash
+update_formatting
+```
 
