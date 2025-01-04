@@ -3,6 +3,7 @@ Module containing PathSplitter class
 '''
 # pylint: disable=line-too-long, import-error, too-few-public-methods
 
+import ap_utilities.decays.utilities as aput
 from dmu.logging.log_store  import LogStore
 from rx_data import utilities as ut
 
@@ -36,6 +37,20 @@ class PathSplitter:
 
         return d_path_trunc
     # ------------------------------------------
+    def _rename_sample(self, d_info_path : dict[tuple[str,str],list[str]]) -> dict[tuple[str,str],list[str]]:
+        log.debug('Renaming samples from lower-case only')
+        d_renamed = {}
+        for (sample, line_name), l_sample in d_info_path.items():
+            try:
+                sample = aput.name_from_lower_case(sample)
+            except ValueError as exc:
+                log.warning(exc)
+                continue
+
+            d_renamed[(sample, line_name)] = l_sample
+
+        return d_renamed
+    # ------------------------------------------
     def split(self) -> dict[tuple[str,str],list[str]]:
         '''
         Takes list of paths to ROOT files
@@ -55,6 +70,7 @@ class PathSplitter:
             d_info_path[info].append(path)
 
         d_info_path = self._truncate_paths(d_info_path)
+        d_info_path = self._rename_sample(d_info_path)
 
         log.info('Found samples:')
         d_info_path = dict(sorted(d_info_path.items()))
