@@ -52,6 +52,7 @@ class Data:
             'data_24_magup_24c2',
             'data_24_magup_24c3',
             'data_24_magup_24c4',
+            'bu_d0enu_kenu_eq_dpc_ptcut200mev_vismass4gev',
             'bd_denu_kstenu_eq_via_hvm_egdwc',
             'bs_dsenu_phienu_eq_dpc_hvm_egdwc',
             'bd_dmnpipl_eq_dpc',
