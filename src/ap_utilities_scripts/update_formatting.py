@@ -41,11 +41,13 @@ def main():
     d_name_evt = _load_file('name_evt.yaml')
     d_evt_name = _load_file('evt_name.yaml')
 
-    d_name_evt = _reformat(d_name_evt, keys=True)
+    d_form_evt = _reformat(d_name_evt, keys=True)
     d_evt_form = _reformat(d_evt_name, keys=False)
+    d_low_org  = { sample.lower() : sample for sample in d_form_evt }
 
-    _save(d_name_evt, 'form_evt.yaml')
-    _save(d_evt_form, 'evt_form.yaml')
+    _save(d_low_org , 'lower_original.yaml')
+    _save(d_form_evt,       'form_evt.yaml')
+    _save(d_evt_form,       'evt_form.yaml')
 # --------------------------------
 if __name__ == '__main__':
     main()
