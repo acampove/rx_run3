@@ -5,6 +5,7 @@ from importlib.resources import files
 
 import yaml
 
+# ---------------------------------
 class Data:
     '''
     Class storing attributes shared
