@@ -119,3 +119,15 @@ def old_from_new_nick(nickname : str) -> str:
     old_nick   = d_evt_old[evt_type]
 
     return old_nick
+# ---------------------------------
+def name_from_lower_case(lower_case : str) -> str:
+    '''
+    Using new naming, but all lower case, will return
+    original naming. Needed to deal with way AP names samples.
+    '''
+    d_data = _load_data('lower_original.yaml')
+    if lower_case not in d_data:
+        raise ValueError(f'Sample {lower_case} not found in: lower_original.yaml')
+
+    return d_data[lower_case]
+# ---------------------------------
