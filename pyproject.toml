@@ -17,6 +17,7 @@ check_samples      ='ap_utilities_scripts.check_samples:main'
 make_fields        ='ap_utilities_scripts.make_fields:main'
 make_name_evt      ='ap_utilities_scripts.make_name_evt:main'
 update_decinfo     ='ap_utilities_scripts.update_decinfo:main'
+update_formatting  ='ap_utilities_scripts.update_formatting:main'
 validate_ap_tuples ='ap_utilities_scripts.validate_ap_tuples:main'
 
 [tool.setuptools.package-data]
