@@ -13,9 +13,9 @@ from dataclasses            import dataclass
 
 import yaml
 from dmu.logging.log_store  import LogStore
-from rx_data.path_splitter import PathSplitter
+from rx_data.path_splitter  import PathSplitter
 
-log = LogStore.add_logger('rx_data:make_tree_structure')
+log = LogStore.add_logger('rx_common:make_tree_structure')
 # ---------------------------------
 @dataclass
 class Data:
