@@ -30,6 +30,8 @@ class Data:
     lfn_vers  : str
     d_project : dict[str,list[str]]
     d_sample  : dict[str, dict[str, list[str]]]
+
+    l_project = ['RK', 'RKst', 'RKS', 'RL', 'RPhi']
 # ---------------------------------
 def _get_paths() -> list[str]:
     '''
@@ -72,9 +74,10 @@ def _get_args() -> argparse.Namespace:
     Parse arguments
     '''
     parser = argparse.ArgumentParser(description='Will make YAML files with specific formatting from lists of LFNs in project')
-    parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs'   , default =-1)
-    parser.add_argument('-v', '--ver', type=str, help='Version of LFNs'                          , required=True)
-    parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30]          , default =20)
+    parser.add_argument('-m', '--max', type =int, help='Maximum number of paths, for test runs'   , default =-1)
+    parser.add_argument('-v', '--ver', type =str, help='Version of LFNs'                          , required=True)
+    parser.add_argument('-l', '--lvl', type =int, help='log level', choices=[10, 20, 30]          , default =20)
+    parser.add_argument('-p', '--prj', nargs='+', help='Projects' , choices=Data.l_project        , default =Data.l_project)
     args = parser.parse_args()
 
     return args
@@ -82,6 +85,7 @@ def _get_args() -> argparse.Namespace:
 def _initialize(args : argparse.Namespace) -> None:
     Data.max_files = args.max
     Data.lfn_vers  = args.ver
+    Data.l_project = args.prj
     Data.d_project = _load_config('sample_run3.yaml')
     Data.d_sample  = _get_formatted_lfns()
 
@@ -165,6 +169,11 @@ def _get_samples(project : str) -> dict[str,dict[str,str]]:
 def _get_data_dict() -> dict[str,dict[str,str]]:
     d_data    = {}
     for proj in Data.d_project:
+        if proj not in Data.l_project:
+            continue
+
+        log.info(f'Project: {proj}')
+
         d_sam={}
         d_sam.update(_get_samples (proj))
         d_sam.update(_get_metadata(proj))
