@@ -6,12 +6,29 @@ based on file for Run1/2
 
 from typing              import Union
 from importlib.resources import files
+from dataclasses         import dataclass
 
 import yaml
 import ap_utilities.decays.utilities as aput
 from dmu.logging.log_store   import LogStore
 
 log=LogStore.add_logger('rx_common:utilities')
+# ----------------------------------
+@dataclass
+class Data:
+    '''
+    Class used to share attributes
+    '''
+    l_data = [
+            'DATA_24_MagDown_24c1',
+            'DATA_24_MagDown_24c2',
+            'DATA_24_MagDown_24c3',
+            'DATA_24_MagDown_24c4',
+            'DATA_24_MagUp_24c1',
+            'DATA_24_MagUp_24c2',
+            'DATA_24_MagUp_24c3',
+            'DATA_24_MagUp_24c4',
+            ]
 # ----------------------------------
 def _load_run12() -> dict:
     file_path = files('rx_config').joinpath('sample_run12.yaml')
@@ -44,6 +61,8 @@ def main():
     for proj, l_sample in d_run12.items():
         l_sample_run3 = [ _run12_to_run3(sample) for sample in l_sample                           ]
         d_run3[proj]  = [ sample                 for sample in l_sample_run3 if sample is not None]
+
+    d_run3 = { proj : l_samp + Data.l_data for proj, l_samp in d_run3.items()}
 
     yaml_path = files('rx_config').joinpath('sample_run3.yaml')
     yaml_path = str(yaml_path)
