@@ -141,7 +141,6 @@ def _lfns_path_from_sample(sample : str) -> dict[str,str]:
     '''
     For a sample name, return a dictionary between trigger and path to list of LFNs 
     '''
-    sample = sample.lower()
     if sample not in Data.d_sample:
         log.warning(f'Sample {sample} not found')
         return {}
