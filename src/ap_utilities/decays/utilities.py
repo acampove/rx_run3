@@ -5,6 +5,47 @@ from importlib.resources import files
 
 import yaml
 
+class Data:
+    '''
+    Class storing attributes shared
+    '''
+
+    d_form_long : dict[str,str]
+    d_form_short: dict[str,str]
+
+    is_initialized = False
+# ---------------------------------
+def _initialize():
+    if Data.is_initialized:
+        return
+
+    d_form_short                        = {}
+    d_form_short[                  '.'] =      'p'
+    d_form_short[                  '-'] =     'mn'
+    d_form_short[                  '+'] =     'pl'
+    d_form_short[                  '='] =   '_eq_'
+    d_form_short[                  ','] =      '_'
+    d_form_short['GeV'                ] =      'G'
+
+    d_form_long                         = {}
+    d_form_long [         'DecProdCut'] =    'DPC'
+    d_form_long [ 'EvtGenDecayWithCut'] =  'EGDWC'
+    d_form_long ['VisibleInAcceptance'] =    'VIA'
+    d_form_long [        'HighVisMass'] =    'HVM'
+    d_form_long [       'OppositeSign'] =     'OS'
+    d_form_long [           'TightCut'] =     'TC'
+    d_form_long ['DiMuon_OppositeSign'] = 'DiM_OS'
+
+    Data.d_form_long = d_form_long
+    Data.d_form_short= d_form_short
+
+    Data.is_initialized = True
+# ---------------------------------
+def _apply_format(d_format : dict[str,str], name : str) -> str:
+    for org, new in d_format.items():
+        name = name.replace(org, new)
+
+    return name
 # ---------------------------------
 def _load_data(file_name : str) -> dict:
     file_path = files('ap_utilities_data').joinpath(file_name)
@@ -21,25 +62,16 @@ def format_nickname(nickname : str, style : str) -> str:
     nickaname: Name to be formatted
     style    : How to format name, supported: literal, safe_1
     '''
+    _initialize()
+
     if style == 'literal':
         return nickname
 
     if style != 'safe_1':
         raise ValueError(f'Invalid style: {style}')
 
-    nickname = nickname.replace(                  '.',     'p')
-    nickname = nickname.replace(                  '-',    'mn')
-    nickname = nickname.replace(                  '+',    'pl')
-    nickname = nickname.replace(                  '=',  '_eq_')
-    nickname = nickname.replace(                  ',',     '_')
-    nickname = nickname.replace(         'DecProdCut',   'DPC')
-    nickname = nickname.replace( 'EvtGenDecayWithCut', 'EGDWC')
-    nickname = nickname.replace('VisibleInAcceptance',   'VIA')
-    nickname = nickname.replace(        'HighVisMass',   'HVM')
-    nickname = nickname.replace(       'OppositeSign',    'OS')
-    nickname = nickname.replace(           'TightCut',    'TC')
-    nickname = nickname.replace('DiMuon_OppositeSign','DiM_OS')
-    nickname = nickname.replace('GeV'                ,     'G')
+    nickname = _apply_format(Data.d_form_long , nickname)
+    nickname = _apply_format(Data.d_form_short, nickname)
 
     return nickname
 # ---------------------------------
@@ -57,6 +89,8 @@ def read_decay_name(event_type : str, style : str = 'safe_1') -> str:
         + -> pl
         , -> _
     '''
+    _initialize()
+
     d_evt_name = _load_data('evt_name.yaml')
 
     if event_type not in d_evt_name:
@@ -72,6 +106,8 @@ def read_event_type(nickname : str) -> str:
     Takes nickname after reformatting, i.e. replacement of commans, equals, etc.
     Returns corresponding event type 
     '''
+    _initialize()
+
     d_name_evt = _load_data('name_evt.yaml')
 
     if nickname not in d_name_evt:
@@ -86,6 +122,8 @@ def new_from_old_nick(nickname : str, style : str = 'safe_1') -> str:
     Function that takes a decay nick name using Run1/2 naming
     and returns nicknames using Run3 naming
     '''
+    _initialize()
+
     d_old_evt = _load_data('old_name_evt.yaml')
     if nickname not in d_old_evt:
         raise ValueError(f'Old nickname {nickname} not found in: old_name_evt.yaml')
@@ -106,6 +144,8 @@ def old_from_new_nick(nickname : str) -> str:
     Function that takes a decay nick name using Run3 naming with safe_1 style
     and returns nicknames using Run1/2 naming
     '''
+    _initialize()
+
     d_name_evt = _load_data('name_evt.yaml')
     if nickname not in d_name_evt:
         raise ValueError(f'Nickname {nickname} not found in: name_evt.yaml')
@@ -125,6 +165,7 @@ def name_from_lower_case(lower_case : str) -> str:
     Using new naming, but all lower case, will return
     original naming. Needed to deal with way AP names samples.
     '''
+    _initialize()
 
     d_data = _load_data('lower_original.yaml')
 
