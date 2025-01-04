@@ -21,6 +21,9 @@ old_nickname = aput.old_from_new_nick(nickname=nickname)
 
 # To get new nickname from old, nickname is formatted by default as safe_1
 new_nickname = aput.new_from_old_nick(nickname=nickname, style='safe_1')
+
+# TO get original (with Run3 style safe_1) nickname from lowercase nickname
+original_nickname = aput.name_from_lower_case(lower_case)
 ```
 
 ### Update table with nicknames and event types
