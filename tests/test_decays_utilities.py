@@ -113,10 +113,10 @@ def test_old_from_new(new_nick : str) -> None:
     print(old_nick)
 # --------------------------------------------------
 @pytest.mark.parametrize('lower_case', Data.l_lower_case)
-def test_old_from_new(lower_case : str) -> None:
+def test_name_from_lower_case(lower_case : str) -> None:
     '''
     Will test function that returns original sample name from lower
     case name
     '''
-    name = aput.name_from_lowe_case(lower_case)
-    print(name)
+    name = aput.name_from_lower_case(lower_case)
+    print(f'{lower_case:<30}{"->":<20}{name:<30}')
