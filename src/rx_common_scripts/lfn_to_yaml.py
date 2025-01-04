@@ -133,7 +133,7 @@ def _path_from_list(l_lfn : list[str], sample : str, hlt : str) -> str:
 
     os.makedirs(json_dir, exist_ok=True)
     with open(json_path, 'w', encoding='utf-8') as ofile:
-        json.dump(l_lfn, ofile)
+        json.dump(l_lfn, ofile, indent=4)
 
     return json_path
 # ---------------------------------
