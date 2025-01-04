@@ -125,6 +125,9 @@ def name_from_lower_case(lower_case : str) -> str:
     Using new naming, but all lower case, will return
     original naming. Needed to deal with way AP names samples.
     '''
+    if lower_case.endswith('_spr'):
+        lower_case = lower_case[:-4]
+
     d_data = _load_data('lower_original.yaml')
     if lower_case not in d_data:
         raise ValueError(f'Sample {lower_case} not found in: lower_original.yaml')
