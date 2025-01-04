@@ -44,6 +44,14 @@ class Data:
             ]
 
     l_lower_case = [
+            'data_24_magdown_24c1',
+            'data_24_magdown_24c2',
+            'data_24_magdown_24c3',
+            'data_24_magdown_24c4',
+            'data_24_magup_24c1',
+            'data_24_magup_24c2',
+            'data_24_magup_24c3',
+            'data_24_magup_24c4',
             'bd_dmnpipl_eq_dpc',
             'bd_dmnpipl_eq_dpc',
             'bd_dstplenu_eq_phsp_tc',
