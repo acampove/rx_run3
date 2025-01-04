@@ -157,19 +157,24 @@ def name_from_lower_case(lower_case : str) -> str:
     '''
     _initialize()
 
-    d_data = _load_data('lower_original.yaml')
+    d_data  = _load_data('lower_original.yaml')
+    org_arg = lower_case
 
-    if   lower_case.endswith('_spr'):
+    if   lower_case.endswith('gev'):
+        lower_case = lower_case[:-2]
+    elif lower_case.endswith('_spr'):
         lower_case = lower_case[:-4]
-        name = d_data[lower_case]
     elif lower_case.endswith('_ss'):
         lower_case = lower_case[:-3]
-        name = d_data[lower_case]
-        name = f'{name}_SS'
-    elif lower_case not in d_data:
-        raise ValueError(f'Sample {lower_case} not found in: lower_original.yaml')
     else:
-        name = d_data[lower_case]
+        pass
+
+    if lower_case not in d_data:
+        raise ValueError(f'Sample {lower_case} not found in: lower_original.yaml')
+
+    name = d_data[lower_case]
+    if org_arg.endswith('_ss'):
+        name = f'{name}_SS'
 
     return name
 # ---------------------------------
