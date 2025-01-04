@@ -1,3 +1,11 @@
+data_24_magdown_24c1: DATA_24_MagDown_24c1
+data_24_magdown_24c2: DATA_24_MagDown_24c2
+data_24_magdown_24c3: DATA_24_MagDown_24c3
+data_24_magdown_24c4: DATA_24_MagDown_24c4
+data_24_magup_24c1: DATA_24_MagUp_24c1
+data_24_magup_24c2: DATA_24_MagUp_24c2
+data_24_magup_24c3: DATA_24_MagUp_24c3
+data_24_magup_24c4: DATA_24_MagUp_24c4
 a1_bb_eq_100gev: A1_bb_eq_100GeV
 a1_bb_eq_175gev: A1_bb_eq_175GeV
 a1_bb_eq_25gev: A1_bb_eq_25GeV
