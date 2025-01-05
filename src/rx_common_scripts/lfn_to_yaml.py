@@ -156,7 +156,7 @@ def _lfns_path_from_sample(sample : str) -> dict[str,str]:
 
     return d_hlt_path
 # ---------------------------------
-def _get_samples(project : str) -> dict[str,dict[str,str]]:
+def _get_samples(project : str) -> Sample:
     '''
     Returns dictionary between sample and
     dictionary between HLT2 trigger and path to list of LFNs
@@ -167,7 +167,19 @@ def _get_samples(project : str) -> dict[str,dict[str,str]]:
 
     return d_sample_lfn
 # ---------------------------------
-def _get_data_dict() -> dict[str,dict[str,str]]:
+def _is_analysis(d_hlt_lfn : dict[str,str], analysis : str) -> bool:
+    if analysis not in ['MM', 'EE']:
+        raise ValueError(f'Wrong analysis {analysis}')
+
+    if len(d_hlt_lfn) == 0:
+        return False
+
+    to_find = 'EE' if analysis == 'EE' else 'MuMu'
+    l_found = [ to_find in hlt for hlt in d_hlt_lfn ]
+
+    return all(l_found)
+# ---------------------------------
+def _get_data_dict() -> Sample:
     d_data    = {}
     for proj in Data.d_project:
         if proj not in Data.l_project:
@@ -179,7 +191,11 @@ def _get_data_dict() -> dict[str,dict[str,str]]:
         d_sam.update(_get_samples (proj))
         d_sam.update(_get_metadata(proj))
 
-        d_data[proj] = d_sam
+        d_sam_mm = { sample_name : d_hlt_lfn for sample_name, d_hlt_lfn in d_sam.items() if _is_analysis(d_hlt_lfn, analysis='MM') }
+        d_sam_ee = { sample_name : d_hlt_lfn for sample_name, d_hlt_lfn in d_sam.items() if _is_analysis(d_hlt_lfn, analysis='EE') }
+
+        d_data[f'{proj}-MM'] = d_sam_mm
+        d_data[f'{proj}-EE'] = d_sam_ee
 
     return d_data
 # ---------------------------------
