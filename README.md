@@ -31,7 +31,7 @@ projects and samples.
 Both of them can be made with:
 
 ```bash
-lfn_to_yaml -v v1 -l 10
+pap_lfn_to_yaml -v v1 -l 10
 ```
 
 which will dump the inputs in the current directory.
