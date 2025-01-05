@@ -19,7 +19,7 @@ def get_truth(event_type : Union[int,str]) -> str:
     if isinstance(event_type, int):
         event_type=str(event_type)
 
-    if     event_type.startswith('data'):
+    if     event_type.startswith('DATA_'):
         cut = '(1)'
     elif   event_type in ['12113001', '12113002']:
         #rare mumu
@@ -159,26 +159,26 @@ def get_truth(event_type : Union[int,str]) -> str:
         tm_dt2 = 'TMath::Abs(L2_MC_MOTHER_ID)  == 521 || TMath::Abs(L2_MC_MOTHER_ID) == 421'
         cut    = f'({tm_par}) && ({tm_dt1}) && ({tm_dt2}) && TMath::Abs(H_TRUEID) == 321 &&  TMath::Abs(H_MC_MOTHER_ID) == 421'
     #------------------------------------------------------------
-    elif event_type == 'bdpsi2kst_ee':
+    elif event_type == '11154011':
         tm_par = 'TMath::Abs(B_TRUEID)        == 511    && TMath::Abs(L1_TRUEID)       == 11     && TMath::Abs(L2_TRUEID)   == 11 && TMath::Abs(H_TRUEID) == 321'
         tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(Jpsi_TRUEID) == 100443'
         tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 313'
 
         cut    = f'{tm_par} && {tm_psi} && {tm_kst}'
-    elif event_type == 'bdpsi2kst_mm':
+    elif event_type == '11144011':
         tm_par = 'TMath::Abs(B_TRUEID)        == 511    && TMath::Abs(L1_TRUEID)       == 13     && TMath::Abs(L2_TRUEID)   == 13 && TMath::Abs(H_TRUEID) == 321'
         tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(Jpsi_TRUEID) == 100443'
         tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 313'
 
         cut    = f'{tm_par} && {tm_psi} && {tm_kst}'
     #------------------------------------------------------------
-    elif event_type == 'bppsi2kst_ee':
+    elif event_type == '12155110':
         tm_par = 'TMath::Abs(B_TRUEID)        == 521    && TMath::Abs(L1_TRUEID)       == 11     && TMath::Abs(L2_TRUEID)   == 11 && TMath::Abs(H_TRUEID) == 211'
         tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(Jpsi_TRUEID) == 100443'
         tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 323'
 
         cut    = f'{tm_par} && {tm_psi} && {tm_kst}'
-    elif event_type == 'bppsi2kst_mm':
+    elif event_type == '12145120':
         tm_par = 'TMath::Abs(B_TRUEID)        == 521    && TMath::Abs(L1_TRUEID)       == 13     && TMath::Abs(L2_TRUEID)   == 13 && TMath::Abs(H_TRUEID) == 211'
         tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(Jpsi_TRUEID) == 100443'
         tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 323'
