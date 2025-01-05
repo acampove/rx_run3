@@ -10,6 +10,7 @@ import glob
 import json
 import argparse
 
+from typing                 import Union
 from importlib.resources    import files
 from dataclasses            import dataclass
 from functools              import cache
@@ -143,13 +144,13 @@ def _path_from_list(l_lfn : list[str], sample : str, hlt : str) -> str:
 
     return txt_path
 # ---------------------------------
-def _lfns_path_from_sample(sample : str) -> dict[str,str]:
+def _lfns_path_from_sample(sample : str) -> Union[None,dict[str,str]]:
     '''
     For a sample name, return a dictionary between trigger and path to list of LFNs
     '''
     if sample not in Data.d_sample:
         log.warning(f'Sample {sample} not found')
-        return {}
+        return None
 
     d_hlt_lfn = Data.d_sample[sample]
     d_hlt_path= {hlt : _path_from_list(l_lfn, sample, hlt) for hlt, l_lfn in d_hlt_lfn.items()}
