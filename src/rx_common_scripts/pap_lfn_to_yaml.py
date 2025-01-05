@@ -184,6 +184,19 @@ def _is_analysis(d_hlt_lfn : dict[str,str], sample_name, analysis : str) -> bool
 
     return all(l_found)
 # ---------------------------------
+def _strip_triggers_for_data(d_hlt_lfn : dict[str,str], sample : str, analysis : str) -> dict[str,str]:
+    '''
+    Takes dictionary and, for the data entries, will remove the triggers that do not correspond to the given analysis
+    '''
+    if not sample.startswith('DATA_'):
+        return d_hlt_lfn
+
+    token = 'EE' if analysis == 'EE' else 'MuMu'
+
+    d_hlt_lfn_strip = { sample : lfn_path for sample, lfn_path in d_hlt_lfn.items() if token in sample }
+
+    return d_hlt_lfn_strip
+# ---------------------------------
 def _get_data_dict() -> Sample:
     d_data    = {}
     for proj in Data.d_project:
@@ -193,14 +206,17 @@ def _get_data_dict() -> Sample:
         log.info(f'Project: {proj}')
 
         d_sam    = _get_samples (proj)
-        d_sam_mm = { sample_name : d_hlt_lfn for sample_name, d_hlt_lfn in d_sam.items() if _is_analysis(d_hlt_lfn, analysis='MM') }
-        d_sam_ee = { sample_name : d_hlt_lfn for sample_name, d_hlt_lfn in d_sam.items() if _is_analysis(d_hlt_lfn, analysis='EE') }
+        d_sam_mm = { sample_name : d_hlt_lfn for sample_name, d_hlt_lfn in d_sam.items() if _is_analysis(d_hlt_lfn, sample_name, analysis='MM') }
+        d_sam_ee = { sample_name : d_hlt_lfn for sample_name, d_hlt_lfn in d_sam.items() if _is_analysis(d_hlt_lfn, sample_name, analysis='EE') }
 
-        d_sam_mm.update(_get_metadata(proj))
-        d_sam_ee.update(_get_metadata(proj))
+        d_sam_mm_str = {sample_name : _strip_triggers_for_data(d_hlt_lfn, sample_name, analysis='MM') for sample_name, d_hlt_lfn in d_sam_mm.items() }
+        d_sam_ee_str = {sample_name : _strip_triggers_for_data(d_hlt_lfn, sample_name, analysis='EE') for sample_name, d_hlt_lfn in d_sam_ee.items() }
 
-        d_data[f'{proj}-MM'] = d_sam_mm
-        d_data[f'{proj}-EE'] = d_sam_ee
+        d_sam_mm_str.update(_get_metadata(proj))
+        d_sam_ee_str.update(_get_metadata(proj))
+
+        d_data[f'{proj}-MM'] = d_sam_mm_str
+        d_data[f'{proj}-EE'] = d_sam_ee_str
 
     return d_data
 # ---------------------------------
