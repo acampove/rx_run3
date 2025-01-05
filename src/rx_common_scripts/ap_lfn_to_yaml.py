@@ -29,6 +29,23 @@ class Data:
     l_project = ['RK', 'RKst']
     regex_sam = r'mc_24_w31_34_hlt1bug_magup_sim10d(-splitsim02)?_\d{8}_(.*)'
 
+    l_sam_ee = ['Bd_Kstee_eq_btosllball05_DPC',
+                'Bu_Kee_eq_btosllball05_DPC',
+                'Bd_Dmnpipl_eq_DPC',
+                'Bd_Denu_Kstenu_eq_VIA_HVM_EGDWC',
+                'Bd_Ksteta_eplemng_eq_Dalitz_DPC',
+                'Bd_Kstgamma_eq_HighPtGamma_DPC',
+                'Bd_Kstpi0_eplemng_eq_Dalitz_DPC',
+                'Bs_phiee_eq_Ball_DPC',
+                'Bu_K1ee_eq_DPC',
+                'Bu_K2stee_Kpipi_eq_mK1430_DPC',
+                'Bd_Dstplenu_eq_PHSP_TC']
+
+    l_sam_mm = ['Bd_Kstmumu_eq_btosllball05_DPC',
+                'Bu_Kmumu_eq_btosllball05_DPC',
+                'Bu_KpipiJpsi_mumu_eq_DPC_LSFLAT',
+                'Bs_phimumu_eq_Ball_DPC']
+
     d_sample_pfn : dict[str,list[str]]
 # ---------------------------------
 def _initialize() -> None:
