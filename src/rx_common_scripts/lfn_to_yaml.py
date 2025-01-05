@@ -94,7 +94,7 @@ def _initialize(args : argparse.Namespace) -> None:
 # ---------------------------------
 def _get_formatted_lfns() -> dict[str, dict[str, list[str]]]:
     '''
-    Returns dictionary between sample name and 
+    Returns dictionary between sample name and
     dictionary between HLT trigger and list of LFNs
     '''
     l_path   = _get_paths()
@@ -145,7 +145,7 @@ def _path_from_list(l_lfn : list[str], sample : str, hlt : str) -> str:
 # ---------------------------------
 def _lfns_path_from_sample(sample : str) -> dict[str,str]:
     '''
-    For a sample name, return a dictionary between trigger and path to list of LFNs 
+    For a sample name, return a dictionary between trigger and path to list of LFNs
     '''
     if sample not in Data.d_sample:
         log.warning(f'Sample {sample} not found')
