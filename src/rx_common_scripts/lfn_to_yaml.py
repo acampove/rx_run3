@@ -187,12 +187,12 @@ def _get_data_dict() -> Sample:
 
         log.info(f'Project: {proj}')
 
-        d_sam={}
-        d_sam.update(_get_samples (proj))
-        d_sam.update(_get_metadata(proj))
-
+        d_sam    = _get_samples (proj)
         d_sam_mm = { sample_name : d_hlt_lfn for sample_name, d_hlt_lfn in d_sam.items() if _is_analysis(d_hlt_lfn, analysis='MM') }
         d_sam_ee = { sample_name : d_hlt_lfn for sample_name, d_hlt_lfn in d_sam.items() if _is_analysis(d_hlt_lfn, analysis='EE') }
+
+        d_sam_mm.update(_get_metadata(proj))
+        d_sam_ee.update(_get_metadata(proj))
 
         d_data[f'{proj}-MM'] = d_sam_mm
         d_data[f'{proj}-EE'] = d_sam_ee
