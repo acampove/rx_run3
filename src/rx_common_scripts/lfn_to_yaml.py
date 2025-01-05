@@ -26,7 +26,7 @@ class Data:
     '''
     Class used to hold shared data
     '''
-    out_dir   = 'yaml_files'
+    out_dir   = 'samples'
     max_files : int
     lfn_vers  : str
     d_project : dict[str,list[str]]
