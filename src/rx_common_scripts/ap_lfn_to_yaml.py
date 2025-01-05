@@ -36,10 +36,11 @@ def _initialize() -> None:
 # ---------------------------------
 def _get_pfns() -> dict[str,list[str]]:
     '''
-    Returns dictionary with sample name mapped to list of PFNs 
+    Returns dictionary with sample name mapped to list of PFNs
     '''
-    cfg    = _load_config(project='post_ap_data', name='post_ap_data/v3.yaml')
-    d_samp = cfg['productions']['samples']
+    log.info('Loading PFNs')
+    cfg    = _load_config(project='post_ap_data', name='post_ap/v3.yaml')
+    d_samp = cfg['productions'][Data.production]['samples']
     l_samp = list(d_samp)
 
     reader = PFNReader(cfg=cfg)
