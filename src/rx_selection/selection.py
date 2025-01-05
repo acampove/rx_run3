@@ -9,6 +9,7 @@ from dataclasses         import dataclass
 from importlib.resources import files
 
 import yaml
+import ap_utilities.decays.utilities as aput
 from dmu.logging.log_store  import LogStore
 
 from rx_selection import truth_matching     as tm
@@ -32,11 +33,12 @@ def selection(analysis : str, project : str, q2bin: str, process : str) -> dict[
     analysis : EE or MM
     project  : RK or RKst
     q2bin    : low, central, jpsi, psi2S or high
-    event_type : Event type for MC, "data" for data
+    process  : Nickname for MC sample, starts with "DATA" for data
     '''
     d_cut : dict[str,str] = {}
 
-    d_cut['truth'] = tm.get_truth(process)
+    event_type     = aput.read_event_type(nickname=process)
+    d_cut['truth'] = tm.get_truth(event_type)
 
     d_tmp = _get_selection(analysis, project, q2bin)
     d_cut.update(d_tmp)
