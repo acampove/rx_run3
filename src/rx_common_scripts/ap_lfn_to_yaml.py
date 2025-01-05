@@ -148,7 +148,41 @@ def _path_from_sample(sample : str) -> Union[str,None]:
 
     return pfn_path
 # ---------------------------------
-def _get_project_data(project : str) -> Project:
+def _is_channel(sample : str, channel : str) -> bool:
+    '''
+    Takes sample name and channel, ee or mm.
+    Returns True or false, depending on wether sample belongs to channel
+    '''
+    if sample.startswith('DATA_'):
+        return True
+
+    if '_ee_' in sample and channel == 'ee':
+        return True
+
+    if '_mm_' in sample and channel == 'ee':
+        return False
+
+    if '_ee_' in sample and channel == 'mm':
+        return False
+
+    if '_mm_' in sample and channel == 'mm':
+        return True
+
+    if channel == 'ee' and sample in Data.l_sam_ee:
+        return True
+
+    if channel == 'mm' and sample in Data.l_sam_ee:
+        return False
+
+    if channel == 'mm' and sample in Data.l_sam_mm:
+        return True
+
+    if channel == 'ee' and sample in Data.l_sam_mm:
+        return False
+
+    raise ValueError(f'Cannot determine channel for: {sample}')
+# ---------------------------------
+def _get_project_data(project : str) -> tuple[Project,Project]:
     log.info(f'Getting data for: {project}')
     l_sample = _samples_from_project(project)
 
