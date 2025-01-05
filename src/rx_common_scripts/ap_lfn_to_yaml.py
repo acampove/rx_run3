@@ -24,6 +24,7 @@ class Data:
     '''
     Class used to share attributes
     '''
+    trg_kind  = 'mva_turbo'
     production= 'rd_ap_2024'
     out_dir   = 'samples'
     l_project = ['RK', 'RKst']
@@ -102,10 +103,30 @@ def _rename_samples(d_pfn : dict[str,list[str]]) -> dict[str,list[str]]:
 
     return d_pfn_renamed
 # ---------------------------------
-def _get_metadata(project : str) -> dict[str,str]:
+def _get_trigger_name(project : str, channel : str) -> str:
+    if [project, channel, Data.trg_kind] == ['RK', 'ee', 'mva_turbo']:
+        return 'Hlt2RD_BuToKpEE_MVA'
+
+    if [project, channel, Data.trg_kind] == ['RK', 'mm', 'mva_turbo']:
+        return 'Hlt2RD_BuToKpMuMu_MVA'
+
+    if [project, channel, Data.trg_kind] == ['RKst', 'ee', 'mva_turbo']:
+        return 'Hlt2RD_B0ToKpPimEE_MVA'
+
+    if [project, channel, Data.trg_kind] == ['RKst', 'mm', 'mva_turbo']:
+        return 'Hlt2RD_B0ToKpPimMuMu_MVA'
+
+    raise ValueError(f'Invalid project/channel/trigger combination: {project}/{channel}/{Data.trg_kind}')
+# ---------------------------------
+def _get_metadata(project : str, channel : str) -> dict[str,str]:
+    if project not in Data.l_project:
+        raise ValueError(f'Invalid project: {project}')
+
+    trigger_name = _get_trigger_name(project, channel)
+
     return {
             'MCDTName'     : 'MCDecayTree',
-            'DTName'       : 'DecayTree',
+            'DTName'       : f'{trigger_name}/DecayTree',
             'LumiTreeName' : 'LumiTree',
             }
 # ---------------------------------
@@ -194,6 +215,9 @@ def _get_project_data(project : str) -> tuple[Project,Project]:
 
     prj_mm = {sample : list_path for sample, list_path in prj.items() if _is_channel(sample, channel='mm')}
     prj_ee = {sample : list_path for sample, list_path in prj.items() if _is_channel(sample, channel='ee')}
+
+    prj_mm.update(_get_metadata(project, channel='mm'))
+    prj_ee.update(_get_metadata(project, channel='ee'))
 
     return prj_mm, prj_ee
 # ---------------------------------
