@@ -1,14 +1,16 @@
 '''
-Module that will transform lists of LFNs from AP jobs 
+Module that will transform lists of LFNs from AP jobs
 into a yaml file ready to be plugged into the RX c++ framework
 '''
 # pylint: disable=line-too-long, import-error
 # pylint: disable=invalid-name
 import os
+import re
 from dataclasses            import dataclass
 from importlib.resources    import files
 
 import yaml
+import ap_utilities.decays.utilities as aput
 from dmu.logging.log_store  import LogStore
 from post_ap.pfn_reader     import PFNReader
 
@@ -24,6 +26,7 @@ class Data:
     production= 'rd_ap_2024'
     out_dir   = 'samples'
     l_project = ['RK', 'RKst']
+    regex_sam = r'mc_24_w31_34_hlt1bug_magup_sim10d(-splitsim02)?_\d{8}_(.*)'
 
     d_sample_pfn : dict[str,list[str]]
 # ---------------------------------
