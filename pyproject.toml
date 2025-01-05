@@ -9,7 +9,8 @@ dependencies= [
 'jacobi',
 'pandas',
 'numpy',
-'matplotlib'
+'matplotlib',
+'ap_utilities'
 ]
 
 [project.optional-dependencies]
