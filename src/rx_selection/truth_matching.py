@@ -19,6 +19,8 @@ def get_truth(event_type : Union[int,str]) -> str:
     if isinstance(event_type, int):
         event_type=str(event_type)
 
+    log.info(f'Applying truth matching to event_type: {event_type}')
+
     if     event_type.startswith('DATA_'):
         cut = '(1)'
     elif   event_type in ['12113001', '12113002']:
