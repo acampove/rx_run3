@@ -192,10 +192,10 @@ def _get_project_data(project : str) -> tuple[Project,Project]:
     nsample = len(prj)
     log.info(f'Found {nsample} samples')
 
-    d_meta = _get_metadata(project)
-    prj.update(d_meta)
+    prj_mm = {sample : list_path for sample, list_path in prj.items() if _is_channel(sample, channel='mm')}
+    prj_ee = {sample : list_path for sample, list_path in prj.items() if _is_channel(sample, channel='ee')}
 
-    return prj
+    return prj_mm, prj_ee
 # ---------------------------------
 def main():
     '''
@@ -203,7 +203,11 @@ def main():
     '''
     _initialize()
 
-    d_data = { project : _get_project_data(project) for project in Data.l_project }
+    d_data = {}
+    for project in Data.l_project:
+        prj_mm, prj_ee = _get_project_data(project)
+        d_data[f'{project}-MM'] = prj_mm
+        d_data[f'{project}-EE'] = prj_ee
 
     with open('samples.yaml', 'w', encoding='utf-8') as ofile:
         yaml.safe_dump(d_data, ofile)
