@@ -18,7 +18,7 @@ import yaml
 from dmu.logging.log_store  import LogStore
 from rx_data.path_splitter  import PathSplitter
 
-log = LogStore.add_logger('rx_common:make_tree_structure')
+log = LogStore.add_logger('rx_common:pap_lfn_to_yaml')
 Sample=dict[str,dict[str,str]]
 # ---------------------------------
 @dataclass
