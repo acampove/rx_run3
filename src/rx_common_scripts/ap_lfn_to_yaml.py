@@ -8,6 +8,7 @@ import os
 import re
 from dataclasses            import dataclass
 from importlib.resources    import files
+from typing                 import Union
 
 import yaml
 import ap_utilities.decays.utilities as aput
