@@ -20,7 +20,9 @@ this is done with:
 make_run3_yaml
 ```
 
-These samples can be fed to the c++ code with:
+## Post AP samples
+
+In order to feed these samples in the C++ code one needs:
 
 - Text files with lists of LFNs
 - YAML file with information on how the LFNs are associated to different
@@ -33,3 +35,12 @@ lfn_to_yaml -v v1 -l 10
 ```
 
 which will dump the inputs in the current directory.
+
+## AP samples
+
+The same two ingredients as above can be made for the files before the filtering (`post_ap`) 
+step, which can be ran with:
+
+```bash
+ap_lfn_to_yaml
+```
