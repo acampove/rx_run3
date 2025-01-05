@@ -164,11 +164,15 @@ def _get_samples(project : str) -> Sample:
     '''
     l_sample = Data.d_project[project]
 
-    d_sample_lfn = {sample : _lfns_path_from_sample(sample) for sample in l_sample}
+    d_sample_lfn = {sample : _lfns_path_from_sample(sample) for sample            in l_sample}
+    d_sample_lfn = {sample : d_hlt_lfn                      for sample, d_hlt_lfn in d_sample_lfn.items() if d_hlt_lfn is not None}
 
     return d_sample_lfn
 # ---------------------------------
-def _is_analysis(d_hlt_lfn : dict[str,str], analysis : str) -> bool:
+def _is_analysis(d_hlt_lfn : dict[str,str], sample_name, analysis : str) -> bool:
+    if sample_name.startswith('DATA_'):
+        return True
+
     if analysis not in ['MM', 'EE']:
         raise ValueError(f'Wrong analysis {analysis}')
 
