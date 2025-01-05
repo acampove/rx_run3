@@ -22,6 +22,8 @@ mass_mm  : &mass_mm
 RKst:
   EE:
     ghost     : H1_TRGHOSTPROB < 0.3 && H2_TRGHOSTPROB < 0.3 && L1_TRACK_GhostProb < 0.3 && L2_TRACK_GhostProb< 0.3
+    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
+    hlt2      : (1)
     kinem_lep : L1_PT > 500 && L2_PT > 500
     kinem_had : H1_P > 2000 && H2_P > 2000
     kst_mass  : TMath::Abs(Kst_M - 892) < 100
@@ -29,20 +31,19 @@ RKst:
     pid_l     : L1_PROBNN_E > 0.2 && L2_PROBNN_E > 0.2 && L1_PIDe  > 3.000 && L2_PIDe  > 3.000
     pid_k     : (H1_ProbNNk   * (1 - H1_PROBNN_P) > 0.05) && H1_PID_K > 0
     pid_pi    : (H2_PROBNN_PI * (1 - H2_PROBNN_P) * (1 - H2_ProbNNk) > 0.1) 
-    jpsi_misid: (1)
     rich      : L1_PPHASRICH && L2_PPHASRICH && H1_PPHASRICH && H2_PPHASRICH
-    bdt       : (1) 
-    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1) || (B_Hlt1TrackElectronMVADecision_TOS == 1)
-    hlt2      : (1)
-    cascade   : (1)
     acceptance: L1_INECAL && L2_INECAL
+    cascade   : (1)
     jpsi_misid: (1)
+    bdt       : (1) 
     q2:
       <<: *q2_common
     mass:
       <<: *mass_ee
   MM:
     ghost     : H1_TRGHOSTPROB < 0.3 && H2_TRGHOSTPROB < 0.3 && L1_TRACK_GhostProb < 0.3 && L2_TRACK_GhostProb< 0.3
+    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
+    hlt2      : (1)
     kinem_lep : L1_PT > 500 && L2_PT > 500
     kinem_had : H1_P > 2000 && H2_P > 2000
     kst_mass  : TMath::Abs(Kst_M - 892) < 100
@@ -50,56 +51,46 @@ RKst:
     pid_l     : L1_ProbNNmu> 0.2 && L2_ProbNNmu> 0.2 && L1_ISMUON && L2_ISMUON && L1_PID_MU >-3. && L2_PID_MU > -3
     pid_k     : (H1_ProbNNk   * (1 - H1_PROBNN_P) > 0.05) && H1_PID_K > 0
     pid_pi    : (H2_PROBNN_PI * (1 - H2_PROBNN_P) * (1 - H2_ProbNNk) > 0.1) 
-    jpsi_misid: (1)
     rich      : L1_PPHASRICH && L2_PPHASRICH && H1_PPHASRICH && H2_PPHASRICH
-    bdt       : (1) 
-    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1) || (B_Hlt1TrackMuonMVADecision_TOS == 1)
-    hlt2      : (1)
-    mass:
-      central : (B_M                      > 4880) && (B_M                       < 6200)
-      jpsi    : (B_nopv_const_mass_M      > 5080) && (B_nopv_const_mass_M       < 5680)
-      psi2    : (B_nopv_const_mass_psi2S_M> 4800) && (B_nopv_const_mass_psi2S_M < 5680)
-      high    : (B_M                      > 4500) && (B_M                       < 6000)
-    cascade   : (1)
     acceptance: L1_INMUON && L2_INMUON
+    cascade   : (1)
     jpsi_misid: (1)
+    bdt       : (1) 
     q2:
       <<: *q2_common
     mass:
       <<: *mass_mm
 RK:
   EE:
-    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1) || (B_Hlt1TrackElectronMVADecision_TOS == 1)
-    hlt2      : (1)
-    kinematics: L1_PT > 500 && L2_PT > 500
-    cascade   : (1)
     ghost     : H_TRACK_GhostProb<0.3 && L1_TRACK_GhostProb <0.3 && L2_TRACK_GhostProb<0.3
-    rich      : L1_PPHASRICH && L2_PPHASRICH && H_PPHASRICH
-    calo      : L1_INECAL    && L2_INECAL
+    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
+    hlt2      : (1)
+    kinem_lep : L1_PT > 500 && L2_PT > 500
+    kinem_had : H_P > 2000
     pid_l     : L1_PROBNN_E > 0.2 && L2_PROBNN_E > 0.2 && L1_PIDe  > 3.000 && L2_PIDe  > 3.000
     pid_k     : H_PIDe <  0.000 && H_PID_K > 2.0
+    rich      : L1_PPHASRICH && L2_PPHASRICH && H_PPHASRICH
+    acceptance: L1_INECAL    && L2_INECAL
+    cascade   : (1)
     jpsi_misid: (1)
-    bdt       : BDT_cmb > 0.7 && BDT_prc > 0
+    bdt       : (1) 
     q2:
     <<: *q2_common
     mass:
       <<: *mass_ee
   MM:
-    ghost     : H1_TRGHOSTPROB < 0.3 && H2_TRGHOSTPROB < 0.3 && L1_TRACK_GhostProb < 0.3 && L2_TRACK_GhostProb< 0.3
-    kinem_lep : L1_PT > 500 && L2_PT > 500
-    kinem_had : H1_P > 2000 && H2_P > 2000
-    kst_mass  : TMath::Abs(Kst_M - 892) < 100
-    kst_pt    : Kst_PT > 500
-    pid_l     : L1_ProbNNmu> 0.2 && L2_ProbNNmu> 0.2 && L1_ISMUON && L2_ISMUON && L1_PID_MU >-3. && L2_PID_MU > -3
-    pid_k     : (H1_ProbNNk   * (1 - H1_PROBNN_P) > 0.05) && H1_PID_K > 0
-    pid_pi    : (H2_PROBNN_PI * (1 - H2_PROBNN_P) * (1 - H2_ProbNNk) > 0.1) 
-    jpsi_misid: (1)
-    rich      : L1_PPHASRICH && L2_PPHASRICH && H1_PPHASRICH && H2_PPHASRICH
-    bdt       : (1) 
-    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1) || (B_Hlt1TrackMuonMVADecision_TOS == 1)
+    ghost     : H_TRGHOSTPROB < 0.3 && L1_TRACK_GhostProb < 0.3 && L2_TRACK_GhostProb< 0.3
+    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
     hlt2      : (1)
-    cascade   : (1)
+    kinem_lep : L1_PT > 500 && L2_PT > 500
+    kinem_had : H_P > 2000
+    pid_l     : L1_ProbNNmu> 0.2 && L2_ProbNNmu> 0.2 && L1_ISMUON && L2_ISMUON && L1_PID_MU >-3. && L2_PID_MU > -3
+    pid_k     : (H_ProbNNk   * (1 - H_PROBNN_P) > 0.05) && H_PID_K > 0
+    rich      : L1_PPHASRICH && L2_PPHASRICH && H_PPHASRICH
     acceptance: L1_INMUON && L2_INMUON
+    cascade   : (1)
+    jpsi_misid: (1)
+    bdt       : (1) 
     jpsi_misid: (1)
     q2:
       <<: *q2_common
