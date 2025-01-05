@@ -12,7 +12,6 @@ import re
 import glob
 
 from importlib.resources import files
-from typing              import Union
 
 import pprint
 import yaml
@@ -152,23 +151,23 @@ class ds_getter:
 
         return l_path
     # ------------------------------------
-    def _get_df_raw(self) -> RDataFrame:
+    def _get_rdf_raw(self, tree_name = 'DecayTree') -> RDataFrame:
         l_file_path = self._get_files_path()
 
-        rdf = RDataFrame('DecayTree', l_file_path)
+        rdf = RDataFrame(tree_name, l_file_path)
         rdf = self._skim_df(rdf)
         rdf.filepath = l_file_path
-        rdf.treename = 'DecayTree'
+        rdf.treename = tree_name
 
         return rdf
     # ------------------------------------
-    def _get_gen_nev(self) -> Union[int,None]:
-        if not self._is_sim:
-            return None
-
+    def _get_gen_nev(self) -> int:
         log.warning('Reading number of entries from MCDecayTree not implemented')
 
-        return 1
+        rdf = self._get_rdf_raw(tree_name = 'MCDecayTree')
+        nev = rdf.Count().GetValue()
+
+        return nev
     # ------------------------------------
     def _redefine_cuts(self, d_cut : dict[str,str]) -> dict[str,str]:
         '''
@@ -236,7 +235,7 @@ class ds_getter:
 
         self._initialize()
 
-        rdf   = self._get_df_raw()
+        rdf   = self._get_rdf_raw()
         dfmgr = AtrMgr(rdf)
 
         cf    = cfl.cutflow(d_meta = {'file' : rdf.filepath, 'tree' : rdf.treename})
