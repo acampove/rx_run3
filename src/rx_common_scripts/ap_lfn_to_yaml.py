@@ -112,14 +112,16 @@ def _samples_from_project(project : str) -> list[str]:
 
     return d_prj_sample[project]
 # ---------------------------------
-def _path_from_sample(sample : str) -> str:
+def _path_from_sample(sample : str) -> Union[str,None]:
     '''
     Takes name of sample, retrieves list of PFNs,
     writes them to a text file,
     returns path to text file with the lists of PFNs corresponding to that sample
+    If sample was not found in the AP list, will show warning and return None
     '''
     if sample not in Data.d_sample_pfn:
-        raise ValueError(f'Cannot find sample {sample}')
+        log.warning(f'Cannot find sample {sample}')
+        return None
 
     l_pfn = Data.d_sample_pfn[sample]
     pfn_list = '\n'.join(l_pfn)
@@ -130,14 +132,19 @@ def _path_from_sample(sample : str) -> str:
     return pfn_path
 # ---------------------------------
 def _get_project_data(project : str) -> Project:
+    log.info(f'Getting data for: {project}')
     l_sample = _samples_from_project(project)
 
     prj = { sample : _path_from_sample(sample) for sample in l_sample}
+    prj = { sample : path for sample, path in prj.items() if path is not None}
+
+    nsample = len(prj)
+    log.info(f'Found {nsample} samples')
 
     d_meta = _get_metadata(project)
     prj.update(d_meta)
 
-    return d_meta
+    return prj
 # ---------------------------------
 def main():
     '''
