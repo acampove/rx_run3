@@ -49,7 +49,40 @@ def _get_pfns() -> dict[str,list[str]]:
         d_tmp = reader.get_pfns(production=Data.production, nickname=samp)
         d_pfn.update(d_tmp)
 
-    return d_pfn
+    d_pfn_renamed = _rename_samples(d_pfn)
+
+    return d_pfn_renamed
+# ---------------------------------
+def _name_from_sample(sample : str) -> str:
+    sample = sample.replace('_full_' , '_')
+    sample = sample.replace('_turbo_', '_')
+    sample = sample.replace(',_tuple',  '')
+    sample = sample.replace('_tuple' ,  '')
+
+    if sample.startswith('data_'):
+        return sample
+
+    if 'tuple' in sample:
+        raise ValueError(f'Invalid sample name: {sample}')
+
+    mtch   = re.match(Data.regex_sam, sample)
+    if not mtch:
+        raise ValueError(f'Cannot extract sample name from {sample}')
+
+    return mtch.group(2)
+# ---------------------------------
+def _rename_samples(d_pfn : dict[str,list[str]]) -> dict[str,list[str]]:
+    d_pfn_renamed = {}
+    for sample, l_pfn in d_pfn.items():
+        sample = _name_from_sample(sample)
+        sample = aput.name_from_lower_case(sample)
+
+        if sample not in d_pfn_renamed:
+            d_pfn_renamed[sample] = []
+
+        d_pfn_renamed[sample] += l_pfn
+
+    return d_pfn_renamed
 # ---------------------------------
 def _get_metadata(project : str) -> dict[str,str]:
     return {
