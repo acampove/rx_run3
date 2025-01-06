@@ -79,12 +79,27 @@ def _get_samples(is_rk : bool) -> list[tuple[str,str]]:
     return l_sam_trg
 # ---------------------------------------------
 def _override_parts(cfg : dict, sample : str) -> Union[None,dict]:
-    if sample in ['Bs_phieta_eplemng_eq_Dalitz_DPC', 'Bs_phipi0_eplemng_eq_Dalitz_DPC']:
+    if sample in [
+            'Bs_phieta_eplemng_eq_Dalitz_DPC', 
+            'Bs_phipi0_eplemng_eq_Dalitz_DPC']:
         log.warning(f'Skipping sample {sample}')
         return None
 
-    if sample in ['Bd_JpsiKS_ee_eq_CPV_DPC', 'Bd_Ksteta_eplemng_eq_Dalitz_DPC', 'Bu_phiKee_KK_eq_DPC']:
+    if sample in [
+            'Bd_JpsiKS_ee_eq_CPV_DPC', 
+            'Bd_Ksteta_eplemng_eq_Dalitz_DPC', 
+            'Bd_Dmnpipl_eq_DPC',
+            'Bu_D0pi_Kmunu_eq_DPC',
+            'Bu_D0enu_Kpi_eq_DPC_TC',
+            'Bu_D0munu_Kpi_eq_cocktail_D0muInAcc_BRcorr1',
+            'Bs_Dsenu_phienu_eq_DPC',
+            'Bu_piplpimnKpl_eq_sqDalitz_DPC',
+            'Bu_piplpimnKpl_eq_sqDalitz_DPC',
+            'Bu_phiKee_KK_eq_DPC']:
         cfg['npart'] = 10
+
+    if sample in []:
+        cfg['npart'] = 1
 
     return cfg
 # ---------------------------------------------
