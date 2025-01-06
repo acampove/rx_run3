@@ -46,6 +46,12 @@ def _trigger_from_sample(sample_name : str, is_rk : bool) -> Union[None,str]:
 
     return None
 # ---------------------------------------------
+def _has_files(sample_path : str, trigger : str) -> bool:
+    file_wc = f'{sample_path}/{trigger}/*.root'
+    l_path  = glob.glob(file_wc)
+
+    return len(l_path) != 0
+# ---------------------------------------------
 def _get_samples(is_rk : bool) -> list[tuple[str,str]]:
     if hasattr(Data, 'l_sam_trg'):
         return Data.l_sam_trg
@@ -59,6 +65,11 @@ def _get_samples(is_rk : bool) -> list[tuple[str,str]]:
     for sample_path in glob.glob(f'{sample_dir}/*'):
         sample_name = os.path.basename(sample_path)
         trigger     = _trigger_from_sample(sample_name, is_rk)
+
+        if not _has_files(sample_path, trigger):
+            log.warning(f'Cannot find any files for: {sample_name}/{trigger}')
+            continue
+
         if trigger is None:
             continue
 
