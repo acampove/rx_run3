@@ -58,6 +58,85 @@ def get_truth(event_type : Union[int,str]) -> str:
     elif   event_type in ['12113001', '12113002', '12113004']:
         # B+ Kp mumu
         cut= 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 521 && TMath::Abs(L2_MC_MOTHER_ID) == 521 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 521'
+    # ---------------------
+    elif   event_type == '11264001':
+        # Bd pi+ D-(Kp pi+ pi-)
+        bp_hp  = 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 411'
+        l1_cut = 'TMath::Abs(L1_TRUEID) == 211 && TMath::Abs(L1_MC_MOTHER_ID) == 511 && TMath::Abs(L2_TRUEID) == 211 && TMath::Abs(L2_MC_MOTHER_ID) == 411'
+        l2_cut = 'TMath::Abs(L2_TRUEID) == 211 && TMath::Abs(L2_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) == 211 && TMath::Abs(L1_MC_MOTHER_ID) == 411'
+        ll_cut = f'({l1_cut}) || ({l2_cut})'
+
+        return f'({bp_hp}) && ({ll_cut})'
+
+    elif   event_type == '12573050':
+        # B+ pi+ D0(Kp mu nu)
+        bp_hp  = 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 421'
+        l1_cut = 'TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 421 && TMath::Abs(L2_TRUEID) == 211 && TMath::Abs(L2_MC_MOTHER_ID) == 521'
+        l2_cut = 'TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L2_MC_MOTHER_ID) == 421 && TMath::Abs(L1_TRUEID) == 211 && TMath::Abs(L1_MC_MOTHER_ID) == 521'
+        ll_cut = f'({l1_cut}) || ({l2_cut})'
+
+        return f'({bp_hp}) && ({ll_cut})'
+    elif   event_type == '12873002':
+        # B+ mu+nu D0(Kp pi)
+        bp_hp  = 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 421'
+        l1_cut = 'TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 521 && TMath::Abs(L2_TRUEID) == 211 && TMath::Abs(L2_MC_MOTHER_ID) == 421'
+        l2_cut = 'TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L2_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 211 && TMath::Abs(L1_MC_MOTHER_ID) == 421'
+        ll_cut = f'({l1_cut}) || ({l2_cut})'
+
+        return f'({bp_hp}) && ({ll_cut})'
+    elif   event_type == '11584041':
+        # B0 e+nu D0(Kp pi)
+        bp_hp  = 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 421'
+        l1_cut = 'TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 511 && TMath::Abs(L2_TRUEID) == 211 && TMath::Abs(L2_MC_MOTHER_ID) == 421'
+        l2_cut = 'TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L2_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) == 211 && TMath::Abs(L1_MC_MOTHER_ID) == 421'
+        ll_cut = f'({l1_cut}) || ({l2_cut})'
+
+        return f'({bp_hp}) && ({ll_cut})'
+    # ---------------------
+    elif   event_type == '11584022':
+        # B0 -> (D- -> (K* K pi) em nu) ep nu
+        bp_hp  = 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 313'
+        l1_cut = 'TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 511 && TMath::Abs(L2_TRUEID) ==  11 && TMath::Abs(L2_MC_MOTHER_ID) == 411'
+        l2_cut = 'TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L2_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) ==  11 && TMath::Abs(L1_MC_MOTHER_ID) == 411'
+        ll_cut = f'({l1_cut}) || ({l2_cut})'
+
+        return f'({bp_hp}) && ({ll_cut})'
+    # ---------------------
+    elif   event_type == '13584000':
+        # Bs -> (Ds- -> (Phi KK) em nu) ep nu
+        bp_hp  = 'TMath::Abs(B_TRUEID) == 531 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 333'
+        l1_cut = 'TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 531 && TMath::Abs(L2_TRUEID) ==  11 && TMath::Abs(L2_MC_MOTHER_ID) == 431'
+        l2_cut = 'TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L2_MC_MOTHER_ID) == 531 && TMath::Abs(L1_TRUEID) ==  11 && TMath::Abs(L1_MC_MOTHER_ID) == 431'
+        ll_cut = f'({l1_cut}) || ({l2_cut})'
+
+        return f'({bp_hp}) && ({ll_cut})'
+    # ---------------------
+    elif   event_type == '11574030':
+        # B0 -> (D- -> (K* K pi) mu nu) mu nu
+        bp_hp  = 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 313'
+        l1_cut = 'TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 511 && TMath::Abs(L2_TRUEID) ==  13 && TMath::Abs(L2_MC_MOTHER_ID) == 411'
+        l2_cut = 'TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L2_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) ==  13 && TMath::Abs(L1_MC_MOTHER_ID) == 411'
+        ll_cut = f'({l1_cut}) || ({l2_cut})'
+
+        return f'({bp_hp}) && ({ll_cut})'
+    elif   event_type == '12583020':
+        # B+ e+ nu D0(Kp e- nu)
+        bp_hp  = 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 421'
+        l1_cut = 'TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 421 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L2_MC_MOTHER_ID) == 521'
+        l2_cut = 'TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L2_MC_MOTHER_ID) == 421 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 521'
+        ll_cut = f'({l1_cut}) || ({l2_cut})'
+
+        return f'({bp_hp}) && ({ll_cut})'
+    elif   event_type == '12573040':
+        # B+ mu+ nu D0(Kp mu- nu)
+        bp_hp  = 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 421'
+        l1_cut = 'TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 421 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L2_MC_MOTHER_ID) == 521'
+        l2_cut = 'TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L2_MC_MOTHER_ID) == 421 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 521'
+        ll_cut = f'({l1_cut}) || ({l2_cut})'
+
+        return f'({bp_hp}) && ({ll_cut})'
+
+    # ---------------------
     elif   event_type in ['12113024']:
         # B+ pi mumu
         cut= 'TMath::Abs(B_TRUEID) == 521  && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 521  && TMath::Abs(L2_MC_MOTHER_ID) == 521  && TMath::Abs(H_TRUEID) == 211 && TMath::Abs(H_MC_MOTHER_ID) == 521'
