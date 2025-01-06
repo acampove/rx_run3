@@ -86,57 +86,49 @@ def get_truth(event_type : Union[int,str]) -> str:
         #reso B+ -> (K*+ -> (K_S0 -> pi+ pi-) pi+) e+ e-
         cut= 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 521 && TMath::Abs(L2_MC_MOTHER_ID) == 521 && TMath::Abs(H_TRUEID) == 211 && (TMath::Abs(H_MC_MOTHER_ID) == 310 || TMath::Abs(H_MC_MOTHER_ID) == 323)'
     #-------------------------------------------------------------
-    elif event_type in ['12952000']:
-        #B+->XcHs
-        ctrl_ee    = get_truth('12153001') # Remove resonant Jpsi electron
-        psi2_ee    = get_truth('12153012') # Remove resonant psi2S electron
-        ctrl_pi_ee = get_truth('12153020') # Remove cabibbo suppressed electron
-        fail       = get_truth('fail')
-
-        cut= f'!({fail}) && !({ctrl_ee}) && !({psi2_ee}) && !({ctrl_pi_ee})'
     elif event_type == '11453001':
         #Bd->XcHs
-        ctrl_ee    = get_truth('ctrl_ee')
-        psi2_ee    = get_truth('psi2_ee')
-        ctrl_pi_ee = get_truth('ctrl_pi_ee')
-        fail       = get_truth('fail')
+        pick     = _get_inclusive_match(lep=11, mes=511)
+        no_reso  = _get_no_reso(channel = 'ee')
 
-        cut= f'!({fail}) && !({ctrl_ee}) && !({psi2_ee}) && !({ctrl_pi_ee})'
+        cut      = f'({pick}) && ({no_reso})'
+    elif event_type == '12952000':
+        #B+->XcHs
+        pick     = _get_inclusive_match(lep=11, mes=521)
+        no_reso  = _get_no_reso(channel = 'ee')
+
+        cut      = f'({pick}) && ({no_reso})'
     elif event_type == '13454001':
         #Bs->XcHs
-        ctrl_ee    = get_truth('ctrl_ee')
-        psi2_ee    = get_truth('psi2_ee')
-        ctrl_pi_ee = get_truth('ctrl_pi_ee')
-        fail       = get_truth('fail')
+        pick     = _get_inclusive_match(lep=11, mes=531)
+        no_reso  = _get_no_reso(channel = 'ee')
 
-        cut= f'!({fail}) && !({ctrl_ee}) && !({psi2_ee}) && !({ctrl_pi_ee})'
-    elif event_type == '12442001':
-        # bpXcHs_mm
-        fail            = get_truth('fail')
-        mm              = '((TMath::Abs(L1_TRUEID)==13) && (TMath::Abs(L2_TRUEID)==13))'
-        ll_mother       = '(((TMath::Abs(Jpsi_TRUEID)==443) && (TMath::Abs(L1_MC_MOTHER_ID)==443) && (TMath::Abs(L2_MC_MOTHER_ID)==443)) || ((TMath::Abs(Jpsi_TRUEID)==100443) && (TMath::Abs(L1_MC_MOTHER_ID)==100443) && (TMath::Abs(L2_MC_MOTHER_ID)==100443)))'
-        Bx              = "TMath::Abs(B_TRUEID)==521"
-        Bx_psi2s_mother = "((TMath::Abs(Jpsi_MC_MOTHER_ID)==521 && TMath::Abs(Jpsi_TRUEID)==100443) || (TMath::Abs(Jpsi_TRUEID) != 100443))"
-
-        cut             = f"!({fail}) && ({mm}) && ({ll_mother}) && ({Bx}) && ({Bx_psi2s_mother})"
+        cut      = f'({pick}) && ({no_reso})'
+    #-------------------------------------------------------------
     elif event_type == '11442001':
         # bdXcHs_mm
-        fail            = get_truth('fail')
-        mm              = '((TMath::Abs(L1_TRUEID)==13) && (TMath::Abs(L2_TRUEID)==13))'
-        ll_mother       = '(((TMath::Abs(Jpsi_TRUEID)==443) && (TMath::Abs(L1_MC_MOTHER_ID)==443) && (TMath::Abs(L2_MC_MOTHER_ID)==443)) || ((TMath::Abs(Jpsi_TRUEID)==100443) && (TMath::Abs(L1_MC_MOTHER_ID)==100443) && (TMath::Abs(L2_MC_MOTHER_ID)==100443)))'
-        Bx              = "TMath::Abs(B_TRUEID)==511"
-        Bx_psi2s_mother = "((TMath::Abs(Jpsi_MC_MOTHER_ID)==511 && TMath::Abs(Jpsi_TRUEID)==100443) || (TMath::Abs(Jpsi_TRUEID) != 100443))"
+        pick     = _get_inclusive_match(lep=13, mes=511)
+        no_reso  = _get_no_reso(channel = 'mm')
 
-        cut             = f"!({fail}) && ({mm}) && ({ll_mother}) && ({Bx}) && ({Bx_psi2s_mother})"
+        cut      = f'({pick}) && ({no_reso})'
+    elif event_type == '12442001':
+        # bpXcHs_mm
+        pick     = _get_inclusive_match(lep=13, mes=521)
+        no_reso  = _get_no_reso(channel = 'mm')
+
+        cut      = f'({pick}) && ({no_reso})'
     elif event_type == '13442001':
         # bsXcHs_mm
-        fail            = get_truth('fail')
-        mm              = '((TMath::Abs(L1_TRUEID)==13) && (TMath::Abs(L2_TRUEID)==13))'
-        ll_mother       = '(((TMath::Abs(Jpsi_TRUEID)==443) && (TMath::Abs(L1_MC_MOTHER_ID)==443) && (TMath::Abs(L2_MC_MOTHER_ID)==443)) || ((TMath::Abs(Jpsi_TRUEID)==100443) && (TMath::Abs(L1_MC_MOTHER_ID)==100443) && (TMath::Abs(L2_MC_MOTHER_ID)==100443)))'
-        Bx              = "TMath::Abs(B_TRUEID)==531"
-        Bx_psi2s_mother = "((TMath::Abs(Jpsi_MC_MOTHER_ID)==531 && TMath::Abs(Jpsi_TRUEID)==100443) || (TMath::Abs(Jpsi_TRUEID) != 100443))"
+        pick     = _get_inclusive_match(lep=13, mes=531)
+        no_reso  = _get_no_reso(channel = 'mm')
 
-        cut             = f"!({fail}) && ({mm}) && ({ll_mother}) && ({Bx}) && ({Bx_psi2s_mother})"
+        cut      = f'({pick}) && ({no_reso})'
+    elif event_type == '15442001':
+        # LbXcHs_mm
+        pick     = _get_inclusive_match(lep=13, mes=5122)
+        no_reso  = _get_no_reso(channel = 'mm')
+
+        cut      = f'({pick}) && ({no_reso})'
     #-------------------------------------------------------------
     elif event_type == '12155100':
         #exclusive jpsi kst ee Bu
