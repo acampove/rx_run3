@@ -11,6 +11,38 @@ from dmu.logging.log_store  import LogStore
 log=LogStore.add_logger('rx_selection:truth_matching')
 
 # ----------------------------------------------------------
+def _get_inclusive_match(lep : int, mes : int) -> str:
+    '''
+    Function taking the lepton ID (11, 13, etc) and the meson ID (511, 521, etc)
+    and returning truth matching string for inclusive decays
+    '''
+    ll        = f'((TMath::Abs(L1_TRUEID)=={lep}) && (TMath::Abs(L2_TRUEID)=={lep}))'
+    ll_mother =  '(((TMath::Abs(Jpsi_TRUEID)==443) && (TMath::Abs(L1_MC_MOTHER_ID)==443) && (TMath::Abs(L2_MC_MOTHER_ID)==443)) || ((TMath::Abs(Jpsi_TRUEID)==100443) && (TMath::Abs(L1_MC_MOTHER_ID)==100443) && (TMath::Abs(L2_MC_MOTHER_ID)==100443)))'
+    Bx        = f'TMath::Abs(B_TRUEID)=={mes}'
+
+    return f'({ll}) && ({ll_mother}) && ({Bx})'
+# ----------------------------------------------------------
+def _get_no_reso(channel : str) -> str:
+    '''
+    Will return truth matching string needed to remove Jpsi, psi2S and cabibbo suppressed components
+    Needed when using inclusive samples
+    '''
+    if channel == 'ee':
+        ctrl_ee    = get_truth('12153001')
+        psi2_ee    = get_truth('12153012')
+        ctrl_pi_ee = get_truth('12153020')
+
+        return f'!({ctrl_ee}) && !({psi2_ee}) && !({ctrl_pi_ee})'
+
+    if channel == 'mm':
+        ctrl_mm    = get_truth('12143001')
+        psi2_mm    = get_truth('12143020')
+        ctrl_pi_mm = get_truth('12143010')
+
+        return f'!({ctrl_mm}) && !({psi2_mm}) && !({ctrl_pi_mm})'
+
+    raise ValueError(f'Invalid channel: {channel}')
+# ----------------------------------------------------------
 def get_truth(event_type : Union[int,str]) -> str:
     '''
     Function meant to return truth matching string from event type string
