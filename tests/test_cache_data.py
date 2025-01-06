@@ -83,8 +83,6 @@ def _get_samples(is_rk : bool) -> list[tuple[str,str]]:
     nsample = len(l_sam_trg)
     log.info(f'Found {nsample} samples')
 
-    l_sam_trg = l_sam_trg[:15]
-
     Data.l_sam_trg = l_sam_trg
 
     return l_sam_trg
@@ -112,7 +110,6 @@ def _get_config(sample : str, trigger : str, is_rk : bool) -> dict:
     d_conf['project'] = 'RK' if is_rk else 'RKst'
     d_conf['q2bin'  ] = 'central'
     d_conf['hlt2'   ] = trigger
-    d_conf['cutver' ] = 'v1'
     d_conf['remove' ] = ['q2', 'bdt']
 
     return d_conf
