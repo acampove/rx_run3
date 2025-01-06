@@ -67,11 +67,18 @@ def _get_samples(is_rk : bool) -> list[tuple[str,str]]:
     nsample = len(l_sam_trg)
     log.info(f'Found {nsample} samples')
 
-    l_sam_trg = l_sam_trg[:2]
+    l_sam_trg = l_sam_trg[:15]
 
     Data.l_sam_trg = l_sam_trg
 
     return l_sam_trg
+# ---------------------------------------------
+def _override_parts(cfg : dict, sample : str) -> Union[None,dict]:
+    if sample in ['Bs_phieta_eplemng_eq_Dalitz_DPC', 'Bs_phipi0_eplemng_eq_Dalitz_DPC']:
+        log.warning(f'Skipping sample {sample}')
+        return None
+
+    return cfg
 # ---------------------------------------------
 def _get_config(sample : str, trigger : str, is_rk : bool) -> dict:
     '''
@@ -80,7 +87,7 @@ def _get_config(sample : str, trigger : str, is_rk : bool) -> dict:
     '''
     d_conf            = {}
     d_conf['ipart'  ] = 0
-    d_conf['npart'  ] = 1000
+    d_conf['npart'  ] = 50
     d_conf['ipath'  ] = '/publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap'
     d_conf['sample' ] = sample
     d_conf['project'] = 'RK' if is_rk else 'RKst'
@@ -98,6 +105,10 @@ def test_run3_rk(sample : str, trigger : str):
     '''
     log.info(f'{sample:<60}{trigger:<40}')
     cfg = _get_config(sample, trigger, is_rk = True)
+
+    cfg = _override_parts(cfg, sample)
+    if cfg is None:
+        return
 
     obj=CacheData(cfg = cfg)
     obj.save()
