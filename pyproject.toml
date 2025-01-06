@@ -5,6 +5,7 @@ version     = '0.0.2'
 readme      = 'README.md'
 dependencies= [
 'data-manipulation-utilities',
+'rx_data',
 'numpy',
 'jacobi',
 'pandas',
