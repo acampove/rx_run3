@@ -179,6 +179,13 @@ def get_truth(event_type : Union[int,str]) -> str:
         tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 313'
 
         cut    = f'{tm_par} && {tm_psi} && {tm_kst}'
+    elif event_type == '11144011':
+        # B0-> mu+ mu- (K*(892)0 -> K+ pi-)
+        tm_par = 'TMath::Abs(B_TRUEID)        == 511    && TMath::Abs(L1_TRUEID)       == 13     && TMath::Abs(L2_TRUEID)   == 13 && TMath::Abs(H_TRUEID) == 321'
+        tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 511    && TMath::Abs(L2_MC_MOTHER_ID) == 511'
+        tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 313'
+
+        cut    = f'{tm_par} && {tm_psi} && {tm_kst}'
     #------------------------------------------------------------
     elif event_type == '12155110':
         tm_par = 'TMath::Abs(B_TRUEID)        == 521    && TMath::Abs(L1_TRUEID)       == 11     && TMath::Abs(L2_TRUEID)   == 11 && TMath::Abs(H_TRUEID) == 211'
