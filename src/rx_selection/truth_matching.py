@@ -148,6 +148,9 @@ def get_truth(event_type : Union[int,str]) -> str:
     elif event_type == '12155020':
         #B+ -> K_1(K pipi) Jpsi(ee)
         cut= 'TMath::Abs(B_TRUEID) == 521 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 443 &&  TMath::Abs(L2_MC_MOTHER_ID) == 443 &&  (TMath::Abs(H_TRUEID) == 321 || TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 10323'
+    elif event_type == '12145090':
+        #B+ -> K_1(K pipi) Jpsi(ee)
+        cut= 'TMath::Abs(B_TRUEID) == 521 &&  TMath::Abs(L1_TRUEID) ==  13 &&  TMath::Abs(L2_TRUEID) == 13 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 443 &&  TMath::Abs(L2_MC_MOTHER_ID) == 443 &&  (TMath::Abs(H_TRUEID) == 321 || TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 10323'
     elif event_type == '12425011':
         #B+ -> K_2(X -> K pipi) ee
         cut= 'TMath::Abs(B_TRUEID) == 521 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  TMath::Abs(L2_MC_MOTHER_ID) == 521 &&  (TMath::Abs(H_TRUEID) == 321 || TMath::Abs(H_TRUEID) == 211) && (TMath::Abs(H_MC_MOTHER_ID) ==   325 || TMath::Abs(H_MC_MOTHER_ID) == 113 || TMath::Abs(H_MC_MOTHER_ID) == 223 || TMath::Abs(H_MC_MOTHER_ID) == 313)'
