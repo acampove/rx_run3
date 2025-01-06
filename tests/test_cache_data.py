@@ -94,6 +94,9 @@ def _override_parts(cfg : dict, sample : str) -> Union[None,dict]:
         log.warning(f'Skipping sample {sample}')
         return None
 
+    if sample in ['Bd_JpsiKS_ee_eq_CPV_DPC', 'Bd_Ksteta_eplemng_eq_Dalitz_DPC', 'Bu_phiKee_KK_eq_DPC']:
+        cfg['npart'] = 10
+
     return cfg
 # ---------------------------------------------
 def _get_config(sample : str, trigger : str, is_rk : bool) -> dict:
