@@ -75,7 +75,7 @@ RK:
     jpsi_misid: (1)
     bdt       : (1) 
     q2:
-    <<: *q2_common
+      <<: *q2_common
     mass:
       <<: *mass_ee
   MM:
