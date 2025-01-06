@@ -260,6 +260,11 @@ def get_truth(event_type : Union[int,str]) -> str:
     elif event_type in ['11124402']:
         #Bd->pi0(->ee gamma) K*0(Kpi)
         cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(Jpsi_TRUEID) == 111 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 111 && TMath::Abs(L2_MC_MOTHER_ID) == 111 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 313'
+    elif event_type == '11202603':
+        #Bd-> K_1 (k pi pi0) gamma
+        jpsi_cut = 'TMath::Abs(Jpsi_TRUEID) ==  22 && (TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 || TMath::Abs(Jpsi_MC_MOTHER_ID) == 111)'
+
+        cut= f'TMath::Abs(B_TRUEID) == 511 && {jpsi_cut} && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) ==  22 && TMath::Abs(L2_MC_MOTHER_ID) ==  22 && TMath::Abs(H_TRUEID) == 321' 
     elif event_type in ['11102453']:
         #Bd->pi0(->gamma gamma) K*0(Kpi)
         cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(Jpsi_TRUEID) ==  22 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 111 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) ==  22 && TMath::Abs(L2_MC_MOTHER_ID) ==  22 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 313'
