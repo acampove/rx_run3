@@ -65,6 +65,10 @@ def _get_samples(is_rk : bool) -> list[tuple[str,str]]:
             continue
 
         sample_name = os.path.basename(sample_path)
+        if sample_name.endswith('_SS'):
+            log.warning('Not testing split-sim samples for now')
+            continue
+
         if not _has_files(sample_path, trigger):
             log.warning(f'Cannot find any files for: {sample_name}/{trigger}')
             continue
