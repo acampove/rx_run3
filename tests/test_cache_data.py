@@ -89,6 +89,7 @@ def _override_parts(cfg : dict, sample : str) -> Union[None,dict]:
             'Bu_piplpimnKpl_eq_sqDalitz_DPC',
             'Bd_Dmnpipl_eq_DPC',
             'Bs_phieta_eplemng_eq_Dalitz_DPC', 
+            'Bd_K1gamma_Kpipi0_eq_mK1270_HighPtGamma_DPC',
             'Bs_phipi0_eplemng_eq_Dalitz_DPC']:
         log.warning(f'Skipping sample {sample}')
         return None
