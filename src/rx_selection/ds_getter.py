@@ -16,7 +16,7 @@ from importlib.resources import files
 import pprint
 import yaml
 
-from ROOT import RDataFrame
+from ROOT import RDataFrame, TFile
 
 from dmu.rdataframe.atr_mgr import AtrMgr
 from dmu.logging.log_store  import LogStore
@@ -151,8 +151,19 @@ class ds_getter:
 
         return l_path
     # ------------------------------------
+    def _tree_found(self, l_path : list[str], tree_name : str) -> bool:
+        if len(l_path) == 0:
+            raise FileNotFoundError('No files found')
+
+        ifile = TFile.Open(l_path[0])
+
+        return hasattr(ifile, tree_name)
+    # ------------------------------------
     def _get_rdf_raw(self, tree_name = 'DecayTree') -> RDataFrame:
         l_file_path = self._get_files_path()
+
+        if tree_name == 'MCDecayTree' and not self._tree_found(l_file_path, 'MCDecayTree'):
+            return None
 
         rdf = RDataFrame(tree_name, l_file_path)
         rdf = self._skim_df(rdf)
@@ -165,6 +176,10 @@ class ds_getter:
         log.warning('Reading number of entries from MCDecayTree not implemented')
 
         rdf = self._get_rdf_raw(tree_name = 'MCDecayTree')
+        if rdf is None:
+            log.warning('MCDecayTree not found, assigning 1 entry to tree')
+            return 1
+
         nev = rdf.Count().GetValue()
 
         return nev
