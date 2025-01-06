@@ -26,7 +26,7 @@ def get_truth(event_type : Union[int,str]) -> str:
     elif   event_type in ['12113001', '12113002']:
         #rare mumu
         cut= 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 521 && TMath::Abs(L2_MC_MOTHER_ID) == 521 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 521'
-    elif event_type in ['12123002', '12123003', '12123005']:
+    elif event_type in ['12123001', '12123002', '12123003', '12123005']:
         #rare ee
         cut= 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 521 && TMath::Abs(L2_MC_MOTHER_ID) == 521 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 521'
     elif event_type in ['12143001']:
