@@ -127,6 +127,16 @@ def get_truth(event_type : Union[int,str]) -> str:
         ll_cut = f'({l1_cut}) || ({l2_cut})'
 
         return f'({bp_hp}) && ({ll_cut})'
+    elif   event_type == '11584030':
+        # B0 e+ nu D-( D0(Kp pi-) pi-)
+        bp_hp  = 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 421'
+        l1_cut = 'TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 511 && TMath::Abs(L2_TRUEID) ==211 && (TMath::Abs(L2_MC_MOTHER_ID) == 421 || TMath::Abs(L2_MC_MOTHER_ID) == 413)'
+        l2_cut = 'TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L2_MC_MOTHER_ID) == 421 && TMath::Abs(L1_TRUEID) == 11 && (TMath::Abs(L1_MC_MOTHER_ID) == 421 || TMath::Abs(L1_MC_MOTHER_ID) == 413)'
+
+        ll_cut = f'({l1_cut}) || ({l2_cut})'
+
+        return f'({bp_hp}) && ({ll_cut})'
+
     elif   event_type == '12573040':
         # B+ mu+ nu D0(Kp mu- nu)
         bp_hp  = 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 421'
