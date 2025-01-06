@@ -19,34 +19,25 @@ class Data:
     '''
     l_sam_trg : list[tuple[str,str]]
     data_version = 'v1'
-    d_rk_trigger = {
-            'ee' : 'Hlt2RD_BuToKpEE_MVA',
-            'mm' : 'Hlt2RD_BuToKpMuMu_MVA',
-            }
+    l_rk_trigger = [
+            'Hlt2RD_BuToKpEE_MVA',
+            'Hlt2RD_BuToKpMuMu_MVA',
+            ]
 
-    d_rkst_trigger = {
-            'ee' : '',
-            'mm' : '',
-            }
+    l_rkst_trigger = ['']
 # ---------------------------------------------
-def _trigger_from_sample(sample_name : str, is_rk : bool) -> Union[None,str]:
-    if sample_name.startswith('DATA_'):
+def _trigger_from_sample(sample_path : str, is_rk : bool) -> Union[None,str]:
+    if 'DATA_' in sample_path:
         return None
 
-    d_trigger = Data.d_rk_trigger if is_rk else Data.d_rkst_trigger
+    l_trigger = Data.l_rk_trigger if is_rk else Data.l_rkst_trigger
 
-    if  'ee'  in sample_name:
-        return d_trigger['ee']
+    for trig in l_trigger:
+        path = f'{sample_path}/{trig}'
+        if os.path.isdir(path):
+            return trig
 
-    if  'eplemn'  in sample_name:
-        return d_trigger['ee']
-
-    if '_mm_' in sample_name:
-        return d_trigger['mm']
-
-    if 'mumu' in sample_name:
-        return d_trigger['mm']
-
+    sample_name = os.path.basename(sample_path)
     log.warning(f'Cannot determine trigger, skipping {sample_name}')
 
     return None
