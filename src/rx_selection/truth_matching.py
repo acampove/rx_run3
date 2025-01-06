@@ -50,9 +50,9 @@ def get_truth(event_type : Union[int,str]) -> str:
     #-------------------------------------------------------------
     elif event_type in ['12952000']:
         #B+->XcHs
-        ctrl_ee    = get_truth('ctrl_ee')
-        psi2_ee    = get_truth('psi2_ee')
-        ctrl_pi_ee = get_truth('ctrl_pi_ee')
+        ctrl_ee    = get_truth('12153001') # Remove resonant Jpsi electron
+        psi2_ee    = get_truth('12153012') # Remove resonant psi2S electron
+        ctrl_pi_ee = get_truth('12153020') # Remove cabibbo suppressed electron
         fail       = get_truth('fail')
 
         cut= f'!({fail}) && !({ctrl_ee}) && !({psi2_ee}) && !({ctrl_pi_ee})'
