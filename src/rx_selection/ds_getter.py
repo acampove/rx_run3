@@ -145,7 +145,7 @@ class ds_getter:
         l_path   = glob.glob(files_wc)
         npath    = len(l_path)
         if npath == 0:
-            raise FileNotFoundError('No files found in: {files_wc}')
+            raise FileNotFoundError(f'No files found in: {files_wc}')
 
         log.info(f'Found {npath} files')
 
