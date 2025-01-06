@@ -68,12 +68,12 @@ def _get_samples(is_rk : bool) -> list[tuple[str,str]]:
     sample_dir = f'{data_dir}/RX_run3/{Data.data_version}/post_ap'
     l_sam_trg  = []
     for sample_path in glob.glob(f'{sample_dir}/*'):
-        sample_name = os.path.basename(sample_path)
-        trigger     = _trigger_from_sample(sample_name, is_rk)
+        trigger     = _trigger_from_sample(sample_path, is_rk)
 
         if trigger is None:
             continue
 
+        sample_name = os.path.basename(sample_path)
         if not _has_files(sample_path, trigger):
             log.warning(f'Cannot find any files for: {sample_name}/{trigger}')
             continue
