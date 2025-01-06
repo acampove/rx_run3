@@ -23,6 +23,11 @@ class Data:
             'ee' : 'Hlt2RD_BuToKpEE_MVA',
             'mm' : 'Hlt2RD_BuToKpMuMu_MVA',
             }
+
+    d_rkst_trigger = {
+            'ee' : '',
+            'mm' : '',
+            }
 # ---------------------------------------------
 def _trigger_from_sample(sample_name : str, is_rk : bool) -> Union[None,str]:
     if sample_name.startswith('DATA_'):
