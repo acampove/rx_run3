@@ -71,11 +71,11 @@ def _get_samples(is_rk : bool) -> list[tuple[str,str]]:
         sample_name = os.path.basename(sample_path)
         trigger     = _trigger_from_sample(sample_name, is_rk)
 
-        if not _has_files(sample_path, trigger):
-            log.warning(f'Cannot find any files for: {sample_name}/{trigger}')
+        if trigger is None:
             continue
 
-        if trigger is None:
+        if not _has_files(sample_path, trigger):
+            log.warning(f'Cannot find any files for: {sample_name}/{trigger}')
             continue
 
         l_sam_trg.append((sample_name, trigger))
