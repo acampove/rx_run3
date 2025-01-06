@@ -45,6 +45,8 @@ class CacheData:
 
         log.debug('Using latest cut version: {version}')
 
+        self._cfg['cutver'] = version
+
         return version
     # ----------------------------------------
     def _get_selection_name(self) -> str:
