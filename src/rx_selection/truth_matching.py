@@ -140,8 +140,11 @@ def get_truth(event_type : Union[int,str]) -> str:
         #Bs -> phi(-> KK) ee
         cut= 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 531 &&  TMath::Abs(L2_MC_MOTHER_ID) == 531 &&  TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 333'
     elif event_type == '13124401':
-        #Bs -> phi(-> KK) eta(-> ee gamma)
+        # Bs -> phi(-> KK) eta(-> ee gamma)
         cut= 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 221 &&  TMath::Abs(L2_MC_MOTHER_ID) == 221 &&  TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 333'
+    elif event_type == '11124401':
+        # B0 -> (eta -> e+ e- gamma) (K*0 -> K+ pi- )
+        cut= 'TMath::Abs(B_TRUEID) == 511 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 221 &&  TMath::Abs(L2_MC_MOTHER_ID) == 221 && (TMath::Abs(H_TRUEID) == 321 ||  TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 323'
     elif event_type == '13124402':
         #Bs -> phi(-> KK) pi0(-> ee gamma)
         cut= 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 111 &&  TMath::Abs(L2_MC_MOTHER_ID) == 111 &&  TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 333'
