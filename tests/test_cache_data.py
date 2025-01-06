@@ -96,13 +96,12 @@ def _override_parts(cfg : dict, sample : str) -> Union[None,dict]:
     if sample in [
             'Bd_JpsiKS_ee_eq_CPV_DPC', 
             'Bd_Ksteta_eplemng_eq_Dalitz_DPC', 
-            'Bd_Dmnpipl_eq_DPC',
             'Bu_D0pi_Kmunu_eq_DPC',
             'Bu_D0enu_Kpi_eq_DPC_TC',
             'Bu_D0munu_Kpi_eq_cocktail_D0muInAcc_BRcorr1',
-            'Bs_Dsenu_phienu_eq_DPC',
-            'Bu_piplpimnKpl_eq_sqDalitz_DPC',
-            'Bu_piplpimnKpl_eq_sqDalitz_DPC',
+            'Bd_Kstpi0_eq_TC_Kst982width100_HighPtPi0',
+            'Bd_D0Xenu_D0_eq_cocktail',
+            'Bs_Dsenu_phienu_eq_DPC_HVM_EGDWC',
             'Bu_phiKee_KK_eq_DPC']:
         cfg['npart'] = 10
 
