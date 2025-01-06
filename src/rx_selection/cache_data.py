@@ -29,7 +29,7 @@ class CacheData:
         self._sample : str       = cfg['sample']
         self._l_rem  : list[str] = cfg['remove']
         self._q2bin  : str       = cfg['q2bin' ]
-        self._cutver : str       = cfg['cutver']
+        self._cutver : str       = '' if 'cutver' not in cfg else cfg['cutver']
         self._hlt2   : str       = cfg['hlt2'  ]
     # ----------------------------------------
     def _get_cut_version(self) -> str:
