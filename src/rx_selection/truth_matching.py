@@ -379,6 +379,16 @@ def get_truth(event_type : Union[int,str]) -> str:
 
         cut    = f'{tm_par} && {tm_psi} && {tm_kst}'
     #------------------------------------------------------------
+    elif event_type == '12175101':
+        beauty = 'TMath::Abs(B_TRUEID)  == 511'
+        lep_1  = 'TMath::Abs(L1_TRUEID) ==  13     && TMath::Abs(L2_TRUEID)   == 211'
+        lep_2  = 'TMath::Abs(L1_TRUEID) == 211     && TMath::Abs(L2_TRUEID)   ==  13'
+        lep    = f'({lep_1}) || ({lep_2})'
+        had_mo = 'TMath::Abs(H_MC_MOTHER_ID)  == 521 || TMath::Abs(H_MC_MOTHER_ID)  == 3122'
+        had_pi = 'TMath::Abs(H_TRUEID)        == 211 || TMath::Abs(H_TRUEID)        == 2212'
+
+        cut    = f'({beauty}) && ({lep}) && ({had_mo}) && ({had_pi})'
+    #------------------------------------------------------------
     elif event_type == 'fail':
         cut= 'TMath::Abs(B_TRUEID) == 0 || TMath::Abs(Jpsi_TRUEID) == 0 || TMath::Abs(Jpsi_MC_MOTHER_ID) == 0 || TMath::Abs(L1_TRUEID) == 0 || TMath::Abs(L2_TRUEID) == 0 || TMath::Abs(L1_MC_MOTHER_ID) == 0 || TMath::Abs(L2_MC_MOTHER_ID) == 0 || TMath::Abs(H_TRUEID) == 0 || TMath::Abs(H_MC_MOTHER_ID) == 0'
     else:
