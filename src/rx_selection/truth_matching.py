@@ -136,7 +136,6 @@ def get_truth(event_type : Union[int,str]) -> str:
         ll_cut = f'({l1_cut}) || ({l2_cut})'
 
         return f'({bp_hp}) && ({ll_cut})'
-
     elif   event_type == '12573040':
         # B+ mu+ nu D0(Kp mu- nu)
         bp_hp  = 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 421'
