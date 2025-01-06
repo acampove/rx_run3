@@ -116,6 +116,12 @@ def get_truth(event_type : Union[int,str]) -> str:
         no_reso  = _get_no_reso(channel = 'ee')
 
         cut      = f'({pick}) && ({no_reso})'
+    elif event_type == '15454101':
+        # LbXcHs_ee
+        pick     = _get_inclusive_match(lep=11, mes=5122)
+        no_reso  = _get_no_reso(channel = 'ee')
+
+        cut      = f'({pick}) && ({no_reso})'
     #-------------------------------------------------------------
     elif event_type == '11442001':
         # bdXcHs_mm
