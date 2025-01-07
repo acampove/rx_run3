@@ -98,10 +98,6 @@ def _get_dt_samples(is_rk : bool) -> list[tuple[str,str]]:
     for sample_path in glob.glob(f'{sample_dir}/DATA_*'):
         for trigger in l_trigger:
             sample_name = os.path.basename(sample_path)
-            if sample_name.endswith('_SS'):
-                log.warning('Not testing split-sim samples for now')
-                continue
-
             if not _has_files(sample_path, trigger):
                 log.warning(f'Cannot find any files for: {sample_name}/{trigger}')
                 continue
