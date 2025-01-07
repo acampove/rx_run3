@@ -93,5 +93,5 @@ run()
 # ----------------------------
 format_opts "$@"
 get_opts "$@"
-setup
+#setup
 run
