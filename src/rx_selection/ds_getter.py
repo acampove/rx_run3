@@ -194,7 +194,7 @@ class ds_getter:
 
         rdf = RDataFrame(tree_name, l_file_path)
         rdf = self._skim_rdf(rdf)
-        rdf = self._add_columns(rdf)
+        rdf = self._add_columns(rdf, d_cut)
         rdf.filepath = l_file_path
         rdf.treename = tree_name
 
