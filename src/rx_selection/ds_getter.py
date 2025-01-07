@@ -160,6 +160,30 @@ class ds_getter:
 
         return hasattr(ifile, tree_name)
     # ------------------------------------
+    def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
+        ana = self._get_analysis()
+        prj = self._project
+
+        if 'Definitions' not in self._cfg:
+            log.debug('No variable definitions found')
+            return rdf
+
+        if prj not in self._cfg['Definitions']:
+            log.debug(f'No variable definitions found for project: {prj}')
+            return rdf
+
+        if ana not in self._cfg['Definitions'][prj]:
+            log.debug(f'No variable definitions found for project/analysis: {prj}/{ana}')
+            return rdf
+
+        d_def = self._cfg['Definitions'][prj][ana]
+        log.info('Defining variables:')
+        for var_name, var_def in d_def.items():
+            log.debug(f'    {var_name:<20}{var_def:<60}')
+            rdf = rdf.Define(var_name, var_def)
+
+        return rdf
+    # ------------------------------------
     def _get_rdf_raw(self, tree_name = 'DecayTree') -> RDataFrame:
         l_file_path = self._get_files_path()
 
