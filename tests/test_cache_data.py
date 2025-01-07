@@ -73,6 +73,7 @@ def _get_mc_samples(is_rk : bool) -> list[tuple[str,str]]:
 
         l_sam_trg.append((sample_name, trigger))
 
+    l_sam_trg = l_sam_trg[:1]
     nsample = len(l_sam_trg)
     log.info(f'Found {nsample} samples')
 
@@ -100,6 +101,7 @@ def _get_dt_samples(is_rk : bool) -> list[tuple[str,str]]:
 
             l_sam_trg.append((sample_name, trigger))
 
+    l_sam_trg = l_sam_trg[:1]
     nsample = len(l_sam_trg)
     log.info(f'Found {nsample} samples')
 
