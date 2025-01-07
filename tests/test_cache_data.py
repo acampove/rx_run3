@@ -17,7 +17,9 @@ class Data:
     '''
     Class used to share data
     '''
-    l_sam_trg : list[tuple[str,str]]
+    l_sam_trg_mc : list[tuple[str,str]]
+    l_sam_trg_dt : list[tuple[str,str]]
+
     data_version = 'v1'
     l_rk_trigger = [
             'Hlt2RD_BuToKpEE_MVA',
@@ -49,8 +51,8 @@ def _has_files(sample_path : str, trigger : str) -> bool:
     return len(l_path) != 0
 # ---------------------------------------------
 def _get_mc_samples(is_rk : bool) -> list[tuple[str,str]]:
-    if hasattr(Data, 'l_sam_trg'):
-        return Data.l_sam_trg
+    if hasattr(Data, 'l_sam_trg_mc'):
+        return Data.l_sam_trg_mc
 
     if 'DATADIR' not in os.environ:
         raise ValueError('DATADIR not found in environment')
@@ -78,9 +80,40 @@ def _get_mc_samples(is_rk : bool) -> list[tuple[str,str]]:
     nsample = len(l_sam_trg)
     log.info(f'Found {nsample} samples')
 
-    Data.l_sam_trg = l_sam_trg
+    Data.l_sam_trg_mc = l_sam_trg
 
-    return l_sam_trg
+    return Data.l_sam_trg_mc
+# ---------------------------------------------
+def _get_dt_samples(is_rk : bool) -> list[tuple[str,str]]:
+    if hasattr(Data, 'l_sam_trg_dt'):
+        return Data.l_sam_trg_dt
+
+    if 'DATADIR' not in os.environ:
+        raise ValueError('DATADIR not found in environment')
+
+    l_trigger  = Data.l_rk_trigger if is_rk else Data.l_rkst_trigger
+    data_dir   = os.environ['DATADIR']
+    sample_dir = f'{data_dir}/RX_run3/{Data.data_version}/post_ap'
+    l_sam_trg  = []
+    for sample_path in glob.glob(f'{sample_dir}/DATA_*'):
+        for trigger in l_trigger:
+            sample_name = os.path.basename(sample_path)
+            if sample_name.endswith('_SS'):
+                log.warning('Not testing split-sim samples for now')
+                continue
+
+            if not _has_files(sample_path, trigger):
+                log.warning(f'Cannot find any files for: {sample_name}/{trigger}')
+                continue
+
+            l_sam_trg.append((sample_name, trigger))
+
+    nsample = len(l_sam_trg)
+    log.info(f'Found {nsample} samples')
+
+    Data.l_sam_trg_dt = l_sam_trg
+
+    return Data.l_sam_trg_dt
 # ---------------------------------------------
 def _override_parts(cfg : dict, sample : str) -> Union[None,dict]:
     if sample in [
@@ -120,7 +153,7 @@ def _get_config(sample : str, trigger : str, is_rk : bool) -> dict:
     '''
     d_conf            = {}
     d_conf['ipart'  ] = 0
-    d_conf['npart'  ] = 50
+    d_conf['npart'  ] = 50 if 'DATA_' not in sample else 1000
     d_conf['ipath'  ] = '/publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap'
     d_conf['sample' ] = sample
     d_conf['project'] = 'RK' if is_rk else 'RKst'
@@ -139,6 +172,19 @@ def test_run3_rk_mc(sample : str, trigger : str):
     cfg = _get_config(sample, trigger, is_rk = True)
 
     cfg = _override_parts(cfg, sample)
+    if cfg is None:
+        return
+
+    obj=CacheData(cfg = cfg)
+    obj.save()
+# ---------------------------------------------
+@pytest.mark.parametrize('sample, trigger', _get_dt_samples(is_rk=True))
+def test_run3_rk_dt(sample : str, trigger : str):
+    '''
+    Testing on run3 RK samples and triggers
+    '''
+    log.info(f'{sample:<60}{trigger:<40}')
+    cfg = _get_config(sample, trigger, is_rk = True)
     if cfg is None:
         return
 
