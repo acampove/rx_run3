@@ -18,12 +18,13 @@ display_help()
 setup()
 {
     source $HOME/.bashrc
+    mma run3 
     if [[ $? -ne 0 ]];then
-        echo "Could not run rc file"
+        echo "Could not set virtual environment"
         exit 1
     fi
 
-    mma run3 
+    which apply_selection
     if [[ $? -ne 0 ]];then
         echo "Could not set virtual environment"
         exit 1
