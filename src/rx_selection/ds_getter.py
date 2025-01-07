@@ -163,7 +163,7 @@ class ds_getter:
     def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
         log.info('Adding columns')
 
-        sel_cfg = sel.load_selection_config() 
+        sel_cfg = sel.load_selection_config()
         ana     = self._get_analysis()
         prj     = self._project
 
