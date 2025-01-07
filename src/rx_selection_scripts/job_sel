@@ -103,7 +103,7 @@ submit_ihep()
     echo "Running $NJOB jobs from: $PWD"
     echo "Queue    =$QUEUE"
 
-    #hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu $JOB_ARGS -wt $QUEU -- $SUBMITTER
+    hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu "$JOB_ARGS" -wt $QUEUE $SUBMITTER
 }
 #-----------------------------
 get_opts "$@"
