@@ -186,7 +186,8 @@ class ds_getter:
 
         return rdf
     # ------------------------------------
-    def _get_rdf_raw(self, tree_name = 'DecayTree') -> RDataFrame:
+    def _get_rdf_raw(self, d_cut : dict, tree_name = 'DecayTree') -> RDataFrame:
+        log.info(f'Getting dataframe for tree: {tree_name}')
         l_file_path = self._get_files_path()
 
         if tree_name == 'MCDecayTree' and not self._tree_found(l_file_path, 'MCDecayTree'):
