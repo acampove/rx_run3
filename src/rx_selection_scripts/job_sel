@@ -59,8 +59,8 @@ prepare()
         exit 1
     fi
 
-    DATE=$(date | sed "s|\s|_|g" | sed "s|:|_|g")
-    JOBDIR=$JOBDIR"_"$DATE
+    DATE=$(date | sed "s|\s|_|g" | sed "s|:|_|g" | sed "s|__|_|g")
+    JOBDIR=$JOBDIR"/rx_selection/"$DATE
 
     echo "Preparing log directory"
     mkdir -p $JOBDIR
