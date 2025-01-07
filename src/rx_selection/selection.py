@@ -37,7 +37,7 @@ def selection(analysis : str, project : str, q2bin: str, process : str) -> dict[
     '''
     d_cut : dict[str,str] = {}
 
-    event_type     = aput.read_event_type(nickname=process)
+    event_type     = process if process.startswith('DATA_') else aput.read_event_type(nickname=process)
     log.info(f'{process:<40}{"->":20}{event_type:<20}')
     d_cut['truth'] = tm.get_truth(event_type)
 
