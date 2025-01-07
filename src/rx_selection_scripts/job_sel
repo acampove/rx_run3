@@ -112,9 +112,9 @@ submit_ihep()
     echo "Jobdir = $JOBDIR"
 
     if [[ -z $REMOVED ]];then
-        hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu "-d\ $DATADIR\ -s\ $SAMPLE\ -i\ %{ProcId}\ -n\ ${NJOB}\ -p\ $PROJECT\ -t\ $TRIGGER\ -q\ $Q2BIN"               -wt $QUEUE $SUBMITTER
+        hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu "-d $DATADIR -s $SAMPLE -i %{ProcId} -n ${NJOB} -p $PROJECT -t $TRIGGER -q $Q2BIN"               -wt $QUEUE $SUBMITTER
     else
-        hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu "-d\ $DATADIR\ -s\ $SAMPLE\ -i\ %{ProcId}\ -n\ ${NJOB}\ -p\ $PROJECT\ -t\ $TRIGGER\ -q\ $Q2BIN\ -r\ $REMOVED" -wt $QUEUE $SUBMITTER
+        hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu "-d $DATADIR -s $SAMPLE -i %{ProcId} -n ${NJOB} -p $PROJECT -t $TRIGGER -q $Q2BIN -r $REMOVED" -wt $QUEUE $SUBMITTER
     fi
 }
 #-----------------------------
