@@ -187,7 +187,7 @@ class ds_getter:
 
         return rdf
     # ------------------------------------
-    def _get_rdf_raw(self, d_cut : dict, tree_name = 'DecayTree') -> RDataFrame:
+    def _get_rdf_raw(self, tree_name = 'DecayTree') -> RDataFrame:
         log.info(f'Getting dataframe for tree: {tree_name}')
         l_file_path = self._get_files_path()
 
@@ -196,7 +196,7 @@ class ds_getter:
 
         rdf = RDataFrame(tree_name, l_file_path)
         rdf = self._skim_rdf(rdf)
-        rdf = self._add_columns(rdf=rdf, d_cut=d_cut)
+        rdf = self._add_columns(rdf=rdf)
         rdf.filepath = l_file_path
         rdf.treename = tree_name
 
@@ -280,15 +280,13 @@ class ds_getter:
 
         self._initialize()
 
+        rdf   = self._get_rdf_raw()
+        dfmgr = AtrMgr(rdf)
         d_cut = sel.selection(
                 analysis = self._get_analysis(),
                 project  = self._project,
                 q2bin    = self._q2bin,
                 process  = self._sample)
-
-        rdf   = self._get_rdf_raw(d_cut = d_cut)
-        dfmgr = AtrMgr(rdf)
-
         cf    = cfl.cutflow(d_meta = {'file' : rdf.filepath, 'tree' : rdf.treename})
         tot   = rdf.Count().GetValue()
         d_cut = self._redefine_cuts(d_cut)
