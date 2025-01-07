@@ -160,23 +160,25 @@ class ds_getter:
 
         return hasattr(ifile, tree_name)
     # ------------------------------------
-    def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
+    def _add_columns(self, rdf : RDataFrame, d_cut : dict) -> RDataFrame:
+        log.info('Adding columns')
+
         ana = self._get_analysis()
         prj = self._project
 
-        if 'Definitions' not in self._cfg:
+        if 'Definitions' not in d_cut:
             log.debug('No variable definitions found')
             return rdf
 
-        if prj not in self._cfg['Definitions']:
+        if prj not in d_cut['Definitions']:
             log.debug(f'No variable definitions found for project: {prj}')
             return rdf
 
-        if ana not in self._cfg['Definitions'][prj]:
+        if ana not in d_cut['Definitions'][prj]:
             log.debug(f'No variable definitions found for project/analysis: {prj}/{ana}')
             return rdf
 
-        d_def = self._cfg['Definitions'][prj][ana]
+        d_def = d_cut['Definitions'][prj][ana]
         log.info('Defining variables:')
         for var_name, var_def in d_def.items():
             log.debug(f'    {var_name:<20}{var_def:<60}')
