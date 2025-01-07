@@ -149,7 +149,7 @@ def _get_config(sample : str, trigger : str, is_rk : bool) -> dict:
     '''
     d_conf            = {}
     d_conf['ipart'  ] = 0
-    d_conf['npart'  ] = 50 if 'DATA_' not in sample else 1000
+    d_conf['npart'  ] = 50 if 'DATA_' not in sample else 2000
     d_conf['ipath'  ] = '/publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap'
     d_conf['sample' ] = sample
     d_conf['project'] = 'RK' if is_rk else 'RKst'
