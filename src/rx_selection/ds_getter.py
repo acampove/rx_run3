@@ -58,7 +58,7 @@ class ds_getter:
         if self._initialized:
             return
 
-        self._is_sim    = not self._sample.startswith('data')
+        self._is_sim    = not self._sample.startswith('DATA_')
 
         self._set_logs()
 
