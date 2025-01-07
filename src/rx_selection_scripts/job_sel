@@ -46,11 +46,6 @@ get_opts()
         esac
     done
 
-    if [[ $NPART -gt 100 ]];then
-        echo "Cannot send $NPART jobs, max = 100"
-        exit 1
-    fi
-
     if [[ $TEST -eq 1 ]];then
         QUEUE=test
     fi
@@ -118,6 +113,11 @@ submit_ihep()
     echo "Npart  = $NPART"
     echo "Queue  = $QUEUE"
     echo "Jobdir = $JOBDIR"
+
+    if [[ $NJOB -gt 100 ]];then
+        echo "Cannot send $NJOB jobs, max = 100"
+        exit 1
+    fi
 
     hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu "$JOB_ARGS" -wt $QUEUE $SUBMITTER
 }
