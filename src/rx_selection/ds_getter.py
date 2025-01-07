@@ -131,7 +131,7 @@ class ds_getter:
 
         raise NotImplementedError(f'BDT filtering has not been implemented for cut: {cut}')
     # ------------------------------------
-    def _skim_df(self, rdf : RDataFrame) -> RDataFrame:
+    def _skim_rdf(self, rdf : RDataFrame) -> RDataFrame:
         if self._part is None:
             return rdf
 
@@ -167,7 +167,8 @@ class ds_getter:
             return None
 
         rdf = RDataFrame(tree_name, l_file_path)
-        rdf = self._skim_df(rdf)
+        rdf = self._skim_rdf(rdf)
+        rdf = self._add_columns(rdf)
         rdf.filepath = l_file_path
         rdf.treename = tree_name
 
