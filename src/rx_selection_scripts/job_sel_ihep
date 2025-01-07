@@ -3,7 +3,7 @@
 #-----------------------------
 display_help()
 {
-    echo "Script used to setup mamba environment and run apply_selection script"
+    echo "Script used to submit jobs to the IHEP's HTCondor cluster. The jobs should apply selection." 
     echo ""
     echo "-d: Path to directory containing directory samples"
     echo "-s: Name of the sample (subdirectory) to run over"
