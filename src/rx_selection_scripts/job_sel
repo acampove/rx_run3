@@ -20,7 +20,7 @@ get_opts()
 {
     TEST=1
     QUEUE=short
-    while getopts :hf:d:s:r:q:t:p:n:T: option; do 
+    while getopts :hf:d:s:r:q:t:p:n:T:Q: option; do 
         case "${option}" in
             d)  DATADIR="${OPTARG}";;
             s)  SAMPLE="${OPTARG}";;
