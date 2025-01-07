@@ -43,7 +43,7 @@ class CacheData:
         selection_dir= os.path.dirname(selection_wc)
         version      = vman.get_last_version(selection_dir, 'yaml')
 
-        log.debug('Using latest cut version: {version}')
+        log.debug(f'Using latest cut version: {version}')
 
         self._cfg['cutver'] = version
 
