@@ -109,15 +109,17 @@ def _get_dt_samples(is_rk : bool) -> list[tuple[str,str]]:
 # ---------------------------------------------
 def _override_parts(cfg : dict, sample : str) -> Union[None,dict]:
     if sample in [
+            'Bs_phieta_eplemng_eq_Dalitz_DPC',
+            'Bs_phipi0_eplemng_eq_Dalitz_DPC',
             'Bu_KplKplKmn_eq_sqDalitz_DPC',
             'Bu_KplpiplKmn_eq_sqDalitz_DPC',
-            'Bu_piplpimnKpl_eq_sqDalitz_DPC',
-            'Bd_Dmnpipl_eq_DPC',
-            'Bs_phieta_eplemng_eq_Dalitz_DPC',
-            'Bd_K1gamma_Kpipi0_eq_mK1270_HighPtGamma_DPC',
             'Bu_Lambdacbarppi_Lambdabarmunu_eq_HELAMP_TC',
+            'Bu_piplpimnKpl_eq_sqDalitz_DPC',
             'Bu_Kstgamma_Kst_eq_KSpi_DPC_SS',
-            'Bs_phipi0_eplemng_eq_Dalitz_DPC']:
+            'Bd_K1gamma_Kpipi0_eq_mK1270_HighPtGamma_DPC',
+            'Bd_Dmnpipl_eq_DPC',
+            'Bs_PhiEta_gg_eq_DPC_SS',
+            ]:
         log.warning(f'Skipping sample {sample}')
         return None
 
