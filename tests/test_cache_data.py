@@ -171,6 +171,8 @@ def test_run3_rk_mc(sample : str, trigger : str):
     if cfg is None:
         return
 
+    LogStore.set_level('rx_selection:cache_data', 10)
+
     obj=CacheData(cfg = cfg)
     obj.save()
 # ---------------------------------------------
