@@ -128,6 +128,7 @@ def _override_parts(cfg : dict, sample : str) -> Union[None,dict]:
             'Bu_D0munu_Kpi_eq_cocktail_D0muInAcc_BRcorr1',
             'Bd_Kstpi0_eq_TC_Kst982width100_HighPtPi0',
             'Bd_Dstplenu_eq_PHSP_TC',
+            'Bd_Ksteta_gg_eq_DPC_SS',
             'Bd_D0Xenu_D0_eq_cocktail',
             'Bs_Dsenu_phienu_eq_DPC_HVM_EGDWC',
             'Bu_phiKee_KK_eq_DPC']:
