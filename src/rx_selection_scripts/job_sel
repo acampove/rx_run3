@@ -98,10 +98,11 @@ set_job_args()
 submit_ihep()
 {
     cd $JOBDIR
-    OFILE=selection_%{ClusterId}_%{ProcId}
+    OFILE=%{ClusterId}_%{ProcId}
 
-    echo "Running $NJOB jobs from: $PWD"
-    echo "Queue    =$QUEUE"
+    echo "Njobs  = $NJOB"
+    echo "Queue  = $QUEUE"
+    echo "Jobdir = $JOBDIR"
 
     hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu "$JOB_ARGS" -wt $QUEUE $SUBMITTER
 }
