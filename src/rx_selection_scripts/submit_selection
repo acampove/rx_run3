@@ -31,13 +31,6 @@ setup()
     fi
 }
 # ----------------------------
-format_opts()
-{
-    if [[ *'\'* != "$1" ]];then
-        return
-    fi
-}
-# ----------------------------
 get_opts()
 {
     while getopts :hf:d:s:r:q:t:p:i:n: option; do 
@@ -91,7 +84,6 @@ run()
     fi
 }
 # ----------------------------
-format_opts "$@"
-get_opts "$@"
-#setup
+setup
+eval get_opts "$@"
 run
