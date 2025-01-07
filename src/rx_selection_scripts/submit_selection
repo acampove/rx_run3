@@ -26,8 +26,15 @@ setup()
 
     which apply_selection
     if [[ $? -ne 0 ]];then
-        echo "Could not set virtual environment"
+        echo "Could not find apply_selection"
         exit 1
+    fi
+}
+# ----------------------------
+format_opts()
+{
+    if [[ *'\'* != "$1" ]];then
+        return
     fi
 }
 # ----------------------------
@@ -63,6 +70,7 @@ get_opts()
     fi
 }
 # ----------------------------
+export DATADIR
 run()
 {
     echo "DATADIR: $DATADIR"
@@ -71,6 +79,8 @@ run()
     echo "Trigger: $TRIGGER"
     echo "PROJECT  $PROJECT"
     echo "Running: $IPART/$NPART"
+
+    return
 
     if [[ -z $REMOVED ]];then
         echo "Will not remove cuts"
@@ -81,7 +91,7 @@ run()
     fi
 }
 # ----------------------------
-
+format_opts "$@"
 get_opts "$@"
 setup
 run
