@@ -26,7 +26,7 @@ class Data:
 
     l_rkst_trigger = ['']
 # ---------------------------------------------
-def _trigger_from_sample(sample_path : str, is_rk : bool) -> Union[None,str]:
+def _trigger_from_mc_sample(sample_path : str, is_rk : bool) -> Union[None,str]:
     if 'DATA_' in sample_path:
         return None
 
@@ -48,7 +48,7 @@ def _has_files(sample_path : str, trigger : str) -> bool:
 
     return len(l_path) != 0
 # ---------------------------------------------
-def _get_samples(is_rk : bool) -> list[tuple[str,str]]:
+def _get_mc_samples(is_rk : bool) -> list[tuple[str,str]]:
     if hasattr(Data, 'l_sam_trg'):
         return Data.l_sam_trg
 
@@ -59,7 +59,7 @@ def _get_samples(is_rk : bool) -> list[tuple[str,str]]:
     sample_dir = f'{data_dir}/RX_run3/{Data.data_version}/post_ap'
     l_sam_trg  = []
     for sample_path in glob.glob(f'{sample_dir}/*'):
-        trigger     = _trigger_from_sample(sample_path, is_rk)
+        trigger     = _trigger_from_mc_sample(sample_path, is_rk)
 
         if trigger is None:
             continue
@@ -130,8 +130,8 @@ def _get_config(sample : str, trigger : str, is_rk : bool) -> dict:
 
     return d_conf
 # ---------------------------------------------
-@pytest.mark.parametrize('sample, trigger', _get_samples(is_rk=True))
-def test_run3_rk(sample : str, trigger : str):
+@pytest.mark.parametrize('sample, trigger', _get_mc_samples(is_rk=True))
+def test_run3_rk_mc(sample : str, trigger : str):
     '''
     Testing on run3 RK samples and triggers
     '''
