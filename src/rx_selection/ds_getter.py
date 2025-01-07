@@ -37,6 +37,7 @@ class ds_getter:
     '''
     # ------------------------------------
     def __init__(self, cfg : dict):
+        self._cfg             = cfg
         ipart                 = cfg['ipart'   ]
         npart                 = cfg['npart'   ]
         self._part            = [ipart, npart ]
