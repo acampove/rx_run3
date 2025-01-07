@@ -277,7 +277,7 @@ class ds_getter:
 
             pas=rdf.Count().GetValue()
 
-            if cut_name == 'truth':
+            if cut_name == 'truth' and self._is_sim:
                 cf = self._add_reco_efficiency(cf, pas, cut)
                 tot= pas
                 continue
