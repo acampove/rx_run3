@@ -47,7 +47,7 @@ get_opts()
     done
 
     if [[ $NPART -gt 100 ]];then
-        echo "Cannot send $NJOB jobs, max = 100"
+        echo "Cannot send $NPART jobs, max = 100"
         exit 1
     fi
 }
@@ -79,6 +79,9 @@ prepare()
     if [[ $TEST -eq 1 ]];then
         echo -e "${YELLOW}Testing with a single job${NC}"
         NJOB=1
+    else
+        echo -e "${GREEN}Running real job${NC}"
+        NJOB=$NPART
     fi
 }
 #-----------------------------
@@ -96,9 +99,9 @@ set_submitter()
 set_job_args()
 {
     if [[ -z $REMOVED ]];then
-        JOB_ARGS="-d\ $DATADIR\ -s\ $SAMPLE\ -i\ %{ProcId}\ -n\ ${NJOB}\ -p\ $PROJECT\ -t\ $TRIGGER\ -q\ $Q2BIN"
+        JOB_ARGS="-d $DATADIR -s $SAMPLE -i %{ProcId} -n ${NPART} -p $PROJECT -t $TRIGGER -q $Q2BIN"
     else
-        JOB_ARGS="-d\ $DATADIR\ -s\ $SAMPLE\ -i\ %{ProcId}\ -n\ ${NJOB}\ -p\ $PROJECT\ -t\ $TRIGGER\ -q\ $Q2BIN\ -r\ $REMOVED"
+        JOB_ARGS="-d $DATADIR -s $SAMPLE -i %{ProcId} -n ${NPART} -p $PROJECT -t $TRIGGER -q $Q2BIN -r $REMOVED"
     fi
 }
 #-----------------------------
@@ -108,14 +111,11 @@ submit_ihep()
     OFILE=%{ClusterId}_%{ProcId}
 
     echo "Njobs  = $NJOB"
+    echo "Npart  = $NPART"
     echo "Queue  = $QUEUE"
     echo "Jobdir = $JOBDIR"
 
-    if [[ -z $REMOVED ]];then
-        hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu "-d $DATADIR -s $SAMPLE -i %{ProcId} -n ${NJOB} -p $PROJECT -t $TRIGGER -q $Q2BIN"               -wt $QUEUE $SUBMITTER
-    else
-        hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu "-d $DATADIR -s $SAMPLE -i %{ProcId} -n ${NJOB} -p $PROJECT -t $TRIGGER -q $Q2BIN -r $REMOVED" -wt $QUEUE $SUBMITTER
-    fi
+    hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu "$JOB_ARGS" -wt $QUEUE $SUBMITTER
 }
 #-----------------------------
 get_opts "$@"
