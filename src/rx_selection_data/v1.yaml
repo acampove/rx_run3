@@ -78,6 +78,7 @@ RK:
     hlt2      : (1)
     kinem_lep : L1_PT > 500 && L2_PT > 500
     kinem_had : H_P > 2000
+    clones    : (th_l1_l2 > 5e-4) && (th_l1_kp > 5e-4) && (th_l2_kp > 5e-4)
     pid_l     : L1_PROBNN_E > 0.2 && L2_PROBNN_E > 0.2 && L1_PIDe  > 3.000 && L2_PIDe  > 3.000
     pid_k     : H_PIDe <  0.000 && H_PID_K > 2.0
     rich      : L1_PPHASRICH && L2_PPHASRICH && H_PPHASRICH
@@ -95,6 +96,7 @@ RK:
     hlt2      : (1)
     kinem_lep : L1_PT > 500 && L2_PT > 500
     kinem_had : H_P > 2000
+    clones    : (th_l1_l2 > 5e-4) && (th_l1_kp > 5e-4) && (th_l2_kp > 5e-4)
     pid_l     : L1_ProbNNmu> 0.2 && L2_ProbNNmu> 0.2 && L1_ISMUON && L2_ISMUON && L1_PID_MU >-3. && L2_PID_MU > -3
     pid_k     : (H_ProbNNk   * (1 - H_PROBNN_P) > 0.05) && H_PID_K > 0
     rich      : L1_PPHASRICH && L2_PPHASRICH && H_PPHASRICH
