@@ -48,19 +48,33 @@ In the cluster, one will need a dedicated directory for the log files, this is s
 export JOBDIR=/path/to/place/here/log/files/are
 ```
 
-then run, for instance:
+Different institutes will have different mechanisms to submit jobs (i.e. HTCondor, Slurm, Torque...). Thus, different submission scripts
+are needed and each institute will have to write the corresponding script. 
+
+To support more sites, one should:
+
+- Write a `job_sel_xxx` script.
+- Add it to `pyproject.toml`
+- Document its usage.
+- Open a merge request.
+
+For IHEP, in China, this script is `job_sel_ihep` and it's documented below.
+
+### For IHEP
+
+Run:
 
 ```bash
-job_sel -d /home/acampove/Data/rx_samples/v1/post_ap -s data_24_magdown_24c2 -q central -t Hlt2RD_B0ToKpPimMuMu -p RK -n 100 -r q2-bdt
+job_sel_ihep -d /publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap -s Bu_JpsiK_mm_eq_DPC -q central -t Hlt2RD_BuToKpMuMu_MVA -p RK -n 1000 -r q2-bdt
 ```
 
 which will apply the selection by: 
 
-- Picking up the data found in `/home/acampove/Data/rx_samples/v1/post_ap`
-- Applying the selection on the sample `data_24_magdown_24c2`
-- For the HLT2 trigger `Hlt2RD_B0ToKpPimMuMu`
+- Picking up the data found in `/publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap`
+- Applying the selection on the sample `Bu_JpsiK_mm_eq_DPC`
+- For the HLT2 trigger `Hlt2RD_BuToKpMuMu_MVA`
 - For the project `RK`
-- Using 100 jobs
+- Using 1000 jobs
 - Skipping the `q2` and `bdt` cuts.
 
 The options are:
@@ -79,3 +93,4 @@ Script used to setup mamba environment and run apply_selection script
 -Q: Queue, e.g. test (5m), short (30m), mid (10h), by default short
 ```
 
+by default, it will run a test job.
