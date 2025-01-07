@@ -19,7 +19,7 @@ display_help()
 get_opts()
 {
     TEST=1
-    QUEUE=short
+    QUEUE=mid
     while getopts :hf:d:s:r:q:t:p:n:T:Q: option; do 
         case "${option}" in
             d)  DATADIR="${OPTARG}";;
@@ -49,6 +49,10 @@ get_opts()
     if [[ $NPART -gt 100 ]];then
         echo "Cannot send $NPART jobs, max = 100"
         exit 1
+    fi
+
+    if [[ $TEST -eq 1 ]];then
+        QUEUE=test
     fi
 }
 #-----------------------------
