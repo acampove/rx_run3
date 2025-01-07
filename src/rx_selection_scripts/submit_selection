@@ -63,7 +63,6 @@ get_opts()
     fi
 }
 # ----------------------------
-export DATADIR
 run()
 {
     echo "DATADIR: $DATADIR"
@@ -72,8 +71,6 @@ run()
     echo "Trigger: $TRIGGER"
     echo "PROJECT  $PROJECT"
     echo "Running: $IPART/$NPART"
-
-    return
 
     if [[ -z $REMOVED ]];then
         echo "Will not remove cuts"
