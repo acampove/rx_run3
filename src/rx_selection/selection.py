@@ -46,7 +46,10 @@ def selection(analysis : str, project : str, q2bin: str, process : str) -> dict[
 
     return d_cut
 #-----------------------
-def _get_selection(analysis : str, project : str, q2bin : str) -> dict[str,str]:
+def load_selection_config() -> dict:
+    '''
+    Returns dictionary with configuration (cuts, definitions, etc) needed for selection
+    '''
     sel_wc = files('rx_selection_data').joinpath('*.yaml')
     sel_wc = str(sel_wc)
     sel_dir= os.path.dirname(sel_wc)
@@ -60,6 +63,10 @@ def _get_selection(analysis : str, project : str, q2bin : str) -> dict[str,str]:
     with open(yaml_path, encoding='utf-8') as ifile:
         d_sel = yaml.safe_load(ifile)
 
+    return d_sel
+#-----------------------
+def _get_selection(analysis : str, project : str, q2bin : str) -> dict[str,str]:
+    d_sel  = load_selection_config()
     d_cut  = d_sel[project][analysis]
     q2_cut = d_cut['q2'  ][q2bin]
     ms_cut = d_cut['mass'][q2bin]
