@@ -116,6 +116,7 @@ def _override_parts(cfg : dict, sample : str) -> Union[None,dict]:
             'Bs_phieta_eplemng_eq_Dalitz_DPC',
             'Bd_K1gamma_Kpipi0_eq_mK1270_HighPtGamma_DPC',
             'Bu_Lambdacbarppi_Lambdabarmunu_eq_HELAMP_TC',
+            'Bu_Kstgamma_Kst_eq_KSpi_DPC_SS',
             'Bs_phipi0_eplemng_eq_Dalitz_DPC']:
         log.warning(f'Skipping sample {sample}')
         return None
@@ -134,7 +135,9 @@ def _override_parts(cfg : dict, sample : str) -> Union[None,dict]:
             'Bu_phiKee_KK_eq_DPC']:
         cfg['npart'] = 10
 
-    if sample in []:
+    if sample in [
+            'Bs_Phipi0_gg_eq_DPC_SS',
+            ]:
         cfg['npart'] = 1
 
     return cfg
