@@ -316,7 +316,7 @@ def get_truth(event_type : Union[int,str]) -> str:
 
         return f'({id_cut}) && ({mo_cut})'
     elif event_type == '13102465_SS':
-        # Bs -> (pi0 -> gamma gamma) (K*0 -> K+ pi- ), either or both photons convert
+        # Bs -> (pi0 -> gamma gamma) (phi -> K+ K- ), either or both photons convert
         id_cut = 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(Jpsi_TRUEID) == 22'
         mo_cut = 'TMath::Abs(L1_MC_MOTHER_ID)  ==  22 &&  TMath::Abs(L2_MC_MOTHER_ID) ==  22 && TMath::Abs(H_MC_MOTHER_ID) == 333  && TMath::Abs(Jpsi_MC_MOTHER_ID) == 111'
 
