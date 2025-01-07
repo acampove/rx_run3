@@ -103,10 +103,18 @@ def read_event_type(nickname : str) -> str:
 
     d_name_evt = _load_data('form_evt.yaml')
 
+    is_ss = False
+    if nickname.endswith('_SS'):
+        nickname = nickname[:-3]
+        is_ss    = True
+
     if nickname not in d_name_evt:
         raise ValueError(f'Event type {nickname} not found')
 
     value = d_name_evt[nickname]
+
+    if is_ss:
+        value = f'{value}_SS'
 
     return value
 # ---------------------------------
