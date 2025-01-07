@@ -278,17 +278,17 @@ class ds_getter:
 
         self._initialize()
 
-        rdf   = self._get_rdf_raw()
-        dfmgr = AtrMgr(rdf)
-
-        cf    = cfl.cutflow(d_meta = {'file' : rdf.filepath, 'tree' : rdf.treename})
-        tot   = rdf.Count().GetValue()
         d_cut = sel.selection(
                 analysis = self._get_analysis(),
                 project  = self._project,
                 q2bin    = self._q2bin,
                 process  = self._sample)
 
+        rdf   = self._get_rdf_raw(d_cut = d_cut)
+        dfmgr = AtrMgr(rdf)
+
+        cf    = cfl.cutflow(d_meta = {'file' : rdf.filepath, 'tree' : rdf.treename})
+        tot   = rdf.Count().GetValue()
         d_cut = self._redefine_cuts(d_cut)
 
         log.info(f'Applying selection version: {self._cutver}')
