@@ -53,14 +53,14 @@ training :
     learning_rate     : 0.1
     min_samples_split : 2
 saving:
-  path : 'output/mva_rare_2024/v1/model.pkl'
+  path : 'output/mva_rare_2024/VERSION/model.pkl'
 plotting:
   roc :
     min : [0.8, 0.8]
-  val_dir : 'output/mva_rare_2024/v1/plots'
+  val_dir : 'output/mva_rare_2024/VERSION/plots'
   features:
     saving:
-      plt_dir : 'output/mva_rare_2024/v1/plots/features'
+      plt_dir : 'output/mva_rare_2024/VERSION/plots/features'
     plots:
       B_PT :
         normalized : true
