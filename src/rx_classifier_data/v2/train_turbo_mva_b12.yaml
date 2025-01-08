@@ -4,7 +4,7 @@ dataset :
       mass : 'mass > 5500'
       run  : 'block == 1 || block == 2'
     sig :
-      mass : 'mass > 5100 && mass < 5600'
+      mass : 'mass > 4500 && mass < 5600'
   paths:
     sig :
       file_path : /publicfs/ucas/user/campoverde/Data/RX_run3/v1/NO_q2_bdt_Q2_central_VR_v1/Bu_Kee_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
@@ -50,7 +50,7 @@ saving:
   path : 'output/mva_rare_2024/v1/model.pkl'
 plotting:
   roc :
-    min : [0.5, 0.5]
+    min : [0.8, 0.8]
   val_dir : 'output/mva_rare_2024/v1/plots'
   features:
     saving:
