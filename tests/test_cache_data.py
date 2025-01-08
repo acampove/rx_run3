@@ -198,6 +198,9 @@ def test_run3_rk_dt(sample : str, trigger : str):
     LogStore.set_level('rx_selection:ds_getter' , 10)
     LogStore.set_level('rx_selection:cache_data', 10)
 
-    cfg['max_files']  = 10
+    # This combination has a very low efficiency, do not limit number of files
+    if sample != 'DATA_24_MagDown_24c1' and trigger != 'SpruceRD_BuToHpEE':
+        cfg['max_files']  = 10
+
     obj=CacheData(cfg = cfg)
     obj.save()
