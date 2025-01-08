@@ -87,6 +87,25 @@ class CacheData:
 
         return dsg_cfg
     # ----------------------------------------
+    def _save_lumifile(self, rdf : RDataFrame, out_dir : str) -> None:
+        if self._ipart != 0:
+            return None
+
+        if not self._sample.startswith('DATA_'):
+            return None
+
+        file_path = rdf.filepath[0]
+        dir_path  = os.path.dirname(file_path)
+        path_wc   = f'{dir_path}/*.root'
+        l_path    = glob.glob(path_wc)
+        npath     = len(l_path)
+        log.info(f'Making lumi file from {npath} files')
+
+        rdf       = RDataFrame('LumiTree', l_path)
+        rdf.Snapshot('LumiTree', f'{out_dir}/lumi.root')
+
+        return None
+    # ----------------------------------------
     def save(self) -> None:
         '''
         Will apply selection and save ROOT file
@@ -106,6 +125,9 @@ class CacheData:
         log.info(f'Saving to: {ntp_path}')
 
         rdf.cf.to_json(cfl_path)
+
+        out_dir = os.path.dirname(ntp_path)
+        self._save_lumifile(rdf, out_dir)
 
         rdf.Snapshot('DecayTree', ntp_path)
 # ----------------------------------------
