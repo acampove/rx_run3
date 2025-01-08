@@ -9,7 +9,10 @@ from functools   import cache
 from dataclasses import dataclass
 
 import tqdm
-from ROOT import RDataFrame
+from ROOT                    import RDataFrame
+from dmu.logging.log_store   import LogStore
+
+log = LogStore.add_logger('rx_selection:make_jobs_list')
 # ----------------------------
 @dataclass
 class Data:
