@@ -27,8 +27,12 @@ Definitions:
   RK:
     EE:
       <<: *angles
+      H_TRACK_GhostProb : H_TRGHOSTPROB
+      H_PIDe            : H_PID_E
     MM:
       <<: *angles
+      H_TRACK_GhostProb : H_TRGHOSTPROB
+      H_PIDe            : H_PID_E
 # --------------------
 RKst:
   EE:
