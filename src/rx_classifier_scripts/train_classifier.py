@@ -33,6 +33,26 @@ class Data:
     q2bin       : str
     max_entries : int
 #---------------------------------
+def _override_version(path : str) -> str:
+    if 'VERSION' not in path:
+        raise ValueError(f'VERSION expected in: {path}')
+
+    replacement = f'{Data.version}/{Data.q2bin}'
+
+    return path.replace('VERSION', replacement)
+#---------------------------------
+def _reformat_config(cfg : dict) -> dict:
+    path = cfg['saving']['path']
+    cfg['saving']['path']      = _override_version(path)
+
+    path = cfg['plotting']['val_dir']
+    cfg['plotting']['val_dir'] = _override_version(path)
+
+    path = cfg['plotting']['features']['saving']['plt_dir']
+    cfg['plotting']['features']['saving']['plt_dir'] = _override_version(path)
+
+    return cfg
+#---------------------------------
 def _load_config():
     '''
     Will load YAML file config
@@ -44,7 +64,8 @@ def _load_config():
         raise FileNotFoundError(f'Could not find: {cfg_path}')
 
     with open(cfg_path, encoding='utf-8') as ifile:
-        Data.cfg_dict = yaml.safe_load(ifile)
+        cfg_dict      = yaml.safe_load(ifile)
+        Data.cfg_dict = _reformat_config(cfg_dict)
 #---------------------------------
 def _get_args():
     '''
