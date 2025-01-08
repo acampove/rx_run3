@@ -194,9 +194,14 @@ class ds_getter:
         if tree_name == 'MCDecayTree' and not self._tree_found(l_file_path, 'MCDecayTree'):
             return None
 
+        nfiles = len(l_file_path)
+        log.info(f'Found {nfiles} files with tree {tree_name}')
+        for file_path in l_file_path:
+            log.debug(f'   {file_path}')
+
         rdf = RDataFrame(tree_name, l_file_path)
         rdf = self._skim_rdf(rdf)
-        rdf = self._add_columns(rdf=rdf)
+        rdf = self._add_columns(rdf=rdf, tree_name=tree_name)
         rdf.filepath = l_file_path
         rdf.treename = tree_name
 
