@@ -91,9 +91,6 @@ class CacheData:
         if self._ipart != 0:
             return None
 
-        if not self._sample.startswith('DATA_'):
-            return None
-
         file_path = rdf.filepath[0]
         dir_path  = os.path.dirname(file_path)
         path_wc   = f'{dir_path}/*.root'
@@ -130,8 +127,9 @@ class CacheData:
 
         rdf.cf.to_json(cfl_path)
 
-        out_dir = os.path.dirname(ntp_path)
-        self._save_lumifile(rdf, out_dir)
+        if self._sample.startswith('DATA_'):
+            out_dir = os.path.dirname(ntp_path)
+            self._save_lumifile(rdf, out_dir)
 
         rdf.Snapshot('DecayTree', ntp_path)
 # ----------------------------------------
