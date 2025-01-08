@@ -203,6 +203,19 @@ class ds_getter:
 
         return l_name
     # ------------------------------------
+    def _filter_files(self, l_file_path) -> list[str]:
+        '''
+        This will be needed when running tests
+        '''
+        if 'max_files' not in self._cfg:
+            return l_file_path
+
+        nmax = self._cfg['max_files']
+
+        log.warning(f'Running over at most {nmax} files')
+
+        return l_file_path[:nmax]
+    # ------------------------------------
     def _get_rdf_raw(self, tree_name = 'DecayTree') -> RDataFrame:
         log.info(f'Getting dataframe for tree: {tree_name}')
         l_file_path = self._get_files_path()
@@ -214,6 +227,8 @@ class ds_getter:
         log.info(f'Found {nfiles} files with tree {tree_name}')
         for file_path in l_file_path[:10]:
             log.debug(f'   {file_path}')
+
+        l_file_path = self._filter_files(l_file_path)
 
         rdf = RDataFrame(tree_name, l_file_path)
         rdf = self._skim_rdf(rdf)
