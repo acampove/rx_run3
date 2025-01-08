@@ -160,7 +160,11 @@ class ds_getter:
 
         return hasattr(ifile, tree_name)
     # ------------------------------------
-    def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
+    def _add_columns(self, rdf : RDataFrame, tree_name : str) -> RDataFrame:
+        if tree_name != 'DecayTree':
+            log.debug(f'Not adding columns to tree {tree_name}')
+            return rdf
+
         log.info('Adding columns')
 
         sel_cfg = sel.load_selection_config()
