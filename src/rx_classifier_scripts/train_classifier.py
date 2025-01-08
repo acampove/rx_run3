@@ -34,7 +34,8 @@ def _load_config():
     Will load YAML file config
     '''
 
-    cfg_path = files('classifier').joinpath(f'data/{Data.cfg_name}.yaml')
+    cfg_path = files('rx_classifier_data').joinpath(f'{Data.cfg_name}.yaml')
+    cfg_path = str(cfg_path)
     if not os.path.isfile(cfg_path):
         raise FileNotFoundError(f'Could not find: {cfg_path}')
 
