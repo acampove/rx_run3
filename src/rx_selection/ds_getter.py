@@ -200,7 +200,7 @@ class ds_getter:
 
         nfiles = len(l_file_path)
         log.info(f'Found {nfiles} files with tree {tree_name}')
-        for file_path in l_file_path:
+        for file_path in l_file_path[:10]:
             log.debug(f'   {file_path}')
 
         rdf = RDataFrame(tree_name, l_file_path)
