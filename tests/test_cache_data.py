@@ -24,8 +24,10 @@ class Data:
 
     data_version = 'v1'
     l_rk_trigger = [
-            'Hlt2RD_BuToKpEE_MVA',
             'Hlt2RD_BuToKpMuMu_MVA',
+            'Hlt2RD_BuToKpEE_MVA',
+            'SpruceRD_BuToHpMuMu',
+            'SpruceRD_BuToHpEE',
             ]
 
     l_rkst_trigger = ['']
