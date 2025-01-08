@@ -32,21 +32,14 @@ class Data:
 
     l_rkst_trigger = ['']
 # ---------------------------------------------
-def _trigger_from_mc_sample(sample_path : str, is_rk : bool) -> Union[None,str]:
+def _triggers_from_mc_sample(sample_path : str, is_rk : bool) -> list[str]:
     if 'DATA_' in sample_path:
-        return None
+        return []
 
     l_trigger = Data.l_rk_trigger if is_rk else Data.l_rkst_trigger
+    l_trig    = [ trig for trig in l_trigger if os.path.isdir(f'{sample_path}/{trig}') ]
 
-    for trig in l_trigger:
-        path = f'{sample_path}/{trig}'
-        if os.path.isdir(path):
-            return trig
-
-    sample_name = os.path.basename(sample_path)
-    log.warning(f'Cannot determine trigger, skipping {sample_name}')
-
-    return None
+    return l_trig
 # ---------------------------------------------
 def _has_files(sample_path : str, trigger : str) -> bool:
     file_wc = f'{sample_path}/{trigger}/*.root'
@@ -65,17 +58,15 @@ def _get_mc_samples(is_rk : bool) -> list[tuple[str,str]]:
     sample_dir = f'{data_dir}/RX_run3/{Data.data_version}/post_ap'
     l_sam_trg  = []
     for sample_path in glob.glob(f'{sample_dir}/*'):
-        trigger     = _trigger_from_mc_sample(sample_path, is_rk)
+        l_trigger   = _triggers_from_mc_sample(sample_path, is_rk)
 
-        if trigger is None:
-            continue
+        for trigger in l_trigger:
+            sample_name = os.path.basename(sample_path)
+            if not _has_files(sample_path, trigger):
+                log.warning(f'Cannot find any files for: {sample_name}/{trigger}')
+                continue
 
-        sample_name = os.path.basename(sample_path)
-        if not _has_files(sample_path, trigger):
-            log.warning(f'Cannot find any files for: {sample_name}/{trigger}')
-            continue
-
-        l_sam_trg.append((sample_name, trigger))
+            l_sam_trg.append((sample_name, trigger))
 
     nsample = len(l_sam_trg)
     log.info(f'Found {nsample} samples')
