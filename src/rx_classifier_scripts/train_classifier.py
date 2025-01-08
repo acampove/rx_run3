@@ -62,6 +62,26 @@ def _get_args():
 
     log.setLevel(args.log_level)
 #---------------------------------
+def _is_ntuple_path(path : str) -> bool:
+    file_name = os.path.basename(path)
+    mtch = re.match(Data.root_regex, file_name)
+
+    return bool(mtch)
+#---------------------------------
+def _file_paths_from_wc(file_wc : str) -> list[str]:
+    l_path = glob.glob(file_wc)
+    if len(l_path) == 0:
+        raise FileNotFoundError(f'Cannot find any file in: {file_wc}')
+
+    l_path = [ path for path in l_path if _is_ntuple_path(path) ]
+    if len(l_path) == 0:
+        raise FileNotFoundError(f'Cannot find any ROOT file with ntuples in: {file_wc}')
+
+    nfile = len(l_path)
+    log.info(f'Found {nfile} files in: {file_wc}')
+
+    return l_path
+#---------------------------------
 def _get_rdf(kind=None):
     '''
     Will load and return ROOT dataframe
@@ -71,9 +91,11 @@ def _get_rdf(kind=None):
     kind (str): kind of dataset to find in config input section
     '''
     tree_name = Data.cfg_dict['dataset']['paths'][kind]['tree_name']
-    file_path = Data.cfg_dict['dataset']['paths'][kind]['file_path']
+    file_wc   = Data.cfg_dict['dataset']['paths'][kind]['file_path']
 
-    rdf = RDataFrame(tree_name, file_path)
+    l_file_path = _file_paths_from_wc(file_wc)
+
+    rdf = RDataFrame(tree_name, l_file_path)
     rdf = _define_columns(rdf)
     rdf = _apply_selection(rdf, kind)
 
