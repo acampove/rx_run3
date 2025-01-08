@@ -198,5 +198,6 @@ def test_run3_rk_dt(sample : str, trigger : str):
     LogStore.set_level('rx_selection:ds_getter' , 10)
     LogStore.set_level('rx_selection:cache_data', 10)
 
+    cfg['max_files']  = 10
     obj=CacheData(cfg = cfg)
     obj.save()
