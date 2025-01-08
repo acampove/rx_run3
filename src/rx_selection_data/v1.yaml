@@ -29,10 +29,12 @@ Definitions:
       <<: *angles
       H_TRACK_GhostProb : H_TRGHOSTPROB
       H_PIDe            : H_PID_E
+      H_ProbNNk         : H_PROBNN_K
     MM:
       <<: *angles
       H_TRACK_GhostProb : H_TRGHOSTPROB
       H_PIDe            : H_PID_E
+      H_ProbNNk         : H_PROBNN_K
 # --------------------
 RKst:
   EE:
