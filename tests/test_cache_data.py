@@ -142,6 +142,7 @@ def _override_parts(cfg : dict, sample : str) -> Union[None,dict]:
 
     if sample in [
             'Bd_Ksteta_gg_eq_DPC_SS',
+            'Bd_Kstgamma_eq_HighPtGamma_DPC',
             'Bu_D0munu_Kpi_eq_cocktail_D0muInAcc_BRcorr1',
             ]:
         cfg['npart'] = 1
