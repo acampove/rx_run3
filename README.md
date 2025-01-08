@@ -49,7 +49,7 @@ export JOBDIR=/path/to/place/here/log/files/are
 ```
 
 Different institutes will have different mechanisms to submit jobs (i.e. HTCondor, Slurm, Torque...). Thus, different submission scripts
-are needed and each institute will have to write the corresponding script. 
+are needed and each institute will have to write the corresponding script.
 
 To support more sites, one should:
 
@@ -68,7 +68,7 @@ Run:
 job_sel_ihep -d /publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap -s Bu_JpsiK_mm_eq_DPC -q central -t Hlt2RD_BuToKpMuMu_MVA -p RK -n 1000 -r q2-bdt
 ```
 
-which will apply the selection by: 
+which will apply the selection by:
 
 - Picking up the data found in `/publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap`
 - Applying the selection on the sample `Bu_JpsiK_mm_eq_DPC`
