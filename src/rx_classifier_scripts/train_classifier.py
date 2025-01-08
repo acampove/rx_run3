@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
 '''
 Script in charge of training classifier
 '''
+# pylint: disable=import-error
 
 import os
 import argparse
@@ -12,10 +12,10 @@ from dataclasses         import dataclass
 import matplotlib.pyplot as plt
 import mplhep
 import yaml
+
 from ROOT                  import RDataFrame
 from dmu.logging.log_store import LogStore
-
-from dmu.ml.train_mva import TrainMva
+from dmu.ml.train_mva      import TrainMva
 
 log = LogStore.add_logger('rx_classifier:train_classifier')
 #---------------------------------
