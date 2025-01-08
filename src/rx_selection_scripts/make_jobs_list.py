@@ -62,7 +62,10 @@ def _is_good_sample(path : str) -> bool:
     return good_sample and good_trigger
 # ----------------------------
 def _njobs_from_nentries(nentries : int) -> int:
-    if 0       < nentries <=   10_000:
+    if     0   < nentries <=     1000:
+        return 0
+
+    if 1_000   < nentries <=   10_000:
         return 1
 
     if 10_000  < nentries <=   50_000:
@@ -104,6 +107,10 @@ def main():
     l_info = _get_all_info()
     text   = ''
     for sample, trigger, njob in l_info:
+        if njob == 0:
+            log.warning(f'Skipping: {sample}/{trigger}')
+            continue
+
         text += f'job_sel_ihep -d {Data.data_dir}/RX_run3/{Data.version}/post_ap -s {sample} -q central -t {trigger} -p RK -n {njob} -r q2-bdt\n'
 
     with open('job_list.txt', 'w', encoding='utf-8') as ofile:
