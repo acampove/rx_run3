@@ -1,6 +1,8 @@
 '''
 Module with tests for CacheData class
 '''
+# pylint: disable = import-error
+
 import os
 import glob
 from typing        import Union
