@@ -101,8 +101,12 @@ class CacheData:
         npath     = len(l_path)
         log.info(f'Making lumi file from {npath} files')
 
-        rdf       = RDataFrame('LumiTree', l_path)
-        rdf.Snapshot('LumiTree', f'{out_dir}/lumi.root')
+        tree_name = 'LumiTree'
+        file_path = f'{out_dir}/lumi.root'
+
+        log.info(f'Saving lumi file to: {file_path}/{tree_name}')
+        rdf       = RDataFrame(tree_name, l_path)
+        rdf.Snapshot(tree_name, file_path)
 
         return None
     # ----------------------------------------
