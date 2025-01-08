@@ -4,6 +4,8 @@ Script in charge of training classifier
 # pylint: disable=import-error
 
 import os
+import re
+import glob
 import argparse
 
 from importlib.resources import files
@@ -24,7 +26,7 @@ class Data:
     '''
     Class meant to hold data to be shared
     '''
-
+    root_regex  = r'\d{3}_\d{3}.root'
     cfg_dict    : dict
     cfg_name    : str
     version     : str
