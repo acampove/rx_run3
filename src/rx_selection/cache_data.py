@@ -95,6 +95,12 @@ class CacheData:
         dir_path  = os.path.dirname(file_path)
         path_wc   = f'{dir_path}/*.root'
         l_path    = glob.glob(path_wc)
+
+        if 'max_files' in self._cfg:
+            nmax   = self._cfg['max_files']
+            log.warning(f'Limitting lumiTrees to {nmax}')
+            l_path = l_path[:nmax]
+
         npath     = len(l_path)
         log.info(f'Making lumi file from {npath} files')
 
