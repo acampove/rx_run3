@@ -185,11 +185,23 @@ class ds_getter:
 
         d_def = sel_cfg['Definitions'][prj][ana]
         log.info('Defining variables:')
+
+        l_col_name = self._get_column_name(rdf)
         for var_name, var_def in d_def.items():
             log.debug(f'    {var_name:<20}{var_def:<60}')
+            if var_name in l_col_name:
+                log.warning(f'Already found variable, cannot define: {var_name} = {var_def}')
+                continue
+
             rdf = rdf.Define(var_name, var_def)
 
         return rdf
+    # ------------------------------------
+    def _get_column_name(self, rdf : RDataFrame) -> list[str]:
+        v_name = rdf.GetColumnNames()
+        l_name = [ name.c_str() for name in v_name ]
+
+        return l_name
     # ------------------------------------
     def _get_rdf_raw(self, tree_name = 'DecayTree') -> RDataFrame:
         log.info(f'Getting dataframe for tree: {tree_name}')
