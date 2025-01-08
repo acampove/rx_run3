@@ -27,6 +27,7 @@ class Data:
 
     cfg_dict    : dict
     cfg_name    : str
+    version     : str
     max_entries : int
 #---------------------------------
 def _load_config():
@@ -34,7 +35,7 @@ def _load_config():
     Will load YAML file config
     '''
 
-    cfg_path = files('rx_classifier_data').joinpath(f'{Data.cfg_name}.yaml')
+    cfg_path = files('rx_classifier_data').joinpath(f'{Data.version}/{Data.cfg_name}.yaml')
     cfg_path = str(cfg_path)
     if not os.path.isfile(cfg_path):
         raise FileNotFoundError(f'Could not find: {cfg_path}')
@@ -47,11 +48,13 @@ def _get_args():
     Use argparser to put options in Data class
     '''
     parser = argparse.ArgumentParser(description='Used to train classifier based on config file')
-    parser.add_argument('-c', '--cfg_name'   , type=str, help='Kind of config file', required=True)
+    parser.add_argument('-v', '--version'    , type=str, help='Version of config files', required=True)
+    parser.add_argument('-c', '--cfg_name'   , type=str, help='Kind of config file'    , required=True)
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=10, choices=[10, 20, 30])
-    parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1) 
+    parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
     args = parser.parse_args()
 
+    Data.version     = args.version
     Data.cfg_name    = args.cfg_name
     Data.max_entries = args.max_entries
 
