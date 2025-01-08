@@ -10,10 +10,10 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
-train_classifier='classifier.scripts.train_classifier:main'
-apply_classifier='classifier.scripts.apply_classifier:main'
+train_classifier='rx_classifier_scripts.train_classifier:main'
+apply_classifier='rx_classifier_scripts.apply_classifier:main'
 
 [tool.setuptools.package-data]
-classifier=['data/*.yaml']
+rx_classifier_data=['rx_classifier_data/*.yaml']
 
 [tool.setuptools]
