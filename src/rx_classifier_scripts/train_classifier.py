@@ -30,6 +30,7 @@ class Data:
     cfg_dict    : dict
     cfg_name    : str
     version     : str
+    q2bin       : str
     max_entries : int
 #---------------------------------
 def _load_config():
@@ -52,12 +53,14 @@ def _get_args():
     parser = argparse.ArgumentParser(description='Used to train classifier based on config file')
     parser.add_argument('-v', '--version'    , type=str, help='Version of config files', required=True)
     parser.add_argument('-c', '--cfg_name'   , type=str, help='Kind of config file'    , required=True)
+    parser.add_argument('-q', '--q2bin'      , type=str, help='q2bin'                  , required=True, choices=['low', 'central', 'jpsi', 'psi2S', 'high'])
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=10, choices=[10, 20, 30])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
     args = parser.parse_args()
 
     Data.version     = args.version
     Data.cfg_name    = args.cfg_name
+    Data.q2bin       = args.q2bin
     Data.max_entries = args.max_entries
 
     log.setLevel(args.log_level)
@@ -127,6 +130,8 @@ def _apply_selection(rdf, kind):
 
     log.info('Applying selection')
     d_cut = Data.cfg_dict['dataset']['selection'][kind]
+    d_cut['q2bin'] = Data.cfg_dict['q2'][Data.q2bin]
+
     for name, cut in d_cut.items():
         log.debug(f'---> {name}')
         rdf = rdf.Filter(cut, name)
