@@ -5,11 +5,13 @@ of commands to run to apply selection
 import os
 import glob
 
-from functools import cache
+from functools   import cache
+from dataclasses import dataclass
 
 import tqdm
 from ROOT import RDataFrame
 # ----------------------------
+@dataclass
 class Data:
     '''
     Class used to hold shared attributes
