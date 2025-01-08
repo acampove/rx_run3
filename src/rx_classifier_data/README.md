@@ -1,10 +1,6 @@
 # Description
 
-These are YAML files storing configurations needed for classifier training and application
+Here is where the configuration files used to train MVA classifiers for the RX analysis are placed
 
-## train_cut_ctrl_2024
-Will use 2024 cutbased HLT trigger data and simulation from 2024 to train BDT
-
-## apply_cut_ctrl_2024
-Meant to use classifier described above and apply it to control mode MC and data in order to
-get a small/background reduced file to do fits.
+- **v1**: Version using only cut based HLT lines, presented in September 2024
+- **v2**: Version trained with rare modes, both MVA turbo and sprucing lines
