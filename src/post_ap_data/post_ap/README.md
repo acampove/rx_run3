@@ -14,3 +14,10 @@ First version to filter rd_2024_ap data
 
 - Adding versions field instead of version. This is now a dictionary mapping sample with version
 - Adding MC from v1r2041
+
+## v4
+
+Fixes:
+
+- Adding q2 and angle between tracks definitions
+- Adding definitions for Hp branches, which were missing and are using in sprucing lines
