@@ -3,10 +3,25 @@ Module containing tests to:
 
     - Check that we can interface with triggercalib
 '''
+from importlib.resources import files
+
+import yaml
 
 from triggercalib import HltEff
 
-def test_simple():
+# -------------------------------------------------
+def _get_config() -> dict:
+    trg_cfg = files('rx_calibration_data').joinpath('triggercalib/v0.yaml')
+    trg_cfg = str(trg_cfg)
+    with open(trg_cfg, encoding='utf-8') as ifile:
+        cfg = yaml.safe_load(ifile)
+
+    return cfg
+# -------------------------------------------------
+def test_reference():
+    '''
+    Test taken from triggercalib reference
+    '''
     hlt_eff = HltEff(
             "simple_example",
             '/home/acampove/cernbox/Run3/calibration/triggercalib/Bu2JpsiK_Jpsi2MuMu_block1_ntuple.root:Tuple/DecayTree',
@@ -33,5 +48,15 @@ def test_simple():
 
     hlt_eff.counts()
     hlt_eff.efficiencies()
-    hlt_eff.write('output.root')
-
+    hlt_eff.write('/tmp/triggercalib/reference.root')
+# -------------------------------------------------
+def test_config():
+    '''
+    Same as test_reference, but with config file
+    '''
+    cfg     = _get_config()
+    hlt_eff = HltEff(**cfg)
+    hlt_eff.counts()
+    hlt_eff.efficiencies()
+    hlt_eff.write('/tmp/triggercalib/config.root')
+# -------------------------------------------------
