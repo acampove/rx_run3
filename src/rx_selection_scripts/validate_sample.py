@@ -42,20 +42,31 @@ def _load_config(dir_name : str, file_name : str) -> dict:
 
     return cfg
 # --------------------------
+def _get_redefinitions() -> dict[str,str]:
+    d_val    = _load_config(dir_name = 'validation', file_name = f'{Data.version}.yaml')
+    cut_ver  = d_val['sample']['cutver']
+    project  = d_val['sample']['project']
+    trigger  = d_val['sample']['hlt2']
+    analysis = 'MM' if 'MuMu' in trigger else 'EE'
+
+    d_sel    = _load_config(dir_name = 'selection', file_name = f'{cut_ver}.yaml')
+    d_cut    = d_sel[project][analysis]
+    d_rem    = {cut_name : '(1)' for cut_name in d_cut}
+
+    return d_rem
+# --------------------------
 def _get_config() -> dict:
     d_cfg = {
             'npart'    : Data.nparts,
             'ipart'    : 0,
             'q2bin'    : 'central', # Just to make sure ds_getter does not complain, this cut will be removed later
-            'redefine' : {},
+            'redefine' : _get_redefinitions(),
             }
 
-    d_ext = _load_config()
+    d_ext = _load_config(dir_name = 'validation', file_name = f'{Data.version}.yaml')
 
     d_sam = d_ext['sample']
     d_cfg.update(d_sam)
-
-    pprint.pprint(d_cfg)
 
     return d_cfg
 # --------------------------
