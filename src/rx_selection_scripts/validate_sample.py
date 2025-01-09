@@ -32,8 +32,9 @@ def _parse_args():
     Data.version = args.version
     Data.nparts  = args.nparts
 # --------------------------
-def _load_config() -> dict:
-    cfg_path = files('rx_selection_data').joinpath(f'validation/{Data.version}.yaml')
+@cache
+def _load_config(dir_name : str, file_name : str) -> dict:
+    cfg_path = files('rx_selection_data').joinpath(f'{dir_name}/{file_name}')
     cfg_path = str(cfg_path)
 
     with open(cfg_path, encoding='utf-8') as ifile:
