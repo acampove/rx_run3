@@ -6,7 +6,6 @@ Script used to make validation plots
 import argparse
 from dataclasses            import dataclass
 from importlib.resources    import files
-from functools              import cache
 
 import yaml
 from dmu.logging.log_store  import LogStore
@@ -20,8 +19,17 @@ class Data:
     '''
     Class used to store shared attributes
     '''
+    cfg_val : dict
+    cfg_sel : dict
+
     version : str
     nparts  : int
+# --------------------------
+def _initialize():
+    Data.cfg_val = _load_config(dir_name = 'validation', file_name = f'{Data.version}.yaml')
+
+    cut_ver      = Data.cfg_val['sample']['cutver']
+    Data.cfg_sel = _load_config(dir_name = 'selection' , file_name = f'{cut_ver}.yaml')
 # --------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to validate ntuples')
@@ -32,7 +40,6 @@ def _parse_args():
     Data.version = args.version
     Data.nparts  = args.nparts
 # --------------------------
-@cache
 def _load_config(dir_name : str, file_name : str) -> dict:
     cfg_path = files('rx_selection_data').joinpath(f'{dir_name}/{file_name}')
     cfg_path = str(cfg_path)
