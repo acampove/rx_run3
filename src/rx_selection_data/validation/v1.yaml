@@ -16,4 +16,9 @@ plotting:
           labels     : ['$q^2$', 'Entries']
           title      : '' 
           name       : 'q2'
-          normalized : true
+      B_M :
+          binning    : [4500, 6000, 40]
+          yscale     : 'linear'
+          labels     : ['$M(B^+)$', 'Entries']
+          title      : '' 
+          name       : 'b_mass'
