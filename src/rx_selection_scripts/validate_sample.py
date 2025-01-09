@@ -8,9 +8,10 @@ from dataclasses            import dataclass
 from importlib.resources    import files
 
 import yaml
-from dmu.logging.log_store  import LogStore
-from ROOT                   import RDataFrame
-from rx_selection.ds_getter import ds_getter
+from dmu.logging.log_store   import LogStore
+from dmu.plotting.plotter_1d import Plotter1D as Plotter
+from ROOT                    import RDataFrame
+from rx_selection.ds_getter  import ds_getter
 
 log = LogStore.add_logger('rx_selection:cache_data')
 # --------------------------
@@ -71,15 +72,6 @@ def _get_config() -> dict:
 
     return d_cfg
 # --------------------------
-def _add_columns(rdf : RDataFrame) -> RDataFrame:
-    log.info('Defining columns')
-
-    d_def = Data.cfg_val['definitions']
-    for var_name, var_expr in d_def.items():
-        rdf = rdf.Define(var_name, var_expr)
-
-    return rdf
-# --------------------------
 def _validate(rdf : RDataFrame, var : str) -> None:
     pass
 # --------------------------
@@ -93,10 +85,12 @@ def main():
     cfg = _get_config()
     dsg = ds_getter(cfg=cfg)
     rdf = dsg.get_rdf()
-    rdf = _add_columns(rdf)
 
-    for var in Data.cfg_val['variables']:
-        _validate(rdf, var)
+    d_rdf = _get_samples(rdf)
+
+    cfg_plf = Data.cfg_val['plotting']
+    ptr=Plotter(d_rdf=d_rdf, cfg=cfg_plt)
+    ptr.run()
 # --------------------------
 if __name__ == '__main__':
     main()
