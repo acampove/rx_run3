@@ -54,7 +54,9 @@ def test_config():
     '''
     Same as test_reference, but with config file
     '''
-    cfg     = _get_config()
+    config  = _get_config()
+
+    cfg     = config['reference']
     hlt_eff = HltEff(**cfg)
     hlt_eff.counts()
     hlt_eff.efficiencies()
