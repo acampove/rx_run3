@@ -22,3 +22,19 @@ plotting:
           labels     : ['$M(B^+)$', 'Entries']
           title      : '' 
           name       : 'b_mass'
+plotting_2d:
+  saving:
+      plt_dir : validation 
+  definitions:
+    q2 : Jpsi_M * Jpsi_M
+  general:
+      size : [20, 10]
+  plots_2d:
+      - [B_M, q2,    null, 'bmass_q2']
+  axes:
+      B_M :
+          binning : [4500, 6000, 40]
+          label   : '$M(B^+)$'
+      q2  :
+          binning : [0., 22000000, 40]
+          label   : '$q^2$'
