@@ -65,7 +65,7 @@ class Plotter:
 
         return minx, maxx
     #-------------------------------------
-    def _preprocess_rdf(self, rdf):
+    def _preprocess_rdf(self, rdf : RDataFrame) -> RDataFrame:
         '''
         rdf (RDataFrame): ROOT dataframe
 
