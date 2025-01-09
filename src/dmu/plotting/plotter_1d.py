@@ -2,6 +2,9 @@
 Module containing plotter class
 '''
 
+import hist
+from hist import Hist
+
 import numpy
 import matplotlib.pyplot as plt
 
@@ -75,9 +78,11 @@ class Plotter1D(Plotter):
 
         l_bc_all = []
         for name, arr_val in d_data.items():
-            arr_wgt      = d_wgt[name] if d_wgt is not None else None
-            arr_bc, _, _ = plt.hist(arr_val, weights=arr_wgt, bins=bins, range=(minx, maxx), density=self._is_normalized(var), histtype='step', label=name)
-            l_bc_all    += numpy.array(arr_bc).tolist()
+            arr_wgt      = d_wgt[name] if d_wgt is not None else numpy.ones_like(arr_val)
+            hst          = Hist.new.Reg(bins=bins, start=minx, stop=maxx, name='x', label=name).Weight()
+            hst.fill(x=arr_val, weight=arr_wgt)
+            hst.plot(label=name)
+            l_bc_all    += hst.values().tolist()
 
         max_y = max(l_bc_all)
 
@@ -99,6 +104,7 @@ class Plotter1D(Plotter):
             title = d_cfg['title']
 
         plt.ylim(top=1.2 * max_y)
+        plt.legend()
         plt.title(title)
     # --------------------------------------------
     def _plot_lines(self, var : str):
