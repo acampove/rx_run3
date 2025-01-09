@@ -2,9 +2,10 @@ sample:
   ipath   : /home/acampove/Data/RX_run3/v1/post_ap
   sample  : Bu_Kee_eq_btosllball05_DPC
   project : RK
-  hlt2    : Hlt2RD_BuToKpEE_MVA
+  #hlt2    : Hlt2RD_BuToKpEE_MVA
+  hlt2    : SpruceRD_BuToHpEE
   cutver  : v1
-plotting:
+plotting_1d:
   saving:
       plt_dir : validation
   definitions:
