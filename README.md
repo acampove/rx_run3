@@ -60,7 +60,7 @@ lhcb-proxy-init -v 100:00
 
 - To check that this is working, open ganga and run:
 
-```bash
+```python
 from post_ap.pfn_reader        import PFNReader
 ```
 
