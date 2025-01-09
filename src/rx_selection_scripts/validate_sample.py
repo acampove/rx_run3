@@ -9,7 +9,8 @@ from importlib.resources    import files
 
 import yaml
 from dmu.logging.log_store   import LogStore
-from dmu.plotting.plotter_1d import Plotter1D as Plotter
+from dmu.plotting.plotter_1d import Plotter1D
+from dmu.plotting.plotter_2d import Plotter2D
 from ROOT                    import RDataFrame
 from rx_selection.ds_getter  import ds_getter
 
