@@ -3,8 +3,6 @@ definitions:
 variables:
   - q2 
 sample:
-  ipart   :  0
-  npart   : 10
   ipath   : /home/acampove/Data/RX_run3/v1/post_ap
   sample  : Bu_Kee_eq_btosllball05_DPC
   project : RK
