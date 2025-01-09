@@ -33,33 +33,17 @@ class Plotter1D(Plotter):
 
         return xname, yname
     #-------------------------------------
-    def _plot_var(self, var):
-        '''
-        Will plot a variable from a dictionary of dataframes
-        Parameters
-        --------------------
-        var   (str)  : name of column
-        '''
-        # pylint: disable=too-many-locals
-
-        d_cfg = self._d_cfg['plots'][var]
-
-        minx, maxx, bins = d_cfg['binning']
-        yscale           = d_cfg['yscale' ] if 'yscale' in d_cfg else 'linear'
-        xname, yname     = self._get_labels(var)
-
+    def _is_normalized(self, var : str) -> bool:
+        d_cfg     = self._d_cfg['plots'][var]
         normalized=False
         if 'normalized' in d_cfg:
             normalized = d_cfg['normalized']
 
-        title = ''
-        if 'title'      in d_cfg:
-            title = d_cfg['title']
-
-        d_data = {}
-        for name, rdf in self._d_rdf.items():
-            d_data[name] = rdf.AsNumpy([var])[var]
-
+        return normalized
+    #-------------------------------------
+    def _get_binning(self, var : str, d_data : dict[str, numpy.ndarray]) -> tuple[float, float, int]:
+        d_cfg  = self._d_cfg['plots'][var]
+        minx, maxx, bins = d_cfg['binning']
         if maxx <= minx + 1e-5:
             log.info(f'Bounds not set for {var}, will calculated them')
             minx, maxx = self._find_bounds(d_data = d_data, qnt=minx)
@@ -67,23 +51,53 @@ class Plotter1D(Plotter):
         else:
             log.debug(f'Using bounds [{minx:.3e}, {maxx:.3e}]')
 
+        return minx, maxx, bins
+    #-------------------------------------
+    def _plot_var(self, var : str) -> float:
+        '''
+        Will plot a variable from a dictionary of dataframes
+        Parameters
+        --------------------
+        var   (str)  : name of column
+
+        Return
+        --------------------
+        Largest bin content among all bins and among all histograms plotted
+        '''
+        # pylint: disable=too-many-locals
+
+        d_data = {}
+        for name, rdf in self._d_rdf.items():
+            d_data[name] = rdf.AsNumpy([var])[var]
+
+        minx, maxx, bins = self._get_binning(var, d_data)
+        d_wgt            = self._get_weights(var)
+
         l_bc_all = []
-        d_wgt    = self._get_weights(var)
         for name, arr_val in d_data.items():
-            arr_wgt    = d_wgt[name] if d_wgt is not None else None
+            arr_wgt      = d_wgt[name] if d_wgt is not None else None
+            arr_bc, _, _ = plt.hist(arr_val, weights=arr_wgt, bins=bins, range=(minx, maxx), density=self._is_normalized(var), histtype='step', label=name)
+            l_bc_all    += numpy.array(arr_bc).tolist()
 
-            self._print_weights(arr_wgt, var, name)
-            l_bc, _, _ = plt.hist(arr_val, weights=arr_wgt, bins=bins, range=(minx, maxx), density=normalized, histtype='step', label=name)
-            l_bc_all  += numpy.array(l_bc).tolist()
+        max_y = max(l_bc_all)
 
-            plt.yscale(yscale)
-            plt.xlabel(xname)
-            plt.ylabel(yname)
+        return max_y
+    # --------------------------------------------
+    def _style_plot(self, var : str, max_y : float) -> None:
+        d_cfg  = self._d_cfg['plots'][var]
+        yscale = d_cfg['yscale' ] if 'yscale' in d_cfg else 'linear'
 
+        xname, yname = self._get_labels(var)
+        plt.xlabel(xname)
+        plt.ylabel(yname)
+        plt.yscale(yscale)
         if yscale == 'linear':
             plt.ylim(bottom=0)
 
-        max_y = max(l_bc_all)
+        title = ''
+        if 'title'      in d_cfg:
+            title = d_cfg['title']
+
         plt.ylim(top=1.2 * max_y)
         plt.title(title)
     # --------------------------------------------
@@ -106,8 +120,10 @@ class Plotter1D(Plotter):
         fig_size = self._get_fig_size()
         for var in self._d_cfg['plots']:
             log.debug(f'Plotting: {var}')
+
             plt.figure(var, figsize=fig_size)
-            self._plot_var(var)
+            max_y = self._plot_var(var)
+            self._style_plot(var, max_y)
             self._plot_lines(var)
             self._save_plot(var)
 # --------------------------------------------
