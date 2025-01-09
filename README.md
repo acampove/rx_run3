@@ -40,7 +40,7 @@ it cannot be installed with `pip`.
 pip install post_ap
 ```
 
-- In order to make Ganga aware of the `post_ap` package do:
+- In order to make Ganga aware of the `post_ap` package, in `$HOME/.ganga.py` add:
 
 ```python
 import sys
