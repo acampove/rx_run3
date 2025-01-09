@@ -9,33 +9,56 @@ This is done using configurations in a YAML file and through Ganga jobs.
 
 ## Installation
 
-This project cannot be installed and used from within a virtual environment. It depends on Ganga
-and therefore one has to be installed in `$HOME/.local/` for this do:
+You will need to install this project in a virtual environment provided by micromamba. 
+For that, check [this](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html)
+Once micromamba is installed in your system:
+
+- Make sure that the `${HOME}/.local` directory does not exist. If a dependency
+of `post_ap` is installed there, `ganga` would have to be pointed to that location and to
+the location of the virtual environment. This is too complicated and should not be done.
+
+- Create a new environment:
+
+```bash
+# python 3.11 is used by DIRAC and it's better to also use it here 
+micromamba create -n post_ap python==3.11
+micromamba activate post_ap
+```
+
+- Install `XROOTD` using:
+
+```bash
+micromamba install xrootd
+```
+
+which is needed to download the ntuples and is not a python project, therefore
+it cannot be installed with `pip`.
+
+- Install this project
+
+```bash
+pip install post_ap
+```
+
+- In order to make Ganga aware of the `post_ap` package do:
+
+```python
+import sys
+
+# Or the proper place where the environment is installed in your system
+sys.path.append('/home/acampove/micromamba/envs/post_ap/lib/python3.11/site-packages')
+```
+
+- This project is used from inside Ganga. To have access to Ganga do:
 
 ```bash
 . cvmfs/lhcb.cern.ch/lib/LbEnv
-
-# Will install a few projects on top of what is already in the LHCb environment
-pip install post_ap
 
 # Make a proxy that lasts 100 hours
 lhcb-proxy-init -v 100:00
 ```
 
-In order to make Ganga aware of the `post_ap` package do:
-
-```python
-import sys
-import os
-
-home_dir = os.environ['HOME']
-sys.path.append(f'{home_dir}/.local/lib/python3.12/site-packages')
-sys.path.append('/cvmfs/lhcb.cern.ch/lib/var/lib/LbEnv/3386/stable/linux-64/lib/python3.12/site-packages')
-```
-
-in `.ganga.py`, where the path will depend on the version of python used by the LHCb environment.
-
-To check that this is working, open ganga and run:
+- To check that this is working, open ganga and run:
 
 ```bash
 from post_ap.pfn_reader        import PFNReader
