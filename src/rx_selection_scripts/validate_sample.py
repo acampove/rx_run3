@@ -33,7 +33,7 @@ def _parse_args():
     Data.version = args.version
     Data.nparts  = args.nparts
 # --------------------------
-def _load_config() -> dict[str,Union[str,int]]:
+def _load_config() -> dict:
     cfg_path = files('rx_selection_data').joinpath(f'validation/{Data.version}.yaml')
     cfg_path = str(cfg_path)
 
@@ -42,8 +42,8 @@ def _load_config() -> dict[str,Union[str,int]]:
 
     return cfg
 # --------------------------
-def _get_config() -> dict[str,Union[str,int]]:
-    d_cfg : dict[str,int] = {
+def _get_config() -> dict:
+    d_cfg = {
             'npart'    : Data.nparts,
             'ipart'    : 0,
             'q2bin'    : 'central', # Just to make sure ds_getter does not complain, this cut will be removed later
