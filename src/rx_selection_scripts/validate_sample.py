@@ -6,10 +6,9 @@ Script used to make validation plots
 import argparse
 from dataclasses            import dataclass
 from importlib.resources    import files
-from typing                 import Union
+from functools              import cache
 
 import yaml
-import pprint
 from dmu.logging.log_store  import LogStore
 from ROOT                   import RDataFrame
 from rx_selection.ds_getter import ds_getter
