@@ -28,8 +28,19 @@ class Data:
     version : str
     nparts  : int
 # --------------------------
+def _override_validation_config(cfg : dict) -> dict:
+    hlt2   = cfg['sample']['hlt2']
+    sample = cfg['sample']['sample']
+    for plt_key in ['plotting_1d', 'plotting_2d']:
+        val_dir = cfg[plt_key]['saving']['plt_dir']
+        val_dir = f'{val_dir}/{sample}/{hlt2}'
+        cfg[plt_key]['saving']['plt_dir'] = val_dir
+
+    return cfg
+# --------------------------
 def _initialize():
-    Data.cfg_val = _load_config(dir_name = 'validation', file_name = f'{Data.version}.yaml')
+    cfg_val      = _load_config(dir_name = 'validation', file_name = f'{Data.version}.yaml')
+    Data.cfg_val = _override_validation_config(cfg_val)
 
     cut_ver      = Data.cfg_val['sample']['cutver']
     Data.cfg_sel = _load_config(dir_name = 'selection' , file_name = f'{cut_ver}.yaml')
