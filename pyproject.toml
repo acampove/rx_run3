@@ -1,0 +1,20 @@
+[project]
+name        = 'rx_calibration'
+description = 'Project with code needed to interface with calibration projects and provide maps to RX analyses' 
+version     = '0.0.1'
+readme      = 'README.md'
+dependencies= ['triggercalib']
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
+[project.scripts]
+
+[tool.setuptools.package-data]
+rx_calibration_data = ['triggercalib/*.yaml'] 
+
+[tool.setuptools]
+script-files=[]
