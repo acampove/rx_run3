@@ -1,0 +1,37 @@
+name     : simple_example
+path     : /home/acampove/cernbox/Run3/calibration/triggercalib/Bu2JpsiK_Jpsi2MuMu_block1_ntuple.root:Tuple/DecayTree
+tos      : Hlt1TrackMVA
+tis      : [Hlt1TrackMVA, Hlt1TwoTrackMVA]
+particle : B
+binning  :
+  B_PT : 
+    bins : 
+      - 2000
+      - 3000
+      - 4000
+      - 5000
+      - 6000
+      - 7000
+      - 8000
+      - 9000
+      - 10000
+      - 11000
+      - 12000
+      - 13000
+      - 14000
+      - 15000
+      - 16000
+      - 17000
+      - 18000
+      - 19000
+      - 20000
+      - 21000
+      - 22000
+      - 25000
+sideband :
+  B_DTF_Jpsi_MASS: 
+    signal: 
+      - [5280 -  55, 5280 +  55]
+    sidebands : 
+      - [5280 - 150, 5280 -  55]
+      - [5280 +  55, 5280 + 150]
