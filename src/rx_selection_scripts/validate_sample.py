@@ -108,10 +108,13 @@ def main():
     dsg = ds_getter(cfg=cfg)
     rdf = dsg.get_rdf()
 
-    d_rdf = _get_samples(rdf)
+    cfg_plt = Data.cfg_val['plotting_2d']
+    ptr=Plotter2D(rdf=rdf, cfg=cfg_plt)
+    ptr.run()
 
-    cfg_plt = Data.cfg_val['plotting']
-    ptr=Plotter(d_rdf=d_rdf, cfg=cfg_plt)
+    d_rdf   = _get_samples(rdf)
+    cfg_plt = Data.cfg_val['plotting_1d']
+    ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg_plt)
     ptr.run()
 # --------------------------
 if __name__ == '__main__':
