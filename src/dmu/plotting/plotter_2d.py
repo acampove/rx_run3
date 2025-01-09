@@ -31,8 +31,8 @@ class Plotter2D(Plotter):
         if not isinstance(cfg, dict):
             raise ValueError('Config dictionary not passed')
 
-        self._rdf   : RDataFrame = rdf
         self._d_cfg : dict       = cfg
+        self._rdf   : RDataFrame = super()._preprocess_rdf(rdf)
 
         self._wgt : numpy.ndarray
     # --------------------------------------------
