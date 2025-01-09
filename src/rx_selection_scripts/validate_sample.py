@@ -22,6 +22,7 @@ class Data:
     '''
     cfg_val : dict
     cfg_sel : dict
+    d_cut   : dict[str,str]
 
     version : str
     nparts  : int
@@ -31,6 +32,8 @@ def _initialize():
 
     cut_ver      = Data.cfg_val['sample']['cutver']
     Data.cfg_sel = _load_config(dir_name = 'selection' , file_name = f'{cut_ver}.yaml')
+
+    Data.d_cut   = _get_selection()
 # --------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to validate ntuples')
@@ -50,30 +53,37 @@ def _load_config(dir_name : str, file_name : str) -> dict:
 
     return cfg
 # --------------------------
-def _get_redefinitions() -> dict[str,str]:
+def _get_selection() -> dict[str,str]:
     project  = Data.cfg_val['sample']['project']
     trigger  = Data.cfg_val['sample']['hlt2']
     analysis = 'MM' if 'MuMu' in trigger else 'EE'
 
     d_cut    = Data.cfg_sel[project][analysis]
-    d_rem    = {cut_name : '(1)' for cut_name in d_cut}
 
-    return d_rem
+    return d_cut
 # --------------------------
 def _get_config() -> dict:
     d_cfg = {
             'npart'    : Data.nparts,
             'ipart'    : 0,
             'q2bin'    : 'central', # Just to make sure ds_getter does not complain, this cut will be removed later
-            'redefine' : _get_redefinitions(),
+            'redefine' : {cut : '(1)' for cut in Data.d_cut},
             }
 
     d_cfg.update(Data.cfg_val['sample'])
 
     return d_cfg
 # --------------------------
-def _validate(rdf : RDataFrame, var : str) -> None:
-    pass
+def _get_samples(rdf : RDataFrame) -> dict[str,RDataFrame]:
+    d_rdf = {'None' : rdf}
+    for cut_name, cut_expr in Data.d_cut.items():
+        if cut_name in ['q2', 'mass']:
+            continue
+
+        rdf = rdf.Filter(cut_expr, cut_name)
+        d_rdf[cut_name] = rdf
+
+    return d_rdf
 # --------------------------
 def main():
     '''
@@ -88,7 +98,7 @@ def main():
 
     d_rdf = _get_samples(rdf)
 
-    cfg_plf = Data.cfg_val['plotting']
+    cfg_plt = Data.cfg_val['plotting']
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_plt)
     ptr.run()
 # --------------------------
