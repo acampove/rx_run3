@@ -50,14 +50,11 @@ def _load_config(dir_name : str, file_name : str) -> dict:
     return cfg
 # --------------------------
 def _get_redefinitions() -> dict[str,str]:
-    d_val    = _load_config(dir_name = 'validation', file_name = f'{Data.version}.yaml')
-    cut_ver  = d_val['sample']['cutver']
-    project  = d_val['sample']['project']
-    trigger  = d_val['sample']['hlt2']
+    project  = Data.cfg_val['sample']['project']
+    trigger  = Data.cfg_val['sample']['hlt2']
     analysis = 'MM' if 'MuMu' in trigger else 'EE'
 
-    d_sel    = _load_config(dir_name = 'selection', file_name = f'{cut_ver}.yaml')
-    d_cut    = d_sel[project][analysis]
+    d_cut    = Data.cfg_sel[project][analysis]
     d_rem    = {cut_name : '(1)' for cut_name in d_cut}
 
     return d_rem
@@ -70,14 +67,20 @@ def _get_config() -> dict:
             'redefine' : _get_redefinitions(),
             }
 
-    d_ext = _load_config(dir_name = 'validation', file_name = f'{Data.version}.yaml')
-
-    d_sam = d_ext['sample']
-    d_cfg.update(d_sam)
+    d_cfg.update(Data.cfg_val['sample'])
 
     return d_cfg
 # --------------------------
-def _validate(rdf : RDataFrame) -> None:
+def _add_columns(rdf : RDataFrame) -> RDataFrame:
+    log.info('Defining columns')
+
+    d_def = Data.cfg_val['definitions']
+    for var_name, var_expr in d_def.items():
+        rdf = rdf.Define(var_name, var_expr)
+
+    return rdf
+# --------------------------
+def _validate(rdf : RDataFrame, var : str) -> None:
     pass
 # --------------------------
 def main():
@@ -85,11 +88,15 @@ def main():
     Script starts here
     '''
     _parse_args()
+    _initialize()
+
     cfg = _get_config()
     dsg = ds_getter(cfg=cfg)
     rdf = dsg.get_rdf()
+    rdf = _add_columns(rdf)
 
-    _validate(rdf)
+    for var in Data.cfg_val['variables']:
+        _validate(rdf, var)
 # --------------------------
 if __name__ == '__main__':
     main()
