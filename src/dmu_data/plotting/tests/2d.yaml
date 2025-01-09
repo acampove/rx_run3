@@ -1,14 +1,20 @@
 saving:
     plt_dir : tests/plotting/2d_weighted
+definitions:
+  z : x + y
 general:
     size : [20, 10]
 plots_2d:
     - [x, y, weights, 'xy_w']
     - [x, y,    null, 'xy_r']
+    - [x, z,    null, 'xz_r']
 axes:
     x :
-        binning : [-5.0, 8.0, 40]
+        binning : [-3.0, 3.0, 40]
         label   : 'x'
     y :
         binning : [-5.0, 8.0, 40]
         label   : 'y'
+    z :
+        binning : [-5.0, 16.0, 40]
+        label   : 'z'
