@@ -2,6 +2,8 @@
 File containing tests for FilterFile class
 '''
 import os
+import glob
+import shutil
 from importlib.resources   import files
 
 import pytest
@@ -48,6 +50,8 @@ def test_dt(kind : bool):
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents = True
     obj.run(skip_saving=False)
+
+    _move_outputs('test_dt')
 # --------------------------------------
 @pytest.mark.parametrize('kind' , ['turbo', 'spruce'])
 def test_mc(kind : str):
@@ -60,4 +64,6 @@ def test_mc(kind : str):
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents = True
     obj.run(skip_saving=False)
+
+    _move_outputs('test_mc')
 # --------------------------------------
