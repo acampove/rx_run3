@@ -1,0 +1,15 @@
+common: &com
+  params    : [PT, ETA]
+  blocks    : [6, 7, 1_v1, 2, 3, 5, 8]
+  polarities: [up, down]
+
+particles:
+  Mup : 
+  <<: *com
+  blocks    : [6, 7, 1_v0, 2, 3, 5, 8]
+  Mum : 
+  <<: *com
+  Pi  : 
+  <<: *com
+  K   : 
+  <<: *com
