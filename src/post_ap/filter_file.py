@@ -411,6 +411,16 @@ class FilterFile:
 
         return opts
     # --------------------------------------
+    def _filter_max_entries(self, rdf : RDataFrame, tree_path : str) -> RDataFrame:
+        if self._max_save <= 0:
+            log.debug(f'Requested {self._max_save} entries => saving full {tree_path} tree')
+            return rdf
+
+        log.warning(f'Saving extra {tree_path} with at most {self._max_save} entries')
+        rdf = rdf.Range(self._max_save)
+
+        return rdf
+    # --------------------------------------
     def _save_file(self, d_rdf : dict[str,RDataFrame]) -> None:
         '''
         Will save all ROOT dataframes to a file
@@ -420,7 +430,7 @@ class FilterFile:
         for line_name, rdf in tqdm.tqdm(d_rdf.items(), ascii=' -'):
             l_branch  = rdf.l_branch
             file_path = self._get_out_file_name(line_name)
-
+            rdf       = self._filter_max_entries(rdf, 'DecayTree')
             rdf.Snapshot('DecayTree', file_path, l_branch, opts)
             log.debug(f'Saved: {file_path}')
 
@@ -436,14 +446,10 @@ class FilterFile:
         log.debug(f'Saving {tree_path}')
 
         ext_rdf = RDataFrame(tree_path, self._file_path)
-        if self._max_save > 0:
-            log.warning(f'Saving extra {tree_path} with at most {self._max_save} entries')
-            ext_rdf = ext_rdf.Range(self._max_save)
-        else:
-            log.debug(f'Requested {self._max_save} entries => saving full {tree_path} tree')
 
         tree_name = self._get_extra_tree_name(tree_path)
         l_name    = self._get_column_names(ext_rdf)
+        ext_rdf   = self._filter_max_entries(ext_rdf, tree_name)
         ext_rdf.Snapshot(tree_name, file_path, l_name, opts)
 
         log.debug(f'Saved {tree_name}')
