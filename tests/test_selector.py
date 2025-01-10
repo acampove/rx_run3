@@ -28,12 +28,12 @@ def _initialize():
     LogStore.set_level('post_ap:selector'      , 10)
     LogStore.set_level('dmu:rdataframe:atr_mgr', 30)
 
-    cern_box     = os.environ['CERNBOX']
-    Data.mc_path = f'{cern_box}/Run3/analysis_productions/MC/local_tests/mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple.root'
-    Data.dt_path = f'{cern_box}/Run3/analysis_productions/MC/local_tests/mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple.root'
+    Data.mc_path = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/bukmm_turbo.root'
+    Data.dt_path = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_spruce.root'
 # --------------------------------------
 def _rename_branches(rdf : RDataFrame) -> RDataFrame:
     rdf = rdf.Define('B_const_mass_M', 'B_DTF_Jpsi_MASS')
+    rdf = rdf.Define('H_TRGHOSTPROB' ,   'K_TRGHOSTPROB')
 
     return rdf
 # --------------------------------------
@@ -42,11 +42,13 @@ def test_mc():
     Test selection in MC
     '''
 
-    rdf = RDataFrame('Hlt2RD_B0ToKpKmMuMu/DecayTree', Data.mc_path)
+    rdf = RDataFrame('Hlt2RD_BuToKpMuMu_MVA/DecayTree', Data.mc_path)
     rdf = _rename_branches(rdf)
 
     obj = Selector(rdf=rdf, is_mc=True)
     rdf = obj.run(sel_kind = 'bukmm')
+    log.info('Saving output of test_mc')
+    rdf.Snapshot('tree', '/tmp/selector_test.root', ['Jpsi_M'])
 # --------------------------------------
 def test_dt():
     '''
