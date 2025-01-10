@@ -519,25 +519,19 @@ transformations:
         L1Ghost: L1_TRGHOSTPROB < 0.5
         L2Ghost: L2_TRGHOSTPROB < 0.5
       bukee:
-        b_mass : B_const_mass_M > 4000 && B_const_mass_M < 6000
         KpGhost: H_TRGHOSTPROB  < 0.5
       bukmm:
-        b_mass : B_const_mass_M > 4000 && B_const_mass_M < 5800
         KpGhost: H_TRGHOSTPROB  < 0.5
       bdkstee:
-        b_mass : B_const_mass_M > 4000 && B_const_mass_M < 6000
         k_mass : Kst_M    >  800 && Kst_M   < 1000
         H1Ghost: H1_TRGHOSTPROB < 0.5
         H2Ghost: H2_TRGHOSTPROB < 0.5
       bdkstmm:
-        b_mass : B_const_mass_M > 4000 && B_const_mass_M < 5800
         k_mass : Kst_M    >  800 && Kst_M   < 1000
         H1Ghost: H1_TRGHOSTPROB < 0.5
         H2Ghost: H2_TRGHOSTPROB < 0.5
       lbpkee:
-        b_mass: B_const_mass_M > 4000 && B_const_mass_M < 6000
       lbpkmm:
-        b_mass: B_const_mass_M > 4000 && B_const_mass_M < 5800
   saving:
     evt_max : -1
     compression : 2
