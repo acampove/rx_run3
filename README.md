@@ -98,6 +98,32 @@ list_venvs
 
 The `post_shell` terminal won't be used to send jobs.
 
+## Make your own virtual environment
+
+You can also:
+
+- Modify this project
+- Make a virtual environment and put it in a tarball
+- Upload it to the grid and make your jobs use it.
+
+For this export:
+
+- **LXNAME**: Your username in LXPLUS, which should also be the one in the grid, 
+used to know where in the grid the environment will go.
+- **VENVS**: Path to the directory where the code will place all the tarballs holding the environments.
+- **POSTAP_PATH**: Path to micromamba directory in which the environment where you are developing is located
+e.g. `/home/acampove/micromamba/envs/run3/bin`. Here the name of the environment is `run3`.
+
+Then do:
+
+```bash
+# This leaves you in a shell with the right environment
+post_shell
+
+# Create and upload the environment with version 030
+update_tarball -v 030
+```
+
 ## Config file
 
 Here is where all the configuration goes and an example of a config can be found [here](https://github.com/acampove/config_files/blob/main/post_ap/v3.yaml)
