@@ -147,9 +147,6 @@ transformations:
     #These defitions are done on top of the names stemming from the changes caused by `redefine_head`
     q2       : Jpsi_M * Jpsi_M
     nTracks  : nBackTracks + nDownstreamTracks + nLongTracks + nTTracks + nUpstreamTracks + nVeloTracks
-    th_l1_l2 : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(L2_PX, L2_PY, L2_PZ); return v1.Angle(v2);
-    th_l1_kp : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2( H_PX,  H_PY,  H_PZ); return v1.Angle(v2);
-    th_l2_kp : TVector3 v1(L2_PX, L2_PY, L2_PZ); TVector3 v2( H_PX,  H_PY,  H_PZ); return v1.Angle(v2);
   rename:
     B_DTF_Jpsi_MASS                   : B_const_mass_M
     B_DTF_Jpsi_PX                     : B_const_mass_PX
