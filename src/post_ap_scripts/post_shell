@@ -43,6 +43,24 @@ make_rcfile()
     echo "# This will be your username in LXPLUS" >> $RCFILE
 }
 # ------------------------------------------------------------------
+initialize()
+{
+    if [[ -z $POSTAP_PATH ]];then
+        echo "POSTAP_PATH (micromamba for the environment with the code) not set"
+        exit 1
+    fi
+
+    if [[ -z $VENVS ]];then
+        echo "VENVS (path where virtual environment tarballs will be saved) not set"
+        exit 1
+    fi
+
+    if [[ -z $LXNAME ]];then
+        echo "LXNAME (user's name in LXPLUS) not set"
+        exit 1
+    fi
+}
+# ------------------------------------------------------------------
 lb_dirac()
 {
     # Will create a shell with dirac and some basic environment specified by rc file 
@@ -77,5 +95,6 @@ lhcb_env()
 }
 # ------------------------------------------------------------------
 get_opts "$@"
+initialize
 make_rcfile
 lb_dirac
