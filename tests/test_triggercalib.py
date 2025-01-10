@@ -6,19 +6,26 @@ Module containing tests to:
 from importlib.resources import files
 
 import yaml
+import pytest
 
 from triggercalib          import HltEff
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('rx_calibration:test_triggercalib')
 # -------------------------------------------------
-def _get_config(name : str) -> dict:
+def _get_config(name : str, sample : str) -> dict:
     trg_cfg = files('rx_calibration_data').joinpath(f'triggercalib/{name}')
     trg_cfg = str(trg_cfg)
     with open(trg_cfg, encoding='utf-8') as ifile:
         cfg = yaml.safe_load(ifile)
 
-    return cfg
+    d_sam   = cfg['samples']
+    d_set   = cfg['settings']
+    path    = d_sam[sample]
+
+    d_set.update({'name' : sample, 'path' : path})
+
+    return d_set
 # -------------------------------------------------
 def _print_conf(cfg : dict) -> None:
     tis = cfg['tis']
@@ -75,16 +82,15 @@ def test_config():
     hlt_eff.efficiencies()
     hlt_eff.write('/tmp/triggercalib/config.root')
 # -------------------------------------------------
-def test_simulation():
+@pytest.mark.parametrize('sample', ['data', 'simulation'])
+def test_real(sample : str):
     '''
     Will run tests over MC
     '''
-    config  = _get_config(name='v1.yaml')
-    cfg     = config['simulation']
-    _print_conf(cfg)
+    cfg = _get_config(name='v1.yaml', sample=sample)
 
     hlt_eff = HltEff(**cfg)
     hlt_eff.counts()
     hlt_eff.efficiencies()
-    hlt_eff.write('/tmp/triggercalib/simulation.root')
+    hlt_eff.write(f'/tmp/triggercalib/{sample}.root')
 # -------------------------------------------------
