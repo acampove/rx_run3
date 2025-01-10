@@ -32,9 +32,10 @@ sid : &sb
       - [5130, 5225]
       - [5335, 5430]
 # ----------------------------
-simulation :
-  name     : simulation 
-  path     : /publicfs/ucas/user/campoverde/Data/RX_run3/v1/NO_q2_bdt_Q2_central_VR_v1/Bu_Kee_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/000_010.root:DecayTree 
+samples:
+  simulation : /home/acampove/cernbox/Run3/post_ap/tests/filter_file/test_mc/mc_test_Hlt2RD_BuToKpMuMu_MVA_cdf0dcd215.root:DecayTree
+  data       : /home/acampove/cernbox/Run3/post_ap/tests/filter_file/test_dt/data_test_SpruceRD_BuToKpMuMu_1b761f00da.root:DecayTree
+settings:
   tos      : Hlt1TrackMVA
   tis      : [Hlt1TrackMVA, Hlt1TwoTrackMVA]
   particle : B
