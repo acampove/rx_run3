@@ -30,7 +30,7 @@ def test_dt():
     '''
     Will test filtering of data
     '''
-    pfn_path_dt            = files('post_ap_data').joinpath('dt_2024_turbo_comp.json')
+    pfn_path_dt            = files('post_ap_data').joinpath('tests/dt_2024_turbo_comp.json')
     os.environ['PFN_PATH'] = str(pfn_path_dt)
 
     obj = NtupleFilter(index=0, ngroup=1)
@@ -40,7 +40,7 @@ def test_mc():
     '''
     Will test filtering of MC 
     '''
-    pfn_path_mc            = files('post_ap_data').joinpath('mc_2024_turbo_comp.json')
+    pfn_path_mc            = files('post_ap_data').joinpath('tests/mc_2024_turbo_comp.json')
     os.environ['PFN_PATH'] = str(pfn_path_mc)
 
     obj = NtupleFilter(index=0, ngroup=1)

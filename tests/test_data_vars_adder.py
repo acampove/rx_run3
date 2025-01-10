@@ -13,7 +13,7 @@ log = LogStore.add_logger('post_ap:test_data_vars_adder')
 # ---------------------------------------------
 def _get_rdf() -> RDataFrame:
     cernbox   = os.environ['CERNBOX']
-    file_path = f'{cernbox}/Run3/analysis_productions/for_local_tests/dt.root'
+    file_path = f'{cernbox}/Run3/analysis_productions/for_local_tests/dt_turbo.root'
     tree_path =  'Hlt2RD_BuToKpEE_MVA/DecayTree'
 
     if not os.path.isfile(file_path):
