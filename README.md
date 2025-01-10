@@ -98,7 +98,23 @@ list_venvs
 
 The `post_shell` terminal won't be used to send jobs.
 
-## Make your own virtual environment
+## Config file
+
+Here is where all the configuration goes and an example of a config can be found [here](https://github.com/acampove/config_files/blob/main/post_ap/v3.yaml)
+
+## Optional
+
+- In order to improve the ganga experience use: 
+
+```bash
+# Minimizes messages when opening ganga
+# Does not start monitoring of jobs by default
+alias ganga='ganga --quiet --no-mon'
+```
+
+in the `$HOME/.bashrc` file. Monitoring can be turned on by hand as explained [here](https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FAQ/GangaLHCbFAQ#How_can_I_run_the_monitoring_loo)
+
+# Make your own virtual environment
 
 You can also:
 
@@ -124,18 +140,3 @@ post_shell
 update_tarball -v 030
 ```
 
-## Config file
-
-Here is where all the configuration goes and an example of a config can be found [here](https://github.com/acampove/config_files/blob/main/post_ap/v3.yaml)
-
-## Optional
-
-- In order to improve the ganga experience use: 
-
-```bash
-# Minimizes messages when opening ganga
-# Does not start monitoring of jobs by default
-alias ganga='ganga --quiet --no-mon'
-```
-
-in the `$HOME/.bashrc` file. Monitoring can be turned on by hand as explained [here](https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FAQ/GangaLHCbFAQ#How_can_I_run_the_monitoring_loo)
