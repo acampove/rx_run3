@@ -29,7 +29,7 @@ def _initialize():
     LogStore.set_level('dmu:rdataframe:atr_mgr', 30)
 
     Data.mc_path = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/bukmm_turbo.root'
-    Data.dt_path = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_spruce.root'
+    Data.dt_path = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_turbo.root'
 # --------------------------------------
 def _rename_branches(rdf : RDataFrame) -> RDataFrame:
     rdf = rdf.Define('B_const_mass_M', 'B_DTF_Jpsi_MASS')
@@ -55,7 +55,7 @@ def test_dt():
     Test selection in data
     '''
 
-    rdf = RDataFrame('Hlt2RD_B0ToKpKmMuMu/DecayTree', Data.dt_path)
+    rdf = RDataFrame('Hlt2RD_BuToKpMuMu_MVA/DecayTree', Data.dt_path)
     rdf = _rename_branches(rdf)
 
     obj = Selector(rdf=rdf, is_mc=False)
@@ -66,7 +66,7 @@ def test_cfl():
     Test retrieving multiple dataframes, one after each cut 
     '''
 
-    rdf          = RDataFrame('Hlt2RD_B0ToKpKmMuMu/DecayTree', Data.mc_path)
+    rdf          = RDataFrame('Hlt2RD_BuToKpMuMu_MVA/DecayTree', Data.mc_path)
     rdf          = _rename_branches(rdf)
 
     obj   = Selector(rdf=rdf, is_mc=True)

@@ -24,7 +24,7 @@ def _initialize():
 # ---------------------------------------------
 def _get_rdf(data_type : str) -> RDataFrame:
     cernbox   = os.environ['CERNBOX']
-    file_path = f'{cernbox}/Run3/analysis_productions/for_local_tests/{data_type}.root'
+    file_path = f'{cernbox}/Run3/analysis_productions/for_local_tests/{data_type}_turbo.root'
     tree_path =  'Hlt2RD_BuToKpMuMu_MVA/DecayTree'
 
     if not os.path.isfile(file_path):
