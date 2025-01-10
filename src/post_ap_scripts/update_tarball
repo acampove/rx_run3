@@ -72,7 +72,7 @@ upload()
     fi
 
     SOURCE=$VENVS/dcheck.tar 
-    TARGET=LFN:/lhcb/user/${CLXNAME:0:1}/$CLXNAME/run3/venv/$VENV_VERS/dcheck.tar
+    TARGET=LFN:/lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv/$VENV_VERS/dcheck.tar
 
     check_existing $TARGET
 
