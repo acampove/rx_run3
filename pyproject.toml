@@ -16,6 +16,7 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
+make_pid_maps='rx_calibration.make_pid_maps:main'
 
 [tool.setuptools.package-data]
 rx_calibration_data = ['triggercalib/*.yaml'] 
