@@ -25,6 +25,15 @@ micromamba create -n post_ap python==3.11
 micromamba activate post_ap
 ```
 
+- In the `$HOME/.bashrc` export `POSTAP_PATH`, which will point to the place where your environment
+is installed, e.g.:
+
+```bash
+export POSTAP_PATH=/home/acampove/micromamba/envs/run3/bin
+```
+
+which is needed to find the executables.
+
 - Install `XROOTD` using:
 
 ```bash

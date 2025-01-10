@@ -37,7 +37,7 @@ make_rcfile()
     echo "#!/usr/bin/env bash"                    >> $RCFILE
     echo ""                                       >> $RCFILE
     echo "export PS1='\u@\h\$ '"                  >> $RCFILE
-    echo "export PATH+=:$MAMBAPATH"               >> $RCFILE
+    echo "export PATH+=:$POSTAP_PATH"             >> $RCFILE
     echo "# This will be your username in LXPLUS" >> $RCFILE
 }
 # ------------------------------------------------------------------
