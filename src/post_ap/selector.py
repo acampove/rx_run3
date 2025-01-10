@@ -61,30 +61,31 @@ class Selector:
 
         rdf = self._rdf
 
-        log.debug(20 * '-')
-        log.debug('Applying selection:')
-        log.debug(20 * '-')
-
+        log.debug(f'Applying selection of kind {sel_kind}')
         d_cut    = self._d_sel['cuts']
         skip_cut = True
-        for key, cut in d_cut.items():
+        for kind, cut in d_cut.items():
             # Skip selection if this block of cuts does not
             # correspond to current tree
             # any: Apply these cuts to any sample
-            # sel_kind: Apply only if key == sel_kind
+            # sel_kind: Apply only if kind == sel_kind
             # This code will at most match two entried of d_cut
 
-            if key not in ['any', sel_kind]:
+            if kind not in ['any', sel_kind]:
                 continue
 
             skip_cut = False
             if len(cut) == 0:
-                log.debug(f'Empty selection for sel_kindess: {sel_kind}')
+                log.debug(f'Empty selection for kind: {sel_kind}')
 
+            log.debug(90 * '-')
+            log.debug(f'{"Cut":<20}{"Expression":<70}')
+            log.debug(90 * '-')
             for name, cut_val in cut.items():
-                rdf = rdf.Filter(cut_val, f'{name}:{key}')
+                log.debug(f'{name:<20}{cut_val:<70}')
+                rdf = rdf.Filter(cut_val, f'{name}:{kind}')
 
-            self._d_rdf[key] = rdf
+            self._d_rdf[kind] = rdf
 
         if skip_cut:
             log.info(40 * '-')
