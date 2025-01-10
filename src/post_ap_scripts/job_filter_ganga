@@ -81,7 +81,7 @@ def _get_splitter_args() -> list[list]:
     # Regardless of how many jobs were specified
     # Will run only one job if:
     #
-    # 1. It runs locally
+    # 1. It runs locally/interactively
     # 2. The test flag was passed
     if Data.back in ['Interactive', 'Local'] or Data.test:
         njob = 1
