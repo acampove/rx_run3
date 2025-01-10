@@ -1,3 +1,19 @@
+tests:
+  versions: &tst_ver
+    test_mc_turbo_ee  : v1r2041
+    test_mc_turbo_mm  : v1r2041
+    test_mc_spruce_ee : v1r2041
+    test_mc_spruce_mm : v1r2041
+  samples: &tst_sam
+    test_mc_turbo_ee: 
+      - mc_24_w31_34_hlt1bug_magup_sim10d_12123003_bu_kee_eq_btosllball05_dpc_tuple
+    test_mc_turbo_mm: 
+      - mc_24_w31_34_hlt1bug_magup_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+    test_mc_spruce_ee: 
+      - mc_24_w31_34_hlt1bug_magup_sim10d_12123003_bu_kee_eq_btosllball05_dpc_spr,_tuple
+    test_mc_spruce_mm: 
+      - mc_24_w31_34_hlt1bug_magup_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_spr,_tuple
+
 working_group: rd
 productions:
   rd_ap_2024:
@@ -6,6 +22,7 @@ productions:
       data_spruce       : v1r1670 
       simulation_spruce : v1r2041
       simulation_turbo  : v1r2041
+      <<: *tst_ver
     samples:
       data_spruce:
         - data_24_magdown_full_24c1
@@ -114,6 +131,7 @@ productions:
         - mc_24_w31_34_hlt1bug_magup_sim10d_11102453_bd_kstpi0_eq_tc_kst982width100_highptpi0_tuple
         - mc_24_w31_34_hlt1bug_magup_sim10d_12153020_bu_jpsipi_ee_eq_dpc_tuple
         - mc_24_w31_34_hlt1bug_magup_sim10d_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+      <<: *tst_sam
 # ------------------------------------------------
 transformations:
   particle_variables:
