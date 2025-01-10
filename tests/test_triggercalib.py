@@ -7,16 +7,29 @@ from importlib.resources import files
 
 import yaml
 
-from triggercalib import HltEff
+from triggercalib          import HltEff
+from dmu.logging.log_store import LogStore
 
+log = LogStore.add_logger('rx_calibration:test_triggercalib')
 # -------------------------------------------------
-def _get_config() -> dict:
-    trg_cfg = files('rx_calibration_data').joinpath('triggercalib/v0.yaml')
+def _get_config(name : str) -> dict:
+    trg_cfg = files('rx_calibration_data').joinpath(f'triggercalib/{name}')
     trg_cfg = str(trg_cfg)
     with open(trg_cfg, encoding='utf-8') as ifile:
         cfg = yaml.safe_load(ifile)
 
     return cfg
+# -------------------------------------------------
+def _print_conf(cfg : dict) -> None:
+    tis = cfg['tis']
+    tis = str(tis)
+
+    tos = cfg['tos']
+    tos = str(tos)
+
+    log.info('')
+    log.info(f'{"TIS":<20}{tis:<20}')
+    log.info(f'{"TOS":<20}{tos:<20}')
 # -------------------------------------------------
 def test_reference():
     '''
@@ -54,11 +67,24 @@ def test_config():
     '''
     Same as test_reference, but with config file
     '''
-    config  = _get_config()
+    config  = _get_config(name='v0.yaml')
 
     cfg     = config['reference']
     hlt_eff = HltEff(**cfg)
     hlt_eff.counts()
     hlt_eff.efficiencies()
     hlt_eff.write('/tmp/triggercalib/config.root')
+# -------------------------------------------------
+def test_simulation():
+    '''
+    Will run tests over MC
+    '''
+    config  = _get_config(name='v1.yaml')
+    cfg     = config['simulation']
+    _print_conf(cfg)
+
+    hlt_eff = HltEff(**cfg)
+    hlt_eff.counts()
+    hlt_eff.efficiencies()
+    hlt_eff.write('/tmp/triggercalib/simulation.root')
 # -------------------------------------------------
