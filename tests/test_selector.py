@@ -22,7 +22,7 @@ class Data:
 # --------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    config_path               = files('post_ap_data').joinpath('v1.yaml')
+    config_path               = files('post_ap_data').joinpath('tests/post_ap.yaml')
     os.environ['CONFIG_PATH'] = str(config_path)
 
     LogStore.set_level('post_ap:selector'      , 10)

@@ -2,6 +2,7 @@
 File containing tests for FilterFile class
 '''
 import os
+from importlib.resources   import files
 
 import pytest
 from dmu.logging.log_store import LogStore
@@ -27,7 +28,9 @@ def _initialize():
     Will set loggers, etc
     '''
     log.info('Initializing')
-    os.environ['CONFIG_PATH'] = '/home/acampove/Packages/config_files/post_ap/v3_low_stats.yaml'
+
+    cfg_path = files('post_ap_data').joinpath('tests/post_ap.yaml')
+    os.environ['CONFIG_PATH'] = str(cfg_path)
 
     LogStore.set_level('dmu:rdataframe:atr_mgr', 30)
     LogStore.set_level('post_ap:selector'      , 20)

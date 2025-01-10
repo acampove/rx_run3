@@ -13,7 +13,7 @@ from dmu.logging.log_store import LogStore
 log = LogStore.add_logger('post_ap:data_vars_adder')
 # -------------------------------------
 def _get_good_runs() -> tuple[numpy.ndarray, numpy.ndarray]:
-    runs_path = files('post_ap_data').joinpath('good_runs.yaml')
+    runs_path = files('post_ap_data').joinpath('selection/good_runs.yaml')
     runs_path = str(runs_path)
     with open(runs_path, encoding='utf-8') as ifile:
         l_runs = yaml.safe_load(ifile)
