@@ -94,6 +94,11 @@ initialize()
         echo "VENVS environment variable not set"
         exit 1
     fi
+
+    if [[ -z $LXNAME ]];then
+        echo "LXNAME (LXPLUS username) variable not set"
+        exit 1
+    fi
 }
 #--------------------------------
 make_tarball()
