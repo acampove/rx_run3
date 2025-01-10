@@ -44,7 +44,7 @@ def test_reference():
     '''
     hlt_eff = HltEff(
             "simple_example",
-            '/home/acampove/cernbox/Run3/calibration/triggercalib/Bu2JpsiK_Jpsi2MuMu_block1_ntuple.root:Tuple/DecayTree',
+            '/home/acampove/cernbox/Run3/calibration/triggercalib/reference/Bu2JpsiK_Jpsi2MuMu_block1_ntuple.root:Tuple',
             tos="Hlt1TrackMVA",
             tis=["Hlt1TrackMVA", "Hlt1TwoTrackMVA"],
             particle="B",
