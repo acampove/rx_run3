@@ -364,12 +364,10 @@ transformations:
       - H2_ELECTRON
       - H2_MUON
       # Hlt not for B 
-      - Hlt1
       - Jpsi_Hlt1
       - Phi_Hlt1
       - Kst_Hlt1
       - Lz_Hlt1
-      - Hlt2
       # Hlt1 for tracks not needed, will use Hlt1 for B
       - H_Hlt1
       - P_Hlt1
