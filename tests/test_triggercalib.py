@@ -74,9 +74,8 @@ def test_config():
     '''
     Same as test_reference, but with config file
     '''
-    config  = _get_config(name='v0.yaml')
+    cfg = _get_config(name='v0.yaml', sample='reference')
 
-    cfg     = config['reference']
     hlt_eff = HltEff(**cfg)
     hlt_eff.counts()
     hlt_eff.efficiencies()
