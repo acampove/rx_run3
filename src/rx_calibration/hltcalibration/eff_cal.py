@@ -12,10 +12,14 @@ class EffCal:
     def __init__(self, pas : Parameter, fal : Parameter):
         self._pas = pas
         self._fal = fal
+
+        self._sig_name  = 'nsig'
     # ----------------------------
     def get_eff(self) -> float:
         '''
         Returns float with value of efficiency
         '''
-        return 0
+        eff = self._pas[self._sig_name] / ( self._pas[self._sig_name] + self._fal[self._sig_name])
+
+        return eff
 # --------------------------------------------------
