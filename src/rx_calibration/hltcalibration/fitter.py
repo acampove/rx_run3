@@ -6,14 +6,15 @@ Module containing Fitter class
 import ROOT
 import zfit
 from zfit.core.interfaces    import ZfitSpace
+from zfit.core.basepdf       import BasePDF
+from zfit.core.data          import Data      as zdata
 
-from zfit.core.basepdf     import BasePDF
 from ROOT                  import RDataFrame
 from dmu.logging.log_store import LogStore
 
 from rx_calibration.hltcalibration.parameter import Parameter
 
-log = LogStore.add_logger('rx_calibration:fitter')
+log   = LogStore.add_logger('rx_calibration:fitter')
 # --------------------------------------------------
 class Fitter:
     '''
@@ -33,6 +34,8 @@ class Fitter:
         self._pdf_sig = smod
         self._pdf_bkg = bmod
         self._pdf_ful : BasePDF
+        self._zdt_sig : zdata
+        self._zdt_dat : zdata
 
         self._par_nsg = zfit.Parameter('nsig', 10, 0, 100_000)
         self._par_nbk = zfit.Parameter('nbkg', 10, 0, 100_000)
@@ -40,19 +43,37 @@ class Fitter:
         self._obs      : ZfitSpace
         self._obs_name : str
     # -------------------------------
-    def _initialize(self):
+    def _initialize(self) -> None:
+        log.info('Initializing')
         self._check_extended()
+
+        log.debug('Checking ROOT dataframes')
         self._rdf_sim  = self._check_weights(self._rdf_sim)
         self._rdf_dat  = self._check_weights(self._rdf_dat)
 
         self._obs      = self._pdf_sig.space
         self._obs_name,= self._pdf_sig.obs
 
+        log.debug('Creating full PDF')
         esig           = self._pdf_sig.create_extended(self._par_nsg)
         ebkg           = self._pdf_bkg.create_extended(self._par_nbk)
         self._pdf_ful  = zfit.pdf.SumPDF([esig, ebkg])
 
+        log.debug('Creating zfit data')
+        self._zdt_sig  = self._data_from_rdf(self._rdf_sim)
+        self._zdt_dat  = self._data_from_rdf(self._rdf_dat)
+
         log.info(f'Using observable: {self._obs_name}')
+    # -------------------------------
+    def _data_from_rdf(self, rdf : RDataFrame) -> zdata:
+        d_data = rdf.AsNumpy([self._obs_name, 'weights'])
+
+        arr_obs = d_data[self._obs_name]
+        arr_wgt = d_data['weights'     ]
+
+        data    = zfit.Data.from_numpy(self._obs, array=arr_obs, weights=arr_wgt)
+
+        return data
     # -------------------------------
     def _check_weights(self, rdf) -> RDataFrame:
         v_col = rdf.GetColumnNames()
