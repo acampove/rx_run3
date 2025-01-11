@@ -24,7 +24,13 @@ class Parameter(UserDict):
         super().__setitem__(name, value)
     # ----------------------------------
     def __getitem__(self, name : str) -> tuple[float,float]:
+        '''
+        Takes name of parameter, returns value and error tuple
+        '''
         log.debug(f'Getting value for key {name}')
+
+        if name not in self.data:
+            raise ValueError(f'Variable {name} not found')
 
         return super().__getitem__(name)
 # ------------------------------------
