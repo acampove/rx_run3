@@ -85,8 +85,8 @@ def _plot_rdf(d_rdf : dict[RDataFrame, RDataFrame]) -> None:
 # --------------------------------------------
 def _get_pdf(kind : str) -> BasePDF:
     if   kind == 'signal':
-        mu  = zfit.Parameter("mu", 2.4, -1, 5)
-        sg  = zfit.Parameter("sg", 1.3,  0, 5)
+        mu  = zfit.Parameter("mu", 5300, 5200, 5400)
+        sg  = zfit.Parameter("sg",  10,    10,  100)
         pdf = zfit.pdf.Gauss(obs=Data.obs, mu=mu, sigma=sg)
     elif kind == 'background':
         lam = zfit.param.Parameter('lam' ,   -1/1000.,  -10/1000.,  0)
