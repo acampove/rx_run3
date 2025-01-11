@@ -528,3 +528,47 @@ def test_plot_pars():
 
     plt.close('all')
 #--------------------------------
+def test_blind():
+    '''
+    Testing blind argument
+    '''
+    obs = zfit.Space('m', limits=(-5, +5))
+    mu  = zfit.Parameter("mu", 0.0, -5, 5)
+    sg  = zfit.Parameter("sg", 0.5,  0, 5)
+    lm  = zfit.Parameter("lm",-0.1, -5, 0)
+
+    pdf = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg, name='gauss')
+    nev = zfit.Parameter('nev', 10000, 0, 10000)
+    pdf = pdf.create_extended(nev,)
+
+    bkg= zfit.pdf.Exponential(obs=obs, lam=lm, name='expo')
+    nbk = zfit.Parameter('nbk', 10000, 0, 10000)
+    bkg = bkg.create_extended(nbk,)
+
+    pdf = zfit.pdf.SumPDF([bkg, pdf])
+
+    dat = pdf.create_sampler()
+    nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
+    mnm = zfit.minimize.Minuit()
+    res = mnm.minimize(nll)
+
+    #Fake GOF for ploting purposes
+    res.gof = (11, 10, 0.5)
+
+    obj   = ZFitPlotter(data=dat, model=pdf, result=res)
+    d_leg = {'gauss': 'New Gauss'}
+    l_bld = ['gauss_ext', -2, +2]
+    #l_bld = None
+    obj.plot(nbins=50, d_leg=d_leg, stacked=True, blind=l_bld, plot_range=(-5, 5), ext_text='Extra text here')
+
+    # add a line to pull hist
+    lower, upper = dat.data_range.limit1d
+    obj.axs[1].plot([lower, upper], [0, 0], linestyle='--', color='black')
+
+    plt_dir = _make_dir_path('blind')
+    plt.savefig(f'{plt_dir}/fit_lin.png', bbox_inches='tight')
+
+    obj.axs[0].set_yscale('log')
+    plt.savefig(f'{plt_dir}/fit_log.png', bbox_inches='tight')
+#--------------------------------
+
