@@ -11,6 +11,7 @@ import ROOT
 import zfit
 from ROOT                    import RDataFrame, RDF
 from zfit.core.basepdf       import BasePDF
+
 from dmu.plotting.plotter_1d import Plotter1D as Plotter
 from dmu.logging.log_store   import LogStore
 
