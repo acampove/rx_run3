@@ -9,9 +9,8 @@ import numpy
 import pytest
 import matplotlib.pyplot as plt
 
-from dmu.stats.fit_plotter import ZFitPlotter
-
-from dmu.logging.log_store import LogStore
+from dmu.stats.zfit_plotter import ZFitPlotter
+from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('dmu:test_fit_plotter')
 #--------------------------------
