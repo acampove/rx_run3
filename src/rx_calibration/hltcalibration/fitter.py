@@ -38,6 +38,9 @@ class Fitter:
         self._obs_name : str
     # -------------------------------
     def _initialize(self):
+        self._check_extended()
+        self._check_sim_weights()
+
         self._obs      = self._pdf_sig.space
         self._obs_name,= self._pdf_sig.obs
 
@@ -46,6 +49,24 @@ class Fitter:
         self._pdf_ful  = zfit.pdf.SumPDF([esig, ebkg])
 
         log.info(f'Using observable: {self._obs_name}')
+    # -------------------------------
+    def _check_sim_weights(self) -> None:
+        v_col = self._rdf_sim.GetColumnNames()
+        l_col = [col.c_str() for col in v_col]
+
+        if 'weights' in l_col:
+            log.debug('Weights column found, not defining ones')
+            return
+
+        log.debug('Weights column not found, defining weights as ones')
+        self._rdf_sim = self._rdf_sim.Define('weights', '1')
+    # -------------------------------
+    def _check_extended(self) -> None:
+        if self._pdf_sig.is_extended:
+            raise ValueError('Signal PDF should not be extended')
+
+        if self._pdf_bkg.is_extended:
+            raise ValueError('Background PDF should not be extended')
     # -------------------------------
     def _fit_signal(self) -> Parameter:
         return Parameter()
