@@ -4,7 +4,7 @@ description = 'Project with code needed to interface with calibration projects a
 version     = '0.0.1'
 readme      = 'README.md'
 dependencies= [
-'triggercalib', 
+'triggercalib',
 'PyYaml',
 'data-manipulation-utilities',
 ]
@@ -16,10 +16,9 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
-make_pid_maps='rx_calibration.make_pid_maps:main'
 
 [tool.setuptools.package-data]
-rx_calibration_data = ['triggercalib/*.yaml'] 
+rx_calibration_data = ['triggercalib/*.yaml']
 
 [tool.setuptools]
 script-files=[]
