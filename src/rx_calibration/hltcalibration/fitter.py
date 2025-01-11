@@ -1,8 +1,11 @@
 '''
 Module containing Fitter class
 '''
+# pylint: disable=import-error, unused-import
+
 import ROOT
 import zfit
+from zfit.core.interfaces    import ZfitSpace
 
 from zfit.core.basepdf     import BasePDF
 from ROOT                  import RDataFrame
