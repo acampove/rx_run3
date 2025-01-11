@@ -7,6 +7,7 @@ dependencies= [
 'triggercalib',
 'PyYaml',
 'data-manipulation-utilities',
+'zfit',
 ]
 
 [project.optional-dependencies]
