@@ -408,4 +408,44 @@ def test_composed_nonextended():
     plt_dir = _make_dir_path('composed_nonextended')
     plt.savefig(f'{plt_dir}/fit.png', bbox_inches='tight')
 #--------------------------------
+def test_composed_blind():
+    '''
+    Test of blindind of a component
+    '''
+    obs = zfit.Space('m', limits=(0, 10))
+    mu  = zfit.Parameter("mu", 5.0,  0, 10)
+    sg  = zfit.Parameter("sg", 1.3,  0,  5)
 
+    sig = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg, name='gauss')
+    nsg = zfit.Parameter('nsg', 1000, 0, 10000)
+    esig= sig.create_extended(nsg, name = 'signal')
+
+    lm  = zfit.Parameter('lm', -0.1, -1, 0)
+    bkg = zfit.pdf.Exponential(obs=obs, lam=lm)
+    nbk = zfit.Parameter('nbk', 1000, 0, 10000)
+    ebkg= bkg.create_extended(nbk)
+
+    pdf = zfit.pdf.SumPDF([esig, ebkg])
+
+    sam = pdf.create_sampler()
+    dat = sam.numpy().flatten()
+    dat = zfit.Data.from_numpy(obs=obs, array=dat)
+
+    nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
+    mnm = zfit.minimize.Minuit()
+    res = mnm.minimize(nll)
+
+    print(res)
+
+    obj   = ZFitPlotter(data=dat, model=pdf, result=res)
+    obj.plot(nbins=50, blind=['signal', 4, 5], stacked=False, plot_range=(0, 10), ext_text='Extra text here')
+
+    # add a line to pull hist
+    obj.axs[1].plot([0, 10], [0, 0], linestyle='--', color='black')
+
+    plt_dir = _make_dir_path('composed_blind')
+    plt.savefig(f'{plt_dir}/fit_lin.png', bbox_inches='tight')
+
+    obj.axs[0].set_yscale('log')
+    plt.savefig(f'{plt_dir}/fit_log.png', bbox_inches='tight')
+#--------------------------------
