@@ -495,3 +495,36 @@ def test_composed_ranges():
     obj.axs[0].set_yscale('log')
     plt.savefig(f'{plt_dir}/fit_log.png', bbox_inches='tight')
 #--------------------------------
+def test_plot_pars():
+    '''
+    Testing plotting of parameters alongside fit
+    '''
+    obs = zfit.Space('m', limits=(-10, 10))
+    mu  = zfit.Parameter("mu", 0.4, -5, 5)
+    sg  = zfit.Parameter("sg", 1.3,  0, 5)
+
+    pdf = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg, name='gauss')
+    nev = zfit.Parameter('nev', 100, 0, 10000)
+    pdf = pdf.create_extended(nev)
+    dat = pdf.create_sampler(n=10000)
+
+    nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
+    mnm = zfit.minimize.Minuit()
+    res = mnm.minimize(nll)
+
+    plt_dir = _make_dir_path('plot_pars')
+
+    plt_path= f'{plt_dir}/fit_all.png'
+    obj_1=ZFitPlotter(model=pdf, data=dat, result=res)
+    obj_1.plot(add_pars='all')
+    log.info(f'Saving to: {plt_path}')
+    plt.savefig(f'{plt_path}')
+
+    plt_path= f'{plt_dir}/fit_some.png'
+    obj_2=ZFitPlotter(model=pdf, data=dat, result=res)
+    obj_2.plot(add_pars=['mu', 'sg'])
+    log.info(f'Saving to: {plt_path}')
+    plt.savefig(f'{plt_path}')
+
+    plt.close('all')
+#--------------------------------
