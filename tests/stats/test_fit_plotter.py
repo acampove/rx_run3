@@ -9,7 +9,7 @@ import numpy
 import pytest
 import matplotlib.pyplot as plt
 
-from dmu.stats.fit_plotter import FitPlotter
+from dmu.stats.fit_plotter import ZFitPlotter
 
 from dmu.logging.log_store import LogStore
 
@@ -46,7 +46,7 @@ def test_simple():
     nev = zfit.Parameter('nev', 1000, 0, 10000)
     pdf = pdf.create_extended(nev,)
 
-    obj   = FitPlotter(data=arr, model=pdf, result=None)
+    obj   = ZFitPlotter(data=arr, model=pdf, result=None)
     d_leg = {'gauss': 'New Gauss'}
     obj.plot(nbins=50, d_leg=d_leg, plot_range=(-10, 10), ext_text='Extra text here')
     obj.axs[1].set_ylim(-5, 5)
