@@ -259,3 +259,28 @@ def test_skip_pulls():
     plt_dir = _make_dir_path(name = 'skip_pulls')
     plt.savefig(f'{plt_dir}/fit_lin.png', bbox_inches='tight')
 #--------------------------------
+def test_nodata():
+    '''
+    Tests usage of no_data=True arg, to remove data from plot
+    '''
+    arr = numpy.random.normal(0, 1, size=1000)
+
+    obs = zfit.Space('m', limits=(-10, 10))
+    mu  = zfit.Parameter("mu", 0.4, -5, 5)
+    sg  = zfit.Parameter("sg", 1.3,  0, 5)
+
+    pdf = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg, name='gauss')
+    nev = zfit.Parameter('nev', 100, 0, 10000)
+    pdf = pdf.create_extended(nev,)
+
+    dat = zfit.Data.from_numpy(obs=obs, array=arr)
+    nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
+    mnm = zfit.minimize.Minuit()
+    res = mnm.minimize(nll)
+
+    obj = ZFitPlotter(data=arr, model=pdf, result=res)
+    obj.plot(nbins=50, plot_range=(0, 10), no_data=True)
+
+    plt_dir = _make_dir_path(name = 'no_data')
+    plt.savefig(f'{plt_dir}/fit_lin.png', bbox_inches='tight')
+#--------------------------------
