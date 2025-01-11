@@ -449,3 +449,49 @@ def test_composed_blind():
     obj.axs[0].set_yscale('log')
     plt.savefig(f'{plt_dir}/fit_log.png', bbox_inches='tight')
 #--------------------------------
+def test_composed_ranges():
+    '''
+    Testing plot in ranges of composed PDF
+    '''
+    obs = zfit.Space('m', limits=(0, 10))
+
+    mu  = zfit.Parameter('mu', 5.0,  0, 10)
+    sg  = zfit.Parameter('sg', 1.0,  0,  5)
+    lm  = zfit.Parameter('lm', -0.1, -1, 0)
+    sg.floating=False
+    mu.floating=False
+    lm.floating=False
+
+    nsg = zfit.Parameter('nsg',  5000, 0, 100000)
+    nbk = zfit.Parameter('nbk', 10000, 0, 100000)
+
+    bkg = zfit.pdf.Exponential(obs=obs, lam=lm)
+    ebkg= bkg.create_extended(nbk)
+
+    sig = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg, name='gauss')
+    esig= sig.create_extended(nsg)
+
+    pdf = zfit.pdf.SumPDF([ebkg, esig])
+    sam = pdf.create_sampler()
+
+    nsg.set_value(100)
+    nbk.set_value(1000)
+
+    nll_1 = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=sam, fit_range=(0, 4))
+    nll_2 = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=sam, fit_range=(6,10))
+    nll   = nll_1 + nll_2
+    mnm   = zfit.minimize.Minuit()
+    res   = mnm.minimize(nll)
+
+    print(res)
+
+    obj   = ZFitPlotter(data=sam, model=pdf, result=res)
+    obj.plot(nbins=50, ranges=[(0, 4), (6, 10)], stacked=False)
+    obj.axs[1].set_ylim(-5, 5)
+
+    plt_dir = _make_dir_path('composed_ranges')
+    plt.savefig(f'{plt_dir}/fit_lin.png', bbox_inches='tight')
+
+    obj.axs[0].set_yscale('log')
+    plt.savefig(f'{plt_dir}/fit_log.png', bbox_inches='tight')
+#--------------------------------
