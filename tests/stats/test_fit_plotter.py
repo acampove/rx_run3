@@ -152,3 +152,47 @@ def test_leg_loc():
     plt_dir = _make_dir_path(name = 'leg_loc')
     plt.savefig(f'{plt_dir}/fit.png', bbox_inches='tight')
 #--------------------------------
+def test_weights():
+    '''
+    Tests plotting of weighted zfit data
+    '''
+    obs = zfit.Space('m', limits=(0, 10))
+    mu  = zfit.Parameter("mu",    5,  4.0, 6)
+    sg1 = zfit.Parameter("sg1", 1.0,  0.5, 2)
+    sg2 = zfit.Parameter("sg2", 2.0,  0.5, 2)
+
+    mu.floating = False
+    sg1.floating= False
+    sg2.floating= False
+
+    pdf_a = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg1, name='gauss_1')
+    pdf_b = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg2, name='gauss_2')
+
+    nev_1 = zfit.Parameter('nev_1', 200, 1, 100000)
+    nev_2 = zfit.Parameter('nev_2', 300, 1, 100000)
+
+    pdf_1 = pdf_a.create_extended(nev_1, name='G1')
+    pdf_2 = pdf_b.create_extended(nev_2, name='G2')
+    pdf   = zfit.pdf.SumPDF([pdf_1, pdf_2], name='Model')
+
+    arr   = numpy.random.normal(loc=5, scale=1, size=1000)
+    wgt   = numpy.random.binomial(1, 0.5, size=arr.size)
+    dat   = zfit.Data.from_numpy(obs=obs, array=arr, weights=wgt)
+
+    nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
+    mnm = zfit.minimize.Minuit()
+    res = mnm.minimize(nll)
+
+    #Fake GOF for ploting purposes
+    res.gof = (11, 10, 0.5)
+
+    obj   = ZFitPlotter(data=dat, model=pdf, result=res)
+    obj.plot(nbins=50)
+
+    # add a line to pull hist
+    [[lower]], [[upper]] = obs.limits
+    obj.axs[1].plot([lower, upper], [0, 0], linestyle='--', color='black')
+
+    plt_dir = _make_dir_path(name = 'weights')
+    plt.savefig(f'{plt_dir}/fit_lin.png', bbox_inches='tight')
+#--------------------------------
