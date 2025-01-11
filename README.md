@@ -21,7 +21,7 @@ such that:
 
 Then, for each remote it pushes the tags and the commits. 
 
-*Why?* 
+*Why?*
 
 1. Tags should be named as the project's version
 1. As soon as a new version is created, that version needs to be tagged.
@@ -210,6 +210,49 @@ print_pars    : ['mu', 'sg']
 likelihood :
     nbins : 100 #If specified, will do binned likelihood fit instead of unbinned
 ```
+
+## Fit plotting
+
+The class `ZFitPlotter` can be used to plot fits done with zfit. For a complete set of examples of how to use
+this class check the [tests](tests/stats/test_fit_plotter.py). A simple example of its usage is below:
+
+```python
+from dmu.stats.zfit_plotter import ZFitPlotter
+
+obs = zfit.Space('m', limits=(0, 10))
+
+# Create signal PDF
+mu  = zfit.Parameter("mu", 5.0,  0, 10)
+sg  = zfit.Parameter("sg", 0.5,  0,  5)
+sig = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
+nsg = zfit.Parameter('nsg', 1000, 0, 10000)
+esig= sig.create_extended(nsg, name='gauss')
+
+# Create background PDF
+lm  = zfit.Parameter('lm', -0.1, -1, 0)
+bkg = zfit.pdf.Exponential(obs=obs, lam=lm)
+nbk = zfit.Parameter('nbk', 1000, 0, 10000)
+ebkg= bkg.create_extended(nbk, name='expo')
+
+# Add them 
+pdf = zfit.pdf.SumPDF([ebkg, esig])
+sam = pdf.create_sampler()
+
+# Plot them 
+obj   = ZFitPlotter(data=sam, model=pdf)
+d_leg = {'gauss': 'New Gauss'}
+obj.plot(nbins=50, d_leg=d_leg, stacked=True, plot_range=(0, 10), ext_text='Extra text here')
+
+# add a line to pull hist
+obj.axs[1].plot([0, 10], [0, 0], linestyle='--', color='black')
+```
+
+this class supports:
+
+- Handling title, legend, plots size.
+- Adding pulls. 
+- Stacking and overlaying of PDFs.
+- Blinding.
 
 ## Arrays
 
