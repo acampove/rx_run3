@@ -1,19 +1,20 @@
 '''
 Module containing tests for Fitter class
 '''
+# pylint: disable=import-error
+
 import os
 from dataclasses import dataclass
 
 import numpy
 import ROOT
 import zfit
-from ROOT              import RDataFrame, RDF
-from zfit.core.basepdf import BasePDF
-
+from ROOT                    import RDataFrame, RDF
+from zfit.core.basepdf       import BasePDF
 from dmu.plotting.plotter_1d import Plotter1D as Plotter
-#from rx_calibration.hltcalibration.fitter import Fitter
+from dmu.logging.log_store   import LogStore
 
-from dmu.logging.log_store import LogStore
+from rx_calibration.hltcalibration.fitter import Fitter
 
 log = LogStore.add_logger('rx_calibration:test_fitter')
 # --------------------------------------------
@@ -96,12 +97,10 @@ def test_simple():
     rdf_sim = _get_rdf(kind = 'signal')
     rdf_dat = _get_rdf(kind =   'data')
 
-    _plot_rdf({'MC' : rdf_sim, 'Data' : rdf_dat})
+    #_plot_rdf({'MC' : rdf_sim, 'Data' : rdf_dat})
 
     pdf_s   = _get_pdf(kind =     'signal')
     pdf_b   = _get_pdf(kind = 'background')
-
-    return
 
     obj = Fitter(
             data=rdf_dat,
