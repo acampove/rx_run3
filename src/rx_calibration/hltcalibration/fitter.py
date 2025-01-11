@@ -26,7 +26,11 @@ class Fitter:
     - Signal and background zfit PDFs
 
     If any of the dataframes does not contain a weights column, one will be defined with ones.
-    Otherwise, the weights will be used in the fit
+    Otherwise, the weights will be used in the fit.
+
+    The fits to the data will be made by "fixing the tails" to the values in simulation, where
+    the tail parameters are the ones whose names do not end with _flt. Usually the mean and
+    widths are not considered tails and thus they would be named like `mu_flt` and `sig_flt`.
     '''
     def __init__(self, data : RDataFrame, sim : RDataFrame, smod : BasePDF, bmod : BasePDF):
         self._rdf_dat = data
@@ -123,10 +127,41 @@ class Fitter:
         return par
     # -------------------------------
     def _fit_data(self) -> Parameter:
-        return Parameter()
+        log.info('Fitting data:')
+
+        print_pdf(self._pdf_ful)
+
+        nll = zfit.loss.ExtendedUnbinnedNLL(model=self._pdf_ful, data=self._zdt_dat)
+        res = self._minimizer.minimize(nll)
+        res.hesse(method='minuit_hesse')
+        par = self._res_to_par(res)
+
+        print(res)
+
+        return par
     # -------------------------------
     def _fix_tails(self, sig_par : Parameter) -> None:
-        pass
+        s_par = self._pdf_ful.get_params()
+
+        log.info(60 * '-')
+        log.info('Fixing tails')
+        log.info(60 * '-')
+        for par in s_par:
+            name = par.name
+            if name not in sig_par:
+                log.debug(f'Skipping non signal parameter: {name}')
+                continue
+
+            if name.endswith('_flt'):
+                log.debug(f'Not fixing {name}')
+                continue
+
+            val, _ = sig_par[name]
+
+            par.set_value(val)
+            par.floating = True
+
+            log.info(f'{name:<20}{"-->":<20}{val:<20.3f}')
     # -------------------------------
     def fit(self) -> Parameter:
         '''
