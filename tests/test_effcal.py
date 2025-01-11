@@ -1,6 +1,7 @@
 '''
 Module with tests for the EffCal class
 '''
+import math
 from dataclasses import dataclass
 
 import numpy
@@ -18,8 +19,13 @@ class Data:
     l_eff_val = numpy.linspace(0.0, 1.0, 11)
 # --------------------------------
 def _get_par(eff_val : float) -> Parameter:
+    tot = 100
+
     pas = Parameter()
+    pas['nsig'] =     eff_val  * tot
+
     fal = Parameter()
+    fal['nsig'] = (1- eff_val) * tot
 
     return pas, fal
 # --------------------------------
@@ -33,4 +39,4 @@ def test_simple(eff_val : float):
     obj = EffCal(pas=pas, fal=fal)
     eff = obj.get_eff()
 
-    #assert eff == eff_val
+    assert math.isclose(eff, eff_val)
