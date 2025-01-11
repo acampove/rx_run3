@@ -11,6 +11,7 @@ from zfit.core.data          import Data      as zdata
 
 from ROOT                  import RDataFrame
 from dmu.logging.log_store import LogStore
+from dmu.stats.utilities   import print_pdf
 
 from rx_calibration.hltcalibration.parameter import Parameter
 
@@ -40,6 +41,7 @@ class Fitter:
         self._par_nsg = zfit.Parameter('nsig', 10, 0, 100_000)
         self._par_nbk = zfit.Parameter('nbkg', 10, 0, 100_000)
 
+        self._minimizer= zfit.minimize.Minuit()
         self._obs      : ZfitSpace
         self._obs_name : str
     # -------------------------------
@@ -95,8 +97,30 @@ class Fitter:
         if self._pdf_bkg.is_extended:
             raise ValueError('Background PDF should not be extended')
     # -------------------------------
+    def _res_to_par(self, res : zfit.result.FitResult) -> Parameter:
+        res.freeze()
+        obj = Parameter()
+        for par_name, d_val in res.params.items():
+            val : float = d_val['value']
+            err : float = d_val['hesse']['error']
+
+            obj[par_name] = val, err
+
+        return obj
+    # -------------------------------
     def _fit_signal(self) -> Parameter:
-        return Parameter()
+        log.info('Fitting signal:')
+
+        print_pdf(self._pdf_sig)
+
+        nll = zfit.loss.UnbinnedNLL(model=self._pdf_sig, data=self._zdt_sig)
+        res = self._minimizer.minimize(nll)
+        res.hesse(method='minuit_hesse')
+        par = self._res_to_par(res)
+
+        print(res)
+
+        return par
     # -------------------------------
     def _fit_data(self) -> Parameter:
         return Parameter()
