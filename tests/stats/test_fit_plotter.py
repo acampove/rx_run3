@@ -284,3 +284,29 @@ def test_nodata():
     plt_dir = _make_dir_path(name = 'no_data')
     plt.savefig(f'{plt_dir}/fit_lin.png', bbox_inches='tight')
 #--------------------------------
+def test_axs():
+    '''
+    Tests overlaying axes, i.e. overlaying plots  
+    '''
+    arr = numpy.random.normal(0, 1, size=1000)
+
+    obs = zfit.Space('m', limits=(-10, 10))
+    mu  = zfit.Parameter("mu", 0.0, -5, 5)
+    sg  = zfit.Parameter("sg", 1.0,  0, 5)
+    sg1 = zfit.Parameter("sg1", 1.7,  0, 5)
+
+    pdf = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg , name='gauss')
+    pdf1= zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg1, name='gauss')
+
+    obj   = ZFitPlotter(data=arr, model=pdf)
+    obj.plot(nbins=50, plot_range=(0, 10), ext_text='Extra text here')
+
+    obj1  = ZFitPlotter(data=arr, model=pdf1)
+    obj1.plot(nbins=50, plot_range=(0, 10), ext_text='Extra text here', axs=obj.axs)
+
+    obj.axs[1].set_ylim(-5, 5)
+    obj.axs[1].plot(linestyle='--', color='black')
+
+    plt_dir = _make_dir_path(name = 'axes')
+    plt.savefig(f'{plt_dir}/fit_lin.png', bbox_inches='tight')
+#--------------------------------
