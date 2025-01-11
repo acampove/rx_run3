@@ -8,6 +8,7 @@ from dataclasses import dataclass
 
 import numpy
 import ROOT
+import pytest
 import zfit
 from ROOT                    import RDataFrame, RDF
 from zfit.core.basepdf       import BasePDF
@@ -31,6 +32,10 @@ class Data:
             'background' : 500_000}
 
     obs        = zfit.Space(mass_name, limits=(4800, 6000))
+# --------------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('rx_calibration:fitter', 10)
 # --------------------------------------------
 def _concatenate_rdf(rdf_1 : RDataFrame, rdf_2 : RDataFrame) -> RDataFrame:
     arr_val1 = rdf_1.AsNumpy([Data.mass_name])[Data.mass_name]
