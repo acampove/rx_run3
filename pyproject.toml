@@ -8,7 +8,7 @@ dependencies= [
 'PyYaml',
 'data-manipulation-utilities',
 'tensorflow==2.16.1',
-'zfit',
+'zfit==0.23.0',
 ]
 
 [project.optional-dependencies]
