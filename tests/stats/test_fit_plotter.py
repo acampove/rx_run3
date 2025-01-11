@@ -232,3 +232,30 @@ def test_low_stat():
     obj.axs[0].set_yscale('log')
     plt.savefig(f'{plt_dir}/fit_log.png', bbox_inches='tight')
 #--------------------------------
+def test_skip_pulls():
+    '''
+    Test usage of skip_pulls=True arg
+    '''
+    arr = numpy.random.normal(0, 1, size=1000)
+
+    obs = zfit.Space('m', limits=(-10, 10))
+    mu  = zfit.Parameter("mu", 0.4, -5, 5)
+    sg  = zfit.Parameter("sg", 1.3,  0, 5)
+
+    pdf = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg, name='gauss')
+    nev = zfit.Parameter('nev', 100, 0, 10000)
+    pdf = pdf.create_extended(nev,)
+
+    dat = zfit.Data.from_numpy(obs=obs, array=arr)
+    nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
+    mnm = zfit.minimize.Minuit()
+    res = mnm.minimize(nll)
+
+    res.gof = (11, 10, 0.5)
+
+    obj   = ZFitPlotter(data=arr, model=pdf, result=res)
+    obj.plot(plot_range=(0, 10), skip_pulls=True)
+
+    plt_dir = _make_dir_path(name = 'skip_pulls')
+    plt.savefig(f'{plt_dir}/fit_lin.png', bbox_inches='tight')
+#--------------------------------
