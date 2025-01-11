@@ -16,7 +16,7 @@ from log_store import log_store
 
 log = log_store.add_logger('rx_scripts:plot')
 #----------------------------------------
-class plot:
+class FitPlotter:
     # pylint: disable=too-many-instance-attributes
     def __init__(self, data=None, model=None, weights=None, result=None, suffix=''):
         '''
