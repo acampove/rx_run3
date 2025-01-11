@@ -2,6 +2,7 @@
 Module with tests for zutils.plot plot class
 '''
 import os
+from typing      import Union
 from dataclasses import dataclass
 
 import zfit
@@ -571,4 +572,64 @@ def test_blind():
     obj.axs[0].set_yscale('log')
     plt.savefig(f'{plt_dir}/fit_log.png', bbox_inches='tight')
 #--------------------------------
+def test_show_components():
+    '''
+    Tests plot_components argument, which shows subcomponents of PDF
+    '''
+    obs   = zfit.Space('m', limits=(-10, 10))
+    mu    = zfit.Parameter("mu", 0.0, -5, 5)
+    sg    = zfit.Parameter("sg", 1.0,  0, 5)
 
+    sig   = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
+    nsg   = zfit.Parameter('nsg', 1000, 0, 10000)
+    sig   = sig.create_extended(nsg, name='gauss')
+    #-----------------------------------------
+    lm_1  = zfit.Parameter("lm_1", -0.1, -5.0, 0)
+    lm_2  = zfit.Parameter("lm_2", -0.1, -5.0, 0)
+    fr_1  = zfit.Parameter("fr_1",  0.5,  0.0, 1)
+    fr_2  = zfit.Parameter("fr_2",  0.5,  0.0, 1)
+
+    bkg_1 = zfit.pdf.Exponential(lam=lm_1, obs=obs, name='ex_1')
+    bkg_2 = zfit.pdf.Exponential(lam=lm_2, obs=obs, name='ex_2')
+
+    bkg   = zfit.pdf.SumPDF([bkg_1, bkg_2], fracs=[fr_1, fr_2])
+    nbk   = zfit.Parameter('nbk', 1000, 0, 10000)
+    bkg   = bkg.create_extended(nbk, name='bkg')
+    #-----------------------------------------
+    pdf   = zfit.pdf.SumPDF([bkg, sig])
+    #-----------------------------------------
+    obj   = ZFitPlotter(data=pdf.create_sampler(), model=pdf, result=None)
+    d_leg = {'gauss': 'New Gauss'}
+    obj.plot(stacked=True, nbins=50, d_leg=d_leg, plot_range=(-10, 10), plot_components=['bkg'], ext_text='Extra text here')
+    obj.axs[1].set_ylim(-5, 5)
+
+    plt_dir = _make_dir_path('show_components')
+    plt.savefig(f'{plt_dir}/fit.png', bbox_inches='tight')
+#--------------------------------
+@pytest.mark.parametrize('val, name', Data.l_arg_xerror)
+def test_xerror(val : Union[float,bool], name : str):
+    '''
+    Tests xerr argument for plotter, i.e. length of error on x-axis
+
+    val : Value of xerr
+    name: name of plot
+    '''
+    numpy.random.seed(42)
+    arr = numpy.random.normal(0, 1, size=1000)
+
+    obs = zfit.Space('m', limits=(-10, 10))
+    mu  = zfit.Parameter("mu", 0.0, -5, 5)
+    sg  = zfit.Parameter("sg", 1.0,  0, 5)
+
+    pdf = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg, name='gauss')
+    nev = zfit.Parameter('nev', 1000, 0, 10000)
+    pdf = pdf.create_extended(nev,)
+
+    obj   = ZFitPlotter(data=arr, model=pdf, result=None)
+    d_leg = {'gauss': 'New Gauss'}
+    obj.plot(nbins=50, d_leg=d_leg, plot_range=(-10, 10), ext_text='Extra text here', xerr=val)
+    obj.axs[1].set_ylim(-5, 5)
+
+    plt_dir = _make_dir_path('xerr')
+    plt.savefig(f'{plt_dir}/{name}.png', bbox_inches='tight')
+#--------------------------------
