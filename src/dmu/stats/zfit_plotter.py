@@ -420,7 +420,7 @@ class ZFitPlotter:
 
         return arr_wgt.sum()
     #----------------------------------------
-    @utnr.timeit
+    @gut.timeit
     def plot(self,
             title             = None,
             stacked           = False,
