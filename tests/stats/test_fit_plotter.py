@@ -349,3 +349,36 @@ def test_stacked():
     obj.axs[0].set_yscale('log')
     plt.savefig(f'{plt_dir}/fit_log.png', bbox_inches='tight')
 #--------------------------------
+def test_composed():
+    '''
+    Testing plot of SumPDF (?)
+    '''
+    obs = zfit.Space('m', limits=(0, 10))
+
+    mu  = zfit.Parameter("mu", 5.0,  0, 10)
+    sg  = zfit.Parameter("sg", 0.5,  0,  5)
+    sig = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg, name='gauss')
+    nsg = zfit.Parameter('nsg', 1000, 0, 10000)
+    esig= sig.create_extended(nsg)
+
+    lm  = zfit.Parameter('lm', -0.1, -1, 0)
+    bkg = zfit.pdf.Exponential(obs=obs, lam=lm)
+    nbk = zfit.Parameter('nbk', 1000, 0, 10000)
+    ebkg= bkg.create_extended(nbk)
+
+    pdf = zfit.pdf.SumPDF([ebkg, esig])
+    sam = pdf.create_sampler()
+
+    obj   = ZFitPlotter(data=sam, model=pdf)
+    d_leg = {'gauss': 'New Gauss'}
+    obj.plot(nbins=50, d_leg=d_leg, plot_range=(0, 10), ext_text='Extra text here')
+
+    # add a line to pull hist
+    obj.axs[1].plot([0, 10], [0, 0], linestyle='--', color='black')
+
+    plt_dir = _make_dir_path('composed')
+    plt.savefig(f'{plt_dir}/fit_lin.png', bbox_inches='tight')
+
+    obj.axs[0].set_yscale('log')
+    plt.savefig(f'{plt_dir}/fit_log.png', bbox_inches='tight')
+#--------------------------------
