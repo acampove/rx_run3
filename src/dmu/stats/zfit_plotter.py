@@ -9,14 +9,14 @@ import pprint
 import zfit
 import hist
 import mplhep
-import pandas            as pd
-import numpy             as np
-import matplotlib.pyplot as plt
-import utils_noroot      as utnr
+import pandas                as pd
+import numpy                 as np
+import matplotlib.pyplot     as plt
+import dmu.generic.utilities as gut
 
-from log_store import log_store
+from dmu.logging.log_store  import LogStore
 
-log = log_store.add_logger('rx_scripts:plot')
+log = LogStore.add_logger('dmu:fit_plotter')
 #----------------------------------------
 class ZFitPlotter:
     '''
