@@ -12,9 +12,6 @@ class Parameter(UserDict):
     Class meant to hold fitting parameters
     '''
     # ----------------------------------
-    def __init__(self):
-        super().__init__()
-    # ----------------------------------
     def __setitem__(self, name : str, value : tuple[float,float]):
         '''
         Takes the name of the parameter and the tuple with the value and the error
