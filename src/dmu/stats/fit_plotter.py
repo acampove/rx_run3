@@ -1,6 +1,8 @@
 '''
 Module containing plot class, used to plot fits
 '''
+# pylint: disable=too-many-instance-attributes
+
 import warnings
 import pprint
 
@@ -16,8 +18,10 @@ from log_store import log_store
 
 log = log_store.add_logger('rx_scripts:plot')
 #----------------------------------------
-class FitPlotter:
-    # pylint: disable=too-many-instance-attributes
+class ZFitPlotter:
+    '''
+    Class used to plot fits done with zfit
+    '''
     def __init__(self, data=None, model=None, weights=None, result=None, suffix=''):
         '''
         obs: zfit space you are using to define the data and model
