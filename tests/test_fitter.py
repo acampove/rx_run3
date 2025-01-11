@@ -5,7 +5,10 @@ import os
 from dataclasses import dataclass
 
 import numpy
-from ROOT        import RDataFrame, RDF
+import ROOT
+import zfit
+from ROOT              import RDataFrame, RDF
+from zfit.core.basepdf import BasePDF
 
 from dmu.plotting.plotter_1d import Plotter1D as Plotter
 #from rx_calibration.hltcalibration.fitter import Fitter
@@ -24,6 +27,8 @@ class Data:
     d_nentries = {
             'signal'     :   5_000,
             'background' : 500_000}
+
+    obs        = zfit.Space(mass_name, limits=(4800, 6000))
 # --------------------------------------------
 def _concatenate_rdf(rdf_1 : RDataFrame, rdf_2 : RDataFrame) -> RDataFrame:
     arr_val1 = rdf_1.AsNumpy([Data.mass_name])[Data.mass_name]
@@ -71,6 +76,19 @@ def _plot_rdf(d_rdf : dict[RDataFrame, RDataFrame]) -> None:
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
 # --------------------------------------------
+def _get_pdf(kind : str) -> BasePDF:
+    if   kind == 'signal':
+        mu  = zfit.Parameter("mu", 2.4, -1, 5)
+        sg  = zfit.Parameter("sg", 1.3,  0, 5)
+        pdf = zfit.pdf.Gauss(obs=Data.obs, mu=mu, sigma=sg)
+    elif kind == 'background':
+        lam = zfit.param.Parameter('lam' ,   -1/1000.,  -10/1000.,  0)
+        pdf = zfit.pdf.Exponential(lam = lam, obs = Data.obs)
+    else:
+        raise ValueError(f'Invalid kind: {kind}')
+
+    return pdf
+# --------------------------------------------
 def test_simple():
     '''
     Simplest test of Fitter class
@@ -80,10 +98,10 @@ def test_simple():
 
     _plot_rdf({'MC' : rdf_sim, 'Data' : rdf_dat})
 
-    return
-
     pdf_s   = _get_pdf(kind =     'signal')
     pdf_b   = _get_pdf(kind = 'background')
+
+    return
 
     obj = Fitter(
             data=rdf_dat,
