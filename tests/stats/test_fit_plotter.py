@@ -53,3 +53,25 @@ def test_simple():
     plt_dir = _make_dir_path(name = 'simple')
     plt.savefig(f'{plt_dir}/fit.png', bbox_inches='tight')
 #--------------------------------
+def test_title():
+    '''
+    Testing adding title in plot
+    '''
+    arr = numpy.random.normal(0, 1, size=1000)
+
+    obs = zfit.Space('m', limits=(-10, 10))
+    mu  = zfit.Parameter("mu", 0.0, -5, 5)
+    sg  = zfit.Parameter("sg", 1.0,  0, 5)
+
+    pdf = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg, name='gauss')
+    nev = zfit.Parameter('nev', 1000, 0, 10000)
+    pdf = pdf.create_extended(nev,)
+
+    obj   = ZFitPlotter(data=arr, model=pdf, result=None)
+    d_leg = {'gauss': 'New Gauss'}
+    obj.plot(title='title here', nbins=50, d_leg=d_leg, plot_range=(-10, 10), ext_text='Extra text here')
+    obj.axs[1].set_ylim(-5, 5)
+
+    plt_dir = _make_dir_path(name = 'title')
+    plt.savefig(f'{plt_dir}/fit.png', bbox_inches='tight')
+#--------------------------------
