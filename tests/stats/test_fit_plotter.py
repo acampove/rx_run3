@@ -286,7 +286,7 @@ def test_nodata():
 #--------------------------------
 def test_axs():
     '''
-    Tests overlaying axes, i.e. overlaying plots  
+    Tests overlaying axes, i.e. overlaying plots
     '''
     arr = numpy.random.normal(0, 1, size=1000)
 
@@ -382,3 +382,30 @@ def test_composed():
     obj.axs[0].set_yscale('log')
     plt.savefig(f'{plt_dir}/fit_log.png', bbox_inches='tight')
 #--------------------------------
+def test_composed_nonextended():
+    '''
+    Testing plot of sum of PDFs with fractions, non-extended
+    '''
+    obs = zfit.Space('m', limits=(-10, 10))
+    mu1 = zfit.Parameter("mu1", 0.4, -5, 5)
+    sg1 = zfit.Parameter("sg1", 1.3,  0, 5)
+    mu2 = zfit.Parameter("mu2", 0.4, -5, 5)
+    sg2 = zfit.Parameter("sg2", 1.3,  0, 5)
+
+    pd1 = zfit.pdf.Gauss(obs=obs, mu=mu1, sigma=sg1, name='gauss1')
+    fr1 = zfit.Parameter('fr1', 0.5, 0, 1)
+
+    pd2 = zfit.pdf.Gauss(obs=obs, mu=mu2, sigma=sg2, name='gauss2')
+    fr2 = zfit.Parameter('fr2', 0.5, 0, 1)
+
+    pdf = zfit.pdf.SumPDF([pd1, pd2], fracs=[fr1, fr2])
+
+    dat = pdf.create_sampler(n=1000)
+
+    obj = ZFitPlotter(data=dat, model=pdf)
+    obj.plot(nbins=50, plot_range=(0, 10), stacked=True)
+
+    plt_dir = _make_dir_path('composed_nonextended')
+    plt.savefig(f'{plt_dir}/fit.png', bbox_inches='tight')
+#--------------------------------
+
