@@ -22,6 +22,9 @@ class Fitter:
 
     - Simulated and real data stored in ROOT dataframe
     - Signal and background zfit PDFs
+
+    If any of the dataframes does not contain a weights column, one will be defined with ones.
+    Otherwise, the weights will be used in the fit
     '''
     def __init__(self, data : RDataFrame, sim : RDataFrame, smod : BasePDF, bmod : BasePDF):
         self._rdf_dat = data
@@ -39,7 +42,8 @@ class Fitter:
     # -------------------------------
     def _initialize(self):
         self._check_extended()
-        self._check_sim_weights()
+        self._rdf_sim  = self._check_weights(self._rdf_sim)
+        self._rdf_dat  = self._check_weights(self._rdf_dat)
 
         self._obs      = self._pdf_sig.space
         self._obs_name,= self._pdf_sig.obs
@@ -50,16 +54,18 @@ class Fitter:
 
         log.info(f'Using observable: {self._obs_name}')
     # -------------------------------
-    def _check_sim_weights(self) -> None:
-        v_col = self._rdf_sim.GetColumnNames()
+    def _check_weights(self, rdf) -> RDataFrame:
+        v_col = rdf.GetColumnNames()
         l_col = [col.c_str() for col in v_col]
 
         if 'weights' in l_col:
             log.debug('Weights column found, not defining ones')
-            return
+            return rdf
 
         log.debug('Weights column not found, defining weights as ones')
-        self._rdf_sim = self._rdf_sim.Define('weights', '1')
+        rdf = rdf.Define('weights', '1')
+
+        return rdf
     # -------------------------------
     def _check_extended(self) -> None:
         if self._pdf_sig.is_extended:
