@@ -48,28 +48,50 @@ class ModelFactory:
         self._obs = obs
     #-----------------------------------------
     @MethodRegistry.register('EXP')
-    def _get_exponential(self, suffix : str = ''):
+    def _get_exponential(self, suffix : str = '') -> zpdf:
         c   = zfit.param.Parameter(f'c_cmb{suffix}', -0.005, -0.05, 0.05)
         pdf = zfit.pdf.Exponential(c, self._obs)
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('POL')
-    def _get_pol(self, order : int, suffix : str = ''):
-        if order == 1:
-            a   = zfit.param.Parameter(f'a_cmb{suffix}', -0.005, -0.95, 0.00)
-            pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a])
+    @MethodRegistry.register('POL1')
+    def _get_pol1(self, suffix : str = '') -> zpdf:
+        a   = zfit.param.Parameter(f'a_cmb{suffix}', -0.005, -0.95, 0.00)
+        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a])
 
-            return pdf
+        return pdf
+    #-----------------------------------------
+    @MethodRegistry.register('POL2')
+    def _get_pol2(self, suffix : str = '') -> zpdf:
+        a   = zfit.param.Parameter(f'a_cmb{suffix}', -0.005, -0.95, 0.00)
+        b   = zfit.param.Parameter(f'b_cmb{suffix}',  0.000, -0.95, 0.95)
+        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b])
 
-        if order == 2:
-            a   = zfit.param.Parameter(f'a_cmb{suffix}', -0.005, -0.95, 0.00)
-            b   = zfit.param.Parameter(f'b_cmb{suffix}',  0.000, -0.95, 0.95)
-            pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b])
+        return pdf
+    #-----------------------------------------
+    @MethodRegistry.register('CBR')
+    def _get_cb(self, suffix : str = '') -> zpdf:
+        mu  = zfit.param.Parameter(f'mu{suffix}', 5300, 5250, 5350)
+        sg  = zfit.param.Parameter(f'sg{suffix}', 10, 2, 300)
 
-            return pdf
+        ar  = zfit.param.Parameter(f'ar{suffix}', -2, -4., -1.)
+        nr  = zfit.param.Parameter(f'nr{suffix}' , 1, 0.5, 5)
 
-        raise ValueError(f'Invalid polynomial of order: {order}')
+        pdf = zfit.pdf.CrystalBall(mu, sg, ar, nr, self._obs)
+
+        return pdf
+    #-----------------------------------------
+    @MethodRegistry.register('CBL')
+    def _get_cb(self, suffix : str = '') -> zpdf:
+        mu  = zfit.param.Parameter(f'mu{suffix}', 5300, 5250, 5350)
+        sg  = zfit.param.Parameter(f'sg{suffix}', 10, 2, 300)
+
+        al  = zfit.param.Parameter(f'al{suffix}',  2,  1.,  4.)
+        nl  = zfit.param.Parameter(f'nl{suffix}' , 2, 0.5, 5)
+
+        pdf = zfit.pdf.CrystalBall(mu, sg, al, nl, self._obs)
+
+        return pdf
     #-----------------------------------------
     def _get_pdf_types(self, l_name) -> list[tuple[str,str]]:
         d_name_freq = {}
