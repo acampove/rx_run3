@@ -34,6 +34,7 @@ def _initialize():
 def _get_conf() -> dict:
     return {
             'name'   : 'signal',
+            'out_dir': '/tmp/rx_calibration/tests/fit_component',
             'fitting':
             {
                 'error_method'  : 'minuit_hesse',
@@ -41,7 +42,6 @@ def _get_conf() -> dict:
                 },
             'plotting' :
             {
-                'plot_dir': '/tmp/rx_calibration/tests/fit_component',
                 'nbins'   : 50,
                 'stacked' : True,
                 },
