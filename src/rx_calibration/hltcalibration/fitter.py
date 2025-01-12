@@ -80,9 +80,9 @@ class Fitter:
         self._obs_name,= self._pdf_sig.obs
 
         log.debug('Creating full PDF')
-        esig           = self._pdf_sig.create_extended(self._par_nsg)
         ebkg           = self._pdf_bkg.create_extended(self._par_nbk)
-        self._pdf_ful  = zfit.pdf.SumPDF([esig, ebkg])
+        esig           = self._pdf_sig.create_extended(self._par_nsg)
+        self._pdf_ful  = zfit.pdf.SumPDF([ebkg, esig])
 
         log.debug('Creating zfit data')
         self._zdt_sig  = self._data_from_rdf(self._rdf_sim)
