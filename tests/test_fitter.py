@@ -109,7 +109,7 @@ def _get_fit_conf() -> dict:
                 'nbins'   : 50,
                 'stacked' : True,
                 'd_leg'   : {
-                    'Gaus_ext'       : 'Signal',
+                    'Gauss_ext'      : 'Signal',
                     'Exponential_ext': 'Combinatorial',
                     'ArgusPDF_ext'   : 'PRec',
                     }
