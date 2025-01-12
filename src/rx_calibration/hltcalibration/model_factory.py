@@ -22,7 +22,10 @@ class MethodRegistry:
     _d_method = {}
 
     @classmethod
-    def register(cls, nickname):
+    def register(cls, nickname : str):
+        '''
+        Decorator in charge of registering method for given nickname
+        '''
         def decorator(method):
             cls._d_method[nickname] = method
             return method
@@ -30,7 +33,10 @@ class MethodRegistry:
         return decorator
 
     @classmethod
-    def get_method(cls, nickname):
+    def get_method(cls, nickname : str) -> Union[Callable,None]:
+        '''
+        Will return method in charge of building PDF, for an input nickname
+        '''
         return cls._d_method.get(nickname, None)
 #-----------------------------------------
 class ModelFactory:
