@@ -45,6 +45,10 @@ class FitComponent:
         self._name      = cfg['name']
         self._fit_cfg   = cfg['fitting' ] if 'fitting'  in cfg else None
         self._plt_cfg   = cfg['plotting'] if 'plotting' in cfg else None
+        self._out_dir   : str
+
+        if self._fit_cfg is not None:
+            self._out_dir = cfg['out_dir']
 
         self._rdf       = rdf
         self._pdf       = pdf
@@ -117,15 +121,12 @@ class FitComponent:
             log.warning('No plotting configuration found, will skip plotting')
             return
 
-        plot_dir = self._plt_cfg['plot_dir']
-        del self._plt_cfg['plot_dir']
-
-        os.makedirs(plot_dir, exist_ok=True)
+        os.makedirs(self._out_dir, exist_ok=True)
 
         obj=ZFitPlotter(data=data, model=model)
         obj.plot(**self._plt_cfg)
 
-        plot_path = f'{plot_dir}/{self._name}.png'
+        plot_path = f'{self._out_dir}/{self._name}.png'
         log.info(f'Saving fit plot to: {plot_path}')
         plt.savefig(plot_path)
     # -------------------------------
