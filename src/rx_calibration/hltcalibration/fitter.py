@@ -17,7 +17,8 @@ from dmu.logging.log_store  import LogStore
 from dmu.stats.utilities    import print_pdf
 from dmu.stats.zfit_plotter import ZFitPlotter
 
-from rx_calibration.hltcalibration.parameter import Parameter
+from rx_calibration.hltcalibration.parameter     import Parameter
+from rx_calibration.hltcalibration.fit_component import FitComponent
 
 log   = LogStore.add_logger('rx_calibration:fitter')
 # --------------------------------------------------
