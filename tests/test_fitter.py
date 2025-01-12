@@ -96,6 +96,13 @@ def _get_pdf(kind : str) -> BasePDF:
 
     return pdf
 # --------------------------------------------
+def _get_conf() -> dict:
+    return {
+            'plot_nbins'     : 50,
+            'error_method'   : 'minuit_hesse',
+            'weights_column' : 'weights'
+            }
+# --------------------------------------------
 def test_simple():
     '''
     Simplest test of Fitter class
@@ -107,12 +114,15 @@ def test_simple():
 
     pdf_s   = _get_pdf(kind =     'signal')
     pdf_b   = _get_pdf(kind = 'background')
+    conf    = _get_conf()
 
     obj = Fitter(
             data=rdf_dat,
             sim =rdf_sim,
             smod=pdf_s,
-            bmod=pdf_b)
+            bmod=pdf_b,
+            conf=conf,
+            )
 
     _ = obj.fit()
 # --------------------------------------------
