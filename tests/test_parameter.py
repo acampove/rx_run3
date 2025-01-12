@@ -5,6 +5,7 @@ import pytest
 
 from rx_calibration.hltcalibration.parameter import Parameter
 
+# ---------------------------------------------------------------------
 def test_simple():
     '''
     Simplest test
@@ -19,7 +20,7 @@ def test_simple():
 
     with pytest.raises(ValueError):
         _ = obj['c']
-
+# ---------------------------------------------------------------------
 def test_to_json():
     '''
     Tests saving to JSON
@@ -30,7 +31,7 @@ def test_to_json():
     obj['b'] = [2,2]
 
     obj.to_json('/tmp/rx_calibration/tests/parameter/save/parameter.json')
-
+# ---------------------------------------------------------------------
 def test_from_json():
     '''
     Tests making a parameter object from JSON
@@ -46,6 +47,4 @@ def test_from_json():
     obj_2=Parameter.from_json(path)
 
     assert obj_1 == obj_2
-
-
-
+# ---------------------------------------------------------------------
