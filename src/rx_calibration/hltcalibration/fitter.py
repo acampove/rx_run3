@@ -9,9 +9,10 @@ from zfit.core.interfaces    import ZfitSpace
 from zfit.core.basepdf       import BasePDF
 from zfit.core.data          import Data      as zdata
 
-from ROOT                  import RDataFrame
-from dmu.logging.log_store import LogStore
-from dmu.stats.utilities   import print_pdf
+from ROOT                   import RDataFrame
+from dmu.logging.log_store  import LogStore
+from dmu.stats.utilities    import print_pdf
+from dmu.stats.zfit_plotter import ZFitPlotter
 
 from rx_calibration.hltcalibration.parameter import Parameter
 
@@ -184,6 +185,10 @@ class Fitter:
             par.floating = True
 
             log.info(f'{name:<20}{"-->":<20}{val:<20.3f}')
+    # -------------------------------
+    def _plot_fit(self, data : zdata, model : BasePDF) -> None:
+        obj   = ZFitPlotter(data=data, model=model)
+        obj.plot(nbins=self._conf['plot_nbins'])
     # -------------------------------
     def fit(self) -> Parameter:
         '''
