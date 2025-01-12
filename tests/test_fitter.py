@@ -166,8 +166,6 @@ def test_simple():
     l_comp  = _get_fit_comp()
     conf    = _get_fit_conf()
 
-    return
-
     obj = Fitter(data = rdf_dat, components = l_comp, conf = conf)
     _   = obj.fit()
 # --------------------------------------------
