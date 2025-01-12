@@ -156,7 +156,7 @@ class FitComponent:
             val, _ = sig_par[name]
 
             par.set_value(val)
-            par.floating = True
+            par.floating = False
 
             log.info(f'{name:<20}{"-->":<20}{val:<20.3f}')
     # --------------------
