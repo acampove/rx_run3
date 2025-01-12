@@ -31,11 +31,11 @@ class FitComponent:
 
     ```yaml
     name    : signal
+    out_dir : /tmp/rx_calibration/tests/fit_component
     fitting :
         error_method   : minuit_hesse
         weights_column : weights
     plotting:
-        plot_dir: /tmp/rx_calibration/tests/fit_component
         nbins   : 50
         stacked : true
     ```
