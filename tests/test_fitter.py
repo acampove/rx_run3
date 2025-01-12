@@ -4,19 +4,22 @@ Module containing tests for Fitter class
 # pylint: disable=import-error
 
 import os
+from typing      import Union
 from dataclasses import dataclass
 
-import numpy
 import ROOT
 import pytest
+import numpy
 import zfit
+import zfit_physics
 from ROOT                    import RDataFrame, RDF
 from zfit.core.basepdf       import BasePDF
 
 from dmu.plotting.plotter_1d import Plotter1D as Plotter
 from dmu.logging.log_store   import LogStore
 
-from rx_calibration.hltcalibration.fitter import Fitter
+from rx_calibration.hltcalibration.fit_component import FitComponent
+from rx_calibration.hltcalibration.fitter        import Fitter
 
 log = LogStore.add_logger('rx_calibration:test_fitter')
 # --------------------------------------------
@@ -28,47 +31,28 @@ class Data:
     out_dir    = '/tmp/rx_calibration/tests/fitter'
     mass_name  = 'mass'
     d_nentries = {
-            'signal'     :   5_000,
-            'background' : 500_000}
+            'signal' : 5_000,
+            'prec'   : 5_000,
+            'comb'   : 5_000,
+            }
 
-    obs        = zfit.Space(mass_name, limits=(4800, 6000))
+    l_no_sim   = ['comb']
+    obs        = zfit.Space(mass_name, limits=(4000, 6000))
 # --------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_calibration:fitter', 10)
 # --------------------------------------------
-def _concatenate_rdf(rdf_1 : RDataFrame, rdf_2 : RDataFrame) -> RDataFrame:
-    arr_val1 = rdf_1.AsNumpy([Data.mass_name])[Data.mass_name]
-    arr_val2 = rdf_2.AsNumpy([Data.mass_name])[Data.mass_name]
-
-    arr_val  = numpy.concatenate([arr_val1, arr_val2])
-
-    return RDF.FromNumpy({Data.mass_name : arr_val})
-# --------------------------------------------
-def _get_rdf(kind : str) -> RDataFrame:
+def _rdf_from_pdf(pdf : BasePDF, kind : str) -> Union[RDataFrame,None]:
     out_path = f'{Data.out_dir}/{kind}.root'
     if os.path.isfile(out_path):
         log.warning(f'Reloading: {out_path}')
         rdf = RDataFrame('tree', out_path)
         return rdf
 
-    if kind == 'data':
-        rdf_s = _get_rdf(    'signal')
-        rdf_b = _get_rdf('background')
-        rdf   = _concatenate_rdf(rdf_s, rdf_b)
-        return rdf
-
-    nentries = Data.d_nentries[kind]
-    rdf      = RDataFrame(nentries)
-
-    if kind == 'background':
-        rdf = rdf.Define(Data.mass_name, 'TRandom3 r(0); return r.Exp(1000.);')
-
-    if kind == 'signal':
-        rdf = rdf.Define(Data.mass_name, 'TRandom3 r(0); return r.Gaus(5300, 50);')
-
-    rdf = rdf.Filter(f'{Data.mass_name} > 4600')
-
+    samp     = pdf.create_sampler(n=Data.d_nentries[kind])
+    arr_mass = samp.numpy().flatten()
+    rdf      = RDF.FromNumpy({Data.mass_name : arr_mass})
     rdf.Snapshot('tree', out_path)
 
     return rdf
@@ -83,55 +67,107 @@ def _plot_rdf(d_rdf : dict[RDataFrame, RDataFrame]) -> None:
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
 # --------------------------------------------
-def _get_pdf(kind : str) -> BasePDF:
+def _get_data_rdf() -> RDataFrame:
+    d_rdf   = { component : _get_comp(component)[0] for component in Data.d_nentries }
+
+    l_arr_mass = []
+    for rdf in d_rdf.values():
+        arr_mass = rdf.AsNumpy([Data.mass_name])[Data.mass_name]
+        l_arr_mass.append(arr_mass)
+
+    arr_mass = numpy.concatenate(l_arr_mass)
+
+    return RDF.FromNumpy({Data.mass_name : arr_mass})
+# --------------------------------------------
+def _get_comp(kind : str) -> tuple[RDataFrame, BasePDF]:
     if   kind == 'signal':
         mu  = zfit.Parameter("mu_flt", 5300, 5200, 5400)
-        sg  = zfit.Parameter(    "sg",  10,    10,  100)
+        sg  = zfit.Parameter(    "sg",  40,    30,  100)
         pdf = zfit.pdf.Gauss(obs=Data.obs, mu=mu, sigma=sg)
-    elif kind == 'background':
+    elif kind == 'comb':
         lam = zfit.param.Parameter('lam' ,   -1/1000.,  -10/1000.,  0)
-        pdf = zfit.pdf.Exponential(lam = lam, obs = Data.obs)
+        pdf = zfit.pdf.Exponential(obs = Data.obs, lam = lam)
+    elif kind == 'prec':
+        mzr = zfit.param.Parameter('mzr' ,  10000,  9000, 11000)
+        cer = zfit.param.Parameter('cer' ,      2,     0,     3)
+        pex = zfit.param.Parameter('pex' ,     10,     8,    15)
+
+        pdf = zfit_physics.pdf.Argus(obs=Data.obs, m0=mzr, c=cer, p=pex)
     else:
         raise ValueError(f'Invalid kind: {kind}')
 
-    return pdf
+    rdf = _rdf_from_pdf(pdf, kind)
+
+    return rdf, pdf
 # --------------------------------------------
-def _get_conf() -> dict:
+def _get_fit_conf() -> dict:
     return {
-            'error_method'  : 'minuit_hesse',
-            'weights_column': 'weights',
-            'plot_dir'      : '/tmp/rx_calibration/tests/fitter/simple',
-            'plotting' :
+            'error_method' : 'minuit_hesse',
+            'out_dir'      : '/tmp/rx_calibration/tests/fitter/simple',
+            'plotting'     :
             {
                 'nbins'   : 50,
                 'stacked' : True,
                 'd_leg'   : {
-                    'Exponential_ext' : 'Combinatorial',
-                    'Gauss_ext'       : 'Signal',
+                    'signal' : 'Signal',
+                    'comb'   : 'Combinatorial',
+                    'prec'   : 'PRec',
                     }
                 },
             }
+# --------------------------------------------
+def _get_fcomp_cfg(name : str) -> dict:
+    d_fcomp = {
+            'name'   : name,
+            'out_dir': '/tmp/rx_calibration/tests/fitter/components',
+            'fitting':
+            {
+                'error_method'  : 'minuit_hesse',
+                'weights_column': 'weights',
+                },
+            'plotting' :
+            {
+                'nbins'   : 50,
+                'stacked' : True,
+                },
+            }
+
+    if name not in Data.l_no_sim:
+        return d_fcomp
+
+    del d_fcomp['fitting' ]
+    del d_fcomp['plotting']
+
+    return d_fcomp
+# --------------------------------------------
+def _get_fit_comp() -> list[FitComponent]:
+    d_comp = { component : _get_comp(kind=component) for component in Data.d_nentries }
+    for name in Data.l_no_sim:
+        _, pdf = d_comp[name]
+        d_comp[name] = None, pdf
+
+    l_cfg   = [ _get_fcomp_cfg(component) for component in d_comp          ]
+    l_rdf   = [ rdf                       for rdf, _    in d_comp.values() ]
+    l_pdf   = [ pdf                       for   _, pdf  in d_comp.values() ]
+
+    l_fcomp = [ FitComponent(cfg=cfg, rdf=rdf, pdf=pdf) for cfg, rdf, pdf in zip(l_cfg, l_rdf, l_pdf)]
+
+    for fcomp in l_fcomp:
+        fcomp.get_pdf()
+
+    return l_fcomp
 # --------------------------------------------
 def test_simple():
     '''
     Simplest test of Fitter class
     '''
-    rdf_sim = _get_rdf(kind = 'signal')
-    rdf_dat = _get_rdf(kind =   'data')
 
-    #_plot_rdf({'MC' : rdf_sim, 'Data' : rdf_dat})
+    rdf_dat = _get_data_rdf()
+    l_comp  = _get_fit_comp()
+    conf    = _get_fit_conf()
 
-    pdf_s   = _get_pdf(kind =     'signal')
-    pdf_b   = _get_pdf(kind = 'background')
-    conf    = _get_conf()
+    return
 
-    obj = Fitter(
-            data=rdf_dat,
-            sim =rdf_sim,
-            smod=pdf_s,
-            bmod=pdf_b,
-            conf=conf,
-            )
-
-    _ = obj.fit()
+    obj = Fitter(data = rdf_dat, components = l_comp, conf = conf)
+    _   = obj.fit()
 # --------------------------------------------
