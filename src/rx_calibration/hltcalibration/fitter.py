@@ -1,7 +1,7 @@
 '''
 Module containing Fitter class
 '''
-# pylint: disable=import-error, unused-import
+# pylint: disable=import-error, unused-import, too-many-positional-arguments, too-many-arguments
 
 import ROOT
 import zfit
@@ -32,9 +32,24 @@ class Fitter:
     the tail parameters are the ones whose names do not end with _flt. Usually the mean and
     widths are not considered tails and thus they would be named like `mu_flt` and `sig_flt`.
     '''
-    def __init__(self, data : RDataFrame, sim : RDataFrame, smod : BasePDF, bmod : BasePDF):
+    def __init__(self,
+                 data : RDataFrame,
+                 sim  : RDataFrame,
+                 smod : BasePDF,
+                 bmod : BasePDF,
+                 conf : dict):
+        '''
+        Parameters
+        ------------------
+        data : ROOT dataframe with real data
+        sim  : ROOT dataframe with simulation
+        smod : zfit PDF with signal model
+        bmod : zfit PDF with background model
+        conf : Dictionary with configuration for fitting, plotting, etc
+        '''
         self._rdf_dat = data
         self._rdf_sim = sim
+        self._conf    = conf
 
         self._pdf_sig = smod
         self._pdf_bkg = bmod
@@ -72,24 +87,26 @@ class Fitter:
         log.info(f'Using observable: {self._obs_name}')
     # -------------------------------
     def _data_from_rdf(self, rdf : RDataFrame) -> zdata:
-        d_data = rdf.AsNumpy([self._obs_name, 'weights'])
+        weights= self._conf['weights_column']
+        d_data = rdf.AsNumpy([self._obs_name, weights])
 
         arr_obs = d_data[self._obs_name]
-        arr_wgt = d_data['weights'     ]
+        arr_wgt = d_data[weights       ]
 
         data    = zfit.Data.from_numpy(self._obs, array=arr_obs, weights=arr_wgt)
 
         return data
     # -------------------------------
     def _check_weights(self, rdf) -> RDataFrame:
-        v_col = rdf.GetColumnNames()
-        l_col = [col.c_str() for col in v_col]
+        v_col  = rdf.GetColumnNames()
+        l_col  = [col.c_str() for col in v_col]
 
-        if 'weights' in l_col:
-            log.debug('Weights column found, not defining ones')
+        weights= self._conf['weights_column']
+        if weights in l_col:
+            log.debug('Weights column {weights} found, not defining ones')
             return rdf
 
-        log.debug('Weights column not found, defining weights as ones')
+        log.debug('Weights column {weights} not found, defining \"weights\" as ones')
         rdf = rdf.Define('weights', '1')
 
         return rdf
@@ -102,6 +119,10 @@ class Fitter:
             raise ValueError('Background PDF should not be extended')
     # -------------------------------
     def _res_to_par(self, res : zfit.result.FitResult) -> Parameter:
+        error_method = self._conf['error_method']
+        if error_method != 'minuit_hesse':
+            raise NotImplementedError(f'Method {error_method} not implemented, only minuit_hesse allowed')
+
         res.freeze()
         obj = Parameter()
         for par_name, d_val in res.params.items():
@@ -119,7 +140,7 @@ class Fitter:
 
         nll = zfit.loss.UnbinnedNLL(model=self._pdf_sig, data=self._zdt_sig)
         res = self._minimizer.minimize(nll)
-        res.hesse(method='minuit_hesse')
+        res.hesse(method=self._conf['error_method'])
         par = self._res_to_par(res)
 
         print(res)
@@ -133,7 +154,8 @@ class Fitter:
 
         nll = zfit.loss.ExtendedUnbinnedNLL(model=self._pdf_ful, data=self._zdt_dat)
         res = self._minimizer.minimize(nll)
-        res.hesse(method='minuit_hesse')
+        error_method = self._conf['error_method']
+        res.hesse(method=error_method)
         par = self._res_to_par(res)
 
         print(res)
