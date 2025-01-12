@@ -25,8 +25,23 @@ class Data:
 # --------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    FitComponent.plot_dir = Data.out_dir
     LogStore.set_level('rx_calibration:fit_component', 10)
+# --------------------------------------------
+def _get_conf() -> dict:
+    return {
+            'name'   : 'signal',
+            'fitting':
+            {
+                'error_method'  : 'minuit_hesse',
+                'weights_column': 'weights',
+                },
+            'plotting' :
+            {
+                'plot_dir': '/tmp/rx_calibration/tests/fitter/simple',
+                'nbins'   : 50,
+                'stacked' : True,
+                },
+            }
 # --------------------------------------------
 def _get_rdf(kind : str) -> RDataFrame:
     out_path = f'{Data.out_dir}/{kind}.root'
