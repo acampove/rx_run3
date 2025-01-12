@@ -98,9 +98,18 @@ def _get_pdf(kind : str) -> BasePDF:
 # --------------------------------------------
 def _get_conf() -> dict:
     return {
-            'plot_nbins'     : 50,
-            'error_method'   : 'minuit_hesse',
-            'weights_column' : 'weights'
+            'error_method'  : 'minuit_hesse',
+            'weights_column': 'weights',
+            'plot_dir'      : '/tmp/rx_calibration/tests/fitter/simple',
+            'plotting' :
+            {
+                'nbins'   : 50,
+                'stacked' : True,
+                'd_leg'   : {
+                    'Exponential_ext' : 'Combinatorial',
+                    'Gauss_ext'       : 'Signal',
+                    }
+                },
             }
 # --------------------------------------------
 def test_simple():
