@@ -81,6 +81,19 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
+    @MethodRegistry.register('DSCB')
+    def _get_dscb(self, suffix : str = '') -> zpdf:
+        mu  = zfit.param.Parameter(f'mu{suffix}' , 5300, 5250, 5400)
+        sg  = zfit.param.Parameter(f'sg{suffix}' ,   10,    2,   30)
+        ar  = zfit.param.Parameter(f'ar{suffix}' ,    1,    0,    5)
+        al  = zfit.param.Parameter(f'al{suffix}' ,    1,    0,    5)
+        nr  = zfit.param.Parameter(f'nr{suffix}' ,    2,    1,    5)
+        nl  = zfit.param.Parameter(f'nl{suffix}' ,    2,    0,    5)
+
+        pdf = zfit.pdf.DoubleCB(mu, sg, al, nl, ar, nr, self._obs)
+
+        return pdf
+    #-----------------------------------------
     @MethodRegistry.register('CBL')
     def _get_cb(self, suffix : str = '') -> zpdf:
         mu  = zfit.param.Parameter(f'mu{suffix}', 5300, 5250, 5350)
