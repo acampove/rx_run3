@@ -9,6 +9,7 @@ dependencies= [
 'data-manipulation-utilities',
 'tensorflow==2.16.1',
 'zfit==0.23.0',
+'zfit-physics',
 ]
 
 [project.optional-dependencies]
