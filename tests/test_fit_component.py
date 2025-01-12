@@ -4,13 +4,15 @@ Module with tests for FitComponent class
 # pylint: disable=import-error
 
 import os
-from dataclasses                             import dataclass
+from dataclasses                                 import dataclass
 
+import ROOT
+import zfit
 import pytest
-from ROOT                                    import RDataFrame
-from zfit.core.basepdf                       import BasePDF
-from dmu.logging.log_store                   import LogStore
-from rx_calibration.hltcalibration.component import FitComponent
+from ROOT                                        import RDataFrame
+from zfit.core.basepdf                           import BasePDF
+from dmu.logging.log_store                       import LogStore
+from rx_calibration.hltcalibration.fit_component import FitComponent
 
 log = LogStore.add_logger('rx_calibration:test_fit_component')
 # --------------------------------------------
@@ -22,10 +24,12 @@ class Data:
     out_dir   = '/tmp/rx_calibration/tests/fit_component'
     nentries  = 5_000
     mass_name = 'mass'
+    obs       = zfit.Space(mass_name, limits=(4800, 6000))
 # --------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_calibration:fit_component', 10)
+    os.makedirs(Data.out_dir, exist_ok=True)
 # --------------------------------------------
 def _get_conf() -> dict:
     return {
@@ -37,7 +41,7 @@ def _get_conf() -> dict:
                 },
             'plotting' :
             {
-                'plot_dir': '/tmp/rx_calibration/tests/fitter',
+                'plot_dir': '/tmp/rx_calibration/tests/fit_component',
                 'nbins'   : 50,
                 'stacked' : True,
                 },
