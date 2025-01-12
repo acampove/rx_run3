@@ -163,11 +163,17 @@ class FitComponent:
         if self._rdf is None:
             raise ValueError('Dataframe not found')
 
-        data=self._get_data()
+        pars_path= f'{self._out_dir}/{self._name}.json'
+        if not os.path.isfile(pars_path):
+            data=self._get_data()
+            par = self._fit(data)
+            self._plot_fit(data, self._pdf)
+            par.to_json(pars_path)
+        else:
+            log.warning(f'Fit parameters for component {self._name} found, loading: {pars_path}')
+            par = Parameter.from_json(pars_path)
 
-        par = self._fit(data)
         self._fix_tails(par)
-        self._plot_fit(data, self._pdf)
 
         return self._pdf
 # ----------------------------------------
