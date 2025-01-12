@@ -24,6 +24,21 @@ log   = LogStore.add_logger('rx_calibration:fit_component')
 class FitComponent:
     '''
     Class meant to represent a fitting component
+
+    It will take the PDF and optionally a ROOT dataframe modelling the corresponding component in MC.
+    If the dataframe is passed, it will fit the PDF and fix the parameters whose names do not end with
+    `_flt`. It can also plot the fit. The configuration looks like:
+
+    ```yaml
+    name    : signal
+    fitting :
+        error_method   : minuit_hesse
+        weights_column : weights
+    plotting:
+        plot_dir: /tmp/rx_calibration/tests/fit_component
+        nbins   : 50
+        stacked : true
+    ```
     '''
     # --------------------
     def __init__(self, cfg : dict, rdf : Union[RDataFrame,None], pdf : BasePDF):
