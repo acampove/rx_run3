@@ -42,4 +42,17 @@ class Parameter(UserDict):
 
         with open(path, 'w', encoding='utf-8') as ofile:
             json.dump(self.data, ofile, indent=4)
+    # ----------------------------------
+    @staticmethod
+    def from_json(path : str) -> UserDict:
+        '''
+        Will take a path to a JSON file and return a Parameter instance
+        '''
+        if not os.path.isfile(path):
+            raise FileNotFoundError(f'Cannot find: {path}')
+
+        with open(path, encoding='utf-8') as ifile:
+            data = json.load(ifile)
+
+        return Parameter(data)
 # ------------------------------------
