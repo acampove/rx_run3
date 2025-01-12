@@ -50,6 +50,8 @@ def _rdf_from_pdf(pdf : BasePDF, kind : str) -> Union[RDataFrame,None]:
         rdf = RDataFrame('tree', out_path)
         return rdf
 
+    os.makedirs(Data.out_dir, exist_ok=True)
+
     samp     = pdf.create_sampler(n=Data.d_nentries[kind])
     arr_mass = samp.numpy().flatten()
     rdf      = RDF.FromNumpy({Data.mass_name : arr_mass})
@@ -149,11 +151,7 @@ def _get_fit_comp() -> list[FitComponent]:
     l_cfg   = [ _get_fcomp_cfg(component) for component in d_comp          ]
     l_rdf   = [ rdf                       for rdf, _    in d_comp.values() ]
     l_pdf   = [ pdf                       for   _, pdf  in d_comp.values() ]
-
     l_fcomp = [ FitComponent(cfg=cfg, rdf=rdf, pdf=pdf) for cfg, rdf, pdf in zip(l_cfg, l_rdf, l_pdf)]
-
-    for fcomp in l_fcomp:
-        fcomp.get_pdf()
 
     return l_fcomp
 # --------------------------------------------
