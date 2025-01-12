@@ -36,6 +36,7 @@ class Fitter:
     the tail parameters are the ones whose names do not end with _flt. Usually the mean and
     widths are not considered tails and thus they would be named like `mu_flt` and `sig_flt`.
     '''
+    # -------------------------------
     def __init__(self,
                  data : RDataFrame,
                  sim  : RDataFrame,
