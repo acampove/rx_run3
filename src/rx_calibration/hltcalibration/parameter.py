@@ -33,7 +33,7 @@ class Parameter(UserDict):
 
         return super().__getitem__(name)
     # ----------------------------------
-    def save(self, path : str) -> None:
+    def to_json(self, path : str) -> None:
         '''
         Will save current object to JSON, using the path as argument
         '''
