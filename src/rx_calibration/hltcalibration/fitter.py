@@ -58,8 +58,8 @@ class Fitter:
         self._zdt_sig : zdata
         self._zdt_dat : zdata
 
-        self._par_nsg = zfit.Parameter('nsig', 10, 0, 100_000)
-        self._par_nbk = zfit.Parameter('nbkg', 10, 0, 100_000)
+        self._par_nsg = zfit.Parameter('nsig', 10, 0, 1000_000)
+        self._par_nbk = zfit.Parameter('nbkg', 10, 0, 1000_000)
 
         self._minimizer= zfit.minimize.Minuit()
         self._obs      : ZfitSpace
