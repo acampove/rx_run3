@@ -56,6 +56,13 @@ class FitComponent:
         self._obs_name, = self._pdf.obs
         self._minimizer = zfit.minimize.Minuit()
     # --------------------
+    @property
+    def name(self) -> str:
+        '''
+        Returns the name of the fit component
+        '''
+        return self._name
+    # --------------------
     def _add_weights(self, rdf : RDataFrame, wgt_name : str) -> RDataFrame:
         v_col  = rdf.GetColumnNames()
         l_col  = [col.c_str() for col in v_col]
