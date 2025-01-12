@@ -37,7 +37,7 @@ def _get_conf() -> dict:
                 },
             'plotting' :
             {
-                'plot_dir': '/tmp/rx_calibration/tests/fitter/simple',
+                'plot_dir': '/tmp/rx_calibration/tests/fitter',
                 'nbins'   : 50,
                 'stacked' : True,
                 },
@@ -78,6 +78,7 @@ def test_simple():
     '''
     rdf= _get_rdf('signal')
     pdf= _get_pdf('signal')
+    cfg= _get_conf()
 
-    obj=FitComponent(name='signal', rdf=rdf, pdf=pdf)
-    pdf=obj.get_pdf(fit=True)
+    obj=FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
+    pdf=obj.get_pdf()
