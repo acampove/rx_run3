@@ -68,9 +68,11 @@ class FitComponent:
             raise ValueError('Cannot find fit configuration')
 
         err_method = self._fit_cfg['error_method']
+
         if err_method != 'minuit_hesse':
             raise NotImplementedError(f'Method {err_method} not implemented, only minuit_hesse allowed')
 
+        res.hesse(method=err_method)
         res.freeze()
         obj = Parameter()
         for par_name, d_val in res.params.items():
@@ -108,7 +110,7 @@ class FitComponent:
         obj=ZFitPlotter(data=data, model=model)
         obj.plot(**self._plt_cfg)
 
-        plot_path = f'{plot_dir}/{self._name}'
+        plot_path = f'{plot_dir}/{self._name}.png'
         log.info(f'Saving fit plot to: {plot_path}')
         plt.savefig(plot_path)
     # -------------------------------
