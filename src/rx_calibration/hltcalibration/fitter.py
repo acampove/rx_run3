@@ -3,8 +3,11 @@ Module containing Fitter class
 '''
 # pylint: disable=import-error, unused-import, too-many-positional-arguments, too-many-arguments
 
+import os
 import ROOT
 import zfit
+import matplotlib.pyplot as plt
+
 from zfit.core.interfaces    import ZfitSpace
 from zfit.core.basepdf       import BasePDF
 from zfit.core.data          import Data      as zdata
@@ -145,6 +148,7 @@ class Fitter:
         par = self._res_to_par(res)
 
         print(res)
+        self._plot_fit(data=self._zdt_sig, model=self._pdf_sig, name = 'fit_sim.png')
 
         return par
     # -------------------------------
@@ -160,6 +164,7 @@ class Fitter:
         par = self._res_to_par(res)
 
         print(res)
+        self._plot_fit(data=self._zdt_dat, model=self._pdf_ful, name = 'fit_dat.png')
 
         return par
     # -------------------------------
@@ -186,9 +191,18 @@ class Fitter:
 
             log.info(f'{name:<20}{"-->":<20}{val:<20.3f}')
     # -------------------------------
-    def _plot_fit(self, data : zdata, model : BasePDF) -> None:
+    def _plot_fit(self, data : zdata, model : BasePDF, name : str) -> None:
+        plot_dir = self._conf['plot_dir']
+        plot_cfg = self._conf['plotting']
+
+        os.makedirs(plot_dir, exist_ok=True)
+
         obj   = ZFitPlotter(data=data, model=model)
-        obj.plot(nbins=self._conf['plot_nbins'])
+        obj.plot(**plot_cfg)
+
+        plot_path = f'{plot_dir}/{name}'
+        log.info(f'Saving fit plot to: {plot_path}')
+        plt.savefig(plot_path)
     # -------------------------------
     def fit(self) -> Parameter:
         '''
