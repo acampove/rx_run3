@@ -46,3 +46,4 @@ def test_simple():
 
     gcl = GofCalculator(nll)
     gof = gcl.get_gof(kind='pvalue')
+# -------------------------------------------
