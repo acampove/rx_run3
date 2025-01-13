@@ -138,7 +138,7 @@ class GofCalculator:
         if kind == 'pvalue':
             return pval
 
-        if kind == 'chi2/nodf':
+        if kind == 'chi2/ndof':
             return chi2/ndof
 
         raise NotImplementedError(f'Invalid goodness of fit: {kind}')
