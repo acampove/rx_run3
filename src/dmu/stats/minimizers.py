@@ -4,6 +4,8 @@ Module containing derived classes from ZFit minimizer
 import numpy
 
 import zfit
+from zfit.result                   import FitResult
+from zfit.core.basepdf             import BasePDF           as zpdf
 from zfit.minimizers.baseminimizer import FailMinimizeNaN
 from dmu.stats.gof_calculator      import GofCalculator
 from dmu.logging.log_store         import LogStore
