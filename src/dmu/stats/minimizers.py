@@ -37,9 +37,11 @@ class AnealingMinimizer(zfit.minimize.Minuit):
             raise ValueError('Threshold for both chi2 and pvalue were specified')
 
         if good_pvalue:
+            log.debug(f'Will use threshold on pvalue with value: {self._pvalue}')
             return
 
         if good_chi2dof:
+            log.debug(f'Will use threshold on chi2ndof with value: {self._chi2ndof}')
             return
 
         raise ValueError('Neither pvalue nor chi2 thresholds are valid')
