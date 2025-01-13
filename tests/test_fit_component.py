@@ -79,7 +79,9 @@ def _get_pdf(kind : str) -> BasePDF:
 # --------------------------------------------
 def _get_signal_rdf() -> RDataFrame:
     file_path = '/publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap/Bu_JpsiK_ee_eq_DPC/Hlt2RD_BuToKpEE_MVA/mc_magup_12153001_bu_jpsik_ee_eq_dpc_Hlt2RD_BuToKpEE_MVA_c4aa6722b2.root'
-    rdf = RDataFrame('DataFrame', file_path)
+    rdf = RDataFrame('DecayTree', file_path)
+    rdf = rdf.Define('mass', 'B_const_mass_M')
+    rdf = rdf.Range(10_000)
 
     return rdf
 # --------------------------------------------
