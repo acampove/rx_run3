@@ -68,15 +68,19 @@ class GofCalculator:
 
         return npar
     # ---------------------
+    @lru_cache(maxsize=10)
     def _get_binning(self) -> tuple[int, float, float]:
         min_x = numpy.min(self._data_np)
         max_x = numpy.max(self._data_np)
         nbins = self._ndof + self._get_float_pars()
 
+        log.debug(f'Nbins: {nbins}')
+        log.debug(f'Range: [{min_x:.3f}, {max_x:.3f}]')
+
         return nbins, min_x, max_x
     # ---------------------
-    def _bin_pdf(self, nbins):
-        [[min_x]], [[max_x]] = self._pdf.space.limits
+    def _get_pdf_bin_contents(self) -> numpy.ndarray:
+        nbins, min_x, max_x  = self._get_binning()
         _, arr_edg = numpy.histogram(self._data_np, bins = nbins, range=(min_x, max_x))
 
         size = arr_edg.size
