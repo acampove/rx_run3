@@ -15,9 +15,17 @@ class AnealingMinimizer(zfit.minimize.Minuit):
     each retry is preceeded by the randomization of the fitting parameters
     '''
     # ------------------------
-    def __init__(self, ntries : int, pvalue : float):
-        self._ntries = ntries
-        self._pvalue = pvalue
+    def __init__(self, ntries : int, pvalue : float = -1, chi2ndof : float = -1):
+        '''
+        ntries  : Try this number of times
+        pvalue  : Stop tries when this threshold is reached
+        chi2ndof: Use this value as a threshold to stop fits
+        '''
+        self._ntries   = ntries
+        self._pvalue   = pvalue
+        self._chi2ndof = chi2ndof
+
+        self._check_thresholds()
 
         super().__init__()
     # ------------------------
