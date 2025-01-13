@@ -92,23 +92,27 @@ class GofCalculator:
 
         return numpy.array(l_bc)
     #------------------------------
+    def _get_data_bin_contents(self) -> numpy.ndarray:
+        nbins, min_x, max_x = self._get_binning()
+        arr_data, _         = numpy.histogram(self._data_np, bins = nbins, range=(min_x, max_x))
+        arr_data            = arr_data.astype(float)
+
+        return arr_data
+    #------------------------------
     @lru_cache(maxsize=30)
     def _calculate_gof(self) -> tuple[float, int, float]:
         log.debug('Calculating GOF')
-        nbins, min_x, max_x = self._get_binning()
 
-        log.debug(f'Nbins: {nbins}')
-        log.debug(f'Range: [{min_x:.3f}, {max_x:.3f}]')
+        arr_data    = self._get_data_bin_contents()
+        arr_modl    = self._get_pdf_bin_contents()
 
-        arr_data, _ = numpy.histogram(self._data_np, bins = nbins, range=(min_x, max_x))
-        arr_data    = arr_data.astype(float)
-        arr_modl    = self._bin_pdf(nbins)
         norm        = numpy.sum(arr_data) / numpy.sum(arr_modl)
         arr_modl    = norm * arr_modl
         arr_res     = arr_modl - arr_data
 
         arr_chi2    = numpy.divide(arr_res ** 2, arr_data, out=numpy.zeros_like(arr_data), where=arr_data!=0)
         sum_chi2    = numpy.sum(arr_chi2)
+
         pvalue      = 1 - stats.chi2.cdf(sum_chi2, self._ndof)
         pvalue      = float(pvalue)
 
