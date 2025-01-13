@@ -24,8 +24,8 @@ def _initialize():
     LogStore.set_level('dmu:ml:minimizers', 10)
 #---------------------------------------------
 def _get_model():
-    mu  = zfit.Parameter('mu', 2.4, -1, 5)
-    sg  = zfit.Parameter('sg', 1.3,  0, 5)
+    mu  = zfit.Parameter('mu', 5.0, -1, 5)
+    sg  = zfit.Parameter('sg', 5.0,  0, 5)
     pdf = zfit.pdf.Gauss(obs=Data.obs, mu=mu, sigma=sg)
 
     return pdf
@@ -48,7 +48,7 @@ def test_simple():
     SImplest test of minimizer
     '''
     nll       = _get_nll()
-    minimizer = AnealingMinimizer(ntries=10, pvalue=0.05)
+    minimizer = AnealingMinimizer(ntries=10, pvalue=0.15)
     res       = minimizer.minimize(nll)
 
     print(res)
