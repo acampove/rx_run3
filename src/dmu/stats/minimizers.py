@@ -21,6 +21,21 @@ class AnealingMinimizer(zfit.minimize.Minuit):
 
         super().__init__()
     # ------------------------
+    def _check_thresholds(self) -> None:
+        good_pvalue  = 0 <= self._pvalue < 1
+        good_chi2dof = self._chi2ndof > 0
+
+        if good_pvalue and good_chi2dof:
+            raise ValueError('Threshold for both chi2 and pvalue were specified')
+
+        if good_pvalue:
+            return
+
+        if good_chi2dof:
+            return
+
+        raise ValueError('Neither pvalue nor chi2 thresholds are valid')
+    # ------------------------
     def _is_good_fit(self, nll) -> bool:
         log.debug('Checking GOF')
 
