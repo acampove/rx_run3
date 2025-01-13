@@ -4,6 +4,7 @@ Module holding zfitter class
 
 import pprint
 from typing                   import Union
+from functools                import lru_cache
 
 import numpy
 import zfit
@@ -100,8 +101,8 @@ class Fitter:
 
         return data
     #------------------------------
-    def _bin_pdf(self, nbins):
-        [[min_x]], [[max_x]] = self._pdf.space.limits
+    def _bin_pdf(self):
+        nbins, min_x, max_x = self._get_binning()
         _, arr_edg = numpy.histogram(self._data_np, bins = nbins, range=(min_x, max_x))
 
         size = arr_edg.size
@@ -117,23 +118,29 @@ class Fitter:
 
         return numpy.array(l_bc)
     #------------------------------
+    def _bin_data(self):
+        nbins, min_x, max_x = self._get_binning()
+        arr_data, _ = numpy.histogram(self._data_np, bins = nbins, range=(min_x, max_x))
+        arr_data    = arr_data.astype(float)
+
+        return arr_data
+    #------------------------------
+    @lru_cache(maxsize=10)
     def _get_binning(self):
         min_x = numpy.min(self._data_np)
         max_x = numpy.max(self._data_np)
         nbins = self._ndof + self._get_float_pars()
 
+        log.debug(f'Nbins: {nbins}')
+        log.debug(f'Range: [{min_x:.3f}, {max_x:.3f}]')
+
         return nbins, min_x, max_x
     #------------------------------
     def _calc_gof(self):
         log.debug('Calculating GOF')
-        nbins, min_x, max_x = self._get_binning()
 
-        log.debug(f'Nbins: {nbins}')
-        log.debug(f'Range: [{min_x:.3f}, {max_x:.3f}]')
-
-        arr_data, _ = numpy.histogram(self._data_np, bins = nbins, range=(min_x, max_x))
-        arr_data    = arr_data.astype(float)
-        arr_modl    = self._bin_pdf(nbins)
+        arr_data    = self._bin_data()
+        arr_modl    = self._bin_pdf()
         norm        = numpy.sum(arr_data) / numpy.sum(arr_modl)
         arr_modl    = norm * arr_modl
         arr_res     = arr_modl - arr_data
