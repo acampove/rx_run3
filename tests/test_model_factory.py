@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import zfit
 from dmu.stats.utilities                         import print_pdf
 from dmu.logging.log_store                       import LogStore
-from rx_calibration.hltcalibration.model_factory import ModelFactory 
+from rx_calibration.hltcalibration.model_factory import ModelFactory
 
 log=LogStore.add_logger('rx_calibration:test_zmodel')
 #--------------------------
@@ -67,3 +67,5 @@ def test_repeated_pdf():
     pdf   = mod.get_pdf()
 
     print_pdf(pdf)
+#--------------------------
+
