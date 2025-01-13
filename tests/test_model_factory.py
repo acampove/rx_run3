@@ -50,9 +50,10 @@ def test_sign():
     '''
     Will test only signal builder
     '''
-    mod = ModelFactory(obs = Data.obs)
-    l_pdf = mod.get_pdf(3 * ['EXP'])
+    l_pdf = ['cbr', 'cbl', 'dscb']
+    l_shr = ['mu', 'sg']
+    mod   = ModelFactory(obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr)
+    pdf   = mod.get_pdf()
 
-    for pdf in l_pdf:
-        print_pdf(pdf)
+    print_pdf(pdf)
 #--------------------------
