@@ -61,7 +61,7 @@ class ModelFactory:
             if name.startswith(f'{can_be_shared}_') and can_be_shared in self._l_shr:
                 return can_be_shared
 
-        return f'{name}_{suffix}'
+        return f'{name}{suffix}'
     #-----------------------------------------
     def _get_parameter(self,
                        name   : str,
@@ -73,7 +73,6 @@ class ModelFactory:
         if name in self._d_par:
             return self._d_par[name]
 
-        name = f'{name}{suffix}'
         par  = zfit.param.Parameter(name, val, low, high)
 
         self._d_par[name] = par
