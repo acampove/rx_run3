@@ -128,13 +128,22 @@ class ModelFactory:
 
         return fun(self, preffix)
     #-----------------------------------------
-    def get_pdf(self, l_name : list[str]) -> zpdf:
+    def _add_pdf(self, l_pdf : list[zpdf]) -> zpdf:
+        nfrc = len(l_pdf)
+        l_frc= [ zfit.param.Parameter(f'frc_{ifrc + 1}', 0.5, 0, 1) for ifrc in range(nfrc) ]
+
+        pdf = zfit.pdf.SumPDF(l_pdf, fracs=l_frc)
+
+        return pdf
+    #-----------------------------------------
+    def get_pdf(self) -> zpdf:
         '''
         Given a list of strings representing PDFs returns the a zfit PDF which is
         the sum of them
         '''
-        l_type= self._get_pdf_types(l_name)
+        l_type=   self._get_pdf_types()
         l_pdf = [ self._get_pdf(kind, preffix) for kind, preffix in l_type ]
+        pdf   =   self._add_pdf(l_pdf)
 
-        return l_pdf
+        return pdf
 #-----------------------------------------
