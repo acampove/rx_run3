@@ -1,27 +1,14 @@
 '''
 Module containing derived classes from ZFit minimizer
 '''
-import random
 import numpy
 
 import zfit
 from dmu.logging.log_store    import LogStore
-#from dmu.stats.gof_calculator import GofCalculator
+from dmu.stats.gof_calculator import GofCalculator
 
 log = LogStore.add_logger('dmu:ml:minimizers')
 
-random.seed(4)
-# ------------------------
-class GofCalculator:
-    '''
-    Class used to calculate goodness of fit from zfit NLL
-    '''
-    # ---------------------
-    def __init__(self, nll):
-        self._nll = nll
-    # ---------------------
-    def get_gof(self, kind : str) -> bool:
-        return random.uniform(0.0, 0.058)
 # ------------------------
 class AnealingMinimizer(zfit.minimize.Minuit):
     '''
