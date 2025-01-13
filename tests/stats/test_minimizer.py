@@ -43,9 +43,9 @@ def _get_nll():
 
     return nll
 # -------------------------------------------
-def test_simple():
+def test_pvalue():
     '''
-    SImplest test of minimizer
+    SImplest test of minimizer with pvalue threshold
     '''
     nll       = _get_nll()
     minimizer = AnealingMinimizer(ntries=10, pvalue=0.15)
