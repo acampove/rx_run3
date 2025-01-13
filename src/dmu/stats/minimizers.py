@@ -4,11 +4,10 @@ Module containing derived classes from ZFit minimizer
 import numpy
 
 import zfit
-from dmu.logging.log_store    import LogStore
 from dmu.stats.gof_calculator import GofCalculator
+from dmu.logging.log_store    import LogStore
 
 log = LogStore.add_logger('dmu:ml:minimizers')
-
 # ------------------------
 class AnealingMinimizer(zfit.minimize.Minuit):
     '''
@@ -27,13 +26,14 @@ class AnealingMinimizer(zfit.minimize.Minuit):
 
         gcl = GofCalculator(nll)
         gof = gcl.get_gof(kind='pvalue')
+        ch2 = gcl.get_gof(kind='chi2/ndof')
 
         is_good = gof > self._pvalue
 
         if is_good:
             log.info(f'Stopping fit, found p-value: {gof:.3f} > {self._pvalue:.3f}')
 
-        log.debug(f'Found p-value: {gof:.3f} <= {self._pvalue:.3f}')
+        log.info(f'Found p-value/chi2: {gof:.3f} (<= {self._pvalue:.3f})/{ch2:.2f}')
 
         return is_good
     # ------------------------
@@ -43,7 +43,7 @@ class AnealingMinimizer(zfit.minimize.Minuit):
         to uniform PDF
         '''
 
-        log.info('Randomizing parameters')
+        log.debug('Randomizing parameters')
         l_model = nll.model
         if len(l_model) != 1:
             raise ValueError('Not found and and only one model')
@@ -61,7 +61,7 @@ class AnealingMinimizer(zfit.minimize.Minuit):
         Will run minimization and return FitResult object
         '''
         for i_try in range(self._ntries):
-            log.info(f'try {i_try}')
+            log.info(f'try {i_try:02}/{self._ntries:02}')
             res = super().minimize(nll, **kwargs)
             if self._is_good_fit(nll):
                 return res
