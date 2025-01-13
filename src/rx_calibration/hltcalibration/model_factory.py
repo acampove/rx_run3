@@ -42,73 +42,106 @@ class ModelFactory:
     Class used to create Zfit PDFs
     '''
     #-----------------------------------------
-    def __init__(self, obs : zspace):
-        self._obs = obs
+    def __init__(self, obs : zobs, l_pdf : list[str], l_shared : list[str]):
+        '''
+        obs:      zfit obserbable
+        l_pdf:    List of PDF nicknames which are registered below
+        l_shared: List of parameter names that are shared
+        '''
+
+        self._l_pdf           = l_pdf
+        self._l_shr           = l_shared
+        self._l_can_be_shared = ['mu', 'sg']
+        self._obs             = obs
+
+        self._d_par : dict[str,zpar] = {}
     #-----------------------------------------
-    @MethodRegistry.register('EXP')
+    def _get_name(self, name : str, suffix : str) -> str:
+        for can_be_shared in self._l_can_be_shared:
+            if name.startswith(f'{can_be_shared}_') and can_be_shared in self._l_shr:
+                return can_be_shared
+
+        return f'{name}_{suffix}'
+    #-----------------------------------------
+    def _get_parameter(self,
+                       name   : str,
+                       suffix : str,
+                       val    : float,
+                       low    : float,
+                       high   : float) -> zpar:
+        name = self._get_name(name, suffix)
+        if name in self._d_par:
+            return self._d_par[name]
+
+        name = f'{name}{suffix}'
+        par  = zfit.param.Parameter(name, val, low, high)
+
+        self._d_par[name] = par
+
+        return par
+    #-----------------------------------------
+    @MethodRegistry.register('exp')
     def _get_exponential(self, suffix : str = '') -> zpdf:
-        c   = zfit.param.Parameter(f'c_cmb{suffix}', -0.005, -0.05, 0.05)
+        c   = self._get_parameter('c_exp', suffix, -0.005, -0.05, 0.00)
         pdf = zfit.pdf.Exponential(c, self._obs)
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('POL1')
+    @MethodRegistry.register('pol1')
     def _get_pol1(self, suffix : str = '') -> zpdf:
-        a   = zfit.param.Parameter(f'a_cmb{suffix}', -0.005, -0.95, 0.00)
+        a   = self._get_parameter('a_pol1', suffix, -0.005, -0.95, 0.00)
         pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a])
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('POL2')
+    @MethodRegistry.register('pol2')
     def _get_pol2(self, suffix : str = '') -> zpdf:
-        a   = zfit.param.Parameter(f'a_cmb{suffix}', -0.005, -0.95, 0.00)
-        b   = zfit.param.Parameter(f'b_cmb{suffix}',  0.000, -0.95, 0.95)
+        a   = self._get_parameter('a_pol2', suffix, -0.005, -0.95, 0.00)
+        b   = self._get_parameter('b_pol2', suffix,  0.000, -0.95, 0.95)
         pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b])
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('CBR')
-    def _get_cb(self, suffix : str = '') -> zpdf:
-        mu  = zfit.param.Parameter(f'mu{suffix}', 5300, 5250, 5350)
-        sg  = zfit.param.Parameter(f'sg{suffix}', 10, 2, 300)
-
-        ar  = zfit.param.Parameter(f'ar{suffix}', -2, -4., -1.)
-        nr  = zfit.param.Parameter(f'nr{suffix}' , 1, 0.5, 5)
+    @MethodRegistry.register('cbr')
+    def _get_cbr(self, suffix : str = '') -> zpdf:
+        mu  = self._get_parameter('mu_cbr', suffix, 5300, 5250, 5350)
+        sg  = self._get_parameter('sg_cbr', suffix,   10,    2,  300)
+        ar  = self._get_parameter('ac_cbr', suffix,   -2,  -4.,  -1.)
+        nr  = self._get_parameter('nc_cbr', suffix,    1,  0.5,  5.0)
 
         pdf = zfit.pdf.CrystalBall(mu, sg, ar, nr, self._obs)
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('DSCB')
-    def _get_dscb(self, suffix : str = '') -> zpdf:
-        mu  = zfit.param.Parameter(f'mu{suffix}' , 5300, 5250, 5400)
-        sg  = zfit.param.Parameter(f'sg{suffix}' ,   10,    2,   30)
-        ar  = zfit.param.Parameter(f'ar{suffix}' ,    1,    0,    5)
-        al  = zfit.param.Parameter(f'al{suffix}' ,    1,    0,    5)
-        nr  = zfit.param.Parameter(f'nr{suffix}' ,    2,    1,    5)
-        nl  = zfit.param.Parameter(f'nl{suffix}' ,    2,    0,    5)
-
-        pdf = zfit.pdf.DoubleCB(mu, sg, al, nl, ar, nr, self._obs)
-
-        return pdf
-    #-----------------------------------------
-    @MethodRegistry.register('CBL')
-    def _get_cb(self, suffix : str = '') -> zpdf:
-        mu  = zfit.param.Parameter(f'mu{suffix}', 5300, 5250, 5350)
-        sg  = zfit.param.Parameter(f'sg{suffix}', 10, 2, 300)
-
-        al  = zfit.param.Parameter(f'al{suffix}',  2,  1.,  4.)
-        nl  = zfit.param.Parameter(f'nl{suffix}' , 2, 0.5, 5)
+    @MethodRegistry.register('cbl')
+    def _get_cbl(self, suffix : str = '') -> zpdf:
+        mu  = self._get_parameter('mu_cbl', suffix, 5300, 5250, 5350)
+        sg  = self._get_parameter('sg_cbl', suffix,   10,    2,  300)
+        al  = self._get_parameter('ac_cbl', suffix,    2,   1.,   4.)
+        nl  = self._get_parameter('nc_cbl', suffix,    1,  0.5,  5.0)
 
         pdf = zfit.pdf.CrystalBall(mu, sg, al, nl, self._obs)
 
         return pdf
     #-----------------------------------------
-    def _get_pdf_types(self, l_name) -> list[tuple[str,str]]:
+    @MethodRegistry.register('dscb')
+    def _get_dscb(self, suffix : str = '') -> zpdf:
+        mu  = self._get_parameter('mu_dscb', suffix, 5300, 5250, 5400)
+        sg  = self._get_parameter('sg_dscb', suffix,   10,    2,   30)
+        ar  = self._get_parameter('ar_dscb', suffix,    1,    0,    5)
+        al  = self._get_parameter('al_dscb', suffix,    1,    0,    5)
+        nr  = self._get_parameter('nr_dscb', suffix,    2,    1,    5)
+        nl  = self._get_parameter('nl_dscb', suffix,    2,    0,    5)
+
+        pdf = zfit.pdf.DoubleCB(mu, sg, al, nl, ar, nr, self._obs)
+
+        return pdf
+    #-----------------------------------------
+    def _get_pdf_types(self) -> list[tuple[str,str]]:
         d_name_freq = {}
 
         l_type = []
-        for name in l_name:
+        for name in self._l_pdf:
             if name not in d_name_freq:
                 d_name_freq[name] = 1
             else:
