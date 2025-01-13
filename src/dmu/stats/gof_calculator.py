@@ -51,6 +51,13 @@ class GofCalculator:
 
         return l_model[0]
     # ---------------------
+    def _data_from_nll(self) -> zpdf:
+        l_data = self._nll.data
+        if len(l_data) != 1:
+            raise ValueError('Not found one and only one dataset')
+
+        return l_data[0]
+    # ---------------------
     def _get_float_pars(self) -> int:
         npar     = 0
         s_par    = self._pdf.get_params()
