@@ -48,15 +48,17 @@ class AnealingMinimizer(zfit.minimize.Minuit):
         log.debug('Checking GOF')
 
         gcl = GofCalculator(nll)
-        gof = gcl.get_gof(kind='pvalue')
+        pvl = gcl.get_gof(kind='pvalue')
         ch2 = gcl.get_gof(kind='chi2/ndof')
 
-        is_good = gof > self._pvalue
+        is_good_pval = pvl > self._pvalue   and self._pvalue   > 0
+        is_good_chi2 = ch2 > self._chi2ndof and self._chi2ndof > 0
+        is_good      = is_good_pval or is_good_chi2
 
         if is_good:
-            log.info(f'Stopping fit, found p-value: {gof:.3f} > {self._pvalue:.3f}')
+            log.info(f'Stopping fit, found p-value: {pvl:.3f} > {self._pvalue:.3f}')
 
-        log.info(f'Found p-value/chi2: {gof:.3f} (<= {self._pvalue:.3f})/{ch2:.2f}')
+        log.info(f'Found p-value/chi2: {pvl:.3f} (<= {self._pvalue:.3f})/{ch2:.2f}')
 
         return is_good
     # ------------------------
