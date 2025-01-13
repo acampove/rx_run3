@@ -62,7 +62,13 @@ class AnealingMinimizer(zfit.minimize.Minuit):
         '''
         for i_try in range(self._ntries):
             log.info(f'try {i_try:02}/{self._ntries:02}')
-            res = super().minimize(nll, **kwargs)
+            try:
+                res = super().minimize(nll, **kwargs)
+            except (ValueError, RuntimeError) as exc:
+                log.warning(exc)
+                self._randomize_parameters(nll)
+                continue
+
             if self._is_good_fit(nll):
                 return res
 
