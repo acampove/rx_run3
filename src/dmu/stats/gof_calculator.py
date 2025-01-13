@@ -24,7 +24,8 @@ class GofCalculator:
         self._ndof    = ndof
 
         self._pdf     = self._pdf_from_nll()
-        self._data_np = self._data_np_from_data(nll.data)
+        self._data_in = self._data_from_nll()
+        self._data_np = self._data_np_from_data(self._data_in)
         self._data_zf = zfit.Data.from_numpy(obs=self._pdf.space, array=self._data_np)
     # ---------------------
     def _data_np_from_data(self, dat) -> numpy.ndarray:
