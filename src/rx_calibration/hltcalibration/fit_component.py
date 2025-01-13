@@ -72,7 +72,7 @@ class FitComponent:
             return rdf
 
         log.debug(f'Weights column {wgt_name} not found, defining \"weights\" as ones')
-        rdf = rdf.Define(wgt_name, '1')
+        rdf = rdf.Define(wgt_name, '1.0')
 
         return rdf
     # --------------------
