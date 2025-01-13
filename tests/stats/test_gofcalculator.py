@@ -1,11 +1,14 @@
 '''
 Module with tests for GofCalculator class
 '''
+import math
 from dataclasses              import dataclass
 
 import zfit
 import numpy
+import pytest
 
+from dmu.stats.zfit_plotter   import ZFitPlotter
 from dmu.stats.gof_calculator import GofCalculator
 from dmu.logging.log_store    import LogStore
 
@@ -16,11 +19,17 @@ class Data:
     '''
     Class used to share attributes
     '''
-    obs = zfit.Space('x', limits=(-10, 10))
+    minimizer = zfit.minimize.Minuit()
+    obs       = zfit.Space('x', limits=(-10, 10))
+#---------------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('dmu:stats:gofcalculator', 10)
+    numpy.random.seed(42)
 #---------------------------------------------
 def _get_model():
-    mu  = zfit.Parameter('mu', 2.4, -1, 5)
-    sg  = zfit.Parameter('sg', 1.3,  0, 5)
+    mu  = zfit.Parameter('mu', 3, -1, 5)
+    sg  = zfit.Parameter('sg', 2,  0, 5)
     pdf = zfit.pdf.Gauss(obs=Data.obs, mu=mu, sigma=sg)
 
     return pdf
@@ -43,7 +52,11 @@ def test_simple():
     Simplest test of GofCalculator
     '''
     nll = _get_nll()
+    res = Data.minimizer.minimize(nll)
+    print(res)
 
-    gcl = GofCalculator(nll)
+    gcl = GofCalculator(nll, ndof=10)
     gof = gcl.get_gof(kind='pvalue')
+
+    assert math.isclose(gof, 0.965, abs_tol=0.01)
 # -------------------------------------------
