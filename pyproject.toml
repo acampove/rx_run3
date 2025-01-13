@@ -1,7 +1,7 @@
 [project]
 name        = 'rx_data'
 description = 'Project with lists of LFNs and utilities needed to download filteres ntuples' 
-version     = '0.0.8'
+version     = '0.0.9'
 readme      = 'README.md'
 dependencies= [
 'tqdm', 
