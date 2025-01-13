@@ -46,7 +46,7 @@ class Data:
             ('2018', 'MTOS', 'psi2'),
             ]
 #--------------------------
-def test_sign():
+def test_unique_pdf():
     '''
     Will test only signal builder
     '''
@@ -57,3 +57,13 @@ def test_sign():
 
     print_pdf(pdf)
 #--------------------------
+def test_repeated_pdf():
+    '''
+    Will test only signal builder
+    '''
+    l_pdf = ['cbr'] + 2 * ['cbl']
+    l_shr = ['mu', 'sg']
+    mod   = ModelFactory(obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr)
+    pdf   = mod.get_pdf()
+
+    print_pdf(pdf)
