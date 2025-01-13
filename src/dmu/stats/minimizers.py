@@ -4,8 +4,9 @@ Module containing derived classes from ZFit minimizer
 import numpy
 
 import zfit
-from dmu.stats.gof_calculator import GofCalculator
-from dmu.logging.log_store    import LogStore
+from zfit.minimizers.baseminimizer import FailMinimizeNaN
+from dmu.stats.gof_calculator      import GofCalculator
+from dmu.logging.log_store         import LogStore
 
 log = LogStore.add_logger('dmu:ml:minimizers')
 # ------------------------
@@ -95,7 +96,7 @@ class AnealingMinimizer(zfit.minimize.Minuit):
             log.info(f'try {i_try:02}/{self._ntries:02}')
             try:
                 res = super().minimize(nll, **kwargs)
-            except (ValueError, RuntimeError) as exc:
+            except (FailMinimizeNaN, ValueError, RuntimeError) as exc:
                 log.warning(exc)
                 self._randomize_parameters(nll)
                 continue
