@@ -1,17 +1,15 @@
 '''
-Module storing ZModel class 
+Module storing ZModel class
 '''
 # pylint: disable=too-many-lines, import-error
 
 from typing import Callable, Union
 
 import zfit
-from zfit.core.interfaces   import ZfitSpace
-from zfit.core.basepdf      import BasePDF
+from zfit.core.interfaces   import ZfitSpace as zobs
+from zfit.core.basepdf      import BasePDF   as zpdf
+from zfit.core.parameter    import Parameter as zpar
 from dmu.logging.log_store  import LogStore
-
-zspace = ZfitSpace
-zpdf   = BasePDF
 
 log=LogStore.add_logger('rx_calibration:zmodel')
 
