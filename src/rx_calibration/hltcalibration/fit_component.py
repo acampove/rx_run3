@@ -16,6 +16,7 @@ from zfit.core.basepdf      import BasePDF
 from dmu.logging.log_store  import LogStore
 from dmu.stats.utilities    import print_pdf
 from dmu.stats.zfit_plotter import ZFitPlotter
+from dmu.stats.minimizers   import AnealingMinimizer
 
 from rx_calibration.hltcalibration.parameter import Parameter
 
@@ -54,7 +55,7 @@ class FitComponent:
         self._pdf       = pdf
         self._obs       = self._pdf.space
         self._obs_name, = self._pdf.obs
-        self._minimizer = zfit.minimize.Minuit()
+        self._minimizer = AnealingMinimizer(ntries=10, pvalue=0.05)
     # --------------------
     @property
     def name(self) -> str:
