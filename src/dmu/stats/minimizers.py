@@ -108,5 +108,11 @@ class AnealingMinimizer(zfit.minimize.Minuit):
 
             self._randomize_parameters(nll)
 
+        if not isinstance(res, FitResult):
+            raise ValueError('Fit failed')
+
+        pdf = self._pdf_from_nll(nll)
+        self._set_pdf_pars(res, pdf)
+
         return res
 # ------------------------
