@@ -13,6 +13,7 @@ from ROOT                                        import RDataFrame
 from zfit.core.basepdf                           import BasePDF
 from dmu.logging.log_store                       import LogStore
 from rx_calibration.hltcalibration.fit_component import FitComponent
+from rx_calibration.hltcalibration.model_factory import ModelFactory
 
 log = LogStore.add_logger('rx_calibration:test_fit_component')
 # --------------------------------------------
@@ -31,10 +32,10 @@ def _initialize():
     LogStore.set_level('rx_calibration:fit_component', 10)
     os.makedirs(Data.out_dir, exist_ok=True)
 # --------------------------------------------
-def _get_conf() -> dict:
+def _get_conf(name : str) -> dict:
     return {
             'name'   : 'signal',
-            'out_dir': '/tmp/rx_calibration/tests/fit_component',
+            'out_dir':f'/tmp/rx_calibration/tests/fit_component/{name}',
             'fitting':
             {
                 'error_method'  : 'minuit_hesse',
@@ -76,13 +77,40 @@ def _get_pdf(kind : str) -> BasePDF:
 
     return pdf
 # --------------------------------------------
+def _get_signal_rdf() -> RDataFrame:
+    file_path = '/publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap/Bu_JpsiK_ee_eq_DPC/Hlt2RD_BuToKpEE_MVA/mc_magup_12153001_bu_jpsik_ee_eq_dpc_Hlt2RD_BuToKpEE_MVA_c4aa6722b2.root'
+    rdf = RDataFrame('DataFrame', file_path)
+
+    return rdf
+# --------------------------------------------
+def _get_signal_pdf() -> BasePDF:
+    l_pdf = ['cbr'] + ['cbl']
+    l_shr = ['mu', 'sg']
+    mod   = ModelFactory(obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr)
+    pdf   = mod.get_pdf()
+
+    return pdf
+# --------------------------------------------
 def test_simple():
     '''
     Simplest test of FitComponent
     '''
-    rdf= _get_rdf('signal')
     pdf= _get_pdf('signal')
-    cfg= _get_conf()
+    rdf= _get_rdf('signal')
+    cfg= _get_conf('simple')
 
     obj=FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
     pdf=obj.get_pdf()
+# --------------------------------------------
+def test_bukee():
+    '''
+    Test using real simulation
+    '''
+    pdf= _get_signal_pdf()
+    rdf= _get_signal_rdf()
+    cfg= _get_conf('bukee')
+
+    obj=FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
+    pdf=obj.get_pdf()
+# --------------------------------------------
+
