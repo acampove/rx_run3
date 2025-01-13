@@ -39,7 +39,7 @@ class Data:
 
     l_arg_simple = [arr, df, zf]
 #-------------------------------------
-@pytest.fixture
+@pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('dmu:logging:Fitter', 10)
     os.makedirs(Data.plt_dir, exist_ok=True)
