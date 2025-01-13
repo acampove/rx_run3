@@ -53,3 +53,13 @@ def test_pvalue():
 
     print(res)
 # -------------------------------------------
+def test_chi2ndof():
+    '''
+    SImplest test of minimizer with pvalue threshold
+    '''
+    nll       = _get_nll()
+    minimizer = AnealingMinimizer(ntries=10, chi2ndof=1.00)
+    res       = minimizer.minimize(nll)
+
+    print(res)
+# -------------------------------------------
