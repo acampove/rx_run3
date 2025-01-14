@@ -26,11 +26,16 @@ dataset :
         - /publicfs/ucas/user/campoverde/Data/RX_run3/v2/NO_q2_bdt_Q2_central_VR_v1/Bu_Kstee_Kpi0_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
       tree_name : DecayTree 
   define :
-    mass       : 'B_M'
-    min_ll_pt  : 'TMath::Min(L1_PT , L2_PT)'
-    max_ll_pt  : 'TMath::Max(L1_PT , L2_PT)'
-    min_ll_ipc : 'TMath::Min(L1_IPCHI2_OWNPV, L2_IPCHI2_OWNPV)'
-    max_ll_ipc : 'TMath::Max(L1_IPCHI2_OWNPV, L2_IPCHI2_OWNPV)'
+    mass        : B_M
+    log_b_pt    : TMath::Log(B_PT)
+    sqrt_ipchi2 : TMath::Sqrt(B_IPCHI2_OWNPV) 
+    acos_dira   : TMath::ACos(B_DIRA_OWNPV)
+    iso_mult    : B_HEAD_CC_B_ChargedIso_DR2_0p20_CMULT
+    iso_mom     : B_HEAD_CC_B_ChargedIso_DR2_0p20_CP
+    sqrt_jipchi2: TMath::Sqrt(Jpsi_IPCHI2_OWNPV) 
+    jp_acos_dira: TMath::ACos(Jpsi_DIRA_OWNPV)
+    log_h_pt    : TMath::Log(H_PT)
+    min_ll_ipc  : TMath::Min(TMath::Sqrt(L1_IPCHI2_OWNPV), TMath::Sqrt(L2_IPCHI2_OWNPV))
 training :
   nfold    : 10
   rdm_stat : 1
@@ -46,24 +51,15 @@ training :
       n_estimators : 50
       learning_rate: 0.05
   features : 
-    - B_PT
-    - B_IPCHI2_OWNPV
-    - B_FDCHI2_OWNPV
-    - B_ENDVERTEX_CHI2DOF 
-    - B_DIRA_OWNPV
-    #
-    - Jpsi_PT
-    - Jpsi_DIRA_OWNPV
-    - Jpsi_CHI2DOF
-    - Jpsi_IPCHI2_OWNPV
-    #
-    - min_ll_pt
-    - max_ll_pt
-    - max_ll_ipc
+    - log_b_pt
+    - sqrt_ipchi2
+    - acos_dira
+    - iso_mult
+    - iso_mom
+    - sqrt_jipchi2
+    - jp_acos_dira
+    - log_h_pt
     - min_ll_ipc
-    #
-    - H_PT 
-    - H_IPCHI2_OWNPV 
 saving:
   path : 'output/mva_rare_2024_prc/VERSION/model.pkl'
 plotting:
