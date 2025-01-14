@@ -63,14 +63,14 @@ training :
     - H_PT 
     - H_IPCHI2_OWNPV 
 saving:
-  path : 'output/mva_rare_2024/VERSION/model.pkl'
+  path : 'output/mva_rare_2024_cmb/VERSION/model.pkl'
 plotting:
   roc :
     min : [0.6, 0.6]
-  val_dir : 'output/mva_rare_2024/VERSION/plots'
+  val_dir : 'output/mva_rare_2024_cmb/VERSION/plots'
   features:
     saving:
-      plt_dir : 'output/mva_rare_2024/VERSION/plots/features'
+      plt_dir : 'output/mva_rare_2024_cmb/VERSION/plots/features'
     plots:
       B_PT :
         normalized : true
