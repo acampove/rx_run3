@@ -123,6 +123,15 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
+    @MethodRegistry.register('gauss')
+    def _get_gauss(self, suffix : str = '') -> zpdf:
+        mu  = self._get_parameter('mu_gauss', suffix, 5300, 5250, 5350)
+        sg  = self._get_parameter('sg_gauss', suffix,   10,    2,  300)
+
+        pdf = zfit.pdf.Gauss(mu, sg, self._obs)
+
+        return pdf
+    #-----------------------------------------
     @MethodRegistry.register('dscb')
     def _get_dscb(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter('mu_dscb', suffix, 5300, 5250, 5400)
