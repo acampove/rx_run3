@@ -102,7 +102,7 @@ class AnealingMinimizer(zfit.minimize.Minuit):
         l_chi2_res.sort()
         chi2, res = l_chi2_res[0]
 
-        log.debug(f'Picking out best fit from {nres} fits with chi2: {chi2}')
+        log.warning(f'Picking out best fit from {nres} fits with chi2: {chi2:.3f}')
 
         return res
     #------------------------------
