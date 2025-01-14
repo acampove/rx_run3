@@ -120,4 +120,6 @@ which for the version `v1` of the `post_ap` ntuples, will automatically:
 - Find which samples exist and for which triggers
 - Assign a number of jobs for each of these samples, based on the number of entries
 
-Some samples, with too few entries, will be skipped altogether.
+Some samples, with too few entries, will be skipped altogether. 
+This is expected to take time, given that, in order to calculate the number of events, each file needs
+to be opened.
