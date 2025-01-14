@@ -2,7 +2,6 @@
 Module containing plotter class
 '''
 
-import hist
 from hist import Hist
 
 import numpy
