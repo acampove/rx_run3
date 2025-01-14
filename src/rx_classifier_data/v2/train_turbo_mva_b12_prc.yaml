@@ -69,87 +69,53 @@ plotting:
     saving:
       plt_dir : 'output/mva_rare_2024_prc/VERSION/plots/features'
     plots:
-      B_PT :
+      log_b_pt  :
         normalized : true
-        binning : [0, 30000, 100]
-        yscale  : 'log'
-        labels  : ['$p_T(B^+)$', '']
-      B_IPCHI2_OWNPV :
+        binning : [6, 11, 40]
+        yscale  : 'linear'
+        labels  : ['$\log(p_T)(B^+)$', '']
+      sqrt_ipchi2:
         normalized : true
-        binning : [0, 20, 100]
-        yscale  : 'log'
-        labels  : ['$IP_{\chi^2}(B^+)$', '']
-      B_FDCHI2_OWNPV :
+        yscale  : 'linear'
+        binning : [0, 6, 40]
+        labels  : ['$\sqrt{IP_{\chi^2}}(B^+)$', '']
+      acos_dira:
         normalized : true
-        binning : [0, 10000, 100]
+        binning : [0, 0.03, 40]
         yscale  : 'log'
-        labels  : ['$FD_{\chi^2}(B^+)$', '']
-      B_ENDVERTEX_CHI2DOF:
+        labels  : ['$\arccos(DIRA)(B^+)$', '']
+      iso_mult:
         normalized : true
-        binning : [0, 10, 100]
-        yscale  : 'log'
-        labels  : ['$\chi^2/dof(B^+)$', '']
-      B_DIRA_OWNPV:
+        binning : [0, 15, 15]
+        yscale  : 'linear'
+        labels  : ['Iso$_{mult}(B^+)$', '']
+      iso_mom:
         normalized : true
-        binning : [0.9995, 1, 100]
-        yscale  : 'log'
-        labels  : ['DIRA$(B^+)$', '']
-
-      Jpsi_PT :
+        yscale  : 'linear'
+        binning : [0, 200000, 40]
+        labels  : ['Iso$(p)(B^+)$MeV', '']
+      sqrt_jipchi2:
         normalized : true
-        binning : [0, 30000, 100]
-        yscale  : 'log'
-        labels  : ['$p_T(J/\psi)$', '']
-      Jpsi_IPCHI2_OWNPV:
+        binning : [0, 100, 40]
+        yscale  : 'linear'
+        labels  : ['$\sqrt{IP_{\chi^2}}(J/\psi)$', '']
+      jp_acos_dira:
         normalized : true
-        binning : [0, 500, 100]
+        binning : [0, 0.2, 40]
         yscale  : 'log'
-        labels  : ['$IP_{\chi^2}(J/\psi)$', '']
-      Jpsi_CHI2DOF:
+        labels  : ['$\arccos(DIRA)(J/\psi^+)$', '']
+      log_h_pt  :
         normalized : true
-        binning : [0, 10, 100]
-        yscale  : 'log'
-        labels  : ['$\chi^2/dof(J/\psi)$', '']
-      Jpsi_DIRA_OWNPV:
-        normalized : true
-        binning : [0.99,  1, 100]
-        yscale  : 'log'
-        labels  : ['DIRA$(J/\psi)$', '']
-        #
-      min_ll_pt:
-        normalized : true
-        binning : [0, 10000, 100]
-        yscale  : 'log'
-        labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
-      max_ll_pt:
-        normalized : true
-        binning : [0, 20000, 100]
-        yscale  : 'log'
-        labels  : ['$\max(p_T(e^+), p_T(e^-))$', '']
+        binning : [6, 11, 40]
+        yscale  : 'linear'
+        labels  : ['$\log(p_T)(K^+)$', '']
       min_ll_ipc:
         normalized : true
-        binning : [0,  500, 100]
-        yscale  : 'log'
+        binning : [0, 60, 40]
+        yscale  : 'linear'
         labels  : ['$\min(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
-      max_ll_ipc:
-        normalized : true
-        binning : [0, 3000, 100]
-        yscale  : 'log'
-        labels  : ['$\max(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
-        #
-      H_PT :
-        normalized : true
-        binning : [0, 15000, 100]
-        yscale  : 'log'
-        labels  : ['$p_T(K^+)$', '']
-      H_IPCHI2_OWNPV:
-        normalized : true
-        binning : [0, 2000, 100]
-        yscale  : 'log'
-        labels  : ['$IP_{\chi^2}(K^+)$', '']
-        #
       mass:
         normalized : true
-        binning : [4800, 6000, 100]
+        binning : [4800, 6000, 40]
         yscale  : 'linear'
         labels  : ['$M_{DTF}(B^+)$', '']
