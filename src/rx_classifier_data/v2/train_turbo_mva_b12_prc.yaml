@@ -12,8 +12,7 @@ hyper               :
 dataset :
   selection:
     bkg :
-      mass : 'mass > 5500'
-      run  : 'block == 1 || block == 2'
+      mass : mass > 0
     sig :
       mass : 'mass > 4500 && mass < 5600'
   paths:
