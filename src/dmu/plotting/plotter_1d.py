@@ -78,6 +78,7 @@ class Plotter1D(Plotter):
         l_bc_all = []
         for name, arr_val in d_data.items():
             arr_wgt      = d_wgt[name] if d_wgt is not None else numpy.ones_like(arr_val)
+            arr_wgt      = self._normalize_weights(arr_wgt, var)
             hst          = Hist.new.Reg(bins=bins, start=minx, stop=maxx, name='x', label=name).Weight()
             hst.fill(x=arr_val, weight=arr_wgt)
             hst.plot(label=name)
@@ -87,6 +88,23 @@ class Plotter1D(Plotter):
 
         return max_y
     # --------------------------------------------
+    def _normalize_weights(self, arr_wgt : numpy.ndarray, var : str) -> numpy.ndarray:
+        cfg_var = self._d_cfg['plots'][var]
+        if 'normalized' not in cfg_var:
+            log.debug(f'Not normalizing for variable: {var}')
+            return arr_wgt
+
+        if not cfg_var['normalized']:
+            log.debug(f'Not normalizing for variable: {var}')
+            return arr_wgt
+
+        log.info(f'Normalizing for variable: {var}')
+        total   = numpy.sum(arr_wgt)
+        arr_wgt = arr_wgt / total
+
+        return arr_wgt
+    # --------------------------------------------
+
     def _style_plot(self, var : str, max_y : float) -> None:
         d_cfg  = self._d_cfg['plots'][var]
         yscale = d_cfg['yscale' ] if 'yscale' in d_cfg else 'linear'
