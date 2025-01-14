@@ -148,3 +148,14 @@ def test_name():
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
+#---------------------------------------
+def test_normalized():
+    '''
+    Will test the plot of normalized histograms
+    '''
+    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+
+    cfg_dat = _load_config(test='normalized')
+
+    ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
+    ptr.run()
