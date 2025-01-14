@@ -112,10 +112,10 @@ job_sel_ihep -T 0 -d /publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap -s B
 Run the following:
 
 ```bash
-make_jobs_list
+make_jobs_list -v v1
 ```
 
-which will automatically:
+which for the version `v1` of the `post_ap` ntuples, will automatically:
 
 - Find which samples exist and for which triggers
 - Assign a number of jobs for each of these samples, based on the number of entries
