@@ -11,7 +11,7 @@ from zfit.core.basepdf      import BasePDF   as zpdf
 from zfit.core.parameter    import Parameter as zpar
 from dmu.logging.log_store  import LogStore
 
-log=LogStore.add_logger('dmu.stats.model_factory')
+log=LogStore.add_logger('dmu:stats:model_factory')
 #-----------------------------------------
 class MethodRegistry:
     '''
