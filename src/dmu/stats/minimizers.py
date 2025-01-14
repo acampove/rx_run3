@@ -93,10 +93,53 @@ class AnealingMinimizer(zfit.minimize.Minuit):
             par.set_value(fval)
             log.debug(f'{par.name:<20}{ival:<15.3f}{"->":<10}{fval:<15.3f}{"in":<5}{par.lower:<15.3e}{par.upper:<15.3e}')
     # ------------------------
-    def minimize(self, nll, **kwargs):
+    def _pick_best_fit(self, d_chi2_res : dict) -> FitResult:
+        nres = len(d_chi2_res)
+        if nres == 0:
+            raise ValueError('No fits found')
+
+        l_chi2_res= list(d_chi2_res.items())
+        l_chi2_res.sort()
+        chi2, res = l_chi2_res[0]
+
+        log.debug(f'Picking out best fit from {nres} fits with chi2: {chi2}')
+
+        return res
+    #------------------------------
+    def _set_pdf_pars(self, res : FitResult, pdf : zpdf) -> None:
+        '''
+        Will set the PDF floating parameter values as the result instance
+        '''
+        l_par_flt = list(pdf.get_params(floating= True))
+        l_par_fix = list(pdf.get_params(floating=False))
+        l_par     = l_par_flt + l_par_fix
+
+        d_val = { par.name : dc['value'] for par, dc in res.params.items()}
+
+        log.debug('Setting PDF parameters to best result')
+        for par in l_par:
+            if par.name not in d_val:
+                par_val = par.value().numpy()
+                log.debug(f'Skipping {par.name} = {par_val:.3e}')
+                continue
+
+            val = d_val[par.name]
+            log.debug(f'{"":<4}{par.name:<20}{"->":<10}{val:<20.3e}')
+            par.set_value(val)
+    # ------------------------
+    def _pdf_from_nll(self, nll) -> zpdf:
+        l_model = nll.model
+        if len(l_model) != 1:
+            raise ValueError('Cannot extract one and only one PDF from NLL')
+
+        return l_model[0]
+    # ------------------------
+    def minimize(self, nll, **kwargs) -> FitResult:
         '''
         Will run minimization and return FitResult object
         '''
+
+        d_chi2_res : dict[float,FitResult] = {}
         for i_try in range(self._ntries):
             log.info(f'try {i_try:02}/{self._ntries:02}')
             try:
