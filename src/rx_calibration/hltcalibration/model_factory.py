@@ -162,6 +162,10 @@ class ModelFactory:
     #-----------------------------------------
     def _add_pdf(self, l_pdf : list[zpdf]) -> zpdf:
         nfrc = len(l_pdf)
+        if nfrc == 1:
+            log.debug('Requested only one PDF, skipping sum')
+            return l_pdf[0]
+
         l_frc= [ zfit.param.Parameter(f'frc_{ifrc + 1}', 0.5, 0, 1) for ifrc in range(nfrc - 1) ]
 
         pdf = zfit.pdf.SumPDF(l_pdf, fracs=l_frc)
