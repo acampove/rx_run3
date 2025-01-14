@@ -103,14 +103,15 @@ class AnealingMinimizer(zfit.minimize.Minuit):
                 self._randomize_parameters(nll)
                 continue
 
-            if self._is_good_fit(nll):
+            chi2, pvl = self._get_gof(nll)
+            d_chi2_res[chi2] = res
+
+            if self._is_good_fit(chi2, pvl):
                 return res
 
             self._randomize_parameters(nll)
 
-        if not isinstance(res, FitResult):
-            raise ValueError('Fit failed')
-
+        res = self._pick_best_fit(d_chi2_res)
         pdf = self._pdf_from_nll(nll)
         self._set_pdf_pars(res, pdf)
 
