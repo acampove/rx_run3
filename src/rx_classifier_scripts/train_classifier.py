@@ -130,7 +130,14 @@ def _get_rdf(kind=None):
     tree_name = Data.cfg_dict['dataset']['paths'][kind]['tree_name']
     file_wc   = Data.cfg_dict['dataset']['paths'][kind]['file_path']
 
-    l_file_path = _file_paths_from_wc(file_wc)
+    if isinstance(file_wc, str):
+        l_file_wc = [file_wc]
+    else:
+        l_file_wc = file_wc
+
+    l_file_path = []
+    for file_wc in l_file_wc:
+        l_file_path += _file_paths_from_wc(file_wc)
 
     rdf = RDataFrame(tree_name, l_file_path)
     rdf = _define_columns(rdf)
