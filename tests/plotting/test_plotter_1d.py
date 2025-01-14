@@ -29,7 +29,8 @@ def _initialize():
     '''
     plt.style.use(mplhep.style.LHCb2)
 
-    LogStore.set_level('dmu:plotting:Plotter', 10)
+    LogStore.set_level('dmu:plotting:Plotter'  , 10)
+    LogStore.set_level('dmu:plotting:Plotter1D', 10)
 #---------------------------------------
 def _get_rdf(kind : str, test : str):
     '''
