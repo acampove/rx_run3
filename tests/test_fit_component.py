@@ -81,13 +81,13 @@ def _get_signal_rdf() -> RDataFrame:
     file_path = '/publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap/Bu_JpsiK_ee_eq_DPC/Hlt2RD_BuToKpEE_MVA/mc_magup_12153001_bu_jpsik_ee_eq_dpc_Hlt2RD_BuToKpEE_MVA_c4aa6722b2.root'
     rdf = RDataFrame('DecayTree', file_path)
     rdf = rdf.Define('mass', 'B_const_mass_M')
-    rdf = rdf.Range(10_000)
+    rdf = rdf.Range(100_000)
 
     return rdf
 # --------------------------------------------
 def _get_signal_pdf() -> BasePDF:
-    l_pdf = ['cbr'] + ['cbl']
-    l_shr = ['mu', 'sg']
+    l_pdf = ['dscb', 'gauss']
+    l_shr = ['mu']
     mod   = ModelFactory(obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr)
     pdf   = mod.get_pdf()
 
@@ -115,4 +115,3 @@ def test_bukee():
     obj=FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
     pdf=obj.get_pdf()
 # --------------------------------------------
-
