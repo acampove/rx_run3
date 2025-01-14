@@ -18,10 +18,12 @@ dataset :
       mass : 'mass > 4500 && mass < 5600'
   paths:
     sig :
-      file_path : /publicfs/ucas/user/campoverde/Data/RX_run3/v2/NO_q2_bdt_Q2_central_VR_v1/Bd_Kstee_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
+      file_path : /publicfs/ucas/user/campoverde/Data/RX_run3/v2/NO_q2_bdt_Q2_central_VR_v1/Bu_Kee_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
       tree_name : DecayTree 
     bkg :
-      file_path : /publicfs/ucas/user/campoverde/Data/RX_run3/v2/NO_q2_bdt_Q2_central_VR_v1/DATA_24_Mag*_24c2/Hlt2RD_BuToKpEE_MVA/*.root
+      file_path : 
+        - /publicfs/ucas/user/campoverde/Data/RX_run3/v2/NO_q2_bdt_Q2_central_VR_v1/Bd_Kstee_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
+        - /publicfs/ucas/user/campoverde/Data/RX_run3/v2/NO_q2_bdt_Q2_central_VR_v1/Bu_Kstee_Kpi0_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
       tree_name : DecayTree 
   define :
     mass       : 'B_M'
