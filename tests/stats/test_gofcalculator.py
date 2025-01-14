@@ -8,7 +8,6 @@ import zfit
 import numpy
 import pytest
 
-from dmu.stats.zfit_plotter   import ZFitPlotter
 from dmu.stats.gof_calculator import GofCalculator
 from dmu.logging.log_store    import LogStore
 
