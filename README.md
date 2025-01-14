@@ -184,6 +184,33 @@ print_pdf(pdf,
 
 The `Fitter` class is a wrapper to zfit, use to make fitting easier.
 
+### Goodness of fits
+
+Once a fit has been done, one can use `GofCalculator` to get a rough estimate of the fit quality.
+This is done by:
+
+- Binning the data and PDF.
+- Calculating the reduced $\chi^2$.
+- Using the $\chi^2$ and the number of degrees of freedom to get the p-value.
+
+This class is used as shown below:
+
+```python
+from dmu.stats.gof_calculator import GofCalculator
+
+nll = _get_nll()
+res = Data.minimizer.minimize(nll)
+
+gcl = GofCalculator(nll, ndof=10)
+gof = gcl.get_gof(kind='pvalue')
+```
+
+where:
+
+- `ndof` Is the number of degrees of freedom used in the reduced $\chi^2$ calculation
+It is needed to know how many bins to use to make the histogram. The recommended value is 10.
+- `kind` The argument can be `pvalue` or `chi2/ndof`.
+
 ### Simplest fit
 
 ```python
