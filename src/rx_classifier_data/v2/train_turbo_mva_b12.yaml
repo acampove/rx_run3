@@ -1,9 +1,14 @@
 q2:
-  low    : (Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1000000)
+  low    : (Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1100000)
   central: (Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000)
   jpsi   : (Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)
   psi2   : (Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)
   high   : (Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)
+hyper               :
+  loss              : log_loss
+  max_depth         : 3
+  min_samples_split : 2
+# ----------------------------------
 dataset :
   selection:
     bkg :
@@ -13,10 +18,10 @@ dataset :
       mass : 'mass > 4500 && mass < 5600'
   paths:
     sig :
-      file_path : /publicfs/ucas/user/campoverde/Data/RX_run3/v1/NO_q2_bdt_Q2_central_VR_v1/Bu_Kee_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
+      file_path : /publicfs/ucas/user/campoverde/Data/RX_run3/v2/NO_q2_bdt_Q2_central_VR_v1/Bu_Kee_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
       tree_name : DecayTree 
     bkg :
-      file_path : /publicfs/ucas/user/campoverde/Data/RX_run3/v1/NO_q2_bdt_Q2_central_VR_v1/DATA_24_Mag*_24c*/Hlt2RD_BuToKpEE_MVA/*.root
+      file_path : /publicfs/ucas/user/campoverde/Data/RX_run3/v2/NO_q2_bdt_Q2_central_VR_v1/DATA_24_Mag*_24c2/Hlt2RD_BuToKpEE_MVA/*.root
       tree_name : DecayTree 
   define :
     mass       : 'B_M'
@@ -27,6 +32,17 @@ dataset :
 training :
   nfold    : 10
   rdm_stat : 1
+  hyper:
+    low : 
+      n_estimators : 20
+      learning_rate: 0.02
+      max_depth    : 2
+    central : 
+      n_estimators : 70
+      learning_rate: 0.05
+    high : 
+      n_estimators : 50
+      learning_rate: 0.05
   features : 
     - B_PT
     - B_IPCHI2_OWNPV
@@ -46,17 +62,11 @@ training :
     #
     - H_PT 
     - H_IPCHI2_OWNPV 
-  hyper    :
-    loss              : log_loss
-    n_estimators      : 100
-    max_depth         : 3
-    learning_rate     : 0.1
-    min_samples_split : 2
 saving:
   path : 'output/mva_rare_2024/VERSION/model.pkl'
 plotting:
   roc :
-    min : [0.8, 0.8]
+    min : [0.6, 0.6]
   val_dir : 'output/mva_rare_2024/VERSION/plots'
   features:
     saving:
