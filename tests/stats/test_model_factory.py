@@ -9,7 +9,7 @@ from dmu.stats.utilities     import print_pdf
 from dmu.logging.log_store   import LogStore
 from dmu.stats.model_factory import ModelFactory
 
-log=LogStore.add_logger('dmu:stats:test_zmodel')
+log=LogStore.add_logger('dmu:stats:test_model_factory')
 #--------------------------
 @dataclass
 class Data:
