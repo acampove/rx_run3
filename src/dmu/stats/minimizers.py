@@ -65,6 +65,21 @@ class AnealingMinimizer(zfit.minimize.Minuit):
 
         return is_good
     # ------------------------
+    def _is_good_fit(self, res : FitResult) -> bool:
+        if not res.valid:
+            log.warning('Skipping invalid fit')
+            return False
+
+        if res.status != 0:
+            log.warning('Skipping fit with bad status')
+            return False
+
+        if not res.converged:
+            log.warning('Skipping non-converging fit')
+            return False
+
+        return True
+    # ------------------------
     def _get_gof(self, nll) -> tuple[float, float]:
         log.debug('Checking GOF')
 
