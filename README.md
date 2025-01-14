@@ -101,6 +101,24 @@ samples:
 
 ## PDFs
 
+### Model building
+
+In order to do complex fits, one often needs PDFs with many parameters, which need to be added.
+In these PDFs certain parameters (e.g. $\mu$ or $\sigma$) need to be shared. This project provides
+`ModelFactory`, which can do this as shown below:
+
+```python
+from dmu.stats.model_factory import ModelFactory
+
+l_pdf = ['cbr'] + 2 * ['cbl']
+l_shr = ['mu', 'sg']
+mod   = ModelFactory(obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr)
+pdf   = mod.get_pdf()
+```
+
+where the model is a sum of three `CrystallBall` PDFs, one with a right tail and two with a left tail.
+The `mu` and `sg` parameters are shared.
+
 ### Printing PDFs
 
 One can print a zfit PDF by doing:
