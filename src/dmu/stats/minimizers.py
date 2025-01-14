@@ -49,7 +49,7 @@ class AnealingMinimizer(zfit.minimize.Minuit):
 
         raise ValueError('Neither pvalue nor chi2 thresholds are valid')
     # ------------------------
-    def _is_good_fit(self, ch2 : float, pvl : float) -> bool:
+    def _is_good_gof(self, ch2 : float, pvl : float) -> bool:
         is_good_pval = pvl > self._pvalue   and self._pvalue   > 0
         is_good_chi2 = ch2 < self._chi2ndof and self._chi2ndof > 0
         is_good      = is_good_pval or is_good_chi2
@@ -149,10 +149,13 @@ class AnealingMinimizer(zfit.minimize.Minuit):
                 self._randomize_parameters(nll)
                 continue
 
+            if not self._is_good_fit(res):
+                continue
+
             chi2, pvl = self._get_gof(nll)
             d_chi2_res[chi2] = res
 
-            if self._is_good_fit(chi2, pvl):
+            if self._is_good_gof(chi2, pvl):
                 return res
 
             self._randomize_parameters(nll)
