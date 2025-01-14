@@ -211,6 +211,44 @@ likelihood :
     nbins : 100 #If specified, will do binned likelihood fit instead of unbinned
 ```
 
+## Minimizers
+
+These are alternative implementations of the minimizers in zfit meant to be used for special types of fits.
+
+### Anealing minimizer
+
+This minimizer is meant to be used for fits to models with many parameters, where multiple minima are expected in the
+likelihood. The minimizer use is illustrated in:
+
+```python
+from dmu.stats.minimizers  import AnealingMinimizer
+
+nll       = _get_nll()
+minimizer = AnealingMinimizer(ntries=10, pvalue=0.05)
+res       = minimizer.minimize(nll)
+```
+
+this will:
+
+- Take the `NLL` object.
+- Try fitting at most 10 times
+- After each fit, calculate the goodness of fit (in this case the p-value)
+- Stop when the number of tries has been exhausted or the p-value reached is higher than `0.05`
+- If the fit has not succeeded because of convergence, validity or goodness of fit issues, 
+randomize the parameters and try again.
+- If the desired goodness of fit has not been achieved, pick the best result.
+- Return the `FitResult` object and set the PDF to the final fit result.
+
+The $\chi^2/Ndof$ can also be used as in:
+
+```python
+from dmu.stats.minimizers  import AnealingMinimizer
+
+nll       = _get_nll()
+minimizer = AnealingMinimizer(ntries=10, chi2ndof=1.00)
+res       = minimizer.minimize(nll)
+```
+
 ## Fit plotting
 
 The class `ZFitPlotter` can be used to plot fits done with zfit. For a complete set of examples of how to use
