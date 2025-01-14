@@ -12,8 +12,8 @@ import pytest
 from ROOT                                        import RDataFrame
 from zfit.core.basepdf                           import BasePDF
 from dmu.logging.log_store                       import LogStore
+from dmu.stats.model_factory                     import ModelFactory
 from rx_calibration.hltcalibration.fit_component import FitComponent
-from rx_calibration.hltcalibration.model_factory import ModelFactory
 
 log = LogStore.add_logger('rx_calibration:test_fit_component')
 # --------------------------------------------
