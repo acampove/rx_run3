@@ -4,6 +4,7 @@ of commands to run to apply selection
 '''
 import os
 import glob
+import argparse
 
 from functools   import cache
 from dataclasses import dataclass
@@ -20,7 +21,7 @@ class Data:
     Class used to hold shared attributes
     '''
     data_dir = os.environ['DATADIR']
-    version  = 'v1'
+    version  : str
 
     l_skip_sample = [
             'Bs_phieta_eplemng_eq_Dalitz_DPC',
@@ -94,16 +95,33 @@ def _get_sample_info(path : str) -> tuple[str,str,int]:
 # ----------------------------
 def _get_all_info() -> list[tuple[str,str,int]]:
     sam_wc = f'{Data.data_dir}/RX_run3/{Data.version}/post_ap/*/*'
+    log.info(f'Looking for samples in: {sam_wc}')
+
     l_path = glob.glob(sam_wc)
+    nsample= len(l_path)
+    if nsample == 0:
+        raise FileNotFoundError(f'Found zero samples in: {sam_wc}')
+
+    log.info(f'Found {nsample} samples')
+
     l_path = [path for path in l_path if _is_good_sample(path)]
     l_info = [ _get_sample_info(path) for path in tqdm.tqdm(l_path, ascii=' -')]
 
     return l_info
 # ----------------------------
+def _parse_args() -> None:
+    parser = argparse.ArgumentParser(description='Script used to make list of commands to send selection jobs')
+    parser.add_argument('-v', '--version' , help='Version of post_ap ntuples, e.g. v1', required=True) 
+    args = parser.parse_args()
+
+    Data.version = args.version
+# ----------------------------
 def main():
     '''
     Script starts here
     '''
+    _parse_args()
+
     l_info = _get_all_info()
     text   = ''
     for sample, trigger, njob in l_info:
