@@ -53,6 +53,16 @@ def _reformat_config(cfg : dict) -> dict:
 
     return cfg
 #---------------------------------
+def _reformat_hyperparameters(cfg : dict) -> dict:
+    d_common_hyper = cfg['hyper']
+    d_q2hyper      = cfg['training']['hyper'][Data.q2bin]
+
+    d_common_hyper.update(d_q2hyper)
+
+    cfg['training']['hyper'] = d_common_hyper
+
+    return cfg
+#---------------------------------
 def _load_config():
     '''
     Will load YAML file config
@@ -64,8 +74,11 @@ def _load_config():
         raise FileNotFoundError(f'Could not find: {cfg_path}')
 
     with open(cfg_path, encoding='utf-8') as ifile:
-        cfg_dict      = yaml.safe_load(ifile)
-        Data.cfg_dict = _reformat_config(cfg_dict)
+        cfg_dict = yaml.safe_load(ifile)
+        cfg_dict = _reformat_config(cfg_dict)
+        cfg_dict = _reformat_hyperparameters(cfg_dict)
+
+    Data.cfg_dict = cfg_dict
 #---------------------------------
 def _get_args():
     '''
