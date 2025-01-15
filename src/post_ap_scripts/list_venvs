@@ -4,24 +4,24 @@
 display_help()
 {
     echo "Script used to show latest versions of virtual environments. Needed to"
-    echo ""
-    echo "- Find out what version to use when updating environment"
-    echo "- Find out what version to use to send slimming jobs" 
+    echo "find out the version of the virtual environments already available in the grid."
     echo ""
     echo "-n: Number of lines to print, default 5"
+    echo "-l: LXPLUS name, needed to find environment in grid. If not passed, will pick it up
+    from the LXNAME environment variable" 
 }
 # -------------------------------
 get_opts()
 {
     NLINES=5
-    CLXNAME=acampove
-    while getopts :hf:n: option; do 
+    while getopts :hf:n:l: option; do 
         case "${option}" in
             h)  
                 display_help
                 exit 0
                 ;;  
             n)  NLINES=${OPTARG};;
+            l)  LXNAME=${OPTARG};;
            \?)  echo "Invalid option: -${OPTARG}"
                 display_help
                 exit 1
