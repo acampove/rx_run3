@@ -86,5 +86,13 @@ untar_venv
 rename_paths
 dcheck/run bash -c "export PFN_PATH=$PFN_PATH && export CONFIG_PATH=$CONF && export LXNAME=$UNAM && filter_ntuples -p $PROD -s $SAMP -g $NJOB -i $IJOB -l 10"
 
-echo "Sandbox: "
-ls
+if [[ $? -ne 0 ]];then
+    echo "Failed job, sandbox: "
+    ls
+    exit 1
+else
+    echo "Sandbox: "
+    ls
+fi
+
+
