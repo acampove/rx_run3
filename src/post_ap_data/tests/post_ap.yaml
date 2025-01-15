@@ -1,3 +1,19 @@
+tests:
+  versions: &tst_ver
+    test_mc_turbo_ee  : v1r2041
+    test_mc_turbo_mm  : v1r2041
+    test_mc_spruce_ee : v1r2041
+    test_mc_spruce_mm : v1r2041
+  samples: &tst_sam
+    test_mc_turbo_ee: 
+      - mc_24_w31_34_hlt1bug_magup_sim10d_12123003_bu_kee_eq_btosllball05_dpc_tuple
+    test_mc_turbo_mm: 
+      - mc_24_w31_34_hlt1bug_magup_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+    test_mc_spruce_ee: 
+      - mc_24_w31_34_hlt1bug_magup_sim10d_12123003_bu_kee_eq_btosllball05_dpc_spr,_tuple
+    test_mc_spruce_mm: 
+      - mc_24_w31_34_hlt1bug_magup_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_spr,_tuple
+
 working_group: rd
 productions:
   rd_ap_2024:
@@ -6,6 +22,7 @@ productions:
       data_spruce       : v1r1670 
       simulation_spruce : v1r2041
       simulation_turbo  : v1r2041
+      <<: *tst_ver
     samples:
       data_spruce:
         - data_24_magdown_full_24c1
@@ -114,6 +131,7 @@ productions:
         - mc_24_w31_34_hlt1bug_magup_sim10d_11102453_bd_kstpi0_eq_tc_kst982width100_highptpi0_tuple
         - mc_24_w31_34_hlt1bug_magup_sim10d_12153020_bu_jpsipi_ee_eq_dpc_tuple
         - mc_24_w31_34_hlt1bug_magup_sim10d_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+      <<: *tst_sam
 # ------------------------------------------------
 transformations:
   particle_variables:
@@ -195,27 +213,23 @@ transformations:
     #
     L1_ISMUON                         : L1_isMuon
     L2_ISMUON                         : L2_isMuon
+    # -----
     B_BPVFDCHI2                       : B_FDCHI2_OWNPV
-    H_BPVIPCHI2                       : H_IPCHI2_OWNPV
+    Jpsi_BPVFDCHI2                    : Jpsi_FDCHI2_OWNPV
+    # -----
+    B_BPVDIRA                         : B_DIRA_OWNPV
+    Jpsi_BPVDIRA                      : Jpsi_DIRA_OWNPV
+    # -----
+    B_BPVIPCHI2                       : B_IPCHI2_OWNPV
     Jpsi_BPVIPCHI2                    : Jpsi_IPCHI2_OWNPV
+    H_BPVIPCHI2                       : H_IPCHI2_OWNPV
     L1_BPVIPCHI2                      : L1_IPCHI2_OWNPV
     L2_BPVIPCHI2                      : L2_IPCHI2_OWNPV
-    Jpsi_BPVDIRA                      : Jpsi_DIRA_OWNPV
-    B_BPVDIRA                         : B_DIRA_OWNPV
-    B_BPVIPCHI2                       : B_IPCHI2_OWNPV
+    # -----
     B_END_VZ                          : B_ENDVERTEX_Z
     B_CHI2                            : B_ENDVERTEX_CHI2
     L1_ENERGY                         : L1_PE
     L2_ENERGY                         : L2_PE
-    B_FDCHI2_OWNPV                    : B_BPVFDCHI2
-    B_IPCHI2_OWNPV                    : B_BPVIPCHI2
-    Jpsi_FDCHI2_OWNPV                 : Jpsi_BPVFDCHI2
-    Jpsi_IPCHI2_OWNPV                 : Jpsi_BPVIPCHI2
-    H_IPCHI2_OWNPV                    : H_BPVIPCHI2
-    L1_IPCHI2_OWNPV                   : L1_BPVIPCHI2
-    L2_IPCHI2_OWNPV                   : L2_BPVIPCHI2
-    B_DIRA_OWNPV                      : B_BPVDIRA
-    Jpsi_DIRA_OWNPV                   : Jpsi_BPVDIRA
     B_ENDVERTEX_Z                     : B_END_VZ
     B_ENDVERTEX_CHI2                  : B_CHI2
     L1_PE                             : L1_ENERGY
@@ -249,7 +263,6 @@ transformations:
       - _STATEAT_
       - _THREE_
       #
-      - NeutralIso
       - SMOG2
       - _EE2KK_
       - _EE2PiPi_
@@ -317,11 +330,6 @@ transformations:
       - B_BPVFDVEC
       - B_MAX
       - B_MIN
-      # B isolation
-      - B_VTXISO_B_
-      - B_cone_indx
-      - bp_cone_indx
-      - bd_cone_indx
       # Jpsi
       - Jpsi_Min
       - Jpsi_MIN
@@ -364,10 +372,12 @@ transformations:
       - H2_ELECTRON
       - H2_MUON
       # Hlt not for B 
+      - Hlt1
       - Jpsi_Hlt1
       - Phi_Hlt1
       - Kst_Hlt1
       - Lz_Hlt1
+      - Hlt2
       # Hlt1 for tracks not needed, will use Hlt1 for B
       - H_Hlt1
       - P_Hlt1
@@ -407,17 +417,9 @@ transformations:
       - H2_N*HITS
       - H2_RICH*_GAS_USED 
       - H2_HASBREM*
-      # DETA and DPHI vectors of isolation track positions?
+      # Isolation 
       - B_HEAD_CC_B_ChargedIso_DR2_*_D*
-      - B_HEAD_CC_B_ChargedIso_DR2_*_Max_P
-      - B_HEAD_CC_B_ChargedIso_DR2_*_Max_PT
-      - B_HEAD_CC_B_ChargedIso_DR2_*_Min_P
-      - B_HEAD_CC_B_ChargedIso_DR2_*_Min_PT
-      - B_HEAD_CC_B_ChargedIso_DR2_*_PASY
-      - B_HEAD_CC_B_ChargedIso_DR2_*_PTASY
-      - B_HEAD_CC_B_ChargedIso_DR2_*_PXASY
-      - B_HEAD_CC_B_ChargedIso_DR2_*_PYASY
-      - B_HEAD_CC_B_ChargedIso_DR2_*_PZASY
+      - B_HEAD_NC_B_NeutralIso_DR2_*_D*
   hlt_lines_test:
     lines_phys_ee_mva:
       - Hlt2RD_B0ToKpPimEE_MVA
@@ -509,7 +511,7 @@ transformations:
       - Hlt2RD_B0ToKpPimMuMu_MVA
       - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
   selection:
-    evt_max : 1000
+    evt_max : 1000 
     cuts:
       any:
         L1Ghost: L1_TRGHOSTPROB < 0.5
@@ -529,6 +531,6 @@ transformations:
       lbpkee:
       lbpkmm:
   saving:
-    evt_max : 100 
+    evt_max : 100
     compression : 2
     store_branch: false
