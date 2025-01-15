@@ -84,16 +84,13 @@ def test_mc(kind : str):
 # --------------------------------------
 def test_bad_mcdt():
     '''
-    Run test on MC
+    Run test on MC with broken MCDT
     '''
     path= '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_bad_mcdt.root' 
 
     obj = FilterFile(sample_name='mc_test', file_path=path)
     obj.dump_contents = True
     obj.run(skip_saving=False)
-
-    status = os.environ['?']
-    log.warning(f'Exit status: {status}')
 
     _move_outputs('test_bad_mcdt')
 # --------------------------------------
