@@ -423,11 +423,9 @@ transformations:
       - H2_HASBREM*
       # DETA and DPHI vectors of isolation track positions?
       - B_HEAD_CC_B_ChargedIso_DR2_*_D*
-      - B_HEAD_CC_B_ChargedIso_DR2_*_Max_P
       - B_HEAD_CC_B_ChargedIso_DR2_*_Max_PT
-      - B_HEAD_CC_B_ChargedIso_DR2_*_Min_P
       - B_HEAD_CC_B_ChargedIso_DR2_*_Min_PT
-      - B_HEAD_CC_B_ChargedIso_DR2_*_PASY
+      - B_HEAD_CC_B_ChargedIso_DR2_*_PTASY
       - B_HEAD_CC_B_ChargedIso_DR2_*_PXASY
       - B_HEAD_CC_B_ChargedIso_DR2_*_PYASY
       - B_HEAD_CC_B_ChargedIso_DR2_*_PZASY

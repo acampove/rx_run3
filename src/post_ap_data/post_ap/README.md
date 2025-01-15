@@ -21,3 +21,7 @@ Fixes:
 
 - Adding q2 and angle between tracks definitions
 - Adding definitions for Hp branches, which were missing and are using in sprucing lines
+
+## v5
+
+Adding isolation branches needed for PRec BDT training
