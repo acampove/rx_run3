@@ -28,8 +28,13 @@ def _initialize():
     LogStore.set_level('post_ap:selector'      , 10)
     LogStore.set_level('dmu:rdataframe:atr_mgr', 30)
 
-    Data.mc_path = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/bukmm_turbo.root'
-    Data.dt_path = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_turbo.root'
+    [Data.dt_path, Data.mc_path] = _get_paths()
+# --------------------------------------
+def _get_paths() -> list[str]:
+    dt_path = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_turbo.root'
+    mc_path = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/bukmm_turbo.root'
+
+    return [dt_path, mc_path]
 # --------------------------------------
 def _rename_branches(rdf : RDataFrame) -> RDataFrame:
     rdf = rdf.Define('B_const_mass_M', 'B_DTF_Jpsi_MASS')
