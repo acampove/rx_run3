@@ -547,17 +547,21 @@ transformations:
         - Hlt2RD_B0ToKpPimMuMu
         - Hlt2RD_B0ToKpPimMuMu_MVA
         - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
-      lbpkee:
+      lbpkee_1:
+        - Hlt2RD_LambdabToPKEE
+        - Hlt2RD_LbToLEE_LL
+      lbpkee_2:
         - Hlt2RD_LbToPKJpsi_JpsiToEE
         - Hlt2RD_LambdabToPKEE
         - Hlt2RD_LbToLEE_LL
         - Hlt2RD_LbTopKEE_MVA_misid
         - Hlt2RD_LbTopKEE_MVA
         - Hlt2RD_LbTopKEE_SameSign_MVA
-      lbpkmm:
-        - Hlt2RD_LbToPKJpsi_JpsiToMuMu
+      lbpkmm_1:
         - Hlt2RD_LambdabToPKMuMu
         - Hlt2RD_LbToLMuMu_LL
+      lbpkmm_2:
+        - Hlt2RD_LbToPKJpsi_JpsiToMuMu
         - Hlt2RD_LbTopKMuMu_MVA
         - Hlt2RD_LbTopKMuMu_SameSign_MVA
   selection:
@@ -578,9 +582,19 @@ transformations:
         k_mass : Kst_M    >  800 && Kst_M   < 1000
         H1Ghost: H1_TRGHOSTPROB < 0.5
         H2Ghost: H2_TRGHOSTPROB < 0.5
-      lbpkee:
-      lbpkmm:
+      lbpkee_1:
+        H1Ghost: H1_TRGHOSTPROB < 0.5
+        H2Ghost: H2_TRGHOSTPROB < 0.5
+      lbpkee_2:
+        H1Ghost: P_TRGHOSTPROB  < 0.5
+        H2Ghost: K_TRGHOSTPROB  < 0.5
+      lbpkmm_1:
+        H1Ghost: H1_TRGHOSTPROB < 0.5
+        H2Ghost: H2_TRGHOSTPROB < 0.5
+      lbpkmm_2:
+        H1Ghost: P_TRGHOSTPROB  < 0.5
+        H2Ghost: K_TRGHOSTPROB  < 0.5
   saving:
-    evt_max : -1 
+    evt_max : 100 
     compression : 2
     store_branch: false
