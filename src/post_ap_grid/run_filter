@@ -91,8 +91,6 @@ if [[ $? -ne 0 ]];then
     ls
     exit 1
 else
-    echo "Sandbox: "
+    echo "Job succeeded, sandbox: "
     ls
 fi
-
-
