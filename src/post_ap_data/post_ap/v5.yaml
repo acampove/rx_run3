@@ -17,10 +17,14 @@ tests:
       - mc_24_w31_34_hlt1bug_magup_sim10d_12123003_bu_kee_eq_btosllball05_dpc_spr,_tuple
     test_mc_spruce_mm: 
       - mc_24_w31_34_hlt1bug_magup_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_spr,_tuple
-    test_mc_rpk_mm:
-      - mc_24_w31_34_hlt1bug_magup_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
     test_mc_rpk_ee:
       - mc_24_w31_34_hlt1bug_magup_sim10d_15124011_lb_pkee_eq_phsp_dpc_tuple
+    test_mc_rpk_mm:
+      - mc_24_w31_34_hlt1bug_magup_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
+    test_dt_c2_turbo:
+        - data_24_magup_turbo_24c2
+    test_dt_c2_spruce:
+        - data_24_magup_full_24c2
 working_group: rd
 productions:
   rd_ap_2024:
