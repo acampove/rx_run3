@@ -480,6 +480,8 @@ transformations:
     lines_phys_mm_cut:
       - Hlt2RD_BuToKpMuMu
       - Hlt2RD_B0ToKpPimMuMu
+      - Hlt2RD_LbToPKJpsi_JpsiToMuMu
+      - Hlt2RD_LambdabToPKMuMu
       - Hlt2RD_LbToLMuMu_LL
     lines_sprucing:
       - SpruceRD_BuToKpMuMu
