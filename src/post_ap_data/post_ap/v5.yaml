@@ -58,6 +58,9 @@ productions:
         - mc_24_w31_34_hlt1bug_magup_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_spr,_tuple
         - mc_24_w31_34_hlt1bug_magup_sim10d_11124002_bd_kstee_eq_btosllball05_dpc_spr,_tuple
         - mc_24_w31_34_hlt1bug_magup_sim10d_11102202_bd_kstgamma_eq_highptgamma_dpc_spr,_tuple
+        - mc_24_w31_34_hlt1bug_magup_sim10d-splitsim02_11102202_bd_kstgamma_eq_highptgamma_dpc_ss_spr,_tuple
+        - mc_24_w31_34_hlt1bug_magup_sim10d_13102202_bs_phigamma_eq_highptgamma_dpc_spr,_tuple
+        - mc_24_w31_34_hlt1bug_magup_sim10d-splitsim02_13102202_bs_phigamma_eq_highptgamma_dpc_ss_spr,_tuple
         - mc_24_w31_34_hlt1bug_magup_sim10d_12113004_bu_kmumu_eq_phsp_dpc_spr,_tuple
         - mc_24_w31_34_hlt1bug_magup_sim10d_11114014_bd_kstmumu_flatq2_eq_dpc_momcut_spr,_tuple
       simulation_turbo: 
