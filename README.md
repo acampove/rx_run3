@@ -83,6 +83,25 @@ job_filter_ganga -n job_name -p PRODUCTION -s SAMPLE -c /path/to/config/file.yam
 - The number of jobs will be equal to the number of PFNs, up to 500 jobs.
 - The code used to filter reside in the grid and the only thing the user has to do is to provide the latest version
 
+The options that can be used are:
+
+```bash
+usage: job_filter_ganga [-h] -n NAME -p PROD -s SAMP -c CONF [-b {Interactive,Local,Dirac}] [-t] -v VENV
+
+Script used to send ntuple filtering jobs to the Grid, through ganga
+
+options:
+  -h, --help            show this help message and exit
+  -n NAME, --name NAME  Job name
+  -p PROD, --prod PROD  Production
+  -s SAMP, --samp SAMP  Sample
+  -c CONF, --conf CONF  Path to config file
+  -b {Interactive,Local,Dirac}, --back {Interactive,Local,Dirac}
+                        Backend
+  -t, --test            Will run one job only if used
+  -v VENV, --venv VENV  Version of virtual environment used to run filtering
+```
+
 ## Check latest version of virtual environment
 
 The jobs below will run with code from a virtual environment that is already in the grid. One should use the
