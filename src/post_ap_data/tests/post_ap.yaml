@@ -423,7 +423,6 @@ transformations:
       - L2_Hlt1
       # Others
       - B_K2Pi_DTF_
-      - K_
       - Lb_
       - BUNCHCROSSING
     ends_with:
