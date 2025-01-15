@@ -390,8 +390,6 @@ transformations:
       - K_
       - Lb_
       - BUNCHCROSSING
-      # Isolation 
-      - B_HEAD_CC_B_ChargedIso_DR2_*_D*
     ends_with:
       - _KEY
       - _PARTICLE_ID
@@ -419,6 +417,8 @@ transformations:
       - H2_N*HITS
       - H2_RICH*_GAS_USED 
       - H2_HASBREM*
+      # Isolation 
+      - B_HEAD_CC_B_ChargedIso_DR2_*_D*
   hlt_lines_test:
     lines_phys_ee_mva:
       - Hlt2RD_B0ToKpPimEE_MVA
