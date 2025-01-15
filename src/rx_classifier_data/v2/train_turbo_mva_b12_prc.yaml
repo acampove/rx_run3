@@ -63,7 +63,7 @@ saving:
   path : 'output/mva_rare_2024_prc/VERSION/model.pkl'
 plotting:
   roc :
-    min : [0.6, 0.6]
+    min : [0.1, 0.1]
   val_dir : 'output/mva_rare_2024_prc/VERSION/plots'
   features:
     saving:
