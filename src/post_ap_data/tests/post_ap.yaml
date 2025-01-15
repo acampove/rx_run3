@@ -548,18 +548,18 @@ transformations:
         - Hlt2RD_B0ToKpPimMuMu_MVA
         - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
       lbpkee:
-      - Hlt2RD_LbToPKJpsi_JpsiToEE
-      - Hlt2RD_LambdabToPKEE
-      - Hlt2RD_LbToLEE_LL
-      - Hlt2RD_LbTopKEE_MVA_misid
-      - Hlt2RD_LbTopKEE_MVA
-      - Hlt2RD_LbTopKEE_SameSign_MVA
+        - Hlt2RD_LbToPKJpsi_JpsiToEE
+        - Hlt2RD_LambdabToPKEE
+        - Hlt2RD_LbToLEE_LL
+        - Hlt2RD_LbTopKEE_MVA_misid
+        - Hlt2RD_LbTopKEE_MVA
+        - Hlt2RD_LbTopKEE_SameSign_MVA
       lbpkmm:
-      - Hlt2RD_LbToPKJpsi_JpsiToMuMu
-      - Hlt2RD_LambdabToPKMuMu
-      - Hlt2RD_LbToLMuMu_LL
-      - Hlt2RD_LbTopKMuMu_MVA
-      - Hlt2RD_LbTopKMuMu_SameSign_MVA
+        - Hlt2RD_LbToPKJpsi_JpsiToMuMu
+        - Hlt2RD_LambdabToPKMuMu
+        - Hlt2RD_LbToLMuMu_LL
+        - Hlt2RD_LbTopKMuMu_MVA
+        - Hlt2RD_LbTopKMuMu_SameSign_MVA
   selection:
     evt_max : 1000 
     cuts:
