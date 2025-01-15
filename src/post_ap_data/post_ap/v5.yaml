@@ -511,6 +511,7 @@ transformations:
       - Hlt2RD_B0ToKpPimMuMu_MVA
       - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
   selection:
+    evt_max : -1 
     cuts:
       any:
         L1Ghost: L1_TRGHOSTPROB < 0.5
@@ -530,6 +531,6 @@ transformations:
       lbpkee:
       lbpkmm:
   saving:
-    evt_max : -1
+    evt_max : -1 
     compression : 2
     store_branch: false
