@@ -161,7 +161,11 @@ class Selector:
         '''
 
         if 'evt_max' not in self._d_sel:
-            log.debug('Not limitting number of entries')
+            log.debug('Not limitting number of entries, no evt_max was found')
+            return
+
+        if self._d_sel['evt_max'] < 0:
+            log.debug('Not limitting number of entries, found negative number for max_evt')
             return
 
         mevt = self._d_sel['evt_max']
