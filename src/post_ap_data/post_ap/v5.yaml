@@ -390,6 +390,8 @@ transformations:
       - K_
       - Lb_
       - BUNCHCROSSING
+      # Isolation 
+      - B_HEAD_CC_B_ChargedIso_DR2_*_D*
     ends_with:
       - _KEY
       - _PARTICLE_ID
