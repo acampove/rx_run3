@@ -6,6 +6,7 @@ q2:
   high   : (Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)
 hyper               :
   loss              : log_loss
+  learning_rate     : 0.10
   max_depth         : 3
   min_samples_split : 2
 # ----------------------------------
@@ -18,10 +19,10 @@ dataset :
       mass : 'mass < 7000'
   paths:
     sig :
-      file_path : /publicfs/ucas/user/campoverde/Data/RX_run3/v2/NO_q2_bdt_Q2_central_VR_v1/Bu_Kee_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
+      file_path : /publicfs/ucas/user/campoverde/Data/RX_run3/v2/NO_q2_bdt_mass_Q2_central_VR_v1/Bu_Kee_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
       tree_name : DecayTree 
     bkg :
-      file_path : /publicfs/ucas/user/campoverde/Data/RX_run3/v2/NO_q2_bdt_Q2_central_VR_v1/DATA_24_Mag*_24c2/Hlt2RD_BuToKpEE_MVA/*.root
+      file_path : /publicfs/ucas/user/campoverde/Data/RX_run3/v2/NO_q2_bdt_mass_Q2_central_VR_v1/DATA_24_Mag*_24c2/Hlt2RD_BuToKpEE_MVA/*.root
       tree_name : DecayTree 
   define :
     mass       : 'B_M'
@@ -34,15 +35,12 @@ training :
   rdm_stat : 1
   hyper:
     low : 
-      n_estimators : 20
-      learning_rate: 0.02
-      max_depth    : 2
+      n_estimators : 70
     central : 
       n_estimators : 70
-      learning_rate: 0.05
+      max_depth    : 4
     high : 
-      n_estimators : 50
-      learning_rate: 0.05
+      n_estimators : 70
   features : 
     - B_PT
     - B_IPCHI2_OWNPV
@@ -66,7 +64,7 @@ saving:
   path : 'output/mva_rare_2024_cmb/VERSION/model.pkl'
 plotting:
   roc :
-    min : [0.9, 0.9]
+    min : [0.7, 0.7]
   val_dir : 'output/mva_rare_2024_cmb/VERSION/plots'
   features:
     saving:
