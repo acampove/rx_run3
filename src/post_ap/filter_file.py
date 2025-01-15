@@ -2,6 +2,8 @@
 Module containing FilterFile class
 '''
 
+import os
+import glob
 import json
 import fnmatch
 import hashlib
