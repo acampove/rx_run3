@@ -6,6 +6,8 @@ tests:
     test_mc_spruce_mm : v1r2041
     test_mc_rpk_ee    : v1r2041
     test_mc_rpk_mm    : v1r2041
+    test_dt_c2_turbo  : v1r1670
+    test_dt_c2_spruce : v1r1670
   samples: &tst_sam
     test_mc_turbo_ee: 
       - mc_24_w31_34_hlt1bug_magup_sim10d_12123003_bu_kee_eq_btosllball05_dpc_tuple
