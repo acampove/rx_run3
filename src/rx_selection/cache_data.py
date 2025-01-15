@@ -40,7 +40,7 @@ class CacheData:
             log.warning(f'Overriding cut version with: {cutver}')
             return cutver
 
-        selection_wc = files('rx_selection_data').joinpath('*.yaml')
+        selection_wc = files('rx_selection_data').joinpath('selection/*.yaml')
         selection_wc = str(selection_wc)
         selection_dir= os.path.dirname(selection_wc)
         version      = vman.get_last_version(selection_dir, 'yaml')
