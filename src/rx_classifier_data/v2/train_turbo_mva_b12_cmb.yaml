@@ -15,7 +15,7 @@ dataset :
       mass : 'mass > 5500'
       run  : 'block == 1 || block == 2'
     sig :
-      mass : 'mass > 4500 && mass < 5600'
+      mass : 'mass < 7000'
   paths:
     sig :
       file_path : /publicfs/ucas/user/campoverde/Data/RX_run3/v2/NO_q2_bdt_Q2_central_VR_v1/Bu_Kee_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
@@ -153,6 +153,6 @@ plotting:
         #
       mass:
         normalized : true
-        binning : [4800, 6000, 100]
+        binning : [4400, 6500, 50]
         yscale  : 'linear'
         labels  : ['$M_{DTF}(B^+)$', '']
