@@ -444,16 +444,37 @@ class FilterFile:
 
             self._add_metadata(file_path, line_name)
     # --------------------------------------
+    def _fail_job(self, tree_path : str) -> None:
+        '''
+        If this function is called, there was a problem processing the input
+        The function will remove the input files and raise an exception to end the job
+        Unless the problem is with MCDT_HEADONLY, which is not really needed
+        '''
+        if tree_path == 'MCDT_HEADONLY/MCDecayTree':
+            return
+
+        l_path = glob.glob('*.root')
+        for path in l_path:
+            log.info(f'Removing: {path}')
+            os.remove(path)
+
+        raise RuntimeError(f'Could not save {tree_path}, failing the job')
+    # --------------------------------------
     def _save_extra_tree(self, tree_path : str, file_path : str, opts : RDF.RSnapshotOptions) -> None:
         log.debug(f'Saving {tree_path}')
 
-        ext_rdf = RDataFrame(tree_path, self._file_path)
+        try:
+            rdf = RDataFrame(tree_path, self._file_path)
+        except TypeError:
+            log.warning(f'Cannot save: {self._file_path}:{tree_path}')
+            self._fail_job(tree_path)
+            return
 
         tree_name = self._get_extra_tree_name(tree_path)
-        l_name    = self._get_column_names(ext_rdf)
-        ext_rdf   = self._filter_max_entries(ext_rdf, tree_name)
-        ext_rdf.Snapshot(tree_name, file_path, l_name, opts)
+        l_name    = self._get_column_names(rdf)
+        rdf       = self._filter_max_entries(rdf, tree_name)
 
+        rdf.Snapshot(tree_name, file_path, l_name, opts)
         log.debug(f'Saved {tree_name}')
     # --------------------------------------
     def _get_extra_tree_name(self, tree_path : str) -> str:
