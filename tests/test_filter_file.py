@@ -94,3 +94,27 @@ def test_bad_mcdt():
 
     _move_outputs('test_bad_mcdt')
 # --------------------------------------
+def test_rpk_ee_mc():
+    '''
+    Run test on MC for RpK electron sample
+    '''
+    path= '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/rpk_ee_mc.root'
+
+    obj = FilterFile(sample_name='mc_test', file_path=path)
+    obj.dump_contents = True
+    obj.run(skip_saving=False)
+
+    _move_outputs('test_rpk_ee_mc')
+# --------------------------------------
+def test_rpk_mm_mc():
+    '''
+    Run test on MC for RpK muon sample
+    '''
+    path= '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/rpk_mm_mc.root'
+
+    obj = FilterFile(sample_name='mc_test', file_path=path)
+    obj.dump_contents = True
+    obj.run(skip_saving=False)
+
+    _move_outputs('test_rpk_mm_mc')
+# --------------------------------------
