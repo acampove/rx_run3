@@ -36,7 +36,7 @@ productions:
       simulation_turbo  : v1r2041
       <<: *tst_ver
     samples:
-      data_blocks_12:
+      data_c2:
         - data_24_magup_turbo_24c2
         - data_24_magup_full_24c2
         - data_24_magdown_turbo_24c2
