@@ -22,9 +22,9 @@ class Data:
     data_test_turbo  = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_turbo.root'
     data_test_spruce = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_spruce.root'
 
-    output_dir = '/home/acampove/cernbox/Run3/post_ap/tests/filter_file'
+    output_dir       = '/tmp/post_ap/tests/filter_file'
 
-    l_args_config = [True, False]
+    l_args_config    = [True, False]
 # --------------------------------------
 def _move_outputs(test_name : str) -> None:
     l_root = glob.glob('*.root')
