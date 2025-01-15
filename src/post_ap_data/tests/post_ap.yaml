@@ -474,6 +474,8 @@ transformations:
     lines_phys_ee_cut:
       - Hlt2RD_BuToKpEE
       - Hlt2RD_B0ToKpPimEE
+      - Hlt2RD_LbToPKJpsi_JpsiToEE
+      - Hlt2RD_LambdabToPKEE
       - Hlt2RD_LbToLEE_LL
     lines_phys_mm_cut:
       - Hlt2RD_BuToKpMuMu
