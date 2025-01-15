@@ -77,3 +77,18 @@ def test_cfl():
 
         log.info(f'{key:<20}{num:<20}')
 # --------------------------------------
+def test_mc_full():
+    '''
+    Test selection in MC
+    '''
+    config_path               = files('post_ap_data').joinpath('tests/post_ap_full.yaml')
+    os.environ['CONFIG_PATH'] = str(config_path)
+
+    rdf = RDataFrame('Hlt2RD_BuToKpMuMu_MVA/DecayTree', Data.mc_path)
+    rdf = _rename_branches(rdf)
+
+    obj = Selector(rdf=rdf, is_mc=True)
+    rdf = obj.run(sel_kind = 'bukmm')
+    log.info('Saving output of test_mc')
+    rdf.Snapshot('tree', '/tmp/selector_test.root', ['Jpsi_M'])
+# --------------------------------------
