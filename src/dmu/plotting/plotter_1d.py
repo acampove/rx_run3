@@ -98,7 +98,7 @@ class Plotter1D(Plotter):
             log.debug(f'Not normalizing for variable: {var}')
             return arr_wgt
 
-        log.info(f'Normalizing for variable: {var}')
+        log.debug(f'Normalizing for variable: {var}')
         total   = numpy.sum(arr_wgt)
         arr_wgt = arr_wgt / total
 
