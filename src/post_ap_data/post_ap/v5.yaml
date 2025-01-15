@@ -29,9 +29,9 @@ working_group: rd
 productions:
   rd_ap_2024:
     versions: 
-      data_blocks_12    : v1r1670
-      data_turbo        : v1r1670
+      data_c2           : v1r1670
       data_spruce       : v1r1670 
+      data_turbo        : v1r1670
       simulation_spruce : v1r2041
       simulation_turbo  : v1r2041
       <<: *tst_ver
