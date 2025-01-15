@@ -461,14 +461,8 @@ transformations:
       - Hlt2RD_B0ToKpPimEE_MVA
   hlt_lines_very_low_priority:  &very_low_priority
     lines_ss_ee_mva:
-      - Hlt2RD_BuToKpEE_SameSign_MVA
-      - Hlt2RD_B0ToKpPimEE_SameSign_MVA
-      - Hlt2RD_LbTopKEE_SameSign_MVA
       - Hlt2RD_BsToPhiEE_SameSign_MVA
     lines_ss_mm_mva:
-      - Hlt2RD_BuToKpMuMu_SameSign_MVA
-      - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
-      - Hlt2RD_LbTopKMuMu_SameSign_MVA
       - Hlt2RD_BsToPhiMuMu_SameSign_MVA
     lines_msid_ee_mva:
       - Hlt2RD_BsToPhiEE_MVA_misid
@@ -508,11 +502,17 @@ transformations:
       - Hlt2RD_LbTopKEE_MVA_misid
     lines_phys_ee_mva:
       - Hlt2RD_BuToKpEE_MVA
+      - Hlt2RD_BuToKpEE_SameSign_MVA
       - Hlt2RD_B0ToKpPimEE_MVA
+      - Hlt2RD_B0ToKpPimEE_SameSign_MVA
       - Hlt2RD_LbTopKEE_MVA
+      - Hlt2RD_LbTopKEE_SameSign_MVA
     lines_phys_mm_mva:
       - Hlt2RD_BuToKpMuMu_MVA
+      - Hlt2RD_BuToKpMuMu_SameSign_MVA
       - Hlt2RD_B0ToKpPimMuMu_MVA
+      - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
+      - Hlt2RD_LbTopKMuMu_SameSign_MVA
       - Hlt2RD_LbTopKMuMu_MVA
   hlt_lines:
     <<: *high_priority
