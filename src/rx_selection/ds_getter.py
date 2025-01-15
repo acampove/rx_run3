@@ -31,7 +31,7 @@ from rx_selection import utilities as ut
 
 log=LogStore.add_logger('rx_selection:ds_getter')
 # -----------------------------------------
-class ds_getter:
+class DsGetter:
     '''
     Class used to provide dataframe after a given selection
     '''
