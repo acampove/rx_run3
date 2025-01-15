@@ -8,11 +8,12 @@ display_help()
     echo "-h: Help"
     echo "-v: Version of tarball, optional, if not passed, wont upload it"
     echo "-i: This will force the script to install this version, e.g. 0.2.4" 
-    echo "-u: This will force updating tarball if found int the grid"
+    echo "-u: With 1 will force updating tarball if found int the grid, default is 0"
 }
 #--------------------------------
 get_args()
 {
+    UPDATE=0
     while getopts :hf:v:i:u: option; do 
         case "${option}" in
             h)  
