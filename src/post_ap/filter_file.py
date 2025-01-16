@@ -40,13 +40,15 @@ class FilterFile:
         self._sample_name  = sample_name
         self._file_path    = file_path
 
+        self.max_run       : int  = -1
+        self.max_save      : int  = -1
+
         self._cfg_dat      : dict
         self._d_trans      : dict
-        self._max_save     : int  = -1
         self._is_mc        : bool
         self._l_line_name  : list[str]
-        self._store_branch : bool
         self._has_lumitree : bool
+        self._store_branch : bool = False
         self._dump_contents: bool = False
         self._d_df_cf      : dict[str, pnd.DataFrame] = {}
 
