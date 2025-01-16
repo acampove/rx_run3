@@ -63,7 +63,9 @@ class FilterFile:
 
         self._check_mcdt()
         self._set_tree_names()
-        self._set_save_pars()
+        self._set_save_max()
+        self._set_run_max()
+        self._set_save_branches()
 
         self._initialized = True
     # --------------------------------------
