@@ -118,3 +118,15 @@ def test_rpk_mm_mc():
 
     _move_outputs('test_rpk_mm_mc')
 # --------------------------------------
+def test_rpk_data():
+    '''
+    Run test on data for RpK
+    '''
+    path= '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/rpk_data.root'
+
+    obj = FilterFile(sample_name='data_rpk_test', file_path=path)
+    obj.dump_contents = True
+    obj.run(skip_saving=False)
+
+    _move_outputs('test_rpk_data')
+# --------------------------------------
