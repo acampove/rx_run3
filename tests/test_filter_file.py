@@ -46,7 +46,7 @@ def _initialize():
     '''
     log.info('Initializing')
 
-    cfg_path = files('post_ap_data').joinpath('tests/post_ap.yaml')
+    cfg_path = files('post_ap_data').joinpath('post_ap/v5.yaml')
     os.environ['CONFIG_PATH'] = str(cfg_path)
 
     LogStore.set_level('dmu:rdataframe:atr_mgr', 30)
@@ -125,7 +125,9 @@ def test_rpk_data():
     path= '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/rpk_data.root'
 
     obj = FilterFile(sample_name='data_rpk_test', file_path=path)
-    obj.dump_contents = True
+    obj.dump_contents  = True
+    obj.max_run        = 1000
+    obj.max_save       =  100
     obj.run(skip_saving=False)
 
     _move_outputs('test_rpk_data')
