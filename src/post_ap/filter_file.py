@@ -95,17 +95,37 @@ class FilterFile:
         else:
             raise ValueError(f'Cannot determine Data/MC from sample name: {self._sample_name}')
     # --------------------------------------
-    def _set_save_pars(self):
-        try:
-            self._max_save = self._d_trans['saving']['evt_max']
-            log.warning(f'Saving dataframe with {self._max_save} entries')
-        except KeyError:
-            log.debug('Not filtering, max_events not specified')
+    def _set_save_max(self) -> None:
+        if self.max_save > 0:
+            log.warning(f'Will save at most {self.max_save} entries')
+            return
 
-        try:
+        if 'evt_max' in self._d_trans['saving']:
+            self.max_save = self._d_trans['saving']['evt_max']
+            log.warning(f'Will save at most {self.max_save} entries')
+            return
+
+        log.info('Saving all entries')
+    # --------------------------------------
+    def _set_run_max(self) -> None:
+        if self.max_run > 0:
+            log.warning(f'Will run over at most {self.max_run} entries')
+            return
+
+        if 'evt_max' in self._d_trans['selection']:
+            self.max_run = self._d_trans['selection']['evt_max']
+            log.warning(f'Will run over at most {self.max_run} entries')
+            return
+
+        log.info('Running over all entries')
+    # --------------------------------------
+    def _set_save_branches(self) -> None:
+        if 'store_branch' in self._d_trans['saving']:
             self._store_branch = self._d_trans['saving']['store_branch']
-        except KeyError:
-            log.debug('Not storing branches')
+
+        val = 'True' if self._store_branch else 'False'
+
+        log.info(f'Storing branches: {val}')
     # --------------------------------------
     def _get_names_from_config(self) -> list[str]:
         '''
