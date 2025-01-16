@@ -438,12 +438,12 @@ class FilterFile:
         return opts
     # --------------------------------------
     def _filter_max_entries(self, rdf : RDataFrame, tree_path : str) -> RDataFrame:
-        if self._max_save <= 0:
-            log.debug(f'Requested {self._max_save} entries => saving full {tree_path} tree')
+        if self.max_save <= 0:
+            log.debug(f'Requested {self.max_save} entries => saving full {tree_path} tree')
             return rdf
 
-        log.warning(f'Saving extra {tree_path} with at most {self._max_save} entries')
-        rdf = rdf.Range(self._max_save)
+        log.warning(f'Saving extra {tree_path} with at most {self.max_save} entries')
+        rdf = rdf.Range(self.max_save)
 
         return rdf
     # --------------------------------------
