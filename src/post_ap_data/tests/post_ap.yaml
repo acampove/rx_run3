@@ -600,6 +600,12 @@ transformations:
       lbpkmm_2:
         H1Ghost: P_TRGHOSTPROB  < 0.5
         H2Ghost: K_TRGHOSTPROB  < 0.5
+      lbppiee  :
+        H1Ghost:  P_TRGHOSTPROB  < 0.5
+        H2Ghost: Pi_TRGHOSTPROB  < 0.5
+      lbppimm  :
+        H1Ghost:  P_TRGHOSTPROB  < 0.5
+        H2Ghost: Pi_TRGHOSTPROB  < 0.5
   saving:
     evt_max : 100 
     compression : 2
