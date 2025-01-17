@@ -7,20 +7,18 @@ Module containing class that provides ROOT dataframe after a given selection
 # pylint: disable = invalid-name
 # pylint: disable = too-many-arguments, too-many-positional-arguments
 
-import os
 import re
 import glob
-
-from importlib.resources import files
-
 import pprint
-import yaml
 
-from ROOT import RDataFrame, TFile
+import joblib
+import numpy
+import dmu.rdataframe.utilities as dmu_ut
 
+from dmu.ml.cv_predict      import CVPredict
 from dmu.rdataframe.atr_mgr import AtrMgr
 from dmu.logging.log_store  import LogStore
-
+from ROOT                   import RDataFrame, TFile
 
 from rx_selection            import cutflow     as cfl
 from rx_selection.efficiency import efficiency
