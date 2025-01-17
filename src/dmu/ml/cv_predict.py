@@ -10,8 +10,8 @@ import tqdm
 from ROOT import RDataFrame
 
 import dmu.ml.utilities     as ut
-import dmu.ml.cv_classifier as CVClassifier
 
+from dmu.ml.cv_classifier  import CVClassifier
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:ml:cv_predict')
