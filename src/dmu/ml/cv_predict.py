@@ -147,6 +147,7 @@ class CVPredict:
             arr_prb = self._predict_with_overlap(df_ft)
 
         arr_prb = self._patch_probabilities(arr_prb)
+        arr_prb = arr_prb.T[1]
 
         return arr_prb
 # ---------------------------------------
