@@ -7,7 +7,6 @@ import os
 
 from dataclasses         import dataclass
 from importlib.resources import files
-from functools           import cache
 
 import yaml
 import ap_utilities.decays.utilities as aput
@@ -51,7 +50,6 @@ def selection(analysis : str, project : str, q2bin: str, process : str) -> dict[
 
     return d_cut
 #-----------------------
-@cache
 def load_selection_config() -> dict:
     '''
     Returns dictionary with configuration (cuts, definitions, etc) needed for selection
