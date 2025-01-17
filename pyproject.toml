@@ -6,7 +6,7 @@ dependencies= [
 'logzero',
 'PyYAML',
 'scipy',
-'awkward',
+'awkward==2.4.6',
 'tqdm',
 'joblib',
 'scikit-learn',
