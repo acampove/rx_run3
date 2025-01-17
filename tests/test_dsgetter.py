@@ -11,6 +11,10 @@ from rx_selection.ds_getter import DsGetter
 
 log = LogStore.add_logger('rx_selection:test_dsgetter')
 # -------------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('rx_selection:ds_getter', 10)
+# -------------------------------------------
 def _get_mva_definitions() -> dict[str,str]:
     d_def               = {}
     d_def['min_ll_pt']  = 'TMath::Min(L1_PT , L2_PT)'
