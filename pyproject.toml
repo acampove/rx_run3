@@ -6,6 +6,7 @@ readme      = 'README.md'
 dependencies= [
 'data-manipulation-utilities',
 'rx_data',
+'numexpr',
 'numpy',
 'jacobi',
 'joblib',
