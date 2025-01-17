@@ -84,7 +84,7 @@ def _triggers_from_mc_sample(sample_path : str, is_rk : bool) -> list[str]:
     return l_trig
 # ---------------------------------------------
 @cache
-def get_dt_samples(is_rk : bool) -> list[tuple[str,str]]:
+def get_dt_samples(is_rk : bool, included :str) -> list[tuple[str,str]]:
     '''
     Will return list of data samples
     Where a sample is a pair of sample name and trigger name
