@@ -133,6 +133,25 @@ class DsGetter:
 
         return hasattr(ifile, tree_name)
     # ------------------------------------
+    def _def_from_sel_conf(self) -> dict[str,str]:
+        sel_cfg = sel.load_selection_config()
+        ana     = self._get_analysis()
+        prj     = self._project
+
+        if 'Definitions' not in sel_cfg:
+            log.debug('No variable definitions found')
+            return {}
+
+        if prj not in sel_cfg['Definitions']:
+            log.debug(f'No variable definitions found for project: {prj}')
+            return {}
+
+        if ana not in sel_cfg['Definitions'][prj]:
+            log.debug(f'No variable definitions found for project/analysis: {prj}/{ana}')
+            return {}
+
+        return sel_cfg['Definitions'][prj][ana]
+    # ------------------------------------
     def _add_columns(self, rdf : RDataFrame, tree_name : str) -> RDataFrame:
         if tree_name != 'DecayTree':
             log.debug(f'Not adding columns to tree {tree_name}')
@@ -140,23 +159,15 @@ class DsGetter:
 
         log.info('Adding columns')
 
-        sel_cfg = sel.load_selection_config()
-        ana     = self._get_analysis()
-        prj     = self._project
+        d_def=self._def_from_sel_conf()
+        if 'Definitions' in self._cfg:
+            log.info('Found definitions in config files')
+            d_def.update(self._cfg['Definitions'])
 
-        if 'Definitions' not in sel_cfg:
-            log.debug('No variable definitions found')
+        if len(d_def) == 0:
+            log.warning('No definitions found')
             return rdf
 
-        if prj not in sel_cfg['Definitions']:
-            log.debug(f'No variable definitions found for project: {prj}')
-            return rdf
-
-        if ana not in sel_cfg['Definitions'][prj]:
-            log.debug(f'No variable definitions found for project/analysis: {prj}/{ana}')
-            return rdf
-
-        d_def = sel_cfg['Definitions'][prj][ana]
         log.info('Defining variables:')
 
         l_col_name = self._get_column_name(rdf)
