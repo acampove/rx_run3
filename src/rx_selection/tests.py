@@ -105,10 +105,7 @@ def get_dt_samples(is_rk : bool, included :str) -> list[tuple[str,str]]:
 
             l_sam_trg.append((sample_name, trigger))
 
-    nsample = len(l_sam_trg)
-    log.info(f'Found {nsample} samples')
-
-    return l_sam_trg
+    return _slice_samples(l_sam_trg, included)
 # ---------------------------------------------
 @cache
 def get_mc_samples(is_rk : bool, included : str) -> list[tuple[str,str]]:
@@ -133,8 +130,11 @@ def get_mc_samples(is_rk : bool, included : str) -> list[tuple[str,str]]:
 
             l_sam_trg.append((sample_name, trigger))
 
+    return _slice_samples(l_sam_trg, included)
+# ---------------------------------------------
+def _slice_samples(l_sam_trg : list[tuple[str,str]], included : str) -> list[tuple[str,str]]:
     nsample = len(l_sam_trg)
-    log.info(f'Found {nsample} samples in {sample_dir}')
+    log.info(f'Found {nsample} samples')
 
     if included == '':
         return l_sam_trg
