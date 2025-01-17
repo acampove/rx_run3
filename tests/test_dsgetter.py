@@ -40,7 +40,9 @@ def test_no_mva(sample : str, trigger : str) -> None:
     obj = DsGetter(cfg=cfg)
     _   = obj.get_rdf()
 # -------------------------------------------
-@pytest.mark.parametrize('sample, trigger', tst.get_mc_samples(is_rk=True, included='Bu_Kee_eq_btosllball05_DPC'))
+@pytest.mark.parametrize('sample, trigger',
+                         tst.get_dt_samples(is_rk=True, included='DATA_24_MagUp_24c2') +
+                         tst.get_mc_samples(is_rk=True, included='Bu_Kee_eq_btosllball05_DPC'))
 def test_mva(sample : str, trigger : str) -> None:
     '''
     Test of DsGetter class with MVA added
