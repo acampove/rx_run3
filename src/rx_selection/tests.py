@@ -83,14 +83,12 @@ def _triggers_from_mc_sample(sample_path : str, is_rk : bool) -> list[str]:
 
     return l_trig
 # ---------------------------------------------
+@cache
 def get_dt_samples(is_rk : bool) -> list[tuple[str,str]]:
     '''
     Will return list of data samples
     Where a sample is a pair of sample name and trigger name
     '''
-    if hasattr(Data, 'l_sam_trg_dt'):
-        return Data.l_sam_trg_dt
-
     if 'DATADIR' not in os.environ:
         raise ValueError('DATADIR not found in environment')
 
@@ -110,18 +108,14 @@ def get_dt_samples(is_rk : bool) -> list[tuple[str,str]]:
     nsample = len(l_sam_trg)
     log.info(f'Found {nsample} samples')
 
-    Data.l_sam_trg_dt = l_sam_trg
-
-    return Data.l_sam_trg_dt
+    return l_sam_trg
 # ---------------------------------------------
-def get_mc_samples(is_rk : bool, included : str = '') -> list[tuple[str,str]]:
+@cache
+def get_mc_samples(is_rk : bool, included : str) -> list[tuple[str,str]]:
     '''
     Will return list of samples, where a sample is a pair of sample name and trigger
     Will only pick samples whose name include the `included` substring
     '''
-    if hasattr(Data, 'l_sam_trg_mc'):
-        return Data.l_sam_trg_mc
-
     if 'DATADIR' not in os.environ:
         raise ValueError('DATADIR not found in environment')
 
@@ -140,18 +134,18 @@ def get_mc_samples(is_rk : bool, included : str = '') -> list[tuple[str,str]]:
             l_sam_trg.append((sample_name, trigger))
 
     nsample = len(l_sam_trg)
-    log.warning(f'Found {nsample} samples in {sample_dir}')
-
-    Data.l_sam_trg_mc = l_sam_trg
+    log.info(f'Found {nsample} samples in {sample_dir}')
 
     if included == '':
-        return Data.l_sam_trg_mc
+        return l_sam_trg
 
     l_sam_trg = [ (sam, trg) for (sam, trg) in l_sam_trg if included in sam ]
+    nsample = len(l_sam_trg)
+    log.warning(f'Slicing for {nsample} samples')
 
     return l_sam_trg
 # ---------------------------------------------
-def get_config(sample : str, trigger : str, is_rk : bool) -> Union[dict, None]:
+def get_config(sample : str, trigger : str, is_rk : bool, remove : list) -> Union[dict, None]:
     '''
     Takes name to config file
     Return settings from YAML as dictionary
