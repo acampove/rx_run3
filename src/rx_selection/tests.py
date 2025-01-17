@@ -161,17 +161,17 @@ def get_config(sample : str, trigger : str, is_rk : bool, remove : list) -> Unio
     d_conf['project'] = 'RK' if is_rk else 'RKst'
     d_conf['q2bin'  ] = 'central'
     d_conf['hlt2'   ] = trigger
-    d_conf['remove' ] = ['q2', 'bdt']
+    d_conf['remove' ] = remove
 
     d_conf = _override_parts(d_conf, sample)
 
     return d_conf
 # ---------------------------------------------
-def get_dsg_config(sample : str, trigger : str, is_rk : bool) -> Union[None,dict]:
+def get_dsg_config(sample : str, trigger : str, is_rk : bool, remove : list) -> Union[None,dict]:
     '''
     Function will return config file for DsGetter tests
     '''
-    cfg = get_config(sample, trigger, is_rk)
+    cfg = get_config(sample, trigger, is_rk, remove)
     if cfg is None:
         return None
 
