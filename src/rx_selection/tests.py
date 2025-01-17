@@ -1,24 +1,23 @@
 '''
 Module containing functions needed by tests
 '''
+# pylint: disable=import-error
+
 import os
 import glob
 from typing        import Union
 from dataclasses   import dataclass
+from functools     import cache
 
 from dmu.logging.log_store   import LogStore
 
 log = LogStore.add_logger('rx_selection:tests')
-
 # ---------------------------------------------
 @dataclass
 class Data:
     '''
     Class used to share data
     '''
-    l_sam_trg_mc : list[tuple[str,str]]
-    l_sam_trg_dt : list[tuple[str,str]]
-
     data_version = 'v2'
     l_rk_trigger = [
             'Hlt2RD_BuToKpMuMu_MVA',
