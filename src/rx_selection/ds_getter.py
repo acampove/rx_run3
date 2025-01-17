@@ -10,6 +10,7 @@ Module containing class that provides ROOT dataframe after a given selection
 import re
 import glob
 import pprint
+import numexpr
 
 import joblib
 import numpy
@@ -301,28 +302,37 @@ class DsGetter:
 
         log.info(f'Using {npkl} pickle files')
 
-        l_model = [ joblib.load(pkl_path) for pkl_path in l_pkl]
+        l_model = [ joblib.load(pkl_path) for pkl_path in l_pkl ]
 
         cvp     = CVPredict(models=l_model, rdf=rdf)
         arr_prb = cvp.predict()
 
         return arr_prb
     # ----------------------------------------
+    def _scores_from_rdf(self, rdf : RDataFrame, d_path : dict[str,str]) -> numpy.ndarray:
+        arr_low     = self._q2_scores_from_rdf(rdf, d_path['low'    ])
+        arr_central = self._q2_scores_from_rdf(rdf, d_path['central'])
+        arr_high    = self._q2_scores_from_rdf(rdf, d_path['high'   ])
+        arr_jpsi_m  = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
+
+        arr_mva     = self._get_full_q2_scores(low=arr_low, central=arr_central, high=arr_high, Jpsi_M=arr_jpsi_m)
+
+        return arr_mva
+    # ----------------------------------------
     def _add_mva(self, rdf : RDataFrame) -> RDataFrame:
         if 'mva' not in self._cfg:
             log.warning('Not adding MVA scores')
             return rdf
 
-        d_mva_path = self._cfg['mva']
-        if len(d_mva_path) == 0:
-            log.warning('No MVA path found, skipping MVAs')
+        d_mva_kind = self._cfg['mva']
+        if len(d_mva_kind) == 0:
+            log.warning('No MVAs found, skipping addition')
             return rdf
 
-        nmva = len(d_mva_path)
+        nmva = len(d_mva_kind)
+        log.info(f'Found {nmva} kinds of MVA scores')
 
-        log.info('Reading MVA scores')
-
-        d_mva_score = { f'mva_{name}' : self._scores_from_rdf(rdf, path) for name, path in d_mva_path.items() }
+        d_mva_score = { f'mva_{name}' : self._scores_from_rdf(rdf, d_path) for name, d_path in d_mva_kind.items() }
 
         log.info(f'Adding {nmva} MVA columns')
 
