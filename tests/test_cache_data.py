@@ -28,13 +28,13 @@ def test_run3_rk_mc(sample : str, trigger : str):
     obj=CacheData(cfg = cfg)
     obj.save()
 # ---------------------------------------------
-@pytest.mark.parametrize('sample, trigger', _get_dt_samples(is_rk=True))
+@pytest.mark.parametrize('sample, trigger', tst.get_dt_samples(is_rk=True))
 def test_run3_rk_dt(sample : str, trigger : str):
     '''
     Testing on run3 RK samples and triggers
     '''
     log.info(f'{sample:<60}{trigger:<40}')
-    cfg = _get_config(sample, trigger, is_rk = True)
+    cfg = tst.get_config(sample, trigger, is_rk = True)
     if cfg is None:
         return
 
