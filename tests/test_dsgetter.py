@@ -47,17 +47,18 @@ def test_mva(sample : str, trigger : str) -> None:
 
     log.info(f'Running over: {sample}/{trigger}')
 
-    cfg = tst.get_dsg_config(sample, trigger, is_rk=True, remove=[])
+    cfg = tst.get_dsg_config(sample, trigger, is_rk=True, remove=['q2', 'bdt'])
     if cfg is None:
         return
 
-    cfg['mva'] = {
-            'cmb_low'    : '/home/acampove/Packages/classifier/output/mva_rare_2024_cmb/v2/low',
-            'cmb_central': '/home/acampove/Packages/classifier/output/mva_rare_2024_cmb/v2/central',
-            'cmb_high'   : '/home/acampove/Packages/classifier/output/mva_rare_2024_cmb/v2/high',
-            }
-
     cfg['Definitions'] = _get_mva_definitions()
+    cfg['mva']         = {
+            'cmb' : {
+                'low'    : '/home/acampove/Packages/classifier/output/mva_rare_2024_cmb/v2/low',
+                'central': '/home/acampove/Packages/classifier/output/mva_rare_2024_cmb/v2/central',
+                'high'   : '/home/acampove/Packages/classifier/output/mva_rare_2024_cmb/v2/high',
+                }
+            }
 
     obj = DsGetter(cfg=cfg)
     _   = obj.get_rdf()
