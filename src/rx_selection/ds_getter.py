@@ -282,6 +282,44 @@ class DsGetter:
 
         return cut
     # ----------------------------------------
+    def _scores_from_rdf(self, rdf : RDataFrame, path : str) -> numpy.ndarray:
+        l_pkl  = glob.glob(f'{path}/*.pkl')
+        npkl   = len(l_pkl)
+        if npkl == 0:
+            raise ValueError(f'No pickle files found in {path}')
+
+        log.info(f'Using {npkl} pickle files')
+
+        l_model = [ joblib.load(pkl_path) for pkl_path in l_pkl]
+
+        cvp     = CVPredict(models=l_model, rdf=rdf)
+        arr_prb = cvp.predict()
+
+        return arr_prb
+    # ----------------------------------------
+    def _add_mva(self, rdf : RDataFrame) -> RDataFrame:
+        if 'mva' not in self._cfg:
+            log.warning('Not adding MVA scores')
+            return rdf
+
+        d_mva_path = self._cfg['mva']
+        if len(d_mva_path) == 0:
+            log.warning('No MVA path found, skipping MVAs')
+            return rdf
+
+        nmva = len(d_mva_path)
+
+        log.info('Reading MVA scores')
+
+        d_mva_score = { f'mva_{name}' : self._scores_from_rdf(rdf, path) for name, path in d_mva_path.items() }
+
+        log.info(f'Adding {nmva} MVA columns')
+
+        for name, arr_val in d_mva_score.items():
+            rdf = dmu_ut.add_column(rdf, arr_val, name)
+
+        return rdf
+    # ----------------------------------------
     def get_rdf(self) -> RDataFrame:
         '''
         Returns ROOT dataframe after selection
@@ -330,6 +368,7 @@ class DsGetter:
 
             tot=pas
 
+        rdf          = self._add_mva(rdf)
         rdf          = dfmgr.add_atr(rdf)
         rdf.treename = 'DecayTree'
         rdf.cf       = cf
