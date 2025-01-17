@@ -294,7 +294,51 @@ class DsGetter:
 
         return cut
     # ----------------------------------------
-    def _scores_from_rdf(self, rdf : RDataFrame, path : str) -> numpy.ndarray:
+    def _get_q2_indexer(self) -> str:
+        '''
+        Returns a string that depends on Jpsi_M.
+        When evaluated it gives 
+        - 0 for low
+        - 1 for central
+        - 2 for high
+
+        q2 bin
+        '''
+        sel_cfg  = sel.load_selection_config()
+        ana      = self._get_analysis()
+        prj      = self._project
+        d_q2_cut = sel_cfg[prj][ana]['q2']
+
+        low_cut  = d_q2_cut['low'    ]
+        cen_cut  = d_q2_cut['central']
+        hig_cut  = d_q2_cut['high'   ]
+
+        cond     = f'0 * ({low_cut}) + 1 * ({cen_cut}) + 2 * ({hig_cut})'
+        cond     = cond.replace('&&', '&')
+
+        log.debug(f'Using q2 indexer: {cond}')
+
+        return cond
+    # ----------------------------------------
+    def _get_full_q2_scores(self,
+                            low     : numpy.ndarray,
+                            central : numpy.ndarray,
+                            high    : numpy.ndarray,
+                            Jpsi_M  : numpy.ndarray) -> numpy.ndarray:
+        '''
+        Takes arrays of MVA in 3 q2 bins, as well as array of jpsi mass.
+        Returns array of mva score correspoinding to right q2 bin. 
+        '''
+
+        q2_cond = self._get_q2_indexer()
+        arr_ind = numexpr.evaluate(q2_cond)
+
+        arr_all_q2  = numpy.array([low, central, high])
+        arr_full_q2 = numpy.choose(arr_ind, arr_all_q2)
+
+        return arr_full_q2
+    # ----------------------------------------
+    def _q2_scores_from_rdf(self, rdf : RDataFrame, path : str) -> numpy.ndarray:
         l_pkl  = glob.glob(f'{path}/*.pkl')
         npkl   = len(l_pkl)
         if npkl == 0:
