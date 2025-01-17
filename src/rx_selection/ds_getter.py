@@ -63,20 +63,6 @@ class DsGetter:
 
         self._initialized = True
     # ------------------------------------
-    def _get_config(self):
-        '''
-        Load YAML config and returns dictionary
-        '''
-        cfg_path = files('tools_data').joinpath('selection/samples.yaml')
-        cfg_path = str(cfg_path)
-        if not os.path.isfile(cfg_path):
-            raise FileNotFoundError(f'File not found: {cfg_path}')
-
-        with open(cfg_path, encoding='utf-8') as ifile:
-            cfg = yaml.safe_load(ifile)
-
-        return cfg
-    # ------------------------------------
     def _set_logs(self):
         '''
         Silence log messages of tools
@@ -85,17 +71,6 @@ class DsGetter:
         LogStore.set_level('dmu:rdataframe:atr_mgr' , 30)
         LogStore.set_level('rx_selection:cutflow'   , 30)
         LogStore.set_level('rx_selection:efficiency', 30)
-    # ------------------------------------
-    @property
-    def extra_bdts(self):
-        '''
-        Dictionary holding information on extra BDTs
-        '''
-        return self._d_ext_bdt
-
-    @extra_bdts.setter
-    def extra_bdts(self, value):
-        self._d_ext_bdt= value
     # ------------------------------------
     def _update_bdt_cut(self, cut : str, skip_cmb : bool, skip_prec : bool) -> str:
         '''
