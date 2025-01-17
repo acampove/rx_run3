@@ -3,6 +3,7 @@ Module with tests for DsGetter class
 '''
 # pylint: disable=import-error
 
+import os
 import pytest
 from dmu.logging.log_store  import LogStore
 
@@ -61,5 +62,11 @@ def test_mva(sample : str, trigger : str) -> None:
             }
 
     obj = DsGetter(cfg=cfg)
-    _   = obj.get_rdf()
+    rdf = obj.get_rdf()
+
+    file_dir  = '/tmp/rx_classifier/ds_getter/mva'
+    os.makedirs(file_dir, exist_ok=True)
+
+    file_path = f'{file_dir}/{sample}_{trigger}.root'
+    rdf.Snapshot('tree', file_path)
 # -------------------------------------------
