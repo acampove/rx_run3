@@ -167,3 +167,4 @@ def test_simple():
     obj = Fitter(data = rdf_dat, components = l_comp, conf = conf)
     _   = obj.fit()
 # --------------------------------------------
+
