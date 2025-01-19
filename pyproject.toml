@@ -12,6 +12,7 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
+lfns_from_csv        ='post_ap_scripts.lfns_from_csv:main'
 save_pfns            ='post_ap_scripts.save_pfns:main'
 ntup_info            ='post_ap_scripts.ntup_info:main'
 plot_vars            ='post_ap_scripts.plot_vars:main'
