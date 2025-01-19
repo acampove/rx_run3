@@ -17,25 +17,38 @@ class Data:
     '''
     Data storing shared attributes
     '''
+    fpath    : str
     version  : str
     grid_dir = '/eos/lhcb/grid/user/lhcb/user/a/acampove'
     l_id     : list[str]
 # ----------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Will use apd to save a list of paths to ROOT files in EOS')
-    parser.add_argument('-v', '--version' , type=str, help='Version of production')
+    parser.add_argument('-f', '--fpath'   , type=str, help='Path to CSV file with job IDs')
+    parser.add_argument('-v', '--version' , type=str, help='Version of production, needed to retrieve CSV file from rx_data')
     parser.add_argument('-l', '--loglevel', type=int, help='Controls logging level', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
     Data.version = args.version
+    Data.fpath   = args.fpath
     LogStore.set_level('post_ap:lfns_from_csv', args.loglevel)
 # ----------------------------
-def _get_jobids() -> list[str]:
-    id_path = files('rx_data_lfns').joinpath(f'{Data.version}/jobid.csv')
-    id_path = str(id_path)
+def _fpath_from_rxdata() -> str:
+    if hasattr(Data, 'fpath'):
+        log.info(f'Using user provided CSV file: {Data.fpath}')
+        id_path = Data.fpath
+    else:
+        log.info(f'Using CSV file from {Data.version} in rx_data')
+        id_path = files('rx_data_lfns').joinpath(f'{Data.version}/jobid.csv')
+        id_path = str(id_path)
+
     if not os.path.isfile(id_path):
         raise FileNotFoundError(f'Missing file: {id_path}')
 
+    return id_path
+# ----------------------------
+def _get_jobids() -> list[str]:
+    id_path = _fpath_from_rxdata()
     with open(id_path, encoding='utf-8') as ifile:
         text = ifile.read()
 
