@@ -31,15 +31,21 @@ def _parse_args():
     parser = argparse.ArgumentParser(description='Script used list triggers for a given version')
     parser.add_argument('-v', '--vers' , type=str, help='Version of LFNs', required=True)
     parser.add_argument('-o', '--outf' , type=str, help='Name of file to save list as YAML, by default will not save anything')
+    parser.add_argument('-l', '--level', type=int, help='Logging level', default=20)
 
     args = parser.parse_args()
     Data.version = args.vers
     Data.outfile = args.outf
+
+    LogStore.set_level('rx_data:list_triggers', args.level)
 # ----------------------------
 def _get_triggers() -> dict[str,int]:
     lfn_wc = files('rx_data_lfns').joinpath(f'{Data.version}/*.json')
     lfn_wc = str(lfn_wc)
     l_path = glob.glob(lfn_wc)
+
+    npath  = len(l_path)
+    log.debug(f'Found {npath} paths in {lfn_wc}')
 
     if len(l_path) == 0:
         raise ValueError(f'No files found in: {lfn_wc}')
