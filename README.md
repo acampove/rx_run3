@@ -159,3 +159,10 @@ post_shell
 update_tarball -v 030
 ```
 
+## Things that can go wrong
+
+For brevity, each of these issues will be documented in a separate file,
+
+[Missing ganga jobs](doc/missing_jobs.md)
+If ganga has problems, the jobs might not appear, despite they did run.
+
