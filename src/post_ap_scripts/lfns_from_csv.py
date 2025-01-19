@@ -82,10 +82,10 @@ def _get_lfns() -> list[str]:
 def _initialize() -> None:
     Data.l_id = _get_jobids()
 
-    if not os.path.isdir(Data.grid_dir):
-        raise FileNotFoundError(f'Missing grid directory: {Data.grid_dir}')
+    if not os.path.isdir(Data.eos_dir):
+        raise FileNotFoundError(f'Missing grid directory: {Data.eos_dir}')
 
-    log.debug(f'Looking into: {Data.grid_dir}')
+    log.debug(f'Looking into: {Data.eos_dir}')
 # ----------------------------
 def main():
     '''
