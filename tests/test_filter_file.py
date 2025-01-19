@@ -63,7 +63,9 @@ def test_dt(kind : bool):
     path        = getattr(Data, f'{sample_name}_{kind}')
 
     obj = FilterFile(sample_name=sample_name, file_path=path)
-    obj.dump_contents = True
+    obj.dump_contents  = True
+    obj.max_run        = 1000
+    obj.max_save       =  100
     obj.run(skip_saving=False)
 
     _move_outputs('test_dt')
@@ -77,7 +79,9 @@ def test_mc(kind : str):
     path        = getattr(Data, f'{sample_name}_{kind}')
 
     obj = FilterFile(sample_name=sample_name, file_path=path)
-    obj.dump_contents = True
+    obj.dump_contents  = True
+    obj.max_run        = 1000
+    obj.max_save       =  100
     obj.run(skip_saving=False)
 
     _move_outputs('test_mc')
@@ -89,7 +93,9 @@ def test_bad_mcdt():
     path= '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_bad_mcdt.root'
 
     obj = FilterFile(sample_name='mc_test', file_path=path)
-    obj.dump_contents = True
+    obj.dump_contents  = True
+    obj.max_run        = 1000
+    obj.max_save       =  100
     obj.run(skip_saving=False)
 
     _move_outputs('test_bad_mcdt')
@@ -101,7 +107,9 @@ def test_rpk_ee_mc():
     path= '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/rpk_ee_mc.root'
 
     obj = FilterFile(sample_name='mc_test', file_path=path)
-    obj.dump_contents = True
+    obj.dump_contents  = True
+    obj.max_run        = 1000
+    obj.max_save       =  100
     obj.run(skip_saving=False)
 
     _move_outputs('test_rpk_ee_mc')
@@ -113,7 +121,9 @@ def test_rpk_mm_mc():
     path= '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/rpk_mm_mc.root'
 
     obj = FilterFile(sample_name='mc_test', file_path=path)
-    obj.dump_contents = True
+    obj.dump_contents  = True
+    obj.max_run        = 1000
+    obj.max_save       =  100
     obj.run(skip_saving=False)
 
     _move_outputs('test_rpk_mm_mc')
