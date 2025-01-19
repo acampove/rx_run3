@@ -1,5 +1,6 @@
 name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
 
+debug: true
 on: push
 
 jobs:
