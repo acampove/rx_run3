@@ -99,7 +99,6 @@ jobs:
     needs:
     - build
     runs-on: ubuntu-latest
-    verbose: true
 
     environment:
       name: testpypi
