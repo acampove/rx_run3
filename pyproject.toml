@@ -1,5 +1,5 @@
 [project]
-name        = 'rx-selection'
+name        = 'rx_selection'
 description = 'Project used to apply selection to ntuples used for RX measurements filtered and skimmed by post_ap project'
 version     = '0.1.0'
 readme      = 'README.md'
