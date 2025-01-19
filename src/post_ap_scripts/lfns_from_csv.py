@@ -19,7 +19,8 @@ class Data:
     '''
     fpath    : str
     version  : str
-    grid_dir = '/eos/lhcb/grid/user/lhcb/user/a/acampove'
+    eos_dir  = '/eos/lhcb/grid/user'
+    lfn_dir  = '/lhcb/user/a/acampove'
     l_id     : list[str]
 # ----------------------------
 def _parse_args() -> None:
@@ -62,19 +63,20 @@ def _get_jobids() -> list[str]:
     return l_id
 # ----------------------------
 def _get_lfns() -> list[str]:
-    l_wc = [ f'{Data.grid_dir}/*/{jobid[:-3]}/{jobid}/' for jobid in Data.l_id ]
+    l_wc = [ f'{Data.eos_dir}/{Data.lfn_dir}/*/{jobid[:-3]}/{jobid}/' for jobid in Data.l_id ]
 
-    l_path = []
+    l_lfn = []
     for wc in tqdm.tqdm(l_wc, ascii=' -'):
-        l_path += glob.glob(f'{wc}/*.root')
+        l_path  = glob.glob(f'{wc}/*.root')
+        l_lfn  += [ lfn.replace(Data.eos_dir, '') for lfn in l_path ]
 
-    nlfn = len(l_path)
+    nlfn = len(l_lfn)
     if nlfn == 0:
         raise FileNotFoundError('No LFN was found')
 
     log.info(f'Found {nlfn} LFNs')
 
-    return l_path
+    return l_lfn
 # ----------------------------
 def _initialize() -> None:
     Data.l_id = _get_jobids()
