@@ -1,6 +1,5 @@
 name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
 
-debug: true
 on: push
 
 jobs:
@@ -110,6 +109,7 @@ jobs:
 
     steps:
     - name: Download all the dists
+      verbose: true
       uses: actions/download-artifact@v4
       with:
         name: python-package-distributions
