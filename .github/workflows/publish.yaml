@@ -1,11 +1,19 @@
 name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
-on: push
+
+on: 
+  push:
+    branches:
+      - main
+
 jobs:
   build:
     name: Build distribution 📦
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -23,6 +31,7 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
+
   publish-to-pypi:
     name: >-
       Publish Python 🐍 distribution 📦 to PyPI
@@ -32,9 +41,10 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/<package-name>  # Replace <package-name> with your PyPI project name
+      url: https://pypi.org/p/rx_selection
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
+
     steps:
     - name: Download all the dists
       uses: actions/download-artifact@v4
@@ -43,6 +53,7 @@ jobs:
         path: dist/
     - name: Publish distribution 📦 to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
+
   github-release:
     name: >-
       Sign the Python 🐍 distribution 📦 with Sigstore
@@ -50,9 +61,11 @@ jobs:
     needs:
     - publish-to-pypi
     runs-on: ubuntu-latest
+
     permissions:
       contents: write  # IMPORTANT: mandatory for making GitHub Releases
       id-token: write  # IMPORTANT: mandatory for sigstore
+
     steps:
     - name: Download all the dists
       uses: actions/download-artifact@v4
@@ -70,8 +83,8 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       run: >-
         gh release create
-        '${{ github.ref_name }}'
-        --repo '${{ github.repository }}'
+        "$GITHUB_REF_NAME"
+        --repo "$GITHUB_REPOSITORY"
         --notes ""
     - name: Upload artifact signatures to GitHub Release
       env:
@@ -81,8 +94,9 @@ jobs:
       # sigstore-produced signatures and certificates.
       run: >-
         gh release upload
-        '${{ github.ref_name }}' dist/**
-        --repo '${{ github.repository }}'
+        "$GITHUB_REF_NAME" dist/**
+        --repo "$GITHUB_REPOSITORY"
+
   publish-to-testpypi:
     name: Publish Python 🐍 distribution 📦 to TestPyPI
     needs:
@@ -91,7 +105,7 @@ jobs:
 
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/<package-name>
+      url: https://test.pypi.org/p/rx_selection
 
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
@@ -106,4 +120,3 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
-
