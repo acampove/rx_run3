@@ -4,6 +4,7 @@ text file with LFNs
 '''
 import os
 import glob
+import json
 import argparse
 from importlib.resources import files
 
@@ -70,13 +71,6 @@ def _initialize() -> None:
 
     log.debug(f'Looking into: {Data.grid_dir}')
 # ----------------------------
-def _save_lfns(l_lfn : list[str]) -> None:
-    text = '\n'.join(l_lfn)
-    with open('lfns.txt', 'w', encoding='utf-8') as ofile:
-        ofile.write(text)
-
-    log.info('Saved LFNs')
-# ----------------------------
 def main():
     '''
     Script starts here
@@ -85,8 +79,10 @@ def main():
     _initialize()
 
     l_lfn = _get_lfns()
-    _save_lfns(l_lfn)
+    with open('lfns.json', 'w', encoding='utf-8') as ofile:
+        json.dump(l_lfn, ofile)
+
+    log.info('Saved LFNs')
 # ----------------------------
 if __name__ == '__main__':
     main()
-
