@@ -1,5 +1,7 @@
 # Description
 
+Due to problems with ganga, `jobid.csv` was saved, which contains the dirac ID for the jobs.
+
 This is the third version of the filtered data and MC produced on January 17th 2025.
 It contains:
 
