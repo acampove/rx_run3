@@ -1,7 +1,7 @@
 [project]
 name        = 'rx_selection'
 description = 'Project used to apply selection to ntuples used for RX measurements filtered and skimmed by post_ap project'
-version     = '0.1.2'
+version     = '0.1.3'
 readme      = 'README.md'
 dependencies= [
 'data-manipulation-utilities',
