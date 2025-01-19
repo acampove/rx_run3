@@ -64,7 +64,7 @@ def _get_jobids() -> list[str]:
     return l_id
 # ----------------------------
 def _get_lfns() -> list[str]:
-    l_wc = [ f'{Data.eos_dir}/{Data.lfn_dir}/*/{jobid[:-3]}/{jobid}/' for jobid in Data.l_id ]
+    l_wc = [ f'{Data.eos_dir}{Data.lfn_dir}/*/{jobid[:-3]}/{jobid}/' for jobid in Data.l_id ]
 
     l_lfn = []
     for wc in tqdm.tqdm(l_wc, ascii=' -'):
