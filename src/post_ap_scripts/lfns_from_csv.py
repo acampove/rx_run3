@@ -80,7 +80,7 @@ def main():
 
     l_lfn = _get_lfns()
     with open('lfns.json', 'w', encoding='utf-8') as ofile:
-        json.dump(l_lfn, ofile)
+        json.dump(l_lfn, ofile, indent=4)
 
     log.info('Saved LFNs')
 # ----------------------------
