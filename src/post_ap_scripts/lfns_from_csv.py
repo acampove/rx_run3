@@ -52,7 +52,7 @@ def _get_lfns() -> list[str]:
 
     l_path = []
     for wc in tqdm.tqdm(l_wc, ascii=' -'):
-        l_path += glob.glob(wc)
+        l_path += glob.glob(f'{wc}/*.root')
 
     nlfn = len(l_path)
     if nlfn == 0:
