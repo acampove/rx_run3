@@ -6,6 +6,7 @@ import os
 import glob
 import json
 import argparse
+from typing              import Union
 from importlib.resources import files
 
 import tqdm
@@ -17,7 +18,7 @@ class Data:
     '''
     Data storing shared attributes
     '''
-    fpath    : str
+    fpath    : Union[str,None]
     version  : str
     eos_dir  = '/eos/lhcb/grid/user'
     lfn_dir  = '/lhcb/user/a/acampove'
@@ -35,7 +36,7 @@ def _parse_args() -> None:
     LogStore.set_level('post_ap:lfns_from_csv', args.loglevel)
 # ----------------------------
 def _fpath_from_rxdata() -> str:
-    if hasattr(Data, 'fpath'):
+    if Data.fpath is not None:
         log.info(f'Using user provided CSV file: {Data.fpath}')
         id_path = Data.fpath
     else:
