@@ -14,8 +14,6 @@ import zfit
 import zfit_physics
 from ROOT                    import RDataFrame, RDF
 from zfit.core.basepdf       import BasePDF
-
-from dmu.plotting.plotter_1d import Plotter1D as Plotter
 from dmu.logging.log_store   import LogStore
 
 from rx_calibration.hltcalibration.fit_component import FitComponent
@@ -58,16 +56,6 @@ def _rdf_from_pdf(pdf : BasePDF, kind : str) -> Union[RDataFrame,None]:
     rdf.Snapshot('tree', out_path)
 
     return rdf
-# --------------------------------------------
-def _plot_rdf(d_rdf : dict[RDataFrame, RDataFrame]) -> None:
-    cfg = {}
-    cfg['saving'] = {'plt_dir' : '/tmp/rx_calibration/tests/fitter'}
-    cfg['plots' ] = {Data.mass_name : {}}
-    cfg['plots' ][Data.mass_name]['binning'] = [4500, 6000, 40]
-    cfg['plots' ][Data.mass_name]['name'   ] = 'mass'
-
-    ptr=Plotter(d_rdf=d_rdf, cfg=cfg)
-    ptr.run()
 # --------------------------------------------
 def _get_data_rdf() -> RDataFrame:
     d_rdf   = { component : _get_comp(component)[0] for component in Data.d_nentries }
@@ -167,4 +155,3 @@ def test_simple():
     obj = Fitter(data = rdf_dat, components = l_comp, conf = conf)
     _   = obj.fit()
 # --------------------------------------------
-
