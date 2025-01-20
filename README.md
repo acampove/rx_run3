@@ -73,3 +73,12 @@ make_tree_structure -i /path/to/downloaded/.data/v1 -o /path/to/directory/struct
 ```
 
 this will not make a copy of the ntuples, it will only create symbolic links to them.
+
+## Samples naming
+
+The samples were named after the DecFiles names for the samples and:
+
+- Replacing certain special charactes as shown [here](https://github.com/acampove/ap_utilities/blob/main/src/ap_utilities/decays/utilities.py#L24)
+- Adding a `_SS` suffix for split sim samples. I.e. samples where the photon converts into an electron pair.
+
+A useful guide showing the correspondence between event type and name is [here](https://github.com/acampove/ap_utilities/blob/main/src/ap_utilities_data/evt_form.yaml)
