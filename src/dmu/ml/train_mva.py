@@ -1,6 +1,8 @@
 '''
 Module with TrainMva class
 '''
+# pylint: disable = too-many-locals
+
 import os
 
 import joblib
@@ -82,7 +84,6 @@ class TrainMva:
         return model
     # ---------------------------------------------
     def _get_models(self):
-        # pylint: disable = too-many-locals
         '''
         Will create models, train them and return them
         '''
