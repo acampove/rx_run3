@@ -199,6 +199,60 @@ def _make_out_dir() -> None:
         -------------------------------------------------------------------
                               ''') from exc
 # --------------------------------------------------
+def _check_superfluous_files(l_pfn : list[str]) -> None:
+    '''
+    Takes list of PFNs to download and:
+
+    1. Make list of file names to download.
+    2. Make list of downloaded file names.
+    3. If there are donwloaded files that were not meant to be downloaded, ask user to delete them and delete them.
+    '''
+    s_name_to_download = { os.path.basename(pfn) for pfn in l_pfn }
+    wc_path_downloaded = f'{Data.dst_dir}/{Data.vers}/*.root'
+    l_path_downloaded  = glob.glob(wc_path_downloaded)
+    if len(l_path_downloaded) == 0:
+        log.info(f'No downloaded files found in {wc_path_downloaded}, check for superfluous paths skipped')
+        return
+
+    s_name_downloaded  = {os.path.basename(path) for path in l_path_downloaded}
+    s_name_superfluous = s_name_downloaded - s_name_to_download
+
+    if len(s_name_superfluous) == 0:
+        log.info(f'No superfluous files found in {wc_path_downloaded}')
+        return
+
+    _delete_superfluous_files(s_name_superfluous)
+# --------------------------------------------------
+def _delete_superfluous_files(s_name : set[str]) -> None:
+    '''
+    Takes set of names of files that need to be deleted, because they do not belong to list of files to download
+    Asks user if these files should be deleted, after showing the list.
+    Deletes the files
+    '''
+    nfile = len(s_name)
+    log.warning(f'Found {nfile} superfluous files')
+
+    for name in s_name:
+        log.info(name)
+
+    dec = input('Delete superfluous files? [y/n]')
+    if dec not in ['y', 'n']:
+        raise ValueError('Choose between [y,n]')
+
+    if dec == 'n':
+        log.debug('Not deleting superfluous files')
+        return
+
+    log.info('Deleting files:')
+    for name in tqdm.tqdm(s_name, ascii=' -'):
+        file_path = f'{Data.dst_dir}/{Data.vers}/{name}'
+        if not os.path.isfile(file_path):
+            raise ValueError(f'Cannot delete missing file: {file_path}')
+
+        log.debug(file_path)
+        if not Data.drun:
+            os.remove(file_path)
+# --------------------------------------------------
 def main():
     '''
     start here
@@ -207,6 +261,8 @@ def main():
     _initialize()
 
     l_pfn   = _get_pfns()
+
+    _check_superfluous_files(l_pfn)
 
     l_l_pfn = _split_pfns(l_pfn)
     ngroup  = len(l_l_pfn)
