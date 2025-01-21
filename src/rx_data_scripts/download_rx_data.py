@@ -261,8 +261,7 @@ def main():
     _initialize()
 
     l_pfn   = _get_pfns()
-
-    _check_superfluous_files(l_pfn)
+    l_pfn   = _cleanup_pfns(l_pfn)
 
     l_l_pfn = _split_pfns(l_pfn)
     ngroup  = len(l_l_pfn)
