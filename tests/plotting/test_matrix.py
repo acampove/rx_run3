@@ -29,17 +29,15 @@ def test_simple():
             'mask_value' : 0,
             }
 
-    cov = [
+    mat = [
             [1, 2, 3],
             [2, 0, 4],
             [3, 4, numpy.nan]
             ]
 
-    cov = numpy.array(cov)
+    mat = numpy.array(mat)
 
-    obj = MatrixPlotter(cov=cov, cfg=cfg)
+    obj = MatrixPlotter(mat=mat, cfg=cfg)
     obj.plot()
-
-    #'path'       : '/tmp/dmu/tests/plotting/matrix/simple.png',
     plt.show()
 # -------------------------------------------
