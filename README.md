@@ -633,6 +633,38 @@ axes:
         label   : 'y'
 ```
 
+# Other plots
+
+## Matrices
+
+This can be done with `MatrixPlotter`, whose usage is illustrated below:
+
+```python
+cfg = {
+        'labels'     : ['x', 'y', 'z'], # Used to label the matrix axes
+        'title'      : 'Some title',    # Optional, title of plot
+        'label_angle': 45,              # Labels will be rotated by 45 degrees
+        'upper'      : True,            # Useful in case this is a symmetric matrix
+        'zrange'     : [0, 10],         # Controls the z axis range
+        'size'       : [7, 7],          # Plot size
+        'format'     : '{:.3f}',        # Optional, if used will add numerical values to the contents, otherwise a color bar is used
+        'fontsize'   : 12,              # Font size associated to `format`
+        'mask_value' : 0,               # These values will appear white in the plot
+        }
+
+mat = [
+        [1, 2, 3],
+        [2, 0, 4],
+        [3, 4, numpy.nan]
+        ]
+
+mat = numpy.array(mat)
+
+obj = MatrixPlotter(mat=mat, cfg=cfg)
+obj.plot()
+plt.show()
+```
+
 # Manipulating ROOT files
 
 ## Getting trees from file
