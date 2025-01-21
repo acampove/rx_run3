@@ -16,8 +16,8 @@ class MatrixPlotter:
     Class used to plot matrices
     '''
     # -----------------------------------------------
-    def __init__(self, cov : Array2D, cfg : dict):
-        self._cov     = cov
+    def __init__(self, mat : Array2D, cfg : dict):
+        self._mat     = mat 
         self._cfg     = cfg
 
         self._size    : int
@@ -36,10 +36,10 @@ class MatrixPlotter:
         mask_val  = self._cfg['mask_value']
         log.debug(f'Masking value: {mask_val}')
 
-        self._cov = numpy.ma.masked_where(self._cov == mask_val, self._cov)
+        self._mat = numpy.ma.masked_where(self._mat == mask_val, self._mat)
     # -----------------------------------------------
     def _check_matrix(self) -> None:
-        a, b = self._cov.shape
+        a, b = self._mat.shape
 
         if a != b:
             raise ValueError(f'Matrix is not square, but with shape: {a}x{b}')
@@ -69,12 +69,12 @@ class MatrixPlotter:
 
         if     upper:
             log.debug('Drawing upper matrix')
-            self._cov = numpy.triu(self._cov, 0)
+            self._mat = numpy.triu(self._mat, 0)
             return
 
         if not upper:
             log.debug('Drawing lower matrix')
-            self._cov = numpy.triu(self._cov, 0)
+            self._mat = numpy.triu(self._mat, 0)
             return
     # -----------------------------------------------
     def _set_axes(self, ax) -> None:
@@ -103,7 +103,7 @@ class MatrixPlotter:
         fig, ax = plt.subplots() if fsize is None else plt.subplots(figsize=fsize)
 
         palette = plt.cm.viridis
-        im      = ax.imshow(self._cov, cmap=palette, vmin=zmin, vmax=zmax)
+        im      = ax.imshow(self._mat, cmap=palette, vmin=zmin, vmax=zmax)
         self._set_axes(ax)
 
         if 'format' in self._cfg:
@@ -130,10 +130,10 @@ class MatrixPlotter:
         for i_x, _ in enumerate(self._l_label):
             for i_y, _ in enumerate(self._l_label):
                 try:
-                    val  = self._cov[i_y, i_x]
+                    val  = self._mat[i_y, i_x]
                 except:
                     log.error(f'Cannot access ({i_x}, {i_y}) in:')
-                    print(self._cov)
+                    print(self._mat)
                     raise
 
                 if numpy.ma.is_masked(val):
