@@ -150,7 +150,7 @@ class TrainMva:
 
         return arr_sig, arr_bkg
     # ---------------------------------------------
-    def _save_model(self, model, ifold):
+    def _save_model(self, model : cls, ifold : int) -> None:
         '''
         Saves a model, associated to a specific fold
         '''
