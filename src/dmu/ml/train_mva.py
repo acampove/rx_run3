@@ -103,7 +103,7 @@ class TrainMva:
             arr_sig_sig_tr, arr_sig_bkg_tr, arr_sig_all_tr, arr_lab_tr = self._get_scores(model, arr_itr, on_training_ok= True)
             arr_sig_sig_ts, arr_sig_bkg_ts, arr_sig_all_ts, arr_lab_ts = self._get_scores(model, arr_its, on_training_ok=False)
 
-            self._plot_covariance(arr_itr, ifold)
+            self._plot_correlation(arr_itr, ifold)
             self._plot_scores(arr_sig_sig_tr, arr_sig_sig_ts, arr_sig_bkg_tr, arr_sig_bkg_ts, ifold)
             self._plot_roc(arr_lab_ts, arr_sig_all_ts, arr_lab_tr, arr_sig_all_tr, ifold)
 
@@ -166,7 +166,7 @@ class TrainMva:
         log.info(f'Saving model to: {model_path}')
         joblib.dump(model, model_path)
     # ---------------------------------------------
-    def _plot_covariance(self, arr_index : numpy.ndarray, ifold : int) -> None:
+    def _plot_correlation(self, arr_index : numpy.ndarray, ifold : int) -> None:
         df_ft = self._df_ft.iloc[arr_index]
 
         cfg = {
