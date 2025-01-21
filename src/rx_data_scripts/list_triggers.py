@@ -67,7 +67,9 @@ def _get_triggers() -> dict[str,int]:
         else:
             d_trigger[trigger]+= 1
 
-    return d_trigger
+    d_trigger_sorted = { name : d_trigger[name] for name in sorted(d_trigger) }
+
+    return d_trigger_sorted
 # ----------------------------
 def _save(d_trigger : dict[str,int]) -> None:
     if Data.outfile is None:
