@@ -20,6 +20,7 @@ class Data:
     '''
     fpath    : Union[str,None]
     version  : str
+    dry_run  : bool
     eos_dir  = '/eos/lhcb/grid/user'
     lfn_dir  = '/lhcb/user/a/acampove'
     l_id     : list[str]
@@ -29,10 +30,12 @@ def _parse_args() -> None:
     parser.add_argument('-f', '--fpath'   , type=str, help='Path to CSV file with job IDs')
     parser.add_argument('-v', '--version' , type=str, help='Version of production, needed to retrieve CSV file from rx_data')
     parser.add_argument('-l', '--loglevel', type=int, help='Controls logging level', choices=[10, 20, 30], default=20)
+    parser.add_argument('-d', '--dry_run' ,           help='Dry run, if used will not search for ROOT paths', action='store_true')
     args = parser.parse_args()
 
     Data.version = args.version
     Data.fpath   = args.fpath
+    Data.dry_run = args.dry_run
     LogStore.set_level('post_ap:lfns_from_csv', args.loglevel)
 # ----------------------------
 def _fpath_from_rxdata() -> str:
