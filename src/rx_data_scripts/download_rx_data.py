@@ -199,29 +199,54 @@ def _make_out_dir() -> None:
         -------------------------------------------------------------------
                               ''') from exc
 # --------------------------------------------------
-def _check_superfluous_files(l_pfn : list[str]) -> None:
+def _cleanup_pfns(l_pfn : list[str]) -> list[str]:
     '''
     Takes list of PFNs to download and:
 
     1. Make list of file names to download.
     2. Make list of downloaded file names.
     3. If there are donwloaded files that were not meant to be downloaded, ask user to delete them and delete them.
+    4. Remove already downloaded PFNs from input list.
+    5. Return list of not downloaded PFNs
     '''
     s_name_to_download = { os.path.basename(pfn) for pfn in l_pfn }
     wc_path_downloaded = f'{Data.dst_dir}/{Data.vers}/*.root'
     l_path_downloaded  = glob.glob(wc_path_downloaded)
     if len(l_path_downloaded) == 0:
         log.info(f'No downloaded files found in {wc_path_downloaded}, check for superfluous paths skipped')
-        return
+        return l_pfn
 
     s_name_downloaded  = {os.path.basename(path) for path in l_path_downloaded}
     s_name_superfluous = s_name_downloaded - s_name_to_download
 
-    if len(s_name_superfluous) == 0:
-        log.info(f'No superfluous files found in {wc_path_downloaded}')
-        return
+    nsuperfluous = len(s_name_superfluous)
+    if nsuperfluous != 0:
+        log.info(f'Found {nsuperfluous} superfluous files in {wc_path_downloaded}')
+        _delete_superfluous_files(s_name_superfluous)
 
-    _delete_superfluous_files(s_name_superfluous)
+    return _get_pfns_to_download(s_name_downloaded, l_pfn)
+# --------------------------------------------------
+def _get_pfns_to_download(s_name_downloaded : set[str], l_pfn : list[str]) -> list[str]:
+    '''
+    Takes names of files already downloaded, list of PFNs to download.
+    Returns list of PFNs to download that have not been downloaded.
+    '''
+
+    nold = len(l_pfn)
+
+    l_pfn_to_download = []
+    for pfn in l_pfn:
+        name_to_download = os.path.basename(pfn)
+        if name_to_download in s_name_downloaded:
+            continue
+
+        l_pfn_to_download.append(pfn)
+
+    nnew = len(l_pfn_to_download)
+
+    log.warning(f'Will download {nnew} out of {nold} requested PFNs')
+
+    return l_pfn_to_download
 # --------------------------------------------------
 def _delete_superfluous_files(s_name : set[str]) -> None:
     '''
