@@ -482,6 +482,36 @@ When evaluating the model with real data, problems might occur, we deal with the
 - **NaNs**: Entries with NaNs will break the evaluation. These entries will be _patched_  with zeros and evaluated. However, before returning, the probabilities will be
 saved as -1. I.e. entries with NaNs will have probabilities of -1.
 
+# Pandas dataframes
+
+## Utilities
+
+These are thin layers of code that take pandas dataframes and carry out specific tasks
+
+### Dataframe to latex
+
+One can save a dataframe to latex with:
+
+```python
+import pandas as pnd
+import dmu.pdataframe.utilities as put
+
+d_data = {}
+d_data['a'] = [1,2,3]
+d_data['b'] = [4,5,6]
+df = pnd.DataFrame(d_data)
+
+d_format = {
+        'a' : '{:.0f}',
+        'b' : '{:.3f}'}
+
+df = _get_df()
+put.df_to_tex(df,
+        './table.tex',
+        d_format = d_format,
+        caption  = 'some caption')
+```
+
 # Rdataframes
 
 These are utility functions meant to be used with ROOT dataframes.
