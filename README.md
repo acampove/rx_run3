@@ -640,6 +640,11 @@ axes:
 This can be done with `MatrixPlotter`, whose usage is illustrated below:
 
 ```python
+import numpy
+import matplotlib.pyplot as plt
+
+from dmu.plotting.matrix import MatrixPlotter
+
 cfg = {
         'labels'     : ['x', 'y', 'z'], # Used to label the matrix axes
         'title'      : 'Some title',    # Optional, title of plot
