@@ -72,6 +72,10 @@ def _get_jobids() -> list[str]:
 def _get_lfns() -> list[str]:
     l_wc = [ f'{Data.eos_dir}{Data.lfn_dir}/*/{jobid[:-3]}/{jobid}/' for jobid in Data.l_id ]
 
+    if Data.dry_run:
+        log.warning('Running dry run, will not search for files')
+        return []
+
     l_lfn = []
     for wc in tqdm.tqdm(l_wc, ascii=' -'):
         l_path  = glob.glob(f'{wc}/*.root')
@@ -88,7 +92,7 @@ def _get_lfns() -> list[str]:
 def _initialize() -> None:
     Data.l_id = _get_jobids()
 
-    if not os.path.isdir(Data.eos_dir):
+    if not Data.dry_run and not os.path.isdir(Data.eos_dir):
         raise FileNotFoundError(f'Missing grid directory: {Data.eos_dir}')
 
     log.debug(f'Looking into: {Data.eos_dir}')
