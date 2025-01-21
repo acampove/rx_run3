@@ -2,9 +2,11 @@
 Module with TrainMva class
 '''
 import os
+import copy
 from typing import Union
 
 import joblib
+import yaml
 import pandas as pnd
 import numpy
 import matplotlib.pyplot as plt
@@ -164,9 +166,28 @@ class TrainMva:
         os.makedirs(dir_name, exist_ok=True)
 
         model_path = model_path.replace('.pkl', f'_{ifold:03}.pkl')
+        metad_path = model_path.replace('.pkl',            '.yaml')
+
+        self._save_feature_importance(model, metad_path)
 
         log.info(f'Saving model to: {model_path}')
         joblib.dump(model, model_path)
+    # ---------------------------------------------
+    def _save_feature_importance(self, model, path):
+        '''
+        Picks up model and path to a YAML file
+        Extracts metadata:
+        - Feature importance table
+
+        saves it to file
+        '''
+
+        cfg = copy.deepcopy(self._cfg)
+        cfg['importances'] = model.feature_importances_.tolist()
+
+        log.info(f'Saving metadata to: {path}')
+        with open(path, 'w', encoding='utf-8') as ofile:
+            yaml.safe_dump(cfg, ofile)
     # ---------------------------------------------
     def _plot_scores(self, arr_sig_trn, arr_sig_tst, arr_bkg_trn, arr_bkg_tst, ifold):
         # pylint: disable = too-many-arguments, too-many-positional-arguments
