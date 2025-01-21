@@ -232,7 +232,7 @@ def _delete_superfluous_files(s_name : set[str]) -> None:
     nfile = len(s_name)
     log.warning(f'Found {nfile} superfluous files')
 
-    for name in s_name:
+    for name in sorted(s_name):
         log.info(name)
 
     dec = input('Delete superfluous files? [y/n]')
