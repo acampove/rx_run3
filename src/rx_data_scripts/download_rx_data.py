@@ -21,7 +21,7 @@ import yaml
 from XRootD                 import client   as clt
 from dmu.logging.log_store  import LogStore
 
-from rx_data                import utilities as ut 
+from rx_data                import utilities as ut
 
 log = LogStore.add_logger('rx_data:download_rx_data')
 
