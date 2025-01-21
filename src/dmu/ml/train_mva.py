@@ -16,6 +16,7 @@ from ROOT import RDataFrame
 import dmu.ml.utilities    as ut
 from dmu.ml.cv_classifier    import CVClassifier as cls
 from dmu.plotting.plotter_1d import Plotter1D    as Plotter
+from dmu.plotting.matrix     import MatrixPlotter
 from dmu.logging.log_store   import LogStore
 
 log = LogStore.add_logger('data_checks:train_mva')
@@ -102,8 +103,8 @@ class TrainMva:
             arr_sig_sig_tr, arr_sig_bkg_tr, arr_sig_all_tr, arr_lab_tr = self._get_scores(model, arr_itr, on_training_ok= True)
             arr_sig_sig_ts, arr_sig_bkg_ts, arr_sig_all_ts, arr_lab_ts = self._get_scores(model, arr_its, on_training_ok=False)
 
+            self._plot_covariance(arr_itr, ifold)
             self._plot_scores(arr_sig_sig_tr, arr_sig_sig_ts, arr_sig_bkg_tr, arr_sig_bkg_ts, ifold)
-
             self._plot_roc(arr_lab_ts, arr_sig_all_ts, arr_lab_tr, arr_sig_all_tr, ifold)
 
             ifold+=1
@@ -164,6 +165,34 @@ class TrainMva:
 
         log.info(f'Saving model to: {model_path}')
         joblib.dump(model, model_path)
+    # ---------------------------------------------
+    def _plot_covariance(self, arr_index : numpy.ndarray, ifold : int) -> None:
+        df_ft = self._df_ft.iloc[arr_index]
+
+        cfg = {
+                'labels'     : df_ft.columns, 
+                'title'      : f'Fold {ifold}',    
+                'label_angle': 45,              
+                'upper'      : True,            
+                'zrange'     : [-1, +1],         
+                'size'       : [7, 7],          
+                'format'     : '{:.3f}',        
+                'fontsize'   : 12,              
+                }
+
+        cov = df_ft.corr()
+        mat = cov.to_numpy()
+
+        log.debug(f'Plotting correlation for {ifold} fold')
+
+        val_dir  = self._cfg['plotting']['val_dir']
+        val_dir  = f'{val_dir}/fold_{ifold:03}'
+        os.makedirs(val_dir, exist_ok=True)
+
+        obj = MatrixPlotter(mat=mat, cfg=cfg)
+        obj.plot()
+        plt.savefig(f'{val_dir}/covariance.png')
+        plt.close()
     # ---------------------------------------------
     def _plot_scores(self, arr_sig_trn, arr_sig_tst, arr_bkg_trn, arr_bkg_tst, ifold):
         # pylint: disable = too-many-arguments, too-many-positional-arguments
