@@ -38,30 +38,33 @@ def _parse_args() -> None:
     Data.dry_run = args.dry_run
     LogStore.set_level('post_ap:lfns_from_csv', args.loglevel)
 # ----------------------------
-def _fpath_from_rxdata() -> str:
+def _fpath_from_rxdata() -> list[str]:
     if Data.fpath is not None:
-        log.info(f'Using user provided CSV file: {Data.fpath}')
-        id_path = Data.fpath
+        log.info(f'Using user provided file with IDs: {Data.fpath}')
+        if not os.path.isfile(Data.fpath):
+            raise FileNotFoundError(f'Cannot find: {Data.fpath}')
+        l_id_path = [Data.fpath]
     else:
-        log.info(f'Using CSV file from {Data.version} in rx_data')
-        id_path = files('rx_data_lfns').joinpath(f'{Data.version}/jobid.csv')
-        id_path = str(id_path)
+        log.info(f'Using lists of IDs from {Data.version} in rx_data')
+        path_wc   = files('rx_data_lfns').joinpath(f'{Data.version}/*.txt')
+        path_wc   = str(path_wc)
+        l_id_path = glob.glob(path_wc)
 
-    if not os.path.isfile(id_path):
-        raise FileNotFoundError(f'Missing file: {id_path}')
+    nfiles = len(l_id_path)
 
-    return id_path
+    if nfiles == 0:
+        raise FileNotFoundError(f'Missing files: {path_wc}')
+
+    return l_id_path
 # ----------------------------
 def _get_jobids() -> list[str]:
-    id_path = _fpath_from_rxdata()
-    with open(id_path, encoding='utf-8') as ifile:
-        text = ifile.read()
+    l_id_path = _fpath_from_rxdata()
+    l_id = []
+    for id_path in l_id_path:
+        with open(id_path, encoding='utf-8') as ifile:
+            l_id += ifile.read().splitlines()
 
-    text = text.replace('\n', '')
-
-    l_id = text.split(',')
-    nid  = len(l_id)
-
+    nid = len(l_id)
     log.info(f'Found {nid} job IDs')
 
     return l_id
