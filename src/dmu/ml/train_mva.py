@@ -15,7 +15,9 @@ from sklearn.model_selection import StratifiedKFold
 
 from ROOT import RDataFrame
 
-import dmu.ml.utilities    as ut
+import dmu.ml.utilities         as ut
+import dmu.pdataframe.utilities as put
+
 from dmu.ml.cv_classifier    import CVClassifier as cls
 from dmu.plotting.plotter_1d import Plotter1D    as Plotter
 from dmu.plotting.matrix     import MatrixPlotter
@@ -104,6 +106,7 @@ class TrainMva:
             arr_sig_sig_tr, arr_sig_bkg_tr, arr_sig_all_tr, arr_lab_tr = self._get_scores(model, arr_itr, on_training_ok= True)
             arr_sig_sig_ts, arr_sig_bkg_ts, arr_sig_all_ts, arr_lab_ts = self._get_scores(model, arr_its, on_training_ok=False)
 
+            self._save_feature_importance(model, ifold)
             self._plot_correlation(arr_itr, ifold)
             self._plot_scores(arr_sig_sig_tr, arr_sig_sig_ts, arr_sig_bkg_tr, arr_sig_bkg_ts, ifold)
             self._plot_roc(arr_lab_ts, arr_sig_all_ts, arr_lab_tr, arr_sig_all_tr, ifold)
@@ -111,6 +114,21 @@ class TrainMva:
             ifold+=1
 
         return l_model
+    # ---------------------------------------------
+    def _save_feature_importance(self, model : cls, ifold : int) -> None:
+        d_data               = {}
+        d_data['Variable'  ] = self._df_ft.columns
+        d_data['Importance'] = model.feature_importances_
+
+        val_dir  = self._cfg['plotting']['val_dir']
+        val_dir  = f'{val_dir}/fold_{ifold:03}'
+        os.makedirs(val_dir, exist_ok=True)
+
+        df = pnd.DataFrame(d_data)
+        df = df.sort_values(by='Importance', ascending=False)
+
+        table_path = f'{val_dir}/importance.tex'
+        put.df_to_tex(df, table_path, caption=f'Importance table for fold {ifold}')
     # ---------------------------------------------
     def _get_scores(self, model : cls, arr_index : numpy.ndarray, on_training_ok : bool) -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, numpy.ndarray]:
         '''
