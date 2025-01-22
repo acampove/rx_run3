@@ -24,8 +24,6 @@ class Data:
             'Hlt2RD_BuToKpEE_MVA',
             'SpruceRD_BuToHpMuMu',
             'SpruceRD_BuToHpEE',
-            'SpruceRD_BuToKpMuMu',
-            'SpruceRD_BuToKpEE',
             ]
 
     l_rkst_trigger = ['']
