@@ -12,7 +12,7 @@ from rx_selection.cache_data import CacheData
 
 log = LogStore.add_logger('rx_selection:test_cache_data')
 # ---------------------------------------------
-@pytest.mark.parametrize('sample, trigger', tst.get_mc_samples(is_rk=True))
+@pytest.mark.parametrize('sample, trigger', tst.get_mc_samples(is_rk=True, included=''))
 def test_run3_rk_mc(sample : str, trigger : str):
     '''
     Testing on run3 RK samples and triggers
@@ -28,7 +28,7 @@ def test_run3_rk_mc(sample : str, trigger : str):
     obj=CacheData(cfg = cfg)
     obj.save()
 # ---------------------------------------------
-@pytest.mark.parametrize('sample, trigger', tst.get_dt_samples(is_rk=True))
+@pytest.mark.parametrize('sample, trigger', tst.get_dt_samples(is_rk=True, included=''))
 def test_run3_rk_dt(sample : str, trigger : str):
     '''
     Testing on run3 RK samples and triggers
