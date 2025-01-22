@@ -17,8 +17,8 @@ class Data:
     Class used to share attributes
     '''
 
-    l_mc_sample = tst.get_mc_samples(is_rk=True, included='')
-    l_dt_sample = tst.get_dt_samples(is_rk=True, included='')
+    l_mc_sample = tst.get_mc_samples(is_rk=True)
+    l_dt_sample = tst.get_dt_samples(is_rk=True)
 # ---------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
