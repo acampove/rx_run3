@@ -154,7 +154,7 @@ class TrainMva:
 
         d_data               = {}
         d_data['Variable'  ] = self._labels_from_varnames(l_var_name)
-        d_data['Importance'] = model.feature_importances_
+        d_data['Importance'] = 100 * model.feature_importances_
 
         val_dir  = self._cfg['plotting']['val_dir']
         val_dir  = f'{val_dir}/fold_{ifold:03}'
@@ -164,7 +164,7 @@ class TrainMva:
         df = df.sort_values(by='Importance', ascending=False)
 
         table_path = f'{val_dir}/importance.tex'
-        d_form = {'Variable' : '{}', 'Importance' : '{:.3f}'}
+        d_form = {'Variable' : '{}', 'Importance' : '{:.1f}'}
         put.df_to_tex(df, table_path, d_format = d_form, caption=f'Importance table for fold {ifold}')
     # ---------------------------------------------
     def _get_scores(self, model : cls, arr_index : numpy.ndarray, on_training_ok : bool) -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, numpy.ndarray]:
