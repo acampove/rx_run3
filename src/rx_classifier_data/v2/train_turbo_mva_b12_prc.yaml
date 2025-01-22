@@ -35,15 +35,15 @@ dataset :
     iso_ch_mom  : B_HEAD_CC_B_ChargedIso_DR2_0p15_CP
     iso_ch_ptasy: B_HEAD_CC_B_ChargedIso_DR2_0p15_PTASY
 
-    iso_nt_mult : B_HEAD_CC_B_NeutralIso_DR2_0p15_CMULT
-    iso_nt_mom  : B_HEAD_CC_B_NeutralIso_DR2_0p15_CP
-    iso_nt_ptasy: B_HEAD_CC_B_NeutralIso_DR2_0p15_PTASY
+    iso_nt_mult : B_HEAD_NC_B_NeutralIso_DR2_0p15_CMULT
+    iso_nt_mom  : B_HEAD_NC_B_NeutralIso_DR2_0p15_CP
+    iso_nt_ptasy: B_HEAD_NC_B_NeutralIso_DR2_0p15_PTASY
 
     iso_one_mass: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
-    iso_two_mass: B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
-
     iso_one_dchi: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
-    iso_two_dchi: B_VTXISO_B_TwoTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
+
+    iso_two_mass: B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
+    iso_two_dchi: B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2
     # ----------
     sqrt_jipchi2: TMath::Sqrt(Jpsi_IPCHI2_OWNPV) 
     jp_acos_dira: TMath::ACos(Jpsi_DIRA_OWNPV)
