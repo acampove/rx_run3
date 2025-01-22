@@ -403,6 +403,14 @@ obj.run()
 where the settings for the training go in a config dictionary, which when written to YAML looks like:
 
 ```yaml
+dataset:
+    # If the key is found to be NaN, replace its value with the number provided
+    # This will be used in the training.
+    # Otherwise the entries with NaNs will be dropped
+    nan:
+        x : 0
+        y : 0
+        z : -999 
 training :
     nfold    : 10
     features : [w, x, y, z]
@@ -413,6 +421,7 @@ training :
       learning_rate     : 0.1
       min_samples_split : 2
 saving:
+    # The actual model names are model_001.pkl, model_002.pkl, etc, one for each fold
     path : 'tests/ml/train_mva/model.pkl'
 plotting:
     val_dir : 'tests/ml/train_mva'
