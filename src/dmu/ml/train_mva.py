@@ -189,14 +189,14 @@ class TrainMva:
         df_ft = self._df_ft.iloc[arr_index]
 
         cfg = {
-                'labels'     : df_ft.columns, 
-                'title'      : f'Fold {ifold}',    
-                'label_angle': 45,              
-                'upper'      : True,            
-                'zrange'     : [-1, +1],         
-                'size'       : [7, 7],          
-                'format'     : '{:.3f}',        
-                'fontsize'   : 12,              
+                'labels'     : df_ft.columns,
+                'title'      : f'Fold {ifold}',
+                'label_angle': 45,
+                'upper'      : True,
+                'zrange'     : [-1, +1],
+                'size'       : [7, 7],
+                'format'     : '{:.3f}',
+                'fontsize'   : 12,
                 }
 
         cov = df_ft.corr()
