@@ -139,6 +139,8 @@ def _get_rdf(kind=None):
     for file_wc in l_file_wc:
         l_file_path += _file_paths_from_wc(file_wc)
 
+    npath = len(l_file_path)
+    log.info(f'Will build dataframe from {npath} paths')
     rdf = RDataFrame(tree_name, l_file_path)
     rdf = _define_columns(rdf)
     rdf = _apply_selection(rdf, kind)
