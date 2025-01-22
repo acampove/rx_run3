@@ -223,8 +223,10 @@ class TrainMva:
         joblib.dump(model, model_path)
     # ---------------------------------------------
     def _get_correlation_cfg(self, df : pnd.DataFrame, ifold : int) -> dict:
+        l_var_name = df.columns.tolist()
+        l_label    = self._labels_from_varnames(l_var_name)
         cfg = {
-                'labels'     : df.columns,
+                'labels'     : l_label,
                 'title'      : f'Fold {ifold}',
                 'label_angle': 45,
                 'upper'      : True,
