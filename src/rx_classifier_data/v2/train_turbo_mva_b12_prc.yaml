@@ -24,6 +24,8 @@ dataset :
       file_path : 
         - /publicfs/ucas/user/campoverde/Data/RX_run3/v3/NO_q2_bdt_mass_Q2_central_VR_v1/Bd_Kstee_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
         - /publicfs/ucas/user/campoverde/Data/RX_run3/v3/NO_q2_bdt_mass_Q2_central_VR_v1/Bu_Kstee_Kpi0_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
+        - /publicfs/ucas/user/campoverde/Data/RX_run3/v3/NO_q2_bdt_mass_Q2_central_VR_v1/Bu_JpsiX_ee_eq_JpsiInAcc/Hlt2RD_BuToKpEE_MVA/*.root
+        - /publicfs/ucas/user/campoverde/Data/RX_run3/v3/NO_q2_bdt_mass_Q2_central_VR_v1/Bd_JpsiX_ee_eq_JpsiInAcc/Hlt2RD_BuToKpEE_MVA/*.root
       tree_name : DecayTree 
   define :
     mass        : B_M
