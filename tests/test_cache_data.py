@@ -28,14 +28,29 @@ class Data:
 
     l_mc_sample = tst.get_mc_samples(is_rk=True)
     l_dt_sample = tst.get_dt_samples(is_rk=True)
+
+    l_mc_prc_sample = _mc_prc_from_all(l_mc_sample)
 # ---------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_selection:ds_getter' , 10)
     LogStore.set_level('rx_selection:cache_data', 10)
 # ---------------------------------------------
+@pytest.mark.parametrize('sample, trigger', Data.l_mc_prc_sample)
+def test_run3_rk_prc_mc(sample : str, trigger : str):
+    '''
+    Testing on run3 RK samples used for training of PRec MVA 
+    '''
+    log.info(f'{sample:<60}{trigger:<40}')
+    cfg = tst.get_config(sample, trigger, is_rk = True, remove=[])
+    if cfg is None:
+        return
+
+    obj=CacheData(cfg = cfg)
+    obj.save()
+# ---------------------------------------------
 @pytest.mark.parametrize('sample, trigger', Data.l_mc_sample)
-def test_run3_rk_mc(sample : str, trigger : str):
+def test_run3_rk_all_mc(sample : str, trigger : str):
     '''
     Testing on run3 RK samples and triggers
     '''
