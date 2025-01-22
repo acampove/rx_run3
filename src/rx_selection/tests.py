@@ -18,7 +18,7 @@ class Data:
     '''
     Class used to share data
     '''
-    data_version = 'v2'
+    data_version = 'v3'
     l_rk_trigger = [
             'Hlt2RD_BuToKpMuMu_MVA',
             'Hlt2RD_BuToKpEE_MVA',
