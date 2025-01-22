@@ -330,6 +330,7 @@ class TrainMva:
         plt.title(f'Fold: {ifold}')
         plt.xlim(min_x, 1)
         plt.ylim(min_y, 1)
+        plt.grid()
         plt.legend()
         plt.savefig(f'{val_dir}/roc.png')
         plt.close()
