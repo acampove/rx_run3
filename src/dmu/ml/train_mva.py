@@ -128,22 +128,21 @@ class TrainMva:
 
         return l_model
     # ---------------------------------------------
-    def _get_var_names(self) -> list[str]:
-        l_col_name = self._df_ft.columns.tolist()
+    def _labels_from_varnames(self, l_var_name : list[str]) -> list[str]:
         try:
             d_plot = self._cfg['plotting']['features']['plots']
         except ValueError:
             log.warning('Cannot find plotting/features/plots section in config, using dataframe names')
-            return l_col_name
+            return l_var_name
 
         l_label = []
-        for col_name in l_col_name:
-            if col_name not in d_plot:
-                log.warning(f'No plot found for: {col_name}')
-                l_label.append(col_name)
+        for var_name in l_var_name:
+            if var_name not in d_plot:
+                log.warning(f'No plot found for: {var_name}')
+                l_label.append(var_name)
                 continue
 
-            d_setting = d_plot[col_name]
+            d_setting = d_plot[var_name]
             [xlab, _ ]= d_setting['labels']
 
             l_label.append(xlab)
@@ -151,8 +150,10 @@ class TrainMva:
         return l_label
     # ---------------------------------------------
     def _save_feature_importance(self, model : cls, ifold : int) -> None:
+        l_var_name           = self._df_ft.columns.tolist()
+
         d_data               = {}
-        d_data['Variable'  ] = self._get_var_names()
+        d_data['Variable'  ] = self._labels_from_varnames(l_var_name)
         d_data['Importance'] = model.feature_importances_
 
         val_dir  = self._cfg['plotting']['val_dir']
