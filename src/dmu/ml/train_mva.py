@@ -185,11 +185,9 @@ class TrainMva:
         log.info(f'Saving model to: {model_path}')
         joblib.dump(model, model_path)
     # ---------------------------------------------
-    def _plot_correlation(self, arr_index : numpy.ndarray, ifold : int) -> None:
-        df_ft = self._df_ft.iloc[arr_index]
-
+    def _get_correlation_cfg(self, df : pnd.DataFrame, ifold : int) -> dict:
         cfg = {
-                'labels'     : df_ft.columns,
+                'labels'     : df.columns,
                 'title'      : f'Fold {ifold}',
                 'label_angle': 45,
                 'upper'      : True,
@@ -199,6 +197,19 @@ class TrainMva:
                 'fontsize'   : 12,
                 }
 
+        if 'correlation' not in self._cfg['plotting']:
+            log.info('Using default correlation plotting configuration')
+            return cfg
+
+        log.debug('Updating correlation plotting configuration')
+        custom = self._cfg['plotting']['correlation']
+        cfg.update(custom)
+
+        return cfg
+    # ---------------------------------------------
+    def _plot_correlation(self, arr_index : numpy.ndarray, ifold : int) -> None:
+        df_ft = self._df_ft.iloc[arr_index]
+        cfg = self._get_correlation_cfg(df_ft, ifold)
         cov = df_ft.corr()
         mat = cov.to_numpy()
 
