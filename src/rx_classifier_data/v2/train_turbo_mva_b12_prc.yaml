@@ -31,13 +31,13 @@ dataset :
     sqrt_ipchi2 : TMath::Sqrt(B_IPCHI2_OWNPV) 
     acos_dira   : TMath::ACos(B_DIRA_OWNPV)
     # ----------
-    iso_ch_mult : B_HEAD_CC_B_ChargedIso_DR2_0p15_CMULT
-    iso_ch_mom  : B_HEAD_CC_B_ChargedIso_DR2_0p15_CP
-    iso_ch_ptasy: B_HEAD_CC_B_ChargedIso_DR2_0p15_PTASY
+    iso_cc_mult : B_HEAD_CC_B_ChargedIso_DR2_0p15_CMULT
+    iso_cc_mom  : B_HEAD_CC_B_ChargedIso_DR2_0p15_CP
+    iso_cc_ptasy: B_HEAD_CC_B_ChargedIso_DR2_0p15_PTASY
 
-    iso_nt_mult : B_HEAD_NC_B_NeutralIso_DR2_0p15_CMULT
-    iso_nt_mom  : B_HEAD_NC_B_NeutralIso_DR2_0p15_CP
-    iso_nt_ptasy: B_HEAD_NC_B_NeutralIso_DR2_0p15_PTASY
+    iso_nc_mult : B_HEAD_NC_B_NeutralIso_DR2_0p15_CMULT
+    iso_nc_mom  : B_HEAD_NC_B_NeutralIso_DR2_0p15_CP
+    iso_nc_ptasy: B_HEAD_NC_B_NeutralIso_DR2_0p15_PTASY
 
     iso_one_mass: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
     iso_one_dchi: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
@@ -76,12 +76,12 @@ training :
     - iso_two_mass 
     - iso_one_dchi
     - iso_two_dchi
-    - iso_ch_mult
-    - iso_ch_mom
-    - iso_ch_ptasy
-    - iso_nt_mult
-    - iso_nt_mom
-    - iso_nt_ptasy
+    - iso_cc_mult
+    - iso_cc_mom
+    - iso_cc_ptasy
+    - iso_nc_mult
+    - iso_nc_mom
+    - iso_nc_ptasy
 saving:
   path : 'output/mva_rare_2024_prc/VERSION/model.pkl'
 plotting:
@@ -95,6 +95,62 @@ plotting:
     saving:
       plt_dir : 'output/mva_rare_2024_prc/VERSION/plots/features'
     plots:
+      iso_cc_mult:
+        normalized : true
+        binning : [0, 15, 15]
+        yscale  : 'linear'
+        labels  : ['Iso$_{CC}^{mult}(B^+)$', '']
+      iso_cc_mom:
+        normalized : true
+        yscale  : 'linear'
+        binning : [0, 200000, 40]
+        labels  : ['Iso$_{CC}^P(B^+)$MeV', '']
+      iso_cc_ptasy:
+        normalized : true
+        yscale  : 'linear'
+        binning : [-1, +1, 40]
+        labels  : ['Iso$_{CC}^{p_T, Asym}(B^+)$MeV', '']
+      # --------------------
+      iso_nc_mult:
+        normalized : true
+        binning : [0, 15, 15]
+        yscale  : 'linear'
+        labels  : ['Iso$_{NC}^{mult}(B^+)$', '']
+      iso_nc_mom:
+        normalized : true
+        yscale  : 'linear'
+        binning : [0, 200000, 40]
+        labels  : ['Iso$_{NC}^P(B^+)$MeV', '']
+      iso_nc_ptasy:
+        normalized : true
+        yscale  : 'linear'
+        binning : [-1, +1, 40]
+        labels  : ['Iso$_{NC}^{p_T, Asym}(B^+)$MeV', '']
+      # --------------------
+      iso_one_mass:
+        normalized : true
+        binning : [4000, 8000, 40]
+        yscale  : 'linear'
+        labels  : ['Iso$_{mass}^{1Trk}(B^+)$', '']
+      # --------------------
+      iso_one_dchi:
+        normalized : true
+        binning : [0, 15, 40]
+        yscale  : 'linear'
+        labels  : ['Iso$_{\Delta\chi^2}^{1Trk}(B^+)$', '']
+      # --------------------
+      iso_two_mass:
+        normalized : true
+        binning : [4000, 8000, 40]
+        yscale  : 'linear'
+        labels  : ['Iso$_{mass}^{2Trk}(B^+)$', '']
+      # --------------------
+      iso_two_dchi:
+        normalized : true
+        binning : [0, 15, 40]
+        yscale  : 'linear'
+        labels  : ['Iso$_{\Delta\chi^2}^{2Trk}(B^+)$', '']
+      # --------------------
       log_b_pt  :
         normalized : true
         binning : [6, 11, 40]
@@ -110,16 +166,6 @@ plotting:
         binning : [0, 0.03, 40]
         yscale  : 'log'
         labels  : ['$\arccos(DIRA)(B^+)$', '']
-      iso_mult:
-        normalized : true
-        binning : [0, 15, 15]
-        yscale  : 'linear'
-        labels  : ['Iso$_{mult}(B^+)$', '']
-      iso_mom:
-        normalized : true
-        yscale  : 'linear'
-        binning : [0, 200000, 40]
-        labels  : ['Iso$(p)(B^+)$MeV', '']
       sqrt_jipchi2:
         normalized : true
         binning : [0, 100, 40]
