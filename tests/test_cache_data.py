@@ -18,7 +18,7 @@ def test_run3_rk_mc(sample : str, trigger : str):
     Testing on run3 RK samples and triggers
     '''
     log.info(f'{sample:<60}{trigger:<40}')
-    cfg = tst.get_config(sample, trigger, is_rk = True)
+    cfg = tst.get_config(sample, trigger, is_rk = True, remove=[])
     if cfg is None:
         return
 
@@ -34,7 +34,7 @@ def test_run3_rk_dt(sample : str, trigger : str):
     Testing on run3 RK samples and triggers
     '''
     log.info(f'{sample:<60}{trigger:<40}')
-    cfg = tst.get_config(sample, trigger, is_rk = True)
+    cfg = tst.get_config(sample, trigger, is_rk = True, remove=[])
     if cfg is None:
         return
 
