@@ -54,7 +54,7 @@ def load_selection_config() -> dict:
     '''
     Returns dictionary with configuration (cuts, definitions, etc) needed for selection
     '''
-    sel_wc = files('rx_selection_data').joinpath('*.yaml')
+    sel_wc = files('rx_selection_data').joinpath('selection/*.yaml')
     sel_wc = str(sel_wc)
     sel_dir= os.path.dirname(sel_wc)
 

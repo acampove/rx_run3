@@ -10,7 +10,7 @@ from importlib.resources import files
 
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
-from rx_selection.ds_getter import ds_getter          as dsg
+from rx_selection.ds_getter import DsGetter
 from rx_selection           import version_management as vman
 
 log = LogStore.add_logger('rx_selection:cache_data')
@@ -40,7 +40,7 @@ class CacheData:
             log.warning(f'Overriding cut version with: {cutver}')
             return cutver
 
-        selection_wc = files('rx_selection_data').joinpath('*.yaml')
+        selection_wc = files('rx_selection_data').joinpath('selection/*.yaml')
         selection_wc = str(selection_wc)
         selection_dir= os.path.dirname(selection_wc)
         version      = vman.get_last_version(selection_dir, 'yaml')
@@ -128,7 +128,7 @@ class CacheData:
         log.info(f'Path not cached, will create: {ntp_path}')
 
         dsg_cfg = self._get_dsg_cfg()
-        obj     = dsg(cfg=dsg_cfg)
+        obj     = DsGetter(cfg=dsg_cfg)
         rdf     = obj.get_rdf()
 
         cfl_path = ntp_path.replace('.root', '.json')

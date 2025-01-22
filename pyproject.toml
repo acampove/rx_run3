@@ -1,13 +1,15 @@
 [project]
 name        = 'rx_selection'
 description = 'Project used to apply selection to ntuples used for RX measurements filtered and skimmed by post_ap project'
-version     = '0.0.5'
+version     = '0.1.5'
 readme      = 'README.md'
 dependencies= [
 'data-manipulation-utilities',
 'rx_data',
+'numexpr',
 'numpy',
 'jacobi',
+'joblib',
 'pandas',
 'numpy',
 'matplotlib',
@@ -23,9 +25,10 @@ where   = ['src']
 [project.scripts]
 apply_selection ='rx_selection_scripts.apply_selection:main'
 make_jobs_list  ='rx_selection_scripts.make_jobs_list:main'
+validate_sample ='rx_selection_scripts.validate_sample:main'
 
 [tool.setuptools.package-data]
-'rx_selection_data' = ['*.yaml']
+'rx_selection_data' = ['selection/*.yaml', 'validation/*.yaml']
 
 [tool.setuptools]
 script-files=[
