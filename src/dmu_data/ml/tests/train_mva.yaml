@@ -13,6 +13,10 @@ saving:
 plotting:
     roc     :
         min : [0, 0]
+    correlation:
+      title      : 'Correlation matrix'
+      size       : [10, 10]
+      mask_value : 0
     val_dir : '/tmp/dmu/ml/tests/train_mva'
     features:
         saving:
