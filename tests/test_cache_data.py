@@ -11,6 +11,15 @@ import rx_selection.tests as tst
 from rx_selection.cache_data import CacheData
 
 log = LogStore.add_logger('rx_selection:test_cache_data')
+
+# ---------------------------------------------
+def _mc_prc_from_all(l_sample : list[tuple[str,str]]) -> list[tuple[str,str]]:
+    l_iso_sample = ['Bd_Kstee_eq_btosllball05_DPC', 'Bu_Kstee_Kpi0_eq_btosllball05_DPC']
+
+    l_sample_mva = [ (sample, trigger) for sample, trigger in l_sample     if 'MVA' in trigger ]
+    l_sample_prc = [ (sample, trigger) for sample, trigger in l_sample_mva if sample in l_iso_sample ]
+
+    return l_sample_prc
 # ---------------------------------------------
 class Data:
     '''
