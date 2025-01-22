@@ -7,6 +7,7 @@ Module containing class that provides ROOT dataframe after a given selection
 # pylint: disable = invalid-name
 # pylint: disable = too-many-arguments, too-many-positional-arguments
 
+import os
 import re
 import glob
 import pprint
@@ -222,13 +223,37 @@ class DsGetter:
 
         l_file_path = self._filter_files(l_file_path)
 
-        rdf = RDataFrame(tree_name, l_file_path)
+        rdf = self._rdf_from_path(tree_name, l_file_path)
         rdf = self._range_rdf(rdf)
         rdf = self._add_columns(rdf=rdf, tree_name=tree_name)
         rdf.filepath = l_file_path
         rdf.treename = tree_name
 
         return rdf
+    # ------------------------------------
+    def _rdf_from_path(self, tree_name : str, l_file_path : list[str]) -> RDataFrame:
+        log.info('Creating dataframe')
+        log.debug(f'Tree name: {tree_name}')
+        log.debug(f'File path: {l_file_path}')
+
+        if len(l_file_path) == 0:
+            raise ValueError('Empty file list')
+
+        d_rdf  = { file_path : RDataFrame(tree_name, file_path) for file_path in l_file_path    }
+        d_name = {      path : rdf.GetColumnNames()             for path, rdf in d_rdf.items()  }
+        l_name = [             rdf.GetColumnNames()             for       rdf in d_rdf.values() ]
+
+        all_equal = all( v_name == l_name[0] for v_name in l_name )
+        if all_equal:
+            return RDataFrame(tree_name, l_file_path)
+
+        log.error('Found files with different numbers of branches:')
+        for path, v_name in d_name.items():
+            name = os.path.basename(path)
+            size = v_name.size()
+            log.info(f'{size:<20}{name:<100}')
+
+        raise ValueError('Invalid input')
     # ------------------------------------
     def _get_gen_nev(self) -> int:
         log.warning('Reading number of entries from MCDecayTree not implemented')
