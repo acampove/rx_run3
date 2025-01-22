@@ -163,7 +163,8 @@ class TrainMva:
         df = df.sort_values(by='Importance', ascending=False)
 
         table_path = f'{val_dir}/importance.tex'
-        put.df_to_tex(df, table_path, caption=f'Importance table for fold {ifold}')
+        d_form = {'Variable' : '{}', 'Importance' : '{:.3f}'}
+        put.df_to_tex(df, table_path, d_format = d_form, caption=f'Importance table for fold {ifold}')
     # ---------------------------------------------
     def _get_scores(self, model : cls, arr_index : numpy.ndarray, on_training_ok : bool) -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, numpy.ndarray]:
         '''
