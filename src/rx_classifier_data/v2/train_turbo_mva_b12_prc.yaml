@@ -97,7 +97,7 @@ plotting:
   roc :
     min : [0.1, 0.1]
   correlation:
-    size       : [10, 10]
+    size       : [20, 15]
     mask_value : 0
   val_dir : 'output/mva_rare_2024_prc/VERSION/plots'
   features:
