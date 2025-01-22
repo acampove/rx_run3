@@ -171,14 +171,21 @@ class DsGetter:
 
         log.info('Defining variables:')
 
-        l_col_name = self._get_column_name(rdf)
+        l_col_name_old = self._get_column_name(rdf)
         for var_name, var_def in d_def.items():
             log.debug(f'    {var_name:<20}{var_def:<60}')
-            if var_name in l_col_name:
+            if var_name in l_col_name_old:
                 log.warning(f'Already found variable, cannot define: {var_name} = {var_def}')
                 continue
 
             rdf = rdf.Define(var_name, var_def)
+
+        l_col_name_new = self._get_column_name(rdf)
+
+        nold = len(l_col_name_old)
+        nnew = len(l_col_name_new)
+
+        log.info(f'Added columns: {nold} -> {nnew}')
 
         return rdf
     # ------------------------------------
