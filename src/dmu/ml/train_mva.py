@@ -237,6 +237,12 @@ class TrainMva:
         plt.savefig(f'{val_dir}/covariance.png')
         plt.close()
     # ---------------------------------------------
+    def _get_nentries(self, arr_val : numpy.ndarray) -> str:
+        size = len(arr_val)
+        size = size / 1000.
+
+        return f'{size:.2f}K'
+    # ---------------------------------------------
     def _plot_scores(self, arr_sig_trn, arr_sig_tst, arr_bkg_trn, arr_bkg_tst, ifold):
         # pylint: disable = too-many-arguments, too-many-positional-arguments
         '''
@@ -252,11 +258,11 @@ class TrainMva:
         val_dir  = f'{val_dir}/fold_{ifold:03}'
         os.makedirs(val_dir, exist_ok=True)
 
-        plt.hist(arr_sig_trn, alpha   =   0.3, bins=50, range=(0,1), color='b', density=True, label='Signal Train')
-        plt.hist(arr_sig_tst, histtype='step', bins=50, range=(0,1), color='b', density=True, label='Signal Test')
+        plt.hist(arr_sig_trn, alpha   =   0.3, bins=50, range=(0,1), color='b', density=True, label='Signal Train: '    + self._get_nentries(arr_sig_trn))
+        plt.hist(arr_sig_tst, histtype='step', bins=50, range=(0,1), color='b', density=True, label='Signal Test: '     + self._get_nentries(arr_sig_tst))
 
-        plt.hist(arr_bkg_trn, alpha   =   0.3, bins=50, range=(0,1), color='r', density=True, label='Background Train')
-        plt.hist(arr_bkg_tst, histtype='step', bins=50, range=(0,1), color='r', density=True, label='Background Test')
+        plt.hist(arr_bkg_trn, alpha   =   0.3, bins=50, range=(0,1), color='r', density=True, label='Background Train: '+ self._get_nentries(arr_bkg_trn))
+        plt.hist(arr_bkg_tst, histtype='step', bins=50, range=(0,1), color='r', density=True, label='Background Test: ' + self._get_nentries(arr_bkg_tst))
 
         plt.legend()
         plt.title(f'Fold: {ifold}')
