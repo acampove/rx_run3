@@ -65,9 +65,22 @@ class TrainMva:
 
         return df, arr_lab
     # ---------------------------------------------
+    def _pre_process_nans(self, df : pnd.DataFrame) -> pnd.DataFrame:
+        if 'nan' not in self._cfg['dataset']:
+            log.debug('dataset/nan section not found, not pre-processing NaNs')
+            return df
+
+        d_name_val = self._cfg['dataset']['nan']
+        for name, val in d_name_val.items():
+            log.info(f'{val:<20}{"<---":<10}{name:<100}')
+            df[name] = df[name].fillna(val)
+
+        return df
+    # ---------------------------------------------
     def _get_sample_inputs(self, rdf : RDataFrame, label : int) -> tuple[pnd.DataFrame, numpy.ndarray]:
         d_ft = rdf.AsNumpy(self._l_ft_name)
         df   = pnd.DataFrame(d_ft)
+        df   = self._pre_process_nans(df)
         df   = ut.cleanup(df)
         l_lab= len(df) * [label]
 
