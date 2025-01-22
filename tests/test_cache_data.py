@@ -12,6 +12,11 @@ from rx_selection.cache_data import CacheData
 
 log = LogStore.add_logger('rx_selection:test_cache_data')
 # ---------------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('rx_selection:ds_getter' , 10)
+    LogStore.set_level('rx_selection:cache_data', 10)
+# ---------------------------------------------
 @pytest.mark.parametrize('sample, trigger', tst.get_mc_samples(is_rk=True, included=''))
 def test_run3_rk_mc(sample : str, trigger : str):
     '''
@@ -21,9 +26,6 @@ def test_run3_rk_mc(sample : str, trigger : str):
     cfg = tst.get_config(sample, trigger, is_rk = True, remove=[])
     if cfg is None:
         return
-
-    LogStore.set_level('rx_selection:ds_getter' , 10)
-    LogStore.set_level('rx_selection:cache_data', 10)
 
     obj=CacheData(cfg = cfg)
     obj.save()
@@ -37,9 +39,6 @@ def test_run3_rk_dt(sample : str, trigger : str):
     cfg = tst.get_config(sample, trigger, is_rk = True, remove=[])
     if cfg is None:
         return
-
-    LogStore.set_level('rx_selection:ds_getter' , 10)
-    LogStore.set_level('rx_selection:cache_data', 10)
 
     # This combination has a very low efficiency, do not limit number of files
     if sample != 'DATA_24_MagDown_24c1' and trigger != 'SpruceRD_BuToHpEE':
