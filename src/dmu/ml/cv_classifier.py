@@ -2,6 +2,7 @@
 Module holding cv_classifier class
 '''
 
+from typing                  import Union
 from sklearn.ensemble        import GradientBoostingClassifier
 
 from dmu.logging.log_store import LogStore
@@ -22,7 +23,7 @@ class CVClassifier(GradientBoostingClassifier):
     '''
     # pylint: disable = too-many-ancestors, abstract-method
     # ----------------------------------
-    def __init__(self, cfg : dict | None = None):
+    def __init__(self, cfg : Union[dict,None] = None):
         '''
         cfg (dict) : Dictionary with configuration, specially the hyperparameters set in the `hyper` field
         '''
