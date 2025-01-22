@@ -150,7 +150,7 @@ def get_config(sample : str, trigger : str, is_rk : bool, remove : list) -> Unio
     d_conf            = {}
     d_conf['ipart'  ] = 0
     d_conf['npart'  ] = 50 if not sample.startswith('DATA_') else 10000
-    d_conf['ipath'  ] = f'{data_dir}/RX_run3/v1/post_ap'
+    d_conf['ipath'  ] = f'{data_dir}/RX_run3/{Data.data_version}/post_ap'
     d_conf['sample' ] = sample
     d_conf['project'] = 'RK' if is_rk else 'RKst'
     d_conf['q2bin'  ] = 'central'
