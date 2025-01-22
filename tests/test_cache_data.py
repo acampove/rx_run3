@@ -63,7 +63,7 @@ def test_run3_rk_all_mc(sample : str, trigger : str):
     obj.save()
 # ---------------------------------------------
 @pytest.mark.parametrize('sample, trigger', Data.l_dt_sample)
-def test_run3_rk_dt(sample : str, trigger : str):
+def test_run3_rk_all_dt(sample : str, trigger : str):
     '''
     Testing on run3 RK samples and triggers
     '''
