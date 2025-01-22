@@ -51,6 +51,14 @@ def _remove_nans(df : pnd.DataFrame) -> pnd.DataFrame:
         log.debug('No NaNs found in dataframe')
         return df
 
+    sr_is_nan = df.isna().any()
+    l_na_name = sr_is_nan[sr_is_nan].index.tolist()
+
+    log.info('Found columns with NaNs')
+    for name in l_na_name:
+        nan_count = df[name].isna().sum()
+        log.info(f'{nan_count:<10}{name:<100}')
+
     ninit = len(df)
     df    = df.dropna()
     nfinl = len(df)
