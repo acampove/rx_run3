@@ -95,8 +95,13 @@ def get_dt_samples(is_rk : bool, included :str) -> list[tuple[str,str]]:
     l_trigger  = Data.l_rk_trigger if is_rk else Data.l_rkst_trigger
     data_dir   = os.environ['DATADIR']
     sample_dir = f'{data_dir}/RX_run3/{Data.data_version}/post_ap'
+    l_dir      = glob.glob(f'{sample_dir}/DATA_*')
     l_sam_trg  = []
-    for sample_path in glob.glob(f'{sample_dir}/DATA_*'):
+
+    if len(l_dir) == 0:
+        raise ValueError(f'No directories found in: {sample_dir}')
+
+    for sample_path in l_dir:
         for trigger in l_trigger:
             sample_name = os.path.basename(sample_path)
             if not _has_files(sample_path, trigger):
@@ -118,8 +123,13 @@ def get_mc_samples(is_rk : bool, included : str) -> list[tuple[str,str]]:
 
     data_dir   = os.environ['DATADIR']
     sample_dir = f'{data_dir}/RX_run3/{Data.data_version}/post_ap'
+    l_dir      = glob.glob(f'{sample_dir}/*')
     l_sam_trg  = []
-    for sample_path in glob.glob(f'{sample_dir}/*'):
+
+    if len(l_dir) == 0:
+        raise ValueError(f'No directories found in: {sample_dir}')
+
+    for sample_path in l_dir:
         l_trigger   = _triggers_from_mc_sample(sample_path, is_rk)
 
         for trigger in l_trigger:
