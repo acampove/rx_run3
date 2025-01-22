@@ -30,8 +30,21 @@ dataset :
     log_b_pt    : TMath::Log(B_PT)
     sqrt_ipchi2 : TMath::Sqrt(B_IPCHI2_OWNPV) 
     acos_dira   : TMath::ACos(B_DIRA_OWNPV)
-    iso_mult    : B_HEAD_CC_B_ChargedIso_DR2_0p20_CMULT
-    iso_mom     : B_HEAD_CC_B_ChargedIso_DR2_0p20_CP
+    # ----------
+    iso_ch_mult : B_HEAD_CC_B_ChargedIso_DR2_0p15_CMULT
+    iso_ch_mom  : B_HEAD_CC_B_ChargedIso_DR2_0p15_CP
+    iso_ch_ptasy: B_HEAD_CC_B_ChargedIso_DR2_0p15_PTASY
+
+    iso_nt_mult : B_HEAD_CC_B_NeutralIso_DR2_0p15_CMULT
+    iso_nt_mom  : B_HEAD_CC_B_NeutralIso_DR2_0p15_CP
+    iso_nt_ptasy: B_HEAD_CC_B_NeutralIso_DR2_0p15_PTASY
+
+    iso_one_mass: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
+    iso_two_mass: B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
+
+    iso_one_dchi: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
+    iso_two_dchi: B_VTXISO_B_TwoTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
+    # ----------
     sqrt_jipchi2: TMath::Sqrt(Jpsi_IPCHI2_OWNPV) 
     jp_acos_dira: TMath::ACos(Jpsi_DIRA_OWNPV)
     log_h_pt    : TMath::Log(H_PT)
@@ -54,12 +67,21 @@ training :
     - log_b_pt
     - sqrt_ipchi2
     - acos_dira
-    - iso_mult
-    - iso_mom
     - sqrt_jipchi2
     - jp_acos_dira
     - log_h_pt
     - min_ll_ipc
+    # ---------
+    - iso_one_mass 
+    - iso_two_mass 
+    - iso_one_dchi
+    - iso_two_dchi
+    - iso_ch_mult
+    - iso_ch_mom
+    - iso_ch_ptasy
+    - iso_nt_mult
+    - iso_nt_mom
+    - iso_nt_ptasy
 saving:
   path : 'output/mva_rare_2024_prc/VERSION/model.pkl'
 plotting:
