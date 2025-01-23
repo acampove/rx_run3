@@ -28,6 +28,8 @@ class Data:
     vers  : str
     group : str
     prod  : str
+
+    l_analysis : list[str]
 # ----------------------------------------------
 def _version_from_name(name : str) -> str:
     mtch = re.match(Data.regex, name)
@@ -62,14 +64,25 @@ def _get_samples(samples) -> dict[str,list[str]]:
 # ----------------------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to create a list of MC samples in YAML, split by sim production for a given (latest) version of the AP.')
-    parser.add_argument('-v', '--vers' , type=str, help='Version of AP, e.g. v1r2266', required=True)
-    parser.add_argument('-p', '--prod' , type=str, help='Production, e.g. rd_ap_2024', required=True)
-    parser.add_argument('-g', '--group', type=str, help='Group, e.g. rd'             , required=True)
+    parser.add_argument('-v', '--vers'    , type =str, help='Version of AP, e.g. v1r2266', required=True)
+    parser.add_argument('-p', '--prod'    , type =str, help='Production, e.g. rd_ap_2024', required=True)
+    parser.add_argument('-g', '--group'   , type =str, help='Group, e.g. rd'             , required=True)
+    parser.add_argument('-a', '--analyses', nargs='+', help='Analyses for which to check if samples are missing, e.g. RK, RKst')
     args = parser.parse_args()
 
-    Data.vers  = args.vers
-    Data.group = args.group
-    Data.prod  = args.prod
+    Data.vers       = args.vers
+    Data.group      = args.group
+    Data.prod       = args.prod
+    Data.l_analysis = args.analyses
+# ----------------------------------------------
+def _save_missing() -> None:
+    if Data.l_analysis is None:
+        log.info('No analysis specified, will not check for missing samples')
+        return
+
+    d_miss = {}
+    with open(f'{Data.group}_{Data.prod}_{Data.vers}_miss.yaml', 'w', encoding='utf-8') as ofile:
+        yaml.dump(d_miss, ofile, Dumper=IndentedDumper)
 # ----------------------------------------------
 def main():
     '''
@@ -83,6 +96,8 @@ def main():
     d_data = _get_samples(samples)
     with open(f'{Data.group}_{Data.prod}_{Data.vers}.yaml', 'w', encoding='utf-8') as ofile:
         yaml.dump(d_data, ofile, Dumper=IndentedDumper)
+
+    _save_missing()
 # ----------------------------------------------
 if __name__ == '__main__':
     main()
