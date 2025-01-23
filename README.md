@@ -158,6 +158,11 @@ post_shell
 # Create and upload the environment with version 030
 update_tarball -v 030
 ```
+## Utilities
+
+For brevity, these utilities are documented separately, the utilities are:
+
+- [dump_sample](doc/utilities/dump_samples.md) Used to search for existing and missing samples in a production
 
 ## Things that can go wrong
 
