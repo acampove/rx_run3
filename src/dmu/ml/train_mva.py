@@ -47,7 +47,7 @@ class TrainMva:
 
         self._rdf_bkg = bkg
         self._rdf_sig = sig
-        self._cfg     = cfg if cfg is not None else {}
+        self._cfg     = cfg
 
         self._l_ft_name = self._cfg['training']['features']
 
