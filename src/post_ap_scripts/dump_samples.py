@@ -2,17 +2,23 @@
 Script used to provide blocks of MC samples in a YAML file
 Needed to write YAML config for post_ap
 '''
+# pylint: disable = too-many-ancestors
 
 import re
 import argparse
 
 import yaml
 from apd import AnalysisData
+from dmu.logging.log_store  import LogStore
 
+log=LogStore.add_logger('dmu:post_ap_scripts:dump_samples')
 # ----------------------------------------------
 class IndentedDumper(yaml.Dumper):
+    '''
+    Class needed to create indentation when saving lists as values of dictionaries in YAML files
+    '''
     def increase_indent(self, flow=False, indentless=False):
-        return super(IndentedDumper, self).increase_indent(flow, False)
+        return super().increase_indent(flow, False)
 # ----------------------------------------------
 class Data:
     '''
