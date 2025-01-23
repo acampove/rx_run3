@@ -95,7 +95,7 @@ def _is_sample_found(sample :  str, l_sample : list[str]) -> bool:
 
     return False
 # ----------------------------------------------
-def _get_missing_samples(l_samples_found : list[str]) -> list[str]:
+def _get_missing_samples(l_samples_found : list[str], block_period : str) -> list[str]:
     d_sam            = _load_samples()
     l_samples_needed = []
     for analysis in Data.l_analysis:
@@ -107,6 +107,12 @@ def _get_missing_samples(l_samples_found : list[str]) -> list[str]:
 
     l_missing = [ sample for sample in l_samples_needed if _is_sample_found(sample, l_samples_found) ]
 
+    nmiss = len(l_missing)
+    if nmiss > 0:
+        log.warning(f'Missing {nmiss} samples in {block_period}')
+    else:
+        log.info(f'No missing samples in {block_period}')
+
     return l_missing
 # ----------------------------------------------
 def _save_missing(d_sam : dict[str,list[str]]) -> None:
@@ -117,7 +123,7 @@ def _save_missing(d_sam : dict[str,list[str]]) -> None:
 
     d_miss = {}
     for block_period, l_sam in d_sam.items():
-        l_missing = _get_missing_samples(l_sam)
+        l_missing = _get_missing_samples(l_sam, block_period)
         d_miss[block_period] = l_missing
 
     with open(f'{Data.group}_{Data.prod}_{Data.vers}_miss.yaml', 'w', encoding='utf-8') as ofile:
