@@ -72,7 +72,7 @@ def main():
     samples  = datasets.all_samples()
 
     d_data = _get_samples(samples)
-    with open('data.yaml', 'w', encoding='utf-8') as ofile:
+    with open(f'{Data.group}_{Data.prod}_{Data.vers}.yaml', 'w', encoding='utf-8') as ofile:
         yaml.dump(d_data, ofile, Dumper=IndentedDumper)
 # ----------------------------------------------
 if __name__ == '__main__':
