@@ -63,7 +63,7 @@ training :
   rdm_stat : 1
   hyper:
     low : 
-      n_estimators : 20
+      n_estimators : 70
       learning_rate: 0.02
       max_depth    : 2
     central : 
