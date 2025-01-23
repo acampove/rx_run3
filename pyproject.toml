@@ -18,6 +18,7 @@ where   = ['src']
 
 [project.scripts]
 lfns_from_csv        ='post_ap_scripts.lfns_from_csv:main'
+dump_samples         ='post_ap_scripts.dump_samples:main'
 save_pfns            ='post_ap_scripts.save_pfns:main'
 ntup_info            ='post_ap_scripts.ntup_info:main'
 plot_vars            ='post_ap_scripts.plot_vars:main'
