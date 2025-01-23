@@ -92,16 +92,22 @@ def _load_samples() -> dict[str, list[str]]:
 
     return d_analysis
 # ----------------------------------------------
-def _is_sample_found(sample :  str, l_sample : list[str]) -> bool:
-    l_sample_lower = [ sample.lower() for sample in l_sample ]
+def _is_sample_found(sample_needed :  str, l_sample_found : list[str]) -> bool:
+    if sample_needed.startswith('DATA_'):
+        return True
 
-    for sample_lower in l_sample_lower:
-        if sample in sample_lower:
+    sample_needed = sample_needed.lower()
+
+    log.debug(f'Looking for {sample_needed}')
+
+    for sample_found in l_sample_found:
+        if sample_needed in sample_found:
+            log.debug(f'{sample_needed:<20}{sample_found}')
             return True
 
     return False
 # ----------------------------------------------
-def _get_missing_samples(l_samples_found : list[str], block_period : str) -> list[str]:
+def _get_missing_samples(l_samples_found : list[str], block_period : str) -> dict[str,str]:
     d_sam            = _load_samples()
     l_samples_needed = []
     for analysis in Data.l_analysis:
@@ -111,21 +117,20 @@ def _get_missing_samples(l_samples_found : list[str], block_period : str) -> lis
 
         l_samples_needed += d_sam[analysis]
 
-    l_missing = [ sample for sample in l_samples_needed if _is_sample_found(sample, l_samples_found) ]
+    d_missing = { sample_needed : aput.read_event_type(sample_needed) for sample_needed in l_samples_needed if not _is_sample_found(sample_needed, l_samples_found) }
 
-    nmiss = len(l_missing)
+    nmiss = len(d_missing)
     if nmiss > 0:
         log.warning(f'Missing {nmiss} samples in {block_period}')
     else:
         log.info(f'No missing samples in {block_period}')
 
-    return l_missing
+    return d_missing
 # ----------------------------------------------
 def _save_missing(d_sam : dict[str,list[str]]) -> None:
     if Data.l_analysis is None:
         log.info('No analysis specified, will not check for missing samples')
         return
-
 
     d_miss = {}
     for block_period, l_sam in d_sam.items():
