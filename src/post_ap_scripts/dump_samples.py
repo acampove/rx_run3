@@ -19,6 +19,7 @@ class Data:
     Data class used to store shared data
     '''
     regex = r'mc_\d{2}_(w\d{2}_\d{2})_mag.*'
+    vers  : str
     group : str
     prod  : str
 # ----------------------------------------------
@@ -32,7 +33,7 @@ def _version_from_name(name : str) -> str:
 def _get_samples(samples) -> dict[str,list[str]]:
     d_data   = {}
     for sample in samples:
-        if sample['version'] != 'v1r2266':
+        if sample['version'] != Data.vers:
             continue
 
         name = sample['name']
@@ -45,14 +46,19 @@ def _get_samples(samples) -> dict[str,list[str]]:
 
         d_data[vers].append(name)
 
+    if len(d_data) == 0:
+        raise ValueError('No samples found')
+
     return d_data
 # ----------------------------------------------
 def _parse_args() -> None:
-    parser = argparse.ArgumentParser(description='Script used to create a list of MC samples in YAML, split by sim production')
+    parser = argparse.ArgumentParser(description='Script used to create a list of MC samples in YAML, split by sim production for a given (latest) version of the AP.')
+    parser.add_argument('-v', '--vers' , type=str, help='Version of AP, e.g. v1r2266', required=True)
     parser.add_argument('-p', '--prod' , type=str, help='Production, e.g. rd_ap_2024', required=True)
     parser.add_argument('-g', '--group', type=str, help='Group, e.g. rd'             , required=True)
     args = parser.parse_args()
 
+    Data.vers  = args.vers
     Data.group = args.group
     Data.prod  = args.prod
 # ----------------------------------------------
