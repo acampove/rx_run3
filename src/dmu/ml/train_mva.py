@@ -347,10 +347,44 @@ class TrainMva:
         ptr   = Plotter(d_rdf = {'Signal' : self._rdf_sig, 'Background' : self._rdf_bkg}, cfg=d_cfg)
         ptr.run()
     # ---------------------------------------------
+    def _save_settings_to_tex(self) -> None:
+        self._save_nan_conversion()
+        self._save_hyperparameters_to_tex()
+    # ---------------------------------------------
+    def _save_nan_conversion(self) -> None:
+        if 'nan' not in self._cfg['dataset']:
+            log.debug('NaN section not found, not saving it')
+            return
+
+        d_nan = self._cfg['dataset']['nan']
+        l_var = list(d_nan)
+        l_lab = self._labels_from_varnames(l_var)
+        l_val = list(d_nan.values())
+
+        d_tex = {'Variable' : l_lab, 'Replacement' : l_val}
+        df    = pnd.DataFrame(d_tex)
+        val_dir  = self._cfg['plotting']['val_dir']
+        os.makedirs(val_dir, exist_ok=True)
+        put.df_to_tex(df, f'{val_dir}/nan_replacement.tex')
+    # ---------------------------------------------
+    def _save_hyperparameters_to_tex(self) -> None:
+        if 'hyper' not in self._cfg:
+            raise ValueError('Cannot find hyper parameters in configuration')
+
+        d_hyper = self._cfg['hyper']
+        d_form  = { f'\\verb|{key}|' : f'\\verb|{val}|' for key, val in d_hyper.items() }
+        d_latex = { 'Hyperparameter' : list(d_form.keys()), 'Value' : list(d_form.values())}
+
+        df = pnd.DataFrame(d_latex)
+        val_dir  = self._cfg['plotting']['val_dir']
+        os.makedirs(val_dir, exist_ok=True)
+        put.df_to_tex(df, f'{val_dir}/hyperparameters.tex')
+    # ---------------------------------------------
     def run(self):
         '''
         Will do the training
         '''
+        self._save_settings_to_tex()
         self._plot_features()
 
         l_mod = self._get_models()
