@@ -117,7 +117,7 @@ def _get_missing_samples(l_samples_found : list[str], block_period : str) -> dic
 
         l_samples_needed += d_sam[analysis]
 
-    d_missing = { sample_needed : aput.read_event_type(sample_needed) for sample_needed in l_samples_needed if not _is_sample_found(sample_needed, l_samples_found) }
+    d_missing = { aput.read_event_type(sample_needed) : sample_needed for sample_needed in l_samples_needed if not _is_sample_found(sample_needed, l_samples_found) }
 
     nmiss = len(d_missing)
     if nmiss > 0:
