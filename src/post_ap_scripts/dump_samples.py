@@ -77,12 +77,49 @@ def _parse_args() -> None:
     Data.prod       = args.prod
     Data.l_analysis = args.analyses
 # ----------------------------------------------
-def _save_missing() -> None:
+@cache
+def _load_samples() -> dict[str, list[str]]:
+    path = files('post_ap_data').joinpath('samples/sample_run3.yaml')
+    path = str(path)
+    with open(path, encoding='utf-8') as ifile:
+        d_analysis = yaml.safe_load(ifile)
+
+    return d_analysis
+# ----------------------------------------------
+def _is_sample_found(sample :  str, l_sample : list[str]) -> bool:
+    l_sample_lower = [ sample.lower() for sample in l_sample ]
+
+    for sample_lower in l_sample_lower:
+        if sample in sample_lower:
+            return True
+
+    return False
+# ----------------------------------------------
+def _get_missing_samples(l_samples_found : list[str]) -> list[str]:
+    d_sam            = _load_samples()
+    l_samples_needed = []
+    for analysis in Data.l_analysis:
+        if analysis not in d_sam:
+            log.warning(f'Analysis {analysis} not found, skipping')
+            continue
+
+        l_samples_needed += d_sam[analysis]
+
+    l_missing = [ sample for sample in l_samples_needed if _is_sample_found(sample, l_samples_found) ]
+
+    return l_missing
+# ----------------------------------------------
+def _save_missing(d_sam : dict[str,list[str]]) -> None:
     if Data.l_analysis is None:
         log.info('No analysis specified, will not check for missing samples')
         return
 
+
     d_miss = {}
+    for block_period, l_sam in d_sam.items():
+        l_missing = _get_missing_samples(l_sam)
+        d_miss[block_period] = l_missing
+
     with open(f'{Data.group}_{Data.prod}_{Data.vers}_miss.yaml', 'w', encoding='utf-8') as ofile:
         yaml.dump(d_miss, ofile, Dumper=IndentedDumper)
 # ----------------------------------------------
@@ -99,7 +136,7 @@ def main():
     with open(f'{Data.group}_{Data.prod}_{Data.vers}.yaml', 'w', encoding='utf-8') as ofile:
         yaml.dump(d_data, ofile, Dumper=IndentedDumper)
 
-    _save_missing()
+    _save_missing(d_data)
 # ----------------------------------------------
 if __name__ == '__main__':
     main()
