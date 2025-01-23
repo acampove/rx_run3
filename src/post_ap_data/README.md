@@ -26,3 +26,8 @@ These are files used to carry out the filtering
 ### Tests
 
 These are files needed by the tests
+
+### Samples
+
+Here is stored the list of samples for each analysis. This is needed to do checks with `dump_samples` which samples are missing in the AP before sending the filtering jobs.
+
