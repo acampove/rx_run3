@@ -61,7 +61,7 @@ sys.path.append('/home/acampove/micromamba/envs/post_ap/lib/python3.11/site-pack
 - This project is used from inside Ganga. To have access to Ganga do:
 
 ```bash
-. cvmfs/lhcb.cern.ch/lib/LbEnv
+. /cvmfs/lhcb.cern.ch/lib/LbEnv
 
 # Make a proxy that lasts 100 hours
 lhcb-proxy-init -v 100:00
