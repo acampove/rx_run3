@@ -72,6 +72,7 @@ def _parse_args() -> None:
     parser.add_argument('-v', '--vers'    , type =str, help='Version of AP, e.g. v1r2266', required=True)
     parser.add_argument('-p', '--prod'    , type =str, help='Production, e.g. rd_ap_2024', required=True)
     parser.add_argument('-g', '--group'   , type =str, help='Group, e.g. rd'             , required=True)
+    parser.add_argument('-l', '--loglvl'  , type =int, help='Log level'                  , choices=[10, 20, 30], default=20)
     parser.add_argument('-a', '--analyses', nargs='+', help='Analyses for which to check if samples are missing, e.g. RK, RKst')
     args = parser.parse_args()
 
@@ -79,6 +80,8 @@ def _parse_args() -> None:
     Data.group      = args.group
     Data.prod       = args.prod
     Data.l_analysis = args.analyses
+
+    LogStore.set_level('dmu:post_ap_scripts:dump_samples', args.loglvl)
 # ----------------------------------------------
 @cache
 def _load_samples() -> dict[str, list[str]]:
