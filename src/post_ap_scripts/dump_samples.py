@@ -18,7 +18,7 @@ class Data:
     '''
     Data class used to store shared data
     '''
-    regex = r'mc_\d{2}_(w\d{2}_\d{2})_mag.*'
+    regex = r'mc_\d{2}_(w\d{2}_\d{2})_.*'
     vers  : str
     group : str
     prod  : str
