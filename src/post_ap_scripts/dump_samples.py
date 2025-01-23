@@ -49,6 +49,9 @@ def _get_samples(samples) -> dict[str,list[str]]:
     if len(d_data) == 0:
         raise ValueError('No samples found')
 
+    for l_sam in d_data.values():
+        l_sam.sort()
+
     return d_data
 # ----------------------------------------------
 def _parse_args() -> None:
