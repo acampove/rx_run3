@@ -424,6 +424,13 @@ saving:
     # The actual model names are model_001.pkl, model_002.pkl, etc, one for each fold
     path : 'tests/ml/train_mva/model.pkl'
 plotting:
+    roc :
+        min : [0.0, 0.0] # Optional, controls where the ROC curve starts and ends
+        max : [1.2, 1.2] # By default it does from 0 to 1 in both axes
+    correlation: # Adds correlation matrix for training datasets
+      title      : 'Correlation matrix'
+      size       : [10, 10]
+      mask_value : 0                # Where correlation is zero, the bin will appear white
     val_dir : 'tests/ml/train_mva'
     features:
         saving:
