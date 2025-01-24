@@ -351,12 +351,16 @@ class TrainMva:
     def _plot_probabilities(self,
                             arr_seff: npa,
                             arr_brej: npa,
-                            arr_sprb: npa) -> None:
+                            arr_sprb: npa,
+                            arr_labl: npa) -> None:
 
         roc_cfg = self._cfg['plotting']['roc']
         if 'annotate' not in roc_cfg:
             log.debug('Annotation section in the ROC curve config not found, skipping annotation')
             return
+
+        l_sprb   = [ sprb for sprb, labl in zip(arr_sprb, arr_labl) if labl == 1 ]
+        arr_sprb = numpy.array(l_sprb)
 
         plt_cfg = roc_cfg['annotate']
         if 'sig_eff' not in plt_cfg:
