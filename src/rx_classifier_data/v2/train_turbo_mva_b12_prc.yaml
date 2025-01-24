@@ -6,7 +6,7 @@ q2:
   high   : (Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)
 hyper               :
   loss              : log_loss
-  max_depth         : 3
+  max_depth         : 2
   min_samples_split : 2
 # ----------------------------------
 dataset :
@@ -65,12 +65,12 @@ training :
     low : 
       n_estimators : 70
       learning_rate: 0.05
-      max_depth    : 2
     central : 
-      n_estimators : 70
-      learning_rate: 0.05
+      n_estimators : 120 
+      learning_rate: 0.03
+      max_depth    : 4
     high : 
-      n_estimators : 50
+      n_estimators : 70
       learning_rate: 0.05
   features : 
     - log_b_pt
