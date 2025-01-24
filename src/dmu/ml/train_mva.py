@@ -370,16 +370,23 @@ class TrainMva:
             del plt_cfg['sig_eff']
 
         arr_seff_target = numpy.array(l_seff_target)
+        arr_quantile    = 1 - arr_seff_target
 
-        l_score = numpy.quantile(arr_sprb, 1 - arr_seff_target)
+        l_score = numpy.quantile(arr_sprb, arr_quantile)
         l_seff  = []
         l_brej  = []
-        for seff_target in l_seff_target:
+
+        log.debug(60 * '-')
+        log.debug(f'{"SigEff":20}{"BkgRej":20}{"Score":20}')
+        log.debug(60 * '-')
+        for seff_target, score in zip(arr_seff_target, l_score):
             arr_diff = numpy.abs(arr_seff - seff_target)
             ind      = numpy.argmin(arr_diff)
 
             seff     = arr_seff[ind]
             brej     = arr_brej[ind]
+
+            log.debug(f'{seff:<20.3f}{brej:<20.3f}{score:<20.2f}')
 
             l_seff.append(seff)
             l_brej.append(brej)
