@@ -427,6 +427,15 @@ plotting:
     roc :
         min : [0.0, 0.0] # Optional, controls where the ROC curve starts and ends
         max : [1.2, 1.2] # By default it does from 0 to 1 in both axes
+        # The section below is optional and will annotate the ROC curve with
+        # values for the score at different signal efficiencies
+        annotate:
+          sig_eff : [0.5, 0.6, 0.7, 0.8, 0.9] # Values of signal efficiency at which to show the scores
+          form    : '{:.2f}' # Use two decimals for scores
+          color   : 'green'  # Color for text and marker
+          xoff    : -15      # Offsets in X and Y
+          yoff    : -15
+          size    :  10      # Size of text
     correlation: # Adds correlation matrix for training datasets
       title      : 'Correlation matrix'
       size       : [10, 10]
