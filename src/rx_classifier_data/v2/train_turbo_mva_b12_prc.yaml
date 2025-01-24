@@ -64,7 +64,7 @@ training :
   hyper:
     low : 
       n_estimators : 70
-      learning_rate: 0.02
+      learning_rate: 0.05
       max_depth    : 2
     central : 
       n_estimators : 70
