@@ -24,6 +24,7 @@ from dmu.plotting.plotter_1d import Plotter1D    as Plotter
 from dmu.plotting.matrix     import MatrixPlotter
 from dmu.logging.log_store   import LogStore
 
+npa = numpy.ndarray
 log = LogStore.add_logger('data_checks:train_mva')
 # ---------------------------------------------
 class TrainMva:
@@ -54,7 +55,7 @@ class TrainMva:
 
         self._df_ft, self._l_lab = self._get_inputs()
     # ---------------------------------------------
-    def _get_inputs(self) -> tuple[pnd.DataFrame, numpy.ndarray]:
+    def _get_inputs(self) -> tuple[pnd.DataFrame, npa]:
         log.info('Getting signal')
         df_sig, arr_lab_sig = self._get_sample_inputs(self._rdf_sig, label = 1)
 
@@ -78,7 +79,7 @@ class TrainMva:
 
         return df
     # ---------------------------------------------
-    def _get_sample_inputs(self, rdf : RDataFrame, label : int) -> tuple[pnd.DataFrame, numpy.ndarray]:
+    def _get_sample_inputs(self, rdf : RDataFrame, label : int) -> tuple[pnd.DataFrame, npa]:
         d_ft = rdf.AsNumpy(self._l_ft_name)
         df   = pnd.DataFrame(d_ft)
         df   = self._pre_process_nans(df)
@@ -87,7 +88,7 @@ class TrainMva:
 
         return df, numpy.array(l_lab)
     # ---------------------------------------------
-    def _get_model(self, arr_index : numpy.ndarray) -> cls:
+    def _get_model(self, arr_index : npa) -> cls:
         model = cls(cfg = self._cfg)
         df_ft = self._df_ft.iloc[arr_index]
         l_lab = self._l_lab[arr_index]
@@ -168,7 +169,7 @@ class TrainMva:
         d_form = {'Variable' : '{}', 'Importance' : '{:.1f}'}
         put.df_to_tex(df, table_path, d_format = d_form)
     # ---------------------------------------------
-    def _get_scores(self, model : cls, arr_index : numpy.ndarray, on_training_ok : bool) -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, numpy.ndarray]:
+    def _get_scores(self, model : cls, arr_index : npa, on_training_ok : bool) -> tuple[npa, npa, npa, npa]:
         '''
         Returns a tuple of four arrays
 
@@ -191,7 +192,7 @@ class TrainMva:
 
         return arr_sig, arr_bkg, arr_all, arr_lab
     # ---------------------------------------------
-    def _split_scores(self, arr_prob : numpy.ndarray, arr_label : numpy.ndarray) -> tuple[numpy.ndarray, numpy.ndarray]:
+    def _split_scores(self, arr_prob : npa, arr_label : npa) -> tuple[npa, npa]:
         '''
         Will split the testing scores (predictions) based on the training scores
 
@@ -247,7 +248,7 @@ class TrainMva:
 
         return cfg
     # ---------------------------------------------
-    def _plot_correlation(self, arr_index : numpy.ndarray, ifold : int) -> None:
+    def _plot_correlation(self, arr_index : npa, ifold : int) -> None:
         df_ft = self._df_ft.iloc[arr_index]
         cfg = self._get_correlation_cfg(df_ft, ifold)
         cov = df_ft.corr()
@@ -264,7 +265,7 @@ class TrainMva:
         plt.savefig(f'{val_dir}/covariance.png')
         plt.close()
     # ---------------------------------------------
-    def _get_nentries(self, arr_val : numpy.ndarray) -> str:
+    def _get_nentries(self, arr_val : npa) -> str:
         size = len(arr_val)
         size = size / 1000.
 
@@ -299,10 +300,10 @@ class TrainMva:
         plt.close()
     # ---------------------------------------------
     def _plot_roc(self,
-                  l_lab_ts : numpy.ndarray,
-                  l_prb_ts : numpy.ndarray,
-                  l_lab_tr : numpy.ndarray,
-                  l_prb_tr : numpy.ndarray,
+                  l_lab_ts : npa,
+                  l_prb_ts : npa,
+                  l_lab_tr : npa,
+                  l_prb_tr : npa,
                   ifold    : int):
         '''
         Takes the labels and the probabilities and plots ROC
