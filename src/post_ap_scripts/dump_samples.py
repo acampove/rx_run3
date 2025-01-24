@@ -139,6 +139,15 @@ def _save_missing(d_sam : dict[str,list[str]]) -> None:
 
     with open(f'{Data.group}_{Data.prod}_{Data.vers}_miss.yaml', 'w', encoding='utf-8') as ofile:
         yaml.dump(d_miss, ofile, Dumper=IndentedDumper)
+
+    l_miss = []
+    for l_evtid in d_miss.values():
+        l_miss += l_evtid
+
+    s_evtid = set(l_miss)
+    with open(f'{Data.group}_{Data.prod}_{Data.vers}_miss.txt', 'w', encoding='utf-8') as ofile:
+        text = '\n'.join(s_evtid)
+        ofile.write(text)
 # ----------------------------------------------
 def main():
     '''
