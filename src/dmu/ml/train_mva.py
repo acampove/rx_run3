@@ -26,7 +26,7 @@ from dmu.plotting.matrix     import MatrixPlotter
 from dmu.logging.log_store   import LogStore
 
 npa = numpy.ndarray
-log = LogStore.add_logger('data_checks:train_mva')
+log = LogStore.add_logger('dmu:ml:train_mva')
 # ---------------------------------------------
 class TrainMva:
     '''
