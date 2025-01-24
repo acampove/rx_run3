@@ -108,7 +108,7 @@ def get_dt_samples(is_rk : bool) -> list[tuple[str,str]]:
 
             l_sam_trg.append((sample_name, trigger))
 
-    return l_sam_trg 
+    return l_sam_trg
 # ---------------------------------------------
 @cache
 def get_mc_samples(is_rk : bool) -> list[tuple[str,str]]:
@@ -137,7 +137,7 @@ def get_mc_samples(is_rk : bool) -> list[tuple[str,str]]:
 
             l_sam_trg.append((sample_name, trigger))
 
-    return l_sam_trg 
+    return l_sam_trg
 # ---------------------------------------------
 def get_config(sample : str, trigger : str, is_rk : bool, remove : list) -> Union[dict, None]:
     '''
