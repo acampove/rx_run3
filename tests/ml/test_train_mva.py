@@ -13,7 +13,7 @@ log = LogStore.add_logger('dmu:ml:test_train_mva')
 # -------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    LogStore.set_level('data_checks:train_mva', 10)
+    LogStore.set_level('dmu:ml:train_mva', 10)
 # -------------------------------
 def test_simple():
     '''
