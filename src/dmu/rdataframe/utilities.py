@@ -66,7 +66,7 @@ def add_column(rdf : RDataFrame, arr_val : Union[numpy.ndarray,None], name : str
     if arr_val.dtype == 'object':
         arr_val = arr_val.astype(float)
 
-    d_data[name] = arr_val
+    d_data[name] = ak.from_numpy(arr_val)
 
     rdf = ak.to_rdataframe(d_data)
 
