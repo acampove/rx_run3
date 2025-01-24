@@ -96,6 +96,13 @@ saving:
 plotting:
   roc :
     min : [0.1, 0.1]
+    annotate:
+      sig_eff : [0.40, 0.5, 0.6, 0.7, 0.8, 0.9]
+      form : '{:.2f}'
+      color: 'green'
+      xoff : -30
+      yoff : -30
+      size :  30
   correlation:
     size       : [20, 15]
     mask_value : 0
