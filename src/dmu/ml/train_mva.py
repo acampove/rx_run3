@@ -353,7 +353,18 @@ class TrainMva:
                             arr_brej: npa,
                             arr_sprb: npa) -> None:
 
-        l_seff_target = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95]
+        roc_cfg = self._cfg['plotting']['roc']
+        if 'annotate' not in roc_cfg:
+            log.debug('Annotation section in the ROC curve config not found, skipping annotation')
+            return
+
+        plt_cfg = roc_cfg['annotate']
+        if 'sig_eff' not in plt_cfg:
+            l_seff_target = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95]
+        else:
+            l_seff_target = plt_cfg['sig_eff']
+            del plt_cfg['sig_eff']
+
         l_score = numpy.quantile(arr_sprb, l_seff_target)
         l_seff  = []
         l_brej  = []
@@ -367,7 +378,7 @@ class TrainMva:
             l_seff.append(seff)
             l_brej.append(brej)
 
-        plu.annotate(l_x=l_seff, l_y=l_brej, l_v=l_score, form='{:.2f}', color='green', xoff=-15, yoff=-15, size=10)
+        plu.annotate(l_x=l_seff, l_y=l_brej, l_v=l_score, **plt_cfg)
     # ---------------------------------------------
     def _plot_features(self):
         '''
