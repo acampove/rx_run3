@@ -18,6 +18,7 @@ from ROOT import RDataFrame
 
 import dmu.ml.utilities         as ut
 import dmu.pdataframe.utilities as put
+import dmu.plotting.utilities   as plu
 
 from dmu.ml.cv_classifier    import CVClassifier as cls
 from dmu.plotting.plotter_1d import Plotter1D    as Plotter
@@ -333,6 +334,8 @@ class TrainMva:
         if 'max' in self._cfg['plotting']['roc']:
             [max_x, max_y] = self._cfg['plotting']['roc']['max']
 
+        self._plot_probabilities(xval_ts, yval_ts, l_prb_ts)
+
         plt.plot(xval_ts, yval_ts, color='b', label=f'Test: {area_ts:.3f}')
         plt.plot(xval_tr, yval_tr, color='r', label=f'Train: {area_tr:.3f}')
         plt.xlabel('Signal efficiency')
@@ -344,6 +347,27 @@ class TrainMva:
         plt.legend()
         plt.savefig(f'{val_dir}/roc.png')
         plt.close()
+    # ---------------------------------------------
+    def _plot_probabilities(self,
+                            arr_seff: npa,
+                            arr_brej: npa,
+                            arr_sprb: npa) -> None:
+
+        l_seff_target = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95]
+        l_score = numpy.quantile(arr_sprb, l_seff_target)
+        l_seff  = []
+        l_brej  = []
+        for seff_target in l_seff_target:
+            arr_diff = numpy.abs(arr_seff - seff_target)
+            ind      = numpy.argmin(arr_diff)
+
+            seff     = arr_seff[ind]
+            brej     = arr_brej[ind]
+
+            l_seff.append(seff)
+            l_brej.append(brej)
+
+        plu.annotate(l_x=l_seff, l_y=l_brej, l_v=l_score, form='{:.2f}', color='green', xoff=-15, yoff=-15, size=10)
     # ---------------------------------------------
     def _plot_features(self):
         '''
