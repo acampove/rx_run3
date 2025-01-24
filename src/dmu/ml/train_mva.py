@@ -330,7 +330,7 @@ class TrainMva:
         plt.plot(xval_ts, yval_ts, color='b', label=f'Test: {area_ts:.3f}')
         plt.plot(xval_tr, yval_tr, color='r', label=f'Train: {area_tr:.3f}')
         plt.xlabel('Signal efficiency')
-        plt.ylabel('Background efficiency')
+        plt.ylabel('Background rejection')
         plt.title(f'Fold: {ifold}')
         plt.xlim(min_x, 1)
         plt.ylim(min_y, 1)
