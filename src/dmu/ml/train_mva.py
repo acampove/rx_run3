@@ -2,6 +2,7 @@
 Module with TrainMva class
 '''
 # pylint: disable = too-many-locals
+# pylint: disable = too-many-arguments, too-many-positional-arguments
 
 import os
 
@@ -307,7 +308,6 @@ class TrainMva:
         Takes the labels and the probabilities and plots ROC
         curve for given fold
         '''
-        # pylint: disable = too-many-arguments, too-many-positional-arguments
         log.debug(f'Plotting ROC curve for {ifold} fold')
 
         val_dir  = self._cfg['plotting']['val_dir']
