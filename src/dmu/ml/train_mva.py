@@ -368,10 +368,10 @@ class TrainMva:
         put.df_to_tex(df, f'{val_dir}/nan_replacement.tex')
     # ---------------------------------------------
     def _save_hyperparameters_to_tex(self) -> None:
-        if 'hyper' not in self._cfg:
+        if 'hyper' not in self._cfg['training']:
             raise ValueError('Cannot find hyper parameters in configuration')
 
-        d_hyper = self._cfg['hyper']
+        d_hyper = self._cfg['training']['hyper']
         d_form  = { f'\\verb|{key}|' : f'\\verb|{val}|' for key, val in d_hyper.items() }
         d_latex = { 'Hyperparameter' : list(d_form.keys()), 'Value' : list(d_form.values())}
 
