@@ -327,13 +327,18 @@ class TrainMva:
         if 'min' in self._cfg['plotting']['roc']:
             [min_x, min_y] = self._cfg['plotting']['roc']['min']
 
+        max_x = 1
+        max_y = 1
+        if 'max' in self._cfg['plotting']['roc']:
+            [max_x, max_y] = self._cfg['plotting']['roc']['max']
+
         plt.plot(xval_ts, yval_ts, color='b', label=f'Test: {area_ts:.3f}')
         plt.plot(xval_tr, yval_tr, color='r', label=f'Train: {area_tr:.3f}')
         plt.xlabel('Signal efficiency')
         plt.ylabel('Background rejection')
         plt.title(f'Fold: {ifold}')
-        plt.xlim(min_x, 1)
-        plt.ylim(min_y, 1)
+        plt.xlim(min_x, max_x)
+        plt.ylim(min_y, max_y)
         plt.grid()
         plt.legend()
         plt.savefig(f'{val_dir}/roc.png')
