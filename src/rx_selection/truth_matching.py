@@ -422,3 +422,22 @@ def get_truth(event_type : Union[int,str]) -> str:
         raise ValueError(f'Event type {event_type} not recognized')
 
     return cut
+
+
+# TODO: Tests are failing for:
+
+# pytest tests/test_dsgetter.py::test_no_mva[Bd_KstPi0gamma_Kpi_eq_DPC_SS-Hlt2RD_BuToKpEE_MVA]
+# pytest tests/test_dsgetter.py::test_no_mva[Bd_Kstgamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA]
+# pytest tests/test_dsgetter.py::test_no_mva[Bs_Dsstenu_Dsgamma_phienu_eq_DPC_HVM_EGDWC-Hlt2RD_BuToKpEE_MVA]
+# pytest tests/test_dsgetter.py::test_no_mva[Bs_phigamma_eq_HighPtGamma_DPC-Hlt2RD_BuToKpEE_MVA]
+# pytest tests/test_dsgetter.py::test_no_mva[Bs_phigamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA]
+# pytest tests/test_dsgetter.py::test_no_mva[Bu_JpsiKst_ee_Kpi0_eq_DPC-Hlt2RD_BuToKpEE_MVA]
+# pytest tests/test_dsgetter.py::test_no_mva[Lb_JpsipKX_mm_eq_JpsiInAcc-Hlt2RD_BuToKpMuMu_MVA]
+# pytest tests/test_dsgetter.py::test_no_mva[Lb_JpsipK_ee_eq_phsp_DPC-Hlt2RD_BuToKpEE_MVA]
+# pytest tests/test_dsgetter.py::test_no_mva[Lb_JpsipK_mm_eq_phsp_DPC-Hlt2RD_BuToKpMuMu_MVA]
+# pytest tests/test_dsgetter.py::test_no_mva[Lb_Jpsippi_ee_eq_phsp_DPC-Hlt2RD_BuToKpEE_MVA]
+# pytest tests/test_dsgetter.py::test_no_mva[Lb_Jpsippi_mm_eq_phsp_DPC-Hlt2RD_BuToKpMuMu_MVA]
+# pytest tests/test_dsgetter.py::test_no_mva[Lb_pKee_eq_phsp_DPC-Hlt2RD_BuToKpEE_MVA]
+# pytest tests/test_dsgetter.py::test_no_mva[Lb_pKmumu_eq_phsp_DPC-Hlt2RD_BuToKpMuMu_MVA]
+
+# TODO: Need to implement truth matching
