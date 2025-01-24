@@ -365,7 +365,9 @@ class TrainMva:
             l_seff_target = plt_cfg['sig_eff']
             del plt_cfg['sig_eff']
 
-        l_score = numpy.quantile(arr_sprb, l_seff_target)
+        arr_seff_target = numpy.array(l_seff_target)
+
+        l_score = numpy.quantile(arr_sprb, 1 - arr_seff_target)
         l_seff  = []
         l_brej  = []
         for seff_target in l_seff_target:
