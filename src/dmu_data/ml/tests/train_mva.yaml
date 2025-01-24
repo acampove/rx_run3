@@ -1,3 +1,6 @@
+dataset:
+  nan :
+    x : 0
 training :
     nfold    : 3
     features : [x, y, z]
