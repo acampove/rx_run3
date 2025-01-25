@@ -404,6 +404,10 @@ where the settings for the training go in a config dictionary, which when writte
 
 ```yaml
 dataset:
+    # Before training, new features can be defined as below
+    define :
+        x : v + w
+        y : v - w
     # If the key is found to be NaN, replace its value with the number provided
     # This will be used in the training.
     # Otherwise the entries with NaNs will be dropped
@@ -413,7 +417,7 @@ dataset:
         z : -999 
 training :
     nfold    : 10
-    features : [w, x, y, z]
+    features : [x, y, z]
     hyper    :
       loss              : log_loss
       n_estimators      : 100
