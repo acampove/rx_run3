@@ -56,8 +56,8 @@ def test_no_mva(sample : str, trigger : str) -> None:
     obj = DsGetter(cfg=cfg)
     _   = obj.get_rdf()
 # -------------------------------------------
-@pytest.mark.parametrize('sample, trigger', _get_signal_samples())
-def test_cmb_mva_mc_signal(sample : str, trigger : str) -> None:
+@pytest.mark.parametrize('sample, trigger', _get_samples(kind='signal'))
+def test_cmb_mva(sample : str, trigger : str) -> None:
     '''
     Test of DsGetter class with combinatorial MVA added only on signal samples
     '''
@@ -85,8 +85,8 @@ def test_cmb_mva_mc_signal(sample : str, trigger : str) -> None:
     file_path = f'{file_dir}/{sample}_{trigger}.root'
     rdf.Snapshot('tree', file_path)
 # -------------------------------------------
-@pytest.mark.parametrize('sample, trigger', _get_signal_samples())
-def test_prc_mva_mc_signal(sample : str, trigger : str) -> None:
+@pytest.mark.parametrize('sample, trigger', _get_samples(kind='signal'))
+def test_prc_mva(sample : str, trigger : str) -> None:
     '''
     Test of DsGetter class with combinatorial MVA added only on signal samples
     '''
@@ -114,12 +114,24 @@ def test_prc_mva_mc_signal(sample : str, trigger : str) -> None:
     file_path = f'{file_dir}/{sample}_{trigger}.root'
     rdf.Snapshot('tree', file_path)
 # -------------------------------------------
-@pytest.mark.parametrize('sample, trigger', _get_signal_samples())
-def test_mva_mc_signal(sample : str, trigger : str) -> None:
+@pytest.mark.parametrize('sample, trigger', _get_samples(kind='signal'))
+def test_mva_signal(sample : str, trigger : str) -> None:
     '''
-    Test of DsGetter class with combinatorial MVA added only on signal samples
+    Test adding both MVAs on signal MC
     '''
-
+    test_mva(sample, trigger)
+# -------------------------------------------
+@pytest.mark.parametrize('sample, trigger', _get_samples(kind='data'))
+def test_mva_data(sample : str, trigger : str) -> None:
+    '''
+    Test adding both MVAs on data
+    '''
+    test_mva(sample, trigger)
+# -------------------------------------------
+def test_mva(sample : str, trigger : str) -> None:
+    '''
+    Underlying test for both MVAs
+    '''
     log.info(f'\nTesting with: {sample}/{trigger}')
 
     cfg = tst.get_dsg_config(sample, trigger, is_rk=True, remove=['q2', 'bdt'])
