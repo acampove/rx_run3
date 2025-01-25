@@ -410,9 +410,9 @@ class DsGetter:
 
         d_mva_score = { f'mva_{name}' : self._scores_from_rdf(rdf, d_path) for name, d_path in d_mva_kind.items() }
 
-        log.info(f'Adding {nmva} MVA columns')
-
+        log.info('Adding MVA columns')
         for name, arr_val in d_mva_score.items():
+            log.debug('    %s',name)
             rdf = dmu_ut.add_column(rdf, arr_val, name)
 
         return rdf
