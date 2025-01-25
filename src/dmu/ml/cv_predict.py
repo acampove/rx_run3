@@ -60,7 +60,13 @@ class CVPredict:
         return rdf
     # --------------------------------------------
     def _get_nan_replacements(self) -> dict[str,str]:
-        return {}
+        cfg = self._l_model[0].cfg
+
+        if 'nan' not in cfg['dataset']:
+            log.debug('No define section found in config, will not define extra columns')
+            return {}
+
+        return cfg['dataset']['nan']
     # --------------------------------------------
     def _get_df(self):
         '''
