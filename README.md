@@ -477,7 +477,9 @@ When training on real data, several things might go wrong and the code will try 
 will end up in different folds. The tool checks for wether a model is evaluated for an entry that was used for training and raise an exception. Thus, repeated
 entries will be removed before training.
 
-- **NaNs**: Entries with NaNs will break the training with the scikit GradientBoostClassifier base class. Thus, we also remove them from the training.
+- **NaNs**: Entries with NaNs will break the training with the scikit `GradientBoostClassifier` base class. Thus, we: 
+    - Can use the `nan` section shown above to replace `NaN` values with something else
+    - For whatever remains we remove the entries from the training.
 
 ## Application
 
@@ -500,15 +502,24 @@ The picking process happens through the comparison of hashes between the samples
 The hashes of the training samples are stored in the pickled model itself; which therefore is a reimplementation of
 `GradientBoostClassifier`, here called `CVClassifier`.
 
-If a sample exist, that was used in the training of _every_ model, no model can be chosen for the prediction and an
+If a sample exists, that was used in the training of _every_ model, no model can be chosen for the prediction and a
 `CVSameData` exception will be risen.
+
+During training, the configuration will be stored in the model. Therefore, variable definitions can be picked up for evaluation
+from that configuration and the user does not need to define extra columns.
 
 ### Caveats
 
 When evaluating the model with real data, problems might occur, we deal with them as follows:
 
 - **Repeated entries**: When there are repeated features in the dataset to be evaluated we assign the same probabilities, no filtering is used.
-- **NaNs**: Entries with NaNs will break the evaluation. These entries will be _patched_  with zeros and evaluated. However, before returning, the probabilities will be
+- **NaNs**: Entries with NaNs will break the evaluation. These entries will be:
+    - Replaced by other values before evaluation IF a replacement was specified during training. The training configuration will be stored in the model
+    and can be accessed through:
+    ```python
+    model.cfg
+    ```
+    - For whatever entries that are still NaN, they will be _patched_  with zeros and evaluated. However, before returning, the probabilities will be
 saved as -1. I.e. entries with NaNs will have probabilities of -1.
 
 # Pandas dataframes
