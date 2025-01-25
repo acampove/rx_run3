@@ -68,6 +68,20 @@ class CVPredict:
 
         return cfg['dataset']['nan']
     # --------------------------------------------
+    def _replace_nans(self, df : pnd.DataFrame) -> pnd.DataFrame:
+        if len(self._d_nan_rep) == 0:
+            log.debug('Not doing any NaN replacement')
+            return df
+
+        log.debug(60 * '-')
+        log.info('Doing NaN replacements')
+        log.debug(60 * '-')
+        for var, val in self._d_nan_rep.items():
+            log.debug(f'{var:<20}{"--->":20}{val:<20.3f}')
+            df[var] = df[var].fillna(val)
+
+        return df
+    # --------------------------------------------
     def _get_df(self):
         '''
         Will make ROOT rdf into dataframe and return it
@@ -76,6 +90,7 @@ class CVPredict:
         l_ft  = model.features
         d_data= self._rdf.AsNumpy(l_ft)
         df_ft = pnd.DataFrame(d_data)
+        df_ft = self._replace_nans(df_ft)
         df_ft = ut.patch_and_tag(df_ft)
 
         if 'patched_indices' in df_ft.attrs:
