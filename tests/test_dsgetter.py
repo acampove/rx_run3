@@ -147,6 +147,9 @@ def test_mva(sample : str, trigger : str) -> None:
     if cfg is None:
         return
 
+    if sample.startswith('DATA_'):
+        cfg['max_files'] = 10
+
     cfg['mva']         = {
             'cmb' : {
                 'low'    : f'/publicfs/ucas/user/campoverde/Data/RK/MVA/run3/{Data.MVA_VERSION}/RK/cmb/low',
