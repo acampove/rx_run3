@@ -25,15 +25,7 @@ class Data:
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_selection:ds_getter', 10)
-# -------------------------------------------
-def _get_mva_definitions() -> dict[str,str]:
-    d_def               = {}
-    d_def['min_ll_pt']  = 'TMath::Min(L1_PT , L2_PT)'
-    d_def['max_ll_pt']  = 'TMath::Max(L1_PT , L2_PT)'
-    d_def['min_ll_ipc'] = 'TMath::Min(L1_IPCHI2_OWNPV, L2_IPCHI2_OWNPV)'
-    d_def['max_ll_ipc'] = 'TMath::Max(L1_IPCHI2_OWNPV, L2_IPCHI2_OWNPV)'
-
-    return d_def
+    LogStore.set_level('dmu:ml:cv_predict'     , 10)
 # -------------------------------------------
 def _is_signal(sample : str, trigger : str) -> bool:
     if not trigger.endswith('_MVA'):
@@ -76,7 +68,6 @@ def test_cmb_mva_mc_signal(sample : str, trigger : str) -> None:
     if cfg is None:
         return
 
-    cfg['Definitions'] = _get_mva_definitions()
     cfg['mva']         = {
             'cmb' : {
                 'low'    : f'/publicfs/ucas/user/campoverde/Data/RK/MVA/run3/{Data.MVA_VERSION}/RK/cmb/low',
