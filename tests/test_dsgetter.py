@@ -27,21 +27,30 @@ def _initialize():
     LogStore.set_level('rx_selection:ds_getter', 10)
     LogStore.set_level('dmu:ml:cv_predict'     , 10)
 # -------------------------------------------
-def _is_signal(sample : str, trigger : str) -> bool:
+def _is_kind(kind : str, sample : str, trigger : str) -> bool:
     if not trigger.endswith('_MVA'):
         return False
 
-    if sample not in ['Bu_Kee_eq_btosllball05_DPC', 'Bu_Kmumu_eq_btosllball05_DPC']:
+    if 'Bu' not in trigger:
         return False
 
-    return True
+    if kind == 'data'   and sample.startswith('DATA_'):
+        return True
+
+    if kind == 'mc'     and not sample.startswith('DATA_'):
+        return True
+
+    if kind == 'signal' and sample in ['Bu_Kee_eq_btosllball05_DPC', 'Bu_Kmumu_eq_btosllball05_DPC']:
+        return True
+
+    return False
 # -------------------------------------------
-def _get_signal_samples():
-    l_sig = [ (sam, trig) for sam, trig in Data.l_mc_sample if _is_signal(sam, trig) ]
+def _get_samples(kind : str) -> list[tuple[str,str]]:
+    l_sig = [ (sam, trig) for sam, trig in Data.l_mc_sample + Data.l_dt_sample if _is_kind(kind, sam, trig) ]
 
     return l_sig
 # -------------------------------------------
-@pytest.mark.parametrize('sample, trigger', Data.l_mc_sample)
+@pytest.mark.parametrize('sample, trigger', _get_samples(kind='mc'))
 def test_no_mva(sample : str, trigger : str) -> None:
     '''
     Test of DsGetter class without BDT added
