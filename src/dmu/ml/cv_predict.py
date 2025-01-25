@@ -51,7 +51,7 @@ class CVPredict:
 
         d_def = cfg['dataset']['define']
         log.debug(60 * '-')
-        log.debug('Defining columns')
+        log.info('Defining columns in RDF before evaluating classifier')
         log.debug(60 * '-')
         for name, expr in d_def.items():
             log.debug(f'{name:<20}{"<---":20}{expr:<100}')
