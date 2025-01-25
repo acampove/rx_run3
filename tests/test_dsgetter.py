@@ -84,7 +84,7 @@ def test_cmb_mva_mc_signal(sample : str, trigger : str) -> None:
 
     file_path = f'{file_dir}/{sample}_{trigger}.root'
     rdf.Snapshot('tree', file_path)
-
+# -------------------------------------------
 @pytest.mark.parametrize('sample, trigger', _get_signal_samples())
 def test_prc_mva_mc_signal(sample : str, trigger : str) -> None:
     '''
@@ -97,7 +97,35 @@ def test_prc_mva_mc_signal(sample : str, trigger : str) -> None:
     if cfg is None:
         return
 
-    cfg['Definitions'] = _get_mva_definitions()
+    cfg['mva']         = {
+            'prc' : {
+                'low'    : f'/publicfs/ucas/user/campoverde/Data/RK/MVA/run3/{Data.MVA_VERSION}/RK/prc/low',
+                'central': f'/publicfs/ucas/user/campoverde/Data/RK/MVA/run3/{Data.MVA_VERSION}/RK/prc/central',
+                'high'   : f'/publicfs/ucas/user/campoverde/Data/RK/MVA/run3/{Data.MVA_VERSION}/RK/prc/high',
+                }
+            }
+
+    obj = DsGetter(cfg=cfg)
+    rdf = obj.get_rdf()
+
+    file_dir  = '/tmp/rx_selection/ds_getter/mva'
+    os.makedirs(file_dir, exist_ok=True)
+
+    file_path = f'{file_dir}/{sample}_{trigger}.root'
+    rdf.Snapshot('tree', file_path)
+# -------------------------------------------
+@pytest.mark.parametrize('sample, trigger', _get_signal_samples())
+def test_mva_mc_signal(sample : str, trigger : str) -> None:
+    '''
+    Test of DsGetter class with combinatorial MVA added only on signal samples
+    '''
+
+    log.info(f'\nTesting with: {sample}/{trigger}')
+
+    cfg = tst.get_dsg_config(sample, trigger, is_rk=True, remove=['q2', 'bdt'])
+    if cfg is None:
+        return
+
     cfg['mva']         = {
             'cmb' : {
                 'low'    : f'/publicfs/ucas/user/campoverde/Data/RK/MVA/run3/{Data.MVA_VERSION}/RK/cmb/low',
@@ -114,7 +142,7 @@ def test_prc_mva_mc_signal(sample : str, trigger : str) -> None:
     obj = DsGetter(cfg=cfg)
     rdf = obj.get_rdf()
 
-    file_dir  = '/tmp/rx_selection/ds_getter/mva'
+    file_dir  = '/tmp/rx_selection/ds_getter/mva_both'
     os.makedirs(file_dir, exist_ok=True)
 
     file_path = f'{file_dir}/{sample}_{trigger}.root'
