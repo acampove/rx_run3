@@ -32,10 +32,35 @@ class CVPredict:
         if rdf is None:
             raise ValueError('No ROOT dataframe passed')
 
-        self._l_model = models
-        self._rdf     = rdf
+        self._l_model   = models
+        self._rdf       = rdf
+        self._d_nan_rep : dict[str,str]
 
         self._arr_patch : numpy.ndarray
+    # --------------------------------------------
+    def _initialize(self):
+        self._rdf       = self._define_columns(self._rdf)
+        self._d_nan_rep = self._get_nan_replacements()
+    # --------------------------------------------
+    def _define_columns(self, rdf : RDataFrame) -> RDataFrame:
+        cfg = self._l_model[0].cfg
+
+        if 'define' not in cfg['dataset']:
+            log.debug('No define section found in config, will not define extra columns')
+            return self._rdf
+
+        d_def = cfg['dataset']['define']
+        log.debug(60 * '-')
+        log.debug('Defining columns')
+        log.debug(60 * '-')
+        for name, expr in d_def.items():
+            log.debug(f'{name:<20}{"<---":20}{expr:<100}')
+            rdf = rdf.Define(name, expr)
+
+        return rdf
+    # --------------------------------------------
+    def _get_nan_replacements(self) -> dict[str,str]:
+        return {}
     # --------------------------------------------
     def _get_df(self):
         '''
@@ -136,6 +161,8 @@ class CVPredict:
         '''
         Will return array of prediction probabilities for the signal category
         '''
+        self._initialize()
+
         df_ft = self._get_df()
         model = self._l_model[0]
 
