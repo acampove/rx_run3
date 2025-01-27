@@ -1,0 +1,209 @@
+q2:
+  low    : (Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1100000)
+  central: (Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000)
+  jpsi   : (Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)
+  psi2   : (Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)
+  high   : (Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)
+hyper               :
+  loss              : log_loss
+  max_depth         : 2
+  min_samples_split : 2
+# ----------------------------------
+dataset :
+  selection:
+    bkg :
+      mass : mass > 0
+    sig :
+      mass : 'mass > 4500 && mass < 5600'
+  paths:
+    sig :
+      file_path : 
+        - /publicfs/ucas/user/campoverde/Data/RX_run3/v3/NO_q2_bdt_mass_Q2_central_VR_v1/Bu_Kee_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
+      tree_name : DecayTree 
+    bkg :
+      file_path : 
+        - /publicfs/ucas/user/campoverde/Data/RX_run3/v3/NO_q2_bdt_mass_Q2_central_VR_v1/Bd_Kstee_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
+        - /publicfs/ucas/user/campoverde/Data/RX_run3/v3/NO_q2_bdt_mass_Q2_central_VR_v1/Bu_Kstee_Kpi0_eq_btosllball05_DPC/Hlt2RD_BuToKpEE_MVA/*.root
+        - /publicfs/ucas/user/campoverde/Data/RX_run3/v3/NO_q2_bdt_mass_Q2_central_VR_v1/Bu_JpsiX_ee_eq_JpsiInAcc/Hlt2RD_BuToKpEE_MVA/*.root
+        - /publicfs/ucas/user/campoverde/Data/RX_run3/v3/NO_q2_bdt_mass_Q2_central_VR_v1/Bd_JpsiX_ee_eq_JpsiInAcc/Hlt2RD_BuToKpEE_MVA/*.root
+      tree_name : DecayTree 
+  define :
+    mass        : B_M
+    log_b_pt    : TMath::Log(B_PT)
+    sqrt_ipchi2 : TMath::Sqrt(B_IPCHI2_OWNPV) 
+    acos_dira   : TMath::ACos(B_DIRA_OWNPV)
+    # ----------
+    iso_cc_mult : B_HEAD_CC_B_ChargedIso_DR2_0p30_CMULT
+    iso_cc_mom  : B_HEAD_CC_B_ChargedIso_DR2_0p30_CP
+    iso_cc_ptasy: B_HEAD_CC_B_ChargedIso_DR2_0p30_PTASY
+
+    iso_nc_mult : B_HEAD_NC_B_NeutralIso_DR2_0p30_CMULT
+    iso_nc_mom  : B_HEAD_NC_B_NeutralIso_DR2_0p30_CP
+    iso_nc_ptasy: B_HEAD_NC_B_NeutralIso_DR2_0p30_PTASY
+
+    iso_one_mass: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
+    iso_one_dchi: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
+
+    iso_two_mass: B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
+    iso_two_dchi: B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2
+    # ----------
+    sqrt_jipchi2: TMath::Sqrt(Jpsi_IPCHI2_OWNPV) 
+    jp_acos_dira: TMath::ACos(Jpsi_DIRA_OWNPV)
+    log_h_pt    : TMath::Log(H_PT)
+    min_ll_ipc  : TMath::Min(TMath::Sqrt(L1_IPCHI2_OWNPV), TMath::Sqrt(L2_IPCHI2_OWNPV))
+  nan :
+    iso_one_mass :  0
+    iso_two_mass :  0
+    iso_one_dchi : -999
+    iso_two_dchi : -999
+    iso_cc_mom   : 0
+    iso_nc_mom   : 0
+training :
+  nfold    : 10
+  rdm_stat : 1
+  hyper:
+    low : 
+      n_estimators : 70
+      learning_rate: 0.05
+    central : 
+      n_estimators : 120 
+      learning_rate: 0.03
+      max_depth    : 4
+    high : 
+      n_estimators : 70
+      learning_rate: 0.05
+  features : 
+    - log_b_pt
+    - sqrt_ipchi2
+    - acos_dira
+    - sqrt_jipchi2
+    - jp_acos_dira
+    - log_h_pt
+    - min_ll_ipc
+    # ---------
+    - iso_one_mass 
+    - iso_two_mass 
+    - iso_one_dchi
+    - iso_two_dchi
+    - iso_cc_mult
+    - iso_cc_mom
+    - iso_cc_ptasy
+    - iso_nc_mult
+    - iso_nc_mom
+    - iso_nc_ptasy
+saving:
+  path : 'output/mva_rare_2024_prc/VERSION/model.pkl'
+plotting:
+  roc :
+    min : [0.1, 0.1]
+    annotate:
+      sig_eff : [0.40, 0.5, 0.6, 0.7, 0.8, 0.9]
+      form : '{:.2f}'
+      color: 'green'
+      xoff : -30
+      yoff : -30
+      size :  30
+  correlation:
+    size       : [20, 15]
+    mask_value : 0
+  val_dir : 'output/mva_rare_2024_prc/VERSION/plots'
+  features:
+    saving:
+      plt_dir : 'output/mva_rare_2024_prc/VERSION/plots/features'
+    plots:
+      iso_cc_mult:
+        normalized : true
+        binning : [0, 15, 15]
+        yscale  : 'linear'
+        labels  : ['Iso$_{CC}^{mult}(B^+)$', '']
+      iso_cc_mom:
+        normalized : true
+        yscale  : 'linear'
+        binning : [0, 200000, 40]
+        labels  : ['Iso$_{CC}^P(B^+)$MeV', '']
+      iso_cc_ptasy:
+        normalized : true
+        yscale  : 'linear'
+        binning : [-1, +1, 40]
+        labels  : ['Iso$_{CC}^{p_T, Asym}(B^+)$MeV', '']
+      # --------------------
+      iso_nc_mult:
+        normalized : true
+        binning : [0, 15, 15]
+        yscale  : 'linear'
+        labels  : ['Iso$_{NC}^{mult}(B^+)$', '']
+      iso_nc_mom:
+        normalized : true
+        yscale  : 'linear'
+        binning : [0, 200000, 40]
+        labels  : ['Iso$_{NC}^P(B^+)$MeV', '']
+      iso_nc_ptasy:
+        normalized : true
+        yscale  : 'linear'
+        binning : [-1, +1, 40]
+        labels  : ['Iso$_{NC}^{p_T, Asym}(B^+)$MeV', '']
+      # --------------------
+      iso_one_mass:
+        normalized : true
+        binning : [4000, 8000, 40]
+        yscale  : 'linear'
+        labels  : ['Iso$_{mass}^{1Trk}(B^+)$', '']
+      # --------------------
+      iso_one_dchi:
+        normalized : true
+        binning : [0, 15, 40]
+        yscale  : 'linear'
+        labels  : ['Iso$_{\Delta\chi^2}^{1Trk}(B^+)$', '']
+      # --------------------
+      iso_two_mass:
+        normalized : true
+        binning : [4000, 8000, 40]
+        yscale  : 'linear'
+        labels  : ['Iso$_{mass}^{2Trk}(B^+)$', '']
+      # --------------------
+      iso_two_dchi:
+        normalized : true
+        binning : [0, 15, 40]
+        yscale  : 'linear'
+        labels  : ['Iso$_{\Delta\chi^2}^{2Trk}(B^+)$', '']
+      # --------------------
+      log_b_pt  :
+        normalized : true
+        binning : [6, 11, 40]
+        yscale  : 'linear'
+        labels  : ['$\log(p_T)(B^+)$', '']
+      sqrt_ipchi2:
+        normalized : true
+        yscale  : 'linear'
+        binning : [0, 6, 40]
+        labels  : ['$\sqrt{IP_{\chi^2}}(B^+)$', '']
+      acos_dira:
+        normalized : true
+        binning : [0, 0.03, 40]
+        yscale  : 'log'
+        labels  : ['$\arccos(DIRA)(B^+)$', '']
+      sqrt_jipchi2:
+        normalized : true
+        binning : [0, 100, 40]
+        yscale  : 'linear'
+        labels  : ['$\sqrt{IP_{\chi^2}}(J/\psi)$', '']
+      jp_acos_dira:
+        normalized : true
+        binning : [0, 0.2, 40]
+        yscale  : 'log'
+        labels  : ['$\arccos(DIRA)(J/\psi^+)$', '']
+      log_h_pt  :
+        normalized : true
+        binning : [6, 11, 40]
+        yscale  : 'linear'
+        labels  : ['$\log(p_T)(K^+)$', '']
+      min_ll_ipc:
+        normalized : true
+        binning : [0, 60, 40]
+        yscale  : 'linear'
+        labels  : ['$\min(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
+      mass:
+        normalized : true
+        binning : [4000, 6000, 50]
+        yscale  : 'linear'
+        labels  : ['$M(B^+)$', '']
