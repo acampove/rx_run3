@@ -27,4 +27,6 @@ ap_lfn_to_yaml ='rx_common_scripts.ap_lfn_to_yaml:main'
 'rx_tests'  = ['kernel/*.yaml']
 
 [tool.setuptools]
-script-files=[]
+script-files=[
+'src/rx_common_scripts/rx_setup',
+]

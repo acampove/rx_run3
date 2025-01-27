@@ -1,0 +1,261 @@
+#!/usr/bin/env bash
+
+#--------------------------
+display_help()
+{
+    echo "Usage: Script used to push changes for all the analyses projects and pull and install"
+    echo ""
+    echo -e "-k: Kind of action, needs to be specified:
+    pull: Pulls all projects 
+    push: pushes all projects 
+    sync: Pulls and then pushes all projects\n" 
+    echo -e "-i: Options are: 
+    Do not install:           0 (default)
+    Install in editable mode: 1
+    Plain install:            2\n"
+    echo -e "-s: Starting project
+    When the code gets stuck in a specific project (e.g. the project has un-committed changes)
+    one can restart the script at that project instead of staring from zero.\n"
+    echo -e "-p: Purge:
+    Do not remove egg-info directories: 0 (default)
+    Remove egg-info directories:        1\n"
+    echo "-r: Name of remote, by default is origin"
+}
+#--------------------------
+check_unstaged()
+{
+    git diff --exit-code
+    if [[ $? -ne 0 ]];then
+        echo "Unstaged changes for $PROJECT/$BRANCH"
+        kill -INT $$
+    fi
+}
+#--------------------------
+check_uncommitted()
+{
+    VAR=$(git status --porcelain) 
+    if [[ ! -z $VAR ]];then
+        echo "Uncommitted changes for $PROJECT/$BRANCH"
+        echo "Found: $VAR"
+        kill -INT $$
+    fi
+}
+#--------------------------
+check_error()
+{
+    if [[ $? -ne 0 ]];then
+        echo "Failed to push/pull:"
+        cat /tmp/rx_update.log
+        kill -INT $$
+    fi
+}
+#--------------------------
+# Will carry out checks before updating code and installing
+check_project()
+{
+    NAME=$1
+
+    clone_project $NAME
+    skip_project  $NAME
+}
+#--------------------------
+# Will clone project if not found
+clone_project()
+{
+    NAME=$1
+
+    if [[ -d $NAME ]];then
+        return
+    fi
+
+    echo "Project $NAME not found, clonning it"
+    echo "git clone ssh://git@gitlab.cern.ch:7999/r_k/$NAME.git"
+    git clone ssh://git@gitlab.cern.ch:7999/r_k/$NAME.git
+}
+#--------------------------
+# Will set SKIP_UPDATE to 0 or 1 
+skip_project()
+{
+    NAME=$1
+
+    if   [[ "$START" == "UNSET" ]];then
+        SKIP_UPDATE=0
+    elif [[ "$START" == "$NAME" ]];then
+        SKIP_UPDATE=0
+        START="UNSET"
+    else
+        SKIP_UPDATE=1
+    fi
+}
+#--------------------------
+# Will update project
+update()
+{
+    BRANCH=$1
+    PROJECT=$2
+
+    check_project $PROJECT
+    if [[ $SKIP_UPDATE -eq 1 ]];then
+        echo "Skipping $PROJECT"
+        return
+    fi
+
+    cd $PROJECT
+
+    LOGFILE=/tmp/rx_update.log
+
+    git fetch              > $LOGFILE 2>&1 
+    git checkout $BRANCH  >> $LOGFILE 2>&1
+
+    check_unstaged
+    check_uncommitted
+
+    echo "Running $KIND on: $PROJECT/$BRANCH"
+    if   [[ "$KIND" == "sync" ]];then
+        git pull -q $REMOTE $BRANCH >> $LOGFILE 2>&1 
+        check_error
+        if [[ $INSTALL -eq 1 ]];then
+            echo "Installing in editable mode"
+            pip install -q -e .
+        elif [[ $INSTALL -eq 2 ]];then
+            echo "Installing in non-editable mode"
+            pip install -q .
+        fi
+
+        git push -q $REMOTE $BRANCH >> $LOGFILE 2>&1 
+        check_error
+    elif [[ "$KIND" == "push" ]];then
+        git push -q $REMOTE $BRANCH >> $LOGFILE 2>&1 
+        check_error
+    elif [[ "$KIND" == "pull" ]];then
+        git pull -q $REMOTE $BRANCH >> $LOGFILE 2>&1 
+        check_error
+        if [[ $INSTALL -eq 1 ]];then
+            echo "Installing in editable mode"
+            pip install -q -e .
+        elif [[ $INSTALL -eq 2 ]];then
+            echo "Installing in non-editable mode"
+            pip install -q .
+        fi
+    else
+        echo "Invalid kind of update: $KIND"
+        kill -INT $$
+    fi
+
+    cd - > /dev/null
+}
+#--------------------------
+update_all()
+{
+    echo "Updating all projects"
+
+    update master rx_classifier
+    update master rx_calibration 
+    update master rx_selection 
+    update master rx_common 
+    update master rx_data
+    update master post_ap 
+    update master dmu 
+}
+#--------------------------
+update_projects()
+{
+    case $TYPE in
+        all)
+            update_all 
+            ;;
+        *)
+            echo "Invalid type of project update: {TYPE}"
+            exit 1
+            ;;
+    esac 
+}
+#--------------------------
+post_installation()
+{
+    if [[ $INSTALL -eq 0 ]];then
+        return
+    fi
+
+    if [[ "$KIND" == "pull" ]];then
+        get_trig_binning
+    fi
+
+    if [[ $INSTALL -eq 1 ]];then
+        lhcbstyle install
+    fi
+}
+#--------------------------
+get_args()
+{
+    INSTALL=0
+    PURGE=0
+    TYPE=all
+    START=UNSET
+    REMOTE=origin
+    while getopts :hf:i:k:p:t:s:r: option
+    do 
+        case "${option}"
+            in
+            h)  
+            display_help
+            exit 0
+            ;;  
+        \?)  echo "Invalid option: -${OPTARG}"
+            display_help
+            exit 1
+            ;;  
+        :)  echo "$0: Arguments needed"
+            display_help
+            exit 1
+            ;;
+        k)KIND=${OPTARG};;
+        i)INSTALL=${OPTARG};;
+        p)PURGE=${OPTARG};;
+        t)TYPE=${OPTARG};;
+        s)START=${OPTARG};;
+        r)REMOTE=${OPTARG};;
+        esac
+    done
+}
+#--------------------------
+check_env()
+{
+    check_var "SFTDIR" $SFTDIR
+
+    if [[ ! -d $SFTDIR ]];then
+        echo "Path does not exist: $SFTDIR"
+        kill -INT $$
+    fi
+}
+#--------------------------
+check_var()
+{
+    NAME=$1
+    VAR=$2
+
+    if [[ -z $VAR ]];then
+        echo "Cannot find $NAME"
+        kill -INT $$
+    fi
+}
+#--------------------------
+purge()
+{
+    if [[ $PURGE -eq 0 ]];then
+        return
+    else
+        for EGG_DIR in `find $PWD -name "*.egg-info*" -type d`;do
+            echo "Removing $EGG_DIR"
+            rm -rf $EGG_DIR
+        done
+    fi
+}
+#--------------------------
+check_env
+cd $SFTDIR
+get_args "$@"
+purge
+update_projects
+post_installation
+
