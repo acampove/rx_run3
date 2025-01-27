@@ -154,15 +154,9 @@ update()
 #--------------------------
 update_all()
 {
-    echo "Updating all projects"
-
-    update master rx_classifier
-    update master rx_calibration 
-    update master rx_selection 
-    update master rx_common 
-    update master rx_data
-    update master post_ap 
-    update master dmu 
+    while IFS= read -r LINE; do
+        update $LINE
+    done < "$FILEPATH"
 }
 #--------------------------
 update_projects()
@@ -200,7 +194,8 @@ get_args()
     TYPE=all
     START=UNSET
     REMOTE=origin
-    while getopts :hf:i:k:p:t:s:r: option
+    DRY=0
+    while getopts :hf:i:k:p:t:s:r:d:f: option
     do 
         case "${option}"
             in
@@ -222,6 +217,8 @@ get_args()
         t)TYPE=${OPTARG};;
         s)START=${OPTARG};;
         r)REMOTE=${OPTARG};;
+        d)DRY=${OPTARG};;
+        f)FILEPATH=${OPTARG};;
         esac
     done
 }
