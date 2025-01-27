@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+GITROOT=ssh://git@gitlab.cern.ch:7999/rx_run3
 #--------------------------
 display_help()
 {
@@ -84,8 +85,8 @@ clone_project()
     fi
 
     echo "Project $NAME not found, clonning it"
-    echo "git clone ssh://git@gitlab.cern.ch:7999/r_k/$NAME.git"
-    git clone ssh://git@gitlab.cern.ch:7999/r_k/$NAME.git
+    echo "git clone $GITROOT/$NAME.git"
+    git clone $GITROOT/$NAME.git
 }
 #--------------------------
 # Will set SKIP_UPDATE to 0 or 1
