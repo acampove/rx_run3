@@ -50,7 +50,7 @@ get_opts()
     done
 
     if [[ $TEST -eq 1 ]];then
-        QUEUE=test
+        QUEUE=short
     fi
 }
 #-----------------------------
