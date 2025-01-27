@@ -19,6 +19,18 @@ display_help()
     echo -e "-p: Purge:
     Do not remove egg-info directories: 0 (default)
     Remove egg-info directories:        1\n"
+
+    echo -e "-f: Text file with list of branches and project names to run over, e.g.\n
+    master rx_classifier
+    master rx_calibration
+    master rx_selection
+    master rx_common
+    master rx_data
+    master post_ap
+    master dmu\n
+    "
+    echo "-d: By default it is zero. Dry run if non-zero.
+    Dry runs will only print name of project and branch that will be run over."
     echo "-r: Name of remote, by default is origin"
 }
 #--------------------------
