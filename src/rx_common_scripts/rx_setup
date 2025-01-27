@@ -164,9 +164,32 @@ update()
     cd - > /dev/null
 }
 #--------------------------
+push_project()
+{
+    REMOTE=$1
+    BRANCH=$2
+    PROJECT=$3
+
+    echo "Pushing to: $REMOTE -> $PROJECT/$BRANCH"
+    git push -q $REMOTE $BRANCH >> $LOGFILE 2>&1
+    check_error
+}
+#--------------------------
+pull_project()
+{
+    REMOTE=$1
+    BRANCH=$2
+    PROJECT=$3
+
+    echo "Pulling from: $REMOTE -> $PROJECT/$BRANCH"
+    git pull -q $REMOTE $BRANCH >> $LOGFILE 2>&1
+    check_error
+}
+#--------------------------
 update_all()
 {
     while IFS= read -r LINE; do
+        cd $SFTDIR
         update $LINE
     done < "$FILEPATH"
 }
@@ -254,7 +277,6 @@ purge()
 }
 #--------------------------
 check_env
-cd $SFTDIR
 get_args "$@"
 purge
 update_projects
