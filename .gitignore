@@ -186,3 +186,4 @@ Local_*_JobDir/
 *.pkl
 *.txt
 job_filter_ganga.py
+./tmp
