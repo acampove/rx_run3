@@ -96,6 +96,11 @@ update()
     BRANCH=$1
     PROJECT=$2
 
+    if [[ $DRY -ne 0 ]];then
+        echo "Dry run: $PROJECT/$BRANCH"
+        return
+    fi
+
     check_project $PROJECT
     if [[ $SKIP_UPDATE -eq 1 ]];then
         echo "Skipping $PROJECT"
