@@ -6,10 +6,10 @@ display_help()
     echo "Usage: Script used to push changes for all the analyses projects and pull and install"
     echo ""
     echo -e "-k: Kind of action, needs to be specified:
-    pull: Pulls all projects 
-    push: pushes all projects 
-    sync: Pulls and then pushes all projects\n" 
-    echo -e "-i: Options are: 
+    pull: Pulls all projects
+    push: pushes all projects
+    sync: Pulls and then pushes all projects\n"
+    echo -e "-i: Options are:
     Do not install:           0 (default)
     Install in editable mode: 1
     Plain install:            2\n"
@@ -33,7 +33,7 @@ check_unstaged()
 #--------------------------
 check_uncommitted()
 {
-    VAR=$(git status --porcelain) 
+    VAR=$(git status --porcelain)
     if [[ ! -z $VAR ]];then
         echo "----------------------------------------"
         echo "Uncommitted changes for $PROJECT/$BRANCH"
@@ -75,7 +75,7 @@ clone_project()
     git clone ssh://git@gitlab.cern.ch:7999/r_k/$NAME.git
 }
 #--------------------------
-# Will set SKIP_UPDATE to 0 or 1 
+# Will set SKIP_UPDATE to 0 or 1
 skip_project()
 {
     NAME=$1
@@ -111,7 +111,7 @@ update()
 
     LOGFILE=/tmp/rx_update.log
 
-    git fetch              > $LOGFILE 2>&1 
+    git fetch              > $LOGFILE 2>&1
     git checkout $BRANCH  >> $LOGFILE 2>&1
 
     check_unstaged
@@ -119,7 +119,7 @@ update()
 
     echo "Running $KIND on: $PROJECT/$BRANCH"
     if   [[ "$KIND" == "sync" ]];then
-        git pull -q $REMOTE $BRANCH >> $LOGFILE 2>&1 
+        git pull -q $REMOTE $BRANCH >> $LOGFILE 2>&1
         check_error
         if [[ $INSTALL -eq 1 ]];then
             echo "Installing in editable mode"
@@ -129,13 +129,13 @@ update()
             pip install -q .
         fi
 
-        git push -q $REMOTE $BRANCH >> $LOGFILE 2>&1 
+        git push -q $REMOTE $BRANCH >> $LOGFILE 2>&1
         check_error
     elif [[ "$KIND" == "push" ]];then
-        git push -q $REMOTE $BRANCH >> $LOGFILE 2>&1 
+        git push -q $REMOTE $BRANCH >> $LOGFILE 2>&1
         check_error
     elif [[ "$KIND" == "pull" ]];then
-        git pull -q $REMOTE $BRANCH >> $LOGFILE 2>&1 
+        git pull -q $REMOTE $BRANCH >> $LOGFILE 2>&1
         check_error
         if [[ $INSTALL -eq 1 ]];then
             echo "Installing in editable mode"
@@ -163,13 +163,13 @@ update_projects()
 {
     case $TYPE in
         all)
-            update_all 
+            update_all
             ;;
         *)
             echo "Invalid type of project update: {TYPE}"
             exit 1
             ;;
-    esac 
+    esac
 }
 #--------------------------
 post_installation()
@@ -196,17 +196,17 @@ get_args()
     REMOTE=origin
     DRY=0
     while getopts :hf:i:k:p:t:s:r:d:f: option
-    do 
+    do
         case "${option}"
             in
-            h)  
+            h)
             display_help
             exit 0
-            ;;  
+            ;;
         \?)  echo "Invalid option: -${OPTARG}"
             display_help
             exit 1
-            ;;  
+            ;;
         :)  echo "$0: Arguments needed"
             display_help
             exit 1
