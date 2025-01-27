@@ -9,6 +9,10 @@ The purpose of this project is to:
 
 ## Installing and the code
 
+It is **strongly** recommended to use conda/mamba/micromamba to create a virtual environment where the code will go.
+Instructions for micromamba can be found 
+[here](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html).
+
 The code is split into multiple projects, each doing a specific study and all belonging to a given group.
 The code is available as a set of packages that can be cloned and installed through with:
 
@@ -21,5 +25,16 @@ git clone ssh://git@gitlab.cern.ch:7999/rx_run3/rx_common.git
 # install
 pip install rx_common 
 
+# This will install all the packages in your system, in editable mode 
 rx_setup -k sync -i 1
 ```
+
+The `sync` flag will make sure that:
+
+- All the remote changes are pulled to your local branch.
+- The code gets reinstalled.
+- All your local changes have been committed.
+- All the changes you committed locally are pushed to whatever branch you specified.
+
+Thus, making it easier to synchronize your local changes with the remote ones.
+
