@@ -151,6 +151,20 @@ def _save_missing(d_sam : dict[str,list[str]]) -> None:
         text = '\n'.join(s_evtid)
         ofile.write(text)
 # ----------------------------------------------
+def _merge_versions(d_data : dict[str,list[str]]) -> dict[str,list[str]]:
+    d_merged = {}
+    for key, l_val in d_data.items():
+        l_part  = key.split('_')
+        l_part  = l_part[:-1]
+        new_key = '_'.join(l_part)
+
+        if new_key not in d_merged:
+            d_merged[new_key] = []
+
+        d_merged[new_key] += l_val
+
+    return d_merged
+# ----------------------------------------------
 def main():
     '''
     Script starts here
@@ -164,6 +178,7 @@ def main():
     with open(f'{Data.group}_{Data.prod}.yaml', 'w', encoding='utf-8') as ofile:
         yaml.dump(d_data, ofile, Dumper=IndentedDumper)
 
+    d_data = _merge_versions(d_data)
     _save_missing(d_data)
 # ----------------------------------------------
 if __name__ == '__main__':
