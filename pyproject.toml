@@ -1,11 +1,11 @@
 [project]
 name        = 'rx_data'
-description = 'Project with lists of LFNs and utilities needed to download filteres ntuples' 
+description = 'Project with lists of LFNs and utilities needed to download filteres ntuples'
 version     = '0.1.3'
 readme      = 'README.md'
 dependencies= [
-'tqdm', 
-'xrootd', 
+'tqdm',
+'xrootd',
 'data_manipulation_utilities>0.1.2',
 'ap_utilities>=0.2.5'
 ]
