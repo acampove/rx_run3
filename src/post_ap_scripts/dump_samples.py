@@ -36,7 +36,7 @@ class Data:
 
     l_analysis : list[str]
 # ----------------------------------------------
-def _version_from_name(name : str) -> str:
+def _block_from_name(name : str) -> str:
     mtch = re.match(Data.regex, name)
     if not mtch:
         raise ValueError(f'Cannot find version in: {name}')
@@ -46,18 +46,20 @@ def _version_from_name(name : str) -> str:
 def _get_samples(samples) -> dict[str,list[str]]:
     d_data   = {}
     for sample in samples:
-        if sample['version'] not in Data.l_vers:
+        vers = sample['version']
+        if vers not in Data.l_vers:
             continue
 
         name = sample['name']
         if not name.startswith('mc_'):
             continue
 
-        vers = _version_from_name(name)
-        if vers not in d_data:
-            d_data[vers] = []
+        block = _block_from_name(name)
+        key = f'{block}_{vers}'
+        if key not in d_data:
+            d_data[key] = []
 
-        d_data[vers].append(name)
+        d_data[key].append(name)
 
     if len(d_data) == 0:
         raise ValueError('No samples found')
