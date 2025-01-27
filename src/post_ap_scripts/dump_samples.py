@@ -30,7 +30,7 @@ class Data:
     Data class used to store shared data
     '''
     regex = r'mc_\d{2}_(w\d{2}_\d{2})_.*'
-    vers  : str
+    l_vers: list[str]
     group : str
     prod  : str
 
@@ -46,7 +46,7 @@ def _version_from_name(name : str) -> str:
 def _get_samples(samples) -> dict[str,list[str]]:
     d_data   = {}
     for sample in samples:
-        if sample['version'] != Data.vers:
+        if sample['version'] not in Data.l_vers:
             continue
 
         name = sample['name']
@@ -69,14 +69,14 @@ def _get_samples(samples) -> dict[str,list[str]]:
 # ----------------------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to create a list of MC samples in YAML, split by sim production for a given (latest) version of the AP.')
-    parser.add_argument('-v', '--vers'    , type =str, help='Version of AP, e.g. v1r2266', required=True)
-    parser.add_argument('-p', '--prod'    , type =str, help='Production, e.g. rd_ap_2024', required=True)
-    parser.add_argument('-g', '--group'   , type =str, help='Group, e.g. rd'             , required=True)
-    parser.add_argument('-l', '--loglvl'  , type =int, help='Log level'                  , choices=[10, 20, 30], default=20)
+    parser.add_argument('-v', '--vers'    , nargs='+', help='Versions of AP, e.g. v1r2266', required=True)
+    parser.add_argument('-p', '--prod'    , type =str, help='Production, e.g. rd_ap_2024' , required=True)
+    parser.add_argument('-g', '--group'   , type =str, help='Group, e.g. rd'              , required=True)
+    parser.add_argument('-l', '--loglvl'  , type =int, help='Log level'                   , choices=[10, 20, 30], default=20)
     parser.add_argument('-a', '--analyses', nargs='+', help='Analyses for which to check if samples are missing, e.g. RK, RKst')
     args = parser.parse_args()
 
-    Data.vers       = args.vers
+    Data.l_vers     = args.vers
     Data.group      = args.group
     Data.prod       = args.prod
     Data.l_analysis = args.analyses
@@ -137,7 +137,7 @@ def _save_missing(d_sam : dict[str,list[str]]) -> None:
         l_missing = _get_missing_samples(l_sam, block_period)
         d_miss[block_period] = l_missing
 
-    with open(f'{Data.group}_{Data.prod}_{Data.vers}_miss.yaml', 'w', encoding='utf-8') as ofile:
+    with open(f'{Data.group}_{Data.prod}_miss.yaml', 'w', encoding='utf-8') as ofile:
         yaml.dump(d_miss, ofile, Dumper=IndentedDumper)
 
     l_miss = []
@@ -145,7 +145,7 @@ def _save_missing(d_sam : dict[str,list[str]]) -> None:
         l_miss += l_evtid
 
     s_evtid = set(l_miss)
-    with open(f'{Data.group}_{Data.prod}_{Data.vers}_miss.txt', 'w', encoding='utf-8') as ofile:
+    with open(f'{Data.group}_{Data.prod}_miss.txt', 'w', encoding='utf-8') as ofile:
         text = '\n'.join(s_evtid)
         ofile.write(text)
 # ----------------------------------------------
@@ -159,7 +159,7 @@ def main():
     samples  = datasets.all_samples()
 
     d_data = _get_samples(samples)
-    with open(f'{Data.group}_{Data.prod}_{Data.vers}.yaml', 'w', encoding='utf-8') as ofile:
+    with open(f'{Data.group}_{Data.prod}.yaml', 'w', encoding='utf-8') as ofile:
         yaml.dump(d_data, ofile, Dumper=IndentedDumper)
 
     _save_missing(d_data)
