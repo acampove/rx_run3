@@ -131,24 +131,19 @@ update()
 
     echo "Running $KIND on: $PROJECT/$BRANCH"
     if   [[ "$KIND" == "sync" ]];then
-        git pull -q $REMOTE $BRANCH >> $LOGFILE 2>&1
-        check_error
-        if [[ $INSTALL -eq 1 ]];then
+        pull_project $REMOTE $BRANCH $PROJECT
+        if   [[ $INSTALL -eq 1 ]];then
             echo "Installing in editable mode"
             pip install -q -e .
         elif [[ $INSTALL -eq 2 ]];then
             echo "Installing in non-editable mode"
             pip install -q .
         fi
-
-        git push -q $REMOTE $BRANCH >> $LOGFILE 2>&1
-        check_error
+        push_project $REMOTE $BRANCH $PROJECT
     elif [[ "$KIND" == "push" ]];then
-        git push -q $REMOTE $BRANCH >> $LOGFILE 2>&1
-        check_error
+        push_project $REMOTE $BRANCH $PROJECT
     elif [[ "$KIND" == "pull" ]];then
-        git pull -q $REMOTE $BRANCH >> $LOGFILE 2>&1
-        check_error
+        pull_project $REMOTE $BRANCH $PROJECT
         if [[ $INSTALL -eq 1 ]];then
             echo "Installing in editable mode"
             pip install -q -e .
