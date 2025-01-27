@@ -7,7 +7,7 @@ The purpose of this project is to:
 
 - Store new tools, needed for the Run3 analyses, that can be shared among run3 $R_X$ analyses.
 
-## Installing and the code
+## Installation
 
 It is **strongly** recommended to use conda/mamba/micromamba to create a virtual environment where the code will go.
 Instructions for micromamba can be found
