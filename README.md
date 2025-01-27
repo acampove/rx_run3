@@ -23,7 +23,7 @@ export SFTDIR=$HOME/run3_rx
 
 git clone ssh://git@gitlab.cern.ch:7999/rx_run3/rx_common.git
 # install
-pip install rx_common
+pip install -e ./rx_common/
 
 # This will install all the packages in your system, in editable mode
 rx_setup -k sync -i 1 -f $PWD/projects.txt
