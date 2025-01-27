@@ -31,6 +31,7 @@ display_help()
     "
     echo "-d: By default it is zero. Dry run if non-zero.
     Dry runs will only print name of project and branch that will be run over."
+    echo "-l: Debug messages, by default turned off, use 1 to turn them on"
     echo "-r: Name of remote, by default is origin"
 }
 #--------------------------
@@ -165,7 +166,10 @@ push_project()
     BRANCH=$2
     PROJECT=$3
 
+    if [[ $LOG -eq 1 ]];then
     echo "Pushing to: $REMOTE -> $PROJECT/$BRANCH"
+    fi
+
     git push -q $REMOTE $BRANCH >> $LOGFILE 2>&1
     check_error
 }
@@ -176,7 +180,10 @@ pull_project()
     BRANCH=$2
     PROJECT=$3
 
+    if [[ $LOG -eq 1 ]];then
     echo "Pulling from: $REMOTE -> $PROJECT/$BRANCH"
+    fi
+
     git pull -q $REMOTE $BRANCH >> $LOGFILE 2>&1
     check_error
 }
@@ -210,7 +217,8 @@ get_args()
     START=UNSET
     REMOTE=origin
     DRY=0
-    while getopts :hf:i:k:p:t:s:r:d:f: option
+    LOG=0
+    while getopts :hf:i:k:p:t:s:r:d:f:l: option
     do
         case "${option}"
             in
@@ -234,6 +242,7 @@ get_args()
         r)REMOTE=${OPTARG};;
         d)DRY=${OPTARG};;
         f)FILEPATH=${OPTARG};;
+        l)LOG=${OPTARG};;
         esac
     done
 }
