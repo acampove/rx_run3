@@ -12,6 +12,7 @@ display_help()
     echo "-t: HLT2 trigger, e.g Hlt2RD_B0ToKpPimEE"
     echo "-p: Project, e.g. RK"
     echo "-n: Number of parts into which selection is split, e.g. 100"
+    echo "-m: Memory required by job, default 4000Mb"
     echo "-T: Will run a test with the first job (default) or will submit all the jobs"
     echo "-Q: Queue, e.g. test (5m), short (30m), mid (10h), by default short"
 }
@@ -20,7 +21,8 @@ get_opts()
 {
     TEST=1
     QUEUE=mid
-    while getopts :hf:d:s:r:q:t:p:n:T:Q: option; do 
+    MEMORY=4000
+    while getopts :hf:d:s:r:q:t:p:n:m:T:Q: option; do 
         case "${option}" in
             d)  DATADIR="${OPTARG}";;
             s)  SAMPLE="${OPTARG}";;
@@ -31,6 +33,7 @@ get_opts()
             n)  NPART="${OPTARG}";;
             T)  TEST="${OPTARG}";;
             Q)  QUEUE="${OPTARG}";;
+            m)  MEMORY="${OPTARG}";;
             h)  
                 display_help
                 exit 0
@@ -119,7 +122,7 @@ submit_ihep()
         exit 1
     fi
 
-    hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu "$JOB_ARGS" -wt $QUEUE $SUBMITTER
+    hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu "$JOB_ARGS" -mem $MEMORY -wt $QUEUE $SUBMITTER
 }
 #-----------------------------
 get_opts "$@"
