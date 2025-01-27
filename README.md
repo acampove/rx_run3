@@ -49,4 +49,8 @@ The `sync` flag will make sure that:
 - All the changes you committed locally are pushed to whatever branch you specified.
 
 Thus, making it easier to synchronize your local changes with the remote ones.
+To check if the project you will run over are the right ones, one can run a dry run with the `-d 1` flag:
 
+```bash
+rx_setup -k sync -i 1 -f $PWD/projects.txt -d 1
+```
