@@ -35,8 +35,10 @@ check_uncommitted()
 {
     VAR=$(git status --porcelain) 
     if [[ ! -z $VAR ]];then
+        echo "----------------------------------------"
         echo "Uncommitted changes for $PROJECT/$BRANCH"
         echo "Found: $VAR"
+        echo "----------------------------------------"
         kill -INT $$
     fi
 }
