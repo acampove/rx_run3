@@ -184,21 +184,6 @@ update_projects()
     esac
 }
 #--------------------------
-post_installation()
-{
-    if [[ $INSTALL -eq 0 ]];then
-        return
-    fi
-
-    if [[ "$KIND" == "pull" ]];then
-        get_trig_binning
-    fi
-
-    if [[ $INSTALL -eq 1 ]];then
-        lhcbstyle install
-    fi
-}
-#--------------------------
 get_args()
 {
     INSTALL=0
@@ -273,5 +258,3 @@ cd $SFTDIR
 get_args "$@"
 purge
 update_projects
-post_installation
-
