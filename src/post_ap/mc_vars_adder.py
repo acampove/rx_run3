@@ -37,6 +37,9 @@ class MCVarsAdder:
 
         self._l_block     = self._get_blocks()
         log.debug(f'Using blocks {self._l_block} for sample {self._sample_name}')
+
+        # Random seed needs to be fixed to make the analysis reproducible
+        self._rng         = numpy.random.default_rng(seed=10)
     # ---------------------------
     def _get_blocks(self) -> list[int]:
         '''
@@ -71,7 +74,8 @@ class MCVarsAdder:
     # ---------------------------
     def _add_to_rec(self) -> RDataFrame:
         nentries  = self._rdf_rec.Count().GetValue()
-        arr_block = numpy.random.choice(self._l_block, size=nentries)
+        log.debug(f'Adding block column for {nentries} entries')
+        arr_block = self._rng.choice(self._l_block, size=nentries)
         rdf       = ut.add_column(self._rdf_rec, arr_block, 'block')
 
         return rdf
