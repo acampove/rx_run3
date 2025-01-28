@@ -240,16 +240,16 @@ class FilterFile:
 
             rdf = rdf.Define(name, expr)
 
+        rdf = self._define_kinematics(rdf)
+
         if not self._is_mc:
             log.info('Adding data only variables')
             obj = DataVarsAdder(rdf)
             rdf = obj.get_rdf()
         else:
             log.info('Adding MC only variables')
-            obj = MCVarsAdder(rdf_rec = rdf)
+            obj = MCVarsAdder(rdf_rec = rdf, sample_name = self._sample_name)
             rdf = obj.get_rdf()
-
-        rdf = self._define_kinematics(rdf)
 
         return rdf
     # --------------------------------------
@@ -508,7 +508,7 @@ class FilterFile:
         rdf       = self._filter_max_entries(rdf, tree_name)
 
         if tree_path.endswith('MCDecayTree'):
-            obj = MCVarsAdder(rdf_gen = rdf, rdf_rec=rdf_rec)
+            obj = MCVarsAdder(rdf_gen = rdf, rdf_rec=rdf_rec, sample_name=self._sample_name)
             rdf = obj.get_rdf() 
 
         rdf.Snapshot(tree_name, file_path, l_name, opts)
