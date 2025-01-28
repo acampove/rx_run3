@@ -15,6 +15,7 @@ class Data:
     Class used to hold shared attributes
     '''
     rng = numpy.random.default_rng(seed=10)
+    sam = 'mc_24_w31_34_magup_sim10d_11102005_bd_kplpimn_eq_cpv2017_dpc_tuple'
 # -------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -40,7 +41,10 @@ def test_add_to_gen():
     rdf_gen = _get_rdf(kind='gen')
     rdf_rec = _get_rdf(kind='rec')
 
-    obj = MCVarsAdder(rdf_gen = rdf_gen, rdf_rec=rdf_rec)
+    obj = MCVarsAdder(
+            sample_name = Data.sam,
+            rdf_rec     = rdf_rec,
+            rdf_gen     = rdf_gen)
     _   = obj.get_rdf()
 # -------------------------------------------------
 def test_add_to_rec():
@@ -50,6 +54,8 @@ def test_add_to_rec():
 
     rdf_rec = _get_rdf(kind='rec')
 
-    obj = MCVarsAdder(rdf_rec=rdf_rec)
+    obj = MCVarsAdder(
+            sample_name = Data.sam,
+            rdf_rec     = rdf_rec)
     _   = obj.get_rdf()
 # -------------------------------------------------
