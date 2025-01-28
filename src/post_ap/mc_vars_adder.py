@@ -50,19 +50,19 @@ class MCVarsAdder:
 
         identifier = mtch.group(1)
 
-        if identifier == 'W31_34':
+        if identifier == 'w31_34':
             return [1, 2]
 
-        if identifier == 'W25_27':
+        if identifier == 'w25_27':
             return [4]
 
-        if identifier in ['W35_37']:
+        if identifier in ['w35_37']:
             return [5]
 
-        if identifier in ['W37_39']:
+        if identifier in ['w37_39']:
             return [6]
 
-        if identifier == 'W40_42':
+        if identifier == 'w40_42':
             return [7, 8]
 
         raise ValueError(f'Invalid identifier: {identifier}')
