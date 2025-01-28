@@ -17,8 +17,8 @@ class Data:
     '''
     Class used to hold shared attributes
     '''
-    ngen    = 1000
-    nrec    =  500
+    ngen    = 30
+    nrec    = 14
     rng     = numpy.random.default_rng(seed=10)
     sam     = 'mc_24_w31_34_magup_sim10d_11102005_bd_kplpimn_eq_cpv2017_dpc_tuple'
     arr_bpt = rng.uniform(0, 10_000, ngen)
@@ -32,7 +32,7 @@ def _get_rdf(kind : str, with_block : bool) -> RDataFrame:
     nentries = {'gen' : Data.ngen, 'rec' : Data.nrec}[kind]
     d_data   = {}
 
-    arr_bpt        = Data.rng.choice(Data.arr_bpt, size=nentries)
+    arr_bpt        = Data.rng.choice(Data.arr_bpt, size=nentries, replace=False)
     d_data['B_PT'] = numpy.sort(arr_bpt)
 
     if kind == 'rec':
@@ -42,6 +42,23 @@ def _get_rdf(kind : str, with_block : bool) -> RDataFrame:
         d_data['block']       = Data.rng.choice([1,2], size=nentries)
 
     return RDF.FromNumpy(d_data)
+# -------------------------------------------------
+def _check_overlap(gen : numpy.ndarray, rec : numpy.ndarray):
+    gen = gen.tolist()
+    rec = rec.tolist()
+
+    frq_1 = 0
+    for elm in rec:
+        if elm in gen:
+            frq_1 += 1
+
+    frq_2 = 0
+    for elm in gen:
+        if elm in rec:
+            frq_2 += 1
+
+    assert frq_1 == Data.nrec
+    assert frq_2 == Data.nrec
 # -------------------------------------------------
 def test_add_to_gen():
     '''
@@ -55,7 +72,17 @@ def test_add_to_gen():
             sample_name = Data.sam,
             rdf_rec     = rdf_rec,
             rdf_gen     = rdf_gen)
-    _   = obj.get_rdf()
+    rdf_gen = obj.get_rdf()
+
+    arr_gen_blk = rdf_gen.AsNumpy([      'block'])[      'block']
+    arr_rec_blk = rdf_rec.AsNumpy([      'block'])[      'block']
+    arr_gen_evt = rdf_gen.AsNumpy(['EVENTNUMBER'])['EVENTNUMBER']
+    arr_rec_evt = rdf_rec.AsNumpy(['EVENTNUMBER'])['EVENTNUMBER']
+
+    arr_rec     = numpy.array([arr_rec_evt, arr_rec_blk]).T
+    arr_gen     = numpy.array([arr_gen_evt, arr_gen_blk]).T
+
+    _check_overlap(gen=arr_gen, rec=arr_rec)
 # -------------------------------------------------
 def test_add_to_rec():
     '''
