@@ -85,6 +85,54 @@ class MCVarsAdder:
 
         return rdf
     # ---------------------------
+    @lru_cache(maxsize=5)
+    def _get_rec_identifiers(self) -> list[str]:
+        l_id = self._get_identifiers(self._rdf_rec)
+
+        return l_id
+    # ---------------------------
+    @lru_cache(maxsize=5)
+    def _get_gen_identifiers(self) -> list[str]:
+        l_id = self._get_identifiers(self._rdf_gen)
+
+        return l_id
+    # ---------------------------
+    def _get_identifiers(self, rdf) -> list[str]:
+        arr_id_value = rdf.AsNumpy([self._branch_id])[self._branch_id]
+        arr_id_scale = arr_id_value * 1000_000
+        arr_id_str   = arr_id_scale.astype(int).astype(str)
+
+        return arr_id_str.tolist()
+    # ---------------------------
+    def _get_mapping(self, name : str) -> dict[str, int]:
+        l_identifier= self._get_rec_identifiers()
+        arr_target  = self._rdf_rec.AsNumpy([name])[name]
+        l_target    = arr_target.tolist()
+
+        nid = len(l_identifier)
+        ntg = len(l_target)
+
+        if nid != ntg:
+            raise ValueError(f'For target/identifier {name}/{self._branch_id} values differ: {nid}/{ntg}')
+
+        d_map = dict(zip(l_identifier, l_target))
+
+        return d_map
+    # ---------------------------
+    def _pick_target(self, gen_id : str, mapping : dict[str,int], name : str) -> int:
+        if gen_id in mapping:
+            return mapping[gen_id]
+
+        if name == self._block_name:
+            l_block = self._get_blocks()
+            return random.choice(l_block)
+
+        # Making this negative ensures we won't accidentally collide with in-mapping value
+        if name == 'EVENTNUMBER':
+            return random.randint(-1000_000, 0)
+
+        raise ValueError(f'Cannot pick out of mapping random number for: {name}')
+    # ---------------------------
     def _add_to_gen(self) -> RDataFrame:
         d_id_bk = self._get_mapping(name= self._block_name)
         d_id_ev = self._get_mapping(name=    'EVENTNUMBER')
