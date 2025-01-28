@@ -495,7 +495,7 @@ class FilterFile:
     def _save_extra_tree(self,
                          tree_path : str,
                          file_path : str,
-                         opts      : RDF.RSnapshotOptions
+                         opts      : RDF.RSnapshotOptions,
                          rdf_rec   : RDataFrame) -> None:
         log.debug(f'Saving {tree_path}')
 
