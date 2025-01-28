@@ -22,6 +22,7 @@ from dmu.rfile.rfprinter   import RFPrinter
 import post_ap.utilities as utdc
 from post_ap.selector        import Selector
 from post_ap.data_vars_adder import DataVarsAdder
+from post_ap.mc_vars_adder   import MCVarsAdder
 from post_ap.part_vars_adder import ParticleVarsAdder
 
 log = LogStore.add_logger('post_ap:FilterFile')
@@ -242,6 +243,10 @@ class FilterFile:
         if not self._is_mc:
             log.info('Adding data only variables')
             obj = DataVarsAdder(rdf)
+            rdf = obj.get_rdf()
+        else:
+            log.info('Adding MC only variables')
+            obj = MCVarsAdder(rdf_rec = rdf)
             rdf = obj.get_rdf()
 
         rdf = self._define_kinematics(rdf)
@@ -464,7 +469,7 @@ class FilterFile:
 
             l_tree_path = self._get_ext_tree_path()
             for tree_path in l_tree_path:
-                self._save_extra_tree(tree_path, file_path, opts)
+                self._save_extra_tree(tree_path, file_path, opts, rdf_rec = rdf)
 
             self._add_metadata(file_path, line_name)
     # --------------------------------------
@@ -484,7 +489,11 @@ class FilterFile:
 
         raise RuntimeError(f'Could not save {tree_path}, failing the job')
     # --------------------------------------
-    def _save_extra_tree(self, tree_path : str, file_path : str, opts : RDF.RSnapshotOptions) -> None:
+    def _save_extra_tree(self, 
+                         tree_path : str, 
+                         file_path : str, 
+                         opts      : RDF.RSnapshotOptions
+                         rdf_rec   : RDataFrame) -> None:
         log.debug(f'Saving {tree_path}')
 
         try:
@@ -497,6 +506,10 @@ class FilterFile:
         tree_name = self._get_extra_tree_name(tree_path)
         l_name    = self._get_column_names(rdf)
         rdf       = self._filter_max_entries(rdf, tree_name)
+
+        if tree_path.endswith('MCDecayTree'):
+            obj = MCVarsAdder(rdf_gen = rdf, rdf_rec=rdf_rec)
+            rdf = obj.get_rdf() 
 
         rdf.Snapshot(tree_name, file_path, l_name, opts)
         log.debug(f'Saved {tree_name}')
