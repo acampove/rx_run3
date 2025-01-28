@@ -9,6 +9,11 @@ tests:
       test_w35_37_v1r2437: v1r2437
       test_w37_39_v1r2437: v1r2437
       test_w40_42_v1r2437: v1r2437
+      # ---------
+      test_dt_c1         : v1r1670
+      test_dt_c2         : v1r1670
+      test_dt_c3         : v1r1670
+      test_dt_c4         : v1r1670
   samples: &tst_sam
     test_dt_c1:
         - data_24_magup_turbo_24c1
@@ -18,6 +23,7 @@ tests:
         - data_24_magup_turbo_24c3
     test_dt_c4:
         - data_24_magup_turbo_24c4
+    # ---------
     test_w31_34_v1r2266:
         - mc_24_w31_34_magup_sim10d_12123021_bu_piee_eq_btosllball_dpc_tuple
         - mc_24_w31_34_magup_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
