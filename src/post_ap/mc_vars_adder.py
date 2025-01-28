@@ -160,8 +160,10 @@ class MCVarsAdder:
         '''
 
         if self._rdf_gen is None:
+            log.info('Adding MC variables to DecayTree')
             rdf = self._add_to_rec()
         else:
+            log.info('Adding MC variables to MCDecayTree')
             rdf = self._add_to_gen()
 
         return rdf
