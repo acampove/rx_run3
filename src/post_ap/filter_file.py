@@ -12,7 +12,7 @@ import copy
 import tqdm
 import pandas as pnd
 
-from ROOT                  import RDataFrame, TFile, RDF, TObjString 
+from ROOT                  import RDataFrame, TFile, RDF, TObjString
 from dmu.logging.log_store import LogStore
 
 import dmu.rdataframe.utilities as ut
@@ -492,9 +492,9 @@ class FilterFile:
 
         raise RuntimeError(f'Could not save {tree_path}, failing the job')
     # --------------------------------------
-    def _save_extra_tree(self, 
-                         tree_path : str, 
-                         file_path : str, 
+    def _save_extra_tree(self,
+                         tree_path : str,
+                         file_path : str,
                          opts      : RDF.RSnapshotOptions
                          rdf_rec   : RDataFrame) -> None:
         log.debug(f'Saving {tree_path}')
@@ -512,7 +512,7 @@ class FilterFile:
 
         if tree_path.endswith('MCDecayTree'):
             obj = MCVarsAdder(rdf_gen = rdf, rdf_rec=rdf_rec, sample_name=self._sample_name)
-            rdf = obj.get_rdf() 
+            rdf = obj.get_rdf()
 
         rdf.Snapshot(tree_name, file_path, l_name, opts)
         log.debug(f'Saved {tree_name}')
