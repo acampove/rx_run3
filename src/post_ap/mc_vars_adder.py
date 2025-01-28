@@ -2,7 +2,8 @@
 Module holding MCVarsAdder class
 '''
 import re
-from typing import Union
+from typing    import Union
+from functools import lru_cache
 
 import numpy
 import dmu.rdataframe.utilities as ut
