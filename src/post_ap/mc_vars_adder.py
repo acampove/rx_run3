@@ -1,10 +1,13 @@
 '''
 Module holding MCVarsAdder class
 '''
+import re
 from typing import Union
 
-from ROOT import RDataFrame
+from ROOT                  import RDataFrame
+from dmu.logging.log_store import LogStore
 
+log = LogStore.add_logger('post_ap:mc_vars_adder')
 # -----------------------------
 class MCVarsAdder:
     '''
