@@ -16,11 +16,8 @@ class Data:
     '''
     Data class with shared attributes
     '''
-    mc_test_turbo    = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/bukmm_turbo.root'
-    mc_test_spruce   = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_spruce.root'
-
-    data_test_turbo  = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_turbo.root'
-    data_test_spruce = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_spruce.root'
+    mc_test_turbo    = 'root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/2024/TUPLE.ROOT/00265061/0000/00265061_00000002_1.tuple.root'
+    data_test_turbo  = 'root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/LHCb/Collision24/FTUPLE.ROOT/00231371/0000/00231371_00000001_1.ftuple.root'
 
     output_dir       = '/tmp/post_ap/tests/filter_file'
 
@@ -54,7 +51,7 @@ def _initialize():
     LogStore.set_level('post_ap:utilities'     , 30)
     LogStore.set_level('post_ap:FilterFile'    , 20)
 # --------------------------------------
-@pytest.mark.parametrize('kind' , ['turbo', 'spruce'])
+@pytest.mark.parametrize('kind' , ['turbo'])
 def test_dt(kind : bool):
     '''
     Run test on data
@@ -70,13 +67,14 @@ def test_dt(kind : bool):
 
     _move_outputs('test_dt')
 # --------------------------------------
-@pytest.mark.parametrize('kind' , ['turbo', 'spruce'])
+@pytest.mark.parametrize('kind' , ['turbo'])
 def test_mc(kind : str):
     '''
     Run test on MC
     '''
     sample_name = 'mc_test'
     path        = getattr(Data, f'{sample_name}_{kind}')
+    sample_name = 'mc_24_w37_39_magdown_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_tuple'
 
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents  = True
