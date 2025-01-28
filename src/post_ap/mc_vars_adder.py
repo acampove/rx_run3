@@ -4,7 +4,7 @@ Module holding MCVarsAdder class
 import re
 import random
 from typing    import Union
-from functools import lru_cache
+from functools import cached_property
 
 import numpy
 import dmu.rdataframe.utilities as ut
@@ -85,14 +85,16 @@ class MCVarsAdder:
 
         return rdf
     # ---------------------------
-    @lru_cache(maxsize=5)
+    @cached_property
     def _get_rec_identifiers(self) -> list[str]:
+        log.debug('Getting identifiers for rec tree')
         l_id = self._get_identifiers(self._rdf_rec)
 
         return l_id
     # ---------------------------
-    @lru_cache(maxsize=5)
+    @cached_property
     def _get_gen_identifiers(self) -> list[str]:
+        log.debug('Getting identifiers for gen tree')
         l_id = self._get_identifiers(self._rdf_gen)
 
         return l_id
