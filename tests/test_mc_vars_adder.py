@@ -6,9 +6,11 @@ import numpy
 import pytest
 from ROOT                    import RDataFrame
 from ROOT                    import RDF
+from dmu.logging.log_store   import LogStore
 
 from post_ap.mc_vars_adder   import MCVarsAdder
 
+log = LogStore.add_logger('post_ap:test_mc_vars_adder')
 # -------------------------------------------------
 class Data:
     '''
@@ -19,7 +21,8 @@ class Data:
 # -------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    pass
+    LogStore.set_level('post_ap:mc_vars_adder'     , 10)
+    LogStore.set_level('post_ap:test_mc_vars_adder', 10)
 # -------------------------------------------------
 def _get_rdf(kind : str) -> RDataFrame:
     nentries = {'gen' : 1000, 'rec' : 100}[kind]
