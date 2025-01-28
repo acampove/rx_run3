@@ -24,15 +24,17 @@ def _initialize():
     LogStore.set_level('post_ap:mc_vars_adder'     , 10)
     LogStore.set_level('post_ap:test_mc_vars_adder', 10)
 # -------------------------------------------------
-def _get_rdf(kind : str) -> RDataFrame:
+def _get_rdf(kind : str, with_block : bool) -> RDataFrame:
     nentries = {'gen' : 1000, 'rec' : 100}[kind]
-
     d_data   = {}
 
     d_data['B_PT'] = Data.rng.uniform(0, 10_000, nentries)
 
     if kind == 'rec':
         d_data['EVENTNUMBER'] = Data.rng.integers(0, 1000_000, size=nentries)
+
+    if with_block:
+        d_data['block']       = Data.rng.choice([1,2], size=nentries)
 
     return RDF.FromNumpy(d_data)
 # -------------------------------------------------
@@ -41,8 +43,8 @@ def test_add_to_gen():
     Tests addition of columns to MCDT
     '''
 
-    rdf_gen = _get_rdf(kind='gen')
-    rdf_rec = _get_rdf(kind='rec')
+    rdf_gen = _get_rdf(kind='gen', with_block=False)
+    rdf_rec = _get_rdf(kind='rec', with_block=True)
 
     obj = MCVarsAdder(
             sample_name = Data.sam,
