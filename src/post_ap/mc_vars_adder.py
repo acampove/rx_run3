@@ -89,9 +89,9 @@ class MCVarsAdder:
         '''
 
         if self._rdf_gen is None:
-            rdf = self._add_to_gen()
-        else:
             rdf = self._add_to_rec()
+        else:
+            rdf = self._add_to_gen()
 
         return rdf
 # -----------------------------
