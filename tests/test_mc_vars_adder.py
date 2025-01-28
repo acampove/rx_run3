@@ -32,9 +32,9 @@ def _get_rdf(kind : str) -> RDataFrame:
 
     return RDF.FromNumpy(d_data)
 # -------------------------------------------------
-def test_add_event_number():
+def test_add_to_gen():
     '''
-    Tests addition of EventNumber column to MCDT
+    Tests addition of columns to MCDT
     '''
 
     rdf_gen = _get_rdf(kind='gen')
