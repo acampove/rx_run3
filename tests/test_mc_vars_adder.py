@@ -55,7 +55,7 @@ def test_add_to_rec():
     Tests addition of columns to DecayTree
     '''
 
-    rdf_rec = _get_rdf(kind='rec')
+    rdf_rec = _get_rdf(kind='rec', with_block=False)
 
     obj = MCVarsAdder(
             sample_name = Data.sam,
