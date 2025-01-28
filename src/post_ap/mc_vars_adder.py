@@ -4,6 +4,8 @@ Module holding MCVarsAdder class
 import re
 from typing import Union
 
+import numpy
+import dmu.rdataframe.utilities as ut
 from ROOT                  import RDataFrame
 from dmu.logging.log_store import LogStore
 
@@ -67,10 +69,14 @@ class MCVarsAdder:
 
         raise ValueError(f'Invalid identifier: {identifier}')
     # ---------------------------
-    def _add_to_rec(self):
-        return self._rdf_rec
+    def _add_to_rec(self) -> RDataFrame:
+        nentries  = self._rdf_rec.Count().GetValue()
+        arr_block = numpy.random.choice(self._l_block, size=nentries)
+        rdf       = ut.add_column(self._rdf_rec, arr_block, 'block')
+
+        return rdf
     # ---------------------------
-    def _add_to_gen(self):
+    def _add_to_gen(self) -> RDataFrame:
         return self._rdf_gen
     # ---------------------------
     def get_rdf(self) -> RDataFrame:
