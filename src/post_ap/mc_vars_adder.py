@@ -35,6 +35,7 @@ class MCVarsAdder:
         self._rdf_rec     = rdf_rec
         self._rdf_gen     = rdf_gen
         self._regex       = r'mc_\d{2}_(w\d{2}_\d{2})_.*'
+        self._branch_id   = 'B_PT'
 
         self._l_block     = self._get_blocks()
         log.debug(f'Using blocks {self._l_block} for sample {self._sample_name}')
