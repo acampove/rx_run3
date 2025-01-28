@@ -107,7 +107,9 @@ class MCVarsAdder:
         return arr_id_str.tolist()
     # ---------------------------
     def _get_mapping(self, name : str) -> dict[str, int]:
-        l_identifier= self._get_rec_identifiers()
+        log.debug(f'Get mapping for {name}')
+
+        l_identifier= self._get_rec_identifiers
         arr_target  = self._rdf_rec.AsNumpy([name])[name]
         l_target    = arr_target.tolist()
 
@@ -135,14 +137,18 @@ class MCVarsAdder:
         raise ValueError(f'Cannot pick out of mapping random number for: {name}')
     # ---------------------------
     def _add_to_gen(self) -> RDataFrame:
+        log.debug('Adding columns to gen tree')
+        rdf     = self._rdf_gen
+
         d_id_bk = self._get_mapping(name= self._block_name)
         d_id_ev = self._get_mapping(name=    'EVENTNUMBER')
-        l_gen_id= self._get_gen_identifiers()
+        l_gen_id= self._get_gen_identifiers
 
         l_ev    = [ self._pick_target(gen_id=gen_id, mapping = d_id_ev, name =    'EVENTNUMBER') for gen_id in l_gen_id ]
         l_bk    = [ self._pick_target(gen_id=gen_id, mapping = d_id_bk, name = self._block_name) for gen_id in l_gen_id ]
 
-        rdf     = self._rdf_gen
+        ngen    = len(l_gen_id)
+        log.debug(f'Adding columns for {ngen} entries')
         rdf     = ut.add_column(rdf, numpy.array(l_bk), self._block_name)
         rdf     = ut.add_column(rdf, numpy.array(l_ev),    'EVENTNUMBER')
 
