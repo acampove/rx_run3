@@ -16,8 +16,11 @@ class Data:
     '''
     Class used to hold shared attributes
     '''
-    rng = numpy.random.default_rng(seed=10)
-    sam = 'mc_24_w31_34_magup_sim10d_11102005_bd_kplpimn_eq_cpv2017_dpc_tuple'
+    ngen    = 1000
+    nrec    =  500
+    rng     = numpy.random.default_rng(seed=10)
+    sam     = 'mc_24_w31_34_magup_sim10d_11102005_bd_kplpimn_eq_cpv2017_dpc_tuple'
+    arr_bpt = rng.uniform(0, 10_000, ngen)
 # -------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -25,10 +28,11 @@ def _initialize():
     LogStore.set_level('post_ap:test_mc_vars_adder', 10)
 # -------------------------------------------------
 def _get_rdf(kind : str, with_block : bool) -> RDataFrame:
-    nentries = {'gen' : 1000, 'rec' : 100}[kind]
+    nentries = {'gen' : Data.ngen, 'rec' : Data.nrec}[kind]
     d_data   = {}
 
-    d_data['B_PT'] = Data.rng.uniform(0, 10_000, nentries)
+    arr_bpt        = Data.rng.choice(Data.arr_bpt, size=nentries)
+    d_data['B_PT'] = numpy.sort(arr_bpt)
 
     if kind == 'rec':
         d_data['EVENTNUMBER'] = Data.rng.integers(0, 1000_000, size=nentries)
