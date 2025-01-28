@@ -124,8 +124,7 @@ class MCVarsAdder:
             return mapping[gen_id]
 
         if name == self._block_name:
-            l_block = self._get_blocks()
-            return random.choice(l_block)
+            return random.choice(self._l_block)
 
         # Making this negative ensures we won't accidentally collide with in-mapping value
         if name == 'EVENTNUMBER':
