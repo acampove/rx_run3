@@ -81,7 +81,7 @@ class MCVarsAdder:
         nentries  = self._rdf_rec.Count().GetValue()
         log.debug(f'Adding block column for {nentries} entries')
         arr_block = self._rng.choice(self._l_block, size=nentries)
-        rdf       = ut.add_column(self._rdf_rec, arr_block, 'block')
+        rdf       = ut.add_column(self._rdf_rec, arr_block, self._block_name)
 
         return rdf
     # ---------------------------
