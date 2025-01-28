@@ -43,3 +43,13 @@ def test_add_to_gen():
     obj = MCVarsAdder(rdf_gen = rdf_gen, rdf_rec=rdf_rec)
     _   = obj.get_rdf()
 # -------------------------------------------------
+def test_add_to_rec():
+    '''
+    Tests addition of columns to DecayTree
+    '''
+
+    rdf_rec = _get_rdf(kind='rec')
+
+    obj = MCVarsAdder(rdf_rec=rdf_rec)
+    _   = obj.get_rdf()
+# -------------------------------------------------
