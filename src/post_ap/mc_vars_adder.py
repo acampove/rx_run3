@@ -31,11 +31,41 @@ class MCVarsAdder:
         self._sample_name = sample_name
         self._rdf_rec     = rdf_rec
         self._rdf_gen     = rdf_gen
+        self._regex       = r'mc_\d{2}_(w\d{2}_\d{2})_.*'
 
-        self._l_block = self._get_blocks()
+        self._l_block     = self._get_blocks()
+        log.debug(f'Using blocks {self._l_block} for sample {self._sample_name}')
     # ---------------------------
     def _get_blocks(self) -> list[int]:
-        return [1, 2]
+        '''
+        Associations taken from:
+
+        https://lhcb-simulation.web.cern.ch/WPP/MCsamples.html#samples
+        '''
+        log.debug('Picking up blocks')
+
+        mtch = re.match(self._regex, self._sample_name)
+        if not mtch:
+            raise ValueError(f'Cannot extract block identifier from sample: {self._sample_name}')
+
+        identifier = mtch.group(1)
+
+        if identifier == 'W31_34':
+            return [1, 2]
+
+        if identifier == 'W25_27':
+            return [4]
+
+        if identifier in ['W35_37']:
+            return [5]
+
+        if identifier in ['W37_39']:
+            return [6]
+
+        if identifier == 'W40_42':
+            return [7, 8]
+
+        raise ValueError(f'Invalid identifier: {identifier}')
     # ---------------------------
     def _add_to_rec(self):
         return self._rdf_rec
