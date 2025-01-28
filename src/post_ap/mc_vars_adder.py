@@ -86,7 +86,18 @@ class MCVarsAdder:
         return rdf
     # ---------------------------
     def _add_to_gen(self) -> RDataFrame:
-        return self._rdf_gen
+        d_id_bk = self._get_mapping(name= self._block_name)
+        d_id_ev = self._get_mapping(name=    'EVENTNUMBER')
+        l_gen_id= self._get_gen_identifiers()
+
+        l_ev    = [ self._pick_target(gen_id=gen_id, mapping = d_id_ev, name =    'EVENTNUMBER') for gen_id in l_gen_id ]
+        l_bk    = [ self._pick_target(gen_id=gen_id, mapping = d_id_bk, name = self._block_name) for gen_id in l_gen_id ]
+
+        rdf     = self._rdf_gen
+        rdf     = ut.add_column(rdf, numpy.array(l_bk), self._block_name)
+        rdf     = ut.add_column(rdf, numpy.array(l_ev),    'EVENTNUMBER')
+
+        return rdf
     # ---------------------------
     def get_rdf(self) -> RDataFrame:
         '''
