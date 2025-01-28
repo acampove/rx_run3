@@ -60,5 +60,12 @@ def test_add_to_rec():
     obj = MCVarsAdder(
             sample_name = Data.sam,
             rdf_rec     = rdf_rec)
-    _   = obj.get_rdf()
+    rdf       = obj.get_rdf()
+    arr_block = rdf.AsNumpy(['block'])['block']
+
+    none = numpy.sum(arr_block == 1)
+    ntwo = numpy.sum(arr_block == 2)
+
+    assert none == 53
+    assert ntwo == 47
 # -------------------------------------------------
