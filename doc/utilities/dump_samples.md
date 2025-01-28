@@ -13,5 +13,4 @@ dump_samples -p rd_ap_2024 -g rd -v v1r2041 -a RK RKst
 
 Which is going to check for missing samples needed by `RK` and `RKst`.
 The sample list for each analysis is in `post_ap_data/samples/sample_run3.yaml` 
-The output of the command are stored in YAML files.
 
