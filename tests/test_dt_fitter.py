@@ -16,8 +16,8 @@ from ROOT                    import RDataFrame, RDF
 from zfit.core.basepdf       import BasePDF
 from dmu.logging.log_store   import LogStore
 
-from rx_calibration.hltcalibration.mc_fitter import Fitter as MCFitter
-from rx_calibration.hltcalibration.dt_fitter import Fitter as DTFitter
+from rx_calibration.hltcalibration.mc_fitter import MCFitter
+from rx_calibration.hltcalibration.dt_fitter import DTFitter
 
 log = LogStore.add_logger('rx_calibration:test_fitter')
 # --------------------------------------------
@@ -130,7 +130,7 @@ def _get_fcomp_cfg(name : str) -> dict:
 
     return d_fcomp
 # --------------------------------------------
-def _get_fit_comp() -> list[FitComponent]:
+def _get_fit_comp() -> list[MCFitter]:
     d_comp = { component : _get_comp(kind=component) for component in Data.d_nentries }
     for name in Data.l_no_sim:
         _, pdf = d_comp[name]
@@ -139,7 +139,7 @@ def _get_fit_comp() -> list[FitComponent]:
     l_cfg   = [ _get_fcomp_cfg(component) for component in d_comp          ]
     l_rdf   = [ rdf                       for rdf, _    in d_comp.values() ]
     l_pdf   = [ pdf                       for   _, pdf  in d_comp.values() ]
-    l_fcomp = [ FitComponent(cfg=cfg, rdf=rdf, pdf=pdf) for cfg, rdf, pdf in zip(l_cfg, l_rdf, l_pdf)]
+    l_fcomp = [ MCFitter(cfg=cfg, rdf=rdf, pdf=pdf) for cfg, rdf, pdf in zip(l_cfg, l_rdf, l_pdf)]
 
     return l_fcomp
 # --------------------------------------------
@@ -152,6 +152,6 @@ def test_simple():
     l_comp  = _get_fit_comp()
     conf    = _get_fit_conf()
 
-    obj = Fitter(data = rdf_dat, components = l_comp, conf = conf)
+    obj = DTFitter(data = rdf_dat, components = l_comp, conf = conf)
     _   = obj.fit()
 # --------------------------------------------
