@@ -23,7 +23,7 @@ class Data:
     Class sharing attributes
     '''
     out_dir   = '/tmp/rx_calibration/tests/fit_component'
-    dat_dir   = '/publicfs/ucas/user/campoverde/Data/RX_run3/v3/post_ap'
+    dat_dir   = '/publicfs/ucas/user/campoverde/Data/RX_run3/for_tests/post_ap'
     nentries  = 5_000
     mass_name = 'mass'
     obs       = zfit.Space(mass_name, limits=(4800, 6000))
