@@ -73,11 +73,9 @@ class MCVarsAdder:
         if len(l_common) == 0:
             log.info('Gen branches:')
             log.info(l_gen_name)
-            self._rdf_gen.Display().Print()
             log.info('')
             log.info('Rec branches:')
             log.info(l_rec_name_strip)
-            self._rdf_rec.Display().Print()
             raise ValueError('Cannot find common PT branches between MCDT and DecayTree')
 
         common_gen = l_common[0]
