@@ -78,7 +78,9 @@ class MCVarsAdder:
             log.info('')
             log.info('Rec branches:')
             log.info(l_rec_name_strip)
-            raise ValueError('Cannot find common PT branches between MCDT and DecayTree')
+            log.warning('Cannot find common PT branches between MCDT and DecayTree')
+            self._unmatched_trees = True
+            return
 
         common_gen = l_common[0]
         common_rec = common_gen.replace('_PT', '_TRUEPT')
