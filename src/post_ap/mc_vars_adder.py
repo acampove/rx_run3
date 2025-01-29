@@ -36,15 +36,56 @@ class MCVarsAdder:
         self._rdf_rec     = rdf_rec
         self._rdf_gen     = rdf_gen
         self._regex       = r'mc_\d{2}_(w\d{2}_\d{2})_.*'
-        self._branch_id   = 'B_PT'
+        self._branch_id   = 'branch_id'
         self._block_name  = 'block'
 
         self._l_block     = self._get_blocks()
         log.debug(f'Using blocks {self._l_block} for sample {self._sample_name}')
 
+        self._set_branch_id()
         # Random seed needs to be fixed to make the analysis reproducible
         self._rng         = numpy.random.default_rng(seed=10)
         random.seed(10)
+    # ---------------------------
+    def _set_branch_id(self) -> None:
+        '''
+        This function will:
+
+        - Check true PT branches in reco tree
+        - PT branches in gen tree
+        - At least one matching branch
+        - Rename it as self._branch_id in each dataframe
+        '''
+        # This branch ID is needed to match stuff in gen and rec
+        # No gen => no matching => no branch ID
+        if self._rdf_gen is None:
+            log.debug('No branch ID needed')
+            return
+
+        l_gen_name = [ name.c_str() for name in self._rdf_gen.GetColumnNames() ]
+        l_rec_name = [ name.c_str() for name in self._rdf_rec.GetColumnNames() ]
+
+        l_gen_name = [ name for name in l_gen_name if name.endswith('_PT'    ) ]
+        l_rec_name = [ name for name in l_rec_name if name.endswith('_TRUEPT') ]
+        l_rec_name_strip = [ name.replace('TRUE', '') for name in l_rec_name ]
+
+        l_common   = [ name for name in l_gen_name if name in l_rec_name_strip ]
+        if len(l_common) == 0:
+            log.info('Gen branches:')
+            log.info(l_gen_name)
+            self._rdf_gen.Display().Print()
+            log.info('')
+            log.info('Rec branches:')
+            log.info(l_rec_name_strip)
+            self._rdf_rec.Display().Print()
+            raise ValueError('Cannot find common PT branches between MCDT and DecayTree')
+
+        common_gen = l_common[0]
+        common_rec = common_gen.replace('_PT', '_TRUEPT')
+        log.debug(f'Using common branches: {common_gen}/{common_rec}')
+
+        self._rdf_rec = self._rdf_rec.Define(self._branch_id, common_rec)
+        self._rdf_gen = self._rdf_gen.Define(self._branch_id, common_gen)
     # ---------------------------
     def _get_blocks(self) -> list[int]:
         '''
