@@ -91,7 +91,7 @@ def test_dt(kind : bool):
     obj.dump_contents  = True
     obj.max_run        = 1000
     obj.max_save       =  100
-    obj.run(skip_saving=False)
+    obj.run()
 
     _move_outputs('test_dt', is_mc = False)
 # --------------------------------------
@@ -102,14 +102,15 @@ def test_mc(kind : str):
     '''
     sample_name = 'mc_test'
     path        = getattr(Data, f'{sample_name}_{kind}')
+    sample_name = 'mc_24_w37_39_magdown_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_tuple'
 
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents  = True
     obj.max_run        = 1000
     obj.max_save       =  100
-    obj.run(skip_saving=False)
+    obj.run()
 
-    _move_outputs('test_mc')
+    _move_outputs('test_mc', is_mc = True)
 # --------------------------------------
 def test_bad_mcdt():
     '''
