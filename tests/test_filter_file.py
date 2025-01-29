@@ -122,9 +122,9 @@ def test_bad_mcdt():
     obj.dump_contents  = True
     obj.max_run        = 1000
     obj.max_save       =  100
-    obj.run(skip_saving=False)
+    obj.run()
 
-    _move_outputs('test_bad_mcdt')
+    _move_outputs('test_bad_mcdt', is_mc = True)
 # --------------------------------------
 def test_rpk_ee_mc():
     '''
