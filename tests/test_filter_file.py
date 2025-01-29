@@ -41,7 +41,7 @@ def _check_file(file_path : str, is_mc : bool) -> None:
     rdf_dt = RDataFrame('DecayTree'  , file_path)
     _check_branches(rdf_dt)
 
-    if is_mc:
+    if not is_mc:
         return
 
     rdf_mc = RDataFrame('MCDecayTree', file_path)
