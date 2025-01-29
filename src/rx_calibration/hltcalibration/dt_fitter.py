@@ -18,28 +18,28 @@ from dmu.stats.utilities    import print_pdf
 from dmu.stats.zfit_plotter import ZFitPlotter
 
 from rx_calibration.hltcalibration.parameter     import Parameter
-from rx_calibration.hltcalibration.fit_component import FitComponent
+from rx_calibration.hltcalibration.mc_fitter     import MCFitter
 
 log   = LogStore.add_logger('rx_calibration:fitter')
 # --------------------------------------------------
-class Fitter:
+class DTFitter:
     '''
     Class meant to produce a Parameter object
     from:
 
     - data stored in ROOT dataframe
-    - List of FitComponent objects
+    - List of MCFitter objects
     '''
     # -------------------------------
     def __init__(self,
                  data       : RDataFrame,
-                 components : list[FitComponent],
+                 components : list[MCFitter],
                  conf       : dict):
         '''
         Parameters
         ------------------
         data       : ROOT dataframe with real data
-        components : List of FitComponent instances
+        components : List of MCFitter instances
         conf       : Dictionary with configuration for fitting, plotting, etc
         '''
         self._rdf_dat = data
