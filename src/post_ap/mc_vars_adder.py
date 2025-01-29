@@ -126,7 +126,7 @@ class MCVarsAdder:
         nentries  = self._rdf_rec.Count().GetValue()
         log.debug(f'Adding block column for {nentries} entries')
         arr_block = self._rng.choice(self._l_block, size=nentries)
-        rdf       = ut.add_column(self._rdf_rec, arr_block, self._block_name)
+        rdf       = ut.add_column_with_numba(self._rdf_rec, arr_block, self._block_name, identifier='rec_block')
 
         return rdf
     # ---------------------------
@@ -182,7 +182,6 @@ class MCVarsAdder:
         raise ValueError(f'Cannot pick out of mapping random number for: {name}')
     # ---------------------------
     def _add_to_gen(self) -> RDataFrame:
-        log.debug('Adding columns to gen tree')
         rdf     = self._rdf_gen
 
         d_id_bk = self._get_mapping(name= self._block_name)
