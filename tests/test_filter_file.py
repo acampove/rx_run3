@@ -37,18 +37,21 @@ def _check_branches(rdf : RDataFrame) -> None:
 
     return rdf
 # --------------------------------------
-def _check_file(file_path : str) -> None:
+def _check_file(file_path : str, is_mc : bool) -> None:
     rdf_dt = RDataFrame('DecayTree'  , file_path)
-    rdf_mc = RDataFrame('MCDecayTree', file_path)
-
     _check_branches(rdf_dt)
+
+    if is_mc:
+        return
+
+    rdf_mc = RDataFrame('MCDecayTree', file_path)
     _check_branches(rdf_mc)
 # --------------------------------------
-def _move_outputs(test_name : str) -> None:
+def _move_outputs(test_name : str, is_mc : bool) -> None:
     l_root = glob.glob('*.root')
 
     for path in l_root:
-        _check_file(path)
+        _check_file(path, is_mc)
 
     l_text = glob.glob('*.txt' )
     l_path = l_root + l_text
@@ -90,7 +93,7 @@ def test_dt(kind : bool):
     obj.max_save       =  100
     obj.run(skip_saving=False)
 
-    _move_outputs('test_dt')
+    _move_outputs('test_dt', is_mc = False)
 # --------------------------------------
 @pytest.mark.parametrize('kind' , ['turbo'])
 def test_mc(kind : str):
