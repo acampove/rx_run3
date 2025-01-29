@@ -1,6 +1,7 @@
 '''
 Module containing utility functions to be used with ROOT dataframes
 '''
+# pylint: disable=no-name-in-module
 
 import re
 from dataclasses import dataclass
@@ -10,7 +11,7 @@ import pandas  as pnd
 import awkward as ak
 import numpy
 
-from ROOT import RDataFrame, RDF
+from ROOT import RDataFrame, RDF, Numba
 
 from dmu.logging.log_store import LogStore
 
@@ -33,6 +34,8 @@ def add_column(rdf : RDataFrame, arr_val : Union[numpy.ndarray,None], name : str
     d_opt (dict) : Used to configure adding columns
          exclude_re : Regex with patter of column names that we won't pick
     '''
+
+    log.info(f'Adding column {name} with awkward')
 
     d_opt = {} if d_opt is None else d_opt
     if arr_val is None:
@@ -69,6 +72,29 @@ def add_column(rdf : RDataFrame, arr_val : Union[numpy.ndarray,None], name : str
     d_data[name] = ak.from_numpy(arr_val)
 
     rdf = ak.to_rdataframe(d_data)
+
+    return rdf
+# ---------------------------------------------------------------------
+def add_column_with_numba(
+        rdf        : RDataFrame,
+        arr_val    : Union[numpy.ndarray,None],
+        name       : str,
+        identifier : str) -> RDataFrame:
+    '''
+    Will take a dataframe, an array of numbers and a string
+    Will add the array as a colunm to the dataframe
+
+    The `identifier` argument is a string need in order to avoid collisions
+    when using Numba to define a function to get the value from.
+    '''
+    identifier=f'fun_{identifier}'
+
+    @Numba.Declare(['int'], 'float', name=identifier)
+    def get_value(index):
+        return arr_val[index]
+
+    log.info(f'Adding column {name} with numba')
+    rdf = rdf.Define(name, f'Numba::{identifier}(rdfentry_)')
 
     return rdf
 # ---------------------------------------------------------------------
