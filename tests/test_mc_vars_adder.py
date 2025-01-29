@@ -33,7 +33,10 @@ def _get_rdf(kind : str, with_block : bool) -> RDataFrame:
     d_data   = {}
 
     arr_bpt        = Data.rng.choice(Data.arr_bpt, size=nentries, replace=False)
-    d_data['B_PT'] = numpy.sort(arr_bpt)
+    if kind == 'gen':
+        d_data['B_PT']     = numpy.sort(arr_bpt)
+    else:
+        d_data['B_TRUEPT'] = numpy.sort(arr_bpt)
 
     if kind == 'rec':
         d_data['EVENTNUMBER'] = Data.rng.integers(0, 1000_000, size=nentries)
