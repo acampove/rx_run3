@@ -66,14 +66,17 @@ productions:
       w40_42_v1r2437: v1r2437
       <<: *tst_ver
     samples:
-      data_turbo:
+      data_turbo_24c1:
         - data_24_magdown_turbo_24c1
-        - data_24_magdown_turbo_24c2
-        - data_24_magdown_turbo_24c3
-        - data_24_magdown_turbo_24c4
         - data_24_magup_turbo_24c1
+      data_turbo_24c2:
+        - data_24_magdown_turbo_24c2
         - data_24_magup_turbo_24c2
+      data_turbo_24c3:
+        - data_24_magdown_turbo_24c3
         - data_24_magup_turbo_24c3
+      data_turbo_24c4:
+        - data_24_magdown_turbo_24c4
         - data_24_magup_turbo_24c4
       # ---------
       w31_34_v1r2266:
