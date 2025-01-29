@@ -51,8 +51,12 @@ class MCVarsAdder:
         log.debug(f'Random ID: {self._randomid}')
 
         # Random seed needs to be fixed to make the analysis reproducible
-        self._rng = numpy.random.default_rng(seed=10)
+        self._rng          = numpy.random.default_rng(seed=10)
+        self._random_state = random.getstate()
         random.seed(10)
+    # ---------------------------
+    def __del__(self):
+        random.setstate(self._random_state)
     # ---------------------------
     def _set_branch_id(self) -> None:
         '''
