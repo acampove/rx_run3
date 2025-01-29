@@ -522,7 +522,6 @@ class FilterFile:
             return
 
         tree_name = self._get_extra_tree_name(tree_path)
-        l_name    = self._get_column_names(rdf)
 
         if tree_path.endswith('MCDecayTree'):
             log.info('Adding MC only variables to generator tree')
@@ -531,6 +530,8 @@ class FilterFile:
 
         rdf= self._filter_save_max_entries(rdf, tree_name)
         rdf= self._check_branches(rdf)
+
+        l_name = self._get_column_names(rdf)
         rdf.Snapshot(tree_name, file_path, l_name, opts)
         log.info(f'Saved {file_path}/{tree_name}')
     # --------------------------------------
