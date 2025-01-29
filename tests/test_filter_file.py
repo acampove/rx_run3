@@ -91,8 +91,9 @@ def test_bad_mcdt():
     Run test on MC with broken MCDT
     '''
     path= '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_bad_mcdt.root'
+    sample_name = 'mc_24_w35_37_magup_sim10d_15124011_lb_pkee_eq_phsp_dpc_tuple'
 
-    obj = FilterFile(sample_name='mc_test', file_path=path)
+    obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents  = True
     obj.max_run        = 1000
     obj.max_save       =  100
@@ -105,8 +106,9 @@ def test_rpk_ee_mc():
     Run test on MC for RpK electron sample
     '''
     path= '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/rpk_ee_mc.root'
+    sample_name = 'mc_24_w35_37_magup_sim10d_15124011_lb_pkee_eq_phsp_dpc_tuple'
 
-    obj = FilterFile(sample_name='mc_test', file_path=path)
+    obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents  = True
     obj.max_run        = 1000
     obj.max_save       =  100
@@ -118,9 +120,10 @@ def test_rpk_mm_mc():
     '''
     Run test on MC for RpK muon sample
     '''
-    path= '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/rpk_mm_mc.root'
+    path        = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/rpk_mm_mc.root'
+    sample_name = 'mc_24_w37_39_magdown_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple'
 
-    obj = FilterFile(sample_name='mc_test', file_path=path)
+    obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents  = True
     obj.max_run        = 1000
     obj.max_save       =  100
