@@ -35,7 +35,7 @@ def add_column(rdf : RDataFrame, arr_val : Union[numpy.ndarray,None], name : str
          exclude_re : Regex with patter of column names that we won't pick
     '''
 
-    log.info(f'Adding column {name} with awkward')
+    log.warning(f'Adding column {name} with awkward')
 
     d_opt = {} if d_opt is None else d_opt
     if arr_val is None:
@@ -93,7 +93,7 @@ def add_column_with_numba(
     def get_value(index):
         return arr_val[index]
 
-    log.info(f'Adding column {name} with numba')
+    log.debug(f'Adding column {name} with numba')
     rdf = rdf.Define(name, f'Numba::{identifier}(rdfentry_)')
 
     return rdf
