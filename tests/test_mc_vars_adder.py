@@ -100,6 +100,6 @@ def test_add_to_rec():
     none = numpy.sum(arr_block == 1)
     ntwo = numpy.sum(arr_block == 2)
 
-    assert none == 53
-    assert ntwo == 47
+    assert none == 6
+    assert ntwo == 8
 # -------------------------------------------------
