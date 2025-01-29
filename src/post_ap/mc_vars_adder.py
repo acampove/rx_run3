@@ -48,6 +48,8 @@ class MCVarsAdder:
         # It has to be as random as possible, no need to make it reproducible
         self._randomid = random.getrandbits(128)
 
+        log.debug(f'Random ID: {self._randomid}')
+
         # Random seed needs to be fixed to make the analysis reproducible
         self._rng = numpy.random.default_rng(seed=10)
         random.seed(10)
