@@ -1,6 +1,7 @@
 '''
 Module will hold unit tests for functions in rdataframe/utilities.py
 '''
+# pylint: disable=no-name-in-module, no-member
 
 from ROOT import RDF
 
@@ -13,11 +14,11 @@ from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:test:rdataframe:utilities')
 
-@pytest.mark.parametrize('itry', [1, 2])
 # -------------------------------------------------
+@pytest.mark.parametrize('itry', [1, 2])
 def test_add_column(itry):
     '''
-    Will test adding a numpy array to a ROOT dataframe
+    Will test adding a numpy array to a ROOT dataframe with awkward
     '''
     log.info(f'This is try: {itry}')
     d_data = {
@@ -32,6 +33,27 @@ def test_add_column(itry):
     arr_val = numpy.array([10, 20, 30])
 
     rdf = ut.add_column(rdf, arr_val, 'values')
+
+    rdf.Display().Print()
+# -------------------------------------------------
+@pytest.mark.parametrize('itry', [1, 2])
+def test_add_column_with_numba(itry):
+    '''
+    Will test adding a numpy array to a ROOT dataframe with numba
+    '''
+    log.info(f'This is try: {itry}')
+    d_data = {
+            'x' : numpy.array([1, 2, 3]),
+            'y' : numpy.array([4, 5, 6]),
+            }
+
+    rdf = RDF.FromNumpy(d_data)
+    rdf = rdf.Define('z', 'ROOT::RVec<int>({1, 2, 3})')
+    rdf = rdf.Define('w', 'true')
+
+    arr_val = numpy.array([10, 20, 30])
+
+    rdf = ut.add_column_with_numba(rdf, arr_val, 'values', identifier=str(itry))
 
     rdf.Display().Print()
 # -------------------------------------------------
