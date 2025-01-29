@@ -7,6 +7,7 @@ import shutil
 from importlib.resources   import files
 
 import pytest
+from ROOT                  import RDataFrame
 from dmu.logging.log_store import LogStore
 from post_ap.filter_file   import FilterFile
 
@@ -26,8 +27,29 @@ class Data:
 
     l_args_config    = [True, False]
 # --------------------------------------
+def _check_branches(rdf : RDataFrame) -> None:
+    l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
+    if 'block' not in l_col:
+        raise ValueError('block branch missing')
+
+    if 'EVENTNUMBER' not in l_col:
+        raise ValueError('EVENTNUMBER branch missing')
+
+    return rdf
+# --------------------------------------
+def _check_file(file_path : str) -> None:
+    rdf_dt = RDataFrame('DecayTree'  , file_path)
+    rdf_mc = RDataFrame('MCDecayTree', file_path)
+
+    _check_branches(rdf_dt)
+    _check_branches(rdf_mc)
+# --------------------------------------
 def _move_outputs(test_name : str) -> None:
     l_root = glob.glob('*.root')
+
+    for path in l_root:
+        _check_file(path)
+
     l_text = glob.glob('*.txt' )
     l_path = l_root + l_text
     npath  = len(l_path)
