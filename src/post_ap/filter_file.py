@@ -252,7 +252,7 @@ class FilterFile:
             obj = DataVarsAdder(rdf)
             rdf = obj.get_rdf()
         else:
-            log.info('Adding MC only variables')
+            log.info('Adding MC only variables to reconstructed tree')
             obj = MCVarsAdder(rdf_rec = rdf, sample_name = self._sample_name)
             rdf = obj.get_rdf()
 
@@ -515,11 +515,12 @@ class FilterFile:
         rdf       = self._filter_max_entries(rdf, tree_name)
 
         if tree_path.endswith('MCDecayTree'):
+            log.info('Adding MC only variables to generator tree')
             obj = MCVarsAdder(rdf_gen = rdf, rdf_rec=rdf_rec, sample_name=self._sample_name)
             rdf = obj.get_rdf()
 
         rdf.Snapshot(tree_name, file_path, l_name, opts)
-        log.debug(f'Saved {tree_name}')
+        log.info(f'Saved {file_path}/{tree_name}')
     # --------------------------------------
     def _get_extra_tree_name(self, tree_path : str) -> str:
         if '/' not in tree_path:
