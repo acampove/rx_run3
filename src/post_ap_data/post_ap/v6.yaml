@@ -1,9 +1,13 @@
 tests:
   versions: &tst_ver
-      test_w31_34_v1r2266: v1r2266
-      test_w35_37_v1r2266: v1r2266
-      test_w37_39_v1r2266: v1r2266
-      test_w40_42_v1r2266: v1r2266
+      test_w31_34_v1r2266_ee: v1r2266
+      test_w35_37_v1r2266_ee: v1r2266
+      test_w37_39_v1r2266_ee: v1r2266
+      test_w40_42_v1r2266_ee: v1r2266
+      test_w31_34_v1r2266_mm: v1r2266
+      test_w35_37_v1r2266_mm: v1r2266
+      test_w37_39_v1r2266_mm: v1r2266
+      test_w40_42_v1r2266_mm: v1r2266
       # ---------
       test_w31_34_v1r2437: v1r2437
       test_w35_37_v1r2437: v1r2437
@@ -24,17 +28,21 @@ tests:
     test_dt_c4:
         - data_24_magup_turbo_24c4
     # ---------
-    test_w31_34_v1r2266:
+    test_w31_34_v1r2266_ee:
         - mc_24_w31_34_magup_sim10d_12123021_bu_piee_eq_btosllball_dpc_tuple
+    test_w31_34_v1r2266_mm:
         - mc_24_w31_34_magup_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
-    test_w35_37_v1r2266:
+    test_w35_37_v1r2266_ee:
         - mc_24_w35_37_magup_sim10d_12123021_bu_piee_eq_btosllball_dpc_tuple
+    test_w35_37_v1r2266_mm:
         - mc_24_w35_37_magup_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
-    test_w37_39_v1r2266:
+    test_w37_39_v1r2266_ee:
         - mc_24_w37_39_magdown_sim10d_12123021_bu_piee_eq_btosllball_dpc_tuple
+    test_w37_39_v1r2266_mm:
         - mc_24_w37_39_magdown_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
-    test_w40_42_v1r2266:
+    test_w40_42_v1r2266_ee:
         - mc_24_w40_42_magdown_sim10d_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+    test_w40_42_v1r2266_mm:
         - mc_24_w40_42_magdown_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
     # ---------
     test_w31_34_v1r2437:
