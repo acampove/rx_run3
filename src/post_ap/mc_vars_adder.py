@@ -32,19 +32,21 @@ class MCVarsAdder:
         - Only `rdf_rec` is passed: Then the class only assigns columns to this dataframe.
         - Both dataframes are passed: Then the reco tree is used to add columns to the `rdf_gen` dataframe.
         '''
-        self._sample_name = sample_name
-        self._rdf_rec     = rdf_rec
-        self._rdf_gen     = rdf_gen
-        self._regex       = r'mc_\d{2}_(w\d{2}_\d{2})_.*'
-        self._branch_id   = 'branch_id'
-        self._block_name  = 'block'
+        self._sample_name     = sample_name
+        self._rdf_rec         = rdf_rec
+        self._rdf_gen         = rdf_gen
+        self._regex           = r'mc_\d{2}_(w\d{2}_\d{2})_.*'
+        self._branch_id       = 'branch_id'
+        self._block_name      = 'block'
+        self._unmatched_trees = True
+        self._l_block         = self._get_blocks()
 
-        self._l_block     = self._get_blocks()
         log.debug(f'Using blocks {self._l_block} for sample {self._sample_name}')
 
         self._set_branch_id()
+
         # Random seed needs to be fixed to make the analysis reproducible
-        self._rng         = numpy.random.default_rng(seed=10)
+        self._rng = numpy.random.default_rng(seed=10)
         random.seed(10)
     # ---------------------------
     def _set_branch_id(self) -> None:
