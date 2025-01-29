@@ -38,7 +38,7 @@ class MCVarsAdder:
         self._regex           = r'mc_\d{2}_(w\d{2}_\d{2})_.*'
         self._branch_id       = 'branch_id'
         self._block_name      = 'block'
-        self._unmatched_trees = True
+        self._unmatched_trees = False
         self._l_block         = self._get_blocks()
 
         log.debug(f'Using blocks {self._l_block} for sample {self._sample_name}')
