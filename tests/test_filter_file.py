@@ -78,6 +78,7 @@ def _initialize():
     LogStore.set_level('post_ap:selector'      , 20)
     LogStore.set_level('post_ap:utilities'     , 30)
     LogStore.set_level('post_ap:FilterFile'    , 20)
+    LogStore.set_level('post_ap:mc_vars_adder' , 20)
 # --------------------------------------
 @pytest.mark.parametrize('kind' , ['turbo'])
 def test_dt(kind : bool):
