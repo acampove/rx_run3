@@ -558,6 +558,24 @@ These are utility functions meant to be used with ROOT dataframes.
 
 ## Adding a column from a numpy array
 
+### With numba
+
+For this do:
+
+```python
+import dmu.rdataframe.utilities as ut
+
+arr_val = numpy.array([10, 20, 30])
+rdf     = ut.add_column_with_numba(rdf, arr_val, 'values', identifier='some_name')
+```
+
+where the identifier needs to be unique, every time the function is called.
+This is the case, because the addition is done internally by declaring a numba function whose name
+cannot be repeated as mentioned
+[here](https://root-forum.cern.ch/t/ways-to-work-around-the-redefinition-of-compiled-functions-in-one-single-notebook-session/41442/1)
+
+### With awkward
+
 For this do:
 
 ```python
