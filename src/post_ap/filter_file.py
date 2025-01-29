@@ -8,6 +8,7 @@ import json
 import fnmatch
 import hashlib
 import copy
+from typing import Union
 
 import tqdm
 import pandas as pnd
@@ -43,6 +44,7 @@ class FilterFile:
 
         self.max_run       : int  = -1
         self.max_save      : int  = -1
+        self.save_nfiles   : Union[int,None] = None
 
         self._cfg_dat      : dict
         self._d_trans      : dict
@@ -459,8 +461,8 @@ class FilterFile:
         '''
         Will save all ROOT dataframes to a file
         '''
-
-        opts = self._get_snap_opts()
+        nsaved= 0
+        opts  = self._get_snap_opts()
         for line_name, rdf in tqdm.tqdm(d_rdf.items(), ascii=' -'):
             l_branch  = rdf.l_branch
             file_path = self._get_out_file_name(line_name)
@@ -475,6 +477,12 @@ class FilterFile:
                 self._save_extra_tree(tree_path, file_path, opts, rdf_rec = rdf)
 
             self._add_metadata(file_path, line_name)
+
+            nsaved += 1
+
+            if self._save_nfiles is not None and nsaved >= self._save_nfiles:
+                log.warning(f'Stop saving files at {nsaved} files')
+                break
     # --------------------------------------
     def _fail_job(self, tree_path : str) -> None:
         '''
