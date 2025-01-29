@@ -225,16 +225,6 @@ class MCVarsAdder:
 
         return rdf
     # ---------------------------
-    def _check_branches(self, rdf : RDataFrame) -> RDataFrame:
-        l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
-        if 'block' not in l_col:
-            raise ValueError('block branch missing')
-
-        if 'EVENTNUMBER' not in l_col:
-            raise ValueError('EVENTNUMBER branch missing')
-
-        return  rdf
-    # ---------------------------
     def get_rdf(self) -> RDataFrame:
         '''
         Returns dataframe after adding column
@@ -243,7 +233,6 @@ class MCVarsAdder:
         if self._rdf_gen is None:
             log.info('Adding MC variables to DecayTree')
             rdf = self._add_to_rec()
-            self._check_branches(rdf)
 
             return rdf
 
@@ -253,8 +242,6 @@ class MCVarsAdder:
         else:
             log.warning('Adding MC variables to MCDecayTree without matching')
             rdf = self._add_to_gen_no_match()
-
-        rdf = self._check_branches(rdf)
 
         return rdf
 # -----------------------------
