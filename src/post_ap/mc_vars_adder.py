@@ -201,6 +201,29 @@ class MCVarsAdder:
 
         return rdf
     # ---------------------------
+    def _add_to_gen_no_match(self) -> RDataFrame:
+        rdf       = self._rdf_gen
+        ngen      = rdf.Count().GetValue()
+
+        arr_block = self._rng.choice(self._l_block, size=ngen)
+        arr_evtnm = self._rng.integers(-1000_000, 0, size=ngen)
+
+        log.debug(f'Adding columns for {ngen} entries')
+        rdf     = ut.add_column_with_numba(rdf, arr_block, self._block_name, identifier=f'gen_block_{self._randomid}')
+        rdf     = ut.add_column_with_numba(rdf, arr_evtnm,    'EVENTNUMBER', identifier=f'gen_evtnm_{self._randomid}')
+
+        return rdf
+    # ---------------------------
+    def _check_branches(self, rdf : RDataFrame) -> RDataFrame:
+        l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
+        if 'block' not in l_col:
+            raise ValueError('block branch missing')
+
+        if 'EVENTNUMBER' not in l_col:
+            raise ValueError('EVENTNUMBER branch missing')
+
+        return  rdf
+    # ---------------------------
     def get_rdf(self) -> RDataFrame:
         '''
         Returns dataframe after adding column
@@ -209,9 +232,18 @@ class MCVarsAdder:
         if self._rdf_gen is None:
             log.info('Adding MC variables to DecayTree')
             rdf = self._add_to_rec()
-        else:
+            self._check_branches(rdf)
+
+            return rdf
+
+        if not self._unmatched_trees:
             log.info('Adding MC variables to MCDecayTree')
             rdf = self._add_to_gen()
+        else:
+            log.warning('Adding MC variables to MCDecayTree without matching')
+            rdf = self._add_to_gen_no_match()
+
+        rdf = self._check_branches(rdf)
 
         return rdf
 # -----------------------------
