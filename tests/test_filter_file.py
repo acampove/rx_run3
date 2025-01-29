@@ -168,5 +168,5 @@ def test_rpk_data():
     obj.max_save       =  100
     obj.run(skip_saving=False)
 
-    _move_outputs('test_rpk_data')
+    _move_outputs('test_rpk_data', is_mc = False)
 # --------------------------------------
