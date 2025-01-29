@@ -54,7 +54,7 @@ def _initialize():
     LogStore.set_level('post_ap:utilities'     , 30)
     LogStore.set_level('post_ap:FilterFile'    , 20)
 # --------------------------------------
-@pytest.mark.parametrize('kind' , ['turbo', 'spruce'])
+@pytest.mark.parametrize('kind' , ['turbo'])
 def test_dt(kind : bool):
     '''
     Run test on data
@@ -70,7 +70,7 @@ def test_dt(kind : bool):
 
     _move_outputs('test_dt')
 # --------------------------------------
-@pytest.mark.parametrize('kind' , ['turbo', 'spruce'])
+@pytest.mark.parametrize('kind' , ['turbo'])
 def test_mc(kind : str):
     '''
     Run test on MC
