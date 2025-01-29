@@ -57,6 +57,8 @@ class MCVarsAdder:
         - PT branches in gen tree
         - At least one matching branch
         - Rename it as self._branch_id in each dataframe
+
+        and it should be removed when the EVENTNUMBER branch becomes available in the MCDT trees
         '''
         # This branch ID is needed to match stuff in gen and rec
         # No gen => no matching => no branch ID
