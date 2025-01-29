@@ -44,6 +44,9 @@ class MCVarsAdder:
         log.debug(f'Using blocks {self._l_block} for sample {self._sample_name}')
 
         self._set_branch_id()
+        # This number is needed to create new numba functions
+        # It has to be as random as possible, no need to make it reproducible
+        self._randomid = random.getrandbits(128)
 
         # Random seed needs to be fixed to make the analysis reproducible
         self._rng = numpy.random.default_rng(seed=10)
@@ -126,7 +129,7 @@ class MCVarsAdder:
         nentries  = self._rdf_rec.Count().GetValue()
         log.debug(f'Adding block column for {nentries} entries')
         arr_block = self._rng.choice(self._l_block, size=nentries)
-        rdf       = ut.add_column_with_numba(self._rdf_rec, arr_block, self._block_name, identifier='rec_block')
+        rdf       = ut.add_column_with_numba(self._rdf_rec, arr_block, self._block_name, identifier=f'rec_block_{self._randomid}')
 
         return rdf
     # ---------------------------
@@ -193,8 +196,8 @@ class MCVarsAdder:
 
         ngen    = len(l_gen_id)
         log.debug(f'Adding columns for {ngen} entries')
-        rdf     = ut.add_column(rdf, numpy.array(l_bk), self._block_name)
-        rdf     = ut.add_column(rdf, numpy.array(l_ev),    'EVENTNUMBER')
+        rdf     = ut.add_column_with_numba(rdf, numpy.array(l_bk), self._block_name, identifier=f'gen_block_{self._randomid}')
+        rdf     = ut.add_column_with_numba(rdf, numpy.array(l_ev),    'EVENTNUMBER', identifier=f'gen_evtnm_{self._randomid}')
 
         return rdf
     # ---------------------------
