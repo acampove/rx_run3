@@ -202,6 +202,11 @@ class MCVarsAdder:
         return rdf
     # ---------------------------
     def _add_to_gen_no_match(self) -> RDataFrame:
+        '''
+        This function will add branches to MCDT with values that are not matched
+        to the ones in the DecayTree. This will only happen if no matching branch
+        (e.g. EVENTNUMBER, B_PT) was found.
+        '''
         rdf       = self._rdf_gen
         ngen      = rdf.Count().GetValue()
 
