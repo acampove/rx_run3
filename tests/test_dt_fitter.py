@@ -16,8 +16,8 @@ from ROOT                    import RDataFrame, RDF
 from zfit.core.basepdf       import BasePDF
 from dmu.logging.log_store   import LogStore
 
-from rx_calibration.hltcalibration.fit_component import FitComponent
-from rx_calibration.hltcalibration.fitter        import Fitter
+from rx_calibration.hltcalibration.mc_fitter import Fitter as MCFitter
+from rx_calibration.hltcalibration.dt_fitter import Fitter as DTFitter
 
 log = LogStore.add_logger('rx_calibration:test_fitter')
 # --------------------------------------------

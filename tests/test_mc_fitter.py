@@ -1,5 +1,5 @@
 '''
-Module with tests for FitComponent class
+Module with tests for Fitter class
 '''
 # pylint: disable=import-error
 
@@ -13,9 +13,9 @@ from ROOT                                        import RDataFrame
 from zfit.core.basepdf                           import BasePDF
 from dmu.logging.log_store                       import LogStore
 from dmu.stats.model_factory                     import ModelFactory
-from rx_calibration.hltcalibration.fit_component import FitComponent
+from rx_calibration.hltcalibration.mc_fitter     import Fitter 
 
-log = LogStore.add_logger('rx_calibration:test_fit_component')
+log = LogStore.add_logger('rx_calibration:test_mc_fitter')
 # --------------------------------------------
 @dataclass
 class Data:
@@ -95,13 +95,13 @@ def _get_signal_pdf() -> BasePDF:
 # --------------------------------------------
 def test_simple():
     '''
-    Simplest test of FitComponent
+    Simplest test of Fitter
     '''
     pdf= _get_pdf('signal')
     rdf= _get_rdf('signal')
     cfg= _get_conf('simple')
 
-    obj=FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
+    obj=Fitter(cfg=cfg, rdf=rdf, pdf=pdf)
     pdf=obj.get_pdf()
 # --------------------------------------------
 def test_bukee():
@@ -112,6 +112,6 @@ def test_bukee():
     rdf= _get_signal_rdf()
     cfg= _get_conf('bukee')
 
-    obj=FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
+    obj=Fitter(cfg=cfg, rdf=rdf, pdf=pdf)
     pdf=obj.get_pdf()
 # --------------------------------------------
