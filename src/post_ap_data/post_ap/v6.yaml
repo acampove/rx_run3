@@ -71,7 +71,10 @@ working_group: rd
 productions:
   rd_ap_2024:
     versions:
-      data_turbo    : v1r1670
+      data_turbo_24c1 : v1r1670
+      data_turbo_24c2 : v1r1670
+      data_turbo_24c3 : v1r1670
+      data_turbo_24c4 : v1r1670
       # ---------
       w31_34_v1r2266: v1r2266
       w35_37_v1r2266: v1r2266
