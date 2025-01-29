@@ -460,16 +460,6 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
-    def _check_branches(self, rdf : RDataFrame) -> RDataFrame:
-        l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
-        if 'block' not in l_col:
-            raise ValueError('block branch missing')
-
-        if 'EVENTNUMBER' not in l_col:
-            raise ValueError('EVENTNUMBER branch missing')
-
-        return rdf
-    # --------------------------------------
     def _save_file(self, d_rdf : dict[str,RDataFrame]) -> None:
         '''
         Will save all ROOT dataframes to a file
@@ -479,7 +469,6 @@ class FilterFile:
             l_branch  = rdf.l_branch
             file_path = self._get_out_file_name(line_name)
             rdf       = self._filter_save_max_entries(rdf, 'DecayTree')
-            rdf       = self._check_branches(rdf)
             rdf.Snapshot('DecayTree', file_path, l_branch, opts)
             log.debug(f'Saved: {file_path}')
 
@@ -528,9 +517,7 @@ class FilterFile:
             obj = MCVarsAdder(rdf_gen = rdf, rdf_rec=rdf_rec, sample_name=self._sample_name)
             rdf = obj.get_rdf()
 
-        rdf= self._filter_save_max_entries(rdf, tree_name)
-        rdf= self._check_branches(rdf)
-
+        rdf    = self._filter_save_max_entries(rdf, tree_name)
         l_name = self._get_column_names(rdf)
         rdf.Snapshot(tree_name, file_path, l_name, opts)
         log.info(f'Saved {file_path}/{tree_name}')
