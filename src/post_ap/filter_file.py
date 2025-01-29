@@ -44,7 +44,7 @@ class FilterFile:
 
         self.max_run       : int  = -1
         self.max_save      : int  = -1
-        self.save_nfiles   : Union[int,None] = None
+        self.proc_ntrees   : Union[int,None] = None
 
         self._cfg_dat      : dict
         self._d_trans      : dict
@@ -173,6 +173,9 @@ class FilterFile:
 
         for line in l_flt:
             log.debug(f'{"":<10}{line:<30}')
+
+        if self.proc_ntrees is not None:
+            l_flt = l_flt[:self.proc_ntrees]
 
         self._l_line_name = l_flt
     # --------------------------------------
@@ -461,7 +464,6 @@ class FilterFile:
         '''
         Will save all ROOT dataframes to a file
         '''
-        nsaved= 0
         opts  = self._get_snap_opts()
         for line_name, rdf in tqdm.tqdm(d_rdf.items(), ascii=' -'):
             l_branch  = rdf.l_branch
@@ -477,12 +479,6 @@ class FilterFile:
                 self._save_extra_tree(tree_path, file_path, opts, rdf_rec = rdf)
 
             self._add_metadata(file_path, line_name)
-
-            nsaved += 1
-
-            if self._save_nfiles is not None and nsaved >= self._save_nfiles:
-                log.warning(f'Stop saving files at {nsaved} files')
-                break
     # --------------------------------------
     def _fail_job(self, tree_path : str) -> None:
         '''
