@@ -137,9 +137,9 @@ def test_rpk_ee_mc():
     obj.dump_contents  = True
     obj.max_run        = 1000
     obj.max_save       =  100
-    obj.run(skip_saving=False)
+    obj.run()
 
-    _move_outputs('test_rpk_ee_mc')
+    _move_outputs('test_rpk_ee_mc', is_mc = True)
 # --------------------------------------
 def test_rpk_mm_mc():
     '''
@@ -152,9 +152,9 @@ def test_rpk_mm_mc():
     obj.dump_contents  = True
     obj.max_run        = 1000
     obj.max_save       =  100
-    obj.run(skip_saving=False)
+    obj.run()
 
-    _move_outputs('test_rpk_mm_mc')
+    _move_outputs('test_rpk_mm_mc', is_mc = True)
 # --------------------------------------
 def test_rpk_data():
     '''
