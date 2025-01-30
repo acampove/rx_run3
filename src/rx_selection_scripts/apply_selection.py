@@ -74,9 +74,8 @@ def _get_mva_cfg(project : str) -> dict:
             }
 # ----------------------------------------
 def _get_cfg(args : argparse.Namespace) -> dict:
-    cfg     = vars(args)
-    mva_cfg = _get_mva_cfg(args.project)
-    cfg.update(mva_cfg)
+    cfg        = vars(args)
+    cfg['mva'] = _get_mva_cfg(args.project)
 
     return cfg
 # ----------------------------------------
