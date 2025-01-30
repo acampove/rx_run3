@@ -1,7 +1,7 @@
 '''
 Module with tests for DsGetter class
 '''
-# pylint: disable=import-error
+# pylint: disable=import-error, no-name-in-module
 
 import os
 import pytest
