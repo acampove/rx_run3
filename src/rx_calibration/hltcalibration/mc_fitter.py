@@ -63,6 +63,10 @@ class MCFitter:
         '''
         return self._name
     # --------------------
+    @property
+    def pdf(self) -> BasePDF:
+        return self._pdf
+    # --------------------
     def _add_weights(self, rdf : RDataFrame, wgt_name : str) -> RDataFrame:
         v_col  = rdf.GetColumnNames()
         l_col  = [col.c_str() for col in v_col]
