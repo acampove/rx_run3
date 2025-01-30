@@ -376,7 +376,7 @@ class DsGetter:
         if npkl == 0:
             raise ValueError(f'No pickle files found in {path}')
 
-        log.info(f'Using {npkl} pickle files')
+        log.info(f'Using {npkl} pickle files from: {path}')
 
         l_model = [ joblib.load(pkl_path) for pkl_path in l_pkl ]
 
