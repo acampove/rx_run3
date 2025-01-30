@@ -32,9 +32,9 @@ class DTFitter:
     '''
     # -------------------------------
     def __init__(self,
-                 data       : RDataFrame,
+                 rdf        : RDataFrame,
                  components : list[MCFitter],
-                 conf       : dict):
+                 cfg        : dict):
         '''
         Parameters
         ------------------
@@ -42,9 +42,9 @@ class DTFitter:
         components : List of MCFitter instances
         conf       : Dictionary with configuration for fitting, plotting, etc
         '''
-        self._rdf_dat = data
+        self._rdf_dat = rdf
         self._l_fcomp = components
-        self._conf    = conf
+        self._conf    = cfg
 
         self._l_pdf   : list[BasePDF] = []
         self._pdf_ful : BasePDF
