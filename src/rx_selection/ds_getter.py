@@ -6,6 +6,7 @@ Module containing class that provides ROOT dataframe after a given selection
 # pylint: disable = line-too-long
 # pylint: disable = invalid-name
 # pylint: disable = too-many-arguments, too-many-positional-arguments
+# pylint: disable = no-name-in-module
 
 import os
 import re
@@ -317,7 +318,7 @@ class DsGetter:
     def _get_q2_indexer(self) -> str:
         '''
         Returns a string that depends on Jpsi_M.
-        When evaluated it gives 
+        When evaluated it gives
         - 0 for low
         - 1 for central
         - 2 for high
@@ -347,7 +348,7 @@ class DsGetter:
                             Jpsi_M  : numpy.ndarray) -> numpy.ndarray:
         '''
         Takes arrays of MVA in 3 q2 bins, as well as array of jpsi mass.
-        Returns array of mva score correspoinding to right q2 bin. 
+        Returns array of mva score correspoinding to right q2 bin.
         '''
 
         q2_cond = self._get_q2_indexer()
