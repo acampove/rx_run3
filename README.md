@@ -866,9 +866,9 @@ last_file = get_latest_file(dir_path = file_dir, wc='name_*.txt')
 
 oversion=get_last_version(dir_path=dir_path, version_only=True)  # This will return only the version, e.g. v3.2
 oversion=get_last_version(dir_path=dir_path, version_only=False) # This will return full path, e.g. /a/b/c/v3.2 
+```
 
 The function above should work for numeric (e.g. `v1.2`) and non-numeric (e.g. `va`, `vb`) versions.
-```
 
 # Text manipulation
 
