@@ -1,7 +1,6 @@
 '''
 Module holding FitComponent class
 '''
-# pylint: disable=import-error, unused-import, too-many-positional-arguments, too-many-arguments
 
 import os
 from typing                 import Union
@@ -161,7 +160,7 @@ class MCFitter:
 
             log.info(f'{name:<20}{"-->":<20}{val:<20.3f}')
     # --------------------
-    def get_pdf(self) -> BasePDF:
+    def run(self) -> Parameter:
         '''
         Will return the PDF
         '''
@@ -183,5 +182,5 @@ class MCFitter:
 
         self._fix_tails(par)
 
-        return self._pdf
+        return par
 # ----------------------------------------
