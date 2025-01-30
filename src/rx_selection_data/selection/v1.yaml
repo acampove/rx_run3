@@ -1,3 +1,10 @@
+bdt      : &bdt_common
+      low     : (mva_cmb > 0.50) && (mva_prc > 0.30)
+      central : (mva_cmb > 0.50) && (mva_prc > 0.50)
+      jpsi    : (mva_cmb > 0.50) && (mva_prc > 0.50)
+      psi2    : (mva_cmb > 0.50) && (mva_prc > 0.50)
+      high    : (mva_cmb > 0.50) && (mva_prc > 0.35)
+
 q2_common: &q2_common
   low    : (Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1000000)
   central: (Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000)
@@ -94,7 +101,8 @@ RK:
     acceptance: L1_INECAL    && L2_INECAL
     cascade   : (1)
     jpsi_misid: (1)
-    bdt       : (1) 
+    bdt       : 
+      <<: *bdt_common
     q2:
       <<: *q2_common
     mass:
@@ -113,7 +121,8 @@ RK:
     acceptance: L1_INMUON && L2_INMUON
     cascade   : (1)
     jpsi_misid: (1)
-    bdt       : (1) 
+    bdt       : 
+      <<: *bdt_common
     jpsi_misid: (1)
     q2:
       <<: *q2_common

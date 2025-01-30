@@ -6,6 +6,7 @@ Module containing class that provides ROOT dataframe after a given selection
 # pylint: disable = line-too-long
 # pylint: disable = invalid-name
 # pylint: disable = too-many-arguments, too-many-positional-arguments
+# pylint: disable = no-name-in-module
 
 import os
 import re
@@ -49,8 +50,6 @@ class DsGetter:
         self._cutver          = cfg['cutver'  ]
         self._ipath           = cfg['ipath'   ]
 
-        self._skip_cmb      = True
-        self._skip_prc      = True
         self._is_sim        : bool
 
         self._initialized   = False
@@ -95,16 +94,6 @@ class DsGetter:
         [bdt_cmb, bdt_prc] = mtch.groups()
 
         return bdt_cmb if skip_prec else bdt_prc
-    # ------------------------------------
-    def _filter_bdt(self, rdf : RDataFrame, cut : str) -> tuple[RDataFrame, str]:
-        '''
-        Will add BDT score column and apply a cut on it
-        '''
-        if self._skip_prc and self._skip_cmb:
-            log.warning('Skipping both BDTs')
-            return rdf, '(1)'
-
-        raise NotImplementedError(f'BDT filtering has not been implemented for cut: {cut}')
     # ------------------------------------
     def _range_rdf(self, rdf : RDataFrame) -> RDataFrame:
         if self._part is None:
@@ -329,7 +318,7 @@ class DsGetter:
     def _get_q2_indexer(self) -> str:
         '''
         Returns a string that depends on Jpsi_M.
-        When evaluated it gives 
+        When evaluated it gives
         - 0 for low
         - 1 for central
         - 2 for high
@@ -359,7 +348,7 @@ class DsGetter:
                             Jpsi_M  : numpy.ndarray) -> numpy.ndarray:
         '''
         Takes arrays of MVA in 3 q2 bins, as well as array of jpsi mass.
-        Returns array of mva score correspoinding to right q2 bin. 
+        Returns array of mva score correspoinding to right q2 bin.
         '''
 
         q2_cond = self._get_q2_indexer()
@@ -413,7 +402,7 @@ class DsGetter:
         log.info('Adding MVA columns')
         for name, arr_val in d_mva_score.items():
             log.debug('    %s',name)
-            rdf = dmu_ut.add_column(rdf, arr_val, name)
+            rdf = dmu_ut.add_column_with_numba(rdf, arr_val, name, identifier=name)
 
         return rdf
     # ----------------------------------------
@@ -426,11 +415,13 @@ class DsGetter:
 
         rdf   = self._get_rdf_raw()
         dfmgr = AtrMgr(rdf)
+        rdf   = self._add_mva(rdf)
         d_cut = sel.selection(
                 analysis = self._get_analysis(),
                 project  = self._project,
                 q2bin    = self._q2bin,
                 process  = self._sample)
+        rdf   = dfmgr.add_atr(rdf)
         cf    = cfl.cutflow(d_meta = {'file' : rdf.filepath, 'tree' : rdf.treename})
         tot   = rdf.Count().GetValue()
         d_cut = self._redefine_cuts(d_cut)
@@ -438,16 +429,13 @@ class DsGetter:
         log.info(f'Applying selection version: {self._cutver}')
 
         for cut_name, cut in d_cut.items():
-            cut = self._redefine_cut(cut_name, cut)
-
             log.info(f'{"":<10}{cut_name:>20}')
 
-            if cut_name == 'bdt':
-                rdf, cut = self._filter_bdt(rdf, cut)
-            else:
-                rdf = rdf.Filter(cut, cut_name)
+            cut = self._redefine_cut(cut_name, cut)
+            rdf = rdf.Filter(cut, cut_name)
+            pas = rdf.Count().GetValue()
 
-            pas=rdf.Count().GetValue()
+            log.debug(f'{cut_name:<20}{"--->":20}{cut:<100}')
 
             if cut_name == 'truth' and self._is_sim:
                 cf = self._add_reco_efficiency(cf, pas, cut)
@@ -465,7 +453,6 @@ class DsGetter:
 
             tot=pas
 
-        rdf          = self._add_mva(rdf)
         rdf          = dfmgr.add_atr(rdf)
         rdf.treename = 'DecayTree'
         rdf.cf       = cf
