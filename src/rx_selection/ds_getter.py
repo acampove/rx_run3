@@ -433,6 +433,8 @@ class DsGetter:
             rdf = rdf.Filter(cut, cut_name)
             pas = rdf.Count().GetValue()
 
+            log.debug(f'{cut_name:<20}{"--->":20}{cut:<100}')
+
             if cut_name == 'truth' and self._is_sim:
                 cf = self._add_reco_efficiency(cf, pas, cut)
                 tot= pas
