@@ -401,7 +401,7 @@ class DsGetter:
         log.info('Adding MVA columns')
         for name, arr_val in d_mva_score.items():
             log.debug('    %s',name)
-            rdf = dmu_ut.add_column(rdf, arr_val, name)
+            rdf = dmu_ut.add_column_with_numba(rdf, arr_val, name, identifier=name)
 
         return rdf
     # ----------------------------------------
@@ -413,6 +413,7 @@ class DsGetter:
         self._initialize()
 
         rdf   = self._get_rdf_raw()
+        rdf   = self._add_mva(rdf)
         dfmgr = AtrMgr(rdf)
         d_cut = sel.selection(
                 analysis = self._get_analysis(),
@@ -448,7 +449,6 @@ class DsGetter:
 
             tot=pas
 
-        rdf          = self._add_mva(rdf)
         rdf          = dfmgr.add_atr(rdf)
         rdf.treename = 'DecayTree'
         rdf.cf       = cf
