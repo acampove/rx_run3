@@ -148,12 +148,35 @@ def get_truth(event_type : Union[int,str]) -> str:
     elif   event_type in ['12113024']:
         # B+ pi mumu
         cut= 'TMath::Abs(B_TRUEID) == 521  && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 521  && TMath::Abs(L2_MC_MOTHER_ID) == 521  && TMath::Abs(H_TRUEID) == 211 && TMath::Abs(H_MC_MOTHER_ID) == 521'
-    elif   event_type == '15124021':
-        # Lb p pi ee
-        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) == 5122 && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122'
+    # -------------
+    elif   event_type == '15114011':
+        # Lb p K mumu
+        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) == 5122 && (TMath::Abs(H_TRUEID) == 321 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122'
     elif   event_type == '15114021':
         # Lb p pi mumu
         cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) == 5122 && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122'
+    # -------------
+    elif   event_type == '15124011':
+        # Lb p K ee
+        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) == 5122 && (TMath::Abs(H_TRUEID) == 321 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122'
+    elif   event_type == '15124021':
+        # Lb p pi ee
+        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) == 5122 && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122'
+    # -------------
+    elif   event_type == '15144001':
+        # Lb p K Jpsi(-> mm)
+        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && (TMath::Abs(H_TRUEID) == 321 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 5122 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443'
+    elif   event_type == '15144021':
+        # Lb p pi Jpsi(-> mm)
+        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 5122 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443'
+    # -------------
+    elif   event_type == '15154001':
+        # Lb p K Jpsi(-> ee)
+        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && (TMath::Abs(H_TRUEID) == 321 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 5122 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443'
+    elif   event_type == '15154021':
+        # Lb p pi Jpsi(-> ee)
+        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 5122 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443'
+    # -------------
     elif event_type in ['12123001', '12123002', '12123003', '12123005']:
         # B+ -> K+ee
         cut= 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 521 && TMath::Abs(L2_MC_MOTHER_ID) == 521 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 521'
@@ -426,18 +449,10 @@ def get_truth(event_type : Union[int,str]) -> str:
 
 # TODO: Tests are failing for:
 
-# pytest tests/test_dsgetter.py::test_no_mva[Bd_KstPi0gamma_Kpi_eq_DPC_SS-Hlt2RD_BuToKpEE_MVA]
-# pytest tests/test_dsgetter.py::test_no_mva[Bd_Kstgamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA]
-# pytest tests/test_dsgetter.py::test_no_mva[Bs_Dsstenu_Dsgamma_phienu_eq_DPC_HVM_EGDWC-Hlt2RD_BuToKpEE_MVA]
-# pytest tests/test_dsgetter.py::test_no_mva[Bs_phigamma_eq_HighPtGamma_DPC-Hlt2RD_BuToKpEE_MVA]
-# pytest tests/test_dsgetter.py::test_no_mva[Bs_phigamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA]
-# pytest tests/test_dsgetter.py::test_no_mva[Bu_JpsiKst_ee_Kpi0_eq_DPC-Hlt2RD_BuToKpEE_MVA]
-# pytest tests/test_dsgetter.py::test_no_mva[Lb_JpsipKX_mm_eq_JpsiInAcc-Hlt2RD_BuToKpMuMu_MVA]
-# pytest tests/test_dsgetter.py::test_no_mva[Lb_JpsipK_ee_eq_phsp_DPC-Hlt2RD_BuToKpEE_MVA]
-# pytest tests/test_dsgetter.py::test_no_mva[Lb_JpsipK_mm_eq_phsp_DPC-Hlt2RD_BuToKpMuMu_MVA]
-# pytest tests/test_dsgetter.py::test_no_mva[Lb_Jpsippi_ee_eq_phsp_DPC-Hlt2RD_BuToKpEE_MVA]
-# pytest tests/test_dsgetter.py::test_no_mva[Lb_Jpsippi_mm_eq_phsp_DPC-Hlt2RD_BuToKpMuMu_MVA]
-# pytest tests/test_dsgetter.py::test_no_mva[Lb_pKee_eq_phsp_DPC-Hlt2RD_BuToKpEE_MVA]
-# pytest tests/test_dsgetter.py::test_no_mva[Lb_pKmumu_eq_phsp_DPC-Hlt2RD_BuToKpMuMu_MVA]
-
-# TODO: Need to implement truth matching
+# [Bd_KstPi0gamma_Kpi_eq_DPC_SS-Hlt2RD_BuToKpEE_MVA] - ValueError: Event type 11102211_SS not recognized
+# [Bd_Kstgamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA] - ValueError: Event type 11102202_SS not recognized
+# [Bs_Dsstenu_Dsgamma_phienu_eq_DPC_HVM_EGDWC-Hlt2RD_BuToKpEE_MVA] - ValueError: Event type 13584200 not recognized
+# [Bs_phigamma_eq_HighPtGamma_DPC-Hlt2RD_BuToKpEE_MVA] - ValueError: Event type 13102202 not recognized
+# [Bs_phigamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA] - ValueError: Event type 13102202_SS not recognized
+# [Bu_JpsiKst_ee_Kpi0_eq_DPC-Hlt2RD_BuToKpEE_MVA] - ValueError: Event type 12153420 not recognized
+# [Lb_JpsipKX_mm_eq_JpsiInAcc-Hlt2RD_BuToKpMuMu_MVA] - ValueError: Event type 15444001 not recognized
