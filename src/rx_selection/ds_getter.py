@@ -49,8 +49,6 @@ class DsGetter:
         self._cutver          = cfg['cutver'  ]
         self._ipath           = cfg['ipath'   ]
 
-        self._skip_cmb      = True
-        self._skip_prc      = True
         self._is_sim        : bool
 
         self._initialized   = False
@@ -95,16 +93,6 @@ class DsGetter:
         [bdt_cmb, bdt_prc] = mtch.groups()
 
         return bdt_cmb if skip_prec else bdt_prc
-    # ------------------------------------
-    def _filter_bdt(self, rdf : RDataFrame, cut : str) -> tuple[RDataFrame, str]:
-        '''
-        Will add BDT score column and apply a cut on it
-        '''
-        if self._skip_prc and self._skip_cmb:
-            log.warning('Skipping both BDTs')
-            return rdf, '(1)'
-
-        raise NotImplementedError(f'BDT filtering has not been implemented for cut: {cut}')
     # ------------------------------------
     def _range_rdf(self, rdf : RDataFrame) -> RDataFrame:
         if self._part is None:
@@ -438,16 +426,11 @@ class DsGetter:
         log.info(f'Applying selection version: {self._cutver}')
 
         for cut_name, cut in d_cut.items():
-            cut = self._redefine_cut(cut_name, cut)
-
             log.info(f'{"":<10}{cut_name:>20}')
 
-            if cut_name == 'bdt':
-                rdf, cut = self._filter_bdt(rdf, cut)
-            else:
-                rdf = rdf.Filter(cut, cut_name)
-
-            pas=rdf.Count().GetValue()
+            cut = self._redefine_cut(cut_name, cut)
+            rdf = rdf.Filter(cut, cut_name)
+            pas = rdf.Count().GetValue()
 
             if cut_name == 'truth' and self._is_sim:
                 cf = self._add_reco_efficiency(cf, pas, cut)
