@@ -1,7 +1,7 @@
 [project]
 name        = 'rx_selection'
 description = 'Project used to apply selection to ntuples used for RX measurements filtered and skimmed by post_ap project'
-version     = '0.1.6'
+version     = '0.1.7'
 readme      = 'README.md'
 dependencies= [
 'data-manipulation-utilities',
@@ -11,7 +11,7 @@ dependencies= [
 'jacobi',
 'joblib',
 'pandas',
-'numpy',
+'numpy>=2.2.2',
 'matplotlib',
 'ap_utilities'
 ]

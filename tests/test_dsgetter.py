@@ -1,11 +1,12 @@
 '''
 Module with tests for DsGetter class
 '''
-# pylint: disable=import-error
+# pylint: disable=import-error, no-name-in-module
 
 import os
 import pytest
 from dmu.logging.log_store  import LogStore
+from ROOT                   import RDataFrame
 
 import rx_selection.tests as tst
 from rx_selection.ds_getter import DsGetter
@@ -91,6 +92,7 @@ def test_cmb_mva(sample : str, trigger : str) -> None:
     file_dir  = '/tmp/rx_selection/ds_getter/mva_cmb'
     os.makedirs(file_dir, exist_ok=True)
 
+    _check_mva(rdf, ['mva_cmb'])
     file_path = f'{file_dir}/{sample}_{trigger}.root'
     rdf.Snapshot('tree', file_path)
 # -------------------------------------------
@@ -120,6 +122,7 @@ def test_prc_mva(sample : str, trigger : str) -> None:
     file_dir  = '/tmp/rx_selection/ds_getter/mva'
     os.makedirs(file_dir, exist_ok=True)
 
+    _check_mva(rdf, ['mva_prc'])
     file_path = f'{file_dir}/{sample}_{trigger}.root'
     rdf.Snapshot('tree', file_path)
 # -------------------------------------------
@@ -128,16 +131,16 @@ def test_mva_signal(sample : str, trigger : str) -> None:
     '''
     Test adding both MVAs on signal MC
     '''
-    test_mva(sample, trigger)
+    _both_mva(sample, trigger)
 # -------------------------------------------
 @pytest.mark.parametrize('sample, trigger', _get_samples(kind='data'))
 def test_mva_data(sample : str, trigger : str) -> None:
     '''
     Test adding both MVAs on data
     '''
-    test_mva(sample, trigger)
+    _both_mva(sample, trigger)
 # -------------------------------------------
-def test_mva(sample : str, trigger : str) -> None:
+def _both_mva(sample : str, trigger : str) -> None:
     '''
     Underlying test for both MVAs
     '''
@@ -169,6 +172,19 @@ def test_mva(sample : str, trigger : str) -> None:
     file_dir  = '/tmp/rx_selection/ds_getter/mva_both'
     os.makedirs(file_dir, exist_ok=True)
 
+    _check_mva(rdf, ['mva_cmb', 'mva_prc'])
+
     file_path = f'{file_dir}/{sample}_{trigger}.root'
     rdf.Snapshot('tree', file_path)
+# -------------------------------------------
+def _check_mva(rdf : RDataFrame, l_col_needed : list[str]):
+    l_col_found = [ name.c_str() for name in rdf.GetColumnNames() ]
+
+    fail = False
+    for col_needed in l_col_needed:
+        if col_needed not in l_col_found:
+            log.warning(f'Missing {col_needed}')
+
+    if fail:
+        raise ValueError('At least one column not found')
 # -------------------------------------------
