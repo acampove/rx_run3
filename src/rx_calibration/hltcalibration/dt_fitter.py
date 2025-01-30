@@ -69,7 +69,8 @@ class DTFitter:
     # -------------------------------
     def _set_pdfs(self) -> None:
         for fcomp in self._l_fcomp:
-            pdf = fcomp.get_pdf()
+            fcomp.run()
+            pdf = fcomp.pdf
             name= fcomp.name
             if pdf.is_extended:
                 raise ValueError(f'PDF for component {name} is extended')
