@@ -1,6 +1,8 @@
 bdt      : &bdt_common
       low     : (mva_cmb > 0.50) && (mva_prc > 0.30)
       central : (mva_cmb > 0.50) && (mva_prc > 0.50)
+      jpsi    : (mva_cmb > 0.50) && (mva_prc > 0.50)
+      psi2    : (mva_cmb > 0.50) && (mva_prc > 0.50)
       high    : (mva_cmb > 0.50) && (mva_prc > 0.35)
 
 q2_common: &q2_common
