@@ -19,9 +19,9 @@ from dmu.stats.minimizers   import AnealingMinimizer
 
 from rx_calibration.hltcalibration.parameter import Parameter
 
-log   = LogStore.add_logger('rx_calibration:mc_fitter')
+log   = LogStore.add_logger('rx_calibration:fit_component')
 # ----------------------------------------
-class MCFitter:
+class FitComponent:
     '''
     Class meant to represent a fitting component
 

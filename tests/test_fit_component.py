@@ -10,7 +10,7 @@ import ROOT
 import zfit
 import pytest
 from dmu.logging.log_store                       import LogStore
-from rx_calibration.hltcalibration.mc_fitter     import MCFitter       as Fitter
+from rx_calibration.hltcalibration.fit_component import FitComponent
 from rx_calibration.hltcalibration               import test_utilities as tut
 
 log = LogStore.add_logger('rx_calibration:test_mc_fitter')
@@ -55,7 +55,7 @@ def test_toy_pdf():
     rdf= tut.rdf_from_pdf(pdf=pdf, nentries=Data.nentries)
     cfg= _get_conf('simple')
 
-    obj=Fitter(cfg=cfg, rdf=rdf, pdf=pdf)
+    obj=FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
     _  =obj.run()
 # --------------------------------------------
 def test_real_pdf():
@@ -66,6 +66,6 @@ def test_real_pdf():
     rdf= tut.rdf_from_pdf(pdf=pdf, nentries=Data.nentries)
     cfg= _get_conf('bukee')
 
-    obj= Fitter(cfg=cfg, rdf=rdf, pdf=pdf)
+    obj= FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
     _  = obj.run()
 # --------------------------------------------
