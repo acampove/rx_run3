@@ -65,6 +65,9 @@ class MCFitter:
     # --------------------
     @property
     def pdf(self) -> BasePDF:
+        '''
+        Returns PDF, meant to be used after calling run()
+        '''
         return self._pdf
     # --------------------
     def _add_weights(self, rdf : RDataFrame, wgt_name : str) -> RDataFrame:
