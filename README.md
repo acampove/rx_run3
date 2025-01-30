@@ -836,6 +836,40 @@ Trees only in file_2.root:
   - Hlt2RD_BsToPhiMuMu_MVA/DecayTree
 ```
 
+# File system
+
+## Versions
+
+The utilities below allow the user to deal with versioned files and directories
+
+```python
+from dmu.generic.version_management import get_last_version
+from dmu.generic.version_management import get_next_version
+from dmu.generic.version_management import get_latest_file
+
+# get_next_version will take a version and provide the next one, e.g.
+get_next_version('v1')           # -> 'v2'
+get_next_version('v1.1')         # -> 'v2.1'
+get_next_version('v10.1')        # -> 'v11.1'
+
+get_next_version('/a/b/c/v1')    # -> '/a/b/c/v2'
+get_next_version('/a/b/c/v1.1')  # -> '/a/b/c/v2.1'
+get_next_version('/a/b/c/v10.1') # -> '/a/b/c/v11.1'
+
+# `get_latest_file` will return the path to the file with the highest version
+# in the `dir_path` directory that matches a wildcard, e.g.:
+
+last_file = get_latest_file(dir_path = file_dir, wc='name_*.txt')
+
+# `get_last_version` will return the string with the latest version
+# of directories in `dir_path`, e.g.:
+
+oversion=get_last_version(dir_path=dir_path, version_only=True)  # This will return only the version, e.g. v3.2
+oversion=get_last_version(dir_path=dir_path, version_only=False) # This will return full path, e.g. /a/b/c/v3.2 
+
+The function above should work for numeric (e.g. `v1.2`) and non-numeric (e.g. `va`, `vb`) versions.
+```
+
 # Text manipulation
 
 ## Transformations
