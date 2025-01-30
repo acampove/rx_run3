@@ -92,6 +92,7 @@ def test_cmb_mva(sample : str, trigger : str) -> None:
     file_dir  = '/tmp/rx_selection/ds_getter/mva_cmb'
     os.makedirs(file_dir, exist_ok=True)
 
+    _check_mva(rdf, ['mva_cmb'])
     file_path = f'{file_dir}/{sample}_{trigger}.root'
     rdf.Snapshot('tree', file_path)
 # -------------------------------------------
@@ -121,6 +122,7 @@ def test_prc_mva(sample : str, trigger : str) -> None:
     file_dir  = '/tmp/rx_selection/ds_getter/mva'
     os.makedirs(file_dir, exist_ok=True)
 
+    _check_mva(rdf, ['mva_prc'])
     file_path = f'{file_dir}/{sample}_{trigger}.root'
     rdf.Snapshot('tree', file_path)
 # -------------------------------------------
@@ -170,6 +172,19 @@ def test_mva(sample : str, trigger : str) -> None:
     file_dir  = '/tmp/rx_selection/ds_getter/mva_both'
     os.makedirs(file_dir, exist_ok=True)
 
+    _check_mva(rdf, ['mva_cmb', 'mva_prc'])
+
     file_path = f'{file_dir}/{sample}_{trigger}.root'
     rdf.Snapshot('tree', file_path)
+# -------------------------------------------
+def _check_mva(rdf : RDataFrame, l_col_needed : list[str]):
+    l_col_found = [ name.c_str() for name in rdf.GetColumnNames() ]
+
+    fail = False
+    for col_needed in l_col_needed:
+        if col_needed not in l_col_found:
+            log.warning(f'Missing {col_needed}')
+
+    if fail:
+        raise ValueError('At least one column not found')
 # -------------------------------------------
