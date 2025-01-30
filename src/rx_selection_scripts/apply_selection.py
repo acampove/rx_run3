@@ -7,10 +7,12 @@ provided by DaVinci
 
 import os
 import argparse
-from dmu.generic import version_management as vman
+from dmu.generic            import version_management as vman
+from dmu.logging.log_store  import LogStore
 
 from rx_selection.cache_data import CacheData
 
+log=LogStore.add_logger('rx_selection:apply_selection')
 # ----------------------------------------
 class Data:
     '''
@@ -28,6 +30,13 @@ def _set_threads() -> None:
     os.environ['NUMEXPR_NUM_THREADS'] ='1'
     os.environ['OPENBLAS_NUM_THREADS']='1'
 # ----------------------------------------
+def _initialize(args : argparse.Namespace) -> None:
+    _set_threads()
+
+    LogStore.set_level('rx_selection:ds_getter'      , args.loglvl)
+    LogStore.set_level('rx_selection:cache_data'     , args.loglvl)
+    LogStore.set_level('rx_selection:apply_selection', args.loglvl)
+# ----------------------------------------
 def _get_args() -> argparse.Namespace:
     '''
     Argument parsing happens here
@@ -42,6 +51,7 @@ def _get_args() -> argparse.Namespace:
     parser.add_argument('-t', '--hlt2'   , type = str, help='Name of HLT2 trigger, e.g. Hlt2RD_B0ToKpPimMuMu'     , required=True)
     parser.add_argument('-c', '--cutver' , type = str, help='Version of selection, by default, latest'            , default =  '')
     parser.add_argument('-r', '--remove' , nargs= '+', help='List of cuts to remove from the full selection'      , default =  [])
+    parser.add_argument('-l', '--loglvl' , type = int, help='Logging level, default 20'                           , default =20, choices=[10, 20, 30])
 
     args = parser.parse_args()
 
@@ -74,8 +84,9 @@ def main():
     '''
     Script starts here
     '''
-    _set_threads()
     args = _get_args()
+    _initialize(args)
+
     cfg  = _get_cfg(args)
 
     obj  = CacheData(cfg = cfg)
