@@ -20,7 +20,7 @@ from dmu.stats.zfit_plotter import ZFitPlotter
 from rx_calibration.hltcalibration.parameter     import Parameter
 from rx_calibration.hltcalibration.mc_fitter     import MCFitter
 
-log   = LogStore.add_logger('rx_calibration:fitter')
+log   = LogStore.add_logger('rx_calibration:dt_fitter')
 # --------------------------------------------------
 class DTFitter:
     '''

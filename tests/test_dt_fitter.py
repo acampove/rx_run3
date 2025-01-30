@@ -2,6 +2,7 @@
 Module containing tests for Fitter class
 '''
 # pylint: disable=import-error
+# pylint: disable=no-name-in-module
 
 import os
 from typing      import Union
@@ -19,7 +20,7 @@ from dmu.logging.log_store   import LogStore
 from rx_calibration.hltcalibration.mc_fitter import MCFitter
 from rx_calibration.hltcalibration.dt_fitter import DTFitter
 
-log = LogStore.add_logger('rx_calibration:test_fitter')
+log = LogStore.add_logger('rx_calibration:test_dt_fitter')
 # --------------------------------------------
 @dataclass
 class Data:
