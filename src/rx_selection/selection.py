@@ -72,12 +72,16 @@ def load_selection_config() -> dict:
 def _get_selection(analysis : str, project : str, q2bin : str) -> dict[str,str]:
     d_sel  = load_selection_config()
     d_cut  = d_sel[project][analysis]
+
+    mv_cut = d_cut['bdt' ][q2bin]
     q2_cut = d_cut['q2'  ][q2bin]
     ms_cut = d_cut['mass'][q2bin]
 
+    del d_cut['bdt' ]
     del d_cut['q2'  ]
     del d_cut['mass']
 
+    d_cut['bdt' ] = mv_cut
     d_cut['q2'  ] = q2_cut
     d_cut['mass'] = ms_cut
 
