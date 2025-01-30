@@ -22,6 +22,7 @@ class Data:
     l_dt_sample = tst.get_dt_samples(is_rk=True)
 
     MVA_VERSION = 'v5'
+    mva_dir     = os.environ['MVADIR']
 # -------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -155,14 +156,14 @@ def _both_mva(sample : str, trigger : str) -> None:
 
     cfg['mva']         = {
             'cmb' : {
-                'low'    : f'/publicfs/ucas/user/campoverde/Data/RK/MVA/run3/{Data.MVA_VERSION}/RK/cmb/low',
-                'central': f'/publicfs/ucas/user/campoverde/Data/RK/MVA/run3/{Data.MVA_VERSION}/RK/cmb/central',
-                'high'   : f'/publicfs/ucas/user/campoverde/Data/RK/MVA/run3/{Data.MVA_VERSION}/RK/cmb/high',
+                'low'    : f'{Data.mva_dir}/run3/{Data.MVA_VERSION}/RK/cmb/low',
+                'central': f'{Data.mva_dir}/run3/{Data.MVA_VERSION}/RK/cmb/central',
+                'high'   : f'{Data.mva_dir}/run3/{Data.MVA_VERSION}/RK/cmb/high',
                 },
             'prc' : {
-                'low'    : f'/publicfs/ucas/user/campoverde/Data/RK/MVA/run3/{Data.MVA_VERSION}/RK/prc/low',
-                'central': f'/publicfs/ucas/user/campoverde/Data/RK/MVA/run3/{Data.MVA_VERSION}/RK/prc/central',
-                'high'   : f'/publicfs/ucas/user/campoverde/Data/RK/MVA/run3/{Data.MVA_VERSION}/RK/prc/high',
+                'low'    : f'{Data.mva_dir}/run3/{Data.MVA_VERSION}/RK/prc/low',
+                'central': f'{Data.mva_dir}/run3/{Data.MVA_VERSION}/RK/prc/central',
+                'high'   : f'{Data.mva_dir}/run3/{Data.MVA_VERSION}/RK/prc/high',
                 }
             }
 
