@@ -1,11 +1,9 @@
 '''
-Module containing tests for Fitter class
+Module containing tests for DTFitter class
 '''
 # pylint: disable=import-error
 # pylint: disable=no-name-in-module
 
-import os
-from typing      import Union
 from dataclasses import dataclass
 
 import ROOT
@@ -17,8 +15,9 @@ from ROOT                    import RDataFrame, RDF
 from zfit.core.basepdf       import BasePDF
 from dmu.logging.log_store   import LogStore
 
-from rx_calibration.hltcalibration.mc_fitter import MCFitter
-from rx_calibration.hltcalibration.dt_fitter import DTFitter
+from rx_calibration.hltcalibration               import test_utilities as tut
+from rx_calibration.hltcalibration.fit_component import FitComponent
+from rx_calibration.hltcalibration.dt_fitter     import DTFitter
 
 log = LogStore.add_logger('rx_calibration:test_dt_fitter')
 # --------------------------------------------
@@ -40,23 +39,7 @@ class Data:
 # --------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    LogStore.set_level('rx_calibration:fitter', 10)
-# --------------------------------------------
-def _rdf_from_pdf(pdf : BasePDF, kind : str) -> Union[RDataFrame,None]:
-    out_path = f'{Data.out_dir}/{kind}.root'
-    if os.path.isfile(out_path):
-        log.warning(f'Reloading: {out_path}')
-        rdf = RDataFrame('tree', out_path)
-        return rdf
-
-    os.makedirs(Data.out_dir, exist_ok=True)
-
-    samp     = pdf.create_sampler(n=Data.d_nentries[kind])
-    arr_mass = samp.numpy().flatten()
-    rdf      = RDF.FromNumpy({Data.mass_name : arr_mass})
-    rdf.Snapshot('tree', out_path)
-
-    return rdf
+    LogStore.set_level('rx_calibration:dt_fitter', 10)
 # --------------------------------------------
 def _get_data_rdf() -> RDataFrame:
     d_rdf   = { component : _get_comp(component)[0] for component in Data.d_nentries }
@@ -87,7 +70,8 @@ def _get_comp(kind : str) -> tuple[RDataFrame, BasePDF]:
     else:
         raise ValueError(f'Invalid kind: {kind}')
 
-    rdf = _rdf_from_pdf(pdf, kind)
+    nentries = Data.d_nentries[kind]
+    rdf = tut.rdf_from_pdf(pdf, nentries)
 
     return rdf, pdf
 # --------------------------------------------
@@ -131,7 +115,7 @@ def _get_fcomp_cfg(name : str) -> dict:
 
     return d_fcomp
 # --------------------------------------------
-def _get_fit_comp() -> list[MCFitter]:
+def _get_fit_comp() -> list[FitComponent]:
     d_comp = { component : _get_comp(kind=component) for component in Data.d_nentries }
     for name in Data.l_no_sim:
         _, pdf = d_comp[name]
@@ -140,7 +124,7 @@ def _get_fit_comp() -> list[MCFitter]:
     l_cfg   = [ _get_fcomp_cfg(component) for component in d_comp          ]
     l_rdf   = [ rdf                       for rdf, _    in d_comp.values() ]
     l_pdf   = [ pdf                       for   _, pdf  in d_comp.values() ]
-    l_fcomp = [ MCFitter(cfg=cfg, rdf=rdf, pdf=pdf) for cfg, rdf, pdf in zip(l_cfg, l_rdf, l_pdf)]
+    l_fcomp = [ FitComponent(cfg=cfg, rdf=rdf, pdf=pdf) for cfg, rdf, pdf in zip(l_cfg, l_rdf, l_pdf)]
 
     return l_fcomp
 # --------------------------------------------
@@ -151,8 +135,8 @@ def test_simple():
 
     rdf_dat = _get_data_rdf()
     l_comp  = _get_fit_comp()
-    conf    = _get_fit_conf()
+    cfg     = _get_fit_conf()
 
-    obj = DTFitter(data = rdf_dat, components = l_comp, conf = conf)
+    obj = DTFitter(rdf = rdf_dat, components = l_comp, cfg = cfg)
     _   = obj.fit()
 # --------------------------------------------
