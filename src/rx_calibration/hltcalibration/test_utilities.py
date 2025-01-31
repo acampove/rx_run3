@@ -24,10 +24,11 @@ class Data:
     out_dir    = '/tmp/rx_calibration/tests'
     dat_dir    = '/publicfs/ucas/user/campoverde/Data/RX_run3/for_tests/post_ap'
     mass_name  = 'mass'
+    sign_name  = 'sign'
     d_nentries = {
-            'sign' : 5_000,
-            'prec' : 5_000,
-            'comb' : 5_000,
+            sign_name : 5_000,
+            'prec'    : 5_000,
+            'comb'    : 5_000,
             }
 
     l_no_sim   = ['comb']
