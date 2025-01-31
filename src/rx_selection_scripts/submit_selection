@@ -18,7 +18,7 @@ display_help()
 setup()
 {
     source $HOME/.bashrc
-    mma run3 
+    mma rx_selection 
     if [[ $? -ne 0 ]];then
         echo "Could not set virtual environment"
         exit 1
