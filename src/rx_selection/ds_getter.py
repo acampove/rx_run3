@@ -402,7 +402,7 @@ class DsGetter:
         log.info('Adding MVA columns')
         for name, arr_val in d_mva_score.items():
             log.debug('    %s',name)
-            rdf = dmu_ut.add_column_with_numba(rdf, arr_val, name, identifier=name)
+            rdf = dmu_ut.add_column(rdf, arr_val, name)
 
         return rdf
     # ----------------------------------------
