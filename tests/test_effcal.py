@@ -50,7 +50,7 @@ def test_integration(eff : float):
     eff_str  = f'{eff:.3f}'
     eff_str  = eff_str.replace('.', 'p')
 
-    name     = f'effcal/integration_{eff_str}'
+    name     = f'{tut.Data.out_dir}/effcal/integration_{eff_str}'
     pas, fal = tut.get_fit_parameters(eff = eff, name = name)
 
     pas.to_json(f'{name}_pas.json')
