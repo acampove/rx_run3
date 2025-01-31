@@ -7,6 +7,7 @@ from dataclasses import dataclass
 import numpy
 import pytest
 
+from rx_calibration.hltcalibration               import test_utilities as tut
 from rx_calibration.hltcalibration.eff_cal       import EffCal
 from rx_calibration.hltcalibration.parameter     import Parameter
 
@@ -40,3 +41,22 @@ def test_simple(eff : float):
     val = obj.get_eff()
 
     assert math.isclose(val, eff)
+# --------------------------------
+@pytest.mark.parametrize('eff', Data.l_eff_val)
+def test_integration(eff : float):
+    '''
+    Tests full chain
+    '''
+    eff_str  = f'{eff:.3f}'
+    eff_str  = eff_str.replace('.', 'p')
+
+    name     = f'effcal/integration_{eff_str}'
+    pas, fal = tut.get_fit_parameters(eff = eff, name = name)
+
+    pas.to_json(f'{name}_pas.json')
+    fal.to_json(f'{name}_fal.json')
+
+    obj = EffCal(pas=pas, fal=fal)
+    val = obj.get_eff()
+
+    print(eff, val)
