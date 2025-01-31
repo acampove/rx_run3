@@ -20,7 +20,7 @@ class Data:
     '''
     Class sharing attributes
     '''
-    out_dir    = '/tmp/rx_calibration/tests/fit_component'
+    out_dir    = '/tmp/rx_calibration/tests'
     dat_dir    = '/publicfs/ucas/user/campoverde/Data/RX_run3/for_tests/post_ap'
     mass_name  = 'mass'
     d_nentries = {
@@ -85,7 +85,7 @@ def get_data_fit_cfg(test : str) -> dict:
     '''
     return {
             'error_method' : 'minuit_hesse',
-            'out_dir'      : f'/tmp/rx_calibration/tests/{test}',
+            'out_dir'      : f'{Data.out_dir}/{test}',
             'plotting'     :
             {
                 'nbins'   : 50,
@@ -104,7 +104,7 @@ def _get_fit_component_cfg(name : str, test : str) -> dict:
     '''
     d_fcomp = {
             'name'   : name,
-            'out_dir': f'/tmp/rx_calibration/tests/{test}/components',
+            'out_dir': f'{Data.out_dir}/{test}/components',
             'fitting':
             {
                 'error_method'  : 'minuit_hesse',
