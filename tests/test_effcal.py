@@ -17,16 +17,16 @@ class Data:
     '''
     Class used to store shared attributes
     '''
-    l_eff_val = numpy.linspace(0.0, 1.0, 11)
+    l_eff_val = numpy.linspace(0.2, 0.8, 7)
 # --------------------------------
 def _get_par(eff_val : float) -> Parameter:
     tot = 100
 
     pas         = Parameter()
-    pas['nsig'] =     eff_val  * tot
+    pas['nsign']=     eff_val  * tot
 
     fal         = Parameter()
-    fal['nsig'] = (1- eff_val) * tot
+    fal['nsign']= (1- eff_val) * tot
 
     return pas, fal
 # --------------------------------
