@@ -60,7 +60,9 @@ To support more sites, one should:
 
 For IHEP, in China, this script is `job_sel_ihep` and it's documented below.
 
-### For IHEP
+## For IHEP
+
+### Submission
 
 Run:
 
@@ -95,7 +97,6 @@ Script used to setup mamba environment and run apply_selection script
 
 by default, it will run a test job.
 
-
 ### Job list
 
 Given the large number of samples to process a utility was created to provide the list of commands, i.e. a list like:
@@ -123,3 +124,13 @@ which for the version `v1` of the `post_ap` ntuples, will automatically:
 Some samples, with too few entries, will be skipped altogether. 
 This is expected to take time, given that, in order to calculate the number of events, each file needs
 to be opened.
+
+### Held jobs
+
+To automate resubmission of HTCondor jobs that run out of memory do:
+
+```bash
+jmanager_ihep -m 8000 -t 0
+```
+
+which will resubmit held jobs with 8GB (`-m`) and not as a test (`-t`).
