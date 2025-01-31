@@ -31,8 +31,8 @@ def test_simple():
     '''
 
     rdf_dat = tut.get_data_rdf()
-    l_comp  = tut.get_fit_components()
-    cfg     = tut.get_data_fit_cfg()
+    l_comp  = tut.get_fit_components(test='dt_fitter/simple')
+    cfg     = tut.get_data_fit_cfg(test='dt_fitter/simple')
 
     obj = DTFitter(rdf = rdf_dat, components = l_comp, cfg = cfg)
     par = obj.fit()
