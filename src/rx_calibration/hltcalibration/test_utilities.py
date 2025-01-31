@@ -1,12 +1,16 @@
 '''
 Module with utility functions needed for tests
 '''
-from dataclasses              import dataclass
+from dataclasses                                 import dataclass
 
+import numpy
+import ROOT
 import zfit
-from zfit.core.basepdf        import BasePDF
-from dmu.stats.model_factory  import ModelFactory
-from ROOT                     import RDataFrame, RDF
+import zfit_physics
+from zfit.core.basepdf                           import BasePDF
+from dmu.stats.model_factory                     import ModelFactory
+from ROOT                                        import RDataFrame, RDF
+from rx_calibration.hltcalibration.fit_component import FitComponent
 
 # --------------------------------------------
 @dataclass
@@ -14,8 +18,17 @@ class Data:
     '''
     Class sharing attributes
     '''
-    out_dir   = '/tmp/rx_calibration/tests/fit_component'
-    dat_dir   = '/publicfs/ucas/user/campoverde/Data/RX_run3/for_tests/post_ap'
+    out_dir    = '/tmp/rx_calibration/tests/fit_component'
+    dat_dir    = '/publicfs/ucas/user/campoverde/Data/RX_run3/for_tests/post_ap'
+    mass_name  = 'mass'
+    d_nentries = {
+            'signal' : 5_000,
+            'prec'   : 5_000,
+            'comb'   : 5_000,
+            }
+
+    l_no_sim   = ['comb']
+    obs        = zfit.Space(mass_name, limits=(4000, 6000))
 # --------------------------------------------
 def get_signal_rdf() -> RDataFrame:
     '''
@@ -63,4 +76,103 @@ def rdf_from_pdf(pdf : BasePDF, nentries : int) -> RDataFrame:
     arr_mas = sam.numpy().flatten()
 
     return RDF.FromNumpy({'mass' : arr_mas})
+# --------------------------------------------
+def get_data_fit_cfg() -> dict:
+    '''
+    Returns configuration for fit to full model
+    '''
+    return {
+            'error_method' : 'minuit_hesse',
+            'out_dir'      : '/tmp/rx_calibration/tests/fitter/simple',
+            'plotting'     :
+            {
+                'nbins'   : 50,
+                'stacked' : True,
+                'd_leg'   : {
+                    'Gauss_ext'      : 'Signal',
+                    'Exponential_ext': 'Combinatorial',
+                    'ArgusPDF_ext'   : 'PRec',
+                    }
+                },
+            }
+# --------------------------------------------
+def _get_fit_component_cfg(name : str) -> dict:
+    '''
+    Returns configuration for a fit to a given component
+    '''
+    d_fcomp = {
+            'name'   : name,
+            'out_dir': '/tmp/rx_calibration/tests/fitter/components',
+            'fitting':
+            {
+                'error_method'  : 'minuit_hesse',
+                'weights_column': 'weights',
+                },
+            'plotting' :
+            {
+                'nbins'   : 50,
+                'stacked' : True,
+                },
+            }
+
+    if name not in Data.l_no_sim:
+        return d_fcomp
+
+    del d_fcomp['fitting' ]
+    del d_fcomp['plotting']
+
+    return d_fcomp
+# --------------------------------------------
+def _get_toy_comp(kind : str) -> tuple[RDataFrame, BasePDF]:
+    if   kind == 'signal':
+        mu  = zfit.Parameter("mu_flt", 5300, 5200, 5400)
+        sg  = zfit.Parameter(    "sg",  40,    30,  100)
+        pdf = zfit.pdf.Gauss(obs=Data.obs, mu=mu, sigma=sg)
+    elif kind == 'comb':
+        lam = zfit.param.Parameter('lam' ,   -1/1000.,  -10/1000.,  0)
+        pdf = zfit.pdf.Exponential(obs = Data.obs, lam = lam)
+    elif kind == 'prec':
+        mzr = zfit.param.Parameter('mzr' ,  10000,  9000, 11000)
+        cer = zfit.param.Parameter('cer' ,      2,     0,     3)
+        pex = zfit.param.Parameter('pex' ,     10,     8,    15)
+
+        pdf = zfit_physics.pdf.Argus(obs=Data.obs, m0=mzr, c=cer, p=pex)
+    else:
+        raise ValueError(f'Invalid kind: {kind}')
+
+    nentries = Data.d_nentries[kind]
+    rdf = rdf_from_pdf(pdf, nentries)
+
+    return rdf, pdf
+# --------------------------------------------
+def get_fit_components() -> list[FitComponent]:
+    '''
+    Function returns list of FitComponent ojects, from toy model
+    '''
+    d_comp = { component : _get_toy_comp(kind=component) for component in Data.d_nentries }
+    for name in Data.l_no_sim:
+        _, pdf = d_comp[name]
+        d_comp[name] = None, pdf
+
+    l_cfg   = [ _get_fit_component_cfg(component)       for component     in d_comp                  ]
+    l_rdf   = [ rdf                                     for rdf, _        in d_comp.values()         ]
+    l_pdf   = [ pdf                                     for   _, pdf      in d_comp.values()         ]
+    l_fcomp = [ FitComponent(cfg=cfg, rdf=rdf, pdf=pdf) for cfg, rdf, pdf in zip(l_cfg, l_rdf, l_pdf)]
+
+    return l_fcomp
+# --------------------------------------------
+def get_data_rdf() -> RDataFrame:
+    '''
+    Will return dataframe with toy data to fit
+    '''
+    d_rdf   = { component : _get_toy_comp(component)[0] for component in Data.d_nentries }
+
+    l_arr_mass = []
+    for rdf in d_rdf.values():
+        arr_mass = rdf.AsNumpy([Data.mass_name])[Data.mass_name]
+        l_arr_mass.append(arr_mass)
+
+    arr_mass = numpy.concatenate(l_arr_mass)
+
+    return RDF.FromNumpy({Data.mass_name : arr_mass})
 # --------------------------------------------
