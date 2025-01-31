@@ -156,14 +156,14 @@ def get_fit_components(test : str) -> list[FitComponent]:
         _, pdf = d_comp[name]
         d_comp[name] = None, pdf
 
-    l_cfg   = [ _get_fit_component_cfg(component)       for component     in d_comp                  ]
+    l_cfg   = [ _get_fit_component_cfg(component, test) for component     in d_comp                  ]
     l_rdf   = [ rdf                                     for rdf, _        in d_comp.values()         ]
     l_pdf   = [ pdf                                     for   _, pdf      in d_comp.values()         ]
     l_fcomp = [ FitComponent(cfg=cfg, rdf=rdf, pdf=pdf) for cfg, rdf, pdf in zip(l_cfg, l_rdf, l_pdf)]
 
     return l_fcomp
 # --------------------------------------------
-def get_data_rdf() -> RDataFrame:
+def get_data_rdf(eff : float = 1.0) -> RDataFrame:
     '''
     Will return dataframe with toy data to fit
     '''
@@ -175,6 +175,33 @@ def get_data_rdf() -> RDataFrame:
         l_arr_mass.append(arr_mass)
 
     arr_mass = numpy.concatenate(l_arr_mass)
+    arr_mass = numpy.random.permutation(arr_mass)
+
+    if eff == 1.0:
+        return RDF.FromNumpy({Data.mass_name : arr_mass})
+
+    nentries = len(arr_mass)
+    arr_mass = arr_mass[:nentries]
 
     return RDF.FromNumpy({Data.mass_name : arr_mass})
+# --------------------------------------------
+def _get_dt_par(eff : float, name : str) -> Parameter:
+    rdf_dat = get_data_rdf(eff)
+    l_comp  = get_fit_components()
+    cfg     = get_data_fit_cfg(name)
+
+    obj = DTFitter(rdf = rdf_dat, components = l_comp, cfg = cfg)
+    par = obj.fit()
+
+    return par
+# --------------------------------------------
+def get_fit_parameters(eff : float, name : str) -> tuple[Parameter, Parameter]:
+    '''
+    Simplest test of Fitter class
+    '''
+
+    par_pas = _get_dt_par(eff=  eff, name = f'{name}_pass')
+    par_fal = _get_dt_par(eff=1-eff, name = f'{name}_fail')
+
+    return par_pas, par_fal
 # --------------------------------------------
