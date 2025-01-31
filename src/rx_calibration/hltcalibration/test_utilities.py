@@ -187,8 +187,8 @@ def get_data_rdf(eff : float = 1.0) -> RDataFrame:
 # --------------------------------------------
 def _get_dt_par(eff : float, name : str) -> Parameter:
     rdf_dat = get_data_rdf(eff)
-    l_comp  = get_fit_components()
-    cfg     = get_data_fit_cfg(name)
+    l_comp  = get_fit_components(test=name)
+    cfg     = get_data_fit_cfg(test=name)
 
     obj = DTFitter(rdf = rdf_dat, components = l_comp, cfg = cfg)
     par = obj.fit()
