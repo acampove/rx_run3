@@ -10,6 +10,7 @@ import zfit_physics
 from zfit.core.basepdf                           import BasePDF
 from dmu.stats.model_factory                     import ModelFactory
 from ROOT                                        import RDataFrame, RDF
+
 from rx_calibration.hltcalibration.fit_component import FitComponent
 from rx_calibration.hltcalibration.dt_fitter     import DTFitter
 from rx_calibration.hltcalibration.parameter     import Parameter
@@ -24,9 +25,9 @@ class Data:
     dat_dir    = '/publicfs/ucas/user/campoverde/Data/RX_run3/for_tests/post_ap'
     mass_name  = 'mass'
     d_nentries = {
-            'signal' : 5_000,
-            'prec'   : 5_000,
-            'comb'   : 5_000,
+            'sign' : 5_000,
+            'prec' : 5_000,
+            'comb' : 5_000,
             }
 
     l_no_sim   = ['comb']
@@ -58,7 +59,7 @@ def get_toy_pdf(kind : str, obs) -> BasePDF:
     '''
     Makes PDFs
     '''
-    if   kind == 'signal':
+    if   kind == 'sign':
         mu  = zfit.Parameter("mu_flt", 5300, 5200, 5400)
         sg  = zfit.Parameter(    "sg",  30,    10,  100)
         pdf = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
@@ -126,7 +127,7 @@ def _get_fit_component_cfg(name : str, test : str) -> dict:
     return d_fcomp
 # --------------------------------------------
 def _get_toy_comp(kind : str) -> tuple[RDataFrame, BasePDF]:
-    if   kind == 'signal':
+    if   kind == 'sign':
         mu  = zfit.Parameter("mu_flt", 5300, 5200, 5400)
         sg  = zfit.Parameter(    "sg",  40,    30,  100)
         pdf = zfit.pdf.Gauss(obs=Data.obs, mu=mu, sigma=sg)
