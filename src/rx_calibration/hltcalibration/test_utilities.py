@@ -165,6 +165,14 @@ def get_fit_components(test : str) -> list[FitComponent]:
 
     return l_fcomp
 # --------------------------------------------
+def _scale_array(arr_val : numpy.ndarray, eff : float) -> numpy.ndarray:
+    l_val = arr_val.tolist()
+    nval  = len(l_val) * eff
+    nval  = int(nval)
+    l_val = l_val[:nval]
+
+    return numpy.array(l_val)
+# --------------------------------------------
 def get_data_rdf(eff : float = 1.0) -> RDataFrame:
     '''
     Will return dataframe with toy data to fit
@@ -172,8 +180,11 @@ def get_data_rdf(eff : float = 1.0) -> RDataFrame:
     d_rdf   = { component : _get_toy_comp(component)[0] for component in Data.d_nentries }
 
     l_arr_mass = []
-    for rdf in d_rdf.values():
+    for name, rdf in d_rdf.items():
         arr_mass = rdf.AsNumpy([Data.mass_name])[Data.mass_name]
+        if name == Data.sign_name:
+            arr_mass = _scale_array(arr_mass, eff)
+
         l_arr_mass.append(arr_mass)
 
     arr_mass = numpy.concatenate(l_arr_mass)
@@ -181,9 +192,6 @@ def get_data_rdf(eff : float = 1.0) -> RDataFrame:
 
     if eff == 1.0:
         return RDF.FromNumpy({Data.mass_name : arr_mass})
-
-    nentries = len(arr_mass)
-    arr_mass = arr_mass[:nentries]
 
     return RDF.FromNumpy({Data.mass_name : arr_mass})
 # --------------------------------------------
