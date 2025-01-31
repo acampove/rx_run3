@@ -82,7 +82,7 @@ which will apply the selection by:
 The options are:
 
 ```bash
-Script used to setup mamba environment and run apply_selection script
+Script used to submit jobs to the IHEP's HTCondor cluster. The jobs should apply selection.
 
 -d: Path to directory containing directory samples
 -s: Name of the sample (subdirectory) to run over
@@ -91,6 +91,7 @@ Script used to setup mamba environment and run apply_selection script
 -t: HLT2 trigger, e.g Hlt2RD_B0ToKpPimEE
 -p: Project, e.g. RK
 -n: Number of parts into which selection is split, e.g. 100
+-m: Memory required by job, default 4000Mb
 -T: Will run a test with the first job (default) or will submit all the jobs
 -Q: Queue, e.g. test (5m), short (30m), mid (10h), by default short
 ```
