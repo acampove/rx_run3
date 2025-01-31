@@ -228,9 +228,13 @@ class DsGetter:
         if len(l_file_path) == 0:
             raise ValueError('Empty file list')
 
-        d_rdf  = { file_path : RDataFrame(tree_name, file_path) for file_path in l_file_path    }
-        d_name = {      path : rdf.GetColumnNames()             for path, rdf in d_rdf.items()  }
-        l_name = [             rdf.GetColumnNames()             for       rdf in d_rdf.values() ]
+        d_name = {}
+        l_name = []
+        for file_path in l_file_path:
+            rdf = RDataFrame(tree_name, file_path)
+            v_col = rdf.GetColumnNames()
+            d_name[file_path] = v_col
+            l_name.append(v_col)
 
         all_equal = all( v_name == l_name[0] for v_name in l_name )
         if all_equal:
