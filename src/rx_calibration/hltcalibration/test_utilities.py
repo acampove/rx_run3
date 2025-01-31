@@ -11,6 +11,8 @@ from zfit.core.basepdf                           import BasePDF
 from dmu.stats.model_factory                     import ModelFactory
 from ROOT                                        import RDataFrame, RDF
 from rx_calibration.hltcalibration.fit_component import FitComponent
+from rx_calibration.hltcalibration.dt_fitter     import DTFitter
+from rx_calibration.hltcalibration.parameter     import Parameter
 
 # --------------------------------------------
 @dataclass
@@ -77,13 +79,13 @@ def rdf_from_pdf(pdf : BasePDF, nentries : int) -> RDataFrame:
 
     return RDF.FromNumpy({'mass' : arr_mas})
 # --------------------------------------------
-def get_data_fit_cfg() -> dict:
+def get_data_fit_cfg(test : str) -> dict:
     '''
     Returns configuration for fit to full model
     '''
     return {
             'error_method' : 'minuit_hesse',
-            'out_dir'      : '/tmp/rx_calibration/tests/fitter/simple',
+            'out_dir'      : f'/tmp/rx_calibration/tests/{test}',
             'plotting'     :
             {
                 'nbins'   : 50,
@@ -96,13 +98,13 @@ def get_data_fit_cfg() -> dict:
                 },
             }
 # --------------------------------------------
-def _get_fit_component_cfg(name : str) -> dict:
+def _get_fit_component_cfg(name : str, test : str) -> dict:
     '''
     Returns configuration for a fit to a given component
     '''
     d_fcomp = {
             'name'   : name,
-            'out_dir': '/tmp/rx_calibration/tests/fitter/components',
+            'out_dir': f'/tmp/rx_calibration/tests/{test}/components',
             'fitting':
             {
                 'error_method'  : 'minuit_hesse',
@@ -145,7 +147,7 @@ def _get_toy_comp(kind : str) -> tuple[RDataFrame, BasePDF]:
 
     return rdf, pdf
 # --------------------------------------------
-def get_fit_components() -> list[FitComponent]:
+def get_fit_components(test : str) -> list[FitComponent]:
     '''
     Function returns list of FitComponent ojects, from toy model
     '''
