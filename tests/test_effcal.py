@@ -60,4 +60,4 @@ def test_integration(eff : float):
     obj = EffCal(pas=pas, fal=fal)
     val = obj.get_eff()
 
-    print(eff, val)
+    assert math.isclose(eff, val, rel_tol=0.01)
