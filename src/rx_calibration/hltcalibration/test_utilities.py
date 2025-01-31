@@ -26,9 +26,9 @@ class Data:
     mass_name  = 'mass'
     sign_name  = 'sign'
     d_nentries = {
-            sign_name : 5_000,
-            'prec'    : 5_000,
-            'comb'    : 5_000,
+            sign_name :30_000,
+            'prec'    :30_000,
+            'comb'    :30_000,
             }
 
     l_no_sim   = ['comb']
