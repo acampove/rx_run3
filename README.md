@@ -74,6 +74,16 @@ make_tree_structure -i /path/to/downloaded/.data/v1 -o /path/to/directory/struct
 
 this will not make a copy of the ntuples, it will only create symbolic links to them.
 
+## Making YAML with files list
+
+If instead one does:
+
+```bash
+make_tree_structure -i /path/to/downloaded/.data/v1 -f samples.yaml 
+```
+
+the links won't be made, instead a YAML file will be created with the list of files for each sample and trigger.
+
 ## Samples naming
 
 The samples were named after the DecFiles names for the samples and:
