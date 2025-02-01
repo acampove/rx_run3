@@ -57,28 +57,6 @@ def _get_args() -> argparse.Namespace:
 
     return args
 # ----------------------------------------
-def _get_mva_cfg(project : str) -> dict:
-    mva_ver = vman.get_last_version(dir_path = f'{Data.mva_dir}/run3', version_only=True)
-
-    return {
-            'cmb' : {
-                'low'    : f'{Data.mva_dir}/run3/{mva_ver}/{project}/cmb/low',
-                'central': f'{Data.mva_dir}/run3/{mva_ver}/{project}/cmb/central',
-                'high'   : f'{Data.mva_dir}/run3/{mva_ver}/{project}/cmb/high',
-                },
-            'prc' : {
-                'low'    : f'{Data.mva_dir}/run3/{mva_ver}/{project}/prc/low',
-                'central': f'{Data.mva_dir}/run3/{mva_ver}/{project}/prc/central',
-                'high'   : f'{Data.mva_dir}/run3/{mva_ver}/{project}/prc/high',
-                }
-            }
-# ----------------------------------------
-def _get_cfg(args : argparse.Namespace) -> dict:
-    cfg        = vars(args)
-    cfg['mva'] = _get_mva_cfg(args.project)
-
-    return cfg
-# ----------------------------------------
 def main():
     '''
     Script starts here
@@ -86,8 +64,7 @@ def main():
     args = _get_args()
     _initialize(args)
 
-    cfg  = _get_cfg(args)
-
+    cfg  = vars(args)
     obj  = CacheData(cfg = cfg)
     obj.save()
 # ----------------------------------------
