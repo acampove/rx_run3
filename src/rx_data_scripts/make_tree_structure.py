@@ -21,6 +21,14 @@ from dmu.logging.log_store  import LogStore
 from rx_data.path_splitter  import PathSplitter
 
 log   = LogStore.add_logger('rx_data:make_tree_structure')
+
+# ---------------------------------
+class IndentListDumper(yaml.SafeDumper):
+    '''
+    Class needed to implement indentation correctly in dumped yaml files
+    '''
+    def increase_indent(self, flow=False, indentless=False):
+        return super().increase_indent(flow, False)
 # ---------------------------------
 @dataclass
 class Data:
@@ -202,7 +210,7 @@ def _save_to_file(d_struc : dict) -> None:
         os.makedirs(out_dir, exist_ok=True)
 
     with open(Data.fil_path, 'w', encoding='utf-8') as ofile:
-        yaml.safe_dump(d_struc, ofile, indent=4)
+        yaml.dump(d_struc, ofile, Dumper=IndentListDumper, default_flow_style=False)
 # ---------------------------------
 def _drop_line(line_name : str) -> bool:
     if len(Data.l_line_to_pick) == 0:
