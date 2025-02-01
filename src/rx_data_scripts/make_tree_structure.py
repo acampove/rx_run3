@@ -8,15 +8,14 @@ import re
 import os
 import glob
 import argparse
-
 from typing                 import Union
 from dataclasses            import dataclass
-from dmu.rfile.rfprinter    import RFPrinter
-from dmu.logging.log_store  import LogStore
 
 import tqdm
-
-from rx_data.path_splitter import PathSplitter
+import yaml
+from dmu.rfile.rfprinter    import RFPrinter
+from dmu.logging.log_store  import LogStore
+from rx_data.path_splitter  import PathSplitter
 
 log   = LogStore.add_logger('rx_data:make_tree_structure')
 # ---------------------------------
