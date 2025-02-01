@@ -288,6 +288,9 @@ def main():
     l_pfn   = _get_pfns()
     l_pfn   = _cleanup_pfns(l_pfn)
 
+    if len(l_pfn) == 0:
+        return
+
     l_l_pfn = _split_pfns(l_pfn)
     ngroup  = len(l_l_pfn)
 
