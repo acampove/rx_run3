@@ -63,7 +63,9 @@ which kinit
 
 and make sure that your kinit does not come from a virtual environment but it is the one in the LHCb stack or the native one.
 
-## Building directory structure
+## Organizing paths
+
+### Building directory structure
 
 All the ntuples will be downloaded in a single directory.
 In order to group them by sample and trigger run:
@@ -74,7 +76,7 @@ make_tree_structure -i /path/to/downloaded/.data/v1 -o /path/to/directory/struct
 
 this will not make a copy of the ntuples, it will only create symbolic links to them.
 
-## Making YAML with files list
+### Making YAML with files list
 
 If instead one does:
 
@@ -84,7 +86,7 @@ make_tree_structure -i /path/to/downloaded/.data/v1 -f samples.yaml
 
 the links won't be made, instead a YAML file will be created with the list of files for each sample and trigger.
 
-## Lists from files in the grid
+### Lists from files in the grid
 
 If instead of taking the downloaded files, one wants the ones in the grid, one can do:
 
