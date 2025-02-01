@@ -92,7 +92,14 @@ If instead of taking the downloaded files, one wants the ones in the grid, one c
 make_tree_structure -v v4 -f samples.yaml 
 ```
 
-where `v4` is the version of the JSON files holding the LFNs
+where `v4` is the version of the JSON files holding the LFNs. In case one needs the old naming, used in Run1 and Run2
+one would run:
+
+```bash
+make_tree_structure -v v4 -f samples.yaml -n old
+```
+
+**This will likely drop samples that have no old naming, because they were not used in the past.**
 
 ## Samples naming
 
