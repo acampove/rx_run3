@@ -3,13 +3,16 @@ Script used to link ntuples properly and merge them
 '''
 
 # pylint: disable=line-too-long, import-error
+# pylint: disable=invalid-name
 
 import re
 import os
 import glob
+import json
 import argparse
 from typing                 import Union
 from dataclasses            import dataclass
+from importlib.resources    import files
 
 import tqdm
 import yaml
@@ -24,16 +27,17 @@ class Data:
     '''
     Class used to hold shared data
     '''
-    # pylint: disable = invalid-name
+    eos_preffix = 'root://x509up_u12477@eoslhcb.cern.ch//eos/lhcb/grid/user'
 
     max_files : int
     ver       : str
     dry       : bool
+    jsn_ver   : str
     inp_path  : str
     out_path  : str
     fil_path  : str
 # ---------------------------------
-def _get_paths() -> list[str]:
+def _get_paths_from_filesystem() -> list[str]:
     '''
     Returns list of paths to ROOT files corresponding to a given job
     '''
