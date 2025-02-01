@@ -84,6 +84,16 @@ make_tree_structure -i /path/to/downloaded/.data/v1 -f samples.yaml
 
 the links won't be made, instead a YAML file will be created with the list of files for each sample and trigger.
 
+## Lists from files in the grid
+
+If instead of taking the downloaded files, one wants the ones in the grid, one can do:
+
+```bash
+make_tree_structure -v v4 -f samples.yaml 
+```
+
+where `v4` is the version of the JSON files holding the LFNs
+
 ## Samples naming
 
 The samples were named after the DecFiles names for the samples and:
