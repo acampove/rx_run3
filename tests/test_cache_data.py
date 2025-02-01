@@ -42,7 +42,7 @@ def test_run3_rk_prc_mc(sample : str, trigger : str):
     Testing on run3 RK samples used for training of PRec MVA 
     '''
     log.info(f'{sample:<60}{trigger:<40}')
-    cfg = tst.get_config(sample, trigger, is_rk = True, remove=[])
+    cfg = tst.get_config(sample, trigger, is_rk = True, remove=['bdt'])
     if cfg is None:
         return
 
@@ -55,7 +55,7 @@ def test_run3_rk_all_mc(sample : str, trigger : str):
     Testing on run3 RK samples and triggers
     '''
     log.info(f'{sample:<60}{trigger:<40}')
-    cfg = tst.get_config(sample, trigger, is_rk = True, remove=[])
+    cfg = tst.get_config(sample, trigger, is_rk = True, remove=['bdt'])
     if cfg is None:
         return
 
@@ -68,7 +68,7 @@ def test_run3_rk_all_dt(sample : str, trigger : str):
     Testing on run3 RK samples and triggers
     '''
     log.info(f'{sample:<60}{trigger:<40}')
-    cfg = tst.get_config(sample, trigger, is_rk = True, remove=[])
+    cfg = tst.get_config(sample, trigger, is_rk = True, remove=['bdt'])
     if cfg is None:
         return
 
