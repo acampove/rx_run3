@@ -67,7 +67,8 @@ class CacheData:
         Returns path and flag, signaling that the file exists or not
         '''
         selection_name = self._get_selection_name()
-        opath          = self._ipath.replace('post_ap', selection_name)
+        out_dir        = os.path.dirname(self._ipath)
+        opath          = f'{out_dir}/{selection_name}'
 
         path_dir = f'{opath}/{self._sample}/{self._hlt2}'
         os.makedirs(path_dir, exist_ok=True)
