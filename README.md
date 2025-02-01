@@ -50,7 +50,7 @@ download_rx_data -m 5 -p /path/to/downloaded/.data -v v1 -d -t triggers.yaml
 which will use 5 threads to download the ntuples associated to the triggers in `triggers.yaml`
 and version `v1` to the specified path.
 
-**IMPORTANT**: 
+**IMPORTANT**:
 - In order to prevent deleting the data, save it in a hiden folder, e.g. one starting with a period. Above it is `.data`.
 - This path is optional, one can export `DOWNLOAD_NTUPPATH` and the path will be picked up
 
@@ -79,7 +79,7 @@ this will not make a copy of the ntuples, it will only create symbolic links to 
 If instead one does:
 
 ```bash
-make_tree_structure -i /path/to/downloaded/.data/v1 -f samples.yaml 
+make_tree_structure -i /path/to/downloaded/.data/v1 -f samples.yaml
 ```
 
 the links won't be made, instead a YAML file will be created with the list of files for each sample and trigger.
@@ -89,7 +89,7 @@ the links won't be made, instead a YAML file will be created with the list of fi
 If instead of taking the downloaded files, one wants the ones in the grid, one can do:
 
 ```bash
-make_tree_structure -v v4 -f samples.yaml 
+make_tree_structure -v v4 -f samples.yaml
 ```
 
 where `v4` is the version of the JSON files holding the LFNs. In case one needs the old naming, used in Run1 and Run2
