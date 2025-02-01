@@ -15,15 +15,15 @@ class PathSplitter:
     Samples and HLT2 trigger categories
     '''
     # ------------------------------------------
-    def __init__(self, paths : list[str], max_files : int = -1, naming : str = 'new'):
+    def __init__(self, paths : list[str], max_files : int = -1, sample_naming : str = 'new'):
         '''
         paths: List of LFNs/PFNs/Local paths
         max_files: If doing tests, the output lists will be limited to this number, default not truncate
-        naming : Either `new` (for Run3) or `old` (for Run1/2 compatibility)
+        sample_naming : Either `new` (for Run3) or `old` (for Run1/2 compatibility)
         '''
-        self._l_path    = paths
-        self._max_files = max_files
-        self._naming    = naming
+        self._l_path       = paths
+        self._max_files    = max_files
+        self._sample_naming= sample_naming
     # ------------------------------------------
     def _truncate_paths(self, d_path):
         '''
@@ -46,8 +46,8 @@ class PathSplitter:
             try:
                 sample = aput.name_from_lower_case(sample)
 
-                log.debug(f'Using {self._naming} naming for samples')
-                if self._naming == 'old' and not sample.startswith('DATA_'):
+                log.debug(f'Using {self._sample_naming} sample_naming for samples')
+                if self._sample_naming == 'old' and not sample.startswith('DATA_'):
                     sample = aput.old_from_new_nick(nickname=sample)
             except ValueError as exc:
                 log.warning(exc)
