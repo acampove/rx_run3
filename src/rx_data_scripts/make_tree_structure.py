@@ -134,12 +134,23 @@ def _initialize(args : argparse.Namespace) -> None:
     Data.max_files = args.max
     Data.inp_path  = args.inp
     Data.out_path  = args.out
-    Data.fil_path  = args.fil
+    Data.fil_path  = args.fle
 
     LogStore.set_level('rx_data:make_tree_structure', args.lvl)
     LogStore.set_level('dmu:rfprinter', 30)
 
     Data.ver       = _version_from_input()
+# ---------------------------------
+def _save_to_file(d_struc : dict) -> None:
+    if Data.fil_path is None:
+        return
+
+    out_dir = os.path.dirname(Data.fil_path)
+    if out_dir != '':
+        os.makedirs(out_dir, exist_ok=True)
+
+    with open(Data.fil_path, 'w', encoding='utf-8') as ofile:
+        yaml.safe_dump(d_struc, ofile, indent=4)
 # ---------------------------------
 def main():
     '''
@@ -153,13 +164,18 @@ def main():
     splt = PathSplitter(paths=l_path, max_files=Data.max_files)
     d_path = splt.split()
 
+    d_struc = {}
     for (sample, line), l_path in tqdm.tqdm(d_path.items(), ascii=' -'):
+        if sample not in d_struc:
+            d_struc[sample] = {}
+
+        d_struc[sample][line] = l_path
 
         target_dir = _link_paths(sample, line, l_path)
-        if target_dir is None:
-            continue
+        if target_dir is not None:
+            _save_summary(target_dir)
 
-        _save_summary(target_dir)
+    _save_to_file(d_struc)
 # ---------------------------------
 if __name__ == '__main__':
     main()
