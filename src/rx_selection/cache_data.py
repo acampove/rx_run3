@@ -4,10 +4,10 @@ Module containing CacheData class
 # pylint: disable = too-many-instance-attributes, too-few-public-methods, import-error
 
 import os
-import glob
 
 from importlib.resources import files
 
+import yaml
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
 from rx_selection.ds_getter import DsGetter
