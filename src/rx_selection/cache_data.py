@@ -84,7 +84,7 @@ class CacheData:
         path_dir = f'{opath}/{self._sample}/{self._hlt2}'
         os.makedirs(path_dir, exist_ok=True)
 
-        path     = f'{path_dir}/{self._ipart:03}_{self._npart:03}.root'
+        path     = f'{path_dir}/{self._ipart:03}_{self._npart:03}_sample.root'
         if os.path.isfile(path):
             log.info(f'Loading cached data: {path}')
             return path, True
