@@ -29,6 +29,7 @@ class Data:
     '''
     eos_preffix = 'root://x509up_u12477@eoslhcb.cern.ch//eos/lhcb/grid/user'
 
+    naming    : str
     max_files : int
     ver       : str
     dry       : bool
@@ -145,6 +146,7 @@ def _get_args() -> argparse.Namespace:
     parser.add_argument('-v', '--ver', type=str, help='Version of LFNs needed to pick up JSON files')
     parser.add_argument('-o', '--out', type=str, help='Path to directory where tree structure will start')
     parser.add_argument('-f', '--fle', type=str, help='Path to YAML file with directory structure')
+    parser.add_argument('-n', '--nam', type=str, help='Naming scheme for samples', default='new', choices=['new', 'old'])
     parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs'   , default=-1)
     parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30]          , default=20)
     parser.add_argument('-d', '--dry',           help='Dry run if 1', action='store_true')
@@ -166,6 +168,7 @@ def _version_from_input() -> Union[str,None]:
 # ---------------------------------
 def _initialize(args : argparse.Namespace) -> None:
     Data.dry       = args.dry
+    Data.naming    = args.nam
     Data.max_files = args.max
     Data.inp_path  = args.inp
     Data.jsn_ver   = args.ver
@@ -197,7 +200,7 @@ def main():
 
     l_path = _get_paths()
 
-    splt = PathSplitter(paths=l_path, max_files=Data.max_files)
+    splt = PathSplitter(paths=l_path, max_files=Data.max_files, sample_naming=Data.naming)
     d_path = splt.split()
 
     d_struc = {}
