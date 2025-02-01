@@ -103,6 +103,19 @@ make_tree_structure -v v4 -f samples.yaml -n old
 
 **This will likely drop samples that have no old naming, because they were not used in the past.**
 
+### Dropping triggers
+
+The YAML outputs of the commands above will be very large and not all of it will be needed. One can drop triggers by:
+
+```bash
+# This will dump a list of triggers to triggers.yaml
+# You can optionally remove not needed triggers
+list_triggers -v v4 -o triggers.yaml
+
+# This will use those triggers only to make samples.yaml
+make_tree_structure -v v4 -f samples.yaml -t triggers.yaml
+```
+
 ## Samples naming
 
 The samples were named after the DecFiles names for the samples and:
