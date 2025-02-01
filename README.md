@@ -84,7 +84,7 @@ The options are:
 ```bash
 Script used to submit jobs to the IHEP's HTCondor cluster. The jobs should apply selection.
 
--d: Path to directory containing directory samples
+-d: Path to YAML file containing sample list
 -s: Name of the sample (subdirectory) to run over
 -r: String with dash separated cuts to remove, e.g. q2-bdt, optional
 -q: q2 bin, e.g. central
@@ -103,12 +103,12 @@ by default, it will run a test job.
 Given the large number of samples to process a utility was created to provide the list of commands, i.e. a list like:
 
 ```
-job_sel_ihep -T 0 -d /publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap -s Bu_Kee_eq_btosllball05_DPC   -q central -t Hlt2RD_BuToKpEE_MVA   -p RK -n 10 -r q2-bdt
-job_sel_ihep -T 0 -d /publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap -s Bu_Kee_eq_btosllball05_DPC   -q central -t SpruceRD_BuToHpEE     -p RK -n 10 -r q2-bdt
-job_sel_ihep -T 0 -d /publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap -s Bu_Kee_eq_btosllball_DPC     -q central -t Hlt2RD_BuToKpEE_MVA   -p RK -n 10 -r q2-bdt
-job_sel_ihep -T 0 -d /publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap -s Bu_Kee_eq_btosllball_DPC     -q central -t SpruceRD_BuToHpEE     -p RK -n 10 -r q2-bdt
-job_sel_ihep -T 0 -d /publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap -s Bu_Kmumu_eq_btosllball05_DPC -q central -t Hlt2RD_BuToKpMuMu_MVA -p RK -n 10 -r q2-bdt
-job_sel_ihep -T 0 -d /publicfs/ucas/user/campoverde/Data/RX_run3/v1/post_ap -s Bu_Kmumu_eq_btosllball05_DPC -q central -t SpruceRD_BuToHpMuMu   -p RK -n 20 -r q2-bdt
+job_sel_ihep -T 0 -d /publicfs/ucas/user/campoverde/Data/RX_run3/v4/rx_samples.yaml -s Bu_Kee_eq_btosllball05_DPC   -q central -t Hlt2RD_BuToKpEE_MVA   -p RK -n 10 -r q2-bdt
+job_sel_ihep -T 0 -d /publicfs/ucas/user/campoverde/Data/RX_run3/v4/rx_samples.yaml -s Bu_Kee_eq_btosllball05_DPC   -q central -t SpruceRD_BuToHpEE     -p RK -n 10 -r q2-bdt
+job_sel_ihep -T 0 -d /publicfs/ucas/user/campoverde/Data/RX_run3/v4/rx_samples.yaml -s Bu_Kee_eq_btosllball_DPC     -q central -t Hlt2RD_BuToKpEE_MVA   -p RK -n 10 -r q2-bdt
+job_sel_ihep -T 0 -d /publicfs/ucas/user/campoverde/Data/RX_run3/v4/rx_samples.yaml -s Bu_Kee_eq_btosllball_DPC     -q central -t SpruceRD_BuToHpEE     -p RK -n 10 -r q2-bdt
+job_sel_ihep -T 0 -d /publicfs/ucas/user/campoverde/Data/RX_run3/v4/rx_samples.yaml -s Bu_Kmumu_eq_btosllball05_DPC -q central -t Hlt2RD_BuToKpMuMu_MVA -p RK -n 10 -r q2-bdt
+job_sel_ihep -T 0 -d /publicfs/ucas/user/campoverde/Data/RX_run3/v4/rx_samples.yaml -s Bu_Kmumu_eq_btosllball05_DPC -q central -t SpruceRD_BuToHpMuMu   -p RK -n 20 -r q2-bdt
 ```
 
 Run the following:
