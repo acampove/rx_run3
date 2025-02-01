@@ -32,6 +32,7 @@ class Data:
     dry       : bool
     inp_path  : str
     out_path  : str
+    fil_path  : str
 # ---------------------------------
 def _get_paths() -> list[str]:
     '''
@@ -108,7 +109,8 @@ def _get_args() -> argparse.Namespace:
     '''
     parser = argparse.ArgumentParser(description='Makes directory structure from ROOT files through symbolic links')
     parser.add_argument('-i', '--inp', type=str, help='Path to directory with ROOT files to link'        , required=True)
-    parser.add_argument('-o', '--out', type=str, help='Path to directory where tree structure will start', required=True)
+    parser.add_argument('-o', '--out', type=str, help='Path to directory where tree structure will start')
+    parser.add_argument('-f', '--fle', type=str, help='Path to YAML file with directory structure')
     parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs'   , default=-1)
     parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30]          , default=20)
     parser.add_argument('-d', '--dry',           help='Dry run if 1', action='store_true')
@@ -130,6 +132,7 @@ def _initialize(args : argparse.Namespace) -> None:
     Data.max_files = args.max
     Data.inp_path  = args.inp
     Data.out_path  = args.out
+    Data.fil_path  = args.fil
 
     LogStore.set_level('rx_data:make_tree_structure', args.lvl)
     LogStore.set_level('dmu:rfprinter', 30)
