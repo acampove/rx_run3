@@ -53,6 +53,33 @@ def _get_paths_from_filesystem() -> list[str]:
 
     return l_path
 # ---------------------------------
+def _get_paths_from_json() -> list[str]:
+    jsn_wc = files('rx_data_lfns').joinpath(f'{Data.jsn_ver}/*.json')
+    jsn_wc = str(jsn_wc)
+    l_path = glob.glob(jsn_wc)
+
+    npath  = len(l_path)
+    if npath == 0:
+        raise FileNotFoundError(f'No files found in {jsn_wc}')
+
+    l_lfn  = []
+    for path in l_path:
+        with open(path, encoding='utf-8') as ifile:
+            l_this_file = json.load(ifile)
+            l_this_file = [ f'{Data.eos_preffix}{this_file}' for this_file in l_this_file ]
+            l_lfn      += l_this_file
+
+    return l_lfn
+# ---------------------------------
+def _get_paths() -> list[str]:
+    if Data.jsn_ver is not None:
+        return _get_paths_from_json()
+
+    if Data.inp_path is not None:
+        return _get_paths_from_filesystem()
+
+    raise ValueError('Cannot get paths, either filesystem path nor JSON version specified')
+# ---------------------------------
 def _link_paths(sample : str, line : str, l_path : list[str]) -> Union[str, None]:
     '''
     Makes symbolic links of list of paths of a specific kind
