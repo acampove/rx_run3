@@ -9,6 +9,7 @@ from typing        import Union
 from dataclasses   import dataclass
 from functools     import cache
 
+import yaml
 from dmu.logging.log_store   import LogStore
 
 log = LogStore.add_logger('rx_selection:tests')
@@ -18,7 +19,7 @@ class Data:
     '''
     Class used to share data
     '''
-    data_version = 'v3'
+    data_version = 'v4'
     l_rk_trigger = [
             'Hlt2RD_BuToKpMuMu_MVA',
             'Hlt2RD_BuToKpEE_MVA',
@@ -84,60 +85,44 @@ def _triggers_from_mc_sample(sample_path : str, is_rk : bool) -> list[str]:
 @cache
 def get_dt_samples(is_rk : bool) -> list[tuple[str,str]]:
     '''
-    Will return list of data samples
-    Where a sample is a pair of sample name and trigger name
+    Returns list for data samples
     '''
-    if 'DATADIR' not in os.environ:
-        raise ValueError('DATADIR not found in environment')
-
-    l_trigger  = Data.l_rk_trigger if is_rk else Data.l_rkst_trigger
-    data_dir   = os.environ['DATADIR']
-    sample_dir = f'{data_dir}/RX_run3/{Data.data_version}/post_ap'
-    l_dir      = glob.glob(f'{sample_dir}/DATA_*')
-    l_sam_trg  = []
-
-    if len(l_dir) == 0:
-        raise ValueError(f'No directories found in: {sample_dir}')
-
-    for sample_path in l_dir:
-        for trigger in l_trigger:
-            sample_name = os.path.basename(sample_path)
-            if not _has_files(sample_path, trigger):
-                log.warning(f'Cannot find any files for: {sample_name}/{trigger}')
-                continue
-
-            l_sam_trg.append((sample_name, trigger))
-
-    return l_sam_trg
+    return _get_samples(is_rk, 'data')
 # ---------------------------------------------
 @cache
 def get_mc_samples(is_rk : bool) -> list[tuple[str,str]]:
+    '''
+    Returns list for MC samples
+    '''
+    return _get_samples(is_rk, 'mc')
+# ---------------------------------------------
+def _get_samples(is_rk : bool, kind : str) -> list[tuple[str,str]]:
     '''
     Will return list of samples, where a sample is a pair of sample name and trigger
     '''
     if 'DATADIR' not in os.environ:
         raise ValueError('DATADIR not found in environment')
 
-    data_dir   = os.environ['DATADIR']
-    sample_dir = f'{data_dir}/RX_run3/{Data.data_version}/post_ap'
-    l_dir      = glob.glob(f'{sample_dir}/*')
-    l_sam_trg  = []
+    data_dir    = os.environ['DATADIR']
+    sample_file = f'{data_dir}/RX_run3/{Data.data_version}/rx_samples.yaml'
+    with open(sample_file, encoding='utf-8') as ifile:
+        d_sample = yaml.safe_load(ifile)
 
-    if len(l_dir) == 0:
-        raise ValueError(f'No directories found in: {sample_dir}')
+    l_sample = []
+    for sample, d_trig in d_sample.items():
+        if     sample.startswith('DATA_') and kind == 'mc':
+            continue
 
-    for sample_path in l_dir:
-        l_trigger   = _triggers_from_mc_sample(sample_path, is_rk)
+        if not sample.startswith('DATA_') and kind == 'dt':
+            continue
 
-        for trigger in l_trigger:
-            sample_name = os.path.basename(sample_path)
-            if not _has_files(sample_path, trigger):
-                log.warning(f'Cannot find any files for: {sample_name}/{trigger}')
-                continue
+        l_trig_found  = list(d_trig)
+        l_trig_needed = Data.l_rk_trigger if is_rk else Data.l_rkst_trigger
+        l_trig        = [ trig for trig in l_trig_found if trig in l_trig_needed]
 
-            l_sam_trg.append((sample_name, trigger))
+        l_sample     += [ (sample, trig) for trig in l_trig ]
 
-    return l_sam_trg
+    return l_sample
 # ---------------------------------------------
 def get_config(sample : str, trigger : str, is_rk : bool, remove : list) -> Union[dict, None]:
     '''
@@ -150,7 +135,7 @@ def get_config(sample : str, trigger : str, is_rk : bool, remove : list) -> Unio
     d_conf            = {}
     d_conf['ipart'  ] = 0
     d_conf['npart'  ] = 50
-    d_conf['ipath'  ] = f'{data_dir}/RX_run3/{Data.data_version}/post_ap'
+    d_conf['ipath'  ] = f'{data_dir}/RX_run3/{Data.data_version}/rx_samples.yaml'
     d_conf['sample' ] = sample
     d_conf['project'] = 'RK' if is_rk else 'RKst'
     d_conf['q2bin'  ] = 'central'
