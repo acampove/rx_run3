@@ -6,7 +6,6 @@ Module with tests for DsGetter class
 import os
 import pytest
 from dmu.logging.log_store  import LogStore
-from ROOT                   import RDataFrame
 
 import rx_selection.tests as tst
 from rx_selection.ds_getter import DsGetter
