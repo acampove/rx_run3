@@ -47,7 +47,7 @@ class PathSplitter:
                 sample = aput.name_from_lower_case(sample)
 
                 log.debug(f'Using {self._naming} naming for samples')
-                if self._naming == 'old':
+                if self._naming == 'old' and not sample.startswith('DATA_'):
                     sample = aput.old_from_new_nick(nickname=sample)
             except ValueError as exc:
                 log.warning(exc)
