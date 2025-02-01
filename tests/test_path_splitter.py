@@ -66,12 +66,12 @@ def test_max_files():
     _save_samples('max_files', data)
 # ----------------------------------------
 @pytest.mark.parametrize('naming', ['new', 'old'])
-def test_naming(naming : str):
+def test_sample_naming(naming : str):
     '''
     Will only read 100 files
     '''
     l_pfn = _get_pfns()
-    spl   = PathSplitter(paths = l_pfn, naming=naming)
+    spl   = PathSplitter(paths = l_pfn, sample_naming=naming)
     data  = spl.split()
 
     _save_samples(f'naming_{naming}', data)
