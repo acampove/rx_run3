@@ -204,6 +204,15 @@ def _save_to_file(d_struc : dict) -> None:
     with open(Data.fil_path, 'w', encoding='utf-8') as ofile:
         yaml.safe_dump(d_struc, ofile, indent=4)
 # ---------------------------------
+def _drop_line(line_name : str) -> bool:
+    if len(Data.l_line_to_pick) == 0:
+        return False
+
+    if line_name not in Data.l_line_to_pick:
+        return True
+
+    return False
+# ---------------------------------
 def main():
     '''
     Script starts here
@@ -218,6 +227,10 @@ def main():
 
     d_struc = {}
     for (sample, line), l_path in tqdm.tqdm(d_path.items(), ascii=' -'):
+        if _drop_line(line):
+            log.debug(f'Dropping {line}')
+            continue
+
         if sample not in d_struc:
             d_struc[sample] = {}
 
