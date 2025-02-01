@@ -14,6 +14,7 @@ import glob
 import pprint
 import numexpr
 
+import yaml
 import joblib
 import numpy
 import dmu.rdataframe.utilities as dmu_ut
@@ -51,6 +52,7 @@ class DsGetter:
         self._ipath           = cfg['ipath'   ]
 
         self._is_sim        : bool
+        self._d_sample      : dict
 
         self._initialized   = False
     # ------------------------------------
@@ -61,8 +63,15 @@ class DsGetter:
         self._is_sim    = not self._sample.startswith('DATA_')
 
         self._set_logs()
+        self._load_samples()
 
         self._initialized = True
+    # ------------------------------------
+    def _load_samples(self) -> None:
+        with open(self._ipath, encoding='utf-8') as ifile:
+            d_sample = yaml.safe_load(ifile)
+
+        self._d_sample = d_sample
     # ------------------------------------
     def _set_logs(self):
         '''
@@ -106,11 +115,10 @@ class DsGetter:
         return rdf
     # ------------------------------------
     def _get_files_path(self) -> list[str]:
-        files_wc = f'{self._ipath}/{self._sample}/{self._hlt2}/*.root'
-        l_path   = glob.glob(files_wc)
+        l_path   = self._d_sample[self._sample][self._hlt2]
         npath    = len(l_path)
         if npath == 0:
-            raise FileNotFoundError(f'No files found in: {files_wc}')
+            raise FileNotFoundError(f'No files found for: {self._sample}/{self._hlt2}')
 
         log.info(f'Found {npath} files')
 
