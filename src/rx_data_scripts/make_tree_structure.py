@@ -114,7 +114,8 @@ def _get_args() -> argparse.Namespace:
     Parse arguments
     '''
     parser = argparse.ArgumentParser(description='Makes directory structure from ROOT files through symbolic links')
-    parser.add_argument('-i', '--inp', type=str, help='Path to directory with ROOT files to link'        , required=True)
+    parser.add_argument('-i', '--inp', type=str, help='Path to directory with ROOT files to link')
+    parser.add_argument('-v', '--ver', type=str, help='Version of LFNs needed to pick up JSON files')
     parser.add_argument('-o', '--out', type=str, help='Path to directory where tree structure will start')
     parser.add_argument('-f', '--fle', type=str, help='Path to YAML file with directory structure')
     parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs'   , default=-1)
@@ -124,7 +125,10 @@ def _get_args() -> argparse.Namespace:
 
     return args
 # ---------------------------------
-def _version_from_input() -> str:
+def _version_from_input() -> Union[str,None]:
+    if Data.inp_path is None:
+        return None
+
     version = os.path.basename(Data.inp_path)
     if not re.match(r'v\d+', version):
         raise ValueError(f'Cannot extract version from: {version}')
@@ -137,13 +141,14 @@ def _initialize(args : argparse.Namespace) -> None:
     Data.dry       = args.dry
     Data.max_files = args.max
     Data.inp_path  = args.inp
+    Data.jsn_ver   = args.ver
     Data.out_path  = args.out
     Data.fil_path  = args.fle
 
     LogStore.set_level('rx_data:make_tree_structure', args.lvl)
     LogStore.set_level('dmu:rfprinter', 30)
 
-    Data.ver       = _version_from_input()
+    Data.ver = _version_from_input()
 # ---------------------------------
 def _save_to_file(d_struc : dict) -> None:
     if Data.fil_path is None:
