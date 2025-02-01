@@ -53,9 +53,9 @@ def _get_samples(kind : str) -> list[tuple[str,str]]:
     return l_sig
 # -------------------------------------------
 @pytest.mark.parametrize('sample, trigger', _get_samples(kind='mc'))
-def test_no_mva(sample : str, trigger : str) -> None:
+def test_select(sample : str, trigger : str) -> None:
     '''
-    Test of DsGetter class without BDT added
+    Tests selection
     '''
 
     log.info(f'Running over: {sample}/{trigger}')
