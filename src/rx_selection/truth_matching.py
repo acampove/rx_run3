@@ -449,10 +449,48 @@ def get_truth(event_type : Union[int,str]) -> str:
 
 # TODO: Tests are failing for:
 
-# [Bd_KstPi0gamma_Kpi_eq_DPC_SS-Hlt2RD_BuToKpEE_MVA] - ValueError: Event type 11102211_SS not recognized
-# [Bd_Kstgamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA] - ValueError: Event type 11102202_SS not recognized
-# [Bs_Dsstenu_Dsgamma_phienu_eq_DPC_HVM_EGDWC-Hlt2RD_BuToKpEE_MVA] - ValueError: Event type 13584200 not recognized
-# [Bs_phigamma_eq_HighPtGamma_DPC-Hlt2RD_BuToKpEE_MVA] - ValueError: Event type 13102202 not recognized
-# [Bs_phigamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA] - ValueError: Event type 13102202_SS not recognized
-# [Bu_JpsiKst_ee_Kpi0_eq_DPC-Hlt2RD_BuToKpEE_MVA] - ValueError: Event type 12153420 not recognized
-# [Lb_JpsipKX_mm_eq_JpsiInAcc-Hlt2RD_BuToKpMuMu_MVA] - ValueError: Event type 15444001 not recognized
+#[Bd_JpsiKst_update2012_mm_eq_DPC-Hlt2RD_BuToKpMuMu_MVA0] - ValueError: Event type 11144002 not recognized
+#[Bd_Kstee_flatq2_eq_DPC-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 11124007 not recognized
+#[Bd_Kstee_flatq2_eq_DPC_MomCut_TC600MeV-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 11124009 not recognized
+#[Bd_Kstgamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 11102202_SS not recognized
+#[Bd_Kstpi0_eq_TC_Kst982width100_HighPtPi0_SS-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 11102453_SS not recognized
+#[Bs_Dsstenu_Dsgamma_phienu_eq_DPC_HVM_EGDWC-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 13584200 not recognized
+#[Bs_JpsiKK_ee_eq_DPC-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 13154041 not recognized
+#[Bs_JpsiKK_mm_eq_DPC-Hlt2RD_BuToKpMuMu_MVA0] - ValueError: Event type 13144041 not recognized
+#[Bs_phiee_flatq2_eq_DPC-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 13124029 not recognized
+#[Bs_phiee_flatq2_eq_DPC_TC600MeV-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 13124030 not recognized
+#[Bs_phigamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 13102202_SS not recognized
+#[Bs_psi2SKK_ee_eq_DPC-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 13154042 not recognized
+#[Bs_psi2SKK_mm_eq_phsp_DPC_TC-Hlt2RD_BuToKpMuMu_MVA0] - ValueError: Event type 13144044 not recognized
+#[Bu_JpsiKst_ee_Kpi0_eq_DPC-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 12153420 not recognized
+#[Bu_pimumu_eq_DPC-Hlt2RD_BuToKpMuMu_MVA0] - ValueError: Event type 12113005 not recognized
+#[Bu_pimumu_eq_btosllball05_DiLeptonInAcc-Hlt2RD_BuToKpMuMu_MVA0] - ValueError: Event type 12113023 not recognized
+#[Lb_Lambda1520Jpsi_ee_eq_DPC-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 15154040 not recognized
+#[Lb_Lambda1520Jpsi_mm_eq_DPC-Hlt2RD_BuToKpMuMu_MVA0] - ValueError: Event type 15144040 not recognized
+#[Lb_Lambda1520ee_eq_phsp_DPC-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 15124001 not recognized
+#[Lb_Lambda1520mumu_eq_phsp_DPC-Hlt2RD_BuToKpMuMu_MVA0] - ValueError: Event type 15114001 not recognized
+#[Lb_Lambda1520psi2S_ee_eq_DPC-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 15154050 not recognized
+#[Lb_psi2SpK_mm_eq_phsp_DPC-Hlt2RD_BuToKpMuMu_MVA0] - ValueError: Event type 15144011 not recognized
+#[Bd_JpsiKS_mm_eq_CPV_DPC-Hlt2RD_BuToKpMuMu_MVA1] - rx_selection.efficiency.ZeroYields: Both passed and failed yields are zero
+#[Bd_JpsiKst_update2012_mm_eq_DPC-Hlt2RD_BuToKpMuMu_MVA1] - ValueError: Event type 11144002 not recognized
+#[Bd_Kstee_flatq2_eq_DPC-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 11124007 not recognized
+#[Bd_Kstee_flatq2_eq_DPC_MomCut_TC600MeV-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 11124009 not recognized
+#[Bd_Kstgamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 11102202_SS not recognized
+#[Bd_Kstpi0_eq_TC_Kst982width100_HighPtPi0_SS-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 11102453_SS not recognized
+#[Bs_Dsstenu_Dsgamma_phienu_eq_DPC_HVM_EGDWC-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 13584200 not recognized
+#[Bs_JpsiKK_ee_eq_DPC-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 13154041 not recognized
+#[Bs_JpsiKK_mm_eq_DPC-Hlt2RD_BuToKpMuMu_MVA1] - ValueError: Event type 13144041 not recognized
+#[Bs_phiee_flatq2_eq_DPC-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 13124029 not recognized
+#[Bs_phiee_flatq2_eq_DPC_TC600MeV-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 13124030 not recognized
+#[Bs_phigamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 13102202_SS not recognized
+#[Bs_psi2SKK_ee_eq_DPC-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 13154042 not recognized
+#[Bs_psi2SKK_mm_eq_phsp_DPC_TC-Hlt2RD_BuToKpMuMu_MVA1] - ValueError: Event type 13144044 not recognized
+#[Bu_JpsiKst_ee_Kpi0_eq_DPC-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 12153420 not recognized
+#[Bu_pimumu_eq_DPC-Hlt2RD_BuToKpMuMu_MVA1] - ValueError: Event type 12113005 not recognized
+#[Bu_pimumu_eq_btosllball05_DiLeptonInAcc-Hlt2RD_BuToKpMuMu_MVA1] - ValueError: Event type 12113023 not recognized
+#[Lb_Lambda1520Jpsi_ee_eq_DPC-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 15154040 not recognized
+#[Lb_Lambda1520Jpsi_mm_eq_DPC-Hlt2RD_BuToKpMuMu_MVA1] - ValueError: Event type 15144040 not recognized
+#[Lb_Lambda1520ee_eq_phsp_DPC-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 15124001 not recognized
+#[Lb_Lambda1520mumu_eq_phsp_DPC-Hlt2RD_BuToKpMuMu_MVA1] - ValueError: Event type 15114001 not recognized
+#[Lb_Lambda1520psi2S_ee_eq_DPC-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 15154050 not recognized
+#[Lb_psi2SpK_mm_eq_phsp_DPC-Hlt2RD_BuToKpMuMu_MVA1] - ValueError: Event type 15144011 not recognized
