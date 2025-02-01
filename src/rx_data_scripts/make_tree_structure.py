@@ -55,6 +55,9 @@ def _link_paths(sample : str, line : str, l_path : list[str]) -> Union[str, None
     info is a tuple with = (sample, channel, kind, year) information
     Will return directory where linked files are
     '''
+    if Data.out_path is None:
+        return None
+
     npath = len(l_path)
     log.debug(f'Linking {npath} paths for {sample}/{line}')
 
