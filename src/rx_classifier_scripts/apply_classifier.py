@@ -193,6 +193,9 @@ def _get_paths() -> list[str]:
     if Data.index is None:
         return l_path
 
+    if Data.index + 1 > nfile:
+        raise ValueError(f'Cannot run for index {Data.index}')
+
     l_path = [l_path[Data.index]]
     log.info(f'Restricting run to input with index: {Data.index}')
 
