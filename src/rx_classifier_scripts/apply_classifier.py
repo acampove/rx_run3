@@ -25,6 +25,7 @@ class Data:
     '''
     Class used to store shared information
     '''
+    sample      : str
     index       : int
     cfg_name    : str
     cfg_dict    : dict
@@ -39,13 +40,15 @@ def _get_args():
     '''
     parser = argparse.ArgumentParser(description='Used to read classifier and write scores to input ntuple, producing output ntuple')
     parser.add_argument('-c', '--cfg_name'   , type=str, help='Kind of config file', required=True)
+    parser.add_argument('-s', '--sample'     , type=str, help='Sample name, meant to exist inside input_dir, if not specified, will do all samples')
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
-    parser.add_argument('-i', '--index'      , type=int, help='Input index')
+    parser.add_argument('-i', '--index'      , type=int, help='Input index, to restrict to specific file, if not specified, will do all files')
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
     parser.add_argument('-d', '--dry_run'    ,           help='Dry run', action='store_true')
     args = parser.parse_args()
 
     Data.index       = args.index
+    Data.sample      = args.sample
     Data.cfg_name    = args.cfg_name
     Data.max_entries = args.max_entries
     Data.log_level   = args.log_level
@@ -181,6 +184,10 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
 #---------------------------------
 def _get_paths() -> list[str]:
     inp_dir = Data.cfg_dict['input_dir']
+    if Data.sample is not None:
+        inp_dir = f'{inp_dir}/{Data.sample}'
+        log.info(f'Restricting jobs to files in: {inp_dir}')
+
     file_wc = f'{inp_dir}/**/*_sample.root'
     l_path  = glob.glob(file_wc, recursive=True)
 
