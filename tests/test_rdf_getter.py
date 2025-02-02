@@ -52,10 +52,10 @@ def _plot_mva_mass(rdf : RDataFrame, test : str) -> None:
 def _plot_mva(rdf : RDataFrame, test : str) -> None:
     rdf = rdf.Filter('Jpsi_M > 2800 && Jpsi_M < 3200')
 
-    for mva in [0.0, 0.2, 0.4, 0.6, 0.8]:
-        arr_mva = rdf.AsNumpy(['mva.mva_cmb'])['mva.mva_cmb']
-
-        plt.hist(arr_mva, bins=40, histtype='step', range=[0, 1])
+    arr_cmb = rdf.AsNumpy(['mva.mva_cmb'])['mva.mva_cmb']
+    arr_prc = rdf.AsNumpy(['mva.mva_prc'])['mva.mva_prc']
+    plt.hist(arr_cmb, bins=40, histtype='step', range=[0, 1], label='CMB')
+    plt.hist(arr_prc, bins=40, histtype='step', range=[0, 1], label='PRC')
 
     plt.legend()
     plt.savefig(f'{Data.out_dir}/{test}_mva.png')
