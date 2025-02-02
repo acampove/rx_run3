@@ -180,18 +180,13 @@ def _save_rdf(tname, fname, rdf):
     Will take ROOT dataframe treename and file name (no extension)
     Will save taking a snapshot
     '''
-    l_var   = Data.cfg_dict['saving']['branches']
     out_dir = Data.cfg_dict['saving']['out_dir']
 
     os.makedirs(out_dir, exist_ok=True)
     out_path= f'{out_dir}/{fname}.root'
 
     log.info(f'Saving to: {out_path}/{tname}')
-
-    if l_var is None:
-        rdf.Snapshot(tname, out_path)
-    else:
-        rdf.Snapshot(tname, out_path, l_var)
+    rdf.Snapshot(tname, out_path)
 #---------------------------------
 def main():
     '''
