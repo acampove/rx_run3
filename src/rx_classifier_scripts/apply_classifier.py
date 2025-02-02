@@ -166,7 +166,7 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
         raise ValueError('No MVAs found, skipping addition')
 
     nmva = len(d_mva_kind)
-    log.info(f'Found {nmva} kinds of MVA scores')
+    log.debug(f'Found {nmva} kinds of MVA scores')
 
     d_mva_score = { f'mva_{name}' : _scores_from_rdf(rdf, d_path) for name, d_path in d_mva_kind.items() }
 
@@ -209,6 +209,8 @@ def main():
 
         if not Data.dry_run:
             rdf.Snapshot('DecayTree', out_path)
+
+        log.info('')
 #---------------------------------
 if __name__ == '__main__':
     main()
