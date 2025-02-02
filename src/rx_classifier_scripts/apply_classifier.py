@@ -178,8 +178,8 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
 #---------------------------------
 def _get_paths() -> list[str]:
     inp_dir = Data.cfg_dict['input_dir']
-    file_wc = f'{inp_dir}/*_sample.root'
-    l_path  = glob.glob(file_wc)
+    file_wc = f'{inp_dir}/**/*_sample.root'
+    l_path  = glob.glob(file_wc, recursive=True)
 
     nfile   = len(l_path)
     if nfile == 0:
