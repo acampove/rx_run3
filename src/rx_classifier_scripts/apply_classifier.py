@@ -29,6 +29,7 @@ class Data:
     cfg_dict    : dict
     max_entries : int
     l_model     : list
+    log_level   : int
 #---------------------------------
 def _get_args():
     '''
@@ -42,8 +43,7 @@ def _get_args():
 
     Data.cfg_name    = args.cfg_name
     Data.max_entries = args.max_entries
-
-    log.setLevel(args.log_level)
+    Data.log_level   = args.log_level
 #---------------------------------
 def _load_config():
     '''
@@ -72,7 +72,8 @@ def _get_rdf(file_path : str) -> RDataFrame:
     return rdf
 #---------------------------------
 def _set_loggers():
-    LogStore.set_level('dmu:ml:cv_predict', 20)
+    LogStore.set_level('dmu:ml:cv_predict'             , Data.log_level)
+    LogStore.set_level('rx_classifier:apply_classifier', Data.log_level)
 #---------------------------------
 def _get_q2_indexer() -> str:
     '''
