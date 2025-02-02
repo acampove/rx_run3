@@ -10,16 +10,9 @@ Module containing class that provides ROOT dataframe after a given selection
 
 import os
 import re
-import glob
 import pprint
-import numexpr
 
 import yaml
-import joblib
-import numpy
-import dmu.rdataframe.utilities as dmu_ut
-
-from dmu.ml.cv_predict      import CVPredict
 from dmu.rdataframe.atr_mgr import AtrMgr
 from dmu.logging.log_store  import LogStore
 from ROOT                   import RDataFrame, TFile
