@@ -168,6 +168,19 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 #---------------------------------
+def _get_paths() -> list[str]:
+    inp_dir = Data.cfg_dict['input_dir']
+    file_wc = f'{inp_dir}/*_sample.root'
+    l_path  = glob.glob(file_wc)
+
+    nfile   = len(l_path)
+    if nfile == 0:
+        raise ValueError(f'No file found in: {file_wc}')
+
+    log.info(f'Found {nfile} files')
+
+    return l_path
+#---------------------------------
 def main():
     '''
     Script starts here
@@ -178,7 +191,8 @@ def main():
     _set_loggers()
 
     log.info('Applying classifier')
-    for file_path in Data.cfg_dict['files']:
+    l_file_path = _get_paths()
+    for file_path in l_file_path:
         if not file_path.endswith('_sample.root'):
             raise ValueError(f'Invalid file name: {file_path}')
 
