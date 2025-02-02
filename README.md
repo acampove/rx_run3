@@ -124,3 +124,22 @@ The samples were named after the DecFiles names for the samples and:
 - Adding a `_SS` suffix for split sim samples. I.e. samples where the photon converts into an electron pair.
 
 A useful guide showing the correspondence between event type and name is [here](https://github.com/acampove/ap_utilities/blob/main/src/ap_utilities_data/evt_form.yaml)
+
+# Accessing ntuples
+
+If the ntuples are stored in a directory where each tuple is accompanied by a friend tree, a preliminary
+step that attaches all friend trees is needed. This is done by `RDFGetter` as shown below:
+
+
+```python
+from rx_data.rdf_getter     import RDFGetter
+
+# This is where the directories with the samples are
+RDFGetter.samples_dir = '/publicfs/ucas/user/campoverde/Data/RX_run3/v4/NO_q2_bdt_mass_Q2_central_VR_v1'
+
+# This picks one sample for a given trigger
+gtr = RDFGetter(sample='DATA_24_MagUp_24c2', trigger='Hlt2RD_BuToKpMuMu_MVA')
+rdf = gtr.get_rdf()
+```
+
+In the case of the MVA friend trees the branches added would be `mva.mva_cmb` and `mva.mva_prc`.
