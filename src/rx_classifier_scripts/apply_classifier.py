@@ -30,6 +30,7 @@ class Data:
     max_entries : int
     l_model     : list
     log_level   : int
+    dry_run     : bool
 #---------------------------------
 def _get_args():
     '''
@@ -39,11 +40,13 @@ def _get_args():
     parser.add_argument('-c', '--cfg_name'   , type=str, help='Kind of config file', required=True)
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
+    parser.add_argument('-d', '--dry_run'    ,           help='Dry run', action='store_true')
     args = parser.parse_args()
 
     Data.cfg_name    = args.cfg_name
     Data.max_entries = args.max_entries
     Data.log_level   = args.log_level
+    Data.dry_run     = args.dry_run
 #---------------------------------
 def _load_config():
     '''
@@ -135,10 +138,15 @@ def _get_full_q2_scores(
     return arr_full_q2
 # ----------------------------------------
 def _scores_from_rdf(rdf : RDataFrame, d_path : dict[str,str]) -> numpy.ndarray:
+    arr_jpsi_m  = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
+
+    # For dry runs return Jpsi mass as score. Won't be used or saved anyway
+    if Data.dry_run:
+        return arr_jpsi_m
+
     arr_low     = _q2_scores_from_rdf(rdf, d_path['low'    ])
     arr_central = _q2_scores_from_rdf(rdf, d_path['central'])
     arr_high    = _q2_scores_from_rdf(rdf, d_path['high'   ])
-    arr_jpsi_m  = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
 
     arr_mva     = _get_full_q2_scores(low=arr_low, central=arr_central, high=arr_high, jpsi_m=arr_jpsi_m)
 
@@ -198,7 +206,9 @@ def main():
 
         out_path = file_path.replace('_sample.root', '_mva.root')
         log.info(f'Saving to: {out_path}')
-        rdf.Snapshot('DecayTree', out_path)
+
+        if not Data.dry_run:
+            rdf.Snapshot('DecayTree', out_path)
 #---------------------------------
 if __name__ == '__main__':
     main()
