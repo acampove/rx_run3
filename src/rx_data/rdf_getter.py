@@ -35,7 +35,7 @@ class RDFGetter:
         if nfile <= 0:
             raise ValueError(f'No files found in: {root_wc}')
 
-        log.info(f'Adding {nfile} files from {root_wc}')
+        log.debug(f'Adding {nfile} files from {root_wc}')
 
         return chain
     # ------------------------------------
