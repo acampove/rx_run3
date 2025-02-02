@@ -25,10 +25,6 @@ class RDFGetter:
 
         chain   = TChain(self._treename)
 
-        nentries= chain.BuildIndex('EVENTNUMBER', 'RUNNUMBER')
-        if nentries < 0:
-            raise ValueError(f'Could not build index for chain made with: {root_wc}')
-
         log.debug(f'Built index for chain made with: {root_wc}')
 
         nfile   = chain.Add(root_wc)
