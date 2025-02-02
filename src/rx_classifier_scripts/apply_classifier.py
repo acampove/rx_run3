@@ -82,21 +82,98 @@ def _get_rdf():
 def _set_loggers():
     LogStore.set_level('dmu:ml:cv_predict', 20)
 #---------------------------------
-def _load_models():
+def _get_q2_indexer() -> str:
     '''
-    Will load classifier models in Data.l_model
+    Returns a string that depends on Jpsi_M.
+    When evaluated it gives
+    - 0 for resonant
+    - 1 for low
+    - 2 for central
+    - 3 for high
+
+    q2 bin
+    '''
+    sel_cfg  = sel.load_selection_config()
+    d_q2_cut = sel_cfg['q2_common']
+
+    low_cut  = d_q2_cut['low'    ]
+    cen_cut  = d_q2_cut['central']
+    hig_cut  = d_q2_cut['high'   ]
+
+    cond     = f'1 * ({low_cut}) + 2 * ({cen_cut}) + 3 * ({hig_cut})'
+    cond     = cond.replace('&&', '&')
+
+    log.debug(f'Using q2 indexer: {cond}')
+
+    return cond
+# ----------------------------------------
+def _q2_scores_from_rdf(rdf : RDataFrame, path : str) -> numpy.ndarray:
+    l_pkl  = glob.glob(f'{path}/*.pkl')
+    npkl   = len(l_pkl)
+    if npkl == 0:
+        raise ValueError(f'No pickle files found in {path}')
+
+    log.info(f'Using {npkl} pickle files from: {path}')
+
+    l_model = [ joblib.load(pkl_path) for pkl_path in l_pkl ]
+
+    cvp     = CVPredict(models=l_model, rdf=rdf)
+    arr_prb = cvp.predict()
+
+    return arr_prb
+# ----------------------------------------
+def _get_full_q2_scores(
+        low     : numpy.ndarray,
+        central : numpy.ndarray,
+        high    : numpy.ndarray,
+        jpsi_m  : numpy.ndarray) -> numpy.ndarray:
+    '''
+    Takes arrays of MVA in 3 q2 bins, as well as array of jpsi mass.
+    Returns array of mva score correspoinding to right q2 bin.
     '''
 
-    log.info('Getting models')
+    q2_cond     = _get_q2_indexer()
+    arr_ind     = numexpr.evaluate(q2_cond, local_dict={'Jpsi_M' : jpsi_m})
 
-    model_path = Data.cfg_dict['model']
-    model_wc   = model_path.replace('.pkl', '_*.pkl')
-    l_path     = glob.glob(model_wc)
-    if len(l_path) == 0:
-        log.error(f'No file found in: {model_wc}')
-        raise ValueError
+    # Resonant q2 bin will pick up central-q2 scores
+    arr_all_q2  = numpy.array([central, low, central, high])
+    arr_full_q2 = numpy.choose(arr_ind, arr_all_q2)
 
-    Data.l_model = [ joblib.load(path) for path in l_path ]
+    return arr_full_q2
+# ----------------------------------------
+def _scores_from_rdf(rdf : RDataFrame, d_path : dict[str,str]) -> numpy.ndarray:
+    arr_low     = _q2_scores_from_rdf(rdf, d_path['low'    ])
+    arr_central = _q2_scores_from_rdf(rdf, d_path['central'])
+    arr_high    = _q2_scores_from_rdf(rdf, d_path['high'   ])
+    arr_jpsi_m  = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
+
+    arr_mva     = _get_full_q2_scores(low=arr_low, central=arr_central, high=arr_high, jpsi_m=arr_jpsi_m)
+
+    return arr_mva
+# ----------------------------------------
+def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
+    '''
+    Takes name of dataset and corresponding ROOT dataframe
+    return dataframe with a classifier probability column added
+    '''
+
+    if 'mva' not in Data.cfg_dict:
+        raise ValueError('Cannot find MVA section in config')
+
+    d_mva_kind = Data.cfg_dict['mva']
+    if len(d_mva_kind) == 0:
+        raise ValueError('No MVAs found, skipping addition')
+
+    nmva = len(d_mva_kind)
+    log.info(f'Found {nmva} kinds of MVA scores')
+
+    d_mva_score = { f'mva_{name}' : _scores_from_rdf(rdf, d_path) for name, d_path in d_mva_kind.items() }
+
+    d_data      = rdf.AsNumpy(['RUNNUMBER', 'EVENTNUMBER'])
+    d_data.update(d_mva_score)
+    rdf         = RDF.FromNumpy(d_data)
+
+    return rdf
 #---------------------------------
 def _save_rdf(tname, fname, rdf):
     '''
