@@ -56,28 +56,20 @@ def _load_config():
     with open(Data.cfg_name, encoding='utf-8') as ifile:
         Data.cfg_dict = yaml.safe_load(ifile)
 #---------------------------------
-def _get_rdf():
+def _get_rdf(file_path : str) -> RDataFrame:
     '''
     Returns a dictionary of dataframes built from paths in config
     '''
     log.info('Getting dataframes')
 
-    d_sample = Data.cfg_dict['samples']
-    d_rdf    = {}
-    for name, d_info in d_sample.items():
-        tree_name = d_info['tree_name']
-        file_path = d_info['file_path']
+    rdf = RDataFrame('DecayTree', file_path)
+    if Data.max_entries > 0:
+        rdf = rdf.Range(Data.max_entries)
 
-        rdf = RDataFrame(tree_name, file_path)
-        if Data.max_entries > 0:
-            rdf = rdf.Range(Data.max_entries)
+    nentries = rdf.Count().GetValue()
+    log.info(f'Using {nentries} entries for sample {file_path}')
 
-        nentries = rdf.Count().GetValue()
-        log.info(f'Using {nentries} entries for sample {name}')
-
-        d_rdf[name] = rdf
-
-    return d_rdf
+    return rdf
 #---------------------------------
 def _set_loggers():
     LogStore.set_level('dmu:ml:cv_predict', 20)
