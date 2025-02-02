@@ -6,18 +6,15 @@ import os
 import glob
 import argparse
 
-from importlib.resources import files
 from dataclasses         import dataclass
 
 import joblib
 import numpy
 import yaml
 
-from ROOT                  import RDataFrame
+from ROOT                  import RDataFrame, RDF
 from dmu.ml.cv_predict     import CVPredict
 from dmu.logging.log_store import LogStore
-
-import dmu.rdataframe.utilities as ut
 
 log = LogStore.add_logger('rx_classifier:apply_classifier')
 #---------------------------------
@@ -51,26 +48,11 @@ def _load_config():
     Will load YAML config and set Data.cfg_dict
     '''
 
-    cfg_path = files('rx_classifier_data').joinpath(f'{Data.cfg_name}.yaml')
-    cfg_path = str(cfg_path)
-    if not os.path.isfile(cfg_path):
-        raise FileNotFoundError(f'Could not find: {cfg_path}')
+    if not os.path.isfile(Data.cfg_name):
+        raise FileNotFoundError(f'Could not find: {Data.cfg_name}')
 
-    with open(cfg_path, encoding='utf-8') as ifile:
+    with open(Data.cfg_name, encoding='utf-8') as ifile:
         Data.cfg_dict = yaml.safe_load(ifile)
-#---------------------------------
-def _add_variables(rdf):
-    '''
-    Will define extra columns in ROOT dataframe
-    according to config
-    '''
-    d_var_def = Data.cfg_dict['define']
-
-    log.info('Defining variables')
-    for name, expr in d_var_def.items():
-        rdf = rdf.Define(name, expr)
-
-    return rdf
 #---------------------------------
 def _get_rdf():
     '''
@@ -85,7 +67,6 @@ def _get_rdf():
         file_path = d_info['file_path']
 
         rdf = RDataFrame(tree_name, file_path)
-        rdf = _add_variables(rdf)
         if Data.max_entries > 0:
             rdf = rdf.Range(Data.max_entries)
 
@@ -96,7 +77,7 @@ def _get_rdf():
 
     return d_rdf
 #---------------------------------
-def _apply_classifier(name, rdf):
+def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
     '''
     Takes name of dataset and corresponding ROOT dataframe
     return dataframe with a classifier probability column added
@@ -107,8 +88,8 @@ def _apply_classifier(name, rdf):
     l_sig   = [ prb[1] for prb in arr_prb ]
     arr_sig = numpy.array(l_sig)
 
-    name    = Data.cfg_dict['saving']['score']
-    rdf     = ut.add_column(rdf, arr_sig, name)
+    score   = Data.cfg_dict['saving']['score']
+    rdf     = RDF.FromNumpy({score : arr_sig})
 
     return rdf
 #---------------------------------
@@ -165,7 +146,7 @@ def main():
     for fname, rdf in d_rdf.items():
         tname = Data.cfg_dict['samples'][fname]['tree_name']
         log.info(f'---> {fname}/{tname}')
-        rdf = _apply_classifier(fname, rdf)
+        rdf = _apply_classifier(rdf)
         _save_rdf(tname, fname, rdf)
 #---------------------------------
 if __name__ == '__main__':
