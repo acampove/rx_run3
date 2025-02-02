@@ -79,21 +79,6 @@ def _get_rdf():
 
     return d_rdf
 #---------------------------------
-def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
-    '''
-    Takes name of dataset and corresponding ROOT dataframe
-    return dataframe with a classifier probability column added
-    '''
-    cvp     = CVPredict(models=Data.l_model, rdf=rdf)
-    arr_prb = cvp.predict()
-    score   = Data.cfg_dict['saving']['score']
-
-    d_data        = rdf.AsNumpy(['RUNNUMBER', 'EVENTNUMBER'])
-    d_data[score] = arr_prb
-    rdf           = RDF.FromNumpy(d_data)
-
-    return rdf
-#---------------------------------
 def _set_loggers():
     LogStore.set_level('dmu:ml:cv_predict', 20)
 #---------------------------------
