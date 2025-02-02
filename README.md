@@ -48,3 +48,31 @@ Some things that can be tried are:
 - One could also merge new datasets to improve the training.
 - One could try MLPs or other type of classifiers.
 
+## Adding MVA scores to ntuples
+
+For this run:
+
+```bash
+apply_classifier -c application.yaml
+```
+
+where the YAML file has configurations that look like:
+
+```yaml
+# This should be the directory with the fully selected (except for the MVA) data and or MC
+input_dir : /publicfs/ucas/user/campoverde/Data/RX_run3/v4/NO_q2_bdt_mass_Q2_central_VR_v1
+# This section specifies the locations of the MVA pickle files for each type of MVA
+mva :
+  cmb :
+    low     : /publicfs/ucas/user/campoverde/Data/RK/MVA/run3/v5/RK/cmb/low
+    central : /publicfs/ucas/user/campoverde/Data/RK/MVA/run3/v5/RK/cmb/central
+    high    : /publicfs/ucas/user/campoverde/Data/RK/MVA/run3/v5/RK/cmb/high
+  prc :
+    low     : /publicfs/ucas/user/campoverde/Data/RK/MVA/run3/v5/RK/prc/low
+    central : /publicfs/ucas/user/campoverde/Data/RK/MVA/run3/v5/RK/prc/central
+    high    : /publicfs/ucas/user/campoverde/Data/RK/MVA/run3/v5/RK/prc/high
+```
+the script above will run over each input file, ending in `_sample.root` and will produce a file
+with the mva scores `mva_cmb` and `mva_prc` alongside the `EVENTNUMBER` and `RUNNUMBER` branches.
+These files can be used to create friend trees with the latter two branches used for indexing as
+specified [here](https://root.cern/manual/trees/#widening-a-ttree-through-friends).
