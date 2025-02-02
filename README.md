@@ -76,3 +76,19 @@ the script above will run over each input file, ending in `_sample.root` and wil
 with the mva scores `mva_cmb` and `mva_prc` alongside the `EVENTNUMBER` and `RUNNUMBER` branches.
 These files can be used to create friend trees with the latter two branches used for indexing as
 specified [here](https://root.cern/manual/trees/#widening-a-ttree-through-friends).
+
+In case multiple samples are present in the directory one can target a specific sample only with:
+
+```bash
+apply_classifier -c application.yaml -s DATA_24_MagUp_24c1
+```
+
+Dry runs can be used to make sure the right files will be processed with `-d`.
+
+If 10 files will be processed, a specific file can be targeted with:
+
+```bash
+apply_classifier -c application.yaml -s DATA_24_MagUp_24c1 -i 2
+```
+
+`-i` can also be used to parametrize jobs in a cluster, like HTCondor.
