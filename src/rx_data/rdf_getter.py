@@ -52,7 +52,7 @@ class RDFGetter:
         chain_main = self._get_chain(kind ='sample')
         chain_mva  = self._get_chain(kind =   'mva')
 
-        chain_main.AddFriend(chain_mva)
+        chain_main.AddFriend(chain_mva, 'mva')
 
         rdf = RDataFrame(chain_main)
         rdf.chains = [chain_main, chain_mva]
