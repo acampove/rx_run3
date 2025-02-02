@@ -37,7 +37,7 @@ def _get_args():
     '''
     parser = argparse.ArgumentParser(description='Used to read classifier and write scores to input ntuple, producing output ntuple')
     parser.add_argument('-c', '--cfg_name'   , type=str, help='Kind of config file', required=True)
-    parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=10, choices=[10, 20, 30])
+    parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
     args = parser.parse_args()
 
