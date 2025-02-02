@@ -179,6 +179,9 @@ def main():
 
     log.info('Applying classifier')
     for file_path in Data.cfg_dict['files']:
+        if not file_path.endswith('_sample.root'):
+            raise ValueError(f'Invalid file name: {file_path}')
+
         rdf = _get_rdf(file_path)
         rdf = _apply_classifier(rdf)
 
