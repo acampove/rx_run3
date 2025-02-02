@@ -59,6 +59,7 @@ class RDFGetter:
         chain_main.AddFriend(chain_mva)
 
         rdf = RDataFrame(chain_main)
+        rdf.chains = [chain_main, chain_mva]
 
         return rdf
 # ---------------------------------------------------------------
