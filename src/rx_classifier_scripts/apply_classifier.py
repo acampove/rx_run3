@@ -8,12 +8,15 @@ import argparse
 
 from dataclasses         import dataclass
 
+import numexpr
 import joblib
+import numpy
 import yaml
 
 from ROOT                  import RDataFrame, RDF
 from dmu.ml.cv_predict     import CVPredict
 from dmu.logging.log_store import LogStore
+from rx_selection          import selection as sel
 
 log = LogStore.add_logger('rx_classifier:apply_classifier')
 #---------------------------------
