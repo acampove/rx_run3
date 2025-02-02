@@ -9,7 +9,6 @@ import argparse
 from dataclasses         import dataclass
 
 import joblib
-import numpy
 import yaml
 
 from ROOT                  import RDataFrame, RDF
@@ -84,12 +83,11 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
     '''
     cvp     = CVPredict(models=Data.l_model, rdf=rdf)
     arr_prb = cvp.predict()
-
-    l_sig   = [ prb[1] for prb in arr_prb ]
-    arr_sig = numpy.array(l_sig)
-
     score   = Data.cfg_dict['saving']['score']
-    rdf     = RDF.FromNumpy({score : arr_sig})
+
+    d_data        = rdf.AsNumpy(['RUNNUMBER', 'EVENTNUMBER'])
+    d_data[score] = arr_prb
+    rdf           = RDF.FromNumpy(d_data)
 
     return rdf
 #---------------------------------
