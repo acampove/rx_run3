@@ -193,9 +193,6 @@ def main():
     log.info('Applying classifier')
     l_file_path = _get_paths()
     for file_path in l_file_path:
-        if not file_path.endswith('_sample.root'):
-            raise ValueError(f'Invalid file name: {file_path}')
-
         rdf = _get_rdf(file_path)
         rdf = _apply_classifier(rdf)
 
