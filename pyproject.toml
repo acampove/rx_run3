@@ -1,7 +1,14 @@
 [project]
 name        = 'rx_classifier'
 version     = '0.0.2'
-dependencies= ['data_manipulation_utilities', 'mplhep', 'matplotlib']
+dependencies= [
+'data_manipulation_utilities', 
+'mplhep', 
+'matplotlib',
+'numpy',
+'joblib',
+'PyYAML',
+]
 
 [project.optional-dependencies]
 dev  = ['pytest']
