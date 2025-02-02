@@ -167,19 +167,6 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 #---------------------------------
-def _save_rdf(tname, fname, rdf):
-    '''
-    Will take ROOT dataframe treename and file name (no extension)
-    Will save taking a snapshot
-    '''
-    out_dir = Data.cfg_dict['saving']['out_dir']
-
-    os.makedirs(out_dir, exist_ok=True)
-    out_path= f'{out_dir}/{fname}.root'
-
-    log.info(f'Saving to: {out_path}/{tname}')
-    rdf.Snapshot(tname, out_path)
-#---------------------------------
 def main():
     '''
     Script starts here
@@ -189,14 +176,14 @@ def main():
     _load_config()
     _set_loggers()
 
-    d_rdf = _get_rdf()
-
     log.info('Applying classifier')
-    for fname, rdf in d_rdf.items():
-        tname = Data.cfg_dict['samples'][fname]['tree_name']
-        log.info(f'---> {fname}/{tname}')
+    for file_path in Data.cfg_dict['files']:
+        rdf = _get_rdf(file_path)
         rdf = _apply_classifier(rdf)
-        _save_rdf(tname, fname, rdf)
+
+        out_path = file_path.replace('_sample.root', '_mva.root')
+        log.info(f'Saving to: {out_path}')
+        rdf.Snapshot('DecayTree', out_path)
 #---------------------------------
 if __name__ == '__main__':
     main()
