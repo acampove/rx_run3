@@ -123,7 +123,6 @@ def main():
 
     _get_args()
     _load_config()
-    _load_models()
     _set_loggers()
 
     d_rdf = _get_rdf()
