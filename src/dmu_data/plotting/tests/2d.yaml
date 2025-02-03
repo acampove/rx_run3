@@ -1,5 +1,8 @@
 saving:
-    plt_dir : tests/plotting/2d_weighted
+    plt_dir : /tmp/dmu/tests/plotting/2d_weighted
+selection:
+  cuts:
+    xlow : x > -1.5
 definitions:
   z : x + y
 general:
