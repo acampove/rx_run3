@@ -26,8 +26,9 @@ class Data:
 
     RDFGetter.samples_dir = '/home/acampove/Data/RX_run3/NO_q2_bdt_mass_Q2_central_VR_v1'
 
-    q2_bin : str
-    q2_cut : str
+    trigger : str
+    q2_bin  : str
+    q2_cut  : str
 # ---------------------------------
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger=Data.trigger_mm)
@@ -55,11 +56,13 @@ def _q2cut_from_q2bin(q2bin : str) -> str:
 # ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make plots')
-    parser.add_argument('-q', '--q2bin', type=str, help='q2 bin', choices=['low', 'central', 'high'], required=True)
+    parser.add_argument('-q', '--q2bin' , type=str, help='q2 bin' , choices=['low', 'central', 'high'], required=True)
+    parser.add_argument('-c', '--chanel', type=str, help='Channel', choices=['ee', 'mm'], required=True)
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
     Data.q2_cut = _q2cut_from_q2bin(args.q2bin)
+    Data.trigger= Data.trigger_mm if args.chanel == 'mm' else Data.trigger_ee
 # ---------------------------------
 def _get_cfg() -> dict:
     config_path = files('rx_plotter_data').joinpath('bdt_cutflow.yaml')
@@ -71,6 +74,9 @@ def _get_cfg() -> dict:
     return _override_cfg(cfg)
 # ---------------------------------
 def _override_cfg(cfg : dict) -> dict:
+    plt_dir = cfg['saving']['plt_dir']
+    cfg['saving']['plt_dir'] = f'{plt_dir}/{Data.trigger}'
+
     cfg['selection']['cuts'] = {'q2' : Data.q2_cut}
 
     for d_plot in cfg['plots'].values():
