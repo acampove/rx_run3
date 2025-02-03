@@ -1,5 +1,5 @@
 saving:
-    plt_dir : plots/bdt_q2
+    plt_dir : plots/mass_q2
 selection:
   cuts:
     cmb : mva.mva_cmb > 0.5
