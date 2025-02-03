@@ -1,5 +1,5 @@
 selection:
-    max_ran_entries : 50000
+  dummy : (1)
 saving:
     plt_dir : plots/bdt_cutflow
 plots:
@@ -10,7 +10,7 @@ plots:
         title      : ''
         name       : 'q2'
     B_M :
-        binning    : [4800, 5600, 50]
+        binning    : [4800, 5700, 50]
         yscale     : 'linear'
         labels     : ['$M(B^+)$', 'Entries']
         title      : ''
@@ -21,9 +21,13 @@ plots:
         labels     : ['Signal Probability', 'Entries']
         title      : 'Combinatorial MVA'
         name       : 'cmb'
+        normalized : true
     mva.mva_prc:
         binning    : [0, 1, 50]
         yscale     : 'linear'
         labels     : ['Signal Probability', 'Entries']
         title      : 'PRec MVA'
         name       : 'prc'
+        normalized : true
+style:
+  skip_lines : true
