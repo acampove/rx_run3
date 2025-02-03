@@ -104,7 +104,6 @@ class Plotter1D(Plotter):
 
         return arr_wgt
     # --------------------------------------------
-
     def _style_plot(self, var : str, max_y : float) -> None:
         d_cfg  = self._d_cfg['plots'][var]
         yscale = d_cfg['yscale' ] if 'yscale' in d_cfg else 'linear'
@@ -124,12 +123,15 @@ class Plotter1D(Plotter):
         plt.legend()
         plt.title(title)
     # --------------------------------------------
-    def _plot_lines(self, var : str):
+    def _plot_lines(self, var : str) -> None:
         '''
         Will plot vertical lines for some variables
 
         var (str) : name of variable
         '''
+        if 'skip_lines' in self._d_cfg['style'] and self._d_cfg['style']['skip_lines']:
+            return
+
         if var in ['B_const_mass_M', 'B_M']:
             plt.axvline(x=5280, color='r', label=r'$B^+$'   , linestyle=':')
         elif var == 'Jpsi_M':
