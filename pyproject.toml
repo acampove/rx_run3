@@ -1,0 +1,21 @@
+[project]
+name        = 'rx_plots'
+version     = '0.0.1'
+readme      = 'README.md'
+dependencies= [
+'data-manipulation-utilities',
+'rx_selection',
+'rx_data',
+]
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
+[project.scripts]
+plot_mass='rx_plots_scripts.plot_mass:main'
+
+[tool.setuptools.package-data]
+rx_plots_data=['rk/mass/*.yaml']
