@@ -18,7 +18,7 @@ class Data:
     '''
     Class used to share attributes
     '''
-    nthreads   = 10
+    nthreads   = 13
     trigger_mm = 'Hlt2RD_BuToKpMuMu_MVA'
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
 
