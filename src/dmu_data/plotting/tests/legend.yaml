@@ -1,0 +1,10 @@
+saving:
+    plt_dir : tests/plotting/legend
+plots:
+    x : 
+        binning : [-5.0, 8.0, 40]
+    y : 
+        binning : [-5.0, 8.0, 40]
+style:
+  legend:
+    bbox_to_anchor : [1.05, 1]
