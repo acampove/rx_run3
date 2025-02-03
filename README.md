@@ -683,6 +683,8 @@ plots:
         yscale     : 'linear'
         labels     : ['x + y', 'Entries']
         normalized : true #This should normalize to the area
+style:
+  skip_lines : true
 ```
 
 it's up to the user to build this dictionary and load it.
