@@ -10,6 +10,7 @@ import mplhep
 from ROOT                    import RDataFrame, EnableImplicitMT
 from dmu.plotting.plotter_2d import Plotter2D
 from dmu.logging.log_store   import LogStore
+from rx_selection.selection  import load_selection_config
 from rx_data.rdf_getter      import RDFGetter
 
 log=LogStore.add_logger('rx_selection:plot_2d')
@@ -28,8 +29,10 @@ class Data:
     RDFGetter.samples_dir = '/home/acampove/Data/RX_run3/NO_q2_bdt_mass_Q2_central_VR_v1'
 
     loglvl  : int
+    q2bin   : str
     chanel  : str
     trigger : str
+    settn   : str
 # ---------------------------------
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger=Data.trigger)
@@ -45,15 +48,19 @@ def _set_logs() -> None:
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make 2D plots')
     parser.add_argument('-c', '--chanel', type=str, help='Channel', choices=['ee', 'mm'], required=True)
+    parser.add_argument('-q', '--q2bin' , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'])
+    parser.add_argument('-s', '--settn' , type=str, help='Settings, i.e. bdt_q2', choices=['bdt_q2', 'cmb_prc'], required=True)
     parser.add_argument('-l', '--loglvl', type=int, help='Log level', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
     Data.trigger= Data.trigger_mm if args.chanel == 'mm' else Data.trigger_ee
     Data.chanel = args.chanel
     Data.loglvl = args.loglvl
+    Data.q2bin  = args.q2bin
+    Data.settn  = args.settn
 # ---------------------------------
 def _get_cfg() -> dict:
-    config_path = files('rx_plotter_data').joinpath('bdt_q2.yaml')
+    config_path = files('rx_plotter_data').joinpath(f'{Data.settn}.yaml')
     config_path = str(config_path)
 
     with open(config_path, encoding='utf=8') as ifile:
