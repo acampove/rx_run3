@@ -49,7 +49,7 @@ def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make 2D plots')
     parser.add_argument('-c', '--chanel', type=str, help='Channel', choices=['ee', 'mm'], required=True)
     parser.add_argument('-q', '--q2bin' , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'])
-    parser.add_argument('-s', '--settn' , type=str, help='Settings, i.e. bdt_q2', choices=['bdt_q2', 'cmb_prc'], required=True)
+    parser.add_argument('-s', '--settn' , type=str, help='Settings, i.e. mass_q2', choices=['mass_q2', 'cmb_prc'], required=True)
     parser.add_argument('-l', '--loglvl', type=int, help='Log level', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
