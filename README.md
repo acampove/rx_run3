@@ -683,6 +683,8 @@ plots:
         yscale     : 'linear'
         labels     : ['x + y', 'Entries']
         normalized : true #This should normalize to the area
+# Some vertical dashed lines are drawn by default
+# If you see them, you can turn them off with this
 style:
   skip_lines : true
 ```
