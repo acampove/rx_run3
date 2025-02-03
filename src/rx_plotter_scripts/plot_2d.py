@@ -72,8 +72,16 @@ def _override_cfg(cfg : dict) -> dict:
     plt_dir = cfg['saving']['plt_dir']
     cfg['saving']['plt_dir']   = f'{plt_dir}/{Data.trigger}'
 
-    for d_plot in cfg['axes'].values():
-        d_plot['title'] = f'Channel: {Data.chanel}'
+    if Data.q2bin is None:
+        return cfg
+
+    cfg_sel = load_selection_config()
+    cut     = cfg_sel['q2_common'][Data.q2bin]
+    cfg['selection'] = {'cuts' : {'q2' : cut}}
+
+    for l_setting in cfg['plots_2d']:
+        name = l_setting[3]
+        l_setting[3] = f'{name}_{Data.q2bin}'
 
     return cfg
 # ---------------------------------
