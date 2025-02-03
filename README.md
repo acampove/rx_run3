@@ -654,6 +654,9 @@ ptr.run()
 where the config dictionary `cfg_dat` in YAML would look like:
 
 ```yaml
+general:
+    # This will set the figure size
+    size : [20, 10]
 selection:
     #Will do at most 50K random entries. Will only happen if the dataset has more than 50K entries
     max_ran_entries : 50000
