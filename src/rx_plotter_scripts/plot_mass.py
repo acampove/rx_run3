@@ -69,7 +69,7 @@ def _override_cfg(cfg : dict) -> dict:
             d_plot['title'] = ''
 
         title = d_plot['title']
-        title = f'{Data.q2_bin} $q^2$' + title
+        title = f'{Data.q2_bin} $q^2$ ' + title
         d_plot['title'] = title
 
         name  = d_plot['name']
