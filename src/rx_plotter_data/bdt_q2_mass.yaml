@@ -14,7 +14,7 @@ plots:
     B_M :
         binning    : [4500, 5800, 50]
         yscale     : 'linear'
-        labels     : ['$M(B^+)$', 'Entries']
+        labels     : ['M$(B^+)$', 'Entries']
         title      : ''
         name       : 'bmass'
     mva.mva_cmb:
