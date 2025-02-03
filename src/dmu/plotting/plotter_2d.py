@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 
 from hist                  import Hist
 from ROOT                  import RDataFrame
+from matplotlib.colors     import LogNorm
 from dmu.logging.log_store import LogStore
 from dmu.plotting.plotter  import Plotter
 
@@ -58,7 +59,7 @@ class Plotter2D(Plotter):
 
         return arr_wgt
     # --------------------------------------------
-    def _plot_vars(self, varx : str, vary : str, wgt_name : str) -> None:
+    def _plot_vars(self, varx : str, vary : str, wgt_name : str, use_log : bool) -> None:
         log.info(f'Plotting {varx} vs {vary} with weights {wgt_name}')
 
         ax_x         = self._get_axis(varx)
@@ -69,7 +70,10 @@ class Plotter2D(Plotter):
         hst   = Hist(ax_x, ax_y)
         hst.fill(arr_x, arr_y, weight=arr_w)
 
-        mplhep.hist2dplot(hst)
+        if use_log:
+            mplhep.hist2dplot(hst, norm=LogNorm())
+        else:
+            mplhep.hist2dplot(hst)
     # --------------------------------------------
     def run(self):
         '''
@@ -77,8 +81,8 @@ class Plotter2D(Plotter):
         '''
 
         fig_size = self._get_fig_size()
-        for [varx, vary, wgt_name, plot_name] in self._d_cfg['plots_2d']:
+        for [varx, vary, wgt_name, plot_name, use_log] in self._d_cfg['plots_2d']:
             plt.figure(plot_name, figsize=fig_size)
-            self._plot_vars(varx, vary, wgt_name)
+            self._plot_vars(varx, vary, wgt_name, use_log)
             self._save_plot(plot_name)
 # --------------------------------------------
