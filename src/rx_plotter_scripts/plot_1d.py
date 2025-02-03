@@ -21,6 +21,7 @@ class Data:
     nthreads   = 13
     trigger_mm = 'Hlt2RD_BuToKpMuMu_MVA'
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
+    d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
 
     mplhep.style.use('LHCb1')
 
@@ -75,11 +76,21 @@ def _get_cfg() -> dict:
 
     return _override_cfg(cfg)
 # ---------------------------------
+def _add_reso_q2(cfg : dict) -> dict:
+    d_mass    = cfg['plots']['B_M']
+    reso_mass = Data.d_reso[Data.q2_bin]
+    cfg['plots'][reso_mass] = d_mass
+
+    return cfg
+# ---------------------------------
 def _override_cfg(cfg : dict) -> dict:
-    plt_dir = cfg['saving']['plt_dir']
+    plt_dir                    = cfg['saving']['plt_dir']
     cfg['saving']['plt_dir']   = f'{plt_dir}/{Data.trigger}'
     cfg['selection']['cuts']   = {'q2' : Data.q2_cut}
     cfg['style']['skip_lines'] = Data.chanel == 'mm'
+
+    if Data.q2_bin in Data.d_reso:
+        cfg = _add_reso_q2(cfg)
 
     for d_plot in cfg['plots'].values():
         if 'title' not in d_plot:
