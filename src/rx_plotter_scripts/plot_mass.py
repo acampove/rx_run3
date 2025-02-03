@@ -31,7 +31,7 @@ class Data:
     q2_cut  : str
 # ---------------------------------
 def _get_rdf() -> RDataFrame:
-    gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger=Data.trigger_mm)
+    gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger=Data.trigger)
     rdf = gtr.get_rdf()
 
     return rdf
