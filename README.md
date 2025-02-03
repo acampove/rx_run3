@@ -708,6 +708,9 @@ The config would look like:
 ```yaml
 saving:
     plt_dir : tests/plotting/2d
+selection:
+  cuts:
+    xlow : x > -1.5
 general:
     size : [20, 10]
 plots_2d:
