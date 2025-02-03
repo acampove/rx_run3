@@ -1,13 +1,16 @@
 '''
 Script used to plot mass distributions
 '''
+import argparse
 from importlib.resources import files
 from dataclasses         import dataclass
 
 import yaml
-from ROOT                    import RDataFrame
+import mplhep
+from ROOT                    import RDataFrame, EnableImplicitMT
 from dmu.plotting.plotter_1d import Plotter1D
 from rx_data.rdf_getter      import RDFGetter
+from rx_selection.selection  import load_selection_config
 
 # ---------------------------------
 @dataclass
@@ -15,10 +18,16 @@ class Data:
     '''
     Class used to share attributes
     '''
+    nthreads   = 10
     trigger_mm = 'Hlt2RD_BuToKpMuMu_MVA'
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
 
+    mplhep.style.use('LHCb1')
+
     RDFGetter.samples_dir = '/home/acampove/Data/RX_run3/NO_q2_bdt_mass_Q2_central_VR_v1'
+
+    q2_bin : str
+    q2_cut : str
 # ---------------------------------
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger=Data.trigger_mm)
@@ -29,6 +38,20 @@ def _get_rdf() -> RDataFrame:
 def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
     return {'all' : rdf}
 # ---------------------------------
+def _q2cut_from_q2bin(q2bin : str) -> str:
+    cfg = load_selection_config()
+    cut = cfg['q2_common'][q2bin]
+
+    return cut
+# ---------------------------------
+def _parse_args() -> None:
+    parser = argparse.ArgumentParser(description='Script used to make plots')
+    parser.add_argument('-q', '--q2bin', type=str, help='q2 bin', choices=['low', 'central', 'high'], required=True)
+    args = parser.parse_args()
+
+    Data.q2_bin = args.q2bin
+    Data.q2_cut = _q2cut_from_q2bin(args.q2bin)
+# ---------------------------------
 def _get_cfg() -> dict:
     config_path = files('rx_plotter_data').joinpath('bdt_cutflow.yaml')
     config_path = str(config_path)
@@ -36,12 +59,31 @@ def _get_cfg() -> dict:
     with open(config_path, encoding='utf=8') as ifile:
         cfg = yaml.safe_load(ifile)
 
+    return _override_cfg(cfg)
+# ---------------------------------
+def _override_cfg(cfg : dict) -> dict:
+    cfg['selection']['cuts'] = {'q2' : Data.q2_cut}
+
+    for d_plot in cfg['plots'].values():
+        if 'title' not in d_plot:
+            d_plot['title'] = ''
+
+        title = d_plot['title']
+        title = f'{Data.q2_bin} $q^2$' + title
+        d_plot['title'] = title
+
+        name  = d_plot['name']
+        d_plot['name'] = f'{Data.q2_bin}_{name}'
+
     return cfg
 # ---------------------------------
 def main():
     '''
     Script starts here
     '''
+    _parse_args()
+    EnableImplicitMT(Data.nthreads)
+
     rdf   = _get_rdf()
     d_rdf = _get_bdt_cutflow_rdf(rdf)
     cfg   = _get_cfg()
