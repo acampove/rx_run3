@@ -129,7 +129,7 @@ class Plotter1D(Plotter):
 
         var (str) : name of variable
         '''
-        if 'skip_lines' in self._d_cfg['style'] and self._d_cfg['style']['skip_lines']:
+        if 'style' in self._d_cfg and 'skip_lines' in self._d_cfg['style'] and self._d_cfg['style']['skip_lines']:
             return
 
         if var in ['B_const_mass_M', 'B_M']:
