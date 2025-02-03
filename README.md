@@ -687,6 +687,10 @@ plots:
 # If you see them, you can turn them off with this
 style:
   skip_lines : true
+  # This can pass arguments to legend making function `plt.legend()` in matplotlib
+  legend:
+    # The line below would place the legend outside the figure to avoid ovelaps with the histogram
+    bbox_to_anchor : [1.2, 1]
 ```
 
 it's up to the user to build this dictionary and load it.
