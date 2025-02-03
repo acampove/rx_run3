@@ -67,7 +67,7 @@ def _parse_args() -> None:
     Data.chanel = args.chanel
 # ---------------------------------
 def _get_cfg() -> dict:
-    config_path = files('rx_plotter_data').joinpath('bdt_cutflow.yaml')
+    config_path = files('rx_plotter_data').joinpath('bdt_q2_mass.yaml')
     config_path = str(config_path)
 
     with open(config_path, encoding='utf=8') as ifile:
