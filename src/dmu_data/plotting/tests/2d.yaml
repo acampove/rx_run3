@@ -8,9 +8,10 @@ definitions:
 general:
     size : [20, 10]
 plots_2d:
-    - [x, y, weights, 'xy_w']
-    - [x, y,    null, 'xy_r']
-    - [x, z,    null, 'xz_r']
+    - [x, y, weights, 'xy_wgt', false]
+    - [x, y,    null, 'xy_raw', false]
+    - [x, z,    null, 'xz_raw', false]
+    - [x, z,    null, 'xz_log',  true]
 axes:
     x :
         binning : [-3.0, 3.0, 40]
