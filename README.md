@@ -717,8 +717,10 @@ plots_2d:
     # Column x and y
     # Name of column where weights are, null for not weights
     # Name of output plot, e.g. xy_x.png
-    - [x, y, weights, 'xy_w']
-    - [x, y,    null, 'xy_r']
+    # Book signaling to use log scale for z axis
+    - [x, y, weights, 'xy_w', false]
+    - [x, y,    null, 'xy_r', false]
+    - [x, y,    null, 'xy_l',  true]
 axes:
     x :
         binning : [-5.0, 8.0, 40]
