@@ -16,7 +16,8 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
-plot_mass='rx_plotter_scripts.plot_mass:main'
+plot_1d='rx_plotter_scripts.plot_1d:main'
+plot_2d='rx_plotter_scripts.plot_2d:main'
 
 [tool.setuptools.package-data]
 rx_plots_data=['rk/mass/*.yaml']
