@@ -77,7 +77,11 @@ def _get_cfg() -> dict:
     return _override_cfg(cfg)
 # ---------------------------------
 def _add_reso_q2(cfg : dict) -> dict:
-    d_mass    = cfg['plots']['B_M']
+    d_mass              = cfg['plots']['B_M']
+    d_mass              = dict(d_mass)
+    d_mass['labels'][0] = r'M${}_{DTF}(B^+)$'
+    d_mass['name'  ]    = f'DTF_mass_{Data.q2_bin}'
+
     reso_mass = Data.d_reso[Data.q2_bin]
     cfg['plots'][reso_mass] = d_mass
 
