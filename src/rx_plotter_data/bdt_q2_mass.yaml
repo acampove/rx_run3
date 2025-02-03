@@ -1,16 +1,18 @@
+general:
+  size : [18, 10]
 selection:
   dummy : (1)
 saving:
-    plt_dir : plots/bdt_q2_mass
+  plt_dir : plots/bdt_q2_mass
 plots:
     q2 :
-        binning    : [0, 22000000, 50]
+        binning    : [0, 22000000, 200]
         yscale     : 'linear'
         labels     : ['$q^2$', 'Entries']
         title      : ''
         name       : 'q2'
     B_M :
-        binning    : [4800, 5700, 50]
+        binning    : [4500, 5800, 50]
         yscale     : 'linear'
         labels     : ['$M(B^+)$', 'Entries']
         title      : ''
@@ -31,3 +33,5 @@ plots:
         normalized : true
 style:
   skip_lines : true
+  legend:
+    bbox_to_anchor : [1.40, 1]
