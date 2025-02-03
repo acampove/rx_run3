@@ -138,6 +138,7 @@ from rx_data.rdf_getter     import RDFGetter
 RDFGetter.samples_dir = '/publicfs/ucas/user/campoverde/Data/RX_run3/v4/NO_q2_bdt_mass_Q2_central_VR_v1'
 
 # This picks one sample for a given trigger
+# The sample accepts wildcards, e.g. `DATA_24_MagUp_24c*` for all the periods
 gtr = RDFGetter(sample='DATA_24_MagUp_24c2', trigger='Hlt2RD_BuToKpMuMu_MVA')
 rdf = gtr.get_rdf()
 ```
