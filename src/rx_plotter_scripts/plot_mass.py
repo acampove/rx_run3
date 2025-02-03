@@ -36,7 +36,16 @@ def _get_rdf() -> RDataFrame:
     return rdf
 # ---------------------------------
 def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
-    return {'all' : rdf}
+    d_rdf = {}
+    for cmb in [0.2, 0.4, 0.6, 0.8]:
+        rdf = rdf.Filter(f'mva.mva_cmb > {cmb}')
+        d_rdf [f'$MVA_{{cmb}}$ > {cmb}'] = rdf
+
+    for prc in [0.2, 0.4, 0.6]:
+        rdf = rdf.Filter(f'mva.mva_prc > {prc}')
+        d_rdf [f'$MVA_{{prc}}$ > {prc}'] = rdf
+
+    return d_rdf
 # ---------------------------------
 def _q2cut_from_q2bin(q2bin : str) -> str:
     cfg = load_selection_config()
