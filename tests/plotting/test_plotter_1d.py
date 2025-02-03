@@ -160,3 +160,14 @@ def test_normalized():
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
+#---------------------------------------
+def test_legend():
+    '''
+    Tests legend options
+    '''
+    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+
+    cfg_dat = _load_config(test='legend')
+
+    ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
+    ptr.run()
