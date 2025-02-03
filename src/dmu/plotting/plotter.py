@@ -212,7 +212,11 @@ class Plotter:
 
         var (str) : Name of variable, needed for plot name
         '''
-        plt.legend()
+        d_leg = {}
+        if 'style' in self._d_cfg and 'legend' in self._d_cfg['style']:
+            d_leg = self._d_cfg['style']['legend']
+
+        plt.legend(**d_leg)
 
         plt_dir = self._d_cfg['saving']['plt_dir']
         os.makedirs(plt_dir, exist_ok=True)
