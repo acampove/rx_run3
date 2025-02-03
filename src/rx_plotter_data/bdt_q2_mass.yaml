@@ -1,7 +1,7 @@
 selection:
   dummy : (1)
 saving:
-    plt_dir : plots/bdt_cutflow
+    plt_dir : plots/bdt_q2_mass
 plots:
     q2 :
         binning    : [0, 22000000, 50]
