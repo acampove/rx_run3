@@ -932,13 +932,10 @@ transformations:
   selection:
     evt_max : -1
     cuts:
-      any:
-        L1Ghost: L1_TRGHOSTPROB < 0.5
-        L2Ghost: L2_TRGHOSTPROB < 0.5
       bukee:
-        KpGhost: H_TRGHOSTPROB  < 0.5
+        <<: *rk_ee_cuts
       bukmm:
-        KpGhost: H_TRGHOSTPROB  < 0.5
+        <<: *rk_mm_cuts
       bdkstee:
         k_mass : Kst_M    >  800 && Kst_M   < 1000
         H1Ghost: H1_TRGHOSTPROB < 0.5
