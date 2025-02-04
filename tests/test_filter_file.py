@@ -9,7 +9,9 @@ from importlib.resources   import files
 import pytest
 from ROOT                  import RDataFrame
 from dmu.logging.log_store import LogStore
+from dmu.generic           import version_management as vmn
 from post_ap.filter_file   import FilterFile
+
 
 log = LogStore.add_logger('post_ap:test_filter_file')
 # --------------------------------------
@@ -71,7 +73,9 @@ def _initialize():
     '''
     log.info('Initializing')
 
-    cfg_path = files('post_ap_data').joinpath('post_ap/v5.yaml')
+    cfg_dir  = files('post_ap_data').joinpath('post_ap')
+    cfg_path = vmn.get_latest_file(dir_path = cfg_dir, wc='v*.yaml')
+
     os.environ['CONFIG_PATH'] = str(cfg_path)
 
     LogStore.set_level('dmu:rdataframe:atr_mgr', 30)
