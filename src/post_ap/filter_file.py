@@ -267,6 +267,10 @@ class FilterFile:
             return rdf
 
         category = self._get_sel_kind(line_name)
+        if category not in self._d_trans['define']:
+            log.debug(f'Not running category-independent definition for category: {category}')
+            return rdf
+
         d_def    = self._d_trans['define'][category]
 
         log.debug(110 * '-')
