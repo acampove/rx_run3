@@ -258,6 +258,33 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
+    def _define_branches_cat(self, rdf : RDataFrame, line_name : str) -> RDataFrame:
+        '''
+        Will define branches per category
+        '''
+        if 'define' not in self._d_trans:
+            log.debug('Not running category-independent definition')
+            return rdf
+
+        category = self._get_sel_kind(line_name)
+        d_def    = self._d_trans['define'][category]
+
+        log.debug(110 * '-')
+        log.info(f'Defining variables for: {line_name} ({category})')
+        log.debug(110 * '-')
+        for name, expr in d_def.items():
+            log.debug(f'{name:<50}{expr:<200}')
+
+            rdf = rdf.Define(name, expr)
+
+        return rdf
+    # --------------------------------------
+    def _define_branches(self, rdf : RDataFrame, line_name : str) -> RDataFrame:
+        rdf = self._define_branches_all(rdf)
+        rdf = self._define_branches_cat(rdf, line_name)
+
+        return rdf
+    # --------------------------------------
     def _define_kinematics(self, rdf : RDataFrame) -> RDataFrame:
         if 'particle_variables' not in self._d_trans:
             log.info('Not defining particle variables')
@@ -329,7 +356,7 @@ class FilterFile:
         log.info('')
 
         rdf      = RDataFrame(f'{line_name}/DecayTree', self._file_path)
-        rdf      = self._define_branches(rdf)
+        rdf      = self._define_branches(rdf, line_name)
         rdf      = self._define_heads(rdf)
         rdf      = self._rename_branches(rdf)
         rdf.lumi = False
