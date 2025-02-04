@@ -29,30 +29,42 @@ class Data:
 
     l_args_config    = [True, False]
 # --------------------------------------
-def _check_branches(rdf : RDataFrame, file_path : str) -> None:
+def _check_branches(rdf : RDataFrame, file_path : str, is_reco : bool) -> None:
     nentries = rdf.Count().GetValue()
     if nentries == 0:
         log.warning(f'No entries found in: {file_path}')
         return
 
     l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
-    if 'block' not in l_col:
-        raise ValueError(f'block branch missing in: {file_path}')
+    l_has_to_exist = ['block', 'EVENTNUMBER']
 
-    if 'EVENTNUMBER' not in l_col:
-        raise ValueError(f'EVENTNUMBER branch missing in: {file_path}')
+    if is_reco:
+        l_has_to_exist += [
+                'B_BPVX',
+                'B_BPVY',
+                'B_BPVZ',
+                'B_END_VX',
+                'B_END_VY',
+                'B_END_VZ']
 
-    return
+    fail=False
+    for has_to_exist in l_has_to_exist:
+        if has_to_exist not in l_col:
+            fail=True
+            log.error(f'{has_to_exist} branch missing in: {file_path}')
+
+    if fail:
+        raise ValueError('At least one branch was not found')
 # --------------------------------------
 def _check_file(file_path : str, is_mc : bool) -> None:
     rdf_dt = RDataFrame('DecayTree'  , file_path)
-    _check_branches(rdf_dt, file_path)
+    _check_branches(rdf_dt, file_path, is_reco=True)
 
     if not is_mc:
         return
 
     rdf_mc = RDataFrame('MCDecayTree', file_path)
-    _check_branches(rdf_mc, file_path)
+    _check_branches(rdf_mc, file_path, is_reco = False)
 # --------------------------------------
 def _move_outputs(test_name : str, is_mc : bool) -> None:
     l_root = glob.glob('*.root')
