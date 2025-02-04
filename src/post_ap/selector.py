@@ -43,7 +43,6 @@ class Selector:
         self._atr_mgr  = AtrMgr(self._rdf)
         cfg_dat        = utdc.load_config()
         self._d_sel    = cfg_dat['transformations']['selection']
-        self._fix_bkgcat()
 
         self._initialized = True
     # -------------------------------------------------------------------
@@ -95,48 +94,6 @@ class Selector:
 
         self._rdf = rdf
     # --------------------------------------
-    def _fix_bkgcat(self):
-        '''
-        If data, will set cut to (1).
-        If MC, will find BKGCAT branch in dataframe (e.g. Lb_BKGCAT)
-        Will rename BKGCAT in cuts dictionary, such that truth matching cut can be applied
-        '''
-        if not self._is_mc:
-            return
-
-        if 'BKGCAT' not in self._d_sel['cuts']['any']:
-            log.debug('Not renaming BKGCAT')
-            return
-
-        log.debug('Fixing BKGCAT')
-        bkgcat_cut = self._d_sel['cuts']['any']['BKGCAT']
-        bkgcat_var = self._get_bkgcat_name()
-        bkgcat_cut = bkgcat_cut.replace('BKGCAT', bkgcat_var)
-
-        log.debug(f'Using truth matching cut: {bkgcat_cut}')
-        self._d_sel['cuts']['any']['BKGCAT'] = bkgcat_cut
-    # --------------------------------------
-    def _get_bkgcat_name(self):
-        '''
-        Will return name of branch in tree, holding the background category for the B meson, i.e.:
-
-        X_BKGCAT
-        '''
-        v_col  = self._rdf.GetColumnNames()
-        l_col  = [ col.c_str() for col in v_col ]
-        l_bkg  = [ col         for col in l_col if col.endswith('BKGCAT') ]
-
-        try:
-            [name] = [ col for col in l_col if col in ['Lb_BKGCAT', 'B_BKGCAT'] ]
-        except ValueError:
-            log.error('Could not find one and only one BKGCAT branch for B meson, found:')
-            pprint.pprint(l_bkg)
-            raise
-
-        log.debug(f'Found background category branch: {name}')
-
-        return name
-    # -------------------------------------------------------------------
     def _prescale(self):
         '''
         Will pick up a random subset of entries from the dataframe if 'prescale=factor' found in selection section
