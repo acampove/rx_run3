@@ -228,19 +228,19 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
-    def _define_branches(self, rdf : RDataFrame) -> RDataFrame:
+    def _define_branches_all(self, rdf : RDataFrame) -> RDataFrame:
         '''
-        Will take dataframe and define columns if "define" field found in config
+        Will take dataframe and define columns if "define_all" field found in config
         Returns dataframe
         '''
-        if 'define' not in self._d_trans:
-            log.debug('Not defining any variables')
+        if 'define_all' not in self._d_trans:
+            log.debug('Not running category-independent definition')
             return rdf
 
         log.debug(110 * '-')
         log.info('Defining variables')
         log.debug(110 * '-')
-        for name, expr in self._d_trans['define'].items():
+        for name, expr in self._d_trans['define_all'].items():
             log.debug(f'{name:<50}{expr:<200}')
 
             rdf = rdf.Define(name, expr)
