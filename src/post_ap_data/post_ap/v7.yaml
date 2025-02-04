@@ -559,10 +559,15 @@ transformations:
     Hp_            : H_
     # Use H names, remove renaming function
     K_             : H_
-  define:
+  define_all:
     #These defitions are done on top of the names stemming from the changes caused by `redefine_head`
     q2       : Jpsi_M * Jpsi_M
     nTracks  : nBackTracks + nDownstreamTracks + nLongTracks + nTTracks + nUpstreamTracks + nVeloTracks
+  define:
+    bukee:
+      <<: *di_track_angles_rk
+    bukmm:
+      <<: *di_track_angles_rk
   rename:
     B_DTF_Jpsi_MASS                   : B_const_mass_M
     B_DTF_Jpsi_PX                     : B_const_mass_PX
@@ -966,6 +971,10 @@ transformations:
     evt_max : -1
     compression : 2
     store_branch: false
+di_track_angles_rk: &angles
+  th_l1_l2 : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(L2_PX, L2_PY, L2_PZ); return v1.Angle(v2);
+  th_l1_kp : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2( H_PX,  H_PY,  H_PZ); return v1.Angle(v2);
+  th_l2_kp : TVector3 v1(L2_PX, L2_PY, L2_PZ); TVector3 v2( H_PX,  H_PY,  H_PZ); return v1.Angle(v2);
 RK:
   EE: &rk_ee_cuts
     ghost     : H_TRACK_GhostProb<0.3 && L1_TRACK_GhostProb <0.3 && L2_TRACK_GhostProb<0.3
