@@ -107,7 +107,7 @@ class Plotter:
 
         d_cut = self._d_cfg['selection']['cuts']
 
-        log.info('Applying cuts')
+        log.debug('Applying cuts')
         for name, cut in d_cut.items():
             log.debug(f'{name:<50}{cut:<150}')
             rdf = rdf.Filter(cut, name)
