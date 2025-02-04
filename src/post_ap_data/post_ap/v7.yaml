@@ -600,9 +600,9 @@ transformations:
     nTracks  : nBackTracks + nDownstreamTracks + nLongTracks + nTTracks + nUpstreamTracks + nVeloTracks
   define:
     bukee:
-      <<: *di_track_angles_rk
+      <<: *angles
     bukmm:
-      <<: *di_track_angles_rk
+      <<: *angles
   rename:
     B_DTF_Jpsi_MASS                   : B_const_mass_M
     B_DTF_Jpsi_PX                     : B_const_mass_PX
