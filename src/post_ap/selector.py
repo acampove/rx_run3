@@ -2,7 +2,6 @@
 Module containing selector class
 '''
 
-import pprint
 from typing                 import Union
 from ROOT                   import RDataFrame
 
