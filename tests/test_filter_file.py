@@ -29,25 +29,25 @@ class Data:
 
     l_args_config    = [True, False]
 # --------------------------------------
-def _check_branches(rdf : RDataFrame) -> None:
+def _check_branches(rdf : RDataFrame, file_path : str) -> None:
     l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
     if 'block' not in l_col:
-        raise ValueError('block branch missing')
+        raise ValueError(f'block branch missing in: {file_path}')
 
     if 'EVENTNUMBER' not in l_col:
-        raise ValueError('EVENTNUMBER branch missing')
+        raise ValueError(f'EVENTNUMBER branch missing in: {file_path}')
 
     return rdf
 # --------------------------------------
 def _check_file(file_path : str, is_mc : bool) -> None:
     rdf_dt = RDataFrame('DecayTree'  , file_path)
-    _check_branches(rdf_dt)
+    _check_branches(rdf_dt, file_path)
 
     if not is_mc:
         return
 
     rdf_mc = RDataFrame('MCDecayTree', file_path)
-    _check_branches(rdf_mc)
+    _check_branches(rdf_mc, file_path)
 # --------------------------------------
 def _move_outputs(test_name : str, is_mc : bool) -> None:
     l_root = glob.glob('*.root')
