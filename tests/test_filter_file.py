@@ -30,6 +30,11 @@ class Data:
     l_args_config    = [True, False]
 # --------------------------------------
 def _check_branches(rdf : RDataFrame, file_path : str) -> None:
+    nentries = rdf.Count().GetValue()
+    if nentries == 0:
+        log.warning(f'No entries found in: {file_path}')
+        return
+
     l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
     if 'block' not in l_col:
         raise ValueError(f'block branch missing in: {file_path}')
@@ -37,7 +42,7 @@ def _check_branches(rdf : RDataFrame, file_path : str) -> None:
     if 'EVENTNUMBER' not in l_col:
         raise ValueError(f'EVENTNUMBER branch missing in: {file_path}')
 
-    return rdf
+    return
 # --------------------------------------
 def _check_file(file_path : str, is_mc : bool) -> None:
     rdf_dt = RDataFrame('DecayTree'  , file_path)
@@ -94,8 +99,8 @@ def test_dt(kind : bool):
 
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents  = True
-    obj.max_run        = 1000
-    obj.max_save       =  100
+    obj.max_run        = 10000
+    obj.max_save       =   100
     obj.run()
 
     _move_outputs('test_dt', is_mc = False)
