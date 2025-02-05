@@ -78,7 +78,7 @@ from post_ap.pfn_reader        import PFNReader
 For this one would run a line like:
 
 ```bash
-job_filter_ganga -n job_name -p PRODUCTION -s SAMPLE -c /path/to/config/file.yaml -b BACKEND -v VERSION_OF_ENV 
+job_filter_ganga -n job_name -p PRODUCTION -s SAMPLE -f /path/to/config/file.yaml -b BACKEND -v VERSION_OF_ENV 
 ```
 - The number of jobs will be equal to the number of PFNs, up to 500 jobs.
 - The code used to filter reside in the grid and the only thing the user has to do is to provide the latest version
@@ -86,7 +86,7 @@ job_filter_ganga -n job_name -p PRODUCTION -s SAMPLE -c /path/to/config/file.yam
 The options that can be used are:
 
 ```bash
-usage: job_filter_ganga [-h] -n NAME -p PROD -s SAMP -c CONF [-b {Interactive,Local,Dirac}] [-t] -v VENV
+usage: job_filter_ganga [-h] -n NAME -p PROD -s SAMP [-f PATH] [-c CONF] [-b {Interactive,Local,Dirac}] [-t] -v VENV [-d]
 
 Script used to send ntuple filtering jobs to the Grid, through ganga
 
@@ -95,11 +95,13 @@ options:
   -n NAME, --name NAME  Job name
   -p PROD, --prod PROD  Production
   -s SAMP, --samp SAMP  Sample
-  -c CONF, --conf CONF  Path to config file
+  -f PATH, --path PATH  Path to config file, proficed by user
+  -c CONF, --conf CONF  Version of config file belonging to project itself
   -b {Interactive,Local,Dirac}, --back {Interactive,Local,Dirac}
                         Backend
   -t, --test            Will run one job only if used
   -v VENV, --venv VENV  Version of virtual environment used to run filtering
+  -d, --dry_run         If used, will not create and send job, only initialize
 ```
 
 ## Check latest version of virtual environment
