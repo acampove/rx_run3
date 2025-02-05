@@ -36,13 +36,14 @@ class Data:
     njob     : int
     test     : bool
     cfg      : dict
+    dry_run  : bool
 
     maxj     = 500
     env_path = '/home/acampove/VENVS'
     user     = 'acampove'
     pfn_path = '/tmp/pfns.json'
     runner   = 'run_filter'
-    platform = 'x86_64-centos7-gcc8-opt'
+    platform = 'x86_64-el9-gcc11-opt'
     grid_site= 'LCG.CERN.cern'
 # -------------------------------------------------
 def _initialize() -> None:
@@ -113,19 +114,47 @@ def _parse_args() -> None:
     parser.add_argument('-n' , '--name', type=str, help='Job name'           , required=True)
     parser.add_argument('-p' , '--prod', type=str, help='Production'         , required=True)
     parser.add_argument('-s' , '--samp', type=str, help='Sample'             , required=True)
-    parser.add_argument('-c' , '--conf', type=str, help='Path to config file', required=True)
+    parser.add_argument('-f' , '--path', type=str, help='Path to config file, proficed by user')
+    parser.add_argument('-c' , '--conf', type=str, help='Version of config file belonging to project itself')
     parser.add_argument('-b' , '--back', type=str, help='Backend'            , choices=['Interactive', 'Local', 'Dirac'], default='Interactive')
     parser.add_argument('-t' , '--test',           help='Will run one job only if used'                       , action='store_true')
     parser.add_argument('-v' , '--venv', type=str, help='Version of virtual environment used to run filtering', required=True)
+    parser.add_argument('-d' , '--dry_run',        help='If used, will not create and send job, only initialize', action='store_true')
     args = parser.parse_args()
 
     Data.name = args.name
     Data.prod = args.prod
     Data.samp = args.samp
-    Data.conf = args.conf
     Data.back = args.back
     Data.venv = args.venv
     Data.test = args.test
+
+    Data.dry_run = args.dry_run
+    Data.conf    = _get_conf_path(args)
+# -------------------------------------------------
+def _get_conf_path(args : argparse.Namespace) -> str:
+    '''
+    Returns path to yaml config file from argparser
+    '''
+    if args.path is     None and args.conf is     None:
+        raise ValueError('Neither path to config, nor version were specified')
+
+    if args.path is not None and args.conf is not None:
+        raise ValueError('Both path to config and version were specified')
+
+    if args.path is not None:
+        return args.path
+
+    version   = args.conf
+    conf_path = files('post_ap_data').joinpath(f'post_ap/{version}.yaml')
+    conf_path = str(conf_path)
+
+    if not os.path.isfile(conf_path):
+        raise FileNotFoundError(f'Cannot find: {conf_path}')
+
+    log.info(f'Using config: {conf_path}')
+
+    return conf_path
 # -------------------------------------------------
 def _get_executable() -> Executable:
     runner_path = files('post_ap_grid').joinpath(Data.runner)
@@ -162,6 +191,9 @@ def main():
     '''
     _parse_args()
     _initialize()
+
+    if Data.dry_run:
+        return
 
     job=_get_job()
     job.prepare()
