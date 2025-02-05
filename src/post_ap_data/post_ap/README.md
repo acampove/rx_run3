@@ -25,3 +25,12 @@ Fixes:
 ## v5
 
 Adding isolation branches needed for PRec BDT training
+
+## v6
+
+Used to send all blocks of data and MC
+
+## v7
+
+Adding preselection and branches needed for HOP variables
+
