@@ -54,7 +54,23 @@ class FitComponent:
         self._pdf       = pdf
         self._obs       = self._pdf.space
         self._obs_name, = self._pdf.obs
-        self._minimizer = AnealingMinimizer(ntries=10, pvalue=0.05)
+        self._minimizer = self._get_minimizer()
+    # --------------------
+    def _get_minimizer(self) -> Union[AnealingMinimizer,None]:
+        if self._fit_cfg is None:
+            return None
+
+        ntries = 10
+        if 'ntries' in self._fit_cfg:
+            ntries = self._fit_cfg['ntries']
+
+        pvalue = 0.05
+        if 'pvalue' in self._fit_cfg:
+            pvalue = self._fit_cfg['pvalue']
+
+        minimizer = AnealingMinimizer(ntries=ntries, pvalue=pvalue)
+
+        return minimizer
     # --------------------
     @property
     def name(self) -> str:
