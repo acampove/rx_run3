@@ -118,10 +118,9 @@ def main():
 
     rdf   = _get_rdf()
     d_rdf = _get_bdt_cutflow_rdf(rdf)
-    cfg   = _get_cfg()
 
-    ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
-    ptr.run()
+    _plot(kind='cutflow', d_rdf = d_rdf)
+    _plot(kind='last'   , d_rdf = d_rdf)
 # ---------------------------------
 if __name__ == 'main':
     main()
