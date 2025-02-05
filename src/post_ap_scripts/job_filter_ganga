@@ -3,6 +3,8 @@
 '''
 Script used to submit fitering jobs using Ganga
 '''
+# pylint: disable=line-too-long,too-many-instance-attributes, import-error
+
 import os
 import json
 import argparse
@@ -14,12 +16,10 @@ from importlib.resources import files
 import yaml
 
 from GangaCore.GPI             import Job, Executable, DiracFile, LocalFile, Interactive, GenericSplitter, Dirac, Local, File
-from post_ap.pfn_reader        import PFNReader
 from dmu.logging.log_store     import LogStore
+from post_ap.pfn_reader        import PFNReader
 
-log = LogStore.add_logger('submit_filter')
-
-# pylint: disable=line-too-long,too-many-instance-attributes
+log = LogStore.add_logger('post_ap:job_filter_ganga')
 # -------------------------------------------------
 @dataclass
 class Data:
