@@ -6,7 +6,7 @@ These are tools that can be used for different data analysis tasks.
 
 ## Pushing
 
-From the root directory of a version controlled project (i.e. a directory with the `.git` subdirectory) 
+From the root directory of a version controlled project (i.e. a directory with the `.git` subdirectory)
 using a `pyproject.toml` file, run:
 
 ```bash
@@ -16,10 +16,10 @@ publish
 such that:
 
 1. The `pyproject.toml` file is checked and the version of the project is extracted.
-1. If a tag named as the version exists move to the steps below. 
+1. If a tag named as the version exists move to the steps below.
 1. If it does not, make a new tag with the name as the version
 
-Then, for each remote it pushes the tags and the commits. 
+Then, for each remote it pushes the tags and the commits.
 
 *Why?*
 
@@ -279,7 +279,7 @@ this will:
 - Try fitting at most 10 times
 - After each fit, calculate the goodness of fit (in this case the p-value)
 - Stop when the number of tries has been exhausted or the p-value reached is higher than `0.05`
-- If the fit has not succeeded because of convergence, validity or goodness of fit issues, 
+- If the fit has not succeeded because of convergence, validity or goodness of fit issues,
 randomize the parameters and try again.
 - If the desired goodness of fit has not been achieved, pick the best result.
 - Return the `FitResult` object and set the PDF to the final fit result.
@@ -317,11 +317,11 @@ bkg = zfit.pdf.Exponential(obs=obs, lam=lm)
 nbk = zfit.Parameter('nbk', 1000, 0, 10000)
 ebkg= bkg.create_extended(nbk, name='expo')
 
-# Add them 
+# Add them
 pdf = zfit.pdf.SumPDF([ebkg, esig])
 sam = pdf.create_sampler()
 
-# Plot them 
+# Plot them
 obj   = ZFitPlotter(data=sam, model=pdf)
 d_leg = {'gauss': 'New Gauss'}
 obj.plot(nbins=50, d_leg=d_leg, stacked=True, plot_range=(0, 10), ext_text='Extra text here')
@@ -333,7 +333,7 @@ obj.axs[1].plot([0, 10], [0, 0], linestyle='--', color='black')
 this class supports:
 
 - Handling title, legend, plots size.
-- Adding pulls. 
+- Adding pulls.
 - Stacking and overlaying of PDFs.
 - Blinding.
 
@@ -414,7 +414,7 @@ dataset:
     nan:
         x : 0
         y : 0
-        z : -999 
+        z : -999
 training :
     nfold    : 10
     features : [x, y, z]
@@ -477,7 +477,7 @@ When training on real data, several things might go wrong and the code will try 
 will end up in different folds. The tool checks for wether a model is evaluated for an entry that was used for training and raise an exception. Thus, repeated
 entries will be removed before training.
 
-- **NaNs**: Entries with NaNs will break the training with the scikit `GradientBoostClassifier` base class. Thus, we: 
+- **NaNs**: Entries with NaNs will break the training with the scikit `GradientBoostClassifier` base class. Thus, we:
     - Can use the `nan` section shown above to replace `NaN` values with something else
     - For whatever remains we remove the entries from the training.
 
@@ -819,7 +819,7 @@ Directory/Treename
     B_ENDVERTEX_CHI2DOF           Double_t
 ```
 
-## Comparing ROOT files 
+## Comparing ROOT files
 
 Given two ROOT files the command below:
 
@@ -881,7 +881,7 @@ last_file = get_latest_file(dir_path = file_dir, wc='name_*.txt')
 # of directories in `dir_path`, e.g.:
 
 oversion=get_last_version(dir_path=dir_path, version_only=True)  # This will return only the version, e.g. v3.2
-oversion=get_last_version(dir_path=dir_path, version_only=False) # This will return full path, e.g. /a/b/c/v3.2 
+oversion=get_last_version(dir_path=dir_path, version_only=False) # This will return full path, e.g. /a/b/c/v3.2
 ```
 
 The function above should work for numeric (e.g. `v1.2`) and non-numeric (e.g. `va`, `vb`) versions.
