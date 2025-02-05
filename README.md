@@ -119,7 +119,15 @@ The `post_shell` terminal won't be used to send jobs.
 
 ## Config file
 
-Here is where all the configuration goes and an example of a config can be found [here](https://github.com/acampove/config_files/blob/main/post_ap/v3.yaml)
+Here is where all the configuration goes and an example of a config can be found [here](https://github.com/acampove/config_files/blob/main/post_ap/v7.yaml).
+One of the sections contains the list of MC samples, this can be updated by:
+
+```bash
+dump_samples -p rd_ap_2024 -g rd -v v1r2437 -a RK RKst
+```
+
+Which will dump a `yaml` file with the samples for the `rd_ap_2024` production in the `rd` group and in
+version `v1r2437` used by the `RK` and `RKst` analyses.
 
 ## Optional
 
