@@ -33,6 +33,7 @@ class Data:
     venv     : str
     back     : str
     env_lfn  : str
+    logl     : int
     njob     : int
     test     : bool
     cfg      : dict
@@ -47,6 +48,9 @@ class Data:
     grid_site= 'LCG.CERN.cern'
 # -------------------------------------------------
 def _initialize() -> None:
+    LogStore.set_level('post_ap:job_filter_ganga', Data.logl)
+    LogStore.set_level('post_ap:pfn_reader'      , Data.logl)
+
     Data.env_lfn = f'LFN:/lhcb/user/{Data.user[0]}/{Data.user}/run3/venv/{Data.venv}/dcheck.tar'
     with open(Data.conf, encoding='utf-8') as ifile:
         Data.cfg = yaml.safe_load(ifile)
@@ -85,6 +89,7 @@ def _get_splitter_args() -> list[list]:
     # 1. It runs locally/interactively
     # 2. The test flag was passed
     if Data.back in ['Interactive', 'Local'] or Data.test:
+        log.warning('Using only one job')
         njob = 1
 
     conf = os.path.basename(Data.conf)
@@ -119,6 +124,7 @@ def _parse_args() -> None:
     parser.add_argument('-b' , '--back', type=str, help='Backend'            , choices=['Interactive', 'Local', 'Dirac'], default='Interactive')
     parser.add_argument('-t' , '--test',           help='Will run one job only if used'                       , action='store_true')
     parser.add_argument('-v' , '--venv', type=str, help='Version of virtual environment used to run filtering', required=True)
+    parser.add_argument('-l' , '--logl', type=int, help='Logging level', choices=[10,20,30], default=10)
     parser.add_argument('-d' , '--dry_run',        help='If used, will not create and send job, only initialize', action='store_true')
     args = parser.parse_args()
 
@@ -128,6 +134,7 @@ def _parse_args() -> None:
     Data.back = args.back
     Data.venv = args.venv
     Data.test = args.test
+    Data.logl = args.logl
 
     Data.dry_run = args.dry_run
     Data.conf    = _get_conf_path(args)
