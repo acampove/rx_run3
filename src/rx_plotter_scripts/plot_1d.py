@@ -81,6 +81,10 @@ def _get_cfg(kind : str) -> dict:
 
     d_plt        = cfg['plots']
     d_mas        = d_plt['B_M']
+    if Data.chanel == 'mm':
+        [_, maxx, nbins] = d_mas['binning']
+        d_mas['binning'] = [5180, maxx, nbins]
+
     name         = d_mas['name']
     d_mas['name']= f'{name}_last'
     cfg['plots'] = {'B_M' : d_mas}
