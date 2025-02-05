@@ -125,6 +125,13 @@ class DTFitter:
         log.info(f'Saving fit plot to: {plot_path}')
         plt.savefig(plot_path)
     # -------------------------------
+    def _save_pars(self, par : Parameter, name : str) -> None:
+        out_dir = self._conf['out_dir' ]
+        os.makedirs(out_dir, exist_ok=True)
+
+        pars_path= f'{out_dir}/{name}'
+        par.to_json(pars_path)
+    # -------------------------------
     def fit(self) -> Parameter:
         '''
         Function returning Parameter object holding fitting parameters
@@ -144,6 +151,7 @@ class DTFitter:
 
         print(res)
         self._plot_fit(data=self._zdt_dat, model=self._pdf_ful, name = 'fit_dat.png')
+        self._save_pars(par, name='fit_dat.json')
 
         return par
 # --------------------------------------------------
