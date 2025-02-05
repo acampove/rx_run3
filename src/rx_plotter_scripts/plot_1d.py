@@ -67,14 +67,25 @@ def _parse_args() -> None:
     Data.trigger= Data.trigger_mm if args.chanel == 'mm' else Data.trigger_ee
     Data.chanel = args.chanel
 # ---------------------------------
-def _get_cfg() -> dict:
+def _get_cfg(kind : str) -> dict:
     config_path = files('rx_plotter_data').joinpath('bdt_q2_mass.yaml')
     config_path = str(config_path)
 
     with open(config_path, encoding='utf=8') as ifile:
         cfg = yaml.safe_load(ifile)
 
-    return _override_cfg(cfg)
+    cfg = _override_cfg(cfg)
+
+    if kind != 'last':
+        return cfg
+
+    d_plt        = cfg['plots']
+    d_mas        = d_plt['B_M']
+    name         = d_mas['name']
+    d_mas['name']= f'{name}_last'
+    cfg['plots'] = {'B_M' : d_mas}
+
+    return cfg
 # ---------------------------------
 def _add_reso_q2(cfg : dict) -> dict:
     d_mass              = cfg['plots']['B_M']
@@ -108,6 +119,16 @@ def _override_cfg(cfg : dict) -> dict:
         d_plot['name'] = f'{Data.q2_bin}_{name}'
 
     return cfg
+# ---------------------------------
+def _plot(kind : str, d_rdf : dict[str,RDataFrame]) -> None:
+    cfg   = _get_cfg(kind)
+
+    if kind == 'last':
+        key, val = d_rdf.popitem()
+        d_rdf    = {key : val}
+
+    ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
+    ptr.run()
 # ---------------------------------
 def main():
     '''
