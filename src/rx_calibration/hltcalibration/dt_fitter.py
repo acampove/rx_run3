@@ -5,9 +5,10 @@ Module containing Fitter class
 
 import os
 import ROOT
-import zfit
 import matplotlib.pyplot as plt
+import zfit
 
+from zfit.exception          import ParamNameNotUniqueError
 from zfit.core.interfaces    import ZfitSpace
 from zfit.core.basepdf       import BasePDF
 from zfit.core.data          import Data      as zdata
@@ -60,7 +61,15 @@ class DTFitter:
 
         self._obs      = self._l_pdf[0].space
         self._obs_name,= self._l_pdf[0].obs
-        self._pdf_ful  = zfit.pdf.SumPDF(self._l_pdf)
+        try:
+            self._pdf_ful  = zfit.pdf.SumPDF(self._l_pdf)
+        except ParamNameNotUniqueError as exc:
+            log.error('Non-unique parameter names')
+            for pdf in self._l_pdf:
+                print_pdf(pdf)
+
+            log.info(exc)
+            raise
 
         log.debug('Creating zfit data')
         self._zdt_dat  = self._data_from_rdf(self._rdf_dat)
