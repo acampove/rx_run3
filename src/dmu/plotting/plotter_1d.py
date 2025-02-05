@@ -77,16 +77,32 @@ class Plotter1D(Plotter):
 
         l_bc_all = []
         for name, arr_val in d_data.items():
+            label        = self._label_from_name(name, arr_val)
             arr_wgt      = d_wgt[name] if d_wgt is not None else numpy.ones_like(arr_val)
             arr_wgt      = self._normalize_weights(arr_wgt, var)
-            hst          = Hist.new.Reg(bins=bins, start=minx, stop=maxx, name='x', label=name).Weight()
+            hst          = Hist.new.Reg(bins=bins, start=minx, stop=maxx, name='x').Weight()
             hst.fill(x=arr_val, weight=arr_wgt)
-            hst.plot(label=name)
+            hst.plot(label=label)
             l_bc_all    += hst.values().tolist()
 
         max_y = max(l_bc_all)
 
         return max_y
+    # --------------------------------------------
+    def _label_from_name(self, name : str, arr_val : numpy.ndarray) -> str:
+        if 'stats' not in self._d_cfg:
+            return name
+
+        d_stat = self._d_cfg['stats']
+        if 'nentries' not in d_stat:
+            return name
+
+        form = d_stat['nentries']
+
+        nentries = len(arr_val)
+        nentries = form.format(nentries)
+
+        return f'{name}; {nentries}'
     # --------------------------------------------
     def _normalize_weights(self, arr_wgt : numpy.ndarray, var : str) -> numpy.ndarray:
         cfg_var = self._d_cfg['plots'][var]
