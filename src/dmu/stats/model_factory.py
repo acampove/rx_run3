@@ -69,12 +69,18 @@ class ModelFactory:
 
         self._d_par : dict[str,zpar] = {}
     #-----------------------------------------
+    def _fltname_from_name(self, name : str) -> str:
+        if name in ['mu', 'sg']:
+            return f'{name}_flt'
+
+        return name
+    #-----------------------------------------
     def _get_name(self, name : str, suffix : str) -> str:
         for can_be_shared in self._l_can_be_shared:
             if name.startswith(f'{can_be_shared}_') and can_be_shared in self._l_shr:
-                return can_be_shared
+                return self._fltname_from_name(can_be_shared)
 
-        return f'{name}{suffix}'
+        return self._fltname_from_name(f'{name}{suffix}')
     #-----------------------------------------
     def _get_parameter(self,
                        name   : str,
