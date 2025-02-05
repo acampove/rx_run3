@@ -102,7 +102,7 @@ class Plotter1D(Plotter):
         nentries = len(arr_val)
         nentries = form.format(nentries)
 
-        return f'{name}; {nentries}'
+        return f'{name}{nentries}'
     # --------------------------------------------
     def _normalize_weights(self, arr_wgt : numpy.ndarray, var : str) -> numpy.ndarray:
         cfg_var = self._d_cfg['plots'][var]
