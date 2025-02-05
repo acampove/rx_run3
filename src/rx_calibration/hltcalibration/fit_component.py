@@ -175,7 +175,7 @@ class FitComponent:
             return self._pdf
 
         if self._rdf is None:
-            raise ValueError('Dataframe not found')
+            raise ValueError('Dataframe not found but fit configuration pased, cannot fit')
 
         pars_path= f'{self._out_dir}/{self._name}.json'
         if not os.path.isfile(pars_path):
