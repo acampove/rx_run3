@@ -694,6 +694,8 @@ style:
   legend:
     # The line below would place the legend outside the figure to avoid ovelaps with the histogram
     bbox_to_anchor : [1.2, 1]
+stats:
+  nentries : '{:.2e}' # This will add number of entries in legend box
 ```
 
 it's up to the user to build this dictionary and load it.
