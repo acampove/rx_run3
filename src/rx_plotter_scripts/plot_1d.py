@@ -131,6 +131,8 @@ def _plot(kind : str, d_rdf : dict[str,RDataFrame]) -> None:
         key, val = d_rdf.popitem()
         d_rdf    = {key : val}
 
+        cfg['stats'] = {'nentries' : '\nEntries: {}'}
+
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
 # ---------------------------------
