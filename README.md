@@ -117,7 +117,17 @@ pdf   = mod.get_pdf()
 ```
 
 where the model is a sum of three `CrystallBall` PDFs, one with a right tail and two with a left tail.
-The `mu` and `sg` parameters are shared.
+The `mu` and `sg` parameters are shared. The elementary components that can be plugged are:
+
+```
+exp: Exponential
+pol1: Polynomial of degree 1
+pol2: Polynomial of degree 2
+cbr : CrystallBall with right tail
+cbl : CrystallBall with left tail
+gauss : Gaussian 
+dscb : Double sided CrystallBall
+```
 
 ### Printing PDFs
 
