@@ -1,7 +1,7 @@
 '''
 Module storing ZModel class
 '''
-# pylint: disable=too-many-lines, import-error
+# pylint: disable=too-many-lines, import-error, too-many-positional-arguments, too-many-arguments
 
 from typing import Callable, Union
 
