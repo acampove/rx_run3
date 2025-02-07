@@ -25,7 +25,8 @@ class Data:
     '''
     Class used to store shared information
     '''
-    max_path    = 400
+    max_path    = 700
+    force_new   : bool
     sample      : str
     trigger     : str
     cfg_path    : str
@@ -47,6 +48,7 @@ def _get_args():
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
     parser.add_argument('-d', '--dry_run'    ,           help='Dry run', action='store_true')
+    parser.add_argument('-f', '--force_new'  ,           help='Will remake outputs, even if they already exist', action='store_true')
     parser.add_argument('-p', '--partition'  , nargs= 2, help='Partition, two integers, such that the input is split into nparts and the script processes one of them', default=[0,1])
     args = parser.parse_args()
 
@@ -56,6 +58,7 @@ def _get_args():
     Data.max_entries = args.max_entries
     Data.log_level   = args.log_level
     Data.dry_run     = args.dry_run
+    Data.force_new   = args.force_new
     Data.l_part      = _parts_from_partition(args.partition)
 #---------------------------------
 def _parts_from_partition(l_partition : list[str]) -> list[int]:
@@ -238,14 +241,17 @@ def main():
     '''
     Script starts here
     '''
-
     _get_args()
     _load_config()
     _set_loggers()
     out_path = _get_out_path()
+    if os.path.isfile(out_path):
+        log.info('Output already found, skipping')
+        return
 
     log.info('Applying classifier')
     l_file_path = _get_paths()
+
     rdf = _get_rdf(l_file_path)
     rdf = _apply_classifier(rdf)
 
