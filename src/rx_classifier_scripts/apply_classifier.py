@@ -26,7 +26,7 @@ class Data:
     Class used to store shared information
     '''
     sample      : str
-    index       : int
+    trigger     : str
     cfg_name    : str
     cfg_dict    : dict
     max_entries : int
@@ -39,16 +39,16 @@ def _get_args():
     Use argparser to put options in Data class
     '''
     parser = argparse.ArgumentParser(description='Used to read classifier and write scores to input ntuple, producing output ntuple')
-    parser.add_argument('-c', '--cfg_name'   , type=str, help='Kind of config file', required=True)
-    parser.add_argument('-s', '--sample'     , type=str, help='Sample name, meant to exist inside input_dir, if not specified, will do all samples')
+    parser.add_argument('-c', '--cfg_path'   , type=str, help='Path to yaml file with configuration'        , required=True)
+    parser.add_argument('-s', '--sample'     , type=str, help='Sample name, meant to exist inside input_dir', required=True)
+    parser.add_argument('-t', '--trigger'    , type=str, help='HLT trigger'                                 , required=True)
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
-    parser.add_argument('-i', '--index'      , type=int, help='Input index, to restrict to specific file, if not specified, will do all files')
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
     parser.add_argument('-d', '--dry_run'    ,           help='Dry run', action='store_true')
     args = parser.parse_args()
 
-    Data.index       = args.index
     Data.sample      = args.sample
+    Data.trigger     = args.trigger
     Data.cfg_name    = args.cfg_name
     Data.max_entries = args.max_entries
     Data.log_level   = args.log_level
@@ -65,18 +65,18 @@ def _load_config():
     with open(Data.cfg_name, encoding='utf-8') as ifile:
         Data.cfg_dict = yaml.safe_load(ifile)
 #---------------------------------
-def _get_rdf(file_path : str) -> RDataFrame:
+def _get_rdf(l_file_path : list[str]) -> RDataFrame:
     '''
     Returns a dictionary of dataframes built from paths in config
     '''
     log.info('Getting dataframes')
 
-    rdf = RDataFrame('DecayTree', file_path)
+    rdf = RDataFrame('DecayTree', l_file_path)
     if Data.max_entries > 0:
         rdf = rdf.Range(Data.max_entries)
 
     nentries = rdf.Count().GetValue()
-    log.info(f'Using {nentries} entries for sample {file_path}')
+    log.info(f'Using {nentries} entries for {Data.sample}/{Data.trigger}')
 
     return rdf
 #---------------------------------
@@ -183,30 +183,32 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
     return rdf
 #---------------------------------
 def _get_paths() -> list[str]:
-    inp_dir = Data.cfg_dict['input_dir']
-    if Data.sample is not None:
-        inp_dir = f'{inp_dir}/{Data.sample}'
-        log.info(f'Restricting jobs to files in: {inp_dir}')
+    if 'samples' not in Data.cfg_dict:
+        raise ValueError('samples entry not found')
 
-    file_wc = f'{inp_dir}/**/*_sample.root'
-    l_path  = glob.glob(file_wc, recursive=True)
+    samples_path = Data.cfg_dict['samples']
+    with open(samples_path, encoding='utf-8') as ifile:
+        d_sample = yaml.safe_load(ifile)
 
-    nfile   = len(l_path)
-    if nfile == 0:
-        raise ValueError(f'No file found in: {file_wc}')
+    if Data.sample not in d_sample:
+        raise ValueError(f'Cannot find {Data.sample} among samples')
 
-    log.info(f'Found {nfile} files')
+    d_trigger = d_sample[Data.sample]
+    if Data.trigger not in d_trigger:
+        raise ValueError(f'Cannot find {Data.sample} among triggers for sample {Data.sample}')
 
-    if Data.index is None:
-        return l_path
+    l_path = d_trigger[Data.trigger]
 
-    if Data.index + 1 > nfile:
-        raise ValueError(f'Cannot run for index {Data.index}')
-
-    l_path = [l_path[Data.index]]
-    log.info(f'Restricting run to input with index: {Data.index}')
+    npath  = len(l_path)
+    log.info(f'Found {npath} paths for {Data.sample}/{Data.trigger}')
 
     return l_path
+#---------------------------------
+def _get_out_path() -> str:
+    out_dir = Data.cfg_dict['output']
+    os.makedirs(out_dir, exist_ok=True)
+
+    return f'{out_dir}/{Data.sample}_{Data.trigger}.root'
 #---------------------------------
 def main():
     '''
@@ -216,20 +218,18 @@ def main():
     _get_args()
     _load_config()
     _set_loggers()
+    out_path = _get_out_path()
 
     log.info('Applying classifier')
     l_file_path = _get_paths()
-    for file_path in l_file_path:
-        rdf = _get_rdf(file_path)
-        rdf = _apply_classifier(rdf)
+    rdf = _get_rdf(l_file_path)
+    rdf = _apply_classifier(rdf)
 
-        out_path = file_path.replace('_sample.root', '_mva.root')
+    if not Data.dry_run:
         log.info(f'Saving to: {out_path}')
+        rdf.Snapshot('DecayTree', out_path)
 
-        if not Data.dry_run:
-            rdf.Snapshot('DecayTree', out_path)
-
-        log.info('')
+    log.info('')
 #---------------------------------
 if __name__ == '__main__':
     main()
