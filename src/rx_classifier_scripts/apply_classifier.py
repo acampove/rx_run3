@@ -25,14 +25,16 @@ class Data:
     '''
     Class used to store shared information
     '''
+    max_path    = 400
     sample      : str
     trigger     : str
-    cfg_name    : str
+    cfg_path    : str
     cfg_dict    : dict
     max_entries : int
     l_model     : list
     log_level   : int
     dry_run     : bool
+    l_part      : list[int]
 #---------------------------------
 def _get_args():
     '''
