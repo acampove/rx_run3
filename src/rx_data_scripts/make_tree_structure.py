@@ -16,12 +16,12 @@ from importlib.resources    import files
 
 import tqdm
 import yaml
+import dmu.generic.utilities as gut
 from dmu.rfile.rfprinter    import RFPrinter
 from dmu.logging.log_store  import LogStore
 from rx_data.path_splitter  import PathSplitter
 
 log   = LogStore.add_logger('rx_data:make_tree_structure')
-
 # ---------------------------------
 class IndentListDumper(yaml.SafeDumper):
     '''
@@ -129,6 +129,7 @@ def _do_link_paths(src : str, tgt : str) -> None:
 
     os.symlink(src, tgt)
 # ---------------------------------
+@gut.timeit
 def _save_summary(target_dir : str) -> None:
     '''
     Make text file with summary of file, e.g. 2024.root -> 2024.txt
@@ -181,11 +182,13 @@ def _load_lines(args : argparse.Namespace) -> list[str]:
         return []
 
     path = args.trg
+    log.debug(f'Picking up lines from: {path}')
     with open(path, encoding='utf-8') as ifile:
         d_trig = yaml.safe_load(ifile)
 
     return list(d_trig)
 # ---------------------------------
+@gut.timeit
 def _initialize(args : argparse.Namespace) -> None:
     Data.dry       = args.dry
     Data.naming    = args.nam
@@ -196,19 +199,26 @@ def _initialize(args : argparse.Namespace) -> None:
     Data.fil_path  = args.fle
 
     LogStore.set_level('rx_data:make_tree_structure', args.lvl)
+    LogStore.set_level('rx_data:path_splitter'      , args.lvl)
     LogStore.set_level('dmu:rfprinter', 30)
 
     Data.ver            = _version_from_input()
     Data.l_line_to_pick = _load_lines(args)
+    gut.TIMER_ON        = args.lvl < 20
 # ---------------------------------
+@gut.timeit
 def _save_to_file(d_struc : dict) -> None:
     if Data.fil_path is None:
+        return
+
+    if Data.dry:
         return
 
     out_dir = os.path.dirname(Data.fil_path)
     if out_dir != '':
         os.makedirs(out_dir, exist_ok=True)
 
+    log.info(f'Saving samples list to: {Data.fil_path}')
     with open(Data.fil_path, 'w', encoding='utf-8') as ofile:
         yaml.dump(d_struc, ofile, Dumper=IndentListDumper, default_flow_style=False)
 # ---------------------------------
@@ -234,7 +244,7 @@ def main():
     d_path = splt.split()
 
     d_struc = {}
-    for (sample, line), l_path in tqdm.tqdm(d_path.items(), ascii=' -'):
+    for (sample, line), l_path in d_path.items():
         if _drop_line(line):
             log.debug(f'Dropping {line}')
             continue
