@@ -144,3 +144,31 @@ rdf = gtr.get_rdf()
 ```
 
 In the case of the MVA friend trees the branches added would be `mva.mva_cmb` and `mva.mva_prc`.
+
+## Accessing metadata 
+
+Information on the ntuples can be accessed through the `metadata` instance of the `TStringObj` class, which is
+stored in the ROOT files. This information can be dumped in a YAML file for easy access with:
+
+
+```bash
+dump_metadata -f root://x509up_u12477@eoslhcb.cern.ch//eos/lhcb/grid/user/lhcb/user/a/acampove/2025_02/1044184/1044184991/data_24_magdown_turbo_24c2_Hlt2RD_BuToKpEE_MVA_4df98a7f32.root
+```
+
+which will produce `metadata.yaml`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
