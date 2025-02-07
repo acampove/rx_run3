@@ -47,24 +47,32 @@ def _get_args():
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
     parser.add_argument('-d', '--dry_run'    ,           help='Dry run', action='store_true')
+    parser.add_argument('-p', '--partition'  , nargs= 2, help='Partition, two integers, such that the input is split into nparts and the script processes one of them', default=[0,1])
     args = parser.parse_args()
 
     Data.sample      = args.sample
     Data.trigger     = args.trigger
-    Data.cfg_name    = args.cfg_name
+    Data.cfg_path    = args.cfg_path
     Data.max_entries = args.max_entries
     Data.log_level   = args.log_level
     Data.dry_run     = args.dry_run
+    Data.l_part      = _parts_from_partition(args.partition)
+#---------------------------------
+def _parts_from_partition(l_partition : list[str]) -> list[int]:
+    ipart = int(l_partition[0])
+    npart = int(l_partition[1])
+
+    return [ipart, npart]
 #---------------------------------
 def _load_config():
     '''
     Will load YAML config and set Data.cfg_dict
     '''
 
-    if not os.path.isfile(Data.cfg_name):
-        raise FileNotFoundError(f'Could not find: {Data.cfg_name}')
+    if not os.path.isfile(Data.cfg_path):
+        raise FileNotFoundError(f'Could not find: {Data.cfg_path}')
 
-    with open(Data.cfg_name, encoding='utf-8') as ifile:
+    with open(Data.cfg_path, encoding='utf-8') as ifile:
         Data.cfg_dict = yaml.safe_load(ifile)
 #---------------------------------
 def _get_rdf(l_file_path : list[str]) -> RDataFrame:
@@ -184,6 +192,14 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 #---------------------------------
+def _partition_paths(l_path : list[str]) -> list[str]:
+    [ipart, npart] = Data.l_part
+    log.info(f'Partitioning with {ipart}/{npart}')
+
+    l_part = numpy.array_split(l_path, npart)
+
+    return l_part[ipart]
+#---------------------------------
 def _get_paths() -> list[str]:
     if 'samples' not in Data.cfg_dict:
         raise ValueError('samples entry not found')
@@ -200,17 +216,23 @@ def _get_paths() -> list[str]:
         raise ValueError(f'Cannot find {Data.sample} among triggers for sample {Data.sample}')
 
     l_path = d_trigger[Data.trigger]
-
+    l_path = _partition_paths(l_path)
     npath  = len(l_path)
+
+    if npath > Data.max_path:
+        raise ValueError(f'Cannot process more than {Data.max_path} paths, requested {npath}')
+
     log.info(f'Found {npath} paths for {Data.sample}/{Data.trigger}')
 
     return l_path
 #---------------------------------
 def _get_out_path() -> str:
     out_dir = Data.cfg_dict['output']
+    [ipart, npart] = Data.l_part
+
     os.makedirs(out_dir, exist_ok=True)
 
-    return f'{out_dir}/{Data.sample}_{Data.trigger}.root'
+    return f'{out_dir}/{Data.sample}_{Data.trigger}_{ipart:03}_{npart:03}.root'
 #---------------------------------
 def main():
     '''
