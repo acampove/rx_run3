@@ -153,15 +153,16 @@ def _get_args() -> argparse.Namespace:
     Parse arguments
     '''
     parser = argparse.ArgumentParser(description='Makes directory structure from ROOT files through symbolic links')
-    parser.add_argument('-i', '--inp', type=str, help='Path to directory with ROOT files to link')
-    parser.add_argument('-v', '--ver', type=str, help='Version of LFNs needed to pick up JSON files')
-    parser.add_argument('-o', '--out', type=str, help='Path to directory where tree structure will start')
-    parser.add_argument('-f', '--fle', type=str, help='Path to YAML file with directory structure')
-    parser.add_argument('-t', '--trg', type=str, help='Path to YAML file with list of lines to process')
-    parser.add_argument('-n', '--nam', type=str, help='Naming scheme for samples', default='new', choices=['new', 'old'])
-    parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs'   , default=-1)
-    parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30]          , default=20)
-    parser.add_argument('-d', '--dry',           help='Dry run if 1', action='store_true')
+    parser.add_argument('-i', '--inp' , type=str, help='Path to directory with ROOT files to link')
+    parser.add_argument('-v', '--ver' , type=str, help='Version of LFNs needed to pick up JSON files')
+    parser.add_argument('-o', '--out' , type=str, help='Path to directory where tree structure will start')
+    parser.add_argument('-f', '--fle' , type=str, help='Path to YAML file with directory structure')
+    parser.add_argument('-t', '--trg' , type=str, help='Path to YAML file with list of lines to process')
+    parser.add_argument('-p', '--path', type=str, help='Path to files that will override original one, e.g. in EOS.')
+    parser.add_argument('-n', '--nam' , type=str, help='Naming scheme for samples', default='new', choices=['new', 'old'])
+    parser.add_argument('-m', '--max' , type=int, help='Maximum number of paths, for test runs'   , default=-1)
+    parser.add_argument('-l', '--lvl' , type=int, help='log level', choices=[10, 20, 30]          , default=20)
+    parser.add_argument('-d', '--dry' ,           help='Dry run if 1', action='store_true')
     args = parser.parse_args()
 
     return args
@@ -198,6 +199,7 @@ def _initialize(args : argparse.Namespace) -> None:
     Data.jsn_ver   = args.ver
     Data.out_path  = args.out
     Data.fil_path  = args.fle
+    Data.new_path  = args.path
 
     LogStore.set_level('rx_data:make_tree_structure', args.lvl)
     LogStore.set_level('rx_data:path_splitter'      , args.lvl)
