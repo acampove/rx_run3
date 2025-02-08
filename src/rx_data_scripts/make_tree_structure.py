@@ -77,7 +77,7 @@ def _get_paths_from_json() -> list[str]:
     for path in l_path:
         with open(path, encoding='utf-8') as ifile:
             l_this_file = json.load(ifile)
-            l_this_file = [ f'{Data.eos_preffix}{this_file}' for this_file in l_this_file ]
+            l_this_file = [ f'{Data.grid_preffix}{this_file}' for this_file in l_this_file ]
             l_lfn      += l_this_file
 
     return l_lfn
