@@ -229,13 +229,19 @@ def _get_paths() -> list[str]:
 
     return l_path
 #---------------------------------
-def _get_out_path() -> str:
+def _get_out_path(l_input_path : list[str]) -> str:
+    input_path = l_input_path[0]
+    name       = os.path.basename(input_path)
+    l_part     = name.split('_')
+    l_part     = l_part[:-1]
+    name       = '_'.join(l_part)
+
     out_dir = Data.cfg_dict['output']
     [ipart, npart] = Data.l_part
 
     os.makedirs(out_dir, exist_ok=True)
 
-    return f'{out_dir}/{Data.sample}_{Data.trigger}_{ipart:03}_{npart:03}.root'
+    return f'{out_dir}/{name}_{ipart:03}_{npart:03}.root'
 #---------------------------------
 def main():
     '''
