@@ -34,11 +34,13 @@ class Data:
     '''
     Class used to hold shared data
     '''
-    eos_preffix = 'root://x509up_u12477@eoslhcb.cern.ch//eos/lhcb/grid/user'
+    grid_preffix = 'root://x509up_u12477@eoslhcb.cern.ch//eos/lhcb/grid/user'
+    eos_preffix  = 'root://eosuser.cern.ch/'
     l_line_to_pick : list[str]
 
     naming    : str
     max_files : int
+    new_path  : str
     ver       : str
     dry       : bool
     jsn_ver   : str
