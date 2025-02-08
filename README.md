@@ -48,7 +48,7 @@ Some things that can be tried are:
 - One could also merge new datasets to improve the training.
 - One could try MLPs or other type of classifiers.
 
-## Adding MVA scores to ntuples
+## Getting MVA scores for ntuples 
 
 For this run:
 
@@ -92,3 +92,28 @@ apply_classifier -c application.yaml -s DATA_24_MagUp_24c1 -i 2
 ```
 
 `-i` can also be used to parametrize jobs in a cluster, like HTCondor.
+
+## Using cluster jobs to apply scores
+
+Given that there are thousands of files, in around 80 samples, this should be run in a computing cluster.
+The line:
+
+```bash
+build_job_script -p /publicfs/ucas/user/campoverde/Data/RX_run3/v5/rx_samples.yaml -c /publicfs/ucas/user/campoverde/Packages/RK/rx_classifier/application.yaml -s DATA
+```
+
+Where the data samples were skipped with `-s`, this is optional. The command will create `jobs.txt` with contents like:
+
+```
+apply_classifier -c /publicfs/ucas/user/campoverde/Packages/RK/rx_classifier/application.yaml -t Hlt2RD_BuToKpEE_MVA       -s Bd_Denu_Kstenu_eq_VIA_HVM_EGDWC
+apply_classifier -c /publicfs/ucas/user/campoverde/Packages/RK/rx_classifier/application.yaml -t Hlt2RD_BuToKpEE_MVA       -s Bd_Dmnpipl_eq_DPC
+apply_classifier -c /publicfs/ucas/user/campoverde/Packages/RK/rx_classifier/application.yaml -t Hlt2RD_BuToKpMuMu_MVA     -s Bd_Dmunu_Kstmunu_eq_DPC
+apply_classifier -c /publicfs/ucas/user/campoverde/Packages/RK/rx_classifier/application.yaml -t Hlt2RD_BuToKpEE_MVA       -s Bd_Dstplenu_eq_PHSP_TC
+apply_classifier -c /publicfs/ucas/user/campoverde/Packages/RK/rx_classifier/application.yaml -t Hlt2RD_BuToKpEE_MVA       -s Bd_JpsiKS_ee_eq_CPV_DPC
+...
+```
+which can be used to apply the selection in a computing cluster, assuming that:
+
+- The job runs in a specific virtual environment where `apply_classifier` is available.
+- Each job runs one line
+
