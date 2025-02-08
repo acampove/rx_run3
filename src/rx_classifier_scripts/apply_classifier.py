@@ -244,15 +244,17 @@ def main():
     _get_args()
     _load_config()
     _set_loggers()
-    out_path = _get_out_path()
+
+    l_file_path = _get_paths()
+    out_path    = _get_out_path(l_file_path)
+
     if os.path.isfile(out_path):
         log.info('Output already found, skipping')
         return
 
-    log.info('Applying classifier')
-    l_file_path = _get_paths()
-
     rdf = _get_rdf(l_file_path)
+
+    log.info('Applying classifier')
     rdf = _apply_classifier(rdf)
 
     if not Data.dry_run:
