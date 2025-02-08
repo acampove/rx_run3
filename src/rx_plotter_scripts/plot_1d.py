@@ -135,6 +135,12 @@ def _plot(kind : str, d_rdf : dict[str,RDataFrame]) -> None:
 
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
+
+    if Data.q2_bin == 'high' and Data.chanel == 'ee':
+        cfg['plots']['B_M']['binning'] = [4500, 6000, 60]
+        cfg['plots']['B_M']['name']    = f'{Data.q2_bin}_bmass_paper'
+        ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
+        ptr.run()
 # ---------------------------------
 def main():
     '''
