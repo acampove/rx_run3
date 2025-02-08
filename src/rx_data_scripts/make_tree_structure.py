@@ -14,7 +14,6 @@ from typing                 import Union
 from dataclasses            import dataclass
 from importlib.resources    import files
 
-import tqdm
 import yaml
 import dmu.generic.utilities as gut
 from dmu.rfile.rfprinter    import RFPrinter
