@@ -209,6 +209,26 @@ def _initialize(args : argparse.Namespace) -> None:
     Data.l_line_to_pick = _load_lines(args)
     gut.TIMER_ON        = args.lvl < 20
 # ---------------------------------
+def _change_file_paths(d_struc : dict) -> dict:
+    if Data.new_path is None:
+        log.debug('Not changing paths')
+        return d_struc
+
+    log.info(f'Overriding paths with: {Data.new_path}')
+    d_struc_mod = {}
+    for sample, d_trig in d_struc.items():
+        d_struc_mod[sample] = {}
+        for trigger, l_path in d_trig.items():
+            l_path_mod = [ _change_file_path(path) for path in l_path ]
+            d_struc_mod[sample] = {trigger : l_path_mod}
+
+    return d_struc_mod
+# ---------------------------------
+def _change_file_path(path : str) -> str:
+    file_name = os.path.basename(path)
+
+    return f'{Data.eos_preffix}{Data.new_path}/{file_name}'
+# ---------------------------------
 @gut.timeit
 def _save_to_file(d_struc : dict) -> None:
     if Data.fil_path is None:
@@ -220,6 +240,8 @@ def _save_to_file(d_struc : dict) -> None:
     out_dir = os.path.dirname(Data.fil_path)
     if out_dir != '':
         os.makedirs(out_dir, exist_ok=True)
+
+    d_struc = _change_file_paths(d_struc)
 
     log.info(f'Saving samples list to: {Data.fil_path}')
     with open(Data.fil_path, 'w', encoding='utf-8') as ofile:
