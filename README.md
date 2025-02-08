@@ -116,6 +116,19 @@ list_triggers -v v4 -o triggers.yaml
 make_tree_structure -v v4 -f samples.yaml -t triggers.yaml
 ```
 
+### Sending files to user's CERNBOX
+
+In order to share files one can:
+
+- Use the CERNBOX [website](https://cernbox.cern.ch) to upload the files. These files will endup in EOS. One can upload entire directories.
+- Use `make_tree_structure` to dump to YAML the list of PFNs with:
+
+```bash
+make_tree_structure -i /publicfs/ucas/user/campoverde/Data/RX_run3/v5/mva/v1 -f rx_mva.yaml -p /eos/user/a/acampove/Data/mva/v1
+```
+
+Where `-p` is the directory in EOS where the files will go.
+
 ## Samples naming
 
 The samples were named after the DecFiles names for the samples and:
