@@ -18,6 +18,7 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
+build_job_script='rx_classifier_scripts.build_job_script:main'
 train_classifier='rx_classifier_scripts.train_classifier:main'
 apply_classifier='rx_classifier_scripts.apply_classifier:main'
 
