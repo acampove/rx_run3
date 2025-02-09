@@ -56,7 +56,11 @@ def main():
     d_data = _get_samples()
     df     = _data_to_size(d_data)
 
-    print(df)
+    with open('stats.md', 'w', encoding='utf-8') as ofile:
+        text = df.to_markdown(index=False)
+        ofile.write(text)
+
+    print(text)
 # --------------------------------------
 if __name__ == '__main__':
     main()
