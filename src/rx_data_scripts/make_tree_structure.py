@@ -34,11 +34,13 @@ class Data:
     '''
     Class used to hold shared data
     '''
-    eos_preffix = 'root://x509up_u12477@eoslhcb.cern.ch//eos/lhcb/grid/user'
+    grid_preffix = 'root://x509up_u12477@eoslhcb.cern.ch//eos/lhcb/grid/user'
+    eos_preffix  = 'root://eosuser.cern.ch/'
     l_line_to_pick : list[str]
 
     naming    : str
     max_files : int
+    new_path  : str
     ver       : str
     dry       : bool
     jsn_ver   : str
@@ -75,7 +77,7 @@ def _get_paths_from_json() -> list[str]:
     for path in l_path:
         with open(path, encoding='utf-8') as ifile:
             l_this_file = json.load(ifile)
-            l_this_file = [ f'{Data.eos_preffix}{this_file}' for this_file in l_this_file ]
+            l_this_file = [ f'{Data.grid_preffix}{this_file}' for this_file in l_this_file ]
             l_lfn      += l_this_file
 
     return l_lfn
@@ -151,15 +153,16 @@ def _get_args() -> argparse.Namespace:
     Parse arguments
     '''
     parser = argparse.ArgumentParser(description='Makes directory structure from ROOT files through symbolic links')
-    parser.add_argument('-i', '--inp', type=str, help='Path to directory with ROOT files to link')
-    parser.add_argument('-v', '--ver', type=str, help='Version of LFNs needed to pick up JSON files')
-    parser.add_argument('-o', '--out', type=str, help='Path to directory where tree structure will start')
-    parser.add_argument('-f', '--fle', type=str, help='Path to YAML file with directory structure')
-    parser.add_argument('-t', '--trg', type=str, help='Path to YAML file with list of lines to process')
-    parser.add_argument('-n', '--nam', type=str, help='Naming scheme for samples', default='new', choices=['new', 'old'])
-    parser.add_argument('-m', '--max', type=int, help='Maximum number of paths, for test runs'   , default=-1)
-    parser.add_argument('-l', '--lvl', type=int, help='log level', choices=[10, 20, 30]          , default=20)
-    parser.add_argument('-d', '--dry',           help='Dry run if 1', action='store_true')
+    parser.add_argument('-i', '--inp' , type=str, help='Path to directory with ROOT files to link')
+    parser.add_argument('-v', '--ver' , type=str, help='Version of LFNs needed to pick up JSON files')
+    parser.add_argument('-o', '--out' , type=str, help='Path to directory where tree structure will start')
+    parser.add_argument('-f', '--fle' , type=str, help='Path to YAML file with directory structure')
+    parser.add_argument('-t', '--trg' , type=str, help='Path to YAML file with list of lines to process')
+    parser.add_argument('-p', '--path', type=str, help='Path to files that will override original one, e.g. in EOS.')
+    parser.add_argument('-n', '--nam' , type=str, help='Naming scheme for samples', default='new', choices=['new', 'old'])
+    parser.add_argument('-m', '--max' , type=int, help='Maximum number of paths, for test runs'   , default=-1)
+    parser.add_argument('-l', '--lvl' , type=int, help='log level', choices=[10, 20, 30]          , default=20)
+    parser.add_argument('-d', '--dry' ,           help='Dry run if 1', action='store_true')
     args = parser.parse_args()
 
     return args
@@ -196,6 +199,7 @@ def _initialize(args : argparse.Namespace) -> None:
     Data.jsn_ver   = args.ver
     Data.out_path  = args.out
     Data.fil_path  = args.fle
+    Data.new_path  = args.path
 
     LogStore.set_level('rx_data:make_tree_structure', args.lvl)
     LogStore.set_level('rx_data:path_splitter'      , args.lvl)
@@ -204,6 +208,26 @@ def _initialize(args : argparse.Namespace) -> None:
     Data.ver            = _version_from_input()
     Data.l_line_to_pick = _load_lines(args)
     gut.TIMER_ON        = args.lvl < 20
+# ---------------------------------
+def _change_file_paths(d_struc : dict) -> dict:
+    if Data.new_path is None:
+        log.debug('Not changing paths')
+        return d_struc
+
+    log.info(f'Overriding paths with: {Data.new_path}')
+    d_struc_mod = {}
+    for sample, d_trig in d_struc.items():
+        d_struc_mod[sample] = {}
+        for trigger, l_path in d_trig.items():
+            l_path_mod = [ _change_file_path(path) for path in l_path ]
+            d_struc_mod[sample] = {trigger : l_path_mod}
+
+    return d_struc_mod
+# ---------------------------------
+def _change_file_path(path : str) -> str:
+    file_name = os.path.basename(path)
+
+    return f'{Data.eos_preffix}{Data.new_path}/{file_name}'
 # ---------------------------------
 @gut.timeit
 def _save_to_file(d_struc : dict) -> None:
@@ -216,6 +240,8 @@ def _save_to_file(d_struc : dict) -> None:
     out_dir = os.path.dirname(Data.fil_path)
     if out_dir != '':
         os.makedirs(out_dir, exist_ok=True)
+
+    d_struc = _change_file_paths(d_struc)
 
     log.info(f'Saving samples list to: {Data.fil_path}')
     with open(Data.fil_path, 'w', encoding='utf-8') as ofile:

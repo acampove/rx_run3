@@ -19,8 +19,8 @@ class Data:
     # pylint: disable = invalid-name
     # Need to call var Max instead of max
 
-    dt_rgx  = r'(data_\d{2}_.*)_(\w+RD_.*)_\w{10}\.root'
-    mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_\w{10}\.root'
+    dt_rgx  = r'(data_\d{2}_.*)_(\w+RD_.*)_(\d{3}_\d{3}|\w{10}).root'
+    mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_(\d{3}_\d{3}|\w{10}).root'
 # ---------------------------------
 def info_from_path(path : str) -> tuple[str,str]:
     '''
@@ -49,7 +49,10 @@ def _info_from_mc_path(path : str) -> tuple[str,str]:
     if not mtch:
         raise ValueError(f'Cannot extract information from MC file:\n\n{name}\n\nUsing {Data.mc_rgx}')
 
-    [sample, line] = mtch.groups()
+    try:
+        [sample, line, _] = mtch.groups()
+    except ValueError as exc:
+        raise ValueError(f'Expected three elements in: {mtch.groups()}') from exc
 
     return sample, line
 # ---------------------------------
@@ -58,14 +61,14 @@ def _info_from_data_path(path : str) -> tuple[str,str]:
     Will get info from data path
     '''
     name = os.path.basename(path)
-    mtc  = re.match(Data.dt_rgx, name)
-    if not mtc:
+    mtch = re.match(Data.dt_rgx, name)
+    if not mtch:
         raise ValueError(f'Cannot find kind in:\n\n{name}\n\nusing\n\n{Data.dt_rgx}')
 
     try:
-        [sample, line] = mtc.groups()
+        [sample, line, _] = mtch.groups()
     except ValueError as exc:
-        raise ValueError(f'Expected three elements in: {mtc.groups()}') from exc
+        raise ValueError(f'Expected three elements in: {mtch.groups()}') from exc
 
     sample = sample.replace('_turbo_', '_')
     sample = sample.replace('_full_' , '_')
