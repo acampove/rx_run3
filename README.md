@@ -158,7 +158,7 @@ rdf = gtr.get_rdf()
 
 In the case of the MVA friend trees the branches added would be `mva.mva_cmb` and `mva.mva_prc`.
 
-## Accessing metadata 
+## Accessing metadata
 
 Information on the ntuples can be accessed through the `metadata` instance of the `TStringObj` class, which is
 stored in the ROOT files. This information can be dumped in a YAML file for easy access with:
@@ -169,4 +169,25 @@ dump_metadata -f root://x509up_u12477@eoslhcb.cern.ch//eos/lhcb/grid/user/lhcb/u
 ```
 
 which will produce `metadata.yaml`.
+
+## Printing information on samples
+
+Use:
+
+```bash
+check_sample_stats -p /path/to/rx_samples.yaml
+```
+
+to print a table to markdown with the sizes of each sample in Megabytes. e.g.:
+
+```markdown
+| Sample                                      | Trigger                        |   Size |
+|:--------------------------------------------|:-------------------------------|-------:|
+| Bu_JpsiK_mm_eq_DPC                          | Hlt2RD_BuToKpMuMu_MVA          |  15829 |     ■■■■ 'BuToKpMuMu': Possible spelling mistake found.
+| Bs_Jpsiphi_mm_eq_CPV_update2016_DPC         | Hlt2RD_BuToKpMuMu_MVA          |  11164 |     ■■■■ 'BuToKpMuMu': Possible spelling mistake found.
+| Bd_JpsiKst_mm_eq_DPC                        | Hlt2RD_BuToKpMuMu_MVA          |   9945 |     ■■■■ 'BuToKpMuMu': Possible spelling mistake found.
+| Bu_JpsiK_ee_eq_DPC                          | Hlt2RD_BuToKpEE_MVA_cal        |   8873 |     ■■■■■ 'BuToKpEE': Possible spelling mistake found.
+| Bu_JpsiK_ee_eq_DPC                          | Hlt2RD_BuToKpEE_MVA            |   8488 |
+...
+```
 
