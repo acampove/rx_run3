@@ -48,6 +48,11 @@ def _data_to_size(d_data : dict) -> pnd.DataFrame:
 
     return df
 # --------------------------------------
+def _save_table(df : pnd.DataFrame, file_name : str) -> None:
+    with open(file_name, 'w', encoding='utf-8') as ofile:
+        text = df.to_markdown(index=False)
+        ofile.write(text)
+# --------------------------------------
 def main():
     '''
     Starts here
@@ -55,12 +60,11 @@ def main():
     _parse_args()
     d_data = _get_samples()
     df     = _data_to_size(d_data)
+    df_dt  = df[ df.Sample.str.startswith('DATA_')]
+    df_mc  = df[~df.Sample.str.startswith('DATA_')]
 
-    with open('stats.md', 'w', encoding='utf-8') as ofile:
-        text = df.to_markdown(index=False)
-        ofile.write(text)
-
-    print(text)
+    _save_table(df_dt, 'data.md')
+    _save_table(df_mc,   'mc.md')
 # --------------------------------------
 if __name__ == '__main__':
     main()
