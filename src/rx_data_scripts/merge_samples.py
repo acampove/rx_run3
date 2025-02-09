@@ -7,7 +7,7 @@ import argparse
 import yaml
 
 import tqdm
-from ROOT                  import TFileMerger
+from ROOT                  import TFileMerger, TFile
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('rx_data:merge_samples')
@@ -50,6 +50,7 @@ def _get_samples() -> dict:
 def _merge_paths(l_path : list[str]) -> None:
     out_path = f'{Data.out_dir}/{Data.sample_name}_{Data.trigger_name}.root'
     if os.path.isfile(out_path):
+        _remove_objects(out_path)
         log.info(f'File already found: {out_path}')
         return
 
@@ -64,6 +65,25 @@ def _merge_paths(l_path : list[str]) -> None:
     success = fm.Merge()
     if not success:
         raise RuntimeError('Merge failed')
+
+    _remove_objects(out_path)
+# ----------------------------
+def _remove_objects(out_path : str) -> None:
+    log.info('Removing not needed objects from merged file')
+
+    ifile = TFile.Open(out_path, 'update')
+    l_key = ifile.GetListOfKeys()
+
+    for key in l_key:
+        obj_name   = key.GetName()
+        class_name = key.GetClassName()
+
+        if class_name != 'TObjString':
+            continue
+
+        ifile.Delete(obj_name)
+
+    ifile.Close()
 # ----------------------------
 def main():
     '''
