@@ -191,3 +191,13 @@ to print a table to markdown with the sizes of each sample in Megabytes. e.g.:
 ...
 ```
 
+## Merging files
+
+After the preselection the data files are very small and there are many of them. The following line can be used to merge them:
+
+```bash
+merge_samples -p /path/to/samples/rx_samples.yaml -s DATA_24_MagUp_24c2 -t Hlt2RD_BuToKpMuMu_MVA
+```
+
+where the command will merge all the files associated to a given sample and trigger and will find the paths
+in the file passed through `-p`.
