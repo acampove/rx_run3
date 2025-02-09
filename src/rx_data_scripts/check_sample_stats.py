@@ -48,7 +48,14 @@ def _data_to_size(d_data : dict) -> pnd.DataFrame:
 
     return df
 # --------------------------------------
+def _add_total(df : pnd.DataFrame) -> pnd.DataFrame:
+    total_size      = df.Size.sum()
+    df.loc[len(df)] = ['Total', 'Any', total_size]
+
+    return df
+# --------------------------------------
 def _save_table(df : pnd.DataFrame, file_name : str) -> None:
+    df = _add_total(df)
     with open(file_name, 'w', encoding='utf-8') as ofile:
         text = df.to_markdown(index=False)
         ofile.write(text)
