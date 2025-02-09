@@ -170,18 +170,3 @@ dump_metadata -f root://x509up_u12477@eoslhcb.cern.ch//eos/lhcb/grid/user/lhcb/u
 
 which will produce `metadata.yaml`.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
