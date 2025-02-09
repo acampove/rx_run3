@@ -7,7 +7,6 @@ import argparse
 import subprocess
 
 import yaml
-import tqdm
 from ROOT                  import TFileMerger
 from dmu.logging.log_store import LogStore
 
@@ -51,15 +50,15 @@ def _get_samples() -> dict:
 def _merge_paths(l_path : list[str]) -> None:
     out_path = f'{Data.out_dir}/{Data.sample_name}_{Data.trigger_name}.root'
     if os.path.isfile(out_path):
-        _remove_objects(out_path)
         log.info(f'File already found: {out_path}')
         return
 
     npath = len(l_path)
-    log.info(f'Mergin {npath} paths for {Data.sample_name}/{Data.trigger_name}')
+    log.info(f'Merging {npath} paths for {Data.sample_name}/{Data.trigger_name}')
 
-    fm = TFileMerger(isLocal=True)
-    for path in tqdm.tqdm(l_path, ascii=' -'):
+    fm = TFileMerger(isLocal=False)
+    fm.SetFastMethod(True)
+    for path in l_path:
         fm.AddFile(path, cpProgress=False)
 
     fm.OutputFile(out_path, 'RECREATE')
@@ -91,6 +90,8 @@ def main():
     l_path = d_data[Data.sample_name][Data.trigger_name]
 
     _merge_paths(l_path)
+
+    log.info('Merge finished')
 # ----------------------------
 if __name__ == '__main__':
     main()
