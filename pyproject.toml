@@ -18,6 +18,7 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
+merge_samples      ='rx_data_scripts.merge_samples:main'
 check_sample_stats ='rx_data_scripts.check_sample_stats:main'
 dump_metadata      ='rx_data_scripts.dump_metadata:main'
 download_rx_data   ='rx_data_scripts.download_rx_data:main'
