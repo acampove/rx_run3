@@ -43,7 +43,10 @@ def _data_to_size(d_data : dict) -> pnd.DataFrame:
             d_size['Trigger'].append(trigger)
             d_size['Size'   ].append(size)
 
-    return pnd.DataFrame(d_size)
+    df = pnd.DataFrame(d_size)
+    df = df.sort_values(by='Size', ascending=False)
+
+    return df
 # --------------------------------------
 def main():
     '''
