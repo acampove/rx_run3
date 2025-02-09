@@ -74,14 +74,18 @@ def _remove_objects(out_path : str) -> None:
     ifile = TFile.Open(out_path, 'update')
     l_key = ifile.GetListOfKeys()
 
+    i_deleted = 0
     for key in l_key:
         obj_name   = key.GetName()
-        class_name = key.GetClassName()
+        class_name = key.ReadObj().GetClassName()
 
         if class_name != 'TObjString':
             continue
 
+        i_deleted += 1
         ifile.Delete(obj_name)
+
+    log.info(f'Deleted {i_deleted} objects')
 
     ifile.Close()
 # ----------------------------
