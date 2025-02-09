@@ -70,6 +70,11 @@ def _copy_sample(sample : str) -> None:
         for source in l_path:
             fname = os.path.basename(source)
             target= f'{Data.out_dir}/{fname}'
+
+            if os.path.isfile(target):
+                log.debug(f'Target found, skipping: {target}')
+                continue
+
             shutil.copy(source, target)
 # -----------------------------------------
 def main():
