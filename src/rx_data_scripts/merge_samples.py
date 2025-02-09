@@ -6,6 +6,7 @@ import os
 import argparse
 import yaml
 
+import tqdm
 from ROOT                  import TFileMerger
 from dmu.logging.log_store import LogStore
 
@@ -56,8 +57,8 @@ def _merge_paths(l_path : list[str]) -> None:
     log.info(f'Mergin {npath} paths for {Data.sample_name}/{Data.trigger_name}')
 
     fm = TFileMerger(isLocal=True)
-    for path in l_path:
-        fm.AddFile(path)
+    for path in tqdm.tqdm(l_path, ascii=' -'):
+        fm.AddFile(path, cpProgress=False)
 
     fm.OutputFile(out_path, 'RECREATE')
     success = fm.Merge()
