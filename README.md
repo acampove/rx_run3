@@ -201,3 +201,24 @@ merge_samples -p /path/to/samples/rx_samples.yaml -s DATA_24_MagUp_24c2 -t Hlt2R
 
 where the command will merge all the files associated to a given sample and trigger and will find the paths
 in the file passed through `-p`.
+
+## Copying files
+
+If the original files are downloaded to a cluster and the user needs the files in e.g. a laptop one could:
+
+- Use SSHFS to mount the cluster's file system in the laptop.
+- Copy the files through
+
+```bash
+copy_samples -p /path/to/file/with/sample/paths/rx_samples.yaml -s to_copy.yaml
+```
+
+where `to_copy.yaml` specifies what samples will be copied and where, e.g.:
+
+```yaml
+out_dir : /path/to/directory/in/laptop
+samples :
+  signal:
+    - 12123003 # Kee
+    - 12113002 # Kmm
+```
