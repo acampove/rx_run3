@@ -4,10 +4,11 @@ Script used to merge ROOT files
 
 import os
 import argparse
-import yaml
+import subprocess
 
+import yaml
 import tqdm
-from ROOT                  import TFileMerger, TFile
+from ROOT                  import TFileMerger
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('rx_data:merge_samples')
@@ -70,24 +71,10 @@ def _merge_paths(l_path : list[str]) -> None:
 # ----------------------------
 def _remove_objects(out_path : str) -> None:
     log.info('Removing not needed objects from merged file')
+    result = subprocess.run(['rootrm', f'{out_path}:metadata'], capture_output=True, text=True, check=False)
 
-    ifile = TFile.Open(out_path, 'update')
-    l_key = ifile.GetListOfKeys()
-
-    i_deleted = 0
-    for key in l_key:
-        obj_name   = key.GetName()
-        class_name = key.ReadObj().GetClassName()
-
-        if class_name != 'TObjString':
-            continue
-
-        i_deleted += 1
-        ifile.Delete(obj_name)
-
-    log.info(f'Deleted {i_deleted} objects')
-
-    ifile.Close()
+    if result.returncode != 0:
+        raise RuntimeError('Cannot delete metadata from file')
 # ----------------------------
 def main():
     '''
