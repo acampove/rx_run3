@@ -74,7 +74,10 @@ def test_simple():
     '''
     Simplest test of getter class
     '''
-    RDFGetter.samples_dir = '/home/acampove/Data/RX_run3/NO_q2_bdt_mass_Q2_central_VR_v1'
+    RDFGetter.samples = {
+            'main' : '/home/acampove/Packages/rx_data/rk_main.yaml',
+            'mva'  : '/home/acampove/Packages/rx_data/rk_mva.yaml',
+            }
 
     gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpMuMu_MVA')
     rdf = gtr.get_rdf()
