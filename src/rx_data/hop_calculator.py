@@ -19,8 +19,26 @@ class HOPCalculator:
     '''
     # -------------------------------
     def __init__(self, rdf : RDataFrame):
-        self._rdf   = rdf
         self._emass = 0.511 # mass of electron
+        self._kmass = 493.6 # mass of kaon
+        self._rdf   = self._preprocess_rdf(rdf)
+    # -------------------------------
+    def _preprocess_rdf(self, rdf : RDataFrame) -> RDataFrame:
+        l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
+
+        if 'L1_PE' not in l_col:
+            name = 'L1_P'
+            rdf  = rdf.Define(f'{name}E', f'TMath::Sqrt({name}X * {name}X + {name}Y * {name}Y + {name}Z * {name}Z + {self._emass} * {self._emass})')
+
+        if 'L2_PE' not in l_col:
+            name = 'L2_P'
+            rdf  = rdf.Define(f'{name}E', f'TMath::Sqrt({name}X * {name}X + {name}Y * {name}Y + {name}Z * {name}Z + {self._emass} * {self._emass})')
+
+        if 'H_PE' not in l_col:
+            name = 'H_P'
+            rdf  = rdf.Define(f'{name}E', f'TMath::Sqrt({name}X * {name}X + {name}Y * {name}Y + {name}Z * {name}Z + {self._kmass} * {self._kmass})')
+
+        return rdf
     # -------------------------------
     def _val_to_vector(self, arr_val : numpy.ndarray, ndim : int) -> Union[LorentzVector, XYZVector]:
         if   ndim == 4:
