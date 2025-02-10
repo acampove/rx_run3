@@ -53,14 +53,24 @@ class HOPCalculator:
         kp_3v     = kp.Vect()
         bp_dr     = sv - pv
 
-        costh_had = bp_dr.Dot(kp_3v) / (kp_3v.R() * bp_dr.R())
-        had_pt    = kp_3v.R() * math.sqrt(1.0 - costh_had ** 2)
+        cos_thhad = bp_dr.Dot(kp_3v) / (kp_3v.R() * bp_dr.R())
+        sin_thhad = math.sqrt(1.0 - cos_thhad ** 2)
+        had_pt    = kp_3v.R() * sin_thhad
 
-        cos_thy   = bp_dr.Dot(ll_3v) / (ll_3v.R() * bp_dr.R())
-        ll_pt     = ll_3v.R() * math.sqrt(1.0 - cos_thy ** 2 )
+        cos_thll  = bp_dr.Dot(ll_3v) / (ll_3v.R() * bp_dr.R())
+        sin_thll  = math.sqrt(1.0 - cos_thll ** 2 )
+        ll_pt     = ll_3v.R() * sin_thll
+
         alpha     = had_pt / ll_pt if ll_pt > 0. else 1.0
 
         return alpha
+    # -------------------------------
+    def _correct_kinematics(self, alpha : float, particle : LorentzVector) -> LorentzVector:
+        px = alpha * particle.px()
+        py = alpha * particle.py()
+        pz = alpha * particle.pz()
+
+        return LorentzVector('ROOT::Math::PxPyPzM4D<double>')(px, py, pz, 0.511)
     # -------------------------------
     def _get_values(self) -> tuple[list[float], list[float]]:
         l_l1 = self._get_xvector(ndim=4, name='L1_P'   )
@@ -72,30 +82,15 @@ class HOPCalculator:
         l_alpha = []
         l_mass  = []
         for pv, sv, l1, l2, kp in zip(l_pv, l_sv, l_l1, l_l2, l_kp):
-            alpha = self._get_alpha(pv, sv, l1, l2, kp)
-            mass  = self._get_hop_mass(alpha, l1, l1, kp)
+            alpha   = self._get_alpha(pv, sv, l1, l2, kp)
+            l1_corr = self._correct_kinematics(alpha, l1)
+            l2_corr = self._correct_kinematics(alpha, l2)
+            mass    = (l1_corr + l2_corr + kp).M()
 
             l_alpha.append(alpha)
             l_mass.append(mass)
 
         return l_alpha, l_mass
-    # -------------------------------
-    def _correct_kinematics(self, alpha : float, particle : LorentzVector) -> LorentzVector:
-        alpha = 1.0
-
-        px = alpha * particle.px()
-        py = alpha * particle.py()
-        pz = alpha * particle.pz()
-        pe =         particle.e()
-
-        return LorentzVector('ROOT::Math::PxPyPzE4D<double>')(px, py, pz, pe)
-    # -------------------------------
-    def _get_hop_mass(self, alpha : float, l1 : LorentzVector, l2 : LorentzVector, kp : LorentzVector) -> float:
-        l1_corr = self._correct_kinematics(alpha, l1)
-        l2_corr = self._correct_kinematics(alpha, l2)
-        bp      = l1_corr + l2_corr + kp
-
-        return bp.M()
     # -------------------------------
     def get_rdf(self) -> RDataFrame:
         '''
