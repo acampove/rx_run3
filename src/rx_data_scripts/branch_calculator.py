@@ -10,6 +10,7 @@ import argparse
 from typing      import Union
 from dataclasses import dataclass
 
+import tqdm
 import yaml
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
@@ -64,10 +65,10 @@ def _get_out_path(path : str) -> Union[str,None]:
     out_path = f'{Data.outp}/{fname}'
 
     if os.path.isfile(out_path):
-        log.info(f'Output found, skipping {out_path}')
+        log.debug(f'Output found, skipping {out_path}')
         return None
 
-    log.info(f'Creating {out_path}')
+    log.debug(f'Creating {out_path}')
     return out_path
 # ---------------------------------
 def _create_file(path : str) -> None:
@@ -89,7 +90,7 @@ def main():
 
     l_path = _get_paths()
 
-    for path in l_path:
+    for path in tqdm.tqdm(l_path, ascii=' -'):
         _create_file(path)
 # ---------------------------------
 if __name__ == '__main__':
