@@ -1,12 +1,15 @@
 '''
 Module containing HOPVarCalculator class
 '''
+import math
+from typing import Union
 
 import numpy
-from ROOT import RDataFrame, RDF
+from ROOT      import RDataFrame, RDF
+from ROOT.Math import LorentzVector, XYZVector
 
 # -------------------------------
-class HOPVarCalculator:
+class HOPCalculator:
     '''
     Class meant to calculate HOP variables from a ROOT dataframe. For info on HOP see:
 
@@ -16,59 +19,94 @@ class HOPVarCalculator:
     def __init__(self, rdf : RDataFrame):
         self._rdf = rdf
     # -------------------------------
-    def _get_alpha(self) -> numpy.ndarray:
-        lv_l1 = _get_lvector('L1')
-        lv_l2 = _get_lvector('L2')
-        lv_kp = _get_lvector('H' )
-        tv_pv = _get_tvector('')
+    def _val_to_vector(self, arr_val : numpy.ndarray, ndim : int) -> Union[LorentzVector, XYZVector]:
+        if   ndim == 4:
+            [px, py, pz, pe] = arr_val.tolist()
+            vector = LorentzVector('ROOT::Math::PxPyPzE4D<double>')(px, py, pz, pe)
+        elif ndim == 3:
+            [px, py, pz    ] = arr_val.tolist()
+            vector = XYZVector(px, py, pz)
+        else:
+            raise NotImplementedError(f'Invalid dimentionality: {ndim}')
+
+        return vector
+    # -------------------------------
+    def _get_xvector(self, name : str, ndim : int) -> list[LorentzVector]:
+        if   ndim == 4:
+            l_branch = [f'{name}X', f'{name}Y', f'{name}Z', f'{name}E']
+        elif ndim == 3:
+            l_branch = [f'{name}X', f'{name}Y', f'{name}Z']
+        else:
+            raise NotImplementedError(f'Invalid ndim={ndim}')
+
+        d_data   = self._rdf.AsNumpy(l_branch)
+        l_array  = [ d_data[branch] for branch in l_branch ]
+        arr_dat  = numpy.array(l_array).T
+        l_4vec   = [ self._val_to_vector(arr_val, ndim) for arr_val in arr_dat ]
+
+        return l_4vec
+    # -------------------------------
+    def _get_alpha(self, pv : XYZVector, sv : XYZVector, l1 : LorentzVector, l2 : LorentzVector, kp : LorentzVector) -> float:
+        l1_3v     = l1.Vect()
+        l2_3v     = l2.Vect()
+        ll_3v     = l1_3v + l2_3v
+        kp_3v     = kp.Vect()
+        bp_dr     = sv - pv
+
+        costh_had = bp_dr.Dot(kp_3v) / (kp_3v.R() * bp_dr.R())
+        had_pt    = kp_3v.R() * math.sqrt(1.0 - costh_had ** 2)
+
+        cos_thy   = bp_dr.Dot(ll_3v) / (ll_3v.R() * bp_dr.R())
+        ll_pt     = ll_3v.R() * math.sqrt(1.0 - cos_thy ** 2 )
+        alpha     = had_pt / ll_pt if ll_pt > 0. else 1.0
+
+        return alpha
+    # -------------------------------
+    def _get_values(self) -> tuple[list[float], list[float]]:
+        l_l1 = self._get_xvector(ndim=4, name='L1_P'   )
+        l_l2 = self._get_xvector(ndim=4, name='L2_P'   )
+        l_kp = self._get_xvector(ndim=4, name='H_P'    )
+        l_pv = self._get_xvector(ndim=3, name='B_BPV'  )
+        l_sv = self._get_xvector(ndim=3, name='B_END_V')
+
+        l_alpha = []
+        l_mass  = []
+        for pv, sv, l1, l2, kp in zip(l_pv, l_sv, l_l1, l_l2, l_kp):
+            alpha = self._get_alpha(pv, sv, l1, l2, kp)
+            mass  = self._get_hop_mass(alpha, l1, l1, kp)
+
+            l_alpha.append(alpha)
+            l_mass.append(mass)
+
+        return l_alpha, l_mass
+    # -------------------------------
+    def _correct_kinematics(self, alpha : float, particle : LorentzVector) -> LorentzVector:
+        alpha = 1.0
+
+        px = alpha * particle.px()
+        py = alpha * particle.py()
+        pz = alpha * particle.pz()
+        pe =         particle.e()
+
+        return LorentzVector('ROOT::Math::PxPyPzE4D<double>')(px, py, pz, pe)
+    # -------------------------------
+    def _get_hop_mass(self, alpha : float, l1 : LorentzVector, l2 : LorentzVector, kp : LorentzVector) -> float:
+        l1_corr = self._correct_kinematics(alpha, l1)
+        l2_corr = self._correct_kinematics(alpha, l2)
+        bp      = l1_corr + l2_corr + kp
+
+        return bp.M()
     # -------------------------------
     def get_rdf(self) -> RDataFrame:
         '''
         Returns ROOT dataframe with HOP variables
         '''
 
-        arr_alpha = self._get_alpha()
-        arr_mass  = self._get_mass(arr_alpha)
+        l_alpha, l_mass = self._get_values()
+        arr_alpha       = numpy.array(l_alpha)
+        arr_mass        = numpy.array(l_mass )
 
-        rdf = RDF.FromNumpy({'alpha_hop' : arr_alpha, 'mass_hop' : arr_mass})
+        rdf = RDF.FromNumpy({'alpha' : arr_alpha, 'mass' : arr_mass})
 
         return rdf
 # -------------------------------
-
-# double HOP::Alpha(const TVector3 &B_OWN_PV, const TVector3 &B_END_VTX, const TLorentzVector &Hadron, const TLorentzVector &DiLepton, TLorentzVector &Lepton1, TLorentzVector &Lepton2)
-# {
-#     TVector3 Hadron_Vect   = Hadron.Vect();
-#     TVector3 DiLepton_Vect = DiLepton.Vect();
-#     TVector3 Lepton1_Vect  = Lepton1.Vect();
-#     TVector3 Lepton2_Vect  = Lepton2.Vect();
-#
-#     TVector3 B_Vect     = B_END_VTX - B_OWN_PV;
-#     TVector3 B_Vect_Dir = B_Vect.Unit();
-#
-#     // ctk = B scalar Hadron
-#     double _CosTheta_Hadron = B_Vect.Dot(Hadron_Vect) / (Hadron_Vect.Mag() * B_Vect.Mag());
-#     double _Hadron_PT       = Hadron_Vect.Mag() * TMath::Sqrt(1.0 - _CosTheta_Hadron * _CosTheta_Hadron);
-#     double _CosThetaY       = B_Vect.Dot(DiLepton_Vect) / (DiLepton_Vect.Mag() * B_Vect.Mag());
-#     double _DiLepton_PT     = DiLepton_Vect.Mag() * sqrt(1.0 - _CosThetaY * _CosThetaY);
-#     double _Alpha_HOP       = _DiLepton_PT > 0. ? _Hadron_PT / _DiLepton_PT : 1.0;
-#     return _Alpha_HOP;
-# };
-#
-# double HOP::Mass_DIELECTRON(const TVector3 &B_OWN_PV, const TVector3 &B_END_VTX, const TLorentzVector &Hadron, const TLorentzVector &DiLepton, TLorentzVector &Lepton1, TLorentzVector &Lepton2)
-# {
-#     double _Alpha_HOP = Alpha(B_OWN_PV, B_END_VTX, Hadron, DiLepton, Lepton1, Lepton2);
-#     // Corrected 4D momentum for leptons
-#     // If we have e-mu mass ?
-#     TLorentzVector Lepton1_LV_Corr;
-#     Lepton1_LV_Corr.SetXYZM(_Alpha_HOP * Lepton1.Px(), _Alpha_HOP * Lepton1.Py(), _Alpha_HOP * Lepton1.Pz(), PDG::Mass::E);
-
-#     TLorentzVector Lepton2_LV_Corr;
-#     Lepton2_LV_Corr.SetXYZM(_Alpha_HOP * Lepton2.Px(), _Alpha_HOP * Lepton2.Py(), _Alpha_HOP * Lepton2.Pz(), PDG::Mass::E);
-#
-#     TLorentzVector DiLepton_Corr = Lepton1_LV_Corr + Lepton2_LV_Corr;
-#
-#     TLorentzVector B_Corr = DiLepton_Corr + Hadron;
-#     double _HOP_M = B_Corr.Mag();
-#     return _HOP_M;
-# };
-
