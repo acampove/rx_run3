@@ -77,7 +77,7 @@ def _create_file(path : str) -> None:
 
     rdf = RDataFrame(Data.tree_name, path)
     obj = HOPCalculator(rdf=rdf)
-    rdf = obj.get_rdf()
+    rdf = obj.get_rdf(extra_branches=['EVENTNUMBER', 'RUNNUMBER'])
     rdf.Snapshot(Data.tree_name, out_path)
 # ---------------------------------
 def main():
