@@ -27,6 +27,7 @@ def _get_rdf(sample : str, trigger : str) -> RDataFrame:
     cfg    = _get_samples()
     l_path = cfg[sample][trigger]
     rdf    = RDataFrame('DecayTree', l_path[0])
+    rdf    = rdf.Range(10_000)
 
     return rdf
 # ----------------------------
@@ -71,13 +72,13 @@ def _get_hop(sample : str, trigger : str) -> tuple[RDataFrame, RDataFrame]:
     return rdf_hop, rdf
 # ----------------------------
 @pytest.mark.parametrize('sample', ['Bd_Kstee_eq_btosllball05_DPC', 'Bu_Kee_eq_btosllball05_DPC'])
-def test_simple(sample : str):
+def test_mc(sample : str):
     '''
-    Simplest test
+    Test on MC
     '''
     rdf_hop, rdf_org = _get_hop(sample = sample, trigger='Hlt2RD_BuToKpEE_MVA')
 
-    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'simple_{sample}')
+    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'mc_{sample}')
 # ----------------------------
 def test_compare():
     '''
@@ -91,7 +92,7 @@ def test_compare():
 # ----------------------------
 def test_extra_branches():
     '''
-    Simplest test
+    Testing adding extra branches to RDF
     '''
     rdf     = _get_rdf(sample = 'Bu_Kee_eq_btosllball05_DPC', trigger='Hlt2RD_BuToKpEE_MVA')
 
