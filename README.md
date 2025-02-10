@@ -140,23 +140,39 @@ A useful guide showing the correspondence between event type and name is [here](
 
 # Accessing ntuples
 
-If the ntuples are stored in a directory where each tuple is accompanied by a friend tree, a preliminary
-step that attaches all friend trees is needed. This is done by `RDFGetter` as shown below:
+Assuming that all the tnuples for data and simulation are in a given directory, the line below:
 
+```bash
+make_tree_structure -i /directory/with/ntuples -f samples.yaml
+```
+
+will create a `samples.yaml` with the list of paths to ROOT files, per trigger and sample.
+If a second set of branches can be obtaine, e.g. with MVA scores, one can run the same command:
+
+```bash
+make_tree_structure -i /directory/with/mva/ntuples -f mva.yaml
+```
+
+and in order to attach the main ntuples to the MVA ntuples:
 
 ```python
 from rx_data.rdf_getter     import RDFGetter
 
-# This is where the directories with the samples are
-RDFGetter.samples_dir = '/publicfs/ucas/user/campoverde/Data/RX_run3/v4/NO_q2_bdt_mass_Q2_central_VR_v1'
+# This is how the YAML files with the samples information is passed 
+RDFGetter.samples = {
+        'main' : '/home/acampove/Packages/rx_data/samples.yaml', # for main trees
+        'mva'  : '/home/acampove/Packages/rx_data/mva.yaml',  # for trees containing the MVA scores
+        }
 
 # This picks one sample for a given trigger
 # The sample accepts wildcards, e.g. `DATA_24_MagUp_24c*` for all the periods
-gtr = RDFGetter(sample='DATA_24_MagUp_24c2', trigger='Hlt2RD_BuToKpMuMu_MVA')
+gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpMuMu_MVA')
 rdf = gtr.get_rdf()
 ```
 
 In the case of the MVA friend trees the branches added would be `mva.mva_cmb` and `mva.mva_prc`.
+
+Thus, one can easily extend the ntuples with extra branches without remaking them.
 
 ## Accessing metadata
 
