@@ -146,8 +146,8 @@ Assuming that all the tnuples for data and simulation are in a given directory, 
 make_tree_structure -i /directory/with/ntuples -f samples.yaml
 ```
 
-will create a `samples.yaml` with the list of paths to ROOT files, per trigger and sample.
-If a second set of branches can be obtaine, e.g. with MVA scores, one can run the same command:
+Will create a `samples.yaml` with the list of paths to ROOT files, per trigger and sample.
+If a second set of branches can be obtained, e.g. with MVA scores, one can run the same command:
 
 ```bash
 make_tree_structure -i /directory/with/mva/ntuples -f mva.yaml
