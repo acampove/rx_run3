@@ -77,8 +77,13 @@ def _create_file(path : str) -> None:
         return
 
     rdf = RDataFrame(Data.tree_name, path)
-    obj = HOPCalculator(rdf=rdf)
-    rdf = obj.get_rdf(extra_branches=['EVENTNUMBER', 'RUNNUMBER'])
+    try:
+        obj = HOPCalculator(rdf=rdf)
+        rdf = obj.get_rdf(extra_branches=['EVENTNUMBER', 'RUNNUMBER'])
+    except Exception as exc:
+        log.error(f'Cannot process: {path}')
+        log.info(exc)
+
     rdf.Snapshot(Data.tree_name, out_path)
 # ---------------------------------
 def main():
