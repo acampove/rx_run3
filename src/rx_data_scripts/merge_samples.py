@@ -48,13 +48,14 @@ def _get_samples() -> dict:
     return d_data
 # ----------------------------
 def _merge_paths(l_path : list[str]) -> None:
-    out_path = f'{Data.out_dir}/{Data.sample_name}_{Data.trigger_name}_0000000000.root'
+    sample_name = Data.sample_name.lower()
+    out_path    = f'{Data.out_dir}/{sample_name}_{Data.trigger_name}_0000000000.root'
     if os.path.isfile(out_path):
         log.info(f'File already found: {out_path}')
         return
 
     npath = len(l_path)
-    log.info(f'Merging {npath} paths for {Data.sample_name}/{Data.trigger_name}')
+    log.info(f'Merging {npath} paths for {sample_name}/{Data.trigger_name}')
 
     fm = TFileMerger(isLocal=False)
     fm.SetFastMethod(True)
