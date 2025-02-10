@@ -7,7 +7,7 @@ from importlib.resources   import files
 from dmu.logging.log_store import LogStore
 import pytest
 
-from post_ap.ntuple_filter import NtupleFilter 
+from post_ap.ntuple_filter import NtupleFilter
 
 log = LogStore.add_logger('post_ap:test_ntuple_filter')
 
@@ -38,7 +38,7 @@ def test_dt():
 # ---------------------------------------
 def test_mc():
     '''
-    Will test filtering of MC 
+    Will test filtering of MC
     '''
     pfn_path_mc            = files('post_ap_data').joinpath('tests/mc_2024_turbo_comp.json')
     os.environ['PFN_PATH'] = str(pfn_path_mc)
