@@ -7,6 +7,7 @@ import yaml
 import pytest
 import matplotlib.pyplot as plt
 from ROOT                   import RDataFrame
+from dmu.logging.log_store  import LogStore
 from rx_data.hop_calculator import HOPCalculator
 
 # ----------------------------
@@ -15,6 +16,10 @@ class Data:
     Class used to share attributes
     '''
     out_dir = '/tmp/rx_data/tests/hop_calculator'
+# ----------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('rx_data:hop_calculator', 10)
 # ----------------------------
 def _get_samples() -> dict:
     samples_list='/publicfs/ucas/user/campoverde/Data/RX_run3/v5/rx_samples.yaml'
@@ -66,7 +71,7 @@ def _compare_sig_bkg(rdf_sig : RDataFrame, rdf_bkg : RDataFrame, name : str) -> 
 def _get_hop(sample : str, trigger : str) -> tuple[RDataFrame, RDataFrame]:
     rdf     = _get_rdf(sample = sample, trigger=trigger)
 
-    obj     = HOPCalculator(rdf=rdf)
+    obj     = HOPCalculator(rdf=rdf, trigger=trigger)
     rdf_hop = obj.get_rdf()
 
     return rdf_hop, rdf
@@ -94,21 +99,23 @@ def test_extra_branches():
     '''
     Testing adding extra branches to RDF
     '''
-    rdf     = _get_rdf(sample = 'Bu_Kee_eq_btosllball05_DPC', trigger='Hlt2RD_BuToKpEE_MVA')
+    trigger = 'Hlt2RD_BuToKpEE_MVA'
+    rdf     = _get_rdf(sample = 'Bu_Kee_eq_btosllball05_DPC', trigger=trigger)
 
-    obj     = HOPCalculator(rdf=rdf)
+    obj     = HOPCalculator(rdf=rdf, trigger=trigger)
     rdf_hop = obj.get_rdf(extra_branches=['EVENTNUMBER', 'RUNNUMBER'])
     l_col   = [ name.c_str() for name in rdf_hop.GetColumnNames() ]
 
     assert 'EVENTNUMBER' in l_col
     assert 'RUNNUMBER'   in l_col
 # ----------------------------
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA'])
 @pytest.mark.parametrize('sample', ['DATA_24_MagDown_24c1'])
-def test_data(sample : str):
+def test_data(sample : str, trigger : str):
     '''
     Test with data
     '''
-    rdf_hop, rdf_org = _get_hop(sample = sample, trigger='Hlt2RD_BuToKpEE_MVA')
+    rdf_hop, rdf_org = _get_hop(sample = sample, trigger=trigger)
 
-    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'data_{sample}')
+    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'data_{sample}_{trigger}')
 # ----------------------------
