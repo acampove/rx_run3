@@ -7,19 +7,15 @@ Script used to create small trees with extra branches from input trees
 
 import os
 import argparse
+from typing      import Union
 from dataclasses import dataclass
 
 import yaml
+from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
+from rx_data.hop_calculator import HOPCalculator
 
 log = LogStore.add_logger('rx_data:branch_calculator')
-# ---------------------------------
-class IndentListDumper(yaml.SafeDumper):
-    '''
-    Class needed to implement indentation correctly in dumped yaml files
-    '''
-    def increase_indent(self, flow=False, indentless=False):
-        return super().increase_indent(flow, False)
 # ---------------------------------
 @dataclass
 class Data:
@@ -30,6 +26,8 @@ class Data:
     outp : str
     kind : str
     lvl  : int
+    l_kind    = ['hop']
+    tree_name = 'DecayTree'
 # ---------------------------------
 def _parse_args() -> None:
     '''
@@ -38,7 +36,7 @@ def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to create ROOT files with trees with extra branches')
     parser.add_argument('-p', '--path', type=str, help='Path to YAML file', required=True)
     parser.add_argument('-o', '--outp', type=str, help='Path to directory with outputs', required=True)
-    parser.add_argument('-k', '--kind', type=str, help='Kind of branch to create', choices=['hop'], required=True)
+    parser.add_argument('-k', '--kind', type=str, help='Kind of branch to create', choices=Data.l_kind, required=True)
     parser.add_argument('-l', '--lvl' , type=int, help='log level', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
@@ -61,15 +59,26 @@ def _get_paths() -> list[str]:
 
     return l_path
 # ---------------------------------
-def _create_file(path : str) -> None:
+def _get_out_path(path : str) -> Union[str,None]:
     fname    = os.path.basename(path)
     out_path = f'{Data.outp}/{fname}'
 
     if os.path.isfile(out_path):
         log.info(f'Output found, skipping {out_path}')
+        return None
 
     log.info(f'Creating {out_path}')
+    return out_path
+# ---------------------------------
+def _create_file(path : str) -> None:
+    out_path = _get_out_path(path)
+    if out_path is None:
+        return
 
+    rdf = RDataFrame(Data.tree_name, path)
+    obj = HOPCalculator(rdf=rdf)
+    rdf = obj.get_rdf()
+    rdf.Snapshot(Data.tree_name, out_path)
 # ---------------------------------
 def main():
     '''
