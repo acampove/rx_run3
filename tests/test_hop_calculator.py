@@ -41,9 +41,10 @@ def _plot_variables(rdf : RDataFrame, rdf_hop : RDataFrame, name : str) -> None:
     plt.savefig(f'{out_dir}/alpha.png')
     plt.close()
 
-    plt.hist(d_data['mass'], bins=40, label='HOP')
-    plt.hist(        arr_ms, bins=40, label='Original')
+    plt.hist(d_data['mass'], bins=40, histtype='step', label='HOP', range=[0, 10_000])
+    plt.hist(        arr_ms, bins=40, histtype='step', label='Original')
     plt.legend()
+    plt.title(name)
     plt.savefig(f'{out_dir}/mass.png')
     plt.close()
 # ----------------------------
@@ -53,6 +54,7 @@ def test_simple(sample : str):
     Simplest test
     '''
     rdf = _get_rdf(sample = sample, trigger='Hlt2RD_BuToKpEE_MVA')
+    rdf = rdf.Range(5000)
 
     obj     = HOPCalculator(rdf=rdf)
     rdf_hop = obj.get_rdf()
