@@ -89,3 +89,16 @@ def test_compare():
 
     _compare_sig_bkg(rdf_sig, rdf_bkg, 'compare')
 # ----------------------------
+def test_extra_branches():
+    '''
+    Simplest test
+    '''
+    rdf     = _get_rdf(sample = 'Bu_Kee_eq_btosllball05_DPC', trigger='Hlt2RD_BuToKpEE_MVA')
+
+    obj     = HOPCalculator(rdf=rdf)
+    rdf_hop = obj.get_rdf(extra_branches=['EVENTNUMBER', 'RUNNUMBER'])
+    l_col   = [ name.c_str() for name in rdf_hop.GetColumnNames() ]
+
+    assert 'EVENTNUMBER' in l_col
+    assert 'RUNNUMBER'   in l_col
+# ----------------------------
