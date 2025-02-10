@@ -17,7 +17,8 @@ class HOPCalculator:
     '''
     # -------------------------------
     def __init__(self, rdf : RDataFrame):
-        self._rdf = rdf
+        self._rdf   = rdf
+        self._emass = 0.511 # mass of electron
     # -------------------------------
     def _val_to_vector(self, arr_val : numpy.ndarray, ndim : int) -> Union[LorentzVector, XYZVector]:
         if   ndim == 4:
@@ -70,7 +71,7 @@ class HOPCalculator:
         py = alpha * particle.py()
         pz = alpha * particle.pz()
 
-        return LorentzVector('ROOT::Math::PxPyPzM4D<double>')(px, py, pz, 0.511)
+        return LorentzVector('ROOT::Math::PxPyPzM4D<double>')(px, py, pz, self._emass)
     # -------------------------------
     def _get_values(self) -> tuple[list[float], list[float]]:
         l_l1 = self._get_xvector(ndim=4, name='L1_P'   )
