@@ -103,3 +103,12 @@ def test_extra_branches():
     assert 'EVENTNUMBER' in l_col
     assert 'RUNNUMBER'   in l_col
 # ----------------------------
+@pytest.mark.parametrize('sample', ['DATA_24_MagDown_24c1'])
+def test_data(sample : str):
+    '''
+    Test with data
+    '''
+    rdf_hop, rdf_org = _get_hop(sample = sample, trigger='Hlt2RD_BuToKpEE_MVA')
+
+    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'data_{sample}')
+# ----------------------------
