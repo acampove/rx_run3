@@ -95,7 +95,18 @@ class HOPCalculator:
 
         return l_alpha, l_mass
     # -------------------------------
-    def get_rdf(self) -> RDataFrame:
+    def _attach_extra_branches(self, l_branch : list[str], d_data : dict) -> RDataFrame:
+        if l_branch is None:
+            return d_data
+
+        log.info(f'Attaching extra branches: {l_branch}')
+
+        d_ext = self._rdf.AsNumpy(l_branch)
+        d_data.update(d_ext)
+
+        return d_data
+    # -------------------------------
+    def get_rdf(self, extra_branches : list[str] = None) -> RDataFrame:
         '''
         Returns ROOT dataframe with HOP variables
         '''
@@ -103,8 +114,10 @@ class HOPCalculator:
         l_alpha, l_mass = self._get_values()
         arr_alpha       = numpy.array(l_alpha)
         arr_mass        = numpy.array(l_mass )
+        d_data          = {'alpha' : arr_alpha, 'mass' : arr_mass}
+        d_data          = self._attach_extra_branches(extra_branches, d_data)
 
-        rdf = RDF.FromNumpy({'alpha' : arr_alpha, 'mass' : arr_mass})
+        rdf = RDF.FromNumpy(d_data)
 
         return rdf
 # -------------------------------
