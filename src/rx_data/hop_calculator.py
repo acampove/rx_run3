@@ -7,7 +7,9 @@ from typing import Union
 import numpy
 from ROOT      import RDataFrame, RDF
 from ROOT.Math import LorentzVector, XYZVector
+from dmu.logging.log_store  import LogStore
 
+log = LogStore.add_logger('rx_data:hop_calculator')
 # -------------------------------
 class HOPCalculator:
     '''
