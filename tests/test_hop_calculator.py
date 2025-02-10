@@ -48,25 +48,44 @@ def _plot_variables(rdf : RDataFrame, rdf_hop : RDataFrame, name : str) -> None:
     plt.savefig(f'{out_dir}/mass.png')
     plt.close()
 # ----------------------------
+def _compare_sig_bkg(rdf_sig : RDataFrame, rdf_bkg : RDataFrame, name : str) -> None:
+    out_dir = f'{Data.out_dir}/{name}'
+    os.makedirs(out_dir, exist_ok=True)
+
+    arr_sig = rdf_sig.AsNumpy(['mass'])['mass']
+    arr_bkg = rdf_bkg.AsNumpy(['mass'])['mass']
+
+    plt.hist(arr_sig, range=[3000, 6000], bins=50, histtype='step', density=True, label='Signal')
+    plt.hist(arr_bkg, range=[3000, 6000], bins=50, histtype='step', density=True, label='Background')
+
+    plt.legend()
+    plt.savefig(f'{out_dir}/mass.png')
+    plt.close()
+# ----------------------------
+def _get_hop(sample : str, trigger : str) -> tuple[RDataFrame, RDataFrame]:
+    rdf     = _get_rdf(sample = sample, trigger=trigger)
+
+    obj     = HOPCalculator(rdf=rdf)
+    rdf_hop = obj.get_rdf()
+
+    return rdf_hop, rdf
+# ----------------------------
 @pytest.mark.parametrize('sample', ['Bd_Kstee_eq_btosllball05_DPC', 'Bu_Kee_eq_btosllball05_DPC'])
 def test_simple(sample : str):
     '''
     Simplest test
     '''
-    rdf = _get_rdf(sample = sample, trigger='Hlt2RD_BuToKpEE_MVA')
-    rdf = rdf.Range(5000)
+    rdf_hop, rdf_org = _get_hop(sample = sample, trigger='Hlt2RD_BuToKpEE_MVA')
 
-    obj     = HOPCalculator(rdf=rdf)
-    rdf_hop = obj.get_rdf()
-
-    _plot_variables(rdf=rdf, rdf_hop=rdf_hop, name=f'simple_{sample}')
+    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'simple_{sample}')
 # ----------------------------
+def test_compare():
+    '''
+    Compare signal with background
+    '''
+    trigger    = 'Hlt2RD_BuToKpEE_MVA'
+    rdf_bkg, _ = _get_hop(sample = 'Bd_Kstee_eq_btosllball05_DPC', trigger=trigger)
+    rdf_sig, _ = _get_hop(sample = 'Bu_Kee_eq_btosllball05_DPC'  , trigger=trigger)
 
-# Bd_Kstmumu_eq_btosllball05_DPC                                                                                                                                                                                                        
-# Bu_Kmumu_eq_btosllball05_DPC                                                                                                                                                                                                          
-# Bd_Kstee_eq_btosllball05_DPC                                                                                                                                                                                                          
-# Bu_Kee_eq_btosllball05_DPC                                                                                                                                                                                                            
-# Bd_JpsiX_ee_eq_JpsiInAcc                                                                                                                                                                                                              
-# Bu_JpsiX_ee_eq_JpsiInAcc                                                                                                                                                                                                              
-# Bs_JpsiX_ee_eq_JpsiInAcc                                                                                                                                                                                                              
-# Lb_JpsiX_ee_eq_JpsiInAcc     
+    _compare_sig_bkg(rdf_sig, rdf_bkg, 'compare')
+# ----------------------------
