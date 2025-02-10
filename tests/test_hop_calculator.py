@@ -76,14 +76,18 @@ def _get_hop(sample : str, trigger : str) -> tuple[RDataFrame, RDataFrame]:
 
     return rdf_hop, rdf
 # ----------------------------
-@pytest.mark.parametrize('sample', ['Bd_Kstee_eq_btosllball05_DPC', 'Bu_Kee_eq_btosllball05_DPC'])
-def test_mc(sample : str):
+@pytest.mark.parametrize('sample, trigger',
+                         [('Bd_Kstmumu_eq_btosllball05_DPC' , 'Hlt2RD_BuToKpMuMu_MVA'),
+                          ('Bu_Kmumu_eq_btosllball05_DPC'   , 'Hlt2RD_BuToKpMuMu_MVA'),
+                          ('Bd_Kstee_eq_btosllball05_DPC'   , 'Hlt2RD_BuToKpEE_MVA'  ),
+                          ('Bu_Kee_eq_btosllball05_DPC'     , 'Hlt2RD_BuToKpEE_MVA'  )])
+def test_mc(sample : str, trigger : str):
     '''
     Test on MC
     '''
-    rdf_hop, rdf_org = _get_hop(sample = sample, trigger='Hlt2RD_BuToKpEE_MVA')
+    rdf_hop, rdf_org = _get_hop(sample = sample, trigger=trigger)
 
-    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'mc_{sample}')
+    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'mc_{sample}_{trigger}')
 # ----------------------------
 def test_compare():
     '''
