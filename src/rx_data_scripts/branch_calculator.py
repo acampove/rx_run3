@@ -46,19 +46,23 @@ def _parse_args() -> None:
     Data.kind = args.kind
     Data.lvl  = args.lvl
 # ---------------------------------
-def _get_paths() -> list[str]:
+def _get_paths() -> dict[str,list[str]]:
     with open(Data.path, encoding='utf-8') as ifile:
         d_sample = yaml.safe_load(ifile)
 
-    l_path = []
+    d_path = {}
     for sample in d_sample:
         for trigger in d_sample[sample]:
-            l_path += d_sample[sample][trigger]
+            if trigger not in d_path:
+                d_path[trigger] = []
 
-    nfile = len(l_path)
-    log.info(f'Found {nfile} files')
+            d_path[trigger] += d_sample[sample][trigger]
 
-    return l_path
+    for trigger, l_path in d_path.items():
+        nfile = len(l_path)
+        log.info(f'{trigger:<30}{nfile:<20}')
+
+    return d_path
 # ---------------------------------
 def _get_out_path(path : str) -> Union[str,None]:
     fname    = os.path.basename(path)
@@ -71,14 +75,15 @@ def _get_out_path(path : str) -> Union[str,None]:
     log.debug(f'Creating {out_path}')
     return out_path
 # ---------------------------------
-def _create_file(path : str) -> None:
+def _create_file(path : str, trigger : str) -> None:
+    # pylint: disable=broad-exception-caught
     out_path = _get_out_path(path)
     if out_path is None:
         return
 
     rdf = RDataFrame(Data.tree_name, path)
     try:
-        obj = HOPCalculator(rdf=rdf)
+        obj = HOPCalculator(rdf=rdf, trigger=trigger)
         rdf = obj.get_rdf(extra_branches=['EVENTNUMBER', 'RUNNUMBER'])
     except Exception as exc:
         log.error(f'Cannot process: {path}')
@@ -93,10 +98,11 @@ def main():
     _parse_args()
     os.makedirs(Data.outp, exist_ok=True)
 
-    l_path = _get_paths()
-
-    for path in tqdm.tqdm(l_path, ascii=' -'):
-        _create_file(path)
+    d_path = _get_paths()
+    for trigger, l_path in d_path.items():
+        for path in tqdm.tqdm(l_path, ascii=' -'):
+            _create_file(path, trigger)
 # ---------------------------------
 if __name__ == '__main__':
     main()
+
