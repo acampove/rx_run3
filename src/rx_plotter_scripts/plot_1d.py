@@ -1,6 +1,8 @@
 '''
 Script used to plot mass distributions
 '''
+import os
+import glob
 import argparse
 from importlib.resources import files
 from dataclasses         import dataclass
@@ -9,9 +11,12 @@ import yaml
 import mplhep
 from ROOT                    import RDataFrame, EnableImplicitMT
 from dmu.plotting.plotter_1d import Plotter1D
+from dmu.logging.log_store   import LogStore
+from dmu.generic             import version_management as vmn
 from rx_data.rdf_getter      import RDFGetter
 from rx_selection.selection  import load_selection_config
 
+log=LogStore.add_logger('rx_selection:plot_1d')
 # ---------------------------------
 @dataclass
 class Data:
@@ -25,12 +30,29 @@ class Data:
 
     mplhep.style.use('LHCb1')
 
-    RDFGetter.samples_dir = '/home/acampove/Data/RX_run3/NO_q2_bdt_mass_Q2_central_VR_v1'
-
     chanel  : str
     trigger : str
     q2_bin  : str
     q2_cut  : str
+    version : str
+    cfg_dir : str
+# ---------------------------------
+def _initialize() -> None:
+    EnableImplicitMT(Data.nthreads)
+
+    cfg_dir = files('rx_plotter_data').joinpath('')
+    if Data.version is None:
+        cfg_dir = vmn.get_last_version(dir_path=cfg_dir, version_only=False)
+    else:
+        cfg_dir = f'{cfg_dir}/{Data.version}'
+
+    Data.cfg_dir = cfg_dir
+    log.info(f'Picking configuration from: {Data.cfg_dir}')
+
+    l_yaml  = glob.glob(f'{Data.cfg_dir}/samples/*.yaml')
+
+    d_sample= { os.path.basename(path).replace('.yaml', '') : path for path in l_yaml }
+    RDFGetter.samples = d_sample
 # ---------------------------------
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger=Data.trigger)
@@ -58,20 +80,22 @@ def _q2cut_from_q2bin(q2bin : str) -> str:
 # ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make plots')
-    parser.add_argument('-q', '--q2bin' , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
-    parser.add_argument('-c', '--chanel', type=str, help='Channel', choices=['ee', 'mm'], required=True)
+    parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
+    parser.add_argument('-c', '--chanel' , type=str, help='Channel', choices=['ee', 'mm'], required=True)
+    parser.add_argument('-v', '--version', type=str, help='Version of inputs, will use latest if not set')
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
     Data.q2_cut = _q2cut_from_q2bin(args.q2bin)
     Data.trigger= Data.trigger_mm if args.chanel == 'mm' else Data.trigger_ee
     Data.chanel = args.chanel
+    Data.version= args.version
 # ---------------------------------
 def _get_cfg(kind : str) -> dict:
-    config_path = files('rx_plotter_data').joinpath('bdt_q2_mass.yaml')
-    config_path = str(config_path)
+    cfg_path= f'{Data.cfg_dir}/bdt_q2_mass.yaml'
+    cfg_path= str(cfg_path)
 
-    with open(config_path, encoding='utf=8') as ifile:
+    with open(cfg_path, encoding='utf=8') as ifile:
         cfg = yaml.safe_load(ifile)
 
     cfg = _override_cfg(cfg)
@@ -147,7 +171,7 @@ def main():
     Script starts here
     '''
     _parse_args()
-    EnableImplicitMT(Data.nthreads)
+    _initialize()
 
     rdf   = _get_rdf()
     d_rdf = _get_bdt_cutflow_rdf(rdf)
