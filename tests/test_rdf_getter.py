@@ -70,19 +70,36 @@ def _plot_mva(rdf : RDataFrame, test : str) -> None:
     plt.savefig(f'{Data.out_dir}/{test}_mva.png')
     plt.close()
 # ------------------------------------------------
-def test_simple():
+def test_data():
     '''
-    Simplest test of getter class
+    Test of getter class in data
     '''
     RDFGetter.samples = {
-            'main' : '/home/acampove/Packages/rx_data/rk_main.yaml',
-            'mva'  : '/home/acampove/Packages/rx_data/rk_mva.yaml',
+            'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
+            'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
+            'hop'  : '/home/acampove/external_ssd/Data/samples/hop.yaml',
             }
 
-    gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpMuMu_MVA')
+    gtr = RDFGetter(sample='DATA_24_MagUp_24c1', trigger='Hlt2RD_BuToKpMuMu_MVA')
     rdf = gtr.get_rdf()
 
     _check_branches(rdf)
-    _plot_mva_mass(rdf, 'simple')
-    _plot_mva(rdf, 'simple')
+    _plot_mva_mass(rdf, 'data')
+    _plot_mva(rdf, 'data')
+# ------------------------------------------------
+def test_mc():
+    '''
+    Test of getter class in mc 
+    '''
+    RDFGetter.samples = {
+            'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
+            'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
+            }
+
+    gtr = RDFGetter(sample='Bu_Kmumu_eq_btosllball05_DPC', trigger='Hlt2RD_BuToKpMuMu_MVA')
+    rdf = gtr.get_rdf()
+
+    _check_branches(rdf)
+    _plot_mva_mass(rdf, 'mc')
+    _plot_mva(rdf, 'mc')
 # ------------------------------------------------
