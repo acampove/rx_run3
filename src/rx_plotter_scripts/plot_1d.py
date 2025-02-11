@@ -3,6 +3,7 @@ Script used to plot mass distributions
 '''
 import os
 import glob
+import pprint
 import argparse
 from importlib.resources import files
 from dataclasses         import dataclass
@@ -27,6 +28,7 @@ class Data:
     trigger_mm = 'Hlt2RD_BuToKpMuMu_MVA'
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
+    data_dir   = os.environ['DATADIR']
 
     mplhep.style.use('LHCb1')
 
@@ -49,9 +51,11 @@ def _initialize() -> None:
     Data.cfg_dir = cfg_dir
     log.info(f'Picking configuration from: {Data.cfg_dir}')
 
-    l_yaml  = glob.glob(f'{Data.cfg_dir}/samples/*.yaml')
+    l_yaml  = glob.glob(f'{Data.data_dir}/samples/*.yaml')
 
     d_sample= { os.path.basename(path).replace('.yaml', '') : path for path in l_yaml }
+    log.info('Using paths:')
+    pprint.pprint(d_sample)
     RDFGetter.samples = d_sample
 # ---------------------------------
 def _get_rdf() -> RDataFrame:
