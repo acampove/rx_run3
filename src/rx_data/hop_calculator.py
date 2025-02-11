@@ -132,7 +132,7 @@ class HOPCalculator:
         if l_branch is None:
             return d_data
 
-        log.info(f'Attaching extra branches: {l_branch}')
+        log.debug(f'Attaching extra branches: {l_branch}')
 
         d_ext = self._rdf.AsNumpy(l_branch)
         d_data.update(d_ext)
