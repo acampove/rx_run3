@@ -6,7 +6,7 @@ import os
 import fnmatch
 
 import yaml
-from ROOT                   import RDataFrame, TChain
+from ROOT                   import RDataFrame, TChain, TTreeIndex
 from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('rx_data:rdf_getter')
@@ -52,7 +52,10 @@ class RDFGetter:
 
         l_file  = self._files_from_yaml(path)
         for file in l_file:
-            chain.Add(file)
+            chain.AddFile(file)
+
+        index = TTreeIndex(chain, 'EVENTNUMBER', 'RUNNUMBER')
+        chain.SetTreeIndex(index)
 
         self._l_chain.append(chain)
 
