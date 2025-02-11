@@ -23,6 +23,8 @@ class Data:
     jpsi_q2    = '(Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)'
     psi2_q2    = '(Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)'
     high_q2    = '(Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)'
+
+    l_branch = ['mva_cmb', 'mva_prc']
 # ------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -32,25 +34,23 @@ def _initialize():
 def _check_branches(rdf : RDataFrame) -> None:
     l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
 
-    l_mva  = [ name for name in l_name if 'mva'  in name ]
-    l_main = [ name for name in l_name if 'B_PT' in name ]
+    for branch in Data.l_branch:
+        if branch in l_name:
+            continue
 
-    if 'mva.mva_cmb' not in l_name or 'B_PT' not in l_name:
-        print(l_mva )
-        print(l_main)
-        raise ValueError('MVA branch missing')
+        raise ValueError(f'Branch missing: {branch}')
 # ------------------------------------------------
 def _plot_mva_mass(rdf : RDataFrame, test : str) -> None:
     rdf = rdf.Filter(Data.jpsi_q2)
 
     for cmb in [0.4, 0.6, 0.8, 0.9]:
-        rdf      = rdf.Filter(f'mva.mva_cmb > {cmb}')
+        rdf      = rdf.Filter(f'mva_cmb > {cmb}')
         arr_mass = rdf.AsNumpy(['B_M'])['B_M']
 
         plt.hist(arr_mass, bins=50, histtype='step', range=[4800, 5500], label=f'{cmb}; 0.0')
 
     for prc in [0.5, 0.6]:
-        rdf      = rdf.Filter(f'mva.mva_prc > {prc}')
+        rdf      = rdf.Filter(f'mva_prc > {prc}')
         arr_mass = rdf.AsNumpy(['B_M'])['B_M']
         plt.hist(arr_mass, bins=50, histtype='step', range=[4800, 5500], label=f'{cmb}; {prc}')
 
@@ -61,8 +61,8 @@ def _plot_mva_mass(rdf : RDataFrame, test : str) -> None:
 def _plot_mva(rdf : RDataFrame, test : str) -> None:
     rdf = rdf.Filter(Data.jpsi_q2)
 
-    arr_cmb = rdf.AsNumpy(['mva.mva_cmb'])['mva.mva_cmb']
-    arr_prc = rdf.AsNumpy(['mva.mva_prc'])['mva.mva_prc']
+    arr_cmb = rdf.AsNumpy(['mva_cmb'])['mva_cmb']
+    arr_prc = rdf.AsNumpy(['mva_prc'])['mva_prc']
     plt.hist(arr_cmb, bins=40, histtype='step', range=[0, 1], label='CMB')
     plt.hist(arr_prc, bins=40, histtype='step', range=[0, 1], label='PRC')
 
@@ -94,9 +94,10 @@ def test_mc():
     RDFGetter.samples = {
             'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
             'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
+            'hop'  : '/home/acampove/external_ssd/Data/samples/hop.yaml',
             }
 
-    gtr = RDFGetter(sample='Bu_Kmumu_eq_btosllball05_DPC', trigger='Hlt2RD_BuToKpMuMu_MVA')
+    gtr = RDFGetter(sample='Bu_Kee_eq_btosllball05_DPC', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
 
     _check_branches(rdf)
