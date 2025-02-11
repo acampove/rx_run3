@@ -23,6 +23,7 @@ class RDFGetter:
         self._trigger = trigger
         self._treename= 'DecayTree'
 
+        self._out_path: str
         self._l_chain : list[TChain] = []
     # ------------------------------------
     def _files_from_yaml(self, path : str) -> list[str]:
@@ -62,6 +63,20 @@ class RDFGetter:
         return chain
     # ------------------------------------
     def _initialize(self) -> None:
+        self._check_inputs()
+        self._out_path = self._get_output_path()
+    # ------------------------------------
+    def _get_output_path(self) -> str:
+        main_path = RDFGetter.samples['main']
+        main_dir  = os.path.dirname(main_path)
+
+        out_dir   = f'{main_dir}/cached'
+        os.makedirs(out_dir, exist_ok=True)
+        sample    = self._sample.replace('*', 'p')
+
+        return f'{out_dir}/{sample}_{self._trigger}.root'
+    # ------------------------------------
+    def _check_inputs(self):
         if not hasattr(RDFGetter, 'samples'):
             raise ValueError('samples attribute has not been set')
 
@@ -89,6 +104,12 @@ class RDFGetter:
         '''
         self._initialize()
 
+        if os.path.isfile(self._out_path):
+            log.info(f'Cached file found: {self._out_path}')
+            rdf = RDataFrame(self._treename, self._out_path)
+            return rdf
+
+        log.info('No cached file found, Building it')
         chain_main = None
         for kind, path in RDFGetter.samples.items():
             log.debug(f'Building chain for {kind} category')
@@ -100,8 +121,11 @@ class RDFGetter:
 
             chain_main.AddFriend(chain, kind)
 
+        log.info(f'Caching to: {self._out_path}')
         rdf = RDataFrame(chain_main)
-        rdf.chains = self._l_chain
+        rdf.Snapshot(self._treename, self._out_path)
+
+        rdf = RDataFrame(self._treename, self._out_path)
 
         return rdf
 # ---------------------------------------------------------------
