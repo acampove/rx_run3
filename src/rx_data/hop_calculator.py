@@ -71,8 +71,9 @@ class HOPCalculator:
         px = alpha * particle.px()
         py = alpha * particle.py()
         pz = alpha * particle.pz()
+        ms =         particle.M()
 
-        return LorentzVector('ROOT::Math::PxPyPzM4D<double>')(px, py, pz, self._lmass)
+        return LorentzVector('ROOT::Math::PxPyPzM4D<double>')(px, py, pz, ms)
     # -------------------------------
     def _get_values(self) -> tuple[list[float], list[float]]:
         l_l1 = self._get_xvector(ndim=4, name='L1_P'   )
