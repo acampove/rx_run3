@@ -6,6 +6,7 @@ readme      = 'README.md'
 dependencies= [
 'tqdm',
 'xrootd',
+'uproot',
 'tabulate',
 'data_manipulation_utilities>0.1.2',
 'ap_utilities>=0.2.5'
