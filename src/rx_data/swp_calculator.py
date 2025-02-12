@@ -16,7 +16,7 @@ from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('rx_data:swap_calculator')
 #---------------------------------
-class Calculator:
+class SWPCalculator:
     def __init__(self, df, d_lep=None, d_had=None):
         self._df     = df
         self._d_lep  = d_lep

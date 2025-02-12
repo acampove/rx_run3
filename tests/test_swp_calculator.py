@@ -7,7 +7,7 @@ from importlib.resources     import files
 import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
-from rx_data.swap_calculator import Calculator
+from rx_data.swp_calculator import SWPCalculator
 
 # ----------------------------------
 class Data:
@@ -33,7 +33,7 @@ def test_simple():
     '''
     df  = _get_df()
 
-    obj = Calculator(df, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
+    obj = SWPCalculator(df, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
     df  = obj.get_df()
     df.H_swp.hist(bins=40, range=(1800, 1950) , histtype='step', label='Swapped')
     df.H_org.hist(bins=40, range=(1800, 1950) , histtype='step', label='Original')
