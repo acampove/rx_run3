@@ -8,6 +8,8 @@ dependencies= [
 'xrootd',
 'uproot',
 'tabulate',
+'particle',
+'vector',
 'data_manipulation_utilities>0.1.2',
 'ap_utilities>=0.2.5'
 ]
@@ -30,4 +32,4 @@ list_triggers      ='rx_data_scripts.list_triggers:main'
 
 [tool.setuptools.package-data]
 'rx_data_lfns' = ['v*/*.json', 'v*/*.csv']
-
+'rx_data_data' = ['*/*.json']
