@@ -19,29 +19,28 @@ class Data:
     nthread = 10
     EnableImplicitMT(nthread)
 
+    inp_dir : str = '/home/acampove/external_ssd/Data/main/v5'
     out_dir : str = '/tmp/rx_data/tests/swap_calculator'
+
+    l_file_wc = [
+            'data_24_mag*_24c1_Hlt2RD_BuToKpMuMu_MVA_0000000000.root',
+            'data_24_mag*_24c2_Hlt2RD_BuToKpMuMu_MVA_0000000000.root',
+            'data_24_mag*_24c3_Hlt2RD_BuToKpMuMu_MVA_0000000000.root',
+            'data_24_mag*_24c4_Hlt2RD_BuToKpMuMu_MVA_0000000000.root']
 # ----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 # ----------------------------------
-def _get_df(test : str) -> pnd.DataFrame:
+def _get_df(test : str, file_wc : str) -> pnd.DataFrame:
     if test == 'cascade':
         json_path = files('rx_data_data').joinpath('tests/swap_adder/bpd0kpienu.json')
         df = pnd.read_json(json_path)
         return df
 
     if test == 'jpsi_misid':
-        #path  = '/home/acampove/external_ssd/Data/main/v5/mc_magup_12143001_bu_jpsik_mm_eq_dpc_Hlt2RD_BuToKpMuMu_MVA_*.root'
-        path  = '/home/acampove/external_ssd/Data/main/v5/data_24_mag*_24c*_Hlt2RD_BuToKpEE_MVA_0000000000.root'
-        #path  = '/home/acampove/external_ssd/Data/main/v5/data_24_magup_24c2_Hlt2RD_BuToKpMuMu_MVA_0000000000.root'
-        rdf   = RDataFrame('DecayTree', path)
+        rdf   = RDataFrame('DecayTree', f'{Data.inp_dir}/{file_wc}')
         rdf   = rdf.Filter('Jpsi_M * Jpsi_M > 15000000')
-        #rdf   = rdf.Filter('(Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000)')
-        #rdf   = rdf.Filter('(Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1000000)')
-        #rdf   = rdf.Filter('(Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)')
-        #rdf   = rdf.Filter('(Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)')
-        #rdf   = rdf.Range(60000)
         msc   = MisCalculator(rdf=rdf, trigger='Hlt2RD_BuToKpMuMu_MVA')
         rdf   = msc.get_rdf()
 
@@ -68,11 +67,12 @@ def test_cascade():
     plt.savefig(f'{Data.out_dir}/cascade.png')
     plt.close('all')
 # ----------------------------------
-def test_jpsi_misid():
+@pytest.mark.parametrize('file_wc', Data.l_file_wc)
+def test_jpsi_misid(file_wc : str):
     '''
     Tests jpsi misid contamination
     '''
-    df  = _get_df(test='jpsi_misid')
+    df  = _get_df(test='jpsi_misid', file_wc = file_wc)
 
     if len(df) == 0:
         raise ValueError('No entries found in input dataframe')
@@ -85,5 +85,6 @@ def test_jpsi_misid():
     plt.grid(False)
     plt.legend()
 
-    plt.savefig(f'{Data.out_dir}/jpsi_misid.png')
+    suffix = file_wc.replace('*', 'p')
+    plt.savefig(f'{Data.out_dir}/jpsi_misid_{suffix}.png')
     plt.close('all')
