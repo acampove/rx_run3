@@ -2,74 +2,76 @@
 Module with class used to swap mass hypotheses
 '''
 
-import os
-import random
-
-import numpy
 import vector
 import pandas as pnd
-
+from ROOT                  import RDataFrame, RDF
 from tqdm                  import tqdm
 from particle              import Particle  as part
-from pandarallel           import pandarallel
 from dmu.logging.log_store import LogStore
 
-log = LogStore.add_logger('rx_data:swap_calculator')
+log = LogStore.add_logger('rx_data:swp_calculator')
 #---------------------------------
 class SWPCalculator:
     '''
     Class used to calculate di-track masses, after mass hypothesis swaps
     '''
-    def __init__(self, df, d_lep=None, d_had=None):
-        self._df     = df
+    #---------------------------------
+    def __init__(self, rdf : RDataFrame, d_lep : dict[str,int], d_had : dict[str,int]):
+        self._rdf    = rdf
         self._d_lep  = d_lep
         self._d_had  = d_had
-        self._plt_dir= None
 
-        self._initialized=False
+        self._extra_branches= ['EVENTNUMBER', 'RUNNUMBER']
+        self._df            = self._pnd_from_root(rdf)
+        self._initialized   = False
     #---------------------------------
-    def _initialize(self, nthread : int):
-        nthread = 7 if nthread > 7 else nthread
-        pandarallel.initialize(nb_workers=nthread, progress_bar=True)
+    def _pnd_from_root(self, rdf : RDataFrame) -> pnd.DataFrame:
+        s_col_all = { name.c_str() for name in rdf.GetColumnNames() }
+        s_col     = { name         for name in s_col_all if self._pick_column(name) }
 
+        ncol  = len(s_col)
+        log.info(f'Using {ncol} columns for dataframe')
+
+        d_data= rdf.AsNumpy(list(s_col))
+        df    = pnd.DataFrame(d_data)
+
+        return df
+    #---------------------------------
+    def _pick_column(self, name : str) -> bool:
+        l_par = list(self._d_lep) + list(self._d_had)
+        l_kin = []
+        for par in l_par:
+            l_kin += [
+                    f'{par}_PX',
+                    f'{par}_PY',
+                    f'{par}_PZ',
+                    f'{par}_PE',
+                    f'{par}_ID']
+
+        return name in l_kin
+    #---------------------------------
+    def _initialize(self):
         if self._initialized:
             return
 
         self._check_particle(self._d_lep)
         self._check_particle(self._d_had)
 
-        if self._plt_dir is not None:
-            os.makedirs(self._plt_dir, exist_ok=True)
-
         tqdm.pandas(ascii=' -')
 
         self._initialized=True
     #---------------------------------
-    @property
-    def plt_dir(self):
-        '''
-        Used to set plot directory where validation plots are stored
-        If not pased, won't make plots
-        '''
-        return self._plt_dir
-
-    @plt_dir.setter
-    def plt_dir(self, value):
-        self._plt_dir = value
-    #---------------------------------
     def _check_particle(self, d_part):
         if not isinstance(d_part, dict):
-            log.error(f'Dictionary expected, found: {d_part}')
-            raise
+            raise ValueError(f'Dictionary expected, found: {d_part}')
 
-        for par_name, pdg_id in d_part.items():
+        for pdg_id in d_part.values():
             try:
                 part.from_pdgid(pdg_id)
-            except:
-                log.error(f'Cannot create particle for PDGID: {pdg_id}')
-                raise
+            except Exception as exc:
+                raise ValueError(f'Cannot create particle for PDGID: {pdg_id}') from exc
     #---------------------------------
-    def _build_mass(self, row, d_part):
+    def _build_mass(self, row, d_part) -> float:
         l_vec = []
         for name, new_id in d_part.items():
             par    = part.from_pdgid(new_id)
@@ -85,13 +87,17 @@ class SWPCalculator:
             vec_2 = vector.obj(pt=vec_1.pt, phi=vec_1.phi, theta=vec_1.theta, mass=ms)
             l_vec.append(vec_2)
 
-        [vec_1, vec_2] = l_vec
+        if len(l_vec) != 2:
+            raise ValueError('Not found two and only two particles')
 
-        vec = vec_1 + vec_2
+        vec_1 = l_vec[0]
+        vec_2 = l_vec[1]
+        vec   = vec_1 + vec_2
+        mass  = float(vec.mass)
 
-        return vec.mass
+        return mass
     #---------------------------------
-    def _combine(self, row, had_name, kind, new_had_id, multiple_candidates):
+    def _combine(self, row : pnd.Series, had_name, kind : str, new_had_id : int) ->  float:
         old_had_id = row[f'{had_name}_ID']
         had        = part.from_pdgid(old_had_id)
         l_mass     = []
@@ -109,68 +115,34 @@ class SWPCalculator:
 
             l_mass.append(mass)
 
-        if not multiple_candidates:
-            l_mass = self._pick_mass(l_mass)
+        if len(l_mass) != 1:
+            log.warning(f'Found two combinations with masses: {l_mass}')
 
-        return l_mass
+        return l_mass[0]
     #---------------------------------
-    def _pick_mass(self, l_mass):
-        l_mass_filt = [ mass for mass in l_mass if not numpy.isnan(mass) ]
-
-        if len(l_mass_filt) == 0:
-            return [ numpy.nan ]
-
-        mass = random.choice(l_mass_filt)
-
-        return [mass]
-    #---------------------------------
-    def _get_charges(self, row, name):
-        pdg_id = row[f'{name}_ID']
-        partic = part.from_pdgid(pdg_id)
-
-        return partic.charge
-    #---------------------------------
-    def _remove_nan(self, sr_val : pnd.Series, nan_val : float) -> pnd.Series:
-        init   = sr_val.size
-        sr_val = sr_val.explode()
-
-        if nan_val is None:
-            sr_val = sr_val.dropna(ignore_index=True)
-        else:
-            sr_val = sr_val.fillna(nan_val)
-
-        fnal   = sr_val.size
-
-        if init != fnal:
-            log.warning(f'Dropped NA values, changed size: {init} -> {fnal}')
-
-        return sr_val
-    #---------------------------------
-    def get_df(self, nan_val : float = 0, multiple_candidates : bool = True, nthread : int = 4):
+    def get_rdf(self, preffix : str) -> RDataFrame:
         '''
         Parameters:
         ------------------
-        nan_val (float|int) When a NaN is found, if not set, will remove the entry. Otherwise will replace it with nan_val
-        multiple_candidates (bool): If true (default), will store all found combinations, otherwise will pick one randomly out of
-        the set of masses that are not NaNs.
-        nthread: Number of threads for pandarallel
+        preffix: Will be used to name branches with masses as `{preffix}_mass_org/swp` for the original and swapped masses
 
         Returns:
         ------------------
         Pandas dataframe with orignal and swapped masses, i.e. masses after the mass hypothesis swap
         '''
-        self._initialize(nthread)
+        self._initialize()
 
         d_comb = {}
         for had_name, new_had_id in self._d_had.items():
             for kind in ['org', 'swp']:
                 log.debug(f'Adding column for {had_name}/{new_had_id}/{kind}')
-                sr_mass = self._df.parallel_apply(self._combine, args=(had_name, kind, new_had_id, multiple_candidates), axis=1)
-                sr_mass = self._remove_nan(sr_mass, nan_val)
+                sr_mass = self._df.progress_apply(self._combine, args=(had_name, kind, new_had_id), axis=1)
+                d_comb[f'{preffix}_mass_{kind}'] = sr_mass.to_numpy().flatten()
 
-                d_comb[f'{had_name}_{kind}'] = sr_mass
+        d_extra = self._rdf.AsNumpy(self._extra_branches)
+        d_comb.update(d_extra)
 
-        df = pnd.DataFrame(d_comb)
+        rdf    = RDF.FromNumpy(d_comb)
 
-        return df
+        return rdf
 #---------------------------------
