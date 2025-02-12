@@ -2,9 +2,7 @@
 Module with class used to swap mass hypotheses
 '''
 
-
 import os
-import re
 import random
 
 import numpy
@@ -31,6 +29,7 @@ class SWPCalculator:
         self._initialized=False
     #---------------------------------
     def _initialize(self, nthread : int):
+        nthread = 7 if nthread > 7 else nthread
         pandarallel.initialize(nb_workers=nthread, progress_bar=True)
 
         if self._initialized:
