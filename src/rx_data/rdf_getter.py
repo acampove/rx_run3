@@ -45,86 +45,65 @@ class RDFGetter:
 
         log.debug(f'Using {nfile} files from {path}')
 
-        return l_path
+        return { path : self._treename for path in l_path }
     # ------------------------------------
-    def _get_chain(self, path : str) -> TChain:
-        chain   = TChain(self._treename)
+    def _get_intersecting_columns(self, d_file : dict[str,str], columns : set[str]):
+        columns = set(columns)
+        for file_name, tree_name in d_file.items():
+            with uproot.open(file_name) as ifile:
+                tree     = ifile[tree_name]
+                branches = set(tree.keys())
+                columns &= branches
 
-        l_file  = self._files_from_yaml(path)
-        for file in l_file:
-            chain.AddFile(file)
+        if len(columns) == 0:
+            print(branches)
 
-        index = TTreeIndex(chain, 'EVENTNUMBER', 'RUNNUMBER')
-        chain.SetTreeIndex(index)
-
-        self._l_chain.append(chain)
-
-        return chain
+        return columns
     # ------------------------------------
-    def _initialize(self) -> None:
-        self._check_inputs()
-        self._out_path = self._get_output_path()
+    def _create_key(self, df : pnd.DataFrame) -> pnd.DataFrame:
+        l_key = list(self._s_keys)
+        l_key.sort()
+
+        df['id'] = df.EVENTNUMBER.astype(str) + '_' + df.RUNNUMBER.astype(str)
+        df       = df.drop(self._s_keys, axis=1)
+
+        return df
     # ------------------------------------
-    def _get_output_path(self) -> str:
-        main_path = RDFGetter.samples['main']
-        main_dir  = os.path.dirname(main_path)
+    def _get_df(self, path : str, columns : set[str]) -> pnd.DataFrame:
+        d_file  = self._files_from_yaml(path)
+        columns = self._get_intersecting_columns(d_file, columns)
+        df      = uproot.concatenate(d_file, expressions=columns | self._s_keys, library='pd')
+        df      = self._create_key(df)
 
-        out_dir   = f'{main_dir}/cached'
-        os.makedirs(out_dir, exist_ok=True)
-        sample    = self._sample.replace('*', 'p')
-
-        return f'{out_dir}/{sample}_{self._trigger}.root'
-    # ------------------------------------
-    def _check_inputs(self):
-        if not hasattr(RDFGetter, 'samples'):
-            raise ValueError('samples attribute has not been set')
-
-        if not isinstance(RDFGetter.samples, dict):
-            raise ValueError('samples is not a dictionary')
-
-        nsample = len(RDFGetter.samples)
-        if nsample == 0:
-            raise FileNotFoundError('No samples found')
-
-        bad_path = False
-        for name, path in RDFGetter.samples.items():
-            if os.path.isfile(path):
-                continue
-
-            bad_path = True
-            log.error(f'Missing path: {path}:{name}')
-
-        if bad_path:
-            raise FileNotFoundError('Paths missing')
-    # ------------------------------------
-    def get_rdf(self) -> RDataFrame:
+        return df
+    # ------------------------
+    def get_df(self, columns : set[str]) -> pnd.DataFrame:
         '''
-        Will return ROOT dataframe
+        Returns pandas dataframe with a given set of columns
         '''
-        self._initialize()
 
-        if os.path.isfile(self._out_path):
-            log.info(f'Cached file found: {self._out_path}')
-            rdf = RDataFrame(self._treename, self._out_path)
-            return rdf
-
-        log.info('No cached file found, Building it')
-        chain_main = None
+        df = None
         for kind, path in RDFGetter.samples.items():
             log.debug(f'Building chain for {kind} category')
+            df_part = self._get_df(path=path, columns=columns)
 
-            chain = self._get_chain(path = path)
-            if chain_main is None:
-                chain_main = chain
+            if df is None:
+                df = df_part
                 continue
 
-            chain_main.AddFriend(chain, kind)
+            df = pnd.merge(df, df_part, on='id')
 
-        log.info(f'Caching to: {self._out_path}')
-        rdf = RDataFrame(chain_main)
-        rdf.Snapshot(self._treename, self._out_path)
+        df = df.drop(['id'], axis=1)
 
-        rdf = RDataFrame(self._treename, self._out_path)
+        return df
+    # ------------------------
+    def get_rdf(self, columns : set[str]) -> RDataFrame:
+        '''
+        Returns pandas dataframe with a given set of columns
+        '''
+        df     = self.get_df(columns)
+        d_nump = { name : df[name].to_numpy() for name in df }
+        rdf    = RDF.FromNumpy(d_nump)
 
         return rdf
 # ---------------------------------------------------------------
