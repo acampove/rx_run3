@@ -30,7 +30,7 @@ class Data:
     outp : str
     kind : str
     lvl  : int
-    l_kind    = ['hop']
+    l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade']
     tree_name = 'DecayTree'
 # ---------------------------------
 def _parse_args() -> None:
@@ -92,7 +92,7 @@ def _create_file(path : str, trigger : str) -> None:
         obj = HOPCalculator(rdf=rdf)
     elif Data.kind == 'swp_jpsi_misid':
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' :  13, 'L2' :  13}, d_had={'H' :  13})
-    elif Data.kind == 'swp_jpsi_misid':
+    elif Data.kind == 'swp_cascade'   :
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
     else:
         raise ValueError(f'Invalid kind: {Data.kind}')
