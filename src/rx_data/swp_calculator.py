@@ -10,13 +10,18 @@ import random
 import numpy
 import vector
 import pandas as pnd
+
 from tqdm                  import tqdm
 from particle              import Particle  as part
+from pandarallel           import pandarallel
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('rx_data:swap_calculator')
 #---------------------------------
 class SWPCalculator:
+    '''
+    Class used to calculate di-track masses, after mass hypothesis swaps
+    '''
     def __init__(self, df, d_lep=None, d_had=None):
         self._df     = df
         self._d_lep  = d_lep
@@ -35,12 +40,17 @@ class SWPCalculator:
         if self._plt_dir is not None:
             os.makedirs(self._plt_dir, exist_ok=True)
 
+        pandarallel.initialize(progress_bar=True)
         tqdm.pandas(ascii=' -')
 
         self._initialized=True
     #---------------------------------
     @property
     def plt_dir(self):
+        '''
+        Used to set plot directory where validation plots are stored
+        If not pased, won't make plots
+        '''
         return self._plt_dir
 
     @plt_dir.setter
@@ -120,7 +130,7 @@ class SWPCalculator:
 
         return partic.charge
     #---------------------------------
-    def _remove_nan(self, sr_val, nan_val):
+    def _remove_nan(self, sr_val : pnd.Series, nan_val : float) -> pnd.Series:
         init   = sr_val.size
         sr_val = sr_val.explode()
 
@@ -136,7 +146,7 @@ class SWPCalculator:
 
         return sr_val
     #---------------------------------
-    def get_df(self, nan_val=None, multiple_candidates=True):
+    def get_df(self, nan_val : float = 0, multiple_candidates : bool =True):
         '''
         Parameters:
         ------------------
@@ -154,27 +164,12 @@ class SWPCalculator:
         for had_name, new_had_id in self._d_had.items():
             for kind in ['org', 'swp']:
                 log.debug(f'Adding column for {had_name}/{new_had_id}/{kind}')
-                sr_mass = self._df.progress_apply(self._combine, args=(had_name, kind, new_had_id, multiple_candidates), axis=1)
+                sr_mass = self._df.parallel_apply(self._combine, args=(had_name, kind, new_had_id, multiple_candidates), axis=1)
                 sr_mass = self._remove_nan(sr_mass, nan_val)
 
                 d_comb[f'{had_name}_{kind}'] = sr_mass
 
         df = pnd.DataFrame(d_comb)
-
-        return df
-    #---------------------------------
-    @staticmethod
-    def rdf_to_df(rdf, regex):
-        v_col_name = rdf.GetColumnNames()
-        l_col_name = [ col_name.c_str() for col_name in v_col_name ]
-        l_col_need = [ col_name         for col_name in l_col_name if re.match(regex, col_name) ]
-
-        if len(l_col_need) == 0:
-            log.error(f'No colum matches: {regex}')
-            raise
-
-        d_data     = rdf.AsNumpy(l_col_need)
-        df         = pnd.DataFrame(d_data)
 
         return df
 #---------------------------------
