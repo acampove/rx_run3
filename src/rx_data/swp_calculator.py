@@ -30,7 +30,7 @@ class SWPCalculator:
         s_col     = { name         for name in s_col_all if self._pick_column(name) }
 
         ncol  = len(s_col)
-        log.info(f'Using {ncol} columns for dataframe')
+        log.debug(f'Using {ncol} columns for dataframe')
 
         d_data= rdf.AsNumpy(list(s_col))
         df    = pnd.DataFrame(d_data)
@@ -120,11 +120,12 @@ class SWPCalculator:
 
         return l_mass[0]
     #---------------------------------
-    def get_rdf(self, preffix : str) -> RDataFrame:
+    def get_rdf(self, preffix : str, progress_bar : bool = False) -> RDataFrame:
         '''
         Parameters:
         ------------------
         preffix: Will be used to name branches with masses as `{preffix}_mass_org/swp` for the original and swapped masses
+        progress_bar: If True, will show progress bar, by default false
 
         Returns:
         ------------------
@@ -136,7 +137,11 @@ class SWPCalculator:
         for had_name, new_had_id in self._d_had.items():
             for kind in ['org', 'swp']:
                 log.debug(f'Adding column for {had_name}/{new_had_id}/{kind}')
-                sr_mass = self._df.progress_apply(self._combine, args=(had_name, kind, new_had_id), axis=1)
+                if progress_bar:
+                    sr_mass = self._df.progress_apply(self._combine, args=(had_name, kind, new_had_id), axis=1)
+                else:
+                    sr_mass = self._df.apply(self._combine, args=(had_name, kind, new_had_id), axis=1)
+
                 d_comb[f'{preffix}_mass_{kind}'] = sr_mass.to_numpy().flatten()
 
         d_extra = self._rdf.AsNumpy(self._extra_branches)
