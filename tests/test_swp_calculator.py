@@ -9,13 +9,15 @@ import pandas            as pnd
 import matplotlib.pyplot as plt
 from ROOT                   import RDataFrame, EnableImplicitMT
 from rx_data.swp_calculator import SWPCalculator
+from rx_data.mis_calculator import MisCalculator
 
 # ----------------------------------
 class Data:
     '''
     Class used to share attributes
     '''
-    EnableImplicitMT(10)
+    nthread = 10
+    EnableImplicitMT(nthread)
 
     out_dir : str = '/tmp/rx_data/tests/swap_calculator'
 # ----------------------------------
@@ -32,14 +34,17 @@ def _get_df(test : str) -> pnd.DataFrame:
     if test == 'jpsi_misid':
         #path  = '/home/acampove/external_ssd/Data/main/v5/mc_magup_12143001_bu_jpsik_mm_eq_dpc_Hlt2RD_BuToKpMuMu_MVA_*.root'
         path  = '/home/acampove/external_ssd/Data/main/v5/data_24_mag*_24c*_Hlt2RD_BuToKpEE_MVA_0000000000.root'
+        #path  = '/home/acampove/external_ssd/Data/main/v5/data_24_magup_24c2_Hlt2RD_BuToKpMuMu_MVA_0000000000.root'
         rdf   = RDataFrame('DecayTree', path)
         rdf   = rdf.Filter('Jpsi_M * Jpsi_M > 15000000')
         #rdf   = rdf.Filter('(Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000)')
         #rdf   = rdf.Filter('(Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1000000)')
         #rdf   = rdf.Filter('(Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)')
         #rdf   = rdf.Filter('(Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)')
-        rdf   = rdf.Range(60000)
-        rdf   = _add_missing(rdf, trigger='Hlt2RD_BuToKpEE_MVA')
+        #rdf   = rdf.Range(60000)
+        msc   = MisCalculator(rdf=rdf, trigger='Hlt2RD_BuToKpMuMu_MVA')
+        rdf   = msc.get_rdf()
+
         d_data= rdf.AsNumpy()
         df    = pnd.DataFrame(d_data)
         return df
@@ -73,7 +78,7 @@ def test_jpsi_misid():
         raise ValueError('No entries found in input dataframe')
 
     obj = SWPCalculator(df, d_lep={'L1' : 13, 'L2' : 13}, d_had={'H' : 13})
-    df  = obj.get_df()
+    df  = obj.get_df(nthread=Data.nthread)
     df.H_swp.hist(bins=40, range=(2700, 3300) , histtype='step', label='Swapped')
     df.H_org.hist(bins=40, range=(2700, 3300) , histtype='step', label='Original')
     plt.axvline(x=3100, color='r', label=r'$J/\psi$')
