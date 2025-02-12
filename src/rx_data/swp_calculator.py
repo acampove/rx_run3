@@ -30,7 +30,9 @@ class SWPCalculator:
 
         self._initialized=False
     #---------------------------------
-    def _initialize(self):
+    def _initialize(self, nthread : int):
+        pandarallel.initialize(nb_workers=nthread, progress_bar=True)
+
         if self._initialized:
             return
 
@@ -40,7 +42,6 @@ class SWPCalculator:
         if self._plt_dir is not None:
             os.makedirs(self._plt_dir, exist_ok=True)
 
-        pandarallel.initialize(progress_bar=True)
         tqdm.pandas(ascii=' -')
 
         self._initialized=True
@@ -146,19 +147,20 @@ class SWPCalculator:
 
         return sr_val
     #---------------------------------
-    def get_df(self, nan_val : float = 0, multiple_candidates : bool =True):
+    def get_df(self, nan_val : float = 0, multiple_candidates : bool = True, nthread : int = 4):
         '''
         Parameters:
         ------------------
         nan_val (float|int) When a NaN is found, if not set, will remove the entry. Otherwise will replace it with nan_val
         multiple_candidates (bool): If true (default), will store all found combinations, otherwise will pick one randomly out of
         the set of masses that are not NaNs.
+        nthread: Number of threads for pandarallel
 
         Returns:
         ------------------
         Pandas dataframe with orignal and swapped masses, i.e. masses after the mass hypothesis swap
         '''
-        self._initialize()
+        self._initialize(nthread)
 
         d_comb = {}
         for had_name, new_had_id in self._d_had.items():
