@@ -44,15 +44,15 @@ def _plot_variables(rdf : RDataFrame, rdf_hop : RDataFrame, name : str) -> None:
     out_dir = f'{Data.out_dir}/{name}'
     os.makedirs(out_dir, exist_ok=True)
 
-    d_data = rdf_hop.AsNumpy(['alpha', 'mass'])
+    d_data = rdf_hop.AsNumpy(['hop_alpha', 'hop_mass'])
     arr_ms = rdf.AsNumpy(['B_M'])['B_M']
 
-    plt.hist(d_data['alpha'], bins=40, range=[0,5])
+    plt.hist(d_data['hop_alpha'], bins=40, range=[0,5])
     plt.savefig(f'{out_dir}/alpha.png')
     plt.close()
 
-    plt.hist(d_data['mass'], bins=40, histtype='step', label='HOP', range=[0, 10_000])
-    plt.hist(        arr_ms, bins=40, histtype='step', label='Original')
+    plt.hist(d_data['hop_mass'], bins=40, histtype='step', label='HOP', range=[0, 10_000])
+    plt.hist(            arr_ms, bins=40, histtype='step', label='Original')
     plt.legend()
     plt.title(name)
     plt.savefig(f'{out_dir}/mass.png')
@@ -62,8 +62,8 @@ def _compare_sig_bkg(rdf_sig : RDataFrame, rdf_bkg : RDataFrame, name : str) -> 
     out_dir = f'{Data.out_dir}/{name}'
     os.makedirs(out_dir, exist_ok=True)
 
-    arr_sig = rdf_sig.AsNumpy(['mass'])['mass']
-    arr_bkg = rdf_bkg.AsNumpy(['mass'])['mass']
+    arr_sig = rdf_sig.AsNumpy(['hop_mass'])['hop_mass']
+    arr_bkg = rdf_bkg.AsNumpy(['hop_mass'])['hop_mass']
 
     plt.hist(arr_sig, range=[3000, 6000], bins=50, histtype='step', density=True, label='Signal')
     plt.hist(arr_bkg, range=[3000, 6000], bins=50, histtype='step', density=True, label='Background')
@@ -75,7 +75,7 @@ def _compare_sig_bkg(rdf_sig : RDataFrame, rdf_bkg : RDataFrame, name : str) -> 
 def _get_hop(sample : str, trigger : str) -> tuple[RDataFrame, RDataFrame]:
     rdf     = _get_rdf(sample = sample, trigger=trigger)
     obj     = HOPCalculator(rdf=rdf)
-    rdf_hop = obj.get_rdf()
+    rdf_hop = obj.get_rdf(preffix='hop')
 
     return rdf_hop, rdf
 # ----------------------------
@@ -110,7 +110,7 @@ def test_extra_branches():
     rdf     = _get_rdf(sample = 'Bu_Kee_eq_btosllball05_DPC', trigger=trigger)
 
     obj     = HOPCalculator(rdf=rdf)
-    rdf_hop = obj.get_rdf(extra_branches=['EVENTNUMBER', 'RUNNUMBER'])
+    rdf_hop = obj.get_rdf(preffix='hop')
     l_col   = [ name.c_str() for name in rdf_hop.GetColumnNames() ]
 
     assert 'EVENTNUMBER' in l_col
