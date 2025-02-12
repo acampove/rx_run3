@@ -27,6 +27,7 @@ class Data:
     Class used to hold shared data
     '''
     path : str
+    pbar : bool
     outp : str
     kind : str
     lvl  : int
@@ -39,12 +40,14 @@ def _parse_args() -> None:
     '''
     parser = argparse.ArgumentParser(description='Script used to create ROOT files with trees with extra branches')
     parser.add_argument('-p', '--path', type=str, help='Path to YAML file', required=True)
+    parser.add_argument('-b', '--pbar',           help='If used, will show progress bar whenever it is available', action='store_true')
     parser.add_argument('-o', '--outp', type=str, help='Path to directory with outputs', required=True)
     parser.add_argument('-k', '--kind', type=str, help='Kind of branch to create', choices=Data.l_kind, required=True)
     parser.add_argument('-l', '--lvl' , type=int, help='log level', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
     Data.path = args.path
+    Data.pbar = args.pbar
     Data.outp = args.outp
     Data.kind = args.kind
     Data.lvl  = args.lvl
@@ -90,14 +93,16 @@ def _create_file(path : str, trigger : str) -> None:
 
     if   Data.kind == 'hop':
         obj = HOPCalculator(rdf=rdf)
+        rdf = obj.get_rdf(preffix=Data.kind)
     elif Data.kind == 'swp_jpsi_misid':
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' :  13, 'L2' :  13}, d_had={'H' :  13})
+        rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar)
     elif Data.kind == 'swp_cascade'   :
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
+        rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar)
     else:
         raise ValueError(f'Invalid kind: {Data.kind}')
 
-    rdf = obj.get_rdf(preffix=Data.kind)
     rdf.Snapshot(Data.tree_name, out_path)
 # ---------------------------------
 def main():
