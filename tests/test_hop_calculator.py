@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
 from rx_data.hop_calculator import HOPCalculator
+from rx_data.mis_calculator import MisCalculator
 
 # ----------------------------
 class Data:
@@ -33,6 +34,9 @@ def _get_rdf(sample : str, trigger : str) -> RDataFrame:
     l_path = cfg[sample][trigger]
     rdf    = RDataFrame('DecayTree', l_path[0])
     rdf    = rdf.Range(10_000)
+
+    mcl    = MisCalculator(rdf=rdf, trigger=trigger)
+    rdf    = mcl.get_rdf()
 
     return rdf
 # ----------------------------
@@ -70,8 +74,7 @@ def _compare_sig_bkg(rdf_sig : RDataFrame, rdf_bkg : RDataFrame, name : str) -> 
 # ----------------------------
 def _get_hop(sample : str, trigger : str) -> tuple[RDataFrame, RDataFrame]:
     rdf     = _get_rdf(sample = sample, trigger=trigger)
-
-    obj     = HOPCalculator(rdf=rdf, trigger=trigger)
+    obj     = HOPCalculator(rdf=rdf)
     rdf_hop = obj.get_rdf()
 
     return rdf_hop, rdf
@@ -106,7 +109,7 @@ def test_extra_branches():
     trigger = 'Hlt2RD_BuToKpEE_MVA'
     rdf     = _get_rdf(sample = 'Bu_Kee_eq_btosllball05_DPC', trigger=trigger)
 
-    obj     = HOPCalculator(rdf=rdf, trigger=trigger)
+    obj     = HOPCalculator(rdf=rdf)
     rdf_hop = obj.get_rdf(extra_branches=['EVENTNUMBER', 'RUNNUMBER'])
     l_col   = [ name.c_str() for name in rdf_hop.GetColumnNames() ]
 
