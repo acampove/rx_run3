@@ -14,7 +14,10 @@ import tqdm
 import yaml
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
+
+from rx_data.mis_calculator import MisCalculator
 from rx_data.hop_calculator import HOPCalculator
+from rx_data.swp_calculator import SWPCalculator
 
 log = LogStore.add_logger('rx_data:branch_calculator')
 # ---------------------------------
@@ -82,13 +85,19 @@ def _create_file(path : str, trigger : str) -> None:
         return
 
     rdf = RDataFrame(Data.tree_name, path)
-    try:
-        obj = HOPCalculator(rdf=rdf, trigger=trigger)
-        rdf = obj.get_rdf(extra_branches=['EVENTNUMBER', 'RUNNUMBER'])
-    except Exception as exc:
-        log.error(f'Cannot process: {path}')
-        log.info(exc)
+    msc = MisCalculator(rdf=rdf, trigger=trigger)
+    rdf = msc.get_rdf()
 
+    if   Data.kind == 'hop':
+        obj = HOPCalculator(rdf=rdf)
+    elif Data.kind == 'swp_jpsi_misid':
+        obj = SWPCalculator(rdf=rdf, d_lep={'L1' :  13, 'L2' :  13}, d_had={'H' :  13})
+    elif Data.kind == 'swp_jpsi_misid':
+        obj = SWPCalculator(rdf=rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
+    else:
+        raise ValueError(f'Invalid kind: {Data.kind}')
+
+    rdf = obj.get_rdf(preffix=Data.kind)
     rdf.Snapshot(Data.tree_name, out_path)
 # ---------------------------------
 def main():
@@ -105,4 +114,3 @@ def main():
 # ---------------------------------
 if __name__ == '__main__':
     main()
-
