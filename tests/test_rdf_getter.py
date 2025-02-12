@@ -24,7 +24,7 @@ class Data:
     psi2_q2    = '(Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)'
     high_q2    = '(Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)'
 
-    l_branch = ['mva_cmb', 'mva_prc']
+    l_branch = ['mva_cmb', 'mva_prc', 'mass', 'alpha']
 # ------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -54,6 +54,7 @@ def _plot_mva_mass(rdf : RDataFrame, test : str) -> None:
         arr_mass = rdf.AsNumpy(['B_M'])['B_M']
         plt.hist(arr_mass, bins=50, histtype='step', range=[4800, 5500], label=f'{cmb}; {prc}')
 
+    plt.title(test)
     plt.legend()
     plt.savefig(f'{Data.out_dir}/{test}_mva_mass.png')
     plt.close()
@@ -66,11 +67,31 @@ def _plot_mva(rdf : RDataFrame, test : str) -> None:
     plt.hist(arr_cmb, bins=40, histtype='step', range=[0, 1], label='CMB')
     plt.hist(arr_prc, bins=40, histtype='step', range=[0, 1], label='PRC')
 
+    plt.title(test)
     plt.legend()
     plt.savefig(f'{Data.out_dir}/{test}_mva.png')
     plt.close()
 # ------------------------------------------------
-def test_data():
+def _plot_hop(rdf : RDataFrame, test : str) -> None:
+    rdf = rdf.Filter(Data.jpsi_q2)
+
+    arr_org = rdf.AsNumpy(['B_M' ])['B_M' ]
+    arr_hop = rdf.AsNumpy(['mass'])['mass']
+    plt.hist(arr_org, bins=80, histtype='step', range=[3000, 7000], label='Original')
+    plt.hist(arr_hop, bins=80, histtype='step', range=[3000, 7000], label='HOP')
+    plt.title(test)
+    plt.legend()
+    plt.savefig(f'{Data.out_dir}/{test}_hop_mass.png')
+    plt.close()
+
+    arr_aph = rdf.AsNumpy(['alpha'])['alpha']
+    plt.hist(arr_aph, bins=40, histtype='step', range=[0, 5])
+    plt.title(test)
+    plt.savefig(f'{Data.out_dir}/{test}_hop_alpha.png')
+    plt.close()
+# ------------------------------------------------
+@pytest.mark.parametrize('sample', ['DATA_24_MagUp_24c1', 'DATA_24_MagUp_24c2'])
+def test_data(sample : str):
     '''
     Test of getter class in data
     '''
@@ -80,16 +101,17 @@ def test_data():
             'hop'  : '/home/acampove/external_ssd/Data/samples/hop.yaml',
             }
 
-    gtr = RDFGetter(sample='DATA_24_MagUp_24c1', trigger='Hlt2RD_BuToKpMuMu_MVA')
-    rdf = gtr.get_rdf()
+    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpMuMu_MVA')
+    rdf = gtr.get_rdf(columns={'alpha', 'mass', 'mva_cmb', 'mva_prc', 'B_M', 'Jpsi_M'})
 
     _check_branches(rdf)
-    _plot_mva_mass(rdf, 'data')
-    _plot_mva(rdf, 'data')
+    _plot_mva_mass(rdf, sample)
+    _plot_mva(rdf, sample)
+    _plot_hop(rdf, sample)
 # ------------------------------------------------
 def test_mc():
     '''
-    Test of getter class in mc 
+    Test of getter class in mc
     '''
     RDFGetter.samples = {
             'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
@@ -98,9 +120,10 @@ def test_mc():
             }
 
     gtr = RDFGetter(sample='Bu_Kee_eq_btosllball05_DPC', trigger='Hlt2RD_BuToKpEE_MVA')
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(columns={'alpha', 'mass', 'mva_cmb', 'mva_prc', 'B_M', 'Jpsi_M'})
 
     _check_branches(rdf)
     _plot_mva_mass(rdf, 'mc')
     _plot_mva(rdf, 'mc')
+    _plot_hop(rdf, 'mc')
 # ------------------------------------------------
