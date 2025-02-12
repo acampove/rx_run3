@@ -2,7 +2,6 @@
 Module containing HOPVarCalculator class
 '''
 import math
-import fnmatch
 from typing import Union
 
 import numpy
@@ -19,41 +18,8 @@ class HOPCalculator:
     https://cds.cern.ch/record/2102345/files/LHCb-INT-2015-037.pdf
     '''
     # -------------------------------
-    def __init__(self, rdf : RDataFrame, trigger : str):
-        self._emass = 0.511 # electron mass
-        self._mmass = 105.6 # muon mass
-        self._kmass = 493.6 # mass of kaon
-
-        self._lmass = self._get_lepton_mass(trigger)
-        self._rdf   = self._preprocess_rdf(rdf)
-    # -------------------------------
-    def _get_lepton_mass(self, trigger : str) -> float:
-        if fnmatch.fnmatch(trigger, 'Hlt2RD_*EE_MVA*'):
-            log.debug('Using electron mass hypothesis')
-            return self._emass
-
-        if fnmatch.fnmatch(trigger, 'Hlt2RD_*MuMu_MVA*'):
-            log.debug('Using muon mass hypothesis')
-            return self._mmass
-
-        raise NotImplementedError(f'Cannot recognize trigger {trigger} as electron or muon')
-    # -------------------------------
-    def _preprocess_rdf(self, rdf : RDataFrame) -> RDataFrame:
-        l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
-
-        if 'L1_PE' not in l_col:
-            name = 'L1_P'
-            rdf  = rdf.Define(f'{name}E', f'TMath::Sqrt({name}X * {name}X + {name}Y * {name}Y + {name}Z * {name}Z + {self._lmass} * {self._lmass})')
-
-        if 'L2_PE' not in l_col:
-            name = 'L2_P'
-            rdf  = rdf.Define(f'{name}E', f'TMath::Sqrt({name}X * {name}X + {name}Y * {name}Y + {name}Z * {name}Z + {self._lmass} * {self._lmass})')
-
-        if 'H_PE' not in l_col:
-            name = 'H_P'
-            rdf  = rdf.Define(f'{name}E', f'TMath::Sqrt({name}X * {name}X + {name}Y * {name}Y + {name}Z * {name}Z + {self._kmass} * {self._kmass})')
-
-        return rdf
+    def __init__(self, rdf : RDataFrame):
+        self._rdf = rdf
     # -------------------------------
     def _val_to_vector(self, arr_val : numpy.ndarray, ndim : int) -> Union[LorentzVector, XYZVector]:
         if   ndim == 4:
