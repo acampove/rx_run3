@@ -2,31 +2,30 @@
 Module holding RDFGetter class
 '''
 
-import os
 import fnmatch
 
+import uproot
+import pandas as pnd
 import yaml
-from ROOT                   import RDataFrame, TChain, TTreeIndex
+
+from ROOT                   import RDataFrame, RDF
 from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('rx_data:rdf_getter')
 # ---------------------------------------------------------------
 class RDFGetter:
     '''
-    Class meant to load data and MC samples and return them as
-    ROOT dataframes
+    Class meant to read ROOT files and return pandas dataframes
     '''
     samples : dict[str,str]
-    # ------------------------------------
+    # ------------------------
     def __init__(self, sample : str, trigger : str):
         self._sample  = sample
         self._trigger = trigger
         self._treename= 'DecayTree'
-
-        self._out_path: str
-        self._l_chain : list[TChain] = []
+        self._s_keys  = {'EVENTNUMBER', 'RUNNUMBER'}
     # ------------------------------------
-    def _files_from_yaml(self, path : str) -> list[str]:
+    def _files_from_yaml(self, path : str) -> dict[str,str]:
         with open(path, encoding='utf-8') as ifile:
             d_data = yaml.safe_load(ifile)
 
