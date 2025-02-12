@@ -90,7 +90,7 @@ def _plot_hop(rdf : RDataFrame, test : str) -> None:
     plt.savefig(f'{Data.out_dir}/{test}_hop_alpha.png')
     plt.close()
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['DATA_24_MagUp_24c1', 'DATA_24_MagUp_24c2'])
+@pytest.mark.parametrize('sample', ['DATA_24_MagUp_24c1', 'DATA_24_MagUp_24c2', 'DATA_24_Mag*_24c*'])
 def test_data(sample : str):
     '''
     Test of getter class in data
@@ -101,10 +101,12 @@ def test_data(sample : str):
             'hop'  : '/home/acampove/external_ssd/Data/samples/hop.yaml',
             }
 
-    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpMuMu_MVA')
+    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf(columns={'alpha', 'mass', 'mva_cmb', 'mva_prc', 'B_M', 'Jpsi_M'})
 
     _check_branches(rdf)
+
+    sample = sample.replace('*', 'p')
     _plot_mva_mass(rdf, sample)
     _plot_mva(rdf, sample)
     _plot_hop(rdf, sample)
