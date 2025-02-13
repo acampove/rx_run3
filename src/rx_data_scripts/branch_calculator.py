@@ -149,8 +149,11 @@ def _create_file(path : str, trigger : str) -> None:
         return
 
     rdf = RDataFrame(Data.tree_name, path)
-    msc = MisCalculator(rdf=rdf, trigger=trigger)
-    rdf = msc.get_rdf()
+    try:
+        msc = MisCalculator(rdf=rdf, trigger=trigger)
+        rdf = msc.get_rdf()
+    except TypeError as exc:
+        raise TypeError(f'Cannot process: {path}/{Data.tree_name}') from exc
 
     if   Data.kind == 'hop':
         obj = HOPCalculator(rdf=rdf)
