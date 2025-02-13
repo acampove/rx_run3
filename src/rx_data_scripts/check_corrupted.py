@@ -50,7 +50,11 @@ def _parse_args() -> None:
     LogStore.set_level('rx_data:check_file', Data.lvl)
 # -----------------------------------
 def _is_good_file(path : str) -> bool:
-    ifile = TFile.Open(path)
+    try:
+        ifile = TFile.Open(path)
+    except OSError as exc:
+        return False
+
     if ifile.IsZombie():
         ifile.Close()
         return False
