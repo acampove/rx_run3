@@ -72,7 +72,8 @@ def _initialize():
     with open(Data.conf, encoding='utf-8') as ifile:
         Data.d_conf = yaml.safe_load(ifile)
 
-    Data.out_dir = Data.d_conf['out_dir']
+    out_dir = Data.d_conf['out_dir']
+    Data.out_dir = f'{out_dir}/{Data.kind}/{Data.vers}'
     os.makedirs(Data.out_dir, exist_ok=True)
     log.info(f'Copying files to: {Data.out_dir}')
 
