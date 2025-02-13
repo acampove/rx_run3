@@ -52,8 +52,31 @@ def _parse_args() -> None:
     Data.pbar = args.pbar
     Data.dry  = args.dry
     Data.lvl  = args.lvl
+
+    LogStore.set_level('rx_data:branch_calculator', Data.lvl)
 # ---------------------------------
 def _get_partition(l_path : list[str]) -> list[str]:
+    igroup, ngroup = Data.part
+    igroup = int(igroup)
+    ngroup = int(ngroup)
+
+    d_path         = { path : os.path.getsize(path) for path in l_path }
+    sorted_files   = sorted(d_path.items(), key=lambda x: x[1], reverse=True)
+
+    groups      = {i: [] for i in range(ngroup)}
+    group_sizes = {i: 0  for i in range(ngroup)}
+
+    for file_path, size in sorted_files:
+        min_group = min(group_sizes, key=group_sizes.get)
+        groups[min_group].append(file_path)
+        group_sizes[min_group] += size
+
+    l_path = groups[igroup]
+    nfile  = len(l_path)
+    log.info(f'Processing group of {nfile} files')
+    for path in l_path:
+        log.debug(path)
+
     return l_path
 # ---------------------------------
 def _get_paths() -> list[str]:
