@@ -55,12 +55,20 @@ def _parse_args() -> None:
 
     LogStore.set_level('rx_data:branch_calculator', Data.lvl)
 # ---------------------------------
+def _get_path_size(path : str) -> int:
+    path = os.path.realpath(path)
+    size = os.path.getsize(path)
+    size = size / 1024 ** 2
+    size = int(size)
+
+    return size
+# ---------------------------------
 def _get_partition(l_path : list[str]) -> list[str]:
     igroup, ngroup = Data.part
     igroup = int(igroup)
     ngroup = int(ngroup)
 
-    d_path      = { path : os.path.getsize(path) for path in l_path }
+    d_path      = { path : _get_path_size(path) for path in l_path }
     sorted_files= sorted(d_path.items(), key=lambda x: x[1], reverse=True)
 
     groups      = {i: [] for i in range(ngroup)}
@@ -71,7 +79,7 @@ def _get_partition(l_path : list[str]) -> list[str]:
         groups[min_group].append(file_path)
         group_sizes[min_group] += size
 
-    _print_groups(groups, igroup)
+    _print_groups(groups, group_sizes, igroup)
 
     norg  = len(l_path)
     l_path= groups[igroup]
@@ -82,16 +90,18 @@ def _get_partition(l_path : list[str]) -> list[str]:
 
     return l_path
 # ---------------------------------
-def _print_groups(group : dict[int,list[str]], this_group : int) -> None:
+def _print_groups(group : dict[int,list[str]], sizes : dict[int,float], this_group : int) -> None:
     log.info(20 * '-')
-    log.info(f'{"Group":<10}{"NFiles":<10}')
+    log.info(f'{"Group":<10}{"NFiles":<10}{"Size":<10}')
     log.info(20 * '-')
     for igroup, l_file in group.items():
+        size  = sizes[igroup]
         nfile = len(l_file)
+
         if igroup == this_group:
-            log.info(f'{igroup:<10}{nfile:<10}{"<---":<10}')
+            log.info(f'{igroup:<10}{nfile:<10}{size:<10}{"<---":<10}')
         else:
-            log.info(f'{igroup:<10}{nfile:<10}')
+            log.info(f'{igroup:<10}{nfile:<10}{size:<10}')
 
     log.info(20 * '-')
 # ---------------------------------
