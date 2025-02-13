@@ -151,7 +151,10 @@ def _create_file(path : str, trigger : str) -> None:
     rdf = RDataFrame(Data.tree_name, path)
     nentries = rdf.Count().GetValue()
     if nentries == 0:
-        log.warning(f'Found empty file: {path}/{Data.tree_name}')
+        log.warning(f'Found empty input file: {path}/{Data.tree_name}')
+        rdf=RDataFrame(0)
+        rdf=rdf.Define('fake_column', '1')
+        rdf.Snapshot(Data.tree_name, out_path)
         return
 
     msc = MisCalculator(rdf=rdf, trigger=trigger)
