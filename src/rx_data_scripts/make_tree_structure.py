@@ -220,7 +220,7 @@ def _change_file_paths(d_struc : dict) -> dict:
         d_struc_mod[sample] = {}
         for trigger, l_path in d_trig.items():
             l_path_mod = [ _change_file_path(path) for path in l_path ]
-            d_struc_mod[sample] = {trigger : l_path_mod}
+            d_struc_mod[sample].update({trigger : l_path_mod})
 
     return d_struc_mod
 # ---------------------------------
