@@ -149,11 +149,13 @@ def _create_file(path : str, trigger : str) -> None:
         return
 
     rdf = RDataFrame(Data.tree_name, path)
-    try:
-        msc = MisCalculator(rdf=rdf, trigger=trigger)
-        rdf = msc.get_rdf()
-    except TypeError as exc:
-        raise TypeError(f'Cannot process: {path}/{Data.tree_name}') from exc
+    nentries = rdf.Count().GetValue()
+    if nentries == 0:
+        log.warning(f'Found empty file: {path}/{Data.tree_name}')
+        return
+
+    msc = MisCalculator(rdf=rdf, trigger=trigger)
+    rdf = msc.get_rdf()
 
     if   Data.kind == 'hop':
         obj = HOPCalculator(rdf=rdf)
