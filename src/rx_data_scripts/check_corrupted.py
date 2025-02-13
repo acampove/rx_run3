@@ -52,7 +52,7 @@ def _parse_args() -> None:
 def _is_good_file(path : str) -> bool:
     try:
         ifile = TFile.Open(path)
-    except OSError as exc:
+    except OSError:
         return False
 
     if ifile.IsZombie():
@@ -72,11 +72,13 @@ def _remove_files(l_path : list[str]) -> None:
     log.info(f'Found {nfile} bad files')
 
     log.info('Removing files:')
-    for path in l_path:
-        path = os.path.realpath(path)
+    for org_path in l_path:
+        path = os.path.realpath(org_path)
         if not Data.dry:
             log.info(path)
             os.remove(path)
+            if org_path != path:
+                os.remove(org_path)
         else:
             log.info(f'Skipped {path}')
 # -----------------------------------
