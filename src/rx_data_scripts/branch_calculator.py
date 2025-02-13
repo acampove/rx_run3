@@ -50,6 +50,7 @@ def _parse_args() -> None:
     args = parser.parse_args()
 
     Data.kind = args.kind
+    Data.vers = args.vers
     Data.part = args.part
     Data.pbar = args.pbar
     Data.dry  = args.dry
@@ -167,12 +168,14 @@ def _create_file(path : str, trigger : str) -> None:
 # ---------------------------------
 def _trigger_from_path(path : str) -> str:
     ichar   = path.index('Hlt2')
-    fchar   = path.index('_MVA') + 3
+    fchar   = path.index('_MVA') + 4
 
     if ichar >= fchar:
         raise ValueError(f'Cannot extract trigger name from: {path}')
 
     trigger = path[ichar:fchar]
+
+    log.debug(f'Using trigger: {trigger}')
 
     return trigger
 # ---------------------------------
