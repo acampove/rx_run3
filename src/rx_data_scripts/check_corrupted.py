@@ -1,6 +1,7 @@
 '''
 Script meant to check if ROOT files are corrupted
 '''
+import os
 import glob
 import argparse
 
@@ -15,6 +16,8 @@ class Data:
     Data class
     '''
     inp_dir : str
+    remove  : bool
+    dry     : bool
 # -----------------------------------
 def _get_paths() -> list[str]:
     files_wc = f'{Data.inp_dir}/*.root'
@@ -33,12 +36,16 @@ def _parse_args() -> None:
     Parse arguments
     '''
     parser = argparse.ArgumentParser(description='Script used to check if ROOT files in directory are OK')
-    parser.add_argument('-p', '--path', type=str, help='Path to directory with files', required=True)
+    parser.add_argument('-p', '--path', type=str, help='Path to directory with files' , required=True)
+    parser.add_argument('-r', '--remo',           help='If set, will remove bad files'    , action='store_true')
+    parser.add_argument('-d', '--dry' ,           help='If set, will not remove bad files', action='store_true')
     parser.add_argument('-l', '--lvl' , type=int, help='log level', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
     Data.inp_dir = args.path
     Data.lvl     = args.lvl
+    Data.dry     = args.dry
+    Data.remove  = args.remo
 
     LogStore.set_level('rx_data:check_file', Data.lvl)
 # -----------------------------------
@@ -60,6 +67,14 @@ def _remove_files(l_path : list[str]) -> None:
     nfile = len(l_path)
     log.info(f'Found {nfile} bad files')
 
+    log.info('Removing files:')
+    for path in l_path:
+        path = os.path.realpath(path)
+        if not Data.dry:
+            log.info(path)
+            os.remove(path)
+        else:
+            log.info(f'Skipped {path}')
 # -----------------------------------
 def main():
     '''
