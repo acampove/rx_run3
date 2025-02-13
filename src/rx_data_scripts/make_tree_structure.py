@@ -229,6 +229,11 @@ def _change_file_path(path : str) -> str:
 
     return f'{Data.eos_preffix}{Data.new_path}/{file_name}'
 # ---------------------------------
+def _sort_lists(d_struc : dict) -> None:
+    for d_trig in d_struc.values():
+        for l_path in d_trig.values():
+            l_path.sort()
+# ---------------------------------
 @gut.timeit
 def _save_to_file(d_struc : dict) -> None:
     if Data.fil_path is None:
@@ -245,6 +250,7 @@ def _save_to_file(d_struc : dict) -> None:
 
     log.info(f'Saving samples list to: {Data.fil_path}')
     with open(Data.fil_path, 'w', encoding='utf-8') as ofile:
+        _sort_lists(d_struc)
         yaml.dump(d_struc, ofile, Dumper=IndentListDumper, default_flow_style=False)
 # ---------------------------------
 def _drop_line(line_name : str) -> bool:
