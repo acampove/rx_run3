@@ -16,11 +16,16 @@ class Data:
     Data class
     '''
     inp_dir : str
+    rgex    : str
     remove  : bool
     dry     : bool
 # -----------------------------------
 def _get_paths() -> list[str]:
-    files_wc = f'{Data.inp_dir}/*.root'
+    if Data.rgex is None:
+        files_wc = f'{Data.inp_dir}/*.root'
+    else:
+        files_wc = f'{Data.inp_dir}/{Data.rgex}'
+
     l_path   = glob.glob(files_wc)
     npath    = len(l_path)
 
@@ -37,12 +42,14 @@ def _parse_args() -> None:
     '''
     parser = argparse.ArgumentParser(description='Script used to check if ROOT files in directory are OK')
     parser.add_argument('-p', '--path', type=str, help='Path to directory with files' , required=True)
+    parser.add_argument('-x', '--rgex', type=str, help='Regular expression to filter file names')
     parser.add_argument('-r', '--remo',           help='If set, will remove bad files'    , action='store_true')
     parser.add_argument('-d', '--dry' ,           help='If set, will not remove bad files', action='store_true')
     parser.add_argument('-l', '--lvl' , type=int, help='log level', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
     Data.inp_dir = args.path
+    Data.rgex    = args.rgex
     Data.lvl     = args.lvl
     Data.dry     = args.dry
     Data.remove  = args.remo
