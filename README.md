@@ -239,3 +239,33 @@ samples :
     - 12123003 # Kee
     - 12113002 # Kmm
 ```
+
+## Calculating extra branches
+
+Given the files produced by `post_ap`, new branches can be attached. These branches can be calculated using
+`branch_calculator` and can be placed in small files. These latter files would be made into friends of the main files.
+
+In order to do this we assume that all the ntuples live in `$DATADIR/main/vx`, where `DATADIR` needs to be exported
+such that the code will pick it up. `vx` represents a version of the ntuples (e.g. `v1`, `v2`, etc), the code will 
+pick up the latest. Then run:
+
+```bash
+branch_calculator -k swp_jpsi_misid -p  0 40 -b -v v1
+```
+
+which will:
+
+- Create a new set of files in `$DATADIR/swp_jpsi_misid/v1` with each input file, corresponding to an output file.
+- Split the input files into 40 groups, with roughly the same file size.
+- Process the zeroth group.
+
+Thus, this can be parallelized by running the line above 40 times in 40 jobs.
+
+Currently the command can add:
+
+`swp_jpsi_misid`: Branches corresponding to lepton kaon swaps that make the resonant mode leak into rare modes. Where the swap is inverted and the $J/\psi$ mass provided
+
+`swp_cascade`: Branches corresponding to $D\toK\pi$ with $\pi\to\ell$ swaps, where the swap is inverted and the $D$ mass provided.
+
+`hop`: With the $\alpha$ and mass branches calculated
+
