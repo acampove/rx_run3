@@ -60,8 +60,8 @@ def _get_partition(l_path : list[str]) -> list[str]:
     igroup = int(igroup)
     ngroup = int(ngroup)
 
-    d_path         = { path : os.path.getsize(path) for path in l_path }
-    sorted_files   = sorted(d_path.items(), key=lambda x: x[1], reverse=True)
+    d_path      = { path : os.path.getsize(path) for path in l_path }
+    sorted_files= sorted(d_path.items(), key=lambda x: x[1], reverse=True)
 
     groups      = {i: [] for i in range(ngroup)}
     group_sizes = {i: 0  for i in range(ngroup)}
@@ -73,9 +73,10 @@ def _get_partition(l_path : list[str]) -> list[str]:
 
     _print_groups(groups, igroup)
 
-    l_path = groups[igroup]
-    nfile  = len(l_path)
-    log.info(f'Processing group of {nfile} files')
+    norg  = len(l_path)
+    l_path= groups[igroup]
+    npar  = len(l_path)
+    log.info(f'Processing group of {npar} files out of {norg}')
     for path in l_path:
         log.debug(path)
 
