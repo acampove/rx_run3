@@ -71,6 +71,8 @@ def _get_partition(l_path : list[str]) -> list[str]:
         groups[min_group].append(file_path)
         group_sizes[min_group] += size
 
+    _print_groups(groups, igroup)
+
     l_path = groups[igroup]
     nfile  = len(l_path)
     log.info(f'Processing group of {nfile} files')
@@ -78,6 +80,19 @@ def _get_partition(l_path : list[str]) -> list[str]:
         log.debug(path)
 
     return l_path
+# ---------------------------------
+def _print_groups(group : dict[int,list[str]], this_group : int) -> None:
+    log.info(20 * '-')
+    log.info(f'{"Group":<10}{"NFiles":<10}')
+    log.info(20 * '-')
+    for igroup, l_file in group.items():
+        nfile = len(l_file)
+        if igroup == this_group:
+            log.info(f'{igroup:<10}{nfile:<10}{"<---":<10}')
+        else:
+            log.info(f'{igroup:<10}{nfile:<10}')
+
+    log.info(20 * '-')
 # ---------------------------------
 def _get_paths() -> list[str]:
     data_dir = os.environ['DATADIR']
