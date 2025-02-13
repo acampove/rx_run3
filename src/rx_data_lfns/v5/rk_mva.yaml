@@ -17,6 +17,8 @@ Bd_JpsiKS_mm_eq_CPV_DPC:
   Hlt2RD_BuToKpMuMu_MVA:
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magup_11144103_bd_jpsiks_mm_eq_cpv_dpc_Hlt2RD_BuToKpMuMu_MVA_000_001.root
 Bd_JpsiKst_ee_eq_DPC:
+  Hlt2RD_BuToKpEE_MVA:
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magup_11154001_bd_jpsikst_ee_eq_dpc_Hlt2RD_BuToKpEE_MVA_000_001.root
   Hlt2RD_BuToKpEE_MVA_cal:
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magup_11154001_bd_jpsikst_ee_eq_dpc_Hlt2RD_BuToKpEE_MVA_cal_000_001.root
 Bd_JpsiKst_mm_eq_DPC:
@@ -26,6 +28,8 @@ Bd_JpsiKst_update2012_mm_eq_DPC:
   Hlt2RD_BuToKpMuMu_MVA:
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magup_11144002_bd_jpsikst_update2012_mm_eq_dpc_Hlt2RD_BuToKpMuMu_MVA_000_001.root
 Bd_JpsiX_ee_eq_JpsiInAcc:
+  Hlt2RD_BuToKpEE_MVA:
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magup_11453001_bd_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_000_001.root
   Hlt2RD_BuToKpEE_MVA_cal:
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magup_11453001_bd_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_cal_000_001.root
 Bd_JpsiX_mm_eq_JpsiInAcc:
@@ -86,6 +90,8 @@ Bs_JpsiKK_mm_eq_DPC:
   Hlt2RD_BuToKpMuMu_MVA:
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magup_13144041_bs_jpsikk_mm_eq_dpc_Hlt2RD_BuToKpMuMu_MVA_000_001.root
 Bs_JpsiX_ee_eq_JpsiInAcc:
+  Hlt2RD_BuToKpEE_MVA:
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magup_13454001_bs_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_000_001.root
   Hlt2RD_BuToKpEE_MVA_cal:
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magup_13454001_bs_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_cal_000_001.root
 Bs_Jpsiphi_ee_eq_CPV_update2012_DPC:
@@ -155,6 +161,8 @@ Bu_JpsiK_mm_eq_DPC:
   Hlt2RD_BuToKpMuMu_MVA:
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magup_12143001_bu_jpsik_mm_eq_dpc_Hlt2RD_BuToKpMuMu_MVA_000_001.root
 Bu_JpsiX_ee_eq_JpsiInAcc:
+  Hlt2RD_BuToKpEE_MVA:
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magup_12952000_bu_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_000_001.root
   Hlt2RD_BuToKpEE_MVA_cal:
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magup_12952000_bu_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_cal_000_001.root
 Bu_Kee_eq_btosllball05_DPC:
@@ -206,54 +214,96 @@ Bu_psi2SKst_ee_Kpi0_eq_DPC:
   Hlt2RD_BuToKpEE_MVA:
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magdown_12153430_bu_psi2skst_ee_kpi0_eq_dpc_Hlt2RD_BuToKpEE_MVA_000_001.root
 DATA_24_MagDown_24c1:
+  Hlt2RD_BuToKpEE_MVA:
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c1_Hlt2RD_BuToKpEE_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c1_Hlt2RD_BuToKpEE_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c1_Hlt2RD_BuToKpEE_MVA_002_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c1_Hlt2RD_BuToKpEE_MVA_003_004.root
   Hlt2RD_BuToKpMuMu_MVA:
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c1_Hlt2RD_BuToKpMuMu_MVA_002_004.root
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c1_Hlt2RD_BuToKpMuMu_MVA_001_004.root
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c1_Hlt2RD_BuToKpMuMu_MVA_003_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c1_Hlt2RD_BuToKpMuMu_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c1_Hlt2RD_BuToKpMuMu_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c1_Hlt2RD_BuToKpMuMu_MVA_002_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c1_Hlt2RD_BuToKpMuMu_MVA_003_004.root
 DATA_24_MagDown_24c2:
+  Hlt2RD_BuToKpEE_MVA:
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c2_Hlt2RD_BuToKpEE_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c2_Hlt2RD_BuToKpEE_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c2_Hlt2RD_BuToKpEE_MVA_002_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c2_Hlt2RD_BuToKpEE_MVA_003_004.root
   Hlt2RD_BuToKpMuMu_MVA:
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c2_Hlt2RD_BuToKpMuMu_MVA_002_004.root
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c2_Hlt2RD_BuToKpMuMu_MVA_001_004.root
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c2_Hlt2RD_BuToKpMuMu_MVA_003_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c2_Hlt2RD_BuToKpMuMu_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c2_Hlt2RD_BuToKpMuMu_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c2_Hlt2RD_BuToKpMuMu_MVA_002_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c2_Hlt2RD_BuToKpMuMu_MVA_003_004.root
 DATA_24_MagDown_24c3:
+  Hlt2RD_BuToKpEE_MVA:
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c3_Hlt2RD_BuToKpEE_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c3_Hlt2RD_BuToKpEE_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c3_Hlt2RD_BuToKpEE_MVA_002_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c3_Hlt2RD_BuToKpEE_MVA_003_004.root
   Hlt2RD_BuToKpMuMu_MVA:
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c3_Hlt2RD_BuToKpMuMu_MVA_003_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c3_Hlt2RD_BuToKpMuMu_MVA_000_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c3_Hlt2RD_BuToKpMuMu_MVA_001_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c3_Hlt2RD_BuToKpMuMu_MVA_002_004.root
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c3_Hlt2RD_BuToKpMuMu_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c3_Hlt2RD_BuToKpMuMu_MVA_003_004.root
 DATA_24_MagDown_24c4:
+  Hlt2RD_BuToKpEE_MVA:
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c4_Hlt2RD_BuToKpEE_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c4_Hlt2RD_BuToKpEE_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c4_Hlt2RD_BuToKpEE_MVA_002_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c4_Hlt2RD_BuToKpEE_MVA_003_004.root
   Hlt2RD_BuToKpMuMu_MVA:
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c4_Hlt2RD_BuToKpMuMu_MVA_002_004.root
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c4_Hlt2RD_BuToKpMuMu_MVA_001_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c4_Hlt2RD_BuToKpMuMu_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c4_Hlt2RD_BuToKpMuMu_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c4_Hlt2RD_BuToKpMuMu_MVA_002_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magdown_turbo_24c4_Hlt2RD_BuToKpMuMu_MVA_003_004.root
 DATA_24_MagUp_24c1:
+  Hlt2RD_BuToKpEE_MVA:
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c1_Hlt2RD_BuToKpEE_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c1_Hlt2RD_BuToKpEE_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c1_Hlt2RD_BuToKpEE_MVA_002_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c1_Hlt2RD_BuToKpEE_MVA_003_004.root
   Hlt2RD_BuToKpMuMu_MVA:
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c1_Hlt2RD_BuToKpMuMu_MVA_002_004.root
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c1_Hlt2RD_BuToKpMuMu_MVA_001_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c1_Hlt2RD_BuToKpMuMu_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c1_Hlt2RD_BuToKpMuMu_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c1_Hlt2RD_BuToKpMuMu_MVA_002_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c1_Hlt2RD_BuToKpMuMu_MVA_003_004.root
 DATA_24_MagUp_24c2:
+  Hlt2RD_BuToKpEE_MVA:
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c2_Hlt2RD_BuToKpEE_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c2_Hlt2RD_BuToKpEE_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c2_Hlt2RD_BuToKpEE_MVA_002_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c2_Hlt2RD_BuToKpEE_MVA_003_004.root
   Hlt2RD_BuToKpMuMu_MVA:
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c2_Hlt2RD_BuToKpMuMu_MVA_002_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c2_Hlt2RD_BuToKpMuMu_MVA_000_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c2_Hlt2RD_BuToKpMuMu_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c2_Hlt2RD_BuToKpMuMu_MVA_002_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c2_Hlt2RD_BuToKpMuMu_MVA_003_004.root
 DATA_24_MagUp_24c3:
+  Hlt2RD_BuToKpEE_MVA:
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c3_Hlt2RD_BuToKpEE_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c3_Hlt2RD_BuToKpEE_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c3_Hlt2RD_BuToKpEE_MVA_002_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c3_Hlt2RD_BuToKpEE_MVA_003_004.root
   Hlt2RD_BuToKpMuMu_MVA:
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c3_Hlt2RD_BuToKpMuMu_MVA_000_004.root
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c3_Hlt2RD_BuToKpMuMu_MVA_002_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c3_Hlt2RD_BuToKpMuMu_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c3_Hlt2RD_BuToKpMuMu_MVA_002_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c3_Hlt2RD_BuToKpMuMu_MVA_003_004.root
 DATA_24_MagUp_24c4:
+  Hlt2RD_BuToKpEE_MVA:
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c4_Hlt2RD_BuToKpEE_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c4_Hlt2RD_BuToKpEE_MVA_001_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c4_Hlt2RD_BuToKpEE_MVA_002_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c4_Hlt2RD_BuToKpEE_MVA_003_004.root
   Hlt2RD_BuToKpMuMu_MVA:
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c4_Hlt2RD_BuToKpMuMu_MVA_003_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c4_Hlt2RD_BuToKpMuMu_MVA_000_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c4_Hlt2RD_BuToKpMuMu_MVA_001_004.root
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c4_Hlt2RD_BuToKpMuMu_MVA_002_004.root
-    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c4_Hlt2RD_BuToKpMuMu_MVA_000_004.root
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/data_24_magup_turbo_24c4_Hlt2RD_BuToKpMuMu_MVA_003_004.root
 Lb_JpsiX_ee_eq_JpsiInAcc:
+  Hlt2RD_BuToKpEE_MVA:
+    - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magup_15454101_lb_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_000_001.root
   Hlt2RD_BuToKpEE_MVA_cal:
     - root://eosuser.cern.ch//eos/user/a/acampove/Data/mva/v1/mc_magdown_15454101_lb_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_cal_000_001.root
 Lb_JpsipK_ee_eq_phsp_DPC:
