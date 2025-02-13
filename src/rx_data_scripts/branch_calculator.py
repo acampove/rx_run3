@@ -27,6 +27,7 @@ class Data:
     '''
     Class used to hold shared data
     '''
+    vers : str
     kind : str
     part : tuple[int,int]
     pbar : bool
@@ -41,6 +42,7 @@ def _parse_args() -> None:
     '''
     parser = argparse.ArgumentParser(description='Script used to create ROOT files with trees with extra branches by picking up inputs from directory and patitioning them')
     parser.add_argument('-k', '--kind', type=str, help='Kind of branch to create', choices=Data.l_kind, required=True)
+    parser.add_argument('-v', '--vers', type=str, help='Version of outputs', required=True)
     parser.add_argument('-p', '--part', nargs= 2, help='Partitioning, first number is the index, second is the number of parts', required=True)
     parser.add_argument('-b', '--pbar',           help='If used, will show progress bar whenever it is available', action='store_true')
     parser.add_argument('-d', '--dry' ,           help='If used, will do dry drun, e.g. stop before processing', action='store_true')
@@ -121,12 +123,7 @@ def _get_paths() -> list[str]:
 # ---------------------------------
 def _get_out_dir() -> str:
     out_dir  = os.environ['DATADIR']
-    out_dir  = f'{out_dir}/{Data.kind}'
-    if not os.path.isdir(out_dir):
-        out_dir = f'{out_dir}/v1'
-    else:
-        out_dir  = vman.get_last_version(dir_path=out_dir, version_only=False)
-        out_dir  = vman.get_next_version(version=out_dir)
+    out_dir  = f'{out_dir}/{Data.kind}/{Data.vers}'
 
     if not Data.dry:
         os.makedirs(out_dir, exist_ok=True)
