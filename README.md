@@ -240,6 +240,19 @@ samples :
     - 12113002 # Kmm
 ```
 
+## Checking for corrupted files
+
+For this run:
+
+```bash
+check_corrupted -p /path/to/directory/with/files -x "data_*_MVA_*.root"
+```
+
+Which will check for corrupted files and will remove them.
+`-x` can be used to pass wildcards, in the case above, it would target only data.
+After removal, the download can be tried again, which would run only on the missing samples.
+This might allow for these files to be fixed, assuming that they were broken due to network issues. 
+
 ## Calculating extra branches
 
 Given the files produced by `post_ap`, new branches can be attached. These branches can be calculated using
