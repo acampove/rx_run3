@@ -4,16 +4,17 @@ Script used to create small trees with extra branches from input trees
 
 # pylint: disable=line-too-long, import-error
 # pylint: disable=invalid-name
+# pylint: disable=broad-exception-caught
 
 import os
+import glob
 import argparse
-from typing      import Union
 from dataclasses import dataclass
 
 import tqdm
-import yaml
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
+from dmu.generic            import version_management as vman
 
 from rx_data.mis_calculator import MisCalculator
 from rx_data.hop_calculator import HOPCalculator
@@ -26,10 +27,10 @@ class Data:
     '''
     Class used to hold shared data
     '''
-    path : str
-    pbar : bool
-    outp : str
     kind : str
+    part : tuple[int,int]
+    pbar : bool
+    dry  : bool
     lvl  : int
     l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade']
     tree_name = 'DecayTree'
@@ -38,53 +39,66 @@ def _parse_args() -> None:
     '''
     Parse arguments
     '''
-    parser = argparse.ArgumentParser(description='Script used to create ROOT files with trees with extra branches')
-    parser.add_argument('-p', '--path', type=str, help='Path to YAML file', required=True)
-    parser.add_argument('-b', '--pbar',           help='If used, will show progress bar whenever it is available', action='store_true')
-    parser.add_argument('-o', '--outp', type=str, help='Path to directory with outputs', required=True)
+    parser = argparse.ArgumentParser(description='Script used to create ROOT files with trees with extra branches by picking up inputs from directory and patitioning them')
     parser.add_argument('-k', '--kind', type=str, help='Kind of branch to create', choices=Data.l_kind, required=True)
+    parser.add_argument('-p', '--part', nargs= 2, help='Partitioning, first number is the index, second is the number of parts', required=True)
+    parser.add_argument('-b', '--pbar',           help='If used, will show progress bar whenever it is available', action='store_true')
+    parser.add_argument('-d', '--dry' ,           help='If used, will do dry drun, e.g. stop before processing', action='store_true')
     parser.add_argument('-l', '--lvl' , type=int, help='log level', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
-    Data.path = args.path
-    Data.pbar = args.pbar
-    Data.outp = args.outp
     Data.kind = args.kind
+    Data.part = args.part
+    Data.pbar = args.pbar
+    Data.dry  = args.dry
     Data.lvl  = args.lvl
 # ---------------------------------
-def _get_paths() -> dict[str,list[str]]:
-    with open(Data.path, encoding='utf-8') as ifile:
-        d_sample = yaml.safe_load(ifile)
-
-    d_path = {}
-    for sample in d_sample:
-        for trigger in d_sample[sample]:
-            if trigger not in d_path:
-                d_path[trigger] = []
-
-            d_path[trigger] += d_sample[sample][trigger]
-
-    for trigger, l_path in d_path.items():
-        nfile = len(l_path)
-        log.info(f'{trigger:<30}{nfile:<20}')
-
-    return d_path
+def _get_partition(l_path : list[str]) -> list[str]:
+    return l_path
 # ---------------------------------
-def _get_out_path(path : str) -> Union[str,None]:
+def _get_paths() -> list[str]:
+    data_dir = os.environ['DATADIR']
+    data_dir = vman.get_last_version(dir_path=f'{data_dir}/main', version_only=False)
+    l_path   = glob.glob(f'{data_dir}/*.root')
+    l_path   = _get_partition(l_path)
+
+    nfiles   = len(l_path)
+    if nfiles == 0:
+        raise ValueError(f'No file found in: {data_dir}')
+
+    log.info(f'Picking up {nfiles} form {data_dir}')
+
+    return l_path
+# ---------------------------------
+def _get_out_dir() -> str:
+    out_dir  = os.environ['DATADIR']
+    out_dir  = f'{out_dir}/{Data.kind}'
+    if not os.path.isdir(out_dir):
+        out_dir = f'{out_dir}/v1'
+    else:
+        out_dir  = vman.get_last_version(dir_path=out_dir, version_only=False)
+        out_dir  = vman.get_next_version(version=out_dir)
+
+    if not Data.dry:
+        os.makedirs(out_dir, exist_ok=True)
+
+    return out_dir
+# ---------------------------------
+def _get_out_path(path : str) -> str:
     fname    = os.path.basename(path)
-    out_path = f'{Data.outp}/{fname}'
+    out_path = f'{Data.out_dir}/{fname}'
 
-    if os.path.isfile(out_path):
-        log.debug(f'Output found, skipping {out_path}')
-        return None
+    log.debug(f'Creating : {out_path}')
 
-    log.debug(f'Creating {out_path}')
     return out_path
 # ---------------------------------
 def _create_file(path : str, trigger : str) -> None:
-    # pylint: disable=broad-exception-caught
     out_path = _get_out_path(path)
-    if out_path is None:
+    if os.path.isfile(out_path):
+        log.debug(f'Output found, skipping {out_path}')
+        return
+
+    if Data.dry:
         return
 
     rdf = RDataFrame(Data.tree_name, path)
@@ -105,17 +119,28 @@ def _create_file(path : str, trigger : str) -> None:
 
     rdf.Snapshot(Data.tree_name, out_path)
 # ---------------------------------
+def _trigger_from_path(path : str) -> str:
+    ichar   = path.index('Hlt2')
+    fchar   = path.index('_MVA') + 3
+
+    if ichar >= fchar:
+        raise ValueError(f'Cannot extract trigger name from: {path}')
+
+    trigger = path[ichar:fchar]
+
+    return trigger
+# ---------------------------------
 def main():
     '''
     Script starts here
     '''
     _parse_args()
-    os.makedirs(Data.outp, exist_ok=True)
 
-    d_path = _get_paths()
-    for trigger, l_path in d_path.items():
-        for path in tqdm.tqdm(l_path, ascii=' -'):
-            _create_file(path, trigger)
+    l_path       = _get_paths()
+    Data.out_dir = _get_out_dir()
+    for path in tqdm.tqdm(l_path, ascii=' -'):
+        trigger = _trigger_from_path(path)
+        _create_file(path, trigger)
 # ---------------------------------
 if __name__ == '__main__':
     main()
