@@ -61,7 +61,29 @@ Contains the same as the JSON files but:
 
 Same as above but only with  the triggers used for RK.
 
-## rk_mva.yaml
+## Extra trees to befriend main ones
+
+One way to befriend the trees is described 
+[here](https://gitlab.cern.ch/rx_run3/rx_data#accessing-ntuples)
+
+All these trees contain the `EVENTNUMBER` and `RUNNUMBER` branches that can be used as an index.
+
+### rk_mva.yaml
 
 These are small trees with the MVA scores and only for RK. They can be attached to the trees in `rk_samples.yaml`
 in order to add the combinatorial and prec scores to the main trees through friend trees.
+
+### rk_hop.yaml
+
+This file contains the paths to the HOP variables $\alpha$ and the mass as described [here](https://cds.cern.ch/record/2102345/files/LHCb-INT-2015-037.pdf)
+
+### rk_swp_cascade.yaml
+
+The branches in this file are the $m(K,\ell)$ masses, both assuming the original lepton mass and with the $\ell\to\pi$
+hypothesis change. They are meant to be used to study $B\to D(\to K\pi) X$ backgrounds.
+
+### rk_swp_jpsi_misid.yaml
+
+The branches in this file are the $m(K,\ell)$ masses, both assuming the original lepton mass and with the $K\to\ell$
+hypothesis change. They are meant to be used to study $B\to J/\psi(\to\ell\ell)K^+$ backgrounds, where one of the leptons
+is misidentified as a Kaon and the Kaon is misidentified as a lepton.
