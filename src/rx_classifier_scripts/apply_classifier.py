@@ -35,7 +35,6 @@ class Data:
     l_model     : list
     log_level   : int
     dry_run     : bool
-    l_part      : list[int]
 #---------------------------------
 def _get_args():
     '''
@@ -49,7 +48,6 @@ def _get_args():
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
     parser.add_argument('-d', '--dry_run'    ,           help='Dry run', action='store_true')
     parser.add_argument('-f', '--force_new'  ,           help='Will remake outputs, even if they already exist', action='store_true')
-    parser.add_argument('-p', '--partition'  , nargs= 2, help='Partition, two integers, such that the input is split into nparts and the script processes one of them', default=[0,1])
     args = parser.parse_args()
 
     Data.sample      = args.sample
@@ -59,13 +57,6 @@ def _get_args():
     Data.log_level   = args.log_level
     Data.dry_run     = args.dry_run
     Data.force_new   = args.force_new
-    Data.l_part      = _parts_from_partition(args.partition)
-#---------------------------------
-def _parts_from_partition(l_partition : list[str]) -> list[int]:
-    ipart = int(l_partition[0])
-    npart = int(l_partition[1])
-
-    return [ipart, npart]
 #---------------------------------
 def _load_config():
     '''
