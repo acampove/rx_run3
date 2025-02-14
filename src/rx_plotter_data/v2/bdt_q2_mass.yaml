@@ -1,0 +1,37 @@
+general:
+  size : [18, 10]
+selection:
+  dummy : (1)
+saving:
+  plt_dir : plots/bdt_q2_mass
+plots:
+    q2 :
+        binning    : [0, 22000000, 200]
+        yscale     : 'linear'
+        labels     : ['$q^2$', 'Entries']
+        title      : ''
+        name       : 'q2'
+    B_M :
+        binning    : [4500, 5800, 50]
+        yscale     : 'linear'
+        labels     : ['M$(B^+)$', 'Entries']
+        title      : ''
+        name       : 'bmass'
+    mva.mva_cmb:
+        binning    : [0, 1, 50]
+        yscale     : 'linear'
+        labels     : ['Signal Probability', 'Entries']
+        title      : 'Combinatorial MVA'
+        name       : 'cmb'
+        normalized : true
+    mva.mva_prc:
+        binning    : [0, 1, 50]
+        yscale     : 'linear'
+        labels     : ['Signal Probability', 'Entries']
+        title      : 'PRec MVA'
+        name       : 'prc'
+        normalized : true
+style:
+  skip_lines : true
+  legend:
+    bbox_to_anchor : [1.40, 1]

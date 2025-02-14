@@ -1,0 +1,16 @@
+saving:
+    plt_dir : plots/mass_q2
+selection:
+  cuts:
+    cmb : mva.mva_cmb > 0.5
+general:
+    size : [20, 15]
+plots_2d:
+    - [B_M, q2, null, 'Bmass_q2', true]
+axes:
+    B_M :
+        binning : [5000, 5600, 200]
+        label   : 'M${}(B^+)$'
+    q2 :
+        binning : [0.0, 22000000, 200]
+        label   : '$q^2$'
