@@ -227,17 +227,19 @@ If the original files are downloaded to a cluster and the user needs the files i
 - Copy the files through
 
 ```bash
-copy_samples -p /path/to/file/with/sample/paths/rx_samples.yaml -s to_copy.yaml
+copy_samples -k main -f to_copy.yaml -v v5 -d
 ```
 
 where `to_copy.yaml` specifies what samples will be copied and where, e.g.:
 
 ```yaml
+inp_dir : /path/to/directory/with/sample/directories # Sample directories: main, hop, mva, swp_cascade...
 out_dir : /path/to/directory/in/laptop
 samples :
   signal:
     - 12123003 # Kee
     - 12113002 # Kmm
+   ...
 ```
 
 ## Checking for corrupted files
