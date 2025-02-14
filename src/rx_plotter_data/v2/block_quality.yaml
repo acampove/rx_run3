@@ -25,17 +25,19 @@ saving:
   plt_dir : plots/quality
 plots:
     B_const_mass_M:
-        binning    : [4500, 6000, 100]
+        binning    : [5000, 5500, 100]
         yscale     : 'linear'
         labels     : ['$B(M_{DTF})$', 'Entries']
         title      : ''
         name       : 'bmass_dtf'
+        normalized : true
     B_M:
         binning    : [4500, 6000, 100]
         yscale     : 'linear'
         labels     : ['$B(M)$', 'Entries']
         title      : ''
         name       : 'bmass'
+        normalized : true
     Jpsi_M:
         binning    : [2500, 3300, 100]
         yscale     : 'linear'
@@ -79,7 +81,7 @@ plots:
         name       : 'l2_pide'
         normalized : true
     H_PID_K:
-        binning    : [1, 10, 100]
+        binning    : [2, 10, 100]
         yscale     : 'log'
         labels     : ['PID${}_{K}$', 'Entries']
         title      : ''
