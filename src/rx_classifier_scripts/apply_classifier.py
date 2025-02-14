@@ -236,6 +236,13 @@ def main():
             return
 
         rdf = _get_rdf(inp_path)
+        nentries = rdf.Count().GetValue()
+        if nentries == 0:
+            log.warning('Input datset is empty, saving empty dataframe')
+            rdf = RDataFrame(0)
+            rdf = rdf.Define('fake', '1')
+            rdf.Snapshot('DecayTree', out_path)
+            continue
 
         log.info('Applying classifier')
         rdf = _apply_classifier(rdf)
