@@ -10,6 +10,7 @@ from dataclasses         import dataclass
 
 import yaml
 import mplhep
+import dmu.generic.utilities as gut
 from ROOT                    import RDataFrame, EnableImplicitMT
 from dmu.plotting.plotter_1d import Plotter1D
 from dmu.logging.log_store   import LogStore
@@ -38,9 +39,14 @@ class Data:
     q2_cut  : str
     version : str
     cfg_dir : str
+
+    l_keep = []
 # ---------------------------------
 def _initialize() -> None:
-    EnableImplicitMT(Data.nthreads)
+    if Data.nthreads > 1:
+        EnableImplicitMT(Data.nthreads)
+
+    gut.TIMER_ON=True
 
     cfg_dir = files('rx_plotter_data').joinpath('')
     if Data.version is None:
@@ -58,12 +64,15 @@ def _initialize() -> None:
     pprint.pprint(d_sample)
     RDFGetter.samples = d_sample
 # ---------------------------------
+@gut.timeit
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger=Data.trigger)
     rdf = gtr.get_rdf()
+    Data.l_keep.append(rdf)
 
     return rdf
 # ---------------------------------
+@gut.timeit
 def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
     d_rdf = {}
     for cmb in [0.2, 0.4, 0.6, 0.8]:
@@ -76,6 +85,7 @@ def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
 
     return d_rdf
 # ---------------------------------
+@gut.timeit
 def _q2cut_from_q2bin(q2bin : str) -> str:
     cfg = load_selection_config()
     cut = cfg['q2_common'][q2bin]
@@ -152,6 +162,7 @@ def _override_cfg(cfg : dict) -> dict:
 
     return cfg
 # ---------------------------------
+@gut.timeit
 def _plot(kind : str, d_rdf : dict[str,RDataFrame]) -> None:
     cfg   = _get_cfg(kind)
 
@@ -164,9 +175,21 @@ def _plot(kind : str, d_rdf : dict[str,RDataFrame]) -> None:
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
 
+    _plot_paper_mass(d_rdf, cfg)
+# ---------------------------------
+@gut.timeit
+def _plot_paper_mass(d_rdf, cfg):
+    l_var = list(cfg['plots'])
+    for var in l_var:
+        if var == 'B_M':
+            continue
+
+        del cfg['plots'][var]
+
     if Data.q2_bin == 'high' and Data.chanel == 'ee':
         cfg['plots']['B_M']['binning'] = [4500, 6000, 60]
         cfg['plots']['B_M']['name']    = f'{Data.q2_bin}_bmass_paper'
+
         ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
         ptr.run()
 # ---------------------------------
