@@ -24,6 +24,25 @@ cutflow:
 saving:
   plt_dir : plots/quality
 plots:
+    B_const_mass_M:
+        binning    : [4500, 6000, 100]
+        yscale     : 'linear'
+        labels     : ['$B(M_{DTF})$', 'Entries']
+        title      : ''
+        name       : 'bmass_dtf'
+    B_M:
+        binning    : [4500, 6000, 100]
+        yscale     : 'linear'
+        labels     : ['$B(M)$', 'Entries']
+        title      : ''
+        name       : 'bmass'
+    Jpsi_M:
+        binning    : [2500, 3300, 100]
+        yscale     : 'linear'
+        labels     : ['$J/\psi(M)$', 'Entries']
+        title      : ''
+        name       : 'jmass'
+        normalized : true
     B_ENDVERTEX_CHI2:
         binning    : [0, 20, 100]
         yscale     : 'log'
@@ -31,24 +50,6 @@ plots:
         title      : ''
         name       : 'bchi2'
         normalized : true
-    B_const_mass_M:
-        binning    : [4500, 6000, 100]
-        yscale     : 'linear'
-        labels     : ['$B(M_{DTF})$', 'Entries']
-        title      : ''
-        name       : 'bmass_dtf'
-    Jpsi_M:
-        binning    : [2500, 3300, 100]
-        yscale     : 'linear'
-        labels     : ['$J/\psi(M)$', 'Entries']
-        title      : ''
-        name       : 'jmass'
-    B_M:
-        binning    : [4500, 6000, 100]
-        yscale     : 'linear'
-        labels     : ['$B(M)$', 'Entries']
-        title      : ''
-        name       : 'bmass'
     mva_cmb:
         binning    : [0, 1, 100]
         yscale     : 'log'
