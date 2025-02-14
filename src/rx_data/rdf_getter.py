@@ -19,9 +19,10 @@ class RDFGetter:
     '''
     samples : dict[str,str]
     # ------------------------
-    def __init__(self, sample : str, trigger : str):
+    def __init__(self, sample : str, trigger : str, substr : str = None):
         self._sample  = sample
         self._trigger = trigger
+        self._substr  = substr
         self._treename= 'DecayTree'
         self._s_keys  = {'EVENTNUMBER', 'RUNNUMBER'}
     # ------------------------------------
@@ -42,7 +43,11 @@ class RDFGetter:
                     log.warning(key)
                 raise ValueError(f'Missing trigger {self._trigger}')
 
-            l_path += d_data[sample][self._trigger]
+            l_path_part = d_data[sample][self._trigger]
+            if self._substr is not None:
+                l_path_part = self._filter_paths(l_path_part)
+
+            l_path += l_path_part
 
         nfile   = len(l_path)
         if nfile <= 0:
@@ -51,6 +56,18 @@ class RDFGetter:
         log.debug(f'Using {nfile} files from {path}')
 
         return { path : self._treename for path in l_path }
+    # ------------------------------------
+    def _filter_paths(self, l_path : list[str]) -> list[str]:
+        l_path_filt = [ path for path in l_path if self._substr in path ]
+
+        npath = len(l_path_filt)
+        if npath != 0:
+            return l_path_filt
+
+        for path in l_path:
+            log.info(path)
+
+        raise ValueError(f'No path could pass filter \"{self._substr}\"')
     # ------------------------------------
     def _get_intersecting_columns(self, d_file : dict[str,str], columns : set[str]):
         columns = set(columns)
