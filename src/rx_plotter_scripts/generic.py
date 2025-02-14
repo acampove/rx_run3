@@ -34,6 +34,7 @@ class Data:
     mplhep.style.use('LHCb1')
 
     chanel  : str
+    substr  : str
     trigger : str
     q2_bin  : str
     cfg_dir : str
@@ -63,7 +64,7 @@ def _get_rdf() -> RDataFrame:
     cfg     = _get_cfg()
     columns = cfg['columns']
 
-    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
+    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger, substr=Data.substr)
     rdf = gtr.get_rdf(columns=columns)
     Data.l_keep.append(rdf)
 
@@ -97,12 +98,14 @@ def _parse_args() -> None:
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True)
     parser.add_argument('-c', '--config' , type=str, help='Configuration')
+    parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
     Data.sample = args.sample
     Data.trigger= args.trigger
     Data.config = args.config
+    Data.substr = args.substr
 # ---------------------------------
 def _get_cfg() -> dict:
     cfg_path= f'{Data.cfg_dir}/{Data.config}.yaml'
