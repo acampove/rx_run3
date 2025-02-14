@@ -69,13 +69,13 @@ def _load_config():
     with open(Data.cfg_path, encoding='utf-8') as ifile:
         Data.cfg_dict = yaml.safe_load(ifile)
 #---------------------------------
-def _get_rdf(l_file_path : list[str]) -> RDataFrame:
+def _get_rdf(file_path : str) -> RDataFrame:
     '''
-    Returns a dictionary of dataframes built from paths in config
+    Returns a dictionary of dataframes built from ROOT file path
     '''
-    log.info('Getting dataframes')
+    log.info('Getting dataframe')
 
-    rdf = RDataFrame('DecayTree', l_file_path)
+    rdf = RDataFrame('DecayTree', file_path)
     if Data.max_entries > 0:
         rdf = rdf.Range(Data.max_entries)
 
@@ -186,14 +186,6 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 #---------------------------------
-def _partition_paths(l_path : list[str]) -> list[str]:
-    [ipart, npart] = Data.l_part
-    log.info(f'Partitioning with {ipart}/{npart}')
-
-    l_part = numpy.array_split(l_path, npart)
-
-    return l_part[ipart]
-#---------------------------------
 def _get_paths() -> list[str]:
     if 'samples' not in Data.cfg_dict:
         raise ValueError('samples entry not found')
@@ -210,7 +202,6 @@ def _get_paths() -> list[str]:
         raise ValueError(f'Cannot find {Data.sample} among triggers for sample {Data.sample}')
 
     l_path = d_trigger[Data.trigger]
-    l_path = _partition_paths(l_path)
     npath  = len(l_path)
 
     if npath > Data.max_path:
@@ -220,19 +211,13 @@ def _get_paths() -> list[str]:
 
     return l_path
 #---------------------------------
-def _get_out_path(l_input_path : list[str]) -> str:
-    input_path = l_input_path[0]
-    name       = os.path.basename(input_path)
-    l_part     = name.split('_')
-    l_part     = l_part[:-1]
-    name       = '_'.join(l_part)
-
+def _get_out_path(input_path : str) -> str:
+    name    = os.path.basename(input_path)
     out_dir = Data.cfg_dict['output']
-    [ipart, npart] = Data.l_part
 
     os.makedirs(out_dir, exist_ok=True)
 
-    return f'{out_dir}/{name}_{ipart:03}_{npart:03}.root'
+    return f'{out_dir}/{name}'
 #---------------------------------
 def main():
     '''
@@ -243,20 +228,21 @@ def main():
     _set_loggers()
 
     l_file_path = _get_paths()
-    out_path    = _get_out_path(l_file_path)
+    for inp_path in l_file_path:
+        out_path = _get_out_path(inp_path)
 
-    if os.path.isfile(out_path):
-        log.info('Output already found, skipping')
-        return
+        if os.path.isfile(out_path):
+            log.info('Output already found, skipping')
+            return
 
-    rdf = _get_rdf(l_file_path)
+        rdf = _get_rdf(inp_path)
 
-    log.info('Applying classifier')
-    rdf = _apply_classifier(rdf)
+        log.info('Applying classifier')
+        rdf = _apply_classifier(rdf)
 
-    if not Data.dry_run:
-        log.info(f'Saving to: {out_path}')
-        rdf.Snapshot('DecayTree', out_path)
+        if not Data.dry_run:
+            log.info(f'Saving to: {out_path}')
+            rdf.Snapshot('DecayTree', out_path)
 
     log.info('')
 #---------------------------------
