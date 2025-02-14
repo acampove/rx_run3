@@ -37,6 +37,11 @@ class RDFGetter:
 
             log.debug(f'    {sample}')
 
+            if self._trigger not in d_data[sample]:
+                for key in d_data[sample]:
+                    log.warning(key)
+                raise ValueError(f'Missing trigger {self._trigger}')
+
             l_path += d_data[sample][self._trigger]
 
         nfile   = len(l_path)
