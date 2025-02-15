@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import mplhep
 import yaml
 
-from ROOT                  import RDataFrame
+from rx_data.rdf_getter    import RDFGetter
 from dmu.logging.log_store import LogStore
 from dmu.ml.train_mva      import TrainMva
 
@@ -128,21 +128,14 @@ def _get_rdf(kind=None):
     ---------------------
     kind (str): kind of dataset to find in config input section
     '''
-    tree_name = Data.cfg_dict['dataset']['paths'][kind]['tree_name']
-    file_wc   = Data.cfg_dict['dataset']['paths'][kind]['file_path']
+    sample  = Data.cfg_dict['dataset']['samples'][kind]['sample']
+    trigger = Data.cfg_dict['dataset']['samples'][kind]['trigger']
+    l_col   = Data.cfg_dict['dataset']['columns']
 
-    if isinstance(file_wc, str):
-        l_file_wc = [file_wc]
-    else:
-        l_file_wc = file_wc
+    RDFGetter.samples = Data.cfg_dict['dataset']['paths']
+    gtr = RDFGetter(sample=sample, trigger=trigger)
+    rdf = gtr.get_rdf(columns=l_col)
 
-    l_file_path = []
-    for file_wc in l_file_wc:
-        l_file_path += _file_paths_from_wc(file_wc)
-
-    npath = len(l_file_path)
-    log.info(f'Will build dataframe from {npath} paths')
-    rdf = RDataFrame(tree_name, l_file_path)
     rdf = _define_columns(rdf)
     rdf = _apply_selection(rdf, kind)
 
