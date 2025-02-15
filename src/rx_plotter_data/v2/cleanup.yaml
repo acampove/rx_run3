@@ -9,27 +9,28 @@ columns:
   - swp_jpsi_misid_mass_swp
 general:
   size : [15, 10]
-#selection:
-  #cuts:
-  #  mva : mva_cmb > 0.0 && mva_prc > 0.0
+selection:
+  cuts:
+    mva : mva_cmb > 0.7 && mva_prc > 0.0
+definitions:
+  q2 : Jpsi_M * Jpsi_M
 cutflow:
-    None    : hop_mass >  0 
-    cmb     : mva_cmb  > 0.7
-    hop     : hop_mass >  4500 
-    cascade : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp    < 1800
-    jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050 
+  None    : hop_mass >  0 
+  hop     : hop_mass >  3000 
+  cascade : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp    < 1800
+  jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050 
 saving:
   plt_dir : plots/cleanup
 plots:
     swp_cascade_mass_swp:
-        binning    : [1000, 3000, 60]
+        binning    : [1000, 3000, 100]
         yscale     : 'linear'
         labels     : ['M$(K,\ell_{\to\pi})$', 'Entries']
         title      : ''
         name       : 'mass_cascade'
         normalized : false
     swp_jpsi_misid_mass_swp:
-        binning    : [1500, 3500, 60]
+        binning    : [1500, 3500, 100]
         yscale     : 'linear'
         labels     : ['M$(K_{\to\ell},\ell)$', 'Entries']
         title      : ''
@@ -50,11 +51,18 @@ plots:
         name       : 'bmass'
         normalized : false 
     mva_cmb:
-        binning    : [0.0, 1, 60]
-        yscale     : 'log'
+        binning    : [0.7, 1.0, 60]
+        yscale     : 'linear'
         labels     : ['MVA${}_{CMB}$', 'Entries']
         title      : ''
         name       : 'mva_cmb'
+        normalized : false 
+    q2: 
+        binning    : [0.0, 22000000, 60]
+        yscale     : 'linear'
+        labels     : ['$q^2$', 'Entries']
+        title      : ''
+        name       : 'q2'
         normalized : false 
 style:
   skip_lines : false 
