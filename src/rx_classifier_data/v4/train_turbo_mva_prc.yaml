@@ -8,7 +8,6 @@ features:
   low:
     - log_b_pt
     - sqrt_ipchi2
-    - acos_dira
     - sqrt_jipchi2
     - jp_acos_dira
     - log_h_pt
@@ -17,17 +16,13 @@ features:
     - iso_one_mass 
     - iso_two_mass 
     - iso_one_dchi
-    - iso_two_dchi
-    - iso_cc_mult
     - iso_cc_mom
     - iso_cc_ptasy
-    - iso_nc_mult
     - iso_nc_mom
     - iso_nc_ptasy
   central:
     - log_b_pt
     - sqrt_ipchi2
-    - acos_dira
     - sqrt_jipchi2
     - jp_acos_dira
     - log_h_pt
@@ -36,17 +31,13 @@ features:
     - iso_one_mass 
     - iso_two_mass 
     - iso_one_dchi
-    - iso_two_dchi
-    - iso_cc_mult
     - iso_cc_mom
     - iso_cc_ptasy
-    - iso_nc_mult
     - iso_nc_mom
     - iso_nc_ptasy
   high:
     - log_b_pt
     - sqrt_ipchi2
-    - acos_dira
     - sqrt_jipchi2
     - jp_acos_dira
     - log_h_pt
@@ -55,11 +46,8 @@ features:
     - iso_one_mass 
     - iso_two_mass 
     - iso_one_dchi
-    - iso_two_dchi
-    - iso_cc_mult
     - iso_cc_mom
     - iso_cc_ptasy
-    - iso_nc_mult
     - iso_nc_mom
     - iso_nc_ptasy
 # ----------------------------------
