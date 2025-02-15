@@ -93,6 +93,8 @@ class RDFGetter:
         columns = self._get_intersecting_columns(d_file, columns)
         df      = uproot.concatenate(d_file, expressions=columns | self._s_keys, library='pd')
         df      = self._create_key(df)
+        df      = df.set_index('id')
+        df      = df[~df.index.duplicated(keep='first')]
 
         return df
     # ------------------------
