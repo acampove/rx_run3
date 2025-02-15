@@ -125,7 +125,7 @@ plotting:
         labels  : ['$FD_{\chi^2}(B^+)$', '']
       B_ENDVERTEX_CHI2DOF:
         normalized : true
-        binning : [0, 10, 100]
+        binning : [0, 9, 100]
         yscale  : 'log'
         labels  : ['$\chi^2/dof(B^+)$', '']
       B_DIRA_OWNPV:
@@ -191,7 +191,7 @@ plotting:
         normalized : true
         binning : [4400, 6500, 50]
         yscale  : 'linear'
-        labels  : ['$M_{DTF}(B^+)$', '']
+        labels  : ['$M(B^+)$', '']
       hop_mass:
         normalized : true
         binning : [1000, 7000, 60]
