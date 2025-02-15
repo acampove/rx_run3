@@ -8,12 +8,17 @@ features:
   low:
     - B_PT
     - B_IPCHI2_OWNPV
+    - B_FDCHI2_OWNPV
     - B_ENDVERTEX_CHI2DOF 
     - B_DIRA_OWNPV
+    #
     - Jpsi_DIRA_OWNPV
+    - Jpsi_CHI2DOF
     - Jpsi_IPCHI2_OWNPV
+    #
     - max_ll_ipc
     - min_ll_ipc
+    #
     - H_PT 
     - H_IPCHI2_OWNPV 
   central:
