@@ -59,6 +59,16 @@ def _initialize() -> None:
     pprint.pprint(d_sample)
     RDFGetter.samples = d_sample
 # ---------------------------------
+def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
+    if 'definitions' not in cfg:
+        return rdf
+
+    d_def = cfg['definitions']
+    for name, expr in d_def.items():
+        rdf = rdf.Define(name, expr)
+
+    return rdf
+# ---------------------------------
 @gut.timeit
 def _get_rdf() -> RDataFrame:
     cfg     = _get_cfg()
@@ -66,6 +76,8 @@ def _get_rdf() -> RDataFrame:
 
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger, substr=Data.substr)
     rdf = gtr.get_rdf(columns=columns)
+    rdf = _apply_definitions(rdf, cfg)
+
     Data.l_keep.append(rdf)
 
     q2_cut = _get_q2cut()
@@ -141,6 +153,7 @@ def _get_inp() -> dict[str,RDataFrame]:
 # ---------------------------------
 def _plot(d_rdf : dict[str,RDataFrame]) -> None:
     cfg= _get_cfg()
+    del cfg['definitions']
 
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
