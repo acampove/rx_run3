@@ -83,9 +83,6 @@ class RDFGetter:
         return columns
     # ------------------------------------
     def _create_key(self, df : pnd.DataFrame) -> pnd.DataFrame:
-        l_key = list(self._s_keys)
-        l_key.sort()
-
         df['id'] = df.EVENTNUMBER.astype(str) + '_' + df.RUNNUMBER.astype(str)
         df       = df.drop(self._s_keys, axis=1)
 
