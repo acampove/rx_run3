@@ -18,11 +18,11 @@ definitions:
   q2 : Jpsi_M * Jpsi_M
 cutflow:
   None    : hop_mass >  0 
-  hop     : hop_mass >  3000 
+  hop     : hop_mass >  4500 
   cascade : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp    < 1800
   jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050 
-  1Trk_mas: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS  > 5000
-  1Trk_mas: B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS > 5000
+  1Trk_mas: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS  > 4800
+  2Trk_mas: B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS > 4800
 saving:
   plt_dir : plots/cleanup
 plots:
