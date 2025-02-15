@@ -1,9 +1,9 @@
 q2:
-  low    : (Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1100000) && (hop_mass > 4500) && (iso_one_mass > 5000) && (iso_two_mass > 5000)
-  central: (Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000) && (hop_mass > 4500) && (iso_one_mass > 5000) && (iso_two_mass > 5000)
-  jpsi   : (Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000) && (hop_mass > 4500) && (iso_one_mass > 5000) && (iso_two_mass > 5000)
-  psi2   : (Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000) && (hop_mass > 4500) && (iso_one_mass > 5000) && (iso_two_mass > 5000)
-  high   : (Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000) && (hop_mass > 3000) && (iso_one_mass > 5000) && (iso_two_mass > 5000)
+  low    : (Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1100000) && (hop_mass > 4500) && (iso_one_mass > 4800 || iso_one_mass < 0) && (iso_two_mass > 5000 || iso_two_mass < 0)
+  central: (Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000) && (hop_mass > 4500) && (iso_one_mass > 4800 || iso_one_mass < 0) && (iso_two_mass > 5000 || iso_two_mass < 0)
+  jpsi   : (Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000) && (hop_mass > 4500) && (iso_one_mass > 4800 || iso_one_mass < 0) && (iso_two_mass > 5000 || iso_two_mass < 0)
+  psi2   : (Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000) && (hop_mass > 4500) && (iso_one_mass > 4800 || iso_one_mass < 0) && (iso_two_mass > 5000 || iso_two_mass < 0)
+  high   : (Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000) && (hop_mass > 3000) && (iso_one_mass > 4800 || iso_one_mass < 0) && (iso_two_mass > 5000 || iso_two_mass < 0)
 features:
   low:
     - log_b_pt
@@ -88,11 +88,11 @@ dataset :
       casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
       jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
       tail : B_M < 5100
-      mva  : mva_cmb > 0.7
+      mva  : mva_cmb > 0.5
     sig :
       casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
       jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
-      mva  : mva_cmb > 0.7
+      mva  : mva_cmb > 0.5
   paths:
     main : /home/acampove/external_ssd/Data/samples/main.yaml
     mva  : /home/acampove/external_ssd/Data/samples/mva.yaml
