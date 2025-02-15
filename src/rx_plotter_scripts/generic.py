@@ -69,6 +69,8 @@ def _get_rdf() -> RDataFrame:
     Data.l_keep.append(rdf)
 
     q2_cut = _get_q2cut()
+    log.info(f'Using q2 cut: {q2_cut}')
+
     rdf    = rdf.Filter(q2_cut, 'q2')
 
     return rdf
