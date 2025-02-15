@@ -129,6 +129,7 @@ class RDFGetter:
         Returns pandas dataframe with a given set of columns
         '''
         df     = self.get_df(columns)
+        df     = df.fillna(-999)
         d_nump = { name : df[name].to_numpy() for name in df }
         rdf    = RDF.FromNumpy(d_nump)
 
