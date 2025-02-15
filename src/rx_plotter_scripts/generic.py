@@ -124,6 +124,9 @@ def _get_inp() -> dict[str,RDataFrame]:
     cfg   = _get_cfg()
     rdf   = _get_rdf()
 
+    if 'cutflow' not in cfg:
+        return {'None' : rdf}
+
     d_cut = cfg['cutflow']
     d_rdf = {name : rdf.Filter(cut, name) for name, cut in d_cut.items()}
 
