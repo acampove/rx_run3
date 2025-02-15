@@ -4,6 +4,55 @@ q2:
   jpsi   : (Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000) && (hop_mass > 4500)
   psi2   : (Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000) && (hop_mass > 4500)
   high   : (Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000) && (hop_mass > 3000)
+features:
+  low:
+    - B_PT
+    - B_IPCHI2_OWNPV
+    - B_ENDVERTEX_CHI2DOF 
+    - B_DIRA_OWNPV
+    - Jpsi_DIRA_OWNPV
+    - Jpsi_IPCHI2_OWNPV
+    - max_ll_ipc
+    - min_ll_ipc
+    - H_PT 
+    - H_IPCHI2_OWNPV 
+  central:
+    - B_PT
+    - B_IPCHI2_OWNPV
+    - B_FDCHI2_OWNPV
+    - B_ENDVERTEX_CHI2DOF 
+    - B_DIRA_OWNPV
+    #
+    - Jpsi_PT
+    - Jpsi_DIRA_OWNPV
+    - Jpsi_CHI2DOF
+    - Jpsi_IPCHI2_OWNPV
+    #
+    - min_ll_pt
+    - max_ll_pt
+    - max_ll_ipc
+    - min_ll_ipc
+    #
+    - H_PT 
+    - H_IPCHI2_OWNPV 
+  high:
+    - B_PT
+    - B_IPCHI2_OWNPV
+    - B_ENDVERTEX_CHI2DOF 
+    - B_DIRA_OWNPV
+    #
+    - Jpsi_PT
+    - Jpsi_DIRA_OWNPV
+    - Jpsi_CHI2DOF
+    - Jpsi_IPCHI2_OWNPV
+    #
+    - min_ll_pt
+    - max_ll_ipc
+    - min_ll_ipc
+    #
+    - H_PT 
+    - H_IPCHI2_OWNPV 
+# ----------------------------------
 hyper               :
   loss              : log_loss
   learning_rate     : 0.10
@@ -69,20 +118,6 @@ training :
       max_depth    : 4
     high : 
       n_estimators : 70
-  features : 
-    - B_PT
-    - B_IPCHI2_OWNPV
-    - B_ENDVERTEX_CHI2DOF 
-    - B_DIRA_OWNPV
-    #
-    - Jpsi_DIRA_OWNPV
-    - Jpsi_IPCHI2_OWNPV
-    #
-    - max_ll_ipc
-    - min_ll_ipc
-    #
-    - H_PT 
-    - H_IPCHI2_OWNPV 
 saving:
   path : 'output/mva_rare_2024_cmb/VERSION/model.pkl'
 plotting:
