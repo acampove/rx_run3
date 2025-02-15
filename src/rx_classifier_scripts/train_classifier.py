@@ -200,8 +200,8 @@ def main():
     _get_args()
     _load_config()
 
-    rdf_bkg = _get_rdf(kind='bkg')
     rdf_sig = _get_rdf(kind='sig')
+    rdf_bkg = _get_rdf(kind='bkg')
 
     trn = TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=Data.cfg_dict)
     trn.run()
