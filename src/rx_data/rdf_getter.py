@@ -103,18 +103,24 @@ class RDFGetter:
         Returns pandas dataframe with a given set of columns
         '''
 
-        df = None
+        df_totl = None
         for kind, path in RDFGetter.samples.items():
             log.debug(f'Building chain for {kind} category')
             df_part = self._get_df(path=path, columns=columns)
-
-            if df is None:
-                df = df_part
+            if df_totl is None:
+                df_totl = df_part
                 continue
 
-            df = pnd.merge(df, df_part, on='id')
+            df_totl = self._merge_df(df_part, df_totl)
 
-        df = df.drop(['id'], axis=1)
+        return df_totl
+    # ------------------------
+    def _merge_df(self, df_1, df_2):
+        same_index = df_1.index.equals(df_2.index)
+        if not same_index:
+            raise ValueError('Dataframes cannot be merged, they do not have the same indexes')
+
+        df = pnd.merge(df_1, df_2, on='id')
 
         return df
     # ------------------------
