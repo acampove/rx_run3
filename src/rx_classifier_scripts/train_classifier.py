@@ -11,6 +11,7 @@ import argparse
 from importlib.resources import files
 from dataclasses         import dataclass
 
+import cppyy
 import matplotlib.pyplot as plt
 import mplhep
 import yaml
@@ -130,6 +131,8 @@ def _get_rdf(kind=None):
     ---------------------
     kind (str): kind of dataset to find in config input section
     '''
+    log.info(f'Getting dataframe for {kind}')
+
     sample  = Data.cfg_dict['dataset']['samples'][kind]['sample']
     trigger = Data.cfg_dict['dataset']['samples'][kind]['trigger']
     l_col   = Data.cfg_dict['dataset']['columns']
@@ -173,7 +176,13 @@ def _apply_selection(rdf, kind):
 
     for name, cut in d_cut.items():
         log.debug(f'---> {name}')
-        rdf = rdf.Filter(cut, name)
+        try:
+            rdf = rdf.Filter(cut, name)
+        except cppyy.gbl.std.runtime_error:
+            for col in rdf.GetColumnNames():
+                log.info(col)
+
+            raise ValueError(f'Coult not apply cut: {cut}')
 
     log.info(f'Cutflow for: {kind}')
     rep = rdf.Report()
