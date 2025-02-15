@@ -107,6 +107,7 @@ dataset :
       mva  : mva_cmb > 0.7
   paths:
     main : /home/acampove/external_ssd/Data/samples/main.yaml
+    mva  : /home/acampove/external_ssd/Data/samples/mva.yaml
     hop  : /home/acampove/external_ssd/Data/samples/hop.yaml
     jmis : /home/acampove/external_ssd/Data/samples/jpsi_misid.yaml
     casc : /home/acampove/external_ssd/Data/samples/cascade.yaml
