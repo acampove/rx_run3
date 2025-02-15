@@ -7,6 +7,8 @@ columns:
   - hop_mass
   - swp_cascade_mass_swp
   - swp_jpsi_misid_mass_swp
+  - B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
+  - B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
 general:
   size : [15, 10]
 selection:
@@ -19,9 +21,25 @@ cutflow:
   hop     : hop_mass >  3000 
   cascade : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp    < 1800
   jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050 
+  1Trk_mas: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS  > 5000
+  1Trk_mas: B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS > 5000
 saving:
   plt_dir : plots/cleanup
 plots:
+    B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS:
+        binning    : [4000, 8000, 100]
+        yscale     : 'linear'
+        labels     : ['Iso${}_{1Trk}^{Mass}$', 'Entries']
+        title      : ''
+        name       : '1Trk_mas'
+        normalized : false
+    B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS:
+        binning    : [4000, 8000, 100]
+        yscale     : 'linear'
+        labels     : ['Iso${}_{2Trk}^{Mass}$', 'Entries']
+        title      : ''
+        name       : '2Trk_mas'
+        normalized : false
     swp_cascade_mass_swp:
         binning    : [1000, 3000, 100]
         yscale     : 'linear'
