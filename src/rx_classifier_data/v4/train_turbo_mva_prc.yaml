@@ -98,6 +98,7 @@ dataset :
     bkg :
       casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
       jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
+      tail : B_M < 5180
     sig :
       casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
       jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
@@ -111,8 +112,8 @@ dataset :
       sample : Bu_Kee_eq_btosllball05_DPC
       trigger: Hlt2RD_BuToKpEE_MVA
     bkg :
-      sample : Bd_Kstee_eq_btosllball05_DPC
-      trigger: Hlt2RD_BuToKpEE_MVA
+      sample : DATA* 
+      trigger: Hlt2RD_BuToKpMuMu_MVA
   define :
     mass        : B_M
     log_b_pt    : TMath::Log(B_PT)
@@ -262,7 +263,7 @@ plotting:
       # ---------------------
       mass:
         normalized : true
-        binning : [4000, 6000, 50]
+        binning : [3500, 6000, 100]
         yscale  : 'linear'
         labels  : ['$M(B^+)$', '']
       hop_mass:
