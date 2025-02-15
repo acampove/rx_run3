@@ -256,7 +256,7 @@ plotting:
         labels  : ['$\arccos(DIRA)(J/\psi^+)$', '']
       log_h_pt  :
         normalized : true
-        binning : [6, 11, 40]
+        binning : [1, 10, 40]
         yscale  : 'linear'
         labels  : ['$\log(p_T)(K^+)$', '']
       min_ll_ipc:
