@@ -8,6 +8,7 @@ dependencies= [
 'numpy',
 'joblib',
 'PyYAML',
+'rx_data',
 'rx_selection',
 ]
 
