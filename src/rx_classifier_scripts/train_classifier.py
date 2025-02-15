@@ -178,11 +178,11 @@ def _apply_selection(rdf, kind):
         log.debug(f'---> {name}')
         try:
             rdf = rdf.Filter(cut, name)
-        except cppyy.gbl.std.runtime_error:
+        except cppyy.gbl.std.runtime_error as exc:
             for col in rdf.GetColumnNames():
                 log.info(col)
 
-            raise ValueError(f'Coult not apply cut: {cut}')
+            raise ValueError(f'Coult not apply cut: {cut}') from exc
 
     log.info(f'Cutflow for: {kind}')
     rep = rdf.Report()
