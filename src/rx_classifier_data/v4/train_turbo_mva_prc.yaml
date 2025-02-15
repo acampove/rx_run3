@@ -207,7 +207,7 @@ plotting:
       # --------------------
       iso_one_mass:
         normalized : true
-        binning : [4000, 8000, 40]
+        binning : [3000, 8000, 40]
         yscale  : 'linear'
         labels  : ['Iso$_{mass}^{1Trk}(B^+)$', '']
       # --------------------
@@ -219,7 +219,7 @@ plotting:
       # --------------------
       iso_two_mass:
         normalized : true
-        binning : [4000, 8000, 40]
+        binning : [3000, 8000, 40]
         yscale  : 'linear'
         labels  : ['Iso$_{mass}^{2Trk}(B^+)$', '']
       # --------------------
@@ -267,7 +267,7 @@ plotting:
       # ---------------------
       mass:
         normalized : true
-        binning : [3500, 6000, 100]
+        binning : [3000, 6000, 100]
         yscale  : 'linear'
         labels  : ['$M(B^+)$', '']
       hop_mass:
