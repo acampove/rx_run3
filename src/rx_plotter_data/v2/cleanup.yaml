@@ -14,10 +14,10 @@ general:
   #  mva : mva_cmb > 0.0 && mva_prc > 0.0
 cutflow:
     None    : hop_mass >  0 
-#    cmb     : mva_cmb  > 0.7
-#    hop     : hop_mass >  4500 
-#    cascade : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp    < 1800
-#    jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050 
+    cmb     : mva_cmb  > 0.7
+    hop     : hop_mass >  4500 
+    cascade : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp    < 1800
+    jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050 
 saving:
   plt_dir : plots/cleanup
 plots:
@@ -51,7 +51,7 @@ plots:
         normalized : false 
     mva_cmb:
         binning    : [0.0, 1, 60]
-        yscale     : 'linear'
+        yscale     : 'log'
         labels     : ['MVA${}_{CMB}$', 'Entries']
         title      : ''
         name       : 'mva_cmb'
