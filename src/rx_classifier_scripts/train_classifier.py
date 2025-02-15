@@ -51,6 +51,8 @@ def _reformat_config(cfg : dict) -> dict:
     path = cfg['plotting']['features']['saving']['plt_dir']
     cfg['plotting']['features']['saving']['plt_dir'] = _override_version(path)
 
+    cfg['training']['features'] = cfg['features'][Data.q2bin]
+
     return cfg
 #---------------------------------
 def _reformat_hyperparameters(cfg : dict) -> dict:
