@@ -1,15 +1,15 @@
 q2:
-  low    : (Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1100000) && (hop_mass > 4500)
-  central: (Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000) && (hop_mass > 4500)
-  jpsi   : (Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000) && (hop_mass > 4500)
-  psi2   : (Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000) && (hop_mass > 4500)
-  high   : (Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000) && (hop_mass > 3000)
+  low    : (Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1100000) && (hop_mass > 4500) && (iso_one_mass > 5000) && (iso_two_mass > 5000)
+  central: (Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000) && (hop_mass > 4500) && (iso_one_mass > 5000) && (iso_two_mass > 5000)
+  jpsi   : (Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000) && (hop_mass > 4500) && (iso_one_mass > 5000) && (iso_two_mass > 5000)
+  psi2   : (Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000) && (hop_mass > 4500) && (iso_one_mass > 5000) && (iso_two_mass > 5000)
+  high   : (Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000) && (hop_mass > 3000) && (iso_one_mass > 5000) && (iso_two_mass > 5000)
 features:
   low:
     - log_b_pt
     - sqrt_ipchi2
     - sqrt_jipchi2
-    - jp_acos_dira
+    - acos_dira
     - log_h_pt
     - min_ll_ipc
     # ---------
@@ -24,7 +24,7 @@ features:
     - log_b_pt
     - sqrt_ipchi2
     - sqrt_jipchi2
-    - jp_acos_dira
+    - acos_dira
     - log_h_pt
     - min_ll_ipc
     # ---------
@@ -39,7 +39,7 @@ features:
     - log_b_pt
     - sqrt_ipchi2
     - sqrt_jipchi2
-    - jp_acos_dira
+    - acos_dira
     - log_h_pt
     - min_ll_ipc
     # ---------
@@ -127,7 +127,6 @@ dataset :
     iso_two_dchi: B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2
     # ----------
     sqrt_jipchi2: TMath::Sqrt(Jpsi_IPCHI2_OWNPV) 
-    jp_acos_dira: TMath::ACos(Jpsi_DIRA_OWNPV)
     log_h_pt    : TMath::Log(H_PT)
     min_ll_ipc  : TMath::Min(TMath::Sqrt(L1_IPCHI2_OWNPV), TMath::Sqrt(L2_IPCHI2_OWNPV))
 training :
@@ -216,11 +215,11 @@ plotting:
         binning : [0, 100, 40]
         yscale  : 'linear'
         labels  : ['$\sqrt{IP_{\chi^2}}(J/\psi)$', '']
-      jp_acos_dira:
+      acos_dira:
         normalized : true
         binning : [0, 0.2, 40]
         yscale  : 'log'
-        labels  : ['$\arccos(DIRA)(J/\psi^+)$', '']
+        labels  : ['$\arccos(DIRA)(B^+)$', '']
       log_h_pt  :
         normalized : true
         binning : [1, 10, 40]
