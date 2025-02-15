@@ -34,12 +34,12 @@ dataset :
     - L2_IPCHI2_OWNPV
   selection:
     bkg :
-      casc : swp_cascade_mass_swp    < 1800 && swp_cascade_mass_swp    > 1900
-      jmis : swp_jpsi_misid_mass_swp < 3050 && swp_jpsi_misid_mass_swp > 3150 
+      casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
+      jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
       mass : mass > 5500
     sig :
-      casc : swp_cascade_mass_swp    < 1800 && swp_cascade_mass_swp    > 1900
-      jmis : swp_jpsi_misid_mass_swp < 3050 && swp_jpsi_misid_mass_swp > 3150 
+      casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
+      jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
   paths:
     main : /home/acampove/external_ssd/Data/samples/main.yaml
     hop  : /home/acampove/external_ssd/Data/samples/hop.yaml
