@@ -15,7 +15,9 @@ columns:
 general:
   size : [18, 10]
 selection:
-  mva_cmb > 0.0 && mva_prc > 0.0
+  cuts:
+    mva : mva_cmb > 0.7 && mva_prc > 0.0
+    mas : B_const_mass_M > 5250 && B_const_mass_M < 5300
 cutflow:
   blocks_12 : block == 1 || block == 2
   blocks_34 : block == 3 || block == 4
