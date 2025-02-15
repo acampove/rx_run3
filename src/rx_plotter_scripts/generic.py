@@ -87,6 +87,10 @@ def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
     return d_rdf
 # ---------------------------------
 def _get_q2cut() -> str:
+    if Data.q2_bin is None:
+        log.info('Not applying any q2 cut')
+        return '(1)'
+
     cfg = load_selection_config()
     cut = cfg['q2_common'][Data.q2_bin]
 
@@ -94,7 +98,7 @@ def _get_q2cut() -> str:
 # ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make generic plots')
-    parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
+    parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'])
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True)
     parser.add_argument('-c', '--config' , type=str, help='Configuration')
