@@ -12,8 +12,8 @@ hyper               :
 # ----------------------------------
 dataset :
   columns:
-    - sw_cascade_mass_swp
-    - sw_jpsi_misid_mass_swp
+    - swp_cascade_mass_swp
+    - swp_jpsi_misid_mass_swp
     - hop_mass
     - B_M
     - Jpsi_M
@@ -34,12 +34,12 @@ dataset :
     - L2_IPCHI2_OWNPV
   selection:
     bkg :
-      casc : sw_cascade_mass_swp    < 1800 && sw_cascade_mass_swp    > 1900
-      jmis : sw_jpsi_misid_mass_swp < 3050 && sw_jpsi_misid_mass_swp > 3150 
+      casc : swp_cascade_mass_swp    < 1800 && swp_cascade_mass_swp    > 1900
+      jmis : swp_jpsi_misid_mass_swp < 3050 && swp_jpsi_misid_mass_swp > 3150 
       mass : mass > 5500
     sig :
-      casc : sw_cascade_mass_swp    < 1800 && sw_cascade_mass_swp    > 1900
-      jmis : sw_jpsi_misid_mass_swp < 3050 && sw_jpsi_misid_mass_swp > 3150 
+      casc : swp_cascade_mass_swp    < 1800 && swp_cascade_mass_swp    > 1900
+      jmis : swp_jpsi_misid_mass_swp < 3050 && swp_jpsi_misid_mass_swp > 3150 
   paths:
     main : /home/acampove/external_ssd/Data/samples/main.yaml
     hop  : /home/acampove/external_ssd/Data/samples/hop.yaml
@@ -197,12 +197,12 @@ plotting:
         binning : [1000, 7000, 60]
         yscale  : 'linear'
         labels  : ['$M_{HOP}(B^+)$', '']
-      sw_cascade_mass_swp:
+      swp_cascade_mass_swp:
         normalized : true
         binning : [1700, 2200, 60]
         yscale  : 'linear'
         labels  : ['$M(K,\ell_{\to\pi})$', '']
-      sw_jpsi_misid_mass_swp:
+      swp_jpsi_misid_mass_swp:
         normalized : true
         binning : [2800, 3400, 60]
         yscale  : 'linear'
