@@ -200,7 +200,7 @@ plotting:
         labels  : ['$\sqrt{IP_{\chi^2}}(J/\psi)$', '']
       acos_dira:
         normalized : true
-        binning : [0, 0.2, 40]
+        binning : [0, 0.03, 40]
         yscale  : 'log'
         labels  : ['$\arccos(DIRA)(B^+)$', '']
       log_h_pt  :
