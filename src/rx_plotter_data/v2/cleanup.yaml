@@ -21,12 +21,27 @@ definitions:
   otk_mas : B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
   ttk_mas : B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
 cutflow:
-  None    : hop_mass >  0
-  hop     : hop_mass >  4500
-  cascade : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp    < 1800
-  jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
-  1Trk_mas: otk_mas > 4800 || otk_mas < 0
-  2Trk_mas: ttk_mas > 5000 || ttk_mas < 0
+  low:
+    None    : hop_mass >  0
+    hop     : hop_mass >  4500
+    cascade : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp    < 1800
+    jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    1Trk_mas: otk_mas > 4800 || otk_mas < 0
+    2Trk_mas: ttk_mas > 5000 || ttk_mas < 0
+  central:
+    None    : hop_mass >  0
+    hop     : hop_mass >  4500
+    cascade : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp    < 1800
+    jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    1Trk_mas: otk_mas > 4800 || otk_mas < 0
+    2Trk_mas: ttk_mas > 5000 || ttk_mas < 0
+  high:
+    None    : hop_mass >  0
+    hop     : hop_mass >  3000
+    cascade : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp    < 1800
+    jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    1Trk_mas: otk_mas > 4800 || otk_mas < 0
+    2Trk_mas: ttk_mas > 5000 || ttk_mas < 0
 plots:
     otk_mas:
         binning    : [2000, 8000, 100]

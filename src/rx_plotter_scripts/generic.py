@@ -151,7 +151,7 @@ def _get_inp() -> dict[str,RDataFrame]:
     if 'cutflow' not in cfg:
         return {'None' : rdf}
 
-    d_cut = cfg['cutflow']
+    d_cut = cfg['cutflow'][Data.q2_bin]
     d_rdf = {}
     log.info('Applying cutflow')
     for name, cut in d_cut.items():
