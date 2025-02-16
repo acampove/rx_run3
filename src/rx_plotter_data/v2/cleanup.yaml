@@ -1,4 +1,4 @@
-columns: 
+columns:
   - mva_cmb
   - mva_prc
   - Jpsi_M
@@ -21,14 +21,12 @@ definitions:
   otk_mas : B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
   ttk_mas : B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
 cutflow:
-  None    : hop_mass >  0 
-  hop     : hop_mass >  4500 
+  None    : hop_mass >  0
+  hop     : hop_mass >  4500
   cascade : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp    < 1800
-  jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050 
+  jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
   1Trk_mas: otk_mas > 4800 || otk_mas < 0
   2Trk_mas: ttk_mas > 5000 || ttk_mas < 0
-saving:
-  plt_dir : plots/cleanup
 plots:
     otk_mas:
         binning    : [2000, 8000, 100]
@@ -71,20 +69,20 @@ plots:
         labels     : ['$B(M)$', 'Entries']
         title      : ''
         name       : 'bmass'
-        normalized : false 
+        normalized : false
     mva_cmb:
         binning    : [0.7, 1.0, 60]
         yscale     : 'linear'
         labels     : ['MVA${}_{CMB}$', 'Entries']
         title      : ''
         name       : 'mva_cmb'
-        normalized : false 
-    q2: 
+        normalized : false
+    q2:
         binning    : [0.0, 22000000, 60]
         yscale     : 'linear'
         labels     : ['$q^2$', 'Entries']
         title      : ''
         name       : 'q2'
-        normalized : false 
+        normalized : false
 style:
-  skip_lines : false 
+  skip_lines : false
