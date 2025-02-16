@@ -434,12 +434,17 @@ class TrainMva:
         os.makedirs(val_dir, exist_ok=True)
         put.df_to_tex(df, f'{val_dir}/hyperparameters.tex')
     # ---------------------------------------------
-    def run(self):
+    def run(self, skip_fit : bool = False) -> None:
         '''
         Will do the training
+
+        skip_fit: By default false, if True, it will only do the plots of features and save tables
         '''
         self._save_settings_to_tex()
         self._plot_features()
+
+        if skip_fit:
+            return
 
         l_mod = self._get_models()
         for ifold, mod in enumerate(l_mod):
