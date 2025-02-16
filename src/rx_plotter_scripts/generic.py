@@ -132,7 +132,17 @@ def _get_cfg() -> dict:
     with open(cfg_path, encoding='utf=8') as ifile:
         cfg = yaml.safe_load(ifile)
 
+    cfg['saving'] = {'plt_dir' : _get_out_dir() }
+
     return cfg
+# ---------------------------------
+def _get_out_dir() -> str:
+    sample  = Data.sample.replace('*', 'p')
+    out_dir = f'plots/{Data.config}_{Data.q2_bin}_{sample}_{Data.trigger}'
+    if Data.substr is not None:
+        out_dir = f'{out_dir}/{Data.substr}'
+
+    return out_dir
 # ---------------------------------
 def _get_inp() -> dict[str,RDataFrame]:
     cfg   = _get_cfg()
