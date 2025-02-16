@@ -235,6 +235,7 @@ def main():
             log.info('Output already found, skipping')
             return
 
+        log.info(f'Producing: {out_path}')
         rdf = _get_rdf(inp_path)
         nentries = rdf.Count().GetValue()
         if nentries == 0:
