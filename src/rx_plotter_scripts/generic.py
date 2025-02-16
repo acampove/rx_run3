@@ -138,7 +138,7 @@ def _get_cfg() -> dict:
 # ---------------------------------
 def _get_out_dir() -> str:
     sample  = Data.sample.replace('*', 'p')
-    out_dir = f'plots/{Data.config}_{Data.q2_bin}_{sample}_{Data.trigger}'
+    out_dir = f'plots/{Data.config}_{sample}_{Data.trigger}_{Data.q2_bin}'
     if Data.substr is not None:
         out_dir = f'{out_dir}/{Data.substr}'
 
