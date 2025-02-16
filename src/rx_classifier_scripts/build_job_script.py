@@ -19,7 +19,7 @@ def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to create list of commands to be run to apply MVA scores')
     parser.add_argument('-p','--path', type=str, help='Path to YAML file with list of samples', required=True)
     parser.add_argument('-c','--conf', type=str, help='Path to YAML file with configuration for application of MVA', required=True)
-    parser.add_argument('-s','--skip', type=str, help='Will skip this sample', choices=['DATA'])
+    parser.add_argument('-s','--skip', type=str, help='Will skip this sample', choices=['DATA', 'mc'])
 
     args = parser.parse_args()
 
@@ -44,16 +44,12 @@ def _get_command(sample : str, trigger : str) -> list[str]:
     if sample.startswith('DATA_') and Data.skip == 'DATA':
         return []
 
+    if not sample.startswith('DATA_') and Data.skip == 'mc':
+        return []
+
     trigger = trigger.ljust(25)
 
-    if not sample.startswith('DATA_'):
-        return [f'apply_classifier -c {Data.conf} -t {trigger} -s {sample}']
-
-    return [
-            f'apply_classifier -c {Data.conf} -t {trigger} -s {sample} -p 0 4',
-            f'apply_classifier -c {Data.conf} -t {trigger} -s {sample} -p 1 4',
-            f'apply_classifier -c {Data.conf} -t {trigger} -s {sample} -p 2 4',
-            f'apply_classifier -c {Data.conf} -t {trigger} -s {sample} -p 3 4']
+    return [f'apply_classifier -c {Data.conf} -t {trigger} -s {sample}']
 # --------------------------------
 def _save_commands(l_samp_trig : list[tuple[str,str]]) -> None:
     l_command = []
