@@ -155,7 +155,7 @@ class CVPredict:
         ndif = len(s_dif_hash)
         ndat = len(s_dat_hash)
         nmod = len(s_mod_hash)
-        log.debug(f'{ndif:<20}{"=":10}{ndat:<20}{"-":10}{nmod:<20}')
+        log.debug(f'{ndif:<10}{"=":5}{ndat:<10}{"-":5}{nmod:<10}')
 
         df_ft_group= df_ft.loc[df_ft.index.isin(s_dif_hash)]
 
