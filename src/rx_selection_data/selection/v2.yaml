@@ -20,18 +20,18 @@ hop_common: &hop_common
   high   : hop_mass > 3000 
 
 mass_ee  : &mass_ee
-  low    : (B_M                  > 4500) && (B_M                  < 6200)
-  central: (B_M                  > 4500) && (B_M                  < 6200)
+  low    : (B_M                  > 4600) && (B_M                  < 6200)
+  central: (B_M                  > 4600) && (B_M                  < 6200)
   jpsi   : (B_const_mass_M       > 5080) && (B_const_mass_M       < 5680)
   psi2   : (B_const_mass_psi2S_M > 4800) && (B_const_mass_psi2S_M < 5680)
   high   : (B_M                  > 4500) && (B_M                  < 6000)
 
 mass_mm  : &mass_mm
-  low    : (B_M                  > 4500) && (B_M                  < 6200)
-  central: (B_M                  > 4500) && (B_M                  < 6200)
-  jpsi   : (B_const_mass_M       > 5080) && (B_const_mass_M       < 5680)
-  psi2   : (B_const_mass_psi2S_M > 4800) && (B_const_mass_psi2S_M < 5680)
-  high   : (B_M                  > 4500) && (B_M                  < 6000)
+  low    : (B_M                  > 5150) && (B_M                  < 5850)
+  central: (B_M                  > 5150) && (B_M                  < 5850)
+  jpsi   : (B_const_mass_M       > 5150) && (B_const_mass_M       < 5850)
+  psi2   : (B_const_mass_psi2S_M > 5150) && (B_const_mass_psi2S_M < 5850)
+  high   : (B_M                  > 5150) && (B_M                  < 5850)
 # --------------------
 di_track_angles_rk: &angles
   th_l1_l2 : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(L2_PX, L2_PY, L2_PZ); return v1.Angle(v2);
