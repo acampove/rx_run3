@@ -40,7 +40,9 @@ class Data:
     process = 'DATA'
 
     l_keep = []
+    l_cuts_to_apply = ['cascade', 'jpsi_misid', 'hop', 'q2']
     l_col  = ['B_M',
+              'q2',
               'Jpsi_M',
               'mva_cmb',
               'mva_prc',
@@ -85,11 +87,11 @@ def _get_rdf() -> RDataFrame:
 @gut.timeit
 def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
     d_rdf = {}
-    for cmb in [0.2, 0.4, 0.6, 0.8]:
+    for cmb in [0.90]:
         rdf = rdf.Filter(f'mva_cmb > {cmb}')
         d_rdf [f'$MVA_{{cmb}}$ > {cmb}'] = rdf
 
-    for prc in [0.2, 0.4, 0.6]:
+    for prc in [0.6, 0.7, 0.8, 0.85]:
         rdf = rdf.Filter(f'mva_prc > {prc}')
         d_rdf [f'$MVA_{{prc}}$ > {prc}'] = rdf
 
@@ -144,9 +146,13 @@ def _add_reso_q2(cfg : dict) -> dict:
 # ---------------------------------
 def _get_cuts() -> dict:
     d_cut = sel.selection(project='RK', analysis='EE', q2bin=Data.q2_bin, process=Data.process)
-    del d_cut['bdt']
+    d_cut_use = { name : value for name, value in d_cut.items() if name in Data.l_cuts_to_apply }
 
-    return d_cut
+    log.info('Using cuts:')
+    for name in d_cut_use:
+        log.info(f'   {name}')
+
+    return d_cut_use
 # ---------------------------------
 def _override_cfg(cfg : dict) -> dict:
     plt_dir                    = cfg['saving']['plt_dir']
@@ -172,9 +178,11 @@ def _override_cfg(cfg : dict) -> dict:
 # ---------------------------------
 @gut.timeit
 def _plot(kind : str, d_rdf : dict[str,RDataFrame]) -> None:
-    cfg   = _get_cfg(kind)
+    cfg= _get_cfg(kind)
+    cfg['plots']['B_M']['yscale']  = 'log'
 
     if kind == 'last':
+        cfg['plots']['B_M']['yscale']  = 'linear'
         key, val = d_rdf.popitem()
         d_rdf    = {key : val}
 
@@ -182,24 +190,6 @@ def _plot(kind : str, d_rdf : dict[str,RDataFrame]) -> None:
 
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
-
-    _plot_paper_mass(d_rdf, cfg)
-# ---------------------------------
-@gut.timeit
-def _plot_paper_mass(d_rdf, cfg):
-    l_var = list(cfg['plots'])
-    for var in l_var:
-        if var == 'B_M':
-            continue
-
-        del cfg['plots'][var]
-
-    if Data.q2_bin == 'high' and Data.chanel == 'ee':
-        cfg['plots']['B_M']['binning'] = [4500, 6000, 60]
-        cfg['plots']['B_M']['name']    = f'{Data.q2_bin}_bmass_paper'
-
-        ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
-        ptr.run()
 # ---------------------------------
 def main():
     '''
