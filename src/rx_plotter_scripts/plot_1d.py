@@ -3,7 +3,6 @@ Script used to plot mass distributions
 '''
 import os
 import glob
-import pprint
 import argparse
 from importlib.resources import files
 from dataclasses         import dataclass
@@ -16,7 +15,7 @@ from dmu.plotting.plotter_1d import Plotter1D
 from dmu.logging.log_store   import LogStore
 from dmu.generic             import version_management as vmn
 from rx_data.rdf_getter      import RDFGetter
-from rx_selection.selection  import load_selection_config
+from rx_selection            import selection as sel
 
 log=LogStore.add_logger('rx_selection:plot_1d')
 # ---------------------------------
@@ -36,11 +35,20 @@ class Data:
     chanel  : str
     trigger : str
     q2_bin  : str
-    q2_cut  : str
     version : str
     cfg_dir : str
+    process = 'DATA'
 
     l_keep = []
+    l_col  = ['B_M',
+              'Jpsi_M',
+              'mva_cmb',
+              'mva_prc',
+              'B_const_mass_M',
+              'B_const_mass_psi2S_M',
+              'swp_jpsi_misid_mass_swp',
+              'swp_cascade_mass_swp',
+              'hop_mass']
 # ---------------------------------
 def _initialize() -> None:
     if Data.nthreads > 1:
@@ -61,13 +69,15 @@ def _initialize() -> None:
 
     d_sample= { os.path.basename(path).replace('.yaml', '') : path for path in l_yaml }
     log.info('Using paths:')
-    pprint.pprint(d_sample)
+    for name, path in d_sample.items():
+        log.info(f'{name:<20}{path}')
+
     RDFGetter.samples = d_sample
 # ---------------------------------
 @gut.timeit
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger=Data.trigger)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(columns=Data.l_col)
     Data.l_keep.append(rdf)
 
     return rdf
@@ -76,21 +86,14 @@ def _get_rdf() -> RDataFrame:
 def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
     d_rdf = {}
     for cmb in [0.2, 0.4, 0.6, 0.8]:
-        rdf = rdf.Filter(f'mva.mva_cmb > {cmb}')
+        rdf = rdf.Filter(f'mva_cmb > {cmb}')
         d_rdf [f'$MVA_{{cmb}}$ > {cmb}'] = rdf
 
     for prc in [0.2, 0.4, 0.6]:
-        rdf = rdf.Filter(f'mva.mva_prc > {prc}')
+        rdf = rdf.Filter(f'mva_prc > {prc}')
         d_rdf [f'$MVA_{{prc}}$ > {prc}'] = rdf
 
     return d_rdf
-# ---------------------------------
-@gut.timeit
-def _q2cut_from_q2bin(q2bin : str) -> str:
-    cfg = load_selection_config()
-    cut = cfg['q2_common'][q2bin]
-
-    return cut
 # ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make plots')
@@ -100,7 +103,6 @@ def _parse_args() -> None:
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
-    Data.q2_cut = _q2cut_from_q2bin(args.q2bin)
     Data.trigger= Data.trigger_mm if args.chanel == 'mm' else Data.trigger_ee
     Data.chanel = args.chanel
     Data.version= args.version
@@ -140,19 +142,16 @@ def _add_reso_q2(cfg : dict) -> dict:
 
     return cfg
 # ---------------------------------
-def _get_cuts(cfg : dict) -> dict:
-    if Data.q2_bin not in cfg['selection']:
-        return {'q2' : Data.q2_cut}
-
-    d_cut       = cfg['selection'][Data.q2_bin]
-    d_cut['q2'] = Data.q2_bin
+def _get_cuts() -> dict:
+    d_cut = sel.selection(project='RK', analysis='EE', q2bin=Data.q2_bin, process=Data.process)
+    del d_cut['bdt']
 
     return d_cut
 # ---------------------------------
 def _override_cfg(cfg : dict) -> dict:
     plt_dir                    = cfg['saving']['plt_dir']
     cfg['saving']['plt_dir']   = f'{plt_dir}/{Data.trigger}'
-    cfg['selection']['cuts']   = _get_cuts(cfg)
+    cfg['selection']['cuts']   = _get_cuts()
     cfg['style']['skip_lines'] = Data.chanel == 'mm'
 
     if Data.q2_bin in Data.d_reso:
