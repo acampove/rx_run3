@@ -4,6 +4,7 @@ Module containing unit tests for CVClassifier
 
 import os
 
+import yaml
 import numpy
 import joblib
 import pandas  as pnd
@@ -125,6 +126,25 @@ def test_properties():
 
     log.info(f'Found features: {l_feat}')
     log.info(f'Found hashes: {nhash}')
+# -------------------------------------------------
+def test_save_config():
+    '''
+    Test saving of config 
+    '''
+
+    cfg_inp = ut.get_config('ml/tests/train_mva.yaml')
+    df_ft, l_lab = _get_train_input()
+
+    model= cls(cfg=cfg_inp)
+    model.fit(df_ft, l_lab)
+
+    config_path = f'{Data.out_dir}/save/config.yaml'
+    model.save_cfg(path=config_path)
+
+    with open(config_path, encoding='utf-8') as ifile:
+        cfg_out = yaml.safe_load(ifile)
+
+    assert cfg_inp == cfg_out
 # -------------------------------------------------
 def main():
     '''
