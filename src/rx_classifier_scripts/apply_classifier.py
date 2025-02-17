@@ -199,7 +199,9 @@ def _get_paths() -> list[str]:
 
     d_trigger = d_sample[Data.sample]
     if Data.trigger not in d_trigger:
-        raise ValueError(f'Cannot find {Data.sample} among triggers for sample {Data.sample}')
+        for trigger in d_trigger:
+            log.info(trigger)
+        raise ValueError(f'Cannot find {Data.trigger} among triggers for sample {Data.sample}')
 
     l_path = d_trigger[Data.trigger]
     npath  = len(l_path)
