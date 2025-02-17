@@ -94,10 +94,9 @@ def _get_selection(chan : str, proj: str, q2_bin : str) -> dict[str,str]:
             raise ValueError(f'Cannot find q2bin {q2_bin} in {cut_name} section')
 
         cut_val = d_q2bin[q2_bin]
+        log.debug(f'Overriding {cut_name} for {q2_bin}')
 
         d_new[cut_name] = cut_val
 
-    cfg[proj][chan] = d_new
-
-    return d_cut
+    return d_new
 #-----------------------
