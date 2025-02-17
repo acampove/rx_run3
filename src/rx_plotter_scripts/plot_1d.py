@@ -140,10 +140,19 @@ def _add_reso_q2(cfg : dict) -> dict:
 
     return cfg
 # ---------------------------------
+def _get_cuts(cfg : dict) -> dict:
+    if Data.q2_bin not in cfg['selection']:
+        return {'q2' : Data.q2_cut}
+
+    d_cut       = cfg['selection'][Data.q2_bin]
+    d_cut['q2'] = Data.q2_bin
+
+    return d_cut
+# ---------------------------------
 def _override_cfg(cfg : dict) -> dict:
     plt_dir                    = cfg['saving']['plt_dir']
     cfg['saving']['plt_dir']   = f'{plt_dir}/{Data.trigger}'
-    cfg['selection']['cuts']   = {'q2' : Data.q2_cut}
+    cfg['selection']['cuts']   = _get_cuts(cfg)
     cfg['style']['skip_lines'] = Data.chanel == 'mm'
 
     if Data.q2_bin in Data.d_reso:
