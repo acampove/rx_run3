@@ -21,56 +21,54 @@ class Data:
     '''
     Class storing shared data
     '''
-    nentries = 3000
 # -------------------------------
-def _double_data(d_data : dict) -> dict:
-    df_1   = pnd.DataFrame(d_data)
-    df_2   = pnd.DataFrame(d_data)
-
+def _double_data(df_1 : pnd.DataFrame) -> pnd.DataFrame:
+    df_2   = df_1.copy()
     df     = pnd.concat([df_1, df_2], axis=0)
 
-    d_data = { name : df[name].to_numpy() for name in df.columns }
-
-    return d_data
+    return df
 # -------------------------------
-def _add_nans(d_data : dict) -> dict:
-    df_good   = pnd.DataFrame(d_data)
-    df_bad    = pnd.DataFrame(d_data)
+def _add_nans(df_good : pnd.DataFrame) -> pnd.DataFrame:
+    log.debug('Adding NaNs')
+    df_bad    = df_good.copy()
     df_bad[:] = numpy.nan
 
     df        = pnd.concat([df_good, df_bad])
-    d_data    = { name : df[name].to_numpy() for name in df.columns }
+    df        = df.reset_index()
 
-    return d_data
+    return df
 # -------------------------------
 def get_rdf(kind : Union[str,None] = None,
             repeated : bool        = False,
+            nentries : int         = 3_000,
             add_nans : bool        = False):
     '''
     Return ROOT dataframe with toy data
     '''
     d_data = {}
     if   kind == 'sig':
-        d_data['w'] = numpy.random.normal(0, 1, size=Data.nentries)
-        d_data['x'] = numpy.random.normal(0, 1, size=Data.nentries)
-        d_data['y'] = numpy.random.normal(0, 1, size=Data.nentries)
-        d_data['z'] = numpy.random.normal(0, 1, size=Data.nentries)
+        d_data['w'] = numpy.random.normal(0, 1, size=nentries)
+        d_data['x'] = numpy.random.normal(0, 1, size=nentries)
+        d_data['y'] = numpy.random.normal(0, 1, size=nentries)
+        d_data['z'] = numpy.random.normal(0, 1, size=nentries)
     elif kind == 'bkg':
-        d_data['w'] = numpy.random.normal(1, 1, size=Data.nentries)
-        d_data['x'] = numpy.random.normal(1, 1, size=Data.nentries)
-        d_data['y'] = numpy.random.normal(1, 1, size=Data.nentries)
-        d_data['z'] = numpy.random.normal(1, 1, size=Data.nentries)
+        d_data['w'] = numpy.random.normal(1, 1, size=nentries)
+        d_data['x'] = numpy.random.normal(1, 1, size=nentries)
+        d_data['y'] = numpy.random.normal(1, 1, size=nentries)
+        d_data['z'] = numpy.random.normal(1, 1, size=nentries)
     else:
         log.error(f'Invalid kind: {kind}')
         raise ValueError
 
+    df = pnd.DataFrame(d_data)
+
     if repeated:
-        d_data = _double_data(d_data)
+        df = _double_data(df)
 
     if add_nans:
-        d_data = _add_nans(d_data)
+        df = _add_nans(df)
 
-    rdf = RDF.FromNumpy(d_data)
+    rdf = RDF.FromPandas(df)
 
     return rdf
 # -------------------------------
