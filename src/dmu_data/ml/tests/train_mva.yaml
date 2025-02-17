@@ -1,6 +1,8 @@
 dataset:
   nan :
-    x : 0
+    x : 1
+    y : 2
+    z : 3
 training :
     nfold    : 3
     features : [x, y, z]
@@ -33,10 +35,6 @@ plotting:
         saving:
             plt_dir : '/tmp/dmu/ml/tests/train_mva/features'
         plots:
-          w :
-            binning : [-4, 4, 100]
-            yscale  : 'linear'
-            labels  : ['w', '']
           x :
             binning : [-4, 4, 100]
             yscale  : 'linear'
