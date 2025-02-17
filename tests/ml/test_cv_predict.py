@@ -14,6 +14,13 @@ from dmu.ml.cv_predict     import CVPredict
 import dmu.testing.utilities as ut
 
 log = LogStore.add_logger('dmu:ml:tests:cv_predict')
+# -------------------------------------------------
+class Data:
+    '''
+    Class used to share attributes
+    '''
+
+    out_dir = '/tmp/dmu/tests/ml/cv_predict'
 #--------------------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _set_logs():
@@ -26,8 +33,8 @@ def _get_models(rdf_sig, rdf_bkg):
     '''
 
     cfg                   = ut.get_config('ml/tests/train_mva.yaml')
-    pkl_path              = 'tests/ml/cv_predict/model.pkl'
-    plt_dir               = 'tests/ml/cv_predict'
+    pkl_path              = f'{Data.out_dir}/model.pkl'
+    plt_dir               = f'{Data.out_dir}/cv_predict'
     cfg['saving']['path'] = pkl_path
     cfg['plotting']['val_dir'] = plt_dir
     cfg['plotting']['features']['saving']['plt_dir'] = plt_dir
