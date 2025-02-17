@@ -73,11 +73,11 @@ class CVPredict:
             log.debug('Not doing any NaN replacement')
             return df
 
-        log.debug(60 * '-')
+        log.info(60 * '-')
         log.info('Doing NaN replacements')
-        log.debug(60 * '-')
+        log.info(60 * '-')
         for var, val in self._d_nan_rep.items():
-            log.debug(f'{var:<20}{"--->":20}{val:<20.3f}')
+            log.info(f'{var:<20}{"--->":20}{val:<20.3f}')
             df[var] = df[var].fillna(val)
 
         return df
