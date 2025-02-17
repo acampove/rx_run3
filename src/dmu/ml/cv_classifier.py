@@ -1,15 +1,15 @@
 '''
 Module holding cv_classifier class
 '''
-
+import os
 from typing                  import Union
 from sklearn.ensemble        import GradientBoostingClassifier
 
+import yaml
 from dmu.logging.log_store import LogStore
 import dmu.ml.utilities    as ut
 
 log = LogStore.add_logger('dmu:ml:CVClassifier')
-
 # ---------------------------------------
 class CVSameData(Exception):
     '''
@@ -60,6 +60,20 @@ class CVClassifier(GradientBoostingClassifier):
         '''
 
         return self._cfg
+    # ----------------------------------
+    def save_cfg(self, path : str):
+        '''
+        Will save configuration used to train this classifier to YAML
+
+        path: Path to YAML file
+        '''
+        dir_name = os.path.dirname(path)
+        os.makedirs(dir_name, exist_ok=True)
+
+        with open(path, 'w', encoding='utf-8') as ofile:
+            yaml.safe_dump(self._cfg, ofile, indent=2)
+
+        log.info(f'Saved config to: {path}')
     # ----------------------------------
     def __str__(self):
         nhash = len(self._s_hash)
