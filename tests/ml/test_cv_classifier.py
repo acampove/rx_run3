@@ -17,6 +17,13 @@ import dmu.testing.utilities as ut
 
 log = LogStore.add_logger('dmu.test.ml.test_cv_classifier')
 # -------------------------------------------------
+class Data:
+    '''
+    Class used to share attributes
+    '''
+
+    out_dir = '/tmp/dmu/tests/ml/cv_classifier'
+# -------------------------------------------------
 def _get_train_input():
     '''
     Will return pandas dataframe with features and list of labels
@@ -51,7 +58,7 @@ def test_save_load():
     cfg   = ut.get_config('ml/tests/train_mva.yaml')
 
     model      = cls(cfg=cfg)
-    model_path = 'tests/ml/CVClassifier/save/model.pkl'
+    model_path = f'{Data.out_dir}/save/model.pkl'
     model_dir  = os.path.dirname(model_path)
     os.makedirs(model_dir, exist_ok=True)
 
@@ -73,7 +80,7 @@ def test_fit():
     model= cls(cfg=cfg)
     model.fit(df_ft, l_lab)
 
-    model_path = 'tests/ml/CVClassifier/fit/model.pkl'
+    model_path = f'{Data.out_dir}/fit/model.pkl'
     model_dir  = os.path.dirname(model_path)
     os.makedirs(model_dir, exist_ok=True)
 
