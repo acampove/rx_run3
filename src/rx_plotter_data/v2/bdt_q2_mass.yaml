@@ -1,7 +1,18 @@
 general:
   size : [18, 10]
 selection:
-  dummy : (1)
+  low:
+    hop  : hop_mass > 4500
+    casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
+    jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
+  central:
+    hop  : hop_mass > 4500
+    casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
+    jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
+  high:
+    hop  : hop_mass > 3000 
+    casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
+    jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
 saving:
   plt_dir : plots/bdt_q2_mass
 plots:
@@ -17,14 +28,14 @@ plots:
         labels     : ['M$(B^+)$', 'Entries']
         title      : ''
         name       : 'bmass'
-    mva.mva_cmb:
+    mva_cmb:
         binning    : [0, 1, 50]
         yscale     : 'linear'
         labels     : ['Signal Probability', 'Entries']
         title      : 'Combinatorial MVA'
         name       : 'cmb'
         normalized : true
-    mva.mva_prc:
+    mva_prc:
         binning    : [0, 1, 50]
         yscale     : 'linear'
         labels     : ['Signal Probability', 'Entries']
