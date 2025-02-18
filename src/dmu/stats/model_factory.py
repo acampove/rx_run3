@@ -37,7 +37,16 @@ class MethodRegistry:
         '''
         Will return method in charge of building PDF, for an input nickname
         '''
-        return cls._d_method.get(nickname, None)
+        method = cls._d_method.get(nickname, None)
+
+        if method is not None:
+            return method
+
+        log.warning('Available PDFs:')
+        for value in cls._d_method:
+            log.info(f'    {value}')
+
+        return method
 #-----------------------------------------
 class ModelFactory:
     '''
