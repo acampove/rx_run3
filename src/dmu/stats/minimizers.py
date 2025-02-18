@@ -1,9 +1,12 @@
 '''
 Module containing derived classes from ZFit minimizer
 '''
+from typing import Union
 import numpy
 
 import zfit
+import matplotlib.pyplot as plt
+
 from zfit.result                   import FitResult
 from zfit.core.basepdf             import BasePDF           as zpdf
 from zfit.minimizers.baseminimizer import FailMinimizeNaN
@@ -149,6 +152,15 @@ class AnealingMinimizer(zfit.minimize.Minuit):
 
         return l_model[0]
     # ------------------------
+    def _print_failed_fit_diagnostics(self, nll) -> None:
+        for res in self._l_bad_fit_res:
+            print(res)
+
+        arr_mass = nll.data[0].numpy()
+
+        plt.hist(arr_mass, bins=60)
+        plt.show()
+    # ------------------------
     def minimize(self, nll, **kwargs) -> FitResult:
         '''
         Will run minimization and return FitResult object
@@ -176,6 +188,10 @@ class AnealingMinimizer(zfit.minimize.Minuit):
             self._randomize_parameters(nll)
 
         res = self._pick_best_fit(d_chi2_res)
+        if res is None:
+            self._print_failed_fit_diagnostics(nll)
+            raise ValueError('Fit failed')
+
         pdf = self._pdf_from_nll(nll)
         self._set_pdf_pars(res, pdf)
 
