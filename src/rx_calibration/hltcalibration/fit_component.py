@@ -194,7 +194,8 @@ class FitComponent:
     # --------------------
     def _get_kde_pdf(self, pars_path : str) -> BasePDF:
         data = self._get_data()
-        pdf  = zfit.pdf.KDE1DimFFT(data)
+        d_pad= {'lowermirror' : 0.2, 'uppermirror' : 0.2}
+        pdf  = zfit.pdf.KDE1DimFFT(data, padding=d_pad)
 
         self._plot_fit(data, pdf)
 
