@@ -69,6 +69,9 @@ class TrainMva:
         return df, arr_lab
     # ---------------------------------------------
     def _pre_process_nans(self, df : pnd.DataFrame) -> pnd.DataFrame:
+        if 'dataset' not in self._cfg:
+            return df
+
         if 'nan' not in self._cfg['dataset']:
             log.debug('dataset/nan section not found, not pre-processing NaNs')
             return df
@@ -406,6 +409,9 @@ class TrainMva:
         self._save_hyperparameters_to_tex()
     # ---------------------------------------------
     def _save_nan_conversion(self) -> None:
+        if 'dataset' not in self._cfg:
+            return
+
         if 'nan' not in self._cfg['dataset']:
             log.debug('NaN section not found, not saving it')
             return
