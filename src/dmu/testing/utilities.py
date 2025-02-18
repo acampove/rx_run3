@@ -29,14 +29,20 @@ def _double_data(df_1 : pnd.DataFrame) -> pnd.DataFrame:
 
     return df
 # -------------------------------
-def _add_nans(df : pnd.DataFrame) -> pnd.DataFrame:
+def _add_nans(df : pnd.DataFrame, columns : list[str]) -> pnd.DataFrame:
     size = len(df) * 0.2
     size = math.floor(size)
+
+    l_col = df.columns.tolist()
+    if columns is None:
+        l_col_index = range(len(l_col))
+    else:
+        l_col_index = [ l_col.index(column) for column in columns ]
 
     log.debug('Replacing randomly with {size} NaNs')
     for _ in range(size):
         irow = numpy.random.randint(0, df.shape[0])      # Random row index
-        icol = numpy.random.randint(0, df.shape[1])      # Random column index
+        icol = numpy.random.choice(l_col_index)      # Random column index
 
         df.iat[irow, icol] = numpy.nan
 
@@ -45,10 +51,11 @@ def _add_nans(df : pnd.DataFrame) -> pnd.DataFrame:
 def get_rdf(kind : Union[str,None] = None,
             repeated : bool        = False,
             nentries : int         = 3_000,
-            add_nans : bool        = False):
+            add_nans : list[str]   = None):
     '''
     Return ROOT dataframe with toy data
     '''
+
     d_data = {}
     if   kind == 'sig':
         d_data['w'] = numpy.random.normal(0, 1, size=nentries)
@@ -70,7 +77,7 @@ def get_rdf(kind : Union[str,None] = None,
         df = _double_data(df)
 
     if add_nans:
-        df = _add_nans(df)
+        df = _add_nans(df, columns=add_nans)
 
     rdf = RDF.FromPandas(df)
 
