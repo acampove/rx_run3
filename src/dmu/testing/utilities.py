@@ -2,6 +2,7 @@
 Module containing utility functions needed by unit tests
 '''
 import os
+import math
 from typing              import Union
 from dataclasses         import dataclass
 from importlib.resources import files
@@ -28,13 +29,16 @@ def _double_data(df_1 : pnd.DataFrame) -> pnd.DataFrame:
 
     return df
 # -------------------------------
-def _add_nans(df_good : pnd.DataFrame) -> pnd.DataFrame:
-    log.debug('Adding NaNs')
-    df_bad    = df_good.copy()
-    df_bad[:] = numpy.nan
+def _add_nans(df : pnd.DataFrame) -> pnd.DataFrame:
+    size = len(df) * 0.2
+    size = math.floor(size)
 
-    df        = pnd.concat([df_good, df_bad])
-    df        = df.reset_index()
+    log.debug('Replacing randomly with {size} NaNs')
+    for _ in range(size):
+        irow = numpy.random.randint(0, df.shape[0])      # Random row index
+        icol = numpy.random.randint(0, df.shape[1])      # Random column index
+
+        df.iat[irow, icol] = numpy.nan
 
     return df
 # -------------------------------
