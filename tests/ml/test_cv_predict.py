@@ -24,9 +24,10 @@ class Data:
     out_dir = '/tmp/dmu/tests/ml/cv_predict'
 #--------------------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _set_logs():
+def _initialize():
     LogStore.set_level('dmu:ml:cv_predict', 10)
     LogStore.set_level('dmu:ml:utilities' , 10)
+    LogStore.set_level('dmu:ml:train_mva' , 20)
 #--------------------------------------------------------------------
 def _check_probabilities(arr_prb : numpy) -> None:
     n_above = int(numpy.sum(arr_prb > 1))
