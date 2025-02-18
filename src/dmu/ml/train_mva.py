@@ -77,14 +77,15 @@ class TrainMva:
             return df
 
         d_name_val = self._cfg['dataset']['nan']
-        log.info(60 * '-')
+        log.info(70 * '-')
         log.info('Doing NaN replacements')
-        log.info(60 * '-')
+        log.info(70 * '-')
         for var, val in d_name_val.items():
             nna = df[var].isna().sum()
 
             log.info(f'{var:<20}{"--->":20}{val:<20.3f}{nna}')
             df[var] = df[var].fillna(val)
+        log.info(70 * '-')
 
         return df
     # ---------------------------------------------
