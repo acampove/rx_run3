@@ -34,6 +34,10 @@ plotting:
         saving:
             plt_dir : '/tmp/dmu/ml/tests/train_mva/features'
         plots:
+          w :
+            binning : [-4, 4, 100]
+            yscale  : 'linear'
+            labels  : ['w', '']
           x :
             binning : [-4, 4, 100]
             yscale  : 'linear'
@@ -46,4 +50,3 @@ plotting:
             binning : [-4, 4, 100]
             yscale  : 'linear'
             labels  : ['z', '']
-
