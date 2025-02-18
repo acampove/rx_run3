@@ -53,24 +53,21 @@ hyper               :
 # ----------------------------------
 dataset :
   columns:
+    - B_M
+    - Jpsi_M
     - swp_cascade_mass_swp
     - swp_jpsi_misid_mass_swp
     - hop_mass
     - mva_cmb
-    - B_M
     - B_PT
     - B_IPCHI2_OWNPV
-    - Jpsi_M
-    - B_HEAD_CC_B_ChargedIso_DR2_0p15_CMULT
     - B_HEAD_CC_B_ChargedIso_DR2_0p15_CP
     - B_HEAD_CC_B_ChargedIso_DR2_0p15_PTASY
-    - B_HEAD_NC_B_NeutralIso_DR2_0p15_CMULT
     - B_HEAD_NC_B_NeutralIso_DR2_0p15_CP
     - B_HEAD_NC_B_NeutralIso_DR2_0p15_PTASY
     - B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
     - B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
     - Jpsi_IPCHI2_OWNPV 
-    - Jpsi_DIRA_OWNPV
     - B_DIRA_OWNPV
     - H_PT
     - L1_IPCHI2_OWNPV
