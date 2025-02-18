@@ -55,8 +55,8 @@ class FitComponent:
 
         self._rdf       = rdf
         self._pdf       = pdf
-        self._obs       = self._pdf.space
-        self._obs_name, = self._pdf.obs
+        self._obs       = obs if pdf is None else pdf.space
+        self._obs_name, = self._obs.obs
         self._minimizer = self._get_minimizer()
     # --------------------
     def _get_minimizer(self) -> Union[AnealingMinimizer,None]:
