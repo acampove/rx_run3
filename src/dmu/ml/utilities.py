@@ -75,10 +75,10 @@ def _remove_repeated(df : pnd.DataFrame) -> pnd.DataFrame:
     nfinl = len(s_hash)
 
     if ninit == nfinl:
-        log.debug('No cleaning needed for dataframe')
+        log.debug('No overlap between training and application found')
         return df
 
-    log.warning(f'Repeated entries found, cleaning up: {ninit} -> {nfinl}')
+    log.warning(f'Overlap between training and application found, cleaning up: {ninit} -> {nfinl}')
 
     df['hash_index'] = l_hash
     df               = df.set_index('hash_index', drop=True)
