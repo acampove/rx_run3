@@ -54,7 +54,11 @@ class RDFGetter:
         if nfile <= 0:
             raise ValueError(f'No files found in: {path}')
 
-        log.debug(f'Using {nfile} files from {path}')
+        log.info(f'Using {nfile} files from:')
+        log.info(f'{"Path   ":<15}{path}')
+        log.info(f'{"Sample ":<15}{self._sample}')
+        log.info(f'{"Trigger":<15}{self._trigger}')
+        log.info('')
 
         return { path : self._treename for path in l_path }
     # ------------------------------------
