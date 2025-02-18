@@ -44,7 +44,13 @@ class FitComponent:
     ```
     '''
     # --------------------
-    def __init__(self, cfg : dict, rdf : Union[RDataFrame,None], pdf : BasePDF):
+    def __init__(self, cfg : dict, rdf : Union[RDataFrame,None], pdf : Union[BasePDF,None], obs = None):
+        '''
+        obs: ZfitSpace instance, not needed unless no PDF was passed
+        '''
+        if rdf is None and pdf is None:
+            raise ValueError('Both PDF and RDataFrame missing')
+
         self._name      = cfg['name']
         self._fit_cfg   = cfg['fitting' ] if 'fitting'  in cfg else None
         self._plt_cfg   = cfg['plotting'] if 'plotting' in cfg else None
