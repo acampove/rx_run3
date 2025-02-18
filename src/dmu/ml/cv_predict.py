@@ -173,7 +173,7 @@ class CVPredict:
             return arr_prb
 
         nentries = len(self._arr_patch)
-        log.warning(f'Patching {nentries} probabilities')
+        log.warning(f'Patching {nentries} probabilities with -1')
         arr_prb[self._arr_patch] = -1
 
         return arr_prb
