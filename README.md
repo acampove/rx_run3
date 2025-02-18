@@ -407,7 +407,7 @@ rdf_bkg = _get_rdf(kind='bkg')
 cfg     = _get_config()
 
 obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
-obj.run()
+obj.run(skip_fit=False) # by default it will be false, if true, it will only make plots of features
 ```
 
 where the settings for the training go in a config dictionary, which when written to YAML looks like:
