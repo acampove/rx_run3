@@ -48,8 +48,26 @@ class TrainMva:
         self._df_ft = pnd.concat([df_ft_sig, df_ft_bkg], axis=0)
         self._l_lab = numpy.array(l_lab_sig + l_lab_bkg)
 
-        self._rdf_bkg = RDF.FromPandas(df_ft_bkg)
-        self._rdf_sig = RDF.FromPandas(df_ft_sig)
+        self._rdf_bkg = self._get_rdf(rdf = bkg, df=df_ft_bkg)
+        self._rdf_sig = self._get_rdf(rdf = sig, df=df_ft_sig)
+    # ---------------------------------------------
+    def _get_rdf(self, rdf : RDataFrame, df : pnd.DataFrame) -> RDataFrame:
+        '''
+        Takes original ROOT dataframe and pre-processed features dataframe
+        Adds missing branches to latter and returns expanded ROOT dataframe
+        '''
+
+        l_pnd_col = df.columns.tolist()
+        l_rdf_col = [ name.c_str() for name in rdf.GetColumnNames() ]
+        l_mis_col = [ col for col in l_rdf_col if col not in l_pnd_col ]
+
+        log.info(f'Adding extra-nonfeature columns: {l_mis_col}')
+
+        d_data = rdf.AsNumpy(l_mis_col)
+        df_ext = pnd.DataFrame(d_data)
+        df_all = pnd.concat([df, df_ext], axis=1)
+
+        return RDF.FromPandas(df_all)
     # ---------------------------------------------
     def _pre_process_nans(self, df : pnd.DataFrame) -> pnd.DataFrame:
         if 'dataset' not in self._cfg:
