@@ -1,7 +1,7 @@
 '''
 Module with TrainMva class
 '''
-# pylint: disable = too-many-locals
+# pylint: disable = too-many-locals, no-name-in-module
 # pylint: disable = too-many-arguments, too-many-positional-arguments
 
 import os
@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics         import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 
-from ROOT import RDataFrame
+from ROOT import RDataFrame, RDF
 
 import dmu.ml.utilities         as ut
 import dmu.pdataframe.utilities as put
@@ -33,40 +33,23 @@ class TrainMva:
     Interface to scikit learn used to train classifier
     '''
     # ---------------------------------------------
-    def __init__(self, bkg=None, sig=None, cfg=None):
+    def __init__(self, bkg : RDataFrame, sig : RDataFrame, cfg : dict):
         '''
         bkg (ROOT dataframe): Holds real data
         sig (ROOT dataframe): Holds simulation
         cfg (dict)          : Dictionary storing configuration for training
         '''
-        if bkg is None:
-            raise ValueError('Background dataframe is not a ROOT dataframe')
-
-        if sig is None:
-            raise ValueError('Signal dataframe is not a ROOT dataframe')
-
-        if not isinstance(cfg, dict):
-            raise ValueError('Config dictionary is not a dictionary')
-
-        self._rdf_bkg = bkg
-        self._rdf_sig = sig
-        self._cfg     = cfg
-
+        self._cfg       = cfg
         self._l_ft_name = self._cfg['training']['features']
 
-        self._df_ft, self._l_lab = self._get_inputs()
-    # ---------------------------------------------
-    def _get_inputs(self) -> tuple[pnd.DataFrame, npa]:
-        log.info('Getting signal')
-        df_sig, arr_lab_sig = self._get_sample_inputs(self._rdf_sig, label = 1)
+        df_ft_sig, l_lab_sig = self._get_sample_inputs(rdf = sig, label = 1)
+        df_ft_bkg, l_lab_bkg = self._get_sample_inputs(rdf = bkg, label = 0)
 
-        log.info('Getting background')
-        df_bkg, arr_lab_bkg = self._get_sample_inputs(self._rdf_bkg, label = 0)
+        self._df_ft = pnd.concat([df_ft_sig, df_ft_bkg], axis=0)
+        self._l_lab = numpy.array(l_lab_sig + l_lab_bkg)
 
-        df      = pnd.concat([df_sig, df_bkg], axis=0)
-        arr_lab = numpy.concatenate([arr_lab_sig, arr_lab_bkg])
-
-        return df, arr_lab
+        self._rdf_bkg = RDF.FromPandas(df_ft_bkg)
+        self._rdf_sig = RDF.FromPandas(df_ft_sig)
     # ---------------------------------------------
     def _pre_process_nans(self, df : pnd.DataFrame) -> pnd.DataFrame:
         if 'dataset' not in self._cfg:
@@ -96,7 +79,7 @@ class TrainMva:
         df   = ut.cleanup(df)
         l_lab= len(df) * [label]
 
-        return df, numpy.array(l_lab)
+        return df, l_lab
     # ---------------------------------------------
     def _get_model(self, arr_index : npa) -> cls:
         model = cls(cfg = self._cfg)
