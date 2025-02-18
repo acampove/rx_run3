@@ -101,11 +101,9 @@ dataset :
     sqrt_ipchi2 : TMath::Sqrt(B_IPCHI2_OWNPV) 
     acos_dira   : TMath::ACos(B_DIRA_OWNPV)
     # ----------
-    iso_cc_mult : B_HEAD_CC_B_ChargedIso_DR2_0p15_CMULT
     iso_cc_mom  : B_HEAD_CC_B_ChargedIso_DR2_0p15_CP
     iso_cc_ptasy: B_HEAD_CC_B_ChargedIso_DR2_0p15_PTASY
 
-    iso_nc_mult : B_HEAD_NC_B_NeutralIso_DR2_0p15_CMULT
     iso_nc_mom  : B_HEAD_NC_B_NeutralIso_DR2_0p15_CP
     iso_nc_ptasy: B_HEAD_NC_B_NeutralIso_DR2_0p15_PTASY
 
@@ -117,9 +115,7 @@ dataset :
     min_ll_ipc  : TMath::Min(TMath::Sqrt(L1_IPCHI2_OWNPV), TMath::Sqrt(L2_IPCHI2_OWNPV))
   nan :
     iso_one_mass :  3000
-    iso_two_mass :  3000
     iso_one_dchi : -1
-    iso_two_dchi : -1
     iso_cc_mom   : -10000
     iso_nc_mom   : -10000
 training :
