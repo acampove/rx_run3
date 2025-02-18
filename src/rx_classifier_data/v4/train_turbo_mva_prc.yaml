@@ -118,6 +118,13 @@ dataset :
     sqrt_jipchi2: TMath::Sqrt(Jpsi_IPCHI2_OWNPV) 
     log_h_pt    : TMath::Log(H_PT)
     min_ll_ipc  : TMath::Min(TMath::Sqrt(L1_IPCHI2_OWNPV), TMath::Sqrt(L2_IPCHI2_OWNPV))
+  nan :
+    iso_one_mass :  3000
+    iso_two_mass :  3000
+    iso_one_dchi : -1
+    iso_two_dchi : -1
+    iso_cc_mom   : -10000
+    iso_nc_mom   : -10000
 training :
   nfold    : 10
   rdm_stat : 1
