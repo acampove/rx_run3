@@ -105,8 +105,9 @@ class RDFGetter:
         '''
 
         df_totl = None
+        # Kind = hop, mva, main...
         for kind, path in RDFGetter.samples.items():
-            log.debug(f'Building chain for {kind} category')
+            log.info(f'Building chain for {kind} category')
             df_part = self._get_df(path=path, columns=columns)
             if df_totl is None:
                 df_totl = df_part
