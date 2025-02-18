@@ -83,11 +83,11 @@ dataset :
       jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
       mva  : mva_cmb > 0.7
   paths:
-    main : /home/acampove/external_ssd/Data/samples/main.yaml
-    mva  : /home/acampove/external_ssd/Data/samples/mva.yaml
+    mva  : /home/acampove/external_ssd/Data/samples/mva_v1.yaml # Use first version of MVA to clean for combinatorial, to train second version of PRC MVA
     hop  : /home/acampove/external_ssd/Data/samples/hop.yaml
     jmis : /home/acampove/external_ssd/Data/samples/jpsi_misid.yaml
     casc : /home/acampove/external_ssd/Data/samples/cascade.yaml
+    main : /home/acampove/external_ssd/Data/samples/main.yaml 
   samples:
     sig :
       sample : Bu_Kee_eq_btosllball05_DPC
