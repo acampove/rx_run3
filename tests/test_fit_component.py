@@ -69,3 +69,13 @@ def test_real_pdf():
     obj= FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
     _  = obj.run()
 # --------------------------------------------
+def test_kde_pdf():
+    '''
+    Test using KDE 
+    '''
+    pdf= tut.get_signal_pdf(obs=Data.obs)
+    rdf= tut.rdf_from_pdf(pdf=pdf, nentries=Data.nentries)
+    cfg= _get_conf('kde')
+
+    obj= FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
+    _  = obj.run()
