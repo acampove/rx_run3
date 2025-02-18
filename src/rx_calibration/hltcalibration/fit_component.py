@@ -192,17 +192,28 @@ class FitComponent:
 
             log.info(f'{name:<20}{"-->":<20}{val:<20.3f}')
     # --------------------
+    def _get_kde_pdf(self, pars_path : str) -> BasePDF:
+        data = self._get_data()
+        pdf  = zfit.pdf.KDE1DimFFT(data)
+
+        self._plot_fit(data, pdf)
+
+        return pdf
+    # --------------------
     def run(self) -> Parameter:
         '''
         Will return the PDF
         '''
-        if self._fit_cfg is None:
-            return self._pdf
+        pars_path= f'{self._out_dir}/{self._name}.json'
+
+        if self._pdf is None:
+            log.info('PDF not found, building KDE')
+            return self._get_kde_pdf(pars_path)
 
         if self._rdf is None:
-            raise ValueError('Dataframe not found but fit configuration pased, cannot fit')
+            log.info('Dataset not found, returning not fitted PDF')
+            return self._pdf
 
-        pars_path= f'{self._out_dir}/{self._name}.json'
         if not os.path.isfile(pars_path):
             data=self._get_data()
             par = self._fit(data)
