@@ -61,7 +61,7 @@ class TrainMva:
         l_rdf_col = [ name.c_str() for name in rdf.GetColumnNames() ]
         l_mis_col = [ col for col in l_rdf_col if col not in l_pnd_col ]
 
-        log.info(f'Adding extra-nonfeature columns: {l_mis_col}')
+        log.debug(f'Adding extra-nonfeature columns: {l_mis_col}')
 
         d_data = rdf.AsNumpy(l_mis_col)
         df_ext = pnd.DataFrame(d_data)
