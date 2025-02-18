@@ -24,7 +24,7 @@ class Data:
     dat_dir   = '/publicfs/ucas/user/campoverde/Data/RX_run3/for_tests/post_ap'
     nentries  = 5_000
     mass_name = 'mass'
-    obs       = zfit.Space(mass_name, limits=(4800, 6000))
+    obs       = zfit.Space(mass_name, limits=(5200, 5400))
 # --------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -33,8 +33,8 @@ def _initialize():
 # --------------------------------------------
 def _get_conf(name : str) -> dict:
     return {
-            'name'   : 'signal',
-            'out_dir':f'/tmp/rx_calibration/tests/fit_component/{name}',
+            'name'   : name,
+            'out_dir': f'/tmp/rx_calibration/tests/fit_component/{name}',
             'fitting':
             {
                 'error_method'  : 'minuit_hesse',
@@ -51,9 +51,9 @@ def test_toy_pdf():
     '''
     Simplest test of MCFitter
     '''
-    pdf= tut.get_toy_pdf(kind='signal', obs=Data.obs)
+    pdf= tut.get_toy_pdf(kind='sign', obs=Data.obs)
     rdf= tut.rdf_from_pdf(pdf=pdf, nentries=Data.nentries)
-    cfg= _get_conf('simple')
+    cfg= _get_conf('toy')
 
     obj=FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
     _  =obj.run()
