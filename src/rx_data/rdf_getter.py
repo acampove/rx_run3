@@ -130,12 +130,17 @@ class RDFGetter:
 
         return df
     # ------------------------
-    def get_rdf(self, columns : set[str]) -> RDataFrame:
+    def get_rdf(self, columns : set[str], fillna : int = None) -> RDataFrame:
         '''
         Returns pandas dataframe with a given set of columns
+
+        fillna: By default nan's will not be touched, if this is set to a value, NaNs will be replaced
         '''
         df     = self.get_df(columns)
-        df     = df.fillna(-999)
+        if fillna is not None:
+            log.info(f'Replacing NaNs with {fillna}')
+            df     = df.fillna(fillna)
+
         d_nump = { name : df[name].to_numpy() for name in df }
         rdf    = RDF.FromNumpy(d_nump)
 
