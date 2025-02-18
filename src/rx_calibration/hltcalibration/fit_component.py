@@ -25,7 +25,10 @@ class FitComponent:
     '''
     Class meant to represent a fitting component
 
-    It will take the PDF and optionally a ROOT dataframe modelling the corresponding component in MC.
+    It will take:
+
+    PDF: To fit to data and fix tails, if not passed, will use KDE
+    ROOT dataframe: Modelling the corresponding component in MC, if not passed, will not fit anything and parameters will float
     If the dataframe is passed, it will fit the PDF and fix the parameters whose names do not end with
     `_flt`. It can also plot the fit. The configuration looks like:
 
