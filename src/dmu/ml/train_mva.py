@@ -90,7 +90,7 @@ class TrainMva:
 
         return df
     # ---------------------------------------------
-    def _get_sample_inputs(self, rdf : RDataFrame, label : int) -> tuple[pnd.DataFrame, npa]:
+    def _get_sample_inputs(self, rdf : RDataFrame, label : int) -> tuple[pnd.DataFrame, list[int]]:
         d_ft = rdf.AsNumpy(self._l_ft_name)
         df   = pnd.DataFrame(d_ft)
         df   = self._pre_process_nans(df)
