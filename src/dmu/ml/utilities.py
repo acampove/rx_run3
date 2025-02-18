@@ -31,7 +31,7 @@ def patch_and_tag(df : pnd.DataFrame, value : float = 0) -> pnd.DataFrame:
     df_nan_frq = df_nan_frq[df_nan_frq > 0]
     print(df_nan_frq)
 
-    log.warning(f'Patching them with {value}')
+    log.warning(f'Attaching array with NaN {nnan} indexes and removing NaNs from dataframe')
 
     df_pa = df.fillna(value)
 
@@ -63,7 +63,7 @@ def _remove_nans(df : pnd.DataFrame) -> pnd.DataFrame:
     log.info('Found columns with NaNs')
     for name in l_na_name:
         nan_count = df[name].isna().sum()
-        log.info(f'{nan_count:<10}{name:<100}')
+        log.info(f'{nan_count:<10}{name}')
 
     ninit = len(df)
     df    = df.dropna()
