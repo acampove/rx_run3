@@ -152,7 +152,7 @@ plotting:
       iso_cc_mom:
         normalized : true
         yscale  : 'linear'
-        binning : [-10000, 200000, 40]
+        binning : [-20000, 200000, 40]
         labels  : ['Iso$_{CC}^P(B^+)$MeV', '']
       iso_cc_ptasy:
         normalized : true
@@ -163,7 +163,7 @@ plotting:
       iso_nc_mom:
         normalized : true
         yscale  : 'linear'
-        binning : [0, 200000, 40]
+        binning : [-20000, 100000, 40]
         labels  : ['Iso$_{NC}^P(B^+)$MeV', '']
       iso_nc_ptasy:
         normalized : true
@@ -173,13 +173,13 @@ plotting:
       # --------------------
       iso_one_mass:
         normalized : true
-        binning : [3000, 8000, 40]
+        binning : [2000, 8000, 40]
         yscale  : 'linear'
         labels  : ['Iso$_{mass}^{1Trk}(B^+)$', '']
       # --------------------
       iso_one_dchi:
         normalized : true
-        binning : [-1, 15, 40]
+        binning : [-3, 15, 40]
         yscale  : 'linear'
         labels  : ['Iso$_{\Delta\chi^2}^{1Trk}(B^+)$', '']
       # --------------------
