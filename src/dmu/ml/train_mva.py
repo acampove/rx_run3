@@ -77,9 +77,12 @@ class TrainMva:
             return df
 
         d_name_val = self._cfg['dataset']['nan']
-        for name, val in d_name_val.items():
-            log.debug(f'{val:<20}{"<---":<10}{name:<100}')
-            df[name] = df[name].fillna(val)
+        log.info(60 * '-')
+        log.info('Doing NaN replacements')
+        log.info(60 * '-')
+        for var, val in d_name_val.items():
+            log.info(f'{var:<20}{"--->":20}{val:<20.3f}')
+            df[var] = df[var].fillna(val)
 
         return df
     # ---------------------------------------------
