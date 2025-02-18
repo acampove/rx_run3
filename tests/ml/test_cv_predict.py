@@ -29,18 +29,22 @@ def _initialize():
     LogStore.set_level('dmu:ml:utilities' , 10)
     LogStore.set_level('dmu:ml:train_mva' , 20)
 #--------------------------------------------------------------------
-def _check_probabilities(arr_prb : numpy) -> None:
+def _check_probabilities(arr_prb : numpy, has_negative : bool) -> None:
     n_above = int(numpy.sum(arr_prb > 1))
     n_below = int(numpy.sum(arr_prb < 0))
 
     if n_above != 0:
         log.error(f'Found {n_above} elements above 1')
 
-    if n_below != 0:
-        log.error(f'Found {n_above} elements below 0')
+    if n_below != 0 and not has_negative:
+        log.error(f'Found {n_below} elements below 0')
 
     assert n_above == 0
-    assert n_below == 0
+
+    if has_negative:
+        assert n_below >  0
+    else:
+        assert n_below == 0
 #--------------------------------------------------------------------
 def _get_models(rdf_sig, rdf_bkg):
     '''
@@ -90,23 +94,41 @@ def test_overlap():
     cvp     = CVPredict(models=l_model, rdf=rdf_sig)
     cvp.predict()
 #--------------------------------------------------------------------
-def test_patch_and_tag():
+def test_patch():
     '''
-    Tests prediction when input dataset needs to be cleaned
+    Prediction with training and application datasets where all NaNs are cleaned 
     '''
     log.info('')
 
     LogStore.set_level('dmu:ml:cv_predict', 10)
     LogStore.set_level('dmu:ml:train_mva' , 20)
 
-    rdf_sig = ut.get_rdf(kind='sig', add_nans=True)
+    rdf_sig = ut.get_rdf(kind='sig', add_nans=['x', 'y'])
     rdf_bkg = ut.get_rdf(kind='bkg', repeated=True)
     l_model = _get_models(rdf_sig, rdf_bkg)
 
     log.info('Predicting')
 
-    rdf     = ut.get_rdf(kind='sig', add_nans=True)
+    rdf     = ut.get_rdf(kind='sig', add_nans=['x', 'y'])
     cvp     = CVPredict(models=l_model, rdf=rdf)
     arr_prb = cvp.predict()
 
-    _check_probabilities(arr_prb)
+    _check_probabilities(arr_prb, has_negative=False)
+#--------------------------------------------------------------------
+def test_partial_patch():
+    '''
+    Test with input and prediction datasets partially cleaned
+    '''
+    log.info('\nTraining')
+
+    rdf_sig = ut.get_rdf(kind='sig', add_nans=['x', 'y', 'z'])
+    rdf_bkg = ut.get_rdf(kind='bkg', repeated=True)
+    l_model = _get_models(rdf_sig, rdf_bkg)
+
+    log.info('Predicting')
+
+    rdf     = ut.get_rdf(kind='sig', add_nans=['x', 'y', 'z'])
+    cvp     = CVPredict(models=l_model, rdf=rdf)
+    arr_prb = cvp.predict()
+
+    _check_probabilities(arr_prb, has_negative=True)
