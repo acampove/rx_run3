@@ -6,6 +6,7 @@ import glob
 import pytest
 
 import joblib
+import numpy
 
 from dmu.logging.log_store import LogStore
 from dmu.ml.train_mva      import TrainMva
@@ -26,6 +27,19 @@ class Data:
 def _set_logs():
     LogStore.set_level('dmu:ml:cv_predict', 10)
     LogStore.set_level('dmu:ml:utilities' , 10)
+#--------------------------------------------------------------------
+def _check_probabilities(arr_prb : numpy) -> None:
+    n_above = int(numpy.sum(arr_prb > 1))
+    n_below = int(numpy.sum(arr_prb < 0))
+
+    if n_above != 0:
+        log.error(f'Found {n_above} elements above 1')
+
+    if n_below != 0:
+        log.error(f'Found {n_above} elements below 0')
+
+    assert n_above == 0
+    assert n_below == 0
 #--------------------------------------------------------------------
 def _get_models(rdf_sig, rdf_bkg):
     '''
@@ -79,8 +93,11 @@ def test_patch_and_tag():
     '''
     Tests prediction when input dataset needs to be cleaned
     '''
+    log.info('')
 
     LogStore.set_level('dmu:ml:cv_predict', 10)
+    LogStore.set_level('dmu:ml:train_mva' , 20)
+
     rdf_sig = ut.get_rdf(kind='sig', add_nans=True)
     rdf_bkg = ut.get_rdf(kind='bkg', repeated=True)
     l_model = _get_models(rdf_sig, rdf_bkg)
@@ -89,4 +106,6 @@ def test_patch_and_tag():
 
     rdf     = ut.get_rdf(kind='sig', add_nans=True)
     cvp     = CVPredict(models=l_model, rdf=rdf)
-    cvp.predict()
+    arr_prb = cvp.predict()
+
+    _check_probabilities(arr_prb)
