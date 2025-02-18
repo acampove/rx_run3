@@ -529,7 +529,7 @@ When evaluating the model with real data, problems might occur, we deal with the
     ```python
     model.cfg
     ```
-    - For whatever entries that are still NaN, they will be _patched_  with zeros and evaluated. However, before returning, the probabilities will be
+    - For whatever features that are still NaN, they will be _patched_  with zeros when evaluated. However, the returned probabilities will be
 saved as -1. I.e. entries with NaNs will have probabilities of -1.
 
 # Pandas dataframes
