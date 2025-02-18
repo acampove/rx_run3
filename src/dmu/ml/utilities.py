@@ -16,7 +16,7 @@ log = LogStore.add_logger('dmu:ml:utilities')
 # ---------------------------------------------
 def patch_and_tag(df : pnd.DataFrame, value : float = 0) -> pnd.DataFrame:
     '''
-    Takes panda dataframe, replaces NaNs with value introduced, by default 0
+    Takes pandas dataframe, replaces NaNs with value introduced, by default 0
     Returns array of indices where the replacement happened
     '''
     l_nan = df.index[df.isna().any(axis=1)].tolist()
