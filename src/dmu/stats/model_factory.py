@@ -162,8 +162,8 @@ class ModelFactory:
     #-----------------------------------------
     @MethodRegistry.register('dscb')
     def _get_dscb(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('mu_dscb', suffix, 5300, 5100, 5400)
-        sg  = self._get_parameter('sg_dscb', suffix,   10,    2,  300)
+        mu  = self._get_parameter('mu_dscb', suffix, 4000, 4000, 5400)
+        sg  = self._get_parameter('sg_dscb', suffix,   10,    2,  500)
         ar  = self._get_parameter('ar_dscb', suffix,    1,    0,    5)
         al  = self._get_parameter('al_dscb', suffix,    1,    0,    5)
         nr  = self._get_parameter('nr_dscb', suffix,    2,    1,   15)
