@@ -81,7 +81,9 @@ class TrainMva:
         log.info('Doing NaN replacements')
         log.info(60 * '-')
         for var, val in d_name_val.items():
-            log.info(f'{var:<20}{"--->":20}{val:<20.3f}')
+            nna = df[var].isna().sum()
+
+            log.info(f'{var:<20}{"--->":20}{val:<20.3f}{nna}')
             df[var] = df[var].fillna(val)
 
         return df
