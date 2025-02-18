@@ -32,6 +32,7 @@ class AnealingMinimizer(zfit.minimize.Minuit):
         self._chi2ndof = chi2ndof
 
         self._check_thresholds()
+        self._l_bad_fit_res : list[FitResult] = []
 
         super().__init__()
     # ------------------------
@@ -69,19 +70,24 @@ class AnealingMinimizer(zfit.minimize.Minuit):
         return is_good
     # ------------------------
     def _is_good_fit(self, res : FitResult) -> bool:
+        good_fit = True
+
         if not res.valid:
             log.warning('Skipping invalid fit')
-            return False
+            good_fit = False
 
         if res.status != 0:
             log.warning('Skipping fit with bad status')
-            return False
+            good_fit = False
 
         if not res.converged:
             log.warning('Skipping non-converging fit')
-            return False
+            good_fit = False
 
-        return True
+        if not good_fit:
+            self._l_bad_fit_res.append(res)
+
+        return good_fit
     # ------------------------
     def _get_gof(self, nll) -> tuple[float, float]:
         log.debug('Checking GOF')
@@ -111,10 +117,11 @@ class AnealingMinimizer(zfit.minimize.Minuit):
             par.set_value(fval)
             log.debug(f'{par.name:<20}{ival:<15.3f}{"->":<10}{fval:<15.3f}{"in":<5}{par.lower:<15.3e}{par.upper:<15.3e}')
     # ------------------------
-    def _pick_best_fit(self, d_chi2_res : dict) -> FitResult:
+    def _pick_best_fit(self, d_chi2_res : dict) -> Union[FitResult,None]:
         nres = len(d_chi2_res)
         if nres == 0:
-            raise ValueError('No fits found')
+            log.error('No fits found')
+            return None
 
         l_chi2_res= list(d_chi2_res.items())
         l_chi2_res.sort()
