@@ -132,17 +132,20 @@ class DTFitter:
         pars_path= f'{out_dir}/{name}'
         par.to_json(pars_path)
     # -------------------------------
-    def fit(self) -> Parameter:
+    def fit(self, skip_fit : bool = False) -> Parameter:
         '''
         Function returning Parameter object holding fitting parameters
         '''
         self._initialize()
 
-        log.info('Fitting data:')
-
+        log.info('Fitting data using PDF:')
         print_pdf(self._pdf_ful)
 
         nll = zfit.loss.ExtendedUnbinnedNLL(model=self._pdf_ful, data=self._zdt_dat)
+
+        if skip_fit:
+            return Parameter()
+
         res = self._minimizer.minimize(nll)
 
         error_method = self._conf['error_method']
