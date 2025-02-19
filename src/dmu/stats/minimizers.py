@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from zfit.result                   import FitResult
 from zfit.core.basepdf             import BasePDF           as zpdf
 from zfit.minimizers.baseminimizer import FailMinimizeNaN
+from dmu.stats.utilities           import print_pdf
 from dmu.stats.gof_calculator      import GofCalculator
 from dmu.logging.log_store         import LogStore
 
@@ -197,6 +198,9 @@ class AnealingMinimizer(zfit.minimize.Minuit):
         res = self._pick_best_fit(d_chi2_res)
         if res is None:
             self._print_failed_fit_diagnostics(nll)
+            pdf = nll.model[0]
+            print_pdf(pdf)
+
             raise ValueError('Fit failed')
 
         pdf = self._pdf_from_nll(nll)
