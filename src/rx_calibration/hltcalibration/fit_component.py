@@ -54,10 +54,7 @@ class FitComponent:
         self._name      = cfg['name']
         self._fit_cfg   = cfg['fitting' ] if 'fitting'  in cfg else None
         self._plt_cfg   = cfg['plotting'] if 'plotting' in cfg else None
-        self._out_dir   : str
-
-        if self._fit_cfg is not None:
-            self._out_dir = cfg['out_dir']
+        self._out_dir   = cfg['out_dir']
 
         self._rdf       = rdf
         self._pdf       = pdf
@@ -213,6 +210,9 @@ class FitComponent:
 
         if self._rdf is None:
             log.info('Dataset not found, returning not fitted PDF')
+            data = self._pdf.create_sampler(n=10_000)
+            self._plot_fit(data, self._pdf)
+
             return self._pdf
 
         if not os.path.isfile(pars_path):
