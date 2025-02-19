@@ -379,13 +379,7 @@ class FilterFile:
         nfnal    = rdf.nfnal
         norg     = rdf.Count().GetValue()
 
-        if not rdf.lumi:
-            sel_kin = self._get_sel_kind(line_name)
-            obj     = Selector(rdf=rdf, is_mc=self._is_mc)
-            rdf     = obj.run(sel_kind=sel_kin)
-
-            self._store_cutflow(rdf, line_name)
-
+        rdf  = self._apply_selection(rdf, line_name)
         nfnl = rdf.Count().GetValue()
 
         log.info('')
@@ -399,7 +393,27 @@ class FilterFile:
 
         return rdf
     # --------------------------------------
-    def _store_cutflow(self, rdf : RDataFrame, line_name : str):
+    def _apply_selection(self, rdf : RDataFrame, line_name : str) -> RDataFrame:
+        if rdf.lumi:
+            return rdf
+
+        if 'cuts' not in self._d_trans['selection']:
+            log.info('Not applying any cuts')
+            self._store_cutflow(rdf, line_name, skip=True)
+            return rdf
+
+        sel_kin = self._get_sel_kind(line_name)
+        obj     = Selector(rdf=rdf, is_mc=self._is_mc)
+        rdf     = obj.run(sel_kind=sel_kin)
+
+        self._store_cutflow(rdf, line_name)
+
+        return rdf
+    # --------------------------------------
+    def _store_cutflow(self, rdf : RDataFrame, line_name : str, skip : bool = False):
+        if skip:
+            self._d_df_cf[line_name] = pnd.DataFrame()
+
         rep = rdf.Report()
         df  = ut.rdf_report_to_df(rep)
 
