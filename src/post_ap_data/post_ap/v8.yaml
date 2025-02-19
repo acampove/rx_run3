@@ -152,6 +152,11 @@ productions:
       <<: *tst_sam
 # ------------------------------------------------
 transformations:
+  redefine_head:
+    B_ : Lb_ 
+    X_ : Lz_ 
+    H1_: P_
+    H2_: K_
   particle_variables:
     P  : TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) + TMath::Sq(PARTICLE_PZ) )
     PT : TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) )
@@ -226,6 +231,10 @@ transformations:
       - _Hlt1Velo
       - _Hlt1XiOmegaLLL
     starts_with:
+      - B_
+      - H1_
+      - H2_
+      - X_
       # Jpsi
       - Jpsi_Min
       - Jpsi_MIN
