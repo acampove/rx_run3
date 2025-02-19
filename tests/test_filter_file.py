@@ -53,10 +53,10 @@ class Data:
             ]
 
     d_branch_names   = {
-            'test_rpk_mm_mc'   : l_rpk_mm,
-            'test_rpk_mm_data' : l_rpk_mm,
-            'test_mc'          : l_pv_sv,
-            'test_dt'          : l_pv_sv,
+            'test_rpk_mm_mc' : l_rpk_mm,
+            'test_rpk_mm_dt' : l_rpk_mm,
+            'test_mc'        : l_pv_sv,
+            'test_dt'        : l_pv_sv,
             }
 
     l_args_config    = [True, False]
@@ -210,7 +210,7 @@ def test_rpk_mm_mc():
 
     _move_outputs('test_rpk_mm_mc', is_mc = True)
 # --------------------------------------
-def test_rpk_data():
+def test_rpk_dt():
     '''
     Run test on data for RpK
     '''
@@ -222,5 +222,5 @@ def test_rpk_data():
     obj.max_save       =  100
     obj.run(skip_saving=False)
 
-    _move_outputs('test_rpk_data', is_mc = False)
+    _move_outputs('test_rpk_dt', is_mc = False)
 # --------------------------------------
