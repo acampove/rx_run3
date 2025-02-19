@@ -297,12 +297,14 @@ transformations:
       - H2_RICH*_GAS_USED
       - H2_HASBREM*
   hlt_lines:
-    - Hlt2RD_LbToLMuMu_DD
-    - Hlt2RD_LbToPKJpsi_JpsiToMuMu
-    - Hlt2RD_LambdabToPKMuMu
-    - Hlt2RD_LbToLMuMu_LL
-    - Hlt2RD_LbTopKMuMu_MVA
-    - Hlt2RD_LbTopKMuMu_SameSign_MVA
+    lb_mumu_cut:
+      - Hlt2RD_LbToLMuMu_DD
+      - Hlt2RD_LbToPKJpsi_JpsiToMuMu
+      - Hlt2RD_LambdabToPKMuMu
+      - Hlt2RD_LbToLMuMu_LL
+    lb_mumu_mva:
+      - Hlt2RD_LbTopKMuMu_MVA
+      - Hlt2RD_LbTopKMuMu_SameSign_MVA
   selection:
     evt_max : -1
   saving:
