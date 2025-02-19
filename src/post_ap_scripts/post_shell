@@ -32,13 +32,14 @@ get_opts()
 make_rcfile()
 {
     export RCFILE=/tmp/bash_dirac
+    LHCBPATH=/cvmfs/lhcb.cern.ch/lib/bin
 
-    echo "#!/usr/bin/env bash"                     > $RCFILE
-    echo ""                                       >> $RCFILE
-    echo "export PS1='\u@\h\$ '"                  >> $RCFILE
-    echo "export PATH+=:$POSTAP_PATH"             >> $RCFILE
-    echo "export VENVS=$VENVS"                    >> $RCFILE
-    echo "export LXNAME=$LXNAME"                  >> $RCFILE
+    echo "#!/usr/bin/env bash"                          > $RCFILE
+    echo ""                                            >> $RCFILE
+    echo "export PS1='\u@\h\$ '"                       >> $RCFILE
+    echo "export PATH+=:$POSTAP_PATH:$LHCBPATH"        >> $RCFILE
+    echo "export VENVS=$VENVS"                         >> $RCFILE
+    echo "export LXNAME=$LXNAME"                       >> $RCFILE
 
     echo "Using rc file:"
     cat $RCFILE
@@ -78,7 +79,7 @@ lb_dirac()
         exit 1
     fi
 
-    lb-dirac bash -c "source $RCFILE && exec bash --norc"
+    lb-dirac bash -c "exec bash --rcfile $RCFILE"
 }
 # ------------------------------------------------------------------
 lhcb_env()
