@@ -11,7 +11,7 @@ dependencies= [
 'jacobi',
 'joblib',
 'pandas',
-'numpy>=2.2.2',
+'numpy',
 'matplotlib',
 'ap_utilities'
 ]
