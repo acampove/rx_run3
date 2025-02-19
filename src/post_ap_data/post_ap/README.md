@@ -34,3 +34,7 @@ Used to send all blocks of data and MC
 
 Adding preselection and branches needed for HOP variables
 
+## v8
+
+Used to filter only lambda mumu samples
+
