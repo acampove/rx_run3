@@ -107,9 +107,6 @@ productions:
         - mc_24_w31_34_magup_sim10d_15114001_lb_lambda1520mumu_eq_phsp_dpc_tuple
         - mc_24_w31_34_magup_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
         - mc_24_w31_34_magup_sim10d_15114021_lb_ppimumu_eq_dpc_tuple
-        - mc_24_w31_34_magup_sim10d_15124001_lb_lambda1520ee_eq_phsp_dpc_tuple
-        - mc_24_w31_34_magup_sim10d_15124011_lb_pkee_eq_phsp_dpc_tuple
-        - mc_24_w31_34_magup_sim10d_15124021_lb_ppiee_eq_dpc_tuple
         - mc_24_w31_34_magup_sim10d_15144001_lb_jpsipk_mm_eq_phsp_dpc_tuple
         - mc_24_w31_34_magup_sim10d_15144011_lb_psi2spk_mm_eq_phsp_dpc_tuple
         - mc_24_w31_34_magup_sim10d_15144021_lb_jpsippi_mm_eq_phsp_dpc_tuple
@@ -122,9 +119,6 @@ productions:
         - mc_24_w35_37_magup_sim10d_15114001_lb_lambda1520mumu_eq_phsp_dpc_tuple
         - mc_24_w35_37_magup_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
         - mc_24_w35_37_magup_sim10d_15114021_lb_ppimumu_eq_dpc_tuple
-        - mc_24_w35_37_magup_sim10d_15124001_lb_lambda1520ee_eq_phsp_dpc_tuple
-        - mc_24_w35_37_magup_sim10d_15124011_lb_pkee_eq_phsp_dpc_tuple
-        - mc_24_w35_37_magup_sim10d_15124021_lb_ppiee_eq_dpc_tuple
         - mc_24_w35_37_magup_sim10d_15144001_lb_jpsipk_mm_eq_phsp_dpc_tuple
         - mc_24_w35_37_magup_sim10d_15144011_lb_psi2spk_mm_eq_phsp_dpc_tuple
         - mc_24_w35_37_magup_sim10d_15144021_lb_jpsippi_mm_eq_phsp_dpc_tuple
@@ -137,9 +131,6 @@ productions:
         - mc_24_w37_39_magdown_sim10d_15114001_lb_lambda1520mumu_eq_phsp_dpc_tuple
         - mc_24_w37_39_magdown_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
         - mc_24_w37_39_magdown_sim10d_15114021_lb_ppimumu_eq_dpc_tuple
-        - mc_24_w37_39_magdown_sim10d_15124001_lb_lambda1520ee_eq_phsp_dpc_tuple
-        - mc_24_w37_39_magdown_sim10d_15124011_lb_pkee_eq_phsp_dpc_tuple
-        - mc_24_w37_39_magdown_sim10d_15124021_lb_ppiee_eq_dpc_tuple
         - mc_24_w37_39_magdown_sim10d_15144001_lb_jpsipk_mm_eq_phsp_dpc_tuple
         - mc_24_w37_39_magdown_sim10d_15144011_lb_psi2spk_mm_eq_phsp_dpc_tuple
         - mc_24_w37_39_magdown_sim10d_15144021_lb_jpsippi_mm_eq_phsp_dpc_tuple
