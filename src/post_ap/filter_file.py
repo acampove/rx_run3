@@ -213,8 +213,13 @@ class FilterFile:
         '''
         Will define branches from mapping in config. Original branches will be dropped later
         '''
-        l_name = self._get_column_names(rdf)
+        if 'rename' not in self._d_trans:
+            log.info('Not renaming mapped branches')
+            return rdf
+
         d_name = self._d_trans['rename']
+
+        l_name = self._get_column_names(rdf)
         log.debug(110 * '-')
         log.info('Renaming mapped branches')
         log.debug(110 * '-')
