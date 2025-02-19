@@ -32,15 +32,16 @@ get_opts()
 make_rcfile()
 {
     export RCFILE=/tmp/bash_dirac
-    touch $RCFILE
 
-    echo "#!/usr/bin/env bash"                    >> $RCFILE
+    echo "#!/usr/bin/env bash"                     > $RCFILE
     echo ""                                       >> $RCFILE
     echo "export PS1='\u@\h\$ '"                  >> $RCFILE
     echo "export PATH+=:$POSTAP_PATH"             >> $RCFILE
     echo "export VENVS=$VENVS"                    >> $RCFILE
     echo "export LXNAME=$LXNAME"                  >> $RCFILE
-    echo "# This will be your username in LXPLUS" >> $RCFILE
+
+    echo "Using rc file:"
+    cat $RCFILE
 }
 # ------------------------------------------------------------------
 initialize()
