@@ -81,15 +81,20 @@ class DTFitter:
             fcomp.run()
             pdf = fcomp.pdf
             name= fcomp.name
+
+            if not isinstance(pdf, BasePDF):
+                print(fcomp)
+                raise ValueError(f'Could not find PDF for component: {name}')
+
             if pdf.is_extended:
                 raise ValueError(f'PDF for component {name} is extended')
 
             nevt = zfit.Parameter(f'n{name}', 10, 0, 1000_000)
-            epdf = pdf.create_extended(nevt)
+            pdf.set_yield(nevt)
 
             log.debug(f'Extracting PDF for component: {name}')
 
-            self._l_pdf.append(epdf)
+            self._l_pdf.append(pdf)
     # -------------------------------
     def _data_from_rdf(self, rdf : RDataFrame) -> zdata:
         arr_obs = rdf.AsNumpy([self._obs_name])[self._obs_name]
