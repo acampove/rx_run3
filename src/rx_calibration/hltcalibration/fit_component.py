@@ -209,6 +209,13 @@ class FitComponent:
             self._pdf = self._get_kde_pdf(pars_path)
             return Parameter()
 
+        s_par = self._pdf.get_params()
+        npar = len(s_par)
+        if npar == 0:
+            log.info('Found non-parametric PDF returning empty parameters')
+            return Parameter()
+
+        log.info('Parametric PDF found, fitting:')
         if self._rdf is None:
             log.info('Dataset not found, returning not fitted PDF')
             data = self._pdf.create_sampler(n=10_000)
