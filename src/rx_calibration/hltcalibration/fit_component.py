@@ -206,14 +206,14 @@ class FitComponent:
 
         if self._pdf is None:
             log.info('PDF not found, building KDE')
-            return self._get_kde_pdf(pars_path)
+            self._pdf = self._get_kde_pdf(pars_path)
+            return Parameter()
 
         if self._rdf is None:
             log.info('Dataset not found, returning not fitted PDF')
             data = self._pdf.create_sampler(n=10_000)
             self._plot_fit(data, self._pdf)
-
-            return self._pdf
+            return Parameter()
 
         if not os.path.isfile(pars_path):
             data=self._get_data()
