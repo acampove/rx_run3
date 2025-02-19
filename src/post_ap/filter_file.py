@@ -313,6 +313,10 @@ class FilterFile:
         '''
         In datafrme will define columns starting with head in _l_head to B_
         '''
+        if 'redefine_head' not in self._d_trans:
+            log.info('Not redefining heads')
+            return rdf
+
         log.info('Defining heads')
 
         d_redef = self._d_trans['redefine_head']
