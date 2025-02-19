@@ -26,28 +26,59 @@ class Data:
     data_test_spruce = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_spruce.root'
 
     output_dir       = '/tmp/post_ap/tests/filter_file'
+    l_pv_sv          = ['B_BPVX', 'B_BPVY', 'B_BPVZ', 'B_END_VX', 'B_END_VY', 'B_END_VZ']
+    l_rpk_mm         = [
+            'Lb_DTF_CHI2DOF',
+            'Lb_P',
+            'Lb_PT',
+            'K_PT',
+            'K_ETA',
+            'P_PID_K',
+            'Lz_BPVIPCHI2',
+            'Lz_PT',
+            'Lz_END_VCHI2DOF',
+            'P_PT',
+            'P_ETA',
+            'P_PID_P',
+            'P_BPVIPCHI2',
+            'L1_PT',
+            'L1_PID_MU',
+            'L2_PT',
+            'L2_PID_MU',
+            'Jpsi_PT',
+            'Jpsi_BPVIPCHI2',
+            'Jpsi_BPVFDCHI2',
+            'Jpsi_END_VCHI2DOF',
+            'nTracks',
+            ]
+
+    d_branch_names   = {
+            'test_rpk_mm_mc'   : l_rpk_mm,
+            'test_rpk_mm_data' : l_rpk_mm,
+            'test_mc'          : l_pv_sv,
+            'test_dt'          : l_pv_sv,
+            }
 
     l_args_config    = [True, False]
 # --------------------------------------
-def _check_branches(rdf : RDataFrame, file_path : str, is_reco : bool) -> None:
+def _check_branches(rdf : RDataFrame, file_path : str, is_reco : bool, test_name : str) -> None:
     nentries = rdf.Count().GetValue()
     if nentries == 0:
         log.warning(f'No entries found in: {file_path}')
         return
 
-    l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
     l_has_to_exist = ['block', 'EVENTNUMBER']
 
-    if is_reco:
-        l_has_to_exist += [
-                'B_BPVX',
-                'B_BPVY',
-                'B_BPVZ',
-                'B_END_VX',
-                'B_END_VY',
-                'B_END_VZ']
+    if is_reco and test_name in Data.d_branch_names:
+        l_has_to_exist += Data.d_branch_names[test_name]
+    else:
+        l_has_to_exist += []
 
-    fail=False
+    if not test_name.endswith('_mc'):
+        l_has_to_exist += ['RUNNUMBER']
+
+    fail  = False
+    l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
     for has_to_exist in l_has_to_exist:
         if has_to_exist not in l_col:
             fail=True
@@ -56,21 +87,21 @@ def _check_branches(rdf : RDataFrame, file_path : str, is_reco : bool) -> None:
     if fail:
         raise ValueError('At least one branch was not found')
 # --------------------------------------
-def _check_file(file_path : str, is_mc : bool) -> None:
+def _check_file(file_path : str, is_mc : bool, test_name : str) -> None:
     rdf_dt = RDataFrame('DecayTree'  , file_path)
-    _check_branches(rdf_dt, file_path, is_reco=True)
+    _check_branches(rdf_dt, file_path, test_name = test_name, is_reco = True)
 
     if not is_mc:
         return
 
     rdf_mc = RDataFrame('MCDecayTree', file_path)
-    _check_branches(rdf_mc, file_path, is_reco = False)
+    _check_branches(rdf_mc, file_path, test_name = test_name, is_reco = False)
 # --------------------------------------
 def _move_outputs(test_name : str, is_mc : bool) -> None:
     l_root = glob.glob('*.root')
 
     for path in l_root:
-        _check_file(path, is_mc)
+        _check_file(path, is_mc, test_name)
 
     l_text = glob.glob('*.txt' )
     l_path = l_root + l_text
