@@ -1,3 +1,8 @@
+cascade_common : &cascade_common
+  low     : swp_cascade_mass_swp    > 1900
+  central : swp_cascade_mass_swp    > 1900
+  high    : swp_cascade_mass_swp    > 0 
+
 bdt_common: &bdt_common
       low     : (mva_cmb > 0.50) && (mva_prc > 0.30)
       central : (mva_cmb > 0.50) && (mva_prc > 0.50)
