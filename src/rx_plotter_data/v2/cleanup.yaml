@@ -34,6 +34,7 @@ cutflow:
   high:
     None    : hop_mass >  0
     hop     : hop_mass >  3000
+    cascade : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp < 1800
     jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
 plots:
     otk_mas:
