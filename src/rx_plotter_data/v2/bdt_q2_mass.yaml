@@ -4,15 +4,15 @@ selection:
   low:
     hop  : hop_mass > 4500
     casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
-    jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
+    jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   central:
     hop  : hop_mass > 4500
     casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
-    jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
+    jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   high:
-    hop  : hop_mass > 3000 
+    hop  : hop_mass > 3000
     casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
-    jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
+    jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
 saving:
   plt_dir : plots/bdt_q2_mass
 plots:
