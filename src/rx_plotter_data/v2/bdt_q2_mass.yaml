@@ -3,16 +3,20 @@ general:
 selection:
   low:
     hop  : hop_mass > 4500
-    casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
+    casc : preselectionswp_cascade_mass_swp    > 1900
     jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   central:
     hop  : hop_mass > 4500
-    casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
+    casc : swp_cascade_mass_swp    > 1900
     jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   high:
     hop  : hop_mass > 3000
     casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
     jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+mass_binning:
+    low     : [4600, 6200, 50]
+    central : [4600, 6200, 50]
+    high    : [4500, 6000, 60]
 saving:
   plt_dir : plots/bdt_q2_mass
 plots:
@@ -23,7 +27,6 @@ plots:
         title      : ''
         name       : 'q2'
     B_M :
-        binning    : [4600, 6200, 50]
         yscale     : 'linear'
         labels     : ['M$(B^+)$', 'Entries']
         title      : ''
