@@ -52,7 +52,7 @@ def test_unique_pdf():
     '''
     l_pdf = ['cbr', 'cbl', 'dscb']
     l_shr = ['mu', 'sg']
-    mod   = ModelFactory(obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr)
+    mod   = ModelFactory(preffix='unique', obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr)
     pdf   = mod.get_pdf()
 
     print_pdf(pdf)
@@ -63,7 +63,7 @@ def test_repeated_pdf():
     '''
     l_pdf = ['cbr'] + 2 * ['cbl']
     l_shr = ['mu', 'sg']
-    mod   = ModelFactory(obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr)
+    mod   = ModelFactory(preffix='repeated', obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr)
     pdf   = mod.get_pdf()
 
     print_pdf(pdf)
