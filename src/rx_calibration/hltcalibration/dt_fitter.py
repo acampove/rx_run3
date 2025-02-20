@@ -58,6 +58,7 @@ class DTFitter:
     def _initialize(self) -> None:
         log.debug('Setting PDFs from fit components')
         self._set_pdfs()
+        self._update_conf()
 
         self._obs      = self._l_pdf[0].space
         self._obs_name,= self._l_pdf[0].obs
@@ -75,6 +76,15 @@ class DTFitter:
         self._zdt_dat  = self._data_from_rdf(self._rdf_dat)
 
         log.info(f'Using observable: {self._obs_name}')
+    # -------------------------------
+    def _update_conf(self):
+        log.debug('Updating plotting configuration')
+        d_leg = {}
+        for fcomp in self._l_fcomp:
+            name_pdf = fcomp.pdf.name
+            d_leg[name_pdf] = fcomp.name
+
+        self._conf['plotting']['d_leg'] = d_leg
     # -------------------------------
     def _set_pdfs(self) -> None:
         for fcomp in self._l_fcomp:
