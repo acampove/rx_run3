@@ -162,7 +162,7 @@ class FitComponent:
         obj=ZFitPlotter(data=data, model=model)
         obj.plot(**self._plt_cfg)
 
-        plot_path = f'{self._out_dir}/{self._name}.png'
+        plot_path = f'{self._out_dir}/fit.png'
         log.info(f'Saving fit plot to: {plot_path}')
         plt.savefig(plot_path)
     # -------------------------------
@@ -202,7 +202,7 @@ class FitComponent:
         '''
         Will return the PDF
         '''
-        pars_path= f'{self._out_dir}/{self._name}.json'
+        pars_path= f'{self._out_dir}/parameters.json'
 
         if self._pdf is None:
             log.info('PDF not found, building KDE')
