@@ -92,11 +92,6 @@ def get_data_fit_cfg(test : str) -> dict:
             {
                 'nbins'   : 50,
                 'stacked' : True,
-                'd_leg'   : {
-                    'Gauss_ext'      : 'Signal',
-                    'Exponential_ext': 'Combinatorial',
-                    'ArgusPDF_ext'   : 'PRec',
-                    }
                 },
             }
 # --------------------------------------------
