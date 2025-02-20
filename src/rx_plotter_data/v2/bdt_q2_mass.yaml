@@ -23,20 +23,20 @@ plots:
         title      : ''
         name       : 'q2'
     B_M :
-        binning    : [4500, 5800, 50]
+        binning    : [4600, 6200, 50]
         yscale     : 'linear'
         labels     : ['M$(B^+)$', 'Entries']
         title      : ''
         name       : 'bmass'
     mva_cmb:
-        binning    : [0, 1, 50]
+        binning    : [0.8, 1.0, 50]
         yscale     : 'linear'
         labels     : ['Signal Probability', 'Entries']
         title      : 'Combinatorial MVA'
         name       : 'cmb'
         normalized : true
     mva_prc:
-        binning    : [0, 1, 50]
+        binning    : [0.6, 1.0, 50]
         yscale     : 'linear'
         labels     : ['Signal Probability', 'Entries']
         title      : 'PRec MVA'
