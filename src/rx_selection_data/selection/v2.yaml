@@ -106,7 +106,7 @@ RK:
     pid_k     : H_PIDe <  0.000 && H_PID_K > 2.0
     rich      : L1_PPHASRICH && L2_PPHASRICH && H_PPHASRICH
     acceptance: L1_INECAL    && L2_INECAL
-    cascade   : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
+    cascade   : swp_cascade_mass_swp    > 1900
     jpsi_misid: swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
     hop       : 
       <<: *hop_common
@@ -128,7 +128,7 @@ RK:
     pid_k     : (H_ProbNNk   * (1 - H_PROBNN_P) > 0.05) && H_PID_K > 0
     rich      : L1_PPHASRICH && L2_PPHASRICH && H_PPHASRICH
     acceptance: L1_INMUON && L2_INMUON
-    cascade   : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
+    cascade   : swp_cascade_mass_swp    > 1900
     jpsi_misid: swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
     hop       : 
       <<: *hop_common
