@@ -57,20 +57,22 @@ class ModelFactory:
 
     l_pdf = ['dscb', 'gauss']
     l_shr = ['mu']
-    mod   = ModelFactory(obs = obs, l_pdf = l_pdf, l_shared=l_shr)
+    mod   = ModelFactory(preffix = 'signal', obs = obs, l_pdf = l_pdf, l_shared=l_shr)
     pdf   = mod.get_pdf()
     ```
 
     where one can specify which parameters can be shared among the PDFs
     '''
     #-----------------------------------------
-    def __init__(self, obs : zobs, l_pdf : list[str], l_shared : list[str]):
+    def __init__(self, preffix : str, obs : zobs, l_pdf : list[str], l_shared : list[str]):
         '''
+        preffix:  used to identify PDF, will be used to name every parameter 
         obs:      zfit obserbable
         l_pdf:    List of PDF nicknames which are registered below
         l_shared: List of parameter names that are shared
         '''
 
+        self._preffix         = preffix
         self._l_pdf           = l_pdf
         self._l_shr           = l_shared
         self._l_can_be_shared = ['mu', 'sg']
@@ -89,7 +91,7 @@ class ModelFactory:
             if name.startswith(f'{can_be_shared}_') and can_be_shared in self._l_shr:
                 return self._fltname_from_name(can_be_shared)
 
-        return self._fltname_from_name(f'{name}{suffix}')
+        return self._fltname_from_name(f'{name}_{self._preffix}_{suffix}')
     #-----------------------------------------
     def _get_parameter(self,
                        name   : str,
