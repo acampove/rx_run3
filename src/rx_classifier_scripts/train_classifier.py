@@ -204,7 +204,7 @@ def main():
     rdf_bkg = _get_rdf(kind='bkg')
 
     trn = TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=Data.cfg_dict)
-    trn.run()
+    trn.run(skip_fit=False)
 #---------------------------------
 if __name__ == '__main__':
     main()

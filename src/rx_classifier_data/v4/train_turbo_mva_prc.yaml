@@ -53,24 +53,21 @@ hyper               :
 # ----------------------------------
 dataset :
   columns:
+    - B_M
+    - Jpsi_M
     - swp_cascade_mass_swp
     - swp_jpsi_misid_mass_swp
     - hop_mass
     - mva_cmb
-    - B_M
     - B_PT
     - B_IPCHI2_OWNPV
-    - Jpsi_M
-    - B_HEAD_CC_B_ChargedIso_DR2_0p15_CMULT
     - B_HEAD_CC_B_ChargedIso_DR2_0p15_CP
     - B_HEAD_CC_B_ChargedIso_DR2_0p15_PTASY
-    - B_HEAD_NC_B_NeutralIso_DR2_0p15_CMULT
     - B_HEAD_NC_B_NeutralIso_DR2_0p15_CP
     - B_HEAD_NC_B_NeutralIso_DR2_0p15_PTASY
     - B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
     - B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
     - Jpsi_IPCHI2_OWNPV 
-    - Jpsi_DIRA_OWNPV
     - B_DIRA_OWNPV
     - H_PT
     - L1_IPCHI2_OWNPV
@@ -86,11 +83,11 @@ dataset :
       jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
       mva  : mva_cmb > 0.7
   paths:
-    main : /home/acampove/external_ssd/Data/samples/main.yaml
-    mva  : /home/acampove/external_ssd/Data/samples/mva.yaml
+    mva  : /home/acampove/external_ssd/Data/samples/mva_v1.yaml # Use first version of MVA to clean for combinatorial, to train second version of PRC MVA
     hop  : /home/acampove/external_ssd/Data/samples/hop.yaml
     jmis : /home/acampove/external_ssd/Data/samples/jpsi_misid.yaml
     casc : /home/acampove/external_ssd/Data/samples/cascade.yaml
+    main : /home/acampove/external_ssd/Data/samples/main.yaml 
   samples:
     sig :
       sample : Bu_Kee_eq_btosllball05_DPC
@@ -104,11 +101,9 @@ dataset :
     sqrt_ipchi2 : TMath::Sqrt(B_IPCHI2_OWNPV) 
     acos_dira   : TMath::ACos(B_DIRA_OWNPV)
     # ----------
-    iso_cc_mult : B_HEAD_CC_B_ChargedIso_DR2_0p15_CMULT
     iso_cc_mom  : B_HEAD_CC_B_ChargedIso_DR2_0p15_CP
     iso_cc_ptasy: B_HEAD_CC_B_ChargedIso_DR2_0p15_PTASY
 
-    iso_nc_mult : B_HEAD_NC_B_NeutralIso_DR2_0p15_CMULT
     iso_nc_mom  : B_HEAD_NC_B_NeutralIso_DR2_0p15_CP
     iso_nc_ptasy: B_HEAD_NC_B_NeutralIso_DR2_0p15_PTASY
 
@@ -118,6 +113,11 @@ dataset :
     sqrt_jipchi2: TMath::Sqrt(Jpsi_IPCHI2_OWNPV) 
     log_h_pt    : TMath::Log(H_PT)
     min_ll_ipc  : TMath::Min(TMath::Sqrt(L1_IPCHI2_OWNPV), TMath::Sqrt(L2_IPCHI2_OWNPV))
+  nan :
+    iso_one_mass :  3000
+    iso_one_dchi : -1
+    iso_cc_mom   : -10000
+    iso_nc_mom   : -10000
 training :
   nfold    : 10
   rdm_stat : 1
@@ -152,7 +152,7 @@ plotting:
       iso_cc_mom:
         normalized : true
         yscale  : 'linear'
-        binning : [0, 200000, 40]
+        binning : [-20000, 200000, 40]
         labels  : ['Iso$_{CC}^P(B^+)$MeV', '']
       iso_cc_ptasy:
         normalized : true
@@ -163,7 +163,7 @@ plotting:
       iso_nc_mom:
         normalized : true
         yscale  : 'linear'
-        binning : [0, 200000, 40]
+        binning : [-20000, 100000, 40]
         labels  : ['Iso$_{NC}^P(B^+)$MeV', '']
       iso_nc_ptasy:
         normalized : true
@@ -173,13 +173,13 @@ plotting:
       # --------------------
       iso_one_mass:
         normalized : true
-        binning : [3000, 8000, 40]
+        binning : [2000, 8000, 40]
         yscale  : 'linear'
         labels  : ['Iso$_{mass}^{1Trk}(B^+)$', '']
       # --------------------
       iso_one_dchi:
         normalized : true
-        binning : [0, 15, 40]
+        binning : [-3, 15, 40]
         yscale  : 'linear'
         labels  : ['Iso$_{\Delta\chi^2}^{1Trk}(B^+)$', '']
       # --------------------
