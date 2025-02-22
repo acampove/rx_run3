@@ -1,0 +1,1008 @@
+# -----------------------------------
+di_track_angles_rk: &angles
+  th_l1_l2 : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(L2_PX, L2_PY, L2_PZ); return v1.Angle(v2);
+  th_l1_kp : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2( H_PX,  H_PY,  H_PZ); return v1.Angle(v2);
+  th_l2_kp : TVector3 v1(L2_PX, L2_PY, L2_PZ); TVector3 v2( H_PX,  H_PY,  H_PZ); return v1.Angle(v2);
+RK:
+  EE: &rk_ee_cuts
+    ghost     : H_TRACK_GhostProb<0.3 && L1_TRACK_GhostProb <0.3 && L2_TRACK_GhostProb<0.3
+    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
+    hlt2      : (1)
+    kinem_lep : (1)
+    kinem_had : H_PT > 300 && H_P > 2500
+    clones    : (th_l1_l2 > 5e-4) && (th_l1_kp > 5e-4) && (th_l2_kp > 5e-4)
+    tr_ipchi2 : H_IPCHI2_OWNPV > 9 && L1_IPCHI2_OWNPV > 9 && L2_IPCHI2_OWNPV > 9
+    pid_l     : L1_PROBNN_E > 0.2 && L2_PROBNN_E > 0.2 && L1_PIDe  > 3.000 && L2_PIDe  > 3.000
+    pid_k     : H_PIDe <  0.000 && H_PID_K > 2.0
+    rich      : L1_PPHASRICH && L2_PPHASRICH && H_PPHASRICH
+    acceptance: L1_INECAL    && L2_INECAL
+    cascade   : (1)
+    jpsi_misid: (1)
+  MM: &rk_mm_cuts
+    ghost     : H_TRGHOSTPROB < 0.3 && L1_TRACK_GhostProb < 0.3 && L2_TRACK_GhostProb< 0.3
+    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
+    hlt2      : (1)
+    kinem_lep : (1)
+    kinem_had : H_PT > 300 && H_P > 2500
+    clones    : (th_l1_l2 > 5e-4) && (th_l1_kp > 5e-4) && (th_l2_kp > 5e-4)
+    tr_ipchi2 : H_IPCHI2_OWNPV > 9 && L1_IPCHI2_OWNPV > 9 && L2_IPCHI2_OWNPV > 9
+    pid_l     : L1_ProbNNmu> 0.2 && L2_ProbNNmu> 0.2 && L1_ISMUON && L2_ISMUON && L1_PID_MU >-3. && L2_PID_MU > -3
+    pid_k     : (H_ProbNNk   * (1 - H_PROBNN_P) > 0.05) && H_PID_K > 0
+    rich      : L1_PPHASRICH && L2_PPHASRICH && H_PPHASRICH
+    acceptance: L1_INMUON && L2_INMUON
+    cascade   : (1)
+    jpsi_misid: (1)
+# -----------------------------------
+tests:
+  versions: &tst_ver
+      test_w31_34_v1r2266_ee: v1r2266
+      test_w35_37_v1r2266_ee: v1r2266
+      test_w37_39_v1r2266_ee: v1r2266
+      test_w40_42_v1r2266_ee: v1r2266
+      test_w31_34_v1r2266_mm: v1r2266
+      test_w35_37_v1r2266_mm: v1r2266
+      test_w37_39_v1r2266_mm: v1r2266
+      test_w40_42_v1r2266_mm: v1r2266
+      # ---------
+      test_w31_34_v1r2437_ee: v1r2437
+      test_w35_37_v1r2437_ee: v1r2437
+      test_w37_39_v1r2437_ee: v1r2437
+      test_w40_42_v1r2437_ee: v1r2437
+      test_w31_34_v1r2437_mm: v1r2437
+      test_w35_37_v1r2437_mm: v1r2437
+      test_w37_39_v1r2437_mm: v1r2437
+      test_w40_42_v1r2437_mm: v1r2437
+      # ---------
+      test_dt_c1         : v1r1670
+      test_dt_c2         : v1r1670
+      test_dt_c3         : v1r1670
+      test_dt_c4         : v1r1670
+  samples: &tst_sam
+    test_dt_c1:
+        - data_24_magup_turbo_24c1
+    test_dt_c2:
+        - data_24_magup_turbo_24c2
+    test_dt_c3:
+        - data_24_magup_turbo_24c3
+    test_dt_c4:
+        - data_24_magup_turbo_24c4
+    # ---------
+    test_w31_34_v1r2266_ee:
+        - mc_24_w31_34_magup_sim10d_12123001_bu_kee_eq_btosllball_dpc_tuple
+    test_w35_37_v1r2266_ee:
+        - mc_24_w35_37_magup_sim10d_12123021_bu_piee_eq_btosllball_dpc_tuple
+    test_w37_39_v1r2266_ee:
+        - mc_24_w37_39_magdown_sim10d_12123021_bu_piee_eq_btosllball_dpc_tuple
+    test_w40_42_v1r2266_ee:
+        - mc_24_w40_42_magdown_sim10d_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+    # ---------
+    test_w31_34_v1r2266_mm:
+        - mc_24_w31_34_magup_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+    test_w35_37_v1r2266_mm:
+        - mc_24_w35_37_magup_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+    test_w37_39_v1r2266_mm:
+        - mc_24_w37_39_magdown_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+    test_w40_42_v1r2266_mm:
+        - mc_24_w40_42_magdown_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+    # ---------
+    test_w31_34_v1r2437_ee:
+        - mc_24_w31_34_magup_sim10d_11124002_bd_kstee_eq_btosllball05_dpc_tuple
+    test_w35_37_v1r2437_ee:
+        - mc_24_w35_37_magup_sim10d_12123003_bu_kee_eq_btosllball05_dpc_tuple
+    test_w37_39_v1r2437_ee:
+        - mc_24_w37_39_magdown_sim10d_12123003_bu_kee_eq_btosllball05_dpc_tuple
+    test_w40_42_v1r2437_ee:
+        - mc_24_w40_42_magdown_sim10d_11453001_bd_jpsix_ee_eq_jpsiinacc_tuple
+    # ---------
+    test_w31_34_v1r2437_mm:
+        - mc_24_w31_34_magup_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+    test_w35_37_v1r2437_mm:
+        - mc_24_w35_37_magup_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+    test_w37_39_v1r2437_mm:
+        - mc_24_w37_39_magdown_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+    test_w40_42_v1r2437_mm:
+        - mc_24_w40_42_magup_sim10d_12113001_bu_kmumu_eq_dpc_tuple
+working_group: rd
+productions:
+  rd_ap_2024:
+    versions:
+      data_turbo_24c1 : v1r1670
+      data_turbo_24c2 : v1r1670
+      data_turbo_24c3 : v1r1670
+      data_turbo_24c4 : v1r1670
+      # ---------
+      w31_34_v1r2266: v1r2266
+      w35_37_v1r2266: v1r2266
+      w37_39_v1r2266: v1r2266
+      w40_42_v1r2266: v1r2266
+      # ---------
+      w31_34_v1r2437: v1r2437
+      w35_37_v1r2437: v1r2437
+      w37_39_v1r2437: v1r2437
+      w40_42_v1r2437: v1r2437
+      <<: *tst_ver
+    samples:
+      data_turbo_24c1:
+        - data_24_magdown_turbo_24c1
+        - data_24_magup_turbo_24c1
+      data_turbo_24c2:
+        - data_24_magdown_turbo_24c2
+        - data_24_magup_turbo_24c2
+      data_turbo_24c3:
+        - data_24_magdown_turbo_24c3
+        - data_24_magup_turbo_24c3
+      data_turbo_24c4:
+        - data_24_magdown_turbo_24c4
+        - data_24_magup_turbo_24c4
+      # ---------
+      w31_34_v1r2266:
+        - mc_24_w31_34_magup_sim10d-splitsim02_11102202_bd_kstgamma_eq_highptgamma_dpc_ss_tuple
+        - mc_24_w31_34_magup_sim10d-splitsim02_11102441_bd_ksteta_gg_eq_dpc_ss_tuple
+        - mc_24_w31_34_magup_sim10d-splitsim02_11102453_bd_kstpi0_eq_tc_kst982width100_highptpi0_ss_tuple
+        - mc_24_w31_34_magup_sim10d-splitsim02_13102202_bs_phigamma_eq_highptgamma_dpc_ss_tuple
+        - mc_24_w31_34_magup_sim10d-splitsim02_13102464_bs_phieta_gg_eq_dpc_ss_tuple
+        - mc_24_w31_34_magup_sim10d-splitsim02_13102465_bs_phipi0_gg_eq_dpc_ss_tuple
+        - mc_24_w31_34_magup_sim10d_11102005_bd_kplpimn_eq_cpv2017_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11102015_bd_piplpimn_eq_cpv2017_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11102021_bd_kplkmn_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11102453_bd_kstpi0_eq_tc_kst982width100_highptpi0_tuple
+        - mc_24_w31_34_magup_sim10d_11112001_bd_mumu_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11112011_bd_emu_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11114014_bd_kstmumu_flatq2_eq_dpc_momcut_tuple
+        - mc_24_w31_34_magup_sim10d_11124007_bd_kstee_flatq2_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11124009_bd_kstee_flatq2_eq_dpc_momcut_tc600mev_tuple
+        - mc_24_w31_34_magup_sim10d_11124037_bd_kpiee_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11124401_bd_ksteta_eplemng_eq_dalitz_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11124402_bd_kstpi0_eplemng_eq_dalitz_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11144001_bd_jpsikst_mm_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11144002_bd_jpsikst_update2012_mm_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11144103_bd_jpsiks_mm_eq_cpv_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11154001_bd_jpsikst_ee_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11154002_bd_jpsikst_update2012_ee_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11154011_bd_psi2skst_ee_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11154100_bd_jpsiks_ee_eq_cpv_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11202603_bd_k1gamma_kpipi0_eq_mk1270_highptgamma_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11512012_bd_pimunu_eq_dpc_m4p5g_tuple
+        - mc_24_w31_34_magup_sim10d_11574030_bd_dmunu_kstmunu_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11584022_bd_denu_kstenu_eq_via_hvm_egdwc_tuple
+        - mc_24_w31_34_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12103025_bu_piplpimnkpl_eq_sqdalitz_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12103030_bu_kplpiplkmn_eq_sqdalitz_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12113004_bu_kmumu_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12113023_bu_pimumu_eq_btosllball05_dileptoninacc_tuple
+        - mc_24_w31_34_magup_sim10d_12113024_bu_pimumu_eq_btosllball05_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12115191_bu_lambdapbarmumu_eq_helamp_tc_tuple
+        - mc_24_w31_34_magup_sim10d_12123001_bu_kee_eq_btosllball_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12123021_bu_piee_eq_btosllball_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12125040_bu_phikee_kk_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12125101_bu_kstee_kspi_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12143001_bu_jpsik_mm_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12143010_bu_jpsipi_mm_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12145090_bu_kpipijpsi_mumu_eq_dpc_lsflat_tuple
+        - mc_24_w31_34_magup_sim10d_12145122_bu_lambdabarpjpsi_mm_eq_helamp_tc_tuple
+        - mc_24_w31_34_magup_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12153020_bu_jpsipi_ee_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12153420_bu_jpsikst_ee_kpi0_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12153430_bu_psi2skst_ee_kpi0_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12155020_bu_kpipijpsi_ee_eq_dpc_lsflat_tuple
+        - mc_24_w31_34_magup_sim10d_12175101_bu_lambdacbarppi_lambdabarmunu_eq_helamp_tc_tuple
+        - mc_24_w31_34_magup_sim10d_12183004_bu_d0pi_kenu_eq_dpc_tc_tuple
+        - mc_24_w31_34_magup_sim10d_12425000_bu_k1ee_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12425011_bu_k2stee_kpipi_eq_mk1430_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12573040_bu_d0munu_kmunu_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12573050_bu_d0pi_kmunu_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12583013_bu_d0enu_kpi_eq_dpc_tc_tuple
+        - mc_24_w31_34_magup_sim10d_12583020_bu_d0enu_kenu_eq_dpc_ptcut200mev_vismass4g_tuple
+        - mc_24_w31_34_magup_sim10d_12873002_bu_d0munu_kpi_eq_cocktail_d0muinacc_brcorr1_tuple
+        - mc_24_w31_34_magup_sim10d_13102004_bs_kplkmn_eq_cpv2017_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13102015_bs_piplkmn_eq_cpv2017_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13102021_bs_piplpimn_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13104013_bs_phiphi_eq_cdfamp_dpc_hpt400_tuple
+        - mc_24_w31_34_magup_sim10d_13112001_bs_mumu_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13112011_bs_emu_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13112205_bs_gammamumu_eq_isr_masscut_tuple
+        - mc_24_w31_34_magup_sim10d_13114006_bs_phimumu_eq_ball_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13124006_bs_phiee_eq_ball_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13124029_bs_phiee_flatq2_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13124030_bs_phiee_flatq2_eq_dpc_tc600mev_tuple
+        - mc_24_w31_34_magup_sim10d_13124401_bs_phieta_eplemng_eq_dalitz_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13124402_bs_phipi0_eplemng_eq_dalitz_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13144001_bs_jpsiphi_mm_eq_cpv_update2012_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13144011_bs_jpsiphi_mm_eq_cpv_update2016_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13144041_bs_jpsikk_mm_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13144044_bs_psi2skk_mm_eq_phsp_dpc_tc_tuple
+        - mc_24_w31_34_magup_sim10d_13154001_bs_jpsiphi_ee_eq_cpv_update2012_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13154041_bs_jpsikk_ee_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13154042_bs_psi2skk_ee_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_13512011_bs_kmunu_eq_dpc_m4p5g_tuple
+        - mc_24_w31_34_magup_sim10d_13584000_bs_dsenu_phienu_eq_dpc_hvm_egdwc_tuple
+        - mc_24_w31_34_magup_sim10d_13584200_bs_dsstenu_dsgamma_phienu_eq_dpc_hvm_egdwc_tuple
+        - mc_24_w31_34_magup_sim10d_15102001_lb_pk_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15102011_lb_ppi_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15114001_lb_lambda1520mumu_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15114021_lb_ppimumu_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15124001_lb_lambda1520ee_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15124011_lb_pkee_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15124021_lb_ppiee_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15144001_lb_jpsipk_mm_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15144011_lb_psi2spk_mm_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15144021_lb_jpsippi_mm_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15144040_lb_lambda1520jpsi_mm_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15144100_lb_jpsilambda_mm_eq_phsp_tuple
+        - mc_24_w31_34_magup_sim10d_15154001_lb_jpsipk_ee_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15154021_lb_jpsippi_ee_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15154040_lb_lambda1520jpsi_ee_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15154050_lb_lambda1520psi2s_ee_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15154105_lb_jpsilambda_ee_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15512020_lb_pmunu_eq_tc_lqcd_m4p5g_rh_tuple
+      w35_37_v1r2266:
+        - mc_24_w35_37_magup_sim10d-splitsim02_11102202_bd_kstgamma_eq_highptgamma_dpc_ss_tuple
+        - mc_24_w35_37_magup_sim10d-splitsim02_11102441_bd_ksteta_gg_eq_dpc_ss_tuple
+        - mc_24_w35_37_magup_sim10d-splitsim02_11102453_bd_kstpi0_eq_tc_kst982width100_highptpi0_ss_tuple
+        - mc_24_w35_37_magup_sim10d-splitsim02_13102202_bs_phigamma_eq_highptgamma_dpc_ss_tuple
+        - mc_24_w35_37_magup_sim10d-splitsim02_13102464_bs_phieta_gg_eq_dpc_ss_tuple
+        - mc_24_w35_37_magup_sim10d-splitsim02_13102465_bs_phipi0_gg_eq_dpc_ss_tuple
+        - mc_24_w35_37_magup_sim10d_11102005_bd_kplpimn_eq_cpv2017_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11102015_bd_piplpimn_eq_cpv2017_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11102021_bd_kplkmn_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11102453_bd_kstpi0_eq_tc_kst982width100_highptpi0_tuple
+        - mc_24_w35_37_magup_sim10d_11112001_bd_mumu_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11112011_bd_emu_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11114014_bd_kstmumu_flatq2_eq_dpc_momcut_tuple
+        - mc_24_w35_37_magup_sim10d_11124007_bd_kstee_flatq2_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11124009_bd_kstee_flatq2_eq_dpc_momcut_tc600mev_tuple
+        - mc_24_w35_37_magup_sim10d_11124037_bd_kpiee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11124401_bd_ksteta_eplemng_eq_dalitz_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11124402_bd_kstpi0_eplemng_eq_dalitz_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11144001_bd_jpsikst_mm_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11144002_bd_jpsikst_update2012_mm_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11144103_bd_jpsiks_mm_eq_cpv_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11154001_bd_jpsikst_ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11154002_bd_jpsikst_update2012_ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11154011_bd_psi2skst_ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11154100_bd_jpsiks_ee_eq_cpv_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11202603_bd_k1gamma_kpipi0_eq_mk1270_highptgamma_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11512012_bd_pimunu_eq_dpc_m4p5g_tuple
+        - mc_24_w35_37_magup_sim10d_11574030_bd_dmunu_kstmunu_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11584022_bd_denu_kstenu_eq_via_hvm_egdwc_tuple
+        - mc_24_w35_37_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12103025_bu_piplpimnkpl_eq_sqdalitz_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12103030_bu_kplpiplkmn_eq_sqdalitz_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12113004_bu_kmumu_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12113023_bu_pimumu_eq_btosllball05_dileptoninacc_tuple
+        - mc_24_w35_37_magup_sim10d_12113024_bu_pimumu_eq_btosllball05_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12115191_bu_lambdapbarmumu_eq_helamp_tc_tuple
+        - mc_24_w35_37_magup_sim10d_12123001_bu_kee_eq_btosllball_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12123021_bu_piee_eq_btosllball_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12125040_bu_phikee_kk_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12125101_bu_kstee_kspi_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12143001_bu_jpsik_mm_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12143010_bu_jpsipi_mm_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12145090_bu_kpipijpsi_mumu_eq_dpc_lsflat_tuple
+        - mc_24_w35_37_magup_sim10d_12145122_bu_lambdabarpjpsi_mm_eq_helamp_tc_tuple
+        - mc_24_w35_37_magup_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12153020_bu_jpsipi_ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12153420_bu_jpsikst_ee_kpi0_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12153430_bu_psi2skst_ee_kpi0_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12155020_bu_kpipijpsi_ee_eq_dpc_lsflat_tuple
+        - mc_24_w35_37_magup_sim10d_12175101_bu_lambdacbarppi_lambdabarmunu_eq_helamp_tc_tuple
+        - mc_24_w35_37_magup_sim10d_12183004_bu_d0pi_kenu_eq_dpc_tc_tuple
+        - mc_24_w35_37_magup_sim10d_12425000_bu_k1ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12425011_bu_k2stee_kpipi_eq_mk1430_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12573040_bu_d0munu_kmunu_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12573050_bu_d0pi_kmunu_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12583013_bu_d0enu_kpi_eq_dpc_tc_tuple
+        - mc_24_w35_37_magup_sim10d_12583020_bu_d0enu_kenu_eq_dpc_ptcut200mev_vismass4g_tuple
+        - mc_24_w35_37_magup_sim10d_12873002_bu_d0munu_kpi_eq_cocktail_d0muinacc_brcorr1_tuple
+        - mc_24_w35_37_magup_sim10d_13102004_bs_kplkmn_eq_cpv2017_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13102015_bs_piplkmn_eq_cpv2017_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13102021_bs_piplpimn_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13104013_bs_phiphi_eq_cdfamp_dpc_hpt400_tuple
+        - mc_24_w35_37_magup_sim10d_13112001_bs_mumu_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13112011_bs_emu_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13112205_bs_gammamumu_eq_isr_masscut_tuple
+        - mc_24_w35_37_magup_sim10d_13114006_bs_phimumu_eq_ball_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13124006_bs_phiee_eq_ball_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13124029_bs_phiee_flatq2_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13124030_bs_phiee_flatq2_eq_dpc_tc600mev_tuple
+        - mc_24_w35_37_magup_sim10d_13124401_bs_phieta_eplemng_eq_dalitz_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13124402_bs_phipi0_eplemng_eq_dalitz_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13144001_bs_jpsiphi_mm_eq_cpv_update2012_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13144011_bs_jpsiphi_mm_eq_cpv_update2016_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13144041_bs_jpsikk_mm_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13144044_bs_psi2skk_mm_eq_phsp_dpc_tc_tuple
+        - mc_24_w35_37_magup_sim10d_13154001_bs_jpsiphi_ee_eq_cpv_update2012_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13154041_bs_jpsikk_ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13154042_bs_psi2skk_ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_13512011_bs_kmunu_eq_dpc_m4p5g_tuple
+        - mc_24_w35_37_magup_sim10d_13584000_bs_dsenu_phienu_eq_dpc_hvm_egdwc_tuple
+        - mc_24_w35_37_magup_sim10d_13584200_bs_dsstenu_dsgamma_phienu_eq_dpc_hvm_egdwc_tuple
+        - mc_24_w35_37_magup_sim10d_15102001_lb_pk_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15102011_lb_ppi_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15114001_lb_lambda1520mumu_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15114021_lb_ppimumu_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15124001_lb_lambda1520ee_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15124011_lb_pkee_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15124021_lb_ppiee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15144001_lb_jpsipk_mm_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15144011_lb_psi2spk_mm_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15144021_lb_jpsippi_mm_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15144040_lb_lambda1520jpsi_mm_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15144100_lb_jpsilambda_mm_eq_phsp_tuple
+        - mc_24_w35_37_magup_sim10d_15154001_lb_jpsipk_ee_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15154021_lb_jpsippi_ee_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15154040_lb_lambda1520jpsi_ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15154050_lb_lambda1520psi2s_ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15154105_lb_jpsilambda_ee_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15512020_lb_pmunu_eq_tc_lqcd_m4p5g_rh_tuple
+      w37_39_v1r2266:
+        - mc_24_w37_39_magdown_sim10d-splitsim02_11102202_bd_kstgamma_eq_highptgamma_dpc_ss_tuple
+        - mc_24_w37_39_magdown_sim10d-splitsim02_11102441_bd_ksteta_gg_eq_dpc_ss_tuple
+        - mc_24_w37_39_magdown_sim10d-splitsim02_11102453_bd_kstpi0_eq_tc_kst982width100_highptpi0_ss_tuple
+        - mc_24_w37_39_magdown_sim10d-splitsim02_13102202_bs_phigamma_eq_highptgamma_dpc_ss_tuple
+        - mc_24_w37_39_magdown_sim10d-splitsim02_13102464_bs_phieta_gg_eq_dpc_ss_tuple
+        - mc_24_w37_39_magdown_sim10d-splitsim02_13102465_bs_phipi0_gg_eq_dpc_ss_tuple
+        - mc_24_w37_39_magdown_sim10d_11102005_bd_kplpimn_eq_cpv2017_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11102015_bd_piplpimn_eq_cpv2017_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11102021_bd_kplkmn_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11102453_bd_kstpi0_eq_tc_kst982width100_highptpi0_tuple
+        - mc_24_w37_39_magdown_sim10d_11112001_bd_mumu_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11112011_bd_emu_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11114014_bd_kstmumu_flatq2_eq_dpc_momcut_tuple
+        - mc_24_w37_39_magdown_sim10d_11124007_bd_kstee_flatq2_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11124009_bd_kstee_flatq2_eq_dpc_momcut_tc600mev_tuple
+        - mc_24_w37_39_magdown_sim10d_11124037_bd_kpiee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11124401_bd_ksteta_eplemng_eq_dalitz_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11124402_bd_kstpi0_eplemng_eq_dalitz_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11144001_bd_jpsikst_mm_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11144002_bd_jpsikst_update2012_mm_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11144103_bd_jpsiks_mm_eq_cpv_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11154001_bd_jpsikst_ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11154002_bd_jpsikst_update2012_ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11154011_bd_psi2skst_ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11154100_bd_jpsiks_ee_eq_cpv_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11202603_bd_k1gamma_kpipi0_eq_mk1270_highptgamma_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11512012_bd_pimunu_eq_dpc_m4p5g_tuple
+        - mc_24_w37_39_magdown_sim10d_11574030_bd_dmunu_kstmunu_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11584022_bd_denu_kstenu_eq_via_hvm_egdwc_tuple
+        - mc_24_w37_39_magdown_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12103025_bu_piplpimnkpl_eq_sqdalitz_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12103030_bu_kplpiplkmn_eq_sqdalitz_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12113004_bu_kmumu_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12113023_bu_pimumu_eq_btosllball05_dileptoninacc_tuple
+        - mc_24_w37_39_magdown_sim10d_12113024_bu_pimumu_eq_btosllball05_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12115191_bu_lambdapbarmumu_eq_helamp_tc_tuple
+        - mc_24_w37_39_magdown_sim10d_12123001_bu_kee_eq_btosllball_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12123021_bu_piee_eq_btosllball_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12125040_bu_phikee_kk_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12125101_bu_kstee_kspi_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12143001_bu_jpsik_mm_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12143010_bu_jpsipi_mm_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12145090_bu_kpipijpsi_mumu_eq_dpc_lsflat_tuple
+        - mc_24_w37_39_magdown_sim10d_12145122_bu_lambdabarpjpsi_mm_eq_helamp_tc_tuple
+        - mc_24_w37_39_magdown_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12153020_bu_jpsipi_ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12153420_bu_jpsikst_ee_kpi0_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12153430_bu_psi2skst_ee_kpi0_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12155020_bu_kpipijpsi_ee_eq_dpc_lsflat_tuple
+        - mc_24_w37_39_magdown_sim10d_12175101_bu_lambdacbarppi_lambdabarmunu_eq_helamp_tc_tuple
+        - mc_24_w37_39_magdown_sim10d_12183004_bu_d0pi_kenu_eq_dpc_tc_tuple
+        - mc_24_w37_39_magdown_sim10d_12425000_bu_k1ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12425011_bu_k2stee_kpipi_eq_mk1430_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12573040_bu_d0munu_kmunu_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12573050_bu_d0pi_kmunu_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12583013_bu_d0enu_kpi_eq_dpc_tc_tuple
+        - mc_24_w37_39_magdown_sim10d_12583020_bu_d0enu_kenu_eq_dpc_ptcut200mev_vismass4g_tuple
+        - mc_24_w37_39_magdown_sim10d_12873002_bu_d0munu_kpi_eq_cocktail_d0muinacc_brcorr1_tuple
+        - mc_24_w37_39_magdown_sim10d_13102004_bs_kplkmn_eq_cpv2017_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13102015_bs_piplkmn_eq_cpv2017_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13102021_bs_piplpimn_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13104013_bs_phiphi_eq_cdfamp_dpc_hpt400_tuple
+        - mc_24_w37_39_magdown_sim10d_13112001_bs_mumu_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13112011_bs_emu_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13112205_bs_gammamumu_eq_isr_masscut_tuple
+        - mc_24_w37_39_magdown_sim10d_13114006_bs_phimumu_eq_ball_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13124006_bs_phiee_eq_ball_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13124029_bs_phiee_flatq2_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13124030_bs_phiee_flatq2_eq_dpc_tc600mev_tuple
+        - mc_24_w37_39_magdown_sim10d_13124401_bs_phieta_eplemng_eq_dalitz_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13124402_bs_phipi0_eplemng_eq_dalitz_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13144001_bs_jpsiphi_mm_eq_cpv_update2012_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13144011_bs_jpsiphi_mm_eq_cpv_update2016_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13144041_bs_jpsikk_mm_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13144044_bs_psi2skk_mm_eq_phsp_dpc_tc_tuple
+        - mc_24_w37_39_magdown_sim10d_13154001_bs_jpsiphi_ee_eq_cpv_update2012_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13154041_bs_jpsikk_ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13154042_bs_psi2skk_ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_13512011_bs_kmunu_eq_dpc_m4p5g_tuple
+        - mc_24_w37_39_magdown_sim10d_13584000_bs_dsenu_phienu_eq_dpc_hvm_egdwc_tuple
+        - mc_24_w37_39_magdown_sim10d_13584200_bs_dsstenu_dsgamma_phienu_eq_dpc_hvm_egdwc_tuple
+        - mc_24_w37_39_magdown_sim10d_15102001_lb_pk_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15102011_lb_ppi_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15114001_lb_lambda1520mumu_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15114021_lb_ppimumu_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15124001_lb_lambda1520ee_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15124011_lb_pkee_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15124021_lb_ppiee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15144001_lb_jpsipk_mm_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15144011_lb_psi2spk_mm_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15144021_lb_jpsippi_mm_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15144040_lb_lambda1520jpsi_mm_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15144100_lb_jpsilambda_mm_eq_phsp_tuple
+        - mc_24_w37_39_magdown_sim10d_15154001_lb_jpsipk_ee_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15154021_lb_jpsippi_ee_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15154040_lb_lambda1520jpsi_ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15154050_lb_lambda1520psi2s_ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15154105_lb_jpsilambda_ee_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15512020_lb_pmunu_eq_tc_lqcd_m4p5g_rh_tuple
+      w40_42_v1r2266:
+        - mc_24_w40_42_magdown_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_11124037_bd_kpiee_eq_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_11144001_bd_jpsikst_mm_eq_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_11144103_bd_jpsiks_mm_eq_cpv_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_11154011_bd_psi2skst_ee_eq_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_11154100_bd_jpsiks_ee_eq_cpv_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_11574030_bd_dmunu_kstmunu_eq_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12103025_bu_piplpimnkpl_eq_sqdalitz_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12103030_bu_kplpiplkmn_eq_sqdalitz_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12143001_bu_jpsik_mm_eq_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12143010_bu_jpsipi_mm_eq_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12145090_bu_kpipijpsi_mumu_eq_dpc_lsflat_tuple
+        - mc_24_w40_42_magdown_sim10d_12153420_bu_jpsikst_ee_kpi0_eq_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12153430_bu_psi2skst_ee_kpi0_eq_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12155020_bu_kpipijpsi_ee_eq_dpc_lsflat_tuple
+        - mc_24_w40_42_magdown_sim10d_12183004_bu_d0pi_kenu_eq_dpc_tc_tuple
+        - mc_24_w40_42_magdown_sim10d_12425000_bu_k1ee_eq_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12425011_bu_k2stee_kpipi_eq_mk1430_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12573040_bu_d0munu_kmunu_eq_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12573050_bu_d0pi_kmunu_eq_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12583013_bu_d0enu_kpi_eq_dpc_tc_tuple
+        - mc_24_w40_42_magdown_sim10d_12583020_bu_d0enu_kenu_eq_dpc_ptcut200mev_vismass4g_tuple
+        - mc_24_w40_42_magdown_sim10d_12873002_bu_d0munu_kpi_eq_cocktail_d0muinacc_brcorr1_tuple
+        - mc_24_w40_42_magdown_sim10d_13144001_bs_jpsiphi_mm_eq_cpv_update2012_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_13144011_bs_jpsiphi_mm_eq_cpv_update2016_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_13154001_bs_jpsiphi_ee_eq_cpv_update2012_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_15144100_lb_jpsilambda_mm_eq_phsp_tuple
+        - mc_24_w40_42_magdown_sim10d_15154105_lb_jpsilambda_ee_eq_phsp_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_11124037_bd_kpiee_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_11144001_bd_jpsikst_mm_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_11144103_bd_jpsiks_mm_eq_cpv_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_11154011_bd_psi2skst_ee_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_11154100_bd_jpsiks_ee_eq_cpv_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_11574030_bd_dmunu_kstmunu_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12103025_bu_piplpimnkpl_eq_sqdalitz_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12103030_bu_kplpiplkmn_eq_sqdalitz_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12113001_bu_kmumu_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12113005_bu_pimumu_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12143001_bu_jpsik_mm_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12145090_bu_kpipijpsi_mumu_eq_dpc_lsflat_tuple
+        - mc_24_w40_42_magup_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12153420_bu_jpsikst_ee_kpi0_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12153430_bu_psi2skst_ee_kpi0_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12155020_bu_kpipijpsi_ee_eq_dpc_lsflat_tuple
+        - mc_24_w40_42_magup_sim10d_12183004_bu_d0pi_kenu_eq_dpc_tc_tuple
+        - mc_24_w40_42_magup_sim10d_12425000_bu_k1ee_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12425011_bu_k2stee_kpipi_eq_mk1430_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12573040_bu_d0munu_kmunu_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12573050_bu_d0pi_kmunu_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12583013_bu_d0enu_kpi_eq_dpc_tc_tuple
+        - mc_24_w40_42_magup_sim10d_12583020_bu_d0enu_kenu_eq_dpc_ptcut200mev_vismass4g_tuple
+        - mc_24_w40_42_magup_sim10d_12873002_bu_d0munu_kpi_eq_cocktail_d0muinacc_brcorr1_tuple
+        - mc_24_w40_42_magup_sim10d_13112001_bs_mumu_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_13144001_bs_jpsiphi_mm_eq_cpv_update2012_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_13144011_bs_jpsiphi_mm_eq_cpv_update2016_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_13154001_bs_jpsiphi_ee_eq_cpv_update2012_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_15144100_lb_jpsilambda_mm_eq_phsp_tuple
+        - mc_24_w40_42_magup_sim10d_15154105_lb_jpsilambda_ee_eq_phsp_dpc_tuple
+      # ---------
+      w31_34_v1r2437:
+        - mc_24_w31_34_magup_sim10d_11124002_bd_kstee_eq_btosllball05_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11144011_bd_psi2skst_mm_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11264001_bd_dmnpipl_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_11442001_bd_jpsix_mm_eq_jpsiinacc_tuple
+        - mc_24_w31_34_magup_sim10d_11453001_bd_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w31_34_magup_sim10d_11584030_bd_dstplenu_eq_phsp_tc_tuple
+        - mc_24_w31_34_magup_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12123003_bu_kee_eq_btosllball05_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12143020_bu_psi2sk_mm_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12153012_bu_psi2sk_ee_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_12952000_bu_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w31_34_magup_sim10d_13454001_bs_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w31_34_magup_sim10d_15454101_lb_jpsix_ee_eq_jpsiinacc_tuple
+      w35_37_v1r2437:
+        - mc_24_w35_37_magup_sim10d_11124002_bd_kstee_eq_btosllball05_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11144011_bd_psi2skst_mm_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11264001_bd_dmnpipl_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_11442001_bd_jpsix_mm_eq_jpsiinacc_tuple
+        - mc_24_w35_37_magup_sim10d_11453001_bd_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w35_37_magup_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12123003_bu_kee_eq_btosllball05_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12143020_bu_psi2sk_mm_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12153012_bu_psi2sk_ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_12952000_bu_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w35_37_magup_sim10d_13454001_bs_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w35_37_magup_sim10d_15454101_lb_jpsix_ee_eq_jpsiinacc_tuple
+      w37_39_v1r2437:
+        - mc_24_w37_39_magdown_sim10d_11124002_bd_kstee_eq_btosllball05_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11144011_bd_psi2skst_mm_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11264001_bd_dmnpipl_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_11442001_bd_jpsix_mm_eq_jpsiinacc_tuple
+        - mc_24_w37_39_magdown_sim10d_11453001_bd_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w37_39_magdown_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12123003_bu_kee_eq_btosllball05_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12143020_bu_psi2sk_mm_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12153012_bu_psi2sk_ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_12952000_bu_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w37_39_magdown_sim10d_13454001_bs_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w37_39_magdown_sim10d_15454101_lb_jpsix_ee_eq_jpsiinacc_tuple
+      w40_42_v1r2437:
+        - mc_24_w40_42_magdown_sim10d_11264001_bd_dmnpipl_eq_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_11442001_bd_jpsix_mm_eq_jpsiinacc_tuple
+        - mc_24_w40_42_magdown_sim10d_11453001_bd_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w40_42_magdown_sim10d_12952000_bu_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w40_42_magdown_sim10d_13454001_bs_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w40_42_magdown_sim10d_15454101_lb_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w40_42_magup_sim10d_11264001_bd_dmnpipl_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_11442001_bd_jpsix_mm_eq_jpsiinacc_tuple
+        - mc_24_w40_42_magup_sim10d_11453001_bd_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w40_42_magup_sim10d_11584030_bd_dstplenu_eq_phsp_tc_tuple
+        - mc_24_w40_42_magup_sim10d_12113001_bu_kmumu_eq_dpc_tuple
+        - mc_24_w40_42_magup_sim10d_12952000_bu_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w40_42_magup_sim10d_13454001_bs_jpsix_ee_eq_jpsiinacc_tuple
+        - mc_24_w40_42_magup_sim10d_15454101_lb_jpsix_ee_eq_jpsiinacc_tuple
+      <<: *tst_sam
+# ------------------------------------------------
+transformations:
+  particle_variables:
+    # For EVERY particle, will define (or redefine) the variables below
+    P  : TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) + TMath::Sq(PARTICLE_PZ) )
+    PT : TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) )
+  redefine_head:
+    # This is needed due to the way the isolation head is defined for
+    # cut based and mva based lines:
+    # https://gitlab.cern.ch/lhcb/Moore/-/blob/2024-patches/Hlt/Hlt2Conf/python/Hlt2Conf/lines/rd/b_to_xll_hlt2_mva.py
+    # X : Y
+    # Means X will be renamed as Y, change in order not possible due to repeated keys
+    Lb_HEAD_CC_Lb_ : B_HEAD_CC_B_
+    Lb_HEAD_NC_Lb_ : B_HEAD_NC_B_
+    Lb_VTXISO_Lb_  : B_VTXISO_B_
+
+    B_HEAD_CC_bp_  : B_HEAD_CC_B_
+    B_HEAD_NC_bp_  : B_HEAD_NC_B_
+    B_VTXISO_bp_   : B_VTXISO_B_
+
+    B_HEAD_CC_bd_  : B_HEAD_CC_B_
+    B_HEAD_NC_bd_  : B_HEAD_NC_B_
+    B_VTXISO_bd_   : B_VTXISO_B_
+    # Lb and Bx samples will have branches starting with B, simpler
+    Lb_            : B_
+    # Sprucing issue
+    Hp_            : H_
+    # Use H names, remove renaming function
+    K_             : H_
+  define_all:
+    #These defitions are done on top of the names stemming from the changes caused by `redefine_head`
+    q2       : Jpsi_M * Jpsi_M
+    nTracks  : nBackTracks + nDownstreamTracks + nLongTracks + nTTracks + nUpstreamTracks + nVeloTracks
+  define:
+    bukee:
+      <<: *angles
+    bukmm:
+      <<: *angles
+  rename:
+    B_DTF_Jpsi_MASS                   : B_const_mass_M
+    B_DTF_Jpsi_PX                     : B_const_mass_PX
+    B_DTF_Jpsi_PY                     : B_const_mass_PY
+    B_DTF_Jpsi_PZ                     : B_const_mass_PZ
+    B_DTF_Jpsi_PE                     : B_const_mass_PE
+
+    B_DTF_Psi2S_MASS                  : B_const_mass_psi2S_M
+    B_DTF_Psi2S_PX                    : B_const_mass_psi2S_PX
+    B_DTF_Psi2S_PY                    : B_const_mass_psi2S_PY
+    B_DTF_Psi2S_PZ                    : B_const_mass_psi2S_PZ
+    B_DTF_Psi2S_PE                    : B_const_mass_psi2S_PE
+    #---------
+    # Needed for sprucing inclusive lines
+    Hp_PID_E                          : H_PIDe
+    Hp_TRGHOSTPROB                    : H_TRACK_GhostProb
+    Hp_PROBNN_K                       : H_ProbNNk
+    #---------
+    K_TRGHOSTPROB                     : H_TRACK_GhostProb
+    H1_TRGHOSTPROB                    : H1_TRACK_GhostProb
+    H2_TRGHOSTPROB                    : H2_TRACK_GhostProb
+    L1_TRGHOSTPROB                    : L1_TRACK_GhostProb
+    L2_TRGHOSTPROB                    : L2_TRACK_GhostProb
+    #
+    K_PID_E                           : H_PIDe
+    H1_PID_E                          : H1_PIDe
+    H2_PID_E                          : H2_PIDe
+    #
+    K_PROBNN_E                        : K_ProbNNe
+    H1_PROBNN_E                       : H1_ProbNNe
+    H2_PROBNN_E                       : H2_ProbNNe
+    #
+    K_PROBNN_K                        : H_ProbNNk
+    H1_PROBNN_K                       : H1_ProbNNk
+    H2_PROBNN_K                       : H2_ProbNNk
+    #
+    L1_PID_E                          : L1_PIDe
+    L2_PID_E                          : L2_PIDe
+    L1_PROBNN_E                       : L1_ProbNNe
+    L2_PROBNN_E                       : L2_ProbNNe
+    #
+    L1_PID_MU                         : L1_PIDmu
+    L2_PID_MU                         : L2_PIDmu
+    L1_PROBNN_MU                      : L1_ProbNNmu
+    L2_PROBNN_MU                      : L2_ProbNNmu
+    #
+    L1_ISMUON                         : L1_isMuon
+    L2_ISMUON                         : L2_isMuon
+    # -----
+    B_BPVFDCHI2                       : B_FDCHI2_OWNPV
+    Jpsi_BPVFDCHI2                    : Jpsi_FDCHI2_OWNPV
+    # -----
+    B_BPVDIRA                         : B_DIRA_OWNPV
+    Jpsi_BPVDIRA                      : Jpsi_DIRA_OWNPV
+    # -----
+    B_BPVIPCHI2                       : B_IPCHI2_OWNPV
+    Jpsi_BPVIPCHI2                    : Jpsi_IPCHI2_OWNPV
+    H_BPVIPCHI2                       : H_IPCHI2_OWNPV
+    L1_BPVIPCHI2                      : L1_IPCHI2_OWNPV
+    L2_BPVIPCHI2                      : L2_IPCHI2_OWNPV
+    # -----
+    B_END_VZ                          : B_ENDVERTEX_Z
+    B_CHI2                            : B_ENDVERTEX_CHI2
+    L1_ENERGY                         : L1_PE
+    L2_ENERGY                         : L2_PE
+    B_ENDVERTEX_Z                     : B_END_VZ
+    B_ENDVERTEX_CHI2                  : B_CHI2
+    L1_PE                             : L1_ENERGY
+    L2_PE                             : L2_ENERGY
+    L1_HASBREMADDED                   : L1_BremMultiplicity
+    L2_HASBREMADDED                   : L2_BremMultiplicity
+  drop_branches:
+    # This should happend AFTER the redefinitions, renaming and definitions are done
+    includes:
+      # Kinematics
+      - _MAXDOCA
+      - _MAXSDOCA
+      - _DOCA
+      - _SDOCA
+      - _SUM_PT
+      - _ALLPV_
+      # Isolation heads
+      - _Lb_
+      - _bp_
+      - _bd_
+      - _Lz_
+      # Drop covariance matrices
+      - _COV_MATRIX
+      #Track's cluster, calo, RICH PID,
+      - _CLUSTER
+      - _Calo
+      - _RICH_DLL_
+      - _RICH_SCALED_DLL_
+      - _STATEAT_
+      - _THREE_
+      #
+      - SMOG2
+      - _EE2KK_
+      - _EE2PiPi_
+      - _K2P_
+      - _K2Pi_
+      - _KP2PK_
+      - _P2K_
+      - _DTF_
+      - _MuMu2KK_
+      - _MuMu2PiPi_
+      - _MuMuK2KKPi_
+      - _MuMuK2PiPiPi_
+      - _POS_COV_MATRIX_
+      - _MOM_POS_COV_MATRIX_
+      - _MOM_COV_MATRIX_
+      - _POSITION_STATEAT_
+      - CutBasedIncl
+      - _InclDet
+      - _RICH_THRESHOLD_
+      - _Hlt1Beam
+      - _Hlt1BGI
+      - _Hlt1D2K
+      - _Hlt1D2P
+      - _Hlt1Det
+      - _Hlt1DiElectron
+      - _Hlt1DiMuon
+      - _Hlt1DiPhoton
+      - _Hlt1Displaced
+      - _Hlt1Dst2
+      - _Hlt1Error
+      - _Hlt1GEC
+      - _Hlt1KsToPiPi
+      - _Hlt1LambdaLL
+      - _Hlt1LowPtDiMuon
+      - _Hlt1LowPtMuon
+      - _Hlt1Material
+      - _Hlt1MicroBias
+      - _Hlt1NoBias
+      - _Hlt1ODIN
+      - _Hlt1OneMuon
+      - _Hlt1Passthrough
+      - _Hlt1Pi02GammaGamma
+      - _Hlt1RICH1
+      - _Hlt1RICH2
+      - _Hlt1SingleHighPt
+      - _Hlt1SMOG
+      - _Hlt1TAEPassthrough
+      - _Hlt1Velo
+      - _Hlt1XiOmegaLLL
+    starts_with:
+      # Occupacy
+      - nBackTracks
+      - nDownstreamTracks
+      - nLongTracks
+      - nTTracks
+      - nUpstreamTracks
+      - nVeloTracks
+      # B
+      - B_ID
+      - B_KEY
+      - B_VPVFDI
+      - B_VPVFDV
+      - B_AL
+      - B_BPVFDVEC
+      - B_MAX
+      - B_MIN
+      # Jpsi
+      - Jpsi_Min
+      - Jpsi_MIN
+      - Jpsi_Max
+      - Jpsi_MAX
+      - Jpsi_ALV
+      # Phi
+      - Phi_Max
+      - Phi_Min
+      - Phi_ALV
+      # Kst
+      - Kst_Min
+      - Kst_MIN
+      - Kst_Max
+      - Kst_MAX
+      - Kst_ALV
+      # Lz
+      - Lz_Max
+      - Lz_Min
+      - Lz_ALV
+      # Lepton
+      - L1_HCAL
+      - L2_HCAL
+      # Hadron
+      - Hp_
+      - H_BREM
+      - H_ECAL
+      - H_ELECTRON
+      - H_MUON
+      - P_BREM
+      - P_ECAL
+      - P_ELECTRON
+      - P_MUON
+      - H1_BREM
+      - H1_ECAL
+      - H1_ELECTRON
+      - H1_MUON
+      - H2_BREM
+      - H2_ECAL
+      - H2_ELECTRON
+      - H2_MUON
+      # Hlt not for B
+      - Hlt1
+      - Jpsi_Hlt1
+      - Phi_Hlt1
+      - Kst_Hlt1
+      - Lz_Hlt1
+      - Hlt2
+      # Hlt1 for tracks not needed, will use Hlt1 for B
+      - H_Hlt1
+      - P_Hlt1
+      - H1_Hlt1
+      - H2_Hlt1
+      - L1_Hlt1
+      - L2_Hlt1
+      # Others
+      - B_K2Pi_DTF_
+      - Lb_
+      - BUNCHCROSSING
+    ends_with:
+      - _KEY
+      - _PARTICLE_ID
+      - _SUM_PT
+    #Will drop branches matching wild card
+    wild_card:
+      # Leptons
+      - L*_N*HITS
+      - L*_PT_WITH_BREM
+      - L*_MUONCATBOOST
+      - L*_RICH*_GAS_USED
+      - L*_ECALPID*
+      - L*_ELECTRON*
+      - L*_BREMHYPO*
+      - L*_HASBREM*
+      - L*MUONLLBG
+      - L*MUONLLMU
+      # Hadrons
+      - H_N*HITS
+      - H_RICH*_GAS_USED
+      - H_HASBREM*
+      - H1_N*HITS
+      - H1_RICH*_GAS_USED
+      - H1_HASBREM*
+      - H2_N*HITS
+      - H2_RICH*_GAS_USED
+      - H2_HASBREM*
+      # Isolation
+      - B_HEAD_CC_B_ChargedIso_DR2_*_D*
+      - B_HEAD_NC_B_NeutralIso_DR2_*_D*
+  hlt_lines_test:
+    lines_phys_ee_mva:
+      - Hlt2RD_B0ToKpPimEE_MVA
+  hlt_lines_very_low_priority:  &very_low_priority
+    lines_ss_ee_mva:
+      - Hlt2RD_BsToPhiEE_SameSign_MVA
+    lines_ss_mm_mva:
+      - Hlt2RD_BsToPhiMuMu_SameSign_MVA
+    lines_msid_ee_mva:
+      - Hlt2RD_BsToPhiEE_MVA_misid
+    lines_phys_mm_mva:
+      - Hlt2RD_BsToPhiMuMu_MVA
+    lines_phys_ee_mva:
+      - Hlt2RD_BsToPhiEE_MVA
+  hlt_lines_low_priority:  &low_priority
+    lines_phys_ee_cut:
+      - Hlt2RD_BuToKpEE
+      - Hlt2RD_B0ToKpPimEE
+      - Hlt2RD_LbToPKJpsi_JpsiToEE
+      - Hlt2RD_LambdabToPKEE
+      - Hlt2RD_LbToLEE_LL
+    lines_phys_mm_cut:
+      - Hlt2RD_BuToKpMuMu
+      - Hlt2RD_B0ToKpPimMuMu
+      - Hlt2RD_LbToPKJpsi_JpsiToMuMu
+      - Hlt2RD_LambdabToPKMuMu
+      - Hlt2RD_LbToLMuMu_LL
+    lines_sprucing:
+      - SpruceRD_BuToKpMuMu
+      - SpruceRD_BuToHpMuMu
+      - SpruceRD_BuToHpEE
+      - SpruceRD_B0ToKpPimMuMu
+      - SpruceRD_B0ToHpHmMuMu
+      - SpruceRD_B0ToKpPimEE
+      - SpruceRD_B0ToHpHmEE
+  hlt_lines_high_priority: &high_priority
+    lines_nopid:
+      - Hlt2RD_BuToKpEE_MVA_noPID
+      - Hlt2RD_BuToKpMuMu_MVA_noPID
+      - Hlt2RD_B0ToKpPimEE_MVA_noPID
+      - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
+    lines_cali_ee_mva:
+      - Hlt2RD_BuToKpEE_MVA_cal
+      - Hlt2RD_B0ToKpPimEE_MVA_cal
+    lines_msid_ee_mva:
+      - Hlt2RD_BuToKpEE_MVA_misid
+      - Hlt2RD_B0ToKpPimEE_MVA_misid
+      - Hlt2RD_LbTopKEE_MVA_misid
+    lines_phys_ee_mva:
+      - Hlt2RD_BuToKpEE_MVA
+      - Hlt2RD_BuToKpEE_SameSign_MVA
+      - Hlt2RD_B0ToKpPimEE_MVA
+      - Hlt2RD_B0ToKpPimEE_SameSign_MVA
+      - Hlt2RD_LbTopKEE_MVA
+      - Hlt2RD_LbTopKEE_SameSign_MVA
+    lines_phys_mm_mva:
+      - Hlt2RD_BuToKpMuMu_MVA
+      - Hlt2RD_BuToKpMuMu_SameSign_MVA
+      - Hlt2RD_B0ToKpPimMuMu_MVA
+      - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
+      - Hlt2RD_LbTopKMuMu_SameSign_MVA
+      - Hlt2RD_LbTopKMuMu_MVA
+  hlt_lines:
+    <<: *high_priority
+    <<: *low_priority
+  categories:
+      bukee:
+        - SpruceRD_BuToHpEE
+        - Hlt2RD_BuToKpEE
+        - Hlt2RD_BuToKpEE_MVA
+        - Hlt2RD_BuToKpEE_SameSign_MVA
+        - Hlt2RD_BuToKpEE_MVA_cal
+        - Hlt2RD_BuToKpEE_MVA_noPID
+        - Hlt2RD_BuToKpEE_MVA_misid
+      bdkstee:
+        - SpruceRD_B0ToKpPimEE
+        - SpruceRD_B0ToHpHmEE
+        - Hlt2RD_B0ToKpPimEE
+        - Hlt2RD_B0ToKpPimEE_MVA
+        - Hlt2RD_B0ToKpPimEE_SameSign_MVA
+        - Hlt2RD_B0ToKpPimEE_MVA_cal
+        - Hlt2RD_B0ToKpPimEE_MVA_noPID
+        - Hlt2RD_B0ToKpPimEE_MVA_misid
+      bukmm:
+        - SpruceRD_BuToKpMuMu
+        - SpruceRD_BuToHpMuMu
+        - Hlt2RD_BuToKpMuMu
+        - Hlt2RD_BuToKpMuMu_MVA
+        - Hlt2RD_BuToKpMuMu_SameSign_MVA
+        - Hlt2RD_BuToKpMuMu_MVA_noPID
+      bdkstmm:
+        - SpruceRD_B0ToKpPimMuMu
+        - SpruceRD_B0ToHpHmMuMu
+        - Hlt2RD_B0ToKpPimMuMu
+        - Hlt2RD_B0ToKpPimMuMu_MVA
+        - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
+        - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
+      lbpkee_1:
+        - Hlt2RD_LambdabToPKEE
+      lbpkee_2:
+        - Hlt2RD_LbToPKJpsi_JpsiToEE
+        - Hlt2RD_LambdabToPKEE
+        - Hlt2RD_LbTopKEE_MVA_misid
+        - Hlt2RD_LbTopKEE_MVA
+        - Hlt2RD_LbTopKEE_SameSign_MVA
+      lbpkmm_1:
+        - Hlt2RD_LambdabToPKMuMu
+      lbpkmm_2:
+        - Hlt2RD_LbToPKJpsi_JpsiToMuMu
+        - Hlt2RD_LbTopKMuMu_MVA
+        - Hlt2RD_LbTopKMuMu_SameSign_MVA
+      lbppiee:
+        - Hlt2RD_LbToLEE_LL
+      lbppimm:
+        - Hlt2RD_LbToLMuMu_LL
+  selection:
+    evt_max : -1
+    cuts:
+      bukee:
+        <<: *rk_ee_cuts
+      bukmm:
+        <<: *rk_mm_cuts
+      bdkstee:
+        k_mass : Kst_M    >  800 && Kst_M   < 1000
+        H1Ghost: H1_TRGHOSTPROB < 0.5
+        H2Ghost: H2_TRGHOSTPROB < 0.5
+      bdkstmm:
+        k_mass : Kst_M    >  800 && Kst_M   < 1000
+        H1Ghost: H1_TRGHOSTPROB < 0.5
+        H2Ghost: H2_TRGHOSTPROB < 0.5
+      lbpkee_1:
+        H1Ghost: H1_TRGHOSTPROB < 0.5
+        H2Ghost: H2_TRGHOSTPROB < 0.5
+      lbpkee_2:
+        H1Ghost: P_TRGHOSTPROB  < 0.5
+        H2Ghost: K_TRGHOSTPROB  < 0.5
+      lbpkmm_1:
+        H1Ghost: H1_TRGHOSTPROB < 0.5
+        H2Ghost: H2_TRGHOSTPROB < 0.5
+      lbpkmm_2:
+        H1Ghost: P_TRGHOSTPROB  < 0.5
+        H2Ghost: K_TRGHOSTPROB  < 0.5
+      lbppiee  :
+        H1Ghost:  P_TRGHOSTPROB  < 0.5
+        H2Ghost: Pi_TRGHOSTPROB  < 0.5
+      lbppimm  :
+        H1Ghost:  P_TRGHOSTPROB  < 0.5
+        H2Ghost: Pi_TRGHOSTPROB  < 0.5
+  saving:
+    evt_max : -1
+    compression : 2
+    store_branch: false
