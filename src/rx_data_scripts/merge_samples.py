@@ -49,7 +49,7 @@ def _get_samples() -> dict:
 # ----------------------------
 def _merge_paths(l_path : list[str]) -> None:
     sample_name = Data.sample_name.lower()
-    out_path    = f'{Data.out_dir}/{sample_name}_{Data.trigger_name}_0000000000.root'
+    out_path    = f'{Data.out_dir}/{sample_name}_{Data.trigger_name}.root'
     if os.path.isfile(out_path):
         log.info(f'File already found: {out_path}')
         return
