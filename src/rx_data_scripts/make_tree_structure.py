@@ -160,7 +160,7 @@ def _get_args() -> argparse.Namespace:
     parser.add_argument('-f', '--fle' , type=str, help='Path to YAML file with directory structure')
     parser.add_argument('-t', '--trg' , type=str, help='Path to YAML file with list of lines to process')
     parser.add_argument('-p', '--path', type=str, help='Path to files that will override original one, e.g. in EOS.')
-    parser.add_argument('-k', '--kind', type=str, help='Type of production', choices=['rx', 'lbpkmumu'], required=True)
+    parser.add_argument('-k', '--kind', type=str, help='Type of production', choices=['rx', 'lbpkmumu'])
     parser.add_argument('-n', '--nam' , type=str, help='Naming scheme for samples', default='new', choices=['new', 'old'])
     parser.add_argument('-m', '--max' , type=int, help='Maximum number of paths, for test runs'   , default=-1)
     parser.add_argument('-l', '--lvl' , type=int, help='log level', choices=[10, 20, 30]          , default=20)
