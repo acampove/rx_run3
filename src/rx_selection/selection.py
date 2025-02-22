@@ -37,12 +37,14 @@ def selection(analysis : str, project : str, q2bin: str, process : str) -> dict[
     '''
     d_cut : dict[str,str] = {}
 
-    event_type     = process if process.startswith('DATA_') else aput.read_event_type(nickname=process)
+    event_type     = process if process.startswith('DATA') else aput.read_event_type(nickname=process)
     log.info(f'{process:<40}{"->":20}{event_type:<20}')
 
-    if process.startswith('DATA_'):
+    if process.startswith('DATA'):
+        log.debug('Adding cleaning requirement for data')
         d_cut['clean'] = 'dataq == 1'
     else:
+        log.debug('Adding truth matching requirement for MC')
         d_cut['truth'] = tm.get_truth(event_type)
 
     d_tmp = _get_selection(analysis, project, q2bin)
@@ -52,7 +54,7 @@ def selection(analysis : str, project : str, q2bin: str, process : str) -> dict[
 #-----------------------
 def load_selection_config() -> dict:
     '''
-    Returns dictionary with configuration (cuts, definitions, etc) needed for selection
+    Returns dictionary with the latest selection config
     '''
     sel_wc = files('rx_selection_data').joinpath('selection/*.yaml')
     sel_wc = str(sel_wc)
@@ -64,26 +66,37 @@ def load_selection_config() -> dict:
             version_only = False ,
             main_only    = False)
 
+    log.info(f'Loading selection from: {yaml_path}')
+
     with open(yaml_path, encoding='utf-8') as ifile:
         d_sel = yaml.safe_load(ifile)
 
     return d_sel
 #-----------------------
-def _get_selection(analysis : str, project : str, q2bin : str) -> dict[str,str]:
-    d_sel  = load_selection_config()
-    d_cut  = d_sel[project][analysis]
+def _get_selection(chan : str, proj: str, q2_bin : str) -> dict[str,str]:
+    cfg = load_selection_config()
 
-    mv_cut = d_cut['bdt' ][q2bin]
-    q2_cut = d_cut['q2'  ][q2bin]
-    ms_cut = d_cut['mass'][q2bin]
+    if proj not in cfg:
+        raise ValueError(f'Cannot find {proj} in config')
 
-    del d_cut['bdt' ]
-    del d_cut['q2'  ]
-    del d_cut['mass']
+    if chan not in cfg[proj]:
+        raise ValueError(f'Cannot find {chan} in config section for {proj}')
 
-    d_cut['bdt' ] = mv_cut
-    d_cut['q2'  ] = q2_cut
-    d_cut['mass'] = ms_cut
+    d_cut = cfg[proj][chan]
 
-    return d_cut
+    d_new = {}
+    for cut_name, d_q2bin in d_cut.items():
+        if not isinstance(d_q2bin, dict):
+            d_new[cut_name] = d_q2bin
+            continue
+
+        if q2_bin not in d_q2bin:
+            raise ValueError(f'Cannot find q2bin {q2_bin} in {cut_name} section')
+
+        cut_val = d_q2bin[q2_bin]
+        log.debug(f'Overriding {cut_name} for {q2_bin}')
+
+        d_new[cut_name] = cut_val
+
+    return d_new
 #-----------------------

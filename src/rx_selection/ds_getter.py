@@ -10,16 +10,9 @@ Module containing class that provides ROOT dataframe after a given selection
 
 import os
 import re
-import glob
 import pprint
-import numexpr
 
 import yaml
-import joblib
-import numpy
-import dmu.rdataframe.utilities as dmu_ut
-
-from dmu.ml.cv_predict      import CVPredict
 from dmu.rdataframe.atr_mgr import AtrMgr
 from dmu.logging.log_store  import LogStore
 from ROOT                   import RDataFrame, TFile
@@ -327,97 +320,6 @@ class DsGetter:
 
         return cut
     # ----------------------------------------
-    def _get_q2_indexer(self) -> str:
-        '''
-        Returns a string that depends on Jpsi_M.
-        When evaluated it gives
-        - 0 for low
-        - 1 for central
-        - 2 for high
-
-        q2 bin
-        '''
-        sel_cfg  = sel.load_selection_config()
-        ana      = self._get_analysis()
-        prj      = self._project
-        d_q2_cut = sel_cfg[prj][ana]['q2']
-
-        low_cut  = d_q2_cut['low'    ]
-        cen_cut  = d_q2_cut['central']
-        hig_cut  = d_q2_cut['high'   ]
-
-        cond     = f'0 * ({low_cut}) + 1 * ({cen_cut}) + 2 * ({hig_cut})'
-        cond     = cond.replace('&&', '&')
-
-        log.debug(f'Using q2 indexer: {cond}')
-
-        return cond
-    # ----------------------------------------
-    def _get_full_q2_scores(self,
-                            low     : numpy.ndarray,
-                            central : numpy.ndarray,
-                            high    : numpy.ndarray,
-                            Jpsi_M  : numpy.ndarray) -> numpy.ndarray:
-        '''
-        Takes arrays of MVA in 3 q2 bins, as well as array of jpsi mass.
-        Returns array of mva score correspoinding to right q2 bin.
-        '''
-
-        q2_cond = self._get_q2_indexer()
-        arr_ind = numexpr.evaluate(q2_cond)
-
-        arr_all_q2  = numpy.array([low, central, high])
-        arr_full_q2 = numpy.choose(arr_ind, arr_all_q2)
-
-        return arr_full_q2
-    # ----------------------------------------
-    def _q2_scores_from_rdf(self, rdf : RDataFrame, path : str) -> numpy.ndarray:
-        l_pkl  = glob.glob(f'{path}/*.pkl')
-        npkl   = len(l_pkl)
-        if npkl == 0:
-            raise ValueError(f'No pickle files found in {path}')
-
-        log.info(f'Using {npkl} pickle files from: {path}')
-
-        l_model = [ joblib.load(pkl_path) for pkl_path in l_pkl ]
-
-        cvp     = CVPredict(models=l_model, rdf=rdf)
-        arr_prb = cvp.predict()
-
-        return arr_prb
-    # ----------------------------------------
-    def _scores_from_rdf(self, rdf : RDataFrame, d_path : dict[str,str]) -> numpy.ndarray:
-        arr_low     = self._q2_scores_from_rdf(rdf, d_path['low'    ])
-        arr_central = self._q2_scores_from_rdf(rdf, d_path['central'])
-        arr_high    = self._q2_scores_from_rdf(rdf, d_path['high'   ])
-        arr_jpsi_m  = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
-
-        arr_mva     = self._get_full_q2_scores(low=arr_low, central=arr_central, high=arr_high, Jpsi_M=arr_jpsi_m)
-
-        return arr_mva
-    # ----------------------------------------
-    def _add_mva(self, rdf : RDataFrame) -> RDataFrame:
-        if 'mva' not in self._cfg:
-            log.warning('Not adding MVA scores')
-            return rdf
-
-        d_mva_kind = self._cfg['mva']
-        if len(d_mva_kind) == 0:
-            log.warning('No MVAs found, skipping addition')
-            return rdf
-
-        nmva = len(d_mva_kind)
-        log.info(f'Found {nmva} kinds of MVA scores')
-
-        d_mva_score = { f'mva_{name}' : self._scores_from_rdf(rdf, d_path) for name, d_path in d_mva_kind.items() }
-
-        log.info('Adding MVA columns')
-        for name, arr_val in d_mva_score.items():
-            log.debug('    %s',name)
-            rdf = dmu_ut.add_column(rdf, arr_val, name)
-
-        return rdf
-    # ----------------------------------------
     def get_rdf(self) -> RDataFrame:
         '''
         Returns ROOT dataframe after selection
@@ -427,7 +329,6 @@ class DsGetter:
 
         rdf   = self._get_rdf_raw()
         dfmgr = AtrMgr(rdf)
-        rdf   = self._add_mva(rdf)
         d_cut = sel.selection(
                 analysis = self._get_analysis(),
                 project  = self._project,
