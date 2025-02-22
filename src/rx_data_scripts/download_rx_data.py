@@ -132,7 +132,7 @@ def _get_args():
     parser = argparse.ArgumentParser(description='Script used to download ntuples from EOS')
     parser.add_argument('-t', '--trig' , type=str, help='Path to YAML file with list of triggers', required=True)
     parser.add_argument('-v', '--vers' , type=str, help='Version of LFNs'                        , required=True)
-    parser.add_argument('-k', '--kind' , type=str, help='Type of production'                     , choices=['rx', 'lbpkmumu'], default='rx')
+    parser.add_argument('-k', '--kind' , type=str, help='Type of production'                     , choices=['rx', 'lbpkmumu'], required=True)
     parser.add_argument('-n', '--nfile', type=int, help='Number of files to download', default=-1)
     parser.add_argument('-p', '--dest' , type=str, help='Destination directory will override whatever is in DOWNLOAD_NTUPPATH')
     parser.add_argument('-l', '--log'  , type=int, help='Log level, default 20', choices=[10, 20, 30, 40], default=20)
