@@ -37,6 +37,7 @@ class Data:
 
     d_trig  : dict[str,int]
     vers    : str
+    kind    : str
     nfile   : int
     log_lvl : int
     dst_dir : Union[str, None]
@@ -93,7 +94,7 @@ def _has_good_trigger(pfn : str) -> bool:
     return is_good
 # --------------------------------------------------
 def _get_pfns() -> list[str]:
-    json_wc = files('rx_data_lfns').joinpath(f'{Data.vers}/*.json')
+    json_wc = files('rx_data_lfns').joinpath(f'{Data.kind}/{Data.vers}/*.json')
     json_wc = str(json_wc)
     l_json  = glob.glob(json_wc)
 
@@ -131,6 +132,7 @@ def _get_args():
     parser = argparse.ArgumentParser(description='Script used to download ntuples from EOS')
     parser.add_argument('-t', '--trig' , type=str, help='Path to YAML file with list of triggers', required=True)
     parser.add_argument('-v', '--vers' , type=str, help='Version of LFNs'                        , required=True)
+    parser.add_argument('-k', '--kind' , type=str, help='Type of production'                     , choices=['rx', 'lbpkmumu'], default='rx')
     parser.add_argument('-n', '--nfile', type=int, help='Number of files to download', default=-1)
     parser.add_argument('-p', '--dest' , type=str, help='Destination directory will override whatever is in DOWNLOAD_NTUPPATH')
     parser.add_argument('-l', '--log'  , type=int, help='Log level, default 20', choices=[10, 20, 30, 40], default=20)
@@ -143,6 +145,7 @@ def _get_args():
 
     Data.trg_path= args.trig
     Data.vers    = args.vers
+    Data.kind    = args.kind
     Data.nfile   = args.nfile
     Data.dst_dir = args.dest
     Data.log_lvl = args.log
