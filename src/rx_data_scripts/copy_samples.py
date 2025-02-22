@@ -92,16 +92,24 @@ def _initialize():
 
     Data.l_source = l_path
 # -----------------------------------------
-def _copy_sample(source : str) -> None:
+def _copy_sample(source : str) -> int:
     fname = os.path.basename(source)
     target= f'{Data.out_dir}/{fname}'
 
     if os.path.isfile(target):
         log.debug(f'Target found, skipping: {target}')
-        return
+        return 0
 
     if not Data.dry:
+        log.debug('')
+        log.debug(source)
+        log.debug('--->')
+        log.debug(target)
+        log.debug('')
         shutil.copy(source, target)
+        return 1
+
+    return 0
 # -----------------------------------------
 def main():
     '''
@@ -111,8 +119,11 @@ def main():
     _initialize()
 
     l_path = _get_source_paths()
+    ncopied= 0
     for path in tqdm.tqdm(l_path, ascii=' -'):
-        _copy_sample(path)
+        ncopied += _copy_sample(path)
+
+    log.info(f'Copied {ncopied} files')
 # -----------------------------------------
 if __name__ == '__main__':
     main()
