@@ -34,7 +34,7 @@ def _save_samples(test : str, data : dict) -> None:
 # ----------------------------------------
 @cache
 def _get_pfns() -> list[str]:
-    jsn_wc = files('rx_data_lfns').joinpath('v4/*.json')
+    jsn_wc = files('rx_data_lfns').joinpath('rx/v4/*.json')
     jsn_wc = str(jsn_wc)
     l_path = glob.glob(jsn_wc)
 
