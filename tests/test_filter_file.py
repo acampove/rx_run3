@@ -143,7 +143,7 @@ def test_dt(kind : bool):
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents  = True
     obj.max_run        = 10000
-    obj.max_save       =   100
+    obj.max_save       = 1000
     obj.run()
 
     _move_outputs('test_dt', is_mc = False)
@@ -160,7 +160,7 @@ def test_mc(kind : str):
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents  = True
     obj.max_run        = 1000
-    obj.max_save       =  100
+    obj.max_save       = 1000
     obj.run()
 
     _move_outputs('test_mc', is_mc = True)
