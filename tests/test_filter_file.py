@@ -19,7 +19,9 @@ class Data:
     '''
     Data class with shared attributes
     '''
-    mc_test_turbo    = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/bukmm_turbo.root'
+    mc_turbo_mm    = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_24_w31_34_magup_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_tuple.root'
+    mc_turbo_ee    = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_24_w35_37_magup_sim10d_12123003_bu_kee_eq_btosllball05_dpc_tuple.root'
+
     mc_test_spruce   = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/mc_spruce.root'
 
     data_test_turbo  = '/home/acampove/cernbox/Run3/analysis_productions/for_local_tests/dt_turbo.root'
@@ -148,14 +150,14 @@ def test_dt(kind : bool):
 
     _move_outputs('test_dt', is_mc = False)
 # --------------------------------------
-@pytest.mark.parametrize('kind' , ['turbo'])
-def test_mc(kind : str):
+@pytest.mark.parametrize('nickname', ['mc_turbo_ee', 'mc_turbo_mm'])
+def test_mc(nickname : str):
     '''
     Run test on MC
     '''
-    sample_name = 'mc_test'
-    path        = getattr(Data, f'{sample_name}_{kind}')
-    sample_name = 'mc_24_w37_39_magdown_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_tuple'
+    path        = getattr(Data, nickname)
+    fname       = os.path.basename(path)
+    sample_name = fname.replace('.root', '')
 
     obj = FilterFile(sample_name=sample_name, file_path=path)
     obj.dump_contents  = True
