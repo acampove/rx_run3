@@ -19,7 +19,7 @@ class Data:
     # pylint: disable = invalid-name
     # Need to call var Max instead of max
 
-    dt_rgx  = r'(data_\d{2}_.*)_(\w+RD_.*)_(\d{3}_\d{3}|\w{10}).root'
+    dt_rgx  = r'(data_\d{2}_.*)_(\w+RD_.*)_?(\d{3}_\d{3}|\w{10})?.root'
     mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_(\d{3}_\d{3}|\w{10}).root'
 # ---------------------------------
 def info_from_path(path : str) -> tuple[str,str]:
