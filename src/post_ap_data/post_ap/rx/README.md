@@ -36,5 +36,4 @@ Adding preselection and branches needed for HOP variables
 
 ## v8
 
-Used to filter only lambda mumu samples
-
+Dropping cut on lepton kinematics
