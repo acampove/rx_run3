@@ -91,7 +91,7 @@ class ModelFactory:
             if name.startswith(f'{can_be_shared}_') and can_be_shared in self._l_shr:
                 return self._fltname_from_name(can_be_shared)
 
-        return self._fltname_from_name(f'{name}_{self._preffix}_{suffix}')
+        return self._fltname_from_name(f'{name}_{self._preffix}{suffix}')
     #-----------------------------------------
     def _get_parameter(self,
                        name   : str,
