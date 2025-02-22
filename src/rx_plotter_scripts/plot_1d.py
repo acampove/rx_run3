@@ -163,7 +163,7 @@ def _override_cfg(cfg : dict) -> dict:
     if Data.q2_bin in Data.d_reso:
         cfg = _add_reso_q2(cfg)
 
-    for d_plot in cfg['plots'].values():
+    for var_name, d_plot in cfg['plots'].items():
         if 'title' not in d_plot:
             d_plot['title'] = ''
 
@@ -173,6 +173,10 @@ def _override_cfg(cfg : dict) -> dict:
 
         name           = d_plot['name']
         d_plot['name'] = f'{Data.q2_bin}_{name}'
+
+        if var_name == 'B_M':
+            binning = cfg['mass_binning'][Data.q2_bin]
+            cfg['plots'][var_name]['binning'] = binning
 
     return cfg
 # ---------------------------------
