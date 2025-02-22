@@ -26,10 +26,10 @@ git clone ssh://git@gitlab.cern.ch:7999/rx_run3/rx_common.git
 pip install -e ./rx_common/
 
 # This will install all the packages in your system, in editable mode
-rx_setup -k sync -i 1 -f $PWD/projects.txt
+rx_setup -k sync -i 1 -f projects.txt
 ```
 
-Where `$PWD/projects.txt` is the full path to a file with the list of branches and project names to run over, e.g.:
+Where `projects.txt` is the file with the list of branches and project names to run over, e.g.:
 
 ```
 master rx_classifier
@@ -52,5 +52,5 @@ Thus, making it easier to synchronize your local changes with the remote ones.
 To check if the project you will run over are the right ones, one can run a dry run with the `-d 1` flag:
 
 ```bash
-rx_setup -k sync -i 1 -f $PWD/projects.txt -d 1
+rx_setup -k sync -i 1 -f projects.txt -d 1
 ```
