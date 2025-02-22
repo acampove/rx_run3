@@ -39,6 +39,7 @@ class Data:
     l_line_to_pick : list[str]
 
     naming    : str
+    kind      : str
     max_files : int
     new_path  : str
     ver       : str
@@ -65,7 +66,7 @@ def _get_paths_from_filesystem() -> list[str]:
     return l_path
 # ---------------------------------
 def _get_paths_from_json() -> list[str]:
-    jsn_wc = files('rx_data_lfns').joinpath(f'{Data.jsn_ver}/*.json')
+    jsn_wc = files('rx_data_lfns').joinpath(f'{Data.kind}/{Data.jsn_ver}/*.json')
     jsn_wc = str(jsn_wc)
     l_path = glob.glob(jsn_wc)
 
@@ -159,6 +160,7 @@ def _get_args() -> argparse.Namespace:
     parser.add_argument('-f', '--fle' , type=str, help='Path to YAML file with directory structure')
     parser.add_argument('-t', '--trg' , type=str, help='Path to YAML file with list of lines to process')
     parser.add_argument('-p', '--path', type=str, help='Path to files that will override original one, e.g. in EOS.')
+    parser.add_argument('-k', '--kind', type=str, help='Type of production', choices=['rx', 'lbpkmumu'], required=True)
     parser.add_argument('-n', '--nam' , type=str, help='Naming scheme for samples', default='new', choices=['new', 'old'])
     parser.add_argument('-m', '--max' , type=int, help='Maximum number of paths, for test runs'   , default=-1)
     parser.add_argument('-l', '--lvl' , type=int, help='log level', choices=[10, 20, 30]          , default=20)
@@ -193,6 +195,7 @@ def _load_lines(args : argparse.Namespace) -> list[str]:
 @gut.timeit
 def _initialize(args : argparse.Namespace) -> None:
     Data.dry       = args.dry
+    Data.kind      = args.kind
     Data.naming    = args.nam
     Data.max_files = args.max
     Data.inp_path  = args.inp
