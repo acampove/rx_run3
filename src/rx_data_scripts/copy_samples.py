@@ -75,12 +75,14 @@ def _initialize():
     out_dir = Data.d_conf['out_dir']
     Data.out_dir = f'{out_dir}/{Data.kind}/{Data.vers}'
     os.makedirs(Data.out_dir, exist_ok=True)
-    log.info(f'Copying files to: {Data.out_dir}')
 
     inp_dir = Data.d_conf['inp_dir']
     inp_dir = f'{inp_dir}/{Data.kind}/{Data.vers}'
     path_wc = f'{inp_dir}/*.root'
     l_path  = glob.glob(path_wc)
+
+    log.info(f'Source: {inp_dir}')
+    log.info(f'Target: {Data.out_dir}')
 
     nsource = len(l_path)
     if nsource == 0:
