@@ -35,7 +35,7 @@ class Data:
             ('rd_ap_2024', 'test_w40_42_v1r2437_mm', 1)]
 # -----------------------------
 def _get_cfg() -> dict:
-    config_path = files('post_ap_data').joinpath('post_ap/v6.yaml')
+    config_path = files('post_ap_data').joinpath('post_ap/rx/v6.yaml')
     config_path = str(config_path)
 
     with open(config_path, encoding='utf-8') as ifile:

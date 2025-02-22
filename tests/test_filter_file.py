@@ -121,7 +121,7 @@ def _initialize():
     '''
     log.info('Initializing')
 
-    cfg_dir  = files('post_ap_data').joinpath('post_ap')
+    cfg_dir  = files('post_ap_data').joinpath('post_ap/rx')
     cfg_path = vmn.get_latest_file(dir_path = cfg_dir, wc='v*.yaml')
 
     os.environ['CONFIG_PATH'] = str(cfg_path)
