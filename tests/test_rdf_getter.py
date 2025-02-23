@@ -102,7 +102,7 @@ def test_data(sample : str):
             }
 
     gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
-    rdf = gtr.get_rdf(columns={'alpha', 'mass', 'mva_cmb', 'mva_prc', 'B_M', 'Jpsi_M'})
+    rdf = gtr.get_rdf(columns={'hop_alpha', 'hop_mass', 'mva_cmb', 'mva_prc', 'B_M', 'Jpsi_M'})
 
     _check_branches(rdf)
 
@@ -122,7 +122,7 @@ def test_mc():
             }
 
     gtr = RDFGetter(sample='Bu_Kee_eq_btosllball05_DPC', trigger='Hlt2RD_BuToKpEE_MVA')
-    rdf = gtr.get_rdf(columns={'alpha', 'mass', 'mva_cmb', 'mva_prc', 'B_M', 'Jpsi_M'})
+    rdf = gtr.get_rdf(columns={'hop_alpha', 'hop_mass', 'mva_cmb', 'mva_prc', 'B_M', 'Jpsi_M'})
 
     _check_branches(rdf)
     _plot_mva_mass(rdf, 'mc')
