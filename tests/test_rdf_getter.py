@@ -151,3 +151,16 @@ def test_max_entries():
     _plot_mva(rdf, 'mc')
     _plot_hop(rdf, 'mc')
 # ------------------------------------------------
+def test_regex():
+    '''
+    Test of getter class in mc
+    '''
+    RDFGetter.samples = {
+            'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
+            'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
+            'hop'  : '/home/acampove/external_ssd/Data/samples/hop.yaml',
+            }
+
+    gtr = RDFGetter(sample='Bu_Kee_eq_btosllball05_DPC', trigger='Hlt2RD_BuToKpEE_MVA', max_entries=10)
+    rdf = gtr.get_rdf(regex=r'.*TRUEID')
+# ------------------------------------------------
