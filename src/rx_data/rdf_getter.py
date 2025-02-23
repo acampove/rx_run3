@@ -184,6 +184,7 @@ class RDFGetter:
             df = df.fillna(fillna)
 
         df     = df.reset_index(drop=True)
+        df     = df.astype(float)
         d_nump = { name : df[name].to_numpy() for name in df }
         rdf    = RDF.FromNumpy(d_nump)
 
