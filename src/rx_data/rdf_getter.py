@@ -2,6 +2,7 @@
 Module holding RDFGetter class
 '''
 
+import re
 import fnmatch
 
 import uproot
@@ -76,18 +77,32 @@ class RDFGetter:
 
         raise ValueError(f'No path could pass filter \"{self._substr}\"')
     # ------------------------------------
-    def _get_intersecting_columns(self, d_file : dict[str,str], columns : set[str]):
-        columns = set(columns)
-        for file_name, tree_name in d_file.items():
-            with uproot.open(file_name) as ifile:
-                tree     = ifile[tree_name]
-                branches = set(tree.keys())
-                columns &= branches
+    def _is_good_branch(self, regex : str, branch : str) -> bool:
+        if regex is None:
+            return False
 
-        if len(columns) == 0:
-            print(branches)
+        return re.match(regex, branch)
+    # ------------------------------------
+    def _get_intersecting_columns(self, d_file : dict[str,str], columns : set[str], regex : str = None):
+        '''
+        For a set of files that will be concatenated (kind main, mva etc) return the columns
+        that will be picked. non-zero interesection with required columns
+        '''
+        log.debug(f'Picking up columns and regex: {columns}/{regex}')
 
-        return columns
+        s_rgx_col    = set()
+        this_columns = set(columns) # You need this copy, or else original will be corrupted
+
+        for file_path, tree_name in d_file.items():
+            with uproot.open(file_path) as ifile:
+                tree          = ifile[tree_name]
+                branches      = set(tree.keys())
+                s_rgx_col    |= { branch for branch in branches if self._is_good_branch(regex, branch) }
+                this_columns &= branches
+
+        s_col = this_columns | s_rgx_col | self._s_keys
+
+        return s_col
     # ------------------------------------
     def _create_key(self, df : pnd.DataFrame) -> pnd.DataFrame:
         df['id'] = df.EVENTNUMBER.astype(str) + '_' + df.RUNNUMBER.astype(str)
@@ -95,10 +110,12 @@ class RDFGetter:
 
         return df
     # ------------------------------------
-    def _get_df(self, path : str, columns : set[str]) -> pnd.DataFrame:
+    def _get_df(self, path : str, columns : set[str], regex : str) -> pnd.DataFrame:
         d_file  = self._files_from_yaml(path)
-        columns = self._get_intersecting_columns(d_file, columns)
-        df      = uproot.concatenate(d_file, expressions=columns | self._s_keys, library='pd')
+        this_col= self._get_intersecting_columns(d_file, columns, regex)
+
+        log.debug(f'Picking up columns: {this_col}')
+        df      = uproot.concatenate(d_file, expressions=this_col, library='pd')
         df      = self._create_key(df)
         df      = df.set_index('id')
         df      = df[~df.index.duplicated(keep='first')]
@@ -109,16 +126,16 @@ class RDFGetter:
 
         return df
     # ------------------------
-    def get_df(self, columns : set[str]) -> pnd.DataFrame:
+    def get_df(self, columns : set[str] = None, regex : str = None) -> pnd.DataFrame:
         '''
         Returns pandas dataframe with a given set of columns
         '''
-
+        columns = set() if columns is None else columns
         df_totl = None
         # Kind = hop, mva, main...
         for kind, path in RDFGetter.samples.items():
             log.info(f'Building chain for {kind} category')
-            df_part = self._get_df(path=path, columns=columns)
+            df_part = self._get_df(path=path, columns=columns, regex=regex)
             if df_totl is None:
                 df_totl = df_part
                 continue
@@ -136,17 +153,37 @@ class RDFGetter:
 
         return df
     # ------------------------
-    def get_rdf(self, columns : set[str], fillna : int = None) -> RDataFrame:
+    def _check_regex(self, regex : str) -> None:
+        if regex is None:
+            return
+
+        try:
+            re.compile(regex)
+        except re.error as exc:
+            raise ValueError(f'Regex {regex} does not compile') from exc
+    # ------------------------
+    def get_rdf(self, columns : set[str] = None, fillna : int = None, regex : str = None) -> RDataFrame:
         '''
         Returns pandas dataframe with a given set of columns
 
         fillna: By default nan's will not be touched, if this is set to a value, NaNs will be replaced
+        regex : Regular expression to filter column names
+
         '''
-        df     = self.get_df(columns)
+        self._check_regex(regex)
+
+        columns = set() if columns is None else columns
+
+        log.debug(f'Requested columns: {columns}')
+        log.debug(f'Requested regex: {regex}')
+
+        df = self.get_df(columns=columns, regex=regex)
+
         if fillna is not None:
             log.info(f'Replacing NaNs with {fillna}')
-            df     = df.fillna(fillna)
+            df = df.fillna(fillna)
 
+        df     = df.reset_index(drop=True)
         d_nump = { name : df[name].to_numpy() for name in df }
         rdf    = RDF.FromNumpy(d_nump)
 
