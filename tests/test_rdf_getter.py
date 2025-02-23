@@ -129,3 +129,25 @@ def test_mc():
     _plot_mva(rdf, 'mc')
     _plot_hop(rdf, 'mc')
 # ------------------------------------------------
+def test_max_entries():
+    '''
+    Test of getter class in mc
+    '''
+    RDFGetter.samples = {
+            'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
+            'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
+            'hop'  : '/home/acampove/external_ssd/Data/samples/hop.yaml',
+            }
+
+    gtr = RDFGetter(sample='Bu_Kee_eq_btosllball05_DPC', trigger='Hlt2RD_BuToKpEE_MVA', max_entries=100)
+    rdf = gtr.get_rdf(columns={'hop_alpha', 'hop_mass', 'mva_cmb', 'mva_prc', 'B_M', 'Jpsi_M'})
+
+    nent = rdf.Count().GetValue()
+
+    assert nent == 100
+
+    _check_branches(rdf)
+    _plot_mva_mass(rdf, 'mc')
+    _plot_mva(rdf, 'mc')
+    _plot_hop(rdf, 'mc')
+# ------------------------------------------------
