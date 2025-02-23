@@ -115,7 +115,7 @@ class RDFGetter:
         this_col= self._get_intersecting_columns(d_file, columns, regex)
 
         log.debug(f'Picking up columns: {this_col}')
-        df      = uproot.concatenate(d_file, expressions=this_col, library='pd')
+        df      = uproot.concatenate(d_file, expressions=this_col, library='pd', num_workers=5)
         df      = self._create_key(df)
         df      = df.set_index('id')
         df      = df[~df.index.duplicated(keep='first')]
