@@ -24,7 +24,7 @@ class Data:
     psi2_q2    = '(Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)'
     high_q2    = '(Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)'
 
-    l_branch = ['mva_cmb', 'mva_prc', 'mass', 'alpha']
+    l_branch = ['mva_cmb', 'mva_prc', 'hop_mass', 'hop_alpha']
 # ------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -76,7 +76,7 @@ def _plot_hop(rdf : RDataFrame, test : str) -> None:
     rdf = rdf.Filter(Data.jpsi_q2)
 
     arr_org = rdf.AsNumpy(['B_M' ])['B_M' ]
-    arr_hop = rdf.AsNumpy(['mass'])['mass']
+    arr_hop = rdf.AsNumpy(['hop_mass'])['hop_mass']
     plt.hist(arr_org, bins=80, histtype='step', range=[3000, 7000], label='Original')
     plt.hist(arr_hop, bins=80, histtype='step', range=[3000, 7000], label='HOP')
     plt.title(test)
@@ -84,7 +84,7 @@ def _plot_hop(rdf : RDataFrame, test : str) -> None:
     plt.savefig(f'{Data.out_dir}/{test}_hop_mass.png')
     plt.close()
 
-    arr_aph = rdf.AsNumpy(['alpha'])['alpha']
+    arr_aph = rdf.AsNumpy(['hop_alpha'])['hop_alpha']
     plt.hist(arr_aph, bins=40, histtype='step', range=[0, 5])
     plt.title(test)
     plt.savefig(f'{Data.out_dir}/{test}_hop_alpha.png')
