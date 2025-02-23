@@ -19,12 +19,14 @@ class RDFGetter:
     '''
     samples : dict[str,str]
     # ------------------------
-    def __init__(self, sample : str, trigger : str, substr : str = None):
+    def __init__(self, sample : str, trigger : str, substr : str = None, max_entries : int = None):
         self._sample  = sample
         self._trigger = trigger
         self._substr  = substr
         self._treename= 'DecayTree'
         self._s_keys  = {'EVENTNUMBER', 'RUNNUMBER'}
+
+        self._max_entries = max_entries
     # ------------------------------------
     def _files_from_yaml(self, path : str) -> dict[str,str]:
         with open(path, encoding='utf-8') as ifile:
@@ -100,6 +102,10 @@ class RDFGetter:
         df      = self._create_key(df)
         df      = df.set_index('id')
         df      = df[~df.index.duplicated(keep='first')]
+
+        if self._max_entries is not None:
+            log.warning(f'Limitting to {self._max_entries} entries')
+            df  = df.head(self._max_entries)
 
         return df
     # ------------------------
