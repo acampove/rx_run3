@@ -1,13 +1,12 @@
 '''
 Module with Stats class
 '''
-from importlib.resources import files
-
 import yaml
-from ROOT                import RDataFrame
-from dmu.generic         import version_management as vman
+from ROOT                  import RDataFrame
+from dmu.generic           import version_management as vman
+from dmu.logging.log_store import LogStore
 
-
+log=LogStore.add_logger('rx_data:stats')
 # ----------------------------------------
 class Stats:
     '''
@@ -25,7 +24,7 @@ class Stats:
     # ----------------------------------------
     def _get_paths(self) -> list[str]:
         if 'main' not in Stats.d_sample:
-            raise ValueError('Cannot find sample path')
+            raise ValueError('Cannot find main section among samples')
 
         yaml_path = Stats.d_sample['main']
 
@@ -41,6 +40,8 @@ class Stats:
         l_path = d_data[self._sample][self._trigger]
         npath  = len(l_path)
         log.info(f'Found {npath} paths')
+        for path in l_path:
+            log.debug(path)
 
         return l_path
     # ----------------------------------------
