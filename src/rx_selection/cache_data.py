@@ -4,10 +4,10 @@ Module containing CacheData class
 # pylint: disable = too-many-instance-attributes, too-few-public-methods, import-error
 
 import os
-import glob
 
 from importlib.resources import files
 
+import yaml
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
 from rx_selection.ds_getter import DsGetter
@@ -33,6 +33,17 @@ class CacheData:
         self._q2bin  : str       = cfg['q2bin' ]
         self._cutver : str       = '' if 'cutver' not in cfg else cfg['cutver']
         self._hlt2   : str       = cfg['hlt2'  ]
+    # ----------------------------------------
+    def _get_data_paths(self) -> list[str]:
+        with open(self._ipath, encoding='utf-8') as ifile:
+            d_sample = yaml.safe_load(ifile)
+
+        l_path = d_sample[self._sample][self._hlt2]
+        npath  = len(l_path)
+
+        log.info(f'Found {npath} paths')
+
+        return l_path
     # ----------------------------------------
     def _get_cut_version(self) -> str:
         cutver = self._cutver
@@ -73,7 +84,7 @@ class CacheData:
         path_dir = f'{opath}/{self._sample}/{self._hlt2}'
         os.makedirs(path_dir, exist_ok=True)
 
-        path     = f'{path_dir}/{self._ipart:03}_{self._npart:03}.root'
+        path     = f'{path_dir}/{self._ipart:03}_{self._npart:03}_sample.root'
         if os.path.isfile(path):
             log.info(f'Loading cached data: {path}')
             return path, True
@@ -89,13 +100,17 @@ class CacheData:
         return dsg_cfg
     # ----------------------------------------
     def _save_lumifile(self, rdf : RDataFrame, out_dir : str) -> None:
+        '''
+        This function saves the lumiTree in lumi.root
+        '''
+        # The selection is done by splitting input sample in to n parts.
+        # The lumiTree is obtained by putting together all the lumiTrees of all the inputs
+        # Only the zeroth job will save the lumi tree.
+        # This should prevent conflicts
         if self._ipart != 0:
             return None
 
-        file_path = rdf.filepath[0]
-        dir_path  = os.path.dirname(file_path)
-        path_wc   = f'{dir_path}/*.root'
-        l_path    = glob.glob(path_wc)
+        l_path = self._get_data_paths() 
 
         if 'max_files' in self._cfg:
             nmax   = self._cfg['max_files']
