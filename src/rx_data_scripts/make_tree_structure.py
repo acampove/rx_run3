@@ -66,6 +66,9 @@ def _get_paths_from_filesystem() -> list[str]:
     return l_path
 # ---------------------------------
 def _get_paths_from_json() -> list[str]:
+    if Data.kind is None:
+        raise ValueError('Kind argument not passed')
+
     jsn_wc = files('rx_data_lfns').joinpath(f'{Data.kind}/{Data.jsn_ver}/*.json')
     jsn_wc = str(jsn_wc)
     l_path = glob.glob(jsn_wc)
