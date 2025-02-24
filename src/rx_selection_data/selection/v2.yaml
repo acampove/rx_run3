@@ -1,14 +1,16 @@
 cascade_common : &cascade_common
   low     : swp_cascade_mass_swp    > 1900
   central : swp_cascade_mass_swp    > 1900
+  jpsi    : swp_cascade_mass_swp    > 1900
+  psi2    : swp_cascade_mass_swp    > 1900
   high    : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp < 1800
 
 bdt_common: &bdt_common
-      low     : (mva_cmb > 0.50) && (mva_prc > 0.30)
-      central : (mva_cmb > 0.50) && (mva_prc > 0.50)
-      jpsi    : (mva_cmb > 0.50) && (mva_prc > 0.50)
-      psi2    : (mva_cmb > 0.50) && (mva_prc > 0.50)
-      high    : (mva_cmb > 0.50) && (mva_prc > 0.35)
+  low     : (mva_cmb > 0.50) && (mva_prc > 0.30)
+  central : (mva_cmb > 0.50) && (mva_prc > 0.50)
+  jpsi    : (mva_cmb > 0.50) && (mva_prc > 0.50)
+  psi2    : (mva_cmb > 0.50) && (mva_prc > 0.50)
+  high    : (mva_cmb > 0.50) && (mva_prc > 0.35)
 
 q2_common: &q2_common
   low    : (Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1000000)
