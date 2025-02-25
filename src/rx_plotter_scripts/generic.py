@@ -71,11 +71,9 @@ def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
 # ---------------------------------
 @gut.timeit
 def _get_rdf() -> RDataFrame:
-    cfg     = _get_cfg()
-    columns = cfg['columns']
-
-    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger, substr=Data.substr)
-    rdf = gtr.get_rdf(columns=columns)
+    cfg = _get_cfg()
+    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
+    rdf = gtr.get_rdf()
     rdf = _apply_definitions(rdf, cfg)
 
     Data.l_keep.append(rdf)
