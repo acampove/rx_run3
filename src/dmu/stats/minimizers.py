@@ -74,15 +74,15 @@ class AnealingMinimizer(zfit.minimize.Minuit):
         good_fit = True
 
         if not res.valid:
-            log.warning('Skipping invalid fit')
+            log.debug('Skipping invalid fit')
             good_fit = False
 
         if res.status != 0:
-            log.warning('Skipping fit with bad status')
+            log.debug('Skipping fit with bad status')
             good_fit = False
 
         if not res.converged:
-            log.warning('Skipping non-converging fit')
+            log.debug('Skipping non-converging fit')
             good_fit = False
 
         if not good_fit:
@@ -176,18 +176,20 @@ class AnealingMinimizer(zfit.minimize.Minuit):
 
         d_chi2_res : dict[float,FitResult] = {}
         for i_try in range(self._ntries):
-            log.info(f'try {i_try:02}/{self._ntries:02}')
             try:
                 res = super().minimize(nll, **kwargs)
             except (FailMinimizeNaN, ValueError, RuntimeError) as exc:
-                log.warning(exc)
+                log.error(f'{i_try:02}/{self._ntries:02}{"Failed":>20}')
+                log.debug(exc)
                 self._randomize_parameters(nll)
                 continue
 
             if not self._is_good_fit(res):
+                log.warning(f'{i_try:02}/{self._ntries:02}{"Bad fit":>20}')
                 continue
 
             chi2, pvl = self._get_gof(nll)
+            log.info(f'{i_try:02}/{self._ntries:02}{chi2:>20.3f}')
             d_chi2_res[chi2] = res
 
             if self._is_good_gof(chi2, pvl):
