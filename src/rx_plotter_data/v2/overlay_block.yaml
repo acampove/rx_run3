@@ -1,0 +1,28 @@
+general:
+  size : [15, 10]
+definitions:
+  nbrem : L1_BremMultiplicity + L2_BremMultiplicity
+overide_selection:
+  brem  : nbrem >= 2
+overlay:
+  b12: block == 1 || block == 2 
+  b5 : block == 5
+  b6 : block == 6
+  b78: block == 7 || block == 8
+plots:
+    B_M:
+        binning    : [4500, 6000, 100]
+        yscale     : 'linear'
+        labels     : ['$M(B^+)$', 'Normalized']
+        title      : ''
+        name       : 'bmass_raw'
+        normalized : true 
+    B_const_mass_M:
+        binning    : [5100, 5500, 100]
+        yscale     : 'linear'
+        labels     : ['$M_{DTF}(B^+)$', 'Normalized']
+        title      : ''
+        name       : 'bmass_dtf'
+        normalized : true 
+style:
+  skip_lines : true 
