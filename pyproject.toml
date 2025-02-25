@@ -16,7 +16,7 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
-generic='rx_plotter_scripts.generic:main'
+overlay='rx_plotter_scripts.overlay:main'
 plot_1d='rx_plotter_scripts.plot_1d:main'
 plot_2d='rx_plotter_scripts.plot_2d:main'
 
