@@ -1,5 +1,5 @@
 '''
-Script used to plot mass distributions
+Script used to plot cutflows 
 '''
 import os
 import glob
@@ -18,7 +18,7 @@ from dmu.generic             import version_management as vmn
 from rx_data.rdf_getter      import RDFGetter
 from rx_selection.selection  import load_selection_config
 
-log=LogStore.add_logger('rx_selection:generic')
+log=LogStore.add_logger('rx_selection:cutflow')
 # ---------------------------------
 @dataclass
 class Data:
