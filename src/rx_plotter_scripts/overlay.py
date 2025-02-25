@@ -1,5 +1,5 @@
 '''
-Script used to plot cutflows 
+Script used to plot overlays 
 '''
 import os
 import glob
@@ -16,7 +16,7 @@ from dmu.plotting.plotter_1d import Plotter1D
 from dmu.logging.log_store   import LogStore
 from dmu.generic             import version_management as vmn
 from rx_data.rdf_getter      import RDFGetter
-from rx_selection.selection  import load_selection_config
+from rx_selection            import selection as sel
 
 log=LogStore.add_logger('rx_selection:cutflow')
 # ---------------------------------
@@ -39,7 +39,6 @@ class Data:
     q2_bin  : str
     cfg_dir : str
 
-    l_keep = []
     l_col  = []
 # ---------------------------------
 def _initialize() -> None:
@@ -76,12 +75,16 @@ def _get_rdf() -> RDataFrame:
     rdf = gtr.get_rdf()
     rdf = _apply_definitions(rdf, cfg)
 
-    Data.l_keep.append(rdf)
+    analysis = 'EE' if Data.trigger == Data.trigger_ee else 'MM'
+    d_sel = sel.selection(project='RK', analysis=analysis, q2bin=Data.q2_bin, process=Data.sample)
 
-    q2_cut = _get_q2cut()
-    log.info(f'Using q2 cut: {q2_cut}')
+    if 'overide_selection' in cfg:
+        d_cut = cfg['overide_selection']
+        d_sel.update(d_cut)
 
-    rdf    = rdf.Filter(q2_cut, 'q2')
+    for cut_name, cut_value in d_sel.items():
+        log.info(f'{cut_name:<20}{cut_value}')
+        rdf = rdf.Filter(cut_value, cut_name)
 
     return rdf
 # ---------------------------------
@@ -98,19 +101,9 @@ def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
 
     return d_rdf
 # ---------------------------------
-def _get_q2cut() -> str:
-    if Data.q2_bin is None:
-        log.info('Not applying any q2 cut')
-        return '(1)'
-
-    cfg = load_selection_config()
-    cut = cfg['q2_common'][Data.q2_bin]
-
-    return cut
-# ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make generic plots')
-    parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'])
+    parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True)
     parser.add_argument('-c', '--config' , type=str, help='Configuration')
@@ -144,18 +137,14 @@ def _get_out_dir() -> str:
 # ---------------------------------
 def _get_inp() -> dict[str,RDataFrame]:
     cfg   = _get_cfg()
-    rdf   = _get_rdf()
+    rdf_in= _get_rdf()
 
-    if 'cutflow' not in cfg:
-        return {'None' : rdf}
-
-    d_cut = cfg['cutflow'][Data.q2_bin]
+    d_cut = cfg['overlay']
     d_rdf = {}
-    log.info('Applying cutflow')
+    log.info('Applying overlay')
     for name, cut in d_cut.items():
         log.info(f'   {name}')
-        rdf         = rdf.Filter(cut, name)
-        d_rdf[name] = rdf
+        d_rdf[name] = rdf_in.Filter(cut, name)
 
     return d_rdf
 # ---------------------------------
