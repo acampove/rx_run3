@@ -208,6 +208,14 @@ class FitComponent:
 
         return pdf
     # --------------------
+    def _get_data_from_pdf(self):
+        if not hasattr(self._pdf, 'arr_wgt') or not hasattr(self._pdf, 'arr_mass'):
+            return self._pdf.create_sampler(n=10_000)
+
+        data = zfit.Data.from_numpy(obs=self._pdf.space, array=self._pdf.arr_mass, weights=self._pdf.arr_wgt)
+
+        return data
+    # --------------------
     def run(self) -> Parameter:
         '''
         Will return the PDF
@@ -228,7 +236,8 @@ class FitComponent:
         log.info('Parametric PDF found, fitting:')
         if self._rdf is None:
             log.info('Dataset not found, returning not fitted PDF')
-            data = self._pdf.create_sampler(n=10_000)
+            data = self._get_data_from_pdf()
+
             self._plot_fit(data, self._pdf)
             return Parameter()
 
