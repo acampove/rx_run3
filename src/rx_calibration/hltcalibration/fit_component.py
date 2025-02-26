@@ -8,6 +8,7 @@ from typing                 import Union
 import ROOT
 import zfit
 import matplotlib.pyplot as plt
+import tensorflow        as tf
 
 from ROOT                   import RDataFrame
 from zfit.core.data         import Data      as zdata
@@ -127,7 +128,12 @@ class FitComponent:
         if err_method != 'minuit_hesse':
             raise NotImplementedError(f'Method {err_method} not implemented, only minuit_hesse allowed')
 
-        res.hesse(method=err_method)
+        try:
+            res.hesse(method=err_method)
+        except tf.errors.InvalidArgumentError as exc:
+            log.warning('Cannot calculate error, TF issue')
+            log.debug(exc)
+
         res.freeze()
         obj = Parameter()
         for par_name, d_val in res.params.items():
