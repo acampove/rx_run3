@@ -136,7 +136,7 @@ class ModelFactory:
         mu  = self._get_parameter('mu_cbr', suffix, 5300, 5100, 5350)
         sg  = self._get_parameter('sg_cbr', suffix,   10,    2,  300)
         ar  = self._get_parameter('ac_cbr', suffix,   -2, -14., -0.1)
-        nr  = self._get_parameter('nc_cbr', suffix,    1,  0.5, 50.0)
+        nr  = self._get_parameter('nc_cbr', suffix,    1,  0.5,  150)
 
         pdf = zfit.pdf.CrystalBall(mu, sg, ar, nr, self._obs, name=suffix)
 
@@ -158,7 +158,7 @@ class ModelFactory:
         mu  = self._get_parameter('mu_cbl', suffix, 5300, 5100, 5350)
         sg  = self._get_parameter('sg_cbl', suffix,   10,    2,  300)
         al  = self._get_parameter('ac_cbl', suffix,    2,  0.1,  14.)
-        nl  = self._get_parameter('nc_cbl', suffix,    1,  0.5, 50.0)
+        nl  = self._get_parameter('nc_cbl', suffix,    1,  0.5,  150)
 
         pdf = zfit.pdf.CrystalBall(mu, sg, al, nl, self._obs, name=suffix)
 
