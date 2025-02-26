@@ -179,7 +179,7 @@ class ModelFactory:
         sg  = self._get_parameter('sg_dscb', suffix,   10,    2,  500)
         ar  = self._get_parameter('ar_dscb', suffix,    1,    0,    5)
         al  = self._get_parameter('al_dscb', suffix,    1,    0,    5)
-        nr  = self._get_parameter('nr_dscb', suffix,    2,    1,   15)
+        nr  = self._get_parameter('nr_dscb', suffix,    2,    1,  150)
         nl  = self._get_parameter('nl_dscb', suffix,    2,    0,  150)
 
         pdf = zfit.pdf.DoubleCB(mu, sg, al, nl, ar, nr, self._obs, name=suffix)
