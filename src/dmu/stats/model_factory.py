@@ -144,12 +144,12 @@ class ModelFactory:
     #-----------------------------------------
     @MethodRegistry.register('suj')
     def _get_suj(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('mu_suj', suffix, 5300, 5100, 5350)
-        sg  = self._get_parameter('sg_suj', suffix,   10,    2,  300)
-        gm  = self._get_parameter('gm_suj', suffix,  -10,  10., 0.0)
-        dl  = self._get_parameter('dl_suj', suffix,    0,    0,  50)
+        mu  = self._get_parameter('mu_suj', suffix, 5300, 4000, 6000)
+        sg  = self._get_parameter('sg_suj', suffix,   10,    2, 1000)
+        gm  = self._get_parameter('gm_suj', suffix,    1,  -10,   10)
+        dl  = self._get_parameter('dl_suj', suffix,    1,  0.1,   10)
 
-        pdf = zfit.pdf.JohnsonSU(mu, sg, gm, dl, self._obs, name=suffix)
+        pdf = zfit.pdf.JohnsonSU(mu, sg, gm, dl, self._obs, name=f'suj_{suffix}')
 
         return pdf
     #-----------------------------------------
