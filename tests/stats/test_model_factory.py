@@ -5,6 +5,7 @@ Module containing tests for ZModel class
 from dataclasses import dataclass
 
 import zfit
+import pytest
 from dmu.stats.utilities     import print_pdf
 from dmu.logging.log_store   import LogStore
 from dmu.stats.model_factory import ModelFactory
@@ -46,13 +47,23 @@ class Data:
             ('2018', 'MTOS', 'psi2'),
             ]
 #--------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('dmu:stats:model_factory', 10)
+#--------------------------
 def test_unique_pdf():
     '''
     Will test only signal builder
     '''
     l_pdf = ['cbr', 'cbl', 'dscb']
     l_shr = ['mu', 'sg']
-    mod   = ModelFactory(preffix='unique', obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr)
+    l_flt = ['mu', 'sg']
+    mod   = ModelFactory(preffix = 'unique',
+                         obs     = Data.obs,
+                         l_pdf   = l_pdf,
+                         l_shared= l_shr,
+                         l_float = l_flt)
+
     pdf   = mod.get_pdf()
 
     print_pdf(pdf)
@@ -61,9 +72,17 @@ def test_repeated_pdf():
     '''
     Will test only signal builder
     '''
+    log.info('Testing for repeated PDFs')
+
     l_pdf = ['cbr'] + 2 * ['cbl']
     l_shr = ['mu', 'sg']
-    mod   = ModelFactory(preffix='repeated', obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr)
+    l_flt = ['mu']
+    mod   = ModelFactory(
+            preffix = 'repeated',
+            obs     = Data.obs,
+            l_pdf   = l_pdf,
+            l_shared= l_shr,
+            l_float = l_flt)
     pdf   = mod.get_pdf()
 
     print_pdf(pdf)
