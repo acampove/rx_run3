@@ -41,12 +41,14 @@ def _check_branches(rdf : RDataFrame) -> None:
         raise ValueError(f'Branch missing: {branch}')
 # ------------------------------------------------
 def _plot_mva_mass(rdf : RDataFrame, test : str) -> None:
+    test_dir = f'{Data.out_dir}/{test}'
+    os.makedirs(test_dir, exist_ok=True)
+
     rdf = rdf.Filter(Data.jpsi_q2)
 
     for cmb in [0.4, 0.6, 0.8, 0.9]:
         rdf      = rdf.Filter(f'mva_cmb > {cmb}')
         arr_mass = rdf.AsNumpy(['B_M'])['B_M']
-
         plt.hist(arr_mass, bins=50, histtype='step', range=[4800, 5500], label=f'{cmb}; 0.0')
 
     for prc in [0.5, 0.6]:
@@ -56,10 +58,13 @@ def _plot_mva_mass(rdf : RDataFrame, test : str) -> None:
 
     plt.title(test)
     plt.legend()
-    plt.savefig(f'{Data.out_dir}/{test}_mva_mass.png')
+    plt.savefig(f'{test_dir}/mva_mass.png')
     plt.close()
 # ------------------------------------------------
 def _plot_mva(rdf : RDataFrame, test : str) -> None:
+    test_dir = f'{Data.out_dir}/{test}'
+    os.makedirs(test_dir, exist_ok=True)
+
     rdf = rdf.Filter(Data.jpsi_q2)
 
     arr_cmb = rdf.AsNumpy(['mva_cmb'])['mva_cmb']
@@ -69,10 +74,13 @@ def _plot_mva(rdf : RDataFrame, test : str) -> None:
 
     plt.title(test)
     plt.legend()
-    plt.savefig(f'{Data.out_dir}/{test}_mva.png')
+    plt.savefig(f'{test_dir}/mva.png')
     plt.close()
 # ------------------------------------------------
 def _plot_hop(rdf : RDataFrame, test : str) -> None:
+    test_dir = f'{Data.out_dir}/{test}'
+    os.makedirs(test_dir, exist_ok=True)
+
     rdf = rdf.Filter(Data.jpsi_q2)
 
     arr_org = rdf.AsNumpy(['B_M' ])['B_M' ]
@@ -81,13 +89,13 @@ def _plot_hop(rdf : RDataFrame, test : str) -> None:
     plt.hist(arr_hop, bins=80, histtype='step', range=[3000, 7000], label='HOP')
     plt.title(test)
     plt.legend()
-    plt.savefig(f'{Data.out_dir}/{test}_hop_mass.png')
+    plt.savefig(f'{test_dir}/hop_mass.png')
     plt.close()
 
     arr_aph = rdf.AsNumpy(['hop_alpha'])['hop_alpha']
     plt.hist(arr_aph, bins=40, histtype='step', range=[0, 5])
     plt.title(test)
-    plt.savefig(f'{Data.out_dir}/{test}_hop_alpha.png')
+    plt.savefig(f'{test_dir}/hop_alpha.png')
     plt.close()
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['DATA_24_MagUp_24c1', 'DATA_24_MagUp_24c2', 'DATA_24_Mag*_24c*'])
@@ -111,7 +119,9 @@ def test_data(sample : str):
     _plot_mva(rdf, sample)
     _plot_hop(rdf, sample)
 # ------------------------------------------------
-def test_mc():
+@pytest.mark.parametrize('sample', ['Bu_JpsiPi_ee_eq_DPC'])
+#@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC'])
+def test_mc(sample : str):
     '''
     Test of getter class in mc
     '''
@@ -121,11 +131,11 @@ def test_mc():
             'hop'  : '/home/acampove/external_ssd/Data/samples/hop.yaml',
             }
 
-    gtr = RDFGetter(sample='Bu_Kee_eq_btosllball05_DPC', trigger='Hlt2RD_BuToKpEE_MVA')
+    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
 
     _check_branches(rdf)
-    _plot_mva_mass(rdf, 'mc')
-    _plot_mva(rdf, 'mc')
-    _plot_hop(rdf, 'mc')
+    _plot_mva_mass(rdf, sample)
+    _plot_mva(rdf     , sample)
+    _plot_hop(rdf     , sample)
 # ------------------------------------------------
