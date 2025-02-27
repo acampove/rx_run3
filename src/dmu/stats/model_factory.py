@@ -82,7 +82,7 @@ class ModelFactory:
     #-----------------------------------------
     def _fltname_from_name(self, name : str) -> str:
         if name in ['mu', 'sg']:
-            return f'{name}_flt'
+            return f'{name}_{self._preffix}_flt'
 
         return name
     #-----------------------------------------
