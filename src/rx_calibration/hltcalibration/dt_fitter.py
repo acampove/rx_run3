@@ -12,6 +12,7 @@ from zfit.exception          import ParamNameNotUniqueError
 from zfit.core.interfaces    import ZfitSpace
 from zfit.core.basepdf       import BasePDF
 from zfit.core.data          import Data      as zdata
+from zfit.constraint         import GaussianConstraint as zgconst
 
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
@@ -147,7 +148,30 @@ class DTFitter:
         pars_path= f'{out_dir}/{name}'
         par.to_json(pars_path)
     # -------------------------------
-    def fit(self, skip_fit : bool = False) -> Parameter:
+    def _constraints_from_dict(self, d_cons : dict[str, list[float,float]]) -> list[zgconst]:
+        if d_cons is None:
+            log.debug('Not using constraints')
+            return None
+
+        s_par   = self._pdf_ful.get_params()
+        l_const = []
+
+        log.info(30 * '-')
+        log.info('Using constraints')
+        log.info(30 * '-')
+        for par in s_par:
+            if par.name not in d_cons:
+                continue
+
+            [mu, sg]   = d_cons[par.name]
+            log.info(f'{mu:<10.3f}{sg:<10.3f}{par.name}')
+            constraint = zgconst(params=[par], observation=[mu], sigma=[sg])
+
+            l_const.append(constraint)
+
+        return l_const
+    # -------------------------------
+    def fit(self, skip_fit : bool = False, constraints : dict[str, list[float,float]] = None) -> Parameter:
         '''
         Function returning Parameter object holding fitting parameters
         '''
@@ -156,7 +180,8 @@ class DTFitter:
         log.info('Fitting data using PDF:')
         print_pdf(self._pdf_ful)
 
-        nll = zfit.loss.ExtendedUnbinnedNLL(model=self._pdf_ful, data=self._zdt_dat)
+        l_const = self._constraints_from_dict(constraints)
+        nll = zfit.loss.ExtendedUnbinnedNLL(model=self._pdf_ful, data=self._zdt_dat, constraints=l_const)
 
         if skip_fit:
             return Parameter()
