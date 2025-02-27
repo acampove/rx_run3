@@ -231,6 +231,8 @@ class FitComponent:
         npar = len(s_par)
         if npar == 0:
             log.info('Found non-parametric PDF returning empty parameters')
+            data = self._get_data_from_pdf()
+            self._plot_fit(data, self._pdf)
             return Parameter()
 
         log.info('Parametric PDF found, fitting:')
