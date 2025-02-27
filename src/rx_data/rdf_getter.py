@@ -41,10 +41,10 @@ class RDFGetter:
             l_path_sample = d_data[sample][self._trigger]
             nsamp = len(l_path_sample)
             if nsamp == 0:
-                log.error(f'No paths found for {sample}/{yaml_path}')
+                log.error(f'No paths found for {sample} in {yaml_path}')
                 nopath = True
             else:
-                log.debug(f'Found {nsamp} paths for {sample}/{yaml_path}')
+                log.debug(f'Found {nsamp} paths for {sample} in {yaml_path}')
 
             l_path += l_path_sample
 
@@ -52,7 +52,7 @@ class RDFGetter:
             raise ValueError('Samples with paths missing')
 
         if nosamp:
-            raise ValueError(f'Could not find any sample matching {self._sample}')
+            raise ValueError(f'Could not find any sample matching {self._sample} in {yaml_path}')
 
         d_section['files'] = l_path
 
