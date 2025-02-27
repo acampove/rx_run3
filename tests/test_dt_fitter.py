@@ -39,3 +39,18 @@ def test_simple():
 
     print(par)
 # --------------------------------------------
+def test_constraints():
+    '''
+    Test of fitter with constraints
+    '''
+
+    rdf_dat = tut.get_data_rdf()
+    l_comp  = tut.get_fit_components(test='dt_fitter/const')
+    cfg     = tut.get_data_fit_cfg(test='dt_fitter/const')
+    d_cons  = {'nsign' : [30_000, 20]}
+
+    obj = DTFitter(rdf = rdf_dat, components = l_comp, cfg = cfg)
+    par = obj.fit(constraints = d_cons)
+
+    print(par)
+# --------------------------------------------
