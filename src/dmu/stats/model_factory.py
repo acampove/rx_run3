@@ -129,7 +129,7 @@ class ModelFactory:
     #-----------------------------------------
     @MethodRegistry.register('exp')
     def _get_exponential(self, suffix : str = '') -> zpdf:
-        c   = self._get_parameter('c_exp', suffix, -0.005, -0.05, 0.00)
+        c   = self._get_parameter('c_exp', suffix, -0.005, -0.20, 0.00)
         pdf = zfit.pdf.Exponential(c, self._obs, name=suffix)
 
         return pdf
