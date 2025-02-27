@@ -31,11 +31,28 @@ class RDFGetter:
             d_data = yaml.safe_load(ifile)
 
         l_path = []
+        nopath = False
+        nosamp = True
         for sample in d_data:
             if not fnmatch.fnmatch(sample, self._sample):
                 continue
 
-            l_path += d_data[sample][self._trigger]
+            nosamp = False
+            l_path_sample = d_data[sample][self._trigger]
+            nsamp = len(l_path_sample)
+            if nsamp == 0:
+                log.error(f'No paths found for {sample}/{yaml_path}')
+                nopath = True
+            else:
+                log.debug(f'Found {nsamp} paths for {sample}/{yaml_path}')
+
+            l_path += l_path_sample
+
+        if nopath:
+            raise ValueError('Samples with paths missing')
+
+        if nosamp:
+            raise ValueError(f'Could not find any sample matching {self._sample}')
 
         d_section['files'] = l_path
 
@@ -62,6 +79,8 @@ class RDFGetter:
         Returns ROOT dataframe
         '''
         self._get_json_conf()
+
+        log.debug(f'Building datarame from {self._tmp_path}')
         rdf = RDF.Experimental.FromSpec(self._tmp_path)
 
         return rdf
