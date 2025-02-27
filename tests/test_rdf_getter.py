@@ -30,6 +30,14 @@ class Data:
 def _initialize():
     LogStore.set_level('rx_data:rdf_getter', 10)
     os.makedirs(Data.out_dir, exist_ok=True)
+
+    RDFGetter.samples = {
+            'main'      : '/home/acampove/external_ssd/Data/samples/main.yaml',
+            'mva'       : '/home/acampove/external_ssd/Data/samples/mva.yaml',
+            'hop'       : '/home/acampove/external_ssd/Data/samples/hop.yaml',
+            'cascade'   : '/home/acampove/external_ssd/Data/samples/cascade.yaml',
+            'jpsi_misid': '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
+            }
 # ------------------------------------------------
 def _check_branches(rdf : RDataFrame) -> None:
     l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
@@ -103,12 +111,6 @@ def test_data(sample : str):
     '''
     Test of getter class in data
     '''
-    RDFGetter.samples = {
-            'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
-            'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
-            'hop'  : '/home/acampove/external_ssd/Data/samples/hop.yaml',
-            }
-
     gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
 
@@ -125,11 +127,6 @@ def test_mc(sample : str):
     '''
     Test of getter class in mc
     '''
-    RDFGetter.samples = {
-            'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
-            'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
-            'hop'  : '/home/acampove/external_ssd/Data/samples/hop.yaml',
-            }
 
     gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
