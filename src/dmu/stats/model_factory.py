@@ -64,34 +64,49 @@ class ModelFactory:
     where one can specify which parameters can be shared among the PDFs
     '''
     #-----------------------------------------
-    def __init__(self, preffix : str, obs : zobs, l_pdf : list[str], l_shared : list[str]):
+    def __init__(self,
+                 preffix  : str,
+                 obs      : zobs,
+                 l_pdf    : list[str],
+                 l_shared : list[str],
+                 l_float  : list[str]):
         '''
-        preffix:  used to identify PDF, will be used to name every parameter 
+        preffix:  used to identify PDF, will be used to name every parameter
         obs:      zfit obserbable
         l_pdf:    List of PDF nicknames which are registered below
         l_shared: List of parameter names that are shared
+        l_float:  List of parameter names to allow to float
         '''
 
         self._preffix         = preffix
         self._l_pdf           = l_pdf
         self._l_shr           = l_shared
-        self._l_can_be_shared = ['mu', 'sg']
+        self._l_flt           = l_float
         self._obs             = obs
 
         self._d_par : dict[str,zpar] = {}
     #-----------------------------------------
-    def _fltname_from_name(self, name : str) -> str:
-        if name in ['mu', 'sg']:
-            return f'{name}_{self._preffix}_flt'
+    def _split_name(self, name : str) -> tuple[str,str]:
+        l_part = name.split('_')
+        pname  = l_part[0]
+        xname  = '_'.join(l_part[1:])
+
+        return pname, xname
+    #-----------------------------------------
+    def _get_parameter_name(self, name : str, suffix : str) -> str:
+        pname, xname = self._split_name(name)
+
+        log.debug(f'Using physical name: {pname}')
+
+        if pname in self._l_shr:
+            name = f'{pname}_{self._preffix}'
+        else:
+            name = f'{pname}_{xname}_{self._preffix}{suffix}'
+
+        if pname in self._l_flt:
+            return f'{name}_flt'
 
         return name
-    #-----------------------------------------
-    def _get_name(self, name : str, suffix : str) -> str:
-        for can_be_shared in self._l_can_be_shared:
-            if name.startswith(f'{can_be_shared}_') and can_be_shared in self._l_shr:
-                return self._fltname_from_name(can_be_shared)
-
-        return self._fltname_from_name(f'{name}_{self._preffix}{suffix}')
     #-----------------------------------------
     def _get_parameter(self,
                        name   : str,
@@ -99,7 +114,10 @@ class ModelFactory:
                        val    : float,
                        low    : float,
                        high   : float) -> zpar:
-        name = self._get_name(name, suffix)
+
+        name = self._get_parameter_name(name, suffix)
+        log.debug(f'Assigning name: {name}')
+
         if name in self._d_par:
             return self._d_par[name]
 
