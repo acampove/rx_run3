@@ -128,9 +128,10 @@ def _parse_args() -> None:
     Data.trigger= args.trigger
     Data.config = args.config
     Data.substr = args.substr
+    Data.brem   = args.brem
 # ---------------------------------
 def _get_cfg() -> dict:
-    cfg_path= f'{Data.cfg_dir}/{Data.config}.yaml'
+    cfg_path= f'{Data.cfg_dir}/overlay/{Data.config}.yaml'
     cfg_path= str(cfg_path)
 
     with open(cfg_path, encoding='utf=8') as ifile:
