@@ -1,0 +1,26 @@
+general:
+  size : [15, 10]
+definitions:
+  nbrem : L1_BremMultiplicity + L2_BremMultiplicity
+overlay:
+  prob_003 : L1_PROBNN_E > 0.3 && L2_PROBNN_E > 0.3 
+  prob_005 : L1_PROBNN_E > 0.5 && L2_PROBNN_E > 0.5 
+  prob_007 : L1_PROBNN_E > 0.7 && L2_PROBNN_E > 0.7 
+  prob_009 : L1_PROBNN_E > 0.9 && L2_PROBNN_E > 0.9 
+plots:
+    B_M:
+        binning    : [4500, 6000, 100]
+        yscale     : 'linear'
+        labels     : ['$M(B^+)$', 'Normalized']
+        title      : ''
+        name       : 'bmass_raw'
+        normalized : true 
+    B_const_mass_M:
+        binning    : [5100, 5500, 100]
+        yscale     : 'linear'
+        labels     : ['$M_{DTF}(B^+)$', 'Normalized']
+        title      : ''
+        name       : 'bmass_dtf'
+        normalized : true 
+style:
+  skip_lines : true 
