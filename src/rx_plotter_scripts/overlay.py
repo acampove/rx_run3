@@ -46,8 +46,7 @@ def _initialize() -> None:
     if Data.nthreads > 1:
         EnableImplicitMT(Data.nthreads)
 
-    cfg_dir = files('rx_plotter_data').joinpath('')
-    cfg_dir = vmn.get_last_version(dir_path=cfg_dir, version_only=False)
+    cfg_dir = files('rx_plotter_data').joinpath('overlay')
 
     Data.cfg_dir = cfg_dir
     log.info(f'Picking configuration from: {Data.cfg_dir}')
@@ -131,7 +130,7 @@ def _parse_args() -> None:
     Data.brem   = args.brem
 # ---------------------------------
 def _get_cfg() -> dict:
-    cfg_path= f'{Data.cfg_dir}/overlay/{Data.config}.yaml'
+    cfg_path= f'{Data.cfg_dir}/{Data.config}.yaml'
     cfg_path= str(cfg_path)
 
     with open(cfg_path, encoding='utf=8') as ifile:
