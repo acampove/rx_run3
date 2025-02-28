@@ -38,6 +38,7 @@ class Data:
     trigger : str
     q2_bin  : str
     cfg_dir : str
+    brem    : int
 
     l_col  = []
 # ---------------------------------
@@ -68,6 +69,15 @@ def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
 
     return rdf
 # ---------------------------------
+def _filter_by_brem(rdf : RDataFrame) -> RDataFrame:
+    if Data.brem is None:
+        return rdf
+
+    brem_cut = f'nbrem == {Data.brem}' if Data.brem in [0, 1] else f'nbrem >= {Data.brem}'
+    rdf = rdf.Filter(brem_cut, 'nbrem')
+
+    return rdf
+# ---------------------------------
 @gut.timeit
 def _get_rdf() -> RDataFrame:
     cfg = _get_cfg()
@@ -85,6 +95,8 @@ def _get_rdf() -> RDataFrame:
     for cut_name, cut_value in d_sel.items():
         log.info(f'{cut_name:<20}{cut_value}')
         rdf = rdf.Filter(cut_value, cut_name)
+
+    rdf = _filter_by_brem(rdf)
 
     return rdf
 # ---------------------------------
@@ -108,6 +120,7 @@ def _parse_args() -> None:
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True)
     parser.add_argument('-c', '--config' , type=str, help='Configuration')
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
+    parser.add_argument('-b', '--brem'   , type=int, help='Brem category', choices=[0, 1, 2])
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
@@ -128,8 +141,13 @@ def _get_cfg() -> dict:
     return cfg
 # ---------------------------------
 def _get_out_dir() -> str:
+    if Data.brem is None:
+        brem_name = 'all'
+    else:
+        brem_name = f'{Data.brem:03}'
+
     sample  = Data.sample.replace('*', 'p')
-    out_dir = f'plots/{Data.config}/{sample}_{Data.trigger}_{Data.q2_bin}'
+    out_dir = f'plots/{Data.config}/{sample}_{Data.trigger}_{Data.q2_bin}_{brem_name}'
     if Data.substr is not None:
         out_dir = f'{out_dir}/{Data.substr}'
 
