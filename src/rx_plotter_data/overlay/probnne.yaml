@@ -2,11 +2,14 @@ general:
   size : [15, 10]
 definitions:
   nbrem : L1_BremMultiplicity + L2_BremMultiplicity
+overide_selection:
+  mass     : B_const_mass_M > 5180
 overlay:
-  prob_003 : L1_PROBNN_E > 0.3 && L2_PROBNN_E > 0.3 
-  prob_005 : L1_PROBNN_E > 0.5 && L2_PROBNN_E > 0.5 
-  prob_007 : L1_PROBNN_E > 0.7 && L2_PROBNN_E > 0.7 
-  prob_009 : L1_PROBNN_E > 0.9 && L2_PROBNN_E > 0.9 
+  prob_090 : L1_PROBNN_E > 0.90 && L2_PROBNN_E > 0.90 
+  prob_093 : L1_PROBNN_E > 0.93 && L2_PROBNN_E > 0.93 
+  prob_095 : L1_PROBNN_E > 0.95 && L2_PROBNN_E > 0.95 
+  prob_097 : L1_PROBNN_E > 0.97 && L2_PROBNN_E > 0.97 
+  prob_099 : L1_PROBNN_E > 0.99 && L2_PROBNN_E > 0.99 
 plots:
     B_M:
         binning    : [4500, 6000, 100]
@@ -21,6 +24,20 @@ plots:
         labels     : ['$M_{DTF}(B^+)$', 'Normalized']
         title      : ''
         name       : 'bmass_dtf'
-        normalized : true 
+        normalized : false 
+    L1_PROBNN_E:
+        binning    : [0.9, 1.0, 100]
+        yscale     : 'log'
+        labels     : ['ProbNNE', 'Normalized']
+        title      : ''
+        name       : 'probnne_l1'
+        normalized : false 
+    L2_PROBNN_E:
+        binning    : [0.9, 1.0, 100]
+        yscale     : 'log'
+        labels     : ['ProbNNE', 'Normalized']
+        title      : ''
+        name       : 'probnne_l2'
+        normalized : false 
 style:
   skip_lines : true 
