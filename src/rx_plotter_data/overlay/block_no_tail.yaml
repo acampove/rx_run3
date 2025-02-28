@@ -3,8 +3,8 @@ general:
 definitions:
   nbrem : L1_BremMultiplicity + L2_BremMultiplicity
 overide_selection:
-  brem  : nbrem >= 2
-  mass  : (1)
+  no_tail : B_const_mass_M > 5150
+  mass    : (1)
 overlay:
   b12: block == 1 || block == 2 
   b5 : block == 5
