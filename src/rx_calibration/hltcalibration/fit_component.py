@@ -216,9 +216,13 @@ class FitComponent:
 
         return data
     # --------------------
-    def run(self) -> Parameter:
+    def run(self, must_load_pars : bool = False) -> Parameter:
         '''
         Will return the PDF
+
+        must_load_pars: Is a flag, if:
+            - True : When a dataframe is not passed, the parameters must exist to be loaded
+            - False: When a dataframe is not passed, if parameters do not exist will not fit PDF. Used for PDFs that have no MC, e.g. Combinatorial
         '''
         pars_path= f'{self._out_dir}/fit.json'
 
@@ -236,23 +240,52 @@ class FitComponent:
             return Parameter()
 
         log.info('Parametric PDF found, fitting:')
-        if self._rdf is None:
+        if self._rdf is None and not must_load_pars:
             log.info('Dataset not found, returning not fitted PDF')
             data = self._get_data_from_pdf()
 
             self._plot_fit(data, self._pdf)
             return Parameter()
 
-        if not os.path.isfile(pars_path):
-            data=self._get_data()
-            par = self._fit(data)
-            self._plot_fit(data, self._pdf)
-            par.to_json(pars_path)
-        else:
+        if os.path.isfile(pars_path):
             log.warning(f'Fit parameters for component {self._name} found, loading: {pars_path}')
             par = Parameter.from_json(pars_path)
+            self._fix_tails(par)
+
+            return par
+
+        log.debug(f'Fit parameters for component {self._name} not found, missed: {pars_path}')
+        if self._rdf is None and must_load_pars:
+            log.debug('No data found and data is expected')
+            raise NoFitDataFound
+
+        data=self._get_data()
+        par = self._fit(data)
+        self._plot_fit(data, self._pdf)
+        par.to_json(pars_path)
 
         self._fix_tails(par)
 
         return par
+# ----------------------------------------
+class NoFitDataFound(Exception):
+    '''
+    Meant to be used if a FitComponent is requested but dataframe is None 
+    '''
+    def __init__(self, message='No ROOT dataframe provided'):
+        self.message = message
+        super().__init__(self.message)
+# ----------------------------------------
+def load_fit_component(cfg : dict, pdf : BasePDF) -> Union[FitComponent, None]:
+    '''
+    Will return a FitComponent instance, if parameters found
+    otherwise will return None
+    '''
+    obj = FitComponent(cfg=cfg, pdf=pdf, rdf=None)
+    try:
+        obj.run(must_load_pars = True)
+    except NoFitDataFound:
+        return None
+
+    return obj
 # ----------------------------------------
