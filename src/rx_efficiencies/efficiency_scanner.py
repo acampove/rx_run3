@@ -20,6 +20,8 @@ class EfficiencyScanner:
     # --------------------------------
     def __init__(self, cfg : dict):
         self._cfg = cfg
+
+        RDFGetter.samples = cfg['input']['paths']
     # --------------------------------
     def _get_selection(self) -> dict[str,str]:
         return {}

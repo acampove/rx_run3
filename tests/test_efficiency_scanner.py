@@ -10,10 +10,21 @@ def test_scan():
     Test efficiency scanning
     '''
     cfg = {
-            'input' : {
+            'input' : 
+            {
                 'sample' : 'Bu_JpsiK_ee_eq_DPC',
-                'trigger': 'Hlt2RD_BuToKpEE_MVA'},
-            'variables' : {
+                'trigger': 'Hlt2RD_BuToKpEE_MVA',
+                'paths':
+                {
+                    'main'      : '/home/acampove/external_ssd/Data/samples/main.yaml',
+                    'mva'       : '/home/acampove/external_ssd/Data/samples/mva.yaml',
+                    'hop'       : '/home/acampove/external_ssd/Data/samples/hop.yaml',
+                    'cascade'   : '/home/acampove/external_ssd/Data/samples/cascade.yaml',
+                    'jpsi_misid': '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
+                    }
+                },
+            'variables' : 
+            {
                 'mva.mva_cmb' : numpy.arange(0.5, 1.0, 0.1),
                 'mva.mva_prc' : numpy.arange(0.5, 1.0, 0.1),
                 }
