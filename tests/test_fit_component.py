@@ -10,7 +10,7 @@ import ROOT
 import zfit
 import pytest
 from dmu.logging.log_store                       import LogStore
-from rx_calibration.hltcalibration.fit_component import FitComponent
+from rx_calibration.hltcalibration.fit_component import FitComponent, load_fit_component
 from rx_calibration.hltcalibration               import test_utilities as tut
 
 log = LogStore.add_logger('rx_calibration:test_mc_fitter')
@@ -58,17 +58,6 @@ def test_toy_pdf():
     obj=FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
     _  =obj.run()
 # --------------------------------------------
-def test_real_pdf():
-    '''
-    Test using real simulation
-    '''
-    pdf= tut.get_signal_pdf(obs=Data.obs)
-    rdf= tut.rdf_from_pdf(pdf=pdf, nentries=Data.nentries)
-    cfg= _get_conf('bukee')
-
-    obj= FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
-    _  = obj.run()
-# --------------------------------------------
 def test_kde_pdf():
     '''
     Test using KDE 
@@ -79,3 +68,30 @@ def test_kde_pdf():
 
     obj= FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
     _  = obj.run()
+# --------------------------------------------
+def test_load_pdf_fail():
+    '''
+    Tests that if PDF does not exist, loader returns None 
+    '''
+    pdf= tut.get_toy_pdf(kind='sign', obs=Data.obs)
+    cfg= _get_conf('load_pdf_fail')
+
+    obj=load_fit_component(cfg=cfg, pdf=pdf)
+
+    assert obj is None
+# --------------------------------------------
+def test_load_pdf_work():
+    '''
+    Tests loading PDF when it already exists
+    '''
+    pdf= tut.get_toy_pdf(kind='sign', obs=Data.obs)
+    cfg= _get_conf('load_pdf_work')
+
+    rdf= tut.rdf_from_pdf(pdf=pdf, nentries=Data.nentries)
+    obj=FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
+    _  =obj.run()
+
+    obj=load_fit_component(cfg=cfg, pdf=pdf)
+
+    assert obj is not None
+# --------------------------------------------
