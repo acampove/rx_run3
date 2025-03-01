@@ -25,9 +25,19 @@ class EfficiencyScanner:
         RDFGetter.samples = cfg['input']['paths']
     # --------------------------------
     def _get_selection(self) -> dict[str,str]:
-        sample = self._cfg['input']['sample']
+        sample  = self._cfg['input']['sample']
+        trigger = self._cfg['input']['trigger']
+        q2bin   = self._cfg['input']['q2bin']
 
-        d_sel = sel.selection(project='RK', analysis='EE', q2bin='jpsi', process=sample)
+        if   trigger == 'Hlt2RD_BuToKpEE_MVA':
+            analysis = 'EE'
+        elif trigger == 'Hlt2RD_BuToKpMuMu_MVA':
+            analysis = 'MM'
+        else:
+            raise ValueError(f'Invalid trigger {trigger}')
+
+
+        d_sel = sel.selection(project='RK', analysis=analysis, q2bin=q2bin, process=sample)
 
         return d_sel
     # --------------------------------
