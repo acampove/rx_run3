@@ -193,8 +193,8 @@ class DTFitter:
         par = self._res_to_par(res)
 
         print(res)
-        self._plot_fit(data=self._zdt_dat, model=self._pdf_ful, name = 'fit_dat.png')
-        self._save_pars(par, name='fit_dat.json')
+        self._plot_fit(data=self._zdt_dat, model=self._pdf_ful, name = 'fit.png')
+        self._save_pars(par, name='fit.json')
 
         return par
 # --------------------------------------------------
