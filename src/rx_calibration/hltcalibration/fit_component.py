@@ -244,11 +244,10 @@ class FitComponent:
             log.info('Dataset not found, returning not fitted PDF')
             data = self._get_data_from_pdf()
 
-            self._plot_fit(data, self._pdf)
             return Parameter()
 
         if os.path.isfile(pars_path):
-            log.warning(f'Fit parameters for component {self._name} found, loading: {pars_path}')
+            log.info(f'Fit parameters for component {self._name} found, loading: {pars_path}')
             par = Parameter.from_json(pars_path)
             self._fix_tails(par)
 
