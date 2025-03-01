@@ -130,14 +130,14 @@ class ModelFactory:
     @MethodRegistry.register('exp')
     def _get_exponential(self, suffix : str = '') -> zpdf:
         c   = self._get_parameter('c_exp', suffix, -0.005, -0.20, 0.00)
-        pdf = zfit.pdf.Exponential(c, self._obs, name=suffix)
+        pdf = zfit.pdf.Exponential(c, self._obs, name=f'exp{suffix}')
 
         return pdf
     #-----------------------------------------
     @MethodRegistry.register('pol1')
     def _get_pol1(self, suffix : str = '') -> zpdf:
         a   = self._get_parameter('a_pol1', suffix, -0.005, -0.95, 0.00)
-        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a], name=suffix)
+        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a], name=f'pol1{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -145,7 +145,7 @@ class ModelFactory:
     def _get_pol2(self, suffix : str = '') -> zpdf:
         a   = self._get_parameter('a_pol2', suffix, -0.005, -0.95, 0.00)
         b   = self._get_parameter('b_pol2', suffix,  0.000, -0.95, 0.95)
-        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b], name=suffix)
+        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b], name=f'pol2{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -156,7 +156,7 @@ class ModelFactory:
         ar  = self._get_parameter('ac_cbr', suffix,   -2, -14., -0.1)
         nr  = self._get_parameter('nc_cbr', suffix,    1,  0.5,  150)
 
-        pdf = zfit.pdf.CrystalBall(mu, sg, ar, nr, self._obs, name=suffix)
+        pdf = zfit.pdf.CrystalBall(mu, sg, ar, nr, self._obs, name=f'cbr{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -167,7 +167,7 @@ class ModelFactory:
         gm  = self._get_parameter('gm_suj', suffix,    1,  -10,   10)
         dl  = self._get_parameter('dl_suj', suffix,    1,  0.1,   10)
 
-        pdf = zfit.pdf.JohnsonSU(mu, sg, gm, dl, self._obs, name=f'suj_{suffix}')
+        pdf = zfit.pdf.JohnsonSU(mu, sg, gm, dl, self._obs, name=f'suj{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -178,7 +178,7 @@ class ModelFactory:
         al  = self._get_parameter('ac_cbl', suffix,    2,  0.1,  14.)
         nl  = self._get_parameter('nc_cbl', suffix,    1,  0.5,  150)
 
-        pdf = zfit.pdf.CrystalBall(mu, sg, al, nl, self._obs, name=suffix)
+        pdf = zfit.pdf.CrystalBall(mu, sg, al, nl, self._obs, name=f'cbl{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -187,7 +187,7 @@ class ModelFactory:
         mu  = self._get_parameter('mu_gauss', suffix, 5300, 5100, 5350)
         sg  = self._get_parameter('sg_gauss', suffix,   10,    2,  300)
 
-        pdf = zfit.pdf.Gauss(mu, sg, self._obs, name=suffix)
+        pdf = zfit.pdf.Gauss(mu, sg, self._obs, name=f'gauss{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -200,7 +200,7 @@ class ModelFactory:
         nr  = self._get_parameter('nr_dscb', suffix,    2,    1,  150)
         nl  = self._get_parameter('nl_dscb', suffix,    2,    0,  150)
 
-        pdf = zfit.pdf.DoubleCB(mu, sg, al, nl, ar, nr, self._obs, name=suffix)
+        pdf = zfit.pdf.DoubleCB(mu, sg, al, nl, ar, nr, self._obs, name=f'dscb{suffix}')
 
         return pdf
     #-----------------------------------------
