@@ -2,7 +2,7 @@
 name        = 'rx_efficiencies'
 version     = '0.0.1'
 readme      = 'README.md'
-dependencies= ['numpy', 'pandas']
+dependencies= ['numpy', 'pandas', 'data-manipulation-utilities', 'rx_data']
 
 [project.optional-dependencies]
 dev  = ['pytest']
