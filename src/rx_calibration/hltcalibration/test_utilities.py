@@ -51,7 +51,7 @@ def get_signal_pdf(obs) -> BasePDF:
     '''
     l_pdf = ['dscb', 'gauss']
     l_shr = ['mu', 'sg']
-    mod   = ModelFactory(obs = obs, l_pdf = l_pdf, l_shared=l_shr)
+    mod   = ModelFactory(preffix='signal', obs = obs, l_pdf = l_pdf, l_shared=l_shr, l_float=l_shr)
     pdf   = mod.get_pdf()
 
     return pdf
