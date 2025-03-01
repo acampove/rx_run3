@@ -1,0 +1,17 @@
+input:
+  sample : Bu_JpsiK_ee_eq_DPC
+  trigger: Hlt2RD_BuToKpEE_MVA
+variables:
+  mva.mva_cmb:
+    - 0.5
+    - 0.6
+    - 0.7
+    - 0.8
+    - 0.9
+  mva.mva_prc:
+    - 0.5
+    - 0.6
+    - 0.7
+    - 0.8
+    - 0.9
+
