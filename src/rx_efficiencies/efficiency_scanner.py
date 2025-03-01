@@ -3,8 +3,9 @@ Module containing EfficiencyScanner class
 '''
 
 from ROOT                  import RDataFrame
-from rx_data.rdf_getter    import RDFGetter
 from dmu.logging.log_store import LogStore
+from rx_data.rdf_getter    import RDFGetter
+from rx_selection          import selection as sel
 
 log = LogStore.add_logger('rx_efficiencies:efficiency_scanner')
 # --------------------------------
@@ -24,7 +25,11 @@ class EfficiencyScanner:
         RDFGetter.samples = cfg['input']['paths']
     # --------------------------------
     def _get_selection(self) -> dict[str,str]:
-        return {}
+        sample = self._cfg['input']['sample']
+
+        d_sel = sel.selection(project='RK', analysis='EE', q2bin='jpsi', process=sample)
+
+        return d_sel
     # --------------------------------
     def _skip_cut(self, expr : str) -> bool:
         d_var = self._cfg['variables']
@@ -45,11 +50,15 @@ class EfficiencyScanner:
         rdf = gtr.get_rdf()
 
         for name, expr in d_cut.items():
+            log.debug(f'{name:<20}{expr}')
             if self._skip_cut(expr):
-                log.debug(f'Skipping cut: {name}')
-                continue
+                log.info(f'Skipping cut: {name}')
+                expr = '(1)'
 
             rdf = rdf.Filter(expr, name)
+
+        rep = rdf.Report()
+        rep.Print()
 
         return rdf
     # --------------------------------
