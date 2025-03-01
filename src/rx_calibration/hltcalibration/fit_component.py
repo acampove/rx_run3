@@ -220,7 +220,7 @@ class FitComponent:
         '''
         Will return the PDF
         '''
-        pars_path= f'{self._out_dir}/parameters.json'
+        pars_path= f'{self._out_dir}/fit.json'
 
         if self._pdf is None:
             log.info('PDF not found, building KDE')
