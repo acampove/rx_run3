@@ -163,7 +163,7 @@ class ModelFactory:
     @MethodRegistry.register('suj')
     def _get_suj(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter('mu_suj', suffix, 5300, 4000, 6000)
-        sg  = self._get_parameter('sg_suj', suffix,   10,    2, 1000)
+        sg  = self._get_parameter('sg_suj', suffix,   10,    2, 5000)
         gm  = self._get_parameter('gm_suj', suffix,    1,  -10,   10)
         dl  = self._get_parameter('dl_suj', suffix,    1,  0.1,   10)
 
