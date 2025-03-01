@@ -1,0 +1,18 @@
+[project]
+name        = 'rx_efficiencies'
+version     = '0.0.1'
+readme      = 'README.md'
+dependencies= []
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
+[project.scripts]
+scan_efficiencies ='rx_efficiencies_scripts.scan_efficiencies:main'
+
+[tool.setuptools.package-data]
+rx_efficiencies_data=['scan/*.yaml']
+
