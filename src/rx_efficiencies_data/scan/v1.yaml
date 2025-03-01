@@ -1,6 +1,7 @@
 input:
   sample : Bu_JpsiK_ee_eq_DPC
   trigger: Hlt2RD_BuToKpEE_MVA
+  q2bin  : jpsi
 variables:
   mva.mva_cmb:
     - 0.5
