@@ -27,11 +27,11 @@ class MisCalculator:
         self._lmass = self._get_lepton_mass(trigger)
     # -------------
     def _get_lepton_mass(self, trigger : str) -> float:
-        if fnmatch.fnmatch(trigger, 'Hlt2RD_*EE_MVA*'):
+        if fnmatch.fnmatch(trigger, 'Hlt2RD_*EE*MVA*'):
             log.debug('Using electron mass hypothesis')
             return self._emass
 
-        if fnmatch.fnmatch(trigger, 'Hlt2RD_*MuMu_MVA*'):
+        if fnmatch.fnmatch(trigger, 'Hlt2RD_*MuMu*MVA*'):
             log.debug('Using muon mass hypothesis')
             return self._mmass
 
