@@ -41,7 +41,7 @@ class Parameter(UserDict):
         os.makedirs(dir_path, exist_ok=True)
 
         with open(path, 'w', encoding='utf-8') as ofile:
-            json.dump(self.data, ofile, indent=4)
+            json.dump(self.data, ofile, indent=4, sort_keys=True)
     # ----------------------------------
     @staticmethod
     def from_json(path : str) -> UserDict:
