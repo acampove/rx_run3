@@ -5,10 +5,8 @@ definitions:
 overide_selection:
   mass     : B_const_mass_M > 5180
 overlay:
-  npv_00_03 : nPVs > 0 && nPVs <=3
-  npv_03_05 : nPVs > 3 && nPVs <=5
-  npv_05_07 : nPVs > 5 && nPVs <=7
-  npv_07_xx : nPVs > 7
+  in  : TMath::Abs(L1_STATEAT_Ecal_positionX) < 800 && TMath::Abs(L1_STATEAT_Ecal_positionY) < 400 && TMath::Abs(L2_STATEAT_Ecal_positionX) < 800 && TMath::Abs(L2_STATEAT_Ecal_positionY) < 400
+  out : TMath::Abs(L1_STATEAT_Ecal_positionX) > 800 && TMath::Abs(L1_STATEAT_Ecal_positionY) > 400 && TMath::Abs(L2_STATEAT_Ecal_positionX) > 800 && TMath::Abs(L2_STATEAT_Ecal_positionY) > 400
 plots:
     B_M:
         binning    : [4500, 6000, 100]
@@ -30,6 +28,6 @@ plots:
         labels     : ['nPVs', 'Normalized']
         title      : ''
         name       : 'npvs'
-        normalized : false 
+        normalized : true 
 style:
-  skip_lines : true 
+  skip_lines : false 
