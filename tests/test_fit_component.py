@@ -51,6 +51,8 @@ def test_toy_pdf():
     '''
     Simplest test of MCFitter
     '''
+    log.info('')
+
     pdf= tut.get_toy_pdf(kind='sign', obs=Data.obs)
     rdf= tut.rdf_from_pdf(pdf=pdf, nentries=Data.nentries)
     cfg= _get_conf('toy')
