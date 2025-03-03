@@ -115,8 +115,14 @@ class SWPCalculator:
 
             l_mass.append(mass)
 
-        if len(l_mass) != 1:
-            log.warning(f'Found two combinations with masses: {l_mass}')
+        ncmb = len(l_mass)
+
+        if ncmb == 0:
+            log.warning(f'Found no combinations with masses: {l_mass}')
+            return -999
+
+        if ncmb >  1:
+            log.warning(f'Found more than one combinations with masses: {l_mass}')
 
         return l_mass[0]
     #---------------------------------
