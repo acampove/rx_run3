@@ -11,7 +11,7 @@ cuts:
     brem_1  : L1_HASBREMADDED == 1
     mass    : B_const_mass_M > 5150
 target:
-  variable : B_M 
+  variable : B_M
   quantity : RMS
 processing:
   ncores : 13
@@ -24,7 +24,7 @@ plots_2d:
   - [L2_STATEAT_Ecal_positionX, L2_STATEAT_Ecal_positionY, weight, ecal_reso, false]
 axes:
   L2_STATEAT_Ecal_positionX:
-    binning: 
+    binning_fine: &finex
       - -4000
       - -3000
       - -2500
@@ -65,9 +65,24 @@ axes:
       - 2500
       - 3000
       - 4000
+    binning:
+      - -4000
+      - -3000
+      - -2500
+      - -1700
+      - -1400
+      - -1000
+      - -400
+      - 400
+      - 1000
+      - 1400
+      - 1700
+      - 2500
+      - 3000
+      - 4000
     label: ECAL${}_{X}$
   L2_STATEAT_Ecal_positionY:
-    binning:
+    binning_fine: &finey
       - -3000
       - -2500
       - -2200
@@ -106,6 +121,19 @@ axes:
       - 1700
       - 2000
       - 2200
+      - 2500
+      - 3000
+    binning:
+      - -3000
+      - -2500
+      - -1700
+      - -1400
+      - -1000
+      - -200
+      - 200
+      - 1000
+      - 1400
+      - 1700
       - 2500
       - 3000
     label: ECAL${}_{Y}$
