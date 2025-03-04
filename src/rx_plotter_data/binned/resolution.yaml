@@ -9,16 +9,23 @@ input:
     jpsi_misid  : /home/acampove/external_ssd/Data/samples/jpsi_misid.yaml
 define:
   out_ep : TMath::Abs(L1_STATEAT_Ecal_positionX) > 800 && TMath::Abs(L1_STATEAT_Ecal_positionY) > 600 
-selection:
-  ep_good : out_ep == 1
-  mass    : B_const_mass_M > 5150
-variables:
+cuts:
+    ep_good : out_ep == 1
+    mass    : B_const_mass_M > 5150
+target:
+  variable : B_M 
+  quantity : RMS
+# --------------------------
+saving:
+  plt_dir : plots/binning/resolution
+general:
+  size : [20, 10]
+plots_2d:
+  - [L2_STATEAT_Ecal_positionX, L2_STATEAT_Ecal_positionY, weight, ecal_reso, false]
+axes:
   L2_STATEAT_Ecal_positionX :
-    nbins : 50
-    min   : 400
-    max   : 3000
+    binning : [30, 400, 3000]
+    label   : ECAL${}_{X}$
   L2_STATEAT_Ecal_positionY :
-    nbins : 50
-    min   : 400
-    max   : 3000
-  B_M : RMS
+    binning : [30, 400, 3000]
+    label   : ECAL${}_{Y}$
