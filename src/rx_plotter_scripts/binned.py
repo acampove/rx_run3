@@ -218,10 +218,11 @@ def _plot(mat_res : list[list[str]], variables : list[str], plot_name : str) -> 
     trigger        = Data.cfg['input']['trigger']
     plt_dir        = Data.cfg['saving']['plt_dir']
     figsize        = Data.cfg['general']['size']
+    [zmin, zmax]   = Data.cfg['general']['zrange']
 
     mat_res = numpy.array(mat_res).T
     plt.subplots(figsize=figsize)
-    plt.pcolormesh(l_bound_x, l_bound_y, mat_res, cmap="viridis", shading="auto", vmin=0, vmax=250)
+    plt.pcolormesh(l_bound_x, l_bound_y, mat_res, cmap="viridis", shading="auto", vmin=zmin, vmax=zmax)
     plt.colorbar()
 
     plt.savefig(f'{plt_dir}/{plot_name}_{sample}_{trigger}_{q2bin}.png')
