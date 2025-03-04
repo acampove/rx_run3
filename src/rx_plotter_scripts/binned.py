@@ -57,9 +57,6 @@ def _get_rdf() -> RDataFrame:
         log.info(f'{cut_name:<20}{cut_value}')
         rdf = rdf.Filter(cut_value, cut_name)
 
-    #rep = rdf.Report()
-    #rep.Print()
-
     return rdf
 # -----------------------------
 def _cuts_from_binning(l_name : list[str], l_setting : list, index : int) -> list[str]:
@@ -115,10 +112,6 @@ def _get_normalized_value(rdf : RDataFrame, l_cut : list[str]) -> dict[str,float
 
     return d_nrm
 # -----------------------------
-def _plot(rdf : RDataFrame) -> None:
-    ptr=Plotter(rdf=rdf, cfg=Data.cfg)
-    ptr.run()
-# -----------------------------
 def _get_cuts(l_name : list[str], l_setting : list) -> list[str]:
     l_cutx = _cuts_from_binning(l_name, l_setting, 0)
     l_cuty = _cuts_from_binning(l_name, l_setting, 1)
@@ -145,8 +138,14 @@ def main():
     _parse_args()
     _load_config()
 
-    d_axis = Data.cfg['axes']
+    root_path = f'{Data.cache_dir}/data.root'
+    if os.path.isfile(root_path):
+        rdf=RDataFrame('tree', root_path)
+        ptr=Plotter(rdf=rdf, cfg=Data.cfg)
+        ptr.run()
+        return
 
+    d_axis = Data.cfg['axes']
     l_name = list(d_axis.keys())
     l_sett = list(d_axis.values())
     l_cutxy= _get_cuts(l_name, l_sett)
@@ -154,9 +153,10 @@ def main():
     rdf    = _get_rdf()
     d_nval = _get_normalized_value(rdf, l_cutxy)
     rdf    = _attach_as_weight(rdf, d_nval)
-    rdf.Snapshot('tree', f'{Data.cache_dir}/data.root', columnList=['B_M', 'weight', 'L2_STATEAT_Ecal_positionX', 'L2_STATEAT_Ecal_positionY'])
+    rdf.Snapshot('tree', root_path, columnList=['B_M', 'weight', 'L2_STATEAT_Ecal_positionX', 'L2_STATEAT_Ecal_positionY'])
 
-    #_plot(rdf)
+    ptr=Plotter(rdf=rdf, cfg=Data.cfg)
+    ptr.run()
 # -----------------------------
 if __name__ == '__main__':
     main()
