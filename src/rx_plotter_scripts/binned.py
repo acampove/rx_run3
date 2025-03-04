@@ -63,13 +63,20 @@ def _get_rdf() -> RDataFrame:
 
     return rdf
 # -----------------------------
-def _get_bounds(var_name : str, d_bin : dict) -> list[float]:
+def _get_bounds(var_name : str, d_bin : dict, isobin : bool) -> list[float]:
     if var_name in Data.d_bound:
         return Data.d_bound[var_name]
 
     nbin    = d_bin['nbin']
     minx    = d_bin['min' ]
     maxx    = d_bin['max' ]
+
+    if isobin:
+        arr_bound = numpy.linspace(minx, maxx, nbin + 1)
+        l_bound   = arr_bound.tolist()
+        Data.d_bound[var_name] = l_bound
+
+        return l_bound
 
     rdf     = _get_rdf()
     rdf     = rdf.Filter(f'({var_name} > {minx}) && ({var_name} < {maxx})')
@@ -86,8 +93,9 @@ def _get_bounds(var_name : str, d_bin : dict) -> list[float]:
 def _cuts_from_binning(l_name : list[str], l_setting : list, index : int) -> list[str]:
     var_name = l_name[index]
     d_bin    = l_setting[index]['binning']
+    isobin   = l_setting[index]['isobin' ]
 
-    l_bound  = _get_bounds(var_name, d_bin)
+    l_bound  = _get_bounds(var_name, d_bin, isobin)
     l_min    = l_bound[:-1]
     l_max    = l_bound[+1:]
 
