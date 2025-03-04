@@ -141,8 +141,8 @@ def _plot_distribution(rdf: RDataFrame, var_name : str, cut : str, val : float, 
     plt.savefig(f'{out_dir}/{name}.png')
     plt.close()
 # -----------------------------
-def _get_resolutions(mat_cut : list[list[str]]) -> list[list[float]]:
-    path = f'{Data.cache_dir}/resolutions.json'
+def _get_resolutions(mat_cut : list[list[str]], plot_name : str) -> list[list[float]]:
+    path = f'{Data.cache_dir}/resolutions_{plot_name}.json'
     if os.path.isfile(path):
         log.info(f'Cached values found, loading: {path}')
         with open(path, encoding='utf-8') as ifile:
@@ -209,7 +209,7 @@ def _get_cuts(l_name : list[str], l_setting : list) -> list[list[str]]:
 
     return l_cut_xy
 # -----------------------------
-def _plot(mat_res : list[list[str]], variables : list[str]) -> None:
+def _plot(mat_res : list[list[str]], variables : list[str], plot_name : str) -> None:
     [var_x, var_y] = variables
     l_bound_x      = Data.d_bound[var_x]
     l_bound_y      = Data.d_bound[var_y]
@@ -224,7 +224,7 @@ def _plot(mat_res : list[list[str]], variables : list[str]) -> None:
     plt.pcolormesh(l_bound_x, l_bound_y, mat_res, cmap="viridis", shading="auto", vmin=0, vmax=250)
     plt.colorbar()
 
-    plt.savefig(f'{plt_dir}/{sample}_{trigger}_{q2bin}.png')
+    plt.savefig(f'{plt_dir}/{plot_name}_{sample}_{trigger}_{q2bin}.png')
     plt.close('all')
 # -----------------------------
 def main():
@@ -234,13 +234,14 @@ def main():
     _parse_args()
     _load_config()
 
-    d_axis = Data.cfg['axes']
-    l_name = list(d_axis.keys())
-    l_sett = list(d_axis.values())
-    mat_cut= _get_cuts(l_name, l_sett)
+    d_plot = Data.cfg['plots']
+    for plot_name, d_axis in d_plot.items():
+        l_name = list(d_axis.keys())
+        l_sett = list(d_axis.values())
+        mat_cut= _get_cuts(l_name, l_sett)
 
-    mat_res= _get_resolutions(mat_cut)
-    _plot(mat_res, l_name)
+        mat_res= _get_resolutions(mat_cut, plot_name)
+        _plot(mat_res, l_name, plot_name)
 # -----------------------------
 if __name__ == '__main__':
     main()
