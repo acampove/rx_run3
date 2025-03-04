@@ -111,11 +111,26 @@ def _get_normalized_value(rdf : RDataFrame, l_cut : list[str]) -> dict[str,float
             log.info(f'{nrm_rms:.3f}')
             d_nrm[cut] = nrm_rms
 
+    with open(path, 'w', encoding='utf-8') as ofile:
+        json.dump(d_nrm, ofile, indent=4, sort_keys=True)
+
     return d_nrm
 # -----------------------------
 def _plot(rdf : RDataFrame) -> None:
     ptr=Plotter(rdf=rdf, cfg=Data.cfg)
     ptr.run()
+# -----------------------------
+def _get_cuts(l_name : list[str], l_setting : list) -> list[str]:
+    l_cutx = _cuts_from_binning(l_name, l_setting, 0)
+    l_cuty = _cuts_from_binning(l_name, l_setting, 1)
+
+    l_cutxy = []
+    for cutx in l_cutx:
+        for cuty in l_cuty:
+            cutxy  = f'({cutx}) && ({cuty})'
+            l_cutxy.append(cutxy)
+
+    return l_cutxy
 # -----------------------------
 def main():
     '''
@@ -128,15 +143,7 @@ def main():
 
     l_name = list(d_axis.keys())
     l_sett = list(d_axis.values())
-
-    l_cutx = _cuts_from_binning(l_name, l_sett, 0)
-    l_cuty = _cuts_from_binning(l_name, l_sett, 1)
-
-    l_cutxy = []
-    for cutx in l_cutx:
-        for cuty in l_cuty:
-            cutxy  = f'({cutx}) && ({cuty})'
-            l_cutxy.append(cutxy)
+    l_cutxy= _get_cuts(l_name, l_sett)
 
     rdf     = _get_rdf()
     d_nvval = _get_normalized_value(rdf, l_cutxy)
