@@ -22,8 +22,8 @@ plots_2d:
   - [L2_STATEAT_Ecal_positionX, L2_STATEAT_Ecal_positionY, weight, ecal_reso, false]
 axes:
   L2_STATEAT_Ecal_positionX :
-    binning : [30, 400, 3000]
+    binning : [40, -4000, 4000]
     label   : ECAL${}_{X}$
   L2_STATEAT_Ecal_positionY :
-    binning : [30, 400, 3000]
+    binning : [30, -3000, 3000]
     label   : ECAL${}_{Y}$
