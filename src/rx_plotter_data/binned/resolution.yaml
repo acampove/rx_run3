@@ -21,19 +21,36 @@ processing:
 saving:
   plt_dir : plots/binning/resolution
 general:
-  size : [20, 10]
-axes:
-  L2_BREMHYPOROW:
-    binning:
-      nbin: 55
-      min :  0
-      max : 55
-    label: ECAL${}_{X}$
-    isobin: true
-  L2_BREMHYPOCOL:
-    binning:
-      nbin: 65
-      min :  0
-      max : 65
-    label : ECAL${}_{Y}$
-    isobin: true
+  size   : [20, 10]
+  zrange : [0, 350]
+plots:
+    brem_pos:
+      L2_BREMHYPOROW:
+        binning:
+          nbin: 47 
+          min :  8
+          max : 55
+        label: ECAL${}_{X}$
+        isobin: true
+      L2_BREMHYPOCOL:
+        binning:
+          nbin: 63
+          min :  0
+          max : 63
+        label : ECAL${}_{Y}$
+        isobin: true
+    ele_pos:
+      L2_STATEAT_Ecal_positionX:
+        binning:
+          nbin: 40
+          min : -4000
+          max :  4000
+        label : ECAL${}_{X}$
+        isobin: false
+      L2_STATEAT_Ecal_positionY:
+        binning:
+          nbin: 30
+          min : -3000
+          max :  3000
+        label : ECAL${}_{Y}$
+        isobin: false
