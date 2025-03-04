@@ -7,10 +7,8 @@ input:
     hop         : /home/acampove/external_ssd/Data/samples/hop.yaml
     cascade     : /home/acampove/external_ssd/Data/samples/cascade.yaml
     jpsi_misid  : /home/acampove/external_ssd/Data/samples/jpsi_misid.yaml
-define:
-  out_ep : TMath::Abs(L1_STATEAT_Ecal_positionX) > 800 && TMath::Abs(L1_STATEAT_Ecal_positionY) > 600 
 cuts:
-    ep_good : out_ep == 1
+    brem_1  : L1_HASBREMADDED == 0
     mass    : B_const_mass_M > 5150
 target:
   variable : B_M 
