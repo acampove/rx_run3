@@ -44,15 +44,16 @@ def _load_config() -> None:
 def _get_rdf() -> RDataFrame:
     q2bin   = Data.cfg['input']['q2bin']
     trigger = Data.cfg['input']['trigger']
+    sample  = Data.cfg['input']['sample']
     ncores  = Data.cfg['processing']['ncores']
     if ncores > 1:
         EnableImplicitMT(ncores)
 
     RDFGetter.samples = Data.cfg['input']['samples']
-    gtr = RDFGetter(sample='DATA*', trigger=trigger)
+    gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
 
-    d_sel = sel.selection(project='RK', analysis='EE', q2bin=q2bin, process='DATA')
+    d_sel = sel.selection(project='RK', analysis='EE', q2bin=q2bin, process=sample)
     d_cut = Data.cfg['cuts']
     d_sel.update(d_cut)
 
@@ -204,11 +205,19 @@ def _plot(mat_res : list[list[str]], variables : list[str]) -> None:
     [var_x, var_y] = variables
     l_bound_x      = Data.d_bound[var_x]
     l_bound_y      = Data.d_bound[var_y]
+    q2bin          = Data.cfg['input']['q2bin']
+    sample         = Data.cfg['input']['sample']
+    trigger        = Data.cfg['input']['trigger']
+    plt_dir        = Data.cfg['saving']['plt_dir']
+    figsize        = Data.cfg['general']['size']
 
     mat_res = numpy.array(mat_res).T
-    plt.pcolormesh(l_bound_x, l_bound_y, mat_res, cmap="viridis", shading="auto")
+    plt.subplots(figsize=figsize)
+    plt.pcolormesh(l_bound_x, l_bound_y, mat_res, cmap="viridis", shading="auto", vmin=0, vmax=250)
     plt.colorbar()
-    plt.show()
+
+    plt.savefig(f'{plt_dir}/{sample}_{trigger}_{q2bin}.png')
+    plt.close('all')
 # -----------------------------
 def main():
     '''
