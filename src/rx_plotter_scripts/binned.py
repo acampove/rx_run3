@@ -130,6 +130,13 @@ def _get_cuts(l_name : list[str], l_setting : list) -> list[str]:
 
     return l_cutxy
 # -----------------------------
+def _attach_as_weight(rdf : RDataFrame, d_nval : dict[str,float]) -> RDataFrame:
+    l_part = [ f'(double({cut}) * {val})' for cut, val in d_nval.items() ]
+    cut    = '+'.join(l_part)
+    rdf    = rdf.Define('weight', cut)
+
+    return rdf
+# -----------------------------
 def main():
     '''
     Start here
@@ -143,13 +150,12 @@ def main():
     l_sett = list(d_axis.values())
     l_cutxy= _get_cuts(l_name, l_sett)
 
-    rdf     = _get_rdf()
-    d_nvval = _get_normalized_value(rdf, l_cutxy)
+    rdf    = _get_rdf()
+    d_nval = _get_normalized_value(rdf, l_cutxy)
+    rdf    = _attach_as_weight(rdf, d_nval)
+    rdf.Snapshot('tree', f'{Data.cache_dir}/data.root', columnList=['weight', 'L2_STATEAT_Ecal_positionX', 'L2_STATEAT_Ecal_positionY'])
 
-    return
-    rdf     = _attach_normalized_value(d_nval)
-
-    _plot(rdf)
+    #_plot(rdf)
 # -----------------------------
 if __name__ == '__main__':
     main()
