@@ -1,6 +1,8 @@
 '''
 Script used to plot binned quantities
 '''
+import os
+import json
 import argparse
 from importlib.resources import files
 
@@ -20,6 +22,9 @@ class Data:
     '''
     conf_name : str
     cfg       : dict
+    cache_dir = '/tmp/rx_plotter/cache'
+
+    os.makedirs(cache_dir, exist_ok=True)
 
     EnableImplicitMT(10)
 # -----------------------------
@@ -72,6 +77,12 @@ def _cuts_from_binning(l_name : list[str], l_setting : list, index : int) -> lis
     return l_cut
 # -----------------------------
 def _get_normalized_value(rdf : RDataFrame, l_cut : list[str]) -> dict[str,float]:
+    path = f'{Data.cache_dir}/normalized_rms.json'
+    if os.path.isfile(path):
+        with open(path, encoding='utf-8') as ifile:
+            d_nrm = json.load(ifile)
+            return d_nrm
+
     var_name = Data.cfg['target']['variable']
     quantity = Data.cfg['target']['quantity']
 
