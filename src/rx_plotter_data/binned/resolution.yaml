@@ -1,6 +1,8 @@
 input:
   q2bin   : jpsi
   trigger : Hlt2RD_BuToKpEE_MVA
+  sample  : DATA*
+  #sample  : Bu_JpsiK_ee_eq_DPC
   samples :
     main        : /home/acampove/external_ssd/Data/samples/main.yaml
     mva         : /home/acampove/external_ssd/Data/samples/mva.yaml
@@ -8,7 +10,7 @@ input:
     cascade     : /home/acampove/external_ssd/Data/samples/cascade.yaml
     jpsi_misid  : /home/acampove/external_ssd/Data/samples/jpsi_misid.yaml
 cuts:
-    brem_1  : L1_HASBREMADDED == 1
+    brem_2  : L2_HASBREMADDED == 1
     mass    : B_const_mass_M > 5150
 target:
   variable : B_M
@@ -20,18 +22,18 @@ saving:
   plt_dir : plots/binning/resolution
 general:
   size : [20, 10]
-plots_2d:
-  - [L2_STATEAT_Ecal_positionX, L2_STATEAT_Ecal_positionY, weight, ecal_reso, false]
 axes:
-  L2_STATEAT_Ecal_positionX:
+  L2_BREMHYPOROW:
     binning:
-      nbin: 40
-      min : -4000
-      max :  4000
+      nbin: 55
+      min :  0
+      max : 55
     label: ECAL${}_{X}$
-  L2_STATEAT_Ecal_positionY:
+    isobin: true
+  L2_BREMHYPOCOL:
     binning:
-      nbin: 30
-      min : -3000
-      max :  3000
-    label: ECAL${}_{Y}$
+      nbin: 65
+      min :  0
+      max : 65
+    label : ECAL${}_{Y}$
+    isobin: true
