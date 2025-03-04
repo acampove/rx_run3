@@ -8,6 +8,7 @@ from importlib.resources import files
 
 import yaml
 import numpy
+import matplotlib.pyplot as plt
 from ROOT                    import RDataFrame, EnableImplicitMT
 from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter_2d import Plotter2D as Plotter
@@ -43,7 +44,7 @@ def _get_rdf() -> RDataFrame:
     trigger = Data.cfg['input']['trigger']
     ncores  = Data.cfg['processing']['ncores']
     if ncores > 1:
-        EnableImplicitMT(13)
+        EnableImplicitMT(ncores)
 
     RDFGetter.samples = Data.cfg['input']['samples']
     gtr = RDFGetter(sample='DATA*', trigger=trigger)
