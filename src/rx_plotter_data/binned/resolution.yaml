@@ -1,0 +1,24 @@
+input:
+  q2bin   : jpsi
+  trigger : Hlt2RD_BuToKpEE_MVA
+  samples :
+    main        : /home/acampove/external_ssd/Data/samples/main.yaml
+    mva         : /home/acampove/external_ssd/Data/samples/mva.yaml
+    hop         : /home/acampove/external_ssd/Data/samples/hop.yaml
+    cascade     : /home/acampove/external_ssd/Data/samples/cascade.yaml
+    jpsi_misid  : /home/acampove/external_ssd/Data/samples/jpsi_misid.yaml
+define:
+  out_ep : TMath::Abs(L1_STATEAT_Ecal_positionX) > 800 && TMath::Abs(L1_STATEAT_Ecal_positionY) > 600 
+selection:
+  ep_good : out_ep == 1
+  mass    : B_const_mass_M > 5150
+variables:
+  L2_STATEAT_Ecal_positionX :
+    nbins : 50
+    min   : 400
+    max   : 3000
+  L2_STATEAT_Ecal_positionY :
+    nbins : 50
+    min   : 400
+    max   : 3000
+  B_M : RMS
