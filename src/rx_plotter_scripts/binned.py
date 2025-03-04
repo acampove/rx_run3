@@ -154,7 +154,7 @@ def main():
     rdf    = _get_rdf()
     d_nval = _get_normalized_value(rdf, l_cutxy)
     rdf    = _attach_as_weight(rdf, d_nval)
-    rdf.Snapshot('tree', f'{Data.cache_dir}/data.root', columnList=['weight', 'L2_STATEAT_Ecal_positionX', 'L2_STATEAT_Ecal_positionY'])
+    rdf.Snapshot('tree', f'{Data.cache_dir}/data.root', columnList=['B_M', 'weight', 'L2_STATEAT_Ecal_positionX', 'L2_STATEAT_Ecal_positionY'])
 
     #_plot(rdf)
 # -----------------------------
