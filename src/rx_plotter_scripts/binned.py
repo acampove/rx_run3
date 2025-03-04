@@ -26,7 +26,7 @@ class Data:
 
     os.makedirs(cache_dir, exist_ok=True)
 
-    EnableImplicitMT(10)
+    EnableImplicitMT(13)
 # -----------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Used to plot 2D distributions')
@@ -47,9 +47,6 @@ def _get_rdf() -> RDataFrame:
     RDFGetter.samples = Data.cfg['input']['samples']
     gtr = RDFGetter(sample='DATA*', trigger=trigger)
     rdf = gtr.get_rdf()
-    d_def = Data.cfg['define']
-    for name, expr in d_def.items():
-        rdf = rdf.Define(name, expr)
 
     d_sel = sel.selection(project='RK', analysis='EE', q2bin=q2bin, process='DATA')
     d_cut = Data.cfg['cuts']
@@ -79,6 +76,7 @@ def _cuts_from_binning(l_name : list[str], l_setting : list, index : int) -> lis
 def _get_normalized_value(rdf : RDataFrame, l_cut : list[str]) -> dict[str,float]:
     path = f'{Data.cache_dir}/normalized_rms.json'
     if os.path.isfile(path):
+        log.info(f'Cached values found, loading: {path}')
         with open(path, encoding='utf-8') as ifile:
             d_nrm = json.load(ifile)
             return d_nrm
@@ -104,11 +102,11 @@ def _get_normalized_value(rdf : RDataFrame, l_cut : list[str]) -> dict[str,float
         frq_val = frq.GetValue()
 
         if frq_val == 0:
-            log.warning(f'Zero yield at: {cut}')
-            d_nrm[cut] = numpy.nan
+            log.warning(f'Zero entries at: {cut}')
+            d_nrm[cut] = 0
         else:
             nrm_rms    = rms_val / frq_val
-            log.info(f'{nrm_rms:.3f}')
+            log.debug(f'{nrm_rms:.3f}')
             d_nrm[cut] = nrm_rms
 
     with open(path, 'w', encoding='utf-8') as ofile:
