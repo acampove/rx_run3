@@ -25,8 +25,6 @@ class Data:
     cache_dir = '/tmp/rx_plotter/cache'
 
     os.makedirs(cache_dir, exist_ok=True)
-
-    EnableImplicitMT(13)
 # -----------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Used to plot 2D distributions')
@@ -43,6 +41,9 @@ def _load_config() -> None:
 def _get_rdf() -> RDataFrame:
     q2bin   = Data.cfg['input']['q2bin']
     trigger = Data.cfg['input']['trigger']
+    ncores  = Data.cfg['processing']['ncores']
+    if ncores > 1:
+        EnableImplicitMT(13)
 
     RDFGetter.samples = Data.cfg['input']['samples']
     gtr = RDFGetter(sample='DATA*', trigger=trigger)

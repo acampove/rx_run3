@@ -8,11 +8,13 @@ input:
     cascade     : /home/acampove/external_ssd/Data/samples/cascade.yaml
     jpsi_misid  : /home/acampove/external_ssd/Data/samples/jpsi_misid.yaml
 cuts:
-    brem_1  : L1_HASBREMADDED == 0
+    brem_1  : L1_HASBREMADDED == 1
     mass    : B_const_mass_M > 5150
 target:
   variable : B_M 
   quantity : RMS
+processing:
+  ncores : 13
 # --------------------------
 saving:
   plt_dir : plots/binning/resolution
