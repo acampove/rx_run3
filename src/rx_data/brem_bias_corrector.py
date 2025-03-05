@@ -41,7 +41,7 @@ class BremBiasCorrector:
 
         return None
     # --------------------------
-    def _find_bin(self, x : float, y : float) -> int:
+    def _find_bin(self, x : float, y : float) -> Union[None, int]:
         for region, l_l_bound in self._d_bound.items():
             ibin = self._find_among_bounds(x, y, l_l_bound)
             if ibin is None:
@@ -49,7 +49,9 @@ class BremBiasCorrector:
 
             return ibin, region
 
-        raise ValueError(f'Cannot find ({x:.3f}, {y:.3f}) among bounds')
+        log.warning(f'Cannot find ({x:.3f}, {y:.3f}) among bounds')
+
+        return None
     # --------------------------
     def _find_corrections(self, ibin : int, region : int) -> dict:
         d_corr_reg = self._d_corr[region]
