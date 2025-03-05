@@ -19,4 +19,4 @@ def test_simple():
 
     obj = BremBiasCorrector()
     brem= obj.correct(brem=brem, row=row, col=col)
-
+# -----------------------------------------------
