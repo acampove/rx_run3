@@ -1,9 +1,15 @@
 '''
 Module holding brem bias corrector class
 '''
+from typing                 import Union
+from importlib.resources    import files
+
+import yaml
+import numpy
 from vector                 import MomentumObject4D as v4d
 
 from dmu.logging.log_store  import LogStore
+from rx_data.translator     import from_id_to_xy
 
 log=LogStore.add_logger('rx_data:brem_bias_corrector')
 # --------------------------
@@ -13,12 +19,69 @@ class BremBiasCorrector:
     '''
     # --------------------------
     def __init__(self):
-        pass
+        self._d_bound = self._load_yaml(pattern='mu_data_24c4MU_bybin_P_ELECTRONENERGY_regionREGION.yaml')
+        self._d_corr  = self._load_yaml(pattern='regionREGION_bins.yaml')
+    # --------------------------
+    def _load_yaml(self, pattern : str) -> dict:
+        path_pattern = files('rx_data_data').jonpath(f'brem_correction/{pattern}')
+
+        d_bound = {}
+        for region in [0,1,2]:
+            path = path_pattern.replace('REGION', str(region))
+            with open(path, encoding='utf-8') as ifile:
+                d_bound[region] = yaml.safe_load(ifile)
+
+        return d_bound
+    # --------------------------
+    def _find_among_bounds(self, x : float, y : float, l_l_bound : list) -> Union[None, int]:
+        for ibound, [xmin, xmax, ymin, ymax] in enumerate(l_l_bound):
+            if (xmin < x < xmax) and (ymin < y < ymax):
+                return ibound
+
+        return None
+    # --------------------------
+    def _find_bin(self, x : float, y : float) -> int:
+        for region, l_l_bound in self._d_bound.items():
+            ibin = self._find_among_bounds(x, y, l_l_bound)
+            if ibin is None:
+                continue
+
+            return ibin, region
+
+        raise ValueError(f'Cannot find ({x:.3f}, {y:.3f}) among bounds')
+    # --------------------------
+    def _find_corrections(self, ibin : int, region : int) -> dict:
+        d_corr_reg = self._d_corr[region]
+        key        = region * 10_000 + ibin
+        key        = str(key)
+
+        correction = d_corr_reg[key]
+
+        return correction
+    # --------------------------
+    def _apply_correction(self, brem : v4d, d_corr : dict) -> v4d:
+        l_bound = d_corr['p']
+        ibin    = numpy.digitize(brem.e, l_bound)
+        mu      = d_corr['mu'][ibin - 1]
+
+        px      = brem.px
+        py      = brem.py
+        pz      = brem.pz
+        e_corr  = brem.e / mu
+
+        brem_corr = v4d(px=px, py=py, pz=pz, e=e_corr)
+
+        return brem_corr
     # --------------------------
     def correct(self, brem : v4d, row : int, col : int) -> v4d:
         '''
         Takes 4 vector with brem, the row and column locations in ECAL
         Returns corrected photon
         '''
+        x, y         = from_id_to_xy(row, col)
+        ibin, region = self._find_bin(x, y)
+        d_corr       = self._find_corrections(ibin, region)
+        brem         = self._apply_correction(brem, d_corr)
+
         return brem
 # --------------------------
