@@ -4,6 +4,7 @@ Module used to test bias corrections
 
 import os
 
+import numpy
 import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
