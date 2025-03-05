@@ -55,12 +55,11 @@ def _get_df() -> pnd.DataFrame:
 
     return df
 #-----------------------------------------
-def test_simple():
+def test_skip_correction():
     '''
-    Tests correction of lepton kinematics 
+    Tests without actually doing the correction 
     '''
     df  = _get_df()
-    cor = ElectronBiasCorrector()
-    for row in df.itertuples():
-        row = cor.correct(row=row, name='L1')
+    cor = ElectronBiasCorrector(skip_correction=True)
+    df  = df.apply(lambda row : cor.correct(row, 'L1'), axis=1)
 #-----------------------------------------
