@@ -17,9 +17,20 @@ class ElectronBiasCorrector:
     '''
     # ------------------------------------------
     def __init__(self, rdf : RDataFrame):
-        self._rdf = rdf
+        self._rdf = self._preprocess_rdf(rdf)
+
+        self._to_keep = ['EVENTNUMBER', 'RUNNUMBER', 'B_M']
     # ------------------------------------------
-    def _calculate_correction(self, row):
+    def _preprocess_rdf(self, rdf: RDataFrame) -> RDataFrame:
+        rdf = rdf.Redefine('L1_HASBREMADDED', 'int(L1_HASBREMADDED)')
+        rdf = rdf.Redefine('L2_HASBREMADDED', 'int(L2_HASBREMADDED)')
+
+        return rdf
+    # ------------------------------------------
+    def _calculate_correction(self, row : pnd.Series) -> float:
+        if not row.L1_HASBREMADDED and not row.L2_HASBREMADDED:
+            return row.B_M
+
         return 1
     # ------------------------------------------
     def _pick_column(self, name : str) -> bool:
@@ -36,7 +47,7 @@ class ElectronBiasCorrector:
         if 'DTF' in name:
             return False
 
-        if name in ['EVENTNUMBER', 'RUNNUMBER', 'B_M']:
+        if name in self._to_keep:
             return True
 
         if name.startswith('L1_'):
@@ -60,9 +71,7 @@ class ElectronBiasCorrector:
         df             = self._df_from_rdf()
         df['B_M_corr'] = df.apply(self._calculate_correction, axis=1)
 
-        to_keep = ['EVENTNUMBER', 'B_M', 'B_M_corr']
-        df  = df[to_keep]
-
+        df  = df[self._to_keep + ['B_M_corr']]
         rdf = RDF.FromPandas(df)
 
         return rdf
