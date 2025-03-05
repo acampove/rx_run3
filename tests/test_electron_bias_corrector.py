@@ -56,11 +56,30 @@ def _get_df() -> pnd.DataFrame:
 
     return df
 #-----------------------------------------
+def _check_equal(df_org : pnd.DataFrame, df_cor : pnd.DataFrame) -> None:
+    equal_cols = numpy.isclose(df_org, df_cor, rtol=0.001)
+
+    assert numpy.all(equal_cols)
+#-----------------------------------------
 def test_skip_correction():
     '''
     Tests without actually doing the correction 
     '''
-    df  = _get_df()
-    cor = ElectronBiasCorrector(skip_correction=True)
-    df  = df.apply(lambda row : cor.correct(row, 'L1'), axis=1)
+    df_org = _get_df()
+    df_org = df_org.fillna(-1)
+    cor    = ElectronBiasCorrector(skip_correction=True)
+    df_cor = df_org.apply(lambda row : cor.correct(row, 'L1'), axis=1)
+
+    _check_equal(df_org, df_cor)
+#-----------------------------------------
+def test_correction():
+    '''
+    Tests actually doing the correction 
+    '''
+    df_org = _get_df()
+    df_org = df_org.fillna(-1)
+    cor    = ElectronBiasCorrector(skip_correction=False)
+    df_cor = df_org.apply(lambda row : cor.correct(row, 'L1'), axis=1)
+
+    _check_equal(df_org, df_cor)
 #-----------------------------------------
