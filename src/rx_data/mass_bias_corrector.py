@@ -1,6 +1,7 @@
 '''
 Module storing ElectronBiasCorrector class
 '''
+# pylint: disable=too-many-return-statements
 
 import math
 import vector
@@ -9,9 +10,9 @@ import pandas as pnd
 from ROOT                  import RDataFrame, RDF
 from dmu.logging.log_store import LogStore
 
-log=LogStore.add_logger('rx_data:electron_bias_corrector')
+log=LogStore.add_logger('rx_data:mass_bias_corrector')
 # ------------------------------------------
-class ElectronBiasCorrector:
+class MassBiasCorrector:
     '''
     Class meant to correct B mass without DTF constraint
     by correcting biases in electrons
@@ -38,6 +39,8 @@ class ElectronBiasCorrector:
         has_brem = row[f'{name}_HASBREMADDED']
         if not has_brem:
             return row
+
+
 
         return row
     # ------------------------------------------
@@ -102,22 +105,17 @@ class ElectronBiasCorrector:
 
         return df
     # ------------------------------------------
-    def _get_corrected_rdf(self) -> RDataFrame:
-        df             = self._df_from_rdf()
-        df['B_M_corr'] = df.apply(self._calculate_correction, axis=1)
-
-        df  = df[self._to_keep + ['B_M_corr']]
-        rdf = RDF.FromPandas(df)
-
-        return rdf
-    # ------------------------------------------
     def get_rdf(self) -> RDataFrame:
         '''
         Returns corrected ROOT dataframe
         '''
         log.info('Applying bias correction')
 
-        rdf    = self._get_corrected_rdf()
+        df             = self._df_from_rdf()
+        df['B_M_corr'] = df.apply(self._calculate_correction, axis=1)
+
+        df  = df[self._to_keep + ['B_M_corr']]
+        rdf = RDF.FromPandas(df)
 
         return rdf
 # ------------------------------------------
