@@ -37,7 +37,6 @@ def _pick_column(name : str, rdf : RDataFrame) -> bool:
     if ctype not in ['Int_t', 'Float_t', 'Double_t', 'int']:
         return False
 
-
     return True
 #-----------------------------------------
 def _get_df() -> pnd.DataFrame:
@@ -47,7 +46,9 @@ def _get_df() -> pnd.DataFrame:
 
     gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
-    rdf = rdf.Redefine('L1_HASBREMADDED', 'Int_t(L1_HASBREMADDED)')
+    rdf = rdf.Redefine('L1_HASBREMADDED', 'int(L1_HASBREMADDED)')
+    rdf = rdf.Redefine('L1_BREMHYPOCOL' , 'int(L1_BREMHYPOCOL)')
+    rdf = rdf.Redefine('L1_BREMHYPOROW' , 'int(L1_BREMHYPOROW)')
     rdf = rdf.Range(10)
 
     l_col  = [ name.c_str() for name in rdf.GetColumnNames() if _pick_column(name.c_str(), rdf) ]
