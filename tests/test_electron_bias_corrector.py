@@ -22,7 +22,7 @@ def _get_rdf() -> RDataFrame:
 
     gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
-    rdf = rdf.Range(10)
+    rdf = rdf.Range(20)
 
     return rdf
 #-----------------------------------------
@@ -34,4 +34,6 @@ def test_simle():
 
     cor = ElectronBiasCorrector(rdf=rdf)
     rdf = cor.get_rdf()
+
+    rdf.Display(nRows=20).Print()
 #-----------------------------------------
