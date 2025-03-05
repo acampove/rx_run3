@@ -47,7 +47,7 @@ class ElectronBiasCorrector:
         if self._skip_correction:
             return e_brem
 
-        return e_brem
+        return 2 * e_brem
     # ---------------------------------
     def _update_row(self, row : pnd.Series, e_corr : v4d) -> pnd.Series:
         l_var      = [

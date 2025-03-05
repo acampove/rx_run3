@@ -56,10 +56,13 @@ def _get_df() -> pnd.DataFrame:
 
     return df
 #-----------------------------------------
-def _check_equal(df_org : pnd.DataFrame, df_cor : pnd.DataFrame) -> None:
+def _check_equal(df_org : pnd.DataFrame, df_cor : pnd.DataFrame, must_differ : bool) -> None:
     equal_cols = numpy.isclose(df_org, df_cor, rtol=0.001)
 
-    assert numpy.all(equal_cols)
+    if must_differ:
+        assert not numpy.all(equal_cols)
+    else:
+        assert numpy.all(equal_cols)
 #-----------------------------------------
 def test_skip_correction():
     '''
@@ -70,7 +73,7 @@ def test_skip_correction():
     cor    = ElectronBiasCorrector(skip_correction=True)
     df_cor = df_org.apply(lambda row : cor.correct(row, 'L1'), axis=1)
 
-    _check_equal(df_org, df_cor)
+    _check_equal(df_org, df_cor, must_differ = False)
 #-----------------------------------------
 def test_correction():
     '''
@@ -81,5 +84,5 @@ def test_correction():
     cor    = ElectronBiasCorrector(skip_correction=False)
     df_cor = df_org.apply(lambda row : cor.correct(row, 'L1'), axis=1)
 
-    _check_equal(df_org, df_cor)
+    _check_equal(df_org, df_cor, must_differ = True)
 #-----------------------------------------
