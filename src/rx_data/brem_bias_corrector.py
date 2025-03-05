@@ -19,11 +19,12 @@ class BremBiasCorrector:
     '''
     # --------------------------
     def __init__(self):
-        self._d_bound = self._load_yaml(pattern='mu_data_24c4MU_bybin_P_ELECTRONENERGY_regionREGION.yaml')
-        self._d_corr  = self._load_yaml(pattern='regionREGION_bins.yaml')
+        self._d_corr  = self._load_yaml(pattern='mu_data_24c4MU_bybin_P_ELECTRONENERGY_regionREGION.yaml')
+        self._d_bound = self._load_yaml(pattern='regionREGION_bins.yaml')
     # --------------------------
     def _load_yaml(self, pattern : str) -> dict:
-        path_pattern = files('rx_data_data').jonpath(f'brem_correction/{pattern}')
+        path_pattern = files('rx_data_data').joinpath(f'brem_correction/{pattern}')
+        path_pattern = str(path_pattern)
 
         d_bound = {}
         for region in [0,1,2]:
