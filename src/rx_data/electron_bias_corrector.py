@@ -6,6 +6,8 @@ from dmu.logging.log_store  import LogStore
 from vector                 import MomentumObject3D as v3d
 from vector                 import MomentumObject4D as v4d
 
+from rx_data.brem_bias_corrector import BremBiasCorrector
+
 log=LogStore.add_logger('rx_data:electron_bias_corrector')
 # ---------------------------------
 class ElectronBiasCorrector:
@@ -16,6 +18,7 @@ class ElectronBiasCorrector:
     def __init__(self, skip_correction : bool = False):
         self._skip_correction = skip_correction
         self._mass            = 0.511
+        self._bcor            = BremBiasCorrector()
         self._name : str
 
         if self._skip_correction:
@@ -43,11 +46,15 @@ class ElectronBiasCorrector:
 
         return e_brem
     # ---------------------------------
-    def _correct_brem(self, e_brem : v4d) -> v4d:
+    def _correct_brem(self, e_brem : v4d, row : pnd.Series) -> v4d:
         if self._skip_correction:
             return e_brem
 
-        return 2 * e_brem
+        brem_row = self._attr_from_row(row, f'{self._name}_BREMHYPOCOL')
+        brem_col = self._attr_from_row(row, f'{self._name}_BREMHYPOROW')
+        e_brem   = self._bcor.correct(brem=e_brem, row=brem_row, col=brem_col)
+
+        return e_brem
     # ---------------------------------
     def _update_row(self, row : pnd.Series, e_corr : v4d) -> pnd.Series:
         l_var      = [
@@ -89,7 +96,7 @@ class ElectronBiasCorrector:
 
         e_track = self._get_electron(row, kind='TRACK_')
         e_brem  = self._get_ebrem(row, e_track)
-        e_brem  = self._correct_brem(e_brem)
+        e_brem  = self._correct_brem(e_brem, row)
         e_corr  = e_track + e_brem
         row     = self._update_row(row, e_corr)
 
