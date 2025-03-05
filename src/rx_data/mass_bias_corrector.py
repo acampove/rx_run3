@@ -7,8 +7,9 @@ import math
 import vector
 import pandas as pnd
 
-from ROOT                  import RDataFrame, RDF
-from dmu.logging.log_store import LogStore
+from ROOT                            import RDataFrame, RDF
+from dmu.logging.log_store           import LogStore
+from rx_data.electron_bias_corrector import ElectronBiasCorrector
 
 log=LogStore.add_logger('rx_data:mass_bias_corrector')
 # ------------------------------------------
@@ -40,7 +41,8 @@ class MassBiasCorrector:
         if not has_brem:
             return row
 
-
+        ebc = ElectronBiasCorrector(row)
+        row = ebc.get_row()
 
         return row
     # ------------------------------------------
