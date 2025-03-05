@@ -9,9 +9,9 @@ import pandas            as pnd
 import matplotlib.pyplot as plt
 
 from ROOT import RDataFrame
-from dmu.logging.log_store           import LogStore
-from rx_data.rdf_getter              import RDFGetter
-from rx_data.electron_bias_corrector import ElectronBiasCorrector
+from dmu.logging.log_store       import LogStore
+from rx_data.rdf_getter          import RDFGetter
+from rx_data.mass_bias_corrector import MassBiasCorrector
 
 log=LogStore.add_logger('rx_data:test_electron_bias_corrector')
 #-----------------------------------------
@@ -57,7 +57,7 @@ def test_skip_correction():
     '''
     rdf = _get_rdf()
 
-    cor = ElectronBiasCorrector(rdf=rdf)
+    cor = MassBiasCorrector(rdf=rdf)
     rdf = cor.get_rdf()
 
     _compare_masses(rdf, 'skip_correction')
