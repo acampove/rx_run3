@@ -41,7 +41,7 @@ class BremBiasCorrector:
 
         return None
     # --------------------------
-    def _find_bin(self, x : float, y : float) -> Union[None, int]:
+    def _find_bin(self, x : float, y : float) -> Union[None, tuple]:
         for region, l_l_bound in self._d_bound.items():
             ibin = self._find_among_bounds(x, y, l_l_bound)
             if ibin is None:
@@ -65,7 +65,20 @@ class BremBiasCorrector:
     def _apply_correction(self, brem : v4d, d_corr : dict) -> v4d:
         l_bound = d_corr['p']
         ibin    = numpy.digitize(brem.e, l_bound)
-        mu      = d_corr['mu'][ibin - 1]
+        index   = ibin - 1 if ibin > 0 else 0
+
+        l_corr  = d_corr['mu']
+        try:
+            mu = l_corr[index]
+        except IndexError:
+            log.warning(f'Cannot find bin with correction for brem energy {brem.e:.0f} at index {index} among:')
+            log.info(l_corr)
+            log.info(l_bound)
+            return brem
+
+        if mu < 0.5 or mu > 3.0:
+            log.warning(f'Found mu={mu:.3f} from:')
+            log.info(l_corr)
 
         px      = brem.px
         py      = brem.py
@@ -82,9 +95,13 @@ class BremBiasCorrector:
         Returns corrected photon
         '''
         x, y         = from_id_to_xy(row, col)
-        ibin, region = self._find_bin(x, y)
-        d_corr       = self._find_corrections(ibin, region)
-        brem         = self._apply_correction(brem, d_corr)
+        val          = self._find_bin(x, y)
+        if val is None:
+            return brem
 
-        return brem
+        ibin, region = val
+        d_corr       = self._find_corrections(ibin, region)
+        brem_corr    = self._apply_correction(brem, d_corr)
+
+        return brem_corr
 # --------------------------
