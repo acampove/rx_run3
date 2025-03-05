@@ -167,8 +167,7 @@ RDFGetter.samples = {
 # This picks one sample for a given trigger
 # The sample accepts wildcards, e.g. `DATA_24_MagUp_24c*` for all the periods
 gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpMuMu_MVA')
-# Have to specify what branches you want
-rdf = gtr.get_rdf(columns=['B_M', 'mva_cmb', 'mva_prc'])
+rdf = gtr.get_rdf()
 ```
 
 In the case of the MVA friend trees the branches added would be `mva.mva_cmb` and `mva.mva_prc`.
