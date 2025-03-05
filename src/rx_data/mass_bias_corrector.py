@@ -23,6 +23,7 @@ class MassBiasCorrector:
         self._rdf             = self._preprocess_rdf(rdf)
         self._skip_correction = skip_correction
 
+        self._ebc     = ElectronBiasCorrector()
         self._emass   = 0.511
         self._kmass   = 493.6
         self._to_keep = ['EVENTNUMBER', 'RUNNUMBER', 'B_M']
@@ -37,12 +38,7 @@ class MassBiasCorrector:
         if self._skip_correction:
             return row
 
-        has_brem = row[f'{name}_HASBREMADDED']
-        if not has_brem:
-            return row
-
-        ebc = ElectronBiasCorrector(row)
-        row = ebc.get_row()
+        row = self._ebc.correct(row, name=name)
 
         return row
     # ------------------------------------------
