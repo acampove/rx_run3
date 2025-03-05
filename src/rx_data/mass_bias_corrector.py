@@ -1,5 +1,5 @@
 '''
-Module storing ElectronBiasCorrector class
+Module storing MassBiasCorrector class
 '''
 # pylint: disable=too-many-return-statements
 

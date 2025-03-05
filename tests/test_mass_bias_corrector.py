@@ -13,17 +13,17 @@ from dmu.logging.log_store       import LogStore
 from rx_data.rdf_getter          import RDFGetter
 from rx_data.mass_bias_corrector import MassBiasCorrector
 
-log=LogStore.add_logger('rx_data:test_electron_bias_corrector')
+log=LogStore.add_logger('rx_data:test_mass_bias_corrector')
 #-----------------------------------------
 class Data:
     '''
     Data class
     '''
-    plt_dir = '/tmp/tests/rx_data/electron_bias_corrector'
+    plt_dir = '/tmp/tests/rx_data/mass_bias_corrector'
 #-----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    LogStore.set_level('rx_data:electron_bias_corrector', 10)
+    LogStore.set_level('rx_data:mass_bias_corrector', 10)
 
     os.makedirs(Data.plt_dir, exist_ok=True)
 #-----------------------------------------
