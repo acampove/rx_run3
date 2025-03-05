@@ -8,8 +8,8 @@ import yaml
 import numpy
 from vector                 import MomentumObject4D as v4d
 
-from dmu.logging.log_store  import LogStore
-from rx_data.translator     import from_id_to_xy
+from dmu.logging.log_store   import LogStore
+from rx_data.calo_translator import from_id_to_xy
 
 log=LogStore.add_logger('rx_data:brem_bias_corrector')
 # --------------------------
