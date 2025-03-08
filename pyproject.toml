@@ -1,6 +1,6 @@
 [project]
 name        = 'data_manipulation_utilities'
-version     = '0.2.5'
+version     = '0.2.6'
 readme      = 'README.md'
 dependencies= [
 'logzero',
