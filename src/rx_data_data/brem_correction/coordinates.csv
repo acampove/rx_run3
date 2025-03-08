@@ -8191,7 +8191,6 @@ EcalLeftMidRegion,761.875,1919.93,63,60
 EcalLeftMidRegion,822.825,1919.93,63,61
 EcalLeftMidRegion,883.775,1919.93,63,62
 EcalLeftMidRegion,944.725,1919.93,63,63
-Ec
 EcalLeftOutRegion,-5790.25,-3839.85,0,0
 EcalLeftOutRegion,-5668.35,-3839.85,0,1
 EcalLeftOutRegion,-5546.45,-3839.85,0,2
@@ -16384,7 +16383,6 @@ EcalRightInnRegion,1645.65,1279.95,63,60
 EcalRightInnRegion,1686.28,1279.95,63,61
 EcalRightInnRegion,1726.92,1279.95,63,62
 EcalRightInnRegion,1767.55,1279.95,63,63
-c
 EcalRightMidRegion,-944.725,-1919.93,0,0
 EcalRightMidRegion,-883.775,-1919.93,0,1
 EcalRightMidRegion,-822.825,-1919.93,0,2
@@ -20481,7 +20479,6 @@ EcalRightMidRegion,2712.28,1919.93,63,60
 EcalRightMidRegion,2773.23,1919.93,63,61
 EcalRightMidRegion,2834.18,1919.93,63,62
 EcalRightMidRegion,2895.12,1919.93,63,63
-c
 EcalRightOutRegion,-1889.45,-3839.85,0,0
 EcalRightOutRegion,-1767.55,-3839.85,0,1
 EcalRightOutRegion,-1645.65,-3839.85,0,2
