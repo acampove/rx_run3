@@ -69,6 +69,17 @@ def _plot_translation(df : pnd.DataFrame, row : int, col : int, det : str, name 
     plt.savefig(f'{Data.out_dir}/{name}/{fname}')
     plt.close()
 # --------------------------------
+def _plot_region(df : pnd.DataFrame, det : str, name : str):
+    os.makedirs(f'{Data.out_dir}/{name}', exist_ok=True)
+
+    ax=df.plot.scatter(x='x', y='y', color='blue', s=1, title=det)
+    ax.set_xlim(-6_500, +6_500)
+    ax.set_ylim(-4_500, +4_500)
+
+    plt.grid()
+    plt.savefig(f'{Data.out_dir}/{name}/{det}.png')
+    plt.close()
+# --------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     '''
@@ -154,4 +165,13 @@ def test_scan_full(row : int, col : int, det : str):
     df = ctran.from_id_to_xy(row, col, det)
 
     _plot_translation(df, row, col, det, name='scan_full')
+# --------------------------------
+@pytest.mark.parametrize('det', subdetectors)
+def test_scan_dets(det : str):
+    '''
+    Tests translation from row and column to x and y
+    '''
+    df = ctran.from_id_to_xy(det=det)
+
+    _plot_region(df, det, name='detector_scan')
 # --------------------------------
