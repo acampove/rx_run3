@@ -52,20 +52,20 @@ def _plot_boundaries(ax):
     rectangle = patches.Rectangle((min(x1, x2), min(y1, y2)), width, height, edgecolor='red', facecolor='none', linewidth=2)
     ax.add_patch(rectangle)
 # --------------------------------
-def _plot_translation(df : pnd.DataFrame, row : int, col : int, name : str):
+def _plot_translation(df : pnd.DataFrame, row : int, col : int, det : str, name : str):
     if len(df) != 1:
         print(df)
         raise ValueError(f'Dataframe does not have one and only one element for: {row}/{col}/{name}')
 
     os.makedirs(f'{Data.out_dir}/{name}', exist_ok=True)
 
-    ax = df.plot.scatter(x='x', y='y', color='blue', title=f'Row={row}; Col={col}')
+    ax = df.plot.scatter(x='x', y='y', color='blue', title=f'Det={det}; Row={row}; Col={col}')
     ax.set_xlim(-6_000, +6_000)
     ax.set_ylim(-4_000, +4_000)
 
     _plot_boundaries(ax)
 
-    fname = f'{row:03}_{col:03}.png'
+    fname = f'{det}_{row:03}_{col:03}.png'
     plt.savefig(f'{Data.out_dir}/{name}/{fname}')
     plt.close()
 # --------------------------------
@@ -122,25 +122,36 @@ def test_plot_xy():
     plt.savefig(f'{Data.out_dir}/xy.png')
     plt.close()
 # --------------------------------
-@pytest.mark.parametrize('name', subdetectors)
-@pytest.mark.parametrize('row' , range(64))
-@pytest.mark.parametrize('col' , range(1))
-def test_scan_row(row : int, col : int, name : str):
+@pytest.mark.parametrize('det', subdetectors)
+@pytest.mark.parametrize('row', range(64))
+@pytest.mark.parametrize('col', range(1))
+def test_scan_row(row : int, col : int, det : str):
     '''
     Tests translation from row and column to x and y
     '''
-    df = ctran.from_id_to_xy(row, col, name)
+    df = ctran.from_id_to_xy(row, col, det)
 
-    _plot_translation(df, row, col, name=f'scan_row_{name}')
+    _plot_translation(df, row, col, det, name='scan_row')
 # --------------------------------
-@pytest.mark.parametrize('name', subdetectors)
-@pytest.mark.parametrize('row' , range(1))
-@pytest.mark.parametrize('col' , range(64))
-def test_scan_col(row : int, col : int, name : str):
+@pytest.mark.parametrize('det', subdetectors)
+@pytest.mark.parametrize('row', range(1))
+@pytest.mark.parametrize('col', range(64))
+def test_scan_col(row : int, col : int, det : str):
     '''
     Tests translation from row and column to x and y
     '''
-    df = ctran.from_id_to_xy(row, col, name)
+    df = ctran.from_id_to_xy(row, col, det)
 
-    _plot_translation(df, row, col, name=f'scan_col_{name}')
+    _plot_translation(df, row, col, det, name='scan_col')
+# --------------------------------
+@pytest.mark.parametrize('det', subdetectors)
+@pytest.mark.parametrize('row', range(0, 64, 4))
+@pytest.mark.parametrize('col', range(0, 64, 4))
+def test_scan_full(row : int, col : int, det : str):
+    '''
+    Tests translation from row and column to x and y
+    '''
+    df = ctran.from_id_to_xy(row, col, det)
+
+    _plot_translation(df, row, col, det, name='scan_full')
 # --------------------------------
