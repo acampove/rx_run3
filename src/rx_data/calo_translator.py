@@ -29,14 +29,24 @@ def get_data() -> pnd.DataFrame:
 
     return df
 # ------------------------------------------------------
-def from_id_to_xy(row : int, col : int) -> tuple[float,float]:
+def from_id_to_xy(row : int, col : int, name : str) -> tuple[float,float]:
     '''
     Function taking row and column in ECAL
     returning X,Y coordinates
     '''
+    if name not in [
+            'EcalLeftInnRegion',
+            'EcalLeftMidRegion',
+            'EcalLeftOutRegion',
+            'EcalRightInnRegion',
+            'EcalRightMidRegion',
+            'EcalRightOutRegion']:
+        raise ValueError('Invalid subdetector name')
+
     df = get_data()
-    df = df[df.r==row]
-    df = df[df.c==col]
+    df = df[df.i==name]
+    df = df[df.r==row ]
+    df = df[df.c==col ]
 
     return df
 # ------------------------------------------------------
