@@ -1,5 +1,5 @@
 '''
-Module with code needed to retrieve X, Y position from ECAL cell ID 
+Module with code needed to retrieve X, Y position from ECAL cell ID
 '''
 
 from importlib.resources import files
@@ -34,5 +34,9 @@ def from_id_to_xy(row : int, col : int) -> tuple[float,float]:
     Function taking row and column in ECAL
     returning X,Y coordinates
     '''
-    return row, col
+    df = get_data()
+    df = df[df.r==row]
+    df = df[df.c==col]
+
+    return df
 # ------------------------------------------------------
