@@ -4,6 +4,7 @@ Module with functions meant to test the row,col <-> x,y translation
 import os
 
 import pytest
+import pandas            as pnd
 import matplotlib.pyplot as plt
 
 from dmu.logging.log_store import LogStore
@@ -17,6 +18,15 @@ class Data:
     Data class
     '''
     out_dir = '/tmp/tests/rx_data/calo_translator'
+# --------------------------------
+def _plot_translation(df : pnd.DataFrame, row : int, col : int):
+    ax = df.plot.scatter(x='x', y='y', color='blue', title=f'Row={row}; Col={col}')
+    ax.set_xlim(-3_000, +3_000)
+    ax.set_ylim(-4_000, +4_000)
+
+    name = f'{row:03}_{col:03}.png'
+    plt.savefig(f'{Data.out_dir}/{name}')
+    plt.close()
 # --------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -77,5 +87,7 @@ def test_xy_from_colrow(row : int, col : int):
     '''
     Tests translation from row and column to x and y
     '''
-    x, y   = ctran.from_id_to_xy(row, col)
+    df = ctran.from_id_to_xy(row, col)
+
+    _plot_translation(df, row, col)
 # --------------------------------
