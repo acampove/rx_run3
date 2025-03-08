@@ -4,14 +4,22 @@ Module with functions meant to test the row,col <-> x,y translation
 import os
 
 import pytest
-import pandas            as pnd
-import matplotlib.pyplot as plt
+import pandas             as pnd
+import matplotlib.pyplot  as plt
+import matplotlib.patches as patches
 
 from dmu.logging.log_store import LogStore
 from rx_data               import calo_translator as ctran
 
 log=LogStore.add_logger('rx_data:test_calo_translator')
 
+subdetectors = [
+            'EcalLeftInnRegion',
+            'EcalLeftMidRegion',
+            'EcalLeftOutRegion',
+            'EcalRightInnRegion',
+            'EcalRightMidRegion',
+            'EcalRightOutRegion']
 # --------------------------------
 class Data:
     '''
@@ -19,13 +27,46 @@ class Data:
     '''
     out_dir = '/tmp/tests/rx_data/calo_translator'
 # --------------------------------
-def _plot_translation(df : pnd.DataFrame, row : int, col : int):
+def _plot_boundaries(ax):
+    x1 = -2_000
+    y1 = -1_200
+
+    x2 =  2_000
+    y2 =  1_200
+
+    height= y2 - y1
+    width = x2 - x1
+
+    rectangle = patches.Rectangle((min(x1, x2), min(y1, y2)), width, height, edgecolor='red', facecolor='none', linewidth=2)
+    ax.add_patch(rectangle)
+
+    x1 = -1_000
+    y1 =   -680
+
+    x2 =  1_000
+    y2 =   +680
+
+    height= y2 - y1
+    width = x2 - x1
+
+    rectangle = patches.Rectangle((min(x1, x2), min(y1, y2)), width, height, edgecolor='red', facecolor='none', linewidth=2)
+    ax.add_patch(rectangle)
+# --------------------------------
+def _plot_translation(df : pnd.DataFrame, row : int, col : int, name : str):
+    if len(df) != 1:
+        print(df)
+        raise ValueError(f'Dataframe does not have one and only one element for: {row}/{col}/{name}')
+
+    os.makedirs(f'{Data.out_dir}/{name}', exist_ok=True)
+
     ax = df.plot.scatter(x='x', y='y', color='blue', title=f'Row={row}; Col={col}')
-    ax.set_xlim(-3_000, +3_000)
+    ax.set_xlim(-6_000, +6_000)
     ax.set_ylim(-4_000, +4_000)
 
-    name = f'{row:03}_{col:03}.png'
-    plt.savefig(f'{Data.out_dir}/{name}')
+    _plot_boundaries(ax)
+
+    fname = f'{row:03}_{col:03}.png'
+    plt.savefig(f'{Data.out_dir}/{name}/{fname}')
     plt.close()
 # --------------------------------
 @pytest.fixture(scope='session', autouse=True)
@@ -81,13 +122,25 @@ def test_plot_xy():
     plt.savefig(f'{Data.out_dir}/xy.png')
     plt.close()
 # --------------------------------
-@pytest.mark.parametrize('row', [10, 20, 30])
-@pytest.mark.parametrize('col', [10, 20, 30])
-def test_xy_from_colrow(row : int, col : int):
+@pytest.mark.parametrize('name', subdetectors)
+@pytest.mark.parametrize('row' , range(64))
+@pytest.mark.parametrize('col' , range(1))
+def test_scan_row(row : int, col : int, name : str):
     '''
     Tests translation from row and column to x and y
     '''
-    df = ctran.from_id_to_xy(row, col)
+    df = ctran.from_id_to_xy(row, col, name)
 
-    _plot_translation(df, row, col)
+    _plot_translation(df, row, col, name=f'scan_row_{name}')
+# --------------------------------
+@pytest.mark.parametrize('name', subdetectors)
+@pytest.mark.parametrize('row' , range(1))
+@pytest.mark.parametrize('col' , range(64))
+def test_scan_col(row : int, col : int, name : str):
+    '''
+    Tests translation from row and column to x and y
+    '''
+    df = ctran.from_id_to_xy(row, col, name)
+
+    _plot_translation(df, row, col, name=f'scan_col_{name}')
 # --------------------------------
