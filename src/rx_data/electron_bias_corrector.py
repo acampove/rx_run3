@@ -38,6 +38,7 @@ class ElectronBiasCorrector:
         phi  = e_3d.phi
 
         e_4d = v4d(pt=pt, eta=eta, phi=phi, mass=self._mass)
+        e_4d = e_4d.to_pxpypzenergy()
 
         return e_4d
     # ---------------------------------
