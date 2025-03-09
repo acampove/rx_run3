@@ -77,7 +77,7 @@ class ElectronBiasCorrector:
 
         if e_brem_corr.isclose(e_brem, rtol=1e-5):
             momentum = e_brem.p
-            log.warning(f'Correction did not change photon at row/column/region/momentum: {brem_row}/{brem_col}/{brem_area}/{momentum}')
+            log.warning(f'Correction did not change photon at row/column/region/momentum: {brem_row}/{brem_col}/{brem_area}/{momentum:.0f}')
             log.info(e_brem)
             log.info('--->')
             log.info(e_brem_corr)
