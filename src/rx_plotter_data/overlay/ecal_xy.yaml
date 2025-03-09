@@ -1,8 +1,9 @@
 general:
   size : [15, 10]
 definitions:
-  nbrem : L1_BremMultiplicity + L2_BremMultiplicity
+  nbrem    : L1_BremMultiplicity + L2_BremMultiplicity
 overide_selection:
+  brem     : L1_BremMultiplicity > 0
   mass     : B_const_mass_M > 5180
 overlay:
   in  : TMath::Abs(L1_STATEAT_Ecal_positionX) < 800 && TMath::Abs(L1_STATEAT_Ecal_positionY) < 400 && TMath::Abs(L2_STATEAT_Ecal_positionX) < 800 && TMath::Abs(L2_STATEAT_Ecal_positionY) < 400
