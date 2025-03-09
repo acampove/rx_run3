@@ -9,15 +9,24 @@ import matplotlib.pyplot as plt
 from vector                      import MomentumObject4D as v4d
 from dmu.logging.log_store       import LogStore
 from rx_data.brem_bias_corrector import BremBiasCorrector
+from rx_data                     import calo_translator as ctran
 
 log=LogStore.add_logger('rx_data:test_brem_bias_corrector')
-
 # -----------------------------------------------
 class Data:
     '''
     Data class
     '''
     plt_dir = '/tmp/tests/rx_data/bias_corrector'
+
+    locations : list[list]
+# -----------------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    df = ctran.get_data()
+    df = df.drop(columns=['n', 'z'])
+
+    Data.locations = df.values.tolist()
 # -----------------------------------------------
 def _get_input(energy : float):
     br_1 = v4d(pt=5_000, eta=3.0, phi=1.0, mass=0.511)
@@ -30,32 +39,24 @@ def test_scan(energy : float):
     '''
     Will scan the calorimeter and plot corrections
     '''
-    arr_row_edge = numpy.linspace(-3000, 3000, 50)
-    arr_col_edge = numpy.linspace(-3000, 3000, 50)
-
-    arr_row_cent = (arr_row_edge[:-1] + arr_row_edge[1:]) / 2
-    arr_col_cent = (arr_col_edge[:-1] + arr_col_edge[1:]) / 2
-
-    obj    = BremBiasCorrector()
     brem   = _get_input(energy=energy)
+    obj    = BremBiasCorrector()
+    l_x    = []
+    l_y    = []
     l_corr = []
-    for row in arr_row_cent:
-        l_corr_row = []
-        for col in arr_col_cent:
-            brem_corr = obj.correct(brem=brem, row=row, col=col)
-            energy_corr = brem_corr.e
+    for area, x, y, row, col in Data.locations:
+        brem_corr = obj.correct(brem=brem, row=row, col=col, area=area)
+        energy_corr = brem_corr.e
 
-            mu = energy / energy_corr
-            if mu < 0.5 or mu > 3.0:
-                log.warning(f'Found correction: {mu:.3f}')
+        mu = energy / energy_corr
+        if mu < 0.5 or mu > 3.0:
+            log.warning(f'Found correction: {mu:.3f}')
 
-            l_corr_row.append(mu)
+        l_corr.append(mu)
+        l_x.append(x)
+        l_y.append(y)
 
-        l_corr.append(l_corr_row)
-
-    arr_corr = numpy.array(l_corr)
-
-    plt.pcolormesh(arr_row_edge, arr_col_edge, arr_corr.T, cmap='plasma', vmin=0.9, vmax=2.0)
+    plt.contourf(l_x, l_y, l_corr, levels=50,vmin=0.9, vmax=2.0)
     plt.colorbar(label='Correction')
 
     os.makedirs(Data.plt_dir, exist_ok=True)
