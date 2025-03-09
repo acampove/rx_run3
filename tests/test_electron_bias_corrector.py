@@ -58,6 +58,17 @@ def _get_df() -> pnd.DataFrame:
 
     return df
 #-----------------------------------------
+def _filter_kinematics(df : pnd.DataFrame, lepton : str):
+    l_to_keep = [
+                 f'{lepton}_PX',
+                 f'{lepton}_PY',
+                 f'{lepton}_PZ',
+                 f'{lepton}_PT',
+                 f'{lepton}_ETA',
+                 f'{lepton}_PHI']
+
+    return df[l_to_keep]
+#-----------------------------------------
 def _check_equal(df_org : pnd.DataFrame, df_cor : pnd.DataFrame, must_differ : bool) -> None:
     equal_cols = numpy.isclose(df_org, df_cor, rtol=0.001)
 
@@ -68,7 +79,7 @@ def _check_equal(df_org : pnd.DataFrame, df_cor : pnd.DataFrame, must_differ : b
 #-----------------------------------------
 def test_skip_correction():
     '''
-    Tests without actually doing the correction 
+    Tests without actually doing the correction
     '''
     df_org = _get_df()
     df_org = df_org.fillna(-1)
@@ -79,12 +90,15 @@ def test_skip_correction():
 #-----------------------------------------
 def test_correction():
     '''
-    Tests actually doing the correction 
+    Tests actually doing the correction
     '''
     df_org = _get_df()
     df_org = df_org.fillna(-1)
     cor    = ElectronBiasCorrector(skip_correction=False)
     df_cor = df_org.apply(lambda row : cor.correct(row, 'L1'), axis=1)
+
+    df_org = _filter_kinematics(df_org, lepton='L1')
+    df_cor = _filter_kinematics(df_cor, lepton='L1')
 
     _check_equal(df_org, df_cor, must_differ = True)
 #-----------------------------------------
