@@ -14,12 +14,9 @@ from rx_data               import calo_translator as ctran
 log=LogStore.add_logger('rx_data:test_calo_translator')
 
 subdetectors = [
-            'EcalLeftInnRegion',
-            'EcalLeftMidRegion',
-            'EcalLeftOutRegion',
-            'EcalRightInnRegion',
-            'EcalRightMidRegion',
-            'EcalRightOutRegion']
+            'Inner',
+            'Middle',
+            'Outer']
 # --------------------------------
 class Data:
     '''
@@ -86,6 +83,7 @@ def _initialize():
     This function will execute before the tests
     '''
     os.makedirs(Data.out_dir, exist_ok=True)
+    LogStore.set_level('rx_data:calo_translator', 10)
 # --------------------------------
 def test_load():
     '''
