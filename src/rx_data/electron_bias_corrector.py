@@ -74,15 +74,18 @@ class ElectronBiasCorrector:
         e_brem_corr = self._bcor.correct(brem=e_brem, row=brem_row, col=brem_col, area=brem_area)
 
         if e_brem_corr.isclose(e_brem, rtol=1e-5):
-            log.warning('Correction did not change photon')
+            momentum = e_brem.p
+            log.warning(f'Correction did not change photon at row/column/region/momentum: {brem_row}/{brem_col}/{brem_area}/{momentum}')
             log.info(e_brem)
             log.info('--->')
             log.info(e_brem_corr)
         else:
-            log.debug('Correction changed photon')
+            log.debug('Brem was corrected:')
             log.debug(e_brem)
             log.debug('--->')
             log.debug(e_brem_corr)
+
+        self._check_massless_brem(e_brem_corr)
 
         return e_brem_corr
     # ---------------------------------
