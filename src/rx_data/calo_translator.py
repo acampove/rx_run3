@@ -4,7 +4,9 @@ Module with code needed to retrieve X, Y position from ECAL cell ID
 
 from importlib.resources import files
 import pandas as pnd
+from dmu.logging.log_store import LogStore
 
+log=LogStore.add_logger('rx_data:calo_translator')
 # --------------------------------
 def _cast_column(column, ctype) -> pnd.Series:
     column = pnd.to_numeric(column, errors='coerce')
@@ -19,34 +21,43 @@ def get_data() -> pnd.DataFrame:
     '''
     data_path = files('rx_data_data').joinpath('brem_correction/coordinates.csv')
     df      = pnd.read_csv(data_path)
+    df['a'] = _cast_column(df.a, int)
     df['x'] = _cast_column(df.x, float)
     df['y'] = _cast_column(df.y, float)
+    df['z'] = _cast_column(df.z, float)
     df['r'] = _cast_column(df.r, int)
     df['c'] = _cast_column(df.c, int)
 
-    df = df[df.x > - 10_000]
-    df = df[df.y > - 10_000]
-
     return df
 # ------------------------------------------------------
-def from_id_to_xy(row : int = None, col : int = None, det : str = None) -> tuple[float,float]:
+def from_id_to_xy(row : int = None, col : int = None, det : str = None, area : int = None) -> tuple[float,float]:
     '''
-    Function taking row and column in ECAL
-    returning X,Y coordinates
+    Function taking position in ECAL
+    Parameters
+    --------------
+    row: Row index
+    col: Column index
+    det: Name of subdetector, Inner, Middle, Outer
+    area: Index of subdetector 0 (Inner), 1 (Middle), 2 (Outer)
+
+    Returns
+    --------------
+    tuple[float,float]: With the x,y coordinates, if the region in the detector is fully specified.
+    df : Pandas dataframe with the location information, if the region is not fully specified
     '''
     if det not in [
             None,
-            'EcalLeftInnRegion',
-            'EcalLeftMidRegion',
-            'EcalLeftOutRegion',
-            'EcalRightInnRegion',
-            'EcalRightMidRegion',
-            'EcalRightOutRegion']:
+            'Inner',
+            'Middle',
+            'Outer']:
         raise ValueError(f'Invalid subdetector name: \"{det}\"')
 
     df = get_data()
+    if area is not None:
+        df = df[df.a==area]
+
     if det is not None:
-        df = df[df.i==det]
+        df = df[df.n==det]
 
     if row is not None:
         df = df[df.r==row]
@@ -54,5 +65,28 @@ def from_id_to_xy(row : int = None, col : int = None, det : str = None) -> tuple
     if col is not None:
         df = df[df.c==col]
 
-    return df
+    are = area
+
+    has_row = row is not None
+    has_col = col is not None
+    has_det = det is not None
+    has_are = are is not None
+
+    full_description = has_row and has_col and (has_det or has_are)
+
+    if not full_description and len(df) <= 1:
+        log.error(df)
+        raise ValueError('Expected dataframe with more than one row')
+
+    if not full_description and len(df) > 1:
+        return df
+
+    if full_description and len(df) != 1:
+        log.error(df)
+        raise ValueError('Expected dataframe with one row')
+
+    x = df.iloc[0]['x']
+    y = df.iloc[0]['y']
+
+    return x, y
 # ------------------------------------------------------
