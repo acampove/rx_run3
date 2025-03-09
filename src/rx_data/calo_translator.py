@@ -83,6 +83,10 @@ def from_id_to_xy(row : int = None, col : int = None, det : str = None, area : i
 
     if full_description and len(df) != 1:
         log.error(df)
+        log.info(f'{"Row":<10}{row}')
+        log.info(f'{"Col":<10}{col}')
+        log.info(f'{"Det":<10}{det}')
+        log.info(f'{"Reg":<10}{are}')
         raise ValueError('Expected dataframe with one row')
 
     x = df.iloc[0]['x']
