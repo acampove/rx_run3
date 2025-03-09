@@ -51,9 +51,9 @@ def _get_rdf() -> RDataFrame:
 
     return rdf
 #-----------------------------------------
-def test_skip_correction():
+def test_correction():
     '''
-    Tests code without actually correcting lepton kinematics
+    Tests code correcting lepton kinematics
     '''
     rdf = _get_rdf()
 
