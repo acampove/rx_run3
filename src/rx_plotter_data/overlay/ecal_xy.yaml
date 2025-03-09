@@ -29,5 +29,12 @@ plots:
         title      : ''
         name       : 'npvs'
         normalized : true 
+    L1_BREMENERGY:
+        binning    : [0, 80000, 100]
+        yscale     : 'linear'
+        labels     : ['Brem Energy', 'Normalized']
+        title      : ''
+        name       : 'brem_energy'
+        normalized : true 
 style:
   skip_lines : false 
