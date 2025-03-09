@@ -1,6 +1,7 @@
 '''
 Module with ElectronBiasCorrector class
 '''
+import math
 import pandas as pnd
 from dmu.logging.log_store  import LogStore
 from vector                 import MomentumObject3D as v3d
@@ -44,6 +45,21 @@ class ElectronBiasCorrector:
         e_full = self._get_electron(row, kind='')
         e_brem = e_full - e_track
         e_brem = e_brem.to_pxpypzenergy()
+
+        self._check_massless_brem(e_brem)
+
+        return e_brem
+    # ---------------------------------
+    def _check_massless_brem(self, e_brem : v4d) -> None:
+        energy  = e_brem.e
+        momentum= e_brem.p
+
+        if not math.isclose(energy, momentum, rel_tol=1e-5):
+            log.warning('Brem energy and momentum are not equal')
+            log.info(f'{energy:.5f}=={momentum:.5f}')
+        else:
+            log.debug('Brem photon energy and momentum are close enough:')
+            log.debug(f'{energy:.5f}=={momentum:.5f}')
 
         return e_brem
     # ---------------------------------
