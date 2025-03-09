@@ -66,16 +66,18 @@ def _plot_translation(df : pnd.DataFrame, row : int, col : int, det : str, name 
     plt.savefig(f'{Data.out_dir}/{name}/{fname}')
     plt.close()
 # --------------------------------
-def _plot_region(df : pnd.DataFrame, det : str, name : str):
-    os.makedirs(f'{Data.out_dir}/{name}', exist_ok=True)
+def _plot_region(df : pnd.DataFrame, det : str, name : str, color : str = 'blue', skip_save : bool = False, ax=None):
+    ax=df.plot.scatter(x='x', y='y', color=color, s=0.1, title=det, ax=ax)
+    ax.set_xlim(-4_000, +4_000)
+    ax.set_ylim(-3_500, +3_500)
 
-    ax=df.plot.scatter(x='x', y='y', color='blue', s=1, title=det)
-    ax.set_xlim(-6_500, +6_500)
-    ax.set_ylim(-4_500, +4_500)
+    if not skip_save:
+        os.makedirs(f'{Data.out_dir}/{name}', exist_ok=True)
+        plt.grid()
+        plt.savefig(f'{Data.out_dir}/{name}/{det}.png')
+        plt.close()
 
-    plt.grid()
-    plt.savefig(f'{Data.out_dir}/{name}/{det}.png')
-    plt.close()
+    return ax
 # --------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -120,49 +122,17 @@ def test_plot_row_col():
     plt.savefig(f'{Data.out_dir}/row_col.png')
     plt.close()
 # --------------------------------
-def test_plot_xy():
+def test_plot_xyz():
     '''
     Tests plotting X and Y coodinates
     '''
     df     = ctran.get_data()
     df.x.hist(bins=50, histtype='step', label='x')
     df.y.hist(bins=50, histtype='step', label='y')
+    df.z.hist(bins=50, histtype='step', label='z')
     plt.legend()
-    plt.savefig(f'{Data.out_dir}/xy.png')
+    plt.savefig(f'{Data.out_dir}/xyz.png')
     plt.close()
-# --------------------------------
-@pytest.mark.parametrize('det', subdetectors)
-@pytest.mark.parametrize('row', range(64))
-@pytest.mark.parametrize('col', range(1))
-def test_scan_row(row : int, col : int, det : str):
-    '''
-    Tests translation from row and column to x and y
-    '''
-    df = ctran.from_id_to_xy(row, col, det)
-
-    _plot_translation(df, row, col, det, name='scan_row')
-# --------------------------------
-@pytest.mark.parametrize('det', subdetectors)
-@pytest.mark.parametrize('row', range(1))
-@pytest.mark.parametrize('col', range(64))
-def test_scan_col(row : int, col : int, det : str):
-    '''
-    Tests translation from row and column to x and y
-    '''
-    df = ctran.from_id_to_xy(row, col, det)
-
-    _plot_translation(df, row, col, det, name='scan_col')
-# --------------------------------
-@pytest.mark.parametrize('det', subdetectors)
-@pytest.mark.parametrize('row', range(0, 64, 4))
-@pytest.mark.parametrize('col', range(0, 64, 4))
-def test_scan_full(row : int, col : int, det : str):
-    '''
-    Tests translation from row and column to x and y
-    '''
-    df = ctran.from_id_to_xy(row, col, det)
-
-    _plot_translation(df, row, col, det, name='scan_full')
 # --------------------------------
 @pytest.mark.parametrize('det', subdetectors)
 def test_scan_dets(det : str):
@@ -172,4 +142,28 @@ def test_scan_dets(det : str):
     df = ctran.from_id_to_xy(det=det)
 
     _plot_region(df, det, name='detector_scan')
+# --------------------------------
+def test_overlay_detectors():
+    '''
+    Tests translation from row and column to x and y
+    '''
+
+    ax = None
+    for det, color in [('Inner', 'red'), ('Middle', 'green'), ('Outer', 'blue')]:
+        df = ctran.from_id_to_xy(det=det)
+        ax = _plot_region(df, det, name='detector_scan', color=color, skip_save = True, ax=ax)
+
+    plt.grid()
+    plt.savefig(f'{Data.out_dir}/overlay_detectors.png')
+    plt.close()
+# --------------------------------
+def test_fully_defined():
+    '''
+    Tests translation from row and column to x and y
+    '''
+    x1, y1 = ctran.from_id_to_xy(row=14, col=35, det ='Inner')
+    x2, y2 = ctran.from_id_to_xy(row=14, col=35, area=      2)
+
+    assert x1 == x2
+    assert y1 == y2
 # --------------------------------
