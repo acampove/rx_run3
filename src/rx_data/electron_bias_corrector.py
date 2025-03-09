@@ -43,6 +43,7 @@ class ElectronBiasCorrector:
     def _get_ebrem(self, row : pnd.Series, e_track : v4d) -> v4d:
         e_full = self._get_electron(row, kind='')
         e_brem = e_full - e_track
+        e_brem = e_brem.to_pxpypzenergy()
 
         return e_brem
     # ---------------------------------
@@ -53,9 +54,21 @@ class ElectronBiasCorrector:
         brem_row = self._attr_from_row(row, f'{self._name}_BREMHYPOROW')
         brem_col = self._attr_from_row(row, f'{self._name}_BREMHYPOCOL')
         brem_area= self._attr_from_row(row, f'{self._name}_BREMHYPOAREA')
-        e_brem   = self._bcor.correct(brem=e_brem, row=brem_row, col=brem_col, area=brem_area)
 
-        return e_brem
+        e_brem_corr = self._bcor.correct(brem=e_brem, row=brem_row, col=brem_col, area=brem_area)
+
+        if e_brem_corr.isclose(e_brem, rtol=1e-5):
+            log.warning('Correction did not change photon')
+            log.info(e_brem)
+            log.info('--->')
+            log.info(e_brem_corr)
+        else:
+            log.debug('Correction changed photon')
+            log.debug(e_brem)
+            log.debug('--->')
+            log.debug(e_brem_corr)
+
+        return e_brem_corr
     # ---------------------------------
     def _update_row(self, row : pnd.Series, e_corr : v4d) -> pnd.Series:
         l_var      = [
