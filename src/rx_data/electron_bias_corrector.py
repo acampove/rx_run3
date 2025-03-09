@@ -50,9 +50,10 @@ class ElectronBiasCorrector:
         if self._skip_correction:
             return e_brem
 
-        brem_row = self._attr_from_row(row, f'{self._name}_BREMHYPOCOL')
-        brem_col = self._attr_from_row(row, f'{self._name}_BREMHYPOROW')
-        e_brem   = self._bcor.correct(brem=e_brem, row=brem_row, col=brem_col)
+        brem_row = self._attr_from_row(row, f'{self._name}_BREMHYPOROW')
+        brem_col = self._attr_from_row(row, f'{self._name}_BREMHYPOCOL')
+        brem_area= self._attr_from_row(row, f'{self._name}_BREMHYPOAREA')
+        e_brem   = self._bcor.correct(brem=e_brem, row=brem_row, col=brem_col, area=brem_area)
 
         return e_brem
     # ---------------------------------
