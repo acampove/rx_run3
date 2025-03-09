@@ -66,6 +66,7 @@ class ElectronBiasCorrector:
     # ---------------------------------
     def _correct_brem(self, e_brem : v4d, row : pnd.Series) -> v4d:
         if self._skip_correction:
+            log.warning('Skipping electron correction')
             return e_brem
 
         brem_row = self._attr_from_row(row, f'{self._name}_BREMHYPOROW')
