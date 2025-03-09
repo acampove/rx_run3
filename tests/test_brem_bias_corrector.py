@@ -25,6 +25,7 @@ class Data:
 def _initialize():
     df = ctran.get_data()
     df = df.drop(columns=['n', 'z'])
+    df = df.sort_values(by = ['x', 'y'])
 
     Data.locations = df.values.tolist()
 # -----------------------------------------------
@@ -34,35 +35,55 @@ def _get_input(energy : float):
 
     return br_2
 # -----------------------------------------------
-@pytest.mark.parametrize('energy', [2_000, 4_000, 6_000, 8_000, 10_000])
+def _plot_area(area : int, energy : float) -> None:
+    brem = _get_input(energy=energy)
+    obj  = BremBiasCorrector()
+    l_x  = []
+    l_y  = []
+    l_z  = []
+    for are, x, y, row, col in Data.locations:
+        if are != area:
+            continue
+
+        brem_corr = obj.correct(brem=brem, row=row, col=col, area=are)
+        energy_corr = brem_corr.e
+
+        z = energy / energy_corr
+        if z < 0.5 or z > 3.0:
+            log.warning(f'Found correction: {z:.3f}')
+
+        l_x.append(x)
+        l_y.append(y)
+        l_z.append(z)
+
+    if area == 2:
+        size = 1
+    elif area == 1:
+        size = 3
+    elif area == 0:
+        size = 18
+    else:
+        raise ValueError(f'Invalid area: {area}')
+
+    plt.scatter(l_x, l_y, c=l_z, cmap='viridis', s=size, marker='s', vmin=0.9, vmax=2.0)
+# -----------------------------------------------
+@pytest.mark.parametrize('energy', [6_000, 8_000, 10_000, 15_000, 30_000, 50_000, 80_000])
 def test_scan(energy : float):
     '''
     Will scan the calorimeter and plot corrections
     '''
-    brem   = _get_input(energy=energy)
-    obj    = BremBiasCorrector()
-    l_x    = []
-    l_y    = []
-    l_corr = []
-    for area, x, y, row, col in Data.locations:
-        brem_corr = obj.correct(brem=brem, row=row, col=col, area=area)
-        energy_corr = brem_corr.e
+    _plot_area(area=0, energy=energy)
+    _plot_area(area=1, energy=energy)
+    _plot_area(area=2, energy=energy)
 
-        mu = energy / energy_corr
-        if mu < 0.5 or mu > 3.0:
-            log.warning(f'Found correction: {mu:.3f}')
-
-        l_corr.append(mu)
-        l_x.append(x)
-        l_y.append(y)
-
-    plt.contourf(l_x, l_y, l_corr, levels=50,vmin=0.9, vmax=2.0)
     plt.colorbar(label='Correction')
 
     os.makedirs(Data.plt_dir, exist_ok=True)
+    plot_path=f'{Data.plt_dir}/scan_{energy:03}.png'
+    log.info(f'Saving to: {plot_path}')
 
     plt.xlabel("X values")
     plt.ylabel("Y values")
-    plt.savefig(f'{Data.plt_dir}/scan_{energy:03}.png')
+    plt.savefig(plot_path)
     plt.close()
 # -----------------------------------------------
