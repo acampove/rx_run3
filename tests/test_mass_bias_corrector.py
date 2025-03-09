@@ -56,16 +56,17 @@ def _get_rdf(polarity : str, period : str) -> RDataFrame:
 
     return rdf
 #-----------------------------------------
-def test_correction():
+@pytest.mark.parametrize('polarity', ['MagUp', 'MagDown'])
+@pytest.mark.parametrize('period', ['24c1', '24c2', '24c3', '24c4'])
+def test_correction(polarity : str, period : str):
     '''
     Tests code correcting lepton kinematics
     '''
-    rdf = _get_rdf()
+    rdf = _get_rdf(polarity, period)
 
     cor = MassBiasCorrector(rdf=rdf)
     rdf = cor.get_rdf()
 
-    _compare_masses(rdf, 'skip_correction')
-
-    rdf.Display(nRows=20).Print()
+    title = f'{polarity}; {period}'
+    _compare_masses(rdf, f'correction_{polarity}_{period}', title)
 #-----------------------------------------
