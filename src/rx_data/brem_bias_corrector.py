@@ -80,10 +80,10 @@ class BremBiasCorrector:
             log.warning(f'Found mu={mu:.3f} from:')
             log.info(l_corr)
 
-        px      = brem.px
-        py      = brem.py
-        pz      = brem.pz
-        e_corr  = brem.e / mu
+        px      = brem.px / mu
+        py      = brem.py / mu
+        pz      = brem.pz / mu
+        e_corr  = brem.e  / mu
 
         brem_corr = v4d(px=px, py=py, pz=pz, e=e_corr)
 
