@@ -113,55 +113,17 @@ class MassBiasCorrector:
 
         return mass
     # ------------------------------------------
-    def _pick_column(self, name : str) -> bool:
-        col_type = self._rdf.GetColumnType(name)
-        if 'RVec' in col_type:
-            return False
-
-        if col_type == 'Bool_t':
-            return False
-
-        if 'Hlt' in name:
-            return False
-
-        if 'DTF' in name:
-            return False
-
-        if name in self._to_keep:
-            return True
-
-        if name.startswith('H_'):
-            #log.info(f'{col_type:<20}{name}')
-            return True
-
-        if name.startswith('L1_'):
-            #log.info(f'{col_type:<20}{name}')
-            return True
-
-        if name.startswith('L2_'):
-            #log.info(f'{col_type:<20}{name}')
-            return True
-
-        return False
-    # ------------------------------------------
-    def _df_from_rdf(self):
-        l_col  = [ name.c_str() for name in self._rdf.GetColumnNames() if self._pick_column(name.c_str()) ]
-        d_data = self._rdf.AsNumpy(l_col)
-        df     = pnd.DataFrame(d_data)
-
-        return df
-    # ------------------------------------------
     def get_rdf(self) -> RDataFrame:
         '''
         Returns corrected ROOT dataframe
         '''
         log.info('Applying bias correction')
 
-        df        = self._df_from_rdf()
-        df['B_M'] = df.apply(self._calculate_correction, axis=1)
+        df        = self._df
+        df['B_M'] = df.parallel_apply(self._calculate_correction, axis=1)
+        df        = df[['B_M', 'EVENTNUMBER', 'RUNNUMBER']]
 
-        df  = df[self._to_keep + ['B_M']]
-        rdf = RDF.FromPandas(df)
+        rdf       = RDF.FromPandas(df)
 
         return rdf
 # ------------------------------------------
