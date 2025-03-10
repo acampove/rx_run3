@@ -109,8 +109,8 @@ class MassBiasCorrector:
         '''
         log.info('Applying bias correction')
 
-        df             = self._df_from_rdf()
-        df['B_M_corr'] = df.apply(self._calculate_correction, axis=1)
+        df        = self._df_from_rdf()
+        df['B_M'] = df.apply(self._calculate_correction, axis=1)
 
         df  = df[self._to_keep + ['B_M']]
         rdf = RDF.FromPandas(df)
