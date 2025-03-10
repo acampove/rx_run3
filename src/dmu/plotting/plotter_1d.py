@@ -74,6 +74,14 @@ class Plotter1D(Plotter):
 
             form        = cfg['format']
             this_title  = form.format(fwhm)
+
+            if 'add_std' in cfg and cfg['add_std']:
+                mu         = numpy.average(arr_val            , weights=arr_wgt)
+                avg        = numpy.average((arr_val - mu) ** 2, weights=arr_wgt)
+                std        = numpy.sqrt(avg)
+                form       = form.replace('FWHM', 'STD')
+                this_title+= '; ' + form.format(std)
+
             self._title+= f'{name}: {this_title}\n'
     #-------------------------------------
     def _plot_var(self, var : str) -> float:
