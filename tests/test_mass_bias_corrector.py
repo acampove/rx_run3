@@ -71,7 +71,7 @@ def _get_rdf(polarity : str, period : str, is_in : int) -> RDataFrame:
     rdf = rdf.Filter('mva.mva_cmb > 0.5 && mva.mva_prc > 0.5')
     rdf = rdf.Filter('B_const_mass_M > 5160')
     rdf = rdf.Filter('hop.hop_mass > 4500')
-    rdf = rdf.Range(10_000)
+    rdf = rdf.Range(50_000)
 
     return rdf
 #-----------------------------------------
@@ -89,6 +89,6 @@ def test_correction(polarity : str, period : str, is_in : int):
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
-    title = f'{polarity}; {period}; Inner={is_in}'
+    title   = f'{polarity}; {period}; Inner={is_in}'
     _compare_masses(d_rdf, f'{polarity}_{period}_{is_in:03}', title)
 #-----------------------------------------
