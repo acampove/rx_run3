@@ -67,16 +67,21 @@ class MassBiasCorrector:
     by correcting biases in electrons
     '''
     # ------------------------------------------
-    def __init__(self, rdf : RDataFrame, skip_correction : bool = False):
+    def __init__(self, rdf : RDataFrame, skip_correction : bool = False, nthreads : int = 4):
+        '''
+        rdf : ROOT dataframe
+        skip_correction: Will do everything but not correction. Needed to check that only the correction is changing data.
+        nthreads : Number of threads, used by pandarallel
+        '''
         self._df              = df_from_rdf(rdf)
         self._skip_correction = skip_correction
-        pandarallel.initialize(nb_workers=10, progress_bar=True)
 
         self._ebc     = ElectronBiasCorrector()
         self._emass   = 0.511
         self._kmass   = 493.6
 
         self._set_loggers()
+        pandarallel.initialize(nb_workers=nthreads, progress_bar=True)
     # ------------------------------------------
     def _set_loggers(self) -> None:
         LogStore.set_level('rx_data:brem_bias_corrector'    , 50)
