@@ -11,7 +11,7 @@ import pytest
 import yaml
 import matplotlib.pyplot as plt
 
-from ROOT import RDataFrame
+from ROOT                        import RDataFrame, EnableImplicitMT
 from dmu.logging.log_store       import LogStore
 from dmu.plotting.plotter_1d     import Plotter1D as Plotter
 from rx_data.rdf_getter          import RDFGetter
@@ -24,6 +24,7 @@ class Data:
     Data class
     '''
     plt_dir = '/tmp/tests/rx_data/mass_bias_corrector'
+    nthreads= 10
 #-----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -31,6 +32,7 @@ def _initialize():
 
     os.makedirs(Data.plt_dir, exist_ok=True)
     plt.style.use(mplhep.style.LHCb2)
+    EnableImplicitMT(Data.nthreads)
 #-----------------------------------------
 def _load_conf() -> dict:
     cfg_path = files('rx_data_data').joinpath('tests/mass_bias_corrector/mass_overlay.yaml')
@@ -80,10 +82,14 @@ def _get_rdf_by_brem(nbrem : int) -> RDataFrame:
         'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
         'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
         'hop'  : '/home/acampove/external_ssd/Data/samples/hop.yaml',
+        'casc' : '/home/acampove/external_ssd/Data/samples/cascade.yaml',
+        'jmis' : '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
         }
 
     gtr = RDFGetter(sample='DATA_24_*', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
+
+    rdf = rdf.Define('nbrem', 'int(L1_HASBREMADDED) + int(L2_HASBREMADDED)')
 
     brem_cut = f'nbrem == {nbrem}' if nbrem in [0,1] else f'nbrem >= {nbrem}'
 
@@ -91,8 +97,9 @@ def _get_rdf_by_brem(nbrem : int) -> RDataFrame:
     rdf = rdf.Filter('mva.mva_cmb > 0.5 && mva.mva_prc > 0.5')
     rdf = rdf.Filter('B_const_mass_M > 5160')
     rdf = rdf.Filter('hop.hop_mass > 4500')
+    rdf = rdf.Filter('jmis.swp_jpsi_misid_mass_swp < 3050 || jmis.swp_jpsi_misid_mass_swp > 3150')
+    rdf = rdf.Filter('casc.swp_cascade_mass_swp > 1900')
     rdf = rdf.Filter(brem_cut)
-    rdf = rdf.Range(50_000)
 
     return rdf
 #-----------------------------------------
@@ -104,7 +111,7 @@ def test_period_polarity_in(polarity : str, period : str, is_in : int):
     correction split by period, polarity and region of detector where leptons are
     '''
     rdf_org = _get_rdf(polarity, period, is_in)
-    cor     = MassBiasCorrector(rdf=rdf_org)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads)
     rdf_cor = cor.get_rdf()
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
@@ -118,7 +125,7 @@ def test_nbrem(nbrem : int):
     Test splitting by brem
     '''
     rdf_org = _get_rdf_by_brem(nbrem)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=10)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads)
     rdf_cor = cor.get_rdf()
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
