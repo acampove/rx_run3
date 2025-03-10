@@ -720,6 +720,7 @@ plugin:
         obs    : [0, 10]     # Observable range where KDE will be made
         plot   : true        # Optional, will overlay KDE and FWHM lines
         format : FWHM={:.3f} # Can be used to control how the FWHM will show in the title
+        add_std: True        # If true, it will also write the standard deviation next to FWHM
 ```
 
 where the section will 
