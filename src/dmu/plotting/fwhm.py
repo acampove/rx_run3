@@ -27,9 +27,23 @@ class FWHM:
 
         return arr_pdf_val
     # -------------------------
-    def run(self):
+    def _get_fwhm(self, arr_x : numpy.ndarray, arr_y : numpy.ndarray) -> float:
+        maxy = numpy.max(arr_y)
+        arry = numpy.where(arr_y > maxy/2.)[0]
+        imax = arry[ 0]
+        imin = arry[-1]
+
+        x1 = arr_x[imax]
+        x2 = arr_x[imin]
+
+        if self._cfg['plot']:
+            plt.plot([x1, x2], [maxy/2, maxy/2], linestyle='-', linewidth=1, color='k')
+
+        return x2 - x1
+    # -------------------------
+    def run(self) -> float:
         '''
-        Runs plugin
+        Runs plugin and return FWHM
         '''
         minx = numpy.min(self._arr_val)
         maxx = numpy.max(self._arr_val)
@@ -42,5 +56,10 @@ class FWHM:
         yval = pdf.pdf(xval)
         yval = self._normalize_yval(yval)
 
-        plt.plot(xval, yval, linestyle='-', linewidth=2, color='red')
+        if self._cfg['plot']:
+            plt.plot(xval, yval, linestyle='-', linewidth=2, color='red')
+
+        fwhm = self._get_fwhm(xval, yval)
+
+        return fwhm
 # --------------------------------------------
