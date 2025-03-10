@@ -6,8 +6,10 @@ import os
 import copy
 from importlib.resources import files
 
+import mplhep
 import pytest
 import yaml
+import matplotlib.pyplot as plt
 
 from ROOT import RDataFrame
 from dmu.logging.log_store       import LogStore
@@ -28,6 +30,7 @@ def _initialize():
     LogStore.set_level('rx_data:mass_bias_corrector', 10)
 
     os.makedirs(Data.plt_dir, exist_ok=True)
+    plt.style.use(mplhep.style.LHCb2)
 #-----------------------------------------
 def _load_conf() -> dict:
     cfg_path = files('rx_data_data').joinpath('tests/mass_bias_corrector/mass_overlay.yaml')
