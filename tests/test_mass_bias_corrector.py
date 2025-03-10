@@ -3,7 +3,7 @@ Module used to test bias corrections
 '''
 
 import os
-from importlib.resource import files
+from importlib.resources import files
 
 import pytest
 import yaml
