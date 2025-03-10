@@ -28,17 +28,20 @@ def _initialize():
 
     os.makedirs(Data.plt_dir, exist_ok=True)
 #-----------------------------------------
-def _compare_masses(rdf : RDataFrame, name : str, title : str) -> None:
-    d_mass = rdf.AsNumpy(['B_M', 'B_M_corr'])
-    df     = pnd.DataFrame(d_mass)
-    std_org= df.B_M.std()
-    std_cor= df.B_M_corr.std()
-    title += f'; $\\sigma_{{org}}={std_org:.0f}$MeV; $\\sigma_{{corr}}={std_cor:.0f}$MeV'
+def _load_conf() -> dict:
+    cfg_path = files('rx_data_data').joinpath('tests/mass_bias_corrector/mass_overlay.yaml')
+    with open(cfg_path, encoding='utf-8') as ifile:
+        cfg = yaml.safe_load(ifile)
 
-    df.plot.hist(bins=40, histtype='step', range=[4000, 6000])
-    plt.title(title)
-    plt.savefig(f'{Data.plt_dir}/{name}.png')
-    plt.close()
+    return cfg
+#-----------------------------------------
+def _compare_masses(d_rdf : dict[str,RDataFrame], name : str, title : str) -> None:
+    cfg = _load_conf()
+    cfg['plots']['B_M']['name' ] = name
+    cfg['plots']['B_M']['title'] = title
+
+    ptr=Plotter(d_rdf=d_rdf, cfg=cfg)
+    ptr.run()
 #-----------------------------------------
 def _get_rdf(polarity : str, period : str, is_in : int) -> RDataFrame:
     RDFGetter.samples = {
@@ -71,11 +74,13 @@ def test_correction(polarity : str, period : str, is_in : int):
     '''
     Tests code correcting lepton kinematics
     '''
-    rdf = _get_rdf(polarity, period, is_in)
+    rdf_org = _get_rdf(polarity, period, is_in)
 
-    cor = MassBiasCorrector(rdf=rdf)
-    rdf = cor.get_rdf()
+    cor     = MassBiasCorrector(rdf=rdf_org)
+    rdf_cor = cor.get_rdf()
+
+    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
     title = f'{polarity}; {period}; Inner={is_in}'
-    _compare_masses(rdf, f'correction_{polarity}_{period}_{is_in:03}', title)
+    _compare_masses(d_rdf, f'correction_{polarity}_{period}_{is_in:03}', title)
 #-----------------------------------------
