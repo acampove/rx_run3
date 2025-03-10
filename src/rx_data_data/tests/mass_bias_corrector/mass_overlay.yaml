@@ -10,4 +10,4 @@ style:
 plugin:
   fwhm :
     plot   : true
-    format : FWHM={fwhm:.0f}
+    format : FWHM={:.0f}
