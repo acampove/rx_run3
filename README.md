@@ -717,8 +717,9 @@ Extra functionality can be `plugged` into the code by using the pluggins section
 ```yaml
 plugin:
     fwhm:
-        plot : true
-        format : FWHM={:.3f}
+        obs    : [0, 10]     # Observable range where KDE will be made
+        plot   : true        # Optional, will overlay KDE and FWHM lines
+        format : FWHM={:.3f} # Can be used to control how the FWHM will show in the title
 ```
 
 where the section will 
