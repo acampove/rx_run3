@@ -29,6 +29,8 @@ class Plotter:
         self._d_cfg = cfg
         self._d_rdf : dict[str, RDataFrame]    = { name : self._preprocess_rdf(rdf) for name, rdf in d_rdf.items()}
         self._d_wgt : Union[dict[str, Union[numpy.ndarray, None]], None]
+
+        self._title : str = ''
     #-------------------------------------
     def _check_quantile(self, qnt : float):
         '''
