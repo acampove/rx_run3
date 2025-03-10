@@ -53,31 +53,7 @@ def _compare_masses(d_rdf : dict[str,RDataFrame], name : str, title : str) -> No
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
 #-----------------------------------------
-def _get_rdf(polarity : str, period : str, is_in : int) -> RDataFrame:
-    RDFGetter.samples = {
-        'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
-        'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
-        'hop'  : '/home/acampove/external_ssd/Data/samples/hop.yaml',
-        }
-
-    gtr = RDFGetter(sample=f'DATA_24_{polarity}_{period}', trigger='Hlt2RD_BuToKpEE_MVA')
-    rdf = gtr.get_rdf()
-
-    if is_in == 0:
-        rdf = rdf.Filter('TMath::Abs(L1_STATEAT_Ecal_positionX) > 800 && TMath::Abs(L1_STATEAT_Ecal_positionY) > 400 && TMath::Abs(L2_STATEAT_Ecal_positionX) > 800 && TMath::Abs(L2_STATEAT_Ecal_positionY) > 400', 'out')
-
-    if is_in == 1:
-        rdf = rdf.Filter('TMath::Abs(L1_STATEAT_Ecal_positionX) < 800 && TMath::Abs(L1_STATEAT_Ecal_positionY) < 400 && TMath::Abs(L2_STATEAT_Ecal_positionX) < 800 && TMath::Abs(L2_STATEAT_Ecal_positionY) < 400', 'in')
-
-    rdf = rdf.Filter('(Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)')
-    rdf = rdf.Filter('mva.mva_cmb > 0.5 && mva.mva_prc > 0.5')
-    rdf = rdf.Filter('B_const_mass_M > 5160')
-    rdf = rdf.Filter('hop.hop_mass > 4500')
-    rdf = rdf.Range(50_000)
-
-    return rdf
-#-----------------------------------------
-def _get_rdf_by_brem(nbrem : int) -> RDataFrame:
+def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> RDataFrame:
     RDFGetter.samples = {
         'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
         'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
@@ -91,7 +67,6 @@ def _get_rdf_by_brem(nbrem : int) -> RDataFrame:
 
     rdf = rdf.Define('nbrem', 'int(L1_HASBREMADDED) + int(L2_HASBREMADDED)')
 
-    brem_cut = f'nbrem == {nbrem}' if nbrem in [0,1] else f'nbrem >= {nbrem}'
 
     rdf = rdf.Filter('(Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)')
     rdf = rdf.Filter('mva.mva_cmb > 0.5 && mva.mva_prc > 0.5')
@@ -99,32 +74,28 @@ def _get_rdf_by_brem(nbrem : int) -> RDataFrame:
     rdf = rdf.Filter('hop.hop_mass > 4500')
     rdf = rdf.Filter('jmis.swp_jpsi_misid_mass_swp < 3050 || jmis.swp_jpsi_misid_mass_swp > 3150')
     rdf = rdf.Filter('casc.swp_cascade_mass_swp > 1900')
-    rdf = rdf.Filter(brem_cut)
+
+    if nbrem is not None:
+        brem_cut = f'nbrem == {nbrem}' if nbrem in [0,1] else f'nbrem >= {nbrem}'
+        rdf = rdf.Filter(brem_cut)
+
+    if is_inner is not None and     is_inner:
+        rdf = rdf.Filter('L1_BREMHYPOAREA == 2 && L2_BREMHYPOAREA == 2')
+
+    if is_inner is not None and not is_inner:
+        rdf = rdf.Filter('L1_BREMHYPOAREA != 2 && L2_BREMHYPOAREA != 2')
+
+    if npvs is not None:
+        rdf = rdf.Filter(f'nPVs == {npvs}')
 
     return rdf
-#-----------------------------------------
-@pytest.mark.parametrize('is_in'   , [0, 1, 2])
-@pytest.mark.parametrize('polarity', ['MagUp', 'MagDown'])
-@pytest.mark.parametrize('period'  , ['24c1', '24c2', '24c3', '24c4'])
-def test_period_polarity_in(polarity : str, period : str, is_in : int):
-    '''
-    correction split by period, polarity and region of detector where leptons are
-    '''
-    rdf_org = _get_rdf(polarity, period, is_in)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads)
-    rdf_cor = cor.get_rdf()
-
-    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-
-    title   = f'{polarity}; {period}; Inner={is_in}'
-    _compare_masses(d_rdf, f'{polarity}_{period}_{is_in:03}', title)
 #-----------------------------------------
 @pytest.mark.parametrize('nbrem'  , [0, 1, 2])
 def test_nbrem(nbrem : int):
     '''
     Test splitting by brem
     '''
-    rdf_org = _get_rdf_by_brem(nbrem)
+    rdf_org = _get_rdf(nbrem=nbrem)
     cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads)
     rdf_cor = cor.get_rdf()
 
@@ -132,4 +103,33 @@ def test_nbrem(nbrem : int):
 
     title   = f'brem={nbrem}'
     _compare_masses(d_rdf, f'nbrem_{nbrem:03}', title)
+#-----------------------------------------
+@pytest.mark.parametrize('is_inner', [True, False])
+def test_isinner(is_inner : bool):
+    '''
+    Test splitting detector region
+    '''
+    rdf_org = _get_rdf(is_inner = is_inner)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads)
+    rdf_cor = cor.get_rdf()
+
+    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+
+    title   = f'isInner={is_inner}'
+    _compare_masses(d_rdf, f'is_inner_{is_inner}', title)
+#-----------------------------------------
+@pytest.mark.parametrize('nbrem', [0, 1, 2])
+@pytest.mark.parametrize('npvs' , [1, 2, 3, 4, 5, 6, 7])
+def test_nbrem_npvs(nbrem : int, npvs : int):
+    '''
+    Split by brem and nPVs
+    '''
+    rdf_org = _get_rdf(nbrem=nbrem, npvs=npvs)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads)
+    rdf_cor = cor.get_rdf()
+
+    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+
+    title   = f'nPVs={npvs}; nbrem={nbrem}'
+    _compare_masses(d_rdf, f'brem_npvs_{nbrem}_{npvs}', title)
 #-----------------------------------------
