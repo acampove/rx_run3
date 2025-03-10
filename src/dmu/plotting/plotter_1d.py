@@ -82,7 +82,7 @@ class Plotter1D(Plotter):
                 form       = form.replace('FWHM', 'STD')
                 this_title+= '; ' + form.format(std)
 
-            self._title+= f'{name}: {this_title}\n'
+            self._title+= f'\n{name}: {this_title}'
     #-------------------------------------
     def _plot_var(self, var : str) -> float:
         '''
@@ -167,7 +167,7 @@ class Plotter1D(Plotter):
             this_title = d_cfg['title']
             title += f'\n {this_title}'
 
-        title = title.rstrip('\n')
+        title = title.lstrip('\n')
 
         plt.ylim(top=1.2 * max_y)
         plt.legend()
