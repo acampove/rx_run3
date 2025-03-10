@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 from dmu.logging.log_store import LogStore
 from dmu.plotting.plotter  import Plotter
-from dmu.plotting.fwhm     import FWHM 
+from dmu.plotting.fwhm     import FWHM
 
 log = LogStore.add_logger('dmu:plotting:Plotter1D')
 # --------------------------------------------
@@ -56,14 +56,20 @@ class Plotter1D(Plotter):
 
         return minx, maxx, bins
     #-------------------------------------
-    def _run_plugins(self, arr_val : numpy.ndarray, arr_wgt : numpy.ndarray) -> None:
+    def _run_plugins(self,
+                     arr_val : numpy.ndarray,
+                     arr_wgt : numpy.ndarray,
+                     hst) -> None:
         if 'plugin' not in self._d_cfg:
             return
 
         d_plugin = self._d_cfg['plugin']
         if 'fwhm' in d_plugin:
+            arr_bin_cnt = hst.values()
+            maxy= numpy.max(arr_bin_cnt)
+
             cfg = d_plugin['fwhm']
-            obj = FWHM(cfg=cfg, val=arr_val, wgt=arr_wgt)
+            obj = FWHM(cfg=cfg, val=arr_val, wgt=arr_wgt, maxy=maxy)
             obj.run()
     #-------------------------------------
     def _plot_var(self, var : str) -> float:
@@ -94,8 +100,8 @@ class Plotter1D(Plotter):
             arr_wgt      = self._normalize_weights(arr_wgt, var)
             hst          = Hist.new.Reg(bins=bins, start=minx, stop=maxx, name='x').Weight()
             hst.fill(x=arr_val, weight=arr_wgt)
+            self._run_plugins(arr_val, arr_wgt, hst)
             hst.plot(label=label)
-            self._run_plugins(arr_val, arr_wgt)
             l_bc_all    += hst.values().tolist()
 
         max_y = max(l_bc_all)
