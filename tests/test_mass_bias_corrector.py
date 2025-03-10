@@ -3,13 +3,14 @@ Module used to test bias corrections
 '''
 
 import os
+from importlib.resource import files
 
 import pytest
-import pandas            as pnd
-import matplotlib.pyplot as plt
+import yaml
 
 from ROOT import RDataFrame
 from dmu.logging.log_store       import LogStore
+from dmu.plotting.plotter_1d     import Plotter1D as Plotter
 from rx_data.rdf_getter          import RDFGetter
 from rx_data.mass_bias_corrector import MassBiasCorrector
 
