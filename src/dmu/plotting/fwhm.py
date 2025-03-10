@@ -45,8 +45,7 @@ class FWHM:
         '''
         Runs plugin and return FWHM
         '''
-        minx = numpy.min(self._arr_val)
-        maxx = numpy.max(self._arr_val)
+        [minx, maxx] = self._cfg['obs']
 
         log.info('Running FWHM pluggin')
         obs = zfit.Space('mass', limits=(minx, maxx))
