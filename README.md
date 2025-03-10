@@ -710,6 +710,22 @@ stats:
 
 it's up to the user to build this dictionary and load it.
 
+### Pluggins
+
+Extra functionality can be `plugged` into the code by using the pluggins section like:
+
+```yaml
+plugin:
+    fwhm:
+        plot : true
+        format : FWHM={:.3f}
+```
+
+where the section will 
+
+- Use a KDE to fit the distribution and plot it on top of the histogram 
+- Add the value of the FullWidth at Half Maximum in the title, for each distribution with a specific formatting.
+
 ## 2D plots
 
 For the 2D case it would look like:
