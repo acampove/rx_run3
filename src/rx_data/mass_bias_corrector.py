@@ -68,19 +68,19 @@ class MassBiasCorrector:
     '''
     # ------------------------------------------
     def __init__(self, rdf : RDataFrame, skip_correction : bool = False):
-        self._rdf             = self._preprocess_rdf(rdf)
+        self._df              = df_from_rdf(rdf)
         self._skip_correction = skip_correction
+        pandarallel.initialize(nb_workers=10, progress_bar=True)
 
         self._ebc     = ElectronBiasCorrector()
         self._emass   = 0.511
         self._kmass   = 493.6
-        self._to_keep = ['EVENTNUMBER', 'RUNNUMBER']
-    # ------------------------------------------
-    def _preprocess_rdf(self, rdf: RDataFrame) -> RDataFrame:
-        rdf = rdf.Redefine('L1_HASBREMADDED', 'int(L1_HASBREMADDED)')
-        rdf = rdf.Redefine('L2_HASBREMADDED', 'int(L2_HASBREMADDED)')
 
-        return rdf
+        self._set_loggers()
+    # ------------------------------------------
+    def _set_loggers(self) -> None:
+        LogStore.set_level('rx_data:brem_bias_corrector'    , 50)
+        LogStore.set_level('rx_data:electron_bias_corrector', 50)
     # ------------------------------------------
     def _correct_electron(self, name : str, row : pnd.Series) -> pnd.Series:
         if self._skip_correction:
