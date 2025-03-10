@@ -43,7 +43,7 @@ def _get_rdf(kind : str, test : str, nentries : Union[int,None] = None) -> RData
     elif test == 'high_stat':
         nentries = 1_000_000
     else:
-        nentries =    10_000
+        nentries =   100_000
 
     d_data = {}
     if   kind == 'class A':
@@ -193,7 +193,7 @@ def test_plugin_fwhm():
 
     cfg_dat = _load_config(test='simple')
     cfg_dat['saving']['plt_dir'] = '/tmp/dmu/plugin_fwhm'
-    cfg_dat['plugin'] = {'fwhm' : {'plot' : True, 'format' : r'FWHM={:.3f}', 'obs' : [-2, 3]}}
+    cfg_dat['plugin'] = {'fwhm' : {'plot' : True, 'format' : r'FWHM={:.3f}', 'obs' : [-2, 3], 'add_std' : True}}
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
