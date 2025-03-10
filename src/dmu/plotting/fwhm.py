@@ -37,7 +37,7 @@ class FWHM:
         x2 = arr_x[imin]
 
         if self._cfg['plot']:
-            plt.plot([x1, x2], [maxy/2, maxy/2], linestyle='-', linewidth=1, color='k')
+            plt.plot([x1, x2], [maxy/2, maxy/2], linestyle=':', linewidth=1, color='k')
 
         return x2 - x1
     # -------------------------
@@ -49,14 +49,14 @@ class FWHM:
 
         log.info('Running FWHM pluggin')
         obs = zfit.Space('mass', limits=(minx, maxx))
-        pdf= zfit.pdf.KDE1DimExact(obs=obs, data=self._arr_val, weights=self._arr_wgt)
+        pdf= zfit.pdf.KDE1DimExact(obs=obs, data=self._arr_val, weights=self._arr_wgt, bandwidth=0.2)
 
         xval = numpy.linspace(minx, maxx, 200)
         yval = pdf.pdf(xval)
         yval = self._normalize_yval(yval)
 
         if self._cfg['plot']:
-            plt.plot(xval, yval, linestyle='-', linewidth=2, color='red')
+            plt.plot(xval, yval, linestyle='-', linewidth=2, color='gray')
 
         fwhm = self._get_fwhm(xval, yval)
 
