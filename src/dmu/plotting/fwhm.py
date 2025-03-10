@@ -49,7 +49,7 @@ class FWHM:
 
         log.info('Running FWHM pluggin')
         obs = zfit.Space('mass', limits=(minx, maxx))
-        pdf= zfit.pdf.KDE1DimExact(obs=obs, data=self._arr_val, weights=self._arr_wgt, bandwidth=0.2)
+        pdf= zfit.pdf.KDE1DimExact(obs=obs, data=self._arr_val, weights=self._arr_wgt)
 
         xval = numpy.linspace(minx, maxx, 200)
         yval = pdf.pdf(xval)
