@@ -3,6 +3,7 @@ Module used to test bias corrections
 '''
 
 import os
+import copy
 from importlib.resources import files
 
 import pytest
@@ -37,6 +38,10 @@ def _load_conf() -> dict:
 #-----------------------------------------
 def _compare_masses(d_rdf : dict[str,RDataFrame], name : str, title : str) -> None:
     cfg = _load_conf()
+    cfg = copy.deepcopy(cfg)
+
+    cfg['saving'] = {'plt_dir' : Data.plt_dir}
+
     cfg['plots']['B_M']['name' ] = name
     cfg['plots']['B_M']['title'] = title
 
@@ -82,5 +87,5 @@ def test_correction(polarity : str, period : str, is_in : int):
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
     title = f'{polarity}; {period}; Inner={is_in}'
-    _compare_masses(d_rdf, f'correction_{polarity}_{period}_{is_in:03}', title)
+    _compare_masses(d_rdf, f'{polarity}_{period}_{is_in:03}', title)
 #-----------------------------------------
