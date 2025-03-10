@@ -6,9 +6,10 @@ plots:
         yscale     : 'linear'
         labels     : ['M$(B^+)$', 'Entries']
 style:
-  skip_lines : false
+  skip_lines : true 
 plugin:
   fwhm :
     obs    : [4500, 6000]
     plot   : true
     format : FWHM={:.0f}
+    add_std: True
