@@ -26,7 +26,7 @@ class MassBiasCorrector:
         self._ebc     = ElectronBiasCorrector()
         self._emass   = 0.511
         self._kmass   = 493.6
-        self._to_keep = ['EVENTNUMBER', 'RUNNUMBER', 'B_M']
+        self._to_keep = ['EVENTNUMBER', 'RUNNUMBER']
     # ------------------------------------------
     def _preprocess_rdf(self, rdf: RDataFrame) -> RDataFrame:
         rdf = rdf.Redefine('L1_HASBREMADDED', 'int(L1_HASBREMADDED)')
@@ -112,7 +112,7 @@ class MassBiasCorrector:
         df             = self._df_from_rdf()
         df['B_M_corr'] = df.apply(self._calculate_correction, axis=1)
 
-        df  = df[self._to_keep + ['B_M_corr']]
+        df  = df[self._to_keep + ['B_M']]
         rdf = RDF.FromPandas(df)
 
         return rdf
