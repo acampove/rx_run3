@@ -8,6 +8,7 @@ dependencies= [
 'xrootd',
 'uproot',
 'tabulate',
+'mplhep',
 'particle',
 'vector',
 'pandarallel',
