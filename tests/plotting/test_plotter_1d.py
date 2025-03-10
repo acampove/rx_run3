@@ -193,7 +193,7 @@ def test_plugin_fwhm():
 
     cfg_dat = _load_config(test='simple')
     cfg_dat['saving']['plt_dir'] = '/tmp/dmu/plugin_fwhm'
-    cfg_dat['plugin'] = {'fwhm' : {'plot' : True, 'format' : r'FWHM={fwhm:.0f}'}}
+    cfg_dat['plugin'] = {'fwhm' : {'plot' : True, 'format' : r'FWHM={:.3f}'}}
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
