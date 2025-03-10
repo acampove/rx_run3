@@ -7,11 +7,59 @@ import math
 import vector
 import pandas as pnd
 
+from pandarallel                     import pandarallel
 from ROOT                            import RDataFrame, RDF
 from dmu.logging.log_store           import LogStore
 from rx_data.electron_bias_corrector import ElectronBiasCorrector
 
 log=LogStore.add_logger('rx_data:mass_bias_corrector')
+# ------------------------------------------
+def df_from_rdf(rdf : RDataFrame) -> pnd.DataFrame:
+    '''
+    Utility method needed to get pandas dataframe from ROOT dataframe
+    '''
+    rdf    = _preprocess_rdf(rdf)
+    l_col  = [ name.c_str() for name in rdf.GetColumnNames() if _pick_column(name.c_str(), rdf) ]
+    d_data = rdf.AsNumpy(l_col)
+    df     = pnd.DataFrame(d_data)
+
+    return df
+# ------------------------------------------
+def _preprocess_rdf(rdf: RDataFrame) -> RDataFrame:
+    rdf = rdf.Redefine('L1_HASBREMADDED', 'int(L1_HASBREMADDED)')
+    rdf = rdf.Redefine('L2_HASBREMADDED', 'int(L2_HASBREMADDED)')
+
+    return rdf
+# ------------------------------------------
+def _pick_column(name : str, rdf : RDataFrame) -> bool:
+    to_keep  = ['EVENTNUMBER', 'RUNNUMBER']
+    col_type = rdf.GetColumnType(name)
+
+    if 'RVec' in col_type:
+        return False
+
+    if col_type == 'Bool_t':
+        return False
+
+    if 'Hlt' in name:
+        return False
+
+    if 'DTF' in name:
+        return False
+
+    if name in to_keep:
+        return True
+
+    if name.startswith('H_'):
+        return True
+
+    if name.startswith('L1_'):
+        return True
+
+    if name.startswith('L2_'):
+        return True
+
+    return False
 # ------------------------------------------
 class MassBiasCorrector:
     '''
