@@ -9,5 +9,6 @@ style:
   skip_lines : false
 plugin:
   fwhm :
+    obs    : [4500, 6000]
     plot   : true
     format : FWHM={:.0f}
