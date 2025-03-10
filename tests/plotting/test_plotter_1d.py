@@ -184,3 +184,17 @@ def test_legend():
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
+#---------------------------------------
+def test_plugin_fwhm():
+    '''
+    Will test fwhm plugin
+    '''
+    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+
+    cfg_dat = _load_config(test='simple')
+    cfg_dat['saving']['plt_dir'] = '/tmp/dmu/plugin_fwhm'
+    cfg_dat['plugin'] = {'fwhm' : {'plot' : True, 'format' : r'FWHM={fwhm:.0f}'}}
+
+    ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
+    ptr.run()
+#---------------------------------------
