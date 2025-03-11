@@ -204,6 +204,35 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
+    @MethodRegistry.register('voigt')
+    def _get_voigt(self, suffix : str = '') -> zpdf:
+        mu  = zfit.Parameter('mu_voigt', 5280,  5040, 5500)
+        sg  = zfit.Parameter('sg_voigt',   20,    10,  400)
+        gm  = zfit.Parameter('gm_voigt',    4,   0.1,  100)
+
+        pdf = zfit.pdf.Voigt(m=mu, sigma=sg, gamma=gm, obs=self._obs, name=f'voigt{suffix}')
+
+        return pdf
+    #-----------------------------------------
+    @MethodRegistry.register('qgauss')
+    def _get_qgauss(self, suffix : str = '') -> zpdf:
+        mu  = zfit.Parameter('mu_qgauss', 5280,  5040, 5500)
+        sg  = zfit.Parameter('sg_qgauss',   20,    10,  400)
+        q   = zfit.Parameter( 'q_qgauss',    1,     1,    3)
+
+        pdf = zfit.pdf.QGauss(q=q, mu=mu, sigma=sg, obs=self._obs, name =f'qgauss{suffix}')
+
+        return pdf
+    #-----------------------------------------
+    @MethodRegistry.register('cauchy')
+    def _get_cauchy(self, suffix : str = '') -> zpdf:
+        mu  = zfit.Parameter('mu', 5280,  5040, 5500)
+        gm  = zfit.Parameter('gm',  150,    50,  500)
+
+        pdf = zfit.pdf.Cauchy(obs=self._obs, m=mu, gamma=gm, name=f'cauchy{suffix}')
+
+        return pdf
+    #-----------------------------------------
     def _get_pdf_types(self) -> list[tuple[str,str]]:
         d_name_freq = {}
 
