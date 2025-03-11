@@ -16,9 +16,10 @@ from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
 from dmu.generic            import version_management as vman
 
-from rx_data.mis_calculator import MisCalculator
-from rx_data.hop_calculator import HOPCalculator
-from rx_data.swp_calculator import SWPCalculator
+from rx_data.mis_calculator      import MisCalculator
+from rx_data.hop_calculator      import HOPCalculator
+from rx_data.swp_calculator      import SWPCalculator
+from rx_data.mass_bias_corrector import MassBiasCorrector
 
 log = LogStore.add_logger('rx_data:branch_calculator')
 # ---------------------------------
@@ -163,6 +164,9 @@ def _create_file(path : str, trigger : str) -> None:
     if   Data.kind == 'hop':
         obj = HOPCalculator(rdf=rdf)
         rdf = obj.get_rdf(preffix=Data.kind)
+    elif Data.kind == 'ecalo_bias':
+        cor = MassBiasCorrector(rdf=rdf)
+        rdf = cor.get_rdf()
     elif Data.kind == 'swp_jpsi_misid':
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' :  13, 'L2' :  13}, d_had={'H' :  13})
         rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar)
