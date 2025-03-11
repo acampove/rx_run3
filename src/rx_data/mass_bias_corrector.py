@@ -19,7 +19,7 @@ def df_from_rdf(rdf : RDataFrame) -> pnd.DataFrame:
     Utility method needed to get pandas dataframe from ROOT dataframe
     '''
     rdf    = _preprocess_rdf(rdf)
-    l_col  = [ name.c_str() for name in rdf.GetColumnNames() if _pick_column(name.c_str(), rdf) ]
+    l_col  = [ name.c_str() for name in rdf.GetColumnNames() if _pick_column(name.c_str()) ]
     d_data = rdf.AsNumpy(l_col)
     df     = pnd.DataFrame(d_data)
 
@@ -31,32 +31,53 @@ def _preprocess_rdf(rdf: RDataFrame) -> RDataFrame:
 
     return rdf
 # ------------------------------------------
-def _pick_column(name : str, rdf : RDataFrame) -> bool:
+def _pick_column(name : str) -> bool:
     to_keep  = ['EVENTNUMBER', 'RUNNUMBER']
-    col_type = rdf.GetColumnType(name)
-
-    if 'RVec' in col_type:
-        return False
-
-    if col_type == 'Bool_t':
-        return False
-
-    if 'Hlt' in name:
-        return False
-
-    if 'DTF' in name:
-        return False
 
     if name in to_keep:
         return True
 
-    if name.startswith('H_'):
+    not_l1 = not name.startswith('L1')
+    not_l2 = not name.startswith('L2')
+    not_kp = not name.startswith('H')
+
+    if not_l1 and not_l2 and not_kp:
+        return False
+
+    if 'HASBREMADDED' in name:
         return True
 
-    if name.startswith('L1_'):
+    if 'NVPHITS' in name:
+        return False
+
+    if 'CHI2' in name:
+        return False
+
+    if 'HYPOID' in name:
+        return False
+
+    if 'HYPODELTA' in name:
+        return False
+
+    if 'PT' in name:
         return True
 
-    if name.startswith('L2_'):
+    if 'ETA' in name:
+        return True
+
+    if 'PHI' in name:
+        return True
+
+    if 'PX' in name:
+        return True
+
+    if 'PY' in name:
+        return True
+
+    if 'PZ' in name:
+        return True
+
+    if 'BREMHYPO' in name:
         return True
 
     return False
