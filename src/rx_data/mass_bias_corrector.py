@@ -67,7 +67,7 @@ class MassBiasCorrector:
     by correcting biases in electrons
     '''
     # ------------------------------------------
-    def __init__(self, rdf : RDataFrame, skip_correction : bool = False, nthreads : int = 4):
+    def __init__(self, rdf : RDataFrame, skip_correction : bool = False, nthreads : int = 1):
         '''
         rdf : ROOT dataframe
         skip_correction: Will do everything but not correction. Needed to check that only the correction is changing data.
@@ -75,13 +75,16 @@ class MassBiasCorrector:
         '''
         self._df              = df_from_rdf(rdf)
         self._skip_correction = skip_correction
+        self._nthreads        = nthreads
 
         self._ebc     = ElectronBiasCorrector()
         self._emass   = 0.511
         self._kmass   = 493.6
 
         self._set_loggers()
-        pandarallel.initialize(nb_workers=nthreads, progress_bar=True)
+
+        if self._nthreads > 1:
+            pandarallel.initialize(nb_workers=self._nthreads, progress_bar=True)
     # ------------------------------------------
     def _set_loggers(self) -> None:
         LogStore.set_level('rx_data:brem_bias_corrector'    , 50)
@@ -125,7 +128,10 @@ class MassBiasCorrector:
         log.info('Applying bias correction')
 
         df        = self._df
-        df['B_M'] = df.parallel_apply(self._calculate_correction, axis=1)
+        if self._nthreads > 1:
+            df['B_M'] = df.parallel_apply(self._calculate_correction, axis=1)
+        else:
+            df['B_M'] = df.apply(self._calculate_correction, axis=1)
         df        = df[['B_M', 'EVENTNUMBER', 'RUNNUMBER']]
 
         rdf       = RDF.FromPandas(df)
