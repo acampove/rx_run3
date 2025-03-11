@@ -140,6 +140,15 @@ def _get_out_path(path : str) -> str:
 
     return out_path
 # ---------------------------------
+def _is_mc(path : str) -> bool:
+    if '/data_24_mag' in path:
+        return False
+
+    if '/mc_mag' in path:
+        return True
+
+    raise ValueError(f'Cannot determine if MC or data for: {path}')
+# ---------------------------------
 def _create_file(path : str, trigger : str) -> None:
     out_path = _get_out_path(path)
     if os.path.isfile(out_path):
@@ -165,7 +174,11 @@ def _create_file(path : str, trigger : str) -> None:
         obj = HOPCalculator(rdf=rdf)
         rdf = obj.get_rdf(preffix=Data.kind)
     elif Data.kind == 'ecalo_bias':
-        cor = MassBiasCorrector(rdf=rdf)
+        is_mc = _is_mc(path)
+        if is_mc:
+            log.warning('Turning off ecalo_bias correction for MC sample')
+
+        cor = MassBiasCorrector(rdf=rdf, skip_correction=is_mc)
         rdf = cor.get_rdf()
     elif Data.kind == 'swp_jpsi_misid':
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' :  13, 'L2' :  13}, d_had={'H' :  13})
