@@ -34,7 +34,7 @@ class Data:
     pbar : bool
     dry  : bool
     lvl  : int
-    l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade']
+    l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias']
     tree_name = 'DecayTree'
 # ---------------------------------
 def _parse_args() -> None:
