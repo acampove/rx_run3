@@ -49,7 +49,7 @@ def _get_command(sample : str, trigger : str) -> list[str]:
 
     trigger = trigger.ljust(25)
 
-    return [f'apply_classifier -c {Data.conf} -t {trigger} -s {sample}']
+    return [f'apply_classifier -c {Data.conf} -t {trigger:<30} -s {sample}']
 # --------------------------------
 def _save_commands(l_samp_trig : list[tuple[str,str]]) -> None:
     l_command = []
