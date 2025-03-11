@@ -112,11 +112,10 @@ class ElectronBiasCorrector:
         if hasattr(row, name):
             return getattr(row, name)
 
-        log.error(f'Cannot find attribute {name} among:')
         for col_name in row.index:
             log.info(col_name)
 
-        raise ValueError
+        raise ValueError(f'Cannot find attribute {name} among:')
     # ---------------------------------
     def correct(self, row : pnd.Series, name : str) -> pnd.Series:
         '''
