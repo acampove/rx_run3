@@ -30,6 +30,7 @@ class Data:
     '''
     vers : str
     kind : str
+    nmax : int
     part : tuple[int,int]
     pbar : bool
     dry  : bool
@@ -44,6 +45,7 @@ def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to create ROOT files with trees with extra branches by picking up inputs from directory and patitioning them')
     parser.add_argument('-k', '--kind', type=str, help='Kind of branch to create', choices=Data.l_kind, required=True)
     parser.add_argument('-v', '--vers', type=str, help='Version of outputs', required=True)
+    parser.add_argument('-n', '--nmax', type=int, help='If used, limit number of entries to process to this value')
     parser.add_argument('-p', '--part', nargs= 2, help='Partitioning, first number is the index, second is the number of parts', required=True)
     parser.add_argument('-b', '--pbar',           help='If used, will show progress bar whenever it is available', action='store_true')
     parser.add_argument('-d', '--dry' ,           help='If used, will do dry drun, e.g. stop before processing', action='store_true')
@@ -53,6 +55,7 @@ def _parse_args() -> None:
     Data.kind = args.kind
     Data.vers = args.vers
     Data.part = args.part
+    Data.nmax = args.nmax
     Data.pbar = args.pbar
     Data.dry  = args.dry
     Data.lvl  = args.lvl
@@ -166,6 +169,10 @@ def _create_file(path : str, trigger : str) -> None:
         rdf=rdf.Define('fake_column', '1')
         rdf.Snapshot(Data.tree_name, out_path)
         return
+
+    if Data.nmax is not None:
+        log.warning(f'Limitting dataframe to {Data.nmax} entries')
+        rdf=rdf.Range(Data.nmax)
 
     msc = MisCalculator(rdf=rdf, trigger=trigger)
     rdf = msc.get_rdf()
