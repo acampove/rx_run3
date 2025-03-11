@@ -15,3 +15,7 @@ It adds:
 `hop`       : Veto on HOP mass to remove partially reconstructed
 
 None of these requirements have been optimized yet.
+
+## v3
+
+Cut on both leptons $p_T$ at 250 MeV
