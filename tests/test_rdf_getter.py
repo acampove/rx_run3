@@ -57,6 +57,15 @@ def _check_branches(rdf : RDataFrame) -> None:
 
         raise ValueError(f'Branch missing: {branch}')
 # ------------------------------------------------
+def _print_dotted_branches(rdf : RDataFrame) -> None:
+    l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
+
+    for name in l_name:
+        if '.' not in name:
+            continue
+
+        log.info(name)
+# ------------------------------------------------
 def _plot_mva_mass(rdf : RDataFrame, test : str) -> None:
     test_dir = f'{Data.out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
@@ -130,8 +139,7 @@ def test_data(sample : str):
     _plot_mva(rdf, sample)
     _plot_hop(rdf, sample)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['Bu_JpsiPi_ee_eq_DPC'])
-#@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC'])
+@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC'])
 def test_mc(sample : str):
     '''
     Test of getter class in mc
@@ -144,4 +152,15 @@ def test_mc(sample : str):
     _plot_mva_mass(rdf, sample)
     _plot_mva(rdf     , sample)
     _plot_hop(rdf     , sample)
+# ------------------------------------------------
+def test_check_vars():
+    '''
+    Checks that variables from friend trees can be accessed
+    '''
+
+    gtr = RDFGetter(sample='Bu_JpsiK_ee_eq_DPC', trigger='Hlt2RD_BuToKpEE_MVA')
+    rdf = gtr.get_rdf()
+
+    #_check_branches(rdf)
+    _print_dotted_branches(rdf)
 # ------------------------------------------------
