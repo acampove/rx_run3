@@ -225,7 +225,12 @@ def _plot(mat_res : list[list[str]], variables : list[str], plot_name : str) -> 
     plt.pcolormesh(l_bound_x, l_bound_y, mat_res, cmap="viridis", shading="auto", vmin=zmin, vmax=zmax)
     plt.colorbar()
 
-    plt.savefig(f'{plt_dir}/{plot_name}_{sample}_{trigger}_{q2bin}.png')
+    plot_path = f'{plt_dir}/{plot_name}_{sample}_{trigger}_{q2bin}.png'
+    plot_path = plot_path.replace('*', 'p')
+
+    log.info(f'Saving to: {plot_path}')
+
+    plt.savefig(plot_path)
     plt.close('all')
 # -----------------------------
 def main():
