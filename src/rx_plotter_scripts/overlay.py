@@ -14,7 +14,6 @@ import dmu.generic.utilities as gut
 from ROOT                    import RDataFrame, EnableImplicitMT
 from dmu.plotting.plotter_1d import Plotter1D
 from dmu.logging.log_store   import LogStore
-from dmu.generic             import version_management as vmn
 from rx_data.rdf_getter      import RDFGetter
 from rx_selection            import selection as sel
 
