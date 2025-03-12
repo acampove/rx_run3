@@ -172,6 +172,12 @@ class FitComponent:
         obj=ZFitPlotter(data=data, model=model)
         obj.plot(**self._plt_cfg)
 
+        arr_val = data.to_numpy()
+        nentries= len(arr_val)
+        title   = f'Entries={nentries}'
+
+        obj.axs[0].set_title(title)
+
         plot_path = f'{self._out_dir}/fit.png'
         log.info(f'Saving fit plot to: {plot_path}')
         plt.savefig(plot_path)
