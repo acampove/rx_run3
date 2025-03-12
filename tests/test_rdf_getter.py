@@ -10,6 +10,7 @@ from ROOT                   import RDataFrame, EnableImplicitMT
 from dmu.logging.log_store  import LogStore
 from rx_data.rdf_getter     import RDFGetter
 
+log=LogStore.add_logger('rx_data:test_rdf_getter')
 # ------------------------------------------------
 class Data:
     '''
@@ -24,7 +25,14 @@ class Data:
     psi2_q2    = '(Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)'
     high_q2    = '(Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)'
 
-    l_branch = ['mva.mva_cmb', 'mva.mva_prc', 'hop.hop_mass', 'hop.hop_alpha']
+    l_branch = [
+            'mva.mva_cmb', 
+            'mva.mva_prc', 
+            'hop.hop_mass', 
+            'hop.hop_alpha',
+            'cascade.swp_cascade_mass_swp',
+            'jpsi_misid.swp_jpsi_misid_mass_swp',
+            'ecalo_bias.B_M']
 # ------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -37,6 +45,7 @@ def _initialize():
             'hop'       : '/home/acampove/external_ssd/Data/samples/hop.yaml',
             'cascade'   : '/home/acampove/external_ssd/Data/samples/cascade.yaml',
             'jpsi_misid': '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
+            'ecalo_bias': '/home/acampove/external_ssd/Data/samples/ecalo_bias.yaml',
             }
 # ------------------------------------------------
 def _check_branches(rdf : RDataFrame) -> None:
