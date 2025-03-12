@@ -137,8 +137,13 @@ class DTFitter:
         obj   = ZFitPlotter(data=data, model=model)
         obj.plot(**plot_cfg)
 
+        arr_val = data.to_numpy()
+        nentries= len(arr_val)
+        title   = f'Entries: {nentries:.0f}'
+
         plot_path = f'{plot_dir}/{name}'
         log.info(f'Saving fit plot to: {plot_path}')
+        obj.axs[0].set_title(title)
         plt.savefig(plot_path)
     # -------------------------------
     def _save_pars(self, par : Parameter, name : str) -> None:
