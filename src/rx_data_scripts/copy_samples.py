@@ -29,7 +29,7 @@ class Data:
 # -----------------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
-    parser.add_argument('-k', '--kind', type=str, help='Type of files', choices=['main', 'mva', 'hop', 'swp_jpsi_misid', 'swp_cascade'], required=True)
+    parser.add_argument('-k', '--kind', type=str, help='Type of files', choices=['main', 'mva', 'hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias'], required=True)
     parser.add_argument('-f', '--conf', type=str, help='Path to YAML files with samples to be copied', required=True)
     parser.add_argument('-v', '--vers', type=str, help='Version', required=True)
     parser.add_argument('-l', '--logl', type=int, help='Logger level', choices=[10, 20, 30], default=20)
