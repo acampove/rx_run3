@@ -72,7 +72,7 @@ class RDFGetter:
                 d_data['friends'][sample] = d_section
 
         with open(self._tmp_path, 'w', encoding='utf-8') as ofile:
-            json.dump(d_data, ofile, indent=4)
+            json.dump(d_data, ofile, indent=4, sort_keys=True)
     # ---------------------------------------------------
     def get_rdf(self) -> RDataFrame:
         '''
