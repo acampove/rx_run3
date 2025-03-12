@@ -26,6 +26,10 @@ class Data:
     l_analysis = ['EE', 'MM'  ]
     l_q2bin    = ['low', 'central', 'jpsi', 'psi2S', 'high']
 #-----------------------
+def _print_selection(d_cut : dict[str,str]) -> None:
+    for name, expr in d_cut.items():
+        log.debug(f'{name:<20}{expr}')
+#-----------------------
 def selection(analysis : str, project : str, q2bin: str, process : str) -> dict[str,str]:
     '''
     Picks up sample name, trigger, etc, returns dictionary with selection
@@ -49,6 +53,8 @@ def selection(analysis : str, project : str, q2bin: str, process : str) -> dict[
 
     d_tmp = _get_selection(analysis, project, q2bin)
     d_cut.update(d_tmp)
+
+    _print_selection(d_cut)
 
     return d_cut
 #-----------------------
