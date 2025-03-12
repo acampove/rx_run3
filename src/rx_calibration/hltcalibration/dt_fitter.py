@@ -144,6 +144,13 @@ class DTFitter:
         plot_path = f'{plot_dir}/{name}'
         log.info(f'Saving fit plot to: {plot_path}')
         obj.axs[0].set_title(title)
+
+        minx, maxx = model.space.limit1d
+
+        obj.axs[1].set_xlim(minx, maxx)
+        obj.axs[1].set_ylim(  -5,   +5)
+        obj.axs[1].plot([minx, maxx], [+3, +3], linestyle='--', color='red')
+        obj.axs[1].plot([minx, maxx], [-3, -3], linestyle='--', color='red')
         plt.savefig(plot_path)
     # -------------------------------
     def _save_pars(self, par : Parameter, name : str) -> None:
