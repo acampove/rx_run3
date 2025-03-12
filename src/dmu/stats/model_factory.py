@@ -47,6 +47,13 @@ class MethodRegistry:
             log.info(f'    {value}')
 
         return method
+
+    @classmethod
+    def get_pdf_names(cls) -> list[str]:
+        '''
+        Returns list of PDFs that are registered/supported
+        '''
+        return list(cls._d_method)
 #-----------------------------------------
 class ModelFactory:
     '''
