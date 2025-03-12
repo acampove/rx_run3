@@ -1,6 +1,7 @@
 '''
 Script with functions needed to test functions in selection.py
 '''
+import os
 import pytest
 
 from ROOT                   import RDataFrame
@@ -10,15 +11,21 @@ from rx_selection           import selection as sel
 
 log=LogStore.add_logger('rx_selection:test_selection')
 # --------------------------
+class Data:
+    '''
+    data class
+    '''
+    DATADIR = os.environ['DATADIR']
+# --------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     RDFGetter.samples = {
-            'main'      : '/home/acampove/external_ssd/Data/samples/main.yaml',
-            'mva'       : '/home/acampove/external_ssd/Data/samples/mva.yaml',
-            'hop'       : '/home/acampove/external_ssd/Data/samples/hop.yaml',
-            'cascade'   : '/home/acampove/external_ssd/Data/samples/cascade.yaml',
-            'jpsi_misid': '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
-            'ecalo_bias': '/home/acampove/external_ssd/Data/samples/ecalo_bias.yaml',
+            'main'      : f'{Data.DATADIR}/samples/main.yaml',
+            'mva'       : f'{Data.DATADIR}/samples/mva.yaml',
+            'hop'       : f'{Data.DATADIR}/samples/hop.yaml',
+            'cascade'   : f'{Data.DATADIR}/samples/cascade.yaml',
+            'jpsi_misid': f'{Data.DATADIR}/samples/jpsi_misid.yaml',
+            'ecalo_bias': f'{Data.DATADIR}/samples/ecalo_bias.yaml',
             }
 
     LogStore.set_level('rx_selection:selection'     , 10)
