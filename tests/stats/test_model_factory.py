@@ -8,7 +8,7 @@ import zfit
 import pytest
 from dmu.stats.utilities     import print_pdf
 from dmu.logging.log_store   import LogStore
-from dmu.stats.model_factory import ModelFactory
+from dmu.stats.model_factory import ModelFactory, MethodRegistry
 
 log=LogStore.add_logger('dmu:stats:test_model_factory')
 #--------------------------
@@ -81,6 +81,26 @@ def test_repeated_pdf():
             preffix = 'repeated',
             obs     = Data.obs,
             l_pdf   = l_pdf,
+            l_shared= l_shr,
+            l_float = l_flt)
+    pdf   = mod.get_pdf()
+
+    print_pdf(pdf)
+#--------------------------
+@pytest.mark.parametrize('name', MethodRegistry.get_pdf_names())
+def test_all_pdf(name : list[str]):
+    '''
+    Will create a PDF for each of the models supported
+    '''
+    log.info(f'Testing {name}')
+
+    l_shr = ['mu', 'sg']
+    l_flt = ['mu', 'sg']
+
+    mod   = ModelFactory(
+            preffix = name,
+            obs     = Data.obs,
+            l_pdf   = [name],
             l_shared= l_shr,
             l_float = l_flt)
     pdf   = mod.get_pdf()
