@@ -11,6 +11,7 @@ input:
     jpsi_misid  : /home/acampove/external_ssd/Data/samples/jpsi_misid.yaml
 cuts:
     brem_2  : L2_HASBREMADDED == 1
+    region  : L1_BREMHYPOAREA == 2 && L2_BREMHYPOAREA == 2
     mass    : B_const_mass_M > 5150
 target:
   variable : B_M
@@ -25,32 +26,17 @@ general:
   zrange : [0, 350]
 plots:
     brem_pos:
-      L2_BREMHYPOX:
+      L2_BREMHYPOROW:
         binning:
           nbin: 47 
           min : -3000 
           max :  3000 
         label: ECAL${}_{X}$
         isobin: true
-      L2_BREMHYPOY:
+      L2_BREMHYPOCOL:
         binning:
           nbin: 63
           min : -4000 
           max :  4000 
         label : ECAL${}_{Y}$
         isobin: true
-    ele_pos:
-      L2_STATEAT_Ecal_positionX:
-        binning:
-          nbin: 40
-          min : -4000
-          max :  4000
-        label : ECAL${}_{X}$
-        isobin: false
-      L2_STATEAT_Ecal_positionY:
-        binning:
-          nbin: 30
-          min : -3000
-          max :  3000
-        label : ECAL${}_{Y}$
-        isobin: false
