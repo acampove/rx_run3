@@ -6,6 +6,30 @@ and downloaded with
 [rx_data](https://github.com/acampove/rx_data).
 the selection is done with jobs sent to an HTCondor cluster.
 
+## How to pick up selection and apply it to data and MC
+
+For this do:
+
+```python
+from rx_selection import selection as sel
+
+# analysis: EE, MM
+# q2bin: low, central, jpsi, psi2, high
+# process: 
+#     One of the keys in https://gitlab.cern.ch/rx_run3/rx_data/-/blob/master/src/rx_data_lfns/rx/v7/rk_samples.yaml
+#     DATA will do all the data combined
+
+d_sel = sel.selection(project='RK', analysis='EE', q2bin='jpsi', process='DATA')
+
+# You can override the selection here
+for cut_name, cut_value in d_sel.items():
+    rdf = rdf.Filter(cut_value, cut_name)
+
+rep = rdf.Report()
+# Here you cross check that the cuts were applied and see the statistics
+rep.Print()
+```
+
 ## Usage
 
 For local tests one can use `apply_selection` as in:
