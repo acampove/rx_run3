@@ -25,18 +25,18 @@ general:
   zrange : [0, 350]
 plots:
     brem_pos:
-      L2_BREMHYPOROW:
+      L2_BREMHYPOX:
         binning:
           nbin: 47 
-          min :  8
-          max : 55
+          min : -3000 
+          max :  3000 
         label: ECAL${}_{X}$
         isobin: true
-      L2_BREMHYPOCOL:
+      L2_BREMHYPOY:
         binning:
           nbin: 63
-          min :  0
-          max : 63
+          min : -4000 
+          max :  4000 
         label : ECAL${}_{Y}$
         isobin: true
     ele_pos:
