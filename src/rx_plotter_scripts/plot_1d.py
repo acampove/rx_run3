@@ -81,12 +81,17 @@ def _get_rdf() -> RDataFrame:
 # ---------------------------------
 @gut.timeit
 def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
+    cfg      = _get_cfg(kind='raw')
+    d_wp     = cfg['wp'][Data.wp]
+    l_cmb_wp = d_wp['cmb']
+    l_prc_wp = d_wp['prc']
+
     d_rdf = {}
-    for cmb in [0.90]:
+    for cmb in l_cmb_wp:
         rdf = rdf.Filter(f'mva_cmb > {cmb}')
         d_rdf [f'$MVA_{{cmb}}$ > {cmb}'] = rdf
 
-    for prc in [0.6, 0.7, 0.8, 0.85]:
+    for prc in l_prc_wp:
         rdf = rdf.Filter(f'mva_prc > {prc}')
         d_rdf [f'$MVA_{{prc}}$ > {prc}'] = rdf
 
@@ -98,6 +103,7 @@ def _parse_args() -> None:
     parser.add_argument('-c', '--chanel' , type=str, help='Channel', choices=['ee', 'mm'], required=True)
     parser.add_argument('-v', '--version', type=str, help='Version of inputs, will use latest if not set')
     parser.add_argument('-s', '--sample' , type=str, help='Name of sample')
+    parser.add_argument('-w', '--wp'     , type=str, help='Name of working point', choices=['no_prc', 'prc'])
     parser.add_argument('-l', '--level'  , type=int, help='Logging message', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
@@ -107,14 +113,18 @@ def _parse_args() -> None:
     Data.version= args.version
     Data.sample = args.sample
     Data.level  = args.level
+    Data.wp     = args.wp
 # ---------------------------------
-def _get_cfg(kind : str) -> dict:
+def _get_cfg(kind : str = 'raw') -> dict:
     cfg_path= f'{Data.cfg_dir}/bdt_q2_mass.yaml'
     cfg_path= str(cfg_path)
 
     log.debug(f'Using config: {cfg_path}')
     with open(cfg_path, encoding='utf=8') as ifile:
         cfg = yaml.safe_load(ifile)
+
+    if kind == 'raw':
+        return cfg
 
     cfg = _override_cfg(cfg)
 
@@ -145,7 +155,7 @@ def _get_cuts() -> dict:
 def _override_cfg(cfg : dict) -> dict:
     plt_dir                    = cfg['saving']['plt_dir']
     sample                     = Data.sample.replace('*', 'p')
-    cfg['saving']['plt_dir']   = f'{plt_dir}/{Data.trigger}/{sample}/{Data.q2_bin}'
+    cfg['saving']['plt_dir']   = f'{plt_dir}/{Data.trigger}/{sample}/{Data.q2_bin}/{Data.wp}'
     cfg['selection']['cuts']   = _get_cuts()
 
     for var_name, d_plot in cfg['plots'].items():
