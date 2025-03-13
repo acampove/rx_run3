@@ -5,7 +5,7 @@ plots:
     binning : [-5.0, 8.0, 40]
     title   : x distribution
     styling :
-      linestyle: '-'
+      histtype : step
   y :
     binning : [-5.0, 8.0, 40]
     title   : y distribution
