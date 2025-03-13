@@ -170,7 +170,7 @@ def _override_cfg(cfg : dict) -> dict:
         name           = d_plot['name']
         d_plot['name'] = name
 
-        if var_name == 'B_M':
+        if var_name in ['B_M', 'ecalo_bias_B_M']:
             binning = cfg['mass_binning'][Data.q2_bin]
             cfg['plots'][var_name]['binning'] = binning
 
