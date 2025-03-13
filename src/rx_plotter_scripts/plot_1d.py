@@ -133,35 +133,20 @@ def _get_cfg(kind : str) -> dict:
 
     return cfg
 # ---------------------------------
-def _add_reso_q2(cfg : dict) -> dict:
-    d_mass              = cfg['plots']['B_M']
-    d_mass              = dict(d_mass)
-    d_mass['labels'][0] = r'M${}_{DTF}(B^+)$'
-    d_mass['name'  ]    = f'DTF_mass_{Data.q2_bin}'
-
-    reso_mass = Data.d_reso[Data.q2_bin]
-    cfg['plots'][reso_mass] = d_mass
-
-    return cfg
-# ---------------------------------
 def _get_cuts() -> dict:
-    d_cut = sel.selection(project='RK', analysis='EE', q2bin=Data.q2_bin, process=Data.process)
-    d_cut_use = { name : value for name, value in d_cut.items() if name in Data.l_cuts_to_apply }
+    d_cut = sel.selection(project='RK', analysis='EE', q2bin=Data.q2_bin, process=Data.sample)
 
     log.info('Using cuts:')
-    for name in d_cut_use:
+    for name in d_cut:
         log.info(f'   {name}')
 
-    return d_cut_use
+    return d_cut
 # ---------------------------------
 def _override_cfg(cfg : dict) -> dict:
     plt_dir                    = cfg['saving']['plt_dir']
-    cfg['saving']['plt_dir']   = f'{plt_dir}/{Data.trigger}'
+    sample                     = Data.sample.replace('*', 'p')
+    cfg['saving']['plt_dir']   = f'{plt_dir}/{Data.trigger}/{sample}/{Data.q2_bin}'
     cfg['selection']['cuts']   = _get_cuts()
-    cfg['style']['skip_lines'] = Data.chanel == 'mm'
-
-    if Data.q2_bin in Data.d_reso:
-        cfg = _add_reso_q2(cfg)
 
     for var_name, d_plot in cfg['plots'].items():
         if 'title' not in d_plot:
@@ -172,7 +157,7 @@ def _override_cfg(cfg : dict) -> dict:
         d_plot['title'] = title
 
         name           = d_plot['name']
-        d_plot['name'] = f'{Data.q2_bin}_{name}'
+        d_plot['name'] = name
 
         if var_name == 'B_M':
             binning = cfg['mass_binning'][Data.q2_bin]
@@ -183,7 +168,6 @@ def _override_cfg(cfg : dict) -> dict:
 @gut.timeit
 def _plot(kind : str, d_rdf : dict[str,RDataFrame]) -> None:
     cfg= _get_cfg(kind)
-    cfg['plots']['B_M']['yscale']  = 'log'
 
     if kind == 'last':
         cfg['plots']['B_M']['yscale']  = 'linear'
