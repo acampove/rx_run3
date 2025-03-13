@@ -144,7 +144,8 @@ def _get_cfg(kind : str = 'raw') -> dict:
     return cfg
 # ---------------------------------
 def _get_cuts() -> dict:
-    d_cut = sel.selection(project='RK', analysis='EE', q2bin=Data.q2_bin, process=Data.sample)
+    d_cut        = sel.selection(project='RK', analysis='EE', q2bin=Data.q2_bin, process=Data.sample)
+    d_cut['bdt'] = '(1)'
 
     log.info('Using cuts:')
     for name in d_cut:
