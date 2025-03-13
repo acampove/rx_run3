@@ -8,6 +8,7 @@ selection:
 overlay:
   Run3               : (1) 
   L0($p_T>2500$ MeV) : L1_PT >  2500 
+  nPV                : nPVs < 4 
 mass_binning:
     jpsi : [4500, 6000, 60]
 saving:
