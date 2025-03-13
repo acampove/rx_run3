@@ -2,7 +2,7 @@ general:
   size : [10, 8]
 definitions:
   nbrem : L1_BremMultiplicity + L2_BremMultiplicity
-overide_selection:
+selection:
   no_tail : B_const_mass_M > 5160
   mass    : (1)
 overlay:
@@ -17,15 +17,6 @@ plots:
         labels     : ['$M(B^+)$', 'Normalized']
         title      : ''
         name       : 'bmass_raw'
-        normalized : true
-        styling:
-          histtype : step
-    B_const_mass_M:
-        binning    : [5100, 5500, 30]
-        yscale     : 'linear'
-        labels     : ['$M_{DTF}(B^+)$', 'Normalized']
-        title      : ''
-        name       : 'bmass_dtf'
         normalized : true
         styling:
           histtype : step
