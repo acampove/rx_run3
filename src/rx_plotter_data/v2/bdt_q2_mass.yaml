@@ -26,38 +26,20 @@ saving:
   plt_dir : plots/bdt_q2_mass
 selection : {}
 plots:
-    q2 :
-        binning    : [0, 22000000, 200]
-        yscale     : 'linear'
-        labels     : ['$q^2$', 'Entries']
-        title      : ''
-        name       : 'q2'
-        normalized : true
-        styling:
-          histtype : step
     B_M :
         yscale     : 'linear'
         labels     : ['M$(B^+)$', 'Entries']
         title      : ''
-        name       : 'bmass'
+        name       : 'bmass_raw'
         normalized : true
         styling:
           histtype : step
-    mva_cmb:
-        binning    : [0.8, 1.0, 50]
+    B_const_mass_M :
+        binning    : [5100, 5600, 60]
         yscale     : 'linear'
-        labels     : ['Signal Probability', 'Entries']
-        title      : 'Combinatorial MVA'
-        name       : 'cmb'
-        normalized : true
-        styling:
-          histtype : step
-    mva_prc:
-        binning    : [0.6, 1.0, 50]
-        yscale     : 'linear'
-        labels     : ['Signal Probability', 'Entries']
-        title      : 'PRec MVA'
-        name       : 'prc'
+        labels     : ['M${}_{DTF}(B^+)$', 'Entries']
+        title      : ''
+        name       : 'bmass_dtf'
         normalized : true
         styling:
           histtype : step
