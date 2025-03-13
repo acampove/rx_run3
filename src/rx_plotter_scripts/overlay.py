@@ -1,6 +1,7 @@
 '''
-Script used to plot overlays 
+Script used to plot overlays
 '''
+# pylint: disable=no-name-in-module
 import os
 import glob
 import pprint
@@ -146,7 +147,7 @@ def _get_out_dir() -> str:
         brem_name = f'{Data.brem:03}'
 
     sample  = Data.sample.replace('*', 'p')
-    out_dir = f'plots/{Data.config}/{sample}_{Data.trigger}_{Data.q2_bin}_{brem_name}'
+    out_dir = f'plots/{Data.config}/{sample}/{Data.trigger}/{Data.q2_bin}/{brem_name}'
     if Data.substr is not None:
         out_dir = f'{out_dir}/{Data.substr}'
 
