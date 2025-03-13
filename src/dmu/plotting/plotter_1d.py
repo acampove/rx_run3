@@ -113,7 +113,13 @@ class Plotter1D(Plotter):
             hst          = Hist.new.Reg(bins=bins, start=minx, stop=maxx, name='x').Weight()
             hst.fill(x=arr_val, weight=arr_wgt)
             self._run_plugins(arr_val, arr_wgt, hst, name)
-            hst.plot(label=label, histtype='errorbar', marker='.', linestyle='none')
+
+            if 'styling' in self._d_cfg['plots'][var]:
+                style = self._d_cfg['plots'][var]['styling']
+            else:
+                style = {'label' : label, 'histtype' : 'errorbar', 'marker' : '.', 'linestyle' : 'none'}
+
+            hst.plot(**style)
             l_bc_all    += hst.values().tolist()
 
         max_y = max(l_bc_all)
