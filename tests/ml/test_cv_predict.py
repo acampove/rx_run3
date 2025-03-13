@@ -65,7 +65,7 @@ def test_overlap():
 
     rdf_sig = ut.get_rdf(kind='sig')
     rdf_bkg = ut.get_rdf(kind='bkg')
-    l_model = _get_models(rdf_sig, rdf_bkg)
+    l_model = ut.get_models(rdf_sig, rdf_bkg)
 
     cvp     = CVPredict(models=l_model, rdf=rdf_sig)
     cvp.predict()
@@ -81,7 +81,7 @@ def test_patch():
 
     rdf_sig = ut.get_rdf(kind='sig', add_nans=['x', 'y'])
     rdf_bkg = ut.get_rdf(kind='bkg', repeated=True)
-    l_model = _get_models(rdf_sig, rdf_bkg)
+    l_model = ut.get_models(rdf_sig, rdf_bkg)
 
     log.info('Predicting')
 
@@ -99,7 +99,7 @@ def test_partial_patch():
 
     rdf_sig = ut.get_rdf(kind='sig', add_nans=['x', 'y', 'z'])
     rdf_bkg = ut.get_rdf(kind='bkg', repeated=True)
-    l_model = _get_models(rdf_sig, rdf_bkg)
+    l_model = ut.get_models(rdf_sig, rdf_bkg)
 
     log.info('Predicting')
 
