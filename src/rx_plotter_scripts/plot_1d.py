@@ -1,6 +1,8 @@
 '''
 Script used to plot mass distributions
 '''
+# pylint: disable=logging-fstring-interpolation, no-name-in-module
+
 import os
 import glob
 import argparse
@@ -35,24 +37,19 @@ class Data:
     chanel  : str
     trigger : str
     q2_bin  : str
+    level   : int
+    sample  : str
     version : str
     cfg_dir : str
     process = 'DATA'
 
     l_keep = []
-    l_cuts_to_apply = ['cascade', 'jpsi_misid', 'hop', 'q2']
-    l_col  = ['B_M',
-              'q2',
-              'Jpsi_M',
-              'mva_cmb',
-              'mva_prc',
-              'B_const_mass_M',
-              'B_const_mass_psi2S_M',
-              'swp_jpsi_misid_mass_swp',
-              'swp_cascade_mass_swp',
-              'hop_mass']
 # ---------------------------------
 def _initialize() -> None:
+    LogStore.set_level('dmu:plotting:Plotter'  , 10)
+    LogStore.set_level('dmu:plotting:Plotter1D', 10)
+    LogStore.set_level('rx_selection:plot_1d'  , 10)
+
     if Data.nthreads > 1:
         EnableImplicitMT(Data.nthreads)
 
@@ -65,8 +62,6 @@ def _initialize() -> None:
         cfg_dir = f'{cfg_dir}/{Data.version}'
 
     Data.cfg_dir = cfg_dir
-    log.info(f'Picking configuration from: {Data.cfg_dir}')
-
     l_yaml  = glob.glob(f'{Data.data_dir}/samples/*.yaml')
 
     d_sample= { os.path.basename(path).replace('.yaml', '') : path for path in l_yaml }
@@ -78,8 +73,8 @@ def _initialize() -> None:
 # ---------------------------------
 @gut.timeit
 def _get_rdf() -> RDataFrame:
-    gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger=Data.trigger)
-    rdf = gtr.get_rdf(columns=Data.l_col)
+    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
+    rdf = gtr.get_rdf()
     Data.l_keep.append(rdf)
 
     return rdf
@@ -102,17 +97,22 @@ def _parse_args() -> None:
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
     parser.add_argument('-c', '--chanel' , type=str, help='Channel', choices=['ee', 'mm'], required=True)
     parser.add_argument('-v', '--version', type=str, help='Version of inputs, will use latest if not set')
+    parser.add_argument('-s', '--sample' , type=str, help='Name of sample')
+    parser.add_argument('-l', '--level'  , type=int, help='Logging message', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
     Data.trigger= Data.trigger_mm if args.chanel == 'mm' else Data.trigger_ee
     Data.chanel = args.chanel
     Data.version= args.version
+    Data.sample = args.sample
+    Data.level  = args.level
 # ---------------------------------
 def _get_cfg(kind : str) -> dict:
     cfg_path= f'{Data.cfg_dir}/bdt_q2_mass.yaml'
     cfg_path= str(cfg_path)
 
+    log.debug(f'Using config: {cfg_path}')
     with open(cfg_path, encoding='utf=8') as ifile:
         cfg = yaml.safe_load(ifile)
 
