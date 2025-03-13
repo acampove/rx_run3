@@ -26,6 +26,14 @@ saving:
   plt_dir : plots/bdt_q2_mass
 selection : {}
 plots:
+    ecalo_bias_B_M :
+        yscale     : 'linear'
+        labels     : ['M_{corr}$(B^+)$', 'Entries']
+        title      : ''
+        name       : 'ecalo_bias_bmass_raw'
+        normalized : true
+        styling:
+          histtype : step
     B_M :
         yscale     : 'linear'
         labels     : ['M$(B^+)$', 'Entries']
