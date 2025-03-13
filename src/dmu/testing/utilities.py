@@ -3,16 +3,20 @@ Module containing utility functions needed by unit tests
 '''
 import os
 import math
+import glob
 from typing              import Union
 from dataclasses         import dataclass
 from importlib.resources import files
 
 from ROOT import RDF, TFile, RDataFrame
 
+import joblib
 import pandas as pnd
 import numpy
 import yaml
 
+from dmu.ml.train_mva      import TrainMva
+from dmu.ml.cv_classifier  import CVClassifier
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:testing:utilities')
@@ -22,6 +26,7 @@ class Data:
     '''
     Class storing shared data
     '''
+    out_dir = '/tmp/dmu/tests/ml/cv_predict'
 # -------------------------------
 def _double_data(df_1 : pnd.DataFrame) -> pnd.DataFrame:
     df_2   = df_1.copy()
@@ -126,3 +131,25 @@ def get_file_with_trees(path : str) -> TFile:
         snap.fMode  = 'update'
 
     return TFile(path)
+# -------------------------------
+def get_models(rdf_sig : RDataFrame, rdf_bkg : RDataFrame) -> list[CVClassifier]:
+    '''
+    Will train and return models
+    '''
+
+    cfg                   = get_config('ml/tests/train_mva.yaml')
+    pkl_path              = f'{Data.out_dir}/model.pkl'
+    plt_dir               = f'{Data.out_dir}/cv_predict'
+    cfg['saving']['path'] = pkl_path
+    cfg['plotting']['val_dir'] = plt_dir
+    cfg['plotting']['features']['saving']['plt_dir'] = plt_dir
+
+    obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
+    obj.run()
+
+    pkl_wc     = pkl_path.replace('.pkl', '_*.pkl')
+    l_pkl_path = glob.glob(pkl_wc)
+    l_model    = [ joblib.load(pkl_path) for pkl_path in l_pkl_path ]
+
+    return l_model
+# -------------------------------
