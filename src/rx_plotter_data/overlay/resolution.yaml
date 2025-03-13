@@ -1,14 +1,13 @@
 general:
-  size : [10, 8]
+  size : [12, 10]
 definitions:
   nbrem : L1_BremMultiplicity + L2_BremMultiplicity
 selection:
   no_tail : B_const_mass_M > 5160
   mass    : (1)
 overlay:
-  None    : (1) 
-  L02P0   : L1_PT >  2000 
-  L02P5   : L1_PT >  2500 
+  Run3               : (1) 
+  L0($p_T>2500$ MeV) : L1_PT >  2500 
 mass_binning:
     jpsi : [4500, 6000, 60]
 saving:
@@ -21,8 +20,6 @@ plots:
         title      : ''
         name       : 'bmass_raw'
         normalized : true
-        styling:
-          histtype : step
     ecalo_bias_B_M:
         binning    : [4500, 6000, 30]
         yscale     : 'linear'
@@ -30,7 +27,11 @@ plots:
         title      : ''
         name       : 'bmass_cor'
         normalized : true
-        styling:
-          histtype : step
 style:
   skip_lines : true
+plugin:
+    fwhm:
+        obs    : [4500, 6000]
+        plot   : true        
+        format : FWHM={:.3f} 
+        add_std: True        
