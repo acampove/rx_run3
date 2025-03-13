@@ -1,7 +1,7 @@
 '''
 Script used to plot overlays
 '''
-# pylint: disable=no-name-in-module
+# pylint: disable=no-name-in-module, logging-fstring-interpolation
 import os
 import glob
 import pprint
@@ -30,8 +30,9 @@ class Data:
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
     data_dir   = os.environ['DATADIR']
+    l_kind     = ['ecal_xy', 'brem', 'block_no_tail', 'npv', 'resolution']
 
-    mplhep.style.use('LHCb1')
+    mplhep.style.use('LHCb2')
 
     chanel  : str
     substr  : str
@@ -87,8 +88,8 @@ def _get_rdf() -> RDataFrame:
     analysis = 'EE' if Data.trigger == Data.trigger_ee else 'MM'
     d_sel = sel.selection(project='RK', analysis=analysis, q2bin=Data.q2_bin, process=Data.sample)
 
-    if 'overide_selection' in cfg:
-        d_cut = cfg['overide_selection']
+    if 'selection' in cfg:
+        d_cut = cfg['selection']
         d_sel.update(d_cut)
 
     for cut_name, cut_value in d_sel.items():
@@ -117,7 +118,7 @@ def _parse_args() -> None:
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True, choices=[Data.trigger_mm, Data.trigger_ee])
-    parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True, choices=['ecal_xy', 'brem', 'block_no_tail', 'npv'])
+    parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True, choices=Data.l_kind)
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category', choices=[0, 1, 2])
     args = parser.parse_args()
