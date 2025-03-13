@@ -6,9 +6,8 @@ selection:
   no_tail : B_const_mass_M > 5160
   mass    : (1)
 overlay:
-  Run3               : (1) 
-  L0($p_T>2500$ MeV) : L1_PT >  2500 
-  nPV                : nPVs < 4 
+  Run3            : (1) 
+  Emulate Run 1&2 : L1_PT >  2500 && nPVs < 4 
 mass_binning:
     jpsi : [4500, 6000, 60]
 saving:
@@ -34,5 +33,5 @@ plugin:
     fwhm:
         obs    : [4500, 6000]
         plot   : true        
-        format : FWHM={:.3f} 
-        add_std: True        
+        format : FWHM={:.0f} 
+        add_std: True
