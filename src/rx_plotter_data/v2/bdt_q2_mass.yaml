@@ -3,9 +3,9 @@ general:
 wp:
   no_prc:
     cmb :
-      - 0.3
       - 0.5
       - 0.7
+      - 0.8
       - 0.9
     prc :
       - 0.0
