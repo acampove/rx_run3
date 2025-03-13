@@ -1,7 +1,7 @@
 '''
 Script used to plot mass distributions
 '''
-# pylint: disable=logging-fstring-interpolation, no-name-in-module
+# pylint: disable=logging-fstring-interpolation, no-name-in-module, line-too-long
 
 import os
 import glob
