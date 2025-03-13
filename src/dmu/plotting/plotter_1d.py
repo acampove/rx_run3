@@ -119,6 +119,9 @@ class Plotter1D(Plotter):
             else:
                 style = {'label' : label, 'histtype' : 'errorbar', 'marker' : '.', 'linestyle' : 'none'}
 
+            if 'label' not in style:
+                style['label'] = label
+
             hst.plot(**style)
             l_bc_all    += hst.values().tolist()
 

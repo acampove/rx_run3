@@ -690,6 +690,7 @@ plots:
         # Can add styling to specific plots, this should be the argument of 
         # hist.plot(...)
         styling :          
+            label : x
             linestyle: '-'
     y :
         binning    : [-5.0, 8.0, 40]
