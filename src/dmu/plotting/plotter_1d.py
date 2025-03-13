@@ -1,7 +1,7 @@
 '''
 Module containing plotter class
 '''
-
+import copy
 from hist import Hist
 
 import numpy
@@ -116,6 +116,7 @@ class Plotter1D(Plotter):
 
             if 'styling' in self._d_cfg['plots'][var]:
                 style = self._d_cfg['plots'][var]['styling']
+                style = copy.deepcopy(style)
             else:
                 style = {'label' : label, 'histtype' : 'errorbar', 'marker' : '.', 'linestyle' : 'none'}
 
