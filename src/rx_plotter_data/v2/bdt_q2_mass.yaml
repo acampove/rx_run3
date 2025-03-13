@@ -1,5 +1,22 @@
 general:
   size : [12, 8]
+wp:
+  no_prc:
+    cmb :
+      - 0.3
+      - 0.5
+      - 0.7
+      - 0.9
+    prc :
+      - 0.0
+  prc:
+    cmb :
+      - 0.9
+    prc :
+      - 0.6
+      - 0.7
+      - 0.8
+      - 0.85
 mass_binning:
     low     : [4500, 6200, 50]
     central : [4500, 6200, 50]
