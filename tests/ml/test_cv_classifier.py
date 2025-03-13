@@ -15,7 +15,6 @@ from dmu.ml.cv_classifier  import CVSameData
 
 import dmu.testing.utilities as ut
 
-
 log = LogStore.add_logger('dmu.test.ml.test_cv_classifier')
 # -------------------------------------------------
 class Data:
@@ -51,6 +50,10 @@ def _get_train_input():
     arr_lab = numpy.array(l_lab)
 
     return df_ft, arr_lab
+# -------------------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('dmu:ml:CVClassifier', 10)
 # -------------------------------------------------
 def test_save_load():
     '''
@@ -146,16 +149,3 @@ def test_save_config():
 
     assert cfg_inp == cfg_out
 # -------------------------------------------------
-def main():
-    '''
-    Tests start here
-    '''
-    LogStore.set_level('dmu:ml:CVClassifier', 10)
-
-    test_save_load()
-    test_properties()
-    test_fit()
-    test_predict()
-# -------------------------------------------------
-if __name__ == '__main__':
-    main()
