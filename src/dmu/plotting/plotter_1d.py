@@ -204,6 +204,7 @@ class Plotter1D(Plotter):
 
         fig_size = self._get_fig_size()
         for var in self._d_cfg['plots']:
+            self._title = ''
             plt.figure(var, figsize=fig_size)
             max_y = self._plot_var(var)
             self._style_plot(var, max_y)
