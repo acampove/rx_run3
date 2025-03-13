@@ -172,7 +172,7 @@ class ModelFactory:
         mu  = self._get_parameter('mu_suj', suffix, 5300, 4000, 6000)
         sg  = self._get_parameter('sg_suj', suffix,   10,    2, 5000)
         gm  = self._get_parameter('gm_suj', suffix,    1,  -10,   10)
-        dl  = self._get_parameter('dl_suj', suffix,    1,  0.1,   10)
+        dl  = self._get_parameter('dl_suj', suffix,    1,  0.1,   40)
 
         pdf = zfit.pdf.JohnsonSU(mu, sg, gm, dl, self._obs, name=f'suj{suffix}')
 
