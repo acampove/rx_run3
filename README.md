@@ -687,6 +687,10 @@ plots:
         labels     : ['x', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
         title      : 'some title can be added for different variable plots'
         name       : 'plot_of_x' # This will ensure that one gets plot_of_x.png as a result, if missing x.png would be saved
+        # Can add styling to specific plots, this should be the argument of 
+        # hist.plot(...)
+        styling :          
+            linestyle: '-'
     y :
         binning    : [-5.0, 8.0, 40]
         yscale     : 'linear'
