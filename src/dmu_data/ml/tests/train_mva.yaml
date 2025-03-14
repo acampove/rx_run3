@@ -1,10 +1,12 @@
 dataset:
+  define :
+    r : z + x
   nan :
     x : -3
     y : -3 
 training :
     nfold    : 3
-    features : [x, y, z]
+    features : [x, y, r]
     rdm_stat : 1
     hyper    :
       loss              : log_loss

@@ -90,7 +90,21 @@ class TrainMva:
 
         return df
     # ---------------------------------------------
+    def _preprocess_rdf(self, rdf : RDataFrame) -> RDataFrame:
+        if 'define' not in self._cfg['dataset']:
+            log.debug('No definitions found')
+            return rdf
+
+        log.debug('Definitions found')
+        d_def = self._cfg['dataset']['define']
+        for name, expr in d_def.items():
+            log.debug(f'{name:<20}{expr}')
+            rdf = rdf.Define(name, expr)
+
+        return rdf
+    # ---------------------------------------------
     def _get_sample_inputs(self, rdf : RDataFrame, label : int) -> tuple[pnd.DataFrame, list[int]]:
+        rdf  = self._preprocess_rdf(rdf)
         d_ft = rdf.AsNumpy(self._l_ft_name)
         df   = pnd.DataFrame(d_ft)
         df   = self._pre_process_nans(df)
