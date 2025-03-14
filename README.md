@@ -532,6 +532,32 @@ When evaluating the model with real data, problems might occur, we deal with the
     - For whatever features that are still NaN, they will be _patched_  with zeros when evaluated. However, the returned probabilities will be
 saved as -1. I.e. entries with NaNs will have probabilities of -1.
 
+## Diagnostics
+
+To run diagnostics on the trained model do:
+
+```python
+from dmu.ml.cv_diagnostics import CVDiagnostics
+
+# Where l_model is the list of models and cfg is a dictionary with the config
+cvd = CVDiagnostics(models=l_model, rdf=rdf, cfg=cfg)
+cvd.run()
+```
+
+the configuration can be loaded from a YAML file and would look like:
+
+```yaml
+# Directory where plots will go
+output      : /tmp/tests/dmu/ml/cv_diagnostics
+correlations:
+  # Variables with respect to which the correlations with the features will be measured
+  target : z
+  methods:
+    - pearson
+  figure:
+    size : [10, 8]
+```
+
 # Pandas dataframes
 
 ## Utilities
