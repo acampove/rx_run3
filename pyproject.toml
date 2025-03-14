@@ -11,7 +11,8 @@ dependencies= [
 'joblib',
 'scikit-learn',
 'toml',
-'numpy',
+'zfit',
+'numpy==1.26.4', # Requirement from TF, which is required by zfit
 'matplotlib',
 'mplhep',
 'hist[plot]',
