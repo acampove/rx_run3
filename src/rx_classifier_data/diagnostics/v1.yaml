@@ -12,6 +12,8 @@ diagnostics:
   correlations:
     target : B_M 
     methods:
-      - pearson
+      - Pearson
+      - Kendall-$\tau$ 
     figure:
-      size : [10, 8]
+      size  : [20, 15]
+      rotate: 45 
