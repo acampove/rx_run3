@@ -49,3 +49,20 @@ def test_score_from_rdf():
     cvd     = CVDiagnostics(models=l_model, rdf=rdf, cfg=cfg)
     cvd.run()
 # -------------------------------
+# -------------------------------
+def test_multiple_methods():
+    '''
+    Measures correlations between target and features + score
+    using multiple methods
+    '''
+
+    rdf_sig = ut.get_rdf(kind='sig')
+    rdf_bkg = ut.get_rdf(kind='bkg')
+
+    l_model = ut.get_models(rdf_sig, rdf_bkg)
+    rdf     = ut.get_rdf(kind='sig')
+    cfg     = ut.get_config('ml/tests/diagnostics_multiple_methods.yaml')
+
+    cvd     = CVDiagnostics(models=l_model, rdf=rdf, cfg=cfg)
+    cvd.run()
+# -------------------------------
