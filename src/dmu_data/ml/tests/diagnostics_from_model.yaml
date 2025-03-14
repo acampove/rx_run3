@@ -1,7 +1,8 @@
 output      : /tmp/tests/dmu/ml/cv_diagnostics/from_model
 correlations:
   # Variables with respect to which the correlations with the features will be measured
-  target    : z
+  target    : 
+    name    : z
   methods:
     - Pearson
   figure:
