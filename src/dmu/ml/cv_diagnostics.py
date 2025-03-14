@@ -104,7 +104,9 @@ class CVDiagnostics:
         plot_path = f'{out_dir}/{method}.png'
         log.info(f'Saving to: {plot_path}')
 
-        title = f'W.R.T. {self._target}'
+        title = None
+        if 'title' in self._cfg['correlations']['figure']:
+            title = self._cfg['correlations']['figure']['title']
 
         plt.ylim(-1, +1)
         plt.title(title)
