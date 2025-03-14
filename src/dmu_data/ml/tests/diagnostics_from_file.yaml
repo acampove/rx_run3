@@ -8,4 +8,5 @@ correlations:
   methods:
     - pearson
   figure:
+    title: Scores from file 
     size : [10, 8]
