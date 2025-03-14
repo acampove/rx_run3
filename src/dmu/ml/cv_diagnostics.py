@@ -100,6 +100,9 @@ class CVDiagnostics:
         figsize = self._cfg['correlations']['figure']['size']
         ax      = df.plot(label=method, figsize=figsize, ax=ax)
 
+        # Needed to show all labels on x axis
+        plt.xticks(ticks=range(len(df)), labels=df.index)
+
         return ax
     # -------------------------
     def _save_plot(self):
