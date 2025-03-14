@@ -16,19 +16,27 @@ log = LogStore.add_logger('dmu:ml:cv_diagnostics')
 class CVDiagnostics:
     '''
     Class meant to rundiagnostics on classifier
+
+    Correlations
+    ------------------
+    Will calculate correlations between features + external variables introduced in config AND the signal probability
     '''
     # -------------------------
     def __init__(self, models : list[CVClassifier], rdf : RDataFrame, cfg : dict):
         self._l_model = models
-        self._d_var   = self._get_variables()
-        self._rdf     = rdf
         self._cfg     = cfg
+        self._rdf     = rdf
+        self._l_var   = self._get_variables()
     # -------------------------
     def _get_variables(self) -> list[str]:
         cfg    = self._l_model[0].cfg
         l_feat = cfg['training']['features']
+        l_var  = l_feat + self._cfg['correlations']['variables']
+        s_var  = set(l_var)
+        l_var  = list(s_var)
+        l_var  = sorted(l_var)
 
-        return l_feat
+        return l_var
     # -------------------------
     def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
         cfg    = self._l_model[0].cfg
@@ -40,11 +48,10 @@ class CVDiagnostics:
     # -------------------------
     def _get_arrays(self) -> dict[str, NPA]:
         rdf   = self._add_columns(self._rdf)
-        l_var = list(self._d_var)
         l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
 
         missing=False
-        for var in l_var:
+        for var in self._l_var:
             if var not in l_col:
                 log.error(f'{"Missing":<20}{var}')
                 missing=True
@@ -52,7 +59,7 @@ class CVDiagnostics:
         if missing:
             raise ValueError('Columns missing')
 
-        d_var = rdf.AsNumpy(l_var)
+        d_var = rdf.AsNumpy(self._l_var)
 
         return d_var
     # -------------------------
