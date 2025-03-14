@@ -10,11 +10,12 @@ from dmu.ml.cv_diagnostics import CVDiagnostics
 
 import dmu.testing.utilities as ut
 
-log = LogStore.add_logger('dmu:ml:tests:test_cv_diagnostics')
+log = LogStore.add_logger('dmu:ml:test_cv_diagnostics')
 # -------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     plt.style.use(mplhep.style.LHCb2)
+    LogStore.set_level('dmu:ml:cv_diagnostics', 10)
 # -------------------------------
 def test_score_from_model():
     '''
