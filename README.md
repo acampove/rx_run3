@@ -548,16 +548,30 @@ the configuration can be loaded from a YAML file and would look like:
 
 ```yaml
 # Directory where plots will go
-output         : /tmp/tests/dmu/ml/cv_diagnostics
-# If this entry exists, the model will not be evaluated to get the score
-# but the score will be taken from branch "mva" ina the dataframe
-score_from_rdf : mva
+output         : /tmp/tests/dmu/ml/cv_diagnostics/overlay
+  # Optional, will assume that the target is already in the input dataframe
+  # and will use it, instead of evaluating models
+score_from_rdf : mva 
 correlations:
   # Variables with respect to which the correlations with the features will be measured
-  target : z
+  target :
+    name : mass
+    overlay :  
+      general:
+        size : [20, 10]
+      saving:
+        plt_dir : /tmp/tests/dmu/ml/cv_diagnostics/from_rdf
+      plots:
+        z :
+          binning    : [1000, 4000, 30] 
+          yscale     : 'linear'
+          labels     : ['mass', 'Entries']
+          normalized : true
   methods:
-    - pearson
+    - Pearson
+    - Kendall-$\tau$
   figure:
+    title: Scores from file 
     size : [10, 8]
 ```
 
