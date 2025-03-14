@@ -22,7 +22,7 @@ class CVDiagnostics:
 
     Correlations
     ------------------
-    Will calculate correlations between features + external variables introduced in config AND the signal probability
+    Will calculate correlations between features + signal probability and some external target variable specified in the config
     '''
     # -------------------------
     def __init__(self, models : list[CVClassifier], rdf : RDataFrame, cfg : dict):
