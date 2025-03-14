@@ -3,12 +3,12 @@ Script with code used to make diagnostics plots for classifiers
 '''
 import os
 import glob
-import joblib
 import argparse
 from importlib.resources   import files
 from dataclasses           import dataclass
 
 import yaml
+import joblib
 from ROOT                  import RDataFrame
 from rx_data.rdf_getter    import RDFGetter
 from dmu.ml.cv_diagnostics import CVDiagnostics
@@ -41,6 +41,7 @@ def _get_args():
     parser = argparse.ArgumentParser(description='Script used to run diagnostic checks for classifier models')
     parser.add_argument('-s', '--sample'     , type=str, help='Sample name, meant to exist inside input_dir', required=True)
     parser.add_argument('-t', '--trigger'    , type=str, help='HLT trigger'                                 , required=True)
+    parser.add_argument('-q', '--q2bin'      , type=str, help='q2 bin'                                      , required=True, choices=['low', 'central', 'high'])
     parser.add_argument('-c', '--conf'       , type=str, help='Version of config file'                      , required=True)
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
