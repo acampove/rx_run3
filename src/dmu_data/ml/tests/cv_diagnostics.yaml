@@ -1,3 +1,6 @@
 correlations:
-  method:
+  # Variables with respect to which the correlations with the features will be measured
+  variables:
+    - x
+  methods:
     - pearson
