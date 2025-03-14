@@ -88,6 +88,24 @@ def _path_to_name(path : str) -> str:
 
     return name
 # -------------------------------
+def _apply_selection(rdf : RDataFrame) -> RDataFrame:
+    if   'EE'   in Data.trigger:
+        analysis = 'EE'
+    elif 'MuMu' in Data.trigger:
+        analysis = 'MM'
+    else:
+        raise ValueError(f'Cannot determine analysis from: {Data.trigger}')
+
+    d_sel        = sel.selection(project='RK', analysis=analysis, q2bin=Data.q2bin, process=Data.sample)
+    d_sel['bdt'] = '(1)'
+    for name, cut in d_sel.items():
+        rdf = rdf.Filter(cut, name)
+
+    rep = rdf.Report()
+    rep.Print()
+
+    return rdf
+# -------------------------------
 def _get_rdf() -> RDataFrame:
     l_yaml   = Data.cfg['samples']
     l_sample = { _path_to_name(yaml_path) : f'{Data.data_dir}/{yaml_path}' for yaml_path in l_yaml }
@@ -95,6 +113,7 @@ def _get_rdf() -> RDataFrame:
     RDFGetter.samples = l_sample
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
     rdf = gtr.get_rdf()
+    rdf = _apply_selection(rdf)
 
     if Data.max_entries > 0:
         rdf = rdf.Range(Data.max_entries)
