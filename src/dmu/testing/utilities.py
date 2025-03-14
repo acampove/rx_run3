@@ -44,7 +44,7 @@ def _add_nans(df : pnd.DataFrame, columns : list[str]) -> pnd.DataFrame:
     else:
         l_col_index = [ l_col.index(column) for column in columns ]
 
-    log.debug('Replacing randomly with {size} NaNs')
+    log.debug(f'Replacing randomly with {size} NaNs')
     for _ in range(size):
         irow = numpy.random.randint(0, df.shape[0])      # Random row index
         icol = numpy.random.choice(l_col_index)      # Random column index
@@ -56,7 +56,7 @@ def _add_nans(df : pnd.DataFrame, columns : list[str]) -> pnd.DataFrame:
 def get_rdf(kind : Union[str,None] = None,
             repeated : bool        = False,
             nentries : int         = 3_000,
-            add_nans : list[str]   = None):
+            columns_with_nans : list[str] = None):
     '''
     Return ROOT dataframe with toy data
     '''
@@ -81,8 +81,8 @@ def get_rdf(kind : Union[str,None] = None,
     if repeated:
         df = _double_data(df)
 
-    if add_nans:
-        df = _add_nans(df, columns=add_nans)
+    if columns_with_nans is not None:
+        df = _add_nans(df, columns=columns_with_nans)
 
     rdf = RDF.FromPandas(df)
 

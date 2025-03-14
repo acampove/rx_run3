@@ -41,7 +41,7 @@ def test_nans():
     '''
     Tests training when inputs have NaNs
     '''
-    rdf_sig = ut.get_rdf(kind='sig', add_nans=True)
+    rdf_sig = ut.get_rdf(kind='sig', columns_with_nans=['x', 'y'])
     rdf_bkg = ut.get_rdf(kind='bkg')
     cfg     = ut.get_config('ml/tests/train_mva.yaml')
 
