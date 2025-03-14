@@ -113,11 +113,15 @@ class CVDiagnostics:
         if 'title' in self._cfg['correlations']['figure']:
             title = self._cfg['correlations']['figure']['title']
 
+        rotation=30
+        if 'rotate' in self._cfg['correlations']['figure']:
+            rotation = self._cfg['correlations']['figure']['rotate']
+
         plt.ylim(-1, +1)
         plt.title(title)
         plt.ylabel('Correlation')
         plt.grid()
-        plt.xticks(rotation=30)
+        plt.xticks(rotation=rotation)
         plt.tight_layout()
         plt.savefig(plot_path)
         plt.close()
