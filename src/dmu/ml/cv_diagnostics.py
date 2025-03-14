@@ -46,6 +46,19 @@ class CVDiagnostics:
 
         return rdf
     # -------------------------
+    def _get_scores(self) -> NPA:
+        if 'score_from_rdf' not in self._cfg:
+            log.debug('Using score from model')
+            prd = CVPredict(models=self._l_model, rdf = self._rdf)
+
+            return prd.predict()
+
+        name = self._cfg['score_from_rdf']
+        log.debug(f'Picking up score from dataframe, column: {name}')
+        arr_score = self._rdf.AsNumpy([name])[name]
+
+        return arr_score
+    # -------------------------
     def _get_arrays(self) -> dict[str, NPA]:
         rdf   = self._add_columns(self._rdf)
         l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
@@ -61,8 +74,7 @@ class CVDiagnostics:
             raise ValueError('Columns missing')
 
         d_var          = rdf.AsNumpy(l_var)
-        prd            = CVPredict(models=self._l_model, rdf = self._rdf)
-        d_var['score'] = prd.predict()
+        d_var['score'] = self._get_scores() 
 
         return d_var
     # -------------------------
