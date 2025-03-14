@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 
 from ROOT                  import RDataFrame, EnableImplicitMT
 from rx_data.rdf_getter    import RDFGetter
+from rx_selection          import selection as sel
 from dmu.ml.cv_diagnostics import CVDiagnostics
 from dmu.ml.cv_classifier  import CVClassifier
 from dmu.logging.log_store import LogStore
@@ -37,7 +38,6 @@ class Data:
 
     mva_dir     : str
     data_dir    : str
-
 #---------------------------------
 def _get_args():
     '''
@@ -46,7 +46,7 @@ def _get_args():
     parser = argparse.ArgumentParser(description='Script used to run diagnostic checks for classifier models')
     parser.add_argument('-s', '--sample'     , type=str, help='Sample name, meant to exist inside input_dir', required=True)
     parser.add_argument('-t', '--trigger'    , type=str, help='HLT trigger'                                 , required=True)
-    parser.add_argument('-q', '--q2bin'      , type=str, help='q2 bin'                                      , required=True, choices=['low', 'central', 'high'])
+    parser.add_argument('-q', '--q2bin'      , type=str, help='q2 bin'                                      , required=True, choices=['low', 'central', 'jpsi', 'high'])
     parser.add_argument('-c', '--conf'       , type=str, help='Version of config file'                      , required=True)
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
@@ -106,7 +106,12 @@ def _get_rdf() -> RDataFrame:
 # -------------------------------
 def _get_model() -> list[CVClassifier]:
     sub_dir = Data.cfg['sub_dir']
-    path_wc = f'{Data.mva_dir}/{sub_dir}/{Data.q2bin}/*.pkl'
+    if Data.q2bin == 'jpsi':
+        q2bin = 'central'
+    else:
+        q2bin = Data.q2bin
+
+    path_wc = f'{Data.mva_dir}/{sub_dir}/{q2bin}/*.pkl'
     l_path  = glob.glob(path_wc)
 
     if len(l_path) == 0:
