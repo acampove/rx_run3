@@ -1,0 +1,17 @@
+sub_dir: run3/v6/RK/prc/central
+samples:
+  - samples/cascade.yaml
+  - samples/hop.yaml
+  - samples/ecalo_bias.yaml
+  - samples/jpsi_misid.yaml
+  - samples/main.yaml
+  - samples/mva.yaml
+diagnostics:
+  output         : plots/prec_correlations 
+  score_from_rdf : mva_prc
+  correlations:
+    target : B_M 
+    methods:
+      - pearson
+    figure:
+      size : [10, 8]
