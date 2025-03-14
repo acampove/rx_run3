@@ -4,16 +4,18 @@ Module containing CVDiagnostics class
 import os
 
 import numpy
-import pandas            as pnd
+import matplotlib
 import matplotlib.pyplot as plt
+import pandas            as pnd
 
+from scipy.stats           import kendalltau
 from ROOT                  import RDataFrame
 from dmu.ml.cv_classifier  import CVClassifier
 from dmu.ml.cv_predict     import CVPredict
 from dmu.logging.log_store import LogStore
 
-NPA=numpy.ndarray
-
+NPA = numpy.ndarray
+Axis= matplotlib.axes._axes.Axes
 log = LogStore.add_logger('dmu:ml:cv_diagnostics')
 # -------------------------
 class CVDiagnostics:
@@ -78,7 +80,7 @@ class CVDiagnostics:
 
         return d_var
     # -------------------------
-    def _run_correlations(self, method : str):
+    def _run_correlations(self, method : str, ax : Axis) -> Axis:
         d_arr      = self._get_arrays()
         arr_target = d_arr[self._target]
 
@@ -89,19 +91,22 @@ class CVDiagnostics:
 
             d_corr[name] = self._calculate_correlations(var=arr_val, target=arr_target, method=method)
 
-        self._plot_correlations(d_corr, method)
+        ax = self._plot_correlations(d_corr=d_corr, method=method, ax=ax)
+
+        return ax
     # -------------------------
-    def _plot_correlations(self, d_corr : dict[str,float], method : str) -> None:
-        df = pnd.DataFrame.from_dict(d_corr, orient="index", columns=['Correlation'])
-        df = df.sort_values(by='Correlation')
+    def _plot_correlations(self, d_corr : dict[str,float], method : str, ax : Axis) -> Axis:
+        df      = pnd.DataFrame.from_dict(d_corr, orient="index", columns=[method])
+        figsize = self._cfg['correlations']['figure']['size']
+        ax      = df.plot(label=method, figsize=figsize, ax=ax)
 
-        figsize     = self._cfg['correlations']['figure']['size']
-        df.plot(kind='bar', legend=False, figsize=figsize)
+        return ax
+    # -------------------------
+    def _save_plot(self):
+        plot_dir = self._cfg['output']
+        os.makedirs(plot_dir, exist_ok=True)
 
-        out_dir = self._cfg['output'] + '/correlations'
-        os.makedirs(out_dir, exist_ok=True)
-
-        plot_path = f'{out_dir}/{method}.png'
+        plot_path = f'{plot_dir}/correlations.png'
         log.info(f'Saving to: {plot_path}')
 
         title = None
@@ -129,11 +134,17 @@ class CVDiagnostics:
         return var, tgt
     # -------------------------
     def _calculate_correlations(self, var : NPA, target : NPA, method : str) -> float:
-        if method == 'pearson':
-            var, target = self._remove_nans(var, target)
+        var, target = self._remove_nans(var, target)
+
+        if method == 'Pearson':
             mat         = numpy.corrcoef(var, target)
 
             return mat[0,1]
+
+        if method == r'Kendall-$\tau$':
+            tau, _ = kendalltau(var, target)
+
+            return tau
 
         raise NotImplementedError(f'Correlation coefficient {method} not implemented')
     # -------------------------
@@ -142,6 +153,9 @@ class CVDiagnostics:
         Runs diagnostics
         '''
         if 'correlations' in self._cfg:
+            ax = None
             for method in self._cfg['correlations']['methods']:
-                self._run_correlations(method=method)
+                ax = self._run_correlations(method=method, ax=ax)
+
+            self._save_plot()
 # -------------------------
