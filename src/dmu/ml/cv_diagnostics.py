@@ -8,11 +8,12 @@ import matplotlib
 import matplotlib.pyplot as plt
 import pandas            as pnd
 
-from scipy.stats           import kendalltau
-from ROOT                  import RDataFrame
-from dmu.ml.cv_classifier  import CVClassifier
-from dmu.ml.cv_predict     import CVPredict
-from dmu.logging.log_store import LogStore
+from scipy.stats             import kendalltau
+from ROOT                    import RDataFrame, RDF
+from dmu.ml.cv_classifier    import CVClassifier
+from dmu.ml.cv_predict       import CVPredict
+from dmu.logging.log_store   import LogStore
+from dmu.plotting.plotter_1d import Plotter1D as Plotter
 
 NPA = numpy.ndarray
 Axis= matplotlib.axes._axes.Axes
@@ -31,7 +32,7 @@ class CVDiagnostics:
         self._l_model = models
         self._cfg     = cfg
         self._rdf     = rdf
-        self._target  = cfg['correlations']['target']
+        self._target  = cfg['correlations']['target']['name']
         self._l_feat  = self._get_features()
     # -------------------------
     def _get_features(self) -> list[str]:
@@ -76,7 +77,7 @@ class CVDiagnostics:
             raise ValueError('Columns missing')
 
         d_var          = rdf.AsNumpy(l_var)
-        d_var['score'] = self._get_scores() 
+        d_var['score'] = self._get_scores()
 
         return d_var
     # -------------------------
@@ -155,6 +156,26 @@ class CVDiagnostics:
 
         raise NotImplementedError(f'Correlation coefficient {method} not implemented')
     # -------------------------
+    def _plot_cutflow(self) -> None:
+        if 'overlay' not in self._cfg['correlations']['target']:
+            log.debug('Not plotting cutflow of target distribution')
+            return
+
+        arr_score = self._get_scores()
+        arr_target= self._rdf.AsNumpy([self._target])[self._target]
+        arr_wp    = numpy.percentile(arr_score, [0, 20, 40, 60, 80])
+        rdf       = RDF.FromNumpy({'Score' : arr_score, self._target : arr_target})
+
+        d_rdf = {}
+        for wp in arr_wp:
+            cut        = f'Score > {wp:.3}'
+            d_rdf[cut] = rdf.Filter(cut)
+
+        cfg_target = self._cfg['correlations']['target']['overlay']
+
+        ptr=Plotter(d_rdf=d_rdf, cfg=cfg_target)
+        ptr.run()
+    # -------------------------
     def run(self) -> None:
         '''
         Runs diagnostics
@@ -165,4 +186,6 @@ class CVDiagnostics:
                 ax = self._run_correlations(method=method, ax=ax)
 
             self._save_plot()
+
+            self._plot_cutflow()
 # -------------------------
