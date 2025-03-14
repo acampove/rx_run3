@@ -1,0 +1,4 @@
+correlations:
+  - a
+method:
+  - pearson
