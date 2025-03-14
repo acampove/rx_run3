@@ -6,7 +6,7 @@ correlations:
   # Variables with respect to which the correlations with the features will be measured
   target    : z
   methods:
-    - pearson
+    - Pearson
   figure:
     title: Scores from file 
     size : [10, 8]
