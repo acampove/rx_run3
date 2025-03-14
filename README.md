@@ -548,7 +548,10 @@ the configuration can be loaded from a YAML file and would look like:
 
 ```yaml
 # Directory where plots will go
-output      : /tmp/tests/dmu/ml/cv_diagnostics
+output         : /tmp/tests/dmu/ml/cv_diagnostics
+# If this entry exists, the model will not be evaluated to get the score
+# but the score will be taken from branch "mva" ina the dataframe
+score_from_rdf : mva
 correlations:
   # Variables with respect to which the correlations with the features will be measured
   target : z
