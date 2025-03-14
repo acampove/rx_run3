@@ -9,7 +9,10 @@ from dataclasses           import dataclass
 
 import yaml
 import joblib
-from ROOT                  import RDataFrame
+import mplhep
+import matplotlib.pyplot as plt
+
+from ROOT                  import RDataFrame, EnableImplicitMT
 from rx_data.rdf_getter    import RDFGetter
 from dmu.ml.cv_diagnostics import CVDiagnostics
 from dmu.ml.cv_classifier  import CVClassifier
@@ -25,6 +28,7 @@ class Data:
     max_path    = 700
     sample      : str
     trigger     : str
+    q2bin       : str
     conf        : str
     cfg         : dict
     max_entries : int
@@ -33,6 +37,7 @@ class Data:
 
     mva_dir     : str
     data_dir    : str
+
 #---------------------------------
 def _get_args():
     '''
@@ -49,6 +54,7 @@ def _get_args():
 
     Data.sample      = args.sample
     Data.trigger     = args.trigger
+    Data.q2bin       = args.q2bin
     Data.conf        = args.conf
     Data.max_entries = args.max_entries
     Data.log_level   = args.log_level
@@ -63,6 +69,12 @@ def _initialize() -> None:
     LogStore.set_level('dmu:ml:cv_diagnostics'            , Data.log_level)
 
     _load_config()
+    EnableImplicitMT(10)
+    plt.style.use(mplhep.style.LHCb2)
+
+    out_dir = Data.cfg['diagnostics']['output']
+    Data.cfg['diagnostics']['output'] = f'{out_dir}/{Data.q2bin}/{Data.sample}_{Data.trigger}'
+    Data.cfg['diagnostics']['correlations']['figure']['title'] = f'{Data.sample};{Data.q2bin}'
 # -------------------------------
 def _load_config() -> None:
     conf_path = files('rx_classifier_data').joinpath(f'diagnostics/{Data.conf}.yaml')
@@ -94,7 +106,7 @@ def _get_rdf() -> RDataFrame:
 # -------------------------------
 def _get_model() -> list[CVClassifier]:
     sub_dir = Data.cfg['sub_dir']
-    path_wc = f'{Data.mva_dir}/{sub_dir}/*.pkl'
+    path_wc = f'{Data.mva_dir}/{sub_dir}/{Data.q2bin}/*.pkl'
     l_path  = glob.glob(path_wc)
 
     if len(l_path) == 0:
