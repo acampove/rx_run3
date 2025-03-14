@@ -1,4 +1,4 @@
-sub_dir: run3/v6/RK/prc/central
+sub_dir: run3/v6/RK/prc
 samples:
   - samples/cascade.yaml
   - samples/hop.yaml
