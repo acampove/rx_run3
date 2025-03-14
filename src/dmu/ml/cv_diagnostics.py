@@ -115,9 +115,22 @@ class CVDiagnostics:
         plt.savefig(plot_path)
         plt.close()
     # -------------------------
+    def _remove_nans(self, var : NPA, tgt : NPA) -> tuple[NPA,NPA]:
+        arr_nan_var = numpy.isnan(var)
+        arr_nan_tgt = numpy.isnan(tgt)
+        arr_is_nan  = numpy.logical_or(arr_nan_var, arr_nan_tgt)
+        arr_not_nan = numpy.logical_not(arr_is_nan)
+
+        var         = var[arr_not_nan]
+        tgt         = tgt[arr_not_nan]
+
+        return var, tgt
+    # -------------------------
     def _calculate_correlations(self, var : NPA, target : NPA, method : str) -> float:
         if method == 'pearson':
-            mat = numpy.corrcoef(var, target)
+            var, target = self._remove_nans(var, target)
+            mat         = numpy.corrcoef(var, target)
+
             return mat[0,1]
 
         raise NotImplementedError(f'Correlation coefficient {method} not implemented')
