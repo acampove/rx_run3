@@ -5,4 +5,5 @@ correlations:
   methods:
     - Pearson
   figure:
-    size : [10, 8]
+    size  : [10, 8]
+    rotate: 90
