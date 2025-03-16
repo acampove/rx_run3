@@ -10,7 +10,19 @@ diagnostics:
   output         : plots/prec_correlations 
   score_from_rdf : mva_prc
   correlations:
-    target : B_M 
+    target : 
+      name    : B_M 
+      overlay :  
+        general:
+          size : [20, 10]
+        saving:
+          plt_dir : plots/prec_correlations 
+        plots:
+          B_M :
+            binning    : [4500, 6000, 60] 
+            yscale     : 'linear'
+            labels     : ['B_M', 'Entries']
+            normalized : true
     methods:
       - Pearson
       - Kendall-$\tau$ 
