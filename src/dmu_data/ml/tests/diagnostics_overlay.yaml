@@ -15,7 +15,7 @@ correlations:
         z :
           binning    : [-4, 4, 10]
           yscale     : 'linear'
-          labels     : ['z', 'Entries']
+          labels     : ['$z$', 'Entries']
           normalized : true
   methods:
     - Pearson
