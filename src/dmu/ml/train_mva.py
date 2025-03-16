@@ -553,6 +553,9 @@ class TrainMva:
         self._run_diagnostics(models = l_mod, rdf = self._rdf_sig_org, name='Signal'    )
         self._run_diagnostics(models = l_mod, rdf = self._rdf_bkg_org, name='Background')
 
+        if load_trained:
+            return
+
         for ifold, mod in enumerate(l_mod):
             self._save_model(mod, ifold)
 # ---------------------------------------------
