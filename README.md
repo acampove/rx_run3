@@ -557,6 +557,11 @@ correlations:
   target :
     name : mass
     overlay :
+      wp :
+        - 0.2
+        - 0.5
+        - 0.7
+        - 0.9
       general:
         size : [20, 10]
       saving:
