@@ -27,7 +27,7 @@ class Data:
             ]
 #--------------------------------
 def _make_dir_path(name : str) -> str:
-    path = f'/tmp/dmu/tests/fit_plotter/{name}'
+    path = f'/tmp/tests/dmu/fit_plotter/{name}'
     os.makedirs(path, exist_ok=True)
 
     return path

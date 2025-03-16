@@ -23,7 +23,7 @@ class Data:
     Class used to share attributes
     '''
 
-    out_dir = '/tmp/dmu/tests/ml/cv_classifier'
+    out_dir = '/tmp/tests/dmu/ml/cv_classifier'
 # -------------------------------------------------
 def _get_train_input():
     '''

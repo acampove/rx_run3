@@ -26,7 +26,7 @@ class Data:
     '''
     Class storing shared data
     '''
-    out_dir = '/tmp/dmu/tests/ml/cv_predict'
+    out_dir = '/tmp/tests/dmu/ml/cv_predict'
 # -------------------------------
 def _double_data(df_1 : pnd.DataFrame) -> pnd.DataFrame:
     df_2   = df_1.copy()
