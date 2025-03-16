@@ -96,7 +96,7 @@ training :
     high : 
       n_estimators : 70
 saving:
-  path : 'output/mva_rare_2024_cmb/VERSION/model.pkl'
+  path : output/mva_rare_2024_cmb/VERSION/model.pkl
 plotting:
   roc :
     min : [0.5, 0.9]
