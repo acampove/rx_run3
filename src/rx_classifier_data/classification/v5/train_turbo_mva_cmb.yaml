@@ -199,17 +199,20 @@ plotting:
         binning : [4400, 6500, 50]
         yscale  : 'linear'
         labels  : ['$M(B^+)$', '']
-      hop_mass:
+      # These variables come from friend trees
+      # They need prefix.varname
+      # Preffix is in dataset/paths section
+      hop.hop_mass:
         normalized : true
         binning : [1000, 7000, 60]
         yscale  : 'linear'
         labels  : ['$M_{HOP}(B^+)$', '']
-      swp_cascade_mass_swp:
+      casc.swp_cascade_mass_swp:
         normalized : true
         binning : [1700, 2200, 60]
         yscale  : 'linear'
         labels  : ['$M(K,\ell_{\to\pi})$', '']
-      swp_jpsi_misid_mass_swp:
+      jmis.swp_jpsi_misid_mass_swp:
         normalized : true
         binning : [2800, 3400, 60]
         yscale  : 'linear'
