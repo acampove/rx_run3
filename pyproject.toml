@@ -7,8 +7,8 @@ dependencies= [
 'triggercalib',
 'PyYaml',
 'data-manipulation-utilities',
-'tensorflow==2.16.1',
-'zfit==0.23.0',
+'tensorflow>=2.18.0',
+'zfit>=0.24.3',
 'zfit-physics',
 ]
 
