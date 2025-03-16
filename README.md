@@ -125,7 +125,7 @@ pol1: Polynomial of degree 1
 pol2: Polynomial of degree 2
 cbr : CrystallBall with right tail
 cbl : CrystallBall with left tail
-gauss : Gaussian 
+gauss : Gaussian
 dscb : Double sided CrystallBall
 ```
 
@@ -551,19 +551,19 @@ the configuration can be loaded from a YAML file and would look like:
 output         : /tmp/tests/dmu/ml/cv_diagnostics/overlay
   # Optional, will assume that the target is already in the input dataframe
   # and will use it, instead of evaluating models
-score_from_rdf : mva 
+score_from_rdf : mva
 correlations:
   # Variables with respect to which the correlations with the features will be measured
   target :
     name : mass
-    overlay :  
+    overlay :
       general:
         size : [20, 10]
       saving:
         plt_dir : /tmp/tests/dmu/ml/cv_diagnostics/from_rdf
       plots:
         z :
-          binning    : [1000, 4000, 30] 
+          binning    : [1000, 4000, 30]
           yscale     : 'linear'
           labels     : ['mass', 'Entries']
           normalized : true
@@ -571,8 +571,9 @@ correlations:
     - Pearson
     - Kendall-$\tau$
   figure:
-    title: Scores from file 
+    title: Scores from file
     size : [10, 8]
+    xlabelsize: 14 # Constrols size of x axis labels. By default 12. 
 ```
 
 # Pandas dataframes
@@ -730,9 +731,9 @@ plots:
         labels     : ['x', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
         title      : 'some title can be added for different variable plots'
         name       : 'plot_of_x' # This will ensure that one gets plot_of_x.png as a result, if missing x.png would be saved
-        # Can add styling to specific plots, this should be the argument of 
+        # Can add styling to specific plots, this should be the argument of
         # hist.plot(...)
-        styling :          
+        styling :
             label : x
             linestyle: '-'
     y :
@@ -771,9 +772,9 @@ plugin:
         add_std: True        # If true, it will also write the standard deviation next to FWHM
 ```
 
-where the section will 
+where the section will
 
-- Use a KDE to fit the distribution and plot it on top of the histogram 
+- Use a KDE to fit the distribution and plot it on top of the histogram
 - Add the value of the FullWidth at Half Maximum in the title, for each distribution with a specific formatting.
 
 ## 2D plots
