@@ -62,3 +62,14 @@ def test_with_diagnostics():
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run()
 # -------------------------------
+def test_only_diagnostics():
+    '''
+    Will only run diagnostics with already trained models
+    '''
+    rdf_sig = ut.get_rdf(kind='sig')
+    rdf_bkg = ut.get_rdf(kind='bkg')
+    cfg     = ut.get_config('ml/tests/train_mva_with_diagnostics.yaml')
+
+    obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
+    obj.run(load_trained=True)
+# -------------------------------

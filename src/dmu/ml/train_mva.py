@@ -3,6 +3,7 @@ Module with TrainMva class
 '''
 # pylint: disable = too-many-locals, no-name-in-module
 # pylint: disable = too-many-arguments, too-many-positional-arguments
+# pylint: disable = too-many-instance-attributes
 
 import os
 import copy
@@ -158,10 +159,14 @@ class TrainMva:
 
         return model
     # ---------------------------------------------
-    def _get_models(self):
+    def _get_models(self, load_trained : bool):
         '''
         Will create models, train them and return them
         '''
+        if load_trained:
+            log.warning('Not retraining, but loading trained models')
+            return self._load_trained_models()
+
         nfold = self._cfg['training']['nfold']
         rdmst = self._cfg['training']['rdm_stat']
 
@@ -185,6 +190,22 @@ class TrainMva:
             self._plot_roc(arr_lab_ts, arr_sig_all_ts, arr_lab_tr, arr_sig_all_tr, ifold)
 
             ifold+=1
+
+        return l_model
+    # ---------------------------------------------
+    def _load_trained_models(self) -> list[cls]:
+        model_path = self._cfg['saving']['path']
+        nfold      = self._cfg['training']['nfold']
+        l_model    = []
+        for ifold in range(nfold):
+            fold_path = model_path.replace('.pkl', f'_{ifold:03}.pkl')
+
+            if not os.path.isfile(fold_path):
+                raise FileNotFoundError(f'Missing trained model: {fold_path}')
+
+            log.debug(f'Loading model from: {fold_path}')
+            model = joblib.load(fold_path)
+            l_model.append(model)
 
         return l_model
     # ---------------------------------------------
@@ -514,7 +535,7 @@ class TrainMva:
         cvd = CVDiagnostics(models=models, rdf=rdf, cfg=cfg_diag)
         cvd.run()
     # ---------------------------------------------
-    def run(self, skip_fit : bool = False) -> None:
+    def run(self, skip_fit : bool = False, load_trained : bool = False) -> None:
         '''
         Will do the training
 
@@ -526,7 +547,7 @@ class TrainMva:
         if skip_fit:
             return
 
-        l_mod = self._get_models()
+        l_mod = self._get_models(load_trained = load_trained)
 
         self._run_diagnostics(models = l_mod, rdf = self._rdf_sig_org, name='Signal'    )
         self._run_diagnostics(models = l_mod, rdf = self._rdf_bkg_org, name='Background')
