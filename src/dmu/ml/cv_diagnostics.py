@@ -54,6 +54,8 @@ class CVDiagnostics:
         d_lab[target]  = xlabel
         d_lab['score'] = 'score'
 
+        d_lab = { var_id : var_name.replace('MeV', '') for var_id, var_name in d_lab.items() }
+
         return d_lab
     # -------------------------
     def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
@@ -120,6 +122,12 @@ class CVDiagnostics:
 
         # Needed to show all labels on x axis
         plt.xticks(ticks=range(len(df)), labels=df.variable)
+        if 'xlabelsize' in self._cfg['correlations']['figure']:
+            xlabsize= self._cfg['correlations']['figure']['xlabelsize']
+        else:
+            xlabsize= 12
+
+        ax.tick_params(axis='x', labelsize=xlabsize)
 
         return ax
     # -------------------------
