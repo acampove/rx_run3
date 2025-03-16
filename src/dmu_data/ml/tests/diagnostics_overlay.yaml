@@ -20,5 +20,6 @@ correlations:
   methods:
     - Pearson
   figure:
-    title: Scores from file
-    size : [12, 10]
+    title     : Scores from file
+    size      : [12, 10]
+    xlabelsize: 14
