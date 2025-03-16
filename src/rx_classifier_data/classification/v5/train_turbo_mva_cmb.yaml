@@ -261,6 +261,12 @@ diagnostics:
     target : 
       name    : B_M
       overlay :
+        wp:
+          - 0.0
+          - 0.5
+          - 0.7
+          - 0.8
+          - 0.9
         general:
           size : [20, 10]
         saving:
