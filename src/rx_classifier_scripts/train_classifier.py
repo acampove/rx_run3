@@ -34,6 +34,7 @@ class Data:
     q2bin       : str
     max_entries : int
     log_level   : int
+    skip_fit    : bool
 
     d_project = {'Hlt2RD_BuToKpEE_MVA' : 'RK', 'Hlt2RD_BuToKpMuMu_MVA' : 'RK'}
     d_analysis= {'Hlt2RD_BuToKpEE_MVA' : 'EE', 'Hlt2RD_BuToKpMuMu_MVA' : 'MM'}
@@ -97,6 +98,7 @@ def _get_args():
     parser.add_argument('-q', '--q2bin'      , type=str, help='q2bin'                  , required=True, choices=['low', 'central', 'jpsi', 'psi2S', 'high'])
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
+    parser.add_argument('-p', '--skip_fit'   , action='store_true', help='If used, will only do plots of feature distributions, not training')
     args = parser.parse_args()
 
     Data.version     = args.version
@@ -104,6 +106,7 @@ def _get_args():
     Data.q2bin       = args.q2bin
     Data.max_entries = args.max_entries
     Data.log_level   = args.log_level
+    Data.skip_fit    = args.skip_fit
 #---------------------------------
 def _is_ntuple_path(path : str) -> bool:
     file_name = os.path.basename(path)
@@ -209,7 +212,7 @@ def main():
     rdf_bkg = _get_rdf(kind='bkg')
 
     trn = TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=Data.cfg_dict)
-    trn.run(skip_fit=False)
+    trn.run(skip_fit=Data.skip_fit)
 #---------------------------------
 if __name__ == '__main__':
     main()
