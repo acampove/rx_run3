@@ -567,6 +567,8 @@ correlations:
           yscale     : 'linear'
           labels     : ['mass', 'Entries']
           normalized : true
+          styling :          
+            linestyle: '-'
   methods:
     - Pearson
     - Kendall-$\tau$
@@ -574,6 +576,7 @@ correlations:
     title: Scores from file
     size : [10, 8]
     xlabelsize: 18 # Constrols size of x axis labels. By default 30
+    rotate    : 60 # Will rotate xlabels by 60 degrees
 ```
 
 # Pandas dataframes
