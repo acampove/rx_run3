@@ -62,15 +62,15 @@ dataset :
   selection:
     bkg :
       bdt  : (1)
-      mass : mass > 5500
+      mass : B_M > 5500
     sig :
       bdt  : (1)
       mass : (1) 
   paths:
-    main : samples/main.yaml
-    hop  : samples/hop.yaml
-    jmis : samples/jpsi_misid.yaml
-    casc : samples/cascade.yaml
+    main : main.yaml
+    hop  : hop.yaml
+    jmis : jpsi_misid.yaml
+    casc : cascade.yaml
   samples:
     sig :
       sample : Bu_Kee_eq_btosllball05_DPC # can be a list
