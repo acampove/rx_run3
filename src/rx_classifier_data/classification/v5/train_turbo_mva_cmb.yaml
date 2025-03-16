@@ -275,4 +275,6 @@ diagnostics:
       - Pearson
       - Kendall-$\tau$
     figure:
-      size : [10, 8]
+      size       : [20, 10]
+      xlabelsize : 25 
+      rotate     : 60
