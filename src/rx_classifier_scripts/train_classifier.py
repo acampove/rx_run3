@@ -155,25 +155,11 @@ def _get_rdf(kind=None):
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
 
-    rdf = _define_columns(rdf)
     rdf = _apply_selection(rdf, kind)
 
     if Data.max_entries > 0:
         log.warning(f'Limiting {kind} dataset to {Data.max_entries} entries')
         rdf = rdf.Range(Data.max_entries)
-
-    return rdf
-#---------------------------------
-def _define_columns(rdf):
-    '''
-    Will define variables
-    '''
-    d_var = Data.cfg_dict['dataset']['define']
-
-    log.info('Defining variables')
-    for name, expr in d_var.items():
-        log.debug(f'---> {name}')
-        rdf = rdf.Define(name, expr)
 
     return rdf
 #---------------------------------
