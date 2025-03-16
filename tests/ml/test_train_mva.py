@@ -48,3 +48,14 @@ def test_nans():
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run()
 # -------------------------------
+def test_with_diagnostics():
+    '''
+    Will add diagnostics plots, for correlations, etc
+    '''
+    rdf_sig = ut.get_rdf(kind='sig')
+    rdf_bkg = ut.get_rdf(kind='bkg')
+    cfg     = ut.get_config('ml/tests/train_mva_with_diagnostics.yaml')
+
+    obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
+    obj.run()
+# -------------------------------
