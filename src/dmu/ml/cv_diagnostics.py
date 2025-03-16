@@ -34,12 +34,27 @@ class CVDiagnostics:
         self._rdf     = rdf
         self._target  = cfg['correlations']['target']['name']
         self._l_feat  = self._get_features()
+        self._d_xlab  = self._get_xlabels()
     # -------------------------
     def _get_features(self) -> list[str]:
         cfg   = self._l_model[0].cfg
         l_var = cfg['training']['features']
 
         return l_var
+    # -------------------------
+    def _get_xlabels(self) -> dict[str,str]:
+        cfg   = self._l_model[0].cfg
+        d_var = cfg['plotting']['features']['plots']
+
+        d_lab = { varname : d_field['labels'][0] for varname, d_field in d_var.items() }
+
+        target= self._cfg['correlations']['target']['name']
+        xlabel= self._cfg['correlations']['target']['overlay']['plots'][target]['labels'][0]
+
+        d_lab[target]  = xlabel
+        d_lab['score'] = 'score'
+
+        return d_lab
     # -------------------------
     def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
         cfg    = self._l_model[0].cfg
