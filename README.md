@@ -568,7 +568,7 @@ correlations:
           labels     : ['mass', 'Entries']
           normalized : true
           styling :          
-            linestyle: '-'
+            linestyle: '-' # By default there is no line, just pointer
   methods:
     - Pearson
     - Kendall-$\tau$
