@@ -39,20 +39,20 @@ plotting:
           r :
             binning : [-6, 6, 100]
             yscale  : 'linear'
-            labels  : ['w', '']
+            labels  : ['$r$', '']
           w :
             binning : [-4, 4, 100]
             yscale  : 'linear'
-            labels  : ['w', '']
+            labels  : ['$w$', '']
           x :
             binning : [-4, 4, 100]
             yscale  : 'linear'
-            labels  : ['x', '']
+            labels  : ['$x$', '']
           y :
             binning : [-4, 4, 100]
             yscale  : 'linear'
-            labels  : ['y', '']
+            labels  : ['$y$', '']
           z :
             binning : [-4, 4, 100]
             yscale  : 'linear'
-            labels  : ['z', '']
+            labels  : ['$z$', '']
