@@ -42,22 +42,34 @@ class TrainMva:
         self._cfg       = cfg
         self._l_ft_name = self._cfg['training']['features']
 
-        df_ft_sig, l_lab_sig = self._get_sample_inputs(rdf = sig, label = 1)
-        df_ft_bkg, l_lab_bkg = self._get_sample_inputs(rdf = bkg, label = 0)
+        rdf_bkg = self._preprocess_rdf(bkg)
+        rdf_sig = self._preprocess_rdf(sig)
+
+        df_ft_sig, l_lab_sig = self._get_sample_inputs(rdf = rdf_sig, label = 1)
+        df_ft_bkg, l_lab_bkg = self._get_sample_inputs(rdf = rdf_bkg, label = 0)
 
         self._df_ft = pnd.concat([df_ft_sig, df_ft_bkg], axis=0)
         self._l_lab = numpy.array(l_lab_sig + l_lab_bkg)
 
-        self._rdf_bkg = self._get_rdf(rdf = bkg, df_feat=df_ft_bkg)
-        self._rdf_sig = self._get_rdf(rdf = sig, df_feat=df_ft_sig)
+        self._rdf_bkg = self._get_rdf(rdf = rdf_bkg, df_feat=df_ft_bkg)
+        self._rdf_sig = self._get_rdf(rdf = rdf_sig, df_feat=df_ft_sig)
     # ---------------------------------------------
     def _get_extra_columns(self, rdf : RDataFrame, df : pnd.DataFrame) -> list[str]:
         d_plot = self._cfg['plotting']['features']['plots']
         l_expr = list(d_plot)
+        l_rdf  = [ name.c_str() for name in rdf.GetColumnNames() ]
 
-        l_col  = [ name.c_str() for name in rdf.GetColumnNames() ]
+        l_extr = []
+        for expr in l_expr:
+            if expr not in l_rdf:
+                continue
 
-        return [ col for col in l_col if (col in l_expr) and (col not in df.columns) ]
+            if expr in df.columns:
+                continue
+
+            l_extr.append(expr)
+
+        return l_extr
     # ---------------------------------------------
     def _get_rdf(self, rdf : RDataFrame, df_feat : pnd.DataFrame) -> RDataFrame:
         '''
@@ -121,7 +133,6 @@ class TrainMva:
         return rdf
     # ---------------------------------------------
     def _get_sample_inputs(self, rdf : RDataFrame, label : int) -> tuple[pnd.DataFrame, list[int]]:
-        rdf  = self._preprocess_rdf(rdf)
         d_ft = rdf.AsNumpy(self._l_ft_name)
         df   = pnd.DataFrame(d_ft)
         df   = self._pre_process_nans(df)
