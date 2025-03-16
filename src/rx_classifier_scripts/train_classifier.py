@@ -64,9 +64,11 @@ def _reformat_config(cfg : dict) -> dict:
         out_dir = cfg['diagnostics']['output']
         cfg['diagnostics']['output'] = _override_version(out_dir)
 
-    if 'overlay' in cfg['diagnostics']['correlations']:
-        plt_dir = cfg['diagnostics']['correlations']['target']['overlay']['saving']['plt_dir']
-        cfg['diagnostics']['correlations']['target']['overlay']['saving']['plt_dir'] = _override_version(plt_dir)
+    d_corr = cfg['diagnostics']['correlations']['target']
+    if 'overlay' in d_corr:
+        d_save  = d_corr['overlay']['saving']
+        plt_dir = d_save['plt_dir']
+        d_save['plt_dir'] = _override_version(plt_dir)
 
     return cfg
 #---------------------------------
