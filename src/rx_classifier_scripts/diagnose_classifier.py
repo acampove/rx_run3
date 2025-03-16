@@ -72,8 +72,10 @@ def _initialize() -> None:
     plt.style.use(mplhep.style.LHCb2)
 
     out_dir = Data.cfg['diagnostics']['output']
-    Data.cfg['diagnostics']['output'] = f'{out_dir}/{Data.q2bin}/{Data.sample}_{Data.trigger}'
-    Data.cfg['diagnostics']['correlations']['figure']['title'] = f'{Data.sample};{Data.q2bin}'
+    plt_dir = f'{out_dir}/{Data.q2bin}/{Data.sample}_{Data.trigger}'
+    Data.cfg['diagnostics']['output'] = plt_dir
+    Data.cfg['diagnostics']['correlations']['target']['overlay']['saving']['plt_dir'] = plt_dir
+    Data.cfg['diagnostics']['correlations']['figure']['title'] = f'{Data.sample}; {Data.q2bin}'
 # -------------------------------
 def _load_config() -> None:
     conf_path = files('rx_classifier_data').joinpath(f'diagnostics/{Data.conf}.yaml')
