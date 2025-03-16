@@ -140,6 +140,7 @@ class CVDiagnostics:
 
         plt.ylim(-1, +1)
         plt.title(title)
+        plt.xlabel('')
         plt.ylabel('Correlation')
         plt.grid()
         plt.xticks(rotation=rotation)
