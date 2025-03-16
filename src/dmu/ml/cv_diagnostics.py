@@ -112,19 +112,16 @@ class CVDiagnostics:
         return ax
     # -------------------------
     def _plot_correlations(self, d_corr : dict[str,float], method : str, ax : Axis) -> Axis:
-        df      = pnd.DataFrame.from_dict(d_corr, orient="index", columns=[method])
-        df      = self._add_labels(df)
+        df             = pnd.DataFrame.from_dict(d_corr, orient="index", columns=[method])
+        df['variable'] = df.index.map(self._d_xlab)
+
         figsize = self._cfg['correlations']['figure']['size']
         ax      = df.plot(x='variable', y=method,label=method, figsize=figsize, ax=ax)
 
         # Needed to show all labels on x axis
-        plt.xticks(ticks=range(len(df)), labels=df.index)
+        plt.xticks(ticks=range(len(df)), labels=df.variable)
 
         return ax
-    # -------------------------
-    def _add_labels(self, df : pnd.DataFrame) -> pnd.DataFrame:
-        df['variable'] = df.index
-        return df
     # -------------------------
     def _save_plot(self):
         plot_dir = self._cfg['output']
