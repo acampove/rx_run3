@@ -5,6 +5,7 @@ Module with TrainMva class
 # pylint: disable = too-many-arguments, too-many-positional-arguments
 
 import os
+import copy
 
 import joblib
 import pandas as pnd
@@ -20,6 +21,7 @@ import dmu.ml.utilities         as ut
 import dmu.pdataframe.utilities as put
 import dmu.plotting.utilities   as plu
 
+from dmu.ml.cv_diagnostics   import CVDiagnostics
 from dmu.ml.cv_classifier    import CVClassifier as cls
 from dmu.plotting.plotter_1d import Plotter1D    as Plotter
 from dmu.plotting.matrix     import MatrixPlotter
@@ -41,6 +43,9 @@ class TrainMva:
         '''
         self._cfg       = cfg
         self._l_ft_name = self._cfg['training']['features']
+
+        self._rdf_sig_org = sig
+        self._rdf_bkg_org = bkg 
 
         rdf_bkg = self._preprocess_rdf(bkg)
         rdf_sig = self._preprocess_rdf(sig)
@@ -489,6 +494,26 @@ class TrainMva:
         os.makedirs(val_dir, exist_ok=True)
         put.df_to_tex(df, f'{val_dir}/hyperparameters.tex')
     # ---------------------------------------------
+    def _run_diagnostics(self, models : list[cls], rdf : RDataFrame, name : str) -> None:
+        if 'diagnostics' not in self._cfg:
+            log.warning('Diagnostics section not found, not running diagnostics')
+            return
+
+        cfg_diag = self._cfg['diagnostics']
+        out_dir  = cfg_diag['output']
+        plt_dir  = None
+
+        if 'overlay' in cfg_diag['correlations']['target']:
+            plt_dir  = cfg_diag['correlations']['target']['overlay']['saving']['plt_dir']
+
+        cfg_diag = copy.deepcopy(cfg_diag)
+        cfg_diag['output'] = f'{out_dir}/{name}'
+        if plt_dir is not None:
+            cfg_diag['correlations']['target']['overlay']['saving']['plt_dir'] = f'{plt_dir}/{name}'
+
+        cvd = CVDiagnostics(models=models, rdf=rdf, cfg=cfg_diag)
+        cvd.run()
+    # ---------------------------------------------
     def run(self, skip_fit : bool = False) -> None:
         '''
         Will do the training
@@ -502,6 +527,10 @@ class TrainMva:
             return
 
         l_mod = self._get_models()
+
+        self._run_diagnostics(models = l_mod, rdf = self._rdf_sig_org, name='Signal'    )
+        self._run_diagnostics(models = l_mod, rdf = self._rdf_bkg_org, name='Background')
+
         for ifold, mod in enumerate(l_mod):
             self._save_model(mod, ifold)
 # ---------------------------------------------
