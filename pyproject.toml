@@ -10,7 +10,7 @@ dependencies= [
 'tqdm',
 'joblib',
 'tensorflow==2.18.0', # Use latest allowed by zfit
-'numpy>=2.2.3'
+'numpy',
 'scikit-learn',
 'toml',
 'zfit',
