@@ -79,13 +79,13 @@ def test_patch():
     LogStore.set_level('dmu:ml:cv_predict', 10)
     LogStore.set_level('dmu:ml:train_mva' , 20)
 
-    rdf_sig = ut.get_rdf(kind='sig', columns_with_nans=['x', 'y'])
+    rdf_sig = ut.get_rdf(kind='sig', columns_with_nans=['y'])
     rdf_bkg = ut.get_rdf(kind='bkg', repeated=True)
     l_model = ut.get_models(rdf_sig, rdf_bkg)
 
     log.info('Predicting')
 
-    rdf     = ut.get_rdf(kind='sig', columns_with_nans=['x', 'y'])
+    rdf     = ut.get_rdf(kind='sig', columns_with_nans=['y'])
     cvp     = CVPredict(models=l_model, rdf=rdf)
     arr_prb = cvp.predict()
 
@@ -97,13 +97,13 @@ def test_partial_patch():
     '''
     log.info('\nTraining')
 
-    rdf_sig = ut.get_rdf(kind='sig', columns_with_nans=['x', 'y', 'z'])
+    rdf_sig = ut.get_rdf(kind='sig', columns_with_nans=['x', 'y'])
     rdf_bkg = ut.get_rdf(kind='bkg', repeated=True)
     l_model = ut.get_models(rdf_sig, rdf_bkg)
 
     log.info('Predicting')
 
-    rdf     = ut.get_rdf(kind='sig', columns_with_nans=['x', 'y', 'z'])
+    rdf     = ut.get_rdf(kind='sig', columns_with_nans=['x', 'y'])
     cvp     = CVPredict(models=l_model, rdf=rdf)
     arr_prb = cvp.predict()
 
