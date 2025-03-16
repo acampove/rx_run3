@@ -540,6 +540,7 @@ class TrainMva:
         Will do the training
 
         skip_fit: By default false, if True, it will only do the plots of features and save tables
+        load_trained: If true, it will load the models instead of training, by default false
         '''
         self._save_settings_to_tex()
         self._plot_features()
