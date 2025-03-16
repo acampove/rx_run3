@@ -60,7 +60,7 @@ diagnostics:
   output         : /tmp/tests/dmu/ml/train_mva/diagnostics
   correlations:
     target :
-      name : mass
+      name : z 
       overlay :  
         general:
           size : [20, 10]
@@ -68,10 +68,12 @@ diagnostics:
           plt_dir : /tmp/tests/dmu/ml/train_mva/diagnostics
         plots:
           z :
-            binning    : [1000, 4000, 30] 
+            binning    : [-4, +4, 30] 
             yscale     : 'linear'
-            labels     : ['mass', 'Entries']
+            labels     : ['z', 'Entries']
             normalized : true
+            styling :
+              linestyle: '-'
     methods:
       - Pearson
       - Kendall-$\tau$
