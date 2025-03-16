@@ -11,11 +11,11 @@ import argparse
 from importlib.resources import files
 from dataclasses         import dataclass
 
-import cppyy
 import matplotlib.pyplot as plt
 import mplhep
 import yaml
 
+from rx_selection          import selection as sel
 from rx_data.rdf_getter    import RDFGetter
 from dmu.logging.log_store import LogStore
 from dmu.ml.train_mva      import TrainMva
@@ -33,6 +33,9 @@ class Data:
     version     : str
     q2bin       : str
     max_entries : int
+
+    d_project = {'Hlt2RD_BuToKpEE_MVA' : 'RK', 'Hlt2RD_BuToKpMuMu_MVA' : 'RK'}
+    d_analysis= {'Hlt2RD_BuToKpEE_MVA' : 'EE', 'Hlt2RD_BuToKpMuMu_MVA' : 'MM'}
 #---------------------------------
 def _override_version(path : str) -> str:
     if 'VERSION' not in path:
@@ -71,7 +74,7 @@ def _load_config():
     Will load YAML file config
     '''
 
-    cfg_path = files('rx_classifier_data').joinpath(f'{Data.version}/{Data.cfg_name}.yaml')
+    cfg_path = files('rx_classifier_data').joinpath(f'classification/{Data.version}/{Data.cfg_name}.yaml')
     cfg_path = str(cfg_path)
     if not os.path.isfile(cfg_path):
         raise FileNotFoundError(f'Could not find: {cfg_path}')
@@ -135,11 +138,10 @@ def _get_rdf(kind=None):
 
     sample  = Data.cfg_dict['dataset']['samples'][kind]['sample']
     trigger = Data.cfg_dict['dataset']['samples'][kind]['trigger']
-    l_col   = Data.cfg_dict['dataset']['columns']
 
     RDFGetter.samples = Data.cfg_dict['dataset']['paths']
     gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf(columns=l_col)
+    rdf = gtr.get_rdf()
 
     rdf = _define_columns(rdf)
     rdf = _apply_selection(rdf, kind)
@@ -171,18 +173,18 @@ def _apply_selection(rdf, kind):
     '''
 
     log.info('Applying selection')
+    sample  = Data.cfg_dict['dataset']['samples'][kind]['sample']
+    trigger = Data.cfg_dict['dataset']['samples'][kind]['trigger']
+    project = Data.d_project[trigger]
+    analysis= Data.d_analysis[trigger]
+
+    d_sel = sel.selection(project=project, analysis=analysis, q2bin=Data.q2bin, process=sample)
     d_cut = Data.cfg_dict['dataset']['selection'][kind]
-    d_cut['q2bin'] = Data.cfg_dict['q2'][Data.q2bin]
+    d_sel.update(d_cut)
 
-    for name, cut in d_cut.items():
-        log.debug(f'---> {name}')
-        try:
-            rdf = rdf.Filter(cut, name)
-        except cppyy.gbl.std.runtime_error as exc:
-            for col in rdf.GetColumnNames():
-                log.info(col)
-
-            raise ValueError(f'Coult not apply cut: {cut}') from exc
+    for cut_name, cut_expr in d_sel.items():
+        log.debug(f'{cut_name:<30}{cut_expr}')
+        rdf = rdf.Filter(cut_expr, cut_name)
 
     log.info(f'Cutflow for: {kind}')
     rep = rdf.Report()
