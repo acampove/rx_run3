@@ -1,9 +1,3 @@
-q2:
-  low    : (Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1100000) && (hop_mass > 4500)
-  central: (Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000) && (hop_mass > 4500)
-  jpsi   : (Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000) && (hop_mass > 4500)
-  psi2   : (Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000) && (hop_mass > 4500)
-  high   : (Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000) && (hop_mass > 3000)
 features:
   low:
     - B_PT
@@ -65,35 +59,13 @@ hyper               :
   min_samples_split : 2
 # ----------------------------------
 dataset :
-  columns:
-    - swp_cascade_mass_swp
-    - swp_jpsi_misid_mass_swp
-    - hop_mass
-    - B_M
-    - Jpsi_M
-    - B_PT
-    - B_IPCHI2_OWNPV
-    - B_FDCHI2_OWNPV
-    - B_ENDVERTEX_CHI2DOF 
-    - B_DIRA_OWNPV
-    - Jpsi_PT
-    - Jpsi_DIRA_OWNPV
-    - Jpsi_CHI2DOF
-    - Jpsi_IPCHI2_OWNPV
-    - H_PT 
-    - H_IPCHI2_OWNPV 
-    - L1_PT
-    - L2_PT
-    - L1_IPCHI2_OWNPV
-    - L2_IPCHI2_OWNPV
   selection:
     bkg :
-      casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
-      jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
+      bdt  : (1)
       mass : mass > 5500
     sig :
-      casc : swp_cascade_mass_swp    < 1800 || swp_cascade_mass_swp    > 1900
-      jmis : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150 
+      bdt  : (1)
+      mass : (1) 
   paths:
     main : /home/acampove/external_ssd/Data/samples/main.yaml
     hop  : /home/acampove/external_ssd/Data/samples/hop.yaml
