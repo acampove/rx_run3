@@ -23,6 +23,8 @@ diagnostics:
             yscale     : 'linear'
             labels     : ['B_M', 'Entries']
             normalized : true
+            styling :          
+              linestyle: '-'
     methods:
       - Pearson
       - Kendall-$\tau$ 
