@@ -33,6 +33,7 @@ class Data:
     version     : str
     q2bin       : str
     max_entries : int
+    log_level   : int
 
     d_project = {'Hlt2RD_BuToKpEE_MVA' : 'RK', 'Hlt2RD_BuToKpMuMu_MVA' : 'RK'}
     d_analysis= {'Hlt2RD_BuToKpEE_MVA' : 'EE', 'Hlt2RD_BuToKpMuMu_MVA' : 'MM'}
@@ -102,9 +103,7 @@ def _get_args():
     Data.cfg_name    = args.cfg_name
     Data.q2bin       = args.q2bin
     Data.max_entries = args.max_entries
-
-    LogStore.set_level('rx_classifier:train_classifier', args.log_level)
-    LogStore.set_level('dmu:ml:train_mva'              , args.log_level)
+    Data.log_level   = args.log_level
 #---------------------------------
 def _is_ntuple_path(path : str) -> bool:
     file_name = os.path.basename(path)
@@ -203,15 +202,20 @@ def _apply_selection(rdf, kind):
 
     return rdf
 #---------------------------------
+def _initialize():
+    _load_config()
+    plt.style.use(mplhep.style.LHCb2)
+
+    LogStore.set_level('rx_classifier:train_classifier', Data.log_level)
+    LogStore.set_level('dmu:ml:train_mva'              , Data.log_level)
+#---------------------------------
 def main():
     '''
     Script starts here
     '''
 
-    plt.style.use(mplhep.style.LHCb2)
-
     _get_args()
-    _load_config()
+    _initialize()
 
     rdf_sig = _get_rdf(kind='sig')
     rdf_bkg = _get_rdf(kind='bkg')
