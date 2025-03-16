@@ -126,6 +126,16 @@ def _file_paths_from_wc(file_wc : str) -> list[str]:
 
     return l_path
 #---------------------------------
+def _get_yaml_paths() -> dict[str,str]:
+    data_dir = os.environ['DATADIR']
+    d_sample = Data.cfg_dict['dataset']['paths']
+
+    d_yaml   = {}
+    for name, end in d_sample.items():
+        d_yaml[name] = f'{data_dir}/{end}'
+
+    return d_yaml
+#---------------------------------
 def _get_rdf(kind=None):
     '''
     Will load and return ROOT dataframe
@@ -139,7 +149,8 @@ def _get_rdf(kind=None):
     sample  = Data.cfg_dict['dataset']['samples'][kind]['sample']
     trigger = Data.cfg_dict['dataset']['samples'][kind]['trigger']
 
-    RDFGetter.samples = Data.cfg_dict['dataset']['paths']
+    RDFGetter.samples = _get_yaml_paths()
+
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
 
