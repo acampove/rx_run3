@@ -13,14 +13,13 @@ These MVAs were trained with:
 train_cone()
 {
     ANGLE=$1
+    CONF=$2
 
-    train_classifier -v $ANGLE -c train_turbo_mva_b12_prc -q low
-    train_classifier -v $ANGLE -c train_turbo_mva_b12_prc -q central
-    train_classifier -v $ANGLE -c train_turbo_mva_b12_prc -q high
+    train_classifier -v $ANGLE -c $CONF -q low
+    train_classifier -v $ANGLE -c $CONF -q central
+    train_classifier -v $ANGLE -c $CONF -q high
 }
 
-train_cone v2p10
-train_cone v2p20
-train_cone v2p25
-train_cone v2p30
+train_cone v4 train_turbo_mva_cmb
+train_cone v4 train_turbo_mva_prc
 ```
