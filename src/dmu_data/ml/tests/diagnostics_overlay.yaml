@@ -17,6 +17,8 @@ correlations:
           yscale     : 'linear'
           labels     : ['$z$', 'Entries']
           normalized : true
+          styling :          
+            linestyle: '-'
   methods:
     - Pearson
   figure:
