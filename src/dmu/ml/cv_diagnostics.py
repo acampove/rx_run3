@@ -194,8 +194,9 @@ class CVDiagnostics:
 
         d_rdf = {}
         for wp in arr_wp:
-            cut        = f'Score > {wp:.3}'
-            d_rdf[cut] = rdf.Filter(cut)
+            name        = f'WP > {wp:.2}'
+            expr        = f'Score > {wp:.3}'
+            d_rdf[name] = rdf.Filter(expr)
 
         cfg_target = self._cfg['correlations']['target']['overlay']
 
