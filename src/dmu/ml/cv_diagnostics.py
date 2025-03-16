@@ -125,7 +125,7 @@ class CVDiagnostics:
         if 'xlabelsize' in self._cfg['correlations']['figure']:
             xlabsize= self._cfg['correlations']['figure']['xlabelsize']
         else:
-            xlabsize= 12
+            xlabsize= 30
 
         ax.tick_params(axis='x', labelsize=xlabsize)
 

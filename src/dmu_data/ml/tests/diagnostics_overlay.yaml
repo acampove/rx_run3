@@ -22,4 +22,4 @@ correlations:
   figure:
     title     : Scores from file
     size      : [12, 10]
-    xlabelsize: 14
+    xlabelsize: 30 

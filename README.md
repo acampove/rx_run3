@@ -573,7 +573,7 @@ correlations:
   figure:
     title: Scores from file
     size : [10, 8]
-    xlabelsize: 14 # Constrols size of x axis labels. By default 12. 
+    xlabelsize: 18 # Constrols size of x axis labels. By default 30
 ```
 
 # Pandas dataframes
