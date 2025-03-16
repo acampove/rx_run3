@@ -8,7 +8,7 @@ correlations:
     name : z
     overlay :
       general:
-        size : [20, 10]
+        size : [12, 10]
       saving:
         plt_dir : /tmp/tests/dmu/ml/cv_diagnostics/overlay
       plots:
@@ -21,4 +21,4 @@ correlations:
     - Pearson
   figure:
     title: Scores from file
-    size : [10, 8]
+    size : [12, 10]
