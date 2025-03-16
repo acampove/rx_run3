@@ -2,6 +2,8 @@
 Unit test for Mva class
 '''
 import pytest
+import mplhep
+import matplotlib.pyplot as plt
 
 from dmu.logging.log_store import LogStore
 from dmu.ml.train_mva      import TrainMva
@@ -14,6 +16,7 @@ log = LogStore.add_logger('dmu:ml:test_train_mva')
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('dmu:ml:train_mva', 10)
+    plt.style.use(mplhep.style.LHCb2)
 # -------------------------------
 def test_simple():
     '''
