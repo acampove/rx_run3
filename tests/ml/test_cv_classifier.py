@@ -10,6 +10,7 @@ import pytest
 import joblib
 import pandas  as pnd
 
+from ROOT                  import RDataFrame
 from dmu.logging.log_store import LogStore
 from dmu.ml.cv_classifier  import CVClassifier as cls
 from dmu.ml.cv_classifier  import CVSameData
@@ -25,6 +26,12 @@ class Data:
 
     out_dir = '/tmp/tests/dmu/ml/cv_classifier'
 # -------------------------------------------------
+def _add_vars(rdf : RDataFrame, d_def : dict[str,str]) -> RDataFrame:
+    for name, expr in d_def.items():
+        rdf = rdf.Define(name, expr)
+
+    return rdf
+# -------------------------------------------------
 def _get_train_input():
     '''
     Will return pandas dataframe with features and list of labels
@@ -33,9 +40,12 @@ def _get_train_input():
     rdf_sig = ut.get_rdf(kind='sig')
     rdf_bkg = ut.get_rdf(kind='bkg')
 
-    cfg         = ut.get_config('ml/tests/train_mva.yaml')
-    l_feat_name = cfg['training']['features']
+    cfg     = ut.get_config('ml/tests/train_mva.yaml')
+    d_def   = cfg['dataset']['define']
+    rdf_sig = _add_vars(rdf_sig, d_def)
+    rdf_bkg = _add_vars(rdf_bkg, d_def)
 
+    l_feat_name = cfg['training']['features']
     d_sig = rdf_sig.AsNumpy(l_feat_name)
     d_bkg = rdf_bkg.AsNumpy(l_feat_name)
 
