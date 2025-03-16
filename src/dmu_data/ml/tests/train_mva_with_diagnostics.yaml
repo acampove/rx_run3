@@ -56,3 +56,25 @@ plotting:
             binning : [-4, 4, 100]
             yscale  : 'linear'
             labels  : ['$z$', '']
+diagnostics:
+  output         : /tmp/tests/dmu/ml/train_mva/diagnostics
+  correlations:
+    target :
+      name : mass
+      overlay :  
+        general:
+          size : [20, 10]
+        saving:
+          plt_dir : /tmp/tests/dmu/ml/train_mva/diagnostics
+        plots:
+          z :
+            binning    : [1000, 4000, 30] 
+            yscale     : 'linear'
+            labels     : ['mass', 'Entries']
+            normalized : true
+    methods:
+      - Pearson
+      - Kendall-$\tau$
+    figure:
+      title: Training diagnostics 
+      size : [10, 8]
