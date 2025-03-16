@@ -120,100 +120,138 @@ plotting:
         binning : [0, 30000, 100]
         yscale  : 'log'
         labels  : ['$p_T(B^+)$', '']
+        styling :          
+            linestyle: '-'
       B_IPCHI2_OWNPV :
         normalized : true
         binning : [0, 20, 100]
         yscale  : 'log'
         labels  : ['$IP_{\chi^2}(B^+)$', '']
+        styling :          
+            linestyle: '-'
       B_FDCHI2_OWNPV :
         normalized : true
         binning : [0, 10000, 100]
         yscale  : 'log'
         labels  : ['$FD_{\chi^2}(B^+)$', '']
+        styling :          
+            linestyle: '-'
       B_ENDVERTEX_CHI2DOF:
         normalized : true
         binning : [0, 9, 100]
         yscale  : 'log'
         labels  : ['$\chi^2/dof(B^+)$', '']
+        styling :          
+            linestyle: '-'
       B_DIRA_OWNPV:
         normalized : true
         binning : [0.9995, 1, 100]
         yscale  : 'log'
         labels  : ['DIRA$(B^+)$', '']
+        styling :          
+            linestyle: '-'
       #
       Jpsi_PT :
         normalized : true
         binning : [0, 30000, 100]
         yscale  : 'log'
         labels  : ['$p_T(J/\psi)$', '']
+        styling :          
+            linestyle: '-'
       Jpsi_IPCHI2_OWNPV:
         normalized : true
         binning : [0, 500, 100]
         yscale  : 'log'
         labels  : ['$IP_{\chi^2}(J/\psi)$', '']
+        styling :          
+            linestyle: '-'
       Jpsi_CHI2DOF:
         normalized : true
         binning : [0, 10, 100]
         yscale  : 'log'
         labels  : ['$\chi^2/dof(J/\psi)$', '']
+        styling :          
+            linestyle: '-'
       Jpsi_DIRA_OWNPV:
         normalized : true
         binning : [0.99,  1, 100]
         yscale  : 'log'
         labels  : ['DIRA$(J/\psi)$', '']
+        styling :          
+            linestyle: '-'
         #
       min_ll_pt:
         normalized : true
         binning : [0, 10000, 100]
         yscale  : 'log'
         labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
+        styling :          
+            linestyle: '-'
       max_ll_pt:
         normalized : true
         binning : [0, 20000, 100]
         yscale  : 'log'
         labels  : ['$\max(p_T(e^+), p_T(e^-))$', '']
+        styling :          
+            linestyle: '-'
       min_ll_ipc:
         normalized : true
         binning : [0,  500, 100]
         yscale  : 'log'
         labels  : ['$\min(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
+        styling :          
+            linestyle: '-'
       max_ll_ipc:
         normalized : true
         binning : [0, 3000, 100]
         yscale  : 'log'
         labels  : ['$\max(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
+        styling :          
+            linestyle: '-'
         #
       H_PT :
         normalized : true
         binning : [0, 15000, 100]
         yscale  : 'log'
         labels  : ['$p_T(K^+)$', '']
+        styling :          
+            linestyle: '-'
       H_IPCHI2_OWNPV:
         normalized : true
         binning : [0, 2000, 100]
         yscale  : 'log'
         labels  : ['$IP_{\chi^2}(K^+)$', '']
+        styling :          
+            linestyle: '-'
         #
       mass:
         normalized : true
         binning : [4400, 6500, 50]
         yscale  : 'linear'
         labels  : ['$M(B^+)$', '']
+        styling :          
+            linestyle: '-'
       # These variables come from friend trees
       # They need prefix.varname
       # Preffix is in dataset/paths section
       hop.hop_mass:
         normalized : true
-        binning : [1000, 7000, 60]
+        binning : [3000, 7000, 60]
         yscale  : 'linear'
         labels  : ['$M_{HOP}(B^+)$', '']
+        styling :          
+            linestyle: '-'
       casc.swp_cascade_mass_swp:
         normalized : true
-        binning : [1700, 2200, 60]
+        binning : [1700, 3000, 60]
         yscale  : 'linear'
         labels  : ['$M(K,\ell_{\to\pi})$', '']
+        styling :          
+            linestyle: '-'
       jmis.swp_jpsi_misid_mass_swp:
         normalized : true
-        binning : [2800, 3400, 60]
+        binning : [2000, 4000, 60]
         yscale  : 'linear'
         labels  : ['$M(K_{\to\ell},\ell)$', '']
+        styling :          
+            linestyle: '-'
