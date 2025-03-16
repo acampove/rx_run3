@@ -67,10 +67,10 @@ dataset :
       bdt  : (1)
       mass : (1) 
   paths:
-    main : /home/acampove/external_ssd/Data/samples/main.yaml
-    hop  : /home/acampove/external_ssd/Data/samples/hop.yaml
-    jmis : /home/acampove/external_ssd/Data/samples/jpsi_misid.yaml
-    casc : /home/acampove/external_ssd/Data/samples/cascade.yaml
+    main : samples/main.yaml
+    hop  : samples/hop.yaml
+    jmis : samples/jpsi_misid.yaml
+    casc : samples/cascade.yaml
   samples:
     sig :
       sample : Bu_Kee_eq_btosllball05_DPC # can be a list
