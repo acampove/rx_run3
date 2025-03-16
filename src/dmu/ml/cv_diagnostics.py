@@ -49,7 +49,10 @@ class CVDiagnostics:
         d_lab = { varname : d_field['labels'][0] for varname, d_field in d_var.items() }
 
         target= self._cfg['correlations']['target']['name']
-        xlabel= self._cfg['correlations']['target']['overlay']['plots'][target]['labels'][0]
+        if 'overlay' not in self._cfg['correlations']['target']:
+            xlabel = target
+        else:
+            xlabel= self._cfg['correlations']['target']['overlay']['plots'][target]['labels'][0]
 
         d_lab[target]  = xlabel
         d_lab['score'] = 'score'
