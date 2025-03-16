@@ -192,7 +192,7 @@ class CVDiagnostics:
 
         arr_score = self._get_scores()
         arr_target= self._rdf.AsNumpy([self._target])[self._target]
-        arr_wp    = numpy.percentile(arr_score, [0, 20, 40, 60, 80])
+        arr_wp    = self._cfg['correlations']['target']['overlay']['wp']
         rdf       = RDF.FromNumpy({'Score' : arr_score, self._target : arr_target})
 
         d_rdf = {}
