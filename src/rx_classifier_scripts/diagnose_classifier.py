@@ -12,7 +12,7 @@ import joblib
 import mplhep
 import matplotlib.pyplot as plt
 
-from ROOT                  import RDataFrame, EnableImplicitMT
+from ROOT                  import RDataFrame
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
 from dmu.ml.cv_diagnostics import CVDiagnostics
@@ -69,7 +69,6 @@ def _initialize() -> None:
     LogStore.set_level('dmu:ml:cv_diagnostics'            , Data.log_level)
 
     _load_config()
-    EnableImplicitMT(10)
     plt.style.use(mplhep.style.LHCb2)
 
     out_dir = Data.cfg['diagnostics']['output']
