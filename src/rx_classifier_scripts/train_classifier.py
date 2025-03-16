@@ -127,11 +127,13 @@ def _file_paths_from_wc(file_wc : str) -> list[str]:
 #---------------------------------
 def _get_yaml_paths() -> dict[str,str]:
     data_dir = os.environ['DATADIR']
+
+    log.debug(f'Loading YAML files in: {data_dir}')
     d_sample = Data.cfg_dict['dataset']['paths']
 
     d_yaml   = {}
     for name, end in d_sample.items():
-        d_yaml[name] = f'{data_dir}/{end}'
+        d_yaml[name] = f'{data_dir}/samples/{end}'
 
     return d_yaml
 #---------------------------------
