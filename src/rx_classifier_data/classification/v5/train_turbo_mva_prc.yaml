@@ -6,7 +6,6 @@ features:
     - acos_dira
     - log_h_pt
     - min_ll_ipc
-    - iso_one_mass 
     - iso_one_dchi
     - iso_cc_mom
     - iso_cc_ptasy
@@ -19,7 +18,6 @@ features:
     - acos_dira
     - log_h_pt
     - min_ll_ipc
-    - iso_one_mass 
     - iso_one_dchi
     - iso_cc_mom
     - iso_cc_ptasy
@@ -32,7 +30,6 @@ features:
     - acos_dira
     - log_h_pt
     - min_ll_ipc
-    - iso_one_mass 
     - iso_one_dchi
     - iso_cc_mom
     - iso_cc_ptasy
@@ -85,7 +82,6 @@ dataset :
     log_h_pt    : TMath::Log(H_PT)
     min_ll_ipc  : TMath::Min(TMath::Sqrt(L1_IPCHI2_OWNPV), TMath::Sqrt(L2_IPCHI2_OWNPV))
   nan :
-    iso_one_mass :  3000
     iso_one_dchi : -1
     iso_cc_mom   : -10000
     iso_nc_mom   : -10000
