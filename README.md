@@ -43,9 +43,6 @@ The output of this training are, for each fold:
 Some things that can be tried are:
 
 - The hyper-parameters need to be optimized
-- The working point needs to be optimized
-- One could train with alternative datasets, like the muon channel, given the low statistics.
-- One could also merge new datasets to improve the training.
 - One could try MLPs or other type of classifiers.
 
 ## Getting MVA scores for ntuples 
