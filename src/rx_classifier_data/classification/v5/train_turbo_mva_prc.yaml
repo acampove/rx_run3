@@ -53,11 +53,11 @@ dataset :
     sig :
       mva  : mva_cmb > 0.7
   paths:
-    mva  : /home/acampove/external_ssd/Data/samples/mva_v2.yaml # Use first version of MVA to clean for combinatorial, to train second version of PRC MVA
-    hop  : /home/acampove/external_ssd/Data/samples/hop.yaml
-    jmis : /home/acampove/external_ssd/Data/samples/jpsi_misid.yaml
-    casc : /home/acampove/external_ssd/Data/samples/cascade.yaml
-    main : /home/acampove/external_ssd/Data/samples/main.yaml 
+    mva  : mva.yaml
+    hop  : hop.yaml
+    jmis : jpsi_misid.yaml
+    casc : cascade.yaml
+    main : main.yaml 
   samples:
     sig :
       sample : Bu_Kee_eq_btosllball05_DPC
@@ -204,3 +204,34 @@ plotting:
         binning : [2800, 3400, 60]
         yscale  : 'linear'
         labels  : ['$M(K_{\to\ell},\ell)$', '']
+diagnostics:
+  output      : output/mva_rare_2024_prc/VERSION/plots/diagnostics
+  correlations:
+    target : 
+      name    : B_M
+      overlay :
+        wp:
+          - 0.0
+          - 0.5
+          - 0.7
+          - 0.8
+          - 0.9
+        general:
+          size : [20, 10]
+        saving:
+          plt_dir : output/mva_rare_2024_prc/VERSION/plots/diagnostics
+        plots:
+          B_M :
+            binning    : [4500, 6000, 40]
+            yscale     : 'linear'
+            labels     : ['M$(B^+)$', 'Entries']
+            normalized : true
+            styling :          
+              linestyle: '-' # By default there is no line, just pointer
+    methods:
+      - Pearson
+      - Kendall-$\tau$
+    figure:
+      size       : [20, 10]
+      xlabelsize : 25 
+      rotate     : 60
