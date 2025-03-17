@@ -162,8 +162,11 @@ def _get_inp() -> dict[str,RDataFrame]:
     d_rdf = {}
     log.info('Applying overlay')
     for name, cut in d_cut.items():
-        log.info(f'   {name}')
-        d_rdf[name] = rdf_in.Filter(cut, name)
+        log.info(f'   {name:<20}{cut}')
+        rdf = rdf_in.Filter(cut, name)
+        d_rdf[name] = rdf
+        rep = rdf.Report()
+        rep.Print()
 
     return d_rdf
 # ---------------------------------
