@@ -130,7 +130,7 @@ plotting:
       iso_cc_ptasy:
         normalized : true
         yscale  : 'linear'
-        binning : [-1, +1, 40]
+        binning : [-1, +1.2, 40]
         labels  : ['Iso$_{CC}^{p_T, Asym}(B^+)$MeV', '']
         styling :          
             linestyle: '-'
@@ -145,7 +145,7 @@ plotting:
       iso_nc_ptasy:
         normalized : true
         yscale  : 'linear'
-        binning : [-1, +1, 40]
+        binning : [-1, +1.2, 40]
         labels  : ['Iso$_{NC}^{p_T, Asym}(B^+)$MeV', '']
         styling :          
             linestyle: '-'
@@ -208,31 +208,30 @@ plotting:
         labels  : ['$\min(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
         styling :          
             linestyle: '-'
-      # ---------------------
       mass:
         normalized : true
-        binning : [3000, 6000, 100]
+        binning : [4400, 6500, 50]
         yscale  : 'linear'
         labels  : ['$M(B^+)$', '']
         styling :          
             linestyle: '-'
       hop.hop_mass:
         normalized : true
-        binning : [1000, 7000, 60]
+        binning : [3000, 7000, 60]
         yscale  : 'linear'
         labels  : ['$M_{HOP}(B^+)$', '']
         styling :          
             linestyle: '-'
       casc.swp_cascade_mass_swp:
         normalized : true
-        binning : [1700, 2200, 60]
+        binning : [1700, 3000, 60]
         yscale  : 'linear'
         labels  : ['$M(K,\ell_{\to\pi})$', '']
         styling :          
             linestyle: '-'
       jmis.swp_jpsi_misid_mass_swp:
         normalized : true
-        binning : [2800, 3400, 60]
+        binning : [2000, 4000, 60]
         yscale  : 'linear'
         labels  : ['$M(K_{\to\ell},\ell)$', '']
         styling :          
