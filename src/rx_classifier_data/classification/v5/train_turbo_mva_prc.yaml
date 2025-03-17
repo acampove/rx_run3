@@ -48,10 +48,11 @@ hyper               :
 dataset :
   selection:
     bkg :
+      bdt  : mva_cmb > 0.7
       mass : B_M < 5100
-      mva  : mva_cmb > 0.7
     sig :
-      mva  : mva_cmb > 0.7
+      bdt  : mva_cmb > 0.7
+      mass : (1) 
   paths:
     mva  : mva.yaml
     hop  : hop.yaml
