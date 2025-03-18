@@ -60,6 +60,8 @@ class FitComponent:
         self._rdf       = rdf
         self._pdf       = pdf
         self._obs       = obs if pdf is None else pdf.space
+        self._minx      = float(self._obs.lower)
+        self._maxx      = float(self._obs.upper)
         self._obs_name, = self._obs.obs
         self._minimizer = self._get_minimizer()
     # --------------------
@@ -177,6 +179,9 @@ class FitComponent:
         title   = f'Entries={nentries}'
 
         obj.axs[0].set_title(title)
+        obj.axs[1].set_ylim([-5, +5])
+        obj.axs[1].plot([self._minx, self._maxx], [+3, +3], linestyle='--', color='red')
+        obj.axs[1].plot([self._minx, self._maxx], [-3, -3], linestyle='--', color='red')
 
         plot_path = f'{self._out_dir}/fit.png'
         log.info(f'Saving fit plot to: {plot_path}')
