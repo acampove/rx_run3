@@ -6,10 +6,7 @@ selection:
   no_tail : B_const_mass_M > 5160
   mass    : (1)
 overlay:
-  Block 1&2: block == 1 || block == 2
-  Block 5  : block == 5
-  Block 6  : block == 6
-  Block 7&8: block == 7 || block == 8
+  All: (1) 
 plots:
     B_PT :
       normalized : true
@@ -20,14 +17,14 @@ plots:
           linestyle: '-'
     B_IPCHI2_OWNPV :
       normalized : true
-      binning : [0, 20, 100]
+      binning : [0, 30, 100]
       yscale  : 'linear'
       labels  : ['$IP_{\chi^2}(B^+)$', '']
       styling :          
           linestyle: '-'
     B_FDCHI2_OWNPV :
       normalized : true
-      binning : [0, 10000, 100]
+      binning : [0, 2000, 30]
       yscale  : 'linear'
       labels  : ['$FD_{\chi^2}(B^+)$', '']
       styling :          
