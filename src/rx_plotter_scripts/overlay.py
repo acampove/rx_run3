@@ -30,7 +30,7 @@ class Data:
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
     data_dir   = os.environ['DATADIR']
-    l_kind     = ['ecal_xy', 'brem', 'block_no_tail', 'npv', 'resolution']
+    l_kind     = ['ecal_xy', 'brem', 'block_no_tail', 'npv', 'resolution', 'for_hlt']
 
     mplhep.style.use('LHCb2')
 
