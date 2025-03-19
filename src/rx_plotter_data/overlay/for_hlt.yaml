@@ -1,44 +1,54 @@
 general:
   size : [10, 8]
 definitions:
-  nbrem : L1_BremMultiplicity + L2_BremMultiplicity
+  nbrem      : L1_BremMultiplicity + L2_BremMultiplicity
+  min_ll_pt  : TMath::Min(L1_PT , L2_PT)
 selection:
-  no_tail : B_const_mass_M > 5160
-  mass    : (1)
+  bdt    : (1)
+  mass   : (1)
 overlay:
-  All: (1) 
+  Brem 0 : nbrem == 0
+  Brem 1 : nbrem == 1
+  Brem 2 : nbrem == 2
 plots:
+    min_ll_pt:
+      normalized : true
+      binning : [0, 10000, 40]
+      yscale  : 'linear'
+      labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
+      styling :          
+          linestyle: '-'
     B_PT :
       normalized : true
-      binning : [0, 10000, 100]
+      binning : [0, 10000, 40]
       yscale  : 'linear'
       labels  : ['$p_T(B^+)$', '']
       styling :          
           linestyle: '-'
     B_IPCHI2_OWNPV :
       normalized : true
-      binning : [0, 30, 100]
+      binning : [0, 30, 40]
       yscale  : 'linear'
       labels  : ['$IP_{\chi^2}(B^+)$', '']
       styling :          
           linestyle: '-'
     B_FDCHI2_OWNPV :
       normalized : true
-      binning : [0, 2000, 30]
+      binning : [0, 2000, 40]
       yscale  : 'linear'
       labels  : ['$FD_{\chi^2}(B^+)$', '']
       styling :          
           linestyle: '-'
     B_ENDVERTEX_CHI2DOF:
       normalized : true
-      binning : [0, 9, 100]
+      binning : [0, 9, 40]
       yscale  : 'linear'
       labels  : ['$\chi^2/dof(B^+)$', '']
       styling :          
           linestyle: '-'
     B_DIRA_OWNPV:
       normalized : true
-      binning : [0.9995, 1, 100]
+      binning : [0.9995, 1, 40]
       yscale  : 'linear'
       labels  : ['DIRA$(B^+)$', '']
       styling :          
