@@ -1,5 +1,6 @@
 general:
   size : [10, 8]
+definitions : {}
 selection:
   bdt    : (1)
   mass   : B_const_mass_M > 5160
