@@ -3,9 +3,9 @@ general:
 definitions:
   nbrem : L1_BremMultiplicity + L2_BremMultiplicity
 overlay:
-  brem_0 : nbrem == 0
-  brem_1 : nbrem == 1
-  brem_n : nbrem >= 2
+  Brem 0 : nbrem == 0
+  Brem 1 : nbrem == 1
+  Brem 2 : nbrem >= 2
 plots:
     B_M:
         binning    : [4500, 6000, 100]
