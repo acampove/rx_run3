@@ -16,6 +16,7 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
+data_mc='rx_plotter_scripts.data_mc:main'
 binned ='rx_plotter_scripts.binned:main'
 overlay='rx_plotter_scripts.overlay:main'
 plot_1d='rx_plotter_scripts.plot_1d:main'
