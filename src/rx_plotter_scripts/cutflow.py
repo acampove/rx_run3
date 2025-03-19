@@ -31,7 +31,7 @@ class Data:
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
     data_dir   = os.environ['DATADIR']
 
-    mplhep.style.use('LHCb1')
+    mplhep.style.use('LHCb2')
 
     chanel  : str
     substr  : str
