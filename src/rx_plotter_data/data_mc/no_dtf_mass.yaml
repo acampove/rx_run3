@@ -8,7 +8,7 @@ definitions :
   min_ll_eta : TMath::Min(L1_ETA , L2_ETA)
   max_ll_eta : TMath::Max(L1_ETA , L2_ETA)
 selection:
-  q2     : Jpsi_M > 2000 && Jpsi_M < 3200 
+  q2     : Jpsi_M > 2300 && Jpsi_M < 3400 
   bdt    : mva_cmb > 0.9
   mass   : B_const_mass_M > 5160
 plots:
@@ -25,7 +25,7 @@ plots:
       labels  : ['$p_T(B^+)$', '']
     H_PT :
       normalized : true
-      binning : [0, 15000, 40]
+      binning : [0, 10000, 40]
       yscale  : linear 
       labels  : ['$p_T(K^+)$', '']
     B_ETA :
@@ -61,7 +61,7 @@ plots:
       normalize : True
     Jpsi_M:
       normalized : true
-      binning : [2000, 3200, 40]
+      binning : [2300, 3400, 40]
       yscale  : linear
       labels  : ['M$(J/\psi(\to ee))$', '']
       normalize : True
@@ -81,7 +81,7 @@ plots:
       normalized : true
       binning : [0, 20, 40]
       yscale  : 'linear'
-      labels  : ['DIRA$(B^+)$', '']
+      labels  : ['1M x (1-DIRA$(B^+)$ )', '']
     B_FDCHI2_OWNPV :
       normalized : true
       binning : [0, 10000, 40]
@@ -94,7 +94,7 @@ plots:
       labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
     max_ll_pt:
       normalized : true
-      binning : [0, 5000, 40]
+      binning : [0, 8000, 40]
       yscale  : linear
       labels  : ['$\max(p_T(e^+), p_T(e^-))$', '']
     min_ll_eta:
