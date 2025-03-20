@@ -102,3 +102,17 @@ def test_correction():
 
     _check_equal(df_org, df_cor, must_differ = True)
 #-----------------------------------------
+def test_correction_brem_track():
+    '''
+    Apply correction using brem based energy instead of bias measurement
+    '''
+    df_org = _get_df()
+    df_org = df_org.fillna(-1)
+    cor    = ElectronBiasCorrector(skip_correction=False)
+    df_cor = df_org.apply(lambda row : cor.correct(row, 'L1', kind='brem_track'), axis=1)
+
+    df_org = _filter_kinematics(df_org, lepton='L1')
+    df_cor = _filter_kinematics(df_cor, lepton='L1')
+
+    _check_equal(df_org, df_cor, must_differ = True)
+#-----------------------------------------
