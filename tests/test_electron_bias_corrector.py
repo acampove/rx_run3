@@ -6,6 +6,7 @@ import os
 
 import numpy
 import pytest
+import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
@@ -22,12 +23,13 @@ class Data:
     Data class
     '''
     plt_dir = '/tmp/tests/rx_data/electron_bias_corrector'
-    EnableImplicitMT(10)
 #-----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_data:electron_bias_corrector', 10)
+    plt.style.use(mplhep.style.LHCb2)
 
+    EnableImplicitMT(10)
     os.makedirs(Data.plt_dir, exist_ok=True)
 #-----------------------------------------
 def _add_column(df : pnd.DataFrame, var : str):
@@ -47,15 +49,15 @@ def _get_range(var : str) -> tuple[float,float]:
         minx = 2
         maxx = 5
 
-    if var == 'L1_PT':
+    if var in ['L1_PT', 'L1_TRACK_PT']:
         minx =    250
         maxx = 20_000
 
-    if var == 'max_PT':
+    if var in ['max_PT', 'max_TRACK_PT']:
         minx =    250
         maxx = 20_000
 
-    if var == 'min_PT':
+    if var in ['min_PT', 'min_TRACK_PT']:
         minx =    250
         maxx = 10_000
 
@@ -66,11 +68,11 @@ def _get_range(var : str) -> tuple[float,float]:
     return minx, maxx
 #-----------------------------------------
 def _plot_brem_kinematics(df : pnd.DataFrame, var : str, label : str, ax=None):
-    df                                                                         = _add_column(df, var)
+    df         = _add_column(df, var)
     minx, maxx = _get_range(var)
 
     if label == 'Original':
-        ax = df[var].hist(label=label, alpha=0.5, bins=40, range=[minx,maxx], ax=ax)
+        ax = df[var].hist(label=label, alpha=0.5, bins=40, range=[minx,maxx], ax=ax, color='gray')
     else:
         ax = df[var].hist(label=label, histtype='step', bins=40, range=[minx,maxx], ax=ax)
 
@@ -82,6 +84,9 @@ def _plot_correction(org : pnd.DataFrame, cor : pnd.DataFrame, name : str) -> No
     for var in ['L1_ETA', 'L1_PHI', 'L1_PT', 'max_PT', 'min_PT']:
         ax=_plot_brem_kinematics(df=org, var=var, label='Original' )
         ax=_plot_brem_kinematics(df=cor, var=var, label='Corrected', ax=ax)
+        if 'PT' in var:
+            name= var.replace('PT', 'TRACK_PT')
+            ax  = _plot_brem_kinematics(df=cor, var=name, label='Track', ax=ax)
 
         nentries = len(org)
         title = f'Entries={nentries}'
@@ -108,8 +113,13 @@ def _get_df(nentries : int = 10) -> pnd.DataFrame:
         'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
         }
 
-    gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpEE_MVA')
+    gtr = RDFGetter(sample='DATA_24_Mag*_24c4', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
+    rdf = rdf.Define('L1_TRACK_PT' , 'TMath::Sqrt(L1_TRACK_PX * L1_TRACK_PX + L1_TRACK_PY * L1_TRACK_PY)')
+    rdf = rdf.Define('L2_TRACK_PT' , 'TMath::Sqrt(L2_TRACK_PX * L2_TRACK_PX + L2_TRACK_PY * L2_TRACK_PY)')
+    rdf = rdf.Define('max_TRACK_PT', 'TMath::Max(L1_TRACK_PT, L2_TRACK_PT)')
+    rdf = rdf.Define('min_TRACK_PT', 'TMath::Min(L1_TRACK_PT, L2_TRACK_PT)')
+
     rdf = rdf.Filter('mva_cmb > 0.8 && mva_prc > 0.5')
     rdf = rdf.Filter('Jpsi_M > 2800 && Jpsi_M < 3200')
     rdf = rdf.Filter('B_const_mass_M > 5200')
@@ -118,7 +128,7 @@ def _get_df(nentries : int = 10) -> pnd.DataFrame:
     rdf = rdf.Redefine('L1_BREMHYPOCOL' , 'int(L1_BREMHYPOCOL)' )
     rdf = rdf.Redefine('L1_BREMHYPOROW' , 'int(L1_BREMHYPOROW)' )
     rdf = rdf.Redefine('L1_BREMHYPOAREA', 'int(L1_BREMHYPOAREA)')
-    rdf = rdf.Range(nentries)
+    #rdf = rdf.Range(nentries)
 
     l_col  = [ name.c_str() for name in rdf.GetColumnNames() if _pick_column(name.c_str(), rdf) ]
     d_data = rdf.AsNumpy(l_col)
@@ -132,13 +142,14 @@ def _filter_kinematics(df : pnd.DataFrame, lepton : str = None):
                  f'{lepton}_PY',
                  f'{lepton}_PZ',
                  f'{lepton}_PT',
+                 f'{lepton}_TRACK_PT',
                  f'{lepton}_ETA',
                  f'{lepton}_PHI']
 
     if lepton is None:
         l_to_keep_l1 = [ name.replace('None', 'L1') for name in l_to_keep ]
         l_to_keep_l2 = [ name.replace('None', 'L2') for name in l_to_keep ]
-        l_to_keep    = l_to_keep_l1 + l_to_keep_l2
+        l_to_keep    = l_to_keep_l1 + l_to_keep_l2 + ['max_TRACK_PT', 'min_TRACK_PT']
 
     return df[l_to_keep]
 #-----------------------------------------
