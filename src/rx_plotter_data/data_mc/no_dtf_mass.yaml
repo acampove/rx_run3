@@ -1,0 +1,35 @@
+general:
+  size : [10, 8]
+definitions :
+  nbrem : int(L1_HASBREMADDED) + int(L2_HASBREMADDED)
+selection:
+  bdt    : mva_cmb > 0.9
+  mass   : B_const_mass_M > 5160
+  #mass   : B_const_mass_M > 5250 && B_const_mass_M < 5300
+plots:
+    B_const_mass_M:
+      normalized : true
+      binning : [5100, 5800, 60]
+      yscale  : 'linear'
+      labels  : ['M${}_{DTF}(B^+ \to J/\psi(\to ee)K^+)$', '']
+      normalize : True
+    B_M:
+      normalized : true
+      binning : [4500, 6000, 60]
+      yscale  : 'linear'
+      labels  : ['M$(B^+ \to J/\psi(\to ee)K^+)$', '']
+      normalize : True
+    ecalo_bias_B_M:
+      normalized : true
+      binning : [4500, 6000, 60]
+      yscale  : 'linear'
+      labels  : ['M${}_{corr}(B^+ \to J/\psi(\to ee)K^+)$', '']
+      normalize : True
+    H_PID_K:
+      normalized : true
+      binning : [2, 20, 20]
+      yscale  : 'linear'
+      labels  : ['PIDK', '']
+      normalize : True
+style:
+  skip_lines : true
