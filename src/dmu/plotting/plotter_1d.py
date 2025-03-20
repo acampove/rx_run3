@@ -60,9 +60,18 @@ class Plotter1D(Plotter):
                      arr_val : numpy.ndarray,
                      arr_wgt : numpy.ndarray,
                      hst,
-                     name    : str) -> None:
+                     name    : str,
+                     varname : str) -> None:
         if 'plugin' not in self._d_cfg:
             return
+
+        if 'vars' in self._d_cfg['plugin']['fwhm']:
+            l_var = self._d_cfg['plugin']['fwhm']['vars']
+            if varname not in l_var:
+                log.debug(f'Not running FWHM for variable {varname}, not in {l_var}')
+                return
+        else:
+            log.debug('Running FWHM for all variables')
 
         d_plugin = self._d_cfg['plugin']
         if 'fwhm' in d_plugin:
@@ -112,7 +121,7 @@ class Plotter1D(Plotter):
             arr_wgt      = self._normalize_weights(arr_wgt, var)
             hst          = Hist.new.Reg(bins=bins, start=minx, stop=maxx, name='x').Weight()
             hst.fill(x=arr_val, weight=arr_wgt)
-            self._run_plugins(arr_val, arr_wgt, hst, name)
+            self._run_plugins(arr_val, arr_wgt, hst, name, var)
 
             if 'styling' in self._d_cfg['plots'][var]:
                 style = self._d_cfg['plots'][var]['styling']
