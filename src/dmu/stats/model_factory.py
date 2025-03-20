@@ -158,7 +158,7 @@ class ModelFactory:
     #-----------------------------------------
     @MethodRegistry.register('cbr')
     def _get_cbr(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('mu_cbr', suffix, 5300, 5100, 5350)
+        mu  = self._get_parameter('mu_cbr', suffix, 5300, 5100, 5500)
         sg  = self._get_parameter('sg_cbr', suffix,   10,    2,  300)
         ar  = self._get_parameter('ac_cbr', suffix,   -2, -14., -0.1)
         nr  = self._get_parameter('nc_cbr', suffix,    1,  0.5,  150)
@@ -180,7 +180,7 @@ class ModelFactory:
     #-----------------------------------------
     @MethodRegistry.register('cbl')
     def _get_cbl(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('mu_cbl', suffix, 5300, 5100, 5350)
+        mu  = self._get_parameter('mu_cbl', suffix, 5300, 5100, 5500)
         sg  = self._get_parameter('sg_cbl', suffix,   10,    2,  300)
         al  = self._get_parameter('ac_cbl', suffix,    2,  0.0,  14.)
         nl  = self._get_parameter('nc_cbl', suffix,    1,  0.5,  150)
@@ -191,7 +191,7 @@ class ModelFactory:
     #-----------------------------------------
     @MethodRegistry.register('gauss')
     def _get_gauss(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('mu_gauss', suffix, 5300, 5100, 5350)
+        mu  = self._get_parameter('mu_gauss', suffix, 5300, 5100, 5500)
         sg  = self._get_parameter('sg_gauss', suffix,   10,    2,  300)
 
         pdf = zfit.pdf.Gauss(mu, sg, self._obs, name=f'gauss{suffix}')
