@@ -8,14 +8,13 @@ definitions :
   min_ll_eta : TMath::Min(L1_ETA , L2_ETA)
   max_ll_eta : TMath::Max(L1_ETA , L2_ETA)
 selection:
-  q2i    : Jpsi_M > 2000 && Jpsi_M < 3200 
+  q2     : Jpsi_M > 2000 && Jpsi_M < 3200 
   bdt    : mva_cmb > 0.9
   mass   : B_const_mass_M > 5160
-  #mass   : B_const_mass_M > 5250 && B_const_mass_M < 5300
 plots:
     B_const_mass_M:
       normalized : true
-      binning : [5100, 5800, 40]
+      binning : [5100, 5500, 40]
       yscale  : 'linear'
       labels  : ['M${}_{DTF}(B^+ \to J/\psi(\to ee)K^+)$', '']
       normalize : True
@@ -24,6 +23,11 @@ plots:
       binning : [0, 20000, 40]
       yscale  : linear
       labels  : ['$p_T(B^+)$', '']
+    H_PT :
+      normalized : true
+      binning : [0, 15000, 40]
+      yscale  : linear 
+      labels  : ['$p_T(K^+)$', '']
     B_ETA :
       normalized : true
       binning : [2, 5, 40]
@@ -31,12 +35,12 @@ plots:
       labels  : ['$\eta(B^+)$', '']
     Jpsi_PT :
       normalized : true
-      binning : [0, 30000, 40]
+      binning : [0, 15000, 40]
       yscale  : linear
       labels  : ['$p_T(J/\psi)$', '']
     Jpsi_ETA :
       normalized : true
-      binning : [0, 5, 40]
+      binning : [2, 5, 40]
       yscale  : linear 
       labels  : ['$\eta(J/\psi)$', '']
     Jpsi_IPCHI2_OWNPV:
@@ -75,7 +79,7 @@ plots:
       normalize : True
     B_DIRA_OWNPV_norm:
       normalized : true
-      binning : [0, 100, 40]
+      binning : [0, 20, 40]
       yscale  : 'linear'
       labels  : ['DIRA$(B^+)$', '']
     B_FDCHI2_OWNPV :
@@ -85,22 +89,22 @@ plots:
       labels  : ['$FD_{\chi^2}(B^+)$', '']
     min_ll_pt:
       normalized : true
-      binning : [0, 10000, 40]
+      binning : [0, 5000, 40]
       yscale  : linear
       labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
     max_ll_pt:
       normalized : true
-      binning : [0, 20000, 40]
+      binning : [0, 5000, 40]
       yscale  : linear
       labels  : ['$\max(p_T(e^+), p_T(e^-))$', '']
     min_ll_eta:
       normalized : true
-      binning : [0, 5, 30]
+      binning : [1.5, 5, 30]
       yscale  : linear 
       labels  : ['$\min(\eta(e^+), \eta(e^-))$', '']
     max_ll_eta:
       normalized : true
-      binning : [0, 5, 30]
+      binning : [1.5, 5, 30]
       yscale  : linear 
       labels  : ['$\max(\eta(e^+), \eta(e^-))$', '']
 style:
