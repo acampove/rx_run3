@@ -187,6 +187,7 @@ class FitComponent:
         plot_path = f'{self._out_dir}/fit.png'
         log.info(f'Saving fit plot to: {plot_path}')
         plt.savefig(plot_path)
+        plt.close()
     # -------------------------------
     def _fix_tails(self, sig_par : Parameter) -> None:
         s_par = self._pdf.get_params()
