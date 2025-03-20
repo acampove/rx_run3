@@ -12,6 +12,14 @@ selection:
   bdt    : mva_cmb > 0.9
   mass   : B_const_mass_M > 5160
 plots:
+    nPVs:
+      normalized : true
+      binning : [0, 10, 10]
+      yscale  : 'linear'
+      labels  : ['nPVs', '']
+      normalize : True
+      styling:
+        linestyle : '-'
     B_const_mass_M:
       normalized : true
       binning : [5100, 5500, 40]
@@ -109,3 +117,11 @@ plots:
       labels  : ['$\max(\eta(e^+), \eta(e^-))$', '']
 style:
   skip_lines : true
+plugin:
+    fwhm:
+      vars:
+        - B_M
+      obs    : [4500, 6000]
+      plot   : true        
+      format : FWHM={:.0f} MeV 
+      add_std: True        
