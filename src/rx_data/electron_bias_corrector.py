@@ -119,6 +119,9 @@ class ElectronBiasCorrector:
     # ---------------------------------
     def _correct_with_track_brem(self, e_track : v4d, row : pnd.Series) -> v4d:
         brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
+        if brem_energy == 0:
+            return e_track
+
         eta = e_track.eta
         phi = e_track.phi
 
@@ -134,7 +137,7 @@ class ElectronBiasCorrector:
 
         self._check_massless_brem(gamma)
 
-        return gamma
+        return e_track + gamma
     # ---------------------------------
     def correct(self, row : pnd.Series, name : str, kind : str = 'bias') -> pnd.Series:
         '''
