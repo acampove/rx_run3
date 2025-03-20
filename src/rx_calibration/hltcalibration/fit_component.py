@@ -179,6 +179,7 @@ class FitComponent:
         title   = f'Entries={nentries}'
 
         obj.axs[0].set_title(title)
+        obj.axs[0].set_ylim(bottom=0)
         obj.axs[1].set_ylim([-5, +5])
         obj.axs[1].plot([self._minx, self._maxx], [+3, +3], linestyle='--', color='red')
         obj.axs[1].plot([self._minx, self._maxx], [-3, -3], linestyle='--', color='red')
