@@ -117,22 +117,48 @@ class ElectronBiasCorrector:
 
         raise ValueError(f'Cannot find attribute {name} among:')
     # ---------------------------------
-    def correct(self, row : pnd.Series, name : str) -> pnd.Series:
+    def _correct_with_track_brem(self, e_track : v4d, row : pnd.Series) -> v4d:
+        brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
+        eta = e_track.eta
+        phi = e_track.phi
+
+        gamma  = v4d(pt=1, eta=eta, phi=phi, m=0)
+        factor = brem_energy / gamma.e
+
+        px     = factor * gamma.px
+        py     = factor * gamma.py
+        pz     = factor * gamma.pz
+        e      = factor * gamma.e
+
+        gamma  = v4d(px=px, py=py, pz=pz, e=e)
+
+        self._check_massless_brem(gamma)
+
+        return gamma
+    # ---------------------------------
+    def correct(self, row : pnd.Series, name : str, kind : str = 'bias') -> pnd.Series:
         '''
         Corrects kinematics and returns row
         row  : Pandas dataframe row
         name : Particle name, e.g. L1
+        kind : Type of correction, [bias, brem_track]
         '''
         self._name = name
+        e_track    = self._get_electron(row, kind='TRACK_')
 
-        if not self._attr_from_row(row, f'{name}_HASBREMADDED'):
-            return row
+        if   kind == 'bias':
+            if not self._attr_from_row(row, f'{name}_HASBREMADDED'):
+                return row
 
-        e_track = self._get_electron(row, kind='TRACK_')
-        e_brem  = self._get_ebrem(row, e_track)
-        e_brem  = self._correct_brem(e_brem, row)
-        e_corr  = e_track + e_brem
-        row     = self._update_row(row, e_corr)
+            e_brem  = self._get_ebrem(row, e_track)
+            e_brem  = self._correct_brem(e_brem, row)
+            e_corr  = e_track + e_brem
+        elif kind == 'brem_track':
+            e_corr  = self._correct_with_track_brem(e_track, row)
+        else:
+            raise NotImplementedError(f'Invalid correction of type: {kind}')
+
+        row = self._update_row(row, e_corr)
 
         return row
 # ---------------------------------
