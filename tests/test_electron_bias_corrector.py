@@ -11,7 +11,7 @@ import pandas            as pnd
 import matplotlib.pyplot as plt
 
 from pandarallel                     import pandarallel
-from ROOT                            import RDataFrame, EnableImplicitMT
+from ROOT                            import RDataFrame
 from dmu.logging.log_store           import LogStore
 from rx_data.rdf_getter              import RDFGetter
 from rx_data.electron_bias_corrector import ElectronBiasCorrector
@@ -29,7 +29,6 @@ def _initialize():
     LogStore.set_level('rx_data:electron_bias_corrector', 10)
     plt.style.use(mplhep.style.LHCb2)
 
-    EnableImplicitMT(10)
     os.makedirs(Data.plt_dir, exist_ok=True)
 #-----------------------------------------
 def _add_column(df : pnd.DataFrame, var : str):
@@ -128,7 +127,7 @@ def _get_df(nentries : int = 10) -> pnd.DataFrame:
     rdf = rdf.Redefine('L1_BREMHYPOCOL' , 'int(L1_BREMHYPOCOL)' )
     rdf = rdf.Redefine('L1_BREMHYPOROW' , 'int(L1_BREMHYPOROW)' )
     rdf = rdf.Redefine('L1_BREMHYPOAREA', 'int(L1_BREMHYPOAREA)')
-    #rdf = rdf.Range(nentries)
+    rdf = rdf.Range(nentries)
 
     l_col  = [ name.c_str() for name in rdf.GetColumnNames() if _pick_column(name.c_str(), rdf) ]
     d_data = rdf.AsNumpy(l_col)
@@ -193,7 +192,7 @@ def test_correction_brem_track():
     LogStore.set_level('rx_data:electron_bias_corrector', 40)
     pandarallel.initialize(nb_workers=10, progress_bar=True)
 
-    df_org = _get_df(nentries = 100_000)
+    df_org = _get_df(nentries = 10_000)
     df_org = df_org.fillna(-1)
 
     cor    = ElectronBiasCorrector(skip_correction=False)
