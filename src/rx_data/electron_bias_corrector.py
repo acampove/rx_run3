@@ -117,7 +117,11 @@ class ElectronBiasCorrector:
 
         raise ValueError(f'Cannot find attribute {name} among:')
     # ---------------------------------
-    def _correct_with_track_brem(self, e_track : v4d, row : pnd.Series) -> v4d:
+    def _correct_with_track_brem(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
+        if self._skip_correction:
+            return e_track + e_brem
+
+        log.info('Applying brem_track electron correction')
         brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
         if brem_energy == 0:
             return e_track
@@ -147,17 +151,17 @@ class ElectronBiasCorrector:
         kind : Type of correction, [ecalo_bias, brem_track]
         '''
         self._name = name
-        e_track    = self._get_electron(row, kind='TRACK_')
+        e_track = self._get_electron(row, kind='TRACK_')
+        e_brem  = self._get_ebrem(row, e_track)
 
         if   kind == 'ecalo_bias':
             if not self._attr_from_row(row, f'{name}_HASBREMADDED'):
                 return row
 
-            e_brem  = self._get_ebrem(row, e_track)
             e_brem  = self._correct_brem(e_brem, row)
             e_corr  = e_track + e_brem
         elif kind == 'brem_track':
-            e_corr  = self._correct_with_track_brem(e_track, row)
+            e_corr  = self._correct_with_track_brem(e_track, e_brem, row)
         else:
             raise NotImplementedError(f'Invalid correction of type: {kind}')
 
