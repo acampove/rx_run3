@@ -98,7 +98,7 @@ def _plot_correction(org : pnd.DataFrame, cor : pnd.DataFrame, name : str) -> No
 def _pick_column(name : str, rdf : RDataFrame) -> bool:
     ctype = rdf.GetColumnType(name)
 
-    if ctype not in ['Int_t', 'Float_t', 'Double_t']:
+    if ctype not in ['Int_t', 'Float_t', 'Double_t', 'Bool_t', 'double']:
         return False
 
     return True
@@ -147,7 +147,9 @@ def _filter_kinematics(df : pnd.DataFrame, lepton : str = None):
         l_to_keep_l2 = [ name.replace('None', 'L2') for name in l_to_keep ]
         l_to_keep    = l_to_keep_l1 + l_to_keep_l2 + ['max_TRACK_PT', 'min_TRACK_PT']
 
-    return df[l_to_keep]
+    df = df[l_to_keep]
+
+    return df
 #-----------------------------------------
 def _check_equal(df_org : pnd.DataFrame, df_cor : pnd.DataFrame, must_differ : bool) -> None:
     equal_cols = numpy.isclose(df_org, df_cor, rtol=0.001)
