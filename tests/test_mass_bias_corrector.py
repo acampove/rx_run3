@@ -53,6 +53,18 @@ def _compare_masses(d_rdf : dict[str,RDataFrame], name : str, title : str) -> No
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
 #-----------------------------------------
+def _check_columns(rdf : RDataFrame) -> None:
+    l_colname = [ name.c_str() for name in rdf.GetColumnNames() ]
+
+    l_track_brem = [ name for name in l_colname if name.endswith('BREMTRACKBASEDENERGY') ]
+
+    if len(l_track_brem) == 0:
+        for colname in l_colname:
+            log.warning(colname)
+        raise ValueError('No BREMTRACKBASEDENERGY found')
+
+    log.info(f'Found: {l_track_brem}')
+#-----------------------------------------
 def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> RDataFrame:
     RDFGetter.samples = {
         'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
@@ -87,6 +99,8 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
 
     if npvs is not None:
         rdf = rdf.Filter(f'nPVs == {npvs}')
+
+    _check_columns(rdf)
 
     return rdf
 #-----------------------------------------
