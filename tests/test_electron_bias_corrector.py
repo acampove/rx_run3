@@ -98,10 +98,7 @@ def _plot_correction(org : pnd.DataFrame, cor : pnd.DataFrame, name : str) -> No
 def _pick_column(name : str, rdf : RDataFrame) -> bool:
     ctype = rdf.GetColumnType(name)
 
-    if not name.startswith('L1_') or not name.startswith('L2_'):
-        return False
-
-    if ctype not in ['Int_t', 'Float_t', 'Double_t', 'int']:
+    if ctype not in ['Int_t', 'Float_t', 'Double_t']:
         return False
 
     return True
