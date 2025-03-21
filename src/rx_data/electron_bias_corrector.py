@@ -21,11 +21,6 @@ class ElectronBiasCorrector:
         self._mass            = 0.511
         self._bcor            = BremBiasCorrector()
         self._name : str
-
-        if self._skip_correction:
-            log.warning('Not applying electron bias correction')
-        else:
-            log.info('Applying electron bias correction')
     # ---------------------------------
     def _get_electron(self, row : pnd.Series, kind : str) -> v4d:
         px = self._attr_from_row(row, f'{self._name}_{kind}PX')
