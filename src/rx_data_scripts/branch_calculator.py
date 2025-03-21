@@ -35,7 +35,7 @@ class Data:
     pbar : bool
     dry  : bool
     lvl  : int
-    l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias']
+    l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias', 'brem_track']
     tree_name = 'DecayTree'
 # ---------------------------------
 def _parse_args() -> None:
@@ -180,13 +180,13 @@ def _create_file(path : str, trigger : str) -> None:
     if   Data.kind == 'hop':
         obj = HOPCalculator(rdf=rdf)
         rdf = obj.get_rdf(preffix=Data.kind)
-    elif Data.kind == 'ecalo_bias':
-        is_mc = _is_mc(path)
-        if is_mc:
+    elif Data.kind in ['ecalo_bias', 'brem_track']:
+        skip_correction = _is_mc(path) and Data.kind == 'ecalo_bias'
+        if skip_correction:
             log.warning('Turning off ecalo_bias correction for MC sample')
 
-        cor = MassBiasCorrector(rdf=rdf, skip_correction=is_mc)
-        rdf = cor.get_rdf()
+        cor = MassBiasCorrector(rdf=rdf, skip_correction=skip_correction, ecorr_kind=Data.kind)
+        rdf = cor.get_rdf(mass_name=f'{Data.kind}_B_M')
     elif Data.kind == 'swp_jpsi_misid':
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' :  13, 'L2' :  13}, d_had={'H' :  13})
         rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar)
