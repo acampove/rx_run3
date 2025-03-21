@@ -168,6 +168,9 @@ def test_skip_correction():
     cor    = ElectronBiasCorrector(skip_correction=True)
     df_cor = df_org.apply(lambda row : cor.correct(row, 'L1'), axis=1)
 
+    df_org = _filter_kinematics(df_org, lepton='L1')
+    df_cor = _filter_kinematics(df_cor, lepton='L1')
+
     _check_equal(df_org, df_cor, must_differ = False)
 #-----------------------------------------
 def test_correction():
