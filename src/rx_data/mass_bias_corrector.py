@@ -4,7 +4,6 @@ Module storing MassBiasCorrector class
 # pylint: disable=too-many-return-statements
 
 import math
-import fnmatch
 
 import vector
 import pandas as pnd
