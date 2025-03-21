@@ -44,6 +44,9 @@ def _pick_column(name : str) -> bool:
     if not_l1 and not_l2 and not_kp:
         return False
 
+    if 'BREMTRACKBASEDENERGY' in name:
+        return True
+
     if 'HASBREMADDED' in name:
         return True
 
