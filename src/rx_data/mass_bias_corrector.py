@@ -100,6 +100,7 @@ class MassBiasCorrector:
         rdf : ROOT dataframe
         skip_correction: Will do everything but not correction. Needed to check that only the correction is changing data.
         nthreads : Number of threads, used by pandarallel
+        ecorr_kind : Kind of correction to be added to electrons, [ecalo_bias, brem_track]
         '''
         self._df              = df_from_rdf(rdf)
         self._skip_correction = skip_correction
