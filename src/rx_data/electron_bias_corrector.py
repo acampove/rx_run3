@@ -64,6 +64,8 @@ class ElectronBiasCorrector:
             log.warning('Skipping electron correction')
             return e_brem
 
+        log.info('Applying ecalo_bias correction')
+
         brem_row = self._attr_from_row(row, f'{self._name}_BREMHYPOROW')
         brem_col = self._attr_from_row(row, f'{self._name}_BREMHYPOCOL')
         brem_area= self._attr_from_row(row, f'{self._name}_BREMHYPOAREA')
