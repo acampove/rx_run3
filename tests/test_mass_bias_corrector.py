@@ -11,7 +11,7 @@ import pytest
 import yaml
 import matplotlib.pyplot as plt
 
-from ROOT                        import RDataFrame, EnableImplicitMT
+from ROOT                        import RDataFrame, EnableImplicitMT, DisableImplicitMT
 from dmu.logging.log_store       import LogStore
 from dmu.plotting.plotter_1d     import Plotter1D as Plotter
 from rx_data.rdf_getter          import RDFGetter
@@ -103,6 +103,23 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
     _check_columns(rdf)
 
     return rdf
+#-----------------------------------------
+def test_minimal():
+    '''
+    Fastest/Simplest test
+    '''
+    DisableImplicitMT()
+
+    rdf_org = _get_rdf()
+    rdf_org = rdf_org.Range(100)
+
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind=Data.ecorr_kind)
+    rdf_cor = cor.get_rdf()
+
+    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+    _compare_masses(d_rdf, 'minimal', 'minimal')
+
+    EnableImplicitMT(Data.nthreads)
 #-----------------------------------------
 @pytest.mark.parametrize('nbrem'  , [0, 1, 2])
 def test_nbrem(nbrem : int):
