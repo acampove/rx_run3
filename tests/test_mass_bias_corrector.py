@@ -23,8 +23,10 @@ class Data:
     '''
     Data class
     '''
-    plt_dir = '/tmp/tests/rx_data/mass_bias_corrector'
-    nthreads= 10
+    plt_dir    = '/tmp/tests/rx_data/mass_bias_corrector'
+    nthreads   = 10
+    #ecorr_kind = 'brem_track'
+    ecorr_kind = 'bias'
 #-----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -78,8 +80,6 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
     rdf = gtr.get_rdf()
 
     rdf = rdf.Define('nbrem', 'int(L1_HASBREMADDED) + int(L2_HASBREMADDED)')
-
-
     rdf = rdf.Filter('(Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)')
     rdf = rdf.Filter('mva.mva_cmb > 0.5 && mva.mva_prc > 0.5')
     rdf = rdf.Filter('B_const_mass_M > 5160')
@@ -110,7 +110,7 @@ def test_nbrem(nbrem : int):
     Test splitting by brem
     '''
     rdf_org = _get_rdf(nbrem=nbrem)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=Data.ecorr_kind)
     rdf_cor = cor.get_rdf()
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
@@ -124,7 +124,7 @@ def test_isinner(is_inner : bool):
     Test splitting detector region
     '''
     rdf_org = _get_rdf(is_inner = is_inner)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=Data.ecorr_kind)
     rdf_cor = cor.get_rdf()
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
@@ -139,7 +139,7 @@ def test_nbrem_npvs(nbrem : int, npvs : int):
     Split by brem and nPVs
     '''
     rdf_org = _get_rdf(nbrem=nbrem, npvs=npvs)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=Data.ecorr_kind)
     rdf_cor = cor.get_rdf()
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
