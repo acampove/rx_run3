@@ -162,7 +162,7 @@ class MassBiasCorrector:
         else:
             df['B_M'] = df.apply(self._calculate_correction, axis=1)
         df        = df[['B_M', 'EVENTNUMBER', 'RUNNUMBER']]
-
+        df        = df.fillna(-1)
         rdf       = RDF.FromPandas(df)
 
         return rdf
