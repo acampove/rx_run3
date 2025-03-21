@@ -25,8 +25,6 @@ class Data:
     '''
     plt_dir    = '/tmp/tests/rx_data/mass_bias_corrector'
     nthreads   = 10
-    #ecorr_kind = 'brem_track'
-    ecorr_kind = 'bias'
 #-----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -34,7 +32,6 @@ def _initialize():
 
     os.makedirs(Data.plt_dir, exist_ok=True)
     plt.style.use(mplhep.style.LHCb2)
-    EnableImplicitMT(Data.nthreads)
 #-----------------------------------------
 def _load_conf() -> dict:
     cfg_path = files('rx_data_data').joinpath('tests/mass_bias_corrector/mass_overlay.yaml')
@@ -104,44 +101,45 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
 
     return rdf
 #-----------------------------------------
-def test_minimal():
+@pytest.mark.parametrize('kind', ['ecalo_bias', 'brem_track'])
+def test_minimal(kind : str):
     '''
     Fastest/Simplest test
     '''
-    DisableImplicitMT()
-
     rdf_org = _get_rdf()
     rdf_org = rdf_org.Range(100)
 
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind=Data.ecorr_kind)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, 'minimal', 'minimal')
-
-    EnableImplicitMT(Data.nthreads)
 #-----------------------------------------
+@pytest.mark.parametrize('kind', ['ecalo_bias', 'brem_track'])
 @pytest.mark.parametrize('nbrem'  , [0, 1, 2])
-def test_nbrem(nbrem : int):
+def test_nbrem(nbrem : int, kind : str):
     '''
     Test splitting by brem
     '''
     rdf_org = _get_rdf(nbrem=nbrem)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=Data.ecorr_kind)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
+    rdf_org = rdf_org.Range(100)
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
     title   = f'brem={nbrem}'
     _compare_masses(d_rdf, f'nbrem_{nbrem:03}', title)
 #-----------------------------------------
+@pytest.mark.parametrize('kind', ['ecalo_bias', 'brem_track'])
 @pytest.mark.parametrize('is_inner', [True, False])
-def test_isinner(is_inner : bool):
+def test_isinner(is_inner : bool, kind : str):
     '''
     Test splitting detector region
     '''
     rdf_org = _get_rdf(is_inner = is_inner)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=Data.ecorr_kind)
+    rdf_org = rdf_org.Range(100)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
@@ -149,14 +147,16 @@ def test_isinner(is_inner : bool):
     title   = f'isInner={is_inner}'
     _compare_masses(d_rdf, f'is_inner_{is_inner}', title)
 #-----------------------------------------
+@pytest.mark.parametrize('kind', ['ecalo_bias', 'brem_track'])
 @pytest.mark.parametrize('nbrem', [0, 1, 2])
 @pytest.mark.parametrize('npvs' , [1, 2, 3, 4, 5, 6, 7])
-def test_nbrem_npvs(nbrem : int, npvs : int):
+def test_nbrem_npvs(nbrem : int, npvs : int, kind : str):
     '''
     Split by brem and nPVs
     '''
     rdf_org = _get_rdf(nbrem=nbrem, npvs=npvs)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=Data.ecorr_kind)
+    rdf_org = rdf_org.Range(100)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
