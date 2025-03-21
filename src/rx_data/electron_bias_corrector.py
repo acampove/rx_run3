@@ -139,17 +139,17 @@ class ElectronBiasCorrector:
 
         return e_track + gamma
     # ---------------------------------
-    def correct(self, row : pnd.Series, name : str, kind : str = 'bias') -> pnd.Series:
+    def correct(self, row : pnd.Series, name : str, kind : str = 'brem_track') -> pnd.Series:
         '''
         Corrects kinematics and returns row
         row  : Pandas dataframe row
         name : Particle name, e.g. L1
-        kind : Type of correction, [bias, brem_track]
+        kind : Type of correction, [ecalo_bias, brem_track]
         '''
         self._name = name
         e_track    = self._get_electron(row, kind='TRACK_')
 
-        if   kind == 'bias':
+        if   kind == 'ecalo_bias':
             if not self._attr_from_row(row, f'{name}_HASBREMADDED'):
                 return row
 
