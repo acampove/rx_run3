@@ -88,7 +88,11 @@ class MassBiasCorrector:
     by correcting biases in electrons
     '''
     # ------------------------------------------
-    def __init__(self, rdf : RDataFrame, skip_correction : bool = False, nthreads : int = 1):
+    def __init__(self,
+                 rdf             : RDataFrame,
+                 skip_correction : bool = False,
+                 nthreads        : int  = 1,
+                 ecorr_kind      : str  = 'brem_track'):
         '''
         rdf : ROOT dataframe
         skip_correction: Will do everything but not correction. Needed to check that only the correction is changing data.
@@ -98,9 +102,10 @@ class MassBiasCorrector:
         self._skip_correction = skip_correction
         self._nthreads        = nthreads
 
-        self._ebc     = ElectronBiasCorrector()
-        self._emass   = 0.511
-        self._kmass   = 493.6
+        self._ebc        = ElectronBiasCorrector()
+        self._emass      = 0.511
+        self._kmass      = 493.6
+        self._ecorr_kind = ecorr_kind
 
         self._set_loggers()
 
@@ -115,7 +120,7 @@ class MassBiasCorrector:
         if self._skip_correction:
             return row
 
-        row = self._ebc.correct(row, name=name)
+        row = self._ebc.correct(row, name=name, kind=self._ecorr_kind)
 
         return row
     # ------------------------------------------
