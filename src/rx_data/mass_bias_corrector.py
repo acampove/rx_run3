@@ -4,9 +4,10 @@ Module storing MassBiasCorrector class
 # pylint: disable=too-many-return-statements
 
 import math
+import fnmatch
+
 import vector
 import pandas as pnd
-
 from pandarallel                     import pandarallel
 from ROOT                            import RDataFrame, RDF
 from dmu.logging.log_store           import LogStore
@@ -150,18 +151,36 @@ class MassBiasCorrector:
 
         return mass
     # ------------------------------------------
-    def get_rdf(self) -> RDataFrame:
+    def _filter_df(self, df : pnd.DataFrame, mass_name : str) -> float:
+        l_to_keep  = ['L1_PT', 'L1_PX', 'L1_PY', 'L1_PZ']
+        l_to_keep += ['L2_PT', 'L2_PX', 'L2_PY', 'L2_PZ']
+        l_to_keep += [mass_name, 'EVENTNUMBER', 'RUNNUMBER']
+
+        log.debug(20 * '-')
+        log.debug('Keeping variables:')
+        log.debug(20 * '-')
+        for name in l_to_keep:
+            log.debug(f'    {name}')
+
+        df = df[l_to_keep]
+
+        return df
+    # ------------------------------------------
+    def get_rdf(self, mass_name : str = 'B_M') -> RDataFrame:
         '''
         Returns corrected ROOT dataframe
+
+        mass_name (str) : Name of the column containing the corrected mass, by default B_M
         '''
         log.info('Applying bias correction')
 
         df        = self._df
         if self._nthreads > 1:
-            df['B_M'] = df.parallel_apply(self._calculate_correction, axis=1)
+            df[mass_name] = df.parallel_apply(self._calculate_correction, axis=1)
         else:
-            df['B_M'] = df.apply(self._calculate_correction, axis=1)
-        df        = df[['B_M', 'EVENTNUMBER', 'RUNNUMBER']]
+            df[mass_name] = df.apply(self._calculate_correction, axis=1)
+
+        df        = self._filter_df(df, mass_name)
         df        = df.fillna(-1)
         rdf       = RDF.FromPandas(df)
 
