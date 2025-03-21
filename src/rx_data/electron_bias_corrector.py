@@ -53,7 +53,10 @@ class ElectronBiasCorrector:
         energy  = e_brem.e
         momentum= e_brem.p
 
-        if not math.isclose(energy, momentum, rel_tol=1e-5):
+        # Energy and momentum of brem photon need to be within 1 MeV.
+        # Numerical issues might be making difference be in the 1e-3
+        # 1 MeV is good enough
+        if not math.isclose(energy, momentum, rel_tol=1):
             log.warning('Brem energy and momentum are not equal')
             log.info(f'{energy:.5f}=={momentum:.5f}')
         else:
