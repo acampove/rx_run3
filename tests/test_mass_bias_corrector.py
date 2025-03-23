@@ -201,8 +201,8 @@ def test_suffix(kind : str):
 
     _check_output_columns(rdf_cor)
 #-----------------------------------------
-@pytest.mark.parametrize('nbrem'  , [0, 1, 2])
-@pytest.mark.parametrize('brem_energy_threshold', [20, 50, 70, 100, 150, 200, 300])
+@pytest.mark.parametrize('nbrem', [0, 1, 2])
+@pytest.mark.parametrize('brem_energy_threshold', [0, 10, 20, 50, 100, 200, 300, 400, 500])
 def test_brem_threshold(nbrem : int, brem_energy_threshold: float):
     '''
     Test splitting by brem
