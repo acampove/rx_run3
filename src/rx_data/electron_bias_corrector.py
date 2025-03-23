@@ -17,7 +17,7 @@ class ElectronBiasCorrector:
     The correction is done by using the `kind` argument in the correct method. Supported arguments are:
 
     ecalo_bias: Will use the $\mu=E_{calo}/E_{track}$ to correct the brem energy of every electron. This will leave Brem 0 unchanged.
-    brem_track_1: This will create a new Brem photon, colinear to the electron track with an energy given by `BREMTRACKBASEDENERGY`. 
+    brem_track_1: This will create a new Brem photon, colinear to the electron track with an energy given by `BREMTRACKBASEDENERGY`.
     brem_track_2: This will:
         - For electrons with brem: Do nothing
         - For electrons without brem: If `BREMTRACKBASEDENERGY > 50 MeV` add brem, otherwise do nothing.
