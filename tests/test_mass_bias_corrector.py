@@ -99,7 +99,7 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
 
     _check_columns(rdf)
 
-    rdf = rdf.Range(100)
+    rdf = rdf.Range(200)
 
     return rdf
 #-----------------------------------------
