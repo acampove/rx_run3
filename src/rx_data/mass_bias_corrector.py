@@ -151,10 +151,10 @@ class MassBiasCorrector:
 
         return mass
     # ------------------------------------------
-    def _filter_df(self, df : pnd.DataFrame, mass_name : str) -> float:
-        l_to_keep  = ['L1_PT', 'L1_PX', 'L1_PY', 'L1_PZ']
-        l_to_keep += ['L2_PT', 'L2_PX', 'L2_PY', 'L2_PZ']
-        l_to_keep += [mass_name, 'EVENTNUMBER', 'RUNNUMBER']
+    def _filter_df(self, df : pnd.DataFrame) -> float:
+        l_to_keep  = ['L1_PT', 'L1_PX', 'L1_PY', 'L1_PZ', 'L1_HASBREMADDED']
+        l_to_keep += ['L2_PT', 'L2_PX', 'L2_PY', 'L2_PZ', 'L2_HASBREMADDED']
+        l_to_keep += ['B_M'  , 'Jpsi_M', 'EVENTNUMBER', 'RUNNUMBER']
 
         log.debug(20 * '-')
         log.debug('Keeping variables:')
@@ -166,7 +166,10 @@ class MassBiasCorrector:
 
         return df
     # ------------------------------------------
-    def get_rdf(self, mass_name : str = 'B_M') -> RDataFrame:
+    def _add_suffix(self, df : pnd.DataFrame, suffix : str):
+        return df
+    # ------------------------------------------
+    def get_rdf(self, suffix: str = 'corr') -> RDataFrame:
         '''
         Returns corrected ROOT dataframe
 
@@ -176,12 +179,13 @@ class MassBiasCorrector:
 
         df        = self._df
         if self._nthreads > 1:
-            df[mass_name] = df.parallel_apply(self._calculate_correction, axis=1)
+            df['B_M'] = df.parallel_apply(self._calculate_correction, axis=1)
         else:
-            df[mass_name] = df.apply(self._calculate_correction, axis=1)
+            df['B_M'] = df.apply(self._calculate_correction, axis=1)
 
-        df        = self._filter_df(df, mass_name)
+        df        = self._filter_df(df)
         df        = df.fillna(-1)
+        df        = self._add_suffix(df, suffix)
         rdf       = RDF.FromPandas(df)
 
         return rdf
