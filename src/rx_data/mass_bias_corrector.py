@@ -92,21 +92,23 @@ class MassBiasCorrector:
     '''
     # ------------------------------------------
     def __init__(self,
-                 rdf             : RDataFrame,
-                 skip_correction : bool = False,
-                 nthreads        : int  = 1,
-                 ecorr_kind      : str  = 'brem_track'):
+                 rdf                   : RDataFrame,
+                 skip_correction       : bool  = False,
+                 nthreads              : int   = 1,
+                 brem_energy_threshold : float = 50,
+                 ecorr_kind            : str   = 'brem_track_2'):
         '''
         rdf : ROOT dataframe
         skip_correction: Will do everything but not correction. Needed to check that only the correction is changing data.
         nthreads : Number of threads, used by pandarallel
+        brem_energy_threshold: Lowest energy that an ECAL cluster needs to have to be considered a photon, used as argument of ElectronBiasCorrector, default 50 (MeV)
         ecorr_kind : Kind of correction to be added to electrons, [ecalo_bias, brem_track]
         '''
         self._df              = df_from_rdf(rdf)
         self._skip_correction = skip_correction
         self._nthreads        = nthreads
 
-        self._ebc        = ElectronBiasCorrector()
+        self._ebc        = ElectronBiasCorrector(brem_energy_threshold = brem_energy_threshold)
         self._emass      = 0.511
         self._kmass      = 493.6
         self._ecorr_kind = ecorr_kind
