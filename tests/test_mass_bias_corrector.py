@@ -40,13 +40,14 @@ def _load_conf() -> dict:
 
     return cfg
 #-----------------------------------------
-def _compare_masses(d_rdf : dict[str,RDataFrame], name : str, title : str) -> None:
+def _compare_masses(d_rdf : dict[str,RDataFrame], test_name : str, title : str) -> None:
     cfg = _load_conf()
     cfg = copy.deepcopy(cfg)
+    plt_dir = f'{Data.plt_dir}/{test_name}'
 
-    cfg['saving'] = {'plt_dir' : Data.plt_dir}
+    cfg['saving'] = {'plt_dir' : plt_dir}
 
-    cfg['plots']['B_M']['name' ] = name
+    cfg['plots']['B_M']['name' ] = title
     cfg['plots']['B_M']['title'] = title
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg)
