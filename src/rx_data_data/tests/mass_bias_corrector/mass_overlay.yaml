@@ -3,11 +3,21 @@ plots:
         binning    : [4300, 6000, 60]
         yscale     : 'linear'
         labels     : ['M$(B^+)$', 'Entries']
+    Jpsi_M :
+        binning    : [2500, 3400, 60]
+        yscale     : 'linear'
+        labels     : ['M$(J/\psi)$', 'Entries']
 style:
   skip_lines : true
 plugin:
   fwhm :
-    obs    : [4500, 6000]
-    plot   : true
-    format : FWHM={:.0f}
-    add_std: True
+    B_M :
+      obs    : [4500, 6000]
+      plot   : true
+      format : FWHM={:.0f}
+      add_std: True
+    Jpsi_M :
+      obs    : [2500, 3400]
+      plot   : true
+      format : FWHM={:.0f}
+      add_std: True
