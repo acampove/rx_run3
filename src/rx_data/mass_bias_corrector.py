@@ -164,9 +164,14 @@ class MassBiasCorrector:
         return df
     # ------------------------------------------
     def _add_suffix(self, df : pnd.DataFrame, suffix : str):
+        if suffix is None:
+            return df
+
+        df = df.add_suffix(f'_{suffix}')
+
         return df
     # ------------------------------------------
-    def get_rdf(self, suffix: str = 'corr') -> RDataFrame:
+    def get_rdf(self, suffix: str = None) -> RDataFrame:
         '''
         Returns corrected ROOT dataframe
 
