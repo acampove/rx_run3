@@ -57,7 +57,7 @@ def _compare_masses(d_rdf : dict[str,RDataFrame], test_name : str, correction : 
 
     cfg = _load_conf()
     cfg = copy.deepcopy(cfg)
-    plt_dir = f'{Data.plt_dir}/{test_name}/{correction}'
+    plt_dir = f'{Data.plt_dir}/{test_name}'
 
     cfg['saving'] = {'plt_dir' : plt_dir}
 
@@ -213,5 +213,5 @@ def test_brem_threshold(nbrem : int, brem_energy_threshold: float):
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
-    _compare_masses(d_rdf, f'brem_threshold_{nbrem:03}', brem_energy_threshold)
+    _compare_masses(d_rdf, f'brem_{nbrem:03}/energy_{brem_energy_threshold:03}', f'$E_{{\\gamma}}>{brem_energy_threshold}$ MeV')
 #-----------------------------------------
