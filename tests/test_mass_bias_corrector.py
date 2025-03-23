@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 from ROOT                        import RDataFrame, EnableImplicitMT, DisableImplicitMT
 from dmu.logging.log_store       import LogStore
 from dmu.plotting.plotter_1d     import Plotter1D as Plotter
+from rx_selection                import selection as sel
 from rx_data.rdf_getter          import RDFGetter
 from rx_data.mass_bias_corrector import MassBiasCorrector
 
@@ -102,16 +103,15 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
     if Data.nentries < 0:
         EnableImplicitMT(Data.nthreads)
 
+
     gtr = RDFGetter(sample='DATA_24_*', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
-
     rdf = rdf.Define('nbrem', 'int(L1_HASBREMADDED) + int(L2_HASBREMADDED)')
-    rdf = rdf.Filter('(Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)')
-    rdf = rdf.Filter('mva.mva_cmb > 0.5 && mva.mva_prc > 0.5')
-    rdf = rdf.Filter('B_const_mass_M > 5160')
-    rdf = rdf.Filter('hop.hop_mass > 4500')
-    rdf = rdf.Filter('jmis.swp_jpsi_misid_mass_swp < 3050 || jmis.swp_jpsi_misid_mass_swp > 3150')
-    rdf = rdf.Filter('casc.swp_cascade_mass_swp > 1900')
+
+    d_sel = sel.selection(project='RK', analysis='EE', q2bin='jpsi', process='DATA')
+    d_sel['mass'] = 'B_const_mass_M < 5160'
+    for cut_name, cut_value in d_sel.items():
+        rdf = rdf.Filter(cut_value, cut_name)
 
     if nbrem is not None:
         brem_cut = f'nbrem == {nbrem}' if nbrem in [0,1] else f'nbrem >= {nbrem}'
