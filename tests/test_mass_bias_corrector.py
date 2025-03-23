@@ -199,3 +199,17 @@ def test_suffix(kind : str):
 
     _check_output_columns(rdf_cor)
 #-----------------------------------------
+@pytest.mark.parametrize('nbrem'  , [0, 1, 2])
+@pytest.mark.parametrize('brem_energy_threshold', [20, 50, 70, 100, 150, 200, 300])
+def test_brem_threshold(nbrem : int, brem_energy_threshold: float):
+    '''
+    Test splitting by brem
+    '''
+    rdf_org = _get_rdf(nbrem=nbrem)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind='brem_track_2', brem_energy_threshold=brem_energy_threshold)
+    rdf_cor = cor.get_rdf()
+
+    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+
+    _compare_masses(d_rdf, f'brem_threshold_{nbrem:03}', brem_energy_threshold)
+#-----------------------------------------
