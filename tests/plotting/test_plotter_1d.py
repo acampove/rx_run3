@@ -71,7 +71,7 @@ def _load_config(test : str):
         cfg = yaml.safe_load(ifile)
 
     plt_dir = cfg['saving']['plt_dir']
-    cfg['saving']['plt_dir'] = f'/tmp/dmu/{plt_dir}'
+    cfg['saving']['plt_dir'] = f'/tmp/tests/dmu/{plt_dir}'
 
     return cfg
 #---------------------------------------

@@ -1,5 +1,5 @@
 saving:
-    plt_dir : /tmp/tests/dmu/plotting/pluggins/fwhm
+    plt_dir : plotting/pluggins/fwhm
 plots:
     x : 
       binning : [-5.0, 8.0, 40]
