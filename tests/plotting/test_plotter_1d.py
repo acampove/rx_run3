@@ -16,6 +16,8 @@ import mplhep
 from ROOT                    import RDF, RDataFrame
 from dmu.plotting.plotter_1d import Plotter1D as Plotter
 from dmu.logging.log_store   import LogStore
+
+log = LogStore.add_logger('dmu:plotting:test_plotter_1d')
 #---------------------------------------
 @dataclass
 class Data:
@@ -199,6 +201,7 @@ def test_plugin_fwhm():
     '''
     Will test fwhm plugin
     '''
+    log.info('')
     d_rdf   =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
     cfg_dat = _load_config(test='plug_fwhm')
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
