@@ -7,17 +7,17 @@ plots:
     y : 
       binning : [-5.0, 8.0, 40]
       title   : y distribution
-pluggin:
+plugin:
   fwhm:
     x :
       plot   : true
-      obs    : [0, 10]
+      obs    : [-2, 4]
       plot   : true
       format : FWHM={:.3f}
       add_std: True
     y :
       plot   : true
-      obs    : [2, 8]
+      obs    : [-4, 8]
       plot   : true
       format : FWHM={:.3f}
       add_std: True
