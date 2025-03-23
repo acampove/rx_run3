@@ -26,7 +26,7 @@ class Data:
     '''
     plt_dir    = '/tmp/tests/rx_data/mass_bias_corrector'
     nthreads   = 13
-    nentries   = 10_000
+    nentries   = -1
 #-----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -201,8 +201,8 @@ def test_suffix(kind : str):
 
     _check_output_columns(rdf_cor)
 #-----------------------------------------
-@pytest.mark.parametrize('nbrem', [0, 1, 2])
-@pytest.mark.parametrize('brem_energy_threshold', [0, 10, 20, 50, 100, 200, 300, 400, 500])
+@pytest.mark.parametrize('nbrem', [0, 1])
+@pytest.mark.parametrize('brem_energy_threshold', [100, 200, 300, 400, 600, 800, 1000, 1500, 2000, 4000])
 def test_brem_threshold(nbrem : int, brem_energy_threshold: float):
     '''
     Test splitting by brem
