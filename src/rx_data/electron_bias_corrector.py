@@ -128,6 +128,10 @@ class ElectronBiasCorrector:
         raise ValueError(f'Cannot find attribute {name} among:')
     # ---------------------------------
     def _correct_with_track_brem_1(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
+        '''
+        Take electron from tracking system and brem, as well as dataframe row representing entry in TTree
+        Create brem photon colinear to track, add it to track, return sum
+        '''
         if self._skip_correction:
             return e_track + e_brem
 
@@ -154,7 +158,21 @@ class ElectronBiasCorrector:
         return e_track + gamma
     # ---------------------------------
     def _correct_with_track_brem_2(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
-        return e_track + e_brem
+        # If electron has brem, leave it untouched
+        # Need brem energy > 1 MeV due to floating point accuracy
+        if e_brem.E > 1:
+            return e_track + e_brem
+
+        brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
+        # If brem is below 50 MeV, this is not actual brem
+        # return original electron
+        if brem_energy <  50:
+            return e_track + e_brem
+
+        # The electron had no brem, but brem was found, correct electron with strategy 1.
+        e_corr = self._correct_with_track_brem_1(e_track, e_brem, row)
+
+        return e_corr
     # ---------------------------------
     def correct(self, row : pnd.Series, name : str, kind : str = 'brem_track_1') -> pnd.Series:
         '''
