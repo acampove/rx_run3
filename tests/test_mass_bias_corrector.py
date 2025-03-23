@@ -97,7 +97,8 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
         'jmis' : '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
         }
 
-    EnableImplicitMT(Data.nthreads)
+    if Data.nentries < 0:
+        EnableImplicitMT(Data.nthreads)
 
     gtr = RDFGetter(sample='DATA_24_*', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
@@ -123,20 +124,20 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
     if npvs is not None:
         rdf = rdf.Filter(f'nPVs == {npvs}')
 
-    _check_input_columns(rdf)
+    if Data.nentries > 0:
+        rdf = rdf.Range(Data.nentries)
 
-    rdf = rdf.Range(200)
+    _check_input_columns(rdf)
 
     return rdf
 #-----------------------------------------
-#@pytest.mark.parametrize('kind', ['ecalo_bias', 'brem_track_1', 'brem_track_2'])
-@pytest.mark.parametrize('kind', ['brem_track_2'])
-def test_minimal(kind : str):
+@pytest.mark.parametrize('kind', ['brem_track_1', 'brem_track_2'])
+def test_full_dataset(kind : str):
     '''
-    Fastest/Simplest test
+    Tests by running over all the data, no binning
     '''
     rdf_org = _get_rdf()
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind=kind)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
 
     _check_output_columns(rdf_cor)
@@ -144,21 +145,7 @@ def test_minimal(kind : str):
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, 'minimal', kind)
 #-----------------------------------------
-@pytest.mark.parametrize('nbrem'  , [0, 1, 2])
-def test_brem_track_2(nbrem : int):
-    '''
-    Test splitting by brem with brem_track_2
-    '''
-    rdf_org = _get_rdf(nbrem=nbrem)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind='brem_track_2')
-    rdf_cor = cor.get_rdf()
-
-    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-
-    title   = f'brem={nbrem}'
-    _compare_masses(d_rdf, 'brem_track_2', title)
-#-----------------------------------------
-@pytest.mark.parametrize('kind', ['ecalo_bias', 'brem_track_1'])
+@pytest.mark.parametrize('kind', ['brem_track_1', 'brem_track_2'])
 @pytest.mark.parametrize('nbrem'  , [0, 1, 2])
 def test_nbrem(nbrem : int, kind : str):
     '''
@@ -173,7 +160,7 @@ def test_nbrem(nbrem : int, kind : str):
     title   = f'brem={nbrem}'
     _compare_masses(d_rdf, f'nbrem_{nbrem:03}', title)
 #-----------------------------------------
-@pytest.mark.parametrize('kind', ['ecalo_bias', 'brem_track_1'])
+@pytest.mark.parametrize('kind', ['brem_track_1', 'brem_track_2'])
 @pytest.mark.parametrize('is_inner', [True, False])
 def test_isinner(is_inner : bool, kind : str):
     '''
@@ -188,7 +175,7 @@ def test_isinner(is_inner : bool, kind : str):
     title   = f'isInner={is_inner}'
     _compare_masses(d_rdf, f'is_inner_{is_inner}', title)
 #-----------------------------------------
-@pytest.mark.parametrize('kind', ['ecalo_bias', 'brem_track_1'])
+@pytest.mark.parametrize('kind', ['brem_track_1', 'brem_track_2'])
 @pytest.mark.parametrize('nbrem', [0, 1, 2])
 @pytest.mark.parametrize('npvs' , [1, 2, 3, 4, 5, 6, 7])
 def test_nbrem_npvs(nbrem : int, npvs : int, kind : str):
