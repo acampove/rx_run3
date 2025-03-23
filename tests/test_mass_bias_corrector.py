@@ -40,7 +40,18 @@ def _load_conf() -> dict:
 
     return cfg
 #-----------------------------------------
+def _clean_rdf(rdf : RDataFrame) -> RDataFrame:
+    rdf = rdf.Filter('Jpsi_M > 0', 'pos_jmass')
+    rdf = rdf.Filter('B_M    > 0', 'pos_bmass')
+
+    rep = rdf.Report()
+    rep.Print()
+
+    return rdf
+#-----------------------------------------
 def _compare_masses(d_rdf : dict[str,RDataFrame], test_name : str, correction : str) -> None:
+    d_rdf = { name : _clean_rdf(rdf) for name, rdf in d_rdf.items() }
+
     cfg = _load_conf()
     cfg = copy.deepcopy(cfg)
     plt_dir = f'{Data.plt_dir}/{test_name}/{correction}'
@@ -85,6 +96,8 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
         'casc' : '/home/acampove/external_ssd/Data/samples/cascade.yaml',
         'jmis' : '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
         }
+
+    EnableImplicitMT(Data.nthreads)
 
     gtr = RDFGetter(sample='DATA_24_*', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
