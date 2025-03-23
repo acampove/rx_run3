@@ -26,6 +26,7 @@ class ElectronBiasCorrector:
     def __init__(self, skip_correction : bool = False):
         self._skip_correction = skip_correction
         self._mass            = 0.511
+        self._min_brem_energy = 50 # If BREMTRACKBASEDENERGY is lower than this, it will not be used for brem recovery
         self._bcor            = BremBiasCorrector()
         self._name : str
 
@@ -165,14 +166,13 @@ class ElectronBiasCorrector:
     # ---------------------------------
     def _correct_with_track_brem_2(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
         # If electron has brem, leave it untouched
-        # Need brem energy > 1 MeV due to floating point accuracy
-        if e_brem.E > 1:
+        if not self._attr_from_row(row, f'{self._name}_HASBREMADDED'):
             return e_track + e_brem
 
         brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
         # If brem is below 50 MeV, this is not actual brem
         # return original electron
-        if brem_energy <  50:
+        if brem_energy <  self._min_brem_energy:
             return e_track + e_brem
 
         # The electron had no brem, but brem was found, correct electron with strategy 1.
