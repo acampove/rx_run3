@@ -139,14 +139,6 @@ class MassBiasCorrector:
         bmass = float(bp.mass) if float(bp.mass) else -1
         jmass = float(jp.mass) if float(jp.mass) else -1
 
-        if math.isnan(bmass) or math.isnan(jmass):
-            log.debug('NaN mass found for:')
-            log.debug(f'L1: {l1}')
-            log.debug(f'L2: {l2}')
-            log.debug(f'Kp: {kp}')
-            log.debug(f'Jp: {jp}')
-            log.debug(f'Bp: {bp}')
-
         return pnd.Series({'B_M' : bmass, 'Jpsi_M' : jmass})
     # ------------------------------------------
     def _calculate_correction(self, row : pnd.Series) -> pnd.DataFrame:
