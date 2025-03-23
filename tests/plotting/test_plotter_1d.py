@@ -199,12 +199,8 @@ def test_plugin_fwhm():
     '''
     Will test fwhm plugin
     '''
-    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
-
-    cfg_dat = _load_config(test='simple')
-    cfg_dat['saving']['plt_dir'] = '/tmp/dmu/plugin_fwhm'
-    cfg_dat['plugin'] = {'fwhm' : {'vars' : ['x'], 'plot' : True, 'format' : r'FWHM={:.3f}', 'obs' : [-3, 5], 'add_std' : True}}
-
+    d_rdf   =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+    cfg_dat = _load_config(test='plug_fwhm')
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
