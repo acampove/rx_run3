@@ -127,7 +127,7 @@ class ElectronBiasCorrector:
 
         raise ValueError(f'Cannot find attribute {name} among:')
     # ---------------------------------
-    def _correct_with_track_brem(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
+    def _correct_with_track_brem_1(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
         if self._skip_correction:
             return e_track + e_brem
 
@@ -153,12 +153,15 @@ class ElectronBiasCorrector:
 
         return e_track + gamma
     # ---------------------------------
-    def correct(self, row : pnd.Series, name : str, kind : str = 'brem_track') -> pnd.Series:
+    def _correct_with_track_brem_2(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
+        return e_track + e_brem
+    # ---------------------------------
+    def correct(self, row : pnd.Series, name : str, kind : str = 'brem_track_1') -> pnd.Series:
         '''
         Corrects kinematics and returns row
         row  : Pandas dataframe row
         name : Particle name, e.g. L1
-        kind : Type of correction, [ecalo_bias, brem_track]
+        kind : Type of correction, [ecalo_bias, brem_track_1, brem_track_2]
         '''
         self._name = name
         e_track = self._get_electron(row, kind='TRACK_')
@@ -170,8 +173,10 @@ class ElectronBiasCorrector:
 
             e_brem  = self._correct_brem(e_brem, row)
             e_corr  = e_track + e_brem
-        elif kind == 'brem_track':
-            e_corr  = self._correct_with_track_brem(e_track, e_brem, row)
+        elif kind == 'brem_track_1':
+            e_corr  = self._correct_with_track_brem_1(e_track, e_brem, row)
+        elif kind == 'brem_track_2':
+            e_corr  = self._correct_with_track_brem_2(e_track, e_brem, row)
         else:
             raise NotImplementedError(f'Invalid correction of type: {kind}')
 
