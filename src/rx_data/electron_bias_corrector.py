@@ -23,10 +23,14 @@ class ElectronBiasCorrector:
         - For electrons without brem: If `BREMTRACKBASEDENERGY > 50 MeV` add brem, otherwise do nothing.
     '''
     # ---------------------------------
-    def __init__(self, skip_correction : bool = False):
+    def __init__(self, skip_correction : bool = False, brem_energy_threshold : float = 50):
+        '''
+        skip_correction: If true, will not correct electrons, but run all the code up to the last stage, default False
+        brem_energy_threshold: Energy deposits in ECAL will be considered brem if their energy is above this value, default 50 MeV
+        '''
         self._skip_correction = skip_correction
         self._mass            = 0.511
-        self._min_brem_energy = 50 # If BREMTRACKBASEDENERGY is lower than this, it will not be used for brem recovery
+        self._min_brem_energy = brem_energy_threshold
         self._bcor            = BremBiasCorrector()
         self._name : str
 
