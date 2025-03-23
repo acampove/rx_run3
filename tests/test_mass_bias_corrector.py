@@ -157,8 +157,7 @@ def test_nbrem(nbrem : int, kind : str):
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
-    title   = f'brem={nbrem}'
-    _compare_masses(d_rdf, f'nbrem_{nbrem:03}', title)
+    _compare_masses(d_rdf, f'nbrem_{nbrem:03}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_1', 'brem_track_2'])
 @pytest.mark.parametrize('is_inner', [True, False])
