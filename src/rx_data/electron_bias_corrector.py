@@ -30,6 +30,11 @@ class ElectronBiasCorrector:
         self._bcor            = BremBiasCorrector()
         self._name : str
 
+        # -1 : If the electron is not touched
+        #  0 : If the electron is not assigned any brem
+        #  1 : If the electron is assigned brem
+        self._brem_status : int
+
         if self._skip_correction:
             log.warning('Skipping electron correction')
     # ---------------------------------
@@ -187,7 +192,9 @@ class ElectronBiasCorrector:
         name : Particle name, e.g. L1
         kind : Type of correction, [ecalo_bias, brem_track_1, brem_track_2]
         '''
-        self._name = name
+        self._name       = name
+        self._brem_status= None
+
         e_track = self._get_electron(row, kind='TRACK_')
         e_brem  = self._get_ebrem(row, e_track)
 
@@ -201,6 +208,9 @@ class ElectronBiasCorrector:
             raise NotImplementedError(f'Invalid correction of type: {kind}')
 
         row = self._update_row(row, e_corr)
+
+        if self._brem_status not in [-1, 0, 1]:
+            raise ValueError(f'Brem status is invalid: {self._brem_status}')
 
         return row
 # ---------------------------------
