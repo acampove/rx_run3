@@ -72,35 +72,6 @@ class ElectronBiasCorrector:
 
         return e_brem
     # ---------------------------------
-    def _correct_brem(self, e_brem : v4d, row : pnd.Series) -> v4d:
-        if self._skip_correction:
-            log.warning('Skipping electron correction')
-            return e_brem
-
-        log.info('Applying ecalo_bias correction')
-
-        brem_row = self._attr_from_row(row, f'{self._name}_BREMHYPOROW')
-        brem_col = self._attr_from_row(row, f'{self._name}_BREMHYPOCOL')
-        brem_area= self._attr_from_row(row, f'{self._name}_BREMHYPOAREA')
-
-        e_brem_corr = self._bcor.correct(brem=e_brem, row=brem_row, col=brem_col, area=brem_area)
-
-        if e_brem_corr.isclose(e_brem, rtol=1e-5):
-            momentum = e_brem.p
-            log.warning(f'Correction did not change photon at row/column/region/momentum: {brem_row}/{brem_col}/{brem_area}/{momentum:.0f}')
-            log.info(e_brem)
-            log.info('--->')
-            log.info(e_brem_corr)
-        else:
-            log.debug('Brem was corrected:')
-            log.debug(e_brem)
-            log.debug('--->')
-            log.debug(e_brem_corr)
-
-        self._check_massless_brem(e_brem_corr)
-
-        return e_brem_corr
-    # ---------------------------------
     def _update_row(self, row : pnd.Series, e_corr : v4d) -> pnd.Series:
         l_var      = [
                 f'{self._name}_PX',
@@ -126,6 +97,41 @@ class ElectronBiasCorrector:
             log.info(col_name)
 
         raise ValueError(f'Cannot find attribute {name} among:')
+    # ---------------------------------
+    def _correct_with_bias_maps(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
+        if self._skip_correction:
+            log.warning('Skipping electron correction')
+            return e_brem
+
+        # Will only correct brem, no brem => no correction
+        if not self._attr_from_row(row, f'{self._name}_HASBREMADDED'):
+            return e_track + e_brem
+
+        log.info('Applying ecalo_bias correction')
+
+        brem_row = self._attr_from_row(row, f'{self._name}_BREMHYPOROW')
+        brem_col = self._attr_from_row(row, f'{self._name}_BREMHYPOCOL')
+        brem_area= self._attr_from_row(row, f'{self._name}_BREMHYPOAREA')
+
+        e_brem_corr = self._bcor.correct(brem=e_brem, row=brem_row, col=brem_col, area=brem_area)
+
+        if e_brem_corr.isclose(e_brem, rtol=1e-5):
+            momentum = e_brem.p
+            log.warning(f'Correction did not change photon at row/column/region/momentum: {brem_row}/{brem_col}/{brem_area}/{momentum:.0f}')
+            log.info(e_brem)
+            log.info('--->')
+            log.info(e_brem_corr)
+        else:
+            log.debug('Brem was corrected:')
+            log.debug(e_brem)
+            log.debug('--->')
+            log.debug(e_brem_corr)
+
+        self._check_massless_brem(e_brem_corr)
+
+        e_corr = e_track + e_brem_corr
+
+        return e_corr
     # ---------------------------------
     def _correct_with_track_brem_1(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
         '''
