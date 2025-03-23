@@ -24,11 +24,13 @@ class Data:
     Data class
     '''
     plt_dir    = '/tmp/tests/rx_data/mass_bias_corrector'
-    nthreads   = 10
+    nthreads   = 13
+    nentries   = 10_000
 #-----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    LogStore.set_level('rx_data:mass_bias_corrector', 10)
+    LogStore.set_level('rx_data:mass_bias_corrector'     , 10)
+    LogStore.set_level('rx_data:test_mass_bias_corrector', 10)
 
     os.makedirs(Data.plt_dir, exist_ok=True)
     plt.style.use(mplhep.style.LHCb2)
