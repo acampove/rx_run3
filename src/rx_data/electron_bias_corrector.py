@@ -93,6 +93,19 @@ class ElectronBiasCorrector:
 
         row.loc[l_var] = [e_corr.pt, e_corr.eta, e_corr.phi]
 
+        row = self._update_brem(row)
+
+        return row
+    # ---------------------------------
+    def _update_brem(self, row : pnd.Series) -> pnd.Series:
+        if self._brem_status == -1:
+            return row
+
+        if self._brem_status not in [0, 1]:
+            raise ValueError(f'Invalid brem status: {self._brem_status}')
+
+        row.loc[[f'{self._name}_HASBREMADDED']] = [self._brem_status]
+
         return row
     # ---------------------------------
     def _attr_from_row(self, row : pnd.Series, name : str) -> float:
