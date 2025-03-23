@@ -109,7 +109,7 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
     rdf = rdf.Define('nbrem', 'int(L1_HASBREMADDED) + int(L2_HASBREMADDED)')
 
     d_sel = sel.selection(project='RK', analysis='EE', q2bin='jpsi', process='DATA')
-    d_sel['mass'] = 'B_const_mass_M < 5160'
+    d_sel['mass'] = 'B_const_mass_M > 5160'
     for cut_name, cut_value in d_sel.items():
         rdf = rdf.Filter(cut_value, cut_name)
 
