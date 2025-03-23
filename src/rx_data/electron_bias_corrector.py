@@ -83,6 +83,10 @@ class ElectronBiasCorrector:
         return e_brem
     # ---------------------------------
     def _update_row(self, row : pnd.Series, e_corr : v4d) -> pnd.Series:
+        # If correction was not applied, do not update anything
+        if e_corr is None:
+            return row
+
         l_var      = [
                 f'{self._name}_PX',
                 f'{self._name}_PY',
