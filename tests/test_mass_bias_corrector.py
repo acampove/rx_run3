@@ -126,6 +126,8 @@ def test_minimal(kind : str):
     cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
 
+    _check_output_columns(rdf_cor)
+
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, 'minimal', kind)
 #-----------------------------------------
