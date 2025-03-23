@@ -105,12 +105,18 @@ class ElectronBiasCorrector:
         raise ValueError(f'Cannot find attribute {name} among:')
     # ---------------------------------
     def _correct_with_bias_maps(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
+        '''
+        Takes track electron, brem and row in dataframe representing entry in TTree
+        Returns electron after correction
+        '''
         if self._skip_correction:
             log.warning('Skipping electron correction')
-            return e_brem
+            self._brem_status = -1
+            return e_track + e_brem
 
         # Will only correct brem, no brem => no correction
         if not self._attr_from_row(row, f'{self._name}_HASBREMADDED'):
+            self._brem_status = -1
             return e_track + e_brem
 
         log.info('Applying ecalo_bias correction')
@@ -135,6 +141,7 @@ class ElectronBiasCorrector:
 
         self._check_massless_brem(e_brem_corr)
 
+        self._brem_status = 1
         e_corr = e_track + e_brem_corr
 
         return e_corr
@@ -145,11 +152,13 @@ class ElectronBiasCorrector:
         Create brem photon colinear to track, add it to track, return sum
         '''
         if self._skip_correction:
+            self._brem_status = -1
             return e_track + e_brem
 
         log.info('Applying brem_track electron correction')
         brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
         if brem_energy == 0:
+            self._brem_status = 0
             return e_track
 
         eta = e_track.eta
@@ -165,19 +174,25 @@ class ElectronBiasCorrector:
 
         gamma  = v4d(px=px, py=py, pz=pz, e=e)
 
+        self._brem_status = 1
         self._check_massless_brem(gamma)
 
         return e_track + gamma
     # ---------------------------------
     def _correct_with_track_brem_2(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
+        '''
+        Smarter strategy than brem_track_1
+        '''
         # If electron has brem, leave it untouched
-        if not self._attr_from_row(row, f'{self._name}_HASBREMADDED'):
+        if self._attr_from_row(row, f'{self._name}_HASBREMADDED'):
+            self._brem_status = -1
             return e_track + e_brem
 
         brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
         # If brem is below 50 MeV, this is not actual brem
         # return original electron
         if brem_energy <  self._min_brem_energy:
+            self._brem_status = -1
             return e_track + e_brem
 
         # The electron had no brem, but brem was found, correct electron with strategy 1.
