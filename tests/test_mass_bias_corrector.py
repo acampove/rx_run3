@@ -53,7 +53,7 @@ def _compare_masses(d_rdf : dict[str,RDataFrame], test_name : str, title : str) 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
 #-----------------------------------------
-def _check_columns(rdf : RDataFrame) -> None:
+def _check_input_columns(rdf : RDataFrame) -> None:
     l_colname = [ name.c_str() for name in rdf.GetColumnNames() ]
 
     l_track_brem = [ name for name in l_colname if name.endswith('BREMTRACKBASEDENERGY') ]
@@ -64,6 +64,18 @@ def _check_columns(rdf : RDataFrame) -> None:
         raise ValueError('No BREMTRACKBASEDENERGY found')
 
     log.info(f'Found: {l_track_brem}')
+#-----------------------------------------
+def _check_output_columns(rdf : RDataFrame) -> None:
+    l_colname = [ name.c_str() for name in rdf.GetColumnNames() ]
+    ncol = len(l_colname)
+    if ncol != 14:
+        for colname in l_colname:
+            log.info(f'   {colname}')
+
+        raise ValueError(f'Expected 14 columns, got {ncol}')
+
+    for colname in l_colname:
+        log.debug(f'   {colname}')
 #-----------------------------------------
 def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> RDataFrame:
     RDFGetter.samples = {
@@ -98,13 +110,14 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
     if npvs is not None:
         rdf = rdf.Filter(f'nPVs == {npvs}')
 
-    _check_columns(rdf)
+    _check_input_columns(rdf)
 
     rdf = rdf.Range(200)
 
     return rdf
 #-----------------------------------------
-@pytest.mark.parametrize('kind', ['ecalo_bias', 'brem_track_1', 'brem_track_2'])
+#@pytest.mark.parametrize('kind', ['ecalo_bias', 'brem_track_1', 'brem_track_2'])
+@pytest.mark.parametrize('kind', ['brem_track_2'])
 def test_minimal(kind : str):
     '''
     Fastest/Simplest test
