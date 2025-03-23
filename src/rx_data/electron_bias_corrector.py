@@ -174,11 +174,11 @@ class ElectronBiasCorrector:
         '''
         if self._skip_correction:
             self._brem_status = -1
-            return e_track + e_brem
+            return None
 
         log.info('Applying brem_track electron correction')
         brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
-        if brem_energy == 0:
+        if brem_energy < self._min_brem_energy:
             self._brem_status = 0
             return e_track
 
@@ -207,14 +207,14 @@ class ElectronBiasCorrector:
         # If electron has brem, leave it untouched
         if self._attr_from_row(row, f'{self._name}_HASBREMADDED'):
             self._brem_status = -1
-            return e_track + e_brem
+            return None
 
         brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
-        # If brem is below 50 MeV, this is not actual brem
+        # If brem is below self._min_brem_energy, this is not actual brem
         # return original electron
         if brem_energy <  self._min_brem_energy:
             self._brem_status = -1
-            return e_track + e_brem
+            return None
 
         # The electron had no brem, but brem was found, correct electron with strategy 1.
         e_corr = self._correct_with_track_brem_1(e_track, e_brem, row)
