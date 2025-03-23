@@ -1,6 +1,6 @@
 plots:
     B_M :
-        binning    : [4300, 6000, 60]
+        binning    : [4200, 6000, 60]
         yscale     : 'linear'
         labels     : ['M$(B^+)$', 'Entries']
     Jpsi_M :
@@ -12,7 +12,7 @@ style:
 plugin:
   fwhm :
     B_M :
-      obs    : [4500, 6000]
+      obs    : [4200, 6000]
       plot   : true
       format : FWHM={:.0f}
       add_std: True
