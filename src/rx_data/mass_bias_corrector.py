@@ -179,7 +179,7 @@ class MassBiasCorrector:
         '''
         log.info('Applying bias correction')
 
-        df        = self._df
+        df = self._df
         if self._nthreads > 1:
             df[['B_M', 'Jpsi_M']] = df.parallel_apply(self._calculate_correction, axis=1)
         else:
