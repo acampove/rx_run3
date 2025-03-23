@@ -63,35 +63,35 @@ class Plotter1D(Plotter):
                      name    : str,
                      varname : str) -> None:
         if 'plugin' not in self._d_cfg:
+            log.debug('No plugins found')
             return
 
-        if 'vars' in self._d_cfg['plugin']['fwhm']:
-            l_var = self._d_cfg['plugin']['fwhm']['vars']
-            if varname not in l_var:
-                log.debug(f'Not running FWHM for variable {varname}, not in {l_var}')
+        if 'fwhm' in self._d_cfg['plugin']:
+            if varname not in self._d_cfg['plugin']['fwhm']:
+                log.debug(f'No FWHM plugin found for variable {varname}')
                 return
-        else:
-            log.debug('Running FWHM for all variables')
 
-        d_plugin = self._d_cfg['plugin']
-        if 'fwhm' in d_plugin:
-            arr_bin_cnt = hst.values()
-            maxy = numpy.max(arr_bin_cnt)
-            cfg  = d_plugin['fwhm']
-            obj  = FWHM(cfg=cfg, val=arr_val, wgt=arr_wgt, maxy=maxy)
-            fwhm = obj.run()
+            log.debug(f'FWHM plugin found for variable {varname}')
+            cfg = self._d_cfg['plugin']['fwhm'][varname]
+            self._run_fwhm(arr_val = arr_val, arr_wgt=arr_wgt, hst=hst, name=name, cfg = cfg)
+    #-------------------------------------
+    def _run_fwhm(self, arr_val : numpy.ndarray, arr_wgt : numpy.ndarray, hst, name : str, cfg : dict) -> None:
+        arr_bin_cnt = hst.values()
+        maxy = numpy.max(arr_bin_cnt)
+        obj  = FWHM(cfg=cfg, val=arr_val, wgt=arr_wgt, maxy=maxy)
+        fwhm = obj.run()
 
-            form        = cfg['format']
-            this_title  = form.format(fwhm)
+        form        = cfg['format']
+        this_title  = form.format(fwhm)
 
-            if 'add_std' in cfg and cfg['add_std']:
-                mu         = numpy.average(arr_val            , weights=arr_wgt)
-                avg        = numpy.average((arr_val - mu) ** 2, weights=arr_wgt)
-                std        = numpy.sqrt(avg)
-                form       = form.replace('FWHM', 'STD')
-                this_title+= '; ' + form.format(std)
+        if 'add_std' in cfg and cfg['add_std']:
+            mu         = numpy.average(arr_val            , weights=arr_wgt)
+            avg        = numpy.average((arr_val - mu) ** 2, weights=arr_wgt)
+            std        = numpy.sqrt(avg)
+            form       = form.replace('FWHM', 'STD')
+            this_title+= '; ' + form.format(std)
 
-            self._title+= f'\n{name}: {this_title}'
+        self._title+= f'\n{name}: {this_title}'
     #-------------------------------------
     def _plot_var(self, var : str) -> float:
         '''
