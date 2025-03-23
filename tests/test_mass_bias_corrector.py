@@ -113,7 +113,21 @@ def test_minimal(kind : str):
     rdf_cor = cor.get_rdf()
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, f'minimal_{kind}', f'minimal {kind}')
+    _compare_masses(d_rdf, 'minimal', kind)
+#-----------------------------------------
+@pytest.mark.parametrize('nbrem'  , [0, 1, 2])
+def test_brem_track_2(nbrem : int):
+    '''
+    Test splitting by brem with brem_track_2
+    '''
+    rdf_org = _get_rdf(nbrem=nbrem)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind='brem_track_2')
+    rdf_cor = cor.get_rdf()
+
+    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+
+    title   = f'brem={nbrem}'
+    _compare_masses(d_rdf, 'brem_track_2', title)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['ecalo_bias', 'brem_track_1'])
 @pytest.mark.parametrize('nbrem'  , [0, 1, 2])
