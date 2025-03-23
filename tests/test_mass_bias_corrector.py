@@ -171,8 +171,7 @@ def test_isinner(is_inner : bool, kind : str):
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
-    title   = f'isInner={is_inner}'
-    _compare_masses(d_rdf, f'is_inner_{is_inner}', title)
+    _compare_masses(d_rdf, f'is_inner_{is_inner}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_1', 'brem_track_2'])
 @pytest.mark.parametrize('nbrem', [0, 1, 2])
@@ -187,6 +186,16 @@ def test_nbrem_npvs(nbrem : int, npvs : int, kind : str):
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
-    title   = f'nPVs={npvs}; nbrem={nbrem}'
-    _compare_masses(d_rdf, f'brem_npvs_{nbrem}_{npvs}', title)
+    _compare_masses(d_rdf, f'brem_npvs_{nbrem}_{npvs}', kind)
+#-----------------------------------------
+@pytest.mark.parametrize('kind', ['brem_track_2'])
+def test_suffix(kind : str):
+    '''
+    Tests that output dataframe has columns with suffix added
+    '''
+    rdf_org = _get_rdf()
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=kind)
+    rdf_cor = cor.get_rdf(suffix=kind)
+
+    _check_output_columns(rdf_cor)
 #-----------------------------------------
