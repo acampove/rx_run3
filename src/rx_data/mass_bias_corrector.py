@@ -128,28 +128,33 @@ class MassBiasCorrector:
 
         return row
     # ------------------------------------------
-    def _calculate_mass(self, row : pnd.Series) -> float:
+    def _calculate_masses(self, row : pnd.Series) -> float:
         l1 = vector.obj(pt=row.L1_PT, phi=row.L1_PHI, eta=row.L1_ETA, m=self._emass)
         l2 = vector.obj(pt=row.L2_PT, phi=row.L2_PHI, eta=row.L2_ETA, m=self._emass)
         kp = vector.obj(pt=row.H_PT , phi=row.H_PHI , eta=row.H_ETA , m=self._kmass)
-        bp = l1 + l2 + kp
 
-        mass = float(bp.mass)
-        if math.isnan(mass):
-            log.warning('NaN mass found for:')
-            log.info(f'L1: {l1}')
-            log.info(f'L2: {l2}')
-            log.info(f'Kp: {kp}')
-            log.info(f'Bp: {bp}')
+        jp = l1 + l2
+        bp = jp + kp
 
-        return mass
+        bmass = float(bp.mass) if float(bp.mass) else -1
+        jmass = float(jp.mass) if float(jp.mass) else -1
+
+        if math.isnan(bmass) or math.isnan(jmass):
+            log.debug('NaN mass found for:')
+            log.debug(f'L1: {l1}')
+            log.debug(f'L2: {l2}')
+            log.debug(f'Kp: {kp}')
+            log.debug(f'Jp: {jp}')
+            log.debug(f'Bp: {bp}')
+
+        return pnd.Series({'B_M' : bmass, 'Jpsi_M' : jmass})
     # ------------------------------------------
-    def _calculate_correction(self, row : pnd.Series) -> float:
+    def _calculate_correction(self, row : pnd.Series) -> pnd.DataFrame:
         row  = self._correct_electron('L1', row)
         row  = self._correct_electron('L2', row)
-        mass = self._calculate_mass(row)
+        df   = self._calculate_masses(row)
 
-        return mass
+        return df
     # ------------------------------------------
     def _filter_df(self, df : pnd.DataFrame) -> float:
         l_to_keep  = ['L1_PT', 'L1_PX', 'L1_PY', 'L1_PZ', 'L1_HASBREMADDED']
@@ -179,9 +184,9 @@ class MassBiasCorrector:
 
         df        = self._df
         if self._nthreads > 1:
-            df['B_M'] = df.parallel_apply(self._calculate_correction, axis=1)
+            df[['B_M', 'Jpsi_M']] = df.parallel_apply(self._calculate_correction, axis=1)
         else:
-            df['B_M'] = df.apply(self._calculate_correction, axis=1)
+            df[['B_M', 'Jpsi_M']] = df.apply(self._calculate_correction, axis=1)
 
         df        = self._filter_df(df)
         df        = df.fillna(-1)
