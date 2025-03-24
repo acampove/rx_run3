@@ -35,6 +35,9 @@ def _initialize():
 
     os.makedirs(Data.plt_dir, exist_ok=True)
     plt.style.use(mplhep.style.LHCb2)
+
+    if Data.nentries < 0:
+        EnableImplicitMT(Data.nthreads)
 #-----------------------------------------
 def _load_conf() -> dict:
     cfg_path = files('rx_data_data').joinpath('tests/mass_bias_corrector/mass_overlay.yaml')
@@ -100,10 +103,6 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
         'jmis' : '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
         }
 
-    if Data.nentries < 0:
-        EnableImplicitMT(Data.nthreads)
-
-
     gtr = RDFGetter(sample='DATA_24_*', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
     rdf = rdf.Define('nbrem', 'int(L1_HASBREMADDED) + int(L2_HASBREMADDED)')
@@ -141,9 +140,9 @@ def test_small_input(kind : str):
     DisableImplicitMT()
 
     rdf_org = _get_rdf()
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=kind)
+    rdf_org = rdf_org.Range(200)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
-    rdf_cor = rdf_cor.Range(100)
 
     _check_output_columns(rdf_cor)
 
