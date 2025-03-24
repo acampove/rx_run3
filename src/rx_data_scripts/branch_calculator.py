@@ -35,7 +35,8 @@ class Data:
     pbar : bool
     dry  : bool
     lvl  : int
-    l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias', 'brem_track']
+    l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias', 'brem_track_1', 'brem_track_2']
+    l_ecorr   = ['ecalo_bias', 'brem_track_1', 'brem_track_2']
     tree_name = 'DecayTree'
 # ---------------------------------
 def _parse_args() -> None:
@@ -98,9 +99,9 @@ def _get_partition(l_path : list[str]) -> list[str]:
     return l_path
 # ---------------------------------
 def _print_groups(group : dict[int,list[str]], sizes : dict[int,float], this_group : int) -> None:
-    log.info(20 * '-')
+    log.info(30 * '-')
     log.info(f'{"Group":<10}{"NFiles":<10}{"Size":<10}')
-    log.info(20 * '-')
+    log.info(30 * '-')
     for igroup, l_file in group.items():
         size  = sizes[igroup]
         nfile = len(l_file)
