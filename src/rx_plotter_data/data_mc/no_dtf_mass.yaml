@@ -8,6 +8,7 @@ definitions :
   min_ll_eta : TMath::Min(L1_ETA , L2_ETA)
   max_ll_eta : TMath::Max(L1_ETA , L2_ETA)
 selection:
+  pid    : (L1_PIDe - L1_BREMPIDE > 3) && (L2_PIDe - L2_BREMPIDE > 3)
   q2     : Jpsi_M > 2300 && Jpsi_M < 3400 
   bdt    : mva_cmb > 0.9
   mass   : B_const_mass_M > 5160
