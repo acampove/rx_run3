@@ -48,21 +48,13 @@ def _get_range(var : str) -> tuple[float,float]:
         minx = 0
         maxx = 2
 
+    if 'PX' in var or 'PY' in var or 'PZ' in var or 'PT' in var:
+        minx =    250
+        maxx = 20_000
+
     if var == 'L1_ETA':
         minx = 2
         maxx = 5
-
-    if var in ['L1_PT', 'L1_TRACK_PT']:
-        minx =    250
-        maxx = 20_000
-
-    if var in ['max_PT', 'max_TRACK_PT']:
-        minx =    250
-        maxx = 20_000
-
-    if var in ['min_PT', 'min_TRACK_PT']:
-        minx =    250
-        maxx = 10_000
 
     if var == 'L1_PHI':
         minx = -3.14
@@ -84,7 +76,7 @@ def _plot_brem_kinematics(df : pnd.DataFrame, var : str, label : str, ax=None):
 def _plot_correction(org : pnd.DataFrame, cor : pnd.DataFrame, name : str) -> None:
     out_dir = f'{Data.plt_dir}/{name}'
     os.makedirs(out_dir, exist_ok=True)
-    for var in ['L1_ETA', 'L1_PHI', 'L1_PT', 'max_PT', 'min_PT', 'L1_HASBREMADDED', 'L2_HASBREMADDED']:
+    for var in ['L1_ETA', 'L1_PHI', 'L1_PT', 'L1_PX', 'L2_PY', 'L1_HASBREMADDED']:
         ax=_plot_brem_kinematics(df=org, var=var, label='Original' )
         ax=_plot_brem_kinematics(df=cor, var=var, label='Corrected', ax=ax)
         if 'PT' in var:
@@ -109,8 +101,6 @@ def _get_df(nentries : int = 10) -> pnd.DataFrame:
     rdf = gtr.get_rdf()
     rdf = rdf.Define('L1_TRACK_PT' , 'TMath::Sqrt(L1_TRACK_PX * L1_TRACK_PX + L1_TRACK_PY * L1_TRACK_PY)')
     rdf = rdf.Define('L2_TRACK_PT' , 'TMath::Sqrt(L2_TRACK_PX * L2_TRACK_PX + L2_TRACK_PY * L2_TRACK_PY)')
-    rdf = rdf.Define('max_TRACK_PT', 'TMath::Max(L1_TRACK_PT, L2_TRACK_PT)')
-    rdf = rdf.Define('min_TRACK_PT', 'TMath::Min(L1_TRACK_PT, L2_TRACK_PT)')
 
     rdf = rdf.Filter('mva_cmb > 0.8 && mva_prc > 0.5')
     rdf = rdf.Filter('Jpsi_M > 2800 && Jpsi_M < 3200')
@@ -138,7 +128,7 @@ def _filter_kinematics(df : pnd.DataFrame, lepton : str = None):
     if lepton is None:
         l_to_keep_l1 = [ name.replace('None', 'L1') for name in l_to_keep ]
         l_to_keep_l2 = [ name.replace('None', 'L2') for name in l_to_keep ]
-        l_to_keep    = l_to_keep_l1 + l_to_keep_l2 + ['max_TRACK_PT', 'min_TRACK_PT']
+        l_to_keep    = l_to_keep_l1 + l_to_keep_l2
 
     df = df[l_to_keep]
 
