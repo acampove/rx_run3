@@ -21,11 +21,37 @@ def df_from_rdf(rdf : RDataFrame) -> pnd.DataFrame:
     d_data = rdf.AsNumpy(l_col)
     df     = pnd.DataFrame(d_data)
 
+    sr_nan = df.isna().any(axis=1)
+    nnan   = sr_nan.sum()
+    if nnan != 0:
+        log.warning(f'Found {nnan} NaNs in Pandas dataframe')
+        df_nan = df[sr_nan]
+        for name in df_nan.columns:
+            sr_val = df_nan[name]
+            if name in ['EVENTNUMBER', 'RUNNUMBER']:
+                log.info(sr_val)
+
+            if not sr_val.isna().any():
+                continue
+            log.info(sr_val)
+
+        df = df.dropna()
+
     return df
 # ------------------------------------------
 def _preprocess_rdf(rdf: RDataFrame) -> RDataFrame:
-    rdf = rdf.Redefine('L1_HASBREMADDED', 'int(L1_HASBREMADDED)')
-    rdf = rdf.Redefine('L2_HASBREMADDED', 'int(L2_HASBREMADDED)')
+    rdf = _preprocess_lepton(rdf, 'L1')
+    rdf = _preprocess_lepton(rdf, 'L2')
+
+    return rdf
+# ------------------------------------------
+def _preprocess_lepton(rdf : RDataFrame, lep : str) -> None:
+    # Make brem flag an int (will make things easier later)
+    rdf = rdf.Redefine(f'{lep}_HASBREMADDED'        , f'int({lep}_HASBREMADDED)')
+    # If there is no brem, make energy zero
+    rdf = rdf.Redefine(f'{lep}_BREMHYPOENERGY'      , f'{lep}_HASBREMADDED == 1 ? {lep}_BREMHYPOENERGY : 0')
+    # If track based energy is NaN, make it zero
+    rdf = rdf.Redefine(f'{lep}_BREMTRACKBASEDENERGY', f'{lep}_BREMTRACKBASEDENERGY == {lep}_BREMTRACKBASEDENERGY ? {lep}_BREMTRACKBASEDENERGY : 0')
 
     return rdf
 # ------------------------------------------
