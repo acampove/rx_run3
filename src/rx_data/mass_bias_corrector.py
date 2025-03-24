@@ -101,7 +101,7 @@ class MassBiasCorrector:
         rdf : ROOT dataframe
         skip_correction: Will do everything but not correction. Needed to check that only the correction is changing data.
         nthreads : Number of threads, used by pandarallel
-        brem_energy_threshold: Lowest energy that an ECAL cluster needs to have to be considered a photon, used as argument of ElectronBiasCorrector, default 400 (MeV)
+        brem_energy_threshold: Lowest energy that an ECAL cluster needs to have to be considered a photon, used as argument of ElectronBiasCorrector, default 0 (MeV)
         ecorr_kind : Kind of correction to be added to electrons, [ecalo_bias, brem_track]
         '''
         self._df              = df_from_rdf(rdf)
