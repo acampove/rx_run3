@@ -4,6 +4,7 @@ Module storing MassBiasCorrector class
 # pylint: disable=too-many-return-statements
 
 import vector
+import numpy
 import pandas as pnd
 from pandarallel                     import pandarallel
 from ROOT                            import RDataFrame, RDF
@@ -59,7 +60,7 @@ class MassBiasCorrector:
 
         return row
     # ------------------------------------------
-    def _calculate_masses(self, row : pnd.Series) -> float:
+    def _calculate_variables(self, row : pnd.Series) -> float:
         l1 = vector.obj(pt=row.L1_PT, phi=row.L1_PHI, eta=row.L1_ETA, m=self._emass)
         l2 = vector.obj(pt=row.L2_PT, phi=row.L2_PHI, eta=row.L2_ETA, m=self._emass)
         kp = vector.obj(pt=row.H_PT , phi=row.H_PHI , eta=row.H_ETA , m=self._kmass)
@@ -67,15 +68,35 @@ class MassBiasCorrector:
         jp = l1 + l2
         bp = jp + kp
 
-        bmass = float(bp.mass) if float(bp.mass) else -1
-        jmass = float(jp.mass) if float(jp.mass) else -1
+        bmass = -1 if numpy.isnan(bp.mass) else float(bp.mass)
+        jmass = -1 if numpy.isnan(jp.mass) else float(jp.mass)
 
-        return pnd.Series({'B_M' : bmass, 'Jpsi_M' : jmass})
+        d_data = {
+                'B_M'    : bmass,
+                'Jpsi_M' : jmass,
+                # --------------
+                'L1_PX'  : row.L1_PX,
+                'L1_PY'  : row.L1_PY,
+                'L1_PZ'  : row.L1_PZ,
+                'L1_PT'  : row.L1_PT,
+                # --------------
+                'L2_PX'  : row.L2_PX,
+                'L2_PY'  : row.L2_PY,
+                'L2_PZ'  : row.L2_PZ,
+                'L2_PT'  : row.L2_PT,
+                # --------------
+                'L1_HASBREMADDED' : row.L1_HASBREMADDED,
+                'L2_HASBREMADDED' : row.L2_HASBREMADDED,
+                }
+
+        df = pnd.Series(d_data)
+
+        return df
     # ------------------------------------------
     def _calculate_correction(self, row : pnd.Series) -> pnd.DataFrame:
         row  = self._correct_electron('L1', row)
         row  = self._correct_electron('L2', row)
-        df   = self._calculate_masses(row)
+        df   = self._calculate_variables(row)
 
         return df
     # ------------------------------------------
@@ -112,9 +133,12 @@ class MassBiasCorrector:
 
         df = self._df
         if self._nthreads > 1:
-            df[['B_M', 'Jpsi_M']] = df.parallel_apply(self._calculate_correction, axis=1)
+            sr_data = df.parallel_apply(self._calculate_correction, axis=1)
         else:
-            df[['B_M', 'Jpsi_M']] = df.apply(self._calculate_correction, axis=1)
+            sr_data = df.apply(self._calculate_correction, axis=1)
+
+        l_var     = sr_data.columns
+        df[l_var] = sr_data
 
         df        = self._filter_df(df)
         df        = df.fillna(-1)
