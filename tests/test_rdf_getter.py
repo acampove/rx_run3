@@ -9,6 +9,7 @@ import ROOT
 from ROOT                   import RDataFrame, EnableImplicitMT
 from dmu.logging.log_store  import LogStore
 from rx_data.rdf_getter     import RDFGetter
+from rx_selection           import selection as sel
 
 log=LogStore.add_logger('rx_data:test_rdf_getter')
 # ------------------------------------------------
@@ -18,7 +19,7 @@ class Data:
     '''
     EnableImplicitMT(10)
 
-    out_dir    = '/tmp/rx_data/tests/rdf_getter'
+    out_dir    = '/tmp/tests/rx_data/rdf_getter'
     low_q2     = '(Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1000000)'
     central_q2 = '(Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000)'
     jpsi_q2    = '(Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)'
@@ -40,12 +41,13 @@ def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 
     RDFGetter.samples = {
-            'main'      : '/home/acampove/external_ssd/Data/samples/main.yaml',
-            'mva'       : '/home/acampove/external_ssd/Data/samples/mva.yaml',
-            'hop'       : '/home/acampove/external_ssd/Data/samples/hop.yaml',
-            'cascade'   : '/home/acampove/external_ssd/Data/samples/cascade.yaml',
-            'jpsi_misid': '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
-            'ecalo_bias': '/home/acampove/external_ssd/Data/samples/ecalo_bias.yaml',
+            'main'        : '/home/acampove/external_ssd/Data/samples/main.yaml',
+            'mva'         : '/home/acampove/external_ssd/Data/samples/mva.yaml',
+            'hop'         : '/home/acampove/external_ssd/Data/samples/hop.yaml',
+            'cascade'     : '/home/acampove/external_ssd/Data/samples/cascade.yaml',
+            'jpsi_misid'  : '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
+            'ecalo_bias'  : '/home/acampove/external_ssd/Data/samples/ecalo_bias.yaml',
+            'brem_track_2': '/home/acampove/external_ssd/Data/samples/brem_track_2.yaml',
             }
 # ------------------------------------------------
 def _check_branches(rdf : RDataFrame) -> None:
