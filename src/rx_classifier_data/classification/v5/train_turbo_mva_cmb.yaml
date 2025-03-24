@@ -223,7 +223,6 @@ plotting:
         labels  : ['$IP_{\chi^2}(K^+)$', '']
         styling :          
             linestyle: '-'
-        #
       mass:
         normalized : true
         binning : [4400, 6500, 50]
@@ -231,9 +230,6 @@ plotting:
         labels  : ['$M(B^+)$', '']
         styling :          
             linestyle: '-'
-      # These variables come from friend trees
-      # They need prefix.varname
-      # Preffix is in dataset/paths section
       hop.hop_mass:
         normalized : true
         binning : [3000, 7000, 60]
