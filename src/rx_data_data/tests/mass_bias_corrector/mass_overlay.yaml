@@ -1,3 +1,7 @@
+definitions:
+    #Will define extra variables
+    max_ll_pt : 'TMath::Max(L1_PT, L2_PT)'
+    min_ll_pt : 'TMath::Min(L1_PT, L2_PT)'
 plots:
     B_M :
         binning    : [4200, 6000, 60]
@@ -7,6 +11,22 @@ plots:
         binning    : [2500, 3400, 60]
         yscale     : 'linear'
         labels     : ['M$(J/\psi)$', 'Entries']
+    min_ll_pt:
+        binning    : [0, 10000, 60]
+        yscale     : 'linear'
+        labels     : ['min pT', 'Entries']
+    max_ll_pt:
+        binning    : [0, 20000, 60]
+        yscale     : 'linear'
+        labels     : ['max pT', 'Entries']
+    L1_HASBREMADDED:
+        binning    : [0, 2, 2]
+        yscale     : 'linear'
+        labels     : ['L1 HASBREMADDED', 'Entries']
+    L2_HASBREMADDED:
+        binning    : [0, 2, 2]
+        yscale     : 'linear'
+        labels     : ['L2 HASBREMADDED', 'Entries']
 style:
   skip_lines : true
 plugin:
