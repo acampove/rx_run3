@@ -48,15 +48,19 @@ def _get_range(var : str) -> tuple[float,float]:
         minx = 0
         maxx = 2
 
-    if 'PX' in var or 'PY' in var or 'PZ' in var or 'PT' in var:
+    if 'PX' in var or 'PY' in var or 'PT' in var:
         minx =    250
-        maxx = 20_000
+        maxx = 10_000
 
-    if var == 'L1_ETA':
+    if 'PZ' in var:
+        minx =    250
+        maxx = 100_000
+
+    if 'ETA' in var:
         minx = 2
         maxx = 5
 
-    if var == 'L1_PHI':
+    if 'PHI' in var:
         minx = -3.14
         maxx =  3.14
 
@@ -76,7 +80,11 @@ def _plot_brem_kinematics(df : pnd.DataFrame, var : str, label : str, ax=None):
 def _plot_correction(org : pnd.DataFrame, cor : pnd.DataFrame, name : str) -> None:
     out_dir = f'{Data.plt_dir}/{name}'
     os.makedirs(out_dir, exist_ok=True)
-    for var in ['L1_ETA', 'L1_PHI', 'L1_PT', 'L1_PX', 'L2_PY', 'L1_HASBREMADDED']:
+
+    l1_var = ['L1_ETA', 'L1_PHI', 'L1_PT', 'L1_PX', 'L1_PY', 'L1_PZ', 'L1_HASBREMADDED']
+    l2_var = ['L2_ETA', 'L2_PHI', 'L2_PT', 'L2_PX', 'L2_PY', 'L2_PZ', 'L2_HASBREMADDED']
+
+    for var in l1_var + l2_var:
         ax=_plot_brem_kinematics(df=org, var=var, label='Original' )
         ax=_plot_brem_kinematics(df=cor, var=var, label='Corrected', ax=ax)
         if 'PT' in var:
