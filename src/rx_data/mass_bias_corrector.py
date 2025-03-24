@@ -3,8 +3,6 @@ Module storing MassBiasCorrector class
 '''
 # pylint: disable=too-many-return-statements
 
-import math
-
 import vector
 import pandas as pnd
 from pandarallel                     import pandarallel
