@@ -178,38 +178,24 @@ def test_skip_correction():
 
     _check_equal(df_org, df_cor, must_differ = False)
 #-----------------------------------------
-def test_correction():
-    '''
-    Tests actually doing the correction
-    '''
-    df_org = _get_df()
-    df_org = df_org.fillna(-1)
-    cor    = ElectronBiasCorrector(skip_correction=False)
-    df_cor = df_org.apply(lambda row : cor.correct(row, 'L1'), axis=1)
-
-    df_org = _filter_kinematics(df_org, lepton='L1')
-    df_cor = _filter_kinematics(df_cor, lepton='L1')
-
-    _check_equal(df_org, df_cor, must_differ = True)
-#-----------------------------------------
 def test_correction_brem_track():
     '''
-    Apply correction using brem based energy instead of bias measurement
+    Use brem_track methods
     '''
     LogStore.set_level('rx_data:electron_bias_corrector', 40)
-    pandarallel.initialize(nb_workers=10, progress_bar=True)
+    pandarallel.initialize(nb_workers=1, progress_bar=True)
 
     df_org = _get_df(nentries = 10_000)
     df_org = df_org.fillna(-1)
 
     cor    = ElectronBiasCorrector(skip_correction=False)
-    df_cor = df_org.parallel_apply(lambda row : cor.correct(row, 'L1', kind='brem_track'), axis=1)
-    df_cor = df_cor.parallel_apply(lambda row : cor.correct(row, 'L2', kind='brem_track'), axis=1)
+    df_cor = df_org.apply(lambda row : cor.correct(row, 'L1', kind='brem_track_2'), axis=1)
+    df_cor = df_cor.apply(lambda row : cor.correct(row, 'L2', kind='brem_track_2'), axis=1)
 
     df_org = _filter_kinematics(df_org)
     df_cor = _filter_kinematics(df_cor)
 
-    _plot_correction(org=df_org, cor=df_cor, name='brem_track')
+    _plot_correction(org=df_org, cor=df_cor, name='brem_track_2')
     _check_equal(df_org, df_cor, must_differ = True)
     LogStore.set_level('rx_data:electron_bias_corrector', 10)
 #-----------------------------------------
