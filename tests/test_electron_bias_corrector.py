@@ -11,9 +11,9 @@ import pandas            as pnd
 import matplotlib.pyplot as plt
 
 from pandarallel                     import pandarallel
-from ROOT                            import RDataFrame
 from dmu.logging.log_store           import LogStore
 from rx_data.rdf_getter              import RDFGetter
+from rx_data.utilities               import df_from_rdf
 from rx_data.electron_bias_corrector import ElectronBiasCorrector
 
 log=LogStore.add_logger('rx_data:test_electron_bias_corrector')
@@ -99,14 +99,6 @@ def _plot_correction(org : pnd.DataFrame, cor : pnd.DataFrame, name : str) -> No
         plt.savefig(f'{out_dir}/{var}.png')
         plt.close()
 #-----------------------------------------
-def _pick_column(name : str, rdf : RDataFrame) -> bool:
-    ctype = rdf.GetColumnType(name)
-
-    if ctype not in ['Int_t', 'Float_t', 'Double_t', 'Bool_t', 'double', 'int']:
-        return False
-
-    return True
-#-----------------------------------------
 def _get_df(nentries : int = 10) -> pnd.DataFrame:
     RDFGetter.samples = {
         'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
@@ -130,11 +122,7 @@ def _get_df(nentries : int = 10) -> pnd.DataFrame:
     rdf = rdf.Redefine('L1_BREMHYPOAREA', 'int(L1_BREMHYPOAREA)')
     rdf = rdf.Range(nentries)
 
-    l_col  = [ name.c_str() for name in rdf.GetColumnNames() if _pick_column(name.c_str(), rdf) ]
-    d_data = rdf.AsNumpy(l_col)
-    df     = pnd.DataFrame(d_data)
-
-    return df
+    return df_from_rdf(rdf)
 #-----------------------------------------
 def _filter_kinematics(df : pnd.DataFrame, lepton : str = None):
     l_to_keep = [
