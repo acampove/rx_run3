@@ -87,14 +87,14 @@ class ElectronBiasCorrector:
         if e_corr is None:
             return row
 
-        l_var      = [
+        l_var = [
                 f'{self._name}_PX',
                 f'{self._name}_PY',
                 f'{self._name}_PZ']
 
         row.loc[l_var] = [e_corr.px, e_corr.py, e_corr.pz]
 
-        l_var      = [
+        l_var = [
                 f'{self._name}_PT' ,
                 f'{self._name}_ETA',
                 f'{self._name}_PHI']
