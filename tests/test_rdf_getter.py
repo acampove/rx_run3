@@ -27,13 +27,14 @@ class Data:
     high_q2    = '(Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)'
 
     l_branch = [
+            'brem_track_2.B_M_brem_track_2',
             'mva.mva_cmb', 
             'mva.mva_prc', 
             'hop.hop_mass', 
             'hop.hop_alpha',
             'cascade.swp_cascade_mass_swp',
             'jpsi_misid.swp_jpsi_misid_mass_swp',
-            'ecalo_bias.B_M']
+            'ecalo_bias.ecalo_bias_B_M']
 # ------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
