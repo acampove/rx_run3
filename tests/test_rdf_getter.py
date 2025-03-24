@@ -126,20 +126,77 @@ def _plot_hop(rdf : RDataFrame, test : str) -> None:
     plt.savefig(f'{test_dir}/hop_alpha.png')
     plt.close()
 # ------------------------------------------------
+def _apply_selection(rdf : RDataFrame, analysis : str, override : dict[str,str] = None) -> RDataFrame:
+    d_sel = sel.selection(project='RK', analysis=analysis, q2bin='jpsi', process='DATA')
+    if override is not None:
+        d_sel.update(override)
+
+    for cut_name, cut_expr in d_sel.items():
+        rdf = rdf.Filter(cut_expr, cut_name)
+
+    return rdf
+# ------------------------------------------------
+def _plot_brem_track_2(rdf : RDataFrame, test : str, tree : str) -> None:
+    test_dir = f'{Data.out_dir}/{test}/{tree}'
+    os.makedirs(test_dir, exist_ok=True)
+
+    d_var= {
+            'B_M'             : [4200,  6000], 
+            'Jpsi_M'          : [2500,  3300], 
+            'L1_PT'           : [   0, 10000], 
+            'L2_PT'           : [   0, 10000], 
+            'L1_HASBREMADDED' : [0, 2],
+            'L2_HASBREMADDED' : [0, 2],
+            }
+
+    kind = 'brem_track_2'
+    for var, rng in d_var.items():
+        name = f'{kind}.{var}_{kind}'
+        arr_org = rdf.AsNumpy([var ])[var ]
+        arr_cor = rdf.AsNumpy([name])[name]
+
+        plt.hist(arr_org, bins=50, alpha=0.5      , range=rng, label='Original' , color='gray')
+        plt.hist(arr_cor, bins=50, histtype='step', range=rng, label='Corrected', color='blue')
+
+        plt.title(f'{var}; {test}')
+        plt.legend()
+        plt.savefig(f'{test_dir}/{var}.png')
+        plt.close()
+# ------------------------------------------------
 @pytest.mark.parametrize('sample', ['DATA_24_MagUp_24c1', 'DATA_24_MagUp_24c2', 'DATA_24_Mag*_24c*'])
-def test_data(sample : str):
+def test_electron_data(sample : str):
     '''
     Test of getter class in data
     '''
     gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
+    rdf = _apply_selection(rdf=rdf, analysis='EE')
+    rep = rdf.Report()
+    rep.Print()
 
     _check_branches(rdf)
 
     sample = sample.replace('*', 'p')
+
     _plot_mva_mass(rdf, sample)
     _plot_mva(rdf, sample)
     _plot_hop(rdf, sample)
+# ------------------------------------------------
+@pytest.mark.parametrize('sample', ['DATA_*MagDown*'])
+def test_brem_track_2(sample : str):
+    '''
+    Test brem_track_2 correction
+    '''
+    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+    rdf = gtr.get_rdf()
+    rdf = _apply_selection(rdf=rdf, analysis='EE', override = {'mass' : 'B_const_mass_M > 5160'})
+    rep = rdf.Report()
+    rep.Print()
+
+    _check_branches(rdf)
+
+    sample = sample.replace('*', 'p')
+    _plot_brem_track_2(rdf, sample, 'brem_track_2')
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC'])
 def test_mc(sample : str):
