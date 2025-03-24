@@ -59,6 +59,9 @@ def _preprocess_lepton(rdf : RDataFrame, lep : str) -> None:
 def _pick_column(name : str) -> bool:
     to_keep  = ['EVENTNUMBER', 'RUNNUMBER']
 
+    if '_TRUE' in name:
+        return False
+
     if name in to_keep:
         return True
 
