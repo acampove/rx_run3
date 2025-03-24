@@ -44,6 +44,10 @@ def _get_range(var : str) -> tuple[float,float]:
     minx = None
     maxx = None
 
+    if 'HASBREMADDED' in var:
+        minx = 0
+        maxx = 2
+
     if var == 'L1_ETA':
         minx = 2
         maxx = 5
@@ -80,7 +84,7 @@ def _plot_brem_kinematics(df : pnd.DataFrame, var : str, label : str, ax=None):
 def _plot_correction(org : pnd.DataFrame, cor : pnd.DataFrame, name : str) -> None:
     out_dir = f'{Data.plt_dir}/{name}'
     os.makedirs(out_dir, exist_ok=True)
-    for var in ['L1_ETA', 'L1_PHI', 'L1_PT', 'max_PT', 'min_PT']:
+    for var in ['L1_ETA', 'L1_PHI', 'L1_PT', 'max_PT', 'min_PT', 'L1_HASBREMADDED', 'L2_HASBREMADDED']:
         ax=_plot_brem_kinematics(df=org, var=var, label='Original' )
         ax=_plot_brem_kinematics(df=cor, var=var, label='Corrected', ax=ax)
         if 'PT' in var:
@@ -98,7 +102,7 @@ def _plot_correction(org : pnd.DataFrame, cor : pnd.DataFrame, name : str) -> No
 def _pick_column(name : str, rdf : RDataFrame) -> bool:
     ctype = rdf.GetColumnType(name)
 
-    if ctype not in ['Int_t', 'Float_t', 'Double_t', 'Bool_t', 'double']:
+    if ctype not in ['Int_t', 'Float_t', 'Double_t', 'Bool_t', 'double', 'int']:
         return False
 
     return True
@@ -140,6 +144,7 @@ def _filter_kinematics(df : pnd.DataFrame, lepton : str = None):
                  f'{lepton}_PT',
                  f'{lepton}_TRACK_PT',
                  f'{lepton}_ETA',
+                 f'{lepton}_HASBREMADDED',
                  f'{lepton}_PHI']
 
     if lepton is None:
