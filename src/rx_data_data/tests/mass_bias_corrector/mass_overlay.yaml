@@ -1,7 +1,3 @@
-definitions:
-    #Will define extra variables
-    max_ll_pt : 'TMath::Max(L1_PT, L2_PT)'
-    min_ll_pt : 'TMath::Min(L1_PT, L2_PT)'
 plots:
     B_M :
         binning    : [4200, 6000, 60]
@@ -11,14 +7,41 @@ plots:
         binning    : [2500, 3400, 60]
         yscale     : 'linear'
         labels     : ['M$(J/\psi)$', 'Entries']
-    min_ll_pt:
+    # ---------------------------
+    L1_PT:
         binning    : [0, 10000, 60]
         yscale     : 'linear'
-        labels     : ['min pT', 'Entries']
-    max_ll_pt:
-        binning    : [0, 20000, 60]
+        labels     : ['L1 PT', 'Entries']
+    L1_PX:
+        binning    : [0, 10000, 60]
         yscale     : 'linear'
-        labels     : ['max pT', 'Entries']
+        labels     : ['L1 PX', 'Entries']
+    L1_PY:
+        binning    : [0, 10000, 60]
+        yscale     : 'linear'
+        labels     : ['L1 PY', 'Entries']
+    L1_PZ:
+        binning    : [0, 100000, 60]
+        yscale     : 'linear'
+        labels     : ['L1 PZ', 'Entries']
+    # ---------------------------
+    L2_PT:
+        binning    : [0, 10000, 60]
+        yscale     : 'linear'
+        labels     : ['L2 PT', 'Entries']
+    L2_PX:
+        binning    : [0, 10000, 60]
+        yscale     : 'linear'
+        labels     : ['L2 PX', 'Entries']
+    L2_PY:
+        binning    : [0, 10000, 60]
+        yscale     : 'linear'
+        labels     : ['L2 PY', 'Entries']
+    L2_PZ:
+        binning    : [0, 100000, 60]
+        yscale     : 'linear'
+        labels     : ['L2 PZ', 'Entries']
+    # ---------------------------
     L1_HASBREMADDED:
         binning    : [0, 2, 2]
         yscale     : 'linear'
