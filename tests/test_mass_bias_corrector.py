@@ -140,7 +140,7 @@ def test_small_input(kind : str):
     DisableImplicitMT()
 
     rdf_org = _get_rdf()
-    rdf_org = rdf_org.Range(200)
+    rdf_org = rdf_org.Range(300)
     cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
 
