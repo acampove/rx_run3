@@ -167,7 +167,7 @@ class ElectronBiasCorrector:
 
         return e_corr
     # ---------------------------------
-    def _correct_with_track_brem_1(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
+    def _correct_with_track_brem_1(self, e_track : v4d, row : pnd.Series) -> v4d:
         '''
         Take electron from tracking system and brem, as well as dataframe row representing entry in TTree
         Create brem photon colinear to track, add it to track, return sum
@@ -200,7 +200,7 @@ class ElectronBiasCorrector:
 
         return e_track + gamma
     # ---------------------------------
-    def _correct_with_track_brem_2(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
+    def _correct_with_track_brem_2(self, e_track : v4d, row : pnd.Series) -> v4d:
         '''
         Smarter strategy than brem_track_1
         '''
@@ -217,11 +217,11 @@ class ElectronBiasCorrector:
             return None
 
         # The electron had no brem, but brem was found, correct electron with strategy 1.
-        e_corr = self._correct_with_track_brem_1(e_track, e_brem, row)
+        e_corr = self._correct_with_track_brem_1(e_track, row)
 
         return e_corr
     # ---------------------------------
-    def correct(self, row : pnd.Series, name : str, kind : str = 'brem_track_1') -> pnd.Series:
+    def correct(self, row : pnd.Series, name : str, kind : str = 'brem_track_2') -> pnd.Series:
         '''
         Corrects kinematics and returns row
         row  : Pandas dataframe row
