@@ -111,19 +111,32 @@ def _print_groups(group : dict[int,list[str]], sizes : dict[int,float], this_gro
         else:
             log.info(f'{igroup:<10}{nfile:<10}{size:<10}')
 
-    log.info(20 * '-')
+    log.info(30 * '-')
+# ---------------------------------
+def _filter_paths(l_path : list[str]) -> list[str]:
+    ninit = len(l_path)
+    log.debug(f'Filtering {ninit} paths')
+    if Data.kind in Data.l_ecorr:
+        # For electron corrections, drop muon paths
+        l_path = [ path for path in l_path if 'MuMu' not in path ]
+
+    nfnal = len(l_path)
+    log.debug(f'Filtered -> {nfnal} paths')
+
+    return l_path
 # ---------------------------------
 def _get_paths() -> list[str]:
     data_dir = os.environ['DATADIR']
     data_dir = vman.get_last_version(dir_path=f'{data_dir}/main', version_only=False)
     l_path   = glob.glob(f'{data_dir}/*.root')
+    l_path   = _filter_paths(l_path)
     l_path   = _get_partition(l_path)
 
     nfiles   = len(l_path)
     if nfiles == 0:
         raise ValueError(f'No file found in: {data_dir}')
 
-    log.info(f'Picking up {nfiles} form {data_dir}')
+    log.info(f'Picking up {nfiles} file(s) from {data_dir}')
 
     return l_path
 # ---------------------------------
@@ -181,13 +194,13 @@ def _create_file(path : str, trigger : str) -> None:
     if   Data.kind == 'hop':
         obj = HOPCalculator(rdf=rdf)
         rdf = obj.get_rdf(preffix=Data.kind)
-    elif Data.kind in ['ecalo_bias', 'brem_track']:
+    elif Data.kind in Data.l_ecorr:
         skip_correction = _is_mc(path) and Data.kind == 'ecalo_bias'
         if skip_correction:
             log.warning('Turning off ecalo_bias correction for MC sample')
 
         cor = MassBiasCorrector(rdf=rdf, skip_correction=skip_correction, ecorr_kind=Data.kind)
-        rdf = cor.get_rdf(mass_name=f'{Data.kind}_B_M')
+        rdf = cor.get_rdf(suffix=Data.kind)
     elif Data.kind == 'swp_jpsi_misid':
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' :  13, 'L2' :  13}, d_had={'H' :  13})
         rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar)
