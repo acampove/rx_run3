@@ -42,6 +42,7 @@ def df_from_rdf(rdf : RDataFrame) -> pnd.DataFrame:
 def _preprocess_rdf(rdf: RDataFrame) -> RDataFrame:
     rdf = _preprocess_lepton(rdf, 'L1')
     rdf = _preprocess_lepton(rdf, 'L2')
+    rdf = _preprocess_lepton(rdf,  'H')
 
     return rdf
 # ------------------------------------------
