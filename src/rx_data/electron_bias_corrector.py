@@ -176,7 +176,6 @@ class ElectronBiasCorrector:
             self._brem_status = -1
             return None
 
-        log.info('Applying brem_track electron correction')
         brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
         if brem_energy < self._min_brem_energy:
             self._brem_status = 0
