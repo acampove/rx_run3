@@ -38,7 +38,11 @@ class RDFGetter:
                 continue
 
             nosamp = False
-            l_path_sample = d_data[sample][self._trigger]
+            try:
+                l_path_sample = d_data[sample][self._trigger]
+            except KeyError as exc:
+                raise KeyError(f'Cannot access {yaml_path}:{sample}/{self._trigger}') from exc
+
             nsamp = len(l_path_sample)
             if nsamp == 0:
                 log.error(f'No paths found for {sample} in {yaml_path}')
