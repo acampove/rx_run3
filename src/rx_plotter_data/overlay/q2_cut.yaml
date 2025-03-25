@@ -1,24 +1,35 @@
 general:
-  size : [10, 8]
+  size : [12, 8]
 definitions:
-  nbrem : L1_BremMultiplicity + L2_BremMultiplicity
+  B_M_corr    : B_M_brem_track_2
+  Jpsi_M_corr : Jpsi_M_brem_track_2
+  nbrem       : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2)
 selection:
-  no_tail : B_const_mass_M > 5160
-  mass    : (1)
+  q2      : (1)
+  mass    : (1) 
 overlay:
-  Block 1&2: block == 1 || block == 2
-  Block 5  : block == 5
-  Block 6  : block == 6
-  Block 7&8: block == 7 || block == 8
+  'none'  : (1)
+  '2150'  : Jpsi_M_corr > 2150 
+  '2350'  : Jpsi_M_corr > 2350 
+  '2450'  : Jpsi_M_corr > 2450 
 plots:
-    B_M:
-        binning    : [4500, 6000, 30]
-        yscale     : 'linear'
-        labels     : ['$M(B^+)$', 'Normalized']
-        title      : ''
-        name       : 'bmass_raw'
-        normalized : true
-        styling:
-          histtype : step
+    B_M_corr:
+      binning    : [4300, 6000, 60]
+      yscale     : 'linear'
+      labels     : ['$M_{corr}(B^+)$', 'Normalized']
+      title      : ''
+      name       : 'bmass'
+      normalized : true
+      styling:
+        histtype : step
+    Jpsi_M_corr:
+      binning    : [2000, 3500, 60]
+      yscale     : 'linear'
+      labels     : ['$M_{corr}(J/\psi)$', 'Normalized']
+      title      : ''
+      name       : 'jmass'
+      normalized : false 
+      styling:
+        histtype : step
 style:
   skip_lines : true
