@@ -37,6 +37,7 @@ class Data:
                   'resolution',
                   'for_hlt',
                   'q2_cut',
+                  'tail_cut',
                   'no_dtf_mass_shape']
 
     mplhep.style.use('LHCb2')
