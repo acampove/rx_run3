@@ -6,7 +6,9 @@ general:
 definitions :
   nbrem      : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2)
   B_M_corr   : B_M_brem_track_2
+  Jpsi_M_corr: Jpsi_M_brem_track_2
 selection:
+  q2     : (1)
   mass   : B_const_mass_M > 5160
 plots:
     B_M:
@@ -22,6 +24,22 @@ plots:
       binning : [4200, 6000, 40]
       yscale  : linear
       labels  : ['M${}_{corr}(B^+ \to J/\psi(\to ee)K^+)$', '']
+      normalize : True
+      styling :
+        linestyle: '-'
+    Jpsi_M_corr:
+      normalized : true
+      binning : [2100, 3500, 40]
+      yscale  : linear
+      labels  : ['M${}_{corr}(J/\psi(\to ee))$', '']
+      normalize : True
+      styling :
+        linestyle: '-'
+    Jpsi_M:
+      normalized : true
+      binning : [2100, 3500, 40]
+      yscale  : linear
+      labels  : ['M$(J/\psi(\to ee))$', '']
       normalize : True
       styling :
         linestyle: '-'
