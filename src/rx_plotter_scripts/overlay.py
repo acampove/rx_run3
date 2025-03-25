@@ -36,6 +36,7 @@ class Data:
                   'npv',
                   'resolution',
                   'for_hlt',
+                  'q2_cut',
                   'no_dtf_mass_shape']
 
     mplhep.style.use('LHCb2')
@@ -171,8 +172,6 @@ def _get_inp() -> dict[str,RDataFrame]:
         log.info(f'   {name:<20}{cut}')
         rdf = rdf_in.Filter(cut, name)
         d_rdf[name] = rdf
-        rep = rdf.Report()
-        rep.Print()
 
     return d_rdf
 # ---------------------------------
