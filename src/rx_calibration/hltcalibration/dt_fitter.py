@@ -190,6 +190,24 @@ class DTFitter:
 
         return l_const
     # -------------------------------
+    def _minimize_nll(self, nll) -> zfit.result.FitResult:
+        try:
+            self._ntries += 1
+            log.debug(f'Minimizing, try: {self._ntries}')
+            res           = self._minimizer.minimize(nll)
+        except FailMinimizeNaN as exc:
+            if self._ntries > self._max_tries:
+                raise FailMinimizeNaN(f'Maximum number of tries ({self._max_tries}) reached') from exc
+
+            log.warning('Minimization hit a NaN, randomizing')
+            s_par = nll.get_params()
+            for par in s_par:
+                par.randomize()
+
+            res = self._minimize_nll(nll)
+
+        return res
+    # -------------------------------
     def fit(self, skip_fit : bool = False, constraints : dict[str, list[float,float]] = None) -> Parameter:
         '''
         Function returning Parameter object holding fitting parameters
