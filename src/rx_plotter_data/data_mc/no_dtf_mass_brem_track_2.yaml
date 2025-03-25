@@ -1,7 +1,5 @@
-# This config makes plots needed to check good data/MC agreement
-# It was created to check investigate the source of dissagreements in lineshapes
 # It is run with:
-# data_mc -q jpsi -d DATA* -s Bu_JpsiK_ee_eq_DPC -t Hlt2RD_BuToKpEE_MVA -c no_dtf_mass -b 0
+# data_mc -q jpsi -d DATA* -s Bu_JpsiK_ee_eq_DPC -t Hlt2RD_BuToKpEE_MVA -c no_dtf_mass_brem_track_2 -b 0
 
 general:
   size : [12, 8]
@@ -17,11 +15,15 @@ plots:
       yscale  : linear
       labels  : ['M$(B^+ \to J/\psi(\to ee)K^+)$', '']
       normalize : True
+      styling :
+        linestyle: '-'
     B_M_corr:
       normalized : true
       binning : [4200, 6000, 40]
       yscale  : linear
       labels  : ['M${}_{corr}(B^+ \to J/\psi(\to ee)K^+)$', '']
       normalize : True
+      styling :
+        linestyle: '-'
 style:
   skip_lines : true
