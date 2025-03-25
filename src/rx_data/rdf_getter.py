@@ -86,6 +86,7 @@ class RDFGetter:
 
         log.debug(f'Building datarame from {self._tmp_path}')
         rdf = RDF.Experimental.FromSpec(self._tmp_path)
+        rdf = rdf.Define('Jpsi_const_mass_M' , 'TMath::Sqrt(TMath::Power(Jpsi_DTF_HEAD_PE, 2) - TMath::Power(Jpsi_DTF_HEAD_PX, 2) - TMath::Power(Jpsi_DTF_HEAD_PY, 2) - TMath::Power(Jpsi_DTF_HEAD_PZ, 2))')
 
         return rdf
 # ---------------------------------------------------
