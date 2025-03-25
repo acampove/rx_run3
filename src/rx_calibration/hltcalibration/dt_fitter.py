@@ -52,6 +52,8 @@ class DTFitter:
         self._l_pdf   : list[BasePDF] = []
         self._pdf_ful : BasePDF
         self._zdt_dat : zdata
+        self._ntries    = 0
+        self._max_tries = 5
 
         self._minimizer= zfit.minimize.Minuit()
         self._obs      : ZfitSpace
@@ -203,7 +205,7 @@ class DTFitter:
         if skip_fit:
             return Parameter()
 
-        res = self._minimizer.minimize(nll)
+        res = self._minimize_nll(nll)
 
         error_method = self._conf['error_method']
         res.hesse(method=error_method)
