@@ -127,9 +127,10 @@ class DTFitter:
             val : float = d_val['value']
             try:
                 err : float = d_val['hesse']['error']
-            except KeyError as exc:
+            except KeyError:
+                log.warning('Error calculation failed, assigning errors of -1')
                 print(res)
-                raise KeyError('Cannot extract error from fit') from exc
+                err = -1
 
             obj[par_name] = val, err
 
