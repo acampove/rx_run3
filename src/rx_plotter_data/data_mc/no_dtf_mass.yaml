@@ -1,3 +1,8 @@
+# This config makes plots needed to check good data/MC agreement
+# It was created to check investigate the source of dissagreements in lineshapes
+# It is run with:
+# data_mc -q jpsi -d DATA* -s Bu_JpsiK_ee_eq_DPC -t Hlt2RD_BuToKpEE_MVA -c no_dtf_mass -b 0
+
 general:
   size : [12, 8]
 definitions :
