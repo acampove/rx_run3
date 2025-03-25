@@ -122,7 +122,11 @@ class DTFitter:
         obj = Parameter()
         for par_name, d_val in res.params.items():
             val : float = d_val['value']
-            err : float = d_val['hesse']['error']
+            try:
+                err : float = d_val['hesse']['error']
+            except KeyError as exc:
+                print(res)
+                raise KeyError('Cannot extract error from fit') from exc
 
             obj[par_name] = val, err
 
