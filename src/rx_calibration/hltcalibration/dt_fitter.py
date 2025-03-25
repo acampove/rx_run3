@@ -8,11 +8,12 @@ import ROOT
 import matplotlib.pyplot as plt
 import zfit
 
-from zfit.exception          import ParamNameNotUniqueError
-from zfit.core.interfaces    import ZfitSpace
-from zfit.core.basepdf       import BasePDF
-from zfit.core.data          import Data      as zdata
-from zfit.constraint         import GaussianConstraint as zgconst
+from zfit.minimizers.strategy import FailMinimizeNaN
+from zfit.exception           import ParamNameNotUniqueError
+from zfit.core.interfaces     import ZfitSpace
+from zfit.core.basepdf        import BasePDF
+from zfit.core.data           import Data      as zdata
+from zfit.constraint          import GaussianConstraint as zgconst
 
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
