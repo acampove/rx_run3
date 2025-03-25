@@ -439,6 +439,7 @@ class ZFitPlotter:
             add_pars          = None,
             ymax              = None,
             skip_pulls        = False,
+            yscale : str      = None,
             axs               = None,
             figsize:tuple     = (13, 7),
             leg_loc:str       = 'best',
@@ -464,6 +465,7 @@ class ZFitPlotter:
         figsize (tuple)       : Tuple with figure size, default (13, 7)
         leg_loc (str)         : Location of legend, default 'best'
         xerr (bool or float)  : Used to pass xerr to mplhep histplot. True will use error with bin size, False, no error, otherwise it's the size of the xerror bar
+        yscale (str)          : Scale for y axis of main plot, either log or linear
         '''
         # pylint: disable=too-many-locals, too-many-positional-arguments, too-many-arguments
         d_leg           = {} if           d_leg is None else d_leg
@@ -511,6 +513,9 @@ class ZFitPlotter:
         self.axs[0].legend(title=text, fontsize=20, title_fontsize=20, loc=self._leg_loc)
         self.axs[0].set(xlabel=xlabel, ylabel=ylabel)
         self.axs[0].set_xlim([self.lower, self.upper])
+
+        if yscale is not None:
+            self.axs[0].set_yscale(yscale)
 
         if title is not None:
             self.axs[0].set_title(title)
