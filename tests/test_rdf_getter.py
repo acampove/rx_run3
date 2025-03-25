@@ -8,8 +8,8 @@ import pytest
 import ROOT
 from ROOT                   import RDataFrame, EnableImplicitMT
 from dmu.logging.log_store  import LogStore
-from rx_data.rdf_getter     import RDFGetter
 from rx_selection           import selection as sel
+from rx_data.rdf_getter     import RDFGetter
 
 log=LogStore.add_logger('rx_data:test_rdf_getter')
 # ------------------------------------------------
