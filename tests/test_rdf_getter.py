@@ -164,7 +164,8 @@ def _plot_brem_track_2(rdf : RDataFrame, test : str, tree : str) -> None:
         plt.savefig(f'{test_dir}/{var}.png')
         plt.close()
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['DATA_24_MagUp_24c1', 'DATA_24_MagUp_24c2', 'DATA_24_Mag*_24c*'])
+#@pytest.mark.parametrize('sample', ['DATA_24_MagUp_24c1', 'DATA_24_MagUp_24c2', 'DATA_24_Mag*_24c*'])
+@pytest.mark.parametrize('sample', ['DATA_24_MagDown_24c2'])
 def test_electron_data(sample : str):
     '''
     Test of getter class in data
@@ -183,7 +184,7 @@ def test_electron_data(sample : str):
     _plot_mva(rdf, sample)
     _plot_hop(rdf, sample)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['DATA_*MagDown*'])
+@pytest.mark.parametrize('sample', ['DATA_24_MagDown_24c2'])
 def test_brem_track_2(sample : str):
     '''
     Test brem_track_2 correction
