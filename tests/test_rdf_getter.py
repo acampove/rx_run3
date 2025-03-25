@@ -127,8 +127,8 @@ def _plot_hop(rdf : RDataFrame, test : str) -> None:
     plt.savefig(f'{test_dir}/hop_alpha.png')
     plt.close()
 # ------------------------------------------------
-def _apply_selection(rdf : RDataFrame, analysis : str, override : dict[str,str] = None) -> RDataFrame:
-    d_sel = sel.selection(project='RK', analysis=analysis, q2bin='jpsi', process='DATA')
+def _apply_selection(rdf : RDataFrame, analysis : str, sample : str, override : dict[str,str] = None) -> RDataFrame:
+    d_sel = sel.selection(project='RK', analysis=analysis, q2bin='jpsi', process=sample)
     if override is not None:
         d_sel.update(override)
 
@@ -184,14 +184,14 @@ def test_electron_data(sample : str):
     _plot_mva(rdf, sample)
     _plot_hop(rdf, sample)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('sample', ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC'])
 def test_brem_track_2(sample : str):
     '''
     Test brem_track_2 correction
     '''
     gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
-    rdf = _apply_selection(rdf=rdf, analysis='EE', override = {'mass' : 'B_const_mass_M > 5160'})
+    rdf = _apply_selection(rdf=rdf, analysis='EE', override = {'mass' : 'B_const_mass_M > 5160'}, sample=sample)
     rep = rdf.Report()
     rep.Print()
 
