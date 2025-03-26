@@ -63,7 +63,7 @@ class ZFitPlotter:
     #----------------------------------------
     def _data_to_zdata(self, obs, data, weights):
         if isinstance(data, zfit.data.Data):
-            return data 
+            return data
 
         if isinstance(data, np.ndarray):
             data = zfit.Data.from_numpy (obs=obs, array=data           , weights=weights)
@@ -202,7 +202,7 @@ class ZFitPlotter:
     #----------------------------------------
     def _get_zfit_gof(self):
         if not hasattr(self._result, 'gof'):
-            return
+            return None
 
         chi2, ndof, pval = self._result.gof
 
@@ -213,14 +213,16 @@ class ZFitPlotter:
     def _get_text(self, ext_text):
         gof_text = self._get_zfit_gof()
 
-        if   ext_text is     None and gof_text is     None:
-            return
-        elif ext_text is not None and gof_text is     None:
+        if ext_text is     None and gof_text is     None:
+            return None
+
+        if ext_text is not None and gof_text is     None:
             return ext_text
-        elif ext_text is     None and gof_text is not None:
+
+        if ext_text is     None and gof_text is not None:
             return gof_text
-        else:
-            return f'{ext_text}\n{gof_text}'
+
+        return f'{ext_text}\n{gof_text}'
     #----------------------------------------
     def _get_pars(self):
         '''
@@ -330,7 +332,7 @@ class ZFitPlotter:
             nevt = self._get_component_yield(model, par)
 
             if   model.name in self._l_plot_components and     hasattr(model, 'pdfs'):
-                l_model = [ (frc, pdf) for pdf, frc in zip(model.pdfs, model.params.values()) ] 
+                l_model = [ (frc, pdf) for pdf, frc in zip(model.pdfs, model.params.values()) ]
             elif model.name in self._l_plot_components and not hasattr(model, 'pdfs'):
                 log.warning(f'Cannot plot {model.name} as separate components, despite it was requested')
                 l_model = [ (1, model)]
