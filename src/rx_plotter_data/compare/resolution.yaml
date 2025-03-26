@@ -1,8 +1,10 @@
 general:
   size : [12, 8]
 definitions:
-  nbrem : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2)
+  Jpsi_DTF_HEAD_MASS : TMath::Sqrt(TMath::Power(Jpsi_DTF_HEAD_PE, 2) - TMath::Power(Jpsi_DTF_HEAD_PX, 2) - TMath::Power(Jpsi_DTF_HEAD_PY, 2) - TMath::Power(Jpsi_DTF_HEAD_PZ, 2))
+  nbrem              : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2)
 selection:
+  q2    : (Jpsi_DTF_HEAD_MASS * Jpsi_DTF_HEAD_MASS) > 6000000 && (Jpsi_DTF_HEAD_MASS * Jpsi_DTF_HEAD_MASS) < 12960000
   mass  : B_const_mass_M > 5160
 comparison:
   Original:
@@ -14,17 +16,18 @@ comparison:
 saving:
   plt_dir : plots/comparison/brem_track_2
 plots:
-    bmass:
-        binning    : [4500, 6000, 30]
-        yscale     : 'linear'
-        labels     : ['$M(B^+)$', 'Normalized']
-        name       : bmass_correction
-        normalized : true
+  bmass:
+    binning    : [4200, 6000, 40]
+    yscale     : 'linear'
+    labels     : ['$M(B^+)$', 'Normalized']
+    name       : bmass_correction
+    normalized : true
 style:
   skip_lines : true
 plugin:
-    fwhm:
-        obs    : [4500, 6000]
-        plot   : true        
-        format : FWHM={:.0f} 
-        add_std: True
+  fwhm:
+    bmass:
+      obs    : [4500, 6000]
+      plot   : true        
+      format : FWHM={:.0f} MeV
+      add_std: True
