@@ -5,8 +5,9 @@ definitions:
 selection:
   mass  : B_const_mass_M > 5160
 comparison:
-  B_M              : mass
-  B_M_brem_track_2 : mass
+  mass:
+    B_M              : Original 
+    B_M_brem_track_2 : Corrected 
 saving:
   plt_dir : plots/comparison/brem_track_2
 plots:
@@ -14,15 +15,7 @@ plots:
         binning    : [4500, 6000, 30]
         yscale     : 'linear'
         labels     : ['$M(B^+)$', 'Normalized']
-        title      : ''
-        name       : 'bmass_raw'
-        normalized : true
-    ecalo_bias_B_M:
-        binning    : [4500, 6000, 30]
-        yscale     : 'linear'
-        labels     : ['$M_{corr}(B^+)$', 'Normalized']
-        title      : ''
-        name       : 'bmass_cor'
+        name       : bmass_correction
         normalized : true
 style:
   skip_lines : true
@@ -32,4 +25,3 @@ plugin:
         plot   : true        
         format : FWHM={:.0f} 
         add_std: True
-brem:
