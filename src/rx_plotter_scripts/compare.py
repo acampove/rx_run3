@@ -125,18 +125,19 @@ def _get_cfg() -> dict:
     with open(cfg_path, encoding='utf=8') as ifile:
         cfg = yaml.safe_load(ifile)
 
-    cfg['saving'] = {'plt_dir' : _get_out_dir() }
+    plt_dir = cfg['saving']['plt_dir']
+    cfg['saving']['plt_dir'] = _get_out_dir(plt_dir)
 
     return cfg
 # ---------------------------------
-def _get_out_dir() -> str:
+def _get_out_dir(plt_dir : str) -> str:
     if Data.brem is None:
         brem_name = 'all'
     else:
         brem_name = f'{Data.brem:03}'
 
     sample  = Data.sample.replace('*', 'p')
-    out_dir = f'plots/{Data.config}/{sample}/{Data.trigger}/{Data.q2_bin}/{brem_name}'
+    out_dir = f'{plt_dir}/{sample}/{Data.trigger}/{Data.q2_bin}/{brem_name}'
     if Data.substr is not None:
         out_dir = f'{out_dir}/{Data.substr}'
 
