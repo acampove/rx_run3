@@ -5,6 +5,7 @@ Module holding FitComponent class
 import os
 from typing                 import Union
 
+import numpy
 import ROOT
 import zfit
 import matplotlib.pyplot as plt
@@ -64,6 +65,9 @@ class FitComponent:
         self._maxx      = float(self._obs.upper)
         self._obs_name, = self._obs.obs
         self._minimizer = self._get_minimizer()
+
+        self._yield_value : float
+        self._yield_error : float
     # --------------------
     def _get_minimizer(self) -> Union[AnealingMinimizer,None]:
         if self._fit_cfg is None:
@@ -148,6 +152,8 @@ class FitComponent:
 
             obj[par_name] = val, err
 
+        obj['nSignal'] = self._yield_value, self._yield_error
+
         return obj
     # -------------------------------
     def _get_data(self) -> zdata:
@@ -161,6 +167,9 @@ class FitComponent:
         arr_obs = d_data[self._obs_name]
         arr_wgt = d_data[weights_column]
         data    = zfit.Data.from_numpy(self._obs, array=arr_obs, weights=arr_wgt)
+
+        self._yield_value = float(numpy.sum(arr_wgt))
+        self._yield_error = float(numpy.sqrt(numpy.sum(arr_wgt * arr_wgt)))
 
         return data
     # --------------------
