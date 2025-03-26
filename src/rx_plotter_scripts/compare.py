@@ -167,13 +167,13 @@ def _rdf_from_def(rdf : RDataFrame, d_def : dict) -> RDataFrame:
     return rdf
 # ---------------------------------
 def _get_inp() -> dict[str,RDataFrame]:
-    cfg = _get_cfg()
-    rdf = _get_rdf()
+    cfg    = _get_cfg()
+    rdf_in = _get_rdf()
 
     d_cmp = cfg['comparison']
     d_rdf = {}
     for kind, d_def in d_cmp.items():
-        rdf = _rdf_from_def(rdf, d_def)
+        rdf = _rdf_from_def(rdf_in, d_def)
         _check_entries(rdf)
         d_rdf[kind] = rdf
 
