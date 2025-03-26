@@ -1,7 +1,8 @@
 '''
 Script used to compare variables in the same dataframe 
 '''
-# pylint: disable=no-name-in-module, logging-fstring-interpolation
+# pylint: disable=no-name-in-module, logging-fstring-interpolation, line-too-long
+
 import os
 import glob
 import pprint
@@ -30,15 +31,7 @@ class Data:
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
     data_dir   = os.environ['DATADIR']
-    l_kind     = ['ecal_xy',
-                  'brem',
-                  'block_no_tail',
-                  'npv',
-                  'resolution',
-                  'for_hlt',
-                  'q2_cut',
-                  'tail_cut',
-                  'no_dtf_mass_shape']
+    l_kind     = ['resolution']
 
     mplhep.style.use('LHCb2')
 
@@ -55,7 +48,7 @@ def _initialize() -> None:
     if Data.nthreads > 1:
         EnableImplicitMT(Data.nthreads)
 
-    cfg_dir = files('rx_plotter_data').joinpath('overlay')
+    cfg_dir = files('rx_plotter_data').joinpath('compare')
 
     Data.cfg_dir = cfg_dir
     log.info(f'Picking configuration from: {Data.cfg_dir}')
@@ -107,19 +100,6 @@ def _get_rdf() -> RDataFrame:
     rdf = _filter_by_brem(rdf)
 
     return rdf
-# ---------------------------------
-@gut.timeit
-def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
-    d_rdf = {}
-    for cmb in [0.2, 0.4, 0.6, 0.8]:
-        rdf = rdf.Filter(f'mva.mva_cmb > {cmb}')
-        d_rdf [f'$MVA_{{cmb}}$ > {cmb}'] = rdf
-
-    for prc in [0.2, 0.4, 0.6]:
-        rdf = rdf.Filter(f'mva.mva_prc > {prc}')
-        d_rdf [f'$MVA_{{prc}}$ > {prc}'] = rdf
-
-    return d_rdf
 # ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make comparison plots between distributions in the same dataframe')
