@@ -73,6 +73,17 @@ def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
 
     return rdf
 # ---------------------------------
+def _check_entries(rdf : RDataFrame) -> None:
+    nentries = rdf.Count().GetValue()
+
+    if nentries > 0:
+        return
+
+    rep = rdf.Report()
+    rep.Print()
+
+    raise ValueError('Found zero entries in dataframe')
+# ---------------------------------
 def _filter_by_brem(rdf : RDataFrame) -> RDataFrame:
     if Data.brem is None:
         return rdf
@@ -162,7 +173,9 @@ def _get_inp() -> dict[str,RDataFrame]:
     d_cmp = cfg['comparison']
     d_rdf = {}
     for kind, d_def in d_cmp.items():
-        d_rdf[kind] = _rdf_from_def(rdf, d_def)
+        rdf = _rdf_from_def(rdf, d_def)
+        _check_entries(rdf)
+        d_rdf[kind] = rdf
 
     return d_rdf
 # ---------------------------------
