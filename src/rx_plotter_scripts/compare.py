@@ -1,5 +1,5 @@
 '''
-Script used to plot overlays
+Script used to compare variables in the same dataframe 
 '''
 # pylint: disable=no-name-in-module, logging-fstring-interpolation
 import os
@@ -18,7 +18,7 @@ from dmu.logging.log_store   import LogStore
 from rx_data.rdf_getter      import RDFGetter
 from rx_selection            import selection as sel
 
-log=LogStore.add_logger('rx_selection:cutflow')
+log=LogStore.add_logger('rx_selection:compare')
 # ---------------------------------
 @dataclass
 class Data:
@@ -122,7 +122,7 @@ def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
     return d_rdf
 # ---------------------------------
 def _parse_args() -> None:
-    parser = argparse.ArgumentParser(description='Script used to make generic plots')
+    parser = argparse.ArgumentParser(description='Script used to make comparison plots between distributions in the same dataframe')
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True, choices=[Data.trigger_mm, Data.trigger_ee])
@@ -162,17 +162,20 @@ def _get_out_dir() -> str:
 
     return out_dir
 # ---------------------------------
-def _get_inp() -> dict[str,RDataFrame]:
-    cfg   = _get_cfg()
-    rdf_in= _get_rdf()
+def _rdf_from_def(rdf : RDataFrame, d_def : dict) -> RDataFrame:
+    for name, expr in d_def.items():
+        rdf = rdf.Define(name, expr)
 
-    d_cut = cfg['overlay']
+    return rdf
+# ---------------------------------
+def _get_inp() -> dict[str,RDataFrame]:
+    cfg = _get_cfg()
+    rdf = _get_rdf()
+
+    d_cmp = cfg['comparison']
     d_rdf = {}
-    log.info('Applying overlay')
-    for name, cut in d_cut.items():
-        log.info(f'   {name:<20}{cut}')
-        rdf = rdf_in.Filter(cut, name)
-        d_rdf[name] = rdf
+    for kind, d_def in d_cmp.items():
+        d_rdf[kind] = _rdf_from_def(rdf, d_def)
 
     return d_rdf
 # ---------------------------------
