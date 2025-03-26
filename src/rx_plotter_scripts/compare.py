@@ -35,12 +35,15 @@ class Data:
 
     mplhep.style.use('LHCb2')
 
-    chanel  : str
-    substr  : str
-    trigger : str
     q2_bin  : str
-    cfg_dir : str
+    sample  : str
+    trigger : str
+    config  : str
+    substr  : str
     brem    : int
+
+    chanel  : str
+    cfg_dir : str
 
     l_col  = []
 # ---------------------------------
@@ -127,6 +130,9 @@ def _get_cfg() -> dict:
 
     plt_dir = cfg['saving']['plt_dir']
     cfg['saving']['plt_dir'] = _get_out_dir(plt_dir)
+
+    for d_setting in cfg['plots'].values():
+        d_setting['title'] = f'Brem {Data.brem}; {Data.sample}'
 
     return cfg
 # ---------------------------------
