@@ -1,7 +1,7 @@
 '''
 Module containing plot class, used to plot fits
 '''
-# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-instance-attributes, too-many-arguments
 
 import warnings
 import pprint
@@ -51,6 +51,8 @@ class ZFitPlotter:
         self._figsize          = None
         self._leg_loc          = None
 
+        self.dat_xerr : bool
+
         # zfit.settings.advanced_warnings['extend_wrapped_extended'] = False
         warnings.filterwarnings("ignore")
     #----------------------------------------
@@ -69,8 +71,7 @@ class ZFitPlotter:
         elif isinstance(data, zfit.data.Data):
             data = data
         else:
-            log.error(f'Passed data is of usupported type {type(data)}')
-            raise
+            raise ValueError(f'Passed data is of usupported type {type(data)}')
 
         return data
     #----------------------------------------
@@ -347,17 +348,17 @@ class ZFitPlotter:
                 ax.plot(self.x, y, '-',               label=self._leg.get(name, name), color=self._col.get(name))
 
         if (blind_name is not None) and (was_blinded is False):
-            log.error(f'Blinding was requested, but PDF {blind_name} was not found among:')
             for model in self.total_model.pdfs:
                 log.info(model.name)
-            raise
+
+            raise ValueError(f'Blinding was requested, but PDF {blind_name} was not found among:')
     #----------------------------------------
     def _get_col(self, name):
         if name in self._col:
             return self._col[name]
 
         col = self._l_def_col[0]
-        del(self._l_def_col[0])
+        del self._l_def_col[0]
 
         return col
     #----------------------------------------
