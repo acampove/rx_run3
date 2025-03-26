@@ -5,13 +5,16 @@ definitions:
 selection:
   mass  : B_const_mass_M > 5160
 comparison:
-  mass:
-    B_M              : Original 
-    B_M_brem_track_2 : Corrected 
+  Original:
+    bmass :    B_M
+    jmass : Jpsi_M
+  Corrected:
+    bmass : B_M_brem_track_2
+    jmass : Jpsi_M_brem_track_2
 saving:
   plt_dir : plots/comparison/brem_track_2
 plots:
-    mass:
+    bmass:
         binning    : [4500, 6000, 30]
         yscale     : 'linear'
         labels     : ['$M(B^+)$', 'Normalized']
