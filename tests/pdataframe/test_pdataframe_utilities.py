@@ -52,3 +52,11 @@ def test_df_to_tex_caption():
     put.df_to_tex(df,
                   f'{Data.out_dir}/df_to_tex/caption.tex',
                   caption = 'Some caption')
+# --------------------------------------
+def test_column_format():
+    '''
+    Test alignment of columns
+    '''
+    df = _get_df()
+    put.df_to_tex(df, f'{Data.out_dir}/df_to_tex/column_format.tex', column_format='lrr')
+# --------------------------------------
