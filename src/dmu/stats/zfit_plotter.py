@@ -62,14 +62,15 @@ class ZFitPlotter:
         self._l_def_col = list(mcolors.TABLEAU_COLORS.keys())
     #----------------------------------------
     def _data_to_zdata(self, obs, data, weights):
+        if isinstance(data, zfit.data.Data):
+            return data 
+
         if isinstance(data, np.ndarray):
             data = zfit.Data.from_numpy (obs=obs, array=data           , weights=weights)
         elif isinstance(data, pd.Series):
             data = zfit.Data.from_pandas(obs=obs, df=pd.DataFrame(data), weights=weights)
         elif isinstance(data, pd.DataFrame):
             data = zfit.Data.from_pandas(obs=obs, df=data              , weights=weights)
-        elif isinstance(data, zfit.data.Data):
-            data = data
         else:
             raise ValueError(f'Passed data is of usupported type {type(data)}')
 
@@ -239,7 +240,7 @@ class ZFitPlotter:
                 name= par if isinstance(par, str) else par.name
                 try:
                     err = d_val['hesse']['error']
-                except:
+                except KeyError:
                     log.warning(f'Cannot extract {name} Hesse errors, using zeros')
                     pprint.pprint(d_val)
                     err = 0
@@ -261,7 +262,7 @@ class ZFitPlotter:
         '''
         d_par = self._get_pars()
 
-        line = f''
+        line = ''
         for name, [val, err] in d_par.items():
             if add_pars != 'all' and name not in add_pars:
                 continue
@@ -401,9 +402,8 @@ class ZFitPlotter:
         if plot_range is not None:
             try:
                 self.lower, self.upper = plot_range
-            except TypeError:
-                log.error(f'plot_range argument is expected to be a tuple with two numeric values')
-                raise TypeError
+            except TypeError as exc:
+                raise TypeError('plot_range argument is expected to be a tuple with two numeric values') from exc
 
         return np.linspace(self.lower, self.upper, 2000)
     #----------------------------------------
