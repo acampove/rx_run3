@@ -7,16 +7,25 @@ general:
 definitions:
   Jpsi_DTF_HEAD_MASS : TMath::Sqrt(TMath::Power(Jpsi_DTF_HEAD_PE, 2) - TMath::Power(Jpsi_DTF_HEAD_PX, 2) - TMath::Power(Jpsi_DTF_HEAD_PY, 2) - TMath::Power(Jpsi_DTF_HEAD_PZ, 2))
   nbrem              : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2)
-  #nbrem              : int(L1_HASBREMADDED) + int(L2_HASBREMADDED)
+  max_ll_pt          : TMath::Max(L1_PT_brem_track_2, L2_PT_brem_track_2)
 selection:
   mass  : B_const_mass_M > 5160
 comparison:
   Original:
-    bmass :    B_M
-    jmass : Jpsi_M
+    vars:
+      bmass :    B_M
+      jmass : Jpsi_M
   Corrected:
-    bmass : B_M_brem_track_2
-    jmass : Jpsi_M_brem_track_2
+    vars:
+      bmass : B_M_brem_track_2
+      jmass : Jpsi_M_brem_track_2
+  Corrected and L0:
+    cuts:
+      npv   : nPVs < 4
+      L0    : max_ll_pt > 2500
+    vars:
+      bmass : B_M_brem_track_2
+      jmass : Jpsi_M_brem_track_2
 saving:
   plt_dir : plots/comparison_new_brem/brem_track_2
 plots:
