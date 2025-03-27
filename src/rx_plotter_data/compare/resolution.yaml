@@ -21,16 +21,18 @@ comparison:
     vars:
       bmass : B_M_brem_track_2
       jmass : Jpsi_M_brem_track_2
-  Corrected and L0 on nPVs:
+  Corrected and L0(nPVs):
     cuts:
       npv   : nPVs < 4
       L0    : max_ll_pt > 2500
     vars:
       bmass : B_M_brem_track_2
       jmass : Jpsi_M_brem_track_2
-  Corrected and L0 on Tracks:
+  Corrected and L0(nPVs) + PID track:
     cuts:
-      ntr   : nLongTracks < 250
+      PID1  : (L1_PID_E - L1_BREMPIDE) > 3
+      PID2  : (L2_PID_E - L2_BREMPIDE) > 3
+      npv   : nPVs < 4
       L0    : max_ll_pt > 2500
     vars:
       bmass : B_M_brem_track_2
