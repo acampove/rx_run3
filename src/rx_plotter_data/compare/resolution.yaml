@@ -3,7 +3,7 @@
 #q2    : (Jpsi_DTF_HEAD_MASS * Jpsi_DTF_HEAD_MASS) > 6000000 && (Jpsi_DTF_HEAD_MASS * Jpsi_DTF_HEAD_MASS) < 12960000
 
 general:
-  size : [12, 8]
+  size : [15, 12]
 definitions:
   Jpsi_DTF_HEAD_MASS : TMath::Sqrt(TMath::Power(Jpsi_DTF_HEAD_PE, 2) - TMath::Power(Jpsi_DTF_HEAD_PX, 2) - TMath::Power(Jpsi_DTF_HEAD_PY, 2) - TMath::Power(Jpsi_DTF_HEAD_PZ, 2))
   nbrem              : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2)
@@ -19,9 +19,16 @@ comparison:
     vars:
       bmass : B_M_brem_track_2
       jmass : Jpsi_M_brem_track_2
-  Corrected and L0:
+  Corrected and L0 on nPVs:
     cuts:
       npv   : nPVs < 4
+      L0    : max_ll_pt > 2500
+    vars:
+      bmass : B_M_brem_track_2
+      jmass : Jpsi_M_brem_track_2
+  Corrected and L0 on Tracks:
+    cuts:
+      ntr   : nLongTracks < 250
       L0    : max_ll_pt > 2500
     vars:
       bmass : B_M_brem_track_2
@@ -31,10 +38,24 @@ saving:
 plots:
   bmass:
     binning    : [4200, 6000, 40]
-    yscale     : 'linear'
+    yscale     : linear
     labels     : ['$M(B^+)$', 'Normalized']
     name       : bmass_correction
     normalized : true
+  nLongTracks:
+    binning    : [0, 300, 50]
+    yscale     : linear
+    labels     : ['Long Tracks', 'Normalized']
+    name       : long_tracks
+    normalized : true
+  nPVs:
+    binning    : [0, 13, 13]
+    yscale     : linear
+    labels     : ['nPVs', 'Normalized']
+    name       : npv 
+    normalized : true
+    styling :          
+      linestyle: '-'
 style:
   skip_lines : true
 plugin:
