@@ -161,8 +161,16 @@ def _get_out_dir(plt_dir : str) -> str:
     return out_dir
 # ---------------------------------
 def _rdf_from_def(rdf : RDataFrame, d_def : dict) -> RDataFrame:
-    for name, expr in d_def.items():
+    d_var = d_def['vars']
+    for name, expr in d_var.items():
         rdf = rdf.Define(name, expr)
+
+    if 'cuts' not in d_def:
+        return rdf
+
+    d_cut = d_def['cuts']
+    for cut_name, cut_expr in d_cut.items():
+        rdf = rdf.Filter(cut_expr, cut_name)
 
     return rdf
 # ---------------------------------
