@@ -7,7 +7,9 @@ general:
 definitions:
   Jpsi_DTF_HEAD_MASS : TMath::Sqrt(TMath::Power(Jpsi_DTF_HEAD_PE, 2) - TMath::Power(Jpsi_DTF_HEAD_PX, 2) - TMath::Power(Jpsi_DTF_HEAD_PY, 2) - TMath::Power(Jpsi_DTF_HEAD_PZ, 2))
   nbrem              : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2)
-  max_ll_pt          : TMath::Max(L1_PT_brem_track_2, L2_PT_brem_track_2)
+  L1_TRACK_PT        : TMath::Sqrt(TMath::Power(L1_TRACK_PX, 2) + TMath::Power(L1_TRACK_PY, 2))
+  L2_TRACK_PT        : TMath::Sqrt(TMath::Power(L2_TRACK_PX, 2) + TMath::Power(L2_TRACK_PY, 2))
+  max_ll_pt          : TMath::Max(L1_TRACK_PT, L2_TRACK_PT)
 selection:
   mass  : B_const_mass_M > 5160
 comparison:
@@ -43,13 +45,15 @@ plots:
     name       : bmass_correction
     normalized : true
   nLongTracks:
-    binning    : [0, 300, 50]
+    binning    : [0, 400, 20]
     yscale     : linear
     labels     : ['Long Tracks', 'Normalized']
     name       : long_tracks
     normalized : true
+    styling :          
+      linestyle: '-'
   nPVs:
-    binning    : [0, 13, 13]
+    binning    : [1, 7, 6]
     yscale     : linear
     labels     : ['nPVs', 'Normalized']
     name       : npv 
