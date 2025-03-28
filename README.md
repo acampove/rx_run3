@@ -5,24 +5,18 @@ kinematic distributions.
 
 ## 1D plots 
 
-### cleanup
+### cutflow 
 
-By using `cleanup` as the config one will get plots of variables used to
-remove background, e.g.:
-
-```bash
-generic -t Hlt2RD_BuToKpMuMu_MVA -s "DATA*" -c cleanup -q high
-```
-
-Which will use the `cleanup.yaml` config to make plots in the high q2 region
-of samples containing "DATA" in the name and belonging to the
-`Hlt2RD_BuToKpMuMu_MVA` trigger. The config lives in `rx_plotter_data`
-
-for different MC samples one can do:
+The `cutflow` utility will make plots of a dataset under multiple cuts, one after the other.
+Use it with:
 
 ```bash
-generic -t Hlt2RD_BuToKpEE_MVA -s Bu_Kee_eq_btosllball05_DPC -c cleanup -q central
+cutflow -q jpsi -s DATA* -t Hlt2RD_BuToKpEE_MVA -c cleanup
 ```
+
+where `cleanup` refers to `cleanup.yaml`, a config file that shows the effect of applying cleanup
+requirements (HOP, Cascade, $J/\psi$ mis ID veto).
+
 
 ### Block quality
 
