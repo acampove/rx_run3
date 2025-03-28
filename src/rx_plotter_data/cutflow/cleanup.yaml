@@ -109,3 +109,5 @@ plots:
           linestyle: '-'
 style:
   skip_lines : false
+saving:
+  plt_dir : plots/cutflow/cleanup
