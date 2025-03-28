@@ -1,3 +1,5 @@
+# This config will plot the RMS of the B_M target variable
+
 input:
   q2bin   : jpsi
   trigger : Hlt2RD_BuToKpEE_MVA
