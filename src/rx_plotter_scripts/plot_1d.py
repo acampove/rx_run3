@@ -27,17 +27,16 @@ class Data:
     Class used to share attributes
     '''
     nthreads   = 13
-    trigger_mm = 'Hlt2RD_BuToKpMuMu_MVA'
-    trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
+    l_trigger  = ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA']
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
     data_dir   = os.environ['DATADIR']
 
     mplhep.style.use('LHCb2')
 
-    chanel  : str
     trigger : str
     q2_bin  : str
     level   : int
+    trigger : str
     sample  : str
     version : str
     cfg_dir : str
@@ -100,7 +99,7 @@ def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make plots')
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
-    parser.add_argument('-c', '--chanel' , type=str, help='Channel', choices=['ee', 'mm'], required=True)
+    parser.add_argument('-t', '--trigger', type=str, help='HLT2 Trigger', choices=Data.l_trigger, required=True)
     parser.add_argument('-v', '--version', type=str, help='Version of inputs, will use latest if not set')
     parser.add_argument('-s', '--sample' , type=str, help='Name of sample')
     parser.add_argument('-w', '--wp'     , type=str, help='Name of working point', choices=['no_prc', 'prc'])
@@ -108,8 +107,7 @@ def _parse_args() -> None:
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
-    Data.trigger= Data.trigger_mm if args.chanel == 'mm' else Data.trigger_ee
-    Data.chanel = args.chanel
+    Data.trigger= args.trigger
     Data.version= args.version
     Data.sample = args.sample
     Data.level  = args.level
@@ -133,7 +131,7 @@ def _get_cfg(kind : str = 'raw') -> dict:
 
     d_plt        = cfg['plots']
     d_mas        = d_plt['B_M']
-    if Data.chanel == 'mm':
+    if Data.trigger in ['Hlt2RD_BuToKpMuMu_MVA']:
         [_, maxx, nbins] = d_mas['binning']
         d_mas['binning'] = [5180, maxx, nbins]
 
