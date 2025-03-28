@@ -30,7 +30,11 @@ class Data:
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
     data_dir   = os.environ['DATADIR']
-    l_kind     = ['no_dtf_mass_brem_track_2', 'no_dtf_mass_diagnostics']
+    l_kind     = [
+            'no_dtf_mass_brem_track_2', 
+            'no_dtf_mass_diagnostics',
+            'brem_energy_fraction'
+            ]
 
     mplhep.style.use('LHCb2')
 
@@ -124,7 +128,7 @@ def _parse_args() -> None:
     parser.add_argument('-s', '--sim'    , type=str, help='MC sample' , required=True)
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True, choices=[Data.trigger_mm, Data.trigger_ee])
     parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True, choices=Data.l_kind)
-    parser.add_argument('-b', '--brem'   , type=int, help='Brem category', choices=[0, 1, 2])
+    parser.add_argument('-b', '--brem'   , type=int, help='Brem category, if nothing is passed will put all data in the plot', choices=[0, 1, 2])
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
