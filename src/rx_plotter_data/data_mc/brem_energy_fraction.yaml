@@ -3,6 +3,7 @@
 general:
   size : [12, 8]
 definitions :
+  nbrem       : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2)
   L1_TRACK_PT : TMath::Sqrt( TMath::Power(L1_TRACK_PX, 2) + TMath::Power(L1_TRACK_PY, 2) )
   L1_TRACK_PE : TMath::Sqrt( TMath::Power(L1_TRACK_PT, 2) + TMath::Power(L1_TRACK_PZ, 2) )
   L1_momentum : (1 - L1_BREMHYPOENERGY / L1_TRACK_PE) * L1_TRACK_PT
@@ -15,7 +16,7 @@ selection:
 plots:
     L1_eloss:
       normalized : true
-      binning : [0, 1, 30]
+      binning : [0, 1, 60]
       yscale  : 'linear'
       labels  : ['Energy Loss', '']
       normalize : True
