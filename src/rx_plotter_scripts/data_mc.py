@@ -69,8 +69,12 @@ def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
     if 'definitions' not in cfg:
         return rdf
 
+    l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
+
     d_def = cfg['definitions']
     for name, expr in d_def.items():
+        if name in l_name:
+            continue
         rdf = rdf.Define(name, expr)
 
     return rdf
