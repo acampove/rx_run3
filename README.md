@@ -771,6 +771,7 @@ it's up to the user to build this dictionary and load it.
 
 Extra functionality can be `plugged` into the code by using the pluggins section like:
 
+#### FWHM
 ```yaml
 plugin:
   fwhm:
@@ -793,6 +794,19 @@ where the section will
 
 - Use a KDE to fit the distribution and plot it on top of the histogram
 - Add the value of the FullWidth at Half Maximum in the title, for each distribution with a specific formatting.
+
+#### stats
+
+```yaml
+plugin:
+  stats:
+    x :
+      mean : $\mu$={:.2f}
+      rms  : $\sigma$={:.2f}
+      sum  : $\Sigma$={:.0f}
+```
+
+Can be used to print statistics, mean, rms and weighted sum of entries for each distribution.
 
 ## 2D plots
 
