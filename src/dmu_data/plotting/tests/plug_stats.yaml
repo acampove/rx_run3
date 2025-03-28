@@ -1,0 +1,15 @@
+saving:
+    plt_dir : plotting/pluggins/stats
+plots:
+    x : 
+      binning : [-5.0, 8.0, 40]
+      title   : x distribution
+    y : 
+      binning : [-5.0, 8.0, 40]
+      title   : y distribution
+plugin:
+  stats:
+    x :
+      - mean
+      - rms
+      - size
