@@ -1,3 +1,5 @@
+# Config used to make 2D plots of BDT vs q2
+
 saving:
     plt_dir : plots/bdt_q2
 general:

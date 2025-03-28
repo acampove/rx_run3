@@ -1,17 +1,3 @@
-columns: 
-  - mva_cmb
-  - mva_prc
-  - Jpsi_M
-  - block
-  - B_ENDVERTEX_CHI2
-  - B_const_mass_M
-  - L1_TRACK_GhostProb
-  - L2_TRACK_GhostProb
-  - H_TRACK_GhostProb
-  - B_M
-  - L1_PIDe
-  - L2_PIDe
-  - H_PID_K
 general:
   size : [18, 10]
 selection:
