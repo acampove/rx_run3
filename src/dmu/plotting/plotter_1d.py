@@ -74,6 +74,18 @@ class Plotter1D(Plotter):
             log.debug(f'FWHM plugin found for variable {varname}')
             cfg = self._d_cfg['plugin']['fwhm'][varname]
             self._run_fwhm(arr_val = arr_val, arr_wgt=arr_wgt, hst=hst, name=name, cfg = cfg)
+
+        if 'stats' in self._d_cfg['plugin']:
+            if varname not in self._d_cfg['plugin']['stats']:
+                log.debug(f'No stats plugin found for variable {varname}')
+                return
+
+            log.debug(f'stats plugin found for variable {varname}')
+            cfg = self._d_cfg['plugin']['stats'][varname]
+            self._run_stats(arr_val = arr_val, arr_wgt=arr_wgt, name=name, cfg = cfg)
+    #-------------------------------------
+    def _run_stats(self, arr_val : numpy.ndarray, arr_wgt : numpy.ndarray, name : str, cfg : dict) -> None:
+        pass
     #-------------------------------------
     def _run_fwhm(self, arr_val : numpy.ndarray, arr_wgt : numpy.ndarray, hst, name : str, cfg : dict) -> None:
         arr_bin_cnt = hst.values()
