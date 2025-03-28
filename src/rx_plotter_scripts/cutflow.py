@@ -37,27 +37,38 @@ class Data:
     substr  : str
     trigger : str
     q2_bin  : str
-    cfg_dir : str
+    config  : str
 
-    l_keep = []
-    l_col  = []
+    l_ee_trees = ['brem_track_2', 'ecalo_bias']
+    l_keep     = []
+    l_col      = []
 # ---------------------------------
 def _initialize() -> None:
     if Data.nthreads > 1:
         EnableImplicitMT(Data.nthreads)
 
-    cfg_dir = files('rx_plotter_data').joinpath('')
-    cfg_dir = vmn.get_last_version(dir_path=cfg_dir, version_only=False)
+    dat_dir = os.environ['DATADIR']
+    l_yaml  = glob.glob(f'{dat_dir}/samples/*.yaml')
 
-    Data.cfg_dir = cfg_dir
-    log.info(f'Picking configuration from: {Data.cfg_dir}')
-
-    l_yaml  = glob.glob(f'{Data.data_dir}/samples/*.yaml')
-
-    d_sample= { os.path.basename(path).replace('.yaml', '') : path for path in l_yaml }
+    d_sample= {}
     log.info('Using paths:')
-    pprint.pprint(d_sample)
+    for path in l_yaml:
+        name = os.path.basename(path).replace('.yaml', '')
+        if _skip_path(name):
+            continue
+
+        log.info(f'{name:<30}{path}')
+        d_sample[name] = path
+
     RDFGetter.samples = d_sample
+# ---------------------------------
+def _skip_path(name : str) -> bool:
+    # Do not pick up electron only (e.g. brem correction) trees
+    # When working with muon samples
+    if name in Data.l_ee_trees and 'MuMu' in Data.trigger:
+        return True
+
+    return False
 # ---------------------------------
 def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
     if 'definitions' not in cfg:
@@ -124,8 +135,9 @@ def _parse_args() -> None:
     Data.substr = args.substr
 # ---------------------------------
 def _get_cfg() -> dict:
-    cfg_path= f'{Data.cfg_dir}/{Data.config}.yaml'
-    cfg_path= str(cfg_path)
+    cfg_path = files('rx_plotter_data').joinpath(f'cutflow/{Data.config}.yaml')
+    cfg_path = str(cfg_path)
+    log.info(f'Picking configuration from: {cfg_path}')
 
     with open(cfg_path, encoding='utf=8') as ifile:
         cfg = yaml.safe_load(ifile)
