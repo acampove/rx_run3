@@ -6,7 +6,7 @@ selection:
   cuts:
     cmb : mva_cmb > 0.5
 general:
-    size : [20, 15]
+    size : [15, 12]
 plots_2d:
     - [B_M, q2, null, 'Bmass_q2', true]
 axes:
