@@ -27,7 +27,7 @@ class Data:
     Class used to share attributes
     '''
     nthreads   = 13
-    l_trigger  = ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA']
+    l_trigger  = ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_BuToKpEE_SameSign_MVA']
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
     data_dir   = os.environ['DATADIR']
 
@@ -101,7 +101,7 @@ def _parse_args() -> None:
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
     parser.add_argument('-t', '--trigger', type=str, help='HLT2 Trigger', choices=Data.l_trigger, required=True)
     parser.add_argument('-v', '--version', type=str, help='Version of inputs, will use latest if not set')
-    parser.add_argument('-s', '--sample' , type=str, help='Name of sample')
+    parser.add_argument('-s', '--sample' , type=str, help='Name of sample, e.g. "Data*"', required=True)
     parser.add_argument('-w', '--wp'     , type=str, help='Name of working point', choices=['no_prc', 'prc'])
     parser.add_argument('-l', '--level'  , type=int, help='Logging message', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
@@ -142,7 +142,9 @@ def _get_cfg(kind : str = 'raw') -> dict:
     return cfg
 # ---------------------------------
 def _get_cuts() -> dict:
-    d_cut        = sel.selection(project='RK', analysis='EE', q2bin=Data.q2_bin, process=Data.sample)
+    analysis = 'MM' if 'MuMu' in Data.trigger else 'EE'
+
+    d_cut        = sel.selection(project='RK', analysis=analysis, q2bin=Data.q2_bin, process=Data.sample)
     d_cut['bdt'] = '(1)'
 
     log.info('Using cuts:')
