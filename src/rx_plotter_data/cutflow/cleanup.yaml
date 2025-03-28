@@ -6,25 +6,34 @@ selection:
   cuts:
     mva : mva_cmb > 0.7 && mva_prc > 0.0
 definitions:
-  q2      : Jpsi_M * Jpsi_M
   otk_mas : B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
   ttk_mas : B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
 cutflow:
   low:
-    None    : hop_mass >  0
-    hop     : hop_mass >  4500
-    cascade : swp_cascade_mass_swp    > 1900
-    jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    None          : hop_mass >  0
+    HOP           : hop_mass >  4500
+    Cascade       : swp_cascade_mass_swp    > 1900
+    $J/\psi$ misID: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
   central:
-    None    : hop_mass >  0
-    hop     : hop_mass >  4500
-    cascade : swp_cascade_mass_swp    > 1900
-    jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    None          : hop_mass >  0
+    HOP           : hop_mass >  4500
+    Cascade       : swp_cascade_mass_swp    > 1900
+    $J/\psi$ misID: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+  jpsi:
+    None          : hop_mass >  0
+    HOP           : hop_mass >  4500
+    Cascade       : swp_cascade_mass_swp    > 1900
+    $J/\psi$ misID: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+  psi2S:
+    None          : hop_mass >  0
+    HOP           : hop_mass >  4500
+    Cascade       : swp_cascade_mass_swp    > 1900
+    $J/\psi$ misID: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
   high:
-    None    : hop_mass >  0
-    hop     : hop_mass >  3000
-    cascade : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp < 1800
-    jpsi_mis: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    None          : hop_mass >  0
+    HOP           : hop_mass >  4500
+    Cascade       : swp_cascade_mass_swp    > 1900
+    $J/\psi$ misID: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
 plots:
     otk_mas:
         binning    : [2000, 8000, 100]
@@ -33,6 +42,8 @@ plots:
         title      : ''
         name       : '1Trk_mas'
         normalized : false
+        styling:
+          linestyle: '-'
     ttk_mas:
         binning    : [2000, 8000, 100]
         yscale     : 'linear'
@@ -40,6 +51,8 @@ plots:
         title      : ''
         name       : '2Trk_mas'
         normalized : false
+        styling:
+          linestyle: '-'
     swp_cascade_mass_swp:
         binning    : [1000, 3000, 100]
         yscale     : 'linear'
@@ -47,6 +60,8 @@ plots:
         title      : ''
         name       : 'mass_cascade'
         normalized : false
+        styling:
+          linestyle: '-'
     swp_jpsi_misid_mass_swp:
         binning    : [1500, 3500, 100]
         yscale     : 'linear'
@@ -54,13 +69,17 @@ plots:
         title      : ''
         name       : 'mass_jpsi_misid'
         normalized : false
+        styling:
+          linestyle: '-'
     hop_mass:
         binning    : [0, 7000, 60]
         yscale     : 'linear'
-        labels     : ['$B(M_{HOP})$', 'Entries']
+        labels     : ['$M_{HOP}(B^+)$', 'Entries']
         title      : ''
         name       : 'bmass_hop'
         normalized : false
+        styling:
+          linestyle: '-'
     B_M:
         binning    : [4500, 6500, 60]
         yscale     : 'linear'
@@ -68,6 +87,8 @@ plots:
         title      : ''
         name       : 'bmass'
         normalized : false
+        styling:
+          linestyle: '-'
     mva_cmb:
         binning    : [0.7, 1.0, 60]
         yscale     : 'linear'
@@ -75,6 +96,8 @@ plots:
         title      : ''
         name       : 'mva_cmb'
         normalized : false
+        styling:
+          linestyle: '-'
     q2:
         binning    : [0.0, 22000000, 60]
         yscale     : 'linear'
@@ -82,5 +105,7 @@ plots:
         title      : ''
         name       : 'q2'
         normalized : false
+        styling:
+          linestyle: '-'
 style:
   skip_lines : false
