@@ -4,12 +4,16 @@ plots:
     x : 
       binning : [-5.0, 8.0, 40]
       title   : x distribution
+      styling:
+        linestyle : '-'
     y : 
       binning : [-5.0, 8.0, 40]
       title   : y distribution
+      styling:
+        linestyle : '-'
 plugin:
   stats:
     x :
-      - mean
-      - rms
-      - size
+      mean : $\mu$={:.2f}
+      rms  : $\sigma$={:.2f}
+      sum  : $\Sigma$={:.0f}
