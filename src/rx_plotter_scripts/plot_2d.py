@@ -1,6 +1,9 @@
 '''
 Script used to plot mass distributions
 '''
+
+import os
+import glob
 import argparse
 from importlib.resources import files
 from dataclasses         import dataclass
@@ -24,15 +27,13 @@ class Data:
     trigger_mm = 'Hlt2RD_BuToKpMuMu_MVA'
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
 
-    mplhep.style.use('LHCb1')
-
-    RDFGetter.samples_dir = '/home/acampove/Data/RX_run3/NO_q2_bdt_mass_Q2_central_VR_v1'
+    mplhep.style.use('LHCb2')
 
     loglvl  : int
     q2bin   : str
     chanel  : str
     trigger : str
-    settn   : str
+    config  : str
 # ---------------------------------
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger=Data.trigger)
@@ -47,9 +48,9 @@ def _set_logs() -> None:
 # ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make 2D plots')
-    parser.add_argument('-c', '--chanel', type=str, help='Channel', choices=['ee', 'mm'], required=True)
-    parser.add_argument('-q', '--q2bin' , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'])
-    parser.add_argument('-s', '--settn' , type=str, help='Settings, i.e. mass_q2', choices=['mass_q2', 'cmb_prc'], required=True)
+    parser.add_argument('-C', '--chanel', type=str, help='Channel', choices=['ee', 'mm'], required=True)
+    parser.add_argument('-q', '--q2bin' , type=str, help='q2 bin, optional' , choices=['low', 'central', 'jpsi', 'psi2', 'high'])
+    parser.add_argument('-c', '--config', type=str, help='Settings, i.e. mass_q2', choices=['mass_q2', 'cmb_prc'], required=True)
     parser.add_argument('-l', '--loglvl', type=int, help='Log level', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
@@ -57,10 +58,10 @@ def _parse_args() -> None:
     Data.chanel = args.chanel
     Data.loglvl = args.loglvl
     Data.q2bin  = args.q2bin
-    Data.settn  = args.settn
+    Data.config = args.config
 # ---------------------------------
 def _get_cfg() -> dict:
-    config_path = files('rx_plotter_data').joinpath(f'{Data.settn}.yaml')
+    config_path = files('rx_plotter_data').joinpath(f'2d/{Data.config}.yaml')
     config_path = str(config_path)
 
     with open(config_path, encoding='utf=8') as ifile:
@@ -85,16 +86,36 @@ def _override_cfg(cfg : dict) -> dict:
 
     return cfg
 # ---------------------------------
+def _set_samples() -> None:
+    data_dir  = os.environ['DATADIR']
+    sample_wc = f'{data_dir}/samples/*.yaml'
+    l_path    = glob.glob(sample_wc)
+    d_sample  = {}
+    for path in l_path:
+        file_name = os.path.basename(path)
+        name      = file_name.replace('.yaml', '')
+
+        if Data.chanel == 'mm' and name in ['brem_track_2', 'ecalo_bias']:
+            continue
+
+        d_sample[name] = path
+
+    RDFGetter.samples = d_sample
+# ---------------------------------
+def _initialize():
+    _set_logs()
+    _set_samples()
+    EnableImplicitMT(Data.nthreads)
+# ---------------------------------
 def main():
     '''
     Script starts here
     '''
     _parse_args()
-    _set_logs()
-    EnableImplicitMT(Data.nthreads)
+    _initialize()
 
-    rdf   = _get_rdf()
-    cfg   = _get_cfg()
+    rdf = _get_rdf()
+    cfg = _get_cfg()
 
     ptr=Plotter2D(rdf=rdf, cfg=cfg)
     ptr.run()
