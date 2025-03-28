@@ -20,7 +20,7 @@ compare='rx_plotter_scripts.compare:main'
 data_mc='rx_plotter_scripts.data_mc:main'
 binned ='rx_plotter_scripts.binned:main'
 overlay='rx_plotter_scripts.overlay:main'
-plot_1d='rx_plotter_scripts.plot_1d:main'
+cutflow='rx_plotter_scripts.cutflow:main'
 plot_2d='rx_plotter_scripts.plot_2d:main'
 
 [tool.setuptools.package-data]
