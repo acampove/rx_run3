@@ -84,8 +84,25 @@ class Plotter1D(Plotter):
             cfg = self._d_cfg['plugin']['stats'][varname]
             self._run_stats(arr_val = arr_val, arr_wgt=arr_wgt, name=name, cfg = cfg)
     #-------------------------------------
-    def _run_stats(self, arr_val : numpy.ndarray, arr_wgt : numpy.ndarray, name : str, cfg : dict) -> None:
-        pass
+    def _run_stats(self, arr_val : numpy.ndarray, arr_wgt : numpy.ndarray, name : str, cfg : dict[str:str]) -> None:
+        this_title = ''
+        if 'sum' in cfg:
+            form = cfg['sum']
+            sumv = numpy.sum(arr_wgt)
+            this_title += form.format(sumv) + '; '
+
+        if 'mean' in cfg:
+            form = cfg['mean']
+            mean = numpy.average(arr_val, weights=arr_wgt)
+            this_title += form.format(mean) + '; '
+
+        if 'rms'  in cfg:
+            form = cfg['rms']
+            mean = numpy.average(arr_val, weights=arr_wgt)
+            rms  = numpy.sqrt(numpy.average((arr_val - mean) ** 2, weights=arr_wgt))
+            this_title += form.format(rms ) + '; '
+
+        self._title+= f'\n{name}: {this_title}'
     #-------------------------------------
     def _run_fwhm(self, arr_val : numpy.ndarray, arr_wgt : numpy.ndarray, hst, name : str, cfg : dict) -> None:
         arr_bin_cnt = hst.values()
