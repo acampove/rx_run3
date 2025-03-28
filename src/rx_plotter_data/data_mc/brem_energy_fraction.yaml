@@ -15,10 +15,21 @@ selection:
   mass     : B_const_mass_M > 5160
 plots:
     L1_eloss:
-      normalized : true
-      binning : [0, 1, 60]
-      yscale  : 'linear'
-      labels  : ['Energy Loss', '']
-      normalize : True
+      binning    : [0, 1, 60]
+      yscale     : linear 
+      labels     : ['Energy Loss', 'Normalized']
+      normalized : True
       styling:
         linestyle : '-'
+    B_M_brem_track_2:
+      binning    : [4500, 6000, 60]
+      yscale     : linear
+      labels     : ['B mass', 'Normalized']
+      normalized : True
+      styling:
+        linestyle : '-'
+plugin:
+  stats:
+    L1_eloss :
+      mean : $\mu$={:.3f}
+      rms  : $\sigma$={:.3f}
