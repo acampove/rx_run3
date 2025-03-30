@@ -1,3 +1,5 @@
+# Config used to check effect of BDT cut on shape of unconstrained B mass
+
 general:
   size : [12, 8]
 selection :
