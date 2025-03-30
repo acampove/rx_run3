@@ -8,6 +8,7 @@ Script used to create small trees with extra branches from input trees
 
 import os
 import glob
+import fnmatch
 import argparse
 from dataclasses import dataclass
 
@@ -35,6 +36,8 @@ class Data:
     pbar : bool
     dry  : bool
     lvl  : int
+    wild_card : str
+
     l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias', 'brem_track_1', 'brem_track_2']
     l_ecorr   = ['ecalo_bias', 'brem_track_1', 'brem_track_2']
     tree_name = 'DecayTree'
@@ -46,6 +49,7 @@ def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to create ROOT files with trees with extra branches by picking up inputs from directory and patitioning them')
     parser.add_argument('-k', '--kind', type=str, help='Kind of branch to create', choices=Data.l_kind, required=True)
     parser.add_argument('-v', '--vers', type=str, help='Version of outputs', required=True)
+    parser.add_argument('-w', '--wc'  , type=str, help='Wildcard, if passed will be used to match paths')
     parser.add_argument('-n', '--nmax', type=int, help='If used, limit number of entries to process to this value')
     parser.add_argument('-p', '--part', nargs= 2, help='Partitioning, first number is the index, second is the number of parts', required=True)
     parser.add_argument('-b', '--pbar',           help='If used, will show progress bar whenever it is available', action='store_true')
@@ -60,6 +64,7 @@ def _parse_args() -> None:
     Data.pbar = args.pbar
     Data.dry  = args.dry
     Data.lvl  = args.lvl
+    Data.wild_card = args.wc
 
     LogStore.set_level('rx_data:branch_calculator', Data.lvl)
 # ---------------------------------
@@ -119,6 +124,9 @@ def _filter_paths(l_path : list[str]) -> list[str]:
     if Data.kind in Data.l_ecorr:
         # For electron corrections, drop muon paths
         l_path = [ path for path in l_path if 'MuMu' not in path ]
+
+    if Data.wild_card is not None:
+        l_path = [ path for path in l_path if fnmatch.fnmatch(path, f'*{Data.wild_card}*') ]
 
     nfnal = len(l_path)
     log.debug(f'Filtered -> {nfnal} paths')
