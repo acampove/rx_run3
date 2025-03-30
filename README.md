@@ -15,8 +15,13 @@ cutflow -q jpsi -s DATA* -t Hlt2RD_BuToKpEE_MVA -c cleanup
 ```
 
 where `cleanup` refers to `cleanup.yaml`, a config file that shows the effect of applying cleanup
-requirements (HOP, Cascade, $J/\psi$ mis ID veto).
+requirements (HOP, Cascade, $J/\psi$ mis ID veto). Below each config description:
 
+| Kind    | Description                                            |
+| ------- | ------------------------------------------------------ |
+| vetoes  | Check effect on `B_M` original and corrected of vetoes |
+| bdt     | Check effect on `B_M` original and correcte of BDT     |
+| cleanup | Same as vetoes but checks effect on multiple variables |
 
 ### Block quality
 
