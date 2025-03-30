@@ -1,0 +1,54 @@
+# Config meant to check effect of Vetoes
+
+general:
+  size : [12, 8]
+selection :
+  jpsi_misid : (1)
+  hop        : (1)
+  cascade    : (1)
+  bdt        : (1) 
+veto : &cuts
+cutflow:
+  low :
+    None       : (1)
+    hop        : hop_mass > 4500 
+    jpsi_misid : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+  central:
+    None       : (1)
+    hop        : hop_mass > 4500 
+    jpsi_misid : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+  jpsi:
+    None       : (1)
+    hop        : hop_mass > 4500 
+    jpsi_misid : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+  psi2:
+    None       : (1)
+    hop        : hop_mass > 4500 
+    jpsi_misid : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+  high:
+    None       : (1)
+    hop        : hop_mass > 3000 
+    jpsi_misid : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+saving:
+  plt_dir : plots/cutflow/vetoes
+plots:
+    B_M_brem_track_2:
+        binning    : [4500, 6000, 30]
+        yscale     : 'linear'
+        labels     : ['M${}_{corr}(B^+)$', 'Normalized']
+        title      : ''
+        name       : 'bmass_brem_track_2'
+        normalized : true
+        styling:
+          histtype : step
+    B_M :
+        binning    : [4500, 6000, 30]
+        yscale     : 'linear'
+        labels     : ['M$(B^+)$', 'Normalized']
+        title      : ''
+        name       : 'bmass'
+        normalized : true
+        styling:
+          histtype : step
+style:
+  skip_lines : true
