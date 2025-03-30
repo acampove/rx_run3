@@ -3,7 +3,6 @@ Script used to plot cutflows
 '''
 import os
 import glob
-import pprint
 import argparse
 from importlib.resources import files
 from dataclasses         import dataclass
@@ -14,9 +13,8 @@ import dmu.generic.utilities as gut
 from ROOT                    import RDataFrame, EnableImplicitMT
 from dmu.plotting.plotter_1d import Plotter1D
 from dmu.logging.log_store   import LogStore
-from dmu.generic             import version_management as vmn
 from rx_data.rdf_getter      import RDFGetter
-from rx_selection.selection  import load_selection_config
+from rx_selection            import selection
 
 log=LogStore.add_logger('rx_selection:cutflow')
 # ---------------------------------
@@ -33,6 +31,7 @@ class Data:
 
     mplhep.style.use('LHCb2')
 
+    sample  : str
     chanel  : str
     substr  : str
     trigger : str
@@ -40,6 +39,7 @@ class Data:
     config  : str
     plt_dir : str
 
+    l_kind     = ['bdt_cmb', 'bdt_prc']
     l_ee_trees = ['brem_track_2', 'ecalo_bias']
     l_keep     = []
     l_col      = []
@@ -81,19 +81,28 @@ def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
 
     return rdf
 # ---------------------------------
+def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
+    d_sel = selection.selection(project='RK', trigger=Data.trigger, q2bin=Data.q2_bin, process=Data.sample)
+
+    if 'selection' in cfg:
+        log.debug('Overriding selection')
+        d_sel.update(cfg['selection'])
+
+    for cut_name, cut_expr in d_sel.items():
+        rdf = rdf.Filter(cut_expr, cut_name)
+
+    rep = rdf.Report()
+    rep.Print()
+
+    return rdf
+# ---------------------------------
 @gut.timeit
 def _get_rdf() -> RDataFrame:
     cfg = _get_cfg()
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
     rdf = gtr.get_rdf()
     rdf = _apply_definitions(rdf, cfg)
-
-    Data.l_keep.append(rdf)
-
-    q2_cut = _get_q2cut()
-    log.info(f'Using q2 cut: {q2_cut}')
-
-    rdf    = rdf.Filter(q2_cut, 'q2')
+    rdf = _apply_selection(rdf, cfg)
 
     return rdf
 # ---------------------------------
@@ -110,22 +119,12 @@ def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
 
     return d_rdf
 # ---------------------------------
-def _get_q2cut() -> str:
-    if Data.q2_bin is None:
-        log.info('Not applying any q2 cut')
-        return '(1)'
-
-    cfg = load_selection_config()
-    cut = cfg['q2_common'][Data.q2_bin]
-
-    return cut
-# ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to cutflow plots')
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'])
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True)
-    parser.add_argument('-c', '--config' , type=str, help='Configuration', choices=['cleanup', 'bdt_q2_mass'])
+    parser.add_argument('-c', '--config' , type=str, help='Configuration', choices=Data.l_kind)
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     args = parser.parse_args()
 
@@ -145,6 +144,9 @@ def _get_cfg() -> dict:
 
     plt_dir       = cfg['saving']['plt_dir']
     cfg['saving'] = {'plt_dir' : _get_out_dir(plt_dir) }
+
+    if 'definitions' in cfg:
+        del cfg['definitions']
 
     return cfg
 # ---------------------------------
@@ -175,7 +177,6 @@ def _get_inp() -> dict[str,RDataFrame]:
 # ---------------------------------
 def _plot(d_rdf : dict[str,RDataFrame]) -> None:
     cfg= _get_cfg()
-    del cfg['definitions']
 
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
