@@ -152,6 +152,17 @@ def _get_cfg() -> dict:
     if 'definitions' in cfg:
         del cfg['definitions']
 
+    cfg = _add_title(cfg)
+
+    return cfg
+# ---------------------------------
+def _add_title(cfg : dict) -> dict:
+    d_plot = cfg['plots']
+
+    title = f'{Data.sample}; {Data.trigger}; {Data.q2_bin}'
+    for cfg_var in d_plot.values():
+        cfg_var['title'] = title
+
     return cfg
 # ---------------------------------
 def _get_out_dir(plt_dir : str) -> str:
