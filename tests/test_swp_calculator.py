@@ -27,13 +27,13 @@ def _initialize():
 # ----------------------------------
 def _get_rdf(kind : str) -> RDataFrame:
     if   kind == 'dt_ss':
-        sample = 'DATA_24_MagUp_24c'
+        sample = 'DATA_24_MagUp_24c3'
         trigger= 'Hlt2RD_BuToKpEE_SameSign_MVA'
     elif kind == 'dt_ee':
-        sample = 'DATA_24_MagUp_24c'
+        sample = 'DATA_24_MagUp_24c3'
         trigger= 'Hlt2RD_BuToKpEE_MVA'
     elif kind == 'dt_mm':
-        sample = 'DATA_24_MagUp_24c'
+        sample = 'DATA_24_MagUp_24c3'
         trigger= 'Hlt2RD_BuToKpMuMu_MVA'
     elif kind == 'mc':
         sample = 'Bu_Kee_eq_btosllball05_DPC'
