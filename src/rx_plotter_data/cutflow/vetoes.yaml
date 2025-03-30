@@ -12,22 +12,27 @@ cutflow:
   low :
     None           : (1)
     HOP            : hop_mass > 4500 
+    Cascade        : swp_cascade_mass_swp    > 1900
     $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   central:
     None           : (1)
     HOP            : hop_mass > 4500 
+    Cascade        : swp_cascade_mass_swp    > 1900
     $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   jpsi:
     None           : (1)
     HOP            : hop_mass > 4500 
+    Cascade        : swp_cascade_mass_swp    > 1900
     $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   psi2:
     None           : (1)
     HOP            : hop_mass > 4500 
+    Cascade        : swp_cascade_mass_swp    > 1900
     $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   high:
     None           : (1)
     HOP            : hop_mass > 3000 
+    Cascade        : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp < 1800
     $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
 saving:
   plt_dir : plots/cutflow/vetoes
