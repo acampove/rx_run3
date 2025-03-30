@@ -33,7 +33,7 @@ class Data:
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
-    LogStore.set_level('rx_data:swp_calculator', 10)
+    LogStore.set_level('rx_data:swp_calculator', 20)
 # ----------------------------------
 def _get_rdf(test : str, file_wc : str) -> RDataFrame:
     if test == 'cascade_mc':
@@ -56,7 +56,7 @@ def _get_rdf(test : str, file_wc : str) -> RDataFrame:
 
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf()
-        rdf = rdf.Range(10)
+        rdf = rdf.Range(100_000)
 
         return rdf
 
@@ -77,7 +77,7 @@ def test_cascade(kind : str):
     '''
     rdf = _get_rdf(test=f'cascade_{kind}', file_wc='NA')
     obj = SWPCalculator(rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
-    rdf = obj.get_rdf(preffix='cascade')
+    rdf = obj.get_rdf(preffix='cascade', use_ss= 'ss' in kind)
 
     _plot(rdf, 'cascade', preffix='cascade', kind=kind)
 # ----------------------------------
