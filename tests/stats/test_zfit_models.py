@@ -11,6 +11,7 @@ from zfit.core.basepdf      import BasePDF   as zpdf
 from zfit.core.parameter    import Parameter as zpar
 
 from dmu.stats.zfit_models  import HypExp
+from dmu.stats.zfit_models  import ModExp
 from dmu.stats.zfit_plotter import ZFitPlotter
 
 # -------------------------------
@@ -37,10 +38,23 @@ def test_hypexp():
     '''
     obs= zfit.Space('x', limits=(4500, 6000))
     mu = zfit.Parameter('mu',  5000,  4000,  6000)
-    ap = zfit.Parameter('ap', 0.020,     0,   0.1)
-    bt = zfit.Parameter('bt', 0.002, 0.001, 0.005)
+    ap = zfit.Parameter('ap', 0.020,     0,  0.10)
+    bt = zfit.Parameter('bt', 0.002, 0.001, 0.003)
 
     pdf= HypExp(obs=obs, mu=mu, alpha=ap, beta=bt)
 
     _plot_pdf(pdf, name='hypexp')
+# -------------------------------
+def test_modexp():
+    '''
+    Test ModExp PDF
+    '''
+    obs= zfit.Space('x', limits=(4500, 6000))
+    mu = zfit.Parameter('mu',  4500,  4000,  6000)
+    ap = zfit.Parameter('ap', 0.020,     0,   0.1)
+    bt = zfit.Parameter('bt', 0.002, 0.001, 0.005)
+
+    pdf= ModExp(obs=obs, mu=mu, alpha=ap, beta=bt)
+
+    _plot_pdf(pdf, name='modexp')
 # -------------------------------
