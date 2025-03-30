@@ -160,13 +160,16 @@ class SWPCalculator:
         ------------------
         Pandas dataframe with orignal and swapped masses, i.e. masses after the mass hypothesis swap
         '''
+        if use_ss:
+            log.warning('Building candidates from Same Sign tracks')
+
         self._use_ss = use_ss
         self._initialize()
 
         d_comb = {}
         for had_name, new_had_id in self._d_had.items():
             for kind in ['org', 'swp']:
-                log.debug(f'Adding column for {had_name}/{new_had_id}/{kind}')
+                log.info(f'Adding column for {had_name}/{new_had_id}/{kind}')
                 if progress_bar:
                     sr_mass = self._df.progress_apply(self._combine, args=(had_name, kind, new_had_id), axis=1)
                 else:
