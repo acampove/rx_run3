@@ -28,6 +28,7 @@ class Data:
     '''
     nthreads   = 13
     l_trigger  = ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_BuToKpEE_SameSign_MVA']
+    l_config   = ['bdt_q2_mass']
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
     data_dir   = os.environ['DATADIR']
 
@@ -38,9 +39,9 @@ class Data:
     level   : int
     trigger : str
     sample  : str
+    config  : str
     version : str
     cfg_dir : str
-    process = 'DATA'
 
     l_keep = []
 # ---------------------------------
@@ -97,16 +98,18 @@ def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
     return d_rdf
 # ---------------------------------
 def _parse_args() -> None:
-    parser = argparse.ArgumentParser(description='Script used to make plots')
+    parser = argparse.ArgumentParser(description='Script used to make plots of a dataset under a cutflow')
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
     parser.add_argument('-t', '--trigger', type=str, help='HLT2 Trigger', choices=Data.l_trigger, required=True)
     parser.add_argument('-v', '--version', type=str, help='Version of inputs, will use latest if not set')
+    parser.add_argument('-c', '--config' , type=str, help='Name of configuration file', choices=Data.l_config, required=True)
     parser.add_argument('-s', '--sample' , type=str, help='Name of sample, e.g. "Data*"', required=True)
-    parser.add_argument('-w', '--wp'     , type=str, help='Name of working point', choices=['no_prc', 'prc'])
+    parser.add_argument('-k', '--kind'   , type=str, help='Type of cutflow', choices=['no_prc', 'prc'])
     parser.add_argument('-l', '--level'  , type=int, help='Logging message', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
+    Data.config = args.config
     Data.trigger= args.trigger
     Data.version= args.version
     Data.sample = args.sample
@@ -114,9 +117,7 @@ def _parse_args() -> None:
     Data.wp     = args.wp
 # ---------------------------------
 def _get_cfg(kind : str = 'raw') -> dict:
-    cfg_path= f'{Data.cfg_dir}/bdt_q2_mass.yaml'
-    cfg_path= str(cfg_path)
-
+    cfg_path= f'{Data.cfg_dir}/{Data.config}.yaml'
     log.debug(f'Using config: {cfg_path}')
     with open(cfg_path, encoding='utf=8') as ifile:
         cfg = yaml.safe_load(ifile)
