@@ -199,6 +199,8 @@ def _create_file(path : str, trigger : str) -> None:
     msc = MisCalculator(rdf=rdf, trigger=trigger)
     rdf = msc.get_rdf()
 
+    # TODO: Remove the SS condition for the SWPCalculator
+    # When the data ntuples with fixed descriptor be ready
     is_ss = 'SameSign' in trigger
 
     if   Data.kind == 'hop':
