@@ -94,6 +94,10 @@ def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
     rep = rdf.Report()
     rep.Print()
 
+    nentries = rdf.Count().GetValue()
+    if nentries == 0:
+        raise ValueError('No entries found after selection')
+
     return rdf
 # ---------------------------------
 @gut.timeit
