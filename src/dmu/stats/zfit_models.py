@@ -3,12 +3,7 @@ Module meant to hold classes defining PDFs that can be used by ZFIT
 '''
 
 import zfit
-import numpy
-import tensorflow      as tf
-import scipy.integrate as spi
-
-from scipy.interpolate import interp1d
-from zfit              import z
+from zfit   import z
 
 #-------------------------------------------------------------------
 class HypExp(zfit.pdf.ZPDF):
