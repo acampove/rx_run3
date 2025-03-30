@@ -1,7 +1,8 @@
 general:
   size : [12, 8]
 selection :
-  bdt : (1) 
+  cascade : (1)
+  bdt     : (1) 
 cmb : &cuts
   BDT_cmb > 0.5 : mva_cmb > 0.5
   BDT_cmb > 0.7 : mva_cmb > 0.7
@@ -22,7 +23,7 @@ saving:
   plt_dir : plots/cutflow/bdt_cmb
 plots:
     B_M_brem_track_2:
-        binning    : [4500, 6200, 50]
+        binning    : [4500, 6000, 50]
         yscale     : 'linear'
         labels     : ['M${}_{corr}(B^+)$', 'Normalized']
         title      : ''
@@ -31,7 +32,7 @@ plots:
         styling:
           histtype : step
     B_M :
-        binning    : [4500, 6200, 50]
+        binning    : [4500, 6000, 50]
         yscale     : 'linear'
         labels     : ['M$(B^+)$', 'Normalized']
         title      : ''
