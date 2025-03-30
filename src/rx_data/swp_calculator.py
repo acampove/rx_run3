@@ -145,6 +145,14 @@ class SWPCalculator:
 
         return l_mass[0]
     #---------------------------------
+    def _calculate_mass(self, progress_bar : bool, had_name : str, kind : str, new_had_id : int) -> pnd.Series:
+        if progress_bar:
+            sr_mass = self._df.progress_apply(self._combine, args=(had_name, kind, new_had_id), axis=1)
+        else:
+            sr_mass = self._df.apply(self._combine, args=(had_name, kind, new_had_id), axis=1)
+
+        return sr_mass
+    #---------------------------------
     def get_rdf(self,
                 preffix      : str,
                 progress_bar : bool = False,
@@ -166,21 +174,18 @@ class SWPCalculator:
         self._use_ss = use_ss
         self._initialize()
 
-        d_comb = {}
+        d_data = {}
         for had_name, new_had_id in self._d_had.items():
             for kind in ['org', 'swp']:
                 log.info(f'Adding column for {had_name}/{new_had_id}/{kind}')
-                if progress_bar:
-                    sr_mass = self._df.progress_apply(self._combine, args=(had_name, kind, new_had_id), axis=1)
-                else:
-                    sr_mass = self._df.apply(self._combine, args=(had_name, kind, new_had_id), axis=1)
 
-                d_comb[f'{preffix}_mass_{kind}'] = sr_mass.to_numpy().flatten()
+                sr_mass = self._calculate_mass(progress_bar, had_name, kind, new_had_id)
+                d_data[f'{preffix}_mass_{kind}'] = sr_mass.to_numpy().flatten()
 
         d_extra = self._rdf.AsNumpy(self._extra_branches)
-        d_comb.update(d_extra)
+        d_data.update(d_extra)
 
-        rdf    = RDF.FromNumpy(d_comb)
+        rdf    = RDF.FromNumpy(d_data)
 
         return rdf
 #---------------------------------
