@@ -3,15 +3,14 @@
 general:
   size : [12, 8]
 selection :
-  cascade : (1)
   bdt     : (1) 
 cmb : &cuts
   prc > 0.2 : mva_prc > 0.2
   prc > 0.4 : mva_prc > 0.4
   prc > 0.6 : mva_prc > 0.6
-  cmb > 0.5 : mva_cmb > 0.5
-  cmb > 0.7 : mva_cmb > 0.7
-  cmb > 0.8 : mva_cmb > 0.8
+  cmb > 0.2 : mva_cmb > 0.2
+  cmb > 0.4 : mva_cmb > 0.4
+  cmb > 0.6 : mva_cmb > 0.6
 cutflow:
   low :
     <<: *cuts
@@ -24,25 +23,25 @@ cutflow:
   high:
     <<: *cuts
 saving:
-  plt_dir : plots/cutflow/bdt_cmb
+  plt_dir : plots/cutflow/bdt
 plots:
-    B_M_brem_track_2:
-        binning    : [4500, 6000, 30]
-        yscale     : 'linear'
-        labels     : ['M${}_{corr}(B^+)$', 'Normalized']
-        title      : ''
-        name       : 'bmass_brem_track_2'
-        normalized : true
-        styling:
-          histtype : step
-    B_M :
-        binning    : [4500, 6000, 30]
-        yscale     : 'linear'
-        labels     : ['M$(B^+)$', 'Normalized']
-        title      : ''
-        name       : 'bmass'
-        normalized : true
-        styling:
-          histtype : step
+  B_M_brem_track_2:
+    binning    : [4500, 6000, 30]
+    yscale     : 'linear'
+    labels     : ['M${}_{corr}(B^+)$', 'Normalized']
+    title      : ''
+    name       : 'bmass_brem_track_2'
+    normalized : true
+    styling:
+      linestyle : '-'
+  B_M :
+    binning    : [4500, 6000, 30]
+    yscale     : 'linear'
+    labels     : ['M$(B^+)$', 'Normalized']
+    title      : ''
+    name       : 'bmass'
+    normalized : true
+    styling:
+      linestyle : '-'
 style:
   skip_lines : true
