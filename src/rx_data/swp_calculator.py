@@ -2,11 +2,12 @@
 Module with class used to swap mass hypotheses
 '''
 
-import vector
 import pandas as pnd
 from ROOT                  import RDataFrame, RDF
 from tqdm                  import tqdm
-from particle              import Particle  as part
+from particle              import Particle         as part
+from vector                import MomentumObject3D as v3d
+from vector                import MomentumObject4D as v4d
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('rx_data:swp_calculator')
@@ -24,6 +25,8 @@ class SWPCalculator:
         self._extra_branches= ['EVENTNUMBER', 'RUNNUMBER']
         self._df            = self._pnd_from_root(rdf)
         self._initialized   = False
+
+        self._use_ss : bool
     #---------------------------------
     def _pnd_from_root(self, rdf : RDataFrame) -> pnd.DataFrame:
         s_col_all = { name.c_str() for name in rdf.GetColumnNames() }
@@ -71,20 +74,33 @@ class SWPCalculator:
             except Exception as exc:
                 raise ValueError(f'Cannot create particle for PDGID: {pdg_id}') from exc
     #---------------------------------
+    def _get_4vec(self, row : pnd.Series, name : str) -> v4d:
+        '''
+        This function is needed because the PE (energy) of the particle was not stored
+        in the ntuples
+        '''
+        px     = row[f'{name}_PX']
+        py     = row[f'{name}_PY']
+        pz     = row[f'{name}_PZ']
+        par_3d = v3d(px=px, py=py, pz=pz)
+
+        par_id = row[f'{name}_ID']
+        par    = part.from_pdgid(par_id)
+        ms     = par.mass
+        vec    = v4d(pt=par_3d.pt, eta=par_3d.eta, phi=par_3d.phi, m=ms)
+
+        return vec
+    #---------------------------------
     def _build_mass(self, row, d_part) -> float:
         l_vec = []
         for name, new_id in d_part.items():
-            par    = part.from_pdgid(new_id)
-            ms     = par.mass
-            old_id = row[f'{name}_ID']
-
-            px = row[f'{name}_PX']
-            py = row[f'{name}_PY']
-            pz = row[f'{name}_PZ']
-            pe = row[f'{name}_PE']
-            vec_1 = vector.obj(px=px, py=py, pz=pz, t=pe)
+            vec_1 = self._get_4vec(row, name)
+            old_id= row[f'{name}_ID']
+            par   = part.from_pdgid(new_id)
+            ms    = par.mass
             log.debug(f'{name}: {vec_1.mass:0f}({old_id}) -> {ms:.0f}({new_id})')
-            vec_2 = vector.obj(pt=vec_1.pt, phi=vec_1.phi, theta=vec_1.theta, mass=ms)
+
+            vec_2 = v4d(pt=vec_1.pt, eta=vec_1.eta, phi=vec_1.phi, mass=ms)
             l_vec.append(vec_2)
 
         if len(l_vec) != 2:
@@ -105,7 +121,10 @@ class SWPCalculator:
             old_lep_id = row[f'{lep_name}_ID']
             lep        = part.from_pdgid(old_lep_id)
 
-            if lep.charge == had.charge:
+            if lep.charge == had.charge and not self._use_ss:
+                continue
+
+            if lep.charge != had.charge and     self._use_ss:
                 continue
 
             lep_id = new_lep_id if kind == 'swp' else old_lep_id
@@ -119,24 +138,29 @@ class SWPCalculator:
 
         if ncmb == 0:
             log.warning(f'Found no combinations with masses: {l_mass}')
+            log.debug(row)
             return -999
 
-        if ncmb >  1:
-            log.warning(f'Found more than one combinations with masses: {l_mass}')
+        log.debug(f'Found {ncmb} combinations with masses: {l_mass}')
 
         return l_mass[0]
     #---------------------------------
-    def get_rdf(self, preffix : str, progress_bar : bool = False) -> RDataFrame:
+    def get_rdf(self,
+                preffix      : str,
+                progress_bar : bool = False,
+                use_ss       : bool = False) -> RDataFrame:
         '''
         Parameters:
         ------------------
         preffix: Will be used to name branches with masses as `{preffix}_mass_org/swp` for the original and swapped masses
         progress_bar: If True, will show progress bar, by default false
+        use_ss: If true, it will combine tracks with same sign, instead of opposite, False by default
 
         Returns:
         ------------------
         Pandas dataframe with orignal and swapped masses, i.e. masses after the mass hypothesis swap
         '''
+        self._use_ss = use_ss
         self._initialize()
 
         d_comb = {}
