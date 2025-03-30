@@ -191,6 +191,8 @@ def _create_file(path : str, trigger : str) -> None:
     msc = MisCalculator(rdf=rdf, trigger=trigger)
     rdf = msc.get_rdf()
 
+    is_ss = 'SameSign' in trigger
+
     if   Data.kind == 'hop':
         obj = HOPCalculator(rdf=rdf)
         rdf = obj.get_rdf(preffix=Data.kind)
@@ -203,10 +205,10 @@ def _create_file(path : str, trigger : str) -> None:
         rdf = cor.get_rdf(suffix=Data.kind)
     elif Data.kind == 'swp_jpsi_misid':
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' :  13, 'L2' :  13}, d_had={'H' :  13})
-        rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar)
+        rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
     elif Data.kind == 'swp_cascade'   :
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
-        rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar)
+        rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
     else:
         raise ValueError(f'Invalid kind: {Data.kind}')
 
