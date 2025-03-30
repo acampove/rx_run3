@@ -1,32 +1,27 @@
 general:
   size : [12, 8]
-wp:
-  no_prc:
-    cmb :
-      - 0.5
-      - 0.7
-      - 0.8
-      - 0.9
-    prc :
-      - 0.0
-  prc:
-    cmb :
-      - 0.9
-    prc :
-      - 0.6
-      - 0.7
-      - 0.8
-      - 0.85
-mass_binning:
-    low     : [4500, 6200, 50]
-    central : [4500, 6200, 50]
-    jpsi    : [4500, 6000, 50]
-    high    : [4500, 6000, 60]
+cmb : &cuts
+  BDT > 0.5 : 0.5
+  BDT > 0.7 : 0.7
+  BDT > 0.8 : 0.8
+  BDT > 0.9 : 0.9
+cutflow:
+  low :
+    <<: *cuts
+  central:
+    <<: *cuts
+  jpsi:
+    <<: *cuts
+  psi2:
+    <<: *cuts
+  high:
+    <<: *cuts
 saving:
   plt_dir : plots/cutflow/bdt_cmb
 selection : {}
 plots:
     ecalo_bias_B_M :
+        binning    : [4500, 6200, 50]
         yscale     : 'linear'
         labels     : ['M_{corr}$(B^+)$', 'Entries']
         title      : ''
@@ -35,6 +30,7 @@ plots:
         styling:
           histtype : step
     B_M :
+        binning    : [4500, 6200, 50]
         yscale     : 'linear'
         labels     : ['M$(B^+)$', 'Entries']
         title      : ''
