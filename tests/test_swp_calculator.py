@@ -5,7 +5,7 @@ import os
 
 import pytest
 import matplotlib.pyplot as plt
-from ROOT                   import RDataFrame
+from ROOT                   import RDataFrame, EnableImplicitMT
 from dmu.logging.log_store  import LogStore
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
@@ -23,19 +23,20 @@ class Data:
 def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
     LogStore.set_level('rx_data:swp_calculator', 20)
+    EnableImplicitMT(10)
 # ----------------------------------
 def _get_rdf(kind : str) -> RDataFrame:
     if   kind == 'dt_ss':
-        sample = 'DATA_24_MagUp_24c3'
+        sample = 'DATA_24_MagUp_24c'
         trigger= 'Hlt2RD_BuToKpEE_SameSign_MVA'
     elif kind == 'dt_ee':
-        sample = 'DATA_24_MagUp_24c3'
+        sample = 'DATA_24_MagUp_24c'
         trigger= 'Hlt2RD_BuToKpEE_MVA'
     elif kind == 'dt_mm':
-        sample = 'DATA_24_MagUp_24c3'
+        sample = 'DATA_24_MagUp_24c'
         trigger= 'Hlt2RD_BuToKpMuMu_MVA'
     elif kind == 'mc':
-        sample = 'Bu_JpsiK_ee_eq_DPC'
+        sample = 'Bu_Kee_eq_btosllball05_DPC'
         trigger= 'Hlt2RD_BuToKpEE_MVA'
     else:
         raise ValueError(f'Invalid dataset of kind: {kind}')
@@ -55,14 +56,11 @@ def _get_rdf(kind : str) -> RDataFrame:
 # ----------------------------------
 def _apply_selection(rdf : RDataFrame, trigger : str, sample : str) -> RDataFrame:
     d_sel = sel.selection(project='RK', trigger=trigger, q2bin='central', process=sample)
-    if 'SameSign' in trigger:
-        del d_sel['jpsi_misid']
-        del d_sel['cascade']
+    del d_sel['jpsi_misid']
+    del d_sel['cascade']
 
     for cut_name, cut_expr in d_sel.items():
         rdf = rdf.Filter(cut_expr, cut_name)
-
-    rdf   = rdf.Range(10_000)
 
     rep   = rdf.Report()
     rep.Print()
