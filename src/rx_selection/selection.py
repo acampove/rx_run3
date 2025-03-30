@@ -30,15 +30,34 @@ def _print_selection(d_cut : dict[str,str]) -> None:
     for name, expr in d_cut.items():
         log.debug(f'{name:<20}{expr}')
 #-----------------------
-def selection(analysis : str, project : str, q2bin: str, process : str) -> dict[str,str]:
+def _get_analysis(analysis : str, trigger : str) -> str:
+    if (trigger is None) and (analysis is None):
+        raise ValueError('Both analysis and trigger are not specified')
+
+    if isinstance(trigger, str) and isinstance(analysis, str):
+        raise ValueError(f'Both analysis and trigger are specified: {analysis}/{trigger}')
+
+    if trigger is None and isinstance(analysis, str):
+        return analysis
+
+    if 'MuMu' in trigger:
+        return 'MM'
+
+    return 'EE'
+#-----------------------
+def selection(project : str, q2bin: str, process : str, analysis : str = None, trigger : str = None) -> dict[str,str]:
     '''
     Picks up sample name, trigger, etc, returns dictionary with selection
 
-    analysis : EE or MM
     project  : RK or RKst
     q2bin    : low, central, jpsi, psi2S or high
     process  : Nickname for MC sample, starts with "DATA" for data
+    analysis : EE or MM
+    trigger  : E.g. Hlt2RD...
     '''
+
+    analysis = _get_analysis(analysis, trigger)
+
     d_cut : dict[str,str] = {}
 
     event_type     = process if process.startswith('DATA') else aput.read_event_type(nickname=process)
