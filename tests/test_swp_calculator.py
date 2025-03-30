@@ -2,14 +2,12 @@
 Module with tests for swap calculator class
 '''
 import os
-from importlib.resources     import files
 
-import numpy
 import pytest
-import pandas            as pnd
 import matplotlib.pyplot as plt
-from ROOT                   import RDataFrame, RDF
+from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
+from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
 from rx_data.swp_calculator import SWPCalculator
 
@@ -30,6 +28,12 @@ def _get_rdf(kind : str) -> RDataFrame:
     if   kind == 'dt_ss':
         sample = 'DATA_24_MagUp_24c3'
         trigger= 'Hlt2RD_BuToKpEE_SameSign_MVA'
+    elif kind == 'dt_ee':
+        sample = 'DATA_24_MagUp_24c3'
+        trigger= 'Hlt2RD_BuToKpEE_MVA'
+    elif kind == 'dt_mm':
+        sample = 'DATA_24_MagUp_24c3'
+        trigger= 'Hlt2RD_BuToKpMuMu_MVA'
     elif kind == 'mc':
         sample = 'Bu_JpsiK_ee_eq_DPC'
         trigger= 'Hlt2RD_BuToKpEE_MVA'
@@ -37,15 +41,35 @@ def _get_rdf(kind : str) -> RDataFrame:
         raise ValueError(f'Invalid dataset of kind: {kind}')
 
     data_dir = os.environ['DATADIR']
-    RDFGetter.samples = {'main' : f'{data_dir}/samples/main.yaml'}
+    RDFGetter.samples = {'main'       : f'{data_dir}/samples/main.yaml',
+                         'mva'        : f'{data_dir}/samples/mva.yaml',
+                         'hop'        : f'{data_dir}/samples/hop.yaml',
+                         'cascade'    : f'{data_dir}/samples/cascade.yaml',
+                         'jpsi_misid' : f'{data_dir}/samples/jpsi_misid.yaml'}
 
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
-    rdf = rdf.Range(100_000)
+    rdf = _apply_selection(rdf, trigger, sample)
 
     return rdf
 # ----------------------------------
-@pytest.mark.parametrize('kind', ['mc', 'dt_ss'])
+def _apply_selection(rdf : RDataFrame, trigger : str, sample : str) -> RDataFrame:
+    d_sel = sel.selection(project='RK', trigger=trigger, q2bin='central', process=sample)
+    if 'SameSign' in trigger:
+        del d_sel['jpsi_misid']
+        del d_sel['cascade']
+
+    for cut_name, cut_expr in d_sel.items():
+        rdf = rdf.Filter(cut_expr, cut_name)
+
+    rdf   = rdf.Range(10_000)
+
+    rep   = rdf.Report()
+    rep.Print()
+
+    return rdf
+# ----------------------------------
+@pytest.mark.parametrize('kind', ['mc', 'dt_ss', 'dt_ee', 'dt_mm'])
 def test_cascade(kind : str):
     '''
     Tests cascade decay contamination
@@ -56,7 +80,7 @@ def test_cascade(kind : str):
 
     _plot(rdf, preffix='cascade', kind=kind)
 # ----------------------------------
-@pytest.mark.parametrize('kind', ['mc', 'dt_ss'])
+@pytest.mark.parametrize('kind', ['mc', 'dt_ss', 'dt_ee', 'dt_mm'])
 def test_jpsi_misid(kind : str):
     '''
     Tests jpsi misid contamination
