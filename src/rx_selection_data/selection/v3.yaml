@@ -27,8 +27,8 @@ hop_common: &hop_common
   high   : hop_mass > 3000 
 
 mass_ee  : &mass_ee
-  low    : (B_M                  > 4600) && (B_M                  < 6200)
-  central: (B_M                  > 4600) && (B_M                  < 6200)
+  low    : (B_M                  > 4500) && (B_M                  < 6000)
+  central: (B_M                  > 4500) && (B_M                  < 6000)
   jpsi   : (B_const_mass_M       > 5080) && (B_const_mass_M       < 5680)
   psi2   : (B_const_mass_psi2S_M > 4800) && (B_const_mass_psi2S_M < 5680)
   high   : (B_M                  > 4500) && (B_M                  < 6000)
