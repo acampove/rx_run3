@@ -10,25 +10,25 @@ selection :
 veto : &cuts
 cutflow:
   low :
-    None       : (1)
-    hop        : hop_mass > 4500 
-    jpsi_misid : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    None           : (1)
+    HOP            : hop_mass > 4500 
+    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   central:
-    None       : (1)
-    hop        : hop_mass > 4500 
-    jpsi_misid : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    None           : (1)
+    HOP            : hop_mass > 4500 
+    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   jpsi:
-    None       : (1)
-    hop        : hop_mass > 4500 
-    jpsi_misid : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    None           : (1)
+    HOP            : hop_mass > 4500 
+    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   psi2:
-    None       : (1)
-    hop        : hop_mass > 4500 
-    jpsi_misid : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    None           : (1)
+    HOP            : hop_mass > 4500 
+    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   high:
-    None       : (1)
-    hop        : hop_mass > 3000 
-    jpsi_misid : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    None           : (1)
+    HOP            : hop_mass > 3000 
+    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
 saving:
   plt_dir : plots/cutflow/vetoes
 plots:
