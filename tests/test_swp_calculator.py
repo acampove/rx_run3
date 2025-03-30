@@ -77,7 +77,7 @@ def test_cascade(kind : str):
     '''
     rdf = _get_rdf(test=f'cascade_{kind}', file_wc='NA')
     obj = SWPCalculator(rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
-    rdf = obj.get_rdf(preffix='cascade', use_ss= 'ss' in kind)
+    rdf = obj.get_rdf(preffix='cascade', progress_bar=True, use_ss= 'ss' in kind)
 
     _plot(rdf, 'cascade', preffix='cascade', kind=kind)
 # ----------------------------------
