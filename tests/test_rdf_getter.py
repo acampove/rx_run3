@@ -225,3 +225,15 @@ def test_check_vars():
     #_check_branches(rdf)
     _print_dotted_branches(rdf)
 # ------------------------------------------------
+def test_initialize():
+    '''
+    Tests the built-in initializer used to find samples automatically
+    '''
+
+    gtr = RDFGetter(sample='Bu_JpsiK_ee_eq_DPC', trigger='Hlt2RD_BuToKpEE_MVA')
+    gtr.initialize()
+    rdf = gtr.get_rdf()
+
+    nentries = rdf.Count().GetValue()
+    print(nentries)
+# ------------------------------------------------
