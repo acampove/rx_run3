@@ -1,7 +1,8 @@
 '''
 Module holding RDFGetter class
 '''
-
+import os
+import glob
 import json
 import fnmatch
 
@@ -23,6 +24,32 @@ class RDFGetter:
 
         self._tmp_path    = '/tmp/config.json'
         self._tree_name   = 'DecayTree'
+    # ---------------------------------------------------
+    def initialize(self) -> None:
+        '''
+        Function will:
+        - Find samples, assuming they are in $DATADIR/samples/*.yaml
+        - Add them to the samples member of RDFGetter
+
+        If no samples found, will raise FileNotFoundError
+        '''
+
+        data_dir     = os.environ['DATADIR']
+        cfg_wildcard = f'{data_dir}/samples/*.yaml'
+        l_config     = glob.glob(cfg_wildcard)
+        npath        = len(l_config)
+        if npath == 0:
+            raise FileNotFoundError(f'No files found in: {cfg_wildcard}')
+
+        d_sample = {}
+        log.info('Adding samples, found:')
+        for path in l_config:
+            file_name   = os.path.basename(path)
+            sample_name = file_name.replace('.yaml', '')
+            d_sample[sample_name] = path
+            log.info(f'    {sample_name}')
+
+        RDFGetter.samples = d_sample
     # ---------------------------------------------------
     def _get_section(self, yaml_path : str) -> dict:
         d_section = {'trees' : [self._tree_name]}
