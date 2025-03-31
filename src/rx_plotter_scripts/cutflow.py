@@ -39,7 +39,7 @@ class Data:
     config  : str
     plt_dir : str
 
-    l_kind     = ['bdt_cmb', 'bdt_prc', 'vetoes']
+    l_kind     = ['bdt', 'vetoes']
     l_ee_trees = ['brem_track_2', 'ecalo_bias']
     l_keep     = []
     l_col      = []
