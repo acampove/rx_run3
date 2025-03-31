@@ -1,4 +1,6 @@
 # Config meant to check effect of Vetoes
+# Also added some representative MVA cut
+# Adding DTF mass to check effect of charge misidentification on central q2
 
 general:
   size : [12, 8]
