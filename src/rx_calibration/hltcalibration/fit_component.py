@@ -160,7 +160,11 @@ class FitComponent:
         if self._fit_cfg is None:
             raise ValueError('Cannot find fit configuration')
 
-        weights_column = self._fit_cfg['weights_column']
+        if 'weights_column' not in self._fit_cfg:
+            weights_column = 'weights'
+        else:
+            weights_column = self._fit_cfg['weights_column']
+
         rdf            = self._add_weights(self._rdf, weights_column)
         d_data         = rdf.AsNumpy([self._obs_name, weights_column])
 
