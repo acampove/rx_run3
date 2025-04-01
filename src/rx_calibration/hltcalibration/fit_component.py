@@ -233,10 +233,10 @@ class FitComponent:
 
             log.info(f'{name:<20}{"-->":<20}{val:<20.3f}')
     # --------------------
-    def _get_kde_pdf(self, pars_path : str) -> BasePDF:
-        data = self._get_data()
-        d_pad= {'lowermirror' : 0.2, 'uppermirror' : 0.2}
-        pdf  = zfit.pdf.KDE1DimFFT(data, padding=d_pad)
+    def _get_kde_pdf(self) -> BasePDF:
+        data    = self._get_data()
+        cfg_kde = self._fit_cfg['config'][self._name]['cfg_kde']
+        pdf     = zfit.pdf.KDE1DimFFT(data, **cfg_kde)
 
         self._plot_fit(data, pdf)
 
@@ -262,7 +262,7 @@ class FitComponent:
 
         if self._pdf is None:
             log.info('PDF not found, building KDE')
-            self._pdf = self._get_kde_pdf(pars_path)
+            self._pdf = self._get_kde_pdf()
             return Parameter()
 
         s_par = self._pdf.get_params()
