@@ -34,22 +34,12 @@ class Data:
             'hop.hop_alpha',
             'cascade.swp_cascade_mass_swp',
             'jpsi_misid.swp_jpsi_misid_mass_swp',
-            'ecalo_bias.ecalo_bias_B_M']
+            ]
 # ------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_data:rdf_getter', 10)
     os.makedirs(Data.out_dir, exist_ok=True)
-
-    RDFGetter.samples = {
-            'main'        : '/home/acampove/external_ssd/Data/samples/main.yaml',
-            'mva'         : '/home/acampove/external_ssd/Data/samples/mva.yaml',
-            'hop'         : '/home/acampove/external_ssd/Data/samples/hop.yaml',
-            'cascade'     : '/home/acampove/external_ssd/Data/samples/cascade.yaml',
-            'jpsi_misid'  : '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
-            'ecalo_bias'  : '/home/acampove/external_ssd/Data/samples/ecalo_bias.yaml',
-            'brem_track_2': '/home/acampove/external_ssd/Data/samples/brem_track_2.yaml',
-            }
 # ------------------------------------------------
 def _check_branches(rdf : RDataFrame) -> None:
     l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
@@ -127,8 +117,8 @@ def _plot_hop(rdf : RDataFrame, test : str) -> None:
     plt.savefig(f'{test_dir}/hop_alpha.png')
     plt.close()
 # ------------------------------------------------
-def _apply_selection(rdf : RDataFrame, analysis : str, sample : str, override : dict[str,str] = None) -> RDataFrame:
-    d_sel = sel.selection(project='RK', analysis=analysis, q2bin='jpsi', process=sample)
+def _apply_selection(rdf : RDataFrame, trigger : str, sample : str, override : dict[str,str] = None) -> RDataFrame:
+    d_sel = sel.selection(project='RK', trigger=trigger, q2bin='jpsi', process=sample)
     if override is not None:
         d_sel.update(override)
 
@@ -164,15 +154,15 @@ def _plot_brem_track_2(rdf : RDataFrame, test : str, tree : str) -> None:
         plt.savefig(f'{test_dir}/{var}.png')
         plt.close()
 # ------------------------------------------------
-#@pytest.mark.parametrize('sample', ['DATA_24_MagUp_24c1', 'DATA_24_MagUp_24c2', 'DATA_24_Mag*_24c*'])
-@pytest.mark.parametrize('sample', ['DATA_24_MagDown_24c2'])
-def test_electron_data(sample : str):
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA' ])
+def test_electron_data(sample : str, trigger : str):
     '''
     Test of getter class in data
     '''
-    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+    gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
-    rdf = _apply_selection(rdf=rdf, analysis='EE')
+    rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
     rep.Print()
 
@@ -184,14 +174,15 @@ def test_electron_data(sample : str):
     _plot_mva(rdf, sample)
     _plot_hop(rdf, sample)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC'])
-def test_brem_track_2(sample : str):
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
+def test_brem_track_2(sample : str, trigger : str):
     '''
     Test brem_track_2 correction
     '''
-    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+    gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
-    rdf = _apply_selection(rdf=rdf, analysis='EE', override = {'mass' : 'B_const_mass_M > 5160'}, sample=sample)
+    rdf = _apply_selection(rdf=rdf, trigger=trigger, override = {'mass' : 'B_const_mass_M > 5160'}, sample=sample)
     rep = rdf.Report()
     rep.Print()
 
