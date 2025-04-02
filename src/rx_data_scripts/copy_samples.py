@@ -11,6 +11,7 @@ import tqdm
 import yaml
 from dmu.generic.version_management import get_last_version
 from dmu.logging.log_store          import LogStore
+from rx_data                        import utilities as ut
 
 log = LogStore.add_logger('rx_data:copy_samples')
 # -----------------------------------------
@@ -51,12 +52,10 @@ def _parse_args():
     LogStore.set_level('rx_data:copy_samples', args.logl)
 # -----------------------------------------
 def _is_right_trigger(path : str) -> bool:
-    l_trigger = Data.d_conf['triggers']
-    for trigger in l_trigger:
-        if trigger in path:
-            return True
+    l_trigger  = Data.d_conf['triggers']
+    _, trigger = ut.info_from_path(path)
 
-    return False
+    return trigger in l_trigger
 # -----------------------------------------
 def _get_source_paths() -> list[str]:
     d_samp   = Data.d_conf['samples']
