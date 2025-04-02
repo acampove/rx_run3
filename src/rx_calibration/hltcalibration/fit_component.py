@@ -202,6 +202,21 @@ class FitComponent:
         plt.savefig(plot_path)
         plt.close()
     # -------------------------------
+    def _plot_placeholder(self, text : str) -> str:
+        if self._plt_cfg is None:
+            log.warning('No plotting configuration found, will skip plotting')
+            return
+
+        os.makedirs(self._out_dir, exist_ok=True)
+
+        _, ax = plt.subplots()
+        ax.text(0.5, 0.5, text, fontsize=20, ha='center', va='center')
+
+        plot_path = f'{self._out_dir}/fit.png'
+        log.info(f'Saving fit plot to: {plot_path}')
+        plt.savefig(plot_path)
+        plt.close()
+    # -------------------------------
     def _fix_tails(self, sig_par : Parameter) -> None:
         s_par = self._pdf.get_params()
 
@@ -233,8 +248,15 @@ class FitComponent:
 
             log.info(f'{name:<20}{"-->":<20}{val:<20.3f}')
     # --------------------
-    def _get_kde_pdf(self) -> BasePDF:
+    def _get_kde_pdf(self) -> Union[BasePDF, None]:
         data    = self._get_data()
+        arr_val = data.to_numpy()
+        nentries= len(arr_val)
+        if nentries == 0:
+            log.warning('No entries found, cannot build KDE')
+            self._plot_placeholder(text='No entries')
+            return None
+
         cfg_kde = self._fit_cfg['config'][self._name]['cfg_kde']
         pdf     = zfit.pdf.KDE1DimFFT(data, **cfg_kde)
 
