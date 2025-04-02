@@ -26,6 +26,12 @@ cd $HOME/.local/bin
 
 ln -s $PWD/RapidSim.exe rapidsim
 chmod +x rapidsim
+
+# Add this to the .bashrc
+export RAPIDSIM_ROOT=$HOME/.local
+
+# For ease of use
+export RAPIDSIM_CONFIG=/home/acampove/Packages/rx_efficiencies/src/rx_efficiencies_data/prec_decfiles
 ```
 
 Now you can use this program by using `rapidsim`.
