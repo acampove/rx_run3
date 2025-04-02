@@ -19,27 +19,32 @@ class Data:
     '''
     kind  : str
     conf  : str
-    vers  : str
     dry   : bool
 
     d_conf  : dict
     d_data  : dict
     out_dir : str
     l_source: list[str]
-    l_kind  = ['main', 'mva', 'hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias', 'brem_track_2']
+    l_kind  = [
+            'all',
+            'main',
+            'mva',
+            'hop',
+            'swp_jpsi_misid',
+            'swp_cascade',
+            'ecalo_bias',
+            'brem_track_2']
 # -----------------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
     parser.add_argument('-k', '--kind', type=str, help='Type of files', choices=Data.l_kind, required=True)
     parser.add_argument('-f', '--conf', type=str, help='Path to YAML files with samples to be copied', required=True)
-    parser.add_argument('-v', '--vers', type=str, help='Version', required=True)
     parser.add_argument('-l', '--logl', type=int, help='Logger level', choices=[10, 20, 30], default=20)
     parser.add_argument('-d', '--dry' ,           help='If used, will do not copy files', action='store_true')
     args = parser.parse_args()
 
     Data.kind = args.kind
     Data.conf = args.conf
-    Data.vers = args.vers
     Data.dry  = args.dry
 
     LogStore.set_level('rx_data:copy_samples', args.logl)
