@@ -26,7 +26,7 @@ class Data:
     Data class
     '''
     out_dir : str
-    l_energy= ['7TeV', '8TeV', '13TeV', '14TeV']
+    l_energy= ['8TeV', '13TeV', '14TeV']
 #----------------------------------
 def _get_tex():
     d_tex                = {}
@@ -60,13 +60,19 @@ def _get_id(path):
 
     return identifier
 #----------------------------------
-def _get_paths():
+def _get_paths(energy : str):
     dat_dir = os.environ['RAPIDSIM_NTUPLES']
-    root_wc = f'{dat_dir}/*/*_tree.root'
+    root_wc = f'{dat_dir}/*/*/*'
 
-    l_path  = glob.glob(root_wc)
+    l_org   = glob.glob(root_wc)
+    l_path  = l_org
+    l_path  = [ path for path in l_path if  '_tree.root' in path ]
+    l_path  = [ path for path in l_path if f'/{energy}/' in path ]
+
     if len(l_path) == 0:
-        raise FileNotFoundError(f'No files found in: {root_wc}')
+        for path in l_org:
+            log.info(path)
+        raise FileNotFoundError(f'No files found in: {root_wc} at {energy}')
 
     log.info(f'Picking up files from: {root_wc}')
     d_path  = { _get_id(path) : path for path in l_path }
@@ -99,7 +105,7 @@ def _get_df(energy : str) -> pnd.DataFrame:
         return df
 
     d_tex  = _get_tex()
-    d_path = _get_paths()
+    d_path = _get_paths(energy)
     d_out  = {'Process' : [], 'Physical' : [], 'LHCb' : []}
     for decay, path in d_path.items():
         log.debug(f'Checking {decay}')
