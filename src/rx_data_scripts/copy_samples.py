@@ -5,6 +5,7 @@ import os
 import glob
 import shutil
 import argparse
+from importlib.resources import files
 
 import tqdm
 import yaml
@@ -38,7 +39,7 @@ class Data:
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
     parser.add_argument('-k', '--kind', type=str, help='Type of files', choices=Data.l_kind, required=True)
-    parser.add_argument('-f', '--conf', type=str, help='Path to YAML files with samples to be copied', required=True)
+    parser.add_argument('-c', '--conf', type=str, help='Name of YAML config file, e.g. rk', required=True)
     parser.add_argument('-l', '--logl', type=int, help='Logger level', choices=[10, 20, 30], default=20)
     parser.add_argument('-d', '--dry' ,           help='If used, will do not copy files', action='store_true')
     args = parser.parse_args()
@@ -115,6 +116,11 @@ def _initialize(kind : str):
 
     Data.l_source = l_path
 # -----------------------------------------
+def _initialize() -> None:
+    cfg_path = files('rx_data_data').joinpath(f'copy_files/{Data.conf}.yaml')
+    with open(cfg_path, encoding='utf-8') as ifile:
+        Data.d_conf = yaml.safe_load(ifile)
+# -----------------------------------------
 def _copy_sample(source : str) -> int:
     fname = os.path.basename(source)
     target= f'{Data.out_dir}/{fname}'
@@ -153,6 +159,7 @@ def main():
     Starts here
     '''
     _parse_args()
+    _initialize()
 
     if Data.kind == 'all':
         l_kind = Data.l_kind
