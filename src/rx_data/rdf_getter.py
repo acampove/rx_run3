@@ -4,6 +4,7 @@ Module holding RDFGetter class
 import os
 import glob
 import json
+import hashlib
 import fnmatch
 
 import yaml
@@ -19,11 +20,24 @@ class RDFGetter:
     samples : dict[str,str]
     # ---------------------------------------------------
     def __init__(self, sample : str, trigger : str):
+        self.initialize()
+
         self._sample   = sample
         self._trigger  = trigger
 
-        self._tmp_path    = '/tmp/config.json'
+        self._tmp_path    = self._get_tmp_path()
         self._tree_name   = 'DecayTree'
+    # ---------------------------------------------------
+    def _get_tmp_path(self) -> str:
+        samples_str = json.dumps(RDFGetter.samples, sort_keys=True)
+        samples_bin = samples_str.encode()
+        hsh         = hashlib.sha256(samples_bin)
+        hsh         = hsh.hexdigest()
+        tmp_path    = f'/tmp/config_{self._sample}_{self._trigger}_{hsh}.json'
+
+        log.debug(f'Using config JSON: {tmp_path}')
+
+        return tmp_path
     # ---------------------------------------------------
     def initialize(self) -> None:
         '''
@@ -33,6 +47,9 @@ class RDFGetter:
 
         If no samples found, will raise FileNotFoundError
         '''
+        if hasattr(RDFGetter, 'samples'):
+            log.debug('Samples dictionary already found in class, skipping initialization')
+            return
 
         data_dir     = os.environ['DATADIR']
         cfg_wildcard = f'{data_dir}/samples/*.yaml'
