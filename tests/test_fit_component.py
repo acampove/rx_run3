@@ -112,7 +112,7 @@ def test_load_pdf_work():
 # --------------------------------------------
 def test_kde_empty_pdf():
     '''
-    Test using KDE 
+    Test using KDE with empty dataset
     '''
     name = 'kde_empty'
 
