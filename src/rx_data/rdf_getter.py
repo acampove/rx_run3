@@ -20,7 +20,7 @@ class RDFGetter:
     samples : dict[str,str]
     # ---------------------------------------------------
     def __init__(self, sample : str, trigger : str):
-        self.initialize()
+        self._initialize()
 
         self._sample   = sample
         self._trigger  = trigger
@@ -39,7 +39,7 @@ class RDFGetter:
 
         return tmp_path
     # ---------------------------------------------------
-    def initialize(self) -> None:
+    def _initialize(self) -> None:
         '''
         Function will:
         - Find samples, assuming they are in $DATADIR/samples/*.yaml
