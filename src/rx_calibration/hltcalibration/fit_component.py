@@ -3,7 +3,7 @@ Module holding FitComponent class
 '''
 
 import os
-from typing                 import Union
+from typing import Union
 
 import numpy
 import ROOT
