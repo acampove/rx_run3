@@ -90,7 +90,7 @@ def _get_version(kind : str) -> str:
 
     return vers
 # -----------------------------------------
-def _initialize(kind : str):
+def _initialize_kind(kind : str):
     with open(Data.conf, encoding='utf-8') as ifile:
         Data.d_conf = yaml.safe_load(ifile)
 
@@ -145,7 +145,7 @@ def _download_kind(kind : str):
         return
 
     log.info(f'Copying files for kind {kind}')
-    _initialize(kind)
+    _initialize_kind(kind)
 
     l_path = _get_source_paths()
     ncopied= 0
