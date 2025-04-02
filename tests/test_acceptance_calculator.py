@@ -26,20 +26,21 @@ class Data:
 def _initialize():
     LogStore.set_level('rx_efficiencies:test_acceptance_calculator', 10)
 #--------------------------
-def _get_rdf(sample : str) -> RDataFrame:
-    file_path = f'{Data.rsm_dir}/{sample}/{sample}_tree.root'
+def _get_rdf(sample : str, energy : str) -> RDataFrame:
+    file_path = f'{Data.rsm_dir}/{sample}/{energy}/{sample}_tree.root'
     rdf       = RDataFrame('DecayTree', file_path)
 
     return rdf
 #--------------------------
 @pytest.mark.parametrize('sample', ['bdkskpiee', 'bpkskpiee', 'bsphiee'])
-def test_sample(sample : str):
+@pytest.mark.parametrize('energy', ['8TeV', '13TeV', '14TeV'])
+def test_sample(sample : str, energy : str):
     '''
     Simplest test of geometric acceptance calculation for different samples
     '''
-    rdf=_get_rdf(sample=sample)
+    rdf=_get_rdf(sample=sample, energy=energy)
     obj=AcceptanceCalculator(rdf=rdf)
-    obj.plot_dir     = f'{Data.out_dir}/{sample}'
+    obj.plot_dir     = f'{Data.out_dir}/{sample}/{energy}'
     acc_phy, acc_lhc = obj.get_acceptances()
 
     log.info(f'{sample:<20}{acc_phy:10.3f}{acc_lhc:10.3f}')
