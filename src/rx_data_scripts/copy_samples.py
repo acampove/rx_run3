@@ -8,7 +8,8 @@ import argparse
 
 import tqdm
 import yaml
-from dmu.logging.log_store  import LogStore
+from dmu.generic.version_management import get_last_version
+from dmu.logging.log_store          import LogStore
 
 log = LogStore.add_logger('rx_data:copy_samples')
 # -----------------------------------------
