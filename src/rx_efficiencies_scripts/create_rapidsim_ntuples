@@ -1,10 +1,52 @@
 #!/usr/bin/env bash
 
+#--------------------------------------------------
+display_help()
+{
+    echo "Script used to steer the creation of ntuples with different decays from what is in the $RAPIDSIM_CONFIG directory"
+    echo ""
+    echo "-n: Number of entries in the ntuples"
+    echo "-o: Directory where the ntuples will be placed"
+}
+#--------------------------------------------------
+get_opts()
+{
+    if [[ $# -eq 0 ]]; then
+        display_help
+        exit 1
+    fi  
+
+    while getopts :hf:n:o: option; do 
+        case "${option}" in
+            h)  
+                display_help
+                exit 0
+                ;;  
+            n)  NEVENTS=${OPTARG};;
+            o)  OUTDIR=${OPTARG};;
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;  
+        esac
+    done
+}
 # -----------------------
-check_env()
+initialize()
 {
     if [ -z $RAPIDSIM_CONFIG ];then
         echo "RAPIDSIM_CONFIG not set, this should point to directory with config files"
+        exit 1
+    fi
+
+    mkdir -p $OUTDIR
+
+    if [ ! -d $OUTDIR ];then
+        echo "Cannot create $OUTDIR"
         exit 1
     fi
 }
@@ -22,12 +64,16 @@ create_ntuple()
 {
     echo "Creating $DECAY with $NEVENTS entries"
 
+    DECAYDIR=$OUTDIR/$DECAY
+    mkdir -p $DECAYDIR
+
+    cd $DECAYDIR
     rapidsim $RAPIDSIM_CONFIG/$DECAY $NEVENTS 1 > $DECAY".log" 2>&1
+    cd -
 }
 # -----------------------
-NEVENTS=1000
-
-check_env
+get_opts "$@"
+initialize
 find_decays
 
 for DECAY in ${DECAYS[@]};do
