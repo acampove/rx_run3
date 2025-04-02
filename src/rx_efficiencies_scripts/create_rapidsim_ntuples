@@ -1,3 +1,35 @@
 #!/usr/bin/env bash
 
+# -----------------------
+check_env()
+{
+    if [ -z $RAPIDSIM_CONFIG ];then
+        echo "RAPIDSIM_CONFIG not set, this should point to directory with config files"
+        exit 1
+    fi
+}
+# -----------------------
+find_decays()
+{
+    shopt -s nullglob
+    PATHS=($RAPIDSIM_CONFIG/*.decay)
+    FILES=("${PATHS[@]##*/}")
+    DECAYS=("${FILES[@]%.decay}")
+    echo "${DECAYS[@]}"
+}
+# -----------------------
+create_ntuple()
+{
+    echo "Creating $DECAY with $NEVENTS entries"
 
+    rapidsim $RAPIDSIM_CONFIG/$DECAY $NEVENTS 1 > $DECAY".log" 2>&1
+}
+# -----------------------
+NEVENTS=1000
+
+check_env
+find_decays
+
+for DECAY in ${DECAYS[@]};do
+    create_ntuple
+done
