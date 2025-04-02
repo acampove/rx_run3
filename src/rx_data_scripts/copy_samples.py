@@ -74,18 +74,26 @@ def _get_source_paths() -> list[str]:
 
     return l_source
 # -----------------------------------------
-def _initialize():
+def _get_version(kind : str) -> str:
+    inp_dir = Data.d_conf['inp_dir']
+    vers    = get_last_version(dir_path = f'{inp_dir}/{kind}', version_only=True)
+
+    return vers
+# -----------------------------------------
+def _initialize(kind : str):
     with open(Data.conf, encoding='utf-8') as ifile:
         Data.d_conf = yaml.safe_load(ifile)
 
-    out_dir = Data.d_conf['out_dir']
-    Data.out_dir = f'{out_dir}/{Data.kind}/{Data.vers}'
-    os.makedirs(Data.out_dir, exist_ok=True)
-
+    vers    = _get_version(kind)
     inp_dir = Data.d_conf['inp_dir']
-    inp_dir = f'{inp_dir}/{Data.kind}/{Data.vers}'
+    inp_dir = f'{inp_dir}/{kind}/{vers}'
     path_wc = f'{inp_dir}/*.root'
     l_path  = glob.glob(path_wc)
+
+    out_dir = Data.d_conf['out_dir']
+    Data.out_dir = f'{out_dir}/{kind}/{vers}'
+    os.makedirs(Data.out_dir, exist_ok=True)
+
 
     log.info(f'Source: {inp_dir}')
     log.info(f'Target: {Data.out_dir}')
