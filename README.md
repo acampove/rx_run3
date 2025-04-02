@@ -35,6 +35,8 @@ where the utility will pick up every decay configuration in the `$RAPIDSIM_CONFI
 This can be done with the `AcceptanceCalculator` class as shown below:
 
 ```python
+from rx_efficiencies.acceptance_calculator import AcceptanceCalculator
+
 obj=AcceptanceCalculator(rdf=rdf)
 obj.plot_dir     = '/optional/path/where/diagnostic/plots/are/saved'
 acc_phy, acc_lhc = obj.get_acceptances()
@@ -56,4 +58,12 @@ which will make the `JSON`, `TEX` and `PNG` files with the acceptances, the tabl
 
 ### Reading acceptances
 
+This is done with the `AcceptanceReader` class with:
+
+```python
+from rx_efficiencies.acceptance_reader import AcceptanceReader
+
+obj=AcceptanceReader(year=year, proc=process)
+acc=obj.read()
+```
 
