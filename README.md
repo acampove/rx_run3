@@ -129,6 +129,17 @@ make_tree_structure -i /publicfs/ucas/user/campoverde/Data/RX_run3/v5/mva/v1 -f 
 
 Where `-p` is the directory in EOS where the files will go.
 
+### Summary
+
+Due to the complexity of this command, the table below was made to sumarize its functionality:
+
+| To build:                   | Input                                                                     | Output                                |
+| --------------------------- | ------------------------------------------------------------------------- | ------------------------------------- |
+| Tree structure              | `-i /path/to/directory/*root`                                             | `-o /path/to/start/of/tree/structure` |
+| YAML list with local files  | `-i /path/to/directory/*root`                                             | `-f /path/to/samples.yaml`            |
+| YAML list with PFNs         | `-v v4` where the LFNs are files, part of the project                     | `-f samples.yaml`                     |
+| YAML with PFNs in users EOS | `-i /path/to/directory/*.root -p /eos/user/x/uname/directory_with_files/` | `-f samples.yaml`                     |
+
 ## Samples naming
 
 The samples were named after the DecFiles names for the samples and:
