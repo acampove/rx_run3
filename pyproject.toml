@@ -3,9 +3,10 @@ name        = 'rx_efficiencies'
 version     = '0.0.1'
 readme      = 'README.md'
 dependencies= [
-'numpy', 
-'pandas', 
-'data-manipulation-utilities', 
+'numpy',
+'pandas',
+'mplhep',
+'data-manipulation-utilities',
 'rx_data',
 'rx_selection']
 
