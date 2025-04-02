@@ -125,19 +125,33 @@ def _copy_sample(source : str) -> int:
 
     return 0
 # -----------------------------------------
-def main():
-    '''
-    Starts here
-    '''
-    _parse_args()
-    _initialize()
+def _download_kind(kind : str):
+    if kind == 'all':
+        return
+
+    log.info(f'Copying files for kind {kind}')
+    _initialize(kind)
 
     l_path = _get_source_paths()
     ncopied= 0
     for path in tqdm.tqdm(l_path, ascii=' -'):
         ncopied += _copy_sample(path)
 
-    log.info(f'Copied {ncopied} files')
+    log.info(f'Copied {ncopied} files for kind {kind}')
+# -----------------------------------------
+def main():
+    '''
+    Starts here
+    '''
+    _parse_args()
+
+    if Data.kind == 'all':
+        l_kind = Data.l_kind
+    else:
+        l_kind = [Data.kind]
+
+    for kind in l_kind:
+        _download_kind(kind)
 # -----------------------------------------
 if __name__ == '__main__':
     main()
