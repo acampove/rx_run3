@@ -6,7 +6,6 @@ display_help()
     echo "Script used to steer the creation of ntuples with different decays from what is in the $RAPIDSIM_CONFIG directory"
     echo ""
     echo "-n: Number of entries in the ntuples"
-    echo "-o: Directory where the ntuples will be placed"
 }
 #--------------------------------------------------
 get_opts()
@@ -16,14 +15,13 @@ get_opts()
         exit 1
     fi  
 
-    while getopts :hf:n:o: option; do 
+    while getopts :hf:n: option; do 
         case "${option}" in
             h)  
                 display_help
                 exit 0
                 ;;  
             n)  NEVENTS=${OPTARG};;
-            o)  OUTDIR=${OPTARG};;
            \?)  echo "Invalid option: -${OPTARG}"
                 display_help
                 exit 1
@@ -43,10 +41,15 @@ initialize()
         exit 1
     fi
 
-    mkdir -p $OUTDIR
+    if [ -z $RAPIDSIM_NTUPLES ];then
+        echo "RAPIDSIM_NTUPLES not set, this should point to directory where ntuples will go"
+        exit 1
+    fi
 
-    if [ ! -d $OUTDIR ];then
-        echo "Cannot create $OUTDIR"
+    mkdir -p $RAPIDSIM_NTUPLES
+
+    if [ ! -d $RAPIDSIM_NTUPLES ];then
+        echo "Cannot create $RAPIDSIM_NTUPLES"
         exit 1
     fi
 }
@@ -60,16 +63,31 @@ find_decays()
     echo "${DECAYS[@]}"
 }
 # -----------------------
+create_config()
+{
+    CFG_PATH=$1
+    ENERGY=$2
+
+    echo "geometry: 4pi"              > $CFG_PATH
+    echo "paramsStable : P, PT, eta" >> $CFG_PATH
+    echo "energy: $ENERGY          " >> $CFG_PATH
+}
+# -----------------------
 create_ntuple()
 {
-    echo "Creating $DECAY with $NEVENTS entries"
+    echo "Creating $DECAY with $NEVENTS entries at $ENERGY"
 
-    DECAYDIR=$OUTDIR/$DECAY
+    DECAYDIR=$RAPIDSIM_NTUPLES/$DECAY/$ENERGY"TeV"
     mkdir -p $DECAYDIR
+
+    CFG_PATH=$RAPIDSIM_CONFIG/$DECAY".config"
+    create_config $CFG_PATH $ENERGY
 
     cd $DECAYDIR
     rapidsim $RAPIDSIM_CONFIG/$DECAY $NEVENTS 1 > $DECAY".log" 2>&1
     cd -
+
+    rm $CFG_PATH
 }
 # -----------------------
 get_opts "$@"
@@ -77,5 +95,7 @@ initialize
 find_decays
 
 for DECAY in ${DECAYS[@]};do
-    create_ntuple
+    for ENERGY in "8" "13" "14";do
+        create_ntuple
+    done
 done
