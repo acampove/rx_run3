@@ -49,6 +49,14 @@ def _parse_args():
 
     LogStore.set_level('rx_data:copy_samples', args.logl)
 # -----------------------------------------
+def _is_right_trigger(path : str) -> bool:
+    l_trigger = Data.d_conf['triggers']
+    for trigger in l_trigger:
+        if trigger in path:
+            return True
+
+    return False
+# -----------------------------------------
 def _get_source_paths() -> list[str]:
     d_samp   = Data.d_conf['samples']
     l_source = []
@@ -57,11 +65,12 @@ def _get_source_paths() -> list[str]:
     log.info(70 * '-')
     for sample, l_identifier in d_samp.items():
         for identifier in l_identifier:
-            l_source_samp = [ source for source in Data.l_source if str(identifier) in source ]
+            identifier    = str(identifier)
+            l_source_samp = [ source for source in Data.l_source if identifier in source and _is_right_trigger(source) ]
             npath = len(l_source_samp)
             log.info(f'{sample:<20}{identifier:<30}{npath:<20}')
-
             l_source += l_source_samp
+
     log.info(70 * '-')
 
     nsource = len(l_source)
