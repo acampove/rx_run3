@@ -226,20 +226,15 @@ If the original files are downloaded to a cluster and the user needs the files i
 - Copy the files through
 
 ```bash
-copy_samples -k main -f to_copy.yaml -v v5 -d
+copy_samples -k all -c rk
 ```
 
-where `to_copy.yaml` specifies what samples will be copied and where, e.g.:
+where:
 
-```yaml
-inp_dir : /path/to/directory/with/sample/directories # Sample directories: main, hop, mva, swp_cascade...
-out_dir : /path/to/directory/in/laptop
-samples :
-  signal:
-    - 12123003 # Kee
-    - 12113002 # Kmm
-   ...
-```
+`-k` Kind of files to be copied, i.e. friend tree like `mva`, `main`, `hop` etc. For everything use `all`.   
+`-c` Name of config specifying what to copy, e.g. `rk`   
+
+The config files live in `src/rx_data_data/copy_files` and can be adapted for new samples or different source paths.
 
 ## Checking for corrupted files
 
