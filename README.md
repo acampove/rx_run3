@@ -1,4 +1,4 @@
-# rx_efficiencies
+# $R_X$ efficiencies
 
 Project used to calculate efficiencies for different simulated datasets
 
@@ -12,4 +12,11 @@ given that:
 1. One might need special definitions for the acceptance and having the ntuples with the
 decay product values offers higher flexibility.
 
-More on how to install rapidsim [here](doc/rapidsim.md)
+More on how to install and configure rapidsim [here](doc/rapidsim.md).
+
+To create the ntuples with the decays, do:
+
+```bash
+create_rapidsim_ntuples
+```
+
