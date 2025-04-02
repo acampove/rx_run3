@@ -110,3 +110,29 @@ def test_load_pdf_work():
 
     assert obj is not None
 # --------------------------------------------
+def test_kde_empty_pdf():
+    '''
+    Test using KDE 
+    '''
+    name = 'kde_empty'
+
+    pdf= tut.get_signal_pdf(obs=Data.obs)
+    rdf= tut.rdf_from_pdf(pdf=pdf, nentries=Data.nentries)
+    rdf= rdf.Filter('mass != mass')
+
+    cfg= _get_conf(name)
+    cfg['fitting'] = {
+            'config' : {
+                name : {
+                    'cfg_kde':
+                    {
+                        'bandwidth': 20,
+                        'padding'  : {'lowermirror': 0.5, 'uppermirror': 0.5},
+                        },
+                    }
+                }
+            }
+
+    obj= FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
+    _  = obj.run()
+# --------------------------------------------
