@@ -276,8 +276,7 @@ def main():
     _initialize(args)
 
     l_path = _get_paths()
-
-    splt = PathSplitter(paths=l_path, max_files=Data.max_files, sample_naming=Data.naming)
+    splt   = PathSplitter(paths=l_path, max_files=Data.max_files, sample_naming=Data.naming)
     d_path = splt.split()
 
     d_struc = {}
