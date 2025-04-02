@@ -91,9 +91,6 @@ def _get_version(kind : str) -> str:
     return vers
 # -----------------------------------------
 def _initialize_kind(kind : str):
-    with open(Data.conf, encoding='utf-8') as ifile:
-        Data.d_conf = yaml.safe_load(ifile)
-
     vers    = _get_version(kind)
     inp_dir = Data.d_conf['inp_dir']
     inp_dir = f'{inp_dir}/{kind}/{vers}'
