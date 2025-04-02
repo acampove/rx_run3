@@ -1,20 +1,28 @@
+'''
+Module holding AcceptanceCalculator class
+'''
 
 import os
-import numpy
 import pprint
+
 import matplotlib.pyplot as plt
 
-from log_store             import log_store
+from dmu.logging.log_store import LogStore
 
-log = log_store.add_logger('prec_acceptances::calculator')
+log = LogStore.add_logger('prec_acceptances::calculator')
 #-----------------------------
-class calculator:
+class AcceptanceCalculator:
+    '''
+    Class meant to calculate geometric acceptances from a Tree created by RapidSim in the 4pi
+    acceptance.
+    '''
+    #-----------------------------
     def __init__(self, rdf):
-        self._rdf = rdf
+        self._rdf         = rdf
+        self._plot_dir    : str
+        self._l_all_trk   : list[str]
 
-        self._plot_dir    = None
-        self._l_all_trk   = None 
-        self._initialized = False 
+        self._initialized = False
     #-----------------------------
     def _initialize(self):
         if self._initialized:
@@ -33,6 +41,9 @@ class calculator:
     #-----------------------------
     @property
     def plot_dir(self):
+        '''
+        Returns path to directory where validation plots go
+        '''
         return self._plot_dir
 
     @plot_dir.setter
@@ -51,7 +62,7 @@ class calculator:
 
         arr_in = rdf_in.AsNumpy([theta])[theta]
         arr_ot = rdf_ot.AsNumpy([theta])[theta]
-        
+
         plt.hist(arr_in, bins=100, range=(0, 3.1415), alpha=0.7, color='r', label='In')
         plt.hist(arr_ot, bins=100, range=(0, 3.1415), alpha=0.7, color='b', label='Out')
         plt.legend()
@@ -65,7 +76,7 @@ class calculator:
     #-----------------------------
     def _plot(self, rdf, var):
         arr_var = rdf.AsNumpy([var])[var]
-        
+
         plt.hist(arr_var, bins=100, range=(-6, +6), alpha=0.7, color='b', label='Out')
         plt.ylabel('Entries')
         plt.xlabel(r'$\eta$')
@@ -102,7 +113,7 @@ class calculator:
     #-----------------------------
     def get_acceptances(self):
         '''
-        Will return tuple with acceptances: 
+        Will return tuple with acceptances:
 
         physical: That contributes to the PRec of RK
         LHCb: Where all tracks are inside the LHCb acceptance
@@ -119,4 +130,3 @@ class calculator:
 
         return eff_phy, eff_lhc
 #-----------------------------
-
