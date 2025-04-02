@@ -17,7 +17,8 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
-scan_efficiencies ='rx_efficiencies_scripts.scan_efficiencies:main'
+scan_efficiencies    ='rx_efficiencies_scripts.scan_efficiencies:main'
+calculate_acceptances='rx_efficiencies_scripts.calculate_acceptances:main'
 
 [tool.setuptools.package-data]
 rx_efficiencies_data=['scan/*.yaml']
