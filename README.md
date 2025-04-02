@@ -46,3 +46,14 @@ where `acc_phy` is the physical acceptance and `acc_lhc` is the LHC one:
 $B^+\to K^+ee$, the decay counts as in acceptance, even if $K^-$ is not in acceptance.
 `LHC acceptance`: What the _generator tables_ provide. All the decay products have to be in the acceptance.
 
+These acceptances can be calculated all at once with:
+
+```bash
+calculate_acceptances -v v1
+```
+
+which will make the `JSON`, `TEX` and `PNG` files with the acceptances, the tables for the note/paper and the plots.
+
+### Reading acceptances
+
+
