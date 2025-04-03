@@ -57,4 +57,17 @@ def test_selection(sample : str):
     rep.Print()
 
     _print_dotted_branches(rdf)
+# --------------------------
+@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'DATA*'])
+def test_full_selection(sample : str):
+    '''
+    Applies selection
+    '''
+    trigger = 'Hlt2RD_BuToKpEE_MVA'
+    gtr     = RDFGetter(sample=sample, trigger=trigger)
+    rdf     = gtr.get_rdf()
+    rdf     = sel.apply_full_selection(rdf = rdf, project='RK', trigger=trigger, q2bin='jpsi', process=sample)
+    rdf     = rdf.Range(10_000)
+
+    _print_dotted_branches(rdf)
 # --------------------------o
