@@ -27,8 +27,9 @@ class RDFGetter:
         '''
         self._initialize()
 
-        self._sample   = sample
-        self._trigger  = trigger
+        self._sample      = sample
+        self._trigger     = trigger
+        self._main_tree   = 'main' # This is the label of the main (not the friends) tree
 
         self._tmp_path    = self._get_tmp_path()
         self._tree_name   = tree
@@ -43,6 +44,17 @@ class RDFGetter:
         log.debug(f'Using config JSON: {tmp_path}')
 
         return tmp_path
+    # ---------------------------------------------------
+    def _filter_samples(self, d_sample : dict[str,str]) -> dict[str,str]:
+        if self._tree_name == 'DecayTree':
+            return d_sample
+
+        # MCDecayTree has no friends
+        if self._tree_name == 'MCDecayTree':
+            path = d_sample[self._main_tree]
+            return {self._main_tree : path}
+
+        raise ValueError(f'Invalid tree name: {self._tree_name}')
     # ---------------------------------------------------
     def _initialize(self) -> None:
         '''
@@ -70,6 +82,8 @@ class RDFGetter:
             sample_name = file_name.replace('.yaml', '')
             d_sample[sample_name] = path
             log.info(f'    {sample_name}')
+
+        self._filter_samples(d_sample)
 
         RDFGetter.samples = d_sample
     # ---------------------------------------------------
