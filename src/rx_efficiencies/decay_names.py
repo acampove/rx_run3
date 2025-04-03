@@ -90,4 +90,16 @@ class DecayNames:
             raise ValueError(f'Decay {decay} not found')
 
         return DecayNames.sam[decay]
+    # -----------------------------------
+    @staticmethod
+    def subdecays_from_decay(decay : str) -> list[str]:
+        '''
+        Takes nickname of decay, returns list of subdecays, needed to build branching fractions
+        '''
+        if decay not in DecayNames.dec:
+            for elm in DecayNames.sam:
+                log.info(elm)
+            raise ValueError(f'Decay {decay} not found')
+
+        return DecayNames.dec[decay]
 # -----------------------------------
