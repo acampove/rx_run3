@@ -71,7 +71,7 @@ class AcceptanceReader:
 
         df  = df[ df.Process == self._proc ]
         if len(df) == 0:
-            raise ValueError(f'Invalid process: {self._proc}')
+            raise ValueError(f'Process {self._proc} not found in {prc_path}')
 
         try:
             [val] = df.Physical.tolist()
