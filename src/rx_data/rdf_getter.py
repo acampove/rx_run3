@@ -42,10 +42,6 @@ class RDFGetter:
 
         If no samples found, will raise FileNotFoundError
         '''
-        if hasattr(RDFGetter, 'samples'):
-            log.debug('Samples dictionary already found in class, skipping initialization')
-            return
-
         data_dir     = os.environ['DATADIR']
         cfg_wildcard = f'{data_dir}/samples/*.yaml'
         l_config     = glob.glob(cfg_wildcard)
