@@ -9,6 +9,7 @@ import argparse
 from importlib.resources   import files
 from typing                import Union
 
+import mplhep
 import pandas                   as pnd
 import matplotlib.pyplot        as plt
 
@@ -27,6 +28,8 @@ class Data:
     '''
     out_dir : str
     l_energy= ['8TeV', '13TeV', '14TeV']
+
+    plt.style.use(mplhep.style.LHCb2)
 #----------------------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Used to dump JSON file with acceptances')
