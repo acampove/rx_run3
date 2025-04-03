@@ -19,14 +19,19 @@ class RDFGetter:
     '''
     samples : dict[str,str]
     # ---------------------------------------------------
-    def __init__(self, sample : str, trigger : str):
+    def __init__(self, sample : str, trigger : str, tree : str):
+        '''
+        Sample: Sample's nickname, e.g. DATA_24_MagDown_24c2
+        Trigger: HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA
+        Tree: E.g. DecayTree or MCDecayTree
+        '''
         self._initialize()
 
         self._sample   = sample
         self._trigger  = trigger
 
         self._tmp_path    = self._get_tmp_path()
-        self._tree_name   = 'DecayTree'
+        self._tree_name   = tree
     # ---------------------------------------------------
     def _get_tmp_path(self) -> str:
         samples_str = json.dumps(RDFGetter.samples, sort_keys=True)
