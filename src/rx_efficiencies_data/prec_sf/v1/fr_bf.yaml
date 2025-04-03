@@ -17,15 +17,19 @@ bf:
   jpmm: 
     - 0.0596
     - 0.00033
+  # B+ -> K+ee
   bpkp: 
     - 4.53e-7
     - 3.5e-8
+  # B+ -> K*+(-> K+pi0)ee
   bpks: 
     - 9.6e-7
     - 1e-7
+  # Bd -> K*(-> K+pi-)ee
   bdks: 
     - 9.4e-7
     - 5e-8
+  # Bs -> phi(-> K+K-)ee
   bsph: 
     - 8.4e-7
     - 4e-8
