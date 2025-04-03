@@ -77,11 +77,21 @@ class EfficiencyCalculator:
 
         return acc
     #------------------------------------------
+    def _add_sel_eff(self, passed : int, total : int, proc : str) -> None:
+        eff = passed / total
+        err = math.sqrt(eff * (1 - eff) / total)
+
+        self._d_sel['Process'].append(proc)
+        self._d_sel['Value'  ].append(eff)
+        self._d_sel['Error'  ].append(err)
+    #------------------------------------------
     def _get_yields(self, proc=None) -> tuple[int,int]:
         sel_yld = self._get_sel_yld(proc)
         gen_yld = self._get_gen_yld(proc)
         geo_acc = self._get_geo_eff(proc)
         tot_yld = gen_yld / geo_acc
+
+        self._add_sel_eff(passed=sel_yld, total=gen_yld, proc=proc)
 
         return sel_yld, tot_yld
     #------------------------------------------
