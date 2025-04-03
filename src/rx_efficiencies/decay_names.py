@@ -43,6 +43,17 @@ class DecayNames:
     sam[bpk1kpipiee] = 'Bu_K1ee_eq_DPC'
     sam[bpk2kpipiee] = 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
     # -----------------------------------
+    # correspondence between decay variable and list of subdecays, needed to calculate branching
+    # fraction of decay from subdecays
+    # -----------------------------------
+    dec              = {}
+    dec[bdkskpiee  ] = ['bdks', 'k+kp']
+    dec[bpkskpiee  ] = ['bpks', 'kokp']
+    dec[bpkpee     ] = ['bpkp']
+    dec[bsphiee    ] = ['bsph', 'phkk']
+    dec[bpk1kpipiee] = ['bpk1', 'k13h']
+    dec[bpk2kpipiee] = ['bpk2', 'k23h']
+    # -----------------------------------
     @staticmethod
     def get_decays() -> list[str]:
         '''
