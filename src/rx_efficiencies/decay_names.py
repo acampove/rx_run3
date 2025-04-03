@@ -9,20 +9,36 @@ class DecayNames:
     '''
     Class used to hold names of decays for ease of use in the rest of the code
     '''
+    # --------------------------
+    # correspondence between variable and name
+    # of sample when e.g. saving to disk
+    # --------------------------
     bpkpee           = 'bpkpee'
     bdkskpiee        = 'bdkskpiee'
     bpkskpiee        = 'bpkskpiee'
     bsphiee          = 'bsphiee'
     bpk1kpipiee      = 'bpk1kpipiee'
     bpk2kpipiee      = 'bpk2kpipiee'
-
+    # --------------------------
+    # correspondence between decay variables and latex
+    # --------------------------
     tex              = {}
     tex[bdkskpiee  ] = r'$B_d\to K^{*0}(\to K^+\pi^-)e^+e^-$'
     tex[bpkskpiee  ] = r'$B^+\to K^{*+}(\to K^+\pi^0)e^+e^-$'
     tex[bpkpee     ] = r'$B^+\to K^+e^+e^-$'
     tex[bsphiee    ] = r'$B_s\to \phi(1020)e^+e^-$'
-    tex[bpk2kpipiee] = r'$B^+\to K_2(1430)^+(\to X \to K^+\pi^+\pi^-)e^+e^-$'
     tex[bpk1kpipiee] = r'$B^+\to K_1(1270)^+(\to K^+\pi^+\pi^-)e^+e^-$'
+    tex[bpk2kpipiee] = r'$B^+\to K_2(1430)^+(\to X \to K^+\pi^+\pi^-)e^+e^-$'
+    # --------------------------
+    # correspondence between decay variable and sample identifier
+    # --------------------------
+    sam              = {}
+    sam[bdkskpiee  ] = 'Bd_Kstee_eq_btosllball05_DPC'
+    sam[bpkskpiee  ] = 'Bu_Kstee_Kpi0_eq_btosllball05_DPC'
+    sam[bpkpee     ] = 'Bu_Kee_eq_btosllball05_DPC'
+    sam[bsphiee    ] = 'Bs_phiee_eq_Ball_DPC'
+    sam[bpk1kpipiee] = 'Bu_K1ee_eq_DPC'
+    sam[bpk2kpipiee] = 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
     # -----------------------------------
     @staticmethod
     def get_decays() -> list[str]:
@@ -46,4 +62,18 @@ class DecayNames:
             for elm in DecayNames.tex:
                 log.info(elm)
             raise ValueError(f'Decay {decay} not found')
+
+        return DecayNames.tex[decay]
+    # -----------------------------------
+    @staticmethod
+    def sample_from_decay(decay : str) -> str:
+        '''
+        Takes nickname of decay, returns nickname of sample
+        '''
+        if decay not in DecayNames.sam:
+            for elm in DecayNames.sam:
+                log.info(elm)
+            raise ValueError(f'Decay {decay} not found')
+
+        return DecayNames.sam[decay]
 # -----------------------------------
