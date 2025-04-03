@@ -25,36 +25,14 @@ class RDFGetter:
         Trigger: HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA
         Tree: E.g. DecayTree or MCDecayTree
         '''
-        self._initialize()
-
         self._sample      = sample
         self._trigger     = trigger
         self._main_tree   = 'main' # This is the label of the main (not the friends) tree
 
-        self._tmp_path    = self._get_tmp_path()
         self._tree_name   = tree
-    # ---------------------------------------------------
-    def _get_tmp_path(self) -> str:
-        samples_str = json.dumps(RDFGetter.samples, sort_keys=True)
-        samples_bin = samples_str.encode()
-        hsh         = hashlib.sha256(samples_bin)
-        hsh         = hsh.hexdigest()
-        tmp_path    = f'/tmp/config_{self._sample}_{self._trigger}_{hsh}.json'
+        self._tmp_path    : str
 
-        log.debug(f'Using config JSON: {tmp_path}')
-
-        return tmp_path
-    # ---------------------------------------------------
-    def _filter_samples(self, d_sample : dict[str,str]) -> dict[str,str]:
-        if self._tree_name == 'DecayTree':
-            return d_sample
-
-        # MCDecayTree has no friends
-        if self._tree_name == 'MCDecayTree':
-            path = d_sample[self._main_tree]
-            return {self._main_tree : path}
-
-        raise ValueError(f'Invalid tree name: {self._tree_name}')
+        self._initialize()
     # ---------------------------------------------------
     def _initialize(self) -> None:
         '''
@@ -86,6 +64,29 @@ class RDFGetter:
         self._filter_samples(d_sample)
 
         RDFGetter.samples = d_sample
+        self._tmp_path    = self._get_tmp_path()
+    # ---------------------------------------------------
+    def _get_tmp_path(self) -> str:
+        samples_str = json.dumps(RDFGetter.samples, sort_keys=True)
+        samples_bin = samples_str.encode()
+        hsh         = hashlib.sha256(samples_bin)
+        hsh         = hsh.hexdigest()
+        tmp_path    = f'/tmp/config_{self._sample}_{self._trigger}_{hsh}.json'
+
+        log.debug(f'Using config JSON: {tmp_path}')
+
+        return tmp_path
+    # ---------------------------------------------------
+    def _filter_samples(self, d_sample : dict[str,str]) -> dict[str,str]:
+        if self._tree_name == 'DecayTree':
+            return d_sample
+
+        # MCDecayTree has no friends
+        if self._tree_name == 'MCDecayTree':
+            path = d_sample[self._main_tree]
+            return {self._main_tree : path}
+
+        raise ValueError(f'Invalid tree name: {self._tree_name}')
     # ---------------------------------------------------
     def _get_section(self, yaml_path : str) -> dict:
         d_section = {'trees' : [self._tree_name]}
@@ -149,7 +150,9 @@ class RDFGetter:
 
         log.debug(f'Building datarame from {self._tmp_path}')
         rdf = RDF.Experimental.FromSpec(self._tmp_path)
-        rdf = rdf.Define('Jpsi_const_mass_M' , 'TMath::Sqrt(TMath::Power(Jpsi_DTF_HEAD_PE, 2) - TMath::Power(Jpsi_DTF_HEAD_PX, 2) - TMath::Power(Jpsi_DTF_HEAD_PY, 2) - TMath::Power(Jpsi_DTF_HEAD_PZ, 2))')
+
+        if self._tree_name == 'DecayTree':
+            rdf = rdf.Define('Jpsi_const_mass_M' , 'TMath::Sqrt(TMath::Power(Jpsi_DTF_HEAD_PE, 2) - TMath::Power(Jpsi_DTF_HEAD_PX, 2) - TMath::Power(Jpsi_DTF_HEAD_PY, 2) - TMath::Power(Jpsi_DTF_HEAD_PZ, 2))')
 
         return rdf
 # ---------------------------------------------------
