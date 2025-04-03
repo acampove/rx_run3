@@ -28,9 +28,9 @@ class Data:
 
     l_branch = [
             'brem_track_2.B_M_brem_track_2',
-            'mva.mva_cmb', 
-            'mva.mva_prc', 
-            'hop.hop_mass', 
+            'mva.mva_cmb',
+            'mva.mva_prc',
+            'hop.hop_mass',
             'hop.hop_alpha',
             'cascade.swp_cascade_mass_swp',
             'jpsi_misid.swp_jpsi_misid_mass_swp',
@@ -132,10 +132,10 @@ def _plot_brem_track_2(rdf : RDataFrame, test : str, tree : str) -> None:
     os.makedirs(test_dir, exist_ok=True)
 
     d_var= {
-            'B_M'             : [4200,  6000], 
-            'Jpsi_M'          : [2500,  3300], 
-            'L1_PT'           : [   0, 10000], 
-            'L2_PT'           : [   0, 10000], 
+            'B_M'             : [4200,  6000],
+            'Jpsi_M'          : [2500,  3300],
+            'L1_PT'           : [   0, 10000],
+            'L2_PT'           : [   0, 10000],
             'L1_HASBREMADDED' : [0, 2],
             'L2_HASBREMADDED' : [0, 2],
             }
@@ -215,4 +215,18 @@ def test_check_vars():
 
     #_check_branches(rdf)
     _print_dotted_branches(rdf)
+# ------------------------------------------------
+@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC'])
+def test_mcdecaytree(sample : str):
+    '''
+    Builds dataframe from MCDecayTree
+    '''
+    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA', tree='MCDecayTree')
+    rdf = gtr.get_rdf()
+
+    nentries = rdf.Count().GetValue()
+
+    log.info(f'Found {nentries} entries')
+
+    assert nentries > 0
 # ------------------------------------------------
