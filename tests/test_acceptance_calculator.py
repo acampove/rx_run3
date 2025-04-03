@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from ROOT                                  import RDataFrame
 from dmu.logging.log_store                 import LogStore
 from rx_efficiencies.acceptance_calculator import AcceptanceCalculator
+from rx_efficiencies.decay_names           import DecayNames as dn
 
 log=LogStore.add_logger('rx_efficiencies:test_acceptance_calculator')
 #--------------------------
@@ -32,7 +33,7 @@ def _get_rdf(sample : str, energy : str) -> RDataFrame:
 
     return rdf
 #--------------------------
-@pytest.mark.parametrize('sample', ['bdkskpiee', 'bpkskpiee', 'bsphiee'])
+@pytest.mark.parametrize('sample', [dn.bdkskpiee, dn.bpkskpiee, dn.bsphiee])
 @pytest.mark.parametrize('energy', ['8TeV', '13TeV', '14TeV'])
 def test_sample(sample : str, energy : str):
     '''
