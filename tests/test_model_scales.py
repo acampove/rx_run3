@@ -1,4 +1,9 @@
-from scales    import scales          as scl
+'''
+Module used to test ModelScales class
+'''
+
+from rx_efficiencies.model_scales    import scales          as scl
+
 from scales    import get_proc_labels 
 from log_store import log_store
 
