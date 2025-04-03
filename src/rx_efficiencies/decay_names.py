@@ -1,17 +1,49 @@
 '''
 Module used to define variables whose values are decay nicknames
 '''
+from dmu.logging.log_store import LogStore
 
-from dataclasses import dataclass
-
-@dataclass
+log=LogStore.add_logger('rx_efficiencies:decay_names')
+# -----------------------------------
 class DecayNames:
     '''
     Class used to hold names of decays for ease of use in the rest of the code
     '''
-    bpkpee     = 'bpkpee'
-    bdkskpiee  = 'bdkskpiee'
-    bpkskpiee  = 'bpkskpiee'
-    bsphiee    = 'bsphiee'
-    bpk1pipiee = 'bpk1kpipiee'
-    bpk2kpiee  = 'bpk2kpipiee'
+    bpkpee           = 'bpkpee'
+    bdkskpiee        = 'bdkskpiee'
+    bpkskpiee        = 'bpkskpiee'
+    bsphiee          = 'bsphiee'
+    bpk1kpipiee      = 'bpk1kpipiee'
+    bpk2kpipiee      = 'bpk2kpipiee'
+
+    tex              = {}
+    tex[bdkskpiee  ] = r'$B_d\to K^{*0}(\to K^+\pi^-)e^+e^-$'
+    tex[bpkskpiee  ] = r'$B^+\to K^{*+}(\to K^+\pi^0)e^+e^-$'
+    tex[bpkpee     ] = r'$B^+\to K^+e^+e^-$'
+    tex[bsphiee    ] = r'$B_s\to \phi(1020)e^+e^-$'
+    tex[bpk2kpipiee] = r'$B^+\to K_2(1430)^+(\to X \to K^+\pi^+\pi^-)e^+e^-$'
+    tex[bpk1kpipiee] = r'$B^+\to K_1(1270)^+(\to K^+\pi^+\pi^-)e^+e^-$'
+    # -----------------------------------
+    @staticmethod
+    def get_decays() -> list[str]:
+        '''
+        Returns list of decay nicknames
+        '''
+        return [
+                DecayNames.bpkpee,
+                DecayNames.bdkskpiee,
+                DecayNames.bpkskpiee,
+                DecayNames.bsphiee,
+                DecayNames.bpk1pipiee,
+                DecayNames.bpk2kpiee]
+    # -----------------------------------
+    @staticmethod
+    def tex_from_decay(decay : str) -> str:
+        '''
+        Returns latex string for a given decay nickname
+        '''
+        if decay not in DecayNames.tex:
+            for elm in DecayNames.tex:
+                log.info(elm)
+            raise ValueError(f'Decay {decay} not found')
+# -----------------------------------
