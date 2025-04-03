@@ -31,7 +31,7 @@ class ModExp(zfit.pdf.ZPDF):
         ap   = self.params['alpha']
         bt   = self.params['beta']
 
-        u   = (x - mu)
+        u   = x - mu
         val = (1 - z.exp(-ap * u)) * z.exp(-bt * u)
 
         return val
