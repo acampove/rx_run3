@@ -50,8 +50,8 @@ class DecayNames:
                 DecayNames.bdkskpiee,
                 DecayNames.bpkskpiee,
                 DecayNames.bsphiee,
-                DecayNames.bpk1pipiee,
-                DecayNames.bpk2kpiee]
+                DecayNames.bpk1kpipiee,
+                DecayNames.bpk2kpipiee]
     # -----------------------------------
     @staticmethod
     def tex_from_decay(decay : str) -> str:
