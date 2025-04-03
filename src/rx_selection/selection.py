@@ -10,6 +10,7 @@ from importlib.resources import files
 
 import yaml
 import ap_utilities.decays.utilities as aput
+from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
 
 from rx_selection import truth_matching     as tm
@@ -124,4 +125,20 @@ def _get_selection(chan : str, proj: str, q2_bin : str) -> dict[str,str]:
         d_new[cut_name] = cut_val
 
     return d_new
+#-----------------------
+def apply_full_selection(
+        rdf      : RDataFrame,
+        project  : str,
+        q2bin    : str,
+        process  : str,
+        analysis : str = None,
+        trigger  : str = None) -> dict[str,str]:
+    '''
+    Will apply full selection on dataframe
+    '''
+    d_sel = selection(project=project, q2bin=q2bin, process=process, analysis=analysis, trigger=trigger)
+    for cut_name, cut_value in d_sel.items():
+        rdf = rdf.Filter(cut_value, cut_name)
+
+    return rdf
 #-----------------------
