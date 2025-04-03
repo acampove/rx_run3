@@ -21,14 +21,15 @@ class EfficiencyCalculator:
     Class used to calculate efficiencies for partially reconstructed samples
     '''
     #------------------------------------------
-    def __init__(self, year : str, q2bin : str, proc : str = None):
+    def __init__(self, q2bin : str):
         '''
         Proc: Nickname of process, if not passed, will do all processes.
         '''
-        self._l_proc     = DecayNames.get_decays() if proc is None else proc
-        self._year       = year
         self._q2bin      = q2bin
+
+        self._year       = '2024'
         self._d_sel      = {'Process' : [], 'Value' : [], 'Error' : []}
+        self._l_proc     = DecayNames.get_decays()
         self._out_dir    = None
         self._trigger    = 'Hlt2RD_BuToKpEE_MVA'
 
@@ -69,7 +70,7 @@ class EfficiencyCalculator:
         df          = df.sort_values(by='Value')
         df.plot(x='Decay', y='Value', yerr='Error', figsize=(20, 8), kind='barh', legend=False)
 
-        plt_path = f'{plt_dir}/sel_eff.png'
+        plt_path = f'{plt_dir}/sel_eff_{self._q2bin}.png'
         log.debug(f'Saving to: {plt_path}')
 
         plt.grid()
