@@ -14,10 +14,10 @@ import matplotlib.pyplot        as plt
 
 from ROOT                           import RDataFrame
 from dmu.pdataframe                 import utilities as put
-from dmu.generic.version_management import get_last_version
 from dmu.logging.log_store          import LogStore
 
 from rx_efficiencies.acceptance_calculator import AcceptanceCalculator
+from rx_efficiencies.decay_names           import DecayNames
 
 log = LogStore.add_logger('rx_efficiencies:calculate_acceptance')
 #----------------------------------
@@ -27,17 +27,6 @@ class Data:
     '''
     out_dir : str
     l_energy= ['8TeV', '13TeV', '14TeV']
-#----------------------------------
-def _get_tex():
-    d_tex                = {}
-    d_tex['bdkskpiee'  ] = r'$B_d\to K^{*0}(\to K^+\pi^-)e^+e^-$'
-    d_tex['bpkskpiee'  ] = r'$B^+\to K^{*+}(\to K^+\pi^0)e^+e^-$'
-    d_tex['B2Kee'      ] = r'$B^+\to K^+e^+e^-$'
-    d_tex['bsphiee'    ] = r'$B_s\to \phi(1020)e^+e^-$'
-    d_tex['bpk2kpipiee'] = r'$B^+\to K_2(1430)^+(\to X \to K^+\pi^+\pi^-)e^+e^-$'
-    d_tex['bpk1kpipiee'] = r'$B^+\to K_1(1270)^+(\to K^+\pi^+\pi^-)e^+e^-$'
-
-    return d_tex
 #----------------------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Used to dump JSON file with acceptances')
@@ -104,14 +93,13 @@ def _get_df(energy : str) -> pnd.DataFrame:
     if df is not None:
         return df
 
-    d_tex  = _get_tex()
     d_path = _get_paths(energy)
     d_out  = {'Process' : [], 'Physical' : [], 'LHCb' : []}
     for decay, path in d_path.items():
         log.debug(f'Checking {decay}')
         acc_phy, acc_lhc = _get_acceptances(decay, path, energy)
 
-        tex_decay = d_tex[decay]
+        tex_decay = DecayNames.tex_from_decay(decay)
 
         d_out['Process' ].append(tex_decay)
         d_out['Physical'].append(acc_phy)
