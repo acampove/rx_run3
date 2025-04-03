@@ -18,7 +18,7 @@ def test_simple(q2bin : str):
     for multiple MC samples
     '''
     obj         = EfficiencyCalculator(proc=None, year='2024', q2bin=q2bin)
-    obj.out_dir = '/tmp/tests/rx_efficiencies/efficiency_calculator/simple/{q2bin}'
+    obj.out_dir = f'/tmp/tests/rx_efficiencies/efficiency_calculator/simple/{q2bin}'
     df          = obj.get_stats()
 
     print(df)
