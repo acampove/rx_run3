@@ -50,7 +50,7 @@ def to_yaml(df : pnd.DataFrame, path : str):
     dir_path = os.path.dirname(path)
     os.makedirs(dir_path, exist_ok=True)
 
-    data = df.to_dict(orient='records')
+    data = df.to_dict()
 
     with open(path, 'w', encoding='utf-8') as ofile:
         yaml.safe_dump(data, ofile)
