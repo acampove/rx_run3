@@ -17,7 +17,6 @@ class RDFGetter:
     '''
     Class meant to load dataframes with friend trees
     '''
-    samples : dict[str,str]
     # ---------------------------------------------------
     def __init__(self, sample : str, trigger : str, tree : str = 'DecayTree'):
         '''
@@ -28,6 +27,7 @@ class RDFGetter:
         self._sample      = sample
         self._trigger     = trigger
         self._main_tree   = 'main' # This is the label of the main (not the friends) tree
+        self._samples     : dict[str,str]
 
         self._tree_name   = tree
         self._tmp_path    : str
@@ -61,12 +61,12 @@ class RDFGetter:
             d_sample[sample_name] = path
             log.info(f'    {sample_name}')
 
-        d_sample          = self._filter_samples(d_sample)
-        RDFGetter.samples = d_sample
-        self._tmp_path    = self._get_tmp_path()
+        d_sample        = self._filter_samples(d_sample)
+        self._samples   = d_sample
+        self._tmp_path  = self._get_tmp_path()
     # ---------------------------------------------------
     def _get_tmp_path(self) -> str:
-        samples_str = json.dumps(RDFGetter.samples, sort_keys=True)
+        samples_str = json.dumps(self._samples, sort_keys=True)
         samples_bin = samples_str.encode()
         hsh         = hashlib.sha256(samples_bin)
         hsh         = hsh.hexdigest()
@@ -129,7 +129,7 @@ class RDFGetter:
         d_data = {'samples' : {}, 'friends' : {}}
 
         log.info('Adding samples')
-        for sample, yaml_path in RDFGetter.samples.items():
+        for sample, yaml_path in self._samples.items():
             d_section = self._get_section(yaml_path)
 
             log.debug(f'    {sample}')
