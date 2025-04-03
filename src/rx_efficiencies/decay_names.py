@@ -13,6 +13,9 @@ class DecayNames:
     # correspondence between variable and name
     # of sample when e.g. saving to disk
     # --------------------------
+    # NOTE: The names have to start with bp,bu or bs,
+    # so that code downstream uses this name to pick up hadronization fractions
+
     bpkpee           = 'bpkpee'
     bdkskpiee        = 'bdkskpiee'
     bpkskpiee        = 'bpkskpiee'
