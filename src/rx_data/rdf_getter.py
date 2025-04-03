@@ -19,11 +19,11 @@ class RDFGetter:
     '''
     samples : dict[str,str]
     # ---------------------------------------------------
-    def __init__(self, sample : str, trigger : str, tree : str):
+    def __init__(self, sample : str, trigger : str, tree : str = 'DecayTree'):
         '''
         Sample: Sample's nickname, e.g. DATA_24_MagDown_24c2
         Trigger: HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA
-        Tree: E.g. DecayTree or MCDecayTree
+        Tree: E.g. DecayTree or MCDecayTree, default DecayTree
         '''
         self._sample      = sample
         self._trigger     = trigger
