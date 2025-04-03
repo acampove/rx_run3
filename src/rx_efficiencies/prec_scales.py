@@ -3,37 +3,35 @@ Module containing class ModelScales and helper functions
 '''
 
 import os
-import json
 import math
 from importlib.resources import files
 
+import yaml
 import numpy
-import pandas            as pnd
-import jacobi            as jac
-from dmu.logging.log_store          import LogStore
-from dmu.generic.version_management import get_last_version
+import pandas                   as pnd
+import jacobi                   as jac
+import dmu.pdataframe.utilities as put
 
+from dmu.logging.log_store                 import LogStore
+from dmu.generic.version_management        import get_last_version
+from rx_efficiencies.decay_names           import DecayNames as dn
+from rx_efficiencies.efficiency_calculator import EfficiencyCalculator
 
-log=LogStore.add_logger('rx_efficiencies:model_scales')
+log=LogStore.add_logger('rx_efficiencies:prec_scales')
 #------------------------------------------
-class ModelScales:
+class PrecScales:
     '''
     Class used to calculate scale factor between yields of partially reconstructed component and signal
     '''
     #------------------------------------------
-    def __init__(self, dset : str, trig : str, kind : str):
-        self._dset = dset
-        self._trig = trig
-        self._kind = kind
+    def __init__(self, proc : str, q2bin : str):
+        self._proc   = proc
+        self._q2bin  = q2bin
 
-        self._l_kind = ['bpks', 'bdks', 'bsph', 'bpk1', 'bpk2']
-        self._l_trig = ['ETOS', 'GTIS']
-        self._l_year = ['2011', '2012', '2015', '2016', '2017', '2018']
-        self._l_dset = self._l_year + ['r1', 'r2p1', 'all']
+        self._d_frbf : dict
+        self._df_eff : pnd.DataFrame
 
-        self._d_frbf = None
-        self._df_eff = None
-
+        self._trigger     = 'Hlt2RD_BuToKpEE_MVA'
         self._initialized = False
     #------------------------------------------
     def _check_arg(self, l_val, val, name):
@@ -50,10 +48,6 @@ class ModelScales:
         self._load_fractions()
         self._load_efficiencies()
 
-        self._check_arg(self._l_kind, self._kind, 'Background')
-        self._check_arg(self._l_dset, self._dset, 'Dataset')
-        self._check_arg(self._l_trig, self._trig, 'Trigger')
-
         self._initialized = True
     #------------------------------------------
     def _load_fractions(self):
@@ -61,122 +55,130 @@ class ModelScales:
 
         frbf_dir  = files('rx_efficiencies_data').joinpath('prec_sf')
         frbf_path = get_last_version(dir_path=frbf_dir, version_only=False)
-        frbf_path = f'{frbf_path}/fr_bf.json'
+        frbf_path = f'{frbf_path}/fr_bf.yaml'
 
         log.debug(f'Picking up branching fractions from: {frbf_path}')
         with open(frbf_path, encoding='utf-8') as ifile:
-            self._d_frbf = json.load(ifile)
+            self._d_frbf = yaml.safe_load(ifile)
+    #------------------------------------------
+    def _calculate_efficiencies(self, yaml_path : str) -> None:
+        log.debug('Efficiencies not found, calculating them')
+        out_dir     = os.path.dirname(yaml_path)
+        obj         = EfficiencyCalculator(q2bin=self._q2bin)
+        obj.out_dir = out_dir
+        df          = obj.get_stats()
+
+        put.to_yaml(df, yaml_path)
     #------------------------------------------
     def _load_efficiencies(self):
         log.debug('Getting efficiencies')
 
         eff_dir  = files('rx_efficiencies_data').joinpath('prec_sf')
         eff_path = get_last_version(dir_path=eff_dir, version_only=False)
-        eff_path = f'{eff_path}/{self._dset}_{self._trig}_{self._kind}.json'
+        eff_path = f'{eff_path}/efficiencies_{self._q2bin}.yaml'
 
-        df      = pnd.read_json(eff_path)
-        df.Year = df.Year.astype(str)
+        if not os.path.isfile(eff_path):
+            self._calculate_efficiencies(yaml_path=eff_path)
+
+        with open(eff_path, encoding='utf-8') as ifile:
+            data = yaml.safe_load(ifile)
+
+        df = pnd.DataFrame(data)
 
         self._df_eff = df
     #------------------------------------------
-    def _get_fr(self, kind):
-        key= 'bpkp' if kind == 'sig' else self._kind
-        fx = {'bpkp' : 'fu', 'bpks' : 'fu', 'bdks' : 'fd', 'bsph' : 'fs', 'bpk1' : 'fu', 'bpk2' : 'fu'}[key]
+    def _get_fr(self, proc : str) -> float:
+        '''
+        Returns hadronization fraction for given process
+        '''
+        if   proc.startswith('bp'):
+            fx = 'fu'
+        elif proc.startswith('bd'):
+            fx = 'fd'
+        elif proc.startswith('bs'):
+            fx = 'fs'
+        else:
+            raise ValueError(f'Cannot find hadronization fraction for: {proc}')
+
         fx = self._d_frbf['fr'][fx]
 
         return fx
     #------------------------------------------
-    def _mult_brs(self, br_1, br_2):
-        l_br_val = [br_1[0], br_2[0]]
-        br_cov   = [[br_1[1] ** 2, 0], [0, br_2[1] ** 2]]
-        val, var = jac.propagate(lambda x : x[0] * x[1], l_br_val, br_cov)
+    def _mult_brs(self, l_br : list[tuple[float,float]]):
+        log.debug('Multiplying branching fractions')
 
-        return val, math.sqrt(var)
+        l_br_val = [ float(br[0]) for br in l_br ] # These numbers come from YAML files
+        l_br_err = [ float(br[1]) for br in l_br ] # when using "e" in scientific notation, these numbers are made into strings
+        br_cov   = numpy.diag(l_br_err) ** 2
+        val, var = jac.propagate(math.prod, l_br_val, br_cov)
+        err      = math.sqrt(var)
+
+        return val, err
     #------------------------------------------
-    def _get_br(self, kind):
-        if   kind == 'sig':
-            br = self._d_frbf['bf']['bpkp']
-            return br
+    def _get_br(self, proc : str) -> tuple[float,float]:
+        log.debug(f'Calculating BR for {proc}')
 
-        key = self._kind
+        l_dec = dn.subdecays_from_decay(proc)
+        l_bf  = [ self._d_frbf['bf'][dec] for dec in l_dec ]
 
-        if   key in 'bpk1':
-            b1 = self._d_frbf['bf'][   key]
-            b2 = self._d_frbf['bf']['k13h']
-        elif key in 'bpk2':
-            b1 = self._d_frbf['bf'][   key]
-            b2 = self._d_frbf['bf']['k23h']
-        elif key == 'bpks':
-            b1 = self._d_frbf['bf'][   key]
-            b2 = self._d_frbf['bf']['k+kp']
-        elif key == 'bdks':
-            b1 = self._d_frbf['bf'][   key]
-            b2 = self._d_frbf['bf']['kokp']
-        elif key == 'bsph':
-            b1 = self._d_frbf['bf'][   key]
-            b2 = self._d_frbf['bf']['phkk']
-        else:
-            log.error(f'Invalid key: {key}')
-            raise
-
-        br = self._mult_brs(b1, b2)
-
-        return br
+        return self._mult_brs(l_bf)
     #------------------------------------------
-    def _filter_by_dataset(self, val):
-        if   self._dset == 'all':
-            return True
-        elif self._dset == 'r1':
-            return (val == '2011') or (val == '2012')
-        elif self._dset == 'r2p1':
-            return val == '2015' or val == '2016'
-        elif self._dset in self._l_year:
-            return val == self._dset
-        else:
-            log.error(f'Invalid dataset: {self._dset}')
-            raise ValueError
-    #------------------------------------------
-    def _get_ef(self, kind):
-        proc= 'bpkp' if kind == 'sig' else self._kind
-        df  = self._df_eff
+    def _get_ef(self, proc : str):
+        log.debug(f'Calculating efficiencies for {proc}')
 
-        df  = df[df.Trigger == self._trig]
-        df  = df[df.Process ==       proc]
-        df  = df[df.Year.apply(self._filter_by_dataset)]
+        df = self._df_eff
+        df = df[df.Process == proc]
 
-        passed = df.Passed.sum()
-        total  = df.Total.sum()
+        if len(df) != 1:
+            print(df)
+            raise ValueError('Expected one and only one row for process {proc}')
 
-        eff, eup, edn = utils.get_eff_err(passed, total)
-        err = 0.5 * (eup + edn)
+        passed, total = df.iloc[-1][['Passed', 'Total']]
+
+        eff = passed / total
+        err = math.sqrt(eff * (1 - eff) / total)
 
         return eff, err
     #------------------------------------------
-    def _print_vars(self, l_tup):
+    def _print_vars(self, l_tup : list[tuple[float,float]], proc : str) -> None:
+        log.debug('')
+        log.debug(f'Decay: {proc}')
         log.debug('-' * 20)
         log.debug(f'{"Var":<20}{"Value":<20}{"Error":<20}')
         log.debug('-' * 20)
-        for (val, err), name in zip(l_tup, ['fr sig', 'br sig', 'eff sig', 'fr bkg', 'br bkg', 'eff bkg']):
+        for (val, err), name in zip(l_tup, ['fr', 'br', 'eff']):
             log.debug(f'{name:<20}{val:<20.3e}{err:<20.3e}')
         log.debug('-' * 20)
     #------------------------------------------
-    def get_scale(self):
+    def get_scale(self, signal : str) -> tuple[float,float]:
+        '''
+        Returns scale factor k and error, meant to be used in:
+
+        Nprec = k * Nsignal
+
+        reparametrization, during fit.
+
+        Parameters
+        -----------------------
+        signal: String representing signal WRT which to scale, e.g. bpkpee
+        '''
         self._initialize()
 
-        fr_sig = self._get_fr('sig')
-        br_sig = self._get_br('sig')
-        ef_sig = self._get_ef('sig')
+        fr_bkg = self._get_fr(self._proc)
+        br_bkg = self._get_br(self._proc)
+        ef_bkg = self._get_ef(self._proc)
 
-        fr_bkg = self._get_fr('bkg')
-        br_bkg = self._get_br('bkg')
-        ef_bkg = self._get_ef('bkg')
+        fr_sig = self._get_fr(signal)
+        br_sig = self._get_br(signal)
+        ef_sig = self._get_ef(signal)
 
         l_tup = [fr_sig, br_sig, ef_sig, fr_bkg, br_bkg, ef_bkg]
         l_val = [ tup[0] for tup in l_tup]
         l_err = [ tup[1] for tup in l_tup]
         cov   = numpy.diag(l_err) ** 2
 
-        self._print_vars(l_tup)
+        self._print_vars(l_tup[:3], proc=    signal)
+        self._print_vars(l_tup[3:], proc=self._proc)
 
         val, var = jac.propagate(lambda x : (x[3] * x[4] * x[5]) / (x[0] * x[1] * x[2]), l_val, cov)
         val = float(val)

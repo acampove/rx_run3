@@ -41,9 +41,16 @@ def test_all_datasets(q2bin : str, process : str):
     '''
     Tests retrieval of scales between signal and PRec yields
     '''
-    obj      = PrecScales(proc=process, q2bin=q2bin)
-    val, err = obj.get_scale(signal='bpkpee')
+    signal   = 'bpkpee'
 
-    assert val < 1   # Prec should be smaller than signal
-    assert err < val # Error smaller than value
+    obj      = PrecScales(proc=process, q2bin=q2bin)
+    val, err = obj.get_scale(signal=signal)
+
+    if process != signal:
+        assert val  < 1   # Prec should be smaller than signal
+    else:
+        assert val == 1   # If this runs on signal, scale is 1
+
+    if val > 0:          # If no events pass selection, error will be zero, as well as value
+        assert err < val # Error smaller than value
 #-------------------------------
