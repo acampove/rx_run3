@@ -2,6 +2,7 @@
 Module containing EfficiencyCalculator class
 '''
 import os
+import math
 import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
@@ -56,12 +57,16 @@ class EfficiencyCalculator:
         if self._out_dir is None:
             return
 
+        log.debug('Plotting selection efficiencies')
+
         plt_dir = f'{self._out_dir}/plots'
         os.makedirs(plt_dir, exist_ok=True)
         df=pnd.DataFrame(self._d_sel)
         df.plot(x='Process', y='Value', yerr='Error', marker='o')
 
         plt_path = f'{plt_dir}/sel_eff.png'
+        log.debug(f'Saving to: {plt_path}')
+
         plt.grid()
         plt.savefig(plt_path)
         plt.close('all')
