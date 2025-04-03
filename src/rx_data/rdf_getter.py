@@ -61,8 +61,7 @@ class RDFGetter:
             d_sample[sample_name] = path
             log.info(f'    {sample_name}')
 
-        self._filter_samples(d_sample)
-
+        d_sample          = self._filter_samples(d_sample)
         RDFGetter.samples = d_sample
         self._tmp_path    = self._get_tmp_path()
     # ---------------------------------------------------
