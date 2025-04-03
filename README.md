@@ -614,6 +614,19 @@ put.df_to_tex(df,
         caption  = 'some caption')
 ```
 
+### Dataframe to and from YAML
+
+This extends the existing JSON functionality
+
+```python
+import dmu.pdataframe.utilities as put
+
+df_1 = _get_df()
+put.to_yaml(df_1, yml_path)
+df_2 = put.from_yaml(yml_path)
+```
+
+and is meant to be less verbose than doing it through the YAML module.
 # Rdataframes
 
 These are utility functions meant to be used with ROOT dataframes.

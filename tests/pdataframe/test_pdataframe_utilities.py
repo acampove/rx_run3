@@ -60,3 +60,15 @@ def test_column_format():
     df = _get_df()
     put.df_to_tex(df, f'{Data.out_dir}/df_to_tex/column_format.tex', column_format='lrr')
 # --------------------------------------
+def test_to_from_yaml():
+    '''
+    Tests saving dataframe to YAML
+    '''
+    yml_path = '/tmp/tests/dmu/pdataframe/utilities/to_yaml/file.yaml'
+
+    df_1 = _get_df()
+    put.to_yaml(df_1, yml_path)
+    df_2 = put.from_yaml(yml_path)
+
+    assert df_1.equals(df_2)
+# --------------------------------------

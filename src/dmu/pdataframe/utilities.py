@@ -2,12 +2,12 @@
 Module containing utilities for pandas dataframes
 '''
 import os
+import yaml
 import pandas as pnd
 
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:pdataframe:utilities')
-
 # -------------------------------------
 def df_to_tex(df         : pnd.DataFrame,
               path       : str,
@@ -41,4 +41,29 @@ def df_to_tex(df         : pnd.DataFrame,
     buf = st.to_latex(buf=path, hrules=True, **kwargs)
 
     return buf
+# -------------------------------------
+def to_yaml(df : pnd.DataFrame, path : str):
+    '''
+    Takes a dataframe and the path to a yaml file
+    Makes the directory path if not found and saves data in YAML file
+    '''
+    dir_path = os.path.dirname(path)
+    os.makedirs(dir_path, exist_ok=True)
+
+    data = df.to_dict(orient='records')
+
+    with open(path, 'w', encoding='utf-8') as ofile:
+        yaml.safe_dump(data, ofile)
+# -------------------------------------
+def from_yaml(path : str) -> pnd.DataFrame:
+    '''
+    Takes path to a yaml file
+    Makes dataframe from it and returns it
+    '''
+    with open(path, encoding='utf-8') as ifile:
+        data = yaml.safe_load(ifile)
+
+    df = pnd.DataFrame(data)
+
+    return df
 # -------------------------------------
