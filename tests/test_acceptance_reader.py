@@ -5,17 +5,12 @@ Modules used to test AcceptanceReader class
 import pytest
 from dmu.logging.log_store             import LogStore
 from rx_efficiencies.acceptance_reader import AcceptanceReader
+from rx_efficiencies.decay_names       import DecayNames
 
 log=LogStore.add_logger('rx_efficiencies:test_acceptance_reader')
 #------------------------------------
-class Data:
-    '''
-    Data class
-    '''
-    l_process = ['bdkskpiee', 'bpk1kpipiee', 'bpk2kpipiee', 'bpkskpiee', 'bsphiee']
-#------------------------------------
 @pytest.mark.parametrize('year'   , ['2018', '2024'])
-@pytest.mark.parametrize('process', Data.l_process)
+@pytest.mark.parametrize('process', DecayNames.get_decays())
 def test_simple(year : str, process : str):
     '''
     Test reading acceptances from JSON files for multiple processes and years
