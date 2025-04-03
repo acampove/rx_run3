@@ -102,27 +102,6 @@ class EfficiencyCalculator:
 
         return rdf.Count().GetValue()
     #------------------------------------------
-    def _get_year_entries(self, df : pnd.DataFrame, year : str) -> int:
-        df_f = df
-        df_f = df_f[(df_f.Year     == str(year)) | (df_f.Year     == int(year))]
-
-        if len(df_f) not in [1, 2]:
-            print(df)
-            print(df.dtypes)
-            log.info('--->')
-            print(df_f)
-            raise ValueError('Found more than two or fewer than one entries (polarities) after fully filtering')
-
-        l_pol=df_f.Polarity.tolist()
-        s_pol=set(l_pol)
-        if   len(df_f) == 2 and s_pol != {'MagUp', 'MagDown'}:
-            raise ValueError(f'Wrong polarities: {s_pol}')
-
-        if len(df_f) == 1:
-            log.warning(f'Found only polarity: {s_pol}')
-
-        return df_f.Events.sum()
-    #------------------------------------------
     def _get_rdf(self, proc : str, tree_name : str) -> RDataFrame:
         sample = DecayNames.sample_from_decay(proc)
 
