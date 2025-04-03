@@ -61,13 +61,22 @@ class EfficiencyCalculator:
 
         plt_dir = f'{self._out_dir}/plots'
         os.makedirs(plt_dir, exist_ok=True)
-        df=pnd.DataFrame(self._d_sel)
-        df.plot(x='Process', y='Value', yerr='Error', marker='o')
+
+        df          = pnd.DataFrame(self._d_sel)
+        df['Decay'] = df.Process.map(DecayNames.tex)
+        df['Value'] = df.Value * 100
+        df['Error'] = df.Error * 100
+        df          = df.sort_values(by='Value')
+        df.plot(x='Decay', y='Value', yerr='Error', figsize=(20, 8), kind='barh', legend=False)
 
         plt_path = f'{plt_dir}/sel_eff.png'
         log.debug(f'Saving to: {plt_path}')
 
         plt.grid()
+        plt.title(f'$q^2$: {self._q2bin}')
+        plt.ylabel('')
+        plt.xlabel(r'$\varepsilon_{sel}$[%]')
+        plt.tight_layout()
         plt.savefig(plt_path)
         plt.close('all')
     #------------------------------------------
