@@ -59,13 +59,14 @@ class DecayNames:
         '''
         Returns list of decay nicknames
         '''
+        # TODO: Need to find K1 and K2 branching fractions. Are these decays important?
         return [
                 DecayNames.bpkpee,
                 DecayNames.bdkskpiee,
                 DecayNames.bpkskpiee,
-                DecayNames.bsphiee,
-                DecayNames.bpk1kpipiee,
-                DecayNames.bpk2kpipiee]
+                DecayNames.bsphiee]
+                #DecayNames.bpk1kpipiee,
+                #DecayNames.bpk2kpipiee]
     # -----------------------------------
     @staticmethod
     def tex_from_decay(decay : str) -> str:
