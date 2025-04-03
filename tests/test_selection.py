@@ -19,15 +19,6 @@ class Data:
 # --------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    RDFGetter.samples = {
-            'main'      : f'{Data.DATADIR}/samples/main.yaml',
-            'mva'       : f'{Data.DATADIR}/samples/mva.yaml',
-            'hop'       : f'{Data.DATADIR}/samples/hop.yaml',
-            'cascade'   : f'{Data.DATADIR}/samples/cascade.yaml',
-            'jpsi_misid': f'{Data.DATADIR}/samples/jpsi_misid.yaml',
-            'ecalo_bias': f'{Data.DATADIR}/samples/ecalo_bias.yaml',
-            }
-
     LogStore.set_level('rx_selection:selection'     , 10)
     LogStore.set_level('rx_selection:test_selection', 10)
 # --------------------------
