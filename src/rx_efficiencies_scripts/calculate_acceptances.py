@@ -124,10 +124,13 @@ def _save_tables(df, energy):
 def _plot_acceptance(df, kind):
     _, ax = plt.subplots(figsize=(8,6))
     for process, df_p in df.groupby('Process'):
-        df_p.plot(x='Energy', y=kind, ax=ax, label=process)
+        df_p.plot(x='Energy', y=kind, ax=ax, label=process, figsize=(12, 8))
 
     plt.ylim(0.0, 0.20)
     plt.grid()
+    plt.title(kind)
+    plt.ylabel('Acceptance')
+    plt.xlabel('')
     plot_path = f'{Data.out_dir}/acceptances_{kind}.png'
     log.info(f'Saving to: {plot_path}')
     plt.savefig(plot_path)
