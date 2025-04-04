@@ -6,6 +6,7 @@ import os
 import pytest
 import matplotlib.pyplot as plt
 
+from conftest                       import ScalesData
 from dmu.logging.log_store          import LogStore
 from rx_efficiencies.decay_names    import DecayNames as dn
 from rx_efficiencies.prec_scales    import PrecScales
@@ -53,4 +54,6 @@ def test_all_datasets(q2bin : str, process : str):
 
     if val > 0:          # If no events pass selection, error will be zero, as well as value
         assert err < val # Error smaller than value
+
+    ScalesData.collect(process, q2bin, val, err)
 #-------------------------------
