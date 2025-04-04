@@ -287,8 +287,6 @@ class FitComponent:
             - True : When a dataframe is not passed, the parameters must exist to be loaded
             - False: When a dataframe is not passed, if parameters do not exist will not fit PDF. Used for PDFs that have no MC, e.g. Combinatorial
         '''
-        pars_path= f'{self._out_dir}/fit.json'
-
         if self._pdf is None:
             log.info('PDF not found, building KDE')
             self._pdf = self._get_kde_pdf()
@@ -309,6 +307,7 @@ class FitComponent:
 
             return Parameter()
 
+        pars_path= f'{self._out_dir}/parameters.json'
         if os.path.isfile(pars_path):
             log.info(f'Fit parameters for component {self._name} found, loading: {pars_path}')
             par = Parameter.from_json(pars_path)
