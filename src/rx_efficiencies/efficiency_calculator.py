@@ -70,7 +70,7 @@ class EfficiencyCalculator:
         df          = df.sort_values(by='Value')
         df.plot(x='Decay', y='Value', yerr='Error', figsize=(20, 8), kind='barh', legend=False)
 
-        plt_path = f'{plt_dir}/sel_eff_{self._q2bin}.png'
+        plt_path = f'{plt_dir}/rec_sel_eff_{self._q2bin}.png'
         log.debug(f'Saving to: {plt_path}')
 
         plt.grid()
