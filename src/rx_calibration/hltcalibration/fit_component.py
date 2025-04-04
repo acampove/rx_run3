@@ -175,8 +175,10 @@ class FitComponent:
         else:
             weights_column = self._fit_cfg['weights_column']
 
-        rdf            = self._add_weights(self._rdf, weights_column)
-        d_data         = rdf.AsNumpy([self._obs_name, weights_column])
+        log.debug(f'Using {weights_column} name for weights column')
+
+        rdf     = self._add_weights(self._rdf, weights_column)
+        d_data  = rdf.AsNumpy([self._obs_name, weights_column])
 
         arr_obs = d_data[self._obs_name]
         arr_wgt = d_data[weights_column]
@@ -185,7 +187,13 @@ class FitComponent:
         self._yield_value = float(numpy.sum(arr_wgt))
         self._yield_error = float(numpy.sqrt(numpy.sum(arr_wgt * arr_wgt)))
 
-        df= data.to_pandas()
+        if self._yield_value == 0:
+            log.warning('No entries found, cannot build KDE')
+            self._plot_placeholder(text='No entries')
+            return None
+
+        df = pnd.DataFrame({self._obs_name : arr_obs, weights_column : arr_wgt})
+
         df.to_json(f'{self._out_dir}/data.json', indent=2)
 
         return data
@@ -198,9 +206,7 @@ class FitComponent:
         obj=ZFitPlotter(data=data, model=model)
         obj.plot(**self._plt_cfg)
 
-        arr_val = data.to_numpy()
-        nentries= len(arr_val)
-        title   = f'Entries={nentries}'
+        title = f'Entries={self._yield_value:.0f}'
 
         obj.axs[0].set_title(title)
         obj.axs[0].set_ylim(bottom=0)
@@ -258,12 +264,8 @@ class FitComponent:
             log.info(f'{name:<20}{"-->":<20}{val:<20.3f}')
     # --------------------
     def _get_kde_pdf(self) -> Union[zpdf, None]:
-        data    = self._get_data()
-        arr_val = data.to_numpy()
-        nentries= len(arr_val)
-        if nentries == 0:
-            log.warning('No entries found, cannot build KDE')
-            self._plot_placeholder(text='No entries')
+        data = self._get_data()
+        if data is None:
             return None
 
         cfg_kde = self._fit_cfg['config'][self._name]['cfg_kde']
