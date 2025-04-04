@@ -13,7 +13,8 @@ import tensorflow        as tf
 
 from ROOT                   import RDataFrame
 from zfit.core.data         import Data      as zdata
-from zfit.core.basepdf      import BasePDF
+from zfit.core.interfaces   import ZfitSpace as zobs
+from zfit.core.basepdf      import BasePDF   as zpdf
 from dmu.logging.log_store  import LogStore
 from dmu.stats.utilities    import print_pdf
 from dmu.stats.zfit_plotter import ZFitPlotter
@@ -46,7 +47,11 @@ class FitComponent:
     ```
     '''
     # --------------------
-    def __init__(self, cfg : dict, rdf : Union[RDataFrame,None], pdf : Union[BasePDF,None], obs = None):
+    def __init__(self,
+                 cfg      : dict,
+                 rdf      : Union[RDataFrame,None],
+                 pdf      : Union[zpdf,None],
+                 obs      : zobs = None):
         '''
         obs: ZfitSpace instance, not needed unless no PDF was passed
         '''
@@ -93,7 +98,7 @@ class FitComponent:
         return self._name
     # --------------------
     @property
-    def pdf(self) -> BasePDF:
+    def pdf(self) -> zpdf:
         '''
         Returns PDF
         '''
@@ -179,7 +184,7 @@ class FitComponent:
 
         return data
     # --------------------
-    def _plot_fit(self, data : zdata, model : BasePDF):
+    def _plot_fit(self, data : zdata, model : zpdf):
         if self._plt_cfg is None:
             log.warning('No plotting configuration found, will skip plotting')
             return
@@ -250,7 +255,7 @@ class FitComponent:
 
             log.info(f'{name:<20}{"-->":<20}{val:<20.3f}')
     # --------------------
-    def _get_kde_pdf(self) -> Union[BasePDF, None]:
+    def _get_kde_pdf(self) -> Union[zpdf, None]:
         data    = self._get_data()
         arr_val = data.to_numpy()
         nentries= len(arr_val)
@@ -327,13 +332,13 @@ class FitComponent:
 # ----------------------------------------
 class NoFitDataFound(Exception):
     '''
-    Meant to be used if a FitComponent is requested but dataframe is None 
+    Meant to be used if a FitComponent is requested but dataframe is None
     '''
     def __init__(self, message='No ROOT dataframe provided'):
         self.message = message
         super().__init__(self.message)
 # ----------------------------------------
-def load_fit_component(cfg : dict, pdf : BasePDF) -> Union[FitComponent, None]:
+def load_fit_component(cfg : dict, pdf : zpdf) -> Union[FitComponent, None]:
     '''
     Will return a FitComponent instance, if parameters found
     otherwise will return None
