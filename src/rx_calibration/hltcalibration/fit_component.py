@@ -3,6 +3,7 @@ Module holding FitComponent class
 '''
 
 import os
+import math
 from typing import Union
 
 import numpy
@@ -76,6 +77,8 @@ class FitComponent:
 
         self._yield_value : float
         self._yield_error : float
+
+        self._nentries_dummy_data = 10_000
     # --------------------
     def _get_minimizer(self) -> Union[AnealingMinimizer,None]:
         if self._fit_cfg is None:
@@ -277,7 +280,10 @@ class FitComponent:
     # --------------------
     def _get_data_from_pdf(self):
         if not hasattr(self._pdf, 'arr_wgt') or not hasattr(self._pdf, 'arr_mass'):
-            return self._pdf.create_sampler(n=10_000)
+            self._yield_value = self._nentries_dummy_data
+            self._yield_error = math.sqrt(self._nentries_dummy_data)
+
+            return self._pdf.create_sampler(n=nentries)
 
         data = zfit.Data.from_numpy(obs=self._pdf.space, array=self._pdf.arr_mass, weights=self._pdf.arr_wgt)
 
@@ -308,6 +314,7 @@ class FitComponent:
         if self._rdf is None and not must_load_pars:
             log.info('Dataset not found, returning not fitted PDF')
             data = self._get_data_from_pdf()
+            self._plot_fit(data, self._pdf)
 
             return Parameter()
 
