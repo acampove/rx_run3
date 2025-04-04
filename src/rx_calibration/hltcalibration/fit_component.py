@@ -283,7 +283,7 @@ class FitComponent:
             self._yield_value = self._nentries_dummy_data
             self._yield_error = math.sqrt(self._nentries_dummy_data)
 
-            return self._pdf.create_sampler(n=nentries)
+            return self._pdf.create_sampler(n=self._nentries_dummy_data)
 
         data = zfit.Data.from_numpy(obs=self._pdf.space, array=self._pdf.arr_mass, weights=self._pdf.arr_wgt)
 
