@@ -161,3 +161,28 @@ def test_pdf():
 
     obj= FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
     pdf= obj.pdf
+# --------------------------------------------
+def test_cache_kde_pdf():
+    '''
+    Test using KDE
+    '''
+    name = 'kde'
+
+    pdf= tut.get_signal_pdf(obs=Data.obs)
+    rdf= tut.rdf_from_pdf(pdf=pdf, nentries=Data.nentries)
+    cfg= _get_conf(name)
+    cfg['fitting'] = {
+            'config' : {
+                name : {
+                    'cfg_kde':
+                    {
+                        'bandwidth': 20,
+                        'padding'  : {'lowermirror': 0.5, 'uppermirror': 0.5},
+                        },
+                    }
+                }
+            }
+
+    obj= FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
+    pdf= obj.pdf
+# --------------------------------------------
