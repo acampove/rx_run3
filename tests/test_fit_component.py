@@ -86,6 +86,18 @@ def test_kde_pdf():
     obj= FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
     _  = obj.run()
 # --------------------------------------------
+def test_no_data():
+    '''
+    Simplest test of MCFitter
+    '''
+    log.info('')
+
+    pdf= tut.get_toy_pdf(kind='sign', obs=Data.obs)
+    cfg= _get_conf('no_data')
+
+    obj=FitComponent(cfg=cfg, rdf=None, pdf=pdf)
+    _  =obj.run()
+# --------------------------------------------
 def test_load_pdf_fail():
     '''
     Tests that if PDF does not exist, loader returns None 
