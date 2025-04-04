@@ -136,3 +136,28 @@ def test_kde_empty_pdf():
     obj= FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
     _  = obj.run()
 # --------------------------------------------
+def test_pdf():
+    '''
+    Test retrieving PDF only 
+    '''
+    name = 'kde_empty'
+
+    pdf= tut.get_signal_pdf(obs=Data.obs)
+    rdf= tut.rdf_from_pdf(pdf=pdf, nentries=Data.nentries)
+    rdf= rdf.Filter('mass != mass')
+
+    cfg= _get_conf(name)
+    cfg['fitting'] = {
+            'config' : {
+                name : {
+                    'cfg_kde':
+                    {
+                        'bandwidth': 20,
+                        'padding'  : {'lowermirror': 0.5, 'uppermirror': 0.5},
+                        },
+                    }
+                }
+            }
+
+    obj= FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
+    pdf= obj.pdf
