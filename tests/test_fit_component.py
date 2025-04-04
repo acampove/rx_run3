@@ -186,6 +186,14 @@ def test_kde_cache_pdf():
                 }
             }
 
-    obj= FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
-    pdf= obj.pdf
+    obj       = FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
+    pdf_orig  = obj.pdf
+
+    out_dir   = cfg['out_dir']
+    json_path = f'{out_dir}/data.json'
+    df        = pnd.read_json(json_path)
+    rdf       = RDF.FromPandas(df)
+
+    obj       = FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
+    pdf_cached= obj.pdf
 # --------------------------------------------
