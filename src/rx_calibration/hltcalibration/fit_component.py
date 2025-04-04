@@ -8,6 +8,7 @@ from typing import Union
 import numpy
 import ROOT
 import zfit
+import pandas            as pnd
 import matplotlib.pyplot as plt
 import tensorflow        as tf
 
@@ -183,6 +184,9 @@ class FitComponent:
 
         self._yield_value = float(numpy.sum(arr_wgt))
         self._yield_error = float(numpy.sqrt(numpy.sum(arr_wgt * arr_wgt)))
+
+        df= data.to_pandas()
+        df.to_json(f'{self._out_dir}/data.json', indent=2)
 
         return data
     # --------------------
