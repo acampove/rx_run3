@@ -31,6 +31,25 @@ Then, for each remote it pushes the tags and the commits.
 
 This section describes generic tools that could not be put in a specific category, but tend to be useful.
 
+## Hashing
+
+The snippet below:
+
+```python
+from dmu.generic  import hashing
+
+obj = [1, 'name', [1, 'sub', 'list'], {'x' : 1}]
+val = hashing.hash_object(obj)
+```
+
+will:
+
+- Make the input object into a JSON string
+- Encode it to utf-8
+- Make a 64 characters hash out of it
+
+in two lines, thus keeping the user's code clean. 
+
 ## Timer
 
 In order to benchmark functions do:
