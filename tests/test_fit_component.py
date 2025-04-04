@@ -9,6 +9,8 @@ from dataclasses                                 import dataclass
 import ROOT
 import zfit
 import pytest
+import pandas as pnd
+from ROOT                                        import RDF 
 from dmu.logging.log_store                       import LogStore
 from rx_calibration.hltcalibration.fit_component import FitComponent, load_fit_component
 from rx_calibration.hltcalibration               import test_utilities as tut
@@ -162,11 +164,11 @@ def test_pdf():
     obj= FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
     pdf= obj.pdf
 # --------------------------------------------
-def test_cache_kde_pdf():
+def test_kde_cache_pdf():
     '''
     Test using KDE
     '''
-    name = 'kde'
+    name = 'kde_cache'
 
     pdf= tut.get_signal_pdf(obs=Data.obs)
     rdf= tut.rdf_from_pdf(pdf=pdf, nentries=Data.nentries)
@@ -176,7 +178,8 @@ def test_cache_kde_pdf():
                 name : {
                     'cfg_kde':
                     {
-                        'bandwidth': 20,
+                        'name'     : 'Cached KDE',
+                        'bandwidth': 3,
                         'padding'  : {'lowermirror': 0.5, 'uppermirror': 0.5},
                         },
                     }
