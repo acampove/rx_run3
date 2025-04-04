@@ -6,9 +6,12 @@ Module storing ZModel class
 from typing import Callable, Union
 
 import zfit
+
 from zfit.core.interfaces   import ZfitSpace as zobs
 from zfit.core.basepdf      import BasePDF   as zpdf
 from zfit.core.parameter    import Parameter as zpar
+from dmu.stats.zfit_models  import HypExp
+from dmu.stats.zfit_models  import ModExp
 from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('dmu:stats:model_factory')
@@ -140,6 +143,26 @@ class ModelFactory:
         pdf = zfit.pdf.Exponential(c, self._obs, name=f'exp{suffix}')
 
         return pdf
+    # ---------------------------------------------
+    @MethodRegistry.register('hypexp')
+    def _get_hypexp(self, suffix : str = '') -> zpdf:
+        mu = zfit.Parameter('mu_hypexp',  5000,   4000,  6000)
+        ap = zfit.Parameter('ap_hypexp', 0.020,      0,  0.10)
+        bt = zfit.Parameter('bt_hypexp', 0.002, 0.0001, 0.003)
+
+        pdf= HypExp(obs=self._obs, mu=mu, alpha=ap, beta=bt, name=f'hypexp{suffix}')
+
+        return pdf
+    # ---------------------------------------------
+    @MethodRegistry.register('modexp')
+    def _get_modexp(self, suffix : str = '') -> zpdf:
+        mu = zfit.Parameter('mu_modexp',  4500,  4000,  6000)
+        ap = zfit.Parameter('ap_modexp', 0.020,     0,   0.1)
+        bt = zfit.Parameter('bt_modexp', 0.002, 0.001, 0.005)
+
+        pdf= ModExp(obs=self._obs, mu=mu, alpha=ap, beta=bt, name=f'modexp{suffix}')
+
+        return pdf
     #-----------------------------------------
     @MethodRegistry.register('pol1')
     def _get_pol1(self, suffix : str = '') -> zpdf:
@@ -152,7 +175,16 @@ class ModelFactory:
     def _get_pol2(self, suffix : str = '') -> zpdf:
         a   = self._get_parameter('a_pol2', suffix, -0.005, -0.95, 0.00)
         b   = self._get_parameter('b_pol2', suffix,  0.000, -0.95, 0.95)
-        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b], name=f'pol2{suffix}')
+        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b   ], name=f'pol2{suffix}')
+
+        return pdf
+    # ---------------------------------------------
+    @MethodRegistry.register('pol3')
+    def _get_pol3(self, suffix : str = '') -> zpdf:
+        a   = zfit.Parameter('a_pol3', -0.005, -0.95, 0.00)
+        b   = zfit.Parameter('b_pol3',  0.000, -0.95, 0.95)
+        c   = zfit.Parameter('c_pol3',  0.000, -0.95, 0.95)
+        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b, c], name=f'pol3{suffix}')
 
         return pdf
     #-----------------------------------------
