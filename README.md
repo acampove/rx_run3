@@ -67,3 +67,23 @@ obj=AcceptanceReader(year=year, proc=process)
 acc=obj.read()
 ```
 
+## Acceptance, Reconstruction and selection efficiencies
+
+The product of these efficiencies can be obtained by dividing:
+
+`Numerator:` The number of entries in the `DecayTree` after the full selection
+`Denominator:` The number of entries in the `MCDecayTree` from the same files.
+
+And multiplying the ratio by the acceptance from RapidSim. This is done by running:
+
+```python
+from rx_efficiencies.efficiency_calculator import EfficiencyCalculator
+
+# q2 bin in low, central, high
+obj         = EfficiencyCalculator(q2bin='central')
+# The plots in this directory show the product of reconstruction and selection efficiencies.
+# The YAML files include also the acceptances.
+obj.out_dir = '/path/to/validation/directory'
+df          = obj.get_stats()
+```
+which provides a dataframe with the passed and total yields. These yields are not weighted.
