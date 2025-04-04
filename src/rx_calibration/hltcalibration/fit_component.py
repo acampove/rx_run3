@@ -63,6 +63,8 @@ class FitComponent:
         self._plt_cfg   = cfg['plotting'] if 'plotting' in cfg else None
         self._out_dir   = cfg['out_dir']
 
+        os.makedirs(self._out_dir, exist_ok=True)
+
         self._rdf       = rdf
         self._pdf       = pdf
         self._obs       = obs if pdf is None else pdf.space
@@ -189,8 +191,6 @@ class FitComponent:
             log.warning('No plotting configuration found, will skip plotting')
             return
 
-        os.makedirs(self._out_dir, exist_ok=True)
-
         obj=ZFitPlotter(data=data, model=model)
         obj.plot(**self._plt_cfg)
 
@@ -213,8 +213,6 @@ class FitComponent:
         if self._plt_cfg is None:
             log.warning('No plotting configuration found, will skip plotting')
             return
-
-        os.makedirs(self._out_dir, exist_ok=True)
 
         _, ax = plt.subplots()
         ax.text(0.5, 0.5, text, fontsize=20, ha='center', va='center')
