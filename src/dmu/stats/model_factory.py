@@ -148,15 +148,50 @@ class ModelFactory:
             low    : float,
             high   : float) -> zpar:
 
-        name = self._get_parameter_name(name, suffix)
-        log.debug(f'Assigning name: {name}')
+        par_name = self._get_parameter_name(name, suffix)
+        log.debug(f'Assigning name: {par_name}')
 
-        if name in self._d_par:
-            return self._d_par[name]
+        if par_name in self._d_par:
+            return self._d_par[par_name]
 
-        par  = zfit.param.Parameter(name, val, low, high)
+        is_reparametrized = self._is_reparametrized(name)
 
-        self._d_par[name] = par
+        if is_reparametrized:
+            init_name, _ = self._split_name(par_name)
+            par  = self._get_reparametrization(par_name, init_name, val)
+        else:
+            par  = zfit.param.Parameter(par_name, val, low, high)
+
+        self._d_par[par_name] = par
+
+        return par
+    #-----------------------------------------
+    def _is_reparametrized(self, name : str) -> bool:
+        if self._d_rep is None:
+            return False
+
+        root_name, _ = self._split_name(name)
+
+        is_rep = root_name in self._d_rep
+
+        log.debug(f'Reparametrizing {name}: {is_rep}')
+
+        return is_rep
+    #-----------------------------------------
+    def _get_reparametrization(self, par_name : str, init_name : str, value : float) -> zpar:
+        log.debug(f'Reparametrizing {par_name}')
+        par_const = zfit.Parameter(f'{par_name}_const', value, value, value + 1)
+        par_const.floating = False
+
+        kind = self._d_rep[init_name]
+        if   kind == 'reso':
+            par_reso  = zfit.Parameter(f'{par_name}_reso' , 1.0, 0.50, 1.5)
+            par       = zfit.ComposedParameter(par_name, lambda d_par : d_par['par_const'] * d_par['reso' ], params={'par_const' : par_const, 'reso'  : par_reso } )
+        elif kind == 'scale':
+            par_scale = zfit.Parameter(f'{par_name}_scale', 0.0, -100, 100)
+            par       = zfit.ComposedParameter(par_name, lambda d_par : d_par['par_const'] + d_par['scale'], params={'par_const' : par_const, 'scale' : par_scale} )
+        else:
+            raise ValueError(f'Invalid kind: {kind}')
 
         return par
     #-----------------------------------------
