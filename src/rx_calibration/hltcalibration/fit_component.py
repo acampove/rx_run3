@@ -237,10 +237,12 @@ class FitComponent:
     # -------------------------------
     def _fix_tails(self, sig_par : Parameter) -> None:
         s_par = self._pdf.get_params()
+        l_par = [ par.name for par in s_par ]
+        l_par = sorted(l_par)
 
         log.debug('Found PDF parameters:')
-        for par in s_par:
-            log.debug(f'    {par.name}')
+        for name in l_par:
+            log.debug(f'    {name}')
 
         log.debug('Found fixing parameters:')
         for name in sig_par:
