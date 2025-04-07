@@ -103,15 +103,6 @@ class FitComponent:
         '''
         return self._name
     # --------------------
-    @property
-    def pdf(self) -> zpdf:
-        '''
-        Returns PDF
-        '''
-        self.run()
-
-        return self._pdf
-    # --------------------
     def _add_weights(self, rdf : RDataFrame, wgt_name : str) -> RDataFrame:
         v_col  = rdf.GetColumnNames()
         l_col  = [col.c_str() for col in v_col]
