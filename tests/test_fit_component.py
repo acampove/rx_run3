@@ -10,7 +10,7 @@ import ROOT
 import zfit
 import pytest
 import pandas as pnd
-from ROOT                                        import RDF 
+from ROOT                                        import RDF
 from dmu.logging.log_store                       import LogStore
 from rx_calibration.hltcalibration.fit_component import FitComponent, load_fit_component
 from rx_calibration.hltcalibration               import test_utilities as tut
@@ -64,7 +64,7 @@ def test_toy_pdf():
 # --------------------------------------------
 def test_kde_pdf():
     '''
-    Test using KDE 
+    Test using KDE
     '''
     name = 'kde'
 
@@ -100,7 +100,7 @@ def test_no_data():
 # --------------------------------------------
 def test_load_pdf_fail():
     '''
-    Tests that if PDF does not exist, loader returns None 
+    Tests that if PDF does not exist, loader returns None
     '''
     pdf= tut.get_toy_pdf(kind='sign', obs=Data.obs)
     cfg= _get_conf('load_pdf_fail')
@@ -152,7 +152,7 @@ def test_kde_empty_pdf():
 # --------------------------------------------
 def test_pdf():
     '''
-    Test retrieving PDF only 
+    Test retrieving PDF only
     '''
     name = 'kde_empty'
 
