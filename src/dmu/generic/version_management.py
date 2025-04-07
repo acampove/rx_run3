@@ -42,8 +42,7 @@ def get_last_version(dir_path : str, version_only : bool = True, main_only : boo
     l_obj = glob.glob(f'{dir_path}/*')
 
     if len(l_obj) == 0:
-        log.error(f'Nothing found in {dir_path}')
-        raise ValueError
+        raise ValueError(f'Nothing found in {dir_path}')
 
     d_dir_org = { os.path.basename(obj).replace('.', '') : obj for obj in l_obj if os.path.isdir(obj) }
     d_dir_num = { _get_numeric_version(name) : dir_path for name, dir_path in d_dir_org.items() }
@@ -52,9 +51,8 @@ def get_last_version(dir_path : str, version_only : bool = True, main_only : boo
 
     try:
         _, path = c_dir[-1]
-    except:
-        log.error(f'Cannot find path in: {dir_path}')
-        raise
+    except Exception as exc:
+        raise ValueError(f'Cannot find path in: {dir_path}') from exc
 
     name = os.path.basename(path)
     dirn = os.path.dirname(path)
