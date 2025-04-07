@@ -158,7 +158,7 @@ class ModelFactory:
 
         if is_reparametrized:
             init_name, _ = self._split_name(par_name)
-            par  = self._get_reparametrization(par_name, init_name, val)
+            par  = self._get_reparametrization(par_name, init_name, val, low, high)
         else:
             par  = zfit.param.Parameter(par_name, val, low, high)
 
@@ -178,18 +178,18 @@ class ModelFactory:
 
         return is_rep
     #-----------------------------------------
-    def _get_reparametrization(self, par_name : str, init_name : str, value : float) -> zpar:
+    def _get_reparametrization(self, par_name : str, init_name : str, value : float, low : float, high : float) -> zpar:
         log.debug(f'Reparametrizing {par_name}')
-        par_const = zfit.Parameter(f'{par_name}_const', value, value, value + 1)
+        par_const = zfit.Parameter(par_name, value, low, high)
         par_const.floating = False
 
         kind = self._d_rep[init_name]
         if   kind == 'reso':
-            par_reso  = zfit.Parameter(f'{par_name}_reso' , 1.0, 0.50, 1.5)
-            par       = zfit.ComposedParameter(par_name, lambda d_par : d_par['par_const'] * d_par['reso' ], params={'par_const' : par_const, 'reso'  : par_reso } )
+            par_reso  = zfit.Parameter(f'{par_name}_reso_flt' , 1.0, 0.50, 1.5)
+            par       = zfit.ComposedParameter(f'{par_name}_cmp', lambda d_par : d_par['par_const'] * d_par['reso' ], params={'par_const' : par_const, 'reso'  : par_reso } )
         elif kind == 'scale':
-            par_scale = zfit.Parameter(f'{par_name}_scale', 0.0, -100, 100)
-            par       = zfit.ComposedParameter(par_name, lambda d_par : d_par['par_const'] + d_par['scale'], params={'par_const' : par_const, 'scale' : par_scale} )
+            par_scale = zfit.Parameter(f'{par_name}_scale_flt', 0.0, -100, 100)
+            par       = zfit.ComposedParameter(f'{par_name}_cmp', lambda d_par : d_par['par_const'] + d_par['scale'], params={'par_const' : par_const, 'scale' : par_scale} )
         else:
             raise ValueError(f'Invalid kind: {kind}')
 
