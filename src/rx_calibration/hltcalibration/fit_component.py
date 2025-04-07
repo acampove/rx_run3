@@ -320,7 +320,7 @@ class FitComponent:
             return Parameter()
 
         log.info('Parametric PDF found, fitting:')
-        if self._rdf is None and not must_load_pars:
+        if (self._rdf is None) and (not must_load_pars):
             log.info('Dataset not found, returning not fitted PDF')
             data = self._get_data_from_pdf()
             self._plot_fit(data, self._pdf)
