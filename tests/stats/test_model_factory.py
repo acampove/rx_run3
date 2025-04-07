@@ -107,3 +107,27 @@ def test_all_pdf(name : list[str]):
 
     print_pdf(pdf)
 #--------------------------
+@pytest.mark.parametrize('name',  ['cbl'])
+def test_rep_signal(name : list[str]):
+    '''
+    Test reparametrized signal PDFs, i.e.:
+    - Use mass scales and resolutions
+    - Use brem fractions
+    '''
+    log.info(f'Testing {name}')
+
+    l_shr = ['mu', 'sg']
+    l_flt = []
+    d_rep = {'mu' : 'scale', 'sg' : 'reso'}
+
+    mod   = ModelFactory(
+            preffix = name,
+            obs     = Data.obs,
+            l_pdf   = [name],
+            d_rep   = d_rep,
+            l_shared= l_shr,
+            l_float = l_flt)
+    pdf   = mod.get_pdf()
+
+    print_pdf(pdf)
+#--------------------------
