@@ -280,12 +280,19 @@ class FitComponent:
     # --------------------
     def _get_data_from_pdf(self):
         if not hasattr(self._pdf, 'arr_wgt') or not hasattr(self._pdf, 'arr_mass'):
+            log.debug(f'Not found array of masses and/or weights, making dummy data with {self._nentries_dummy_data}')
             self._yield_value = self._nentries_dummy_data
             self._yield_error = math.sqrt(self._nentries_dummy_data)
 
             return self._pdf.create_sampler(n=self._nentries_dummy_data)
 
-        data = zfit.Data.from_numpy(obs=self._pdf.space, array=self._pdf.arr_mass, weights=self._pdf.arr_wgt)
+        arr_wgt           = self._pdf.arr_wgt
+        arr_mass          = self._pdf.arr_mass
+        self._yield_value = numpy.sum(arr_wgt)
+        self._yield_error = math.sqrt(numpy.sum(arr_wgt * arr_wgt))
+
+        log.debug(f'Found array of masses and weights, making real data with {self._yield_value:.0f} entries')
+        data = zfit.Data.from_numpy(obs=self._pdf.space, array=arr_mass, weights=arr_wgt)
 
         return data
     # --------------------
