@@ -105,9 +105,9 @@ class ModelFactory:
 
         self._d_par : dict[str,zpar] = {}
 
-        self._check_pars()
+        self._check_reparametrization()
     #-----------------------------------------
-    def _check_pars(self) -> None:
+    def _check_reparametrization(self) -> None:
         if self._d_rep is None:
             return
 
