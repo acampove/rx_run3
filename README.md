@@ -148,6 +148,34 @@ gauss : Gaussian
 dscb : Double sided CrystallBall
 ```
 
+### Model building with reparametrizations
+
+In order to introduce reparametrizations for the means and the resolutions, such that:
+
+$\mu\to\mu+\Delta\mu$
+$\sigma\to\sigma\cdot s_{\sigma}$
+
+where the reparametrized $\mu$ and $\sigma$ are constant, while the scale and resolution is floating, do:
+
+```python
+from dmu.stats.model_factory import ModelFactory
+
+l_shr = ['mu', 'sg']
+l_flt = []
+d_rep = {'mu' : 'scale', 'sg' : 'reso'}
+
+mod   = ModelFactory(
+        preffix = name,
+        obs     = Data.obs,
+        l_pdf   = l_name,
+        d_rep   = d_rep,
+        l_shared= l_shr,
+        l_float = l_flt)
+pdf   = mod.get_pdf()
+```
+
+Here, the floating parameters **should not** be the same as the reparametrized ones.
+
 ### Printing PDFs
 
 One can print a zfit PDF by doing:
