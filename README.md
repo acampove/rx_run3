@@ -152,7 +152,7 @@ dscb : Double sided CrystallBall
 
 In order to introduce reparametrizations for the means and the resolutions, such that:
 
-$\mu\to\mu+\Delta\mu$
+$\mu\to\mu+\Delta\mu$   
 $\sigma\to\sigma\cdot s_{\sigma}$
 
 where the reparametrized $\mu$ and $\sigma$ are constant, while the scale and resolution is floating, do:
