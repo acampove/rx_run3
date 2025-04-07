@@ -118,12 +118,13 @@ class ModelFactory:
 
         return name
     #-----------------------------------------
-    def _get_parameter(self,
-                       name   : str,
-                       suffix : str,
-                       val    : float,
-                       low    : float,
-                       high   : float) -> zpar:
+    def _get_parameter(
+            self,
+            name   : str,
+            suffix : str,
+            val    : float,
+            low    : float,
+            high   : float) -> zpar:
 
         name = self._get_parameter_name(name, suffix)
         log.debug(f'Assigning name: {name}')
