@@ -108,6 +108,9 @@ class ModelFactory:
         self._check_pars()
     #-----------------------------------------
     def _check_pars(self) -> None:
+        if self._d_rep is None:
+            return
+
         s_par_1 = set(self._d_rep)
         s_par_2 = set(self._l_flt)
 
