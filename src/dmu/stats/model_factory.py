@@ -67,11 +67,17 @@ class ModelFactory:
 
     l_pdf = ['dscb', 'gauss']
     l_shr = ['mu']
-    mod   = ModelFactory(preffix = 'signal', obs = obs, l_pdf = l_pdf, l_shared=l_shr)
+    l_flt = ['mu', 'sg']
+    d_rep = {'mu' : 'scale', 'sg' : 'reso'}
+    mod   = ModelFactory(preffix = 'signal', obs = obs, l_pdf = l_pdf, l_shared = l_shr, d_rep = d_rep)
     pdf   = mod.get_pdf()
     ```
 
-    where one can specify which parameters can be shared among the PDFs
+    where one can specify which parameters
+
+    - Can be shared among the PDFs
+    - Are meant to float if this fit is done to MC, in order to fix parameters in data.
+    - Are scales or resolutions that need reparametrizations
     '''
     #-----------------------------------------
     def __init__(self,
