@@ -85,22 +85,38 @@ class ModelFactory:
                  obs      : zobs,
                  l_pdf    : list[str],
                  l_shared : list[str],
-                 l_float  : list[str]):
+                 l_float  : list[str],
+                 d_rep    : dict[str:str] = None):
         '''
         preffix:  used to identify PDF, will be used to name every parameter
         obs:      zfit obserbable
         l_pdf:    List of PDF nicknames which are registered below
         l_shared: List of parameter names that are shared
         l_float:  List of parameter names to allow to float
+        d_rep:    Dictionary with keys as variables that will be reparametrized
         '''
 
         self._preffix         = preffix
         self._l_pdf           = l_pdf
         self._l_shr           = l_shared
         self._l_flt           = l_float
+        self._d_rep           = d_rep
         self._obs             = obs
 
         self._d_par : dict[str,zpar] = {}
+
+        self._check_pars()
+    #-----------------------------------------
+    def _check_pars(self) -> None:
+        s_par_1 = set(self._d_rep)
+        s_par_2 = set(self._l_flt)
+
+        if not s_par_1.isdisjoint(s_par_2):
+            raise ValueError('Non empty intersection between floating and reparametrization parameters')
+
+        s_kind  = set(self._d_rep.values())
+        if not s_kind.issubset({'scale', 'reso'}):
+            raise ValueError(f'Only scales and resolution reparametrizations allowed, found: {s_kind}')
     #-----------------------------------------
     def _split_name(self, name : str) -> tuple[str,str]:
         l_part = name.split('_')
