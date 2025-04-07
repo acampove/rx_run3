@@ -289,6 +289,18 @@ class FitComponent:
 
         return data
     # --------------------
+    def get_pdf(self, must_load_pars : bool = False) -> zpdf:
+        '''
+        Will return PDF
+
+        must_load_pars (bool): If true, it will expect the existence of a JSON file with fitting parameters. 
+        If False, will do the fit all over again
+        '''
+        if self._pdf is None:
+            self.run(must_load_pars)
+
+        return self._pdf
+    # --------------------
     def run(self, must_load_pars : bool = False) -> Parameter:
         '''
         Will return the PDF
