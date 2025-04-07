@@ -174,7 +174,7 @@ def test_pdf():
             }
 
     obj= FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
-    pdf= obj.pdf
+    pdf= obj.get_pdf()
 # --------------------------------------------
 def test_kde_cache_pdf():
     '''
@@ -199,7 +199,7 @@ def test_kde_cache_pdf():
             }
 
     obj       = FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
-    pdf_orig  = obj.pdf
+    pdf_orig  = obj.get_pdf()
 
     out_dir   = cfg['out_dir']
     json_path = f'{out_dir}/data.json'
@@ -207,5 +207,5 @@ def test_kde_cache_pdf():
     rdf       = RDF.FromPandas(df)
 
     obj       = FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
-    pdf_cached= obj.pdf
+    pdf_cached= obj.get_pdf()
 # --------------------------------------------
