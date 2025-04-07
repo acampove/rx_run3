@@ -158,15 +158,17 @@ $\sigma\to\sigma\cdot s_{\sigma}$
 where the reparametrized $\mu$ and $\sigma$ are constant, while the scale and resolution is floating, do:
 
 ```python
+import zfit
 from dmu.stats.model_factory import ModelFactory
 
 l_shr = ['mu', 'sg']
 l_flt = []
 d_rep = {'mu' : 'scale', 'sg' : 'reso'}
+obs   = zfit.Space('mass', limits=(5080, 5680))
 
 mod   = ModelFactory(
         preffix = name,
-        obs     = Data.obs,
+        obs     = obs,
         l_pdf   = l_name,
         d_rep   = d_rep,
         l_shared= l_shr,
