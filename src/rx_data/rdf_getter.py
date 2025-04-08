@@ -29,10 +29,18 @@ class RDFGetter:
         self._main_tree   = 'main' # This is the label of the main (not the friends) tree
         self._samples     : dict[str,str]
 
+        self._l_electron_only = ['brem_track_2.yaml']
+
         self._tree_name   = tree
         self._tmp_path    : str
 
         self._initialize()
+    # ---------------------------------------------------
+    def _skip_path(self, file_name : str) -> bool:
+        if file_name in self._l_electron_only and 'MuMu' in self._trigger:
+            return True
+
+        return False
     # ---------------------------------------------------
     def _initialize(self) -> None:
         '''
@@ -53,6 +61,9 @@ class RDFGetter:
         log.info('Adding samples, found:')
         for path in l_config:
             file_name   = os.path.basename(path)
+            if self._skip_path(file_name):
+                continue
+
             sample_name = file_name.replace('.yaml', '')
             d_sample[sample_name] = path
             log.info(f'    {sample_name}')
