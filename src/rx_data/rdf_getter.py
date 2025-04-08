@@ -161,10 +161,8 @@ class RDFGetter:
             rdf = rdf.Define('L1_TRACK_PT', 'TMath::Sqrt(TMath::Power(L1_TRACK_PX, 2) + TMath::Power(L1_TRACK_PY, 2))')
             rdf = rdf.Define('L2_TRACK_PT', 'TMath::Sqrt(TMath::Power(L2_TRACK_PX, 2) + TMath::Power(L2_TRACK_PY, 2))')
 
-        if 'MuMu' not in self._trigger:
-            # NO need to define track q2 for muons
-            log.debug('Adding q2_track column')
-            rdf = rdf.Define('q2_track'   , 'ROOT::Math::PtEtaPhiMVector l1(L1_TRACK_PT, L1_ETA, L1_PHI, 0.511); ROOT::Math::PtEtaPhiMVector l2(L2_TRACK_PT, L2_ETA, L2_PHI, 0.511); auto ll = l1 + l2; return ll.M2();')
+        log.debug('Adding q2_track column')
+        rdf = rdf.Define('q2_track'   , 'ROOT::Math::PtEtaPhiMVector l1(L1_TRACK_PT, L1_ETA, L1_PHI, 0.511); ROOT::Math::PtEtaPhiMVector l2(L2_TRACK_PT, L2_ETA, L2_PHI, 0.511); auto ll = l1 + l2; return ll.M2();')
 
         return rdf
     # ---------------------------------------------------
