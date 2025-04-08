@@ -21,11 +21,15 @@ class EfficiencyCalculator:
     Class used to calculate efficiencies for partially reconstructed samples
     '''
     #------------------------------------------
-    def __init__(self, q2bin : str):
+    def __init__(self, q2bin : str, d_cut : dict[str,str]=None):
         '''
         Proc: Nickname of process, if not passed, will do all processes.
+
+        q2bin : Either low, central or high
+        d_cut : Dictionary meant to be used to override default selection
         '''
         self._q2bin      = q2bin
+        self._d_cut      = d_cut
 
         self._year       = '2024'
         self._d_sel      = {'Process' : [], 'Value' : [], 'Error' : []}
@@ -108,7 +112,15 @@ class EfficiencyCalculator:
     def _get_sel_yld(self, proc : str) -> int:
         sample = DecayNames.sample_from_decay(proc)
         rdf    = self._get_rdf(proc=proc, tree_name='DecayTree')
-        rdf    = sel.apply_full_selection(rdf = rdf, project='RK', trigger=self._trigger, q2bin=self._q2bin, process=sample)
+
+        d_sel  = sel.selection(project='RK', trigger=self._trigger, q2bin=self._q2bin, process=sample)
+        if self._d_cut is not None:
+            log.warning('Overriding default selection')
+            d_sel.update(self._d_cut)
+
+        for cut_name, cut_expr in d_sel.items():
+            log.debug(f'{cut_name:<20}{cut_expr}')
+            rdf = rdf.Filter(cut_expr, cut_name)
 
         return rdf.Count().GetValue()
     #------------------------------------------
