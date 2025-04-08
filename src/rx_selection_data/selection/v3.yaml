@@ -17,8 +17,7 @@ q2_common: &q2_common
   central: (Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000)
   jpsi   : (Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)
   psi2   : (Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)
-  high   : (Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)
-
+  high   : (q2_track        > 15000000) && (q2_track        < 22000000)
 hop_common: &hop_common
   low    : hop_mass > 4500 
   central: hop_mass > 4500 
