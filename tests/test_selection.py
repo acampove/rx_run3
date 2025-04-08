@@ -58,16 +58,43 @@ def test_selection(sample : str):
 
     _print_dotted_branches(rdf)
 # --------------------------
-@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'DATA*'])
-def test_full_selection(sample : str):
+@pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('q2bin' , ['low', 'central', 'jpsi', 'psi2', 'high'])
+def test_full_selection_electron(sample : str, q2bin : str):
     '''
-    Applies selection
+    Applies full selection to all q2 bins in electron channel
     '''
     trigger = 'Hlt2RD_BuToKpEE_MVA'
     gtr     = RDFGetter(sample=sample, trigger=trigger)
     rdf     = gtr.get_rdf()
-    rdf     = sel.apply_full_selection(rdf = rdf, project='RK', trigger=trigger, q2bin='jpsi', process=sample)
-    rdf     = rdf.Range(10_000)
+    rdf     = sel.apply_full_selection(rdf = rdf, project='RK', trigger=trigger, q2bin=q2bin, process=sample)
+
+    rep     = rdf.Report()
+    rep.Print()
+
+    nentries = rdf.Count().GetValue()
+
+    assert nentries > 0
+
+    _print_dotted_branches(rdf)
+# --------------------------o
+@pytest.mark.parametrize('sample', ['Bu_Kmumu_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('q2bin' , ['low', 'central', 'jpsi', 'psi2', 'high'])
+def test_full_selection_muon(sample : str, q2bin : str):
+    '''
+    Applies full selection to all q2 bins in muon channel
+    '''
+    trigger = 'Hlt2RD_BuToKpMuMu_MVA'
+    gtr     = RDFGetter(sample=sample, trigger=trigger)
+    rdf     = gtr.get_rdf()
+    rdf     = sel.apply_full_selection(rdf = rdf, project='RK', trigger=trigger, q2bin=q2bin, process=sample)
+
+    rep     = rdf.Report()
+    rep.Print()
+
+    nentries = rdf.Count().GetValue()
+
+    assert nentries > 0
 
     _print_dotted_branches(rdf)
 # --------------------------o
