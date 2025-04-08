@@ -194,7 +194,7 @@ def test_data(sample : str, trigger : str):
     rep = rdf.Report()
     rep.Print()
 
-    _check_branches(rdf)
+    _check_branches(rdf, is_ee = 'MuMu' not in trigger)
 
     sample = sample.replace('*', 'p')
 
@@ -203,7 +203,7 @@ def test_data(sample : str, trigger : str):
     _plot_hop(rdf, sample)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC', 'Bu_psi2SK_ee_eq_DPC', 'Bu_JpsiX_ee_eq_JpsiInAcc'])
-def test_q2_track(sample : str):
+def test_q2_track_electron(sample : str):
     '''
     Checks the distributions of q2_track vs normal q2
     '''
@@ -215,11 +215,31 @@ def test_q2_track(sample : str):
     rep = rdf.Report()
     rep.Print()
 
-    _check_branches(rdf)
+    _check_branches(rdf, is_ee=True)
 
     sample = sample.replace('*', 'p')
 
     _plot_q2_track(rdf, sample)
+# ------------------------------------------------
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_Kmumu_eq_btosllball05_DPC']) 
+def test_q2_track_muon(sample : str):
+    '''
+    Checks the distributions of q2_track vs normal q2
+    '''
+    trigger = 'Hlt2RD_BuToKpMuMu_MVA'
+
+    gtr = RDFGetter(sample=sample, trigger=trigger)
+    rdf = gtr.get_rdf()
+    rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
+    rep = rdf.Report()
+    rep.Print()
+
+    _check_branches(rdf, is_ee=False)
+
+    sample     = sample.replace('*', 'p')
+    identifier = f'{trigger}_{sample}'
+
+    _plot_q2_track(rdf, identifier)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
@@ -233,7 +253,7 @@ def test_brem_track_2(sample : str, trigger : str):
     rep = rdf.Report()
     rep.Print()
 
-    _check_branches(rdf)
+    _check_branches(rdf, is_ee=True)
 
     sample = sample.replace('*', 'p')
     _plot_brem_track_2(rdf, sample, 'brem_track_2')
@@ -247,7 +267,7 @@ def test_mc(sample : str):
     gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
 
-    _check_branches(rdf)
+    _check_branches(rdf, is_ee=True)
     _plot_mva_mass(rdf, sample)
     _plot_mva(rdf     , sample)
     _plot_hop(rdf     , sample)
@@ -260,7 +280,7 @@ def test_check_vars():
     gtr = RDFGetter(sample='Bu_JpsiK_ee_eq_DPC', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
 
-    #_check_branches(rdf)
+    _check_branches(rdf, is_ee=True)
     _print_dotted_branches(rdf)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC'])
