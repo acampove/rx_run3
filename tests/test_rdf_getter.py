@@ -26,7 +26,7 @@ class Data:
     psi2_q2    = '(Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)'
     high_q2    = '(Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)'
 
-    l_branch = [
+    l_branch_ee = [
             'brem_track_2.B_M_brem_track_2',
             'mva.mva_cmb',
             'mva.mva_prc',
@@ -35,16 +35,27 @@ class Data:
             'cascade.swp_cascade_mass_swp',
             'jpsi_misid.swp_jpsi_misid_mass_swp',
             ]
+
+    l_branch_mm = [
+            'mva.mva_cmb',
+            'mva.mva_prc',
+            'hop.hop_mass',
+            'hop.hop_alpha',
+            'cascade.swp_cascade_mass_swp',
+            'jpsi_misid.swp_jpsi_misid_mass_swp',
+            ]
+
 # ------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_data:rdf_getter', 10)
     os.makedirs(Data.out_dir, exist_ok=True)
 # ------------------------------------------------
-def _check_branches(rdf : RDataFrame) -> None:
+def _check_branches(rdf : RDataFrame, is_ee : bool) -> None:
     l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
 
-    for branch in Data.l_branch:
+    l_branch = Data.l_branch_ee if is_ee else Data.l_branch_mm
+    for branch in l_branch:
         if branch in l_name:
             continue
 
@@ -172,8 +183,8 @@ def _plot_brem_track_2(rdf : RDataFrame, test : str, tree : str) -> None:
         plt.close()
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA' ])
-def test_electron_data(sample : str, trigger : str):
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
+def test_data(sample : str, trigger : str):
     '''
     Test of getter class in data
     '''
