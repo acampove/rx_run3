@@ -80,6 +80,21 @@ def _plot_mva_mass(rdf : RDataFrame, test : str) -> None:
     plt.savefig(f'{test_dir}/mva_mass.png')
     plt.close()
 # ------------------------------------------------
+def _plot_q2_track(rdf : RDataFrame, sample : str) -> None:
+    test_dir = f'{Data.out_dir}/{sample}'
+    os.makedirs(test_dir, exist_ok=True)
+
+    arr_q2_track = rdf.AsNumpy(['q2_track'])['q2_track']
+    arr_q2       = rdf.AsNumpy(['q2'      ])['q2'      ]
+
+    plt.hist(arr_q2_track, alpha=0.5      , range=[0, 22_000_000], bins=40, label='$q^2_{track}$')
+    plt.hist(arr_q2      , histtype='step', range=[0, 22_000_000], bins=40, label='$q^2$')
+
+    plt.title(sample)
+    plt.legend()
+    plt.savefig(f'{test_dir}/q2_track.png')
+    plt.close()
+# ------------------------------------------------
 def _plot_mva(rdf : RDataFrame, test : str) -> None:
     test_dir = f'{Data.out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
@@ -123,6 +138,8 @@ def _apply_selection(rdf : RDataFrame, trigger : str, sample : str, override : d
         d_sel.update(override)
 
     for cut_name, cut_expr in d_sel.items():
+        if cut_name in ['mass', 'q2']:
+            continue
         rdf = rdf.Filter(cut_expr, cut_name)
 
     return rdf
@@ -173,6 +190,25 @@ def test_electron_data(sample : str, trigger : str):
     _plot_mva_mass(rdf, sample)
     _plot_mva(rdf, sample)
     _plot_hop(rdf, sample)
+# ------------------------------------------------
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC', 'Bu_psi2SK_ee_eq_DPC', 'Bu_JpsiX_ee_eq_JpsiInAcc'])
+def test_q2_track(sample : str):
+    '''
+    Checks the distributions of q2_track vs normal q2
+    '''
+    trigger = 'Hlt2RD_BuToKpEE_MVA'
+
+    gtr = RDFGetter(sample=sample, trigger=trigger)
+    rdf = gtr.get_rdf()
+    rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
+    rep = rdf.Report()
+    rep.Print()
+
+    _check_branches(rdf)
+
+    sample = sample.replace('*', 'p')
+
+    _plot_q2_track(rdf, sample)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
