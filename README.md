@@ -131,7 +131,8 @@ from dmu.stats.model_factory import ModelFactory
 
 l_pdf = ['cbr'] + 2 * ['cbl']
 l_shr = ['mu', 'sg']
-mod   = ModelFactory(obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr)
+d_fix = {'al_cbl' : 3, 'nr_cbr' : 1} # This is optional and will fix two parameters whose names start with the keys
+mod   = ModelFactory(obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr, d_fix=d_fix)
 pdf   = mod.get_pdf()
 ```
 

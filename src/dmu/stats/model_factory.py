@@ -86,13 +86,16 @@ class ModelFactory:
                  l_pdf    : list[str],
                  l_shared : list[str],
                  l_float  : list[str],
-                 d_rep    : dict[str:str] = None):
+                 d_fix    : dict[str:float] = None,
+                 d_rep    : dict[str:str]   = None):
         '''
         preffix:  used to identify PDF, will be used to name every parameter
         obs:      zfit obserbable
         l_pdf:    List of PDF nicknames which are registered below
         l_shared: List of parameter names that are shared
         l_float:  List of parameter names to allow to float
+        d_fix:    Dictionary with keys as the beginning of the name of a parameter and value as the number
+                  to which it has to be fixed. If not one and only one parameter is found, ValueError is raised
         d_rep:    Dictionary with keys as variables that will be reparametrized
         '''
 
@@ -100,6 +103,7 @@ class ModelFactory:
         self._l_pdf           = l_pdf
         self._l_shr           = l_shared
         self._l_flt           = l_float
+        self._d_fix           = d_fix
         self._d_rep           = d_rep
         self._obs             = obs
 
@@ -369,6 +373,36 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
+    def _find_par(self, s_par : set[zpar], name_start : str) -> zpar:
+        l_par_match = [ par for par in s_par if par.name.startswith(name_start) ]
+
+        if len(l_par_match) != 1:
+            for par in s_par:
+                log.info(par.name)
+
+            raise ValueError(f'Not found one and only one parameter starting with: {name_start}')
+
+        return l_par_match[0]
+    #-----------------------------------------
+    def _fix_parameters(self, pdf : zpdf) -> zpdf:
+        if self._d_fix is None:
+            log.debug('Not fixing any parameter')
+            return pdf
+
+        s_par = pdf.get_params()
+
+        log.info('-' * 30)
+        log.info('Fixing parameters')
+        log.info('-' * 30)
+        for name_start, value in self._d_fix.items():
+            par = self._find_par(s_par, name_start)
+            par.set_value(value)
+
+            log.info(f'{name_start:<20}{value:<20.3f}')
+            par.floating = False
+
+        return pdf
+    #-----------------------------------------
     def get_pdf(self) -> zpdf:
         '''
         Given a list of strings representing PDFs returns the a zfit PDF which is
@@ -377,6 +411,7 @@ class ModelFactory:
         l_type=   self._get_pdf_types()
         l_pdf = [ self._get_pdf(kind, preffix) for kind, preffix in l_type ]
         pdf   =   self._add_pdf(l_pdf)
+        pdf   =   self._fix_parameters(pdf)
 
         return pdf
 #-----------------------------------------

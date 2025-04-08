@@ -51,6 +51,26 @@ class Data:
 def _initialize():
     LogStore.set_level('dmu:stats:model_factory', 10)
 #--------------------------
+def test_fix_params():
+    '''
+    Will test fixing subset of parameters 
+    '''
+    l_pdf = ['cbr', 'cbl', 'dscb']
+    l_shr = ['mu', 'sg']
+    l_flt = ['mu', 'sg']
+
+    mod   = ModelFactory(
+            preffix = 'unique',
+            obs     = Data.obs,
+            l_pdf   = l_pdf,
+            d_fix   = {'al_dscb' : 3, 'nr_dscb' : 1},
+            l_shared= l_shr,
+            l_float = l_flt)
+
+    pdf   = mod.get_pdf()
+
+    print_pdf(pdf)
+#--------------------------
 def test_unique_pdf():
     '''
     Will test only signal builder
