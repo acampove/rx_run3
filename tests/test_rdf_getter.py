@@ -272,12 +272,12 @@ def test_mc(sample : str):
     _plot_mva(rdf     , sample)
     _plot_hop(rdf     , sample)
 # ------------------------------------------------
-def test_check_vars():
+@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'DATA_24_MagDown_24c2'])
+def test_check_vars(sample : str):
     '''
     Checks that variables from friend trees can be accessed
     '''
-
-    gtr = RDFGetter(sample='Bu_JpsiK_ee_eq_DPC', trigger='Hlt2RD_BuToKpEE_MVA')
+    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
 
     _check_branches(rdf, is_ee=True)
