@@ -58,14 +58,22 @@ class EfficiencyCalculator:
 
         self._out_dir = value
     #------------------------------------------
+    def _get_title(self) -> str:
+        if 'mva' in self._d_cut:
+            wp    = self._d_cut['mva']
+            title = f'$q^2$: {self._q2bin}; {wp}'
+        else:
+            title = f'$q^2$: {self._q2bin}'
+
+        return title
+    #------------------------------------------
     def _plot_sel_eff(self):
         if self._out_dir is None:
             return
 
         log.debug('Plotting selection efficiencies')
 
-        plt_dir = f'{self._out_dir}/plots'
-        os.makedirs(plt_dir, exist_ok=True)
+        os.makedirs(self._out_dir, exist_ok=True)
 
         df          = pnd.DataFrame(self._d_sel)
         df['Decay'] = df.Process.map(DecayNames.tex)
@@ -74,11 +82,14 @@ class EfficiencyCalculator:
         df          = df.sort_values(by='Value')
         df.plot(x='Decay', y='Value', yerr='Error', figsize=(20, 8), kind='barh', legend=False)
 
-        plt_path = f'{plt_dir}/rec_sel_eff_{self._q2bin}.png'
+        plt_path = f'{self._out_dir}/rec_sel_eff_{self._q2bin}.png'
         log.debug(f'Saving to: {plt_path}')
 
+        title = self._get_title()
+
         plt.grid()
-        plt.title(f'$q^2$: {self._q2bin}')
+        plt.xlim(0, 1.8)
+        plt.title(title)
         plt.ylabel('')
         plt.xlabel(r'$\varepsilon_{sel}$[%]')
         plt.tight_layout()
