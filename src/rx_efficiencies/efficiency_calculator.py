@@ -29,7 +29,7 @@ class EfficiencyCalculator:
         d_cut : Dictionary meant to be used to override default selection
         '''
         self._q2bin      = q2bin
-        self._d_cut      = d_cut
+        self._d_cut      = {} if d_cut is None else d_cut
 
         self._year       = '2024'
         self._d_sel      = {'Process' : [], 'Value' : [], 'Error' : []}
