@@ -21,5 +21,18 @@ def test_dump_json():
     '''
     Tests dump_json
     '''
-    gut.dump_json([1,2,3,4], '/tmp/list.json')
+    gut.dump_json([1,2,3,4], '/tmp/tests/dmu/generic/list.json')
+# -------------------------
+def test_load_json():
+    '''
+    Tests load_json
+    '''
+    json_path = '/tmp/tests/dmu/generic/list.json'
+
+    l_data_org = [1,2,3,4]
+    gut.dump_json(l_data_org, json_path)
+
+    l_data_lod = gut.load_json(json_path)
+
+    assert l_data_org == l_data_lod
 # -------------------------

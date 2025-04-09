@@ -52,7 +52,7 @@ def timeit(f):
         return result
     return wrap
 # --------------------------------
-def dump_json(data, path : str, sort_keys : bool = False):
+def dump_json(data, path : str, sort_keys : bool = False) -> None:
     '''
     Saves data as JSON
 
@@ -66,4 +66,17 @@ def dump_json(data, path : str, sort_keys : bool = False):
 
     with open(path, 'w', encoding='utf-8') as ofile:
         json.dump(data, ofile, indent=4, sort_keys=sort_keys)
+# --------------------------------
+def load_json(path : str):
+    '''
+    Loads data from JSON
+
+    Parameters
+    path     : Path to JSON file where data is saved 
+    '''
+
+    with open(path, encoding='utf-8') as ofile:
+        data = json.load(ofile)
+
+    return data
 # --------------------------------

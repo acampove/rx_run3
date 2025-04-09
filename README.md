@@ -66,9 +66,9 @@ def fun():
 fun()
 ```
 
-## JSON dumper
+## JSON dumper and loader
 
-The following lines will dump data (dictionaries, lists, etc) to a JSON file:
+The following lines will dump data (dictionaries, lists, etc) to a JSON file and load it back:
 
 ```python
 import dmu.generic.utilities as gut
@@ -76,7 +76,10 @@ import dmu.generic.utilities as gut
 data = [1,2,3,4]
 
 gut.dump_json(data, '/tmp/list.json')
+data = gut.load_json('/tmp/list.json')
 ```
+
+and it's meant to allow the user to bypass all the boilerplate and keep their code brief.
 
 # Physics
 
