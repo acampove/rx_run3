@@ -44,7 +44,6 @@ class Data:
             'cascade.swp_cascade_mass_swp',
             'jpsi_misid.swp_jpsi_misid_mass_swp',
             ]
-
 # ------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
