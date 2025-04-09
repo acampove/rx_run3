@@ -27,6 +27,8 @@ class Data:
     d_data  : dict
     out_dir : str
     l_source: list[str]
+
+    vers    = None
     l_kind  = [
             'all',
             'main',
@@ -42,11 +44,13 @@ def _parse_args():
     parser.add_argument('-k', '--kind', type=str, help='Type of files', choices=Data.l_kind, required=True)
     parser.add_argument('-c', '--conf', type=str, help='Name of YAML config file, e.g. rk', required=True)
     parser.add_argument('-l', '--logl', type=int, help='Logger level', choices=[10, 20, 30], default=20)
+    parser.add_argument('-v', '--vers', type=str, help='Version of files, only makes sense if kind is not "all"')
     parser.add_argument('-d', '--dry' ,           help='If used, will do not copy files', action='store_true')
     args = parser.parse_args()
 
     Data.kind = args.kind
     Data.conf = args.conf
+    Data.vers = args.vers
     Data.dry  = args.dry
 
     LogStore.set_level('rx_data:copy_samples', args.logl)
@@ -84,12 +88,18 @@ def _get_source_paths() -> list[str]:
     return l_source
 # -----------------------------------------
 def _get_version(kind : str) -> str:
+    if Data.vers is not None:
+        return Data.vers
+
     inp_dir = Data.d_conf['inp_dir']
     vers    = get_last_version(dir_path = f'{inp_dir}/{kind}', version_only=True)
 
     return vers
 # -----------------------------------------
 def _initialize_kind(kind : str):
+    if Data.vers is not None and Data.kind == 'all':
+        raise ValueError(f'Specified version {Data.vers} for kind {Data.kind}')
+
     vers    = _get_version(kind)
     inp_dir = Data.d_conf['inp_dir']
     inp_dir = f'{inp_dir}/{kind}/{vers}'
