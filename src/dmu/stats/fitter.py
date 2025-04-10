@@ -231,7 +231,7 @@ class Fitter:
                 continue
 
             const = zfit.constraint.GaussianConstraint(params=par, observation=float(par_mu), uncertainty=float(par_sg))
-            log.info(f'{"":<4}{par_name:<25}{par_mu:<15.3e}{par_sg:<15.3e}')
+            log.info(f'{"":<4}{par_name:<45}{par_mu:<15.3e}{par_sg:<15.3e}')
             l_const.append(const)
 
         return l_const
