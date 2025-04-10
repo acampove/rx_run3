@@ -35,6 +35,16 @@ which will make plots showing distributions per block. These distributions pass
 a tight MVA requirement and are taken from the core of the DTF B mass. Thus can be
 considered background subtracted.
 
+### Same sign shape
+
+Plots showing effect of vetoes and MVA on SS data
+
+```bash
+cutflow -s "DATA*" -t Hlt2RD_BuToKpEE_SameSign_MVA -c vetoes -q low
+cutflow -s "DATA*" -t Hlt2RD_BuToKpEE_SameSign_MVA -c vetoes -q central
+cutflow -s "DATA*" -t Hlt2RD_BuToKpEE_SameSign_MVA -c vetoes -q high
+```
+
 ## 2D plots
 
 For this run:
@@ -62,4 +72,5 @@ This will provide plots showing
 
 - Correlations
 - Mass vs q2
+
 
