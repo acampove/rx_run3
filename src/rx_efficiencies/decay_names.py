@@ -33,6 +33,16 @@ class DecayNames:
     tex[bpk1kpipiee] = r'$B^+\to K_1(1270)^+(\to K^+\pi^+\pi^-)e^+e^-$'
     tex[bpk2kpipiee] = r'$B^+\to K_2(1430)^+(\to X \to K^+\pi^+\pi^-)e^+e^-$'
     # --------------------------
+    # correspondence between sample identifier and decay name (nickname)
+    # --------------------------
+    nic                                       = {}
+    nic['Bd_Kstee_eq_btosllball05_DPC'      ] = bdkskpiee
+    nic['Bu_Kstee_Kpi0_eq_btosllball05_DPC' ] = bpkskpiee
+    nic['Bu_Kee_eq_btosllball05_DPC'        ] = bpkpee
+    nic['Bs_phiee_eq_Ball_DPC'              ] = bsphiee
+    nic['Bu_K1ee_eq_DPC'                    ] = bpk1kpipiee
+    nic['Bu_K2stee_Kpipi_eq_mK1430_DPC'     ] = bpk2kpipiee
+    # --------------------------
     # correspondence between decay variable and sample identifier
     # --------------------------
     sam              = {}
@@ -79,6 +89,19 @@ class DecayNames:
             raise ValueError(f'Decay {decay} not found')
 
         return DecayNames.tex[decay]
+    # -----------------------------------
+    @staticmethod
+    def nic_from_sample(sample : str) -> str:
+        '''
+        Returns decay nickname from sample nick name
+        '''
+        if sample not in DecayNames.nic:
+            for elm in DecayNames.nic:
+                log.info(elm)
+
+            raise ValueError(f'Sample {sample} not found')
+
+        return DecayNames.nic[sample]
     # -----------------------------------
     @staticmethod
     def sample_from_decay(decay : str) -> str:
