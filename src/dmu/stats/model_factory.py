@@ -192,7 +192,7 @@ class ModelFactory:
 
         kind = self._d_rep[init_name]
         if   kind == 'reso':
-            par_reso  = zfit.Parameter(f'{par_name}_reso_flt' , 1.0, 0.50, 1.5)
+            par_reso  = zfit.Parameter(f'{par_name}_reso_flt' , 1.0, 0.20, 3.0)
             par       = zfit.ComposedParameter(f'{par_name}_cmp', lambda d_par : d_par['par_const'] * d_par['reso' ], params={'par_const' : par_const, 'reso'  : par_reso } )
         elif kind == 'scale':
             par_scale = zfit.Parameter(f'{par_name}_scale_flt', 0.0, -100, 100)
