@@ -227,13 +227,18 @@ class FitComponent:
         plt.close()
     # -------------------------------
     def _fix_tails(self, sig_par : Parameter) -> None:
-        s_par = self._pdf.get_params()
+        s_par_flt = self._pdf.get_params(floating= True)
+        s_par_fix = self._pdf.get_params(floating=False)
+        s_par     = s_par_flt | s_par_fix
+
         l_par = [ par.name for par in s_par ]
         l_par = sorted(l_par)
 
         log.debug('Found PDF parameters:')
         for name in l_par:
             log.debug(f'    {name}')
+
+        sig_par = Parameter.remove_suffix(sig_par, '_flt')
 
         log.debug('Found fixing parameters:')
         for name in sig_par:
@@ -243,21 +248,24 @@ class FitComponent:
         log.info('Fixing tails')
         log.info(60 * '-')
         for par in s_par:
-            name = par.name
+            name        = par.name
+            is_floating = name.endswith('_flt')
+            name        = name.removesuffix('_flt')
+
             if name not in sig_par:
                 log.debug(f'Skipping non signal parameter: {name}')
-                continue
-
-            if name.endswith('_flt'):
-                log.debug(f'Not fixing {name}')
                 continue
 
             val, _ = sig_par[name]
 
             par.set_value(val)
-            par.floating = False
-
             log.info(f'{name:<20}{"-->":<20}{val:<20.3f}')
+
+            if is_floating:
+                log.debug(f'Not fixing {name}')
+                continue
+
+            par.floating = False
     # --------------------
     def _get_kde_pdf(self) -> Union[zpdf, None]:
         data = self._get_data()
