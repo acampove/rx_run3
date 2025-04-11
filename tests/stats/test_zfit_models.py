@@ -34,7 +34,7 @@ def _initialize():
 def _plot_pdf(pdf : zpdf, name : str, mu_val : float) -> None:
     data = pdf.create_sampler(n=1_000)
     obj  = ZFitPlotter(data=data, model=pdf)
-    obj.plot(nbins=50, title=f'$\\mu_{{{mu_val}}}$')
+    obj.plot(nbins=50, title=f'$\\mu={{{mu_val}}}$')
 
     plt.savefig(f'{Data.out_dir}/{name}_{mu_val}.png')
 # -------------------------------
@@ -51,16 +51,17 @@ def test_hypexp():
 
     _plot_pdf(pdf, name='hypexp')
 # -------------------------------
-def test_modexp():
+@pytest.mark.parametrize('mu_val', Data.l_mu_mod_exp)
+def test_modexp(mu_val : int):
     '''
     Test ModExp PDF
     '''
     obs= zfit.Space('x', limits=(4500, 6000))
-    mu = zfit.Parameter('mu',  4500,  4000,  6000)
-    ap = zfit.Parameter('ap', 0.020,     0,   0.1)
-    bt = zfit.Parameter('bt', 0.002, 0.001, 0.005)
+    mu = zfit.Parameter('mu', mu_val,  4000,  5000)
+    ap = zfit.Parameter('ap',  0.020,     0,   0.1)
+    bt = zfit.Parameter('bt',  0.002, 0.001, 0.005)
 
     pdf= ModExp(obs=obs, mu=mu, alpha=ap, beta=bt)
 
-    _plot_pdf(pdf, name='modexp')
+    _plot_pdf(pdf, name='modexp', mu_val=mu_val)
 # -------------------------------
