@@ -3,8 +3,10 @@ Module holding tests for Parameter class
 '''
 import pytest
 
+from dmu.logging.log_store import LogStore
 from rx_calibration.hltcalibration.parameter import Parameter
 
+log=LogStore.add_logger('rx_calibration:hltcalibration:test_parameter')
 # ---------------------------------------------------------------------
 def test_simple():
     '''
