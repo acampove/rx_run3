@@ -62,3 +62,19 @@ def test_str():
 
     print(obj)
 # ---------------------------------------------------------------------
+def test_remove_suffix():
+    '''
+    Tests static remove_suffix method 
+    '''
+    log.info('')
+
+    obj = Parameter()
+    obj['a_x'] = 3,3
+    obj['b_y'] = 2,2
+
+    val_no_y = Parameter.remove_suffix(par=obj, suffix='_y')
+    val_no_x = Parameter.remove_suffix(par=obj, suffix='_x')
+
+    print(val_no_x)
+    print(val_no_y)
+# ---------------------------------------------------------------------

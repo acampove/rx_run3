@@ -62,4 +62,14 @@ class Parameter(UserDict):
             data = json.load(ifile)
 
         return Parameter(data)
+    # ----------------------------------
+    @staticmethod
+    def remove_suffix(par : 'Parameter', suffix : str) -> 'Parameter':
+        '''
+        Method taking a Parameter object and making a copy of it
+        the copy has its keys modified such that the suffix string is removed, if found
+        '''
+        data_new = { key.removesuffix(suffix) : value for key, value in par.items() }
+
+        return Parameter(data_new)
 # ------------------------------------
