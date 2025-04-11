@@ -17,17 +17,26 @@ class Data:
     Data class
     '''
     out_dir = '/tmp/tests/dmu/stats/zfit_models'
+
+    l_mu_mod_exp = [
+            4000,
+            4100,
+            4200,
+            4300,
+            4500,
+            4600,
+            ]
 # -------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------
-def _plot_pdf(pdf : zpdf, name : str) -> None:
-    data = pdf.create_sampler(n=10000)
+def _plot_pdf(pdf : zpdf, name : str, mu_val : float) -> None:
+    data = pdf.create_sampler(n=1_000)
     obj  = ZFitPlotter(data=data, model=pdf)
-    obj.plot(nbins=50)
+    obj.plot(nbins=50, title=f'$\\mu_{{{mu_val}}}$')
 
-    plt.savefig(f'{Data.out_dir}/{name}.png')
+    plt.savefig(f'{Data.out_dir}/{name}_{mu_val}.png')
 # -------------------------------
 def test_hypexp():
     '''
