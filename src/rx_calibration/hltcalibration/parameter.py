@@ -51,7 +51,7 @@ class Parameter(UserDict):
         return val
     # ----------------------------------
     @staticmethod
-    def from_json(path : str) -> UserDict:
+    def from_json(path : str) -> 'Parameter':
         '''
         Will take a path to a JSON file and return a Parameter instance
         '''
