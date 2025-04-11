@@ -221,7 +221,7 @@ class ModelFactory:
     # ---------------------------------------------
     @MethodRegistry.register('modexp')
     def _get_modexp(self, suffix : str = '') -> zpdf:
-        mu = zfit.Parameter('mu_modexp',  4500,  4000,  6000)
+        mu = zfit.Parameter('mu_modexp',  4000,  3000,  4500)
         ap = zfit.Parameter('ap_modexp', 0.020,     0,   0.1)
         bt = zfit.Parameter('bt_modexp', 0.002, 0.001, 0.005)
 
