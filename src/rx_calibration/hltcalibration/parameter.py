@@ -43,6 +43,13 @@ class Parameter(UserDict):
         with open(path, 'w', encoding='utf-8') as ofile:
             json.dump(self.data, ofile, indent=4, sort_keys=True)
     # ----------------------------------
+    def __str__(self) -> str:
+        val = ''
+        for key, value in self.data.items():
+            val += f'{key:<40}{value}\n'
+
+        return val
+    # ----------------------------------
     @staticmethod
     def from_json(path : str) -> UserDict:
         '''
