@@ -201,6 +201,9 @@ class FitComponent:
         obj.plot(**self._plt_cfg)
 
         title = f'Entries={self._yield_value:.0f}'
+        if 'title' in self._plt_cfg:
+            this_title = self._plt_cfg['title']
+            title = f'{title}; {this_title}'
 
         obj.axs[0].set_title(title)
         obj.axs[0].set_ylim(bottom=0)

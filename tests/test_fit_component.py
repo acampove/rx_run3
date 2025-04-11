@@ -209,3 +209,17 @@ def test_kde_cache_pdf():
     obj       = FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
     pdf_cached= obj.get_pdf()
 # --------------------------------------------
+def test_custom_title():
+    '''
+    Tests adding custom title
+    '''
+    log.info('')
+
+    pdf= tut.get_toy_pdf(kind='sign', obs=Data.obs)
+    rdf= tut.rdf_from_pdf(pdf=pdf, nentries=Data.nentries)
+    cfg= _get_conf('custom_title')
+    cfg['plotting']['title'] = 'some title'
+
+    obj=FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
+    _  =obj.run()
+# --------------------------------------------
