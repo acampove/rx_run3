@@ -36,7 +36,10 @@ def _plot_pdf(pdf : zpdf, name : str, mu_val : float) -> None:
     obj  = ZFitPlotter(data=data, model=pdf)
     obj.plot(nbins=50, title=f'$\\mu={{{mu_val}}}$')
 
-    plt.savefig(f'{Data.out_dir}/{name}_{mu_val}.png')
+    out_dir = f'{Data.out_dir}/{name}'
+    os.makedirs(out_dir, exist_ok=True)
+
+    plt.savefig(f'{out_dir}/{mu_val}.png')
 # -------------------------------
 def test_hypexp():
     '''
