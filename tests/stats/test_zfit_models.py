@@ -6,10 +6,7 @@ import zfit
 import pytest
 import matplotlib.pyplot as plt
 
-from zfit.core.interfaces   import ZfitSpace as zobs
 from zfit.core.basepdf      import BasePDF   as zpdf
-from zfit.core.parameter    import Parameter as zpar
-
 from dmu.stats.zfit_models  import HypExp
 from dmu.stats.zfit_models  import ModExp
 from dmu.stats.zfit_plotter import ZFitPlotter
