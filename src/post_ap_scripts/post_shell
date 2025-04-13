@@ -11,20 +11,20 @@ display_help()
 get_opts()
 {
     TEST=1
-    while getopts :hf:u:c: option; do 
+    while getopts :hf:u:c: option; do
         case "${option}" in
-            h)  
+            h)
                 display_help
                 exit 0
-                ;;  
+                ;;
            \?)  echo "Invalid option: -${OPTARG}"
                 display_help
                 exit 1
-                ;;  
+                ;;
             :)  echo "$0: Arguments needed"
                 display_help
                 exit 1
-                ;;  
+                ;;
         esac
     done
 }
@@ -65,8 +65,8 @@ initialize()
 # ------------------------------------------------------------------
 lb_dirac()
 {
-    # Will create a shell with dirac and some basic environment specified by rc file 
-    
+    # Will create a shell with dirac and some basic environment specified by rc file
+
     which lb-dirac > /dev/null 2>&1
 
     if [[ $? -ne 0 ]];then
