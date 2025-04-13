@@ -84,12 +84,15 @@ upload()
 #--------------------------------
 initialize()
 {
+    mkdir -p /tmp/logs/post_ap
+    LOGPATH="/tmp/logs/post_ap/update_tarball.log"
+
     echo "Initialling"
 
-    which lb-conda-dev        > /dev/null 2>&1
+    which lb-conda-dev        >> $LOGPATH 2>&1
     check "No lb-conda-dev found"
 
-    dirac-proxy-info          > /dev/null 2>&1
+    dirac-proxy-info          >> $LOGPATH 2>&1
     check "Invalid grid proxy, or cannot access dirac-proxy-info"
 
     if [[ -z $VENVS ]];then
