@@ -8,12 +8,8 @@ dependencies= [
 'scipy',
 'awkward',
 'tqdm',
-'joblib',
-'tensorflow==2.18.0', # Use latest allowed by zfit
 'numpy',
-'scikit-learn',
 'toml',
-'zfit',
 'numpy',
 'matplotlib',
 'mplhep',
@@ -21,6 +17,9 @@ dependencies= [
 'pandas']
 
 [project.optional-dependencies]
+# Use latest tensorflow allowed by zfit
+fit  = ['zfit','tensorflow==2.18.0']
+ml   = ['scikit-learn', 'joblib']
 dev  = ['pytest']
 
 [tools.setuptools.packages.find]
