@@ -37,3 +37,24 @@ Adding preselection and branches needed for HOP variables
 ## v8
 
 Dropping cut on lepton kinematics
+
+## v9
+
+Doing only RK lines and not removing branches
+
+## v10
+
+- Dropping PIDe cut on electrons, processes only `Hlt2RD_BuToKpEE_MVA` line. 
+- Can be used for applying properly PIDe cut, with brem corrected electrons.
+
+## v11
+
+Using all electron RK lines, i.e.:
+
+- Hlt2RD_BuToKpEE_MVA
+- Hlt2RD_BuToKpEE_SameSign_MVA
+- Hlt2RD_BuToKpEE_MVA_cal
+- Hlt2RD_BuToKpEE_MVA_misid
+
+Can be additionally used to stdy mis-ID backgrounds and PIDe calibration.
+
