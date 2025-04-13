@@ -1,5 +1,3 @@
-#!/usr/bin/env ganga
-
 '''
 Script used to submit fitering jobs using Ganga
 '''
@@ -14,8 +12,9 @@ from dataclasses         import dataclass
 from importlib.resources import files
 
 import yaml
+import ganga.ganga
+from ganga import Job, Executable, DiracFile, LocalFile, Interactive, GenericSplitter, Dirac, Local, File
 
-from GangaCore.GPI             import Job, Executable, DiracFile, LocalFile, Interactive, GenericSplitter, Dirac, Local, File
 from dmu.logging.log_store     import LogStore
 from post_ap.pfn_reader        import PFNReader
 
