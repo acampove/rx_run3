@@ -32,45 +32,45 @@ RK:
     acceptance: L1_INMUON && L2_INMUON
     cascade   : (1)
     jpsi_misid: (1)
-# -----------------------------------
+    # -----------------------------------
 tests:
   versions: &tst_ver
-      test_w31_34_v1r2266_ee: v1r2266
-      test_w35_37_v1r2266_ee: v1r2266
-      test_w37_39_v1r2266_ee: v1r2266
-      test_w40_42_v1r2266_ee: v1r2266
-      # ---------
-      test_dt_c1         : v1r1670
-      test_dt_c2         : v1r1670
-      test_dt_c3         : v1r1670
-      test_dt_c4         : v1r1670
+    test_w31_34_v1r2266_ee: v1r2266
+    test_w35_37_v1r2266_ee: v1r2266
+    test_w37_39_v1r2266_ee: v1r2266
+    test_w40_42_v1r2266_ee: v1r2266
+    # ---------
+    test_dt_c1         : v1r1670
+    test_dt_c2         : v1r1670
+    test_dt_c3         : v1r1670
+    test_dt_c4         : v1r1670
   samples: &tst_sam
     test_dt_c1:
-        - data_24_magup_turbo_24c1
+      - data_24_magup_turbo_24c1
     test_dt_c2:
-        - data_24_magup_turbo_24c2
+      - data_24_magup_turbo_24c2
     test_dt_c3:
-        - data_24_magup_turbo_24c3
+      - data_24_magup_turbo_24c3
     test_dt_c4:
-        - data_24_magup_turbo_24c4
-    # ---------
+      - data_24_magup_turbo_24c4
+      # ---------
     test_w31_34_v1r2266_ee:
-        - mc_24_w31_34_magup_sim10d_12123001_bu_kee_eq_btosllball_dpc_tuple
+      - mc_24_w31_34_magup_sim10d_12123001_bu_kee_eq_btosllball_dpc_tuple
     test_w35_37_v1r2266_ee:
-        - mc_24_w35_37_magup_sim10d_12123021_bu_piee_eq_btosllball_dpc_tuple
+      - mc_24_w35_37_magup_sim10d_12123021_bu_piee_eq_btosllball_dpc_tuple
     test_w37_39_v1r2266_ee:
-        - mc_24_w37_39_magdown_sim10d_12123021_bu_piee_eq_btosllball_dpc_tuple
+      - mc_24_w37_39_magdown_sim10d_12123021_bu_piee_eq_btosllball_dpc_tuple
     test_w40_42_v1r2266_ee:
-        - mc_24_w40_42_magdown_sim10d_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
-    # ---------
+      - mc_24_w40_42_magdown_sim10d_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+      # ---------
     test_w31_34_v1r2437_ee:
-        - mc_24_w31_34_magup_sim10d_11124002_bd_kstee_eq_btosllball05_dpc_tuple
+      - mc_24_w31_34_magup_sim10d_11124002_bd_kstee_eq_btosllball05_dpc_tuple
     test_w35_37_v1r2437_ee:
-        - mc_24_w35_37_magup_sim10d_12123003_bu_kee_eq_btosllball05_dpc_tuple
+      - mc_24_w35_37_magup_sim10d_12123003_bu_kee_eq_btosllball05_dpc_tuple
     test_w37_39_v1r2437_ee:
-        - mc_24_w37_39_magdown_sim10d_12123003_bu_kee_eq_btosllball05_dpc_tuple
+      - mc_24_w37_39_magdown_sim10d_12123003_bu_kee_eq_btosllball05_dpc_tuple
     test_w40_42_v1r2437_ee:
-        - mc_24_w40_42_magdown_sim10d_11453001_bd_jpsix_ee_eq_jpsiinacc_tuple
+      - mc_24_w40_42_magdown_sim10d_11453001_bd_jpsix_ee_eq_jpsiinacc_tuple
 working_group: rd
 productions:
   rd_ap_2024:
@@ -103,7 +103,7 @@ productions:
       data_turbo_24c4:
         - data_24_magdown_turbo_24c4
         - data_24_magup_turbo_24c4
-      # ---------
+        # ---------
       w31_34_v1r2266:
         - mc_24_w31_34_magup_sim10d-splitsim02_11102202_bd_kstgamma_eq_highptgamma_dpc_ss_tuple
         - mc_24_w31_34_magup_sim10d-splitsim02_11102441_bd_ksteta_gg_eq_dpc_ss_tuple
@@ -477,7 +477,7 @@ productions:
         - mc_24_w40_42_magup_sim10d_13154001_bs_jpsiphi_ee_eq_cpv_update2012_dpc_tuple
         - mc_24_w40_42_magup_sim10d_15144100_lb_jpsilambda_mm_eq_phsp_tuple
         - mc_24_w40_42_magup_sim10d_15154105_lb_jpsilambda_ee_eq_phsp_dpc_tuple
-      # ---------
+        # ---------
       w31_34_v1r2437:
         - mc_24_w31_34_magup_sim10d_11124002_bd_kstee_eq_btosllball05_dpc_tuple
         - mc_24_w31_34_magup_sim10d_11144011_bd_psi2skst_mm_eq_dpc_tuple
@@ -534,7 +534,7 @@ productions:
         - mc_24_w40_42_magup_sim10d_13454001_bs_jpsix_ee_eq_jpsiinacc_tuple
         - mc_24_w40_42_magup_sim10d_15454101_lb_jpsix_ee_eq_jpsiinacc_tuple
       <<: *tst_sam
-# ------------------------------------------------
+      # ------------------------------------------------
 transformations:
   particle_variables:
     # For EVERY particle, will define (or redefine) the variables below
@@ -655,28 +655,28 @@ transformations:
       - Hlt2RD_BuToKpEE_MVA_cal
       - Hlt2RD_BuToKpEE_MVA_misid
   categories:
-      bukee:
-        - Hlt2RD_BuToKpEE_MVA
-        - Hlt2RD_BuToKpEE_SameSign_MVA
-        - Hlt2RD_BuToKpEE_MVA_cal
-        - Hlt2RD_BuToKpEE_MVA_noPID
-        - Hlt2RD_BuToKpEE_MVA_misid
-      bdkstee:
-        - Hlt2RD_B0ToKpPimEE_MVA
-        - Hlt2RD_B0ToKpPimEE_SameSign_MVA
-        - Hlt2RD_B0ToKpPimEE_MVA_cal
-        - Hlt2RD_B0ToKpPimEE_MVA_noPID
-        - Hlt2RD_B0ToKpPimEE_MVA_misid
-      bukmm:
-        - Hlt2RD_BuToKpMuMu
-        - Hlt2RD_BuToKpMuMu_MVA
-        - Hlt2RD_BuToKpMuMu_SameSign_MVA
-        - Hlt2RD_BuToKpMuMu_MVA_noPID
-      bdkstmm:
-        - Hlt2RD_B0ToKpPimMuMu
-        - Hlt2RD_B0ToKpPimMuMu_MVA
-        - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
-        - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
+    bukee:
+      - Hlt2RD_BuToKpEE_MVA
+      - Hlt2RD_BuToKpEE_SameSign_MVA
+      - Hlt2RD_BuToKpEE_MVA_cal
+      - Hlt2RD_BuToKpEE_MVA_noPID
+      - Hlt2RD_BuToKpEE_MVA_misid
+    bdkstee:
+      - Hlt2RD_B0ToKpPimEE_MVA
+      - Hlt2RD_B0ToKpPimEE_SameSign_MVA
+      - Hlt2RD_B0ToKpPimEE_MVA_cal
+      - Hlt2RD_B0ToKpPimEE_MVA_noPID
+      - Hlt2RD_B0ToKpPimEE_MVA_misid
+    bukmm:
+      - Hlt2RD_BuToKpMuMu
+      - Hlt2RD_BuToKpMuMu_MVA
+      - Hlt2RD_BuToKpMuMu_SameSign_MVA
+      - Hlt2RD_BuToKpMuMu_MVA_noPID
+    bdkstmm:
+      - Hlt2RD_B0ToKpPimMuMu
+      - Hlt2RD_B0ToKpPimMuMu_MVA
+      - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
+      - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
   selection:
     evt_max : -1
     cuts:
