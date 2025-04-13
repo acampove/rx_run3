@@ -104,6 +104,9 @@ options:
   -d, --dry_run         If used, will not create and send job, only initialize
 ```
 
+**RX jobs**: See [this](doc/rx_jobs.md).   
+**LbpKmumu jobs**: See [this](doc/lbpkmm_jobs.md)
+
 ## Check latest version of virtual environment
 
 The jobs below will run with code from a virtual environment that is already in the grid. One should use the
