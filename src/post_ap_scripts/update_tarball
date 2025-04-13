@@ -8,7 +8,7 @@ display_help()
     echo "-h: Help"
     echo "-v: Version of tarball, optional, if not passed, wont upload it"
     echo "-i: This will force the script to install this version, e.g. 0.2.4" 
-    echo "-u: With 1 will force updating tarball if found int the grid, default is 0"
+    echo "-u: With 1 will force updating tarball if found in the grid, default is 0"
 }
 #--------------------------------
 get_args()
