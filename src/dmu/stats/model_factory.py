@@ -204,7 +204,7 @@ class ModelFactory:
     #-----------------------------------------
     @MethodRegistry.register('exp')
     def _get_exponential(self, suffix : str = '') -> zpdf:
-        c   = self._get_parameter('c_exp', suffix, -0.005, -0.20, 0.00)
+        c   = self._get_parameter('c_exp', suffix, -0.010, -0.020, -0.0001)
         pdf = zfit.pdf.Exponential(c, self._obs, name=f'exp{suffix}')
 
         return pdf
@@ -221,9 +221,9 @@ class ModelFactory:
     # ---------------------------------------------
     @MethodRegistry.register('modexp')
     def _get_modexp(self, suffix : str = '') -> zpdf:
-        mu = zfit.Parameter('mu_modexp',  4000,  3000,  4500)
-        ap = zfit.Parameter('ap_modexp', 0.020,     0,   0.1)
-        bt = zfit.Parameter('bt_modexp', 0.002, 0.001, 0.005)
+        mu = zfit.Parameter('mu_modexp',  4250,  4250,  4500)
+        ap = zfit.Parameter('ap_modexp', 0.002, 0.002, 0.026)
+        bt = zfit.Parameter('bt_modexp', 0.002, 0.002, 0.020)
 
         pdf= ModExp(obs=self._obs, mu=mu, alpha=ap, beta=bt, name=f'modexp{suffix}')
 
