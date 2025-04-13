@@ -37,8 +37,9 @@ get_args()
 #--------------------------------
 check()
 {
+    PROCESS=$1
     if [[ $? -ne 0 ]];then
-        echo "Failed: $1"
+        echo "Failed: $PROCESS, check logs at $LOGPATH"
         exit 1
     fi
 }
