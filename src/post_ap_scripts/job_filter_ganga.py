@@ -110,7 +110,7 @@ def _get_backend() -> Union[Dirac, Interactive]:
         return Local()
 
     if Data.back == 'Dirac':
-        return _get_dirac_backend() 
+        return _get_dirac_backend()
 
     raise ValueError(f'Invalid backend: {Data.back}')
 # -------------------------------------------------
