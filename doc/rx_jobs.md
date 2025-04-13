@@ -95,3 +95,6 @@ send_tests_data
 ```
 
 where only the first two lines need to be updated according to the user's virtual environment version and the location of their config.
+Comment the actual submissions and send the test jobs first.
+
+Submit the jobs by `source tmp/job.sh`
