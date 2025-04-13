@@ -539,7 +539,7 @@ productions:
         - mc_24_w40_42_magup_sim10d_13454001_bs_jpsix_ee_eq_jpsiinacc_tuple
         - mc_24_w40_42_magup_sim10d_15454101_lb_jpsix_ee_eq_jpsiinacc_tuple
       <<: *tst_sam
-      # ------------------------------------------------
+# ------------------------------------------------
 transformations:
   particle_variables:
     # For EVERY particle, will define (or redefine) the variables below
