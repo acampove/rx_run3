@@ -1,0 +1,12 @@
+executable              = __SCRIPT__
+arguments               = ""
+getenv                  = true
+output                  = __BASEFOLDLOG__/output/results.output.$(ClusterId)
+error                   = __BASEFOLDLOG__/error/results.error.$(ClusterId)
+log                     = __BASEFOLDLOG__/log/results.log.$(ClusterId)
+notify_user = __USER__@cern.ch
+notification = always
++JobFlavour = "workday"
+RequestCpus = 1
+request_memory = 5024M
+queue 1

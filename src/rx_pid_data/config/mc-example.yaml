@@ -1,0 +1,36 @@
+common: &com
+  data_types   : [MC]
+  years: [2024]
+  polarities: [up, down]
+  samples    : [block1_v1, block7, block8]
+  bin-vars   : [P, ETA]
+  output-dir-fake-sweights: "/afs/cern.ch/work/m/matzeni/ewp-rjpsi-2024/corrections/pid/samples/"
+  acceptable_config:
+      - polarities: [up]
+        samples: [block1_v0, block1_v1, block8]
+      - polarities: [down]
+        samples: [block7]
+        
+particles:
+  Mu : 
+    <<: *com
+    channel: JpsiToMuMu
+    particle_prefix: muprobe
+    samples    : [block1_v0, block7, block8]
+    pid-cuts:
+      - "((IsMuon==1) & (muprobe_PID_MU>-4))"
+      - "((IsMuon==1) & (muprobe_PID_MU>0))"
+  Pi  : 
+    <<: *com
+    channel: DstToD0Pi_D0ToKPi
+    particle_prefix: K
+    pid-cuts:
+      - "(pi_PID_K<0.00001)"
+
+  K   : 
+    <<: *com
+    channel: DstToD0Pi_D0ToKPi
+    particle_prefix: pi
+    pid-cuts:
+      - "(K_PID_K>-5)"
+      - "(K_PID_K>2)"
