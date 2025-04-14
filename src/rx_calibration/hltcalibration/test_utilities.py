@@ -7,7 +7,9 @@ import numpy
 import ROOT
 import zfit
 import zfit_physics
-from zfit.core.basepdf                           import BasePDF
+
+from zfit.core.basepdf                           import BasePDF    as zpdf
+from zfit.core.interfaces                        import ZfitSpace  as zobs
 from dmu.stats.model_factory                     import ModelFactory
 from ROOT                                        import RDataFrame, RDF
 
@@ -72,7 +74,7 @@ def get_toy_pdf(kind : str, obs) -> BasePDF:
 
     return pdf
 # --------------------------------------------
-def rdf_from_pdf(pdf : BasePDF, nentries : int) -> RDataFrame:
+def rdf_from_pdf(pdf : zpdf, nentries : int) -> RDataFrame:
     '''
     Returns ROOT dataframe from PDF
     '''
@@ -122,7 +124,7 @@ def _get_fit_component_cfg(name : str, test : str) -> dict:
 
     return d_fcomp
 # --------------------------------------------
-def _get_toy_comp(kind : str) -> tuple[RDataFrame, BasePDF]:
+def _get_toy_comp(kind : str) -> tuple[RDataFrame, zpdf]:
     if   kind == 'sign':
         mu  = zfit.Parameter("mu_flt", 5300, 5200, 5400)
         sg  = zfit.Parameter(    "sg",  40,    30,  100)
