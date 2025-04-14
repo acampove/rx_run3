@@ -6,7 +6,6 @@ dependencies= [
 'pidcalib2']
 
 [project.optional-dependencies]
-# Use latest tensorflow allowed by zfit
 dev  = ['pytest']
 
 [tools.setuptools.packages.find]
