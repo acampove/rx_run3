@@ -1,9 +1,11 @@
 '''
 Module with tests for Fitter class
 '''
-# pylint: disable=import-error
+# pylint: disable=import-error, wrong-import-position
 
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+
 from dataclasses                                 import dataclass
 
 import ROOT
