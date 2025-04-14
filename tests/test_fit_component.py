@@ -28,7 +28,7 @@ class Data:
     dat_dir   = '/publicfs/ucas/user/campoverde/Data/RX_run3/for_tests/post_ap'
     nentries  = 5_000
     mass_name = 'mass'
-    obs       = zfit.Space(mass_name, limits=(5200, 5400))
+    obs       = zfit.Space(mass_name, limits=(4500, 6000))
 # --------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -64,13 +64,14 @@ def test_toy_pdf():
     obj=FitComponent(cfg=cfg, rdf=rdf, pdf=pdf)
     _  =obj.run()
 # --------------------------------------------
-def test_kde_pdf():
+@pytest.mark.parametrize('width', [30, 50, 100, 150, 200])
+def test_kde_pdf(width : float):
     '''
     Test using KDE
     '''
-    name = 'kde'
+    name = f'kde_width_{width:03}'
 
-    pdf= tut.get_signal_pdf(obs=Data.obs)
+    pdf= tut.get_signal_pdf(obs=Data.obs, width=width)
     rdf= tut.rdf_from_pdf(pdf=pdf, nentries=Data.nentries)
     cfg= _get_conf(name)
     cfg['fitting'] = {
@@ -78,8 +79,8 @@ def test_kde_pdf():
                 name : {
                     'cfg_kde':
                     {
-                        'bandwidth': 20,
-                        'padding'  : {'lowermirror': 0.5, 'uppermirror': 0.5},
+                        'bandwidth': 'isj',
+                        'padding'  : {'lowermirror': 1.0, 'uppermirror': 1.0},
                         },
                     }
                 }
