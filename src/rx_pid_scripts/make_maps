@@ -1,3 +1,0 @@
-CWD=/afs/cern.ch/work/m/matzeni/ewp-rjpsi-2024/corrections/pid/
-python create_pidcalib2_histograms_scripts.py --yaml ${CWD}/configurations/data-example.yaml  --plot --binning-file ${CWD}/configurations/binnings/P_ETA.json #--dry-run 
-python create_pidcalib2_histograms_scripts.py --yaml ${CWD}/configurations/mc-example.yaml  --plot --binning-file ${CWD}/configurations/binnings/P_ETA.json  #--dry-run 
