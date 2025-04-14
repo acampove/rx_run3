@@ -47,7 +47,17 @@ def get_signal_rdf() -> RDataFrame:
 
     return rdf
 # --------------------------------------------
-def get_signal_pdf(obs) -> BasePDF:
+def _set_pdf_width(pdf : zpdf, width : float) -> None:
+    s_par_flt = pdf.get_params(floating= True)
+    s_par_fix = pdf.get_params(floating=False)
+    s_par     = s_par_flt | s_par_fix
+    for par in s_par:
+        if not par.name.startswith('sg_'):
+            continue
+
+        par.set_value(width)
+# --------------------------------------------
+def get_signal_pdf(obs : zobs, width : float = 100) -> zpdf:
     '''
     Returns PDFs for signal
     '''
@@ -56,9 +66,11 @@ def get_signal_pdf(obs) -> BasePDF:
     mod   = ModelFactory(preffix='signal', obs = obs, l_pdf = l_pdf, l_shared=l_shr, l_float=l_shr)
     pdf   = mod.get_pdf()
 
+    _set_pdf_width(pdf, width)
+
     return pdf
 # --------------------------------------------
-def get_toy_pdf(kind : str, obs) -> BasePDF:
+def get_toy_pdf(kind : str, obs) -> zpdf:
     '''
     Makes PDFs
     '''
