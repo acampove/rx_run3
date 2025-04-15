@@ -1,8 +1,14 @@
-import matplotlib.pyplot as plt
-import pickle
+'''
+Script used to plot histograms made by PIDCalib2
+'''
 import os
-import numpy as np
+import pickle
+import argparse
+
+import numpy             as np
 import matplotlib
+import matplotlib.pyplot as plt
+
 matplotlib.use('Agg')
 
 #fancy = True
@@ -121,7 +127,6 @@ def plot_boosthistogram_2d(fn, figure_dict=None, size=2):
     print(f"Saving figure in {outputfold}")
     plt.savefig(f"{outputfold}/{figure_dict['outputname']}")
 
-
 def get_fancy_xlabel(var):
     fancy_dict = {"P":r"$p(\mu)$ [MeV/c]",
                   "muprobe_P":r"$p(\mu)$ [MeV/c]",
@@ -134,10 +139,7 @@ def get_fancy_xlabel(var):
     return fancy_dict[var]
 
 
-
-if __name__ == "__main__":
-    # load the data of interest
-    import argparse
+def _parse_args():
     parser = argparse.ArgumentParser(description="A simple program that demonstrates argparse usage")
     parser.add_argument('--pid-cut', required=False, help='Path to the input file', dest="pid_cut", action='append')
     parser.add_argument('--output-dir', required=False, help='Path to the input file', dest="input_dir")
@@ -148,16 +150,21 @@ if __name__ == "__main__":
     parser.add_argument('--particle', required=False, help='Path to the input file', dest="particle")
     parser.add_argument('--binning-file', required=False, help='Path to the input file')
 
-    args = parser.parse_args()
+    args         = parser.parse_args()
     pid_cut_list = args.pid_cut
-    input_dir = args.input_dir
-    bin_var  = args.bin_var
-    year  = args.year
-    samples_file  = args.samples_file
-    particle = args.particle
+    input_dir    = args.input_dir
+    bin_var      = args.bin_var
+    year         = args.year
+    samples_file = args.samples_file
+    particle     = args.particle
     magnet = args.magnet
     binning_file = args.binning_file
-    
+
+# ------------------------------------
+def main():
+    '''
+    start here
+    '''
     output_dir = os.path.dirname(samples_file)
 
     if len(bin_var)<2:
@@ -181,3 +188,6 @@ if __name__ == "__main__":
                         "outputname":f"effhists-{year}-{magnet}-{particle}-{pid_cut}-{joined_bin_var}.pdf",
                         "outputfold":f'{output_dir}/std/{particle}/', "label":None}
             plot_boosthistogram_2d(fn, figure_dict=figure_dict)
+# ------------------------------------
+if __name__ == "__main__":
+    main()
