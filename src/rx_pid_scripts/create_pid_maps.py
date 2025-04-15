@@ -98,10 +98,12 @@ def _initialize() -> None:
     if Data.verbose:
         LogStore.set_level('rx_pid:create_pid_maps', 10)
 
-    Data.conf                 = _load_data(kind='config' )
+    Data.conf                 = _load_data(kind='config')
 
-    Data.conf['sample']       = Data.conf['samples'][Data.sample]
+    samples                   = Data.conf['samples_ee'] if Data.particle == 'e' else Data.conf['samples']
+    Data.conf['sample']       = samples[Data.sample]
     del Data.conf['samples']
+    del Data.conf['samples_ee']
 
     Data.conf['pid_cuts']     = Data.conf['particles'][Data.particle]['pid_cuts']
     Data.conf['bin_vars']     = Data.conf['particles'][Data.particle]['bin_vars']
