@@ -7,22 +7,6 @@ samples  :
   b6  : 2024_WithUT_block6
   b7  : 2024_WithUT_block7
   b8  : 2024_WithUT_block8
-selection:
-    MC: 
-     JpsiToMuMu       : 
-      - mutag_MUONLLBG  < 0 
-      - muprobe_INMUON == 1 
-      - (muprobe_Hlt1TrackMVADecision_TIS   ==1) | (muprobe_Hlt1TwoTrackMVADecision_TIS==1)
-      - (Jpsi_M                           >2930) & (Jpsi_M               <3270)
-      - (Jpsi_TRUEID                      ==443) | (Jpsi_TRUEID         ==-443)
-      - (muprobe_TRUEID                   == 13) | (muprobe_TRUEID      == -13)
-      - (mutag_TRUEID                     == 13) | (mutag_TRUEID        == -13)
-      - (mutag_MC_MOTHER_ID               ==443) | (mutag_MC_MOTHER_ID  ==-443) 
-      - (muprobe_MC_MOTHER_ID             ==443) | (muprobe_MC_MOTHER_ID==-443)
-     DstToD0Pi_D0ToKPi: 
-      - Dst_BKGCAT            == 0 
-      - (D_M          > 1825) & (D_M          < 1910) 
-      - (Dst_M - D_M) >  141) & (Dst_M - D_M) <  152) 
 common: &com
   bin_vars :
     - P
