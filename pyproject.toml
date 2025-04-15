@@ -6,6 +6,8 @@ dependencies= [
 'uproot',
 'pyYAML',
 'numpy',
+'fsspec-xrootd',
+'data-manipulation-utilities',
 'pidcalib2']
 
 [project.optional-dependencies]
