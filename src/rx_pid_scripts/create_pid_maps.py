@@ -5,10 +5,12 @@ Script meant to be used to create PID maps
 
 import argparse
 from importlib.resources      import files
-from pidcalib2.make_eff_hists import make_eff_hists
 
 import yaml
+from pidcalib2.make_eff_hists import make_eff_hists
+from dmu.logging.log_store    import LogStore
 
+log=LogStore.add_logger('rx_pid:create_pid_maps')
 # --------------------------------
 class Data:
     '''
