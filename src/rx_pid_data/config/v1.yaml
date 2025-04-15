@@ -15,9 +15,7 @@ samples_ee:
 selection_ee:
   - PT              > 250
   - P               > 3000
-  - IPCHI2          > 9
   - PROBNN_E        > 0.2
-  - PARTICLE_PPHASRICH
 # -----------------------------------------------
 samples  :
   b1  : 2024_WithUT_block1_v1
