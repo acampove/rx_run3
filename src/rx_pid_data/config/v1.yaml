@@ -3,19 +3,15 @@
 #
 #
 samples_ee:
-  b10 : 2024_WithUT_block1_Tables_0brem
-  b11 : 2024_WithUT_block1_Tables_1brem_probe
-  b12 : 2024_WithUT_block1_Tables_2brem
+  b10 : 2024_WithUT_block1_Tables_1brem_tag
+  b11 : 2024_WithUT_block1_Tables_2brem
   # --------
-  b50 : 2024_WithUT_block5_Tables_0brem
-  b51 : 2024_WithUT_block5_Tables_1brem_probe
-  b52 : 2024_WithUT_block5_Tables_2brem
+  b50 : 2024_WithUT_block5_Tables_1brem_tag
+  b51 : 2024_WithUT_block5_Tables_2brem
   # --------
-  b70 : 2024_WithUT_block7_Tables_0brem
-  b71 : 2024_WithUT_block7_Tables_1brem_probe
-  b72 : 2024_WithUT_block7_Tables_2brem
+  b70 : 2024_WithUT_block7_Tables_1brem_tag
+  b71 : 2024_WithUT_block7_Tables_2brem
 samples  :
-  2024: 2024
   b1  : 2024_WithUT_block1_v1
   b2  : 2024_WithUT_block2
   b3  : 2024_WithUT_block3
