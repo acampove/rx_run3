@@ -35,7 +35,7 @@ def _parse_args() -> None:
     parser.add_argument('-b', '--bin_vers', type=str, help='Version of binning file'               , required=True)
     parser.add_argument('-p', '--particle', type=str, help='Particle name', choices=Data.l_particle, required=True)
     parser.add_argument('-m', '--polarity', type=str, help='Polarity'     , choices=['up', 'down'] , required=True)
-    parser.add_argument('-s', '--sample'  , type=str, help='Sample'       ,                          default='2024')
+    parser.add_argument('-s', '--sample'  , type=str, help='Sample'       ,                          required=True)
     parser.add_argument('-d', '--dry-run' ,           help='Enable dry-run mode (default: False)'  , action='store_true')
     # These are by default None and will be used as in PIDCalib2's make_eff_hists
     parser.add_argument('-M', '--maxfiles', type=int, help='Limit number of files to this value')
