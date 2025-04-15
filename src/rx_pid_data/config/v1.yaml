@@ -21,14 +21,11 @@ common: &com
   bin_vars :
     - P
     - ETA
+  pid_cuts:
+    - (DLLe > 1.0) & (DLLe < 3.0) #Control region
+    - DLLe > 3.0                  #Signal region
 particles:
   Pi  :
     <<: *com
-    pid_cuts       :
-      - (DLLe > 1.0) & (DLLe < 3.0) #Control region
-      - DLLe > 3.0                  #Signal region
   K   :
     <<: *com
-    pid_cuts       :
-      - (DLLe > 1.0) & (DLLe < 3.0) #Control region
-      - DLLe > 3.0                  #Signal region
