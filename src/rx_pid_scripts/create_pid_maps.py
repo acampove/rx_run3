@@ -23,6 +23,9 @@ class Data:
     sample  : str
     conf    : dict
     dry_run : bool
+
+    max_files: int
+    verbose  : bool
 # --------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to calculate PID efficiencies using PIDCalib2')
@@ -32,6 +35,9 @@ def _parse_args() -> None:
     parser.add_argument('-m', '--polarity', type=str, help='Polarity'     , choices=['up', 'down'] , required=True)
     parser.add_argument('-s', '--sample'  , type=str, help='Sample'       ,                          default='2024')
     parser.add_argument('-d', '--dry-run' ,           help='Enable dry-run mode (default: False)'  , action='store_true')
+    # These are by default None and will be used as in PIDCalib2's make_eff_hists
+    parser.add_argument('-M', '--maxfiles', type=str, help='Limit number of files to this value')
+    parser.add_argument('-v', '--verbose' , help='Will print debug messages', action='store_true')
 
     args          = parser.parse_args()
     Data.cfg_vers = args.cfg_vers
@@ -40,6 +46,8 @@ def _parse_args() -> None:
     Data.polarity = args.polarity
     Data.sample   = args.sample
     Data.dry_run  = args.dry_run
+    Data.max_files= args.maxfiles
+    Data.verbose  = args.verbose
 # --------------------------------
 def _get_bin_vars() -> str:
     if not hasattr(Data, 'conf'):
@@ -88,11 +96,11 @@ def _initialize() -> None:
     Data.conf['cuts']         = None
     Data.conf['output_dir']   = 'pidcalib_output'
     Data.conf['binning_file'] = _path_from_kind(kind='binning')
+    Data.conf['max_files']       = Data.max_files
+    Data.conf['verbose']         = Data.verbose
     Data.conf['local_dataframe'] = None
     Data.conf['file_list']       = None
     Data.conf['samples_file']    = None
-    Data.conf['max_files']       = 1
-    Data.conf['verbose']         = True
 # --------------------------------
 def main():
     '''
