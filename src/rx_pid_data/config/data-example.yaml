@@ -1,35 +1,34 @@
 common: &com
-  data_types   : [Data]
-  years: [2024]
-  polarities: [up, down]
-  samples    : [2024_WithUT_block1_v1, 2024_WithUT_block8, 2024_WithUT_block7]
-  bin-vars   : [P, ETA]
-  acceptable_config:
-    - polarities: [up]
-      samples: [2024_WithUT_block1_v0, 2024_WithUT_block1_v1, 2024_WithUT_block8, 2024_WithUT_block1_v0]
-    - polarities: [down]
-      samples: [2024_WithUT_block7]
-
+  years: 
+    - 2024
+  polarities: 
+    - up
+    - down
+  samples  : 
+    - 2024_WithUT_block1_v1
+    - 2024_WithUT_block8
+    - 2024_WithUT_block7
+  bin-vars : 
+    - P
+    - ETA
 particles:
   Mu : 
     <<: *com
-    channel: JpsiToMuMu
+    channel        : JpsiToMuMu
     particle_prefix: muprobe
-    samples    : [2024_WithUT_block1_v1, 2024_WithUT_block8, 2024_WithUT_block7]
     pid-cuts:
-      - "((IsMuon==1) & (muprobe_PID_MU>-4))"
-      - "((IsMuon==1) & (muprobe_PID_MU>0))"
+      - (IsMuon==1) & (muprobe_PID_MU>-4)
+      - (IsMuon==1) & (muprobe_PID_MU> 0)
   Pi  : 
     <<: *com
-    channel: DstToD0Pi_D0ToKPi
+    channel        : DstToD0Pi_D0ToKPi
     particle_prefix: K
     pid-cuts:
-      - "(pi_PID_K<0.00001)"
-
+      - pi_PID_K < 0.00001
   K   : 
     <<: *com
     channel: DstToD0Pi_D0ToKPi
     particle_prefix: pi
     pid-cuts:
-      - "(K_PID_K>-5)"
-      - "(K_PID_K>2)"
+      - K_PID_K > -5
+      - K_PID_K > +2
