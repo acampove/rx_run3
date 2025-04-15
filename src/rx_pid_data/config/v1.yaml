@@ -1,4 +1,4 @@
-samples  : 
+samples  :
   2024: 2024
   b1  : 2024_WithUT_block1_v1
   b2  : 2024_WithUT_block2
@@ -12,19 +12,19 @@ common: &com
     - P
     - ETA
 particles:
-  Mu : 
+  Mu :
     <<: *com
     channel        : JpsiToMuMu
-    pid_cuts       : 
+    pid_cuts       :
       - IsMuon == 1
       - muprobe_PID_MU > -4
-  Pi  : 
+  Pi  :
     <<: *com
     channel        : DstToD0Pi_D0ToKPi
-    pid_cuts       : 
+    pid_cuts       :
       - pi_PID_K < 0.00001
-  K   : 
+  K   :
     <<: *com
     channel        : DstToD0Pi_D0ToKPi
-    pid_cuts       : 
+    pid_cuts       :
       - K_PID_K > -5
