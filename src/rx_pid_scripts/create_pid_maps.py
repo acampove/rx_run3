@@ -41,17 +41,27 @@ def _parse_args() -> None:
     Data.sample   = args.sample
     Data.dry_run  = args.dry_run
 # --------------------------------
+def _get_bin_vars() -> str:
+    if not hasattr(Data, 'conf'):
+        raise AttributeError('Data class does not have a config dictionary')
+
+    l_var   = Data.conf['bin_vars']
+    var_str = '_'.join(l_var)
+
+    return var_str
+# --------------------------------
 def _path_from_kind(kind : str) -> str:
     if kind == 'config':
         ext     = 'yaml'
         version = Data.cfg_vers
+        path    = files('rx_pid_data').joinpath(f'{kind}/{version}.{ext}')
     elif kind == 'binning':
         ext     = 'json'
         version = Data.bin_vers
+        bin_vars= _get_bin_vars()
+        path    = files('rx_pid_data').joinpath(f'{kind}/{bin_vars}/{version}.{ext}')
     else:
         raise ValueError(f'Invalid kind: {kind}')
-
-    path = files('rx_pid_data').joinpath(f'{kind}/{version}.{ext}')
 
     return path
 # --------------------------------
