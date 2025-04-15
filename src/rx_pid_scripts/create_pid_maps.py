@@ -83,15 +83,16 @@ def _load_data(kind : str) -> dict:
 
     return data
 # --------------------------------
-def _get_cuts() -> str:
-    l_cut = Data.conf['cuts']
+def _get_cuts() -> list[str]:
+    l_cut = Data.conf['selection']
     l_cut = [ cut.replace('PARTICLE', Data.particle) for cut in l_cut ]
-    l_cut = [ f'({cut})'                             for cut in l_cut ]
-    cut   = ' & '.join(l_cut)
+    l_cut = [ cut.replace('Pi_'     ,         'pi_') for cut in l_cut ]
 
-    log.debug(f'Using cut: {cut}')
+    log.debug('Using cuts:')
+    for cut in l_cut:
+        log.debug(cut)
 
-    return cut
+    return l_cut
 # --------------------------------
 def _initialize() -> None:
     if Data.verbose:
@@ -107,7 +108,7 @@ def _initialize() -> None:
     del Data.conf['particles']
 
     Data.conf['cuts']         = _get_cuts()
-    del Data.conf['cuts']
+    del Data.conf['selection']
 
     Data.conf['magnet']       = Data.polarity
     Data.conf['particle']     = Data.particle
