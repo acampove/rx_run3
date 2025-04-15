@@ -84,7 +84,7 @@ def _load_data(kind : str) -> dict:
     return data
 # --------------------------------
 def _get_cuts() -> list[str]:
-    l_cut = Data.conf['selection']
+    l_cut = Data.conf['selection_ee'] if Data.particle == 'e' else Data.conf['selection']
     l_cut = [ cut.replace('PARTICLE', Data.particle) for cut in l_cut ]
     l_cut = [ cut.replace('Pi_'     ,         'pi_') for cut in l_cut ]
 
