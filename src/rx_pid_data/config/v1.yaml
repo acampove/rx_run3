@@ -25,10 +25,10 @@ particles:
   Pi  :
     <<: *com
     pid_cuts       :
-      - DLLe < 3.0
-      - DLLe > 1.0
+      - (DLLe > 1.0) & (DLLe < 3.0) #Control region
+      - DLLe > 3.0                  #Signal region
   K   :
     <<: *com
     pid_cuts       :
-      - DLLe < 3.0
-      - DLLe > 1.0
+      - (DLLe > 1.0) & (DLLe < 3.0) #Control region
+      - DLLe > 3.0                  #Signal region
