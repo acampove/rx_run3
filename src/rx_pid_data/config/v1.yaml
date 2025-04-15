@@ -10,12 +10,12 @@ samples  :
   b6  : 2024_WithUT_block6
   b7  : 2024_WithUT_block7
   b8  : 2024_WithUT_block8
-cuts  :
-  - PARTICLE_TRACK_GHOSTPROB < 0.3
-  - PARTICLE_PT              > 250
-  - PARTICLE_P               > 3000
-  - PARTICLE_IPCHI2          > 9
-  - PARTICLE_PROBNN_E        > 0.2
+selection :
+  - TRACK_GHOSTPROB < 0.3
+  - PT              > 250
+  - P               > 3000
+  - IPCHI2          > 9
+  - PROBNN_E        > 0.2
   - PARTICLE_PPHASRICH
 common: &com
   bin_vars :
@@ -25,10 +25,10 @@ particles:
   Pi  :
     <<: *com
     pid_cuts       :
-      - pi_PID_E < 3.0
-      - pi_PID_E > 1.0
+      - DLLe < 3.0
+      - DLLe > 1.0
   K   :
     <<: *com
     pid_cuts       :
-      - K_PID_E < 3.0
-      - K_PID_E > 1.0
+      - DLLe < 3.0
+      - DLLe > 1.0
