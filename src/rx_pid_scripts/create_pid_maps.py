@@ -127,6 +127,9 @@ def main():
     _parse_args()
     _initialize()
 
+    if Data.dry_run:
+        return
+
     make_eff_hists(Data.conf)
 # --------------------------------
 if __name__ == '__main__':
