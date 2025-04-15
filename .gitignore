@@ -179,3 +179,4 @@ pyrightconfig.json
 *.pdf
 *.root
 *.swp
+pidcalib_output/
