@@ -83,7 +83,20 @@ def _load_data(kind : str) -> dict:
 
     return data
 # --------------------------------
+def _get_cuts() -> str:
+    l_cut = Data.conf['cuts']
+    l_cut = [ cut.replace('PARTICLE', Data.particle) for cut in l_cut ]
+    l_cut = [ f'({cut})'                             for cut in l_cut ]
+    cut   = ' & '.join(l_cut)
+
+    log.debug(f'Using cut: {cut}')
+
+    return cut
+# --------------------------------
 def _initialize() -> None:
+    if Data.verbose:
+        LogStore.set_level('rx_pid:create_pid_maps', 10)
+
     Data.conf                 = _load_data(kind='config' )
 
     Data.conf['sample']       = Data.conf['samples'][Data.sample]
@@ -93,9 +106,11 @@ def _initialize() -> None:
     Data.conf['bin_vars']     = Data.conf['particles'][Data.particle]['bin_vars']
     del Data.conf['particles']
 
+    Data.conf['cuts']         = _get_cuts()
+    del Data.conf['cuts']
+
     Data.conf['magnet']       = Data.polarity
     Data.conf['particle']     = Data.particle
-    Data.conf['cuts']         = None
     Data.conf['output_dir']   = 'pidcalib_output'
     Data.conf['binning_file'] = _path_from_kind(kind='binning')
     Data.conf['max_files']       = Data.max_files
