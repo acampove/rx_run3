@@ -1,3 +1,6 @@
+# This file is used to measure PIDe efficiencies for pions, kaons and electrons
+# falling outside the signal region, but within [1,3] in PIDe
+
 samples  :
   2024: 2024
   b1  : 2024_WithUT_block1_v1
@@ -7,24 +10,25 @@ samples  :
   b6  : 2024_WithUT_block6
   b7  : 2024_WithUT_block7
   b8  : 2024_WithUT_block8
+cuts  :
+  - PARTICLE_TRACK_GHOSTPROB < 0.3
+  - PARTICLE_PT              > 250
+  - PARTICLE_P               > 3000
+  - PARTICLE_IPCHI2          > 9
+  - PARTICLE_PROBNN_E        > 0.2
+  - PARTICLE_PPHASRICH
 common: &com
   bin_vars :
     - P
     - ETA
 particles:
-  Mu :
-    <<: *com
-    channel        : JpsiToMuMu
-    pid_cuts       :
-      - IsMuon == 1
-      - muprobe_PID_MU > -4
   Pi  :
     <<: *com
-    channel        : DstToD0Pi_D0ToKPi
     pid_cuts       :
-      - pi_PID_K < 0.00001
+      - pi_PID_E < 3.0
+      - pi_PID_E > 1.0
   K   :
     <<: *com
-    channel        : DstToD0Pi_D0ToKPi
     pid_cuts       :
-      - K_PID_K > -5
+      - K_PID_E < 3.0
+      - K_PID_E > 1.0
