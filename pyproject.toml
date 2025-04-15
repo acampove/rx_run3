@@ -3,6 +3,9 @@ name        = 'rx_pid'
 version     = '0.0.1'
 readme      = 'README.md'
 dependencies= [
+'uproot',
+'pyYAML',
+'numpy',
 'pidcalib2']
 
 [project.optional-dependencies]
@@ -12,11 +15,8 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
-create_pidcalib2_histograms_scripts='rx_pid.create_pidcalib2_histograms_scripts:main'
+create_pid_maps='rx_pid.create_pid_maps:main'
 plot_histograms='rx_pid.plot_histograms:main'
 
 [tool.setuptools.package-data]
 rx_pid_data=['*/*.json', '*/*.yaml', '*/*.submit']
-
-[tool.setuptools]
-script-files=['src/rx_pid_scripts/make_maps']
