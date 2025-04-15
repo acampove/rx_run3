@@ -1,34 +1,30 @@
+samples  : 
+  2024: 2024
+  b1  : 2024_WithUT_block1_v1
+  b2  : 2024_WithUT_block2
+  b3  : 2024_WithUT_block3
+  b5  : 2024_WithUT_block5
+  b6  : 2024_WithUT_block6
+  b7  : 2024_WithUT_block7
+  b8  : 2024_WithUT_block8
 common: &com
-  years: 
-    - 2024
-  polarities: 
-    - up
-    - down
-  samples  : 
-    - 2024_WithUT_block1_v1
-    - 2024_WithUT_block8
-    - 2024_WithUT_block7
-  vars :
+  bin_vars :
     - P
     - ETA
 particles:
   Mu : 
     <<: *com
     channel        : JpsiToMuMu
-    particle_prefix: muprobe
-    cuts:
-      - (IsMuon==1) & (muprobe_PID_MU>-4)
-      - (IsMuon==1) & (muprobe_PID_MU> 0)
+    pid_cuts       : 
+      - IsMuon == 1
+      - muprobe_PID_MU > -4
   Pi  : 
     <<: *com
     channel        : DstToD0Pi_D0ToKPi
-    particle_prefix: K
-    cuts:
+    pid_cuts       : 
       - pi_PID_K < 0.00001
   K   : 
     <<: *com
-    channel: DstToD0Pi_D0ToKPi
-    particle_prefix: pi
-    cuts:
+    channel        : DstToD0Pi_D0ToKPi
+    pid_cuts       : 
       - K_PID_K > -5
-      - K_PID_K > +2
