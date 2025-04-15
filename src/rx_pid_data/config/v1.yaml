@@ -2,6 +2,7 @@
 # falling outside the signal region, but within [1,3] in PIDe
 #
 #
+# -----------------------------------------------
 samples_ee:
   b10 : 2024_WithUT_block1_Tables_1brem_tag
   b11 : 2024_WithUT_block1_Tables_2brem
@@ -11,6 +12,13 @@ samples_ee:
   # --------
   b70 : 2024_WithUT_block7_Tables_1brem_tag
   b71 : 2024_WithUT_block7_Tables_2brem
+selection_ee:
+  - PT              > 250
+  - P               > 3000
+  - IPCHI2          > 9
+  - PROBNN_E        > 0.2
+  - PARTICLE_PPHASRICH
+# -----------------------------------------------
 samples  :
   b1  : 2024_WithUT_block1_v1
   b2  : 2024_WithUT_block2
@@ -26,6 +34,7 @@ selection :
   - IPCHI2          > 9
   - PROBNN_E        > 0.2
   - PARTICLE_PPHASRICH
+# -----------------------------------------------
 common: &com
   bin_vars :
     - P
