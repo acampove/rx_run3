@@ -75,19 +75,24 @@ def _load_data(kind : str) -> dict:
 # --------------------------------
 def _initialize() -> None:
     Data.conf                 = _load_data(kind='config' )
-    Data.conf['binning_file'] = _path_from_kind(kind='binning')
 
     Data.conf['sample']       = Data.conf['samples'][Data.sample]
     del Data.conf['samples']
 
-    Data.conf['pid_cuts'] = Data.conf['particles'][Data.particle]['pid_cuts']
+    Data.conf['pid_cuts']     = Data.conf['particles'][Data.particle]['pid_cuts']
+    Data.conf['bin_vars']     = Data.conf['particles'][Data.particle]['bin_vars']
     del Data.conf['particles']
 
-    Data.conf['magnet']   = Data.polarity
-    Data.conf['particle'] = Data.particle
-    Data.conf['verbose']  = False
-    Data.conf['cuts']     = None
-    Data.conf['output_dir']= 'pidcalib_output' 
+    Data.conf['magnet']       = Data.polarity
+    Data.conf['particle']     = Data.particle
+    Data.conf['cuts']         = None
+    Data.conf['output_dir']   = 'pidcalib_output'
+    Data.conf['binning_file'] = _path_from_kind(kind='binning')
+    Data.conf['local_dataframe'] = None
+    Data.conf['file_list']       = None
+    Data.conf['samples_file']    = None
+    Data.conf['max_files']       = 1
+    Data.conf['verbose']         = True
 # --------------------------------
 def main():
     '''
