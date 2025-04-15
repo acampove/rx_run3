@@ -8,6 +8,7 @@ from importlib.resources      import files
 
 import yaml
 from pidcalib2.make_eff_hists import make_eff_hists
+from pidcalib2.ref_calib      import ref_calib 
 from dmu.logging.log_store    import LogStore
 
 log=LogStore.add_logger('rx_pid:create_pid_maps')
@@ -132,7 +133,10 @@ def main():
     if Data.dry_run:
         return
 
-    make_eff_hists(Data.conf)
+    if Data.particle == 'e':
+        ref_calib(Data.conf)
+    else:
+        make_eff_hists(Data.conf)
 # --------------------------------
 if __name__ == '__main__':
     main()
