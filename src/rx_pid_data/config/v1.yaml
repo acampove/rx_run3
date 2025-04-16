@@ -29,7 +29,6 @@ selection :
   - PT              > 250
   - P               > 3000
   - IPCHI2          > 9
-  - PROBNN_E        > 0.2
   - PARTICLE_PPHASRICH
 # -----------------------------------------------
 common: &com
@@ -37,7 +36,8 @@ common: &com
     - P
     - ETA
   pid_cuts:
-    - DLLe > 3.0
+    - PROBNN_E > 0.2
+    - DLLe     > 3.0
 particles:
   e   :
     <<: *com
