@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+setup()
+{
+    . /cvmfs/lhcb.cern.ch/lib/LbEnv
+    lb-conda-dev virtual-env default venv
+
+    source venv/bin/activate
+
+    pip install pidcalib2
+
+    git clone ssh://git@gitlab.cern.ch:7999/rx_run3/rx_pid.git
+
+    pip install ./rx_pid/
+}
+
+run()
+{
+    let INDEX=0
+    for BLOCK in b1 b2 b3 b5 b6 b7 b8;do
+        for PARTICLE in Pi K;do
+            for CONF in v1 v2;do
+                if [[ $INDEX -eq $JOBID ]];then
+                    echo "Running at $INDEX with: $BLOCK, $PARTICLE, $CONF"
+                    create_pid_maps -c $CONF -b v1 -s $BLOCK -p $PARTICLE -o $OPATH
+                    return
+                fi
+                let INDEX+=1
+            done
+        done
+    done
+}
+
+# 7 (Blocks) x 2 (Particles) x 2 (Regions) = 28 jobs
+OPATH=/eos/home-a/acampove/calibration/mis_id
+JOBID=$1
+
+setup
+run
