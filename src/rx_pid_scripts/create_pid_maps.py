@@ -127,7 +127,7 @@ def _initialize() -> None:
     del Data.conf['samples']
     del Data.conf['samples_ee']
 
-    Data.conf['pid_cuts']     = _get_pid_cuts()
+    Data.conf['pid_cuts']     = [ _get_pid_cuts() ] # PIDCalib2 expects a list of cuts, we use one cut, make list of one element...
     Data.conf['bin_vars']     = Data.conf['particles'][Data.particle]['bin_vars']
     del Data.conf['particles']
 
