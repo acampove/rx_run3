@@ -98,7 +98,7 @@ def _get_pid_cuts() -> str:
     l_cut = Data.conf['particles'][Data.particle]['pid_cuts']
     l_cut = [ f'({cut})' for cut in l_cut ]
 
-    cut   = ' && '.join(l_cut)
+    cut   = ' & '.join(l_cut)
 
     log.debug(f'Using PID cut: {cut}')
 
