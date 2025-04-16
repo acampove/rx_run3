@@ -60,7 +60,23 @@ and the `b*` key is what the `-s` flag should get.
 
 ### Cluster jobs
 
+In order to make these maps with jobs sent to the cluster do:
 
+- Move to LXPLUS
+- Copy to an empty directory both submission and running scripts in `src/rx_pid_data/jobs`
+
+```bash
+chmod +x make_pid_maps
+
+# Modify the line OPATH to point to the user's directory where the outputs will go
+
+# The log files will be placed here, the directory has to exist or else the jobs will be held
+mkdir logs/
+
+condor_submit job.sub
+```
+
+the jobs can be monitored with `watch condor_q`
 
 ### Plotting
 
