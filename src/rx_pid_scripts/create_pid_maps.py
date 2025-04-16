@@ -94,6 +94,18 @@ def _get_cuts() -> list[str]:
 
     return l_cut
 # --------------------------------
+def _get_polarity() -> str:
+    if Data.sample in ['b1', 'b2', 'b3', 'b5', 'b8']:
+        polarity = 'up'
+    elif Data.sample in ['b4', 'b6', 'b7']:
+        polarity = 'down'
+    else:
+        raise NotImplementedError(f'Invalid sample: {Data.sample}')
+
+    log.debug(f'Using polarity: {polarity}')
+
+    return polarity
+# --------------------------------
 def _initialize() -> None:
     if Data.verbose:
         LogStore.set_level('rx_pid:create_pid_maps', 10)
@@ -112,9 +124,9 @@ def _initialize() -> None:
     Data.conf['cuts']         = _get_cuts()
     del Data.conf['selection']
 
-    Data.conf['magnet']       = Data.polarity
+    Data.conf['magnet']       = _get_polarity()
     Data.conf['particle']     = Data.particle
-    Data.conf['output_dir']   = Data.out_dir 
+    Data.conf['output_dir']   = Data.out_dir
     Data.conf['binning_file'] = _path_from_kind(kind='binning')
     Data.conf['max_files']       = Data.max_files
     Data.conf['verbose']         = Data.verbose
