@@ -22,7 +22,6 @@ class Data:
     cfg_vers: str
     bin_vers: str
     particle: str
-    polarity: str
     sample  : str
     conf    : dict
     dry_run : bool
@@ -35,7 +34,6 @@ def _parse_args() -> None:
     parser.add_argument('-c', '--cfg_vers', type=str, help='Version of configuration file'         , required=True)
     parser.add_argument('-b', '--bin_vers', type=str, help='Version of binning file'               , required=True)
     parser.add_argument('-p', '--particle', type=str, help='Particle name', choices=Data.l_particle, required=True)
-    parser.add_argument('-m', '--polarity', type=str, help='Polarity'     , choices=['up', 'down'] , required=True)
     parser.add_argument('-s', '--sample'  , type=str, help='Sample'       ,                          required=True)
     parser.add_argument('-o', '--out_dir' , type=str, help='Directory where pkl files will go'     , required=True)
     parser.add_argument('-d', '--dry-run' ,           help='Enable dry-run mode (default: False)'  , action='store_true')
@@ -48,7 +46,6 @@ def _parse_args() -> None:
     Data.cfg_vers = args.cfg_vers
     Data.bin_vers = args.bin_vers
     Data.particle = args.particle
-    Data.polarity = args.polarity
     Data.sample   = args.sample
     Data.dry_run  = args.dry_run
     Data.max_files= args.maxfiles
