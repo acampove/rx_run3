@@ -26,10 +26,10 @@ options:
                         Version of binning file
   -p {e,Pi,K,Mu,P}, --particle {e,Pi,K,Mu,P}
                         Particle name
-  -m {up,down}, --polarity {up,down}
-                        Polarity
   -s SAMPLE, --sample SAMPLE
                         Sample
+  -o OUT_DIR, --out_dir OUT_DIR
+                        Directory where pkl files will go
   -d, --dry-run         Enable dry-run mode (default: False)
   -M MAXFILES, --maxfiles MAXFILES
                         Limit number of files to this value
