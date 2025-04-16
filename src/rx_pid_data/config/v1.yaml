@@ -1,6 +1,5 @@
 # This file is used to measure PIDe efficiencies for pions, kaons and electrons
-# falling outside the signal region, but within [1,3] in PIDe
-#
+# falling inside signal region, and above  0.2 in PROBNN_E
 #
 # -----------------------------------------------
 samples_ee:
