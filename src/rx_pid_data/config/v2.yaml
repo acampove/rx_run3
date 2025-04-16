@@ -38,7 +38,7 @@ common: &com
     - P
     - ETA
   pid_cuts:
-    - DLLe > 3.0
+    - (DLLe > 1.0) & (DLLe < 3.0)
 particles:
   e   :
     <<: *com
