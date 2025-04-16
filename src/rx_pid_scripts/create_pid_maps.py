@@ -94,6 +94,16 @@ def _get_cuts() -> list[str]:
 
     return l_cut
 # --------------------------------
+def _get_pid_cuts() -> str:
+    l_cut = Data.conf['particles'][Data.particle]['pid_cuts']
+    l_cut = [ f'({cut})' for cut in l_cut ]
+
+    cut   = ' && '.join(l_cut)
+
+    log.debug(f'Using PID cut: {cut}')
+
+    return cut
+# --------------------------------
 def _get_polarity() -> str:
     if Data.sample in ['b1', 'b2', 'b3', 'b5', 'b8']:
         polarity = 'up'
@@ -117,7 +127,7 @@ def _initialize() -> None:
     del Data.conf['samples']
     del Data.conf['samples_ee']
 
-    Data.conf['pid_cuts']     = Data.conf['particles'][Data.particle]['pid_cuts']
+    Data.conf['pid_cuts']     = _get_pid_cuts()
     Data.conf['bin_vars']     = Data.conf['particles'][Data.particle]['bin_vars']
     del Data.conf['particles']
 
