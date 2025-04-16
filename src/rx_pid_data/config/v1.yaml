@@ -30,6 +30,7 @@ selection :
   - P               > 3000
   - IPCHI2          > 9
   - PARTICLE_PPHASRICH
+  - PARTICLE_INECAL
 # -----------------------------------------------
 common: &com
   bin_vars :
