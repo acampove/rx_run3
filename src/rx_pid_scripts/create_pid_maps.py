@@ -18,6 +18,7 @@ class Data:
     '''
     l_particle : list[str] = ['e', 'Pi', 'K', 'Mu', 'P']
 
+    out_dir : str
     cfg_vers: str
     bin_vers: str
     particle: str
@@ -36,12 +37,14 @@ def _parse_args() -> None:
     parser.add_argument('-p', '--particle', type=str, help='Particle name', choices=Data.l_particle, required=True)
     parser.add_argument('-m', '--polarity', type=str, help='Polarity'     , choices=['up', 'down'] , required=True)
     parser.add_argument('-s', '--sample'  , type=str, help='Sample'       ,                          required=True)
+    parser.add_argument('-o', '--out_dir' , type=str, help='Directory where pkl files will go'     , required=True)
     parser.add_argument('-d', '--dry-run' ,           help='Enable dry-run mode (default: False)'  , action='store_true')
     # These are by default None and will be used as in PIDCalib2's make_eff_hists
     parser.add_argument('-M', '--maxfiles', type=int, help='Limit number of files to this value')
     parser.add_argument('-v', '--verbose' , help='Will print debug messages', action='store_true')
 
     args          = parser.parse_args()
+    Data.out_dir  = args.out_dir
     Data.cfg_vers = args.cfg_vers
     Data.bin_vers = args.bin_vers
     Data.particle = args.particle
@@ -114,7 +117,7 @@ def _initialize() -> None:
 
     Data.conf['magnet']       = Data.polarity
     Data.conf['particle']     = Data.particle
-    Data.conf['output_dir']   = 'pidcalib_output'
+    Data.conf['output_dir']   = Data.out_dir 
     Data.conf['binning_file'] = _path_from_kind(kind='binning')
     Data.conf['max_files']       = Data.max_files
     Data.conf['verbose']         = Data.verbose
