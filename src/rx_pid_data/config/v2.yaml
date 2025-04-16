@@ -1,7 +1,6 @@
 # This file is used to measure PIDe efficiencies for pions, kaons and electrons
 # falling outside the signal region for Analysis samples, with PIDe in [1,inf]
 #
-#
 # -----------------------------------------------
 samples_ee:
   b10 : 2024_WithUT_block1_Tables_1brem_tag
@@ -37,13 +36,16 @@ common: &com
   bin_vars :
     - P
     - ETA
-  pid_cuts:
-    - PROBNN_E < 0.2 | DLLe < 3
-    - DLLe > 1.0
 particles:
-  e   :
-    <<: *com
   Pi  :
     <<: *com
+    pid_cuts:
+      - PROBNN_E < 0.2 | DLLe < 3
+      - DLLe > 1.0
+      - PROBNN_K < 0.1
   K   :
     <<: *com
+    pid_cuts:
+      - PROBNN_E < 0.2 | DLLe < 3
+      - DLLe > 1.0
+      - PROBNN_K > 0.1
