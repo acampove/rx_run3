@@ -22,5 +22,5 @@ def test_simple():
     '''
     cfg = _get_config()
     obj =MisIDCalculator(cfg=cfg)
-    data=obj.get_dataset()
+    data=obj.get_misid()
 # ---------------------------------
