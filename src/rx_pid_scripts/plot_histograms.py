@@ -26,7 +26,7 @@ class Data:
     fontsize   : int
     fancy      : bool = True
     skip_values: bool = True
-    regex      : str  = r'effhists-2024_WithUT_block\d(?:_v1)?-(up|down)-([A-Z,a-z,0-9]+)-([A-Z,a-z,0-9,<,>,\.,&,\(,\)]+)-(\w+)\.(\w+)\.pkl'
+    regex      : str  = r'effhists-2024_WithUT_block\d(?:_v1)?-(up|down)-([A-Z,a-z,0-9]+)-(.*)-(\w+)\.(\w+)\.pkl'
 # ---------------------------------
 def _initialize() -> None:
     plt.style.use(mplhep.style.LHCb2)
