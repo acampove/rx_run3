@@ -67,7 +67,15 @@ run()
             for CONF in v1 v2;do
                 if [[ $INDEX -eq $JOBID ]];then
                     echo "Running at $INDEX with: $BLOCK, $PARTICLE, $CONF"
-                    create_pid_maps -c $CONF -b $BINNING -s $BLOCK -p $PARTICLE -o $OPATH
+                    if [[ $TEST -eq 0 ]];then
+                        create_pid_maps -c $CONF -b $BINNING -s $BLOCK -p $PARTICLE -o $OPATH
+                    elif [[ $TEST -eq 1 ]];then
+                        echo "Running test"
+                        create_pid_maps -c $CONF -b $BINNING -s $BLOCK -p $PARTICLE -o $OPATH -M 1 -v
+                    else
+                        echo "Invalid value for test argument $TEST"
+                        exit 1
+                    fi
                     return
                 fi
                 let INDEX+=1
