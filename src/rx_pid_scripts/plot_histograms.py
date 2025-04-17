@@ -10,6 +10,7 @@ from typing import TypeAlias
 
 import numpy
 import matplotlib.pyplot as plt
+from matplotlib.colors  import LogNorm
 import mplhep
 from dmu.logging.log_store import LogStore
 
@@ -21,6 +22,10 @@ class Data:
     '''
     Data class
     '''
+    log_eff    : bool
+    norm       : LogNorm
+    max_eff    : float = 1.0
+    min_eff    : float = 0.0
     dir_path   : str
     figsize    : tuple[int,int]
     fontsize   : int
@@ -30,6 +35,13 @@ class Data:
 # ---------------------------------
 def _initialize() -> None:
     plt.style.use(mplhep.style.LHCb2)
+
+    if Data.log_eff:
+        Data.norm    = LogNorm()
+        Data.min_eff = None
+        Data.max_eff = None
+    else:
+        Data.norm    = None
 
     if Data.fancy:
         Data.figsize  = 12, 12
@@ -41,9 +53,13 @@ def _initialize() -> None:
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to plot histograms in pkl files created by PIDCalib2')
     parser.add_argument('-d', '--dir_path', type=str, help='Path to directory with PKL files')
+    parser.add_argument('-m', '--max_eff' , type=str, help='Upper value for z-axis in plots, i.e. maximum efficiency', default=Data.max_eff)
+    parser.add_argument('-l', '--log_eff' , help='If used, will make efficiency (z) axis in log scale', action='store_true')
     args   = parser.parse_args()
 
     Data.dir_path = args.dir_path
+    Data.max_eff  = args.max_eff
+    Data.log_eff  = args.log_eff
 # ------------------------------------
 def _get_pkl_paths() -> list[str]:
     path_wc = f'{Data.dir_path}/*.pkl'
@@ -81,13 +97,14 @@ def _plot_hist(pkl_path : str) -> None:
     errors     = numpy.sqrt(variances)
 
     arr_x, arr_y = numpy.meshgrid(x_edges, y_edges)
-    plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', vmin=0.0, vmax=1.)
+    plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=Data.norm, vmin=Data.min_eff, vmax=Data.max_eff)
     plt.colorbar(label='Efficiency')
 
     _add_values(x_edges, y_edges, counts, errors)
     _add_info(pkl_path)
 
     out_path = pkl_path.replace('.pkl', '.png')
+
     plt.savefig(out_path)
     plt.close()
 # ------------------------------------
