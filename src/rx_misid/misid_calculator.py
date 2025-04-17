@@ -25,7 +25,8 @@ class MisIDCalculator:
         trigger = self._cfg['input']['trigger']
         d_cut   = self._cfg['input']['selection']
 
-        rdf     = RDFGetter(sample=sample, trigger=trigger)
+        obj     = RDFGetter(sample=sample, trigger=trigger)
+        rdf     = obj.get_rdf()
 
         d_sel   = sel.selection(project='RK', analysis='EE', q2bin='jpsi', process='DATA')
         d_sel.update(d_cut)
