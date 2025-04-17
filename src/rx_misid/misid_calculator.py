@@ -6,6 +6,8 @@ from zfit.core.data         import Data      as zdata
 from dmu.logging.log_store  import LogStore
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
+from rx_misid.splitter      import SampleSplitter
+from rx_misid.weighter      import SampleWeighter
 
 log=LogStore.add_logger('rx_misid:misid_calculator')
 # ----------------------------
