@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+# -----------------------------------------------------
+display_help()
+{
+    echo "Script used to make PID maps, meant to be used by HTCondor submit script that will do:"
+    echo ""
+    echo "# 7 (Blocks) x 2 (Particles) x 2 (Signal and control region) = 28 jobs"
+    echo ""
+    echo "With options:"
+    echo "-t: Test flag, if true will do only one file and with pidcalib2's --verbose"
+    echo "-i: Index of the job. Such that each job will run with a different configuration, from 0 to 27, inclusive"
+    echo "-o: Path to output directory, by default $OPATH"
+    echo "-b: Version of binning, default $BINNING" 
+}
+# -----------------------------------------------------
+get_opts()
+{
+    if [[ $# -eq 0 ]]; then
+        display_help
+        exit 1
+    fi  
+
+    OPATH=/eos/home-a/acampove/calibration/mis_id
+    BINNING=v1
+    while getopts :hf:i:t:o:b: option; do 
+        case "${option}" in
+            h)  
+                display_help
+                exit 0
+                ;;  
+            t)  TEST=${OPTARG};;
+            i)  JOBID=${OPTARG};;
+            b)  BINNING=${OPTARG};;
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;  
+        esac
+    done
+}
+# -----------------------------------------------------
+setup()
+{
+    . /cvmfs/lhcb.cern.ch/lib/LbEnv
+    lb-conda-dev virtual-env default venv
+
+    source venv/bin/activate
+
+    pip install pidcalib2
+
+    git clone ssh://git@gitlab.cern.ch:7999/rx_run3/rx_pid.git
+
+    pip install ./rx_pid/
+}
+# -----------------------------------------------------
+run()
+{
+    let INDEX=0
+    for BLOCK in b1 b2 b3 b5 b6 b7 b8;do
+        for PARTICLE in Pi K;do
+            for CONF in v1 v2;do
+                if [[ $INDEX -eq $JOBID ]];then
+                    echo "Running at $INDEX with: $BLOCK, $PARTICLE, $CONF"
+                    create_pid_maps -c $CONF -b $BINNING -s $BLOCK -p $PARTICLE -o $OPATH
+                    return
+                fi
+                let INDEX+=1
+            done
+        done
+    done
+}
+# -----------------------------------------------------
+get_opts "$@"
+setup
+run
