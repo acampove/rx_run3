@@ -8,7 +8,7 @@ display_help()
     echo "# 7 (Blocks) x 2 (Particles) x 2 (Signal and control region) = 28 jobs"
     echo ""
     echo "With options:"
-    echo "-t: Test flag, if true will do only one file and with pidcalib2's --verbose"
+    echo "-t: Test flag, if 1 will do only one file and with pidcalib2's --verbose, by default 0"
     echo "-i: Index of the job. Such that each job will run with a different configuration, from 0 to 27, inclusive"
     echo "-o: Path to output directory, by default $OPATH"
     echo "-b: Version of binning, default $BINNING" 
@@ -23,6 +23,7 @@ get_opts()
 
     OPATH=/eos/home-a/acampove/calibration/mis_id
     BINNING=v1
+    TEST=0
     while getopts :hf:i:t:o:b: option; do 
         case "${option}" in
             h)  
