@@ -63,7 +63,11 @@ and the `b*` key is what the `-s` flag should get.
 In order to make these maps with jobs sent to the cluster do:
 
 - Move to LXPLUS
-- Copy to an empty directory both submission and running scripts in `src/rx_pid_data/jobs`
+- Copy to an empty directory both submission and running scripts in 
+`src/rx_pid_data/jobs`
+and
+`src/rx_pid_data_scripts`
+respectively.
 
 ```bash
 chmod +x make_pid_maps

@@ -1,8 +1,8 @@
 executable            = $ENV(PWD)/make_pid_maps
-arguments             = $(ProcId)
+arguments             = -i $(ProcId)
 output                = $ENV(PWD)/logs/$(ClusterId)_$(ProcId).out
 error                 = $ENV(PWD)/logs/$(ClusterId)_$(ProcId).err
 log                   = $ENV(PWD)/logs/$(ClusterId)_$(ProcId).log
 +JobFlavour           = "workday"
-queue 28 
+queue 28
 
