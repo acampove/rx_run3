@@ -1,0 +1,10 @@
+input :
+  samples  :
+    data  : DATA_*
+    signal: Bu_Kee_eq_btosllball05_DPC
+    leak  : Bu_JpsiK_ee_eq_DPC
+  trigger  : Hlt2RD_BuToKpEE_MVA
+  selection:
+    bdt : mva_cmb > 0.5 && mva_prc > 0.5
+maps :
+  path : /home/acampove/external_ssd/Calibration/mis_id/v2
