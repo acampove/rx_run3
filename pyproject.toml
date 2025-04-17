@@ -23,3 +23,6 @@ plot_histograms='rx_pid_scripts.plot_histograms:main'
 
 [tool.setuptools.package-data]
 rx_pid_data=['*/*/*.json', '*/*.yaml', '*/*.submit']
+
+[tool.setuptools]
+script-files=['src/rx_pid_scripts/make_pid_maps']
