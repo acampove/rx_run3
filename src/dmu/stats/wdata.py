@@ -67,6 +67,23 @@ class Wdata:
         '''
         return numpy.sum(self._weights)
     # -------------------------------
+    def update_weights(self, weights : numpy.ndarray, replace : bool) -> 'Wdata':
+        '''
+        Takes array of weights to either:
+        - Replace existing array
+        - Update by multiply by existing array
+
+        depending on the replace argument value. It returns a new instance of Wdata
+        '''
+        if self._weights.shape != weights.shape:
+            raise ValueError(f'Invalid shape for array of weights, expected/got: {self._weights.shape}/{weights.shape}')
+
+        new_weights = weights if replace else weights * self._weights
+
+        data = Wdata(data=self._data, weights=new_weights)
+
+        return data
+    # -------------------------------
     def to_zfit(self, obs : zobs) -> zdata:
         '''
         Function that takes a zfit observable and uses it

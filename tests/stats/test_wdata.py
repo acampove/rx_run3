@@ -95,3 +95,19 @@ def test_add():
     assert wdata_1.size + wdata_2.size == wdata_3.size
     assert wdata_1.sumw + wdata_2.sumw == wdata_3.sumw
 # --------------------------
+def test_update_weights():
+    '''
+    Tests that the object can be build
+    '''
+    log.info('')
+    arr_mass = numpy.random.normal(loc=0, scale=1.0, size=Data.nentries)
+    arr_wgto = numpy.ones(Data.nentries)
+    data_1   = Wdata(data=arr_mass, weights=arr_wgto)
+
+    arr_wgtn = numpy.random.normal(loc=1, scale=0.1, size=Data.nentries)
+    data_2   = data_1.update_weights(weights=arr_wgtn, replace=False)
+    data_3   = data_1.update_weights(weights=arr_wgto, replace= True)
+
+    assert data_1 != data_2
+    assert data_1 == data_3
+# --------------------------
