@@ -18,6 +18,7 @@ class RDFGetter:
     '''
     Class meant to load dataframes with friend trees
     '''
+    max_entries = -1
     # ---------------------------------------------------
     def __init__(self, sample : str, trigger : str, tree : str = 'DecayTree'):
         '''
@@ -191,6 +192,10 @@ class RDFGetter:
 
         log.debug(f'Building datarame from {self._tmp_path}')
         rdf = RDF.Experimental.FromSpec(self._tmp_path)
+        if RDFGetter.max_entries > 0:
+            log.warning(f'Returning dataframe with at most {RDFGetter.max_entries} entries')
+            rdf = rdf.Range(RDFGetter.max_entries)
+
         rdf = self._add_columns(rdf)
 
         return rdf
