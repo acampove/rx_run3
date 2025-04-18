@@ -148,6 +148,15 @@ wdata_3  = wdata_1 + wdata_2
 
 wdata.sumw() # sum of weights
 wdata.size() # Number of entries
+
+# Update weights creating a new Wdata instance
+arr_wgt_new  = numpy.random.normal(loc=1, scale=0.2, size=Data.nentries)
+
+# New weights
+wdata_2 = wdata.update_weights(weights=arr_wgt_new, replace=True)
+
+# Multiply old weights by new ones and update
+wdata_3 = wdata.update_weights(weights=arr_wgt_new, replace=False)
 ```
 
 ## PDFs
