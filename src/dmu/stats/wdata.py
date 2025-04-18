@@ -44,6 +44,16 @@ class Wdata:
 
         return Wdata(data=data, weights=weights)
     # -------------------------------
+    def __eq__(self, other) -> bool:
+        '''
+        Checks that the data and weights are the same within a 1e-5 relative tolerance
+        '''
+        rtol = 1e-5
+        equal_data    = numpy.allclose(other._data   , self._data   , rtol=rtol)
+        equal_weights = numpy.allclose(other._weights, self._weights, rtol=rtol)
+
+        return equal_data and equal_weights
+    # -------------------------------
     @property
     def size(self) -> int:
         '''

@@ -58,14 +58,33 @@ def test_kde_fit():
     plt.savefig(f'{Data.outdir}/kde_fit.png')
     plt.close()
 # --------------------------
+def test_equal():
+    '''
+    Tests that the object can be build
+    '''
+    log.info('')
+    arr_mass_1 = numpy.random.normal(loc=0, scale=1.0, size=Data.nentries)
+    arr_wgt_1  = numpy.random.normal(loc=1, scale=0.1, size=Data.nentries)
+
+    arr_mass_2 = numpy.random.normal(loc=0, scale=1.1, size=Data.nentries)
+    arr_wgt_2  = numpy.random.normal(loc=1, scale=0.2, size=Data.nentries)
+
+    wdata_1  = Wdata(data=arr_mass_1, weights=arr_wgt_1)
+    wdata_2  = Wdata(data=arr_mass_1, weights=arr_wgt_1)
+    wdata_3  = Wdata(data=arr_mass_2, weights=arr_wgt_1)
+    wdata_4  = Wdata(data=arr_mass_1, weights=arr_wgt_2)
+    wdata_5  = Wdata(data=arr_mass_2, weights=arr_wgt_2)
+
+    assert wdata_1 == wdata_2
+    assert wdata_1 != wdata_3
+    assert wdata_1 != wdata_4
+    assert wdata_1 != wdata_5
+# --------------------------
 def test_add():
     '''
     Tests that the object can be build
     '''
-    log.info(20 * '-')
-    log.info('Running test_add')
-    log.info(20 * '-')
-
+    log.info('')
     arr_mass = numpy.random.normal(loc=0, scale=1.0, size=Data.nentries)
     arr_wgt  = numpy.random.normal(loc=1, scale=0.1, size=Data.nentries)
 
