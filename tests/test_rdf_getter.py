@@ -5,8 +5,7 @@ import os
 import matplotlib.pyplot as plt
 
 import pytest
-import ROOT
-from ROOT                   import RDataFrame, EnableImplicitMT
+from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
@@ -17,8 +16,6 @@ class Data:
     '''
     Class used to share attributes
     '''
-    EnableImplicitMT(10)
-
     out_dir    = '/tmp/tests/rx_data/rdf_getter'
     low_q2     = '(Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1000000)'
     central_q2 = '(Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000)'
