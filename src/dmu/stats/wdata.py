@@ -97,15 +97,31 @@ class Wdata:
 
         return df
     # -------------------------------
+    def _is_extra_data_equal(self, df_other : pnd.DataFrame, rtol : float) -> bool:
+        df_this = self._df
+
+        if df_other is None and df_this is None:
+            return True
+
+        fail_1 = df_other is     None and df_this is not None
+        fail_2 = df_other is not None and df_this is     None
+
+        if fail_1 or fail_2:
+            log.warning('One of the weighted data compared does not have extra columns information')
+            return False
+
+        return numpy.allclose(df_this.values, df_other.values, rtol=rtol)
+    # -------------------------------
     def __eq__(self, other) -> bool:
         '''
         Checks that the data and weights are the same within a 1e-5 relative tolerance
         '''
         rtol = 1e-5
-        equal_data    = numpy.allclose(other._data   , self._data   , rtol=rtol)
-        equal_weights = numpy.allclose(other._weights, self._weights, rtol=rtol)
+        equal_data       = numpy.allclose(other._data   , self._data   , rtol=rtol)
+        equal_weights    = numpy.allclose(other._weights, self._weights, rtol=rtol)
+        equal_extra_data = self._is_extra_data_equal(df_other=other.extra_columns, rtol=rtol)
 
-        return equal_data and equal_weights
+        return equal_data and equal_weights and equal_extra_data
     # -------------------------------
     @property
     def extra_columns(self) -> Union[pnd.DataFrame,None]:
