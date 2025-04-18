@@ -17,9 +17,25 @@ class Wdata:
     Class meant to symbolize weighted data
     '''
     # -------------------------------
-    def __init__(self, data : numpy.ndarray, weights : numpy.ndarray):
+    def __init__(self, data : numpy.ndarray, weights : numpy.ndarray = None):
+        '''
+        '''
         self._data    = data
-        self._weights = weights
+        self._weights = self._get_weights(weights)
+    # -------------------------------
+    def _get_weights(self, weights : numpy.ndarray) -> numpy.ndarray:
+        if weights is None:
+            log.info('Weights not found, using ones')
+            return numpy.ones(self.size)
+
+        if not isinstance(weights, numpy.ndarray):
+            raise ValueError('Weights argument is not a numpy array')
+
+        weights_size = len(weights)
+        if weights_size != self.size:
+            raise ValueError(f'Data size and weights size differ: {self.size} != {weights_size}')
+
+        return weights
     # -------------------------------
     def _build_new_array(self, arr_other : numpy.ndarray, kind : str) -> numpy.ndarray:
         arr_this = getattr(self, kind)
@@ -60,6 +76,7 @@ class Wdata:
         Returns number of entries in dataset
         '''
         return len(self._data)
+    # -------------------------------
     @property
     def sumw(self) -> int:
         '''

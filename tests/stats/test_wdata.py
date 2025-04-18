@@ -108,3 +108,13 @@ def test_update_weights():
     assert data_1 != data_2
     assert data_1 == data_3
 # --------------------------
+def test_none_weights():
+    '''
+    Tests that the object can be build
+    '''
+    log.info('')
+    arr_mass = numpy.random.normal(loc=0, scale=1.0, size=Data.nentries)
+    data     = Wdata(data=arr_mass)
+
+    assert isinstance(data, Wdata)
+# --------------------------
