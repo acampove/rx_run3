@@ -85,13 +85,16 @@ def test_add():
     log.info('')
     arr_mass = numpy.random.normal(loc=0, scale=1.0, size=Data.nentries)
     arr_wgt  = numpy.random.normal(loc=1, scale=0.1, size=Data.nentries)
+    df       = pnd.DataFrame({'a' : arr_mass, 'b' : arr_mass})
+    df_sum   = pnd.concat([df, df], axis=0, ignore_index=True)
 
-    wdata_1  = Wdata(data=arr_mass, weights=arr_wgt)
-    wdata_2  = Wdata(data=arr_mass, weights=arr_wgt)
+    wdata_1  = Wdata(data=arr_mass, weights=arr_wgt, extra_columns=df)
+    wdata_2  = Wdata(data=arr_mass, weights=arr_wgt, extra_columns=df)
     wdata_3  = wdata_1 + wdata_2
 
     assert wdata_1.size + wdata_2.size == wdata_3.size
     assert wdata_1.sumw + wdata_2.sumw == wdata_3.sumw
+    assert wdata_3.extra_columns.equals(df_sum)
 # --------------------------
 def test_update_weights():
     '''
