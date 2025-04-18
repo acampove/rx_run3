@@ -158,21 +158,28 @@ class RDFGetter:
         with open(self._tmp_path, 'w', encoding='utf-8') as ofile:
             json.dump(d_data, ofile, indent=4, sort_keys=True)
     # ---------------------------------------------------
+    def _add_column(self, rdf: RDataFrame, name : str, definition : str) -> RDataFrame:
+        if not hasattr(self, '_l_columns'):
+            self._l_columns = [ name.c_str() for name in rdf.GetColumnNames() ]
+
+        if name in self._l_columns:
+            log.debug(f'Not adding column {name}, already found')
+            return rdf
+
+        log.debug(f'Adding column {name}, not found')
+
+        rdf = rdf.Define(name, definition)
+
+        self._l_columns.append(name)
+
+        return rdf
+    # ---------------------------------------------------
     def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
         if self._tree_name != 'DecayTree':
             return rdf
 
-        log.debug('Adding Jpsi_const_mass_M')
-        rdf = rdf.Define('Jpsi_const_mass_M' , 'TMath::Sqrt(TMath::Power(Jpsi_DTF_HEAD_PE, 2) - TMath::Power(Jpsi_DTF_HEAD_PX, 2) - TMath::Power(Jpsi_DTF_HEAD_PY, 2) - TMath::Power(Jpsi_DTF_HEAD_PZ, 2))')
-
-        if 'DATA' in self._sample:
-            # Data does not have TRACK_PT in this version of ntuples, mc does
-            log.debug('Adding TRACK_PT columns')
-            rdf = rdf.Define('L1_TRACK_PT', 'TMath::Sqrt(TMath::Power(L1_TRACK_PX, 2) + TMath::Power(L1_TRACK_PY, 2))')
-            rdf = rdf.Define('L2_TRACK_PT', 'TMath::Sqrt(TMath::Power(L2_TRACK_PX, 2) + TMath::Power(L2_TRACK_PY, 2))')
-
-        log.debug('Adding q2_track column')
-        rdf = rdf.Define('q2_track'   , 'ROOT::Math::PtEtaPhiMVector l1(L1_TRACK_PT, L1_ETA, L1_PHI, 0.511); ROOT::Math::PtEtaPhiMVector l2(L2_TRACK_PT, L2_ETA, L2_PHI, 0.511); auto ll = l1 + l2; return ll.M2();')
+        for name, definition in self._cfg['definitions'].items():
+            rdf = self._add_column(rdf, name, definition)
 
         return rdf
     # ---------------------------------------------------
