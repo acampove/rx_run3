@@ -109,9 +109,9 @@ def test_update_weights():
     assert data_1 != data_2
     assert data_1 == data_3
 # --------------------------
-def test_none_weights():
+def test_unweighted():
     '''
-    Tests that the object can be build
+    Test with unweighted data
     '''
     log.info('')
     arr_mass = numpy.random.normal(loc=0, scale=1.0, size=Data.nentries)
