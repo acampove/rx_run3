@@ -1,14 +1,16 @@
 '''
 Module with Wdata class
 '''
+from typing import Union
+
 import zfit
 import numpy
+import pandas as pnd
 from zfit.core.interfaces  import ZfitSpace  as zobs
 from zfit.core.data        import Data       as zdata
 
 from dmu.logging.log_store import LogStore
 
-# pylint: disable=too-many-ancestors
 
 log=LogStore.add_logger('dmu:stats:wdata')
 # -------------------------------
@@ -17,8 +19,12 @@ class Wdata:
     Class meant to symbolize weighted data
     '''
     # -------------------------------
-    def __init__(self, data : numpy.ndarray, weights : numpy.ndarray = None):
+    def __init__(self,
+                 data    : Union[numpy.ndarray, pnd.DataFrame],
+                 weights : numpy.ndarray = None):
         '''
+        data   :
+        weights: Numpy array with weights, if not passed, will use ones as weights
         '''
         self._data    = data
         self._weights = self._get_weights(weights)
@@ -80,7 +86,7 @@ class Wdata:
     @property
     def sumw(self) -> int:
         '''
-        Returns sum of weights 
+        Returns sum of weights
         '''
         return numpy.sum(self._weights)
     # -------------------------------
