@@ -274,7 +274,12 @@ def test_mc(sample : str):
 @pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'DATA_24_MagDown_24c2'])
 def test_check_vars(sample : str):
     '''
-    Checks that variables from friend trees can be accessed
+    Checks that variables from:
+
+    - Friend trees
+    - Added branches, e.g. L*_TRACK_P/ETA, etc
+
+    Can be accessed
     '''
     gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
