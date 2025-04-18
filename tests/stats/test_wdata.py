@@ -5,6 +5,7 @@ import os
 import zfit
 import numpy
 import pytest
+import pandas            as pnd
 import matplotlib.pyplot as plt
 from dmu.stats.wdata        import Wdata
 from dmu.logging.log_store  import LogStore
@@ -115,6 +116,17 @@ def test_none_weights():
     log.info('')
     arr_mass = numpy.random.normal(loc=0, scale=1.0, size=Data.nentries)
     data     = Wdata(data=arr_mass)
+
+    assert isinstance(data, Wdata)
+# --------------------------
+def test_extra_columns():
+    '''
+    Tests adding extra information on top of the observable and weights
+    '''
+    log.info('')
+    arr_mass = numpy.random.normal(loc=0, scale=1.0, size=Data.nentries)
+    df       = pnd.DataFrame({'a' : arr_mass, 'b' : arr_mass})
+    data     = Wdata(data=arr_mass, extra_columns=df)
 
     assert isinstance(data, Wdata)
 # --------------------------

@@ -20,14 +20,27 @@ class Wdata:
     '''
     # -------------------------------
     def __init__(self,
-                 data    : Union[numpy.ndarray, pnd.DataFrame],
-                 weights : numpy.ndarray = None):
+                 data          : Union[numpy.ndarray, pnd.DataFrame],
+                 weights       : numpy.ndarray = None,
+                 extra_columns : pnd.DataFrame = None):
         '''
         data   :
         weights: Numpy array with weights, if not passed, will use ones as weights
+        extra_columns: Extra information that can be attached to the Wdata object in the form of a pandas dataframe, default None
         '''
         self._data    = data
         self._weights = self._get_weights(weights)
+        self._df_extr = self._get_df_extr(extra_columns)
+    # -------------------------------
+    def _get_df_extr(self, df : pnd.DataFrame) -> pnd.DataFrame:
+        if not isinstance(df, pnd.DataFrame):
+            arg_type = type(df)
+            raise ValueError(f'Expected a pandas dataframe, got {arg_type}')
+
+        if len(df) != self.size:
+            raise ValueError('Input dataframe differs in length from data')
+
+        return df
     # -------------------------------
     def _get_weights(self, weights : numpy.ndarray) -> numpy.ndarray:
         if weights is None:
