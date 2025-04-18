@@ -1,0 +1,8 @@
+# This config file is used to configure the behaviour of RDFGetter
+
+#If a column ins not found in a dataframe, it will be added according to the following definitions
+definitions:
+  Jpsi_const_mass_M : 'TMath::Sqrt(TMath::Power(Jpsi_DTF_HEAD_PE, 2) - TMath::Power(Jpsi_DTF_HEAD_PX, 2) - TMath::Power(Jpsi_DTF_HEAD_PY, 2) - TMath::Power(Jpsi_DTF_HEAD_PZ, 2))'
+  L1_TRACK_PT       : 'TMath::Sqrt(TMath::Power(L1_TRACK_PX, 2) + TMath::Power(L1_TRACK_PY, 2))'
+  L2_TRACK_PT       : 'TMath::Sqrt(TMath::Power(L2_TRACK_PX, 2) + TMath::Power(L2_TRACK_PY, 2))'
+  q2_track          : 'ROOT::Math::PtEtaPhiMVector l1(L1_TRACK_PT, L1_ETA, L1_PHI, 0.511); ROOT::Math::PtEtaPhiMVector l2(L2_TRACK_PT, L2_ETA, L2_PHI, 0.511); auto ll = l1 + l2; return ll.M2();'
