@@ -63,15 +63,17 @@ def test_equal():
     log.info('')
     arr_mass_1 = numpy.random.normal(loc=0, scale=1.0, size=Data.nentries)
     arr_wgt_1  = numpy.random.normal(loc=1, scale=0.1, size=Data.nentries)
+    df_1       = pnd.DataFrame({'a' : arr_mass_1, 'b' : arr_mass_1})
 
     arr_mass_2 = numpy.random.normal(loc=0, scale=1.1, size=Data.nentries)
     arr_wgt_2  = numpy.random.normal(loc=1, scale=0.2, size=Data.nentries)
+    df_2       = pnd.DataFrame({'a' : arr_mass_2, 'b' : arr_mass_2})
 
-    wdata_1  = Wdata(data=arr_mass_1, weights=arr_wgt_1)
-    wdata_2  = Wdata(data=arr_mass_1, weights=arr_wgt_1)
-    wdata_3  = Wdata(data=arr_mass_2, weights=arr_wgt_1)
-    wdata_4  = Wdata(data=arr_mass_1, weights=arr_wgt_2)
-    wdata_5  = Wdata(data=arr_mass_2, weights=arr_wgt_2)
+    wdata_1  = Wdata(data=arr_mass_1, weights=arr_wgt_1, extra_columns=df_1)
+    wdata_2  = Wdata(data=arr_mass_1, weights=arr_wgt_1, extra_columns=df_1)
+    wdata_3  = Wdata(data=arr_mass_2, weights=arr_wgt_1, extra_columns=None)
+    wdata_4  = Wdata(data=arr_mass_1, weights=arr_wgt_2, extra_columns=None)
+    wdata_5  = Wdata(data=arr_mass_2, weights=arr_wgt_2, extra_columns=df_2)
 
     assert wdata_1 == wdata_2
     assert wdata_1 != wdata_3
