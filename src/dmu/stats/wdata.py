@@ -30,7 +30,7 @@ class Wdata:
         '''
         self._data    = data
         self._weights = self._get_weights(weights)
-        self._df_extr = self._get_df_extr(extra_columns)
+        self._df      = self._get_df_extr(extra_columns)
     # -------------------------------
     def _get_df_extr(self, df : pnd.DataFrame) -> Union[pnd.DataFrame,None]:
         if df is None:
@@ -77,10 +77,25 @@ class Wdata:
             raise NotImplementedError(f'Cannot add Wdata instance to {other_type} instance')
 
         log.debug('Adding instances of Wdata')
-        data    = self._build_new_array(arr_other=other._data   , kind='_data'   )
-        weights = self._build_new_array(arr_other=other._weights, kind='_weights')
+        data    = self._build_new_array(arr_other = other._data   , kind='_data'   )
+        weights = self._build_new_array(arr_other = other._weights, kind='_weights')
+        df      = self._build_extra_df(df_other = other._df)
 
-        return Wdata(data=data, weights=weights)
+        return Wdata(data=data, weights=weights, extra_columns=df)
+    # -------------------------------
+    def _build_extra_df(self, df_other : pnd.DataFrame) -> Union[pnd.DataFrame,None]:
+        if df_other is None and self._df is None:
+            return None
+
+        fail_1 = df_other is     None and self._df is not None
+        fail_2 = df_other is not None and self._df is     None
+
+        if fail_1 or fail_2:
+            raise ValueError('One of the two Wdata instances does not contain extra column information')
+
+        df = pnd.concat([df_other, self._df], axis=0, ignore_index=True)
+
+        return df
     # -------------------------------
     def __eq__(self, other) -> bool:
         '''
@@ -91,6 +106,13 @@ class Wdata:
         equal_weights = numpy.allclose(other._weights, self._weights, rtol=rtol)
 
         return equal_data and equal_weights
+    # -------------------------------
+    @property
+    def extra_columns(self) -> Union[pnd.DataFrame,None]:
+        '''
+        Dataframe with extra columns, or None, if not passed
+        '''
+        return self._df
     # -------------------------------
     @property
     def size(self) -> int:
