@@ -29,10 +29,6 @@ def test_create():
     Tests that the object can be build
     '''
     log.info('')
-    log.info(20 * '-')
-    log.info('Running test_create')
-    log.info(20 * '-')
-
     arr_mass = numpy.random.normal(loc=0, scale=1.0, size=Data.nentries)
     arr_wgt  = numpy.random.normal(loc=1, scale=0.1, size=Data.nentries)
 
@@ -44,6 +40,7 @@ def test_kde_fit():
     '''
     Tests that KDE fit can be done with data
     '''
+    log.info('')
     arr_mass = numpy.random.normal(loc=0, scale=1.0, size=Data.nentries)
     arr_wgt  = numpy.random.normal(loc=1, scale=0.1, size=Data.nentries)
     obs      = zfit.Space('obs', limits=(-3, +3))
