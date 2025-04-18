@@ -220,7 +220,7 @@ def test_q2_track_electron(sample : str):
 
     _plot_q2_track(rdf, sample)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_Kmumu_eq_btosllball05_DPC']) 
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_Kmumu_eq_btosllball05_DPC'])
 def test_q2_track_muon(sample : str):
     '''
     Checks the distributions of q2_track vs normal q2
