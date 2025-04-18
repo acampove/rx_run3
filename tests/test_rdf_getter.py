@@ -31,6 +31,12 @@ class Data:
             'hop.hop_alpha',
             'cascade.swp_cascade_mass_swp',
             'jpsi_misid.swp_jpsi_misid_mass_swp',
+            'L1_TRACK_PT',
+            'L1_TRACK_ETA',
+            'L1_TRACK_P',
+            'L2_TRACK_PT',
+            'L2_TRACK_ETA',
+            'L2_TRACK_P',
             ]
 
     l_branch_mm = [
@@ -46,6 +52,7 @@ class Data:
 def _initialize():
     LogStore.set_level('rx_data:rdf_getter', 10)
     os.makedirs(Data.out_dir, exist_ok=True)
+    RDFGetter.max_entries = 1000
 # ------------------------------------------------
 def _check_branches(rdf : RDataFrame, is_ee : bool) -> None:
     l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
