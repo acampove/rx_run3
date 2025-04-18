@@ -32,7 +32,10 @@ class Wdata:
         self._weights = self._get_weights(weights)
         self._df_extr = self._get_df_extr(extra_columns)
     # -------------------------------
-    def _get_df_extr(self, df : pnd.DataFrame) -> pnd.DataFrame:
+    def _get_df_extr(self, df : pnd.DataFrame) -> Union[pnd.DataFrame,None]:
+        if df is None:
+            return None
+
         if not isinstance(df, pnd.DataFrame):
             arg_type = type(df)
             raise ValueError(f'Expected a pandas dataframe, got {arg_type}')
