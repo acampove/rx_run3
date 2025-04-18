@@ -6,6 +6,7 @@ import glob
 import json
 import hashlib
 import fnmatch
+from importlib.resources import files
 
 import yaml
 from ROOT                  import RDF, RDataFrame
@@ -26,15 +27,24 @@ class RDFGetter:
         '''
         self._sample      = sample
         self._trigger     = trigger
-        self._main_tree   = 'main' # This is the label of the main (not the friends) tree
         self._samples     : dict[str,str]
 
-        self._l_electron_only = ['brem_track_2.yaml']
 
-        self._tree_name   = tree
-        self._tmp_path    : str
+        self._tree_name       = tree
+        self._tmp_path        : str
+        self._l_columns       : list[str]
+        self._cfg             = self._load_config()
+        self._main_tree       = self._cfg['trees']['main']
+        self._l_electron_only = self._cfg['trees']['electron_only']
 
         self._initialize()
+    # ---------------------------------------------------
+    def _load_config(self) -> dict:
+        config_path = files('rx_data_data').joinpath('rdf_getter/config.yaml')
+        with open(config_path, encoding='utf-8') as ifile:
+            cfg = yaml.safe_load(ifile)
+
+        return cfg
     # ---------------------------------------------------
     def _skip_path(self, file_name : str) -> bool:
         if file_name in self._l_electron_only and 'MuMu' in self._trigger:
