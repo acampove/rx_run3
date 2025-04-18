@@ -1,3 +1,6 @@
+# Particles charges are defined from AP's YAML config:
+# https://gitlab.cern.ch/lhcb-datapkg/AnalysisProductions/-/blob/223655c72f9c778cf9daa9a0138174b464ac7ca9/rd_ap_2024/tupling/config/b_to_xll_mva.yaml
+
 input :
   samples  :
     data  : DATA_*
@@ -8,3 +11,17 @@ input :
     bdt : mva_cmb > 0.5 && mva_prc > 0.5
 maps :
   path : /home/acampove/external_ssd/Calibration/mis_id/v2
+  pars :
+    - TRACK_P
+    - TRACK_ETA
+splitting:
+  observable: B_M
+  tracks:
+    ss : L1 # Lepton with same charge as B
+    os : L2 # Lepton with opposite charge as B
+  hadron_tagging:
+    kaon :  LEP_PROBNN_K > 0.1
+    pion :  LEP_PROBNN_K < 0.1
+  lepton_tagging:
+    pass :  LEP_PROBNN_E > 0.2 && LEP_PID_E > 3
+    fail : (LEP_PROBNN_E < 0.2 || LEP_PID_E < 3) && LEP_PID_E > 1
