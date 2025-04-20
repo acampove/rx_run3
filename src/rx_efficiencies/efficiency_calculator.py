@@ -88,7 +88,7 @@ class EfficiencyCalculator:
         title = self._get_title()
 
         plt.grid()
-        plt.xlim(0, 1.8)
+        plt.xlim(0, 0.5)
         plt.title(title)
         plt.ylabel('')
         plt.xlabel(r'$\varepsilon_{sel}$[%]')
