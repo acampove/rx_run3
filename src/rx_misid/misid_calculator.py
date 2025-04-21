@@ -2,7 +2,8 @@
 Module holding MisIDCalculator class
 '''
 
-from dmu.stats.wdata        import Wdata
+import pandas as pnd
+
 from dmu.logging.log_store  import LogStore
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
@@ -43,7 +44,7 @@ class MisIDCalculator:
 
         return d_sel
     # -----------------------------
-    def _get_sample(self, is_bplus : bool, hadron_id : str) -> Wdata:
+    def _get_sample(self, is_bplus : bool, hadron_id : str) -> pnd.DataFrame:
         sample  = self._cfg['input']['sample']
         trigger = self._cfg['input']['trigger']
         d_cut   = self._cfg['input']['selection']
@@ -64,44 +65,33 @@ class MisIDCalculator:
 
         log.info('Splitting samples')
         splitter = SampleSplitter(rdf=rdf, is_bplus=is_bplus, hadron_id=hadron_id, cfg=self._cfg['splitting'])
-        d_sample = splitter.get_samples()
+        df       = splitter.get_samples()
 
         log.info('Applying weights')
-        weighter = SampleWeighter(samples=d_sample, cfg=self._cfg['maps'])
-        d_data   = weighter.get_weighted_data()
+        weighter = SampleWeighter(df=df, cfg=self._cfg['maps'])
+        df       = weighter.get_weighted_data()
 
-        total_data = None
-        for kind, data in d_data.items():
-            if data.size == 0:
-                log.warning('Found empty dataset for:')
-                log.info(f'{"Kind  ":<20}{kind:<20}')
-                log.info(f'{"B+    ":<20}{is_bplus:<20}')
-                log.info(f'{"Hadron":<20}{hadron_id:<20}')
-            if total_data is None:
-                total_data = data
-                continue
+        df['hadron'] = hadron_id
+        df['bmeson'] = 'bplus' if is_bplus else 'bminus'
 
-            total_data = total_data + data
-
-        return total_data
+        return df
     # -----------------------------
-    def get_misid(self) -> Wdata:
+    def get_misid(self) -> pnd.DataFrame:
         '''
-        Returns zfit dataset with weighted events after adding
-        - Kaon/Pion like
-        - Bplus and Bminus
+        Returns pandas dataframe with weighted entries with, extra columns
+        hadron : kaon or pion
+        bmeson : bplus or bminus
 
         For a given kind of inputs, e.g (Data, signal, leakage)
         '''
 
-        bp_misid_kaon=self._get_sample(is_bplus= True, hadron_id='kaon')
-        bm_misid_kaon=self._get_sample(is_bplus=False, hadron_id='kaon')
+        df_k_bp =self._get_sample(is_bplus= True, hadron_id='kaon')
+        df_k_bm =self._get_sample(is_bplus=False, hadron_id='kaon')
 
-        bp_misid_pion=self._get_sample(is_bplus= True, hadron_id='pion')
-        bm_misid_pion=self._get_sample(is_bplus=False, hadron_id='pion')
+        df_pi_bp=self._get_sample(is_bplus= True, hadron_id='pion')
+        df_pi_bm=self._get_sample(is_bplus=False, hadron_id='pion')
 
-        kaon_misid = bp_misid_kaon + bm_misid_kaon
-        pion_misid = bp_misid_pion + bm_misid_pion
+        l_df = [df_k_bp, df_k_bm, df_pi_bp, df_pi_bm]
 
-        return kaon_misid + pion_misid
+        return pnd.concat(l_df)
 # -----------------------------
