@@ -106,12 +106,12 @@ class SampleSplitter:
         '''
         d_sample = {}
 
-        rdf = self._rdf
         for kind in self._l_kind:
+            rdf            = self._rdf
             cut_os, cut_ss = self._get_cuts(kind=kind)
 
-            rdf = self._rdf.Filter(cut_os, f'OS {kind}')
-            rdf = self._rdf.Filter(cut_ss, f'SS {kind}')
+            rdf = rdf.Filter(cut_os, f'OS {kind}')
+            rdf = rdf.Filter(cut_ss, f'SS {kind}')
 
             d_sample[kind] = self._rdf_to_wdata(rdf=rdf)
 
