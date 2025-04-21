@@ -7,6 +7,7 @@ dependencies= [
 'data_manipulation_utilities>0.1.2',
 'PyYAML',
 'rx_data',
+'boost-histogram',
 'rx_selection',
 ]
 
