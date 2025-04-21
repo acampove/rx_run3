@@ -27,7 +27,17 @@ def test_simple():
     '''
     Simplest example of misid calculator usage
     '''
+
+    # data  : DATA_*
+    # signal: Bu_Kee_eq_btosllball05_DPC
+    # leak  : Bu_JpsiK_ee_eq_DPC
     cfg = _get_config()
+    cfg['input']['max_entries'] = 100_000
+    cfg['input']['sample'     ] = 'DATA_*'
+    cfg['input']['q2bin'      ] = 'jpsi'
+
     obj =MisIDCalculator(cfg=cfg)
     data=obj.get_misid()
+
+    print(data)
 # ---------------------------------
