@@ -78,10 +78,9 @@ class SampleSplitter:
         return l_branch
     # --------------------------------
     def _rdf_to_df(self, rdf : RDataFrame) -> pnd.DataFrame:
-        l_branch = self._get_branches()
-        obs_name = self._cfg['observable']
-        data     = rdf.AsNumpy(l_branch + [obs_name])
-
+        l_branch = self._cfg['branches']
+        l_branch+= self._get_branches()
+        data     = rdf.AsNumpy(l_branch)
         df       = pnd.DataFrame(data)
 
         if len(df) == 0:
