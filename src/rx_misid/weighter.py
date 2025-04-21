@@ -2,8 +2,10 @@
 Module with SampleWeighter class
 '''
 import numpy
-from dmu.stats.wdata        import Wdata
+from dmu.stats.wdata           import Wdata
+from dmu.logging.log_store     import LogStore
 
+log=LogStore.add_logger('rx_misid:weighter')
 # ------------------------------
 class SampleWeighter:
     '''
@@ -23,9 +25,12 @@ class SampleWeighter:
         self._cfg     = cfg
     # ------------------------------
     def _get_weights(self, data : Wdata) -> numpy.ndarray:
+        log.warning('Using ones as weights')
         return numpy.ones(data.size)
     # ------------------------------
     def _weight_data(self, kind : str, data : Wdata) -> Wdata:
+        log.info(f'Applying weights to {kind}')
+
         arr_wgt = self._get_weights(data=data)
         data    = data.update_weights(weights=arr_wgt, replace=False)
 
