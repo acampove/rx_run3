@@ -2,7 +2,7 @@
 Module holding MisIDCalculator class
 '''
 
-from zfit.core.data         import Data      as zdata
+from dmu.stats.wdata        import Wdata
 from dmu.logging.log_store  import LogStore
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
@@ -22,7 +22,7 @@ class MisIDCalculator:
         '''
         self._cfg = cfg
     # -----------------------------
-    def _get_sample(self, kind : str, is_bplus : bool, hadron_id : str) -> zdata:
+    def _get_sample(self, kind : str, is_bplus : bool, hadron_id : str) -> Wdata:
         sample  = self._cfg['input']['samples'][kind]
         trigger = self._cfg['input']['trigger']
         d_cut   = self._cfg['input']['selection']
@@ -45,7 +45,7 @@ class MisIDCalculator:
 
         return data
     # -----------------------------
-    def _get_dataset(self, is_bplus : bool, hadron_id : str) -> zdata:
+    def _get_dataset(self, is_bplus : bool, hadron_id : str) -> Wdata:
         '''
         Returns zfit dataset with weighted events
         representing contamination
@@ -58,7 +58,7 @@ class MisIDCalculator:
 
         return data_msid - data_sign - data_leak
     # -----------------------------
-    def get_misid(self) -> zdata:
+    def get_misid(self) -> Wdata:
         '''
         Returns zfit dataset with weighted events
         '''
