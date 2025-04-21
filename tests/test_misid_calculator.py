@@ -28,13 +28,15 @@ def test_sample(sample : str):
     '''
     Simplest example of misid calculator with different samples
     '''
-    cfg                         = _get_config()
-    cfg['input']['max_entries'] = 100_000
-    cfg['input']['sample'     ] = sample
-    cfg['input']['q2bin'      ] = 'jpsi'
+    cfg                    = _get_config()
+    cfg['input']['range' ] = 600_000, 610_000
+    cfg['input']['sample'] = sample
+    cfg['input']['q2bin' ] = 'jpsi'
 
     obj = MisIDCalculator(cfg=cfg)
     df  = obj.get_misid()
 
-    print(df)
+    sample = sample.replace('*_', '')
+
+    df.to_parquet(f'{Data.out_dir}/misid_{sample}.parquet')
 # ---------------------------------

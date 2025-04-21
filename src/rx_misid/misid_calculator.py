@@ -52,10 +52,11 @@ class MisIDCalculator:
         obj     = RDFGetter(sample=sample, trigger=trigger)
         rdf     = obj.get_rdf()
 
-        max_entries = self._cfg['input'].get('max_entries')
-        if max_entries is not None:
-            log.warning(f'Limitting dataframe to {max_entries}')
-            rdf = rdf.Range(max_entries)
+        entry_range = self._cfg['input'].get('range')
+        if entry_range is not None:
+            log.warning(f'Limitting dataframe to {entry_range}')
+            min_entry, max_entry = entry_range
+            rdf = rdf.Range(min_entry, max_entry)
 
         d_sel   = self._get_selection(cuts=d_cut)
         log.info('Applying selection')
