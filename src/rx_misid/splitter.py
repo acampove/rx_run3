@@ -5,6 +5,7 @@ Module holding SampleSplitter class
 import pandas as pnd
 from ROOT                   import RDataFrame
 from dmu.stats.wdata        import Wdata
+from dmu.rdataframe         import utilities as ut
 from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('rx_misid:splitter')
@@ -84,6 +85,12 @@ class SampleSplitter:
 
         df       = pnd.DataFrame(data)
         wdata    = Wdata(data=data[obs_name], extra_columns=df)
+
+        if wdata.size == 0:
+            rep      = rdf.Report()
+            cutflow  = ut.rdf_report_to_df(rep)
+            log.warning('Empty dataset:')
+            log.info('\n' + str(cutflow))
 
         return wdata
     # --------------------------------
