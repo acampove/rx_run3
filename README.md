@@ -175,6 +175,10 @@ gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpMuMu_MVA')
 rdf = gtr.get_rdf()
 ```
 
+The way this class will find the paths to the ntuples is by using the `DATADIR` environment
+variable. This variable will point to a path `$DATADIR/samples/` with the `YAML` files
+mentioned above.
+
 In the case of the MVA friend trees the branches added would be `mva.mva_cmb` and `mva.mva_prc`.
 
 Thus, one can easily extend the ntuples with extra branches without remaking them.
