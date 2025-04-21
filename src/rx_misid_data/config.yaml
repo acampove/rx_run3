@@ -2,10 +2,6 @@
 # https://gitlab.cern.ch/lhcb-datapkg/AnalysisProductions/-/blob/223655c72f9c778cf9daa9a0138174b464ac7ca9/rd_ap_2024/tupling/config/b_to_xll_mva.yaml
 
 input :
-  samples  :
-    data  : DATA_*
-    signal: Bu_Kee_eq_btosllball05_DPC
-    leak  : Bu_JpsiK_ee_eq_DPC
   trigger  : Hlt2RD_BuToKpEE_MVA
   selection:
     bdt : mva_cmb > 0.5 && mva_prc > 0.5
@@ -15,7 +11,7 @@ maps : &mp
     - TRACK_P
     - TRACK_ETA
 splitting:
-  observable: B_M
+  observable: B_M_brem_track_2
   tracks:
     ss : L1 # Lepton with same charge as B
     os : L2 # Lepton with opposite charge as B
