@@ -15,7 +15,7 @@ weights : &mp
     - TRACK_ETA
 splitting:
   observable: B_M_brem_track_2
-  tracks:
+  tracks: # This is needed to assign the right electrons to PassFail, FailPass ... datasets
     ss : L1 # Lepton with same charge as B
     os : L2 # Lepton with opposite charge as B
   hadron_tagging:
