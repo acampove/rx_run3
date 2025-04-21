@@ -1,6 +1,7 @@
 '''
 Script meant to test MisIDCalculator class
 '''
+import os
 from importlib.resources import files
 
 import yaml
@@ -10,11 +11,16 @@ from rx_misid.misid_calculator import MisIDCalculator
 
 log=LogStore.add_logger('rx_misid:test_misid_calculator')
 # -------------------------------------------------------
+class Data:
+    out_dir = '/tmp/tests/rx_misid/misid_calculator'
+# -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_misid:misid_calculator', 10)
     LogStore.set_level('rx_misid:splitter'        , 10)
     LogStore.set_level('rx_misid:weighter'        , 10)
+
+    os.makedirs(Data.out_dir, exist_ok=True)
 # ---------------------------------
 def _get_config() -> dict:
     config_path = files('rx_misid_data').joinpath('config.yaml')
