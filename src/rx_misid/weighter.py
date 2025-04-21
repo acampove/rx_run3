@@ -94,7 +94,16 @@ class SampleWeighter:
         eff_signal  = hist_signal [ix, iy]
         eff_control = hist_control[ix, iy]
 
-        return eff_signal / eff_control
+        if eff_control.value == 0:
+            log.warning(f'Found zero control efficiency for {row.block}/{row.hadron} at: ({x_value:.2f},{y_value:.2f})')
+            return 1
+
+        weight = eff_signal.value / eff_control.value
+        if weight < 0:
+            log.warning(f'Found negative weight for {row.block}/{row.hadron} at: ({x_value:.2f},{y_value:.2f})')
+            return 1
+
+        return weight
     # ------------------------------
     def _get_candidate_weight(self, row : pnd.Series) -> float:
         if   row.kind == 'PassFail':
