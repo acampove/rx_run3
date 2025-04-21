@@ -45,7 +45,6 @@ class SampleSplitter:
         fail_cut = self._cfg['lepton_tagging']['fail']
         hadr_tag = self._cfg['hadron_tagging'][self._hadron_id]
 
-        pass_cut = f'({pass_cut}) && ({hadr_tag})'
         fail_cut = f'({fail_cut}) && ({hadr_tag})'
 
         lep_ss   = self._cfg['tracks']['ss']
