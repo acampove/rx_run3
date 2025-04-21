@@ -69,7 +69,7 @@ class MisIDCalculator:
         df       = splitter.get_samples()
 
         log.info('Applying weights')
-        weighter = SampleWeighter(df=df, cfg=self._cfg['maps'])
+        weighter = SampleWeighter(df=df, cfg=self._cfg['weights'])
         df       = weighter.get_weighted_data()
 
         df['hadron'] = hadron_id
