@@ -23,17 +23,14 @@ def _get_config() -> dict:
 
     return data
 # ---------------------------------
-def test_simple():
+@pytest.mark.parametrize('sample', ['DATA_*', 'Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC'])
+def test_sample(sample : str):
     '''
-    Simplest example of misid calculator usage
+    Simplest example of misid calculator with different samples
     '''
-
-    # data  : DATA_*
-    # signal: Bu_Kee_eq_btosllball05_DPC
-    # leak  : Bu_JpsiK_ee_eq_DPC
     cfg = _get_config()
     cfg['input']['max_entries'] = 100_000
-    cfg['input']['sample'     ] = 'DATA_*'
+    cfg['input']['sample'     ] = sample
     cfg['input']['q2bin'      ] = 'jpsi'
 
     obj =MisIDCalculator(cfg=cfg)
