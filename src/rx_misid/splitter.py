@@ -115,7 +115,8 @@ class SampleSplitter:
             df['kind'] = kind
             l_df.append(df)
 
-        df_tot = pnd.concat(l_df)
+        df_tot           = pnd.concat(l_df)
+        df_tot['hadron'] = self._hadron_id
 
         return df_tot
 # --------------------------------
