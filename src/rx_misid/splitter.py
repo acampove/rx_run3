@@ -35,6 +35,7 @@ class SampleSplitter:
     # --------------------------------
     def _filter_rdf(self, rdf : RDataFrame) -> RDataFrame:
         bid = self._b_id if self._is_bplus else - self._b_id
+        rdf = rdf.Filter('block > 0', 'block')
         rdf = rdf.Filter(f'B_ID=={bid}', f'B_ID=={bid}')
 
         return rdf
