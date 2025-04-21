@@ -4,7 +4,6 @@ Module holding SampleSplitter class
 
 import pandas as pnd
 from ROOT                   import RDataFrame
-from dmu.stats.wdata        import Wdata
 from dmu.rdataframe         import utilities as ut
 from dmu.logging.log_store  import LogStore
 
@@ -77,34 +76,32 @@ class SampleSplitter:
 
         return l_branch
     # --------------------------------
-    def _rdf_to_wdata(self, rdf : RDataFrame) -> Wdata:
+    def _rdf_to_df(self, rdf : RDataFrame) -> pnd.DataFrame:
         l_branch = self._get_branches()
         obs_name = self._cfg['observable']
         data     = rdf.AsNumpy(l_branch + [obs_name])
 
         df       = pnd.DataFrame(data)
-        wdata    = Wdata(data=data[obs_name], extra_columns=df)
 
-        if wdata.size == 0:
+        if len(df) == 0:
             rep      = rdf.Report()
             cutflow  = ut.rdf_report_to_df(rep)
             log.warning('Empty dataset:')
             log.info('\n' + str(cutflow))
 
-        return wdata
+        return df
     # --------------------------------
-    def get_samples(self) -> dict[str,Wdata]:
+    def get_samples(self) -> pnd.DataFrame:
         '''
-        Returns dictionary wth the identifier of the split sample as the key, values among:
+        Returns pandas dataframe with data split by:
 
         PassFail
         FailPass
         FailFail
 
-        and the weighted dataset
+        Where these strings are stored in the column "kind"
         '''
-        d_sample = {}
-
+        l_df = []
         for kind in self._l_kind:
             rdf            = self._rdf
             cut_os, cut_ss = self._get_cuts(kind=kind)
@@ -112,7 +109,11 @@ class SampleSplitter:
             rdf = rdf.Filter(cut_os, f'OS {kind}')
             rdf = rdf.Filter(cut_ss, f'SS {kind}')
 
-            d_sample[kind] = self._rdf_to_wdata(rdf=rdf)
+            df = self._rdf_to_df(rdf=rdf)
+            df['kind'] = kind
+            l_df.append(df)
 
-        return d_sample
+        df_tot = pnd.concat(l_df)
+
+        return df_tot
 # --------------------------------
