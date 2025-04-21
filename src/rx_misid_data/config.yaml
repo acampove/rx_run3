@@ -23,7 +23,9 @@ splitting:
     kaon :  LEP_PROBNN_K > 0.1
     pion :  LEP_PROBNN_K < 0.1
   lepton_tagging:
-    pass :  LEP_PROBNN_E > 0.2 && LEP_PID_E > 3
-    fail : (LEP_PROBNN_E < 0.2 || LEP_PID_E < 3) && LEP_PID_E > 1
+    #pass :  LEP_PROBNN_E > 0.2 && LEP_PID_E > 3
+    #fail : (LEP_PROBNN_E < 0.2 || LEP_PID_E < 3) && LEP_PID_E > 1
+    pass :  LEP_PROBNN_E > 0.5 && LEP_PID_E > 4
+    fail : (LEP_PROBNN_E < 0.5 || LEP_PID_E < 4) && LEP_PID_E > 1
   maps:
     <<: *mp
