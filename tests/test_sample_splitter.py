@@ -18,6 +18,10 @@ class Data:
     '''
     l_hadron_id = ['kaon', 'pion']
 # -------------------------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('rx_misid:splitter', 10)
+# -------------------------------------------------------
 def _get_config() -> dict:
     cfg_path = files('rx_misid_data').joinpath('config.yaml')
     with open(cfg_path, encoding='utf-8') as ifile:
@@ -28,7 +32,7 @@ def _get_config() -> dict:
 def _get_rdf():
     gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
-    rdf = rdf.Range(10_000)
+    rdf = rdf.Range(100_000)
 
     return rdf
 # -------------------------------------------------------
