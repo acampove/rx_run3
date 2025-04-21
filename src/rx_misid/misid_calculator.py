@@ -13,7 +13,11 @@ log=LogStore.add_logger('rx_misid:misid_calculator')
 # ----------------------------
 class MisIDCalculator:
     '''
-    Class meant to calculate MisID contamination
+    Class meant to apply contamination selection and reweighting for a given sample, e.g.
+
+    Data
+    Signal
+    Leakage
     '''
     # -----------------------------
     def __init__(self, cfg : dict):
@@ -83,7 +87,11 @@ class MisIDCalculator:
     # -----------------------------
     def get_misid(self) -> Wdata:
         '''
-        Returns zfit dataset with weighted events
+        Returns zfit dataset with weighted events after adding
+        - Kaon/Pion like
+        - Bplus and Bminus
+
+        For a given kind of inputs, e.g (Data, signal, leakage)
         '''
 
         bp_misid_kaon=self._get_sample(is_bplus= True, hadron_id='kaon')
