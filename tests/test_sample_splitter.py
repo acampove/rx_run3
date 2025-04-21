@@ -5,7 +5,7 @@ from importlib.resources import files
 
 import yaml
 import pytest
-from dmu.stats.wdata       import Wdata
+import pandas as pnd
 from dmu.logging.log_store import LogStore
 from rx_data.rdf_getter    import RDFGetter
 from rx_misid.splitter     import SampleSplitter
@@ -37,16 +37,16 @@ def _get_rdf():
 
     return rdf
 # -------------------------------------------------------
-def _check_samples(samples : dict[str, Wdata]):
+def _check_samples(df : pnd.DataFrame):
     fail = False
-    for name, sample in samples.items():
-        if sample.size == 0:
-            log.warning(f'Empty sample: {name}')
+    for kind, df_kind in df.groupby('kind'):
+        if len(df_kind) == 0:
+            log.warning(f'Empty sample: {kind}')
             fail=True
             continue
 
-        log.info(f'Sample: {name}')
-        log.info(sample)
+        log.info(f'Sample: {kind}')
+        log.info(f'Size: {len(df)}')
 
     assert not fail
 # -------------------------------------------------------
@@ -60,7 +60,7 @@ def test_simple(hadron_id : str, is_bplus : bool):
     cfg   = _get_config()
 
     spl   = SampleSplitter(rdf=rdf, hadron_id=hadron_id, is_bplus=is_bplus, cfg=cfg)
-    d_sam = spl.get_samples()
+    df    = spl.get_samples()
 
-    _check_samples(samples=d_sam)
+    _check_samples(df=df)
 # -------------------------------------------------------
