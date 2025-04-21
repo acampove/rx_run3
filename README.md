@@ -722,6 +722,24 @@ and is meant to be less verbose than doing it through the YAML module.
 
 These are utility functions meant to be used with ROOT dataframes.
 
+## Cutflows from RDataFrames
+
+When using the `Filter` method on a ROOT dataframe, one can:
+
+```python
+rep = rdf.Report()
+rep.Print()
+```
+
+however this `rep` object is not python friendly, despite it is basically a table that can be
+put in pandas dataframe. Precisely this can be done with:
+
+```python
+from dmu.rdataframe import utilities as ut
+
+df = ut.rdf_report_to_df(rep)
+```
+
 ## Adding a column from a numpy array
 
 ### With numba
