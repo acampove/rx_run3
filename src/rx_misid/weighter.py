@@ -2,7 +2,7 @@
 Module with SampleWeighter class
 '''
 import numpy
-from dmu.stats.wdata           import Wdata
+import pandas as pnd
 from dmu.logging.log_store     import LogStore
 
 log=LogStore.add_logger('rx_misid:weighter')
@@ -16,32 +16,36 @@ class SampleWeighter:
     - Apply weights to datasets and return them
     '''
     # ------------------------------
-    def __init__(self, samples : dict[str,Wdata], cfg : dict):
+    def __init__(self, df : pnd.DataFrame, cfg : dict):
         '''
-        samples : Dictionary mapping kind of map (PassFail, etc) with datasets
-        cfg     : Dictionary storing configuration
+        df  : Pandas dataframe with columns 'hadron', 'bmeson' and 'kind'. Used to assign weights
+        cfg : Dictionary storing configuration
         '''
-        self._samples = samples
-        self._cfg     = cfg
+        self._df  = df
+        self._cfg = cfg
     # ------------------------------
-    def _get_weights(self, data : Wdata) -> numpy.ndarray:
+    def _get_weights(self, df : pnd.DataFrame) -> numpy.ndarray:
         log.warning('Using ones as weights')
-        return numpy.ones(data.size)
+        return numpy.ones(len(df))
     # ------------------------------
-    def _weight_data(self, kind : str, data : Wdata) -> Wdata:
+    def _weight_data(self, kind : str, df : pnd.DataFrame) -> pnd.DataFrame:
         log.info(f'Applying weights to {kind}')
 
-        arr_wgt = self._get_weights(data=data)
-        data    = data.update_weights(weights=arr_wgt, replace=False)
+        arr_wgt       = self._get_weights(df=df)
+        df['weights'] = arr_wgt
 
-        return data
+        return df
     # ------------------------------
-    def get_weighted_data(self) -> dict[str,Wdata]:
+    def get_weighted_data(self) -> pnd.DataFrame:
         '''
         Returns instance of weighted data
         '''
+        l_df_wgt = []
+        for kind, df_kind in self._df.groupby('kind'):
+            df_wgt = self._weight_data(kind, df_kind)
+            l_df_wgt.append(df_wgt)
 
-        d_data_weighted = { kind : self._weight_data(kind, data) for kind, data in self._samples.items() }
+        df = pnd.concat(l_df_wgt)
 
-        return d_data_weighted
+        return df
 # ------------------------------
