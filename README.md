@@ -75,6 +75,29 @@ from post_ap.pfn_reader        import PFNReader
 
 # Submitting jobs
 
+## Environment
+
+The script in the next setion needs a special environment to run. This environment is created by:
+
+- Go to a virtual environment where this project is installed, could be named e.g. `post_ap`
+- Make a grid token with:
+
+```bash
+lhcb-proxy-init -v 100:00
+```
+
+- Run:
+
+```bash
+post_shell
+```
+
+which will leave you in a new shell with the required environment variables
+
+- Run the commands shown below
+
+## Submition script
+
 For this one would run a line like:
 
 ```bash
