@@ -58,3 +58,6 @@ Using all electron RK lines, i.e.:
 
 Can be additionally used to stdy mis-ID backgrounds and PIDe calibration.
 
+## v12
+
+Same as v11, but removing altogether PID selection for electrons and Kaon. Needed to do pass-fail
