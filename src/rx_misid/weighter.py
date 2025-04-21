@@ -4,6 +4,7 @@ Module with SampleWeighter class
 import os
 import re
 import glob
+import pickle
 import pandas          as pnd
 import boost_histogram as bh
 from dmu.logging.log_store     import LogStore
@@ -29,6 +30,7 @@ class SampleWeighter:
 
         self._varx : str
         self._vary : str
+        self._set_variables()
 
         self._regex = r'.*_(block\d)(?:_v\d)?-(?:up|down)-(K|Pi)-.*'
 
@@ -57,6 +59,7 @@ class SampleWeighter:
         pkl_dir = self._cfg['path']
         path_wc = f'{pkl_dir}/*.pkl'
 
+        d_map = {}
         for path in glob.glob(path_wc):
             key = self._key_from_path(path)
 
