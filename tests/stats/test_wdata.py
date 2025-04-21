@@ -135,3 +135,16 @@ def test_extra_columns():
 
     assert isinstance(data, Wdata)
 # --------------------------
+def test_repr():
+    '''
+    Tests the __str__ dunder
+    '''
+    log.info('')
+    arr_mass = numpy.random.normal(loc=0, scale=1.0, size=Data.nentries)
+    arr_wgt  = numpy.random.normal(loc=1, scale=0.1, size=Data.nentries)
+    df       = pnd.DataFrame({'a' : arr_mass, 'b' : arr_mass})
+
+    data     = Wdata(data=arr_mass, weights=arr_wgt, extra_columns=df)
+
+    log.info(data)
+# --------------------------

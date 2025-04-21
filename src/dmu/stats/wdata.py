@@ -83,6 +83,19 @@ class Wdata:
 
         return Wdata(data=data, weights=weights, extra_columns=df)
     # -------------------------------
+    def __str__(self) -> str:
+        message = '\n'
+        message+= f'{"Size   ":<20}{self.size:<20}\n'
+        message+= f'{"Sumw   ":<20}{self.sumw:<20.3f}\n'
+        if self._df is None:
+            return message
+
+        message+= f'{"Columns":<20}{"       ":<20}\n'
+        for column in self._df.columns:
+            message += '    ' + column + '\n'
+
+        return message
+    # -------------------------------
     def _build_extra_df(self, df_other : pnd.DataFrame) -> Union[pnd.DataFrame,None]:
         if df_other is None and self._df is None:
             return None
