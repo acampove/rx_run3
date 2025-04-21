@@ -25,6 +25,7 @@ class SampleSplitter:
         is_bplus: True if the sam ple that will be returned will contain B+ mesons, false for B-
         cfg     : Dictionary with configuration specifying how to split the samples
         '''
+        self._b_id     = 521
         self._is_bplus = is_bplus
         self._hadron_id= hadron_id
         self._cfg      = cfg
@@ -33,8 +34,8 @@ class SampleSplitter:
         self._rdf      = self._filter_rdf(rdf)
     # --------------------------------
     def _filter_rdf(self, rdf : RDataFrame) -> RDataFrame:
-        bid = 312 if self._is_bplus else -312
-        rdf = rdf.Filter(f'B_ID=={bid}')
+        bid = self._b_id if self._is_bplus else - self._b_id
+        rdf = rdf.Filter(f'B_ID=={bid}', f'B_ID=={bid}')
 
         return rdf
     # --------------------------------
