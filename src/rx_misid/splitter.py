@@ -95,11 +95,13 @@ class SampleSplitter:
         '''
         Returns pandas dataframe with data split by:
 
-        PassFail
-        FailPass
-        FailFail
+        PassFail: Pass (SS), Fail (OS)
+        FailPass: Fail (SS), Pass (OS)
+        FailFail: Both electrons fail the PID cut
 
-        Where these strings are stored in the column "kind"
+        Where:
+            - SS means same sign as the B and OS is opposite sign
+            - These strings are stored in the column "kind"
         '''
         l_df = []
         for kind in self._l_kind:
