@@ -9,7 +9,7 @@ input :
   trigger  : Hlt2RD_BuToKpEE_MVA
   selection:
     bdt : mva_cmb > 0.5 && mva_prc > 0.5
-maps :
+maps : &mp
   path : /home/acampove/external_ssd/Calibration/mis_id/v2
   pars :
     - TRACK_P
@@ -25,3 +25,5 @@ splitting:
   lepton_tagging:
     pass :  LEP_PROBNN_E > 0.2 && LEP_PID_E > 3
     fail : (LEP_PROBNN_E < 0.2 || LEP_PID_E < 3) && LEP_PID_E > 1
+  maps:
+    <<: *mp
