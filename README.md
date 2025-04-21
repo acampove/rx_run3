@@ -169,12 +169,6 @@ and in order to attach the main ntuples to the MVA ntuples:
 ```python
 from rx_data.rdf_getter     import RDFGetter
 
-# This is how the YAML files with the samples information is passed 
-RDFGetter.samples = {
-        'main' : '/home/acampove/Packages/rx_data/samples.yaml', # for main trees
-        'mva'  : '/home/acampove/Packages/rx_data/mva.yaml',  # for trees containing the MVA scores
-        }
-
 # This picks one sample for a given trigger
 # The sample accepts wildcards, e.g. `DATA_24_MagUp_24c*` for all the periods
 gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpMuMu_MVA')
