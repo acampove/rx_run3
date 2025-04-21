@@ -22,52 +22,75 @@ class MisIDCalculator:
         '''
         self._cfg = cfg
     # -----------------------------
-    def _get_sample(self, kind : str, is_bplus : bool, hadron_id : str) -> Wdata:
-        sample  = self._cfg['input']['samples'][kind]
+    def _get_selection(self, cuts : dict[str,str]) -> dict[str,str]:
+        q2bin     = self._cfg['input']['q2bin']
+        sample    = self._cfg['input']['sample']
+        d_sel_org = sel.selection(project='RK', analysis='EE', q2bin=q2bin, process=sample)
+        d_sel = {}
+
+        for cut_name, cut_expr in d_sel_org.items():
+            if 'pid' in cut_name:
+                log.info(f'Skipping: {cut_name}={cut_expr}')
+                continue
+
+            d_sel[cut_name] = cut_expr
+
+        d_sel.update(cuts)
+
+        return d_sel
+    # -----------------------------
+    def _get_sample(self, is_bplus : bool, hadron_id : str) -> Wdata:
+        sample  = self._cfg['input']['sample']
         trigger = self._cfg['input']['trigger']
         d_cut   = self._cfg['input']['selection']
 
         obj     = RDFGetter(sample=sample, trigger=trigger)
         rdf     = obj.get_rdf()
 
-        d_sel   = sel.selection(project='RK', analysis='EE', q2bin='jpsi', process='DATA')
-        d_sel.update(d_cut)
+        max_entries = self._cfg['input'].get('max_entries')
+        if max_entries is not None:
+            log.warning(f'Limitting dataframe to {max_entries}')
+            rdf = rdf.Range(max_entries)
 
+        d_sel   = self._get_selection(cuts=d_cut)
+        log.info('Applying selection')
         for cut_name, cut_expr in d_sel.items():
+            log.debug(f'{cut_name:<30}{cut_expr}')
             rdf = rdf.Filter(cut_expr, cut_name)
 
+        log.info('Splitting samples')
         splitter = SampleSplitter(rdf=rdf, is_bplus=is_bplus, hadron_id=hadron_id, cfg=self._cfg['splitting'])
         d_sample = splitter.get_samples()
 
+        log.info('Applying weights')
         weighter = SampleWeighter(samples=d_sample, cfg=self._cfg['maps'])
         d_data   = weighter.get_weighted_data()
-        data     = sum(d_data.values())
 
-        return data
-    # -----------------------------
-    def _get_dataset(self, is_bplus : bool, hadron_id : str) -> Wdata:
-        '''
-        Returns zfit dataset with weighted events
-        representing contamination
+        total_data = None
+        for kind, data in d_data.items():
+            if data.size == 0:
+                log.warning('Found empty dataset for:')
+                log.info(f'{"Kind  ":<20}{kind:<20}')
+                log.info(f'{"B+    ":<20}{is_bplus:<20}')
+                log.info(f'{"Hadron":<20}{hadron_id:<20}')
+            if total_data is None:
+                total_data = data
+                continue
 
-        is_bplus : Sign of the B meson 
-        '''
-        data_msid = self._get_sample(kind=  'data', is_bplus = is_bplus, hadron_id=hadron_id)
-        data_sign = self._get_sample(kind='signal', is_bplus = is_bplus, hadron_id=hadron_id)
-        data_leak = self._get_sample(kind=  'leak', is_bplus = is_bplus, hadron_id=hadron_id)
+            total_data = total_data + data
 
-        return data_msid - data_sign - data_leak
+        return total_data
     # -----------------------------
     def get_misid(self) -> Wdata:
         '''
         Returns zfit dataset with weighted events
         '''
 
-        bp_misid_kaon=self._get_dataset(is_bplus= True, hadron_id='kaon')
-        bm_misid_kaon=self._get_dataset(is_bplus=False, hadron_id='kaon')
+        bp_misid_kaon=self._get_sample(is_bplus= True, hadron_id='kaon')
+        bm_misid_kaon=self._get_sample(is_bplus=False, hadron_id='kaon')
 
-        bp_misid_pion=self._get_dataset(is_bplus= True, hadron_id='pion')
-        bm_misid_pion=self._get_dataset(is_bplus=False, hadron_id='pion')
+        bp_misid_pion=self._get_sample(is_bplus= True, hadron_id='pion')
+        bm_misid_pion=self._get_sample(is_bplus=False, hadron_id='pion')
 
         kaon_misid = bp_misid_kaon + bm_misid_kaon
         pion_misid = bp_misid_pion + bm_misid_pion
