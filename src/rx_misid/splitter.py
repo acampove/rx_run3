@@ -25,11 +25,12 @@ class SampleSplitter:
         is_bplus: True if the sam ple that will be returned will contain B+ mesons, false for B-
         cfg     : Dictionary with configuration specifying how to split the samples
         '''
-        self._rdf      = self._filter_rdf(rdf)
         self._is_bplus = is_bplus
         self._hadron_id= hadron_id
         self._cfg      = cfg
         self._l_kind   = ['PassFail', 'FailPass', 'FailFail']
+
+        self._rdf      = self._filter_rdf(rdf)
     # --------------------------------
     def _filter_rdf(self, rdf : RDataFrame) -> RDataFrame:
         bid = 312 if self._is_bplus else -312
@@ -38,15 +39,15 @@ class SampleSplitter:
         return rdf
     # --------------------------------
     def _get_cuts(self, kind : str) -> tuple[str,str]:
-        pass_cut = self._cfg['splitting']['lepton_tagging']['pass']
-        fail_cut = self._cfg['splitting']['lepton_tagging']['fail']
+        pass_cut = self._cfg['lepton_tagging']['pass']
+        fail_cut = self._cfg['lepton_tagging']['fail']
         hadr_tag = self._cfg['hadron_tagging'][self._hadron_id]
 
         pass_cut = f'({pass_cut}) && ({hadr_tag})'
         fail_cut = f'({fail_cut}) && ({hadr_tag})'
 
-        lep_ss   = self._cfg['splitting']['tracks']['ss']
-        lep_os   = self._cfg['splitting']['tracks']['os']
+        lep_ss   = self._cfg['tracks']['ss']
+        lep_os   = self._cfg['tracks']['os']
 
         if   kind == 'PassFail':
             cut_ss   = pass_cut.replace('LEP_', lep_ss + '_')
@@ -77,7 +78,7 @@ class SampleSplitter:
     # --------------------------------
     def _rdf_to_wdata(self, rdf : RDataFrame) -> Wdata:
         l_branch = self._get_branches()
-        obs_name = self._cfg['splitting']['observable']
+        obs_name = self._cfg['observable']
         data     = rdf.AsNumpy(l_branch + [obs_name])
 
         df       = pnd.DataFrame(data)
