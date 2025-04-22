@@ -64,7 +64,10 @@ class SampleWeighter:
             key = self._key_from_path(path)
 
             with open(path, 'rb') as ifile:
-                hist = pickle.load(ifile)
+                try:
+                    hist = pickle.load(ifile)
+                except EOFError as exc:
+                    raise EOFError(f'Cannot open map: {path}') from exc
 
             d_map[key] = hist
 
