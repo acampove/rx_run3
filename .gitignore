@@ -179,4 +179,6 @@ pyrightconfig.json
 *.pdf
 *.root
 *.swp
-pidcalib_output/
+pid_maps
+.binning
+
