@@ -12,6 +12,9 @@ from rx_misid.misid_calculator import MisIDCalculator
 log=LogStore.add_logger('rx_misid:test_misid_calculator')
 # -------------------------------------------------------
 class Data:
+    '''
+    Data class
+    '''
     out_dir = '/tmp/tests/rx_misid/misid_calculator'
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
