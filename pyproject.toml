@@ -16,7 +16,7 @@ dependencies= [
 dev  = ['pytest']
 
 [project.scripts]
-plot_misid='rx_misid.plot_misid:main'
+plot_misid='rx_misid_scripts.plot_misid:main'
 
 [tools.setuptools.packages.find]
 where   = ['src']
