@@ -2,13 +2,16 @@
 Script meant to be used to create PID maps
 '''
 # pylint: disable=line-too-long
-
+import os
 import argparse
 from importlib.resources      import files
 
 import yaml
 from pidcalib2.make_eff_hists import make_eff_hists
-from dmu.logging.log_store    import LogStore
+
+import dmu.generic.utilities as gut
+from dmu.generic             import hashing
+from dmu.logging.log_store   import LogStore
 
 log=LogStore.add_logger('rx_pid:create_pid_maps')
 # --------------------------------
@@ -68,10 +71,26 @@ def _path_from_kind(kind : str) -> str:
         version = Data.bin_vers
         bin_vars= _get_bin_vars()
         path    = files('rx_pid_data').joinpath(f'{kind}/{bin_vars}/{version}.yaml')
+        path    = _replace_binning_path(path)
     else:
         raise ValueError(f'Invalid kind: {kind}')
 
     return path
+# --------------------------------
+def _replace_binning_path(yaml_path : str) -> str:
+    with open(yaml_path, encoding='utf-8') as ifile:
+        data = yaml.safe_load(ifile)
+
+    data     = data[Data.sample]
+    hash_val = hashing.hash_object(data)
+
+    os.makedirs('.binning', exist_ok=True)
+
+    json_path = f'.binning/{hash_val}.json'
+    log.debug(f'Using binning path: {json_path}')
+    gut.dump_json(data, json_path)
+
+    return json_path
 # --------------------------------
 def _load_data(kind : str) -> dict:
     path = _path_from_kind(kind)
