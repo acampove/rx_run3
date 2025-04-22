@@ -9,9 +9,10 @@ import argparse
 from typing import TypeAlias
 
 import numpy
-import matplotlib.pyplot as plt
-from matplotlib.colors  import LogNorm
 import mplhep
+import matplotlib.pyplot as plt
+from matplotlib.colors     import LogNorm
+from boost_histogram       import Histogram as bh
 from dmu.logging.log_store import LogStore
 
 Npa : TypeAlias = numpy.ndarray
@@ -22,26 +23,24 @@ class Data:
     '''
     Data class
     '''
-    log_eff    : bool
-    norm       : LogNorm
+    sig_cut    = '(PROBNN_E>0.2)&(DLLe>3.0)&(PROBNN_K>0.1)'
+    ctr_cut    = '(PROBNN_E<0.2|DLLe<3)&(DLLe>1.0)&(PROBNN_K>0.1)'
+
     max_eff    : float = 1.0
     min_eff    : float = 0.0
+
+    max_rat    : float = 2.0
+    min_rat    : float = 0.0
+
     dir_path   : str
     figsize    : tuple[int,int]
     fontsize   : int
     fancy      : bool = True
     skip_values: bool = True
-    regex      : str  = r'effhists-2024_WithUT_block\d(?:_v1)?-(up|down)-([A-Z,a-z,0-9]+)-(.*)-(\w+)\.(\w+)\.pkl'
+    regex      : str  = r'effhists-2024_WithUT_(block\d)(?:_v1)?-(up|down)-([A-Z,a-z,0-9]+)-(.*)-(\w+)\.(\w+)\.pkl'
 # ---------------------------------
 def _initialize() -> None:
     plt.style.use(mplhep.style.LHCb2)
-
-    if Data.log_eff:
-        Data.norm    = LogNorm()
-        Data.min_eff = None
-        Data.max_eff = None
-    else:
-        Data.norm    = None
 
     if Data.fancy:
         Data.figsize  = 12, 12
@@ -54,15 +53,13 @@ def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to plot histograms in pkl files created by PIDCalib2')
     parser.add_argument('-d', '--dir_path', type=str, help='Path to directory with PKL files')
     parser.add_argument('-m', '--max_eff' , type=str, help='Upper value for z-axis in plots, i.e. maximum efficiency', default=Data.max_eff)
-    parser.add_argument('-l', '--log_eff' , help='If used, will make efficiency (z) axis in log scale', action='store_true')
     args   = parser.parse_args()
 
     Data.dir_path = args.dir_path
     Data.max_eff  = args.max_eff
-    Data.log_eff  = args.log_eff
 # ------------------------------------
 def _get_pkl_paths() -> list[str]:
-    path_wc = f'{Data.dir_path}/*.pkl'
+    path_wc = f'{Data.dir_path}/*{Data.sig_cut}*.pkl'
     l_path  = glob.glob(path_wc)
     npath   = len(l_path)
 
@@ -71,39 +68,40 @@ def _get_pkl_paths() -> list[str]:
 
     return l_path
 # ------------------------------------
-def _add_values(x_edges : Npa, y_edges : Npa, counts : Npa, errors : Npa) -> None:
-    if Data.skip_values:
-        return
-
-    for i in range(len(x_edges)-1):
-        for j in range(len(y_edges)-1):
-            x_center = (x_edges[i] + x_edges[i+1]) / 2
-            y_center = (y_edges[j] + y_edges[j+1]) / 2
-            val      = counts[i][j]
-            err      = errors[i][j]
-            text     = f'{val:.2f}\n$\pm${err:.2f}'
-            plt.text(x_center, y_center, text, ha='center', va='center', color='white', fontdict={'size': Data.fontsize})
-# ------------------------------------
-def _plot_hist(pkl_path : str) -> None:
-    log.info(f'Plotting histograms in: {pkl_path}')
+def _hist_from_path(pkl_path : str) -> bh:
     with open(pkl_path, 'rb') as ifile:
         hist = pickle.load(ifile)
 
+    return hist
+# ------------------------------------
+def _get_values(hist : bh) -> numpy.ndarray:
+    bin_values = hist.view()
+
+    try:
+        counts = bin_values['value']
+    except Exception:
+        counts = bin_values
+
+    return counts
+# ------------------------------------
+def _plot_hist(hist : bh, pkl_path : str, is_ratio : bool = False) -> None:
     x_edges    = hist.axes[0].edges
     y_edges    = hist.axes[1].edges
-    bin_values = hist.view()
-    counts     = bin_values['value']
-    variances  = bin_values['variance']
-    errors     = numpy.sqrt(variances)
+    counts     = _get_values(hist)
 
     arr_x, arr_y = numpy.meshgrid(x_edges, y_edges)
-    plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=Data.norm, vmin=Data.min_eff, vmax=Data.max_eff)
-    plt.colorbar(label='Efficiency')
 
-    _add_values(x_edges, y_edges, counts, errors)
+    if is_ratio:
+        plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None     , vmin=Data.min_rat, vmax=Data.max_rat)
+        plt.colorbar(label='$w_{fake}$')
+    else:
+        plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=LogNorm())
+        plt.colorbar(label='Efficiency')
+
     _add_info(pkl_path)
 
-    out_path = pkl_path.replace('.pkl', '.png')
+    ext      = '_ratio.png' if is_ratio else '.png'
+    out_path = pkl_path.replace('.pkl', ext)
 
     plt.savefig(out_path)
     plt.close()
@@ -114,13 +112,31 @@ def _add_info(pkl_path : str) -> None:
     if not mtch:
         raise ValueError(f'Cannot extract information from {file_name}, using {Data.regex}')
 
-    [pol, par, cut, xlabel, ylabel] = mtch.groups()
+    [block, pol, par, cut, xlabel, ylabel] = mtch.groups()
 
-    title = f'{par}; {pol}; {cut}'
+    par   = {'K' : 'Kaon', 'Pi' : 'Pion'}[par]
+    title = f'{par}; Mag {pol}; {block};\n{cut}'
 
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
+# ------------------------------------
+def _divide_hists(sig : str, ctr : str) -> bh:
+    vfun    = numpy.vectorize(lambda x : x[0])
+
+    values1 = sig.view()
+    values2 = ctr.view()
+
+    values1 = vfun(values1)
+    values2 = vfun(values2)
+
+    ax_x = sig.axes[0]
+    ax_y = sig.axes[1]
+
+    rat  = bh(ax_x, ax_y)
+    rat.values()[:] = numpy.where(values2 != 0, values1 / values2, numpy.nan)
+
+    return rat
 # ------------------------------------
 def main():
     '''
@@ -130,8 +146,16 @@ def main():
     _initialize()
 
     l_path = _get_pkl_paths()
-    for pkl_path in l_path:
-        _plot_hist(pkl_path)
+    for sig_pkl_path in l_path:
+        sig_hist = _hist_from_path(sig_pkl_path)
+        _plot_hist(hist=sig_hist, pkl_path=sig_pkl_path)
+
+        ctr_pkl_path = sig_pkl_path.replace(Data.sig_cut, Data.ctr_cut)
+        ctr_hist = _hist_from_path(ctr_pkl_path)
+        _plot_hist(hist=ctr_hist, pkl_path=ctr_pkl_path)
+
+        rat_hist = _divide_hists(sig=sig_hist, ctr=ctr_hist)
+        _plot_hist(hist=rat_hist, pkl_path=sig_pkl_path, is_ratio=True)
 # ------------------------------------
 if __name__ == "__main__":
     main()
