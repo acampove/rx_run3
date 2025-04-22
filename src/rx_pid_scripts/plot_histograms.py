@@ -108,7 +108,7 @@ def _plot_hist(hist : bh, pkl_path : str, is_ratio : bool = False) -> None:
         plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=LogNorm())
         plt.colorbar(label='Efficiency')
 
-    _add_info(pkl_path)
+    _add_info(pkl_path, is_ratio)
 
     ext      = '_ratio.png' if is_ratio else '.png'
     out_path = pkl_path.replace('.pkl', ext)
@@ -116,7 +116,7 @@ def _plot_hist(hist : bh, pkl_path : str, is_ratio : bool = False) -> None:
     plt.savefig(out_path)
     plt.close()
 # ------------------------------------
-def _add_info(pkl_path : str) -> None:
+def _add_info(pkl_path : str, is_ratio : bool) -> None:
     file_name = os.path.basename(pkl_path)
     mtch      = re.match(Data.regex, file_name)
     if not mtch:
@@ -125,7 +125,9 @@ def _add_info(pkl_path : str) -> None:
     [block, pol, par, cut, xlabel, ylabel] = mtch.groups()
 
     par   = {'K' : 'Kaon', 'Pi' : 'Pion'}[par]
-    title = f'{par}; Mag {pol}; {block};\n{cut}'
+    title = f'{par}; Mag {pol}; {block}'
+    if not is_ratio:
+        title += f';\n{cut}'
 
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
