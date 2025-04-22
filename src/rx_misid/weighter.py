@@ -78,6 +78,22 @@ class SampleWeighter:
         self._varx = l_var[0]
         self._vary = l_var[1]
     # ------------------------------
+    def _get_bin_index(self, hist : bh, iaxis : int, value : float) -> int:
+        axis = hist.axes[iaxis]
+        minv = axis.edges[ 0] * 1.001
+        maxv = axis.edges[-1] * 0.999
+
+        old_value = value
+        new_value = max(old_value, minv)
+        new_value = min(new_value, maxv)
+
+        if old_value != new_value:
+            log.warning(f'Moving value inside map {old_value:.3f} -> {new_value:.3f}')
+
+        index = axis.index(new_value)
+
+        return index
+    # ------------------------------
     def _get_lepton_weight(self, lep : str, row : pnd.Series) -> float:
         block   = int(row.block)
         key_sig = f'block{block}_{row.hadron}_signal'
@@ -89,8 +105,8 @@ class SampleWeighter:
         x_value = getattr(row, f'{lep}_{self._varx}')
         y_value = getattr(row, f'{lep}_{self._vary}')
 
-        ix = hist_signal.axes[0].index(x_value)
-        iy = hist_signal.axes[1].index(y_value)
+        ix = self._get_bin_index(hist_signal, iaxis=0, value=x_value)
+        iy = self._get_bin_index(hist_signal, iaxis=1, value=y_value)
 
         eff_signal  = hist_signal [ix, iy]
         eff_control = hist_control[ix, iy]
