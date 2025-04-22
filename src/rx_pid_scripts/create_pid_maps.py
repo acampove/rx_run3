@@ -61,15 +61,13 @@ def _get_bin_vars() -> str:
     return var_str
 # --------------------------------
 def _path_from_kind(kind : str) -> str:
-    if kind == 'config':
-        ext     = 'yaml'
+    if   kind == 'config':
         version = Data.cfg_vers
-        path    = files('rx_pid_data').joinpath(f'{kind}/{version}.{ext}')
+        path    = files('rx_pid_data').joinpath(f'{kind}/{version}.yaml')
     elif kind == 'binning':
-        ext     = 'json'
         version = Data.bin_vers
         bin_vars= _get_bin_vars()
-        path    = files('rx_pid_data').joinpath(f'{kind}/{bin_vars}/{version}.{ext}')
+        path    = files('rx_pid_data').joinpath(f'{kind}/{bin_vars}/{version}.yaml')
     else:
         raise ValueError(f'Invalid kind: {kind}')
 
