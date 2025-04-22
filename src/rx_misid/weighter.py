@@ -79,8 +79,9 @@ class SampleWeighter:
         self._vary = l_var[1]
     # ------------------------------
     def _get_lepton_weight(self, lep : str, row : pnd.Series) -> float:
-        key_sig = f'block{row.block}_{row.hadron}_signal'
-        key_ctr = f'block{row.block}_{row.hadron}_control'
+        block   = int(row.block)
+        key_sig = f'block{block}_{row.hadron}_signal'
+        key_ctr = f'block{block}_{row.hadron}_control'
 
         hist_signal  = self._d_map[key_sig]
         hist_control = self._d_map[key_ctr]
