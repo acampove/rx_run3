@@ -6,7 +6,7 @@ import re
 import glob
 import pickle
 import argparse
-from typing import TypeAlias
+from typing import TypeAlias, Union
 
 import numpy
 import mplhep
@@ -23,8 +23,9 @@ class Data:
     '''
     Data class
     '''
-    sig_cut    = '(PROBNN_E>0.2)&(DLLe>3.0)&(PROBNN_K>0.1)'
-    ctr_cut    = '(PROBNN_E<0.2|DLLe<3)&(DLLe>1.0)&(PROBNN_K>0.1)'
+    sig_cut      = '(PROBNN_E>0.2)&(DLLe>3.0)'
+    ctr_cut      = '(PROBNN_E<0.2|DLLe<3)&(DLLe>1.0)'
+    d_hadron_cut = {'pion' : '&(PROBNN_K<0.1)', 'kaon' : '&(PROBNN_K>0.1)'}
 
     max_eff    : float = 1.0
     min_eff    : float = 0.0
@@ -58,8 +59,11 @@ def _parse_args():
     Data.dir_path = args.dir_path
     Data.max_eff  = args.max_eff
 # ------------------------------------
-def _get_pkl_paths() -> list[str]:
-    path_wc = f'{Data.dir_path}/*{Data.sig_cut}*.pkl'
+def _get_pkl_paths(kind : str) -> list[str]:
+    part    = Data.d_hadron_cut[kind]
+    sig_cut = f'{Data.sig_cut}{part}'
+
+    path_wc = f'{Data.dir_path}/*{sig_cut}*.pkl'
     l_path  = glob.glob(path_wc)
     npath   = len(l_path)
 
@@ -68,9 +72,15 @@ def _get_pkl_paths() -> list[str]:
 
     return l_path
 # ------------------------------------
-def _hist_from_path(pkl_path : str) -> bh:
+def _hist_from_path(pkl_path : str) -> Union[bh,None]:
     with open(pkl_path, 'rb') as ifile:
-        hist = pickle.load(ifile)
+        try:
+            hist = pickle.load(ifile)
+        except EOFError:
+            log.warning(f'Cannot load: {pkl_path}')
+            return None
+
+    log.debug(f'Loaded: {pkl_path}')
 
     return hist
 # ------------------------------------
@@ -138,6 +148,24 @@ def _divide_hists(sig : str, ctr : str) -> bh:
 
     return rat
 # ------------------------------------
+def _plot_maps(l_path : list[str]) -> None:
+    for sig_pkl_path in l_path:
+        sig_hist = _hist_from_path(sig_pkl_path)
+        if sig_hist is None:
+            continue
+
+        _plot_hist(hist=sig_hist, pkl_path=sig_pkl_path)
+
+        ctr_pkl_path = sig_pkl_path.replace(Data.sig_cut, Data.ctr_cut)
+        ctr_hist = _hist_from_path(ctr_pkl_path)
+        if ctr_hist is None:
+            continue
+
+        _plot_hist(hist=ctr_hist, pkl_path=ctr_pkl_path)
+
+        rat_hist = _divide_hists(sig=sig_hist, ctr=ctr_hist)
+        _plot_hist(hist=rat_hist, pkl_path=sig_pkl_path, is_ratio=True)
+# ------------------------------------
 def main():
     '''
     start here
@@ -145,17 +173,9 @@ def main():
     _parse_args()
     _initialize()
 
-    l_path = _get_pkl_paths()
-    for sig_pkl_path in l_path:
-        sig_hist = _hist_from_path(sig_pkl_path)
-        _plot_hist(hist=sig_hist, pkl_path=sig_pkl_path)
-
-        ctr_pkl_path = sig_pkl_path.replace(Data.sig_cut, Data.ctr_cut)
-        ctr_hist = _hist_from_path(ctr_pkl_path)
-        _plot_hist(hist=ctr_hist, pkl_path=ctr_pkl_path)
-
-        rat_hist = _divide_hists(sig=sig_hist, ctr=ctr_hist)
-        _plot_hist(hist=rat_hist, pkl_path=sig_pkl_path, is_ratio=True)
+    for kind in ['kaon', 'pion']:
+        l_path = _get_pkl_paths(kind=kind)
+        _plot_maps(l_path)
 # ------------------------------------
 if __name__ == "__main__":
     main()
