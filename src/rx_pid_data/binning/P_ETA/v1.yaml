@@ -128,11 +128,11 @@ block_common: &block_com
   K : *Kcom
   Pi: *Picom
 # --------------------------------
-block1: *block_com
-block2: *block_com
-block3: *block_com
-block4: *block_com
-block5: 
+b1: *b_com
+b2: *b_com
+b3: *b_com
+b4: *b_com
+b5: 
   e  : *ecom
   Mu : *Mucom
   Pi : *Picom
@@ -169,8 +169,8 @@ block5:
     - 3.7
     - 4.1
     - 5.5
-block6: *block_com
-block7:
+b6: *b_com
+b7:
   e  : *ecom
   Mu : *Mucom
   Pi : *Picom
@@ -206,7 +206,7 @@ block7:
     - 3.7
     - 4.1
     - 5.5
-block8:
+b8:
   e  : *ecom
   Mu : *Mucom
   Pi : *Picom
