@@ -33,10 +33,10 @@ lhcb-proxy-init -v 100:00
 In order to see what triggers are present in the current version of the ntuples do:
 
 ```bash
-list_triggers -v v1
+list_triggers -v v1 -k rx
 
 # And this will save them to a yaml file
-list_triggers -v v1 -o triggers.yaml
+list_triggers -v v1 -k rx -o triggers.yaml
 ```
 
 ## Downloading the ntuples
