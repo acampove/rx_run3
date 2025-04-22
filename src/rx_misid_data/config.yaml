@@ -6,7 +6,7 @@ input :
   selection:
     bdt : mva_cmb > 0.5 && mva_prc > 0.5
 weights : &mp
-  path : /home/acampove/external_ssd/Calibration/mis_id/v2
+  path : /home/acampove/external_ssd/Calibration/mis_id/v3
   regions: # These are cuts that need to appear in the name of the pkl files with the PID maps
     control : (PROBNN_E<0.2|DLLe<3)&(DLLe>1.0)
     signal  : (PROBNN_E>0.2)&(DLLe>3.0)
