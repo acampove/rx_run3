@@ -9,6 +9,7 @@ import pprint
 import zfit
 import hist
 import mplhep
+import tensorflow            as tf
 import pandas                as pd
 import numpy                 as np
 import matplotlib.pyplot     as plt
@@ -385,7 +386,12 @@ class ZFitPlotter:
             return
 
         data_yield = self.data_weight_np.sum()
-        y = model.pdf(self.x) * data_yield / nbins * (self.upper - self.lower)
+        try:
+            y = model.pdf(self.x) * data_yield / nbins * (self.upper - self.lower)
+        except tf.errors.InvalidArgumentError as exc:
+            log.warning(f'Data yield: {data_yield:.0f}')
+            log.info(self.data_np)
+            raise RuntimeError('Cannot parse PDF') from exc
 
         name = model.name
         ax.plot(self.x, y, linestyle, label=self._leg.get(name, name), color=self._col.get(name))
