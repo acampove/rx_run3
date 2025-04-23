@@ -33,10 +33,10 @@ lhcb-proxy-init -v 100:00
 In order to see what triggers are present in the current version of the ntuples do:
 
 ```bash
-list_triggers -v v1
+list_triggers -v v1 -k rx
 
 # And this will save them to a yaml file
-list_triggers -v v1 -o triggers.yaml
+list_triggers -v v1 -k rx -o triggers.yaml
 ```
 
 ## Downloading the ntuples
@@ -49,6 +49,26 @@ download_rx_data -m 5 -p /path/to/downloaded/.data -v v1 -d -t triggers.yaml
 
 which will use 5 threads to download the ntuples associated to the triggers in `triggers.yaml`
 and version `v1` to the specified path.
+
+The full options are:
+
+```
+options:
+  -h, --help            show this help message and exit
+  -t TRIG, --trig TRIG  Path to YAML file with list of triggers
+  -v VERS, --vers VERS  Version of LFNs
+  -k {rx,lbpkmumu}, --kind {rx,lbpkmumu}
+                        Type of production
+  -n NFILE, --nfile NFILE
+                        Number of files to download
+  -p DEST, --dest DEST  Destination directory will override whatever is in DOWNLOAD_NTUPPATH
+  -l {10,20,30,40}, --log {10,20,30,40}
+                        Log level, default 20
+  -m MTH, --mth MTH     Number of threads to use for downloading, default 1
+  -r, --ran             When picking a subset of files, with -n, pick them randomly
+  -d, --dryr            If used, it will skip downloads, but do everything else
+  -f, --force           If used, it will download even if output already exists
+```
 
 **IMPORTANT**:
 - In order to prevent deleting the data, save it in a hiden folder, e.g. one starting with a period. Above it is `.data`.
