@@ -79,6 +79,7 @@ class FitComponent:
         self._yield_error : float
 
         self._nentries_dummy_data = 10_000
+        self._yield_threshold     = 30 # Will not build KDE if fewer than this number of entries
     # --------------------
     def _get_minimizer(self) -> Union[AnealingMinimizer,None]:
         if self._fit_cfg is None:
@@ -181,8 +182,8 @@ class FitComponent:
         self._yield_value = float(numpy.sum(arr_wgt))
         self._yield_error = float(numpy.sqrt(numpy.sum(arr_wgt * arr_wgt)))
 
-        if self._yield_value == 0:
-            log.warning('No entries found, cannot build KDE')
+        if self._yield_value < self._yield_threshold:
+            log.warning(f'Cannot build KDE, found fewer entries than threshold: {self._yield_value}/{self._yield_threshold}')
             self._plot_placeholder(text='No entries')
             return None
 
@@ -274,6 +275,8 @@ class FitComponent:
         data = self._get_data()
         if data is None:
             return None
+
+        log.info(f'Building KDE with {self._yield_value:.0f} entries')
 
         cfg_kde = self._fit_cfg['config'][self._name]['cfg_kde']
         if 'bandwidth' not in cfg_kde:
