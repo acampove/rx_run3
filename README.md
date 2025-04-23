@@ -12,7 +12,8 @@ The following set of scripts aims to do two main things:
 A preliminary version of the histograms can be produce by running:
 
 ```bash
-create_pid_maps -c v1 -b v1 -m up -s b1 -p Pi 
+# for tests run over one file only with -M 1
+create_pid_maps -c v1 -b v1 -s b1 -p Pi -o /output/directory
 ```
 
 where:
