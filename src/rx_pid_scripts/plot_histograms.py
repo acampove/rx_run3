@@ -152,7 +152,7 @@ def _divide_hists(sig : str, ctr : str) -> bh:
 
     return rat
 # ------------------------------------
-def _plot_maps(l_path : list[str]) -> None:
+def _plot_maps(l_path : list[str], kind : str) -> None:
     for sig_pkl_path in l_path:
         sig_hist = _hist_from_path(sig_pkl_path)
         if sig_hist is None:
@@ -178,8 +178,8 @@ def main():
     _initialize()
 
     for kind in ['kaon', 'pion']:
-        l_path = _get_pkl_paths(kind=kind)
-        _plot_maps(l_path)
+        l_path = _get_pkl_paths(kind)
+        _plot_maps(l_path, kind)
 # ------------------------------------
 if __name__ == "__main__":
     main()
