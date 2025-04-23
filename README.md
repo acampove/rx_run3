@@ -287,3 +287,8 @@ Currently the command can add:
 
 `hop`: With the $\alpha$ and mass branches calculated
 
+## Calculating luminosity
+
+For this one would have to use the `get_lumi` script in this project, together
+with the one in [this](https://gitlab.cern.ch/lhcb-luminosity/lumi_calib/-/blob/master/get_lumi.py?ref_type=heads)
+project. This should, at some point, be cleaned up.
