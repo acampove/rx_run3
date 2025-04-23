@@ -12,7 +12,8 @@ The following set of scripts aims to do two main things:
 A preliminary version of the histograms can be produce by running:
 
 ```bash
-# for tests run over one file only with -M 1
+# For tests run over one file only with -M 1
+# For vebose messages use -v
 create_pid_maps -c v1 -b v1 -s b1 -p Pi -o /output/directory
 ```
 
