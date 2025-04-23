@@ -281,7 +281,7 @@ class FitComponent:
         cfg_kde = self._fit_cfg['config'][self._name]['cfg_kde']
         if 'bandwidth' not in cfg_kde:
             cfg_kde['bandwidth'] = 'isj' # Seems to give good fit (no over/under fitting)
-        pdf     = zfit.pdf.KDE1DimExact(data, **cfg_kde)
+        pdf     = zfit.pdf.KDE1DimExact(data, name=self._name, **cfg_kde)
 
         self._plot_fit(data, pdf)
 
