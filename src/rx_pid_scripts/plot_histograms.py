@@ -128,6 +128,8 @@ def _add_info(pkl_path : str, is_ratio : bool) -> None:
     title = f'{par}; Mag {pol}; {block}'
     if not is_ratio:
         title += f';\n{cut}'
+    else:
+        title += '\n Signal over Control'
 
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
