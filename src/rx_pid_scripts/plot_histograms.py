@@ -60,12 +60,10 @@ def _parse_args():
     Data.max_eff  = args.max_eff
 # ------------------------------------
 def _get_pkl_paths(kind : str) -> list[str]:
-    part    = Data.d_hadron_cut[kind]
-    sig_cut = f'{Data.sig_cut}{part}'
-
-    path_wc = f'{Data.dir_path}/*{sig_cut}*.pkl'
-    l_path  = glob.glob(path_wc)
-    npath   = len(l_path)
+    particle = {'kaon' : 'K', 'pion' : 'Pi'}[kind]
+    path_wc  = f'{Data.dir_path}/*-{particle}-*{Data.sig_cut}*.pkl'
+    l_path   = glob.glob(path_wc)
+    npath    = len(l_path)
 
     if npath == 0:
         raise FileNotFoundError(f'No files found in {path_wc}')
@@ -160,7 +158,9 @@ def _plot_maps(l_path : list[str], kind : str) -> None:
 
         _plot_hist(hist=sig_hist, pkl_path=sig_pkl_path)
 
-        ctr_pkl_path = sig_pkl_path.replace(Data.sig_cut, Data.ctr_cut)
+        had_cut      = Data.d_hadron_cut[kind]
+        ctr_cut      = f'{Data.ctr_cut}{had_cut}'
+        ctr_pkl_path = sig_pkl_path.replace(Data.sig_cut, ctr_cut)
         ctr_hist = _hist_from_path(ctr_pkl_path)
         if ctr_hist is None:
             continue
