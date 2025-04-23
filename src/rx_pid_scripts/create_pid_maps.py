@@ -37,7 +37,7 @@ def _parse_args() -> None:
     parser.add_argument('-c', '--cfg_vers', type=str, help='Version of configuration file'         , required=True)
     parser.add_argument('-b', '--bin_vers', type=str, help='Version of binning file'               , required=True)
     parser.add_argument('-p', '--particle', type=str, help='Particle name', choices=Data.l_particle, required=True)
-    parser.add_argument('-s', '--sample'  , type=str, help='Sample'       ,                          required=True)
+    parser.add_argument('-s', '--sample'  , type=str, help='Sample/block, e.g. b1, b2...'          , required=True)
     parser.add_argument('-o', '--out_dir' , type=str, help='Directory where pkl files will go'     , required=True)
     parser.add_argument('-d', '--dry-run' ,           help='Enable dry-run mode (default: False)'  , action='store_true')
     # These are by default None and will be used as in PIDCalib2's make_eff_hists
