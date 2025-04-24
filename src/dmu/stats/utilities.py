@@ -207,5 +207,16 @@ def pdf_to_tex(path : str, d_par : dict[str,str], skip_fixed : bool = True) -> N
 
     out_path = path.replace('.txt', '.tex')
 
+    if skip_fixed:
+        df = df[df.Floating == '1']
+        df = df.drop(columns='Floating')
+
+    df_1 = df[df.Constraint == 'none']
+    df_2 = df[df.Constraint != 'none']
+
+    df_1 = df_1.sort_values(by='Parameter', ascending=True)
+    df_2 = df_2.sort_values(by='Parameter', ascending=True)
+    df   = pnd.concat([df_1, df_2])
+
     put.df_to_tex(df, out_path)
 #-------------------------------------------------------
