@@ -5,7 +5,7 @@ but missing among the friend trees
 import os
 import re
 import glob
-import tqdm
+import argparse
 from typing import Union
 
 import yaml
@@ -18,15 +18,28 @@ class Data:
     '''
     Data class
     '''
-    data_dir : str
+    data_dir : str = None
     data_rgx = r'(data_24_mag(?:down|up)_24c\d)_(.*)\.root'
     mc_rgx   = r'mc_mag(?:up|down)_(?:.*_)?\d{8}_(.*)_(Hlt2RD.*)_\w{10}\.root'
 # ---------------------------------
-def _initialize() -> None:
+def _set_data_dir() -> None:
+    if Data.data_dir is not None:
+        return
+
     if 'DATADIR' not in os.environ:
         raise FileNotFoundError('DATADIR environment variable not set')
 
     Data.data_dir = os.environ['DATADIR']
+# ---------------------------------
+def _initialize() -> None:
+    _set_data_dir()
+# ---------------------------------
+def _parse_args() -> None:
+    parser = argparse.ArgumentParser(description='Script meant to check for missing friend trees')
+    parser.add_argument('-d', '--data_dir', type=str, help='Path to directory with main and friend samples, if not passed, will pick DATADIR from environment')
+    args = parser.parse_args()
+
+    Data.data_dir = args.data_dir
 # ---------------------------------
 def _version_from_path(path : str) -> Union[str,None]:
     try:
@@ -118,6 +131,7 @@ def main():
     '''
     Start here
     '''
+    _parse_args()
     _initialize()
 
     d_sample = _find_paths()
