@@ -307,6 +307,46 @@ Currently the command can add:
 
 `hop`: With the $\alpha$ and mass branches calculated
 
+## Missing files
+
+Once the extra branches have been calculated, one will have a file structure like:
+
+```
+├── brem_track_2
+│   └── v1
+├── ecalo_bias
+│   ├── v0
+│   └── v1
+├── hop
+│   ├── v1
+│   └── v2
+├── main
+│   ├── v1
+│   ├── v5
+│   └── v7
+├── mva
+│   ├── v1
+│   ├── v2
+│   ├── v3
+│   └── v4
+├── swp_cascade
+│   ├── v1
+│   └── v2
+└── swp_jpsi_misid
+    ├── v1
+    └── v2
+```
+
+Typically (not always), a sample in `main` should be also in all the other friend trees.
+If samples are missing, one could do:
+
+```bash
+check_missing -d /path/to/directory/with/samples
+```
+
+where the argument is optional, if not passed, the script will take the value of the 
+`DATADIR` environment variable.
+
 ## Calculating luminosity
 
 For this one would have to use the `get_lumi` script in this project, together
