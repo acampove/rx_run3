@@ -187,7 +187,7 @@ def _df_from_lines(l_line : list[str]) -> pnd.DataFrame:
 
     return df
 #-------------------------------------------------------
-def pdf_to_tex(path : str, d_par : dict[str,str]) -> None:
+def pdf_to_tex(path : str, d_par : dict[str,str], skip_fixed : bool = True) -> None:
     '''
     Takes 
 

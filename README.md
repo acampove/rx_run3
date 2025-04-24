@@ -293,7 +293,8 @@ d_par = {
     'ar_dscb_Signal_002_2_reso_flt' : r'$\alpha_{DSCB}^{2}$',
     }
 
-pdf_to_tex(path='/path/to/pdf.txt', d_par=d_par)
+# It will skip fixed parameters by default 
+pdf_to_tex(path='/path/to/pdf.txt', d_par=d_par, skip_fixed=True)
 ```
 
 where `d_par` will rename the `Parameters` column, such that it's in latex.
