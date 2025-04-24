@@ -136,13 +136,29 @@ def print_pdf(
 #-------------------------------------------------------
 # Make latex table from text file
 #-------------------------------------------------------
+def _reformat_expo(val : str) -> str:
+    regex = r'([\d\.]+)e([-,\d]+)'
+    mtch  = re.match(regex, val)
+    if not mtch:
+        raise ValueError(f'Cannot extract value and exponent from: {val}')
+
+    [val, exp] = mtch.groups()
+    exp        = int(exp)
+
+    return f'{val}\cdot 10^{{{exp}}}'
+#-------------------------------------------------------
 def _format_float_str(val : str) -> str:
     val = float(val)
 
     if abs(val) > 1000:
         return f'{val:,.0f}'
 
-    return f'{val:.3g}'
+    val = f'{val:.3g}'
+
+    if 'e' in val:
+        val = _reformat_expo(val)
+
+    return val
 #-------------------------------------------------------
 def _info_from_line(line : str) -> [tuple,None]:
     regex = r'(^\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)'
@@ -168,7 +184,6 @@ def _info_from_line(line : str) -> [tuple,None]:
     return par, low, high, floating, cons
 #-------------------------------------------------------
 def _df_from_lines(l_line : list[str]) -> pnd.DataFrame:
-
     df = pnd.DataFrame(columns=['Parameter', 'Low', 'High', 'Floating', 'Constraint'])
 
     for line in l_line:
