@@ -8,7 +8,6 @@ Script used to create small trees with extra branches from input trees
 
 import os
 import glob
-import shutil
 import fnmatch
 import argparse
 from dataclasses import dataclass
@@ -258,17 +257,17 @@ def _create_file(path : str, trigger : str) -> None:
         tmp_path = out_path.replace('.root', f'_{index:03}_pre_merge.root')
         rdf_out.Snapshot(Data.tree_name, tmp_path)
 
-        fmrg.AddFile(tmp_path)
+        fmrg.AddFile(tmp_path, cpProgress=False)
 
     fmrg.OutputFile(out_path)
 
-    log.info('Merging temporary files into: {out_path}')
+    log.info(f'Merging temporary files into: {out_path}')
     fmrg.Merge()
 
     tmp_wc = out_path.replace('.root', '_*_pre_merge.root')
-    log.info('Removing temporary files from: {tmp_wc}')
+    log.info(f'Removing temporary files from: {tmp_wc}')
     for tmp_path in glob.glob(tmp_wc):
-        shutil.rmtree(tmp_path)
+        os.remove(tmp_path)
 # ---------------------------------
 def _trigger_from_path(path : str) -> str:
     ichar   = path.index('Hlt2')
