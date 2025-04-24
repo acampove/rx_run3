@@ -240,6 +240,7 @@ def _create_file(path : str, trigger : str) -> None:
     l_rdf = _split_rdf(rdf=rdf)
 
     if Data.dry:
+        log.warning('Doing dry run')
         return
 
     nchunk = len(l_rdf)
