@@ -281,6 +281,23 @@ print_pdf(pdf,
           txt_path = 'tests/stats/utilities/print_pdf/pdf_const.txt')
 ```
 
+### Storing PDF as latex
+
+The file above can be transformed into a `tex` file by running:
+
+```python
+from dmu.stats.utilities   import pdf_to_tex
+
+d_par = {
+    'ar_dscb_Signal_002_1_reso_flt' : r'$\alpha_{DSCB}^{1}$',
+    'ar_dscb_Signal_002_2_reso_flt' : r'$\alpha_{DSCB}^{2}$',
+    }
+
+pdf_to_tex(path='/path/to/pdf.txt', d_par=d_par)
+```
+
+where `d_par` will rename the `Parameters` column, such that it's in latex.
+
 ## Fits
 
 The `Fitter` class is a wrapper to zfit, use to make fitting easier.
