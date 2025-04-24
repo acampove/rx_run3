@@ -179,6 +179,5 @@ pyrightconfig.json
 *.png
 *.pkl
 *.root
-*.txt
 
 tests/*/*/*.json
