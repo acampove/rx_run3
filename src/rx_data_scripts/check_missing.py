@@ -3,9 +3,12 @@ Script used to check what samples are present in the main trees
 but missing among the friend trees
 '''
 import os
+import re
 import glob
+import tqdm
 from typing import Union
 
+import yaml
 from dmu.generic.version_management import get_last_version
 from dmu.logging.log_store          import LogStore
 
@@ -16,6 +19,8 @@ class Data:
     Data class
     '''
     data_dir : str
+    data_rgx = r'(data_24_mag(?:down|up)_24c\d)_(.*)\.root'
+    mc_rgx   = r'mc_mag(?:up|down)_(?:.*_)?\d{8}_(.*)_(Hlt2RD.*)_\w{10}\.root'
 # ---------------------------------
 def _initialize() -> None:
     if 'DATADIR' not in os.environ:
@@ -32,26 +37,53 @@ def _version_from_path(path : str) -> Union[str,None]:
 
     return version
 # ---------------------------------
-def _paths_from_sample(path : str, version : str) -> set[str]:
+def _fname_from_sample(path : str, version : str) -> set[str]:
     root_wc = f'{path}/{version}/*.root'
     l_path  = glob.glob(root_wc)
+    l_fname = [ os.path.basename(path) for path in l_path ]
 
-    if len(l_path) == 0:
+    if len(l_fname) == 0:
         log.warning(f'No file found in: {root_wc}')
 
-    return set(l_path)
+    return set(l_fname)
 # ---------------------------------
-def main():
-    '''
-    Start here
-    '''
-    _initialize()
-    l_sample = glob.glob(f'{Data.data_dir}/*')
-    d_path   = {}
+def _info_from_fname(fname : str) -> tuple[str,str]:
+    if fname.startswith('data_'):
+        rgx = Data.data_rgx
+    elif fname.startswith('mc_'):
+        rgx = Data.mc_rgx
+    else:
+        raise ValueError(f'File cannot be identified as MC or data: {fname}')
 
-    log.info(40 * '-')
-    log.info(f'{"Tree":<20}{"Latest":<10}{"Files":<10}')
-    log.info(40 * '-')
+    mtch = re.match(rgx, fname)
+    if not mtch:
+        raise ValueError(f'Cannot extract sample and trigger from: {fname}')
+
+    [sample, trigger] = mtch.groups()
+
+    return sample, trigger
+# ---------------------------------
+def _fname_to_dict(s_fname : set[str]) -> dict[str,dict[str,list[str]]]:
+    d_data = {}
+
+    for fname in s_fname:
+        sample, trigger = _info_from_fname(fname)
+
+        if sample not in d_data:
+            d_data[sample] = {}
+
+        if trigger not in d_data[sample]:
+            d_data[sample] = {trigger : []}
+
+        d_data[sample][trigger].append(fname)
+
+    return d_data
+# ---------------------------------
+def _find_paths() -> dict[str,set[str]]:
+    l_sample = glob.glob(f'{Data.data_dir}/*')
+    d_fname  = {}
+
+    l_msg = []
     for sample in l_sample:
         version = _version_from_path(path=sample)
         if not version:
@@ -59,12 +91,47 @@ def main():
 
         name = os.path.basename(sample)
 
-        s_path = _paths_from_sample(path=sample, version=version)
-        d_path[f'{name}_{version}'] = s_path
-        npath  = len(s_path)
+        s_fname = _fname_from_sample(path=sample, version=version)
+        d_fname[name] = _fname_to_dict(s_fname)
+        nfname  = len(s_fname)
 
-        log.info(f'{name:<20}{version:<10}{npath:<10}')
+        l_msg.append(f'{name:<20}{version:<10}{nfname:<10}')
+
     log.info(40 * '-')
+    log.info(f'{"Tree":<20}{"Latest":<10}{"Files":<10}')
+    log.info(40 * '-')
+    for msg in l_msg:
+        log.info(msg)
+    log.info(40 * '-')
+
+    return d_fname
+# ---------------------------------
+def _compare_against_main(main_sam : dict[str,dict], frnd_sam : dict[str,dict]) -> list[str]:
+    s_main_sample = set(main_sam.keys())
+    s_frnd_sample = set(frnd_sam.keys())
+    s_diff        = s_main_sample - s_frnd_sample
+    l_diff        = list(s_diff)
+
+    return sorted(l_diff)
+# ---------------------------------
+def main():
+    '''
+    Start here
+    '''
+    _initialize()
+
+    d_sample = _find_paths()
+
+    main_sam = d_sample['main']
+    d_mis    = {}
+    for friend, data in d_sample.items():
+        if friend == 'main':
+            continue
+
+        d_mis[friend] = _compare_against_main(main_sam=main_sam, frnd_sam=data)
+
+    with open('missing.yaml', 'w', encoding='utf-8') as ofile:
+        yaml.safe_dump(d_mis, ofile, indent=2)
 # ---------------------------------
 if __name__ == '__main__':
     main()
