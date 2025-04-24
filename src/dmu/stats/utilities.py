@@ -5,7 +5,9 @@ import os
 import re
 from typing import Union
 import zfit
+import pandas as pnd
 
+import dmu.pdataframe.utilities as put
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:stats:utilities')
@@ -131,4 +133,79 @@ def print_pdf(
             log.debug(msg)
         else:
             raise ValueError(f'Invalid level: {level}')
+#-------------------------------------------------------
+# Make latex table from text file
+#-------------------------------------------------------
+def _format_float_str(val : str) -> str:
+    val = float(val)
+
+    if abs(val) > 1000:
+        return f'{val:,.0f}'
+
+    return f'{val:.3g}'
+#-------------------------------------------------------
+def _info_from_line(line : str) -> [tuple,None]:
+    regex = r'(^\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)'
+    mtch  = re.match(regex, line)
+    if not mtch:
+        return None
+
+    log.debug(f'Reading information from: {line}')
+
+    [par, _, low, high, floating, cons] = mtch.groups()
+
+    low  = _format_float_str(low)
+    high = _format_float_str(high)
+
+    if cons != 'none':
+        [mu, sg] = cons.split('___')
+
+        mu   = _format_float_str(mu)
+        sg   = _format_float_str(sg)
+
+        cons = f'$\mu={mu}; \sigma={sg}$'
+
+    return par, low, high, floating, cons
+#-------------------------------------------------------
+def _df_from_lines(l_line : list[str]) -> pnd.DataFrame:
+
+    df = pnd.DataFrame(columns=['Parameter', 'Low', 'High', 'Floating', 'Constraint'])
+
+    for line in l_line:
+        info = _info_from_line(line=line)
+        if info is None:
+            continue
+
+        par, low, high, floating, cons = info
+
+        df.loc[len(df)] = {'Parameter' : par,
+                           'Low'       : low,
+                           'High'      : high,
+                           'Floating'  : floating,
+                           'Constraint': cons,
+                           }
+
+    return df
+#-------------------------------------------------------
+def pdf_to_tex(path : str, d_par : dict[str,str]) -> None:
+    '''
+    Takes 
+
+    path: path to a `txt` file produced by stats/utilities:print_pdf
+    d_par: Dictionary mapping parameter names in this file to proper latex names
+
+    Creates a latex table with the same name as `path` but `txt` extension replaced by `tex`
+    '''
+
+    path = str(path)
+    with open(path, encoding='utf-8') as ifile:
+        l_line = ifile.read().splitlines()
+        l_line = l_line[4:] # Remove header
+
+    df = _df_from_lines(l_line)
+    df['Parameter']=df.Parameter.apply(lambda x : d_par.get(x, x.replace('_', ' ')))
+
+    out_path = path.replace('.txt', '.tex')
+
+    put.df_to_tex(df, out_path)
 #-------------------------------------------------------
