@@ -13,6 +13,7 @@ import argparse
 from dataclasses import dataclass
 
 import tqdm
+import dmu.generic.utilities as gut
 from ROOT                   import RDataFrame, TFileMerger
 from dmu.logging.log_store  import LogStore
 from dmu.generic            import version_management as vman
@@ -225,6 +226,7 @@ def _split_rdf(rdf : RDataFrame) -> list[RDataFrame]:
 
     return l_rdf
 # ---------------------------------
+@gut.timeit
 def _create_file(path : str, trigger : str) -> None:
     out_path = _get_out_path(path)
     if os.path.isfile(out_path):
@@ -287,6 +289,7 @@ def main():
     Script starts here
     '''
     _parse_args()
+    gut.TIMER_ON=True
 
     l_path       = _get_paths()
     Data.out_dir = _get_out_dir()
