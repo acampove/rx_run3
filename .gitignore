@@ -181,3 +181,4 @@ pyrightconfig.json
 *.root
 
 tests/*/*/*.json
+src/dmu_data/tests/*.tex
