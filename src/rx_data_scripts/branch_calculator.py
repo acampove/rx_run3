@@ -8,12 +8,13 @@ Script used to create small trees with extra branches from input trees
 
 import os
 import glob
+import shutil
 import fnmatch
 import argparse
 from dataclasses import dataclass
 
 import tqdm
-from ROOT                   import RDataFrame
+from ROOT                   import RDataFrame, TFileMerger
 from dmu.logging.log_store  import LogStore
 from dmu.generic            import version_management as vman
 
@@ -41,6 +42,7 @@ class Data:
     l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias', 'brem_track_1', 'brem_track_2']
     l_ecorr   = ['ecalo_bias', 'brem_track_1', 'brem_track_2']
     tree_name = 'DecayTree'
+    chunk_size= 100_000
 # ---------------------------------
 def _parse_args() -> None:
     '''
