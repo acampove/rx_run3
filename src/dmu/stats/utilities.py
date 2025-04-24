@@ -23,7 +23,7 @@ def _get_const(par : zfit.Parameter, d_const : Union[None, dict[str, list[float]
     obj = d_const[par.name]
     if isinstance(obj, (list, tuple)):
         [mu, sg] = obj
-        val      = f'{mu:.3e}; {sg:.3e}'
+        val      = f'{mu:.3e}___{sg:.3e}' # This separator needs to be readable and not a space
     else:
         val      = str(obj)
 
