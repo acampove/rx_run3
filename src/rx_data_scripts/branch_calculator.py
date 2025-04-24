@@ -217,7 +217,7 @@ def _process_rdf(rdf : RDataFrame, trigger : str, path : str) -> RDataFrame:
     return rdf
 # ---------------------------------
 def _split_rdf(rdf : RDataFrame) -> list[RDataFrame]:
-    nentries = rdf.Count.GetValue()
+    nentries = rdf.Count().GetValue()
     l_size   = range(0, nentries, Data.chunk_size)
 
     l_rdf    = [
@@ -252,12 +252,12 @@ def _create_file(path : str, trigger : str) -> None:
 
     log.info(f'File will be processed in {nchunk} chunks')
     fmrg = TFileMerger()
-    for rdf_in, index in enumerate(l_rdf):
+    for index, rdf_in in enumerate(tqdm.tqdm(l_rdf, ascii=' -')):
         rdf_out  = _process_rdf(rdf_in, trigger, path)
         tmp_path = out_path.replace('.root', f'_{index:03}_pre_merge.root')
         rdf_out.Snapshot(Data.tree_name, tmp_path)
 
-        fmrg.AddFilte(tmp_path)
+        fmrg.AddFile(tmp_path)
 
     fmrg.OutputFile(out_path)
 
