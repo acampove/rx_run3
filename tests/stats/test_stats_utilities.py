@@ -1,13 +1,21 @@
 '''
 Module with unit tests for functions in dmu.stat.utilities
 '''
+from importlib.resources import files
+
+import pytest
 import zfit
 from zfit.core.basepdf import ZfitPDF
 
 from dmu.logging.log_store import LogStore
 from dmu.stats.utilities   import print_pdf
+from dmu.stats.utilities   import pdf_to_tex
 
 log = LogStore.add_logger('dmu:tests:stats:test_utilities')
+#----------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('dmu:stats:utilities', 10)
 #----------------------------------
 def _get_pdf_simple() -> ZfitPDF:
     obs = zfit.Space('m',    limits=(-10, 10))
@@ -75,3 +83,20 @@ def test_print_pdf():
     print_pdf(pdf,
               d_const  = d_const,
               txt_path = 'tests/stats/utilities/print_pdf/pdf_const.txt')
+#----------------------------------
+def test_pdf_to_tex():
+    '''
+    Tests converting text file with PDF description
+    into latex table
+    '''
+    d_par = {
+            'ar_dscb_Signal_002_1_reso_flt' : r'$\alpha_{DSCB}^{1}$',
+            'c_exp_cmb_1'                   : 'b',
+            'frac_brem_001'                 : 'c',
+            'mu_Signal_001_scale_flt'       : 'd',
+            'mu_Signal_002_scale_flt'       : 'e',
+            }
+
+    path = files('dmu_data').joinpath('tests/pdf_to_tex.txt')
+    pdf_to_tex(path=path, d_par=d_par)
+#----------------------------------
