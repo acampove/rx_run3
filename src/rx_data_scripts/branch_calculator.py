@@ -38,11 +38,12 @@ class Data:
     dry  : bool
     lvl  : int
     wild_card : str
+    chunk_size: int
 
     l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias', 'brem_track_1', 'brem_track_2']
     l_ecorr   = ['ecalo_bias', 'brem_track_1', 'brem_track_2']
+
     tree_name = 'DecayTree'
-    chunk_size= 100_000
 # ---------------------------------
 def _parse_args() -> None:
     '''
@@ -53,6 +54,7 @@ def _parse_args() -> None:
     parser.add_argument('-v', '--vers', type=str, help='Version of outputs', required=True)
     parser.add_argument('-w', '--wc'  , type=str, help='Wildcard, if passed will be used to match paths')
     parser.add_argument('-n', '--nmax', type=int, help='If used, limit number of entries to process to this value')
+    parser.add_argument('-s', '--chunk',type=int, help='It will set the chunk size, dataframes will be split before processing', default=100_000)
     parser.add_argument('-p', '--part', nargs= 2, help='Partitioning, first number is the index, second is the number of parts', required=True)
     parser.add_argument('-b', '--pbar',           help='If used, will show progress bar whenever it is available', action='store_true')
     parser.add_argument('-d', '--dry' ,           help='If used, will do dry drun, e.g. stop before processing', action='store_true')
@@ -67,6 +69,7 @@ def _parse_args() -> None:
     Data.dry  = args.dry
     Data.lvl  = args.lvl
     Data.wild_card = args.wc
+    Data.chunk_size= args.chunk
 
     LogStore.set_level('rx_data:branch_calculator', Data.lvl)
 # ---------------------------------
