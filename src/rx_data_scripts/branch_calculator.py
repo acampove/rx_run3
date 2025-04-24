@@ -176,27 +176,14 @@ def _is_mc(path : str) -> bool:
 
     raise ValueError(f'Cannot determine if MC or data for: {path}')
 # ---------------------------------
-def _create_file(path : str, trigger : str) -> None:
-    out_path = _get_out_path(path)
-    if os.path.isfile(out_path):
-        log.debug(f'Output found, skipping {out_path}')
-        return
-
-    if Data.dry:
-        return
-
-    rdf = RDataFrame(Data.tree_name, path)
+def _process_rdf(rdf : RDataFrame, trigger : str, path : str) -> RDataFrame:
     nentries = rdf.Count().GetValue()
     if nentries == 0:
         log.warning(f'Found empty input file: {path}/{Data.tree_name}')
         rdf=RDataFrame(0)
         rdf=rdf.Define('fake_column', '1')
-        rdf.Snapshot(Data.tree_name, out_path)
-        return
 
-    if Data.nmax is not None:
-        log.warning(f'Limitting dataframe to {Data.nmax} entries')
-        rdf=rdf.Range(Data.nmax)
+        return rdf
 
     msc = MisCalculator(rdf=rdf, trigger=trigger)
     rdf = msc.get_rdf()
@@ -224,7 +211,60 @@ def _create_file(path : str, trigger : str) -> None:
     else:
         raise ValueError(f'Invalid kind: {Data.kind}')
 
-    rdf.Snapshot(Data.tree_name, out_path)
+    return rdf
+# ---------------------------------
+def _split_rdf(rdf : RDataFrame) -> list[RDataFrame]:
+    nentries = rdf.Count.GetValue()
+    l_size   = range(0, nentries, Data.chunk_size)
+
+    l_rdf    = [
+                rdf.Range(start, min(start + Data.chunk_size, nentries))
+                for start in l_size ]
+
+    return l_rdf
+# ---------------------------------
+def _create_file(path : str, trigger : str) -> None:
+    out_path = _get_out_path(path)
+    if os.path.isfile(out_path):
+        log.warning(f'Output found, skipping {out_path}')
+        return
+
+    rdf = RDataFrame(Data.tree_name, path)
+    if Data.nmax is not None:
+        log.warning(f'Limitting dataframe to {Data.nmax} entries')
+        rdf=rdf.Range(Data.nmax)
+
+    l_rdf = _split_rdf(rdf=rdf)
+
+    if Data.dry:
+        return
+
+    nchunk = len(l_rdf)
+    if nchunk == 1:
+        log.info('File will be processed in a single chunk')
+        rdf = l_rdf[0]
+        rdf = _process_rdf(rdf, trigger, path)
+        rdf.Snapshot(Data.tree_name, out_path)
+        return
+
+    log.info(f'File will be processed in {nchunk} chunks')
+    fmrg = TFileMerger()
+    for rdf_in, index in enumerate(l_rdf):
+        rdf_out  = _process_rdf(rdf_in, trigger, path)
+        tmp_path = out_path.replace('.root', f'_{index:03}_pre_merge.root')
+        rdf_out.Snapshot(Data.tree_name, tmp_path)
+
+        fmrg.AddFilte(tmp_path)
+
+    fmrg.OutputFile(out_path)
+
+    log.info('Merging temporary files into: {out_path}')
+    fmrg.Merge()
+
+    tmp_wc = out_path.replace('.root', '_*_pre_merge.root')
+    log.info('Removing temporary files from: {tmp_wc}')
+    for tmp_path in glob.glob(tmp_wc):
+        shutil.rmtree(tmp_path)
 # ---------------------------------
 def _trigger_from_path(path : str) -> str:
     ichar   = path.index('Hlt2')
