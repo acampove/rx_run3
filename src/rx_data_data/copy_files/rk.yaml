@@ -2,6 +2,7 @@ inp_dir : /publicfs/ucas/user/campoverde/Data/data
 out_dir : /home/acampove/external_ssd/Data
 triggers:
   - Hlt2RD_BuToKpEE_MVA
+  - Hlt2RD_BuToKpEE_MVA_cal
   - Hlt2RD_BuToKpEE_MVA_misid
   - Hlt2RD_BuToKpEE_SameSign_MVA
   - Hlt2RD_BuToKpMuMu_MVA
