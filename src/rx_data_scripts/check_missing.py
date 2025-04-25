@@ -127,13 +127,42 @@ def _find_paths() -> dict[str,set[str]]:
 
     return d_fname
 # ---------------------------------
-def _compare_against_main(main_sam : dict[str,dict], frnd_sam : dict[str,dict]) -> list[str]:
+def _get_sample_files(sample : dict[str,list[str]]) -> set[str]:
+    l_path = []
+    for paths in sample.values():
+        l_path += paths
+
+    return set(l_path)
+# ---------------------------------
+def _sample_difference(sample_1 : dict[str,list[str]], sample_2 : dict[str,list[str]]) -> list[str]:
+    s_path_1 = _get_sample_files(sample_1)
+    s_path_2 = _get_sample_files(sample_2)
+    s_diff   = s_path_1 - s_path_2
+    l_diff   = list(s_diff)
+
+    return sorted(l_diff)
+# ---------------------------------
+def _compare_against_main(main_sam : dict[str,dict], frnd_sam : dict[str,dict]) -> dict[str]:
     s_main_sample = set(main_sam.keys())
     s_frnd_sample = set(frnd_sam.keys())
     s_diff        = s_main_sample - s_frnd_sample
     l_diff        = list(s_diff)
+    l_diff        = sorted(l_diff)
 
-    return sorted(l_diff)
+    d_diff = { sample : 'all' for sample in l_diff }
+    s_both = s_main_sample & s_frnd_sample
+    for sample in s_both:
+        m_sample = main_sam[sample]
+        f_sample = frnd_sam[sample]
+
+        l_path = _sample_difference(sample_1=m_sample, sample_2=f_sample)
+        npath  = len(l_path)
+        if npath == 0:
+            continue
+
+        d_diff[sample] = l_path
+
+    return d_diff
 # ---------------------------------
 def main():
     '''
