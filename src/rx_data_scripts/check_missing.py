@@ -87,6 +87,9 @@ def _fname_to_dict(s_fname : set[str]) -> dict[str,dict[str,list[str]]]:
     for fname in s_fname:
         sample, trigger = _info_from_fname(fname)
 
+        if 'data' in sample:
+            sample = f'{sample}_{trigger}'
+
         if sample not in d_data:
             d_data[sample] = {}
 
