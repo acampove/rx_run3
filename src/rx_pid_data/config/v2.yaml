@@ -33,7 +33,7 @@ selection :
 # -----------------------------------------------
 common: &com
   bin_vars :
-    - log10(PT)
+    - log10PT
     - ETA
 particles:
   Pi  :
