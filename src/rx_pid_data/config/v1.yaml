@@ -39,7 +39,7 @@ particles:
       - PROBNN_K < 0.1
     bin_vars :
       - log10(pi_PT)
-      - ETA
+      - pi_ETA
   K   :
     pid_cuts:
       - PROBNN_E > 0.2
@@ -47,4 +47,4 @@ particles:
       - PROBNN_K > 0.1
     bin_vars :
       - log10(K_PT)
-      - ETA
+      - K_ETA
