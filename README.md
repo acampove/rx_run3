@@ -347,6 +347,27 @@ check_missing -d /path/to/directory/with/samples
 where the argument is optional, if not passed, the script will take the value of the 
 `DATADIR` environment variable.
 
+Other options are:
+
+```
+options:
+  -h, --help            show this help message and exit
+  -d DATA_DIR, --data_dir DATA_DIR
+                        Path to directory with main and friend samples, if not passed, will pick
+                        DATADIR from environment
+  -s SKIP_SAM [SKIP_SAM ...], --skip_sam SKIP_SAM [SKIP_SAM ...]
+                        Samples to skip
+  -l {10,20,30}, --log_level {10,20,30}
+                        Logging level
+```
+
+the output will be `missing.yaml`. This file will tell you:
+
+- Which friend trees have which samples missing.
+- Which are the files missing
+
+In this case `missing` is relative to the samples and files in the `main` sample.
+
 ## Calculating luminosity
 
 For this one would have to use the `get_lumi` script in this project, together
