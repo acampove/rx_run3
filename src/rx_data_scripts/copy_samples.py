@@ -146,6 +146,13 @@ def _copy_sample(source : str) -> int:
 
     return 0
 # -----------------------------------------
+def _download_group(group : list[str]) -> int:
+    ncopied = 0
+
+        ncopied += _copy_sample(path)
+
+    return ncopied
+# -----------------------------------------
 def _download_kind(kind : str):
     if kind == 'all':
         return
@@ -154,9 +161,10 @@ def _download_kind(kind : str):
     _initialize_kind(kind)
 
     l_path = _get_source_paths()
+    l_group= _group_paths(l_path)
     ncopied= 0
-    for path in tqdm.tqdm(l_path, ascii=' -'):
-        ncopied += _copy_sample(path)
+    for group in tqdm.tqdm(l_group, ascii=' -'):
+        ncopied += _download_group(group)
 
     log.info(f'Copied {ncopied} files for kind {kind}')
 # -----------------------------------------
