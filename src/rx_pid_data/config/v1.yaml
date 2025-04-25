@@ -31,20 +31,20 @@ selection :
   - PARTICLE_PPHASRICH
   - PARTICLE_INECAL
 # -----------------------------------------------
-common: &com
-  bin_vars :
-    - log10(PT)
-    - ETA
 particles:
   Pi  :
-    <<: *com
     pid_cuts:
       - PROBNN_E > 0.2
       - DLLe     > 2.0
       - PROBNN_K < 0.1
+    bin_vars :
+      - log10(Pi_PT)
+      - ETA
   K   :
-    <<: *com
     pid_cuts:
       - PROBNN_E > 0.2
       - DLLe     > 2.0
       - PROBNN_K > 0.1
+    bin_vars :
+      - log10(K_PT)
+      - ETA
