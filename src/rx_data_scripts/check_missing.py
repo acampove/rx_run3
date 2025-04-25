@@ -18,6 +18,7 @@ class Data:
     '''
     Data class
     '''
+    skip_sam : list[str]
     data_dir : str = None
     data_rgx = r'(data_24_mag(?:down|up)_24c\d)_(.*)\.root'
     mc_rgx   = r'mc_mag(?:up|down)_(?:.*_)?\d{8}_(.*)_(Hlt2RD.*)_\w{10}\.root'
@@ -36,10 +37,13 @@ def _initialize() -> None:
 # ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script meant to check for missing friend trees')
-    parser.add_argument('-d', '--data_dir', type=str, help='Path to directory with main and friend samples, if not passed, will pick DATADIR from environment')
+    parser.add_argument('-d', '--data_dir', type=str , help='Path to directory with main and friend samples, if not passed, will pick DATADIR from environment')
+    parser.add_argument('-s', '--skip_sam', nargs='+', help='Samples to skip', default=[])
+
     args = parser.parse_args()
 
     Data.data_dir = args.data_dir
+    Data.skip_sam = args.skip_sam
 # ---------------------------------
 def _version_from_path(path : str) -> Union[str,None]:
     try:
@@ -140,6 +144,9 @@ def main():
     d_mis    = {}
     for friend, data in d_sample.items():
         if friend in ['main', 'samples']: # samples stores yaml files
+            continue
+
+        if friend in Data.skip_sam:
             continue
 
         d_mis[friend] = _compare_against_main(main_sam=main_sam, frnd_sam=data)
