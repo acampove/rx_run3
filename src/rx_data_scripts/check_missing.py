@@ -139,7 +139,7 @@ def main():
     main_sam = d_sample['main']
     d_mis    = {}
     for friend, data in d_sample.items():
-        if friend == 'main':
+        if friend in ['main', 'samples']: # samples stores yaml files
             continue
 
         d_mis[friend] = _compare_against_main(main_sam=main_sam, frnd_sam=data)
