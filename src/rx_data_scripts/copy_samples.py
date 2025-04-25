@@ -5,10 +5,12 @@ import os
 import glob
 import shutil
 import argparse
+import multiprocessing
 from importlib.resources import files
 
 import tqdm
 import yaml
+import numpy
 from dmu.generic.version_management import get_last_version
 from dmu.logging.log_store          import LogStore
 from rx_data                        import utilities as ut
@@ -19,10 +21,10 @@ class Data:
     '''
     Class holding attributes meant to be shared
     '''
-    kind  : str
-    conf  : str
-    dry   : bool
-
+    kind    : str
+    conf    : str
+    dry     : bool
+    nprc    : int
     d_conf  : dict
     d_data  : dict
     out_dir : str
@@ -44,6 +46,7 @@ def _parse_args():
     parser.add_argument('-k', '--kind', type=str, help='Type of files', choices=Data.l_kind, required=True)
     parser.add_argument('-c', '--conf', type=str, help='Name of YAML config file, e.g. rk', required=True)
     parser.add_argument('-l', '--logl', type=int, help='Logger level', choices=[10, 20, 30], default=20)
+    parser.add_argument('-n', '--nprc', type=int, help='Number of process to download with', default=1)
     parser.add_argument('-v', '--vers', type=str, help='Version of files, only makes sense if kind is not "all"')
     parser.add_argument('-d', '--dry' ,           help='If used, will do not copy files', action='store_true')
     args = parser.parse_args()
@@ -52,6 +55,7 @@ def _parse_args():
     Data.conf = args.conf
     Data.vers = args.vers
     Data.dry  = args.dry
+    Data.nprc = args.nprc
 
     LogStore.set_level('rx_data:copy_samples', args.logl)
 # -----------------------------------------
