@@ -31,6 +31,18 @@ Then, for each remote it pushes the tags and the commits.
 
 This section describes generic tools that could not be put in a specific category, but tend to be useful.
 
+## YAML
+
+When dumping data to yaml files do it like:
+
+```python
+import dmu.generic.utilities as gut
+
+yaml.dump(data, Dumper=gut.BlockStyleDumper)
+```
+
+to make sure the indentation is correct.
+
 ## Hashing
 
 The snippet below:

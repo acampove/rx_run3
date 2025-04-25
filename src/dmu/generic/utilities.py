@@ -5,16 +5,23 @@ import os
 import time
 import json
 import inspect
-
-from typing import Callable
-
+from typing                import Callable
 from functools             import wraps
+
+import yaml
 from dmu.logging.log_store import LogStore
 
 TIMER_ON=False
 
 log = LogStore.add_logger('dmu:generic:utilities')
-
+# --------------------------------
+class BlockStyleDumper(yaml.SafeDumper):
+    '''
+    Class needed to specify proper indentation when
+    dumping data to YAML files
+    '''
+    def increase_indent(self, flow=False, indentless=False):
+        return super().increase_indent(flow=flow, indentless=False)
 # --------------------------------
 def _get_module_name( fun : Callable) -> str:
     mod = inspect.getmodule(fun)
