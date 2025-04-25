@@ -124,11 +124,16 @@ def _find_paths() -> dict[str,set[str]]:
 
     l_msg = []
     for sample in l_sample:
+        if sample.endswith('/samples'):
+            continue
+
         version = _version_from_path(path=sample)
         if not version:
             continue
 
         name = os.path.basename(sample)
+
+        log.info(f'Finding paths for {sample}')
 
         s_fname = _fname_from_sample(path=sample, version=version)
         d_fname[name] = _fname_to_dict(s_fname)
