@@ -151,11 +151,25 @@ def _copy_sample(source : str) -> int:
     return 0
 # -----------------------------------------
 def _download_group(group : list[str]) -> int:
-    ncopied = 0
+    if len(group) == 1:
+        ncopied = _copy_sample(group[0])
+        return ncopied
 
-        ncopied += _copy_sample(path)
+    with multiprocessing.Pool() as pool:
+        l_ncopied = pool.map(_copy_sample, group)
+        ncopied   = sum(l_ncopied)
 
     return ncopied
+# -----------------------------------------
+def _group_paths(l_path : list[str]) -> list[list[str]]:
+    if Data.nprc <  1:
+        raise ValueError(f'Number of processes has to be larger or equal to 1, found: {Data.nprc}')
+
+    if Data.nprc == 1:
+        l_group = [ [path] for path in l_path ]
+        return l_group
+
+    return numpy.array_split(l_path, Data.nprc).tolist()
 # -----------------------------------------
 def _download_kind(kind : str):
     if kind == 'all':
