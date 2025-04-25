@@ -88,6 +88,7 @@ def _info_from_fname(fname : str) -> tuple[str,str]:
 def _fname_to_dict(s_fname : set[str]) -> dict[str,dict[str,list[str]]]:
     d_data = {}
 
+    nipath = len(s_fname)
     for fname in s_fname:
         sample, trigger = _info_from_fname(fname)
 
@@ -102,7 +103,20 @@ def _fname_to_dict(s_fname : set[str]) -> dict[str,dict[str,list[str]]]:
 
         d_data[sample][trigger].append(fname)
 
+    nfpath = _count_paths(d_data)
+
+    if nipath != nfpath:
+        raise ValueError(f'Number of paths changed: {nipath} --> {nfpath}')
+
     return d_data
+# ---------------------------------
+def _count_paths(d_data : dict[str, dict]) -> int:
+    npath = 0
+    for d_trig in d_data.values():
+        for l_path in d_trig.values():
+            npath += len(l_path)
+
+    return npath
 # ---------------------------------
 def _find_paths() -> dict[str,set[str]]:
     l_sample = glob.glob(f'{Data.data_dir}/*')
