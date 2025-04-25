@@ -144,6 +144,17 @@ def _sample_difference(sample_1 : dict[str,list[str]], sample_2 : dict[str,list[
     s_diff   = s_path_1 - s_path_2
     l_diff   = list(s_diff)
 
+    if len(l_diff) != 0:
+        log.debug('Main')
+        l_path_1 = sorted(list(s_path_1))
+        for path_1 in l_path_1:
+            log.info(path_1)
+
+        log.debug('Friend')
+        l_path_2 = sorted(list(s_path_2))
+        for path_2 in l_path_2:
+            log.info(path_2)
+
     return sorted(l_diff)
 # ---------------------------------
 def _compare_against_main(main_sam : dict[str,dict], frnd_sam : dict[str,dict]) -> dict[str]:
