@@ -24,13 +24,14 @@ class Data:
     Data class
     '''
     sig_cut      = '(PROBNN_E>0.2)&(DLLe>3.0)'
-    ctr_cut      = '(PROBNN_E<0.2|DLLe<3)&(DLLe>1.0)'
+    ctr_cut      = '(PROBNN_E<0.2|DLLe<2)&(DLLe>-1.0)'
     d_hadron_cut = {'pion' : '&(PROBNN_K<0.1)', 'kaon' : '&(PROBNN_K>0.1)'}
 
     max_eff    : float = 1.0
     min_eff    : float = 0.0
 
-    max_rat    : float = 3.0
+    max_rat_pi : float = 5.0
+    max_rat_k  : float = 0.5
     min_rat    : float = 0.0
 
     dir_path   : str
@@ -100,7 +101,8 @@ def _plot_hist(hist : bh, pkl_path : str, is_ratio : bool = False) -> None:
     arr_x, arr_y = numpy.meshgrid(x_edges, y_edges)
 
     if is_ratio:
-        plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None     , vmin=Data.min_rat, vmax=Data.max_rat)
+        max_rat = Data.max_rat_pi if '-Pi-' in pkl_path else Data.max_rat_k
+        plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None     , vmin=Data.min_rat, vmax=max_rat)
         plt.colorbar(label='$w_{fake}$')
     else:
         plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=LogNorm())
@@ -158,9 +160,7 @@ def _plot_maps(l_path : list[str], kind : str) -> None:
 
         _plot_hist(hist=sig_hist, pkl_path=sig_pkl_path)
 
-        had_cut      = Data.d_hadron_cut[kind]
-        ctr_cut      = f'{Data.ctr_cut}{had_cut}'
-        ctr_pkl_path = sig_pkl_path.replace(Data.sig_cut, ctr_cut)
+        ctr_pkl_path = sig_pkl_path.replace(Data.sig_cut, Data.ctr_cut)
         ctr_hist = _hist_from_path(ctr_pkl_path)
         if ctr_hist is None:
             continue
