@@ -38,7 +38,7 @@ particles:
       - DLLe     > 2.0
       - PROBNN_K < 0.1
     bin_vars :
-      - log10(Pi_PT)
+      - log10(pi_PT)
       - ETA
   K   :
     pid_cuts:
