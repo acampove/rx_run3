@@ -9,6 +9,7 @@ import argparse
 from typing import Union
 
 import yaml
+from dmu.generic                    import utilities          as gut
 from dmu.generic.version_management import get_last_version
 from dmu.logging.log_store          import LogStore
 
@@ -152,7 +153,7 @@ def main():
         d_mis[friend] = _compare_against_main(main_sam=main_sam, frnd_sam=data)
 
     with open('missing.yaml', 'w', encoding='utf-8') as ofile:
-        yaml.safe_dump(d_mis, ofile, indent=2)
+        yaml.dump(d_mis, ofile, Dumper=gut.BlockStyleDumper)
 # ---------------------------------
 if __name__ == '__main__':
     main()
