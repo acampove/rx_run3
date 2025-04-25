@@ -89,29 +89,30 @@ def _fname_to_dict(s_fname : set[str]) -> dict[str,dict[str,list[str]]]:
     d_data = {}
 
     nipath = len(s_fname)
+    nadded = 0
     for fname in s_fname:
         sample, trigger = _info_from_fname(fname)
 
-        if 'data' in sample:
-            sample = f'{sample}_{trigger}'
-
-        if sample not in d_data:
+        if sample  not in d_data:
             d_data[sample] = {}
 
         if trigger not in d_data[sample]:
-            d_data[sample] = {trigger : []}
+            d_data[sample][trigger] = []
 
         d_data[sample][trigger].append(fname)
+        nadded += 1
 
     nfpath = _count_paths(d_data)
 
     if nipath != nfpath:
-        raise ValueError(f'Number of paths changed: {nipath} --> {nfpath}')
+        raise ValueError(f'Number of paths changed: {nipath} --> {nfpath}, added {nadded}')
 
     return d_data
 # ---------------------------------
 def _count_paths(d_data : dict[str, dict]) -> int:
     npath = 0
+
+    log.debug('Counting paths')
     for d_trig in d_data.values():
         for l_path in d_trig.values():
             npath += len(l_path)
