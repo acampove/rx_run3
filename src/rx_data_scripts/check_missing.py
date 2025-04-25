@@ -124,7 +124,8 @@ def _find_paths() -> dict[str,set[str]]:
 
     l_msg = []
     for sample in l_sample:
-        if sample.endswith('/samples'):
+        sample_name = os.path.basename(sample)
+        if sample_name in ['samples'] + Data.skip_sam:
             continue
 
         version = _version_from_path(path=sample)
