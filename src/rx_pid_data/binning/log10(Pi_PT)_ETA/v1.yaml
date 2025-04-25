@@ -2,7 +2,7 @@
 # meant to be used with PIDCalib2 through rx_pid. It is closer to what was used in Run1/2
 # --------------------------------
 bin: &bin_com
-  log10(PT):
+  log10(Pi_PT):
   - 2.699
   - 2.900
   - 3.000
@@ -32,7 +32,6 @@ bin: &bin_com
   - 5.0
 # --------------------------------
 block_common: &b_com
-  K : *bin_com
   Pi: *bin_com
 # --------------------------------
 b1: *b_com
