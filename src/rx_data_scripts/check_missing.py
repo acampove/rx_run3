@@ -134,7 +134,7 @@ def _find_paths() -> dict[str,set[str]]:
 
         name = os.path.basename(sample)
 
-        log.info(f'Finding paths for {sample}')
+        log.info(f'Finding paths for sample: {name}/{version}')
 
         s_fname = _fname_from_sample(path=sample, version=version)
         d_fname[name] = _fname_to_dict(s_fname)
