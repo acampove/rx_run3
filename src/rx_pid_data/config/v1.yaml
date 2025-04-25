@@ -40,11 +40,11 @@ particles:
     <<: *com
     pid_cuts:
       - PROBNN_E > 0.2
-      - DLLe     > 3.0
+      - DLLe     > 2.0
       - PROBNN_K < 0.1
   K   :
     <<: *com
     pid_cuts:
       - PROBNN_E > 0.2
-      - DLLe     > 3.0
+      - DLLe     > 2.0
       - PROBNN_K > 0.1
