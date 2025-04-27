@@ -39,14 +39,19 @@ def _get_rdf():
 # -------------------------------------------------------
 def _check_samples(df : pnd.DataFrame):
     fail = False
+    log.info(40 * '-')
+    log.info(f'{"Kind":<20}{"Entries":<20}')
+    log.info(40 * '-')
     for kind, df_kind in df.groupby('kind'):
         if len(df_kind) == 0:
             log.warning(f'Empty sample: {kind}')
             fail=True
             continue
 
-        log.info(f'Sample: {kind}')
-        log.info(f'Size: {len(df)}')
+        nentries = len(df_kind)
+
+        log.info(f'{kind:<20}{nentries:<20}')
+    log.info(40 * '-')
 
     assert not fail
 # -------------------------------------------------------
