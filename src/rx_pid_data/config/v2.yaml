@@ -21,7 +21,7 @@ selection :
 particles:
   Pi  :
     pid_cuts:
-      - PROBNN_E < 0.2 | DLLe < 2
+      - PROBNN_E < 0.2 | DLLe < 2.0
       - DLLe     >-1.0
       - PROBNN_K < 0.1
     bin_vars :
@@ -29,7 +29,7 @@ particles:
       - ETA
   K   :
     pid_cuts:
-      - PROBNN_E < 0.2 | DLLe < 2
+      - PROBNN_E < 0.2 | DLLe < 2.0
       - DLLe     >-1.0
       - PROBNN_K > 0.1
     bin_vars :
