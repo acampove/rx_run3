@@ -39,7 +39,7 @@ def test_sample(sample : str):
     '''
     cfg                    = _get_config()
     if 'DATA' in sample:
-        cfg['input']['range' ] = 600_000, 610_000
+        cfg['input']['range' ] = 500_000, 700_000
     cfg['input']['sample'] = sample
     cfg['input']['q2bin' ] = 'jpsi'
 
