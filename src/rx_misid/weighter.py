@@ -34,7 +34,8 @@ class SampleWeighter:
 
         self._regex = r'.*_(block\d)(?:_v\d)?-(?:up|down)-(K|Pi)-.*'
 
-        self._d_map : dict[str, bh] = self._load_maps()
+        self._d_map        : dict[str, bh] = self._load_maps()
+        self._d_out_of_map : dict[str,dict[int,int]] = {}
     # ------------------------------
     def _get_df(self, df : pnd.DataFrame) -> pnd.DataFrame:
         df = self._add_columns(df=df, particle='L1')
@@ -113,7 +114,13 @@ class SampleWeighter:
         new_value = min(new_value, maxv)
 
         if old_value != new_value:
-            log.warning(f'Moving {name} value inside map {old_value:.3f} -> {new_value:.3f}')
+            log.debug(f'Moving {name} value inside map {old_value:.5f} -> {new_value:.5f}')
+
+            is_max = old_value > maxv
+            if name not in self._d_out_of_map:
+                self._d_out_of_map[name] = {True : 0, False : 0}
+
+            self._d_out_of_map[name][is_max] += 1
 
         index = axis.index(new_value)
 
@@ -181,6 +188,15 @@ class SampleWeighter:
         Returns instance of weighted data
         '''
         self._df['weights'] = self._df.apply(self._get_candidate_weight, axis=1)
+
+        log.info(40 * '-')
+        log.info(f'{"Variable":<20}{"Low":<10}{"High":<20}')
+        log.info(40 * '-')
+        for var, d_frq in self._d_out_of_map.items():
+            val_low  = d_frq.get(False,0)
+            val_high = d_frq.get(True ,0)
+            log.info(f'{var:<20}{val_low:<10}{val_high:<20}')
+        log.info(40 * '-')
 
         return self._df
 # ------------------------------
