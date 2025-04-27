@@ -129,12 +129,16 @@ class SampleWeighter:
         log.info(40 * '-')
         log.info(f'Block/Hadron: {row.block}/{row.hadron}')
         log.info(40 * '-')
-        log.info(f'{"L1_PT":<20}{row.L1_PT:20.0f}')
-        log.info(f'{"L2_PT":<20}{row.L2_PT:20.0f}')
-        log.info('')
-        log.info(f'{"L1_ETA":<20}{row.L1_ETA:20.2f}')
-        log.info(f'{"L2_ETA":<20}{row.L2_ETA:20.2f}')
-        log.info('')
+        for lepton in ['L1', 'L2']:
+            varx = self._varx.replace('PARTICLE', lepton)
+            vary = self._vary.replace('PARTICLE', lepton)
+
+            valx = getattr(row, varx)
+            valy = getattr(row, vary)
+
+            log.info(f'{varx:<20}{valx:20.2f}')
+            log.info(f'{vary:<20}{valy:20.2f}')
+            log.info('')
     # ------------------------------
     def _get_candidate_weight(self, row : pnd.Series) -> float:
         if   row.kind == 'PassFail':
