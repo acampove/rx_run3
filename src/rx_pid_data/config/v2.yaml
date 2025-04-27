@@ -11,10 +11,10 @@ samples  :
   b7  : 2024_WithUT_block7
   b8  : 2024_WithUT_block8
 selection :
-  - PARTICLE_PT              > 250
-  - PARTICLE_P               > 3000
-  - PARTICLE_TRACK_GHOSTPROB < 0.3
-  - PARTICLE_IPCHI2          > 9
+  - PARTICLE_PT        > 250
+  - PARTICLE_P         > 3000
+  - PARTICLE_GHOSTPROB < 0.3
+  - PARTICLE_BPVIPCHI2 > 9
   - PARTICLE_PPHASRICH
   - PARTICLE_INECAL
 # -----------------------------------------------
