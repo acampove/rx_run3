@@ -23,14 +23,15 @@ class Data:
     '''
     Data class
     '''
-    sig_cut      = '(PROBNN_E>0.2)&(DLLe>3.0)'
+    sig_cut      = '(PROBNN_E>0.2)&(DLLe>2.0)'
     ctr_cut      = '(PROBNN_E<0.2|DLLe<2)&(DLLe>-1.0)'
     d_hadron_cut = {'pion' : '&(PROBNN_K<0.1)', 'kaon' : '&(PROBNN_K>0.1)'}
 
-    max_eff    : float = 1.0
-    min_eff    : float = 0.0
+    max_eff_pi : float = 0.05
+    max_eff_k  : float = 0.05
+    min_eff    : float = 0.00
 
-    max_rat_pi : float = 5.0
+    max_rat_pi : float = 8.0
     max_rat_k  : float = 0.5
     min_rat    : float = 0.0
 
@@ -39,7 +40,7 @@ class Data:
     fontsize   : int
     fancy      : bool = True
     skip_values: bool = True
-    regex      : str  = r'effhists-2024_WithUT_(block\d)(?:_v1)?-(up|down)-([A-Z,a-z,0-9]+)-(.*)-(\w+)\.(\w+)\.pkl'
+    regex      : str  = r'effhists-2024_WithUT_(block\d)(?:_v1)?-(up|down)-([A-Z,a-z,0-9]+)-(.*)-([\w,(,)]+)\.(\w+)\.pkl'
 # ---------------------------------
 def _initialize() -> None:
     plt.style.use(mplhep.style.LHCb2)
@@ -54,11 +55,9 @@ def _initialize() -> None:
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to plot histograms in pkl files created by PIDCalib2')
     parser.add_argument('-d', '--dir_path', type=str, help='Path to directory with PKL files')
-    parser.add_argument('-m', '--max_eff' , type=str, help='Upper value for z-axis in plots, i.e. maximum efficiency', default=Data.max_eff)
     args   = parser.parse_args()
 
     Data.dir_path = args.dir_path
-    Data.max_eff  = args.max_eff
 # ------------------------------------
 def _get_pkl_paths(kind : str) -> list[str]:
     particle = {'kaon' : 'K', 'pion' : 'Pi'}[kind]
@@ -76,7 +75,10 @@ def _hist_from_path(pkl_path : str) -> Union[bh,None]:
         try:
             hist = pickle.load(ifile)
         except EOFError:
-            log.warning(f'Cannot load: {pkl_path}')
+            log.warning(f'EOFError, cannot load: {pkl_path}')
+            return None
+        except ModuleNotFoundError:
+            log.warning(f'ModuleNotFoundError, cannot load: {pkl_path}')
             return None
 
     log.debug(f'Loaded: {pkl_path}')
@@ -102,10 +104,11 @@ def _plot_hist(hist : bh, pkl_path : str, is_ratio : bool = False) -> None:
 
     if is_ratio:
         max_rat = Data.max_rat_pi if '-Pi-' in pkl_path else Data.max_rat_k
-        plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None     , vmin=Data.min_rat, vmax=max_rat)
+        plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None, vmin=Data.min_rat, vmax=max_rat)
         plt.colorbar(label='$w_{fake}$')
     else:
-        plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=LogNorm())
+        max_eff = Data.max_eff_pi if '-Pi-' in pkl_path else Data.max_eff_k
+        plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None, vmin=Data.min_eff, vmax=max_eff)
         plt.colorbar(label='Efficiency')
 
     _add_info(pkl_path, is_ratio)
