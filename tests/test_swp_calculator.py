@@ -41,13 +41,6 @@ def _get_rdf(kind : str) -> RDataFrame:
     else:
         raise ValueError(f'Invalid dataset of kind: {kind}')
 
-    data_dir = os.environ['DATADIR']
-    RDFGetter.samples = {'main'       : f'{data_dir}/samples/main.yaml',
-                         'mva'        : f'{data_dir}/samples/mva.yaml',
-                         'hop'        : f'{data_dir}/samples/hop.yaml',
-                         'cascade'    : f'{data_dir}/samples/cascade.yaml',
-                         'jpsi_misid' : f'{data_dir}/samples/jpsi_misid.yaml'}
-
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
     rdf = _apply_selection(rdf, trigger, sample)
