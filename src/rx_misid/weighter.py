@@ -25,16 +25,27 @@ class SampleWeighter:
         df  : Pandas dataframe with columns 'hadron', 'bmeson' and 'kind'. Used to assign weights
         cfg : Dictionary storing configuration
         '''
-        self._df  = df
         self._cfg = cfg
 
         self._varx : str
         self._vary : str
         self._set_variables()
+        self._df   = self._get_df(df)
 
         self._regex = r'.*_(block\d)(?:_v\d)?-(?:up|down)-(K|Pi)-.*'
 
         self._d_map : dict[str, bh] = self._load_maps()
+    # ------------------------------
+    def _get_df(self, df : pnd.DataFrame) -> pnd.DataFrame:
+        for var in [self._varx, self._vary]:
+            if var in df.columns:
+                log.debug(f'Variable {var} already found, not adding it')
+                continue
+
+            log.info(f'Adding column: {var}')
+            df[var] = df.eval(var)
+
+        return df
     # ------------------------------
     def _key_from_path(self, path : str) -> str:
         file_name = os.path.basename(path)
