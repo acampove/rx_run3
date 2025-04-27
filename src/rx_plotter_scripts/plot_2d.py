@@ -24,8 +24,6 @@ class Data:
     Class used to share attributes
     '''
     nthreads   = 13
-    trigger_mm = 'Hlt2RD_BuToKpMuMu_MVA'
-    trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
 
     mplhep.style.use('LHCb2')
 
@@ -34,9 +32,11 @@ class Data:
     chanel  : str
     trigger : str
     config  : str
+    sample  : str
+    trigger : str
 # ---------------------------------
 def _get_rdf() -> RDataFrame:
-    gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger=Data.trigger)
+    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
     rdf = gtr.get_rdf()
 
     return rdf
@@ -50,11 +50,14 @@ def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make 2D plots')
     parser.add_argument('-C', '--chanel', type=str, help='Channel', choices=['ee', 'mm'], required=True)
     parser.add_argument('-q', '--q2bin' , type=str, help='q2 bin, optional' , choices=['low', 'central', 'jpsi', 'psi2', 'high'])
-    parser.add_argument('-c', '--config', type=str, help='Settings, i.e. mass_q2', choices=['mass_q2', 'cmb_prc'], required=True)
+    parser.add_argument('-c', '--config', type=str, help='Settings, i.e. mass_q2', required=True)
+    parser.add_argument('-s', '--sample', type=str, help='Name of sample, can use wildcards', required=True)
+    parser.add_argument('-t', '--trigger', type=str, help='Name of trigger', required=True)
     parser.add_argument('-l', '--loglvl', type=int, help='Log level', choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
-    Data.trigger= Data.trigger_mm if args.chanel == 'mm' else Data.trigger_ee
+    Data.sample = args.sample
+    Data.trigger= args.trigger
     Data.chanel = args.chanel
     Data.loglvl = args.loglvl
     Data.q2bin  = args.q2bin
