@@ -11,8 +11,8 @@ plots_2d:
     - [L1_PID_E, L2_PID_E, null, 'PID_E', true]
 axes:
     L1_PID_E:
-        binning : [-5, 5, 20]
+        binning : [-5, 12, 20]
         label   : '$\Delta LL(e^+)$'
     L2_PID_E:
-        binning : [-5, 5, 20]
+        binning : [-5, 12, 20]
         label   : '$\Delta LL(e^-)$'
