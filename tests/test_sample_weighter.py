@@ -49,7 +49,7 @@ def _get_dataframe() -> pnd.DataFrame:
     df['block' ] = numpy.random.choice(Data.l_block, size=Data.nentries)
 
     for lep in ['L1', 'L2']:
-        df[f'{lep}_TRACK_P'  ] = numpy.random.uniform(0, 20_000, Data.nentries)
+        df[f'{lep}_TRACK_PT' ] = numpy.random.uniform(0, 20_000, Data.nentries)
         df[f'{lep}_TRACK_ETA'] = numpy.random.uniform(1.5,    5, Data.nentries)
 
     return df
