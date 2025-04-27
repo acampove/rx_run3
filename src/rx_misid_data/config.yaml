@@ -11,8 +11,8 @@ weights : &mp
     control : (PROBNN_E<0.2|DLLe<2.0)&(DLLe>-1.0)
     signal  : (PROBNN_E>0.2)&(DLLe>2.0)
   pars :
-    - TRACK_P
-    - TRACK_ETA
+    - log10(PARTICLE_TRACK_P)
+    - PARTICLE_TRACK_ETA
 splitting:
   branches: # all these branches will be picked in the dataframe
     - B_M_brem_track_2
