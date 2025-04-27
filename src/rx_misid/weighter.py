@@ -37,7 +37,14 @@ class SampleWeighter:
         self._d_map : dict[str, bh] = self._load_maps()
     # ------------------------------
     def _get_df(self, df : pnd.DataFrame) -> pnd.DataFrame:
+        df = self._add_columns(df=df, particle='L1')
+        df = self._add_columns(df=df, particle='L2')
+
+        return df
+    # ------------------------------
+    def _add_columns(self, df : pnd.DataFrame, particle : str) -> pnd.DataFrame:
         for var in [self._varx, self._vary]:
+            var = var.replace('PARTICLE', particle)
             if var in df.columns:
                 log.debug(f'Variable {var} already found, not adding it')
                 continue
