@@ -11,7 +11,6 @@ from typing import TypeAlias, Union
 import numpy
 import mplhep
 import matplotlib.pyplot as plt
-from matplotlib.colors     import LogNorm
 from boost_histogram       import Histogram as bh
 from dmu.logging.log_store import LogStore
 
