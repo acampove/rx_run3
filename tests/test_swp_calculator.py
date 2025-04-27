@@ -3,6 +3,7 @@ Module with tests for swap calculator class
 '''
 import os
 
+import mplhep
 import pytest
 import matplotlib.pyplot as plt
 from ROOT                   import RDataFrame, EnableImplicitMT
@@ -24,13 +25,15 @@ def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
     LogStore.set_level('rx_data:swp_calculator', 20)
     EnableImplicitMT(10)
+
+    plt.style.use(mplhep.style.LHCb2)
 # ----------------------------------
 def _get_rdf(kind : str) -> RDataFrame:
     if   kind == 'dt_ss':
         sample = 'DATA_24_MagUp_24c3'
         trigger= 'Hlt2RD_BuToKpEE_SameSign_MVA'
     elif kind == 'dt_ee':
-        sample = 'DATA_24_MagUp_24c3'
+        sample = 'DATA_*'
         trigger= 'Hlt2RD_BuToKpEE_MVA'
     elif kind == 'dt_mm':
         sample = 'DATA_24_MagUp_24c3'
@@ -48,7 +51,7 @@ def _get_rdf(kind : str) -> RDataFrame:
     return rdf
 # ----------------------------------
 def _apply_selection(rdf : RDataFrame, trigger : str, sample : str) -> RDataFrame:
-    d_sel = sel.selection(project='RK', trigger=trigger, q2bin='central', process=sample)
+    d_sel = sel.selection(project='RK', trigger=trigger, q2bin='jpsi', process=sample)
     del d_sel['jpsi_misid']
     del d_sel['cascade']
 
@@ -87,7 +90,7 @@ def _plot(rdf : RDataFrame, preffix : str, kind : str):
     arr_swp= d_data[f'{preffix}_mass_swp']
     arr_org= d_data[f'{preffix}_mass_org']
 
-    mass_rng = {'jpsi_misid' : [2700, 3300], 'cascade' : [1800, 1950]}[preffix]
+    mass_rng = {'jpsi_misid' : [2700, 3300], 'cascade' : [1600, 2100]}[preffix]
 
     plt.hist(arr_swp, bins=40, range=mass_rng, histtype='step', label='Swapped')
     plt.hist(arr_org, bins=40, range=mass_rng, histtype='step', label='Original')
