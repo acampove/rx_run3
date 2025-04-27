@@ -1,3 +1,5 @@
+[TOC]
+
 # Description
 
 This is a set of scripts and config files meant to be used to make plots of several
