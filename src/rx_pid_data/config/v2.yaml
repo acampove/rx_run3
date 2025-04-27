@@ -11,10 +11,10 @@ samples  :
   b7  : 2024_WithUT_block7
   b8  : 2024_WithUT_block8
 selection :
-  - TRACK_GHOSTPROB < 0.3
-  - PT              > 250
-  - P               > 3000
-  - IPCHI2          > 9
+  - PARTICLE_PT              > 250
+  - PARTICLE_P               > 3000
+  - PARTICLE_TRACK_GHOSTPROB < 0.3
+  - PARTICLE_IPCHI2          > 9
   - PARTICLE_PPHASRICH
   - PARTICLE_INECAL
 # -----------------------------------------------
@@ -25,7 +25,7 @@ particles:
       - DLLe     >-1.0
       - PROBNN_K < 0.1
     bin_vars :
-      - log10(Pi_PT)
+      - log10(pi_PT)
       - ETA
   K   :
     pid_cuts:
