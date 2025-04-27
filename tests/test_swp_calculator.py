@@ -23,7 +23,9 @@ class Data:
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
-    LogStore.set_level('rx_data:swp_calculator', 20)
+    LogStore.set_level('rx_data:swp_calculator'     , 20)
+    LogStore.set_level('rx_data:test_swp_calculator', 10)
+    LogStore.set_level('rx_data:rdf_getter'         , 10)
     EnableImplicitMT(10)
 
     plt.style.use(mplhep.style.LHCb2)
@@ -35,8 +37,11 @@ def _get_rdf(kind : str) -> RDataFrame:
     elif kind == 'dt_ee':
         sample = 'DATA_*'
         trigger= 'Hlt2RD_BuToKpEE_MVA'
+    elif kind == 'dt_mi':
+        sample = 'DATA_*'
+        trigger= 'Hlt2RD_BuToKpEE_MVA_misid'
     elif kind == 'dt_mm':
-        sample = 'DATA_24_MagUp_24c3'
+        sample = 'DATA_*'
         trigger= 'Hlt2RD_BuToKpMuMu_MVA'
     elif kind == 'mc':
         sample = 'Bu_Kee_eq_btosllball05_DPC'
@@ -63,16 +68,27 @@ def _apply_selection(rdf : RDataFrame, trigger : str, sample : str) -> RDataFram
 
     return rdf
 # ----------------------------------
-@pytest.mark.parametrize('kind', ['mc', 'dt_ss', 'dt_ee', 'dt_mm'])
-def test_cascade(kind : str):
+@pytest.mark.parametrize('kind', ['mc', 'dt_ss', 'dt_ee', 'dt_mi', 'dt_mm'])
+def test_dzero_misid(kind : str):
     '''
-    Tests cascade decay contamination
+    Tests dzero decay contamination
     '''
     rdf = _get_rdf(kind=kind)
     obj = SWPCalculator(rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
-    rdf = obj.get_rdf(preffix='cascade', progress_bar=True, use_ss= 'ss' in kind)
+    rdf = obj.get_rdf(preffix='dzero_misid', progress_bar=True, use_ss= 'ss' in kind)
 
-    _plot(rdf, preffix='cascade', kind=kind)
+    _plot(rdf, preffix='dzero_misid', kind=kind)
+# ----------------------------------
+@pytest.mark.parametrize('kind', ['mc', 'dt_ss', 'dt_ee', 'dt_mi', 'dt_mm'])
+def test_phi_misid(kind : str):
+    '''
+    Tests phi decay contamination
+    '''
+    rdf = _get_rdf(kind=kind)
+    obj = SWPCalculator(rdf, d_lep={'L1' : 321, 'L2' : 321}, d_had={'H' : 321})
+    rdf = obj.get_rdf(preffix='phi_misid', progress_bar=True, use_ss= 'ss' in kind)
+
+    _plot(rdf, preffix='phi_misid', kind=kind)
 # ----------------------------------
 @pytest.mark.parametrize('kind', ['mc', 'dt_ss', 'dt_ee', 'dt_mm'])
 def test_jpsi_misid(kind : str):
@@ -90,18 +106,24 @@ def _plot(rdf : RDataFrame, preffix : str, kind : str):
     arr_swp= d_data[f'{preffix}_mass_swp']
     arr_org= d_data[f'{preffix}_mass_org']
 
-    mass_rng = {'jpsi_misid' : [2700, 3300], 'cascade' : [1600, 2100]}[preffix]
+    mass_rng = {
+            'jpsi_misid' : [2700, 3300],
+            'dzero_misid': [1700, 2000],
+            'phi_misid'  : [ 980, 1100],
+            }[preffix]
 
-    plt.hist(arr_swp, bins=40, range=mass_rng, histtype='step', label='Swapped')
-    plt.hist(arr_org, bins=40, range=mass_rng, histtype='step', label='Original')
+    plt.hist(arr_org, bins=80, range=mass_rng, alpha=0.5, label='Original', color='gray')
+    plt.hist(arr_swp, bins=80, range=mass_rng, histtype='step', label='Swapped', color='blue')
     plt.grid(False)
-    plt.legend()
 
-    if preffix == 'jpsi_misid':
-        plt.axvline(x=3100, color='r', label=r'$J/\psi$')
+    if preffix == 'phi_misid':
+        plt.axvline(x=1020, color='r', label=r'$\phi$', linestyle=':')
+    elif preffix == 'jpsi_misid':
+        plt.axvline(x=3100, color='r', label=r'$J/\psi$', linestyle=':')
     else:
-        plt.axvline(x=1864, color='r', label='$D_0$')
+        plt.axvline(x=1864, color='r', label='$D_0$', linestyle=':')
 
-    plt.savefig(f'{Data.out_dir}/{preffix}_{kind}.png')
+    plt.legend()
+    plt.savefig(f'{Data.out_dir}/{kind}_{preffix}.png')
     plt.close('all')
 # ----------------------------------
