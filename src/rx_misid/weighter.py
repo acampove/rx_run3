@@ -99,7 +99,11 @@ class SampleWeighter:
         self._varx = l_var[0]
         self._vary = l_var[1]
     # ------------------------------
-    def _get_bin_index(self, hist : bh, iaxis : int, value : float) -> int:
+    def _get_bin_index(self,
+                       hist  : bh,
+                       iaxis : int,
+                       value : float,
+                       name  : str) -> int:
         axis = hist.axes[iaxis]
         minv = axis.edges[ 0] * 1.001
         maxv = axis.edges[-1] * 0.999
@@ -109,7 +113,7 @@ class SampleWeighter:
         new_value = min(new_value, maxv)
 
         if old_value != new_value:
-            log.warning(f'Moving value inside map {old_value:.3f} -> {new_value:.3f}')
+            log.warning(f'Moving {name} value inside map {old_value:.3f} -> {new_value:.3f}')
 
         index = axis.index(new_value)
 
@@ -126,8 +130,8 @@ class SampleWeighter:
         x_value = getattr(row, varx)
         y_value = getattr(row, vary)
 
-        ix = self._get_bin_index(hist, iaxis=0, value=x_value)
-        iy = self._get_bin_index(hist, iaxis=1, value=y_value)
+        ix = self._get_bin_index(hist, iaxis=0, value=x_value, name=varx)
+        iy = self._get_bin_index(hist, iaxis=1, value=y_value, name=vary)
         eff= hist[ix, iy]
 
         return eff.value
