@@ -68,18 +68,8 @@ class SampleSplitter:
 
         return cut_ss, cut_os
     # --------------------------------
-    def _get_branches(self) -> list[str]:
-        l_all_branches = [ name.c_str() for name in self._rdf.GetColumnNames() ]
-
-        l_branch = []
-        for par in self._cfg['maps']['pars']:
-            l_branch += [ name for name in l_all_branches if par in name ]
-
-        return l_branch
-    # --------------------------------
     def _rdf_to_df(self, rdf : RDataFrame) -> pnd.DataFrame:
         l_branch = self._cfg['branches']
-        l_branch+= self._get_branches()
         data     = rdf.AsNumpy(l_branch)
         df       = pnd.DataFrame(data)
 
