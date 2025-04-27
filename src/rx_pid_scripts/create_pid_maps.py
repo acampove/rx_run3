@@ -139,10 +139,8 @@ def _initialize() -> None:
 
     Data.conf                 = _load_data(kind='config')
 
-    samples                   = Data.conf['samples_ee'] if Data.particle == 'e' else Data.conf['samples']
-    Data.conf['sample']       = samples[Data.sample]
+    Data.conf['sample']       = Data.conf['samples'][Data.sample]
     del Data.conf['samples']
-    del Data.conf['samples_ee']
 
     Data.conf['pid_cuts']     = [ _get_pid_cuts() ] # PIDCalib2 expects a list of cuts, we use one cut, make list of one element...
     Data.conf['bin_vars']     = Data.conf['particles'][Data.particle]['bin_vars']
