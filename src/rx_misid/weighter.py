@@ -108,47 +108,58 @@ class SampleWeighter:
 
         return index
     # ------------------------------
-    def _get_lepton_weight(self, lep : str, row : pnd.Series) -> float:
+    def _get_lepton_eff(self, lep : str, row : pnd.Series, is_sig : bool) -> float:
         block   = int(row.block)
-        key_sig = f'block{block}_{row.hadron}_signal'
-        key_ctr = f'block{block}_{row.hadron}_control'
+        key_map = f'block{block}_{row.hadron}_signal' if is_sig else f'block{block}_{row.hadron}_control'
+        hist    = self._d_map[key_map]
 
-        hist_signal  = self._d_map[key_sig]
-        hist_control = self._d_map[key_ctr]
+        varx = self._varx.replace('PARTICLE', lep)
+        vary = self._vary.replace('PARTICLE', lep)
 
-        x_value = getattr(row, f'{lep}_{self._varx}')
-        y_value = getattr(row, f'{lep}_{self._vary}')
+        x_value = getattr(row, varx)
+        y_value = getattr(row, vary)
 
-        ix = self._get_bin_index(hist_signal, iaxis=0, value=x_value)
-        iy = self._get_bin_index(hist_signal, iaxis=1, value=y_value)
+        ix = self._get_bin_index(hist, iaxis=0, value=x_value)
+        iy = self._get_bin_index(hist, iaxis=1, value=y_value)
+        eff= hist[ix, iy]
 
-        eff_signal  = hist_signal [ix, iy]
-        eff_control = hist_control[ix, iy]
-
-        if eff_control.value == 0:
-            log.warning(f'Found zero control efficiency for {row.block}/{row.hadron} at: ({x_value:.2f},{y_value:.2f})')
-            return 1
-
-        weight = eff_signal.value / eff_control.value
-        if weight < 0:
-            log.warning(f'Found negative weight for {row.block}/{row.hadron} at: ({x_value:.2f},{y_value:.2f})')
-            return 1
-
-        return weight
+        return eff.value
+    # ------------------------------
+    def _print_info_from_row(self, row : pnd.Series) -> None:
+        log.info(40 * '-')
+        log.info(f'Block/Hadron: {row.block}/{row.hadron}')
+        log.info(40 * '-')
+        log.info(f'{"L1_PT":<20}{row.L1_PT:20.0f}')
+        log.info(f'{"L2_PT":<20}{row.L2_PT:20.0f}')
+        log.info('')
+        log.info(f'{"L1_ETA":<20}{row.L1_ETA:20.2f}')
+        log.info(f'{"L2_ETA":<20}{row.L2_ETA:20.2f}')
+        log.info('')
     # ------------------------------
     def _get_candidate_weight(self, row : pnd.Series) -> float:
         if   row.kind == 'PassFail':
-            w = self._get_lepton_weight(lep='L2', row=row)
+            num  = self._get_lepton_eff(lep='L2', row=row, is_sig= True)
+            den  = self._get_lepton_eff(lep='L2', row=row, is_sig=False)
         elif row.kind == 'FailPass':
-            w = self._get_lepton_weight(lep='L1', row=row)
+            num  = self._get_lepton_eff(lep='L1', row=row, is_sig= True)
+            den  = self._get_lepton_eff(lep='L1', row=row, is_sig=False)
         elif row.kind == 'FailFail':
-            w1 = self._get_lepton_weight(lep='L1', row=row)
-            w2 = self._get_lepton_weight(lep='L2', row=row)
-            w  = w1 * w2
+            eff1 = self._get_lepton_eff(lep='L1', row=row, is_sig= True)
+            eff2 = self._get_lepton_eff(lep='L2', row=row, is_sig= True)
+            eff3 = self._get_lepton_eff(lep='L1', row=row, is_sig=False)
+            eff4 = self._get_lepton_eff(lep='L2', row=row, is_sig=False)
+
+            num  = eff1 * eff2
+            den  = eff3 * eff4
         else:
             raise ValueError(f'Invalid kind: {row.kind}')
 
-        return w
+        if den == 0:
+            log.warning('Control efficiency is zero at:')
+            self._print_info_from_row(row)
+            return 1
+
+        return num / den
     # ------------------------------
     def get_weighted_data(self) -> pnd.DataFrame:
         '''
