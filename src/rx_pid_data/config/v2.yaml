@@ -34,4 +34,4 @@ particles:
       - PROBNN_K > 0.1
     bin_vars :
       - log10(K_PT)
-      - K_ETA
+      - ETA
