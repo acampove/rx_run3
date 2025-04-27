@@ -182,6 +182,9 @@ class RDFGetter:
         for name, definition in self._cfg['definitions'].items():
             rdf = self._add_column(rdf, name, definition)
 
+        log.warning('Sending pre-UT candidates to block 4')
+        rdf = rdf.Redefine('block', 'block < 0 ? 4 : block')
+
         return rdf
     # ---------------------------------------------------
     def get_rdf(self) -> RDataFrame:
