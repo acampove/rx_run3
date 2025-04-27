@@ -19,14 +19,14 @@ class Data:
     nentries = 10_000
 
     l_block = [
-        'block1',
-        'block2',
-        'block3',
-        'block4',
-        'block5',
-        'block6',
-        'block7',
-        'block8',
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
             ]
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
