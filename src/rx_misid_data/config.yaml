@@ -6,10 +6,10 @@ input :
   selection:
     bdt : mva_cmb > 0.5 && mva_prc > 0.5
 weights : &mp
-  path : /home/acampove/external_ssd/Calibration/mis_id/v3
+  path : /home/acampove/external_ssd/Calibration/mis_id/v9
   regions: # These are cuts that need to appear in the name of the pkl files with the PID maps
-    control : (PROBNN_E<0.2|DLLe<3)&(DLLe>1.0)
-    signal  : (PROBNN_E>0.2)&(DLLe>3.0)
+    control : (PROBNN_E<0.2|DLLe<2.0)&(DLLe>1.0)
+    signal  : (PROBNN_E>0.2)&(DLLe>2.0)
   pars :
     - TRACK_P
     - TRACK_ETA
@@ -24,9 +24,7 @@ splitting:
     kaon :  LEP_PROBNN_K > 0.1
     pion :  LEP_PROBNN_K < 0.1
   lepton_tagging:
-    #pass :  LEP_PROBNN_E > 0.2 && LEP_PID_E > 3
-    #fail : (LEP_PROBNN_E < 0.2 || LEP_PID_E < 3) && LEP_PID_E > 1
-    pass :  LEP_PROBNN_E > 0.5 && LEP_PID_E > 4
-    fail : (LEP_PROBNN_E < 0.5 || LEP_PID_E < 4) && LEP_PID_E > 1
+    pass :  LEP_PROBNN_E > 0.2 && LEP_PID_E > 2
+    fail : (LEP_PROBNN_E < 0.2 || LEP_PID_E < 2) && LEP_PID_E > 1
   maps:
     <<: *mp
