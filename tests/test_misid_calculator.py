@@ -16,7 +16,7 @@ class Data:
     Data class
     '''
     out_dir     = '/tmp/tests/rx_misid/misid_calculator'
-    config_name = 'misid_v2.yaml'
+    config_name = 'misid_v1.yaml'
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
