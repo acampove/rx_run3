@@ -24,6 +24,7 @@ class Data:
     Class used to share attributes
     '''
     nthreads   = 13
+    project    = 'RK'
 
     mplhep.style.use('LHCb2')
 
@@ -38,6 +39,22 @@ class Data:
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
     rdf = gtr.get_rdf()
+
+    return rdf
+# ---------------------------------
+def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
+    d_cut = cfg['selection']['cuts']
+    d_sel = sel.selection(project=Data.project, trigger=Data.trigger, q2bin=Data.q2bin, process=Data.sample)
+    d_sel.update(d_cut)
+
+    for cut_name, cut_expr in d_sel.items():
+        log.debug(f'{cut_name:<20}{cut_expr}')
+        rdf = rdf.Filter(cut_expr, cut_name)
+
+    rep = rdf.Report()
+    rep.Print()
+
+    del cfg['selection']
 
     return rdf
 # ---------------------------------
@@ -115,6 +132,7 @@ def main():
 
     rdf = _get_rdf()
     cfg = _get_cfg()
+    rdf = _apply_selection(rdf=rdf, cfg=cfg)
 
     ptr=Plotter2D(rdf=rdf, cfg=cfg)
     ptr.run()
