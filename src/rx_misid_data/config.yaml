@@ -2,7 +2,7 @@
 # https://gitlab.cern.ch/lhcb-datapkg/AnalysisProductions/-/blob/223655c72f9c778cf9daa9a0138174b464ac7ca9/rd_ap_2024/tupling/config/b_to_xll_mva.yaml
 
 input :
-  trigger  : Hlt2RD_BuToKpEE_MVA
+  trigger  : Hlt2RD_BuToKpEE_MVA_ext
   selection:
     bdt : mva_cmb > 0.5 && mva_prc > 0.5
 weights : &mp
