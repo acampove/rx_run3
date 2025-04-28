@@ -8,8 +8,9 @@ plots:
     labels  : ['M$(B^+_{Brem corr})$', 'Entries']
     weights : weight
   weight:
-    binning : [0, 10, 15]
+    binning : [0, 6, 15]
     labels  : ['Weight', 'Entries']
-    yscale  : log
+    styling:
+      linestyle : '-'
 stats:
   sumw : '{:.0f}'
