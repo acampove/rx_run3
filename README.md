@@ -887,10 +887,11 @@ definitions:
 plots:
     x :
         binning    : [0.98, 0.98, 40] # Here bounds agree => tool will calculate bounds making sure that they are the 2% and 98% quantile
-        yscale     : 'linear' # Optional, if not passed, will do linear, can be log
+        yscale     : linear # Optional, if not passed, will do linear, can be log
         labels     : ['x', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
-        title      : 'some title can be added for different variable plots'
-        name       : 'plot_of_x' # This will ensure that one gets plot_of_x.png as a result, if missing x.png would be saved
+        title      : some title can be added for different variable plots
+        name       : plot_of_x # This will ensure that one gets plot_of_x.png as a result, if missing x.png would be saved
+        weights    : my_weights # Optional, this is the column in the dataframe with the weights
         # Can add styling to specific plots, this should be the argument of
         # hist.plot(...)
         styling :
