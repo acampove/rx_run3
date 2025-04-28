@@ -44,11 +44,12 @@ def _rdf_from_df(df : pnd.DataFrame) -> dict[str,RDataFrame]:
 
     return {'Weighted' : rdf_wgt, 'Unweighted' : rdf_raw}
 # ---------------------------------------
-def _get_conf(df : pnd.DataFrame) -> dict:
+def _get_conf(df : pnd.DataFrame, kind : str) -> dict:
     nentries = len(df)
     cfg = copy.deepcopy(Data.cfg)
-    for d_plot in cfg['plots'].values():
-        d_plot['title'] = f'Entries={nentries}'
+    for var, d_plot in cfg['plots'].items():
+        d_plot['title'] = f'{kind}; Entries={nentries}'
+        d_plot['name' ] = f'{var}_{kind}' 
 
     return cfg
 # ---------------------------------------
