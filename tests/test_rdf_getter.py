@@ -189,14 +189,14 @@ def _plot_brem_track_2(rdf : RDataFrame, test : str, tree : str) -> None:
         plt.savefig(f'{test_dir}/{var}.png')
         plt.close()
 # ------------------------------------------------
-def _plot_ext(rdf : RDataFrame) -> None:
+def _plot_ext(rdf : RDataFrame, sample : str) -> None:
     cfg = {
-            'saving'   : { 'plt_dir' : f'{Data.out_dir}/ext'},
+            'saving'   : {'plt_dir' : f'{Data.out_dir}/ext'},
             'general'  : {'size' : [20, 10]},
             'plots_2d' :
-            [['L1_PID_E', 'L2_PID_E', 'weight', 'PIDe_wgt', True],
-             ['L1_PID_E', 'L2_PID_E',     None, 'PIDe_raw', True]],
-            'axes' : 
+            [['L1_PID_E', 'L2_PID_E', 'weight', f'PIDe_wgt_{sample}', True],
+             ['L1_PID_E', 'L2_PID_E',     None, f'PIDe_raw_{sample}', True]],
+            'axes' :
             {
                 'L1_PID_E' : {'binning' : [-5, 13, 60], 'label': r'$\Delta LL(e^+)$'},
                 'L2_PID_E' : {'binning' : [-5, 13, 60], 'label': r'$\Delta LL(e^-)$'},
@@ -336,11 +336,13 @@ def test_mcdecaytree(sample : str):
 
     assert nentries > 0
 # ------------------------------------------------
-def test_ext_trigger():
+@pytest.mark.parametrize('period'  ,['24c1','24c2','24c3','24c4'])
+@pytest.mark.parametrize('polarity',['MagUp', 'MagDown'])
+def test_ext_trigger(period : str, polarity : str):
     '''
     Test of getter class for combination of analysis and misID trigger
     '''
-    sample='DATA_24_MagDown_24c2'
+    sample=f'DATA_24_{polarity}_{period}'
     trigger='Hlt2RD_BuToKpEE_MVA_ext'
 
     RDFGetter.max_entries = -1
@@ -348,5 +350,5 @@ def test_ext_trigger():
     rdf = gtr.get_rdf()
 
     _check_ext(rdf)
-    _plot_ext(rdf)
+    _plot_ext(rdf, sample=sample)
 # ------------------------------------------------
