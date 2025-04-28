@@ -210,6 +210,8 @@ class RDFGetter:
         if self._trigger.endswith('_ext'):
             log.info('Adding weight of 10 to MisID sample')
             rdf = rdf.Define('weight', self._ext_weight)
+        else:
+            rdf = rdf.Define('weight',              '1')
 
         return rdf
     # ---------------------------------------------------
