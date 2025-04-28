@@ -53,6 +53,13 @@ def _get_conf(df : pnd.DataFrame, kind : str) -> dict:
 
     return cfg
 # ---------------------------------------
+def _plot_kind(df : pnd.DataFrame, kind : str) -> None:
+    d_rdf = _rdf_from_df(df)
+    cfg   = _get_conf(df, kind=kind)
+
+    ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
+    ptr.run()
+# ---------------------------------------
 def main():
     '''
     Start here
@@ -60,25 +67,13 @@ def main():
     _parse_args()
     _load_conf()
     df_all= pnd.read_parquet(Data.file_path)
-    d_rdf = _rdf_from_df(df_all)
-    cfg   = _get_conf(df_all, kind='combined')
-
-    ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
-    ptr.run()
+    _plot_kind(df_all, kind='Combined')
 
     for kind, df in df_all.groupby('kind'):
-        d_rdf = _rdf_from_df(df)
-        cfg   = _get_conf(df, kind)
-
-        ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
-        ptr.run()
+        _plot_kind(df, kind=kind)
 
     for kind, df in df_all.groupby('hadron'):
-        d_rdf = _rdf_from_df(df)
-        cfg   = _get_conf(df, kind)
-
-        ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
-        ptr.run()
+        _plot_kind(df, kind=kind)
 # ---------------------------------------
 if __name__ == '__main__':
     main()
