@@ -31,13 +31,12 @@ def _get_config() -> dict:
     return cfg['splitting']
 # -------------------------------------------------------
 def _get_rdf():
-    gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpEE_MVA')
+    gtr = RDFGetter(sample='DATA_24_MagUp_24c1', trigger='Hlt2RD_BuToKpEE_MVA_ext')
     rdf = gtr.get_rdf()
-    rdf = rdf.Range(100_000)
 
     return rdf
 # -------------------------------------------------------
-def _check_samples(df : pnd.DataFrame):
+def _check_stats(df : pnd.DataFrame):
     fail = False
     log.info(40 * '-')
     log.info(f'{"Kind":<20}{"Entries":<20}')
@@ -67,5 +66,5 @@ def test_simple(hadron_id : str, is_bplus : bool):
     spl   = SampleSplitter(rdf=rdf, hadron_id=hadron_id, is_bplus=is_bplus, cfg=cfg)
     df    = spl.get_samples()
 
-    _check_samples(df=df)
+    _check_stats(df=df)
 # -------------------------------------------------------
