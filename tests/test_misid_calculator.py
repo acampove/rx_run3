@@ -6,7 +6,6 @@ from importlib.resources import files
 
 import yaml
 import pytest
-import pandas as pnd
 from dmu.logging.log_store     import LogStore
 from rx_misid.misid_calculator import MisIDCalculator
 
@@ -16,7 +15,8 @@ class Data:
     '''
     Data class
     '''
-    out_dir = '/tmp/tests/rx_misid/misid_calculator'
+    out_dir     = '/tmp/tests/rx_misid/misid_calculator'
+    config_name = 'misid_v2.yaml'
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -27,7 +27,7 @@ def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 # ---------------------------------
 def _get_config() -> dict:
-    config_path = files('rx_misid_data').joinpath('config.yaml')
+    config_path = files('rx_misid_data').joinpath(Data.config_name)
     with open(config_path, encoding='utf-8') as ifile:
         data = yaml.safe_load(ifile)
 
@@ -35,7 +35,7 @@ def _get_config() -> dict:
 # ---------------------------------
 def _get_sample(name : str) -> str:
     if name == 'data':
-        return 'DATA_24_MagUp_24c1'
+        return 'DATA_24_*'
 
     return name
 # ---------------------------------
