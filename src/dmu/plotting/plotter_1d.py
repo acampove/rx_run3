@@ -173,15 +173,17 @@ class Plotter1D(Plotter):
             return name
 
         d_stat = self._d_cfg['stats']
-        if 'nentries' not in d_stat:
+        if 'sumw' not in d_stat:
             return name
 
-        form = d_stat['nentries']
+        form = d_stat['sumw']
 
-        nentries = len(arr_val)
-        nentries = form.format(nentries)
+        arr_wgt  = self._d_wgt[name]
+        arr_wgt  = numpy.nan_to_num(arr_wgt, nan=0.0)
+        sumw     = numpy.sum(arr_wgt)
+        nentries = form.format(sumw)
 
-        return f'{name}{nentries}'
+        return f'{name:<15}{nentries:<10}'
     # --------------------------------------------
     def _normalize_weights(self, arr_wgt : numpy.ndarray, var : str) -> numpy.ndarray:
         cfg_var = self._d_cfg['plots'][var]
