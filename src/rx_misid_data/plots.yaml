@@ -11,3 +11,5 @@ plots:
     binning : [0, 10, 15]
     labels  : ['Weight', 'Entries']
     yscale  : log
+stats:
+  sumw : '{:.0f}'
