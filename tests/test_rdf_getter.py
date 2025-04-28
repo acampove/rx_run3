@@ -5,8 +5,11 @@ import os
 import matplotlib.pyplot as plt
 
 import pytest
-from ROOT                   import RDataFrame
-from dmu.logging.log_store  import LogStore
+import mplhep
+from ROOT                    import RDataFrame
+from dmu.logging.log_store   import LogStore
+from dmu.plotting.plotter_2d import Plotter2D
+
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
 
@@ -52,6 +55,7 @@ class Data:
 def _initialize():
     LogStore.set_level('rx_data:rdf_getter', 10)
     os.makedirs(Data.out_dir, exist_ok=True)
+    plt.style.use(mplhep.style.LHCb2)
     RDFGetter.max_entries = 1000
 # ------------------------------------------------
 def _check_branches(rdf : RDataFrame, is_ee : bool) -> None:
@@ -185,6 +189,33 @@ def _plot_brem_track_2(rdf : RDataFrame, test : str, tree : str) -> None:
         plt.savefig(f'{test_dir}/{var}.png')
         plt.close()
 # ------------------------------------------------
+def _plot_ext(rdf : RDataFrame) -> None:
+    cfg = {
+            'saving'   : { 'plt_dir' : f'{Data.out_dir}/ext'},
+            'general'  : {'size' : [20, 10]},
+            'plots_2d' :
+            [['L1_PID_E', 'L2_PID_E', 'weight', 'PIDe_wgt', True],
+             ['L1_PID_E', 'L2_PID_E',     None, 'PIDe_raw', True]],
+            'axes' : 
+            {
+                'L1_PID_E' : {'binning' : [-5, 13, 60], 'label': r'$\Delta LL(e^+)$'},
+                'L2_PID_E' : {'binning' : [-5, 13, 60], 'label': r'$\Delta LL(e^-)$'},
+                },
+            }
+
+    ptr=Plotter2D(rdf=rdf, cfg=cfg)
+    ptr.run()
+# ------------------------------------------------
+def _check_ext(rdf : RDataFrame) -> None:
+    rdf_ana = rdf.Filter('L1_PID_E > 1 && L2_PID_E > 1')
+    rdf_mis = rdf.Filter('L1_PID_E < 1 || L2_PID_E < 1')
+
+    count_ana = rdf_ana.Count().GetValue()
+    count_mis = rdf_mis.Count().GetValue()
+
+    log.info(f'Analysis: {count_ana}')
+    log.info(f'MisID   : {count_mis}')
+# ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
 def test_data(sample : str, trigger : str):
@@ -304,4 +335,18 @@ def test_mcdecaytree(sample : str):
     log.info(f'Found {nentries} entries')
 
     assert nentries > 0
+# ------------------------------------------------
+def test_ext_trigger():
+    '''
+    Test of getter class for combination of analysis and misID trigger
+    '''
+    sample='DATA_24_MagDown_24c2'
+    trigger='Hlt2RD_BuToKpEE_MVA_ext'
+
+    RDFGetter.max_entries = -1
+    gtr = RDFGetter(sample=sample, trigger=trigger)
+    rdf = gtr.get_rdf()
+
+    _check_ext(rdf)
+    _plot_ext(rdf)
 # ------------------------------------------------
