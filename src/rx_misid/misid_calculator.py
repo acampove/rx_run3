@@ -34,7 +34,7 @@ class MisIDCalculator:
         d_sel = {}
 
         for cut_name, cut_expr in d_sel_org.items():
-            if 'pid' in cut_name:
+            if 'pid_l' == cut_name:
                 d_sel[cut_name] = '(1)'
             else:
                 d_sel[cut_name] = cut_expr
