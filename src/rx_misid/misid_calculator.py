@@ -35,10 +35,9 @@ class MisIDCalculator:
 
         for cut_name, cut_expr in d_sel_org.items():
             if 'pid' in cut_name:
-                log.info(f'Skipping: {cut_name}={cut_expr}')
-                continue
-
-            d_sel[cut_name] = cut_expr
+                d_sel[cut_name] = '(1)'
+            else:
+                d_sel[cut_name] = cut_expr
 
         d_sel.update(cuts)
 
