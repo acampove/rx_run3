@@ -59,9 +59,21 @@ def main():
     '''
     _parse_args()
     _load_conf()
+    df_all= pnd.read_parquet(Data.file_path)
+    d_rdf = _rdf_from_df(df_all)
+    cfg   = _get_conf(df_all, kind='combined')
 
-    df_all    = pnd.read_parquet(Data.file_path)
+    ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
+    ptr.run()
+
     for kind, df in df_all.groupby('kind'):
+        d_rdf = _rdf_from_df(df)
+        cfg   = _get_conf(df, kind)
+
+        ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
+        ptr.run()
+
+    for kind, df in df_all.groupby('hadron'):
         d_rdf = _rdf_from_df(df)
         cfg   = _get_conf(df, kind)
 
