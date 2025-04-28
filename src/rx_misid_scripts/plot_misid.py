@@ -54,6 +54,12 @@ def _get_conf(df : pnd.DataFrame, kind : str) -> dict:
     return cfg
 # ---------------------------------------
 def _plot_kind(df : pnd.DataFrame, kind : str) -> None:
+    if kind == 'FailFail': # If plotting only this category, make sure weights are positive
+        df['weight'] = df.apply(lambda x : +abs(x.weight), axis=1)
+    else: # Otherwise need to subtract to avoid double counting
+        log.info(f'Inverting weights sign for FailFail region for {kind}')
+        df['weight'] = df.apply(lambda x : -abs(x.weight) if x.kind == 'FailFail' else abs(x.weight), axis=1)
+
     d_rdf = _rdf_from_df(df)
     cfg   = _get_conf(df, kind=kind)
 
@@ -67,6 +73,7 @@ def main():
     _parse_args()
     _load_conf()
     df_all= pnd.read_parquet(Data.file_path)
+
     _plot_kind(df_all, kind='Combined')
 
     for kind, df in df_all.groupby('kind'):
