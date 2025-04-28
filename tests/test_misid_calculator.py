@@ -6,6 +6,7 @@ from importlib.resources import files
 
 import yaml
 import pytest
+import pandas as pnd
 from dmu.logging.log_store     import LogStore
 from rx_misid.misid_calculator import MisIDCalculator
 
@@ -32,21 +33,23 @@ def _get_config() -> dict:
 
     return data
 # ---------------------------------
-@pytest.mark.parametrize('sample', ['DATA_*', 'Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC'])
-def test_sample(sample : str):
+def _get_sample(name : str) -> str:
+    if name == 'data':
+        return 'DATA_24_MagUp_24c1'
+
+    return name
+# ---------------------------------
+@pytest.mark.parametrize('name', ['data', 'Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC'])
+def test_sample(name : str):
     '''
     Simplest example of misid calculator with different samples
     '''
     cfg                    = _get_config()
-    if 'DATA' in sample:
-        cfg['input']['range' ] = 500_000, 700_000
-    cfg['input']['sample'] = sample
+    cfg['input']['sample'] = _get_sample(name=name)
     cfg['input']['q2bin' ] = 'jpsi'
 
     obj = MisIDCalculator(cfg=cfg)
     df  = obj.get_misid()
 
-    sample = sample.replace('_*', '')
-
-    df.to_parquet(f'{Data.out_dir}/misid_{sample}.parquet')
+    df.to_parquet(f'{Data.out_dir}/misid_{name}.parquet')
 # ---------------------------------
