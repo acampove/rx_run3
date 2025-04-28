@@ -2,12 +2,17 @@
 Script used to plot mass distributions associated to samples in data and MC
 used to study fully hadronic mis-ID backgrounds
 '''
+import copy
 import argparse
+from importlib.resources import files
 
+import yaml
 import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
-from dmu.logging.log_store import LogStore
+from ROOT                    import RDataFrame, RDF
+from dmu.logging.log_store   import LogStore
+from dmu.plotting.plotter_1d import Plotter1D
 
 log=LogStore.add_logger('rx_misid:plot_misid')
 # ---------------------------------------
@@ -16,10 +21,9 @@ class Data:
     Data class
     '''
     file_path : str
-    mass = 'B_M_brem_track_2'
-    plt.style.use(mplhep.style.LHCb2)
+    cfg       : dict
 
-    binning = {'bins' : 30, 'range' : (4500, 7000)}
+    plt.style.use(mplhep.style.LHCb2)
 # ---------------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script meant to make plots for the samples used to study fully hadronic misID')
@@ -28,31 +32,42 @@ def _parse_args():
 
     Data.file_path = args.path
 # ---------------------------------------
-def _plot_kind(kind : str, df : pnd.DataFrame) -> None:
-    ax = None
-    ax = df.plot.hist(y=Data.mass, **Data.binning, alpha=0.3      , color='blue', label='Unweighed', ax=ax)
-    ax = df.plot.hist(y=Data.mass, **Data.binning, histtype='step', color='red' , label='Weighted', ax=ax, weights=df['weights'])
-
-    path = Data.file_path.replace('.parquet', f'_{kind}.png')
-
-    plt.title(kind)
-    plt.savefig(path)
-    plt.close()
+def _load_conf() -> None:
+    conf_path = files('rx_misid_data').joinpath('plots.yaml')
+    with open(conf_path, encoding='utf-8') as ifile:
+        Data.cfg = yaml.safe_load(ifile)
 # ---------------------------------------
-def _plot(df : pnd.DataFrame) -> None:
-    for kind, df_kind in df.groupby('kind'):
-        _plot_kind(kind=kind, df=df_kind)
+def _rdf_from_df(df : pnd.DataFrame) -> dict[str,RDataFrame]:
+    df      = df.drop(columns=['kind', 'hadron', 'bmeson'])
+    rdf_org = RDF.FromPandas(df)
+    rdf_wgt = rdf_org.Define('weights', 'weight')
 
-    _plot_kind(kind='PF+FP+FF', df=df)
+    rdf_raw = rdf_org.Define('weights',       '1')
+    rdf_raw = rdf_raw.Redefine('weight','weights')
+
+    return {'Weighted' : rdf_wgt, 'Unweighted' : rdf_raw}
+# ---------------------------------------
+def _get_conf(df : pnd.DataFrame) -> dict:
+    nentries = len(df)
+    cfg = copy.deepcopy(Data.cfg)
+    for d_plot in cfg['plots'].values():
+        d_plot['title'] = f'Entries={nentries}'
+
+    return cfg
 # ---------------------------------------
 def main():
     '''
     Start here
     '''
     _parse_args()
+    _load_conf()
 
-    df = pnd.read_parquet(Data.file_path)
-    _plot(df)
+    df    = pnd.read_parquet(Data.file_path)
+    d_rdf = _rdf_from_df(df)
+    cfg   = _get_conf(df)
+
+    ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
+    ptr.run()
 # ---------------------------------------
 if __name__ == '__main__':
     main()
