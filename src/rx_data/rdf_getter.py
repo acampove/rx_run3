@@ -166,9 +166,9 @@ class RDFGetter:
 
         log.info('Adding samples')
         for sample, yaml_path in self._samples.items():
-            d_section = self._get_section(yaml_path)
+            log.debug(f'    {sample}|{yaml_path}')
 
-            log.debug(f'    {sample}')
+            d_section = self._get_section(yaml_path)
             if sample == 'main':
                 d_data['samples'][sample] = d_section
             else:
