@@ -114,7 +114,7 @@ class SampleWeighter:
         new_value = min(new_value, maxv)
 
         if old_value != new_value:
-            log.debug(f'Moving {name} value inside map {old_value:.5f} -> {new_value:.5f}')
+            #log.debug(f'Moving {name} value inside map {old_value:.5f} -> {new_value:.5f}')
 
             is_max = old_value > maxv
             if name not in self._d_out_of_map:
@@ -189,6 +189,7 @@ class SampleWeighter:
         '''
         self._df['weight'] *= self._df.apply(self._get_candidate_weight, axis=1)
 
+        log.info(f'Processed {len(self._df)} entries')
         log.info(40 * '-')
         log.info(f'{"Variable":<20}{"Low":<10}{"High":<20}')
         log.info(40 * '-')
