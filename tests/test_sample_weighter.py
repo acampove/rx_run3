@@ -47,6 +47,7 @@ def _get_dataframe() -> pnd.DataFrame:
     df['bmeson'] = numpy.random.choice(['bplus', 'bminus'], size=Data.nentries)
     df['kind'  ] = numpy.random.choice(['PassFail', 'FailPass', 'FailFail'], size=Data.nentries)
     df['block' ] = numpy.random.choice(Data.l_block, size=Data.nentries)
+    df['weight'] = numpy.random.choice([1, 10], size=Data.nentries)
 
     for lep in ['L1', 'L2']:
         df[f'{lep}_TRACK_PT' ] = numpy.random.uniform(550, 20_000, Data.nentries)
