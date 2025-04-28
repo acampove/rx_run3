@@ -185,14 +185,17 @@ class Plotter:
 
         return d_weight
     # --------------------------------------------
-    def _read_weights(self, name : str, rdf : RDataFrame) -> Union[numpy.ndarray, None]:
+    def _read_weights(self, name : str, rdf : RDataFrame) -> numpy.ndarray:
         v_col = rdf.GetColumnNames()
         l_col = [ col.c_str() for col in v_col ]
 
         if name not in l_col:
-            log.debug(f'Weight {name} not found')
-            return None
+            nentries = rdf.Count().GetValue()
+            log.debug(f'Weight {name} not found, using ones')
 
+            return numpy.ones(nentries)
+
+        log.debug(f'Weight {name} found')
         arr_wgt = rdf.AsNumpy([name])[name]
 
         return arr_wgt
