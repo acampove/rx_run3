@@ -49,7 +49,7 @@ def _get_conf(df : pnd.DataFrame, kind : str) -> dict:
     cfg = copy.deepcopy(Data.cfg)
     for var, d_plot in cfg['plots'].items():
         d_plot['title'] = f'{kind}; Entries={nentries}'
-        d_plot['name' ] = f'{var}_{kind}' 
+        d_plot['name' ] = f'{var}_{kind}'
 
     return cfg
 # ---------------------------------------
