@@ -105,6 +105,23 @@ class RDFGetter:
 
         raise ValueError(f'Invalid tree name: {self._tree_name}')
     # ---------------------------------------------------
+    def _get_trigger_paths(self, d_trigger : dict[str,list[str]]) -> list[str]:
+        if self._trigger in d_trigger:
+            return d_trigger[self._trigger]
+
+        if not self._trigger.endswith('_ext'):
+            raise ValueError(f'Invalid trigger name {self._trigger}')
+
+        log.debug(f'Found extended trigger: {self._trigger}')
+        trig_misid    = self._trigger.replace('_ext', '_misid')
+        trig_analysis = self._trigger.replace('_ext',       '')
+
+        l_path = []
+        l_path+= d_trigger[trig_analysis]
+        l_path+= d_trigger[trig_misid   ]
+
+        return l_path
+    # ---------------------------------------------------
     def _get_section(self, yaml_path : str) -> dict:
         d_section = {'trees' : [self._tree_name]}
 
@@ -120,7 +137,8 @@ class RDFGetter:
 
             nosamp = False
             try:
-                l_path_sample = d_data[sample][self._trigger]
+                d_trigger     = d_data[sample]
+                l_path_sample = self._get_trigger_paths(d_trigger=d_trigger)
             except KeyError as exc:
                 raise KeyError(f'Cannot access {yaml_path}:{sample}/{self._trigger}') from exc
 
