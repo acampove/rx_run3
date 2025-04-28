@@ -38,6 +38,8 @@ class RDFGetter:
         self._main_tree       = self._cfg['trees']['main']
         self._l_electron_only = self._cfg['trees']['electron_only']
 
+        self._ext_weight      = '(L1_PID_E > 1 && L2_PID_E > 1) ? 1 : 10'
+
         self._initialize()
     # ---------------------------------------------------
     def _load_config(self) -> dict:
@@ -202,6 +204,12 @@ class RDFGetter:
 
         log.warning('Sending pre-UT candidates to block 4')
         rdf = rdf.Redefine('block', 'block < 0 ? 4 : block')
+
+        # TODO: The weight (taking into account prescale) should be removed
+        # for 2025 data
+        if self._trigger.endswith('_ext'):
+            log.info('Adding weight of 10 to MisID sample')
+            rdf = rdf.Define('weight', self._ext_weight)
 
         return rdf
     # ---------------------------------------------------
