@@ -46,7 +46,7 @@ def test_sample(name : str):
     '''
     cfg                    = _get_config()
     cfg['input']['sample'] = _get_sample(name=name)
-    cfg['input']['q2bin' ] = 'jpsi'
+    cfg['input']['q2bin' ] = 'central'
 
     obj = MisIDCalculator(cfg=cfg)
     df  = obj.get_misid()
