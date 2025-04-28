@@ -1,10 +1,13 @@
 '''
 Module with functions meant to test SampleSplitter class
 '''
+import os
 from importlib.resources import files
 
 import yaml
 import pytest
+import mplhep
+import matplotlib.pyplot as plt
 import pandas as pnd
 from dmu.logging.log_store import LogStore
 from rx_data.rdf_getter    import RDFGetter
@@ -17,10 +20,15 @@ class Data:
     Data class
     '''
     l_hadron_id = ['kaon', 'pion']
+    plt.style.use(mplhep.style.LHCb2)
+
+    out_dir = '/tmp/tests/rx_misid/sample_splitter'
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_misid:splitter', 10)
+
+    os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
 def _get_config() -> dict:
     cfg_path = files('rx_misid_data').joinpath('config.yaml')
@@ -67,4 +75,21 @@ def test_simple(hadron_id : str, is_bplus : bool):
     df    = spl.get_samples()
 
     _check_stats(df=df)
+    _plot_pide(df=df, hadron_id=hadron_id, is_bplus=is_bplus)
+# -------------------------------------------------------
+def _plot_pide(df : pnd.DataFrame, hadron_id : str, is_bplus : bool) -> None:
+    for kind, df_kind in df.groupby('kind'):
+        ax = None
+        ax = df_kind.plot.scatter(x='L1_PID_E', y='L1_PROBNN_E', color='blue', s=1, label='$e_{SS}$', ax=ax)
+        ax = df_kind.plot.scatter(x='L2_PID_E', y='L2_PROBNN_E', color='red' , s=1, label='$e_{OS}$', ax=ax)
+
+        plot_path = f'{Data.out_dir}/{hadron_id}_{is_bplus}_{kind}.png'
+
+        ax.set_xlabel(r'$\Delta LL (e)$')
+        ax.set_ylabel('ProbNN(e)')
+
+        bname = '$B^+$' if is_bplus else '$B^-$'
+        plt.title(f'{hadron_id}; {bname}; {kind}')
+        plt.savefig(plot_path)
+        plt.close()
 # -------------------------------------------------------
