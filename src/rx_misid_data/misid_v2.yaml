@@ -1,0 +1,39 @@
+# Particles charges are defined from AP's YAML config:
+# https://gitlab.cern.ch/lhcb-datapkg/AnalysisProductions/-/blob/223655c72f9c778cf9daa9a0138174b464ac7ca9/rd_ap_2024/tupling/config/b_to_xll_mva.yaml
+
+input :
+  trigger  : Hlt2RD_BuToKpEE_MVA_ext
+  selection:
+    bdt : mva_cmb > 0.5 && mva_prc > 0.5
+weights : &mp
+  path : /home/acampove/external_ssd/Calibration/mis_id/v9
+  regions: # These are cuts that need to appear in the name of the pkl files with the PID maps
+    control : (PROBNN_E<0.2|DLLe<2.0)&(DLLe>-1.0)
+    signal  : (PROBNN_E>0.2)&(DLLe>2.0)
+  pars :
+    - log10(PARTICLE_TRACK_PT)
+    - PARTICLE_TRACK_ETA
+splitting:
+  branches: # all these branches will be picked in the dataframe
+    - B_M_brem_track_2
+    - block
+    - L1_PID_E
+    - L2_PID_E
+    - L1_PROBNN_E
+    - L2_PROBNN_E
+    - L1_TRACK_PT
+    - L1_TRACK_ETA
+    - L2_TRACK_PT
+    - L2_TRACK_ETA
+    - weight # This is where the prescale weight of 10 should be
+  tracks: # This is needed to assign the right electrons to PassFail, FailPass ... datasets
+    ss : L1 # Lepton with same charge as B
+    os : L2 # Lepton with opposite charge as B
+  hadron_tagging:
+    kaon : LEP_PROBNN_K > 0.1
+    pion : LEP_PROBNN_K < 0.1
+  lepton_tagging:
+    pass : LEP_PROBNN_E > 0.2 && LEP_PID_E > 2.0
+    fail : LEP_PROBNN_E < 0.2 || LEP_PID_E < 2.0
+  maps:
+    <<: *mp
