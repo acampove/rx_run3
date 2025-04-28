@@ -30,10 +30,10 @@ splitting:
     ss : L1 # Lepton with same charge as B
     os : L2 # Lepton with opposite charge as B
   hadron_tagging:
-    kaon :  LEP_PROBNN_K > 0.1
-    pion :  LEP_PROBNN_K < 0.1
+    kaon : LEP_PROBNN_K > 0.1
+    pion : LEP_PROBNN_K < 0.1
   lepton_tagging:
-    pass :  LEP_PROBNN_E > 0.2 && LEP_PID_E > 3.0
-    fail : (LEP_PROBNN_E < 0.2 || LEP_PID_E < 3.0) && LEP_PID_E > 1
+    pass : LEP_PROBNN_E > 0.2 && LEP_PID_E > 3.0
+    fail : LEP_PROBNN_E < 0.2 || LEP_PID_E < 3.0
   maps:
     <<: *mp
