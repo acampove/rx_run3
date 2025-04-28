@@ -13,7 +13,7 @@ import mplhep
 from ROOT                    import RDataFrame, EnableImplicitMT
 from dmu.plotting.plotter_2d import Plotter2D
 from dmu.logging.log_store   import LogStore
-from rx_selection.selection  import load_selection_config
+from rx_selection            import selection as sel
 from rx_data.rdf_getter      import RDFGetter
 
 log=LogStore.add_logger('rx_selection:plot_2d')
@@ -78,10 +78,6 @@ def _override_cfg(cfg : dict) -> dict:
 
     if Data.q2bin is None:
         return cfg
-
-    cfg_sel = load_selection_config()
-    cut     = cfg_sel['q2_common'][Data.q2bin]
-    cfg['selection'] = {'cuts' : {'q2' : cut}}
 
     for l_setting in cfg['plots_2d']:
         name = l_setting[3]
