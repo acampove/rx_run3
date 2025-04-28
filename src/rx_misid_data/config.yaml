@@ -21,6 +21,7 @@ splitting:
     - L1_TRACK_ETA
     - L2_TRACK_PT
     - L2_TRACK_ETA
+    - weight # This is where the prescale weight of 10 should be
   tracks: # This is needed to assign the right electrons to PassFail, FailPass ... datasets
     ss : L1 # Lepton with same charge as B
     os : L2 # Lepton with opposite charge as B
