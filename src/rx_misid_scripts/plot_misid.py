@@ -39,11 +39,8 @@ def _load_conf() -> None:
 # ---------------------------------------
 def _rdf_from_df(df : pnd.DataFrame) -> dict[str,RDataFrame]:
     df      = df.drop(columns=['kind', 'hadron', 'bmeson'])
-    rdf_org = RDF.FromPandas(df)
-    rdf_wgt = rdf_org.Define('weights', 'weight')
-
-    rdf_raw = rdf_org.Define('weights',       '1')
-    rdf_raw = rdf_raw.Redefine('weight','weights')
+    rdf_wgt = RDF.FromPandas(df)
+    rdf_raw = rdf_wgt.Redefine('weight','1')
 
     return {'Weighted' : rdf_wgt, 'Unweighted' : rdf_raw}
 # ---------------------------------------
