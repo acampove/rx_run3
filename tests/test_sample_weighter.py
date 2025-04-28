@@ -65,5 +65,5 @@ def test_simple():
     wgt = SampleWeighter(df=df, cfg=cfg)
     df  = wgt.get_weighted_data()
 
-    print(df.weights)
+    print(df.weight)
 # ----------------------------
