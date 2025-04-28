@@ -187,7 +187,7 @@ class SampleWeighter:
         '''
         Returns instance of weighted data
         '''
-        self._df['weights'] = self._df.apply(self._get_candidate_weight, axis=1)
+        self._df['weight'] *= self._df.apply(self._get_candidate_weight, axis=1)
 
         log.info(40 * '-')
         log.info(f'{"Variable":<20}{"Low":<10}{"High":<20}')
