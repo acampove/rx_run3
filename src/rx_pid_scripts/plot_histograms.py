@@ -30,8 +30,8 @@ class Data:
     max_eff_k  : float = 0.05
     min_eff    : float = 0.00
 
-    max_rat_pi : float = 8.0
-    max_rat_k  : float = 0.5
+    max_rat_pi : float = 2.5
+    max_rat_k  : float = 0.4
     min_rat    : float = 0.0
 
     dir_path   : str
