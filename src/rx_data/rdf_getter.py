@@ -62,6 +62,8 @@ class RDFGetter:
 
         If no samples found, will raise FileNotFoundError
         '''
+        self._check_multithreading()
+
         data_dir     = os.environ['DATADIR']
         cfg_wildcard = f'{data_dir}/samples/*.yaml'
         l_config     = glob.glob(cfg_wildcard)
@@ -83,6 +85,11 @@ class RDFGetter:
         d_sample        = self._filter_samples(d_sample)
         self._samples   = d_sample
         self._tmp_path  = self._get_tmp_path()
+    # ---------------------------------------------------
+    def _check_multithreading(self) -> None:
+        nthreads = GetThreadPoolSize()
+        if nthreads > 1:
+            raise ValueError(f'Cannot run with mulithreading, using {nthreads} threads')
     # ---------------------------------------------------
     def _get_tmp_path(self) -> str:
         samples_str = json.dumps(self._samples, sort_keys=True)
