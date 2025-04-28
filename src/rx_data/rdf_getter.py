@@ -9,7 +9,7 @@ import fnmatch
 from importlib.resources import files
 
 import yaml
-from ROOT                  import RDF, RDataFrame
+from ROOT                  import RDF, RDataFrame, GetThreadPoolSize
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_data:rdf_getter')
@@ -26,10 +26,9 @@ class RDFGetter:
         Trigger: HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA
         Tree: E.g. DecayTree or MCDecayTree, default DecayTree
         '''
-        self._sample      = sample
-        self._trigger     = trigger
-        self._samples     : dict[str,str]
-
+        self._sample          = sample
+        self._trigger         = trigger
+        self._samples         : dict[str,str]
 
         self._tree_name       = tree
         self._tmp_path        : str
