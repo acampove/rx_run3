@@ -37,6 +37,7 @@ class MisIdPdf:
     def _preprocess_df(self, df : pnd.DataFrame, sample : str) -> pnd.DataFrame:
         log.debug(f'Preprocessing {sample}')
         df['weight'] = df.apply(lambda x : -abs(x.weight) if x.kind == 'FailFail' else abs(x.weight), axis=1)
+        df['sample'] = sample
 
         self._check_for_nans(df, sample)
 
@@ -120,25 +121,24 @@ class MisIdPdf:
 
         return d_df
     # ----------------------------------------
-    def get_data(self) -> zdata:
+    def get_data(self) -> pnd.DataFrame:
         '''
-        Return zfit data used to make PDF
+        Returns pandas dataframe
         '''
         d_df = self._get_data()
         d_df = { sample : self._preprocess_df(df, sample) for sample, df in d_df.items() }
-
         df   = self._add_samples(d_df)
 
-        log.debug('Building data from dataframe')
-        data = zfit.data.Data.from_pandas(df=df, obs=self._obs, weights='weight')
-
-        return data
+        return df
     # ----------------------------------------
     def get_pdf(self) -> zpdf:
         '''
         Return KDE PDF used to model misID
         '''
-        data = self.get_data()
+        df   = self.get_data()
+
+        log.debug('Building data from dataframe')
+        data = zfit.data.Data.from_pandas(df=df, obs=self._obs, weights='weight')
 
         log.debug(f'Building PDF from data with bandwidth {self._bandwidth}')
         pdf  = zfit.pdf.KDE1DimExact(data, bandwidth=self._bandwidth)
