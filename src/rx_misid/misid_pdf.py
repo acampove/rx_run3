@@ -128,27 +128,31 @@ class MisIdPdf:
 
         return d_df
     # ----------------------------------------
-    def get_data(self) -> pnd.DataFrame:
+    def get_data(self, kind : str = 'zfit') -> pnd.DataFrame:
         '''
-        Returns pandas dataframe
+        Returns data used to make KDE
+
+        kind: zfit (default) provides a zfit data object, pandas provides a dataframe
         '''
         d_df = self._get_data()
         d_df = { sample : self._preprocess_df(df, sample) for sample, df in d_df.items() }
         df   = self._add_samples(d_df)
 
-        return df
+        if kind == 'pandas':
+            return df
+
+        data = zfit.data.Data.from_pandas(df=df, obs=self._obs, weights='weight')
+
+        return data
     # ----------------------------------------
     def get_pdf(self) -> zpdf:
         '''
         Return KDE PDF used to model misID
         '''
-        df   = self.get_data()
-
-        log.debug('Building data from dataframe')
-        data = zfit.data.Data.from_pandas(df=df, obs=self._obs, weights='weight')
+        data = self.get_data(kind='zfit')
 
         log.debug(f'Building PDF from data with bandwidth {self._bandwidth}')
-        pdf  = zfit.pdf.KDE1DimExact(data, bandwidth=self._bandwidth)
+        pdf  = zfit.pdf.KDE1DimFFT(data, padding=self._d_padding, bandwidth=self._bandwidth)
 
         return pdf
 # ----------------------------------------
