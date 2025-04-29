@@ -120,6 +120,12 @@ class RDFGetter:
         if not self._trigger.endswith('_ext'):
             raise ValueError(f'Invalid trigger name {self._trigger}')
 
+        # TODO: When misid trigger be processed also for MC, this has to be updated
+        if not self._sample.startswith('DATA_24_'):
+            trigger = self._trigger.replace('_ext', '')
+            log.warning(f'For sample {self._sample} will use {trigger} instead of {self._trigger}')
+            return d_trigger[trigger]
+
         log.debug(f'Found extended trigger: {self._trigger}')
         trig_misid    = self._trigger.replace('_ext', '_misid')
         trig_analysis = self._trigger.replace('_ext',       '')
