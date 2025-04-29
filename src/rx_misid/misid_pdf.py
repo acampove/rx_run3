@@ -31,9 +31,10 @@ class MisIdPdf:
         self._q2bin = q2bin
         self._data  : zdata
 
-        self._bandwidth     = 'isj'
+        self._bandwidth     = 80
         self._nan_threshold = 0.02
-        self._d_scale       = {'signal' : 0.1, 'leakage' : 1.0, 'data' : 1.0}
+        self._d_scale       = {'signal' : 0.5, 'leakage' : 1.0, 'data' : 1.0}
+        self._d_padding     = {'lowermirror' : 1.0, 'uppermirror' : 1.0}
     # ----------------------------------------
     def _preprocess_df(self, df : pnd.DataFrame, sample : str) -> pnd.DataFrame:
         log.debug(f'Preprocessing {sample}')
