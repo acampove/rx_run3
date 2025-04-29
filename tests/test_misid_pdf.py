@@ -29,6 +29,13 @@ def _initialize():
 
     os.makedirs(Data.out_dir, exist_ok=True)
 # ----------------------------
+def _plot_data(dat : zdata) -> None:
+    arr_val = dat.value().numpy()
+    arr_wgt = dat.weights.numpy()
+
+    plt.hist(arr_val, weights=arr_wgt)
+    plt.show()
+# ----------------------------
 def _plot_pdf(pdf : zpdf, dat : zdata, name : str) -> None:
     obj   = ZFitPlotter(data=dat, model=pdf)
     obj.plot(nbins=50)
@@ -46,4 +53,14 @@ def test_simple():
     dat = obj.get_data()
 
     _plot_pdf(pdf, dat, name='simple')
+# ----------------------------
+def test_data():
+    '''
+    Tests that the tool can provide data
+    '''
+
+    obj = MisIdPdf(obs=Data.obs, q2bin='central')
+    dat = obj.get_data()
+
+    _plot_data(dat)
 # ----------------------------
