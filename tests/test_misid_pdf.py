@@ -47,7 +47,7 @@ def _plot_pdf(pdf : zpdf, dat : zdata, name : str) -> None:
     plt.savefig(f'{Data.out_dir}/{name}.png')
     plt.close()
 # ----------------------------
-@pytest.mark.parametrize('q2bin', ['low'])
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 def test_pdf(q2bin : str):
     '''
     Tests PDF provided by tool
@@ -59,7 +59,7 @@ def test_pdf(q2bin : str):
 
     _plot_pdf(pdf, dat, name='simple')
 # ----------------------------
-@pytest.mark.parametrize('q2bin', ['low'])
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 def test_data(q2bin : str):
     '''
     Tests that the tool can provide data
