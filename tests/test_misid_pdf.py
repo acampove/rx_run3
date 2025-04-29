@@ -4,6 +4,7 @@ Script containing functions meant to test MisID_PDF class
 import os
 
 import matplotlib.pyplot as plt
+import pandas            as pnd
 import pytest
 import zfit
 from zfit.core.data         import Data       as zdata
@@ -19,7 +20,8 @@ class Data:
     '''
     Data class
     '''
-    obs     = zfit.Space('B_M_brem_track_2', limits=(4500, 7000))
+    obs_name= 'B_M_brem_track_2'
+    obs     = zfit.Space(obs_name, limits=(4500, 7000))
     out_dir = '/tmp/tests/rx_misid/misid_pdf'
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
@@ -29,11 +31,13 @@ def _initialize():
 
     os.makedirs(Data.out_dir, exist_ok=True)
 # ----------------------------
-def _plot_data(dat : zdata) -> None:
-    arr_val = dat.value().numpy()
-    arr_wgt = dat.weights.numpy()
+def _plot_data(df : pnd.DataFrame, q2bin : str) -> None:
+    ax = None
+    for sample, df_sample in df.groupby('sample'):
+        ax = df_sample[Data.obs_name].plot.hist(column=Data.obs_name, range=[4500, 7000], bins=60, histtype='step', weights=df_sample['weight'], label=sample, ax=ax)
 
-    plt.hist(arr_val, weights=arr_wgt)
+    plt.legend()
+    plt.title(q2bin)
     plt.show()
 # ----------------------------
 def _plot_pdf(pdf : zpdf, dat : zdata, name : str) -> None:
@@ -43,24 +47,26 @@ def _plot_pdf(pdf : zpdf, dat : zdata, name : str) -> None:
     plt.savefig(f'{Data.out_dir}/{name}.png')
     plt.close()
 # ----------------------------
-def test_pdf():
+@pytest.mark.parametrize('q2bin', ['low'])
+def test_pdf(q2bin : str):
     '''
     Tests PDF provided by tool
     '''
 
-    obj = MisIdPdf(obs=Data.obs, q2bin='central')
+    obj = MisIdPdf(obs=Data.obs, q2bin=q2bin)
     pdf = obj.get_pdf()
     dat = obj.get_data()
 
     _plot_pdf(pdf, dat, name='simple')
 # ----------------------------
-def test_data():
+@pytest.mark.parametrize('q2bin', ['low'])
+def test_data(q2bin : str):
     '''
     Tests that the tool can provide data
     '''
 
-    obj = MisIdPdf(obs=Data.obs, q2bin='central')
-    dat = obj.get_data()
+    obj = MisIdPdf(obs=Data.obs, q2bin=q2bin)
+    df  = obj.get_data()
 
-    _plot_data(dat)
+    _plot_data(df, q2bin)
 # ----------------------------
