@@ -2,10 +2,13 @@
 Script intended to create pandas dataframes with weighted misID control region
 '''
 import os
+import copy
 import argparse
+import multiprocessing
 from importlib.resources import files
 
 import yaml
+import pandas as pnd
 from dmu.logging.log_store     import LogStore
 from rx_misid.misid_calculator import MisIDCalculator
 
@@ -76,8 +79,17 @@ def main():
     _parse_args()
     _initialize()
 
-    obj = MisIDCalculator(cfg=Data.cfg)
-    df  = obj.get_misid()
+    l_sample = _get_samples()
+    nsample  = len(l_sample)
+
+    if nsample == 1:
+        df = _make_dataframe(l_sample[0])
+    else:
+        log.info(f'Using {nsample} processes')
+        with multiprocessing.Pool(processes=nsample) as pool:
+            l_df = pool.map(_make_dataframe, l_sample)
+
+        df = pnd.concat(l_df, axis=1)
 
     out_path = f'{Data.out_dir}/{Data.sample}_{Data.q2bin}.parquet'
     log.info(f'Saving to: {out_path}')
