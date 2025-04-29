@@ -45,7 +45,7 @@ def _get_sample(name : str) -> str:
 
     return name
 # ---------------------------------
-@pytest.mark.parametrize('name', ['data', 'signal', 'lakage'])
+@pytest.mark.parametrize('name', ['data', 'signal', 'leakage'])
 def test_sample(name : str):
     '''
     Simplest example of misid calculator with different samples
