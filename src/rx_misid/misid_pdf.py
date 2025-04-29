@@ -11,7 +11,7 @@ from zfit.core.basepdf      import BasePDF    as zpdf
 from zfit.core.interfaces   import ZfitSpace  as zobs
 from dmu.logging.log_store  import LogStore
 
-log=LogStore.add_logger('rx_misid:mid_pdf')
+log=LogStore.add_logger('rx_misid:misid_pdf')
 # ----------------------------------------
 class MisIdPdf:
     '''
