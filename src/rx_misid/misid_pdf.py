@@ -33,9 +33,15 @@ class MisIdPdf:
 
         self._bandwidth     = 'isj'
         self._nan_threshold = 0.02
+        self._d_scale       = {'signal' : 0.1, 'leakage' : 1.0, 'data' : 1.0}
     # ----------------------------------------
     def _preprocess_df(self, df : pnd.DataFrame, sample : str) -> pnd.DataFrame:
         log.debug(f'Preprocessing {sample}')
+        scale        = self._d_scale[sample]
+
+        log.debug(f'Scaling sample {sample} by {scale:.3e}')
+        df['weight'] = scale * df['weight']
+
         df['weight'] = df.apply(lambda x : -abs(x.weight) if x.kind == 'FailFail' else abs(x.weight), axis=1)
         df['sample'] = sample
 
