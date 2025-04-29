@@ -53,7 +53,31 @@ class MisIdPdf:
 
         return df
     # ----------------------------------------
+    def _check_columns(self, d_df : dict[str,list[str]]) -> None:
+        d_col = { sample : df.columns.tolist() for sample, df in d_df.items() }
+
+        last_col = None
+        fail     = False
+        for l_col in d_col.values():
+            if last_col is None:
+                last_col = l_col
+
+            if last_col != l_col:
+                fail=True
+
+        if not fail:
+            log.debug(f'Columns check, passed, columns: {last_col}')
+            return
+
+        for sample, l_col in d_col.items():
+            log.info(sample)
+            log.info(l_col)
+
+        raise ValueError('Columns differ')
+    # ----------------------------------------
     def _add_samples(self, d_df : dict[str,pnd.DataFrame]) -> pnd.DataFrame:
+        self._check_columns(d_df)
+
         log.debug('Adding samples')
         df_data = d_df['data']
         del d_df['data']
@@ -112,6 +136,7 @@ class MisIdPdf:
         '''
         d_df = self._get_data()
         d_df = { sample : self._preprocess_df(df, sample) for sample, df in d_df.items() }
+
         df   = self._add_samples(d_df)
 
         log.debug('Building data from dataframe')
