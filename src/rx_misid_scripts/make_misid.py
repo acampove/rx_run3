@@ -8,7 +8,8 @@ import multiprocessing
 from importlib.resources import files
 
 import yaml
-import pandas as pnd
+import pandas                as pnd
+import dmu.generic.utilities as gut
 from dmu.logging.log_store     import LogStore
 from rx_misid.misid_calculator import MisIDCalculator
 
@@ -21,10 +22,11 @@ class Data:
     sample    : str
     q2bin     : str
     version   : str
-
-    out_dir   = 'misid_output'
     log_lvl   : int
     cfg       : dict
+
+    gut.TIMER_ON=True
+    out_dir   = 'misid_output'
 # -------------------------------------------------------
 def _set_log():
     LogStore.set_level('rx_misid:make_misid'      , Data.log_lvl)
@@ -82,6 +84,7 @@ def _make_dataframe(sample : str) -> pnd.DataFrame:
 
     return df
 # ---------------------------------
+@gut.timeit
 def main():
     '''
     Start here
