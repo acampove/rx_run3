@@ -37,7 +37,6 @@ def _get_config() -> dict:
     with open(config_path, encoding='utf-8') as ifile:
         cfg = yaml.safe_load(ifile)
 
-    cfg['input']['sample'] = _get_sample()
     cfg['input']['q2bin' ] = Data.q2bin
 
     return cfg
@@ -47,15 +46,17 @@ def _initialize() -> None:
     Data.cfg = _get_config()
     os.makedirs(Data.out_dir, exist_ok=True)
 # ---------------------------------
-def _get_sample() -> str:
+def _get_samples() -> list[str]:
     if Data.sample == 'data':
-        return 'DATA_24_*'
+        l_dset = ['24c1', '24c2', '24c3', '24c4']
+        l_magn = ['MagUp', 'MagDown']
+        return [ f'DATA_24_{magn}_{dset}' for magn in l_magn for dset in l_dset ]
 
     if Data.sample == 'signal':
-        return 'Bu_Kee_eq_btosllball05_DPC'
+        return ['Bu_Kee_eq_btosllball05_DPC']
 
     if Data.sample == 'leakage':
-        return 'Bu_JpsiK_ee_eq_DPC'
+        return ['Bu_JpsiK_ee_eq_DPC']
 
     raise ValueError(f'Invalid sample: {Data.sample}')
 # ---------------------------------
@@ -71,6 +72,15 @@ def _parse_args():
     Data.q2bin  = args.q2bin
     Data.version= args.version
     Data.log_lvl= args.log_lvl
+# ---------------------------------
+def _make_dataframe(sample : str) -> pnd.DataFrame:
+    cfg = copy.deepcopy(Data.cfg)
+    cfg['input']['sample'] = sample
+
+    obj = MisIDCalculator(cfg=cfg)
+    df  = obj.get_misid()
+
+    return df
 # ---------------------------------
 def main():
     '''
