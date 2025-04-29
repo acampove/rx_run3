@@ -43,9 +43,9 @@ def _plot_pdf(pdf : zpdf, dat : zdata, name : str) -> None:
     plt.savefig(f'{Data.out_dir}/{name}.png')
     plt.close()
 # ----------------------------
-def test_simple():
+def test_pdf():
     '''
-    Simplest test
+    Tests PDF provided by tool
     '''
 
     obj = MisIdPdf(obs=Data.obs, q2bin='central')
