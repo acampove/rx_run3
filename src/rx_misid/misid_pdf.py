@@ -111,8 +111,10 @@ class MisIdPdf:
         Return zfit data used to make PDF
         '''
         d_df = self._get_data()
-        d_df = { sample : self._preprocess_df(df) for sample, df in d_df.items() }
+        d_df = { sample : self._preprocess_df(df, sample) for sample, df in d_df.items() }
         df   = self._add_samples(d_df)
+
+        log.debug('Building data from dataframe')
         data = zfit.data.Data.from_pandas(df=df, obs=self._obs, weights='weight')
 
         return data
