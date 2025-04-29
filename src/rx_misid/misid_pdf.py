@@ -79,12 +79,13 @@ class MisIdPdf:
         self._check_columns(d_df)
 
         log.debug('Adding samples')
-        df_data = d_df['data']
-        del d_df['data']
 
-        l_df_mc = [ df_mc['weight'].apply(lambda x : -x) for df_mc in d_df.values() ]
-        l_df    = [df_data] + l_df_mc
-        df      = pnd.concat(l_df)
+        l_df_mc = [ df for sample, df in d_df.items() if sample != 'data' ]
+        df_mc   = pnd.concat(l_df_mc)
+        df_mc['weight'] = - df_mc['weight']
+
+        df_data = d_df['data']
+        df      = pnd.concat([df_data, df_mc])
 
         self._check_for_nans(df, 'merged')
 
