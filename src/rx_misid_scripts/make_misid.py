@@ -15,19 +15,19 @@ class Data:
     '''
     Data class
     '''
-    sample      : str
-    q2bin       : str
-    version     : str
+    sample    : str
+    q2bin     : str
+    version   : str
 
-    out_dir     = 'misid_output'
-    log_level   : int = 20
-    cfg         : dict
+    out_dir   = 'misid_output'
+    log_lvl   : int
+    cfg       : dict
 # -------------------------------------------------------
 def _set_log():
-    LogStore.set_level('rx_misid:make_misid'      , Data.log_level)
-    LogStore.set_level('rx_misid:misid_calculator', Data.log_level)
-    LogStore.set_level('rx_misid:splitter'        , Data.log_level)
-    LogStore.set_level('rx_misid:weighter'        , Data.log_level)
+    LogStore.set_level('rx_misid:make_misid'      , Data.log_lvl)
+    LogStore.set_level('rx_misid:misid_calculator', Data.log_lvl)
+    LogStore.set_level('rx_misid:splitter'        , Data.log_lvl)
+    LogStore.set_level('rx_misid:weighter'        , Data.log_lvl)
 # ---------------------------------
 def _get_config() -> dict:
     config_path = files('rx_misid_data').joinpath(f'misid_{Data.version}.yaml')
@@ -61,11 +61,13 @@ def _parse_args():
     parser.add_argument('-s', '--sample' , type=str, help='Sample name', required=True, choices=['data', 'signal' , 'leakage'])
     parser.add_argument('-q', '--q2bin'  , type=str, help='Q2 bin'     , required=True, choices=['low' , 'central', 'high'   ])
     parser.add_argument('-v', '--version', type=str, help='Version'    , required=True)
+    parser.add_argument('-l', '--log_lvl', type=int, help='Logging level', default=20, choices=[10, 20, 30])
     args = parser.parse_args()
 
     Data.sample = args.sample
     Data.q2bin  = args.q2bin
     Data.version= args.version
+    Data.log_lvl= args.log_lvl
 # ---------------------------------
 def main():
     '''
