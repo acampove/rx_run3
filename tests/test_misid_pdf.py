@@ -11,7 +11,7 @@ from zfit.core.basepdf      import BasePDF    as zpdf
 
 from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.logging.log_store  import LogStore
-from rx_misid.misid_pdf     import MisID_PDF
+from rx_misid.misid_pdf     import MisIdPdf
 
 log=LogStore.add_logger('rx_misid:test_misid_pdf')
 # ----------------------------
@@ -19,7 +19,7 @@ class Data:
     '''
     Data class
     '''
-    obs     = zfit.Space('mass', limits=(4500, 7000))
+    obs     = zfit.Space('B_M_brem_track_2', limits=(4500, 7000))
     out_dir = '/tmp/tests/rx_misid/misid_pdf'
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
@@ -41,7 +41,7 @@ def test_simple():
     Simplest test
     '''
 
-    obj = MisID_PDF(obs=Data.obs, q2bin='central')
+    obj = MisIdPdf(obs=Data.obs, q2bin='central')
     pdf = obj.get_pdf()
     dat = obj.get_data()
 
