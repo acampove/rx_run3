@@ -121,7 +121,6 @@ def _set_samples() -> None:
 def _initialize():
     _set_logs()
     _set_samples()
-    EnableImplicitMT(Data.nthreads)
 # ---------------------------------
 def main():
     '''
