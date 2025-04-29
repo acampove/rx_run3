@@ -34,17 +34,6 @@ class MisIdPdf:
         self._bandwidth     = 'isj'
         self._nan_threshold = 0.02
     # ----------------------------------------
-    def get_pdf(self) -> zpdf:
-        '''
-        Return KDE PDF used to model misID
-        '''
-        data = self.get_data()
-
-        log.debug(f'Building PDF from data with bandwidth {self._bandwidth}')
-        pdf  = zfit.pdf.KDE1DimExact(data, bandwidth=self._bandwidth)
-
-        return pdf
-    # ----------------------------------------
     def _preprocess_df(self, df : pnd.DataFrame, sample : str) -> pnd.DataFrame:
         log.debug(f'Preprocessing {sample}')
         df['weight'] = df.apply(lambda x : -abs(x.weight) if x.kind == 'FailFail' else abs(x.weight), axis=1)
@@ -144,4 +133,15 @@ class MisIdPdf:
         data = zfit.data.Data.from_pandas(df=df, obs=self._obs, weights='weight')
 
         return data
+    # ----------------------------------------
+    def get_pdf(self) -> zpdf:
+        '''
+        Return KDE PDF used to model misID
+        '''
+        data = self.get_data()
+
+        log.debug(f'Building PDF from data with bandwidth {self._bandwidth}')
+        pdf  = zfit.pdf.KDE1DimExact(data, bandwidth=self._bandwidth)
+
+        return pdf
 # ----------------------------------------
