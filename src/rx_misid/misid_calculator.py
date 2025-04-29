@@ -63,7 +63,7 @@ class MisIDCalculator:
             log.debug(f'{cut_name:<30}{cut_expr}')
             rdf = rdf.Filter(cut_expr, cut_name)
 
-        log.info('Splitting samples')
+        log.info('Splitting samples: Bplus={is_bplus}, Hadron={hadron_id}')
         splitter = SampleSplitter(rdf=rdf, is_bplus=is_bplus, hadron_id=hadron_id, cfg=self._cfg['splitting'])
         df       = splitter.get_samples()
 
