@@ -10,7 +10,7 @@ from dataclasses         import dataclass
 
 import yaml
 import mplhep
-from ROOT                    import RDataFrame, EnableImplicitMT
+from ROOT                    import RDataFrame
 from dmu.plotting.plotter_2d import Plotter2D
 from dmu.logging.log_store   import LogStore
 from rx_selection            import selection as sel
