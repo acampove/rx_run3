@@ -31,31 +31,55 @@ class MisIdPdf:
         self._q2bin = q2bin
         self._data  : zdata
 
-        self._bandwidth = 'isj'
+        self._bandwidth     = 'isj'
+        self._nan_threshold = 0.02
     # ----------------------------------------
     def get_pdf(self) -> zpdf:
         '''
         Return KDE PDF used to model misID
         '''
         data = self.get_data()
+
+        log.debug(f'Building PDF from data with bandwidth {self._bandwidth}')
         pdf  = zfit.pdf.KDE1DimExact(data, bandwidth=self._bandwidth)
 
         return pdf
     # ----------------------------------------
-    def _preprocess_df(self, df : pnd.DataFrame) -> pnd.DataFrame:
+    def _preprocess_df(self, df : pnd.DataFrame, sample : str) -> pnd.DataFrame:
+        log.debug(f'Preprocessing {sample}')
         df['weight'] = df.apply(lambda x : -abs(x.weight) if x.kind == 'FailFail' else abs(x.weight), axis=1)
+
+        self._check_for_nans(df, sample)
 
         return df
     # ----------------------------------------
     def _add_samples(self, d_df : dict[str,pnd.DataFrame]) -> pnd.DataFrame:
+        log.debug('Adding samples')
         df_data = d_df['data']
         del d_df['data']
 
         l_df_mc = [ df_mc['weight'].apply(lambda x : -x) for df_mc in d_df.values() ]
         l_df    = [df_data] + l_df_mc
-        df      = pnd.concat(l_df, axis=0, ignore_index=True)
+        df      = pnd.concat(l_df)
+
+        self._check_for_nans(df, 'merged')
 
         return df
+    # ----------------------------------------
+    def _check_for_nans(self, df : pnd.DataFrame, sample : str) -> None:
+        nnan = df.isna().sum().sum()
+        if nnan == 0:
+            log.debug(f'No NaNs found in: {sample}')
+            return
+
+        size = len(df)
+        if nnan / size < self._nan_threshold:
+            log.warning(f'Found {nnan}/{size} in {sample}, cleaning up dataframe')
+            df.dropna(inplace=True)
+            return
+
+        print(df)
+        raise ValueError(f'Found {nnan}/{size} NaNs in {sample}')
     # ----------------------------------------
     def _get_data(self) -> dict[str,pnd.DataFrame]:
         inp_dir = os.environ['MISIDDIR']
