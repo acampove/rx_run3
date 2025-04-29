@@ -90,8 +90,10 @@ def _get_cfg() -> dict:
     return _override_cfg(cfg)
 # ---------------------------------
 def _override_cfg(cfg : dict) -> dict:
+    sample = Data.sample.replace('*', 'p')
+
     plt_dir = cfg['saving']['plt_dir']
-    cfg['saving']['plt_dir']   = f'{plt_dir}/{Data.trigger}'
+    cfg['saving']['plt_dir']   = f'{plt_dir}/{Data.trigger}/{sample}'
 
     if Data.q2bin is None:
         return cfg
