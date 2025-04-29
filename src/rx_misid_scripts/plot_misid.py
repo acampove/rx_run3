@@ -51,6 +51,8 @@ def _get_conf(df : pnd.DataFrame, kind : str) -> dict:
         d_plot['title'] = f'{kind}; Entries={nentries}'
         d_plot['name' ] = f'{var}_{kind}'
 
+    cfg['saving']['plt_dir'] = Data.file_path.replace('.parquet', '')
+
     return cfg
 # ---------------------------------------
 def _plot_kind(df : pnd.DataFrame, kind : str) -> None:
