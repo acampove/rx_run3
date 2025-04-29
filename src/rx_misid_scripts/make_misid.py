@@ -99,7 +99,7 @@ def main():
         with multiprocessing.Pool(processes=nsample) as pool:
             l_df = pool.map(_make_dataframe, l_sample)
 
-        df = pnd.concat(l_df, axis=1)
+        df = pnd.concat(l_df, axis=0, ignore_index=True)
 
     out_path = f'{Data.out_dir}/{Data.sample}_{Data.q2bin}.parquet'
     log.info(f'Saving to: {out_path}')
