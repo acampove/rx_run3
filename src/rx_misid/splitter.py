@@ -70,14 +70,15 @@ class SampleSplitter:
     # --------------------------------
     def _rdf_to_df(self, rdf : RDataFrame) -> pnd.DataFrame:
         l_branch = self._cfg['branches']
+        log.debug('Storing branches')
         data     = rdf.AsNumpy(l_branch)
         df       = pnd.DataFrame(data)
 
         if len(df) == 0:
             rep      = rdf.Report()
             cutflow  = ut.rdf_report_to_df(rep)
-            log.warning('Empty dataset:')
-            log.info('\n' + str(cutflow))
+            log.warning('Empty dataset:\n')
+            log.info(cutflow)
 
         return df
     # --------------------------------
@@ -95,6 +96,7 @@ class SampleSplitter:
         '''
         l_df = []
         for kind in self._l_kind:
+            log.info(f'Calculating sample: {kind}')
             rdf            = self._rdf
             cut_os, cut_ss = self._get_cuts(kind=kind)
 
