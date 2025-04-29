@@ -36,7 +36,28 @@ The code will:
 
 ## Building the Pandas dataframe with the weighted control regions
 
-Will be updated soon
+For this run:
+
+```bash
+make_misid -s leakage -q central -v v1
+```
+
+where:
+
+```
+options:
+  -h, --help            show this help message and exit
+  -s {data,signal,leakage}, --sample {data,signal,leakage}
+                        Sample name
+  -q {low,central,high}, --q2bin {low,central,high}
+                        Q2 bin
+  -v VERSION, --version VERSION
+                        Version
+```
+
+and leakage refers to the resonant mode's. Regarding the version, this corresponds to the
+configurations needed, which are stored in YAML files in `rx_misid_data/misid_v*.yaml`.
+The output will go to a pandas dataframe, which will be saved in `parquet` format.
 
 ## Plotting
 
@@ -47,3 +68,4 @@ Run:
 plot_misid -p /path/to/parquet/file.parquet
 ```
 
+and the plots will end up in the same directory as the `parquet` file.
