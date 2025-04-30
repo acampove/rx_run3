@@ -143,6 +143,26 @@ def print_pdf(
             log.debug(msg)
         else:
             raise ValueError(f'Invalid level: {level}')
+#---------------------------------------------
+def save_fit(
+        data    : zdata,
+        model   : zpdf,
+        res     : zres,
+        fit_dir : str,
+        d_const : dict[str,list[str]] = None) -> None:
+    '''
+    Function used to save fit results, meant to reduce boiler plate code
+    '''
+    os.makedirs(fit_dir, exist_ok=True)
+
+    res.freeze()
+    with open(f'{fit_dir}/fit.pkl', 'wb') as ofile:
+        pickle.dump(res, ofile)
+
+    plt.savefig(f'{fit_dir}/fit.png')
+
+    print_pdf(model, txt_path=f'{fit_dir}/post_fit.txt', d_const=d_const)
+    pdf_to_tex(path=f'{fit_dir}/post_fit.txt', d_par={'mu' : r'$\mu$'}, skip_fixed=True)
 #-------------------------------------------------------
 # Make latex table from text file
 #-------------------------------------------------------
