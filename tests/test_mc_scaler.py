@@ -1,7 +1,9 @@
 '''
 File with functions to test MCScaler
 '''
+from importlib.resources import files
 import pytest
+import yaml
 
 from dmu.logging.log_store  import LogStore
 from conftest               import DataCollector
@@ -13,7 +15,18 @@ class Data:
     '''
     data class
     '''
-    sig_reg = '(L1_PID_E > 3) && (L2_PID_E > 3)'
+    version = 'v1' # This should be the version of the config actually used in the analysis
+# -----------------------------------------------
+def _get_signal_cut() -> str:
+    config_path = files('rx_misid_data').joinpath(f'misid_{Data.version}.yaml')
+    with open(config_path, encoding='utf-8') as ifile:
+        cfg = yaml.safe_load(ifile)
+
+    cut = cfg['splitting']['lepton_tagging']['pass']
+
+    log.info(f'Using signal cut: {cut}')
+
+    return cut
 # -----------------------------------------------
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
 @pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC'])
@@ -21,10 +34,12 @@ def test_simple(q2bin : str, sample : str):
     '''
     Test over all samples and q2 bins
     '''
+    sig_reg = _get_signal_cut()
+
     scl = MCScaler(
             q2bin  =q2bin,
             sample =sample,
-            sig_reg=Data.sig_reg)
+            sig_reg=sig_reg)
 
     nsig, nctr, val = scl.get_scale()
 
