@@ -4,6 +4,7 @@ File with functions to test MCScaler
 import pytest
 
 from dmu.logging.log_store  import LogStore
+from conftest               import DataCollector
 from rx_misid.mc_scaler     import MCScaler
 
 log=LogStore.add_logger('rx_misid:test_ms_scaler')
@@ -25,7 +26,15 @@ def test_simple(q2bin : str, sample : str):
             sample =sample,
             sig_reg=Data.sig_reg)
 
-    val = scl.get_scale()
+    nsig, nctr, val = scl.get_scale()
 
-    log.info(f'{sample:<20}{q2bin:<20}{val:.3f}')
+    d_row = {
+            'sample' : sample,
+            'q2bin'  :  q2bin,
+            'signal' :   nsig,
+            'control':   nctr,
+            'scale'  :    val,
+             }
+
+    DataCollector.add_entry(name='simple', data=d_row)
 # -----------------------------------------------
