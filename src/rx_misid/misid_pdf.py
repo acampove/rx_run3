@@ -75,7 +75,8 @@ class MisIdPdf:
             sig_reg       = MisIdPdf.get_signal_cut(version=self._vers)
 
             scl           = MCScaler(q2bin=self._q2bin, sample=sample, sig_reg=sig_reg)
-            d_scale[name] = scl.get_scale()
+            _, _, scale   = scl.get_scale()
+            d_scale[name] = scale
 
         return d_scale
     # ----------------------------------------
