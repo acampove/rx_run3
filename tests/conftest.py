@@ -16,6 +16,7 @@ class DataCollector:
     - Collect outputs of tests into dataframes
     '''
     d_df = {}
+    out_dir = '/tmp/tests/rx_misid/mc_scale'
     # ---------------------------------------
     @staticmethod
     def add_entry(name : str, data : dict):
@@ -32,14 +33,24 @@ class DataCollector:
         df=DataCollector.d_df[name]
         df.loc[len(df)] = data
 # -----------------------------------
-def _plot_scales(df : pnd.DataFrame) -> None:
-    print(df)
+def _plot_scales(df : pnd.DataFrame, name : str) -> None:
+    ax = None
+    for sample, df_sample in df.groupby('sample'):
+        ax = df_sample.plot(x='q2bin', y='scale', label=sample, ax=ax)
+
+    out_dir = f'{DataCollector.out_dir}/{name}'
+    os.makedirs(out_dir, exist_ok=True)
+
+    plt.savefig(f'{out_dir}/scales.png')
+    plt.close()
 # -----------------------------------
 def pytest_sessionfinish():
     '''
     Runs at the end
     '''
+    plt.style.use(mplhep.style.LHCb2)
+
     if 'simple' in DataCollector.d_df:
         df = DataCollector.d_df['simple']
-        _plot_scales(df=df)
+        _plot_scales(df=df, name='simple')
 # -----------------------------------
