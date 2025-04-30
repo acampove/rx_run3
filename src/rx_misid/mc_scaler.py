@@ -50,7 +50,7 @@ class MCScaler:
 
         return rdf
     # ----------------------------------
-    def _get_ratio(self, rdf : RDataFrame) -> float:
+    def _get_stats(self, rdf : RDataFrame) -> tuple[float,float]:
         log.debug('Getting ratio of MC yields')
 
         sig_reg = self._sig_reg
@@ -71,6 +71,9 @@ class MCScaler:
         nctr = rdf_ctr.Count().GetValue()
         nsig = rdf_sig.Count().GetValue()
 
+        return nsig, nctr
+    # ----------------------------------
+    def _get_ratio(self, nsig : float, nctr : float) -> float:
         if nsig == 0:
             log.warning(f'Zero yield in {self._sample}/{self._q2bin} => scale is zero')
             return 0
