@@ -46,7 +46,11 @@ class MisIDCalculator:
     def _get_sample(self, is_bplus : bool, hadron_id : str) -> pnd.DataFrame:
         sample  = self._cfg['input']['sample']
         trigger = self._cfg['input']['trigger']
-        d_cut   = self._cfg['input']['selection']
+
+        d_cut = {}
+        if 'selection' in self._cfg['input']:
+            log.warning('Overriding selection')
+            d_cut   = self._cfg['input']['selection']
 
         obj     = RDFGetter(sample=sample, trigger=trigger)
         rdf     = obj.get_rdf()
