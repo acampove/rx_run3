@@ -3,8 +3,6 @@
 
 input :
   trigger  : Hlt2RD_BuToKpEE_MVA_ext
-  selection:
-    bdt : mva_cmb > 0.5 && mva_prc > 0.5
 weights : &mp
   path : /home/acampove/external_ssd/Calibration/mis_id/v10
   regions: # These are cuts that need to appear in the name of the pkl files with the PID maps
