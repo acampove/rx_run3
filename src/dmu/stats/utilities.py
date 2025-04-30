@@ -3,12 +3,22 @@ Module with utility functions related to the dmu.stats project
 '''
 import os
 import re
+import pickle
 from typing import Union
+
 import zfit
-import pandas as pnd
+from zfit.core.data         import Data       as zdata
+from zfit.core.basepdf      import BasePDF    as zpdf
+from zfit.result            import FitResult  as zres
+
+import pandas            as pnd
+import matplotlib.pyplot as plt
 
 import dmu.pdataframe.utilities as put
-from dmu.logging.log_store import LogStore
+
+from dmu.stats.fitter       import Fitter
+from dmu.stats.zfit_plotter import ZFitPlotter
+from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('dmu:stats:utilities')
 #-------------------------------------------------------
