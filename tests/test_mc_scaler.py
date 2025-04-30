@@ -26,7 +26,10 @@ def _get_signal_cut() -> str:
 
     log.info(f'Using signal cut: {cut}')
 
-    return cut
+    cut_l1 = cut.replace('LEP', 'L1')
+    cut_l2 = cut.replace('LEP', 'L2')
+
+    return f'({cut_l1}) && ({cut_l2})'
 # -----------------------------------------------
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
 @pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC'])
