@@ -38,13 +38,24 @@ def _plot_data(df : pnd.DataFrame, q2bin : str) -> None:
 
     plt.legend()
     plt.title(q2bin)
-    plt.show()
+    plt.savefig(f'{Data.out_dir}/{q2bin}.png')
+    plt.close()
 # ----------------------------
-def _plot_pdf(pdf : zpdf, dat : zdata, name : str) -> None:
+def _plot_pdf(pdf  : zpdf,
+              dat  : zdata,
+              name : str,
+              q2bin: str) -> None:
     obj   = ZFitPlotter(data=dat, model=pdf)
     obj.plot(nbins=50)
+    obj.axs[0].axhline(y=+0, color='gray', linestyle=':')
+    obj.axs[1].axhline(y=-3, color='red' , linestyle=':')
+    obj.axs[1].axhline(y=+3, color='red' , linestyle=':')
+    obj.axs[1].set_ylim(-5, 5)
 
-    plt.savefig(f'{Data.out_dir}/{name}.png')
+    out_dir = f'{Data.out_dir}/{name}'
+    os.makedirs(out_dir, exist_ok=True)
+
+    plt.savefig(f'{out_dir}/{q2bin}.png')
     plt.close()
 # ----------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
@@ -57,7 +68,7 @@ def test_pdf(q2bin : str):
     pdf = obj.get_pdf()
     dat = obj.get_data(kind='zfit')
 
-    _plot_pdf(pdf, dat, name='simple')
+    _plot_pdf(pdf, dat, name='simple', q2bin=q2bin)
 # ----------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 def test_data(q2bin : str):
