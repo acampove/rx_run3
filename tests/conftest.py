@@ -41,6 +41,10 @@ def _plot_scales(df : pnd.DataFrame, name : str) -> None:
     out_dir = f'{DataCollector.out_dir}/{name}'
     os.makedirs(out_dir, exist_ok=True)
 
+    plt.title('Fracion of leakage into MisID region')
+    plt.xlabel(r'$q^2$')
+    plt.ylabel(r'$N^{SR}/N^{CR}$')
+    plt.grid()
     plt.savefig(f'{out_dir}/scales.png')
     plt.close()
 # -----------------------------------
