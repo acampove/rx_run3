@@ -217,23 +217,3 @@ def test_plugin_stats():
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
