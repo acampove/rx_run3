@@ -17,7 +17,7 @@ splitting:
       - Bu_Kee_eq_btosllball05_DPC
     leakage:
       - Bu_JpsiK_ee_eq_DPC
-    data   : 
+    data   :
       - DATA_24_MagUp_24c1
       - DATA_24_MagUp_24c2
       - DATA_24_MagUp_24c3
