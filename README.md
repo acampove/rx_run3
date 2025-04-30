@@ -475,7 +475,7 @@ To save in one go everything regarding your fit do:
 ```python
 from dmu.stats import utilities
 
-utilities.savefig(data=data, model=pdf, res=fit_result, fit_dit='/some/directory', d_const=constraints)
+utilities.save_fit(data=data, model=pdf, res=fit_result, fit_dit='/some/directory', d_const=constraints)
 ```
 
 and the function will save everything that you would normally need froma fit.
