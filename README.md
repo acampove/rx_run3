@@ -490,6 +490,19 @@ from dmu.stats import utilities
 utilities.placeholder_fit(kind='s+b', fit_dir='/some/directory')
 ```
 
+## Retrieving information on fits
+
+Once the fit has be done and the results are saved to a given directory one can do:
+
+```python
+from dmu.stats.fit_stats    import FitStats
+
+obj =FitStats(fit_dir='/directory/with/fit')
+val = obj.get_value(name='var_name', kind='value or error')
+```
+
+and the tool will retrieve the value. This is useful when the values are needed elsewhere
+in the code, i.e. it would connect the fitting part with other parts.
 ## Arrays
 
 ### Scaling by non-integer
