@@ -24,9 +24,9 @@ class Data:
     version   : str
     log_lvl   : int
     cfg       : dict
+    out_dir   : str 
 
     gut.TIMER_ON=True
-    out_dir   = 'misid_output'
 # -------------------------------------------------------
 def _set_log():
     LogStore.set_level('rx_misid:make_misid'      , Data.log_lvl)
@@ -45,7 +45,9 @@ def _get_config() -> dict:
 # ---------------------------------
 def _initialize() -> None:
     _set_log()
-    Data.cfg = _get_config()
+    Data.cfg    = _get_config()
+    misid_dir   = os.environ['MISIDDIR']
+    Data.out_dir= f'{misid_dir}/data'
     os.makedirs(Data.out_dir, exist_ok=True)
 # ---------------------------------
 def _get_samples() -> list[str]:
