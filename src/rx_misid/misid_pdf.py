@@ -25,6 +25,25 @@ class MisIdPdf:
     - Provide it alongside with the data to the user
     '''
     # ----------------------------------------
+    @staticmethod
+    def get_signal_cut(version : str) -> str:
+        '''
+        Given the version of the config file (misid_vx.yaml) will return the
+        cut defining the signal region
+        '''
+        config_path = files('rx_misid_data').joinpath(f'misid_{version}.yaml')
+        with open(config_path, encoding='utf-8') as ifile:
+            cfg = yaml.safe_load(ifile)
+
+        cut = cfg['splitting']['lepton_tagging']['pass']
+
+        log.info(f'Using signal cut: {cut}')
+
+        cut_l1 = cut.replace('LEP', 'L1')
+        cut_l2 = cut.replace('LEP', 'L2')
+
+        return f'({cut_l1}) && ({cut_l2})'
+    # ----------------------------------------
     def __init__(self, obs : zobs, q2bin : str, version : str):
         '''
         obs : Observable needed for KDE
@@ -32,6 +51,7 @@ class MisIdPdf:
         '''
         self._obs   = obs
         self._q2bin = q2bin
+        self._vers  = version
         self._cfg   = self._get_config(version=version)
 
         self._data  : zdata
@@ -52,8 +72,9 @@ class MisIdPdf:
         d_scale = {'data' : 1.0}
         for name in self._l_component:
             [sample]      = self._cfg['splitting']['samples'][name]
+            sig_reg       = MisIdPdf.get_signal_cut(version=self._vers)
 
-            scl           = MCScaler(q2bin=self._q2bin, sample=sample)
+            scl           = MCScaler(q2bin=self._q2bin, sample=sample, sig_reg=sig_reg)
             d_scale[name] = scl.get_scale()
 
         return d_scale
