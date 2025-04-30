@@ -187,7 +187,17 @@ class SampleWeighter:
         '''
         Returns instance of weighted data
         '''
-        self._df['weight'] *= self._df.apply(self._get_candidate_weight, axis=1)
+        if len(self._df) == 0:
+            log.warning('Empty dataframe, not assigning any weight')
+            return self._df
+
+        try:
+            self._df['weight'] *= self._df.apply(self._get_candidate_weight, axis=1)
+        except AttributeError as exc:
+            log.info(self._df.dtypes)
+            log.info(self._df.columns)
+            log.info(self._df)
+            raise AttributeError('Cannot assign weight') from exc
 
         log.info(f'Processed {len(self._df)} entries')
         log.info(40 * '-')
