@@ -61,8 +61,10 @@ def test_level(backend : str, level : int):
 
     name = f'level_{backend}_{level}'
 
-    LogStore.add_logger(name)
+    log=LogStore.add_logger(name)
     LogStore.set_level(name, level)
+
+    assert log.getEffectiveLevel() == level
 
     LogStore.show_loggers()
 # --------------------------------

@@ -852,6 +852,12 @@ log.error('error')
 log.critical('critical')
 ```
 
+In order to get the logging level fromt the logger do:
+
+```python
+level = log.getEffectiveLevel()
+```
+
 # Plotting from ROOT dataframes
 
 ## 1D plots
