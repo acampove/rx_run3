@@ -468,6 +468,28 @@ this class supports:
 - Stacking and overlaying of PDFs.
 - Blinding.
 
+## Fit saving
+
+To save in one go everything regarding your fit do:
+
+```python
+from dmu.stats import utilities
+
+utilities.savefig(data=data, model=pdf, res=fit_result, fit_dit='/some/directory', d_const=constraints)
+```
+
+and the function will save everything that you would normally need froma fit.
+
+## Placeholdef fits
+
+In order to create a _fake_ fit on top of which one could develop other tools, do:
+
+```python
+from dmu.stats import utilities
+
+utilities.placeholder_fit(kind='s+b', fit_dir='/some/directory')
+```
+
 ## Arrays
 
 ### Scaling by non-integer
