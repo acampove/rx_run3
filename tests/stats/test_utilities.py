@@ -1,6 +1,7 @@
 '''
 Module with unit tests for functions in dmu.stat.utilities
 '''
+import os
 from importlib.resources import files
 
 import pytest
@@ -10,12 +11,22 @@ from zfit.core.basepdf import ZfitPDF
 from dmu.logging.log_store import LogStore
 from dmu.stats.utilities   import print_pdf
 from dmu.stats.utilities   import pdf_to_tex
+from dmu.stats.utilities   import placeholder_fit
 
 log = LogStore.add_logger('dmu:tests:stats:test_utilities')
+#----------------------------------
+class Data:
+    '''
+    data class
+    '''
+    fit_dir = '/tmp/tests/dmu/stats'
 #----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('dmu:stats:utilities', 10)
+
+    os.makedirs(Data.fit_dir, exist_ok=True)
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 #----------------------------------
 def _get_pdf_simple() -> ZfitPDF:
     obs = zfit.Space('m',    limits=(-10, 10))
@@ -99,4 +110,11 @@ def test_pdf_to_tex():
 
     path = files('dmu_data').joinpath('tests/pdf_to_tex.txt')
     pdf_to_tex(path=path, d_par=d_par)
+#----------------------------------
+def test_placeholder_fit() -> None:
+    '''
+    Runs a placeholder fit needed to produce outputs useful
+    to develop tools
+    '''
+    placeholder_fit(kind='s+b', fit_dir=Data.fit_dir)
 #----------------------------------
