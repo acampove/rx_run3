@@ -49,18 +49,12 @@ def _initialize() -> None:
     os.makedirs(Data.out_dir, exist_ok=True)
 # ---------------------------------
 def _get_samples() -> list[str]:
-    if Data.sample == 'data':
-        l_dset = ['24c1', '24c2', '24c3', '24c4']
-        l_magn = ['MagUp', 'MagDown']
-        return [ f'DATA_24_{magn}_{dset}' for magn in l_magn for dset in l_dset ]
+    if Data.sample not in Data.cfg['splitting']['samples']:
+        raise ValueError(f'Invalid sample: {Data.sample}')
 
-    if Data.sample == 'signal':
-        return ['Bu_Kee_eq_btosllball05_DPC']
+    l_sample = Data.cfg['splitting']['samples'][Data.sample]
 
-    if Data.sample == 'leakage':
-        return ['Bu_JpsiK_ee_eq_DPC']
-
-    raise ValueError(f'Invalid sample: {Data.sample}')
+    return l_sample
 # ---------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script needed to calculate pandas dataframes with weighted misID control regions')
