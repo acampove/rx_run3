@@ -84,14 +84,16 @@ class MCScaler:
 
         return rat
     # ----------------------------------
-    def get_scale(self) -> float:
+    def get_scale(self) -> tuple[int,int,float]:
         '''
-        Returns scale factor:
+        Returns tuple with three elements, nsig, nctr and rat,
+        where the former two are the signal and control yields and rat:
         Signal yield x MC control / MC signal
         '''
-        rdf = self._get_rdf()
-        rat = self._get_ratio(rdf)
-        nsig= 1
 
-        return rat * nsig
+        rdf        = self._get_rdf()
+        nsig, nctr = self._get_stats(rdf)
+        rat        = self._get_ratio(nsig=nsig, nctr=nctr)
+
+        return nsig, nctr, rat
 # ----------------------------------
