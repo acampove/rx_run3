@@ -25,22 +25,38 @@ class MisIdPdf:
     - Provide it alongside with the data to the user
     '''
     # ----------------------------------------
-    def __init__(self, obs : zobs, q2bin : str):
+    def __init__(self, obs : zobs, q2bin : str, version : str):
         '''
         obs : Observable needed for KDE
         q2bin: q2 bin
         '''
         self._obs   = obs
         self._q2bin = q2bin
-        self._data  : zdata
+        self._cfg   = self._get_config(version=version)
 
+        self._data  : zdata
         self._bandwidth     = 80
         self._nan_threshold = 0.02
         self._d_padding     = {'lowermirror' : 1.0, 'uppermirror' : 1.0}
+        self._l_component   = ['signal', 'leakage'] # components that need to be subtracted from misID
         self._d_scale       = self._get_scales()
     # ----------------------------------------
+    def _get_config(self, version : str) -> dict:
+        cfg_path = files('rx_misid_data').joinpath(f'misid_{version}.yaml')
+        with open(cfg_path, encoding='utf-8') as ifile:
+            cfg = yaml.safe_load(ifile)
+
+        return cfg
+    # ----------------------------------------
     def _get_scales(self) -> dict[str,float]:
-        return {'signal' : 0.5, 'leakage' : 1.0, 'data' : 1.0}
+        d_scale = {'data' : 1.0}
+        for name in self._l_component:
+            [sample]      = self._cfg['splitting']['samples'][name]
+
+            scl           = MCScaler(q2bin=self._q2bin, sample=sample)
+            d_scale[name] = scl.get_scale()
+
+        return d_scale
     # ----------------------------------------
     def _preprocess_df(self, df : pnd.DataFrame, sample : str) -> pnd.DataFrame:
         log.debug(f'Preprocessing {sample}')
