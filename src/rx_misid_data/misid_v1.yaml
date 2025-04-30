@@ -4,7 +4,7 @@
 input :
   trigger  : Hlt2RD_BuToKpEE_MVA_ext
 weights : &mp
-  path : /home/acampove/external_ssd/Calibration/mis_id/v10
+  path : /home/acampove/external_ssd/Calibration/mis_id/v11
   regions: # These are cuts that need to appear in the name of the pkl files with the PID maps
     control : (PROBNN_E<0.2|DLLe<3.0)&(DLLe>-1.0)
     signal  : (PROBNN_E>0.2)&(DLLe>3.0)
