@@ -244,4 +244,53 @@ def pdf_to_tex(path : str, d_par : dict[str,str], skip_fixed : bool = True) -> N
     df   = pnd.concat([df_1, df_2])
 
     put.df_to_tex(df, out_path)
-#-------------------------------------------------------
+#---------------------------------------------
+# Fake/Placeholder fit
+#---------------------------------------------
+def _get_model(kind : str):
+    obs   = zfit.Space('mass', limits=(0, 10))
+    mu    = zfit.Parameter('mu', 5.0, -1, 5)
+    sg    = zfit.Parameter('sg', 0.5,  0, 5)
+    gauss = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
+
+    if kind == 'signal':
+        return gauss
+
+    c     = zfit.Parameter('c', -0.1, -1, 0)
+    expo  = zfit.pdf.Exponential(obs=obs, lam=c)
+
+    if kind == 's+b':
+        nsig  = zfit.Parameter('nsig', 1000,  0, 10_000)
+        nbkg  = zfit.Parameter('nbkg', 1000,  0, 10_000)
+
+        sig   = gauss.create_extended(nsig)
+        bkg   = expo.create_extended(nbkg)
+        pdf   = zfit.pdf.SumPDF([sig, bkg])
+
+        return pdf
+
+    raise NotImplementedError(f'Invalid kind of fit: {kind}')
+#---------------------------------------------
+def placeholder_fit(kind : str, fit_dir : str) -> None:
+    '''
+    Function meant to run toy fits that produce output needed as an input
+    to develop tools on top of them
+
+    kind: Kind of fit, e.g. s+b for the simples signal plus background fit
+    fit_dir: Directory where the output of the fit will go
+    '''
+
+    pdf = _get_model(kind)
+    print_pdf(pdf, txt_path=f'{fit_dir}/pre_fit.txt')
+
+    data    = pdf.create_sampler(n=10_000)
+    d_const = {'sg' : [0.6, 0.1]}
+
+    obj = Fitter(pdf, data)
+    res = obj.fit(cfg={'constraints' : d_const})
+
+    obj   = ZFitPlotter(data=data, model=pdf)
+    obj.plot(nbins=50)
+
+    save_fit(data=data, model=pdf, res=res, fit_dir=fit_dir, d_const=d_const)
+#---------------------------------------------
