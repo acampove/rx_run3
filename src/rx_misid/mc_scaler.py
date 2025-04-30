@@ -51,7 +51,7 @@ class MCScaler:
         return rdf
     # ----------------------------------
     def _get_stats(self, rdf : RDataFrame) -> tuple[float,float]:
-        log.debug('Getting ratio of MC yields')
+        log.debug(f'Getting ratio of MC yields with signal region: {self._sig_reg}')
 
         sig_reg = self._sig_reg
         ctr_reg = f'({self._sig_reg}) == 0'
