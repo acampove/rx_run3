@@ -70,6 +70,11 @@ class MCScaler:
 
         nctr = rdf_ctr.Count().GetValue()
         nsig = rdf_sig.Count().GetValue()
+
+        if nsig == 0:
+            log.warning(f'Zero yield in {self._sample}/{self._q2bin} => scale is zero')
+            return 0
+
         rat  = nctr / nsig
 
         log.debug('Control/Signal : {nctr}/{nsig}={rat:.3f}')
