@@ -29,6 +29,7 @@ class Data:
 def _initialize():
     LogStore.set_level('rx_misid:test_misid_pdf', 10)
     LogStore.set_level('rx_misid:misid_pdf'     , 10)
+    LogStore.set_level('rx_misid:mc_scaler'     , 10)
 
     os.makedirs(Data.out_dir, exist_ok=True)
 # ----------------------------
