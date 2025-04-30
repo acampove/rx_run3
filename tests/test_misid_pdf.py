@@ -23,6 +23,7 @@ class Data:
     obs_name= 'B_M_brem_track_2'
     obs     = zfit.Space(obs_name, limits=(4500, 7000))
     out_dir = '/tmp/tests/rx_misid/misid_pdf'
+    version = 'v1'
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -64,7 +65,7 @@ def test_pdf(q2bin : str):
     Tests PDF provided by tool
     '''
 
-    obj = MisIdPdf(obs=Data.obs, q2bin=q2bin)
+    obj = MisIdPdf(obs=Data.obs, q2bin=q2bin, version=Data.version)
     pdf = obj.get_pdf()
     dat = obj.get_data(kind='zfit')
 
@@ -76,7 +77,7 @@ def test_data(q2bin : str):
     Tests that the tool can provide data
     '''
 
-    obj = MisIdPdf(obs=Data.obs, q2bin=q2bin)
+    obj = MisIdPdf(obs=Data.obs, q2bin=q2bin, version=Data.version)
     df  = obj.get_data()
 
     _plot_data(df, q2bin)
