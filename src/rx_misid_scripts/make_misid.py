@@ -24,7 +24,7 @@ class Data:
     version   : str
     log_lvl   : int
     cfg       : dict
-    out_dir   : str 
+    out_dir   : str
 
     gut.TIMER_ON=True
 # -------------------------------------------------------
