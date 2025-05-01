@@ -80,7 +80,7 @@ def test_full_selection_electron(sample : str, q2bin : str):
     assert nentries > 0
 
     _print_dotted_branches(rdf)
-# --------------------------o
+# --------------------------
 @pytest.mark.parametrize('sample', ['Bu_Kmumu_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'jpsi', 'psi2', 'high'])
 def test_full_selection_muon(sample : str, q2bin : str):
