@@ -21,16 +21,13 @@ class EfficiencyCalculator:
     Class used to calculate efficiencies for partially reconstructed samples
     '''
     #------------------------------------------
-    def __init__(self, q2bin : str, d_cut : dict[str,str]=None):
+    def __init__(self, q2bin : str):
         '''
         Proc: Nickname of process, if not passed, will do all processes.
 
         q2bin : Either low, central or high
-        d_cut : Dictionary meant to be used to override default selection
         '''
         self._q2bin      = q2bin
-        self._d_cut      = {} if d_cut is None else d_cut
-
         self._year       = '2024'
         self._d_sel      = {'Process' : [], 'Value' : [], 'Error' : []}
         self._l_proc     = DecayNames.get_decays()
@@ -58,15 +55,6 @@ class EfficiencyCalculator:
 
         self._out_dir = value
     #------------------------------------------
-    def _get_title(self) -> str:
-        if 'mva' in self._d_cut:
-            wp    = self._d_cut['mva']
-            title = f'$q^2$: {self._q2bin}; {wp}'
-        else:
-            title = f'$q^2$: {self._q2bin}'
-
-        return title
-    #------------------------------------------
     def _plot_sel_eff(self):
         if self._out_dir is None:
             return
@@ -85,7 +73,7 @@ class EfficiencyCalculator:
         plt_path = f'{self._out_dir}/rec_sel_eff_{self._q2bin}.png'
         log.debug(f'Saving to: {plt_path}')
 
-        title = self._get_title()
+        title = f'$q^2$: {self._q2bin}'
 
         plt.grid()
         plt.xlim(0, 0.5)
@@ -123,11 +111,7 @@ class EfficiencyCalculator:
     def _get_sel_yld(self, proc : str) -> int:
         sample = DecayNames.sample_from_decay(proc)
         rdf    = self._get_rdf(proc=proc, tree_name='DecayTree')
-
-        d_sel  = sel.selection(project='RK', trigger=self._trigger, q2bin=self._q2bin, process=sample)
-        if self._d_cut is not None:
-            log.warning('Overriding default selection')
-            d_sel.update(self._d_cut)
+        d_sel  = sel.selection(trigger=self._trigger, q2bin=self._q2bin, process=sample)
 
         for cut_name, cut_expr in d_sel.items():
             log.debug(f'{cut_name:<20}{cut_expr}')
