@@ -34,7 +34,7 @@ rep.Print()
 
 The selection stored in the config files can be overriden with:
 
-```
+```python
 from rx_selection import selection as sel
 
 sel.set_custom_selection(d_cut = {'bdt' : 'mva_cmb > 0.1'})
