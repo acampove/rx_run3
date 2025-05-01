@@ -83,6 +83,25 @@ def set_custom_selection(d_cut : dict[str,str]) -> None:
 
     Data.d_custom_selection = d_cut
 #-----------------------
+def reset_custom_selection() -> None:
+    '''
+    This function can be called to remove the custom selection.
+
+    Why should I need this?
+
+    Mostly because you want to try different selections in parametrized tests
+    If used elsewhere it might lead to an analysis running different selections in different
+    parts of the code
+    '''
+
+    if not hasattr(Data, 'd_custom_selection'):
+        log.warning('No custom selection found')
+        return
+
+    log.warning('Resetting custom selection')
+
+    del Data.d_custom_selection
+#-----------------------
 # TODO: Eventually we should only require trigger, project and analysis can be deduced from that.
 def selection(
         q2bin    : str,
