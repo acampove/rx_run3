@@ -45,11 +45,14 @@ def test_selection(sample : str):
     '''
     Applies selection
     '''
-    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+    q2bin   = 'jpsi'
+    trigger = 'Hlt2RD_BuToKpEE_MVA'
+
+    gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
     rdf = rdf.Range(10_000)
 
-    d_sel = sel.selection(project='RK', analysis='EE', q2bin='jpsi', process=sample)
+    d_sel = sel.selection(trigger=trigger, q2bin=q2bin, process=sample)
     for cut_name, cut_value in d_sel.items():
         rdf = rdf.Filter(cut_value, cut_name)
 
