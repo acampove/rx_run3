@@ -121,3 +121,14 @@ def test_override():
 
     assert cut == mva_cut
 # --------------------------o
+def test_reset_custom_selection():
+    '''
+    Tests resetting custom selection
+    '''
+
+    mva_cut = 'mva_cmb > 0.1'
+
+    sel.set_custom_selection(d_cut={'bdt' : mva_cut})
+    sel.reset_custom_selection()
+    sel.set_custom_selection(d_cut={'bdt' : mva_cut})
+# --------------------------
