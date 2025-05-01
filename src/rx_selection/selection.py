@@ -26,6 +26,15 @@ class Data:
     l_project  = ['RK', 'RKst']
     l_analysis = ['EE', 'MM'  ]
     l_q2bin    = ['low', 'central', 'jpsi', 'psi2S', 'high']
+
+    d_custom_selection : dict[str,str]
+#-----------------------
+class MultipleSelectionOverriding(Exception):
+    '''
+    Will be risen when global selection is overriden more than once per run
+    '''
+    def __init__(self, message):
+        super().__init__(message)
 #-----------------------
 def _print_selection(d_cut : dict[str,str]) -> None:
     for name, expr in d_cut.items():
