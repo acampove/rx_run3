@@ -412,7 +412,8 @@ class ZFitPlotter:
 
         data_yield = self.data_weight_np.sum()
         try:
-            y = model.pdf(self.x) * data_yield / nbins * (self.upper - self.lower)
+            arr_y = self._evaluate_pdf(model)
+            y     = arr_y * data_yield / nbins * (self.upper - self.lower)
         except tf.errors.InvalidArgumentError as exc:
             log.warning(f'Data yield: {data_yield:.0f}')
             log.info(self.data_np)
