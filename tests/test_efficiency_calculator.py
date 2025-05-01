@@ -28,9 +28,7 @@ def test_custom_selection(q2bin : str):
     '''
     Tests calculation of total efficiency where the selection has been overriden
     '''
-    d_cut       = {'mva' : 'mva_cmb > 0.90 && mva_prc > 0.85'}
-
-    obj         = EfficiencyCalculator(q2bin=q2bin, d_cut=d_cut)
+    obj         = EfficiencyCalculator(q2bin=q2bin)
     obj.out_dir = '/tmp/tests/rx_efficiencies/efficiency_calculator/custom_selection'
     df          = obj.get_stats()
 
