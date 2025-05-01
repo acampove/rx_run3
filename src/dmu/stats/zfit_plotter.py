@@ -13,8 +13,9 @@ import tensorflow            as tf
 import pandas                as pd
 import numpy                 as np
 import matplotlib.pyplot     as plt
-import dmu.generic.utilities as gut
+from zfit.core.basepdf      import BasePDF    as zpdf
 
+import dmu.generic.utilities as gut
 from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('dmu:fit_plotter')
