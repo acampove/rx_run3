@@ -77,9 +77,10 @@ class FitComponent:
 
         self._yield_value : float
         self._yield_error : float
+        self._yield_nentr : int
 
         self._nentries_dummy_data = 10_000
-        self._yield_threshold     = 30 # Will not build KDE if fewer than this number of entries
+        self._yield_threshold     = 100 # Will not build KDE if fewer than this number of entries
     # --------------------
     def _get_minimizer(self) -> Union[AnealingMinimizer,None]:
         if self._fit_cfg is None:
@@ -179,6 +180,7 @@ class FitComponent:
         arr_wgt = d_data[weights_column]
         data    = zfit.Data.from_numpy(self._obs, array=arr_obs, weights=arr_wgt)
 
+        self._yield_nentr = len(arr_wgt)
         self._yield_value = float(numpy.sum(arr_wgt))
         self._yield_error = float(numpy.sqrt(numpy.sum(arr_wgt * arr_wgt)))
 
@@ -274,14 +276,17 @@ class FitComponent:
     def _get_kde_pdf(self) -> Union[zpdf, None]:
         data = self._get_data()
         if data is None:
+            log.warning(f'No data found, not making KDE')
+            return None
+
+        if self._yield_nentr < self._yield_threshold:
+            log.warning(f'Found {self._yield_nentr} entries, fewer than the threshold to make KDE, {self._yield_threshold}')
             return None
 
         log.info(f'Building KDE with {self._yield_value:.0f} entries')
 
         cfg_kde = self._fit_cfg['config'][self._name]['cfg_kde']
-        if 'bandwidth' not in cfg_kde:
-            cfg_kde['bandwidth'] = 'isj' # Seems to give good fit (no over/under fitting)
-        pdf     = zfit.pdf.KDE1DimExact(data, name=self._name, **cfg_kde)
+        pdf     = zfit.pdf.KDE1DimISJ(data, name=self._name, **cfg_kde)
 
         self._plot_fit(data, pdf)
 
