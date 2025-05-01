@@ -104,10 +104,13 @@ def test_full_selection_muon(sample : str, q2bin : str):
 def test_override():
     '''
     Will test overriding selection
+    Will test overriding selection multiple times
     '''
     mva_cut = 'mva_cmb > 0.1'
 
     sel.set_custom_selection(d_cut={'bdt' : mva_cut})
+    with pytest.raises(sel.MultipleSelectionOverriding):
+        sel.set_custom_selection(d_cut={'bdt' : mva_cut})
 
     q2bin   = 'jpsi'
     sample  = 'DATA*'
@@ -118,14 +121,3 @@ def test_override():
 
     assert cut == mva_cut
 # --------------------------o
-def test_override_repeat():
-    '''
-    Will test overriding selection multiple times
-    '''
-    mva_cut = 'mva_cmb > 0.1'
-
-    sel.set_custom_selection(d_cut={'bdt' : mva_cut})
-
-    with pytest.raises(sel.MultipleSelectionOverriding):
-        sel.set_custom_selection(d_cut={'bdt' : mva_cut})
-# --------------------------
