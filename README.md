@@ -30,6 +30,23 @@ rep = rdf.Report()
 rep.Print()
 ```
 
+## Overriding selection
+
+The selection stored in the config files can be overriden with:
+
+```
+from rx_selection import selection as sel
+
+sel.set_custom_selection(d_cut = {'bdt' : 'mva_cmb > 0.1'})
+```
+
+which will **override** the `bdt` cut. By adding new entries one can also expand the selection.
+This function can only be called **ONCE** per session in order to prevent having different parts
+of the code running different selections.
+
+The purpose of this method is to provide the flexibility to run the analysis with a new selection
+while ensuring that all the parts of the analysis use the same selection.
+
 ## Usage
 
 For local tests one can use `apply_selection` as in:
