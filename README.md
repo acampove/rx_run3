@@ -19,7 +19,7 @@ from rx_selection import selection as sel
 #     One of the keys in https://gitlab.cern.ch/rx_run3/rx_data/-/blob/master/src/rx_data_lfns/rx/v7/rk_samples.yaml
 #     DATA will do all the data combined
 
-d_sel = sel.selection(project='RK', analysis='EE', q2bin='jpsi', process='DATA')
+d_sel = sel.selection(trigger='Hlt2RD_BuToKpEE_MVA', q2bin='jpsi', process='DATA')
 
 # You can override the selection here
 for cut_name, cut_value in d_sel.items():
