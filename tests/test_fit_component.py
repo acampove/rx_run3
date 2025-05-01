@@ -142,7 +142,6 @@ def test_kde_empty_pdf():
                 name : {
                     'cfg_kde':
                     {
-                        'bandwidth': 20,
                         'padding'  : {'lowermirror': 0.5, 'uppermirror': 0.5},
                         },
                     }
@@ -168,7 +167,6 @@ def test_pdf():
                 name : {
                     'cfg_kde':
                     {
-                        'bandwidth': 20,
                         'padding'  : {'lowermirror': 0.5, 'uppermirror': 0.5},
                         },
                     }
@@ -192,8 +190,6 @@ def test_kde_cache_pdf():
                 name : {
                     'cfg_kde':
                     {
-                        'name'     : 'Cached KDE',
-                        'bandwidth': 3,
                         'padding'  : {'lowermirror': 0.5, 'uppermirror': 0.5},
                         },
                     }
