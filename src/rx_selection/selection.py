@@ -46,17 +46,34 @@ def _get_analysis(analysis : str, trigger : str) -> str:
 
     return 'EE'
 #-----------------------
-def selection(project : str, q2bin: str, process : str, analysis : str = None, trigger : str = None) -> dict[str,str]:
+def _project_from_trigger(trigger : str, project : str) -> str:
+    if trigger is None:
+        log.warning('It is advised to specify the trigger rather than the analysis')
+        return project
+
+    if trigger.startswith('Hlt2RD_BuToKpMuMu_MVA') or trigger.startswith('Hlt2RD_BuToKpEE_MVA'):
+        return 'RK'
+
+    raise NotImplementedError(f'Cannot deduce project for trigger: {trigger}')
+#-----------------------
+# TODO: Eventually we should only require trigger, project and analysis can be deduced from that.
+def selection(
+        q2bin    : str,
+        process  : str,
+        project  : str = None,
+        analysis : str = None,
+        trigger  : str = None) -> dict[str,str]:
     '''
     Picks up sample name, trigger, etc, returns dictionary with selection
 
-    project  : RK or RKst
+    project  : Optional, RK or RKst, if not passed, will be decided from trigger argument
     q2bin    : low, central, jpsi, psi2S or high
     process  : Nickname for MC sample, starts with "DATA" for data
     analysis : EE or MM
     trigger  : E.g. Hlt2RD...
     '''
 
+    project  = _project_from_trigger(trigger=trigger, project=project)
     analysis = _get_analysis(analysis, trigger)
 
     d_cut : dict[str,str] = {}
