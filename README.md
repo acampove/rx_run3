@@ -13,7 +13,7 @@ For this do:
 ```python
 from rx_selection import selection as sel
 
-# analysis: EE, MM
+# trigger : HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA 
 # q2bin: low, central, jpsi, psi2, high
 # process: 
 #     One of the keys in https://gitlab.cern.ch/rx_run3/rx_data/-/blob/master/src/rx_data_lfns/rx/v7/rk_samples.yaml
