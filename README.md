@@ -47,6 +47,17 @@ of the code running different selections.
 The purpose of this method is to provide the flexibility to run the analysis with a new selection
 while ensuring that all the parts of the analysis use the same selection.
 
+## Resetting overriding selection
+
+In order to do tests of parts of the code with different selections, one would have to
+override the selection multiple times. This is not allowed, unless the selection is reset with:
+
+```python
+from rx_selection import selection as sel
+
+sel.reset_custom_selection()
+```
+
 ## Usage
 
 For local tests one can use `apply_selection` as in:
