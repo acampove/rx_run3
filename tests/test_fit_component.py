@@ -79,7 +79,6 @@ def test_kde_pdf(width : float):
                 name : {
                     'cfg_kde':
                     {
-                        'bandwidth': 'isj',
                         'padding'  : {'lowermirror': 1.0, 'uppermirror': 1.0},
                         },
                     }
