@@ -367,10 +367,28 @@ class ZFitPlotter:
 
         return col
     #----------------------------------------
+    def _print_data(self) -> None:
+        log.info(f'Data shape  : {self.data_np.shape}')
+        log.info(f'Weights hape: {self.data_weight_np.shape}')
+
+        nnans = np.sum(np.isnan(self.data_np))
+        log.info(f'NaNs: {nnans}')
+    #----------------------------------------
+    def _evaluate_pdf(self, pdf : zpdf) -> np.ndarray:
+        try:
+            arr_y = pdf.pdf(self.x)
+        except tf.errors.InvalidArgumentError as exc:
+            log.info(f'X values: {self.x}')
+            self._print_data()
+            raise ValueError('Cannot evaluate PDF') from exc
+
+        return arr_y
+    #----------------------------------------
     def _plot_sub_components(self, y, nbins, stacked, nevt, l_model):
         l_y = []
         for frc, model in l_model:
-            this_y = model.pdf(self.x) * nevt * frc / nbins * (self.upper - self.lower)
+            arr_y  = self._evaluate_pdf(pdf = model)
+            this_y = arr_y * nevt * frc / nbins * (self.upper - self.lower)
 
             if stacked:
                 y = this_y if y is None else y + this_y
