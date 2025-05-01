@@ -145,9 +145,9 @@ def _get_selection(chan : str, proj: str, q2_bin : str) -> dict[str,str]:
 #-----------------------
 def apply_full_selection(
         rdf      : RDataFrame,
-        project  : str,
         q2bin    : str,
         process  : str,
+        project  : str = None,
         analysis : str = None,
         trigger  : str = None) -> dict[str,str]:
     '''
