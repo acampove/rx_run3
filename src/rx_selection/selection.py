@@ -65,6 +65,24 @@ def _project_from_trigger(trigger : str, project : str) -> str:
 
     raise NotImplementedError(f'Cannot deduce project for trigger: {trigger}')
 #-----------------------
+def set_custom_selection(d_cut : dict[str,str]) -> None:
+    '''
+    This function is meant to override the analysis selection, such that
+
+    - Every tool that uses the selection picks up the same selection
+    - Cuts are added (e.g. brem category) or modified (e.g. MVA WP)
+
+    This function is meant to be called once, at the beginning of the process, e.g. main function.
+    '''
+    if hasattr(Data, 'd_custom_selection'):
+        raise MultipleSelectionOverriding('Custom selection can only be set once')
+
+    log.info('Setting custom selection')
+    for cut_name, cut_expr in d_cut.items():
+        log.info(f'{cut_name:<20}{cut_expr}')
+
+    Data.d_custom_selection = d_cut
+#-----------------------
 # TODO: Eventually we should only require trigger, project and analysis can be deduced from that.
 def selection(
         q2bin    : str,
@@ -99,6 +117,9 @@ def selection(
 
     d_tmp = _get_selection(analysis, project, q2bin)
     d_cut.update(d_tmp)
+
+    if hasattr(Data, 'd_custom_selection'):
+        d_cut.update(Data.d_custom_selection)
 
     _print_selection(d_cut)
 
