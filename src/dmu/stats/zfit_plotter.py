@@ -369,10 +369,16 @@ class ZFitPlotter:
     #----------------------------------------
     def _print_data(self) -> None:
         log.info(f'Data shape  : {self.data_np.shape}')
-        log.info(f'Weights hape: {self.data_weight_np.shape}')
+        log.info(f'Weights shape: {self.data_weight_np.shape}')
 
         nnans = np.sum(np.isnan(self.data_np))
         log.info(f'NaNs: {nnans}')
+
+        # This function will run before program raises
+        # One should be able to drop any plot
+        plt.close('all')
+        plt.hist(self.data_np, weights=self.data_weight_np)
+        plt.show()
     #----------------------------------------
     def _evaluate_pdf(self, pdf : zpdf) -> np.ndarray:
         try:
