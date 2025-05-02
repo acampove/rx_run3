@@ -274,6 +274,10 @@ class FitComponent:
             log.warning('No data found, not making KDE')
             return None
 
+        if self._yield_nentr == 0:
+            log.warning('No entries found in dataset not building PDF')
+            return None
+
         log.info(f'Building KDE with {self._yield_value:.0f} entries')
 
         cfg_kde = self._fit_cfg['config'][self._name]['cfg_kde']
