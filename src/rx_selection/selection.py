@@ -77,7 +77,7 @@ def set_custom_selection(d_cut : dict[str,str]) -> None:
     if hasattr(Data, 'd_custom_selection'):
         raise MultipleSelectionOverriding('Custom selection can only be set once')
 
-    log.info('Setting custom selection')
+    log.warning('Setting custom selection')
     for cut_name, cut_expr in d_cut.items():
         log.info(f'{cut_name:<20}{cut_expr}')
 
