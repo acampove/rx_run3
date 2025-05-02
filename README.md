@@ -293,6 +293,19 @@ print_pdf(pdf,
           txt_path = 'tests/stats/utilities/print_pdf/pdf_const.txt')
 ```
 
+### Check PDF usability
+
+In many cases, PDFs are not usable, the function below should check for this:
+
+```python
+from dmu.stats.utilities   import is_pdf_usable
+
+is_pdf_usable(pdf)
+```
+
+This is needed because when building a KDE with too little data, that KDE cannot be evaluated
+and when trying it, tensorflow emits an exception.
+
 ### Storing PDF as latex
 
 The file above can be transformed into a `tex` file by running:

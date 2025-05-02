@@ -36,7 +36,7 @@ def is_pdf_usable(pdf : zpdf) -> zpdf:
 
     try:
         pdf.pdf(arr_x)
-    except tf.errors.InvalidArgumentError as exc:
+    except tf.errors.InvalidArgumentError:
         log.warning('PDF cannot be evaluated')
         return False
 
