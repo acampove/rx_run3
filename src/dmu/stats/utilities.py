@@ -6,6 +6,8 @@ import re
 import pickle
 from typing import Union
 
+import numpy
+import tensorflow as tf
 import zfit
 from zfit.core.data         import Data       as zdata
 from zfit.core.basepdf      import BasePDF    as zpdf
@@ -21,6 +23,24 @@ from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('dmu:stats:utilities')
+#-------------------------------------------------------
+# Check PDF
+#-------------------------------------------------------
+def is_pdf_usable(pdf : zpdf) -> zpdf:
+    '''
+    Will check if the PDF is usable
+    '''
+    [[[minx]], [[maxx]]]= pdf.space.limits
+
+    arr_x = numpy.linspace(minx, maxx, 100)
+
+    try:
+        pdf.pdf(arr_x)
+    except tf.errors.InvalidArgumentError as exc:
+        log.warning('PDF cannot be evaluated')
+        return False
+
+    return True
 #-------------------------------------------------------
 #Zfit/print_pdf
 #-------------------------------------------------------

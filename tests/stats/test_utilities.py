@@ -12,6 +12,7 @@ from dmu.logging.log_store import LogStore
 from dmu.stats.utilities   import print_pdf
 from dmu.stats.utilities   import pdf_to_tex
 from dmu.stats.utilities   import placeholder_fit
+from dmu.stats.utilities   import is_pdf_usable
 
 log = LogStore.add_logger('dmu:tests:stats:test_utilities')
 #----------------------------------
@@ -117,4 +118,12 @@ def test_placeholder_fit() -> None:
     to develop tools
     '''
     placeholder_fit(kind='s+b', fit_dir=Data.fit_dir)
+#----------------------------------
+def test_is_pdf_usable():
+    '''
+    Tests for PDF printer
+    '''
+    pdf = _get_pdf(kind='composed_nonextended')
+
+    is_pdf_usable(pdf)
 #----------------------------------
