@@ -1,3 +1,5 @@
+[TOC]
+
 # $R_X$ data
 
 This repository contains:
