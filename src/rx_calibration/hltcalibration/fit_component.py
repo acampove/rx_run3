@@ -81,6 +81,7 @@ class FitComponent:
         self._yield_nentr : int
 
         self._nentries_dummy_data = 10_000
+        self._yield_threshold     = 10
     # --------------------
     def _get_minimizer(self) -> Union[AnealingMinimizer,None]:
         if self._fit_cfg is None:
@@ -276,6 +277,10 @@ class FitComponent:
 
         if self._yield_nentr == 0:
             log.warning('No entries found in dataset not building PDF')
+            return None
+
+        if self._yield_nentr < self._yield_threshold:
+            log.warning('Cannot build KDE with {self._yield_nentr}, threshold is {self._yield_threshold}')
             return None
 
         log.info(f'Building KDE with {self._yield_value:.0f} entries')
