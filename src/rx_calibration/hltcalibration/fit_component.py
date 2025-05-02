@@ -280,7 +280,7 @@ class FitComponent:
             return None
 
         if self._yield_nentr < self._yield_threshold:
-            log.warning('Cannot build KDE with {self._yield_nentr}, threshold is {self._yield_threshold}')
+            log.warning(f'Cannot build KDE with {self._yield_nentr}, threshold is {self._yield_threshold}')
             return None
 
         log.info(f'Building KDE with {self._yield_value:.0f} entries')
