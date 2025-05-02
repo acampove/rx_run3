@@ -1,3 +1,5 @@
+[TOC]
+
 # $R_X$ selection
 
 This project is meant to apply an offline selection to ntuples produced by
