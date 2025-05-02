@@ -205,6 +205,22 @@ In the case of the MVA friend trees the branches added would be `mva.mva_cmb` an
 
 Thus, one can easily extend the ntuples with extra branches without remaking them.
 
+## Defining custom columns
+
+Given that this `RDFGetter` can be used across multiple modules, the safest way to
+add extra columns is by specifying their definitions once at the beggining of the
+process (i.e. the initializer function called within the main function). 
+This is done with:
+
+```python
+from rx_data.rdf_getter     import RDFGetter
+
+RDFGetter.set_custom_columns(d_def = d_def)
+```
+
+If custom columns are defined in more than one place in the code, the function will
+raise an exception, thus ensuring a unique definition for all dataframes.
+
 ## Accessing metadata
 
 Information on the ntuples can be accessed through the `metadata` instance of the `TStringObj` class, which is
