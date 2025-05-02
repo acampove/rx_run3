@@ -367,6 +367,9 @@ class FitComponent:
 
         self._fix_tails(par)
 
+        if self._pdf is None:
+            self._plot_placeholder(text='No entries')
+
         return par
 # ----------------------------------------
 class NoFitDataFound(Exception):
