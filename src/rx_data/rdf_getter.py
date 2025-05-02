@@ -238,7 +238,12 @@ class RDFGetter:
         if self._tree_name != 'DecayTree':
             return rdf
 
-        for name, definition in self._cfg['definitions'].items():
+        d_def = self._cfg['definitions']
+        if hasattr(RDFGetter, 'd_custom_columns'):
+            log.warning('Adding custom column definitions')
+            d_def.update(RDFGetter.d_custom_columns)
+
+        for name, definition in d_def.items():
             rdf = self._add_column(rdf, name, definition)
 
         log.warning('Sending pre-UT candidates to block 4')
