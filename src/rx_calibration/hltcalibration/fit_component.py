@@ -19,6 +19,7 @@ from zfit.core.interfaces   import ZfitSpace as zobs
 from zfit.core.basepdf      import BasePDF   as zpdf
 from dmu.logging.log_store  import LogStore
 from dmu.stats.utilities    import print_pdf
+from dmu.stats.utilities    import is_pdf_usable
 from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.stats.minimizers   import AnealingMinimizer
 
@@ -80,7 +81,6 @@ class FitComponent:
         self._yield_nentr : int
 
         self._nentries_dummy_data = 10_000
-        self._yield_threshold     = 100 # Will not build KDE if fewer than this number of entries
     # --------------------
     def _get_minimizer(self) -> Union[AnealingMinimizer,None]:
         if self._fit_cfg is None:
@@ -184,11 +184,6 @@ class FitComponent:
         self._yield_value = float(numpy.sum(arr_wgt))
         self._yield_error = float(numpy.sqrt(numpy.sum(arr_wgt * arr_wgt)))
 
-        if self._yield_value < self._yield_threshold:
-            log.warning(f'Cannot build KDE, found fewer entries than threshold: {self._yield_value}/{self._yield_threshold}')
-            self._plot_placeholder(text='No entries')
-            return None
-
         df = pnd.DataFrame({self._obs_name : arr_obs, weights_column : arr_wgt})
 
         df.to_json(f'{self._out_dir}/data.json', indent=2)
@@ -276,17 +271,15 @@ class FitComponent:
     def _get_kde_pdf(self) -> Union[zpdf, None]:
         data = self._get_data()
         if data is None:
-            log.warning(f'No data found, not making KDE')
-            return None
-
-        if self._yield_nentr < self._yield_threshold:
-            log.warning(f'Found {self._yield_nentr} entries, fewer than the threshold to make KDE, {self._yield_threshold}')
+            log.warning('No data found, not making KDE')
             return None
 
         log.info(f'Building KDE with {self._yield_value:.0f} entries')
 
         cfg_kde = self._fit_cfg['config'][self._name]['cfg_kde']
         pdf     = zfit.pdf.KDE1DimISJ(data, name=self._name, **cfg_kde)
+        if not is_pdf_usable(pdf):
+            return None
 
         self._plot_fit(data, pdf)
 
