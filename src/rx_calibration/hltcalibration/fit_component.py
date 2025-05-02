@@ -329,6 +329,9 @@ class FitComponent:
         if self._pdf is None:
             log.info('PDF not found, building KDE')
             self._pdf = self._get_kde_pdf()
+            if self._pdf is None:
+                self._plot_placeholder(text='No entries')
+
             return Parameter()
 
         s_par = self._pdf.get_params()
@@ -367,8 +370,6 @@ class FitComponent:
 
         self._fix_tails(par)
 
-        if self._pdf is None:
-            self._plot_placeholder(text='No entries')
 
         return par
 # ----------------------------------------
