@@ -14,11 +14,38 @@ from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_data:rdf_getter')
 # ---------------------------------------------------
+class AlreadySetColumns(Exception):
+    '''
+    Class used to raise exception when columns have already been defined.
+    This is supposed to be done once per session
+    '''
+    def __init__(self, message : str):
+        '''
+        Takes message to show in exception
+        '''
+        super().__init__(message)
+# ---------------------------------------------------
 class RDFGetter:
     '''
     Class meant to load dataframes with friend trees
     '''
     max_entries = -1
+    d_custom_columns : dict[str,str]
+    # ---------------------------------------------------
+    @staticmethod
+    def set_custom_columns(d_def : dict[str,str]) -> None:
+        '''
+        Defines custom columns that the getter class will use to
+        provide dataframes
+        '''
+        if hasattr(RDFGetter, 'd_custom_columns'):
+            raise AlreadySetColumns('Custom columns have already been set')
+
+        log.warning('Defining custom columns')
+        for column, definition in d_def.items():
+            log.info(f'{column:<30}{definition}')
+
+        RDFGetter.d_custom_columns = d_def
     # ---------------------------------------------------
     def __init__(self, sample : str, trigger : str, tree : str = 'DecayTree'):
         '''

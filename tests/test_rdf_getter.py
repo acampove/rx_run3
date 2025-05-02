@@ -11,7 +11,7 @@ from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter_2d import Plotter2D
 
 from rx_selection           import selection as sel
-from rx_data.rdf_getter     import RDFGetter
+from rx_data.rdf_getter     import RDFGetter, AlreadySetColumns
 
 log=LogStore.add_logger('rx_data:test_rdf_getter')
 # ------------------------------------------------
@@ -351,4 +351,17 @@ def test_ext_trigger(period : str, polarity : str):
 
     _check_ext(rdf)
     _plot_ext(rdf, sample=sample)
+# ------------------------------------------------
+def test_define_custom_branches():
+    '''
+    Tests defining of new custom columns
+    '''
+    d_def = {
+            'nbrem' : 'int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2)',
+            'mva'   : 'mva_cmb + mva_prc',
+            }
+
+    RDFGetter.set_custom_columns(d_def = d_def)
+    with pytest.raises(AlreadySetColumns):
+        RDFGetter.set_custom_columns(d_def = d_def)
 # ------------------------------------------------
