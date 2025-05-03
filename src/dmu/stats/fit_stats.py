@@ -23,10 +23,12 @@ class FitStats:
         fit_dir :  Path to directory where fit outputs are stored
         '''
         self._fit_dir = fit_dir
-        self._df      : pnd.DataFrame
-
         self._regex   = r'^([^\s]+)\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)\s*$'
         self._sig_yld = 'nsig'
+
+        # Functions need to be called at the end
+        # When all the needed attributes are already set
+        self._df      = self._get_data()
     # -------------------------------
     def _row_from_line(self, line : str) -> Union[list,None]:
         mtch = re.match(self._regex, line)
@@ -49,7 +51,7 @@ class FitStats:
 
         return row
     # -------------------------------
-    def _load_data(self) -> None:
+    def _get_data(self) -> pnd.DataFrame:
         fit_path = f'{self._fit_dir}/post_fit.txt'
 
         with open(fit_path, encoding='utf-8') as ifile:
@@ -63,7 +65,10 @@ class FitStats:
 
             df.loc[len(df)] = row
 
-        self._df = self._attach_errors(df)
+        df = self._attach_errors(df)
+        log.debug(df)
+
+        return df
     # -------------------------------
     def _error_from_res(self, row : pnd.Series, res : zres) -> float:
         if not row['float']: # If this parameter is fixed in the fit, the error is zero
