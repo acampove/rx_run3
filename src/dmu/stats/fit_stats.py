@@ -43,7 +43,9 @@ class FitStats:
             mu       = float(mu)
             sg       = float(sg)
 
-        row = [name, float(value), float(low), float(high), float(is_floating), mu, sg]
+        is_floating = int(is_floating)  #Direct conversion from '0' to bool will break this
+        is_floating = bool(is_floating)
+        row         = [name, float(value), float(low), float(high), is_floating, mu, sg]
 
         return row
     # -------------------------------
