@@ -35,3 +35,10 @@ def test_simple(var : str, kind : str):
 
     log.info(f'{kind:<20}{var:<20}{val:.3f}')
 # -------------------------------------------------
+def test_print_blind():
+    '''
+    Retrieve signal yield
+    '''
+    obj =FitStats(fit_dir=Data.fit_dir)
+    obj.print_blind_stats()
+# -------------------------------------------------
