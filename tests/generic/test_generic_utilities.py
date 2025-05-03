@@ -1,8 +1,9 @@
 '''
 Module with tests for functions in generic/utilities.py
 '''
-
 from time import sleep
+
+import pytest
 import dmu.generic.utilities as gut
 
 # -------------------------
@@ -17,17 +18,19 @@ def test_timeit():
 
     fun()
 # -------------------------
-def test_dump_json():
+@pytest.mark.parametrize('ext', ['json', 'yaml'])
+def test_dump_json(ext : str):
     '''
     Tests dump_json
     '''
-    gut.dump_json([1,2,3,4], '/tmp/tests/dmu/generic/list.json')
+    gut.dump_json([1,2,3,4], f'/tmp/tests/dmu/generic/list.{ext}')
 # -------------------------
-def test_load_json():
+@pytest.mark.parametrize('ext', ['json', 'yaml'])
+def test_load_json(ext : str):
     '''
     Tests load_json
     '''
-    json_path = '/tmp/tests/dmu/generic/list.json'
+    json_path = f'/tmp/tests/dmu/generic/list.{ext}'
 
     l_data_org = [1,2,3,4]
     gut.dump_json(l_data_org, json_path)
