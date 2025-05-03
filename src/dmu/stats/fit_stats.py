@@ -94,20 +94,25 @@ class FitStats:
 
         return df
     # -------------------------------
+    def print_blind_stats(self) -> None:
+        '''
+        Will print statistics, excluding signal information
+        '''
+        df_blind = self._df[self._df['name'] != self._sig_yld]
+        log.info(df_blind)
+    # -------------------------------
     def get_value(self, name : str, kind : str) -> float:
         '''
         Returns float with value associated to fit
         name : Name of variable, e.g. mu, sg, nsig
         kind : Type of quantity, e.g. value, error
         '''
-        self._load_data()
-        log.debug('')
-        log.debug(self._df)
 
-        log.info('Retrieving signal yield')
-        df   = self._df[self._df.name == name]
+        log.info(f'Retrieving signal yield from {name} and {kind}')
+        df   = self._df[self._df['name'] == name]
         nrow = len(df)
         if nrow != 1:
+            self.print_blind_stats()
             raise ValueError(f'Cannot retrieve one and only one row, found {nrow}')
 
         val = df[kind]
