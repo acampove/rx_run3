@@ -76,14 +76,19 @@ class MCScaler:
 
         return nsig, nctr
     # ----------------------------------
-    def _get_ratio(self, nsig : float, nctr : float) -> float:
-        if nsig == 0:
-            log.warning(f'Zero yield in {self._sample}/{self._q2bin} => scale is zero')
+    def _get_ratio(self, num : float, den : float) -> float:
+        '''
+        num: Is meant to be a data yield, from fits
+        den: Is meant to be a MC yield
+        '''
+        if num == 0:
+            log.warning(f'Zero yield in data for {self._sample}/{self._q2bin} => scale is zero')
             return 0
 
-        rat  = nctr / nsig
+        if den == 0:
+            raise ValueError(f'Zero yield in MC for {self._sample}/{self._q2bin} but not in data')
 
-        return rat
+        return num / den
     # ----------------------------------
     def _get_nsignal(self) -> float:
         fit_dir = os.environ['FITDIR']
@@ -118,7 +123,7 @@ class MCScaler:
         rdf              = self._get_rdf()
         nsig_mc, nctr_mc = self._get_stats(rdf)
         nsig_dt          = self._get_nsignal()
-        scale            = self._get_ratio(nsig=nsig_dt, nctr=nsig_mc)
+        scale            = self._get_ratio(num=nsig_dt, den=nsig_mc)
 
         log.info(f'Scale for {self._sample}: {scale:.3f}')
 
