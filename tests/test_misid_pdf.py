@@ -12,6 +12,7 @@ from zfit.core.basepdf      import BasePDF    as zpdf
 
 from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.logging.log_store  import LogStore
+from dmu.stats.fitter       import Fitter
 from rx_misid.misid_pdf     import MisIdPdf
 
 log=LogStore.add_logger('rx_misid:test_misid_pdf')
@@ -96,4 +97,25 @@ def test_data(q2bin : str):
     df  = obj.get_data(kind='pandas')
 
     _plot_data(df, q2bin, name='test_data')
+# ----------------------------
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+def test_fit(q2bin : str):
+    '''
+    Test fitting with PDF
+    '''
+    obj = MisIdPdf(obs=Data.obs, q2bin=q2bin, version=Data.version)
+    mid = obj.get_pdf()
+
+    lam = zfit.Parameter('c', -0.001, -0.01, 0)
+    nbk = zfit.Parameter('nbkg', 1000, 0, 10_000)
+    exp = zfit.pdf.Exponential(obs=Data.obs, lam=lam)
+    exp = exp.create_extended(nbk)
+
+    pdf = zfit.pdf.SumPDF([mid, exp])
+    dat = pdf.create_sampler()
+
+    obj = Fitter(pdf, dat)
+    obj.fit()
+
+    _plot_pdf(pdf=pdf, dat=dat, name='test_fit', q2bin=q2bin)
 # ----------------------------
