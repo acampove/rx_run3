@@ -209,7 +209,7 @@ class MisIdPdf:
         data = self.get_data(kind='zfit')
 
         log.info('Building MisID KDE')
-        pdf  = zfit.pdf.KDE1DimISJ(data, padding=self._d_padding)
+        pdf  = zfit.pdf.KDE1DimISJ(data, padding=self._d_padding, name='MisID')
         pdf  = self._extend_pdf(pdf, data)
 
         return pdf
