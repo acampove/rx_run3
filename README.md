@@ -69,3 +69,17 @@ plot_misid -p /path/to/parquet/file.parquet
 ```
 
 and the plots will end up in the same directory as the `parquet` file.
+
+## Accessing the Mis ID component
+
+When bulding the fitting model one can do:
+
+```python
+from rx_misid.misid_pdf     import MisIdPdf
+
+obj = MisIdPdf(obs=obs, q2bin='central', version='v1')
+pdf = obj.get_pdf()
+```
+
+to access a KDE PDF ready to be used as a component of a fitting model.
+
