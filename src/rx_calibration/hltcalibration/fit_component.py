@@ -111,7 +111,7 @@ class FitComponent:
         l_col  = [col.c_str() for col in v_col]
 
         if wgt_name in l_col:
-            log.debug(f'Weights column {wgt_name} found, not defining ones')
+            log.debug(f'Weights column \"{wgt_name}\" found, not defining ones')
             return rdf
 
         log.debug(f'Weights column {wgt_name} not found, defining \"weights\" as ones')
