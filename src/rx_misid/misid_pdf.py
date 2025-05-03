@@ -140,11 +140,11 @@ class MisIdPdf:
 
         size = len(df)
         if nnan / size < self._nan_threshold:
-            log.warning(f'Found {nnan}/{size} in {sample}, cleaning up dataframe')
+            log.warning(f'Found {nnan}/{size} NaNs in {sample}, cleaning up dataframe')
             df.dropna(inplace=True)
             return
 
-        print(df)
+        log.info(df)
         raise ValueError(f'Found {nnan}/{size} NaNs in {sample}')
     # ----------------------------------------
     def _get_data(self) -> dict[str,pnd.DataFrame]:
@@ -176,7 +176,7 @@ class MisIdPdf:
         arr_wgt = data.weights.numpy()
         nentries= numpy.sum(arr_wgt)
 
-        log.debug('Extending PDF with {nentries:.0f} entries')
+        log.debug(f'Extending PDF with {nentries:.0f} entries')
 
         nent    = zfit.Parameter('nmisid', nentries, 0, 10 * nentries)
         nent.floating = False
