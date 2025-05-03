@@ -55,7 +55,6 @@ class MisIdPdf:
         self._cfg   = self._get_config(version=version)
 
         self._data  : zdata
-        self._bandwidth     = 80
         self._nan_threshold = 0.02
         self._d_padding     = {'lowermirror' : 1.0, 'uppermirror' : 1.0}
         self._l_component   = ['signal', 'leakage'] # components that need to be subtracted from misID
@@ -195,8 +194,8 @@ class MisIdPdf:
         '''
         data = self.get_data(kind='zfit')
 
-        log.debug(f'Building PDF from data with bandwidth {self._bandwidth}')
-        pdf  = zfit.pdf.KDE1DimFFT(data, padding=self._d_padding, bandwidth=self._bandwidth)
+        log.info('Building MisID KDE')
+        pdf  = zfit.pdf.KDE1DimISJ(data, padding=self._d_padding)
 
         return pdf
 # ----------------------------------------
