@@ -1,8 +1,11 @@
 '''
 Module containing MCScaler class
 '''
+import os
+
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
+from dmu.stats.fit_stats    import FitStats
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
 
@@ -80,9 +83,19 @@ class MCScaler:
 
         rat  = nctr / nsig
 
-        log.debug('Control/Signal : {nctr}/{nsig}={rat:.3f}')
-
         return rat
+    # ----------------------------------
+    def _get_nsignal(self) -> float:
+        fit_dir = os.environ['FITDIR']
+        trigger = self._trigger.replace('_ext', '')
+
+        fit_dir = f'{fit_dir}/DATAp/{trigger}/v1/{self._q2bin}/default'
+        log.debug(f'Reading signal yield from: {fit_dir}')
+
+        obj  = FitStats(fit_dir=fit_dir)
+        nsig = obj.get_value(name='nsig', kind='value')
+
+        return nsig
     # ----------------------------------
     def get_scale(self) -> tuple[int,int,float]:
         '''
@@ -94,6 +107,10 @@ class MCScaler:
         rdf        = self._get_rdf()
         nsig, nctr = self._get_stats(rdf)
         rat        = self._get_ratio(nsig=nsig, nctr=nctr)
+        nsig       = self._get_nsignal()
+        scale      = rat * nsig
 
-        return nsig, nctr, rat
+        log.info(f'Predicted {self._sample} yield in MisID region: {scale:.0f}')
+
+        return nsig, nctr, scale
 # ----------------------------------
