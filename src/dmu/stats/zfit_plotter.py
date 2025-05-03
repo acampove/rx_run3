@@ -428,7 +428,7 @@ class ZFitPlotter:
 
         if ylabel == "":
             width  = (self.upper-self.lower)/nbins
-            ylabel = f'Candidates / ({width:.3f} {unit})'
+            ylabel = f'Candidates / ({width:.0f} {unit})'
 
         return xlabel, ylabel
     #----------------------------------------
