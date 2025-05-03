@@ -7,6 +7,7 @@ from importlib.resources import files
 
 import zfit
 import yaml
+import numpy
 import pandas as pnd
 from zfit.core.data         import Data       as zdata
 from zfit.core.basepdf      import BasePDF    as zpdf
@@ -171,6 +172,19 @@ class MisIdPdf:
 
         return d_df
     # ----------------------------------------
+    def _extend_pdf(self, pdf : zpdf, data : zdata) -> zpdf:
+        arr_wgt = data.weights.numpy()
+        nentries= numpy.sum(arr_wgt)
+
+        log.debug('Extending PDF with {nentries:.0f} entries')
+
+        nent    = zfit.Parameter('nmisid', nentries, 0, 10 * nentries)
+        nent.floating = False
+
+        pdf.set_yield(nent)
+
+        return pdf
+    # ----------------------------------------
     def get_data(self, kind : str = 'zfit') -> pnd.DataFrame:
         '''
         Returns data used to make KDE
@@ -196,6 +210,7 @@ class MisIdPdf:
 
         log.info('Building MisID KDE')
         pdf  = zfit.pdf.KDE1DimISJ(data, padding=self._d_padding)
+        pdf  = self._extend_pdf(pdf, data)
 
         return pdf
 # ----------------------------------------
