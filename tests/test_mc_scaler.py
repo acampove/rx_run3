@@ -16,6 +16,11 @@ class Data:
     '''
     version = 'v1' # This should be the version of the config actually used in the analysis
 # -----------------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('rx_misid:test_ms_scaler', 10)
+    LogStore.set_level('rx_misid:ms_scaler'     , 10)
+# -----------------------------------------------
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
 @pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC'])
 def test_simple(q2bin : str, sample : str):
