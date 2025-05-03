@@ -17,6 +17,7 @@ import pandas            as pnd
 import matplotlib.pyplot as plt
 
 import dmu.pdataframe.utilities as put
+import dmu.generic.utilities    as gut
 
 from dmu.stats.fitter       import Fitter
 from dmu.stats.zfit_plotter import ZFitPlotter
@@ -179,10 +180,20 @@ def save_fit(
     with open(f'{fit_dir}/fit.pkl', 'wb') as ofile:
         pickle.dump(res, ofile)
 
-    plt.savefig(f'{fit_dir}/fit.png')
+    if plt.get_fignums():
+        fit_path = f'{fit_dir}/fit.png'
+        log.info(f'Saving fit to: {fit_path}')
+        plt.savefig(fit_path)
+        plt.close('all')
+    else:
+        log.info('No fit plot found')
 
     print_pdf(model, txt_path=f'{fit_dir}/post_fit.txt', d_const=d_const)
     pdf_to_tex(path=f'{fit_dir}/post_fit.txt', d_par={'mu' : r'$\mu$'}, skip_fixed=True)
+
+    l_data = data.value().numpy().tolist()
+    opath  = f'{fit_dir}/data.json'
+    gut.dump_json(l_data, opath)
 #-------------------------------------------------------
 # Make latex table from text file
 #-------------------------------------------------------
