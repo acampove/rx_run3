@@ -61,29 +61,43 @@ def timeit(f):
 # --------------------------------
 def dump_json(data, path : str, sort_keys : bool = False) -> None:
     '''
-    Saves data as JSON
+    Saves data as JSON or YAML, depending on the extension, supported .json, .yaml, .yml
 
     Parameters
     data     : dictionary, list, etc
-    path     : Path to JSON file where to save it
-    sort_keys: Will set sort_keys argument of json.dump function 
+    path     : Path to output file where to save it
+    sort_keys: Will set sort_keys argument of json.dump function
     '''
     dir_name = os.path.dirname(path)
     os.makedirs(dir_name, exist_ok=True)
 
     with open(path, 'w', encoding='utf-8') as ofile:
-        json.dump(data, ofile, indent=4, sort_keys=sort_keys)
+        if path.endswith('.json'):
+            json.dump(data, ofile, indent=4, sort_keys=sort_keys)
+            return
+
+        if path.endswith('.yaml') or path.endswith('.yml'):
+            yaml.dump(data, ofile, Dumper=BlockStyleDumper, sort_keys=sort_keys)
+            return
+
+        raise NotImplementedError(f'Cannot deduce format from extension in path: {path}')
 # --------------------------------
 def load_json(path : str):
     '''
-    Loads data from JSON
+    Loads data from JSON or YAML, depending on extension of files, supported .json, .yaml, .yml
 
     Parameters
-    path     : Path to JSON file where data is saved 
+    path     : Path to outut file where data is saved 
     '''
 
     with open(path, encoding='utf-8') as ofile:
-        data = json.load(ofile)
+        if path.endswith('.json'):
+            data = json.load(ofile)
+            return data
 
-    return data
+        if path.endswith('.yaml') or path.endswith('.yml'):
+            data = yaml.safe_load(ofile)
+            return data
+
+        raise NotImplementedError(f'Cannot deduce format from extension in path: {path}')
 # --------------------------------
