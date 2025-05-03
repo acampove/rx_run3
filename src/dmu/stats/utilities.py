@@ -322,13 +322,14 @@ def _get_model(kind : str):
 
     raise NotImplementedError(f'Invalid kind of fit: {kind}')
 #---------------------------------------------
-def placeholder_fit(kind : str, fit_dir : str) -> None:
+def placeholder_fit(kind : str, fit_dir : str, plot_fit : bool = True) -> None:
     '''
     Function meant to run toy fits that produce output needed as an input
     to develop tools on top of them
 
     kind: Kind of fit, e.g. s+b for the simples signal plus background fit
     fit_dir: Directory where the output of the fit will go
+    plot_fit: Will plot the fit or not, by default True
     '''
 
     pdf = _get_model(kind)
@@ -340,8 +341,9 @@ def placeholder_fit(kind : str, fit_dir : str) -> None:
     obj = Fitter(pdf, data)
     res = obj.fit(cfg={'constraints' : d_const})
 
-    obj   = ZFitPlotter(data=data, model=pdf)
-    obj.plot(nbins=50)
+    if plot_fit:
+        obj   = ZFitPlotter(data=data, model=pdf)
+        obj.plot(nbins=50)
 
     save_fit(data=data, model=pdf, res=res, fit_dir=fit_dir, d_const=d_const)
 #---------------------------------------------
