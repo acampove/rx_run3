@@ -34,14 +34,14 @@ def test_simple(q2bin : str, sample : str):
             sample =sample,
             sig_reg=sig_reg)
 
-    nsig, nctr, val = scl.get_scale()
+    nsig_mc, nctr_mc, scl = scl.get_scale()
 
     d_row = {
-            'sample' : sample,
-            'q2bin'  :  q2bin,
-            'signal' :   nsig,
-            'control':   nctr,
-            'scale'  :    val,
+            'sample' :  sample,
+            'q2bin'  :   q2bin,
+            'sig_mc' : nsig_mc,
+            'ctr_mc' : nctr_mc,
+            'scale'  :     scl,
              }
 
     DataCollector.add_entry(name='simple', data=d_row)
