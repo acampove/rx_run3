@@ -94,7 +94,7 @@ class MCScaler:
         fit_dir = os.environ['FITDIR']
         trigger = self._trigger.replace('_ext', '')
 
-        fit_dir = f'{fit_dir}/DATAp/{trigger}/v1/{self._q2bin}/default'
+        fit_dir = f'{fit_dir}/DATAp/{trigger}/v1/{self._q2bin}/no_misid'
         log.debug(f'Reading signal yield from: {fit_dir}')
 
         obj  = FitStats(fit_dir=fit_dir)
