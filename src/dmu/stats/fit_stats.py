@@ -87,6 +87,8 @@ class FitStats:
         kind : Type of quantity, e.g. value, error
         '''
         self._load_data()
+        log.debug('')
+        log.debug(self._df)
 
         log.info('Retrieving signal yield')
         df   = self._df[self._df.name == name]
