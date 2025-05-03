@@ -65,9 +65,16 @@ class FitStats:
 
         self._df = self._attach_errors(df)
     # -------------------------------
-    def _error_from_res(self, name : str, res : zres) -> float:
+    def _error_from_res(self, row : pnd.Series, res : zres) -> float:
+        if not row['float']: # If this parameter is fixed in the fit, the error is zero
+            return 0
+
+        name = row['name']
         if name not in res.params:
-            raise KeyError(f'{name} not found in {res.params}')
+            for this_name in res.params:
+                log.info(this_name)
+
+            raise KeyError(f'{name} not found')
 
         d_data = res.params[name]
 
@@ -78,7 +85,7 @@ class FitStats:
         with open(pkl_path, 'rb') as ifile:
             res = pickle.load(ifile)
 
-        df['error'] = df['name'].apply(lambda name : self._error_from_res(name, res))
+        df['error'] = df.apply(lambda row : self._error_from_res(row, res), axis=1)
 
         return df
     # -------------------------------
