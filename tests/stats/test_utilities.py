@@ -112,12 +112,16 @@ def test_pdf_to_tex():
     path = files('dmu_data').joinpath('tests/pdf_to_tex.txt')
     pdf_to_tex(path=path, d_par=d_par)
 #----------------------------------
-def test_placeholder_fit() -> None:
+@pytest.mark.parametrize('make_plot', [True, False])
+def test_placeholder_fit(make_plot : bool) -> None:
     '''
     Runs a placeholder fit needed to produce outputs useful
     to develop tools
     '''
-    placeholder_fit(kind='s+b', fit_dir=Data.fit_dir)
+    kind    = 'plotted' if make_plot else 'unplotted'
+    fit_dir = f'{Data.fit_dir}/placeholder_{kind}'
+
+    placeholder_fit(kind='s+b', fit_dir=fit_dir, plot_fit=make_plot)
 #----------------------------------
 def test_is_pdf_usable():
     '''
