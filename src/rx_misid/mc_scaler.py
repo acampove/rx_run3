@@ -93,7 +93,15 @@ class MCScaler:
         log.debug(f'Reading signal yield from: {fit_dir}')
 
         obj  = FitStats(fit_dir=fit_dir)
-        nsig = obj.get_value(name='nsig', kind='value')
+
+        if   self._sample == 'Bu_JpsiK_ee_eq_DPC':
+            poi = 'nBu_JpsiK_ee_eq_DPC'
+        elif self._sample == 'Bu_Kee_eq_btosllball05_DPC':
+            poi = 'nsig'
+        else:
+            raise ValueError(f'Invalid sample: {self._sample}')
+
+        nsig = obj.get_value(name=poi, kind='value')
 
         return nsig
     # ----------------------------------
