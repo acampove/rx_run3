@@ -78,9 +78,9 @@ def fun():
 fun()
 ```
 
-## JSON dumper and loader
+## JSON/YAML dumper and loader
 
-The following lines will dump data (dictionaries, lists, etc) to a JSON file and load it back:
+The following lines will dump data (dictionaries, lists, etc) to a JSON/YAML file and load it back:
 
 ```python
 import dmu.generic.utilities as gut
@@ -89,6 +89,14 @@ data = [1,2,3,4]
 
 gut.dump_json(data, '/tmp/list.json')
 data = gut.load_json('/tmp/list.json')
+```
+
+this will dump to either JSON or YAML files, depending on the extension, extensions allowed are:
+
+```
+.json
+.yaml
+.yml
 ```
 
 and it's meant to allow the user to bypass all the boilerplate and keep their code brief.
