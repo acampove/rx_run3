@@ -33,19 +33,26 @@ class DataCollector:
         df=DataCollector.d_df[name]
         df.loc[len(df)] = data
 # -----------------------------------
-def _plot_scales(df : pnd.DataFrame, name : str) -> None:
+def _plot_scales(df : pnd.DataFrame, name : str, kind : str) -> None:
     ax = None
     for sample, df_sample in df.groupby('sample'):
-        ax = df_sample.plot(x='q2bin', y='scale', label=sample, ax=ax)
+        ax = df_sample.plot(x='q2bin', y=kind, label=sample, ax=ax)
 
     out_dir = f'{DataCollector.out_dir}/{name}'
     os.makedirs(out_dir, exist_ok=True)
 
-    plt.title('Fracion of leakage into MisID region')
+    if   kind == 'ctr_dt':
+        plt.title('Estimate of signal and leakage in MisID region')
+        plt.ylabel(r'Number of Candidates')
+    elif kind == 'scale':
+        plt.title('MC to Data MisID Scale factor')
+        plt.ylabel(r'Ratio of yields: $N_{x}^{Data}/N_{x}^{MC}$')
+    else:
+        raise ValueError(f'Invalid kind: {kind}')
+
     plt.xlabel(r'$q^2$')
-    plt.ylabel(r'$N^{SR}/N^{CR}$')
     plt.grid()
-    plt.savefig(f'{out_dir}/scales.png')
+    plt.savefig(f'{out_dir}/{kind}.png')
     plt.close()
 # -----------------------------------
 def pytest_sessionfinish():
@@ -56,5 +63,8 @@ def pytest_sessionfinish():
 
     if 'simple' in DataCollector.d_df:
         df = DataCollector.d_df['simple']
-        _plot_scales(df=df, name='simple')
+        df['ctr_dt'] = df['scale'] * df['ctr_mc']
+
+        _plot_scales(df=df, name='simple', kind= 'scale')
+        _plot_scales(df=df, name='simple', kind='ctr_dt')
 # -----------------------------------
