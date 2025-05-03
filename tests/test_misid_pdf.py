@@ -119,3 +119,17 @@ def test_fit(q2bin : str):
 
     _plot_pdf(pdf=pdf, dat=dat, name='test_fit', q2bin=q2bin)
 # ----------------------------
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+def test_pdf_benchmark(benchmark, q2bin : str):
+    '''
+    Check how long it takes to load PDF
+    '''
+
+    def _retrieve_pdf():
+        obj = MisIdPdf(obs=Data.obs, q2bin=q2bin, version=Data.version)
+        return obj.get_pdf()
+
+    pdf = benchmark(_retrieve_pdf)
+
+    assert pdf is not None
+# ----------------------------
