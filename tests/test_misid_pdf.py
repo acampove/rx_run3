@@ -79,6 +79,9 @@ def test_pdf(q2bin : str):
 
     obj = MisIdPdf(obs=Data.obs, q2bin=q2bin, version=Data.version)
     pdf = obj.get_pdf()
+
+    assert pdf.is_extended
+
     dat = obj.get_data(kind='zfit')
 
     _plot_pdf(pdf, dat, name='test_pdf', q2bin=q2bin)
