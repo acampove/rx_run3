@@ -100,6 +100,10 @@ class MCScaler:
         obj  = FitStats(fit_dir=fit_dir)
 
         if   self._sample == 'Bu_JpsiK_ee_eq_DPC':
+            if self._q2bin in ['low', 'high']:
+                log.info('Assuming no leakage from Jpsi sample in low and high q2bin')
+                return 0
+
             poi = 'nBu_JpsiK_ee_eq_DPC'
         elif self._sample == 'Bu_Kee_eq_btosllball05_DPC':
             poi = 'nsig'
