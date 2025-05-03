@@ -33,20 +33,24 @@ def _initialize():
 
     os.makedirs(Data.out_dir, exist_ok=True)
 # ----------------------------
-def _plot_data(df : pnd.DataFrame, q2bin : str) -> None:
+def _plot_data(df : pnd.DataFrame, q2bin : str, name : str) -> None:
     ax = None
     for sample, df_sample in df.groupby('sample'):
         ax = df_sample[Data.obs_name].plot.hist(column=Data.obs_name, range=[4500, 7000], bins=60, histtype='step', weights=df_sample['weight'], label=sample, ax=ax)
 
+    out_dir = f'{Data.out_dir}/{name}'
+    os.makedirs(out_dir, exist_ok=True)
+
     plt.legend()
     plt.title(q2bin)
-    plt.savefig(f'{Data.out_dir}/{q2bin}.png')
+    plt.savefig(f'{out_dir}/{q2bin}.png')
     plt.close()
 # ----------------------------
 def _plot_pdf(pdf  : zpdf,
               dat  : zdata,
               name : str,
               q2bin: str) -> None:
+
     obj   = ZFitPlotter(data=dat, model=pdf)
     obj.plot(nbins=50)
     obj.axs[0].axhline(y=+0, color='gray', linestyle=':')
@@ -57,6 +61,7 @@ def _plot_pdf(pdf  : zpdf,
     out_dir = f'{Data.out_dir}/{name}'
     os.makedirs(out_dir, exist_ok=True)
 
+    plt.title(q2bin)
     plt.savefig(f'{out_dir}/{q2bin}.png')
     plt.close()
 # ----------------------------
@@ -70,7 +75,7 @@ def test_pdf(q2bin : str):
     pdf = obj.get_pdf()
     dat = obj.get_data(kind='zfit')
 
-    _plot_pdf(pdf, dat, name='simple', q2bin=q2bin)
+    _plot_pdf(pdf, dat, name='test_pdf', q2bin=q2bin)
 # ----------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 def test_data(q2bin : str):
@@ -81,5 +86,5 @@ def test_data(q2bin : str):
     obj = MisIdPdf(obs=Data.obs, q2bin=q2bin, version=Data.version)
     df  = obj.get_data(kind='pandas')
 
-    _plot_data(df, q2bin)
+    _plot_data(df, q2bin, name='test_data')
 # ----------------------------
