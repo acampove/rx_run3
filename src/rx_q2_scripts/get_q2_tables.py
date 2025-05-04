@@ -315,34 +315,34 @@ def _fit(df, d_fix=None, identifier='unnamed'):
         log.info('Skipping fit')
         res=None
     elif is_signal:
-        res=obj.fit(ntries=30, pval_threshold=0.04)
+        res=obj.fit(cfg={'strategy' : {'retry' : {'ntries' : 10}}})
     else:
         res=obj.fit()
 
     if   Data.skip_fit:
         return
-    elif res is None:
+
+    if res is None:
         plot_fit(dat, pdf, res, identifier, add_pars=None)
         plot_fit(dat, pdf, res, identifier, add_pars='all')
 
-        log.error(f'Fit failed')
-        print(res)
-        raise
-    elif res.status != 0:
+        log.info(res)
+        raise ValueError('Fit failed')
+
+    if res.status != 0:
         plot_fit(dat, pdf, res, identifier, add_pars=None)
         plot_fit(dat, pdf, res, identifier, add_pars='all')
 
-        log.error(f'Finished with status/validity: {res.status}/{res.valid}')
-        print(res)
-        raise
-    else:
-        log.info(f'Using minuit hesse for errors')
-        with zfit.run.set_autograd_mode(False):
-            res.hesse(method='minuit_hesse')
-        res.freeze()
+        log.info(res)
+        raise ValueError(f'Finished with status/validity: {res.status}/{res.valid}')
 
-    log.info(f'Found parameters:')
-    print(res)
+    log.info('Using minuit hesse for errors')
+    with zfit.run.set_autograd_mode(False):
+        res.hesse(method='minuit_hesse')
+    res.freeze()
+
+    log.info('Found parameters:')
+    log.info(res)
     plot_fit(dat, pdf, res, identifier, add_pars='all')
 
     tex_path = f'{Data.plt_dir}/{identifier}.tex'
@@ -358,7 +358,11 @@ def _fit(df, d_fix=None, identifier='unnamed'):
 
     return d_par
 #-------------------
-def get_data(rdf, pdf, is_signal, identifier):
+def _get_data(
+        rdf        : RDataFrame,
+        pdf        : zpdf,
+        is_signal  : bool,
+        identifier : str) -> zdata:
     arr_val = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
     arr_wgt = rdf.AsNumpy(['weight'])['weight']
 
@@ -369,22 +373,22 @@ def get_data(rdf, pdf, is_signal, identifier):
 
     return dat
 #-------------------
-def get_obs_range():
+def _get_obs_range() -> tuple[int,int]:
     if Data.brem == '0':
         return [2200, 3300]
-    else:
-        return [2200, 3800]
+
+    return [2200, 3800]
 #-------------------
 def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier):
     plt.close('all')
     [[lower]], [[upper]] = obs.limits
 
-    fig, ax   = plt.subplots(figsize=(15, 10))
+    _, ax     = plt.subplots(figsize=(15, 10))
     data_hist = hist.Hist.new.Regular(Data.nbins, lower, upper, name='', underflow=False, overflow=False)
     data_hist = data_hist.Weight()
     data_hist.fill(arr_mas, weight=arr_wgt)
 
-    errorbars = mplhep.histplot(
+    mplhep.histplot(
         data_hist,
         yerr    = True,
         color   = 'black',
@@ -474,11 +478,11 @@ def _get_sim_pars_fits(rdf : RDataFrame, identifier : str):
         rdf = _add_nspd_col(rdf)
         for i_nspd in [1,2,3]:
             rdf_sim_nspd = rdf.Filter(f'nspd == {i_nspd}')
-            d_tmp_1      = fit(rdf_sim_nspd, d_fix=None, identifier=f'sim_{i_nspd}_{identifier}')
+            d_tmp_1      = _fit(rdf_sim_nspd, d_fix=None, identifier=f'sim_{i_nspd}_{identifier}')
             d_tmp_2      = { f'{key}_{i_nspd}' : val for key, val in d_tmp_1.items() }
             d_par.update(d_tmp_2)
     elif Data.sys == 'nom':
-        d_par = fit(rdf, d_fix=None, identifier=f'sim_{identifier}')
+        d_par = _fit(rdf, d_fix=None, identifier=f'sim_{identifier}')
     else:
         raise ValueError(f'Invalid systematic: {Data.sys}')
 
@@ -535,8 +539,9 @@ def _get_args():
     Data.skip_fit = args.skip_fit
 
     syst          = {'nom' : 'nom', 'nspd' : 'lsh'}[Data.sys]
-    Data.plt_dir  = utnr.make_dir_path(f'{Data.qsq_dir}/get_q2_tables/fits/{args.vers}.{syst}')
-    Data.obs      = zfit.Space('Jpsi_M', limits=get_obs_range())
+    Data.plt_dir  = f'{Data.qsq_dir}/get_q2_tables/fits/{args.vers}.{syst}'
+    os.makedirs(Data.plt_dir, exist_ok=True)
+    Data.obs      = zfit.Space('Jpsi_M', limits=_get_obs_range())
 #-------------------
 def main():
     '''
