@@ -411,11 +411,11 @@ def plot_fit(dat, pdf, res, identifier, add_pars=None):
     log.info(f'Saving to: {plot_path}')
     plt.savefig(plot_path, bbox_inches='tight')
 #-------------------
-def get_fix_pars(d_par):
+def _get_fix_pars(d_par : dict[str,tuple[float,float]]) -> dict[str,tuple[float,float]]:
     d_fix = dict(d_par)
     for parname in d_par:
         if parname.startswith('mu') or parname.startswith('sg'):
-            del(d_fix[parname])
+            del d_fix[parname]
 
     if Data.sys == 'nspd':
         for index in [1,2,3]:
@@ -423,11 +423,11 @@ def get_fix_pars(d_par):
             lyld = d_fix[f'ncbl_{index}'][0]
             d_fix[f'fr_cb_{index}'] = [ryld / (ryld + lyld), 0]
 
-            del(d_fix[f'ncbr_{index}'])
-            del(d_fix[f'ncbl_{index}'])
+            del d_fix[f'ncbr_{index}']
+            del d_fix[f'ncbl_{index}']
     else:
-        del(d_fix['ncbr'])
-        del(d_fix['ncbl'])
+        del d_fix['ncbr']
+        del d_fix['ncbl']
 
     return d_fix
 #-------------------
@@ -503,7 +503,7 @@ def _make_table():
     Data.d_sim_par = d_sim_par
     Data.nevs_data = rdf_dat.Count().GetValue()
 
-    d_fix_par = get_fix_pars(d_sim_par)
+    d_fix_par = _get_fix_pars(d_sim_par)
     _         = fit(rdf_dat, d_fix=d_fix_par, identifier=f'dat_{Data.trig}_{Data.year}_{Data.brem}_{Data.sys}')
 #-------------------
 def _get_args():
