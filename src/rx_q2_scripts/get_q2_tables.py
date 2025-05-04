@@ -14,7 +14,9 @@ import hist
 import numpy
 import mplhep
 import matplotlib.pyplot   as plt
+from ROOT import RDataFrame
 
+import dmu.generic.utilities as gut
 from dmu.stats.fitter       import Fitter      as zfitter
 from dmu.stats.zfit_plotter import ZFitPlotter as zfp
 from dmu.logging.log_store  import LogStore
@@ -436,70 +438,70 @@ def add_nspd_col(df):
 
     return df
 #-------------------
-def get_sim_pars_cache(trig=None, year=None, brem=None):
-    json_wc = f'{Data.plt_dir}/sim_{trig}_{year}_{brem}*.json'
+def _get_sim_pars_cache() -> dict[str,float]:
+    json_wc = f'{Data.plt_dir}/sim_{Data.trig}_{Data.year}_{Data.brem}*.json'
     l_json_path = glob.glob(json_wc)
-    if len(l_json_path) == 0:
-        log.error(f'No file found in: {json_wc}')
-        raise
-    elif len(l_json_path) == 1:
-        d_par = utnr.load_json(l_json_path[0])
+    if   len(l_json_path) == 0:
+        raise ValueError(f'No file found in: {json_wc}')
+
+    if len(l_json_path) == 1:
+        json_path = l_json_path[0]
+        d_par     = gut.load_json(json_path)
     else:
         d_par = {}
         for i_nspd, json_path in enumerate(l_json_path):
             log.info(f'Loading parameters from: {json_path}')
-            d_par_x = utnr.load_json(json_path)
+            d_par_x = gut.load_json(json_path)
             d_par_r = {f'{key}_{i_nspd + 1}' : val for key, val in d_par_x.items()}
             d_par.update(d_par_r)
 
     return d_par
 #-------------------
-def get_sim_pars_fits(df, identifier):
+def _get_sim_pars_fits(rdf : RDataFrame, identifier : str):
     d_par = {}
     if   Data.sys == 'nspd':
-        df = add_nspd_col(df)
+        rdf = add_nspd_col(rdf)
         for i_nspd in [1,2,3]:
-            df_sim_nspd = df.Filter(f'nspd == {i_nspd}')
-            d_tmp_1     = fit(df_sim_nspd, d_fix=None, identifier=f'sim_{i_nspd}_{identifier}')
-            d_tmp_2     = { f'{key}_{i_nspd}' : val for key, val in d_tmp_1.items() }
+            rdf_sim_nspd = rdf.Filter(f'nspd == {i_nspd}')
+            d_tmp_1      = fit(rdf_sim_nspd, d_fix=None, identifier=f'sim_{i_nspd}_{identifier}')
+            d_tmp_2      = { f'{key}_{i_nspd}' : val for key, val in d_tmp_1.items() }
             d_par.update(d_tmp_2)
     elif Data.sys == 'nom':
-        d_par = fit(df, d_fix=None, identifier=f'sim_{identifier}')
+        d_par = fit(rdf, d_fix=None, identifier=f'sim_{identifier}')
     else:
-        log.error(f'Invalid systematic: {Data.sys}')
-        raise
+        raise ValueError(f'Invalid systematic: {Data.sys}')
 
     return d_par
 #-------------------
-def make_table(trig=None, year=None, brem=None):
-    identifier= f'{trig}_{year}_{brem}_{Data.sys}'
+def _make_table():
+    identifier= f'{Data.trig}_{Data.year}_{Data.brem}_{Data.sys}'
 
-    odf_sim   = data_set(is_mc= True, trigger=trig, dset=year)
+    odf_sim   = data_set(is_mc= True, trigger=Data.trig, dset=Data.year)
     odf_sim.plt_dir = f'{Data.plt_dir}/cal_wgt_sim_{identifier}'
-    df_sim    = odf_sim.get_rdf()
-    df_sim    = df_sim.Filter(f'nbrem == {brem}')
+    rdf_sim    = odf_sim.get_rdf()
+    rdf_sim    = rdf_sim.Filter(f'nbrem == {Data.brem}')
 
-    odf_dat   = data_set(is_mc=False, trigger=trig, dset=year)
+    odf_dat   = data_set(is_mc=False, trigger=Data.trig, dset=Data.year)
     odf_dat.plt_dir = f'{Data.plt_dir}/dat_plt_{identifier}'
-    df_dat    = odf_dat.get_rdf()
-    df_dat    = df_dat.Filter(f'nbrem == {brem}')
+    rdf_dat    = odf_dat.get_rdf()
+    rdf_dat    = rdf_dat.Filter(f'nbrem == {Data.brem}')
 
     if Data.sam == 'data':
-        d_sim_par = get_sim_pars_cache(trig, year, brem)
+        d_sim_par = _get_sim_pars_cache()
     else:
-        d_sim_par = get_sim_pars_fits(df_sim, identifier)
+        d_sim_par = _get_sim_pars_fits(rdf_sim, identifier)
 
     if Data.sam == 'simulation':
-        log.info(f'Done with simulation and returning')
+        log.info('Done with simulation and returning')
         return
 
     Data.d_sim_par = d_sim_par
-    Data.nevs_data = df_dat.Count().GetValue()
+    Data.nevs_data = rdf_dat.Count().GetValue()
 
     d_fix_par = get_fix_pars(d_sim_par)
-    _         = fit(df_dat, d_fix=d_fix_par, identifier=f'dat_{trig}_{year}_{brem}_{Data.sys}')
+    _         = fit(rdf_dat, d_fix=d_fix_par, identifier=f'dat_{Data.trig}_{Data.year}_{Data.brem}_{Data.sys}')
 #-------------------
-def get_args():
+def _get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
     parser.add_argument('-v', '--vers' , type =str, help='Version, used for naming of output directory', required=True)
     parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , required=True, choices=Data.l_trig)
@@ -526,10 +528,13 @@ def get_args():
     Data.obs      = zfit.Space('Jpsi_M', limits=get_obs_range())
 #-------------------
 def main():
+    '''
+    Start here
+    '''
     plt.style.use(mplhep.style.LHCb2)
 
-    get_args()
-    make_table(trig=Data.trig, year=Data.year, brem=Data.brem)
+    _get_args()
+    _make_table()
 #-------------------
 if __name__ == '__main__':
     main()
