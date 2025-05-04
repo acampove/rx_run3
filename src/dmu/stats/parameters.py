@@ -6,6 +6,9 @@ from importlib.resources import files
 import yaml
 import pandas as pnd
 
+from dmu.logging.log_store import LogStore
+
+log=LogStore.add_logger('dmu:parameters')
 # --------------------------------
 class ParameterLibrary:
     '''
@@ -51,6 +54,26 @@ class ParameterLibrary:
         df = df[ df['kind'] == kind ]
 
         print(df)
+    # --------------------------------
+    @staticmethod
+    def get_values(kind : str, parameter : str) -> tuple[float,float,float]:
+        '''
+        Takes PDF and parameter names and returns default value, low value and high value
+        '''
+        df = ParameterLibrary.df_parameters
+
+        df = df[df['kind']     ==     kind]
+        df = df[df['parameter']==parameter]
+
+        if len(df) != 1:
+            log.info(df)
+            raise ValueError(f'Could not find one and only one row for: {kind}/{parameter}')
+
+        val = df['val'].iloc[0]
+        low = df['low'].iloc[0]
+        high= df['high'].iloc[0]
+
+        return val, low, high
 # --------------------------------
 
 ParameterLibrary._load_data()
