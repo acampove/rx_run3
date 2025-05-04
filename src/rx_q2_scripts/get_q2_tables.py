@@ -28,7 +28,8 @@ from dmu.stats              import utilities   as sut
 from dmu.stats.fitter       import Fitter      as zfitter
 from dmu.stats.zfit_plotter import ZFitPlotter as zfp
 from dmu.logging.log_store  import LogStore
-from rx_q2.data_set         import data_set
+
+from rx_data.rdf_getter     import RDFGetter
 
 log=LogStore.add_logger('rx_q2:get_q2_tables')
 #-------------------
@@ -45,6 +46,7 @@ class Data:
     l_brem       : list[str]
     l_syst       : list[str]
     l_samp       : list[str]
+    d_samp       : dict[str,str]
     l_cali       : list[str]
     trig         : str
     year         : str
@@ -88,12 +90,16 @@ def _set_vars():
     Data.l_brem = d_input['brem']
     Data.l_cali = d_input['cali']
     Data.l_syst = d_input['syst']
-    Data.l_samp = d_input['samp']
+    Data.d_samp = d_input['samp']
+    Data.l_samp = list(Data.d_samp)
 
     Data.nbins  = d_fitting['binning']['nbins']
     Data.j_mass = d_fitting['mass']
 #-------------------
 def _initialize():
+    plt.style.use(mplhep.style.LHCb2)
+    RDFGetter.set_custom_columns(d_def = {'nbrem' : f'nbrem == {Data.brem}'})
+
     syst          = {'nom' : 'nom', 'nspd' : 'lsh'}[Data.syst]
     Data.plt_dir  = f'{Data.ana_dir}/q2/fits/{Data.vers}_{syst}'
     os.makedirs(Data.plt_dir, exist_ok=True)
@@ -472,18 +478,24 @@ def _get_sim_pars_fits(rdf : RDataFrame, identifier : str):
 
     return d_par
 #-------------------
+def _get_rdf(kind : str) -> RDataFrame:
+    sample = Data.d_samp[kind]
+
+    gtr = RDFGetter(sample=sample, trigger=Data.trig)
+    rdf = gtr.get_rdf()
+
+    return rdf
+#-------------------
 def _make_table():
     identifier= f'{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}'
 
-    odf_sim   = data_set(is_mc= True, trigger=Data.trig, dset=Data.year)
+    odf_sim   = _get_rdf(kind='simulation')
     odf_sim.plt_dir = f'{Data.plt_dir}/cal_wgt_sim_{identifier}'
     rdf_sim    = odf_sim.get_rdf()
-    rdf_sim    = rdf_sim.Filter(f'nbrem == {Data.brem}')
 
-    odf_dat   = data_set(is_mc=False, trigger=Data.trig, dset=Data.year)
+    odf_dat   = _get_rdf(kind='data')
     odf_dat.plt_dir = f'{Data.plt_dir}/dat_plt_{identifier}'
     rdf_dat    = odf_dat.get_rdf()
-    rdf_dat    = rdf_dat.Filter(f'nbrem == {Data.brem}')
 
     if Data.samp == 'data':
         d_sim_par = _get_sim_pars_cache()
@@ -527,9 +539,9 @@ def main():
     '''
     Start here
     '''
-    plt.style.use(mplhep.style.LHCb2)
 
     _set_vars()
+    return
     _get_args()
     _initialize()
     _make_table()
