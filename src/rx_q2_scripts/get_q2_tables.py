@@ -322,15 +322,15 @@ def _fit(df, d_fix=None, identifier='unnamed'):
         return
 
     if res is None:
-        plot_fit(dat, pdf, res, identifier, add_pars=None)
-        plot_fit(dat, pdf, res, identifier, add_pars='all')
+        _plot_fit(dat, pdf, res, identifier, add_pars=None)
+        _plot_fit(dat, pdf, res, identifier, add_pars='all')
 
         log.info(res)
         raise ValueError('Fit failed')
 
     if res.status != 0:
-        plot_fit(dat, pdf, res, identifier, add_pars=None)
-        plot_fit(dat, pdf, res, identifier, add_pars='all')
+        _plot_fit(dat, pdf, res, identifier, add_pars=None)
+        _plot_fit(dat, pdf, res, identifier, add_pars='all')
 
         log.info(res)
         raise ValueError(f'Finished with status/validity: {res.status}/{res.valid}')
@@ -342,7 +342,7 @@ def _fit(df, d_fix=None, identifier='unnamed'):
 
     log.info('Found parameters:')
     log.info(res)
-    plot_fit(dat, pdf, res, identifier, add_pars='all')
+    _plot_fit(dat, pdf, res, identifier, add_pars='all')
 
     tex_path = f'{Data.plt_dir}/{identifier}.tex'
     log.info(f'Saving to: {tex_path}')
@@ -407,10 +407,17 @@ def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier):
     plt.savefig(plt_path)
     plt.close('all')
 #-------------------
-def plot_fit(dat, pdf, res, identifier, add_pars=None):
+def _plot_fit(
+        dat        : zdata,
+        pdf        : zpdf,
+        res        : zres,
+        identifier : str,
+        add_pars   : str) -> None:
+
+    obs_range = _get_obs_range()
     obj=zfp(data=dat, model=pdf, result=res)
-    obj.plot(nbins=Data.nbins, d_leg={}, plot_range=get_obs_range(), ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
-    obj.axs[1].plot(get_obs_range(), [0, 0], linestyle='--', color='black')
+    obj.plot(nbins=Data.nbins, d_leg={}, plot_range=obs_range, ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
+    obj.axs[1].plot(obs_range, [0, 0], linestyle='--', color='black')
 
     if add_pars is not None:
         plot_path = f'{Data.plt_dir}/{identifier}_pars.png'
@@ -419,6 +426,7 @@ def plot_fit(dat, pdf, res, identifier, add_pars=None):
 
     log.info(f'Saving to: {plot_path}')
     plt.savefig(plot_path, bbox_inches='tight')
+    plt.close()
 #-------------------
 def _get_fix_pars(d_par : dict[str,tuple[float,float]]) -> dict[str,tuple[float,float]]:
     d_fix = dict(d_par)
