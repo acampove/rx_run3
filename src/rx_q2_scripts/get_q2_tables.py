@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+'''
+Script needed to calculate smearing factors for q2 distribution 
+'''
 
-import utils_noroot                as utnr
-import matplotlib.pyplot           as plt
 import os
 import re
 import zfit
@@ -15,12 +15,13 @@ import argparse
 import ROOT
 import logging
 
+import utils_noroot                as utnr
+import matplotlib.pyplot           as plt
 from logzero      import logger    as log
 from zutils.plot  import plot      as zfp
 from zutils.utils import result_to_latex 
 from fitter       import zfitter
-
-from q2_syst.data_set import data_set
+from rx_q2.data_set import data_set
 
 #-------------------
 class data:
