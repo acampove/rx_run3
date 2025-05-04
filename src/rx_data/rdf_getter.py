@@ -238,6 +238,12 @@ class RDFGetter:
         if self._tree_name != 'DecayTree':
             return rdf
 
+        d_def = self._cfg['redefinitions']
+        for name, definition in d_def.items():
+            if name == 'block':
+                log.warning('Sending pre-UT candidates to block 4')
+            rdf = rdf.Redefine(name, definition)
+
         d_def = self._cfg['definitions']
         if hasattr(RDFGetter, 'd_custom_columns'):
             log.warning('Adding custom column definitions')
@@ -245,9 +251,6 @@ class RDFGetter:
 
         for name, definition in d_def.items():
             rdf = self._add_column(rdf, name, definition)
-
-        log.warning('Sending pre-UT candidates to block 4')
-        rdf = rdf.Redefine('block', 'block < 0 ? 4 : block')
 
         # TODO: The weight (taking into account prescale) should be removed
         # for 2025 data
