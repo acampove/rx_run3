@@ -235,7 +235,7 @@ def fix_pdf(pdf, d_fix):
             continue
 
         if par.name not in d_fix:
-            log.visible(f'{par.name:<20}{"->":<10}{"floating":>20}')
+            log.info(f'{par.name:<20}{"->":<10}{"floating":>20}')
             continue
         else:
             fix_val, _ = d_fix[par.name]
@@ -336,7 +336,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
     plot_fit(dat, pdf, res, identifier, add_pars='all')
 
     tex_path = f'{Data.plt_dir}/{identifier}.tex'
-    log.visible(f'Saving to: {tex_path}')
+    log.info(f'Saving to: {tex_path}')
     result_to_latex(res, tex_path, method='minos')
 
     pkl_path = f'{Data.plt_dir}/{identifier}.pkl'
@@ -389,7 +389,7 @@ def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier):
     else:
         plt_path = f'{Data.plt_dir}/data_{identifier}.png'
 
-    log.visible(f'Saving to: {plt_path}')
+    log.info(f'Saving to: {plt_path}')
     plt.title(title)
     plt.savefig(plt_path)
     plt.close('all')
@@ -404,7 +404,7 @@ def plot_fit(dat, pdf, res, identifier, add_pars=None):
     else:
         plot_path = f'{Data.plt_dir}/{identifier}.png'
 
-    log.visible(f'Saving to: {plot_path}')
+    log.info(f'Saving to: {plot_path}')
     plt.savefig(plot_path, bbox_inches='tight')
 #-------------------
 def get_fix_pars(d_par):
