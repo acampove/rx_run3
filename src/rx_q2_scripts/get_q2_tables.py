@@ -4,25 +4,23 @@ Script needed to calculate smearing factors for q2 distribution
 
 import os
 import re
+import glob
+import pprint
+import argparse
+
+import ROOT
 import zfit
 import hist
-import glob
-import utils
-import pprint
 import numpy
 import mplhep
-import argparse
-import ROOT
-import logging
+import matplotlib.pyplot   as plt
 
-import utils_noroot                as utnr
-import matplotlib.pyplot           as plt
-from logzero      import logger    as log
-from zutils.plot  import plot      as zfp
-from zutils.utils import result_to_latex 
-from fitter       import zfitter
-from rx_q2.data_set import data_set
+from dmu.stats.fitter       import Fitter      as zfitter
+from dmu.stats.zfit_plotter import ZFitPlotter as zfp
+from dmu.logging.log_store  import LogStore
+from rx_q2.data_set         import data_set
 
+log=LogStore.add_logger('rx_q2:get_q2_tables')
 #-------------------
 class data:
     zfit.settings.changed_warnings.hesse_name = False
