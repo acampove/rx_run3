@@ -195,19 +195,20 @@ def _get_cb_nspd_pdf(prefix : str = '') -> zpdf:
     return sig
 #-------------------
 def _get_signal_pdf(split_by_nspd : bool = False) -> zpdf:
-    if Data.sig_pdf_splt is not None and     split_by_nspd:
+    if hasattr(Data, 'sig_pdf_splt') and     split_by_nspd: # Return cached one
         return Data.sig_pdf_splt
 
-    if Data.sig_pdf_merg is not None and not split_by_nspd:
+    if hasattr(Data, 'sig_pdf_merg') and not split_by_nspd:
         return Data.sig_pdf_merg
 
+    # Or else remake the PDF
     if split_by_nspd:
         l_pdf = [ _get_cb_nspd_pdf(prefix=f'_{i_nspd}') for i_nspd in [1, 2, 3] ]
         Data.sig_pdf_splt = _get_nspd_signal(l_pdf)
-    else:
-        Data.sig_pdf_merg = _get_cb_pdf()
+        return Data.sig_pdf_splt
 
-    return Data.sig_pdf_splt if split_by_nspd else Data.sig_pdf_merg
+    Data.sig_pdf_merg = _get_cb_pdf()
+    return Data.sig_pdf_merg
 #-------------------
 def _get_bkg_pdf() -> zpdf:
     if Data.bkg_pdf is not None:
