@@ -541,9 +541,7 @@ def main():
     '''
     Start here
     '''
-
     _set_vars()
-    return
     _get_args()
     _initialize()
     _make_table()
