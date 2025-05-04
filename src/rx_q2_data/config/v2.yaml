@@ -1,33 +1,22 @@
 input:
   year:    # Supported years
-    - 2011
-    - 2012
-    - 2015
-    - 2016
-    - 2017
-    - 2018
+    - 2014
   trigger:
-    - ETOS
-    - GTIS
+    - Hlt2RD_BuToKpEE_MVA
   brem:   # Supported brem categories
-    - 0
     - 1
     - 2
-  cali:   # This specifies what weights the MC input to the calibration can have 
-    - 000 # No weights
-    - nom # Fully weighted with nominal weights
+  cali:
+    - 000
   samples: # Supported samples
-    - simulation
-    - data
-    - both
+    simulation : Bu_JpsiK_ee_eq_DPC 
+    data       : DATA* 
 syst:
-    - nom   # Nominal
-    - nspd  # Measured by splitting in different nSPDHits bins
+    - nom
 fitting:
-  mass : Jpsi_M # Observable to be fitted
+  mass    : Jpsi_M_brem_track_2 # Observable to be fitted
   binning :
     nbins : 60
-
   model:
     parameters: # Initial values of parameters used in fit
       mu   : 3060
