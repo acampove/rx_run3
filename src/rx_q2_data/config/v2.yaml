@@ -9,8 +9,10 @@ input:
   cali:
     - 000
   samples: # Supported samples
-    simulation : Bu_JpsiK_ee_eq_DPC 
-    data       : DATA* 
+    simulation : Bu_JpsiK_ee_eq_DPC
+    data       : DATA*
+  selection:
+    q2 : Jpsi_M_brem_track_2 > 2200 && Jpsi_M_brem_track_2 < 3800
 syst:
     - nom
 fitting:
@@ -40,6 +42,6 @@ fitting:
   simulation:
     strategy  :
       retry   :
-        ntries        : 4   
+        ntries        : 4
         pvalue_thresh : 0.05
         ignore_status : true
