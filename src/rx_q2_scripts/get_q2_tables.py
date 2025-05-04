@@ -104,7 +104,7 @@ def _set_vars():
     Data.nbins       = d_fitting['binning']['nbins']
     Data.cfg_sim_fit = d_fitting['simulation']
     Data.j_mass      = d_fitting['mass']
-    Data.d_obs_range = d_fitting['ranges']
+    Data.d_obs_range = { str(brem) : val for brem, val in d_fitting['ranges'].items() }
 #-------------------
 def _initialize():
     plt.style.use(mplhep.style.LHCb2)
