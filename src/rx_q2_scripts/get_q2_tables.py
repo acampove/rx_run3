@@ -62,7 +62,6 @@ class Data:
     brem     = None
     plt_dir  = None
     nentries = None
-    d_sim_par= None
     skip_fit = None
     nevs_data= None
     cal_sys  = None
@@ -71,6 +70,7 @@ class Data:
     sig_pdf_splt = None
     sig_pdf_merg = None
     bkg_pdf      = None
+    d_sim_par    : dict[str,tuple[float,float]]
 
     mu       = zfit.Parameter('mu', 3060,  3040, 3100)
     sg       = zfit.Parameter('sg',   20,    10,  100)
@@ -88,30 +88,7 @@ class Data:
     d_sig_ini['ncbr']=  1000
     d_sig_ini['ncbl']=  1000
 #-------------------
-def get_branches(rdf):
-    v_col = rdf.GetColumnNames()
-    l_col = [ str(col.c_str()) for col in v_col ]
-
-    l_branch = []
-    l_branch.append('b_mass')
-    l_branch.append('Jpsi_M')
-    l_branch.append('nSPDHits')
-
-    l_branch.append('nbrem')
-    l_branch.append('L1_HasBremAdded')
-    l_branch.append('L2_HasBremAdded')
-
-    l_branch.append('L1_P')
-    l_branch.append('L2_P')
-
-    if 'Jpsi_TRUEID' in l_col:
-        l_branch.append('Jpsi_TRUEID')
-        l_branch.append('L1_TRUEID')
-        l_branch.append('L2_TRUEID')
-
-    return l_branch
-#-------------------
-def float_pars(pdf):
+def _float_pars(pdf : zpdf) -> None:
     l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
     log.info('Floating parameters:')
     for par in l_par:
@@ -164,21 +141,21 @@ def get_cb_pdf():
 
     return sig
 #-------------------
-def get_nspd_data_pars(preffix=''):
+def _get_nspd_data_pars(preffix : str ='') -> tuple[zpar,zpar]:
     sim_mu = zfit.param.ConstantParameter(f'sim_mu{preffix}', Data.d_sim_par[f'mu{preffix}'][0])
     sim_sg = zfit.param.ConstantParameter(f'sim_sg{preffix}', Data.d_sim_par[f'sg{preffix}'][0])
 
     dat_mu = zfit.ComposedParameter(f'dat_mu{preffix}',
-                                    lambda d_par : d_par['dmu'] + d_par[f'sim_mu{preffix}'],
-                                    {'dmu' : Data.dmu, f'sim_mu{preffix}' : sim_mu} )
+                                    func=lambda d_par : d_par['dmu'] + d_par[f'sim_mu{preffix}'],
+                                    params={'dmu' : Data.dmu, f'sim_mu{preffix}' : sim_mu} )
     dat_sg = zfit.ComposedParameter(f'dat_sg{preffix}',
-                                    lambda d_par : d_par['rsg'] * d_par[f'sim_sg{preffix}'],
-                                    {'rsg' : Data.rsg, f'sim_sg{preffix}' : sim_sg} )
+                                    func=lambda d_par : d_par['rsg'] * d_par[f'sim_sg{preffix}'],
+                                    params={'rsg' : Data.rsg, f'sim_sg{preffix}' : sim_sg} )
 
     return dat_mu, dat_sg
 #-------------------
 def get_cb_nspd_pdf(prefix=''):
-    mu,sg = get_nspd_data_pars(prefix)
+    mu,sg = _get_nspd_data_pars(prefix)
 
     ap_r  = zfit.Parameter(f'ap_r{prefix}',  1.0,  -10.0, 10.0)
     pw_r  = zfit.Parameter(f'pw_r{prefix}',  1.0,    0.1, 10.0)
@@ -277,8 +254,8 @@ def _get_pars(res : zres, identifier : str) -> dict[str,list[str]]:
     return d_par
 #-------------------
 def _fit(
-        rdf        : RDataFrame, 
-        d_fix      : dict[str,tuple[float,float]] = None, 
+        rdf        : RDataFrame,
+        d_fix      : dict[str,tuple[float,float]] = None,
         identifier : str                          ='unnamed') -> dict[str,tuple[float,float]]:
 
     jsn_path  = f'{Data.plt_dir}/{identifier}.json'
@@ -299,7 +276,7 @@ def _fit(
         raise ValueError(f'Invalid identifier: {identifier}')
 
     if is_signal:
-        float_pars(pdf)
+        _float_pars(pdf)
         if os.path.isfile(jsn_path):
             log.info(f'Loading cached simulation parameters: {jsn_path}')
             d_par = gut.load_json(jsn_path)
