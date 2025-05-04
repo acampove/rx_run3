@@ -31,8 +31,4 @@ remake_q2_json    ='rx_q2_scripts.remake_q2_json:main'
 validate_smear    ='rx_q2_scripts.validate_smear:main'
 
 [tool.setuptools.package-data]
-rx_q2_data=[
-'*.csv']
-
-[tool.setuptools]
-script-files=['src/dmu_scripts/git/publish']
+rx_q2_data=['*.csv']
