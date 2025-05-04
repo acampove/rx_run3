@@ -165,6 +165,16 @@ def print_pdf(
         else:
             raise ValueError(f'Invalid level: {level}')
 #---------------------------------------------
+def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
+    d_par = {}
+    for name, d_val in result.params.items():
+        value = d_val['value']
+        error = d_val['hesse']['error']
+
+        d_par[name] = value, error
+
+    return d_par
+#---------------------------------------------
 def save_fit(
         data    : zdata,
         model   : zpdf,
@@ -194,6 +204,10 @@ def save_fit(
     l_data = data.value().numpy().tolist()
     opath  = f'{fit_dir}/data.json'
     gut.dump_json(l_data, opath)
+
+    d_par  = _parameters_from_result(result=res)
+    opath  = f'{fit_dir}/parameters.json'
+    gut.dump_json(d_par, opath)
 #-------------------------------------------------------
 # Make latex table from text file
 #-------------------------------------------------------
