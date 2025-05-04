@@ -161,7 +161,7 @@ def test_rep_signal(l_name : list[str]):
 
     print_pdf(pdf)
 #--------------------------
-@pytest.mark.parametrize('kind', ['cbr', 'cbrl', 'dscb', 'gauss'])
+@pytest.mark.parametrize('kind', ['cbr', 'cbl', 'dscb', 'gauss'])
 def test_override_parameter(kind: list[str]):
     '''
     Will create a PDF by overriding parameters
