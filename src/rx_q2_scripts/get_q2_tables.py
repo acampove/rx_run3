@@ -431,14 +431,17 @@ def get_fix_pars(d_par):
 
     return d_fix
 #-------------------
-def add_nspd_col(df):
-    arr_nspd = df.AsNumpy(['nSPDHits'])['nSPDHits']
-    q1 = numpy.quantile(arr_nspd, 1./3)
-    q2 = numpy.quantile(arr_nspd, 2./3)
+def _add_nspd_col(rdf : RDataFrame) -> RDataFrame:
+    if Data.year in Data.l_run3_year:
+        log.info(f'Skipping adding nSPDHits for {Data.year}')
+        return rdf
 
-    df = df.Define('nspd', f'float res=-1; if (nSPDHits<{q1}) res = 1; else if (nSPDHits < {q2}) res = 2; else res = 3; return res;')
+    arr_nspd = rdf.AsNumpy(['nSPDHits'])['nSPDHits']
+    q1       = numpy.quantile(arr_nspd, 1./3)
+    q2       = numpy.quantile(arr_nspd, 2./3)
+    rdf      = rdf.Define('nspd', f'float res=-1; if (nSPDHits<{q1}) res = 1; else if (nSPDHits < {q2}) res = 2; else res = 3; return res;')
 
-    return df
+    return rdf
 #-------------------
 def _get_sim_pars_cache() -> dict[str,float]:
     json_wc = f'{Data.plt_dir}/sim_{Data.trig}_{Data.year}_{Data.brem}*.json'
@@ -462,7 +465,7 @@ def _get_sim_pars_cache() -> dict[str,float]:
 def _get_sim_pars_fits(rdf : RDataFrame, identifier : str):
     d_par = {}
     if   Data.sys == 'nspd':
-        rdf = add_nspd_col(rdf)
+        rdf = _add_nspd_col(rdf)
         for i_nspd in [1,2,3]:
             rdf_sim_nspd = rdf.Filter(f'nspd == {i_nspd}')
             d_tmp_1      = fit(rdf_sim_nspd, d_fix=None, identifier=f'sim_{i_nspd}_{identifier}')
