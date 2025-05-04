@@ -218,9 +218,9 @@ class ModelFactory:
     # ---------------------------------------------
     @MethodRegistry.register('hypexp')
     def _get_hypexp(self, suffix : str = '') -> zpdf:
-        mu = zfit.Parameter('mu_hypexp',  5000,   4000,  6000)
-        ap = zfit.Parameter('ap_hypexp', 0.020,      0,  0.10)
-        bt = zfit.Parameter('bt_hypexp', 0.002, 0.0001, 0.003)
+        mu = self._get_parameter('mu_hypexp', suffix,  5000,   4000,  6000)
+        ap = self._get_parameter('ap_hypexp', suffix, 0.020,      0,  0.10)
+        bt = self._get_parameter('bt_hypexp', suffix, 0.002, 0.0001, 0.003)
 
         pdf= HypExp(obs=self._obs, mu=mu, alpha=ap, beta=bt, name=f'hypexp{suffix}')
 
@@ -228,9 +228,9 @@ class ModelFactory:
     # ---------------------------------------------
     @MethodRegistry.register('modexp')
     def _get_modexp(self, suffix : str = '') -> zpdf:
-        mu = zfit.Parameter('mu_modexp',  4250,  4250,  4500)
-        ap = zfit.Parameter('ap_modexp', 0.002, 0.002, 0.026)
-        bt = zfit.Parameter('bt_modexp', 0.002, 0.002, 0.020)
+        mu = self._get_parameter('mu_modexp', suffix,  4250,  4250,  4500)
+        ap = self._get_parameter('ap_modexp', suffix, 0.002, 0.002, 0.026)
+        bt = self._get_parameter('bt_modexp', suffix, 0.002, 0.002, 0.020)
 
         pdf= ModExp(obs=self._obs, mu=mu, alpha=ap, beta=bt, name=f'modexp{suffix}')
 
@@ -253,9 +253,10 @@ class ModelFactory:
     # ---------------------------------------------
     @MethodRegistry.register('pol3')
     def _get_pol3(self, suffix : str = '') -> zpdf:
-        a   = zfit.Parameter('a_pol3', -0.005, -0.95, 0.00)
-        b   = zfit.Parameter('b_pol3',  0.000, -0.95, 0.95)
-        c   = zfit.Parameter('c_pol3',  0.000, -0.95, 0.95)
+        a   = self._get_parameter('a_pol3', suffix, -0.005, -0.95, 0.00)
+        b   = self._get_parameter('b_pol3', suffix,  0.000, -0.95, 0.95)
+        c   = self._get_parameter('c_pol3', suffix,  0.000, -0.95, 0.95)
+
         pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b, c], name=f'pol3{suffix}')
 
         return pdf
