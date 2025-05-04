@@ -1,5 +1,5 @@
 '''
-Script needed to calculate smearing factors for q2 distribution 
+Script needed to calculate smearing factors for q2 distribution
 '''
 
 import os
@@ -22,10 +22,12 @@ from rx_q2.data_set         import data_set
 
 log=LogStore.add_logger('rx_q2:get_q2_tables')
 #-------------------
-class data:
+class Data:
+    '''
+    Data class
+    '''
     zfit.settings.changed_warnings.hesse_name = False
 
-    log      = utnr.getLogger(__name__)
     cal_dir  = os.environ['CALDIR']
     dat_dir  = os.environ['DATDIR']
     cas_dir  = os.environ['CASDIR']
@@ -44,10 +46,10 @@ class data:
     j_mass   = 'Jpsi_M'
     nbins    = 60
 
-    trig     = None 
-    year     = None 
-    brem     = None 
-    plt_dir  = None 
+    trig     = None
+    year     = None
+    brem     = None
+    plt_dir  = None
     nentries = None
     d_sim_par= None
     skip_fit = None
@@ -72,8 +74,8 @@ class data:
     d_sig_ini['pw_r']=  1.0
     d_sig_ini['ap_l']= -1.0
     d_sig_ini['pw_l']=  1.0
-    d_sig_ini['ncbr']=  1000 
-    d_sig_ini['ncbl']=  1000  
+    d_sig_ini['ncbr']=  1000
+    d_sig_ini['ncbl']=  1000
 #-------------------
 def get_branches(rdf):
     v_col = rdf.GetColumnNames()
@@ -87,7 +89,7 @@ def get_branches(rdf):
     l_branch.append('nbrem')
     l_branch.append('L1_HasBremAdded')
     l_branch.append('L2_HasBremAdded')
-    
+
     l_branch.append('L1_P')
     l_branch.append('L2_P')
 
@@ -100,18 +102,18 @@ def get_branches(rdf):
 #-------------------
 def float_pars(pdf):
     l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
-    data.log.info('Floating parameters:')
+    log.info('Floating parameters:')
     for par in l_par:
         par.floating = True
-        if par.name in data.d_sig_ini:
-            val = data.d_sig_ini[par.name]
+        if par.name in Data.d_sig_ini:
+            val = Data.d_sig_ini[par.name]
             par.set_value(val)
 
-        data.log.info(f'{"":<4}{par.name:<20}{par.value():>20.3f}')
+        log.info(f'{"":<4}{par.name:<20}{par.value():>20.3f}')
 #-------------------
 def reset_sig_pars(pdf, d_val):
     l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
-    data.log.info('Setting initial values:')
+    log.info('Setting initial values:')
     for par in l_par:
         name = par.name
         if name not in d_val:
@@ -119,12 +121,12 @@ def reset_sig_pars(pdf, d_val):
 
         val  = d_val[name]
         par.set_value(val)
-        data.log.info(f'{name:<20}{"->":<10}{val:<10.3}')
+        log.info(f'{name:<20}{"->":<10}{val:<10.3}')
 #-------------------
 def get_nspd_signal(l_pdf):
-    nsg_1 = zfit.Parameter('nsg_1', 1000, 0, data.nevs_data)
-    nsg_2 = zfit.Parameter('nsg_2', 1000, 0, data.nevs_data)
-    nsg_3 = zfit.Parameter('nsg_3', 1000, 0, data.nevs_data)
+    nsg_1 = zfit.Parameter('nsg_1', 1000, 0, Data.nevs_data)
+    nsg_2 = zfit.Parameter('nsg_2', 1000, 0, Data.nevs_data)
+    nsg_3 = zfit.Parameter('nsg_3', 1000, 0, Data.nevs_data)
 
     l_nsg = [nsg_1, nsg_2, nsg_3]
     l_epdf= [ pdf.create_extended(nsg) for pdf, nsg in zip(l_pdf, l_nsg) ]
@@ -135,32 +137,32 @@ def get_nspd_signal(l_pdf):
 def get_cb_pdf():
     ap_r  = zfit.Parameter('ap_r',  1.0,  -3.0,   3.0)
     pw_r  = zfit.Parameter('pw_r',  1.0,   0.1,  20.0)
-    sig_r = zfit.pdf.CrystalBall(obs=data.obs, mu=data.mu, sigma=data.sg, alpha=ap_r, n=pw_r)
+    sig_r = zfit.pdf.CrystalBall(obs=Data.obs, mu=Data.mu, sigma=Data.sg, alpha=ap_r, n=pw_r)
 
     ap_l  = zfit.Parameter('ap_l', -1.0,   -3.0,  3.0)
     pw_l  = zfit.Parameter('pw_l',  1.0,    0.1, 20.0)
-    sig_l = zfit.pdf.CrystalBall(obs=data.obs, mu=data.mu, sigma=data.sg, alpha=ap_l, n=pw_l)
+    sig_l = zfit.pdf.CrystalBall(obs=Data.obs, mu=Data.mu, sigma=Data.sg, alpha=ap_l, n=pw_l)
 
     ncbr  = zfit.Parameter('ncbr',  10,   0,  1000000)
     sig_r = sig_r.create_extended(ncbr, name='CB1')
 
     ncbl  = zfit.Parameter('ncbl',  10,   0,  1000000)
-    sig_l = sig_l.create_extended(ncbl, name='CB2') 
+    sig_l = sig_l.create_extended(ncbl, name='CB2')
 
     sig   = zfit.pdf.SumPDF([sig_r, sig_l], name='Signal')
 
     return sig
 #-------------------
 def get_nspd_data_pars(preffix=''):
-    sim_mu = zfit.param.ConstantParameter(f'sim_mu{preffix}', data.d_sim_par[f'mu{preffix}'][0])
-    sim_sg = zfit.param.ConstantParameter(f'sim_sg{preffix}', data.d_sim_par[f'sg{preffix}'][0])
+    sim_mu = zfit.param.ConstantParameter(f'sim_mu{preffix}', Data.d_sim_par[f'mu{preffix}'][0])
+    sim_sg = zfit.param.ConstantParameter(f'sim_sg{preffix}', Data.d_sim_par[f'sg{preffix}'][0])
 
-    dat_mu = zfit.ComposedParameter(f'dat_mu{preffix}', 
-                                    lambda d_par : d_par['dmu'] + d_par[f'sim_mu{preffix}'], 
-                                    {'dmu' : data.dmu, f'sim_mu{preffix}' : sim_mu} )
-    dat_sg = zfit.ComposedParameter(f'dat_sg{preffix}', 
-                                    lambda d_par : d_par['rsg'] * d_par[f'sim_sg{preffix}'], 
-                                    {'rsg' : data.rsg, f'sim_sg{preffix}' : sim_sg} )
+    dat_mu = zfit.ComposedParameter(f'dat_mu{preffix}',
+                                    lambda d_par : d_par['dmu'] + d_par[f'sim_mu{preffix}'],
+                                    {'dmu' : Data.dmu, f'sim_mu{preffix}' : sim_mu} )
+    dat_sg = zfit.ComposedParameter(f'dat_sg{preffix}',
+                                    lambda d_par : d_par['rsg'] * d_par[f'sim_sg{preffix}'],
+                                    {'rsg' : Data.rsg, f'sim_sg{preffix}' : sim_sg} )
 
     return dat_mu, dat_sg
 #-------------------
@@ -169,11 +171,11 @@ def get_cb_nspd_pdf(prefix=''):
 
     ap_r  = zfit.Parameter(f'ap_r{prefix}',  1.0,  -10.0, 10.0)
     pw_r  = zfit.Parameter(f'pw_r{prefix}',  1.0,    0.1, 10.0)
-    sig_r = zfit.pdf.CrystalBall(obs=data.obs, mu=mu, sigma=sg, alpha=ap_r, n=pw_r)
+    sig_r = zfit.pdf.CrystalBall(obs=Data.obs, mu=mu, sigma=sg, alpha=ap_r, n=pw_r)
 
     ap_l  = zfit.Parameter(f'ap_l{prefix}', -1.0,  -10.0, 10.0)
     pw_l  = zfit.Parameter(f'pw_l{prefix}',  1.0,    0.1,  10.)
-    sig_l = zfit.pdf.CrystalBall(obs=data.obs, mu=mu, sigma=sg, alpha=ap_l, n=pw_l)
+    sig_l = zfit.pdf.CrystalBall(obs=Data.obs, mu=mu, sigma=sg, alpha=ap_l, n=pw_l)
 
     fr    = zfit.Parameter(f'fr_cb{prefix}', 0.5,  0.0, 1)
     sig   = zfit.pdf.SumPDF([sig_r, sig_l], fracs=[fr])
@@ -181,41 +183,41 @@ def get_cb_nspd_pdf(prefix=''):
     return sig
 #-------------------
 def get_signal_pdf(split_by_nspd = False, prefix=None):
-    if   data.sig_pdf_splt is not None and     split_by_nspd:
-        return data.sig_pdf_splt
-    elif data.sig_pdf_merg is not None and not split_by_nspd:
-        return data.sig_pdf_merg
+    if   Data.sig_pdf_splt is not None and     split_by_nspd:
+        return Data.sig_pdf_splt
+    elif Data.sig_pdf_merg is not None and not split_by_nspd:
+        return Data.sig_pdf_merg
 
     if split_by_nspd:
         l_pdf = [ get_cb_nspd_pdf(prefix=f'_{i_nspd}') for i_nspd in [1, 2, 3] ]
-        data.sig_pdf_splt = get_nspd_signal(l_pdf)
+        Data.sig_pdf_splt = get_nspd_signal(l_pdf)
     else:
-        data.sig_pdf_merg = get_cb_pdf()
+        Data.sig_pdf_merg = get_cb_pdf()
 
-    return data.sig_pdf_splt if split_by_nspd else data.sig_pdf_merg 
+    return Data.sig_pdf_splt if split_by_nspd else Data.sig_pdf_merg
 #-------------------
 def get_bkg_pdf():
-    if data.bkg_pdf is not None:
-        return data.bkg_pdf
+    if Data.bkg_pdf is not None:
+        return Data.bkg_pdf
 
     lam = zfit.Parameter('lam', -0.001, -0.1, -0.0001)
-    bkg = zfit.pdf.Exponential(lam=lam, obs=data.obs, name='')
+    bkg = zfit.pdf.Exponential(lam=lam, obs=Data.obs, name='')
 
     nbk = zfit.Parameter(f'nbk', 100, 0.0, 200000)
     bkg = bkg.create_extended(nbk, name='Combinatorial')
 
-    data.bkg_pdf = bkg
+    Data.bkg_pdf = bkg
 
     return bkg
 #-------------------
-def get_full_pdf(split_by_nspd): 
+def get_full_pdf(split_by_nspd):
     sig = get_signal_pdf(split_by_nspd)
     bkg = get_bkg_pdf()
     pdf = zfit.pdf.SumPDF([sig, bkg], name='Model')
 
-    data.log.debug(f'Signal    : {sig}')
-    data.log.debug(f'Background: {bkg}')
-    data.log.debug(f'Model     : {pdf}')
+    log.debug(f'Signal    : {sig}')
+    log.debug(f'Background: {bkg}')
+    log.debug(f'Model     : {pdf}')
 
     return pdf
 #-------------------
@@ -225,15 +227,15 @@ def fix_pdf(pdf, d_fix):
 
     l_par = list(pdf.get_params(floating=True))
 
-    data.log.info('-----------------')
-    data.log.info('Fixing parameters')
-    data.log.info('-----------------')
+    log.info('-----------------')
+    log.info('Fixing parameters')
+    log.info('-----------------')
     for par in l_par:
         if re.match(r'mu_[1,2,3]', par.name) or re.match(r'sg_[1,2,3]', par.name):
             continue
 
         if par.name not in d_fix:
-            data.log.visible(f'{par.name:<20}{"->":<10}{"floating":>20}')
+            log.visible(f'{par.name:<20}{"->":<10}{"floating":>20}')
             continue
         else:
             fix_val, _ = d_fix[par.name]
@@ -241,17 +243,17 @@ def fix_pdf(pdf, d_fix):
         par.assign(fix_val)
         par.floating=False
 
-        data.log.info(f'{par.name:<20}{"->":<10}{fix_val:>20.3e}')
+        log.info(f'{par.name:<20}{"->":<10}{fix_val:>20.3e}')
 
     return pdf
 #-------------------
 def get_pdf(is_signal=None, split_by_nspd=None):
     if is_signal     not in [True, False]:
-        data.log.error('Signal flag not specified')
+        log.error('Signal flag not specified')
         raise
 
     if split_by_nspd not in [True, False]:
-        data.log.error('split_by_nspd flag not specified')
+        log.error('split_by_nspd flag not specified')
         raise
 
     pdf = get_signal_pdf() if is_signal else get_full_pdf(split_by_nspd)
@@ -262,7 +264,7 @@ def get_pars(res, identifier):
     try:
         d_par = { name : [ d_val['value'], d_val['hesse']['error'] ] for name, d_val in res.params.items() }
     except:
-        data.log.error(f'Cannot extract {identifier} parameters from:')
+        log.error(f'Cannot extract {identifier} parameters from:')
         print(res)
         pprint.pprint(res.params)
         raise
@@ -270,28 +272,28 @@ def get_pars(res, identifier):
     return d_par
 #-------------------
 def fit(df, d_fix=None, identifier='unnamed'):
-    jsn_path  = f'{data.plt_dir}/{identifier}.json'
+    jsn_path  = f'{Data.plt_dir}/{identifier}.json'
     if os.path.isfile(jsn_path):
-        data.log.info(f'Fit file found: {jsn_path}')
+        log.info(f'Fit file found: {jsn_path}')
         d_par = utnr.load_json(jsn_path)
         return d_par
 
     is_signal = True if d_fix is None else False
 
     if   identifier.endswith('_nspd'):
-        data.log.info(f'Splitting by nSPD: {identifier}')
+        log.info(f'Splitting by nSPD: {identifier}')
         pdf = get_pdf(is_signal, split_by_nspd= True)
     elif identifier.endswith( '_nom'):
-        data.log.info(f'Not splitting by nSPD: {identifier}')
+        log.info(f'Not splitting by nSPD: {identifier}')
         pdf = get_pdf(is_signal, split_by_nspd=False)
     else:
-        data.log.error(f'Invalid identifier: {identifier}')
+        log.error(f'Invalid identifier: {identifier}')
         raise
 
     if is_signal:
         float_pars(pdf)
         if os.path.isfile(jsn_path):
-            data.log.info(f'Loading cached simulation parameters: {jsn_path}')
+            log.info(f'Loading cached simulation parameters: {jsn_path}')
             d_par = utnr.load_json(jsn_path)
             reset_sig_pars(pdf, d_par)
 
@@ -299,7 +301,7 @@ def fit(df, d_fix=None, identifier='unnamed'):
     pdf = fix_pdf(pdf, d_fix)
     obj = zfitter(pdf, dat)
 
-    if   data.skip_fit:
+    if   Data.skip_fit:
         log.info('Skipping fit')
         res=None
     elif is_signal:
@@ -307,20 +309,20 @@ def fit(df, d_fix=None, identifier='unnamed'):
     else:
         res=obj.fit()
 
-    if   data.skip_fit:
+    if   Data.skip_fit:
         return
     elif res is None:
         plot_fit(dat, pdf, res, identifier, add_pars=None)
         plot_fit(dat, pdf, res, identifier, add_pars='all')
 
-        data.log.error(f'Fit failed')
+        log.error(f'Fit failed')
         print(res)
         raise
     elif res.status != 0:
         plot_fit(dat, pdf, res, identifier, add_pars=None)
         plot_fit(dat, pdf, res, identifier, add_pars='all')
 
-        data.log.error(f'Finished with status/validity: {res.status}/{res.valid}')
+        log.error(f'Finished with status/validity: {res.status}/{res.valid}')
         print(res)
         raise
     else:
@@ -333,11 +335,11 @@ def fit(df, d_fix=None, identifier='unnamed'):
     print(res)
     plot_fit(dat, pdf, res, identifier, add_pars='all')
 
-    tex_path = f'{data.plt_dir}/{identifier}.tex'
-    data.log.visible(f'Saving to: {tex_path}')
+    tex_path = f'{Data.plt_dir}/{identifier}.tex'
+    log.visible(f'Saving to: {tex_path}')
     result_to_latex(res, tex_path, method='minos')
 
-    pkl_path = f'{data.plt_dir}/{identifier}.pkl'
+    pkl_path = f'{Data.plt_dir}/{identifier}.pkl'
     utnr.dump_pickle(res, pkl_path)
 
     d_par = get_pars(res, identifier)
@@ -358,7 +360,7 @@ def get_data(rdf, pdf, is_signal, identifier):
     return dat
 #-------------------
 def get_obs_range():
-    if data.brem == '0':
+    if Data.brem == '0':
         return [2200, 3300]
     else:
         return [2200, 3800]
@@ -368,7 +370,7 @@ def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier):
     [[lower]], [[upper]] = obs.limits
 
     fig, ax   = plt.subplots(figsize=(15, 10))
-    data_hist = hist.Hist.new.Regular(data.nbins, lower, upper, name='', underflow=False, overflow=False)
+    data_hist = hist.Hist.new.Regular(Data.nbins, lower, upper, name='', underflow=False, overflow=False)
     data_hist = data_hist.Weight()
     data_hist.fill(arr_mas, weight=arr_wgt)
 
@@ -383,35 +385,35 @@ def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier):
     title=f'Entries={arr_wgt.size:.0f}; Sum={numpy.sum(arr_wgt):.0f}; {identifier}'
 
     if is_signal:
-        plt_path = f'{data.plt_dir}/ctrl_{identifier}.png'
+        plt_path = f'{Data.plt_dir}/ctrl_{identifier}.png'
     else:
-        plt_path = f'{data.plt_dir}/data_{identifier}.png'
+        plt_path = f'{Data.plt_dir}/data_{identifier}.png'
 
-    data.log.visible(f'Saving to: {plt_path}')
+    log.visible(f'Saving to: {plt_path}')
     plt.title(title)
     plt.savefig(plt_path)
     plt.close('all')
 #-------------------
 def plot_fit(dat, pdf, res, identifier, add_pars=None):
     obj=zfp(data=dat, model=pdf, result=res)
-    obj.plot(nbins=data.nbins, d_leg={}, plot_range=get_obs_range(), ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
+    obj.plot(nbins=Data.nbins, d_leg={}, plot_range=get_obs_range(), ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
     obj.axs[1].plot(get_obs_range(), [0, 0], linestyle='--', color='black')
 
     if add_pars is not None:
-        plot_path = f'{data.plt_dir}/{identifier}_pars.png'
+        plot_path = f'{Data.plt_dir}/{identifier}_pars.png'
     else:
-        plot_path = f'{data.plt_dir}/{identifier}.png'
+        plot_path = f'{Data.plt_dir}/{identifier}.png'
 
-    data.log.visible(f'Saving to: {plot_path}')
+    log.visible(f'Saving to: {plot_path}')
     plt.savefig(plot_path, bbox_inches='tight')
 #-------------------
 def get_fix_pars(d_par):
     d_fix = dict(d_par)
-    for parname in d_par: 
+    for parname in d_par:
         if parname.startswith('mu') or parname.startswith('sg'):
             del(d_fix[parname])
 
-    if data.sys == 'nspd':
+    if Data.sys == 'nspd':
         for index in [1,2,3]:
             ryld = d_fix[f'ncbr_{index}'][0]
             lyld = d_fix[f'ncbl_{index}'][0]
@@ -435,17 +437,17 @@ def add_nspd_col(df):
     return df
 #-------------------
 def get_sim_pars_cache(trig=None, year=None, brem=None):
-    json_wc = f'{data.plt_dir}/sim_{trig}_{year}_{brem}*.json'
+    json_wc = f'{Data.plt_dir}/sim_{trig}_{year}_{brem}*.json'
     l_json_path = glob.glob(json_wc)
     if len(l_json_path) == 0:
-        data.log.error(f'No file found in: {json_wc}')
+        log.error(f'No file found in: {json_wc}')
         raise
     elif len(l_json_path) == 1:
         d_par = utnr.load_json(l_json_path[0])
     else:
         d_par = {}
         for i_nspd, json_path in enumerate(l_json_path):
-            data.log.info(f'Loading parameters from: {json_path}')
+            log.info(f'Loading parameters from: {json_path}')
             d_par_x = utnr.load_json(json_path)
             d_par_r = {f'{key}_{i_nspd + 1}' : val for key, val in d_par_x.items()}
             d_par.update(d_par_r)
@@ -454,81 +456,80 @@ def get_sim_pars_cache(trig=None, year=None, brem=None):
 #-------------------
 def get_sim_pars_fits(df, identifier):
     d_par = {}
-    if   data.sys == 'nspd':
+    if   Data.sys == 'nspd':
         df = add_nspd_col(df)
         for i_nspd in [1,2,3]:
             df_sim_nspd = df.Filter(f'nspd == {i_nspd}')
             d_tmp_1     = fit(df_sim_nspd, d_fix=None, identifier=f'sim_{i_nspd}_{identifier}')
             d_tmp_2     = { f'{key}_{i_nspd}' : val for key, val in d_tmp_1.items() }
             d_par.update(d_tmp_2)
-    elif data.sys == 'nom':
+    elif Data.sys == 'nom':
         d_par = fit(df, d_fix=None, identifier=f'sim_{identifier}')
     else:
-        data.log.error(f'Invalid systematic: {data.sys}')
+        log.error(f'Invalid systematic: {Data.sys}')
         raise
-    
+
     return d_par
 #-------------------
 def make_table(trig=None, year=None, brem=None):
-    identifier= f'{trig}_{year}_{brem}_{data.sys}'
+    identifier= f'{trig}_{year}_{brem}_{Data.sys}'
 
     odf_sim   = data_set(is_mc= True, trigger=trig, dset=year)
-    odf_sim.plt_dir = f'{data.plt_dir}/cal_wgt_sim_{identifier}'
+    odf_sim.plt_dir = f'{Data.plt_dir}/cal_wgt_sim_{identifier}'
     df_sim    = odf_sim.get_rdf()
     df_sim    = df_sim.Filter(f'nbrem == {brem}')
 
     odf_dat   = data_set(is_mc=False, trigger=trig, dset=year)
-    odf_dat.plt_dir = f'{data.plt_dir}/dat_plt_{identifier}'
+    odf_dat.plt_dir = f'{Data.plt_dir}/dat_plt_{identifier}'
     df_dat    = odf_dat.get_rdf()
     df_dat    = df_dat.Filter(f'nbrem == {brem}')
 
-    if data.sam == 'data':
+    if Data.sam == 'data':
         d_sim_par = get_sim_pars_cache(trig, year, brem)
     else:
         d_sim_par = get_sim_pars_fits(df_sim, identifier)
 
-    if data.sam == 'simulation':
-        data.log.info(f'Done with simulation and returning')
+    if Data.sam == 'simulation':
+        log.info(f'Done with simulation and returning')
         return
 
-    data.d_sim_par = d_sim_par
-    data.nevs_data = df_dat.Count().GetValue()
+    Data.d_sim_par = d_sim_par
+    Data.nevs_data = df_dat.Count().GetValue()
 
     d_fix_par = get_fix_pars(d_sim_par)
-    _         = fit(df_dat, d_fix=d_fix_par, identifier=f'dat_{trig}_{year}_{brem}_{data.sys}')
+    _         = fit(df_dat, d_fix=d_fix_par, identifier=f'dat_{trig}_{year}_{brem}_{Data.sys}')
 #-------------------
 def get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
     parser.add_argument('-v', '--vers' , type =str, help='Version, used for naming of output directory', required=True)
-    parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , required=True, choices=data.l_trig)
-    parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True, choices=data.l_year)
-    parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True, choices=data.l_brem)
-    parser.add_argument('-c', '--cali' , type =str, help='Calibration weight systematics'              , default='nom', choices=data.l_cali)
-    parser.add_argument('-x', '--sys'  , type =str, help='Systematic variabion'                        , choices=data.l_sys) 
-    parser.add_argument('-s', '--sam'  , type =str, help='Sample'                                      , choices=data.l_sam, default='both') 
-    parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1) 
-    parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action='store_true') 
+    parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , required=True, choices=Data.l_trig)
+    parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True, choices=Data.l_year)
+    parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True, choices=Data.l_brem)
+    parser.add_argument('-c', '--cali' , type =str, help='Calibration weight systematics'              , default='nom', choices=Data.l_cali)
+    parser.add_argument('-x', '--sys'  , type =str, help='Systematic variabion'                        , choices=Data.l_sys)
+    parser.add_argument('-s', '--sam'  , type =str, help='Sample'                                      , choices=Data.l_sam, default='both')
+    parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1)
+    parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action='store_true')
     args = parser.parse_args()
 
-    data.trig     = args.trig
-    data.year     = args.year
-    data.brem     = args.brem
-    data.sys      = args.sys
-    data.sam      = args.sam
-    data.cal_sys  = args.cali
-    data.nentries = args.nent
-    data.skip_fit = args.skip_fit
+    Data.trig     = args.trig
+    Data.year     = args.year
+    Data.brem     = args.brem
+    Data.sys      = args.sys
+    Data.sam      = args.sam
+    Data.cal_sys  = args.cali
+    Data.nentries = args.nent
+    Data.skip_fit = args.skip_fit
 
-    syst          = {'nom' : 'nom', 'nspd' : 'lsh'}[data.sys]
-    data.plt_dir  = utnr.make_dir_path(f'{data.qsq_dir}/get_q2_tables/fits/{args.vers}.{syst}')
-    data.obs      = zfit.Space('Jpsi_M', limits=get_obs_range())
+    syst          = {'nom' : 'nom', 'nspd' : 'lsh'}[Data.sys]
+    Data.plt_dir  = utnr.make_dir_path(f'{Data.qsq_dir}/get_q2_tables/fits/{args.vers}.{syst}')
+    Data.obs      = zfit.Space('Jpsi_M', limits=get_obs_range())
 #-------------------
 def main():
     plt.style.use(mplhep.style.LHCb2)
 
     get_args()
-    make_table(trig=data.trig, year=data.year, brem=data.brem)
+    make_table(trig=Data.trig, year=Data.year, brem=Data.brem)
 #-------------------
 if __name__ == '__main__':
     main()
-
