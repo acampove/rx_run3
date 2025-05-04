@@ -73,7 +73,7 @@ class Data:
     d_sim_par    : dict[str,tuple[float,float]]
     cfg_sim_fit  : dict
 
-    mu       = zfit.Parameter('mu', 3060,  3040, 3100)
+    mu       = zfit.Parameter('mu', 3060,  3000, 3100)
     sg       = zfit.Parameter('sg',   20,    10,  100)
 
     dmu      = zfit.Parameter('dmu', 0, -50.0, 50.0)
