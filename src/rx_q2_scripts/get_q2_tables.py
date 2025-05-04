@@ -315,7 +315,7 @@ def _fit(
 
     d_par = _get_pars(res, identifier)
 
-    sut.save_fit(data=dat, model=pdf, res=res, fit_dit=fit_dir)
+    sut.save_fit(data=dat, model=pdf, res=res, fit_dir=fit_dir)
 
     return d_par
 #-------------------
@@ -487,7 +487,7 @@ def _make_table():
     Data.nevs_data = rdf_dat.Count().GetValue()
 
     d_fix_par = _get_fix_pars(d_sim_par)
-    _         = fit(rdf_dat, d_fix=d_fix_par, identifier=f'dat_{Data.trig}_{Data.year}_{Data.brem}_{Data.sys}')
+    _         = _fit(rdf_dat, d_fix=d_fix_par, identifier=f'dat_{Data.trig}_{Data.year}_{Data.brem}_{Data.sys}')
 #-------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
