@@ -368,7 +368,7 @@ def _get_data(
     obs     = pdf.space
     dat     = zfit.Data.from_numpy(obs=obs, array=arr_val, weights=arr_wgt)
 
-    plot_data(arr_val, arr_wgt, obs, is_signal, identifier)
+    _plot_data(arr_val, arr_wgt, obs, is_signal, identifier)
 
     return dat
 #-------------------
@@ -378,10 +378,14 @@ def _get_obs_range() -> tuple[int,int]:
 
     return [2200, 3800]
 #-------------------
-def plot_data(arr_mas, arr_wgt, obs, is_signal, identifier):
-    plt.close('all')
-    [[lower]], [[upper]] = obs.limits
+def _plot_data(
+        arr_mas    : numpy.ndarray,
+        arr_wgt    : numpy.ndarray,
+        obs        : zobs,
+        is_signal  : bool,
+        identifier : str) -> None:
 
+    [[lower]], [[upper]] = obs.limits
     _, ax     = plt.subplots(figsize=(15, 10))
     data_hist = hist.Hist.new.Regular(Data.nbins, lower, upper, name='', underflow=False, overflow=False)
     data_hist = data_hist.Weight()
