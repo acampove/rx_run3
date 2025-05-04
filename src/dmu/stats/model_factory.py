@@ -388,12 +388,13 @@ class ModelFactory:
     #-----------------------------------------
     def _find_par(self, s_par : set[zpar], name_start : str) -> zpar:
         l_par_match = [ par for par in s_par if par.name.startswith(name_start) ]
+        npar        = len(l_par_match)
 
-        if len(l_par_match) != 1:
+        if npar!= 1:
             for par in s_par:
                 log.info(par.name)
 
-            raise ValueError(f'Not found one and only one parameter starting with: {name_start}')
+            raise ValueError(f'Found {npar} parameters starting with: {name_start}')
 
         return l_par_match[0]
     #-----------------------------------------
