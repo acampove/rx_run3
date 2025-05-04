@@ -24,10 +24,22 @@ class ParameterLibrary:
         data_path = files('dmu_data').joinpath('stats/parameters/data.yaml')
         data_path = str(data_path)
 
+        d_data = {'parameter' : [], 'kind' : [], 'val' : [], 'low' : [], 'high' : []}
         with open(data_path, encoding='utf-8') as ifile:
             data = yaml.safe_load(ifile)
+            for kind, d_par in data.items():
+                for parameter, d_kind in d_par.items():
+                    val = d_kind['val' ]
+                    low = d_kind['low' ]
+                    high= d_kind['high']
 
-        ParameterLibrary.df_parameters = pnd.DataFrame(data)
+                    d_data['parameter'].append(parameter)
+                    d_data['kind'     ].append(kind     )
+                    d_data['val'      ].append(val      )
+                    d_data['low'      ].append(low      )
+                    d_data['high'     ].append(high     )
+
+        ParameterLibrary.df_parameters = pnd.DataFrame(d_data)
     # --------------------------------
     @staticmethod
     def print_parameters(kind : str) -> None:
