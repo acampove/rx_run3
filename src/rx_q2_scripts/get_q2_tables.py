@@ -67,6 +67,7 @@ class Data:
     sig_pdf_merg : zpdf
     bkg_pdf      : zpdf
     d_sim_par    : dict[str,tuple[float,float]]
+    cfg_sim_fit  : dict
 
     mu       = zfit.Parameter('mu', 3060,  3040, 3100)
     sg       = zfit.Parameter('sg',   20,    10,  100)
@@ -97,8 +98,9 @@ def _set_vars():
     Data.d_samp = d_input['samples']
     Data.l_samp = list(Data.d_samp)
 
-    Data.nbins  = d_fitting['binning']['nbins']
-    Data.j_mass = d_fitting['mass']
+    Data.nbins       = d_fitting['binning']['nbins']
+    Data.cfg_sim_fit = d_fitting['simulation']
+    Data.j_mass      = d_fitting['mass']
 #-------------------
 def _initialize():
     plt.style.use(mplhep.style.LHCb2)
@@ -316,7 +318,7 @@ def _fit(
         return None
 
     if is_signal:
-        res=obj.fit(cfg={'strategy' : {'retry' : {'ntries' : 10}}})
+        res=obj.fit(cfg=Data.cfg_sim_fit)
     else:
         res=obj.fit()
 
