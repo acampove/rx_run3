@@ -529,7 +529,7 @@ def _get_args():
     parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True, choices=Data.l_brem)
     parser.add_argument('-x', '--syst' , type =str, help='Systematic variabion'                        ,                choices=Data.l_syst)
     parser.add_argument('-s', '--samp' , type =str, help='Sample'                                      , default='both',choices=Data.l_samp)
-    parser.add_argument('-l', '--logl' , type =int, help='Logging level'                                               ,choices=[10, 20, 30])
+    parser.add_argument('-l', '--logl' , type =int, help='Logging level'                               , default=20    ,choices=[10, 20, 30])
     parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1)
     parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action='store_true')
     args = parser.parse_args()
