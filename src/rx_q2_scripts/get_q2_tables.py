@@ -491,13 +491,13 @@ def _get_rdf(kind : str) -> RDataFrame:
 def _make_table():
     identifier= f'{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}'
 
-    odf_sim   = _get_rdf(kind='simulation')
+    odf_sim         = _get_rdf(kind='simulation')
     odf_sim.plt_dir = f'{Data.plt_dir}/cal_wgt_sim_{identifier}'
-    rdf_sim    = odf_sim.get_rdf()
+    rdf_sim         = odf_sim.get_rdf()
 
-    odf_dat   = _get_rdf(kind='data')
+    odf_dat         = _get_rdf(kind='data')
     odf_dat.plt_dir = f'{Data.plt_dir}/dat_plt_{identifier}'
-    rdf_dat    = odf_dat.get_rdf()
+    rdf_dat         = odf_dat.get_rdf()
 
     if Data.samp == 'data':
         d_sim_par = _get_sim_pars_cache()
