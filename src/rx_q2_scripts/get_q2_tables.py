@@ -494,6 +494,15 @@ def _get_rdf(kind : str) -> RDataFrame:
     gtr = RDFGetter(sample=sample, trigger=Data.trig)
     rdf = gtr.get_rdf()
 
+    d_sel = sel.selection(trigger=Data.trig, q2bin='jpsi', process=sample)
+    for cut_name, cut_value in d_sel.items():
+        log.debug(f'{cut_name:<20}{cut_value}')
+        rdf = rdf.Filter(cut_value, cut_name)
+
+    if log.getEffectiveLevel() == 10:
+        rep = rdf.Report()
+        rep.Print()
+
     return rdf
 #-------------------
 def _make_table():
