@@ -5,7 +5,6 @@ Script needed to calculate smearing factors for q2 distribution
 import os
 import re
 import glob
-import pprint
 import argparse
 
 import hist
@@ -24,6 +23,7 @@ from zfit.core.parameter    import Parameter  as zpar
 from zfit.result            import FitResult  as zres
 
 import dmu.generic.utilities as gut
+from dmu.stats              import utilities   as sut
 from dmu.stats.fitter       import Fitter      as zfitter
 from dmu.stats.zfit_plotter import ZFitPlotter as zfp
 from dmu.logging.log_store  import LogStore
@@ -99,7 +99,7 @@ def _float_pars(pdf : zpdf) -> None:
 
         log.info(f'{"":<4}{par.name:<20}{par.value():>20.3f}')
 #-------------------
-def reset_sig_pars(pdf, d_val):
+def _reset_sig_pars(pdf : zpdf, d_val : dict[str,tuple[float,float]]) -> None:
     l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
     log.info('Setting initial values:')
     for par in l_par:
@@ -257,8 +257,8 @@ def _fit(
         rdf        : RDataFrame,
         d_fix      : dict[str,tuple[float,float]] = None,
         identifier : str                          ='unnamed') -> dict[str,tuple[float,float]]:
-
-    jsn_path  = f'{Data.plt_dir}/{identifier}.json'
+    fit_dir  = f'{Data.plt_dir}/{identifier}'
+    jsn_path = f'{fit_dir}/parameters.json'
     if os.path.isfile(jsn_path):
         log.info(f'Fit file found: {jsn_path}')
         d_par = gut.load_json(jsn_path)
@@ -280,22 +280,20 @@ def _fit(
         if os.path.isfile(jsn_path):
             log.info(f'Loading cached simulation parameters: {jsn_path}')
             d_par = gut.load_json(jsn_path)
-            reset_sig_pars(pdf, d_par)
+            _reset_sig_pars(pdf, d_par)
 
     dat = _get_data(rdf, pdf, is_signal, identifier)
     pdf = _fix_pdf(pdf, d_fix)
     obj = zfitter(pdf, dat)
 
-    if   Data.skip_fit:
-        log.info('Skipping fit')
-        res=None
-    elif is_signal:
+    if Data.skip_fit:
+        log.warning('Skipping fit')
+        return None
+
+    if is_signal:
         res=obj.fit(cfg={'strategy' : {'retry' : {'ntries' : 10}}})
     else:
         res=obj.fit()
-
-    if   Data.skip_fit:
-        return None
 
     if res is None:
         _plot_fit(dat, pdf, res, identifier, add_pars=None)
@@ -311,25 +309,13 @@ def _fit(
         log.info(res)
         raise ValueError(f'Finished with status/validity: {res.status}/{res.valid}')
 
-    log.info('Using minuit hesse for errors')
-    with zfit.run.set_autograd_mode(False):
-        res.hesse(method='minuit_hesse')
-    res.freeze()
-
     log.info('Found parameters:')
     log.info(res)
     _plot_fit(dat, pdf, res, identifier, add_pars='all')
 
-    tex_path = f'{Data.plt_dir}/{identifier}.tex'
-    log.info(f'Saving to: {tex_path}')
-    result_to_latex(res, tex_path, method='minos')
-
-    pkl_path = f'{Data.plt_dir}/{identifier}.pkl'
-    gut.dump_pickle(res, pkl_path)
-
     d_par = _get_pars(res, identifier)
 
-    gut.dump_json(d_par, jsn_path)
+    sut.save_fit(data=dat, model=pdf, res=res, fit_dit=fit_dir)
 
     return d_par
 #-------------------
