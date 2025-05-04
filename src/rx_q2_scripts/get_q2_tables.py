@@ -193,10 +193,14 @@ def get_cb_nspd_pdf(prefix=''):
 
     return sig
 #-------------------
-def get_signal_pdf(split_by_nspd = False, prefix=None):
-    if   Data.sig_pdf_splt is not None and     split_by_nspd:
+def _get_signal_pdf(
+        split_by_nspd : bool = False,
+        prefix        : str  = None) -> zpdf:
+
+    if Data.sig_pdf_splt is not None and     split_by_nspd:
         return Data.sig_pdf_splt
-    elif Data.sig_pdf_merg is not None and not split_by_nspd:
+
+    if Data.sig_pdf_merg is not None and not split_by_nspd:
         return Data.sig_pdf_merg
 
     if split_by_nspd:
@@ -207,14 +211,14 @@ def get_signal_pdf(split_by_nspd = False, prefix=None):
 
     return Data.sig_pdf_splt if split_by_nspd else Data.sig_pdf_merg
 #-------------------
-def get_bkg_pdf():
+def _get_bkg_pdf() -> zpdf:
     if Data.bkg_pdf is not None:
         return Data.bkg_pdf
 
     lam = zfit.Parameter('lam', -0.001, -0.1, -0.0001)
     bkg = zfit.pdf.Exponential(lam=lam, obs=Data.obs, name='')
 
-    nbk = zfit.Parameter(f'nbk', 100, 0.0, 200000)
+    nbk = zfit.Parameter('nbk', 100, 0.0, 200000)
     bkg = bkg.create_extended(nbk, name='Combinatorial')
 
     Data.bkg_pdf = bkg
@@ -222,8 +226,8 @@ def get_bkg_pdf():
     return bkg
 #-------------------
 def get_full_pdf(split_by_nspd):
-    sig = get_signal_pdf(split_by_nspd)
-    bkg = get_bkg_pdf()
+    sig = _get_signal_pdf(split_by_nspd)
+    bkg = _get_bkg_pdf()
     pdf = zfit.pdf.SumPDF([sig, bkg], name='Model')
 
     log.debug(f'Signal    : {sig}')
