@@ -1,6 +1,8 @@
 # This config file is used to configure the behaviour of RDFGetter
 
 #If a column ins not found in a dataframe, it will be added according to the following definitions
+redefinitions:
+  block             : 'block < 0 ? 4 : block' # This is needed to process pre-UT data as Block 4 data, temporary
 definitions:
   Jpsi_const_mass_M : TMath::Sqrt(TMath::Power(Jpsi_DTF_HEAD_PE, 2) - TMath::Power(Jpsi_DTF_HEAD_PX, 2) - TMath::Power(Jpsi_DTF_HEAD_PY, 2) - TMath::Power(Jpsi_DTF_HEAD_PZ, 2))
   L1_TRACK_PT       : ROOT::Math::XYZVector lep(L1_TRACK_PX, L1_TRACK_PY, L1_TRACK_PZ); return lep.rho();
