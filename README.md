@@ -101,6 +101,19 @@ this will dump to either JSON or YAML files, depending on the extension, extensi
 
 and it's meant to allow the user to bypass all the boilerplate and keep their code brief.
 
+## PKL dumper and loader
+
+In the same way one can do:
+
+```python
+import dmu.generic.utilities as gut
+
+data = [1,2,3,4]
+
+gut.dump_pickle(data, '/tmp/list.pkl')
+data = gut.load_pickle('/tmp/list.pkl')
+```
+
 # Physics
 
 ## Truth matching

@@ -4,6 +4,7 @@ Module containing generic utility functions
 import os
 import time
 import json
+import pickle
 import inspect
 from typing                import Callable
 from functools             import wraps
@@ -100,4 +101,30 @@ def load_json(path : str):
             return data
 
         raise NotImplementedError(f'Cannot deduce format from extension in path: {path}')
+# --------------------------------
+def dump_pickle(data, path : str) -> None:
+    '''
+    Saves data as pickle file 
+
+    Parameters
+    data     : dictionary, list, etc
+    path     : Path to output file where to save it
+    '''
+    dir_name = os.path.dirname(path)
+    os.makedirs(dir_name, exist_ok=True)
+
+    with open(path, 'wb') as ofile:
+        pickle.dump(data, ofile)
+# --------------------------------
+def load_pickle(path : str) -> None:
+    '''
+    loads data file 
+
+    Parameters
+    path     : Path to output file where to save it
+    '''
+    with open(path, 'rb') as ofile:
+        data = pickle.load(ofile)
+
+    return data
 # --------------------------------

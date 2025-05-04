@@ -39,3 +39,15 @@ def test_load_json(ext : str):
 
     assert l_data_org == l_data_lod
 # -------------------------
+def test_dump_pickle():
+    '''
+    Tests dump_json and loading it
+    '''
+    path = '/tmp/tests/dmu/generic/list.pkl'
+    data = [1,2,3,4]
+    gut.dump_pickle(data=data, path=path)
+
+    loaded = gut.load_pickle(path=path)
+
+    assert data == loaded
+# -------------------------
