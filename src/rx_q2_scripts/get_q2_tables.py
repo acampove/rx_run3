@@ -6,6 +6,7 @@ import os
 import re
 import glob
 import argparse
+from importlib.resources import files
 
 import hist
 import numpy
@@ -37,26 +38,14 @@ class Data:
     '''
     zfit.settings.changed_warnings.hesse_name = False
 
-    cal_dir  = os.environ['CALDIR']
-    dat_dir  = os.environ['DATDIR']
-    cas_dir  = os.environ['CASDIR']
-    mva_dir  = os.environ['MVADIR']
-    qsq_dir  = os.environ['QSQSYS']
+    ana_dir      = os.environ['ANADIR']
 
-    l_run3_year = ['2024']
-
-    l_year   = ['2011', '2012', '2015', '2016', '2017', '2018', 'r1', 'r2p1', '2024']
-    l_trig   = ['ETOS', 'GTIS']
-    l_brem   = ['0', '1', '2']
-    l_sys    = ['nom', 'nspd']
-    l_sam    = ['simulation', 'data', 'both']
-    l_cali   = ['000', 'nom']
-
-    bdt_dir  = f'{mva_dir}/electron/bdt_v10.14.a0v2ss'
-    b_mass   = 'B_const_mass_M[0]'
-    j_mass   = 'Jpsi_M'
-    nbins    = 60
-
+    l_year       : list[str]
+    l_trig       : list[str]
+    l_brem       : list[str]
+    l_syst       : list[str]
+    l_samp       : list[str]
+    l_cali       : list[str]
     trig         : str
     year         : str
     brem         : str
@@ -65,6 +54,9 @@ class Data:
     skip_fit     : bool
     nevs_data    : int
     cal_sys      : str
+    vers         : str
+    j_mass       : str
+    nbins        : int
     obs          : zobs
     sig_pdf_splt : zpdf
     sig_pdf_merg : zpdf
@@ -77,15 +69,35 @@ class Data:
     dmu      = zfit.Parameter('dmu', 0, -50.0, 50.0)
     rsg      = zfit.Parameter('rsg', 1, 0.7,  1.4)
 
-    d_sig_ini        =   {}
-    d_sig_ini['mu'  ]= 3060
-    d_sig_ini['sg'  ]= 20.0
-    d_sig_ini['ap_r']=  1.0
-    d_sig_ini['pw_r']=  1.0
-    d_sig_ini['ap_l']= -1.0
-    d_sig_ini['pw_l']=  1.0
-    d_sig_ini['ncbr']=  1000
-    d_sig_ini['ncbl']=  1000
+    d_sig_ini : dict[str,float]
+#-------------------
+def _load_config() -> dict:
+    cfg_path = files('rx_q2_data').joinpath('config/v1.yaml')
+    cfg      = gut.load_json(cfg_path)
+
+    return cfg
+#-------------------
+def _set_vars():
+    cfg      = _load_config()
+    d_input  = cfg['input'  ]
+    d_fitting= cfg['fitting']
+
+    Data.d_sig_ini.update(cfg['fitting']['model']['parameters'])
+    Data.l_year = d_input['year']
+    Data.l_trig = d_input['trig']
+    Data.l_brem = d_input['brem']
+    Data.l_cali = d_input['cali']
+    Data.l_syst = d_input['syst']
+    Data.l_samp = d_input['samp']
+
+    Data.nbins  = d_fitting['binning']['nbins']
+    Data.j_mass = d_fitting['mass']
+#-------------------
+def _initialize():
+    syst          = {'nom' : 'nom', 'nspd' : 'lsh'}[Data.syst]
+    Data.plt_dir  = f'{Data.ana_dir}/q2/fits/{Data.vers}_{syst}'
+    os.makedirs(Data.plt_dir, exist_ok=True)
+    Data.obs      = zfit.Space(Data.j_mass, limits=_get_obs_range())
 #-------------------
 def _float_pars(pdf : zpdf) -> None:
     l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
@@ -399,7 +411,7 @@ def _get_fix_pars(d_par : dict[str,tuple[float,float]]) -> dict[str,tuple[float,
         if parname.startswith('mu') or parname.startswith('sg'):
             del d_fix[parname]
 
-    if Data.sys == 'nspd':
+    if Data.syst == 'nspd':
         for index in [1,2,3]:
             ryld = d_fix[f'ncbr_{index}'][0]
             lyld = d_fix[f'ncbl_{index}'][0]
@@ -414,7 +426,7 @@ def _get_fix_pars(d_par : dict[str,tuple[float,float]]) -> dict[str,tuple[float,
     return d_fix
 #-------------------
 def _add_nspd_col(rdf : RDataFrame) -> RDataFrame:
-    if Data.year in Data.l_run3_year:
+    if Data.year in Data.l_year:
         log.info(f'Skipping adding nSPDHits for {Data.year}')
         return rdf
 
@@ -446,22 +458,22 @@ def _get_sim_pars_cache() -> dict[str,float]:
 #-------------------
 def _get_sim_pars_fits(rdf : RDataFrame, identifier : str):
     d_par = {}
-    if   Data.sys == 'nspd':
+    if   Data.syst == 'nspd':
         rdf = _add_nspd_col(rdf)
         for i_nspd in [1,2,3]:
             rdf_sim_nspd = rdf.Filter(f'nspd == {i_nspd}')
             d_tmp_1      = _fit(rdf_sim_nspd, d_fix=None, identifier=f'sim_{i_nspd}_{identifier}')
             d_tmp_2      = { f'{key}_{i_nspd}' : val for key, val in d_tmp_1.items() }
             d_par.update(d_tmp_2)
-    elif Data.sys == 'nom':
+    elif Data.syst == 'nom':
         d_par = _fit(rdf, d_fix=None, identifier=f'sim_{identifier}')
     else:
-        raise ValueError(f'Invalid systematic: {Data.sys}')
+        raise ValueError(f'Invalid systematic: {Data.syst}')
 
     return d_par
 #-------------------
 def _make_table():
-    identifier= f'{Data.trig}_{Data.year}_{Data.brem}_{Data.sys}'
+    identifier= f'{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}'
 
     odf_sim   = data_set(is_mc= True, trigger=Data.trig, dset=Data.year)
     odf_sim.plt_dir = f'{Data.plt_dir}/cal_wgt_sim_{identifier}'
@@ -473,12 +485,12 @@ def _make_table():
     rdf_dat    = odf_dat.get_rdf()
     rdf_dat    = rdf_dat.Filter(f'nbrem == {Data.brem}')
 
-    if Data.sam == 'data':
+    if Data.samp == 'data':
         d_sim_par = _get_sim_pars_cache()
     else:
         d_sim_par = _get_sim_pars_fits(rdf_sim, identifier)
 
-    if Data.sam == 'simulation':
+    if Data.samp == 'simulation':
         log.info('Done with simulation and returning')
         return
 
@@ -486,7 +498,7 @@ def _make_table():
     Data.nevs_data = rdf_dat.Count().GetValue()
 
     d_fix_par = _get_fix_pars(d_sim_par)
-    _         = _fit(rdf_dat, d_fix=d_fix_par, identifier=f'dat_{Data.trig}_{Data.year}_{Data.brem}_{Data.sys}')
+    _         = _fit(rdf_dat, d_fix=d_fix_par, identifier=f'dat_{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}')
 #-------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
@@ -495,8 +507,8 @@ def _get_args():
     parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True, choices=Data.l_year)
     parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True, choices=Data.l_brem)
     parser.add_argument('-c', '--cali' , type =str, help='Calibration weight systematics'              , default='nom', choices=Data.l_cali)
-    parser.add_argument('-x', '--sys'  , type =str, help='Systematic variabion'                        , choices=Data.l_sys)
-    parser.add_argument('-s', '--sam'  , type =str, help='Sample'                                      , choices=Data.l_sam, default='both')
+    parser.add_argument('-x', '--sys'  , type =str, help='Systematic variabion'                        ,                choices=Data.l_syst)
+    parser.add_argument('-s', '--sam'  , type =str, help='Sample'                                      , default='both',choices=Data.l_samp)
     parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1)
     parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action='store_true')
     args = parser.parse_args()
@@ -504,16 +516,12 @@ def _get_args():
     Data.trig     = args.trig
     Data.year     = args.year
     Data.brem     = args.brem
-    Data.sys      = args.sys
-    Data.sam      = args.sam
+    Data.syst     = args.syst
+    Data.samp     = args.samp
+    Data.vers     = args.vers
     Data.cal_sys  = args.cali
     Data.nentries = args.nent
     Data.skip_fit = args.skip_fit
-
-    syst          = {'nom' : 'nom', 'nspd' : 'lsh'}[Data.sys]
-    Data.plt_dir  = f'{Data.qsq_dir}/get_q2_tables/fits/{args.vers}.{syst}'
-    os.makedirs(Data.plt_dir, exist_ok=True)
-    Data.obs      = zfit.Space('Jpsi_M', limits=_get_obs_range())
 #-------------------
 def main():
     '''
@@ -521,7 +529,9 @@ def main():
     '''
     plt.style.use(mplhep.style.LHCb2)
 
+    _set_vars()
     _get_args()
+    _initialize()
     _make_table()
 #-------------------
 if __name__ == '__main__':
