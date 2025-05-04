@@ -16,6 +16,7 @@ input:
 syst:
     - nom
 fitting:
+  model  : dscb
   ranges : # Fitting ranges for each brem category
     0 :
       - 2200
