@@ -111,7 +111,7 @@ def reset_sig_pars(pdf, d_val):
         par.set_value(val)
         log.info(f'{name:<20}{"->":<10}{val:<10.3}')
 #-------------------
-def get_nspd_signal(l_pdf):
+def _get_nspd_signal(l_pdf : list[zpdf]) -> zpdf:
     nsg_1 = zfit.Parameter('nsg_1', 1000, 0, Data.nevs_data)
     nsg_2 = zfit.Parameter('nsg_2', 1000, 0, Data.nevs_data)
     nsg_3 = zfit.Parameter('nsg_3', 1000, 0, Data.nevs_data)
@@ -122,7 +122,7 @@ def get_nspd_signal(l_pdf):
 
     return epdf
 #-------------------
-def get_cb_pdf():
+def _get_cb_pdf() -> zpdf:
     ap_r  = zfit.Parameter('ap_r',  1.0,  -3.0,   3.0)
     pw_r  = zfit.Parameter('pw_r',  1.0,   0.1,  20.0)
     sig_r = zfit.pdf.CrystalBall(obs=Data.obs, mu=Data.mu, sigma=Data.sg, alpha=ap_r, n=pw_r)
@@ -154,7 +154,7 @@ def _get_nspd_data_pars(preffix : str ='') -> tuple[zpar,zpar]:
 
     return dat_mu, dat_sg
 #-------------------
-def get_cb_nspd_pdf(prefix=''):
+def _get_cb_nspd_pdf(prefix : str = '') -> zpdf:
     mu,sg = _get_nspd_data_pars(prefix)
 
     ap_r  = zfit.Parameter(f'ap_r{prefix}',  1.0,  -10.0, 10.0)
@@ -178,10 +178,10 @@ def _get_signal_pdf(split_by_nspd : bool = False) -> zpdf:
         return Data.sig_pdf_merg
 
     if split_by_nspd:
-        l_pdf = [ get_cb_nspd_pdf(prefix=f'_{i_nspd}') for i_nspd in [1, 2, 3] ]
-        Data.sig_pdf_splt = get_nspd_signal(l_pdf)
+        l_pdf = [ _get_cb_nspd_pdf(prefix=f'_{i_nspd}') for i_nspd in [1, 2, 3] ]
+        Data.sig_pdf_splt = _get_nspd_signal(l_pdf)
     else:
-        Data.sig_pdf_merg = get_cb_pdf()
+        Data.sig_pdf_merg = _get_cb_pdf()
 
     return Data.sig_pdf_splt if split_by_nspd else Data.sig_pdf_merg
 #-------------------
