@@ -57,19 +57,18 @@ class Data:
     j_mass   = 'Jpsi_M'
     nbins    = 60
 
-    trig     = None
-    year     = None
-    brem     = None
-    plt_dir  = None
-    nentries = None
-    skip_fit = None
-    nevs_data= None
-    cal_sys  = None
-    obs      : zobs
-
-    sig_pdf_splt = None
-    sig_pdf_merg = None
-    bkg_pdf      = None
+    trig         : str
+    year         : str
+    brem         : str
+    plt_dir      : str
+    nentries     : int
+    skip_fit     : bool
+    nevs_data    : int
+    cal_sys      : str
+    obs          : zobs
+    sig_pdf_splt : zpdf
+    sig_pdf_merg : zpdf
+    bkg_pdf      : zpdf
     d_sim_par    : dict[str,tuple[float,float]]
 
     mu       = zfit.Parameter('mu', 3060,  3040, 3100)
