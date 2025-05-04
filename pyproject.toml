@@ -1,0 +1,38 @@
+[project]
+name        = 'rx_q2'
+version     = '0.0.1'
+readme      = 'README.md'
+dependencies= [
+'matplotlib',
+'pandas',
+'numpy',
+'zfit',
+'jacobi',
+'pandas']
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
+[project.scripts]
+check             ='rx_q2_scripts.check:main'
+compare_q2        ='rx_q2_scripts.compare_q2:main'
+compare_trig      ='rx_q2_scripts.compare_trig:main'
+create_rx_maps    ='rx_q2_scripts.create_rx_maps:main'
+dump_q2_ratios    ='rx_q2_scripts.dump_q2_ratios:main'
+get_q2_resolutions='rx_q2_scripts.get_q2_resolutions:main'
+get_q2_tables     ='rx_q2_scripts.get_q2_tables:main'
+plot_resolutions  ='rx_q2_scripts.plot_resolutions:main'
+print_q2_settings ='rx_q2_scripts.print_q2_settings:main'
+q2_merger         ='rx_q2_scripts.q2_merger:main'
+remake_q2_json    ='rx_q2_scripts.remake_q2_json:main'
+validate_smear    ='rx_q2_scripts.validate_smear:main'
+
+[tool.setuptools.package-data]
+rx_q2_data=[
+'*.csv']
+
+[tool.setuptools]
+script-files=['src/dmu_scripts/git/publish']
