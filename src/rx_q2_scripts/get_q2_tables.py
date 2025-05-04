@@ -36,8 +36,10 @@ class Data:
     mva_dir  = os.environ['MVADIR']
     qsq_dir  = os.environ['QSQSYS']
 
+    l_run3_year = ['2024']
+
+    l_year   = ['2011', '2012', '2015', '2016', '2017', '2018', 'r1', 'r2p1', '2024']
     l_trig   = ['ETOS', 'GTIS']
-    l_year   = ['2011', '2012', '2015', '2016', '2017', '2018', 'r1', 'r2p1']
     l_brem   = ['0', '1', '2']
     l_sys    = ['nom', 'nspd']
     l_sam    = ['simulation', 'data', 'both']
