@@ -497,13 +497,11 @@ def _get_rdf(kind : str) -> RDataFrame:
 def _make_table():
     identifier= f'{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}'
 
-    odf_sim         = _get_rdf(kind='simulation')
-    odf_sim.plt_dir = f'{Data.plt_dir}/cal_wgt_sim_{identifier}'
-    rdf_sim         = odf_sim.get_rdf()
+    rdf_sim         = _get_rdf(kind='simulation')
+    rdf_sim.plt_dir = f'{Data.plt_dir}/cal_wgt_sim_{identifier}'
 
-    odf_dat         = _get_rdf(kind='data')
-    odf_dat.plt_dir = f'{Data.plt_dir}/dat_plt_{identifier}'
-    rdf_dat         = odf_dat.get_rdf()
+    rdf_dat         = _get_rdf(kind='data')
+    rdf_dat.plt_dir = f'{Data.plt_dir}/dat_plt_{identifier}'
 
     if Data.samp == 'data':
         d_sim_par = _get_sim_pars_cache()
@@ -526,8 +524,9 @@ def _get_args():
     parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , required=True, choices=Data.l_trig)
     parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True, choices=Data.l_year)
     parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True, choices=Data.l_brem)
-    parser.add_argument('-x', '--sys'  , type =str, help='Systematic variabion'                        ,                choices=Data.l_syst)
-    parser.add_argument('-s', '--sam'  , type =str, help='Sample'                                      , default='both',choices=Data.l_samp)
+    parser.add_argument('-x', '--syst' , type =str, help='Systematic variabion'                        ,                choices=Data.l_syst)
+    parser.add_argument('-s', '--samp' , type =str, help='Sample'                                      , default='both',choices=Data.l_samp)
+    parser.add_argument('-l', '--logl' , type =int, help='Logging level'                                               ,choices=[10, 20, 30])
     parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1)
     parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action='store_true')
     args = parser.parse_args()
