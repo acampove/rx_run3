@@ -26,7 +26,7 @@ from zfit.result            import FitResult  as zres
 import dmu.generic.utilities as gut
 from dmu.stats              import utilities   as sut
 from dmu.stats.fitter       import Fitter      as zfitter
-from dmu.stats.zfit_plotter import ZFitPlotter as zfp
+from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.logging.log_store  import LogStore
 
 from rx_selection           import selection as sel
@@ -411,7 +411,7 @@ def _plot_fit(
         identifier : str,
         add_pars   : str) -> None:
 
-    obj=zfp(data=dat, model=pdf, result=res)
+    obj=ZFitPlotter(data=dat, model=pdf, result=res)
     obj.plot(nbins=Data.nbins, d_leg={}, plot_range=Data.obs_range, ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
     obj.axs[1].plot(Data.obs_range, [0, 0], linestyle='--', color='black')
 
