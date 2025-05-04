@@ -90,9 +90,9 @@ def _set_vars():
     d_fitting   = cfg['fitting']
 
     Data.d_sig_ini = cfg['fitting']['model']['parameters']
-    Data.l_year = d_input['year']
+    Data.l_year = [ str(year) for year in d_input['year'] ]
+    Data.l_brem = [ str(brem) for brem in d_input['brem'] ]
     Data.l_trig = d_input['trigger']
-    Data.l_brem = d_input['brem']
     Data.l_cali = d_input['cali']
     Data.d_samp = d_input['samples']
     Data.l_samp = list(Data.d_samp)
