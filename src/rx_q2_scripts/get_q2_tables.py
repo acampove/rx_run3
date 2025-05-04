@@ -74,7 +74,7 @@ class Data:
     d_sig_ini : dict[str,float]
 #-------------------
 def _load_config() -> dict:
-    cfg_path = files('rx_q2_data').joinpath(f'config/{Data.vers}.yaml')
+    cfg_path = files('rx_q2_data').joinpath(f'config/{Data.cfg_vers}.yaml')
     cfg_path = str(cfg_path)
     cfg      = gut.load_json(cfg_path)
 
@@ -102,7 +102,7 @@ def _initialize():
     RDFGetter.set_custom_columns(d_def = {'nbrem' : f'nbrem == {Data.brem}'})
 
     syst          = {'nom' : 'nom', 'nspd' : 'lsh'}[Data.syst]
-    Data.plt_dir  = f'{Data.ana_dir}/q2/fits/{Data.vers}_{syst}'
+    Data.plt_dir  = f'{Data.ana_dir}/q2/fits/{Data.out_vers}_{syst}'
     os.makedirs(Data.plt_dir, exist_ok=True)
     Data.obs      = zfit.Space(Data.j_mass, limits=_get_obs_range())
 #-------------------
@@ -463,8 +463,11 @@ def _get_sim_pars_cache() -> dict[str,float]:
 
     return d_par
 #-------------------
-def _get_sim_pars_fits(rdf : RDataFrame, identifier : str):
-    d_par = {}
+def _get_sim_pars_fits(rdf : RDataFrame, identifier : str) -> dict[str,tuple[float,float]]:
+    if Data.syst == 'nom':
+        d_par = _fit(rdf, d_fix=None, identifier=f'sim_{identifier}')
+        return d_par
+
     if   Data.syst == 'nspd':
         rdf = _add_nspd_col(rdf)
         for i_nspd in [1,2,3]:
@@ -472,12 +475,10 @@ def _get_sim_pars_fits(rdf : RDataFrame, identifier : str):
             d_tmp_1      = _fit(rdf_sim_nspd, d_fix=None, identifier=f'sim_{i_nspd}_{identifier}')
             d_tmp_2      = { f'{key}_{i_nspd}' : val for key, val in d_tmp_1.items() }
             d_par.update(d_tmp_2)
-    elif Data.syst == 'nom':
-        d_par = _fit(rdf, d_fix=None, identifier=f'sim_{identifier}')
-    else:
-        raise ValueError(f'Invalid systematic: {Data.syst}')
 
-    return d_par
+        return d_par
+
+    raise ValueError(f'Invalid systematic: {Data.syst}')
 #-------------------
 def _get_rdf(kind : str) -> RDataFrame:
     sample = Data.d_samp[kind]
