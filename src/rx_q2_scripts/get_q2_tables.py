@@ -49,6 +49,7 @@ class Data:
     l_samp       : list[str]
     d_samp       : dict[str,str]
     l_cali       : list[str]
+    d_sel        : dict[str,str]
     obs_range    : list[float]
     d_obs_range  : dict[str,list[float]]
 
@@ -100,6 +101,7 @@ def _set_vars():
     Data.l_cali = d_input['cali']
     Data.d_samp = d_input['samples']
     Data.l_samp = list(Data.d_samp)
+    Data.d_sel  = d_input['selection']
 
     Data.nbins       = d_fitting['binning']['nbins']
     Data.cfg_sim_fit = d_fitting['simulation']
@@ -108,13 +110,15 @@ def _set_vars():
 #-------------------
 def _initialize():
     plt.style.use(mplhep.style.LHCb2)
-    sel.set_custom_selection(d_cut = {'nbrem' : f'nbrem == {Data.brem}'})
+    d_cut={'nbrem' : f'nbrem == {Data.brem}'}
+    d_cut.update(Data.d_sel)
+    sel.set_custom_selection(d_cut = d_cut)
 
     syst          = {'nom' : 'nom', 'nspd' : 'lsh'}[Data.syst]
     Data.plt_dir  = f'{Data.ana_dir}/q2/fits/{Data.out_vers}_{syst}'
     os.makedirs(Data.plt_dir, exist_ok=True)
 
-    Data.obs_range= Data.d_obs_range[Data.brem] 
+    Data.obs_range= Data.d_obs_range[Data.brem]
     Data.obs      = zfit.Space(Data.j_mass, limits=Data.obs_range)
 
     LogStore.set_level('rx_q2:get_q2_tables', Data.logl)
