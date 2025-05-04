@@ -95,8 +95,8 @@ def _set_vars():
     d_input     = cfg['input'  ]
     d_fitting   = cfg['fitting']
 
-    Data.model  = d_fitting['model']
     Data.d_sig_ini = cfg['fitting']['model']['parameters']
+    Data.model  = d_fitting['model']
     Data.l_year = [ str(year) for year in d_input['year'] ]
     Data.l_brem = [ str(brem) for brem in d_input['brem'] ]
     Data.l_trig = d_input['trigger']
