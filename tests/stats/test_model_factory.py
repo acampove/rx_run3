@@ -9,6 +9,7 @@ import pytest
 from dmu.stats.utilities     import print_pdf
 from dmu.logging.log_store   import LogStore
 from dmu.stats.model_factory import ModelFactory, MethodRegistry
+from dmu.stats.parameters    import ParameterLibrary
 
 log=LogStore.add_logger('dmu:stats:test_model_factory')
 #--------------------------
@@ -53,7 +54,7 @@ def _initialize():
 #--------------------------
 def test_fix_params():
     '''
-    Will test fixing subset of parameters 
+    Will test fixing subset of parameters
     '''
     l_pdf = ['cbr', 'cbl', 'dscb']
     l_shr = ['mu', 'sg']
@@ -154,6 +155,30 @@ def test_rep_signal(l_name : list[str]):
             obs     = Data.obs,
             l_pdf   = l_name,
             d_rep   = d_rep,
+            l_shared= l_shr,
+            l_float = l_flt)
+    pdf   = mod.get_pdf()
+
+    print_pdf(pdf)
+#--------------------------
+@pytest.mark.parametrize('kind', ['cbr', 'cbrl', 'dscb', 'gauss'])
+def test_override_parameter(kind: list[str]):
+    '''
+    Will create a PDF by overriding parameters
+    '''
+    log.info(f'Testing {kind}')
+
+    l_shr = ['mu', 'sg']
+    l_flt = ['mu', 'sg']
+
+    ParameterLibrary.print_parameters(kind=kind)
+    ParameterLibrary.set_values(parameter='mu', kind=kind, val=3100, low=2200, high=3500)
+    ParameterLibrary.set_values(parameter='sg', kind=kind, val=  30, low=  10, high=  50)
+
+    mod   = ModelFactory(
+            preffix = kind,
+            obs     = Data.obs,
+            l_pdf   = [kind],
             l_shared= l_shr,
             l_float = l_flt)
     pdf   = mod.get_pdf()
