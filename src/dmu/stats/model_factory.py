@@ -165,7 +165,7 @@ class ModelFactory:
         name: Name of parameter, e.g. mu
         '''
 
-        par_name = self._get_parameter_name(f'{kind}_{name}', suffix)
+        par_name = self._get_parameter_name(f'{name}_{kind}', suffix)
         log.debug(f'Assigning name: {par_name}')
 
         if par_name in self._d_par:
