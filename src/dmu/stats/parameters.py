@@ -74,6 +74,19 @@ class ParameterLibrary:
         high= df['high'].iloc[0]
 
         return val, low, high
+    # --------------------------------
+    @staticmethod
+    def set_values(
+            parameter : str,
+            kind      : str,
+            val       : float,
+            low       : float,
+            high      : float) -> None:
+        '''
+        This function will override the value and range for the given parameter
+        It should be typically used before using the ModelFactory class
+        '''
+        pass
 # --------------------------------
 
 ParameterLibrary._load_data()
