@@ -27,3 +27,9 @@ fitting:
       pw_l :  1.0
       ncbr :  1000
       ncbl :  1000
+  simulation:
+    strategy  :
+      retry   :
+        ntries        : 4   
+        pvalue_thresh : 0.05
+        ignore_status : true
