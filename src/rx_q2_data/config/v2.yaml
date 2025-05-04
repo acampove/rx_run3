@@ -1,6 +1,6 @@
 input:
   year:    # Supported years
-    - 2014
+    - 2024
   trigger:
     - Hlt2RD_BuToKpEE_MVA
   brem:   # Supported brem categories
