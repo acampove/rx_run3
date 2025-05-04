@@ -11,13 +11,13 @@ definitions:
   L1_TRACK_P        : ROOT::Math::XYZVector lep(L1_TRACK_PX, L1_TRACK_PY, L1_TRACK_PZ); return lep.r();
 
   L2_TRACK_PT       : ROOT::Math::XYZVector lep(L2_TRACK_PX, L2_TRACK_PY, L2_TRACK_PZ); return lep.rho();
-  L2_TRACK_ETA      : ROOT::Math::XYZVector lep(L2_TRACK_PX, L2_TRACK_PY, L2_TRACK_PZ); return lep.eta(); 
-  L2_TRACK_PHI      : ROOT::Math::XYZVector lep(L2_TRACK_PX, L2_TRACK_PY, L2_TRACK_PZ); return lep.phi(); 
+  L2_TRACK_ETA      : ROOT::Math::XYZVector lep(L2_TRACK_PX, L2_TRACK_PY, L2_TRACK_PZ); return lep.eta();
+  L2_TRACK_PHI      : ROOT::Math::XYZVector lep(L2_TRACK_PX, L2_TRACK_PY, L2_TRACK_PZ); return lep.phi();
   L2_TRACK_P        : ROOT::Math::XYZVector lep(L2_TRACK_PX, L2_TRACK_PY, L2_TRACK_PZ); return lep.r();
 
-  q2_track          : ROOT::Math::PtEtaPhiMVector l1(L1_TRACK_PT, L1_TRACK_ETA, L1_TRACK_PHI, 0.511); 
-                      ROOT::Math::PtEtaPhiMVector l2(L2_TRACK_PT, L2_TRACK_ETA, L2_TRACK_PHI, 0.511); 
-                      auto ll = l1 + l2; 
+  q2_track          : ROOT::Math::PtEtaPhiMVector l1(L1_TRACK_PT, L1_TRACK_ETA, L1_TRACK_PHI, 0.511);
+                      ROOT::Math::PtEtaPhiMVector l2(L2_TRACK_PT, L2_TRACK_ETA, L2_TRACK_PHI, 0.511);
+                      auto ll = l1 + l2;
                       return ll.M2();
   nbrem             : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2) # Will use the new definition of brem
 trees:
