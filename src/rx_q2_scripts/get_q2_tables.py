@@ -194,7 +194,6 @@ def get_cb_nspd_pdf(prefix=''):
     return sig
 #-------------------
 def _get_signal_pdf(split_by_nspd : bool = False) -> zpdf:
-
     if Data.sig_pdf_splt is not None and     split_by_nspd:
         return Data.sig_pdf_splt
 
@@ -223,7 +222,7 @@ def _get_bkg_pdf() -> zpdf:
 
     return bkg
 #-------------------
-def get_full_pdf(split_by_nspd):
+def _get_full_pdf(split_by_nspd : bool):
     sig = _get_signal_pdf(split_by_nspd)
     bkg = _get_bkg_pdf()
     pdf = zfit.pdf.SumPDF([sig, bkg], name='Model')
@@ -262,16 +261,8 @@ def _fix_pdf(
 
     return pdf
 #-------------------
-def get_pdf(is_signal=None, split_by_nspd=None):
-    if is_signal     not in [True, False]:
-        log.error('Signal flag not specified')
-        raise
-
-    if split_by_nspd not in [True, False]:
-        log.error('split_by_nspd flag not specified')
-        raise
-
-    pdf = get_signal_pdf() if is_signal else get_full_pdf(split_by_nspd)
+def _get_pdf(is_signal : bool, split_by_nspd : bool) -> zpdf:
+    pdf = _get_signal_pdf() if is_signal else _get_full_pdf(split_by_nspd)
 
     return pdf
 #-------------------
@@ -285,7 +276,11 @@ def _get_pars(res : zres, identifier : str) -> dict[str,list[str]]:
 
     return d_par
 #-------------------
-def _fit(df, d_fix=None, identifier='unnamed'):
+def _fit(
+        rdf        : RDataFrame, 
+        d_fix      : dict[str,tuple[float,float]] = None, 
+        identifier : str                          ='unnamed') -> dict[str,tuple[float,float]]:
+
     jsn_path  = f'{Data.plt_dir}/{identifier}.json'
     if os.path.isfile(jsn_path):
         log.info(f'Fit file found: {jsn_path}')
@@ -296,10 +291,10 @@ def _fit(df, d_fix=None, identifier='unnamed'):
 
     if   identifier.endswith('_nspd'):
         log.info(f'Splitting by nSPD: {identifier}')
-        pdf = get_pdf(is_signal, split_by_nspd= True)
+        pdf = _get_pdf(is_signal, split_by_nspd= True)
     elif identifier.endswith( '_nom'):
         log.info(f'Not splitting by nSPD: {identifier}')
-        pdf = get_pdf(is_signal, split_by_nspd=False)
+        pdf = _get_pdf(is_signal, split_by_nspd=False)
     else:
         raise ValueError(f'Invalid identifier: {identifier}')
 
@@ -310,7 +305,7 @@ def _fit(df, d_fix=None, identifier='unnamed'):
             d_par = gut.load_json(jsn_path)
             reset_sig_pars(pdf, d_par)
 
-    dat = _get_data(df, pdf, is_signal, identifier)
+    dat = _get_data(rdf, pdf, is_signal, identifier)
     pdf = _fix_pdf(pdf, d_fix)
     obj = zfitter(pdf, dat)
 
@@ -323,7 +318,7 @@ def _fit(df, d_fix=None, identifier='unnamed'):
         res=obj.fit()
 
     if   Data.skip_fit:
-        return
+        return None
 
     if res is None:
         _plot_fit(dat, pdf, res, identifier, add_pars=None)
