@@ -271,14 +271,13 @@ def get_pdf(is_signal=None, split_by_nspd=None):
 
     return pdf
 #-------------------
-def get_pars(res, identifier):
+def _get_pars(res : zres, identifier : str) -> dict[str,list[str]]:
     try:
         d_par = { name : [ d_val['value'], d_val['hesse']['error'] ] for name, d_val in res.params.items() }
-    except:
-        log.error(f'Cannot extract {identifier} parameters from:')
-        print(res)
-        pprint.pprint(res.params)
-        raise
+    except Exception as exc:
+        log.info(res)
+        log.info(res.params)
+        raise ValueError(f'Cannot extract {identifier} parameters from:') from exc
 
     return d_par
 #-------------------
@@ -350,11 +349,11 @@ def _fit(df, d_fix=None, identifier='unnamed'):
     result_to_latex(res, tex_path, method='minos')
 
     pkl_path = f'{Data.plt_dir}/{identifier}.pkl'
-    utnr.dump_pickle(res, pkl_path)
+    gut.dump_pickle(res, pkl_path)
 
-    d_par = get_pars(res, identifier)
+    d_par = _get_pars(res, identifier)
 
-    utnr.dump_json(d_par, jsn_path)
+    gut.dump_json(d_par, jsn_path)
 
     return d_par
 #-------------------
