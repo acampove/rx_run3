@@ -7,6 +7,8 @@ dependencies= [
 'pandas',
 'data-manipulation-utilities',
 'numpy',
+'rx_data',
+'rx_selection',
 'zfit',
 'jacobi',
 'pandas']
