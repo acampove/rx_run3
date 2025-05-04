@@ -66,7 +66,7 @@ class Data:
     skip_fit = None
     nevs_data= None
     cal_sys  = None
-    obs      = None
+    obs      : zobs
 
     sig_pdf_splt = None
     sig_pdf_merg = None
@@ -282,14 +282,14 @@ def get_pars(res, identifier):
 
     return d_par
 #-------------------
-def fit(df, d_fix=None, identifier='unnamed'):
+def _fit(df, d_fix=None, identifier='unnamed'):
     jsn_path  = f'{Data.plt_dir}/{identifier}.json'
     if os.path.isfile(jsn_path):
         log.info(f'Fit file found: {jsn_path}')
-        d_par = utnr.load_json(jsn_path)
+        d_par = gut.load_json(jsn_path)
         return d_par
 
-    is_signal = True if d_fix is None else False
+    is_signal = d_fix is None
 
     if   identifier.endswith('_nspd'):
         log.info(f'Splitting by nSPD: {identifier}')
@@ -298,17 +298,16 @@ def fit(df, d_fix=None, identifier='unnamed'):
         log.info(f'Not splitting by nSPD: {identifier}')
         pdf = get_pdf(is_signal, split_by_nspd=False)
     else:
-        log.error(f'Invalid identifier: {identifier}')
-        raise
+        raise ValueError(f'Invalid identifier: {identifier}')
 
     if is_signal:
         float_pars(pdf)
         if os.path.isfile(jsn_path):
             log.info(f'Loading cached simulation parameters: {jsn_path}')
-            d_par = utnr.load_json(jsn_path)
+            d_par = gut.load_json(jsn_path)
             reset_sig_pars(pdf, d_par)
 
-    dat = get_data(df, pdf, is_signal, identifier)
+    dat = _get_data(df, pdf, is_signal, identifier)
     pdf = fix_pdf(pdf, d_fix)
     obj = zfitter(pdf, dat)
 
