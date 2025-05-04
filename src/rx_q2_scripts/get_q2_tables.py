@@ -193,9 +193,7 @@ def get_cb_nspd_pdf(prefix=''):
 
     return sig
 #-------------------
-def _get_signal_pdf(
-        split_by_nspd : bool = False,
-        prefix        : str  = None) -> zpdf:
+def _get_signal_pdf(split_by_nspd : bool = False) -> zpdf:
 
     if Data.sig_pdf_splt is not None and     split_by_nspd:
         return Data.sig_pdf_splt
