@@ -2,6 +2,7 @@
 Module storing ZModel class
 '''
 # pylint: disable=too-many-lines, import-error, too-many-positional-arguments, too-many-arguments
+# pylint: disable=too-many-instance-attributes
 
 from typing import Callable, Union
 
@@ -69,7 +70,13 @@ class ModelFactory:
     l_shr = ['mu']
     l_flt = ['mu', 'sg']
     d_rep = {'mu' : 'scale', 'sg' : 'reso'}
-    mod   = ModelFactory(preffix = 'signal', obs = obs, l_pdf = l_pdf, l_shared = l_shr, d_rep = d_rep)
+    mod   = ModelFactory(
+            preffix = 'signal', 
+            obs     = obs, 
+            l_pdf   = l_pdf, 
+            l_shared= l_shr, 
+            d_rep   = d_rep)
+
     pdf   = mod.get_pdf()
     ```
 
