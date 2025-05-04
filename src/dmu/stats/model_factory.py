@@ -338,8 +338,8 @@ class ModelFactory:
     #-----------------------------------------
     @MethodRegistry.register('cauchy')
     def _get_cauchy(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('mu', suffix, 5280,  5040, 5500)
-        gm  = self._get_parameter('gm', suffix,  150,    50,  500)
+        mu  = self._get_parameter('mu_cauchy', suffix, 5280,  5040, 5500)
+        gm  = self._get_parameter('gm_cauchy', suffix,  150,    50,  500)
 
         pdf = zfit.pdf.Cauchy(obs=self._obs, m=mu, gamma=gm, name=f'cauchy{suffix}')
 
