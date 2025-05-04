@@ -49,6 +49,9 @@ class Data:
     l_samp       : list[str]
     d_samp       : dict[str,str]
     l_cali       : list[str]
+    obs_range    : list[float]
+    d_obs_range  : dict[str,list[float]]
+
     trig         : str
     year         : str
     brem         : str
@@ -101,6 +104,7 @@ def _set_vars():
     Data.nbins       = d_fitting['binning']['nbins']
     Data.cfg_sim_fit = d_fitting['simulation']
     Data.j_mass      = d_fitting['mass']
+    Data.d_obs_range = d_fitting['ranges']
 #-------------------
 def _initialize():
     plt.style.use(mplhep.style.LHCb2)
@@ -109,7 +113,9 @@ def _initialize():
     syst          = {'nom' : 'nom', 'nspd' : 'lsh'}[Data.syst]
     Data.plt_dir  = f'{Data.ana_dir}/q2/fits/{Data.out_vers}_{syst}'
     os.makedirs(Data.plt_dir, exist_ok=True)
-    Data.obs      = zfit.Space(Data.j_mass, limits=_get_obs_range())
+
+    Data.obs_range= Data.d_obs_range[Data.brem] 
+    Data.obs      = zfit.Space(Data.j_mass, limits=Data.obs_range)
 
     LogStore.set_level('rx_q2:get_q2_tables', Data.logl)
     LogStore.set_level('rx_data:rdf_getter' , Data.logl)
@@ -361,12 +367,6 @@ def _get_data(
 
     return dat
 #-------------------
-def _get_obs_range() -> tuple[int,int]:
-    if Data.brem == '0':
-        return [2200, 3300]
-
-    return [2200, 3800]
-#-------------------
 def _plot_data(
         arr_mas    : numpy.ndarray,
         arr_wgt    : numpy.ndarray,
@@ -407,10 +407,9 @@ def _plot_fit(
         identifier : str,
         add_pars   : str) -> None:
 
-    obs_range = _get_obs_range()
     obj=zfp(data=dat, model=pdf, result=res)
-    obj.plot(nbins=Data.nbins, d_leg={}, plot_range=obs_range, ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
-    obj.axs[1].plot(obs_range, [0, 0], linestyle='--', color='black')
+    obj.plot(nbins=Data.nbins, d_leg={}, plot_range=Data.obs_range, ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
+    obj.axs[1].plot(Data.obs_range, [0, 0], linestyle='--', color='black')
 
     if add_pars is not None:
         plot_path = f'{Data.plt_dir}/{identifier}_pars.png'
