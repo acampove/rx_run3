@@ -56,7 +56,9 @@ class Data:
     skip_fit     : bool
     nevs_data    : int
     cal_sys      : str
-    vers         : str = 'v2'
+    out_vers     : str
+    cfg_vers     : str = 'v2'
+
     j_mass       : str
     nbins        : int
     obs          : zobs
@@ -520,7 +522,6 @@ def _get_args():
     parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , required=True, choices=Data.l_trig)
     parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True, choices=Data.l_year)
     parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True, choices=Data.l_brem)
-    parser.add_argument('-c', '--cali' , type =str, help='Calibration weight systematics'              , default='nom', choices=Data.l_cali)
     parser.add_argument('-x', '--sys'  , type =str, help='Systematic variabion'                        ,                choices=Data.l_syst)
     parser.add_argument('-s', '--sam'  , type =str, help='Sample'                                      , default='both',choices=Data.l_samp)
     parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1)
@@ -532,8 +533,7 @@ def _get_args():
     Data.brem     = args.brem
     Data.syst     = args.syst
     Data.samp     = args.samp
-    Data.vers     = args.vers
-    Data.cal_sys  = args.cali
+    Data.out_vers = args.vers
     Data.nentries = args.nent
     Data.skip_fit = args.skip_fit
 #-------------------
