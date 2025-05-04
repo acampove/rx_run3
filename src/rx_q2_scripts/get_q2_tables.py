@@ -29,6 +29,7 @@ from dmu.stats.fitter       import Fitter      as zfitter
 from dmu.stats.zfit_plotter import ZFitPlotter as zfp
 from dmu.logging.log_store  import LogStore
 
+from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
 
 log=LogStore.add_logger('rx_q2:get_q2_tables')
@@ -101,12 +102,15 @@ def _set_vars():
 #-------------------
 def _initialize():
     plt.style.use(mplhep.style.LHCb2)
-    RDFGetter.set_custom_columns(d_def = {'nbrem' : f'nbrem == {Data.brem}'})
+    sel.set_custom_selection(d_cut = {'nbrem' : f'nbrem == {Data.brem}'})
 
     syst          = {'nom' : 'nom', 'nspd' : 'lsh'}[Data.syst]
     Data.plt_dir  = f'{Data.ana_dir}/q2/fits/{Data.out_vers}_{syst}'
     os.makedirs(Data.plt_dir, exist_ok=True)
     Data.obs      = zfit.Space(Data.j_mass, limits=_get_obs_range())
+
+    LogStore.set_level('rx_q2:get_q2_tables', Data.logl)
+    LogStore.set_level('rx_data:rdf_getter' , Data.logl)
 #-------------------
 def _float_pars(pdf : zpdf) -> None:
     l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
@@ -533,6 +537,7 @@ def _get_args():
     Data.brem     = args.brem
     Data.syst     = args.syst
     Data.samp     = args.samp
+    Data.logl     = args.logl
     Data.out_vers = args.vers
     Data.nentries = args.nent
     Data.skip_fit = args.skip_fit
