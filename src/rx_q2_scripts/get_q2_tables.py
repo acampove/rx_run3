@@ -56,6 +56,7 @@ class Data:
     trig         : str
     year         : str
     brem         : str
+    model        : str
     plt_dir      : str
     nentries     : int
     skip_fit     : bool
@@ -94,6 +95,7 @@ def _set_vars():
     d_input     = cfg['input'  ]
     d_fitting   = cfg['fitting']
 
+    Data.model  = d_fitting['model']
     Data.d_sig_ini = cfg['fitting']['model']['parameters']
     Data.l_year = [ str(year) for year in d_input['year'] ]
     Data.l_brem = [ str(brem) for brem in d_input['brem'] ]
@@ -177,6 +179,15 @@ def _get_cb_pdf() -> zpdf:
 
     return sig
 #-------------------
+def _get_sig_pdf() -> zpdf:
+    if Data.model == 'cbl_cbr':
+        return _get_cb_pdf()
+
+    if Data.model == 'dscb':
+        return _get_dscb_pdf()
+
+    raise NotImplementedError(f'Invalid signal model: {Data.model}')
+#-------------------
 def _get_nspd_data_pars(preffix : str ='') -> tuple[zpar,zpar]:
     sim_mu = zfit.param.ConstantParameter(f'sim_mu{preffix}', Data.d_sim_par[f'mu{preffix}'][0])
     sim_sg = zfit.param.ConstantParameter(f'sim_sg{preffix}', Data.d_sim_par[f'sg{preffix}'][0])
@@ -219,7 +230,7 @@ def _get_signal_pdf(split_by_nspd : bool = False) -> zpdf:
         Data.sig_pdf_splt = _get_nspd_signal(l_pdf)
         return Data.sig_pdf_splt
 
-    Data.sig_pdf_merg = _get_cb_pdf()
+    Data.sig_pdf_merg = _get_sig_pdf()
     return Data.sig_pdf_merg
 #-------------------
 def _get_bkg_pdf() -> zpdf:
