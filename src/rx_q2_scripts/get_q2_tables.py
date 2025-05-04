@@ -232,7 +232,10 @@ def get_full_pdf(split_by_nspd):
 
     return pdf
 #-------------------
-def fix_pdf(pdf, d_fix):
+def _fix_pdf(
+        pdf   : zpdf,
+        d_fix : dict[str,tuple[float,float]]) -> zpdf:
+
     if d_fix is None:
         return pdf
 
@@ -248,10 +251,9 @@ def fix_pdf(pdf, d_fix):
         if par.name not in d_fix:
             log.info(f'{par.name:<20}{"->":<10}{"floating":>20}')
             continue
-        else:
-            fix_val, _ = d_fix[par.name]
 
-        par.assign(fix_val)
+        fix_val, _ = d_fix[par.name]
+        par.set_value(fix_val)
         par.floating=False
 
         log.info(f'{par.name:<20}{"->":<10}{fix_val:>20.3e}')
@@ -307,7 +309,7 @@ def _fit(df, d_fix=None, identifier='unnamed'):
             reset_sig_pars(pdf, d_par)
 
     dat = _get_data(df, pdf, is_signal, identifier)
-    pdf = fix_pdf(pdf, d_fix)
+    pdf = _fix_pdf(pdf, d_fix)
     obj = zfitter(pdf, dat)
 
     if   Data.skip_fit:
