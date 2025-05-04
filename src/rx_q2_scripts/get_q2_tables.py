@@ -8,13 +8,20 @@ import glob
 import pprint
 import argparse
 
-import ROOT
-import zfit
 import hist
 import numpy
 import mplhep
 import matplotlib.pyplot   as plt
+
+import ROOT # ROOT import has to be before zfit ones to avoid crash due to ROOT -> tensorflow issue
 from ROOT import RDataFrame
+
+import zfit
+from zfit.core.data         import Data       as zdata
+from zfit.core.basepdf      import BasePDF    as zpdf
+from zfit.core.interfaces   import ZfitSpace  as zobs
+from zfit.core.parameter    import Parameter  as zpar
+from zfit.result            import FitResult  as zres
 
 import dmu.generic.utilities as gut
 from dmu.stats.fitter       import Fitter      as zfitter
