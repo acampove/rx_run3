@@ -39,6 +39,7 @@ dmu_data=[
 'ml/*/*.yaml',
 'plotting/*/*.yaml',
 'tests/*.txt',
+'stats/parameters/data.yaml',
 ]
 
 [tool.setuptools]
