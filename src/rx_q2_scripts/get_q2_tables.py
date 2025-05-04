@@ -56,7 +56,7 @@ class Data:
     skip_fit     : bool
     nevs_data    : int
     cal_sys      : str
-    vers         : str
+    vers         : str = 'v2'
     j_mass       : str
     nbins        : int
     obs          : zobs
@@ -74,23 +74,24 @@ class Data:
     d_sig_ini : dict[str,float]
 #-------------------
 def _load_config() -> dict:
-    cfg_path = files('rx_q2_data').joinpath('config/v1.yaml')
+    cfg_path = files('rx_q2_data').joinpath(f'config/{Data.vers}.yaml')
+    cfg_path = str(cfg_path)
     cfg      = gut.load_json(cfg_path)
 
     return cfg
 #-------------------
 def _set_vars():
-    cfg      = _load_config()
-    d_input  = cfg['input'  ]
-    d_fitting= cfg['fitting']
+    cfg         = _load_config()
+    Data.l_syst = cfg['syst']
+    d_input     = cfg['input'  ]
+    d_fitting   = cfg['fitting']
 
-    Data.d_sig_ini.update(cfg['fitting']['model']['parameters'])
+    Data.d_sig_ini = cfg['fitting']['model']['parameters']
     Data.l_year = d_input['year']
-    Data.l_trig = d_input['trig']
+    Data.l_trig = d_input['trigger']
     Data.l_brem = d_input['brem']
     Data.l_cali = d_input['cali']
-    Data.l_syst = d_input['syst']
-    Data.d_samp = d_input['samp']
+    Data.d_samp = d_input['samples']
     Data.l_samp = list(Data.d_samp)
 
     Data.nbins  = d_fitting['binning']['nbins']
