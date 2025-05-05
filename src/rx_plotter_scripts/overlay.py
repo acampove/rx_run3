@@ -48,6 +48,7 @@ class Data:
     q2_bin  : str
     cfg_dir : str
     brem    : int
+    logl    : int
 
     l_col  = []
 # ---------------------------------
@@ -56,6 +57,8 @@ def _initialize() -> None:
         EnableImplicitMT(Data.nthreads)
 
     cfg_dir = files('rx_plotter_data').joinpath('overlay')
+
+    LogStore.set_level('rx_selection:cutflow', Data.logl)
 
     Data.cfg_dir = cfg_dir
     log.info(f'Picking configuration from: {Data.cfg_dir}')
@@ -106,6 +109,10 @@ def _get_rdf() -> RDataFrame:
 
     rdf = _filter_by_brem(rdf)
 
+    if log.getEffectiveLevel() == 10:
+        rep = rdf.Report()
+        rep.Print()
+
     return rdf
 # ---------------------------------
 @gut.timeit
@@ -129,6 +136,7 @@ def _parse_args() -> None:
     parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True)
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category', choices=[0, 1, 2])
+    parser.add_argument('-l', '--logl'   , type=int, help='Log level'    , choices=[10, 20, 30])
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
@@ -137,6 +145,7 @@ def _parse_args() -> None:
     Data.config = args.config
     Data.substr = args.substr
     Data.brem   = args.brem
+    Data.logl   = args.logl
 # ---------------------------------
 def _get_cfg() -> dict:
     cfg_path= f'{Data.cfg_dir}/{Data.config}.yaml'
