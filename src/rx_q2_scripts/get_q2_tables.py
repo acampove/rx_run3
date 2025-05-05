@@ -409,21 +409,21 @@ def _plot_fit(
         dat        : zdata,
         pdf        : zpdf,
         res        : zres,
-        identifier : str,
-        add_pars   : str) -> None:
+        identifier : str) -> None:
 
     obj=ZFitPlotter(data=dat, model=pdf, result=res)
-    obj.plot(nbins=Data.nbins, d_leg={}, plot_range=Data.obs_range, ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
-    obj.axs[1].plot(Data.obs_range, [0, 0], linestyle='--', color='black')
+    for add_pars in ['all', None]:
+        obj.plot(nbins=Data.nbins, d_leg={}, plot_range=Data.obs_range, ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
+        obj.axs[1].plot(Data.obs_range, [0, 0], linestyle='--', color='black')
 
-    if add_pars is not None:
-        plot_path = f'{Data.plt_dir}/{identifier}_pars.png'
-    else:
-        plot_path = f'{Data.plt_dir}/{identifier}.png'
+        if add_pars is not None:
+            plot_path = f'{Data.plt_dir}/{identifier}_pars.png'
+        else:
+            plot_path = f'{Data.plt_dir}/{identifier}.png'
 
-    log.info(f'Saving to: {plot_path}')
-    plt.savefig(plot_path, bbox_inches='tight')
-    plt.close()
+        log.info(f'Saving to: {plot_path}')
+        plt.savefig(plot_path, bbox_inches='tight')
+        plt.close()
 #-------------------
 def _get_fix_pars(d_par : dict[str,tuple[float,float]]) -> dict[str,tuple[float,float]]:
     d_fix = dict(d_par)
