@@ -451,28 +451,9 @@ def _add_nspd_col(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 #-------------------
-def _get_sim_pars_cache() -> dict[str,float]:
-    json_wc = f'{Data.plt_dir}/sim_{Data.trig}_{Data.year}_{Data.brem}*.json'
-    l_json_path = glob.glob(json_wc)
-    if   len(l_json_path) == 0:
-        raise ValueError(f'No file found in: {json_wc}')
-
-    if len(l_json_path) == 1:
-        json_path = l_json_path[0]
-        d_par     = gut.load_json(json_path)
-    else:
-        d_par = {}
-        for i_nspd, json_path in enumerate(l_json_path):
-            log.info(f'Loading parameters from: {json_path}')
-            d_par_x = gut.load_json(json_path)
-            d_par_r = {f'{key}_{i_nspd + 1}' : val for key, val in d_par_x.items()}
-            d_par.update(d_par_r)
-
-    return d_par
-#-------------------
 def _get_sim_pars_fits(rdf : RDataFrame, identifier : str) -> dict[str,tuple[float,float]]:
     if Data.syst == 'nom':
-        d_par = _fit(rdf, d_fix=None, identifier=f'sim_{identifier}')
+        d_par = _fit(rdf, d_fix=None, identifier=identifier)
         return d_par
 
     if   Data.syst == 'nspd':
