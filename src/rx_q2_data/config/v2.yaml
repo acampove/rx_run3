@@ -16,7 +16,7 @@ input:
     #block : block == 1 || block == 2
     #hop   : (1)
     mass  : (1)
-    q2    : Jpsi_Mass > 2200 && Jpsi_Mass < 3800
+    q2    : (1) 
 syst:
     - nom
 fitting:
@@ -36,15 +36,6 @@ fitting:
   model:
     pdfs:
       - dscb 
-    parameters: # Initial values of parameters used in fit
-      mu   : 3060
-      sg   : 20.0
-      ap_r :  1.0
-      pw_r :  1.0
-      ap_l : -1.0
-      pw_l :  1.0
-      ncbr :  1000
-      ncbl :  1000
   simulation:
     strategy  :
       retry   :
