@@ -345,8 +345,11 @@ def _fit(
         log.info(res)
         raise ValueError(f'Finished with status/validity: {res.status}/{res.valid}')
 
+    log.info(30 * '-')
     log.info('Found parameters:')
+    log.info(30 * '-')
     log.info(res)
+    log.info(30 * '-')
     _plot_fit(dat, pdf, res, identifier, add_pars='all')
 
     d_par = _get_pars(res, identifier)
