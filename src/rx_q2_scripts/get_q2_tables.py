@@ -218,7 +218,7 @@ def _get_bkg_pdf() -> zpdf:
     if hasattr(Data, 'bkg_pdf'):
         return Data.bkg_pdf
 
-    lam = zfit.Parameter('lam', -0.001, -0.1, -0.0001)
+    lam = zfit.Parameter('lam', -0.001, -0.1, 0.0)
     bkg = zfit.pdf.Exponential(lam=lam, obs=Data.obs, name='')
 
     nbk = zfit.Parameter('nbk', 100, 0.0, 200000)
