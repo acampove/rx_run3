@@ -405,6 +405,11 @@ def _plot_data(
     plt.savefig(plt_path)
     plt.close('all')
 #-------------------
+def _add_q2_region_lines(obj : ZFitPlotter) -> None:
+    axis = obj.axs[0]
+    axis.axvline(x=2450, c='red', ls=':')
+    axis.axvline(x=3600, c='red', ls=':')
+#-------------------
 def _plot_fit(
         dat        : zdata,
         pdf        : zpdf,
@@ -412,17 +417,23 @@ def _plot_fit(
         identifier : str) -> None:
 
     obj=ZFitPlotter(data=dat, model=pdf, result=res)
-    for add_pars in ['all', None]:
-        obj.plot(nbins=Data.nbins, d_leg={}, plot_range=Data.obs_range, ext_text=f'#events={dat.nevents.numpy()}', add_pars=add_pars)
+    for yscale in ['log', 'linear']:
+        for add_pars in ['pars', 'no_pars']:
+            pars = None if add_pars == 'no_pars' else 'all'
+            obj.plot(
+                    nbins     =Data.nbins,
+                    d_leg     ={},
+                    plot_range=Data.obs_range,
+                    ext_text  =f'#Events={dat.nevents.numpy()}',
+                    yscale    =yscale,
+                    add_pars  =pars)
 
-        if add_pars is not None:
-            plot_path = f'{Data.plt_dir}/{identifier}_pars.png'
-        else:
-            plot_path = f'{Data.plt_dir}/{identifier}.png'
+            _add_q2_region_lines(obj)
 
-        log.info(f'Saving to: {plot_path}')
-        plt.savefig(plot_path, bbox_inches='tight')
-        plt.close()
+            plot_path = f'{Data.plt_dir}/{identifier}_{add_pars}_{yscale}.png'
+            log.info(f'Saving to: {plot_path}')
+            plt.savefig(plot_path, bbox_inches='tight')
+            plt.close()
 #-------------------
 def _get_fix_pars(d_par : dict[str,tuple[float,float]]) -> dict[str,tuple[float,float]]:
     d_fix = dict(d_par)
