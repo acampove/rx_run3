@@ -333,15 +333,13 @@ def _fit(
         res=obj.fit()
 
     if res is None:
-        _plot_fit(dat, pdf, res, identifier, add_pars=None)
-        _plot_fit(dat, pdf, res, identifier, add_pars='all')
+        _plot_fit(dat, pdf, res, identifier)
 
         log.info(res)
         raise ValueError('Fit failed')
 
     if res.status != 0:
-        _plot_fit(dat, pdf, res, identifier, add_pars=None)
-        _plot_fit(dat, pdf, res, identifier, add_pars='all')
+        _plot_fit(dat, pdf, res, identifier)
 
         log.info(res)
         raise ValueError(f'Finished with status/validity: {res.status}/{res.valid}')
@@ -351,7 +349,7 @@ def _fit(
     log.info(30 * '-')
     log.info(res)
     log.info(30 * '-')
-    _plot_fit(dat, pdf, res, identifier, add_pars='all')
+    _plot_fit(dat, pdf, res, identifier)
 
     d_par = _get_pars(res, identifier)
 
