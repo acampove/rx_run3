@@ -165,7 +165,7 @@ def _get_nspd_signal(l_pdf : list[zpdf]) -> zpdf:
 def _get_sig_pdf() -> zpdf:
     for pdf_name in Data.l_pdf:
         PL.set_values(kind=pdf_name, parameter='mu', val=3000, low=2800, high=3300)
-        PL.set_values(kind=pdf_name, parameter='sg', val= 100, low=  20, high= 200)
+        PL.set_values(kind=pdf_name, parameter='sg', val= 100, low=  10, high= 200)
 
     mod     = ModelFactory(
     preffix = 'q2_smearing',
