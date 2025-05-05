@@ -16,7 +16,9 @@ input:
 syst:
     - nom
 fitting:
-  model  : dscb
+  model  :
+    - cbr
+    - cbl
   ranges : # Fitting ranges for each brem category
     0 :
       - 2200
