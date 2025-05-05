@@ -255,6 +255,25 @@ pdf   = mod.get_pdf()
 
 Here, the floating parameters **should not** be the same as the reparametrized ones.
 
+### Overriding parameters
+
+The models above have their parameter ranges chosen for fits to B meson distributions
+e.g. the mean of the distributions is around 5GeV. To make these models extensible for other
+resonances do:
+
+```python
+from dmu.stats.parameters  import ParameterLibrary as PL
+
+PL.set_values(kind='cbr', parameter='mu', val=3000, low=2500, high=3500)
+```
+
+before using the `ModelFactory` class. 
+For a summary of all the parameters and values available do:
+
+```python
+PL.print_parameters(kind='cbr')
+```
+
 ### Printing PDFs
 
 One can print a zfit PDF by doing:
