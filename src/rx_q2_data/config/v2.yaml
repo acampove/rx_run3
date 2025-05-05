@@ -4,6 +4,7 @@ input:
   trigger:
     - Hlt2RD_BuToKpEE_MVA
   brem:   # Supported brem categories
+    - 0
     - 1
     - 2
   cali:
@@ -31,8 +32,7 @@ fitting:
     nbins : 60
   model:
     pdfs:
-     - cbr
-     - cbl
+      - dscb 
     parameters: # Initial values of parameters used in fit
       mu   : 3060
       sg   : 20.0
