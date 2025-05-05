@@ -516,28 +516,24 @@ def _get_rdf(kind : str) -> RDataFrame:
     return rdf
 #-------------------
 def _make_table():
-    identifier= f'{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}'
-
-    rdf_sim         = _get_rdf(kind='simulation')
-    rdf_sim.plt_dir = f'{Data.plt_dir}/cal_wgt_sim_{identifier}'
-
-    rdf_dat         = _get_rdf(kind='data')
-    rdf_dat.plt_dir = f'{Data.plt_dir}/dat_plt_{identifier}'
+    identifier = f'{Data.samp}_{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}'
 
     if Data.samp == 'data':
         d_sim_par = _get_sim_pars_cache()
     else:
+        rdf_sim   = _get_rdf(kind='simulation')
         d_sim_par = _get_sim_pars_fits(rdf_sim, identifier)
 
     if Data.samp == 'simulation':
         log.info('Done with simulation and returning')
         return
 
+    rdf_dat        = _get_rdf(kind='data')
     Data.d_sim_par = d_sim_par
     Data.nevs_data = rdf_dat.Count().GetValue()
 
     d_fix_par = _get_fix_pars(d_sim_par)
-    _         = _fit(rdf_dat, d_fix=d_fix_par, identifier=f'dat_{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}')
+    _         = _fit(rdf_dat, d_fix=d_fix_par, identifier=identifier)
 #-------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
