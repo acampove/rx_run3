@@ -474,6 +474,7 @@ class ZFitPlotter:
             add_pars          = None,
             ymax              = None,
             skip_pulls        = False,
+            pull_styling :bool= True,
             yscale : str      = None,
             axs               = None,
             figsize:tuple     = (13, 7),
@@ -491,6 +492,7 @@ class ZFitPlotter:
         d_leg                 : Customize legend
         d_col                 : Customize color
         plot_range            : Set plot_range
+        pull_styling(bool)    : Will add lines at +/-3 and set range to +/-5 for pull plots, by default True
         plot_components (list): List of strings, with names of PDFs, which are expected to be sums of PDFs and whose components should be plotted separately
         ext_text              : Text that can be added to plot
         add_pars (list|str)   : List of names of parameters to be added or string with value 'all' to add all fit parameters. If this is used, plot won't use LHCb style.
@@ -564,4 +566,9 @@ class ZFitPlotter:
 
         for ax in self.axs:
             ax.label_outer()
+
+        if pull_styling:
+            self.axs[1].axhline(y=-3, color='red' , linestyle=':')
+            self.axs[1].axhline(y=+3, color='red' , linestyle=':')
+            self.axs[1].set_ylim(-5, 5)
 #----------------------------------------
