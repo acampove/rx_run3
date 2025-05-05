@@ -156,6 +156,9 @@ def _get_sig_pdf() -> zpdf:
         if pdf_name == 'cbr':
             PL.set_values(kind=pdf_name, parameter='nc', val= 3, low=  0.1, high= 10)
 
+        if pdf_name == 'dscb':
+            PL.set_values(kind=pdf_name, parameter='nr', val= 3, low=  0.1, high= 10)
+
     mod     = ModelFactory(
     preffix = 'q2_smearing',
     obs     = Data.obs,
