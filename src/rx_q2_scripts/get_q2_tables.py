@@ -486,24 +486,20 @@ def _get_rdf(kind : str) -> RDataFrame:
     return rdf
 #-------------------
 def _make_table():
-    identifier = f'{Data.samp}_{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}'
-
-    if Data.samp == 'data':
-        d_sim_par = _get_sim_pars_cache()
-    else:
-        rdf_sim   = _get_rdf(kind='simulation')
-        d_sim_par = _get_sim_pars_fits(rdf_sim, identifier)
+    identifier = f'{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}'
 
     if Data.samp == 'simulation':
+        rdf_sim   = _get_rdf(kind='simulation')
+        _get_sim_pars_fits(rdf_sim, f'simulation_{identifier}')
         log.info('Done with simulation and returning')
         return
 
+    Data.d_sim_par = gut.load_json(f'{Data.plt_dir}/simulation_{identifier}/parameters.json')
     rdf_dat        = _get_rdf(kind='data')
-    Data.d_sim_par = d_sim_par
     Data.nevs_data = rdf_dat.Count().GetValue()
+    d_fix_par      = _get_fix_pars()
 
-    d_fix_par = _get_fix_pars(d_sim_par)
-    _         = _fit(rdf_dat, d_fix=d_fix_par, identifier=identifier)
+    _fit(rdf_dat, d_fix=d_fix_par, identifier=f'data_{identifier}')
 #-------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
