@@ -135,7 +135,7 @@ def _parse_args() -> None:
     parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True)
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category', choices=[0, 1, 2])
-    parser.add_argument('-l', '--logl'   , type=int, help='Log level'    , choices=[10, 20, 30])
+    parser.add_argument('-l', '--logl'   , type=int, help='Log level'    , choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
