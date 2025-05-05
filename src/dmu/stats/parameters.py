@@ -42,7 +42,13 @@ class ParameterLibrary:
                     d_data['low'      ].append(low      )
                     d_data['high'     ].append(high     )
 
-        ParameterLibrary.df_parameters = pnd.DataFrame(d_data)
+        df = pnd.DataFrame(d_data)
+
+        if not df[['parameter', 'kind']].is_unique:
+            print(df)
+            raise ValueError('Found non-unique occurrence of a parameter for a given pdf')
+
+        ParameterLibrary.df_parameters = df
     # --------------------------------
     @staticmethod
     def print_parameters(kind : str) -> None:
