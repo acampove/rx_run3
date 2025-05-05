@@ -23,7 +23,7 @@ fitting:
   ranges : # Fitting ranges for each brem category
     0 :
       - 2200
-      - 3300
+      - 3800
     1 :
       - 2200
       - 3800
