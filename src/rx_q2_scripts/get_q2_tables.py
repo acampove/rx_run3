@@ -162,33 +162,19 @@ def _get_nspd_signal(l_pdf : list[zpdf]) -> zpdf:
 
     return epdf
 #-------------------
-def _get_cb_pdf() -> zpdf:
-    ap_r  = zfit.Parameter('ap_r',  1.0,  -3.0,   3.0)
-    pw_r  = zfit.Parameter('pw_r',  1.0,   0.1,  20.0)
-    sig_r = zfit.pdf.CrystalBall(obs=Data.obs, mu=Data.mu, sigma=Data.sg, alpha=ap_r, n=pw_r)
-
-    ap_l  = zfit.Parameter('ap_l', -1.0,   -3.0,  3.0)
-    pw_l  = zfit.Parameter('pw_l',  1.0,    0.1, 20.0)
-    sig_l = zfit.pdf.CrystalBall(obs=Data.obs, mu=Data.mu, sigma=Data.sg, alpha=ap_l, n=pw_l)
-
-    ncbr  = zfit.Parameter('ncbr',  10,   0,  1000000)
-    sig_r = sig_r.create_extended(ncbr, name='CB1')
-
-    ncbl  = zfit.Parameter('ncbl',  10,   0,  1000000)
-    sig_l = sig_l.create_extended(ncbl, name='CB2')
-
-    sig   = zfit.pdf.SumPDF([sig_r, sig_l], name='Signal')
-
-    return sig
-#-------------------
 def _get_sig_pdf() -> zpdf:
-    if Data.model == 'cbl_cbr':
-        return _get_cb_pdf()
+    PL.set_values(kind='cbr', parameter='mu', val=3000, low=2500, high=3500)
+    PL.set_values(kind='cbl', parameter='mu', val=3000, low=2500, high=3500)
 
-    if Data.model == 'dscb':
-        return _get_dscb_pdf()
+    mod     = ModelFactory(
+    preffix = 'q2_smearing',
+    obs     = Data.obs,
+    l_pdf   = Data.l_pdf,
+    l_shared= ['mu', 'sg'],
+    l_float = ['mu', 'sg'])
+    pdf     = mod.get_pdf()
 
-    raise NotImplementedError(f'Invalid signal model: {Data.model}')
+    return pdf
 #-------------------
 def _get_nspd_data_pars(preffix : str ='') -> tuple[zpar,zpar]:
     sim_mu = zfit.param.ConstantParameter(f'sim_mu{preffix}', Data.d_sim_par[f'mu{preffix}'][0])
