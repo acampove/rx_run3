@@ -410,6 +410,14 @@ def _add_q2_region_lines(obj : ZFitPlotter) -> None:
     axis.axvline(x=2450, c='red', ls=':')
     axis.axvline(x=3600, c='red', ls=':')
 #-------------------
+def _get_text(data : zdata) -> str:
+    nentries= data.nevents.numpy()
+    text    = f'#Events={nentries}'
+    for name, value in Data.d_sel.items():
+        text += f'\n{name}={value}'
+
+    return text
+#-------------------
 def _plot_fit(
         dat        : zdata,
         pdf        : zpdf,
@@ -424,7 +432,7 @@ def _plot_fit(
                     nbins     =Data.nbins,
                     d_leg     ={},
                     plot_range=Data.obs_range,
-                    ext_text  =f'#Events={dat.nevents.numpy()}',
+                    ext_text  = _get_text(data = dat),
                     yscale    =yscale,
                     add_pars  =pars)
 
