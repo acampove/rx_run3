@@ -1,0 +1,51 @@
+general:
+  size : [12, 8]
+selection:
+  bdt  : (1)
+  q2   : (1)
+  mass : (1)
+overlay:
+  '[0.00, 0.15]' : mva_prc > 0.00 && mva_prc < 0.15
+  '[0.15, 0.30]' : mva_prc > 0.15 && mva_prc < 0.30
+  '[0.30, 0.50]' : mva_prc > 0.30 && mva_prc < 0.50
+  '[0.50, 0.80]' : mva_prc > 0.50 && mva_prc < 0.80
+  '[0.80, 1.00]' : mva_prc > 0.80 && mva_prc < 1.00
+plots:
+    Jpsi_M:
+        binning    : [2200, 3800, 60]
+        yscale     : 'linear'
+        labels     : ['M$(J/\psi)$[MeV]', 'Normalized']
+        title      : Mass distribution vs $BDT_{prc}$ bins
+        name       : jpsi_mass_mva_prc_raw
+        normalized : true
+        styling:
+          histtype : step
+    Jpsi_M_brem_track_2:
+        binning    : [2200, 3800, 60]
+        yscale     : 'linear'
+        labels     : ['M${}_{corr}(J/\psi)$[MeV]', 'Normalized']
+        title      : Mass distribution vs $BDT_{prc}$ bins
+        name       : jpsi_mass_mva_prc_cor
+        normalized : true
+        styling:
+          histtype : step
+    B_M:
+        binning    : [4500, 6000, 60]
+        yscale     : 'linear'
+        labels     : ['M$(B^+)$[MeV]', 'Normalized']
+        title      : Mass distribution vs $BDT_{prc}$ bins
+        name       : b_mass_mva_prc_raw
+        normalized : true
+        styling:
+          histtype : step
+    B_M_brem_track_2:
+        binning    : [4500, 6000, 60]
+        yscale     : 'linear'
+        labels     : ['M${}_{corr}(B^+)$[MeV]', 'Normalized']
+        title      : Mass distribution vs $BDT_{prc}$ bins
+        name       : b_mass_mva_prc_cor
+        normalized : true
+        styling:
+          histtype : step
+style:
+  skip_lines : true
