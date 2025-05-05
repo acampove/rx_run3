@@ -224,6 +224,9 @@ def _get_bkg_pdf() -> zpdf:
 #-------------------
 def _get_full_pdf(split_by_nspd : bool):
     sig = _get_signal_pdf(split_by_nspd)
+    nsg = zfit.Parameter('nsg', 10_000, 100, 2_000_000)
+    sig = sig.create_extended(nsg, name='Signal')
+
     bkg = _get_bkg_pdf()
     pdf = zfit.pdf.SumPDF([sig, bkg], name='Model')
 
