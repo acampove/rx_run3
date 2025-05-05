@@ -163,8 +163,11 @@ def _get_nspd_signal(l_pdf : list[zpdf]) -> zpdf:
     return epdf
 #-------------------
 def _get_sig_pdf() -> zpdf:
-    PL.set_values(kind='cbr', parameter='mu', val=3000, low=2500, high=3500)
-    PL.set_values(kind='cbl', parameter='mu', val=3000, low=2500, high=3500)
+    PL.set_values(kind='cbr', parameter='mu', val=3000, low=2800, high=3300)
+    PL.set_values(kind='cbl', parameter='mu', val=3000, low=2800, high=3300)
+
+    PL.set_values(kind='cbr', parameter='sg', val= 100, low=  50, high= 200)
+    PL.set_values(kind='cbl', parameter='sg', val= 100, low=  50, high= 200)
 
     mod     = ModelFactory(
     preffix = 'q2_smearing',
