@@ -44,10 +44,6 @@ class ParameterLibrary:
 
         df = pnd.DataFrame(d_data)
 
-        if not df[['parameter', 'kind']].is_unique:
-            print(df)
-            raise ValueError('Found non-unique occurrence of a parameter for a given pdf')
-
         ParameterLibrary.df_parameters = df
     # --------------------------------
     @staticmethod
