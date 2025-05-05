@@ -13,11 +13,11 @@ bdt_common: &bdt_common
   high    : (mva_cmb > 0.60) && (mva_prc > 0.80)
 
 q2_common: &q2_common
-  low    : (Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1000000)
-  central: (Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000)
-  jpsi   : (Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)
-  psi2   : (Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)
-  high   : (q2_track        > 15000000) && (Jpsi_M * Jpsi_M < 22000000)
+  low    : (q2       >        0) && (q2 <  1000000)
+  central: (q2       >  1100000) && (q2 <  6000000)
+  jpsi   : (q2       >  6000000) && (q2 < 12960000)
+  psi2   : (q2       >  9920000) && (q2 < 16400000)
+  high   : (q2_track > 15000000) && (q2 < 22000000)
 hop_common: &hop_common
   low    : hop_mass > 4500 
   central: hop_mass > 4500 
