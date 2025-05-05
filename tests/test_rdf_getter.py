@@ -26,14 +26,22 @@ class Data:
     psi2_q2    = '(Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)'
     high_q2    = '(Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)'
 
-    l_branch_ee = [
-            'brem_track_2.B_M_brem_track_2',
+    l_branch_common = [
+            'th_l1_l2',
+            'th_l1_kp',
+            'th_l2_kp',
             'mva.mva_cmb',
             'mva.mva_prc',
             'hop.hop_mass',
             'hop.hop_alpha',
             'cascade.swp_cascade_mass_swp',
             'jpsi_misid.swp_jpsi_misid_mass_swp',
+            'Jpsi_Mass',
+            'q2',
+                      ]
+
+    l_branch_ee = l_branch_common + [
+            'brem_track_2.B_M_brem_track_2',
             'L1_TRACK_PT',
             'L1_TRACK_ETA',
             'L1_TRACK_P',
@@ -42,14 +50,7 @@ class Data:
             'L2_TRACK_P',
             ]
 
-    l_branch_mm = [
-            'mva.mva_cmb',
-            'mva.mva_prc',
-            'hop.hop_mass',
-            'hop.hop_alpha',
-            'cascade.swp_cascade_mass_swp',
-            'jpsi_misid.swp_jpsi_misid_mass_swp',
-            ]
+    l_branch_mm = l_branch_common + []
 # ------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
