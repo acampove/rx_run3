@@ -18,7 +18,7 @@ def test_print(kind : str):
 @pytest.mark.parametrize('parameter', ['mu', 'sg', 'ac', 'nc'])
 def test_get_values(parameter : str):
     '''
-    Will test retrieving values for different parameters of cbl 
+    Will test retrieving values for different parameters of cbl
     '''
     kind = 'cbl'
 
