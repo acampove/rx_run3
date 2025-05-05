@@ -81,8 +81,6 @@ class Data:
 
     dmu      = zfit.Parameter('dmu', 0, -50.0, 50.0)
     rsg      = zfit.Parameter('rsg', 1, 0.7,  1.4)
-
-    d_sig_ini : dict[str,float]
 #-------------------
 def _load_config() -> dict:
     cfg_path = files('rx_q2_data').joinpath(f'config/{Data.cfg_vers}.yaml')
@@ -97,7 +95,6 @@ def _set_vars():
     d_input     = cfg['input'  ]
     d_fitting   = cfg['fitting']
 
-    Data.d_sig_ini = cfg['fitting']['model']['parameters']
     Data.l_pdf  = d_fitting['model']['pdfs']
     Data.l_year = [ str(year) for year in d_input['year'] ]
     Data.l_brem = [ str(brem) for brem in d_input['brem'] ]
@@ -127,17 +124,6 @@ def _initialize():
 
     LogStore.set_level('rx_q2:get_q2_tables', Data.logl)
     LogStore.set_level('rx_data:rdf_getter' , Data.logl)
-#-------------------
-def _float_pars(pdf : zpdf) -> None:
-    l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
-    log.info('Floating parameters:')
-    for par in l_par:
-        par.floating = True
-        if par.name in Data.d_sig_ini:
-            val = Data.d_sig_ini[par.name]
-            par.set_value(val)
-
-        log.info(f'{"":<4}{par.name:<20}{par.value():>20.3f}')
 #-------------------
 def _reset_sig_pars(pdf : zpdf, d_val : dict[str,tuple[float,float]]) -> None:
     l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
@@ -313,7 +299,6 @@ def _fit(
         raise ValueError(f'Invalid identifier: {identifier}')
 
     if is_signal:
-        _float_pars(pdf)
         if os.path.isfile(jsn_path):
             log.info(f'Loading cached simulation parameters: {jsn_path}')
             d_par = gut.load_json(jsn_path)
