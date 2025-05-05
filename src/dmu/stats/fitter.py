@@ -453,7 +453,6 @@ class Fitter:
         log.info('Fitting full sample')
         nll    = self._get_full_nll(cfg = cfg)
         res, _ = self._minimize(nll, cfg)
-        res.hesse(method='minuit_hesse')
 
         if res is None:
             nsteps = len(l_nsample)
@@ -508,7 +507,6 @@ class Fitter:
         if 'strategy' not in cfg:
             nll    = self._get_full_nll(cfg = cfg)
             res, _ = self._minimize(nll, cfg)
-            res.hesse(method='minuit_hesse')
         elif 'retry' in cfg['strategy']:
             d_pval_res, last_res = self._fit_retries(cfg)
             res = self._pick_best_fit(d_pval_res, last_res)
@@ -517,6 +515,7 @@ class Fitter:
         else:
             raise ValueError('Unsupported fitting strategy')
 
+        res.hesse(method='minuit_hesse')
 
         return res
 #------------------------------
