@@ -13,7 +13,10 @@ input:
     simulation : Bu_JpsiK_ee_eq_DPC
     data       : DATA*
   selection:
-    q2 : Jpsi_M_brem_track_2 > 2200 && Jpsi_M_brem_track_2 < 3800
+    #block : block == 1 || block == 2
+    #hop   : (1)
+    mass  : (1)
+    q2    : Jpsi_Mass > 2200 && Jpsi_Mass < 3800
 syst:
     - nom
 fitting:
