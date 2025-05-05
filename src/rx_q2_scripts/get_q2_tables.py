@@ -209,7 +209,7 @@ def _get_signal_pdf(split_by_nspd : bool = False) -> zpdf:
     return Data.sig_pdf_merg
 #-------------------
 def _get_bkg_pdf() -> zpdf:
-    if Data.bkg_pdf is not None:
+    if hasattr(Data, 'bkg_pdf'):
         return Data.bkg_pdf
 
     lam = zfit.Parameter('lam', -0.001, -0.1, -0.0001)
