@@ -568,7 +568,8 @@ class ZFitPlotter:
             ax.label_outer()
 
         if pull_styling and not skip_pulls:
-            self.axs[1].axhline(y=-3, color='red' , linestyle=':')
-            self.axs[1].axhline(y=+3, color='red' , linestyle=':')
+            self.axs[1].axhline(y=-3, color='red' , linestyle='-', lw=2)
+            self.axs[1].axhline(y= 0, color='gray', linestyle='-', lw=1)
+            self.axs[1].axhline(y=+3, color='red' , linestyle='-', lw=2)
             self.axs[1].set_ylim(-5, 5)
 #----------------------------------------
