@@ -1,3 +1,6 @@
+# This config is used to overlay different distributions (mostly masses) 
+# in different mva_prc bins
+
 general:
   size : [12, 8]
 selection:
