@@ -433,23 +433,9 @@ def _plot_fit(
             plt.savefig(plot_path, bbox_inches='tight')
             plt.close()
 #-------------------
-def _get_fix_pars(d_par : dict[str,tuple[float,float]]) -> dict[str,tuple[float,float]]:
-    d_fix = dict(d_par)
-    for parname in d_par:
-        if parname.startswith('mu') or parname.startswith('sg'):
-            del d_fix[parname]
-
-    if Data.syst == 'nspd':
-        for index in [1,2,3]:
-            ryld = d_fix[f'ncbr_{index}'][0]
-            lyld = d_fix[f'ncbl_{index}'][0]
-            d_fix[f'fr_cb_{index}'] = [ryld / (ryld + lyld), 0]
-
-            del d_fix[f'ncbr_{index}']
-            del d_fix[f'ncbl_{index}']
-    else:
-        del d_fix['ncbr']
-        del d_fix['ncbl']
+def _get_fix_pars() -> dict[str,tuple[float,float]]:
+    d_par = Data.d_sim_par
+    d_fix = { key : val for key, val in d_par.items() if ('mu' not in key) and ('sg' not in key) }
 
     return d_fix
 #-------------------
