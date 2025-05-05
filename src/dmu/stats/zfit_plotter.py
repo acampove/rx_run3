@@ -350,7 +350,7 @@ class ZFitPlotter:
             if stacked:
                 ax.fill_between(self.x, y, alpha=1.0, label=self._leg.get(name, name), color=self._get_col(name))
             else:
-                ax.plot(self.x, y, '-',               label=self._leg.get(name, name), color=self._col.get(name))
+                ax.plot(self.x, y, ':',               label=self._leg.get(name, name), color=self._col.get(name))
 
         if (blind_name is not None) and (was_blinded is False):
             for model in self.total_model.pdfs:
