@@ -63,10 +63,19 @@ class RDFGetter:
         self._cfg             = self._load_config()
         self._main_tree       = self._cfg['trees']['main']
         self._l_electron_only = self._cfg['trees']['electron_only']
-
         self._ext_weight      = '(L1_PID_E > 1 && L2_PID_E > 1) ? 1 : 10'
 
+        self._analysis        = self._analysis_from_trigger()
         self._initialize()
+    # ---------------------------------------------------
+    def _analysis_from_trigger(self) -> str:
+        if 'MuMu_MVA' in self._trigger:
+            return 'MM'
+
+        if 'EE_MVA'   in self._trigger:
+            return 'EE'
+
+        raise NotImplementedError(f'Cannot deduce analysis from trigger: {self._trigger}')
     # ---------------------------------------------------
     def _load_config(self) -> dict:
         config_path = files('rx_data_data').joinpath('rdf_getter/config.yaml')
@@ -244,7 +253,7 @@ class RDFGetter:
                 log.warning('Sending pre-UT candidates to block 4')
             rdf = rdf.Redefine(name, definition)
 
-        d_def = self._cfg['definitions']
+        d_def = self._cfg['definitions'][self._analysis]
         if hasattr(RDFGetter, 'd_custom_columns'):
             log.warning('Adding custom column definitions')
             d_def.update(RDFGetter.d_custom_columns)
