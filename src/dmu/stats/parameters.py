@@ -88,7 +88,14 @@ class ParameterLibrary:
         This function will override the value and range for the given parameter
         It should be typically used before using the ModelFactory class
         '''
-        pass
-# --------------------------------
 
+        df = ParameterLibrary.df_parameters
+
+        location = (df['parameter'] == parameter) & (df['kind'] == kind)
+
+        df.loc[location, 'val' ] = val
+        df.loc[location, 'low' ] = low
+        df.loc[location, 'high'] = high
+# --------------------------------
 ParameterLibrary._load_data()
+
