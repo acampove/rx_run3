@@ -58,7 +58,6 @@ class Data:
     trig         : str
     year         : str
     brem         : str
-    model        : str
     plt_dir      : str
     nentries     : int
     skip_fit     : bool
@@ -73,6 +72,7 @@ class Data:
     sig_pdf_splt : zpdf
     sig_pdf_merg : zpdf
     bkg_pdf      : zpdf
+    l_pdf        : list[str]
     d_sim_par    : dict[str,tuple[float,float]]
     cfg_sim_fit  : dict
 
@@ -98,7 +98,7 @@ def _set_vars():
     d_fitting   = cfg['fitting']
 
     Data.d_sig_ini = cfg['fitting']['model']['parameters']
-    Data.model  = d_fitting['model']
+    Data.l_pdf  = d_fitting['model']['pdfs']
     Data.l_year = [ str(year) for year in d_input['year'] ]
     Data.l_brem = [ str(brem) for brem in d_input['brem'] ]
     Data.l_trig = d_input['trigger']
