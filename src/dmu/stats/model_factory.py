@@ -370,7 +370,7 @@ class ModelFactory:
     def _get_pdf(self, kind : str, preffix : str) -> zpdf:
         fun = MethodRegistry.get_method(kind)
         if fun is None:
-            raise NotImplementedError(f'PDF of type {kind} is not implemented')
+            raise NotImplementedError(f'PDF of type \"{kind}\" with preffix \"{preffix}\" is not implemented')
 
         return fun(self, preffix)
     #-----------------------------------------
