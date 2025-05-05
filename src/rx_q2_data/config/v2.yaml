@@ -16,9 +16,6 @@ input:
 syst:
     - nom
 fitting:
-  model  :
-    - cbr
-    - cbl
   ranges : # Fitting ranges for each brem category
     0 :
       - 2200
@@ -33,6 +30,9 @@ fitting:
   binning :
     nbins : 60
   model:
+    pdfs:
+     - cbr
+     - cbl
     parameters: # Initial values of parameters used in fit
       mu   : 3060
       sg   : 20.0
