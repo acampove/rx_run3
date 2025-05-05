@@ -153,6 +153,9 @@ def _get_sig_pdf() -> zpdf:
         PL.set_values(kind=pdf_name, parameter='mu', val=3000, low=2800, high=3300)
         PL.set_values(kind=pdf_name, parameter='sg', val= 100, low=  10, high= 200)
 
+        if pdf_name == 'cbr':
+            PL.set_values(kind=pdf_name, parameter='nc', val= 3, low=  0.1, high= 10)
+
     mod     = ModelFactory(
     preffix = 'q2_smearing',
     obs     = Data.obs,
@@ -400,7 +403,7 @@ def _add_q2_region_lines(obj : ZFitPlotter) -> None:
 #-------------------
 def _get_title(data : zdata) -> str:
     nentries= data.nevents.numpy()
-    text    = f'#Events={nentries}'
+    text    = f'Candidates={nentries}'
     for name, value in Data.d_sel.items():
         text += f'; {name}: {value}'
 
