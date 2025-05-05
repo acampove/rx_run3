@@ -5,11 +5,11 @@ selection:
   q2   : (1)
   mass : (1)
 overlay:
-  '[0.00, 0.15]' : mva_prc > 0.00 && mva_prc < 0.15
-  '[0.15, 0.30]' : mva_prc > 0.15 && mva_prc < 0.30
-  '[0.30, 0.50]' : mva_prc > 0.30 && mva_prc < 0.50
-  '[0.50, 0.80]' : mva_prc > 0.50 && mva_prc < 0.80
-  '[0.80, 1.00]' : mva_prc > 0.80 && mva_prc < 1.00
+  '0.00-0.15' : mva_prc > 0.00 && mva_prc < 0.15
+  '0.15-0.30' : mva_prc > 0.15 && mva_prc < 0.30
+  '0.30-0.50' : mva_prc > 0.30 && mva_prc < 0.50
+  '0.50-0.80' : mva_prc > 0.50 && mva_prc < 0.80
+  '0.80-1.00' : mva_prc > 0.80 && mva_prc < 1.00
 plots:
     Jpsi_M:
         binning    : [2200, 3800, 60]
