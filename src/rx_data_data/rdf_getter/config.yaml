@@ -29,7 +29,7 @@ definitions:
     <<: *common
   MM:
     Jpsi_Mass         : Jpsi_M
-    nbrem             : 0
+    nbrem             : '0'
     <<: *common
 trees:
   main : main # This is the name of the file holding the main (not friend) trees, e.g. main.yaml
