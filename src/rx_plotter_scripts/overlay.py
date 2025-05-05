@@ -25,7 +25,7 @@ class Data:
     '''
     Class used to share attributes
     '''
-    nthreads   = 13
+    nthreads   = 1
     trigger_mm = 'Hlt2RD_BuToKpMuMu_MVA'
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
@@ -126,7 +126,7 @@ def _parse_args() -> None:
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True, choices=[Data.trigger_mm, Data.trigger_ee])
-    parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True, choices=Data.l_kind)
+    parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True)
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category', choices=[0, 1, 2])
     args = parser.parse_args()
@@ -178,7 +178,8 @@ def _get_inp() -> dict[str,RDataFrame]:
 # ---------------------------------
 def _plot(d_rdf : dict[str,RDataFrame]) -> None:
     cfg= _get_cfg()
-    del cfg['definitions']
+    if 'definitions' in cfg:
+        del cfg['definitions']
 
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
