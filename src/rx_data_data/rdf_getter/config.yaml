@@ -4,6 +4,10 @@
 redefinitions:
   block             : 'block < 0 ? 4 : block' # This is needed to process pre-UT data as Block 4 data, temporary
 definitions:
+  th_l1_l2          : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(L2_PX, L2_PY, L2_PZ); return v1.Angle(v2);
+  th_l1_kp          : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2( H_PX,  H_PY,  H_PZ); return v1.Angle(v2);
+  th_l2_kp          : TVector3 v1(L2_PX, L2_PY, L2_PZ); TVector3 v2( H_PX,  H_PY,  H_PZ); return v1.Angle(v2);
+
   Jpsi_const_mass_M : TMath::Sqrt(TMath::Power(Jpsi_DTF_HEAD_PE, 2) - TMath::Power(Jpsi_DTF_HEAD_PX, 2) - TMath::Power(Jpsi_DTF_HEAD_PY, 2) - TMath::Power(Jpsi_DTF_HEAD_PZ, 2))
   L1_TRACK_PT       : ROOT::Math::XYZVector lep(L1_TRACK_PX, L1_TRACK_PY, L1_TRACK_PZ); return lep.rho();
   L1_TRACK_ETA      : ROOT::Math::XYZVector lep(L1_TRACK_PX, L1_TRACK_PY, L1_TRACK_PZ); return lep.eta();
@@ -15,6 +19,8 @@ definitions:
   L2_TRACK_PHI      : ROOT::Math::XYZVector lep(L2_TRACK_PX, L2_TRACK_PY, L2_TRACK_PZ); return lep.phi();
   L2_TRACK_P        : ROOT::Math::XYZVector lep(L2_TRACK_PX, L2_TRACK_PY, L2_TRACK_PZ); return lep.r();
 
+  Jpsi_Mass         : 'TMath::Abs(L1_ID) == 11 ? Jpsi_M_brem_track_2 : Jpsi_M'
+  q2                : Jpsi_Mass * Jpsi_Mass
   q2_track          : ROOT::Math::PtEtaPhiMVector l1(L1_TRACK_PT, L1_TRACK_ETA, L1_TRACK_PHI, 0.511);
                       ROOT::Math::PtEtaPhiMVector l2(L2_TRACK_PT, L2_TRACK_ETA, L2_TRACK_PHI, 0.511);
                       auto ll = l1 + l2;
