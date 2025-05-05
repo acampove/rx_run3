@@ -24,13 +24,15 @@ from zfit.core.parameter    import Parameter  as zpar
 from zfit.result            import FitResult  as zres
 
 import dmu.generic.utilities as gut
-from dmu.stats              import utilities   as sut
-from dmu.stats.fitter       import Fitter      as zfitter
-from dmu.stats.zfit_plotter import ZFitPlotter
-from dmu.logging.log_store  import LogStore
+from dmu.stats               import utilities        as sut
+from dmu.stats.fitter        import Fitter           as zfitter
+from dmu.stats.parameters    import ParameterLibrary as PL
+from dmu.stats.model_factory import ModelFactory
+from dmu.stats.zfit_plotter  import ZFitPlotter
+from dmu.logging.log_store   import LogStore
 
-from rx_selection           import selection as sel
-from rx_data.rdf_getter     import RDFGetter
+from rx_selection            import selection as sel
+from rx_data.rdf_getter      import RDFGetter
 
 log=LogStore.add_logger('rx_q2:get_q2_tables')
 #-------------------
