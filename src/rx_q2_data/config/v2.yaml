@@ -35,10 +35,10 @@ fitting:
     nbins : 60
   model:
     pdfs:
-      - dscb
+      - dscb 
   simulation:
     strategy :
       retry  :
-        ntries        : 4 
+        ntries        : 6
         pvalue_thresh : 0.05
         ignore_status : true
