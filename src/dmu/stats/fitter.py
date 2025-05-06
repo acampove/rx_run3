@@ -376,6 +376,15 @@ class Fitter:
 
         return res, gof
     #------------------------------
+    def _gof_is_bad(self, gof : tuple[float, int, float]) -> bool:
+        chi2, ndof, pval = gof
+
+        good_ndof = 0 <= ndof < numpy.inf
+        good_chi2 = 0 <= chi2 < numpy.inf
+        good_pval = 0 <= pval < numpy.inf
+
+        return not (good_chi2 and good_pval and good_ndof)
+    #------------------------------
     def _fit_retries(self, cfg : dict) -> tuple[dict, FitResult]:
         ntries       = cfg['strategy']['retry']['ntries']
         pvalue_thresh= cfg['strategy']['retry']['pvalue_thresh']
@@ -401,6 +410,12 @@ class Fitter:
                 continue
 
             chi2, _, pval   = gof
+
+            if self._gof_is_bad(gof):
+                log.debug('Reshufling and skipping, found bad gof')
+                self._reshuffle_pdf_pars()
+                continue
+
             d_pval_res[chi2]=res
 
             if pval > pvalue_thresh:
