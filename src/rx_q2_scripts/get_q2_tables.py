@@ -10,6 +10,7 @@ from importlib.resources import files
 import hist
 import numpy
 import mplhep
+import pandas              as pnd
 import matplotlib.pyplot   as plt
 
 import ROOT # ROOT import has to be before zfit ones to avoid crash due to ROOT -> tensorflow issue
