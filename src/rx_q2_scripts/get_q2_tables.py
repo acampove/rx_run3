@@ -154,10 +154,10 @@ def _get_sig_pdf() -> zpdf:
         PL.set_values(kind=pdf_name, parameter='sg', val= 100, low=  10, high= 200)
 
         if pdf_name == 'cbr':
-            PL.set_values(kind=pdf_name, parameter='nc', val= 3, low=  0.1, high= 10)
+            PL.set_values(kind=pdf_name, parameter='nc', val= 3, low= 0.1, high= 10)
 
         if pdf_name == 'dscb':
-            PL.set_values(kind=pdf_name, parameter='nr', val= 3, low=  0.1, high= 10)
+            PL.set_values(kind=pdf_name, parameter='nr', val= 3, low= 0.1, high=128)
 
     mod     = ModelFactory(
     preffix = 'q2_smearing',
@@ -218,10 +218,10 @@ def _get_bkg_pdf() -> zpdf:
     if hasattr(Data, 'bkg_pdf'):
         return Data.bkg_pdf
 
-    lam = zfit.Parameter('lam', -0.001, -0.1, 0.0)
+    lam = zfit.Parameter('lam', -0.001, -0.1, 0.1)
     bkg = zfit.pdf.Exponential(lam=lam, obs=Data.obs, name='')
 
-    nbk = zfit.Parameter('nbk', 100, 0.0, 200000)
+    nbk = zfit.Parameter('nbk', 100, -100, 1000_000)
     bkg = bkg.create_extended(nbk, name='Combinatorial')
 
     Data.bkg_pdf = bkg
