@@ -10,7 +10,8 @@ overlay:
   None : (1) 
   '630': B_const_mass_M > 5280 - 630
   '620': B_const_mass_M > 5280 - 620
-  '600': B_const_mass_M > 5280 - 600
+  '500': B_const_mass_M > 5280 - 500
+  '300': B_const_mass_M > 5280 - 300
 plots:
     Jpsi_M:
         binning    : [3200, 3800, 30]
