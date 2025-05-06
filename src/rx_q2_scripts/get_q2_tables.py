@@ -249,12 +249,12 @@ def _fix_pdf(
 
     return pdf
 #-------------------
-def _get_pdf(kind : str, split_by_nspd : bool) -> zpdf:
+def _get_pdf(kind : str) -> zpdf:
     if kind == 'simulation':
-        return _get_signal_pdf()
+        return _get_sig_pdf()
 
     if kind == 'data':
-        return _get_full_pdf(split_by_nspd)
+        return _get_full_pdf()
 
     raise NotImplementedError(f'Cannot get PDF for: {kind}')
 #-------------------
