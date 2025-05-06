@@ -169,7 +169,10 @@ def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
     d_par = {}
     for name, d_val in result.params.items():
         value = d_val['value']
-        error = d_val['hesse']['error']
+        if 'hesse' not in d_val:
+            error = None
+        else:
+            error = d_val['hesse']['error']
 
         d_par[name] = value, error
 
