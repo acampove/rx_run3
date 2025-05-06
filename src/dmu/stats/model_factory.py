@@ -179,7 +179,7 @@ class ModelFactory:
             init_name, _ = self._split_name(par_name)
             par  = self._get_reparametrization(par_name, init_name, val, low, high)
         else:
-            if low == high:
+            if val == low == high:
                 log.warning(f'Upper and lower edges agree, fixing parameter to: {low}')
                 par  = zfit.param.Parameter(par_name, val, low - 1 , high + 1)
                 par.floating = False
