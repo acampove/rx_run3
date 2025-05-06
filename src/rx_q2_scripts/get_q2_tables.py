@@ -117,8 +117,7 @@ def _initialize():
     d_cut.update(Data.d_sel)
     sel.set_custom_selection(d_cut = d_cut)
 
-    syst          = {'nom' : 'nom', 'nspd' : 'lsh'}[Data.syst]
-    Data.plt_dir  = f'{Data.ana_dir}/q2/fits/{Data.out_vers}_{syst}'
+    Data.plt_dir  = f'{Data.ana_dir}/q2/fits/{Data.out_vers}'
     os.makedirs(Data.plt_dir, exist_ok=True)
 
     Data.obs_range= Data.d_obs_range[Data.brem]
