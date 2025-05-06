@@ -111,7 +111,14 @@ def _set_vars():
 def _initialize():
     plt.style.use(mplhep.style.LHCb2)
     d_cut={'nbrem' : f'nbrem == {Data.brem}'}
-    if Data.block != -1:
+
+    if   Data.block == -1:
+        d_cut['block'] =  'block == (1)'
+    elif Data.block == 12:
+        d_cut['block'] =  '(block == 1) || (block == 2)'
+    elif Data.block == 78:
+        d_cut['block'] =  '(block == 7) || (block == 8)'
+    else:
         d_cut['block'] = f'block == {Data.block}'
 
     d_cut.update(Data.d_sel)
