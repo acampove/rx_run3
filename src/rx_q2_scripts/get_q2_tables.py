@@ -346,17 +346,26 @@ def _fit(
     return d_par
 #-------------------
 def _get_data(
-        rdf        : RDataFrame,
         pdf        : zpdf,
-        is_signal  : bool,
+        kind       : str,
         identifier : str) -> zdata:
+
+    data_path = f'{Data.plt_dir}/{identifier}/data.json'
+    if os.path.isfile(data_path):
+        log.warning(f'Data found, loading from: {data_path}')
+        df  = pnd.read_json(data_path)
+        dat = zfit.data.Data.from_pandas(df, obs=Data.obs, weights='weights')
+
+        return dat
+
+    rdf     = _get_rdf(kind=kind)
     arr_val = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
     arr_wgt = rdf.AsNumpy(['weight'])['weight']
 
     obs     = pdf.space
     dat     = zfit.Data.from_numpy(obs=obs, array=arr_val, weights=arr_wgt)
 
-    _plot_data(arr_val, arr_wgt, obs, is_signal, identifier)
+    _plot_data(arr_val, arr_wgt, obs, kind, identifier)
 
     return dat
 #-------------------
