@@ -426,7 +426,7 @@ class Fitter:
         l_pval_res.sort()
         _, res = l_pval_res[0]
 
-        log.debug('Picking out best fit from {nsucc} fits')
+        log.debug(f'Picking out best fit from {nsucc} fits')
         for chi2, _ in l_pval_res:
             log.debug(f'{chi2:.3f}')
 
