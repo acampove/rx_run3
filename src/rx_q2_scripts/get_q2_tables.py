@@ -286,9 +286,18 @@ def _get_pdf(kind : str, split_by_nspd : bool) -> zpdf:
 
     raise NotImplementedError(f'Cannot get PDF for: {kind}')
 #-------------------
+def _par_val_from_dict(d_par : dict) -> tuple[float,float]:
+    value = d_par['value']
+    if 'hesse' not in d_par:
+        return value, None
+
+    error = d_par['hesse']['error']
+
+    return value, error
+#-------------------
 def _get_pars(res : zres, identifier : str) -> dict[str,list[str]]:
     try:
-        d_par = { name : [ d_val['value'], d_val['hesse']['error'] ] for name, d_val in res.params.items() }
+        d_par = { name : _par_val_from_dict(d_val) for name, d_val in res.params.items() }
     except Exception as exc:
         log.info(res)
         log.info(res.params)
