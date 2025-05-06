@@ -329,9 +329,9 @@ def _plot_data(
         ax      = ax
     )
 
-    title=f'Entries={arr_wgt.size:.0f}; Sum={numpy.sum(arr_wgt):.0f}; {identifier}'
+    title=f'Entries={arr_wgt.size:.0f}; Sum={numpy.sum(arr_wgt):.0f}'
 
-    plt_path = f'{Data.plt_dir}/{kind}_{identifier}.png'
+    plt_path = f'{Data.out_dir}/{kind}.png'
 
     log.info(f'Saving to: {plt_path}')
     plt.title(title)
@@ -357,9 +357,7 @@ def _get_text(data : zdata) -> tuple[str,str]:
 def _plot_fit(
         dat        : zdata,
         pdf        : zpdf,
-        res        : zres,
-        identifier : str) -> None:
-
+        res        : zres) -> None:
     obj=ZFitPlotter(data=dat, model=pdf, result=res)
     for yscale in ['log', 'linear']:
         for add_pars in ['pars', 'no_pars']:
@@ -379,22 +377,22 @@ def _plot_fit(
             obj.axs[0].set_title(title)
             obj.axs[0].axhline(y=0, c='gray')
 
-            plot_path = f'{Data.plt_dir}/{identifier}_{add_pars}_{yscale}.png'
+            plot_path = f'{Data.out_dir}/{add_pars}_{yscale}.png'
             log.info(f'Saving to: {plot_path}')
-            plt.savefig(plot_path, bbox_inches='tight')
+            plt.savefig(plot_path)
             plt.close()
 #-------------------
-def _get_fix_pars() -> dict[str,tuple[float,float]]:
+def _get_fix_pars() -> Parameters:
     d_par = Data.d_sim_par
     d_fix = { key : val for key, val in d_par.items() if ('mu' not in key) and ('sg' not in key) }
 
     return d_fix
 #-------------------
 def _get_rdf(kind : str) -> RDataFrame:
+    log.info(f'Getting data for: {kind}')
     sample = Data.d_samp[kind]
-
-    gtr = RDFGetter(sample=sample, trigger=Data.trig)
-    rdf = gtr.get_rdf()
+    gtr    = RDFGetter(sample=sample, trigger=Data.trig)
+    rdf    = gtr.get_rdf()
 
     d_sel = sel.selection(trigger=Data.trig, q2bin='jpsi', process=sample)
     for cut_name, cut_value in d_sel.items():
@@ -408,18 +406,18 @@ def _get_rdf(kind : str) -> RDataFrame:
     return rdf
 #-------------------
 def _make_table():
-    identifier = f'{Data.trig}_{Data.year}_{Data.brem}_{Data.block:03}_{Data.syst}'
-
-    if Data.samp == 'simulation':
+    if Data.kind == 'sim':
         log.info('Running simulation fit')
-        _fit(d_fix=None, identifier=identifier)
+        _fit(d_fix=None)
         return
 
     log.info('Running data fit')
-    Data.d_sim_par = gut.load_json(f'{Data.plt_dir}/simulation_{identifier}/parameters.json')
+    dat_par_path   = f'{Data.out_dir}/parameters.json'
+    sim_par_path   = dat_par_path.replace('/dat/', '/sim/')
+    Data.d_sim_par = gut.load_json(sim_par_path)
     d_fix_par      = _get_fix_pars()
 
-    _fit(d_fix=d_fix_par, identifier=f'data_{identifier}')
+    _fit(d_fix=d_fix_par)
 #-------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
@@ -429,7 +427,7 @@ def _get_args():
     parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True, choices=Data.l_brem)
     parser.add_argument('-B', '--block', type =int, help='Block, by default -1, all'                   , default=-1   , choices=[1, 2, 3, 4, 5, 6, 7, 8])
     parser.add_argument('-x', '--syst' , type =str, help='Systematic variabion'                        ,                choices=Data.l_syst)
-    parser.add_argument('-s', '--samp' , type =str, help='Sample'                                      , default='both',choices=Data.l_samp)
+    parser.add_argument('-k', '--kind' , type =str, help='Kind of sample'                              , required=True, choices=Data.l_kind)
     parser.add_argument('-l', '--logl' , type =int, help='Logging level'                               , default=20    ,choices=[10, 20, 30])
     parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1)
     parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action='store_true')
@@ -440,7 +438,7 @@ def _get_args():
     Data.brem     = args.brem
     Data.block    = args.block
     Data.syst     = args.syst
-    Data.samp     = args.samp
+    Data.kind     = args.kind
     Data.logl     = args.logl
     Data.out_vers = args.vers
     Data.nentries = args.nent
