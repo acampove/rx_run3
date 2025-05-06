@@ -194,14 +194,11 @@ def _get_full_pdf():
 
     return pdf
 #-------------------
-def _fix_pdf(
-        pdf   : zpdf,
-        d_fix : dict[str,tuple[float,float]]) -> zpdf:
+def _fix_pdf(pdf : zpdf, d_fix : Parameters) -> zpdf:
     '''
     This will take a PDF and a dictionary of paramters
     It will fix the PDF parameters according to dictionary
     '''
-
     if d_fix is None:
         return pdf
 
@@ -224,10 +221,10 @@ def _fix_pdf(
     return pdf
 #-------------------
 def _get_pdf(kind : str) -> zpdf:
-    if kind == 'simulation':
+    if kind == 'sim':
         return _get_sig_pdf()
 
-    if kind == 'data':
+    if kind == 'dat':
         return _get_full_pdf()
 
     raise NotImplementedError(f'Cannot get PDF for: {kind}')
@@ -241,25 +238,21 @@ def _par_val_from_dict(d_par : dict) -> tuple[float,float]:
 
     return value, error
 #-------------------
-def _get_pars(res : zres, identifier : str) -> dict[str,list[str]]:
+def _get_pars(res : zres) -> Parameters:
     try:
         d_par = { name : _par_val_from_dict(d_val) for name, d_val in res.params.items() }
     except Exception as exc:
         log.info(res)
         log.info(res.params)
-        raise ValueError(f'Cannot extract {identifier} parameters from:') from exc
+        raise ValueError('Cannot extract parameters') from exc
 
     return d_par
 #-------------------
-def _fit(
-        d_fix      : dict[str,tuple[float,float]] = None,
-        identifier : str                          ='unnamed') -> dict[str,tuple[float,float]]:
-
-    fit_dir   = f'{Data.plt_dir}/{identifier}'
-    kind      = 'simulation' if d_fix is None else 'data'
+def _fit(d_fix : Parameters = None)-> Parameters:
+    kind= 'sim' if d_fix is None else 'dat'
 
     pdf = _get_pdf(kind)
-    dat = _get_data(pdf, kind, identifier)
+    dat = _get_data(pdf, kind)
     pdf = _fix_pdf(pdf, d_fix)
     obj = zfitter(pdf, dat)
 
@@ -269,13 +262,13 @@ def _fit(
 
     res=obj.fit(cfg=Data.cfg_sim_fit)
     if res is None:
-        _plot_fit(dat, pdf, res, identifier)
+        _plot_fit(dat, pdf, res)
 
         log.info(res)
         raise ValueError('Fit failed')
 
     if res.status != 0:
-        _plot_fit(dat, pdf, res, identifier)
+        _plot_fit(dat, pdf, res)
 
         log.info(res)
         raise ValueError(f'Finished with status/validity: {res.status}/{res.valid}')
@@ -285,20 +278,16 @@ def _fit(
     log.info(30 * '-')
     log.info(res)
     log.info(30 * '-')
-    _plot_fit(dat, pdf, res, identifier)
+    _plot_fit(dat, pdf, res)
 
-    d_par = _get_pars(res, identifier)
+    d_par = _get_pars(res)
 
-    sut.save_fit(data=dat, model=pdf, res=res, fit_dir=fit_dir)
+    sut.save_fit(data=dat, model=pdf, res=res, fit_dir=Data.out_dir)
 
     return d_par
 #-------------------
-def _get_data(
-        pdf        : zpdf,
-        kind       : str,
-        identifier : str) -> zdata:
-
-    data_path = f'{Data.plt_dir}/{identifier}/data.json'
+def _get_data(pdf : zpdf, kind : str) -> zdata:
+    data_path = f'{Data.out_dir}/data.json'
     if os.path.isfile(data_path):
         log.warning(f'Data found, loading from: {data_path}')
         df  = pnd.read_json(data_path)
@@ -314,15 +303,14 @@ def _get_data(
     obs     = pdf.space
     dat     = zfit.Data.from_pandas(obs=obs, df=df, weights=Data.weights)
 
-    _plot_data(df, obs, kind, identifier)
+    _plot_data(df, obs, kind)
 
     return dat
 #-------------------
 def _plot_data(
         df         : pnd.DataFrame,
         obs        : zobs,
-        kind       : str,
-        identifier : str) -> None:
+        kind       : str) -> None:
 
     arr_mas = df[Data.j_mass ].to_numpy()
     arr_wgt = df[Data.weights].to_numpy()
