@@ -290,34 +290,28 @@ def _get_pars(res : zres, identifier : str) -> dict[str,list[str]]:
     return d_par
 #-------------------
 def _fit(
-        rdf        : RDataFrame,
         d_fix      : dict[str,tuple[float,float]] = None,
         identifier : str                          ='unnamed') -> dict[str,tuple[float,float]]:
-    fit_dir  = f'{Data.plt_dir}/{identifier}'
-    jsn_path = f'{fit_dir}/parameters.json'
-    if os.path.isfile(jsn_path):
-        log.info(f'Fit file found: {jsn_path}')
-        d_par = gut.load_json(jsn_path)
-        return d_par
-
-    is_signal = d_fix is None
+    fit_dir   = f'{Data.plt_dir}/{identifier}'
+    jsn_path  = f'{fit_dir}/parameters.json'
+    kind      = 'simulation' if d_fix is None else 'data'
 
     if   identifier.endswith('_nspd'):
         log.info(f'Splitting by nSPD: {identifier}')
-        pdf = _get_pdf(is_signal, split_by_nspd= True)
+        pdf = _get_pdf(kind, split_by_nspd= True)
     elif identifier.endswith( '_nom'):
         log.info(f'Not splitting by nSPD: {identifier}')
-        pdf = _get_pdf(is_signal, split_by_nspd=False)
+        pdf = _get_pdf(kind, split_by_nspd=False)
     else:
         raise ValueError(f'Invalid identifier: {identifier}')
 
-    if is_signal:
+    if kind == 'signal':
         if os.path.isfile(jsn_path):
             log.info(f'Loading cached simulation parameters: {jsn_path}')
             d_par = gut.load_json(jsn_path)
             _reset_sig_pars(pdf, d_par)
 
-    dat = _get_data(rdf, pdf, is_signal, identifier)
+    dat = _get_data(pdf, kind, identifier)
     pdf = _fix_pdf(pdf, d_fix)
     obj = zfitter(pdf, dat)
 
