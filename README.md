@@ -993,6 +993,14 @@ plots:
         styling :
             label : x
             linestyle: '-'
+        # This will add vertical lines to plots, the arguments are the same
+        # as the ones passed to axvline
+        vline   :
+          x     : 0
+          label : label
+          ls    : --
+          c     : blue
+          lw    : 1
     y :
         binning    : [-5.0, 8.0, 40]
         yscale     : 'linear'
