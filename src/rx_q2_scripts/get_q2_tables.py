@@ -197,6 +197,10 @@ def _get_full_pdf():
 def _fix_pdf(
         pdf   : zpdf,
         d_fix : dict[str,tuple[float,float]]) -> zpdf:
+    '''
+    This will take a PDF and a dictionary of paramters
+    It will fix the PDF parameters according to dictionary
+    '''
 
     if d_fix is None:
         return pdf
@@ -250,16 +254,11 @@ def _get_pars(res : zres, identifier : str) -> dict[str,list[str]]:
 def _fit(
         d_fix      : dict[str,tuple[float,float]] = None,
         identifier : str                          ='unnamed') -> dict[str,tuple[float,float]]:
+
     fit_dir   = f'{Data.plt_dir}/{identifier}'
-    jsn_path  = f'{fit_dir}/parameters.json'
     kind      = 'simulation' if d_fix is None else 'data'
 
     pdf = _get_pdf(kind)
-    if kind == 'signal' and os.path.isfile(jsn_path):
-        log.info(f'Loading cached simulation parameters: {jsn_path}')
-        d_par = gut.load_json(jsn_path)
-        _reset_sig_pars(pdf, d_par)
-
     dat = _get_data(pdf, kind, identifier)
     pdf = _fix_pdf(pdf, d_fix)
     obj = zfitter(pdf, dat)
