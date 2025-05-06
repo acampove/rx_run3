@@ -143,17 +143,6 @@ def _set_pdf_pars(pdf : zpdf, d_val : dict[str,tuple[float,float]]) -> None:
         par.set_value(val)
         log.info(f'{name:<20}{"->":<10}{val:<10.3}')
 #-------------------
-def _get_nspd_signal(l_pdf : list[zpdf]) -> zpdf:
-    nsg_1 = zfit.Parameter('nsg_1', 1000, 0, Data.nevs_data)
-    nsg_2 = zfit.Parameter('nsg_2', 1000, 0, Data.nevs_data)
-    nsg_3 = zfit.Parameter('nsg_3', 1000, 0, Data.nevs_data)
-
-    l_nsg = [nsg_1, nsg_2, nsg_3]
-    l_epdf= [ pdf.create_extended(nsg) for pdf, nsg in zip(l_pdf, l_nsg) ]
-    epdf  = zfit.pdf.SumPDF(pdfs=l_epdf)
-
-    return epdf
-#-------------------
 def _get_sig_pdf() -> zpdf:
     for pdf_name in Data.l_pdf:
         PL.set_values(kind=pdf_name, parameter='mu', val=3000, low=2800, high=3300)
@@ -174,19 +163,6 @@ def _get_sig_pdf() -> zpdf:
     pdf     = mod.get_pdf()
 
     return pdf
-#-------------------
-def _get_nspd_data_pars(preffix : str ='') -> tuple[zpar,zpar]:
-    sim_mu = zfit.param.ConstantParameter(f'sim_mu{preffix}', Data.d_sim_par[f'mu{preffix}'][0])
-    sim_sg = zfit.param.ConstantParameter(f'sim_sg{preffix}', Data.d_sim_par[f'sg{preffix}'][0])
-
-    dat_mu = zfit.ComposedParameter(f'dat_mu{preffix}',
-                                    func=lambda d_par : d_par['dmu'] + d_par[f'sim_mu{preffix}'],
-                                    params={'dmu' : Data.dmu, f'sim_mu{preffix}' : sim_mu} )
-    dat_sg = zfit.ComposedParameter(f'dat_sg{preffix}',
-                                    func=lambda d_par : d_par['rsg'] * d_par[f'sim_sg{preffix}'],
-                                    params={'rsg' : Data.rsg, f'sim_sg{preffix}' : sim_sg} )
-
-    return dat_mu, dat_sg
 #-------------------
 def _get_bkg_pdf() -> zpdf:
     if hasattr(Data, 'bkg_pdf'):
@@ -231,9 +207,6 @@ def _fix_pdf(
     log.info('Fixing parameters')
     log.info('-----------------')
     for par in l_par:
-        if re.match(r'mu_[1,2,3]', par.name) or re.match(r'sg_[1,2,3]', par.name):
-            continue
-
         if par.name not in d_fix:
             log.info(f'{par.name:<20}{"->":<10}{"floating":>20}')
             continue
@@ -428,25 +401,6 @@ def _get_fix_pars() -> dict[str,tuple[float,float]]:
     d_fix = { key : val for key, val in d_par.items() if ('mu' not in key) and ('sg' not in key) }
 
     return d_fix
-#-------------------
-def _add_nspd_col(rdf : RDataFrame) -> RDataFrame:
-    if Data.year in Data.l_year:
-        log.info(f'Skipping adding nSPDHits for {Data.year}')
-        return rdf
-
-    arr_nspd = rdf.AsNumpy(['nSPDHits'])['nSPDHits']
-    q1       = numpy.quantile(arr_nspd, 1./3)
-    q2       = numpy.quantile(arr_nspd, 2./3)
-    rdf      = rdf.Define('nspd', f'float res=-1; if (nSPDHits<{q1}) res = 1; else if (nSPDHits < {q2}) res = 2; else res = 3; return res;')
-
-    return rdf
-#-------------------
-def _get_sim_pars_fits(identifier : str) -> dict[str,tuple[float,float]]:
-    if Data.syst == 'nom':
-        d_par = _fit(d_fix=None, identifier=identifier)
-        return d_par
-
-    raise ValueError(f'Invalid systematic: {Data.syst}')
 #-------------------
 def _get_rdf(kind : str) -> RDataFrame:
     sample = Data.d_samp[kind]
