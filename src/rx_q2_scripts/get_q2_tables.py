@@ -127,8 +127,9 @@ def _initialize():
     Data.obs_range= Data.d_obs_range[Data.brem]
     Data.obs      = zfit.Space(Data.j_mass, limits=Data.obs_range)
 
-    LogStore.set_level('rx_q2:get_q2_tables', Data.logl)
-    LogStore.set_level('rx_data:rdf_getter' , Data.logl)
+    LogStore.set_level('dmu:statistics:fitter', Data.logl)
+    LogStore.set_level('rx_q2:get_q2_tables'  , Data.logl)
+    LogStore.set_level('rx_data:rdf_getter'   , Data.logl)
 #-------------------
 def _reset_sig_pars(pdf : zpdf, d_val : dict[str,tuple[float,float]]) -> None:
     l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
