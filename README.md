@@ -264,7 +264,11 @@ resonances do:
 ```python
 from dmu.stats.parameters  import ParameterLibrary as PL
 
+# This will override the ranges and starting value
 PL.set_values(kind='cbr', parameter='mu', val=3000, low=2500, high=3500)
+
+# This will fix a parameter, the three arguments need to be equal
+PL.set_values(kind='cbr', parameter='sg', val=  30, low=  30, high=  30)
 ```
 
 before using the `ModelFactory` class. 
