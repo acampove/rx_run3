@@ -158,7 +158,7 @@ class Fitter:
         log.debug(f'Ndof: {self._ndof}')
         log.debug(f'pval: {pvalue:<.3e}')
 
-        return (sum_chi2, self._ndof, pvalue)
+        return sum_chi2, self._ndof, pvalue
     #------------------------------
     def _get_float_pars(self):
         npar     = 0
