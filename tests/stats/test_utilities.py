@@ -4,8 +4,9 @@ Module with unit tests for functions in dmu.stat.utilities
 import os
 from importlib.resources import files
 
-import pytest
 import zfit
+import pytest
+import pandas as pnd
 from zfit.core.basepdf import ZfitPDF
 
 from dmu.logging.log_store import LogStore
@@ -122,6 +123,18 @@ def test_placeholder_fit(make_plot : bool) -> None:
     fit_dir = f'{Data.fit_dir}/placeholder_{kind}'
 
     placeholder_fit(kind='s+b', fit_dir=fit_dir, plot_fit=make_plot)
+#----------------------------------
+def test_reuse_data() -> None:
+    '''
+    Tests running fit on cached data
+    '''
+    fit_dir = f'{Data.fit_dir}/placeholder_reuse_data'
+
+    placeholder_fit(kind='s+b', fit_dir=fit_dir, plot_fit=False)
+
+    df   = pnd.read_json(f'{fit_dir}/data.json')
+
+    placeholder_fit(kind='s+b', fit_dir=fit_dir, plot_fit=True, df=df)
 #----------------------------------
 def test_is_pdf_usable():
     '''
