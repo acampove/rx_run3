@@ -169,11 +169,11 @@ def test_override_parameter(kind: list[str]):
     log.info(f'Testing {kind}')
 
     l_shr = ['mu', 'sg']
-    l_flt = ['mu', 'sg']
+    l_flt = ['mu']
 
     ParameterLibrary.print_parameters(kind=kind)
     ParameterLibrary.set_values(parameter='mu', kind=kind, val=3100, low=2200, high=3500)
-    ParameterLibrary.set_values(parameter='sg', kind=kind, val=  30, low=  10, high=  50)
+    ParameterLibrary.set_values(parameter='sg', kind=kind, val=  30, low=  30, high=  30)
 
     mod   = ModelFactory(
             preffix = kind,
@@ -182,6 +182,11 @@ def test_override_parameter(kind: list[str]):
             l_shared= l_shr,
             l_float = l_flt)
     pdf   = mod.get_pdf()
+
+    s_par = pdf.get_params(floating=False)
+    [sg]  = [ par for par in s_par if par.name == 'sg_gauss' ]
+
+    assert sg.floating == False
 
     print_pdf(pdf)
 #--------------------------
