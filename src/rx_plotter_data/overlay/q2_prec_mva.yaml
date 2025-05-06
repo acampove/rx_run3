@@ -15,7 +15,7 @@ overlay:
   '0.80-1.00' : mva_prc > 0.80 && mva_prc < 1.00
 plots:
     mva_prc:
-        binning    : [0, 1, 30]
+        binning    : [0, 1, 20]
         yscale     : 'linear'
         labels     : ['$BDT_{PRC}$', 'Normalized']
         title      : PRec MVA distribution in $BDT_{prc}$ bins
