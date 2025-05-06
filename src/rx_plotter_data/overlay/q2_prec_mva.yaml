@@ -20,7 +20,7 @@ plots:
         labels     : ['$BDT_{PRC}$', 'Normalized']
         title      : PRec MVA distribution in $BDT_{prc}$ bins
         name       : mva_prc_mva_prc
-        normalized : true
+        normalized : false 
         styling:
           histtype : step
     Jpsi_M:
