@@ -13,8 +13,8 @@ input:
     simulation : Bu_JpsiK_ee_eq_DPC
     data       : DATA*
   selection:
-    #block : block == 1 || block == 2
-    #hop   : (1)
+    psi_vt: B_const_mass_M > 4880
+    bdt   : mva_prc > 0.70
     mass  : (1)
     q2    : (1) 
 syst:
@@ -35,7 +35,7 @@ fitting:
     nbins : 60
   model:
     pdfs:
-      - dscb 
+      - dscb
   simulation:
     strategy  :
       retry   :
