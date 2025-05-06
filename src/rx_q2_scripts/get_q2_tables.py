@@ -4,7 +4,6 @@ Script needed to calculate smearing factors for q2 distribution
 
 import os
 import re
-import glob
 import argparse
 from importlib.resources import files
 
@@ -42,6 +41,7 @@ class Data:
     '''
     zfit.settings.changed_warnings.hesse_name = False
 
+    gut.TIMER_ON = True
     ana_dir      = os.environ['ANADIR']
 
     l_year       : list[str]
@@ -407,9 +407,11 @@ def _add_q2_region_lines(obj : ZFitPlotter) -> None:
 def _get_text(data : zdata) -> tuple[str,str]:
     nentries= data.nevents.numpy()
     text    = f'Candidates={nentries}'
-    title   = ''
+    l_part  = []
     for name, value in Data.d_sel.items():
-        title += f'; {name}: {value}'
+        l_part.append(f'{name}: {value}')
+
+    title = '; '.join(l_part)
 
     return text, title
 #-------------------
@@ -533,6 +535,7 @@ def _get_args():
     Data.nentries = args.nent
     Data.skip_fit = args.skip_fit
 #-------------------
+@gut.timeit
 def main():
     '''
     Start here
