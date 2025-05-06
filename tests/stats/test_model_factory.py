@@ -186,7 +186,7 @@ def test_override_parameter(kind: list[str]):
     s_par = pdf.get_params(floating=False)
     [sg]  = [ par for par in s_par if par.name == 'sg_gauss' ]
 
-    assert sg.floating == False
+    assert sg.floating is False
 
     print_pdf(pdf)
 #--------------------------
