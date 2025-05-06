@@ -335,6 +335,17 @@ def _get_model(kind : str):
 
     raise NotImplementedError(f'Invalid kind of fit: {kind}')
 #---------------------------------------------
+def _pdf_to_data(pdf : zpdf, add_weights : bool) -> zdata:
+    nentries = 10_000
+    data     = pdf.create_sampler(n=nentries)
+    if not add_weights:
+        return data
+
+    arr_wgt  = numpy.random.normal(loc=1, scale=0.1, size=nentries)
+    data     = data.with_weights(arr_wgt)
+
+    return data
+#---------------------------------------------
 def placeholder_fit(kind : str, fit_dir : str, plot_fit : bool = True) -> None:
     '''
     Function meant to run toy fits that produce output needed as an input
@@ -344,11 +355,10 @@ def placeholder_fit(kind : str, fit_dir : str, plot_fit : bool = True) -> None:
     fit_dir: Directory where the output of the fit will go
     plot_fit: Will plot the fit or not, by default True
     '''
-
-    pdf = _get_model(kind)
+    pdf  = _get_model(kind)
     print_pdf(pdf, txt_path=f'{fit_dir}/pre_fit.txt')
+    data = _pdf_to_data(pdf=pdf, add_weights=True)
 
-    data    = pdf.create_sampler(n=10_000)
     d_const = {'sg' : [0.6, 0.1]}
 
     obj = Fitter(pdf, data)
