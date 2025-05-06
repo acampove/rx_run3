@@ -373,7 +373,7 @@ def _plot_data(
         arr_mas    : numpy.ndarray,
         arr_wgt    : numpy.ndarray,
         obs        : zobs,
-        is_signal  : bool,
+        kind       : str,
         identifier : str) -> None:
 
     [[lower]], [[upper]] = obs.limits
@@ -392,10 +392,7 @@ def _plot_data(
 
     title=f'Entries={arr_wgt.size:.0f}; Sum={numpy.sum(arr_wgt):.0f}; {identifier}'
 
-    if is_signal:
-        plt_path = f'{Data.plt_dir}/ctrl_{identifier}.png'
-    else:
-        plt_path = f'{Data.plt_dir}/data_{identifier}.png'
+    plt_path = f'{Data.plt_dir}/{kind}_{identifier}.png'
 
     log.info(f'Saving to: {plt_path}')
     plt.title(title)
@@ -493,17 +490,17 @@ def _make_table():
     identifier = f'{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}'
 
     if Data.samp == 'simulation':
+        log.info('Running simulation fit')
         rdf_sim   = _get_rdf(kind='simulation')
         _get_sim_pars_fits(rdf_sim, f'simulation_{identifier}')
         log.info('Done with simulation and returning')
         return
 
+    log.info('Running data fit')
     Data.d_sim_par = gut.load_json(f'{Data.plt_dir}/simulation_{identifier}/parameters.json')
-    rdf_dat        = _get_rdf(kind='data')
-    Data.nevs_data = rdf_dat.Count().GetValue()
     d_fix_par      = _get_fix_pars()
 
-    _fit(rdf_dat, d_fix=d_fix_par, identifier=f'data_{identifier}')
+    _fit(d_fix=d_fix_par, identifier=f'data_{identifier}')
 #-------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
