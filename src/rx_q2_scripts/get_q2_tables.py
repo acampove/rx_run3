@@ -333,27 +333,29 @@ def _get_data(
     if os.path.isfile(data_path):
         log.warning(f'Data found, loading from: {data_path}')
         df  = pnd.read_json(data_path)
-        dat = zfit.data.Data.from_pandas(df, obs=Data.obs, weights='weights')
+        dat = zfit.data.Data.from_pandas(df, obs=Data.obs, weights=Data.weights)
 
         return dat
 
     rdf     = _get_rdf(kind=kind)
-    arr_val = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
-    arr_wgt = rdf.AsNumpy(['weight'])['weight']
+    d_data  = rdf.AsNumpy([Data.j_mass, Data.weights])
+    df      = pnd.DataFrame(d_data)
 
     obs     = pdf.space
-    dat     = zfit.Data.from_numpy(obs=obs, array=arr_val, weights=arr_wgt)
+    dat     = zfit.Data.from_pandas(obs=obs, df=df, weights=Data.weights)
 
-    _plot_data(arr_val, arr_wgt, obs, kind, identifier)
+    _plot_data(df, obs, kind, identifier)
 
     return dat
 #-------------------
 def _plot_data(
-        arr_mas    : numpy.ndarray,
-        arr_wgt    : numpy.ndarray,
+        df         : pnd.DataFrame,
         obs        : zobs,
         kind       : str,
         identifier : str) -> None:
+
+    arr_mas = df[Data.j_mass ].to_numpy()
+    arr_wgt = df[Data.weights].to_numpy()
 
     [[lower]], [[upper]] = obs.limits
     _, ax     = plt.subplots(figsize=(15, 10))
