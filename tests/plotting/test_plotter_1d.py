@@ -88,6 +88,17 @@ def test_simple():
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
+def test_line():
+    '''
+    Tests config that places lines on figure
+    '''
+    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+
+    cfg_dat = _load_config(test='line')
+
+    ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
+    ptr.run()
+#---------------------------------------
 def test_styling():
     '''
     Change style of histogram plots

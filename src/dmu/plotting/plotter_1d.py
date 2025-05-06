@@ -229,6 +229,11 @@ class Plotter1D(Plotter):
 
         var (str) : name of variable
         '''
+        var_cfg = self._d_cfg['plots'][var]
+        if 'vline' in var_cfg:
+            line_cfg = var_cfg['vline']
+            plt.axvline(**line_cfg)
+
         if 'style' in self._d_cfg and 'skip_lines' in self._d_cfg['style'] and self._d_cfg['style']['skip_lines']:
             return
 
