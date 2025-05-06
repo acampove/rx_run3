@@ -441,6 +441,7 @@ def _plot_fit(
             _add_q2_region_lines(obj)
 
             obj.axs[0].set_title(title)
+            obj.axs[0].axhline(y=0, c='gray')
 
             plot_path = f'{Data.plt_dir}/{identifier}_{add_pars}_{yscale}.png'
             log.info(f'Saving to: {plot_path}')
