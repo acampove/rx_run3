@@ -204,7 +204,7 @@ def save_fit(
     print_pdf(model, txt_path=f'{fit_dir}/post_fit.txt', d_const=d_const)
     pdf_to_tex(path=f'{fit_dir}/post_fit.txt', d_par={'mu' : r'$\mu$'}, skip_fixed=True)
 
-    df     = data.to_pandas(weightsname='weights')
+    df     = data.to_pandas(weightsname='weight')
     df.to_json(f'{fit_dir}/data.json', indent=2)
 
     d_par  = _parameters_from_result(result=res)
