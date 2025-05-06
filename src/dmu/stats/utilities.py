@@ -201,9 +201,8 @@ def save_fit(
     print_pdf(model, txt_path=f'{fit_dir}/post_fit.txt', d_const=d_const)
     pdf_to_tex(path=f'{fit_dir}/post_fit.txt', d_par={'mu' : r'$\mu$'}, skip_fixed=True)
 
-    l_data = data.value().numpy().tolist()
-    opath  = f'{fit_dir}/data.json'
-    gut.dump_json(l_data, opath)
+    df     = data.to_pandas(weightsname='weights')
+    df.to_json(f'{fit_dir}/data.json', indent=2)
 
     d_par  = _parameters_from_result(result=res)
     opath  = f'{fit_dir}/parameters.json'
