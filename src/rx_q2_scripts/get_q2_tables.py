@@ -284,20 +284,11 @@ def _fit(
     jsn_path  = f'{fit_dir}/parameters.json'
     kind      = 'simulation' if d_fix is None else 'data'
 
-    if   identifier.endswith('_nspd'):
-        log.info(f'Splitting by nSPD: {identifier}')
-        pdf = _get_pdf(kind, split_by_nspd= True)
-    elif identifier.endswith( '_nom'):
-        log.info(f'Not splitting by nSPD: {identifier}')
-        pdf = _get_pdf(kind, split_by_nspd=False)
-    else:
-        raise ValueError(f'Invalid identifier: {identifier}')
-
-    if kind == 'signal':
-        if os.path.isfile(jsn_path):
-            log.info(f'Loading cached simulation parameters: {jsn_path}')
-            d_par = gut.load_json(jsn_path)
-            _reset_sig_pars(pdf, d_par)
+    pdf = _get_pdf(kind)
+    if kind == 'signal' and os.path.isfile(jsn_path):
+        log.info(f'Loading cached simulation parameters: {jsn_path}')
+        d_par = gut.load_json(jsn_path)
+        _reset_sig_pars(pdf, d_par)
 
     dat = _get_data(pdf, kind, identifier)
     pdf = _fix_pdf(pdf, d_fix)
