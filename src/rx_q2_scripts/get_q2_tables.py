@@ -467,17 +467,7 @@ def _add_nspd_col(rdf : RDataFrame) -> RDataFrame:
 #-------------------
 def _get_sim_pars_fits(rdf : RDataFrame, identifier : str) -> dict[str,tuple[float,float]]:
     if Data.syst == 'nom':
-        d_par = _fit(rdf, d_fix=None, identifier=identifier)
-        return d_par
-
-    if   Data.syst == 'nspd':
-        rdf = _add_nspd_col(rdf)
-        for i_nspd in [1,2,3]:
-            rdf_sim_nspd = rdf.Filter(f'nspd == {i_nspd}')
-            d_tmp_1      = _fit(rdf_sim_nspd, d_fix=None, identifier=f'sim_{i_nspd}_{identifier}')
-            d_tmp_2      = { f'{key}_{i_nspd}' : val for key, val in d_tmp_1.items() }
-            d_par.update(d_tmp_2)
-
+        d_par = _fit(d_fix=None, identifier=identifier)
         return d_par
 
     raise ValueError(f'Invalid systematic: {Data.syst}')
