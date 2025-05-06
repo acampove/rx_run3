@@ -36,8 +36,8 @@ fitting:
     pdfs:
       - dscb
   simulation:
-    strategy  :
-      retry   :
-        ntries        : 4
+    strategy :
+      retry  :
+        ntries        : 3 
         pvalue_thresh : 0.05
         ignore_status : true
