@@ -191,54 +191,22 @@ def _get_nspd_data_pars(preffix : str ='') -> tuple[zpar,zpar]:
 
     return dat_mu, dat_sg
 #-------------------
-def _get_cb_nspd_pdf(prefix : str = '') -> zpdf:
-    mu,sg = _get_nspd_data_pars(prefix)
-
-    ap_r  = zfit.Parameter(f'ap_r{prefix}',  1.0,  -10.0, 10.0)
-    pw_r  = zfit.Parameter(f'pw_r{prefix}',  1.0,    0.1, 10.0)
-    sig_r = zfit.pdf.CrystalBall(obs=Data.obs, mu=mu, sigma=sg, alpha=ap_r, n=pw_r)
-
-    ap_l  = zfit.Parameter(f'ap_l{prefix}', -1.0,  -10.0, 10.0)
-    pw_l  = zfit.Parameter(f'pw_l{prefix}',  1.0,    0.1,  10.)
-    sig_l = zfit.pdf.CrystalBall(obs=Data.obs, mu=mu, sigma=sg, alpha=ap_l, n=pw_l)
-
-    fr    = zfit.Parameter(f'fr_cb{prefix}', 0.5,  0.0, 1)
-    sig   = zfit.pdf.SumPDF([sig_r, sig_l], fracs=[fr])
-
-    return sig
-#-------------------
-def _get_signal_pdf(split_by_nspd : bool = False) -> zpdf:
-    if hasattr(Data, 'sig_pdf_splt') and     split_by_nspd: # Return cached one
-        return Data.sig_pdf_splt
-
-    if hasattr(Data, 'sig_pdf_merg') and not split_by_nspd:
-        return Data.sig_pdf_merg
-
-    # Or else remake the PDF
-    if split_by_nspd:
-        l_pdf = [ _get_cb_nspd_pdf(prefix=f'_{i_nspd}') for i_nspd in [1, 2, 3] ]
-        Data.sig_pdf_splt = _get_nspd_signal(l_pdf)
-        return Data.sig_pdf_splt
-
-    Data.sig_pdf_merg = _get_sig_pdf()
-    return Data.sig_pdf_merg
-#-------------------
 def _get_bkg_pdf() -> zpdf:
     if hasattr(Data, 'bkg_pdf'):
         return Data.bkg_pdf
 
-    lam = zfit.Parameter('lam', -0.001, -0.1, 0.1)
+    lam = zfit.Parameter('lam', 0.0, -0.01, +0.01)
     bkg = zfit.pdf.Exponential(lam=lam, obs=Data.obs, name='')
 
-    nbk = zfit.Parameter('nbk', 100, -100, 1000_000)
+    nbk = zfit.Parameter('nbk', 10, 1, 10_000)
     bkg = bkg.create_extended(nbk, name='Combinatorial')
 
     Data.bkg_pdf = bkg
 
     return bkg
 #-------------------
-def _get_full_pdf(split_by_nspd : bool):
-    sig = _get_signal_pdf(split_by_nspd)
+def _get_full_pdf():
+    sig = _get_sig_pdf()
     nsg = zfit.Parameter('nsg', 10_000, 100, 2_000_000)
     sig = sig.create_extended(nsg, name='Signal')
 
