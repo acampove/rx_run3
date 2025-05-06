@@ -13,8 +13,7 @@ input:
     simulation : Bu_JpsiK_ee_eq_DPC
     data       : DATA*
   selection:
-    block : block == 6
-    psi_vt: B_const_mass_M > 4880
+    psi_vt: B_const_mass_M > 5180
     mass  : (1)
     q2    : (1) 
 syst:
