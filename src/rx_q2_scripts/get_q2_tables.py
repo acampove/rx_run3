@@ -404,13 +404,14 @@ def _add_q2_region_lines(obj : ZFitPlotter) -> None:
     axis.axvline(x=2450, c='red', ls=':')
     axis.axvline(x=3600, c='red', ls=':')
 #-------------------
-def _get_title(data : zdata) -> str:
+def _get_text(data : zdata) -> tuple[str,str]:
     nentries= data.nevents.numpy()
     text    = f'Candidates={nentries}'
+    title   = ''
     for name, value in Data.d_sel.items():
-        text += f'; {name}: {value}'
+        title += f'; {name}: {value}'
 
-    return text
+    return text, title
 #-------------------
 def _plot_fit(
         dat        : zdata,
@@ -421,17 +422,19 @@ def _plot_fit(
     obj=ZFitPlotter(data=dat, model=pdf, result=res)
     for yscale in ['log', 'linear']:
         for add_pars in ['pars', 'no_pars']:
-            pars = None if add_pars == 'no_pars' else 'all'
+            pars  = None if add_pars == 'no_pars' else 'all'
+            text, title = _get_text(data = dat)
+
             obj.plot(
                     nbins     = Data.nbins,
                     d_leg     = {'dscb_1' : 'DSCB'},
                     plot_range= Data.obs_range,
                     yscale    = yscale,
+                    ext_text  = text,
                     add_pars  = pars)
 
             _add_q2_region_lines(obj)
 
-            title = _get_title(data = dat)
             obj.axs[0].set_title(title)
 
             plot_path = f'{Data.plt_dir}/{identifier}_{add_pars}_{yscale}.png'
