@@ -309,6 +309,7 @@ def _get_data(
     rdf     = _get_rdf(kind=kind)
     d_data  = rdf.AsNumpy([Data.j_mass, Data.weights])
     df      = pnd.DataFrame(d_data)
+    df.to_json(data_path) # Caching now will avoid redoing this if fit fails
 
     obs     = pdf.space
     dat     = zfit.Data.from_pandas(obs=obs, df=df, weights=Data.weights)
@@ -423,8 +424,7 @@ def _make_table():
 
     if Data.samp == 'simulation':
         log.info('Running simulation fit')
-        _get_sim_pars_fits(f'simulation_{identifier}')
-        log.info('Done with simulation and returning')
+        _fit(d_fix=None, identifier=identifier)
         return
 
     log.info('Running data fit')
