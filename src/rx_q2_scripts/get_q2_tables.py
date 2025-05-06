@@ -114,7 +114,7 @@ def _set_vars():
 def _initialize():
     plt.style.use(mplhep.style.LHCb2)
     d_cut={'nbrem' : f'nbrem == {Data.brem}'}
-    if block != -1:
+    if Data.block != -1:
         d_cut['block'] = f'block == {Data.block}'
 
     d_cut.update(Data.d_sel)
@@ -495,7 +495,7 @@ def _get_rdf(kind : str) -> RDataFrame:
     return rdf
 #-------------------
 def _make_table():
-    identifier = f'{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}'
+    identifier = f'{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}_{Data.block:03}'
 
     if Data.samp == 'simulation':
         log.info('Running simulation fit')
