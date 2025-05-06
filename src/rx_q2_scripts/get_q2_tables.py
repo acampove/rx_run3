@@ -495,7 +495,7 @@ def _get_rdf(kind : str) -> RDataFrame:
     return rdf
 #-------------------
 def _make_table():
-    identifier = f'{Data.trig}_{Data.year}_{Data.brem}_{Data.syst}_{Data.block:03}'
+    identifier = f'{Data.trig}_{Data.year}_{Data.brem}_{Data.block:03}_{Data.syst}'
 
     if Data.samp == 'simulation':
         log.info('Running simulation fit')
