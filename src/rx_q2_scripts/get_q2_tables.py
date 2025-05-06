@@ -466,7 +466,7 @@ def _add_nspd_col(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 #-------------------
-def _get_sim_pars_fits(rdf : RDataFrame, identifier : str) -> dict[str,tuple[float,float]]:
+def _get_sim_pars_fits(identifier : str) -> dict[str,tuple[float,float]]:
     if Data.syst == 'nom':
         d_par = _fit(d_fix=None, identifier=identifier)
         return d_par
@@ -495,8 +495,7 @@ def _make_table():
 
     if Data.samp == 'simulation':
         log.info('Running simulation fit')
-        rdf_sim   = _get_rdf(kind='simulation')
-        _get_sim_pars_fits(rdf_sim, f'simulation_{identifier}')
+        _get_sim_pars_fits(f'simulation_{identifier}')
         log.info('Done with simulation and returning')
         return
 
