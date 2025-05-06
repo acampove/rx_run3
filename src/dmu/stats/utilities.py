@@ -346,18 +346,27 @@ def _pdf_to_data(pdf : zpdf, add_weights : bool) -> zdata:
 
     return data
 #---------------------------------------------
-def placeholder_fit(kind : str, fit_dir : str, plot_fit : bool = True) -> None:
+def placeholder_fit(
+        kind     : str,
+        fit_dir  : str,
+        df       : pnd.DataFrame = None,
+        plot_fit : bool          = True) -> None:
     '''
     Function meant to run toy fits that produce output needed as an input
     to develop tools on top of them
 
     kind: Kind of fit, e.g. s+b for the simples signal plus background fit
     fit_dir: Directory where the output of the fit will go
+    df: pandas dataframe if passed, will reuse that data, needed to test data caching
     plot_fit: Will plot the fit or not, by default True
     '''
     pdf  = _get_model(kind)
     print_pdf(pdf, txt_path=f'{fit_dir}/pre_fit.txt')
-    data = _pdf_to_data(pdf=pdf, add_weights=True)
+    if df is None:
+        log.warning('Using user provided data')
+        data = _pdf_to_data(pdf=pdf, add_weights=True)
+    else:
+        data = zfit.data.Data.from_pandas(df, obs=pdf.space, weights='weights')
 
     d_const = {'sg' : [0.6, 0.1]}
 
