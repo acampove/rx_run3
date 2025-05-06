@@ -270,10 +270,14 @@ def _fix_pdf(
 
     return pdf
 #-------------------
-def _get_pdf(is_signal : bool, split_by_nspd : bool) -> zpdf:
-    pdf = _get_signal_pdf() if is_signal else _get_full_pdf(split_by_nspd)
+def _get_pdf(kind : str, split_by_nspd : bool) -> zpdf:
+    if kind == 'simulation':
+        return _get_signal_pdf()
 
-    return pdf
+    if kind == 'data':
+        return _get_full_pdf(split_by_nspd)
+
+    raise NotImplementedError(f'Cannot get PDF for: {kind}')
 #-------------------
 def _get_pars(res : zres, identifier : str) -> dict[str,list[str]]:
     try:
