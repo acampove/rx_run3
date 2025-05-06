@@ -60,7 +60,7 @@ class Data:
     trig         : str
     year         : str
     brem         : str
-    block        : int
+    block        : str 
     nentries     : int
     skip_fit     : bool
     nevs_data    : int
@@ -112,11 +112,11 @@ def _initialize():
     plt.style.use(mplhep.style.LHCb2)
     d_cut={'nbrem' : f'nbrem == {Data.brem}'}
 
-    if   Data.block == -1:
-        d_cut['block'] =  'block == (1)'
-    elif Data.block == 12:
+    if   Data.block == 'all':
+        d_cut['block'] =  '(1)'
+    elif Data.block == '12':
         d_cut['block'] =  '(block == 1) || (block == 2)'
-    elif Data.block == 78:
+    elif Data.block == '78':
         d_cut['block'] =  '(block == 7) || (block == 8)'
     else:
         d_cut['block'] = f'block == {Data.block}'
@@ -131,7 +131,7 @@ def _initialize():
     LogStore.set_level('rx_q2:get_q2_tables'  , Data.logl)
     LogStore.set_level('rx_data:rdf_getter'   , Data.logl)
 
-    Data.out_dir = f'{Data.ana_dir}/q2/fits/{Data.out_vers}/{Data.kind}/{Data.trig}_{Data.year}_{Data.brem}_{Data.block:03}_{Data.syst}'
+    Data.out_dir = f'{Data.ana_dir}/q2/fits/{Data.out_vers}/{Data.kind}/{Data.trig}_{Data.year}_{Data.brem}_{Data.block}_{Data.syst}'
     os.makedirs(Data.out_dir, exist_ok=True)
 #-------------------
 def _set_pdf_pars(pdf : zpdf, d_val : Parameters) -> None:
@@ -432,7 +432,7 @@ def _get_args():
     parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , required=True, choices=Data.l_trig)
     parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True, choices=Data.l_year)
     parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True, choices=Data.l_brem)
-    parser.add_argument('-B', '--block', type =int, help='Block, by default -1, all'                   , default=-1   , choices=[12, 3, 4, 5, 6, 78])
+    parser.add_argument('-B', '--block', type =int, help='Block, by default -1, all'                   , default=-1   , choices=[12, 3, 4, 5, 6, 78, -1])
     parser.add_argument('-x', '--syst' , type =str, help='Systematic variabion'                        ,                choices=Data.l_syst)
     parser.add_argument('-k', '--kind' , type =str, help='Kind of sample'                              , required=True, choices=Data.l_kind)
     parser.add_argument('-l', '--logl' , type =int, help='Logging level'                               , default=20    ,choices=[10, 20, 30])
@@ -443,7 +443,7 @@ def _get_args():
     Data.trig     = args.trig
     Data.year     = args.year
     Data.brem     = args.brem
-    Data.block    = args.block
+    Data.block    = 'all' if args.block == -1 else str(args.block)
     Data.syst     = args.syst
     Data.kind     = args.kind
     Data.logl     = args.logl
