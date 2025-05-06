@@ -3,7 +3,6 @@ Script needed to calculate smearing factors for q2 distribution
 '''
 
 import os
-import re
 import argparse
 from importlib.resources import files
 
@@ -20,7 +19,6 @@ import zfit
 from zfit.core.data         import Data       as zdata
 from zfit.core.basepdf      import BasePDF    as zpdf
 from zfit.core.interfaces   import ZfitSpace  as zobs
-from zfit.core.parameter    import Parameter  as zpar
 from zfit.result            import FitResult  as zres
 
 import dmu.generic.utilities as gut
@@ -34,6 +32,8 @@ from dmu.logging.log_store   import LogStore
 from rx_selection            import selection as sel
 from rx_data.rdf_getter      import RDFGetter
 
+Parameters=dict[str,tuple[float,float]]
+
 log=LogStore.add_logger('rx_q2:get_q2_tables')
 #-------------------
 class Data:
@@ -44,15 +44,16 @@ class Data:
 
     gut.TIMER_ON = True
     ana_dir      = os.environ['ANADIR']
+    out_dir      : str
 
     l_year       : list[str]
     l_trig       : list[str]
     l_brem       : list[str]
     l_syst       : list[str]
-    l_samp       : list[str]
-    d_samp       : dict[str,str]
+    l_kind       : list[str]
     l_cali       : list[str]
     d_sel        : dict[str,str]
+    d_samp       : dict[str,str]
     obs_range    : list[float]
     d_obs_range  : dict[str,list[float]]
 
@@ -60,7 +61,6 @@ class Data:
     year         : str
     brem         : str
     block        : int
-    plt_dir      : str
     nentries     : int
     skip_fit     : bool
     nevs_data    : int
@@ -98,7 +98,7 @@ def _set_vars():
     Data.l_trig = d_input['trigger']
     Data.l_cali = d_input['cali']
     Data.d_samp = d_input['samples']
-    Data.l_samp = list(Data.d_samp)
+    Data.l_kind = list(Data.d_samp)
     Data.d_sel  = d_input['selection']
 
     Data.nbins       = d_fitting['binning']['nbins']
@@ -117,17 +117,17 @@ def _initialize():
     d_cut.update(Data.d_sel)
     sel.set_custom_selection(d_cut = d_cut)
 
-    Data.plt_dir  = f'{Data.ana_dir}/q2/fits/{Data.out_vers}'
-    os.makedirs(Data.plt_dir, exist_ok=True)
-
     Data.obs_range= Data.d_obs_range[Data.brem]
     Data.obs      = zfit.Space(Data.j_mass, limits=Data.obs_range)
 
     LogStore.set_level('dmu:statistics:fitter', Data.logl)
     LogStore.set_level('rx_q2:get_q2_tables'  , Data.logl)
     LogStore.set_level('rx_data:rdf_getter'   , Data.logl)
+
+    Data.out_dir = f'{Data.ana_dir}/q2/fits/{Data.out_vers}/{Data.kind}/{Data.trig}_{Data.year}_{Data.brem}_{Data.block:03}_{Data.syst}'
+    os.makedirs(Data.out_dir, exist_ok=True)
 #-------------------
-def _set_pdf_pars(pdf : zpdf, d_val : dict[str,tuple[float,float]]) -> None:
+def _set_pdf_pars(pdf : zpdf, d_val : Parameters) -> None:
     '''
     This function takes pad and dictionary of parameters
     sets PDF parameter values according to dictionary
