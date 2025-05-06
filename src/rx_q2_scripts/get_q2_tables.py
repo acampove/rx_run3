@@ -321,11 +321,7 @@ def _fit(
         log.warning('Skipping fit')
         return None
 
-    if is_signal:
-        res=obj.fit(cfg=Data.cfg_sim_fit)
-    else:
-        res=obj.fit()
-
+    res=obj.fit(cfg=Data.cfg_sim_fit)
     if res is None:
         _plot_fit(dat, pdf, res, identifier)
 
