@@ -60,7 +60,7 @@ class Data:
     trig         : str
     year         : str
     brem         : str
-    block        : str 
+    block        : str
     nentries     : int
     skip_fit     : bool
     nevs_data    : int
