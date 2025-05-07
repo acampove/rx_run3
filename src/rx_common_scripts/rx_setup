@@ -86,7 +86,7 @@ clone_project()
 
     echo "Project $NAME not found, clonning it"
     echo "git clone $GITROOT/$NAME.git"
-    git clone $GITROOT/$NAME.git
+    git clone --origin $REMOTE $GITROOT/$NAME.git
 }
 #--------------------------
 # Will set SKIP_UPDATE to 0 or 1
