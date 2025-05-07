@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 
 import pytest
 import mplhep
+import numpy
 from ROOT                    import RDataFrame
 from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter_2d import Plotter2D
@@ -58,6 +59,13 @@ def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
     plt.style.use(mplhep.style.LHCb2)
     RDFGetter.max_entries = 1000
+# ------------------------------------------------
+def _check_block(rdf : RDataFrame) -> None:
+    arr_block = rdf.AsNumpy(['block'])['block']
+
+    assert numpy.any(arr_block == 0)
+    assert numpy.all(arr_block >= 0)
+    assert numpy.all(arr_block <= 8)
 # ------------------------------------------------
 def _check_branches(rdf : RDataFrame, is_ee : bool) -> None:
     l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
