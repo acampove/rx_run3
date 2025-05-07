@@ -371,7 +371,7 @@ def _get_naming() -> dict[str,str]:
     if Data.kind == 'sim':
         return {
                 'Data'   : 'Simulation',
-                'Signal' : 'PDF',
+                'dscb_1' : 'PDF',
                 }
 
     raise NotImplementedError(f'Invalid sample: {Data.kind}')
