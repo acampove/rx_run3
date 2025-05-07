@@ -253,7 +253,7 @@ class RDFGetter:
         d_def = self._cfg['redefinitions']
         for name, definition in d_def.items():
             if name == 'block':
-                log.warning('Sending pre-UT candidates to block 4')
+                log.warning('Sending pre-UT candidates to block 0')
             rdf = rdf.Redefine(name, definition)
 
         d_def = self._cfg['definitions'][self._analysis]
