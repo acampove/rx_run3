@@ -8,10 +8,10 @@ selection:
   mass : (1)
 overlay:
   None : (1) 
-  '630': B_const_mass_M > 5280 - 630
-  '620': B_const_mass_M > 5280 - 620
-  '500': B_const_mass_M > 5280 - 500
-  '400': B_const_mass_M > 5280 - 400
+  '$m(B^+)-400$ MeV': B_const_mass_M > 5280 - 400 
+  '$m(B^+)-500$ MeV': B_const_mass_M > 5280 - 500 
+  '$m(B^+)-600$ MeV': B_const_mass_M > 5280 - 600 
+  '$m(B^+)-800$ MeV': B_const_mass_M > 5280 - 800 
 plots:
     Jpsi_M:
         binning    : [3200, 3800, 30]
