@@ -14,6 +14,7 @@ from scipy                    import stats
 from zfit.minimizers.strategy import FailMinimizeNaN
 from zfit.result              import FitResult
 from zfit.core.data           import Data
+from zfit.result              import FitResult  as zres
 from dmu.logging.log_store    import LogStore
 
 log = LogStore.add_logger('dmu:statistics:fitter')
