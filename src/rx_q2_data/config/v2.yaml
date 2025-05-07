@@ -39,6 +39,6 @@ fitting:
   simulation:
     strategy :
       retry  :
-        ntries        : 10
+        ntries        : 4
         pvalue_thresh : 0.05
         ignore_status : true
