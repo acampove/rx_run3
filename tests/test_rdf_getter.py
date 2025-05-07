@@ -112,7 +112,7 @@ def _plot_block(rdf : RDataFrame, name : str) -> None:
 
     os.makedirs(f'{Data.out_dir}/{name}', exist_ok=True)
 
-    plt.hist(arr_block, range=[0,8], bins=8)
+    plt.hist(arr_block, bins=30)
     plt.savefig(f'{Data.out_dir}/{name}/block.png')
     plt.close()
 # ------------------------------------------------
