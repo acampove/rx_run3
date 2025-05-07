@@ -23,7 +23,7 @@ from zfit.result            import FitResult  as zres
 
 import dmu.generic.utilities as gut
 from dmu.stats               import utilities        as sut
-from dmu.stats.fitter        import Fitter           as zfitter
+from dmu.stats.fitter        import Fitter
 from dmu.stats.parameters    import ParameterLibrary as PL
 from dmu.stats.model_factory import ModelFactory
 from dmu.stats.zfit_plotter  import ZFitPlotter
@@ -261,7 +261,7 @@ def _fit(d_fix : Parameters = None)-> Parameters:
     pdf = _get_pdf(kind)
     dat = _get_data(pdf, kind)
     pdf = _fix_pdf(pdf, d_fix)
-    obj = zfitter(pdf, dat)
+    obj = Fitter(pdf, dat)
 
     if Data.skip_fit:
         log.warning('Skipping fit')
