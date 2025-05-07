@@ -107,6 +107,15 @@ def _plot_mva_mass(rdf : RDataFrame, test : str) -> None:
     plt.savefig(f'{test_dir}/mva_mass.png')
     plt.close()
 # ------------------------------------------------
+def _plot_block(rdf : RDataFrame, name : str) -> None:
+    arr_block = rdf.AsNumpy(['block'])['block']
+
+    os.makedirs(f'{Data.out_dir}/{name}', exist_ok=True)
+
+    plt.hist(arr_block, range=[0,8], bins=8)
+    plt.savefig(f'{Data.out_dir}/{name}/block.png')
+    plt.close()
+# ------------------------------------------------
 def _plot_q2_track(rdf : RDataFrame, sample : str) -> None:
     test_dir = f'{Data.out_dir}/{sample}'
     os.makedirs(test_dir, exist_ok=True)
@@ -381,4 +390,25 @@ def test_define_custom_branches():
 
     assert 'xbrem' in l_col
     assert 'xmva'  in l_col
+# ------------------------------------------------
+@pytest.mark.parametrize('sample' , ['DATA*'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
+def test_block(sample : str, trigger : str):
+    '''
+    Test of getter class with check for block assignment
+    '''
+    RDFGetter.max_entries = -1
+    gtr = RDFGetter(sample=sample, trigger=trigger)
+    rdf = gtr.get_rdf()
+    rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
+    rep = rdf.Report()
+    rep.Print()
+
+    _check_block(rdf)
+
+    sample = sample.replace('*', 'p')
+    name   = f'block/{sample}_{trigger}'
+
+    _plot_block(rdf=rdf, name=name)
+    RDFGetter.max_entries = 1000
 # ------------------------------------------------
