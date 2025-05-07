@@ -363,6 +363,7 @@ class Fitter:
     def _minimize(self, nll, cfg : dict) -> tuple[FitResult, tuple]:
         mnm = zfit.minimize.Minuit()
         res = mnm.minimize(nll)
+        res = self._calculate_error(res)
 
         try:
             gof = self._calc_gof()
@@ -509,6 +510,11 @@ class Fitter:
 
             log.info(f'{name:<20}{val - err:<20.3e}{val + err:<20.3e}')
     #------------------------------
+    def _calculate_error(self, res : zres) -> zres:
+        res.hesse(name='minuit_hesse')
+
+        return res
+    #------------------------------
     def fit(self, cfg : Union[dict, None] = None):
         '''
         Runs the fit using the configuration specified by the cfg dictionary
@@ -530,8 +536,6 @@ class Fitter:
             res = self._fit_in_steps(cfg)
         else:
             raise ValueError('Unsupported fitting strategy')
-
-        res.hesse(method='minuit_hesse')
 
         return res
 #------------------------------
