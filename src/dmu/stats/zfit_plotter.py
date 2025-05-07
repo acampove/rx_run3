@@ -243,7 +243,7 @@ class ZFitPlotter:
                 val = d_val['value']
                 name= par if isinstance(par, str) else par.name
                 try:
-                    err = d_val['hesse']['error']
+                    err = d_val['minuit_hesse']['error']
                 except KeyError:
                     log.warning(f'Cannot extract {name} Hesse errors, using zeros')
                     pprint.pprint(d_val)
