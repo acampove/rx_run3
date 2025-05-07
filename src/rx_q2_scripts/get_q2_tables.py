@@ -361,6 +361,21 @@ def _get_text(data : zdata) -> tuple[str,str]:
 
     return text, title
 #-------------------
+def _get_naming() -> dict[str,str]:
+    if Data.kind == 'dat':
+        return {
+                'Data'   : 'Data',
+                'Signal' : 'PDF',
+                }
+
+    if Data.kind == 'sim':
+        return {
+                'Data'   : 'Simulation',
+                'Signal' : 'PDF',
+                }
+
+    raise NotImplementedError(f'Invalid sample: {Data.kind}')
+#-------------------
 def _plot_fit(
         dat        : zdata,
         pdf        : zpdf,
@@ -373,7 +388,7 @@ def _plot_fit(
 
             obj.plot(
                     nbins     = Data.nbins,
-                    d_leg     = {'dscb_1' : 'DSCB'},
+                    d_leg     = _get_naming(),
                     plot_range= Data.obs_range,
                     yscale    = yscale,
                     ext_text  = text,
