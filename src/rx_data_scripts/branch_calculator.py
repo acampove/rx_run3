@@ -19,6 +19,9 @@ from ROOT                   import RDataFrame, TFileMerger
 from dmu.logging.log_store  import LogStore
 from dmu.generic            import version_management as vman
 
+
+from rx_q2.q2smear_calculator    import Q2SmearCalculator
+
 from rx_data.mis_calculator      import MisCalculator
 from rx_data.hop_calculator      import HOPCalculator
 from rx_data.swp_calculator      import SWPCalculator
@@ -41,7 +44,7 @@ class Data:
     wild_card : str
     chunk_size: int
 
-    l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias', 'brem_track_1', 'brem_track_2']
+    l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias', 'brem_track_1', 'brem_track_2', 'qsq_smear']
     l_ecorr   = ['ecalo_bias', 'brem_track_1', 'brem_track_2']
 
     tree_name = 'DecayTree'
@@ -221,6 +224,12 @@ def _process_rdf(rdf : RDataFrame, trigger : str, path : str) -> RDataFrame:
     elif Data.kind == 'swp_cascade'   :
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
         rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
+    elif Data.kind == 'qsq_smear':
+        if _skip_qsq_smear(trigger=trigger, path=path):
+            return None
+
+        obj = Q2SmearCalculator(rdf=rdf)
+        rdf = obj.get_rdf()
     else:
         raise ValueError(f'Invalid kind: {Data.kind}')
 
