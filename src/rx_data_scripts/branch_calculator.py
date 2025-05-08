@@ -10,6 +10,7 @@ import os
 import glob
 import fnmatch
 import argparse
+from typing      import Union
 from dataclasses import dataclass
 
 import tqdm
