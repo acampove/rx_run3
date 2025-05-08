@@ -51,14 +51,32 @@ class Q2SmearCalculator:
         if not numpy.all(arr_trueid == 11):
             raise WrongQ2SmearInput('Input does not belong to electron channel')
     # ------------------------------------
-    def _calculate_smeared_mass(self, row : pnd.Series) -> float:
-        factor = numpy.random.normal(loc=0, scale=1000_000)
+    def _read_quantity(self, row : pnd.Series, kind : str) -> float:
+        if kind == 'mu_mc':
+            return 3090
 
-        return factor + row[self._mass_ee]
+        if kind == 'reso':
+            return 1.3
+
+        if kind == 'scale':
+            return -20
+
+        raise NotImplementedError(f'Invalid quantity: {kind}')
+    # ------------------------------------
+    def _calculate_smeared_mass(self, row : pnd.Series) -> float:
+        jpsi_mass_reco = row[self._mass_ee]
+        jpsi_mass_true = self._mass_ee_pdg
+
+        mu_mc     = self._read_quantity(row, kind='mu_mc')
+        reso      = self._read_quantity(row, kind= 'reso')
+        scale     = self._read_quantity(row, kind='scale')
+        mass      = jpsi_mass_true + reso * (jpsi_mass_reco - jpsi_mass_true) + scale + (1 - reso) * (mu_mc - self._mass_ee_pdg)
+
+        return mass
     # ------------------------------------
     def get_rdf(self, name : str = None) -> RDataFrame:
         '''
-        Will return ROOT dataframe with smeared mass of dielectron 
+        Will return ROOT dataframe with smeared mass of dielectron
 
         name: Name of branch containing smeared mass
         '''
