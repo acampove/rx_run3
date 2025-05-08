@@ -217,9 +217,7 @@ def main():
     if os.path.isfile(out_path):
         log.warning(f'Dataframe already found, reusing: {out_path}')
         df = pnd.read_json(out_path)
-        df = _get_scales(df)
-        _plot_scales(df, quantity='ssg')
-        _plot_scales(df, quantity='smu')
+        _plot(df=df)
 
         return
 
@@ -230,13 +228,9 @@ def main():
         df['sample'] = sample
         l_df.append(df)
 
-    df = pnd.concat(l_df, axis=0, ignore_index=True)
-    df.fillna(0, inplace=True)
-
+    df=pnd.concat(l_df, axis=0, ignore_index=True)
     df.to_json(out_path, indent=2)
-    df = _get_scales(df)
-    _plot_scales(df, quantity='ssg')
-    _plot_scales(df, quantity='smu')
+    _plot(df=df)
 #-------------------------------------
 if __name__ == '__main__':
     main()
