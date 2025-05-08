@@ -63,14 +63,24 @@ class Q2SmearCalculator:
             raise WrongQ2SmearInput('Input does not belong to electron channel')
     # ------------------------------------
     def _read_quantity(self, row : pnd.Series, kind : str) -> float:
+        brem = row['nbrem']
+        block= row['block']
+
+        df   = self._df
         if kind == 'mu_mc':
-            return 3090
+            mu_mc = df.loc[ (df['block'] == block) & (df['brem'] == brem) & (df['sample'] == 'sim'), 'mu_val' ].iloc[0]
+            return mu_mc
 
         if kind == 'reso':
-            return 1.3
+            sg_dt = df.loc[ (df['block'] == block) & (df['brem'] == brem) & (df['sample'] == 'dat'), 'sg_val' ].iloc[0]
+            sg_mc = df.loc[ (df['block'] == block) & (df['brem'] == brem) & (df['sample'] == 'sim'), 'sg_val' ].iloc[0]
+            return sg_dt / sg_mc
 
         if kind == 'scale':
-            return -20
+            mu_dt = df.loc[ (df['block'] == block) & (df['brem'] == brem) & (df['sample'] == 'dat'), 'mu_val' ].iloc[0]
+            mu_mc = df.loc[ (df['block'] == block) & (df['brem'] == brem) & (df['sample'] == 'sim'), 'mu_val' ].iloc[0]
+
+            return mu_dt - mu_mc
 
         raise NotImplementedError(f'Invalid quantity: {kind}')
     # ------------------------------------
