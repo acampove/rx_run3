@@ -88,10 +88,10 @@ class Q2SmearCalculator:
         jpsi_mass_reco = row[self._mass_ee]
         jpsi_mass_true = self._mass_ee_pdg
 
-        mu_mc     = self._read_quantity(row, kind='mu_mc')
-        reso      = self._read_quantity(row, kind= 'reso')
-        scale     = self._read_quantity(row, kind='scale')
-        mass      = jpsi_mass_true + reso * (jpsi_mass_reco - jpsi_mass_true) + scale + (1 - reso) * (mu_mc - self._mass_ee_pdg)
+        mu_mc = self._read_quantity(row, kind='mu_mc')
+        reso  = self._read_quantity(row, kind= 'reso')
+        scale = self._read_quantity(row, kind='scale')
+        mass  = jpsi_mass_true + reso * (jpsi_mass_reco - jpsi_mass_true) + scale + (1 - reso) * (mu_mc - self._mass_ee_pdg)
 
         return mass
     # ------------------------------------
