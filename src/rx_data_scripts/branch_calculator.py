@@ -192,7 +192,28 @@ def _is_mc(path : str) -> bool:
 
     raise ValueError(f'Cannot determine if MC or data for: {path}')
 # ---------------------------------
-def _process_rdf(rdf : RDataFrame, trigger : str, path : str) -> RDataFrame:
+def _skip_qsq_smear(trigger: str, path : str) -> bool:
+    if not _is_mc(path):
+        return False
+
+    if not _is_electron(trigger):
+        return False
+
+    return True
+# ---------------------------------
+def _process_rdf(rdf : RDataFrame, trigger : str, path : str) -> Union[RDataFrame,None]:
+    '''
+    Takes:
+
+    rdf: Dataframe to have the columns added
+    trigger: HLT2 trigger
+    path: Full path to corresponding ROOT file
+
+    Returns:
+    Either:
+    - Dataframe with columns needed
+    - None, in case it does not make sense to add the columns to this type of file
+    '''
     nentries = rdf.Count().GetValue()
     if nentries == 0:
         log.warning(f'Found empty input file: {path}/{Data.tree_name}')
