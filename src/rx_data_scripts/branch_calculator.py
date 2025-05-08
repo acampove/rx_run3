@@ -48,6 +48,7 @@ class Data:
     l_ecorr   = ['ecalo_bias', 'brem_track_1', 'brem_track_2']
 
     tree_name = 'DecayTree'
+    ana_dir   = os.environ['ANADIR']
 # ---------------------------------
 def _parse_args() -> None:
     '''
@@ -143,8 +144,7 @@ def _filter_paths(l_path : list[str]) -> list[str]:
     return l_path
 # ---------------------------------
 def _get_paths() -> list[str]:
-    data_dir = os.environ['DATADIR']
-    data_dir = vman.get_last_version(dir_path=f'{data_dir}/main', version_only=False)
+    data_dir = vman.get_last_version(dir_path=f'{Data.ana_dir}/Data/main', version_only=False)
     l_path   = glob.glob(f'{data_dir}/*.root')
     l_path   = _filter_paths(l_path)
     l_path   = _get_partition(l_path)
@@ -158,8 +158,7 @@ def _get_paths() -> list[str]:
     return l_path
 # ---------------------------------
 def _get_out_dir() -> str:
-    out_dir  = os.environ['DATADIR']
-    out_dir  = f'{out_dir}/{Data.kind}/{Data.vers}'
+    out_dir  = f'{Data.ana_dir}/Data/{Data.kind}/{Data.vers}'
 
     if not Data.dry:
         os.makedirs(out_dir, exist_ok=True)
