@@ -39,6 +39,16 @@ class Q2SmearCalculator:
         self._rdf     = rdf
         self._l_var   = [mass_ee, 'nbrem', 'block', 'EVENTNUMBER', 'RUNNUMBER'] # EVENTNUMBER and RUNNUMBER are needed to align samples
         self._mass_ee = mass_ee
+        self._df      = self._get_scales()
+    # ------------------------------------
+    def _get_scales(self) -> pnd.DataFrame:
+        ana_dir = os.environ['ANADIR']
+        par_dir = get_last_version(f'{ana_dir}/q2/fits', version_only=False)
+        par_path= f'{par_dir}/parameters.json'
+        log.info(f'Reading scales from: {par_path}')
+        df      = pnd.read_json(par_path)
+
+        return df
     # ------------------------------------
     def _validate_input(self, rdf :  RDataFrame) -> None:
         l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
