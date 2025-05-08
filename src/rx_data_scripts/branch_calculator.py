@@ -259,13 +259,18 @@ def _create_file(path : str, trigger : str) -> None:
         log.info('File will be processed in a single chunk')
         rdf = l_rdf[0]
         rdf = _process_rdf(rdf, trigger, path)
-        rdf.Snapshot(Data.tree_name, out_path)
+        if rdf is not None:
+            rdf.Snapshot(Data.tree_name, out_path)
+
         return
 
     log.info(f'File will be processed in {nchunk} chunks')
     fmrg = TFileMerger()
     for index, rdf_in in enumerate(tqdm.tqdm(l_rdf, ascii=' -')):
         rdf_out  = _process_rdf(rdf_in, trigger, path)
+        if rdf_out is None:
+            continue
+
         tmp_path = out_path.replace('.root', f'_{index:03}_pre_merge.root')
         rdf_out.Snapshot(Data.tree_name, tmp_path)
 
