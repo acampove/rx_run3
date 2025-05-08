@@ -1,12 +1,13 @@
 '''
 Script used to test Q2Smear
 '''
-from ROOT import RDataFrame, RDF
+import os
 
 import numpy
 import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
+from ROOT                     import RDataFrame, RDF
 from dmu.logging.log_store    import LogStore
 from rx_q2.q2smear_calculator import Q2SmearCalculator, WrongQ2SmearInput
 
@@ -16,15 +17,19 @@ class Data:
     '''
     Data class
     '''
-    nentries = 10_000
+    nentries = 1_000
     columns  = ['Jpsi_M_brem_track_2', 'nbrem', 'block', 'L1_TRUEID']
+    out_dir  = '/tmp/tests/rx_q2/smear'
+
+    os.makedirs(out_dir, exist_ok=True)
 # -------------------------------------------
-def _plot_masses(rdf : RDataFrame) -> None:
+def _plot_masses(rdf : RDataFrame, name : str) -> None:
     data = rdf.AsNumpy(['Jpsi_M_brem_track_2', 'Jpsi_M_brem_track_2_smr'])
     df   = pnd.DataFrame(data)
 
     df.plot.hist(bins=60, histtype='step')
-    plt.show()
+    plt.savefig(f'{Data.out_dir}/{name}.png')
+    plt.close()
 # -------------------------------------------
 def _get_rdf(lepton_id : int = 11, uniform : bool = True) -> RDataFrame:
     df                        = pnd.DataFrame(columns=Data.columns)
@@ -61,5 +66,5 @@ def test_simple():
     obj = Q2SmearCalculator(rdf=rdf)
     rdf = obj.get_rdf()
 
-    _plot_masses(rdf)
+    _plot_masses(rdf, name = 'simple')
 # -------------------------------------------
