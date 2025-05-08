@@ -161,12 +161,13 @@ def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
 
     if quantity == 'smu':
         plt.ylabel(r'$\Delta\mu$[MeV]')
-        plt.ylim(-100, +100)
+        plt.ylim(-50, +50)
 
     if quantity == 'ssg':
         plt.ylabel(r'$s_{\sigma}$')
-        plt.ylim(-10, +10)
+        plt.ylim(1.0, 1.5)
 
+    plt.grid()
     plt.savefig(f'{Data.inp_dir}/{quantity}.png')
     plt.close()
 #-------------------------------------
