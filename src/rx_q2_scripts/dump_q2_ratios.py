@@ -180,6 +180,33 @@ def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
     plt.savefig(f'{Data.inp_dir}/{quantity}.png')
     plt.close()
 #-------------------------------------
+def _plot_variables(df : pnd.DataFrame, quantity : str, kind : str) -> None:
+    ax = None
+    for brem, df_brem in df.groupby('brem'):
+        df_brem = _reorder_blocks(df = df_brem)
+        ax = _plot_df(df=df, quantity=quantity, brem=brem, ax=ax)
+
+    if quantity == 'mu':
+        plt.ylabel(f'$\\mu^{kind}$[MeV]')
+        plt.ylim(3000, 3200)
+
+    if quantity == 'sg':
+        plt.ylabel(f'$s_{{\\sigma}}^{kind}$')
+        plt.ylim(0.0, 100)
+
+    plt.grid()
+    plt.savefig(f'{Data.inp_dir}/{quantity}_{kind}.png')
+    plt.close()
+#-------------------------------------
+def _plot(df : pnd.DataFrame):
+    for kind, df_kind in df.groupby('sample'):
+        _plot_variables(df=df_kind, quantity='mu', kind = kind)
+        _plot_variables(df=df_kind, quantity='sg', kind = kind)
+
+    df_scale = _get_scales(df)
+    _plot_scales(df=df_scale, quantity='ssg')
+    _plot_scales(df=df_scale, quantity='smu')
+#-------------------------------------
 def main():
     '''
     Starts here
