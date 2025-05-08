@@ -167,12 +167,23 @@ def print_pdf(
 #---------------------------------------------
 def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
     d_par = {}
+    log.debug('Reading parameters from:')
+    if log.getEffectiveLevel() == 10:
+        print(result)
+
+    log.debug(60 * '-')
+    log.debug('Reading parameters')
+    log.debug(60 * '-')
     for name, d_val in result.params.items():
         value = d_val['value']
-        if 'hesse' not in d_val:
-            error = None
-        else:
+        error = None
+        if 'hesse'         in d_val:
             error = d_val['hesse']['error']
+
+        if 'minuit_hesse'  in d_val:
+            error = d_val['minuit_hesse']['error']
+
+        log.debug(f'{name:<20}{value:<20.3f}{error}')
 
         d_par[name] = value, error
 
@@ -188,6 +199,7 @@ def save_fit(
     Function used to save fit results, meant to reduce boiler plate code
     '''
     os.makedirs(fit_dir, exist_ok=True)
+    log.info(f'Saving fit to: {fit_dir}')
 
     res.freeze()
     with open(f'{fit_dir}/fit.pkl', 'wb') as ofile:
@@ -205,10 +217,13 @@ def save_fit(
     pdf_to_tex(path=f'{fit_dir}/post_fit.txt', d_par={'mu' : r'$\mu$'}, skip_fixed=True)
 
     df     = data.to_pandas(weightsname='weight')
-    df.to_json(f'{fit_dir}/data.json', indent=2)
+    opath  = f'{fit_dir}/data.json'
+    log.debug(f'Saving data to: {opath}')
+    df.to_json(opath, indent=2)
 
     d_par  = _parameters_from_result(result=res)
     opath  = f'{fit_dir}/parameters.json'
+    log.debug(f'Saving parameters to: {opath}')
     gut.dump_json(d_par, opath)
 #-------------------------------------------------------
 # Make latex table from text file
