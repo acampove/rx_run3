@@ -128,6 +128,7 @@ def _initialize():
     Data.obs      = zfit.Space(Data.j_mass, limits=Data.obs_range)
 
     LogStore.set_level('dmu:statistics:fitter', Data.logl)
+    LogStore.set_level('dmu:stats:utilities'  , Data.logl)
     LogStore.set_level('rx_q2:get_q2_tables'  , Data.logl)
     LogStore.set_level('rx_data:rdf_getter'   , Data.logl)
 
