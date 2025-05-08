@@ -4,7 +4,7 @@ Module containing Q2SmearCalculator class
 
 import numpy
 import pandas as pnd
-from ROOT                   import RDataFrame, RDF 
+from ROOT                   import RDataFrame, RDF
 from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('rx_q2:q2smear_calculator')
