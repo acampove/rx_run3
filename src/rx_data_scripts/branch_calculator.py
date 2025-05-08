@@ -246,6 +246,7 @@ def _process_rdf(rdf : RDataFrame, trigger : str, path : str) -> Union[RDataFram
         rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
     elif Data.kind == 'qsq_smear':
         if _skip_qsq_smear(trigger=trigger, path=path):
+            log.warning(f'Skipping {Data.kind} for {path}/{trigger}')
             return None
 
         obj = Q2SmearCalculator(rdf=rdf)
