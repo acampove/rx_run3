@@ -194,12 +194,12 @@ def _is_mc(path : str) -> bool:
 # ---------------------------------
 def _skip_qsq_smear(trigger: str, path : str) -> bool:
     if not _is_mc(path):
-        return False
+        return True
 
     if not _is_electron(trigger):
-        return False
+        return True
 
-    return True
+    return False
 # ---------------------------------
 def _process_rdf(rdf : RDataFrame, trigger : str, path : str) -> Union[RDataFrame,None]:
     '''
