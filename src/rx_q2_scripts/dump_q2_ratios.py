@@ -166,7 +166,7 @@ def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
     ax  = None
     for brem, df_brem in df.groupby('brem'):
         df_brem = _reorder_blocks(df=df_brem)
-        ax = _plot_df(df=df, quantity=quantity, brem=brem, ax=ax)
+        ax = _plot_df(df=df_brem, quantity=quantity, brem=brem, ax=ax)
 
     if quantity == 'smu':
         plt.ylabel(r'$\Delta\mu$[MeV]')
@@ -174,7 +174,7 @@ def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
 
     if quantity == 'ssg':
         plt.ylabel(r'$s_{\sigma}$')
-        plt.ylim(1.0, 1.5)
+        plt.ylim(1.0, 1.7)
 
     plt.grid()
     plt.savefig(f'{Data.inp_dir}/{quantity}.png')
@@ -184,14 +184,16 @@ def _plot_variables(df : pnd.DataFrame, quantity : str, kind : str) -> None:
     ax = None
     for brem, df_brem in df.groupby('brem'):
         df_brem = _reorder_blocks(df = df_brem)
-        ax = _plot_df(df=df, quantity=quantity, brem=brem, ax=ax)
+        ax = _plot_df(df=df_brem, quantity=quantity, brem=brem, ax=ax)
+
+    name = {'dat' : 'Data', 'sim' : 'MC'}[kind]
 
     if quantity == 'mu':
-        plt.ylabel(f'$\\mu^{kind}$[MeV]')
-        plt.ylim(3000, 3200)
+        plt.ylabel(f'$\\mu^{{{name}}}$[MeV]')
+        plt.ylim(3000, 3100)
 
     if quantity == 'sg':
-        plt.ylabel(f'$s_{{\\sigma}}^{kind}$')
+        plt.ylabel(f'$\\sigma^{{{name}}}$[MeV]')
         plt.ylim(0.0, 100)
 
     plt.grid()
