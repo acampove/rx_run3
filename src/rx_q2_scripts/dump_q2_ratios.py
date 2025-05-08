@@ -9,8 +9,9 @@ import math
 import argparse
 from typing import Callable
 
-import numpy
+import mplhep
 import jacobi
+import matplotlib.pyplot     as plt
 import pandas                as pnd
 import dmu.generic.utilities as gut
 from dmu.logging.log_store import LogStore
@@ -24,7 +25,8 @@ class Data:
     regex   = r'Hlt2RD_BuToKpEE_MVA_2024_(\d)_(\d)_nom'
     inp_dir : str
     version : str
-    l_par   = ['rsg', 'dmu', 'mMC', 'mDT']
+
+    plt.style.use(mplhep.style.LHCb2)
 #-------------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Used to create pandas dataframe with information from fits needed to smear q2')
@@ -75,7 +77,7 @@ def _get_df(sample : str) -> pnd.DataFrame:
 
     return df
 #-------------------------------------
-def _process_dataframe(df : pnd.DataFrame) -> None:
+def _get_scales(df : pnd.DataFrame) -> pnd.DataFrame:
     l_df_scale = []
     for (block, brem), df_group in df.groupby(['block', 'brem']):
         df_scale          = _scales_from_df(df=df_group)
@@ -86,7 +88,18 @@ def _process_dataframe(df : pnd.DataFrame) -> None:
 
     df = pnd.concat(l_df_scale, ignore_index=True)
 
-    print(df)
+    return df
+#-------------------------------------
+def _reorder_blocks(df : pnd.DataFrame) -> pnd.DataFrame:
+    custom_order = ['0', '4', '3', '1', '2', '1', '5', '6', '7', '8']
+    df['block']  = df['block'].astype(str)
+
+    order_map = {val: i for i, val in enumerate(custom_order)}
+    df['order'] = df['block'].map(order_map)
+
+    df= df.sort_values('order')
+
+    return df
 #-------------------------------------
 def _scales_from_df(df : pnd.DataFrame) -> pnd.DataFrame:
     d_mu = _get_scale(df=df, name='mu', fun=lambda x : x[0] - x[1])
@@ -103,6 +116,8 @@ def _get_scale(df : pnd.DataFrame, name : str, fun : Callable) -> dict[str:float
     dat_err = float(df_dat[f'{name}_err'])
 
     sim_val = float(df_sim[f'{name}_val'])
+    # TODO: Errors in MC fits are orders of magnitude off. Will make them zero
+    # until bug in zfit is found
     sim_err = 0# float(df_sim[f'{name}_err'])
 
     cov     = [
@@ -121,6 +136,40 @@ def _get_scale(df : pnd.DataFrame, name : str, fun : Callable) -> dict[str:float
 
     return {f's{name}_val' : [val], f's{name}_err' : [err]}
 #-------------------------------------
+def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
+    ax  = None
+    val = f'{quantity}_val'
+    err = f'{quantity}_err'
+
+    for brem, df_brem in df.groupby('brem'):
+        df_brem = _reorder_blocks(df=df_brem)
+
+        ax = df_brem.plot(
+                x='block',
+                y=val,
+                linestyle='-',
+                label=f'Brem: {brem}',
+                figsize=(15, 10),
+                ax=ax)
+
+        ax.fill_between(
+            df_brem['block'],
+            df_brem[val] - df_brem[err],
+            df_brem[val] + df_brem[err],
+            alpha=0.3,
+            label=f'Error band: {brem}')
+
+    if quantity == 'smu':
+        plt.ylabel(r'$\Delta\mu$[MeV]')
+        plt.ylim(-100, +100)
+
+    if quantity == 'ssg':
+        plt.ylabel(r'$s_{\sigma}$')
+        plt.ylim(-10, +10)
+
+    plt.savefig(f'{Data.inp_dir}/{quantity}.png')
+    plt.close()
+#-------------------------------------
 def main():
     '''
     Starts here
@@ -131,7 +180,9 @@ def main():
     if os.path.isfile(out_path):
         log.warning(f'Dataframe already found, reusing: {out_path}')
         df = pnd.read_json(out_path)
-        _process_dataframe(df)
+        df = _get_scales(df)
+        _plot_scales(df, quantity='ssg')
+        _plot_scales(df, quantity='smu')
 
         return
 
@@ -146,7 +197,9 @@ def main():
     df.fillna(0, inplace=True)
 
     df.to_json(out_path, indent=2)
-    _process_dataframe(df)
+    df = _get_scales(df)
+    _plot_scales(df, quantity='ssg')
+    _plot_scales(df, quantity='smu')
 #-------------------------------------
 if __name__ == '__main__':
     main()
