@@ -299,7 +299,8 @@ def _get_data(pdf : zpdf, kind : str) -> zdata:
     if os.path.isfile(data_path):
         log.warning(f'Data found, loading from: {data_path}')
         df  = pnd.read_json(data_path)
-        dat = zfit.data.Data.from_pandas(df, obs=Data.obs, weights=Data.weights)
+        # TODO: Here the weights need to be put back, once the bug in zfit be fixed
+        dat = zfit.data.Data.from_pandas(df, obs=Data.obs)
 
         return dat
 
