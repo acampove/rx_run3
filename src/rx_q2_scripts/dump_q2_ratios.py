@@ -14,6 +14,7 @@ import jacobi
 import matplotlib.pyplot     as plt
 import pandas                as pnd
 import dmu.generic.utilities as gut
+from matplotlib.axes       import Axes
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_q2:dump_q2_ratios')
@@ -136,28 +137,36 @@ def _get_scale(df : pnd.DataFrame, name : str, fun : Callable) -> dict[str:float
 
     return {f's{name}_val' : [val], f's{name}_err' : [err]}
 #-------------------------------------
-def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
-    ax  = None
+def _plot_df(
+        df       : pnd.DataFrame,
+        quantity : str,
+        brem     : str,
+        ax       : Axes) -> Axes:
+
     val = f'{quantity}_val'
     err = f'{quantity}_err'
 
+    ax = df.plot(
+        x='block',
+        y=val,
+        linestyle='-',
+        label=f'Brem: {brem}',
+        figsize=(15, 10),
+        ax=ax)
+
+    ax.fill_between(
+        df['block'],
+        df[val] - df[err],
+        df[val] + df[err],
+        alpha=0.3)
+
+    return ax
+#-------------------------------------
+def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
+    ax  = None
     for brem, df_brem in df.groupby('brem'):
         df_brem = _reorder_blocks(df=df_brem)
-
-        ax = df_brem.plot(
-                x='block',
-                y=val,
-                linestyle='-',
-                label=f'Brem: {brem}',
-                figsize=(15, 10),
-                ax=ax)
-
-        ax.fill_between(
-            df_brem['block'],
-            df_brem[val] - df_brem[err],
-            df_brem[val] + df_brem[err],
-            alpha=0.3,
-            label=f'Error band: {brem}')
+        ax = _plot_df(df=df, quantity=quantity, brem=brem, ax=ax)
 
     if quantity == 'smu':
         plt.ylabel(r'$\Delta\mu$[MeV]')
