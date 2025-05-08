@@ -310,7 +310,8 @@ def _get_data(pdf : zpdf, kind : str) -> zdata:
     df.to_json(data_path) # Caching now will avoid redoing this if fit fails
 
     obs     = pdf.space
-    dat     = zfit.Data.from_pandas(obs=obs, df=df, weights=Data.weights)
+    # TODO: Here the weights need to be put back, once the bug in zfit be fixed
+    dat     = zfit.Data.from_pandas(obs=obs, df=df)
 
     _plot_data(df, obs, kind)
 
