@@ -138,6 +138,18 @@ def _plot_q2_track(rdf : RDataFrame, sample : str) -> None:
     plt.savefig(f'{test_dir}/q2_track.png')
     plt.close()
 # ------------------------------------------------
+def _plot_sim(rdf : RDataFrame, test : str) -> None:
+    test_dir = f'{Data.out_dir}/{test}'
+    os.makedirs(test_dir, exist_ok=True)
+
+    arr_mass = rdf.AsNumpy(['Jpsi_TRUEM'])['Jpsi_TRUEM']
+    plt.hist(arr_mass, bins=40, histtype='step', label='CMB')
+
+    plt.title(test)
+    plt.legend()
+    plt.savefig(f'{test_dir}/jpsi_truem.png')
+    plt.close()
+# ------------------------------------------------
 def _plot_mva(rdf : RDataFrame, test : str) -> None:
     test_dir = f'{Data.out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
@@ -272,9 +284,10 @@ def test_mc(sample : str):
 
     _check_branches(rdf, is_ee=True, is_mc=True)
 
-    _plot_mva_mass(rdf, sample)
-    _plot_mva(rdf     , sample)
-    _plot_hop(rdf     , sample)
+    _plot_mva_mass(rdf, f'test_mc/{sample}')
+    _plot_mva(rdf     , f'test_mc/{sample}')
+    _plot_hop(rdf     , f'test_mc/{sample}')
+    _plot_sim(rdf     , f'test_mc/{sample}')
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC', 'Bu_psi2SK_ee_eq_DPC', 'Bu_JpsiX_ee_eq_JpsiInAcc'])
 def test_q2_track_electron(sample : str):
