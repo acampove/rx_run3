@@ -203,19 +203,19 @@ class ElectronBiasCorrector:
         '''
         Smarter strategy than brem_track_1
         '''
-        # If electron has brem, leave it untouched
         if self._attr_from_row(row, f'{self._name}_HASBREMADDED'):
             self._brem_status = -1
+            log.info('Electron has already brem, skipping correction')
             return None
 
         brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
-        # If brem is below self._min_brem_energy, this is not actual brem
-        # return original electron
         if brem_energy <  self._min_brem_energy:
+            log.info(f'Brem energy is below threshold: {brem_energy:.0f} < {self._min_brem_energy:.0f}')
+            log.info('Skipping correction')
             self._brem_status = -1
             return None
 
-        # The electron had no brem, but brem was found, correct electron with strategy 1.
+        log.info('Correcting electron')
         e_corr = self._correct_with_track_brem_1(e_track, row)
 
         return e_corr
@@ -227,6 +227,8 @@ class ElectronBiasCorrector:
         name : Particle name, e.g. L1
         kind : Type of correction, [ecalo_bias, brem_track_1, brem_track_2]
         '''
+        log.info(f'Correcting {name} with {kind}')
+
         self._name       = name
         self._brem_status= None
 
