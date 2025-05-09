@@ -1,10 +1,10 @@
 '''
 Module holding LogStore 
 '''
-
 import logging
-from logging import Logger
+from typing import Union
 
+from logging import Logger
 import logzero
 
 #------------------------------------------------------------
@@ -38,6 +38,13 @@ class LogStore:
     log_level     = logging.INFO
     is_configured = False
     backend       = 'logging'
+    #--------------------------
+    @staticmethod
+    def get_logger(name : str) -> Union[Logger,None]:
+        '''
+        Returns logger for a given name or None, if no logger found for that name
+        '''
+        return LogStore.d_logger.get(name)
     #--------------------------
     @staticmethod
     def add_logger(name : str, exists_ok : bool = False) -> Logger:

@@ -946,6 +946,12 @@ log.error('error')
 log.critical('critical')
 ```
 
+In order to get a specific logger do:
+
+```python
+logger = LogStore.get_logger(name='my_logger_name')
+```
+
 In order to get the logging level fromt the logger do:
 
 ```python
