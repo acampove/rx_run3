@@ -247,6 +247,8 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
+    # TODO: This function and the corresponding test might need to be
+    # removed, the existing Jpsi_TRUEM column is just the PDG mass of the Jpsi
     def _add_mc_columns(self, rdf : RDataFrame) -> RDataFrame:
         if self._sample.startswith('DATA_'):
             return rdf
