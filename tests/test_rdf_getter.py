@@ -27,6 +27,10 @@ class Data:
     psi2_q2    = '(Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)'
     high_q2    = '(Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)'
 
+    l_branch_mc = [
+            'Jpsi_TRUEM',
+            ]
+
     l_branch_common = [
             'th_l1_l2',
             'th_l1_kp',
@@ -67,10 +71,13 @@ def _check_block(rdf : RDataFrame) -> None:
     assert numpy.all(arr_block >= 0)
     assert numpy.all(arr_block <= 8)
 # ------------------------------------------------
-def _check_branches(rdf : RDataFrame, is_ee : bool) -> None:
+def _check_branches(rdf : RDataFrame, is_ee : bool, is_mc : bool) -> None:
     l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
 
     l_branch = Data.l_branch_ee if is_ee else Data.l_branch_mm
+    if is_mc:
+        l_branch += Data.l_branch_mc
+
     for branch in l_branch:
         if branch in l_name:
             continue
