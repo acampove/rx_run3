@@ -122,8 +122,8 @@ def _preprocess_lepton(rdf : RDataFrame, lep : str) -> None:
     return rdf
 # ------------------------------------------
 def _pick_column(name : str) -> bool:
-    to_keep  = ['EVENTNUMBER', 'RUNNUMBER']    # To make friend trees and align entries
-    to_keep += ['nbrem', 'L1_TRUEID', 'block'] # For q2 smearing
+    to_keep  = ['EVENTNUMBER', 'RUNNUMBER'] # To make friend trees and align entries
+    to_keep += ['nbrem'      , 'block'    ] # For q2 smearing
 
     if name in to_keep:
         return True
