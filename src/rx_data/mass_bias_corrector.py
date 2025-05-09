@@ -112,6 +112,11 @@ class MassBiasCorrector:
                 'L2_HASBREMADDED' : row.L2_HASBREMADDED,
                 }
 
+        # If this is data, use the original mass as placeholder for Jpsi_M_smr
+        nbrem = row['brem' ]
+        block = row['block']
+        d_data['Jpsi_M_smr'] = jmass if not self._is_mc else self._qsq_corr.get_mass(nbrem=nbrem, block=block, jpsi_mass_reco=jmass)
+
         sr = pnd.Series(d_data)
 
         return sr
