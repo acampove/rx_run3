@@ -9,9 +9,9 @@ import pandas            as pnd
 import matplotlib.pyplot as plt
 from ROOT                     import RDataFrame, RDF
 from dmu.logging.log_store    import LogStore
-from rx_q2.q2smear_calculator import Q2SmearCalculator, WrongQ2SmearInput
+from rx_q2.q2smear_corrector import Q2SmearCorrector, WrongQ2SmearInput
 
-log  = LogStore.add_logger('rx_q2:test_q2smear_calculator')
+log  = LogStore.add_logger('rx_q2:test_q2smear_corrector')
 # -------------------------------------------
 class Data:
     '''
@@ -55,7 +55,7 @@ def test_wrong_input():
     rdf = _get_rdf(lepton_id = 13)
 
     with pytest.raises(WrongQ2SmearInput):
-        obj = Q2SmearCalculator(rdf=rdf)
+        obj = Q2SmearCorrector(rdf=rdf)
         rdf = obj.get_rdf()
 # -------------------------------------------
 @pytest.mark.parametrize('is_uniform', [True, False])
@@ -64,7 +64,7 @@ def test_simple(is_uniform : bool):
     Checks if the input is wrong
     '''
     rdf = _get_rdf(lepton_id = 11, uniform = is_uniform)
-    obj = Q2SmearCalculator(rdf=rdf)
+    obj = Q2SmearCorrector(rdf=rdf)
     rdf = obj.get_rdf()
 
     _plot_masses(rdf, name = f'simple_{is_uniform}')
