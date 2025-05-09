@@ -143,11 +143,14 @@ def _plot_sim(rdf : RDataFrame, test : str) -> None:
     os.makedirs(test_dir, exist_ok=True)
 
     arr_mass = rdf.AsNumpy(['Jpsi_TRUEM'])['Jpsi_TRUEM']
-    plt.hist(arr_mass, bins=200, range=[3090, 3100], histtype='step', label='CMB')
+
+    if 'Jpsi' in test:
+        plt.hist(arr_mass, bins=200, range=[3090, 3100], histtype='step', label='')
+    else:
+        plt.hist(arr_mass, bins=200, range=[   0, 4500], histtype='step', label='')
 
     plt.title(test)
     plt.legend()
-    plt.yscale('log')
     plt.savefig(f'{test_dir}/jpsi_truem.png')
     plt.close()
 # ------------------------------------------------
