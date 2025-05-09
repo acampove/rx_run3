@@ -147,6 +147,7 @@ def _plot_sim(rdf : RDataFrame, test : str) -> None:
 
     plt.title(test)
     plt.legend()
+    plt.yscale('log')
     plt.savefig(f'{test_dir}/jpsi_truem.png')
     plt.close()
 # ------------------------------------------------
@@ -273,7 +274,7 @@ def test_data(sample : str, trigger : str):
     _plot_mva(rdf, sample)
     _plot_hop(rdf, sample)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC'])
+@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC'])
 def test_mc(sample : str):
     '''
     Test of getter class in mc
