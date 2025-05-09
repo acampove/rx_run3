@@ -237,13 +237,18 @@ def test_brem_threshold(nbrem : int, brem_energy_threshold: float):
 
     _compare_masses(d_rdf, f'brem_{nbrem:03}/energy_{brem_energy_threshold:03}', f'$E_{{\\gamma}}>{brem_energy_threshold}$ MeV')
 #-----------------------------------------
-@pytest.mark.parametrize('kind', ['brem_track_2'])
-def test_add_smearing(kind : str):
+@pytest.mark.parametrize('kind' , ['brem_track_2'])
+@pytest.mark.parametrize('is_mc', [True])
+def test_add_smearing(kind : str, is_mc : bool):
     '''
     Checks that smearing of q2 was added on top of correction
     '''
-    rdf_org = _get_rdf()
-    rdf_org = rdf_org.Range(1)
+    rdf_org = _get_rdf(is_mc=is_mc)
+    rdf_org = rdf_org.Range(1000)
     cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
+    _check_output_columns(rdf_cor)
+
+    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+    _compare_masses(d_rdf, 'add_smearing', kind)
 #-----------------------------------------
