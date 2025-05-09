@@ -20,7 +20,6 @@ from dmu.logging.log_store  import LogStore
 from dmu.generic            import version_management as vman
 
 
-from rx_q2.q2smear_calculator    import Q2SmearCalculator
 
 from rx_data.mis_calculator      import MisCalculator
 from rx_data.hop_calculator      import HOPCalculator
