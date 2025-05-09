@@ -60,7 +60,7 @@ class MassBiasCorrector:
 
         return row
     # ------------------------------------------
-    def _calculate_variables(self, row : pnd.Series) -> float:
+    def _calculate_variables(self, row : pnd.Series) -> pnd.Series:
         l1 = vector.obj(pt=row.L1_PT, phi=row.L1_PHI, eta=row.L1_ETA, m=self._emass)
         l2 = vector.obj(pt=row.L2_PT, phi=row.L2_PHI, eta=row.L2_ETA, m=self._emass)
         kp = vector.obj(pt=row.H_PT , phi=row.H_PHI , eta=row.H_ETA , m=self._kmass)
@@ -89,16 +89,16 @@ class MassBiasCorrector:
                 'L2_HASBREMADDED' : row.L2_HASBREMADDED,
                 }
 
-        df = pnd.Series(d_data)
+        sr = pnd.Series(d_data)
 
-        return df
+        return sr
     # ------------------------------------------
-    def _calculate_correction(self, row : pnd.Series) -> pnd.DataFrame:
+    def _calculate_correction(self, row : pnd.Series) -> pnd.Series:
         row  = self._correct_electron('L1', row)
         row  = self._correct_electron('L2', row)
-        df   = self._calculate_variables(row)
+        sr   = self._calculate_variables(row)
 
-        return df
+        return sr
     # ------------------------------------------
     def _filter_df(self, df : pnd.DataFrame) -> float:
         l_to_keep  = ['L1_PT', 'L1_PX', 'L1_PY', 'L1_PZ', 'L1_HASBREMADDED']
