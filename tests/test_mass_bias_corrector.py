@@ -100,11 +100,12 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
         'jmis' : '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
         }
 
-    gtr = RDFGetter(sample='DATA_24_*', trigger='Hlt2RD_BuToKpEE_MVA')
-    rdf = gtr.get_rdf()
-    rdf = rdf.Define('nbrem', 'int(L1_HASBREMADDED) + int(L2_HASBREMADDED)')
+    trigger='Hlt2RD_BuToKpEE_MVA'
 
-    d_sel = sel.selection(project='RK', analysis='EE', q2bin='jpsi', process='DATA')
+    gtr = RDFGetter(sample='DATA_24_*', trigger=trigger)
+    rdf = gtr.get_rdf()
+
+    d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process='DATA')
     d_sel['mass'] = 'B_const_mass_M > 5160'
     for cut_name, cut_value in d_sel.items():
         rdf = rdf.Filter(cut_value, cut_name)
