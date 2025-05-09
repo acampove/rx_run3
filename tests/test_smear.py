@@ -3,6 +3,7 @@ Script used to test Q2Smear
 '''
 import os
 
+import tqdm
 import numpy
 import pytest
 import pandas            as pnd
@@ -21,11 +22,18 @@ class Data:
 
     os.makedirs(out_dir, exist_ok=True)
 # -------------------------------------------
-def _plot_masses(rdf : RDataFrame, name : str) -> None:
-    data = rdf.AsNumpy(['Jpsi_M_brem_track_2', 'Jpsi_M_brem_track_2_smr'])
-    df   = pnd.DataFrame(data)
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('rx_q2:q2smear_corrector'     , 20)
+    LogStore.set_level('rx_q2:test_q2smear_corrector', 10)
+# -------------------------------------------
+def _plot_masses(df : pnd.DataFrame, name : str) -> None:
+    log.info('Plotting')
 
-    df.plot.hist(bins=60, histtype='step')
+    ax=None
+    ax=df.plot.hist(y='mass'    , range=[2000, 3500], bins=60, histtype='step', ax=ax)
+    ax=df.plot.hist(y='mass_smr', range=[2000, 3500], bins=60, histtype='step', ax=ax)
+
     plt.savefig(f'{Data.out_dir}/{name}.png')
     plt.close()
 # -------------------------------------------
@@ -35,9 +43,9 @@ def _get_df(uniform : bool = True) -> pnd.DataFrame:
     df['block']    = numpy.random.choice(range(9) , Data.nentries)
 
     if uniform:
-        df['mass'] = numpy.random.uniform(2000, 3500, Data.nentries)
+        df['mass'] = numpy.random.uniform(1800, 3700, Data.nentries)
     else:
-        df['mass'] = numpy.random.normal(loc=3000, scale=40, size=Data.nentries)
+        df['mass'] = numpy.random.normal(loc=3000, scale=100, size=Data.nentries)
 
     return df
 # -------------------------------------------
@@ -49,8 +57,13 @@ def test_simple(is_uniform : bool):
     obj = Q2SmearCorrector()
     df  = _get_df(uniform = is_uniform)
 
-    for nbrem, block, mass in df.itertuples(index=False):
-        val = obj.get_mass(nbrem=nbrem, block=block, jpsi_mass_reco=mass)
+    l_val = []
+    itr   = df.itertuples(index=False)
+    for nbrem, block, mass in tqdm.tqdm(itr, total=len(df), ascii=' -'):
+        val    = obj.get_mass(nbrem=nbrem, block=block, jpsi_mass_reco=mass)
+        l_val += [val]
 
-    #_plot_masses(rdf, name = f'simple_{is_uniform}')
+    df['mass_smr'] = l_val
+
+    _plot_masses(df=df, name = f'simple_{is_uniform}')
 # -------------------------------------------
