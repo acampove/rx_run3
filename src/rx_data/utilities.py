@@ -128,6 +128,9 @@ def _pick_column(name : str) -> bool:
     if name in to_keep:
         return True
 
+    if name.endswith('MC_ISPROMPT'):
+        return False
+
     if name.startswith('H_BREM'):
         return False
 
