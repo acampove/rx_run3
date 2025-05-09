@@ -253,14 +253,28 @@ def test_data(sample : str, trigger : str):
     rep = rdf.Report()
     rep.Print()
 
-    is_mc = not sample.startswith('DATA_24_')
-    _check_branches(rdf, is_ee = 'MuMu' not in trigger, is_mc = is_mc)
+    _check_branches(rdf, is_ee = 'MuMu' not in trigger, is_mc = False)
 
     sample = sample.replace('*', 'p')
 
     _plot_mva_mass(rdf, sample)
     _plot_mva(rdf, sample)
     _plot_hop(rdf, sample)
+# ------------------------------------------------
+@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC'])
+def test_mc(sample : str):
+    '''
+    Test of getter class in mc
+    '''
+
+    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+    rdf = gtr.get_rdf()
+
+    _check_branches(rdf, is_ee=True, is_mc=True)
+
+    _plot_mva_mass(rdf, sample)
+    _plot_mva(rdf     , sample)
+    _plot_hop(rdf     , sample)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC', 'Bu_psi2SK_ee_eq_DPC', 'Bu_JpsiX_ee_eq_JpsiInAcc'])
 def test_q2_track_electron(sample : str):
@@ -320,22 +334,6 @@ def test_brem_track_2(sample : str, trigger : str):
 
     sample = sample.replace('*', 'p')
     _plot_brem_track_2(rdf, sample, 'brem_track_2')
-# ------------------------------------------------
-@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC'])
-def test_mc(sample : str):
-    '''
-    Test of getter class in mc
-    '''
-
-    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
-    rdf = gtr.get_rdf()
-
-    is_mc = not sample.startswith('DATA_24_')
-    _check_branches(rdf, is_ee=True, is_mc=is_mc)
-
-    _plot_mva_mass(rdf, sample)
-    _plot_mva(rdf     , sample)
-    _plot_hop(rdf     , sample)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'DATA_24_MagDown_24c2'])
 def test_check_vars(sample : str):
