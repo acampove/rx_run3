@@ -37,11 +37,11 @@ The fit needs to be done for MC and THEN data, in order to fix the tails
 This is done with:
 
 ```python
-from rx_q2.q2smear_calculator import Q2SmearCalculator
+from rx_q2.q2smear_corrector import Q2SmearCorrector
 
-obj = Q2SmearCalculator(rdf=rdf)
-rdf = obj.get_rdf()
+obj          = Q2SmearCorrector()
+smeared_mass = obj.get_mass(nbrem=nbrem, block=block, jpsi_mass_reco=original_mass)
 ```
 
-This will create a dataframe with the smeared mass and a `EVENTNUMBER` and `RUNNUMBER`
-which are needed to use the dataframe as a friend tree.
+This will smear the mass for a given block and brem category. The object should be reused
+for all the candidates and declared only once.
