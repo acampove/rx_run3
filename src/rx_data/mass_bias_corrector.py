@@ -117,12 +117,18 @@ class MassBiasCorrector:
                 }
 
         jmass_reco = jmass
+        if not self._is_mc:
+            d_data['Jpsi_M_smr'] = jmass_reco
+            sr = pnd.Series(d_data)
+
+            return sr
+
         jmass_true = row['Jpsi_TRUEM']
 
         nbrem = row['L1_HASBREMADDED'] + row['L2_HASBREMADDED']
         block = row['block']
         # If this is data, use the original mass as placeholder for Jpsi_M_smr
-        d_data['Jpsi_M_smr'] = jmass if not self._is_mc else self._qsq_corr.get_mass(nbrem=nbrem, block=block, jpsi_mass_reco=jmass_reco, jpsi_mass_true=jmass_true)
+        d_data['Jpsi_M_smr'] = self._qsq_corr.get_mass(nbrem=nbrem, block=block, jpsi_mass_reco=jmass_reco, jpsi_mass_true=jmass_true)
 
         sr = pnd.Series(d_data)
 
