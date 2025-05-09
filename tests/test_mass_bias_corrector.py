@@ -11,7 +11,7 @@ import pytest
 import yaml
 import matplotlib.pyplot as plt
 
-from ROOT                        import RDataFrame, EnableImplicitMT, DisableImplicitMT
+from ROOT                        import RDataFrame
 from dmu.logging.log_store       import LogStore
 from dmu.plotting.plotter_1d     import Plotter1D as Plotter
 from rx_selection                import selection as sel
@@ -35,9 +35,6 @@ def _initialize():
 
     os.makedirs(Data.plt_dir, exist_ok=True)
     plt.style.use(mplhep.style.LHCb2)
-
-    if Data.nentries < 0:
-        EnableImplicitMT(Data.nthreads)
 #-----------------------------------------
 def _load_conf() -> dict:
     cfg_path = files('rx_data_data').joinpath('tests/mass_bias_corrector/mass_overlay.yaml')
@@ -137,8 +134,6 @@ def test_small_input(kind : str):
     '''
     Run over a few entries
     '''
-    DisableImplicitMT()
-
     rdf_org = _get_rdf()
     rdf_org = rdf_org.Range(10_000)
     cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind=kind)
@@ -148,8 +143,6 @@ def test_small_input(kind : str):
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, 'small_input', kind)
-
-    EnableImplicitMT(Data.nthreads)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_1', 'brem_track_2'])
 def test_full_dataset(kind : str):
