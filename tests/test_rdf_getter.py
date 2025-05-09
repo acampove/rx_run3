@@ -143,7 +143,7 @@ def _plot_sim(rdf : RDataFrame, test : str) -> None:
     os.makedirs(test_dir, exist_ok=True)
 
     arr_mass = rdf.AsNumpy(['Jpsi_TRUEM'])['Jpsi_TRUEM']
-    plt.hist(arr_mass, bins=40, histtype='step', label='CMB')
+    plt.hist(arr_mass, bins=200, range=[3090, 3100], histtype='step', label='CMB')
 
     plt.title(test)
     plt.legend()
