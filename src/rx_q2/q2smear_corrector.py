@@ -37,18 +37,6 @@ class Q2SmearCorrector:
 
         return df
     # ------------------------------------
-    def _validate_input(self, rdf :  RDataFrame) -> None:
-        l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
-        if 'L1_TRUEID' not in l_col:
-            raise WrongQ2SmearInput('Dataframe does not have true information, e.g. it is not MC')
-
-        rdf_small  = rdf.Range(10)
-        arr_trueid = rdf_small.AsNumpy(['L1_TRUEID'])['L1_TRUEID']
-        arr_trueid = numpy.abs(arr_trueid)
-
-        if not numpy.all(arr_trueid == 11):
-            raise WrongQ2SmearInput('Input does not belong to electron channel')
-    # ------------------------------------
     def _read_quantity(self, row : pnd.Series, kind : str) -> float:
         brem = row['nbrem']
         block= row['block']
