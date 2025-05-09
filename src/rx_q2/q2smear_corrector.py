@@ -10,14 +10,7 @@ from dmu.generic.version_management import get_last_version
 
 log = LogStore.add_logger('rx_q2:q2smear_calculator')
 # ------------------------------------
-class WrongQ2SmearInput(Exception):
-    '''
-    Exception meant to be risen if wrong input is provided to Q2SmearCalculator
-    '''
-    def __init__(self, message : str):
-        super().__init__(message)
-# ------------------------------------
-class Q2SmearCalculator:
+class Q2SmearCorrector:
     '''
     Class intended to operate only on simulated datasets from the electron channel to:
 
