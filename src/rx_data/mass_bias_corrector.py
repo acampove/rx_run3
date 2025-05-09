@@ -38,6 +38,7 @@ class MassBiasCorrector:
         brem_energy_threshold: Lowest energy that an ECAL cluster needs to have to be considered a photon, used as argument of ElectronBiasCorrector, default 0 (MeV)
         ecorr_kind : Kind of correction to be added to electrons, [ecalo_bias, brem_track]
         '''
+        self._is_mc           = self._rdf_is_mc(rdf)
         self._df              = ut.df_from_rdf(rdf)
         self._skip_correction = skip_correction
         self._nthreads        = nthreads
@@ -47,11 +48,21 @@ class MassBiasCorrector:
         self._kmass      = 493.6
         self._ecorr_kind = ecorr_kind
 
+        self._qsq_corr   = Q2SmearCorrector()
+
         self._silence_logger(name = 'rx_data:brem_bias_corrector')
         self._silence_logger(name = 'rx_data:electron_bias_corrector')
 
         if self._nthreads > 1:
             pandarallel.initialize(nb_workers=self._nthreads, progress_bar=True)
+    # ------------------------------------------
+    def _rdf_is_mc(self, rdf : RDataFrame) -> bool:
+        l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
+        for col in l_col:
+            if col.endswith('_TRUEID'):
+                return True
+
+        return False
     # ------------------------------------------
     def _silence_logger(self, name) -> None:
         logger = LogStore.get_logger(name=name)
