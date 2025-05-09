@@ -37,10 +37,7 @@ class Q2SmearCorrector:
 
         return df
     # ------------------------------------
-    def _read_quantity(self, row : pnd.Series, kind : str) -> float:
-        brem = row['nbrem']
-        block= row['block']
-
+    def _read_quantity(self, brem : int, block : int, kind : str) -> float:
         df   = self._df
         if kind == 'mu_mc':
             mu_mc = df.loc[ (df['block'] == block) & (df['brem'] == brem) & (df['sample'] == 'sim'), 'mu_val' ].iloc[0]
