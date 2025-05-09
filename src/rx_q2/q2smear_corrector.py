@@ -58,21 +58,20 @@ class Q2SmearCorrector:
             self,
             nbrem          : int,
             block          : int,
+            jpsi_mass_true : float,
             jpsi_mass_reco : float) -> float:
         '''
         Parameters:
         ---------------
         brem          : Integer with the brem category 0, 1, 2 
         block         : Integer with the block [0-8] 
+        jpsi_mass_true: True mass of Jpsi
         jpsi_mass_reco: Value of unsmeared Jpsi mass
 
         Returns:
         ---------------
         Smeared mass
         '''
-        # TODO: Should the true mass be the PDG mass?
-        jpsi_mass_true = self._mass_ee_pdg
-
         mu_mc = self._read_quantity(nbrem=nbrem, block=block, kind='mu_mc')
         reso  = self._read_quantity(nbrem=nbrem, block=block, kind= 'reso')
         scale = self._read_quantity(nbrem=nbrem, block=block, kind='scale')
