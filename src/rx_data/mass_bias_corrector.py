@@ -94,6 +94,10 @@ class MassBiasCorrector:
         bmass = -1 if numpy.isnan(bp.mass) else float(bp.mass)
         jmass = -1 if numpy.isnan(jp.mass) else float(jp.mass)
 
+        # TODO: Needs to recalculate:
+        # DIRA
+        # PIDe
+        # ProbNNe
         d_data = {
                 'B_M'    : bmass,
                 'Jpsi_M' : jmass,
