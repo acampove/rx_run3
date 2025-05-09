@@ -9,9 +9,9 @@ import pandas as pnd
 from pandarallel                     import pandarallel
 from ROOT                            import RDataFrame, RDF
 from dmu.logging.log_store           import LogStore
+from rx_q2.q2smear_corrector         import Q2SmearCorrector
 
 import rx_data.utilities             as ut
-from rx_q2.q2smear_corrector         import Q2SmearCorrector
 from rx_data.electron_bias_corrector import ElectronBiasCorrector
 
 log=LogStore.add_logger('rx_data:mass_bias_corrector')
