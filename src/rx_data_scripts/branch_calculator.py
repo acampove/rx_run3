@@ -43,7 +43,7 @@ class Data:
     wild_card : str
     chunk_size: int
 
-    l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias', 'brem_track_1', 'brem_track_2', 'qsq_smear']
+    l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias', 'brem_track_1', 'brem_track_2']
     l_ecorr   = ['ecalo_bias', 'brem_track_1', 'brem_track_2']
 
     tree_name = 'DecayTree'
@@ -243,13 +243,6 @@ def _process_rdf(rdf : RDataFrame, trigger : str, path : str) -> Union[RDataFram
     elif Data.kind == 'swp_cascade'   :
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
         rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
-    elif Data.kind == 'qsq_smear':
-        if _skip_qsq_smear(trigger=trigger, path=path):
-            log.warning(f'Skipping {Data.kind} for {path}/{trigger}')
-            return None
-
-        obj = Q2SmearCalculator(rdf=rdf)
-        rdf = obj.get_rdf()
     else:
         raise ValueError(f'Invalid kind: {Data.kind}')
 
