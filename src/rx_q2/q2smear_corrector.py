@@ -35,20 +35,20 @@ class Q2SmearCorrector:
 
         return df
     # ------------------------------------
-    def _read_quantity(self, brem : int, block : int, kind : str) -> float:
+    def _read_quantity(self, nbrem : int, block : int, kind : str) -> float:
         df   = self._df
         if kind == 'mu_mc':
-            mu_mc = df.loc[ (df['block'] == block) & (df['brem'] == brem) & (df['sample'] == 'sim'), 'mu_val' ].iloc[0]
+            mu_mc = df.loc[ (df['block'] == block) & (df['brem'] == nbrem) & (df['sample'] == 'sim'), 'mu_val' ].iloc[0]
             return mu_mc
 
         if kind == 'reso':
-            sg_dt = df.loc[ (df['block'] == block) & (df['brem'] == brem) & (df['sample'] == 'dat'), 'sg_val' ].iloc[0]
-            sg_mc = df.loc[ (df['block'] == block) & (df['brem'] == brem) & (df['sample'] == 'sim'), 'sg_val' ].iloc[0]
+            sg_dt = df.loc[ (df['block'] == block) & (df['brem'] == nbrem) & (df['sample'] == 'dat'), 'sg_val' ].iloc[0]
+            sg_mc = df.loc[ (df['block'] == block) & (df['brem'] == nbrem) & (df['sample'] == 'sim'), 'sg_val' ].iloc[0]
             return sg_dt / sg_mc
 
         if kind == 'scale':
-            mu_dt = df.loc[ (df['block'] == block) & (df['brem'] == brem) & (df['sample'] == 'dat'), 'mu_val' ].iloc[0]
-            mu_mc = df.loc[ (df['block'] == block) & (df['brem'] == brem) & (df['sample'] == 'sim'), 'mu_val' ].iloc[0]
+            mu_dt = df.loc[ (df['block'] == block) & (df['brem'] == nbrem) & (df['sample'] == 'dat'), 'mu_val' ].iloc[0]
+            mu_mc = df.loc[ (df['block'] == block) & (df['brem'] == nbrem) & (df['sample'] == 'sim'), 'mu_val' ].iloc[0]
 
             return mu_dt - mu_mc
 
@@ -56,7 +56,7 @@ class Q2SmearCorrector:
     # ------------------------------------
     def get_mass(
             self,
-            brem           : int,
+            nbrem          : int,
             block          : int,
             jpsi_mass_reco : float) -> float:
         '''
@@ -73,9 +73,9 @@ class Q2SmearCorrector:
         # TODO: Should the true mass be the PDG mass?
         jpsi_mass_true = self._mass_ee_pdg
 
-        mu_mc = self._read_quantity(brem=brem, block=block, kind='mu_mc')
-        reso  = self._read_quantity(brem=brem, block=block, kind= 'reso')
-        scale = self._read_quantity(brem=brem, block=block, kind='scale')
+        mu_mc = self._read_quantity(nbrem=nbrem, block=block, kind='mu_mc')
+        reso  = self._read_quantity(nbrem=nbrem, block=block, kind= 'reso')
+        scale = self._read_quantity(nbrem=nbrem, block=block, kind='scale')
         mass  = jpsi_mass_true + reso * (jpsi_mass_reco - jpsi_mass_true) + scale + (1 - reso) * (mu_mc - self._mass_ee_pdg)
 
         log.debug(f'{jpsi_mass_reco:20.0f}{"->:<20"}{mass:<20.0f}')
