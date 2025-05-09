@@ -124,6 +124,8 @@ class MassBiasCorrector:
     def _calculate_correction(self, row : pnd.Series) -> pnd.Series:
         row  = self._correct_electron('L1', row)
         row  = self._correct_electron('L2', row)
+
+        # NOTE: The variable calculation has to be done on the row AFTER the correction
         row  = self._calculate_variables(row)
 
         return row
