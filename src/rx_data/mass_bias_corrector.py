@@ -104,9 +104,9 @@ class MassBiasCorrector:
     def _calculate_correction(self, row : pnd.Series) -> pnd.Series:
         row  = self._correct_electron('L1', row)
         row  = self._correct_electron('L2', row)
-        sr   = self._calculate_variables(row)
+        row  = self._calculate_variables(row)
 
-        return sr
+        return row
     # ------------------------------------------
     def _filter_df(self, df : pnd.DataFrame) -> float:
         l_to_keep  = ['L1_PT', 'L1_PX', 'L1_PY', 'L1_PZ', 'L1_HASBREMADDED']
