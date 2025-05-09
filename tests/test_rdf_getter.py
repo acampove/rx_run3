@@ -253,7 +253,8 @@ def test_data(sample : str, trigger : str):
     rep = rdf.Report()
     rep.Print()
 
-    _check_branches(rdf, is_ee = 'MuMu' not in trigger)
+    is_mc = not sample.startswith('DATA_24_')
+    _check_branches(rdf, is_ee = 'MuMu' not in trigger, is_mc = is_mc)
 
     sample = sample.replace('*', 'p')
 
@@ -274,7 +275,8 @@ def test_q2_track_electron(sample : str):
     rep = rdf.Report()
     rep.Print()
 
-    _check_branches(rdf, is_ee=True)
+    is_mc = not sample.startswith('DATA_24_')
+    _check_branches(rdf, is_ee=True, is_mc = is_mc)
 
     sample = sample.replace('*', 'p')
 
@@ -293,7 +295,8 @@ def test_q2_track_muon(sample : str):
     rep = rdf.Report()
     rep.Print()
 
-    _check_branches(rdf, is_ee=False)
+    is_mc = not sample.startswith('DATA_24_')
+    _check_branches(rdf, is_ee=False, is_mc=is_mc)
 
     sample     = sample.replace('*', 'p')
     identifier = f'{trigger}_{sample}'
@@ -312,7 +315,8 @@ def test_brem_track_2(sample : str, trigger : str):
     rep = rdf.Report()
     rep.Print()
 
-    _check_branches(rdf, is_ee=True)
+    is_mc = not sample.startswith('DATA_24_')
+    _check_branches(rdf, is_ee=True, is_mc=is_mc)
 
     sample = sample.replace('*', 'p')
     _plot_brem_track_2(rdf, sample, 'brem_track_2')
@@ -326,7 +330,9 @@ def test_mc(sample : str):
     gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
 
-    _check_branches(rdf, is_ee=True)
+    is_mc = not sample.startswith('DATA_24_')
+    _check_branches(rdf, is_ee=True, is_mc=is_mc)
+
     _plot_mva_mass(rdf, sample)
     _plot_mva(rdf     , sample)
     _plot_hop(rdf     , sample)
@@ -344,7 +350,9 @@ def test_check_vars(sample : str):
     gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
 
-    _check_branches(rdf, is_ee=True)
+    is_mc = not sample.startswith('DATA_24_')
+    _check_branches(rdf, is_ee=True, is_mc=is_mc)
+
     _print_dotted_branches(rdf)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC'])
