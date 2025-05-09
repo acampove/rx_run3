@@ -122,13 +122,20 @@ def _preprocess_lepton(rdf : RDataFrame, lep : str) -> None:
     return rdf
 # ------------------------------------------
 def _pick_column(name : str) -> bool:
-    to_keep  = ['EVENTNUMBER', 'RUNNUMBER']
-
-    if '_TRUE' in name:
-        return False
+    to_keep  = ['EVENTNUMBER', 'RUNNUMBER']    # To make friend trees and align entries
+    to_keep += ['nbrem', 'L1_TRUEID', 'block'] # For q2 smearing
 
     if name in to_keep:
         return True
+
+    if name.startswith('H_BREM'):
+        return False
+
+    if name.startswith('H_TRACK_P'):
+        return False
+
+    if '_TRUE' in name:
+        return False
 
     not_l1 = not name.startswith('L1')
     not_l2 = not name.startswith('L2')
