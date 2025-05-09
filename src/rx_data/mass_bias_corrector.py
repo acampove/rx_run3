@@ -161,17 +161,16 @@ class MassBiasCorrector:
 
         df = self._df
         if self._nthreads > 1:
-            sr_data = df.parallel_apply(self._calculate_correction, axis=1)
+            df_corr = df.parallel_apply(self._calculate_correction, axis=1)
         else:
-            sr_data = df.apply(self._calculate_correction, axis=1)
+            df_corr = df.apply(self._calculate_correction, axis=1)
 
-        l_var     = sr_data.columns
-        df[l_var] = sr_data
+        df_corr = self._add_suffix(df_corr, suffix)
+        for variable in ['EVENTNUMBER', 'RUNNUMBER']:
+            df_corr[variable] = df[variable]
 
-        df        = self._filter_df(df)
-        df        = df.fillna(-1)
-        df        = self._add_suffix(df, suffix)
-        rdf       = RDF.FromPandas(df)
+        df_corr = df_corr.fillna(-1) # For some candidates the B mass after correction becomes NaN
+        rdf     = RDF.FromPandas(df_corr)
 
         return rdf
 # ------------------------------------------
