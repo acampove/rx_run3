@@ -247,19 +247,20 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    # TODO: This function and the corresponding test might need to be
-    # removed, the existing Jpsi_TRUEM column is just the PDG mass of the Jpsi
     def _add_mc_columns(self, rdf : RDataFrame) -> RDataFrame:
         if self._sample.startswith('DATA_'):
             return rdf
 
-        lep_3d  = 'ROOT::Math::XYZVector LEP_3D(LEP_TRUEPX, LEP_TRUEPY, LEP_TRUEPZ)'
+        lep_3d  = 'ROOT::Math::XYZVector LEP_3D(LEP_TRUEPX, LEP_TRUEPY, LEP_TRUEPZ); LEP_PT=LEP.Rho(); LEP_ETA=LEP.ETA(); LEP_PHI=LEP.Phi()'
         l1_3d   = lep_3d.replace('LEP', 'L1')
         l2_3d   = lep_3d.replace('LEP', 'L2')
 
-        jps_3d  =  'ROOT::Math::XYZVector           Jpsi_3D = L1_3D + L2_3D'
-        jps_4d  = f'ROOT::Math::PtEtaPhiM4D<double> Jpsi_4D(Jpsi_3D.Rho(), Jpsi_3D.Eta(), Jpsi_3D.Phi(), {self._jpsi_pdg_mass})'
-        expr    = f'{l1_3d}; {l2_3d}; {jps_3d}; {jps_4d}; return Jpsi_4D.M();'
+        lep_4d  = 'ROOT::Math::PtEtaPhiM4D<double> PAR_4D(PAR_PT, PAR_ETA, PAT_PHI, 0.511)'
+        l1_4d   = lep_4d.replace('LEP', 'L1')
+        l2_4d   = lep_4d.replace('LEP', 'L2')
+
+        jps_4d  = 'ROOT::Math::PtEtaPhiM4D<double> Jpsi_4D = L1_4D + L2_4D'
+        expr    = f'{l1_3d}; {l2_3d}; {l1_4d}; {l2_4d}; {jps_4d}; return Jpsi_4D.M();'
 
         log.debug('Jpsi_TRUEM')
         log.debug('-->')
