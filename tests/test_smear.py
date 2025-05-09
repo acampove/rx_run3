@@ -7,9 +7,8 @@ import numpy
 import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
-from ROOT                     import RDataFrame, RDF
 from dmu.logging.log_store    import LogStore
-from rx_q2.q2smear_corrector import Q2SmearCorrector, WrongQ2SmearInput
+from rx_q2.q2smear_corrector import Q2SmearCorrector
 
 log  = LogStore.add_logger('rx_q2:test_q2smear_corrector')
 # -------------------------------------------
