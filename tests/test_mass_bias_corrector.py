@@ -31,6 +31,7 @@ class Data:
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_data:mass_bias_corrector'     , 10)
+    LogStore.set_level('rx_data:electron_bias_corrector' , 10)
     LogStore.set_level('rx_data:test_mass_bias_corrector', 10)
 
     os.makedirs(Data.plt_dir, exist_ok=True)
