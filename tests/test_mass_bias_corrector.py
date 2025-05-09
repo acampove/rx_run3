@@ -87,7 +87,7 @@ def _check_input_columns(rdf : RDataFrame) -> None:
 def _check_output_columns(rdf : RDataFrame) -> None:
     l_colname = [ name.c_str() for name in rdf.GetColumnNames() ]
     ncol = len(l_colname)
-    if ncol != 14:
+    if ncol != 15:
         for colname in l_colname:
             log.info(f'   {colname}')
 

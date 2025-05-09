@@ -112,6 +112,7 @@ class MassBiasCorrector:
         l_to_keep  = ['L1_PT', 'L1_PX', 'L1_PY', 'L1_PZ', 'L1_HASBREMADDED']
         l_to_keep += ['L2_PT', 'L2_PX', 'L2_PY', 'L2_PZ', 'L2_HASBREMADDED']
         l_to_keep += ['B_M'  , 'Jpsi_M', 'EVENTNUMBER', 'RUNNUMBER']
+        l_to_keep += ['Jpsi_M_smr']
 
         log.debug(20 * '-')
         log.debug('Keeping variables:')
