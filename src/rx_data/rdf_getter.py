@@ -93,15 +93,15 @@ class RDFGetter:
     def _initialize(self) -> None:
         '''
         Function will:
-        - Find samples, assuming they are in $DATADIR/samples/*.yaml
+        - Find samples, assuming they are in $ANADIR/Data/samples/*.yaml
         - Add them to the samples member of RDFGetter
 
         If no samples found, will raise FileNotFoundError
         '''
         self._check_multithreading()
 
-        data_dir     = os.environ['DATADIR']
-        cfg_wildcard = f'{data_dir}/samples/*.yaml'
+        data_dir     = os.environ['ANADIR']
+        cfg_wildcard = f'{data_dir}/Data/samples/*.yaml'
         l_config     = glob.glob(cfg_wildcard)
         npath        = len(l_config)
         if npath == 0:
