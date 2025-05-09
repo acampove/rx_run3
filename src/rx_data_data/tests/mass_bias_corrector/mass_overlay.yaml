@@ -7,6 +7,10 @@ plots:
         binning    : [2500, 3400, 60]
         yscale     : 'linear'
         labels     : ['M$(J/\psi)$', 'Entries']
+    Jpsi_M_smr :
+        binning    : [2500, 3400, 60]
+        yscale     : 'linear'
+        labels     : ['M${}_{smeared}(J/\psi)$', 'Entries']
     # ---------------------------
     L1_PT:
         binning    : [0, 10000, 60]
