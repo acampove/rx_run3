@@ -44,7 +44,10 @@ def _load_conf() -> dict:
 
     return cfg
 #-----------------------------------------
-def _clean_rdf(rdf : RDataFrame) -> RDataFrame:
+def _clean_rdf(rdf : RDataFrame, name : str) -> RDataFrame:
+    if name == 'Original':
+        rdf = rdf.Define('Jpsi_M_smr', 'Jpsi_M')
+
     rdf = rdf.Filter('Jpsi_M > 0', 'pos_jmass')
     rdf = rdf.Filter('B_M    > 0', 'pos_bmass')
 
@@ -54,7 +57,7 @@ def _clean_rdf(rdf : RDataFrame) -> RDataFrame:
     return rdf
 #-----------------------------------------
 def _compare_masses(d_rdf : dict[str,RDataFrame], test_name : str, correction : str) -> None:
-    d_rdf = { name : _clean_rdf(rdf) for name, rdf in d_rdf.items() }
+    d_rdf = { name : _clean_rdf(rdf, name) for name, rdf in d_rdf.items() }
 
     cfg = _load_conf()
     cfg = copy.deepcopy(cfg)
