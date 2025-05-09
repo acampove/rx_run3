@@ -19,20 +19,14 @@ class Q2SmearCorrector:
     - Return them in a dataframe
     '''
     # ------------------------------------
-    def __init__(self, rdf : RDataFrame, mass_ee : str = 'Jpsi_M_brem_track_2'):
+    def __init__(self):
         '''
-        rdf : ROOT Dataframe with the data
-        mass_ee : Name of branch with masses to smear
+        No arguments needed, inputs will be passed to `get_mass`
         '''
-        self._validate_input(rdf)
-
         self._mass_ee_pdg = 3096.9
         log.debug(f'Using Jpsi PDG mass: {self._mass_ee_pdg:.2f}')
 
-        self._rdf     = rdf
-        self._l_var   = [mass_ee, 'nbrem', 'block', 'EVENTNUMBER', 'RUNNUMBER'] # EVENTNUMBER and RUNNUMBER are needed to align samples
-        self._mass_ee = mass_ee
-        self._df      = self._get_scales()
+        self._df = self._get_scales()
     # ------------------------------------
     def _get_scales(self) -> pnd.DataFrame:
         ana_dir = os.environ['ANADIR']
