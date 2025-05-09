@@ -96,7 +96,11 @@ def _check_output_columns(rdf : RDataFrame) -> None:
     for colname in l_colname:
         log.debug(f'   {colname}')
 #-----------------------------------------
-def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> RDataFrame:
+def _get_rdf(
+        nbrem    : int  = None,
+        is_inner : bool = None,
+        npvs     : int  = None,
+        is_mc    : bool = False) -> RDataFrame:
     RDFGetter.samples = {
         'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
         'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
@@ -106,8 +110,9 @@ def _get_rdf(nbrem : int = None, is_inner : bool = None, npvs : int = None) -> R
         }
 
     trigger='Hlt2RD_BuToKpEE_MVA'
+    sample ='Bu_JpsiK_ee_eq_DPC' if is_mc else 'DATA_24_*'
 
-    gtr = RDFGetter(sample='DATA_24_*', trigger=trigger)
+    gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
 
     d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process='DATA')
