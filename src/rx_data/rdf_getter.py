@@ -251,9 +251,13 @@ class RDFGetter:
         if self._sample.startswith('DATA_'):
             return rdf
 
-        jps_3d  =  'ROOT::Math::XYZVector           Jpsi_3D(Jpsi_TRUEPX, Jpsi_TRUEPY, Jpsi_TRUEPZ)'
-        jps_4d  = f'ROOT::Math::PtEtaPhiM4D<double> Jpsi_4D(Jpsi_TRUEPT, Jpsi_3D.Eta(), Jpsi_3D.Phi(), {self._jpsi_pdg_mass})'
-        expr    = f'{jps_3d}; {jps_4d}; return Jpsi_4D.M();'
+        lep_3d  = 'ROOT::Math::XYZVector LEP_3D(LEP_TRUEPX, LEP_TRUEPY, LEP_TRUEPZ)'
+        l1_3d   = lep_3d.replace('LEP', 'L1')
+        l2_3d   = lep_3d.replace('LEP', 'L2')
+
+        jps_3d  =  'ROOT::Math::XYZVector           Jpsi_3D = L1_3D + L2_3D'
+        jps_4d  = f'ROOT::Math::PtEtaPhiM4D<double> Jpsi_4D(Jpsi_3D.Rho(), Jpsi_3D.Eta(), Jpsi_3D.Phi(), {self._jpsi_pdg_mass})'
+        expr    = f'{l1_3d}; {l2_3d}; {jps_3d}; {jps_4d}; return Jpsi_4D.M();'
 
         log.debug('Jpsi_TRUEM')
         log.debug('-->')
