@@ -43,17 +43,25 @@ class MassBiasCorrector:
         self._kmass      = 493.6
         self._ecorr_kind = ecorr_kind
 
-        self._set_loggers()
+        self._silence_logger(name = 'rx_data:brem_bias_corrector')
+        self._silence_logger(name = 'rx_data:electron_bias_corrector')
 
         if self._nthreads > 1:
             pandarallel.initialize(nb_workers=self._nthreads, progress_bar=True)
     # ------------------------------------------
-    def _set_loggers(self) -> None:
-        LogStore.set_level('rx_data:brem_bias_corrector'    , 50)
-        LogStore.set_level('rx_data:electron_bias_corrector', 50)
+    def _silence_logger(self, name) -> None:
+        logger = LogStore.get_logger(name=name)
+
+        # If a logger has been put in debug level
+        # then it is not meant to be silenced here
+        if logger.getEffectiveLevel() == 10:
+            return
+
+        LogStore.set_level(name, 50)
     # ------------------------------------------
     def _correct_electron(self, name : str, row : pnd.Series) -> pnd.Series:
         if self._skip_correction:
+            log.debug('Skipping correction for {name}')
             return row
 
         row = self._ebc.correct(row, name=name, kind=self._ecorr_kind)
