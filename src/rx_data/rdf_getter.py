@@ -56,6 +56,7 @@ class RDFGetter:
         self._sample          = sample
         self._trigger         = trigger
         self._samples         : dict[str,str]
+        self._jpsi_pdg_mass   = 3096.9
 
         self._tree_name       = tree
         self._tmp_path        : str
@@ -246,6 +247,21 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
+    def _add_mc_columns(self, rdf : RDataFrame) -> RDataFrame:
+        if self._sample.startswith('DATA_'):
+            return rdf
+
+        jps_3d  =  'ROOT::Math::XYZVector           Jpsi_3D(Jpsi_TRUEPX, Jpsi_TRUEPY, Jpsi_TRUEPZ)'
+        jps_4d  = f'ROOT::Math::PtEtaPhiM4D<double> Jpsi_4D(Jpsi_TRUEPT, Jpsi_3D.Eta(), Jpsi_3D.Phi(), {self._jpsi_pdg_mass})'
+        expr    = f'{jps_3d}; {jps_4d}; return Jpsi_4D.M();'
+
+        log.debug('Jpsi_TRUEM')
+        log.debug('-->')
+        log.debug(expr)
+        rdf     = rdf.Define('Jpsi_TRUEM', expr)
+
+        return rdf
+    # ---------------------------------------------------
     def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
         if self._tree_name != 'DecayTree':
             return rdf
@@ -263,6 +279,8 @@ class RDFGetter:
 
         for name, definition in d_def.items():
             rdf = self._add_column(rdf, name, definition)
+
+        rdf = self._add_mc_columns(rdf)
 
         # TODO: The weight (taking into account prescale) should be removed
         # for 2025 data
