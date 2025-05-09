@@ -2,9 +2,7 @@
 Module containing Q2SmearCalculator class
 '''
 import os
-import numpy
 import pandas as pnd
-from ROOT                           import RDataFrame, RDF
 from dmu.logging.log_store          import LogStore
 from dmu.generic.version_management import get_last_version
 
@@ -16,7 +14,7 @@ class Q2SmearCorrector:
 
     - Read mass scales and resolutions
     - Calculated smeared masses
-    - Return them in a dataframe
+    - Returns smeared mass for each unsmeared mass, block and brem 
     '''
     # ------------------------------------
     def __init__(self):
