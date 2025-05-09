@@ -6,7 +6,7 @@ import pandas as pnd
 from dmu.logging.log_store          import LogStore
 from dmu.generic.version_management import get_last_version
 
-log = LogStore.add_logger('rx_q2:q2smear_calculator')
+log = LogStore.add_logger('rx_q2:q2smear_corrector')
 # ------------------------------------
 class Q2SmearCorrector:
     '''
