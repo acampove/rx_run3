@@ -12,13 +12,17 @@ from dmu.logging.log_store           import LogStore
 
 import rx_data.utilities             as ut
 from rx_data.electron_bias_corrector import ElectronBiasCorrector
+from rx_q2.q2smear_corrector         import Q2SmearCorrector
 
 log=LogStore.add_logger('rx_data:mass_bias_corrector')
 # ------------------------------------------
 class MassBiasCorrector:
     '''
     Class meant to correct B mass without DTF constraint
-    by correcting biases in electrons
+    by correcting biases in electrons due to:
+
+    - Issues with brem recovery: For this we use the `ElectronBiasCorrector` with `brem_track_2` correction
+    - Differences in scale and resolution: For this we use the `Q2SmearCorrector`
     '''
     # ------------------------------------------
     def __init__(self,
