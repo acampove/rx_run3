@@ -115,7 +115,7 @@ def _get_rdf(
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
 
-    d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process='DATA')
+    d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
     d_sel['mass'] = 'B_const_mass_M > 5160'
     for cut_name, cut_value in d_sel.items():
         rdf = rdf.Filter(cut_value, cut_name)
