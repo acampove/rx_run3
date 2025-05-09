@@ -251,16 +251,23 @@ class RDFGetter:
         if self._sample.startswith('DATA_'):
             return rdf
 
-        lep_3d  = 'ROOT::Math::XYZVector LEP_3D(LEP_TRUEPX, LEP_TRUEPY, LEP_TRUEPZ); LEP_PT=LEP.Rho(); LEP_ETA=LEP.ETA(); LEP_PHI=LEP.Phi()'
+        tv_tp   = 'ROOT::Math::XYZVector'
+        fv_tp   = 'ROOT::Math::PtEtaPhiM4D<double>'
+
+        lep_3d  =f'{tv_tp} LEP_3D(LEP_TRUEPX, LEP_TRUEPY, LEP_TRUEPZ); auto LEP_truept=LEP_3D.Rho(); auto LEP_trueeta=LEP_3D.Eta(); auto LEP_truephi=LEP_3D.Phi()'
         l1_3d   = lep_3d.replace('LEP', 'L1')
         l2_3d   = lep_3d.replace('LEP', 'L2')
 
-        lep_4d  = 'ROOT::Math::PtEtaPhiM4D<double> PAR_4D(PAR_PT, PAR_ETA, PAT_PHI, 0.511)'
+        lep_4d  =f'{fv_tp} LEP_4D(LEP_truept, LEP_trueeta, LEP_truephi, 0.511)'
         l1_4d   = lep_4d.replace('LEP', 'L1')
         l2_4d   = lep_4d.replace('LEP', 'L2')
 
-        jps_4d  = 'ROOT::Math::PtEtaPhiM4D<double> Jpsi_4D = L1_4D + L2_4D'
-        expr    = f'{l1_3d}; {l2_3d}; {l1_4d}; {l2_4d}; {jps_4d}; return Jpsi_4D.M();'
+        lv      =f'ROOT::Math::LorentzVector<{fv_tp}>(LEP_4D)'
+        lv1     = lv.replace('LEP', 'L1')
+        lv2     = lv.replace('LEP', 'L2')
+        jps_4d  =f'auto jpsi_4d = {lv1} + {lv2};'
+
+        expr    =f'{l1_3d}; {l2_3d}; {l1_4d}; {l2_4d}; {jps_4d}; return jpsi_4d.M();'
 
         log.debug('Jpsi_TRUEM')
         log.debug('-->')
