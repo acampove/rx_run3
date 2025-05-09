@@ -56,32 +56,31 @@ class Q2SmearCorrector:
 
         raise NotImplementedError(f'Invalid quantity: {kind}')
     # ------------------------------------
-    def _calculate_smeared_mass(self, row : pnd.Series) -> float:
-        jpsi_mass_reco = row[self._mass_ee]
+    def get_mass(
+            self,
+            brem           : int,
+            block          : int,
+            jpsi_mass_reco : float) -> float:
+        '''
+        Parameters:
+        ---------------
+        brem          : Integer with the brem category 0, 1, 2 
+        block         : Integer with the block [0-8] 
+        jpsi_mass_reco: Value of unsmeared Jpsi mass
+
+        Returns:
+        ---------------
+        Smeared mass
+        '''
+        # TODO: Should the true mass be the PDG mass?
         jpsi_mass_true = self._mass_ee_pdg
 
-        mu_mc = self._read_quantity(row, kind='mu_mc')
-        reso  = self._read_quantity(row, kind= 'reso')
-        scale = self._read_quantity(row, kind='scale')
+        mu_mc = self._read_quantity(brem=brem, block=block, kind='mu_mc')
+        reso  = self._read_quantity(brem=brem, block=block, kind= 'reso')
+        scale = self._read_quantity(brem=brem, block=block, kind='scale')
         mass  = jpsi_mass_true + reso * (jpsi_mass_reco - jpsi_mass_true) + scale + (1 - reso) * (mu_mc - self._mass_ee_pdg)
 
+        log.debug(f'{jpsi_mass_reco:20.0f}{"->:<20"}{mass:<20.0f}')
+
         return mass
-    # ------------------------------------
-    def get_rdf(self, name : str = None) -> RDataFrame:
-        '''
-        Will return ROOT dataframe with smeared mass of dielectron
-
-        name: Name of branch containing smeared mass
-        '''
-        if name is None:
-            name = f'{self._mass_ee}_smr'
-
-        log.info(f'Storing smeared di-electron mass in: {name}')
-
-        data     = self._rdf.AsNumpy(self._l_var)
-        df       = pnd.DataFrame(data)
-        df[name] = df.apply(self._calculate_smeared_mass, axis=1)
-        rdf      = RDF.FromPandas(df)
-
-        return rdf
 # ------------------------------------
