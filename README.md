@@ -306,13 +306,14 @@ such that the code will pick it up. `vx` represents a version of the ntuples (e.
 pick up the latest. Then run:
 
 ```bash
-branch_calculator -k swp_jpsi_misid -p  0 40 -b -v v1
+branch_calculator -k swp_jpsi_misid -p  0 40 -b -v v1 -s 10000
 ```
 
 which will:
 
-- Create a new set of files in `$DATADIR/swp_jpsi_misid/v1` with each input file, corresponding to an output file.
+- Create a new set of files in `$ANADIR/Data/swp_jpsi_misid/v1` with each input file, corresponding to an output file.
 - Split the input files into 40 groups, with roughly the same file size.
+- Process files by chunks of 10 thousands entries at a time. This is needed to prevent the cluster (HTCondor, etc) to run out of memory.
 - Process the zeroth group.
 
 Thus, this can be parallelized by running the line above 40 times in 40 jobs.
