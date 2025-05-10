@@ -9,12 +9,12 @@ plots:
     labels     : ['M$(J/\psi)$', 'Entries']
   # ---------------------------
   B_DIRA_OWNPV:
-    binning    : [0.9998, 1.0, 60]
-    yscale     : 'linear'
+    binning    : [0.99998, 1.0, 30]
+    yscale     : 'log'
     labels     : ['DIRA$(B^+)$', 'Entries']
   Jpsi_DIRA_OWNPV:
-    binning    : [0.9998, 1.0, 60]
-    yscale     : 'linear'
+    binning    : [0.995, 1.0, 30]
+    yscale     : 'log'
     labels     : ['DIRA$(J/\psi)$', 'Entries']
   # ---------------------------
   L1_PT:
