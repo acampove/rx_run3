@@ -68,8 +68,8 @@ class RDFGetter:
         jps_4d  =f'auto jpsi_4d = {lv1} + {lv2};'
         bpl_4d  =f'auto bpls_4d = {lv1} + {lv2} + {lv3};'
 
-        expr_jp =f'{l1_3d}; {l2_3d}         ; {l1_4d}; {l2_4d}         ; {jps_4d}; return jpsi_4d.M();'
-        expr_bp =f'{l1_3d}; {l2_3d}; {kp_3d}; {l1_4d}; {l2_4d}; {kp_4d}; {bpl_4d}; return bpls_4d.M();'
+        expr_jp =f'{l1_3d}; {l2_3d}         ; {l1_4d}; {l2_4d}         ; {jps_4d}; auto val = jpsi_4d.M(); return val!=val ? {RDFGetter.JPSI_PDG_MASS} : val'
+        expr_bp =f'{l1_3d}; {l2_3d}; {kp_3d}; {l1_4d}; {l2_4d}; {kp_4d}; {bpl_4d}; auto val = bpls_4d.M(); return val!=val ? {RDFGetter.BPLS_PDG_MASS} : val'
 
         log.debug('Jpsi_TRUEM')
         log.debug('-->')
