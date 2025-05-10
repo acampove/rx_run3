@@ -33,6 +33,54 @@ class RDFGetter:
     d_custom_columns : dict[str,str]
     # ---------------------------------------------------
     @staticmethod
+    def add_truem(rdf : RDataFrame) -> RDataFrame:
+        '''
+        Takes ROOT dataframe associated to MC sample:
+
+        - Adds TRUEM branches missing
+
+        Returns dataframe
+        '''
+
+        tv_tp   = 'ROOT::Math::XYZVector'
+        fv_tp   = 'ROOT::Math::PtEtaPhiM4D<double>'
+
+        par_3d  =f'{tv_tp} PAR_3D(PAR_TRUEPX, PAR_TRUEPY, PAR_TRUEPZ); auto PAR_truept=PAR_3D.Rho(); auto PAR_trueeta=PAR_3D.Eta(); auto PAR_truephi=PAR_3D.Phi()'
+        l1_3d   = par_3d.replace('PAR', 'L1')
+        l2_3d   = par_3d.replace('PAR', 'L2')
+        kp_3d   = par_3d.replace('PAR',  'H')
+
+        lep_4d  =f'{fv_tp} PAR_4D(PAR_truept, PAR_trueeta, PAR_truephi, 0.511)'
+        kpl_4d  =f'{fv_tp} PAR_4D(PAR_truept, PAR_trueeta, PAR_truephi, 493.7)'
+        l1_4d   = lep_4d.replace('PAR', 'L1')
+        l2_4d   = lep_4d.replace('PAR', 'L2')
+        kp_4d   = kpl_4d.replace('PAR',  'H')
+
+        lv      =f'ROOT::Math::LorentzVector<{fv_tp}>(PAR_4D)'
+        lv1     = lv.replace('PAR', 'L1')
+        lv2     = lv.replace('PAR', 'L2')
+        lv3     = lv.replace('PAR',  'H')
+
+        jps_4d  =f'auto jpsi_4d = {lv1} + {lv2};'
+        bpl_4d  =f'auto bpls_4d = {lv1} + {lv2} + {lv3};'
+
+        expr_jp =f'{l1_3d}; {l2_3d}         ; {l1_4d}; {l2_4d}         ; {jps_4d}; return jpsi_4d.M();'
+        expr_bp =f'{l1_3d}; {l2_3d}; {kp_3d}; {l1_4d}; {l2_4d}; {kp_4d}; {bpl_4d}; return bpls_4d.M();'
+
+        log.debug('Jpsi_TRUEM')
+        log.debug('-->')
+        log.debug(expr_jp)
+
+        log.debug('B_TRUEM')
+        log.debug('-->')
+        log.debug(expr_bp)
+
+        rdf = rdf.Define('Jpsi_TRUEM', expr_jp)
+        rdf = rdf.Define(   'B_TRUEM', expr_bp)
+
+        return rdf
+    # ---------------------------------------------------
+    @staticmethod
     def set_custom_columns(d_def : dict[str,str]) -> None:
         '''
         Defines custom columns that the getter class will use to
@@ -251,41 +299,7 @@ class RDFGetter:
         if self._sample.startswith('DATA_'):
             return rdf
 
-        tv_tp   = 'ROOT::Math::XYZVector'
-        fv_tp   = 'ROOT::Math::PtEtaPhiM4D<double>'
-
-        par_3d  =f'{tv_tp} PAR_3D(PAR_TRUEPX, PAR_TRUEPY, PAR_TRUEPZ); auto PAR_truept=PAR_3D.Rho(); auto PAR_trueeta=PAR_3D.Eta(); auto PAR_truephi=PAR_3D.Phi()'
-        l1_3d   = par_3d.replace('PAR', 'L1')
-        l2_3d   = par_3d.replace('PAR', 'L2')
-        kp_3d   = par_3d.replace('PAR',  'H')
-
-        lep_4d  =f'{fv_tp} PAR_4D(PAR_truept, PAR_trueeta, PAR_truephi, 0.511)'
-        kpl_4d  =f'{fv_tp} PAR_4D(PAR_truept, PAR_trueeta, PAR_truephi, 493.7)'
-        l1_4d   = lep_4d.replace('PAR', 'L1')
-        l2_4d   = lep_4d.replace('PAR', 'L2')
-        kp_4d   = kpl_4d.replace('PAR',  'H')
-
-        lv      =f'ROOT::Math::LorentzVector<{fv_tp}>(PAR_4D)'
-        lv1     = lv.replace('PAR', 'L1')
-        lv2     = lv.replace('PAR', 'L2')
-        lv3     = lv.replace('PAR',  'H')
-
-        jps_4d  =f'auto jpsi_4d = {lv1} + {lv2};'
-        bpl_4d  =f'auto bpls_4d = {lv1} + {lv2} + {lv3};'
-
-        expr_jp =f'{l1_3d}; {l2_3d}         ; {l1_4d}; {l2_4d}         ; {jps_4d}; return jpsi_4d.M();'
-        expr_bp =f'{l1_3d}; {l2_3d}; {kp_3d}; {l1_4d}; {l2_4d}; {kp_4d}; {bpl_4d}; return bpls_4d.M();'
-
-        log.debug('Jpsi_TRUEM')
-        log.debug('-->')
-        log.debug(expr_jp)
-
-        log.debug('B_TRUEM')
-        log.debug('-->')
-        log.debug(expr_bp)
-
-        rdf = rdf.Define('Jpsi_TRUEM', expr_jp)
-        rdf = rdf.Define(   'B_TRUEM', expr_bp)
+        rdf = RDFGetter.add_truem(rdf=rdf)
 
         return rdf
     # ---------------------------------------------------
