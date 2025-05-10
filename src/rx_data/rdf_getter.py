@@ -30,6 +30,9 @@ class RDFGetter:
     Class meant to load dataframes with friend trees
     '''
     max_entries = -1
+    JPSI_PDG_MASS = 3096.90 # https://pdg.lbl.gov/2018/listings/rpp2018-list-J-psi-1S.pdf
+    BPLS_PDG_MASS = 5279.34 # https://pdg.lbl.gov/2022/tables/rpp2022-tab-mesons-bottom.pdf
+
     d_custom_columns : dict[str,str]
     # ---------------------------------------------------
     @staticmethod
@@ -105,7 +108,7 @@ class RDFGetter:
         self._sample          = sample
         self._trigger         = trigger
         self._samples         : dict[str,str]
-        self._jpsi_pdg_mass   = 3096.9
+        self._jpsi_pdg_mass   = RDFGetter.JPSI_PDG_MASS
 
         self._tree_name       = tree
         self._tmp_path        : str
