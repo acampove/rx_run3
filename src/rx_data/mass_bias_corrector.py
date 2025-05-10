@@ -6,6 +6,7 @@ Module storing MassBiasCorrector class
 import vector
 import numpy
 import pandas as pnd
+from vector                          import MomentumObject3D as v3d
 from pandarallel                     import pandarallel
 from ROOT                            import RDataFrame, RDF
 from dmu.logging.log_store           import LogStore
@@ -95,7 +96,6 @@ class MassBiasCorrector:
         jmass = -1 if numpy.isnan(jp.mass) else float(jp.mass)
 
         # TODO: Needs to recalculate:
-        # DIRA
         # PIDe
         # ProbNNe
         d_data = {
@@ -119,9 +119,33 @@ class MassBiasCorrector:
         d_data['Jpsi_M_smr'] = self._smear_mass(row, particle='Jpsi', reco=jmass)
         d_data[   'B_M_smr'] = self._smear_mass(row, particle=   'B', reco=bmass)
 
+        d_data[   'B_DIRA_OWNPV'] = self._calculate_dira(momentum=bp.to_Vector3D(), row=row, particle=   'B')
+        d_data['Jpsi_DIRA_OWNPV'] = self._calculate_dira(momentum=jp.to_Vector3D(), row=row, particle='Jpsi')
+
         sr = pnd.Series(d_data)
 
         return sr
+    # ------------------------------------------
+    def _calculate_dira(
+            self, 
+            row      : pnd.DataFrame, 
+            momentum : v3d, 
+            particle : str) -> float:
+        pv_x = row[f'{particle}_BPVX']
+        pv_y = row[f'{particle}_BPVY']
+        pv_z = row[f'{particle}_BPVZ']
+
+        sv_x = row[f'{particle}_END_VX']
+        sv_y = row[f'{particle}_END_VY']
+        sv_z = row[f'{particle}_END_VZ']
+
+        pv   = v3d(x=pv_x, y=pv_y, z=pv_z)
+        sv   = v3d(x=sv_x, y=sv_y, z=sv_z)
+        DR   = sv - pv
+
+        cos_theta = DR.dot(momentum) / (DR.mag * momentum.mag)
+
+        return cos_theta
     # ------------------------------------------
     def _smear_mass(self, row : pnd.Series, particle : str, reco : float) -> float:
         if not self._is_mc:
