@@ -116,23 +116,23 @@ class MassBiasCorrector:
                 'L2_HASBREMADDED' : row.L2_HASBREMADDED,
                 }
 
-        jmass_reco = jmass
-        if not self._is_mc:
-            d_data['Jpsi_M_smr'] = jmass_reco
-            sr = pnd.Series(d_data)
-
-            return sr
-
-        jmass_true = row['Jpsi_TRUEM']
-
-        nbrem = row['L1_HASBREMADDED'] + row['L2_HASBREMADDED']
-        block = row['block']
-        # If this is data, use the original mass as placeholder for Jpsi_M_smr
-        d_data['Jpsi_M_smr'] = self._qsq_corr.get_mass(nbrem=nbrem, block=block, jpsi_mass_reco=jmass_reco, jpsi_mass_true=jmass_true)
+        d_data['Jpsi_M_smr'] = self._smear_mass(row, particle='Jpsi', reco=jmass)
+        #d_data[   'B_M_smr'] = self._smear_mass(row, particle=   'B', reco=bmass)
 
         sr = pnd.Series(d_data)
 
         return sr
+    # ------------------------------------------
+    def _smear_mass(self, row : pnd.Series, particle : str, reco : float) -> float:
+        if not self._is_mc:
+            return reco
+
+        true    = row[f'{particle}_TRUEM']
+        nbrem   = row['L1_HASBREMADDED'] + row['L2_HASBREMADDED']
+        block   = row['block']
+        smeared = self._qsq_corr.get_mass(nbrem=nbrem, block=block, jpsi_mass_reco=reco, jpsi_mass_true=true)
+
+        return smeared
     # ------------------------------------------
     def _calculate_correction(self, row : pnd.Series) -> pnd.Series:
         row  = self._correct_electron('L1', row)
