@@ -8,6 +8,15 @@ plots:
     yscale     : 'linear'
     labels     : ['M$(J/\psi)$', 'Entries']
   # ---------------------------
+  B_DIRA_OWNPV:
+    binning    : [0.9998, 1.0, 60]
+    yscale     : 'linear'
+    labels     : ['DIRA$(B^+)$', 'Entries']
+  Jpsi_DIRA_OWNPV:
+    binning    : [0.9998, 1.0, 60]
+    yscale     : 'linear'
+    labels     : ['DIRA$(J/\psi)$', 'Entries']
+  # ---------------------------
   L1_PT:
     binning    : [0, 10000, 60]
     yscale     : 'linear'
