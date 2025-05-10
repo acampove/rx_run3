@@ -244,7 +244,7 @@ def test_add_smearing(kind : str, is_mc : bool):
     '''
     rdf_org = _get_rdf(is_mc=is_mc)
     rdf_org = rdf_org.Range(50_000)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind=kind)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=10, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
     _check_output_columns(rdf_cor)
 
