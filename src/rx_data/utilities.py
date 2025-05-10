@@ -88,19 +88,21 @@ def df_from_rdf(rdf : RDataFrame) -> pnd.DataFrame:
 
     ntot     = len(df)
     has_nans = False
-    log.info(60 * '-')
-    log.info(f'{"Variable":<20}{"NaNs":<20}{"%":<20}')
-    log.info(60 * '-')
+    log.debug(60 * '-')
+    log.debug(f'{"Variable":<20}{"NaNs":<20}{"%":<20}')
+    log.debug(60 * '-')
     for name, sr in df.items():
         nnan = sr.isna().sum()
         perc = 100 * nnan / ntot
         if perc > 0:
             has_nans = True
-            log.info(f'{name:<20}{nnan:<20}{perc:<20.2f}')
-    log.info(60 * '-')
+            log.debug(f'{name:<20}{nnan:<20}{perc:<20.2f}')
+    log.debug(60 * '-')
 
     if has_nans:
-        df = df.dropna()
+        df   = df.dropna()
+        ndrp = len(df)
+        log.warning(f'Dropping columns with NaNs {ntot} -> {ndrp}')
 
     return df
 # ------------------------------------------
