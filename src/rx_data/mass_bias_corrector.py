@@ -102,6 +102,9 @@ class MassBiasCorrector:
                 'B_M'    : bmass,
                 'Jpsi_M' : jmass,
                 # --------------
+                'B_PT'   : bp.pt,
+                'Jpsi_PT': jp.pt,
+                # --------------
                 'L1_PX'  : row.L1_PX,
                 'L1_PY'  : row.L1_PY,
                 'L1_PZ'  : row.L1_PZ,
