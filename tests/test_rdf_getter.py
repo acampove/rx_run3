@@ -29,6 +29,7 @@ class Data:
 
     l_branch_mc = [
             'Jpsi_TRUEM',
+               'B_TRUEM',
             ]
 
     l_branch_common = [
@@ -138,15 +139,15 @@ def _plot_q2_track(rdf : RDataFrame, sample : str) -> None:
     plt.savefig(f'{test_dir}/q2_track.png')
     plt.close()
 # ------------------------------------------------
-def _plot_sim(rdf : RDataFrame, test : str) -> None:
+def _plot_sim(rdf : RDataFrame, test : str, particle : str) -> None:
     test_dir = f'{Data.out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
 
-    arr_mass = rdf.AsNumpy(['Jpsi_TRUEM'])['Jpsi_TRUEM']
+    arr_mass = rdf.AsNumpy([f'{particle}_TRUEM'])[f'{particle}_TRUEM']
 
-    if 'Jpsi' in test:
+    if 'Jpsi' in test: # This will do the resonant sample
         plt.hist(arr_mass, bins=200, range=[3090, 3100], histtype='step', label='')
-    else:
+    else: # This will do the rare one
         plt.hist(arr_mass, bins=200, range=[   0, 4500], histtype='step', label='')
 
     plt.title(test)
@@ -291,7 +292,8 @@ def test_mc(sample : str):
     _plot_mva_mass(rdf, f'test_mc/{sample}')
     _plot_mva(rdf     , f'test_mc/{sample}')
     _plot_hop(rdf     , f'test_mc/{sample}')
-    _plot_sim(rdf     , f'test_mc/{sample}')
+    _plot_sim(rdf     , f'test_mc/{sample}', particle=   'B')
+    _plot_sim(rdf     , f'test_mc/{sample}', particle='Jpsi')
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC', 'Bu_psi2SK_ee_eq_DPC', 'Bu_JpsiX_ee_eq_JpsiInAcc'])
 def test_q2_track_electron(sample : str):
