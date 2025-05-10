@@ -145,14 +145,18 @@ def _plot_sim(rdf : RDataFrame, test : str, particle : str) -> None:
 
     arr_mass = rdf.AsNumpy([f'{particle}_TRUEM'])[f'{particle}_TRUEM']
 
-    if 'Jpsi' in test: # This will do the resonant sample
+    if   particle == 'B':
+        plt.hist(arr_mass, bins=200, range=[4500, 6000], histtype='step', label='')
+    elif particle == 'Jpsi' and 'Jpsi'     in test: # This will do the resonant sample
         plt.hist(arr_mass, bins=200, range=[3090, 3100], histtype='step', label='')
-    else: # This will do the rare one
+    elif particle == 'Jpsi' and 'Jpsi' not in test: # This will do the rare one
         plt.hist(arr_mass, bins=200, range=[   0, 4500], histtype='step', label='')
+    else:
+        raise ValueError(f'Invalid test/particle: {test}/{particle}')
 
     plt.title(test)
     plt.legend()
-    plt.savefig(f'{test_dir}/jpsi_truem.png')
+    plt.savefig(f'{test_dir}/{particle}_truem.png')
     plt.close()
 # ------------------------------------------------
 def _plot_mva(rdf : RDataFrame, test : str) -> None:
