@@ -67,7 +67,6 @@ def _compare_masses(d_rdf : dict[str,RDataFrame], test_name : str, correction : 
 
     cfg['plots']['B_M'       ]['title'] = correction
     cfg['plots']['Jpsi_M'    ]['title'] = correction
-    cfg['plots']['Jpsi_M_smr']['title'] = correction
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
@@ -244,13 +243,14 @@ def test_add_smearing(kind : str, is_mc : bool):
     Checks that smearing of q2 was added on top of correction
     '''
     rdf_org = _get_rdf(is_mc=is_mc)
-    rdf_org = rdf_org.Range(1_000)
+    rdf_org = rdf_org.Range(50_000)
     cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
     _check_output_columns(rdf_cor)
 
-    sample  = 'mc' if is_mc else 'data'
+    rdf_smr = rdf_cor.Redefine('Jpsi_M', 'Jpsi_M_smr')
 
-    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+    sample  = 'mc' if is_mc else 'data'
+    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor, 'Smeared' : rdf_smr}
     _compare_masses(d_rdf, f'add_smearing_{sample}', kind)
 #-----------------------------------------
