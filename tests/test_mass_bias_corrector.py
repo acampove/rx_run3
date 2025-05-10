@@ -86,7 +86,7 @@ def _check_input_columns(rdf : RDataFrame) -> None:
 def _check_output_columns(rdf : RDataFrame) -> None:
     l_colname = [ name.c_str() for name in rdf.GetColumnNames() ]
     ncol = len(l_colname)
-    if ncol != 15:
+    if ncol != 16:
         for colname in l_colname:
             log.info(f'   {colname}')
 
@@ -249,6 +249,7 @@ def test_add_smearing(kind : str, is_mc : bool):
     _check_output_columns(rdf_cor)
 
     rdf_smr = rdf_cor.Redefine('Jpsi_M', 'Jpsi_M_smr')
+    rdf_smr = rdf_smr.Redefine(   'B_M',    'B_M_smr')
 
     sample  = 'mc' if is_mc else 'data'
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor, 'Smeared' : rdf_smr}
