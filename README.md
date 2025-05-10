@@ -321,7 +321,7 @@ Currently the command can add:
 
 `swp_jpsi_misid`: Branches corresponding to lepton kaon swaps that make the resonant mode leak into rare modes. Where the swap is inverted and the $J/\psi$ mass provided
 
-`swp_cascade`: Branches corresponding to $D\toK\pi$ with $\pi\to\ell$ swaps, where the swap is inverted and the $D$ mass provided.
+`swp_cascade`: Branches corresponding to $D\to K\pi$ with $\pi\to\ell$ swaps, where the swap is inverted and the $D$ mass provided.
 
 `hop`: With the $\alpha$ and mass branches calculated
 
