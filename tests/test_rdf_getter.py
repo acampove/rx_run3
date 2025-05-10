@@ -2,8 +2,10 @@
 Class testing RDFGetter
 '''
 import os
-import matplotlib.pyplot as plt
+import glob
 
+import matplotlib.pyplot as plt
+import pandas            as pnd
 import pytest
 import mplhep
 import numpy
@@ -64,6 +66,16 @@ def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
     plt.style.use(mplhep.style.LHCb2)
     RDFGetter.max_entries = 1000
+# ------------------------------------------------
+def _check_truem_columns(rdf : RDataFrame):
+    l_name = [ name.c_str() for name in rdf.GetColumnNames() if name.endswith('_TRUEM') ]
+    d_data = rdf.AsNumpy(l_name)
+    df     = pnd.DataFrame(d_data)
+    nnan   = df.isna().sum().sum()
+    ntot   = len(df)
+
+    if nnan > 0:
+        raise ValueError(f'Found {nnan}/{ntot} NaNs in dataframe')
 # ------------------------------------------------
 def _check_block(rdf : RDataFrame) -> None:
     arr_block = rdf.AsNumpy(['block'])['block']
