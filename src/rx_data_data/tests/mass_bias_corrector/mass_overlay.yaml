@@ -1,59 +1,55 @@
 plots:
-    B_M :
-        binning    : [4200, 6000, 60]
-        yscale     : 'linear'
-        labels     : ['M$(B^+)$', 'Entries']
-    Jpsi_M :
-        binning    : [2500, 3400, 60]
-        yscale     : 'linear'
-        labels     : ['M$(J/\psi)$', 'Entries']
-    Jpsi_M_smr :
-        binning    : [2500, 3400, 60]
-        yscale     : 'linear'
-        labels     : ['M${}_{smeared}(J/\psi)$', 'Entries']
-    # ---------------------------
-    L1_PT:
-        binning    : [0, 10000, 60]
-        yscale     : 'linear'
-        labels     : ['L1 PT', 'Entries']
-    L1_PX:
-        binning    : [0, 10000, 60]
-        yscale     : 'linear'
-        labels     : ['L1 PX', 'Entries']
-    L1_PY:
-        binning    : [0, 10000, 60]
-        yscale     : 'linear'
-        labels     : ['L1 PY', 'Entries']
-    L1_PZ:
-        binning    : [0, 100000, 60]
-        yscale     : 'linear'
-        labels     : ['L1 PZ', 'Entries']
-    # ---------------------------
-    L2_PT:
-        binning    : [0, 10000, 60]
-        yscale     : 'linear'
-        labels     : ['L2 PT', 'Entries']
-    L2_PX:
-        binning    : [0, 10000, 60]
-        yscale     : 'linear'
-        labels     : ['L2 PX', 'Entries']
-    L2_PY:
-        binning    : [0, 10000, 60]
-        yscale     : 'linear'
-        labels     : ['L2 PY', 'Entries']
-    L2_PZ:
-        binning    : [0, 100000, 60]
-        yscale     : 'linear'
-        labels     : ['L2 PZ', 'Entries']
-    # ---------------------------
-    L1_HASBREMADDED:
-        binning    : [0, 2, 2]
-        yscale     : 'linear'
-        labels     : ['L1 HASBREMADDED', 'Entries']
-    L2_HASBREMADDED:
-        binning    : [0, 2, 2]
-        yscale     : 'linear'
-        labels     : ['L2 HASBREMADDED', 'Entries']
+  B_M :
+    binning    : [4200, 6000, 60]
+    yscale     : 'linear'
+    labels     : ['M$(B^+)$', 'Entries']
+  Jpsi_M :
+    binning    : [2500, 3400, 60]
+    yscale     : 'linear'
+    labels     : ['M$(J/\psi)$', 'Entries']
+  # ---------------------------
+  L1_PT:
+    binning    : [0, 10000, 60]
+    yscale     : 'linear'
+    labels     : ['L1 PT', 'Entries']
+  L1_PX:
+    binning    : [0, 10000, 60]
+    yscale     : 'linear'
+    labels     : ['L1 PX', 'Entries']
+  L1_PY:
+    binning    : [0, 10000, 60]
+    yscale     : 'linear'
+    labels     : ['L1 PY', 'Entries']
+  L1_PZ:
+    binning    : [0, 100000, 60]
+    yscale     : 'linear'
+    labels     : ['L1 PZ', 'Entries']
+  # ---------------------------
+  L2_PT:
+    binning    : [0, 10000, 60]
+    yscale     : 'linear'
+    labels     : ['L2 PT', 'Entries']
+  L2_PX:
+    binning    : [0, 10000, 60]
+    yscale     : 'linear'
+    labels     : ['L2 PX', 'Entries']
+  L2_PY:
+    binning    : [0, 10000, 60]
+    yscale     : 'linear'
+    labels     : ['L2 PY', 'Entries']
+  L2_PZ:
+    binning    : [0, 100000, 60]
+    yscale     : 'linear'
+    labels     : ['L2 PZ', 'Entries']
+  # ---------------------------
+  L1_HASBREMADDED:
+    binning    : [0, 2, 2]
+    yscale     : 'linear'
+    labels     : ['L1 HASBREMADDED', 'Entries']
+  L2_HASBREMADDED:
+    binning    : [0, 2, 2]
+    yscale     : 'linear'
+    labels     : ['L2 HASBREMADDED', 'Entries']
 style:
   skip_lines : true
 plugin:
