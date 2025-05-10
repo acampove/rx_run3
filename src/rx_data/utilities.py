@@ -122,8 +122,15 @@ def _preprocess_lepton(rdf : RDataFrame, lep : str) -> None:
     return rdf
 # ------------------------------------------
 def _pick_column(name : str) -> bool:
-    to_keep  = ['EVENTNUMBER', 'RUNNUMBER'] # To make friend trees and align entries
-    to_keep += ['nbrem'      , 'block', 'Jpsi_TRUEM', 'B_TRUEM'] # For q2 smearing
+    # To make friend trees and align entries
+    to_keep  = ['EVENTNUMBER', 'RUNNUMBER']
+    # For q2 smearing
+    to_keep += ['nbrem'      , 'block', 'Jpsi_TRUEM', 'B_TRUEM']
+    # To recalculate DIRA
+    to_keep += ['Jpsi_BPVX', 'Jpsi_BPVY', 'Jpsi_BPVZ']
+    to_keep += [   'B_BPVX',    'B_BPVY',    'B_BPVZ']
+    to_keep += ['Jpsi_END_VX', 'Jpsi_END_VY', 'Jpsi_END_VZ']
+    to_keep += [   'B_END_VX',    'B_END_VY',    'B_END_VZ']
 
     if name in to_keep:
         return True
