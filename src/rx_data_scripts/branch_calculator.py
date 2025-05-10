@@ -265,7 +265,9 @@ def _create_file(path : str, trigger : str) -> None:
         return
 
     rdf = RDataFrame(Data.tree_name, path)
-    rdf = RDFGetter.add_truem(rdf)
+    if _is_mc(path=path):
+        rdf = RDFGetter.add_truem(rdf)
+
     if Data.nmax is not None:
         log.warning(f'Limitting dataframe to {Data.nmax} entries')
         rdf=rdf.Range(Data.nmax)
