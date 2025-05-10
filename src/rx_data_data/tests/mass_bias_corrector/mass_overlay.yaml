@@ -17,6 +17,15 @@ plots:
     yscale     : 'log'
     labels     : ['DIRA$(J/\psi)$', 'Entries']
   # ---------------------------
+  Jpsi_PT:
+    binning    : [0, 10000, 60]
+    yscale     : 'linear'
+    labels     : ['$p_T(J/\psi)$', 'Entries']
+  B_PT:
+    binning    : [0, 10000, 60]
+    yscale     : 'linear'
+    labels     : ['$p_T(B^+)$', 'Entries']
+  # ---------------------------
   L1_PT:
     binning    : [0, 10000, 60]
     yscale     : 'linear'
