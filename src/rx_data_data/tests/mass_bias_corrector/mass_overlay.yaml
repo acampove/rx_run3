@@ -18,11 +18,11 @@ plots:
     labels     : ['DIRA$(J/\psi)$', 'Entries']
   # ---------------------------
   Jpsi_PT:
-    binning    : [0, 10000, 60]
+    binning    : [0, 50000, 60]
     yscale     : 'linear'
     labels     : ['$p_T(J/\psi)$', 'Entries']
   B_PT:
-    binning    : [0, 10000, 60]
+    binning    : [0, 50000, 60]
     yscale     : 'linear'
     labels     : ['$p_T(B^+)$', 'Entries']
   # ---------------------------
@@ -64,10 +64,14 @@ plots:
     binning    : [0, 2, 2]
     yscale     : 'linear'
     labels     : ['L1 HASBREMADDED', 'Entries']
+    styling:
+      linestyle : '-'
   L2_HASBREMADDED:
     binning    : [0, 2, 2]
     yscale     : 'linear'
     labels     : ['L2 HASBREMADDED', 'Entries']
+    styling:
+      linestyle : '-'
 style:
   skip_lines : true
 plugin:
