@@ -19,8 +19,7 @@ from ROOT                   import RDataFrame, TFileMerger
 from dmu.logging.log_store  import LogStore
 from dmu.generic            import version_management as vman
 
-
-
+from rx_data.rdf_getter          import RDFGetter
 from rx_data.mis_calculator      import MisCalculator
 from rx_data.hop_calculator      import HOPCalculator
 from rx_data.swp_calculator      import SWPCalculator
@@ -266,6 +265,7 @@ def _create_file(path : str, trigger : str) -> None:
         return
 
     rdf = RDataFrame(Data.tree_name, path)
+    rdf = RDFGetter.add_truem(rdf)
     if Data.nmax is not None:
         log.warning(f'Limitting dataframe to {Data.nmax} entries')
         rdf=rdf.Range(Data.nmax)
