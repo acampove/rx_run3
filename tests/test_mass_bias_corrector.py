@@ -65,8 +65,8 @@ def _compare_masses(d_rdf : dict[str,RDataFrame], test_name : str, correction : 
 
     cfg['saving'] = {'plt_dir' : plt_dir}
 
-    cfg['plots']['B_M'       ]['title'] = correction
-    cfg['plots']['Jpsi_M'    ]['title'] = correction
+    cfg['plots']['B_M'   ]['title'] = correction
+    cfg['plots']['Jpsi_M']['title'] = correction
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
