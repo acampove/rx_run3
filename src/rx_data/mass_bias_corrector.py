@@ -117,7 +117,7 @@ class MassBiasCorrector:
                 }
 
         d_data['Jpsi_M_smr'] = self._smear_mass(row, particle='Jpsi', reco=jmass)
-        #d_data[   'B_M_smr'] = self._smear_mass(row, particle=   'B', reco=bmass)
+        d_data[   'B_M_smr'] = self._smear_mass(row, particle=   'B', reco=bmass)
 
         sr = pnd.Series(d_data)
 
