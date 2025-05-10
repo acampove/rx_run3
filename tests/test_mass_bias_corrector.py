@@ -99,6 +99,7 @@ def _get_rdf(
         nbrem    : int  = None,
         is_inner : bool = None,
         npvs     : int  = None,
+        bdt      : str  = None,
         is_mc    : bool = False) -> RDataFrame:
     RDFGetter.samples = {
         'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
@@ -116,6 +117,9 @@ def _get_rdf(
 
     d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
     d_sel['mass'] = 'B_const_mass_M > 5160'
+    if bdt is not None:
+        d_sel['bdt' ] = bdt 
+
     for cut_name, cut_value in d_sel.items():
         rdf = rdf.Filter(cut_value, cut_name)
 
@@ -242,7 +246,7 @@ def test_add_smearing(kind : str, is_mc : bool):
     '''
     Checks that smearing of q2 was added on top of correction
     '''
-    rdf_org = _get_rdf(is_mc=is_mc)
+    rdf_org = _get_rdf(is_mc=is_mc, bdt='(1)')
     rdf_org = rdf_org.Range(50_000)
     cor     = MassBiasCorrector(rdf=rdf_org, nthreads=10, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
