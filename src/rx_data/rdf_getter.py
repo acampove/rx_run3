@@ -41,6 +41,7 @@ class RDFGetter:
 
         Returns dataframe
         '''
+        log.info('Adding TRUEM branches')
 
         tv_tp   = 'ROOT::Math::XYZVector'
         fv_tp   = 'ROOT::Math::PtEtaPhiM4D<double>'
