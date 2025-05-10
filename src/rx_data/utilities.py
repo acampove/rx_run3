@@ -86,20 +86,20 @@ def df_from_rdf(rdf : RDataFrame) -> pnd.DataFrame:
     d_data = rdf.AsNumpy(l_col)
     df     = pnd.DataFrame(d_data)
 
-    sr_nan = df.isna().any(axis=1)
-    nnan   = sr_nan.sum()
-    if nnan != 0:
-        log.warning(f'Found {nnan} NaNs in Pandas dataframe')
-        df_nan = df[sr_nan]
-        for name in df_nan.columns:
-            sr_val = df_nan[name]
-            if name in ['EVENTNUMBER', 'RUNNUMBER']:
-                log.info(sr_val)
+    ntot     = len(df)
+    has_nans = False
+    log.info(60 * '-')
+    log.info(f'{"Variable":<20}{"NaNs":<20}{"%":<20}')
+    log.info(60 * '-')
+    for name, sr in df.items():
+        nnan = sr.isna().sum()
+        perc = 100 * nnan / ntot
+        if perc > 0:
+            has_nans = True
+            log.info(f'{name:<20}{nnan:<20}{perc:<20.2f}')
+    log.info(60 * '-')
 
-            if not sr_val.isna().any():
-                continue
-            log.info(sr_val)
-
+    if has_nans:
         df = df.dropna()
 
     return df
