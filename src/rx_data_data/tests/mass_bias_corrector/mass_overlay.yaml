@@ -31,15 +31,15 @@ plots:
     yscale     : 'linear'
     labels     : ['L1 PT', 'Entries']
   L1_PX:
-    binning    : [0, 10000, 60]
+    binning    : [-10000, 10000, 60]
     yscale     : 'linear'
     labels     : ['L1 PX', 'Entries']
   L1_PY:
-    binning    : [0, 10000, 60]
+    binning    : [-10000, 10000, 60]
     yscale     : 'linear'
     labels     : ['L1 PY', 'Entries']
   L1_PZ:
-    binning    : [0, 100000, 60]
+    binning    : [-100000, 100000, 60]
     yscale     : 'linear'
     labels     : ['L1 PZ', 'Entries']
   # ---------------------------
@@ -48,15 +48,15 @@ plots:
     yscale     : 'linear'
     labels     : ['L2 PT', 'Entries']
   L2_PX:
-    binning    : [0, 10000, 60]
+    binning    : [-10000, 10000, 60]
     yscale     : 'linear'
     labels     : ['L2 PX', 'Entries']
   L2_PY:
-    binning    : [0, 10000, 60]
+    binning    : [-10000, 10000, 60]
     yscale     : 'linear'
     labels     : ['L2 PY', 'Entries']
   L2_PZ:
-    binning    : [0, 100000, 60]
+    binning    : [-100000, 100000, 60]
     yscale     : 'linear'
     labels     : ['L2 PZ', 'Entries']
   # ---------------------------
