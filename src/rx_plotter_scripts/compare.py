@@ -82,14 +82,23 @@ def _check_entries(rdf : RDataFrame) -> None:
 
     raise ValueError('Found zero entries in dataframe')
 # ---------------------------------
-def _filter_by_brem(rdf : RDataFrame) -> RDataFrame:
+def _update_with_brem(d_sel : dict[str,str]) -> dict[str,str]:
     if Data.brem is None:
-        return rdf
+        log.info('Not filtering by brem')
+        return d_sel
 
-    brem_cut = f'nbrem == {Data.brem}' if Data.brem in [0, 1] else f'nbrem >= {Data.brem}'
-    rdf = rdf.Filter(brem_cut, 'nbrem')
+    d_sel['nbrem'] = f'nbrem == {Data.brem}'
 
-    return rdf
+    return d_sel
+# ---------------------------------
+def _update_with_block(d_sel : dict[str,str]) -> dict[str,str]:
+    if Data.block == -1:
+        log.info('Not filtering by block')
+        return d_sel
+
+    d_sel['block'] = f'block == {Data.block}'
+
+    return d_sel
 # ---------------------------------
 @gut.timeit
 def _get_rdf() -> RDataFrame:
@@ -103,11 +112,12 @@ def _get_rdf() -> RDataFrame:
         d_cut = cfg['selection']
         d_sel.update(d_cut)
 
+    d_sel = _update_with_brem(d_sel)
+    d_sel = _update_with_block(d_sel)
+
     for cut_name, cut_value in d_sel.items():
         log.info(f'{cut_name:<20}{cut_value}')
         rdf = rdf.Filter(cut_value, cut_name)
-
-    rdf = _filter_by_brem(rdf)
 
     return rdf
 # ---------------------------------
