@@ -5,9 +5,9 @@
 This is a set of scripts and config files meant to be used to make plots of several
 kinematic distributions.
 
-## 1D plots 
+## 1D plots
 
-### cutflow 
+### cutflow
 
 The `cutflow` utility will make plots of a dataset under multiple cuts, one after the other.
 Use it with:
@@ -30,7 +30,7 @@ requirements (HOP, Cascade, $J/\psi$ mis ID veto). Below each config description
 One can use the same command with `block_quality`, e.g:
 
 ```bash
-generic -t Hlt2RD_BuToKpMuMu_MVA -s "DATA*" -c block_quality -q jpsi 
+generic -t Hlt2RD_BuToKpMuMu_MVA -s "DATA*" -c block_quality -q jpsi
 ```
 
 which will make plots showing distributions per block. These distributions pass
@@ -70,7 +70,7 @@ options:
                         Log level
 ```
 
-This will provide plots showing 
+This will provide plots showing
 
 - Correlations
 - Mass vs q2
