@@ -185,11 +185,13 @@ def _sample_difference(
 # ---------------------------------
 def _is_muon_sample(l_path : list[str]) -> bool:
     '''
-    Checks if paths belong to muon or electron channel
+    True if ALL paths belong to muon
     '''
-    path = l_path[0]
+    is_muon = True
+    for path in l_path:
+        is_muon = 'MuMu_' in path
 
-    return 'MuMu_' in path
+    return is_muon
 # ---------------------------------
 def _should_exist(frn_name : str, sample : dict[str,list[str]]) -> bool:
     '''
