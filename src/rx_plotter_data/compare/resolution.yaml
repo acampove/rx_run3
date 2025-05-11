@@ -3,7 +3,6 @@ general:
 definitions:
   max_ll_pt   : TMath::Max(L1_TRACK_PT, L2_TRACK_PT)
 selection:
-  bdt   : (1)
   mass  : B_const_mass_M > 5160
 comparison:
   Original:
