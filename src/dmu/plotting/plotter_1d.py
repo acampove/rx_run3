@@ -113,7 +113,14 @@ class Plotter1D(Plotter):
 
         self._title+= f'\n{name}: {this_title}'
     #-------------------------------------
-    def _run_fwhm(self, arr_val : numpy.ndarray, arr_wgt : numpy.ndarray, hst, name : str, cfg : dict) -> None:
+    def _run_fwhm(
+            self,
+            arr_val : numpy.ndarray,
+            arr_wgt : numpy.ndarray,
+            hst     : Hist,
+            name    : str,
+            cfg     : dict) -> None:
+
         arr_bin_cnt = hst.values()
         maxy = numpy.max(arr_bin_cnt)
         obj  = FWHM(cfg=cfg, val=arr_val, wgt=arr_wgt, maxy=maxy)
