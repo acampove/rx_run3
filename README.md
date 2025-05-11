@@ -7,6 +7,42 @@ kinematic distributions.
 
 ## 1D plots
 
+### comparisons between variables
+
+For this use:
+
+```bash
+compare -q jpsi -s Bu_JpsiK_ee_eq_DPC -t Hlt2RD_BuToKpEE_MVA -c resolution -b 2 -B 2
+```
+where the arguments mean:
+
+```
+options:
+  -h, --help            show this help message and exit
+  -q {low,central,jpsi,psi2,high}, --q2bin {low,central,jpsi,psi2,high}
+                        q2 bin
+  -s SAMPLE, --sample SAMPLE
+                        Sample
+  -t {Hlt2RD_BuToKpMuMu_MVA,Hlt2RD_BuToKpEE_MVA}, --trigger {Hlt2RD_BuToKpMuMu_MVA,Hlt2RD_BuToKpEE_MVA}
+                        Trigger
+  -c CONFIG, --config CONFIG
+                        Configuration
+  -x SUBSTR, --substr SUBSTR
+                        Substring that must be contained in path, e.g. magup
+  -b {-1,0,1,2}, --brem {-1,0,1,2}
+                        Brem category
+  -B {-1,1,2,5,6,7,8}, --block {-1,1,2,5,6,7,8}
+                        Block to which data belongs, -1 will put all the data together
+  -r, --nomva           If used, it will remove the MVA requirement
+```
+
+The config files are stored in `rx_plotter_data/compare` and they are:
+
+| Kind          | Description                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------- |
+| resolution    | Used to compare the distribution before and after brem correction and also with L0 emulating requirements           |
+| mass_smearing | Used to compare mass line shapes of $J/\psi$ and $B$ before and after smearing and of the non-brem corrected sample |
+
 ### cutflow
 
 The `cutflow` utility will make plots of a dataset under multiple cuts, one after the other.
