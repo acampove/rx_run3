@@ -88,10 +88,10 @@ class Plotter1D(Plotter):
             self._run_stats(arr_val = arr_val, arr_wgt=arr_wgt, name=name, cfg = cfg)
     #-------------------------------------
     def _run_stats(
-            self, 
-            arr_val : numpy.ndarray, 
-            arr_wgt : numpy.ndarray, 
-            name    : str, 
+            self,
+            arr_val : numpy.ndarray,
+            arr_wgt : numpy.ndarray,
+            name    : str,
             cfg     : dict[str:str]) -> None:
 
         this_title = ''
