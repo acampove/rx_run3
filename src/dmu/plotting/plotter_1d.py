@@ -61,7 +61,7 @@ class Plotter1D(Plotter):
             self,
             arr_val : numpy.ndarray,
             arr_wgt : numpy.ndarray,
-            hst,
+            hst     : Hist,
             name    : str,
             varname : str) -> None:
 
