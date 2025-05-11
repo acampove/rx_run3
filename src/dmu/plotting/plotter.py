@@ -3,6 +3,7 @@ Module containing plotter class
 '''
 
 import os
+import json
 import math
 from typing import Union
 
@@ -233,4 +234,15 @@ class Plotter:
         plt.tight_layout()
         plt.savefig(plot_path)
         plt.close(var)
+    #-------------------------------------
+    def _data_to_json(self,
+                      data : dict,
+                      name : str) -> None:
+
+        plt_dir = self._d_cfg['saving']['plt_dir']
+        os.makedirs(plt_dir, exist_ok=True)
+
+        json_path = f'{plt_dir}/{name}.json'
+        with open(json_path, 'w', encoding='utf-8') as ofile:
+            json.dump(data, ofile, indent=2, sort_keys=True)
 # --------------------------------------------
