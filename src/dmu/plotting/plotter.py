@@ -236,12 +236,17 @@ class Plotter:
         plt.close(var)
     #-------------------------------------
     def _data_to_json(self,
-                      data : dict,
+                      data : dict[str,float],
                       name : str) -> None:
+
+        # In case the values are numpy objects, which are not JSON
+        # serializable
+        data = { key : float(value)  for key, value in data.items() }
 
         plt_dir = self._d_cfg['saving']['plt_dir']
         os.makedirs(plt_dir, exist_ok=True)
 
+        name      = name.replace(' ', '_')
         json_path = f'{plt_dir}/{name}.json'
         with open(json_path, 'w', encoding='utf-8') as ofile:
             json.dump(data, ofile, indent=2, sort_keys=True)
