@@ -115,7 +115,7 @@ def _parse_args() -> None:
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True, choices=[Data.trigger_mm, Data.trigger_ee])
-    parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True, choices=Data.l_kind)
+    parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True)
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category', choices=[0, 1, 2])
     args = parser.parse_args()
