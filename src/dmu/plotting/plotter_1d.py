@@ -95,21 +95,27 @@ class Plotter1D(Plotter):
             cfg     : dict[str:str]) -> None:
 
         this_title = ''
+        data       = {}
         if 'sum' in cfg:
             form = cfg['sum']
             sumv = numpy.sum(arr_wgt)
             this_title += form.format(sumv) + '; '
+            data['sum'] = sumv
 
         if 'mean' in cfg:
             form = cfg['mean']
             mean = numpy.average(arr_val, weights=arr_wgt)
             this_title += form.format(mean) + '; '
+            data['mean'] = mean
 
         if 'rms'  in cfg:
             form = cfg['rms']
             mean = numpy.average(arr_val, weights=arr_wgt)
             rms  = numpy.sqrt(numpy.average((arr_val - mean) ** 2, weights=arr_wgt))
             this_title += form.format(rms ) + '; '
+            data['rms'] = rms
+
+        self._data_to_json(data = data, name = 'stats')
 
         self._title+= f'\n{name}: {this_title}'
     #-------------------------------------
