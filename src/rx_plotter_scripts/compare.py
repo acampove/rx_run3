@@ -39,6 +39,7 @@ class Data:
     config  : str
     substr  : str
     brem    : int
+    block   : int
 
     chanel  : str
     cfg_dir : str
@@ -118,6 +119,7 @@ def _parse_args() -> None:
     parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True)
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category', choices=[0, 1, 2])
+    parser.add_argument('-B', '--block'  , type=int, help='Block to which data belongs, -1 will put all the data together', choices=[-1, 1, 2, 5, 6, 7, 8]) # TODO: We need MC for blocks 0, 4 and 3
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
@@ -126,6 +128,7 @@ def _parse_args() -> None:
     Data.config = args.config
     Data.substr = args.substr
     Data.brem   = args.brem
+    Data.block  = args.block
 # ---------------------------------
 def _get_cfg() -> dict:
     cfg_path= f'{Data.cfg_dir}/{Data.config}.yaml'
