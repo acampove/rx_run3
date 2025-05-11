@@ -184,18 +184,63 @@ def _sample_difference(
     return sorted(l_diff)
 # ---------------------------------
 def _is_muon_sample(l_path : list[str]) -> bool:
+    '''
+    Checks if paths belong to muon or electron channel
+    '''
     path = l_path[0]
 
-    return '_MuMu' in path
+    return 'MuMu_' in path
 # ---------------------------------
-def _compare_against_main(main_sam : dict[str,dict], frnd_sam : dict[str,dict]) -> dict[str]:
+def _should_exist(frn_name : str, sample : dict[str,list[str]]) -> bool:
+    '''
+    Checks if for a friend tree type (e.g. brem_track_2) the sample should exist
+
+    Sample is the dictionary:
+
+    HltTrigger -> list of files
+
+    It will be true if the sample contains AT LEAST one file that should exist
+    '''
+    has_electron = False
+    for trigger in sample:
+        has_electron = 'MuMu_' not in trigger
+
+    if has_electron and frn_name in Data.l_electron_samples:
+        return True
+
+    return False
+# ---------------------------------
+def _compare_against_main(
+        frn_name : str,
+        main_sam : dict[str,dict],
+        frnd_sam : dict[str,dict]) -> Union[dict[list[str]], dict[str]]:
+    '''
+    Compares dictionaries associated to main and friend trees
+
+    Parameters
+    -------------
+    frn_name : Name of the friend tree kind, e.g. mva
+    *_sam: Dictionary mapping:
+
+    sample (e.g. data_24_mag) ->
+        HltTrigger -> list of paths to ROOT files
+
+    Returns
+    -------------
+    Dictionary with missing samples:
+
+    sample (e.g. data_24_mag) -> list of missing files OR 'all' in case all the files are missing
+    '''
     s_main_sample = set(main_sam.keys())
     s_frnd_sample = set(frnd_sam.keys())
     s_diff        = s_main_sample - s_frnd_sample
     l_diff        = list(s_diff)
     l_diff        = sorted(l_diff)
 
-    d_diff = { sample : 'all' for sample in l_diff }
+    # If whole sample is missing, add 'all'
+    d_diff = { sample : 'all' for sample in l_diff if _should_exist(frn_name=frn_name, sample=main_sam[sample])}
+
+    # Else check which files are missing
     s_both = s_main_sample & s_frnd_sample
     for sample in s_both:
         m_sample = main_sam[sample]
