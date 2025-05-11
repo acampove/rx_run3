@@ -60,9 +60,16 @@ def _get_cfg() -> dict:
     cfg['saving']['plt_dir'] = _get_out_dir(plt_dir)
 
     for d_setting in cfg['plots'].values():
-        d_setting['title'] = f'Brem {Data.brem}; {Data.sample}'
+        brem, block        = _get_brem_block()
+        d_setting['title'] = f'Brem {brem}; Block {block}; {Data.sample}'
 
     return cfg
+# ---------------------------------
+def _get_brem_block() -> tuple[str,str]:
+    brem = 'all' if Data.brem == -1 else str(Data.brem)
+    block= 'all' if Data.block== -1 else str(Data.block)
+
+    return brem, block
 # ---------------------------------
 def _apply_definitions(rdf : RDataFrame) -> RDataFrame:
     if 'definitions' not in Data.cfg:
@@ -137,7 +144,7 @@ def _parse_args() -> None:
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True, choices=[Data.trigger_mm, Data.trigger_ee])
     parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True)
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
-    parser.add_argument('-b', '--brem'   , type=int, help='Brem category', choices=[0, 1, 2])
+    parser.add_argument('-b', '--brem'   , type=int, help='Brem category', choices=[-1, 0, 1, 2], required=True)
     # TODO: We need MC for blocks 0, 4 and 3
     parser.add_argument('-B', '--block'  , type=int, help='Block to which data belongs, -1 will put all the data together', choices=[-1, 1, 2, 5, 6, 7, 8], required=True)
     parser.add_argument('-r', '--nomva'  ,           help='If used, it will remove the MVA requirement', action='store_true')
@@ -154,13 +161,10 @@ def _parse_args() -> None:
     Data.nomva  = args.nomva
 # ---------------------------------
 def _get_out_dir(plt_dir : str) -> str:
-    if Data.brem is None:
-        brem_name = 'all'
-    else:
-        brem_name = f'{Data.brem:03}'
+    brem, block = _get_brem_block()
 
     sample  = Data.sample.replace('*', 'p')
-    out_dir = f'{Data.ana_dir}/{plt_dir}/{sample}/{Data.trigger}/{Data.q2_bin}/{brem_name}'
+    out_dir = f'{Data.ana_dir}/{plt_dir}/{sample}/{Data.trigger}/{Data.q2_bin}/{brem}_{block}'
     if Data.nomva:
         out_dir = f'{out_dir}/drop_mva'
     else:
