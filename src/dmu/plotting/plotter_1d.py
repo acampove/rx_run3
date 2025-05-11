@@ -57,12 +57,14 @@ class Plotter1D(Plotter):
 
         return minx, maxx, bins
     #-------------------------------------
-    def _run_plugins(self,
-                     arr_val : numpy.ndarray,
-                     arr_wgt : numpy.ndarray,
-                     hst,
-                     name    : str,
-                     varname : str) -> None:
+    def _run_plugins(
+            self,
+            arr_val : numpy.ndarray,
+            arr_wgt : numpy.ndarray,
+            hst,
+            name    : str,
+            varname : str) -> None:
+
         if 'plugin' not in self._d_cfg:
             log.debug('No plugins found')
             return
@@ -85,7 +87,13 @@ class Plotter1D(Plotter):
             cfg = self._d_cfg['plugin']['stats'][varname]
             self._run_stats(arr_val = arr_val, arr_wgt=arr_wgt, name=name, cfg = cfg)
     #-------------------------------------
-    def _run_stats(self, arr_val : numpy.ndarray, arr_wgt : numpy.ndarray, name : str, cfg : dict[str:str]) -> None:
+    def _run_stats(
+            self, 
+            arr_val : numpy.ndarray, 
+            arr_wgt : numpy.ndarray, 
+            name    : str, 
+            cfg     : dict[str:str]) -> None:
+
         this_title = ''
         if 'sum' in cfg:
             form = cfg['sum']
