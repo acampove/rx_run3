@@ -3,8 +3,6 @@ Script used to plot data and MC overlaid
 '''
 # pylint: disable=no-name-in-module, logging-fstring-interpolation
 import os
-import glob
-import pprint
 import argparse
 from importlib.resources import files
 from dataclasses         import dataclass
