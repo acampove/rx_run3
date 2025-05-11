@@ -1,5 +1,5 @@
 '''
-Script used to plot data and MC overlaid 
+Script used to plot data and MC overlaid
 '''
 # pylint: disable=no-name-in-module, logging-fstring-interpolation
 import os
