@@ -47,17 +47,9 @@ class Data:
     l_col  = []
 # ---------------------------------
 def _initialize() -> None:
-    cfg_dir = files('rx_plotter_data').joinpath('compare')
-
+    cfg_dir      = files('rx_plotter_data').joinpath('compare')
     Data.cfg_dir = cfg_dir
     log.info(f'Picking configuration from: {Data.cfg_dir}')
-
-    l_yaml  = glob.glob(f'{Data.ana_dir}/Data/samples/*.yaml')
-
-    d_sample= { os.path.basename(path).replace('.yaml', '') : path for path in l_yaml }
-    log.info('Using paths:')
-    pprint.pprint(d_sample)
-    RDFGetter.samples = d_sample
 # ---------------------------------
 def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
     if 'definitions' not in cfg:
