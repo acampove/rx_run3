@@ -147,6 +147,17 @@ def _get_cfg() -> dict:
         cfg = yaml.safe_load(ifile)
 
     cfg['saving'] = {'plt_dir' : _get_out_dir() }
+    cfg           = _update_for_block(cfg)
+
+    return cfg
+# ---------------------------------
+def _update_for_block(cfg : dict) -> dict:
+    block = 'all' if Data.block == -1 else f'{Data.block:03}'
+
+    for d_set in cfg['plots'].values():
+        name = d_set['name']
+        d_set['name' ] = f'{name}_{block}'
+        d_set['title'] = f'Block: {block}'
 
     return cfg
 # ---------------------------------
