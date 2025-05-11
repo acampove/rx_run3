@@ -31,9 +31,9 @@ plots:
       label : $B^+$ 
       ls    : --
       c     : black 
-      lw    : 1
+      lw    : 2
   jmass:
-    binning    : [2200, 3500, 40]
+    binning    : [2300, 3700, 40]
     yscale     : linear
     labels     : ['M$(J/\psi)$[MeV]', 'Normalized']
     name       : jmass 
@@ -45,4 +45,4 @@ plots:
       label : $J/\psi$ 
       ls    : --
       c     : black 
-      lw    : 1
+      lw    : 2
