@@ -135,7 +135,7 @@ def _find_paths() -> dict[str,set[str]]:
 
         name = os.path.basename(sample)
 
-        log.info(f'Finding paths for sample: {name}/{version}')
+        log.debug(f'Finding paths for sample: {name}/{version}')
 
         s_fname = _fname_from_sample(path=sample, version=version)
         d_fname[name] = _fname_to_dict(s_fname)
@@ -169,14 +169,19 @@ def _sample_difference(sample_1 : dict[str,list[str]], sample_2 : dict[str,list[
         log.debug('Main')
         l_path_1 = sorted(list(s_path_1))
         for path_1 in l_path_1:
-            log.info(path_1)
+            log.debug(path_1)
 
         log.debug('Friend')
         l_path_2 = sorted(list(s_path_2))
         for path_2 in l_path_2:
-            log.info(path_2)
+            log.debug(path_2)
 
     return sorted(l_diff)
+# ---------------------------------
+def _is_muon_sample(l_path : list[str]) -> bool:
+    path = l_path[0]
+
+    return '_MuMu' in path
 # ---------------------------------
 def _compare_against_main(main_sam : dict[str,dict], frnd_sam : dict[str,dict]) -> dict[str]:
     s_main_sample = set(main_sam.keys())
@@ -219,9 +224,9 @@ def main():
         if friend in Data.skip_sam:
             continue
 
-        log.info(30 * '-')
+        log.debug(30 * '-')
         log.info(f'Comparing WRT: {friend}')
-        log.info(30 * '-')
+        log.debug(30 * '-')
         d_mis[friend] = _compare_against_main(main_sam=main_sam, frnd_sam=data)
 
     with open('missing.yaml', 'w', encoding='utf-8') as ofile:
