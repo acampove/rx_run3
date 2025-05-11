@@ -126,8 +126,8 @@ def _parse_args() -> None:
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True, choices=[Data.trigger_mm, Data.trigger_ee])
     parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True)
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category, if nothing is passed will put all data in the plot', choices=[0, 1, 2])
-    parser.add_argument('-B', '--block'  , type=int, help='Block to which data belongs, -1 will put all the data together', choices=[-1, 1, 2, 5, 6, 7, 8]) # TODO: We need MC for blocks 0, 4 and 3
-
+    # TODO: We need MC for blocks 0, 4 and 3
+    parser.add_argument('-B', '--block'  , type=int, help='Block to which data belongs, -1 will put all the data together', choices=[-1, 1, 2, 5, 6, 7, 8], required=True)
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
