@@ -163,11 +163,6 @@ class Plotter1D(Plotter):
 
         self._title+= f'\n{name}: {this_title}'
     #-------------------------------------
-    def _data_to_json(self,
-                      data : dict,
-                      name : str) -> None:
-        pass
-    #-------------------------------------
     def _plot_var(self, var : str) -> float:
         '''
         Will plot a variable from a dictionary of dataframes
