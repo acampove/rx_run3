@@ -61,6 +61,8 @@ def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
             continue
         rdf = rdf.Define(name, expr)
 
+    del cfg['definitions']
+
     return rdf
 # ---------------------------------
 def _filter_by_brem(rdf : RDataFrame) -> RDataFrame:
@@ -115,7 +117,7 @@ def _parse_args() -> None:
     parser.add_argument('-d', '--data'   , type=str, help='Data sample' , required=True)
     parser.add_argument('-s', '--sim'    , type=str, help='MC sample' , required=True)
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True, choices=[Data.trigger_mm, Data.trigger_ee])
-    parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True, choices=Data.l_kind)
+    parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True)
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category, if nothing is passed will put all data in the plot', choices=[0, 1, 2])
     args = parser.parse_args()
 
@@ -146,7 +148,7 @@ def _get_out_dir() -> str:
     data = Data.data.replace('*', 'p')
     mc   = Data.mc.replace('*', 'p')
 
-    out_dir = f'plots/{Data.config}/{data}_{mc}/{Data.trigger}/{Data.q2_bin}/{brem_name}'
+    out_dir = f'{Data.ana_dir}/plots/{Data.config}/{data}_{mc}/{Data.trigger}/{Data.q2_bin}/{brem_name}'
 
     return out_dir
 # ---------------------------------
@@ -160,7 +162,6 @@ def _get_inp() -> dict[str,RDataFrame]:
 # ---------------------------------
 def _plot(d_rdf : dict[str,RDataFrame]) -> None:
     cfg= _get_cfg()
-    del cfg['definitions']
 
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
