@@ -38,6 +38,7 @@ class Data:
     q2_bin  : str
     cfg_dir : str
     brem    : int
+    block   : int
 
     l_col  = []
 # ---------------------------------
@@ -72,6 +73,16 @@ def _filter_by_brem(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 # ---------------------------------
+def _filter_by_block(rdf : RDataFrame) -> RDataFrame:
+    if Data.block == -1:
+        log.info('Not filtering by block')
+        return rdf
+
+    cut = f'block == {Data.block}'
+    rdf = rdf.Filter('block', cut)
+
+    return rdf
+# ---------------------------------
 @gut.timeit
 def _get_rdf(is_mc : bool) -> RDataFrame:
     sample = Data.data if not is_mc else Data.mc
@@ -91,6 +102,7 @@ def _get_rdf(is_mc : bool) -> RDataFrame:
         rdf = rdf.Filter(cut_value, cut_name)
 
     rdf = _filter_by_brem(rdf)
+    rdf = _filter_by_block(rdf)
 
     return rdf
 # ---------------------------------
@@ -115,6 +127,8 @@ def _parse_args() -> None:
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True, choices=[Data.trigger_mm, Data.trigger_ee])
     parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True)
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category, if nothing is passed will put all data in the plot', choices=[0, 1, 2])
+    parser.add_argument('-B', '--block'  , type=int, help='Block to which data belongs, -1 will put all the data together', choices=[-1, 1, 2, 5, 6, 7, 8]) # TODO: We need MC for blocks 0, 4 and 3
+
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
@@ -123,6 +137,7 @@ def _parse_args() -> None:
     Data.trigger= args.trigger
     Data.config = args.config
     Data.brem   = args.brem
+    Data.block  = args.block
 # ---------------------------------
 def _get_cfg() -> dict:
     cfg_path= f'{Data.cfg_dir}/{Data.config}.yaml'
