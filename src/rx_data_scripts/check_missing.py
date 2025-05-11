@@ -228,7 +228,7 @@ def main():
     d_mis    = {}
     for friend, data in d_sample.items():
         if friend in ['main', 'samples']: # samples stores yaml files
-            continue
+            continue                      # main is what we are comparing against
 
         if friend in Data.skip_sam:
             continue
