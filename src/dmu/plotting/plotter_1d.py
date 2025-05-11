@@ -134,15 +134,24 @@ class Plotter1D(Plotter):
 
         form        = cfg['format']
         this_title  = form.format(fwhm)
+        data        = {}
 
         if 'add_std' in cfg and cfg['add_std']:
             mu         = numpy.average(arr_val            , weights=arr_wgt)
-            avg        = numpy.average((arr_val - mu) ** 2, weights=arr_wgt)
-            std        = numpy.sqrt(avg)
+            var        = numpy.average((arr_val - mu) ** 2, weights=arr_wgt)
+            std        = numpy.sqrt(var)
             form       = form.replace('FWHM', 'STD')
             this_title+= '; ' + form.format(std)
+            data       = {'mu' : mu, 'std' : std}
+
+        self._data_to_json(data = data, name = 'fwhm')
 
         self._title+= f'\n{name}: {this_title}'
+    #-------------------------------------
+    def _data_to_json(self,
+                      data : dict,
+                      name : str) -> None:
+        pass
     #-------------------------------------
     def _plot_var(self, var : str) -> float:
         '''
