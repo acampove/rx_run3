@@ -121,7 +121,7 @@ def _get_rdf() -> RDataFrame:
 
     if Data.nomva:
         log.info('Removing MVA requirement')
-        del d_sel['bdt']
+        d_sel['bdt'] = '(1)'
 
     if 'selection' in Data.cfg:
         d_cut = Data.cfg['selection']
