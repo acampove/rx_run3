@@ -13,7 +13,7 @@ from dataclasses         import dataclass
 import yaml
 import mplhep
 import dmu.generic.utilities as gut
-from ROOT                    import RDataFrame, EnableImplicitMT
+from ROOT                    import RDataFrame
 from dmu.plotting.plotter_1d import Plotter1D
 from dmu.logging.log_store   import LogStore
 from rx_data.rdf_getter      import RDFGetter
@@ -26,12 +26,10 @@ class Data:
     '''
     Class used to share attributes
     '''
-    nthreads   = 13
     trigger_mm = 'Hlt2RD_BuToKpMuMu_MVA'
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
-    data_dir   = os.environ['DATADIR']
-    l_kind     = ['resolution']
+    ana_dir    = os.environ['ANADIR']
 
     mplhep.style.use('LHCb2')
 
@@ -48,15 +46,12 @@ class Data:
     l_col  = []
 # ---------------------------------
 def _initialize() -> None:
-    if Data.nthreads > 1:
-        EnableImplicitMT(Data.nthreads)
-
     cfg_dir = files('rx_plotter_data').joinpath('compare')
 
     Data.cfg_dir = cfg_dir
     log.info(f'Picking configuration from: {Data.cfg_dir}')
 
-    l_yaml  = glob.glob(f'{Data.data_dir}/samples/*.yaml')
+    l_yaml  = glob.glob(f'{Data.ana_dir}/Data/samples/*.yaml')
 
     d_sample= { os.path.basename(path).replace('.yaml', '') : path for path in l_yaml }
     log.info('Using paths:')
