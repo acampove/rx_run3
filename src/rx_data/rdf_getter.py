@@ -300,10 +300,13 @@ class RDFGetter:
         return rdf
     # ---------------------------------------------------
     def _add_mc_columns(self, rdf : RDataFrame) -> RDataFrame:
-        if self._sample.startswith('DATA_'):
+        if self._sample.startswith('DATA'):
             return rdf
 
-        rdf = RDFGetter.add_truem(rdf=rdf)
+        try:
+            rdf = RDFGetter.add_truem(rdf=rdf)
+        except TypeError as exc:
+            raise TypeError(f'Cannot add TRUEM branches to {self._sample}/{self._trigger}') from exc
 
         return rdf
     # ---------------------------------------------------
