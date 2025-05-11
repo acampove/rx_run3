@@ -66,6 +66,8 @@ def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
     for name, expr in d_def.items():
         rdf = rdf.Define(name, expr)
 
+    del cfg['definitions']
+
     return rdf
 # ---------------------------------
 def _check_entries(rdf : RDataFrame) -> None:
@@ -182,8 +184,6 @@ def _get_inp() -> dict[str,RDataFrame]:
 # ---------------------------------
 def _plot(d_rdf : dict[str,RDataFrame]) -> None:
     cfg= _get_cfg()
-    del cfg['definitions']
-
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
 # ---------------------------------
