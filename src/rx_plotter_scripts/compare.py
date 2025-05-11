@@ -1,5 +1,5 @@
 '''
-Script used to compare variables in the same dataframe 
+Script used to compare variables in the same dataframe
 '''
 # pylint: disable=no-name-in-module, logging-fstring-interpolation, line-too-long
 
