@@ -4,8 +4,6 @@ Script used to compare variables in the same dataframe
 # pylint: disable=no-name-in-module, logging-fstring-interpolation, line-too-long
 
 import os
-import glob
-import pprint
 import argparse
 from importlib.resources import files
 from dataclasses         import dataclass
