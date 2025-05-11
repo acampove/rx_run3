@@ -207,6 +207,10 @@ def _compare_against_main(main_sam : dict[str,dict], frnd_sam : dict[str,dict]) 
         if npath == 0:
             continue
 
+        if _is_muon_sample(l_path) and frn_name in Data.l_electron_samples:
+            log.warning(f'Skipping {sample} for {frn_name}')
+            continue
+
         d_diff[sample] = l_path
 
     return d_diff
@@ -232,7 +236,10 @@ def main():
         log.debug(30 * '-')
         log.info(f'Comparing WRT: {friend}')
         log.debug(30 * '-')
-        d_mis[friend] = _compare_against_main(main_sam=main_sam, frnd_sam=data)
+        d_mis[friend] = _compare_against_main(
+                frn_name = friend,
+                main_sam = main_sam,
+                frnd_sam = data)
 
     with open('missing.yaml', 'w', encoding='utf-8') as ofile:
         yaml.dump(d_mis, ofile, Dumper=gut.BlockStyleDumper)
