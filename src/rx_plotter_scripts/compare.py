@@ -42,24 +42,39 @@ class Data:
     block   : int
 
     chanel  : str
-    cfg_dir : str
+    cfg     : dict
 
     l_col  = []
 # ---------------------------------
 def _initialize() -> None:
-    cfg_dir      = files('rx_plotter_data').joinpath('compare')
-    Data.cfg_dir = cfg_dir
-    log.info(f'Picking configuration from: {Data.cfg_dir}')
+    Data.cfg = _get_cfg()
 # ---------------------------------
-def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
-    if 'definitions' not in cfg:
+def _get_cfg() -> dict:
+    cfg_dir = files('rx_plotter_data').joinpath('compare')
+    cfg_path= f'{cfg_dir}/{Data.config}.yaml'
+    cfg_path= str(cfg_path)
+
+    log.info(f'Picking configuration from: {cfg_path}')
+    with open(cfg_path, encoding='utf=8') as ifile:
+        cfg = yaml.safe_load(ifile)
+
+    plt_dir = cfg['saving']['plt_dir']
+    cfg['saving']['plt_dir'] = _get_out_dir(plt_dir)
+
+    for d_setting in cfg['plots'].values():
+        d_setting['title'] = f'Brem {Data.brem}; {Data.sample}'
+
+    return cfg
+# ---------------------------------
+def _apply_definitions(rdf : RDataFrame) -> RDataFrame:
+    if 'definitions' not in Data.cfg:
         return rdf
 
-    d_def = cfg['definitions']
+    d_def = Data.cfg['definitions']
     for name, expr in d_def.items():
         rdf = rdf.Define(name, expr)
 
-    del cfg['definitions']
+    del Data.cfg['definitions']
 
     return rdf
 # ---------------------------------
@@ -94,15 +109,15 @@ def _update_with_block(d_sel : dict[str,str]) -> dict[str,str]:
 # ---------------------------------
 @gut.timeit
 def _get_rdf() -> RDataFrame:
-    cfg = _get_cfg()
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
     rdf = gtr.get_rdf()
-    rdf = _apply_definitions(rdf, cfg)
+    rdf = _apply_definitions(rdf)
     d_sel = sel.selection(trigger=Data.trigger, q2bin=Data.q2_bin, process=Data.sample)
 
-    if 'selection' in cfg:
-        d_cut = cfg['selection']
+    if 'selection' in Data.cfg:
+        d_cut = Data.cfg['selection']
         d_sel.update(d_cut)
+        del Data.cfg['selection']
 
     d_sel = _update_with_brem(d_sel)
     d_sel = _update_with_block(d_sel)
@@ -133,21 +148,6 @@ def _parse_args() -> None:
     Data.brem   = args.brem
     Data.block  = args.block
 # ---------------------------------
-def _get_cfg() -> dict:
-    cfg_path= f'{Data.cfg_dir}/{Data.config}.yaml'
-    cfg_path= str(cfg_path)
-
-    with open(cfg_path, encoding='utf=8') as ifile:
-        cfg = yaml.safe_load(ifile)
-
-    plt_dir = cfg['saving']['plt_dir']
-    cfg['saving']['plt_dir'] = _get_out_dir(plt_dir)
-
-    for d_setting in cfg['plots'].values():
-        d_setting['title'] = f'Brem {Data.brem}; {Data.sample}'
-
-    return cfg
-# ---------------------------------
 def _get_out_dir(plt_dir : str) -> str:
     if Data.brem is None:
         brem_name = 'all'
@@ -176,21 +176,21 @@ def _rdf_from_def(rdf : RDataFrame, d_def : dict) -> RDataFrame:
     return rdf
 # ---------------------------------
 def _get_inp() -> dict[str,RDataFrame]:
-    cfg    = _get_cfg()
     rdf_in = _get_rdf()
 
-    d_cmp = cfg['comparison']
     d_rdf = {}
+    d_cmp = Data.cfg['comparison']
     for kind, d_def in d_cmp.items():
         rdf = _rdf_from_def(rdf_in, d_def)
         _check_entries(rdf)
         d_rdf[kind] = rdf
 
+    del Data.cfg['comparison']
+
     return d_rdf
 # ---------------------------------
 def _plot(d_rdf : dict[str,RDataFrame]) -> None:
-    cfg= _get_cfg()
-    ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
+    ptr=Plotter1D(d_rdf=d_rdf, cfg=Data.cfg)
     ptr.run()
 # ---------------------------------
 def main():
