@@ -1,6 +1,8 @@
 '''
 Module containing plotter class
 '''
+# pylint: disable=too-many-positional-arguments, too-many-arguments
+
 import copy
 import cppyy
 from hist import Hist
@@ -202,7 +204,7 @@ class Plotter1D(Plotter):
 
         return max_y
     # --------------------------------------------
-    def _label_from_name(self, name : str, arr_val : numpy.ndarray) -> str:
+    def _label_from_name(self, name : str) -> str:
         if 'stats' not in self._d_cfg:
             return name
 
