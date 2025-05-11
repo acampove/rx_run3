@@ -78,7 +78,13 @@ class Plotter1D(Plotter):
 
             log.debug(f'FWHM plugin found for variable {varname}')
             cfg = self._d_cfg['plugin']['fwhm'][varname]
-            self._run_fwhm(arr_val = arr_val, arr_wgt=arr_wgt, hst=hst, name=name, cfg = cfg)
+            self._run_fwhm(
+                    arr_val = arr_val,
+                    arr_wgt = arr_wgt,
+                    hst     = hst,
+                    name    = name,
+                    varname = varname,
+                    cfg     = cfg)
 
         if 'stats' in self._d_cfg['plugin']:
             if varname not in self._d_cfg['plugin']['stats']:
@@ -87,12 +93,18 @@ class Plotter1D(Plotter):
 
             log.debug(f'stats plugin found for variable {varname}')
             cfg = self._d_cfg['plugin']['stats'][varname]
-            self._run_stats(arr_val = arr_val, arr_wgt=arr_wgt, name=name, cfg = cfg)
+            self._run_stats(
+                    arr_val = arr_val,
+                    arr_wgt = arr_wgt,
+                    name    = name,
+                    varname = varname,
+                    cfg     = cfg)
     #-------------------------------------
     def _run_stats(
             self,
             arr_val : numpy.ndarray,
             arr_wgt : numpy.ndarray,
+            varname : str,
             name    : str,
             cfg     : dict[str:str]) -> None:
 
@@ -117,7 +129,7 @@ class Plotter1D(Plotter):
             this_title += form.format(rms ) + '; '
             data['rms'] = rms
 
-        self._data_to_json(data = data, name = 'stats')
+        self._data_to_json(data = data, name = f'stats_{varname}_{name}')
 
         self._title+= f'\n{name}: {this_title}'
     #-------------------------------------
@@ -126,6 +138,7 @@ class Plotter1D(Plotter):
             arr_val : numpy.ndarray,
             arr_wgt : numpy.ndarray,
             hst     : Hist,
+            varname : str,
             name    : str,
             cfg     : dict) -> None:
 
@@ -146,7 +159,7 @@ class Plotter1D(Plotter):
             this_title+= '; ' + form.format(std)
             data       = {'mu' : mu, 'std' : std}
 
-        self._data_to_json(data = data, name = 'fwhm')
+        self._data_to_json(data = data, name = f'fwhm_{varname}_{name}')
 
         self._title+= f'\n{name}: {this_title}'
     #-------------------------------------
