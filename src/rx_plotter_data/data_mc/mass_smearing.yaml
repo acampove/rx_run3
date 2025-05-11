@@ -1,0 +1,24 @@
+# This config makes plots needed to plot the fraction of energy in brem out of the track energy
+
+general:
+  size : [15, 10]
+plots:
+  Jpsi_M_smr_brem_track_2:
+    binning    : [2300, 3700, 40]
+    yscale     : linear
+    labels     : ['M$(J/\psi)$[MeV]', 'Normalized']
+    name       : jmass 
+    normalized : true
+    styling:
+      linestyle : '-'
+    vline   :
+      x     : 3097
+      label : $J/\psi$ 
+      ls    : --
+      c     : black 
+      lw    : 2
+plugin:
+  stats:
+    Jpsi_M_smr_brem_track_2:
+      mean : $\mu$={:.3f}
+      rms  : $\sigma$={:.3f}
