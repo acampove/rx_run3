@@ -181,7 +181,7 @@ class Plotter1D(Plotter):
 
         l_bc_all = []
         for name, arr_val in d_data.items():
-            label        = self._label_from_name(name, arr_val)
+            label        = self._label_from_name(name)
             arr_wgt      = d_wgt[name] if d_wgt is not None else numpy.ones_like(arr_val)
             arr_wgt      = self._normalize_weights(arr_wgt, var)
             hst          = Hist.new.Reg(bins=bins, start=minx, stop=maxx, name='x').Weight()
