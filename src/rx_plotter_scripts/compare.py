@@ -149,7 +149,7 @@ def _get_out_dir(plt_dir : str) -> str:
         brem_name = f'{Data.brem:03}'
 
     sample  = Data.sample.replace('*', 'p')
-    out_dir = f'{plt_dir}/{sample}/{Data.trigger}/{Data.q2_bin}/{brem_name}'
+    out_dir = f'{Data.ana_dir}/{plt_dir}/{sample}/{Data.trigger}/{Data.q2_bin}/{brem_name}'
     if Data.substr is not None:
         out_dir = f'{out_dir}/{Data.substr}'
 
