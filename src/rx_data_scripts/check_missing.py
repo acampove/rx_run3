@@ -161,7 +161,10 @@ def _get_sample_files(sample : dict[str,list[str]]) -> set[str]:
 
     return set(l_path)
 # ---------------------------------
-def _sample_difference(sample_1 : dict[str,list[str]], sample_2 : dict[str,list[str]]) -> list[str]:
+def _sample_difference(
+        sample_1 : dict[str,list[str]],
+        sample_2 : dict[str,list[str]]) -> list[str]:
+
     s_path_1 = _get_sample_files(sample_1)
     s_path_2 = _get_sample_files(sample_2)
     s_diff   = s_path_1 - s_path_2
