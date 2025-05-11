@@ -38,7 +38,7 @@ class Data:
     substr  : str
     brem    : int
     block   : int
-
+    nomva   : bool
     chanel  : str
     cfg     : dict
 
@@ -112,6 +112,10 @@ def _get_rdf() -> RDataFrame:
     rdf = _apply_definitions(rdf)
     d_sel = sel.selection(trigger=Data.trigger, q2bin=Data.q2_bin, process=Data.sample)
 
+    if Data.nomva:
+        log.info('Removing MVA requirement')
+        del d_sel['bdt']
+
     if 'selection' in Data.cfg:
         d_cut = Data.cfg['selection']
         d_sel.update(d_cut)
@@ -136,6 +140,8 @@ def _parse_args() -> None:
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category', choices=[0, 1, 2])
     # TODO: We need MC for blocks 0, 4 and 3
     parser.add_argument('-B', '--block'  , type=int, help='Block to which data belongs, -1 will put all the data together', choices=[-1, 1, 2, 5, 6, 7, 8], required=True)
+    parser.add_argument('-r', '--nomva'  ,           help='If used, it will remove the MVA requirement', action='store_true')
+
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
@@ -145,6 +151,7 @@ def _parse_args() -> None:
     Data.substr = args.substr
     Data.brem   = args.brem
     Data.block  = args.block
+    Data.nomva  = args.nomva
 # ---------------------------------
 def _get_out_dir(plt_dir : str) -> str:
     if Data.brem is None:
