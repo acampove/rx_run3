@@ -38,3 +38,6 @@ plugin:
     Jpsi_M_smr_brem_track_2:
       mean : $\mu$={:.3f}
       rms  : $\sigma$={:.3f}
+    Jpsi_M_brem_track_2:
+      mean : $\mu$={:.3f}
+      rms  : $\sigma$={:.3f}
