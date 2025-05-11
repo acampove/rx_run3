@@ -64,24 +64,23 @@ def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
 
     return rdf
 # ---------------------------------
-def _filter_by_brem(rdf : RDataFrame) -> RDataFrame:
+def _update_with_brem(d_sel : dict[str,str]) -> dict[str,str]:
     if Data.brem is None:
-        return rdf
+        log.info('Not filtering by brem')
+        return d_sel
 
-    brem_cut = f'nbrem == {Data.brem}' if Data.brem in [0, 1] else f'nbrem >= {Data.brem}'
-    rdf = rdf.Filter(brem_cut, 'nbrem')
+    d_sel['nbrem'] = f'nbrem == {Data.brem}'
 
-    return rdf
+    return d_sel
 # ---------------------------------
-def _filter_by_block(rdf : RDataFrame) -> RDataFrame:
+def _update_with_block(d_sel : dict[str,str]) -> dict[str,str]:
     if Data.block == -1:
         log.info('Not filtering by block')
-        return rdf
+        return d_sel
 
-    cut = f'block == {Data.block}'
-    rdf = rdf.Filter('block', cut)
+    d_sel['block'] = f'block == {Data.block}'
 
-    return rdf
+    return d_sel
 # ---------------------------------
 @gut.timeit
 def _get_rdf(is_mc : bool) -> RDataFrame:
@@ -97,12 +96,12 @@ def _get_rdf(is_mc : bool) -> RDataFrame:
         d_cut = cfg['selection']
         d_sel.update(d_cut)
 
+    d_sel = _update_with_brem(d_sel)
+    d_sel = _update_with_block(d_sel)
+
     for cut_name, cut_value in d_sel.items():
         log.info(f'{cut_name:<20}{cut_value}')
         rdf = rdf.Filter(cut_value, cut_name)
-
-    rdf = _filter_by_brem(rdf)
-    rdf = _filter_by_block(rdf)
 
     return rdf
 # ---------------------------------
