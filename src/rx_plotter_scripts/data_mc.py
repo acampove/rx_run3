@@ -82,9 +82,7 @@ def _get_rdf(is_mc : bool) -> RDataFrame:
     gtr = RDFGetter(sample=sample, trigger=Data.trigger)
     rdf = gtr.get_rdf()
     rdf = _apply_definitions(rdf, cfg)
-
-    analysis = 'EE' if Data.trigger == Data.trigger_ee else 'MM'
-    d_sel = sel.selection(project='RK', analysis=analysis, q2bin=Data.q2_bin, process=sample)
+    d_sel = sel.selection(trigger=Data.trigger, q2bin=Data.q2_bin, process=sample)
 
     if 'selection' in cfg:
         d_cut = cfg['selection']
