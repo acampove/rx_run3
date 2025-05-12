@@ -37,9 +37,6 @@ class Data:
     log_level   : int
     plot_only   : bool
     load_trained: bool
-
-    d_project = {'Hlt2RD_BuToKpEE_MVA' : 'RK', 'Hlt2RD_BuToKpMuMu_MVA' : 'RK'}
-    d_analysis= {'Hlt2RD_BuToKpEE_MVA' : 'EE', 'Hlt2RD_BuToKpMuMu_MVA' : 'MM'}
 #---------------------------------
 def _override_path(path : str) -> str:
     if 'VERSION' not in path:
@@ -181,10 +178,8 @@ def _apply_selection(rdf, kind):
     log.info('Applying selection')
     sample  = Data.cfg_dict['dataset']['samples'][kind]['sample']
     trigger = Data.cfg_dict['dataset']['samples'][kind]['trigger']
-    project = Data.d_project[trigger]
-    analysis= Data.d_analysis[trigger]
 
-    d_sel = sel.selection(project=project, analysis=analysis, q2bin=Data.q2bin, process=sample)
+    d_sel = sel.selection(trigger=trigger, q2bin=Data.q2bin, process=sample)
     d_cut = Data.cfg_dict['dataset']['selection'][kind]
     d_sel.update(d_cut)
 
