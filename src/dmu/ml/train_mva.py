@@ -489,7 +489,7 @@ class TrainMva:
         '''
         out_dir         = self._cfg['saving']['output']
         d_cfg           = self._cfg['plotting']['features']
-        d_cfg['saving'] = {'plt_dir' : out_dir}
+        d_cfg['saving'] = {'plt_dir' : f'{out_dir}/features'}
 
         ptr   = Plotter(d_rdf = {'Signal' : self._rdf_sig, 'Background' : self._rdf_bkg}, cfg=d_cfg)
         ptr.run()
