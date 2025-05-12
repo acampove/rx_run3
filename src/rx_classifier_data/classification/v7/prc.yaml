@@ -61,7 +61,7 @@ dataset :
       sample : DATA* 
       trigger: Hlt2RD_BuToKpMuMu_MVA
   define :
-    mass        : brem_track_2. B_M_brem_track_2
+    mass        : brem_track_2.B_M_brem_track_2
     log_b_pt    : TMath::Log(brem_track_2.B_PT_brem_track_2)
     sqrt_ipchi2 : TMath::Sqrt(B_IPCHI2_OWNPV) 
     acos_dira   : TMath::ACos(brem_track_2.B_DIRA_OWNPV_brem_track_2)
