@@ -28,6 +28,7 @@ class Data:
     Class meant to hold data to be shared
     '''
     root_regex  = r'\d{3}_\d{3}.root'
+    ana_dir     = os.environ['ANADIR']
     cfg_dict    : dict
     cfg_name    : str
     version     : str
@@ -40,17 +41,22 @@ class Data:
     d_project = {'Hlt2RD_BuToKpEE_MVA' : 'RK', 'Hlt2RD_BuToKpMuMu_MVA' : 'RK'}
     d_analysis= {'Hlt2RD_BuToKpEE_MVA' : 'EE', 'Hlt2RD_BuToKpMuMu_MVA' : 'MM'}
 #---------------------------------
-def _override_version(path : str) -> str:
+def _override_path(path : str) -> str:
     if 'VERSION' not in path:
         raise ValueError(f'VERSION expected in: {path}')
 
     replacement = f'{Data.version}/{Data.q2bin}'
 
-    return path.replace('VERSION', replacement)
+    path = path.replace('VERSION', replacement)
+    path = f'{Data.ana_dir}/{path}/model.pkl'
+
+    log.info(f'Using output path: {path}')
+
+    return path
 #---------------------------------
 def _reformat_config(cfg : dict) -> dict:
     path = cfg['saving']['path']
-    cfg['saving']['path']      = _override_version(path)
+    cfg['saving']['path']      = _override_path(path)
 
     path = cfg['plotting']['val_dir']
     cfg['plotting']['val_dir'] = _override_version(path)
