@@ -153,6 +153,15 @@ def _get_rdf(kind=None):
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
 
+    if 'definitions' in Data.cfg_dict['dataset']['samples'][kind]:
+        log.info(f'Found definitions for {kind}')
+        d_def = Data.cfg_dict['dataset']['samples'][kind]['definitions']
+        for name, expr in d_def.items():
+            log.debug(f'{name:<20}{"-->":<10}{expr:<20}')
+            rdf = rdf.Define(name, expr)
+
+        del Data.cfg_dict['dataset']['samples'][kind]['definitions']
+
     rdf = _apply_selection(rdf, kind)
 
     if Data.max_entries > 0:
