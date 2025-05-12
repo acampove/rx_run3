@@ -107,7 +107,7 @@ plotting:
     mask_value : 0
   features:
     plots:
-      B_PT :
+      brem_track_2.B_PT_brem_track_2 :
         normalized : true
         binning : [0, 30000, 100]
         yscale  : 'log'
@@ -135,7 +135,7 @@ plotting:
         labels  : ['$\chi^2/dof(B^+)$', '']
         styling :          
             linestyle: '-'
-      B_DIRA_OWNPV:
+      brem_track_2.B_DIRA_OWNPV_brem_track_2:
         normalized : true
         binning : [0.9995, 1, 100]
         yscale  : 'log'
@@ -143,7 +143,7 @@ plotting:
         styling :          
             linestyle: '-'
       #
-      Jpsi_PT :
+      brem_track_2.Jpsi_PT_brem_track_2 :
         normalized : true
         binning : [0, 30000, 100]
         yscale  : 'log'
@@ -164,7 +164,7 @@ plotting:
         labels  : ['$\chi^2/dof(J/\psi)$', '']
         styling :          
             linestyle: '-'
-      Jpsi_DIRA_OWNPV:
+      brem_track_2.Jpsi_DIRA_OWNPV_brem_track_2 :
         normalized : true
         binning : [0.99,  1, 100]
         yscale  : 'log'
