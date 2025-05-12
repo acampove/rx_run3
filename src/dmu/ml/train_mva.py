@@ -174,6 +174,9 @@ class TrainMva:
 
         l_model=[]
         ifold=0
+
+        l_arr_lab_ts = []
+        l_arr_all_ts = []
         for arr_itr, arr_its in kfold.split(self._df_ft, self._l_lab):
             log.debug(20 * '-')
             log.info(f'Training fold: {ifold}')
@@ -193,6 +196,15 @@ class TrainMva:
             self._save_roc_plot(ifold=ifold)
 
             ifold+=1
+
+            l_arr_lab_ts.append(arr_lab_ts)
+            l_arr_all_ts.append(arr_all_ts)
+
+        arr_lab_ts = numpy.concatenate(l_arr_lab_ts)
+        arr_all_ts = numpy.concatenate(l_arr_all_ts)
+
+        self._plot_roc(arr_lab_ts, arr_all_ts, kind='Test', ifold=-1)
+        self._save_roc_plot(ifold=-1)
 
         return l_model
     # ---------------------------------------------
@@ -217,6 +229,7 @@ class TrainMva:
         self._plot_probabilities(xval, yval, l_prb, l_lab)
     # ---------------------------------------------
     def _save_roc_plot(self, ifold : int) -> None:
+        ifold    = 'all' if ifold == -1 else ifold # -1 represets all the testing datasets combined
         val_dir  = self._cfg['plotting']['val_dir']
         val_dir  = f'{val_dir}/fold_{ifold:03}'
         os.makedirs(val_dir, exist_ok=True)
