@@ -177,6 +177,8 @@ class TrainMva:
 
         l_arr_lab_ts = []
         l_arr_all_ts = []
+        l_arr_sig_ts = []
+        l_arr_bkg_ts = []
         for arr_itr, arr_its in kfold.split(self._df_ft, self._l_lab):
             log.debug(20 * '-')
             log.info(f'Training fold: {ifold}')
@@ -199,11 +201,16 @@ class TrainMva:
 
             l_arr_lab_ts.append(arr_lab_ts)
             l_arr_all_ts.append(arr_all_ts)
+            l_arr_sig_ts.append(arr_sig_ts)
+            l_arr_bkg_ts.append(arr_bkg_ts)
 
         arr_lab_ts = numpy.concatenate(l_arr_lab_ts)
         arr_all_ts = numpy.concatenate(l_arr_all_ts)
+        arr_sig_ts = numpy.concatenate(l_arr_sig_ts)
+        arr_bkg_ts = numpy.concatenate(l_arr_bkg_ts)
 
         self._plot_roc(arr_lab_ts, arr_all_ts, kind='Test', ifold=-1)
+        self._plot_scores(ifold=-1, sig_tst=arr_sig_ts, bkg_tst=arr_bkg_ts)
         self._save_roc_plot(ifold=-1)
 
         return l_model
