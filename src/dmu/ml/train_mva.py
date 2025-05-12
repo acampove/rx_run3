@@ -426,8 +426,13 @@ class TrainMva:
 
         return f'{size:.2f}K'
     # ---------------------------------------------
-    def _plot_scores(self, arr_sig_trn, arr_sig_tst, arr_bkg_trn, arr_bkg_tst, ifold):
-        # pylint: disable = too-many-arguments, too-many-positional-arguments
+    def _plot_scores(
+            self,
+            ifold   : int,
+            sig_tst : NPA,
+            bkg_tst : NPA,
+            sig_trn : NPA = None,
+            bkg_trn : NPA = None) -> None:
         '''
         Will plot an array of scores, associated to a given fold
         '''
