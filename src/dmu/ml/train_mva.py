@@ -226,7 +226,8 @@ class TrainMva:
         color='red' if kind == 'Train' else 'blue'
 
         plt.plot(xval, yval, color=color, label=f'{kind}: {area:.3f}')
-        self._plot_probabilities(xval, yval, l_prb, l_lab)
+        if kind == 'Train':
+            self._plot_probabilities(xval, yval, l_prb, l_lab)
     # ---------------------------------------------
     def _save_roc_plot(self, ifold : int) -> None:
         ifold    = 'all' if ifold == -1 else ifold # -1 represets all the testing datasets combined
