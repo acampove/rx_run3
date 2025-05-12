@@ -110,10 +110,7 @@ plotting:
   correlation:
     size       : [20, 15]
     mask_value : 0
-  val_dir : 'output/mva_rare_2024_cmb/VERSION/plots'
   features:
-    saving:
-      plt_dir : 'output/mva_rare_2024_cmb/VERSION/plots/features'
     plots:
       B_PT :
         normalized : true
