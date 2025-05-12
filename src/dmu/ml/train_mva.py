@@ -226,7 +226,11 @@ class TrainMva:
         color='red' if kind == 'Train' else 'blue'
 
         plt.plot(xval, yval, color=color, label=f'{kind}: {area:.3f}')
-        if kind == 'Train':
+        # When plotting for fold, this will plot only the signal probability on
+        # the training sample
+        # When plotting for the whole sample (ifold==-1), this will plot it on the testing
+        # sample, which is the only one
+        if kind == 'Train' or ifold == -1:
             self._plot_probabilities(xval, yval, l_prb, l_lab)
     # ---------------------------------------------
     def _save_roc_plot(self, ifold : int) -> None:
