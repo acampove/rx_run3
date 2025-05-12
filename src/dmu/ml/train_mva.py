@@ -462,11 +462,12 @@ class TrainMva:
         plt.savefig(f'{val_dir}/scores.png')
         plt.close()
     # ---------------------------------------------
-    def _plot_probabilities(self,
-                            arr_seff: NPA,
-                            arr_brej: NPA,
-                            arr_sprb: NPA,
-                            arr_labl: NPA) -> None:
+    def _plot_probabilities(
+            self,
+            arr_seff: NPA,
+            arr_brej: NPA,
+            arr_sprb: NPA,
+            arr_labl: NPA) -> None:
 
         roc_cfg = self._cfg['plotting']['roc']
         if 'annotate' not in roc_cfg:
