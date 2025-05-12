@@ -18,13 +18,17 @@ def _initialize():
     LogStore.set_level('dmu:ml:train_mva', 10)
     plt.style.use(mplhep.style.LHCb2)
 # -------------------------------
-def test_simple():
+@pytest.mark.parametrize('nfold', [3, 10])
+def test_simple(nfold : int):
     '''
     Test a simple training
     '''
     rdf_sig = ut.get_rdf(kind='sig')
     rdf_bkg = ut.get_rdf(kind='bkg')
     cfg     = ut.get_config('ml/tests/train_mva.yaml')
+    cfg['training']['nfold'] = nfold
+    path    = cfg['saving']['path']
+    cfg['saving']['path'] = path.replace('train_mva', f'train_mva_{nfold:03}')
 
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run()
