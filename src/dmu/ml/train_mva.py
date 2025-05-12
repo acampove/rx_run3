@@ -216,8 +216,8 @@ class TrainMva:
         arr_bkg_ts = numpy.concatenate(l_arr_bkg_ts)
 
         self._plot_roc(arr_lab_ts, arr_all_ts, kind='Test', ifold=-1)
-        self._plot_scores(ifold=-1, sig_tst=arr_sig_ts, bkg_tst=arr_bkg_ts)
         self._save_roc_plot(ifold=-1)
+        self._plot_scores(ifold=-1, sig_tst=arr_sig_ts, bkg_tst=arr_bkg_ts)
 
         return l_model
     # ---------------------------------------------
