@@ -448,11 +448,12 @@ class TrainMva:
         val_dir  = f'{val_dir}/fold_{ifold:03}'
         os.makedirs(val_dir, exist_ok=True)
 
-        plt.hist(arr_sig_trn, alpha   =   0.3, bins=50, range=(0,1), color='b', density=True, label='Signal Train: '    + self._get_nentries(arr_sig_trn))
-        plt.hist(arr_sig_tst, histtype='step', bins=50, range=(0,1), color='b', density=True, label='Signal Test: '     + self._get_nentries(arr_sig_tst))
+        plt.hist(sig_tst, histtype='step', bins=50, range=(0,1), color='b', density=True, label='Signal Test: '     + self._get_nentries(sig_tst))
+        plt.hist(bkg_tst, histtype='step', bins=50, range=(0,1), color='r', density=True, label='Background Test: ' + self._get_nentries(bkg_tst))
 
-        plt.hist(arr_bkg_trn, alpha   =   0.3, bins=50, range=(0,1), color='r', density=True, label='Background Train: '+ self._get_nentries(arr_bkg_trn))
-        plt.hist(arr_bkg_tst, histtype='step', bins=50, range=(0,1), color='r', density=True, label='Background Test: ' + self._get_nentries(arr_bkg_tst))
+        if sig_trn is not None and bkg_trn is not None:
+            plt.hist(sig_trn, alpha = 0.3, bins=50, range=(0,1), color='b', density=True, label='Signal Train: '    + self._get_nentries(sig_trn))
+            plt.hist(bkg_trn, alpha = 0.3, bins=50, range=(0,1), color='r', density=True, label='Background Train: '+ self._get_nentries(bkg_trn))
 
         plt.legend()
         plt.title(f'Fold: {ifold}')
