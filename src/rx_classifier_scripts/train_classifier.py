@@ -45,7 +45,7 @@ def _override_path(path : str) -> str:
     replacement = f'{Data.version}/{Data.q2bin}'
 
     path = path.replace('VERSION', replacement)
-    path = f'{Data.ana_dir}/{path}/model.pkl'
+    path = f'{Data.ana_dir}/{path}'
 
     log.info(f'Using output path: {path}')
 
