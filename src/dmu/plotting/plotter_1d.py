@@ -157,7 +157,7 @@ class Plotter1D(Plotter):
             std        = numpy.sqrt(var)
             form       = form.replace('FWHM', 'STD')
             this_title+= '; ' + form.format(std)
-            data       = {'mu' : mu, 'std' : std}
+            data       = {'mu' : mu, 'std' : std, 'fwhm' : fwhm}
 
         self._data_to_json(data = data, name = f'fwhm_{varname}_{name}')
 
