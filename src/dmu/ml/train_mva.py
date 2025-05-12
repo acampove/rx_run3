@@ -187,11 +187,59 @@ class TrainMva:
             self._save_feature_importance(model, ifold)
             self._plot_correlation(arr_itr, ifold)
             self._plot_scores(arr_sig_sig_tr, arr_sig_sig_ts, arr_sig_bkg_tr, arr_sig_bkg_ts, ifold)
-            self._plot_roc(arr_lab_ts, arr_sig_all_ts, arr_lab_tr, arr_sig_all_tr, ifold)
+
+            self._plot_roc(arr_lab_ts, arr_sig_all_ts, kind='Test' , ifold=ifold)
+            self._plot_roc(arr_lab_tr, arr_sig_all_tr, kind='Train', ifold=ifold)
+            self._save_roc_plot(ifold=ifold)
 
             ifold+=1
 
         return l_model
+    # ---------------------------------------------
+    def _plot_roc(self,
+                  l_lab : NPA,
+                  l_prb : NPA,
+                  kind  : str,
+                  ifold : int):
+        '''
+        Takes the labels and the probabilities and plots ROC
+        curve for given fold
+        '''
+        log.debug(f'Plotting ROC curve for {ifold} fold')
+
+        xval, yval, _ = roc_curve(l_lab, l_prb)
+        xval          = 1 - xval
+        area          = auc(xval, yval)
+
+        color='red' if kind == 'Train' else 'blue'
+
+        plt.plot(xval, yval, color=color, label=f'{kind}: {area:.3f}')
+        self._plot_probabilities(xval, yval, l_prb, l_lab)
+    # ---------------------------------------------
+    def _save_roc_plot(self, ifold : int) -> None:
+        val_dir  = self._cfg['plotting']['val_dir']
+        val_dir  = f'{val_dir}/fold_{ifold:03}'
+        os.makedirs(val_dir, exist_ok=True)
+
+        min_x = 0
+        min_y = 0
+        if 'min' in self._cfg['plotting']['roc']:
+            [min_x, min_y] = self._cfg['plotting']['roc']['min']
+
+        max_x = 1
+        max_y = 1
+        if 'max' in self._cfg['plotting']['roc']:
+            [max_x, max_y] = self._cfg['plotting']['roc']['max']
+
+        plt.xlabel('Signal efficiency')
+        plt.ylabel('Background rejection')
+        plt.title(f'Fold: {ifold}')
+        plt.xlim(min_x, max_x)
+        plt.ylim(min_y, max_y)
+        plt.grid()
+        plt.legend()
+        plt.savefig(f'{val_dir}/roc.png')
+        plt.close()
     # ---------------------------------------------
     def _load_trained_models(self) -> list[cls]:
         model_path = self._cfg['saving']['path']
@@ -376,54 +424,6 @@ class TrainMva:
         plt.xlabel('Signal probability')
         plt.ylabel('Normalized')
         plt.savefig(f'{val_dir}/scores.png')
-        plt.close()
-    # ---------------------------------------------
-    def _plot_roc(self,
-                  l_lab_ts : NPA,
-                  l_prb_ts : NPA,
-                  l_lab_tr : NPA,
-                  l_prb_tr : NPA,
-                  ifold    : int):
-        '''
-        Takes the labels and the probabilities and plots ROC
-        curve for given fold
-        '''
-        log.debug(f'Plotting ROC curve for {ifold} fold')
-
-        val_dir  = self._cfg['plotting']['val_dir']
-        val_dir  = f'{val_dir}/fold_{ifold:03}'
-        os.makedirs(val_dir, exist_ok=True)
-
-        xval_ts, yval_ts, _ = roc_curve(l_lab_ts, l_prb_ts)
-        xval_ts             = 1 - xval_ts
-        area_ts             = auc(xval_ts, yval_ts)
-
-        xval_tr, yval_tr, _ = roc_curve(l_lab_tr, l_prb_tr)
-        xval_tr             = 1 - xval_tr
-        area_tr             = auc(xval_tr, yval_tr)
-
-        min_x = 0
-        min_y = 0
-        if 'min' in self._cfg['plotting']['roc']:
-            [min_x, min_y] = self._cfg['plotting']['roc']['min']
-
-        max_x = 1
-        max_y = 1
-        if 'max' in self._cfg['plotting']['roc']:
-            [max_x, max_y] = self._cfg['plotting']['roc']['max']
-
-        plt.plot(xval_ts, yval_ts, color='b', label=f'Test: {area_ts:.3f}')
-        plt.plot(xval_tr, yval_tr, color='r', label=f'Train: {area_tr:.3f}')
-        self._plot_probabilities(xval_ts, yval_ts, l_prb_ts, l_lab_ts)
-
-        plt.xlabel('Signal efficiency')
-        plt.ylabel('Background rejection')
-        plt.title(f'Fold: {ifold}')
-        plt.xlim(min_x, max_x)
-        plt.ylim(min_y, max_y)
-        plt.grid()
-        plt.legend()
-        plt.savefig(f'{val_dir}/roc.png')
         plt.close()
     # ---------------------------------------------
     def _plot_probabilities(self,
