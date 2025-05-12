@@ -5,8 +5,10 @@ in electrons
 import os
 import re
 import glob
+import mplhep
 import pandas                as pnd
 import dmu.generic.utilities as gut
+import matplotlib.pyplot     as plt
 
 from dmu.logging.log_store import LogStore
 
@@ -18,7 +20,8 @@ class Data:
     '''
     ana_dir = os.environ['ANADIR']
     kind    = 'brem_track_2'
-    sample  = 'DATAp'
+    #sample  = 'DATAp'
+    sample  = 'Bu_JpsiK_ee_eq_DPC'
     trigger = 'Hlt2RD_BuToKpEE_MVA'
 
     regex   = f'{ana_dir}\/\w+\/\w+\/\w+\/\w+\/\w+\/\w+\/(\d)_(\d)\/(\w+)\/([\w,\(,\)]+.json)'
@@ -27,6 +30,8 @@ class Data:
             'bmass_Corrected'              : 'Corrected',
             'bmass_Corrected_and_L0(nPVs)' : '+Run1/2 Emulation',
             }
+
+    plt.style.use(mplhep.style.LHCb2)
 # --------------------------------------
 def _get_paths() -> list[str]:
     path_wc = f'{Data.ana_dir}/plots/comparison_{Data.kind}/{Data.kind}/{Data.sample}/{Data.trigger}/jpsi/*/*/*.json'
@@ -66,6 +71,34 @@ def _path_to_df(path : str) -> pnd.DataFrame:
     data['kind' ] = kind
 
     return pnd.DataFrame([data])
+#-------------------------------------
+def _reorder_blocks(df : pnd.DataFrame) -> pnd.DataFrame:
+    custom_order = ['0', '4', '3', '1', '2', '1', '5', '6', '7', '8']
+    df['block']  = df['block'].astype(str)
+
+    order_map = {val: i for i, val in enumerate(custom_order)}
+    df['order'] = df['block'].map(order_map)
+
+    df= df.sort_values('order')
+
+    return df
+# --------------------------------------
+def _pad_blocks(df : pnd.DataFrame) -> pnd.DataFrame:
+    if Data.sample.startswith('DATA'):
+        return df
+
+    df_b2 = df[df['block'] == '2']
+    df_b0 = df_b2.copy()
+    df_b4 = df_b2.copy()
+    df_b3 = df_b2.copy()
+
+    df_b0['block'] = '0'
+    df_b4['block'] = '4'
+    df_b3['block'] = '3'
+
+    df = pnd.concat([df_b0, df_b4, df_b3, df], axis=0, ignore_index=True)
+
+    return df
 # --------------------------------------
 def main():
     '''
@@ -75,11 +108,25 @@ def main():
     l_df   = [ _path_to_df(path) for path in l_path ]
 
     df         = pnd.concat(l_df, axis=0, ignore_index=True)
+    df         = _pad_blocks(df)
+    df         = _reorder_blocks(df)
     df['kind'] = df['kind'].replace(Data.d_naming)
 
-    pnd.set_option('display.max_rows', None)
-    print(df)
+    for mva, df_mva in df.groupby('mva'):
+        for brem, df_brem in df_mva.groupby('brem'):
+            ax = None
+            for kind, df_kind in df_brem.groupby('kind'):
+                ax = df_kind.plot(x='block', y='fwhm', label=kind, ax=ax, figsize=[15,10])
 
+            plt.title(f'MVA: {mva}; Brem: {brem}')
+
+            plot_path = f'{Data.ana_dir}/plots/comparison_{Data.kind}/{Data.kind}/{Data.sample}/mva_{mva}_brem_{brem}.png'
+            plt.ylim(000, 300)
+            plt.xlabel('Block')
+            plt.ylabel('FWHM [MeV]')
+            plt.grid()
+            plt.savefig(plot_path)
+            plt.close()
 # --------------------------------------
 if __name__ == '__main__':
     main()
