@@ -66,11 +66,6 @@ dataset :
     sig :
       bdt  : (1)
       mass : (1) 
-  paths:
-    main : main.yaml
-    hop  : hop.yaml
-    jmis : jpsi_misid.yaml
-    casc : cascade.yaml
   samples:
     sig :
       sample : Bu_Kee_eq_btosllball05_DPC # can be a list
