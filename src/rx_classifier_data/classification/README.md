@@ -23,3 +23,9 @@ train_cone()
 train_cone v4 train_turbo_mva_cmb
 train_cone v4 train_turbo_mva_prc
 ```
+
+- **v5**: Dropped Iso mass variables
+- **v6**: Adding back ISO mass variables in PRec MVA and using new version of code that
+    1. Makes better plots
+    2. Adds the ROC curve with the full testing dataset
+- **v7**: Using the brem corrected variables.
