@@ -146,7 +146,7 @@ def _parse_args() -> None:
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category', choices=[-1, 0, 1, 2], required=True)
     # TODO: We need MC for blocks 0, 4 and 3
-    parser.add_argument('-B', '--block'  , type=int, help='Block to which data belongs, -1 will put all the data together', choices=[-1, 1, 2, 3, 4, 5, 6, 7, 8], required=True)
+    parser.add_argument('-B', '--block'  , type=int, help='Block to which data belongs, -1 will put all the data together', choices=[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8], required=True)
     parser.add_argument('-r', '--nomva'  ,           help='If used, it will remove the MVA requirement', action='store_true')
 
     args = parser.parse_args()
