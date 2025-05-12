@@ -421,11 +421,7 @@ class TrainMva:
         '''
         log.debug(f'Plotting scores for {ifold} fold')
 
-        if 'val_dir' not in self._cfg['plotting']:
-            log.warning('Scores path not passed, not plotting scores')
-            return
-
-        val_dir  = self._cfg['plotting']['val_dir']
+        val_dir  = self._cfg['saving']['output']
         val_dir  = f'{val_dir}/fold_{ifold:03}'
         os.makedirs(val_dir, exist_ok=True)
 
@@ -491,7 +487,10 @@ class TrainMva:
         '''
         Will plot the features, based on the settings in the config
         '''
-        d_cfg = self._cfg['plotting']['features']
+        out_dir         = self._cfg['saving']['output']
+        d_cfg           = self._cfg['plotting']['features']
+        d_cfg['saving'] = {'plt_dir' : out_dir}
+
         ptr   = Plotter(d_rdf = {'Signal' : self._rdf_sig, 'Background' : self._rdf_bkg}, cfg=d_cfg)
         ptr.run()
     # ---------------------------------------------
