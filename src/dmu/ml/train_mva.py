@@ -230,7 +230,7 @@ class TrainMva:
     # ---------------------------------------------
     def _save_roc_plot(self, ifold : int) -> None:
         ifold    = 'all' if ifold == -1 else ifold # -1 represets all the testing datasets combined
-        val_dir  = self._cfg['saving']['outdir']
+        val_dir  = self._cfg['saving']['output']
         val_dir  = f'{val_dir}/fold_{ifold:03}'
         os.makedirs(val_dir, exist_ok=True)
 
