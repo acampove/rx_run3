@@ -46,7 +46,7 @@ class TrainMva:
         self._l_ft_name = self._cfg['training']['features']
 
         self._rdf_sig_org = sig
-        self._rdf_bkg_org = bkg 
+        self._rdf_bkg_org = bkg
 
         rdf_bkg = self._preprocess_rdf(bkg)
         rdf_sig = self._preprocess_rdf(sig)
