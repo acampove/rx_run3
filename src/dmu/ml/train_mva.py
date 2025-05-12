@@ -4,6 +4,7 @@ Module with TrainMva class
 # pylint: disable = too-many-locals, no-name-in-module
 # pylint: disable = too-many-arguments, too-many-positional-arguments
 # pylint: disable = too-many-instance-attributes
+# pylint: disable = too-many-arguments, too-many-positional-arguments
 
 import os
 import copy
