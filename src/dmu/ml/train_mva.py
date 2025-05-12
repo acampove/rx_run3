@@ -181,15 +181,15 @@ class TrainMva:
             model = self._get_model(arr_itr)
             l_model.append(model)
 
-            arr_sig_sig_tr, arr_sig_bkg_tr, arr_sig_all_tr, arr_lab_tr = self._get_scores(model, arr_itr, on_training_ok= True)
-            arr_sig_sig_ts, arr_sig_bkg_ts, arr_sig_all_ts, arr_lab_ts = self._get_scores(model, arr_its, on_training_ok=False)
+            arr_sig_tr, arr_bkg_tr, arr_all_tr, arr_lab_tr = self._get_scores(model, arr_itr, on_training_ok= True)
+            arr_sig_ts, arr_bkg_ts, arr_all_ts, arr_lab_ts = self._get_scores(model, arr_its, on_training_ok=False)
 
             self._save_feature_importance(model, ifold)
             self._plot_correlation(arr_itr, ifold)
-            self._plot_scores(arr_sig_sig_tr, arr_sig_sig_ts, arr_sig_bkg_tr, arr_sig_bkg_ts, ifold)
+            self._plot_scores(arr_sig_tr, arr_sig_ts, arr_bkg_tr, arr_bkg_ts, ifold)
 
-            self._plot_roc(arr_lab_ts, arr_sig_all_ts, kind='Test' , ifold=ifold)
-            self._plot_roc(arr_lab_tr, arr_sig_all_tr, kind='Train', ifold=ifold)
+            self._plot_roc(arr_lab_ts, arr_all_ts, kind='Test' , ifold=ifold)
+            self._plot_roc(arr_lab_tr, arr_all_tr, kind='Train', ifold=ifold)
             self._save_roc_plot(ifold=ifold)
 
             ifold+=1
