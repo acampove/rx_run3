@@ -52,26 +52,19 @@ def _override_path(path : str) -> str:
     return path
 #---------------------------------
 def _reformat_config(cfg : dict) -> dict:
-    path = cfg['saving']['path']
-    cfg['saving']['path']      = _override_path(path)
-
-    path = cfg['plotting']['val_dir']
-    cfg['plotting']['val_dir'] = _override_version(path)
-
-    path = cfg['plotting']['features']['saving']['plt_dir']
-    cfg['plotting']['features']['saving']['plt_dir'] = _override_version(path)
-
+    path = cfg['saving']['output']
+    cfg['saving']['output']     = _override_path(path)
     cfg['training']['features'] = cfg['features'][Data.q2bin]
 
     if 'diagnostics' in cfg:
         out_dir = cfg['diagnostics']['output']
-        cfg['diagnostics']['output'] = _override_version(out_dir)
+        cfg['diagnostics']['output'] = _override_path(out_dir)
 
     d_corr = cfg['diagnostics']['correlations']['target']
     if 'overlay' in d_corr:
         d_save  = d_corr['overlay']['saving']
         plt_dir = d_save['plt_dir']
-        d_save['plt_dir'] = _override_version(plt_dir)
+        d_save['plt_dir'] = _override_path(plt_dir)
 
     return cfg
 #---------------------------------
