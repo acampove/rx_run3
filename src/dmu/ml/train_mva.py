@@ -247,7 +247,7 @@ class TrainMva:
             self._plot_probabilities(xval, yval, l_prb, l_lab)
     # ---------------------------------------------
     def _save_roc_plot(self, ifold : int) -> None:
-        ifold    = 'all' if ifold == -1 else ifold # -1 represets all the testing datasets combined
+        ifold    = 'all' if ifold == -1 else ifold # -1 represents all the testing datasets combined
         val_dir  = self._cfg['saving']['output']
         val_dir  = f'{val_dir}/fold_{ifold:03}'
         os.makedirs(val_dir, exist_ok=True)
@@ -442,6 +442,7 @@ class TrainMva:
         '''
         Will plot an array of scores, associated to a given fold
         '''
+        ifold = 'all' if ifold == -1 else ifold
         log.debug(f'Plotting scores for {ifold} fold')
 
         val_dir  = self._cfg['saving']['output']
