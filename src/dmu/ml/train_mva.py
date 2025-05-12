@@ -159,7 +159,7 @@ class TrainMva:
 
         return model
     # ---------------------------------------------
-    def _get_models(self, load_trained : bool):
+    def _get_models(self, load_trained : bool) -> list[cls]:
         '''
         Will create models, train them and return them
         '''
