@@ -230,7 +230,7 @@ class TrainMva:
     # ---------------------------------------------
     def _save_roc_plot(self, ifold : int) -> None:
         ifold    = 'all' if ifold == -1 else ifold # -1 represets all the testing datasets combined
-        val_dir  = self._cfg['plotting']['val_dir']
+        val_dir  = self._cfg['saving']['outdir']
         val_dir  = f'{val_dir}/fold_{ifold:03}'
         os.makedirs(val_dir, exist_ok=True)
 
@@ -255,7 +255,8 @@ class TrainMva:
         plt.close()
     # ---------------------------------------------
     def _load_trained_models(self) -> list[cls]:
-        model_path = self._cfg['saving']['path']
+        out_dir    = self._cfg['saving']['output']
+        model_path = f'{out_dir}/model.pkl'
         nfold      = self._cfg['training']['nfold']
         l_model    = []
         for ifold in range(nfold):
@@ -298,7 +299,7 @@ class TrainMva:
         d_data['Variable'  ] = self._labels_from_varnames(l_var_name)
         d_data['Importance'] = 100 * model.feature_importances_
 
-        val_dir  = self._cfg['plotting']['val_dir']
+        val_dir  = self._cfg['saving']['output']
         val_dir  = f'{val_dir}/fold_{ifold:03}'
         os.makedirs(val_dir, exist_ok=True)
 
@@ -351,7 +352,9 @@ class TrainMva:
         '''
         Saves a model, associated to a specific fold
         '''
-        model_path = self._cfg['saving']['path']
+        out_dir    = self._cfg['saving']['output']
+        model_path = f'{out_dir}/model.pkl'
+
         if os.path.isfile(model_path):
             log.info(f'Model found in {model_path}, not saving')
             return
@@ -396,7 +399,7 @@ class TrainMva:
 
         log.debug(f'Plotting correlation for {ifold} fold')
 
-        val_dir  = self._cfg['plotting']['val_dir']
+        val_dir  = self._cfg['saving']['output']
         val_dir  = f'{val_dir}/fold_{ifold:03}'
         os.makedirs(val_dir, exist_ok=True)
 
@@ -511,7 +514,7 @@ class TrainMva:
 
         d_tex = {'Variable' : l_lab, 'Replacement' : l_val}
         df    = pnd.DataFrame(d_tex)
-        val_dir  = self._cfg['plotting']['val_dir']
+        val_dir  = self._cfg['saving']['output']
         os.makedirs(val_dir, exist_ok=True)
         put.df_to_tex(df, f'{val_dir}/nan_replacement.tex')
     # ---------------------------------------------
@@ -524,7 +527,7 @@ class TrainMva:
         d_latex = { 'Hyperparameter' : list(d_form.keys()), 'Value' : list(d_form.values())}
 
         df = pnd.DataFrame(d_latex)
-        val_dir  = self._cfg['plotting']['val_dir']
+        val_dir  = self._cfg['saving']['output']
         os.makedirs(val_dir, exist_ok=True)
         put.df_to_tex(df, f'{val_dir}/hyperparameters.tex')
     # ---------------------------------------------
