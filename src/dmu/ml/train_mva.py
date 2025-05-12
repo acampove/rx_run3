@@ -8,6 +8,7 @@ Module with TrainMva class
 
 import os
 import copy
+import json
 
 import joblib
 import pandas as pnd
@@ -135,7 +136,15 @@ class TrainMva:
         d_def = self._cfg['dataset']['define']
         for name, expr in d_def.items():
             log.debug(f'{name:<20}{expr}')
-            rdf = rdf.Define(name, expr)
+            try:
+                rdf = rdf.Define(name, expr)
+            except TypeError as exc:
+                l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
+                branch_list = 'found_branches.txt'
+                with open(branch_list, encoding='utf-8') as ifile:
+                    json.dump(l_col, ifile, indent=2)
+
+                raise TypeError(f'Branches found were dumped to {branch_list}') from exc
 
         return rdf
     # ---------------------------------------------
