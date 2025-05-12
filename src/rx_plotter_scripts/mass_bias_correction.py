@@ -5,6 +5,8 @@ in electrons
 import os
 import re
 import glob
+import argparse
+
 import mplhep
 import pandas                as pnd
 import dmu.generic.utilities as gut
@@ -18,10 +20,10 @@ class Data:
     '''
     Class used to hold attributes
     '''
+    sample  : str
+
     ana_dir = os.environ['ANADIR']
     kind    = 'brem_track_2'
-    #sample  = 'DATAp'
-    sample  = 'Bu_JpsiK_ee_eq_DPC'
     trigger = 'Hlt2RD_BuToKpEE_MVA'
 
     regex   = f'{ana_dir}\/\w+\/\w+\/\w+\/\w+\/\w+\/\w+\/(\d)_(\d)\/(\w+)\/([\w,\(,\)]+.json)'
@@ -100,10 +102,19 @@ def _pad_blocks(df : pnd.DataFrame) -> pnd.DataFrame:
 
     return df
 # --------------------------------------
+def _parse_args() -> None:
+    parser = argparse.ArgumentParser(description='Script used to go from JSON files with statistics regarding the Brem track correction to summary plots')
+    parser.add_argument('-s', '--sample' , type=str, help='Sample', choices=['dat', 'sim'], required=True)
+    args = parser.parse_args()
+
+    Data.sample = 'DATAp' if args.sample == 'dat' else 'Bu_JpsiK_ee_eq_DPC'
+# --------------------------------------
 def main():
     '''
     Start here
     '''
+    _parse_args()
+
     l_path = _get_paths()
     l_df   = [ _path_to_df(path) for path in l_path ]
 
@@ -121,7 +132,7 @@ def main():
             plt.title(f'MVA: {mva}; Brem: {brem}')
 
             plot_path = f'{Data.ana_dir}/plots/comparison_{Data.kind}/{Data.kind}/{Data.sample}/mva_{mva}_brem_{brem}.png'
-            plt.ylim(000, 300)
+            plt.ylim(000, 500)
             plt.xlabel('Block')
             plt.ylabel('FWHM [MeV]')
             plt.grid()
