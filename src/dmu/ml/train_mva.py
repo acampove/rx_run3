@@ -247,7 +247,12 @@ class TrainMva:
 
         color='red' if kind == 'Train' else 'blue'
 
-        plt.plot(xval, yval, color=color, label=f'{kind}: {area:.3f}')
+        if ifold == -1:
+            label=f'Test sample: {area:.3f}'
+        else:
+            label=f'{kind}: {area:.3f}'
+
+        plt.plot(xval, yval, color=color, label=label)
         # When plotting for fold, this will plot only the signal probability on
         # the training sample
         # When plotting for the whole sample (ifold==-1), this will plot it on the testing
