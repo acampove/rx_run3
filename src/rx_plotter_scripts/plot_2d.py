@@ -105,25 +105,9 @@ def _override_cfg(cfg : dict) -> dict:
 
     return cfg
 # ---------------------------------
-def _set_samples() -> None:
-    data_dir  = os.environ['DATADIR']
-    sample_wc = f'{data_dir}/samples/*.yaml'
-    l_path    = glob.glob(sample_wc)
-    d_sample  = {}
-    for path in l_path:
-        file_name = os.path.basename(path)
-        name      = file_name.replace('.yaml', '')
-
-        if Data.chanel == 'mm' and name in ['brem_track_2', 'ecalo_bias']:
-            continue
-
-        d_sample[name] = path
-
-    RDFGetter.samples = d_sample
-# ---------------------------------
 def _initialize():
     _set_logs()
-    _set_samples()
+    Data.ana_dir = os.environ['ANADIR']
 # ---------------------------------
 def main():
     '''
