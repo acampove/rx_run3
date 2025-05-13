@@ -145,33 +145,26 @@ def _plot_df(
         return ax
 
     color = {0 : '#1f77b4', 1 : '#ff7f0e', 2 : '#2ca02c'}[brem]
-
     val = f'{quantity}_val'
     err = f'{quantity}_err'
-
-    ax = df.plot(
-        x='block',
-        y=val,
-        linestyle='-',
-        label=f'Brem: {brem}',
-        figsize=(15, 10),
-        color=color,
-        ax=ax)
 
     ax.fill_between(
         df['block'],
         df[val] - df[err],
         df[val] + df[err],
         color=color,
-        alpha=0.3)
+        label=f'Brem {brem}',
+        alpha=0.5)
 
     return ax
 #-------------------------------------
 def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
-    ax  = None
+    ax = plt.gca()
     for brem, df_brem in df.groupby('brem'):
         df_brem = _reorder_blocks(df=df_brem)
         ax = _plot_df(df=df_brem, quantity=quantity, brem=brem, ax=ax)
+
+    ax.legend()
 
     if quantity == 'smu':
         plt.ylabel(r'$\Delta\mu$[MeV]')
@@ -186,10 +179,12 @@ def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
     plt.close()
 #-------------------------------------
 def _plot_variables(df : pnd.DataFrame, quantity : str, kind : str) -> None:
-    ax = None
+    ax = plt.gca()
     for brem, df_brem in df.groupby('brem'):
         df_brem = _reorder_blocks(df = df_brem)
         ax = _plot_df(df=df_brem, quantity=quantity, brem=brem, ax=ax)
+
+    ax.legend()
 
     name = {'dat' : 'Data', 'sim' : 'MC'}[kind]
 
