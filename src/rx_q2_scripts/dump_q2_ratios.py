@@ -141,6 +141,11 @@ def _plot_df(
         brem     : str,
         ax       : Axes) -> Axes:
 
+    if brem == 0 and quantity == 'ssg':
+        return ax
+
+    color = {0 : '#1f77b4', 1 : '#ff7f0e', 2 : '#2ca02c'}[brem]
+
     val = f'{quantity}_val'
     err = f'{quantity}_err'
 
@@ -150,12 +155,14 @@ def _plot_df(
         linestyle='-',
         label=f'Brem: {brem}',
         figsize=(15, 10),
+        color=color,
         ax=ax)
 
     ax.fill_between(
         df['block'],
         df[val] - df[err],
         df[val] + df[err],
+        color=color,
         alpha=0.3)
 
     return ax
@@ -172,7 +179,7 @@ def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
 
     if quantity == 'ssg':
         plt.ylabel(r'$s_{\sigma}$')
-        plt.ylim(1.0, 1.7)
+        plt.ylim(1.0, 1.5)
 
     plt.grid()
     plt.savefig(f'{Data.inp_dir}/{quantity}.png')
