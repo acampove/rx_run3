@@ -13,7 +13,7 @@ plots_2d:
 axes:
     B_M :
         binning : [5000, 5600, 200]
-        label   : 'M${}(B^+)$'
+        label   : 'M${}(B^+)$[MeV]'
     q2 :
         binning : [0.0, 22000000, 200]
-        label   : '$q^2$'
+        label   : '$q^2$[GeV${}^2$]'
