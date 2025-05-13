@@ -32,12 +32,6 @@ class Data:
     trigger : str
     ana_dir : str
 # ---------------------------------
-def _get_rdf() -> RDataFrame:
-    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
-    rdf = gtr.get_rdf()
-
-    return rdf
-# ---------------------------------
 def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
     d_cut = cfg['selection']['cuts']
 
@@ -116,7 +110,9 @@ def main():
     _parse_args()
     _initialize()
 
-    rdf = _get_rdf()
+    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
+    rdf = gtr.get_rdf()
+
     cfg = _get_cfg()
     rdf = _apply_selection(rdf=rdf, cfg=cfg)
 
