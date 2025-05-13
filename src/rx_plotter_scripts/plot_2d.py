@@ -40,7 +40,14 @@ def _get_rdf() -> RDataFrame:
 # ---------------------------------
 def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
     d_cut = cfg['selection']['cuts']
-    d_sel = sel.selection(project=Data.project, trigger=Data.trigger, q2bin=Data.q2bin, process=Data.sample)
+
+    if Data.q2bin is None:
+        q2bin       = 'jpsi' # Need dummy cut for selection code
+        d_cut['q2'] = '(1)'  # Will remove cut here
+    else:
+        q2bin = Data.q2bin
+
+    d_sel = sel.selection(trigger=Data.trigger, q2bin=q2bin, process=Data.sample)
     d_sel.update(d_cut)
 
     for cut_name, cut_expr in d_sel.items():
