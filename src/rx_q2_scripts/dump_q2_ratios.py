@@ -159,7 +159,7 @@ def _plot_df(
     return ax
 #-------------------------------------
 def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
-    ax = plt.gca()
+    _, ax = plt.subplots(figsize=(15, 10))
     for brem, df_brem in df.groupby('brem'):
         df_brem = _reorder_blocks(df=df_brem)
         ax = _plot_df(df=df_brem, quantity=quantity, brem=brem, ax=ax)
@@ -179,7 +179,7 @@ def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
     plt.close()
 #-------------------------------------
 def _plot_variables(df : pnd.DataFrame, quantity : str, kind : str) -> None:
-    ax = plt.gca()
+    _, ax = plt.subplots(figsize=(15, 10))
     for brem, df_brem in df.groupby('brem'):
         df_brem = _reorder_blocks(df = df_brem)
         ax = _plot_df(df=df_brem, quantity=quantity, brem=brem, ax=ax)
