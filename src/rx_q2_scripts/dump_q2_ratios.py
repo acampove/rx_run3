@@ -117,9 +117,7 @@ def _get_scale(df : pnd.DataFrame, name : str, fun : Callable) -> dict[str:float
     dat_err = float(df_dat[f'{name}_err'])
 
     sim_val = float(df_sim[f'{name}_val'])
-    # TODO: Errors in MC fits are orders of magnitude off. Will make them zero
-    # until bug in zfit is found
-    sim_err = 0# float(df_sim[f'{name}_err'])
+    sim_err = float(df_sim[f'{name}_err'])
 
     cov     = [
             [dat_err ** 2,            0],
