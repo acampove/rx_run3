@@ -5,6 +5,7 @@ saving:
 selection:
   cuts:
     cmb : mva_cmb > 0.5
+    mass: (1)
 general:
     size : [15, 12]
 plots_2d:
