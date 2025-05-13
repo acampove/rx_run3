@@ -3,7 +3,6 @@ Script used to plot mass distributions
 '''
 
 import os
-import glob
 import argparse
 from importlib.resources import files
 from dataclasses         import dataclass
@@ -23,18 +22,15 @@ class Data:
     '''
     Class used to share attributes
     '''
-    nthreads   = 13
-    project    = 'RK'
-
     mplhep.style.use('LHCb2')
 
     loglvl  : int
     q2bin   : str
-    chanel  : str
     trigger : str
     config  : str
     sample  : str
     trigger : str
+    ana_dir : str
 # ---------------------------------
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
