@@ -20,6 +20,7 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
+calculate_brem    ='rx_q2_scripts.calculate_brem:main'
 check             ='rx_q2_scripts.check:main'
 compare_q2        ='rx_q2_scripts.compare_q2:main'
 compare_trig      ='rx_q2_scripts.compare_trig:main'
