@@ -215,8 +215,9 @@ class TrainMva:
                     bkg_trn=arr_bkg_tr,
                     bkg_tst=arr_bkg_ts)
 
-            self._plot_roc(arr_lab_ts, arr_all_ts, kind='Test' , ifold=ifold)
-            xval, yval = self._plot_roc(arr_lab_tr, arr_all_tr, kind='Train', ifold=ifold)
+            TrainMva.plot_roc(arr_lab_ts, arr_all_ts, kind='Test' , ifold=ifold)
+            xval, yval = TrainMva.plot_roc(arr_lab_tr, arr_all_tr, kind='Train', ifold=ifold)
+            self._plot_probabilities(xval, yval, arr_all_tr, arr_lab_tr)
             self._save_roc(xval=xval, yval=yval, ifold=ifold)
 
             ifold+=1
@@ -231,17 +232,19 @@ class TrainMva:
         arr_sig_ts = numpy.concatenate(l_arr_sig_ts)
         arr_bkg_ts = numpy.concatenate(l_arr_bkg_ts)
 
-        xval, yval = self._plot_roc(arr_lab_ts, arr_all_ts, kind='Test', ifold=-1)
+        xval, yval = TrainMva.plot_roc(arr_lab_ts, arr_all_ts, kind='Test', ifold=-1)
+        self._plot_probabilities(xval, yval, arr_all_ts, arr_lab_ts)
         self._save_roc(xval=xval, yval=yval, ifold=-1)
         self._plot_scores(ifold=-1, sig_tst=arr_sig_ts, bkg_tst=arr_bkg_ts)
 
         return l_model
     # ---------------------------------------------
-    def _plot_roc(self,
-                  l_lab : NPA,
-                  l_prb : NPA,
-                  kind  : str,
-                  ifold : int) -> tuple[NPA, NPA]:
+    @staticmethod
+    def plot_roc(
+            l_lab : NPA,
+            l_prb : NPA,
+            kind  : str,
+            ifold : int) -> tuple[NPA, NPA]:
         '''
         Takes the labels and the probabilities and plots ROC
         curve for given fold
@@ -260,12 +263,6 @@ class TrainMva:
             label=f'{kind}: {area:.3f}'
 
         plt.plot(xval, yval, color=color, label=label)
-        # When plotting for fold, this will plot only the signal probability on
-        # the training sample
-        # When plotting for the whole sample (ifold==-1), this will plot it on the testing
-        # sample, which is the only one
-        if kind == 'Train' or ifold == -1:
-            self._plot_probabilities(xval, yval, l_prb, l_lab)
 
         return xval, yval
     # ---------------------------------------------
