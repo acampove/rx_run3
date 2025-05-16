@@ -1,13 +1,13 @@
 dataset:
   define :
-    r : z + x
+    r : z + preffix.x.suffix
   nan :
-    x : -3
-    y : -3
+    preffix.x.suffix : -3
+    y                : -3
 training :
     nfold    : 3
     features : 
-      - x
+      - preffix.x.suffix
       - y
       - r
     rdm_stat : 1
@@ -44,7 +44,7 @@ plotting:
             binning : [-4, 4, 100]
             yscale  : 'linear'
             labels  : ['$w$', '']
-          x :
+          preffix.x.suffix :
             binning : [-4, 4, 100]
             yscale  : 'linear'
             labels  : ['$x$', '']
