@@ -33,6 +33,13 @@ from dmu.logging.log_store   import LogStore
 NPA = numpy.ndarray
 log = LogStore.add_logger('dmu:ml:train_mva')
 # ---------------------------------------------
+class NoFeatureInfo(Exception):
+    '''
+    Used when information about a feature is missing in the config file
+    '''
+    def __init__(self, message : str):
+        super().__init__(message)
+# ---------------------------------------------
 class TrainMva:
     '''
     Interface to scikit learn used to train classifier
@@ -313,11 +320,12 @@ class TrainMva:
         l_label = []
         for var_name in l_var_name:
             if var_name not in d_plot:
-                log.warning(f'No plot found for: {var_name}')
-                l_label.append(var_name)
-                continue
+                raise NoFeatureInfo(f'No plot found for feature {var_name}, cannot extract label')
 
             d_setting = d_plot[var_name]
+            if 'labels' not in d_setting:
+                raise NoFeatureInfo(f'No no labels present for plot of feature {var_name}, cannot extract label')
+
             [xlab, _ ]= d_setting['labels']
 
             l_label.append(xlab)

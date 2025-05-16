@@ -5,9 +5,8 @@ import pytest
 import mplhep
 import matplotlib.pyplot as plt
 
-from dmu.logging.log_store import LogStore
-from dmu.ml.train_mva      import TrainMva
-
+from   dmu.logging.log_store import LogStore
+from   dmu.ml.train_mva      import TrainMva, NoFeatureInfo
 import dmu.testing.utilities as ut
 
 log = LogStore.add_logger('dmu:ml:test_train_mva')
@@ -32,6 +31,27 @@ def test_simple(nfold : int):
 
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run()
+# -------------------------------
+def test_missing_feature_plot():
+    '''
+    Tests that a feature's plot is missing, 
+    thus the label corresponding to the feature's name cannot be accessed
+    '''
+    nfold   = 2
+
+    rdf_sig = ut.get_rdf(kind='sig')
+    rdf_bkg = ut.get_rdf(kind='bkg')
+    cfg     = ut.get_config('ml/tests/train_mva.yaml')
+
+    del cfg['plotting']['features']['plots']['y']
+
+    cfg['training']['nfold'] = nfold
+    path    = cfg['saving']['output']
+    cfg['saving']['output'] = path.replace('train_mva', 'missing_feature_plot')
+
+    obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
+    with pytest.raises(NoFeatureInfo):
+        obj.run()
 # -------------------------------
 def test_repeated():
     '''
