@@ -28,7 +28,6 @@ features:
     - Jpsi_IPCHI2_OWNPV
     #
     - min_ll_pt
-    - max_ll_pt
     - max_ll_ipc
     - min_ll_ipc
     #
