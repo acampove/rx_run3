@@ -694,6 +694,20 @@ plotting:
 
 the `TrainMva` is just a wrapper to `scikit-learn` that enables cross-validation (and therefore that explains the `nfolds` setting).
 
+#### Outputs
+
+The trainer will produce in the output:
+
+- Models in form of `pkl` files
+- Plots of the features
+- For each fold:
+1. Covariance plot
+1. ROC curve plot
+1. Feature importance table in latex
+1. JSON file with data to build the ROC curve
+- For the full dataset it will provide the ROC curve, scores distribution and JSON file with `x`, `y` coordinates for ROC curve.
+- Latex table with hyperparameters and NaN replacements.
+
 ### Caveats
 
 When training on real data, several things might go wrong and the code will try to deal with them in the following ways:
