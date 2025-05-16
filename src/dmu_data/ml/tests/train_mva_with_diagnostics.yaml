@@ -60,15 +60,15 @@ diagnostics:
   output         : /tmp/tests/dmu/ml/train_mva/diagnostics
   correlations:
     target :
-      name : z 
-      overlay :  
+      name : z
+      overlay :
         general:
           size : [20, 10]
         saving:
           plt_dir : /tmp/tests/dmu/ml/train_mva/diagnostics
         plots:
           z :
-            binning    : [-4, +4, 30] 
+            binning    : [-4, +4, 30]
             yscale     : 'linear'
             labels     : ['z', 'Entries']
             normalized : true
@@ -78,5 +78,5 @@ diagnostics:
       - Pearson
       - Kendall-$\tau$
     figure:
-      title: Training diagnostics 
+      title: Training diagnostics
       size : [10, 8]
