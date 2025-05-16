@@ -63,13 +63,13 @@ def get_rdf(kind : Union[str,None] = None,
 
     d_data = {}
     if   kind == 'sig':
+        d_data['preffix.x.suffix'] = numpy.random.normal(0, 1, size=nentries)
         d_data['w'] = numpy.random.normal(0, 1, size=nentries)
-        d_data['x'] = numpy.random.normal(0, 1, size=nentries)
         d_data['y'] = numpy.random.normal(0, 1, size=nentries)
         d_data['z'] = numpy.random.normal(0, 1, size=nentries)
     elif kind == 'bkg':
+        d_data['preffix.x.suffix'] = numpy.random.normal(1, 1, size=nentries)
         d_data['w'] = numpy.random.normal(1, 1, size=nentries)
-        d_data['x'] = numpy.random.normal(1, 1, size=nentries)
         d_data['y'] = numpy.random.normal(1, 1, size=nentries)
         d_data['z'] = numpy.random.normal(1, 1, size=nentries)
     else:
