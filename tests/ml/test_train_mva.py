@@ -38,21 +38,9 @@ def test_preffix():
 
     preffix.x.suffix
     '''
-    rdf_sig  = ut.get_rdf(kind='sig', use_preffix=True)
-    rdf_bkg  = ut.get_rdf(kind='bkg', use_preffix=True)
-    l_column = [ name.c_str() for name in rdf_sig.GetColumnNames() ]
-    d_name   = { name.replace('preffix.', '').replace('.suffix', '') : name for name in l_column}
-
-    cfg     = ut.get_config('ml/tests/train_mva.yaml')
-    cfg['training']['nfold']    = 2
-    cfg['training']['features'] = l_column
-
-    d_plt_org = cfg['plotting']['features']['plots']
-    d_plt_new = { d_name.get(key, key) : val for key, val in d_plt_org.items() }
-    cfg['plotting']['features']['plots'] = d_plt_new
-
-    path    = cfg['saving']['output']
-    cfg['saving']['output'] = path.replace('train_mva', 'name_with_preffix')
+    rdf_sig = ut.get_rdf(kind='sig', use_preffix=True)
+    rdf_bkg = ut.get_rdf(kind='bkg', use_preffix=True)
+    cfg     = ut.get_config('ml/tests/train_mva_preffix.yaml')
 
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run()
