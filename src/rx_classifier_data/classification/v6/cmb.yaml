@@ -1,12 +1,12 @@
 features:
   low:
-    - B_PT
+    - b_pt 
     - B_IPCHI2_OWNPV
     - B_FDCHI2_OWNPV
     - B_ENDVERTEX_CHI2DOF 
-    - B_DIRA_OWNPV
+    - b_dira 
     #
-    - Jpsi_DIRA_OWNPV
+    - j_dira 
     - Jpsi_CHI2DOF
     - Jpsi_IPCHI2_OWNPV
     #
@@ -16,32 +16,31 @@ features:
     - H_PT 
     - H_IPCHI2_OWNPV 
   central:
-    - B_PT
+    - b_pt 
+    - b_dira 
     - B_IPCHI2_OWNPV
     - B_FDCHI2_OWNPV
     - B_ENDVERTEX_CHI2DOF 
-    - B_DIRA_OWNPV
     #
-    - Jpsi_PT
-    - Jpsi_DIRA_OWNPV
+    - j_pt 
+    - j_dira 
     - Jpsi_CHI2DOF
     - Jpsi_IPCHI2_OWNPV
     #
     - min_ll_pt
-    - max_ll_pt
     - max_ll_ipc
     - min_ll_ipc
     #
     - H_PT 
     - H_IPCHI2_OWNPV 
   high:
-    - B_PT
+    - b_pt 
+    - b_dira
     - B_IPCHI2_OWNPV
     - B_ENDVERTEX_CHI2DOF 
-    - B_DIRA_OWNPV
     #
-    - Jpsi_PT
-    - Jpsi_DIRA_OWNPV
+    - j_pt 
+    - j_dira
     - Jpsi_CHI2DOF
     - Jpsi_IPCHI2_OWNPV
     #
@@ -75,8 +74,12 @@ dataset :
       trigger: Hlt2RD_BuToKpEE_MVA
   define :
     mass       : B_M
-    min_ll_pt  : TMath::Min(L1_PT , L2_PT)
-    max_ll_pt  : TMath::Max(L1_PT , L2_PT)
+    b_pt       : B_PT
+    j_pt       : Jpsi_PT
+    b_dira     : B_DIRA_OWNPV
+    j_dira     : Jpsi_DIRA_OWNPV
+    min_ll_pt  : TMath::Min(L1_PT, L2_PT)
+    max_ll_pt  : TMath::Max(L1_PT, L2_PT)
     min_ll_ipc : TMath::Min(L1_IPCHI2_OWNPV, L2_IPCHI2_OWNPV)
     max_ll_ipc : TMath::Max(L1_IPCHI2_OWNPV, L2_IPCHI2_OWNPV)
 training :
