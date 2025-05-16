@@ -815,6 +815,23 @@ correlations:
     rotate    : 60 # Will rotate xlabels by 60 degrees
 ```
 
+## Comparing classifiers
+
+To do that run:
+
+```bash
+compare_classifiers -c /path/to/config.yaml
+```
+
+where the config looks like:
+
+```yaml
+out_dir : /path/to/plots 
+classifiers:
+  label for model 1 : /path/to/directory/with/model1
+  label for model 2 : /path/to/directory/with/model2
+```
+
 # Pandas dataframes
 
 ## Utilities
