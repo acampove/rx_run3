@@ -7,7 +7,7 @@ dataset:
 training :
     nfold    : 3
     features :
-      - preffix.x.suffix
+      - x
       - y
       - r
     rdm_stat : 1
