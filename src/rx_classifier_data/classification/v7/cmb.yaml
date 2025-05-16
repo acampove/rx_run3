@@ -1,12 +1,12 @@
 features:
   low:
-    - brem_track_2.B_PT_brem_track_2
+    - b_pt 
     - B_IPCHI2_OWNPV
     - B_FDCHI2_OWNPV
     - B_ENDVERTEX_CHI2DOF 
-    - brem_track_2.B_DIRA_OWNPV_brem_track_2
+    - b_dira 
     #
-    - brem_track_2.Jpsi_DIRA_OWNPV_brem_track_2
+    - j_dira 
     - Jpsi_CHI2DOF
     - Jpsi_IPCHI2_OWNPV
     #
@@ -16,14 +16,14 @@ features:
     - H_PT 
     - H_IPCHI2_OWNPV 
   central:
-    - brem_track_2.B_PT_brem_track_2
+    - b_pt 
+    - b_dira 
     - B_IPCHI2_OWNPV
     - B_FDCHI2_OWNPV
     - B_ENDVERTEX_CHI2DOF 
-    - brem_track_2.B_DIRA_OWNPV_brem_track_2
     #
-    - brem_track_2.Jpsi_PT_brem_track_2
-    - brem_track_2.Jpsi_DIRA_OWNPV_brem_track_2
+    - j_pt 
+    - j_dira 
     - Jpsi_CHI2DOF
     - Jpsi_IPCHI2_OWNPV
     #
@@ -35,13 +35,13 @@ features:
     - H_PT 
     - H_IPCHI2_OWNPV 
   high:
-    - brem_track_2.B_PT_brem_track_2
+    - b_pt 
+    - b_dira
     - B_IPCHI2_OWNPV
     - B_ENDVERTEX_CHI2DOF 
-    - brem_track_2.B_DIRA_OWNPV_brem_track_2
     #
-    - brem_track_2.Jpsi_PT_brem_track_2
-    - brem_track_2.Jpsi_DIRA_OWNPV_brem_track_2
+    - j_pt 
+    - j_dira
     - Jpsi_CHI2DOF
     - Jpsi_IPCHI2_OWNPV
     #
