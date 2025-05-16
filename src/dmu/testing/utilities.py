@@ -53,10 +53,11 @@ def _add_nans(df : pnd.DataFrame, columns : list[str]) -> pnd.DataFrame:
 
     return df
 # -------------------------------
-def get_rdf(kind : Union[str,None] = None,
-            repeated : bool        = False,
-            nentries : int         = 3_000,
-            columns_with_nans : list[str] = None):
+def get_rdf(
+        kind              : Union[str,None] = None,
+        repeated          : bool        = False,
+        nentries          : int         = 3_000,
+        columns_with_nans : list[str] = None):
     '''
     Return ROOT dataframe with toy data
     '''
