@@ -44,7 +44,7 @@ plotting:
             binning : [-4, 4, 100]
             yscale  : 'linear'
             labels  : ['$w$', '']
-          preffix.x.suffix :
+          x :
             binning : [-4, 4, 100]
             yscale  : 'linear'
             labels  : ['$x$', '']
