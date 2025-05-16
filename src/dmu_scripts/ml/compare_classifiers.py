@@ -59,8 +59,16 @@ def _compare():
     _save_roc()
 # ------------------------------
 def _save_roc():
+    d_set = Data.cfg['roc']
+    if 'xrange' in d_set:
+        plt.xlim(d_set['xrange'])
+
+    if 'yrange' in d_set:
+        plt.ylim(d_set['yrange'])
+
     plt.figure(num='ROC')
     plt.legend()
+    plt.grid()
     plt.xlabel('Signal Efficiency')
     plt.ylabel('Background Rejection')
     plt.savefig(f'{Data.out_path}/roc.png')
