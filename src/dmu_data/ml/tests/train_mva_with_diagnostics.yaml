@@ -15,7 +15,7 @@ training :
       learning_rate     : 0.1
       min_samples_split : 2
 saving:
-    path : '/tmp/tests/dmu/ml/train_mva/model.pkl'
+    output : /tmp/tests/dmu/ml/train_mva
 plotting:
     roc     :
         min : [0.0, 0.0]
