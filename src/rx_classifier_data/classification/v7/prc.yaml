@@ -52,13 +52,13 @@ dataset :
       mass : B_M < 5100
     sig :
       bdt  : mva_cmb > 0.6
-      mass : (1) 
+      mass : (1)
   samples:
     sig :
       sample : Bu_Kee_eq_btosllball05_DPC
       trigger: Hlt2RD_BuToKpEE_MVA
     bkg :
-      sample : DATA* 
+      sample : DATA*
       trigger: Hlt2RD_BuToKpMuMu_MVA
       definitions: # This is needed because the muon samples do not have brem corrections
         B_M_brem_track_2          : B_M
@@ -67,7 +67,7 @@ dataset :
   define :
     mass        : B_M_brem_track_2
     log_b_pt    : TMath::Log(B_PT_brem_track_2)
-    sqrt_ipchi2 : TMath::Sqrt(B_IPCHI2_OWNPV) 
+    sqrt_ipchi2 : TMath::Sqrt(B_IPCHI2_OWNPV)
     acos_dira   : TMath::ACos(B_DIRA_OWNPV_brem_track_2)
     # ----------
     iso_cc_mom  : B_HEAD_CC_B_ChargedIso_DR2_0p15_CP
@@ -79,7 +79,7 @@ dataset :
     iso_one_mass: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
     iso_one_dchi: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
     # ----------
-    sqrt_jipchi2: TMath::Sqrt(Jpsi_IPCHI2_OWNPV) 
+    sqrt_jipchi2: TMath::Sqrt(Jpsi_IPCHI2_OWNPV)
     log_h_pt    : TMath::Log(H_PT)
     min_ll_ipc  : TMath::Min(TMath::Sqrt(L1_IPCHI2_OWNPV), TMath::Sqrt(L2_IPCHI2_OWNPV))
   nan :
@@ -91,12 +91,12 @@ training :
   nfold    : 10
   rdm_stat : 1
   hyper:
-    low : 
+    low :
       n_estimators : 70
-    central : 
+    central :
       n_estimators : 70
       max_depth    : 4
-    high : 
+    high :
       n_estimators : 70
 saving:
   output : mva/prc/VERSION
@@ -120,14 +120,14 @@ plotting:
         yscale  : 'linear'
         binning : [-20000, 200000, 40]
         labels  : ['Iso$_{CC}^P(B^+)$MeV', '']
-        styling :          
+        styling :
             linestyle: '-'
       iso_cc_ptasy:
         normalized : true
         yscale  : 'linear'
         binning : [-1, +1.2, 40]
         labels  : ['Iso$_{CC}^{p_T, Asym}(B^+)$MeV', '']
-        styling :          
+        styling :
             linestyle: '-'
       # --------------------
       iso_nc_mom:
@@ -135,14 +135,14 @@ plotting:
         yscale  : 'linear'
         binning : [-20000, 100000, 40]
         labels  : ['Iso$_{NC}^P(B^+)$MeV', '']
-        styling :          
+        styling :
             linestyle: '-'
       iso_nc_ptasy:
         normalized : true
         yscale  : 'linear'
         binning : [-1, +1.2, 40]
         labels  : ['Iso$_{NC}^{p_T, Asym}(B^+)$MeV', '']
-        styling :          
+        styling :
             linestyle: '-'
       # --------------------
       iso_one_mass:
@@ -150,7 +150,7 @@ plotting:
         binning : [1999, 8000, 40]
         yscale  : 'linear'
         labels  : ['Iso$_{mass}^{1Trk}(B^+)$', '']
-        styling :          
+        styling :
             linestyle: '-'
       # --------------------
       iso_one_dchi:
@@ -158,7 +158,7 @@ plotting:
         binning : [-3, 15, 40]
         yscale  : 'linear'
         labels  : ['Iso$_{\Delta\chi^2}^{1Trk}(B^+)$', '']
-        styling :          
+        styling :
             linestyle: '-'
       # --------------------
       log_b_pt  :
