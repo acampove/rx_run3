@@ -6,7 +6,7 @@ dataset:
     y                : -3
 training :
     nfold    : 3
-    features : 
+    features :
       - preffix.x.suffix
       - y
       - r
