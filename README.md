@@ -786,6 +786,8 @@ correlations:
   target :
     name : mass
     overlay :
+      # These are the working points at which the "mass" variable will be plotted
+      # If there is a correlation the shape should change
       wp :
         - 0.2
         - 0.5
