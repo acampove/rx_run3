@@ -141,17 +141,13 @@ def get_models(rdf_sig : RDataFrame, rdf_bkg : RDataFrame) -> list[CVClassifier]
     Will train and return models
     '''
 
-    cfg                   = get_config('ml/tests/train_mva.yaml')
-    pkl_path              = f'{Data.out_dir}/model.pkl'
-    plt_dir               = f'{Data.out_dir}/cv_predict'
-    cfg['saving']['path'] = pkl_path
-    cfg['plotting']['val_dir'] = plt_dir
-    cfg['plotting']['features']['saving']['plt_dir'] = plt_dir
+    cfg                     = get_config('ml/tests/train_mva.yaml')
+    cfg['saving']['output'] = Data.out_dir
 
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run()
 
-    pkl_wc     = pkl_path.replace('.pkl', '_*.pkl')
+    pkl_wc     = f'{Data.out_dir}/model*.pkl'
     l_pkl_path = glob.glob(pkl_wc)
     l_model    = [ joblib.load(pkl_path) for pkl_path in l_pkl_path ]
 
