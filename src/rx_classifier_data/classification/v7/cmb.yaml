@@ -75,6 +75,10 @@ dataset :
       trigger: Hlt2RD_BuToKpEE_MVA
   define :
     mass       : brem_track_2.B_M_brem_track_2
+    b_pt       : brem_track_2.B_PT_brem_track_2
+    j_pt       : brem_track_2.Jpsi_PT_brem_track_2
+    b_dira     : brem_track_2.B_DIRA_OWNPV_brem_track_2
+    j_dira     : brem_track_2.Jpsi_DIRA_OWNPV_brem_track_2
     min_ll_pt  : TMath::Min(brem_track_2.L1_PT_brem_track_2 , brem_track_2.L2_PT_brem_track_2)
     max_ll_pt  : TMath::Max(brem_track_2.L1_PT_brem_track_2 , brem_track_2.L2_PT_brem_track_2)
     min_ll_ipc : TMath::Min(L1_IPCHI2_OWNPV, L2_IPCHI2_OWNPV)
