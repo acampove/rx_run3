@@ -32,9 +32,28 @@ def test_simple(nfold : int):
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run()
 # -------------------------------
+def test_preffix():
+    '''
+    Tests using prefixes and suffixes in feature names, e.g.:
+
+    preffix.x.suffix
+    '''
+    rdf_sig  = ut.get_rdf(kind='sig', use_preffix=True)
+    rdf_bkg  = ut.get_rdf(kind='bkg', use_preffix=True)
+    l_column = [ name.c_str() for name in rdf_sig.GetColumnNames() ]
+
+    cfg     = ut.get_config('ml/tests/train_mva.yaml')
+    cfg['training']['nfold']    = 2
+    cfg['training']['features'] = l_column
+    path    = cfg['saving']['output']
+    cfg['saving']['output'] = path.replace('train_mva', 'name_with_preffix')
+
+    obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
+    obj.run()
+# -------------------------------
 def test_missing_feature_plot():
     '''
-    Tests that a feature's plot is missing, 
+    Tests that a feature's plot is missing,
     thus the label corresponding to the feature's name cannot be accessed
     '''
     nfold   = 2
