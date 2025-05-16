@@ -153,6 +153,9 @@ def _get_rdf(kind=None) -> RDataFrame:
 
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
+    if Data.max_entries > 0:
+        log.warning(f'Limiting {kind} dataset to {Data.max_entries} entries')
+        rdf = rdf.Range(Data.max_entries)
 
     if 'definitions' in Data.cfg_dict['dataset']['samples'][kind]:
         log.info(f'Found definitions for {kind}')
@@ -165,9 +168,7 @@ def _get_rdf(kind=None) -> RDataFrame:
 
     rdf = _apply_selection(rdf, kind)
 
-    if Data.max_entries > 0:
-        log.warning(f'Limiting {kind} dataset to {Data.max_entries} entries')
-        rdf = rdf.Range(Data.max_entries)
+    del d_def
 
     return rdf
 #---------------------------------
