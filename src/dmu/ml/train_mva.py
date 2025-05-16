@@ -148,7 +148,7 @@ class TrainMva:
             except TypeError as exc:
                 l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
                 branch_list = 'found_branches.txt'
-                with open(branch_list, encoding='utf-8') as ifile:
+                with open(branch_list, 'w', encoding='utf-8') as ifile:
                     json.dump(l_col, ifile, indent=2)
 
                 raise TypeError(f'Branches found were dumped to {branch_list}') from exc
