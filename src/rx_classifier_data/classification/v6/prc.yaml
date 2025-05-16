@@ -201,7 +201,7 @@ plotting:
             linestyle: '-'
       mass:
         normalized : true
-        binning : [4400, 6500, 50]
+        binning : [3500, 6500, 50]
         yscale  : 'linear'
         labels  : ['$M(B^+)$', '']
         styling :          
