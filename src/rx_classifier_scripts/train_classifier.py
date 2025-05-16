@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 import mplhep
 import yaml
 
+from ROOT                  import RDataFrame
 from rx_selection          import selection as sel
 from rx_data.rdf_getter    import RDFGetter
 from dmu.logging.log_store import LogStore
@@ -137,7 +138,7 @@ def _file_paths_from_wc(file_wc : str) -> list[str]:
 
     return l_path
 #---------------------------------
-def _get_rdf(kind=None):
+def _get_rdf(kind=None) -> RDataFrame:
     '''
     Will load and return ROOT dataframe
 
