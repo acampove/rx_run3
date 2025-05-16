@@ -239,33 +239,6 @@ class TrainMva:
 
         return l_model
     # ---------------------------------------------
-    @staticmethod
-    def plot_roc(
-            l_lab : NPA,
-            l_prb : NPA,
-            kind  : str,
-            ifold : int) -> tuple[NPA, NPA]:
-        '''
-        Takes the labels and the probabilities and plots ROC
-        curve for given fold
-        '''
-        log.debug(f'Plotting ROC curve for {ifold} fold')
-
-        xval, yval, _ = roc_curve(l_lab, l_prb)
-        xval          = 1 - xval
-        area          = auc(xval, yval)
-
-        color='red' if kind == 'Train' else 'blue'
-
-        if ifold == -1:
-            label=f'Test sample: {area:.3f}'
-        else:
-            label=f'{kind}: {area:.3f}'
-
-        plt.plot(xval, yval, color=color, label=label)
-
-        return xval, yval
-    # ---------------------------------------------
     def _save_roc(self, xval : NPA, yval : NPA, ifold : int) -> None:
         ifold    = 'all' if ifold == -1 else ifold # -1 represents all the testing datasets combined
         val_dir  = self._cfg['saving']['output']
@@ -620,4 +593,31 @@ class TrainMva:
 
         self._run_diagnostics(models = l_mod, rdf = self._rdf_sig_org, name='Signal'    )
         self._run_diagnostics(models = l_mod, rdf = self._rdf_bkg_org, name='Background')
+    # ---------------------------------------------
+    @staticmethod
+    def plot_roc(
+            l_lab : NPA,
+            l_prb : NPA,
+            kind  : str,
+            ifold : int) -> tuple[NPA, NPA]:
+        '''
+        Takes the labels and the probabilities and plots ROC
+        curve for given fold
+        '''
+        log.debug(f'Plotting ROC curve for {ifold} fold')
+
+        xval, yval, _ = roc_curve(l_lab, l_prb)
+        xval          = 1 - xval
+        area          = auc(xval, yval)
+
+        color='red' if kind == 'Train' else 'blue'
+
+        if ifold == -1:
+            label=f'Test sample: {area:.3f}'
+        else:
+            label=f'{kind}: {area:.3f}'
+
+        plt.plot(xval, yval, color=color, label=label)
+
+        return xval, yval
 # ---------------------------------------------
