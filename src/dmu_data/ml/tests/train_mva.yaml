@@ -6,7 +6,10 @@ dataset:
     y : -3
 training :
     nfold    : 3
-    features : [x, y, r]
+    features : 
+      - x
+      - y
+      - r
     rdm_stat : 1
     hyper    :
       loss              : log_loss
