@@ -57,15 +57,16 @@ dataset :
     sig :
       sample : Bu_Kee_eq_btosllball05_DPC
       trigger: Hlt2RD_BuToKpEE_MVA
+      definitions: # Simpler name
+        mass                      : B_M_brem_track_2
     bkg :
       sample : DATA*
       trigger: Hlt2RD_BuToKpMuMu_MVA
       definitions: # This is needed because the muon samples do not have brem corrections
-        B_M_brem_track_2          : B_M
+        mass                      : B_M
         B_PT_brem_track_2         : B_PT
         B_DIRA_OWNPV_brem_track_2 : B_DIRA_OWNPV
   define :
-    mass        : B_M_brem_track_2
     log_b_pt    : TMath::Log(B_PT_brem_track_2)
     sqrt_ipchi2 : TMath::Sqrt(B_IPCHI2_OWNPV)
     acos_dira   : TMath::ACos(B_DIRA_OWNPV_brem_track_2)
