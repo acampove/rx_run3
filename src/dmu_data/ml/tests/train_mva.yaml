@@ -1,9 +1,9 @@
 dataset:
   define :
-    r : z + preffix.x.suffix
+    r : z + x
   nan :
-    preffix.x.suffix : -3
-    y                : -3
+    x : -3
+    y : -3
 training :
     nfold    : 3
     features :
