@@ -313,9 +313,8 @@ class TrainMva:
     def _labels_from_varnames(self, l_var_name : list[str]) -> list[str]:
         try:
             d_plot = self._cfg['plotting']['features']['plots']
-        except ValueError:
-            log.warning('Cannot find plotting/features/plots section in config, using dataframe names')
-            return l_var_name
+        except KeyError as exc:
+            raise KeyError('Cannot find plotting/features/plots section in config, using dataframe names') from exc
 
         l_label = []
         for var_name in l_var_name:
