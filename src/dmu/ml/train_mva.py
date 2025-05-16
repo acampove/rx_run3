@@ -241,7 +241,7 @@ class TrainMva:
                   l_lab : NPA,
                   l_prb : NPA,
                   kind  : str,
-                  ifold : int):
+                  ifold : int) -> tuple[NPA, NPA]:
         '''
         Takes the labels and the probabilities and plots ROC
         curve for given fold
@@ -266,12 +266,18 @@ class TrainMva:
         # sample, which is the only one
         if kind == 'Train' or ifold == -1:
             self._plot_probabilities(xval, yval, l_prb, l_lab)
+
+        return xval, yval
     # ---------------------------------------------
-    def _save_roc_plot(self, ifold : int) -> None:
+    def _save_roc(self, xval : NPA, yval : NPA, ifold : int) -> None:
         ifold    = 'all' if ifold == -1 else ifold # -1 represents all the testing datasets combined
         val_dir  = self._cfg['saving']['output']
         val_dir  = f'{val_dir}/fold_{ifold:03}'
         os.makedirs(val_dir, exist_ok=True)
+        plt_path = f'{val_dir}/roc.png'
+        jsn_path = plt_path.replace('.png', '.json')
+        df       = pnd.DataFrame({'x' : xval, 'y' : yval})
+        df.to_json(jsn_path, indent=2)
 
         min_x = 0
         min_y = 0
@@ -290,7 +296,7 @@ class TrainMva:
         plt.ylim(min_y, max_y)
         plt.grid()
         plt.legend()
-        plt.savefig(f'{val_dir}/roc.png')
+        plt.savefig(plt_path)
         plt.close()
     # ---------------------------------------------
     def _load_trained_models(self) -> list[cls]:
