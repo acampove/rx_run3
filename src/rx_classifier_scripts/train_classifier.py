@@ -157,16 +157,23 @@ def _get_rdf(kind=None) -> RDataFrame:
         log.warning(f'Limiting {kind} dataset to {Data.max_entries} entries')
         rdf = rdf.Range(Data.max_entries)
 
-    if 'definitions' in Data.cfg_dict['dataset']['samples'][kind]:
-        log.info(f'Found definitions for {kind}')
-        d_def = Data.cfg_dict['dataset']['samples'][kind]['definitions']
-        for name, expr in d_def.items():
-            log.debug(f'{name:<20}{"-->":<10}{expr:<20}')
-            rdf = rdf.Define(name, expr)
-
-        del Data.cfg_dict['dataset']['samples'][kind]['definitions']
-
+    rdf = _add_columns(rdf=rdf, kind=kind)
     rdf = _apply_selection(rdf, kind)
+
+    return rdf
+#---------------------------------
+def _add_columns(rdf :  RDataFrame, kind : str) -> RDataFrame:
+    if 'definitions' not in Data.cfg_dict['dataset']['samples'][kind]:
+        return rdf
+
+    d_def = Data.cfg_dict['dataset']['samples'][kind]['definitions']
+    log.info(60 * '-')
+    log.info(f'Found definitions for {kind}')
+    log.info(60 * '-')
+    for name, expr in d_def.items():
+        log.info(f'{name:<30}{"-->":<10}{expr:<20}')
+        rdf = rdf.Define(name, expr)
+    log.info(60 * '-')
 
     del d_def
 
