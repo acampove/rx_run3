@@ -40,7 +40,7 @@ def test_preffix():
     '''
     rdf_sig = ut.get_rdf(kind='sig', use_preffix=True)
     rdf_bkg = ut.get_rdf(kind='bkg', use_preffix=True)
-    cfg     = ut.get_config('ml/tests/train_mva_preffix.yaml')
+    cfg     = ut.get_config('ml/tests/train_mva_with_preffix.yaml')
 
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run()
