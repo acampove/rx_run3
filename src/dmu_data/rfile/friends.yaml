@@ -1,4 +1,6 @@
 tree   : tree_name
+primary_keys:
+  - index
 samples:
   main :
     - /tmp/tests/dmu/rfile/main/file_001.root
