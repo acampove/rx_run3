@@ -23,14 +23,17 @@ class DDFGetter:
     - Multiple files
     '''
     # ----------------------
-    def __init__(self, config_path : str):
+    def __init__(
+            self,
+            cfg         : dict= None,
+            config_path : str = None):
         '''
         Params
         --------------
-
-        config_path : Path to YAML configuration file
+        cfg         : Dictionary storing the configuration (optional)
+        config_path : Path to YAML configuration file (optional)
         '''
-        self._cfg = self._load_config(path=config_path)
+        self._cfg = self._load_config(path=config_path) if cfg is None else cfg
     # ----------------------
     def _load_config(self, path : str) -> dict:
         with open(path, encoding='utf-8') as ifile:

@@ -4,6 +4,7 @@ Script used to test the DDataFrameGetter class
 import os
 from importlib.resources   import files
 
+import yaml
 import pytest
 import dask.dataframe    as DaskDataFrame
 import matplotlib.pyplot as plt
@@ -30,9 +31,10 @@ def _plot_columns(ddf : DaskDataFrame, name : str) -> None:
     df.plot.hist(range=[-3,+3], bins=20, histtype='step')
     plt.savefig(f'{Data.out_dir}/{name}.png')
 # ------------------------------
-def test_simple():
+def test_with_path():
     '''
-    Simplest test for loading trees and friends into a DaskDataFrame
+    Tests loading trees and friends into a DaskDataFrame
+    using path to config file
     '''
     file_name = 'friends.yaml'
     build_friend_structure(file_name=file_name)
@@ -41,5 +43,21 @@ def test_simple():
     ddfg = DDFGetter(config_path=cfg_path)
     ddf  = ddfg.get_dataframe()
 
-    _plot_columns(ddf=ddf, name='simple')
+    _plot_columns(ddf=ddf, name='with_path')
+# ------------------------------
+def test_with_conf():
+    '''
+    Tests loading trees and friends into a DaskDataFrame
+    using path to config file
+    '''
+    file_name = 'friends.yaml'
+    build_friend_structure(file_name=file_name)
+    cfg_path  = files('dmu_data').joinpath(f'rfile/{file_name}')
+    with open(cfg_path, encoding='utf-8') as ofile:
+        cfg = yaml.safe_load(ofile)
+
+    ddfg = DDFGetter(cfg=cfg)
+    ddf  = ddfg.get_dataframe()
+
+    _plot_columns(ddf=ddf, name='with_conf')
 # ------------------------------
