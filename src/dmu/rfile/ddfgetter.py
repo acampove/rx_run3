@@ -1,25 +1,66 @@
+'''
+Module holding DDFGetter class
+'''
+# pylint: disable=unnecessary-lambda-assignment
+
+from functools import reduce
 
 import uproot
-import dask
-import dask.dataframe as dd
-import pandas as pd
+import yaml
+import dask.dataframe as ddf
+import pandas         as pnd
+from dmu.logging.log_store import LogStore
 
-# List of ROOT files
-root_files = ['/path/to/file1.root', '/path/to/file2.root', ...]
+log=LogStore.add_logger('dmu:rfile:ddfgetter')
+# -------------------------------
+class DDFGetter:
+    '''
+    Class used to provide Dask DataFrames from YAML config files. It should handle:
 
-# Function to load one ROOT file into pandas DataFrame (lazy)
-@dask.delayed
-def load_root_file(file_path):
-    with uproot.open(file_path) as file:
-        tree = file['myTree']
-        df = tree.arrays(library='pd')  # convert to pandas DataFrame
-    return df
+    - Friend trees
+    - Multiple files
+    '''
+    # ----------------------
+    def __init__(self, config_path : str):
+        self._cfg = self._load_config(path=config_path)
+    # ----------------------
+    def _load_config(self, path : str) -> dict:
+        with open(path, encoding='utf-8') as ifile:
+            data = yaml.safe_load(ifile)
 
-# Create a list of delayed DataFrames
-delayed_dfs = [load_root_file(f) for f in root_files]
+            return data
+    # ----------------------
+    def _get_file_df(self, fpath : str) -> pnd.DataFrame:
+        with uproot.open(fpath) as file:
+            tname= self._cfg['tree_name']
+            tree = file[tname]
+            df   = tree.arrays(library='pd')
 
-# Convert delayed objects to a Dask DataFrame
-ddf = dd.from_delayed(delayed_dfs)
+        return df
+    # ----------------------
+    def _get_file_dfs(self, fname : str) -> list[pnd.DataFrame]:
+        l_fpath = [ f'{sample_dir}/{fname}'          for sample_dir in self._cfg['samples'] ]
+        l_df    = [ self._get_file_df(fpath = fpath) for fpath in l_fpath ]
 
-# Now you can use `ddf` as a normal Dask DataFrame,
-# then convert batches to PyTorch tensors as before
+        return l_df
+    # ----------------------
+    def _load_root_file(self, fname : str) -> pnd.DataFrame:
+        l_primary_key = self._cfg['primary_keys']
+
+        l_df = self._get_file_dfs(fname=fname)
+        fun  = lambda df_l, df_r : pnd.merge(df_l, df_r, on=l_primary_key)
+        df   = reduce(fun, l_df)
+
+        return df
+    # ----------------------
+    def get_dataframe(self) -> ddf:
+        '''
+        Returns dask dataframe
+        '''
+        l_fname = self._cfg['files']
+        l_dfs   = [ self._load_root_file(fname = fname) for fname in l_fname  ]
+
+        output = ddf.from_delayed(l_dfs)
+
+        return output
+# -------------------------------
