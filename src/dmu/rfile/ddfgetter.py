@@ -6,6 +6,7 @@ Module holding DDFGetter class
 from functools import reduce
 
 import uproot
+import dask
 import yaml
 import dask.dataframe as ddf
 import pandas         as pnd
@@ -44,6 +45,7 @@ class DDFGetter:
 
         return l_df
     # ----------------------
+    @dask.delayed
     def _load_root_file(self, fname : str) -> pnd.DataFrame:
         l_primary_key = self._cfg['primary_keys']
 
