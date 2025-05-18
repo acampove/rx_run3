@@ -158,25 +158,25 @@ def get_models(rdf_sig : RDataFrame, rdf_bkg : RDataFrame) -> list[CVClassifier]
 
     return l_model
 # -------------------------------
-def _make_files(
-        sample   : str,
-        l_path   : list[str],
+def _make_file(
+        fpath    : str,
         tree     : str,
         nentries : int = 100) -> None:
 
+    fdir       = os.path.dirname(fpath)
+    sample     = os.path.basename(fdir)
     l_col_name = Data.d_col[sample]
-    for path in l_path:
-        data = {}
-        for col_name in l_col_name:
-            if col_name == 'index':
-                data[col_name] = numpy.arange(nentries)
-                continue
+    data       = {}
+    for col_name in l_col_name:
+        if col_name == 'index':
+            data[col_name] = numpy.arange(nentries)
+            continue
 
-            data[col_name] = numpy.random.normal(0, 1, nentries)
+        data[col_name] = numpy.random.normal(0, 1, nentries)
 
-        with uproot.recreate(path) as ofile:
-            log.debug(f'Savign to: {path}:{tree}')
-            ofile[tree] = data
+    with uproot.recreate(fpath) as ofile:
+        log.debug(f'Saving to: {fpath}:{tree}')
+        ofile[tree] = data
 # -------------------------------
 def build_friend_structure(file_name : str) -> None:
     '''
@@ -199,6 +199,11 @@ def build_friend_structure(file_name : str) -> None:
     if 'samples' not in data:
         raise ValueError('Samples section missing in: {cfg_path}')
 
-    for sample, l_path in data['samples'].items():
-        _make_files(sample=sample, l_path = l_path, tree=tree_name)
+    if 'files' not in data:
+        raise ValueError('Files section missing in: {cfg_path}')
+
+    for fdir in data['samples']:
+        for fname in data['files']:
+            path = f'{fdir}/{fname}'
+            _make_file(fpath=path, tree=tree_name)
 # ----------------------------------------------
