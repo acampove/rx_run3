@@ -5,10 +5,11 @@ Module holding DDFGetter class
 
 from functools import reduce
 
-import uproot
 import dask
-import yaml
 import dask.dataframe as ddf
+
+import uproot
+import yaml
 import pandas         as pnd
 from dmu.logging.log_store import LogStore
 
