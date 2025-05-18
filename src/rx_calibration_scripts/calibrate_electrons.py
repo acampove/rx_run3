@@ -31,9 +31,8 @@ def main():
     '''
     ddf = _get_ddf()
     cal = Calculator(ddf=ddf)
-    obj = cal.run()
-
-    obj.save(out_dir=f'{Data.ana_dir}/calibration/electron/brem_energy/{Data.vers}')
+    cal.train()
+    cal.save(out_dir=f'{Data.ana_dir}/calibration/electron/brem_energy/{Data.vers}')
 # -------------------------------
 if __name__ == '__main__':
     main()
