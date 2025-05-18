@@ -10,6 +10,7 @@ from importlib.resources import files
 
 from ROOT import RDF, TFile, RDataFrame
 
+import uproot
 import joblib
 import pandas as pnd
 import numpy
@@ -27,6 +28,10 @@ class Data:
     Class storing shared data
     '''
     out_dir = '/tmp/tests/dmu/ml/cv_predict'
+
+    d_col   = {
+            'main' : ['index', 'a', 'b'],
+            'frnd' : ['index', 'c', 'd']}
 # -------------------------------
 def _double_data(df_1 : pnd.DataFrame) -> pnd.DataFrame:
     df_2   = df_1.copy()
@@ -153,3 +158,47 @@ def get_models(rdf_sig : RDataFrame, rdf_bkg : RDataFrame) -> list[CVClassifier]
 
     return l_model
 # -------------------------------
+def _make_files(
+        sample   : str,
+        l_path   : list[str],
+        tree     : str,
+        nentries : int = 100) -> None:
+
+    l_col_name = Data.d_col[sample]
+    for path in l_path:
+        data = {}
+        for col_name in l_col_name:
+            if col_name == 'index':
+                data[col_name] = numpy.arange(nentries)
+                continue
+
+            data[col_name] = numpy.random.normal(0, 1, nentries)
+
+        with uproot.recreate(path) as ofile:
+            log.debug(f'Savign to: {path}:{tree}')
+            ofile[tree] = data
+# -------------------------------
+def build_friend_structure(file_name : str) -> None:
+    '''
+    Will load YAML file with file structure needed to
+    test code that relies on friend trees, e.g. DDFGetter
+
+    Parameters:
+    -------------------
+    file_name (str): Name of YAML file with wanted structure, e.g. friends.yaml
+    '''
+    cfg_path = files('dmu_data').joinpath(f'rfile/{file_name}')
+    with open(cfg_path, encoding='utf=8') as ifile:
+        data = yaml.safe_load(ifile)
+
+    if 'tree' not in data:
+        raise ValueError('tree entry missing in: {cfg_path}')
+
+    tree_name = data['tree']
+
+    if 'samples' not in data:
+        raise ValueError('Samples section missing in: {cfg_path}')
+
+    for sample, l_path in data['samples'].items():
+        _make_files(sample=sample, l_path = l_path, tree=tree_name)
+# ----------------------------------------------

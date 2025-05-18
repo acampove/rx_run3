@@ -35,6 +35,7 @@ compare_classifiers  ='dmu_scripts.ml.compare_classifiers:main'
 
 [tool.setuptools.package-data]
 dmu_data=[
+'rfile/*.yaml',
 'text/*.txt',
 'text/*.toml',
 'ml/*/*.yaml',
