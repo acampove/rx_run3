@@ -80,7 +80,6 @@ class DDFGetter:
         fun  = lambda df_l, df_r : pnd.merge(df_l, df_r, on=l_primary_key)
         df   = reduce(fun, l_df)
 
-
         return df
     # ----------------------
     def get_dataframe(self) -> ddf:
