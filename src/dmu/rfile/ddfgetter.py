@@ -39,7 +39,7 @@ class DDFGetter:
     # ----------------------
     def _get_file_df(self, fpath : str) -> pnd.DataFrame:
         with uproot.open(fpath) as file:
-            tname= self._cfg['tree_name']
+            tname= self._cfg['tree']
             tree = file[tname]
             df   = tree.arrays(library='pd')
 
