@@ -20,6 +20,7 @@ class Data:
     Data class
     '''
     out_dir = '/tmp/tests/dmu/rfile/ddfgetter'
+    nentries= 100
 # ------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -37,7 +38,7 @@ def test_with_path():
     using path to config file
     '''
     file_name = 'friends.yaml'
-    build_friend_structure(file_name=file_name)
+    build_friend_structure(file_name=file_name, nentries=Data.nentries)
     cfg_path  = files('dmu_data').joinpath(f'rfile/{file_name}')
 
     ddfg = DDFGetter(config_path=cfg_path)
@@ -51,7 +52,7 @@ def test_with_conf():
     using path to config file
     '''
     file_name = 'friends.yaml'
-    build_friend_structure(file_name=file_name)
+    build_friend_structure(file_name=file_name, nentries=Data.nentries)
     cfg_path  = files('dmu_data').joinpath(f'rfile/{file_name}')
     with open(cfg_path, encoding='utf-8') as ofile:
         cfg = yaml.safe_load(ofile)
@@ -67,7 +68,7 @@ def test_columns():
     with only a few columns
     '''
     file_name = 'friends.yaml'
-    build_friend_structure(file_name=file_name)
+    build_friend_structure(file_name=file_name, nentries=Data.nentries)
     cfg_path  = files('dmu_data').joinpath(f'rfile/{file_name}')
 
     ddfg = DDFGetter(config_path=cfg_path, columns=['a', 'b'])
