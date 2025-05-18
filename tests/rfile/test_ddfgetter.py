@@ -61,3 +61,17 @@ def test_with_conf():
 
     _plot_columns(ddf=ddf, name='with_conf')
 # ------------------------------
+def test_columns():
+    '''
+    Tests loading trees and friends into a DaskDataFrame
+    with only a few columns
+    '''
+    file_name = 'friends.yaml'
+    build_friend_structure(file_name=file_name)
+    cfg_path  = files('dmu_data').joinpath(f'rfile/{file_name}')
+
+    ddfg = DDFGetter(config_path=cfg_path, columns=['a', 'b'])
+    ddf  = ddfg.get_dataframe()
+
+    _plot_columns(ddf=ddf, name='columns')
+# ------------------------------
