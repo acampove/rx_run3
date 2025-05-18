@@ -841,6 +841,7 @@ A set of `ROOT` files can be loaded into one of these with:
 ```python
 from dmu.rfile.ddfgetter   import DDFGetter
 
+# Can also pass directly the configuration dictionary with the `cfg` argument
 ddfg = DDFGetter(config_path='config.yaml')
 ddf  = ddfg.get_dataframe()
 
