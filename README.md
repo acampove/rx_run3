@@ -842,7 +842,9 @@ A set of `ROOT` files can be loaded into one of these with:
 from dmu.rfile.ddfgetter   import DDFGetter
 
 # Can also pass directly the configuration dictionary with the `cfg` argument
-ddfg = DDFGetter(config_path='config.yaml')
+# If no columns argument is passed, will take all the columns
+
+ddfg = DDFGetter(config_path='config.yaml', columns=['a', 'b'])
 ddf  = ddfg.get_dataframe()
 
 # This will provide the pandas dataframe
