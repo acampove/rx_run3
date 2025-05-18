@@ -161,7 +161,7 @@ def get_models(rdf_sig : RDataFrame, rdf_bkg : RDataFrame) -> list[CVClassifier]
 def _make_file(
         fpath    : str,
         tree     : str,
-        nentries : int = 100) -> None:
+        nentries : int) -> None:
 
     fdir       = os.path.dirname(fpath)
     sample     = os.path.basename(fdir)
@@ -178,7 +178,7 @@ def _make_file(
         log.debug(f'Saving to: {fpath}:{tree}')
         ofile[tree] = data
 # -------------------------------
-def build_friend_structure(file_name : str) -> None:
+def build_friend_structure(file_name : str, nentries : int) -> None:
     '''
     Will load YAML file with file structure needed to
     test code that relies on friend trees, e.g. DDFGetter
@@ -186,6 +186,7 @@ def build_friend_structure(file_name : str) -> None:
     Parameters:
     -------------------
     file_name (str): Name of YAML file with wanted structure, e.g. friends.yaml
+    nentries (int) : Number of entries in file
     '''
     cfg_path = files('dmu_data').joinpath(f'rfile/{file_name}')
     with open(cfg_path, encoding='utf=8') as ifile:
@@ -205,5 +206,5 @@ def build_friend_structure(file_name : str) -> None:
     for fdir in data['samples']:
         for fname in data['files']:
             path = f'{fdir}/{fname}'
-            _make_file(fpath=path, tree=tree_name)
+            _make_file(fpath=path, tree=tree_name, nentries=nentries)
 # ----------------------------------------------
