@@ -37,6 +37,31 @@ def _plot_columns(ddf : DaskDataFrame, name : str) -> None:
     df.plot.hist(range=[-3,+3], bins=20, histtype='step')
     plt.savefig(f'{Data.out_dir}/{name}.png')
 # ------------------------------
+def test_small():
+    '''
+    Tests loading trees and friends into a DaskDataFrame
+    with at most 10 entries per file
+    '''
+    old_entries   = Data.nentries
+    Data.nentries = 10
+
+    file_name = 'friends.yaml'
+    build_friend_structure(file_name=file_name, nentries=Data.nentries)
+    cfg_path  = files('dmu_data').joinpath(f'rfile/{file_name}')
+    with open(cfg_path, encoding='utf-8') as ofile:
+        cfg = yaml.safe_load(ofile)
+
+    ddfg = DDFGetter(cfg=cfg)
+    ddf  = ddfg.get_dataframe()
+
+    _plot_columns(ddf=ddf, name='with_conf')
+    _check_ddf(ddf=ddf)
+
+    log.info('Dataframe:')
+    print(ddf.compute())
+
+    Data.nentries = old_entries
+# ------------------------------
 def test_with_path():
     '''
     Tests loading trees and friends into a DaskDataFrame
