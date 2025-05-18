@@ -1,0 +1,10 @@
+tree   : tree_name
+samples:
+  main :
+    - /tmp/tests/dmu/rfile/main/file_001.root
+    - /tmp/tests/dmu/rfile/main/file_002.root
+    - /tmp/tests/dmu/rfile/main/file_003.root
+  frnd :
+    - /tmp/tests/dmu/rfile/frnd/file_001.root
+    - /tmp/tests/dmu/rfile/frnd/file_002.root
+    - /tmp/tests/dmu/rfile/frnd/file_003.root
