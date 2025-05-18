@@ -26,6 +26,11 @@ class Data:
 def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 # ------------------------------
+# index and a,b,c,d, This is hardcoded in the utilities.py Data class
+def _check_ddf(ddf : DaskDataFrame, ncol : int = 5) -> None:
+    assert len(ddf)         == Data.nentries * 3 # There are 3 files in the config file
+    assert len(ddf.columns) == ncol
+# ------------------------------
 def _plot_columns(ddf : DaskDataFrame, name : str) -> None:
     df= ddf.compute()
     df= df.drop(columns=['index'])
@@ -45,6 +50,7 @@ def test_with_path():
     ddf  = ddfg.get_dataframe()
 
     _plot_columns(ddf=ddf, name='with_path')
+    _check_ddf(ddf=ddf)
 # ------------------------------
 def test_with_conf():
     '''
@@ -61,6 +67,7 @@ def test_with_conf():
     ddf  = ddfg.get_dataframe()
 
     _plot_columns(ddf=ddf, name='with_conf')
+    _check_ddf(ddf=ddf)
 # ------------------------------
 def test_columns():
     '''
@@ -75,4 +82,5 @@ def test_columns():
     ddf  = ddfg.get_dataframe()
 
     _plot_columns(ddf=ddf, name='columns')
+    _check_ddf(ddf=ddf, ncol=3)
 # ------------------------------
