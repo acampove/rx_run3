@@ -23,6 +23,12 @@ class DDFGetter:
     '''
     # ----------------------
     def __init__(self, config_path : str):
+        '''
+        Params
+        --------------
+
+        config_path : Path to YAML configuration file
+        '''
         self._cfg = self._load_config(path=config_path)
     # ----------------------
     def _load_config(self, path : str) -> dict:
