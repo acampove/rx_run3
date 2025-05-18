@@ -12,7 +12,7 @@ dependencies= [
 'toml',
 'uproot',
 'awkward-pandas', # Because DDFGetter might need to access files with jagged data?
-'dask[dataframe]',
+'dask[dataframe,distributed]',
 'numpy',
 'matplotlib',
 'mplhep',
