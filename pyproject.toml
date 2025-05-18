@@ -10,6 +10,8 @@ dependencies= [
 'tqdm',
 'numpy',
 'toml',
+'uproot',
+'dask[dataframe]',
 'numpy',
 'matplotlib',
 'mplhep',
