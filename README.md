@@ -62,7 +62,7 @@ will:
 - Encode it to utf-8
 - Make a 64 characters hash out of it
 
-in two lines, thus keeping the user's code clean. 
+in two lines, thus keeping the user's code clean.
 
 ## Timer
 
@@ -229,7 +229,7 @@ dscb : Double sided CrystallBall
 
 In order to introduce reparametrizations for the means and the resolutions, such that:
 
-$\mu\to\mu+\Delta\mu$   
+$\mu\to\mu+\Delta\mu$
 $\sigma\to\sigma\cdot s_{\sigma}$
 
 where the reparametrized $\mu$ and $\sigma$ are constant, while the scale and resolution is floating, do:
@@ -271,7 +271,7 @@ PL.set_values(kind='cbr', parameter='mu', val=3000, low=2500, high=3500)
 PL.set_values(kind='cbr', parameter='sg', val=  30, low=  30, high=  30)
 ```
 
-before using the `ModelFactory` class. 
+before using the `ModelFactory` class.
 For a summary of all the parameters and values available do:
 
 ```python
@@ -364,7 +364,7 @@ d_par = {
     'ar_dscb_Signal_002_2_reso_flt' : r'$\alpha_{DSCB}^{2}$',
     }
 
-# It will skip fixed parameters by default 
+# It will skip fixed parameters by default
 pdf_to_tex(path='/path/to/pdf.txt', d_par=d_par, skip_fixed=True)
 ```
 
@@ -803,7 +803,7 @@ correlations:
           yscale     : 'linear'
           labels     : ['mass', 'Entries']
           normalized : true
-          styling :          
+          styling :
             linestyle: '-' # By default there is no line, just pointer
   methods:
     - Pearson
@@ -826,7 +826,7 @@ compare_classifiers -c /path/to/config.yaml
 where the config looks like:
 
 ```yaml
-out_dir : /path/to/plots 
+out_dir : /path/to/plots
 classifiers:
   label for model 1 : /path/to/directory/with/model1
   label for model 2 : /path/to/directory/with/model2
