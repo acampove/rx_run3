@@ -7,4 +7,7 @@ files :
   - file_003.root
 samples:
   - /tmp/tests/dmu/rfile/main
-  - /tmp/tests/dmu/rfile/frnd
+  - /tmp/tests/dmu/rfile/frn1
+  - /tmp/tests/dmu/rfile/frn2
+  - /tmp/tests/dmu/rfile/frn3
+  - /tmp/tests/dmu/rfile/frn4

@@ -30,8 +30,12 @@ class Data:
     out_dir = '/tmp/tests/dmu/ml/cv_predict'
 
     d_col   = {
-            'main' : ['index', 'a', 'b'],
-            'frnd' : ['index', 'c', 'd']}
+            'main' : ['index', 'a0', 'b0'],
+            'frn1' : ['index', 'a1', 'b1'],
+            'frn2' : ['index', 'a2', 'b2'],
+            'frn3' : ['index', 'a3', 'b3'],
+            'frn4' : ['index', 'a4', 'b4'],
+            }
 # -------------------------------
 def _double_data(df_1 : pnd.DataFrame) -> pnd.DataFrame:
     df_2   = df_1.copy()
