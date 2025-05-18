@@ -45,3 +45,10 @@ def test_get_rdf_with_nans():
     rdf = ut.get_rdf(kind='bkg', nentries=10, add_nans=True)
     _check_rdf(rdf)
 # ----------------------------------------------
+def test_build_friend_structure():
+    '''
+    Tests function that builds files needed to test friend tree dependent code
+    '''
+    log.info('Testing build_friend_structure')
+    ut.build_friend_structure('friends.yaml')
+# ----------------------------------------------
