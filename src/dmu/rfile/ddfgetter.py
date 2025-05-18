@@ -44,11 +44,25 @@ class DDFGetter:
 
             return data
     # ----------------------
+    def _get_columns_to_keep(self, tree) -> list[str]:
+        if self._columns is None:
+            return None
+
+        columns       = self._columns + self._cfg['primary_keys']
+        columns       = set(columns)
+        available     = set(tree.keys())
+        columns       = columns & available
+
+        log.debug(f'Keeping only {columns}')
+
+        return list(columns)
+    # ----------------------
     def _get_file_df(self, fpath : str) -> pnd.DataFrame:
         with uproot.open(fpath) as file:
-            tname= self._cfg['tree']
-            tree = file[tname]
-            df   = tree.arrays(library='pd')
+            tname   = self._cfg['tree']
+            tree    = file[tname]
+            columns = self._get_columns_to_keep(tree)
+            df      = tree.arrays(columns, library='pd')
 
         return df
     # ----------------------
@@ -66,9 +80,6 @@ class DDFGetter:
         fun  = lambda df_l, df_r : pnd.merge(df_l, df_r, on=l_primary_key)
         df   = reduce(fun, l_df)
 
-        if self._columns is not None:
-            log.debug(f'Keeping only {self._columns}')
-            df = df[[col for col in self._columns + l_primary_key if col in df.columns]]
 
         return df
     # ----------------------
