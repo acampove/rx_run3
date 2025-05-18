@@ -27,13 +27,12 @@ def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 # ------------------------------
 # index and a,b,c,d, This is hardcoded in the utilities.py Data class
-def _check_ddf(ddf : DaskDataFrame, ncol : int = 5) -> None:
+def _check_ddf(ddf : DaskDataFrame, ncol : int = 4) -> None:
     assert len(ddf)         == Data.nentries * 3 # There are 3 files in the config file
     assert len(ddf.columns) == ncol
 # ------------------------------
 def _plot_columns(ddf : DaskDataFrame, name : str) -> None:
     df= ddf.compute()
-    df= df.drop(columns=['index'])
     df.plot.hist(range=[-3,+3], bins=20, histtype='step')
     plt.savefig(f'{Data.out_dir}/{name}.png')
 # ------------------------------
@@ -107,5 +106,5 @@ def test_columns():
     ddf  = ddfg.get_dataframe()
 
     _plot_columns(ddf=ddf, name='columns')
-    _check_ddf(ddf=ddf, ncol=3)
+    _check_ddf(ddf=ddf, ncol=2)
 # ------------------------------
