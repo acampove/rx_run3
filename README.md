@@ -832,6 +832,37 @@ classifiers:
   label for model 2 : /path/to/directory/with/model2
 ```
 
+# Dask dataframes
+
+In order to process large ammounts of data a `Dask` dataframe is more suitable.
+A set of `ROOT` files can be loaded into one of these with:
+
+
+```python
+from dmu.rfile.ddfgetter   import DDFGetter
+
+ddfg = DDFGetter(config_path='config.yaml')
+ddf  = ddfg.get_dataframe()
+
+# This will provide the pandas dataframe
+df   = ddf.compute()
+...
+```
+where `config.yaml` would look like:
+
+```yaml
+tree   : tree_name
+primary_keys:
+  - index
+files :
+  - file_001.root
+  - file_002.root
+  - file_003.root
+samples:
+  - /tmp/tests/dmu/rfile/main
+  - /tmp/tests/dmu/rfile/frnd
+```
+
 # Pandas dataframes
 
 ## Utilities
