@@ -74,11 +74,11 @@ class DDFGetter:
     # ----------------------
     @dask.delayed
     def _load_root_file(self, fname : str) -> pnd.DataFrame:
-        l_primary_key = self._cfg['primary_keys']
-
+        keys = self._cfg['primary_keys']
         l_df = self._get_file_dfs(fname=fname)
-        fun  = lambda df_l, df_r : pnd.merge(df_l, df_r, on=l_primary_key)
+        fun  = lambda df_l, df_r : pnd.merge(df_l, df_r, on=keys)
         df   = reduce(fun, l_df)
+        df   = df.drop(columns=keys)
 
         return df
     # ----------------------
