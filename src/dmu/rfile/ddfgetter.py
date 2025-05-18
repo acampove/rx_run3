@@ -25,15 +25,18 @@ class DDFGetter:
     # ----------------------
     def __init__(
             self,
-            cfg         : dict= None,
-            config_path : str = None):
+            cfg         : dict      = None,
+            config_path : str       = None,
+            columns     : list[str] = None):
         '''
         Params
         --------------
         cfg         : Dictionary storing the configuration (optional)
         config_path : Path to YAML configuration file (optional)
+        colums      : If passed, will only use these columns to build dataframe
         '''
-        self._cfg = self._load_config(path=config_path) if cfg is None else cfg
+        self._cfg     = self._load_config(path=config_path) if cfg is None else cfg
+        self._columns = columns
     # ----------------------
     def _load_config(self, path : str) -> dict:
         with open(path, encoding='utf-8') as ifile:
@@ -62,6 +65,10 @@ class DDFGetter:
         l_df = self._get_file_dfs(fname=fname)
         fun  = lambda df_l, df_r : pnd.merge(df_l, df_r, on=l_primary_key)
         df   = reduce(fun, l_df)
+
+        if self._columns is not None:
+            log.debug(f'Keeping only {self._columns}')
+            df = df[[col for col in self._columns + l_primary_key if col in df.columns]]
 
         return df
     # ----------------------
