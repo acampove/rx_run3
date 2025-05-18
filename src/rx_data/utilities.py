@@ -197,3 +197,8 @@ def _pick_column(name : str) -> bool:
 
     return False
 # ------------------------------------------
+# Dask
+# ------------------------------------------
+def get_dask_config(sample : str, trigger : str) -> dict:
+    return {}
+# ------------------------------------------
