@@ -27,7 +27,7 @@ def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 # ------------------------------
 # index and a,b,c,d, This is hardcoded in the utilities.py Data class
-def _check_ddf(ddf : DaskDataFrame, ncol : int = 4) -> None:
+def _check_ddf(ddf : DaskDataFrame, ncol : int = 10) -> None:
     assert len(ddf)         == Data.nentries * 3 # There are 3 files in the config file
     assert len(ddf.columns) == ncol
 # ------------------------------
@@ -102,7 +102,7 @@ def test_columns():
     build_friend_structure(file_name=file_name, nentries=Data.nentries)
     cfg_path  = files('dmu_data').joinpath(f'rfile/{file_name}')
 
-    ddfg = DDFGetter(config_path=cfg_path, columns=['a', 'b'])
+    ddfg = DDFGetter(config_path=cfg_path, columns=['a0', 'b0'])
     ddf  = ddfg.get_dataframe()
 
     _plot_columns(ddf=ddf, name='columns')
