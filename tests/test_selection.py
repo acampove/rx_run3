@@ -36,6 +36,11 @@ def _print_dotted_branches(rdf : RDataFrame) -> None:
 
         log.debug(name)
 # --------------------------
+def _save_info(rep : RDF.RCutFlowReport, cuts : dict[str,str], name : str) -> None:
+    df = ut.rdf_report_to_df(rep)
+    df.to_json(f'{Data.out_dir}/{name}_cutflow.json', indent=2)
+    gut.dump_json(cuts, f'{Data.out_dir}/{name}_cuts.json')
+# --------------------------
 @pytest.mark.parametrize('analysis', ['EE', 'MM'])
 @pytest.mark.parametrize('q2bin'   , ['low', 'central', 'high'])
 def test_read_selection(analysis : str, q2bin : str):
@@ -73,6 +78,8 @@ def test_selection(sample : str, smeared : bool):
 
     rep = rdf.Report()
     rep.Print()
+
+    _save_info(rep=rep, cuts=d_sel, name=f'{sample}_{smeared}')
 
     _print_dotted_branches(rdf)
 # --------------------------
