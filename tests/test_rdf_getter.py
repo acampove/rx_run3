@@ -89,7 +89,7 @@ def _check_branches(rdf : RDataFrame, is_ee : bool, is_mc : bool) -> None:
 
     l_branch = Data.l_branch_ee if is_ee else Data.l_branch_mm
     if is_mc:
-        l_branch += Data.l_branch_mc
+        l_branch = Data.l_branch_mc + l_branch
 
     for branch in l_branch:
         if branch in l_name:
