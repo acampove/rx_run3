@@ -18,11 +18,15 @@ class Data:
     data class
     '''
     DATADIR = os.environ['ANADIR'] + '/Data'
+
+    out_dir = '/tmp/tests/rx_selection/selection'
 # --------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_selection:selection'     , 10)
     LogStore.set_level('rx_selection:test_selection', 10)
+
+    os.makedirs(Data.out_dir, exist_ok=True)
 # --------------------------
 def _print_dotted_branches(rdf : RDataFrame) -> None:
     l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
