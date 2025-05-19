@@ -320,6 +320,7 @@ class RDFGetter:
         return rdf
     # ---------------------------------------------------
     def _define_mc_columns(self, rdf : RDataFrame) -> RDataFrame:
+        log.info('Adding MC only columns')
         if self._sample.startswith('DATA'):
             return rdf
 
@@ -331,6 +332,8 @@ class RDFGetter:
         return rdf
     # ---------------------------------------------------
     def _redefine_columns(self, rdf : RDataFrame) -> RDataFrame:
+        log.info('Redefining columns')
+
         d_def = self._cfg['redefinitions']
         for name, definition in d_def.items():
             if name == 'block':
