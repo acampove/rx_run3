@@ -48,7 +48,7 @@ def test_read_selection(analysis : str, q2bin : str):
 # --------------------------
 @pytest.mark.parametrize('sample' , ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC', 'DATA*'])
 @pytest.mark.parametrize('smeared', [True, False])
-@pytest.mark.parametrize('q2bin'  , ['jpsi', 'central'])
+@pytest.mark.parametrize('q2bin'  , ['low', 'central', 'jpsi', 'psi2', 'high'])
 def test_selection(sample : str, smeared : bool, q2bin : str):
     '''
     Basic test of selection
