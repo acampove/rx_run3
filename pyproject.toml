@@ -16,6 +16,7 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
+leakage='rx_plotter_scripts.leakage:main'
 compare='rx_plotter_scripts.compare:main'
 data_mc='rx_plotter_scripts.data_mc:main'
 binned ='rx_plotter_scripts.binned:main'
