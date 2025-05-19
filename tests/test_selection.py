@@ -48,14 +48,11 @@ def test_read_selection(analysis : str, q2bin : str):
 # --------------------------
 @pytest.mark.parametrize('sample' , ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC', 'DATA*'])
 @pytest.mark.parametrize('smeared', [True, False])
-def test_selection(sample : str, smeared : bool):
+@pytest.mark.parametrize('q2bin'  , ['jpsi', 'central'])
+def test_selection(sample : str, smeared : bool, q2bin : str):
     '''
-    Applies selection
+    Basic test of selection
     '''
-    q2bin   = {'Bu_JpsiK_ee_eq_DPC'         : 'jpsi',
-               'DATA*'                      : 'jpsi',
-               'Bu_Kee_eq_btosllball05_DPC' : 'central'}[sample]
-
     trigger = 'Hlt2RD_BuToKpEE_MVA'
 
     gtr = RDFGetter(sample=sample, trigger=trigger)
@@ -72,9 +69,12 @@ def test_selection(sample : str, smeared : bool):
         rdf = rdf.Filter(cut_value, cut_name)
 
     rep = rdf.Report()
-    rep.Print()
+    df  = ut.rdf_report_to_df(rep)
+    df['sample' ] = sample
+    df['smeared'] = smeared
+    df['q2bin'  ] = q2bin
 
-    _save_info(rep=rep, cuts=d_sel, name=f'{sample}_{smeared}')
+    col.Collector.add_dataframe(df=df, test_name='selection')
 
     _print_dotted_branches(rdf)
 # --------------------------
