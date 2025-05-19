@@ -61,3 +61,14 @@ def test_is_ee():
     assert not ut.is_ee(trigger='Hlt2RD_B0ToKpPimMuMu_MVA')
     assert not ut.is_ee(trigger='Hlt2RD_B0ToKpPimMuMu_SameSign_MVA')
 # -----------------------------------------
+def test_is_reso():
+    '''
+    Tests is_reso
+    '''
+    assert not ut.is_reso(q2bin='low')
+    assert not ut.is_reso(q2bin='central')
+    assert not ut.is_reso(q2bin='high')
+
+    assert ut.is_reso(q2bin='jpsi')
+    assert ut.is_reso(q2bin='psi2')
+# -----------------------------------------

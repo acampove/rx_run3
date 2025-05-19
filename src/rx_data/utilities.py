@@ -89,6 +89,22 @@ def is_ee(trigger : str) -> bool:
 
     raise ValueError(f'Trigger {trigger} not found')
 # ---------------------------------
+def is_reso(q2bin : str) -> bool:
+    '''
+    Takes q2bin name, returns true if it has associated
+    charmonium component. If not, returns false.
+    '''
+    reso = ['jpsi', 'psi2']
+    rare = ['low', 'central', 'high']
+
+    if q2bin in reso:
+        return True
+
+    if q2bin in rare:
+        return False
+
+    raise ValueError(f'Invalid q2bin: {q2bin}')
+# ---------------------------------
 def info_from_path(path : str) -> tuple[str,str]:
     '''
     Will pick a path to a ROOT file
