@@ -331,6 +331,18 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
+    def _define_data_columns(self, rdf : RDataFrame) -> RDataFrame:
+        log.info('Adding data only columns')
+
+        if not self._sample.startswith('DATA'):
+            return rdf
+
+        d_def = self._cfg['definitions']['DATA']
+        for name, definition in d_def.items():
+            rdf = self._add_column(rdf, name, definition)
+
+        return rdf
+    # ---------------------------------------------------
     def _redefine_columns(self, rdf : RDataFrame) -> RDataFrame:
         log.info('Redefining columns')
 
