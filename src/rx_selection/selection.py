@@ -144,14 +144,17 @@ def selection(
 def _use_smeared_masses(cuts : dict[str,str], q2bin : str) -> dict[str,str]:
     log.info('Overriding selection for electron MC to use smeared q2 and mass')
 
-    cut_org    = cuts['q2']
-    cut_new    = cut_org.replace('q2', 'q2_smr')
-    cuts['q2'] = cut_new
+    cut_org = cuts['q2']
+    if 'q2_track' not in cut_org:
+        cut_new    = cut_org.replace('q2', 'q2_smr')
+        cuts['q2'] = cut_new
 
-    log.debug('Overriding:')
-    log.debug(cut_org)
-    log.debug('--->')
-    log.debug(cut_new)
+        log.debug('Overriding:')
+        log.debug(cut_org)
+        log.debug('--->')
+        log.debug(cut_new)
+    else:
+        log.warning(f'Not overriding q2_track cut: {cut_org}')
 
     if dut.is_reso(q2bin):
         log.debug(f'Not overriding mass cut for resonant bin: {q2bin}')
