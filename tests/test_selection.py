@@ -40,8 +40,9 @@ def test_read_selection(analysis : str, q2bin : str):
     for cut_name, cut_value in d_sel.items():
         log.info(f'{cut_name:<20}{cut_value}')
 # --------------------------
-@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC', 'DATA*'])
-def test_selection(sample : str):
+@pytest.mark.parametrize('sample' , ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC', 'DATA*'])
+@pytest.mark.parametrize('smeared', [True, False])
+def test_selection(sample : str, smeared : bool):
     '''
     Applies selection
     '''
@@ -55,7 +56,12 @@ def test_selection(sample : str):
     rdf = gtr.get_rdf()
     rdf = rdf.Range(10_000)
 
-    d_sel = sel.selection(trigger=trigger, q2bin=q2bin, process=sample)
+    d_sel = sel.selection(
+            trigger=trigger,
+            q2bin  =q2bin,
+            process=sample,
+            smeared=smeared)
+
     for cut_name, cut_value in d_sel.items():
         rdf = rdf.Filter(cut_value, cut_name)
 
