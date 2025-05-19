@@ -207,6 +207,16 @@ wdata_3 = wdata.update_weights(weights=arr_wgt_new, replace=False)
 
 ## PDFs
 
+### Suppressing tensorflow messages from zfit import
+
+If you work with zfit, you will see messages from tensorflow, by importing zfit through:
+
+```python
+from dmu.stats.zfit import zfit
+```
+
+these messages should be hidden.
+
 ### Model building
 
 In order to do complex fits, one often needs PDFs with many parameters, which need to be added.
