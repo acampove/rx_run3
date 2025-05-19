@@ -440,6 +440,8 @@ def test_define_custom_branches():
 
     assert 'xbrem' in l_col
     assert 'xmva'  in l_col
+
+    del RDFGetter.d_custom_columns
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA*'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
