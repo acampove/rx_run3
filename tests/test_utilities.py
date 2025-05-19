@@ -20,8 +20,8 @@ class Data:
 def _initialize():
     LogStore.set_level('rx_data:utilities', 10)
 
-    data_dir  = os.environ['DATADIR']
-    yaml_path = f'{data_dir}/samples/main.yaml'
+    ana_dir   = os.environ['ANADIR']
+    yaml_path = f'{ana_dir}/Data/samples/main.yaml'
     with open(yaml_path, encoding='utf-8') as ifile:
         Data.d_sample = yaml.safe_load(ifile)
 # -----------------------------------------
