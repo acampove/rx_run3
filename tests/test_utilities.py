@@ -55,4 +55,9 @@ def test_is_ee():
     assert ut.is_ee(trigger='Hlt2RD_BuToKpEE_MVA')
     assert ut.is_ee(trigger='Hlt2RD_BuToKpEE_SameSign_MVA')
     assert ut.is_ee(trigger='Hlt2RD_BuToKpEE_MVA_misid')
+
+    assert not ut.is_ee(trigger='Hlt2RD_BuToKpMuMu_MVA')
+    assert not ut.is_ee(trigger='Hlt2RD_BuToKpMuMu_SameSign_MVA')
+    assert not ut.is_ee(trigger='Hlt2RD_B0ToKpPimMuMu_MVA')
+    assert not ut.is_ee(trigger='Hlt2RD_B0ToKpPimMuMu_SameSign_MVA')
 # -----------------------------------------
