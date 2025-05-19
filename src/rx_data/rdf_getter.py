@@ -288,12 +288,12 @@ class RDFGetter:
             log.debug(f'Not adding column {name}, already found')
             return rdf
 
-        log.debug(f'Adding column {name}, not found')
+        log.debug(f'Defining: {name}={definition}')
 
         try:
             rdf = rdf.Define(name, definition)
         except TypeError as exc:
-            raise TypeError(f'Cannot define {name} as {definition}') from exc
+            raise TypeError(f'Cannot define {name}={definition}') from exc
 
         self._l_columns.append(name)
 
