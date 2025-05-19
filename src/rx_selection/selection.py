@@ -13,6 +13,7 @@ import ap_utilities.decays.utilities as aput
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
 
+from rx_data      import utilities          as dut
 from rx_selection import truth_matching     as tm
 from rx_selection import version_management as vman
 
@@ -131,9 +132,41 @@ def selection(
     if hasattr(Data, 'd_custom_selection'):
         d_cut.update(Data.d_custom_selection)
 
+    if dut.is_mc(sample=process) and dut.is_ee(trigger=trigger) and smeared:
+        d_cut = _use_smeared_masses(cuts=d_cut, q2bin=q2bin)
+    else:
+        log.warning('Using cuts on un-smeared masses')
+
     _print_selection(d_cut)
 
     return d_cut
+#-----------------------
+def _use_smeared_masses(cuts : dict[str,str], q2bin : str) -> dict[str,str]:
+    log.info('Overriding selection for electron MC to use smeared q2 and mass')
+
+    cut_org    = cuts['q2']
+    cut_new    = cut_org.replace('q2', 'q2_smr')
+    cuts['q2'] = cut_new
+
+    log.debug('Overriding:')
+    log.debug(cut_org)
+    log.debug('--->')
+    log.debug(cut_new)
+
+    if dut.is_reso(q2bin):
+        log.debug(f'Not overriding mass cut for resonant bin: {q2bin}')
+        return cuts
+
+    cut_org = cuts['mass']
+    cut_new = cut_org.replace('B_Mass', 'B_Mass_smr')
+    cuts['mass'] = cut_new
+
+    log.debug('Overriding:')
+    log.debug(cut_org)
+    log.debug('--->')
+    log.debug(cut_new)
+
+    return cuts
 #-----------------------
 def load_selection_config() -> dict:
     '''
