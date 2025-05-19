@@ -98,7 +98,7 @@ def selection(
         q2bin    : str,
         process  : str,
         project  : str = None,
-        analysis : str = None,
+        smeared  : bool= True,
         trigger  : str = None) -> dict[str,str]:
     '''
     Picks up sample name, trigger, etc, returns dictionary with selection
@@ -106,12 +106,12 @@ def selection(
     project  : Optional, RK or RKst, if not passed, will be decided from trigger argument
     q2bin    : low, central, jpsi, psi2S or high
     process  : Nickname for MC sample, starts with "DATA" for data
-    analysis : EE or MM
     trigger  : E.g. Hlt2RD...
+    smeared  : If true (default), the selection will use cuts on smeared masses. Only makes sense for electron MC samples
     '''
 
     project  = _project_from_trigger(trigger=trigger, project=project)
-    analysis = _get_analysis(analysis, trigger)
+    analysis = _get_analysis(trigger)
 
     d_cut : dict[str,str] = {}
 
