@@ -3,6 +3,7 @@
 #If a column ins not found in a dataframe, it will be added according to the following definitions
 redefinitions:
   block             : 'block < 0 ? 0 : block' # This is needed to process pre-UT data as Block 0 data, temporary
+  q2                : Jpsi_Mass * Jpsi_Mass # Ntuples from post_ap already have q2 calculated without correction
 definitions:
   common: &common
     th_l1_l2          : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(L2_PX, L2_PY, L2_PZ); return v1.Angle(v2);
