@@ -24,6 +24,71 @@ class Data:
     dt_rgx  = r'(data_\d{2}_.*c\d)_(Hlt2RD_.*(?:EE|MuMu|misid|cal|MVA|LL|DD))_?(\d{3}_\d{3}|[a-z0-9]{10})?\.root'
     mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_(\d{3}_\d{3}|\w{10}).root'
 # ---------------------------------
+def is_mc(sample : str) -> bool:
+    '''
+    Given a sample name, it will check if it is MC or data
+    '''
+
+    if sample.startswith('DATA'):
+        return False
+
+    return True
+# ---------------------------------
+def is_ee(trigger : str) -> bool:
+    '''
+    Given Hlt2 trigger name, it will tell if it belongs to
+    muon or electron channel
+    '''
+    # From https://gitlab.cern.ch/lhcb/Moore/-/blob/master/Hlt/Hlt2Conf/python/Hlt2Conf/lines/rd/b_to_xll_hlt2_mva.py?ref_type=heads
+
+    ee_trig = [
+            'Hlt2RD_BuToKpEE_MVA', 
+            'Hlt2RD_BuToKpEE_SameSign_MVA',
+            'Hlt2RD_BuToKpEE_MVA_misid',
+            'Hlt2RD_BuToKpEE_MVA_cal',
+            # ----
+            'Hlt2RD_B0ToKpPimEE_MVA',
+            'Hlt2RD_B0ToKpPimEE_SameSign_MVA',
+            'Hlt2RD_B0ToKpPimEE_MVA_misid',
+            'Hlt2RD_B0ToKpPimEE_MVA_cal',
+            # ----
+            'Hlt2RD_LbTopKEE_MVA',
+            'Hlt2RD_LbTopKEE_SameSign_MVA',
+            'Hlt2RD_LbTopKEE_MVA_misid',
+            # ----
+            'Hlt2RD_BsToPhiEE_MVA',
+            'Hlt2RD_BsToPhiEE_SameSign_MVA',
+            'Hlt2RD_BsToPhiEE_MVA_misid']
+
+    mm_trig = [
+            'Hlt2RD_BuToKpMuMu_MVA',
+            'Hlt2RD_BuToKpMuMu_SameSign_MVA',
+            # ----
+            'Hlt2RD_B0ToKpPimMuMu_MVA',
+            'Hlt2RD_B0ToKpPimMuMu_SameSign_MVA',
+            # ----
+            'Hlt2RD_LbTopKMuMu_SameSign_MVA',
+            'Hlt2RD_LbTopKMuMu_MVA',
+            # ----
+            'Hlt2RD_BsToPhiMuMu_MVA',
+            'Hlt2RD_BsToPhiMuMu_SameSign_MVA']
+
+    em_trig = [
+            'Hlt2RD_BuToKpMuE_MVA',
+            'Hlt2RD_B0ToKpPimMuE_MVA',
+            'Hlt2RD_LbTopKMuE_MVA',
+            'Hlt2RD_BsToPhiMuE_MVA']
+
+    non_ee = mm_trig + em_trig
+
+    if trigger in ee_trig:
+        return True
+
+    if trigger in non_ee:
+        return False
+
+    raise ValueError(f'Trigger {trigger} not found')
+# ---------------------------------
 def info_from_path(path : str) -> tuple[str,str]:
     '''
     Will pick a path to a ROOT file
