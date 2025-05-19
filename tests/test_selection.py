@@ -15,7 +15,7 @@ class Data:
     '''
     data class
     '''
-    DATADIR = os.environ['DATADIR']
+    DATADIR = os.environ['ANADIR'] + '/Data'
 # --------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
