@@ -40,20 +40,11 @@ def _print_selection(d_cut : dict[str,str]) -> None:
     for name, expr in d_cut.items():
         log.debug(f'{name:<20}{expr}')
 #-----------------------
-def _get_analysis(analysis : str, trigger : str) -> str:
-    if (trigger is None) and (analysis is None):
-        raise ValueError('Both analysis and trigger are not specified')
+def _get_analysis(trigger : str) -> str:
+    if dut.is_ee(trigger=trigger):
+        return 'EE'
 
-    if isinstance(trigger, str) and isinstance(analysis, str):
-        raise ValueError(f'Both analysis and trigger are specified: {analysis}/{trigger}')
-
-    if trigger is None and isinstance(analysis, str):
-        return analysis
-
-    if 'MuMu' in trigger:
-        return 'MM'
-
-    return 'EE'
+    return 'MM'
 #-----------------------
 def _project_from_trigger(trigger : str, project : str) -> str:
     if trigger is None:
