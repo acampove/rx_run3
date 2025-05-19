@@ -298,7 +298,9 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def _define_columns(self, rdf : RDataFrame) -> RDataFrame:
+    def _define_common_columns(self, rdf : RDataFrame) -> RDataFrame:
+        log.info('Adding common columns')
+
         d_def = self._cfg['definitions'][self._analysis]
         if hasattr(RDFGetter, 'd_custom_columns'):
             log.warning('Adding custom column definitions')
