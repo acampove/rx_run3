@@ -40,12 +40,15 @@ def test_read_selection(analysis : str, q2bin : str):
     for cut_name, cut_value in d_sel.items():
         log.info(f'{cut_name:<20}{cut_value}')
 # --------------------------
-@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'DATA*'])
+@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC', 'DATA*'])
 def test_selection(sample : str):
     '''
     Applies selection
     '''
-    q2bin   = 'jpsi'
+    q2bin   = {'Bu_JpsiK_ee_eq_DPC'         : 'jpsi',
+               'DATA*'                      : 'jpsi',
+               'Bu_Kee_eq_btosllball05_DPC' : 'central'}[sample]
+
     trigger = 'Hlt2RD_BuToKpEE_MVA'
 
     gtr = RDFGetter(sample=sample, trigger=trigger)
