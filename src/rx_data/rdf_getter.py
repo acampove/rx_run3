@@ -329,33 +329,29 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
-        if self._tree_name != 'DecayTree':
-            return rdf
-
+    def _redefine_columns(self, rdf : RDataFrame) -> RDataFrame:
         d_def = self._cfg['redefinitions']
         for name, definition in d_def.items():
             if name == 'block':
                 log.warning('Sending pre-UT candidates to block 0')
+            else:
+                log.debug(f'Redefining: {name}={definition}')
+
             rdf = rdf.Redefine(name, definition)
 
-        d_def = self._cfg['definitions'][self._analysis]
-        if hasattr(RDFGetter, 'd_custom_columns'):
-            log.warning('Adding custom column definitions')
-            d_def.update(RDFGetter.d_custom_columns)
+        return rdf
+    # ---------------------------------------------------
+    def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
+        if self._tree_name != 'DecayTree':
+            return rdf
 
-        for name, definition in d_def.items():
-            rdf = self._add_column(rdf, name, definition)
+        rdf = self._define_columns(rdf=rdf)
+        rdf = self._define_mc_columns(rdf=rdf)
 
-        rdf = self._add_mc_columns(rdf)
-
-        # TODO: The weight (taking into account prescale) should be removed
-        # for 2025 data
-        if self._trigger.endswith('_ext'):
-            log.info('Adding weight of 10 to MisID sample')
-            rdf = rdf.Define('weight', self._ext_weight)
-        else:
-            rdf = rdf.Define('weight',              '1')
+        # Redefinitions need to come after definitions
+        # Because they might be in function of defined columns
+        # E.g. q2 -> Jpsi_Mass
+        rdf = self._redefine_columns(rdf=rdf)
 
         return rdf
     # ---------------------------------------------------
