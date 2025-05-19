@@ -361,8 +361,9 @@ class RDFGetter:
         if self._tree_name != 'DecayTree':
             return rdf
 
-        rdf = self._define_columns(rdf=rdf)
+        rdf = self._define_common_columns(rdf=rdf)
         rdf = self._define_mc_columns(rdf=rdf)
+        rdf = self._define_data_columns(rdf=rdf)
 
         # Redefinitions need to come after definitions
         # Because they might be in function of defined columns
