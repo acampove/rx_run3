@@ -48,3 +48,11 @@ def test_info_from_path(sample : str, trigger : str):
         log.info(v1)
         log.info(v2)
 # -----------------------------------------
+def test_is_ee():
+    '''
+    Test that trigger is recognized as electron trigger
+    '''
+    assert ut.is_ee(trigger='Hlt2RD_BuToKpEE_MVA')
+    assert ut.is_ee(trigger='Hlt2RD_BuToKpEE_SameSign_MVA')
+    assert ut.is_ee(trigger='Hlt2RD_BuToKpEE_MVA_misid')
+# -----------------------------------------
