@@ -8,6 +8,7 @@ import pickle
 import inspect
 from typing                import Callable
 from functools             import wraps
+from contextlib            import contextmanager
 
 import yaml
 from dmu.logging.log_store import LogStore
@@ -127,4 +128,24 @@ def load_pickle(path : str) -> None:
         data = pickle.load(ofile)
 
     return data
+# --------------------------------
+@contextmanager
+def silent_import():
+    '''
+    In charge of suppressing messages
+    of imported modules
+    '''
+    saved_stdout_fd = os.dup(1)
+    saved_stderr_fd = os.dup(2)
+
+    with open(os.devnull, 'w', encoding='utf-8') as devnull:
+        os.dup2(devnull.fileno(), 1)
+        os.dup2(devnull.fileno(), 2)
+        try:
+            yield
+        finally:
+            os.dup2(saved_stdout_fd, 1)
+            os.dup2(saved_stderr_fd, 2)
+            os.close(saved_stdout_fd)
+            os.close(saved_stderr_fd)
 # --------------------------------

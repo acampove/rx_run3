@@ -51,3 +51,11 @@ def test_dump_pickle():
 
     assert data == loaded
 # -------------------------
+def test_silent_import():
+    '''
+    Tests decorator in charge of suppressing
+    messages from imported modules
+    '''
+    with gut.silent_import():
+        import tensorflow
+# -------------------------

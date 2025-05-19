@@ -33,6 +33,17 @@ Then, for each remote it pushes the tags and the commits.
 
 This section describes generic tools that could not be put in a specific category, but tend to be useful.
 
+## Silencing import messages
+
+To silence messages given by modules not in the user's control do:
+
+```python
+import dmu.generic.utilities as gut
+
+with gut.silent_import():
+    import tensorflow
+```
+
 ## YAML
 
 When dumping data to yaml files do it like:
