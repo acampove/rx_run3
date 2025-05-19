@@ -285,8 +285,7 @@ class RDFGetter:
             self._l_columns = [ name.c_str() for name in rdf.GetColumnNames() ]
 
         if name in self._l_columns:
-            log.debug(f'Not adding column {name}, already found')
-            return rdf
+            raise ValueError(f'Cannot add {name}={definition}, column already found')
 
         log.debug(f'Defining: {name}={definition}')
 
