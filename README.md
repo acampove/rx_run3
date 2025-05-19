@@ -215,7 +215,9 @@ If you work with zfit, you will see messages from tensorflow, by importing zfit 
 from dmu.stats.zfit import zfit
 ```
 
-these messages should be hidden.
+these messages should be hidden. If `ROOT` is installed, the wrapper will import it before
+importing tensorflow. That will prevent crashes which usually happen when `tensorflow` 
+is imported before `ROOT`.
 
 ### Model building
 
