@@ -3,9 +3,11 @@ Script with functions needed to test functions in selection.py
 '''
 import os
 import pytest
+from ROOT                   import RDataFrame, RDF
 
-from ROOT                   import RDataFrame
+import dmu.generic.utilities as gut
 from dmu.logging.log_store  import LogStore
+from dmu.rdataframe         import utilities as ut
 from rx_data.rdf_getter     import RDFGetter
 from rx_selection           import selection as sel
 
