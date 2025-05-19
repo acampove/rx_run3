@@ -299,7 +299,26 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def _add_mc_columns(self, rdf : RDataFrame) -> RDataFrame:
+    def _define_columns(self, rdf : RDataFrame) -> RDataFrame:
+        d_def = self._cfg['definitions'][self._analysis]
+        if hasattr(RDFGetter, 'd_custom_columns'):
+            log.warning('Adding custom column definitions')
+            d_def.update(RDFGetter.d_custom_columns)
+
+        for name, definition in d_def.items():
+            rdf = self._add_column(rdf, name, definition)
+
+        # TODO: The weight (taking into account prescale) should be removed
+        # for 2025 data
+        if self._trigger.endswith('_ext'):
+            log.info('Adding weight of 10 to MisID sample')
+            rdf = rdf.Define('weight', self._ext_weight)
+        else:
+            rdf = rdf.Define('weight',              '1')
+
+        return rdf
+    # ---------------------------------------------------
+    def _define_mc_columns(self, rdf : RDataFrame) -> RDataFrame:
         if self._sample.startswith('DATA'):
             return rdf
 
