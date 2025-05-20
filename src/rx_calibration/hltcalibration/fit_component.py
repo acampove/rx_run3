@@ -7,21 +7,20 @@ import math
 from typing import Union
 
 import numpy
-import ROOT
-import zfit
 import pandas            as pnd
 import matplotlib.pyplot as plt
-import tensorflow        as tf
+
+from dmu.stats.zfit         import zfit
+from dmu.stats.utilities    import print_pdf
+from dmu.stats.utilities    import is_pdf_usable
+from dmu.stats.zfit_plotter import ZFitPlotter
+from dmu.stats.minimizers   import AnealingMinimizer
+from dmu.logging.log_store  import LogStore
 
 from ROOT                   import RDataFrame
 from zfit.core.data         import Data      as zdata
 from zfit.core.interfaces   import ZfitSpace as zobs
 from zfit.core.basepdf      import BasePDF   as zpdf
-from dmu.logging.log_store  import LogStore
-from dmu.stats.utilities    import print_pdf
-from dmu.stats.utilities    import is_pdf_usable
-from dmu.stats.zfit_plotter import ZFitPlotter
-from dmu.stats.minimizers   import AnealingMinimizer
 
 from rx_calibration.hltcalibration.parameter import Parameter
 
