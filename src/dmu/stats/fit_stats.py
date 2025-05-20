@@ -3,6 +3,7 @@ Module with FitStats class
 '''
 
 import re
+import pprint
 import pickle
 from typing import Union
 
@@ -83,7 +84,14 @@ class FitStats:
 
         d_data = res.params[name]
 
-        return d_data['hesse']['error']
+        if 'hesse' in d_data:
+            return d_data['hesse']['error']
+
+        if 'minuit_hesse' in d_data:
+            return d_data['minuit_hesse']['error']
+
+        pprint.pprint(d_data)
+        raise KeyError(f'Cannot find error in dictionary')
     # -------------------------------
     def _attach_errors(self, df : pnd.DataFrame) -> pnd.DataFrame:
         pkl_path = f'{self._fit_dir}/fit.pkl'
