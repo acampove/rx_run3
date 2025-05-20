@@ -4,16 +4,13 @@ Module with tests for Fitter class
 # pylint: disable=import-error, wrong-import-position
 
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-
 from dataclasses                                 import dataclass
 
-import ROOT
-import zfit
 import pytest
 import pandas as pnd
-from ROOT                                        import RDF
+from dmu.stats.zfit                              import zfit
 from dmu.logging.log_store                       import LogStore
+from ROOT                                        import RDF
 from rx_calibration.hltcalibration.fit_component import FitComponent, load_fit_component
 from rx_calibration.hltcalibration               import test_utilities as tut
 
