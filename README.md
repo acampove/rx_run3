@@ -16,12 +16,13 @@ For this do:
 from rx_selection import selection as sel
 
 # trigger : HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA 
-# q2bin: low, central, jpsi, psi2, high
-# process: 
+# q2bin   : low, central, jpsi, psi2, high
+# smeared : If true (default), the selection will use cuts on smeared masses. Only makes sense for electron MC samples
+# process : 
 #     One of the keys in https://gitlab.cern.ch/rx_run3/rx_data/-/blob/master/src/rx_data_lfns/rx/v7/rk_samples.yaml
 #     DATA will do all the data combined
 
-d_sel = sel.selection(trigger='Hlt2RD_BuToKpEE_MVA', q2bin='jpsi', process='DATA')
+d_sel = sel.selection(trigger='Hlt2RD_BuToKpEE_MVA', q2bin='jpsi', process='DATA', smeared=True)
 
 # You can override the selection here
 for cut_name, cut_value in d_sel.items():
