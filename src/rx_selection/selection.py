@@ -247,13 +247,11 @@ def apply_full_selection(
         rdf      : RDataFrame,
         q2bin    : str,
         process  : str,
-        project  : str = None,
-        analysis : str = None,
         trigger  : str = None) -> dict[str,str]:
     '''
     Will apply full selection on dataframe
     '''
-    d_sel = selection(project=project, q2bin=q2bin, process=process, analysis=analysis, trigger=trigger)
+    d_sel = selection(q2bin=q2bin, process=process, trigger=trigger)
     for cut_name, cut_value in d_sel.items():
         rdf = rdf.Filter(cut_value, cut_name)
 
