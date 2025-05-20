@@ -148,6 +148,31 @@ def test_kde_empty_pdf():
     obj= FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
     _  = obj.run()
 # --------------------------------------------
+@pytest.mark.parametrize('nentries', [50, 100, 200, 400, 600])
+def test_kde_stats(nentries : int):
+    '''
+    Test using KDE with different dataset sizes 
+    '''
+    name = f'kde_stats_{nentries:03}'
+
+    pdf= tut.get_signal_pdf(obs=Data.obs)
+    rdf= tut.rdf_from_pdf(pdf=pdf, nentries=nentries)
+
+    cfg= _get_conf(name)
+    cfg['fitting'] = {
+            'config' : {
+                name : {
+                    'cfg_kde':
+                    {
+                        'padding'  : {'lowermirror': 0.5, 'uppermirror': 0.5},
+                        },
+                    }
+                }
+            }
+
+    obj= FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
+    _  = obj.run()
+# --------------------------------------------
 def test_pdf():
     '''
     Test retrieving PDF only
