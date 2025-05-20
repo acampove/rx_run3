@@ -132,12 +132,36 @@ def selection(
     if hasattr(Data, 'd_custom_selection'):
         d_cut.update(Data.d_custom_selection)
 
-    if dut.is_mc(sample=process) and dut.is_ee(trigger=trigger) and smeared:
-        d_cut = _use_smeared_masses(cuts=d_cut, q2bin=q2bin)
-    else:
-        log.warning('Using cuts on un-smeared masses')
+    d_cut = _update_mass_cuts(
+            d_cut   =   d_cut,
+            q2bin   =   q2bin,
+            sample  = process,
+            trigger = trigger,
+            smeared = smeared)
 
     _print_selection(d_cut)
+
+    return d_cut
+#-----------------------
+def _update_mass_cuts(
+        d_cut   : dict[str,str],
+        q2bin   : str,
+        sample  : str,
+        trigger : str,
+        smeared : bool) -> dict[str,str]:
+
+    should_smear = dut.is_mc(sample=sample) and dut.is_ee(trigger=trigger)
+
+    if not should_smear:
+        log.debug(f'Not using cuts on smeared masses for {sample}/{trigger}')
+        return d_cut
+
+    if not smeared:
+        log.warning('Using cuts on un-smeared masses')
+        return d_cut
+
+    log.debug('Using cuts on smeared masses')
+    d_cut = _use_smeared_masses(cuts=d_cut, q2bin=q2bin)
 
     return d_cut
 #-----------------------
