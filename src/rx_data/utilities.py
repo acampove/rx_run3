@@ -45,11 +45,13 @@ def is_ee(trigger : str) -> bool:
             'Hlt2RD_BuToKpEE_MVA', 
             'Hlt2RD_BuToKpEE_SameSign_MVA',
             'Hlt2RD_BuToKpEE_MVA_misid',
+            'Hlt2RD_BuToKpEE_MVA_ext',
             'Hlt2RD_BuToKpEE_MVA_cal',
             # ----
             'Hlt2RD_B0ToKpPimEE_MVA',
             'Hlt2RD_B0ToKpPimEE_SameSign_MVA',
             'Hlt2RD_B0ToKpPimEE_MVA_misid',
+            'Hlt2RD_B0ToKpPimEE_MVA_ext',
             'Hlt2RD_B0ToKpPimEE_MVA_cal',
             # ----
             'Hlt2RD_LbTopKEE_MVA',
