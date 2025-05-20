@@ -47,11 +47,7 @@ def _get_analysis(trigger : str) -> str:
 
     return 'MM'
 #-----------------------
-def _project_from_trigger(trigger : str, project : str) -> str:
-    if trigger is None:
-        log.warning('It is advised to specify the trigger rather than the analysis')
-        return project
-
+def _project_from_trigger(trigger : str) -> str:
     if trigger.startswith('Hlt2RD_BuToKpMuMu_MVA') or trigger.startswith('Hlt2RD_BuToKpEE_MVA'):
         return 'RK'
 
@@ -98,7 +94,6 @@ def reset_custom_selection() -> None:
 def selection(
         q2bin    : str,
         process  : str,
-        project  : str = None,
         smeared  : bool= True,
         trigger  : str = None) -> dict[str,str]:
     '''
@@ -111,7 +106,7 @@ def selection(
     smeared  : If true (default), the selection will use cuts on smeared masses. Only makes sense for electron MC samples
     '''
 
-    project  = _project_from_trigger(trigger=trigger, project=project)
+    project  = _project_from_trigger(trigger=trigger)
     analysis = _get_analysis(trigger)
 
     d_cut : dict[str,str] = {}
