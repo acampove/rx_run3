@@ -22,7 +22,6 @@ def pytest_sessionfinish(session, exitstatus):
     plt.style.use(mplhep.style.LHCb2)
 
     df = col.Collector.data['selection']
-    df.to_json('output.json', indent=2)
     _plot_selection(df = df)
 # ------------------------------
 def _compare_smearing(df : pnd.DataFrame, plot_name : str, plot_dir : str) -> None:
