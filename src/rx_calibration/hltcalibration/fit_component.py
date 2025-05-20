@@ -80,6 +80,7 @@ class FitComponent:
         self._yield_nentr : int
 
         self._nentries_dummy_data = 10_000
+        self._min_isj_entries     = 300
         self._yield_threshold     = 10
     # --------------------
     def _get_minimizer(self) -> Union[AnealingMinimizer,None]:
@@ -285,7 +286,13 @@ class FitComponent:
         log.info(f'Building KDE with {self._yield_value:.0f} entries')
 
         cfg_kde = self._fit_cfg['config'][self._name]['cfg_kde']
-        pdf     = zfit.pdf.KDE1DimISJ(data, name=self._name, **cfg_kde)
+        if self._yield_value > self._min_isj_entries:
+            log.info('High statistics dataset found => using KDE1DimISJ')
+            pdf = zfit.pdf.KDE1DimISJ(data, name=self._name, **cfg_kde)
+        else:
+            log.info('Low statistics dataset found => using KDE1DimFFT')
+            pdf = zfit.pdf.KDE1DimExact(data, name=self._name, **cfg_kde)
+
         if not is_pdf_usable(pdf):
             return None
 
@@ -373,7 +380,6 @@ class FitComponent:
         par.to_json(pars_path)
 
         self._fix_tails(par)
-
 
         return par
 # ----------------------------------------
