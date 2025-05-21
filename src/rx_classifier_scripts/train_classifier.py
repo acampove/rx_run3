@@ -141,7 +141,7 @@ def _file_paths_from_wc(file_wc : str) -> list[str]:
 
     return l_path
 #---------------------------------
-def _get_rdf(kind=None) -> RDataFrame:
+def _get_rdf(kind : str) -> RDataFrame:
     '''
     Will load and return ROOT dataframe
 
