@@ -16,6 +16,7 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
+high_q2cut='rx_plotter_scripts.high_q2cut:main'
 leakage='rx_plotter_scripts.leakage:main'
 compare='rx_plotter_scripts.compare:main'
 data_mc='rx_plotter_scripts.data_mc:main'
