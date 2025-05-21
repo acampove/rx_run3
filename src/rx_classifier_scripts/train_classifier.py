@@ -229,8 +229,6 @@ def _apply_selection(rdf : RDataFrame, kind : str):
         rdf = rdf.Filter(cut_expr, cut_name)
 
     log.info(f'Cutflow for: {kind}')
-    rep = rdf.Report()
-    rep.Print()
 
     return rdf
 #---------------------------------
