@@ -111,4 +111,25 @@ This will provide plots showing
 - Correlations
 - Mass vs q2
 
+## Other studies
+
+### Leakage from $B^+\to K^+ J/\psi(\to ee)$ into central $q^2$ bin
+
+To study the distribution after applying the smearing in the mass and using
+the brem corrected vs smeared vs non smeared masses in the selection do:
+
+```bash
+leakage
+```
+
+**TODO**: This should be improved
+
+### $q^2$ cut on different variables to get high-q2 signal region 
+
+To study this run:
+
+```bash
+high_q2cut
+```
+
 
