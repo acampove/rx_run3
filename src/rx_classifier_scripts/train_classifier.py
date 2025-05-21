@@ -18,8 +18,11 @@ import yaml
 from ROOT                  import RDataFrame
 from rx_selection          import selection as sel
 from rx_data.rdf_getter    import RDFGetter
+
+import dmu.generic.utilities as gut
 from dmu.logging.log_store import LogStore
 from dmu.ml.train_mva      import TrainMva
+from dmu.rdataframe        import utilities as rut
 
 log = LogStore.add_logger('rx_classifier:train_classifier')
 #---------------------------------
