@@ -170,10 +170,11 @@ def _check_q2_leakage(sample : str, nbrem : int) -> None:
     plt.title(f'{latex}; Brem={nbrem}')
     ax.set_ylim(top=0.05)
     ax.set_xlabel(r'$q^2$[GeV$/c^2$]')
+    ax.set_ylabel('Normalized')
     ax.axvline(x= 6, ls=':', color='green')
     ax.axvline(x=15, ls=':', color='green')
     ax.axvline(x=22, ls=':', color='green')
-    plt.savefig(f'{sample}_{nbrem}.png')
+    plt.savefig(f'{Data.plots_dir}/{sample}_{nbrem}.png')
     plt.close()
 # --------------------------------
 def main():
