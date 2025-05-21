@@ -19,7 +19,12 @@ class Data:
     Data class
     '''
     plt.style.use(mplhep.style.LHCb2)
+    cache_dir : str
+    plots_dir : str
 
+    sample  = 'Bu_JpsiK_ee_eq_DPC'
+    trigger = 'Hlt2RD_BuToKpEE_MVA'
+    q2bin   = 'central'
     columns = [
             'B_M',
             'B_M_brem_track_2',
