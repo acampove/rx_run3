@@ -163,7 +163,32 @@ def _get_rdf(kind : str) -> RDataFrame:
     rdf = _add_columns(rdf=rdf, kind=kind)
     rdf = _apply_selection(rdf, kind)
 
+    _save_cutflow(rdf=rdf, kind=kind)
+
     return rdf
+#---------------------------------
+def _save_cutflow(rdf : RDataFrame, kind : str) -> None:
+    log.info(f'Saving cutflow for: {kind}')
+
+    out_dir = Data.cfg_dict['saving']['output']
+    out_dir = f'{out_dir}/input'
+    os.makedirs(out_dir, exist_ok=True)
+
+    rep = rdf.Report()
+    rep.Print()
+
+    df  = rut.rdf_report_to_df(rep)
+
+    df.to_json(f'{out_dir}/cutflow_{kind}.json', indent=2)
+#---------------------------------
+def _save_selection(cuts : dict[str,str], kind : str) -> None:
+    log.info(f'Saving selection for: {kind}')
+
+    out_dir = Data.cfg_dict['saving']['output']
+    out_dir = f'{out_dir}/input'
+    os.makedirs(out_dir, exist_ok=True)
+
+    gut.dump_json(cuts, f'{out_dir}/selection_{kind}.yaml') 
 #---------------------------------
 def _add_columns(rdf :  RDataFrame, kind : str) -> RDataFrame:
     if 'definitions' not in Data.cfg_dict['dataset']['samples'][kind]:
@@ -182,7 +207,7 @@ def _add_columns(rdf :  RDataFrame, kind : str) -> RDataFrame:
 
     return rdf
 #---------------------------------
-def _apply_selection(rdf, kind):
+def _apply_selection(rdf : RDataFrame, kind : str):
     '''
     Will take ROOT dataframe and kind (bkg or sig)
     Will load selection from config
@@ -196,6 +221,8 @@ def _apply_selection(rdf, kind):
     d_sel = sel.selection(trigger=trigger, q2bin=Data.q2bin, process=sample)
     d_cut = Data.cfg_dict['dataset']['selection'][kind]
     d_sel.update(d_cut)
+
+    _save_selection(cuts=d_sel, kind=kind)
 
     for cut_name, cut_expr in d_sel.items():
         log.debug(f'{cut_name:<30}{cut_expr}')
