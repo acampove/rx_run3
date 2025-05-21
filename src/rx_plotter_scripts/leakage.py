@@ -123,13 +123,17 @@ def _plot_b_mass(df : pnd.DataFrame, kind : str) -> None:
     plt.title(f'Entries: {nentries}, Cut on: {kind}')
     plt.legend()
     plt.xlabel(r'M$(B^+)$')
-    plt.savefig(f'{kind}.png')
+
+    name = kind.replace(' ', '_')
+    plt.savefig(f'{Data.plots_dir}/{name}.png')
     plt.close()
 # --------------------------------
 def main():
     '''
     Start here
     '''
+    _initialize()
+
     df = _get_df()
 
     _plot_b_mass(df=df, kind='original')
