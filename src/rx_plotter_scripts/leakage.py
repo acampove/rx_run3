@@ -34,24 +34,27 @@ class Data:
             'Jpsi_M_smr_brem_track_2',
             ]
 # --------------------------------
+def _initialize():
+    ana_dir        = os.environ['ANADIR']
+    Data.cache_dir = '/tmp/cache/rx_plots/leakage'
+    Data.plots_dir = f'{ana_dir}/plots/leakage'
+
+    os.makedirs(Data.cache_dir, exist_ok=True)
+    os.makedirs(Data.plots_dir, exist_ok=True)
+# --------------------------------
 def _get_df() -> pnd.DataFrame:
-    out_path = '/tmp/rx_plots/leakage/data.json'
-    os.makedirs('/tmp/rx_plots/leakage', exist_ok=True)
+    out_path = f'{Data.cache_dir}/data_{Data.sample}_{Data.trigger}_{Data.q2bin}.json'
     if os.path.isfile(out_path):
         log.info(f'Loading data from: {out_path}')
 
         df = pnd.read_json(out_path)
-        df = _define_columns(df)
 
         return df
 
-    sample = 'Bu_JpsiK_ee_eq_DPC'
-    trigger= 'Hlt2RD_BuToKpEE_MVA'
-
-    gtr = RDFGetter(sample=sample, trigger=trigger)
+    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
     rdf = gtr.get_rdf()
 
-    d_sel = sel.selection(trigger=trigger, q2bin='central', process=sample)
+    d_sel = sel.selection(trigger=Data.trigger, q2bin=Data.q2bin, process=Data.sample)
     d_sel['q2']   = '(1)'
     d_sel['mass'] = '(1)'
 
@@ -60,6 +63,7 @@ def _get_df() -> pnd.DataFrame:
 
     data = rdf.AsNumpy(Data.columns)
     df   = pnd.DataFrame(data)
+    df   = _define_columns(df)
 
     log.info(f'Saving data to: {out_path}')
     df.to_json(out_path, indent=4)
