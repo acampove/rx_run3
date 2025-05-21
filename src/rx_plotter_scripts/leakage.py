@@ -130,17 +130,20 @@ def _plot_b_mass(df : pnd.DataFrame, kind : str) -> None:
     plt.savefig(f'{Data.plots_dir}/{name}.png')
     plt.close()
 # --------------------------------
+def _compare_mass_cuts() -> None:
+    df = _get_df(sample=Data.jpsi)
+
+    _plot_b_mass(df=df, kind='original')
+    _plot_b_mass(df=df, kind='corrected')
+    _plot_b_mass(df=df, kind='corrected and smeared')
+# --------------------------------
 def main():
     '''
     Start here
     '''
     _initialize()
 
-    df = _get_df()
-
-    _plot_b_mass(df=df, kind='original')
-    _plot_b_mass(df=df, kind='corrected')
-    _plot_b_mass(df=df, kind='corrected and smeared')
+    _compare_mass_cuts()
 # --------------------------------
 if __name__ == '__main__':
     main()
