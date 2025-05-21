@@ -2,6 +2,7 @@
 Script used to study effect of different cuts on q2
 to get signal in high q2 bin
 '''
+import os
 import numpy
 import mplhep
 import pandas            as pnd
@@ -16,6 +17,8 @@ class Data:
     '''
     Data class
     '''
+    plt_dir : str
+
     trigger = 'Hlt2RD_BuToKpEE_MVA'
     sample  = 'Bu_Kee_eq_btosllball05_DPC'
     q2bin   = 'high'
@@ -24,6 +27,14 @@ class Data:
     min_q2  = 14
 
     l_q2var = ['q2_smr', 'q2_track', 'nbrem']
+# ---------------------------
+def _initialize():
+    ana_dir = os.environ['ANADIR']
+    plt_dir = f'{ana_dir}/plots/high_q2'
+
+    os.makedirs(plt_dir, exist_ok=True)
+
+    Data.plt_dir = plt_dir
 # ---------------------------
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
@@ -86,13 +97,15 @@ def _plot_q2(brem : int, df : pnd.DataFrame) -> None:
     plt.axvline(x=15, c='black', ls=':')
     plt.title(f'Brem {brem}')
     plt.grid()
-    plt.savefig(f'q2_{brem}.png')
+    plt.savefig(f'{Data.plt_dir}/q2_{brem}.png')
     plt.close()
 # ---------------------------
 def main():
     '''
     Start here
     '''
+    _initialize()
+
     rdf = _get_rdf()
 
     _plot(rdf=rdf)
