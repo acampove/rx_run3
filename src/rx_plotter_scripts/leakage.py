@@ -22,7 +22,9 @@ class Data:
     cache_dir : str
     plots_dir : str
 
-    sample  = 'Bu_JpsiK_ee_eq_DPC'
+    jpsi    = 'Bu_JpsiK_ee_eq_DPC'
+    psi2    = 'Bu_psi2SK_ee_eq_DPC'
+
     trigger = 'Hlt2RD_BuToKpEE_MVA'
     q2bin   = 'central'
     columns = [
@@ -42,8 +44,8 @@ def _initialize():
     os.makedirs(Data.cache_dir, exist_ok=True)
     os.makedirs(Data.plots_dir, exist_ok=True)
 # --------------------------------
-def _get_df() -> pnd.DataFrame:
-    out_path = f'{Data.cache_dir}/data_{Data.sample}_{Data.trigger}_{Data.q2bin}.json'
+def _get_df(sample : str) -> pnd.DataFrame:
+    out_path = f'{Data.cache_dir}/data_{sample}_{Data.trigger}_{Data.q2bin}.json'
     if os.path.isfile(out_path):
         log.info(f'Loading data from: {out_path}')
 
@@ -51,10 +53,10 @@ def _get_df() -> pnd.DataFrame:
 
         return df
 
-    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
+    gtr = RDFGetter(sample=sample, trigger=Data.trigger)
     rdf = gtr.get_rdf()
 
-    d_sel = sel.selection(trigger=Data.trigger, q2bin=Data.q2bin, process=Data.sample)
+    d_sel = sel.selection(trigger=Data.trigger, q2bin=Data.q2bin, process=sample)
     d_sel['q2']   = '(1)'
     d_sel['mass'] = '(1)'
 
