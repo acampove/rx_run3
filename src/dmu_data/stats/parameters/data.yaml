@@ -75,9 +75,9 @@ cbr:
     high: 150
 suj:
   mu:
-    val : 5300
-    low : 4500
-    high: 6000
+    val : 4000
+    low : 3000
+    high: 5000
   sg:
     val : 10
     low : 2
