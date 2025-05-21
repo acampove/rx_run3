@@ -243,7 +243,6 @@ def main():
     '''
     Script starts here
     '''
-
     _get_args()
     _initialize()
 
