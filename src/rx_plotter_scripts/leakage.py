@@ -28,6 +28,7 @@ class Data:
     trigger = 'Hlt2RD_BuToKpEE_MVA'
     q2bin   = 'central'
     columns = [
+            'nbrem',
             'B_M',
             'B_M_brem_track_2',
             'B_M_smr_brem_track_2',
@@ -35,6 +36,10 @@ class Data:
             'Jpsi_M_brem_track_2',
             'Jpsi_M_smr_brem_track_2',
             ]
+
+    d_latex = {
+            jpsi : r'$B^+\to K^+ J/\psi(\to ee)$',
+            psi2 : r'$B^+\to K^+ \psi(2S)(\to ee)$'}
 # --------------------------------
 def _initialize():
     ana_dir        = os.environ['ANADIR']
@@ -47,7 +52,7 @@ def _initialize():
 def _get_df(sample : str) -> pnd.DataFrame:
     out_path = f'{Data.cache_dir}/data_{sample}_{Data.trigger}_{Data.q2bin}.json'
     if os.path.isfile(out_path):
-        log.info(f'Loading data from: {out_path}')
+        log.debug(f'Loading data from: {out_path}')
 
         df = pnd.read_json(out_path)
 
@@ -81,7 +86,8 @@ def _define_columns(df : pnd.DataFrame) -> pnd.DataFrame:
     df['mass_cor'] = df['B_M_brem_track_2'       ]
     df['mass_smr'] = df['B_M_smr_brem_track_2'   ]
 
-    df = df.drop(columns=Data.columns)
+    l_drop = [ col for col in Data.columns if col not in ['nbrem'] ]
+    df     = df.drop(columns=l_drop)
 
     return df
 # --------------------------------
@@ -137,13 +143,50 @@ def _compare_mass_cuts() -> None:
     _plot_b_mass(df=df, kind='corrected')
     _plot_b_mass(df=df, kind='corrected and smeared')
 # --------------------------------
+def _drop_resonant(df : pnd.DataFrame) -> pnd.DataFrame:
+    fail_org = (df['qsq_org'] >  6) & (df['qsq_org'] < 15)
+    fail_cor = (df['qsq_cor'] >  6) & (df['qsq_cor'] < 15)
+    df       = df[~fail_org | ~fail_cor]
+
+    return df
+# --------------------------------
+def _check_q2_leakage(sample : str, nbrem : int) -> None:
+    df = _get_df(sample=sample)
+
+    if nbrem != -1:
+        df = df[df['nbrem'] == nbrem]
+    else:
+        nbrem = 'all'
+
+    fig, ax = plt.subplots(figsize=[15,10])
+
+    df['qsq_org'].plot.hist(bins=60, range=[-3, 22], density=True, label='Original' , alpha   =   0.2, color='black')
+    df['qsq_cor'].plot.hist(bins=60, range=[-3, 22], density=True, label='Corrected', histtype='step', color='blue' )
+    df['qsq_smr'].plot.hist(bins=60, range=[-3, 22], density=True, label='Smeared'  , histtype='step', color='red'  )
+
+    latex = Data.d_latex[sample]
+
+    fig.legend(loc='upper left', bbox_to_anchor=(0.2, 0.9))
+    plt.title(f'{latex}; Brem={nbrem}')
+    ax.set_ylim(top=0.05)
+    ax.set_xlabel(r'$q^2$[GeV$/c^2$]')
+    ax.axvline(x= 6, ls=':', color='green')
+    ax.axvline(x=15, ls=':', color='green')
+    ax.axvline(x=22, ls=':', color='green')
+    plt.savefig(f'{sample}_{nbrem}.png')
+    plt.close()
+# --------------------------------
 def main():
     '''
     Start here
     '''
     _initialize()
 
-    _compare_mass_cuts()
+    #_compare_mass_cuts()
+    #_check_q2_leakage(sample=Data.jpsi)
+    for nbrem in [-1, 0, 1, 2]:
+        _check_q2_leakage(sample=Data.psi2, nbrem = nbrem)
+        _check_q2_leakage(sample=Data.jpsi, nbrem = nbrem)
 # --------------------------------
 if __name__ == '__main__':
     main()
