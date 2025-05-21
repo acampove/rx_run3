@@ -61,7 +61,7 @@ dataset :
   selection:
     bkg :
       bdt  : (1)
-      mass : B_M > 5500
+      mass : mass > 5500
     sig :
       bdt  : (1)
       mass : (1) 
