@@ -76,7 +76,7 @@ def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
     return rdf
 # ---------------------------------
 def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
-    d_sel = selection.selection(project='RK', trigger=Data.trigger, q2bin=Data.q2_bin, process=Data.sample)
+    d_sel = selection.selection(trigger=Data.trigger, q2bin=Data.q2_bin, process=Data.sample)
 
     if 'selection' in cfg:
         log.debug('Overriding selection')
