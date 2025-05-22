@@ -104,7 +104,7 @@ def _get_bdt_cutflow_rdf(rdf : RDataFrame) -> dict[str,RDataFrame]:
 # ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to cutflow plots')
-    parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'])
+    parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high', 'high_dtf'])
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True)
     parser.add_argument('-c', '--config' , type=str, help='Configuration', choices=Data.l_kind)
@@ -146,7 +146,7 @@ def _add_title(cfg : dict) -> dict:
 # ---------------------------------
 def _get_out_dir(plt_dir : str) -> str:
     sample  = Data.sample.replace('*', 'p')
-    out_dir = f'{plt_dir}/{sample}_{Data.trigger}_{Data.q2_bin}'
+    out_dir = f'{Data.ana_dir}/plots/{plt_dir}/{sample}_{Data.trigger}_{Data.q2_bin}'
     if Data.substr is not None:
         out_dir = f'{out_dir}/{Data.substr}'
 
