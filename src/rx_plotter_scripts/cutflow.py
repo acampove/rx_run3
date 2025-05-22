@@ -23,11 +23,10 @@ class Data:
     '''
     Class used to share attributes
     '''
-    nthreads   = 13
     trigger_mm = 'Hlt2RD_BuToKpMuMu_MVA'
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
-    data_dir   = os.environ['DATADIR']
+    ana_dir    = os.environ['ANADIR']
 
     mplhep.style.use('LHCb2')
 
@@ -45,12 +44,7 @@ class Data:
     l_col      = []
 # ---------------------------------
 def _initialize() -> None:
-    if Data.nthreads > 1:
-        EnableImplicitMT(Data.nthreads)
-
-    dat_dir = os.environ['DATADIR']
-    l_yaml  = glob.glob(f'{dat_dir}/samples/*.yaml')
-
+    l_yaml  = glob.glob(f'{Data.ana_dir}/Data/samples/*.yaml')
     d_sample= {}
     log.info('Using paths:')
     for path in l_yaml:
