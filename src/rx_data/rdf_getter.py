@@ -118,14 +118,23 @@ class RDFGetter:
         self._l_electron_only = self._cfg['trees']['electron_only']
         self._ext_weight      = '(L1_PID_E > 1 && L2_PID_E > 1) ? 1 : 10'
 
+        self._l_ee_trigger    = ['Hlt2RD_BuToKpEE_MVA',
+                                 'Hlt2RD_BuToKpEE_MVA_cal',
+                                 'Hlt2RD_BuToKpEE_MVA_misid',
+                                 'Hlt2RD_BuToKpEE_MVA_ext',
+                                 'Hlt2RD_BuToKpEE_SameSign_MVA']
+
+        self._l_mm_trigger    = ['Hlt2RD_BuToKpMuMu_MVA',
+                                 'Hlt2RD_BuToKpMuMu_SameSign_MVA']
+
         self._analysis        = self._analysis_from_trigger()
         self._initialize()
     # ---------------------------------------------------
     def _analysis_from_trigger(self) -> str:
-        if 'MuMu_MVA' in self._trigger:
+        if self._trigger in self._l_mm_trigger:
             return 'MM'
 
-        if 'EE_MVA'   in self._trigger:
+        if self._trigger in self._l_ee_trigger:
             return 'EE'
 
         raise NotImplementedError(f'Cannot deduce analysis from trigger: {self._trigger}')
