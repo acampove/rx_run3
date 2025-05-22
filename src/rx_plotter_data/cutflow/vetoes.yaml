@@ -46,7 +46,7 @@ plots:
     B_M_brem_track_2:
         binning    : [4500, 7200, 50]
         yscale     : 'linear'
-        labels     : ['M${}_{corr}(B^+)$', 'Normalized']
+        labels     : ['M${}_{corr}(B^+)$ MeV', 'Normalized']
         title      : ''
         name       : 'bmass_brem_track_2'
         normalized : true
@@ -60,7 +60,7 @@ plots:
     B_M :
         binning    : [4500, 7200, 50]
         yscale     : 'linear'
-        labels     : ['M$(B^+)$', 'Normalized']
+        labels     : ['M$(B^+)$ MeV', 'Normalized']
         title      : ''
         name       : 'bmass'
         normalized : true
