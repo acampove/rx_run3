@@ -242,7 +242,7 @@ def _get_selection(chan : str, proj: str, q2_bin : str) -> dict[str,str]:
             continue
 
         if q2_bin not in d_q2bin:
-            raise ValueError(f'Cannot find q2bin {q2_bin} in {cut_name} section')
+            raise ValueError(f'Cannot find q2 bin {q2_bin} in {cut_name} section')
 
         cut_val = d_q2bin[q2_bin]
         log.debug(f'Overriding {cut_name} for {q2_bin}')
