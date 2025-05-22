@@ -35,10 +35,10 @@ cutflow:
     Cascade        : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp < 1800
     $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
 saving:
-  plt_dir : plots/cutflow/vetoes
+  plt_dir : cutflow/vetoes
 plots:
     B_M_brem_track_2:
-        binning    : [4500, 6000, 30]
+        binning    : [4500, 7200, 50]
         yscale     : 'linear'
         labels     : ['M${}_{corr}(B^+)$', 'Normalized']
         title      : ''
@@ -46,8 +46,13 @@ plots:
         normalized : true
         styling:
           histtype : step
+        vline   :
+          x     : 4600 
+          ls    : --
+          c     : gray 
+          lw    : 1
     B_M :
-        binning    : [4500, 6000, 30]
+        binning    : [4500, 7200, 50]
         yscale     : 'linear'
         labels     : ['M$(B^+)$', 'Normalized']
         title      : ''
