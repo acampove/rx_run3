@@ -28,6 +28,16 @@ class Data:
     l_analysis = ['EE', 'MM'  ]
     l_q2bin    = ['low', 'central', 'jpsi', 'psi2S', 'high']
 
+
+    l_ee_rk_trigger = ['Hlt2RD_BuToKpEE_MVA',
+                       'Hlt2RD_BuToKpEE_MVA_cal',
+                       'Hlt2RD_BuToKpEE_MVA_misid',
+                       'Hlt2RD_BuToKpEE_MVA_ext',
+                       'Hlt2RD_BuToKpEE_SameSign_MVA']
+
+    l_mm_rk_trigger = ['Hlt2RD_BuToKpMuMu_MVA',
+                       'Hlt2RD_BuToKpMuMu_SameSign_MVA']
+
     d_custom_selection : dict[str,str]
 #-----------------------
 class MultipleSelectionOverriding(Exception):
@@ -48,7 +58,10 @@ def _get_analysis(trigger : str) -> str:
     return 'MM'
 #-----------------------
 def _project_from_trigger(trigger : str) -> str:
-    if trigger.startswith('Hlt2RD_BuToKpMuMu_MVA') or trigger.startswith('Hlt2RD_BuToKpEE_MVA'):
+    if trigger in Data.l_ee_rk_trigger:
+        return 'RK'
+
+    if trigger in Data.l_mm_rk_trigger:
         return 'RK'
 
     raise NotImplementedError(f'Cannot deduce project for trigger: {trigger}')
