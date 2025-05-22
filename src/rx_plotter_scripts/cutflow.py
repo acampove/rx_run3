@@ -42,20 +42,6 @@ class Data:
     l_keep     = []
     l_col      = []
 # ---------------------------------
-def _initialize() -> None:
-    l_yaml  = glob.glob(f'{Data.ana_dir}/Data/samples/*.yaml')
-    d_sample= {}
-    log.info('Using paths:')
-    for path in l_yaml:
-        name = os.path.basename(path).replace('.yaml', '')
-        if _skip_path(name):
-            continue
-
-        log.info(f'{name:<30}{path}')
-        d_sample[name] = path
-
-    RDFGetter.samples = d_sample
-# ---------------------------------
 def _skip_path(name : str) -> bool:
     # Do not pick up electron only (e.g. brem correction) trees
     # When working with muon samples
@@ -194,7 +180,6 @@ def main():
     Script starts here
     '''
     _parse_args()
-    _initialize()
 
     d_rdf = _get_inp()
     _plot(d_rdf)
