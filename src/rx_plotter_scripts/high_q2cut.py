@@ -35,7 +35,7 @@ class Data:
             'DATA*'                      : 'SS data',
             'Bu_Kee_eq_btosllball05_DPC' : r'$B^+\to K^+e^+e^-$',
             'Bu_JpsiK_ee_eq_DPC'         : r'$B^+\to K^+J/\psi(\to e^+e^-)$',
-            'Bu_psi2SK_ee_eq_DPC'        : r'$B^+\to K^+J/\psi(\to e^+e^-)$'}
+            'Bu_psi2SK_ee_eq_DPC'        : r'$B^+\to K^+\psi(2S)(\to e^+e^-)$'}
 
     q2bin   = 'high'
     plt.style.use(mplhep.style.LHCb2)
