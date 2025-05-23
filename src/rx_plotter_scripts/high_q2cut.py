@@ -3,6 +3,8 @@ Script used to study effect of different cuts on q2
 to get signal in high q2 bin
 '''
 import os
+import argparse
+
 import numpy
 import mplhep
 import pandas            as pnd
@@ -27,6 +29,14 @@ class Data:
     min_q2  = 14
 
     l_q2var = ['q2_smr', 'q2_track', 'q2_dtf', 'nbrem', 'B_Mass']
+# ---------------------------
+def _parse_args():
+    parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
+    parser.add_argument('-s', '--sample', type=str, help='MC sample', required=True, choices=list(Data.d_samples))
+    args = parser.parse_args()
+
+    sample     = args.sample
+    Data.sample= Data.d_samples[sample]
 # ---------------------------
 def _initialize():
     ana_dir = os.environ['ANADIR']
