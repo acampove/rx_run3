@@ -26,7 +26,7 @@ class Data:
     max_q2  = 22
     min_q2  = 14
 
-    l_q2var = ['q2_smr', 'q2_track', 'nbrem']
+    l_q2var = ['q2_smr', 'q2_track', 'q2_dtf', 'nbrem', 'B_Mass']
 # ---------------------------
 def _initialize():
     ana_dir = os.environ['ANADIR']
@@ -73,27 +73,41 @@ def _plot_eff(arr_val : numpy.ndarray, color : str, ax) -> None:
     ax.plot(sorted_data, eff, color=color)
 # ---------------------------
 def _plot_q2(brem : int, df : pnd.DataFrame) -> None:
-    fig, ax1 = plt.subplots()
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(30, 10))
 
-    df['q2_smr'  ].plot.hist(bins=60, range=[0, Data.max_q2], density=True, label='$q^2$'        , alpha = 0.2, color='blue')
-    df['q2_track'].plot.hist(bins=60, range=[0, Data.max_q2], density=True, label='$q^2_{track}$', alpha = 0.2, color='red' )
+    ax1.hist(df['q2_smr'  ], bins=60, range=[0, Data.max_q2], density=True, label='$q^2$'        , alpha = 0.2, color='blue' )
+    ax1.hist(df['q2_dtf'  ], bins=60, range=[0, Data.max_q2], density=True, label='$q^2_{DTF}$'  , alpha = 0.2, color='green')
+    ax1.hist(df['q2_track'], bins=60, range=[0, Data.max_q2], density=True, label='$q^2_{track}$', alpha = 0.2, color='red'  )
+
+    df_smr=df[df.q2_smr   > 15]
+    df_dtf=df[df.q2_dtf   > 15]
+    df_trk=df[df.q2_track > 15]
+
+    ax2.hist(df_smr['B_Mass'  ], bins=60, range=[4500, 6000], label='$q^2$'        , alpha   =   0.2, color='blue' )
+    ax2.hist(df_dtf['B_Mass'  ], bins=60, range=[4500, 6000], label='$q^2_{DTF}$'  , histtype='step', color='green')
+    ax2.hist(df_trk['B_Mass'  ], bins=60, range=[4500, 6000], label='$q^2_{track}$', histtype='step', color='red'  )
 
     arr_q2smr = df['q2_smr'  ].to_numpy()
+    arr_q2dtf = df['q2_dtf'  ].to_numpy()
     arr_q2trk = df['q2_track'].to_numpy()
 
-    ax2= ax1.twinx()
-    ax1.set_ylim(0, 0.08)
-    ax2.set_ylim(0, 0.25)
-    ax2.set_xlim(Data.min_q2, Data.max_q2)
+    ax3= ax1.twinx()
+    ax1.set_ylim(0, 0.20)
+    ax3.set_ylim(0, 0.40)
+    ax3.set_xlim(Data.min_q2, Data.max_q2)
 
-    _plot_eff(arr_q2smr, color='blue', ax=ax2)
-    _plot_eff(arr_q2trk, color='red' , ax=ax2)
+    _plot_eff(arr_q2smr, color='blue' , ax=ax3)
+    _plot_eff(arr_q2dtf, color='green', ax=ax3)
+    _plot_eff(arr_q2trk, color='red'  , ax=ax3)
 
-    ax2.tick_params(axis='y', labelcolor='green')
-    ax2.set_ylabel('Efficiency', color='green')
+    ax3.tick_params(axis='y', labelcolor='green')
+    ax3.set_ylabel('Efficiency', color='green')
     ax1.set_xlabel('$q^2$[GeV$/c^{2}$]')
+    ax2.set_xlabel('$M(B^+)$[MeV$/c^{2}$]')
 
-    fig.legend(loc='upper right', bbox_to_anchor=(0.9, 0.9))
+    ax1.legend(loc='upper right', bbox_to_anchor=(0.9, 0.9))
+    ax2.legend(loc='upper right', bbox_to_anchor=(0.9, 0.9))
+
     plt.axvline(x=15, c='black', ls=':')
     plt.title(f'Brem {brem}')
     plt.grid()
