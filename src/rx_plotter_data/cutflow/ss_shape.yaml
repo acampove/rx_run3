@@ -29,8 +29,10 @@ cutflow:
     Cascade        : swp_cascade_mass_swp    > 1900
     $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   high:
-    None    : (1)
-    q2_dtf  : q2_dtf > 15000000 && q2_dtf < 22000000
+    None        : (1)
+    $q^2_{DTF}$   : q2_dtf > 15000000 && q2_dtf < 22000000
+    #$q^2_{track}$ : q2_track > 15000000
+    #$q^2$         : q2 > 15000000 && q2 < 22000000
 saving:
   plt_dir : cutflow/ss_shape
 plots:
