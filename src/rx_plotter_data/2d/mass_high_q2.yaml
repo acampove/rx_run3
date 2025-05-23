@@ -5,8 +5,8 @@ saving:
     plt_dir : plots/2d/mass_q2/high_q2
 selection:
   cuts:
-    bdt : (1)
-    mass: (1)
+    bdt    : (1)
+    mass   : (1)
 general:
     size : [15, 10]
 plots_2d:
@@ -19,7 +19,7 @@ axes:
         label   : '$M_{corr}(B^+)$[MeV]'
     q2 :
         binning : [15000000, 22000000, 100]
-        label   : '$q^2$[GeV${}^2$]'
+        label   : '$q^2$[MeV${}^2$]'
     q2_dtf :
         binning : [15000000, 22000000, 100]
-        label   : '$q_{DTF}^2$[GeV${}^2$]'
+        label   : '$q_{DTF}^2$[MeV${}^2$]'
