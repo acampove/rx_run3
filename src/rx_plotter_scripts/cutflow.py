@@ -67,7 +67,11 @@ def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
         log.debug('Overriding selection')
         d_sel.update(cfg['selection'])
 
+    log.info(40 * '-')
+    log.info('Applying selection')
+    log.info(40 * '-')
     for cut_name, cut_expr in d_sel.items():
+        log.info(f'{cut_name:<20}{cut_expr}')
         rdf = rdf.Filter(cut_expr, cut_name)
 
     rep = rdf.Report()
