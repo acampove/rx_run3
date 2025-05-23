@@ -47,7 +47,7 @@ def _parse_args():
 # ---------------------------
 def _initialize():
     ana_dir = os.environ['ANADIR']
-    plt_dir = f'{ana_dir}/plots/high_q2'
+    plt_dir = f'{ana_dir}/plots/high_q2/{Data.sample}'
 
     os.makedirs(plt_dir, exist_ok=True)
 
@@ -135,6 +135,7 @@ def main():
     '''
     Start here
     '''
+    _parse_args()
     _initialize()
 
     rdf = _get_rdf()
