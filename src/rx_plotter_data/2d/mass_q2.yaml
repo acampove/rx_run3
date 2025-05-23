@@ -21,8 +21,8 @@ axes:
         binning : [4500, 6000, 100]
         label   : '$M_{corr}(B^+)$[MeV]'
     q2 :
-        binning : [     0.0, 30000000, 100]
+        binning : [ 8000000, 50000000, 100]
         label   : '$q^2$[MeV${}^2$]'
     q2_dtf :
-        binning : [15000000, 30000000, 100]
+        binning : [15000000, 22000000, 100]
         label   : '$q_{DTF}^2$[MeV${}^2$]'
