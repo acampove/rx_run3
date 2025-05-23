@@ -35,10 +35,10 @@ class Data:
 def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
     d_cut = cfg['selection']['cuts']
     if Data.q2bin is None:
-        q2bin          = 'jpsi' # Need dummy cut for selection code
-        d_cut['q2bin'] = '(1)'
+        q2bin       = 'jpsi' # Need dummy cut for selection code
+        d_cut['q2'] = '(1)'
     else:
-        q2bin          = Data.q2bin
+        q2bin       = Data.q2bin
 
     sel.set_custom_selection(d_cut = d_cut)
 
