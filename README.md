@@ -1,3 +1,5 @@
+[TOC]
+
 # ap_utilities
 
 - For instructions on how to install this project, check [this](doc/installation.md)   
