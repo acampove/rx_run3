@@ -22,9 +22,14 @@ class Data:
     Data class
     '''
     plt_dir : str
+    sample  : str
+
+    d_samples = {
+            'bukee'   : 'Bu_Kee_eq_btosllball05_DPC',
+            'bukjpee' : 'Bu_JpsiK_ee_eq_DPC',
+            'bukpsee' : 'Bu_psi2SK_ee_eq_DPC'}
 
     trigger = 'Hlt2RD_BuToKpEE_MVA'
-    sample  = 'Bu_Kee_eq_btosllball05_DPC'
     q2bin   = 'high'
     plt.style.use(mplhep.style.LHCb2)
     max_q2  = 22
