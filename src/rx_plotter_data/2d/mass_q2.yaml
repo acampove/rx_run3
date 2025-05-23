@@ -4,20 +4,24 @@ saving:
     plt_dir : plots/2d/mass_q2
 selection:
   cuts:
-    bdt : mva_cmb > 0.5
     mass: (1)
 general:
     size : [15, 12]
 plots_2d:
-    - [B_M   , q2, null, 'Bmass_q2_org', true]
-    - [B_Mass, q2, null, 'Bmass_q2_cor', true]
+    - [B_M   , q2    , null, 'Bmass_org_q2' , true]
+    - [B_Mass, q2    , null, 'Bmass_q2_cor' , true]
+    - [B_Mass, q2_dtf, null, 'Bmass_q2_dtf' , true]
+    - [q2    , q2_dtf, null, 'q2_cor_q2_dtf', true]
 axes:
     B_M   :
-        binning : [4500, 6000, 200]
+        binning : [4500, 6000, 100]
         label   : '$M(B^+)$[MeV]'
     B_Mass:
-        binning : [4500, 6000, 200]
+        binning : [4500, 6000, 100]
         label   : '$M_{corr}(B^+)$[MeV]'
     q2 :
-        binning : [0.0, 22000000, 200]
-        label   : '$q^2$[GeV${}^2$]'
+        binning : [0.0, 22000000, 100]
+        label   : '$q^2$[MeV${}^2$]'
+    q2_dtf :
+        binning : [0.0, 22000000, 100]
+        label   : '$q_{DTF}^2$[MeV${}^2$]'
