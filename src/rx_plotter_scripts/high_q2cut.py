@@ -133,7 +133,9 @@ def _plot_q2(brem : int, df : pnd.DataFrame) -> None:
     title = _get_title(brem=brem)
 
     fig.suptitle(title, fontsize=40)
-    plt.axvline(x=15, c='black', ls=':')
+    ax1.axvline(x=15  , c='black', ls=':')
+    ax2.axvline(x=5280, c='black', ls=':')
+
     plt.grid()
     plt.savefig(f'{Data.plt_dir}/q2_{brem}.png')
     plt.close()
