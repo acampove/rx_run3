@@ -174,7 +174,10 @@ def _check_q2_leakage(sample : str, nbrem : int) -> None:
     ax.axvline(x= 6, ls=':', color='green')
     ax.axvline(x=15, ls=':', color='green')
     ax.axvline(x=22, ls=':', color='green')
-    plt.savefig(f'{Data.plots_dir}/{sample}_{nbrem}.png')
+    plot_path = f'{Data.plots_dir}/{sample}_{nbrem}.png'
+
+    log.info(f'Saving to:{plot_path}')
+    plt.savefig(plot_path)
     plt.close()
 # --------------------------------
 def main():
