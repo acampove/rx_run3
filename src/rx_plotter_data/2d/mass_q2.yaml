@@ -2,6 +2,9 @@
 
 saving:
     plt_dir : plots/2d/mass_q2
+definitions:
+  q2_cen_low : q2
+  q2_dtf_high: q2_dtf
 selection:
   cuts:
     bdt : (1)
@@ -23,6 +26,9 @@ axes:
     q2 :
         binning : [ 8000000, 35000000, 100]
         label   : '$q^2$[MeV${}^2$]'
-    q2_dtf :
+    q2_dtf_high :
         binning : [15000000, 22000000, 100]
         label   : '$q_{DTF}^2$[MeV${}^2$]'
+    q2_cen_low :
+        binning : [0       ,  6000000, 100]
+        label   : '$q^2$[MeV${}^2$]'
