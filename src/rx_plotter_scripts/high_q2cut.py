@@ -40,7 +40,7 @@ class Data:
     q2bin   = 'high'
     plt.style.use(mplhep.style.LHCb2)
     max_q2  = 22
-    min_q2  = 14
+    min_q2  = 10
 
     l_q2var = ['q2_smr', 'q2_track', 'q2_dtf', 'nbrem', 'B_Mass']
 # ---------------------------
