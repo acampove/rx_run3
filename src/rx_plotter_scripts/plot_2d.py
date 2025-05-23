@@ -110,10 +110,14 @@ def main():
     _parse_args()
     _initialize()
 
+    cfg = _get_cfg()
+    if 'definitions' in cfg:
+        log.warning('Adding custom definitions')
+        RDFGetter.set_custom_columns(d_def = cfg['definitions'])
+        del cfg['definitions']
+
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
     rdf = gtr.get_rdf()
-
-    cfg = _get_cfg()
     rdf = _apply_selection(rdf=rdf, cfg=cfg)
 
     ptr=Plotter2D(rdf=rdf, cfg=cfg)
