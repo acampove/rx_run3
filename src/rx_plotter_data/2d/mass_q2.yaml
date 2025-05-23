@@ -3,8 +3,9 @@
 saving:
     plt_dir : plots/2d/mass_q2
 definitions:
-  q2_cen_low : q2
-  q2_dtf_high: q2_dtf
+  q2_org     : q2_smr / 1000000
+  q2_cen_low : q2_smr / 1000000
+  q2_dtf_high: q2_dtf / 1000000
 selection:
   cuts:
     bdt : (1)
@@ -12,8 +13,8 @@ selection:
 general:
     size : [15, 12]
 plots_2d:
-    - [B_M       , q2         , null,          'Bmass_org_q2' , true]
-    - [B_Mass    , q2         , null,          'Bmass_q2_cor' , true]
+    - [B_M       , q2_org     , null,          'Bmass_org_q2' , true]
+    - [B_Mass    , q2_org     , null,          'Bmass_q2_cor' , true]
     - [B_Mass    , q2_dtf_high, null,          'Bmass_q2_dtf' , true]
     - [q2_cen_low, q2_dtf_high, null, 'q2_central_low_vs_high', true]
 axes:
@@ -23,12 +24,12 @@ axes:
     B_Mass:
         binning : [4500, 6000, 100]
         label   : '$M_{corr}(B^+)$[MeV]'
-    q2 :
-        binning : [ 8000000, 35000000, 100]
-        label   : '$q^2$[MeV${}^2$]'
+    q2_org :
+        binning : [ 8, 35, 100]
+        label   : '$q^2$[GeV${}^2$]'
     q2_dtf_high :
-        binning : [15000000, 22000000, 100]
-        label   : '$q_{DTF}^2$[MeV${}^2$]'
+        binning : [14, 22, 100]
+        label   : '$q_{DTF}^2$[GeV${}^2$]'
     q2_cen_low :
-        binning : [0       ,  6000000, 100]
-        label   : '$q^2$[MeV${}^2$]'
+        binning : [0 , 10, 100]
+        label   : '$q^2$[GeV${}^2$]'
