@@ -34,15 +34,15 @@ class Data:
 # ---------------------------------
 def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
     d_cut = cfg['selection']['cuts']
-
     if Data.q2bin is None:
-        q2bin       = 'jpsi' # Need dummy cut for selection code
-        d_cut['q2'] = '(1)'  # Will remove cut here
+        q2bin          = 'jpsi' # Need dummy cut for selection code
+        d_cut['q2bin'] = '(1)'
     else:
-        q2bin = Data.q2bin
+        q2bin          = Data.q2bin
+
+    sel.set_custom_selection(d_cut = d_cut)
 
     d_sel = sel.selection(trigger=Data.trigger, q2bin=q2bin, process=Data.sample)
-    d_sel.update(d_cut)
 
     for cut_name, cut_expr in d_sel.items():
         log.debug(f'{cut_name:<20}{cut_expr}')
