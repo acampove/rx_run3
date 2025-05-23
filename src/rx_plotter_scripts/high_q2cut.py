@@ -10,10 +10,12 @@ import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from ROOT                import RDataFrame
-from rx_data.rdf_getter  import RDFGetter
-from rx_selection        import selection as sel
+from ROOT                  import RDataFrame
+from rx_data.rdf_getter    import RDFGetter
+from rx_selection          import selection as sel
+from dmu.logging.log_store import LogStore
 
+log=LogStore.add_logger('rx_plots:high_q2cut')
 # ---------------------------
 class Data:
     '''
