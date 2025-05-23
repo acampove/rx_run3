@@ -166,7 +166,7 @@ def _get_inp() -> dict[str,RDataFrame]:
     d_rdf = {}
     log.info('Applying cutflow')
     for name, cut in d_cut.items():
-        log.info(f'   {name}')
+        log.info(f'{"":<4}{name:<30}{cut}')
         rdf         = rdf.Filter(cut, name)
         d_rdf[name] = rdf
 
