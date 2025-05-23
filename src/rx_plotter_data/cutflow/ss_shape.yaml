@@ -35,7 +35,6 @@ cutflow:
     None           : (1)
     q2             : q2 > 15000000 && q2 < 22000000
     ccbar_veto     : q2_dtf > 15000000
-    HOP            : hop_mass > 3000 
 saving:
   plt_dir : cutflow/ss_shape
 plots:
