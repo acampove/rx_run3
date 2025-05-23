@@ -5,7 +5,7 @@ saving:
     plt_dir : plots/2d/mass_q2/high_q2
 selection:
   cuts:
-    cmb : (1)
+    bdt : (1)
     mass: (1)
 general:
     size : [15, 10]

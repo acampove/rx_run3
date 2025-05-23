@@ -4,7 +4,7 @@ saving:
     plt_dir : plots/2d/mass_q2
 selection:
   cuts:
-    cmb : mva_cmb > 0.5
+    bdt : mva_cmb > 0.5
     mass: (1)
 general:
     size : [15, 12]
