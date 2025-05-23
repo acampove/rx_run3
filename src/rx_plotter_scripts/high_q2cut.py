@@ -23,18 +23,20 @@ class Data:
     '''
     plt_dir : str
     sample  : str
+    trigger : str
 
     d_samples = {
+            'data_ss' : 'DATA*',
             'bukee'   : 'Bu_Kee_eq_btosllball05_DPC',
             'bukjpee' : 'Bu_JpsiK_ee_eq_DPC',
             'bukpsee' : 'Bu_psi2SK_ee_eq_DPC'}
 
     d_latex   = {
+            'DATA*'                      : 'SS data',
             'Bu_Kee_eq_btosllball05_DPC' : r'$B^+\to K^+e^+e^-$',
             'Bu_JpsiK_ee_eq_DPC'         : r'$B^+\to K^+J/\psi(\to e^+e^-)$',
             'Bu_psi2SK_ee_eq_DPC'        : r'$B^+\to K^+J/\psi(\to e^+e^-)$'}
 
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
     q2bin   = 'high'
     plt.style.use(mplhep.style.LHCb2)
     max_q2  = 22
@@ -55,6 +57,11 @@ def _initialize():
     plt_dir = f'{ana_dir}/plots/high_q2/{Data.sample}'
 
     os.makedirs(plt_dir, exist_ok=True)
+
+    if Data.sample.startswith('DATA'):
+        Data.trigger = 'Hlt2RD_BuToKpEE_SameSign_MVA'
+    else:
+        Data.trigger = 'Hlt2RD_BuToKpEE_MVA'
 
     Data.plt_dir = plt_dir
 # ---------------------------
