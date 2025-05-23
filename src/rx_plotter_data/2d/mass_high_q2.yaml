@@ -12,13 +12,14 @@ general:
 plots_2d:
     - [B_Mass, q2    , null, 'Bmass_q2_org', true]
     - [B_Mass, q2_dtf, null, 'Bmass_q2_dtf', true]
+    - [q2    , q2_dtf, null, 'q2_q2_dtf'   , true]
 axes:
     B_Mass:
-        binning : [4500, 7000, 200]
+        binning : [4500, 7000, 100]
         label   : '$M_{corr}(B^+)$[MeV]'
     q2 :
-        binning : [15000000, 22000000, 200]
+        binning : [15000000, 22000000, 100]
         label   : '$q^2$[GeV${}^2$]'
     q2_dtf :
-        binning : [15000000, 22000000, 200]
+        binning : [15000000, 22000000, 100]
         label   : '$q_{DTF}^2$[GeV${}^2$]'
