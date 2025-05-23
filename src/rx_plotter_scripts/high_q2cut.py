@@ -108,8 +108,8 @@ def _plot_q2(brem : int, df : pnd.DataFrame) -> None:
     ax1.legend(loc='upper right', bbox_to_anchor=(0.9, 0.9))
     ax2.legend(loc='upper right', bbox_to_anchor=(0.9, 0.9))
 
+    fig.suptitle(f'Brem {brem}', fontsize=40)
     plt.axvline(x=15, c='black', ls=':')
-    plt.title(f'Brem {brem}')
     plt.grid()
     plt.savefig(f'{Data.plt_dir}/q2_{brem}.png')
     plt.close()
