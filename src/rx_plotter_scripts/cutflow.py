@@ -37,7 +37,6 @@ class Data:
     config  : str
     plt_dir : str
 
-    l_kind     = ['bdt', 'vetoes']
     l_ee_trees = ['brem_track_2', 'ecalo_bias']
     l_keep     = []
     l_col      = []
@@ -111,7 +110,7 @@ def _parse_args() -> None:
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high', 'high_dtf'])
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True)
-    parser.add_argument('-c', '--config' , type=str, help='Configuration', choices=Data.l_kind)
+    parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True) 
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     args = parser.parse_args()
 
