@@ -29,6 +29,11 @@ class Data:
             'bukjpee' : 'Bu_JpsiK_ee_eq_DPC',
             'bukpsee' : 'Bu_psi2SK_ee_eq_DPC'}
 
+    d_latex   = {
+            'Bu_Kee_eq_btosllball05_DPC' : r'$B^+\to K^+e^+e^-$',
+            'Bu_JpsiK_ee_eq_DPC'         : r'$B^+\to K^+J/\psi(\to e^+e^-)$',
+            'Bu_psi2SK_ee_eq_DPC'        : r'$B^+\to K^+J/\psi(\to e^+e^-)$'}
+
     trigger = 'Hlt2RD_BuToKpEE_MVA'
     q2bin   = 'high'
     plt.style.use(mplhep.style.LHCb2)
@@ -125,11 +130,18 @@ def _plot_q2(brem : int, df : pnd.DataFrame) -> None:
     ax1.legend(loc='upper right', bbox_to_anchor=(0.9, 0.9))
     ax2.legend(loc='upper right', bbox_to_anchor=(0.9, 0.9))
 
-    fig.suptitle(f'Brem {brem}', fontsize=40)
+    title = _get_title(brem=brem)
+
+    fig.suptitle(title, fontsize=40)
     plt.axvline(x=15, c='black', ls=':')
     plt.grid()
     plt.savefig(f'{Data.plt_dir}/q2_{brem}.png')
     plt.close()
+# ---------------------------
+def _get_title(brem : str) -> str:
+    latex = Data.d_latex[Data.sample]
+
+    return f'Brem = {brem}; {latex}'
 # ---------------------------
 def main():
     '''
