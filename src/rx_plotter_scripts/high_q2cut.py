@@ -108,17 +108,17 @@ def _plot_q2(brem : int, df : pnd.DataFrame) -> None:
     ax1.hist(df['q2_dtf'  ], bins=60, range=[0, Data.max_q2], density=True, label='$q^2_{DTF}$'  , alpha = 0.2, color='green')
     ax1.hist(df['q2_track'], bins=60, range=[0, Data.max_q2], density=True, label='$q^2_{track}$', alpha = 0.2, color='red'  )
 
-    df_smr=df[(df.q2_smr   > 15) & (df.q2_smr   < 22)]
-    df_dtf=df[(df.q2_dtf   > 15) & (df.q2_dtf   < 22)]
-    df_trk=df[(df.q2_track > 15) & (df.q2_track < 22)]
+    df_smr=df[(df.q2_smr   > 15) & (df.q2_smr   < 22)                     ]
+    df_dtf=df[(df.q2_dtf   > 15) & (df.q2_dtf   < 22) & (df.q2_smr   < 22)]
+    df_trk=df[(df.q2_track > 15) & (df.q2_track < 22)                     ]
 
     ax2.hist(df_smr['B_Mass'  ], bins=60, range=[4500, 6000], label='$q^2$'        , alpha   =   0.2, color='blue' )
     ax2.hist(df_dtf['B_Mass'  ], bins=60, range=[4500, 6000], label='$q^2_{DTF}$'  , histtype='step', color='green')
     ax2.hist(df_trk['B_Mass'  ], bins=60, range=[4500, 6000], label='$q^2_{track}$', histtype='step', color='red'  )
 
-    arr_q2smr = df[df['q2_smr'  ] < 22]['q2_smr'  ].to_numpy()
-    arr_q2dtf = df[df['q2_dtf'  ] < 22]['q2_dtf'  ].to_numpy()
-    arr_q2trk = df[df['q2_track'] < 22]['q2_track'].to_numpy()
+    arr_q2smr = df[(df.q2_smr   < 22)                     ]['q2_smr'  ].to_numpy()
+    arr_q2dtf = df[(df.q2_dtf   < 22) & (df.q2_smr   < 22)]['q2_dtf'  ].to_numpy()
+    arr_q2trk = df[(df.q2_track < 22)                     ]['q2_track'].to_numpy()
 
     ax3= ax1.twinx()
     ax1.set_ylim(0, 0.20)
