@@ -1,11 +1,8 @@
 # Config meant to check effect of cuts on combinatorial through SS samples 
 
 general:
-  size : [12, 8]
+  size : [15, 10]
 selection :
-  jpsi_misid : (1)
-  hop        : (1)
-  cascade    : (1)
   bdt        : (1) 
   mass       : (1)
   q2         : (1)
