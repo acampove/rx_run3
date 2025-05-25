@@ -46,9 +46,19 @@ check_status()
 # -----------------------
 initialize()
 {
+    RAPIDSIM_CONFIG=$(python3 -c "from importlib.resources import files; data_path=files('rx_efficiencies_data').joinpath('prec_decfiles/$VERSION'); print(str(data_path))")
+    check_status "Finding rx_efficiencies data directory"
+
     if [ -z $RAPIDSIM_CONFIG ];then
-        echo "RAPIDSIM_CONFIG not set, this should point to directory with config files"
+        echo "Cannot find variable $RAPIDSIM_CONFIG"
         exit 1
+    fi
+
+    if [ ! -d $RAPIDSIM_CONFIG ];then
+        echo "Cannot find directory $RAPIDSIM_CONFIG"
+        exit 1
+    else
+        echo "Looking for config files in $RAPIDSIM_CONFIG"
     fi
 
     if [ -z $ANADIR ];then
