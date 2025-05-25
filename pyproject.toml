@@ -2,7 +2,10 @@
 name        = 'ecal_calibration'
 version     = '0.0.1'
 readme      = 'README.md'
-dependencies= []
+dependencies= [
+'dask',
+'data_manipulation_utilities',
+]
 
 [project.optional-dependencies]
 dev  = ['pytest']
