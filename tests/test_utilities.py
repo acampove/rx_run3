@@ -25,6 +25,17 @@ def _plot_distributions(df : pnd.DataFrame) -> None:
     _plot_lept(df=df, name='BREMHYPOROW')
     _plot_lept(df=df, name='BREMHYPOCOL')
     _plot_lept(df=df, name='BREMHYPOAREA')
+
+    _plot_evt(df=df, name='nPVs')
+    _plot_evt(df=df, name='block')
+# -----------------------------------------
+def _plot_evt(df : pnd.DataFrame, name : str) -> None:
+    df[name].plot.hist(bins=30)
+
+    plt.legend()
+    plt.xlabel(name)
+    plt.savefig(f'{Data.out_dir}/{name}.png')
+    plt.close()
 # -----------------------------------------
 def _plot_lept(df : pnd.DataFrame, name : str) -> None:
     df[f'L1_{name}'].plot.hist(label='$e^+$', bins=30, alpha=0.3)
