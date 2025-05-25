@@ -70,9 +70,9 @@ create_config()
     CFG_PATH=$1
     ENERGY=$2
 
-    echo "geometry: 4pi"              > $CFG_PATH
-    echo "paramsStable : P, PT, eta" >> $CFG_PATH
-    echo "energy: $ENERGY          " >> $CFG_PATH
+    echo "geometry: 4pi"                   > $CFG_PATH
+    echo "paramsStable : P, PT, eta, phi" >> $CFG_PATH
+    echo "energy: $ENERGY          "      >> $CFG_PATH
 }
 # -----------------------
 create_ntuple()
