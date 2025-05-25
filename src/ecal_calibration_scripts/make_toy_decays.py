@@ -28,18 +28,17 @@ class Data:
         ]
 
     d_name= {
-            'Kp_0_PT_TRUE'  : 'kp_pt' ,
-            'Kp_0_eta_TRUE' : 'kp_eta',
-            'Kp_0_phi_TRUE' : 'kp_phi',
+            'Kp_0_PT_TRUE'  :  'H_PT' ,
+            'Kp_0_eta_TRUE' :  'H_ETA',
+            'Kp_0_phi_TRUE' :  'H_PHI',
             # ----------
-            'ep_0_PT_TRUE'  : 'ep_pt' ,
-            'ep_0_eta_TRUE' : 'ep_eta',
-            'ep_0_phi_TRUE' : 'ep_phi',
+            'ep_0_PT_TRUE'  : 'L1_PT' ,
+            'ep_0_eta_TRUE' : 'L1_ETA',
+            'ep_0_phi_TRUE' : 'L1_PHI',
             # ----------
-            'em_0_PT_TRUE'  : 'em_pt' ,
-            'em_0_eta_TRUE' : 'em_eta',
-            'em_0_phi_TRUE' : 'em_phi',
-            }
+            'em_0_PT_TRUE'  : 'L2_PT' ,
+            'em_0_eta_TRUE' : 'L2_ETA',
+            'em_0_phi_TRUE' : 'L2_PHI'}
 # ------------------------------------
 def _get_df() -> pnd.DataFrame:
     root_path = f'{Data.ana_dir}/Rapidsim/{Data.ntup_ver}/bpkpee/13TeV/bpkpee_tree.root'
