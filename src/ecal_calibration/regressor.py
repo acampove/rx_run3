@@ -20,11 +20,11 @@ class Regressor:
     corrections
     '''
     # ---------------------------------------------
-    def __init__(self, ddf : DDF, cfg : dict):
+    def __init__(self, df : pnd.DataFrame, cfg : dict):
         '''
         Parameters
         -------------------
-        ddf : Dask DataFrame holding the data needed for the regression.
+        df  : Pandas dataframe storing the target and the features
         cfg : Dictionary holding configuration
         '''
     # ---------------------------------------------
