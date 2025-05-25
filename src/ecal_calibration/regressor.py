@@ -8,7 +8,7 @@ from torch import nn
 from torch import optim
 from torch import Tensor
 
-import pandas as pnd
+from dask.dataframe.core      import DataFrame as DDF
 from dmu.logging.log_store    import LogStore
 from ecal_calibration.network import Network
 
@@ -20,20 +20,21 @@ class Regressor:
     corrections
     '''
     # ---------------------------------------------
-    def __init__(self, df : pnd.DataFrame, cfg : dict):
+    def __init__(self, ddf : DDF, cfg : dict):
         '''
         Parameters
         -------------------
-        df  : Pandas dataframe storing the target and the features
+        ddf : Dask dataframe storing the target and the features
         cfg : Dictionary holding configuration
         '''
 
-        self._df  =  df
+        self._ddf = ddf
         self._cfg = cfg
     # ---------------------------------------------
     def _get_training_data(self) -> tuple[Tensor,Tensor]:
-        arr_target = self._df[self._cfg['target']]
-        df         = self._df.drop(self._cfg['target'], axis=1)
+        df         = self._ddf.compute()
+        arr_target = df[self._cfg['target']]
+        df         = df.drop(self._cfg['target'], axis=1)
 
         features = torch.tensor(df.values , dtype=torch.float32)
         targets  = torch.tensor(arr_target, dtype=torch.float32)
