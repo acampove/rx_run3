@@ -7,6 +7,7 @@ dependencies= [
 'pandas',
 'uproot',
 'vector',
+'numpy',
 'data_manipulation_utilities',
 ]
 
