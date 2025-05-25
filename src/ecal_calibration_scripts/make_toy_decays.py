@@ -5,6 +5,7 @@ toy decays, needed for tests
 import os
 from importlib.resources import files
 
+import numpy
 import uproot
 import pandas as pnd
 
@@ -57,7 +58,7 @@ def _add_b_vtx(row : pnd.Series) -> pnd.Series:
     kp = v3d(pt=row.H_PT , eta=row.H_ETA , phi=row.H_PHI )
 
     bp = ep + em + kp
-    pos= 10 * bp / bp.mag
+    pos= numpy.random.exponential(scale=10) * bp / bp.mag
     sr = pnd.Series(
             {'B_END_VX' : pos.px,
              'B_END_VY' : pos.py,
