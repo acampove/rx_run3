@@ -2,7 +2,7 @@
 Module holding PreProcessor class
 '''
 
-from dask.dataframe.core import DataFrame as DDF
+from dask.dataframe import DataFrame as DDF
 
 # --------------------------
 class PreProcessor:
