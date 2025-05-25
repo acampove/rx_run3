@@ -27,14 +27,49 @@ class Regressor:
         df  : Pandas dataframe storing the target and the features
         cfg : Dictionary holding configuration
         '''
+
+        self._df  =  df
+        self._cfg = cfg
+    # ---------------------------------------------
+    def _get_training_data(self) -> tuple[Tensor,Tensor]:
+        arr_target = self._df[self._cfg['target']]
+        df         = self._df.drop(self._cfg['target'], axis=1)
+
+        features = torch.tensor(df.values , dtype=torch.float32)
+        targets  = torch.tensor(arr_target, dtype=torch.float32)
+
+        return features, targets
     # ---------------------------------------------
     def train(self) -> None:
         '''
         Will train the regressor
         '''
+        cfg_trn   = self._cfg['train']
+        net       = Network()
+        criterion = nn.MSELoss()
+        optimizer = optim.Adam(net.parameters(), lr=cfg_trn['lr'])
+
+        features, targets = self._get_training_data()
+        for epoch in range(cfg_trn['epochs']):
+            net.train()
+            optimizer.zero_grad()
+            outputs = net(features)
+            loss    = criterion(outputs, targets)
+            loss.backward()
+            optimizer.step()
+
+            if epoch % 50 == 0:
+                log.info(f'Epoch {epoch}, Loss: {loss.item():.4f}')
+
+        self._save_regressor(regressor=net)
     # ---------------------------------------------
-    def test(self) -> None:
-        '''
-        Will test performance of regressor
-        '''
+    def _save_regressor(self, regressor : Network) -> None:
+        ana_dir = os.environ['ANADIR']
+        out_dir = self._cfg['saving']['out_dir']
+        out_dir = f'{ana_dir}/{out_dir}'
+        os.makedirs(out_dir, exist_ok=True)
+
+        out_path = f'{out_dir}/model.pth'
+        log.info(f'Saving model to: {out_path}')
+        torch.save(regressor, out_path)
 # ---------------------------------------------
