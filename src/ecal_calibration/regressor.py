@@ -1,8 +1,18 @@
 '''
 Module containing the Regressor class
 '''
-from dask.dataframe import DataFrame as DDF
+import os
 
+import torch
+from torch import nn
+from torch import optim
+from torch import Tensor
+
+import pandas as pnd
+from dmu.logging.log_store    import LogStore
+from ecal_calibration.network import Network
+
+log=LogStore.add_logger('ecal_calibration:regressor')
 # ---------------------------------------------
 class Regressor:
     '''
