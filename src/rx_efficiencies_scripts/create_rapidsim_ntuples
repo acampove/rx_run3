@@ -69,11 +69,12 @@ initialize()
 # -----------------------
 find_decays()
 {
+    echo "Looking for decays in: $RAPIDSIM_CONFIG"
     shopt -s nullglob
     PATHS=($RAPIDSIM_CONFIG/*.decay)
     FILES=("${PATHS[@]##*/}")
     DECAYS=("${FILES[@]%.decay}")
-    echo "${DECAYS[@]}"
+    echo "Found decays: ${DECAYS[@]}"
 }
 # -----------------------
 create_config()
