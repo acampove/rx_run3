@@ -36,6 +36,14 @@ get_opts()
     done
 }
 # -----------------------
+check_status()
+{
+    if [ $? -ne 0 ];then
+        echo "Failed: $1"
+        exit 1
+    fi
+}
+# -----------------------
 initialize()
 {
     if [ -z $RAPIDSIM_CONFIG ];then
@@ -45,14 +53,6 @@ initialize()
 
     if [ -z $ANADIR ];then
         echo "ANADIR variable not set"
-        exit 1
-    fi
-}
-# -----------------------
-check_status()
-{
-    if [ $? -ne 0 ];then
-        echo "Failed: $1"
         exit 1
     fi
 }
