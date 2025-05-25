@@ -43,15 +43,16 @@ initialize()
         exit 1
     fi
 
-    if [ -z $RAPIDSIM_NTUPLES ];then
-        echo "RAPIDSIM_NTUPLES not set, this should point to directory where ntuples will go"
+    if [ -z $ANADIR ];then
+        echo "ANADIR variable not set"
         exit 1
     fi
-
-    mkdir -p $RAPIDSIM_NTUPLES
-
-    if [ ! -d $RAPIDSIM_NTUPLES ];then
-        echo "Cannot create $RAPIDSIM_NTUPLES"
+}
+# -----------------------
+check_status()
+{
+    if [ $? -ne 0 ];then
+        echo "Failed: $1"
         exit 1
     fi
 }
