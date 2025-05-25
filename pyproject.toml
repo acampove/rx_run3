@@ -16,7 +16,7 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
-make_toy_decays ='ecal_calibration_data.make_toy_decays:main'
+make_toy_decays ='ecal_calibration_scripts.make_toy_decays:main'
 
 [tool.setuptools.package-data]
 ecal_calibration_data=[
