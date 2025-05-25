@@ -14,7 +14,7 @@ def test_simple():
     ddf = cut.get_ddf()
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
-    df  = pre.get_data()
+    ddf = pre.get_data()
 
-    assert len(df) == 10000
+    assert len(ddf) == 10000
 # ---------------------------------------------
