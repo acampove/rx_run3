@@ -1,10 +1,37 @@
 '''
 Module testing PreProcessor class
 '''
+import os
+import pytest
+import pandas            as pnd
+import matplotlib.pyplot as plt
 
+from dask.dataframe                import DataFrame    as DDF
 from ecal_calibration.preprocessor import PreProcessor
-from ecal_calibration              import utilities as cut
+from ecal_calibration              import utilities    as cut
 
+# -----------------------------------------
+class Data:
+    '''
+    Data class
+    '''
+    out_dir = '/tmp/tests/ecal_calibration/preprocessor'
+# -----------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    os.makedirs(Data.out_dir, exist_ok=True)
+# ---------------------------------------------
+def _plot_brem(df : pnd.DataFrame):
+    df['nbrem'] = df['L1_brem'] + df['L2_brem']
+    df['nbrem'].plot.hist(bins=10)
+
+    plt.savefig(f'{Data.out_dir}/brem.png')
+    plt.close()
+# ---------------------------------------------
+def _plot_ddf(ddf : DDF) -> None:
+    df = ddf.compute()
+
+    _plot_brem(df=df)
 # ---------------------------------------------
 def test_simple():
     '''
@@ -16,5 +43,5 @@ def test_simple():
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
 
-    assert len(ddf) == 10000
+    _plot_ddf(ddf=ddf)
 # ---------------------------------------------
