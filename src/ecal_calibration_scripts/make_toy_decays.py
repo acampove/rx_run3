@@ -60,7 +60,7 @@ def main():
     os.makedirs(out_dir, exist_ok=True)
 
     out_path = f'{out_dir}/toy_decays.json'
-    df.to_json(out_path, indent=2)
+    df.to_json(out_path, orient='records', lines=True)
 # ------------------------------------
 if __name__ == '__main__':
     main()
