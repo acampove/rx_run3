@@ -91,7 +91,7 @@ create_ntuple()
 {
     echo "Creating $DECAY with $NEVENTS entries at $ENERGY"
 
-    DECAYDIR=$ANADIR"/Rapidsim/"$DECAY"/"$ENERGY"TeV"
+    DECAYDIR=$ANADIR"/Rapidsim/"$VERSION"/"$DECAY"/"$ENERGY"TeV"
     mkdir -p $DECAYDIR
 
     check_status "Creating $DECAYDIR"
