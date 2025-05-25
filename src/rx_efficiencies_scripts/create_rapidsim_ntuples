@@ -100,7 +100,9 @@ initialize
 find_decays
 
 for DECAY in ${DECAYS[@]};do
+    echo "Creating $DECAY"
     for ENERGY in "8" "13" "14";do
+        echo "  $ENERGY TeV"
         create_ntuple
     done
 done
