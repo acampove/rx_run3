@@ -18,6 +18,7 @@ def load_cfg(name : str) -> dict:
     '''
 
     config_path = files('ecal_calibration_data').joinpath(f'{name}.yaml')
+    config_path = str(config_path)
     data        = gut.load_json(config_path)
 
     return data
