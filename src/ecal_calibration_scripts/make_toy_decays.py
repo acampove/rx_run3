@@ -8,6 +8,8 @@ from importlib.resources import files
 import uproot
 import pandas as pnd
 
+from vector import MomentumObject3D as v3d
+
 # ------------------------------------
 class Data:
     '''
@@ -49,11 +51,35 @@ def _get_df() -> pnd.DataFrame:
 
     return df
 # ------------------------------------
+def _add_b_vtx(row : pnd.Series) -> pnd.Series:
+    ep = v3d(pt=row.L1_PT, eta=row.L1_ETA, phi=row.L1_PHI)
+    em = v3d(pt=row.L2_PT, eta=row.L2_ETA, phi=row.L2_PHI)
+    kp = v3d(pt=row.H_PT , eta=row.H_ETA , phi=row.H_PHI )
+
+    bp = ep + em + kp
+    pos= 10 * bp / bp.mag
+    sr = pnd.Series(
+            {'B_END_VX' : pos.px,
+             'B_END_VY' : pos.py,
+             'B_END_VZ' : pos.pz,
+             'B_BPVX'   : 0,
+             'B_BPVY'   : 0,
+             'B_BPVZ'   : 0})
+
+    return sr
+# ------------------------------------
+def _reformat_df(df : pnd.DataFrame) -> pnd.DataFrame:
+    df_vtx = df.apply(_add_b_vtx, axis=1)
+    df     = df.join(df_vtx)
+
+    return df
+# ------------------------------------
 def main():
     '''
     Start here
     '''
     df = _get_df()
+    df = _reformat_df(df=df)
 
     out_dir = files('ecal_calibration_data').joinpath('tests/data')
     os.makedirs(out_dir, exist_ok=True)
