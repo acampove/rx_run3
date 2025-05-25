@@ -70,8 +70,12 @@ def _add_b_vtx(row : pnd.Series) -> pnd.Series:
     return sr
 # ------------------------------------
 def _reformat_df(df : pnd.DataFrame) -> pnd.DataFrame:
+    size   = len(df)
     df_vtx = df.apply(_add_b_vtx, axis=1)
-    df     = df.join(df_vtx)
+
+    df            = df.join(df_vtx)
+    df['L1_brem'] = numpy.random.choice([0,1], size=size, p=[0.2, 0.8])
+    df['L2_brem'] = numpy.random.choice([0,1], size=size, p=[0.2, 0.8])
 
     return df
 # ------------------------------------
