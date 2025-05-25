@@ -4,6 +4,8 @@ version     = '0.0.1'
 readme      = 'README.md'
 dependencies= [
 'dask',
+'pandas',
+'uproot',
 'data_manipulation_utilities',
 ]
 
@@ -14,7 +16,7 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
-#transform_text       ='dmu_scripts.text.transform_text:main'
+make_toy_decays ='ecal_calibration_data.make_toy_decays:main'
 
 [tool.setuptools.package-data]
 ecal_calibration_data=[
