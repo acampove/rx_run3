@@ -6,6 +6,7 @@ display_help()
     echo "Script used to steer the creation of ntuples with different decays from what is in the $RAPIDSIM_CONFIG directory"
     echo ""
     echo "-n: Number of entries in the ntuples"
+    echo "-v: Version of ntuples"
 }
 #--------------------------------------------------
 get_opts()
@@ -15,13 +16,14 @@ get_opts()
         exit 1
     fi  
 
-    while getopts :hf:n: option; do 
+    while getopts :hf:n:v: option; do 
         case "${option}" in
             h)  
                 display_help
                 exit 0
                 ;;  
             n)  NEVENTS=${OPTARG};;
+            v)  VERSION=${OPTARG};;
            \?)  echo "Invalid option: -${OPTARG}"
                 display_help
                 exit 1
