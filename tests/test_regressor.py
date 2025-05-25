@@ -2,16 +2,22 @@
 Script with code needed to test Calibration class
 '''
 
-from ecal_calibration.regressor import Regressor
-from ecal_calibration           import utilities as cut
+from ecal_calibration.preprocessor import PreProcessor
+from ecal_calibration.regressor    import Regressor
+from ecal_calibration              import utilities as cut
 
+# -----------------------------------------------------------
 def test_simple():
     '''
     Simplest test for calibration
     '''
-    ddf = cut.get_ddf()
-    cfg = cut.load_cfg(name='tests/regressor/simple')
+    cfg = cut.load_cfg(name='tests/preprocessor/simple')
 
-    obj = Regressor(ddf=ddf, cfg=cfg)
+    ddf = cut.get_ddf()
+    pre = PreProcessor(ddf=ddf, cfg=cfg)
+    df  = pre.get_data()
+
+    cfg = cut.load_cfg(name='tests/regressor/simple')
+    obj = Regressor(df=df, cfg=cfg)
     obj.train()
-    obj.test()
+# -----------------------------------------------------------
