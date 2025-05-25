@@ -70,12 +70,30 @@ def _add_b_vtx(row : pnd.Series) -> pnd.Series:
     return sr
 # ------------------------------------
 def _reformat_df(df : pnd.DataFrame) -> pnd.DataFrame:
-    size   = len(df)
     df_vtx = df.apply(_add_b_vtx, axis=1)
 
-    df            = df.join(df_vtx)
-    df['L1_brem'] = numpy.random.choice([0,1], size=size, p=[0.2, 0.8])
-    df['L2_brem'] = numpy.random.choice([0,1], size=size, p=[0.2, 0.8])
+    df     = df.join(df_vtx)
+    df     = _add_lepton_columns(df=df, lepton='L1')
+    df     = _add_lepton_columns(df=df, lepton='L2')
+    df     = _add_event_columns(df=df)
+
+    return df
+# ------------------------------------
+def _add_event_columns(df : pnd.DataFrame) -> pnd.DataFrame:
+    size        = len(df)
+    df['nPVs' ] = numpy.random.poisson(lam=3, size=size)
+    df['block'] = numpy.random.uniform(1, 8,  size=size)
+
+    return df
+# ------------------------------------
+def _add_lepton_columns(df : pnd.DataFrame, lepton : str) -> pnd.DataFrame:
+    size   = len(df)
+
+    df[f'{lepton}_BREMHYPOAREA'] = numpy.random.choice([0, 1, 2], size=size)
+    df[f'{lepton}_brem'        ] = numpy.random.choice([0, 1   ], size=size, p=[0.2, 0.8])
+    df[f'{lepton}_BREMHYPOCOL' ] = numpy.random.randint(1, 60, size=size)
+    df[f'{lepton}_BREMHYPOROW' ] = numpy.random.randint(1, 60, size=size)
+    df[f'{lepton}_BREMTRACKBASEDENERGY' ] = numpy.random.exponential(scale=30_000, size=size)
 
     return df
 # ------------------------------------
