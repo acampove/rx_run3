@@ -17,6 +17,8 @@ class Corrector:
         ddf : Dask DataFrame holding the data needed for the regression.
         cfg : Dictionary holding configuration
         '''
+        self._ddf = ddf
+        self._cfg = cfg
     # ---------------------------------------------
     def get_ddf(self) -> DDF:
         '''
