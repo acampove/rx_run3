@@ -8,6 +8,7 @@ dependencies= [
 'uproot',
 'vector',
 'numpy',
+'torch',
 'data_manipulation_utilities',
 ]
 
