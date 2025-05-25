@@ -177,3 +177,6 @@ pyrightconfig.json
 
 *.root
 *.png
+
+src/rx_efficiencies_data/prec_sf/v*/*/*/
+
