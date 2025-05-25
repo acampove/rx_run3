@@ -4,7 +4,9 @@ Module holding code meant to be reused elsewhere
 
 from importlib.resources import files
 
+from dask                import dataframe
 from dask.dataframe      import DataFrame as DDF
+
 import dmu.generic.utilities as gut
 
 # ------------------------------------
@@ -27,4 +29,9 @@ def get_ddf() -> DDF:
     '''
     Returns Dask DataFrame with toy data, used for tests
     '''
+    data_path = files('ecal_calibration_data').joinpath('tests/data/toy_decays.json')
+    data_path = str(data_path)
+    ddf       = dataframe.read_json(data_path, orient='records', lines=True)
+
+    return ddf
 # ------------------------------------
