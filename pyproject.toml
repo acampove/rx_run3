@@ -6,6 +6,7 @@ dependencies= [
 'dask',
 'pandas',
 'uproot',
+'vector',
 'data_manipulation_utilities',
 ]
 
