@@ -79,8 +79,10 @@ create_ntuple()
 {
     echo "Creating $DECAY with $NEVENTS entries at $ENERGY"
 
-    DECAYDIR=$RAPIDSIM_NTUPLES/$DECAY/$ENERGY"TeV"
+    DECAYDIR=$ANADIR"/Rapidsim/"$DECAY"/"$ENERGY"TeV"
     mkdir -p $DECAYDIR
+
+    check_status "Creating $DECAYDIR"
 
     CFG_PATH=$RAPIDSIM_CONFIG/$DECAY".config"
     create_config $CFG_PATH $ENERGY
