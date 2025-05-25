@@ -22,6 +22,18 @@ def _initialize():
 def _plot_distributions(df : pnd.DataFrame) -> None:
     _plot_vtx(df=df)
     _plot_brem(df=df)
+    _plot_lept(df=df, name='BREMHYPOROW')
+    _plot_lept(df=df, name='BREMHYPOCOL')
+    _plot_lept(df=df, name='BREMHYPOAREA')
+# -----------------------------------------
+def _plot_lept(df : pnd.DataFrame, name : str) -> None:
+    df[f'L1_{name}'].plot.hist(label='$e^+$', bins=30, alpha=0.3)
+    df[f'L2_{name}'].plot.hist(label='$e^-$', bins=30, histtype='step')
+
+    plt.legend()
+    plt.xlabel(name)
+    plt.savefig(f'{Data.out_dir}/{name}.png')
+    plt.close()
 # -----------------------------------------
 def _plot_brem(df : pnd.DataFrame) -> None:
     df['nbrem'  ] = df['L1_brem'] + df['L2_brem']
@@ -31,6 +43,7 @@ def _plot_brem(df : pnd.DataFrame) -> None:
     df['nbrem'  ].plot.hist(label='both' , bins=10, alpha=0.3)
 
     plt.legend()
+    plt.xlabel('brem')
     plt.savefig(f'{Data.out_dir}/brem.png')
     plt.close()
 # -----------------------------------------
@@ -40,6 +53,7 @@ def _plot_vtx(df : pnd.DataFrame) -> None:
     df['B_END_VY'].plot.hist(label='VY', bins=80, alpha=0.3, range=[-20, +20])
 
     plt.yscale('log')
+    plt.xlabel('B vertex position')
     plt.savefig(f'{Data.out_dir}/end_vtx.png')
     plt.close()
 # -----------------------------------------
