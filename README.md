@@ -1,6 +1,8 @@
 # $R_X$ efficiencies
 
-Project used to calculate efficiencies for different simulated datasets
+Project used to calculate efficiencies for different simulated datasets. 
+This project assumes (as all the others in the RX group) that an `ANADIR` variable is set and points to a directory
+where the outputs can be written.
 
 ## Geometric acceptance
 
@@ -22,13 +24,19 @@ More on how to install and configure rapidsim [here](doc/rapidsim.md).
 To create the ntuples with the decays, do:
 
 ```bash
-create_rapidsim_ntuples -n 100000 -o /some/path/to/rapidsim/ntuples
+create_rapidsim_ntuples -n 100000 -v v2
 ```
 
-where the utility will pick up every decay configuration in the `$RAPIDSIM_CONFIG` directory and 
+where the utility will pick up every decay configuration in the `rx_efficiencies_data/prec_decfiles/v2` directory and 
 
 - Create the respective ntuple with the logfile and some histogram file and with 100K entries.
 - Make the output path if not found and send the outputs there.
+
+The output in this case would go to:
+
+```bash
+$ANADIR/Rapidsim/v2/DECAYNAME/ENERGY/
+```
 
 ### Measuring acceptances from them
 
