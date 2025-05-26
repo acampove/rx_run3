@@ -44,11 +44,13 @@ class Data:
             'Bu_psi2SK_ee_eq_DPC'        : r'$B^+\to K^+\psi(2S)(\to e^+e^-)$'}
 
     q2bin   = 'high'
+    bmass   = 'B_Mass'
     plt.style.use(mplhep.style.LHCb2)
     max_q2  = 22
     min_q2  = 10
+    mass_rng= [4500, 6000]
 
-    l_q2var = ['q2_smr', 'q2_track', 'q2_dtf', 'nbrem', 'B_Mass']
+    l_q2var = ['q2_smr', 'q2_track', 'q2_dtf', 'nbrem', 'B_Mass', 'B_M']
 # ---------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
@@ -118,9 +120,9 @@ def _plot_q2(brem : int, df : pnd.DataFrame) -> None:
     df_dtf=df[(df.q2_dtf   > 15) & (df.q2_dtf   < 22) & (df.q2_smr   < 22)]
     df_trk=df[(df.q2_track > 15) & (df.q2_track < 22)                     ]
 
-    ax2.hist(df_smr['B_Mass'  ], bins=60, range=[4500, 6000], label='$q^2$'        , alpha   =   0.2, color='blue' )
-    ax2.hist(df_dtf['B_Mass'  ], bins=60, range=[4500, 6000], label='$q^2_{DTF}$'  , histtype='step', color='green')
-    ax2.hist(df_trk['B_Mass'  ], bins=60, range=[4500, 6000], label='$q^2_{track}$', histtype='step', color='red'  )
+    ax2.hist(df_smr[Data.bmass], bins=60, range=Data.mass_rng, label='$q^2$'        , alpha   =   0.2, color='blue' )
+    ax2.hist(df_dtf[Data.bmass], bins=60, range=Data.mass_rng, label='$q^2_{DTF}$'  , histtype='step', color='green')
+    ax2.hist(df_trk[Data.bmass], bins=60, range=Data.mass_rng, label='$q^2_{track}$', histtype='step', color='red'  )
 
     arr_q2smr = df[(df.q2_smr   < 22)                     ]['q2_smr'  ].to_numpy()
     arr_q2dtf = df[(df.q2_dtf   < 22) & (df.q2_smr   < 22)]['q2_dtf'  ].to_numpy()
