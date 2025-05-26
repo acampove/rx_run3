@@ -28,6 +28,8 @@ class Data:
     d_samples = {
             'data_ss' : 'DATA*',
             'buhsee'  : 'Bu_JpsiX_ee_eq_JpsiInAcc',
+            'bdhsee'  : 'Bd_JpsiX_ee_eq_JpsiInAcc',
+            'bshsee'  : 'Bs_JpsiX_ee_eq_JpsiInAcc',
             'bukee'   : 'Bu_Kee_eq_btosllball05_DPC',
             'bukjpee' : 'Bu_JpsiK_ee_eq_DPC',
             'bukpsee' : 'Bu_psi2SK_ee_eq_DPC'}
@@ -35,6 +37,8 @@ class Data:
     d_latex   = {
             'DATA*'                      : 'SS data',
             'Bu_JpsiX_ee_eq_JpsiInAcc'   : r'$B^+\to H_s c\bar{c}(\to e^+e^-)$',
+            'Bd_JpsiX_ee_eq_JpsiInAcc'   : r'$B^0\to H_s c\bar{c}(\to e^+e^-)$',
+            'Bs_JpsiX_ee_eq_JpsiInAcc'   : r'$B_s\to H_s c\bar{c}(\to e^+e^-)$',
             'Bu_Kee_eq_btosllball05_DPC' : r'$B^+\to K^+e^+e^-$',
             'Bu_JpsiK_ee_eq_DPC'         : r'$B^+\to K^+J/\psi(\to e^+e^-)$',
             'Bu_psi2SK_ee_eq_DPC'        : r'$B^+\to K^+\psi(2S)(\to e^+e^-)$'}
