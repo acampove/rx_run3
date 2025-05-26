@@ -1,21 +1,23 @@
 '''
 Module holding zfitter class
 '''
+# pylint: disable=wrong-import-order
 
 import pprint
 from typing                   import Union
 from functools                import lru_cache
 
 import numpy
-import zfit
 import pandas as pd
 
+from dmu.stats.zfit           import zfit
+from dmu.logging.log_store    import LogStore
+
 from scipy                    import stats
+
 from zfit.minimizers.strategy import FailMinimizeNaN
-from zfit.result              import FitResult
 from zfit.core.data           import Data
 from zfit.result              import FitResult  as zres
-from dmu.logging.log_store    import LogStore
 
 log = LogStore.add_logger('dmu:statistics:fitter')
 #------------------------------
