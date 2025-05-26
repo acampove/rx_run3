@@ -1,10 +1,10 @@
 '''
 Module with FWHM plugin class
 '''
-import zfit
 import numpy
 import matplotlib.pyplot as plt
 
+from dmu.stats.zfit        import zfit
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:plotting:fwhm')
