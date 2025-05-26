@@ -218,7 +218,7 @@ plotting:
         labels  : ['$IP_{\chi^2}(K^+)$', '']
         styling :          
             linestyle: '-'
-      mass:
+      B_Mass:
         normalized : true
         binning : [4400, 6500, 50]
         yscale  : 'linear'
@@ -250,7 +250,7 @@ diagnostics:
   output      : mva/cmb/VERSION/plots/diagnostics
   correlations:
     target : 
-      name    : B_M
+      name    : B_Mass
       overlay :
         wp:
           - 0.0
@@ -263,7 +263,7 @@ diagnostics:
         saving:
           plt_dir : mva/cmb/VERSION/plots/diagnostics
         plots:
-          B_M :
+          B_Mass :
             binning    : [4500, 6000, 40]
             yscale     : 'linear'
             labels     : ['M$(B^+)$', 'Entries']
