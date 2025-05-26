@@ -1,29 +1,39 @@
 '''
 Module with utility functions related to the dmu.stats project
 '''
+# pylint: disable=import-error
+
 import os
 import re
 import pickle
 from typing import Union
 
 import numpy
-import tensorflow as tf
-import zfit
-from zfit.core.data         import Data       as zdata
-from zfit.core.basepdf      import BasePDF    as zpdf
-from zfit.result            import FitResult  as zres
-
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
 import dmu.pdataframe.utilities as put
 import dmu.generic.utilities    as gut
 
+from dmu.stats.zfit         import zfit
 from dmu.stats.fitter       import Fitter
 from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.logging.log_store  import LogStore
 
+import tensorflow as tf
+
+from zfit.core.data         import Data       as zdata
+from zfit.core.basepdf      import BasePDF    as zpdf
+from zfit.core.parameter    import Parameter  as zpar
+from zfit.result            import FitResult  as zres
+
 log = LogStore.add_logger('dmu:stats:utilities')
+#-------------------------------------------------------
+class Data:
+    '''
+    Data class
+    '''
+    weight_name = 'weight'
 #-------------------------------------------------------
 # Check PDF
 #-------------------------------------------------------
