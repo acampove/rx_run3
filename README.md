@@ -456,8 +456,8 @@ strategy      :
 # The lines below will split the range of the data [0-10] into two subranges, such that the NLL is built
 # only in those ranges. The ranges need to be tuples
 ranges        :
-      - !!python/tuple [0, 3]
-      - !!python/tuple [6, 9]
+      - [0, 3]
+      - [6, 9]
 #The lines below will allow using contraints for each parameter, where the first element is the mean and the second
 #the width of a Gaussian constraint. No correlations are implemented, yet.
 constraints   :
