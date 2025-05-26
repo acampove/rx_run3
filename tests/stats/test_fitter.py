@@ -25,7 +25,7 @@ class Data:
     Data class used to store share data
     '''
     nsample = 100_000
-    plt_dir = 'tests/Fitter/plots'
+    plt_dir = '/tmp/tests/dmu/stats/fitter'
 
     arr_sig = numpy.random.normal(5.0, 0.5, size=10_000)
     arr_bkg = numpy.random.exponential(scale=10, size=10_000)
