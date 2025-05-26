@@ -10,10 +10,11 @@ import numpy
 import pytest
 import pandas              as pnd
 
-from dmu.stats.zfit        import zfit
-from dmu.stats.fitter      import Fitter
-from dmu.logging.log_store import LogStore
-from ROOT                  import RDF, gInterpreter
+from dmu.stats.zfit         import zfit
+from dmu.stats.fitter       import Fitter
+from dmu.stats.zfit_plotter import ZFitPlotter
+from dmu.logging.log_store  import LogStore
+from ROOT                   import RDF, gInterpreter
 
 log = LogStore.add_logger('dmu:logging:test_fitter')
 #-------------------------------------
