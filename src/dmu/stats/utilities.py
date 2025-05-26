@@ -341,7 +341,7 @@ def pdf_to_tex(path : str, d_par : dict[str,str], skip_fixed : bool = True) -> N
 #---------------------------------------------
 def _get_model(kind : str):
     obs   = zfit.Space('mass', limits=(0, 10))
-    mu    = zfit.Parameter('mu', 5.0, -1, 5)
+    mu    = zfit.Parameter('mu', 5.0, -1, 8)
     sg    = zfit.Parameter('sg', 0.5,  0, 5)
     gauss = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
 
