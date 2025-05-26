@@ -339,7 +339,7 @@ def pdf_to_tex(path : str, d_par : dict[str,str], skip_fixed : bool = True) -> N
 #---------------------------------------------
 # Fake/Placeholder fit
 #---------------------------------------------
-def get_model(kind : str) -> zpdf:
+def get_model(kind : str, lam : float = -0.1) -> zpdf:
     '''
     Returns zfit PDF for tests
 
@@ -355,7 +355,7 @@ def get_model(kind : str) -> zpdf:
     if kind == 'signal':
         return gauss
 
-    c     = zfit.Parameter('c', -0.1, -1, 0)
+    c     = zfit.Parameter('c', lam, -1, 0)
     expo  = zfit.pdf.Exponential(obs=obs, lam=c)
 
     if kind == 's+b':
