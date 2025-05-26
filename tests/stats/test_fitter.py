@@ -9,6 +9,7 @@ from functools   import cache
 import numpy
 import pytest
 import pandas              as pnd
+import matplotlib.pyplot   as plt
 
 from dmu.stats.zfit         import zfit
 from dmu.stats.fitter       import Fitter
@@ -73,6 +74,13 @@ def _get_pdf():
     pdf = zfit.pdf.SumPDF([sig, bkg])
 
     return pdf
+#-------------------------------------
+def _save_fit(test : str, kind : str):
+    out_dir = f'{Data.plt_dir}/{test}'
+    os.makedirs(out_dir, exist_ok=True)
+
+    plt.savefig(f'{out_dir}/{kind}.png')
+    plt.close()
 #-------------------------------------
 @pytest.mark.parametrize('dat', Data.l_arg_simple)
 def test_simple(dat):
@@ -139,6 +147,11 @@ def test_ranges():
     res   = obj.fit(cfg)
 
     assert res.valid
+
+    obj   = ZFitPlotter(data=data, model=pdf)
+    obj.plot(nbins=50, stacked=True, plot_range=(0, 10))
+
+    _save_fit(test='ranges', kind='fit')
 #-------------------------------------
 # TODO: Need to improve this test
 def test_wgt():
