@@ -226,7 +226,7 @@ def save_fit(
     print_pdf(model, txt_path=f'{fit_dir}/post_fit.txt', d_const=d_const)
     pdf_to_tex(path=f'{fit_dir}/post_fit.txt', d_par={'mu' : r'$\mu$'}, skip_fixed=True)
 
-    df     = data.to_pandas(weightsname='weight')
+    df     = data.to_pandas(weightsname=Data.weight_name)
     opath  = f'{fit_dir}/data.json'
     log.debug(f'Saving data to: {opath}')
     df.to_json(opath, indent=2)
@@ -394,7 +394,7 @@ def placeholder_fit(
         log.warning('Using user provided data')
         data = _pdf_to_data(pdf=pdf, add_weights=True)
     else:
-        data = zfit.data.Data.from_pandas(df, obs=pdf.space, weights='weights')
+        data = zfit.data.Data.from_pandas(df, obs=pdf.space, weights=Data.weight_name)
 
     d_const = {'sg' : [0.6, 0.1]}
 
