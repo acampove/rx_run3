@@ -11,6 +11,7 @@ import pytest
 import pandas              as pnd
 import matplotlib.pyplot   as plt
 
+from dmu.stats              import utilities as sut
 from dmu.stats.zfit         import zfit
 from dmu.stats.fitter       import Fitter
 from dmu.stats.zfit_plotter import ZFitPlotter
@@ -137,22 +138,19 @@ def test_ranges():
     '''
     Fit data in disjoint ranges
     '''
-    obs   = zfit.Space('x', limits=(0, 10))
-    lb    = zfit.Parameter("lb", -1,  -2, 0)
-    pdf   = zfit.pdf.Exponential(obs=obs, lam=lb)
+    pdf   = sut.get_model('s+b')
+    sam   = pdf.create_sampler(n=50_000)
+    pdf   = sut.get_model('s+b', lam = -0.3)
 
-    data  = numpy.random.exponential(5, size=10000)
-    data  = data[(data < 10)]
-    data  = data[(data < 2) | ((data > 4) & (data < 6)) |  ((data > 8) & (data < 10)) ]
-
-    rng   = [[0, 2], [4, 6], [8, 10]]
+    rng   = [[0, 3.5], [6.5, 10]]
     cfg   = {'ranges': rng}
-    obj   = Fitter(pdf, data)
+    obj   = Fitter(pdf, sam)
     res   = obj.fit(cfg)
 
+    print(res)
     assert res.valid
 
-    obj   = ZFitPlotter(data=data, model=pdf)
+    obj   = ZFitPlotter(data=sam, model=pdf)
     obj.plot(nbins=50, stacked=True, ranges=rng)
 
     _save_fit(test='ranges', kind='fit')
