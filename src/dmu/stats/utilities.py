@@ -359,8 +359,8 @@ def get_model(kind : str) -> zpdf:
     expo  = zfit.pdf.Exponential(obs=obs, lam=c)
 
     if kind == 's+b':
-        nsig  = zfit.Parameter('nsig', 1000,  0, 10_000)
-        nbkg  = zfit.Parameter('nbkg', 1000,  0, 10_000)
+        nsig  = zfit.Parameter('nsig', 1000,  0, 1_000_000)
+        nbkg  = zfit.Parameter('nbkg', 1000,  0, 1_000_000)
 
         sig   = gauss.create_extended(nsig)
         bkg   = expo.create_extended(nbkg)
