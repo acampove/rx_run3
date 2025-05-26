@@ -219,6 +219,20 @@ these messages should be hidden. If `ROOT` is installed, the wrapper will import
 importing tensorflow. That will prevent crashes which usually happen when `tensorflow` 
 is imported before `ROOT`.
 
+### Toy models
+
+For quick tests, one can retrieve simple models with :
+
+```python
+from dmu.stats  import utilities as sut
+
+# For a Gaussian plus Exponential, extended
+pdf = sut.get_model(name='s+b')
+
+# For a Gaussian signal, non extended
+pdf = sut.get_model(name='signal')
+```
+
 ### Model building
 
 In order to do complex fits, one often needs PDFs with many parameters, which need to be added.
@@ -538,6 +552,10 @@ sam = pdf.create_sampler()
 obj   = ZFitPlotter(data=sam, model=pdf)
 d_leg = {'gauss': 'New Gauss'}
 obj.plot(nbins=50, d_leg=d_leg, stacked=True, plot_range=(0, 10), ext_text='Extra text here')
+
+#Alternatively one can do:
+obj.plot(nbins=50, d_leg=d_leg, stacked=True, ranges=[[0,3], [3,10]])
+# For plotting only sidebands, useful if one has a blinded fit
 
 # add a line to pull hist
 obj.axs[1].plot([0, 10], [0, 0], linestyle='--', color='black')
