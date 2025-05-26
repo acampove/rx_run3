@@ -339,7 +339,14 @@ def pdf_to_tex(path : str, d_par : dict[str,str], skip_fixed : bool = True) -> N
 #---------------------------------------------
 # Fake/Placeholder fit
 #---------------------------------------------
-def _get_model(kind : str):
+def get_model(kind : str) -> zpdf:
+    '''
+    Returns zfit PDF for tests
+
+    Parameters:
+
+    kind: 'signal' for Gaussian, 's+b' for Gaussian plus exponential
+    '''
     obs   = zfit.Space('mass', limits=(0, 10))
     mu    = zfit.Parameter('mu', 5.0, -1, 8)
     sg    = zfit.Parameter('sg', 0.5,  0, 5)
@@ -388,7 +395,7 @@ def placeholder_fit(
     df: pandas dataframe if passed, will reuse that data, needed to test data caching
     plot_fit: Will plot the fit or not, by default True
     '''
-    pdf  = _get_model(kind)
+    pdf  = get_model(kind)
     print_pdf(pdf, txt_path=f'{fit_dir}/pre_fit.txt')
     if df is None:
         log.warning('Using user provided data')
