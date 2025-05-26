@@ -79,7 +79,10 @@ def _save_fit(test : str, kind : str):
     out_dir = f'{Data.plt_dir}/{test}'
     os.makedirs(out_dir, exist_ok=True)
 
-    plt.savefig(f'{out_dir}/{kind}.png')
+    plot_path = f'{out_dir}/{kind}.png'
+
+    log.info(f'Saving to: {plot_path}')
+    plt.savefig(plot_path)
     plt.close()
 #-------------------------------------
 @pytest.mark.parametrize('dat', Data.l_arg_simple)
