@@ -55,7 +55,7 @@ def is_pdf_usable(pdf : zpdf) -> zpdf:
 #-------------------------------------------------------
 #Zfit/print_pdf
 #-------------------------------------------------------
-def _get_const(par : zfit.Parameter, d_const : Union[None, dict[str, list[float]]]) -> str:
+def _get_const(par : zpar , d_const : Union[None, dict[str, list[float]]]) -> str:
     '''
     Takes zfit parameter and dictionary of constraints
     Returns a formatted string with the value of the constraint on that parameter
@@ -72,7 +72,7 @@ def _get_const(par : zfit.Parameter, d_const : Union[None, dict[str, list[float]
 
     return val
 #-------------------------------------------------------
-def _blind_vars(s_par : set, l_blind : Union[list[str], None] = None) -> set[zfit.Parameter]:
+def _blind_vars(s_par : set, l_blind : Union[list[str], None] = None) -> set[zpar]:
     '''
     Takes set of zfit parameters and list of parameter names to blind
     returns set of zfit parameters that should be blinded
@@ -88,7 +88,7 @@ def _blind_vars(s_par : set, l_blind : Union[list[str], None] = None) -> set[zfi
     return s_par_blind
 #-------------------------------------------------------
 def _get_pars(
-        pdf : zfit.pdf.BasePDF,
+        pdf   : zpdf,
         blind : Union[None, list[str]]) -> tuple[list, list]:
 
     s_par_flt = pdf.get_params(floating= True)
@@ -106,7 +106,7 @@ def _get_pars(
     return l_par_flt, l_par_fix
 #-------------------------------------------------------
 def _get_messages(
-        pdf       : zfit.pdf.BasePDF,
+        pdf       : zpdf, 
         l_par_flt : list,
         l_par_fix : list,
         d_const   : Union[None, dict[str,list[float]]] = None) -> list[str]:
@@ -138,7 +138,7 @@ def _get_messages(
     return l_msg
 #-------------------------------------------------------
 def print_pdf(
-        pdf      : zfit.pdf.BasePDF,
+        pdf      : zpdf, 
         d_const  : Union[None, dict[str,list[float]]] = None,
         txt_path : Union[str,None]                    = None,
         level    : int                                = 20,
