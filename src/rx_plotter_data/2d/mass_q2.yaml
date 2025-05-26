@@ -4,32 +4,50 @@ saving:
     plt_dir : plots/2d/mass_q2
 definitions:
   q2_org     : q2_smr / 1000000
-  q2_cen_low : q2_smr / 1000000
-  q2_dtf_high: q2_dtf / 1000000
+  q2_org_wide: q2_smr / 1000000
+  q2_org_low : q2_smr / 1000000
+
+  q2_DTF     : q2_dtf / 1000000
+  q2_DTF_wide: q2_dtf / 1000000
+  q2_DTF_low : q2_dtf / 1000000
 selection:
   cuts:
-    bdt : (1)
+    q2  : (1)
+    #bdt : (1) 
     mass: (1)
 general:
     size : [15, 12]
 plots_2d:
-    - [B_M       , q2_org     , null,          'Bmass_org_q2' , true]
-    - [B_Mass    , q2_org     , null,          'Bmass_q2_cor' , true]
-    - [B_Mass    , q2_dtf_high, null,          'Bmass_q2_dtf' , true]
-    - [q2_cen_low, q2_dtf_high, null, 'q2_central_low_vs_high', true]
+    - [B_Mass, q2_org     , null, Bmass_q2_cor      , true]
+    - [B_Mass, q2_org_low , null, Bmass_q2_cor_low  , true]
+    - [B_Mass, q2_org_wide, null, Bmass_q2_cor_wide , true]
+    - [B_Mass, q2_DTF     , null, Bmass_q2_dtf      , true]
+    - [B_Mass, q2_DTF_low , null, Bmass_q2_dtf_low  , true]
+    - [B_Mass, q2_DTF_wide, null, Bmass_q2_dtf_wide , true]
 axes:
     B_M   :
-        binning : [4500, 6000, 100]
+        binning : [4500, 7000, 100]
         label   : '$M(B^+)$[MeV]'
     B_Mass:
-        binning : [4500, 6000, 100]
+        binning : [4500, 7000, 100]
         label   : '$M_{corr}(B^+)$[MeV]'
+    # --------------------
     q2_org :
-        binning : [ 8, 35, 100]
+        binning : [13, 24, 100]
         label   : '$q^2$[GeV${}^2$]'
-    q2_dtf_high :
-        binning : [14, 22, 100]
-        label   : '$q_{DTF}^2$[GeV${}^2$]'
-    q2_cen_low :
+    q2_org_wide :
+        binning : [10, 30, 100]
+        label   : '$q^2$[GeV${}^2$]'
+    q2_org_low :
         binning : [0 , 10, 100]
         label   : '$q^2$[GeV${}^2$]'
+    # --------------------
+    q2_DTF :
+        binning : [13, 24, 100]
+        label   : '$q^2_{DTF}$[GeV${}^2$]'
+    q2_DTF_wide :
+        binning : [10, 30, 100]
+        label   : '$q^2_{DTF}$[GeV${}^2$]'
+    q2_DTF_low :
+        binning : [0 , 10, 100]
+        label   : '$q^2_{DTF}$[GeV${}^2$]'
