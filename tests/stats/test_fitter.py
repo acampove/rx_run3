@@ -150,7 +150,7 @@ def test_ranges():
     assert res.valid
 
     obj   = ZFitPlotter(data=data, model=pdf)
-    obj.plot(nbins=50, stacked=True, ranges=rng) 
+    obj.plot(nbins=50, stacked=True, ranges=rng)
 
     _save_fit(test='ranges', kind='fit')
 #-------------------------------------
