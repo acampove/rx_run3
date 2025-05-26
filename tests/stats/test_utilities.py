@@ -87,15 +87,15 @@ def test_print_pdf():
               blind   = ['sg.*', 'mu.*'])
     #-----------------
     print_pdf(pdf,
-              txt_path = 'tests/stats/utilities/print_pdf/pdf.txt')
+              txt_path = f'{Data.fit_dir}/utilities/print_pdf/pdf.txt')
 
     print_pdf(pdf,
               blind    =['sg.*', 'mu.*'],
-              txt_path = 'tests/stats/utilities/print_pdf/pdf_blind.txt')
+              txt_path = f'{Data.fit_dir}/utilities/print_pdf/pdf_blind.txt')
 
     print_pdf(pdf,
               d_const  = d_const,
-              txt_path = 'tests/stats/utilities/print_pdf/pdf_const.txt')
+              txt_path = f'{Data.fit_dir}/utilities/print_pdf/pdf_const.txt')
 #----------------------------------
 def test_pdf_to_tex():
     '''
