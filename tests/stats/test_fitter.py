@@ -133,7 +133,7 @@ def test_ranges():
     data  = data[(data < 10)]
     data  = data[(data < 2) | ((data > 4) & (data < 6)) |  ((data > 8) & (data < 10)) ]
 
-    cfg   = {'ranges': [(0, 2), (4, 6), (8, 10)]}
+    cfg   = {'ranges': [[0, 2], [4, 6], [8, 10]]}
     obj   = Fitter(pdf, data)
     res   = obj.fit(cfg)
 

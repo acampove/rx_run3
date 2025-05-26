@@ -242,7 +242,9 @@ class Fitter:
         if 'ranges' not in cfg:
             return [None]
 
-        ranges = cfg['ranges']
+        ranges_any = cfg['ranges']
+
+        ranges = [ tuple(elm) for elm in ranges_any ]
         log.info('-' * 30)
         log.info(f'{"Low edge":>15}{"High edge":>15}')
         log.info('-' * 30)
