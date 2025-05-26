@@ -4,16 +4,16 @@ Module with unit tests for functions in dmu.stat.utilities
 import os
 from importlib.resources import files
 
-import zfit
-import pytest
-import pandas as pnd
-from zfit.core.basepdf import ZfitPDF
-
 from dmu.logging.log_store import LogStore
+from dmu.stats.zfit        import zfit
 from dmu.stats.utilities   import print_pdf
 from dmu.stats.utilities   import pdf_to_tex
 from dmu.stats.utilities   import placeholder_fit
 from dmu.stats.utilities   import is_pdf_usable
+
+import pytest
+import pandas as pnd
+from zfit.core.basepdf import ZfitPDF
 
 log = LogStore.add_logger('dmu:tests:stats:test_utilities')
 #----------------------------------
