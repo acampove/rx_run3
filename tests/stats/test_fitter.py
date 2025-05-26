@@ -142,14 +142,15 @@ def test_ranges():
     data  = data[(data < 10)]
     data  = data[(data < 2) | ((data > 4) & (data < 6)) |  ((data > 8) & (data < 10)) ]
 
-    cfg   = {'ranges': [[0, 2], [4, 6], [8, 10]]}
+    rng   = [[0, 2], [4, 6], [8, 10]]
+    cfg   = {'ranges': rng}
     obj   = Fitter(pdf, data)
     res   = obj.fit(cfg)
 
     assert res.valid
 
     obj   = ZFitPlotter(data=data, model=pdf)
-    obj.plot(nbins=50, stacked=True, plot_range=(0, 10))
+    obj.plot(nbins=50, stacked=True, ranges=rng) 
 
     _save_fit(test='ranges', kind='fit')
 #-------------------------------------
