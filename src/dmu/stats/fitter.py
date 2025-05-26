@@ -360,7 +360,7 @@ class Fitter:
         log.info(header)
         log.info(parval)
     #------------------------------
-    def _minimize(self, nll, cfg : dict) -> tuple[FitResult, tuple]:
+    def _minimize(self, nll, cfg : dict) -> tuple[zres, tuple]:
         mnm = zfit.minimize.Minuit()
         res = mnm.minimize(nll)
         res = self._calculate_error(res)
@@ -387,7 +387,7 @@ class Fitter:
 
         return not (good_chi2 and good_pval and good_ndof)
     #------------------------------
-    def _fit_retries(self, cfg : dict) -> tuple[dict, FitResult]:
+    def _fit_retries(self, cfg : dict) -> tuple[dict, zres]:
         ntries       = cfg['strategy']['retry']['ntries']
         pvalue_thresh= cfg['strategy']['retry']['pvalue_thresh']
         ignore_status= cfg['strategy']['retry']['ignore_status']
@@ -431,7 +431,7 @@ class Fitter:
 
         return d_pval_res, last_res
     #------------------------------
-    def _pick_best_fit(self, d_pval_res : dict, last_res : FitResult) -> FitResult:
+    def _pick_best_fit(self, d_pval_res : dict, last_res : zres) -> zres:
         nsucc = len(d_pval_res)
         if nsucc == 0:
             log.warning('None of the fits succeeded, returning last result')
@@ -451,7 +451,7 @@ class Fitter:
 
         return res
     #------------------------------
-    def _fit_in_steps(self, cfg : dict) -> FitResult:
+    def _fit_in_steps(self, cfg : dict) -> zres:
         l_nsample = cfg['strategy']['steps']['nsteps']
         l_nsigma  = cfg['strategy']['steps']['nsigma']
         l_yield   = cfg['strategy']['steps']['yields']
@@ -477,7 +477,7 @@ class Fitter:
 
         return res
     #------------------------------
-    def _result_to_value_error(self, res : FitResult) -> dict[str, list[float]]:
+    def _result_to_value_error(self, res : zres) -> dict[str, list[float]]:
         d_par = {}
         for par, d_val in res.params.items():
             try:
@@ -491,7 +491,7 @@ class Fitter:
 
         return d_par
     #------------------------------
-    def _update_par_bounds(self, res : FitResult, nsigma : float, yields : list[str]) -> None:
+    def _update_par_bounds(self, res : zres, nsigma : float, yields : list[str]) -> None:
         s_shape_par = self._pdf.get_params(is_yield=False, floating=True)
         d_shp_par   = { par.name : par for par in s_shape_par if par.name not in yields}
         d_fit_par   = self._result_to_value_error(res)
