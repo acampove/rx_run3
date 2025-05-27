@@ -44,5 +44,9 @@ def test_simple():
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
 
-    _plot_ddf(ddf=ddf)
+    df  = ddf.compute()
+    _plot_df(df=df)
+
+    for column in df.columns:
+        log.info(column)
 # ---------------------------------------------
