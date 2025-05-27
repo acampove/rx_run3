@@ -6,11 +6,9 @@ import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from dask.dataframe                import DataFrame    as DDF
+from dmu.logging.log_store         import LogStore
 from ecal_calibration.preprocessor import PreProcessor
 from ecal_calibration              import utilities    as cut
-
-from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('ecal_calibration:test_preprocessor')
 # -----------------------------------------
