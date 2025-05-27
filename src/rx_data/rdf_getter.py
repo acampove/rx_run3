@@ -33,6 +33,8 @@ class RDFGetter:
 
     max_entries : Limits the number of entries that will be provided
     friends     : List of names of samples, to be treated as friend trees. By default this is None and everything will be processed
+    main_tree   : Name of tree treated as the main tree when building dataframes with friend trees through `FromSpec`
+    skip_adding_columns : By default false. If true, it will skip defining new columns.
     '''
     max_entries         = -1
     skip_adding_columns = False
