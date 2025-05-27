@@ -479,3 +479,19 @@ def test_add_truem():
 
     _check_truem_columns(rdf)
 # ------------------------------------------------
+@pytest.mark.parametrize('sample', ['Bu_JpsiX_ee_eq_JpsiInAcc', 'Bd_JpsiX_ee_eq_JpsiInAcc', 'Bs_JpsiX_ee_eq_JpsiInAcc'] )
+def test_ccbar(sample : str):
+    '''
+    Tests reading of ccbar + X samples
+    '''
+    RDFGetter.max_entries         = -1
+    RDFGetter.skip_adding_columns = True
+
+    trigger = 'Hlt2RD_BuToKpEE_MVA'
+
+    gtr = RDFGetter(sample=sample, trigger=trigger)
+    rdf = gtr.get_rdf()
+    rdf = rdf.Filter('mva_prc > 0.8')
+
+    RDFGetter.max_entries = 1000
+# ------------------------------------------------
