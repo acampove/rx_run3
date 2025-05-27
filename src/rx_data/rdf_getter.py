@@ -292,11 +292,27 @@ class RDFGetter:
 
         return d_section
     # ---------------------------------------------------
+    def _skip_sample(self, sample : str) -> bool:
+        if sample == self._main_tree:
+            return False
+
+        if not hasattr(RDFGetter, 'friends'):
+            return False
+
+        if not isinstance(RDFGetter.friends, list):
+            raise ValueError(f'List of friend trees is not a list: {RDFGetter.friends}')
+
+        return sample not in RDFGetter.friends
+    # ---------------------------------------------------
     def _get_json_conf(self):
         d_data = {'samples' : {}, 'friends' : {}}
 
         log.info('Adding samples')
         for sample, yaml_path in self._samples.items():
+            if self._skip_sample(sample=sample):
+                log.warning(f'Skipping sample: {sample}')
+                continue
+
             log.debug(f'    {sample}|{yaml_path}')
 
             d_section = self._get_section(yaml_path)
