@@ -27,12 +27,37 @@ class PreProcessor:
         '''
         self._ddf = ddf
         self._cfg = cfg
+
+        self._brem_cut = 'L1_brem + L2_brem == 1'
     # ---------------------------------
     def _apply_selection(self, ddf : DDF) -> DDF:
+        ddf = ddf.query(self._brem_cut)
+        if 'selection' not in self._cfg:
+            return ddf
+
         for selection in self._cfg['selection']:
             ddf = ddf.query(selection)
 
         return ddf
+    # ---------------------------------
+    def _get_correction(self, row : pnd.Series, lepton : str) -> float:
+        return 1.0
+    # ---------------------------------
+    def _build_features(self, row_sr : pnd.Series) -> pnd.Series:
+        lep = 'L1' if row_sr['L1_brem'] == 1 else 'L2'
+
+        data        = {}
+        data['row'] = row_sr[f'{lep}_BREMHYPOROW']
+        data['col'] = row_sr[f'{lep}_BREMHYPOCOL']
+        data['are'] = row_sr[f'{lep}_BREMHYPOAREA']
+        data['eng'] = row_sr[f'{lep}_BREMTRACKBASEDENERGY']
+        data['npv'] = row_sr['nPVs']
+        data['blk'] = row_sr['block']
+        data['mu' ] = self._get_correction(row=row_sr, lepton=lep)
+
+        row_sr = pnd.Series(data)
+
+        return row_sr
     # ---------------------------------
     def get_data(self) -> DDF:
         '''
@@ -40,5 +65,7 @@ class PreProcessor:
         '''
         ddf = self._apply_selection(ddf=self._ddf)
 
-        return ddf
+        ddf_feat = ddf.apply(self._build_features, axis=1)
+
+        return ddf_feat
 # --------------------------
