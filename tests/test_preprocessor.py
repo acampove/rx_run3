@@ -19,6 +19,7 @@ class Data:
     Data class
     '''
     out_dir = '/tmp/tests/ecal_calibration/preprocessor'
+    columns = {'row', 'col', 'are', 'eng', 'npv', 'blk', 'mu'}
 # -----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -38,9 +39,12 @@ def _plot_features(df : pnd.DataFrame):
 def _plot_df(df : pnd.DataFrame) -> None:
     _plot_features(df=df)
 # ---------------------------------------------
-def test_simple():
+def test_nobias():
     '''
-    Simplest test for preprocessor
+    Tests that:
+
+    - The features can be retrieved
+    - The bias is zero, i.e. mu=1
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
     ddf = cut.get_ddf()
