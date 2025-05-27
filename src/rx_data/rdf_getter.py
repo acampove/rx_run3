@@ -316,7 +316,7 @@ class RDFGetter:
             log.debug(f'    {sample}|{yaml_path}')
 
             d_section = self._get_section(yaml_path)
-            if sample == 'main':
+            if sample == self._main_tree:
                 d_data['samples'][sample] = d_section
             else:
                 d_data['friends'][sample] = d_section
