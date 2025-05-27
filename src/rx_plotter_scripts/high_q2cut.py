@@ -44,13 +44,13 @@ class Data:
             'Bu_psi2SK_ee_eq_DPC'        : r'$B^+\to K^+\psi(2S)(\to e^+e^-)$'}
 
     q2bin   = 'high'
-    bmass   = 'B_Mass'
+    bmass   = 'B_Mass_smr'
     plt.style.use(mplhep.style.LHCb2)
     max_q2  = 22
     min_q2  = 10
     mass_rng= [4500, 6000]
 
-    l_q2var = ['q2_smr', 'q2_track', 'q2_dtf', 'nbrem', 'B_Mass', 'B_M']
+    l_q2var = ['q2_smr', 'q2_track', 'q2_dtf', 'nbrem', 'B_Mass', 'B_M', 'B_Mass_smr']
 # ---------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
