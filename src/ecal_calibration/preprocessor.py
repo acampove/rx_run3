@@ -35,6 +35,7 @@ class PreProcessor:
         self._cfg = cfg
 
         self._brem_cut = 'L1_brem + L2_brem == 1'
+        self._neg_tol  = -10
     # ---------------------------------
     def _apply_selection(self, ddf : DDF) -> DDF:
         ddf = ddf.query(self._brem_cut)
