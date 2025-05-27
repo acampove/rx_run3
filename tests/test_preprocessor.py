@@ -61,3 +61,27 @@ def test_nobias():
     assert numpy.allclose(arr_mu, 1, rtol=1e-5)
     assert set(df.columns) == Data.columns
 # ---------------------------------------------
+@pytest.mark.parametrize('bias', [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3])
+def test_flat_bias(bias : float):
+    '''
+    Tests that:
+
+    - The features can be retrieved
+    - The bias is the number that was injected
+    '''
+    cfg = cut.load_cfg(name='tests/preprocessor/simple')
+    ddf = cut.get_ddf()
+    ddf = _inject_bias(ddf, bias)
+
+    pre = PreProcessor(ddf=ddf, cfg=cfg)
+    ddf = pre.get_data()
+    df  = ddf.compute()
+
+    name = f'flat_bias_{100 * bias:.0f}'
+    _plot_df(df=df, name=name, corr= 1./bias)
+
+    arr_mu = df['mu'].to_numpy()
+
+    assert numpy.allclose(arr_mu, 1 / bias, rtol=1e-5)
+    assert set(df.columns) == Data.columns
+# ---------------------------------------------
