@@ -268,6 +268,7 @@ def _create_file(path : str, trigger : str) -> None:
     nentries = rdf.Count().GetValue()
     if nentries == 0:
         log.warning('Found empty file, skipping')
+        return
 
     if _is_mc(path=path):
         rdf = RDFGetter.add_truem(rdf)
