@@ -325,6 +325,28 @@ class RDFGetter:
 
         with open(self._tmp_path, 'w', encoding='utf-8') as ofile:
             json.dump(d_data, ofile, indent=4, sort_keys=True)
+
+        self._check_samples(samples=d_data)
+    # ---------------------------------------------------
+    def _check_samples(self, samples : dict) -> None:
+        gut.dump_json(samples, '/tmp/debugging/rx_data/samples.yaml')
+
+        l_file = samples['samples'][self._main_tree]['files']
+        nmain  = len(l_file)
+
+        fail = False
+        for sample_name, sample in samples['friends'].items():
+            l_file  = sample['files']
+            nfriend = len(l_file)
+
+            if nfriend == nmain:
+                log.debug(f'{sample_name:<20}{nfriend}')
+            else:
+                log.error(f'{sample_name:<20}{nfriend}')
+                fail = True
+
+        if fail:
+            raise ValueError('Samples check failed')
     # ---------------------------------------------------
     def _add_column(self, rdf: RDataFrame, name : str, definition : str) -> RDataFrame:
         if not hasattr(self, '_l_columns'):
