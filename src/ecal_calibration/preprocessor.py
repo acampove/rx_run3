@@ -73,7 +73,42 @@ class PreProcessor:
         l2_p = self._get_momentum(row=row, name='L2')
         kp_p = self._get_momentum(row=row, name= 'H')
 
-        return 1.0
+        # Remove the component alongside normal. i.e. vectors lie on plane
+        l1_p = l1_p - norm * norm.dot(l1_p)
+        l2_p = l2_p - norm * norm.dot(l2_p)
+        kp_p = kp_p - norm * norm.dot(kp_p)
+
+        if   lepton == 'L1':
+            lep = l1_p
+            oth = l2_p + kp_p
+        elif lepton == 'L2':
+            lep = l2_p
+            oth = l1_p + kp_p
+        else:
+            raise ValueError(f'Invalid lepton: {lepton}')
+
+        a = lep.mag ** 2
+        b = 2 * lep.dot(oth)
+        c = oth.mag ** 2
+
+        root2 = b ** 2 - 4 * a * c
+        if self._neg_tol < root2 < 0:
+            root2 = 0
+
+        if root2 < 0:
+            log.warning(f'No valid solutions found, radicand={root2:.3f} , correction set to 1')
+            return 1
+
+        num_1 = -b + math.sqrt(root2)
+        num_2 = -b - math.sqrt(root2)
+
+        if num_1 <= 0 and num_2 <= 0:
+            log.warning(f'Both solutions are negative {num_1:.3f}/{num_2:.3f}')
+            return 1
+
+        num = num_1 if num_1 > 0 else num_2
+
+        return num / (2 * a)
     # ---------------------------------
     def _build_features(self, row_sr : pnd.Series) -> pnd.Series:
         lep = 'L1' if row_sr['L1_brem'] == 1 else 'L2'
