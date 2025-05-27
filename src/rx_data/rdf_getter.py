@@ -8,9 +8,11 @@ import hashlib
 import fnmatch
 from importlib.resources import files
 
+import dmu.generic.utilities as gut
+from dmu.logging.log_store import LogStore
+
 import yaml
 from ROOT                  import RDF, RDataFrame, GetThreadPoolSize
-from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_data:rdf_getter')
 # ---------------------------------------------------
