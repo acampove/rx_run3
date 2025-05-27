@@ -1,12 +1,16 @@
 '''
 Module holding PreProcessor class
 '''
+import math
 
 import pandas as pnd
 
 from vector         import MomentumObject3D as v3d
 from dask.dataframe import DataFrame        as DDF
 
+from dmu.logging.log_store import LogStore
+
+log=LogStore.add_logger('ecal_calibration:preprocessor')
 # --------------------------
 class PreProcessor:
     '''
