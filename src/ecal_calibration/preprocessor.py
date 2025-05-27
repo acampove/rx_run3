@@ -92,6 +92,9 @@ class PreProcessor:
         c = oth.mag ** 2
 
         root2 = b ** 2 - 4 * a * c
+        # root2 is expected to be proportional to momentum squared
+        # i.e. 10e6, it will go negative due to numerical accuracy
+        # push it back to zero if above negative tolerance
         if self._neg_tol < root2 < 0:
             root2 = 0
 
