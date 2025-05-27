@@ -402,6 +402,10 @@ class RDFGetter:
         return rdf
     # ---------------------------------------------------
     def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
+        if RDFGetter.skip_adding_columns:
+            log.warning(f'Not adding new columns')
+            return rdf
+
         if self._tree_name != 'DecayTree':
             return rdf
 
