@@ -3,7 +3,9 @@ Module holding PreProcessor class
 '''
 
 import pandas as pnd
-from dask.dataframe import DataFrame as DDF
+
+from vector         import MomentumObject3D as v3d
+from dask.dataframe import DataFrame        as DDF
 
 # --------------------------
 class PreProcessor:
