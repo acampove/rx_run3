@@ -315,7 +315,7 @@ class RDFGetter:
                 log.warning(f'Skipping sample: {sample}')
                 continue
 
-            log.debug(f'    {sample}|{yaml_path}')
+            log.debug(f'{"":<4}{sample:<15}{yaml_path}')
 
             d_section = self._get_section(yaml_path)
             if sample == self._main_tree:
