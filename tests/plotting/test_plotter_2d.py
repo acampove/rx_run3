@@ -59,13 +59,26 @@ def _load_config(test : str):
 
     return cfg
 #---------------------------------------
-@pytest.mark.parametrize('name', ['2d'])
-def test_simple(name : str):
+def test_simple():
     '''
     Tests for 2D plots
     '''
+    name    = '2d'
     rdf     = _get_rdf(kind='class A', test='weights')
     cfg_dat = _load_config(test=name)
+
+    ptr=Plotter(rdf=rdf, cfg=cfg_dat)
+    ptr.run()
+#---------------------------------------
+def test_empty_log():
+    '''
+    Tests plotting an empty dataset with log scale for z axis 
+    '''
+    name    = '2d_empty_log'
+    rdf     = _get_rdf(kind='class A', test='weights', nentries = 0)
+
+    cfg_dat = _load_config(test=name)
+    cfg_dat['plt_dir'] = '/tmp/tests/dmu/plotting/2d_empty_log'
 
     ptr=Plotter(rdf=rdf, cfg=cfg_dat)
     ptr.run()
