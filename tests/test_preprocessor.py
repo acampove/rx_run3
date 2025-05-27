@@ -24,17 +24,15 @@ class Data:
 def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 # ---------------------------------------------
-def _plot_brem(df : pnd.DataFrame):
-    df['nbrem'] = df['L1_brem'] + df['L2_brem']
-    df['nbrem'].plot.hist(bins=10)
-
-    plt.savefig(f'{Data.out_dir}/brem.png')
-    plt.close()
+def _plot_features(df : pnd.DataFrame):
+    for name in ['eng', 'row', 'col', 'are', 'npv', 'blk', 'mu']:
+        df[name].plot.hist(bins=100)
+        plt.xlabel(name)
+        plt.savefig(f'{Data.out_dir}/{name}.png')
+        plt.close()
 # ---------------------------------------------
-def _plot_ddf(ddf : DDF) -> None:
-    df = ddf.compute()
-
-    _plot_brem(df=df)
+def _plot_df(df : pnd.DataFrame) -> None:
+    _plot_features(df=df)
 # ---------------------------------------------
 def test_simple():
     '''
