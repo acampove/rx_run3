@@ -114,7 +114,7 @@ class RDFGetter:
         self._tmp_path        : str
         self._l_columns       : list[str]
         self._cfg             = self._load_config()
-        self._main_tree       = self._cfg['trees']['main']
+        self._main_tree       = self._get_main_tree()
         self._l_electron_only = self._cfg['trees']['electron_only']
         self._ext_weight      = '(L1_PID_E > 1 && L2_PID_E > 1) ? 1 : 10'
 
@@ -129,6 +129,14 @@ class RDFGetter:
 
         self._analysis        = self._analysis_from_trigger()
         self._initialize()
+    # ---------------------------------------------------
+    def _get_main_tree(self):
+        if not hasattr(RDFGetter, 'main_tree'):
+            return self._cfg['trees']['main']
+
+        log.warning(f'Overriding main tree with: {RDFGetter.main_tree}')
+
+        return RDFGetter.main_tree
     # ---------------------------------------------------
     def _analysis_from_trigger(self) -> str:
         if self._trigger in self._l_mm_trigger:
