@@ -265,6 +265,10 @@ def _create_file(path : str, trigger : str) -> None:
         return
 
     rdf = RDataFrame(Data.tree_name, path)
+    nentries = rdf.Count().GetValue()
+    if nentries == 0:
+        log.warning('Found empty file, skipping')
+
     if _is_mc(path=path):
         rdf = RDFGetter.add_truem(rdf)
 
@@ -332,8 +336,10 @@ def main():
 
     l_path       = _get_paths()
     Data.out_dir = _get_out_dir()
+    log.info('Processing paths')
     for path in tqdm.tqdm(l_path, ascii=' -'):
         trigger = _trigger_from_path(path)
+        log.debug(f'{"":<4}{path}')
         _create_file(path, trigger)
 # ---------------------------------
 if __name__ == '__main__':
