@@ -42,7 +42,32 @@ class PreProcessor:
 
         return ddf
     # ---------------------------------
+    def _get_normal(self, row : pnd.Series) -> v3d:
+        pvx = row['B_BPVX']
+        pvy = row['B_BPVY']
+        pvz = row['B_BPVZ']
+
+        svx = row['B_END_VX']
+        svy = row['B_END_VY']
+        svz = row['B_END_VZ']
+
+        dr  = v3d(x=svx - pvx, y=svy - pvy, z=svz - pvz)
+
+        return dr / dr.mag
+    # ---------------------------------
+    def _get_momentum(self, row : pnd.Series, name : str) -> v3d:
+        pt = row[f'{name}_PT' ]
+        et = row[f'{name}_ETA']
+        ph = row[f'{name}_PHI']
+
+        return v3d(pt=pt, eta=et, phi=ph)
+    # ---------------------------------
     def _get_correction(self, row : pnd.Series, lepton : str) -> float:
+        norm = self._get_normal(row=row)
+        l1_p = self._get_momentum(row=row, name='L1')
+        l2_p = self._get_momentum(row=row, name='L2')
+        kp_p = self._get_momentum(row=row, name= 'H')
+
         return 1.0
     # ---------------------------------
     def _build_features(self, row_sr : pnd.Series) -> pnd.Series:
