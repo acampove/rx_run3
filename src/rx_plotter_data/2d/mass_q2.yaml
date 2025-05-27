@@ -6,24 +6,38 @@ definitions:
   q2_org     : q2_smr / 1000000
   q2_org_wide: q2_smr / 1000000
   q2_org_low : q2_smr / 1000000
-
+  q2_org_all : q2_smr / 1000000
+  # -------
+  q2_trk     : q2_track / 1000000
+  q2_trk_wide: q2_track / 1000000
+  q2_trk_low : q2_track / 1000000
+  q2_trk_all : q2_track / 1000000
+  # -------
   q2_DTF     : q2_dtf / 1000000
   q2_DTF_wide: q2_dtf / 1000000
   q2_DTF_low : q2_dtf / 1000000
+  q2_DTF_all : q2_dtf / 1000000
 selection:
   cuts:
     q2  : (1)
-    #bdt : (1) 
     mass: (1)
 general:
     size : [15, 12]
 plots_2d:
-    - [B_Mass, q2_org     , null, Bmass_q2_cor      , true]
-    - [B_Mass, q2_org_low , null, Bmass_q2_cor_low  , true]
-    - [B_Mass, q2_org_wide, null, Bmass_q2_cor_wide , true]
+    - [B_Mass, q2_org     , null, Bmass_q2_org      , true]
+    - [B_Mass, q2_org_low , null, Bmass_q2_org_low  , true]
+    - [B_Mass, q2_org_wide, null, Bmass_q2_org_wide , true]
+    - [B_Mass, q2_org_all , null, Bmass_q2_org_all  , true]
+    # ----------
+    - [B_Mass, q2_trk     , null, Bmass_q2_trk      , true]
+    - [B_Mass, q2_trk_low , null, Bmass_q2_trk_low  , true]
+    - [B_Mass, q2_trk_wide, null, Bmass_q2_trk_wide , true]
+    - [B_Mass, q2_trk_all , null, Bmass_q2_trk_all  , true]
+    # ----------
     - [B_Mass, q2_DTF     , null, Bmass_q2_dtf      , true]
     - [B_Mass, q2_DTF_low , null, Bmass_q2_dtf_low  , true]
     - [B_Mass, q2_DTF_wide, null, Bmass_q2_dtf_wide , true]
+    - [B_Mass, q2_DTF_all , null, Bmass_q2_dtf_all  , true]
 axes:
     B_M   :
         binning : [4500, 7000, 100]
@@ -34,13 +48,29 @@ axes:
     # --------------------
     q2_org :
         binning : [13, 24, 100]
-        label   : '$q^2$[GeV${}^2$]'
+        label   : '$q^2_{corr}$[GeV${}^2$]'
     q2_org_wide :
         binning : [10, 30, 100]
-        label   : '$q^2$[GeV${}^2$]'
-    q2_org_low :
+        label   : '$q^2_{corr}$[GeV${}^2$]'
+    q2_org_low  :
         binning : [0 , 10, 100]
-        label   : '$q^2$[GeV${}^2$]'
+        label   : '$q^2_{corr}$[GeV${}^2$]'
+    q2_org_all  :
+        binning : [0, 24, 100]
+        label   : '$q^2_{corr}$[GeV${}^2$]'
+    # --------------------
+    q2_trk :
+        binning : [13, 24, 100]
+        label   : '$q^2_{track}$[GeV${}^2$]'
+    q2_trk_wide :
+        binning : [10, 30, 100]
+        label   : '$q^2_{track}$[GeV${}^2$]'
+    q2_trk_low  :
+        binning : [0 , 10, 100]
+        label   : '$q^2_{track}$[GeV${}^2$]'
+    q2_trk_all  :
+        binning : [0 , 24, 100]
+        label   : '$q^2_{track}$[GeV${}^2$]'
     # --------------------
     q2_DTF :
         binning : [13, 24, 100]
@@ -51,3 +81,8 @@ axes:
     q2_DTF_low :
         binning : [0 , 10, 100]
         label   : '$q^2_{DTF}$[GeV${}^2$]'
+    q2_DTF_all  :
+        binning : [0 , 24, 100]
+        label   : '$q^2_{DTF}$[GeV${}^2$]'
+# --------------------
+
