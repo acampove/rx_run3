@@ -2,12 +2,23 @@
 Module holding PreProcessor class
 '''
 
+import pandas as pnd
 from dask.dataframe import DataFrame as DDF
 
 # --------------------------
 class PreProcessor:
     '''
-    Class used to process input data into features and target columns
+    Class used to process input data into features and target columns.
+    The features needed are:
+
+    - row : Row of brem photon in ECAL
+    - col : Calumn of brem photon in ECAL
+    - area: Index of region of ECAL, 0, 1, 2
+    - energy: Energy of brem photon
+    - npvs  : Number of primary vertices
+    - block : Index representing part of the year when data was collected
+
+    The label will be called "mu"
     '''
     # ---------------------------------
     def __init__(self, ddf : DDF, cfg : dict):
