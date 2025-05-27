@@ -2,6 +2,8 @@
 Module testing PreProcessor class
 '''
 import os
+
+import numpy
 import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
@@ -49,6 +51,8 @@ def test_simple():
     df  = ddf.compute()
     _plot_df(df=df)
 
-    for column in df.columns:
-        log.info(column)
+    arr_mu = df['mu'].to_numpy()
+
+    assert numpy.allclose(arr_mu, 1, rtol=1e-5)
+    assert set(df.columns) == Data.columns
 # ---------------------------------------------
