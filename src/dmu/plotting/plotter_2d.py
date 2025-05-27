@@ -70,6 +70,11 @@ class Plotter2D(Plotter):
         hst   = Hist(ax_x, ax_y)
         hst.fill(arr_x, arr_y, weight=arr_w)
 
+        if hst.values().sum() == 0:
+            log.warning('Empty histogram, not using log scale')
+            mplhep.hist2dplot(hst)
+            return
+
         if use_log:
             mplhep.hist2dplot(hst, norm=LogNorm())
         else:
