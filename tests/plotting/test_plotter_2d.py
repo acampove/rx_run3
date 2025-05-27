@@ -67,7 +67,7 @@ def test_simple():
     rdf     = _get_rdf(kind='class A', test='weights')
     cfg_dat = _load_config(test=name)
     out_path= cfg_dat['saving']['plt_dir']
-    cfg_dat = f'{out_path}/simple'
+    cfg_dat['saving']['plt_dir'] = f'{out_path}/simple'
 
     ptr=Plotter(rdf=rdf, cfg=cfg_dat)
     ptr.run()
@@ -76,12 +76,13 @@ def test_empty_log():
     '''
     Tests plotting an empty dataset with log scale for z axis 
     '''
-    name    = '2d_empty_log'
-    rdf     = _get_rdf(kind='class A', test='weights', nentries = 0)
+    name    = '2d'
+    rdf     = _get_rdf(kind='class A', test='weights', nentries = 10)
+    rdf     = rdf.Filter('x!=x')
 
     cfg_dat = _load_config(test=name)
     out_path= cfg_dat['saving']['plt_dir']
-    cfg_dat = f'{out_path}/empty_log'
+    cfg_dat['saving']['plt_dir'] = f'{out_path}/empty_log'
 
     ptr=Plotter(rdf=rdf, cfg=cfg_dat)
     ptr.run()
