@@ -211,7 +211,7 @@ def _plot_hop(rdf : RDataFrame, test : str) -> None:
     plt.close()
 # ------------------------------------------------
 def _apply_selection(rdf : RDataFrame, trigger : str, sample : str, override : dict[str,str] = None) -> RDataFrame:
-    d_sel = sel.selection(project='RK', trigger=trigger, q2bin='jpsi', process=sample)
+    d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
     if override is not None:
         d_sel.update(override)
 
