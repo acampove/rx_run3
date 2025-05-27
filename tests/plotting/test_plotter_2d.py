@@ -66,6 +66,8 @@ def test_simple():
     name    = '2d'
     rdf     = _get_rdf(kind='class A', test='weights')
     cfg_dat = _load_config(test=name)
+    out_path= cfg_dat['saving']['plt_dir']
+    cfg_dat = f'{out_path}/simple'
 
     ptr=Plotter(rdf=rdf, cfg=cfg_dat)
     ptr.run()
@@ -78,7 +80,8 @@ def test_empty_log():
     rdf     = _get_rdf(kind='class A', test='weights', nentries = 0)
 
     cfg_dat = _load_config(test=name)
-    cfg_dat['plt_dir'] = '/tmp/tests/dmu/plotting/2d_empty_log'
+    out_path= cfg_dat['saving']['plt_dir']
+    cfg_dat = f'{out_path}/empty_log'
 
     ptr=Plotter(rdf=rdf, cfg=cfg_dat)
     ptr.run()
