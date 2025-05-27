@@ -24,7 +24,11 @@ def _initialize():
 # ---------------------------------------------
 def _plot_features(df : pnd.DataFrame):
     for name in ['eng', 'row', 'col', 'are', 'npv', 'blk', 'mu']:
-        df[name].plot.hist(bins=100)
+        if name == 'mu':
+            df[name].plot.hist(bins=101, range=[0.5, 1.5])
+        else:
+            df[name].plot.hist(bins=100)
+
         plt.xlabel(name)
         plt.savefig(f'{Data.out_dir}/{name}.png')
         plt.close()
