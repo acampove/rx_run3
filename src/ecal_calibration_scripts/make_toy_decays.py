@@ -82,7 +82,7 @@ def _reformat_df(df : pnd.DataFrame) -> pnd.DataFrame:
 def _add_event_columns(df : pnd.DataFrame) -> pnd.DataFrame:
     size        = len(df)
     df['nPVs' ] = numpy.random.poisson(lam=3, size=size)
-    df['block'] = numpy.random.uniform(1, 8,  size=size)
+    df['block'] = numpy.random.randint(1, 9,  size=size)
 
     return df
 # ------------------------------------
