@@ -4,6 +4,7 @@ Module holding RDFGetter class
 import os
 import glob
 import json
+import pprint
 import hashlib
 import fnmatch
 from importlib.resources import files
@@ -331,19 +332,28 @@ class RDFGetter:
     def _check_samples(self, samples : dict) -> None:
         gut.dump_json(samples, '/tmp/debugging/rx_data/samples.yaml')
 
-        l_file = samples['samples'][self._main_tree]['files']
-        nmain  = len(l_file)
+        l_path_main = samples['samples'][self._main_tree]['files']
+        l_fname_main= [ os.path.basename(path) for path in l_path_main]
+        nmain       = len(l_fname_main)
 
         fail = False
         for sample_name, sample in samples['friends'].items():
-            l_file  = sample['files']
-            nfriend = len(l_file)
+            l_path_frnd = sample['files']
+            l_fname_frnd= [ os.path.basename(path) for path in l_path_frnd]
 
-            if nfriend == nmain:
-                log.debug(f'{sample_name:<20}{nfriend}')
+            nfrnd = len(l_path_frnd)
+            if l_fname_main == l_fname_frnd:
+                continue
+
+            fail = True
+            if nfrnd != nmain:
+                log.error(f'{sample_name:<20}{nfrnd}')
+                log.error(f'{"Main"     :<20}{nmain}')
             else:
-                log.error(f'{sample_name:<20}{nfriend}')
-                fail = True
+                data = {'main' : l_fname_main, sample_name : l_fname_frnd}
+                pprint.pprint(data)
+
+                log.error('File matching did not work')
 
         if fail:
             raise ValueError('Samples check failed')
