@@ -23,7 +23,7 @@ def _initialize():
 
     LogStore.set_level('dmu:plotting:Plotter', 10)
 #---------------------------------------
-def _get_rdf(kind : str, test : str):
+def _get_rdf(kind : str, test : str, nentries : int = 10_000):
     '''
     kind (str): "class A" or "class B", equivalent to data or mc, but general
     test (str): Identifies specific test
@@ -31,8 +31,6 @@ def _get_rdf(kind : str, test : str):
 
     if test == 'high_stat':
         nentries = 1_000_000
-    else:
-        nentries =    10_000
 
     d_data = {}
     if   kind == 'class A':
