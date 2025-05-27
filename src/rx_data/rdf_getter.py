@@ -28,11 +28,20 @@ class AlreadySetColumns(Exception):
 class RDFGetter:
     '''
     Class meant to load dataframes with friend trees
-    '''
-    max_entries = -1
-    JPSI_PDG_MASS = 3096.90 # https://pdg.lbl.gov/2018/listings/rpp2018-list-J-psi-1S.pdf
-    BPLS_PDG_MASS = 5279.34 # https://pdg.lbl.gov/2022/tables/rpp2022-tab-mesons-bottom.pdf
 
+    This class has the following attributes:
+
+    max_entries : Limits the number of entries that will be provided
+    friends     : List of names of samples, to be treated as friend trees. By default this is None and everything will be processed
+    '''
+    max_entries         = -1
+    skip_adding_columns = False
+
+    friends             : list[str]
+    main_tree           : str
+
+    JPSI_PDG_MASS    = 3096.90 # https://pdg.lbl.gov/2018/listings/rpp2018-list-J-psi-1S.pdf
+    BPLS_PDG_MASS    = 5279.34 # https://pdg.lbl.gov/2022/tables/rpp2022-tab-mesons-bottom.pdf
     d_custom_columns : dict[str,str]
     # ---------------------------------------------------
     @staticmethod
