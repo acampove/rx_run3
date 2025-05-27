@@ -26,19 +26,38 @@ class Data:
 def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 # ---------------------------------------------
-def _plot_features(df : pnd.DataFrame):
-    for name in ['eng', 'row', 'col', 'are', 'npv', 'blk', 'mu']:
-        if name == 'mu':
-            df[name].plot.hist(bins=101, range=[0.5, 1.5])
-        else:
-            df[name].plot.hist(bins=100)
+def _inject_bias(ddf : DDF, bias : float) -> DDF:
+    '''
+    This function scales the momentum components of the lepton by the `bias` factor
+    This is done only when the electrons have brem associated, i.e. L*_brem == 1
+    '''
+    for lep in ['L1', 'L2']:
+        ddf[f'{lep}_PT'] = ddf[f'{lep}_PT'] + ddf[f'{lep}_PT'] * ddf[f'{lep}_brem'] * (bias - 1)
 
-        plt.xlabel(name)
-        plt.savefig(f'{Data.out_dir}/{name}.png')
+    return ddf
+# ---------------------------------------------
+def _plot_features(df : pnd.DataFrame, plot_name : str):
+    for feature in ['eng', 'row', 'col', 'are', 'npv', 'blk']:
+        df[feature].plot.hist(bins=100)
+
+        plt.xlabel(feature)
+        plt.savefig(f'{Data.out_dir}/{plot_name}_{feature}.png')
         plt.close()
 # ---------------------------------------------
-def _plot_df(df : pnd.DataFrame) -> None:
-    _plot_features(df=df)
+def _plot_df(
+        df   : pnd.DataFrame,
+        name : str,
+        corr : float) -> None:
+    _plot_features(df=df, plot_name=name)
+    _plot_bias(df=df, plot_name=name, corr=corr)
+# ---------------------------------------------
+def _plot_bias(df : pnd.DataFrame, plot_name : str, corr : float) -> None:
+    df['mu'].plot.hist(bins=101, range=[0.5, 1.5], label='measured')
+    plt.axvline(x=corr, ls=':', label='expected', color='red')
+
+    plt.legend()
+    plt.savefig(f'{Data.out_dir}/mu_{plot_name}.png')
+    plt.close()
 # ---------------------------------------------
 def test_nobias():
     '''
