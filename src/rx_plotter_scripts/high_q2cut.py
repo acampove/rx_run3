@@ -96,7 +96,7 @@ def _get_run3_rdf() -> list[RDataFrame]:
     for cut_name, cut_value in d_sel.items():
         rdf = rdf.Filter(cut_value, cut_name)
 
-    return rdf
+    return [rdf]
 # ---------------------------
 def _get_run12_rdf() -> list[RDataFrame]:
     l_rdf = []
