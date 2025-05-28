@@ -171,10 +171,10 @@ def _plot_sim(rdf : RDataFrame, test : str, particle : str) -> None:
 
     if   particle == 'B':
         plt.hist(arr_mass, bins=200, range=[5000, 5300], histtype='step', label='True')
-        plt.axvline(x=5279.3, c='red', ls=':', label='$B^+$')
+        plt.axvline(x=5279.3, c='red', ls=':', label=r'$B^+$')
     elif particle == 'Jpsi' and 'Jpsi'     in test: # This will do the resonant sample
         plt.hist(arr_mass, bins=200, range=[3090, 3100], histtype='step', label='True')
-        plt.axvline(x=3096.9, c='red', ls=':', label='$J/\psi$')
+        plt.axvline(x=3096.9, c='red', ls=':', label=r'$J/\psi$')
     elif particle == 'Jpsi' and 'Jpsi' not in test: # This will do the rare one
         plt.hist(arr_mass, bins=200, range=[   0, 4500], histtype='step', label='True')
     else:
