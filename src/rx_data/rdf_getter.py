@@ -402,6 +402,10 @@ class RDFGetter:
         if self._sample.startswith('DATA'):
             return rdf
 
+        d_def = self._cfg['definitions']['MC']
+        for var, expr in d_def.items():
+            rdf = self._add_column(rdf=rdf, name=var, definition=expr)
+
         try:
             rdf = RDFGetter.add_truem(rdf=rdf)
         except TypeError as exc:
