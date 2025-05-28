@@ -98,6 +98,8 @@ def _plot(rdf : RDataFrame) -> None:
     df   = pnd.DataFrame(data)
     df   = _reformat_q2(df=df)
 
+    _plot_true_q2(df_raw=df)
+
     for brem, df_brem in df.groupby('nbrem'):
         _plot_q2(brem, df_brem)
 
@@ -154,6 +156,70 @@ def _plot_q2(brem : int, df : pnd.DataFrame) -> None:
     plt.grid()
     plt.savefig(f'{Data.plt_dir}/q2_{brem}.png')
     plt.close()
+# ---------------------------
+def _plot_true_q2(df_raw : pnd.DataFrame) -> None:
+    cut_value = 14.3
+    df_trk = df_raw[df_raw['q2_track'] > cut_value ]
+    df_smr = df_raw[df_raw['q2_smr'  ] > cut_value ]
+    df_dtf = df_raw[df_raw['q2_dtf'  ] > cut_value ]
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(30, 10))
+
+    ax1.hist(df_raw['q2_true'], bins=60, range=[0, Data.max_q2], density=False, label=r'No cut'              , alpha   =   0.2, color='blue'  )
+    ax1.hist(df_smr['q2_true'], bins=60, range=[0, Data.max_q2], density=False, label=r'Cut on $q^2$'        , histtype='step', color='green' )
+    ax1.hist(df_trk['q2_true'], bins=60, range=[0, Data.max_q2], density=False, label=r'Cut on $q^2_{track}$', histtype='step', color='red'   )
+    ax1.hist(df_dtf['q2_true'], bins=60, range=[0, Data.max_q2], density=False, label=r'Cut on $q^2_{DTF}$'  , histtype='step', color='orange')
+
+    ax2.hist(df_raw[Data.bmass], bins=60, range=Data.mass_rng, label=r'No cut'              , alpha   =   0.2, color='blue'  )
+    ax2.hist(df_smr[Data.bmass], bins=60, range=Data.mass_rng, label=r'Cut on $q^2$'        , histtype='step', color='green' )
+    ax2.hist(df_trk[Data.bmass], bins=60, range=Data.mass_rng, label=r'Cut on $q^2_{track}$', histtype='step', color='red'   )
+    ax2.hist(df_dtf[Data.bmass], bins=60, range=Data.mass_rng, label=r'Cut on $q^2_{DTF}$'  , histtype='step', color='orange')
+
+    ax1.axvline(cut_value, label='Cut', ls=':', color='black')
+
+    ax1.legend(loc='upper right', bbox_to_anchor=(0.9, 1.0))
+    ax2.legend(loc='upper right', bbox_to_anchor=(0.9, 1.0))
+
+    ax1.set_xlabel(r'$q^2_{True}$')
+    ax2.set_xlabel(r'$M_{corr}(K^+e^+e^-)$')
+
+    title = _get_efficiencies_title(
+            df_raw=df_raw,
+            df_smr=df_smr,
+            df_dtf=df_dtf,
+            df_trk=df_trk)
+
+    fig.suptitle(title, fontsize=40)
+
+    plot_path = f'{Data.plt_dir}/true_q2.png'
+    log.info(f'Saving to: {plot_path}')
+
+    plt.grid()
+    plt.savefig(plot_path)
+    plt.close()
+# ---------------------------
+def _get_efficiencies_title(
+        df_raw : pnd.DataFrame,
+        df_smr : pnd.DataFrame,
+        df_dtf : pnd.DataFrame,
+        df_trk : pnd.DataFrame) -> str:
+
+    tot = len(df_raw)
+    smr = len(df_smr)
+    dtf = len(df_dtf)
+    trk = len(df_trk)
+
+    eff_smr = smr/tot * 100
+    eff_dtf = dtf/tot * 100
+    eff_trk = trk/tot * 100
+
+    title = (
+            f'$\\varepsilon_{{ORG}}={eff_smr:.0f}$%; '
+            f'$\\varepsilon_{{DTF}}={eff_dtf:.0f}$%; '
+            f'$\\varepsilon_{{TRK}}={eff_trk:.0f}$%'
+            )
+
+    return title
 # ---------------------------
 def _get_title(brem : str) -> str:
     latex = Data.d_latex[Data.sample]
