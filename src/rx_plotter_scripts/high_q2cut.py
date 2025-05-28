@@ -139,12 +139,12 @@ def _plot(l_rdf : list[RDataFrame]) -> None:
     l_df = [ _rdf_to_df(rdf) for rdf in l_rdf ]
     df   = pnd.concat(l_df, ignore_index=True)
 
-    _plot_true_q2(df_raw=df)
-
     for brem, df_brem in df.groupby('nbrem'):
-        _plot_q2(brem, df_brem)
+        #_plot_reco_q2(brem, df=df_brem)
+        _plot_true_q2(brem, df=df_brem)
 
-    _plot_q2('all', df)
+    #_plot_reco_q2('all', df)
+    _plot_true_q2('all', df)
 # ---------------------------
 def _plot_eff(arr_val : numpy.ndarray, color : str, ax) -> None:
     sorted_data = numpy.sort(arr_val)
@@ -152,7 +152,7 @@ def _plot_eff(arr_val : numpy.ndarray, color : str, ax) -> None:
 
     ax.plot(sorted_data, eff, color=color)
 # ---------------------------
-def _plot_q2(brem : int, df : pnd.DataFrame) -> None:
+def _plot_reco_q2(brem : int, df : pnd.DataFrame) -> None:
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(30, 10))
 
     ax1.hist(df['q2_smr'  ], bins=60, range=[0, Data.max_q2], density=True, label='$q^2$'        , alpha = 0.2, color='blue' )
