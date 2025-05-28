@@ -77,7 +77,16 @@ def _initialize():
 
     Data.plt_dir = plt_dir
 # ---------------------------
-def _get_rdf() -> RDataFrame:
+def _get_rdf() -> list[RDataFrame]:
+    if Data.run == 'run3':
+        return _get_run3_rdf()
+
+    if Data.run == 'run12':
+        return _get_run12_rdf()
+
+    raise ValueError(f'Invalid run: {Data.run}')
+# ---------------------------
+def _get_run3_rdf() -> list[RDataFrame]:
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
     rdf = gtr.get_rdf()
 
