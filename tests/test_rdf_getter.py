@@ -261,7 +261,7 @@ def _plot_brem_track_2(rdf : RDataFrame, test : str, tree : str) -> None:
         plt.savefig(f'{test_dir}/{var}.png')
         plt.close()
 # ------------------------------------------------
-def _plot_qsq(rdf : RDataFrame, test : str) -> None:
+def _plot_mc_qsq(rdf : RDataFrame, test : str, sample : str) -> None:
     test_dir = f'{Data.out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
 
@@ -271,11 +271,12 @@ def _plot_qsq(rdf : RDataFrame, test : str) -> None:
     df   = pnd.DataFrame(data)
     df   = df / 1e6
 
-    df['q2_true' ].plot.hist(bins=60, range=[0, 25], histtype='step', label='True')
+    df['q2_true' ].plot.hist(bins=60, range=[0, 25], alpha   =   0.3, label='True')
     df['q2_smr'  ].plot.hist(bins=60, range=[0, 25], histtype='step', label='Smeared')
     df['q2_track'].plot.hist(bins=60, range=[0, 25], histtype='step', label='Track')
     df['q2_dtf'  ].plot.hist(bins=60, range=[0, 25], histtype='step', label='DTF')
 
+    plt.title(sample)
     plt.legend()
     plt.savefig(f'{test_dir}/q2.png')
     plt.close()
@@ -332,6 +333,7 @@ def test_mc(sample : str):
     '''
     Test of getter class in mc
     '''
+    RDFGetter.max_entries = -1
 
     gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
@@ -343,7 +345,10 @@ def test_mc(sample : str):
     _plot_hop(rdf     , f'test_mc/{sample}')
     _plot_sim(rdf     , f'test_mc/{sample}', particle=   'B')
     _plot_sim(rdf     , f'test_mc/{sample}', particle='Jpsi')
-    _plot_qsq(rdf     , f'test_mc/{sample}')
+
+    _plot_mc_qsq(rdf, f'test_mc/{sample}', sample)
+
+    RDFGetter.max_entries = 1000
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC', 'Bu_psi2SK_ee_eq_DPC', 'Bu_JpsiX_ee_eq_JpsiInAcc'])
 def test_q2_track_electron(sample : str):
