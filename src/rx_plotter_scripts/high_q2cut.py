@@ -163,6 +163,9 @@ def _plot_q2(brem : int, df : pnd.DataFrame) -> None:
     plt.close()
 # ---------------------------
 def _plot_true_q2(df_raw : pnd.DataFrame) -> None:
+    if 'data' in Data.sample:
+        return
+
     cut_value = 14.3
     df_trk = df_raw[df_raw['q2_track'] > cut_value ]
     df_smr = df_raw[df_raw['q2_smr'  ] > cut_value ]
