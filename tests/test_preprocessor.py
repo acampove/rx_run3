@@ -26,7 +26,7 @@ class Data:
 def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 # ---------------------------------------------
-def _inject_bias(ddf : DDF, bias : float) -> DDF:
+def _inject_flat_bias(ddf : DDF, bias : float) -> DDF:
     '''
     This function scales the momentum components of the lepton by the `bias` factor
     This is done only when the electrons have brem associated, i.e. L*_brem == 1
@@ -90,11 +90,11 @@ def test_flat_bias(bias : float):
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
     ddf = cut.get_ddf()
-    ddf = _inject_bias(ddf, bias)
+    ddf = _inject_flat_bias(ddf, bias)
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
-    df  = ddf.compute()
+    df  = ddf.head(100)
 
     name = f'flat_bias_{100 * bias:.0f}'
     _plot_df(df=df, name=name, corr= 1./bias)
