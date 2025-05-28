@@ -52,7 +52,7 @@ class Data:
     min_q2  = 10
     mass_rng= [4500, 6000]
 
-    l_q2var = ['q2_true', 'q2_smr', 'q2_track', 'q2_dtf', 'nbrem', 'B_Mass', 'B_M', 'B_Mass_smr']
+    l_q2var = ['q2_true', 'q2_smr', 'q2_track', 'q2_dtf', 'nbrem', 'B_Mass_smr']
 # ---------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
