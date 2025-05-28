@@ -123,7 +123,7 @@ def _reformat_q2(df : pnd.DataFrame) -> pnd.DataFrame:
 
     return df
 # ---------------------------
-def _plot(rdf : RDataFrame) -> None:
+def _rdf_to_df(rdf : RDataFrame) -> pnd.DataFrame:
     if 'data' in Data.sample:
         l_q2var = [ var for var in Data.l_q2var if 'true' not in var ]
     else:
@@ -132,6 +132,12 @@ def _plot(rdf : RDataFrame) -> None:
     data = rdf.AsNumpy(l_q2var)
     df   = pnd.DataFrame(data)
     df   = _reformat_q2(df=df)
+
+    return df
+# ---------------------------
+def _plot(l_rdf : list[RDataFrame]) -> None:
+    l_df = [ _rdf_to_df(rdf) for rdf in l_rdf ]
+    df   = pnd.concat(l_df, ignore_index=True)
 
     _plot_true_q2(df_raw=df)
 
@@ -271,9 +277,9 @@ def main():
     _parse_args()
     _initialize()
 
-    rdf = _get_rdf()
+    l_rdf = _get_rdf()
 
-    _plot(rdf=rdf)
+    _plot(l_rdf=l_rdf)
 # ---------------------------
 if __name__ == '__main__':
     main()
