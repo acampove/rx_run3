@@ -227,14 +227,17 @@ def _plot_true_q2(df_raw : pnd.DataFrame) -> None:
     ax2.set_xlabel(r'$M_{corr}(K^+e^+e^-)$')
 
     title = _get_efficiencies_title(
-            df_raw=df_raw,
+            df_raw=df,
             df_smr=df_smr,
             df_dtf=df_dtf,
             df_trk=df_trk)
 
     fig.suptitle(title, fontsize=40)
 
-    plot_path = f'{Data.plt_dir}/true_q2.png'
+    if isinstance(brem, int):
+        brem = f'{brem:.0f}'
+
+    plot_path = f'{Data.plt_dir}/true_q2_{Data.run}_{brem}.png'
     log.info(f'Saving to: {plot_path}')
 
     plt.grid()
