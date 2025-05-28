@@ -105,10 +105,9 @@ def _get_run12_rdf() -> list[RDataFrame]:
 
     for year in l_year:
         obj = DSG('jpsi', 'ETOS', year, vers, (0, 1), 'sign', 'all_gorder')
-        obj.debug_mode=True
         rdf = obj.get_df(
-                skip_cmb  = True,
-                skip_prec = True,
+                skip_cmb  = False,
+                skip_prec = False,
                 d_redefine= {'q2' : '(1)', 'mass' : '(1)'})
 
         l_rdf.append(rdf)
