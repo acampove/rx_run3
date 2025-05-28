@@ -23,6 +23,7 @@ class Data:
     '''
     plt_dir : str
     sample  : str
+    run     : str
     trigger : str
 
     d_samples = {
@@ -55,10 +56,12 @@ class Data:
 def _parse_args():
     parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
     parser.add_argument('-s', '--sample', type=str, help='MC sample', required=True, choices=list(Data.d_samples))
+    parser.add_argument('-r', '--run'   , type=str, help='Run from which to plot', default='run3', choices=['run12', 'run3'])
     args = parser.parse_args()
 
     sample     = args.sample
     Data.sample= Data.d_samples[sample]
+    Data.run   = args.run
 # ---------------------------
 def _initialize():
     ana_dir = os.environ['ANADIR']
