@@ -136,6 +136,18 @@ def _plot_block(rdf : RDataFrame, name : str) -> None:
     plt.savefig(f'{Data.out_dir}/{name}/block.png')
     plt.close()
 # ------------------------------------------------
+def _plot_bmass(rdf : RDataFrame) -> None:
+    minx = 4500
+    maxx = 6000
+    mass = 'B_M_brem_track_2'
+    rdf  = rdf.Filter(f'{mass} > {minx} && {mass} < {maxx}')
+
+    data = rdf.AsNumpy([mass])
+    df   = pnd.DataFrame(data)
+    sr   = df[mass]
+
+    sr.plot.hist(range=[minx, maxx], bins=100, histtype='step')
+# ------------------------------------------------
 def _plot_q2_track(rdf : RDataFrame, sample : str) -> None:
     test_dir = f'{Data.out_dir}/{sample}'
     os.makedirs(test_dir, exist_ok=True)
