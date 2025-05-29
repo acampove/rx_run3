@@ -51,11 +51,12 @@ def _inject_bias(ddf : DDF, bias : float, kind : str) -> DDF:
     return ddf
 # ---------------------------------------------
 def _plot_df(
-        df   : pnd.DataFrame,
-        name : str,
-        corr : float) -> None:
-    _plot_features(df=df, plot_name=name)
-    _plot_bias(df=df, plot_name=name, corr=corr)
+        df        : pnd.DataFrame,
+        test_name : str,
+        corr      : float) -> None:
+
+    _plot_features(df=df, test_name=test_name)
+    _plot_bias(    df=df, test_name=test_name, corr=corr)
 # ---------------------------------------------
 def _plot_bias(df : pnd.DataFrame, plot_name : str, corr : float) -> None:
     df['mu'].plot.hist(bins=101, range=[0.5, 1.5], label='measured')
