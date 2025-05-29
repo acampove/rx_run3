@@ -56,12 +56,15 @@ class Regressor:
         '''
         Will train the regressor
         '''
+        features, targets = self._get_training_data()
+        _, nfeatures      = features.shape
+
         cfg_trn   = self._cfg['train']
-        net       = Network()
+
+        net       = Network(nfeatures=nfeatures)
         criterion = nn.MSELoss()
         optimizer = optim.Adam(net.parameters(), lr=cfg_trn['lr'])
 
-        features, targets = self._get_training_data()
         for epoch in range(cfg_trn['epochs']):
             net.train()
             optimizer.zero_grad()
