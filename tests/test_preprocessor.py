@@ -50,14 +50,6 @@ def _inject_bias(ddf : DDF, bias : float, kind : str) -> DDF:
 
     return ddf
 # ---------------------------------------------
-def _plot_features(df : pnd.DataFrame, plot_name : str):
-    for feature in ['eng', 'row', 'col', 'are', 'npv', 'blk']:
-        df[feature].plot.hist(bins=100)
-
-        plt.xlabel(feature)
-        plt.savefig(f'{Data.out_dir}/{plot_name}_{feature}.png')
-        plt.close()
-# ---------------------------------------------
 def _plot_df(
         df   : pnd.DataFrame,
         name : str,
@@ -72,6 +64,17 @@ def _plot_bias(df : pnd.DataFrame, plot_name : str, corr : float) -> None:
     plt.legend()
     plt.savefig(f'{Data.out_dir}/mu_{plot_name}.png')
     plt.close()
+# ---------------------------------------------
+def _plot_features(df : pnd.DataFrame, test_name : str):
+    out_dir = f'{Data.out_dir}/{test_name}'
+    os.makedirs(out_dir, exist_ok=True)
+
+    for feature in ['eng', 'row', 'col', 'are', 'npv', 'blk']:
+        df[feature].plot.hist(bins=100)
+
+        plt.xlabel(feature)
+        plt.savefig(f'{out_dir}/{feature}.png')
+        plt.close()
 # ---------------------------------------------
 def test_nobias():
     '''
