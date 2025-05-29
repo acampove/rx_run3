@@ -267,9 +267,9 @@ def main():
     _parse_args()
     _initialize()
 
-    l_rdf = _get_rdf()
+    rdf = _get_rdf()
 
-    _plot(l_rdf=l_rdf)
+    _plot(rdf=rdf)
 # ---------------------------
 if __name__ == '__main__':
     main()
