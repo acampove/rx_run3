@@ -2,6 +2,7 @@
 Module testing PreProcessor class
 '''
 import os
+import logging
 
 import numpy
 import pytest
@@ -25,6 +26,8 @@ class Data:
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
+    logging.getLogger("PIL.PngImagePlugin").setLevel(logging.WARNING)
+    logging.getLogger("matplotlib.font_manager").setLevel(logging.WARNING)
 # ---------------------------------------------
 def _inject_flat_bias(ddf : DDF, bias : float) -> DDF:
     '''
