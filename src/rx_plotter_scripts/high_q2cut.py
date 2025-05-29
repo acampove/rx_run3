@@ -14,7 +14,6 @@ from ROOT                  import RDataFrame
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
 from dmu.logging.log_store import LogStore
-from rk.ds_getter          import ds_getter as DSG
 
 log=LogStore.add_logger('rx_plots:high_q2cut')
 # ---------------------------
@@ -96,23 +95,14 @@ def _get_run3_rdf() -> list[RDataFrame]:
     for cut_name, cut_value in d_sel.items():
         rdf = rdf.Filter(cut_value, cut_name)
 
-    return [rdf]
+    if log.getEffectiveLevel() < 20:
+        rep = rdf.Report()
+        rep.Print()
+
+    return rdf
 # ---------------------------
-def _get_run12_rdf() -> list[RDataFrame]:
-    l_rdf = []
-    vers  = 'v10.21p3'
-    l_year= ['2011', '2012', '2015', '2016', '2017', '2018']
-
-    for year in l_year:
-        obj = DSG('jpsi', 'ETOS', year, vers, (0, 1), 'sign', 'all_gorder')
-        rdf = obj.get_df(
-                skip_cmb  = False,
-                skip_prec = False,
-                d_redefine= {'q2' : '(1)', 'mass' : '(1)'})
-
-        l_rdf.append(rdf)
-
-    return l_rdf
+def _get_run12_rdf() -> RDataFrame:
+    return
 # ---------------------------
 def _reformat_q2(df : pnd.DataFrame) -> pnd.DataFrame:
     l_col = [ col for col in df.columns if col.startswith('q2') ]
