@@ -112,14 +112,14 @@ def test_flat_bias(bias : float):
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
     ddf = cut.get_ddf()
-    ddf = _inject_flat_bias(ddf, bias)
+    ddf = _inject_bias(ddf, bias, kind='flat')
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
     df  = ddf.head(100)
 
-    name = f'flat_bias_{100 * bias:.0f}'
-    _plot_df(df=df, name=name, corr= 1./bias)
+    name = f'flat_bias/{100 * bias:.0f}'
+    _plot_df(df=df, test_name=name, corr= 1./bias)
 
     arr_mu = df['mu'].to_numpy()
 
