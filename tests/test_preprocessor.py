@@ -29,27 +29,6 @@ def _initialize():
     logging.getLogger("PIL.PngImagePlugin").setLevel(logging.WARNING)
     logging.getLogger("matplotlib.font_manager").setLevel(logging.WARNING)
 # ---------------------------------------------
-def _inject_bias(ddf : DDF, bias : float, kind : str) -> DDF:
-    '''
-    This function scales the momentum components of the lepton by the `bias` factor
-    This is done only when the electrons have brem associated, i.e. L*_brem == 1
-
-    Parameters
-    --------------
-    kind (str) : Type of bias
-        flat: bias is uncorrelated with anything
-        row : Correlation with the row
-    '''
-    for lep in ['L1', 'L2']:
-        if   kind == 'flat':
-            ddf[f'{lep}_PT'] = ddf[f'{lep}_PT'] + ddf[f'{lep}_PT'] * ddf[f'{lep}_brem'] * (bias - 1)
-        elif kind == 'row' :
-            ddf[f'{lep}_PT'] = ddf[f'{lep}_PT'] + ddf[f'{lep}_PT'] * ddf[f'{lep}_brem'] * (bias - ddf[f'{lep}_BREMHYPOROW'] / 60.)
-        else:
-            raise ValueError(f'Invalid bias: {kind}')
-
-    return ddf
-# ---------------------------------------------
 def _plot_df(
         df        : pnd.DataFrame,
         test_name : str,
