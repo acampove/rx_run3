@@ -142,10 +142,10 @@ def _rdf_to_df(rdf : RDataFrame) -> pnd.DataFrame:
 def _plot(rdf : RDataFrame) -> None:
     df   = _rdf_to_df(rdf)
     for brem, df_brem in df.groupby('nbrem'):
-        #_plot_reco_q2(brem, df=df_brem)
+        _plot_reco_q2(brem, df=df_brem)
         _plot_true_q2(brem, df=df_brem)
 
-    #_plot_reco_q2('all', df)
+    _plot_reco_q2('all', df)
     _plot_true_q2('all', df)
 # ---------------------------
 def _plot_eff(arr_val : numpy.ndarray, color : str, ax) -> None:
