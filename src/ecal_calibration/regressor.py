@@ -8,7 +8,7 @@ from torch import nn
 from torch import optim
 from torch import Tensor
 
-from dask.dataframe.core      import DataFrame as DDF
+from dask.dataframe           import DataFrame as DDF
 from dmu.logging.log_store    import LogStore
 from ecal_calibration.network import Network
 
