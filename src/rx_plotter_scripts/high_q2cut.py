@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 
 from ROOT                  import RDataFrame
 from rx_data.rdf_getter    import RDFGetter
+from rx_data.rdf_getter12  import RDFGetter12
 from rx_selection          import selection as sel
 from dmu.logging.log_store import LogStore
 
@@ -107,7 +108,16 @@ def _get_run3_rdf() -> RDataFrame:
     return rdf
 # ---------------------------
 def _get_run12_rdf() -> RDataFrame:
-    return
+    gtr = RDFGetter12(
+            sample = Data.sample,
+            trigger= Data.trigger,
+            dset   = 'all')
+
+    rdf = gtr.get_rdf()
+    #rdf = rdf.Filter('BDT_cmb > 0.9 && BDT_prc > 0.8')
+    rdf = rdf.Filter('nbrem <= 2')
+
+    return rdf
 # ---------------------------
 def _reformat_q2(df : pnd.DataFrame) -> pnd.DataFrame:
     l_col = [ col for col in df.columns if col.startswith('q2') ]
