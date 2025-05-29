@@ -193,11 +193,17 @@ def _plot_reco_q2(brem : int, df : pnd.DataFrame) -> None:
     title = _get_title(brem=brem)
 
     fig.suptitle(title, fontsize=40)
-    ax1.axvline(x=15  , c='black', ls=':')
-    ax2.axvline(x=5280, c='black', ls=':')
+    ax1.axvline(x=Data.cut_min, c='black', ls=':')
+    ax2.axvline(x=5280        , c='black', ls=':')
+
+    if isinstance(brem, float):
+        brem = f'{brem:.0f}'
+
+    plot_path = f'{Data.plt_dir}/reco_q2_{Data.run}_{brem}.png'
+    log.info(f'Saving to: {plot_path}')
 
     plt.grid()
-    plt.savefig(f'{Data.plt_dir}/q2_{brem}_{Data.run}.png')
+    plt.savefig(plot_path)
     plt.close()
 # ---------------------------
 def _plot_true_q2(brem : int, df : pnd.DataFrame) -> None:
