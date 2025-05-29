@@ -13,9 +13,9 @@ class Network(nn.Module):
     def __init__(self):
         super().__init__()
         self.model = nn.Sequential(
-            nn.Linear(1, 16),
+            nn.Linear(6, 6),
             nn.ReLU(),
-            nn.Linear(16, 1)
+            nn.Linear(6, 1)
         )
     # ------------------------------
     def forward(self, x : Tensor) -> Tensor:
