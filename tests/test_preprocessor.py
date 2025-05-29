@@ -68,13 +68,13 @@ def test_nobias():
     - The bias is zero, i.e. mu=1
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    ddf = cut.get_ddf()
+    ddf = cut.get_ddf(bias=1.0, kind='flat')
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
 
     df  = ddf.compute()
-    _plot_df(df=df)
+    _plot_df(df=df, test_name='nobias', corr=None)
 
     arr_mu = df['mu'].to_numpy()
 
@@ -90,8 +90,7 @@ def test_flat_bias(bias : float):
     - The bias is the number that was injected
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    ddf = cut.get_ddf()
-    ddf = _inject_bias(ddf, bias, kind='flat')
+    ddf = cut.get_ddf(bias=bias, kind='flat')
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
@@ -115,8 +114,7 @@ def test_row_bias():
     bias = 1.0
 
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    ddf = cut.get_ddf()
-    ddf = _inject_bias(ddf, bias, kind='row')
+    ddf = cut.get_ddf(bias=bias, kind='row')
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
