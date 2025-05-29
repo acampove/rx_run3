@@ -128,7 +128,7 @@ def _reformat_q2(df : pnd.DataFrame) -> pnd.DataFrame:
     return df
 # ---------------------------
 def _rdf_to_df(rdf : RDataFrame) -> pnd.DataFrame:
-    if 'data' in Data.sample:
+    if 'DATA' in Data.sample:
         l_q2var = [ var for var in Data.l_q2var if 'true' not in var ]
     else:
         l_q2var = Data.l_q2var
