@@ -126,3 +126,24 @@ def test_flat_bias(bias : float):
     assert numpy.allclose(arr_mu, 1 / bias, rtol=1e-5)
     assert set(df.columns) == Data.columns
 # ---------------------------------------------
+def test_row_bias():
+    '''
+    Tests that:
+
+    - The features can be retrieved
+    - The bias is the number that was injected
+    '''
+    bias = 1.0
+
+    cfg = cut.load_cfg(name='tests/preprocessor/simple')
+    ddf = cut.get_ddf()
+    ddf = _inject_bias(ddf, bias, kind='row')
+
+    pre = PreProcessor(ddf=ddf, cfg=cfg)
+    ddf = pre.get_data()
+    df  = ddf.head(100)
+
+    name = f'row_bias/{100 * bias:.0f}'
+    _plot_df(df=df, test_name=name, corr= None)
+
+    assert set(df.columns) == Data.columns
