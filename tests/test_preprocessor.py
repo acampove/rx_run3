@@ -3,12 +3,12 @@ Module testing PreProcessor class
 '''
 import os
 import logging
-
 import numpy
 import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
+from dask.distributed              import Client
 from dmu.logging.log_store         import LogStore
 from ecal_calibration.preprocessor import PreProcessor
 from ecal_calibration              import utilities    as cut
@@ -59,7 +59,7 @@ def _plot_features(df : pnd.DataFrame, test_name : str):
         plt.savefig(f'{out_dir}/{feature}.png')
         plt.close()
 # ---------------------------------------------
-def test_nobias():
+def test_nobias(_dask_client : Client):
     '''
     Tests that:
 
@@ -81,7 +81,7 @@ def test_nobias():
     assert set(df.columns) == Data.columns
 # ---------------------------------------------
 @pytest.mark.parametrize('bias', [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3])
-def test_flat_bias(bias : float):
+def test_flat_bias(bias : float, _dask_client : Client):
     '''
     Tests that:
 
@@ -103,7 +103,7 @@ def test_flat_bias(bias : float):
     assert numpy.allclose(arr_mu, 1 / bias, rtol=1e-5)
     assert set(df.columns) == Data.columns
 # ---------------------------------------------
-def test_row_bias():
+def test_row_bias(_dask_client : Client):
     '''
     Tests that:
 
@@ -123,3 +123,4 @@ def test_row_bias():
     _plot_df(df=df, test_name=name, corr= None)
 
     assert set(df.columns) == Data.columns
+# ---------------------------------------------
