@@ -10,10 +10,13 @@ class Network(nn.Module):
     Class wrapping pytorch (abstract?) newtwork
     '''
     # ------------------------------
-    def __init__(self):
+    def __init__(self, nfeatures : int):
+        '''
+        nfeatures (int): Number of features, needed to build first layer
+        '''
         super().__init__()
         self.model = nn.Sequential(
-            nn.Linear(6, 6),
+            nn.Linear(nfeatures, 6),
             nn.ReLU(),
             nn.Linear(6, 1)
         )
