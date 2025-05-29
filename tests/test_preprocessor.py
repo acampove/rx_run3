@@ -58,12 +58,16 @@ def _plot_df(
     _plot_features(df=df, test_name=test_name)
     _plot_bias(    df=df, test_name=test_name, corr=corr)
 # ---------------------------------------------
-def _plot_bias(df : pnd.DataFrame, plot_name : str, corr : float) -> None:
+def _plot_bias(df : pnd.DataFrame, test_name : str, corr : float) -> None:
     df['mu'].plot.hist(bins=101, range=[0.5, 1.5], label='measured')
-    plt.axvline(x=corr, ls=':', label='expected', color='red')
+    if corr is not None:
+        plt.axvline(x=corr, ls=':', label='expected', color='red')
+
+    out_dir = f'{Data.out_dir}/{test_name}'
+    os.makedirs(out_dir, exist_ok=True)
 
     plt.legend()
-    plt.savefig(f'{Data.out_dir}/mu_{plot_name}.png')
+    plt.savefig(f'{out_dir}/mu.png')
     plt.close()
 # ---------------------------------------------
 def _plot_features(df : pnd.DataFrame, test_name : str):
