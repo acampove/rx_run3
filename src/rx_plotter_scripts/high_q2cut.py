@@ -96,6 +96,7 @@ def _get_run3_rdf() -> RDataFrame:
     rdf = gtr.get_rdf()
 
     d_sel       = sel.selection(trigger=Data.trigger, q2bin=Data.q2bin, process=Data.sample)
+    d_sel['bdt']= '(1)'
     d_sel['q2'] = '(1)'
 
     for cut_name, cut_value in d_sel.items():
