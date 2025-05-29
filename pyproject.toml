@@ -5,6 +5,7 @@ readme      = 'README.md'
 dependencies= [
 'dask',
 'pandas',
+'bokeh',
 'uproot',
 'vector',
 'numpy',
