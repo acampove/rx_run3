@@ -22,10 +22,16 @@ class RDFGetter12:
         '''
         self._sample = self._get_sample(sample)
         self._trigger= self._get_trigger(trigger)
-        self._dset   = dset
+        self._dset   = self._get_dset(dset)
 
         self._ntp_dir= 'no_bdt_q2_mass'
         self._version= 'v10.21p3'
+    # --------------------------
+    def _get_dset(self, dset : str) -> str:
+        if dset == 'all':
+            return '*'
+
+        return dset
     # --------------------------
     def _get_sample(self, sample : str) -> str:
         if sample in ['Bu_Kee_eq_btosllball05_DPC', 'Bu_Kmumu_eq_btosllball05_DPC']:
