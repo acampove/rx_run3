@@ -15,9 +15,9 @@ def test_simple():
 
     ddf = cut.get_ddf()
     pre = PreProcessor(ddf=ddf, cfg=cfg)
-    df  = pre.get_data()
+    ddf = pre.get_data()
 
     cfg = cut.load_cfg(name='tests/regressor/simple')
-    obj = Regressor(df=df, cfg=cfg)
+    obj = Regressor(ddf=ddf, cfg=cfg)
     obj.train()
 # -----------------------------------------------------------
