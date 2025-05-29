@@ -182,12 +182,14 @@ def _plot_reco_q2(brem : int, df : pnd.DataFrame) -> None:
     ax2.axvline(x=5280, c='black', ls=':')
 
     plt.grid()
-    plt.savefig(f'{Data.plt_dir}/q2_{brem}.png')
+    plt.savefig(f'{Data.plt_dir}/q2_{brem}_{Data.run}.png')
     plt.close()
 # ---------------------------
-def _plot_true_q2(df_raw : pnd.DataFrame) -> None:
+def _plot_true_q2(brem : int, df : pnd.DataFrame) -> None:
     if 'data' in Data.sample:
         return
+
+    df_raw = df
 
     cut_value = 14.3
     df_trk = df_raw[df_raw['q2_track'] > cut_value ]
