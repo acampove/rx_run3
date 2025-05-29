@@ -182,10 +182,10 @@ def _plot_reco_q2(brem : int, df : pnd.DataFrame) -> None:
     _plot_eff(arr_q2dtf, color='green', ax=ax3)
     _plot_eff(arr_q2trk, color='red'  , ax=ax3)
 
+    ax1.set_xlabel('$q^2$[GeV$/c^{2}$]')
+    ax2.set_xlabel(r'$M(K^+e^+e^-)$')
     ax3.tick_params(axis='y', labelcolor='green')
     ax3.set_ylabel('Efficiency', color='green')
-    ax1.set_xlabel('$q^2$[GeV$/c^{2}$]')
-    ax2.set_xlabel('$M(B^+)$[MeV$/c^{2}$]')
 
     ax1.legend(loc='upper right', bbox_to_anchor=(0.9, 0.9))
     ax2.legend(loc='upper right', bbox_to_anchor=(0.9, 0.9))
@@ -205,11 +205,9 @@ def _plot_true_q2(brem : int, df : pnd.DataFrame) -> None:
         return
 
     df_raw = df
-
-    cut_value = 14.3
-    df_trk = df_raw[df_raw['q2_track'] > cut_value ]
-    df_smr = df_raw[df_raw['q2_smr'  ] > cut_value ]
-    df_dtf = df_raw[df_raw['q2_dtf'  ] > cut_value ]
+    df_smr = df_raw[ (Data.cut_min < df_raw['q2_smr'  ]) & (df_raw['q2_smr'  ] < Data.cut_max) ]
+    df_trk = df_raw[ (Data.cut_min < df_raw['q2_track']) & (df_raw['q2_track'] < Data.cut_max) ]
+    df_dtf = df_raw[ (Data.cut_min < df_raw['q2_dtf'  ]) & (df_raw['q2_dtf'  ] < Data.cut_max) ]
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(30, 10))
 
@@ -223,23 +221,21 @@ def _plot_true_q2(brem : int, df : pnd.DataFrame) -> None:
     ax2.hist(df_trk[Data.bmass], bins=60, range=Data.mass_rng, label=r'Cut on $q^2_{track}$', histtype='step', color='red'   )
     ax2.hist(df_dtf[Data.bmass], bins=60, range=Data.mass_rng, label=r'Cut on $q^2_{DTF}$'  , histtype='step', color='orange')
 
-    ax1.axvline(cut_value, label='Cut', ls=':', color='black')
-
-    ax1.legend(loc='upper right', bbox_to_anchor=(0.9, 1.0))
-    ax2.legend(loc='upper right', bbox_to_anchor=(0.9, 1.0))
+    ax1.legend(loc='upper right', bbox_to_anchor=(1.0, 1.0))
+    ax2.legend(loc='upper right', bbox_to_anchor=(1.0, 1.0))
 
     ax1.set_xlabel(r'$q^2_{True}$')
-    ax2.set_xlabel(r'$M_{corr}(K^+e^+e^-)$')
+    ax2.set_xlabel(r'$M(K^+e^+e^-)$')
 
     title = _get_efficiencies_title(
-            df_raw=df,
+            df_raw=df_raw,
             df_smr=df_smr,
             df_dtf=df_dtf,
             df_trk=df_trk)
 
     fig.suptitle(title, fontsize=40)
 
-    if isinstance(brem, int):
+    if isinstance(brem, float):
         brem = f'{brem:.0f}'
 
     plot_path = f'{Data.plt_dir}/true_q2_{Data.run}_{brem}.png'
