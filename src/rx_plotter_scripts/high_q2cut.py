@@ -47,8 +47,13 @@ class Data:
     q2bin   = 'high'
     bmass   = 'B_Mass_smr'
     plt.style.use(mplhep.style.LHCb2)
-    max_q2  = 22
+
     min_q2  = 10
+    max_q2  = 24
+
+    cut_min = 14.3
+    cut_max = 22.0
+
     mass_rng= [4500, 6000]
 
     l_q2var = ['q2_true', 'q2_smr', 'q2_track', 'q2_dtf', 'nbrem', 'B_Mass_smr']
