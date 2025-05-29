@@ -51,30 +51,6 @@ class RDFGetter12:
 
         raise NotImplementedError(f'Invalid trigger: {trigger}')
     # --------------------------
-    def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
-        q2_track_def = (
-                        'ROOT::Math::PxPyPzMVector l1(L1_TRACK_PX, L1_TRACK_PY, L1_TRACK_PZ, 0.511);'
-                        'ROOT::Math::PxPyPzMVector l2(L2_TRACK_PX, L2_TRACK_PY, L2_TRACK_PZ, 0.511);'
-                        'auto ll = l1 + l2;'
-                        'return ll.M2();'
-                        )
-
-        q2_true_def  = (
-                        'ROOT::Math::PxPyPzEVector l1(L1_TRUEP_X, L1_TRUEP_Y, L1_TRUEP_Z, L1_TRUEP_E);'
-                        'ROOT::Math::PxPyPzEVector l2(L2_TRUEP_X, L2_TRUEP_Y, L2_TRUEP_Z, L2_TRUEP_E);'
-                        'auto ll = l1 + l2;'
-                        'return ll.M2();'
-                        )
-
-        rdf = rdf.Define('nbrem'     , 'L1_BremMultiplicity + L2_BremMultiplicity')
-        rdf = rdf.Define('B_Mass_smr',             'B_M')
-        rdf = rdf.Define('q2_smr'    , 'Jpsi_M * Jpsi_M')
-        rdf = rdf.Define('q2_track'  ,      q2_track_def)
-        rdf = rdf.Define('q2_true'   ,      q2_true_def )
-        rdf = rdf.Define('q2_dtf'    ,      q2_true_def ) # Placeholder, DTF branches were not saved in Run12 ntuples.
-
-        return rdf
-    # --------------------------
     def get_rdf(self) -> RDataFrame:
         '''
         Returns ROOT dataframe with dataset
@@ -93,7 +69,6 @@ class RDFGetter12:
             raise ValueError(f'No file found in: {ntp_wc}')
 
         rdf = RDataFrame(self._trigger, l_path)
-        rdf = self._add_columns(rdf=rdf)
 
         return rdf
 # --------------------------
