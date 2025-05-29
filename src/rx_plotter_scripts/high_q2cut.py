@@ -207,7 +207,7 @@ def _plot_reco_q2(brem : int, df : pnd.DataFrame) -> None:
     plt.close()
 # ---------------------------
 def _plot_true_q2(brem : int, df : pnd.DataFrame) -> None:
-    if 'data' in Data.sample:
+    if 'DATA' in Data.sample:
         return
 
     df_raw = df
