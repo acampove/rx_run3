@@ -10,6 +10,6 @@ features:
   BREMENERGY # This should be BREMTRACKBASEDENERGY when the photon was added by hand
 train:
   lr     : 0.01
-  epochs : 300
+  epochs : 1000
 saving:
   out_dir : calibration/electron
