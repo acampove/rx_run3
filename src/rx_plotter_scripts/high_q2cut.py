@@ -76,7 +76,7 @@ def _initialize():
 
     Data.plt_dir = plt_dir
 # ---------------------------
-def _get_rdf() -> list[RDataFrame]:
+def _get_rdf() -> RDataFrame:
     if Data.run == 'run3':
         return _get_run3_rdf()
 
@@ -85,7 +85,7 @@ def _get_rdf() -> list[RDataFrame]:
 
     raise ValueError(f'Invalid run: {Data.run}')
 # ---------------------------
-def _get_run3_rdf() -> list[RDataFrame]:
+def _get_run3_rdf() -> RDataFrame:
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
     rdf = gtr.get_rdf()
 
@@ -124,10 +124,8 @@ def _rdf_to_df(rdf : RDataFrame) -> pnd.DataFrame:
 
     return df
 # ---------------------------
-def _plot(l_rdf : list[RDataFrame]) -> None:
-    l_df = [ _rdf_to_df(rdf) for rdf in l_rdf ]
-    df   = pnd.concat(l_df, ignore_index=True)
-
+def _plot(rdf : RDataFrame) -> None:
+    df   = _rdf_to_df(rdf)
     for brem, df_brem in df.groupby('nbrem'):
         #_plot_reco_q2(brem, df=df_brem)
         _plot_true_q2(brem, df=df_brem)
