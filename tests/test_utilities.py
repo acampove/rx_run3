@@ -2,6 +2,7 @@
 Module with tests for utility functions
 '''
 import os
+import numpy
 import pytest
 import pandas as pnd
 import matplotlib.pyplot as plt
@@ -22,9 +23,10 @@ def _initialize():
 def _plot_distributions(df : pnd.DataFrame) -> None:
     _plot_vtx(df=df)
     _plot_brem(df=df)
-    _plot_lept(df=df, name='BREMHYPOROW')
-    _plot_lept(df=df, name='BREMHYPOCOL')
+    _plot_lept(df=df, name= 'BREMHYPOROW')
+    _plot_lept(df=df, name= 'BREMHYPOCOL')
     _plot_lept(df=df, name='BREMHYPOAREA')
+    _plot_lept(df=df, name=          'PT')
 
     _plot_evt(df=df, name='nPVs')
     _plot_evt(df=df, name='block')
@@ -38,11 +40,24 @@ def _plot_evt(df : pnd.DataFrame, name : str) -> None:
     plt.close()
 # -----------------------------------------
 def _plot_lept(df : pnd.DataFrame, name : str) -> None:
-    df[f'L1_{name}'].plot.hist(label='$e^+$', bins=100, alpha=0.3)
-    df[f'L2_{name}'].plot.hist(label='$e^-$', bins=100, histtype='step')
+    if name == 'PT':
+        arr_l1 = df[f'L1_{name}'].to_numpy()
+        arr_l2 = df[f'L2_{name}'].to_numpy()
+
+        arr_l1_log = numpy.log(arr_l1)
+        arr_l2_log = numpy.log(arr_l2)
+
+        plt.hist(arr_l1_log, label='$e^+$', bins=100, alpha=0.3)
+        plt.hist(arr_l2_log, label='$e^-$', bins=100, histtype='step')
+
+        plt.xlabel(f'Log {name}')
+    else:
+        df[f'L1_{name}'].plot.hist(label='$e^+$', bins=100, alpha=0.3)
+        df[f'L2_{name}'].plot.hist(label='$e^-$', bins=100, histtype='step')
+
+        plt.xlabel(name)
 
     plt.legend()
-    plt.xlabel(name)
     plt.savefig(f'{Data.out_dir}/{name}.png')
     plt.close()
 # -----------------------------------------
