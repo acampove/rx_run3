@@ -127,8 +127,6 @@ def test_predict_row_bias(bias : float):
     - Introducing data with row dependent bias
     - Training a real model that outputs the correction
     '''
-    corr= 1.0 / bias
-
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
     ddf = cut.get_ddf(bias=bias, kind='row')
     pre = PreProcessor(ddf=ddf, cfg=cfg)
