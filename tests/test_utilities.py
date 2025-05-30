@@ -20,26 +20,39 @@ class Data:
 def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 # -----------------------------------------
-def _plot_distributions(df : pnd.DataFrame) -> None:
-    _plot_vtx(df=df)
-    _plot_brem(df=df)
-    _plot_lept(df=df, name= 'BREMHYPOROW')
-    _plot_lept(df=df, name= 'BREMHYPOCOL')
-    _plot_lept(df=df, name='BREMHYPOAREA')
-    _plot_lept(df=df, name=          'PT')
+def _plot_distributions(df : pnd.DataFrame, test_name : str) -> None:
+    _plot_vtx( test_name=test_name, df=df)
+    _plot_brem(test_name=test_name, df=df)
+    _plot_lept(test_name=test_name, df=df, name= 'BREMHYPOROW')
+    _plot_lept(test_name=test_name, df=df, name= 'BREMHYPOCOL')
+    _plot_lept(test_name=test_name, df=df, name='BREMHYPOAREA')
+    _plot_lept(test_name=test_name, df=df, name=          'PT')
 
-    _plot_evt(df=df, name='nPVs')
-    _plot_evt(df=df, name='block')
+    _plot_evt(test_name=test_name, df=df, name='nPVs')
+    _plot_evt(test_name=test_name, df=df, name='block')
 # -----------------------------------------
-def _plot_evt(df : pnd.DataFrame, name : str) -> None:
+def _plot_evt(
+        df        : pnd.DataFrame,
+        test_name : str,
+        name      : str) -> None:
+    out_dir = f'{Data.out_dir}/{test_name}'
+    os.makedirs(out_dir, exist_ok=True)
+
     df[name].plot.hist(bins=30)
 
     plt.legend()
     plt.xlabel(name)
-    plt.savefig(f'{Data.out_dir}/{name}.png')
+    plt.savefig(f'{out_dir}/{name}.png')
     plt.close()
 # -----------------------------------------
-def _plot_lept(df : pnd.DataFrame, name : str) -> None:
+def _plot_lept(
+        df        : pnd.DataFrame,
+        test_name : str,
+        name      : str) -> None:
+
+    out_dir = f'{Data.out_dir}/{test_name}'
+    os.makedirs(out_dir, exist_ok=True)
+
     if name == 'PT':
         arr_l1 = df[f'L1_{name}'].to_numpy()
         arr_l2 = df[f'L2_{name}'].to_numpy()
@@ -58,10 +71,13 @@ def _plot_lept(df : pnd.DataFrame, name : str) -> None:
         plt.xlabel(name)
 
     plt.legend()
-    plt.savefig(f'{Data.out_dir}/{name}.png')
+    plt.savefig(f'{out_dir}/{name}.png')
     plt.close()
 # -----------------------------------------
-def _plot_brem(df : pnd.DataFrame) -> None:
+def _plot_brem(df : pnd.DataFrame, test_name : str) -> None:
+    out_dir = f'{Data.out_dir}/{test_name}'
+    os.makedirs(out_dir, exist_ok=True)
+
     df['nbrem'  ] = df['L1_brem'] + df['L2_brem']
 
     df['L1_brem'].plot.hist(label='$e^+$', bins=10, alpha=0.3)
@@ -70,27 +86,32 @@ def _plot_brem(df : pnd.DataFrame) -> None:
 
     plt.legend()
     plt.xlabel('brem')
-    plt.savefig(f'{Data.out_dir}/brem.png')
+    plt.savefig(f'{out_dir}/brem.png')
     plt.close()
 # -----------------------------------------
-def _plot_vtx(df : pnd.DataFrame) -> None:
+def _plot_vtx(df : pnd.DataFrame, test_name : str) -> None:
+    out_dir = f'{Data.out_dir}/{test_name}'
+    os.makedirs(out_dir, exist_ok=True)
+
     df['B_END_VX'].plot.hist(label='VX', bins=80, alpha=0.3, range=[-20, +20])
     df['B_END_VY'].plot.hist(label='VY', bins=80, alpha=0.3, range=[-20, +20])
     df['B_END_VY'].plot.hist(label='VY', bins=80, alpha=0.3, range=[-20, +20])
 
     plt.yscale('log')
     plt.xlabel('B vertex position')
-    plt.savefig(f'{Data.out_dir}/end_vtx.png')
+    plt.savefig(f'{out_dir}/end_vtx.png')
     plt.close()
 # -----------------------------------------
-def test_get_ddf():
+@pytest.mark.parametrize('bias', [0.8, 1.0, 1.2])
+def test_get_ddf_flat_bias(bias : float):
     '''
     Tests getter of dask dataframe
     '''
-    ddf = cut.get_ddf(bias=1.0, kind='flat')
+    ddf = cut.get_ddf(bias=bias, kind='flat')
     df  = ddf.compute()
 
     assert len(df) == 100_000
 
-    _plot_distributions(df=df)
+    bias_str = f'{100 * bias:.0f}'
+    _plot_distributions(df=df, test_name=f'nobias/{bias_str}')
 # -----------------------------------------
