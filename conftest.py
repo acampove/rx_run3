@@ -8,10 +8,12 @@ from dask.distributed      import Client
 from dmu.logging.log_store import LogStore
 
 # ---------------------------------------
-def pytest_configure(_config : pytest.Config) -> None:
+def pytest_configure(config : pytest.Config) -> None:
     '''
     Runs before all tests, needed to do global initialization. e.g. logging level setting
     '''
+    _ = config
+
     LogStore.set_level('ecal_calibration:regressor'   , 10)
     LogStore.set_level('ecal_calibration:preprocessor', 10)
 # ---------------------------------------
