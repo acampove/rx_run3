@@ -18,6 +18,7 @@ def _plot_target_vs_features(arr_pred : numpy.ndarray, features : Tensor) -> Non
     plt.scatter(arr_feat, arr_pred, s=5)
     plt.xlabel('Feature')
     plt.ylabel('Prediction')
+    plt.grid()
     plt.show()
 # -----------------------------------------------------------
 def _plot_target_vs_prediction(
@@ -27,6 +28,7 @@ def _plot_target_vs_prediction(
     plt.scatter(real, pred, s=5)
     plt.xlabel('Real')
     plt.ylabel('Predicted')
+    plt.grid()
     plt.show()
 # -----------------------------------------------------------
 def _plot_targets(
