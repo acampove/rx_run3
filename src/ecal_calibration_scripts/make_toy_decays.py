@@ -17,6 +17,7 @@ class Data:
     '''
     data class
     '''
+    nentries = 10_000
     ntup_ver = 'v2'
     ana_dir  = os.environ['ANADIR']
     l_branch = [
@@ -48,7 +49,7 @@ def _get_df() -> pnd.DataFrame:
     root_path = f'{Data.ana_dir}/Rapidsim/{Data.ntup_ver}/bpkpee/13TeV/bpkpee_tree.root'
     ifile = uproot.open(root_path)
     tree  = ifile['DecayTree']
-    df    = tree.arrays(Data.l_branch, library='pd', entry_stop=10_000)
+    df    = tree.arrays(Data.l_branch, library='pd', entry_stop=Data.nentries)
     df    = df.rename(columns=Data.d_name)
 
     return df
