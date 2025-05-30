@@ -8,7 +8,7 @@ from dask.distributed import Client
 
 # ---------------------------------------
 @pytest.fixture(scope='session')
-def dask_client():
+def _dask_client():
     '''
     Create a dask client to:
 
