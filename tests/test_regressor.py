@@ -2,6 +2,7 @@
 Script with code needed to test Calibration class
 '''
 import numpy
+import pytest
 import matplotlib.pyplot as plt
 
 from ecal_calibration.preprocessor import PreProcessor
@@ -43,20 +44,28 @@ def test_loader():
     obj = Regressor(ddf=ddf, cfg=cfg)
     obj.load()
 # -----------------------------------------------------------
-def test_predict():
+@pytest.mark.parametrize('bias', [0.5, 0.8, 1.0, 1.2, 1.4])
+def test_constant_predict(bias : float):
     '''
-    Tests predicting targets from existing features 
+    Meant to test everything around network by:
+
+    - Introducing data with constant (not dependent on features) bias
+    - Training a constant model that outputs that bias
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-
-    ddf = cut.get_ddf(bias=1.1, kind='flat')
+    ddf = cut.get_ddf(bias=bias, kind='flat')
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
 
     cfg = cut.load_cfg(name='tests/regressor/simple')
-    obj = Regressor(ddf=ddf, cfg=cfg)
-    pred= obj.predict(features=pre.features)
-    real= pre.targets.detach().numpy()
+    cfg['train']['epochs']   = 600
+    cfg['saving']['out_dir'] = 'regressor/constant_predict'
 
-    _plot_targets(pred=pred, real=real)
+    obj = Regressor(ddf=ddf, cfg=cfg)
+    obj.train(constant_target=bias)
+
+    pred= obj.predict(features=pre.features)
+
+    assert numpy.allclose(pred, 1./bias, rtol=1e-4)
 # -----------------------------------------------------------
+    #_plot_targets(pred=pred, real=real)
