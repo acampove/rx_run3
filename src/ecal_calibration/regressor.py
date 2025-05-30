@@ -91,13 +91,18 @@ class Regressor:
         net.eval()
         self._net = net
     # ---------------------------------------------
-    def load(self) -> None:
+    def load(self) -> bool:
         '''
         Will load model. This would do exactly what `train` does, but without training.
         The model has to exist as a `mode.pth` file.
+
+        If model is not found, return False
         '''
         model_path = self._get_model_path()
         log.debug(f'Picking model from: {model_path}')
+
+        if not os.path.isfile(model_path):
+            return False
 
         net        = torch.load(model_path, weights_only=False)
         net.eval()
