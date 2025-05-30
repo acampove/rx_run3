@@ -51,6 +51,9 @@ class Regressor:
         arr_target = df[target]
         df         = df.drop(target, axis=1)
 
+        log.debug(f'Using features: {df.columns.tolist()}')
+        log.debug(f'Using target  : {target}')
+
         features   = torch.tensor(df.values , dtype=torch.float32)
         targets    = torch.tensor(arr_target, dtype=torch.float32)
 
@@ -109,7 +112,10 @@ class Regressor:
         criterion = nn.MSELoss()
 
         cfg_trn   = self._cfg['train']
-        optimizer = optim.Adam(net.parameters(), lr=cfg_trn['lr'])
+
+        learning_rate = cfg_trn['lr']
+        log.debug(f'Using learning_rate: {learning_rate}')
+        optimizer = optim.Adam(net.parameters(), lr=learning_rate)
         for epoch in range(cfg_trn['epochs']):
             net.train()
             optimizer.zero_grad()
