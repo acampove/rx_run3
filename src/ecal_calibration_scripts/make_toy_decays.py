@@ -3,6 +3,7 @@ Script with code meant to create JSON files with
 toy decays, needed for tests
 '''
 import os
+import argparse
 from importlib.resources import files
 
 import numpy
@@ -97,10 +98,19 @@ def _add_lepton_columns(df : pnd.DataFrame, lepton : str) -> pnd.DataFrame:
 
     return df
 # ------------------------------------
+def _parse_args():
+    parser = argparse.ArgumentParser(description='Script used to produce JSON file with toy decays needed for running tests')
+    parser.add_argument('-n', '--nentries', type=int, help='Number of entries to process', default=Data.nentries)
+    args = parser.parse_args()
+
+    Data.nentries = args.nentries
+# ------------------------------------
 def main():
     '''
     Start here
     '''
+    _parse_args()
+
     df = _get_df()
     df = _reformat_df(df=df)
 
