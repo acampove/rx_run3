@@ -35,15 +35,26 @@ def _plot_df(
         corr      : float) -> None:
 
     _plot_features(df=df, test_name=test_name)
-    _plot_bias(    df=df, test_name=test_name, corr=corr)
+    _plot_bias(  df=df, test_name=test_name, corr=corr)
+    _plot_var_mu(df=df, test_name=test_name)
 # ---------------------------------------------
-def _plot_bias(df : pnd.DataFrame, test_name : str, corr : float) -> None:
-    df['mu'].plot.hist(bins=101, range=[0.5, 1.5], label='measured')
-    if corr is not None:
-        plt.axvline(x=corr, ls=':', label='expected', color='red')
-
+def _plot_var_mu(df : pnd.DataFrame, test_name : str) -> None:
     out_dir = f'{Data.out_dir}/{test_name}'
     os.makedirs(out_dir, exist_ok=True)
+    for column in df.columns:
+        df.plot.scatter(x=column, y='mu', s=5)
+
+        plt.legend()
+        plt.savefig(f'{out_dir}/{column}_mu.png')
+        plt.close()
+# ---------------------------------------------
+def _plot_bias(df : pnd.DataFrame, test_name : str, corr : float) -> None:
+    out_dir = f'{Data.out_dir}/{test_name}'
+    os.makedirs(out_dir, exist_ok=True)
+
+    df['mu'].plot.hist(bins=101, label='measured')
+    if corr is not None:
+        plt.axvline(x=corr, ls=':', label='expected', color='red')
 
     plt.legend()
     plt.savefig(f'{out_dir}/mu.png')
