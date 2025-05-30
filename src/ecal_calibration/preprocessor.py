@@ -130,6 +130,21 @@ class PreProcessor:
 
         return row_sr
     # ---------------------------------
+    def _values(self, kind : str) -> tensor:
+        ddf = self.get_data()
+        df  = ddf.compute()
+
+        if   kind == 'features':
+            l_col = [ var for var in df.columns if var != 'mu' ]
+        elif kind == 'targets':
+            l_col = [ var for var in df.columns if var == 'mu' ]
+        else:
+            raise ValueError(f'Invalid kind of value: {kind}')
+
+        arr_val = df[l_col].to_numpy()
+
+        return torch.tensor(arr_val, dtype=torch.float32)
+    # ---------------------------------
     def get_data(self) -> DDF:
         '''
         Returns dask dataframe after preprocessing, it contains.
