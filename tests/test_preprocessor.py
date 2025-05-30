@@ -89,6 +89,7 @@ def test_flat_bias(bias : float, _dask_client : Client):
     - The features can be retrieved
     - The bias is the number that was injected
     '''
+    corr= 1.0 / bias
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
     ddf = cut.get_ddf(bias=bias, kind='flat')
 
@@ -97,11 +98,11 @@ def test_flat_bias(bias : float, _dask_client : Client):
     df  = ddf.head(100)
 
     name = f'flat_bias/{100 * bias:.0f}'
-    _plot_df(df=df, test_name=name, corr= 1./bias)
+    _plot_df(df=df, test_name=name, corr=corr)
 
     arr_mu = df['mu'].to_numpy()
 
-    assert numpy.allclose(arr_mu, 1 / bias, rtol=1e-5)
+    assert numpy.allclose(arr_mu, corr, rtol=1e-5)
     assert set(df.columns) == Data.columns
 # ---------------------------------------------
 def test_row_bias(_dask_client : Client):
