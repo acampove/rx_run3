@@ -94,14 +94,14 @@ class Regressor:
         else:
             net = ConstantModel(target=constant_target)
 
-        self._move_to_gpu(net)
-        self._move_to_gpu(features)
-        self._move_to_gpu(targets)
+        net      = self._move_to_gpu(net)
+        features = self._move_to_gpu(features)
+        targets  = self._move_to_gpu(targets)
 
         criterion = nn.MSELoss()
-        optimizer = optim.Adam(net.parameters(), lr=cfg_trn['lr'])
 
         cfg_trn   = self._cfg['train']
+        optimizer = optim.Adam(net.parameters(), lr=cfg_trn['lr'])
         for epoch in range(cfg_trn['epochs']):
             net.train()
             optimizer.zero_grad()
