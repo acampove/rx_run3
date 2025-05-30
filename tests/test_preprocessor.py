@@ -83,6 +83,7 @@ def test_nobias(_dask_client : Client):
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
+    df  = ddf.head(1000)
 
     df  = ddf.compute()
     _plot_df(df=df, test_name='nobias', corr=None)
@@ -91,6 +92,8 @@ def test_nobias(_dask_client : Client):
 
     assert numpy.allclose(arr_mu, 1, rtol=1e-5)
     assert set(df.columns) == Data.columns
+
+    _plot_df(df=df, test_name='nobias', corr= None)
 # ---------------------------------------------
 @pytest.mark.parametrize('bias', [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3])
 def test_flat_bias(bias : float, _dask_client : Client):
@@ -115,6 +118,8 @@ def test_flat_bias(bias : float, _dask_client : Client):
 
     assert numpy.allclose(arr_mu, corr, rtol=1e-5)
     assert set(df.columns) == Data.columns
+
+    _plot_df(df=df, test_name=name, corr= None)
 # ---------------------------------------------
 def test_row_bias(_dask_client : Client):
     '''
