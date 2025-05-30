@@ -12,7 +12,7 @@ from torch import Tensor
 
 from dask.dataframe           import DataFrame as DDF
 from dmu.logging.log_store    import LogStore
-from ecal_calibration.network import Network
+from ecal_calibration.network import Network, ConstantModel
 
 log=LogStore.add_logger('ecal_calibration:regressor')
 # ---------------------------------------------
@@ -62,16 +62,25 @@ class Regressor:
         log.info(f'Saving model to: {out_path}')
         torch.save(regressor, out_path)
     # ---------------------------------------------
-    def train(self) -> None:
+    def train(self, constant_target : float = None) -> None:
         '''
         Will train the regressor
+
+        Parameters
+        -------------
+        constant_target (float) : By default None. If passed, will create network that outputs always this value. Used for debugging
         '''
+
         features, targets = self._get_training_data()
         _, nfeatures      = features.shape
 
         cfg_trn   = self._cfg['train']
 
-        net       = Network(nfeatures=nfeatures)
+        if constant_target is None:
+            net = Network(nfeatures=nfeatures)
+        else:
+            net = ConstantModel(target=constant_target)
+
         criterion = nn.MSELoss()
         optimizer = optim.Adam(net.parameters(), lr=cfg_trn['lr'])
 
