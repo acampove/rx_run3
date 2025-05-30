@@ -64,14 +64,16 @@ class Regressor:
         log.info(f'Saving model to: {out_path}')
         torch.save(regressor, out_path)
     # ---------------------------------------------
-    def _move_to_gpu(self, x) -> None:
+    def _move_to_gpu(self, x):
         if not torch.cuda.is_available():
             log.warning('Cannot move object to GPU, GPU not available?')
-            return
+            return x
 
         log.debug('Moving object to GPU')
 
-        x.to(self._device)
+        x = x.to(self._device)
+
+        return x
     # ---------------------------------------------
     def train(self, constant_target : float = None) -> None:
         '''
