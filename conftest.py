@@ -31,7 +31,8 @@ def _dask_client():
     - Turn off multithreading. Due to lack of thread safety in vector
     - Turn on multiprocessing
     '''
-    client = Client(processes=True)
+    client = Client(n_workers=1, threads_per_worker=1, processes=True)
+
     yield client
     client.close()
 # ---------------------------------------
