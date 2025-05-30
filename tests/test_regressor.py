@@ -5,10 +5,20 @@ import numpy
 import pytest
 import matplotlib.pyplot as plt
 
+from torch                         import Tensor
+from dask.distributed              import Client
 from ecal_calibration.preprocessor import PreProcessor
 from ecal_calibration.regressor    import Regressor
 from ecal_calibration              import utilities as cut
 
+# -----------------------------------------------------------
+def _plot_target_vs_features(arr_pred : numpy.ndarray, features : Tensor) -> None:
+    arr_feat = features.numpy()
+
+    plt.scatter(arr_feat, arr_pred, s=5)
+    plt.xlabel('Feature')
+    plt.ylabel('Prediction')
+    plt.show()
 # -----------------------------------------------------------
 def _plot_target_vs_prediction(
         pred : numpy.ndarray,
