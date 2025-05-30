@@ -4,6 +4,8 @@ Module containing the Regressor class
 import os
 
 import torch
+import numpy
+
 from torch import nn
 from torch import optim
 from torch import Tensor
@@ -85,6 +87,8 @@ class Regressor:
                 log.info(f'Epoch {epoch}, Loss: {loss.item():.4f}')
 
         self._save_regressor(regressor=net)
+
+        net.eval()
         self._net = net
     # ---------------------------------------------
     def load(self) -> None:
