@@ -3,8 +3,10 @@ Module holding PreProcessor class
 '''
 import math
 
+import torch
 import pandas as pnd
 
+from torch          import tensor
 from vector         import MomentumObject3D as v3d
 from dask.dataframe import DataFrame        as DDF
 
