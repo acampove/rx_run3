@@ -13,7 +13,7 @@ def test_simple():
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
 
-    ddf = cut.get_ddf()
+    ddf = cut.get_ddf(bias=1.1, kind='flat')
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
 
