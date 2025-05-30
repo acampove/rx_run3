@@ -52,20 +52,22 @@ def test_constant_predict(bias : float):
     - Introducing data with constant (not dependent on features) bias
     - Training a constant model that outputs that bias
     '''
+    corr= 1.0 / bias
+
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
     ddf = cut.get_ddf(bias=bias, kind='flat')
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
 
     cfg = cut.load_cfg(name='tests/regressor/simple')
-    cfg['train']['epochs']   = 600
+    cfg['train']['epochs']   = 200
     cfg['saving']['out_dir'] = 'regressor/constant_predict'
 
     obj = Regressor(ddf=ddf, cfg=cfg)
-    obj.train(constant_target=bias)
+    obj.train(constant_target=corr)
 
     pred= obj.predict(features=pre.features)
 
-    assert numpy.allclose(pred, 1./bias, rtol=1e-4)
+    assert numpy.allclose(pred, corr, rtol=1e-5)
 # -----------------------------------------------------------
     #_plot_targets(pred=pred, real=real)
