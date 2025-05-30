@@ -26,7 +26,7 @@ class PreProcessor:
     - npvs  : Number of primary vertices
     - block : Index representing part of the year when data was collected
 
-    The label will be called "mu"
+    The targer will be called "mu" and will represent the correction needed
     '''
     # ---------------------------------
     def __init__(self, ddf : DDF, cfg : dict):
@@ -175,7 +175,7 @@ class PreProcessor:
     @property
     def targets(self) -> tensor:
         '''
-        Returns pytorch tensor with values of regression targets 
+        Returns pytorch tensor with values of regression targets
         '''
 
         return self._values(kind='targets')
