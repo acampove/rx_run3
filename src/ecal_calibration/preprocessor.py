@@ -160,5 +160,23 @@ class PreProcessor:
         ddf_res = ddf.apply(self._build_features, axis=1)
         ddf_res = ddf_res.persist()
 
-        return ddf
+        self._ddf_res = ddf_res
+
+        return ddf_res
+    # ---------------------------------
+    @property
+    def features(self) -> tensor:
+        '''
+        Returns pytorch tensor with features
+        '''
+
+        return self._values(kind='features')
+    # ---------------------------------
+    @property
+    def targets(self) -> tensor:
+        '''
+        Returns pytorch tensor with values of regression targets 
+        '''
+
+        return self._values(kind='targets')
 # --------------------------
