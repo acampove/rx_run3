@@ -4,6 +4,7 @@ Module testing PreProcessor class
 import os
 import logging
 import numpy
+import torch
 import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
@@ -124,13 +125,14 @@ def test_row_bias(_dask_client : Client):
 
     assert set(df.columns) == Data.columns
 # ---------------------------------------------
-def test_features(_dask_client : Client):
+@pytest.mark.parametrize('bias', [0.9, 1.0, 1.2])
+def test_features_target(_dask_client : Client, bias : float):
     '''
     Preprocesses a Dask dataframe and provides the tensor with the
     features
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    ddf = cut.get_ddf(bias=1.0, kind='flat')
+    ddf = cut.get_ddf(bias=bias, kind='flat')
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     fet = pre.features
@@ -142,4 +144,7 @@ def test_features(_dask_client : Client):
     assert ncols == 6
     assert nrows >  0
     assert nrows == nsample
+
+    corr = 1.0 / bias
+    assert torch.allclose(tgt, torch.tensor(corr), rtol=1e-5)
 # ---------------------------------------------
