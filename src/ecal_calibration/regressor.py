@@ -89,16 +89,9 @@ class Regressor:
         Will load model. This would do exactly what `train` does, but without training.
         The model has to exist as a `mode.pth` file.
         '''
-        log.info('Loading model')
-        features, _  = self._get_training_data()
-        _, nfeatures = features.shape
-        model_path   = self._get_model_path()
-
+        model_path = self._get_model_path()
         log.debug(f'Picking model from: {model_path}')
-        model        = torch.load(model_path)
 
-        net       = Network(nfeatures=nfeatures)
-        net.load_sate_dict(model)
-        log.debug('Setting to evaluation mode')
+        net        = torch.load(model_path, weights_only=False)
         net.eval()
 # ---------------------------------------------
