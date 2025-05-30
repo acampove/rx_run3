@@ -25,7 +25,7 @@ def _plot_target_vs_prediction(
         pred : numpy.ndarray,
         real : numpy.ndarray) -> None:
 
-    plt.scatter(real, pred, s=5)
+    plt.scatter(real, pred, s=1)
     plt.xlabel('Real')
     plt.ylabel('Predicted')
     plt.grid()
@@ -146,8 +146,8 @@ def test_predict_row_bias(_dask_client : Client, bias : float):
     ddf = pre.get_data()
 
     cfg = cut.load_cfg(name='tests/regressor/simple')
-    cfg['train']['epochs']   =    400
-    cfg['input']['nentries'] = 10_000
+    cfg['train']['epochs']   =  20000
+    #cfg['input']['nentries'] = 30_000
     cfg['saving']['out_dir'] = 'regressor/predict_row_bias'
 
     obj = Regressor(ddf=ddf, cfg=cfg)
