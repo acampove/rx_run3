@@ -13,7 +13,6 @@ from torch import Tensor
 from dask.dataframe           import DataFrame as DDF
 from dmu.logging.log_store    import LogStore
 from ecal_calibration.network import Network, ConstantModel
-from ecal_calibration         import utilities as cut
 
 log=LogStore.add_logger('ecal_calibration:regressor')
 # ---------------------------------------------
@@ -41,7 +40,7 @@ class Regressor:
     def _get_training_data(self) -> tuple[Tensor,Tensor]:
         target     = self._cfg['target']
 
-        if 'nentries' in self._cfg['input']:
+        if 'nentries' in self._cfg['input'] and self._cfg['input']['nentries'] > 0:
             nentries = self._cfg['input']['nentries']
             log.warning(f'Picking up only {nentries} entries')
             df       = self._ddf.head(nentries)
