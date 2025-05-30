@@ -33,6 +33,8 @@ class Regressor:
         self._ddf = ddf
         self._cfg = cfg
 
+        self._device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
         self._net : Network
     # ---------------------------------------------
     def _get_training_data(self) -> tuple[Tensor,Tensor]:
@@ -62,6 +64,15 @@ class Regressor:
         log.info(f'Saving model to: {out_path}')
         torch.save(regressor, out_path)
     # ---------------------------------------------
+    def _move_to_gpu(self, x) -> None:
+        if not torch.cuda.is_available():
+            log.warning('Cannot move object to GPU, GPU not available?')
+            return
+
+        log.debug('Moving object to GPU')
+
+        x.to(self._device)
+    # ---------------------------------------------
     def train(self, constant_target : float = None) -> None:
         '''
         Will train the regressor
@@ -71,19 +82,24 @@ class Regressor:
         constant_target (float) : By default None. If passed, will create network that outputs always this value. Used for debugging
         '''
 
-        features, targets = self._get_training_data()
-        _, nfeatures      = features.shape
+        features, targets   = self._get_training_data()
+        nsamples, nfeatures = features.shape
 
-        cfg_trn   = self._cfg['train']
+        log.info(f'Training with {nsamples} samples')
 
         if constant_target is None:
             net = Network(nfeatures=nfeatures)
         else:
             net = ConstantModel(target=constant_target)
 
+        self._move_to_gpu(net)
+        self._move_to_gpu(features)
+        self._move_to_gpu(targets)
+
         criterion = nn.MSELoss()
         optimizer = optim.Adam(net.parameters(), lr=cfg_trn['lr'])
 
+        cfg_trn   = self._cfg['train']
         for epoch in range(cfg_trn['epochs']):
             net.train()
             optimizer.zero_grad()
