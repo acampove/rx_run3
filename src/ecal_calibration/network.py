@@ -19,12 +19,42 @@ class Network(nn.Module):
         '''
         nfeatures (int): Number of features, needed to build first layer
         '''
+        self._nfeatures = nfeatures
+
         super().__init__()
-        self.model = nn.Sequential(
-            nn.Linear(nfeatures, 6),
+
+        self.model      = self._model_v2()
+    # ------------------------------
+    def _model_v1(self) -> nn.Sequential:
+        model = nn.Sequential(
+            nn.Linear(self._nfeatures, 6),
             nn.ReLU(),
             nn.Linear(6, 1)
         )
+
+        return model
+    # ------------------------------
+    def _model_v2(self) -> nn.Sequential:
+        model = self.model = nn.Sequential(
+            nn.Linear(self._nfeatures, 10),
+            nn.ReLU(),
+            nn.Linear(10, 10),
+            nn.ReLU(),
+            nn.Linear(10, 1)
+        )
+
+        return model
+    # ------------------------------
+    def _model_v3(self) -> nn.Sequential:
+        model = nn.Sequential(
+            nn.Linear(self._nfeatures, 6),
+            nn.ReLU(),
+            nn.Linear(6              , 6),
+            nn.ReLU(),
+            nn.Linear(6              , 1)
+        )
+
+        return model
     # ------------------------------
     def forward(self, x : Tensor) -> Tensor:
         '''
