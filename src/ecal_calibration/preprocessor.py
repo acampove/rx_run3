@@ -130,11 +130,14 @@ class PreProcessor:
     # ---------------------------------
     def get_data(self) -> DDF:
         '''
-        Returns dask dataframe after preprocessing
+        Returns dask dataframe after preprocessing, it contains.
+
+        - The features in the class description.
+        - The target for regression, labeled as 'mu'
         '''
+
         ddf = self._apply_selection(ddf=self._ddf)
+        ddf = ddf.apply(self._build_features, axis=1)
 
-        ddf_feat = ddf.apply(self._build_features, axis=1)
-
-        return ddf_feat
+        return ddf
 # --------------------------
