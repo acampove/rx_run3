@@ -14,8 +14,9 @@ from ecal_calibration              import utilities as cut
 # -----------------------------------------------------------
 def _plot_target_vs_features(arr_pred : numpy.ndarray, features : Tensor) -> None:
     arr_feat = features.numpy()
+    arr_feat = arr_feat.T[0] # The zeroth feature is the one the target depends on, for now
 
-    plt.scatter(arr_feat, arr_pred, s=5)
+    plt.scatter(arr_feat, arr_pred, s=1)
     plt.xlabel('Feature')
     plt.ylabel('Prediction')
     plt.grid()
