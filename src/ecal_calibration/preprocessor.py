@@ -37,6 +37,7 @@ class PreProcessor:
         self._cfg      = cfg
         self._brem_cut = 'L1_brem + L2_brem == 1'
         self._neg_tol  = -10
+        self._ddf_res  : DDF
     # ---------------------------------
     def _apply_selection(self, ddf : DDF) -> DDF:
         ddf = ddf.query(self._brem_cut)
@@ -152,9 +153,12 @@ class PreProcessor:
         - The features in the class description.
         - The target for regression, labeled as 'mu'
         '''
+        if hasattr(self, '_ddf_res'):
+            return self._ddf_res
 
-        ddf = self._apply_selection(ddf=self._ddf)
-        ddf = ddf.apply(self._build_features, axis=1)
+        ddf     = self._apply_selection(ddf=self._ddf)
+        ddf_res = ddf.apply(self._build_features, axis=1)
+        ddf_res = ddf_res.persist()
 
         return ddf
 # --------------------------
