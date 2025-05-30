@@ -72,7 +72,7 @@ def test_get_ddf():
     '''
     Tests getter of dask dataframe
     '''
-    ddf = cut.get_ddf()
+    ddf = cut.get_ddf(bias=1.0, kind='flat')
     df  = ddf.compute()
 
     assert len(df) == 10_000
