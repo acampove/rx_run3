@@ -10,10 +10,32 @@ from ecal_calibration.regressor    import Regressor
 from ecal_calibration              import utilities as cut
 
 # -----------------------------------------------------------
-def _plot_targets(pred : numpy.ndarray, real : numpy.ndarray) -> None:
-    plt.hist(real, bins=60, range=[-2, 3], label='Real'     , alpha   =   0.3)
-    plt.hist(pred, bins=60, range=[-2, 3], label='Predicted', histtype='step')
+def _plot_target_vs_prediction(
+        pred : numpy.ndarray,
+        real : numpy.ndarray) -> None:
 
+    plt.scatter(real, pred, s=5)
+    plt.xlabel('Real')
+    plt.ylabel('Predicted')
+    plt.show()
+# -----------------------------------------------------------
+def _plot_targets(
+        pred : numpy.ndarray,
+        real : numpy.ndarray,
+        corr : float) -> None:
+
+    minx = min(numpy.min(pred), numpy.min(real))
+    maxx = max(numpy.max(pred), numpy.max(real))
+
+    plt.hist(real, bins=80, range=[minx, maxx], label='Training' , alpha   =   0.3)
+    plt.hist(pred, bins=80, range=[minx, maxx], label='Predicted', histtype='step')
+
+    if corr is not None:
+        plt.axvline(x=corr, label='Correction', ls=':', color='red')
+
+    plt.legend()
+    plt.xlabel('Real')
+    plt.ylabel('Predicted')
     plt.show()
 # -----------------------------------------------------------
 def test_flat_bias():
