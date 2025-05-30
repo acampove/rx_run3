@@ -122,10 +122,10 @@ class PreProcessor:
         data['row'] = row_sr[f'{lep}_BREMHYPOROW']
         data['col'] = row_sr[f'{lep}_BREMHYPOCOL']
         data['are'] = row_sr[f'{lep}_BREMHYPOAREA']
-        data['eng'] = row_sr[f'{lep}_BREMTRACKBASEDENERGY']
+        data['eng'] = row_sr[f'{lep}_BREMTRACKBASEDENERGY'] / 1000 # Very large numbers seem to break down training
         data['npv'] = row_sr['nPVs']
         data['blk'] = row_sr['block']
-        data['mu' ] = self._get_correction(row=row_sr, lepton=lep)
+        data['mu' ] = 1000 * self._get_correction(row=row_sr, lepton=lep)
 
         row_sr = pnd.Series(data)
 
