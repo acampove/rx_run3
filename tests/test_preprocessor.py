@@ -134,5 +134,12 @@ def test_features(_dask_client : Client):
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     fet = pre.features
+    tgt = pre.targets
 
+    nrows, ncols = fet.shape
+    nsample, _   = tgt.shape
+
+    assert ncols == 6
+    assert nrows >  0
+    assert nrows == nsample
 # ---------------------------------------------
