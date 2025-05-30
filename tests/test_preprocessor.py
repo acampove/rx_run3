@@ -124,3 +124,15 @@ def test_row_bias(_dask_client : Client):
 
     assert set(df.columns) == Data.columns
 # ---------------------------------------------
+def test_features(_dask_client : Client):
+    '''
+    Preprocesses a Dask dataframe and provides the tensor with the
+    features
+    '''
+    cfg = cut.load_cfg(name='tests/preprocessor/simple')
+    ddf = cut.get_ddf(bias=1.0, kind='flat')
+
+    pre = PreProcessor(ddf=ddf, cfg=cfg)
+    fet = pre.features
+
+# ---------------------------------------------
