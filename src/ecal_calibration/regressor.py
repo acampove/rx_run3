@@ -111,15 +111,25 @@ class Regressor:
 
         return True
     # ---------------------------------------------
-    def predict(self) -> numpy.ndarray:
+    def predict(self, features : Tensor) -> numpy.ndarray:
         '''
         Runs prediction of targets and returns them as a numpy array
 
-        If model does not exist it will 
+        If model does not exist it will train it with the data passed in the initializer
+
+        Parameters
+        ---------------
+        features: Tensor with features to predict from
+
+        Returns
+        ---------------
+        Numpy array with values of predicted targets
         '''
         if not self.load():
             log.info('Model not found, training it')
             self.train()
 
+        targets = self._net(features)
 
+        return targets.detach().numpy()
 # ---------------------------------------------
