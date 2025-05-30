@@ -43,3 +43,20 @@ def test_loader():
     obj = Regressor(ddf=ddf, cfg=cfg)
     obj.load()
 # -----------------------------------------------------------
+def test_predict():
+    '''
+    Tests predicting targets from existing features 
+    '''
+    cfg = cut.load_cfg(name='tests/preprocessor/simple')
+
+    ddf = cut.get_ddf(bias=1.1, kind='flat')
+    pre = PreProcessor(ddf=ddf, cfg=cfg)
+    ddf = pre.get_data()
+
+    cfg = cut.load_cfg(name='tests/regressor/simple')
+    obj = Regressor(ddf=ddf, cfg=cfg)
+    pred= obj.predict(features=pre.features)
+    real= pre.targets.detach().numpy()
+
+    _plot_targets(pred=pred, real=real)
+# -----------------------------------------------------------
