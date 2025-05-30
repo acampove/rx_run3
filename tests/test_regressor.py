@@ -7,9 +7,9 @@ from ecal_calibration.regressor    import Regressor
 from ecal_calibration              import utilities as cut
 
 # -----------------------------------------------------------
-def test_simple():
+def test_flat_bias():
     '''
-    Simplest test for calibration
+    Simplest test for calibration with biased data
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
 
