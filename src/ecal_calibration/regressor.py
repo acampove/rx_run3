@@ -102,9 +102,24 @@ class Regressor:
         log.debug(f'Picking model from: {model_path}')
 
         if not os.path.isfile(model_path):
+            log.info(f'Model not found in: {model_path}')
             return False
 
         net        = torch.load(model_path, weights_only=False)
         net.eval()
         self._net  = net
+
+        return True
+    # ---------------------------------------------
+    def predict(self) -> numpy.ndarray:
+        '''
+        Runs prediction of targets and returns them as a numpy array
+
+        If model does not exist it will 
+        '''
+        if not self.load():
+            log.info('Model not found, training it')
+            self.train()
+
+
 # ---------------------------------------------
