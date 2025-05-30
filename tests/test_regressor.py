@@ -118,7 +118,8 @@ def test_predict_flat_bias(bias : float):
     ddf = pre.get_data()
 
     cfg = cut.load_cfg(name='tests/regressor/simple')
-    cfg['train']['epochs']   = 1000
+    cfg['train']['epochs']   =  2_000
+    cfg['input']['nentries'] = 15_000
     cfg['saving']['out_dir'] = 'regressor/predict_flat_bias'
 
     obj = Regressor(ddf=ddf, cfg=cfg)
@@ -130,7 +131,7 @@ def test_predict_flat_bias(bias : float):
 # -----------------------------------------------------------
 #@pytest.mark.parametrize('bias', [0.5, 0.8, 1.0, 1.2, 1.4])
 @pytest.mark.parametrize('bias', [1.0])
-def test_predict_row_bias(bias : float):
+def test_predict_row_bias(_dask_client : Client, bias : float):
     '''
     Meant to test everything by:
 
@@ -143,14 +144,17 @@ def test_predict_row_bias(bias : float):
     ddf = pre.get_data()
 
     cfg = cut.load_cfg(name='tests/regressor/simple')
-    cfg['train']['epochs']   = 2000
+    cfg['train']['epochs']   =    400
+    cfg['input']['nentries'] = 10_000
     cfg['saving']['out_dir'] = 'regressor/predict_row_bias'
 
     obj = Regressor(ddf=ddf, cfg=cfg)
     obj.train()
 
-    pred= obj.predict(features=pre.features)
-    real= pre.targets.numpy()
+    features = pre.features
+    pred     = obj.predict(features=features)
+    real     = pre.targets.numpy()
 
     _plot_target_vs_prediction(pred=pred, real=real)
+    _plot_target_vs_features(arr_pred=pred, features=features)
 # -----------------------------------------------------------
