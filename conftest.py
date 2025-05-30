@@ -1,7 +1,7 @@
 '''
 This module is used by pytest to _inject_ fixtures in the tests
 '''
-
+import os
 import logging
 import pytest
 
@@ -14,6 +14,8 @@ def pytest_configure(config : pytest.Config) -> None:
     Runs before all tests, needed to do global initialization. e.g. logging level setting
     '''
     _ = config
+
+    os.environ['ANADIR'] = '/tmp/tests/ecal_calibration'
 
     logging.getLogger("PIL.PngImagePlugin").setLevel(logging.WARNING)
     logging.getLogger("matplotlib.font_manager").setLevel(logging.WARNING)
