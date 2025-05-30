@@ -9,6 +9,9 @@ import torch
 from torch import nn
 from torch import Tensor
 
+from dmu.logging.log_store import LogStore
+
+log=LogStore.add_logger('ecal_calibration:network')
 # --------------------------------------
 class Network(nn.Module):
     '''
@@ -23,35 +26,69 @@ class Network(nn.Module):
 
         super().__init__()
 
-        self.model      = self._model_v2()
+        self.model      = self._model_v4()
     # ------------------------------
     def _model_v1(self) -> nn.Sequential:
+        log.info('Using model v1')
+
         model = nn.Sequential(
             nn.Linear(self._nfeatures, 6),
             nn.ReLU(),
-            nn.Linear(6, 1)
+            nn.Linear(6,               1)
         )
 
         return model
     # ------------------------------
     def _model_v2(self) -> nn.Sequential:
-        model = self.model = nn.Sequential(
-            nn.Linear(self._nfeatures, 10),
-            nn.ReLU(),
-            nn.Linear(10, 10),
-            nn.ReLU(),
-            nn.Linear(10, 1)
-        )
+        log.info('Using model v2')
 
-        return model
-    # ------------------------------
-    def _model_v3(self) -> nn.Sequential:
         model = nn.Sequential(
             nn.Linear(self._nfeatures, 6),
             nn.ReLU(),
             nn.Linear(6              , 6),
             nn.ReLU(),
             nn.Linear(6              , 1)
+        )
+
+        return model
+    # ------------------------------
+    def _model_v3(self) -> nn.Sequential:
+        log.info('Using model v3')
+
+        model = self.model = nn.Sequential(
+            nn.Linear(self._nfeatures, 10),
+            nn.ReLU(),
+            nn.Linear(10             , 10),
+            nn.ReLU(),
+            nn.Linear(10             ,  1)
+        )
+
+        return model
+    # ------------------------------
+    def _model_v4(self) -> nn.Sequential:
+        log.info('Using model v4')
+
+        model = self.model = nn.Sequential(
+            nn.Linear(self._nfeatures,  6),
+            nn.ReLU(),
+            nn.Linear(6              ,  6),
+            nn.ReLU(),
+            nn.Linear(6              ,  6),
+            nn.ReLU(),
+            nn.Linear(6              ,  1)
+        )
+
+        return model
+    # ------------------------------
+    def _model_v5(self) -> nn.Sequential:
+        log.info('Using model v5')
+
+        model = self.model = nn.Sequential(
+            nn.Linear(self._nfeatures, 13),
+            nn.ReLU(),
+            nn.Linear(13             , 13),
+            nn.ReLU(),
+            nn.Linear(13             ,  1)
         )
 
         return model
