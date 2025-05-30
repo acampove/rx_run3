@@ -1,11 +1,19 @@
 '''
 Script with code needed to test Calibration class
 '''
+import numpy
+import matplotlib.pyplot as plt
 
 from ecal_calibration.preprocessor import PreProcessor
 from ecal_calibration.regressor    import Regressor
 from ecal_calibration              import utilities as cut
 
+# -----------------------------------------------------------
+def _plot_targets(pred : numpy.ndarray, real : numpy.ndarray) -> None:
+    plt.hist(real, bins=60, range=[-2, 3], label='Real'     , alpha   =   0.3)
+    plt.hist(pred, bins=60, range=[-2, 3], label='Predicted', histtype='step')
+
+    plt.show()
 # -----------------------------------------------------------
 def test_flat_bias():
     '''
