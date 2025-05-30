@@ -142,7 +142,7 @@ class Regressor:
 
         net        = torch.load(model_path, weights_only=False)
         net.eval()
-        self._net  = net
+        self._net  = self._move_to_gpu(net)
 
         return True
     # ---------------------------------------------
@@ -164,7 +164,9 @@ class Regressor:
             log.info('Model not found, training it')
             self.train()
 
+        features= self._move_to_gpu(features)
         targets = self._net(features)
+        targets = targets.cpu()
 
         return targets.detach().numpy()
 # ---------------------------------------------
