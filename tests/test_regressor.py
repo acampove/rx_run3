@@ -21,3 +21,17 @@ def test_flat_bias():
     obj = Regressor(ddf=ddf, cfg=cfg)
     obj.train()
 # -----------------------------------------------------------
+def test_loader():
+    '''
+    Tests loading existing model
+    '''
+    cfg = cut.load_cfg(name='tests/preprocessor/simple')
+
+    ddf = cut.get_ddf(bias=1.1, kind='flat')
+    pre = PreProcessor(ddf=ddf, cfg=cfg)
+    ddf = pre.get_data()
+
+    cfg = cut.load_cfg(name='tests/regressor/simple')
+    obj = Regressor(ddf=ddf, cfg=cfg)
+    obj.load()
+# -----------------------------------------------------------
