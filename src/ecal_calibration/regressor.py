@@ -42,13 +42,19 @@ class Regressor:
 
         return features, targets
     # ---------------------------------------------
-    def _save_regressor(self, regressor : Network) -> None:
+    def _get_model_path(self) -> str:
         ana_dir = os.environ['ANADIR']
         out_dir = self._cfg['saving']['out_dir']
         out_dir = f'{ana_dir}/{out_dir}'
         os.makedirs(out_dir, exist_ok=True)
 
         out_path = f'{out_dir}/model.pth'
+
+        return out_path
+    # ---------------------------------------------
+    def _save_regressor(self, regressor : Network) -> None:
+        out_path = self._get_model_path()
+
         log.info(f'Saving model to: {out_path}')
         torch.save(regressor, out_path)
     # ---------------------------------------------
