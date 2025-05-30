@@ -30,6 +30,8 @@ class Regressor:
 
         self._ddf = ddf
         self._cfg = cfg
+
+        self._net : Network
     # ---------------------------------------------
     def _get_training_data(self) -> tuple[Tensor,Tensor]:
         target     = self._cfg['target']
@@ -83,6 +85,7 @@ class Regressor:
                 log.info(f'Epoch {epoch}, Loss: {loss.item():.4f}')
 
         self._save_regressor(regressor=net)
+        self._net = net
     # ---------------------------------------------
     def load(self) -> None:
         '''
@@ -94,4 +97,5 @@ class Regressor:
 
         net        = torch.load(model_path, weights_only=False)
         net.eval()
+        self._net  = net
 # ---------------------------------------------
