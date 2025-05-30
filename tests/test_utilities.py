@@ -47,8 +47,8 @@ def _plot_lept(df : pnd.DataFrame, name : str) -> None:
         arr_l1_log = numpy.log(arr_l1)
         arr_l2_log = numpy.log(arr_l2)
 
-        plt.hist(arr_l1_log, label='$e^+$', bins=100, alpha=0.3)
-        plt.hist(arr_l2_log, label='$e^-$', bins=100, histtype='step')
+        plt.hist(arr_l1_log, range=[-5, +4], label='$e^+$', bins=100, alpha=0.3)
+        plt.hist(arr_l2_log, range=[-5, +4], label='$e^-$', bins=100, histtype='step')
 
         plt.xlabel(f'Log {name}')
     else:
