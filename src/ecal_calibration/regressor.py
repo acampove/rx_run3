@@ -13,6 +13,7 @@ from torch import Tensor
 from dask.dataframe           import DataFrame as DDF
 from dmu.logging.log_store    import LogStore
 from ecal_calibration.network import Network, ConstantModel
+from ecal_calibration         import utilities as cut
 
 log=LogStore.add_logger('ecal_calibration:regressor')
 # ---------------------------------------------
@@ -56,6 +57,11 @@ class Regressor:
 
         features   = torch.tensor(df.values , dtype=torch.float32)
         targets    = torch.tensor(arr_target, dtype=torch.float32)
+        targets    = targets.unsqueeze(1)
+        features   = cut.normalize_tensor(features)
+
+        log.debug(f'Features shape: {features.shape}')
+        log.debug(f'Targets shape: {targets.shape}')
 
         return features, targets
     # ---------------------------------------------
