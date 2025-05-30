@@ -58,7 +58,6 @@ class Regressor:
         features   = torch.tensor(df.values , dtype=torch.float32)
         targets    = torch.tensor(arr_target, dtype=torch.float32)
         targets    = targets.unsqueeze(1)
-        features   = cut.normalize_tensor(features)
 
         log.debug(f'Features shape: {features.shape}')
         log.debug(f'Targets shape: {targets.shape}')
