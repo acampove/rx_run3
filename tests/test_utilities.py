@@ -38,8 +38,8 @@ def _plot_evt(df : pnd.DataFrame, name : str) -> None:
     plt.close()
 # -----------------------------------------
 def _plot_lept(df : pnd.DataFrame, name : str) -> None:
-    df[f'L1_{name}'].plot.hist(label='$e^+$', bins=30, alpha=0.3)
-    df[f'L2_{name}'].plot.hist(label='$e^-$', bins=30, histtype='step')
+    df[f'L1_{name}'].plot.hist(label='$e^+$', bins=100, alpha=0.3)
+    df[f'L2_{name}'].plot.hist(label='$e^-$', bins=100, histtype='step')
 
     plt.legend()
     plt.xlabel(name)
@@ -75,7 +75,7 @@ def test_get_ddf():
     ddf = cut.get_ddf(bias=1.0, kind='flat')
     df  = ddf.compute()
 
-    assert len(df) == 10_000
+    assert len(df) == 100_000
 
     _plot_distributions(df=df)
 # -----------------------------------------
