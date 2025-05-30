@@ -38,8 +38,6 @@ class ConstantModel(nn.Module):
     '''
     # ------------------------------
     def __init__(self, target : float):
-        self._target = target
-
         super().__init__()
         self.value = nn.Parameter(torch.tensor(target))
     # ------------------------------
@@ -47,5 +45,5 @@ class ConstantModel(nn.Module):
         '''
         Returns required target, no training needed
         '''
-        return self.value.expand(x.shape[0], self._target)
+        return self.value.expand(x.shape[0], 1)
 # --------------------------------------
