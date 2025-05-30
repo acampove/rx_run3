@@ -129,7 +129,7 @@ class Regressor:
             loss.backward()
             optimizer.step()
 
-            if epoch % 50 == 0:
+            if epoch % 2000 == 0:
                 log.info(f'Epoch {epoch}, Loss: {loss.item():.4f}')
 
         self._save_regressor(regressor=net)
