@@ -119,7 +119,7 @@ def test_row_bias(_dask_client : Client):
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
-    df  = ddf.head(100)
+    df  = ddf.head(1000)
 
     name = f'row_bias/{100 * bias:.0f}'
     _plot_df(df=df, test_name=name, corr= None)
