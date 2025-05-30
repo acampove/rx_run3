@@ -1,7 +1,7 @@
 # Sample configuration file for regressor class
 
 input:
-  nentries : 1000000
+  nentries : -1 
 target  : mu
 features:
   BREMHYPOROW
