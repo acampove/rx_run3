@@ -70,4 +70,57 @@ def test_constant_predict(bias : float):
 
     assert numpy.allclose(pred, corr, rtol=1e-5)
 # -----------------------------------------------------------
-    #_plot_targets(pred=pred, real=real)
+@pytest.mark.parametrize('bias', [0.5, 0.8, 1.0, 1.2, 1.4])
+def test_predict_flat_bias(bias : float):
+    '''
+    Meant to test whole pipeline by:
+
+    - Introducing data with constant (not dependent on features) bias
+    - Training a real model
+    '''
+    corr= 1.0 / bias
+
+    cfg = cut.load_cfg(name='tests/preprocessor/simple')
+    ddf = cut.get_ddf(bias=bias, kind='flat')
+    pre = PreProcessor(ddf=ddf, cfg=cfg)
+    ddf = pre.get_data()
+
+    cfg = cut.load_cfg(name='tests/regressor/simple')
+    cfg['train']['epochs']   = 1000
+    cfg['saving']['out_dir'] = 'regressor/predict_flat_bias'
+
+    obj = Regressor(ddf=ddf, cfg=cfg)
+    obj.train()
+
+    pred= obj.predict(features=pre.features)
+    real= pre.targets.numpy()
+    _plot_targets(pred=pred, real=real, corr=corr)
+# -----------------------------------------------------------
+#@pytest.mark.parametrize('bias', [0.5, 0.8, 1.0, 1.2, 1.4])
+@pytest.mark.parametrize('bias', [1.0])
+def test_predict_row_bias(bias : float):
+    '''
+    Meant to test everything by:
+
+    - Introducing data with row dependent bias
+    - Training a real model that outputs the correction
+    '''
+    corr= 1.0 / bias
+
+    cfg = cut.load_cfg(name='tests/preprocessor/simple')
+    ddf = cut.get_ddf(bias=bias, kind='row')
+    pre = PreProcessor(ddf=ddf, cfg=cfg)
+    ddf = pre.get_data()
+
+    cfg = cut.load_cfg(name='tests/regressor/simple')
+    cfg['train']['epochs']   = 2000
+    cfg['saving']['out_dir'] = 'regressor/predict_row_bias'
+
+    obj = Regressor(ddf=ddf, cfg=cfg)
+    obj.train()
+
+    pred= obj.predict(features=pre.features)
+    real= pre.targets.numpy()
+
+    _plot_target_vs_prediction(pred=pred, real=real)
+# -----------------------------------------------------------
