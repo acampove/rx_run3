@@ -89,31 +89,10 @@ class PreProcessor:
         else:
             raise ValueError(f'Invalid lepton: {lepton}')
 
-        a = lep.mag ** 2
-        b = 2 * lep.dot(oth)
-        c = oth.mag ** 2
+        a = lep.dot(oth)
+        b = lep.mag ** 2
 
-        root2 = b ** 2 - 4 * a * c
-        # root2 is expected to be proportional to momentum squared
-        # i.e. 10e6, it will go negative due to numerical accuracy
-        # push it back to zero if above negative tolerance
-        if self._neg_tol < root2 < 0:
-            root2 = 0
-
-        if root2 < 0:
-            log.warning(f'No valid solutions found, radicand={root2:.3f} , correction set to 1')
-            return 1
-
-        num_1 = -b + math.sqrt(root2)
-        num_2 = -b - math.sqrt(root2)
-
-        if num_1 <= 0 and num_2 <= 0:
-            log.warning(f'Both solutions are negative {num_1:.3f}/{num_2:.3f}')
-            return 1
-
-        num = num_1 if num_1 > 0 else num_2
-
-        return num / (2 * a)
+        return - a/b
     # ---------------------------------
     def _build_features(self, row_sr : pnd.Series) -> pnd.Series:
         lep = 'L1' if row_sr['L1_brem'] == 1 else 'L2'
