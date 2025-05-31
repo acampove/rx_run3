@@ -11,7 +11,9 @@ import uproot
 import pandas as pnd
 
 from vector import MomentumObject3D as v3d
+from dmu.logging.log_store import LogStore
 
+log=LogStore.add_logger('ecal_calibration:make_toy_decays')
 # ------------------------------------
 class Data:
     '''
@@ -47,6 +49,7 @@ class Data:
 # ------------------------------------
 def _get_df() -> pnd.DataFrame:
     root_path = f'{Data.ana_dir}/Rapidsim/{Data.ntup_ver}/bpkpee/13TeV/bpkpee_tree.root'
+    log.info(f'Reading datafrom: {root_path}')
     ifile = uproot.open(root_path)
     tree  = ifile['DecayTree']
     df    = tree.arrays(Data.l_branch, library='pd', entry_stop=Data.nentries)
@@ -119,6 +122,7 @@ def main():
     os.makedirs(out_dir, exist_ok=True)
 
     out_path = f'{out_dir}/toy_decays.parquet'
+    log.info(f'Sending output to: {out_path}')
     df.to_parquet(out_path, compression='snappy')
 # ------------------------------------
 if __name__ == '__main__':
