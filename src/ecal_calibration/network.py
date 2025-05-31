@@ -26,7 +26,7 @@ class Network(nn.Module):
 
         super().__init__()
 
-        self.model      = self._model_v6()
+        self.model      = self._model_v7()
     # ------------------------------
     def _model_v1(self) -> nn.Sequential:
         log.info('Using model v1')
@@ -104,6 +104,21 @@ class Network(nn.Module):
             nn.Linear(15             , 15),
             nn.ReLU(),
             nn.Linear(15             ,  1)
+        )
+
+        return model
+    # ------------------------------
+    def _model_v7(self) -> nn.Sequential:
+        log.info('Using model v7')
+
+        model = self.model = nn.Sequential(
+            nn.Linear(self._nfeatures, 20),
+            nn.ReLU(),
+            nn.Linear(20             , 20),
+            nn.ReLU(),
+            nn.Linear(20             , 20),
+            nn.ReLU(),
+            nn.Linear(20             ,  1)
         )
 
         return model
