@@ -160,5 +160,5 @@ def test_predict_bias(_dask_client : Client, bias : float, kind : str):
     real     = pre.targets.numpy()
 
     _plot_target_vs_prediction(pred=pred, real=real)
-    _plot_target_vs_features(arr_pred=pred, features=features)
+    #_plot_target_vs_features(arr_pred=pred, features=features)
 # -----------------------------------------------------------
