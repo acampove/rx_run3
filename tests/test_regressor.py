@@ -134,22 +134,23 @@ def test_predict_flat_bias(bias : float):
 # -----------------------------------------------------------
 #@pytest.mark.parametrize('bias', [0.5, 0.8, 1.0, 1.2, 1.4])
 @pytest.mark.parametrize('bias', [1.0])
-def test_predict_row_bias(_dask_client : Client, bias : float):
+@pytest.mark.parametrize('kind', ['row_col_are'])
+def test_predict_bias(_dask_client : Client, bias : float, kind : str):
     '''
     Meant to test everything by:
 
-    - Introducing data with row dependent bias
+    - Introducing data with row, column bias
     - Training a real model that outputs the correction
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    ddf = cut.get_ddf(bias=bias, kind='row')
+    ddf = cut.get_ddf(bias=bias, kind=kind)
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
 
     cfg = cut.load_cfg(name='tests/regressor/simple')
-    cfg['train']['epochs']   =  20000
+    cfg['train']['epochs']   =  30000
     #cfg['input']['nentries'] = 30_000
-    cfg['saving']['out_dir'] = 'regressor/predict_row_bias'
+    cfg['saving']['out_dir'] = 'regressor/predict_{kind}'
 
     obj = Regressor(ddf=ddf, cfg=cfg)
     obj.train()
