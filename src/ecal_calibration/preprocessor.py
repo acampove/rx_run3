@@ -146,7 +146,7 @@ class PreProcessor:
 
         return torch.tensor(arr_val, dtype=torch.float32)
     # ---------------------------------
-    def get_data(self, npartitions : int = 100) -> DDF:
+    def get_data(self, partition_size : str = '10MB') -> DDF:
         '''
         Returns dask dataframe after preprocessing, it contains.
 
@@ -155,19 +155,20 @@ class PreProcessor:
 
         Parameters
         ----------------------
-        npartitions : Number of partitions needed to process with multiple processes
+        partition_size : Partition size in MB. Used to split among workers.
         '''
         if hasattr(self, '_ddf_res'):
             return self._ddf_res
 
-        ddf     = self._apply_selection(ddf=self._ddf)
-        ddf_res = ddf.apply(self._build_features, axis=1)
-        ddf_res = ddf_res.repartition(npartitions=npartitions)
-        ddf_res = ddf_res.persist()
+        ddf = self._ddf.repartition(partition_size=partition_size)
+        ddf = self._apply_selection(ddf=ddf)
 
-        self._ddf_res = ddf_res
+        ddf = ddf.apply(self._build_features, axis=1)
+        ddf = ddf.persist()
 
-        return ddf_res
+        self._ddf_res = ddf
+
+        return ddf
     # ---------------------------------
     @property
     def features(self) -> tensor:
