@@ -70,9 +70,9 @@ def get_ddf(bias : float, kind : str) -> DDF:
     bias (float): Numerical value of bias, if flat, should be around 1, 1 will be no bias.
     kind (str)  : Type of bias, `flat` for same bias for all electrons, `row` for row dependent one.
     '''
-    data_path = files('ecal_calibration_data').joinpath('tests/data/toy_decays.json')
+    data_path = files('ecal_calibration_data').joinpath('tests/data/toy_decays.parquet')
     data_path = str(data_path)
-    ddf       = dataframe.read_json(data_path, orient='records', lines=True)
+    ddf       = dataframe.read_parquet(data_path)
     ddf       = _inject_bias(ddf=ddf, bias=bias, kind=kind)
 
     return ddf
