@@ -46,6 +46,8 @@ def _inject_bias(ddf : DDF, bias : float, kind : str) -> DDF:
             ddf[f'{lep}_PT'] = ddf[f'{lep}_PT'] + ddf[f'{lep}_PT'] * ddf[f'{lep}_brem'] * (bias - ddf[f'{lep}_BREMHYPOROW'] / 60. * ddf[f'{lep}_BREMHYPOCOL']/ 60.)
         elif kind == 'row_col_are' :
             ddf[f'{lep}_PT'] = ddf[f'{lep}_PT'] + ddf[f'{lep}_PT'] * ddf[f'{lep}_brem'] * (bias - ddf[f'{lep}_BREMHYPOROW'] / 60. * ddf[f'{lep}_BREMHYPOCOL']/ 60.) * ddf[f'{lep}_BREMHYPOAREA']
+        elif kind == 'row_col_are_eng' :
+            ddf[f'{lep}_PT'] = ddf[f'{lep}_PT'] + ddf[f'{lep}_PT'] * ddf[f'{lep}_brem'] * (bias - ddf[f'{lep}_BREMHYPOROW'] / 60. * ddf[f'{lep}_BREMHYPOCOL']/ 60.) * ddf[f'{lep}_BREMHYPOAREA'] * ddf[f'{lep}_BREMTRACKBASEDENERGY'] / 10_000.
         else:
             raise ValueError(f'Invalid bias: {kind}')
 
