@@ -146,18 +146,23 @@ class PreProcessor:
 
         return torch.tensor(arr_val, dtype=torch.float32)
     # ---------------------------------
-    def get_data(self) -> DDF:
+    def get_data(self, npartitions : int = 100) -> DDF:
         '''
         Returns dask dataframe after preprocessing, it contains.
 
         - The features in the class description.
         - The target for regression, labeled as 'mu'
+
+        Parameters
+        ----------------------
+        npartitions : Number of partitions needed to process with multiple processes
         '''
         if hasattr(self, '_ddf_res'):
             return self._ddf_res
 
         ddf     = self._apply_selection(ddf=self._ddf)
         ddf_res = ddf.apply(self._build_features, axis=1)
+        ddf_res = ddf_res.repartition(npartitions=npartitions)
         ddf_res = ddf_res.persist()
 
         self._ddf_res = ddf_res
