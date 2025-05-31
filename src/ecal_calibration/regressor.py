@@ -48,7 +48,7 @@ class Regressor:
             log.debug('Picking up full dataset')
             df       = self._ddf.compute()
 
-        arr_target = df[target]
+        arr_target = df[target].to_numpy()
         df         = df.drop(target, axis=1)
 
         log.debug(f'Using features: {df.columns.tolist()}')
