@@ -118,8 +118,8 @@ def main():
     out_dir = files('ecal_calibration_data').joinpath('tests/data')
     os.makedirs(out_dir, exist_ok=True)
 
-    out_path = f'{out_dir}/toy_decays.json'
-    df.to_json(out_path, orient='records', lines=True)
+    out_path = f'{out_dir}/toy_decays.parquet'
+    df.to_parquet(out_path, compression='snappy')
 # ------------------------------------
 if __name__ == '__main__':
     main()
