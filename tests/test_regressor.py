@@ -150,7 +150,7 @@ def test_predict_bias(_dask_client : Client, bias : float, kind : str):
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
-    ddf_tr, ddf_ts = ddf.random_split([0.75, 0.25], random_state=42)
+    ddf_tr, ddf_ts = ddf.random_split([0.95, 0.05], random_state=42)
 
     cfg = cut.load_cfg(name='tests/regressor/simple')
     cfg['train']['epochs']   =  40000
