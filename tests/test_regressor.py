@@ -5,6 +5,7 @@ import numpy
 import pytest
 import matplotlib.pyplot as plt
 
+import torch
 from torch                         import Tensor
 from dask.distributed              import Client
 from ecal_calibration.preprocessor import PreProcessor
@@ -25,10 +26,12 @@ def _plot_target_vs_features(arr_pred : numpy.ndarray, features : Tensor) -> Non
 def _plot_target_vs_prediction(
         pred : numpy.ndarray,
         real : numpy.ndarray) -> None:
+    nentries = len(pred)
 
     plt.scatter(real, pred, s=1)
     plt.xlabel('Real')
     plt.ylabel('Predicted')
+    plt.title(f'Entries: {nentries}')
     plt.grid()
     plt.show()
 # -----------------------------------------------------------
