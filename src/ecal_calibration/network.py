@@ -18,15 +18,20 @@ class Network(nn.Module):
     Class wrapping pytorch (abstract?) newtwork
     '''
     # ------------------------------
-    def __init__(self, nfeatures : int):
+    def __init__(self, nfeatures : int, model : str):
         '''
         nfeatures (int): Number of features, needed to build first layer
+        model          : Name of model, e.g. v1
         '''
         self._nfeatures = nfeatures
 
         super().__init__()
 
-        self.model      = self._model_v7()
+        fun = getattr(self, f'_model_{model}', None)
+        if fun is None:
+            raise ValueError(f'No model {model} found')
+
+        self.model      = fun()
     # ------------------------------
     def _model_v1(self) -> nn.Sequential:
         log.info('Using model v1')
