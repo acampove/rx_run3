@@ -147,20 +147,26 @@ def test_predict_bias(_dask_client : Client, bias : float, kind : str):
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
     ddf = cut.get_ddf(bias=bias, kind=kind)
+
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
 
-    cfg = cut.load_cfg(name='tests/regressor/simple')
-    cfg['train']['epochs']   =  30000
-    #cfg['input']['nentries'] = 30_000
-    cfg['saving']['out_dir'] = 'regressor/predict_{kind}'
+    ddf_tr = ddf.loc[0:300_000]
+    ddf_ts = ddf.loc[300_000:400_000]
 
-    obj = Regressor(ddf=ddf, cfg=cfg)
+    cfg = cut.load_cfg(name='tests/regressor/simple')
+    cfg['train']['epochs']   =  40000
+    cfg['saving']['out_dir'] =f'regressor/predict_{kind}'
+
+    obj = Regressor(ddf=ddf_tr, cfg=cfg)
     obj.train()
 
-    features = pre.features
+    l_fea    = [ var for var in ddf_ts.columns if var != 'mu' ]
+    arr_fea  = ddf_ts[l_fea].compute().to_numpy()
+    features = torch.tensor(arr_fea, dtype=torch.float32)
+
+    real     = ddf_ts['mu'].compute().to_numpy()
     pred     = obj.predict(features=features)
-    real     = pre.targets.numpy()
 
     _plot_target_vs_prediction(pred=pred, real=real)
 # -----------------------------------------------------------
