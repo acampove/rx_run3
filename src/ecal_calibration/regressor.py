@@ -97,7 +97,7 @@ class Regressor:
         log.info(f'Training with {nsamples} samples')
 
         if constant_target is None:
-            net = Network(nfeatures=nfeatures)
+            net = Network(nfeatures=nfeatures, model=self._cfg['model'])
         else:
             net = ConstantModel(target=constant_target)
 
