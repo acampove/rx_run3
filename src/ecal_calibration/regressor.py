@@ -39,15 +39,7 @@ class Regressor:
     # ---------------------------------------------
     def _get_training_data(self) -> tuple[Tensor,Tensor]:
         target     = self._cfg['target']
-
-        if 'nentries' in self._cfg['input'] and self._cfg['input']['nentries'] > 0:
-            nentries = self._cfg['input']['nentries']
-            log.warning(f'Picking up only {nentries} entries')
-            df       = self._ddf.head(nentries)
-        else:
-            log.debug('Picking up full dataset')
-            df       = self._ddf.compute()
-
+        df         = self._ddf.compute()
         arr_target = df[target].to_numpy()
         df         = df.drop(target, axis=1)
 
