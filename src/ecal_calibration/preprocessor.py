@@ -160,7 +160,8 @@ class PreProcessor:
         if hasattr(self, '_ddf_res'):
             return self._ddf_res
 
-        ddf = self._ddf.repartition(partition_size=partition_size)
+        ddf = self._ddf.dropna()
+        ddf = ddf.repartition(partition_size=partition_size)
         ddf = self._apply_selection(ddf=ddf)
 
         ddf = ddf.apply(self._build_features, axis=1)
