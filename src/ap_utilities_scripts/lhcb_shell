@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------
 display_help()
 {
-    echo "Utility needed to setup shell environment where to use post_ap scripts"
+    echo "Utility needed to setup shell environment where to use lhcb CLI utilities"
     echo ""
     echo "-h: Print this help"
 }
