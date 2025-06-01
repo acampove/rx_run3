@@ -35,7 +35,7 @@ Bd_Denu_Kstenu_eq_VisibleInAcceptance_HighVisMass_EGDWC:
 The list goes in `rd_ap_2024/info.yaml`. For this, the [installation](doc/installation.md#with-access-to-dirac) that allows access to DIRAC is needed. 
 Given a set of MC samples specified in a YAML file like:
 
-```YAML
+```yaml
 settings_common: &common
   year      : 2024
   mc_path   : 2024.W31.34
