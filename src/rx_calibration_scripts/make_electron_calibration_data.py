@@ -66,8 +66,8 @@ def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample='DATA*', trigger=Data.trigger)
     rdf = gtr.get_rdf()
 
-    if Data.nentries > 0:
-        rdf = rdf.Range(Data.nentries)
+    if Data.max_evt > 0:
+        rdf = rdf.Range(Data.max_evt)
 
     sel.set_custom_selection(d_cut = {
         #'bdt'  : 'mva_cmb > 0.7 && mva_prc > 0.8',
