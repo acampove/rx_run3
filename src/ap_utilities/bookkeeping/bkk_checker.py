@@ -122,7 +122,17 @@ class BkkChecker:
         nfile   = self._nfiles_from_stdout(result.stdout)
         found   = nfile != 0
 
+        name    =  bkk.replace(r'/', '_')
+        name    = name.replace(r'.', '_')
+        name    = name.replace(r'-', '_')
+        self._save_text(data=result.stdout, path=f'{self._out_dir}/{name}.txt')
+
         return found
+    # -------------------------
+    def _save_text(self, data : str, path : str) -> None:
+        log.info(f'Saving to: {path}')
+        with open(path, 'w', encoding='utf-8') as ofile:
+            ofile.write(data)
     # -------------------------
     def _get_samples_with_threads(self, nthreads : int) -> list[str]:
         l_found : list[bool] = []
