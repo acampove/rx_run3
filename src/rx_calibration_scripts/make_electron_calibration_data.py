@@ -56,11 +56,10 @@ class Data:
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample='DATA*', trigger=Data.trigger)
     rdf = gtr.get_rdf()
-    rdf = rdf.Range(10_000)
 
     sel.set_custom_selection(d_cut = {
         'bdt'  : 'mva_cmb > 0.9 && mva_prc > 0.9',
-        'tail' : 'B_const_mass_M > 5200'
+        'tail' : 'B_const_mass_M > 5200 && B_const_mass_M < 5500'
         })
 
     d_sel = sel.selection(trigger=Data.trigger, q2bin='jpsi', process='DATA')
@@ -92,8 +91,6 @@ def _save_data(rdf : RDataFrame) -> None:
     data = rdf.AsNumpy(Data.l_branch)
     df   = pnd.DataFrame(data)
     df   = _rename_columns(df=df)
-
-    print(df)
 
     out_path = f'{out_dir}/data.parquet'
     log.info(f'Saving to: {out_path}')
