@@ -2,10 +2,13 @@
 #
 # The information was taken from:
 #
-# https://lblogbook.cern.ch/Alignment+and+calibration/?mode=summary&reverse=0&reverse=1&npp=20&System=Ecal
-
+# https://lblogbook.cern.ch/Alignment+and+calibration/273
 
 runs:
-  2024-05-27 : 295531
-  2024-07-10 : 299850
-
+  - 2024-05-18
+  - 2024-05-27
+  - 2024-07-10
+  - 2024-07-25
+  - 2024-08-02
+  - 2024-09-26
+  - 2024-09-26
