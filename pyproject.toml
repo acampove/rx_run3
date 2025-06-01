@@ -22,7 +22,7 @@ where   = ['src']
 make_electron_calibration_data='rx_calibration_scripts.make_electron_calibration_data:main'
 
 [tool.setuptools.package-data]
-rx_calibration_data = ['triggercalib/*.yaml']
+rx_calibration_data = ['triggercalib/*.yaml', 'ecal_calib/*.yaml']
 
 [tool.setuptools]
 script-files=[]
