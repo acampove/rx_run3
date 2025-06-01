@@ -3,8 +3,9 @@ Script used to produce parquet files with the information needed by the
 `PreProcessor` class of the `ecal_calibration` project
 '''
 import os
-import pandas as pnd
+import argparse
 
+import pandas as pnd
 from ROOT                   import RDataFrame
 from rx_data.rdf_getter     import RDFGetter
 from rx_selection           import selection as sel
@@ -16,6 +17,7 @@ class Data:
     '''
     Data class
     '''
+    max_evt : int
     trigger = 'Hlt2RD_BuToKpEE_MVA'
     ana_dir = os.environ['ANADIR']
 
@@ -53,11 +55,22 @@ class Data:
             'L2_BREMHYPOAREA',
             'L2_BREMTRACKBASEDENERGY']
 # --------------------------------
+def _parse_args():
+    parser = argparse.ArgumentParser(description='Used to provide parquet file to carry out training of regressor')
+    parser.add_argument('-n', '--nentries' , type=str, help='Number of entries to limit run', default=-1)
+    args = parser.parse_args()
+
+    Data.max_evt = args.nentries
+# --------------------------------
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample='DATA*', trigger=Data.trigger)
     rdf = gtr.get_rdf()
 
+    if Data.nentries > 0:
+        rdf = rdf.Range(Data.nentries)
+
     sel.set_custom_selection(d_cut = {
+        #'bdt'  : 'mva_cmb > 0.7 && mva_prc > 0.8',
         'bdt'  : 'mva_cmb > 0.9 && mva_prc > 0.9',
         'tail' : 'B_const_mass_M > 5200 && B_const_mass_M < 5500'
         })
