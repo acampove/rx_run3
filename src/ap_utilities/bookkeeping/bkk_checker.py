@@ -2,6 +2,7 @@
 Module with BkkChecker class
 '''
 
+import os
 import re
 from concurrent.futures     import ThreadPoolExecutor
 
@@ -39,8 +40,20 @@ class BkkChecker:
         self._sim_version  : str = d_section['settings']['sim_vers']
         self._ctags        : str = d_section['settings']['ctags']
         self._dtags        : str = d_section['settings']['dtags']
+        self._out_dir      = self._get_out_dir()
 
         self._l_event_type : list[str] = self._get_event_types(d_section)
+    # -------------------------
+    def _get_out_dir(self) -> str:
+        if 'ANADIR' not in os.environ:
+            ana_dir = '/tmp/ap_utilities/output'
+        else:
+            ana_dir = os.environ['ANADIR']
+
+        out_dir = f'{ana_dir}/bkk_checker/{self._name}'
+        os.makedirs(out_dir, exist_ok=True)
+
+        return out_dir
     # -------------------------
     def _get_event_types(self, d_section : dict) -> list[str]:
         l_evt  = self._list_from_dict(d_section, 'evt_type')
