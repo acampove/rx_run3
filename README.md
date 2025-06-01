@@ -8,6 +8,12 @@
 - For instructions to mount EOS in your laptop check [this](doc/mounting_eos.md)
 - For instructions on how to make the decay descriptor fields check [this](doc/descriptors.md)
 
+## Environment
+
+The following variables _can_ be defined:
+
+`ANADIR`: Where outputs will be saved, if not specified, outputs will go to `/tmp`
+
 ## How to add a decay 
 
 ### Add the decay matching lines 
