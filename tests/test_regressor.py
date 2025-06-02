@@ -153,8 +153,8 @@ def test_predict_bias(_dask_client : Client, bias : float, kind : str):
     ddf_tr, ddf_ts = ddf.random_split([0.95, 0.05], random_state=42)
 
     cfg = cut.load_cfg(name='tests/regressor/simple')
-    cfg['train']['epochs']   =  40000
-    cfg['saving']['out_dir'] =f'regressor/predict_{kind}'
+    cfg['train']['epochs']   = 40000
+    cfg['saving']['out_dir'] = f'regressor/predict_{kind}'
 
     obj = Regressor(ddf=ddf_tr, cfg=cfg)
     obj.train()
