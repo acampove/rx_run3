@@ -6,12 +6,12 @@ import os
 import pytest
 import pandas             as pnd
 import matplotlib.pyplot  as plt
-import matplotlib.patches as patches
 
+from matplotlib            import patches
 from dmu.logging.log_store import LogStore
-from rx_data               import calo_translator as ctran
+from ecal_calibration      import calo_translator as ctran
 
-log=LogStore.add_logger('rx_data:test_calo_translator')
+log=LogStore.add_logger('ecal_calibration:test_calo_translator')
 
 subdetectors = [
             'Inner',

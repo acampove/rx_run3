@@ -6,7 +6,7 @@ from importlib.resources import files
 import pandas as pnd
 from dmu.logging.log_store import LogStore
 
-log=LogStore.add_logger('rx_data:calo_translator')
+log=LogStore.add_logger('ecal_calibration:calo_translator')
 # --------------------------------
 def _cast_column(column, ctype) -> pnd.Series:
     column = pnd.to_numeric(column, errors='coerce')
@@ -19,7 +19,7 @@ def get_data() -> pnd.DataFrame:
     '''
     Returns pandas dataframe with x,y and row and column values
     '''
-    data_path = files('rx_data_data').joinpath('brem_correction/coordinates.csv')
+    data_path = files('ecal_calibration_data').joinpath('brem_correction/coordinates.csv')
     df      = pnd.read_csv(data_path)
     df['a'] = _cast_column(df.a, int)
     df['x'] = _cast_column(df.x, float)
