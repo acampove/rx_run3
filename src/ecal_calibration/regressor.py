@@ -156,7 +156,14 @@ class Regressor:
     def _plot_corrections(self, df : pnd.DataFrame) -> None:
         nentries = len(df)
 
-        plt.scatter(df['mu'], df['mu_pred'], s=1)
+        ax = None
+        for area, df_area in df.groupby('are'):
+            area = int(area)
+            name = self._d_area[area]
+            color= self._d_color[area]
+
+            ax   = df_area.plot.scatter(x='mu', y='mu_pred', s=1, label=name, ax=ax, color=color)
+
         plt.xlabel('Real')
         plt.ylabel('Predicted')
         plt.title(f'Entries: {nentries}')
