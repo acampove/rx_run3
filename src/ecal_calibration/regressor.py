@@ -149,6 +149,7 @@ class Regressor:
 
         self._plot_corrections(df=df)
         self._plot_by_area(df=df)
+        self._plot_by_energy(df=df)
     # ---------------------------------------------
     def _plot_corrections(self, df : pnd.DataFrame) -> None:
         nentries = len(df)
@@ -174,6 +175,15 @@ class Regressor:
             plt.legend()
             plt.savefig(f'{self._out_dir}/area_{area}.png')
             plt.close()
+    # ---------------------------------------------
+    def _plot_by_energy(self, df : pnd.DataFrame) -> None:
+        ax = None
+        ax = df.plot.scatter('eng', 'mu'     , label='Real'     , color='blue', s=1, ax=ax)
+        ax = df.plot.scatter('eng', 'mu_pred', label='Predicted', color='red' , s=1, ax=ax)
+
+        plt.legend()
+        plt.savefig(f'{self._out_dir}/corr_vs_energy.png')
+        plt.close()
     # ---------------------------------------------
     def load(self) -> bool:
         '''
