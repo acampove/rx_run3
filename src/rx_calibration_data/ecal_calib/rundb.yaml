@@ -267,10 +267,6 @@
     fillid: 9846
     starttime: 2024-07-01 08:10:17+00:00
 -
-    runid: 299764
-    fillid: 9846
-    starttime: 
--
     runid: 299763
     fillid: 9846
     starttime: 2024-07-01 08:01:10+00:00
@@ -350,14 +346,6 @@
     runid: 299726
     fillid: 9843
     starttime: 2024-06-30 22:17:12+00:00
--
-    runid: 299725
-    fillid: 9843
-    starttime: 
--
-    runid: 299724
-    fillid: 9843
-    starttime: 
 -
     runid: 299722
     fillid: 9843
@@ -1123,18 +1111,6 @@
     fillid: 9830
     starttime: 2024-06-26 23:50:28+00:00
 -
-    runid: 299259
-    fillid: 9826
-    starttime: 
--
-    runid: 299258
-    fillid: 9826
-    starttime: 
--
-    runid: 299257
-    fillid: 9826
-    starttime: 
--
     runid: 299147
     fillid: 9819
     starttime: 2024-06-24 05:45:10+00:00
@@ -1327,10 +1303,6 @@
     fillid: 9819
     starttime: 2024-06-23 15:29:09+00:00
 -
-    runid: 299088
-    fillid: 9819
-    starttime: 
--
     runid: 299087
     fillid: 9819
     starttime: 2024-06-23 15:14:01+00:00
@@ -1382,10 +1354,6 @@
     runid: 299061
     fillid: 9819
     starttime: 2024-06-23 12:26:42+00:00
--
-    runid: 299039
-    fillid: 9816
-    starttime: 
 -
     runid: 299037
     fillid: 9816
@@ -1478,10 +1446,6 @@
     runid: 299002
     fillid: 9813
     starttime: 2024-06-22 17:04:08+00:00
--
-    runid: 298998
-    fillid: 9813
-    starttime: 
 -
     runid: 298991
     fillid: 9813
@@ -2123,10 +2087,6 @@
     fillid: 9808
     starttime: 2024-06-20 21:03:00+00:00
 -
-    runid: 298707
-    fillid: 9808
-    starttime: 
--
     runid: 298691
     fillid: 9808
     starttime: 2024-06-20 20:05:47+00:00
@@ -2171,14 +2131,6 @@
     fillid: 9808
     starttime: 2024-06-20 15:49:34+00:00
 -
-    runid: 298614
-    fillid: 9808
-    starttime: 
--
-    runid: 298600
-    fillid: 9807
-    starttime: 
--
     runid: 298590
     fillid: 9807
     starttime: 2024-06-20 12:26:00+00:00
@@ -2190,38 +2142,6 @@
     runid: 298588
     fillid: 9807
     starttime: 2024-06-20 12:21:00+00:00
--
-    runid: 298586
-    fillid: 9807
-    starttime: 
--
-    runid: 298585
-    fillid: 9807
-    starttime: 
--
-    runid: 298583
-    fillid: 9807
-    starttime: 
--
-    runid: 298582
-    fillid: 9807
-    starttime: 
--
-    runid: 298581
-    fillid: 9807
-    starttime: 
--
-    runid: 298580
-    fillid: 9807
-    starttime: 
--
-    runid: 298579
-    fillid: 9807
-    starttime: 
--
-    runid: 298576
-    fillid: 9807
-    starttime: 
 -
     runid: 298568
     fillid: 9806
@@ -2270,14 +2190,6 @@
     runid: 298465
     fillid: 9806
     starttime: 2024-06-20 08:36:20+00:00
--
-    runid: 298460
-    fillid: 9806
-    starttime: 
--
-    runid: 298454
-    fillid: 9806
-    starttime: 
 -
     runid: 298427
     fillid: 9806
@@ -11059,14 +10971,6 @@
     fillid: 9559
     starttime: 2024-04-24 04:23:00+00:00
 -
-    runid: 291841
-    fillid: 9559
-    starttime: 
--
-    runid: 291840
-    fillid: 9559
-    starttime: 
--
     runid: 291838
     fillid: 9559
     starttime: 2024-04-24 02:42:14+00:00
@@ -12255,18 +12159,6 @@
     fillid: 9539
     starttime: 2024-04-19 03:56:48+00:00
 -
-    runid: 291099
-    fillid: 9539
-    starttime: 
--
-    runid: 291098
-    fillid: 9539
-    starttime: 
--
-    runid: 291097
-    fillid: 9539
-    starttime: 
--
     runid: 291095
     fillid: 9539
     starttime: 2024-04-19 02:44:33+00:00
@@ -12615,10 +12507,6 @@
     fillid: 9537
     starttime: 2024-04-18 10:02:31+00:00
 -
-    runid: 290845
-    fillid: 9537
-    starttime: 
--
     runid: 290841
     fillid: 9537
     starttime: 2024-04-18 09:53:25+00:00
@@ -12634,10 +12522,6 @@
     runid: 290833
     fillid: 9537
     starttime: 2024-04-18 09:31:39+00:00
--
-    runid: 290832
-    fillid: 9537
-    starttime: 
 -
     runid: 290831
     fillid: 9537
@@ -12751,10 +12635,6 @@
     fillid: 9537
     starttime: 2024-04-18 02:57:23+00:00
 -
-    runid: 290722
-    fillid: 9531
-    starttime: 
--
     runid: 290721
     fillid: 9531
     starttime: 2024-04-17 10:47:06+00:00
@@ -12818,10 +12698,6 @@
     runid: 290672
     fillid: 9530
     starttime: 2024-04-17 03:42:49+00:00
--
-    runid: 290671
-    fillid: 9530
-    starttime: 
 -
     runid: 290663
     fillid: 9530
