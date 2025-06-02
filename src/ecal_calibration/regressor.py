@@ -35,10 +35,19 @@ class Regressor:
         self._ddf_tr = ddf_tr
         self._ddf_ts = ddf_ts
         self._cfg    = cfg
+        self._out_dir= self._get_out_dir()
 
         self._device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
         self._net : Network
+    # ---------------------------------------------
+    def _get_out_dir(self) -> str:
+        ana_dir = os.environ['ANADIR']
+        out_dir = self._cfg['saving']['out_dir']
+        out_dir = f'{ana_dir}/{out_dir}'
+        os.makedirs(out_dir, exist_ok=True)
+
+        return out_dir
     # ---------------------------------------------
     def _get_training_data(self) -> tuple[Tensor,Tensor]:
         target     = self._cfg['target']
@@ -60,19 +69,8 @@ class Regressor:
 
         return features, targets
     # ---------------------------------------------
-    def _get_model_path(self) -> str:
-        ana_dir = os.environ['ANADIR']
-        out_dir = self._cfg['saving']['out_dir']
-        out_dir = f'{ana_dir}/{out_dir}'
-        os.makedirs(out_dir, exist_ok=True)
-
-        out_path = f'{out_dir}/model.pth'
-
-        return out_path
-    # ---------------------------------------------
     def _save_regressor(self, regressor : Network) -> None:
-        out_path = self._get_model_path()
-
+        out_path = f'{self._out_dir}/model.pth'
         log.info(f'Saving model to: {out_path}')
         torch.save(regressor, out_path)
     # ---------------------------------------------
@@ -167,7 +165,7 @@ class Regressor:
 
         If model is not found, return False
         '''
-        model_path = self._get_model_path()
+        model_path = f'{self._out_dir}/model.pth'
         log.debug(f'Picking model from: {model_path}')
 
         if not os.path.isfile(model_path):
