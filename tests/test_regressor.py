@@ -144,6 +144,5 @@ def test_predict_bias(_dask_client : Client, bias : float, kind : str):
     cfg['saving']['out_dir'] = f'regressor/predict_{kind}'
 
     obj = Regressor(ddf_tr=ddf_tr, ddf_ts=ddf_ts, cfg=cfg)
-    #obj.train()
     obj.test()
 # -----------------------------------------------------------
