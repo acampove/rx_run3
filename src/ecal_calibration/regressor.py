@@ -41,12 +41,12 @@ class Regressor:
         target     = self._cfg['target']
         l_feat     = self._cfg['features']
 
+        log.debug(f'Using features: {l_feat}')
+        log.debug(f'Using target  : {target}')
+
         df         = self._ddf.compute()
         arr_target = df[target].to_numpy()
         arr_feat   = df[l_feat].values
-
-        log.debug(f'Using features: {l_feat}')
-        log.debug(f'Using target  : {target}')
 
         features   = torch.tensor(arr_feat, dtype=torch.float32)
         targets    = torch.tensor(arr_target, dtype=torch.float32)
