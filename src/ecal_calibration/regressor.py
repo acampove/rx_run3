@@ -158,8 +158,12 @@ class Regressor:
         self._plot_corrections(df=df)
         self._plot_by_energy(df=df)
         self._plot_by_area(df=df)
+
         self._plot_by_npvs(df=df, kind=     'Real')
         self._plot_by_npvs(df=df, kind='Predicted')
+
+        self._plot_by_block(df=df, kind=     'Real')
+        self._plot_by_block(df=df, kind='Predicted')
     # ---------------------------------------------
     def _plot_corrections(self, df : pnd.DataFrame) -> None:
         nentries = len(df)
@@ -225,7 +229,22 @@ class Regressor:
         plt.xlabel(r'Correction')
         plt.ylabel(r'$\mu$')
 
-        plt.savefig(f'{self._out_dir}/corr_vs_{kind}.png')
+        plt.savefig(f'{self._out_dir}/corr_vs_npv_{kind}.png')
+        plt.close()
+    # ---------------------------------------------
+    def _plot_by_block(self, df : pnd.DataFrame, kind : str) -> None:
+        ax  = None
+        var = self._d_var[kind]
+        for blk, df_blk in df.groupby('blk'):
+            blk= int(blk)
+            ax = df_blk[var].plot.hist(label=f'Block={blk}', bins=10, range=[0.0, 1.5], histtype='step', density=True, ax=ax)
+
+        plt.legend()
+        plt.title(kind)
+        plt.xlabel(r'Correction')
+        plt.ylabel(r'$\mu$')
+
+        plt.savefig(f'{self._out_dir}/corr_vs_block_{kind}.png')
         plt.close()
     # ---------------------------------------------
     def load(self) -> bool:
