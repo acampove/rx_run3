@@ -1,7 +1,7 @@
 '''
 Module containing the Regressor class
 '''
-# pylint : disable=too-many-instance-attributes
+# pylint: disable=too-many-instance-attributes
 
 import os
 
