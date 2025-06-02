@@ -6,11 +6,11 @@ import os
 import argparse
 
 import pandas as pnd
-from ROOT                    import RDataFrame
-from rx_data.rdf_getter      import RDFGetter
-from rx_selection            import selection as sel
-from dmu.logging.log_store   import LogStore
-from rx_calibration.pizerodb import PiZeroDb
+from ROOT                             import RDataFrame
+from rx_data.rdf_getter               import RDFGetter
+from rx_selection                     import selection as sel
+from dmu.logging.log_store            import LogStore
+from rx_calibration.electron.pizerodb import PiZeroDb
 
 log=LogStore.add_logger('rx_calibration:make_electron_calibration_data')
 # --------------------------------
@@ -115,8 +115,8 @@ def _save_data(df : pnd.DataFrame) -> None:
     df.to_parquet(out_path)
 # --------------------------------
 def _process_df(df : pnd.DataFrame) -> pnd.DataFrame:
-    df                 = _rename_columns(df=df)
-    df['ndays_pizero'] = df.apply(lambda row : Data.pizero_db.get_days(run=row['RUNNUMBER']), axis=1)
+    df           = _rename_columns(df=df)
+    df['period'] = df.apply(lambda row : Data.pizero_db.get_period(run=row['RUNNUMBER']), axis=1)
 
     return df
 # --------------------------------
