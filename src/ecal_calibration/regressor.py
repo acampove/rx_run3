@@ -27,8 +27,8 @@ class Regressor:
         '''
         Parameters
         -------------------
-        ddf_tr : Dask dataframe storing training dataset 
-        ddf_ts : Dask dataframe storing testing dataset 
+        ddf_tr : Dask dataframe storing training dataset
+        ddf_ts : Dask dataframe storing testing dataset
         cfg    : Dictionary holding configuration
         '''
 
