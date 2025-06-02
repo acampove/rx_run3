@@ -3,6 +3,7 @@ Module containing the Regressor class
 '''
 import os
 
+import matplotlib.pyplot as plt
 import torch
 import numpy
 
@@ -131,6 +132,33 @@ class Regressor:
 
         net.eval()
         self._net = net
+    # ---------------------------------------------
+    def test(self) -> None:
+        '''
+        Runs comparison of predicted
+        '''
+        if not self.load():
+            log.info('Model not found, training it')
+            self.train()
+
+        l_fea    = self._cfg['features']
+        arr_fea  = self._ddf_ts[l_fea].compute().to_numpy()
+        features = torch.tensor(arr_fea, dtype=torch.float32)
+
+        real     = self._ddf_ts['mu'].compute().to_numpy()
+        pred     = self.predict(features=features)
+
+        self._plot_corrections(real=real, pred=pred)
+    # ---------------------------------------------
+    def _plot_corrections(self, real : numpy.ndarray, pred : numpy.ndarray) -> None:
+        nentries = len(real)
+
+        plt.scatter(real, pred, s=1)
+        plt.xlabel('Real')
+        plt.ylabel('Predicted')
+        plt.title(f'Entries: {nentries}')
+        plt.grid()
+        plt.show()
     # ---------------------------------------------
     def load(self) -> bool:
         '''
