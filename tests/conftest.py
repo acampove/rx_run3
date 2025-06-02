@@ -28,9 +28,6 @@ def _load_df(name : str) -> pnd.DataFrame:
     data      = gut.load_json(file_path)
     df        = pnd.DataFrame(data)
 
-    if name == 'rundb':
-        df = df.set_index('runid', drop=True)
-
     return df
 # ---------------------------------------
 def pytest_configure(config : pytest.Config) -> None:
