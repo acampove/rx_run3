@@ -1,10 +1,13 @@
 '''
 Module containing the Regressor class
 '''
+# pylint : disable=too-many-instance-attributes
+
 import os
 
 import pandas            as pnd
 import matplotlib.pyplot as plt
+import mplhep
 import torch
 import numpy
 
@@ -32,6 +35,7 @@ class Regressor:
         ddf_ts : Dask dataframe storing testing dataset
         cfg    : Dictionary holding configuration
         '''
+        plt.style.use(mplhep.style.LHCb2)
 
         self._ddf_tr = ddf_tr
         self._ddf_ts = ddf_ts
