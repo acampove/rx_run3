@@ -22,16 +22,18 @@ class Regressor:
     corrections
     '''
     # ---------------------------------------------
-    def __init__(self, ddf : DDF, cfg : dict):
+    def __init__(self, ddf_tr : DDF, ddf_ts : DDF, cfg : dict):
         '''
         Parameters
         -------------------
-        ddf : Dask dataframe storing the target and the features
-        cfg : Dictionary holding configuration
+        ddf_tr : Dask dataframe storing training dataset 
+        ddf_ts : Dask dataframe storing testing dataset 
+        cfg    : Dictionary holding configuration
         '''
 
-        self._ddf = ddf
-        self._cfg = cfg
+        self._ddf_tr = ddf_tr
+        self._ddf_ts = ddf_ts
+        self._cfg    = cfg
 
         self._device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
