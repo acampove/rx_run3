@@ -60,7 +60,7 @@ class Data:
 # --------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Used to provide parquet file to carry out training of regressor')
-    parser.add_argument('-n', '--nentries' , type=str, help='Number of entries to limit run', default=-1)
+    parser.add_argument('-n', '--nentries' , type=int, help='Number of entries to limit run', default=-1)
     args = parser.parse_args()
 
     Data.max_evt = args.nentries
