@@ -52,7 +52,7 @@ def test_flat_bias():
     ddf = pre.get_data()
 
     cfg = cut.load_cfg(name='tests/regressor/simple')
-    obj = Regressor(ddf=ddf, cfg=cfg)
+    obj = Regressor(ddf_tr=ddf, ddf_ts=ddf, cfg=cfg)
     obj.train()
 # -----------------------------------------------------------
 def test_loader():
@@ -66,7 +66,7 @@ def test_loader():
     ddf = pre.get_data()
 
     cfg = cut.load_cfg(name='tests/regressor/simple')
-    obj = Regressor(ddf=ddf, cfg=cfg)
+    obj = Regressor(ddf_tr=ddf, ddf_ts=ddf, cfg=cfg)
     obj.load()
 # -----------------------------------------------------------
 @pytest.mark.parametrize('bias', [0.5, 0.8, 1.0, 1.2, 1.4])
@@ -88,7 +88,7 @@ def test_constant_predict(bias : float):
     cfg['train']['epochs']   = 200
     cfg['saving']['out_dir'] = 'regressor/constant_predict'
 
-    obj = Regressor(ddf=ddf, cfg=cfg)
+    obj = Regressor(ddf_tr=ddf, ddf_ts=ddf, cfg=cfg)
     obj.train(constant_target=corr)
 
     pred= obj.predict(features=pre.features)
@@ -115,7 +115,7 @@ def test_predict_flat_bias(bias : float):
     cfg['input']['nentries'] = 15_000
     cfg['saving']['out_dir'] = 'regressor/predict_flat_bias'
 
-    obj = Regressor(ddf=ddf, cfg=cfg)
+    obj = Regressor(ddf_tr=ddf, ddf_ts=ddf, cfg=cfg)
     obj.train()
 
     pred= obj.predict(features=pre.features)
