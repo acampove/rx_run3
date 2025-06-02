@@ -174,15 +174,15 @@ class Regressor:
     def _plot_by_area(self, df : pnd.DataFrame) -> None:
         for area, df_area in df.groupby('are'):
             area = int(area)
-            area = {0 : 'Outer', 1 : 'Middle', 2 : 'Inner'}[area]
+            name = self._d_area[area]
 
             ax = None
             ax = df_area['mu'     ].plot.hist(range=[0, 1500], label='Real'     , alpha   =   0.3, ax=ax, color='blue')
             ax = df_area['mu_pred'].plot.hist(range=[0, 1500], label='Predicted', histtype='step', ax=ax, color='red' )
 
-            plt.title(f'Region: {area}')
+            plt.title(f'Region: {name}')
             plt.legend()
-            plt.savefig(f'{self._out_dir}/area_{area}.png')
+            plt.savefig(f'{self._out_dir}/area_{name}.png')
             plt.close()
     # ---------------------------------------------
     def _plot_by_energy(self, df : pnd.DataFrame) -> None:
