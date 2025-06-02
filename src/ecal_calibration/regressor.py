@@ -3,6 +3,7 @@ Module containing the Regressor class
 '''
 import os
 
+import pandas            as pnd
 import matplotlib.pyplot as plt
 import torch
 import numpy
@@ -143,20 +144,27 @@ class Regressor:
         arr_fea  = self._ddf_ts[l_fea].compute().to_numpy()
         features = torch.tensor(arr_fea, dtype=torch.float32)
 
-        real     = self._ddf_ts['mu'].compute().to_numpy()
-        pred     = self.predict(features=features)
+        df            = self._ddf_ts.compute()
+        df['mu_pred'] = self.predict(features=features)
 
-        self._plot_corrections(real=real, pred=pred)
+        self._plot_corrections(df=df)
     # ---------------------------------------------
-    def _plot_corrections(self, real : numpy.ndarray, pred : numpy.ndarray) -> None:
-        nentries = len(real)
+    def _plot_corrections(self, df : pnd.DataFrame) -> None:
+        nentries = len(df)
 
-        plt.scatter(real, pred, s=1)
+        plt.scatter(df['mu'], df['mu_pred'], s=1)
         plt.xlabel('Real')
         plt.ylabel('Predicted')
         plt.title(f'Entries: {nentries}')
         plt.grid()
-        plt.show()
+        plt.savefig(f'{self._out_dir}/prediction_vs_real.png')
+        plt.close()
+
+        #plt.hist(real, range=[0, 1500], bins=50, label='Real'     , alpha   =   0.3)
+        #plt.hist(pred, range=[0, 1500], bins=50, label='Predicted', histtype='step')
+        #plt.legend()
+        #plt.savefig(f'{self._out_dir}/corrections.png')
+        #plt.close()
     # ---------------------------------------------
     def load(self) -> bool:
         '''
