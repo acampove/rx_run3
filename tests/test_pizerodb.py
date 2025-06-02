@@ -14,14 +14,14 @@ class Data:
     '''
     db  = PiZeroDb()
 # -----------------------------------------------------
-@pytest.mark.parametrize('run', ConfData.l_run)
-def test_simple(run : int):
+def test_simple():
     '''
     Simplest test
     '''
-    log.info('Simple')
+    l_run = ConfData.l_run
 
-    val = Data.db.get_period(run = run)
-
-    log.info(val)
+    log.info(f'Running simple test with {len(l_run)} runs')
+    for run in l_run:
+        period = Data.db.get_period(run = run)
+        ConfData.add_run_period(run, period)
 # -----------------------------------------------------
