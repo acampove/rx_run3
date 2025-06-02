@@ -39,14 +39,16 @@ class Regressor:
     # ---------------------------------------------
     def _get_training_data(self) -> tuple[Tensor,Tensor]:
         target     = self._cfg['target']
+        l_feat     = self._cfg['features']
+
         df         = self._ddf.compute()
         arr_target = df[target].to_numpy()
-        df         = df.drop(target, axis=1)
+        arr_feat   = df[l_feat].values
 
-        log.debug(f'Using features: {df.columns.tolist()}')
+        log.debug(f'Using features: {l_feat}')
         log.debug(f'Using target  : {target}')
 
-        features   = torch.tensor(df.values , dtype=torch.float32)
+        features   = torch.tensor(arr_feat, dtype=torch.float32)
         targets    = torch.tensor(arr_target, dtype=torch.float32)
         targets    = targets.unsqueeze(1)
 
