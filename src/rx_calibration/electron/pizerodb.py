@@ -67,7 +67,7 @@ class PiZeroDb:
         run_date = self._find_date(run=run)
         index    = bisect.bisect_left(self._l_cal, run_date)
         if index == 0:
-            log.debug('No calibration was performed before run: {run}')
+            log.debug(f'No calibration was performed before run: {run}')
             return -1
 
         cal_date = self._l_cal[index - 1]
