@@ -5,7 +5,6 @@ import numpy
 import pytest
 import matplotlib.pyplot as plt
 
-import torch
 from torch                         import Tensor
 from dask.distributed              import Client
 from ecal_calibration.preprocessor import PreProcessor
@@ -20,18 +19,6 @@ def _plot_target_vs_features(arr_pred : numpy.ndarray, features : Tensor) -> Non
     plt.scatter(arr_feat, arr_pred, s=1)
     plt.xlabel('Feature')
     plt.ylabel('Prediction')
-    plt.grid()
-    plt.show()
-# -----------------------------------------------------------
-def _plot_target_vs_prediction(
-        pred : numpy.ndarray,
-        real : numpy.ndarray) -> None:
-    nentries = len(pred)
-
-    plt.scatter(real, pred, s=1)
-    plt.xlabel('Real')
-    plt.ylabel('Predicted')
-    plt.title(f'Entries: {nentries}')
     plt.grid()
     plt.show()
 # -----------------------------------------------------------
@@ -156,15 +143,7 @@ def test_predict_bias(_dask_client : Client, bias : float, kind : str):
     cfg['train']['epochs']   = 40000
     cfg['saving']['out_dir'] = f'regressor/predict_{kind}'
 
-    obj = Regressor(ddf=ddf_tr, cfg=cfg)
-    obj.train()
-
-    l_fea    = [ var for var in ddf_ts.columns if var != 'mu' ]
-    arr_fea  = ddf_ts[l_fea].compute().to_numpy()
-    features = torch.tensor(arr_fea, dtype=torch.float32)
-
-    real     = ddf_ts['mu'].compute().to_numpy()
-    pred     = obj.predict(features=features)
-
-    _plot_target_vs_prediction(pred=pred, real=real)
+    obj = Regressor(ddf_tr=ddf_tr, ddf_ts=ddf_ts, cfg=cfg)
+    #obj.train()
+    obj.test()
 # -----------------------------------------------------------
