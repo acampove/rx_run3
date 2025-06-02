@@ -122,7 +122,6 @@ def test_predict_flat_bias(bias : float):
     real= pre.targets.numpy()
     _plot_targets(pred=pred, real=real, corr=corr)
 # -----------------------------------------------------------
-#@pytest.mark.parametrize('bias', [0.5, 0.8, 1.0, 1.2, 1.4])
 @pytest.mark.parametrize('bias', [1.0])
 @pytest.mark.parametrize('kind', ['row_col_are_eng'])
 def test_predict_bias(_dask_client : Client, bias : float, kind : str):
