@@ -24,6 +24,7 @@ class PiZeroDb:
         '''
         No args
         '''
+        log.debug('Initializing PiZeroDb')
 
         self._df_run = self._load_df(name='rundb')
         self._l_cal  = self._get_calibration_dates()
@@ -52,6 +53,8 @@ class PiZeroDb:
             raise ValueError(f'No entry with date found for run: {run}')
 
         date_str = str(date_str)
+        log.debug(f'Found date {date_str} for run {run}')
+
         date     = DateTime.fromisoformat(date_str)
 
         return date
