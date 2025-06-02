@@ -46,7 +46,7 @@ class Regressor:
         log.debug(f'Using features: {l_feat}')
         log.debug(f'Using target  : {target}')
 
-        df         = self._ddf.compute()
+        df         = self._ddf_tr.compute()
         arr_target = df[target].to_numpy()
         arr_feat   = df[l_feat].values
 
