@@ -18,6 +18,7 @@ from torch import Tensor
 from dask.dataframe           import DataFrame as DDF
 from dmu.logging.log_store    import LogStore
 from ecal_calibration.network import Network, ConstantModel
+from ecal_calibration         import calo_translator as ctran
 
 log=LogStore.add_logger('ecal_calibration:regressor')
 # ---------------------------------------------
@@ -139,6 +140,11 @@ class Regressor:
         net.eval()
         self._net = net
     # ---------------------------------------------
+    def _add_xy(self, row : pnd.Series, var : str) -> pnd.Series:
+        x, y = ctran.from_id_to_xy(row=row['row'], col=row['col'], area=row['are'])
+
+        return x if var == 'x' else y
+    # ---------------------------------------------
     def test(self) -> None:
         '''
         Runs comparison of predicted
@@ -154,6 +160,8 @@ class Regressor:
         df            = self._ddf_ts.compute()
         df['mu_pred'] = self.predict(features=features) / 1000.
         df['mu']      = df['mu'] / 1000.
+        df['x']       = df.apply(self._add_xy, args=('x',))
+        df['y']       = df.apply(self._add_xy, args=('y',))
 
         self._plot_corrections(df=df)
         self._plot_by_energy(df=df)
