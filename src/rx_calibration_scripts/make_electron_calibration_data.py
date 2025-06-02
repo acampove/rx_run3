@@ -6,10 +6,11 @@ import os
 import argparse
 
 import pandas as pnd
-from ROOT                   import RDataFrame
-from rx_data.rdf_getter     import RDFGetter
-from rx_selection           import selection as sel
-from dmu.logging.log_store  import LogStore
+from ROOT                    import RDataFrame
+from rx_data.rdf_getter      import RDFGetter
+from rx_selection            import selection as sel
+from dmu.logging.log_store   import LogStore
+from rx_calibration.pizerodb import PiZeroDb
 
 log=LogStore.add_logger('rx_calibration:make_electron_calibration_data')
 # --------------------------------
@@ -17,9 +18,10 @@ class Data:
     '''
     Data class
     '''
-    max_evt : int
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
-    ana_dir = os.environ['ANADIR']
+    max_evt   : int
+    pizero_db = PiZeroDb()
+    trigger   = 'Hlt2RD_BuToKpEE_MVA'
+    ana_dir   = os.environ['ANADIR']
 
     l_branch = [
             'nPVs',
@@ -98,30 +100,37 @@ def _rename_columns(df : pnd.DataFrame) -> pnd.DataFrame:
 
     return df
 # --------------------------------
-def _add_pical_branch(df : pnd.DataFrame) -> pnd.DataFrame:
-    return df
-# --------------------------------
-def _save_data(rdf : RDataFrame) -> None:
-    out_dir = f'{Data.ana_dir}/Calibration/ecal'
-    os.makedirs(out_dir, exist_ok=True)
-
+def _rdf_to_df(rdf : RDataFrame) -> pnd.DataFrame:
     data = rdf.AsNumpy(Data.l_branch)
     df   = pnd.DataFrame(data)
-    df   = _rename_columns(df=df)
-    df   = _add_pical_branch(df=df)
+
+    return df
+# --------------------------------
+def _save_data(df : pnd.DataFrame) -> None:
+    out_dir = f'{Data.ana_dir}/Calibration/ecal'
+    os.makedirs(out_dir, exist_ok=True)
 
     out_path = f'{out_dir}/data.parquet'
     log.info(f'Saving to: {out_path}')
     df.to_parquet(out_path)
 # --------------------------------
+def _process_df(df : pnd.DataFrame) -> pnd.DataFrame:
+    df                 = _rename_columns(df=df)
+    df['ndays_pizero'] = df.apply(lambda row : Data.pizero_db.get_days(run=row['RUNNUMBER']), axis=1)
+
+    return df
+# --------------------------------
 def main():
     '''
     Start here
     '''
+    _parse_args()
     rdf = _get_rdf()
     rdf = _add_columns(rdf=rdf)
+    df  = _rdf_to_df(rdf=rdf)
+    df  = _process_df(df=df)
 
-    _save_data(rdf=rdf)
+    _save_data(df=df)
 # --------------------------------
 if __name__ == '__main__':
     main()
