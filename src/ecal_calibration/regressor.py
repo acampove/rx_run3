@@ -142,7 +142,11 @@ class Regressor:
         self._net = net
     # ---------------------------------------------
     def _add_xy(self, row : pnd.Series, var : str) -> pnd.Series:
-        x, y = ctran.from_id_to_xy(row=row['row'], col=row['col'], area=row['are'])
+        r = row['row']
+        c = row['col']
+        a = row['are']
+
+        x, y = ctran.from_id_to_xy(row=int(r), col=int(c), area=int(a))
 
         return x if var == 'x' else y
     # ---------------------------------------------
