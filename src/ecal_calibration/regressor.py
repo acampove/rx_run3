@@ -45,6 +45,7 @@ class Regressor:
         self._device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self._d_area = {0 : 'Outer', 1 : 'Middle', 2 : 'Inner'}
         self._d_color= {0 : 'blue' , 1 : 'green' , 2 : 'red'}
+        self._d_var  = {'Real' : 'mu', 'Predicted' : 'mu_pred'}
 
         self._net : Network
     # ---------------------------------------------
@@ -151,12 +152,14 @@ class Regressor:
         features = torch.tensor(arr_fea, dtype=torch.float32)
 
         df            = self._ddf_ts.compute()
-        df['mu_pred'] = self.predict(features=features)
+        df['mu_pred'] = self.predict(features=features) / 1000.
+        df['mu']      = df['mu'] / 1000.
 
         self._plot_corrections(df=df)
         self._plot_by_energy(df=df)
         self._plot_by_area(df=df)
-        self._plot_by_npvs(df=df)
+        self._plot_by_npvs(df=df, kind=     'Real')
+        self._plot_by_npvs(df=df, kind='Predicted')
     # ---------------------------------------------
     def _plot_corrections(self, df : pnd.DataFrame) -> None:
         nentries = len(df)
@@ -182,10 +185,12 @@ class Regressor:
             name = self._d_area[area]
 
             ax = None
-            ax = df_area['mu'     ].plot.hist(range=[0, 1500], label='Real'     , alpha   =   0.3, ax=ax, color='blue')
-            ax = df_area['mu_pred'].plot.hist(range=[0, 1500], label='Predicted', histtype='step', ax=ax, color='red' )
+            ax = df_area['mu'     ].plot.hist(bins=20, range=[0.0, 1.5], label='Real'     , alpha   =   0.3, ax=ax, color='blue')
+            ax = df_area['mu_pred'].plot.hist(bins=20, range=[0.0, 1.5], label='Predicted', histtype='step', ax=ax, color='red' )
 
             plt.title(f'Region: {name}')
+            plt.xlabel('Correction')
+            plt.ylabel('Entries')
             plt.legend()
             plt.savefig(f'{self._out_dir}/area_{name}.png')
             plt.close()
@@ -196,16 +201,31 @@ class Regressor:
         ax = df.plot.scatter('eng', 'mu_pred', label='Predicted', color='red' , s=1, ax=ax)
 
         plt.legend()
+        plt.xlabel(r'$E(\gamma)$ MeV')
+        plt.ylabel(r'$\mu$')
         plt.savefig(f'{self._out_dir}/corr_vs_energy.png')
         plt.close()
     # ---------------------------------------------
-    def _plot_by_npvs(self, df : pnd.DataFrame) -> None:
-        ax = None
-        ax = df.plot.scatter('npv', 'mu'     , label='Real'     , color='blue', s=1, ax=ax)
-        ax = df.plot.scatter('npv', 'mu_pred', label='Predicted', color='red' , s=1, ax=ax)
+    def _plot_by_npvs(self, df : pnd.DataFrame, kind : str) -> None:
+        ax  = None
+        var = self._d_var[kind]
+        for npv, df_npv in df.groupby('npv'):
+            npv = int(npv)
+
+            if npv % 2 == 0:
+                continue
+
+            if npv > 10:
+                break
+
+            ax = df_npv[var].plot.hist(label=f'nPV={npv}', bins=10, range=[0.0, 1.5], histtype='step', density=True, ax=ax)
 
         plt.legend()
-        plt.savefig(f'{self._out_dir}/corr_vs_npv.png')
+        plt.title(kind)
+        plt.xlabel(r'Correction')
+        plt.ylabel(r'$\mu$')
+
+        plt.savefig(f'{self._out_dir}/corr_vs_{kind}.png')
         plt.close()
     # ---------------------------------------------
     def load(self) -> bool:
