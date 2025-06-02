@@ -154,15 +154,19 @@ class Regressor:
             log.info('Model not found, training it')
             self.train()
 
-        l_fea    = self._cfg['features']
-        arr_fea  = self._ddf_ts[l_fea].compute().to_numpy()
-        features = torch.tensor(arr_fea, dtype=torch.float32)
+        l_fea         = self._cfg['features']
+        ddf           = self._ddf_ts
+        ddf           = ddf[ddf['row'] > 1]
+        ddf           = ddf[ddf['col'] > 1]
 
-        df            = self._ddf_ts.compute()
+        df            = ddf.compute()
+        arr_fea       = df[l_fea].values
+        features      = torch.tensor(arr_fea, dtype=torch.float32)
+
         df['mu_pred'] = self.predict(features=features) / 1000.
         df['mu']      = df['mu'] / 1000.
-        df['x']       = df.apply(self._add_xy, args=('x',))
-        df['y']       = df.apply(self._add_xy, args=('y',))
+        df['x']       = df.apply(self._add_xy, args=('x',), axis=1)
+        df['y']       = df.apply(self._add_xy, args=('y',), axis=1)
 
         self._plot_corrections(df=df)
         self._plot_by_energy(df=df)
@@ -173,6 +177,25 @@ class Regressor:
 
         self._plot_by_block(df=df, kind=     'Real')
         self._plot_by_block(df=df, kind='Predicted')
+
+        self._plot_in_xy(df=df, kind=     'Real')
+        self._plot_in_xy(df=df, kind='Predicted')
+    # ---------------------------------------------
+    def _plot_in_xy(self, df : pnd.DataFrame, kind : str) -> None:
+        var = self._d_var[kind]
+        grid_x, grid_y = numpy.mgrid[-3000:+3000:100j, -3000:+3000:100j]
+
+        levels  = numpy.linspace(0.0, 1.5, 50)
+        grid_z  = griddata((df['x'], df['y']), df[var], (grid_x, grid_y), method='cubic')
+        contour = plt.contourf(grid_x, grid_y, grid_z, levels=levels, cmap='viridis')
+
+        plt.colorbar(contour, label=kind)
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.title(r'$\mu$ vs $x$ and $y$')
+        plt.tight_layout()
+        plt.savefig(f'{self._out_dir}/xy_correction_{kind}.png')
+        plt.close()
     # ---------------------------------------------
     def _plot_corrections(self, df : pnd.DataFrame) -> None:
         nentries = len(df)
