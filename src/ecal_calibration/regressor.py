@@ -39,6 +39,8 @@ class Regressor:
         self._out_dir= self._get_out_dir()
 
         self._device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self._d_area = {0 : 'Outer', 1 : 'Middle', 2 : 'Inner'}
+        self._d_color= {0 : 'blue' , 1 : 'green' , 2 : 'red'}
 
         self._net : Network
     # ---------------------------------------------
