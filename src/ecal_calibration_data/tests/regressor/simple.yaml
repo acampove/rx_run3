@@ -3,13 +3,13 @@
 model   : v7
 target  : mu
 features:
-  - col 
   - row 
+  - col 
   - are 
-  - per
-  - npv
-  - blk
   - eng # This should be BREMTRACKBASEDENERGY when the photon was added by hand
+  - npv
+  - per
+  - blk
 train:
   lr     : 0.01
   epochs :  1000
