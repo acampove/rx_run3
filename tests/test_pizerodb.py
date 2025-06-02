@@ -1,7 +1,6 @@
 '''
 Module holding tests for PiZeroDb class
 '''
-import pytest
 from dmu.logging.log_store            import LogStore
 from conftest                         import ConfData
 from rx_calibration.electron.pizerodb import PiZeroDb
