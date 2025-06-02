@@ -148,6 +148,7 @@ class Regressor:
         df['mu_pred'] = self.predict(features=features)
 
         self._plot_corrections(df=df)
+        self._plot_by_area(df=df)
     # ---------------------------------------------
     def _plot_corrections(self, df : pnd.DataFrame) -> None:
         nentries = len(df)
@@ -159,12 +160,20 @@ class Regressor:
         plt.grid()
         plt.savefig(f'{self._out_dir}/prediction_vs_real.png')
         plt.close()
+    # ---------------------------------------------
+    def _plot_by_area(self, df : pnd.DataFrame) -> None:
+        for area, df_area in df.groupby('are'):
+            area = int(area)
+            area = {0 : 'Outer', 1 : 'Middle', 2 : 'Inner'}[area]
 
-        #plt.hist(real, range=[0, 1500], bins=50, label='Real'     , alpha   =   0.3)
-        #plt.hist(pred, range=[0, 1500], bins=50, label='Predicted', histtype='step')
-        #plt.legend()
-        #plt.savefig(f'{self._out_dir}/corrections.png')
-        #plt.close()
+            ax = None
+            ax = df_area['mu'     ].plot.hist(range=[0, 1500], label='Real'     , alpha   =   0.3, ax=ax, color='blue')
+            ax = df_area['mu_pred'].plot.hist(range=[0, 1500], label='Predicted', histtype='step', ax=ax, color='red' )
+
+            plt.title(f'Region: {area}')
+            plt.legend()
+            plt.savefig(f'{self._out_dir}/area_{area}.png')
+            plt.close()
     # ---------------------------------------------
     def load(self) -> bool:
         '''
