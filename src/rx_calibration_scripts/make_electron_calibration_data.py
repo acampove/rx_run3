@@ -5,7 +5,8 @@ Script used to produce parquet files with the information needed by the
 import os
 import argparse
 
-import pandas as pnd
+import pandas            as pnd
+import matplotlib.pyplot as plt
 from ROOT                             import RDataFrame
 from rx_data.rdf_getter               import RDFGetter
 from rx_selection                     import selection as sel
@@ -109,6 +110,10 @@ def _rdf_to_df(rdf : RDataFrame) -> pnd.DataFrame:
 def _save_data(df : pnd.DataFrame) -> None:
     out_dir = f'{Data.ana_dir}/Calibration/ecal'
     os.makedirs(out_dir, exist_ok=True)
+
+    df.plot.scatter('RUNNUMBER', 'period')
+    plt.savefig(f'{out_dir}/run_period.png')
+    plt.close()
 
     out_path = f'{out_dir}/data.parquet'
     log.info(f'Saving to: {out_path}')
