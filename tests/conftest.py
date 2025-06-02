@@ -1,9 +1,11 @@
 '''
 This module is used by pytest to _inject_ fixtures in the tests
 '''
+import os
 import logging
 from importlib.resources import files
 
+import matplotlib.pyplot as plt
 import pytest
 import pandas as pnd
 
@@ -16,6 +18,18 @@ class ConfData:
     Class used to hold data needed for tests
     '''
     l_run : list[int]
+
+    df_pi0= pnd.DataFrame(columns=['run', 'period'])
+
+    @staticmethod
+    def add_run_period(run : int, period : int) -> None:
+        '''
+        Adds to dataframe the run number and the number of days since
+        last pi0 calibration
+        '''
+        df = ConfData.df_pi0
+
+        df.loc[len(df)] = [run, period]
 # ---------------------------------------
 def _load_runs() -> None:
     df = _load_df(name='rundb')
@@ -39,7 +53,19 @@ def pytest_configure(config : pytest.Config) -> None:
     logging.getLogger("PIL.PngImagePlugin").setLevel(logging.WARNING)
     logging.getLogger("matplotlib.font_manager").setLevel(logging.WARNING)
 
-    LogStore.set_level('rx_calibration:pizerodb', 10)
+    LogStore.set_level('rx_calibration:pizerodb', 20)
 
     _load_runs()
+# ---------------------------------------
+def _save_run_period() -> None:
+    df      = ConfData.df_pi0
+    out_dir = '/tmp/tests/rx_calibration/pizerodb'
+    os.makedirs(out_dir, exist_ok=True)
+
+    df.plot.scatter('run', 'period', s=1)
+    plt.savefig(f'{out_dir}/run_period.png')
+    plt.close()
+# ---------------------------------------
+def pytest_sessionfinish(session, exitstatus):
+    _save_run_period()
 # ---------------------------------------
