@@ -3,7 +3,6 @@ Script with code needed to test Corrector class
 '''
 from importlib.resources import files
 
-import dask
 import pandas as pnd
 
 from vector                        import MomentumObject4D as v4d
@@ -16,7 +15,10 @@ from ecal_calibration.corrector    import Corrector
 def _load_data(name : str) -> dict:
     fpath = files('ecal_calibration_data').joinpath(f'tests/regressor/{name}.json')
     fpath = str(fpath)
-    data  = gut.load_json(fpath)
+
+    data            = gut.load_json(fpath)
+    data['L1_brem'] = data['L1_HASBREMADDED']
+    data['L2_brem'] = data['L2_HASBREMADDED']
 
     return data
 # -----------------------------------------------------------
