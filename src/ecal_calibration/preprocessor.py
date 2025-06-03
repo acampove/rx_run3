@@ -38,6 +38,7 @@ class PreProcessor:
         self._brem_cut = '(L1_brem + L2_brem > 0.5) & (L1_brem + L2_brem < 1.5)'
         self._neg_tol  = -10
         self._ddf_res  : DDF
+        self._nentries = None
     # ---------------------------------
     def _apply_selection(self, ddf : DDF) -> DDF:
         log.info(f'Applying: {self._brem_cut}')
@@ -54,7 +55,10 @@ class PreProcessor:
     # ---------------------------------
     def _values(self, kind : str) -> tensor:
         ddf = self.get_data()
-        df  = ddf.compute()
+        if self._nentries is None:
+            df  = ddf.compute()
+        else:
+            df  = ddf.head(self._nentries)
 
         if   kind == 'features':
             l_col = [ var for var in df.columns if var != 'mu' ]
