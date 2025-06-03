@@ -157,3 +157,12 @@ def test_predict_bias(_dask_client : Client, bias : float, kind : str):
     obj = Regressor(ddf_tr=ddf_tr, ddf_ts=ddf_ts, cfg=cfg)
     obj.test()
 # -----------------------------------------------------------
+def test_calibrate():
+    '''
+    Tests `calibrate_electron` from the Regressor class
+    '''
+    electron = v4d(px=2250, py=-3287, pz=43253, e=43437)
+    data     = _load_data(name='row')
+    sr       = pnd.Series(data)
+
+# -----------------------------------------------------------
