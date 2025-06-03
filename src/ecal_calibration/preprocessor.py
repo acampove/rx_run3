@@ -183,15 +183,25 @@ class PreProcessor:
         return - a/b
     # ---------------------------------
     @staticmethod
-    def build_features(row : pnd.Series, skip_target : bool = False) -> pnd.Series:
+    def build_features(
+            row         : pnd.Series,
+            lep         : str  = None,
+            skip_target : bool = False) -> pnd.Series:
         '''
-        Takes a pandas series with information from tree branches, one entry.
+        Builds features and optionally target, needed for training.
+
+        Parameters:
+        row        : Pandas series with information from tree branches, one entry.
+        lep        : By default None, if passed as L1/L2, it will target this lepton to buld features
+        skip_target: By default false, if True it will not calculate "mu". Recommended for prediction mode
 
         Returns series with features and target needed for training or prediction
         '''
-        if   row['L1_brem'] == 1:
+        if   lep is not None:
+            log.debug(f'Picking up user defined lepton {lep}')
+        elif row['L1_brem'] == 1 and row['L2_brem'] != 1:
             lep = 'L1'
-        elif row['L2_brem'] == 1:
+        elif row['L1_brem'] != 1 and row['L2_brem'] == 1:
             lep = 'L2'
         else:
             log.info(row)
