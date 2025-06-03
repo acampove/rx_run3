@@ -104,13 +104,14 @@ def test_flat_bias(bias : float, _dask_client : Client):
     '''
     corr= 1.0 / bias
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    ddf = cut.get_ddf(bias=bias, kind='flat')
+    ddf = cut.get_ddf(name='fake_data',bias=bias, kind='flat')
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
     df  = ddf.head(100)
+    df['mu'] = df['mu'] / 1000.
 
-    name = f'flat_bias/{100 * bias:.0f}'
+    name = f'flat_bias/{bias}'
     _plot_df(df=df, test_name=name, corr=corr)
 
     arr_mu = df['mu'].to_numpy()
@@ -130,11 +131,12 @@ def test_row_bias(_dask_client : Client):
     bias = 1.0
 
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    ddf = cut.get_ddf(bias=bias, kind='row')
+    ddf = cut.get_ddf(name='fake_data',bias=bias, kind='row')
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
-    df  = ddf.head(1000)
+    df  = ddf.head(100)
+    df['mu'] = df['mu'] / 1000.
 
     name = f'row_bias/{100 * bias:.0f}'
     _plot_df(df=df, test_name=name, corr= None)
@@ -148,11 +150,11 @@ def test_features_target(_dask_client : Client, bias : float):
     features
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    ddf = cut.get_ddf(bias=bias, kind='flat')
+    ddf = cut.get_ddf(name='fake_data', bias=bias, kind='flat')
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     fet = pre.features
-    tgt = pre.targets
+    tgt = pre.targets / 1000
 
     nrows, ncols = fet.shape
     nsample, _   = tgt.shape
