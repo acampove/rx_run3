@@ -20,11 +20,19 @@ def _load_data(name : str) -> dict:
 
     return data
 # -----------------------------------------------------------
+def _get_corrector() -> Corrector:
+    kind = 'row_col_are_eng'
+    cfg  = cut.load_cfg(name='tests/corrector/simple')
+    cfg['saving']['out_dir'] = f'regressor/predict_{kind}'
+
+    cal  = Corrector(cfg=cfg)
+
+    return cal
+# -----------------------------------------------------------
 def test_calibrate():
     '''
     Tests `calibrate_electron` from the Corrector class
     '''
-    kind     = 'row_col_are_eng'
 
     electron = v4d(px=2250, py=-3287, pz=43253, e=43437)
     data     = _load_data(name='row')
@@ -40,9 +48,6 @@ def test_calibrate():
     pre = PreProcessor(ddf=ddf_in, cfg=cfg)
     ddf = pre.get_data()
 
-    cfg      = cut.load_cfg(name='tests/regressor/simple')
-    cfg['saving']['out_dir'] =f'regressor/predict_{kind}'
-
-    cal      = Corrector(cfg=cfg)
-    electron = cal.run(electron, ddf=ddf)
+    cor      = _get_corrector()
+    electron = cor.run(electron, ddf=ddf)
 # -----------------------------------------------------------
