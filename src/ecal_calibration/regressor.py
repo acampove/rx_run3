@@ -310,8 +310,9 @@ class Regressor:
     @staticmethod
     def load(model_dir : str) -> Network:
         '''
-        Will load model. This would do exactly what `train` does, but without training.
-        The model has to exist as a `mode.pth` file.
+        Parameters
+        ----------------
+        model_dir: Directory where model.pth is found
 
         Returns
         ----------------
