@@ -1,11 +1,13 @@
 '''
 Script with code needed to test Corrector class
 '''
+from importlib.resources import files
 
 import dask
 import pandas as pnd
 
 from vector                        import MomentumObject4D as v4d
+from dmu.generic                   import utilities        as gut
 from ecal_calibration              import utilities        as cut
 from ecal_calibration.preprocessor import PreProcessor
 from ecal_calibration.corrector    import Corrector
