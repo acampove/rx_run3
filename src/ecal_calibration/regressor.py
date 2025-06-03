@@ -86,7 +86,7 @@ class Regressor:
         constant_target (float) : By default None. If passed, will create network that outputs always this value. Used for debugging
         '''
 
-        features, targets   = self._get_training_data()
+        features, targets   = Regressor.get_tensors(cfg = self._cfg, ddf = self._ddf_tr)
         nsamples, nfeatures = features.shape
 
         log.info(f'Training with {nsamples} samples')
@@ -292,6 +292,35 @@ class Regressor:
         targets = targets.cpu()
 
         return targets.detach().numpy()
+    # ---------------------------------------------
+    @staticmethod
+    def get_tensors(cfg : dict, ddf : DDF) -> tuple[Tensor,Tensor]:
+        '''
+        Provides features and target tensors in a tuple
+
+        Parameters
+        -----------------
+        cfg : Dictionary storing configuration
+        ddf : Dask dataframe with data
+        '''
+        target     = cfg['target']
+        l_feat     = cfg['features']
+
+        log.debug(f'Using features: {l_feat}')
+        log.debug(f'Using target  : {target}')
+
+        df         = ddf.compute()
+        arr_target = df[target].to_numpy()
+        arr_feat   = df[l_feat].values
+
+        features   = torch.tensor(arr_feat, dtype=torch.float32)
+        targets    = torch.tensor(arr_target, dtype=torch.float32)
+        targets    = targets.unsqueeze(1)
+
+        log.debug(f'Features shape: {features.shape}')
+        log.debug(f'Targets shape: {targets.shape}')
+
+        return features, targets
     # ---------------------------------------------
     @staticmethod
     def load(model_dir : str) -> Network:
