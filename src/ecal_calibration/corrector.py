@@ -8,9 +8,9 @@ from dmu.logging.log_store      import LogStore
 from ecal_calibration.network   import Network
 from ecal_calibration.regressor import Regressor
 
-log=LogStore.add_logger('ecal_calibration:calibrator')
+log=LogStore.add_logger('ecal_calibration:corrector')
 # ---------------------------------------
-class Calibrator:
+class Corrector:
     '''
     Class intended to calibrate electrons
     '''
