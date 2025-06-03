@@ -96,7 +96,10 @@ def _plot_correction(org : pnd.DataFrame, cor : pnd.DataFrame, name : str) -> No
         plt.title(title)
         plt.legend()
         plt.xlabel(var)
-        plt.savefig(f'{out_dir}/{var}.png')
+
+        out_path = f'{out_dir}/{var}.png'
+        log.info(f'Saving to: {out_path}')
+        plt.savefig(out_path)
         plt.close()
 #-----------------------------------------
 def _get_df(nentries : int = 10) -> pnd.DataFrame:
