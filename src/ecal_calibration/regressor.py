@@ -42,7 +42,7 @@ class Regressor:
         self._ddf_tr = ddf_tr
         self._ddf_ts = ddf_ts
         self._cfg    = cfg
-        self._out_dir= self._get_out_dir()
+        self._out_dir= Regressor.get_out_dir(cfg=cfg, create=True)
 
         self._device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self._d_area = {0 : 'Outer', 1 : 'Middle', 2 : 'Inner'}
@@ -282,6 +282,26 @@ class Regressor:
         targets = targets.cpu()
 
         return targets.detach().numpy()
+    # ---------------------------------------------
+    @staticmethod
+    def get_out_dir(cfg : dict, create : bool = False) -> str:
+        '''
+        This function assumes that the path will **start** in ANADIR
+
+        Parameters
+        -----------------
+        cfg   : Config with 'saving:out_dir' entry specifying path
+        create: If true, it will try to create the directory
+        '''
+        ana_dir = os.environ['ANADIR']
+        out_dir = cfg['saving']['out_dir']
+        out_dir = f'{ana_dir}/{out_dir}'
+
+        log.info(f'Using output directory: {out_dir}')
+        if create:
+            os.makedirs(out_dir, exist_ok=True)
+
+        return out_dir
     # ---------------------------------------------
     @staticmethod
     def get_tensors(cfg : dict, ddf : DDF) -> tuple[Tensor,Tensor]:
