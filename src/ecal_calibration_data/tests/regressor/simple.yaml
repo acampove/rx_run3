@@ -8,7 +8,6 @@ features:
   - are 
   - eng # This should be BREMTRACKBASEDENERGY when the photon was added by hand
   - npv
-  - per
   - blk
 train:
   lr     : 0.01
