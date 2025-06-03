@@ -137,14 +137,13 @@ class ElectronBiasCorrector:
 
         raise ValueError(f'Cannot find attribute {name} among:')
     # ---------------------------------
-    def _scale_electron(self, e_corr : v4d, row : pnd.Series, fallback : v4d) -> Union[v4d, None]:
+    def _scale_electron(self, e_corr : v4d, row : pnd.Series) -> Union[v4d, None]:
         '''
         e_corr  : Electron with brem added that needs correction by scaling factor "mu"
         row     : Pandas series with information on event
-        fallback: If correction needs to be skipped, return the fallback
         '''
         if not self._use_ecal_calibration:
-            return fallback
+            return e_corr
 
         return e_corr
     # ---------------------------------
