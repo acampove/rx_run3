@@ -8,8 +8,8 @@ import yaml
 import numpy
 from vector                 import MomentumObject4D as v4d
 
-from dmu.logging.log_store   import LogStore
-from rx_data.calo_translator import from_id_to_xy
+from dmu.logging.log_store  import LogStore
+from ecal_calibration       import calo_translator as ctran
 
 log=LogStore.add_logger('rx_data:brem_bias_corrector')
 # --------------------------
@@ -94,7 +94,7 @@ class BremBiasCorrector:
         Takes 4 vector with brem, the row and column locations in ECAL
         Returns corrected photon
         '''
-        x, y         = from_id_to_xy(row=row, col=col, area=area)
+        x, y         = ctran.from_id_to_xy(row=row, col=col, area=area)
         val          = self._find_bin(x, y)
         if val is None:
             return brem
