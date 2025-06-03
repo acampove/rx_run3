@@ -1,6 +1,8 @@
 '''
 Module holding PreProcessor class
 '''
+from contextlib import contextmanager
+
 import torch
 import pandas as pnd
 
@@ -100,6 +102,19 @@ class PreProcessor:
         '''
 
         return self._values(kind='targets')
+    # ---------------------------------
+    @contextmanager
+    def max_entries(self, nentries : int):
+        '''
+        Context manager that will
+        set, temporarily, the number of entries, e.g for tests
+        '''
+        old            = self._nentries
+        self._nentries = nentries
+        try:
+            yield
+        finally:
+            self._nentries = old
     # ---------------------------------
     @staticmethod
     def _get_normal(row : pnd.Series) -> v3d:
