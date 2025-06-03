@@ -50,6 +50,11 @@ class ElectronBiasCorrector:
             log.warning('Skipping electron correction')
     # ---------------------------------
     def _get_electron(self, row : pnd.Series, kind : str) -> v4d:
+        '''
+        Parameters:
+
+        kind : TRACK or empty string for track electron or full electron, respectively
+        '''
         px = self._attr_from_row(row, f'{self._name}_{kind}PX')
         py = self._attr_from_row(row, f'{self._name}_{kind}PY')
         pz = self._attr_from_row(row, f'{self._name}_{kind}PZ')
