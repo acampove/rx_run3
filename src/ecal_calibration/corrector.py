@@ -1,8 +1,9 @@
 '''
 Module containing the Corrector class
 '''
+import torch
+import pandas as pnd
 
-from dask.dataframe             import DataFrame        as DDF
 from vector                     import MomentumObject4D as v4d
 from dmu.logging.log_store      import LogStore
 from ecal_calibration.network   import Network
