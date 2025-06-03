@@ -23,7 +23,7 @@ class BremBiasCorrector:
         self._d_bound = self._load_yaml(pattern='regionREGION_bins.yaml')
     # --------------------------
     def _load_yaml(self, pattern : str) -> dict:
-        path_pattern = files('rx_data_data').joinpath(f'brem_correction/{pattern}')
+        path_pattern = files('ecal_calibration_data').joinpath(f'brem_correction/{pattern}')
         path_pattern = str(path_pattern)
 
         d_bound = {}
