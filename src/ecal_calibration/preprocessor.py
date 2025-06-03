@@ -35,7 +35,7 @@ class PreProcessor:
         '''
         self._ddf      = ddf
         self._cfg      = cfg
-        self._brem_cut = 'L1_brem + L2_brem == 1'
+        self._brem_cut = '(L1_brem + L2_brem > 0.5) & (L1_brem + L2_brem < 1.5)'
         self._neg_tol  = -10
         self._ddf_res  : DDF
     # ---------------------------------
