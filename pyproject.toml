@@ -27,6 +27,7 @@ make_toy_decays ='ecal_calibration_scripts.make_toy_decays:main'
 [tool.setuptools.package-data]
 ecal_calibration_data=[
 '*/*/*.yaml',
+'*/*/*.json',
 ]
 
 [tool.setuptools]
