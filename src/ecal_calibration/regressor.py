@@ -283,26 +283,6 @@ class Regressor:
         plt.savefig(f'{self._out_dir}/corr_vs_block_{kind}.png')
         plt.close()
     # ---------------------------------------------
-    def load(self) -> bool:
-        '''
-        Will load model. This would do exactly what `train` does, but without training.
-        The model has to exist as a `mode.pth` file.
-
-        If model is not found, return False
-        '''
-        model_path = f'{self._out_dir}/model.pth'
-        log.debug(f'Picking model from: {model_path}')
-
-        if not os.path.isfile(model_path):
-            log.info(f'Model not found in: {model_path}')
-            return False
-
-        net        = torch.load(model_path, weights_only=False)
-        net.eval()
-        self._net  = self._move_to_gpu(net)
-
-        return True
-    # ---------------------------------------------
     def predict(self, features : Tensor) -> numpy.ndarray:
         '''
         Runs prediction of targets and returns them as a numpy array
@@ -326,4 +306,26 @@ class Regressor:
         targets = targets.cpu()
 
         return targets.detach().numpy()
+    # ---------------------------------------------
+    @staticmethod
+    def load(model_dir : str) -> Network:
+        '''
+        Will load model. This would do exactly what `train` does, but without training.
+        The model has to exist as a `mode.pth` file.
+
+        Returns
+        ----------------
+        Network with model
+        '''
+        model_path = f'{model_dir}/model.pth'
+        log.debug(f'Picking model from: {model_path}')
+
+        if not os.path.isfile(model_path):
+            log.info(f'Model not found in: {model_path}')
+            return None
+
+        net  = torch.load(model_path, weights_only=False)
+        net.eval()
+
+        return net
 # ---------------------------------------------
