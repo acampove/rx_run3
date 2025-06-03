@@ -156,12 +156,12 @@ class Regressor:
         '''
         Runs comparison of predicted
         '''
-        net       = Regressor.load(model_dir = self._out_dir)
-        if net is None:
+        self._net = Regressor.load(model_dir = self._out_dir)
+        if self._net is None:
             log.info('Model not found, training it')
             self.train()
 
-        self._net     = self._move_to_gpu(net)
+        self._net     = self._move_to_gpu(self._net)
         l_fea         = self._cfg['features']
         ddf           = self._ddf_ts
         ddf           = ddf[ddf['row'] > 1]
@@ -301,12 +301,12 @@ class Regressor:
         ---------------
         Numpy array with values of predicted targets
         '''
-        net       = Regressor.load(model_dir = self._out_dir)
-        if net is None:
+        self._net = Regressor.load(model_dir = self._out_dir)
+        if self._net is None:
             log.info('Model not found, training it')
             self.train()
 
-        self._net = self._move_to_gpu(net)
+        self._net = self._move_to_gpu(self._net)
         features= self._move_to_gpu(features)
         targets = self._net(features)
         targets = targets.cpu()
