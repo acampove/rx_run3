@@ -1,16 +1,28 @@
 '''
 Script with code needed to test Calibration class
 '''
+from importlib.resources import files
+
 import numpy
 import pytest
+import pandas            as pnd
 import matplotlib.pyplot as plt
 
+from vector                        import MomentumObject4D as v4d
 from torch                         import Tensor
 from dask.distributed              import Client
+from dmu.generic                   import utilities as gut
 from ecal_calibration.preprocessor import PreProcessor
 from ecal_calibration.regressor    import Regressor
 from ecal_calibration              import utilities as cut
 
+# -----------------------------------------------------------
+def _load_data(name : str) -> dict:
+    fpath = files('ecal_calibration_data').joinpath(f'tests/regressor/{name}.json')
+    fpath = str(fpath)
+    data  = gut.load_json(fpath)
+
+    return data
 # -----------------------------------------------------------
 def _plot_target_vs_features(arr_pred : numpy.ndarray, features : Tensor) -> None:
     arr_feat = features.numpy()
