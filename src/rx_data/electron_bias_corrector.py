@@ -14,7 +14,7 @@ from rx_data.brem_bias_corrector import BremBiasCorrector
 log=LogStore.add_logger('rx_data:electron_bias_corrector')
 # ---------------------------------
 class ElectronBiasCorrector:
-    '''
+    r'''
     Class meant to correct electron kinematics
     The correction is done by using the `kind` argument in the correct method. Supported arguments are:
 
@@ -23,6 +23,7 @@ class ElectronBiasCorrector:
     brem_track_2: This will:
         - For electrons with brem: Do nothing
         - For electrons without brem: If `BREMTRACKBASEDENERGY > 50 MeV` add brem, otherwise do nothing.
+        - Optionally, rescale energy of electron based on measurement of "mu" through the momentum closure.
     '''
     # ---------------------------------
     def __init__(self, skip_correction : bool = False, brem_energy_threshold : float = 300):
