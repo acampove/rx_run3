@@ -101,7 +101,6 @@ class PreProcessor:
         data['are'] = row_sr[f'{lep}_BREMHYPOAREA']
         data['eng'] = row_sr[f'{lep}_BREMTRACKBASEDENERGY'] / 1000 # Very large numbers seem to break down training
         data['npv'] = row_sr['nPVs']
-        data['per'] = row_sr['period']
         data['blk'] = row_sr['block']
         data['mu' ] = 1000 * self._get_correction(row=row_sr, lepton=lep)
 
