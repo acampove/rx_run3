@@ -156,7 +156,9 @@ class Regressor:
         '''
         Runs comparison of predicted
         '''
-        if not self.load():
+        net       = Regressor.load(model_dir = self._out_dir)
+        self._net = self._move_to_gpu(net)
+        if net is None:
             log.info('Model not found, training it')
             self.train()
 
