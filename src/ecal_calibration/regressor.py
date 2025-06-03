@@ -56,17 +56,6 @@ class Regressor:
         log.info(f'Saving model to: {out_path}')
         torch.save(regressor, out_path)
     # ---------------------------------------------
-    def _move_to_gpu(self, x):
-        if not torch.cuda.is_available():
-            log.warning('Cannot move object to GPU, GPU not available?')
-            return x
-
-        log.debug('Moving object to GPU')
-
-        x = x.to(self._device)
-
-        return x
-    # ---------------------------------------------
     def train(self, constant_target : float = None) -> None:
         '''
         Will train the regressor
@@ -86,9 +75,9 @@ class Regressor:
         else:
             net = ConstantModel(target=constant_target)
 
-        net      = self._move_to_gpu(net)
-        features = self._move_to_gpu(features)
-        targets  = self._move_to_gpu(targets)
+        net      = Regressor.move_to_gpu(net)
+        features = Regressor.move_to_gpu(features)
+        targets  = Regressor.move_to_gpu(targets)
 
         criterion = nn.MSELoss()
 
@@ -131,7 +120,7 @@ class Regressor:
             log.info('Model not found, training it')
             self.train()
 
-        self._net     = self._move_to_gpu(self._net)
+        self._net     = Regressor.move_to_gpu(self._net)
         l_fea         = self._cfg['features']
         ddf           = self._ddf_ts
         ddf           = ddf[ddf['row'] > 1]
@@ -276,12 +265,27 @@ class Regressor:
             log.info('Model not found, training it')
             self.train()
 
-        self._net = self._move_to_gpu(self._net)
-        features= self._move_to_gpu(features)
-        targets = self._net(features)
-        targets = targets.cpu()
+        self._net = Regressor.move_to_gpu(self._net)
+        features  = Regressor.move_to_gpu(features)
+        targets   = self._net(features)
+        targets   = targets.cpu()
 
         return targets.detach().numpy()
+    # ---------------------------------------------
+    @staticmethod
+    def move_to_gpu(x):
+        '''
+        Will move tensor to GPU in order to do training, prediction, etc
+        '''
+        if not torch.cuda.is_available():
+            log.warning('Cannot move object to GPU, GPU not available?')
+            return x
+
+        log.debug('Moving object to GPU')
+
+        x = x.to(Regressor.device)
+
+        return x
     # ---------------------------------------------
     @staticmethod
     def get_out_dir(cfg : dict, create : bool = False) -> str:
