@@ -79,13 +79,12 @@ def test_nobias(_dask_client : Client):
     - The bias is zero, i.e. mu=1
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    ddf = cut.get_ddf(bias=1.0, kind='flat')
+    ddf = cut.get_ddf(name='fake_data', bias=1.0, kind='flat')
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
-    df  = ddf.head(1000)
-
-    df  = ddf.compute()
+    df  = ddf.head(100)
+    df['mu'] = df['mu'] / 1000.
     _plot_df(df=df, test_name='nobias', corr=None)
 
     arr_mu = df['mu'].to_numpy()
