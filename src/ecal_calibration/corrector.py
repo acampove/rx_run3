@@ -35,21 +35,21 @@ class Corrector:
 
         return net
     # ---------------------------------------
-    def run(self, electron : v4d, ddf : DDF) -> v4d:
+    def run(self, electron : v4d, row : pnd.Series) -> v4d:
         '''
         Calibrates electron
 
         Parameters
         -----------------
         electron: Lorentz vector before calibration
-        ddf     : Dask dataframe, after the `PreProcessor` class has been ran.
+        row     : Pandas series with the features needed for predicting correction 
 
         Returns
         -----------------
         Lorentz vector representing calibrated electron
         '''
-
-        features, _ = Regressor.get_tensors(cfg = self._cfg, ddf = ddf)
+        features    = row.to_numpy()
+        features    = torch.tensor(features, dtype=torch.float32)
         features    = Regressor.move_to_gpu(features)
 
         targets     = self._net(features)
