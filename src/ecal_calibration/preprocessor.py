@@ -40,11 +40,14 @@ class PreProcessor:
         self._ddf_res  : DDF
     # ---------------------------------
     def _apply_selection(self, ddf : DDF) -> DDF:
+        log.info(f'Applying: {self._brem_cut}')
         ddf = ddf.query(self._brem_cut)
+
         if 'selection' not in self._cfg:
             return ddf
 
         for selection in self._cfg['selection']:
+            log.info(f'Applying: {selection}')
             ddf = ddf.query(selection)
 
         return ddf
