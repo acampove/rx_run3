@@ -2,6 +2,8 @@
 Module with ElectronBiasCorrector class
 '''
 import math
+from typing                 import Union
+
 import pandas as pnd
 from dmu.logging.log_store  import LogStore
 from vector                 import MomentumObject3D as v3d
@@ -38,6 +40,10 @@ class ElectronBiasCorrector:
         #  0 : If the electron is not assigned any brem
         #  1 : If the electron is assigned brem
         self._brem_status : int
+
+        # This will turn ON/OFF the code that reads the regressor
+        # to apply the energy scaling to electrons based on kinematic balance
+        self._use_ecal_calibration = True
 
         if self._skip_correction:
             log.warning('Skipping electron correction')
@@ -124,6 +130,17 @@ class ElectronBiasCorrector:
             log.info(col_name)
 
         raise ValueError(f'Cannot find attribute {name} among:')
+    # ---------------------------------
+    def _scale_electron(self, e_corr : v4d, row : pnd.Series, fallback : v4d) -> Union[v4d, None]:
+        '''
+        e_corr  : Electron with brem added that needs correction by scaling factor "mu"
+        row     : Pandas series with information on event
+        fallback: If correction needs to be skipped, return the fallback
+        '''
+        if not self._use_ecal_calibration:
+            return fallback
+
+        return e_corr
     # ---------------------------------
     def _correct_with_bias_maps(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
         '''
