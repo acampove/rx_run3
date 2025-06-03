@@ -51,16 +51,6 @@ class Regressor:
 
         self._net : Network
     # ---------------------------------------------
-    def _get_out_dir(self) -> str:
-        ana_dir = os.environ['ANADIR']
-        out_dir = self._cfg['saving']['out_dir']
-        out_dir = f'{ana_dir}/{out_dir}'
-
-        log.info(f'Using output directory: {out_dir}')
-        os.makedirs(out_dir, exist_ok=True)
-
-        return out_dir
-    # ---------------------------------------------
     def _save_regressor(self, regressor : Network) -> None:
         out_path = f'{self._out_dir}/model.pth'
         log.info(f'Saving model to: {out_path}')
