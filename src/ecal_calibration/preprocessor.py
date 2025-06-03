@@ -142,8 +142,6 @@ class PreProcessor:
         ddf = self._apply_selection(ddf=ddf)
 
         ddf = ddf.apply(self._build_features, axis=1)
-        ddf = ddf.persist()
-
         self._ddf_res = ddf
 
         return ddf
