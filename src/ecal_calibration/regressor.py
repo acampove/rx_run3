@@ -28,6 +28,7 @@ class Regressor:
     Class used to train a regressor to _learn_ energy
     corrections
     '''
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     # ---------------------------------------------
     def __init__(self, ddf_tr : DDF, ddf_ts : DDF, cfg : dict):
         '''
@@ -44,7 +45,6 @@ class Regressor:
         self._cfg    = cfg
         self._out_dir= Regressor.get_out_dir(cfg=cfg, create=True)
 
-        self._device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self._d_area = {0 : 'Outer', 1 : 'Middle', 2 : 'Inner'}
         self._d_color= {0 : 'blue' , 1 : 'green' , 2 : 'red'}
         self._d_var  = {'Real' : 'mu', 'Predicted' : 'mu_pred'}
