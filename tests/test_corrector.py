@@ -39,17 +39,7 @@ def test_calibrate():
     electron = v4d(px=2250, py=-3287, pz=43253, e=43437)
     data     = _load_data(name='row')
     sr       = pnd.Series(data)
-    df       = sr.to_frame()
-    df       = df.T
-    df['L1_brem'] = df['L1_HASBREMADDED']
-    df['L2_brem'] = df['L2_HASBREMADDED']
-
-    ddf_in = dask.dataframe.from_pandas(df)
-
-    cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    pre = PreProcessor(ddf=ddf_in, cfg=cfg)
-    ddf = pre.get_data()
-
+    sr       = PreProcessor.build_features(row=sr, skip_target=True)
     cor      = _get_corrector()
-    electron = cor.run(electron, ddf=ddf)
+    electron = cor.run(electron, row=sr)
 # -----------------------------------------------------------
