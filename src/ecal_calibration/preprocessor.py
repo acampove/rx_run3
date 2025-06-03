@@ -82,7 +82,25 @@ class PreProcessor:
         ddf = ddf.repartition(partition_size=partition_size)
         ddf = self._apply_selection(ddf=ddf)
 
-        ddf = ddf.apply(PreProcessor.build_features, axis=1)
+        # This meta thing MUST be here
+        # Or else dask will try to "guess"
+        # the structure by plugging in data
+        # that will make the code rise exception
+        meta = {
+            'row': 'f8',
+            'col': 'f8',
+            'are': 'f8',
+            'eng': 'f8',
+            'npv': 'i8',
+            'blk': 'i8',
+            'mu' : 'f8'
+        }
+
+        ddf = ddf.apply(
+                PreProcessor.build_features,
+                meta = meta,
+                axis = 1)
+
         self._ddf_res = ddf
 
         return ddf
