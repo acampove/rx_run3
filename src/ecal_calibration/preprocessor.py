@@ -150,26 +150,32 @@ class PreProcessor:
         return - a/b
     # ---------------------------------
     @staticmethod
-    def build_features(row_sr : pnd.Series, skip_target : bool = False) -> pnd.Series:
+    def build_features(row : pnd.Series, skip_target : bool = False) -> pnd.Series:
         '''
         Takes a pandas series with information from tree branches, one entry.
 
         Returns series with features and target needed for training or prediction
         '''
-        lep = 'L1' if row_sr['L1_brem'] == 1 else 'L2'
+        if   row['L1_brem'] == 1:
+            lep = 'L1'
+        elif row['L2_brem'] == 1:
+            lep = 'L2'
+        else:
+            log.info(row)
+            raise ValueError('One and only one electron must have brem')
 
         data        = {}
-        data['row'] = row_sr[f'{lep}_BREMHYPOROW']
-        data['col'] = row_sr[f'{lep}_BREMHYPOCOL']
-        data['are'] = row_sr[f'{lep}_BREMHYPOAREA']
-        data['eng'] = row_sr[f'{lep}_BREMTRACKBASEDENERGY'] / 1000 # Very large numbers seem to break down training
-        data['npv'] = row_sr['nPVs']
-        data['blk'] = row_sr['block']
+        data['row'] = row[f'{lep}_BREMHYPOROW']
+        data['col'] = row[f'{lep}_BREMHYPOCOL']
+        data['are'] = row[f'{lep}_BREMHYPOAREA']
+        data['eng'] = row[f'{lep}_BREMTRACKBASEDENERGY'] / 1000 # Very large numbers seem to break down training
+        data['npv'] = row['nPVs']
+        data['blk'] = row['block']
 
         if not skip_target:
-            data['mu' ] = 1000 * PreProcessor._get_correction(row=row_sr, lepton=lep)
+            data['mu' ] = 1000 * PreProcessor._get_correction(row=row, lepton=lep)
 
-        row_sr = pnd.Series(data)
+        row = pnd.Series(data)
 
-        return row_sr
+        return row
 # --------------------------
