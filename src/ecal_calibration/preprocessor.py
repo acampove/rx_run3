@@ -1,8 +1,6 @@
 '''
 Module holding PreProcessor class
 '''
-import math
-
 import torch
 import pandas as pnd
 
