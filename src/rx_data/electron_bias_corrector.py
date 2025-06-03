@@ -228,7 +228,9 @@ class ElectronBiasCorrector:
         if self._attr_from_row(row, f'{self._name}_HASBREMADDED'):
             self._brem_status = -1
             log.info('Electron has already brem, skipping correction')
-            return None
+            e_corr = self._get_electron(row, kind='')
+            e_corr = self._scale_electron(e_corr, row)
+            return e_corr
 
         brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
         if brem_energy <  self._min_brem_energy:
@@ -239,6 +241,7 @@ class ElectronBiasCorrector:
 
         log.info('Correcting electron')
         e_corr = self._correct_with_track_brem_1(e_track, row)
+        e_corr = self._scale_electron(e_corr, row)
 
         return e_corr
     # ---------------------------------
