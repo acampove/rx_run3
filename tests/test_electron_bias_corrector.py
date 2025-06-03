@@ -107,8 +107,6 @@ def _get_df(nentries : int = 10) -> pnd.DataFrame:
 
     gtr = RDFGetter(sample='DATA_24_Mag*_24c4', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
-    rdf = rdf.Define('L1_TRACK_PT' , 'TMath::Sqrt(L1_TRACK_PX * L1_TRACK_PX + L1_TRACK_PY * L1_TRACK_PY)')
-    rdf = rdf.Define('L2_TRACK_PT' , 'TMath::Sqrt(L2_TRACK_PX * L2_TRACK_PX + L2_TRACK_PY * L2_TRACK_PY)')
 
     rdf = rdf.Filter('mva_cmb > 0.8 && mva_prc > 0.5')
     rdf = rdf.Filter('Jpsi_M > 2800 && Jpsi_M < 3200')
