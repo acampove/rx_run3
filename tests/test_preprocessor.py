@@ -149,12 +149,15 @@ def test_features_target(_dask_client : Client, bias : float):
     Preprocesses a Dask dataframe and provides the tensor with the
     features
     '''
+    log.info('Running test_features_target')
+
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
     ddf = cut.get_ddf(name='fake_data', bias=bias, kind='flat')
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
-    fet = pre.features
-    tgt = pre.targets / 1000
+    with pre.max_entries(100):
+        fet = pre.features
+        tgt = pre.targets / 1000
 
     nrows, ncols = fet.shape
     nsample, _   = tgt.shape
