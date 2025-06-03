@@ -80,7 +80,7 @@ class PreProcessor:
         ddf = ddf.repartition(partition_size=partition_size)
         ddf = self._apply_selection(ddf=ddf)
 
-        ddf = ddf.apply(self._build_features, axis=1)
+        ddf = ddf.apply(PreProcessor.build_features, axis=1)
         self._ddf_res = ddf
 
         return ddf
