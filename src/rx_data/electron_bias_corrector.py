@@ -3,13 +3,17 @@ Module with ElectronBiasCorrector class
 '''
 import math
 from typing                 import Union
+from importlib.resources    import files
 
 import pandas as pnd
 from dmu.logging.log_store  import LogStore
+from dmu.generic            import utilities        as gut
 from vector                 import MomentumObject3D as v3d
 from vector                 import MomentumObject4D as v4d
 
-from rx_data.brem_bias_corrector import BremBiasCorrector
+from ecal_calibration.preprocessor import PreProcessor
+from ecal_calibration.corrector    import Corrector
+from rx_data.brem_bias_corrector   import BremBiasCorrector
 
 log=LogStore.add_logger('rx_data:electron_bias_corrector')
 # ---------------------------------
