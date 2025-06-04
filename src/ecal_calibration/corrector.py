@@ -35,7 +35,20 @@ class Corrector:
 
         return net
     # ---------------------------------------
-    def run(self, electron : v4d, row : pnd.Series) -> v4d:
+    def _get_correction_from_nn(self, row : pnd.Series) -> float:
+        features = row.to_numpy()
+        features = torch.tensor(features, dtype=torch.float32)
+
+        targets  = self._net(features)
+        val      = targets.detach().numpy()
+
+        return val
+    # ---------------------------------------
+    def run(
+            self,
+            electron : v4d,
+            row      : pnd.Series,
+            from_nn  : bool = True) -> v4d:
         '''
         Calibrates electron
 
