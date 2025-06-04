@@ -39,7 +39,10 @@ def test_calibrate():
 
     data     = _load_data(name='row')
     sr       = pnd.Series(data)
-    sr       = PreProcessor.build_features(row=sr, skip_target=True)
+    sr       = PreProcessor.build_features(
+            row        =  sr,
+            lep        ='L1',
+            skip_target=True)
     cor      = _get_corrector()
 
     for val in tqdm.tqdm(range(100), ascii=' -'):
