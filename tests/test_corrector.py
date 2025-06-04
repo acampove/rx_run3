@@ -3,6 +3,7 @@ Script with code needed to test Corrector class
 '''
 from importlib.resources import files
 
+import tqdm
 import pandas as pnd
 
 from vector                        import MomentumObject4D as v4d
@@ -36,10 +37,12 @@ def test_calibrate():
     Tests `calibrate_electron` from the Corrector class
     '''
 
-    electron = v4d(px=2250, py=-3287, pz=43253, e=43437)
     data     = _load_data(name='row')
     sr       = pnd.Series(data)
     sr       = PreProcessor.build_features(row=sr, skip_target=True)
     cor      = _get_corrector()
-    electron = cor.run(electron, row=sr)
+
+    for val in tqdm.tqdm(range(100), ascii=' -'):
+        electron = v4d(px=2250 + val, py=-3287 + val, pz=43253, e=43437)
+        electron = cor.run(electron, row=sr)
 # -----------------------------------------------------------
