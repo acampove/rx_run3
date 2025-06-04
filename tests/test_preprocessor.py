@@ -187,3 +187,16 @@ def test_features_target(_dask_client : Client, bias : float):
     corr = 1.0 / bias
     assert torch.allclose(tgt, torch.tensor(corr), rtol=1e-5)
 # ---------------------------------------------
+def test_real_bias(_dask_client : Client):
+    '''
+    Run over real data
+    '''
+    cfg = cut.load_cfg(name='tests/preprocessor/simple')
+    ddf = cut.get_ddf(name='real_data',bias=None, kind='flat')
+    pre = PreProcessor(ddf=ddf, cfg=cfg)
+    ddf = pre.get_data()
+
+    df       = ddf.compute()
+    df['mu'] = df['mu'] / 1000.
+    _plot_df(df=df, test_name='real_bias', corr=None)
+# ---------------------------------------------
