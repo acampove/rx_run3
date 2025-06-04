@@ -23,8 +23,6 @@ def pytest_configure(config : pytest.Config) -> None:
     logging.getLogger("PIL.PngImagePlugin").setLevel(logging.WARNING)
     logging.getLogger("matplotlib.font_manager").setLevel(logging.WARNING)
 
-    LogStore.set_level('ecal_calibration:regressor'   , 10)
-    LogStore.set_level('ecal_calibration:preprocessor', 10)
 # ---------------------------------------
 @pytest.fixture(scope='session')
 def _dask_client():
