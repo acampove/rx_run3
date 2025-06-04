@@ -24,6 +24,8 @@ class Corrector:
         '''
         self._cfg = cfg
         self._net = self._get_network()
+
+        self._electron_mass = 0.511
     # ---------------------------------------
     def _get_network(self) -> Network:
         model_dir = Regressor.get_out_dir(cfg=self._cfg)
@@ -40,7 +42,7 @@ class Corrector:
         Parameters
         -----------------
         electron: Lorentz vector before calibration
-        row     : Pandas series with the features needed for predicting correction 
+        row     : Pandas series with the features needed for predicting correction
 
         Returns
         -----------------
@@ -56,8 +58,13 @@ class Corrector:
         val         = float(val) / 1000.
 
         log.debug(f'Original : {electron}')
-        electron    = val * electron
-        log.debug(f'Corrected: {electron}')
+        res = v4d(
+                pt  = val * electron.pt,
+                eta =       electron.eta,
+                phi =       electron.phi,
+                mass= self._electron_mass)
 
-        return electron
+        log.debug(f'Corrected: {res}')
+
+        return res
 # ---------------------------------------
