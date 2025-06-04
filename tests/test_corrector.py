@@ -71,8 +71,12 @@ def test_calibrate_benchmark(_dask_client):
     cor      = _get_corrector()
 
     with LogStore.level('ecal_calibration:corrector', 30):
-        for val in tqdm.tqdm(range(1000), ascii=' -'):
-            electron = v4d(px=2250 + val, py=-3287 + val, pz=43253, e=43437)
+        for val in tqdm.tqdm(range(10_000), ascii=' -'):
+            electron = v4d(
+                    px=-10_000 + val,
+                    py=-10_000 + val,
+                    pz= 43253,
+                    e=  43437)
+
             electron = cor.run(electron, row=sr)
 # -----------------------------------------------------------
-
