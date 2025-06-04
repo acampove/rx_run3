@@ -64,8 +64,8 @@ def normalize_tensor(x : Tensor) -> Tensor:
     return x
 # ------------------------------------
 def get_ddf(
-        name : str, 
-        bias : float, 
+        name : str,
+        bias : float,
         kind : str) -> DDF:
     '''
     Returns Dask DataFrame with toy data, used for tests
