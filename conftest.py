@@ -22,7 +22,6 @@ def pytest_configure(config : pytest.Config) -> None:
 
     logging.getLogger("PIL.PngImagePlugin").setLevel(logging.WARNING)
     logging.getLogger("matplotlib.font_manager").setLevel(logging.WARNING)
-
 # ---------------------------------------
 @pytest.fixture(scope='session')
 def _dask_client():
