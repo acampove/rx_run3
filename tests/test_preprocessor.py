@@ -42,10 +42,16 @@ def _plot_df(
 def _plot_var_mu(df : pnd.DataFrame, test_name : str) -> None:
     out_dir = f'{Data.out_dir}/{test_name}'
     os.makedirs(out_dir, exist_ok=True)
-    for column in df.columns:
-        df.plot.scatter(x=column, y='mu', s=5)
+    for column, name in Data.d_feat.items():
+        df.plot.scatter(x=column, y='mu', s=1)
 
         plt.legend()
+        plt.grid()
+        plt.xlabel(name)
+        plt.ylabel(r'$\mu$')
+        plt.ylim(0.2, 1.8)
+        if name == 'eng':
+            plt.xlim(bottom=0.0)
         plt.savefig(f'{out_dir}/{column}_mu.png')
         plt.close()
 # ---------------------------------------------
@@ -53,11 +59,22 @@ def _plot_bias(df : pnd.DataFrame, test_name : str, corr : float) -> None:
     out_dir = f'{Data.out_dir}/{test_name}'
     os.makedirs(out_dir, exist_ok=True)
 
-    df['mu'].plot.hist(bins=101, label='measured')
+    ax = None
+    for area, df_area in df.groupby('are'):
+        ax = df_area['mu'].plot.hist(
+                bins=101,
+                label=f'Region {area}',
+                histtype='step',
+                ax=ax,
+                density=True)
+
     if corr is not None:
         plt.axvline(x=corr, ls=':', label='expected', color='red')
 
     plt.legend()
+    plt.xlabel(r'$\mu$')
+    plt.ylabel('Normalized')
+    plt.grid()
     plt.savefig(f'{out_dir}/mu.png')
     plt.close()
 # ---------------------------------------------
@@ -65,11 +82,11 @@ def _plot_features(df : pnd.DataFrame, test_name : str):
     out_dir = f'{Data.out_dir}/{test_name}'
     os.makedirs(out_dir, exist_ok=True)
 
-    for feature in ['eng', 'row', 'col', 'are', 'npv', 'blk']:
-        df[feature].plot.hist(bins=100)
+    for feat, name in Data.d_feat.items() :
+        df[feat].plot.hist(bins=100)
 
-        plt.xlabel(feature)
-        plt.savefig(f'{out_dir}/{feature}.png')
+        plt.xlabel(name)
+        plt.savefig(f'{out_dir}/{feat}.png')
         plt.close()
 # ---------------------------------------------
 def test_nobias(_dask_client : Client):
