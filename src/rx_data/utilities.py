@@ -208,7 +208,7 @@ def _preprocess_lepton(rdf : RDataFrame, lep : str) -> None:
 # ------------------------------------------
 def _pick_column(name : str) -> bool:
     # To make friend trees and align entries
-    to_keep  = ['EVENTNUMBER', 'RUNNUMBER']
+    to_keep  = ['EVENTNUMBER', 'RUNNUMBER', 'nPVs']
     # For q2 smearing
     to_keep += ['nbrem'      , 'block', 'Jpsi_TRUEM', 'B_TRUEM']
     # To recalculate DIRA
