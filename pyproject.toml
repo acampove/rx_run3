@@ -11,6 +11,7 @@ dependencies= [
 'numpy',
 'toml',
 'uproot',
+'tensorflow',
 'awkward-pandas', # Because DDFGetter might need to access files with jagged data?
 'dask[dataframe,distributed]',
 'numpy',
