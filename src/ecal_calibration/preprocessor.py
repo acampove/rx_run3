@@ -204,6 +204,8 @@ class PreProcessor:
 
         Returns series with features and target needed for training or prediction
         '''
+        log.debug('Building features')
+
         if   lep is not None:
             log.debug(f'Picking up user defined lepton {lep}')
         elif row['L1_brem'] == 1 and row['L2_brem'] != 1:
