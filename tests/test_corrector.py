@@ -4,14 +4,22 @@ Script with code needed to test Corrector class
 from importlib.resources import files
 
 import tqdm
+import pytest
 import pandas as pnd
 
 from vector                        import MomentumObject4D as v4d
 from dmu.generic                   import utilities        as gut
+from dmu.logging.log_store         import LogStore
 from ecal_calibration              import utilities        as cut
 from ecal_calibration.preprocessor import PreProcessor
 from ecal_calibration.corrector    import Corrector
 
+# -----------------------------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('ecal_calibration:regressor'   , 20)
+    LogStore.set_level('ecal_calibration:preprocessor', 20)
+    LogStore.set_level('ecal_calibration:corrector'   , 10)
 # -----------------------------------------------------------
 def _load_data(name : str) -> dict:
     fpath = files('ecal_calibration_data').joinpath(f'tests/regressor/{name}.json')
