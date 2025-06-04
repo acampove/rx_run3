@@ -252,7 +252,7 @@ class ElectronBiasCorrector:
 
         return e_track + gamma
     # ---------------------------------
-    def _correct_with_track_brem_2(self, e_track : v4d, row : pnd.Series) -> v4d:
+    def _correct_with_track_brem_2(self, e_track : v4d, row : pnd.Series, name : str) -> v4d:
         '''
         Smarter strategy than brem_track_1
         '''
@@ -260,7 +260,7 @@ class ElectronBiasCorrector:
             self._brem_status = -1
             log.info('Electron has already brem, skipping correction')
             e_corr = self._get_electron(row, kind='')
-            e_corr = self._scale_electron(e_corr, row)
+            e_corr = self._scale_electron(e_corr, row, name)
             return e_corr
 
         brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
@@ -272,7 +272,7 @@ class ElectronBiasCorrector:
 
         log.info('Correcting electron')
         e_corr = self._correct_with_track_brem_1(e_track, row)
-        e_corr = self._scale_electron(e_corr, row)
+        e_corr = self._scale_electron(e_corr, row, name)
 
         return e_corr
     # ---------------------------------
@@ -296,7 +296,7 @@ class ElectronBiasCorrector:
         elif kind == 'brem_track_1':
             e_corr = self._correct_with_track_brem_1(e_track, row)
         elif kind == 'brem_track_2':
-            e_corr = self._correct_with_track_brem_2(e_track, row)
+            e_corr = self._correct_with_track_brem_2(e_track, row, name=name)
         else:
             raise NotImplementedError(f'Invalid correction of type: {kind}')
 
