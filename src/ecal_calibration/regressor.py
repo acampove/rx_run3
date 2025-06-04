@@ -354,7 +354,7 @@ class Regressor:
             log.info(f'Model not found in: {model_path}')
             return None
 
-        net  = torch.load(model_path, weights_only=False)
+        net = torch.load(model_path, map_location='cpu', weights_only=False)
         net.eval()
 
         return net
