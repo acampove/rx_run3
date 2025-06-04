@@ -217,12 +217,14 @@ class PreProcessor:
             raise ValueError('One and only one electron must have brem')
 
         data        = {}
+        data['nam'] = lep
         data['row'] = row[f'{lep}_BREMHYPOROW']
         data['col'] = row[f'{lep}_BREMHYPOCOL']
         data['are'] = row[f'{lep}_BREMHYPOAREA']
         data['eng'] = row[f'{lep}_BREMTRACKBASEDENERGY'] / 1000 # Very large numbers seem to break down training
         data['npv'] = row['nPVs']
         data['blk'] = row['block']
+        data['evn'] = row['EVENTNUMBER']
 
         if not skip_target:
             data['mu' ] = 1000 * PreProcessor._get_correction(row=row, lepton=lep)
