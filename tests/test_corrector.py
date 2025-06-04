@@ -57,6 +57,24 @@ def test_calibrate_simple(_dask_client):
         electron = v4d(pt=2250 + val, eta=3.0, phi=1, m=0.511)
         electron = cor.run(electron, row=sr)
 # -----------------------------------------------------------
+def test_calibrate_are(_dask_client):
+    '''
+    Tests tests correction for different areas
+    '''
+
+    data     = _load_data(name='row')
+    sr       = pnd.Series(data)
+    sr       = PreProcessor.build_features(
+            row        =  sr,
+            lep        ='L1',
+            skip_target=True)
+    cor      = _get_corrector()
+
+    for are in [0, 1, 2]:
+        sr['are']= are
+        electron = v4d(pt=2250, eta=3.0, phi=1, m=0.511)
+        electron = cor.run(electron, row=sr)
+# -----------------------------------------------------------
 def test_calibrate_benchmark(_dask_client):
     '''
     Tests `corrector` from the Corrector class
