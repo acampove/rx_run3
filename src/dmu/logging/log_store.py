@@ -2,6 +2,7 @@
 Module holding LogStore 
 '''
 import logging
+import contextlib
 from typing import Union
 
 from logging import Logger
@@ -38,6 +39,29 @@ class LogStore:
     log_level     = logging.INFO
     is_configured = False
     backend       = 'logging'
+    #--------------------------
+    @staticmethod
+    @contextlib.contextmanager
+    def level(name : str, lvl : int) -> None:
+        '''
+        Context manager used to set the logging level of a given logger
+
+        Parameters
+        ------------------
+        name : Name of logger
+        lvl  : Integer representing logging level
+        '''
+        log       = LogStore.get_logger(name=name)
+        if log is None:
+            raise ValueError(f'Cannot find logger {name}')
+
+        old_lvl = log.getEffectiveLevel()
+
+        LogStore.set_level(name, lvl)
+        try:
+            yield
+        finally:
+            LogStore.set_level(name, old_lvl)
     #--------------------------
     @staticmethod
     def get_logger(name : str) -> Union[Logger,None]:
