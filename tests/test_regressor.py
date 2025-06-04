@@ -132,17 +132,15 @@ def test_predict_flat_bias(bias : float):
     real= pre.targets.numpy()
     _plot_targets(pred=pred, real=real, corr=corr)
 # -----------------------------------------------------------
-@pytest.mark.parametrize('bias', [1.0])
 @pytest.mark.parametrize('kind', ['row_col_are_eng'])
-def test_predict_bias(_dask_client : Client, bias : float, kind : str):
+def test_predict_bias(_dask_client : Client, kind : str):
     '''
     Meant to test everything by:
 
-    - Introducing data with row, column bias
     - Training a real model that outputs the correction
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    ddf = cut.get_ddf(bias=bias, kind=kind)
+    ddf = cut.get_ddf(name='real_data', bias=None, kind=kind)
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
