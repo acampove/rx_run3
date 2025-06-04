@@ -32,9 +32,9 @@ def _get_corrector() -> Corrector:
 
     return cal
 # -----------------------------------------------------------
-def test_calibrate():
+def test_calibrate_simple():
     '''
-    Tests `calibrate_electron` from the Corrector class
+    Tests `corrector` from the Corrector class
     '''
 
     data     = _load_data(name='row')
@@ -45,7 +45,26 @@ def test_calibrate():
             skip_target=True)
     cor      = _get_corrector()
 
-    for val in tqdm.tqdm(range(100), ascii=' -'):
+    for val in range(5):
         electron = v4d(px=2250 + val, py=-3287 + val, pz=43253, e=43437)
         electron = cor.run(electron, row=sr)
 # -----------------------------------------------------------
+def test_calibrate_benchmark():
+    '''
+    Tests `corrector` from the Corrector class
+    '''
+
+    data     = _load_data(name='row')
+    sr       = pnd.Series(data)
+    sr       = PreProcessor.build_features(
+            row        =  sr,
+            lep        ='L1',
+            skip_target=True)
+    cor      = _get_corrector()
+
+    with LogStore.level('ecal_calibration:corrector', 30):
+        for val in tqdm.tqdm(range(1000), ascii=' -'):
+            electron = v4d(px=2250 + val, py=-3287 + val, pz=43253, e=43437)
+            electron = cor.run(electron, row=sr)
+# -----------------------------------------------------------
+
