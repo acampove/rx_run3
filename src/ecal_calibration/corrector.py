@@ -48,6 +48,12 @@ class Corrector:
         -----------------
         Lorentz vector representing calibrated electron
         '''
+        # Do not correct electrons in outer ECAL
+        if row['are'] < 0.5:
+            area = row['are']
+            log.debug(f'Skipping correction for area: {area}')
+            return electron
+
         features    = row.to_numpy()
         features    = torch.tensor(features, dtype=torch.float32)
 
