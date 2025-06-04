@@ -1066,6 +1066,13 @@ In order to get the logging level fromt the logger do:
 level = log.getEffectiveLevel()
 ```
 
+And a context manager is available, which can be used with:
+
+```python
+    with LogStore.level('logger_name', 10):
+        log.debug('Debug message')
+```
+
 # Plotting from ROOT dataframes
 
 ## 1D plots
