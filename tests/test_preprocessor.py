@@ -62,18 +62,19 @@ def _plot_bias(df : pnd.DataFrame, test_name : str, corr : float) -> None:
     ax = None
     for area, df_area in df.groupby('are'):
         ax = df_area['mu'].plot.hist(
+                range=[0,2],
                 bins=101,
                 label=f'Region {area}',
                 histtype='step',
                 ax=ax,
-                density=True)
+                density=False)
 
     if corr is not None:
         plt.axvline(x=corr, ls=':', label='expected', color='red')
 
     plt.legend()
     plt.xlabel(r'$\mu$')
-    plt.ylabel('Normalized')
+    plt.ylabel('Entries')
     plt.grid()
     plt.savefig(f'{out_dir}/mu.png')
     plt.close()
