@@ -56,16 +56,17 @@ class Corrector:
         -----------------
         electron: Lorentz vector before calibration
         row     : Pandas series with the features needed for predicting correction
+        from_nn : If true, it will evaluate an NN, otherwise it will read the correction from input series
 
         Returns
         -----------------
         Lorentz vector representing calibrated electron
         '''
-        features    = row.to_numpy()
-        features    = torch.tensor(features, dtype=torch.float32)
+        if from_nn:
+            val = self._get_correction_from_nn(row=row)
+        else:
+            val = row['mu']
 
-        targets     = self._net(features)
-        val         = targets.detach().numpy()
         # The target was scaled by 1000 for training
         # Scale back the correction
         val         = float(val) / 1000.
