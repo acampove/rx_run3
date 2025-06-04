@@ -31,8 +31,6 @@ class Corrector:
         if net is None:
             raise FileNotFoundError(f'Model could not be found in: {model_dir}')
 
-        net       = Regressor.move_to_gpu(net)
-
         return net
     # ---------------------------------------
     def run(self, electron : v4d, row : pnd.Series) -> v4d:
