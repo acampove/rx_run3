@@ -48,10 +48,8 @@ class Corrector:
         '''
         features    = row.to_numpy()
         features    = torch.tensor(features, dtype=torch.float32)
-        features    = Regressor.move_to_gpu(features)
 
         targets     = self._net(features)
-        targets     = targets.cpu()
         val         = targets.detach().numpy()
         # The target was scaled by 1000 for training
         # Scale back the correction
