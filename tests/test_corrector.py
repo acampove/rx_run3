@@ -40,7 +40,7 @@ def _get_corrector() -> Corrector:
 
     return cal
 # -----------------------------------------------------------
-def test_calibrate_simple():
+def test_calibrate_simple(_dask_client):
     '''
     Tests `corrector` from the Corrector class
     '''
@@ -57,7 +57,7 @@ def test_calibrate_simple():
         electron = v4d(px=2250 + val, py=-3287 + val, pz=43253, e=43437)
         electron = cor.run(electron, row=sr)
 # -----------------------------------------------------------
-def test_calibrate_benchmark():
+def test_calibrate_benchmark(_dask_client):
     '''
     Tests `corrector` from the Corrector class
     '''
