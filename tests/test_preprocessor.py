@@ -22,6 +22,7 @@ class Data:
     '''
     out_dir = '/tmp/tests/ecal_calibration/preprocessor'
     columns = {'row', 'col', 'are', 'eng', 'npv', 'blk', 'mu'}
+    d_feat  = {'eng' : r'$E(\gamma)$[GeV]', 'row' : 'Row', 'col' : 'Column', 'are' : 'ECAL region', 'npv' : 'nPVs', 'blk' : 'Block'}
 # -----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
