@@ -4,10 +4,11 @@ This module is used by pytest to _inject_ fixtures in the tests
 import os
 import logging
 import pytest
+import mplhep
 import matplotlib
+import matplotlib.pyplot as plt
 
 from dask.distributed      import Client
-
 # ---------------------------------------
 def pytest_configure(config : pytest.Config) -> None:
     '''
@@ -18,6 +19,7 @@ def pytest_configure(config : pytest.Config) -> None:
     # Line below is needed to avoid core dump with Dask
     matplotlib.use('Agg')
     os.environ['ANADIR'] = '/tmp/tests/ecal_calibration'
+    plt.style.use(mplhep.style.LHCb2)
 
     logging.getLogger("PIL.PngImagePlugin").setLevel(logging.WARNING)
     logging.getLogger("matplotlib.font_manager").setLevel(logging.WARNING)
