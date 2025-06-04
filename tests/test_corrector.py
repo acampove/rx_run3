@@ -53,8 +53,8 @@ def test_calibrate_simple(_dask_client):
             skip_target=True)
     cor      = _get_corrector()
 
-    for val in range(5):
-        electron = v4d(px=2250 + val, py=-3287 + val, pz=43253, e=43437)
+    for val in [100, 200, 300, 400, 500]:
+        electron = v4d(pt=2250 + val, eta=3.0, phi=1, m=0.511)
         electron = cor.run(electron, row=sr)
 # -----------------------------------------------------------
 def test_calibrate_benchmark(_dask_client):
