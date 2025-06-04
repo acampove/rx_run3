@@ -7,7 +7,6 @@ import pytest
 import matplotlib
 
 from dask.distributed      import Client
-from dmu.logging.log_store import LogStore
 
 # ---------------------------------------
 def pytest_configure(config : pytest.Config) -> None:
