@@ -105,3 +105,33 @@ def test_exists_ok_default():
     LogStore.add_logger('exists_ok_default')
     with pytest.raises(ValueError):
         LogStore.add_logger('exists_ok_default')
+# --------------------------------
+def test_context_logger():
+    '''
+    Tests level context manager
+    '''
+    log = LogStore.add_logger('context')
+
+    print(20 * '-')
+    log.debug('Debug message')
+    log.info('Info message')
+    log.warning('Warning message')
+    log.error('Error message')
+    print(20 * '-')
+    with LogStore.level('context', 10):
+        log.debug('Debug message')
+        log.info('Info message')
+        log.warning('Warning message')
+        log.error('Error message')
+    print(20 * '-')
+    with LogStore.level('context', 30):
+        log.debug('Debug message')
+        log.info('Info message')
+        log.warning('Warning message')
+        log.error('Error message')
+    print(20 * '-')
+    log.debug('Debug message')
+    log.info('Info message')
+    log.warning('Warning message')
+    log.error('Error message')
+# --------------------------------
