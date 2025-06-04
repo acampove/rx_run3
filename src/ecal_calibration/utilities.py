@@ -73,13 +73,17 @@ def get_ddf(
     Parameters
     ---------------
     name (str)  : Name of file, e.g. real_data/fake_data
-    bias (float): Numerical value of bias, if flat, should be around 1, 1 will be no bias.
+    bias (float): Numerical value of bias, if flat, should be around 1, 1 will be no bias. Pass None, if no bias is will be used
     kind (str)  : Type of bias, `flat` for same bias for all electrons, `row` for row dependent one.
     '''
     data_path = files('ecal_calibration_data').joinpath(f'tests/data/{name}.parquet')
     data_path = str(data_path)
     ddf       = dataframe.read_parquet(data_path)
-    ddf       = _inject_bias(ddf=ddf, bias=bias, kind=kind)
+
+    if bias is None:
+        return ddf
+
+    ddf = _inject_bias(ddf=ddf, bias=bias, kind=kind)
 
     return ddf
 # ------------------------------------
