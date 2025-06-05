@@ -173,7 +173,9 @@ class ZFitPlotter:
             pul = res / err
 
             if abs(pul) > 5:
-                log.warning(f'Large pull: {pul:.1f}=({dat_val:.0f}-{pdf_val:.0f})/{err:.0f}')
+                log.warning(f'Large pull: {pul:.2f}=({dat_val:.2f}-{pdf_val:.2f})/{err:.2f}')
+            else:
+                log.debug(f'Large pull: {pul:.2f}=({dat_val:.2f}-{pdf_val:.2f})/{err:.2f}')
 
             pulls.append(pul)
             pull_errors[0].append(low / err)
