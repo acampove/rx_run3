@@ -64,7 +64,7 @@ class ZFitPlotter:
         self._l_def_col = list(mcolors.TABLEAU_COLORS.keys())
     #----------------------------------------
     def _data_to_zdata(self, obs, data, weights):
-        if isinstance(data, zfit.data.Data):
+        if isinstance(data, zfit.Data):
             return data
 
         if isinstance(data, np.ndarray):
