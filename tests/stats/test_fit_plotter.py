@@ -26,6 +26,10 @@ class Data:
             (0.5  , 'xerr_0p5'),
             ]
 #--------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('dmu:zfit_plotter', 10)
+#--------------------------------
 def _make_dir_path(name : str) -> str:
     path = f'/tmp/tests/dmu/fit_plotter/{name}'
     os.makedirs(path, exist_ok=True)
