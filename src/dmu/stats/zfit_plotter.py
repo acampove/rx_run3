@@ -18,7 +18,7 @@ from zfit.core.basepdf      import BasePDF    as zpdf
 import dmu.generic.utilities as gut
 from dmu.logging.log_store  import LogStore
 
-log = LogStore.add_logger('dmu:fit_plotter')
+log = LogStore.add_logger('dmu:zfit_plotter')
 #----------------------------------------
 class ZFitPlotter:
     '''
