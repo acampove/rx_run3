@@ -5,13 +5,13 @@ import os
 from typing      import Union
 from dataclasses import dataclass
 
-import zfit
 import numpy
 import pytest
 import matplotlib.pyplot as plt
 
 from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.logging.log_store  import LogStore
+from conftest               import zfit
 
 log = LogStore.add_logger('dmu:test_fit_plotter')
 #--------------------------------
