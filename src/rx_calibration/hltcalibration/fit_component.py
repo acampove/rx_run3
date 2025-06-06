@@ -191,7 +191,10 @@ class FitComponent:
 
         return data
     # --------------------
-    def _plot_fit(self, data : zdata, model : zpdf):
+    # TODO: Due to issue in zfit, cannot retrieve label from PDF itself
+    # Update this when issue is fixed
+    # https://github.com/zfit/zfit/issues/631
+    def _plot_fit(self, data : zdata, model : zpdf, label : str = ''):
         if self._plt_cfg is None:
             log.warning('No plotting configuration found, will skip plotting')
             return
@@ -202,7 +205,7 @@ class FitComponent:
         title = f'Entries={self._yield_value:.0f}'
         if 'title' in self._plt_cfg:
             this_title = self._plt_cfg['title']
-            title = f'{title}; {this_title}'
+            title = f'{title}; {this_title}; {label}'
 
         obj.axs[0].set_title(title)
         obj.axs[0].set_ylim(bottom=0)
