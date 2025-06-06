@@ -3,9 +3,8 @@ Script used to create calibration map for electrons
 '''
 import os
 import dask.dataframe    as DaskDataFrame
-import rx_data.utilities as rxut
 
-from dmu.rfile.ddfgetter     import DDFGetter
+from rx_data.config_loader               import ConfigLoader
 from rx_calibration.electron.brem_energy import Calculator
 
 # -------------------------------
@@ -19,7 +18,9 @@ class Data:
     vers    = 'v1'
 # -------------------------------
 def _get_ddf() -> DaskDataFrame:
-    cfg  = rxut.get_dask_config(sample=Data.sample, trigger=Data.trigger)
+    ldr  = ConfigLoader(sample=Data.sample, trigger=Data.trigger, tree='DecayTree')
+    cfg  = ldr.get_dask_conf()
+
     ddfg = DDFGetter(cfg=cfg)
     ddf  = ddfg.get_dataframe()
 
