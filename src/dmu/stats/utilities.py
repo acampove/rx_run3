@@ -231,7 +231,13 @@ def save_fit(
         log.info('No result object found, not saving parameters in pkl or JSON')
         return
 
-    res.freeze()
+    # TODO: Remove this once there be a safer way to freeze
+    # see https://github.com/zfit/zfit/issues/632
+    try:
+        res.freeze()
+    except AttributeError:
+        pass
+
     with open(f'{fit_dir}/fit.pkl', 'wb') as ofile:
         pickle.dump(res, ofile)
 
