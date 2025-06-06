@@ -289,6 +289,33 @@ def test_nodata():
     plt_dir = _make_dir_path(name = 'no_data')
     plt.savefig(f'{plt_dir}/fit_lin.png', bbox_inches='tight')
 #--------------------------------
+def test_empty_region():
+    '''
+    Tests fit with empty regions, no data
+    '''
+    arr = numpy.random.normal(0, 1, size=1000)
+
+    obs = zfit.Space('m', limits=(-10, 10))
+    mu  = zfit.Parameter("mu", 0.4, -5, 5)
+    sg  = zfit.Parameter("sg", 1.3,  0, 5)
+
+    pdf = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg, name='gauss')
+    nev = zfit.Parameter('nev', 100, 0, 10000)
+    pdf = pdf.create_extended(nev,)
+
+    dat = zfit.Data.from_numpy(obs=obs, array=arr)
+    nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
+    mnm = zfit.minimize.Minuit()
+    res = mnm.minimize(nll)
+
+    wgt = (arr < 400).astype(float)
+
+    obj = ZFitPlotter(data=arr, model=pdf, result=res, weights=wgt)
+    obj.plot(nbins=50, plot_range=(0, 10))
+
+    plt_dir = _make_dir_path(name = 'empty_region')
+    plt.savefig(f'{plt_dir}/fit.png')
+#--------------------------------
 def test_axs():
     '''
     Tests overlaying axes, i.e. overlaying plots
