@@ -6,12 +6,9 @@ import os
 import math
 from typing import Union
 
-import numpy
-import pandas            as pnd
-import matplotlib.pyplot as plt
-
 
 from dmu.generic            import utilities as gut
+from dmu.stats              import utilities as sut
 from dmu.stats.zfit         import zfit
 from dmu.stats.utilities    import print_pdf
 from dmu.stats.utilities    import is_pdf_usable
@@ -19,10 +16,16 @@ from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.stats.minimizers   import AnealingMinimizer
 from dmu.logging.log_store  import LogStore
 
+import numpy
+import tensorflow        as tf
+import pandas            as pnd
+import matplotlib.pyplot as plt
+
 from ROOT                   import RDataFrame
 from zfit.core.data         import Data      as zdata
 from zfit.core.interfaces   import ZfitSpace as zobs
 from zfit.core.basepdf      import BasePDF   as zpdf
+from zfit.result            import FitResult as zres
 
 from rx_calibration.hltcalibration.parameter import Parameter
 
@@ -122,7 +125,7 @@ class FitComponent:
         return rdf
     # --------------------
     @gut.timeit
-    def _fit(self, zdt : zdata) -> Parameter:
+    def _fit(self, zdt : zdata) -> zres:
         log.info(f'Fitting component {self._name}')
 
         print_pdf(self._pdf)
@@ -130,10 +133,7 @@ class FitComponent:
         nll = zfit.loss.UnbinnedNLL(model=self._pdf, data=zdt)
         res = self._minimizer.minimize(nll)
 
-        print(res)
-        par = self._res_to_par(res)
-
-        return par
+        return res
     # -------------------------------
     def _res_to_par(self, res : zfit.result.FitResult) -> Parameter:
         if self._fit_cfg is None:
