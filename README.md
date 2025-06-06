@@ -573,9 +573,9 @@ this class supports:
 To save in one go everything regarding your fit do:
 
 ```python
-from dmu.stats import utilities
+from dmu.stats import utilities as sut
 
-utilities.save_fit(data=data, model=pdf, res=fit_result, fit_dir='/some/directory', d_const=constraints)
+sut.save_fit(data=data, model=pdf, res=fit_result, fit_dir='/some/directory', d_const=constraints)
 ```
 
 and the function will save everything that you would normally need froma fit.
