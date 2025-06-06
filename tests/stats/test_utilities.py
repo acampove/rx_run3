@@ -5,7 +5,9 @@ import os
 from importlib.resources import files
 
 from dmu.logging.log_store import LogStore
+from dmu.stats             import utilities as sut
 from dmu.stats.zfit        import zfit
+from dmu.stats.fitter      import Fitter
 from dmu.stats.utilities   import print_pdf
 from dmu.stats.utilities   import pdf_to_tex
 from dmu.stats.utilities   import placeholder_fit
@@ -143,4 +145,20 @@ def test_is_pdf_usable():
     pdf = _get_pdf(kind='composed_nonextended')
 
     is_pdf_usable(pdf)
+#----------------------------------
+def test_save_fit():
+    '''
+    Tests saving fit
+    '''
+    pdf = _get_pdf(kind='simple')
+    dat = pdf.create_sampler(n=1000)
+
+    obj = Fitter(pdf, dat)
+    res = obj.fit()
+
+    sut.save_fit(
+            data   =dat,
+            model  =pdf,
+            res    =res,
+            fit_dir=f'{Data.fit_dir}/save_fit/parametric')
 #----------------------------------
