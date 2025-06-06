@@ -324,6 +324,11 @@ class FitComponent:
             return None
 
         self._plot_fit(data, pdf, label=model)
+        sut.save_fit(
+                data   =data,
+                model  =pdf,
+                res    =None,
+                fit_dir=self._out_dir)
 
         return pdf
     # --------------------
@@ -349,7 +354,7 @@ class FitComponent:
         '''
         Will return PDF
 
-        must_load_pars (bool): If true, it will expect the existence of a JSON file with fitting parameters. 
+        must_load_pars (bool): If true, it will expect the existence of a JSON file with fitting parameters.
         If False, will do the fit all over again
         '''
         self.run(must_load_pars)
@@ -378,6 +383,12 @@ class FitComponent:
             log.info('Found non-parametric PDF returning empty parameters')
             data = self._get_data_from_pdf()
             self._plot_fit(data, self._pdf)
+            sut.save_fit(
+                    data   =data,
+                    model  =self._pdf,
+                    res    =None,
+                    fit_dir=self._out_dir)
+
             return Parameter()
 
         log.info('Parametric PDF found, fitting:')
@@ -385,6 +396,11 @@ class FitComponent:
             log.info('Dataset not found, returning not fitted PDF')
             data = self._get_data_from_pdf()
             self._plot_fit(data, self._pdf)
+            sut.save_fit(
+                    data   =data,
+                    model  =self._pdf,
+                    res    =None,
+                    fit_dir=self._out_dir)
 
             return Parameter()
 
