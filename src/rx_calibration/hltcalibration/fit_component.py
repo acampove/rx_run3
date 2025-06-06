@@ -80,7 +80,7 @@ class FitComponent:
         self._yield_nentr : int
 
         self._nentries_dummy_data = 10_000
-        self._min_isj_entries     = 300
+        self._min_isj_entries     = 500
         self._yield_threshold     = 10
     # --------------------
     def _get_minimizer(self) -> Union[AnealingMinimizer,None]:
