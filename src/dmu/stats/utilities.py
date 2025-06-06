@@ -211,10 +211,6 @@ def save_fit(
     os.makedirs(fit_dir, exist_ok=True)
     log.info(f'Saving fit to: {fit_dir}')
 
-    res.freeze()
-    with open(f'{fit_dir}/fit.pkl', 'wb') as ofile:
-        pickle.dump(res, ofile)
-
     if plt.get_fignums():
         fit_path = f'{fit_dir}/fit.png'
         log.info(f'Saving fit to: {fit_path}')
@@ -230,6 +226,14 @@ def save_fit(
     opath  = f'{fit_dir}/data.json'
     log.debug(f'Saving data to: {opath}')
     df.to_json(opath, indent=2)
+
+    if res is None:
+        log.info('No result object found, not saving parameters in pkl or JSON')
+        return
+
+    res.freeze()
+    with open(f'{fit_dir}/fit.pkl', 'wb') as ofile:
+        pickle.dump(res, ofile)
 
     d_par  = _parameters_from_result(result=res)
     opath  = f'{fit_dir}/parameters.json'
