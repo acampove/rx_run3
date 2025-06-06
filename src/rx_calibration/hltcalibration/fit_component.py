@@ -272,6 +272,18 @@ class FitComponent:
 
             par.floating = False
     # --------------------
+    def _get_kde_model(self) -> str:
+        if 'model' in self._fit_cfg['config'][self._name]:
+            name = self._fit_cfg['config'][self._name]['model']
+            log.info(f'Using user-defined model {name} for {self._name} KDE')
+
+            return name
+
+        if self._yield_value > self._min_isj_entries:
+            return 'ISJ'
+
+        return 'FFT'
+    # --------------------
     def _get_kde_pdf(self) -> Union[zpdf, None]:
         data = self._get_data()
         if data is None:
