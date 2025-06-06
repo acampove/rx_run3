@@ -221,7 +221,7 @@ def test_kde_cache_pdf():
     obj       = FitComponent(cfg=cfg, rdf=rdf, pdf=None, obs=Data.obs)
     pdf_orig  = obj.get_pdf()
 
-    out_dir   = cfg['out_dir']
+    out_dir   = cfg['output']['out_dir']
     json_path = f'{out_dir}/data.json'
     df        = pnd.read_json(json_path)
     rdf       = RDF.FromPandas(df)
