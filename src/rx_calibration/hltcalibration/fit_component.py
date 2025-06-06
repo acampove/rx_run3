@@ -419,6 +419,7 @@ class FitComponent:
 
         data=self._get_data()
         res = self._fit(data)
+        par = self._res_to_par(res)
         self._plot_fit(data, self._pdf)
         sut.save_fit(
                 data   =data,
@@ -426,7 +427,6 @@ class FitComponent:
                 res    =res,
                 fit_dir=self._out_dir)
 
-        par = self._res_to_par(res)
         self._fix_tails(par)
 
         return par
