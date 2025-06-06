@@ -35,7 +35,7 @@ def _initialize():
 def _get_conf(name : str) -> dict:
     return {
             'name'   : name,
-            'out_dir': f'/tmp/tests/rx_calibration/fit_component/{name}',
+            'output' : {'out_dir': f'/tmp/tests/rx_calibration/fit_component/{name}'},
             'fitting':
             {
                 'error_method'  : 'minuit_hesse',
