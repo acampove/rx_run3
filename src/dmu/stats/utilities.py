@@ -405,7 +405,7 @@ def placeholder_fit(
         log.warning('Using user provided data')
         data = _pdf_to_data(pdf=pdf, add_weights=True)
     else:
-        data = zfit.data.Data.from_pandas(df, obs=pdf.space, weights=Data.weight_name)
+        data = zfit.Data.from_pandas(df, obs=pdf.space, weights=Data.weight_name)
 
     d_const = {'sg' : [0.6, 0.1]}
 
