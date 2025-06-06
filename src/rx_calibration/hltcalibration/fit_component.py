@@ -63,7 +63,7 @@ class FitComponent:
         self._name      = cfg['name']
         self._fit_cfg   = cfg['fitting' ] if 'fitting'  in cfg else None
         self._plt_cfg   = cfg['plotting'] if 'plotting' in cfg else None
-        self._out_dir   = cfg['out_dir']
+        self._out_dir   = cfg['output']['out_dir']
 
         os.makedirs(self._out_dir, exist_ok=True)
 
