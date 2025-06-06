@@ -175,3 +175,21 @@ def test_save_fit_nonparam():
             res    =None,
             fit_dir=f'{Data.fit_dir}/save_fit/non_parametric')
 #----------------------------------
+def test_save_fit_param_refreeze():
+    '''
+    Tests saving fit with parameters
+    when the result object has already been frozen
+    '''
+    pdf = _get_pdf(kind='simple')
+    dat = pdf.create_sampler(n=1000)
+
+    obj = Fitter(pdf, dat)
+    res = obj.fit()
+    res.freeze()
+
+    sut.save_fit(
+            data   =dat,
+            model  =pdf,
+            res    =res,
+            fit_dir=f'{Data.fit_dir}/save_fit/parametric')
+#----------------------------------
