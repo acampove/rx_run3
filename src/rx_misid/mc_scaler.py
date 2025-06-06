@@ -36,7 +36,6 @@ class MCScaler:
         rdf = gtr.get_rdf()
 
         d_sel = sel.selection(
-                project=self._project,
                 trigger=self._trigger,
                 q2bin  =self._q2bin,
                 process=self._sample)
