@@ -418,10 +418,15 @@ class FitComponent:
             raise NoFitDataFound
 
         data=self._get_data()
-        par = self._fit(data)
+        res = self._fit(data)
         self._plot_fit(data, self._pdf)
-        par.to_json(pars_path)
+        sut.save_fit(
+                data   =data,
+                model  =self._pdf,
+                res    =res,
+                fit_dir=self._out_dir)
 
+        par = self._res_to_par(res)
         self._fix_tails(par)
 
         return par
