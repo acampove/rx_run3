@@ -289,17 +289,26 @@ class FitComponent:
         log.info(f'Building KDE with {self._yield_value:.0f} entries')
 
         cfg_kde = self._fit_cfg['config'][self._name]['cfg_kde']
-        if self._yield_value > self._min_isj_entries:
+        model   = self._get_kde_model()
+
+        # TODO: Improve logic, might need to get PDF callable from function above
+        # instead of these lines below
+        if   model == 'ISJ':
             log.info('High statistics dataset found => using KDE1DimISJ')
-            pdf = zfit.pdf.KDE1DimISJ(data, name=self._name, **cfg_kde)
-        else:
+            pdf = zfit.pdf.KDE1DimISJ(data, name=self._name, **cfg_kde, label='ISJ')
+        elif model == 'FFT':
             log.info('Low statistics dataset found => using KDE1DimFFT')
-            pdf = zfit.pdf.KDE1DimFFT(data, name=self._name, **cfg_kde)
+            pdf = zfit.pdf.KDE1DimFFT(data, name=self._name, **cfg_kde, label='FFT')
+        elif model == 'Exact':
+            log.info('Low statistics dataset found => using KDE1DimExact')
+            pdf = zfit.pdf.KDE1DimExact(data, name=self._name, **cfg_kde, label='Exact')
+        else:
+            raise ValueError(f'Invalid KDE model: {model}')
 
         if not is_pdf_usable(pdf):
             return None
 
-        self._plot_fit(data, pdf)
+        self._plot_fit(data, pdf, label=model)
 
         return pdf
     # --------------------
