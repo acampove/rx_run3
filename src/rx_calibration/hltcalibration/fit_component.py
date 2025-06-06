@@ -291,7 +291,7 @@ class FitComponent:
             pdf = zfit.pdf.KDE1DimISJ(data, name=self._name, **cfg_kde)
         else:
             log.info('Low statistics dataset found => using KDE1DimFFT')
-            pdf = zfit.pdf.KDE1DimExact(data, name=self._name, **cfg_kde)
+            pdf = zfit.pdf.KDE1DimFFT(data, name=self._name, **cfg_kde)
 
         if not is_pdf_usable(pdf):
             return None
