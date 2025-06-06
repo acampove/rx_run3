@@ -10,6 +10,8 @@ import numpy
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
+
+from dmu.generic            import utilities as gut
 from dmu.stats.zfit         import zfit
 from dmu.stats.utilities    import print_pdf
 from dmu.stats.utilities    import is_pdf_usable
@@ -119,6 +121,7 @@ class FitComponent:
 
         return rdf
     # --------------------
+    @gut.timeit
     def _fit(self, zdt : zdata) -> Parameter:
         log.info(f'Fitting component {self._name}')
 
