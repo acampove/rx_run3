@@ -62,7 +62,7 @@ cbr:
     low : 5100
     high: 5500
   sg:
-    val : 10
+    val : 50
     low : 2
     high: 300
   ac:
@@ -96,7 +96,7 @@ cbl:
     low : 5100
     high: 5500
   sg:
-    val : 10
+    val : 50
     low : 2
     high: 300
   ac:
@@ -113,7 +113,7 @@ gauss:
     low : 5100
     high: 5500
   sg:
-    val : 10
+    val : 50
     low : 2
     high: 300
 dscb:
@@ -122,7 +122,7 @@ dscb:
     low : 5000
     high: 5400
   sg:
-    val : 10
+    val : 50
     low : 2
     high: 500
   ar:
