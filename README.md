@@ -858,6 +858,7 @@ correlations:
 
 ## Comparing classifiers
 
+### Simple approach
 To do that run:
 
 ```bash
@@ -872,6 +873,35 @@ classifiers:
   label for model 1 : /path/to/directory/with/model1
   label for model 2 : /path/to/directory/with/model2
 ```
+
+However this will only compare the classifiers ROC curves with respect to the
+samples that were used to train them.
+
+### With custom samples
+
+However the models' peformances can also be compared by _plugging_ any
+signal and backgroud proxy for any model, like:
+
+```python
+
+import matplotlib.pyplot as plt
+from dmu.ml.cv_performance import CVPerformance
+
+cvp = CVPerformance()
+cvp.plot_roc(
+        sig  =rdf_sig_1, bkg=rdf_bkg_1,
+        model=l_model_1, name='def', color='red')
+cvp.plot_roc(
+        sig  =rdf_sig_1, bkg=rdf_bkg_2,
+        model=l_model_2, name='alt', color='blue')
+
+plt.legend()
+plt.grid()
+plt.show()
+```
+
+This should show an overlay of different ROC curves made for a specific combination
+of signal and background proxies with a given model.
 
 # Dask dataframes
 
