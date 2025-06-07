@@ -150,18 +150,21 @@ def get_file_with_trees(path : str) -> TFile:
 
     return TFile(path)
 # -------------------------------
-def get_models(rdf_sig : RDataFrame, rdf_bkg : RDataFrame) -> list[CVClassifier]:
+def get_models(
+        rdf_sig : RDataFrame,
+        rdf_bkg : RDataFrame,
+        name    : str ='def') -> list[CVClassifier]:
     '''
     Will train and return models
     '''
+    out_dir = Data.out_dir if name is None else f'{Data.out_dir}/{name}'
 
     cfg                     = get_config('ml/tests/train_mva.yaml')
-    cfg['saving']['output'] = Data.out_dir
+    cfg['saving']['output'] = out_dir
 
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run()
-
-    pkl_wc     = f'{Data.out_dir}/model*.pkl'
+    pkl_wc     = f'{out_dir}/model*.pkl'
     l_pkl_path = glob.glob(pkl_wc)
     l_model    = [ joblib.load(pkl_path) for pkl_path in l_pkl_path ]
 
