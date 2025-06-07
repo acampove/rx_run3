@@ -33,9 +33,17 @@ class CVPerformance:
         model: List of instances of the CVClassifier
         '''
         log.info(f'Loading {name}')
-    # ---------------------------
-    def save(self, path : str) -> None:
-        '''
-        Directory path where outputs will be saved
-        '''
+
+
+        cvp_sig = CVPredict(models=model, rdf=sig)
+        arr_sig = cvp_sig.predict()
+
+        cvp_bkg = CVPredict(models=model, rdf=bkg)
+        arr_bkg = cvp_bkg.predict()
+
+        TrainMva.plot_roc_from_prob(
+                arr_sig_prb=arr_sig,
+                arr_bkg_prb=arr_bkg,
+                kind       =   name,
+                ifold      =     -1)
 # -----------------------------------------------------
