@@ -599,7 +599,8 @@ class TrainMva:
             arr_sig_prb : NPA,
             arr_bkg_prb : NPA,
             kind        : str,
-            ifold       : int) -> tuple[NPA,NPA]:
+            ifold       : int,
+            color       : str = None) -> tuple[NPA,NPA]:
         '''
         Takes arrays of signal and background probabilities
         and plots ROC curve
@@ -610,14 +611,20 @@ class TrainMva:
         arr_prb     = numpy.concatenate([arr_sig_prb, arr_bkg_prb])
         arr_lab     = numpy.concatenate([arr_sig_lab, arr_bkg_lab])
 
-        TrainMva.plot_roc(l_lab=arr_lab, l_prb=arr_prb, kind=kind, ifold=ifold)
+        TrainMva.plot_roc(
+                l_lab=arr_lab,
+                l_prb=arr_prb,
+                color=color,
+                kind =kind,
+                ifold=ifold)
     # ---------------------------------------------
     @staticmethod
     def plot_roc(
             l_lab : NPA,
             l_prb : NPA,
             kind  : str,
-            ifold : int) -> tuple[NPA, NPA]:
+            ifold : int,
+            color : str = None) -> tuple[NPA, NPA]:
         '''
         Takes the labels and the probabilities and plots ROC
         curve for given fold
@@ -625,7 +632,7 @@ class TrainMva:
         Parameters
         --------------------
         ifold : If no fold makes sense (i.e. this is the full sample), use ifold=-1
-        kind  : Used to label the plot 
+        kind  : Used to label the plot
         '''
         log.debug(f'Plotting ROC curve for {ifold} fold')
 
@@ -633,7 +640,8 @@ class TrainMva:
         xval          = 1 - xval
         area          = auc(xval, yval)
 
-        color='red' if kind == 'Train' else 'blue'
+        if color is None:
+            color='red' if kind == 'Train' else 'blue'
 
         if ifold == -1:
             label=f'Test sample: {area:.3f}'
