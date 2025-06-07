@@ -76,15 +76,20 @@ def get_rdf(
 
     d_data = {}
     if   kind == 'sig':
-        d_data[xnm] = numpy.random.normal(0, 1, size=nentries)
-        d_data['w'] = numpy.random.normal(0, 1, size=nentries)
-        d_data['y'] = numpy.random.normal(0, 1, size=nentries)
-        d_data['z'] = numpy.random.normal(0, 1, size=nentries)
+        d_data[xnm] = numpy.random.normal(0.0, 1.0, size=nentries)
+        d_data['w'] = numpy.random.normal(0.0, 1.0, size=nentries)
+        d_data['y'] = numpy.random.normal(0.0, 1.0, size=nentries)
+        d_data['z'] = numpy.random.normal(0.0, 1.0, size=nentries)
     elif kind == 'bkg':
-        d_data[xnm] = numpy.random.normal(1, 1, size=nentries)
-        d_data['w'] = numpy.random.normal(1, 1, size=nentries)
-        d_data['y'] = numpy.random.normal(1, 1, size=nentries)
-        d_data['z'] = numpy.random.normal(1, 1, size=nentries)
+        d_data[xnm] = numpy.random.normal(1.0, 1.0, size=nentries)
+        d_data['w'] = numpy.random.normal(1.0, 1.0, size=nentries)
+        d_data['y'] = numpy.random.normal(1.0, 1.0, size=nentries)
+        d_data['z'] = numpy.random.normal(1.0, 1.0, size=nentries)
+    elif kind == 'bkg_alt':
+        d_data[xnm] = numpy.random.normal(1.3, 1.3, size=nentries)
+        d_data['w'] = numpy.random.normal(1.3, 1.3, size=nentries)
+        d_data['y'] = numpy.random.normal(1.3, 1.3, size=nentries)
+        d_data['z'] = numpy.random.normal(1.3, 1.3, size=nentries)
     else:
         log.error(f'Invalid kind: {kind}')
         raise ValueError
