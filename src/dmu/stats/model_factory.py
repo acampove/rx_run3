@@ -127,6 +127,8 @@ class ModelFactory:
         s_par_2 = set(self._l_flt)
 
         if not s_par_1.isdisjoint(s_par_2):
+            log.info(f'Found  : {s_par_1}')
+            log.info(f'Allowed: {s_par_2}')
             raise ValueError('Non empty intersection between floating and reparametrization parameters')
 
         s_kind  = set(self._d_rep.values())
