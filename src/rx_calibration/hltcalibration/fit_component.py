@@ -67,7 +67,6 @@ class FitComponent:
 
         self._name      = cfg['name']
         self._fit_cfg   = cfg['fitting' ] if 'fitting'  in cfg else None
-        self._plt_cfg   = cfg['plotting'] if 'plotting' in cfg else None
         self._out_dir   = cfg['output']['out_dir']
 
         os.makedirs(self._out_dir, exist_ok=True)
@@ -78,7 +77,6 @@ class FitComponent:
         self._minx      = float(self._obs.lower)
         self._maxx      = float(self._obs.upper)
         self._obs_name, = self._obs.obs
-        self._minimizer = self._get_minimizer()
 
         self._yield_value : float
         self._yield_error : float
@@ -87,6 +85,25 @@ class FitComponent:
         self._nentries_dummy_data = 10_000
         self._min_isj_entries     = 500
         self._yield_threshold     = 10
+
+        self._minimizer = self._get_minimizer()
+        self._plt_cfg   = self._get_plotting_config(cfg=cfg)
+    # --------------------
+    def _get_plotting_config(self, cfg : dict) -> Union[dict,None]:
+        d_cfg = cfg['plotting'] if 'plotting' in cfg else None
+
+        if d_cfg is None:
+            return None
+
+        if 'nbins' in d_cfg:
+            return d_cfg
+
+        if self._obs.binning is None:
+            return d_cfg
+
+        d_cfg['nbins'] = self._obs.binning.size
+
+        return d_cfg
     # --------------------
     def _get_minimizer(self) -> Union[AnealingMinimizer,None]:
         if self._fit_cfg is None:
