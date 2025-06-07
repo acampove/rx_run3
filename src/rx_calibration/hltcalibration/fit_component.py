@@ -212,14 +212,21 @@ class FitComponent:
             title = f'{title}; {this_title}; {label}'
 
         obj.axs[0].set_title(title)
-        obj.axs[0].set_ylim(bottom=0)
         obj.axs[1].set_ylim([-5, +5])
         obj.axs[1].plot([self._minx, self._maxx], [+3, +3], linestyle='--', color='red')
         obj.axs[1].plot([self._minx, self._maxx], [-3, -3], linestyle='--', color='red')
 
-        plot_path = f'{self._out_dir}/fit.png'
+        obj.axs[0].set_yscale('log')
+        plot_path = f'{self._out_dir}/fit_log.png'
         log.info(f'Saving fit plot to: {plot_path}')
         plt.savefig(plot_path)
+
+        obj.axs[0].set_yscale('linear')
+        obj.axs[0].set_ylim(bottom=0)
+        plot_path = f'{self._out_dir}/fit_lin.png'
+        log.info(f'Saving fit plot to: {plot_path}')
+        plt.savefig(plot_path)
+
         plt.close()
     # -------------------------------
     def _plot_placeholder(self, text : str) -> str:
