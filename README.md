@@ -883,7 +883,6 @@ However the models' peformances can also be compared by _plugging_ any
 signal and backgroud proxy for any model, like:
 
 ```python
-
 import matplotlib.pyplot as plt
 from dmu.ml.cv_performance import CVPerformance
 
