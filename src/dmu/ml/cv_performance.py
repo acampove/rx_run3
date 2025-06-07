@@ -3,6 +3,8 @@ This module contains the class CVPerformance
 '''
 from ROOT                  import RDataFrame
 from dmu.ml.cv_classifier  import CVClassifier
+from dmu.ml.cv_predict     import CVPredict
+from dmu.ml.train_mva      import TrainMva
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:ml:cv_performance')
@@ -14,14 +16,14 @@ class CVPerformance:
     - Compare the classifier performance, through the ROC curve, of a model, for a given background and signal sample
     '''
     # ---------------------------
-    def load(
+    def plot_roc(
             self,
             name  : str,
             sig   : RDataFrame,
             bkg   : RDataFrame,
             model : list[CVClassifier] ) -> None:
         '''
-        Method in charge of picking up model and data
+        Method in charge of picking up model and data and plotting ROC curve
 
         Parameters
         --------------------------
