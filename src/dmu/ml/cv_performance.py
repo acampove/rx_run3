@@ -45,6 +45,6 @@ class CVPerformance:
                 arr_sig_prb=arr_sig,
                 arr_bkg_prb=arr_bkg,
                 kind       =   name,
-                color      =  color,
-                ifold      =     -1)
+                color      =  color, # This should allow the function to pick kind
+                ifold      =    999) # for the label
 # -----------------------------------------------------
