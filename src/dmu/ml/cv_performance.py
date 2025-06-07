@@ -19,6 +19,7 @@ class CVPerformance:
     def plot_roc(
             self,
             name  : str,
+            color : str,
             sig   : RDataFrame,
             bkg   : RDataFrame,
             model : list[CVClassifier] ) -> None:
@@ -34,7 +35,6 @@ class CVPerformance:
         '''
         log.info(f'Loading {name}')
 
-
         cvp_sig = CVPredict(models=model, rdf=sig)
         arr_sig = cvp_sig.predict()
 
@@ -45,5 +45,6 @@ class CVPerformance:
                 arr_sig_prb=arr_sig,
                 arr_bkg_prb=arr_bkg,
                 kind       =   name,
+                color      =  color,
                 ifold      =     -1)
 # -----------------------------------------------------
