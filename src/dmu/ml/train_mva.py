@@ -595,6 +595,24 @@ class TrainMva:
         self._run_diagnostics(models = l_mod, rdf = self._rdf_bkg_org, name='Background')
     # ---------------------------------------------
     @staticmethod
+    def plot_roc_from_prob(
+            arr_sig_prb : NPA,
+            arr_bkg_prb : NPA,
+            kind        : str,
+            ifold       : int) -> tuple[NPA,NPA]:
+        '''
+        Takes arrays of signal and background probabilities
+        and plots ROC curve
+        '''
+        arr_sig_lab = numpy.ones_like( arr_sig_prb)
+        arr_bkg_lab = numpy.zeros_like(arr_bkg_prb)
+
+        arr_prb     = numpy.concatenate([arr_sig_prb, arr_bkg_prb])
+        arr_lab     = numpy.concatenate([arr_sig_lab, arr_bkg_lab])
+
+        TrainMva.plot_roc(l_lab=arr_lab, l_prb=arr_prb, kind=kind, ifold=ifold)
+    # ---------------------------------------------
+    @staticmethod
     def plot_roc(
             l_lab : NPA,
             l_prb : NPA,
