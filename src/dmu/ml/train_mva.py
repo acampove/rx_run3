@@ -603,6 +603,11 @@ class TrainMva:
         '''
         Takes the labels and the probabilities and plots ROC
         curve for given fold
+
+        Parameters
+        --------------------
+        ifold : If no fold makes sense (i.e. this is the full sample), use ifold=-1
+        kind  : Used to label the plot 
         '''
         log.debug(f'Plotting ROC curve for {ifold} fold')
 
