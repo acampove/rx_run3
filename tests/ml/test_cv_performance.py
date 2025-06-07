@@ -1,6 +1,7 @@
 '''
 Script with functions meant to test CVPerformance
 '''
+import matplotlib.pyplot as plt
 
 from dmu.testing           import utilities as tut
 from dmu.logging.log_store import LogStore
@@ -26,7 +27,14 @@ def test_simple():
     l_model_2 = tut.get_models(rdf_sig_1, rdf_bkg_2, name='alt')
 
     cvp = CVPerformance()
-    cvp.load(sig=rdf_sig_1, bkg=rdf_bkg_1, model=l_model_1, name='def')
-    cvp.load(sig=rdf_sig_1, bkg=rdf_bkg_2, model=l_model_2, name='alt')
-    cvp.save(path=f'{Data.out_dir}/simple')
+    cvp.plot_roc(
+            sig  =rdf_sig_1, bkg=rdf_bkg_1,
+            model=l_model_1, name='def', color='red')
+    cvp.plot_roc(
+            sig  =rdf_sig_1, bkg=rdf_bkg_2,
+            model=l_model_2, name='alt', color='blue')
+
+    plt.legend()
+    plt.grid()
+    plt.show()
 # -------------------------------
