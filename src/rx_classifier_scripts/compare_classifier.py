@@ -24,6 +24,7 @@ class Data:
     Data class
     '''
     cfg : dict
+    nev : int
     cvp = CVPerformance()
 # -------------------------------
 def _load_config(name : str) -> dict:
@@ -36,9 +37,11 @@ def _load_config(name : str) -> dict:
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to compare performance of classifiers')
     parser.add_argument('-c', '--config', type=str, help='Name of config file', required=True)
+    parser.add_argument('-n', '--nevent', type=int, help='Number of entries to limit run')
     args = parser.parse_args()
 
     Data.cfg = _load_config(name=args.config)
+    Data.nev = args.nevent
 # -------------------------------
 def _get_models(path : str) -> list[CVClassifier]:
     path_wc = f'{path}/model_*.pkl'
@@ -83,6 +86,12 @@ def _get_rdf(cfg : dict) -> RDataFrame:
     gtr  = RDFGetter(sample=name, trigger=trig)
     rdf  = gtr.get_rdf()
     rdf  = _apply_selection(rdf, cfg)
+
+    if Data.nev is None:
+        return rdf
+
+    log.warning(f'Limiting run to {Data.nev} entries')
+    rdf = rdf.Range(Data.nev)
 
     return rdf
 # -------------------------------
