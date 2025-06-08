@@ -24,7 +24,7 @@ samples     : &sample
       mass  : B_Mass > 5500
 
 plotting:
-  title: Performance on High $q^2$ bin
+  title: Performance on High $q^2$ bin, cut on $q^2_{track}$
   minx : 0.5
   miny : 0.5
 cases:
