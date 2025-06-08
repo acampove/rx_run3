@@ -1,6 +1,7 @@
 '''
 Script in charge of comparing different classifiers' performances
 '''
+import os
 import glob
 import argparse
 from importlib.resources   import files
@@ -15,7 +16,6 @@ from dmu.ml.cv_classifier  import CVClassifier
 
 from dmu.logging.log_store import LogStore
 from dmu.generic           import utilities as gut
-from dmu.rdataframe        import utilities as rut
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
 
