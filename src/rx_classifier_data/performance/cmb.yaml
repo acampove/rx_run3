@@ -4,6 +4,9 @@
 # - Which models are compared
 # - How to plot the comparisons, colors, etc
 
+plotting:
+  minx : 0.5
+  miny : 0.5
 central OS:
   model  : /home/acampove/external_ssd/mva/cmb/v6/central
   color  : blue 
