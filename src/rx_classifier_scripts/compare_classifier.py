@@ -27,10 +27,14 @@ class Data:
     nev : int
     cvp = CVPerformance()
 # -------------------------------
+def _initialize():
+    LogStore.set_level('rx_data:rdf_getter'    , 30)
+    LogStore.set_level('rx_selection:selection', 30)
+# -------------------------------
 def _load_config(name : str) -> dict:
     fpath = files('rx_classifier_data').joinpath(f'performance/{name}.yaml')
     fpath = str(fpath)
-    data  = gut.load_yaml(fpath)
+    data  = gut.load_json(fpath)
 
     return data
 # -------------------------------
@@ -110,9 +114,10 @@ def main():
     Start here
     '''
     _parse_args()
+    _initialize()
 
     log.info('Plotting:')
-    for kind, cfg in Data.cfg['setup'].items():
+    for kind, cfg in Data.cfg.items():
         log.info(f'{"":<4}{kind:<20}')
         _plot_roc(kind=kind, cfg=cfg)
 
