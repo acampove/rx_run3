@@ -6,6 +6,7 @@ import argparse
 from importlib.resources   import files
 
 import joblib
+import mplhep
 import matplotlib.pyplot as plt
 
 from ROOT                  import RDataFrame
@@ -26,6 +27,8 @@ class Data:
     cfg : dict
     nev : int
     cvp = CVPerformance()
+
+    plt.style.use(mplhep.style.LHCb2)
 # -------------------------------
 def _initialize():
     LogStore.set_level('rx_data:rdf_getter'    , 30)
@@ -121,6 +124,8 @@ def main():
         log.info(f'{"":<4}{kind:<20}')
         _plot_roc(kind=kind, cfg=cfg)
 
+    plt.legend()
+    plt.grid()
     plt.show()
 # -------------------------------
 if __name__ == '__main__':
