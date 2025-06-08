@@ -4,6 +4,7 @@
 # - Which models are compared
 # - How to plot the comparisons, colors, etc
 #
+# For case where the q2 requirement was applied on the q2 track variable
 
 samples     : &sample
   signal    :
