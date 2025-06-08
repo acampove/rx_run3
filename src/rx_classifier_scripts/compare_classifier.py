@@ -117,8 +117,8 @@ def _plot() -> None:
     minx= cfg.get('minx', 0)
     miny= cfg.get('miny', 0)
 
-    plt.xlim(bottom=minx)
-    plt.ylim(bottom=miny)
+    plt.xlim(minx, None)
+    plt.ylim(miny, None)
 
     plt.xlabel('Signal Efficiency')
     plt.ylabel('Background Rejection')
@@ -134,7 +134,7 @@ def main():
     _initialize()
 
     log.info('Plotting:')
-    for kind, cfg in Data.cfg.items():
+    for kind, cfg in Data.cfg['cases'].items():
         log.info(f'{"":<4}{kind:<20}')
         _plot_roc(kind=kind, cfg=cfg)
 
