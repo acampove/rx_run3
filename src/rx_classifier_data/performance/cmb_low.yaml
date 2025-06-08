@@ -4,7 +4,7 @@
 # - Which models are compared
 # - How to plot the comparisons, colors, etc
 #
-# Used for the low q2 bin
+# Used for the low q2 bin, checks performance of models trained in different q2 bins
 
 samples : &default
   signal:
@@ -33,5 +33,10 @@ cases:
   on central $q^2$:
     model  : /home/acampove/external_ssd/mva/cmb/v7p0/central
     color  : red 
+    samples:
+      <<: *default
+  on high $q^2$:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p0/high
+    color  : green 
     samples:
       <<: *default
