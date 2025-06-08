@@ -1,6 +1,8 @@
 '''
 This module contains the class CVPerformance
 '''
+# pytest: disable=too-many-positional-arguments
+
 from ROOT                  import RDataFrame
 from dmu.ml.cv_classifier  import CVClassifier
 from dmu.ml.cv_predict     import CVPredict
