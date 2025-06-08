@@ -7,32 +7,33 @@
 plotting:
   minx : 0.5
   miny : 0.5
-central OS:
-  model  : /home/acampove/external_ssd/mva/cmb/v6/central
-  color  : blue 
-  samples:
-    signal: &def_sig
-      name    : Bu_Kee_eq_btosllball05_DPC
-      trigger : Hlt2RD_BuToKpEE_MVA
-      q2bin   : central
-      selection :
-        bdt   : (1)
-    background: 
-      name    : DATA*
-      trigger : Hlt2RD_BuToKpEE_MVA
-      q2bin   : central
-      selection :
-        bdt   : (1)
-        mass  : B_Mass > 5700 && B_Mass < 6700
-central SS:
-  model  : /home/acampove/external_ssd/mva/cmb/v6/central
-  color  : red 
-  samples:
-    signal: 
-      <<: *def_sig
-    background: 
-      name    : DATA*
-      trigger : Hlt2RD_BuToKpEE_SameSign_MVA
-      q2bin   : central
-      selection :
-        bdt   : (1)
+cases:
+  central OS:
+    model  : /home/acampove/external_ssd/mva/cmb/v6/central
+    color  : blue 
+    samples:
+      signal: &def_sig
+        name    : Bu_Kee_eq_btosllball05_DPC
+        trigger : Hlt2RD_BuToKpEE_MVA
+        q2bin   : central
+        selection :
+          bdt   : (1)
+      background: 
+        name    : DATA*
+        trigger : Hlt2RD_BuToKpEE_MVA
+        q2bin   : central
+        selection :
+          bdt   : (1)
+          mass  : B_Mass > 5700 && B_Mass < 6700
+  central SS:
+    model  : /home/acampove/external_ssd/mva/cmb/v6/central
+    color  : red 
+    samples:
+      signal: 
+        <<: *def_sig
+      background: 
+        name    : DATA*
+        trigger : Hlt2RD_BuToKpEE_SameSign_MVA
+        q2bin   : central
+        selection :
+          bdt   : (1)
