@@ -3,43 +3,47 @@
 # - Which samples are compared
 # - Which models are compared
 # - How to plot the comparisons, colors, etc
+#
+
+samples     : &sample
+  signal    :
+    name    : Bu_Kee_eq_btosllball05_DPC
+    trigger : Hlt2RD_BuToKpEE_MVA
+    q2bin   : high 
+    selection :
+      bdt   : (1)
+      q2    : q2_track > 14300000 && q2_track < 22000000 && q2 < 22000000
+  background:
+    name    : DATA*
+    trigger : Hlt2RD_BuToKpEE_MVA
+    q2bin   : high 
+    selection :
+      bdt   : (1)
+      q2    : q2_track > 14300000 && q2_track < 22000000 && q2 < 22000000
+      mass  : B_Mass > 5500
 
 plotting:
   title: Performance on High $q^2$ bin
-  minx : 0.0
-  miny : 0.0
+  minx : 0.5
+  miny : 0.5
 cases:
+  On central $q^2$:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p0/central
+    color  : black 
+    samples:
+      <<: *sample
   On $q^2$:
     model  : /home/acampove/external_ssd/mva/cmb/v7p0/high
     color  : blue 
-    samples: &def_sam
-      signal    :
-        name    : Bu_Kee_eq_btosllball05_DPC
-        trigger : Hlt2RD_BuToKpEE_MVA
-        q2bin   : high 
-        selection :
-          bdt   : (1)
-          q2    : q2_track > 14300000 && q2_track > 22000000 && q2 > 22000000
-      background:
-        name    : DATA*
-        trigger : Hlt2RD_BuToKpEE_MVA
-        q2bin   : high 
-        selection :
-          bdt   : (1)
-          q2    : q2_track > 14300000 && q2_track > 22000000 && q2 > 22000000
-          mass  : B_Mass > 5500
+    samples:
+      <<: *sample
   On $q^2_{track}$:
     model  : /home/acampove/external_ssd/mva/cmb/v7p1/high
-    color  : blue 
+    color  : red 
     samples:
-      <<: *def_sam
+      <<: *sample
   On $q^2_{DTF}$:
     model  : /home/acampove/external_ssd/mva/cmb/v7p2/high
     color  : green
     samples:
-      <<: *def_sam
-  On central $q^2$:
-    model  : /home/acampove/external_ssd/mva/cmb/v6/high
-    color  : green
-    samples:
-      <<: *def_sam
+      <<: *sample
