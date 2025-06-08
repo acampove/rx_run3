@@ -61,11 +61,11 @@ dataset :
   selection:
     bkg :
       bdt  : (1)
-      q2   : q2_track >  15000000 && q2 < 22000000
+      q2   : q2 >  15000000 && q2 < 22000000
       mass : B_Mass > 5500 # This selection will be applied before definitions
     sig :                            # Cannot be put in function of aliases
       bdt  : (1)
-      q2   : q2_track >  15000000 && q2 < 22000000
+      q2   : q2 >  15000000 && q2 < 22000000
       mass : (1)
   samples:
     sig :
@@ -74,7 +74,6 @@ dataset :
     bkg :
       sample : DATA*
       trigger: Hlt2RD_BuToKpEE_MVA
-      #trigger: Hlt2RD_BuToKpEE_SameSign_MVA
   define :
     b_pt       : brem_track_2.B_PT_brem_track_2
     j_pt       : brem_track_2.Jpsi_PT_brem_track_2
