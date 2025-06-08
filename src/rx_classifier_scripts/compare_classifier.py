@@ -25,15 +25,22 @@ class Data:
     '''
     Data class
     '''
-    cfg : dict
-    nev : int
-    cvp = CVPerformance()
+    cfg     : dict
+    nev     : int
+    nam     : str
+    out_dir : str
 
+    cvp = CVPerformance()
     plt.style.use(mplhep.style.LHCb2)
 # -------------------------------
 def _initialize():
     LogStore.set_level('rx_data:rdf_getter'    , 30)
     LogStore.set_level('rx_selection:selection', 30)
+
+    ana_dir      = os.environ['ANADIR']
+    Data.out_dir = f'{ana_dir}/mva/comparison'
+
+    os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------
 def _load_config(name : str) -> dict:
     fpath = files('rx_classifier_data').joinpath(f'performance/{name}.yaml')
@@ -49,6 +56,7 @@ def _parse_args() -> None:
     args = parser.parse_args()
 
     Data.cfg = _load_config(name=args.config)
+    Data.nam = args.config
     Data.nev = args.nevent
 # -------------------------------
 def _get_models(path : str) -> list[CVClassifier]:
