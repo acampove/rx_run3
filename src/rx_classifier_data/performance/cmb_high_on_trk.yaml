@@ -25,8 +25,8 @@ samples     : &sample
 
 plotting:
   title: Performance on High $q^2$ bin, cut on $q^2_{track}$
-  minx : 0.5
-  miny : 0.5
+  minx : 0.8
+  miny : 0.8
 cases:
   On central $q^2$:
     model  : /home/acampove/external_ssd/mva/cmb/v7p0/central
