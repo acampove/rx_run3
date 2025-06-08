@@ -124,3 +124,21 @@ def rdf_report_to_df(rep : RDF.RCutFlowReport) -> Union[pnd.DataFrame, None]:
     df['Cummulative'] = df['Efficiency'].cumprod()
 
     return df
+# ---------------------------------------------------------------------
+def random_filter(rdf : RDataFrame, entries : int) -> RDataFrame:
+    '''
+    Filters a dataframe, such that the output has **approximately** `entries` entries
+    '''
+
+    ntot = rdf.Count().GetValue()
+    prob = float(entries) / ntot
+    name = f'filter_{entries}'
+
+    rdf  = rdf.Define(name, 'gRandom->Rndm();')
+    rdf  = rdf.Filter(f'{name} < {prob}', name)
+    nres = rdf.Count().GetValue()
+
+    log.debug(f'Requested {ntot}, picked {nres}')
+
+    return rdf
+# ---------------------------------------------------------------------

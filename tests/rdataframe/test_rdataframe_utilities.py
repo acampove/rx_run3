@@ -91,3 +91,19 @@ def test_rdf_report_to_df():
     df   = ut.rdf_report_to_df(rep)
 
     print(df)
+# -------------------------------------------------
+def test_rdf_random():
+    '''
+    This function will check that one can
+    get a random subset of entries from a ROOT dataframe
+    '''
+    val = 100_000
+    rdf = RDataFrame(1000_000)
+    rdf = rdf.Define('a', '1')
+
+    rdf = ut.random_filter(rdf, entries=val)
+
+    res = rdf.Count().GetValue()
+
+    assert math.isclose(val, res, rel_tol=0.01)
+# -------------------------------------------------
