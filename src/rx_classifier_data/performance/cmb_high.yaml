@@ -5,10 +5,11 @@
 # - How to plot the comparisons, colors, etc
 
 plotting:
-  minx : 0.5
-  miny : 0.5
+  title: Performance on High $q^2$ bin
+  minx : 0.0
+  miny : 0.0
 cases:
-  High:
+  Trained on high:
     model  : /home/acampove/external_ssd/mva/cmb/v6/high
     color  : blue 
     samples: &def_sam
@@ -25,7 +26,7 @@ cases:
         selection :
           bdt   : (1)
           mass  : B_Mass > 5700 && B_Mass < 6700
-  Central:
+  Trained on central:
     model  : /home/acampove/external_ssd/mva/cmb/v6/central
     color  : red 
     samples:
