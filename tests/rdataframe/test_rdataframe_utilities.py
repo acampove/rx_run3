@@ -97,18 +97,24 @@ def test_rdf_report_to_df():
 
     print(df)
 # -------------------------------------------------
-def test_rdf_random():
+@pytest.mark.parametrize('val', [-1, 0, 100_000, 1000_000, 2000_000])
+def test_rdf_random(val : int):
     '''
     This function will check that one can
     get a random subset of entries from a ROOT dataframe
     '''
-    val = 100_000
-    rdf = RDataFrame(1000_000)
+    tot = 1000_000
+    rdf = RDataFrame(tot)
     rdf = rdf.Define('a', '1')
 
     rdf = ut.random_filter(rdf, entries=val)
 
     res = rdf.Count().GetValue()
 
-    assert math.isclose(val, res, rel_tol=0.01)
+    if val <= 0 or val >= tot:
+        tar = tot
+    else:
+        tar = val
+
+    assert math.isclose(tar, res, rel_tol=0.01)
 # -------------------------------------------------
