@@ -1064,6 +1064,18 @@ obj = AtrMgr(rdf)
 obj.to_json('/path/to/file.json')
 ```
 
+## Filtering for a random number of entries
+
+The built in method `Range` only can be used to select ranges. Use
+
+```python
+import dmu.rdataframe.utilities as ut
+
+rdf = ut.random_filter(rdf, entries=val)
+```
+
+to select **approximately** a random number `entries` of entries from the dataframe.
+
 # Logging
 
 The `LogStore` class is an interface to the `logging` module. It is aimed at making it easier to include
