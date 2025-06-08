@@ -98,8 +98,7 @@ def _get_rdf(cfg : dict) -> RDataFrame:
     if Data.nev is None:
         return rdf
 
-    log.warning(f'Limiting run to {Data.nev} entries')
-    rdf = rut.random_filter(rdf, entries=Data.nev)
+    log.warning('Running over full dataset')
 
     return rdf
 # -------------------------------
