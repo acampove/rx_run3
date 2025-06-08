@@ -112,6 +112,20 @@ def _plot_roc(kind : str, cfg : dict) -> None:
         sig  =rdf_sig, bkg=rdf_bkg,
         model=models , name=kind, color=color)
 # -------------------------------
+def _plot() -> None:
+    cfg = Data.cfg['plotting']
+    minx= cfg.get('minx', 0)
+    miny= cfg.get('miny', 0)
+
+    plt.xlim(bottom=minx)
+    plt.ylim(bottom=miny)
+
+    plt.xlabel('Signal Efficiency')
+    plt.ylabel('Background Rejection')
+    plt.legend()
+    plt.grid()
+    plt.show()
+# -------------------------------
 def main():
     '''
     Start here
@@ -124,9 +138,7 @@ def main():
         log.info(f'{"":<4}{kind:<20}')
         _plot_roc(kind=kind, cfg=cfg)
 
-    plt.legend()
-    plt.grid()
-    plt.show()
+    _plot()
 # -------------------------------
 if __name__ == '__main__':
     main()
