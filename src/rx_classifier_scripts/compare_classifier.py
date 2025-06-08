@@ -112,7 +112,7 @@ def _plot_roc(kind : str, cfg : dict) -> None:
         sig  =rdf_sig, bkg=rdf_bkg,
         model=models , name=kind, color=color)
 # -------------------------------
-def _plot() -> None:
+def _plot(out_path : str) -> None:
     cfg = Data.cfg['plotting']
     minx= cfg.get('minx' , 0)
     miny= cfg.get('miny' , 0)
@@ -126,7 +126,9 @@ def _plot() -> None:
     plt.title(titl)
     plt.legend()
     plt.grid()
-    plt.show()
+    log.info(f'Saving to: {out_path}')
+    plt.savefig(out_path)
+    plt.close()
 # -------------------------------
 def main():
     '''
@@ -140,7 +142,9 @@ def main():
         log.info(f'{"":<4}{kind:<20}')
         _plot_roc(kind=kind, cfg=cfg)
 
-    _plot()
+    out_path = f'{Data.out_dir}/{Data.nam}.png'
+
+    _plot(out_path=out_path)
 # -------------------------------
 if __name__ == '__main__':
     main()
