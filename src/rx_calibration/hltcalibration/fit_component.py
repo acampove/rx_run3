@@ -216,14 +216,14 @@ class FitComponent:
         obj.axs[1].plot([self._minx, self._maxx], [+3, +3], linestyle='--', color='red')
         obj.axs[1].plot([self._minx, self._maxx], [-3, -3], linestyle='--', color='red')
 
-        obj.axs[0].set_yscale('log')
-        plot_path = f'{self._out_dir}/fit_log.png'
+        obj.axs[0].set_yscale('linear')
+        plot_path = f'{self._out_dir}/fit_lin.png'
         log.info(f'Saving fit plot to: {plot_path}')
         plt.savefig(plot_path)
 
-        obj.axs[0].set_yscale('linear')
-        obj.axs[0].set_ylim(bottom=0)
-        plot_path = f'{self._out_dir}/fit_lin.png'
+        obj.axs[0].set_ylim(bottom=0.1)
+        obj.axs[0].set_yscale('log')
+        plot_path = f'{self._out_dir}/fit_log.png'
         log.info(f'Saving fit plot to: {plot_path}')
         plt.savefig(plot_path)
 
