@@ -13,8 +13,8 @@ signal: &def_sig
 
 plotting:
   title: Performance on central $q^2$ bin
-  minx : 0.8
-  miny : 0.8
+  minx : 0.5
+  miny : 0.5
 cases:
   OS background proxy:
     model  : /home/acampove/external_ssd/mva/cmb/v7p0/central
