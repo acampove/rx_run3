@@ -13,7 +13,6 @@ central default:
       trigger : Hlt2RD_BuToKpEE_MVA
       q2bin   : central
       selection :
-        mass  : B_Mass > 5700 && B_Mass < 6700
         bdt   : (1)
     background: 
       name    : DATA*
