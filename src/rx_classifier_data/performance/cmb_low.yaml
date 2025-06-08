@@ -20,7 +20,6 @@ samples : &default
     selection :
       bdt   : (1)
       mass  : B_Mass > 5500
-
 plotting:
   title: Performance on low $q^2$ bin, for different classifiers
   minx : 0.5
