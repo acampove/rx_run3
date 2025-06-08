@@ -12,10 +12,11 @@ signal: &def_sig
     bdt   : (1)
 
 plotting:
+  title: Performance on central $q^2$ bin
   minx : 0.8
   miny : 0.8
 cases:
-  central OS:
+  OS background proxy:
     model  : /home/acampove/external_ssd/mva/cmb/v7p0/central
     color  : blue 
     samples:
@@ -28,7 +29,7 @@ cases:
         selection :
           bdt   : (1)
           mass  : B_Mass > 5500
-  central SS:
+  SS background proxy:
     model  : /home/acampove/external_ssd/mva/cmb/v7p0/central
     color  : red 
     samples:
