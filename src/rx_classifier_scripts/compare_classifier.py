@@ -98,7 +98,7 @@ def _get_rdf(cfg : dict) -> RDataFrame:
     if Data.nev is None:
         return rdf
 
-    log.warning('Running over full dataset')
+    rdf = rdf.Range(Data.nev)
 
     return rdf
 # -------------------------------
