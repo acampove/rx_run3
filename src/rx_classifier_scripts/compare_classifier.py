@@ -15,6 +15,7 @@ from dmu.ml.cv_classifier  import CVClassifier
 
 from dmu.logging.log_store import LogStore
 from dmu.generic           import utilities as gut
+from dmu.rdataframe        import utilities as rut
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
 
@@ -98,7 +99,7 @@ def _get_rdf(cfg : dict) -> RDataFrame:
         return rdf
 
     log.warning(f'Limiting run to {Data.nev} entries')
-    rdf = rdf.Range(Data.nev)
+    rdf = rut.random_filter(rdf, entries=Data.nev)
 
     return rdf
 # -------------------------------
