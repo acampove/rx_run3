@@ -132,7 +132,7 @@ def random_filter(rdf : RDataFrame, entries : int) -> RDataFrame:
     ntot = rdf.Count().GetValue()
 
     if entries <= 0 or entries >= ntot:
-        log.warning(f'Requested {entries} random entries, not filtering')
+        log.warning(f'Requested {entries}/{ntot} random entries, not filtering')
         return rdf
 
     prob = float(entries) / ntot
