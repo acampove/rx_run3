@@ -59,6 +59,26 @@ The output of this training are, for each fold:
 - Plots of the features
 - Covariance matrix
 
+## Performance
+
+In order to compare the performances use:
+
+```bash
+compare_performance -c cmb_high -n 10000
+```
+
+where:
+
+- `-c` specifies the name of the config file in `rx_classifier_data/performance/{name}.yaml`
+- `-n` specifies the number of entries to use, these are chosen randomly.
+
+The config file will specify:
+
+- How to make the plots, ranges, colors, etc.
+- What models to test.
+- What samples to pick for signal and proxy backgrounds, including the selections.
+
+**Note:** By selection, we mean what we add **on top** of the default analysis selection.
 ## TODO
 
 Some things that can be tried are:
