@@ -114,14 +114,16 @@ def _plot_roc(kind : str, cfg : dict) -> None:
 # -------------------------------
 def _plot() -> None:
     cfg = Data.cfg['plotting']
-    minx= cfg.get('minx', 0)
-    miny= cfg.get('miny', 0)
+    minx= cfg.get('minx' , 0)
+    miny= cfg.get('miny' , 0)
+    titl= cfg.get('title','')
 
     plt.xlim(minx, None)
     plt.ylim(miny, None)
 
     plt.xlabel('Signal Efficiency')
     plt.ylabel('Background Rejection')
+    plt.title(titl)
     plt.legend()
     plt.grid()
     plt.show()
