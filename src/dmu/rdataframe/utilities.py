@@ -129,8 +129,12 @@ def random_filter(rdf : RDataFrame, entries : int) -> RDataFrame:
     '''
     Filters a dataframe, such that the output has **approximately** `entries` entries
     '''
-
     ntot = rdf.Count().GetValue()
+
+    if entries <= 0 or entries >= ntot:
+        log.warning(f'Requested {entries} random entries, not filtering')
+        return rdf
+
     prob = float(entries) / ntot
     name = f'filter_{entries}'
 
