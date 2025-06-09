@@ -57,9 +57,8 @@ hyper               :
   loss              : log_loss
   max_features      : sqrt 
   n_estimators      : 100
-  max_depth         : 5
+  max_depth         : 3
   min_samples_split : 2
-  subsample         : 0.8
   learning_rate     : 0.1
 # ----------------------------------
 dataset :
@@ -93,8 +92,8 @@ training :
     low :
       n_estimators : 70
     central :
-      n_estimators : 70
-      max_depth    : 4
+      max_depth    : 5
+      subsample    : 0.8
     high :
       n_estimators : 70
 saving:
