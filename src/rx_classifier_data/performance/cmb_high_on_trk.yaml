@@ -4,7 +4,7 @@
 # - Which models are compared
 # - How to plot the comparisons, colors, etc
 #
-# For case where the q2 requirement was applied on the q2 track variable
+# For case where testing on OS track q2, training on every possible choice 
 
 samples     : &sample
   signal    :
@@ -33,18 +33,33 @@ cases:
     color  : black 
     samples:
       <<: *sample
-  On $q^2$:
+  On high $q^2$:
     model  : /home/acampove/external_ssd/mva/cmb/v7p0/high
-    color  : blue 
-    samples:
-      <<: *sample
-  On $q^2_{track}$:
-    model  : /home/acampove/external_ssd/mva/cmb/v7p1/high
     color  : red 
     samples:
       <<: *sample
-  On $q^2_{DTF}$:
+  On high $q^2_{track}$:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p1/high
+    color  : blue 
+    samples:
+      <<: *sample
+  On high $q^2_{DTF}$:
     model  : /home/acampove/external_ssd/mva/cmb/v7p2/high
     color  : green
+    samples:
+      <<: *sample
+  On high $q^2_{DTF}$ SS:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p3/high
+    color  : green
+    samples:
+      <<: *sample
+  On high $q^2$ SS:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p4/high
+    color  : purple
+    samples:
+      <<: *sample
+  On central $q^2$ SS:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p4/high
+    color  : cyan 
     samples:
       <<: *sample
