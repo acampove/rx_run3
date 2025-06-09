@@ -63,11 +63,9 @@ dataset :
   selection:
     bkg :
       bdt  : (1)
-      q2   : q2_dtf >  15000000 && q2_dtf < 22000000
       mass : B_Mass > 5500 # This selection will be applied before definitions
     sig :                            # Cannot be put in function of aliases
       bdt  : (1)
-      q2   : q2_dtf >  15000000 && q2_dtf < 22000000
       mass : (1)
   samples:
     sig :
