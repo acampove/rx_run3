@@ -15,7 +15,7 @@ class Data:
     '''
     Data class
     '''
-    out_dir = '/tmp/tests/dmu/stats/cv_performance'
+    out_dir = '/tmp/tests/dmu/ml/cv_performance'
 # -------------------------------
 def test_simple():
     '''
@@ -41,6 +41,6 @@ def test_simple():
 
     plt.legend()
     plt.grid()
-    plt.savefig(f'{Data.out_dir}/simple.png')
+    plt.savefig(f'{out_dir}/performance.png')
     plt.close()
 # -------------------------------
