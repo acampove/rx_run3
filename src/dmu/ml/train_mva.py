@@ -9,6 +9,7 @@ Module with TrainMva class
 import os
 import copy
 import json
+import math
 
 import joblib
 import pandas as pnd
@@ -607,12 +608,17 @@ class TrainMva:
 
         skip_fit: By default false, if True, it will only do the plots of features and save tables
         load_trained: If true, it will load the models instead of training, by default false
+
+        Returns
+        ----------------
+        Area under the ROC curve from evaluating the classifiers
+        on samples that were not used in their training. Uses the full sample
         '''
         self._save_settings_to_tex()
         self._plot_features()
 
         if skip_fit:
-            return
+            return math.nan
 
         l_mod = self._get_models(load_trained = load_trained)
         if not load_trained:
