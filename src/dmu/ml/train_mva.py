@@ -415,8 +415,8 @@ class TrainMva:
         arr_sig_idx, = numpy.where(l_lab == 1)
         arr_bkg_idx, = numpy.where(l_lab == 0)
 
-        df_ft_sig = df_ft[arr_sig_idx]
-        df_ft_bkg = df_ft[arr_bkg_idx]
+        df_ft_sig = df_ft.iloc[arr_sig_idx]
+        df_ft_bkg = df_ft.iloc[arr_bkg_idx]
 
         self._plot_correlation(df_ft=df_ft_sig, ifold=ifold, name='signal'    )
         self._plot_correlation(df_ft=df_ft_bkg, ifold=ifold, name='background')
