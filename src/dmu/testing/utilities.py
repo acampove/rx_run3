@@ -70,6 +70,11 @@ def get_rdf(
         columns_with_nans : list[str]   = None):
     '''
     Return ROOT dataframe with toy data
+
+    kind              : sig, bkg or bkg_alt
+    repeated          : Will add repeated rows
+    nentries          : Number of rows
+    columns_with_nans : List of column names in [w, y, z]
     '''
     # Needed for a specific test
     xnm = 'preffix.x.suffix' if use_preffix else 'x'
