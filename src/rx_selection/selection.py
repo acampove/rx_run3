@@ -184,7 +184,9 @@ def _use_smeared_masses(cuts : dict[str,str], q2bin : str) -> dict[str,str]:
         log.debug('--->')
         log.debug(cut_new)
     else:
-        log.warning(f'Not overriding q2_track cut: {cut_org}')
+        # TODO: IF we use the q2_track for this cut, we need to find the
+        # correct smearing factors here
+        log.warning(f'Not overriding with smeared version q2 cut: {cut_org}')
 
     if dut.is_reso(q2bin):
         log.debug(f'Not overriding mass cut for resonant bin: {q2bin}')
