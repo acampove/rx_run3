@@ -55,7 +55,7 @@ class Fitter:
 
         self._check_data()
 
-        self._intialized = True
+        self._initialized = True
     #------------------------------
     def _check_data(self):
         if   isinstance(self._data_in, numpy.ndarray):
