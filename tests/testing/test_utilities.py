@@ -52,3 +52,16 @@ def test_build_friend_structure():
     log.info('Testing build_friend_structure')
     ut.build_friend_structure('friends.yaml', nentries=100)
 # ----------------------------------------------
+def test_get_models():
+    '''
+    Tests the get_models function
+    '''
+    rdf_sig = ut.get_rdf(kind='sig')
+    rdf_bkg = ut.get_rdf(kind='bkg')
+
+    l_model = ut.get_models(
+        rdf_sig,
+        rdf_bkg)
+
+    assert len(l_model) == 3
+# ----------------------------------------------
