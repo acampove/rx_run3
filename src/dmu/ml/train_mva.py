@@ -52,6 +52,7 @@ class TrainMva:
         cfg (dict)          : Dictionary storing configuration for training
         '''
         self._cfg       = cfg
+        self._auc       : float # This is where the Area Under the ROC curve for the full sample will be saved
         self._l_ft_name = self._cfg['training']['features']
 
         self._rdf_sig_org = sig
@@ -232,7 +233,12 @@ class TrainMva:
         arr_sig_ts = numpy.concatenate(l_arr_sig_ts)
         arr_bkg_ts = numpy.concatenate(l_arr_bkg_ts)
 
-        xval, yval = TrainMva.plot_roc(arr_lab_ts, arr_all_ts, kind='Test', ifold=-1)
+        xval, yval, self._auc = TrainMva.plot_roc(
+                arr_lab_ts,
+                arr_all_ts,
+                kind ='Test',
+                ifold=-1)
+
         self._plot_probabilities(xval, yval, arr_all_ts, arr_lab_ts)
         self._save_roc(xval=xval, yval=yval, ifold=-1)
         self._plot_scores(ifold=-1, sig_tst=arr_sig_ts, bkg_tst=arr_bkg_ts)
@@ -595,7 +601,7 @@ class TrainMva:
     def run(
             self,
             skip_fit     : bool = False,
-            load_trained : bool = False) -> None:
+            load_trained : bool = False) -> float:
         '''
         Will do the training
 
@@ -615,6 +621,8 @@ class TrainMva:
 
         self._run_diagnostics(models = l_mod, rdf = self._rdf_sig_org, name='Signal'    )
         self._run_diagnostics(models = l_mod, rdf = self._rdf_bkg_org, name='Background')
+
+        return self._auc
     # ---------------------------------------------
     @staticmethod
     def plot_roc_from_prob(
