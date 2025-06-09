@@ -30,7 +30,7 @@ cases:
     samples:
       <<: *samp
   SS background proxy:
-    model  : /home/acampove/external_ssd/mva/cmb/v7p4/central
+    model  : /home/acampove/external_ssd/mva/cmb/v7p5/central
     color  : red 
     samples:
       <<: *samp

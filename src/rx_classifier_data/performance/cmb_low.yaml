@@ -31,7 +31,7 @@ cases:
     samples:
       <<: *default
   on low SS $q^2$:
-    model  : /home/acampove/external_ssd/mva/cmb/v7p4/low
+    model  : /home/acampove/external_ssd/mva/cmb/v7p5/low
     color  : red 
     samples:
       <<: *default
@@ -41,7 +41,7 @@ cases:
     samples:
       <<: *default
   on central SS $q^2$:
-    model  : /home/acampove/external_ssd/mva/cmb/v7p4/central
+    model  : /home/acampove/external_ssd/mva/cmb/v7p5/central
     color  : green 
     samples:
       <<: *default

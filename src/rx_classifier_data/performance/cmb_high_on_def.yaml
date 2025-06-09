@@ -54,12 +54,12 @@ cases:
     samples:
       <<: *sample
   On high $q^2$ SS:
-    model  : /home/acampove/external_ssd/mva/cmb/v7p4/high
+    model  : /home/acampove/external_ssd/mva/cmb/v7p5/high
     color  : purple
     samples:
       <<: *sample
   On central $q^2$ SS:
-    model  : /home/acampove/external_ssd/mva/cmb/v7p4/high
+    model  : /home/acampove/external_ssd/mva/cmb/v7p5/high
     color  : cyan 
     samples:
       <<: *sample
