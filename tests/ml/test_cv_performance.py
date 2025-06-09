@@ -1,6 +1,9 @@
 '''
 Script with functions meant to test CVPerformance
 '''
+import os
+
+import pytest
 import matplotlib.pyplot as plt
 
 from dmu.testing           import utilities as tut
@@ -14,6 +17,10 @@ class Data:
     Data class
     '''
     out_dir = '/tmp/tests/dmu/stats/cv_performance'
+# -------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------
 def test_simple():
     '''
@@ -36,5 +43,6 @@ def test_simple():
 
     plt.legend()
     plt.grid()
-    plt.show()
+    plt.savefig(f'{Data.out_dir}/simple.png')
+    plt.close()
 # -------------------------------
