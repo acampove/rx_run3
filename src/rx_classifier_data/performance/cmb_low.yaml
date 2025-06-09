@@ -27,21 +27,26 @@ plotting:
 cases:
   on low $q^2$:
     model  : /home/acampove/external_ssd/mva/cmb/v7p0/low
-    color  : blue 
+    color  : black 
+    samples:
+      <<: *default
+  on low SS $q^2$:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p4/low
+    color  : red 
     samples:
       <<: *default
   on central $q^2$:
     model  : /home/acampove/external_ssd/mva/cmb/v7p0/central
-    color  : red 
+    color  : blue 
     samples:
       <<: *default
   on central SS $q^2$:
-    model  : /home/acampove/external_ssd/mva/cmb/v7p0/central
-    color  : red 
+    model  : /home/acampove/external_ssd/mva/cmb/v7p4/central
+    color  : green 
     samples:
       <<: *default
   on high $q^2$:
     model  : /home/acampove/external_ssd/mva/cmb/v7p0/high
-    color  : green 
+    color  : orange
     samples:
       <<: *default
