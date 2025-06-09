@@ -207,7 +207,7 @@ class TrainMva:
             arr_sig_ts, arr_bkg_ts, arr_all_ts, arr_lab_ts = self._get_scores(model, arr_its, on_training_ok=False)
 
             self._save_feature_importance(model, ifold)
-            self._plot_correlation(arr_itr, ifold)
+            self._plot_correlations(arr_itr, ifold)
             self._plot_scores(
                     ifold  =     ifold,
                     sig_trn=arr_sig_tr,
@@ -406,8 +406,25 @@ class TrainMva:
 
         return cfg
     # ---------------------------------------------
-    def _plot_correlation(self, arr_index : NPA, ifold : int) -> None:
+    def _plot_correlations(self, arr_index : NPA, ifold : int) -> None:
         df_ft = self._df_ft.iloc[arr_index]
+        l_lab = self._l_lab[arr_index]
+
+        arr_sig_idx, = numpy.where(l_lab == 1)
+        arr_bkg_idx, = numpy.where(l_lab == 0)
+
+        df_ft_sig = df_ft[arr_sig_idx]
+        df_ft_bkg = df_ft[arr_bkg_idx]
+
+        self._plot_correlation(df_ft=df_ft_sig, ifold=ifold, name='signal'    )
+        self._plot_correlation(df_ft=df_ft_bkg, ifold=ifold, name='background')
+    # ---------------------------------------------
+    def _plot_correlation(
+            self,
+            df_ft : pnd.DataFrame,
+            ifold : int,
+            name  : str) -> None:
+
         cfg = self._get_correlation_cfg(df_ft, ifold)
         cov = df_ft.corr()
         mat = cov.to_numpy()
