@@ -27,6 +27,7 @@ class Data:
     '''
     cfg     : dict
     nev     : int
+    lvl     : int
     nam     : str
     out_dir : str
 
@@ -34,8 +35,9 @@ class Data:
     plt.style.use(mplhep.style.LHCb2)
 # -------------------------------
 def _initialize():
-    LogStore.set_level('rx_data:rdf_getter'    , 30)
-    LogStore.set_level('rx_selection:selection', 30)
+    LogStore.set_level('rx_data:rdf_getter'             , 30)
+    LogStore.set_level('rx_selection:selection'         , 30)
+    LogStore.set_level('rx_selection:compare_classifier', Data.lvl)
 
     ana_dir      = os.environ['ANADIR']
     Data.out_dir = f'{ana_dir}/mva/comparison'
@@ -53,11 +55,13 @@ def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to compare performance of classifiers')
     parser.add_argument('-c', '--config', type=str, help='Name of config file', required=True)
     parser.add_argument('-n', '--nevent', type=int, help='Number of entries to limit run')
+    parser.add_argument('-l', '--loglvl', type=int, help='Logging level', default=20)
     args = parser.parse_args()
 
     Data.cfg = _load_config(name=args.config)
     Data.nam = args.config
     Data.nev = args.nevent
+    Data.lvl = args.loglvl
 # -------------------------------
 def _get_models(path : str) -> list[CVClassifier]:
     path_wc = f'{path}/model_*.pkl'
