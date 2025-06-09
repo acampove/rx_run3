@@ -29,7 +29,8 @@ train_cone v4 train_turbo_mva_prc
     1. Makes better plots
     2. Adds the ROC curve with the full testing dataset
 
-The following versions use brem corrected variables
+The following versions use brem corrected variables and the following changes
+for high q2.
 
 - **v7p0**: Cut on $q^2$.
 - **v7p1**: Cut on $q^2_{track}$.
