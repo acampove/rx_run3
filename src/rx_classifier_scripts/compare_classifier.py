@@ -94,7 +94,9 @@ def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
             smeared=True)
 
     d_sel = _override_selection(cfg=cfg, d_sel=d_sel)
+    log.info('Applying selection')
     for name, expr in d_sel.items():
+        log.debug(f'{name:<15}{expr}')
         rdf = rdf.Filter(expr, name)
 
     return rdf
