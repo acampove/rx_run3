@@ -573,7 +573,10 @@ class TrainMva:
         cvd = CVDiagnostics(models=models, rdf=rdf, cfg=cfg_diag)
         cvd.run()
     # ---------------------------------------------
-    def run(self, skip_fit : bool = False, load_trained : bool = False) -> None:
+    def run(
+            self, 
+            skip_fit     : bool = False, 
+            load_trained : bool = False) -> None:
         '''
         Will do the training
 
