@@ -407,6 +407,8 @@ class TrainMva:
         return cfg
     # ---------------------------------------------
     def _plot_correlations(self, arr_index : NPA, ifold : int) -> None:
+        log.debug('Plotting correlations')
+
         df_ft = self._df_ft.iloc[arr_index]
         l_lab = self._l_lab[arr_index]
 
@@ -425,11 +427,11 @@ class TrainMva:
             ifold : int,
             name  : str) -> None:
 
+        log.debug(f'Plotting correlation for {name}/{ifold} fold')
+
         cfg = self._get_correlation_cfg(df_ft, ifold)
         cov = df_ft.corr()
         mat = cov.to_numpy()
-
-        log.debug(f'Plotting correlation for {ifold} fold')
 
         val_dir  = self._cfg['saving']['output']
         val_dir  = f'{val_dir}/fold_{ifold:03}'
