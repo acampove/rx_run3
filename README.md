@@ -710,10 +710,7 @@ plotting:
       title      : 'Correlation matrix'
       size       : [10, 10]
       mask_value : 0                # Where correlation is zero, the bin will appear white
-    val_dir : 'tests/ml/train_mva'
     features:
-        saving:
-            plt_dir : 'tests/ml/train_mva/features'
         plots:
           w :
             binning : [-4, 4, 100]
