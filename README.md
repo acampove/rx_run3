@@ -692,7 +692,7 @@ training :
       min_samples_split : 2
 saving:
     # The actual model names are model_001.pkl, model_002.pkl, etc, one for each fold
-    path : 'tests/ml/train_mva/model.pkl'
+    path : 'tests/ml/train_mva'
 plotting:
     roc :
         min : [0.0, 0.0] # Optional, controls where the ROC curve starts and ends
