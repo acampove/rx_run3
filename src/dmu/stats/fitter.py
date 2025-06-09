@@ -85,8 +85,7 @@ class Fitter:
         elif len(shp) == 2:
             _, jval = shp
             if jval != 1:
-                log.error(f'Invalid data shape: {shp}')
-                raise
+                raise ValueError(f'Invalid data shape: {shp}')
         else:
             log.error(f'Invalid data shape: {shp}')
             raise
