@@ -59,7 +59,7 @@ def test_get_models():
     rdf_sig = ut.get_rdf(kind='sig')
     rdf_bkg = ut.get_rdf(kind='bkg')
 
-    l_model = ut.get_models(
+    l_model, _ = ut.get_models(
         rdf_sig,
         rdf_bkg)
 
