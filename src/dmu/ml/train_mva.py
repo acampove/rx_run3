@@ -218,7 +218,7 @@ class TrainMva:
                     bkg_tst=arr_bkg_ts)
 
             TrainMva.plot_roc(arr_lab_ts, arr_all_ts, kind='Test' , ifold=ifold)
-            xval, yval = TrainMva.plot_roc(arr_lab_tr, arr_all_tr, kind='Train', ifold=ifold)
+            xval, yval, _ = TrainMva.plot_roc(arr_lab_tr, arr_all_tr, kind='Train', ifold=ifold)
             self._plot_probabilities(xval, yval, arr_all_tr, arr_lab_tr)
             self._save_roc(xval=xval, yval=yval, ifold=ifold)
 
