@@ -49,9 +49,9 @@ def test_non_overlap():
     '''
 
     LogStore.set_level('dmu:ml:cv_predict', 10)
-    rdf_sig = ut.get_rdf(kind='sig')
-    rdf_bkg = ut.get_rdf(kind='bkg')
-    l_model = ut.get_models(rdf_sig, rdf_bkg)
+    rdf_sig    = ut.get_rdf(kind='sig')
+    rdf_bkg    = ut.get_rdf(kind='bkg')
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
 
     rdf     = ut.get_rdf(kind='sig')
     cvp     = CVPredict(models=l_model, rdf=rdf)
@@ -63,9 +63,9 @@ def test_overlap():
     '''
     LogStore.set_level('dmu:ml:cv_predict', 10)
 
-    rdf_sig = ut.get_rdf(kind='sig')
-    rdf_bkg = ut.get_rdf(kind='bkg')
-    l_model = ut.get_models(rdf_sig, rdf_bkg)
+    rdf_sig    = ut.get_rdf(kind='sig')
+    rdf_bkg    = ut.get_rdf(kind='bkg')
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
 
     cvp     = CVPredict(models=l_model, rdf=rdf_sig)
     cvp.predict()
@@ -79,9 +79,9 @@ def test_patch():
     LogStore.set_level('dmu:ml:cv_predict', 10)
     LogStore.set_level('dmu:ml:train_mva' , 20)
 
-    rdf_sig = ut.get_rdf(kind='sig', columns_with_nans=['y'])
-    rdf_bkg = ut.get_rdf(kind='bkg', repeated=True)
-    l_model = ut.get_models(rdf_sig, rdf_bkg)
+    rdf_sig     = ut.get_rdf(kind='sig', columns_with_nans=['y'])
+    rdf_bkg     = ut.get_rdf(kind='bkg', repeated=True)
+    l_model , _ = ut.get_models(rdf_sig, rdf_bkg)
 
     log.info('Predicting')
 
@@ -97,9 +97,9 @@ def test_partial_patch():
     '''
     log.info('\nTraining')
 
-    rdf_sig = ut.get_rdf(kind='sig', columns_with_nans=['x', 'y'])
-    rdf_bkg = ut.get_rdf(kind='bkg', repeated=True)
-    l_model = ut.get_models(rdf_sig, rdf_bkg)
+    rdf_sig    = ut.get_rdf(kind='sig', columns_with_nans=['x', 'y'])
+    rdf_bkg    = ut.get_rdf(kind='bkg', repeated=True)
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
 
     log.info('Predicting')
 
