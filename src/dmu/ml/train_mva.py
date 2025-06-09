@@ -53,7 +53,7 @@ class TrainMva:
         cfg (dict)          : Dictionary storing configuration for training
         '''
         self._cfg       = cfg
-        self._auc       : float # This is where the Area Under the ROC curve for the full sample will be saved
+        self._auc       = math.nan # This is where the Area Under the ROC curve for the full sample will be saved
         self._l_ft_name = self._cfg['training']['features']
 
         self._rdf_sig_org = sig
@@ -618,7 +618,7 @@ class TrainMva:
         self._plot_features()
 
         if skip_fit:
-            return math.nan
+            return self._auc 
 
         l_mod = self._get_models(load_trained = load_trained)
         if not load_trained:
