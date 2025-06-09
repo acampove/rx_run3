@@ -4,12 +4,20 @@
 # - Which models are compared
 # - How to plot the comparisons, colors, etc
 
-signal: &def_sig
-  name    : Bu_Kee_eq_btosllball05_DPC
-  trigger : Hlt2RD_BuToKpEE_MVA
-  q2bin   : central
-  selection :
-    bdt   : (1)
+samples: &samp
+  signal    :
+    name    : Bu_Kee_eq_btosllball05_DPC
+    trigger : Hlt2RD_BuToKpEE_MVA
+    q2bin   : central
+    selection :
+      bdt   : (1)
+  background: 
+    name    : DATA*
+    trigger : Hlt2RD_BuToKpEE_MVA
+    q2bin   : central
+    selection :
+      bdt   : (1)
+      mass  : B_Mass > 5500
 
 plotting:
   title: Performance on central $q^2$ bin
@@ -20,24 +28,9 @@ cases:
     model  : /home/acampove/external_ssd/mva/cmb/v7p0/central
     color  : blue 
     samples:
-      signal    :
-        <<: *def_sig
-      background: 
-        name    : DATA*
-        trigger : Hlt2RD_BuToKpEE_MVA
-        q2bin   : central
-        selection :
-          bdt   : (1)
-          mass  : B_Mass > 5500
+      <<: *samp
   SS background proxy:
-    model  : /home/acampove/external_ssd/mva/cmb/v7p0/central
+    model  : /home/acampove/external_ssd/mva/cmb/v7p4/central
     color  : red 
     samples:
-      signal: 
-        <<: *def_sig
-      background: 
-        name    : DATA*
-        trigger : Hlt2RD_BuToKpEE_SameSign_MVA
-        q2bin   : central
-        selection :
-          bdt   : (1)
+      <<: *samp
