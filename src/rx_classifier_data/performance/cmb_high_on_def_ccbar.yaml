@@ -14,6 +14,7 @@ signal    : &sig_sam
   selection :
     bdt   : (1)
     q2    : q2 > 15000000 && q2 < 22000000
+    mass  : (1) 
 
 background: &bkg_sam
   trigger : Hlt2RD_BuToKpEE_MVA
