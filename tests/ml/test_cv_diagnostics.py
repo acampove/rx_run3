@@ -26,9 +26,9 @@ def test_score_from_model():
     rdf_sig = ut.get_rdf(kind='sig')
     rdf_bkg = ut.get_rdf(kind='bkg')
 
-    l_model = ut.get_models(rdf_sig, rdf_bkg)
-    rdf     = ut.get_rdf(kind='sig')
-    cfg     = ut.get_config('ml/tests/diagnostics_from_model.yaml')
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
+    rdf        = ut.get_rdf(kind='sig')
+    cfg        = ut.get_config('ml/tests/diagnostics_from_model.yaml')
 
     cvd     = CVDiagnostics(models=l_model, rdf=rdf, cfg=cfg)
     cvd.run()
@@ -42,9 +42,9 @@ def test_score_from_rdf():
     rdf_sig = ut.get_rdf(kind='sig')
     rdf_bkg = ut.get_rdf(kind='bkg')
 
-    l_model = ut.get_models(rdf_sig, rdf_bkg)
-    rdf     = ut.get_rdf(kind='sig')
-    cfg     = ut.get_config('ml/tests/diagnostics_from_file.yaml')
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
+    rdf        = ut.get_rdf(kind='sig')
+    cfg        = ut.get_config('ml/tests/diagnostics_from_file.yaml')
 
     cvd     = CVDiagnostics(models=l_model, rdf=rdf, cfg=cfg)
     cvd.run()
@@ -58,9 +58,9 @@ def test_multiple_methods():
     rdf_sig = ut.get_rdf(kind='sig')
     rdf_bkg = ut.get_rdf(kind='bkg')
 
-    l_model = ut.get_models(rdf_sig, rdf_bkg)
-    rdf     = ut.get_rdf(kind='sig')
-    cfg     = ut.get_config('ml/tests/diagnostics_multiple_methods.yaml')
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
+    rdf        = ut.get_rdf(kind='sig')
+    cfg        = ut.get_config('ml/tests/diagnostics_multiple_methods.yaml')
 
     cvd     = CVDiagnostics(models=l_model, rdf=rdf, cfg=cfg)
     cvd.run()
@@ -74,9 +74,9 @@ def test_overlay():
     rdf_sig = ut.get_rdf(kind='sig')
     rdf_bkg = ut.get_rdf(kind='bkg')
 
-    l_model = ut.get_models(rdf_sig, rdf_bkg)
-    rdf     = ut.get_rdf(kind='sig')
-    cfg     = ut.get_config('ml/tests/diagnostics_overlay.yaml')
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
+    rdf        = ut.get_rdf(kind='sig')
+    cfg        = ut.get_config('ml/tests/diagnostics_overlay.yaml')
 
     cvd     = CVDiagnostics(models=l_model, rdf=rdf, cfg=cfg)
     cvd.run()
