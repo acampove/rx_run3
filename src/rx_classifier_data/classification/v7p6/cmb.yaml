@@ -24,7 +24,6 @@ features:
     - B_FDCHI2_OWNPV
     - B_ENDVERTEX_CHI2DOF
     #
-    - j_pt
     - j_dira
     - Jpsi_CHI2DOF
     - Jpsi_IPCHI2_OWNPV
@@ -92,8 +91,10 @@ training :
     low :
       n_estimators : 70
     central :
-      max_depth    : 5
-      subsample    : 0.8
+      n_estimators     : 300
+      max_depth        : 6
+      subsample        : 0.7
+      min_samples_leaf : 1
     high :
       n_estimators : 70
 saving:
