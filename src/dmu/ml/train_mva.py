@@ -420,7 +420,7 @@ class TrainMva:
 
         obj = MatrixPlotter(mat=mat, cfg=cfg)
         obj.plot()
-        plt.savefig(f'{val_dir}/covariance.png')
+        plt.savefig(f'{val_dir}/correlation_{name}.png')
         plt.close()
     # ---------------------------------------------
     def _get_nentries(self, arr_val : NPA) -> str:
