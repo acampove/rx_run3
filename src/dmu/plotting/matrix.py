@@ -102,7 +102,7 @@ class MatrixPlotter:
 
         fig, ax = plt.subplots() if fsize is None else plt.subplots(figsize=fsize)
 
-        palette = plt.cm.viridis
+        palette = plt.cm.viridis #pylint: disable=no-member
         im      = ax.imshow(self._mat, cmap=palette, vmin=zmin, vmax=zmax)
         self._set_axes(ax)
 
