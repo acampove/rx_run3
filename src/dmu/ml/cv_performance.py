@@ -24,7 +24,7 @@ class CVPerformance:
             color : str,
             sig   : RDataFrame,
             bkg   : RDataFrame,
-            model : list[CVClassifier] ) -> None:
+            model : list[CVClassifier] ) -> float:
         '''
         Method in charge of picking up model and data and plotting ROC curve
 
@@ -34,6 +34,10 @@ class CVPerformance:
         sig  : ROOT dataframe storing signal samples
         bkg  : ROOT dataframe storing background samples
         model: List of instances of the CVClassifier
+
+        Returns
+        --------------------------
+        Area under the ROC curve
         '''
         log.info(f'Loading {name}')
 
@@ -43,10 +47,12 @@ class CVPerformance:
         cvp_bkg = CVPredict(models=model, rdf=bkg)
         arr_bkg = cvp_bkg.predict()
 
-        TrainMva.plot_roc_from_prob(
+        _, _, auc = TrainMva.plot_roc_from_prob(
                 arr_sig_prb=arr_sig,
                 arr_bkg_prb=arr_bkg,
                 kind       =   name,
                 color      =  color, # This should allow the function to pick kind
                 ifold      =    999) # for the label
+
+        return auc
 # -----------------------------------------------------
