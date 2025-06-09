@@ -158,11 +158,14 @@ def get_file_with_trees(path : str) -> TFile:
 def get_models(
         rdf_sig : RDataFrame,
         rdf_bkg : RDataFrame,
-        name    : str ='def') -> list[CVClassifier]:
+        out_dir : str = None) -> list[CVClassifier]:
     '''
     Will train and return models
+
+    rdf_xxx : Signal or background dataframe used for training
+    out_dir : Directory where the training output will go, optional.
     '''
-    out_dir = Data.out_dir if name is None else f'{Data.out_dir}/{name}'
+    out_dir = Data.out_dir if out_dir is None else out_dir
 
     cfg                     = get_config('ml/tests/train_mva.yaml')
     cfg['saving']['output'] = out_dir
