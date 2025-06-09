@@ -622,10 +622,26 @@ class TrainMva:
             arr_bkg_prb : NPA,
             kind        : str,
             ifold       : int,
-            color       : str = None) -> tuple[NPA,NPA]:
+            color       : str = None) -> tuple[NPA,NPA, float]:
         '''
         Takes arrays of signal and background probabilities
         and plots ROC curve
+
+        Parameters
+        --------------------
+        arr_bkg/sig_prb : Array with background/signal probabilities
+        kind            : String used to label the plot
+        ifold           : If no fold makes sense (i.e. this is the full sample), use ifold=-1
+        kind            : Used to label the plot
+        color           : String with color of curve
+
+        Returns
+        --------------------
+        Tuple with 3 elements:
+
+        - Array of x coordinates of ROC curve
+        - Array of y coordinates of ROC curve
+        - Area under the curve
         '''
         arr_sig_lab = numpy.ones_like( arr_sig_prb)
         arr_bkg_lab = numpy.zeros_like(arr_bkg_prb)
@@ -655,6 +671,14 @@ class TrainMva:
         --------------------
         ifold : If no fold makes sense (i.e. this is the full sample), use ifold=-1
         kind  : Used to label the plot
+
+        Returns
+        --------------------
+        Tuple with 3 elements:
+
+        - Array of x coordinates of ROC curve
+        - Array of y coordinates of ROC curve
+        - Area under the curve
         '''
         log.debug(f'Plotting ROC curve for {ifold} fold')
 
