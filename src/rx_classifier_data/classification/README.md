@@ -39,5 +39,4 @@ for high q2.
 | v7p2    | $q^2_{dtf}$        | OS data (default)       |
 | v7p3    | $q^2_{dtf}$        | SS data                 |
 | v7p4    | $q^2$              | SS data                 |
-
-
+| v7p5    | $q^2$              | SS data no upper SB     |
