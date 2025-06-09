@@ -35,6 +35,11 @@ cases:
     color  : red 
     samples:
       <<: *default
+  on central SS $q^2$:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p0/central
+    color  : red 
+    samples:
+      <<: *default
   on high $q^2$:
     model  : /home/acampove/external_ssd/mva/cmb/v7p0/high
     color  : green 
