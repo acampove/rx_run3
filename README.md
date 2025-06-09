@@ -691,7 +691,7 @@ training :
       learning_rate     : 0.1
       min_samples_split : 2
 saving:
-    # The actual model names are model_001.pkl, model_002.pkl, etc, one for each fold
+    # The model names are model_001.pkl, model_002.pkl, etc, one for each fold
     path : 'tests/ml/train_mva'
 plotting:
     roc :
