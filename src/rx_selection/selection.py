@@ -103,7 +103,6 @@ def reset_custom_selection() -> None:
 
     del Data.d_custom_selection
 #-----------------------
-# TODO: Eventually we should only require trigger, project and analysis can be deduced from that.
 def selection(
         q2bin    : str,
         process  : str,
@@ -112,11 +111,10 @@ def selection(
     '''
     Picks up sample name, trigger, etc, returns dictionary with selection
 
-    project  : Optional, RK or RKst, if not passed, will be decided from trigger argument
     q2bin    : low, central, jpsi, psi2S or high
     process  : Nickname for MC sample, starts with "DATA" for data
-    trigger  : E.g. Hlt2RD...
     smeared  : If true (default), the selection will use cuts on smeared masses. Only makes sense for electron MC samples
+    trigger  : E.g. Hlt2RD...
     '''
 
     project  = _project_from_trigger(trigger=trigger)
