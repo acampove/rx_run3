@@ -28,4 +28,5 @@ train_cone v4 train_turbo_mva_prc
 - **v6**: Adding back ISO mass variables in PRec MVA and using new version of code that
     1. Makes better plots
     2. Adds the ROC curve with the full testing dataset
-- **v7**: Using the brem corrected variables.
+- **v7p0**: Using the brem corrected variables with cut on $q^2$.
+- **v7p1**: Using the brem corrected variables with cut on $q^2_{track}$.
