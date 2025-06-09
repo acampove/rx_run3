@@ -32,7 +32,12 @@ train_cone v4 train_turbo_mva_prc
 The following versions use brem corrected variables and the following changes
 for high q2.
 
-- **v7p0**: Cut on $q^2$.
-- **v7p1**: Cut on $q^2_{track}$.
-- **v7p2**: Cut on $q^2_{dtf}$.
-- **v7p3**: Cut on $q^2_{dtf}$ and with SS data as background proxy
+| Version | $q^2$ Cut Type     | Background Proxy        |
+|---------|--------------------|-------------------------|
+| v7p0    | $q^2$              | OS data (default)       |
+| v7p1    | $q^2_{track}$      | OS data (default)       |
+| v7p2    | $q^2_{dtf}$        | OS data (default)       |
+| v7p3    | $q^2_{dtf}$        | SS data                 |
+| v7p4    | $q^2$              | SS data                 |
+
+
