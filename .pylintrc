@@ -3,3 +3,6 @@ disable=logging-fstring-interpolation, too-few-public-methods, line-too-long, no
 
 [TYPECHECK]
 ignored-modules = ROOT, zfit
+
+[MASTER]
+ingnore=build
