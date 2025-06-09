@@ -649,12 +649,14 @@ class TrainMva:
         arr_prb     = numpy.concatenate([arr_sig_prb, arr_bkg_prb])
         arr_lab     = numpy.concatenate([arr_sig_lab, arr_bkg_lab])
 
-        TrainMva.plot_roc(
+        res = TrainMva.plot_roc(
                 l_lab=arr_lab,
                 l_prb=arr_prb,
                 color=color,
                 kind =kind,
                 ifold=ifold)
+
+        return res
     # ---------------------------------------------
     @staticmethod
     def plot_roc(
@@ -662,7 +664,7 @@ class TrainMva:
             l_prb : NPA,
             kind  : str,
             ifold : int,
-            color : str = None) -> tuple[NPA, NPA]:
+            color : str = None) -> tuple[NPA, NPA, float]:
         '''
         Takes the labels and the probabilities and plots ROC
         curve for given fold
@@ -696,5 +698,5 @@ class TrainMva:
 
         plt.plot(xval, yval, color=color, label=label)
 
-        return xval, yval
+        return xval, yval, area
 # ---------------------------------------------
