@@ -574,8 +574,8 @@ class TrainMva:
         cvd.run()
     # ---------------------------------------------
     def run(
-            self, 
-            skip_fit     : bool = False, 
+            self,
+            skip_fit     : bool = False,
             load_trained : bool = False) -> None:
         '''
         Will do the training
