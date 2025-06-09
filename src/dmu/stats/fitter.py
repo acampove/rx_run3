@@ -87,8 +87,7 @@ class Fitter:
             if jval != 1:
                 raise ValueError(f'Invalid data shape: {shp}')
         else:
-            log.error(f'Invalid data shape: {shp}')
-            raise
+            raise ValueError(f'Invalid data shape: {shp}')
 
         ival = data.shape[0]
 
