@@ -60,6 +60,9 @@ hyper               :
   min_samples_split : 2
 # ----------------------------------
 dataset :
+  override:
+    high :
+      q2 : q2_dtf >  15000000 && q2_dtf < 22000000
   selection:
     bkg :
       bdt  : (1)
