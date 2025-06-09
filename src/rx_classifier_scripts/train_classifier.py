@@ -207,6 +207,24 @@ def _add_columns(rdf :  RDataFrame, kind : str) -> RDataFrame:
 
     return rdf
 #---------------------------------
+def _get_overriding_selection(kind : str) -> dict[str,str]:
+    '''
+    Kind here is bkg or sig
+    '''
+    cfg_sel = Data.cfg_dict['dataset']['selection']
+
+    d_cut   = cfg_sel[kind]
+    if 'override' not in cfg_sel:
+        return d_cut
+
+    if Data.q2bin not in cfg_sel['override']:
+        return d_cut
+
+    d_cut_ext = cfg_sel['override'][Data.q2bin]
+    d_cut.update(d_cut_ext)
+
+    return d_cut
+#---------------------------------
 def _apply_selection(rdf : RDataFrame, kind : str):
     '''
     Will take ROOT dataframe and kind (bkg or sig)
@@ -219,7 +237,7 @@ def _apply_selection(rdf : RDataFrame, kind : str):
     trigger = Data.cfg_dict['dataset']['samples'][kind]['trigger']
 
     d_sel = sel.selection(trigger=trigger, q2bin=Data.q2bin, process=sample)
-    d_cut = Data.cfg_dict['dataset']['selection'][kind]
+    d_cut = _get_overriding_selection(kind=kind)
     d_sel.update(d_cut)
 
     _save_selection(cuts=d_sel, kind=kind)
