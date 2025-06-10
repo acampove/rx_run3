@@ -99,7 +99,13 @@ training :
       n_estimators     : 374 
       subsample        : 0.7
     high :
-      n_estimators : 70
+      learning_rate    : 0.058
+      max_depth        :  8 
+      max_features     :  8 
+      min_samples_split:  8
+      min_samples_leaf : 18
+      n_estimators     : 358
+      subsample        : 0.7
 saving:
   output : mva/cmb/VERSION
 plotting:
