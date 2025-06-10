@@ -610,6 +610,79 @@ class TrainMva:
         cvd = CVDiagnostics(models=models, rdf=rdf, cfg=cfg_diag)
         cvd.run()
     # ---------------------------------------------
+    # TODO: These hyperparameter optimization methods
+    # should go into their own class
+    #
+    # Hyperparameter optimization
+    # ---------------------------------------------
+    def _objective(self, trial) -> float:
+        ft = self._df_ft
+        lab= self._l_lab
+
+        if not issubclass(cls, GradientBoostingClassifier):
+            raise NotImplementedError('Hyperparameter optimization only implemented for GradientBoostingClassifier')
+
+        nft = len(ft.columns)
+
+        var_learn_rate  = trial.suggest_float('learning_rate'  , 1e-3, 1e-1, log=True)
+        var_max_depth   = trial.suggest_int('max_depth'        ,    2,   15)
+        var_max_features= trial.suggest_int('max_features'     ,    2,  nft)
+        var_min_split   = trial.suggest_int('min_samples_split',    2,   10)
+        var_min_samples = trial.suggest_int('min_samples_leaf' ,    2,   30)
+        var_nestimators = trial.suggest_int('n_estimators'     ,   50,  400)
+
+        classifier = GradientBoostingClassifier(
+            learning_rate     = var_learn_rate,
+            max_depth         = var_max_depth,
+            max_features      = var_max_features,
+            min_samples_split = var_min_split,
+            min_samples_leaf  = var_min_samples,
+            n_estimators      = var_nestimators,
+            random_state      = self._rdm_state)
+
+        score = cross_val_score(
+                classifier,
+                ft,
+                lab,
+                n_jobs=-1,
+                cv=2)
+
+        accuracy = score.mean()
+
+        return accuracy
+    # ---------------------------------------------
+    def _optimize_hyperparameters(self, ):
+        log.info('Running hyperparameter optimization')
+
+        self._pbar = tqdm.tqdm(total=self._opt_trials, desc='Optimizing')
+
+        study = optuna.create_study(direction='maximize')
+        study.optimize(
+                self._objective,
+                callbacks = [self._update_progress],
+                n_trials  = self._opt_trials)
+
+        self._print_hyper_opt(study=study)
+
+        log.info('Overriding hyperparameters with optimized values')
+
+        self._cfg['training']['hyper'] = study.best_params
+    # ---------------------------------------------
+    def _update_progress(self, study, _trial):
+        self._pbar.set_postfix({'Best': f'{study.best_value:.4f}' if study.best_value else 'N/A'})
+        self._pbar.update(1)
+    # ---------------------------------------------
+    def _print_hyper_opt(self, study) -> None:
+        log.info(40 * '-')
+        log.info('Optimized hyperparameters:')
+        log.info(40 * '-')
+        for name, value in study.best_params.items():
+            if isinstance(value, float):
+                log.info(f'{name:<20}{value:.3f}')
+            else:
+                log.info(f'{name:<20}{value}')
+    # ---------------------------------------------
+    # ---------------------------------------------
     def run(
             self,
             skip_fit     : bool = False,
