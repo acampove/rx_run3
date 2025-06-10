@@ -32,7 +32,9 @@ def _initialize() -> None:
         log.info(f'Picking configuration form: {Data.config_path}')
         return
 
-    config_path      = files('ap_utilities_data').joinpath(f'{Data.config}.yaml')
+    config_path      = files('ap_utilities_data').joinpath(f'samples/{Data.config}.yaml')
+    log.info(f'Using config path: {config_path}')
+
     Data.config_path = str(config_path)
 # ----------------------------------------
 def _sections_from_path(path : str) -> dict[str, dict]:
