@@ -691,7 +691,7 @@ class TrainMva:
         Will do the training
 
         skip_fit    : By default false, if True, it will only do the plots of features and save tables
-        opt_ntrial  : Number of optimization tries for hyperparameter optimization, by default zero, i.e. no optimization will run 
+        opt_ntrial  : Number of optimization tries for hyperparameter optimization, by default zero, i.e. no optimization will run
         load_trained: If true, it will load the models instead of training, by default false.
 
         Returns
