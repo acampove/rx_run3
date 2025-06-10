@@ -681,13 +681,13 @@ class TrainMva:
         plt.title('Optimization History')
         plt.grid(True)
         plt.savefig(f'{opt_dir}/history.png')
+        plt.close()
 
         plt.hist(trials_df['value'], bins=20, alpha=0.7)
         plt.xlabel('Accuracy')
         plt.ylabel('Frequency')
         plt.title('Distribution of Trial Results')
         plt.savefig(f'{opt_dir}/accuracy.png')
-
         plt.close()
     # ---------------------------------------------
     def _update_progress(self, study, _trial):
