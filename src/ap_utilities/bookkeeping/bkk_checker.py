@@ -84,7 +84,7 @@ class BkkChecker:
 
         return line
     # -------------------------
-    def _nfiles_from_stdout(self, stdout : str) -> int:
+    def _nfiles_from_stdout(self, stdout : str, bkk : str) -> int:
         line  = self._nfiles_line_from_stdout(stdout)
         log.debug(f'Searching in line {line}')
 
@@ -92,7 +92,9 @@ class BkkChecker:
         mtch  = re.match(regex, line)
 
         if not mtch:
-            raise ValueError(f'No match found in: \n{stdout}')
+            log.warning(f'For BKK: {bkk}')
+            log.warning(f'No match found in: \n{stdout}')
+            return 0
 
         nsample = mtch.group(1)
         if nsample == 'None':
@@ -119,7 +121,7 @@ class BkkChecker:
     def _find_bkk(self, bkk : str) -> bool:
         cmd_bkk = ['dirac-bookkeeping-get-stats', '-B' , bkk]
         result  = subprocess.run(cmd_bkk, capture_output=True, text=True, check=False)
-        nfile   = self._nfiles_from_stdout(result.stdout)
+        nfile   = self._nfiles_from_stdout(result.stdout, bkk)
         found   = nfile != 0
 
         name    =  bkk.replace(r'/', '_')
