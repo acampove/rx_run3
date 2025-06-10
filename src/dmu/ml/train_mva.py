@@ -11,7 +11,8 @@ import copy
 import json
 import math
 
-from typing import Optional
+from contextlib import contextmanager
+from typing     import Optional
 
 import tqdm
 import joblib
@@ -78,6 +79,7 @@ class TrainMva:
         self._rdf_sig = self._get_rdf(rdf = rdf_sig, df_feat=df_ft_sig)
 
         self._rdm_state = 42 # Random state for training classifier
+        self._nworkers  =  1 # Used to set number of workers for ANY process. Can be overriden with `use` context manager
 
         optuna.logging.set_verbosity(optuna.logging.WARNING)
     # ---------------------------------------------
@@ -659,6 +661,7 @@ class TrainMva:
         study.optimize(
                 self._objective,
                 callbacks = [self._update_progress],
+                n_jobs    = self._nworkers,
                 n_trials  = ntrial)
 
         self._print_hyper_opt(study=study)
@@ -740,6 +743,21 @@ class TrainMva:
         self._run_diagnostics(models = l_mod, rdf = self._rdf_bkg_org, name='Background')
 
         return self._auc
+    # ---------------------------------------------
+    @contextmanager
+    def use(self, nworkers : int) -> None:
+        '''
+        Context manager used to run with a specific configuration
+
+        nworkers: Use this number of workers for ANY process that can be parallelized.
+        '''
+        old = self._nworkers
+
+        self._nworkers = nworkers
+        try:
+            yield
+        finally:
+            self._nworkers = old
     # ---------------------------------------------
     @staticmethod
     def plot_roc_from_prob(
