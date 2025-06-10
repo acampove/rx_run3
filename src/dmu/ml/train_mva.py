@@ -653,7 +653,7 @@ class TrainMva:
     def _optimize_hyperparameters(self, ntrial : int):
         log.info('Running hyperparameter optimization')
 
-        self._pbar = tqdm.tqdm(total=self._opt_trials, desc='Optimizing')
+        self._pbar = tqdm.tqdm(total=ntrial, desc='Optimizing')
 
         study = optuna.create_study(direction='maximize')
         study.optimize(
