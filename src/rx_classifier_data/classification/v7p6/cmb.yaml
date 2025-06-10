@@ -91,10 +91,13 @@ training :
     low :
       n_estimators : 70
     central :
-      n_estimators     : 300
-      max_depth        : 6
+      learning_rate    : 0.023
+      max_depth        : 12 
+      max_features     :  8 
+      min_samples_split:  9
+      min_samples_leaf : 29
+      n_estimators     : 118 
       subsample        : 0.7
-      min_samples_leaf : 1
     high :
       n_estimators : 70
 saving:
