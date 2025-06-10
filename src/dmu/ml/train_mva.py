@@ -662,10 +662,33 @@ class TrainMva:
                 n_trials  = ntrial)
 
         self._print_hyper_opt(study=study)
+        self._plot_hyper_opt(study=study)
 
         log.info('Overriding hyperparameters with optimized values')
 
         self._cfg['training']['hyper'] = study.best_params
+    # ---------------------------------------------
+    def _plot_hyper_opt(self, study) -> None:
+        out_dir = self._cfg['saving']['output']
+        opt_dir = f'{out_dir}/optimization'
+        os.makedirs(opt_dir, exist_ok=True)
+
+        trials_df = study.trials_dataframe()
+
+        plt.plot(trials_df['number'], trials_df['value'])
+        plt.xlabel('Trial')
+        plt.ylabel('Accuracy')
+        plt.title('Optimization History')
+        plt.grid(True)
+        plt.savefig(f'{opt_dir}/history.png')
+
+        plt.hist(trials_df['value'], bins=20, alpha=0.7)
+        plt.xlabel('Accuracy')
+        plt.ylabel('Frequency')
+        plt.title('Distribution of Trial Results')
+        plt.savefig(f'{opt_dir}/accuracy.png')
+
+        plt.close()
     # ---------------------------------------------
     def _update_progress(self, study, _trial):
         self._pbar.set_postfix({'Best': f'{study.best_value:.4f}' if study.best_value else 'N/A'})
