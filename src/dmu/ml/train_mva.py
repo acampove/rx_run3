@@ -646,7 +646,7 @@ class TrainMva:
                 ft,
                 lab,
                 n_jobs=-1,
-                cv=2)
+                cv=5)
 
         accuracy = score.mean()
 
