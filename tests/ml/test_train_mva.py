@@ -110,3 +110,17 @@ def test_only_diagnostics():
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run(load_trained=True)
 # -------------------------------
+def test_hyperparameter_optimization():
+    '''
+    This function will test optimizing hyperparameters
+    before running the training
+    '''
+    rdf_sig = ut.get_rdf(kind='sig')
+    rdf_bkg = ut.get_rdf(kind='bkg')
+    cfg     = ut.get_config('ml/tests/train_mva.yaml')
+    path    = cfg['saving']['output']
+    cfg['saving']['output'] = path.replace('train_mva', 'train_mva_hyp_opt')
+
+    obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
+    obj.run(optimize_hyp=True)
+# -------------------------------
