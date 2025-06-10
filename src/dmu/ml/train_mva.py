@@ -613,12 +613,14 @@ class TrainMva:
     def run(
             self,
             skip_fit     : bool = False,
+            optimize_hyp : bool = False,
             load_trained : bool = False) -> float:
         '''
         Will do the training
 
-        skip_fit: By default false, if True, it will only do the plots of features and save tables
-        load_trained: If true, it will load the models instead of training, by default false
+        skip_fit    : By default false, if True, it will only do the plots of features and save tables
+        optimize_hyp: If true, it will run a preliminary optimization stage for hyperparameters, default false.
+        load_trained: If true, it will load the models instead of training, by default false.
 
         Returns
         ----------------
@@ -630,6 +632,9 @@ class TrainMva:
 
         if skip_fit:
             return self._auc
+
+        if optimize_hyp:
+            self._optimize_hyperparameters()
 
         l_mod = self._get_models(load_trained = load_trained)
         if not load_trained:
