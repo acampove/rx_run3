@@ -78,7 +78,11 @@ sections:
 run:
 
 ```bash
-check_samples -i samples.yaml -n 6
+# This would pick the config.yaml from the project's data directory
+check_samples -c config.yaml -n 6
+
+# This would take the path to the file
+check_samples -f /paht/to/config.yaml -n 6
 ```
 
 to check if the samples exist using 6 threads (default is 1). The script will produce:
