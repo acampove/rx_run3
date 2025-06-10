@@ -7,6 +7,7 @@ dependencies= [
 'PyYAML',
 'scipy',
 'awkward',
+'optuna',
 'tqdm',
 'numpy',
 'toml',
