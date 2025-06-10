@@ -618,7 +618,7 @@ class TrainMva:
         self._plot_features()
 
         if skip_fit:
-            return self._auc 
+            return self._auc
 
         l_mod = self._get_models(load_trained = load_trained)
         if not load_trained:
