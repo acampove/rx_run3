@@ -27,7 +27,7 @@ class Data:
 def _initialize() -> None:
     _set_logs()
 
-    if hasattr(Data, 'fpath'):
+    if Data.fpath is not None:
         Data.config_path = Data.fpath
         log.info(f'Picking configuration form: {Data.config_path}')
         return
