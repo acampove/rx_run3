@@ -17,6 +17,7 @@ class Data:
     '''
     Class storing shared attributes
     '''
+    fpath   : str
     config  : str
     nthread : int
     log_lvl : int
@@ -24,10 +25,15 @@ class Data:
     config_path : str
 # ----------------------------------------
 def _initialize() -> None:
+    _set_logs()
+
+    if hasattr(Data, 'fpath'):
+        config_path = Data.fpath
+        log.info(f'Picking configuration form: {config_path}')
+        return
+
     config_path      = files('ap_utilities_data').joinpath(f'{Data.config}.yaml')
     Data.config_path = str(config_path)
-
-    _set_logs()
 # ----------------------------------------
 def _sections_from_path(path : str) -> dict[str, dict]:
     with open(path, encoding='utf-8') as ifile:
@@ -37,11 +43,13 @@ def _sections_from_path(path : str) -> dict[str, dict]:
 # --------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Used to filter samples based on what exists in the GRID')
+    parser.add_argument('-f', '--fpath'  , type=str, help='Path to YAML file with configuration, will override the -c argument')
     parser.add_argument('-c', '--config' , type=str, help='Config file specifying samples to check')
     parser.add_argument('-n', '--nthread', type=int, help='Number of threads', default=1)
     parser.add_argument('-l', '--log_lvl', type=int, help='Logging level', default=20, choices=[10,20,30,40])
     args = parser.parse_args()
 
+    Data.fpath    = args.fpath
     Data.config   = args.config
     Data.nthread  = args.nthread
     Data.log_lvl  = args.log_lvl
