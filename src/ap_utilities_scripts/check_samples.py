@@ -28,8 +28,8 @@ def _initialize() -> None:
     _set_logs()
 
     if hasattr(Data, 'fpath'):
-        config_path = Data.fpath
-        log.info(f'Picking configuration form: {config_path}')
+        Data.config_path = Data.fpath
+        log.info(f'Picking configuration form: {Data.config_path}')
         return
 
     config_path      = files('ap_utilities_data').joinpath(f'{Data.config}.yaml')
