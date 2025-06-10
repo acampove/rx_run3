@@ -35,6 +35,7 @@ class Data:
     ana_dir     = os.environ['ANADIR']
     cfg_dict    : dict
     cfg_name    : str
+    opt_ntrial  : int
     version     : str
     q2bin       : str
     max_entries : int
@@ -106,6 +107,7 @@ def _get_args():
     parser = argparse.ArgumentParser(description='Used to train classifier based on config file')
     parser.add_argument('-v', '--version'    , type=str, help='Version of config files', required=True)
     parser.add_argument('-c', '--cfg_name'   , type=str, help='Kind of config file'    , required=True)
+    parser.add_argument('-n', '--opt_ntrial' , type=int, help='Number of tries for hyperparameter optimization', default=0)
     parser.add_argument('-q', '--q2bin'      , type=str, help='q2bin'                  , required=True, choices=['low', 'central', 'jpsi', 'psi2S', 'high'])
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
@@ -115,6 +117,7 @@ def _get_args():
 
     Data.version     = args.version
     Data.cfg_name    = args.cfg_name
+    Data.opt_ntrial  = args.opt_ntrial
     Data.q2bin       = args.q2bin
     Data.max_entries = args.max_entries
     Data.log_level   = args.log_level
@@ -268,7 +271,10 @@ def main():
     rdf_bkg = _get_rdf(kind='bkg')
 
     trn = TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=Data.cfg_dict)
-    trn.run(skip_fit=Data.plot_only, load_trained=Data.load_trained)
+    trn.run(
+            skip_fit    =Data.plot_only,
+            opt_ntrial  =Data.opt_ntrial,
+            load_trained=Data.load_trained)
 #---------------------------------
 if __name__ == '__main__':
     main()
