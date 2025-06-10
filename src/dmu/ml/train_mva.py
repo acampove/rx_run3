@@ -753,6 +753,8 @@ class TrainMva:
         '''
         old = self._nworkers
 
+        log.info(f'Using {nworkers} workers to run training')
+
         self._nworkers = nworkers
         try:
             yield
