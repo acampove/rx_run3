@@ -663,7 +663,11 @@ rdf_bkg = _get_rdf(kind='bkg')
 cfg     = _get_config()
 
 obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
-obj.run(skip_fit=False) # by default it will be false, if true, it will only make plots of features
+obj.run(
+skip_fit=False, # by default it will be false, if true, it will only make plots of features
+opt_ntrial=20,  # By default this is zero, if a larger number is chosen, a hyperparameter optimization with optuna will run with this number of trials
+load_trained=False, # If true, it will not train the models but will just load them, only makes sense if models already exist. Useful to add postprocessing code, like the diagnostics section.
+)
 ```
 
 where the settings for the training go in a config dictionary, which when written to YAML looks like:
