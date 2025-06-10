@@ -1,6 +1,7 @@
 '''
 Module containing utility functions
 '''
+from typing              import Union
 from functools           import cache
 from importlib.resources import files
 
@@ -72,15 +73,22 @@ def format_nickname(nickname : str) -> str:
     return nickname
 # ---------------------------------
 # ---------------------------------
-def read_decay_name(event_type : str, formatted : bool = True) -> str:
+def read_decay_name(
+        event_type : Union[str,int],
+        formatted  : bool = True) -> str:
     '''
-    Takes event type, and style strings, returns nickname of decay as defined in DecFiles package
+    Parameters
+    ------------------
+    event_type: String or integer corresponding to MC sample
+    formatted : If True will reformat name to be usable for naming files, e.g. no spaces
 
-    Styles:
-
-    literal   : No change is made to nickname
-    formatted : If true, will return name after formatting 
+    Returns
+    ------------------
+    Decay name corresponding to event_type
     '''
+    if isinstance(event_type, int):
+        event_type = str(event_type)
+
     _initialize()
 
     yaml_path  = 'evt_form.yaml' if formatted else 'evt_name.yaml'
