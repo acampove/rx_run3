@@ -60,6 +60,7 @@ class TrainMva:
         self._cfg       = cfg
         self._auc       = math.nan # This is where the Area Under the ROC curve for the full sample will be saved
         self._l_ft_name = self._cfg['training']['features']
+        self._pbar      : Optional[tqdm.tqdm]
 
         self._rdf_sig_org = sig
         self._rdf_bkg_org = bkg
@@ -75,6 +76,11 @@ class TrainMva:
 
         self._rdf_bkg = self._get_rdf(rdf = rdf_bkg, df_feat=df_ft_bkg)
         self._rdf_sig = self._get_rdf(rdf = rdf_sig, df_feat=df_ft_sig)
+
+        self._rdm_state = 42 # Random state for training classifier
+        self._opt_trials= 20 # Trials for hyperparameter optimization
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
     # ---------------------------------------------
     def _get_extra_columns(self, rdf : RDataFrame, df : pnd.DataFrame) -> list[str]:
         d_plot = self._cfg['plotting']['features']['plots']
