@@ -122,5 +122,5 @@ def test_hyperparameter_optimization():
     cfg['saving']['output'] = path.replace('train_mva', 'train_mva_hyp_opt')
 
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
-    obj.run(optimize_hyp=True)
+    obj.run(opt_ntrial=20)
 # -------------------------------
