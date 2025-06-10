@@ -78,7 +78,6 @@ class TrainMva:
         self._rdf_sig = self._get_rdf(rdf = rdf_sig, df_feat=df_ft_sig)
 
         self._rdm_state = 42 # Random state for training classifier
-        self._opt_trials= 20 # Trials for hyperparameter optimization
 
         optuna.logging.set_verbosity(optuna.logging.WARNING)
     # ---------------------------------------------
@@ -651,7 +650,7 @@ class TrainMva:
 
         return accuracy
     # ---------------------------------------------
-    def _optimize_hyperparameters(self, ):
+    def _optimize_hyperparameters(self, ntrial : int):
         log.info('Running hyperparameter optimization')
 
         self._pbar = tqdm.tqdm(total=self._opt_trials, desc='Optimizing')
@@ -660,7 +659,7 @@ class TrainMva:
         study.optimize(
                 self._objective,
                 callbacks = [self._update_progress],
-                n_trials  = self._opt_trials)
+                n_trials  = ntrial)
 
         self._print_hyper_opt(study=study)
 
@@ -686,13 +685,13 @@ class TrainMva:
     def run(
             self,
             skip_fit     : bool = False,
-            optimize_hyp : bool = False,
+            opt_ntrial   : int  =     0,
             load_trained : bool = False) -> float:
         '''
         Will do the training
 
         skip_fit    : By default false, if True, it will only do the plots of features and save tables
-        optimize_hyp: If true, it will run a preliminary optimization stage for hyperparameters, default false.
+        opt_ntrial  : Number of optimization tries for hyperparameter optimization, by default zero, i.e. no optimization will run 
         load_trained: If true, it will load the models instead of training, by default false.
 
         Returns
@@ -706,8 +705,8 @@ class TrainMva:
         if skip_fit:
             return self._auc
 
-        if optimize_hyp:
-            self._optimize_hyperparameters()
+        if opt_ntrial > 0:
+            self._optimize_hyperparameters(ntrial=opt_ntrial)
 
         l_mod = self._get_models(load_trained = load_trained)
         if not load_trained:
