@@ -1,0 +1,15 @@
+sim-version: 10
+name: test
+inform:
+  - acampove@cern.ch
+WG: RD
+file-format: DST
+
+samples:
+  - event-types:
+    - 12103017
+    data-types:
+      - 2024.W40.42
+    magnet-polarities:
+      - MagUp
+    num-events: 10
