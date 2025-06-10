@@ -657,7 +657,10 @@ class TrainMva:
 
         self._pbar = tqdm.tqdm(total=ntrial, desc='Optimizing')
 
-        study = optuna.create_study(direction='maximize')
+        study = optuna.create_study(
+                direction='maximize',
+                pruner   = optuna.pruners.MedianPruner(n_startup_trials=10, n_warmup_steps=5),)
+
         study.optimize(
                 self._objective,
                 callbacks = [self._update_progress],
