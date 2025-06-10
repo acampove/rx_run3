@@ -112,7 +112,7 @@ class BkkChecker:
         return found
     # -------------------------
     def _get_bkk(self, event_type : str) -> str:
-        sample_path = f'/MC/{self._year}/Beam6800GeV-{self._mc_path}-{self._polarity}-{self._nu_path}-25ns-{self._generator}/{self._sim_version}/HLT2-{self._mc_path}/{event_type}/DST'
+        sample_path = f'/MC/{self._year}/Beam6800GeV-{self._mc_path}-{self._polarity}-{self._nu_path}-25ns-{self._generator}/{self._sim_version}/HLT2-{self._mc_path}/{event_type}/HLT2.DST'
 
         log.debug(f'{"":<4}{sample_path:<100}')
 
