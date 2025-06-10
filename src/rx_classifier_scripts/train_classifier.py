@@ -271,10 +271,11 @@ def main():
     rdf_bkg = _get_rdf(kind='bkg')
 
     trn = TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=Data.cfg_dict)
-    trn.run(
-            skip_fit    =Data.plot_only,
-            opt_ntrial  =Data.opt_ntrial,
-            load_trained=Data.load_trained)
+    with trn.use(nworkers=10):
+        trn.run(
+                skip_fit    =Data.plot_only,
+                opt_ntrial  =Data.opt_ntrial,
+                load_trained=Data.load_trained)
 #---------------------------------
 if __name__ == '__main__':
     main()
