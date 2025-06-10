@@ -1,7 +1,8 @@
 [project]
-name        = 'data_manipulation_utilities'
-version     = '0.2.7'
-readme      = 'README.md'
+name            = 'data_manipulation_utilities'
+requires-python = ">=3.9,<3.13"
+version         = '0.2.7'
+readme          = 'README.md'
 dependencies= [
 'logzero',
 'PyYAML',
@@ -12,7 +13,7 @@ dependencies= [
 'numpy',
 'toml',
 'uproot',
-'tensorflow==2.19.0', # Use latest tensorflow allowed by zfit
+'tensorflow==2.18.0', # Use latest tensorflow allowed by zfit
 'awkward-pandas', # Because DDFGetter might need to access files with jagged data?
 'dask[dataframe,distributed]',
 'numpy',
