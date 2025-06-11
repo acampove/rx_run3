@@ -271,9 +271,12 @@ class TrainMva:
         jsn_path = plt_path.replace('.png', '.json')
         df       = pnd.DataFrame({'x' : xval, 'y' : yval})
         df.to_json(jsn_path, indent=2)
-
+    # ---------------------------------------------
+    def _save_roc_plot(self, ifold : int) -> None:
         min_x = 0
         min_y = 0
+        ifold = 'all' if ifold == -1 else ifold
+
         if 'min' in self._cfg['plotting']['roc']:
             [min_x, min_y] = self._cfg['plotting']['roc']['min']
 
@@ -282,6 +285,15 @@ class TrainMva:
         if 'max' in self._cfg['plotting']['roc']:
             [max_x, max_y] = self._cfg['plotting']['roc']['max']
 
+        val_dir  = self._cfg['saving']['output']
+
+        if ifold == 'all':
+            plt_dir  = f'{val_dir}/fold_all'
+        else:
+            plt_dir  = f'{val_dir}/fold_{ifold:03}'
+
+        os.makedirs(plt_dir, exist_ok=True)
+
         plt.xlabel('Signal efficiency')
         plt.ylabel('Background rejection')
         plt.title(f'Fold: {ifold}')
@@ -289,7 +301,7 @@ class TrainMva:
         plt.ylim(min_y, max_y)
         plt.grid()
         plt.legend()
-        plt.savefig(plt_path)
+        plt.savefig(f'{plt_dir}/roc.png')
         plt.close()
     # ---------------------------------------------
     def _load_trained_models(self) -> list[cls]:
