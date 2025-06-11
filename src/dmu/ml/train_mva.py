@@ -262,13 +262,20 @@ class TrainMva:
 
         return l_model
     # ---------------------------------------------
-    def _save_roc(self, xval : NPA, yval : NPA, ifold : int) -> None:
+    def _save_roc_json(
+            self,
+            ifold : int,
+            kind  : str,
+            xval  : NPA,
+            yval  : NPA) -> None:
         ifold    = 'all' if ifold == -1 else ifold # -1 represents all the testing datasets combined
         val_dir  = self._cfg['saving']['output']
+
+        name     = kind.lower()
         val_dir  = f'{val_dir}/fold_{ifold:03}'
         os.makedirs(val_dir, exist_ok=True)
-        plt_path = f'{val_dir}/roc.png'
-        jsn_path = plt_path.replace('.png', '.json')
+        jsn_path = f'{val_dir}/roc_{name}.json'
+
         df       = pnd.DataFrame({'x' : xval, 'y' : yval})
         df.to_json(jsn_path, indent=2)
     # ---------------------------------------------
