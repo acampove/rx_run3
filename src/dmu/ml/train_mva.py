@@ -617,7 +617,7 @@ class TrainMva:
     #
     # Hyperparameter optimization
     # ---------------------------------------------
-    def _objective(self, trial) -> float:
+    def _objective(self, trial, kfold : StratifiedKFold) -> float:
         ft = self._df_ft
         lab= self._l_lab
 
@@ -647,7 +647,7 @@ class TrainMva:
                 ft,
                 lab,
                 n_jobs=-1,
-                cv=5)
+                cv=kfold)
 
         accuracy = score.mean()
 
