@@ -255,10 +255,11 @@ class TrainMva:
                 arr_all_ts,
                 kind ='Test',
                 ifold=-1)
-
         self._plot_probabilities(xval, yval, arr_all_ts, arr_lab_ts)
-        self._save_roc(xval=xval, yval=yval, ifold=-1)
+        self._save_roc_plot(ifold=-1)
+
         self._plot_scores(ifold=-1, sig_tst=arr_sig_ts, bkg_tst=arr_bkg_ts)
+        self._save_roc_json(xval=xval, yval=yval, kind='Full', ifold=-1)
 
         return l_model
     # ---------------------------------------------
