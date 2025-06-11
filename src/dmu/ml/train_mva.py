@@ -761,7 +761,7 @@ class TrainMva:
         ax=None
         ax=df.plot('fold', 'test' , color='blue', label='Testing sample' , ax=ax)
         ax=df.plot('fold', 'train', color='red' , label='Training sample', ax=ax)
-        ax.set_ylim(top=1.0)
+        ax.set_ylim(bottom=0.75, top=1.00)
         ax.set_ylabel('AUC')
         ax.set_xlabel('Fold')
 
