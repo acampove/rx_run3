@@ -230,10 +230,13 @@ class TrainMva:
                     bkg_trn=arr_bkg_tr,
                     bkg_tst=arr_bkg_ts)
 
-            TrainMva.plot_roc(arr_lab_ts, arr_all_ts, kind='Test' , ifold=ifold)
-            xval, yval, _ = TrainMva.plot_roc(arr_lab_tr, arr_all_tr, kind='Train', ifold=ifold)
-            self._plot_probabilities(xval, yval, arr_all_tr, arr_lab_tr)
-            self._save_roc(xval=xval, yval=yval, ifold=ifold)
+            xval_ts, yval_ts, _ = TrainMva.plot_roc(arr_lab_ts, arr_all_ts, kind='Test' , ifold=ifold)
+            xval_tr, yval_tr, _ = TrainMva.plot_roc(arr_lab_tr, arr_all_tr, kind='Train', ifold=ifold)
+            self._plot_probabilities(xval_tr, yval_tr, arr_all_tr, arr_lab_tr)
+            self._save_roc_plot(ifold=ifold)
+
+            self._save_roc_json(xval=xval_ts, yval=yval_ts, kind='Test' , ifold=ifold)
+            self._save_roc_json(xval=xval_tr, yval=yval_tr, kind='Train', ifold=ifold)
 
             ifold+=1
 
