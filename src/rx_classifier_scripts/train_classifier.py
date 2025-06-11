@@ -36,6 +36,7 @@ class Data:
     cfg_dict    : dict
     cfg_name    : str
     opt_ntrial  : int
+    workers     : int
     version     : str
     q2bin       : str
     max_entries : int
@@ -106,6 +107,7 @@ def _get_args():
     '''
     parser = argparse.ArgumentParser(description='Used to train classifier based on config file')
     parser.add_argument('-v', '--version'    , type=str, help='Version of config files', required=True)
+    parser.add_argument('-w', '--workers'    , type=str, help='Number of processes, if using parallel processing', default=1)
     parser.add_argument('-c', '--cfg_name'   , type=str, help='Kind of config file'    , required=True)
     parser.add_argument('-n', '--opt_ntrial' , type=int, help='Number of tries for hyperparameter optimization', default=0)
     parser.add_argument('-q', '--q2bin'      , type=str, help='q2bin'                  , required=True, choices=['low', 'central', 'jpsi', 'psi2S', 'high'])
@@ -117,6 +119,7 @@ def _get_args():
 
     Data.version     = args.version
     Data.cfg_name    = args.cfg_name
+    Data.workers     = args.workers
     Data.opt_ntrial  = args.opt_ntrial
     Data.q2bin       = args.q2bin
     Data.max_entries = args.max_entries
@@ -271,7 +274,7 @@ def main():
     rdf_bkg = _get_rdf(kind='bkg')
 
     trn = TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=Data.cfg_dict)
-    with trn.use(nworkers=10):
+    with trn.use(nworkers=Data.workers):
         trn.run(
                 skip_fit    =Data.plot_only,
                 opt_ntrial  =Data.opt_ntrial,
