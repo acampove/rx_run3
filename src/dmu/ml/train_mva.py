@@ -731,7 +731,6 @@ class TrainMva:
         Area under the ROC curve from evaluating the classifiers
         on samples that were not used in their training. Uses the full sample
         '''
-        self._save_settings_to_tex()
         self._plot_features()
 
         if skip_fit:
@@ -740,6 +739,7 @@ class TrainMva:
         if opt_ntrial > 0:
             self._optimize_hyperparameters(ntrial=opt_ntrial)
 
+        self._save_settings_to_tex()
         l_mod = self._get_models(load_trained = load_trained)
         if not load_trained:
             for ifold, mod in enumerate(l_mod):
