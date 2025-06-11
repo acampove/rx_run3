@@ -128,6 +128,6 @@ def test_hyperparameter_optimization(workers : int):
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     with obj.use(nworkers=workers):
         obj.run(
-                opt_ntrial  =100,
+                opt_ntrial  =10,
                 load_trained=False)
 # -------------------------------
