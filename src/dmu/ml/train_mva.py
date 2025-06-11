@@ -13,6 +13,7 @@ import math
 
 from contextlib import contextmanager
 from typing     import Optional
+from functools  import partial
 
 import tqdm
 import joblib
@@ -656,13 +657,15 @@ class TrainMva:
         log.info('Running hyperparameter optimization')
 
         self._pbar = tqdm.tqdm(total=ntrial, desc='Optimizing')
+        kfold      = StratifiedKFold(n_splits=ntrial, shuffle=True, random_state=self._rdm_state)
+        objective  = partial(self._objective, kfold=kfold)
 
         study = optuna.create_study(
                 direction='maximize',
                 pruner   = optuna.pruners.MedianPruner(n_startup_trials=10, n_warmup_steps=5),)
 
         study.optimize(
-                self._objective,
+                objective,
                 callbacks = [self._update_progress],
                 n_jobs    = self._nworkers,
                 n_trials  = ntrial)
