@@ -743,6 +743,35 @@ class TrainMva:
                 log.info(f'{name:<20}{value}')
     # ---------------------------------------------
     # ---------------------------------------------
+    def _auc_from_json(self, ifold : int, kind : str) -> float:
+        val_dir = self._cfg['saving']['output']
+        path    = f'{val_dir}/fold_{ifold:03}/roc_{kind}.json'
+        df      = pnd.read_json(path)
+
+        return auc(df['x'], df['y'])
+    # ---------------------------------------------
+    def _check_overtraining(self) -> None:
+        nfold      = self._cfg['training']['nfold']
+
+        df         = pnd.DataFrame(columns=['fold'])
+        df['fold' ]= numpy.linspace(0, nfold - 1, nfold, dtype=int)
+        df['test' ]= df['fold'].apply(self._auc_from_json, args=('test' ,))
+        df['train']= df['fold'].apply(self._auc_from_json, args=('train',))
+
+        ax=None
+        ax=df.plot('fold', 'test' , color='blue', label='Testing sample' , ax=ax)
+        ax=df.plot('fold', 'train', color='red' , label='Training sample', ax=ax)
+        ax.set_ylim(top=1.0)
+        ax.set_ylabel('AUC')
+        ax.set_xlabel('Fold')
+
+        plt.grid()
+
+        val_dir = self._cfg['saving']['output']
+        path    = f'{val_dir}/fold_all/auc_vs_fold.png'
+        plt.savefig(path)
+        plt.close()
+    # ---------------------------------------------
     def run(
             self,
             skip_fit     : bool = False,
