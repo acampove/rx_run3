@@ -657,7 +657,7 @@ class TrainMva:
         log.info('Running hyperparameter optimization')
 
         self._pbar = tqdm.tqdm(total=ntrial, desc='Optimizing')
-        kfold      = StratifiedKFold(n_splits=ntrial, shuffle=True, random_state=self._rdm_state)
+        kfold      = StratifiedKFold(n_splits=5, shuffle=True, random_state=self._rdm_state)
         objective  = partial(self._objective, kfold=kfold)
 
         study = optuna.create_study(
