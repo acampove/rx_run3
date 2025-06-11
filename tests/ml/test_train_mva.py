@@ -123,11 +123,11 @@ def test_hyperparameter_optimization(workers : int):
     cfg     = ut.get_config('ml/tests/train_mva.yaml')
     cfg['training']['nfold'] = nfold
     path    = cfg['saving']['output']
-    cfg['saving']['output'] = path.replace('train_mva', 'train_mva_hyp_opt')
+    cfg['saving']['output'] = path.replace('train_mva', f'train_mva_hyp_opt_{workers:02}w')
 
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     with obj.use(nworkers=workers):
         obj.run(
-                opt_ntrial  =30,
+                opt_ntrial  =100,
                 load_trained=False)
 # -------------------------------
