@@ -803,6 +803,7 @@ class TrainMva:
             for ifold, mod in enumerate(l_mod):
                 self._save_model(mod, ifold)
 
+        self._check_overtraining()
         self._run_diagnostics(models = l_mod, rdf = self._rdf_sig_org, name='Signal'    )
         self._run_diagnostics(models = l_mod, rdf = self._rdf_bkg_org, name='Background')
 
