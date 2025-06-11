@@ -12,7 +12,7 @@ import json
 import math
 
 from contextlib import contextmanager
-from typing     import Optional
+from typing     import Optional, Union
 from functools  import partial
 
 import tqdm
@@ -583,8 +583,14 @@ class TrainMva:
         if 'hyper' not in self._cfg['training']:
             raise ValueError('Cannot find hyper parameters in configuration')
 
+        def format_value(val : Union[int,float]) -> str:
+            if isinstance(val, float):
+                return f'\\verb|{val:.3f}|'
+
+            return f'\\verb|{val}|'
+
         d_hyper = self._cfg['training']['hyper']
-        d_form  = { f'\\verb|{key}|' : f'\\verb|{val}|' for key, val in d_hyper.items() }
+        d_form  = { f'\\verb|{key}|' : format_value(val) for key, val in d_hyper.items() }
         d_latex = { 'Hyperparameter' : list(d_form.keys()), 'Value' : list(d_form.values())}
 
         df = pnd.DataFrame(d_latex)
