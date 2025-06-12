@@ -107,11 +107,11 @@ def _get_args():
     '''
     parser = argparse.ArgumentParser(description='Used to train classifier based on config file')
     parser.add_argument('-v', '--version'    , type=str, help='Version of config files', required=True)
-    parser.add_argument('-w', '--workers'    , type=str, help='Number of processes, if using parallel processing', default=1)
     parser.add_argument('-c', '--cfg_name'   , type=str, help='Kind of config file'    , required=True)
-    parser.add_argument('-n', '--opt_ntrial' , type=int, help='Number of tries for hyperparameter optimization', default=0)
     parser.add_argument('-q', '--q2bin'      , type=str, help='q2bin'                  , required=True, choices=['low', 'central', 'jpsi', 'psi2S', 'high'])
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
+    parser.add_argument('-n', '--opt_ntrial' , type=int, help='Number of tries for hyperparameter optimization', default=0)
+    parser.add_argument('-w', '--workers'    , type=int, help='Number of processes, if using parallel processing', default=1)
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
     parser.add_argument('-p', '--plot_only'   , action='store_true', help='If used, will only do plots of feature distributions, not training')
     parser.add_argument('-L', '--load_trained', action='store_true', help='Nothing changes, but instead of training models, will load trained models, which should exist')
