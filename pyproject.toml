@@ -8,7 +8,6 @@ dependencies= [
 'PyYAML',
 'scipy',
 'awkward',
-'optuna',
 'tqdm',
 'numpy',
 'toml',
@@ -24,7 +23,7 @@ dependencies= [
 
 [project.optional-dependencies]
 fit  = ['zfit']
-ml   = ['scikit-learn', 'joblib']
+ml   = ['scikit-learn', 'joblib', 'optuna']
 dev  = ['pytest']
 
 [tools.setuptools.packages.find]
