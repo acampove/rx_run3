@@ -162,7 +162,7 @@ def test_rep_signal(l_name : list[str]):
     print_pdf(pdf)
 #--------------------------
 @pytest.mark.parametrize('kind', ['cbr', 'cbl', 'dscb', 'gauss'])
-def test_override_parameter(kind: list[str]):
+def test_override_parameter(kind: str):
     '''
     Will create a PDF by overriding parameters
     '''
@@ -184,7 +184,7 @@ def test_override_parameter(kind: list[str]):
     pdf   = mod.get_pdf()
 
     s_par = pdf.get_params(floating=False)
-    [sg]  = [ par for par in s_par if par.name == 'sg_gauss' ]
+    [sg]  = [ par for par in s_par if par.name == f'sg_{kind}' ]
 
     assert sg.floating is False
 
