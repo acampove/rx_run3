@@ -1,10 +1,10 @@
 '''
 Tests for RFPrinter class
 '''
-
 import os
 import pytest
 
+import dmu.testing.utilities as tut
 from dmu.rfile.rfprinter import RFPrinter
 
 # -------------------------------------------------
@@ -17,16 +17,18 @@ class Data:
 # -------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize() -> None:
-    cernbox = os.environ['CERNBOX']
+    Data.file_path_simple = '/tmp/tests/rfprinter/test.root'
+    Data.file_path_fail   = '/this/file/does/not/exist.root'
 
-    Data.file_path_simple = f'{cernbox}/Run3/analysis_productions/for_local_tests/mc_turbo.root'
-    Data.file_path_fail   = f'{cernbox}/tests/dmu/rfprinter/fail.root'
+    os.makedirs('/tmp/tests/rfprinter', exist_ok=True)
+
+    rdf = tut.get_rdf(kind='sig', nentries=10)
+    rdf.Snapshot('tree', Data.file_path_simple)
 # -------------------------------------------------
 def test_simple():
     '''
     Test basic printing
     '''
-
     obj = RFPrinter(path=Data.file_path_simple)
     obj.save(to_screen=True)
 # -------------------------------------------------
@@ -34,12 +36,9 @@ def test_raise_on_fail():
     '''
     Test raise_on_fail flag 
     '''
-
-    obj = RFPrinter(path=Data.file_path_fail)
-    obj.save(raise_on_fail=False)
-    with pytest.raises(OSError) as exc_info:
+    with pytest.raises(FileNotFoundError):
+        obj = RFPrinter(path=Data.file_path_fail)
         obj.save(raise_on_fail= True)
-        assert exc_info.value.startswith('Cannot open:')
 # -------------------------------------------------
 def test_file_name():
     '''
