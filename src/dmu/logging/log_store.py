@@ -109,6 +109,7 @@ class LogStore:
     @staticmethod
     def _get_logging_logger(name : str, level : int) -> Logger:
         logger = logging.getLogger(name=name)
+        logger.propagate = False
 
         logger.setLevel(level)
 
