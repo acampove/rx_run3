@@ -8,29 +8,31 @@ jobs:
       max-parallel: 5
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v3
+    - name: Set up micromamba
+      uses: mamba-org/setup-micromamba@v1
       with:
-        python-version: '3.12'
-    - name: Install system headers
+        micromamba-version: 'latest'
+        environment-name: myenv
+        create-args: >-
+          python=3.12
+          gxx
+          root
+        channels: conda-forge
+        init-shell: bash
+    - name: Define output directory 
       run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential
-    - name: Add conda to system path
+        ANADIR=$PWD/output
+        echo  "ANADIR=$PWD/output" >> "$GITHUB_ENV"
+    
+        mkdir -p $ANADIR
+    #-----------
+    - name: Install project 
       run: |
-        echo $CONDA/bin >> $GITHUB_PATH
-    - name: Install dependencies
-      run: |
-        conda install conda-forge::gxx
-        conda install conda-forge::root python=3.12
+          pip install .[fit,ml,dev]
     #-----------
     - name: Test
       run: |
-          pip install .[dev]
-          pytest tests/arrays
-          pytest tests/logging
-          pytest tests/generic
-          pytest tests/text
+          pytest tests
     #-----------
     - name: Install pypa/build
       run: >-
@@ -57,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/<package-name>  # Replace <package-name> with your PyPI project name
+      url: https://pypi.org/p/data-manipulation-utilities
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
