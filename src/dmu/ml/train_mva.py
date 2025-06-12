@@ -675,7 +675,7 @@ class TrainMva:
                 classifier,
                 ft,
                 lab,
-                n_jobs=-1,
+                n_jobs=1, # More than this will reach RLIMIT_NPROC in cluster
                 cv=kfold)
 
         accuracy = score.mean()
