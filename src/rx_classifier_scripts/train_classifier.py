@@ -35,10 +35,10 @@ class Data:
     ana_dir     = os.environ['ANADIR']
     cfg_dict    : dict
     cfg_name    : str
-    opt_ntrial  : int
-    workers     : int
     version     : str
     q2bin       : str
+    opt_ntrial  : int
+    workers     : int
     max_entries : int
     log_level   : int
     plot_only   : bool
