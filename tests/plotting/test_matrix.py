@@ -39,5 +39,4 @@ def test_simple():
 
     obj = MatrixPlotter(mat=mat, cfg=cfg)
     obj.plot()
-    plt.show()
 # -------------------------------------------
