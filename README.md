@@ -194,7 +194,12 @@ from rx_data.rdf_getter     import RDFGetter
 # This picks one sample for a given trigger
 # The sample accepts wildcards, e.g. `DATA_24_MagUp_24c*` for all the periods
 gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpMuMu_MVA')
-rdf = gtr.get_rdf()
+
+# If False (default) will return a single dataframe for the sample
+rdf = gtr.get_rdf(per_file=False)
+
+# If True, will return a dictionary with an entry per file. They key is the full path of the ROOT file
+d_rdf = gtr.get_rdf(per_file=True)
 ```
 
 The way this class will find the paths to the ntuples is by using the `DATADIR` environment
