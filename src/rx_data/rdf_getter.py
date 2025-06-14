@@ -577,6 +577,13 @@ class RDFGetter:
         datac = copy.deepcopy(data)
         fpath = data['samples'][main]['files'][ifile]
 
+        datac['samples'][main]['files'] = [fpath]
+
+        data_frnd = data['friends']
+        for kind, data_kind in data_frnd.items():
+            fpath = data_kind['files'][ifile]
+            datac['friends'][kind]['files'] = [fpath]
+
         return datac, fpath
     # ---------------------------------------------------
     @staticmethod
