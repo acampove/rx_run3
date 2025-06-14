@@ -10,16 +10,6 @@
                 "DecayTree"
             ]
         },
-        "jpsi_misid": {
-            "files": [
-                "/home/acampove/external_ssd/Data/swp_jpsi_misid/v3/mc_magdown_11453001_bd_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_032a6393c1.root",
-                "/home/acampove/external_ssd/Data/swp_jpsi_misid/v3/mc_magdown_11453001_bd_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_0718aef4bd.root",
-                "/home/acampove/external_ssd/Data/swp_jpsi_misid/v3/mc_magdown_11453001_bd_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_09bb3e4e6b.root",
-            ],
-            "trees": [
-                "DecayTree"
-            ]
-        },
         "mva": {
             "files": [
                 "/home/acampove/external_ssd/Data/mva/v5/mc_magdown_11453001_bd_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_032a6393c1.root",
