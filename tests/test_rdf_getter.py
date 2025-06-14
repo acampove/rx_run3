@@ -315,6 +315,11 @@ def test_split_per_file():
     '''
     data = gut.load_data(package='rx_data_data', fpath='tests/rdf_getter/config.yaml')
     d_cf = RDFGetter.split_per_file(data, main='main')
+
+    for fpath, cpath in d_cf.items():
+        log.info(f'{"File path":<20}{fpath}')
+        log.info(f'{"Conf path":<20}{cpath}')
+        log.info('')
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2',    'Bu_JpsiK_ee_eq_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA' , 'Hlt2RD_BuToKpMuMu_MVA'])
