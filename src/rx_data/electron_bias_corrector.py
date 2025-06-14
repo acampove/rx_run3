@@ -3,13 +3,17 @@ Module with ElectronBiasCorrector class
 '''
 import math
 from typing                 import Union
+from importlib.resources    import files
 
 import pandas as pnd
 from dmu.logging.log_store  import LogStore
+from dmu.generic            import utilities        as gut
 from vector                 import MomentumObject3D as v3d
 from vector                 import MomentumObject4D as v4d
 
-from rx_data.brem_bias_corrector import BremBiasCorrector
+from ecal_calibration.preprocessor import PreProcessor
+from ecal_calibration.corrector    import Corrector
+from rx_data.brem_bias_corrector   import BremBiasCorrector
 
 log=LogStore.add_logger('rx_data:electron_bias_corrector')
 # ---------------------------------
@@ -35,7 +39,8 @@ class ElectronBiasCorrector:
         self._mass            = 0.511
         self._min_brem_energy = brem_energy_threshold
         self._bcor            = BremBiasCorrector()
-        self._name : str
+        self._name      : str
+        self._corrector : Corrector
 
         # -1 : If the electron is not touched
         #  0 : If the electron is not assigned any brem
@@ -137,15 +142,41 @@ class ElectronBiasCorrector:
 
         raise ValueError(f'Cannot find attribute {name} among:')
     # ---------------------------------
-    def _scale_electron(self, e_corr : v4d, row : pnd.Series) -> Union[v4d, None]:
+    def _get_corrector(self) -> Corrector:
+        if hasattr(self, '_corrector'):
+            return self._corrector
+
+        config_path = files('rx_data_data').joinpath('calibration/ecal.yaml')
+        config_path = str(config_path)
+
+        log.info(f'Loading config for calibration: {config_path}')
+        cfg         = gut.load_json(config_path)
+
+        self._corrector = Corrector(cfg=cfg)
+
+        return self._corrector
+    # ---------------------------------
+    def _scale_electron(self, e_corr : v4d, row : pnd.Series, name : str) -> Union[v4d, None]:
         '''
         e_corr  : Electron with brem added that needs correction by scaling factor "mu"
         row     : Pandas series with information on event
+        name    : Name of lepton, L1 or L2, needed to build features from right electron
         '''
         if not self._use_ecal_calibration:
             return e_corr
 
-        return e_corr
+        row['L1_brem'] = row['L1_HASBREMADDED']
+        row['L2_brem'] = row['L2_HASBREMADDED']
+
+        sr = PreProcessor.build_features(
+            row        = row,
+            lep        = name,
+            skip_target= True)
+
+        cor    = self._get_corrector()
+        e_cali = cor.run(e_corr, row=sr)
+
+        return e_cali
     # ---------------------------------
     def _correct_with_bias_maps(self, e_track : v4d, e_brem : v4d, row : pnd.Series) -> v4d:
         '''
@@ -221,7 +252,7 @@ class ElectronBiasCorrector:
 
         return e_track + gamma
     # ---------------------------------
-    def _correct_with_track_brem_2(self, e_track : v4d, row : pnd.Series) -> v4d:
+    def _correct_with_track_brem_2(self, e_track : v4d, row : pnd.Series, name : str) -> v4d:
         '''
         Smarter strategy than brem_track_1
         '''
@@ -229,7 +260,7 @@ class ElectronBiasCorrector:
             self._brem_status = -1
             log.info('Electron has already brem, skipping correction')
             e_corr = self._get_electron(row, kind='')
-            e_corr = self._scale_electron(e_corr, row)
+            e_corr = self._scale_electron(e_corr, row, name)
             return e_corr
 
         brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
@@ -241,7 +272,7 @@ class ElectronBiasCorrector:
 
         log.info('Correcting electron')
         e_corr = self._correct_with_track_brem_1(e_track, row)
-        e_corr = self._scale_electron(e_corr, row)
+        e_corr = self._scale_electron(e_corr, row, name)
 
         return e_corr
     # ---------------------------------
@@ -265,7 +296,7 @@ class ElectronBiasCorrector:
         elif kind == 'brem_track_1':
             e_corr = self._correct_with_track_brem_1(e_track, row)
         elif kind == 'brem_track_2':
-            e_corr = self._correct_with_track_brem_2(e_track, row)
+            e_corr = self._correct_with_track_brem_2(e_track, row, name=name)
         else:
             raise NotImplementedError(f'Invalid correction of type: {kind}')
 
