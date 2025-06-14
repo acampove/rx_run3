@@ -16,6 +16,7 @@ import yaml
 from ROOT                  import RDataFrame, RDF
 from dmu.ml.cv_predict     import CVPredict
 from dmu.logging.log_store import LogStore
+from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
 
 log = LogStore.add_logger('rx_classifier:apply_classifier')
@@ -26,11 +27,10 @@ class Data:
     Class used to store shared information
     '''
     max_path    = 700
+    version     : str
     force_new   : bool
     sample      : str
     trigger     : str
-    cfg_path    : str
-    cfg_dict    : dict
     max_entries : int
     l_model     : list
     log_level   : int
@@ -41,8 +41,8 @@ def _get_args():
     Use argparser to put options in Data class
     '''
     parser = argparse.ArgumentParser(description='Used to read classifier and write scores to input ntuple, producing output ntuple')
-    parser.add_argument('-c', '--cfg_path'   , type=str, help='Path to yaml file with configuration'        , required=True)
-    parser.add_argument('-s', '--sample'     , type=str, help='Sample name, meant to exist inside input_dir', required=True)
+    parser.add_argument('-v', '--version'    , type=str, help='Version of classifier'                       , required=True)
+    parser.add_argument('-s', '--sample'     , type=str, help='Sample name'                                 , required=True)
     parser.add_argument('-t', '--trigger'    , type=str, help='HLT trigger'                                 , required=True)
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
@@ -50,7 +50,7 @@ def _get_args():
     parser.add_argument('-f', '--force_new'  ,           help='Will remake outputs, even if they already exist', action='store_true')
     args = parser.parse_args()
 
-    Data.sample      = args.sample
+    Data.version     = args.version
     Data.trigger     = args.trigger
     Data.cfg_path    = args.cfg_path
     Data.max_entries = args.max_entries
@@ -238,7 +238,6 @@ def main():
             return
 
         log.info(f'Producing: {out_path}')
-        rdf = _get_rdf(inp_path)
         nentries = rdf.Count().GetValue()
         if nentries == 0:
             log.warning('Input datset is empty, saving empty dataframe')
