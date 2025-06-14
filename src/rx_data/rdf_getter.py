@@ -49,70 +49,6 @@ class RDFGetter:
     BPLS_PDG_MASS    = 5279.34 # https://pdg.lbl.gov/2022/tables/rpp2022-tab-mesons-bottom.pdf
     d_custom_columns : dict[str,str]
     # ---------------------------------------------------
-    @staticmethod
-    def add_truem(rdf : RDataFrame) -> RDataFrame:
-        '''
-        Takes ROOT dataframe associated to MC sample:
-
-        - Adds TRUEM branches missing
-
-        Returns dataframe
-        '''
-        log.info('Adding TRUEM branches')
-
-        tv_tp   = 'ROOT::Math::XYZVector'
-        fv_tp   = 'ROOT::Math::PtEtaPhiM4D<double>'
-
-        par_3d  =f'{tv_tp} PAR_3D(PAR_TRUEPX, PAR_TRUEPY, PAR_TRUEPZ); auto PAR_truept=PAR_3D.Rho(); auto PAR_trueeta=PAR_3D.Eta(); auto PAR_truephi=PAR_3D.Phi()'
-        l1_3d   = par_3d.replace('PAR', 'L1')
-        l2_3d   = par_3d.replace('PAR', 'L2')
-        kp_3d   = par_3d.replace('PAR',  'H')
-
-        lep_4d  =f'{fv_tp} PAR_4D(PAR_truept, PAR_trueeta, PAR_truephi, 0.511)'
-        kpl_4d  =f'{fv_tp} PAR_4D(PAR_truept, PAR_trueeta, PAR_truephi, 493.7)'
-        l1_4d   = lep_4d.replace('PAR', 'L1')
-        l2_4d   = lep_4d.replace('PAR', 'L2')
-        kp_4d   = kpl_4d.replace('PAR',  'H')
-
-        lv      =f'ROOT::Math::LorentzVector<{fv_tp}>(PAR_4D)'
-        lv1     = lv.replace('PAR', 'L1')
-        lv2     = lv.replace('PAR', 'L2')
-        lv3     = lv.replace('PAR',  'H')
-
-        jps_4d  =f'auto jpsi_4d = {lv1} + {lv2};'
-        bpl_4d  =f'auto bpls_4d = {lv1} + {lv2} + {lv3};'
-
-        expr_jp =f'{l1_3d}; {l2_3d}         ; {l1_4d}; {l2_4d}         ; {jps_4d}; auto val = jpsi_4d.M(); return val!=val ? {RDFGetter.JPSI_PDG_MASS} : val'
-        expr_bp =f'{l1_3d}; {l2_3d}; {kp_3d}; {l1_4d}; {l2_4d}; {kp_4d}; {bpl_4d}; auto val = bpls_4d.M(); return val!=val ? {RDFGetter.BPLS_PDG_MASS} : val'
-
-        log.debug('Jpsi_TRUEM')
-        log.debug('-->')
-        log.debug(expr_jp)
-
-        log.debug('B_TRUEM')
-        log.debug('-->')
-        log.debug(expr_bp)
-
-        rdf = rdf.Define('Jpsi_TRUEM', expr_jp)
-        rdf = rdf.Define(   'B_TRUEM', expr_bp)
-
-        return rdf
-    # ---------------------------------------------------
-    @staticmethod
-    def set_custom_columns(d_def : dict[str,str]) -> None:
-        '''
-        Defines custom columns that the getter class will use to
-        provide dataframes
-        '''
-        if hasattr(RDFGetter, 'd_custom_columns'):
-            raise AlreadySetColumns('Custom columns have already been set')
-
-        log.warning('Defining custom columns')
-        for column, definition in d_def.items():
-            log.info(f'{column:<30}{definition}')
-
-        RDFGetter.d_custom_columns = d_def
-    # ---------------------------------------------------
     def __init__(self, sample : str, trigger : str, tree : str = 'DecayTree'):
         '''
         Sample: Sample's nickname, e.g. DATA_24_MagDown_24c2
@@ -463,17 +399,64 @@ class RDFGetter:
     # ---------------------------------------------------
     def get_rdf(self) -> RDataFrame:
         '''
-        Returns ROOT dataframe
+        Takes ROOT dataframe associated to MC sample:
+
+        - Adds TRUEM branches missing
+
+        Returns dataframe
         '''
-        self._get_json_conf()
+        log.info('Adding TRUEM branches')
 
-        log.debug(f'Building datarame from {self._tmp_path}')
-        rdf = RDF.Experimental.FromSpec(self._tmp_path)
-        if RDFGetter.max_entries > 0:
-            log.warning(f'Returning dataframe with at most {RDFGetter.max_entries} entries')
-            rdf = rdf.Range(RDFGetter.max_entries)
+        tv_tp   = 'ROOT::Math::XYZVector'
+        fv_tp   = 'ROOT::Math::PtEtaPhiM4D<double>'
 
-        rdf = self._add_columns(rdf)
+        par_3d  =f'{tv_tp} PAR_3D(PAR_TRUEPX, PAR_TRUEPY, PAR_TRUEPZ); auto PAR_truept=PAR_3D.Rho(); auto PAR_trueeta=PAR_3D.Eta(); auto PAR_truephi=PAR_3D.Phi()'
+        l1_3d   = par_3d.replace('PAR', 'L1')
+        l2_3d   = par_3d.replace('PAR', 'L2')
+        kp_3d   = par_3d.replace('PAR',  'H')
+
+        lep_4d  =f'{fv_tp} PAR_4D(PAR_truept, PAR_trueeta, PAR_truephi, 0.511)'
+        kpl_4d  =f'{fv_tp} PAR_4D(PAR_truept, PAR_trueeta, PAR_truephi, 493.7)'
+        l1_4d   = lep_4d.replace('PAR', 'L1')
+        l2_4d   = lep_4d.replace('PAR', 'L2')
+        kp_4d   = kpl_4d.replace('PAR',  'H')
+
+        lv      =f'ROOT::Math::LorentzVector<{fv_tp}>(PAR_4D)'
+        lv1     = lv.replace('PAR', 'L1')
+        lv2     = lv.replace('PAR', 'L2')
+        lv3     = lv.replace('PAR',  'H')
+
+        jps_4d  =f'auto jpsi_4d = {lv1} + {lv2};'
+        bpl_4d  =f'auto bpls_4d = {lv1} + {lv2} + {lv3};'
+
+        expr_jp =f'{l1_3d}; {l2_3d}         ; {l1_4d}; {l2_4d}         ; {jps_4d}; auto val = jpsi_4d.M(); return val!=val ? {RDFGetter.JPSI_PDG_MASS} : val'
+        expr_bp =f'{l1_3d}; {l2_3d}; {kp_3d}; {l1_4d}; {l2_4d}; {kp_4d}; {bpl_4d}; auto val = bpls_4d.M(); return val!=val ? {RDFGetter.BPLS_PDG_MASS} : val'
+
+        log.debug('Jpsi_TRUEM')
+        log.debug('-->')
+        log.debug(expr_jp)
+
+        log.debug('B_TRUEM')
+        log.debug('-->')
+        log.debug(expr_bp)
+
+        rdf = rdf.Define('Jpsi_TRUEM', expr_jp)
+        rdf = rdf.Define(   'B_TRUEM', expr_bp)
 
         return rdf
+    # ---------------------------------------------------
+    @staticmethod
+    def set_custom_columns(d_def : dict[str,str]) -> None:
+        '''
+        Defines custom columns that the getter class will use to
+        provide dataframes
+        '''
+        if hasattr(RDFGetter, 'd_custom_columns'):
+            raise AlreadySetColumns('Custom columns have already been set')
+
+        log.warning('Defining custom columns')
+        for column, definition in d_def.items():
+            log.info(f'{column:<30}{definition}')
+
+        RDFGetter.d_custom_columns = d_def
 # ---------------------------------------------------
