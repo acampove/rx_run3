@@ -321,12 +321,21 @@ def test_split_per_file():
         log.info(f'{"Conf path":<20}{cpath}')
         log.info('')
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2',    'Bu_JpsiK_ee_eq_DPC'])
+@pytest.mark.parametrize('kind'   , ['data', 'mc'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
-def test_per_file(sample : str, trigger : str):
+def test_per_file(kind : str, trigger : str):
     '''
     Test of per_file flag set to True
     '''
+    if   kind == 'data':
+        sample = 'DATA_24_MagDown_24c2'
+    elif kind == 'mc' and trigger == 'Hlt2RD_BuToKpEE_MVA':
+        sample = 'Bu_JpsiK_ee_eq_DPC'
+    elif kind == 'mc' and trigger == 'Hlt2RD_BuToKpMuMu_MVA':
+        sample = 'Bu_Kmumu_eq_btosllball05_DPC'
+    else:
+        raise ValueError(f'Invalid kind/trigger: {kind}/{trigger}')
+
     gtr   = RDFGetter(sample=sample, trigger=trigger)
     d_rdf = gtr.get_rdf(per_file=True)
 
