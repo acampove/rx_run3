@@ -140,19 +140,36 @@ class RDFGetter:
 
         d_sample        = self._filter_samples(d_sample)
         self._samples   = d_sample
-        self._tmp_path  = self._get_tmp_path()
     # ---------------------------------------------------
     def _check_multithreading(self) -> None:
         nthreads = GetThreadPoolSize()
         if nthreads > 1:
             raise ValueError(f'Cannot run with mulithreading, using {nthreads} threads')
     # ---------------------------------------------------
-    def _get_tmp_path(self) -> str:
+    def _get_tmp_path(self, identifier : str) -> str:
+        '''
+        This method creates paths to temporary config files in /tmp.
+        Needed to configure creation of dataframes
+
+        Parameters
+        ----------------
+        identifier : String identifying sample/file whose configuration will be stored
+
+        Returns
+        ----------------
+        Path to JSON file that will be used to dump configuration
+        '''
         samples_str = json.dumps(self._samples, sort_keys=True)
-        samples_bin = samples_str.encode()
-        hsh         = hashlib.sha256(samples_bin)
+        identifier  = f'{samples_str}.{identifier}'
+
+        bidentifier = identifier.encode()
+        hsh         = hashlib.sha256(bidentifier)
         hsh         = hsh.hexdigest()
-        tmp_path    = f'/tmp/config_{self._sample}_{self._trigger}_{hsh}.json'
+
+        tmp_dir     =  '/tmp/rx_data/rdf_getter'
+        os.makedirs(tmp_dir, exist_ok=True)
+
+        tmp_path    = f'{tmp_dir}/config_{self._sample}_{self._trigger}_{hsh}.json'
 
         log.debug(f'Using config JSON: {tmp_path}')
 
