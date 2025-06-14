@@ -308,6 +308,15 @@ def _check_ext(rdf : RDataFrame) -> None:
     log.info(f'Analysis: {count_ana}')
     log.info(f'MisID   : {count_mis}')
 # ------------------------------------------------
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2',    'Bu_JpsiK_ee_eq_DPC'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA' , 'Hlt2RD_BuToKpMuMu_MVA'])
+def test_per_file(sample : str, trigger : str):
+    '''
+    Test of per_file flag set to True
+    '''
+    gtr   = RDFGetter(sample=sample, trigger=trigger)
+    d_rdf = gtr.get_rdf(per_file=True)
+# ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
 def test_data(sample : str, trigger : str):
