@@ -276,10 +276,9 @@ class RDFGetter:
             else:
                 d_data['friends'][sample] = d_section
 
-        with open(self._tmp_path, 'w', encoding='utf-8') as ofile:
-            json.dump(d_data, ofile, indent=4, sort_keys=True)
-
         self._check_samples(samples=d_data)
+
+        return d_data
     # ---------------------------------------------------
     def _check_samples(self, samples : dict) -> None:
         gut.dump_json(samples, '/tmp/debugging/rx_data/samples.yaml')
