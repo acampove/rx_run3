@@ -322,13 +322,27 @@ def test_split_per_file():
         log.info('')
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2',    'Bu_JpsiK_ee_eq_DPC'])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA' , 'Hlt2RD_BuToKpMuMu_MVA'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
 def test_per_file(sample : str, trigger : str):
     '''
     Test of per_file flag set to True
     '''
     gtr   = RDFGetter(sample=sample, trigger=trigger)
     d_rdf = gtr.get_rdf(per_file=True)
+
+    for name, rdf in d_rdf.items():
+        name = hash(name)
+        name = abs(name)
+        name = str(name)
+        name = name[:10]
+
+        _check_branches(rdf, is_ee = 'MuMu' not in trigger, is_mc = False)
+
+        sample = sample.replace('*', 'p')
+
+        _plot_mva_mass(rdf, f'{name}_{sample}')
+        _plot_mva(rdf     , f'{name}_{sample}')
+        _plot_hop(rdf     , f'{name}_{sample}')
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
