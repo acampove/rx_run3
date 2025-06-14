@@ -69,13 +69,11 @@ def _load_config():
     with open(Data.cfg_path, encoding='utf-8') as ifile:
         Data.cfg_dict = yaml.safe_load(ifile)
 #---------------------------------
-def _get_rdf(file_path : str) -> RDataFrame:
+def _filter_rdf(rdf : RDataFrame) -> RDataFrame:
     '''
-    Returns a dictionary of dataframes built from ROOT file path
+    Applies any filter before running prediction 
     '''
-    log.info('Getting dataframe')
 
-    rdf = RDataFrame('DecayTree', file_path)
     if Data.max_entries > 0:
         rdf = rdf.Range(Data.max_entries)
 
@@ -229,8 +227,12 @@ def main():
     _load_config()
     _set_loggers()
 
-    l_file_path = _get_paths()
-    for inp_path in l_file_path:
+    log.info('Getting dataframe')
+    gtr   = RDFGetter(sample=Data.sample, trigger=Data.trigger)
+    d_rdf = gtr.get_rdf(per_file=True)
+
+    for inp_path, rdf in d_rdf.items():
+        rdf      = _filter_rdf(rdf)
         out_path = _get_out_path(inp_path)
 
         if os.path.isfile(out_path):
