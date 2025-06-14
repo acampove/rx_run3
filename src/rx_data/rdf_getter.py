@@ -7,6 +7,7 @@ import json
 import pprint
 import hashlib
 import fnmatch
+from typing              import Union
 from importlib.resources import files
 
 import dmu.generic.utilities as gut
