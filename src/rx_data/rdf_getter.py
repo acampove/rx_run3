@@ -182,8 +182,13 @@ class RDFGetter:
         return l_path
     # ---------------------------------------------------
     def _get_section(self, yaml_path : str) -> dict:
+        '''
+        This method should return the different sections (friend/main tree)
+        needed to make the JSON file taken by FromSpec
+        '''
         d_section = {'trees' : [self._tree_name]}
 
+        log.debug(f'Building section from: {yaml_path}')
         with open(yaml_path, encoding='utf-8') as ifile:
             d_data = yaml.safe_load(ifile)
 
