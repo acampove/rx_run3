@@ -412,7 +412,66 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def get_rdf(self) -> RDataFrame:
+    def _rdf_from_conf(self, conf_path : str) -> RDataFrame:
+        '''
+        Parameters
+        ------------------
+        conf_path: Path to JSON file with configuration needed to build dataframe
+
+        Returns
+        ------------------
+        Dataframe after some basic preprocessing
+        '''
+        rdf = RDF.Experimental.FromSpec(conf_path) 
+        if RDFGetter.max_entries > 0:
+            log.warning(f'Returning dataframe with at most {RDFGetter.max_entries} entries')
+            rdf = rdf.Range(RDFGetter.max_entries)
+
+        rdf = self._add_columns(rdf)
+
+        return rdf
+    # ---------------------------------------------------
+    def get_rdf(
+            self,
+            per_file : bool = False) -> Union[RDataFrame, dict[str,RDataFrame]]:
+        '''
+        Returns sample in the form of dataframes
+
+        Parameters
+        -----------------
+        per_file : Flag controlling returned object
+
+        Returns
+        -----------------
+        Based on `per_file` flag it will return:
+
+        - A dictionary with the key as the path to the ROOT file and the value as the dataframe
+        - The dataframe for the full sample
+        '''
+        # This is a dictionary with:
+        #
+        # key  : Path to ROOT file from the main sample, if per_file==True. Otherwise empty string
+        # Value: Path to config used to build DataFrame
+        d_sample = self._get_paths_to_conf(per_file=per_file)
+        if per_file:
+            log.info('Building one dataframe per file')
+            d_rdf = { fpath : self._rdf_from_conf(conf_path) for fpath, conf_path in d_sample.items() }
+
+            return d_rdf
+
+        nconf = len(d_sample)
+        if nconf != 1:
+            raise ValueError(f'Sample-wise config dictionary expects only one entry, found {nconf}')
+
+        _, conf_path = next(iter(d_sample.items()))
+        log.debug(f'Building datarame from file {conf_path}')
+
+        rdf = self._rdf_from_conf(conf_path)
+
+        return rdf
+    # ---------------------------------------------------
+    @staticmethod
+    def add_truem(rdf : RDataFrame) -> RDataFrame:
         '''
         Takes ROOT dataframe associated to MC sample:
 
