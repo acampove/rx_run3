@@ -61,7 +61,6 @@ class RDFGetter:
         self._jpsi_pdg_mass   = RDFGetter.JPSI_PDG_MASS
 
         self._tree_name       = tree
-        self._tmp_path        : str
         self._l_columns       : list[str]
         self._cfg             = self._load_config()
         self._main_tree       = self._get_main_tree()
