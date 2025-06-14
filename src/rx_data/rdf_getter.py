@@ -259,7 +259,36 @@ class RDFGetter:
 
         return sample not in RDFGetter.friends
     # ---------------------------------------------------
-    def _get_json_conf(self):
+    def _get_paths_to_conf(self, per_file : bool) -> dict[str,str]:
+        '''
+        Parameters
+        ----------------------
+        per_file : If true will process configs per file, otherwise it will do the full sample
+
+        Returns
+        ----------------------
+        Dictionary with:
+
+        key  : Path to the ROOT file, '' if per_file is False
+        value: Path to JSON config file, needed to build dataframe though FromSpec
+        '''
+        d_data = self._get_samples()
+
+        if not per_file:
+            log.debug('Not splitting per file')
+            cfg_path = self._get_tmp_path(identifier='full_sample')
+            with open(cfg_path, 'w', encoding='utf-8') as ofile:
+                json.dump(d_data, ofile, indent=4, sort_keys=True)
+
+            return {'' : cfg_path}
+
+        log.debug('Splitting per file')
+        return RDFGetter.split_per_file(data=d_data, main=self._main_tree)
+    # ---------------------------------------------------
+    def _get_samples(self) -> dict:
+        '''
+        Returns a dictionary with information on the main samples and the friend trees, needed to build dataframes
+        '''
         d_data = {'samples' : {}, 'friends' : {}}
 
         log.info('Adding samples')
