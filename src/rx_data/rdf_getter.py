@@ -4,6 +4,7 @@ Module holding RDFGetter class
 import os
 import glob
 import json
+import copy
 import pprint
 import hashlib
 import fnmatch
@@ -146,35 +147,6 @@ class RDFGetter:
         if nthreads > 1:
             raise ValueError(f'Cannot run with mulithreading, using {nthreads} threads')
     # ---------------------------------------------------
-    def _get_tmp_path(self, identifier : str) -> str:
-        '''
-        This method creates paths to temporary config files in /tmp.
-        Needed to configure creation of dataframes
-
-        Parameters
-        ----------------
-        identifier : String identifying sample/file whose configuration will be stored
-
-        Returns
-        ----------------
-        Path to JSON file that will be used to dump configuration
-        '''
-        samples_str = json.dumps(self._samples, sort_keys=True)
-        identifier  = f'{samples_str}.{identifier}'
-
-        bidentifier = identifier.encode()
-        hsh         = hashlib.sha256(bidentifier)
-        hsh         = hsh.hexdigest()
-
-        tmp_dir     =  '/tmp/rx_data/rdf_getter'
-        os.makedirs(tmp_dir, exist_ok=True)
-
-        tmp_path    = f'{tmp_dir}/config_{self._sample}_{self._trigger}_{hsh}.json'
-
-        log.debug(f'Using config JSON: {tmp_path}')
-
-        return tmp_path
-    # ---------------------------------------------------
     def _filter_samples(self, d_sample : dict[str,str]) -> dict[str,str]:
         if self._tree_name == 'DecayTree':
             return d_sample
@@ -277,7 +249,7 @@ class RDFGetter:
 
         if not per_file:
             log.debug('Not splitting per file')
-            cfg_path = self._get_tmp_path(identifier='full_sample')
+            cfg_path = RDFGetter.get_tmp_path(identifier='full_sample', data=d_data)
             with open(cfg_path, 'w', encoding='utf-8') as ofile:
                 json.dump(d_data, ofile, indent=4, sort_keys=True)
 
@@ -563,4 +535,77 @@ class RDFGetter:
             log.info(f'{column:<30}{definition}')
 
         RDFGetter.d_custom_columns = d_def
+    # ---------------------------------------------------
+    @staticmethod
+    def split_per_file(data : dict, main : str) -> dict[str,str]:
+        '''
+        Parameters
+        --------------------
+        data: Dictionary representing _spec_ needed to build ROOT dataframe with friend trees
+        main: Name of the main category, e.g. not the friend trees.
+
+        Returns
+        --------------------
+        Dictionary with the:
+
+        key  : As the ROOT file path in the main category
+        Value: The path to the JSON config file
+        '''
+        l_file = data['samples'][main]['files']
+        nfiles = len(l_file)
+
+        d_config = {}
+        for ifile in range(nfiles):
+            data_copy, fpath = RDFGetter._remove_all_but(data, ifile, main)
+            cpath            = RDFGetter.get_tmp_path(identifier=str(ifile), data=data_copy)
+            gut.dump_json(data_copy, cpath)
+            d_config[fpath]  = cpath
+
+        return d_config
+    # ---------------------------------------------------
+    @staticmethod
+    def _remove_all_but(data : dict, ifile : int, main : str) -> tuple[dict,str]:
+        '''
+        Will:
+
+        - Take the file specification structure `data`
+        - Make a local copy
+        - Remove all the paths except the ifile th entry
+        - Return the copy after removal alongside the path not removed AND beloging to the main sample
+        '''
+
+        datac = copy.deepcopy(data)
+        fpath = data['samples'][main]['files'][ifile]
+
+        return datac, fpath
+    # ---------------------------------------------------
+    @staticmethod
+    def get_tmp_path(identifier : str, data : dict) -> str:
+        '''
+        This method creates paths to temporary config files in /tmp.
+        Needed to configure creation of dataframes
+
+        Parameters
+        ----------------
+        identifier : String identifying sample/file whose configuration will be stored
+
+        Returns
+        ----------------
+        Path to JSON file that will be used to dump configuration
+        '''
+        samples_str = json.dumps(data, sort_keys=True)
+        identifier  = f'{samples_str}.{identifier}'
+
+        bidentifier = identifier.encode()
+        hsh         = hashlib.sha256(bidentifier)
+        hsh         = hsh.hexdigest()
+
+        tmp_dir     =  '/tmp/rx_data/rdf_getter'
+        os.makedirs(tmp_dir, exist_ok=True)
+
+        tmp_path    = f'{tmp_dir}/config_{hsh}.json'
+
+        log.debug(f'Using config JSON: {tmp_path}')
+
+        return tmp_path
 # ---------------------------------------------------
