@@ -399,6 +399,7 @@ class RDFGetter:
             return rdf
 
         if self._tree_name != 'DecayTree':
+            log.debug(f'Not adding columns to {self._tree_name}')
             return rdf
 
         rdf = self._define_mc_columns(rdf=rdf)
@@ -425,7 +426,10 @@ class RDFGetter:
         ------------------
         Dataframe after some basic preprocessing
         '''
-        rdf = RDF.Experimental.FromSpec(conf_path) 
+        log.debug(f'Building dataframe from {conf_path}')
+        rdf = RDF.Experimental.FromSpec(conf_path)
+        log.debug(f'Dataframe at: {id(rdf)}')
+
         if RDFGetter.max_entries > 0:
             log.warning(f'Returning dataframe with at most {RDFGetter.max_entries} entries')
             rdf = rdf.Range(RDFGetter.max_entries)
