@@ -6,7 +6,8 @@ import time
 import json
 import pickle
 import inspect
-from typing                import Callable
+from importlib.resources   import files
+from typing                import Callable, Any
 from functools             import wraps
 from contextlib            import contextmanager
 
@@ -24,6 +25,26 @@ class BlockStyleDumper(yaml.SafeDumper):
     '''
     def increase_indent(self, flow=False, indentless=False):
         return super().increase_indent(flow=flow, indentless=False)
+# ---------------------------------
+def load_data(package : str, fpath : str) -> Any:
+    '''
+    This function will load a YAML or JSON file from a data package
+
+    Parameters
+    ---------------------
+    package: Data package, e.g. `dmu_data`
+    path   : Path to YAML/JSON file, relative to the data package 
+
+    Returns
+    ---------------------
+    Dictionary or whatever structure the file is holding
+    '''
+
+    cpath = files(package).joinpath(fpath)
+    cpath = str(cpath)
+    data  = load_json(cpath)
+
+    return data
 # --------------------------------
 def _get_module_name( fun : Callable) -> str:
     mod = inspect.getmodule(fun)

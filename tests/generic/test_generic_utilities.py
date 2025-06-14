@@ -59,3 +59,21 @@ def test_silent_import():
     with gut.silent_import():
         import tensorflow
 # -------------------------
+@pytest.mark.parametrize('ext', ['yaml', 'json'])
+def test_load_data(ext : str):
+    '''
+    Tests loading file from data package
+    '''
+    expected = {
+            "key" : [
+                "value1",
+                "value2",
+                "value3"]
+            }
+
+    data = gut.load_data(
+            package='dmu_data',
+            fpath  =f'tests/config.{ext}')
+
+    assert data == expected
+# -------------------------

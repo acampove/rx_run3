@@ -127,6 +127,16 @@ gut.dump_pickle(data, '/tmp/list.pkl')
 data = gut.load_pickle('/tmp/list.pkl')
 ```
 
+## Loader of files from data packages
+
+YAML and JSON files can be loaded from data packages with:
+
+```python
+import dmu.generic.utilities as gut
+
+data = gut.load_data(package='dmu_data', fpath=f'tests/config.json')
+```
+
 # Physics
 
 ## Truth matching
