@@ -12,6 +12,7 @@ import numpy
 from ROOT                    import RDataFrame
 from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter_2d import Plotter2D
+from dmu.generic             import utilities as gut
 
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter, AlreadySetColumns
@@ -307,6 +308,13 @@ def _check_ext(rdf : RDataFrame) -> None:
 
     log.info(f'Analysis: {count_ana}')
     log.info(f'MisID   : {count_mis}')
+# ------------------------------------------------
+def test_split_per_file():
+    '''
+    Tests static `split_per_file` method
+    '''
+    data = gut.load_data(package='rx_data_data', fpath='tests/rdf_getter/config.yaml')
+    d_cf = RDFGetter.split_per_file(data, main='main')
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2',    'Bu_JpsiK_ee_eq_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA' , 'Hlt2RD_BuToKpMuMu_MVA'])
