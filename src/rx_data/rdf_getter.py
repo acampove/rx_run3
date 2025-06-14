@@ -63,7 +63,6 @@ class RDFGetter:
         self._jpsi_pdg_mass   = RDFGetter.JPSI_PDG_MASS
 
         self._tree_name       = tree
-        self._l_columns       : list[str]
         self._cfg             = self._load_config()
         self._main_tree       = self._get_main_tree()
         self._l_electron_only = self._cfg['trees']['electron_only']
@@ -313,20 +312,13 @@ class RDFGetter:
             raise ValueError('Samples check failed')
     # ---------------------------------------------------
     def _add_column(self, rdf: RDataFrame, name : str, definition : str) -> RDataFrame:
-        if not hasattr(self, '_l_columns'):
-            self._l_columns = [ name.c_str() for name in rdf.GetColumnNames() ]
+        l_columns = [ name.c_str() for name in rdf.GetColumnNames() ]
 
-        if name in self._l_columns:
+        if name in l_columns:
             raise ValueError(f'Cannot add {name}={definition}, column already found')
 
         log.debug(f'Defining: {name}={definition}')
-
-        try:
-            rdf = rdf.Define(name, definition)
-        except TypeError as exc:
-            raise TypeError(f'Cannot define {name}={definition}') from exc
-
-        self._l_columns.append(name)
+        rdf = rdf.Define(name, definition)
 
         return rdf
     # ---------------------------------------------------
