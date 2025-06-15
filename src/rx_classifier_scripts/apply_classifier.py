@@ -11,7 +11,6 @@ from dataclasses         import dataclass
 import numexpr
 import joblib
 import numpy
-import yaml
 
 from ROOT                  import RDataFrame, RDF
 from dmu.ml.cv_predict     import CVPredict
@@ -61,7 +60,7 @@ def _get_args():
 #---------------------------------
 def _filter_rdf(rdf : RDataFrame) -> RDataFrame:
     '''
-    Applies any filter before running prediction 
+    Applies any filter before running prediction
     '''
 
     if Data.max_entries > 0:
