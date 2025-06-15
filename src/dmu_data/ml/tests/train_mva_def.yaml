@@ -6,19 +6,19 @@ dataset:
   samples:
     sig :
       definitions:
-        w : x + y
+        n : x + y
     bkg :
       definitions:
-        w : x - y
+        n : x - y
   define :
     r : z + x
   nan :
-    w : -3
+    n : -3
     y : -3
 training :
     nfold    : 3
     features :
-      - w
+      - n
       - y
       - r
     rdm_stat : 1
@@ -53,6 +53,10 @@ plotting:
             binning : [-6, 6, 100]
             yscale  : 'linear'
             labels  : ['$r$', '']
+          n :
+            binning : [-4, 4, 100]
+            yscale  : 'linear'
+            labels  : ['$n$', '']
           w :
             binning : [-4, 4, 100]
             yscale  : 'linear'
