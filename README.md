@@ -684,9 +684,20 @@ where the settings for the training go in a config dictionary, which when writte
 
 ```yaml
 dataset:
+    # This section is optional. It can be used to redefine
+    # columns in different ways for different samples
+    #
+    # When evaluating the model, the same definitions will be used
+    # but they will be taken from the `sig` section.
+    samples:
+        sig:
+            definitions:
+                x : v + w
+        bkg:
+            definitions:
+                x : v - w
     # Before training, new features can be defined as below
     define :
-        x : v + w
         y : v - w
     # If the key is found to be NaN, replace its value with the number provided
     # This will be used in the training.
