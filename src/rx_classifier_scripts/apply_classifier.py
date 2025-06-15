@@ -127,7 +127,7 @@ def _get_full_q2_scores(
     '''
 
     q2_cond     = _get_q2_indexer()
-    arr_ind     = numexpr.evaluate(q2_cond, local_dict={'Jpsi_M' : jpsi_m})
+    arr_ind     = numexpr.evaluate(q2_cond, local_dict={'q2' : jpsi_m * jpsi_m})
 
     # Resonant q2 bin will pick up central-q2 scores
     arr_all_q2  = numpy.array([central, low, central, high])
