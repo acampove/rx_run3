@@ -22,18 +22,12 @@ class CVPredict:
     def __init__(
             self,
             rdf      : RDataFrame,
-            models   : list[CVClassifier],
-            treat_as : str | None = None):
+            models   : list[CVClassifier]):
         '''
         Will take a list of CVClassifier models and a ROOT dataframe
 
         rdf   : ROOT dataframe where features will be extracted
         models: List of models, one per fold
-        treat_as: The input dataframe will be treated as `signal` or `background` when doing the evaluation
-
-        This might be needed, in order to:
-
-        - Apply signal/background definitions to dataframe, before evaluating
         '''
 
         if not isinstance(models, list):
@@ -41,7 +35,6 @@ class CVPredict:
 
         self._l_model   = models
         self._rdf       = rdf
-        self._treat_as  = treat_as
         self._d_nan_rep : dict[str,str]
 
         self._arr_patch : numpy.ndarray
@@ -61,16 +54,16 @@ class CVPredict:
             d_def_gen = cfg['dataset']['define'] # get generic definitions
             d_def.update(d_def_gen)
 
-        if self._treat_as is None:
-            log.debug('No sample specific definitions were requested')
+        sig_name = 'sig'
+        try:
+            # Get sample specific definitions. This will be taken from the signal section
+            # because predicted scores should come from features defined as for the signal.
+            d_def_sam = cfg['dataset']['samples'][sig_name]['definitions']
+        except KeyError:
+            log.debug('No sample specific definitions were found in: {sig_name}')
             return d_def
 
-        try:
-            d_def_sam = cfg['dataset']['samples'][self._treat_as]['definitions'] # get sample specific definitions
-        except KeyError as exc:
-            raise KeyError(f'Cannot find sample specific definitions for sample {self._treat_as}') from exc
-
-        log.info(f'Found sample dependent definitions for sample: {self._treat_as}')
+        log.info('Adding sample dependent definitions')
         d_def.update(d_def_sam)
 
         return d_def
