@@ -1,3 +1,7 @@
+# This config file is used for testing training and evaluation
+# when there is a variable that is defined in different ways
+# for the `sig` and `bkg` samples
+
 dataset:
   samples:
     sig :
