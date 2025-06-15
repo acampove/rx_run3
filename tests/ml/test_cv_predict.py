@@ -116,6 +116,8 @@ def test_sample_def():
     '''
 
     LogStore.set_level('dmu:ml:cv_predict', 10)
+    LogStore.set_level('dmu:ml:train_mva' , 10)
+
     rdf_sig    = ut.get_rdf(kind='sig')
     rdf_bkg    = ut.get_rdf(kind='bkg')
     l_model, _ = ut.get_models(
