@@ -67,8 +67,8 @@ class TrainMva:
         self._rdf_sig_org = sig
         self._rdf_bkg_org = bkg
 
-        rdf_bkg = self._preprocess_rdf(bkg)
-        rdf_sig = self._preprocess_rdf(sig)
+        rdf_bkg = self._preprocess_rdf(rdf=bkg, kind='bkg')
+        rdf_sig = self._preprocess_rdf(rdf=sig, kind='sig')
 
         df_ft_sig, l_lab_sig = self._get_sample_inputs(rdf = rdf_sig, label = 1)
         df_ft_bkg, l_lab_bkg = self._get_sample_inputs(rdf = rdf_bkg, label = 0)
@@ -148,8 +148,34 @@ class TrainMva:
         log.info(70 * '-')
 
         return df
+    #---------------------------------
+    def _add_columns(
+            self,
+            rdf  : RDataFrame,
+            kind : str) -> RDataFrame:
+        '''
+        This will apply sample specific column definitions
+        to the dataframe
+        '''
+        try:
+            d_def = self._cfg['dataset']['samples'][kind]['definitions']
+        except KeyError:
+            log.debug('Not found sample definitions for {kind}')
+            return rdf
+
+        log.info(60 * '-')
+        log.info(f'Found sample definitions for {kind}')
+        log.info(60 * '-')
+        for name, expr in d_def.items():
+            log.info(f'{name:<30}{"-->":<10}{expr:<20}')
+            rdf = rdf.Define(name, expr)
+        log.info(60 * '-')
+
+        return rdf
     # ---------------------------------------------
-    def _preprocess_rdf(self, rdf : RDataFrame) -> RDataFrame:
+    def _preprocess_rdf(self, rdf : RDataFrame, kind : str) -> RDataFrame:
+        rdf = self._add_columns(rdf, kind)
+
         if 'define' not in self._cfg['dataset']:
             log.debug('No definitions found')
             return rdf
