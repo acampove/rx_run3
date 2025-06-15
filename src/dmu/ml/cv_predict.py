@@ -190,7 +190,9 @@ class CVPredict:
         d_prob = dict(zip(l_hash, l_prob))
         nfeat  = len(df_ft_group)
         nprob  = len(l_prob)
-        log.debug(f'{nfeat:<10}{"->":10}{nprob:<10}')
+
+        if nfeat != nprob:
+            raise ValueError(f'Number of features and probabilities do not agree: {nfeat} != {nprob}')
 
         return d_prob
     # --------------------------------------------
