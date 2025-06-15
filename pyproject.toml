@@ -45,6 +45,8 @@ dmu_data=[
 'ml/*/*.yaml',
 'plotting/*/*.yaml',
 'tests/*.txt',
+'tests/*.yaml',
+'tests/*.json',
 'stats/parameters/data.yaml',
 ]
 
