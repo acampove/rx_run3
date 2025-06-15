@@ -176,8 +176,8 @@ class CVPredict:
         '''
         Evaluate the dataset for one of the folds, by taking the model and the full dataset
         '''
-        s_dat_hash = set(df_ft.index)
-        s_mod_hash = model.hashes
+        s_dat_hash : set[str] = set(df_ft.index)
+        s_mod_hash : set[str] = model.hashes
 
         s_dif_hash = s_dat_hash - s_mod_hash
 
