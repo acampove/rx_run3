@@ -109,3 +109,22 @@ def test_partial_patch():
 
     _check_probabilities(arr_prb, has_negative=True)
 #--------------------------------------------------------------------
+def test_sample_def():
+    '''
+    Tests prediction when a features is the result of a definition
+    that is different for different samples
+    '''
+
+    LogStore.set_level('dmu:ml:cv_predict', 10)
+    rdf_sig    = ut.get_rdf(kind='sig')
+    rdf_bkg    = ut.get_rdf(kind='bkg')
+    l_model, _ = ut.get_models(
+            rdf_sig,
+            rdf_bkg,
+            name    = 'train_mva_def',
+            out_dir = f'{Data.out_dir}/sample_def')
+
+    rdf     = ut.get_rdf(kind='sig')
+    cvp     = CVPredict(models=l_model, rdf=rdf)
+    cvp.predict()
+#--------------------------------------------------------------------
