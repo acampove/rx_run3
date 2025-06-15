@@ -47,7 +47,7 @@ class CVClassifier(GradientBoostingClassifier):
         return self._l_ft_name
     # ----------------------------------
     @property
-    def hashes(self):
+    def hashes(self) -> set[str]:
         '''
         Will return set with hashes of training data
         '''
