@@ -18,7 +18,7 @@ class Data:
     Class used to share attributes
     '''
 
-    out_dir = '/tmp/dmu/tests/ml/cv_predict'
+    out_dir = '/tmp/tests/dmu/ml/cv_predict'
 #--------------------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
