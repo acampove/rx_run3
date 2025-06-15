@@ -62,9 +62,14 @@ class CVPredict:
             d_def.update(d_def_gen)
 
         if self._treat_as is None:
+            log.debug('No sample specific definitions were requested')
             return d_def
 
-        d_def_sam = cfg['dataset']['samples'][self._treat_as]['definitions'] # get sample specific definitions
+        try:
+            d_def_sam = cfg['dataset']['samples'][self._treat_as]['definitions'] # get sample specific definitions
+        except KeyError as exc:
+            raise KeyError(f'Cannot find sample specific definitions for sample {self._treat_as}') from exc
+
         log.info(f'Found sample dependent definitions for sample: {self._treat_as}')
         d_def.update(d_def_sam)
 
