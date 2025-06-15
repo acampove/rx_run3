@@ -72,7 +72,7 @@ def test_overlap():
 #--------------------------------------------------------------------
 def test_patch():
     '''
-    Prediction with training and application datasets where all NaNs are cleaned 
+    Prediction with training and application datasets where all NaNs are cleaned
     '''
     log.info('')
 
