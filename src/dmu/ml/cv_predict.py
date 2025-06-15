@@ -39,9 +39,6 @@ class CVPredict:
         if not isinstance(models, list):
             raise ValueError('No list of models passed')
 
-        if not isinstance(rdf, RDataFrame):
-            raise ValueError('No ROOT dataframe passed')
-
         self._l_model   = models
         self._rdf       = rdf
         self._treat_as  = treat_as
