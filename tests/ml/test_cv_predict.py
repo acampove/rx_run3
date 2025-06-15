@@ -26,7 +26,7 @@ def _initialize():
     LogStore.set_level('dmu:ml:utilities' , 10)
     LogStore.set_level('dmu:ml:train_mva' , 20)
 #--------------------------------------------------------------------
-def _check_probabilities(arr_prb : numpy, has_negative : bool) -> None:
+def _check_probabilities(arr_prb : numpy.ndarray, has_negative : bool) -> None:
     n_above = int(numpy.sum(arr_prb > 1))
     n_below = int(numpy.sum(arr_prb < 0))
 
