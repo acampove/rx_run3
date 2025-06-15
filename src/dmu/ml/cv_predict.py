@@ -1,8 +1,6 @@
 '''
 Module holding CVPredict class
 '''
-from typing import Optional
-
 import pandas as pnd
 import numpy
 import tqdm
