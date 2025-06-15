@@ -125,6 +125,9 @@ def test_sample_def():
             out_dir = f'{Data.out_dir}/sample_def')
 
     rdf     = ut.get_rdf(kind='sig')
-    cvp     = CVPredict(models=l_model, rdf=rdf)
+    cvp     = CVPredict(
+            treat_as = 'sig',
+            models   = l_model,
+            rdf      =rdf)
     cvp.predict()
 #--------------------------------------------------------------------
