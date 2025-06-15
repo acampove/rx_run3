@@ -13,7 +13,7 @@ dataset:
   define :
     r : z + x
   nan :
-    x : -3
+    w : -3
     y : -3
 training :
     nfold    : 3
