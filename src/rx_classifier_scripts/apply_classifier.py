@@ -27,6 +27,7 @@ class Data:
     Class used to store shared information
     '''
     max_path    = 700
+    ana_dir     = os.environ['ANADIR']
     version     : str
     force_new   : bool
     sample      : str
@@ -51,23 +52,12 @@ def _get_args():
     args = parser.parse_args()
 
     Data.version     = args.version
+    Data.sample      = args.sample
     Data.trigger     = args.trigger
-    Data.cfg_path    = args.cfg_path
-    Data.max_entries = args.max_entries
     Data.log_level   = args.log_level
+    Data.max_entries = args.max_entries
     Data.dry_run     = args.dry_run
     Data.force_new   = args.force_new
-#---------------------------------
-def _load_config():
-    '''
-    Will load YAML config and set Data.cfg_dict
-    '''
-
-    if not os.path.isfile(Data.cfg_path):
-        raise FileNotFoundError(f'Could not find: {Data.cfg_path}')
-
-    with open(Data.cfg_path, encoding='utf-8') as ifile:
-        Data.cfg_dict = yaml.safe_load(ifile)
 #---------------------------------
 def _filter_rdf(rdf : RDataFrame) -> RDataFrame:
     '''
@@ -224,7 +214,6 @@ def main():
     Script starts here
     '''
     _get_args()
-    _load_config()
     _set_loggers()
 
     log.info('Getting dataframe')
