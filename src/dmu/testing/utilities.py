@@ -158,16 +158,18 @@ def get_file_with_trees(path : str) -> TFile:
 def get_models(
         rdf_sig : RDataFrame,
         rdf_bkg : RDataFrame,
+        name    : str = 'train_mva',
         out_dir : str = None) -> tuple[list[CVClassifier], float]:
     '''
     Will train and return models together with the AUC in a tuple
 
     rdf_xxx : Signal or background dataframe used for training
+    name    : Name of config file, e.g. train_mva
     out_dir : Directory where the training output will go, optional.
     '''
     out_dir = Data.out_dir if out_dir is None else out_dir
 
-    cfg                     = get_config('ml/tests/train_mva.yaml')
+    cfg                     = get_config(f'ml/tests/{name}.yaml')
     cfg['saving']['output'] = out_dir
 
     obj = TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
