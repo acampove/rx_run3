@@ -155,16 +155,7 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
     Takes name of dataset and corresponding ROOT dataframe
     return dataframe with a classifier probability column added
     '''
-
-    if 'mva' not in Data.cfg_dict:
-        raise ValueError('Cannot find MVA section in config')
-
-    d_mva_kind = Data.cfg_dict['mva']
-    if len(d_mva_kind) == 0:
-        raise ValueError('No MVAs found, skipping addition')
-
-    nmva = len(d_mva_kind)
-    log.debug(f'Found {nmva} kinds of MVA scores')
+    d_mva_kind = _get_mva_config()
 
     d_mva_score = { f'mva_{name}' : _scores_from_rdf(rdf, d_path) for name, d_path in d_mva_kind.items() }
 
@@ -174,36 +165,15 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 #---------------------------------
-def _get_paths() -> list[str]:
-    if 'samples' not in Data.cfg_dict:
-        raise ValueError('samples entry not found')
+def _get_mva_config() -> dict:
+    d_path_cmb = { q2bin : f'{Data.ana_dir}/mva/cmb/{Data.version}/{q2bin}' for q2bin in ['low', 'central', 'high'] }
+    d_path_prc = { q2bin : f'{Data.ana_dir}/mva/prc/{Data.version}/{q2bin}' for q2bin in ['low', 'central', 'high'] }
 
-    samples_path = Data.cfg_dict['samples']
-    with open(samples_path, encoding='utf-8') as ifile:
-        d_sample = yaml.safe_load(ifile)
-
-    if Data.sample not in d_sample:
-        raise ValueError(f'Cannot find {Data.sample} among samples')
-
-    d_trigger = d_sample[Data.sample]
-    if Data.trigger not in d_trigger:
-        for trigger in d_trigger:
-            log.info(trigger)
-        raise ValueError(f'Cannot find {Data.trigger} among triggers for sample {Data.sample}')
-
-    l_path = d_trigger[Data.trigger]
-    npath  = len(l_path)
-
-    if npath > Data.max_path:
-        raise ValueError(f'Cannot process more than {Data.max_path} paths, requested {npath}')
-
-    log.info(f'Found {npath} paths for {Data.sample}/{Data.trigger}')
-
-    return l_path
+    return {'cmb' : d_path_cmb, 'prc' : d_path_prc}
 #---------------------------------
 def _get_out_path(input_path : str) -> str:
+    out_dir = f'{Data.ana_dir}/Data/mva/{Data.version}'
     name    = os.path.basename(input_path)
-    out_dir = Data.cfg_dict['output']
 
     os.makedirs(out_dir, exist_ok=True)
 
