@@ -21,19 +21,32 @@ class CVPredict:
     Class used to get classification probabilities from ROOT
     dataframe and a set of models. The models were trained with CVClassifier
     '''
-    def __init__(self, models : Optional[list] = None, rdf : Optional[RDataFrame] = None):
+    def __init__(
+            self,
+            rdf      : RDataFrame,
+            models   : list[CVClassifier],
+            treat_as : str | None = None):
         '''
         Will take a list of CVClassifier models and a ROOT dataframe
+
+        rdf   : ROOT dataframe where features will be extracted
+        models: List of models, one per fold
+        treat_as: The input dataframe will be treated as `signal` or `background` when doing the evaluation
+
+        This might be needed, in order to:
+
+        - Apply signal/background definitions to dataframe, before evaluating
         '''
 
-        if models is None:
+        if not isinstance(models, list):
             raise ValueError('No list of models passed')
 
-        if rdf is None:
+        if not isinstance(rdf, RDataFrame):
             raise ValueError('No ROOT dataframe passed')
 
         self._l_model   = models
         self._rdf       = rdf
+        self._treat_as  = treat_as
         self._d_nan_rep : dict[str,str]
 
         self._arr_patch : numpy.ndarray
