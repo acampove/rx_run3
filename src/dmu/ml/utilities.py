@@ -96,7 +96,7 @@ def _remove_repeated(df : pnd.DataFrame) -> pnd.DataFrame:
     return df_clean
 # ----------------------------------
 # ---------------------------------------------
-def get_hashes(df_ft : pnd.DataFrame, rvalue : str ='set') -> Union[set, list]:
+def get_hashes(df_ft : pnd.DataFrame, rvalue : str ='set') -> Union[set[str], list[str]]:
     '''
     Will return hashes for each row in the feature dataframe
 
@@ -113,9 +113,9 @@ def get_hashes(df_ft : pnd.DataFrame, rvalue : str ='set') -> Union[set, list]:
 
     return res
 # ----------------------------------
-def hash_from_row(row):
+def hash_from_row(row : pnd.Series) -> str:
     '''
-    Will return a hash from a pandas dataframe row
+    Will return a hash in the form or a string from a pandas dataframe row
     corresponding to an event
     '''
     l_val   = [ str(val) for val in row ]
