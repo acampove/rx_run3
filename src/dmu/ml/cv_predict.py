@@ -55,14 +55,32 @@ class CVPredict:
         self._rdf       = self._define_columns(self._rdf)
         self._d_nan_rep = self._get_nan_replacements()
     # --------------------------------------------
-    def _define_columns(self, rdf : RDataFrame) -> RDataFrame:
-        cfg = self._l_model[0].cfg
+    def _get_definitions(self) -> dict[str,str]:
+        '''
+        This method will search in the configuration the definitions used
+        on the dataframe before the dataframe was used to train the model.
+        '''
+        cfg   = self._l_model[0].cfg
+        d_def = {}
+        if 'define' in cfg['dataset']:
+            d_def_gen = cfg['dataset']['define'] # get generic definitions
+            d_def.update(d_def_gen)
 
-        if 'define' not in cfg['dataset']:
-            log.debug('No define section found in config, will not define extra columns')
+        if self._treat_as is None:
+            return d_def
+
+        d_def_sam = cfg['dataset']['samples'][self._treat_as]['definitions'] # get sample specific definitions
+        log.info(f'Found sample dependent definitions for sample: {self._treat_as}')
+        d_def.update(d_def_sam)
+
+        return d_def
+    # --------------------------------------------
+    def _define_columns(self, rdf : RDataFrame) -> RDataFrame:
+        d_def = self._get_definitions()
+        if len(d_def) == 0:
+            log.info('No definitions found')
             return self._rdf
 
-        d_def = cfg['dataset']['define']
         log.debug(60 * '-')
         log.info('Defining columns in RDF before evaluating classifier')
         log.debug(60 * '-')
