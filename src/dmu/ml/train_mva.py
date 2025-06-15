@@ -52,6 +52,9 @@ class TrainMva:
     '''
     Interface to scikit learn used to train classifier
     '''
+    # TODO: 
+    # - Hyperparameter optimization methods should go into their own class
+    # - Data preprocessing methods might need their own class
     # ---------------------------------------------
     def __init__(self, bkg : RDataFrame, sig : RDataFrame, cfg : dict):
         '''
@@ -667,8 +670,6 @@ class TrainMva:
         cvd = CVDiagnostics(models=models, rdf=rdf, cfg=cfg_diag)
         cvd.run()
     # ---------------------------------------------
-    # TODO: These hyperparameter optimization methods
-    # should go into their own class
     #
     # Hyperparameter optimization
     # ---------------------------------------------
