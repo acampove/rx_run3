@@ -6,6 +6,8 @@ Script used to plot PID distributions from:
 '''
 
 import os
+import copy
+import glob
 import argparse
 
 import mplhep
@@ -26,7 +28,6 @@ class Data:
 
     plt.style.use(mplhep.style.LHCb2)
     ana_dir = os.environ['ANADIR']
-    fname   = '00012345_00006789_2.tuple.root'
     tname   = 'Hlt2RD_BuToKpEE_MVA'
 # ----------------------------
 def _parse_args():
@@ -36,9 +37,7 @@ def _parse_args():
 
     Data.channel = args.channel
 # ----------------------------
-def _get_rdf(has_pid : bool) -> RDataFrame:
-    root_path = f'{Data.ana_dir}/ana_prod/ntuples/no_pid/{Data.channel}/{Data.fname}'
-
+def _get_rdf(root_path : str, has_pid : bool) -> RDataFrame:
     if has_pid:
         tname = f'{Data.tname}'
     else:
@@ -51,15 +50,32 @@ def _get_rdf(has_pid : bool) -> RDataFrame:
 
     return rdf
 # ----------------------------
-def _compare(rdf_nopid : RDataFrame,
-             rdf_yspid : RDataFrame,
-             rdf_xcpid : RDataFrame) -> None:
+# ----------------------------
+def _compare(
+        root_path : str,
+        rdf_nopid : RDataFrame,
+        rdf_yspid : RDataFrame,
+        rdf_xcpid : RDataFrame) -> None:
+
     d_rdf={'Original'     : rdf_yspid,
            'New with PID' : rdf_xcpid,
            '0.1 x New'    : rdf_nopid}
 
-    ptr=Plotter(d_rdf=d_rdf, cfg=Data.cfg)
+    fname = os.path.basename(root_path)
+    cfg   = _get_config_with_title(fname=fname)
+    ptr   = Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
+# ----------------------------
+def _get_config_with_title(fname : str) -> dict:
+    title= fname.replace('.root', '')
+    cfg  = copy.deepcopy(Data.cfg)
+
+    for _, settings in cfg['plots'].items():
+        settings['title'] = title
+        name = settings['name']
+        settings['name'] = f'{name}_{title}'
+
+    return cfg
 # ----------------------------
 def _load_config() -> None:
     cfg = gut.load_data(
@@ -89,16 +105,21 @@ def main():
     Start here
     '''
     _parse_args()
-    _load_config()
 
-    rdf_nopid = _get_rdf(has_pid=False)
-    rdf_yspid = _get_rdf(has_pid=True )
-    rdf_xcpid = _apply_pid(rdf_nopid)
+    path_wc = f'{Data.ana_dir}/ana_prod/ntuples/no_pid/{Data.channel}/*.root'
+    for root_path in glob.glob(path_wc):
+        _load_config()
+        log.info(root_path)
 
-    _compare(
-            rdf_nopid=rdf_nopid,
-            rdf_yspid=rdf_yspid,
-            rdf_xcpid=rdf_xcpid)
+        rdf_nopid = _get_rdf(root_path=root_path, has_pid=False)
+        rdf_yspid = _get_rdf(root_path=root_path, has_pid=True )
+        rdf_xcpid = _apply_pid(rdf=rdf_nopid)
+
+        _compare(
+                root_path=root_path,
+                rdf_nopid=rdf_nopid,
+                rdf_yspid=rdf_yspid,
+                rdf_xcpid=rdf_xcpid)
 # ----------------------------
 if __name__ == '__main__':
     main()
