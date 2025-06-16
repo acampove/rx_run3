@@ -301,7 +301,7 @@ Which will check for corrupted files and will remove them.
 After removal, the download can be tried again, which would run only on the missing samples.
 This might allow for these files to be fixed, assuming that they were broken due to network issues. 
 
-## Calculating extra branches
+## Calculating extra branches (no MVA)
 
 Given the files produced by `post_ap`, new branches can be attached. These branches can be calculated using
 `branch_calculator` and can be placed in small files. These latter files would be made into friends of the main files.
@@ -330,6 +330,27 @@ Currently the command can add:
 `swp_cascade`: Branches corresponding to $D\to K\pi$ with $\pi\to\ell$ swaps, where the swap is inverted and the $D$ mass provided.
 
 `hop`: With the $\alpha$ and mass branches calculated
+
+## Calculating MVA branches
+
+The code needed to calculate the trees with the MVA branches is different. For this do:
+
+```bash
+apply_classifier -v VERSION -s SAMPLE -t HLTTRIGGER
+```
+
+for a given sample. The code will 
+
+- Search each file
+- Create another file with the friend tree
+
+To run this as a job, all the commands can be dumped in a text file with:
+
+```bash
+make_mva_joblist -v VERSION
+```
+
+where `VERSION` is the version of the MVA classifier 
 
 ## Missing files
 
