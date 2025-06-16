@@ -866,8 +866,6 @@ correlations:
           yscale     : 'linear'
           labels     : ['mass', 'Entries']
           normalized : true
-          styling :
-            linestyle: '-' # By default there is no line, just pointer
   methods:
     - Pearson
     - Kendall-$\tau$
@@ -1179,8 +1177,15 @@ plots:
         # Can add styling to specific plots, this should be the argument of
         # hist.plot(...)
         styling :
-            label : x
-            linestyle: '-'
+        # This section will update the styling of each category
+        # The categories (class A, etc) are the keys of the dictionary of dataframes
+          styling : 
+            class A:
+              histtype : fill 
+              color    : gray
+              alpha    : 0.3
+            class B:
+              color    : red 
         # This will add vertical lines to plots, the arguments are the same
         # as the ones passed to axvline
         vline   :
