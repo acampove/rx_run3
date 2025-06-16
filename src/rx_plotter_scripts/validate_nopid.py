@@ -8,8 +8,12 @@ Script used to plot PID distributions from:
 import os
 import argparse
 
-from ROOT                  import RDataFrame
-from dmu.logging.log_store import LogStore
+import mplhep
+import matplotlib.pyplot as plt
+from ROOT                    import RDataFrame
+from dmu.logging.log_store   import LogStore
+from dmu.plotting.plotter_1d import Plotter1D as Plotter
+from dmu.generic             import utilities as gut
 
 log = LogStore.add_logger('rx_plots:validate_nopid')
 # ----------------------------
@@ -17,7 +21,10 @@ class Data:
     '''
     Data class
     '''
+    cfg     : dict
     channel : str
+
+    plt.style.use(mplhep.style.LHCb2)
     ana_dir = os.environ['ANADIR']
     fname   = '00012345_00006789_2.tuple.root'
     tname   = 'Hlt2RD_BuToKpEE_MVA'
@@ -33,30 +40,65 @@ def _get_rdf(has_pid : bool) -> RDataFrame:
     root_path = f'{Data.ana_dir}/ana_prod/ntuples/no_pid/{Data.channel}/{Data.fname}'
 
     if has_pid:
-        tname = f'{Data.tname}_noPID'
-    else:
         tname = f'{Data.tname}'
+    else:
+        tname = f'{Data.tname}_noPID'
+
+    wgt = '1.0' if has_pid else '0.1'
 
     rdf = RDataFrame(f'{tname}/DecayTree', root_path)
+    rdf = rdf.Define('weights', wgt)
 
     return rdf
 # ----------------------------
 def _compare(rdf_nopid : RDataFrame,
-             rdf_yspid : RDataFrame) -> None:
-    pass
+             rdf_yspid : RDataFrame,
+             rdf_xcpid : RDataFrame) -> None:
+    d_rdf={'Original'     : rdf_yspid,
+           'New with PID' : rdf_xcpid,
+           '0.1 x New'    : rdf_nopid}
+
+    ptr=Plotter(d_rdf=d_rdf, cfg=Data.cfg)
+    ptr.run()
+# ----------------------------
+def _load_config() -> None:
+    cfg = gut.load_data(
+            package='rx_plotter_data',
+            fpath  =f'no_pid/{Data.channel}.yaml')
+
+    plt_dir = f'{Data.ana_dir}/plots/no_pid'
+
+    cfg['saving'] = {'plt_dir' : plt_dir}
+
+    Data.cfg = cfg
+# ----------------------------
+def _apply_pid(rdf : RDataFrame) -> RDataFrame:
+    d_cut = Data.cfg['selection']['cuts']
+
+    for name, expr in d_cut.items():
+        rdf = rdf.Filter(expr, name)
+
+    rdf = rdf.Redefine('weights', '1.0')
+
+    del Data.cfg['selection']['cuts']
+
+    return rdf
 # ----------------------------
 def main():
     '''
     Start here
     '''
     _parse_args()
+    _load_config()
 
     rdf_nopid = _get_rdf(has_pid=False)
     rdf_yspid = _get_rdf(has_pid=True )
+    rdf_xcpid = _apply_pid(rdf_nopid)
 
     _compare(
             rdf_nopid=rdf_nopid,
-            rdf_yspid=rdf_yspid)
+            rdf_yspid=rdf_yspid,
+            rdf_xcpid=rdf_xcpid)
 # ----------------------------
 if __name__ == '__main__':
     main()
