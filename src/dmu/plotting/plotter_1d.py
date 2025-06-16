@@ -195,15 +195,7 @@ class Plotter1D(Plotter):
             hst          = Hist.new.Reg(bins=bins, start=minx, stop=maxx, name='x').Weight()
             hst.fill(x=arr_val, weight=arr_wgt)
             self._run_plugins(arr_val, arr_wgt, hst, name, var)
-
-            if 'styling' in self._d_cfg['plots'][var]:
-                style = self._d_cfg['plots'][var]['styling']
-                style = copy.deepcopy(style)
-            else:
-                style = {'label' : label, 'histtype' : 'errorbar', 'marker' : '.', 'linestyle' : 'none'}
-
-            if 'label' not in style:
-                style['label'] = label
+            style = self._get_style_config(var=var, label=label)
 
             hst.plot(**style)
             l_bc_all    += hst.values().tolist()
@@ -211,6 +203,24 @@ class Plotter1D(Plotter):
         max_y = max(l_bc_all)
 
         return max_y
+    # --------------------------------------------
+    def _get_style_config(self, var : str, label : str) -> dict[str,str]:
+        try:
+            style = self._d_cfg['plots'][var]['styling'][label]
+            style = copy.deepcopy(style)
+
+            log.debug(f'Using custom styling for {var}/{label}')
+        except KeyError:
+            style = {
+                    'label'     : label, 
+                    'histtype'  : 'errorbar', 
+                    'marker'    : '.', 
+                    'linestyle' : 'none'}
+
+        if 'label' not in style:
+            style['label'] = label
+
+        return style
     # --------------------------------------------
     def _label_from_name(self, name : str) -> str:
         if 'stats' not in self._d_cfg:
