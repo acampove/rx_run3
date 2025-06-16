@@ -28,4 +28,4 @@ validate_nopid      ='rx_plotter_scripts.validate_nopid:main'
 mass_bias_correction='rx_plotter_scripts.mass_bias_correction:main'
 
 [tool.setuptools.package-data]
-rx_plots_data=['rk/mass/*.yaml']
+rx_plotter_data=['*/*.yaml']
