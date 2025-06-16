@@ -11,11 +11,11 @@ from dataclasses         import dataclass
 import numexpr
 import joblib
 import numpy
-import yaml
 
 from ROOT                  import RDataFrame, RDF
 from dmu.ml.cv_predict     import CVPredict
 from dmu.logging.log_store import LogStore
+from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
 
 log = LogStore.add_logger('rx_classifier:apply_classifier')
@@ -26,11 +26,11 @@ class Data:
     Class used to store shared information
     '''
     max_path    = 700
+    ana_dir     = os.environ['ANADIR']
+    version     : str
     force_new   : bool
     sample      : str
     trigger     : str
-    cfg_path    : str
-    cfg_dict    : dict
     max_entries : int
     l_model     : list
     log_level   : int
@@ -41,8 +41,8 @@ def _get_args():
     Use argparser to put options in Data class
     '''
     parser = argparse.ArgumentParser(description='Used to read classifier and write scores to input ntuple, producing output ntuple')
-    parser.add_argument('-c', '--cfg_path'   , type=str, help='Path to yaml file with configuration'        , required=True)
-    parser.add_argument('-s', '--sample'     , type=str, help='Sample name, meant to exist inside input_dir', required=True)
+    parser.add_argument('-v', '--version'    , type=str, help='Version of classifier'                       , required=True)
+    parser.add_argument('-s', '--sample'     , type=str, help='Sample name'                                 , required=True)
     parser.add_argument('-t', '--trigger'    , type=str, help='HLT trigger'                                 , required=True)
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
@@ -50,32 +50,19 @@ def _get_args():
     parser.add_argument('-f', '--force_new'  ,           help='Will remake outputs, even if they already exist', action='store_true')
     args = parser.parse_args()
 
+    Data.version     = args.version
     Data.sample      = args.sample
     Data.trigger     = args.trigger
-    Data.cfg_path    = args.cfg_path
-    Data.max_entries = args.max_entries
     Data.log_level   = args.log_level
+    Data.max_entries = args.max_entries
     Data.dry_run     = args.dry_run
     Data.force_new   = args.force_new
 #---------------------------------
-def _load_config():
+def _filter_rdf(rdf : RDataFrame) -> RDataFrame:
     '''
-    Will load YAML config and set Data.cfg_dict
+    Applies any filter before running prediction
     '''
 
-    if not os.path.isfile(Data.cfg_path):
-        raise FileNotFoundError(f'Could not find: {Data.cfg_path}')
-
-    with open(Data.cfg_path, encoding='utf-8') as ifile:
-        Data.cfg_dict = yaml.safe_load(ifile)
-#---------------------------------
-def _get_rdf(file_path : str) -> RDataFrame:
-    '''
-    Returns a dictionary of dataframes built from ROOT file path
-    '''
-    log.info('Getting dataframe')
-
-    rdf = RDataFrame('DecayTree', file_path)
     if Data.max_entries > 0:
         rdf = rdf.Range(Data.max_entries)
 
@@ -139,7 +126,7 @@ def _get_full_q2_scores(
     '''
 
     q2_cond     = _get_q2_indexer()
-    arr_ind     = numexpr.evaluate(q2_cond, local_dict={'Jpsi_M' : jpsi_m})
+    arr_ind     = numexpr.evaluate(q2_cond, local_dict={'q2' : jpsi_m * jpsi_m})
 
     # Resonant q2 bin will pick up central-q2 scores
     arr_all_q2  = numpy.array([central, low, central, high])
@@ -167,16 +154,7 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
     Takes name of dataset and corresponding ROOT dataframe
     return dataframe with a classifier probability column added
     '''
-
-    if 'mva' not in Data.cfg_dict:
-        raise ValueError('Cannot find MVA section in config')
-
-    d_mva_kind = Data.cfg_dict['mva']
-    if len(d_mva_kind) == 0:
-        raise ValueError('No MVAs found, skipping addition')
-
-    nmva = len(d_mva_kind)
-    log.debug(f'Found {nmva} kinds of MVA scores')
+    d_mva_kind = _get_mva_config()
 
     d_mva_score = { f'mva_{name}' : _scores_from_rdf(rdf, d_path) for name, d_path in d_mva_kind.items() }
 
@@ -186,36 +164,15 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 #---------------------------------
-def _get_paths() -> list[str]:
-    if 'samples' not in Data.cfg_dict:
-        raise ValueError('samples entry not found')
+def _get_mva_config() -> dict:
+    d_path_cmb = { q2bin : f'{Data.ana_dir}/mva/cmb/{Data.version}/{q2bin}' for q2bin in ['low', 'central', 'high'] }
+    d_path_prc = { q2bin : f'{Data.ana_dir}/mva/prc/{Data.version}/{q2bin}' for q2bin in ['low', 'central', 'high'] }
 
-    samples_path = Data.cfg_dict['samples']
-    with open(samples_path, encoding='utf-8') as ifile:
-        d_sample = yaml.safe_load(ifile)
-
-    if Data.sample not in d_sample:
-        raise ValueError(f'Cannot find {Data.sample} among samples')
-
-    d_trigger = d_sample[Data.sample]
-    if Data.trigger not in d_trigger:
-        for trigger in d_trigger:
-            log.info(trigger)
-        raise ValueError(f'Cannot find {Data.trigger} among triggers for sample {Data.sample}')
-
-    l_path = d_trigger[Data.trigger]
-    npath  = len(l_path)
-
-    if npath > Data.max_path:
-        raise ValueError(f'Cannot process more than {Data.max_path} paths, requested {npath}')
-
-    log.info(f'Found {npath} paths for {Data.sample}/{Data.trigger}')
-
-    return l_path
+    return {'cmb' : d_path_cmb, 'prc' : d_path_prc}
 #---------------------------------
 def _get_out_path(input_path : str) -> str:
+    out_dir = f'{Data.ana_dir}/Data/mva/{Data.version}'
     name    = os.path.basename(input_path)
-    out_dir = Data.cfg_dict['output']
 
     os.makedirs(out_dir, exist_ok=True)
 
@@ -226,11 +183,14 @@ def main():
     Script starts here
     '''
     _get_args()
-    _load_config()
     _set_loggers()
 
-    l_file_path = _get_paths()
-    for inp_path in l_file_path:
+    log.info('Getting dataframe')
+    gtr   = RDFGetter(sample=Data.sample, trigger=Data.trigger)
+    d_rdf = gtr.get_rdf(per_file=True)
+
+    for inp_path, rdf in d_rdf.items():
+        rdf      = _filter_rdf(rdf)
         out_path = _get_out_path(inp_path)
 
         if os.path.isfile(out_path):
@@ -238,7 +198,6 @@ def main():
             return
 
         log.info(f'Producing: {out_path}')
-        rdf = _get_rdf(inp_path)
         nentries = rdf.Count().GetValue()
         if nentries == 0:
             log.warning('Input datset is empty, saving empty dataframe')
