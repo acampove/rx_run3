@@ -132,7 +132,7 @@ The YAML outputs of the commands above will be very large and not all of it will
 ```bash
 # This will dump a list of triggers to triggers.yaml
 # You can optionally remove not needed triggers
-list_triggers -v v4 -o triggers.yaml
+list_triggers -v v4 -o triggers.yaml -k rx
 
 # This will use those triggers only to make samples.yaml
 make_tree_structure -v v4 -f samples.yaml -t triggers.yaml
