@@ -16,15 +16,15 @@ dev  = ['pytest']
 where   = ['src']
 
 [project.scripts]
-high_q2cut='rx_plotter_scripts.high_q2cut:main'
-leakage='rx_plotter_scripts.leakage:main'
-compare='rx_plotter_scripts.compare:main'
-data_mc='rx_plotter_scripts.data_mc:main'
-binned ='rx_plotter_scripts.binned:main'
-overlay='rx_plotter_scripts.overlay:main'
-cutflow='rx_plotter_scripts.cutflow:main'
-plot_2d='rx_plotter_scripts.plot_2d:main'
-validate_nopid='rx_plotter_scripts.validate_nopid:main'
+high_q2cut          ='rx_plotter_scripts.high_q2cut:main'
+leakage             ='rx_plotter_scripts.leakage:main'
+compare             ='rx_plotter_scripts.compare:main'
+data_mc             ='rx_plotter_scripts.data_mc:main'
+binned              ='rx_plotter_scripts.binned:main'
+overlay             ='rx_plotter_scripts.overlay:main'
+cutflow             ='rx_plotter_scripts.cutflow:main'
+plot_2d             ='rx_plotter_scripts.plot_2d:main'
+validate_nopid      ='rx_plotter_scripts.validate_nopid:main'
 mass_bias_correction='rx_plotter_scripts.mass_bias_correction:main'
 
 [tool.setuptools.package-data]
