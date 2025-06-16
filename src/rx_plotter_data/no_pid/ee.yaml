@@ -7,6 +7,16 @@ selection:
     pidk : K_PID_K > -2
 plots:
   L1_PID_E :
-    binning : [-10, 10, 60]
+    binning : [-15,+15, 30]
     labels  : ['PID${}_{e}(e^+)$', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
-    name    : l1_pide 
+    weights : weights
+    name    : l1_pide
+    styling :
+      '0.1 x New':
+        histtype : fill
+        color    : gray
+        alpha    : 0.2
+      'Original':
+        color    : black
+      'New with PID':
+        color    : blue
