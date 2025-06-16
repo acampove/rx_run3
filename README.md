@@ -1181,6 +1181,7 @@ plots:
         # The categories (class A, etc) are the keys of the dictionary of dataframes
           styling : 
             class A:
+              # These are the arguments of plt.hist(...)
               histtype : fill 
               color    : gray
               alpha    : 0.3
