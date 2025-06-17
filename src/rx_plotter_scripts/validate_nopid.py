@@ -28,7 +28,6 @@ class Data:
 
     plt.style.use(mplhep.style.LHCb2)
     ana_dir = os.environ['ANADIR']
-    tname   = 'Hlt2RD_BuToKpEE_MVA'
 # ----------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='')
@@ -38,10 +37,17 @@ def _parse_args():
     Data.channel = args.channel
 # ----------------------------
 def _get_rdf(root_path : str, has_pid : bool) -> RDataFrame:
-    if has_pid:
-        tname = f'{Data.tname}'
+    if   Data.channel == 'ee':
+        tname = 'Hlt2RD_BuToKpEE_MVA'
+    elif Data.channel == 'mm':
+        tname = 'Hlt2RD_BuToKpMuMu_MVA'
     else:
-        tname = f'{Data.tname}_noPID'
+        raise ValueError(f'Invalid channel: {Data.channel}')
+
+    if has_pid:
+        tname = f'{tname}'
+    else:
+        tname = f'{tname}_noPID'
 
     wgt = '1.0' if has_pid else '0.1'
 
