@@ -48,6 +48,7 @@ class RDFGetter:
     friends             : list[str]
     main_tree           : str
 
+    excluded_friends = [] 
     JPSI_PDG_MASS    = 3096.90 # https://pdg.lbl.gov/2018/listings/rpp2018-list-J-psi-1S.pdf
     BPLS_PDG_MASS    = 5279.34 # https://pdg.lbl.gov/2022/tables/rpp2022-tab-mesons-bottom.pdf
     d_custom_columns : dict[str,str]
@@ -62,7 +63,6 @@ class RDFGetter:
         self._trigger         = trigger
         self._samples         : dict[str,str]
         self._jpsi_pdg_mass   = RDFGetter.JPSI_PDG_MASS
-        self._excluded_friends= [] 
 
         self._tree_name       = tree
         self._cfg             = self._load_config()
@@ -114,7 +114,7 @@ class RDFGetter:
             log.info(f'Excluding friend tree {friend_name} for muon trigger {self._trigger}')
             return True
 
-        if friend_name in self._excluded_friends:
+        if friend_name in RDFGetter.excluded_friends:
             log.info(f'Excluding friend tree: {friend_name}')
             return True
 
@@ -628,15 +628,16 @@ class RDFGetter:
         return tmp_path
     # ---------------------------------------------------
     @contextmanager
-    def exclude_friends(self, names : list[str]):
+    @staticmethod
+    def exclude_friends(names : list[str]):
         '''
         It will build the dataframe, excluding the friend trees
         in the `names` list
         '''
-        old_val = self._excluded_friends
+        old_val = RDFGetter.excluded_friends
         try:
-            self._excluded_friends = names
+            RDFGetter.excluded_friends = names
             yield
         finally:
-            self._excluded_friends = old_val
+            RDFGetter.excluded_friends = old_val 
 # ---------------------------------------------------
