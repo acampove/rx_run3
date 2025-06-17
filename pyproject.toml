@@ -12,8 +12,8 @@ dependencies= [
 'particle',
 'vector',
 'pandarallel',
-'data_manipulation_utilities>0.1.2',
-'ap_utilities>=0.2.5'
+'data_manipulation_utilities',
+'ap_utilities'
 ]
 
 [project.optional-dependencies]
