@@ -78,7 +78,7 @@ def _get_config_with_title(fname : str) -> dict:
     cfg  = copy.deepcopy(Data.cfg)
 
     for _, settings in cfg['plots'].items():
-        settings['title'] = title
+        settings['title'] = f'{title}; {Data.channel}'
         name = settings['name']
         settings['name'] = f'{name}_{title}'
 
