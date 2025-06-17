@@ -205,20 +205,18 @@ class Plotter1D(Plotter):
         return max_y
     # --------------------------------------------
     def _get_style_config(self, var : str, label : str) -> dict[str,str]:
+        style = {
+                'label'     : label, 
+                'histtype'  : 'errorbar', 
+                'linestyle' : 'none'}
+
         try:
-            style = self._d_cfg['plots'][var]['styling'][label]
-            style = copy.deepcopy(style)
+            custom_style = self._d_cfg['plots'][var]['styling'][label]
+            style.update(custom_style)
 
             log.debug(f'Using custom styling for {var}/{label}')
         except KeyError:
-            style = {
-                    'label'     : label, 
-                    'histtype'  : 'errorbar', 
-                    'marker'    : '.', 
-                    'linestyle' : 'none'}
-
-        if 'label' not in style:
-            style['label'] = label
+            style['marker'] = '.'
 
         return style
     # --------------------------------------------
