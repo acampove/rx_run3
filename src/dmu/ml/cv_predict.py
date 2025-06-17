@@ -41,7 +41,27 @@ class CVPredict:
     # --------------------------------------------
     def _initialize(self):
         self._rdf       = self._define_columns(self._rdf)
+        self._rdf       = self._remove_periods(self._rdf)
+
         self._d_nan_rep = self._get_nan_replacements()
+    # ----------------------------------
+    def _remove_periods(self, rdf : RDataFrame) -> RDataFrame:
+        '''
+        This will redefine all columns associated to friend trees as:
+
+        friend_preffix.branch_name -> friend_preffix.branch_name
+        '''
+        l_col = [ col.c_str() for col in rdf.GetColumnNames() ]
+        l_col = [ col         for col in l_col if '.' in col  ]
+
+        if len(l_col) == 0:
+            return rdf
+
+        for col in l_col:
+            new = col.replace('.', '_')
+            rdf = rdf.Define(new, col)
+
+        return rdf
     # --------------------------------------------
     def _get_definitions(self) -> dict[str,str]:
         '''
