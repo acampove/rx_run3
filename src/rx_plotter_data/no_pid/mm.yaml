@@ -15,7 +15,7 @@ plots:
       '0.5 x New':
         histtype : fill
         color    : gray
-        alpha    : 0.2
+        alpha    : 0.3
       'Original':
         color    : black
       'New with PID':
@@ -33,7 +33,7 @@ plots:
       '0.5 x New':
         histtype : fill
         color    : gray
-        alpha    : 0.2
+        alpha    : 0.3
       'Original':
         color    : black
       'New with PID':
