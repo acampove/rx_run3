@@ -25,6 +25,7 @@ class Data:
     '''
     cfg     : dict
     channel : str
+    weight  : str
 
     plt.style.use(mplhep.style.LHCb2)
     ana_dir = os.environ['ANADIR']
@@ -35,6 +36,7 @@ def _parse_args():
     args = parser.parse_args()
 
     Data.channel = args.channel
+    Data.weight  = {'ee' : '0.1', 'mm' : '0.5'}[Data.channel]
 # ----------------------------
 def _get_rdf(root_path : str, has_pid : bool) -> RDataFrame:
     if   Data.channel == 'ee':
@@ -49,13 +51,12 @@ def _get_rdf(root_path : str, has_pid : bool) -> RDataFrame:
     else:
         tname = f'{tname}_noPID'
 
-    wgt = '1.0' if has_pid else '0.1'
+    weight = '1.0' if has_pid else Data.weight
 
     rdf = RDataFrame(f'{tname}/DecayTree', root_path)
-    rdf = rdf.Define('weights', wgt)
+    rdf = rdf.Define('weights', weight)
 
     return rdf
-# ----------------------------
 # ----------------------------
 def _compare(
         root_path : str,
@@ -63,9 +64,9 @@ def _compare(
         rdf_yspid : RDataFrame,
         rdf_xcpid : RDataFrame) -> None:
 
-    d_rdf={'Original'     : rdf_yspid,
-           'New with PID' : rdf_xcpid,
-           '0.1 x New'    : rdf_nopid}
+    d_rdf={'Original'             : rdf_yspid,
+           'New with PID'         : rdf_xcpid,
+           f'{Data.weight} x New' : rdf_nopid}
 
     fname = os.path.basename(root_path)
     cfg   = _get_config_with_title(fname=fname)
