@@ -12,7 +12,7 @@ plots:
     weights : weights
     name    : l1_pidmu
     styling :
-      '0.1 x New':
+      '0.5 x New':
         histtype : fill
         color    : gray
         alpha    : 0.2
@@ -30,7 +30,7 @@ plots:
     weights : weights
     name    : k_pidk
     styling :
-      '0.1 x New':
+      '0.5 x New':
         histtype : fill
         color    : gray
         alpha    : 0.2
