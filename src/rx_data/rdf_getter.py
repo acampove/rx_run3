@@ -1,6 +1,7 @@
 '''
 Module holding RDFGetter class
 '''
+from contextlib import contextmanager
 import os
 import glob
 import json
@@ -617,4 +618,17 @@ class RDFGetter:
         log.debug(f'Using config JSON: {tmp_path}')
 
         return tmp_path
+    # ---------------------------------------------------
+    @contextmanager
+    def exclude_friends(self, names : list[str]):
+        '''
+        It will build the dataframe, excluding the friend trees
+        in the `names` list
+        '''
+        old_val = self._excluded_friends
+        try:
+            self._excluded_friends = names
+            yield
+        finally:
+            self._excluded_friends = old_val
 # ---------------------------------------------------
