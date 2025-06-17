@@ -217,8 +217,9 @@ def main():
     _set_loggers()
 
     log.info('Getting dataframe')
-    gtr   = RDFGetter(sample=Data.sample, trigger=Data.trigger)
-    d_rdf = gtr.get_rdf(per_file=True)
+    with RDFGetter.exclude_friends(names=['mva']):
+        gtr   = RDFGetter(sample=Data.sample, trigger=Data.trigger)
+        d_rdf = gtr.get_rdf(per_file=True)
 
     for inp_path, rdf in d_rdf.items():
         rdf      = _filter_rdf(rdf)
