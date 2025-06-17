@@ -3,7 +3,6 @@ Module containing plotter class
 '''
 # pylint: disable=too-many-positional-arguments, too-many-arguments
 
-import copy
 import cppyy
 from hist import Hist
 
