@@ -88,7 +88,7 @@ def _load_config() -> None:
             package='rx_plotter_data',
             fpath  =f'no_pid/{Data.channel}.yaml')
 
-    plt_dir = f'{Data.ana_dir}/plots/no_pid'
+    plt_dir = f'{Data.ana_dir}/plots/no_pid/{Data.channel}'
 
     cfg['saving'] = {'plt_dir' : plt_dir}
 
