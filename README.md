@@ -210,6 +210,19 @@ In the case of the MVA friend trees the branches added would be `mva.mva_cmb` an
 
 Thus, one can easily extend the ntuples with extra branches without remaking them.
 
+## Excluding datasets
+
+One can also exclude a certain type of friend trees with:
+```python
+from rx_data.rdf_getter     import RDFGetter
+
+wih RDFGetter.exclude_friends(names=['mva']):
+    gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpMuMu_MVA')
+    rdf = gtr.get_rdf(per_file=False)
+```
+
+that should leave the MVA branches out of the dataframe.
+
 ## Defining custom columns
 
 Given that this `RDFGetter` can be used across multiple modules, the safest way to
