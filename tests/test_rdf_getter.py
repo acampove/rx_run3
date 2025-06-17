@@ -577,3 +577,18 @@ def test_ccbar(sample : str):
 
     RDFGetter.max_entries = 1000
 # ------------------------------------------------
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
+def test_exclude_friends(sample : str, trigger : str):
+    '''
+    Tests excluding friend trees through a context manager
+    '''
+    with RDFGetter.exclude_friends(names=['mva']):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf()
+
+    l_col = [ name.c_str() for name in rdf.GetColumnNames()        ]
+    l_mva = [ name         for name in l_col if ('mva_cmb' in name) or ('mva_prc' in name) ]
+
+    assert l_mva == []
+# ------------------------------------------------
