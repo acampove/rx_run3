@@ -102,6 +102,7 @@ class RDFGetter:
     # ---------------------------------------------------
     def _load_config(self) -> dict:
         config_path = files('rx_data_data').joinpath('rdf_getter/config.yaml')
+        config_path = str(config_path)
         with open(config_path, encoding='utf-8') as ifile:
             cfg = yaml.safe_load(ifile)
 
