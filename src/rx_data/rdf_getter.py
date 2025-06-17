@@ -62,6 +62,7 @@ class RDFGetter:
         self._trigger         = trigger
         self._samples         : dict[str,str]
         self._jpsi_pdg_mass   = RDFGetter.JPSI_PDG_MASS
+        self._excluded_friends= [] 
 
         self._tree_name       = tree
         self._cfg             = self._load_config()
@@ -107,7 +108,14 @@ class RDFGetter:
         return cfg
     # ---------------------------------------------------
     def _skip_path(self, file_name : str) -> bool:
+        friend_name = file_name.replace('.yaml', '')
+
         if file_name in self._l_electron_only and 'MuMu' in self._trigger:
+            log.info(f'Excluding friend tree {friend_name} for muon trigger {self._trigger}')
+            return True
+
+        if friend_name in self._excluded_friends:
+            log.info(f'Excluding friend tree: {friend_name}')
             return True
 
         return False
