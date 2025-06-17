@@ -81,7 +81,7 @@ def _add_muon_columns(rdf : RDataFrame) -> RDataFrame:
         log.debug('Not defining muon columns before prediction for: {Data.trigger}')
         return rdf
 
-    log.info('Defining muon columns before prediction for: {Data.trigger}')
+    log.info(f'Defining muon columns before prediction for: {Data.trigger}')
     l_var = [
             'B_PT',
             'Jpsi_PT',
