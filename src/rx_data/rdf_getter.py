@@ -111,56 +111,80 @@ class RDFGetter:
 
         return cfg
     # ---------------------------------------------------
-    def _skip_path(self, ftree : str) -> bool:
-        '''
-        This method will decide if a friend tree (e.g. mva) should be picked.
-
-        Parameters
-        ------------------
-        ftree : Friend tree, e.g. mva
-
-        Returns
-        ------------------
-        True or False
-        '''
-
-        if ftree in self._l_electron_only and 'MuMu' in self._trigger:
-            log.info(f'Excluding friend tree {ftree} for muon trigger {self._trigger}')
-            return True
-
-        if ftree in RDFGetter.excluded_friends:
-            log.info(f'Excluding friend tree: {ftree}')
-            return True
-
-        return False
-    # ---------------------------------------------------
     def _initialize(self) -> None:
         '''
         Function will:
-        - Find samples, assuming they are in $ANADIR/Data/samples/*.yaml
-        - Add them to the samples member of RDFGetter
+        - Find samples, assuming they are in $ANADIR/Data as friend tree directories
+        - Add them to the samples attribute of RDFGetter
 
         If no samples found, will raise FileNotFoundError
         '''
         os.makedirs(RDFGetter.cache_dir, exist_ok=True)
         self._check_multithreading()
-        l_config = self._get_yaml_paths()
 
-        os.makedirs(RDFGetter.cache_dir, exist_ok=True)
+        self._samples = self._get_yaml_paths()
+    # ---------------------------------------------------
+    def _get_yaml_paths(self) -> dict[str,str]:
+        '''
+        This function will return a dictionary with:
 
-        d_sample = {}
-        log.debug('Using samles in:')
-        for path in l_config:
-            file_name   = os.path.basename(path)
-            if self._skip_path(file_name):
-                continue
+        key  : Name of sample, e.g. main, mva
+        value: Path to YAML file with the directory structure needed to make an RDataFrame
+        '''
+        data_dir     = os.environ['ANADIR']
+        ftree_wc     = f'{data_dir}/Data/*'
+        l_ftree_dir  = glob.glob(ftree_wc)
+        d_ftree_dir  = { os.path.basename(ftree_dir) : ftree_dir for ftree_dir in l_ftree_dir }
+        d_ftree_dir  = self._filter_samples(d_ftree_dir=d_ftree_dir)
 
-            sample_name = file_name.replace('.yaml', '')
-            d_sample[sample_name] = path
-            log.debug(f'    {path}')
+        log.info(40 * '-')
+        log.info(f'{"Friend":<20}{"Version":<20}')
+        log.info(40 * '-')
+        d_vers_dir   = { ftree_name : self._versioned_from_ftrees(ftree_dir)        for ftree_name, ftree_dir in d_ftree_dir.items() }
+        d_yaml_path  = { ftree_name : self._yaml_path_from_ftree(dir_path=vers_dir) for ftree_name,   vers_dir in d_vers_dir.items()   }
 
-        d_sample        = self._filter_samples(d_sample)
-        self._samples   = d_sample
+        return d_yaml_path
+    # ---------------------------------------------------
+    def _versioned_from_ftrees(self, ftree_dir :  str) -> str:
+        '''
+        Takes path to directory corresponding to a friend tree.
+        Finds latest/custom version and returns this path
+        '''
+        ftree = os.path.basename(ftree_dir)
+        if ftree in RDFGetter.custom_versions:
+            version     = RDFGetter.custom_versions[ftree]
+            version_dir = f'{ftree_dir}/{version}'
+
+            log.warning(f'{ftree:<20}{version:<20}')
+
+            return version_dir
+
+        version = vmn.get_last_version(dir_path=ftree_dir, version_only=True)
+        log.info(f'{ftree:<20}{version:<20}')
+
+        return f'{ftree_dir}/{version}'
+    # ---------------------------------------------------
+    def _yaml_path_from_ftree(self, dir_path : str) -> str:
+        '''
+        Takes path to directory with ROOT files associated to friend tree
+        returns path to YAML file with correctly structured files
+        '''
+        l_root_path = glob.glob(f'{dir_path}/*.root')
+        nroot_path  = len(l_root_path)
+        if nroot_path == 0:
+            raise ValueError(f'No ROOT files found in {dir_path}')
+
+        spl  = PathSplitter(paths=l_root_path)
+        data = spl.split(nested=True)
+        val  = hashing.hash_object(data)
+        val  = val[:10] # Ten characters are long enough for a hash
+
+        out_path = f'{RDFGetter.cache_dir}/{val}.yaml'
+        log.debug(f'Saving friend tree structure to {out_path}')
+
+        gut.dump_json(data, out_path)
+
+        return out_path
     # ---------------------------------------------------
     def _check_multithreading(self) -> None:
         nthreads = GetThreadPoolSize()
