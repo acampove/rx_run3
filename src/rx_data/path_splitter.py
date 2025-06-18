@@ -91,7 +91,7 @@ class PathSplitter:
         d_info_path = self._truncate_paths(d_info_path)
         d_info_path = self._rename_sample(d_info_path)
 
-        log.info('Found samples:')
+        log.debug('Found samples:')
         d_info_path = dict(sorted(d_info_path.items()))
         for sample, line in sorted(d_info_path):
             log.debug(f'{sample:<50}{line:<30}')
