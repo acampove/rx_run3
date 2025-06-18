@@ -139,7 +139,7 @@ class RDFGetter:
         os.makedirs(RDFGetter.cache_dir, exist_ok=True)
 
         d_sample = {}
-        log.info('Adding samples, found:')
+        log.debug('Using samles in:')
         for path in l_config:
             file_name   = os.path.basename(path)
             if self._skip_path(file_name):
@@ -147,7 +147,7 @@ class RDFGetter:
 
             sample_name = file_name.replace('.yaml', '')
             d_sample[sample_name] = path
-            log.info(f'    {sample_name}')
+            log.debug(f'    {path}')
 
         d_sample        = self._filter_samples(d_sample)
         self._samples   = d_sample
