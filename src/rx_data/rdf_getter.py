@@ -167,13 +167,26 @@ class RDFGetter:
         if nthreads > 1:
             raise ValueError(f'Cannot run with mulithreading, using {nthreads} threads')
     # ---------------------------------------------------
-    def _filter_samples(self, d_sample : dict[str,str]) -> dict[str,str]:
+    def _filter_samples(self, d_ftree_dir : dict[str,str]) -> dict[str,str]:
+        '''
+        Parameters
+        --------------
+        d_ftree_dir: Dictionary where:
+            key : Is the friend tree name
+            val : Is the path to the directory with the friend trees
+
+        Returns
+        --------------
+        Same as input, but after filtering for not needed samples
+        '''
+        d_ftree_dir_flt = { ftree : ftree_dir for ftree, ftree_dir in d_ftree_dir.items() if not self._skip_ftree(ftree=ftree) }
+
         if self._tree_name == 'DecayTree':
-            return d_sample
+            return d_ftree_dir_flt
 
         # MCDecayTree has no friends
         if self._tree_name == 'MCDecayTree':
-            path = d_sample[self._main_tree]
+            path = d_ftree_dir_flt[self._main_tree]
             return {self._main_tree : path}
 
         raise ValueError(f'Invalid tree name: {self._tree_name}')
