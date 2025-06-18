@@ -689,7 +689,7 @@ class RDFGetter:
     # ---------------------------------------------------
     @contextmanager
     @staticmethod
-    def custom_friends(d_ver : dict[str,str]):
+    def custom_friends(versions : dict[str,str]):
         '''
         It will pick a dictionary between:
 
@@ -700,7 +700,7 @@ class RDFGetter:
         '''
         old_val = RDFGetter.custom_versions
         try:
-            RDFGetter.custom_versions = d_ver
+            RDFGetter.custom_versions = versions
             yield
         finally:
             RDFGetter.custom_versions = old_val

@@ -612,7 +612,7 @@ def test_custom_friend(sample : str, trigger : str):
     '''
     Tests getting data with a custom version for a given tree, either friend or main
     '''
-    with RDFGetter.custom_version(versions={'mva' : 'v5'}):
+    with RDFGetter.custom_friends(versions={'mva' : 'v5'}):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf()
 
