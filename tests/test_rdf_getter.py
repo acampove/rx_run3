@@ -606,3 +606,15 @@ def test_exclude_friends(sample : str, trigger : str):
 
     assert l_mva == []
 # ------------------------------------------------
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
+def test_custom_friend(sample : str, trigger : str):
+    '''
+    Tests getting data with a custom version for a given tree, either friend or main
+    '''
+    with RDFGetter.custom_version(versions={'mva' : 'v5'}):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf()
+
+    _run_default_checks(rdf=rdf, sample=sample, trigger=trigger, test_name='custom_friend')
+# ------------------------------------------------
