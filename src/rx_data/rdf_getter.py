@@ -12,11 +12,13 @@ import fnmatch
 from typing              import Union
 from importlib.resources import files
 
-import dmu.generic.utilities as gut
-from dmu.logging.log_store import LogStore
-
 import yaml
+import dmu.generic.utilities as gut
+
 from ROOT                  import RDF, RDataFrame, GetThreadPoolSize
+from dmu.generic           import hashing
+from dmu.logging.log_store import LogStore
+from rx_data.path_splitter import PathSplitter
 
 log=LogStore.add_logger('rx_data:rdf_getter')
 # ---------------------------------------------------
