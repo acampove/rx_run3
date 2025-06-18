@@ -48,8 +48,10 @@ class RDFGetter:
     skip_adding_columns = False
 
     friends             : list[str]
+    custom_versions     : dict[str,str] = {}
     main_tree           : str
 
+    cache_dir        = f'/tmp/cache/rx_data/rdf_getter' # Here is where all the temporary output will go
     excluded_friends = []
     JPSI_PDG_MASS    = 3096.90 # https://pdg.lbl.gov/2018/listings/rpp2018-list-J-psi-1S.pdf
     BPLS_PDG_MASS    = 5279.34 # https://pdg.lbl.gov/2022/tables/rpp2022-tab-mesons-bottom.pdf
@@ -615,11 +617,8 @@ class RDFGetter:
         bidentifier = identifier.encode()
         hsh         = hashlib.sha256(bidentifier)
         hsh         = hsh.hexdigest()
-
-        tmp_dir     =  '/tmp/rx_data/rdf_getter'
-        os.makedirs(tmp_dir, exist_ok=True)
-
-        tmp_path    = f'{tmp_dir}/config_{hsh}.json'
+        hsh         = hsh[:10]
+        tmp_path    = f'{RDFGetter.cache_dir}/config_{hsh}.json'
 
         log.debug(f'Using config JSON: {tmp_path}')
 
