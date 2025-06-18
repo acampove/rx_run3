@@ -57,12 +57,25 @@ class PathSplitter:
 
         return d_renamed
     # ------------------------------------------
-    def split(self) -> dict[tuple[str,str],list[str]]:
+    def split(
+            self,
+            nested : bool = False) -> dict[tuple[str,str],list[str]]:
         '''
-        Takes list of paths to ROOT files
-        Splits them into categories and returns a dictionary:
+        Takes list of paths to ROOT files and splits them in an easier to read structure
+
+        Parameters
+        ------------------------
+        nested: If False, splits them into categories and returns a dictionary:
 
         category : [path_1, path_2, ...]
+
+        If True, it will use a nested structure like:
+
+        sample:
+            trigger:
+                - path 1
+                - path 2
+                - path 3
         '''
         npath = len(self._l_path)
         log.info(f'Splitting {npath} paths into categories')
@@ -83,5 +96,31 @@ class PathSplitter:
         for sample, line in sorted(d_info_path):
             log.debug(f'{sample:<50}{line:<30}')
 
+        if nested:
+            d_info_path = self._nest_structure(d_data = d_info_path)
+
         return d_info_path
+    # ------------------------------------------
+    def _nest_structure(self, d_data : dict) -> dict:
+        '''
+        Takes a dictionary of the form:
+
+        (sample, trigger) : path_1
+
+        And nests it as:
+
+        sample:
+            trigger:
+                - path 1
+                - path 2
+                - path 3
+        '''
+        d_struc = {}
+        for (sample, line), l_path in d_data.items():
+            if sample not in d_struc:
+                d_struc[sample] = {}
+
+            d_struc[sample][line] = l_path
+
+        return d_struc
 # ------------------------------------------

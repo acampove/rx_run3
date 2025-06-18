@@ -55,6 +55,16 @@ def test_default():
 
     _save_samples('default', data)
 # ----------------------------------------
+def test_nested():
+    '''
+    Dumps it with nesting sample:trigger:list of files 
+    '''
+    l_pfn = _get_pfns()
+    spl   = PathSplitter(paths = l_pfn)
+    data  = spl.split(nested=True)
+
+    _save_samples('nested', data)
+# ----------------------------------------
 def test_max_files():
     '''
     Will only read 100 files
