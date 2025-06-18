@@ -18,11 +18,11 @@ def test_hash_simple():
 
     log.info(f'Hash: {val}')
 
-    assert len(val) == 64
+    assert len(val) == 10
 # --------------------------------------
 def test_hash_pandas():
     '''
-    Function testing the hashing of a pandas dataframe 
+    Function testing the hashing of a pandas dataframe
     '''
 
     data = {
@@ -37,5 +37,5 @@ def test_hash_pandas():
 
     log.info(f'Hash: {val}')
 
-    assert len(val) == 64
+    assert len(val) == 10
 # --------------------------------------
