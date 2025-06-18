@@ -308,18 +308,18 @@ class RDFGetter:
         d_data = {'samples' : {}, 'friends' : {}}
 
         log.info('Adding samples')
-        for sample, yaml_path in self._samples.items():
-            if self._skip_sample(sample=sample):
-                log.warning(f'Skipping sample: {sample}')
+        for ftree, yaml_path in self._samples.items():
+            if self._skip_ftree(ftree=ftree):
+                log.warning(f'Skipping friend tree: {ftree}')
                 continue
 
-            log.debug(f'{"":<4}{sample:<15}{yaml_path}')
+            log.debug(f'{"":<4}{ftree:<15}{yaml_path}')
 
-            d_section = self._get_section(yaml_path)
-            if sample == self._main_tree:
-                d_data['samples'][sample] = d_section
+            d_section = self._get_section(yaml_path=yaml_path, ftree=ftree)
+            if ftree == self._main_tree:
+                d_data['samples'][ftree] = d_section
             else:
-                d_data['friends'][sample] = d_section
+                d_data['friends'][ftree] = d_section
 
         return d_data
     # ---------------------------------------------------
