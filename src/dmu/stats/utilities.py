@@ -55,7 +55,7 @@ def is_pdf_usable(pdf : zpdf) -> zpdf:
 #-------------------------------------------------------
 #Zfit/print_pdf
 #-------------------------------------------------------
-def _get_const(par : zpar , d_const : Union[None, dict[str, list[float]]]) -> str:
+def _get_const(par : zpar , d_const : Union[None, dict[str, tuple[float,float]]]) -> str:
     '''
     Takes zfit parameter and dictionary of constraints
     Returns a formatted string with the value of the constraint on that parameter
@@ -106,7 +106,7 @@ def _get_pars(
     return l_par_flt, l_par_fix
 #-------------------------------------------------------
 def _get_messages(
-        pdf       : zpdf, 
+        pdf       : zpdf,
         l_par_flt : list,
         l_par_fix : list,
         d_const   : Union[None, dict[str,list[float]]] = None) -> list[str]:
@@ -138,11 +138,11 @@ def _get_messages(
     return l_msg
 #-------------------------------------------------------
 def print_pdf(
-        pdf      : zpdf, 
-        d_const  : Union[None, dict[str,list[float]]] = None,
-        txt_path : Union[str,None]                    = None,
-        level    : int                                = 20,
-        blind    : Union[None, list[str]]             = None):
+        pdf      : zpdf,
+        d_const  : Union[None, dict[str,tuple[float, float]]] = None,
+        txt_path : Union[str,None]                            = None,
+        level    : int                                        = 20,
+        blind    : Union[None, list[str]]                     = None):
     '''
     Function used to print zfit PDFs
 
@@ -204,7 +204,7 @@ def save_fit(
         model   : zpdf,
         res     : Union[zres, None],
         fit_dir : str,
-        d_const : dict[str,list[str]] = None) -> None:
+        d_const : dict[str,tuple[float,float]] = None) -> None:
     '''
     Function used to save fit results, meant to reduce boiler plate code
     '''
