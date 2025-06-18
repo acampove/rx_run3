@@ -338,9 +338,6 @@ class RDFGetter:
 
         log.info('Adding samples')
         for ftree, yaml_path in self._samples.items():
-            if self._skip_ftree(ftree=ftree):
-                log.warning(f'Skipping friend tree: {ftree}')
-                continue
 
             log.debug(f'{"":<4}{ftree:<15}{yaml_path}')
 
