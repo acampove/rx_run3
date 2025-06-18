@@ -607,6 +607,7 @@ class RDFGetter:
         Parameters
         ----------------
         identifier : String identifying sample/file whose configuration will be stored
+        data       : Dictionary with structure as needed by ROOT to make dataframe with friend trees
 
         Returns
         ----------------
