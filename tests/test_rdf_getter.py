@@ -309,6 +309,19 @@ def _check_ext(rdf : RDataFrame) -> None:
     log.info(f'Analysis: {count_ana}')
     log.info(f'MisID   : {count_mis}')
 # ------------------------------------------------
+def _run_default_checks(
+    rdf       : RDataFrame,
+    test_name : str,
+    trigger   : str,
+    sample    : str) -> None:
+
+    _check_branches(rdf, is_ee = 'MuMu' not in trigger, is_mc = False)
+    sample = sample.replace('*', 'p')
+
+    _plot_mva_mass(rdf, f'{test_name}_{sample}')
+    _plot_mva(rdf     , f'{test_name}_{sample}')
+    _plot_hop(rdf     , f'{test_name}_{sample}')
+# ------------------------------------------------
 def test_split_per_file():
     '''
     Tests static `split_per_file` method
