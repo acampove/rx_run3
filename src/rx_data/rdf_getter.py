@@ -169,12 +169,21 @@ class RDFGetter:
 
         raise ValueError(f'Invalid tree name: {self._tree_name}')
     # ---------------------------------------------------
-    def _get_trigger_paths(self, d_trigger : dict[str,list[str]]) -> list[str]:
+    def _get_trigger_paths(
+            self,
+            sample    : str,
+            d_trigger : dict[str,list[str]]) -> list[str]:
+        '''
+        Parameters
+        ----------------
+        d_trigger : Dictionary mapping HLT2 trigger names to lists of ROOT files
+        sample    : Name of sample, e.g Bu_Kp...
+        '''
         if self._trigger in d_trigger:
             return d_trigger[self._trigger]
 
         if not self._trigger.endswith('_ext'):
-            raise ValueError(f'Invalid trigger name {self._trigger}')
+            raise ValueError(f'Invalid trigger name {self._trigger} for sample {sample}')
 
         # TODO: When misid trigger be processed also for MC, this has to be updated
         if not self._sample.startswith('DATA_24_'):
