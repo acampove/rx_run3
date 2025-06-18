@@ -201,10 +201,18 @@ class RDFGetter:
 
         return l_path
     # ---------------------------------------------------
-    def _get_section(self, yaml_path : str) -> dict:
+    def _get_section(
+            self,
+            yaml_path : str,
+            ftree     : str) -> dict:
         '''
         This method should return the different sections (friend/main tree)
         needed to make the JSON file taken by FromSpec
+
+        Parameters:
+        --------------------
+        yaml_path : Path to YAML file specifying samples:trigger:files
+        ftree     : Friend tree name, e.g mva, main
         '''
         d_section = {'trees' : [self._tree_name]}
 
@@ -222,9 +230,11 @@ class RDFGetter:
             nosamp = False
             try:
                 d_trigger     = d_data[sample]
-                l_path_sample = self._get_trigger_paths(d_trigger=d_trigger)
+                l_path_sample = self._get_trigger_paths(
+                        d_trigger= d_trigger,
+                        sample   = sample)
             except KeyError as exc:
-                raise KeyError(f'Cannot access {yaml_path}:{sample}/{self._trigger}') from exc
+                raise KeyError(f'For friend tree {ftree}, cannot access {yaml_path}:{sample}/{self._trigger}') from exc
 
             nsamp = len(l_path_sample)
             if nsamp == 0:
