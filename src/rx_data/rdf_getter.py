@@ -87,7 +87,7 @@ class RDFGetter:
         self._analysis        = self._analysis_from_trigger()
         self._initialize()
     # ---------------------------------------------------
-    def _get_main_tree(self):
+    def _get_main_tree(self) -> str:
         if not hasattr(RDFGetter, 'main_tree'):
             return self._cfg['trees']['main']
 
