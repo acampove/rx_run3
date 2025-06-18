@@ -48,7 +48,7 @@ class RDFGetter:
     friends             : list[str]
     main_tree           : str
 
-    excluded_friends = [] 
+    excluded_friends = []
     JPSI_PDG_MASS    = 3096.90 # https://pdg.lbl.gov/2018/listings/rpp2018-list-J-psi-1S.pdf
     BPLS_PDG_MASS    = 5279.34 # https://pdg.lbl.gov/2022/tables/rpp2022-tab-mesons-bottom.pdf
     d_custom_columns : dict[str,str]
@@ -640,5 +640,5 @@ class RDFGetter:
             RDFGetter.excluded_friends = names
             yield
         finally:
-            RDFGetter.excluded_friends = old_val 
+            RDFGetter.excluded_friends = old_val
 # ---------------------------------------------------
