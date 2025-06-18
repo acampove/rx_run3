@@ -43,8 +43,8 @@ class Data:
             'mva.mva_prc',
             'hop.hop_mass',
             'hop.hop_alpha',
-            'cascade.swp_cascade_mass_swp',
-            'jpsi_misid.swp_jpsi_misid_mass_swp',
+            'swp_cascade.swp_cascade_mass_swp',
+            'swp_jpsi_misid.swp_jpsi_misid_mass_swp',
             'Jpsi_Mass',
             'q2',
                       ]
@@ -383,6 +383,7 @@ def test_mc(sample : str):
     gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
 
+    _print_dotted_branches(rdf)
     _check_branches(rdf, is_ee=True, is_mc=True)
 
     _plot_mva_mass(rdf, f'test_mc/{sample}')
