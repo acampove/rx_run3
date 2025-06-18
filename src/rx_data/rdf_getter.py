@@ -293,38 +293,7 @@ class RDFGetter:
             else:
                 d_data['friends'][sample] = d_section
 
-        self._check_samples(samples=d_data)
-
         return d_data
-    # ---------------------------------------------------
-    def _check_samples(self, samples : dict) -> None:
-        gut.dump_json(samples, '/tmp/debugging/rx_data/samples.yaml')
-
-        l_path_main = samples['samples'][self._main_tree]['files']
-        l_fname_main= [ os.path.basename(path) for path in l_path_main]
-        nmain       = len(l_fname_main)
-
-        fail = False
-        for sample_name, sample in samples['friends'].items():
-            l_path_frnd = sample['files']
-            l_fname_frnd= [ os.path.basename(path) for path in l_path_frnd]
-
-            nfrnd = len(l_path_frnd)
-            if l_fname_main == l_fname_frnd:
-                continue
-
-            fail = True
-            if nfrnd != nmain:
-                log.error(f'{sample_name:<20}{nfrnd}')
-                log.error(f'{"Main"     :<20}{nmain}')
-            else:
-                data = {'main' : l_fname_main, sample_name : l_fname_frnd}
-                pprint.pprint(data)
-
-                log.error('File matching did not work')
-
-        if fail:
-            raise ValueError('Samples check failed')
     # ---------------------------------------------------
     def _add_column(self, rdf: RDataFrame, name : str, definition : str) -> RDataFrame:
         l_columns = [ name.c_str() for name in rdf.GetColumnNames() ]
