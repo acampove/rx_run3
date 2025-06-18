@@ -29,16 +29,21 @@ def _dataframe_to_hash(df : pnd.DataFrame) -> str:
 # ------------------------------------
 def hash_object(obj : Any) -> str:
     '''
-    Function taking a python object and returning 
+    Function taking a python object and returning
     a string representing the hash
     '''
 
     if isinstance(obj, pnd.DataFrame):
-        return _dataframe_to_hash(df=obj)
+        value = _dataframe_to_hash(df=obj)
+        value = value[:10]
+
+        return value
 
     string     = _object_to_string(obj=obj)
     string_bin = string.encode('utf-8')
     hsh        = hashlib.sha256(string_bin)
+    value      = hsh.hexdigest()
+    value      = value[:10]
 
-    return hsh.hexdigest()
+    return value
 # ------------------------------------
