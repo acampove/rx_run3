@@ -236,8 +236,15 @@ class RDFGetter:
 
         return d_section
     # ---------------------------------------------------
-    def _skip_sample(self, sample : str) -> bool:
-        if sample == self._main_tree:
+    def _skip_ftree(self, ftree : str) -> bool:
+        '''
+        Will decide if a friend tree should be skipped
+
+        Parameters
+        ----------------
+        ftree: Name of friend tree, e.g. mva
+        '''
+        if ftree == self._main_tree:
             return False
 
         if not hasattr(RDFGetter, 'friends'):
@@ -246,7 +253,8 @@ class RDFGetter:
         if not isinstance(RDFGetter.friends, list):
             raise ValueError(f'List of friend trees is not a list: {RDFGetter.friends}')
 
-        return sample not in RDFGetter.friends
+        # Skip if friend tree was meant to be skipped explicitly through `friends` attribute
+        return ftree not in RDFGetter.friends
     # ---------------------------------------------------
     def _get_paths_to_conf(self, per_file : bool) -> dict[str,str]:
         '''
