@@ -47,7 +47,6 @@ class RDFGetter:
     max_entries         = -1
     skip_adding_columns = False
 
-    friends             : list[str]
     custom_versions     : dict[str,str] = {}
     main_tree           : str
 
@@ -279,14 +278,15 @@ class RDFGetter:
         if ftree == self._main_tree:
             return False
 
-        if not hasattr(RDFGetter, 'friends'):
-            return False
+        if ftree in RDFGetter.excluded_friends:
+            log.warning(f'Excluding friend tree: {ftree}')
+            return True
 
-        if not isinstance(RDFGetter.friends, list):
-            raise ValueError(f'List of friend trees is not a list: {RDFGetter.friends}')
+        if ftree in self._l_electron_only and 'MuMu' in self._trigger:
+            log.info(f'Excluding friend tree {ftree} for muon trigger {self._trigger}')
+            return True
 
-        # Skip if friend tree was meant to be skipped explicitly through `friends` attribute
-        return ftree not in RDFGetter.friends
+        return False
     # ---------------------------------------------------
     def _get_paths_to_conf(self, per_file : bool) -> dict[str,str]:
         '''
