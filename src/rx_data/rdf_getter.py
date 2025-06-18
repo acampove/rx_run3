@@ -136,6 +136,8 @@ class RDFGetter:
         self._check_multithreading()
         l_config = self._get_yaml_paths()
 
+        os.makedirs(RDFGetter.cache_dir, exist_ok=True)
+
         d_sample = {}
         log.info('Adding samples, found:')
         for path in l_config:
