@@ -686,4 +686,22 @@ class RDFGetter:
             yield
         finally:
             RDFGetter.excluded_friends = old_val
+    # ---------------------------------------------------
+    @contextmanager
+    @staticmethod
+    def custom_friends(d_ver : dict[str,str]):
+        '''
+        It will pick a dictionary between:
+
+        key: Friend tree names, e.g. mva
+        val: Versions, e.g. v5
+
+        and override the version used for this friend tree
+        '''
+        old_val = RDFGetter.custom_versions
+        try:
+            RDFGetter.custom_versions = d_ver
+            yield
+        finally:
+            RDFGetter.custom_versions = old_val
 # ---------------------------------------------------
