@@ -19,7 +19,7 @@ class Data:
     '''
     Class used to share attributes
     '''
-    out_dir = '/tmp/rx_data/path_splitter'
+    out_dir = '/tmp/tests/rx_data/path_splitter'
 # ----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
