@@ -112,15 +112,25 @@ class RDFGetter:
 
         return cfg
     # ---------------------------------------------------
-    def _skip_path(self, file_name : str) -> bool:
-        friend_name = file_name.replace('.yaml', '')
+    def _skip_path(self, ftree : str) -> bool:
+        '''
+        This method will decide if a friend tree (e.g. mva) should be picked.
 
-        if file_name in self._l_electron_only and 'MuMu' in self._trigger:
-            log.info(f'Excluding friend tree {friend_name} for muon trigger {self._trigger}')
+        Parameters
+        ------------------
+        ftree : Friend tree, e.g. mva
+
+        Returns
+        ------------------
+        True or False
+        '''
+
+        if ftree in self._l_electron_only and 'MuMu' in self._trigger:
+            log.info(f'Excluding friend tree {ftree} for muon trigger {self._trigger}')
             return True
 
-        if friend_name in RDFGetter.excluded_friends:
-            log.info(f'Excluding friend tree: {friend_name}')
+        if ftree in RDFGetter.excluded_friends:
+            log.info(f'Excluding friend tree: {ftree}')
             return True
 
         return False
