@@ -132,13 +132,7 @@ class RDFGetter:
         If no samples found, will raise FileNotFoundError
         '''
         self._check_multithreading()
-
-        data_dir     = os.environ['ANADIR']
-        cfg_wildcard = f'{data_dir}/Data/samples/*.yaml'
-        l_config     = glob.glob(cfg_wildcard)
-        npath        = len(l_config)
-        if npath == 0:
-            raise FileNotFoundError(f'No files found in: {cfg_wildcard}')
+        l_config = self._get_yaml_paths()
 
         d_sample = {}
         log.info('Adding samples, found:')
