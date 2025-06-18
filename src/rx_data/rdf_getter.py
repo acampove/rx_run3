@@ -182,18 +182,20 @@ class RDFGetter:
     def _get_trigger_paths(
             self,
             sample    : str,
+            ftree     : str,
             d_trigger : dict[str,list[str]]) -> list[str]:
         '''
         Parameters
         ----------------
         d_trigger : Dictionary mapping HLT2 trigger names to lists of ROOT files
         sample    : Name of sample, e.g Bu_Kp...
+        ftree     : Name of friend tree, e.g. mva
         '''
         if self._trigger in d_trigger:
             return d_trigger[self._trigger]
 
         if not self._trigger.endswith('_ext'):
-            raise ValueError(f'Invalid trigger name {self._trigger} for sample {sample}')
+            raise ValueError(f'Invalid trigger name {self._trigger} for sample {sample} and friend tree {ftree}')
 
         # TODO: When misid trigger be processed also for MC, this has to be updated
         if not self._sample.startswith('DATA_24_'):
@@ -242,6 +244,7 @@ class RDFGetter:
                 d_trigger     = d_data[sample]
                 l_path_sample = self._get_trigger_paths(
                         d_trigger= d_trigger,
+                        ftree    = ftree,
                         sample   = sample)
             except KeyError as exc:
                 raise KeyError(f'For friend tree {ftree}, cannot access {yaml_path}:{sample}/{self._trigger}') from exc
