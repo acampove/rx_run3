@@ -275,6 +275,9 @@ class RDFGetter:
         ----------------
         ftree: Name of friend tree, e.g. mva
         '''
+        if ftree == 'not_used': # This is the directory where old samples will go
+            return True
+
         if ftree == self._main_tree:
             return False
 
