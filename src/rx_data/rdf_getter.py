@@ -6,7 +6,6 @@ import os
 import glob
 import json
 import copy
-import pprint
 import hashlib
 import fnmatch
 from typing              import Union
@@ -16,6 +15,7 @@ import yaml
 import dmu.generic.utilities as gut
 
 from ROOT                  import RDF, RDataFrame, GetThreadPoolSize
+from dmu.generic           import version_management as vmn
 from dmu.generic           import hashing
 from dmu.logging.log_store import LogStore
 from rx_data.path_splitter import PathSplitter
@@ -133,6 +133,7 @@ class RDFGetter:
 
         If no samples found, will raise FileNotFoundError
         '''
+        os.makedirs(RDFGetter.cache_dir, exist_ok=True)
         self._check_multithreading()
         l_config = self._get_yaml_paths()
 
