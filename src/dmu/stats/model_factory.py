@@ -94,8 +94,8 @@ class ModelFactory:
                  l_pdf    : list[str],
                  l_shared : list[str],
                  l_float  : list[str],
-                 d_fix    : dict[str:float] = None,
-                 d_rep    : dict[str:str]   = None):
+                 d_fix    : None | dict[str,float] = None,
+                 d_rep    : None | dict[str,str]   = None):
         '''
         preffix:  used to identify PDF, will be used to name every parameter
         obs:      zfit obserbable
