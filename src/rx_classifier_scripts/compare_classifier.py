@@ -18,6 +18,7 @@ from dmu.logging.log_store import LogStore
 from dmu.generic           import utilities as gut
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
+from rx_classifier         import utilities as cut
 
 log=LogStore.add_logger('rx_classifier:compare_classifier')
 # -------------------------------
@@ -115,6 +116,9 @@ def _get_rdf(cfg : dict) -> RDataFrame:
     with RDFGetter.custom_friends(versions=d_vers):
         gtr  = RDFGetter(sample=name, trigger=trig)
         rdf  = gtr.get_rdf()
+
+    if 'MuMu' in trig:
+        rdf = cut.add_muon_columns(rdf=rdf)
 
     rdf  = _apply_selection(rdf, cfg)
     if Data.nev is None:
