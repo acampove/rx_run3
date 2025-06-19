@@ -186,6 +186,9 @@ class CVDiagnostics:
         raise NotImplementedError(f'Correlation coefficient {method} not implemented')
     # -------------------------
     def _plot_cutflow(self) -> None:
+        '''
+        Plot the 'mass' column for different values of working point
+        '''
         if 'overlay' not in self._cfg['correlations']['target']:
             log.debug('Not plotting cutflow of target distribution')
             return
