@@ -163,7 +163,7 @@ class TrainMva:
         try:
             d_def = self._cfg['dataset']['samples'][kind]['definitions']
         except KeyError:
-            log.debug('Not found sample definitions for {kind}')
+            log.debug(f'Not found sample definitions for {kind}')
             return rdf
 
         log.info(60 * '-')
@@ -651,6 +651,7 @@ class TrainMva:
         put.df_to_tex(df, f'{val_dir}/hyperparameters.tex')
     # ---------------------------------------------
     def _run_diagnostics(self, models : list[cls], rdf : RDataFrame, name : str) -> None:
+        log.info(f'Running diagnostics for sample {name}')
         if 'diagnostics' not in self._cfg:
             log.warning('Diagnostics section not found, not running diagnostics')
             return
