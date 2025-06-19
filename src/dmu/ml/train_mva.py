@@ -152,7 +152,7 @@ class TrainMva:
 
         return df
     #---------------------------------
-    def _add_columns(
+    def _add_sample_columns(
             self,
             rdf  : RDataFrame,
             kind : str) -> RDataFrame:
@@ -177,13 +177,13 @@ class TrainMva:
         return rdf
     # ---------------------------------------------
     def _preprocess_rdf(self, rdf : RDataFrame, kind : str) -> RDataFrame:
-        rdf = self._add_columns(rdf, kind)
+        rdf = self._add_sample_columns(rdf, kind)
 
         if 'define' not in self._cfg['dataset']:
             log.debug('No definitions found')
             return rdf
 
-        log.debug('Definitions found')
+        log.debug(f'Definitions found for {kind}')
         d_def = self._cfg['dataset']['define']
         for name, expr in d_def.items():
             log.debug(f'{name:<20}{expr}')
