@@ -43,7 +43,7 @@ class Data:
     log_level   : int
     plot_only   : bool
     load_trained: bool
-    cache_dir   = '/tmp/cache/rx_classifier/train_classifier/samples'
+    cache_dir   = '/tmp/rx_classifier/cache/train_classifier/samples'
 #---------------------------------
 def _override_path(path : str) -> str:
     if 'VERSION' not in path:
