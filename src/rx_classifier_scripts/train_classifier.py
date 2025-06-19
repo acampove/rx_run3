@@ -4,8 +4,6 @@ Script in charge of training classifier
 # pylint: disable=import-error
 
 import os
-import re
-import glob
 import argparse
 
 from importlib.resources import files
@@ -126,26 +124,6 @@ def _get_args():
     Data.log_level   = args.log_level
     Data.plot_only   = args.plot_only
     Data.load_trained= args.load_trained
-#---------------------------------
-def _is_ntuple_path(path : str) -> bool:
-    file_name = os.path.basename(path)
-    mtch = re.match(Data.root_regex, file_name)
-
-    return bool(mtch)
-#---------------------------------
-def _file_paths_from_wc(file_wc : str) -> list[str]:
-    l_path = glob.glob(file_wc)
-    if len(l_path) == 0:
-        raise FileNotFoundError(f'Cannot find any file in: {file_wc}')
-
-    l_path = [ path for path in l_path if _is_ntuple_path(path) ]
-    if len(l_path) == 0:
-        raise FileNotFoundError(f'Cannot find any ROOT file with ntuples in: {file_wc}')
-
-    nfile = len(l_path)
-    log.info(f'Found {nfile} files in: {file_wc}')
-
-    return l_path
 #---------------------------------
 def _get_rdf(kind : str) -> RDataFrame:
     '''
