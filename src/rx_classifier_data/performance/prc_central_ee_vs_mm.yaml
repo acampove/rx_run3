@@ -1,11 +1,9 @@
-# Config file used to control
-# 
-# - Which samples are compared
-# - Which models are compared
-# - How to plot the comparisons, colors, etc
-
-samples: &samp
-  signal    :
+# This config compares PRec MVAs v6 and v7.
+# Which were both trained with muon low sideband candidates as background proxies
+# They are tested with muon and electron backgrounds
+# --------------------------------
+ee : &samp_ee
+  signal    : &signal
     name    : Bu_Kee_eq_btosllball05_DPC
     trigger : Hlt2RD_BuToKpEE_MVA
     q2bin   : central
@@ -17,18 +15,38 @@ samples: &samp
     q2bin   : central
     selection :
       bdt   : mva_cmb > 0.6
+mm : &samp_mm
+  signal    :
+    <<: *signal
+  background: 
+    name    : DATA_* 
+    trigger : Hlt2RD_BuToKpMuMu_MVA
+    q2bin   : central
+    selection :
+      bdt   : mva_cmb > 0.6
+# --------------------------------
 plotting:
   title: Performance on central $q^2$ bin
-  minx : 0.5
-  miny : 0.5
+  minx : 0.0
+  miny : 0.0
 cases:
   v6 electron background:
     model  : /home/acampove/external_ssd/mva/prc/v6/central
     color  : blue 
     samples:
-      <<: *samp
+      <<: *samp_ee
   v7 electron background:
-    model  : /home/acampove/external_ssd/mva/cmb/v7p6/central
+    model  : /home/acampove/external_ssd/mva/prc/v7p6/central
     color  : red 
     samples:
-      <<: *samp
+      <<: *samp_ee
+  v6 muon background:
+    model  : /home/acampove/external_ssd/mva/prc/v6/central
+    color  : green 
+    samples:
+      <<: *samp_mm
+  v7 muon background:
+    model  : /home/acampove/external_ssd/mva/prc/v7p6/central
+    color  : orange 
+    samples:
+      <<: *samp_mm
