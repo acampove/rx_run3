@@ -57,8 +57,12 @@ class CVPredict:
         if len(l_col) == 0:
             return rdf
 
+        log.debug(60 * '-')
+        log.debug('Renaming dotted columns')
+        log.debug(60 * '-')
         for col in l_col:
             new = col.replace('.', '_')
+            log.debug('{col:<30}{"->":10}{new:<20}')
             rdf = rdf.Define(new, col)
 
         return rdf
