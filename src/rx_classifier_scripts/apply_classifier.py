@@ -17,6 +17,7 @@ from dmu.ml.cv_predict     import CVPredict
 from dmu.logging.log_store import LogStore
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
+from rx_classifier         import utilities as cut
 
 log = LogStore.add_logger('rx_classifier:apply_classifier')
 #---------------------------------
@@ -71,36 +72,6 @@ def _filter_rdf(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 #---------------------------------
-def _add_muon_columns(rdf : RDataFrame) -> RDataFrame:
-    '''
-    Defines columns in dataframe, needed only for muon channel:
-
-    - Columns with brem correction, that exist in electron channel, but in the muon channel are the same as the default ones
-    '''
-    if 'MuMu' not in Data.trigger:
-        log.debug('Not defining muon columns before prediction for: {Data.trigger}')
-        return rdf
-
-    log.info(f'Defining muon columns before prediction for: {Data.trigger}')
-    l_var = [
-            'B_PT',
-            'Jpsi_PT',
-            'B_DIRA_OWNPV',
-            'Jpsi_DIRA_OWNPV',
-            'L1_PT',
-            'L2_PT',
-            'B_M',
-            ]
-
-    for var in l_var:
-        # The underscore is needed due to:
-        #
-        # - ROOT does not allow for branches with periods
-        # - Periods are replaced with underscore in CVPredict tool anyway.
-        rdf = rdf.Define(f'brem_track_2_{var}_brem_track_2', var)
-
-    return rdf
-#---------------------------------
 def _set_loggers():
     LogStore.set_level('dmu:ml:cv_predict'             , Data.log_level)
     LogStore.set_level('rx_classifier:apply_classifier', Data.log_level)
@@ -140,7 +111,10 @@ def _q2_scores_from_rdf(rdf : RDataFrame, path : str) -> numpy.ndarray:
 
     l_model = [ joblib.load(pkl_path) for pkl_path in l_pkl ]
 
-    rdf     = _add_muon_columns(rdf=rdf)
+    if 'MuMu' in Data.trigger:
+        log.info(f'Defining muon columns before prediction for: {Data.trigger}')
+        rdf = cut.add_muon_columns(rdf=rdf)
+
     cvp     = CVPredict(models=l_model, rdf=rdf)
     arr_prb = cvp.predict()
 
