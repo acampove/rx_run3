@@ -69,7 +69,7 @@ dataset :
         - Bd_Kstee_eq_btosllball05_DPC
         - Bu_Kstee_Kpi0_eq_btosllball05_DPC
         #- Bs_phiee_eq_Ball_DPC
-      trigger: Hlt2RD_BuToKpMuMu_MVA
+      trigger: Hlt2RD_BuToKpEE_MVA
       definitions:
         mass                      : B_M
         log_b_pt                  : TMath::Log(B_PT)
