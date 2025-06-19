@@ -4,6 +4,8 @@ Script in charge of training classifier
 # pylint: disable=import-error
 
 import os
+import glob
+import shutil
 import argparse
 
 from importlib.resources import files
@@ -41,6 +43,7 @@ class Data:
     log_level   : int
     plot_only   : bool
     load_trained: bool
+    cache_dir   = '/tmp/cache/rx_classifier/train_classifier/samples'
 #---------------------------------
 def _override_path(path : str) -> str:
     if 'VERSION' not in path:
@@ -125,6 +128,23 @@ def _get_args():
     Data.plot_only   = args.plot_only
     Data.load_trained= args.load_trained
 #---------------------------------
+def _merge_dataframes(l_rdf : list[RDataFrame]) -> RDataFrame:
+    '''
+    Takes list of dataframes, one for a different sample, after selection
+    '''
+
+    for fpath in glob.glob(f'{Data.cache_dir}/*.root'):
+        shutil.rmtree(fpath)
+
+    for i_rdf, rdf, in enumerate(l_rdf):
+        fpath = f'{Data.cache_dir}/file_{i_rdf:03}.root'
+        log.info(f'Saving temporary file to: {fpath}')
+        rdf.Snapshot('tree', fpath)
+
+    rdf = RDataFrame('tree', f'{Data.cache_dir}/file_*.root')
+
+    return rdf
+#---------------------------------
 def _get_rdf(kind : str) -> RDataFrame:
     '''
     Will load and return ROOT dataframe
@@ -138,8 +158,20 @@ def _get_rdf(kind : str) -> RDataFrame:
     sample  = Data.cfg_dict['dataset']['samples'][kind]['sample']
     trigger = Data.cfg_dict['dataset']['samples'][kind]['trigger']
 
+    if isinstance(sample, str):
+        rdf = _get_sample_rdf(sample=sample, trigger=trigger, kind=kind)
+    elif isinstance(sample, list):
+        l_rdf = [ _get_sample_rdf(sample=sname, trigger=trigger, kind=kind) for sname in sample ]
+        rdf   = _merge_dataframes(l_rdf = l_rdf)
+    else:
+        raise ValueError(f'Unexpected value of sample: {sample}')
+
+    return rdf
+#---------------------------------
+def _get_sample_rdf(sample : str, trigger : str, kind : str) -> RDataFrame:
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
+
     if Data.max_entries > 0:
         log.warning(f'Limiting {kind} dataset to {Data.max_entries} entries')
         rdf = rdf.Range(Data.max_entries)
@@ -219,6 +251,8 @@ def _apply_selection(rdf : RDataFrame, kind : str):
 def _initialize():
     _load_config()
     plt.style.use(mplhep.style.LHCb2)
+
+    os.makedirs(Data.cache_dir, exist_ok=True)
 
     LogStore.set_level('rx_classifier:train_classifier', Data.log_level)
     LogStore.set_level('dmu:ml:train_mva'              , Data.log_level)
