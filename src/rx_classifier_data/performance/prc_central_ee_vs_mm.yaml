@@ -1,6 +1,8 @@
 # This config compares PRec MVAs v6 and v7.
 # Which were both trained with muon low sideband candidates as background proxies
 # They are tested with muon and electron backgrounds
+#
+# This file compares performance with v6 and v7, using electron rare and muon sideband proxies
 # --------------------------------
 ee : &samp_ee
   signal    : &signal
