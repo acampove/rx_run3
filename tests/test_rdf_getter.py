@@ -324,6 +324,30 @@ def _check_ext(rdf : RDataFrame) -> None:
     log.info(f'Analysis: {count_ana}')
     log.info(f'MisID   : {count_mis}')
 # ------------------------------------------------
+def _check_mva_scores(
+        rdf : RDataFrame,
+        ) -> None:
+    '''
+    Checks that the event number and run number are aligned between
+    main tree and MVA tree
+    '''
+    l_branch = [
+            'mva.EVENTNUMBER',
+            'mva.RUNNUMBER',
+            'EVENTNUMBER',
+            'RUNNUMBER']
+
+    data = rdf.AsNumpy(l_branch)
+
+    ev1 = data['mva.EVENTNUMBER']
+    ev2 = data[    'EVENTNUMBER']
+
+    rn1 = data['mva.RUNNUMBER'  ]
+    rn2 = data[    'RUNNUMBER'  ]
+
+    assert numpy.array_equal(ev1, ev2)
+    assert numpy.array_equal(rn1, rn2)
+# ------------------------------------------------
 def _run_default_checks(
     rdf       : RDataFrame,
     test_name : str,
@@ -332,6 +356,8 @@ def _run_default_checks(
 
     _check_branches(rdf, is_ee = 'MuMu' not in trigger, is_mc = False)
     sample = sample.replace('*', 'p')
+
+    _check_mva_scores(rdf=rdf)
 
     _plot_bmass(
             rdf        = rdf,
