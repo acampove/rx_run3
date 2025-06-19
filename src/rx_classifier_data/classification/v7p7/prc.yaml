@@ -204,7 +204,7 @@ plotting:
         labels  : ['$\min(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
         styling :
             linestyle: '-'
-      mass:
+      B_Mass_smr:
         normalized : true
         binning : [3500, 6500, 50]
         yscale  : 'linear'
@@ -236,7 +236,7 @@ diagnostics:
   output      : mva/prc/VERSION/plots/diagnostics
   correlations:
     target :
-      name    : mass
+      name    : B_Mass_smr
       overlay :
         wp:
           - 0.0
@@ -249,10 +249,10 @@ diagnostics:
         saving:
           plt_dir : mva/prc/VERSION/plots/diagnostics
         plots:
-          mass:
+          B_Mass_smr:
             binning    : [4500, 6000, 40]
             yscale     : 'linear'
-            labels     : ['M$(B^+)$', 'Entries']
+            labels     : ['M${}_{corr}(B^+)$', 'Entries']
             normalized : true
             styling :
               linestyle: '-' # By default there is no line, just pointer
