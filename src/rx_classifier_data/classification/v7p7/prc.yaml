@@ -51,33 +51,24 @@ hyper               :
 dataset :
   selection:
     bkg :
-      bdt  : mva_cmb > 0.6
       mass : (1)
     sig :
-      bdt  : mva_cmb > 0.6
       mass : (1)
   samples:
     sig :
       sample : Bu_Kee_eq_btosllball05_DPC
       trigger: Hlt2RD_BuToKpEE_MVA
-      definitions:
-        mass                      : brem_track_2.B_M_brem_track_2
-        log_b_pt                  : TMath::Log(brem_track_2.B_PT_brem_track_2)
-        acos_dira                 : TMath::ACos(brem_track_2.B_DIRA_OWNPV_brem_track_2)
     bkg :
       sample : 
         - Bu_JpsiX_ee_eq_JpsiInAcc
         - Bd_JpsiX_ee_eq_JpsiInAcc
-        #- Bs_JpsiX_ee_eq_JpsiInAcc
         - Bd_Kstee_eq_btosllball05_DPC
         - Bu_Kstee_Kpi0_eq_btosllball05_DPC
-        #- Bs_phiee_eq_Ball_DPC
       trigger: Hlt2RD_BuToKpEE_MVA
-      definitions:
-        mass                      : B_M
-        log_b_pt                  : TMath::Log(B_PT)
-        acos_dira                 : TMath::ACos(B_DIRA_OWNPV)
   define :
+    mass        : B_M_brem_track_2
+    log_b_pt    : TMath::Log(B_PT_brem_track_2)
+    acos_dira   : TMath::ACos(B_DIRA_OWNPV_brem_track_2)
     sqrt_ipchi2 : TMath::Sqrt(B_IPCHI2_OWNPV)
     # ----------
     iso_cc_mom  : B_HEAD_CC_B_ChargedIso_DR2_0p15_CP
