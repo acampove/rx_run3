@@ -38,6 +38,7 @@ def _initialize():
     LogStore.set_level('rx_data:rdf_getter'             , 30)
     LogStore.set_level('rx_selection:selection'         , 30)
     LogStore.set_level('rx_selection:compare_classifier', Data.lvl)
+    LogStore.set_level('dmu:ml:cv_predict'              , Data.lvl)
 
     ana_dir      = os.environ['ANADIR']
     Data.out_dir = f'{ana_dir}/mva/comparison'
