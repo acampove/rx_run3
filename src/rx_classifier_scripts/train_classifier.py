@@ -161,6 +161,7 @@ def _get_rdf(kind : str) -> RDataFrame:
     if isinstance(sample, str):
         rdf = _get_sample_rdf(sample=sample, trigger=trigger, kind=kind)
     elif isinstance(sample, list):
+        log.info(f'Found composed sample: {sample}')
         l_rdf = [ _get_sample_rdf(sample=sname, trigger=trigger, kind=kind) for sname in sample ]
         rdf   = _merge_dataframes(l_rdf = l_rdf)
     else:
