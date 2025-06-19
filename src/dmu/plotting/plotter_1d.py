@@ -178,8 +178,8 @@ class Plotter1D(Plotter):
         d_data = {}
         for name, rdf in self._d_rdf.items():
             try:
-                d_data[name] = rdf.AsNumpy([var])[var]
                 log.debug(f'Plotting: {var}/{name}')
+                d_data[name] = rdf.AsNumpy([var])[var]
             except cppyy.gbl.std.runtime_error as exc:
                 raise ValueError(f'Cannot find variable {var} in category {name}') from exc
 
