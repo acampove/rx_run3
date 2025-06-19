@@ -392,6 +392,8 @@ def test_electron(kind : str, trigger : str):
     '''
     Tests for electron samples
     '''
+    RDFGetter.max_entries = 50_000
+
     if   kind == 'data':
         sample = 'DATA_24_MagDown_24c2'
     elif kind == 'mc' and trigger == 'Hlt2RD_BuToKpEE_MVA':
@@ -407,6 +409,8 @@ def test_electron(kind : str, trigger : str):
             test_name='electron',
             trigger  =trigger,
             sample   =sample)
+
+    RDFGetter.max_entries = 1000
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
