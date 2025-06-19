@@ -40,8 +40,8 @@ class CVPredict:
         self._arr_patch : numpy.ndarray
     # --------------------------------------------
     def _initialize(self):
-        self._rdf       = self._define_columns(self._rdf)
         self._rdf       = self._remove_periods(self._rdf)
+        self._rdf       = self._define_columns(self._rdf)
 
         self._d_nan_rep = self._get_nan_replacements()
     # ----------------------------------
