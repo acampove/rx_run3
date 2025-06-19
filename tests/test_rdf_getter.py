@@ -369,6 +369,28 @@ def test_per_file(kind : str, trigger : str):
         _plot_mva(rdf     , f'{name}_{sample}')
         _plot_hop(rdf     , f'{name}_{sample}')
 # ------------------------------------------------
+@pytest.mark.parametrize('kind'   , ['data', 'mc'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
+def test_electron(kind : str, trigger : str):
+    '''
+    Tests for electron samples
+    '''
+    if   kind == 'data':
+        sample = 'DATA_24_MagDown_24c2'
+    elif kind == 'mc' and trigger == 'Hlt2RD_BuToKpEE_MVA':
+        sample = 'Bu_JpsiK_ee_eq_DPC'
+    else:
+        raise ValueError(f'Invalid kind/trigger: {kind}/{trigger}')
+
+    gtr = RDFGetter(sample=sample, trigger=trigger)
+    rdf = gtr.get_rdf()
+
+    _run_default_checks(
+            rdf      =rdf,
+            test_name='electron',
+            trigger  =trigger,
+            sample   =sample)
+# ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
 def test_data(sample : str, trigger : str):
