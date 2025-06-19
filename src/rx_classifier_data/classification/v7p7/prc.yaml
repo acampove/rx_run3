@@ -62,7 +62,13 @@ dataset :
         log_b_pt                  : TMath::Log(brem_track_2.B_PT_brem_track_2)
         acos_dira                 : TMath::ACos(brem_track_2.B_DIRA_OWNPV_brem_track_2)
     bkg :
-      sample : DATA*
+      sample : 
+        - Bu_JpsiX_ee_eq_JpsiInAcc
+        - Bd_JpsiX_ee_eq_JpsiInAcc
+        #- Bs_JpsiX_ee_eq_JpsiInAcc
+        - Bd_Kstee_eq_btosllball05_DPC
+        - Bu_Kstee_Kpi0_eq_btosllball05_DPC
+        #- Bs_phiee_eq_Ball_DPC
       trigger: Hlt2RD_BuToKpMuMu_MVA
       definitions:
         mass                      : B_M
