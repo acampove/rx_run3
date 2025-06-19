@@ -105,10 +105,17 @@ def _get_rdf(cfg : dict) -> RDataFrame:
     name = cfg['name']
     trig = cfg['trigger']
 
-    gtr  = RDFGetter(sample=name, trigger=trig)
-    rdf  = gtr.get_rdf()
-    rdf  = _apply_selection(rdf, cfg)
+    d_vers = {}
+    if 'mva' in Data.cfg:
+        vers = Data.cfg['mva']
+        log.warning(f'Overriding MVA version with {vers}')
+        d_vers['mva'] = vers
 
+    with RDFGetter.custom_friends(versions=d_vers):
+        gtr  = RDFGetter(sample=name, trigger=trig)
+        rdf  = gtr.get_rdf()
+
+    rdf  = _apply_selection(rdf, cfg)
     if Data.nev is None:
         return rdf
 
