@@ -177,7 +177,7 @@ def _get_sample_rdf(sample : str, trigger : str, kind : str) -> RDataFrame:
         log.warning(f'Limiting {kind} dataset to {Data.max_entries} entries')
         rdf = rdf.Range(Data.max_entries)
 
-    rdf = _apply_selection(rdf, kind)
+    rdf = _apply_selection(rdf, sample, kind)
 
     _save_cutflow(rdf=rdf, kind=kind)
 
@@ -224,7 +224,10 @@ def _get_overriding_selection(kind : str) -> dict[str,str]:
 
     return d_cut
 #---------------------------------
-def _apply_selection(rdf : RDataFrame, kind : str):
+def _apply_selection(
+        rdf    : RDataFrame,
+        sample : str,
+        kind   : str):
     '''
     Will take ROOT dataframe and kind (bkg or sig)
     Will load selection from config
@@ -232,7 +235,6 @@ def _apply_selection(rdf : RDataFrame, kind : str):
     '''
 
     log.info('Applying selection')
-    sample  = Data.cfg_dict['dataset']['samples'][kind]['sample']
     trigger = Data.cfg_dict['dataset']['samples'][kind]['trigger']
 
     d_sel = sel.selection(trigger=trigger, q2bin=Data.q2bin, process=sample)
