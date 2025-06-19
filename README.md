@@ -1,3 +1,5 @@
+[TOC]
+
 # Classifier
 
 This project is meant to be used to make classifiers for the RX analyses
