@@ -67,6 +67,9 @@ class TrainMva:
         self._l_ft_name = self._cfg['training']['features']
         self._pbar      : Optional[tqdm.tqdm]
 
+        self._rdf_sig_org = sig
+        self._rdf_bkg_org = bkg
+
         rdf_bkg = self._preprocess_rdf(rdf=bkg, kind='bkg')
         rdf_sig = self._preprocess_rdf(rdf=sig, kind='sig')
 
@@ -829,8 +832,8 @@ class TrainMva:
                 self._save_model(mod, ifold)
 
         self._check_overtraining()
-        self._run_diagnostics(models = l_mod, rdf = self._rdf_sig, name='Signal'    )
-        self._run_diagnostics(models = l_mod, rdf = self._rdf_bkg, name='Background')
+        self._run_diagnostics(models = l_mod, rdf = self._rdf_sig_org, name='Signal'    )
+        self._run_diagnostics(models = l_mod, rdf = self._rdf_bkg_org, name='Background')
 
         return self._auc
     # ---------------------------------------------
