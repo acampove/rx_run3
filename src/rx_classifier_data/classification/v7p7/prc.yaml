@@ -6,6 +6,7 @@ features:
     - acos_dira
     - log_h_pt
     - min_ll_ipc
+    - hop_mass
     - iso_one_mass
     - iso_one_dchi
     - iso_cc_mom
@@ -19,6 +20,7 @@ features:
     - acos_dira
     - log_h_pt
     - min_ll_ipc
+    - hop_mass
     - iso_one_mass
     - iso_one_dchi
     - iso_cc_mom
@@ -32,6 +34,7 @@ features:
     - acos_dira
     - log_h_pt
     - min_ll_ipc
+    - hop_mass
     - iso_one_mass
     - iso_one_dchi
     - iso_cc_mom
