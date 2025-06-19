@@ -217,21 +217,21 @@ plotting:
         labels  : ['$M(B^+)$', '']
         styling :
             linestyle: '-'
-      hop.hop_mass:
+      hop_mass:
         normalized : true
         binning : [3000, 7000, 60]
         yscale  : 'linear'
         labels  : ['$M_{HOP}(B^+)$', '']
         styling :
             linestyle: '-'
-      cascade.swp_cascade_mass_swp:
+      swp_cascade_mass_swp:
         normalized : true
         binning : [1700, 3000, 60]
         yscale  : 'linear'
         labels  : ['$M(K,\ell_{\to\pi})$', '']
         styling :
             linestyle: '-'
-      jpsi_misid.swp_jpsi_misid_mass_swp:
+      swp_jpsi_misid_mass_swp:
         normalized : true
         binning : [2000, 4000, 60]
         yscale  : 'linear'
