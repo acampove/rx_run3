@@ -140,17 +140,29 @@ def _plot_block(rdf : RDataFrame, name : str) -> None:
     plt.savefig(f'{Data.out_dir}/{name}/block.png')
     plt.close()
 # ------------------------------------------------
-def _plot_bmass(rdf : RDataFrame) -> None:
+def _plot_bmass(
+        rdf         : RDataFrame,
+        is_electron : bool,
+        test_name   : str) -> None:
+    test_dir = f'{Data.out_dir}/{test_name}'
+    os.makedirs(test_dir, exist_ok=True)
+
     minx = 4500
     maxx = 6000
-    mass = 'B_M_brem_track_2'
-    rdf  = rdf.Filter(f'{mass} > {minx} && {mass} < {maxx}')
+    if is_electron:
+        masses = ['B_Mass_smr', 'B_M']
+    else:
+        masses = ['B_M']
 
-    data = rdf.AsNumpy([mass])
+    data = rdf.AsNumpy(masses)
     df   = pnd.DataFrame(data)
-    sr   = df[mass]
 
-    sr.plot.hist(range=[minx, maxx], bins=100, histtype='step')
+    df.plot.hist(range=[minx, maxx], bins=100, histtype='step')
+
+    plt.title(test_name)
+    plt.legend()
+    plt.savefig(f'{test_dir}/bmass.png')
+    plt.close()
 # ------------------------------------------------
 def _plot_q2_track(rdf : RDataFrame, sample : str) -> None:
     test_dir = f'{Data.out_dir}/{sample}'
@@ -320,6 +332,11 @@ def _run_default_checks(
 
     _check_branches(rdf, is_ee = 'MuMu' not in trigger, is_mc = False)
     sample = sample.replace('*', 'p')
+
+    _plot_bmass(
+            rdf        = rdf,
+            is_electron= 'MuMu' not in trigger,
+            test_name  = f'{test_name}_{sample}')
 
     _plot_mva_mass(rdf, f'{test_name}_{sample}')
     _plot_mva(rdf     , f'{test_name}_{sample}')
