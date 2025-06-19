@@ -22,8 +22,8 @@ from dmu.logging.log_store  import LogStore
 
 import tensorflow as tf
 
-from zfit.core.data         import Data       as zdata
-from zfit.core.basepdf      import BasePDF    as zpdf
+from zfit.core.interfaces   import ZfitData   as zdata
+from zfit.core.interfaces   import ZfitPDF    as zpdf
 from zfit.core.parameter    import Parameter  as zpar
 from zfit.result            import FitResult  as zres
 
