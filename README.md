@@ -66,7 +66,7 @@ The output of this training are, for each fold:
 In order to compare the performances use:
 
 ```bash
-compare_performance -c cmb_high -n 10000
+compare_classifier -c cmb_high -n 10000
 ```
 
 where:
