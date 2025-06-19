@@ -4,7 +4,7 @@ Script in charge of training classifier
 # pylint: disable=import-error
 
 import os
-import glob
+import random
 import shutil
 import argparse
 
@@ -43,7 +43,9 @@ class Data:
     log_level   : int
     plot_only   : bool
     load_trained: bool
-    cache_dir   = '/tmp/rx_classifier/cache/train_classifier/samples'
+
+    ran_val     = random.randint(10**9, 10**10 - 1)
+    cache_dir   = f'/tmp/rx_classifier/{ran_val}/cache/train_classifier/samples'
 #---------------------------------
 def _override_path(path : str) -> str:
     if 'VERSION' not in path:
