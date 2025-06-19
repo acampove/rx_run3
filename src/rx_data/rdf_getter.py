@@ -50,7 +50,7 @@ class RDFGetter:
     custom_versions     : dict[str,str] = {}
     main_tree           : str
 
-    cache_dir        = '/tmp/cache/rx_data/rdf_getter' # Here is where all the temporary output will go
+    cache_dir        = '/tmp/rx_data/cache/rdf_getter' # Here is where all the temporary output will go
     excluded_friends = []
     JPSI_PDG_MASS    = 3096.90 # https://pdg.lbl.gov/2018/listings/rpp2018-list-J-psi-1S.pdf
     BPLS_PDG_MASS    = 5279.34 # https://pdg.lbl.gov/2022/tables/rpp2022-tab-mesons-bottom.pdf
