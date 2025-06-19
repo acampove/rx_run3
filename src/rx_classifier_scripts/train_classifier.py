@@ -259,6 +259,7 @@ def _initialize():
 
     LogStore.set_level('rx_classifier:train_classifier', Data.log_level)
     LogStore.set_level('dmu:ml:train_mva'              , Data.log_level)
+    LogStore.set_level('dmu:ml:Plotter1D'              , Data.log_level)
 #---------------------------------
 def main():
     '''
