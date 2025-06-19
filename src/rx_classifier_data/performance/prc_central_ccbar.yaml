@@ -25,6 +25,7 @@ bd : &samp_bd
     selection :
       bdt   : mva_cmb > 0.6
 # --------------------------------
+mva: v5
 plotting:
   title: Performance on central $q^2$ bin
   minx : 0.0
