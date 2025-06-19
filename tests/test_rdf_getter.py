@@ -438,25 +438,28 @@ def test_electron(kind : str, trigger : str):
 
     RDFGetter.max_entries = 1000
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('sample' , ['DATA_24_*'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
 def test_data(sample : str, trigger : str):
     '''
     Test of getter class in data
     '''
+
+    RDFGetter.max_entries = 10_000
+
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
     rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
     rep.Print()
 
-    _check_branches(rdf, is_ee = 'MuMu' not in trigger, is_mc = False)
+    _run_default_checks(
+            rdf      =rdf,
+            sample   =sample,
+            trigger  =trigger,
+            test_name=f'data_{sample}_{trigger}')
 
-    sample = sample.replace('*', 'p')
-
-    _plot_mva_mass(rdf, sample)
-    _plot_mva(rdf, sample)
-    _plot_hop(rdf, sample)
+    RDFGetter.max_entries = 1000
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC'])
 def test_mc(sample : str):
