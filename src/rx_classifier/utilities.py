@@ -13,6 +13,8 @@ def add_muon_columns(rdf : RDataFrame) -> RDataFrame:
     - Columns with brem correction, that exist in electron channel, but in the muon channel are the same as the default ones
     '''
 
+    log.info('Defining muon sample columns')
+
     l_var = [
             'B_PT',
             'Jpsi_PT',
