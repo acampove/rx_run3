@@ -98,7 +98,7 @@ class CVPredict:
             log.info('No definitions found')
             return self._rdf
 
-        fail = False
+        dexc = None
         log.debug(60 * '-')
         log.info('Defining columns in RDF before evaluating classifier')
         log.debug(60 * '-')
@@ -108,12 +108,12 @@ class CVPredict:
             log.debug(f'{name:<20}{"<---":20}{expr:<100}')
             try:
                 rdf = rdf.Define(name, expr)
-            except TypeError:
+            except TypeError as exc:
                 log.error(f'Cannot define {name}={expr}')
-                fail = True
+                dexc = exc
 
-        if fail:
-            raise TypeError('Could not define at least one column')
+        if dexc is not None:
+            raise TypeError('Could not define at least one column') from dexc
 
         return rdf
     # --------------------------------------------
