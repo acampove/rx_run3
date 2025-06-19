@@ -2,7 +2,7 @@
 # Which were both trained with muon low sideband candidates as background proxies
 # They are tested with muon and electron backgrounds
 # --------------------------------
-ee : &samp_ee
+bp : &samp_bp
   signal    : &signal
     name    : Bu_Kee_eq_btosllball05_DPC
     trigger : Hlt2RD_BuToKpEE_MVA
@@ -15,12 +15,12 @@ ee : &samp_ee
     q2bin   : central
     selection :
       bdt   : mva_cmb > 0.6
-mm : &samp_mm
+bd : &samp_bd
   signal    :
     <<: *signal
   background: 
-    name    : DATA_* 
-    trigger : Hlt2RD_BuToKpMuMu_MVA
+    name    : Bd_JpsiX_ee_eq_JpsiInAcc 
+    trigger : Hlt2RD_BuToKpEE_MVA
     q2bin   : central
     selection :
       bdt   : mva_cmb > 0.6
@@ -30,23 +30,23 @@ plotting:
   minx : 0.0
   miny : 0.0
 cases:
-  v6 electron background:
+  v6 on $B^+$ background:
     model  : /home/acampove/external_ssd/mva/prc/v6/central
     color  : blue 
     samples:
-      <<: *samp_ee
-  v7 electron background:
+      <<: *samp_bp
+  v7 on $B^+$ background:
     model  : /home/acampove/external_ssd/mva/prc/v7p6/central
     color  : red 
     samples:
-      <<: *samp_ee
-  v6 muon background:
+      <<: *samp_bp
+  v6 on $B_d$ background:
     model  : /home/acampove/external_ssd/mva/prc/v6/central
     color  : green 
     samples:
-      <<: *samp_mm
-  v7 muon background:
+      <<: *samp_bd
+  v7 on $B_d$ background:
     model  : /home/acampove/external_ssd/mva/prc/v7p6/central
     color  : orange 
     samples:
-      <<: *samp_mm
+      <<: *samp_bd
