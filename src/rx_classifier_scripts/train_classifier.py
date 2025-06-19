@@ -204,7 +204,7 @@ def _save_selection(cuts : dict[str,str], kind : str) -> None:
     out_dir = f'{out_dir}/input'
     os.makedirs(out_dir, exist_ok=True)
 
-    gut.dump_json(cuts, f'{out_dir}/selection_{kind}.yaml') 
+    gut.dump_json(cuts, f'{out_dir}/selection_{kind}.yaml')
 #---------------------------------
 def _get_overriding_selection(kind : str) -> dict[str,str]:
     '''
