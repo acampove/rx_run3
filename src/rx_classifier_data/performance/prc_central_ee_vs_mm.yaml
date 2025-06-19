@@ -1,0 +1,34 @@
+# Config file used to control
+# 
+# - Which samples are compared
+# - Which models are compared
+# - How to plot the comparisons, colors, etc
+
+samples: &samp
+  signal    :
+    name    : Bu_Kee_eq_btosllball05_DPC
+    trigger : Hlt2RD_BuToKpEE_MVA
+    q2bin   : central
+    selection :
+      bdt   : mva_cmb > 0.6
+  background: 
+    name    : Bu_JpsiX_ee_eq_JpsiInAcc 
+    trigger : Hlt2RD_BuToKpEE_MVA
+    q2bin   : central
+    selection :
+      bdt   : mva_cmb > 0.6
+plotting:
+  title: Performance on central $q^2$ bin
+  minx : 0.5
+  miny : 0.5
+cases:
+  v6 electron background:
+    model  : /home/acampove/external_ssd/mva/prc/v6/central
+    color  : blue 
+    samples:
+      <<: *samp
+  v7 electron background:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p6/central
+    color  : red 
+    samples:
+      <<: *samp
