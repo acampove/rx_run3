@@ -291,7 +291,10 @@ class FitComponent:
             return name
 
         if self._yield_value > self._min_isj_entries:
+            log.info(f'Yield above threshold ({self._yield_value} > {self._min_isj_entries}) picking ISJ')
             return 'ISJ'
+
+        log.info(f'Yield below threshold ({self._yield_value} < {self._min_isj_entries}) picking FFT')
 
         return 'FFT'
     # --------------------
