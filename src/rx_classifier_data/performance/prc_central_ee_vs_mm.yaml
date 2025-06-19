@@ -34,16 +34,6 @@ plotting:
   minx : 0.0
   miny : 0.0
 cases:
-  v6 on $B^+$ rare electron background:
-    model  : /home/acampove/external_ssd/mva/prc/v6/central
-    color  : blue 
-    samples:
-      <<: *samp_ee
-  v7 on $B^+$ rare electron background:
-    model  : /home/acampove/external_ssd/mva/prc/v7p6/central
-    color  : red 
-    samples:
-      <<: *samp_ee
   v6 on muon low SB background:
     model  : /home/acampove/external_ssd/mva/prc/v6/central
     color  : green 
@@ -54,3 +44,13 @@ cases:
     color  : orange 
     samples:
       <<: *samp_mm
+  v6 on $B^+$ rare electron background:
+    model  : /home/acampove/external_ssd/mva/prc/v6/central
+    color  : blue 
+    samples:
+      <<: *samp_ee
+  v7 on $B^+$ rare electron background:
+    model  : /home/acampove/external_ssd/mva/prc/v7p6/central
+    color  : red 
+    samples:
+      <<: *samp_ee
