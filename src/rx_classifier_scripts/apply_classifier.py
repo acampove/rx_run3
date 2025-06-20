@@ -212,6 +212,35 @@ def _get_out_path(input_path : str) -> str:
 
     return f'{out_dir}/{name}'
 #---------------------------------
+def _run(inp_path : str, rdf : RDataFrame) -> None:
+    '''
+    Takes ROOT dataframe and path associated to file
+
+    Runs preliminary checks with early returns
+    Calls prediction and saves file
+    '''
+    out_path = _get_out_path(inp_path)
+
+    if os.path.isfile(out_path):
+        log.info('Output already found, skipping')
+        return
+
+    log.info(f'Producing: {out_path}')
+    nentries = rdf.Count().GetValue()
+    if nentries == 0:
+        log.warning('Input datset is empty, saving empty dataframe')
+        rdf = RDataFrame(0)
+        rdf = rdf.Define('fake', '1')
+        rdf.Snapshot('DecayTree', out_path)
+        return
+
+    log.info('Applying classifier')
+    rdf = _apply_classifier(rdf)
+
+    if not Data.dry_run:
+        log.info(f'Saving to: {out_path}')
+        rdf.Snapshot('DecayTree', out_path)
+#---------------------------------
 def main():
     '''
     Script starts here
@@ -225,30 +254,9 @@ def main():
         d_rdf = gtr.get_rdf(per_file=True)
 
     for inp_path, rdf in d_rdf.items():
-        rdf      = _filter_rdf(rdf)
-        out_path = _get_out_path(inp_path)
-
-        if os.path.isfile(out_path):
-            log.info('Output already found, skipping')
-            return
-
-        log.info(f'Producing: {out_path}')
-        nentries = rdf.Count().GetValue()
-        if nentries == 0:
-            log.warning('Input datset is empty, saving empty dataframe')
-            rdf = RDataFrame(0)
-            rdf = rdf.Define('fake', '1')
-            rdf.Snapshot('DecayTree', out_path)
-            continue
-
-        log.info('Applying classifier')
-        rdf = _apply_classifier(rdf)
-
-        if not Data.dry_run:
-            log.info(f'Saving to: {out_path}')
-            rdf.Snapshot('DecayTree', out_path)
-
-    log.info('')
+        rdf = _filter_rdf(rdf)
+        rdf = _add_columns(rdf)
+        _run(inp_path=inp_path, rdf=rdf)
 #---------------------------------
 if __name__ == '__main__':
     main()
