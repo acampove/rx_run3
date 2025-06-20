@@ -151,10 +151,10 @@ class CVPredict:
         d_data= self._rdf.AsNumpy(l_ft)
         df_ft = pnd.DataFrame(d_data)
         df_ft = self._replace_nans(df_ft)
-        df_ft = ut.patch_and_tag(df_ft)
-
-        if self._patch_name in df_ft.attrs:
-            self._arr_patch = df_ft.attrs[self._patch_name]
+        df_ft = self._tag_skipped(df_ft=df_ft)
+        df_ft = ut.tag_nans(
+                df      = df_ft,
+                indexes = self._index_skip)
 
         nfeat = len(l_ft)
         log.info(f'Found {nfeat} features')
