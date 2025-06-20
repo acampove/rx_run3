@@ -80,7 +80,7 @@ def _add_columns(rdf : RDataFrame) -> RDataFrame:
         log.info('Processing entire dataframe')
         return rdf
 
-    log.info('Processing only entries that pass selection, except [q2, btd, mass]')
+    log.info('Processing only entries that pass selection, except [q2, btd, pid_l, mass]')
     d_sel = sel.selection(
             trigger=Data.trigger,
             q2bin  = 'jpsi', # Does not matter, will remove q2 cut
