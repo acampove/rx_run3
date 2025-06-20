@@ -285,7 +285,7 @@ class CVPredict:
 
         arr_keep = None
         arr_skip = None
-        if self._index_skip in df_ft.attrs[self._index_skip]:
+        if self._index_skip in df_ft.attrs:
             arr_skip = df_ft.attrs[self._index_skip]
             df_ft    = df_ft.drop(arr_skip)
             arr_keep = df_ft.index.to_numpy()
