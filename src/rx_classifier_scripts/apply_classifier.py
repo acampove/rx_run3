@@ -92,6 +92,7 @@ def _add_columns(rdf : RDataFrame) -> RDataFrame:
     # except for the cuts below
     del d_sel['q2']
     del d_sel['bdt']
+    del d_sel['pid_l'] # Need to remove the PID on electrons to allow MisID lines
     del d_sel['mass']
 
     l_expr   = list(d_sel.values())
