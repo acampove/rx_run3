@@ -40,7 +40,7 @@ class CVClassifier(GradientBoostingClassifier):
         self._l_ft_name = None
     # ----------------------------------
     @property
-    def features(self):
+    def features(self) -> list[str]:
         '''
         Returns list of feature names used in training dataset
         '''

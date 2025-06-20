@@ -140,7 +140,7 @@ class CVPredict:
 
         return df
     # --------------------------------------------
-    def _get_df(self):
+    def _get_df(self) -> pnd.DataFrame:
         '''
         Will make ROOT rdf into dataframe and return it
         '''
