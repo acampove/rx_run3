@@ -21,18 +21,14 @@ class CVPredict:
     '''
     def __init__(
             self,
-            rdf      : RDataFrame,
-            models   : list[CVClassifier]):
+            rdf    : RDataFrame,
+            models : list[CVClassifier]):
         '''
         Will take a list of CVClassifier models and a ROOT dataframe
 
         rdf   : ROOT dataframe where features will be extracted
         models: List of models, one per fold
         '''
-
-        if not isinstance(models, list):
-            raise ValueError('No list of models passed')
-
         self._l_model   = models
         self._rdf       = rdf
         self._d_nan_rep : dict[str,str]
