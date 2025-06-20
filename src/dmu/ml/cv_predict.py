@@ -163,6 +163,24 @@ class CVPredict:
 
         return df_ft
     # --------------------------------------------
+    def _tag_skipped(self, df_ft : pnd.DataFrame) -> pnd.DataFrame:
+        '''
+        Will drop rows with features where column with name _skip_name (currently "_skip_mva_prediction") has values of 1
+        '''
+        if self._skip_index_column not in self._l_column:
+            log.debug(f'Not dropping any rows through: {self._skip_index_column}')
+            return df_ft
+
+        log.info(f'Dropping rows through: {self._skip_index_column}')
+        arr_drop                = self._rdf.AsNumpy([self._skip_index_column])[self._skip_index_column]
+
+        if self._index_skip in df_ft.attrs:
+            raise ValueError(f'Feature dataframe already contains attribute: {self._index_skip}')
+
+        df_ft.attrs[self._index_skip] = numpy.where(arr_drop == 1)[0]
+
+        return df_ft
+    # --------------------------------------------
     def _non_overlapping_hashes(self, model, df_ft):
         '''
         Will return True if hashes of model and data do not overlap
