@@ -6,10 +6,11 @@ import pytest
 
 import numpy
 
-from dmu.logging.log_store import LogStore
-from dmu.ml.cv_predict     import CVPredict
+from ROOT                  import RDataFrame
 
 import dmu.testing.utilities as ut
+from dmu.logging.log_store import LogStore
+from dmu.ml.cv_predict     import CVPredict
 
 log = LogStore.add_logger('dmu:ml:tests:cv_predict')
 # -------------------------------------------------
