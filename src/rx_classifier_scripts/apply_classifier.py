@@ -104,6 +104,7 @@ def _add_columns(rdf : RDataFrame) -> RDataFrame:
 def _set_loggers():
     LogStore.set_level('dmu:ml:cv_predict'             , Data.log_level)
     LogStore.set_level('rx_classifier:apply_classifier', Data.log_level)
+    LogStore.set_level('rx_data:rdf_getter'            , Data.log_level)
 #---------------------------------
 def _get_q2_indexer() -> str:
     '''
