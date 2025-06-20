@@ -50,7 +50,14 @@ def patch_and_tag(
 
     df_pa = df.fillna(value)
 
-    df_pa.attrs['patched_indices'] = numpy.array(l_nan)
+    arr_patch_2 = numpy.array(l_nan)
+    if patch_name in df.attrs:
+        arr_patch_1 = df_pa.attrs[patch_name]
+        arr_patch   = numpy.concatenate((arr_patch_1, arr_patch_2))
+    else:
+        arr_patch   = arr_patch_2
+
+    df_pa.attrs[patch_name] = arr_patch
 
     return df_pa
 # ---------------------------------------------
