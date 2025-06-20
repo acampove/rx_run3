@@ -31,8 +31,12 @@ class CVPredict:
         '''
         self._l_model   = models
         self._rdf       = rdf
+        self._nrows     : int
         self._l_column  : list[str]
         self._d_nan_rep : dict[str,str]
+
+        # Value of score used when no score has been assigned
+        self._dummy_score = -1.0
 
         # name of column in ROOT dataframe where 1s will prevent prediction
         self._skip_index_column = 'skip_mva_prediction'
@@ -43,9 +47,9 @@ class CVPredict:
     def _initialize(self):
         self._rdf       = self._remove_periods(self._rdf)
         self._rdf       = self._define_columns(self._rdf)
-
         self._d_nan_rep = self._get_nan_replacements()
         self._l_column  = [ name.c_str() for name in self._rdf.GetColumnNames() ]
+        self._nrows     = self._rdf.Count().GetValue()
     # ----------------------------------
     def _remove_periods(self, rdf : RDataFrame) -> RDataFrame:
         '''
