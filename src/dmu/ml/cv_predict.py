@@ -90,7 +90,7 @@ class CVPredict:
             # because predicted scores should come from features defined as for the signal.
             d_def_sam = cfg['dataset']['samples'][sig_name]['definitions']
         except KeyError:
-            log.debug('No sample specific definitions were found in: {sig_name}')
+            log.debug(f'No sample specific definitions were found in: {sig_name}')
             return d_def
 
         log.info('Adding sample dependent definitions')
