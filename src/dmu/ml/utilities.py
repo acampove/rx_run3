@@ -16,9 +16,19 @@ log = LogStore.add_logger('dmu:ml:utilities')
 # ---------------------------------------------
 def patch_and_tag(df : pnd.DataFrame, value : float = 0) -> pnd.DataFrame:
     '''
-    Takes pandas dataframe, replaces NaNs with value introduced, by default 0
-    Returns array of indices where the replacement happened
+    Parameters
+    ----------------
+    df   : Pandas dataframe, replaces NaNs with value introduced
+    value: Value to do replacement with, default = 0
+
+    Returns 
+    ----------------
+    Dataframe:
+
+    - After filtering, i.e. with dropped rows.
+    - With array of indices dropped as attribute at `patched_indices`
     '''
+
     l_nan = df.index[df.isna().any(axis=1)].tolist()
     nnan  = len(l_nan)
     if nnan == 0:
