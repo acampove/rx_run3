@@ -143,8 +143,10 @@ def _q2_scores_from_rdf(rdf : RDataFrame, path : str) -> numpy.ndarray:
     l_model = [ joblib.load(pkl_path) for pkl_path in l_pkl ]
 
     if 'MuMu' in Data.trigger:
-        log.info(f'Defining muon columns before prediction for: {Data.trigger}')
+        log.info(f'Defining muon columns before prediction for trigger: {Data.trigger}')
         rdf = cut.add_muon_columns(rdf=rdf)
+    else:
+        log.info(f'Not defining muon columns for trigger: {Data.trigger}')
 
     cvp     = CVPredict(models=l_model, rdf=rdf)
     arr_prb = cvp.predict()
