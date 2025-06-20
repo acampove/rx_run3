@@ -14,17 +14,15 @@ log = LogStore.add_logger('dmu:ml:utilities')
 # ---------------------------------------------
 # Patch dataframe with features
 # ---------------------------------------------
-def patch_and_tag(
-        df         : pnd.DataFrame,
-        patch_name : str,
-        value      : float = 0) -> pnd.DataFrame:
+def tag_nans(
+        df      : pnd.DataFrame,
+        indexes : str) -> pnd.DataFrame:
     '''
 
     Parameters
     ----------------
-    df        : Pandas dataframe
-    patch_name: Name of dataframe attribute where array of indices of NaN rows should go
-    value     : Value to do replacement with, default = 0
+    df      : Pandas dataframe
+    indexes : Name of dataframe attribute where array of indices of NaN rows should go
 
     Returns
     ----------------
@@ -48,18 +46,17 @@ def patch_and_tag(
     log.info(df_nan_frq)
     log.warning(f'Attaching array with NaN {nnan} indexes and removing NaNs from dataframe')
 
-    df_pa = df.fillna(value)
-
-    arr_patch_2 = numpy.array(l_nan)
-    if patch_name in df.attrs:
-        arr_patch_1 = df_pa.attrs[patch_name]
-        arr_patch   = numpy.concatenate((arr_patch_1, arr_patch_2))
+    arr_index_2 = numpy.array(l_nan)
+    if indexes in df.attrs:
+        arr_index_1 = df.attrs[indexes]
+        arr_index   = numpy.concatenate((arr_index_1, arr_index_2))
+        arr_index   = numpy.unique(arr_index)
     else:
-        arr_patch   = arr_patch_2
+        arr_index   = arr_index_2
 
-    df_pa.attrs[patch_name] = arr_patch
+    df.attrs[indexes] = arr_index
 
-    return df_pa
+    return df
 # ---------------------------------------------
 # Cleanup of dataframe with features
 # ---------------------------------------------
