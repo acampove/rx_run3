@@ -128,19 +128,23 @@ class CVPredict:
 
         return cfg['dataset']['nan']
     # --------------------------------------------
-    def _replace_nans(self, df : pnd.DataFrame) -> pnd.DataFrame:
+    def _replace_nans(self, df_ft : pnd.DataFrame) -> pnd.DataFrame:
+        '''
+        Funtion replaces nans in user specified columns with user specified values
+        These NaNs are expected
+        '''
         if len(self._d_nan_rep) == 0:
             log.debug('Not doing any NaN replacement')
-            return df
+            return df_ft
 
         log.info(60 * '-')
         log.info('Doing NaN replacements')
         log.info(60 * '-')
         for var, val in self._d_nan_rep.items():
             log.info(f'{var:<20}{"--->":20}{val:<20.3f}')
-            df[var] = df[var].fillna(val)
+            df_ft[var] = df_ft[var].fillna(val)
 
-        return df
+        return df_ft
     # --------------------------------------------
     def _get_df(self) -> pnd.DataFrame:
         '''
