@@ -283,15 +283,22 @@ class CVPredict:
         df_ft = self._get_df()
         model = self._l_model[0]
 
-        if self._non_overlapping_hashes(model, df_ft):
-            log.debug('No intersecting hashes found between model and data')
-            arr_prb = model.predict_proba(df_ft)
-        else:
-            log.info('Intersecting hashes found between model and data')
-            arr_prb = self._predict_with_overlap(df_ft)
+        arr_keep = None
+        arr_skip = None
+        if self._index_skip in df_ft.attrs[self._index_skip]:
+            arr_skip = df_ft.attrs[self._index_skip]
+            df_ft    = df_ft.drop(arr_skip)
+            arr_keep = df_ft.index.to_numpy()
 
-        arr_prb = self._patch_probabilities(arr_prb)
-        arr_prb = arr_prb.T[1]
+        arr_sig_prb  = self._predict_signal_probabilities(
+                model = model,
+                df_ft = df_ft)
 
-        return arr_prb
+        if arr_skip is None:
+            return arr_sig_prb
+
+        arr_all_sig_prb           = numpy.full(self._nrows, self._dummy_score)
+        arr_all_sig_prb[arr_keep] = arr_sig_prb
+
+        return arr_all_sig_prb
 # ---------------------------------------
