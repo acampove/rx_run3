@@ -42,27 +42,20 @@ def test_cleanup():
 
     assert df_ou.equals(df_ts)
 # ----------------------------------------
-def test_patch_and_tag():
+def test_tag_nans():
     '''
-    Will test patch_and_tag
+    Will test tag_nans utility
     '''
-    patch = 123.
-
-    d_data_in = {
+    indexes = 'nan_indexes'
+    d_data  = {
             'a' : [1., 2.,  numpy.nan, 4.],
             'b' : [5., 6.,         7., 8.],
             }
 
-    d_data_ot = {
-            'a' : [1., 2.,      patch, 4.],
-            'b' : [5., 6.,         7., 8.],
-            }
+    df_in = pnd.DataFrame(d_data)
+    df_tg = ut.tag_nans(df=df_in, indexes=indexes)
 
-    df_in = pnd.DataFrame(d_data_in)
-    df_ot = pnd.DataFrame(d_data_ot)
-    df_pa = ut.patch_and_tag(df_in, value=patch)
-
-    arr_index = df_pa.attrs['patched_indices']
+    arr_index = df_tg.attrs[indexes]
 
     assert arr_index.tolist() == [2]
-    assert df_pa.equals(df_ot)
+    assert df_tg.equals(df_in)
