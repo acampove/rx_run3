@@ -810,6 +810,18 @@ If a sample exists, that was used in the training of _every_ model, no model can
 During training, the configuration will be stored in the model. Therefore, variable definitions can be picked up for evaluation
 from that configuration and the user does not need to define extra columns.
 
+### Further optimization
+
+If not all the entries of the ROOT dataframe are needed for the prediction (e.g. some entries won't be used anyway) define
+a column as:
+
+```python
+rdf = rdf.Define('skip_mva_prediction', 'mass < 3000')
+```
+
+and the predictor will assign scores of `-1` to all the entries with `mass < 3000`.
+This should speed up the prediction and reduce resource consumption.
+
 ### Caveats
 
 When evaluating the model with real data, problems might occur, we deal with them as follows:
