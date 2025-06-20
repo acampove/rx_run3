@@ -29,6 +29,7 @@ class Data:
     max_path    = 700
     ana_dir     = os.environ['ANADIR']
     version     : str
+    process_all : int
     force_new   : bool
     sample      : str
     trigger     : str
@@ -46,6 +47,7 @@ def _get_args():
     parser.add_argument('-s', '--sample'     , type=str, help='Sample name'                                 , required=True)
     parser.add_argument('-t', '--trigger'    , type=str, help='HLT trigger'                                 , required=True)
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
+    parser.add_argument('-a', '--process_all', type=int, help='If 1, will process all, if 0 (default) will skip candidates that fail selection', default=0, choices=[0, 1])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
     parser.add_argument('-d', '--dry_run'    ,           help='Dry run', action='store_true')
     parser.add_argument('-f', '--force_new'  ,           help='Will remake outputs, even if they already exist', action='store_true')
@@ -55,6 +57,7 @@ def _get_args():
     Data.sample      = args.sample
     Data.trigger     = args.trigger
     Data.log_level   = args.log_level
+    Data.process_all = args.process_all
     Data.max_entries = args.max_entries
     Data.dry_run     = args.dry_run
     Data.force_new   = args.force_new
@@ -69,6 +72,32 @@ def _filter_rdf(rdf : RDataFrame) -> RDataFrame:
 
     nentries = rdf.Count().GetValue()
     log.info(f'Using {nentries} entries for {Data.sample}/{Data.trigger}')
+
+    return rdf
+#---------------------------------
+def _add_columns(rdf : RDataFrame) -> RDataFrame:
+    if Data.process_all:
+        log.info('Processing entire dataframe')
+        return rdf
+
+    log.info('Processing only entries that pass selection, except [q2, btd, mass]')
+    d_sel = sel.selection(
+            trigger=Data.trigger,
+            q2bin  = 'jpsi', # Does not matter, will remove q2 cut
+            process=Data.sample)
+
+    log.info('Adding prediction skipping column')
+
+    # We need MVA scores only for the candidates passing full selection
+    # except for the cuts below
+    del d_sel['q2']
+    del d_sel['bdt']
+    del d_sel['mass']
+
+    l_expr   = list(d_sel.values())
+    l_expr   = [ f'({expr})' for expr in l_expr ]
+    full_cut = ' && '.join(l_expr)
+    rdf      = rdf.Define('skip_mva_prediction', f'({full_cut}) == 0')
 
     return rdf
 #---------------------------------
