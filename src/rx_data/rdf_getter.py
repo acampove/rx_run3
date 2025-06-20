@@ -6,6 +6,7 @@ import os
 import glob
 import json
 import copy
+import pprint
 import hashlib
 import fnmatch
 from typing              import Union
@@ -610,7 +611,12 @@ class RDFGetter:
         key  : As the ROOT file path in the main category
         Value: The path to the JSON config file
         '''
-        l_file = data['samples'][main]['files']
+        try:
+            l_file = data['samples'][main]['files']
+        except KeyError as exc:
+            pprint.pprint(data)
+            raise KeyError('Cannot access list of files from JSON config needed by FromSpec') from exc
+
         nfiles = len(l_file)
 
         d_config = {}
