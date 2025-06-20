@@ -135,6 +135,9 @@ class RDFGetter:
         data_dir     = os.environ['ANADIR']
         ftree_wc     = f'{data_dir}/Data/*'
         l_ftree_dir  = glob.glob(ftree_wc)
+        if len(l_ftree_dir) == 0:
+            raise ValueError(f'No directories with samples found in: {ftree_wc}')
+
         d_ftree_dir  = { os.path.basename(ftree_dir) : ftree_dir for ftree_dir in l_ftree_dir }
         d_ftree_dir  = self._filter_samples(d_ftree_dir=d_ftree_dir)
 
