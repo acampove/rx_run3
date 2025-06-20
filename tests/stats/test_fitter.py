@@ -203,4 +203,6 @@ def test_binning(nbins : int):
     obj = Fitter(pdf, Data.arr)
     res = obj.fit(cfg)
 
+    log.info(res)
+
     assert res.valid
