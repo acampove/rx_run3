@@ -34,14 +34,11 @@ class CVPredict:
         self._l_column  : list[str]
         self._d_nan_rep : dict[str,str]
 
-        # name of column where 1s will prevent prediction
-        self._skip_name = 'skip_mva_prediction'
+        # name of column in ROOT dataframe where 1s will prevent prediction
+        self._skip_index_column = 'skip_mva_prediction'
 
-        # name of features dataframe attribute where array of patched indices is stored
-        self._index_skip= 'skip_mva_prediction'
-
-        # array with indexes to be skipped
-        self._arr_index_skip : numpy.ndarray
+        # name of attribute of features dataframe where array of indices to skip are stored
+        self._index_skip  = 'skip_mva_prediction'
     # --------------------------------------------
     def _initialize(self):
         self._rdf       = self._remove_periods(self._rdf)
