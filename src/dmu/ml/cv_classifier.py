@@ -37,7 +37,7 @@ class CVClassifier(GradientBoostingClassifier):
 
         self._s_hash    = set()
         self._data      = {}
-        self._l_ft_name = None
+        self._l_ft_name : list[str]
     # ----------------------------------
     @property
     def features(self) -> list[str]:
