@@ -38,9 +38,10 @@ class CVPredict:
         self._skip_name = 'skip_mva_prediction'
 
         # name of features dataframe attribute where array of patched indices is stored
-        self._patch_name= 'patched_indices'
+        self._index_skip= 'skip_mva_prediction'
 
-        self._arr_patch : numpy.ndarray
+        # array with indexes to be skipped
+        self._arr_index_skip : numpy.ndarray
     # --------------------------------------------
     def _initialize(self):
         self._rdf       = self._remove_periods(self._rdf)
