@@ -31,6 +31,7 @@ class CVPredict:
         '''
         self._l_model   = models
         self._rdf       = rdf
+        self._l_column  : list[str]
         self._d_nan_rep : dict[str,str]
 
         # name of column where 1s will prevent prediction
@@ -46,6 +47,7 @@ class CVPredict:
         self._rdf       = self._define_columns(self._rdf)
 
         self._d_nan_rep = self._get_nan_replacements()
+        self._l_column  = [ name.c_str() for name in self._rdf.GetColumnNames() ]
     # ----------------------------------
     def _remove_periods(self, rdf : RDataFrame) -> RDataFrame:
         '''
