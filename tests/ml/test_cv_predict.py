@@ -132,3 +132,18 @@ def test_sample_def():
             rdf    =rdf)
     cvp.predict()
 #--------------------------------------------------------------------
+def test_skip_mva_prediction():
+    '''
+    Tests skipping the reading of scores for candidates
+    with the skip_mva_prediction branch set to 1
+    '''
+
+    LogStore.set_level('dmu:ml:cv_predict', 10)
+    rdf_sig    = ut.get_rdf(kind='sig')
+    rdf_bkg    = ut.get_rdf(kind='bkg')
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
+
+    rdf     = ut.get_rdf(kind='sig')
+    cvp     = CVPredict(models=l_model, rdf=rdf)
+    cvp.predict()
+#--------------------------------------------------------------------
