@@ -29,8 +29,8 @@ def patch_and_tag(df : pnd.DataFrame, value : float = 0) -> pnd.DataFrame:
 
     df_nan_frq = df.isna().sum()
     df_nan_frq = df_nan_frq[df_nan_frq > 0]
-    print(df_nan_frq)
 
+    log.info(df_nan_frq)
     log.warning(f'Attaching array with NaN {nnan} indexes and removing NaNs from dataframe')
 
     df_pa = df.fillna(value)
