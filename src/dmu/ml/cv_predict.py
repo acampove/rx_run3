@@ -33,6 +33,12 @@ class CVPredict:
         self._rdf       = rdf
         self._d_nan_rep : dict[str,str]
 
+        # name of column where 1s will prevent prediction
+        self._skip_name = 'skip_mva_prediction'
+
+        # name of features dataframe attribute where array of patched indices is stored
+        self._patch_name= 'patched_indices'
+
         self._arr_patch : numpy.ndarray
     # --------------------------------------------
     def _initialize(self):
@@ -147,8 +153,8 @@ class CVPredict:
         df_ft = self._replace_nans(df_ft)
         df_ft = ut.patch_and_tag(df_ft)
 
-        if 'patched_indices' in df_ft.attrs:
-            self._arr_patch = df_ft.attrs['patched_indices']
+        if self._patch_name in df_ft.attrs:
+            self._arr_patch = df_ft.attrs[self._patch_name]
 
         nfeat = len(l_ft)
         log.info(f'Found {nfeat} features')
