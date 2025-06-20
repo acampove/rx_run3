@@ -25,12 +25,22 @@ def add_muon_columns(rdf : RDataFrame) -> RDataFrame:
             'B_M',
             ]
 
+    log.debug(50 * '-')
+    log.debug(f'{"Variable":<30}{"Expression"}')
+    log.debug(50 * '-')
     for var in l_var:
         # The underscore is needed due to:
         #
         # - ROOT does not allow for branches with periods
         # - Periods are replaced with underscore in CVPredict tool anyway.
-        rdf = rdf.Define(f'brem_track_2_{var}_brem_track_2', var)
+        name_2 =              f'{var}_brem_track_2'
+        name_1 = f'brem_track_2_{var}_brem_track_2'
+
+        log.debug(f'{name_1:<50}{var}')
+        log.debug(f'{name_2:<50}{var}')
+
+        rdf = rdf.Define(name_1, var)
+        rdf = rdf.Define(name_2, var)
 
     return rdf
 #---------------------------------
