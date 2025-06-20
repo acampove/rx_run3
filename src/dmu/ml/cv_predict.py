@@ -161,8 +161,8 @@ class CVPredict:
         df_ft = self._replace_nans(df_ft=df_ft)
         df_ft = self._tag_skipped(df_ft=df_ft)
         df_ft = ut.tag_nans(
-                df      = df_ft,
-                indexes = self._index_skip)
+            df      = df_ft,
+            indexes = self._index_skip)
 
         nfeat = len(l_ft)
         log.info(f'Found {nfeat} features')
