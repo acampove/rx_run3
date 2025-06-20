@@ -186,7 +186,10 @@ class RDFGetter:
         out_path = f'{RDFGetter.cache_dir}/{val}.yaml'
         log.debug(f'Saving friend tree structure to {out_path}')
 
-        gut.dump_json(data, out_path)
+        # In a cluster, two jobs might interfere each other
+        # If the YAML file was made by one job, do not make it in another
+        if not os.path.isfile(out_path):
+            gut.dump_json(data, out_path)
 
         return out_path
     # ---------------------------------------------------
