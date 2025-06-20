@@ -256,15 +256,23 @@ class CVPredict:
 
         return d_prob
     # --------------------------------------------
-    def _patch_probabilities(self, arr_prb : numpy.ndarray) -> numpy.ndarray:
-        if not hasattr(self, '_arr_patch'):
-            return arr_prb
+    def _predict_signal_probabilities(
+            self,
+            model : CVClassifier,
+            df_ft : pnd.DataFrame) -> numpy.ndarray:
+        '''
+        Takes model and features dataframe, returns array of signal probabilities
+        '''
+        if self._non_overlapping_hashes(model, df_ft):
+            log.debug('No intersecting hashes found between model and data')
+            arr_prb = model.predict_proba(df_ft)
+        else:
+            log.info('Intersecting hashes found between model and data')
+            arr_prb = self._predict_with_overlap(df_ft)
 
-        nentries = len(self._arr_patch)
-        log.warning(f'Patching {nentries} probabilities with -1')
-        arr_prb[self._arr_patch] = -1
+        arr_sig_prb = arr_prb.T[1]
 
-        return arr_prb
+        return arr_sig_prb
     # --------------------------------------------
     def predict(self) -> numpy.ndarray:
         '''
