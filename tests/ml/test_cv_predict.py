@@ -138,13 +138,24 @@ def test_skip_mva_prediction():
     Tests skipping the reading of scores for candidates
     with the skip_mva_prediction branch set to 1
     '''
-
     LogStore.set_level('dmu:ml:cv_predict', 10)
+
     rdf_sig    = ut.get_rdf(kind='sig')
     rdf_bkg    = ut.get_rdf(kind='bkg')
+
+    skip_col   = 'skip_mva_prediction'
     l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
 
     rdf     = ut.get_rdf(kind='sig')
+    rdf     = rdf.Define(skip_col, 'rdfentry_ % 2')
+
     cvp     = CVPredict(models=l_model, rdf=rdf)
-    cvp.predict()
+    arr_prb = cvp.predict()
+
+    arr_skipped = arr_prb[1::2]
+    arr_res     = arr_skipped + 1.0
+    arr_dif     = numpy.abs(arr_res)
+    arr_fail    = arr_skipped[arr_dif > 1e-5]
+
+    assert len(arr_fail) == 0
 #--------------------------------------------------------------------
