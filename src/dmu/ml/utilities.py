@@ -14,14 +14,19 @@ log = LogStore.add_logger('dmu:ml:utilities')
 # ---------------------------------------------
 # Patch dataframe with features
 # ---------------------------------------------
-def patch_and_tag(df : pnd.DataFrame, value : float = 0) -> pnd.DataFrame:
+def patch_and_tag(
+        df         : pnd.DataFrame,
+        patch_name : str,
+        value      : float = 0) -> pnd.DataFrame:
     '''
+
     Parameters
     ----------------
-    df   : Pandas dataframe, replaces NaNs with value introduced
-    value: Value to do replacement with, default = 0
+    df        : Pandas dataframe
+    patch_name: Name of dataframe attribute where array of indices of NaN rows should go
+    value     : Value to do replacement with, default = 0
 
-    Returns 
+    Returns
     ----------------
     Dataframe:
 
