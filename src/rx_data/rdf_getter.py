@@ -491,9 +491,12 @@ class RDFGetter:
         rdf = RDF.Experimental.FromSpec(conf_path)
         log.debug(f'Dataframe at: {id(rdf)}')
 
-        if RDFGetter.max_entries > 0:
-            log.warning(f'Returning dataframe with at most {RDFGetter.max_entries} entries')
-            rdf = rdf.Range(RDFGetter.max_entries)
+        nentries = rdf.Count().GetValue()
+        if 0 < RDFGetter.max_entries < nentries:
+            frac = nentries / RDFGetter.max_entries
+            perc = int(100 * frac)
+            log.warning(f'Returning dataframe with around {RDFGetter.max_entries} entries')
+            rdf  = rdf.Filter(f'rdfentry_ % {perc}', 'random_{perc:02}_percent')
 
         rdf = self._add_columns(rdf)
 
