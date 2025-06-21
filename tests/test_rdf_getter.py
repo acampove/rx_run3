@@ -465,17 +465,26 @@ def test_electron(kind : str, trigger : str):
 
     RDFGetter.max_entries = 1000
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_*'])
+@pytest.mark.parametrize('sample' , [
+                             'DATA_24_MagDown_24c1',
+                             'DATA_24_MagDown_24c2',
+                             'DATA_24_MagDown_24c3',
+                             'DATA_24_MagDown_24c4',
+                             'DATA_24_MagUp_24c1',
+                             'DATA_24_MagUp_24c2',
+                             'DATA_24_MagUp_24c3',
+                             'DATA_24_MagUp_24c4'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
 def test_data(sample : str, trigger : str):
     '''
     Test of getter class in data
     '''
-
-    RDFGetter.max_entries = 10_000
+    org_entries = RDFGetter.max_entries
+    RDFGetter.max_entries = -1
 
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
+    rdf = rdf.Range(1000)
     rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
     rep.Print()
@@ -486,7 +495,7 @@ def test_data(sample : str, trigger : str):
             trigger  =trigger,
             test_name=f'data_{sample}_{trigger}')
 
-    RDFGetter.max_entries = 1000
+    RDFGetter.max_entries = org_entries
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC'])
 def test_mc(sample : str):
