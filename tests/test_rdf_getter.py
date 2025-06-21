@@ -626,10 +626,8 @@ def test_block(sample : str, trigger : str):
     '''
     Test of getter class with check for block assignment
     '''
-    RDFGetter.max_entries = -1
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
-    rdf = rdf.Filter('rdfentry_ % 1000 == 0', 'random_filter')
     rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
     rep.Print()
@@ -640,7 +638,6 @@ def test_block(sample : str, trigger : str):
     name   = f'block/{sample}_{trigger}'
 
     _plot_block(rdf=rdf, name=name)
-    RDFGetter.max_entries = 1000
 # ------------------------------------------------
 def test_add_truem():
     '''
