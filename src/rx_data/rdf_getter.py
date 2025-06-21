@@ -496,10 +496,12 @@ class RDFGetter:
         nentries = rdf.Count().GetValue()
         if 0 < RDFGetter.max_entries < nentries:
             frac = RDFGetter.max_entries / nentries
-            perc = math.ceil(1.0 / frac)
+            part = math.ceil(1.0 / frac)
             log.warning(f'Returning dataframe with around {RDFGetter.max_entries} entries')
-            log.debug(f'Filter 1 / {perc} entries => {frac:.3f} fraction')
-            rdf  = rdf.Filter(f'rdfentry_ % {perc} == 0', 'random_{perc:02}_percent')
+            log.debug(f'Filter 1 / {part} entries => {frac:.3f} fraction')
+            rdf  = rdf.Filter(f'rdfentry_ % {part} == 0', f'random_{part:02}_part')
+            nentries = rdf.Count().GetValue()
+            log.warning(f'New dataset size: {nentries}')
 
         rdf = self._add_columns(rdf)
 
