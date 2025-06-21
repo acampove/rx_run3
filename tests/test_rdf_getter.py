@@ -209,8 +209,8 @@ def _plot_mva(rdf : RDataFrame, test : str) -> None:
 
     arr_cmb = rdf.AsNumpy(['mva_cmb'])['mva_cmb']
     arr_prc = rdf.AsNumpy(['mva_prc'])['mva_prc']
-    plt.hist(arr_cmb, bins=40, histtype='step', range=[0, 1], label='CMB')
-    plt.hist(arr_prc, bins=40, histtype='step', range=[0, 1], label='PRC')
+    plt.hist(arr_cmb, bins=40, histtype='step', range=[-1.1, 1.0], label='CMB')
+    plt.hist(arr_prc, bins=40, histtype='step', range=[-1.1, 1.0], label='PRC')
 
     plt.title(test)
     plt.legend()
