@@ -96,7 +96,10 @@ def _get_version(kind : str) -> str:
         return Data.vers
 
     inp_dir = Data.d_conf['inp_dir']
-    vers    = get_last_version(dir_path = f'{inp_dir}/{kind}', version_only=True)
+    knd_dir = f'{inp_dir}/{kind}'
+    vers    = get_last_version(dir_path = knd_dir, version_only=True)
+
+    log.info(f'Latest version {vers} found in {knd_dir}')
 
     return vers
 # -----------------------------------------
