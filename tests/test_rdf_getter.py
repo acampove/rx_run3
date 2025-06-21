@@ -3,6 +3,7 @@ Class testing RDFGetter
 '''
 import os
 import glob
+import math
 
 import matplotlib.pyplot as plt
 import pandas            as pnd
@@ -385,6 +386,26 @@ def test_split_per_file():
         log.info(f'{"File path":<20}{fpath}')
         log.info(f'{"Conf path":<20}{cpath}')
         log.info('')
+# ------------------------------------------------
+@pytest.mark.parametrize('sample'   , ['Bu_JpsiK_ee_eq_DPC'])
+@pytest.mark.parametrize('requested', [1_000, 10_000, 20_000])
+def test_max_entries(sample : str, requested : int):
+    '''
+    Check that one can filter randomly entries in dataframe
+    '''
+    org_entries = RDFGetter.max_entries
+    RDFGetter.max_entries = requested
+
+    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+    rdf = gtr.get_rdf()
+
+    nentries = rdf.Count().GetValue()
+
+    log.info(f'Found {nentries} entries')
+
+    assert math.isclose(nentries, requested, rel_tol=0.1)
+
+    RDFGetter.max_entries = org_entries
 # ------------------------------------------------
 @pytest.mark.parametrize('kind'   , ['data', 'mc'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
