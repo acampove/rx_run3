@@ -629,6 +629,7 @@ def test_block(sample : str, trigger : str):
     RDFGetter.max_entries = -1
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
+    rdf = rdf.Filter('rdfentry_ % 1000 == 0', 'random_filter')
     rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
     rep.Print()
