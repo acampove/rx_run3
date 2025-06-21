@@ -4,6 +4,7 @@ Module holding RDFGetter class
 from contextlib import contextmanager
 import os
 import glob
+import math
 import json
 import copy
 import pprint
@@ -493,10 +494,11 @@ class RDFGetter:
 
         nentries = rdf.Count().GetValue()
         if 0 < RDFGetter.max_entries < nentries:
-            frac = nentries / RDFGetter.max_entries
-            perc = int(100 * frac)
+            frac = RDFGetter.max_entries / nentries
+            perc = math.ceil(1.0 / frac)
             log.warning(f'Returning dataframe with around {RDFGetter.max_entries} entries')
-            rdf  = rdf.Filter(f'rdfentry_ % {perc}', 'random_{perc:02}_percent')
+            log.debug(f'Filter 1 / {perc} entries => {frac:.3f} fraction')
+            rdf  = rdf.Filter(f'rdfentry_ % {perc} == 0', 'random_{perc:02}_percent')
 
         rdf = self._add_columns(rdf)
 
