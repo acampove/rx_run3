@@ -47,7 +47,7 @@ def _get_args():
     parser.add_argument('-s', '--sample'     , type=str, help='Sample name'                                 , required=True)
     parser.add_argument('-t', '--trigger'    , type=str, help='HLT trigger'                                 , required=True)
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
-    parser.add_argument('-a', '--process_all', type=int, help='If 1, will process all, if 0 (default) will skip candidates that fail selection', default=0, choices=[0, 1])
+    parser.add_argument('-a', '--process_all', type=int, help='If 1 (default), will process all, if 0 will skip candidates that fail selection', default=1, choices=[0, 1])
     parser.add_argument('-m', '--max_entries', type=int, help='Limit datasets entries to this value', default=-1)
     parser.add_argument('-d', '--dry_run'    ,           help='Dry run', action='store_true')
     parser.add_argument('-f', '--force_new'  ,           help='Will remake outputs, even if they already exist', action='store_true')
