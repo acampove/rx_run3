@@ -99,7 +99,7 @@ def _get_version(kind : str) -> str:
     knd_dir = f'{inp_dir}/{kind}'
     vers    = get_last_version(dir_path = knd_dir, version_only=True)
 
-    log.info(f'Latest version {vers} found in {knd_dir}')
+    log.debug(f'Latest version {vers} found in {knd_dir}')
 
     return vers
 # -----------------------------------------
