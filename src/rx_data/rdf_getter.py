@@ -294,7 +294,7 @@ class RDFGetter:
 
             nsamp = len(l_path_sample)
             if nsamp == 0:
-                log.error(f'No paths found for {sample} in {yaml_path}')
+                log.error(f'No paths found for {sample} in {yaml_path} and friend tree {ftree}')
                 nopath = True
             else:
                 log.debug(f'Found {nsamp} paths for {sample} in {yaml_path}')
@@ -305,7 +305,7 @@ class RDFGetter:
             raise ValueError('Samples with paths missing')
 
         if nosamp:
-            raise ValueError(f'Could not find any sample matching {self._sample} in {yaml_path}')
+            raise ValueError(f'Could not find any sample matching {self._sample} with friend tree {ftree} in {yaml_path}')
 
         d_section['files'] = l_path
 
