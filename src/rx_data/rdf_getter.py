@@ -414,10 +414,11 @@ class RDFGetter:
         return rdf
     # ---------------------------------------------------
     def _define_mc_columns(self, rdf : RDataFrame) -> RDataFrame:
-        log.info('Adding MC only columns')
         if self._sample.startswith('DATA'):
+            log.debug(f'Not adding MC only columns for: {self._sample}')
             return rdf
 
+        log.info('Adding MC only columns')
         d_def = self._cfg['definitions']['MC']
         for var, expr in d_def.items():
             rdf = self._add_column(rdf=rdf, name=var, definition=expr)
@@ -430,11 +431,11 @@ class RDFGetter:
         return rdf
     # ---------------------------------------------------
     def _define_data_columns(self, rdf : RDataFrame) -> RDataFrame:
-        log.info('Adding data only columns')
-
         if not self._sample.startswith('DATA'):
+            log.info(f'Not adding data columns for: {self._sample}')
             return rdf
 
+        log.info('Adding data only columns')
         d_def = self._cfg['definitions']['DATA']
         for name, definition in d_def.items():
             rdf = self._add_column(rdf, name, definition)
