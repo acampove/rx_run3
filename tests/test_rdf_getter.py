@@ -84,8 +84,7 @@ def _check_truem_columns(rdf : RDataFrame):
 def _check_block(rdf : RDataFrame) -> None:
     arr_block = rdf.AsNumpy(['block'])['block']
 
-    assert numpy.all(arr_block == 0)
-    assert numpy.all(arr_block >  0)
+    assert numpy.all(arr_block >= 0)
     assert numpy.all(arr_block <= 8)
 # ------------------------------------------------
 def _check_branches(rdf : RDataFrame, is_ee : bool, is_mc : bool) -> None:
