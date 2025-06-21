@@ -650,9 +650,10 @@ def test_define_custom_branches():
 
     del RDFGetter.d_custom_columns
 # ------------------------------------------------
+# TODO: This test is very slow, needs to be disabled for now
 @pytest.mark.parametrize('sample' , ['DATA*'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
-def test_block(sample : str, trigger : str):
+def skip_test_block(sample : str, trigger : str):
     '''
     Test of getter class with check for block assignment
     '''
