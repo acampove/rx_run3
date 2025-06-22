@@ -110,16 +110,32 @@ def _set_loggers():
         LogStore.set_level('rx_data:path_splitter'  ,             30)
         LogStore.set_level('dmu:ml:cv_predict'      ,             30)
 #---------------------------------
-def _get_q2_indexer() -> str:
+def _get_q2_selection(q2bin : str) -> str:
+    d_sel = sel.selection(
+            trigger=Data.trigger,
+            q2bin  =q2bin,
+            process=Data.sample)
+
+    q2_cut = d_sel['q2']
+
+    return q2_cut
+#---------------------------------
+def _apply_q2_cut(
+        rdf   : RDataFrame,
+        q2bin : str) -> RDataFrame:
     '''
     Applies q2 requirement to ROOT dataframe
     '''
-    sel_cfg  = sel.load_selection_config()
-    d_q2_cut = sel_cfg['q2_common']
+    if q2bin == 'rest':
+        low     = _get_q2_selection(q2bin='low')
+        central = _get_q2_selection(q2bin='central')
+        high    = _get_q2_selection(q2bin='high')
+        q2_cut  = f'!({low}) && !({central}) && !({high})'
+    else:
+        q2_cut  = _get_q2_selection(q2bin=q2bin)
 
-    low_cut  = d_q2_cut['low'    ]
-    cen_cut  = d_q2_cut['central']
-    hig_cut  = d_q2_cut['high'   ]
+    log.debug(f'{q2bin:<10}{q2_cut}')
+    rdf = rdf.Filter(q2_cut, 'q2')
 
     cond     = f'1 * ({low_cut}) + 2 * ({cen_cut}) + 3 * ({hig_cut})'
     cond     = cond.replace('&&', '&')
