@@ -250,11 +250,11 @@ def _get_out_path(input_path : str) -> str:
 
     return f'{out_dir}/{name}'
 #---------------------------------
+def _skip_rdf(inp_path : str, rdf : RDataFrame) -> bool:
     out_path = _get_out_path(inp_path)
-
     if os.path.isfile(out_path):
         log.info('Output already found, skipping')
-        return
+        return True
 
     log.info(f'Producing: {out_path}')
     nentries = rdf.Count().GetValue()
@@ -263,7 +263,9 @@ def _get_out_path(input_path : str) -> str:
         rdf = RDataFrame(0)
         rdf = rdf.Define('fake', '1')
         rdf.Snapshot('DecayTree', out_path)
-        return
+        return True
+
+    return False
 #---------------------------------
 def _run(inp_path : str, rdf : RDataFrame) -> None:
     '''
@@ -296,8 +298,8 @@ def main():
         d_rdf = gtr.get_rdf(per_file=True)
 
     for inp_path, rdf in d_rdf.items():
-        rdf = _filter_rdf(rdf)
-        rdf = _add_columns(rdf)
+        if _skip_rdf(inp_path=inp_path, rdf=rdf):
+            continue
         _run(inp_path=inp_path, rdf=rdf)
 #---------------------------------
 if __name__ == '__main__':
