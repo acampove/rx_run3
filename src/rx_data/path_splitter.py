@@ -42,7 +42,8 @@ class PathSplitter:
     def _rename_sample(self, d_info_path : dict[tuple[str,str],list[str]]) -> dict[tuple[str,str],list[str]]:
         log.debug('Renaming samples from lower-case only')
         d_renamed = {}
-        for (sample, line_name), l_sample in d_info_path.items():
+
+        for (sample, line_name), l_fpath in d_info_path.items():
             try:
                 sample = aput.name_from_lower_case(sample)
 
@@ -53,7 +54,7 @@ class PathSplitter:
                 log.warning(exc)
                 continue
 
-            d_renamed[(sample, line_name)] = l_sample
+            d_renamed[(sample, line_name)] = l_fpath
 
         return d_renamed
     # ------------------------------------------
