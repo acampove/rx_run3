@@ -56,6 +56,6 @@ lower_original.yaml
 will all have to be updated with:
 
 ```bash
-update_formatting
+update_sample_naming
 ```
 
