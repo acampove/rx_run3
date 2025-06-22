@@ -300,6 +300,10 @@ def main():
     for inp_path, rdf in d_rdf.items():
         if _skip_rdf(inp_path=inp_path, rdf=rdf):
             continue
+
+        rdf = _range_rdf(rdf)
+        rdf = _add_muon_columns(rdf)
+        rdf = _add_common_columns(rdf)
         _run(inp_path=inp_path, rdf=rdf)
 #---------------------------------
 if __name__ == '__main__':
