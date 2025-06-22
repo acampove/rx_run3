@@ -11,14 +11,8 @@ dev  = ['pytest']
 [tools.setuptools.packages.find]
 where   = ['src']
 
-[project.scripts]
-make_run3_yaml ='rx_common_scripts.make_run3_yaml:main'
-pap_lfn_to_yaml='rx_common_scripts.pap_lfn_to_yaml:main'
-ap_lfn_to_yaml ='rx_common_scripts.ap_lfn_to_yaml:main'
-
 [tool.setuptools.package-data]
 'rx_config' = ['*.yaml']
-'rx_tests'  = ['kernel/*.yaml']
 
 [tool.setuptools]
 script-files=[
