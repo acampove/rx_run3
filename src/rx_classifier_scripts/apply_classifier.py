@@ -176,7 +176,6 @@ def _q2_scores_from_rdf(
     log.info(f'Using {npkl} pickle files from: {path}')
     l_model = [ joblib.load(pkl_path) for pkl_path in l_pkl ]
 
-
     cvp     = CVPredict(models=l_model, rdf=rdf)
     if Data.dry_run:
         log.warning(f'Using {nentries} ones for dry run MVA scores')
