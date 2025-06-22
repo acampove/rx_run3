@@ -98,17 +98,19 @@ def _set_loggers():
     # Dependencies in custom level, if custom level is debug
     # Otherwise keep them in WARNING
     if Data.log_level < 20:
-        LogStore.set_level('rx_classifier:utilities', Data.log_level)
-        LogStore.set_level('rx_selection:selection' , Data.log_level)
-        LogStore.set_level('rx_data:rdf_getter'     , Data.log_level)
-        LogStore.set_level('rx_data:path_splitter'  , Data.log_level)
-        LogStore.set_level('dmu:ml:cv_predict'      , Data.log_level)
+        LogStore.set_level('rx_classifier:utilities'    , Data.log_level)
+        LogStore.set_level('rx_selection:selection'     , Data.log_level)
+        LogStore.set_level('rx_selection:truth_matching', Data.log_level)
+        LogStore.set_level('rx_data:rdf_getter'         , Data.log_level)
+        LogStore.set_level('rx_data:path_splitter'      , Data.log_level)
+        LogStore.set_level('dmu:ml:cv_predict'          , Data.log_level)
     else:
-        LogStore.set_level('rx_classifier:utilities',             30)
-        LogStore.set_level('rx_selection:selection' ,             30)
-        LogStore.set_level('rx_data:rdf_getter'     ,             30)
-        LogStore.set_level('rx_data:path_splitter'  ,             30)
-        LogStore.set_level('dmu:ml:cv_predict'      ,             30)
+        LogStore.set_level('rx_classifier:utilities'    ,             30)
+        LogStore.set_level('rx_selection:truth_matching',             30)
+        LogStore.set_level('rx_selection:selection'     ,             30)
+        LogStore.set_level('rx_data:rdf_getter'         ,             30)
+        LogStore.set_level('rx_data:path_splitter'      ,             30)
+        LogStore.set_level('dmu:ml:cv_predict'          ,             30)
 #---------------------------------
 def _get_q2_selection(q2bin : str) -> str:
     d_sel = sel.selection(
