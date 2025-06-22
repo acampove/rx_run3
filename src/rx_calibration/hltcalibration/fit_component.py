@@ -184,6 +184,7 @@ class FitComponent:
         arr_obs = d_data[self._obs_name]
         arr_wgt = d_data[weights_column]
         data    = zfit.Data.from_numpy(self._obs, array=arr_obs, weights=arr_wgt)
+        arr_wgt = data.weights.numpy() # These are the weights INSIDE the observable range
 
         self._yield_nentr = len(arr_wgt)
         self._yield_value = float(numpy.sum(arr_wgt))
