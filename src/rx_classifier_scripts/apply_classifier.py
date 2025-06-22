@@ -58,7 +58,7 @@ def _get_args():
     Data.dry_run     = args.dry_run
     Data.force_new   = args.force_new
 #---------------------------------
-def _filter_rdf(rdf : RDataFrame) -> RDataFrame:
+def _range_rdf(rdf : RDataFrame) -> RDataFrame:
     '''
     Applies any filter before running prediction
     '''
