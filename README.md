@@ -120,7 +120,7 @@ options:
   -n NAME, --name NAME  Job name
   -p PROD, --prod PROD  Production
   -s SAMP, --samp SAMP  Sample
-  -f PATH, --path PATH  Path to config file, proficed by user
+  -f PATH, --path PATH  Path to config file, provided by user
   -c CONF, --conf CONF  Version of config file belonging to project itself
   -b {Interactive,Local,Dirac}, --back {Interactive,Local,Dirac}
                         Backend

@@ -118,7 +118,7 @@ def _parse_args() -> None:
     parser.add_argument('-n' , '--name', type=str, help='Job name'           , required=True)
     parser.add_argument('-p' , '--prod', type=str, help='Production'         , required=True)
     parser.add_argument('-s' , '--samp', type=str, help='Sample'             , required=True)
-    parser.add_argument('-f' , '--path', type=str, help='Path to config file, proficed by user')
+    parser.add_argument('-f' , '--path', type=str, help='Path to config file, provided by user')
     parser.add_argument('-c' , '--conf', type=str, help='Version of config file belonging to project itself')
     parser.add_argument('-b' , '--back', type=str, help='Backend'            , choices=['Interactive', 'Local', 'Dirac'], default='Interactive')
     parser.add_argument('-t' , '--test',           help='Will run one job only if used'                       , action='store_true')
