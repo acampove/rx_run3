@@ -188,37 +188,37 @@ def _q2_scores_from_rdf(
 
     return arr_res
 # ----------------------------------------
-def _get_full_q2_scores(
-        low     : numpy.ndarray,
-        central : numpy.ndarray,
-        high    : numpy.ndarray,
-        jpsi_m  : numpy.ndarray) -> numpy.ndarray:
+def _scores_from_rdf(
+        rdf    : RDataFrame,
+        d_path : dict[str,str]) -> numpy.ndarray:
     '''
-    Takes arrays of MVA in 3 q2 bins, as well as array of jpsi mass.
-    Returns array of mva score correspoinding to right q2 bin.
+    Parameters
+    ------------------
+    rdf   : DataFrame with inputs
+    d_path: Dictionary mapping q2bin to path to models
+
+    Returns
+    ------------------
+    Array of signal probabilities
     '''
+    nentries = rdf.Count().GetValue()
 
-    q2_cond     = _get_q2_indexer()
-    arr_ind     = numexpr.evaluate(q2_cond, local_dict={'q2' : jpsi_m * jpsi_m})
+    arr_low     = _q2_scores_from_rdf(rdf=rdf, d_path=d_path, q2bin='low'    )
+    arr_central = _q2_scores_from_rdf(rdf=rdf, d_path=d_path, q2bin='central')
+    arr_high    = _q2_scores_from_rdf(rdf=rdf, d_path=d_path, q2bin='high'   )
+    arr_rest    = _q2_scores_from_rdf(rdf=rdf, d_path=d_path, q2bin='rest'   )
+    arr_all     = numpy.concatenate((arr_low, arr_central, arr_high, arr_rest))
 
-    # Resonant q2 bin will pick up central-q2 scores
-    arr_all_q2  = numpy.array([central, low, central, high])
-    arr_full_q2 = numpy.choose(arr_ind, arr_all_q2)
+    arr_ind = arr_all.T[0]
+    arr_val = arr_all.T[1]
 
-    return arr_full_q2
-# ----------------------------------------
-def _scores_from_rdf(rdf : RDataFrame, d_path : dict[str,str]) -> numpy.ndarray:
-    arr_jpsi_m  = rdf.AsNumpy(['Jpsi_M'])['Jpsi_M']
+    arr_obtained = numpy.sort(arr_ind)
+    arr_expected = numpy.arange(nentries + 1)
+    if  numpy.array_equal(arr_obtained, arr_expected):
+        raise ValueError('Array of indexes has the wrong values')
 
-    # For dry runs return Jpsi mass as score. Won't be used or saved anyway
-    if Data.dry_run:
-        return arr_jpsi_m
-
-    arr_low     = _q2_scores_from_rdf(rdf, d_path['low'    ])
-    arr_central = _q2_scores_from_rdf(rdf, d_path['central'])
-    arr_high    = _q2_scores_from_rdf(rdf, d_path['high'   ])
-
-    arr_mva     = _get_full_q2_scores(low=arr_low, central=arr_central, high=arr_high, jpsi_m=arr_jpsi_m)
+    arr_ord = numpy.argsort(arr_ind)
+    arr_mva = arr_val[arr_ord]
 
     return arr_mva
 # ----------------------------------------
