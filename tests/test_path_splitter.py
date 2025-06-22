@@ -57,7 +57,7 @@ def test_default():
 # ----------------------------------------
 def test_nested():
     '''
-    Dumps it with nesting sample:trigger:list of files 
+    Dumps it with nesting sample:trigger:list of files
     '''
     l_pfn = _get_pfns()
     spl   = PathSplitter(paths = l_pfn)
