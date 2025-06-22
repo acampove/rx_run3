@@ -276,9 +276,12 @@ def _run(inp_path : str, rdf : RDataFrame) -> None:
     log.info('Applying classifier')
     rdf = _apply_classifier(rdf)
 
-    if not Data.dry_run:
-        log.info(f'Saving to: {out_path}')
-        rdf.Snapshot('DecayTree', out_path)
+    if Data.dry_run:
+        return
+
+    out_path = _get_out_path(inp_path)
+    log.info(f'Saving to: {out_path}')
+    rdf.Snapshot('DecayTree', out_path)
 #---------------------------------
 def main():
     '''
