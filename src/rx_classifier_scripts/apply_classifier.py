@@ -264,6 +264,14 @@ def _get_out_path(input_path : str) -> str:
         rdf = rdf.Define('fake', '1')
         rdf.Snapshot('DecayTree', out_path)
         return
+#---------------------------------
+def _run(inp_path : str, rdf : RDataFrame) -> None:
+    '''
+    Takes ROOT dataframe and path associated to file
+
+    Runs preliminary checks with early returns
+    Calls prediction and saves file
+    '''
 
     log.info('Applying classifier')
     rdf = _apply_classifier(rdf)
