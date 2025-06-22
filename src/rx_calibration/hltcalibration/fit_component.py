@@ -321,6 +321,9 @@ class FitComponent:
         # instead of these lines below
         if   model == 'ISJ':
             log.info('High statistics dataset found => using KDE1DimISJ')
+            if 'bandwidth' in cfg_kde:
+                del cfg_kde['bandwidth']
+
             pdf = zfit.pdf.KDE1DimISJ(data, name=self._name, **cfg_kde, label='ISJ')
         elif model == 'FFT':
             log.info('Low statistics dataset found => using KDE1DimFFT')
