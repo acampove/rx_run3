@@ -71,9 +71,9 @@ def _range_rdf(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 #---------------------------------
-def _add_columns(rdf : RDataFrame) -> RDataFrame:
-    if Data.process_all:
-        log.info('Processing entire dataframe')
+def _add_muon_columns(rdf : RDataFrame) -> RDataFrame:
+    if 'MuMu' not in Data.trigger:
+        log.info(f'Not defining muon columns for trigger: {Data.trigger}')
         return rdf
 
     log.info(f'Defining muon columns before prediction for trigger: {Data.trigger}')
@@ -81,10 +81,14 @@ def _add_columns(rdf : RDataFrame) -> RDataFrame:
     # For muons, they should be the same as the original columns
     rdf = cut.add_muon_columns(rdf=rdf)
 
-    l_expr   = list(d_sel.values())
-    l_expr   = [ f'({expr})' for expr in l_expr ]
-    full_cut = ' && '.join(l_expr)
-    rdf      = rdf.Define('skip_mva_prediction', f'({full_cut}) == 0')
+    return rdf
+#---------------------------------
+def _add_common_columns(rdf : RDataFrame) -> RDataFrame:
+    '''
+    Adds columns needed by all samples
+    '''
+    # Needed to align scores with entries
+    rdf = rdf.Define('index', 'rdfentry_')
 
     return rdf
 #---------------------------------
