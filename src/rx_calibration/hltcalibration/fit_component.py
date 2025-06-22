@@ -84,7 +84,8 @@ class FitComponent:
         self._yield_nentr : int
 
         self._nentries_dummy_data = 10_000
-        self._min_isj_entries     = 300 # Below this threshold we use FFT PDFs
+        self._min_isj_entries     = 300 # Below this threshold we use FFT KDEs 
+        self._min_fft_entries     = 100 # Below this threshold we use Exact KDEs 
         self._yield_threshold     = 10
 
         self._minimizer = self._get_minimizer()
@@ -291,13 +292,17 @@ class FitComponent:
 
             return name
 
-        if self._yield_value > self._min_isj_entries:
-            log.info(f'Yield above threshold ({self._yield_value} > {self._min_isj_entries}) picking ISJ')
+        if self._min_isj_entries < self._yield_value:
+            log.info(f'Yield above ISJ threshold ({self._yield_value} > {self._min_isj_entries}) picking ISJ')
             return 'ISJ'
 
-        log.info(f'Yield below threshold ({self._yield_value} < {self._min_isj_entries}) picking FFT')
+        if self._min_fft_entries < self._yield_value < self._min_isj_entries:
+            log.info(f'Yield above threshold FFT and below ISJ ({self._min_fft_entries} < {self._yield_value} < {self._min_isj_entries}) picking FFT')
+            return 'FFT'
 
-        return 'FFT'
+        log.info(f'Yield below FFT threshold ({self._yield_value} < {self._min_fft_entries}) picking Exact')
+
+        return 'Exact'
     # --------------------
     def _get_kde_pdf(self) -> Union[zpdf, None]:
         data = self._get_data()
@@ -330,6 +335,7 @@ class FitComponent:
             log.info('Low statistics dataset found => using KDE1DimFFT')
             pdf = zfit.pdf.KDE1DimFFT(data, name=self._name, **cfg_kde, label='FFT')
         elif model == 'Exact':
+            cfg_kde['bandwidth'] = 20
             log.info('Low statistics dataset found => using KDE1DimExact')
             pdf = zfit.pdf.KDE1DimExact(data, name=self._name, **cfg_kde, label='Exact')
         else:
