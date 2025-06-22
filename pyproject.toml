@@ -9,10 +9,10 @@ dependencies= ['PyYAML']
 dev  = ['pytest']
 
 [tools.setuptools.packages.find]
-where   = ['src']
+where= ['src']
 
 [tool.setuptools.package-data]
-'rx_config' = ['*.yaml']
+'rx_comon_data' = ['*.txt']
 
 [tool.setuptools]
 script-files=[
