@@ -26,6 +26,7 @@ class Data:
     '''
     max_path    = 700
     ana_dir     = os.environ['ANADIR']
+    default_q2  = 'central' # Any entry not in [low, central, high] bins will go to this bin for prediction
     version     : str
     force_new   : bool
     sample      : str
