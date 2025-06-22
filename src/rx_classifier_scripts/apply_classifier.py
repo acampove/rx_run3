@@ -250,13 +250,6 @@ def _get_out_path(input_path : str) -> str:
 
     return f'{out_dir}/{name}'
 #---------------------------------
-def _run(inp_path : str, rdf : RDataFrame) -> None:
-    '''
-    Takes ROOT dataframe and path associated to file
-
-    Runs preliminary checks with early returns
-    Calls prediction and saves file
-    '''
     out_path = _get_out_path(inp_path)
 
     if os.path.isfile(out_path):
