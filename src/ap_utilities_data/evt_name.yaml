@@ -591,6 +591,7 @@
 '11146410': Bd_Psi2SrhoK,Jpsipipi,mm=DecProdCut
 '11146501': Bd_JpsiKSeta,mm,3pi=phsp,TightCut
 '11154001': Bd_JpsiKst,ee=DecProdCut
+'11154002': Bd_JpsiKst,update2012,ee=DecProdCut
 '11154011': Bd_psi2SKst,ee=DecProdCut
 '11154020': Bd_Jpsirho0,ee=DecProdCut
 '11154021': Bd_psi2Srho0,eepipi=DecProdCut
