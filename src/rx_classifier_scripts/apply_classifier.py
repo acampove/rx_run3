@@ -154,7 +154,11 @@ def _q2_scores_from_rdf(
     -----------
     2D Array with indexes and MVA scores
     '''
-    rdf = _apply_q2_cut(rdf=rdf, q2bin=q2bin)
+    rdf     = _apply_q2_cut(rdf=rdf, q2bin=q2bin)
+    nentries= rdf.Count().GetValue()
+    if nentries == 0:
+        log.warning(f'No entries found for q2 bin: {q2bin}')
+        return numpy.column_stack(([], []))
 
     # The dataframe has the correct cut applied
     # From here onwards, if the q2bin is non-rare (rest)
@@ -172,7 +176,6 @@ def _q2_scores_from_rdf(
     log.info(f'Using {npkl} pickle files from: {path}')
     l_model = [ joblib.load(pkl_path) for pkl_path in l_pkl ]
 
-    nentries= rdf.Count().GetValue()
 
     cvp     = CVPredict(models=l_model, rdf=rdf)
     if Data.dry_run:
