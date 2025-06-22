@@ -245,6 +245,19 @@ check_env()
         echo "Path does not exist: $SFTDIR"
         kill -INT $$
     fi
+
+    FILEPATH=$(python -c "from importlib.resources import files; fpath=files('rx_common_data').joinpath('projects.txt'); print (fpath)")
+    if [[ $? -ne 0 ]];then
+        echo "Cannot extract the path to the list of projects"
+        exit 1
+    fi
+
+    if [[ ! -f $FILEPATH ]];then
+        echo "Cannot find: $FILEPATH"
+        exit 1
+    fi
+
+    echo "Using projects in: $FILEPATH"
 }
 #--------------------------
 check_var()
