@@ -47,9 +47,10 @@ class PathSplitter:
             try:
                 sample = aput.name_from_lower_case(sample)
 
-                log.debug(f'Using {self._sample_naming} sample_naming for samples')
-                if self._sample_naming == 'old' and not sample.startswith('DATA_'):
-                    sample = aput.old_from_new_nick(nickname=sample)
+            log.debug(f'Using {self._sample_naming} sample_naming for samples')
+            if self._sample_naming != 'old' or sample.startswith('DATA_'):
+                d_renamed[(sample, line_name)] = l_fpath
+                continue
             except ValueError as exc:
                 log.warning(exc)
                 continue
