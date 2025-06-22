@@ -189,6 +189,9 @@ def get_truth(event_type : Union[int,str]) -> str:
     elif event_type in ['12153001']:
         #B+ -> K+ Jpsi ee
         cut= 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 521'
+    elif event_type == '12153420':
+        #B+ -> K*+(Kpi0) Jpsi ee
+        cut= 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 323'
     elif event_type in ['12153001']:
         #B+ -> K*+(-> K+ pi0) Jpsi ee
         cut= 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 323'
@@ -468,7 +471,6 @@ def get_truth(event_type : Union[int,str]) -> str:
 #[Bs_phigamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 13102202_SS not recognized
 #[Bs_psi2SKK_ee_eq_DPC-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 13154042 not recognized
 #[Bs_psi2SKK_mm_eq_phsp_DPC_TC-Hlt2RD_BuToKpMuMu_MVA0] - ValueError: Event type 13144044 not recognized
-#[Bu_JpsiKst_ee_Kpi0_eq_DPC-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 12153420 not recognized
 #[Bu_pimumu_eq_DPC-Hlt2RD_BuToKpMuMu_MVA0] - ValueError: Event type 12113005 not recognized
 #[Bu_pimumu_eq_btosllball05_DiLeptonInAcc-Hlt2RD_BuToKpMuMu_MVA0] - ValueError: Event type 12113023 not recognized
 #[Lb_Lambda1520Jpsi_ee_eq_DPC-Hlt2RD_BuToKpEE_MVA0] - ValueError: Event type 15154040 not recognized
@@ -491,7 +493,6 @@ def get_truth(event_type : Union[int,str]) -> str:
 #[Bs_phigamma_eq_HighPtGamma_DPC_SS-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 13102202_SS not recognized
 #[Bs_psi2SKK_ee_eq_DPC-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 13154042 not recognized
 #[Bs_psi2SKK_mm_eq_phsp_DPC_TC-Hlt2RD_BuToKpMuMu_MVA1] - ValueError: Event type 13144044 not recognized
-#[Bu_JpsiKst_ee_Kpi0_eq_DPC-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 12153420 not recognized
 #[Bu_pimumu_eq_DPC-Hlt2RD_BuToKpMuMu_MVA1] - ValueError: Event type 12113005 not recognized
 #[Bu_pimumu_eq_btosllball05_DiLeptonInAcc-Hlt2RD_BuToKpMuMu_MVA1] - ValueError: Event type 12113023 not recognized
 #[Lb_Lambda1520Jpsi_ee_eq_DPC-Hlt2RD_BuToKpEE_MVA1] - ValueError: Event type 15154040 not recognized
