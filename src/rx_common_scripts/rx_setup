@@ -283,7 +283,7 @@ purge()
     fi
 }
 #--------------------------
-check_env
 get_args "$@"
+check_env
 purge
 update_projects
