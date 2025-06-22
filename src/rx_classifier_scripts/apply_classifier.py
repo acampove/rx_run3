@@ -137,33 +137,56 @@ def _apply_q2_cut(
     log.debug(f'{q2bin:<10}{q2_cut}')
     rdf = rdf.Filter(q2_cut, 'q2')
 
-    cond     = f'1 * ({low_cut}) + 2 * ({cen_cut}) + 3 * ({hig_cut})'
-    cond     = cond.replace('&&', '&')
-
-    log.debug(f'Using q2 indexer: {cond}')
-
-    return cond
+    return rdf
 # ----------------------------------------
-def _q2_scores_from_rdf(rdf : RDataFrame, path : str) -> numpy.ndarray:
+def _q2_scores_from_rdf(
+        rdf    : RDataFrame,
+        d_path : dict[str,str],
+        q2bin  : str) -> numpy.ndarray:
+    '''
+    Parameters
+    -----------
+    rdf   : DataFrame with input data, it has to be indexed with an `index` column
+    d_path: Dictionary mapping q2bin to path to models
+    q2bin : q2 bin
+
+    Returns
+    -----------
+    2D Array with indexes and MVA scores
+    '''
+    rdf = _apply_q2_cut(rdf=rdf, q2bin=q2bin)
+
+    # The dataframe has the correct cut applied
+    # From here onwards, if the q2bin is non-rare (rest)
+    # Will use default_q2 model
+    if q2bin == 'rest':
+        q2bin = Data.default_q2
+
+    path   = d_path[q2bin]
     l_pkl  = glob.glob(f'{path}/*.pkl')
+
     npkl   = len(l_pkl)
     if npkl == 0:
         raise ValueError(f'No pickle files found in {path}')
 
     log.info(f'Using {npkl} pickle files from: {path}')
-
     l_model = [ joblib.load(pkl_path) for pkl_path in l_pkl ]
 
-    if 'MuMu' in Data.trigger:
-        log.info(f'Defining muon columns before prediction for trigger: {Data.trigger}')
-        rdf = cut.add_muon_columns(rdf=rdf)
-    else:
-        log.info(f'Not defining muon columns for trigger: {Data.trigger}')
+    nentries= rdf.Count().GetValue()
 
     cvp     = CVPredict(models=l_model, rdf=rdf)
-    arr_prb = cvp.predict()
+    if Data.dry_run:
+        log.warning(f'Using {nentries} ones for dry run MVA scores')
+        arr_prb = numpy.ones(nentries)
+    else:
+        arr_prb = cvp.predict()
 
-    return arr_prb
+    arr_ind = rdf.AsNumpy(['index'])['index']
+    arr_res = numpy.column_stack((arr_ind, arr_prb))
+
+    log.debug(f'Shape: {arr_res.shape}')
+
+    return arr_res
 # ----------------------------------------
 def _get_full_q2_scores(
         low     : numpy.ndarray,
