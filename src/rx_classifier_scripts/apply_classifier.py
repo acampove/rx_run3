@@ -227,8 +227,7 @@ def _apply_classifier(rdf : RDataFrame) -> RDataFrame:
     Takes name of dataset and corresponding ROOT dataframe
     return dataframe with a classifier probability column added
     '''
-    d_mva_kind = _get_mva_config()
-
+    d_mva_kind  = _get_mva_config()
     d_mva_score = { f'mva_{name}' : _scores_from_rdf(rdf, d_path) for name, d_path in d_mva_kind.items() }
 
     d_data      = rdf.AsNumpy(['RUNNUMBER', 'EVENTNUMBER'])
