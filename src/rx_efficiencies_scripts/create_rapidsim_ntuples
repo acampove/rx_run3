@@ -69,7 +69,6 @@ initialize()
 # -----------------------
 find_decays()
 {
-    echo "Looking for decays in: $RAPIDSIM_CONFIG"
     shopt -s nullglob
     PATHS=($RAPIDSIM_CONFIG/*.decay)
     FILES=("${PATHS[@]##*/}")
@@ -101,7 +100,7 @@ create_ntuple()
 
     cd $DECAYDIR
     rapidsim $RAPIDSIM_CONFIG/$DECAY $NEVENTS 1 > $DECAY".log" 2>&1
-    cd -
+    cd - > /dev/null
 
     rm $CFG_PATH
 }
@@ -111,7 +110,7 @@ initialize
 find_decays
 
 for DECAY in ${DECAYS[@]};do
-    echo "Creating $DECAY"
+    echo "$DECAY"
     for ENERGY in "8" "13" "14";do
         echo "  $ENERGY TeV"
         create_ntuple
