@@ -112,7 +112,7 @@ create_ntuple()
     create_config $CFG_PATH $ENERGY
 
     cd $DECAYDIR
-    if [[ $DRY_RUN -eq 0 ]];then
+    if [[ "$DRY_RUN" == "0" ]];then
         rapidsim $RAPIDSIM_CONFIG/$DECAY $NEVENTS 1 > $DECAY".log" 2>&1
     fi
     cd - > /dev/null
