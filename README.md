@@ -81,8 +81,8 @@ acc=obj.read()
 
 The product of these efficiencies can be obtained by dividing:
 
-`Numerator:` The number of entries in the `DecayTree` after the full selection
-`Denominator:` The number of entries in the `MCDecayTree` from the same files.
+**Numerator:** The number of entries in the `DecayTree` after the full selection   
+**Denominator:** The number of entries in the `MCDecayTree` from the same files.
 
 And multiplying the ratio by the acceptance from RapidSim. This is done by running:
 
