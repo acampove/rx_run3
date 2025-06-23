@@ -7,6 +7,7 @@ display_help()
     echo ""
     echo "-n: Number of entries in the ntuples"
     echo "-v: Version of input config files, which is the same as the output's version"
+    echo "-d: Will run a dry run if 1 (default) or a real run if 0"
 }
 #--------------------------------------------------
 get_opts()
@@ -16,7 +17,8 @@ get_opts()
         exit 1
     fi  
 
-    while getopts :hf:n:v: option; do 
+    DRY_RUN=1
+    while getopts :hf:n:v:d: option; do 
         case "${option}" in
             h)  
                 display_help
@@ -24,6 +26,7 @@ get_opts()
                 ;;  
             n)  NEVENTS=${OPTARG};;
             v)  VERSION=${OPTARG};;
+            d)  DRY_RUN=${OPTARG};;
            \?)  echo "Invalid option: -${OPTARG}"
                 display_help
                 exit 1
@@ -107,7 +110,9 @@ create_ntuple()
     create_config $CFG_PATH $ENERGY
 
     cd $DECAYDIR
-    rapidsim $RAPIDSIM_CONFIG/$DECAY $NEVENTS 1 > $DECAY".log" 2>&1
+    if [[ $DRY_RUN -eq 0 ]];then
+        rapidsim $RAPIDSIM_CONFIG/$DECAY $NEVENTS 1 > $DECAY".log" 2>&1
+    fi
     cd - > /dev/null
 
     rm $CFG_PATH
