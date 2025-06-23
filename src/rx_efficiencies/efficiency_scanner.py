@@ -2,6 +2,10 @@
 Module containing EfficiencyScanner class
 '''
 
+import numpy
+import tqdm
+import pandas as pnd
+
 from ROOT                  import RDataFrame
 from dmu.logging.log_store import LogStore
 from rx_data.rdf_getter    import RDFGetter
@@ -20,17 +24,38 @@ class EfficiencyScanner:
     '''
     # --------------------------------
     def __init__(self, cfg : dict):
-        self._cfg = cfg
+        self._cfg    = cfg
+        [xvar, yvar] = list(cfg['variables'].keys())
 
-        RDFGetter.samples = cfg['input']['paths']
+        self._xvar = xvar
+        self._yvar = yvar
+        self._zvar = 'yield'
     # --------------------------------
     def _get_selection(self) -> dict[str,str]:
+        log.debug('Getting selection')
+
         sample  = self._cfg['input']['sample']
         trigger = self._cfg['input']['trigger']
         q2bin   = self._cfg['input']['q2bin']
         d_sel   = sel.selection(trigger=trigger, q2bin=q2bin, process=sample)
 
         return d_sel
+    # --------------------------------
+    def _check_rdf(self, rdf : RDataFrame) -> None:
+        l_variable = [ var.c_str()        for var in rdf.GetColumnNames() ]
+        # Drop prefix for variables in friend trees
+        l_variable = [ var.split('.')[-1] for var in rdf.GetColumnNames() ]
+        l_variable = sorted(l_variable)
+
+        fail = False
+        for variable in self._cfg['variables']:
+            if variable not in l_variable:
+                log.error(f'Missing variable: {variable}')
+                fail = True
+
+        if fail:
+            log.info(l_variable)
+            raise ValueError('At least one variable was not found')
     # --------------------------------
     def _skip_cut(self, expr : str) -> bool:
         d_var = self._cfg['variables']
@@ -42,6 +67,7 @@ class EfficiencyScanner:
         return False
     # --------------------------------
     def _get_rdf(self) -> RDataFrame:
+        log.debug('Getting dataframe')
         d_cut = self._get_selection()
 
         sample  = self._cfg['input']['sample']
@@ -50,6 +76,9 @@ class EfficiencyScanner:
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf()
 
+        self._check_rdf(rdf=rdf)
+
+        log.debug('Applying selection')
         for name, expr in d_cut.items():
             log.debug(f'{name:<20}{expr}')
             if self._skip_cut(expr):
@@ -63,11 +92,37 @@ class EfficiencyScanner:
 
         return rdf
     # --------------------------------
+    def _scan_rdf(self, rdf : RDataFrame) -> dict[str,RDataFrame]:
+        d_var        = self._cfg['variables']
+        [xvar, yvar] = list(d_var.keys())
+        arr_xval     = d_var[xvar]
+        arr_yval     = d_var[yvar]
+        X, Y         = numpy.meshgrid(arr_xval, arr_yval, indexing='xy')
+        arr_bound    = numpy.stack([X.ravel(), Y.ravel()], axis=1)
+
+        d_rdf = {}
+        for [xval, yval] in arr_bound:
+            expr                = f'({xvar} > {xval}) && ({yvar} > {yval})'
+            d_rdf[(xval, yval)] = rdf.Filter(expr)
+
+        return d_rdf
+    # --------------------------------
     def run(self):
         '''
         return dataframe with efficiency and values of variables in scan
         '''
         rdf   = self._get_rdf()
+        d_rdf = self._scan_rdf(rdf=rdf)
 
-        return
+        log.info('Evaluating yields')
+
+        d_data= {self._xvar : [], self._yvar : [], self._zvar : []}
+        for (xval, yval), rdf in tqdm.tqdm(d_rdf.items()):
+            zval = rdf.Count().GetValue()
+
+            d_data[self._xvar].append(xval)
+            d_data[self._yvar].append(yval)
+            d_data[self._zvar].append(zval)
+
+        return pnd.DataFrame(d_data)
 # --------------------------------
