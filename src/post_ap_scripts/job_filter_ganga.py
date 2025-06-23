@@ -213,5 +213,3 @@ def main():
     job.prepare()
     job.submit()
 # -------------------------------------------------
-if __name__ == 'GangaCore.GPI':
-    main()
