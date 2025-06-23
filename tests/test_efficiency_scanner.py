@@ -31,7 +31,7 @@ def _plot_values(
     '''
     Plot dataframe as an interpolated mesh
     '''
-    pivoted = df.pivot(index='y', columns='x', values='z')
+    pivoted = df.pivot(index='mva_prc', columns='mva_cmb', values='yield')
     plt.imshow(
         pivoted.values,
         origin='lower',
@@ -43,9 +43,8 @@ def _plot_values(
     )
 
     plt.colorbar(label='z')
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.title('Heatmap of z vs (x, y)')
+    plt.xlabel('MVA${}_{comb}$')
+    plt.ylabel('MVA${}_{prec}$')
     plt.xticks(pivoted.columns)
     plt.yticks(pivoted.index)
     plt.tight_layout()
