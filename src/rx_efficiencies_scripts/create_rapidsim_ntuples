@@ -88,7 +88,7 @@ create_config()
 # -----------------------
 create_ntuple()
 {
-    echo "Creating $DECAY with $NEVENTS entries at $ENERGY"
+    echo "    $NEVENTS entries @ $ENERGY TeV"
 
     DECAYDIR=$OUTDIR"/"$DECAY"/"$ENERGY"TeV"
     mkdir -p $DECAYDIR
@@ -113,7 +113,6 @@ OUTDIR=$ANADIR"/Rapidsim/"$VERSION
 for DECAY in ${DECAYS[@]};do
     echo "$DECAY"
     for ENERGY in "8" "13" "14";do
-        echo "  $ENERGY TeV"
         create_ntuple
     done
 done
