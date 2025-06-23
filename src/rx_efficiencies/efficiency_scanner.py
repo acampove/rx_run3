@@ -28,16 +28,7 @@ class EfficiencyScanner:
         sample  = self._cfg['input']['sample']
         trigger = self._cfg['input']['trigger']
         q2bin   = self._cfg['input']['q2bin']
-
-        if   trigger == 'Hlt2RD_BuToKpEE_MVA':
-            analysis = 'EE'
-        elif trigger == 'Hlt2RD_BuToKpMuMu_MVA':
-            analysis = 'MM'
-        else:
-            raise ValueError(f'Invalid trigger {trigger}')
-
-
-        d_sel = sel.selection(project='RK', analysis=analysis, q2bin=q2bin, process=sample)
+        d_sel   = sel.selection(trigger=trigger, q2bin=q2bin, process=sample)
 
         return d_sel
     # --------------------------------
