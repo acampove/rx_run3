@@ -65,6 +65,14 @@ initialize()
         echo "ANADIR variable not set"
         exit 1
     fi
+
+    which rapidsim > /dev/null 2>&1
+
+    if [ $? -ne 0 ];then
+        echo ""
+        echo "Rapidsim not found"
+        exit 1
+    fi
 }
 # -----------------------
 find_decays()
