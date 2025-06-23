@@ -90,7 +90,7 @@ create_ntuple()
 {
     echo "Creating $DECAY with $NEVENTS entries at $ENERGY"
 
-    DECAYDIR=$ANADIR"/Rapidsim/"$VERSION"/"$DECAY"/"$ENERGY"TeV"
+    DECAYDIR=$OUTDIR"/"$DECAY"/"$ENERGY"TeV"
     mkdir -p $DECAYDIR
 
     check_status "Creating $DECAYDIR"
@@ -109,6 +109,7 @@ get_opts "$@"
 initialize
 find_decays
 
+OUTDIR=$ANADIR"/Rapidsim/"$VERSION
 for DECAY in ${DECAYS[@]};do
     echo "$DECAY"
     for ENERGY in "8" "13" "14";do
@@ -116,3 +117,8 @@ for DECAY in ${DECAYS[@]};do
         create_ntuple
     done
 done
+
+echo ""
+echo "Files saved to $OUTDIR:"
+echo ""
+ls $OUTDIR
