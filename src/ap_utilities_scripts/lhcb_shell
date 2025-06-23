@@ -6,17 +6,20 @@ display_help()
     echo "Utility needed to setup shell environment where to use lhcb CLI utilities"
     echo ""
     echo "-h: Print this help"
+    echo "-g: Ganga version, e.g. 8.7.10, by default LATEST"
 }
 # ------------------------------------------------------------------
 get_opts()
 {
     TEST=1
-    while getopts :hf:u:c: option; do
+    GVER="LATEST"
+    while getopts :hf:g: option; do
         case "${option}" in
             h)
                 display_help
                 exit 0
                 ;;
+            g)  GVER="${OPTARG}";;
            \?)  echo "Invalid option: -${OPTARG}"
                 display_help
                 exit 1
@@ -27,6 +30,10 @@ get_opts()
                 ;;
         esac
     done
+
+    if [[ "$GVER" != "LATEST" ]];then
+        echo "Using Ganga version: $GVER"
+    fi
 }
 # ------------------------------------------------------------------
 make_rcfile()
@@ -42,7 +49,7 @@ make_rcfile()
     echo "export LXNAME=$LXNAME"                                                                                 >> $RCFILE
     echo "export GANGA_CONFIG_PATH=GangaLHCb/LHCb.ini"                                                           >> $RCFILE
     echo "export GANGA_SITE_CONFIG_AREA=/cvmfs/lhcb.cern.ch/lib/GangaConfig/config"                              >> $RCFILE
-    echo "export PYTHONPATH=$PYTHONPATH:/cvmfs/ganga.cern.ch/Ganga/install/LATEST/lib/python3.11/site-packages/" >> $RCFILE
+    echo "export PYTHONPATH=$PYTHONPATH:/cvmfs/ganga.cern.ch/Ganga/install/$GVER/lib/python3.11/site-packages/"  >> $RCFILE
     echo "Using rc file:"
     cat $RCFILE
 }
