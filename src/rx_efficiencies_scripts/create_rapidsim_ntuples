@@ -8,6 +8,7 @@ display_help()
     echo "-n: Number of entries in the ntuples"
     echo "-v: Version of input config files, which is the same as the output's version"
     echo "-d: Will run a dry run if 1 (default) or a real run if 0"
+    echo "-p: Process to run over, if none found, will do all the processes" 
 }
 #--------------------------------------------------
 get_opts()
@@ -18,7 +19,7 @@ get_opts()
     fi  
 
     DRY_RUN=1
-    while getopts :hf:n:v:d: option; do 
+    while getopts :hf:n:v:d:p: option; do 
         case "${option}" in
             h)  
                 display_help
@@ -27,6 +28,7 @@ get_opts()
             n)  NEVENTS=${OPTARG};;
             v)  VERSION=${OPTARG};;
             d)  DRY_RUN=${OPTARG};;
+            p)  PROCESS=${OPTARG};;
            \?)  echo "Invalid option: -${OPTARG}"
                 display_help
                 exit 1
@@ -124,6 +126,10 @@ find_decays
 
 OUTDIR=$ANADIR"/Rapidsim/"$VERSION
 for DECAY in ${DECAYS[@]};do
+    if [[ ! -z $PROCESS ]] && [[ "$DECAY" != "$PROCESS" ]];then
+        continue
+    fi
+
     echo "$DECAY"
     for ENERGY in "8" "13" "14";do
         create_ntuple
