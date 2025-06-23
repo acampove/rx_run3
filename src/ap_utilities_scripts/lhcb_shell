@@ -72,7 +72,7 @@ initialize()
     fi
 }
 # ------------------------------------------------------------------
-lb_dirac()
+create_shell()
 {
     # Will create a shell with dirac and some basic environment specified by rc file
 
@@ -108,4 +108,4 @@ lhcb_env()
 get_opts "$@"
 initialize
 make_rcfile
-lb_dirac
+create_shell
