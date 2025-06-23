@@ -23,14 +23,6 @@ def test_scan():
                 'sample' : 'Bu_JpsiK_ee_eq_DPC',
                 'trigger': 'Hlt2RD_BuToKpEE_MVA',
                 'q2bin'  : 'jpsi',
-                'paths':
-                {
-                    'main'      : '/home/acampove/external_ssd/Data/samples/main.yaml',
-                    'mva'       : '/home/acampove/external_ssd/Data/samples/mva.yaml',
-                    'hop'       : '/home/acampove/external_ssd/Data/samples/hop.yaml',
-                    'cascade'   : '/home/acampove/external_ssd/Data/samples/cascade.yaml',
-                    'jpsi_misid': '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
-                    }
                 },
             'variables' : 
             {
