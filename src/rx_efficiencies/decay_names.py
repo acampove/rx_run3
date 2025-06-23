@@ -17,6 +17,7 @@ class DecayNames:
     # so that code downstream uses this name to pick up hadronization fractions
 
     bpkpee           = 'bpkpee'
+    bpkpjpsiee       = 'bpkpjpsiee'
     bdkskpiee        = 'bdkskpiee'
     bpkskpiee        = 'bpkskpiee'
     bsphiee          = 'bsphiee'
@@ -29,6 +30,7 @@ class DecayNames:
     tex[bdkskpiee  ] = r'$B_d\to K^{*0}(\to K^+\pi^-)e^+e^-$'
     tex[bpkskpiee  ] = r'$B^+\to K^{*+}(\to K^+\pi^0)e^+e^-$'
     tex[bpkpee     ] = r'$B^+\to K^+e^+e^-$'
+    tex[bpkpjpsiee ] = r'$B^+\to K^+ J/\psi(\to e^+e^-)$'
     tex[bsphiee    ] = r'$B_s\to \phi(1020)e^+e^-$'
     tex[bpk1kpipiee] = r'$B^+\to K_1(1270)^+(\to K^+\pi^+\pi^-)e^+e^-$'
     tex[bpk2kpipiee] = r'$B^+\to K_2(1430)^+(\to X \to K^+\pi^+\pi^-)e^+e^-$'
@@ -37,6 +39,7 @@ class DecayNames:
     # --------------------------
     nic                                       = {}
     nic['Bd_Kstee_eq_btosllball05_DPC'      ] = bdkskpiee
+    nic['Bu_JpsiK_ee_eq_DPC'                ] = bpkpjpsiee
     nic['Bu_Kstee_Kpi0_eq_btosllball05_DPC' ] = bpkskpiee
     nic['Bu_Kee_eq_btosllball05_DPC'        ] = bpkpee
     nic['Bs_phiee_eq_Ball_DPC'              ] = bsphiee
@@ -46,6 +49,8 @@ class DecayNames:
     # correspondence between decay variable and sample identifier
     # --------------------------
     sam              = {}
+
+    sam[bpkpjpsiee]  = 'Bu_JpsiK_ee_eq_DPC'
     sam[bdkskpiee  ] = 'Bd_Kstee_eq_btosllball05_DPC'
     sam[bpkskpiee  ] = 'Bu_Kstee_Kpi0_eq_btosllball05_DPC'
     sam[bpkpee     ] = 'Bu_Kee_eq_btosllball05_DPC'
@@ -57,6 +62,7 @@ class DecayNames:
     # fraction of decay from subdecays
     # -----------------------------------
     dec              = {}
+    dec[bpkpjpsiee ] = ['bpjk', 'jpee']
     dec[bdkskpiee  ] = ['bdks', 'k+kp']
     dec[bpkskpiee  ] = ['bpks', 'kokp']
     dec[bpkpee     ] = ['bpkp']
