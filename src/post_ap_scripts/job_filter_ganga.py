@@ -12,9 +12,17 @@ from dataclasses         import dataclass
 from importlib.resources import files
 
 import yaml
-import ganga.ganga
-from ganga import Job, Executable, DiracFile, LocalFile, Interactive, GenericSplitter, Dirac, Local, File
 
+from ganga import ganga
+from ganga import Job
+from ganga import Executable
+from ganga import DiracFile
+from ganga import LocalFile
+from ganga import Interactive
+from ganga import GenericSplitter
+from ganga import Dirac
+from ganga import Local
+from ganga import File
 from dmu.logging.log_store     import LogStore
 from post_ap.pfn_reader        import PFNReader
 
