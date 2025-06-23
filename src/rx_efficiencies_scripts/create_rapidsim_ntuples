@@ -46,7 +46,7 @@ check_status()
 # -----------------------
 initialize()
 {
-    RAPIDSIM_CONFIG=$(python3 -c "from importlib.resources import files; data_path=files('rx_efficiencies_data').joinpath('prec_decfiles/$VERSION'); print(str(data_path))")
+    RAPIDSIM_CONFIG=$(python3 -c "from importlib.resources import files; data_path=files('rx_efficiencies_data').joinpath('descriptors/$VERSION'); print(str(data_path))")
     check_status "Finding rx_efficiencies data directory"
 
     if [ -z $RAPIDSIM_CONFIG ];then
