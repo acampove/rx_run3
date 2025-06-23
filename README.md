@@ -1,3 +1,5 @@
+[TOC]
+
 # $R_X$ efficiencies
 
 Project used to calculate efficiencies for different simulated datasets. 
