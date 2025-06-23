@@ -18,7 +18,10 @@ log=LogStore.add_logger('rx_efficiencies:efficiency_calculator')
 #------------------------------------------
 class EfficiencyCalculator:
     '''
-    Class used to calculate efficiencies for partially reconstructed samples
+    Class used to calculate efficiencies for:
+
+    - Full nominal selection
+    - Full selection defined as the product of the acceptance, selection and reconstruction efficiencies 
     '''
     #------------------------------------------
     def __init__(self, q2bin : str):
