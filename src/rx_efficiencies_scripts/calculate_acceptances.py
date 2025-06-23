@@ -6,7 +6,6 @@ import os
 import glob
 import pprint
 import argparse
-from importlib.resources   import files
 from typing                import Union
 
 import mplhep
@@ -26,6 +25,7 @@ class Data:
     '''
     Data class
     '''
+    ana_dir = os.environ['ANADIR']
     out_dir : str
     l_energy= ['8TeV', '13TeV', '14TeV']
 
@@ -41,7 +41,7 @@ def _get_args():
     Data.out_dir  = _get_out_dir(args.version)
 #----------------------------------
 def _get_out_dir(version : str) -> str:
-    out_dir = files('rx_efficiencies_data').joinpath(f'acceptances/{version}')
+    out_dir = f'{Data.ana_dir}/efficiencies/acceptances/{version}'
     os.makedirs(out_dir, exist_ok=True)
 
     return out_dir
@@ -53,8 +53,8 @@ def _get_id(path):
     return identifier
 #----------------------------------
 def _get_paths(energy : str):
-    dat_dir = os.environ['RAPIDSIM_NTUPLES']
-    root_wc = f'{dat_dir}/*/*/*'
+    dat_dir = f'{Data.ana_dir}/Rapidsim'
+    root_wc = f'{dat_dir}/*/*/*/*'
 
     l_org   = glob.glob(root_wc)
     l_path  = l_org
