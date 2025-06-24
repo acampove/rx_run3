@@ -566,7 +566,7 @@ class RDFGetter:
         all_guuid = ''
         for path in self._l_path:
             ifile = TFile(path)
-            all_guuid += ifile.GetGUUID().AsString()
+            all_guuid += ifile.GetUUID().AsString()
             ifile.Close()
 
         val = hashing.hash_object(all_guuid)
