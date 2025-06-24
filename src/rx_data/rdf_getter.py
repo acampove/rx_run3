@@ -10,7 +10,6 @@ import copy
 import pprint
 import hashlib
 import fnmatch
-from typing              import Union
 from importlib.resources import files
 
 import yaml
