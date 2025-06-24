@@ -199,7 +199,8 @@ class EfficiencyScanner:
         df = self._get_yields(rdf=rdf)
         df = self._eff_from_yield(df_tgt=df)
 
-        gut.cache_data(df, hash_obj=[hsh, self._cfg])
+        data = df.to_dict(orient='records')
+        gut.cache_data(data, hash_obj=[hsh, self._cfg])
 
         return df
 # --------------------------------
