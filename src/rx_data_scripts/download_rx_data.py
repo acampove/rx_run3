@@ -134,7 +134,6 @@ def _get_args():
     parser.add_argument('-v', '--vers' , type=str, help='Version of LFNs'                        , required=True)
     parser.add_argument('-k', '--kind' , type=str, help='Type of production'                     , required=True)
     parser.add_argument('-n', '--nfile', type=int, help='Number of files to download', default=-1)
-    parser.add_argument('-p', '--dest' , type=str, help='Destination directory will override whatever is in DOWNLOAD_NTUPPATH')
     parser.add_argument('-l', '--log'  , type=int, help='Log level, default 20', choices=[10, 20, 30, 40], default=20)
     parser.add_argument('-m', '--mth'  , type=int, help=f'Number of threads to use for downloading, default {Data.nthread}', default=Data.nthread)
     parser.add_argument('-r', '--ran'  ,           help='When picking a subset of files, with -n, pick them randomly', action='store_true')
@@ -147,7 +146,6 @@ def _get_args():
     Data.vers    = args.vers
     Data.kind    = args.kind
     Data.nfile   = args.nfile
-    Data.dst_dir = args.dest
     Data.log_lvl = args.log
     Data.nthread = args.mth
     Data.ran_pfn = args.ran
@@ -177,11 +175,8 @@ def _split_pfns(l_pfn : list[str]) -> list[list[str]]:
 def _initialize():
     LogStore.set_level('rx_data:download_rx_data', Data.log_lvl)
 
-    if Data.dst_dir is None:
-        if 'DOWNLOAD_NTUPPATH' not in os.environ:
-            raise ValueError('DOWNLOAD_NTUPPATH not set and -d option not pased')
-
-        Data.dst_dir = os.environ['DOWNLOAD_NTUPPATH']
+    ana_dir = os.environ['ANADIR']
+    Data.dst_dir = f'{ana_dir}/Data/{Data.kind}'
 
     _make_out_dir()
     with open(Data.trg_path, encoding='utf-8') as ifile:
