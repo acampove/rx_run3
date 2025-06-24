@@ -66,8 +66,8 @@ def test_scan():
                 },
             'variables' : 
             {
-                'mva_cmb' : numpy.arange(0.5, 1.0, 0.1),
-                'mva_prc' : numpy.arange(0.5, 1.0, 0.1),
+                'mva_cmb' : numpy.arange(0.5, 1.0, 0.1).tolist(),
+                'mva_prc' : numpy.arange(0.5, 1.0, 0.1).tolist(),
                 }
             }
 
