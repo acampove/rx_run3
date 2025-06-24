@@ -31,7 +31,7 @@ def _plot_values(
     '''
     Plot dataframe as an interpolated mesh
     '''
-    pivoted = df.pivot(index='mva_prc', columns='mva_cmb', values='yield')
+    pivoted = df.pivot(index='mva_prc', columns='mva_cmb', values='eff')
     plt.imshow(
         pivoted.values,
         origin='lower',
@@ -42,6 +42,7 @@ def _plot_values(
         interpolation='bilinear',
     )
 
+    plt.title('Efficiencies vs WP')
     plt.colorbar(label='z')
     plt.xlabel('MVA${}_{comb}$')
     plt.ylabel('MVA${}_{prec}$')
