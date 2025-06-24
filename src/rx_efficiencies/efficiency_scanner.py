@@ -125,8 +125,20 @@ class EfficiencyScanner:
     def run(self):
         '''
         return dataframe with efficiency and values of variables in scan
+    # --------------------------------
+    def _get_yields(self, rdf : RDataFrame) -> pnd.DataFrame:
         '''
-        rdf   = self._get_rdf()
+        Parameters 
+        ------------------
+        rdf: ROOT dataframe with actual data/mc
+
+        Returns 
+        ------------------
+        pandas dataframe with:
+
+        X/Y: Coordinates at which cuts are evaluated
+        Z  : Yield
+        '''
         d_rdf = self._scan_rdf(rdf=rdf)
 
         log.info('Evaluating yields')
