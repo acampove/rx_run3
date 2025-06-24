@@ -31,7 +31,7 @@ class Data:
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used list triggers for a given version')
     parser.add_argument('-v', '--vers' , type=str, help='Version of LFNs', required=True)
-    parser.add_argument('-k', '--kind' , type=str, help='Type of production', choices=['rx', 'lbpkmumu'], required=True)
+    parser.add_argument('-k', '--kind' , type=str, help='Type of production', required=True)
     parser.add_argument('-o', '--outf' , type=str, help='Name of file to save list as YAML, by default will not save anything')
     parser.add_argument('-l', '--level', type=int, help='Logging level', default=20)
 
