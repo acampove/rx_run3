@@ -9,6 +9,7 @@ dependencies= [
 'joblib',
 'PyYAML',
 'rx_data',
+'rx_efficiencies',
 'rx_selection',
 ]
 
