@@ -79,7 +79,7 @@ class EfficiencyCalculator:
         title = f'$q^2$: {self._q2bin}'
 
         plt.grid()
-        plt.xlim(0, 0.5)
+        plt.xlim(0, 1.0)
         plt.title(title)
         plt.ylabel('')
         plt.xlabel(r'$\varepsilon_{sel}$[%]')
