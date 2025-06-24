@@ -8,8 +8,13 @@ import pandas as pnd
 
 from ROOT                  import RDataFrame
 from dmu.logging.log_store import LogStore
+from dmu.generic           import hashing
+from dmu.generic           import utilities as gut
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
+
+from rx_efficiencies.efficiency_calculator import EfficiencyCalculator
+from rx_efficiencies.decay_names           import DecayNames
 
 log = LogStore.add_logger('rx_efficiencies:efficiency_scanner')
 # --------------------------------
