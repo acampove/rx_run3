@@ -86,7 +86,7 @@ class RDFGetter:
 
         self._rdf    : RDataFrame     # This is where the dataframe will be stored, prevents recalculation
         self._l_path : list[str] = [] # list of paths to all the ROOT files
-        self._analysis           = self._analysis_from_trigger()
+        self._channel            = self._channel_from_trigger()
         self._initialize()
     # ---------------------------------------------------
     def _get_main_tree(self) -> str:
@@ -97,14 +97,17 @@ class RDFGetter:
 
         return RDFGetter.main_tree
     # ---------------------------------------------------
-    def _analysis_from_trigger(self) -> str:
+    def _channel_from_trigger(self) -> str:
+        '''
+        Returns EE or MM given the HLT2 trigger
+        '''
         if self._trigger in self._l_mm_trigger:
             return 'MM'
 
         if self._trigger in self._l_ee_trigger:
             return 'EE'
 
-        raise NotImplementedError(f'Cannot deduce analysis from trigger: {self._trigger}')
+        raise NotImplementedError(f'Cannot deduce channel from trigger: {self._trigger}')
     # ---------------------------------------------------
     def _load_config(self) -> dict:
         config_path = files('rx_data_data').joinpath('rdf_getter/config.yaml')
@@ -249,12 +252,12 @@ class RDFGetter:
             return d_trigger[trigger]
 
         log.debug(f'Found extended trigger: {self._trigger}')
-        trig_misid    = self._trigger.replace('_ext', '_misid')
-        trig_analysis = self._trigger.replace('_ext',       '')
+        trig_misid   = self._trigger.replace('_ext', '_misid')
+        trig_channel = self._trigger.replace('_ext',       '')
 
         l_path = []
-        l_path+= d_trigger[trig_analysis]
-        l_path+= d_trigger[trig_misid   ]
+        l_path+= d_trigger[trig_channel]
+        l_path+= d_trigger[trig_misid  ]
 
         return l_path
     # ---------------------------------------------------
@@ -396,7 +399,7 @@ class RDFGetter:
     def _define_common_columns(self, rdf : RDataFrame) -> RDataFrame:
         log.info('Adding common columns')
 
-        d_def = self._cfg['definitions'][self._analysis]
+        d_def = self._cfg['definitions'][self._channel]
         if hasattr(RDFGetter, 'd_custom_columns'):
             log.warning('Adding custom column definitions')
             d_def.update(RDFGetter.d_custom_columns)
