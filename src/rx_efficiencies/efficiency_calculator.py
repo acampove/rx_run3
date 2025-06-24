@@ -21,7 +21,7 @@ class EfficiencyCalculator:
     Class used to calculate efficiencies for:
 
     - Full nominal selection
-    - Full selection defined as the product of the acceptance, selection and reconstruction efficiencies 
+    - Full selection defined as the product of the acceptance, selection and reconstruction efficiencies
     '''
     #------------------------------------------
     def __init__(self, q2bin : str):
@@ -97,9 +97,9 @@ class EfficiencyCalculator:
         return acc
     #------------------------------------------
     def _add_sel_eff(
-            self, 
-            passed : int, 
-            total  : int, 
+            self,
+            passed : int,
+            total  : int,
             proc   : str) -> None:
         eff = passed / total
         err = math.sqrt(eff * (1 - eff) / total)
