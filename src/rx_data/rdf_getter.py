@@ -511,7 +511,7 @@ class RDFGetter:
     # ---------------------------------------------------
     def get_rdf(
             self,
-            per_file : bool = False) -> Union[RDataFrame, dict[str,RDataFrame]]:
+            per_file : bool = False) -> RDataFrame|dict[str,RDataFrame]:
         '''
         Returns sample in the form of dataframes
 
