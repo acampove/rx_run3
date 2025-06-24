@@ -31,6 +31,8 @@ def _plot_values(
     '''
     Plot dataframe as an interpolated mesh
     '''
+    df['eff'] = 100 * df['eff']
+
     pivoted = df.pivot(index='mva_prc', columns='mva_cmb', values='eff')
     plt.imshow(
         pivoted.values,
