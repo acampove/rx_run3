@@ -3,8 +3,6 @@ Module holding AcceptanceReader class
 '''
 
 import os
-from importlib.resources import files
-
 import pandas as pnd
 
 from dmu.generic.version_management import get_last_version
@@ -18,8 +16,9 @@ class AcceptanceReader:
     '''
     #----------------------------------
     def __init__(self, year : str, proc : str):
-        self._year = year
-        self._proc = proc
+        self._year    = year
+        self._proc    = proc
+        self._ana_dir = os.environ['ANADIR']
     #----------------------------------
     def _get_energy(self) -> dict[str,str]:
         d_energy  = {
@@ -54,7 +53,7 @@ class AcceptanceReader:
         '''
         Reads JSON files, returns acceptance value
         '''
-        prc_dir = files('rx_efficiencies_data').joinpath('acceptances')
+        prc_dir = f'{self._ana_dir}/efficiencies/acceptances'
         vers    = get_last_version(dir_path=prc_dir, version_only=True)
         energy  = self._get_energy()
         prc_path= f'{prc_dir}/{vers}/acceptances_{energy}.json'
