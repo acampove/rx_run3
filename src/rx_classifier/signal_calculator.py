@@ -22,6 +22,28 @@ class SignalCalculator:
         self._cfg   = cfg
         self._q2bin = q2bin
     # -----------------------------------
+    def _get_bfr_ratio(self) -> float:
+        '''
+        Returns ratio of branching fractions between the signal and control channel
+
+        BR_sig / BR_ctr
+        '''
+        sig_sam = self._cfg['samples']['signal' ]
+        ctr_sam = self._cfg['samples']['control']
+
+        data    = gut.load_data(package='rx_efficiencies_data', fpath='scales/fr_bf.yaml')
+
+        l_dec   = DecayNames.subdecays_from_sample(sample=sig_sam)
+        bf_sig  = 1
+        for dec in l_dec:
+            bf_sig *= data['bf'][dec]
+
+        l_dec   = DecayNames.subdecays_from_sample(sample=ctr_sam)
+        bf_ctr  = 1
+        for dec in l_dec:
+            bf_ctr *= data['bf'][dec]
+
+        return bf_sig / bf_ctr
     # -----------------------------------
     def _get_ctr_yield(self) -> float:
         return 1.0
