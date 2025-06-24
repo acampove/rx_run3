@@ -122,9 +122,39 @@ class EfficiencyScanner:
 
         return d_rdf
     # --------------------------------
-    def run(self):
+    def _eff_from_yield(self, df_tgt : pnd.DataFrame) -> pnd.DataFrame:
         '''
-        return dataframe with efficiency and values of variables in scan
+        Takes dataframe with yields and adds an efficiency column.
+        The denominator is taken from an `EfficiencyCalculator` instance
+        at the correct process.
+
+        Parameters
+        ------------------
+        df_tgt: Dataframe with yields for different working points
+
+        Returns
+        ------------------
+        Same dataframe with eff column added
+        '''
+        sample = self._cfg['input']['sample']
+        nick   = DecayNames.nic_from_sample(sample)
+
+        # We only need the denominator,
+        # the q2bin only matters for the numerator of the
+        # total efficiency
+        obj = EfficiencyCalculator(q2bin='central')
+        df  = obj.get_stats()
+        df  = df[df['Process'] == nick]
+
+        if len(df) != 1:
+            log.error(df)
+            raise ValueError('Not found one and only one efficiency for: {sample}/{nick}')
+
+        total = df.at['Total'].iloc[0]
+
+        df_tgt['eff'] = df_tgt['yield'] / total
+
+        return df_tgt
     # --------------------------------
     def _get_yields(self, rdf : RDataFrame) -> pnd.DataFrame:
         '''
