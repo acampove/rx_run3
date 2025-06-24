@@ -12,7 +12,7 @@ dependencies= [
 'numpy',
 'toml',
 'uproot',
-'tensorflow==2.18.0', # Use latest tensorflow allowed by zfit
+'tensorflow', # Use latest tensorflow allowed by zfit
 'awkward-pandas', # Because DDFGetter might need to access files with jagged data?
 'dask[dataframe,distributed]',
 'numpy',
