@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 
 from ROOT                              import RDataFrame
 from dmu.logging.log_store             import LogStore
+from dmu.generic                       import utilities as gut
 from rx_data.rdf_getter                import RDFGetter
 from rx_selection                      import selection as sel
 from rx_efficiencies.acceptance_reader import AcceptanceReader
@@ -119,15 +120,24 @@ class EfficiencyCalculator:
         return sel_yld, tot_yld
     #------------------------------------------
     def _get_sel_yld(self, proc : str) -> int:
-        sample = DecayNames.sample_from_decay(proc)
-        rdf    = self._get_rdf(proc=proc, tree_name='DecayTree')
-        d_sel  = sel.selection(trigger=self._trigger, q2bin=self._q2bin, process=sample)
+        sample   = DecayNames.sample_from_decay(proc)
+        rdf, uid = self._get_rdf(proc=proc, tree_name='DecayTree')
+        d_sel    = sel.selection(trigger=self._trigger, q2bin=self._q2bin, process=sample)
 
+        nsel     = gut.load_cached(hash_obj=[uid, d_sel], on_fail=-999)
+        if nsel != -999:
+            log.info(f'Using cached selected yield: {nsel}')
+            return nsel
+
+        log.info('No cached selected yield found, recalculating it')
         for cut_name, cut_expr in d_sel.items():
             log.debug(f'{cut_name:<20}{cut_expr}')
             rdf = rdf.Filter(cut_expr, cut_name)
 
-        return rdf.Count().GetValue()
+        nsel = rdf.Count().GetValue()
+        gut.cache_data(nsel, hash_obj=[uid, d_sel])
+
+        return nsel
     #------------------------------------------
     def _get_rdf(self, proc : str, tree_name : str) -> tuple[RDataFrame,str]:
         sample = DecayNames.sample_from_decay(proc)
