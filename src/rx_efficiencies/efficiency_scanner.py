@@ -22,7 +22,7 @@ class EfficiencyScanner:
     '''
     Class meant to scan efficiencies in MC samples
 
-    It will 
+    It will
 
     - Apply full selection, except for cuts involving variables been scanned
     - Scan those variables and provide dataframe with efficiencies
