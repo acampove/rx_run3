@@ -22,6 +22,17 @@ class SignalCalculator:
         self._cfg   = cfg
         self._q2bin = q2bin
     # -----------------------------------
+    # -----------------------------------
+    def _get_eff_ratio(self) -> pnd.DataFrame:
+        df_sig_eff = self._get_eff(is_signal=True)
+        df_ctr_eff = self._get_eff(is_signal=False)
+
+        df         = df_sig_eff.copy()
+        df['rat']  = df_sig_eff['eff'] / df_ctr_eff['eff']
+        df         = df.drop(columns=['yield', 'eff'])
+
+        return df
+    # -----------------------------------
     def _get_bfr_ratio(self) -> float:
         '''
         Returns ratio of branching fractions between the signal and control channel
