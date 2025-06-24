@@ -90,7 +90,7 @@ class EfficiencyCalculator:
         plt.savefig(plt_path)
         plt.close('all')
     #------------------------------------------
-    def _get_geo_eff(self, proc):
+    def _get_geo_eff(self, proc : str) -> float:
         obj = AcceptanceReader(year=self._year, proc=proc)
         acc = obj.read()
 
