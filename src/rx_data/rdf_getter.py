@@ -16,7 +16,7 @@ from importlib.resources import files
 import yaml
 import dmu.generic.utilities as gut
 
-from ROOT                  import RDF, RDataFrame, GetThreadPoolSize
+from ROOT                  import RDF, RDataFrame, GetThreadPoolSize, TFile
 from dmu.generic           import version_management as vmn
 from dmu.generic           import hashing
 from dmu.logging.log_store import LogStore
@@ -551,6 +551,28 @@ class RDFGetter:
         self._rdf = self._rdf_from_conf(conf_path)
 
         return self._rdf
+    # ---------------------------------------------------
+    def get_uid(self) -> str:
+        '''
+        Retrieves unique identifier for this sample
+        Build on top of the UUID from each file
+        '''
+        self.get_rdf() # Full RDF calculation needs to kick in before calculating GUID
+
+        if len(self._l_path) == 0:
+            raise ValueError('No path to ROOT files was found')
+
+        log.debug('Calculating GUUIDs')
+        all_guuid = ''
+        for path in self._l_path:
+            ifile = TFile(path)
+            all_guuid += ifile.GetGUUID().AsString()
+            ifile.Close()
+
+        val = hashing.hash_object(all_guuid)
+        val = val[:10]
+
+        return val
     # ---------------------------------------------------
     @staticmethod
     def add_truem(rdf : RDataFrame) -> RDataFrame:
