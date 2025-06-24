@@ -55,7 +55,12 @@ def _plot_values(
     plt.savefig(out_path)
     plt.close()
 # -----------------------------------
-def test_scan():
+@pytest.mark.parametrize('sample, q2bin', [
+    ('Bu_JpsiK_ee_eq_DPC'        , 'jpsi'   ),
+    ('Bu_Kee_eq_btosllball05_DPC', 'low'    ),
+    ('Bu_Kee_eq_btosllball05_DPC', 'central'),
+    ('Bu_Kee_eq_btosllball05_DPC', 'high'   )])
+def test_scan(sample : str, q2bin : str):
     '''
     Test efficiency scanning
     '''
@@ -66,9 +71,9 @@ def test_scan():
     cfg  = {
             'input' :
             {
-                'sample' : 'Bu_JpsiK_ee_eq_DPC',
+                'sample' : sample,
                 'trigger': 'Hlt2RD_BuToKpEE_MVA',
-                'q2bin'  : 'jpsi',
+                'q2bin'  : q2bin,
                 },
             'variables' :
             {
