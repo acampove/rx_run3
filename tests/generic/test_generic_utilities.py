@@ -1,7 +1,9 @@
 '''
 Module with tests for functions in generic/utilities.py
 '''
-from time import sleep
+import math
+from typing import Any
+from time   import sleep
 
 import pytest
 import dmu.generic.utilities as gut
@@ -76,4 +78,21 @@ def test_load_data(ext : str):
             fpath  =f'tests/config.{ext}')
 
     assert data == expected
+# -------------------------
+@pytest.mark.parametrize('obj', [
+    1,
+    1.3,
+    [1,2],
+    {'a' : 1}])
+def test_cache(obj : Any):
+    '''
+    Tests dumping and loading data in files with names as hashes
+    '''
+    gut.cache_data(obj, hash_obj=obj)
+    ret = gut.load_cached(hash_obj=obj)
+
+    if isinstance(obj, float):
+        math.isclose(obj, ret, rel_tol=1e-5)
+    else:
+        assert ret == obj
 # -------------------------

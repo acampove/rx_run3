@@ -12,6 +12,8 @@ from functools             import wraps
 from contextlib            import contextmanager
 
 import yaml
+from dmu.generic           import hashing
+from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 
 TIMER_ON=False
@@ -169,4 +171,38 @@ def silent_import():
             os.dup2(saved_stderr_fd, 2)
             os.close(saved_stdout_fd)
             os.close(saved_stderr_fd)
+# --------------------------------
+# Caching
+# --------------------------------
+def cache_data(obj : Any, hash_obj : Any) -> None:
+    '''
+    Will save data to a text file using a name from a hash
+
+    Parameters
+    -----------
+    obj      : Object that can be saved to a text file, e.g. list, number, dictionary
+    hash_obj : Object that can be used to get hash e.g. immutable
+    '''
+    try:
+        json.dumps(obj)
+    except Exception as exc:
+        raise ValueError('Object is not JSON serializable') from exc
+
+    val  = hashing.hash_object(hash_obj)
+    path = f'/tmp/dmu/cache/{val}.json'
+    gut.dump_json(obj, path)
+# --------------------------------
+def load_cached(hash_obj : Any) -> Any:
+    '''
+    Loads data corresponding to hash from hash_obj
+
+    Parameters
+    ---------------
+    hash_obj: Object used to calculate hash, which is in the file name
+    '''
+    val  = hashing.hash_object(hash_obj)
+    path = f'/tmp/dmu/cache/{val}.json'
+    data = gut.load_json(path)
+
+    return data
 # --------------------------------
