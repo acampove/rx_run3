@@ -33,6 +33,30 @@ Then, for each remote it pushes the tags and the commits.
 
 This section describes generic tools that could not be put in a specific category, but tend to be useful.
 
+## Caching data
+
+In order to reuse data that is hard to calculate one would need:
+
+- Serializable data, i.e. strings, floats, lists, etc
+- A way to get a unique identifier of that data, e.g. a hashable object
+
+If both are avalable, one can:
+
+```python
+import dmu.generic.utilities as gut
+
+obj     = very_expensive_function(arg1, arg2)
+hashable= arg1, arg2
+
+# This saves the data
+gut.cache_data(obj, hash_obj=hashable)
+
+# This loads the data back
+ret = gut.load_cached(hash_obj=hashable)
+```
+
+the cached data will go to JSON files in `/tmp/dmu/cache`
+
 ## Silencing import messages
 
 To silence messages given by modules not in the user's control do:
