@@ -22,6 +22,31 @@ class SignalCalculator:
         self._cfg   = cfg
         self._q2bin = q2bin
     # -----------------------------------
+    def _get_eff(self, is_signal : bool) -> pnd.DataFrame:
+        '''
+        Parameters
+        -------------
+        is_signal: If true, will run efficiency scan for signal, otherwise control mode
+
+        Returns
+        -------------
+        Dataframe with the total efficiency for each working point
+        '''
+        cfg = {'input' : {}}
+        if is_signal:
+            cfg['input']['sample'] = self._cfg['samples']['signal']
+            cfg['input']['q2bin' ] = self._q2bin
+        else:
+            cfg['input']['sample'] = self._cfg['samples']['control']
+            cfg['input']['q2bin' ] = 'jpsi'
+
+        cfg['input']['trigger'] = self._cfg['samples']['trigger']
+        cfg['variables']        = self._cfg['variables']
+
+        obj = EfficiencyScanner(cfg=cfg)
+        df  = obj.run()
+
+        return df
     # -----------------------------------
     def _get_eff_ratio(self) -> pnd.DataFrame:
         df_sig_eff = self._get_eff(is_signal=True)
