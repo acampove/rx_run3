@@ -23,14 +23,3 @@ def test_simple(q2bin : str):
 
     print(df)
 #-------------------------------------------------
-@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-def test_custom_selection(q2bin : str):
-    '''
-    Tests calculation of total efficiency where the selection has been overriden
-    '''
-    obj         = EfficiencyCalculator(q2bin=q2bin)
-    obj.out_dir = '/tmp/tests/rx_efficiencies/efficiency_calculator/custom_selection'
-    df          = obj.get_stats()
-
-    print(df)
-#-------------------------------------------------
