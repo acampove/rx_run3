@@ -96,3 +96,14 @@ def test_cache(obj : Any):
     else:
         assert ret == obj
 # -------------------------
+def test_cache_not_found():
+    '''
+    Checks that what will happen when a cached file is not found happens
+    '''
+    with pytest.raises(FileNotFoundError):
+        ret = gut.load_cached(hash_obj=['something that will never be cached'])
+
+    ret = gut.load_cached(hash_obj=['something that will never be cached'], on_fail=-999)
+
+    assert ret == -999
+# -------------------------

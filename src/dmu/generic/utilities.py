@@ -192,17 +192,24 @@ def cache_data(obj : Any, hash_obj : Any) -> None:
     path = f'/tmp/dmu/cache/{val}.json'
     gut.dump_json(obj, path)
 # --------------------------------
-def load_cached(hash_obj : Any) -> Any:
+def load_cached(hash_obj : Any, on_fail : Any = None) -> Any:
     '''
     Loads data corresponding to hash from hash_obj
 
     Parameters
     ---------------
     hash_obj: Object used to calculate hash, which is in the file name
+    on_fail : Value returned if no data was found. 
+              By default None, and it will just raise a FileNotFoundError
     '''
     val  = hashing.hash_object(hash_obj)
     path = f'/tmp/dmu/cache/{val}.json'
-    data = gut.load_json(path)
+    if os.path.isfile(path):
+        data = gut.load_json(path)
+        return data
 
-    return data
+    if on_fail is not None:
+        return on_fail
+
+    raise FileNotFoundError(f'Cannot find cached data at: {path}')
 # --------------------------------
