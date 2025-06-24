@@ -63,7 +63,7 @@ class EfficiencyCalculator:
         self._out_dir = value
     #------------------------------------------
     def _plot_sel_eff(self):
-        if self._out_dir is None:
+        if not hasattr(self, '_out_dir'):
             return
 
         log.debug('Plotting selection efficiencies')
