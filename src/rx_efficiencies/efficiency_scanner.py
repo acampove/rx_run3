@@ -71,7 +71,14 @@ class EfficiencyScanner:
 
         return False
     # --------------------------------
-    def _get_rdf(self) -> RDataFrame:
+    def _get_rdf(self) -> tuple[RDataFrame,str]:
+        '''
+        Load dataframe and lazily apply selection, except for the scanning part
+
+        Return dataframe and hash with unique identifier for:
+            - Dataset itself
+            - Selection used on it
+        '''
         log.debug('Getting dataframe')
         d_cut = self._get_selection()
 
@@ -80,22 +87,25 @@ class EfficiencyScanner:
 
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf()
+        uid = gtr.get_uid()
 
         self._check_rdf(rdf=rdf)
 
         log.debug('Applying selection')
+
+        d_cut_used = {}
         for name, expr in d_cut.items():
             log.debug(f'{name:<20}{expr}')
             if self._skip_cut(expr):
                 log.info(f'Skipping cut: {name}')
                 expr = '(1)'
 
+            d_cut_used[name] = expr
             rdf = rdf.Filter(expr, name)
 
-        rep = rdf.Report()
-        rep.Print()
+        hsh = hashing.hash_object([uid, d_cut_used])
 
-        return rdf
+        return rdf, hsh
     # --------------------------------
     def _scan_rdf(self, rdf : RDataFrame) -> dict[str,RDataFrame]:
         d_var        = self._cfg['variables']
