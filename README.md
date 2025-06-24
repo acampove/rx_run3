@@ -46,7 +46,7 @@ list_triggers -v v1 -k rx -o triggers.yaml
 For this, run:
 
 ```bash
-download_rx_data -m 5 -p /path/to/downloaded/.data -v v1 -d -t triggers.yaml
+download_rx_data -m 5 -v v1 -d -t triggers.yaml -k rx
 ```
 
 which will use 5 threads to download the ntuples associated to the triggers in `triggers.yaml`
@@ -56,20 +56,16 @@ The full options are:
 
 ```
 options:
-  -h, --help            show this help message and exit
-  -t TRIG, --trig TRIG  Path to YAML file with list of triggers
-  -v VERS, --vers VERS  Version of LFNs
-  -k {rx,lbpkmumu}, --kind {rx,lbpkmumu}
-                        Type of production
-  -n NFILE, --nfile NFILE
-                        Number of files to download
-  -p DEST, --dest DEST  Destination directory will override whatever is in DOWNLOAD_NTUPPATH
-  -l {10,20,30,40}, --log {10,20,30,40}
-                        Log level, default 20
-  -m MTH, --mth MTH     Number of threads to use for downloading, default 1
-  -r, --ran             When picking a subset of files, with -n, pick them randomly
-  -d, --dryr            If used, it will skip downloads, but do everything else
-  -f, --force           If used, it will download even if output already exists
+  -h, --help              show this help message and exit
+  -t TRIG, --trig TRIG    Path to YAML file with list of triggers
+  -v VERS, --vers VERS    Version of LFNs
+  -k KIND, --kind KIND    Type of production
+  -n NFILE, --nfile NFILE Number of files to download
+  -l {10,20,30,40}, --log {10,20,30,40} Log level, default 20
+  -m MTH, --mth MTH       Number of threads to use for downloading, default 1
+  -r, --ran               When picking a subset of files, with -n, pick them randomly
+  -d, --dryr              If used, it will skip downloads, but do everything else
+  -f, --force             If used, it will download even if output already exists
 ```
 
 **IMPORTANT**:
