@@ -60,7 +60,11 @@ def test_scan():
     '''
     Test efficiency scanning
     '''
-    cfg = {
+    l_wp = [0.50, 0.52, 0.54, 0.56, 0.58, 0.60, 0.62, 0.64, 0.66, 0.68, 0.70,
+            0.72, 0.74, 0.76, 0.78, 0.80, 0.82, 0.84, 0.86, 0.88, 0.90, 0.92, 
+            0.94, 0.96, 0.98]
+
+    cfg  = {
             'input' : 
             {
                 'sample' : 'Bu_JpsiK_ee_eq_DPC',
@@ -69,8 +73,8 @@ def test_scan():
                 },
             'variables' : 
             {
-                'mva_cmb' : numpy.arange(0.5, 1.0, 0.1).tolist(),
-                'mva_prc' : numpy.arange(0.5, 1.0, 0.1).tolist(),
+                'mva_cmb' : l_wp,
+                'mva_prc' : l_wp,
                 }
             }
 
