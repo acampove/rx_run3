@@ -85,7 +85,9 @@ class RDFGetter:
         self._l_mm_trigger    = ['Hlt2RD_BuToKpMuMu_MVA',
                                  'Hlt2RD_BuToKpMuMu_SameSign_MVA']
 
-        self._analysis        = self._analysis_from_trigger()
+        self._rdf    : RDataFrame     # This is where the dataframe will be stored, prevents recalculation
+        self._l_path : list[str] = [] # list of paths to all the ROOT files
+        self._analysis           = self._analysis_from_trigger()
         self._initialize()
     # ---------------------------------------------------
     def _get_main_tree(self) -> str:
@@ -308,6 +310,7 @@ class RDFGetter:
         if nosamp:
             raise ValueError(f'Could not find any sample matching {self._sample} with friend tree {ftree} in {yaml_path}')
 
+        self._l_path      += l_path
         d_section['files'] = l_path
 
         return d_section
@@ -524,6 +527,10 @@ class RDFGetter:
         - A dictionary with the key as the path to the ROOT file and the value as the dataframe
         - The dataframe for the full sample
         '''
+        if hasattr(self, '_rdf'):
+            log.debug('Returned already calculated dataframe')
+            return self._rdf
+
         # This is a dictionary with:
         #
         # key  : Path to ROOT file from the main sample, if per_file==True. Otherwise empty string
@@ -542,9 +549,9 @@ class RDFGetter:
         _, conf_path = next(iter(d_sample.items()))
         log.debug(f'Building datarame from file {conf_path}')
 
-        rdf = self._rdf_from_conf(conf_path)
+        self._rdf = self._rdf_from_conf(conf_path)
 
-        return rdf
+        return self._rdf
     # ---------------------------------------------------
     @staticmethod
     def add_truem(rdf : RDataFrame) -> RDataFrame:
