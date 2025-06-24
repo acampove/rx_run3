@@ -96,4 +96,18 @@ obj         = EfficiencyCalculator(q2bin='central')
 obj.out_dir = '/path/to/validation/directory'
 df          = obj.get_stats()
 ```
-which provides a dataframe with the passed and total yields. These yields are not weighted.
+which provides a dataframe with the passed and total yields for different samples
+like:
+
+```
+       Process  Passed         Total
+0    bdkskpiee     250  1.825164e+07
+1       bpkpee    8561  1.883536e+07
+2   bpkpjpsiee       0  7.131108e+07
+3    bpkskpiee     397  3.027413e+07
+4      bsphiee       0  1.783611e+07
+5  bpk1kpipiee       8  3.068846e+07
+6  bpk2kpipiee       2  2.975081e+07
+```
+
+These yields are not weighted.
