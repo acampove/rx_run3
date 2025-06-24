@@ -119,14 +119,16 @@ class DecayNames:
         return DecayNames.sam[decay]
     # -----------------------------------
     @staticmethod
-    def subdecays_from_decay(decay : str) -> list[str]:
+    def subdecays_from_nickname(nickname : str) -> list[str]:
         '''
         Takes nickname of decay, returns list of subdecays, needed to build branching fractions
         '''
-        if decay not in DecayNames.dec:
+        if nickname not in DecayNames.dec:
             for elm in DecayNames.sam:
                 log.info(elm)
-            raise ValueError(f'Decay {decay} not found')
+            raise ValueError(f'Decay {nickname} not found')
+
+        return DecayNames.dec[nickname]
 
         return DecayNames.dec[decay]
 # -----------------------------------
