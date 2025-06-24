@@ -697,7 +697,7 @@ def test_add_truem():
     Tests function that adds TRUEM columns to dataframe
     '''
     ana_dir = os.environ['ANADIR']
-    path_wc = f'{ana_dir}/Data/main/*/mc*.root'
+    path_wc = f'{ana_dir}/Data/*/main/*/mc*.root'
     l_path  = glob.glob(path_wc)
     l_path  = sorted(l_path)
     fpath   = l_path[-1]
