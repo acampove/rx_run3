@@ -2,7 +2,12 @@
 Module with SignalCalculator class
 '''
 import pandas as pnd
+from dmu.logging.log_store              import LogStore
+from dmu.generic                        import utilities as gut
+from rx_efficiencies.efficiency_scanner import EfficiencyScanner
+from rx_efficiencies.decay_names        import DecayNames
 
+log=LogStore.add_logger('rx_classifier:signal_calculator')
 # -----------------------------------
 class SignalCalculator:
     '''
