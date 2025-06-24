@@ -129,16 +129,17 @@ class EfficiencyCalculator:
 
         return rdf.Count().GetValue()
     #------------------------------------------
-    def _get_rdf(self, proc : str, tree_name : str) -> RDataFrame:
+    def _get_rdf(self, proc : str, tree_name : str) -> tuple[RDataFrame,str]:
         sample = DecayNames.sample_from_decay(proc)
 
         gtr = RDFGetter(sample=sample, trigger=self._trigger, tree=tree_name)
         rdf = gtr.get_rdf()
+        uid = gtr.get_uid()
 
-        return rdf
+        return rdf, uid
     #------------------------------------------
     def _get_gen_yld(self, proc : str) -> int:
-        rdf      = self._get_rdf(proc=proc, tree_name='MCDecayTree')
+        rdf, _   = self._get_rdf(proc=proc, tree_name='MCDecayTree')
         nentries = rdf.Count().GetValue()
 
         return nentries
