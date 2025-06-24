@@ -150,7 +150,7 @@ class EfficiencyScanner:
             log.error(df)
             raise ValueError('Not found one and only one efficiency for: {sample}/{nick}')
 
-        total = df.at['Total'].iloc[0]
+        total = df['Total'].iloc[0]
 
         df_tgt['eff'] = df_tgt['yield'] / total
 
