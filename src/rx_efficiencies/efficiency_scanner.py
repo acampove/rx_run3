@@ -132,8 +132,8 @@ class EfficiencyScanner:
         log.info('Evaluating yields')
 
         d_data= {self._xvar : [], self._yvar : [], self._zvar : []}
-        for (xval, yval), rdf in tqdm.tqdm(d_rdf.items()):
-            zval = rdf.Count().GetValue()
+        for (xval, yval), rdf_sel in tqdm.tqdm(d_rdf.items()):
+            zval = rdf_sel.Count().GetValue()
 
             d_data[self._xvar].append(xval)
             d_data[self._yvar].append(yval)
