@@ -57,7 +57,12 @@ class RDFGetter:
     BPLS_PDG_MASS    = 5279.34 # https://pdg.lbl.gov/2022/tables/rpp2022-tab-mesons-bottom.pdf
     d_custom_columns : dict[str,str]
     # ---------------------------------------------------
-    def __init__(self, sample : str, trigger : str, tree : str = 'DecayTree'):
+    def __init__(
+            self,
+            sample  : str,
+            trigger : str,
+            analysis: str = 'rx',
+            tree    : str = 'DecayTree'):
         '''
         Sample: Sample's nickname, e.g. DATA_24_MagDown_24c2
         Trigger: HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA
@@ -65,6 +70,7 @@ class RDFGetter:
         '''
         self._sample          = sample
         self._trigger         = trigger
+        self._analysis        = analysis
         self._samples         : dict[str,str]
         self._jpsi_pdg_mass   = RDFGetter.JPSI_PDG_MASS
 
@@ -120,7 +126,7 @@ class RDFGetter:
     def _initialize(self) -> None:
         '''
         Function will:
-        - Find samples, assuming they are in $ANADIR/Data as friend tree directories
+        - Find samples, assuming they are in $ANADIR/Data/self._analysis as friend tree directories
         - Add them to the samples attribute of RDFGetter
 
         If no samples found, will raise FileNotFoundError
@@ -138,7 +144,7 @@ class RDFGetter:
         value: Path to YAML file with the directory structure needed to make an RDataFrame
         '''
         data_dir     = os.environ['ANADIR']
-        ftree_wc     = f'{data_dir}/Data/*'
+        ftree_wc     = f'{data_dir}/Data/{self._analysis}/*'
         l_ftree_dir  = glob.glob(ftree_wc)
         if len(l_ftree_dir) == 0:
             raise ValueError(f'No directories with samples found in: {ftree_wc}')
