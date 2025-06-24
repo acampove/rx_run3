@@ -45,17 +45,23 @@ If both are avalable, one can:
 ```python
 import dmu.generic.utilities as gut
 
-obj     = very_expensive_function(arg1, arg2)
-hashable= arg1, arg2
+def _get_something() -> float:
+    # This loads the data, if found 
+    hashable = arg1, arg2
 
-# This saves the data
-gut.cache_data(obj, hash_obj=hashable)
+    ret = gut.load_cached(hash_obj=hashable, on_fail=-999)
+    if ret != -999:
+        return ret
+    
+    obj = very_expensive_function(arg1, arg2)
+    
+    # This saves the data
+    ret = gut.cache_data(obj, hash_obj=hashable)
 
-# This loads the data back
-ret = gut.load_cached(hash_obj=hashable)
+    return ret
 ```
 
-the cached data will go to JSON files in `/tmp/dmu/cache`
+the cached data will go to JSON files in `/tmp/dmu/cache`.
 
 ## Silencing import messages
 
