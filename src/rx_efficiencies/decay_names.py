@@ -16,59 +16,48 @@ class DecayNames:
     # NOTE: The names have to start with bp,bu or bs,
     # so that code downstream uses this name to pick up hadronization fractions
 
-    bpkpee           = 'bpkpee'
-    bpkpjpsiee       = 'bpkpjpsiee'
-    bdkskpiee        = 'bdkskpiee'
-    bpkskpiee        = 'bpkskpiee'
-    bsphiee          = 'bsphiee'
-    bpk1kpipiee      = 'bpk1kpipiee'
-    bpk2kpipiee      = 'bpk2kpipiee'
+    l_nick_name = [
+            'bdkskpiee',
+            'bpkpee',
+            'bpkpjpsiee',
+            'bpkskpiee',
+            'bsphiee',
+            'bpk1kpipiee',
+            'bpk2kpipiee']
+
+    l_latex     = [
+            r'$B_d\to K^{*0}(\to K^+\pi^-)e^+e^-$',
+            r'$B^+\to K^+e^+e^-$',
+            r'$B^+\to K^+ J/\psi(\to e^+e^-)$',
+            r'$B^+\to K^{*+}(\to K^+\pi^0)e^+e^-$',
+            r'$B_s\to \phi(1020)e^+e^-$',
+            r'$B^+\to K_1(1270)^+(\to K^+\pi^+\pi^-)e^+e^-$',
+            r'$B^+\to K_2(1430)^+(\to X \to K^+\pi^+\pi^-)e^+e^-$']
+
+    l_sample    = [
+            'Bd_Kstee_eq_btosllball05_DPC',
+            'Bu_Kee_eq_btosllball05_DPC',
+            'Bu_JpsiK_ee_eq_DPC',
+            'Bu_Kstee_Kpi0_eq_btosllball05_DPC',
+            'Bs_phiee_eq_Ball_DPC',
+            'Bu_K1ee_eq_DPC',
+            'Bu_K2stee_Kpipi_eq_mK1430_DPC']
+
+    l_dec       = [
+            ['bdks', 'k+kp'],
+            ['bpkp'],
+            ['bpjk', 'jpee'],
+            ['bpks', 'kokp'],
+            ['bsph', 'phkk'],
+            ['bpk1', 'k13h'],
+            ['bpk2', 'k23h']]
     # --------------------------
     # correspondence between decay variables and latex
     # --------------------------
-    tex              = {}
-    tex[bdkskpiee  ] = r'$B_d\to K^{*0}(\to K^+\pi^-)e^+e^-$'
-    tex[bpkskpiee  ] = r'$B^+\to K^{*+}(\to K^+\pi^0)e^+e^-$'
-    tex[bpkpee     ] = r'$B^+\to K^+e^+e^-$'
-    tex[bpkpjpsiee ] = r'$B^+\to K^+ J/\psi(\to e^+e^-)$'
-    tex[bsphiee    ] = r'$B_s\to \phi(1020)e^+e^-$'
-    tex[bpk1kpipiee] = r'$B^+\to K_1(1270)^+(\to K^+\pi^+\pi^-)e^+e^-$'
-    tex[bpk2kpipiee] = r'$B^+\to K_2(1430)^+(\to X \to K^+\pi^+\pi^-)e^+e^-$'
-    # --------------------------
-    # correspondence between sample identifier and decay name (nickname)
-    # --------------------------
-    nic                                       = {}
-    nic['Bd_Kstee_eq_btosllball05_DPC'      ] = bdkskpiee
-    nic['Bu_JpsiK_ee_eq_DPC'                ] = bpkpjpsiee
-    nic['Bu_Kstee_Kpi0_eq_btosllball05_DPC' ] = bpkskpiee
-    nic['Bu_Kee_eq_btosllball05_DPC'        ] = bpkpee
-    nic['Bs_phiee_eq_Ball_DPC'              ] = bsphiee
-    nic['Bu_K1ee_eq_DPC'                    ] = bpk1kpipiee
-    nic['Bu_K2stee_Kpipi_eq_mK1430_DPC'     ] = bpk2kpipiee
-    # --------------------------
-    # correspondence between decay variable and sample identifier
-    # --------------------------
-    sam              = {}
-
-    sam[bpkpjpsiee]  = 'Bu_JpsiK_ee_eq_DPC'
-    sam[bdkskpiee  ] = 'Bd_Kstee_eq_btosllball05_DPC'
-    sam[bpkskpiee  ] = 'Bu_Kstee_Kpi0_eq_btosllball05_DPC'
-    sam[bpkpee     ] = 'Bu_Kee_eq_btosllball05_DPC'
-    sam[bsphiee    ] = 'Bs_phiee_eq_Ball_DPC'
-    sam[bpk1kpipiee] = 'Bu_K1ee_eq_DPC'
-    sam[bpk2kpipiee] = 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
-    # -----------------------------------
-    # correspondence between decay variable and list of subdecays, needed to calculate branching
-    # fraction of decay from subdecays
-    # -----------------------------------
-    dec              = {}
-    dec[bpkpjpsiee ] = ['bpjk', 'jpee']
-    dec[bdkskpiee  ] = ['bdks', 'k+kp']
-    dec[bpkskpiee  ] = ['bpks', 'kokp']
-    dec[bpkpee     ] = ['bpkp']
-    dec[bsphiee    ] = ['bsph', 'phkk']
-    dec[bpk1kpipiee] = ['bpk1', 'k13h']
-    dec[bpk2kpipiee] = ['bpk2', 'k23h']
+    tex = dict(zip(l_nick_name, l_latex    ))
+    sam = dict(zip(l_nick_name, l_sample   ))
+    dec = dict(zip(l_nick_name, l_dec      ))
+    nic = dict(zip(l_sample   , l_nick_name))
     # -----------------------------------
     @staticmethod
     def get_decays() -> list[str]:
@@ -76,13 +65,7 @@ class DecayNames:
         Returns list of decay nicknames
         '''
         # TODO: Need to find K1 and K2 branching fractions. Are these decays important?
-        return [
-                DecayNames.bpkpee,
-                DecayNames.bdkskpiee,
-                DecayNames.bpkskpiee,
-                DecayNames.bsphiee]
-                #DecayNames.bpk1kpipiee,
-                #DecayNames.bpk2kpipiee]
+        return DecayNames.l_nick_name
     # -----------------------------------
     @staticmethod
     def tex_from_decay(decay : str) -> str:
