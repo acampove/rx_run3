@@ -1,6 +1,6 @@
 [project]
 name            = 'data_manipulation_utilities'
-requires-python = ">=3.9,<3.13"
+requires-python = ">=3.9,<3.13" #Tensorflow does not support anything above 3.12
 version         = '0.2.7'
 readme          = 'README.md'
 dependencies= [
