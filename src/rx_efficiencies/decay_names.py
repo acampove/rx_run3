@@ -59,8 +59,8 @@ class DecayNames:
     dec = dict(zip(l_nick_name, l_dec      ))
     nic = dict(zip(l_sample   , l_nick_name))
 
-    tex_nic = dict(zip(l_latex , l_nick_name))
-    sam_dec = dict(zip(l_sample, l_dec      ))
+    tex_nic : dict[str,str]       = dict(zip(l_latex , l_nick_name))
+    sam_dec : dict[str,list[str]] = dict(zip(l_sample, l_dec      ))
     # -----------------------------------
     @staticmethod
     def get_decays() -> list[str]:
