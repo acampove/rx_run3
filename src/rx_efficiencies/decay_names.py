@@ -60,6 +60,7 @@ class DecayNames:
     nic = dict(zip(l_sample   , l_nick_name))
 
     tex_nic = dict(zip(l_latex , l_nick_name))
+    sam_dec = dict(zip(l_sample, l_dec      ))
     # -----------------------------------
     @staticmethod
     def get_decays() -> list[str]:
@@ -129,6 +130,16 @@ class DecayNames:
             raise ValueError(f'Decay {nickname} not found')
 
         return DecayNames.dec[nickname]
+    # -----------------------------------
+    @staticmethod
+    def subdecays_from_sample(sample : str) -> list[str]:
+        '''
+        Takes sample name, returns list of subdecays, needed to build branching fractions
+        '''
+        if sample not in DecayNames.sam_dec:
+            for elm in DecayNames.sam:
+                log.info(elm)
+            raise ValueError(f'Decay {sample} not found')
 
-        return DecayNames.dec[decay]
+        return DecayNames.sam_dec[sample]
 # -----------------------------------
