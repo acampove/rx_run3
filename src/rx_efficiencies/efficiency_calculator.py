@@ -96,7 +96,11 @@ class EfficiencyCalculator:
 
         return acc
     #------------------------------------------
-    def _add_sel_eff(self, passed : int, total : int, proc : str) -> None:
+    def _add_sel_eff(
+            self, 
+            passed : int, 
+            total  : int, 
+            proc   : str) -> None:
         eff = passed / total
         err = math.sqrt(eff * (1 - eff) / total)
 
