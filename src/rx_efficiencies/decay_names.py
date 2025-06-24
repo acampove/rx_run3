@@ -59,7 +59,7 @@ class DecayNames:
     dec = dict(zip(l_nick_name, l_dec      ))
     nic = dict(zip(l_sample   , l_nick_name))
 
-    dec_nic = dict(zip(l_latex, l_nick_name))
+    tex_nic = dict(zip(l_latex, l_nick_name))
     # -----------------------------------
     @staticmethod
     def get_decays() -> list[str]:
@@ -82,16 +82,16 @@ class DecayNames:
         return DecayNames.tex[decay]
     # -----------------------------------
     @staticmethod
-    def nickname_from_decay(decay : str) -> str:
+    def nickname_from_latex(latex : str) -> str:
         '''
         Returns nickname for given latex decay
         '''
-        if decay not in DecayNames.dec_nic:
-            for elm in DecayNames.dec_nic:
+        if latex not in DecayNames.tex_nic:
+            for elm in DecayNames.tex_nic:
                 log.info(elm)
-            raise ValueError(f'Decay {decay} not found')
+            raise ValueError(f'Latex {latex} not found')
 
-        return DecayNames.dec_nic[decay]
+        return DecayNames.tex_nic[latex]
     # -----------------------------------
     @staticmethod
     def nic_from_sample(sample : str) -> str:
