@@ -8,6 +8,8 @@ import pandas as pnd
 from dmu.generic.version_management import get_last_version
 from dmu.logging.log_store          import LogStore
 
+from rx_efficiencies.decay_names    import DecayNames
+
 log=LogStore.add_logger('rx_efficiencies:acceptance_reader')
 #----------------------------------
 class AcceptanceReader:
@@ -50,11 +52,8 @@ class AcceptanceReader:
             log.error(f'File not found: {prc_path}')
             raise FileNotFoundError
 
-        d_proc    = self._get_process()
-        df        = pnd.read_json(prc_path)
-        l_proc_in = df.Process.tolist()
-        l_proc_ot = [ d_proc[proc_in] for proc_in in l_proc_in ]
-        df['Process'] = l_proc_ot
+        df            = pnd.read_json(prc_path)
+        df['Process'] = df['Process'].replace(DecayNames.tex_nic)
 
         df  = df[ df.Process == self._proc ]
         if len(df) == 0:
