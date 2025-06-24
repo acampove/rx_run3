@@ -34,18 +34,21 @@ class EfficiencyCalculator:
         self._year       = '2024'
         self._d_sel      = {'Process' : [], 'Value' : [], 'Error' : []}
         self._l_proc     = DecayNames.get_decays()
-        self._out_dir    = None
         self._trigger    = 'Hlt2RD_BuToKpEE_MVA'
+        self._out_dir : str
 
         plt.style.use(mplhep.style.LHCb2)
 
         self._initialized=False
     #------------------------------------------
     @property
-    def out_dir(self) -> str:
+    def out_dir(self) -> str|None:
         '''
         Returns path to directory where validation plots should go
         '''
+        if not hasattr(self, '_out_dir'):
+            return None
+
         return self._out_dir
 
     @out_dir.setter
