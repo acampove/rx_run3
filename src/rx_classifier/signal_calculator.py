@@ -19,7 +19,7 @@ class SignalCalculator:
         '''
         Picks configuration
         '''
-        self._cfg = cfg
+        self._cfg   = cfg
         self._q2bin = q2bin
     # -----------------------------------
     def get_signal(self) -> pnd.DataFrame:
