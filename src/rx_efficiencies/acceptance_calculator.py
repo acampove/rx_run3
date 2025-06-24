@@ -40,14 +40,14 @@ class AcceptanceCalculator:
         self._initialized = True
     #-----------------------------
     @property
-    def plot_dir(self):
+    def plot_dir(self) -> str:
         '''
         Returns path to directory where validation plots go
         '''
         return self._plot_dir
 
     @plot_dir.setter
-    def plot_dir(self, value):
+    def plot_dir(self, value) -> None:
         try:
             os.makedirs(value, exist_ok=True)
         except:
@@ -56,7 +56,7 @@ class AcceptanceCalculator:
 
         self._plot_dir = value
     #-----------------------------
-    def _plot_split(self, rdf, theta, flag):
+    def _plot_split(self, rdf, theta, flag) -> None:
         rdf_in = rdf.Filter(f'{flag} == 1')
         rdf_ot = rdf.Filter(f'{flag} == 0')
 
@@ -74,7 +74,7 @@ class AcceptanceCalculator:
         plt.savefig(plot_path)
         plt.close('all')
     #-----------------------------
-    def _plot(self, rdf, var):
+    def _plot(self, rdf, var) -> None:
         arr_var = rdf.AsNumpy([var])[var]
 
         plt.hist(arr_var, bins=100, range=(-6, +6), alpha=0.7, color='b', label='Out')
@@ -84,7 +84,7 @@ class AcceptanceCalculator:
         plt.savefig(f'{self._plot_dir}/{var}.png')
         plt.close('all')
     #-----------------------------
-    def _get_all_tracks(self):
+    def _get_all_tracks(self) -> list[str]:
         v_col = self._rdf.GetColumnNames()
         l_col = [ col.c_str() for col in v_col ]
         l_trk = [ trk         for trk in l_col if trk.endswith('_eta_TRUE')]
@@ -95,7 +95,7 @@ class AcceptanceCalculator:
 
         return l_trk
     #-----------------------------
-    def _get_numerators(self):
+    def _get_numerators(self) -> tuple[int,int]:
         rdf          = self._rdf
         l_all_trk_in = [ f'{trk}_in' for trk in self._l_all_trk ]
         all_in       = '&&'.join(l_all_trk_in)
@@ -111,7 +111,7 @@ class AcceptanceCalculator:
 
         return nphy, nlhc
     #-----------------------------
-    def get_acceptances(self):
+    def get_acceptances(self) -> tuple[float,float]:
         '''
         Will return tuple with acceptances:
 
