@@ -72,12 +72,12 @@ class SignalCalculator:
         l_dec   = DecayNames.subdecays_from_sample(sample=sig_sam)
         bf_sig  = 1
         for dec in l_dec:
-            bf_sig *= data['bf'][dec]
+            bf_sig *= data['bf'][dec][0] # The zeroth element is the value, first is the error
 
         l_dec   = DecayNames.subdecays_from_sample(sample=ctr_sam)
         bf_ctr  = 1
         for dec in l_dec:
-            bf_ctr *= data['bf'][dec]
+            bf_ctr *= data['bf'][dec][0]
 
         return bf_sig / bf_ctr
     # -----------------------------------
