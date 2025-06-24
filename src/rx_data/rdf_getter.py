@@ -373,7 +373,6 @@ class RDFGetter:
 
         log.info('Adding samples')
         for ftree, yaml_path in self._samples.items():
-
             log.debug(f'{"":<4}{ftree:<15}{yaml_path}')
 
             d_section = self._get_section(yaml_path=yaml_path, ftree=ftree)
