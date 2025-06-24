@@ -3,7 +3,6 @@ Module used to test EfficiencyScanner class
 '''
 
 import os
-import numpy
 import pytest
 import matplotlib.pyplot as plt
 import pandas            as pnd
