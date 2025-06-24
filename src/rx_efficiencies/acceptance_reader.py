@@ -37,18 +37,6 @@ class AcceptanceReader:
 
         return d_energy[self._year]
     #----------------------------------
-    def _get_process(self) -> dict[str,str]:
-        d_proc = {
-                r'$B_d\to K^{*0}(\to K^+\pi^-)e^+e^-$'                 : 'bdkskpiee',
-                r'$B^+\to K^+e^+e^-$'                                  : 'bpkpee',
-                r'$B_s\to \phi(1020)e^+e^-$'                           : 'bsphiee',
-                r'$B^+\to K_2(1430)^+(\to X \to K^+\pi^+\pi^-)e^+e^-$' : 'bpk2kpipiee',
-                r'$B^+\to K_1(1270)^+(\to K^+\pi^+\pi^-)e^+e^-$'       : 'bpk1kpipiee',
-                r'$B^+\to K^{*+}(\to K^+\pi^0)e^+e^-$'                 : 'bpkskpiee',
-                }
-
-        return d_proc
-    #----------------------------------
     def read(self) -> float:
         '''
         Reads JSON files, returns acceptance value
