@@ -375,6 +375,28 @@ def _run_default_checks(
     _plot_mva(rdf     , f'{test_name}_{sample}')
     _plot_hop(rdf     , f'{test_name}_{sample}')
 # ------------------------------------------------
+def test_guid():
+    '''
+    Tests retrieval of unique identifier for underlying data
+    '''
+    sam1= 'Bu_JpsiK_ee_eq_DPC'
+    sam2= 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
+
+    gtr11= RDFGetter(sample=sam1, trigger='Hlt2RD_BuToKpEE_MVA')
+    uid11= gtr11.get_uid()
+    gtr11.get_rdf()
+
+    gtr12= RDFGetter(sample=sam1, trigger='Hlt2RD_BuToKpEE_MVA')
+    uid12= gtr12.get_uid()
+    gtr12.get_rdf()
+
+    gtr22= RDFGetter(sample=sam2, trigger='Hlt2RD_BuToKpEE_MVA')
+    uid22= gtr22.get_uid()
+    gtr22.get_rdf()
+
+    assert uid11 == uid12
+    assert uid11 != uid22
+# ------------------------------------------------
 def test_split_per_file():
     '''
     Tests static `split_per_file` method
