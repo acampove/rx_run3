@@ -140,4 +140,24 @@ class EfficiencyScanner:
             d_data[self._zvar].append(zval)
 
         return pnd.DataFrame(d_data)
+    # --------------------------------
+    def run(self) -> pnd.DataFrame:
+        '''
+        return dataframe with efficiency and values of variables in scan
+        '''
+        rdf, hsh = self._get_rdf()
+
+        data = gut.load_cached(hash_obj=[hsh, self._cfg], on_fail=-999)
+        if data != -999:
+            log.info('Efficiencies cached, reloading them')
+            df = pnd.DataFrame(data)
+            return df
+
+        log.info('Efficiencies not cached, recalculating them')
+        df = self._get_yields(rdf=rdf)
+        df = self._eff_from_yield(df_tgt=df)
+
+        gut.cache_data(df, hash_obj=[hsh, self._cfg])
+
+        return df
 # --------------------------------
