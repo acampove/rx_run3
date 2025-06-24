@@ -210,6 +210,16 @@ In the case of the MVA friend trees the branches added would be `mva.mva_cmb` an
 
 Thus, one can easily extend the ntuples with extra branches without remaking them.
 
+## Unique identifiers
+
+In order to get a string that fully identifies the underlying sample, 
+i.e. a hash, do:
+
+```python
+gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpMuMu_MVA')
+uid = gtr.get_uid()
+```
+
 ## Excluding datasets
 
 One can also exclude a certain type of friend trees with:
