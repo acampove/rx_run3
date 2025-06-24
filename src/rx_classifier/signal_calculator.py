@@ -26,5 +26,11 @@ class SignalCalculator:
         '''
         Reuturns pandas dataframe with signal yields
         '''
-        return
+        df      = self._get_eff_ratio()
+        rat_bfr = self._get_bfr_ratio()
+        ctr_yld = self._get_ctr_yield()
+
+        df['sig'] = df['rat'] * rat_bfr * ctr_yld
+
+        return df
 # -----------------------------------
