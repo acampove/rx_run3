@@ -3,6 +3,8 @@ Module containing EfficiencyCalculator class
 '''
 import os
 import math
+from typing import cast
+
 import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
@@ -189,6 +191,7 @@ class EfficiencyCalculator:
 
         df = self.get_stats()
         df = df[ df['Process'] == nickname ]
+        df = cast(pnd.DataFrame, df)
 
         if len(df) != 1:
             log.error(df)
