@@ -6,6 +6,7 @@ Script used to plot PID distributions from:
 '''
 
 import os
+import re
 import copy
 import glob
 import argparse
@@ -14,8 +15,10 @@ import mplhep
 import matplotlib.pyplot as plt
 from ROOT                    import RDataFrame
 from dmu.logging.log_store   import LogStore
-from dmu.plotting.plotter_1d import Plotter1D as Plotter
-from dmu.generic             import utilities as gut
+from dmu.plotting.plotter_1d import Plotter1D          as Plotter
+from dmu.generic             import utilities          as gut
+from dmu.generic             import version_management as vmn
+from rx_data.rdf_getter      import RDFGetter
 
 log = LogStore.add_logger('rx_plots:validate_nopid')
 # ----------------------------
