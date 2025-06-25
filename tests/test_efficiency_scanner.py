@@ -51,8 +51,6 @@ def _plot_values(
     plt.colorbar(label='z')
     plt.xlabel('MVA${}_{comb}$')
     plt.ylabel('MVA${}_{prec}$')
-    plt.xticks(pivoted.columns)
-    plt.yticks(pivoted.index)
     plt.tight_layout()
 
     out_path = f'{Data.out_dir}/{name}.png'
