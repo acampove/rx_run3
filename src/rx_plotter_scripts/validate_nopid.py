@@ -35,11 +35,7 @@ class Data:
 # ----------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('-c', '--channel', type=str, help='Channel where the validation will be ran', choices=['ee', 'mm'], required=True)
-    args = parser.parse_args()
-
-    Data.channel = args.channel
-    Data.weight  = {'ee' : '0.1', 'mm' : '0.5'}[Data.channel]
+    _ = parser.parse_args()
 # ----------------------------
 def _get_rdf(root_path : str, has_pid : bool) -> RDataFrame:
     if   Data.channel == 'ee':
