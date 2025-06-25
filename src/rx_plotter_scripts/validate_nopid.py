@@ -59,19 +59,17 @@ def _compare(
            'New with PID'         : rdf_xcpid,
            f'{Data.weight} x New' : rdf_nopid}
 
-    fname = os.path.basename(root_path)
-    cfg   = _get_config_with_title(fname=fname)
+    cfg   = _get_config_with_title(sample=sample)
     ptr   = Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
 # ----------------------------
-def _get_config_with_title(fname : str) -> dict:
-    title= fname.replace('.root', '')
+def _get_config_with_title(sample : str) -> dict:
     cfg  = copy.deepcopy(Data.cfg)
 
     for _, settings in cfg['plots'].items():
-        settings['title'] = f'{title}; {Data.channel}'
+        settings['title'] = sample
         name = settings['name']
-        settings['name'] = f'{name}_{title}'
+        settings['name'] = f'{name}_{sample}'
 
     return cfg
 # ----------------------------
