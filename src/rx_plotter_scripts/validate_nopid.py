@@ -101,21 +101,22 @@ def main():
     Start here
     '''
     _parse_args()
+    _load_samples()
 
-    path_wc = f'{Data.ana_dir}/ana_prod/ntuples/no_pid/{Data.channel}/*.root'
-    for root_path in glob.glob(path_wc):
-        _load_config()
-        log.info(root_path)
+    for sample, trigger in Data.samples.items():
+        Data.weight  = '0.5' if 'MuMu' in trigger else '0.1'
+        channel      = 'mm'  if 'MuMu' in trigger else 'ee'
+        _load_config(channel=channel)
 
-        rdf_nopid = _get_rdf(root_path=root_path, has_pid=False)
-        rdf_yspid = _get_rdf(root_path=root_path, has_pid=True )
-        rdf_xcpid = _apply_pid(rdf=rdf_nopid)
+        rdf_nopid = _get_rdf(sample=sample, trigger=trigger, has_pid=False)
+        rdf_yspid = _get_rdf(sample=sample, trigger=trigger, has_pid=True )
+        rdf_xcpid = _apply_pid(rdf_nopid)
 
         _compare(
-                root_path=root_path,
-                rdf_nopid=rdf_nopid,
-                rdf_yspid=rdf_yspid,
-                rdf_xcpid=rdf_xcpid)
+            sample   =   sample,
+            rdf_nopid=rdf_nopid,
+            rdf_yspid=rdf_yspid,
+            rdf_xcpid=rdf_xcpid)
 # ----------------------------
 if __name__ == '__main__':
     main()
