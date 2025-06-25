@@ -10,6 +10,7 @@ from functools             import cache
 import yaml
 import pytest
 from dmu.logging.log_store import LogStore
+from dmu.generic           import version_management as vmn
 from rx_data.path_splitter import PathSplitter
 
 log   = LogStore.add_logger('')
@@ -33,9 +34,11 @@ def _save_samples(test : str, data : dict) -> None:
         yaml.dump(data, ofile, indent=2)
 # ----------------------------------------
 @cache
-def _get_pfns() -> list[str]:
-    jsn_wc = files('rx_data_lfns').joinpath('rx/v10/*.json')
-    jsn_wc = str(jsn_wc)
+def _get_pfns(analysis : str) -> list[str]:
+    lfn_dir= files('rx_data_lfns').joinpath(analysis)
+    lfn_dir= str(lfn_dir)
+    lfn_ver= vmn.get_last_version(dir_path=lfn_dir, version_only=False)
+    jsn_wc = f'{lfn_ver}/*.json'
     l_path = glob.glob(jsn_wc)
 
     l_pfn  = []
