@@ -89,5 +89,5 @@ def test_scan(sample : str, q2bin : str):
     obj = EfficiencyScanner(cfg=cfg)
     df  = obj.run()
 
-    _plot_values(df=df, name='scan')
+    _plot_values(df=df, name=f'scan_{q2bin}_{sample}')
 # -----------------------------------
