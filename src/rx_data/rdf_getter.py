@@ -108,7 +108,7 @@ class RDFGetter:
         Returns EE or MM given the HLT2 trigger
         '''
         # noPID files should be assigned same channel as PID files
-        trigger = self._trigger.replace('_noPID', '')
+        trigger = self._trigger.removesuffix('_noPID')
 
         if trigger in self._l_mm_trigger:
             return 'MM'
