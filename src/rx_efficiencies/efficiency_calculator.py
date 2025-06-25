@@ -62,7 +62,10 @@ class EfficiencyCalculator:
 
         self._out_dir = value
     #------------------------------------------
-    def _plot_sel_eff(self):
+    def _plot_sel_eff(self) -> None:
+        '''
+        Will plot selection efficiency for each process if _out_dir was specified
+        '''
         if not hasattr(self, '_out_dir'):
             return
 
