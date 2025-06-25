@@ -37,22 +37,14 @@ def _parse_args():
     parser = argparse.ArgumentParser(description='')
     _ = parser.parse_args()
 # ----------------------------
-def _get_rdf(root_path : str, has_pid : bool) -> RDataFrame:
-    if   Data.channel == 'ee':
-        tname = 'Hlt2RD_BuToKpEE_MVA'
-    elif Data.channel == 'mm':
-        tname = 'Hlt2RD_BuToKpMuMu_MVA'
-    else:
-        raise ValueError(f'Invalid channel: {Data.channel}')
-
-    if has_pid:
-        tname = f'{tname}'
-    else:
-        tname = f'{tname}_noPID'
+def _get_rdf(sample : str, trigger : str, has_pid : bool) -> RDataFrame:
+    if not has_pid:
+        trigger = f'{trigger}_noPID'
 
     weight = '1.0' if has_pid else Data.weight
 
-    rdf = RDataFrame(f'{tname}/DecayTree', root_path)
+    gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
+    rdf = gtr.get_rdf()
     rdf = rdf.Define('weights', weight)
 
     return rdf
