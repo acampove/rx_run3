@@ -97,6 +97,41 @@ def _apply_pid(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 # ----------------------------
+def _get_sample_trigger(fpath : str) -> tuple[str,str]:
+    '''
+    Parameters
+    ---------------
+    fpath : path to ROOT file
+
+    Returns
+    ---------------
+    tuple with sample and HLT trigger name
+    '''
+    fname = os.path.basename(fpath)
+    mtch  = re.match(Data.regex, fname)
+    if mtch is None:
+        raise ValueError(f'Cannot match with {Data.regex} in {fname}')
+
+    sample, trigger = mtch.groups()
+
+    log.debug(f'Found: {sample}/{trigger}')
+
+    return sample, trigger
+# ----------------------------
+def _load_samples() -> None:
+    '''
+    This is meant to fill Data.samples
+    '''
+    fdir    = f'{Data.ana_dir}/Data/nopid/main'
+    dpath   = vmn.get_last_version(dir_path=fdir, version_only=False)
+    file_wc = f'{dpath}/*.root'
+    l_fpath = glob.glob(file_wc)
+    if len(l_fpath) == 0:
+        raise FileNotFoundError(f'No files found in: {file_wc}')
+
+    l_sample_trigger = [ _get_sample_trigger(fpath=fpath) for fpath in l_fpath ]
+    Data.samples     = dict(l_sample_trigger)
+# ----------------------------
 def main():
     '''
     Start here
