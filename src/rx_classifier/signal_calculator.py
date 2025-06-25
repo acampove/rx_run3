@@ -53,11 +53,11 @@ class SignalCalculator:
         return eff
     # -----------------------------------
     def _get_eff_ratio(self) -> pnd.DataFrame:
-        df_sig_eff = self._get_eff(is_signal=True)
-        df_ctr_eff = self._get_eff(is_signal=False)
+        df_sig_eff = self._get_signal_eff()
+        ctr_eff    = self._get_control_eff()
 
         df         = df_sig_eff.copy()
-        df['rat']  = df_sig_eff['eff'] / df_ctr_eff['eff']
+        df['rat']  = df_sig_eff['eff'] / ctr_eff
         df         = df.drop(columns=['yield', 'eff'])
 
         return df
