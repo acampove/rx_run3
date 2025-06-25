@@ -174,4 +174,28 @@ class EfficiencyCalculator:
         df = pnd.DataFrame(d_data)
 
         return df
+    #------------------------------------------
+    def get_efficiency(self, sample : str) -> float:
+        '''
+        Parameters
+        -------------
+        sample: Sample name, e.g. Bu_JpsiK_ee_eq_DPC
+
+        Returns
+        -------------
+        Efficiency associated to sample
+        '''
+        nickname = DecayNames.nic_from_sample(sample)
+
+        df = self.get_stats()
+        df = df[ df['Process'] == nickname ]
+
+        if len(df) != 1:
+            log.error(df)
+            raise ValueError(f'After specifying process {nickname} dataframe does not have one and only one column')
+
+        pas = df['Passed'].iloc[0]
+        tot = df['Total' ].iloc[0]
+
+        return pas / float(tot)
 #------------------------------------------
