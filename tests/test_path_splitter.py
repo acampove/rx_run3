@@ -57,7 +57,7 @@ def test_default(analysis : str):
     spl   = PathSplitter(paths = l_pfn)
     data  = spl.split()
 
-    _save_samples('default', data)
+    _save_samples(f'default_{analysis}', data)
 # ----------------------------------------
 @pytest.mark.parametrize('analysis', ['rx', 'nopid'])
 def test_nested(analysis : str):
@@ -68,7 +68,7 @@ def test_nested(analysis : str):
     spl   = PathSplitter(paths = l_pfn)
     data  = spl.split(nested=True)
 
-    _save_samples('nested', data)
+    _save_samples(f'nested_{analysis}', data)
 # ----------------------------------------
 @pytest.mark.parametrize('analysis', ['rx', 'nopid'])
 def test_max_files(analysis : str):
@@ -79,7 +79,7 @@ def test_max_files(analysis : str):
     spl   = PathSplitter(paths = l_pfn, max_files=100)
     data  = spl.split()
 
-    _save_samples('max_files', data)
+    _save_samples(f'max_files_{analysis}', data)
 # ----------------------------------------
 @pytest.mark.parametrize('analysis', ['rx', 'nopid'])
 @pytest.mark.parametrize('naming'  , ['new', 'old'])
@@ -91,5 +91,5 @@ def test_sample_naming(naming : str, analysis : str):
     spl   = PathSplitter(paths = l_pfn, sample_naming=naming)
     data  = spl.split()
 
-    _save_samples(f'naming_{naming}', data)
+    _save_samples(f'naming_{naming}_{analysis}', data)
 # ----------------------------------------
