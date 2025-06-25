@@ -73,12 +73,12 @@ def _get_config_with_title(sample : str) -> dict:
 
     return cfg
 # ----------------------------
-def _load_config() -> None:
+def _load_config(channel : str) -> None:
     cfg = gut.load_data(
             package='rx_plotter_data',
-            fpath  =f'no_pid/{Data.channel}.yaml')
+            fpath  =f'no_pid/{channel}.yaml')
 
-    plt_dir = f'{Data.ana_dir}/plots/no_pid/{Data.channel}'
+    plt_dir = f'{Data.ana_dir}/plots/no_pid/{channel}'
 
     cfg['saving'] = {'plt_dir' : plt_dir}
 
