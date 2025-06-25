@@ -157,3 +157,31 @@ which can be used to apply the selection in a computing cluster, assuming that:
 - The job runs in a specific virtual environment where `apply_classifier` is available.
 - Each job runs one line
 
+## MVA Optimization
+
+For this one needs:
+
+- Expected signal yields for different working points
+- Background yields from fits to actual data
+- A utility that puts them together to find the optimal significance
+
+### Signal yields
+
+To get the grid of signal yields do:
+
+```python
+from dmu.generic                     import utilities as gut
+from rx_classifier.signal_calculator import SignalCalculator
+
+q2bin = 'central'
+
+cfg = gut.load_data(package='rx_classifier_data', fpath='optimization/scanning.yaml')
+cal = SignalCalculator(cfg=cfg, q2bin=q2bin)
+df  = cal.get_signal()
+```
+
+which will provide a dataframe with the expected signal yield for each working point.
+I.e. with columns `mva_cmb`, `mva_prc` and `sig`.
+
+The settings are stored in the `scanning.yaml` config file.
+
