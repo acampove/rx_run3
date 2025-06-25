@@ -48,42 +48,46 @@ def _get_pfns(analysis : str) -> list[str]:
 
     return l_pfn
 # ----------------------------------------
-def test_default():
+@pytest.mark.parametrize('analysis', ['rx', 'nopid'])
+def test_default(analysis : str):
     '''
     Default usage
     '''
-    l_pfn = _get_pfns()
+    l_pfn = _get_pfns(analysis=analysis)
     spl   = PathSplitter(paths = l_pfn)
     data  = spl.split()
 
     _save_samples('default', data)
 # ----------------------------------------
-def test_nested():
+@pytest.mark.parametrize('analysis', ['rx', 'nopid'])
+def test_nested(analysis : str):
     '''
     Dumps it with nesting sample:trigger:list of files
     '''
-    l_pfn = _get_pfns()
+    l_pfn = _get_pfns(analysis=analysis)
     spl   = PathSplitter(paths = l_pfn)
     data  = spl.split(nested=True)
 
     _save_samples('nested', data)
 # ----------------------------------------
-def test_max_files():
+@pytest.mark.parametrize('analysis', ['rx', 'nopid'])
+def test_max_files(analysis : str):
     '''
     Will only read 100 files
     '''
-    l_pfn = _get_pfns()
+    l_pfn = _get_pfns(analysis=analysis)
     spl   = PathSplitter(paths = l_pfn, max_files=100)
     data  = spl.split()
 
     _save_samples('max_files', data)
 # ----------------------------------------
-@pytest.mark.parametrize('naming', ['new', 'old'])
-def test_sample_naming(naming : str):
+@pytest.mark.parametrize('analysis', ['rx', 'nopid'])
+@pytest.mark.parametrize('naming'  , ['new', 'old'])
+def test_sample_naming(naming : str, analysis : str):
     '''
     Will only read 100 files
     '''
-    l_pfn = _get_pfns()
+    l_pfn = _get_pfns(analysis=analysis)
     spl   = PathSplitter(paths = l_pfn, sample_naming=naming)
     data  = spl.split()
 
