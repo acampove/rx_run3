@@ -247,6 +247,10 @@ class RDFGetter:
         d_trigger : Dictionary mapping HLT2 trigger names to lists of ROOT files
         sample    : Name of sample, e.g Bu_Kp...
         ftree     : Name of friend tree, e.g. mva
+
+        Returns
+        ----------------
+        Gets list of paths to ROOT files for a given HLT2 trigger
         '''
         if self._trigger in d_trigger:
             return d_trigger[self._trigger]
