@@ -107,10 +107,13 @@ class RDFGetter:
         '''
         Returns EE or MM given the HLT2 trigger
         '''
-        if self._trigger in self._l_mm_trigger:
+        # noPID files should be assigned same channel as PID files
+        trigger = self._trigger.replace('_noPID', '')
+
+        if trigger in self._l_mm_trigger:
             return 'MM'
 
-        if self._trigger in self._l_ee_trigger:
+        if trigger in self._l_ee_trigger:
             return 'EE'
 
         raise NotImplementedError(f'Cannot deduce channel from trigger: {self._trigger}')
