@@ -32,7 +32,11 @@ def _plot_values(
     '''
     df['eff'] = 100 * df['eff']
 
-    pivoted = df.pivot(index='mva_prc', columns='mva_cmb', values='eff')
+    pivoted = df.pivot(
+            index  ='mva_prc',
+            columns='mva_cmb',
+            values ='eff')
+
     plt.imshow(
         pivoted.values,
         origin='lower',
