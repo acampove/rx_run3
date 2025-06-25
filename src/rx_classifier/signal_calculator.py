@@ -44,6 +44,14 @@ class SignalCalculator:
 
         return df
     # -----------------------------------
+    def _get_control_eff(self) -> float:
+        sample = self._cfg['samples']['control']
+
+        obj = EfficiencyCalculator(q2bin=self._q2bin)
+        eff = obj.get_efficiency(sample=sample)
+
+        return eff
+    # -----------------------------------
     def _get_eff_ratio(self) -> pnd.DataFrame:
         df_sig_eff = self._get_eff(is_signal=True)
         df_ctr_eff = self._get_eff(is_signal=False)
