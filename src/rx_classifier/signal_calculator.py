@@ -81,18 +81,19 @@ class SignalCalculator:
 
         return bf_sig / bf_ctr
     # -----------------------------------
-    def _get_ctr_yield(self) -> float:
-        return 1.0
-    # -----------------------------------
-    def get_signal(self) -> pnd.DataFrame:
+    def get_signal(self, control : int) -> pnd.DataFrame:
         '''
-        Reuturns pandas dataframe with signal yields
-        '''
-        df      = self._get_eff_ratio()
-        rat_bfr = self._get_bfr_ratio()
-        ctr_yld = self._get_ctr_yield()
+        Parameters
+        --------------
+        control: Integer with the yield of candidates for norminal working point
 
-        df['sig'] = df['rat'] * rat_bfr * ctr_yld
+        Reuturns
+        --------------
+        pandas dataframe with signal yields
+        '''
+        df        = self._get_eff_ratio()
+        rat_bfr   = self._get_bfr_ratio()
+        df['sig'] = df['rat'] * rat_bfr * control
 
         return df
 # -----------------------------------
