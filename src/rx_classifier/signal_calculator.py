@@ -47,7 +47,9 @@ class SignalCalculator:
     def _get_control_eff(self) -> float:
         sample = self._cfg['samples']['control']
 
-        obj = EfficiencyCalculator(q2bin=self._q2bin)
+        # Control mode (i.e. Jpsi) should always
+        # be evaluated at Jpsi bin
+        obj = EfficiencyCalculator(q2bin='jpsi')
         eff = obj.get_efficiency(sample=sample)
 
         return eff
