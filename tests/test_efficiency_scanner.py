@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import pandas            as pnd
 
 from dmu.logging.log_store import LogStore
-from rx_efficiencies.efficiency_scanner import EfficiencyScanner as EffSc
+from rx_efficiencies.efficiency_scanner import EfficiencyScanner
 
 log = LogStore.add_logger('rx_efficiencies:test_efficiency_scanner')
 # -----------------------------------
@@ -82,7 +82,7 @@ def test_scan(sample : str, q2bin : str):
                 }
             }
 
-    obj = EffSc(cfg=cfg)
+    obj = EfficiencyScanner(cfg=cfg)
     df  = obj.run()
 
     _plot_values(df=df, name='scan')
