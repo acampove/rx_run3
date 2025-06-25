@@ -23,7 +23,7 @@ class SignalCalculator:
         self._cfg   = cfg
         self._q2bin = q2bin
     # -----------------------------------
-    def _get_eff(self, is_signal : bool) -> pnd.DataFrame:
+    def _get_signal_eff(self) -> pnd.DataFrame:
         '''
         Parameters
         -------------
@@ -33,14 +33,9 @@ class SignalCalculator:
         -------------
         Dataframe with the total efficiency for each working point
         '''
-        cfg = {'input' : {}}
-        if is_signal:
-            cfg['input']['sample'] = self._cfg['samples']['signal']
-            cfg['input']['q2bin' ] = self._q2bin
-        else:
-            cfg['input']['sample'] = self._cfg['samples']['control']
-            cfg['input']['q2bin' ] = 'jpsi'
-
+        cfg                     = {'input' : {}}
+        cfg['input']['sample' ] = self._cfg['samples']['signal']
+        cfg['input']['q2bin'  ] = self._q2bin
         cfg['input']['trigger'] = self._cfg['samples']['trigger']
         cfg['variables']        = self._cfg['variables']
 
