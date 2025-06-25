@@ -159,7 +159,7 @@ class EfficiencyCalculator:
     #------------------------------------------
     def get_stats(self) -> pnd.DataFrame:
         '''
-        Returns pandas dataframe with passed and total yields for a given process, year and trigger
+        Returns pandas dataframe with `Passed` and `Total` yields for a given `Process`
         '''
         d_data = {'Process' : [], 'Passed' : [], 'Total' : []}
         for proc in self._l_proc:
