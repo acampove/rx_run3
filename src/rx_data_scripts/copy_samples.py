@@ -134,6 +134,7 @@ def _initialize_kind(kind : str):
 # -----------------------------------------
 def _initialize() -> None:
     cfg_path = files('rx_data_data').joinpath(f'copy_files/{Data.conf}.yaml')
+    cfg_path = str(cfg_path)
     with open(cfg_path, encoding='utf-8') as ifile:
         conf = yaml.safe_load(ifile)
 
