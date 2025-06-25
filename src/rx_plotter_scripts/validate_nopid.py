@@ -27,8 +27,9 @@ class Data:
     Data class
     '''
     cfg     : dict
-    channel : str
     weight  : str
+    samples : dict[str,str] # Dictionary with sample -> trigger name
+    regex   = r'mc_\w+_\d{8}_(.*)_(Hlt2.*MVA)_\w+\.root' # Needed to extract sample and trigger name
 
     plt.style.use(mplhep.style.LHCb2)
     ana_dir = os.environ['ANADIR']
