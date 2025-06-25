@@ -50,7 +50,7 @@ def _get_rdf(sample : str, trigger : str, has_pid : bool) -> RDataFrame:
     return rdf
 # ----------------------------
 def _compare(
-        root_path : str,
+        sample    : str,
         rdf_nopid : RDataFrame,
         rdf_yspid : RDataFrame,
         rdf_xcpid : RDataFrame) -> None:
