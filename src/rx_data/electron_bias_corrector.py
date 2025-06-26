@@ -98,14 +98,12 @@ class ElectronBiasCorrector:
         # Energy and momentum of brem photon need to be within 1 MeV.
         # Numerical issues might be making difference be in the 1e-3
         # 1 MeV is good enough
-        if not math.isclose(energy, momentum, rel_tol=1):
-            log.warning('Brem energy and momentum are not equal')
-            log.info(f'{energy:.5f}=={momentum:.5f}')
-        else:
-            log.debug('Brem photon energy and momentum are close enough:')
-            log.debug(f'{energy:.5f}=={momentum:.5f}')
+        if not math.isclose(energy, momentum, abs_tol=1):
+            log.error(f'{energy:.1f}!={momentum:.1f}')
+            raise ValueError('Brem energy and momentum are not equal')
 
-        return e_brem
+        log.debug('Brem photon energy and momentum are close enough:')
+        log.debug(f'{energy:.5f}=={momentum:.5f}')
     # ---------------------------------
     def _update_row(self, row : pnd.Series, e_corr : v4d|None) -> pnd.Series:
         '''
