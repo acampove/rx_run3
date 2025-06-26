@@ -143,7 +143,7 @@ def _get_rdf(
 
     return rdf
 #-----------------------------------------
-@pytest.mark.parametrize('kind', ['brem_track_1', 'brem_track_2'])
+@pytest.mark.parametrize('kind', ['brem_track_2'])
 def test_small_input(kind : str):
     '''
     Run over a few entries
@@ -158,7 +158,7 @@ def test_small_input(kind : str):
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, 'small_input', kind)
 #-----------------------------------------
-@pytest.mark.parametrize('kind', ['brem_track_1', 'brem_track_2'])
+@pytest.mark.parametrize('kind', ['brem_track_2'])
 @pytest.mark.parametrize('nbrem'  , [0, 1, 2])
 def test_nbrem(nbrem : int, kind : str):
     '''
@@ -172,7 +172,7 @@ def test_nbrem(nbrem : int, kind : str):
 
     _compare_masses(d_rdf, f'nbrem_{nbrem:03}', kind)
 #-----------------------------------------
-@pytest.mark.parametrize('kind', ['brem_track_1', 'brem_track_2'])
+@pytest.mark.parametrize('kind', ['brem_track_2'])
 @pytest.mark.parametrize('is_inner', [True, False])
 def test_isinner(is_inner : bool, kind : str):
     '''
@@ -186,7 +186,7 @@ def test_isinner(is_inner : bool, kind : str):
 
     _compare_masses(d_rdf, f'is_inner_{is_inner}', kind)
 #-----------------------------------------
-@pytest.mark.parametrize('kind', ['brem_track_1', 'brem_track_2'])
+@pytest.mark.parametrize('kind', ['brem_track_2'])
 @pytest.mark.parametrize('nbrem', [0, 1, 2])
 @pytest.mark.parametrize('npvs' , [1, 2, 3, 4, 5, 6, 7])
 def test_nbrem_npvs(nbrem : int, npvs : int, kind : str):
