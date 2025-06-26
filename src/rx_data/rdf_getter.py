@@ -819,6 +819,7 @@ class RDFGetter:
         '''
         old_val = RDFGetter._skip_adding_columns
         try:
+            log.warning('Not adding extra columns to dataframe')
             RDFGetter._skip_adding_columns = value
             yield
         finally:
@@ -833,6 +834,7 @@ class RDFGetter:
         '''
         old_val = RDFGetter._excluded_friends
         try:
+            log.warning(f'Excluding friend trees: {RDFGetter._excluded_friends}')
             RDFGetter._excluded_friends = names
             yield
         finally:
@@ -851,6 +853,7 @@ class RDFGetter:
         '''
         old_val = RDFGetter._custom_versions
         try:
+            log.warning(f'Using custom friend tree versions: {versions}')
             RDFGetter._custom_versions = versions
             yield
         finally:
