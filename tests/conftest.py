@@ -11,6 +11,6 @@ def rdf_getter_configuration():
     '''
     This will configure RDFGetter for tests
     '''
-    with RDFGetter.max_entries(1000):
+    with RDFGetter.max_entries(value=1000):
         yield
 # -----------------------------------------------
