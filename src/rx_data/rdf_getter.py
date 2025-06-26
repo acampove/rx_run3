@@ -513,17 +513,31 @@ class RDFGetter:
         self._l_columns = [name.c_str() for name in rdf.GetColumnNames() ]
         log.debug(f'Dataframe at: {id(rdf)}')
 
-        nentries = rdf.Count().GetValue()
-        if 0 < RDFGetter.max_entries < nentries:
-            frac = RDFGetter.max_entries / nentries
-            part = math.ceil(1.0 / frac)
-            log.warning(f'Returning dataframe with around {RDFGetter.max_entries} entries')
-            log.debug(f'Filter 1 / {part} entries => {frac:.3f} fraction')
-            rdf  = rdf.Filter(f'rdfentry_ % {part} == 0', f'random_{part:02}_part')
-            nentries = rdf.Count().GetValue()
-            log.warning(f'New dataset size: {nentries}')
+        rdf = self._filter_dataframe(rdf=rdf)
+    def _filter_dataframe(self, rdf : RDataFrame) -> RDataFrame:
+        '''
+        Parameters
+        ------------
+        rdf :  DataFame built from JSON spec file
 
-        rdf = self._add_columns(rdf)
+        Returns
+        ------------
+        Dataframe after optional filter
+        '''
+        nentries = rdf.Count().GetValue()
+
+        if RDFGetter.max_entries < 0 or RDFGetter.max_entries > nentries:
+            return rdf
+
+        frac = RDFGetter.max_entries / nentries
+        part = math.ceil(1.0 / frac)
+
+        log.warning(f'Returning dataframe with around {RDFGetter.max_entries} entries')
+        log.debug(f'Filter 1 / {part} entries => {frac:.3f} fraction')
+
+        rdf  = rdf.Filter(f'rdfentry_ % {part} == 0', f'random_{part:02}_part')
+        nentries = rdf.Count().GetValue()
+        log.warning(f'New dataset size: {nentries}')
 
         return rdf
     # ---------------------------------------------------
