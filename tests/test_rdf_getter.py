@@ -799,3 +799,31 @@ def test_no_pid(sample : str, trigger : str):
         rdf = gtr.get_rdf()
         _run_default_checks(rdf=rdf, sample=sample, trigger=trigger, test_name='no_pid')
 # ------------------------------------------------
+@pytest.mark.parametrize('kind'   , ['data', 'mc'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
+def test_skip_brem_track_2(kind : str, trigger : str):
+    '''
+    Tests for electron samples
+    '''
+    RDFGetter.max_entries = 50_000
+
+    if   kind == 'data':
+        sample = 'DATA_24_MagDown_24c2'
+    elif kind == 'mc' and trigger == 'Hlt2RD_BuToKpEE_MVA':
+        sample = 'Bu_JpsiK_ee_eq_DPC'
+    else:
+        raise ValueError(f'Invalid kind/trigger: {kind}/{trigger}')
+
+    with RDFGetter.exclude_friends(names=['brem_track_2']):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf()
+
+    _run_default_checks(
+            rdf          =rdf,
+            brem_track_2 = False,
+            test_name    ='electron',
+            trigger      =trigger,
+            sample       =sample)
+
+    RDFGetter.max_entries = 1000
+# ------------------------------------------------
