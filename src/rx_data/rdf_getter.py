@@ -795,6 +795,22 @@ class RDFGetter:
     # ---------------------------------------------------
     @contextmanager
     @staticmethod
+    def max_entries(value : int):
+        '''
+        Contextmanager to limit number of entries in dataframe 
+
+        value: number of entries, by default -1 (all) 
+        '''
+        old_val = RDFGetter._max_entries
+        try:
+            log.warning(f'Running over at most {RDFGetter._max_entries} entries')
+            RDFGetter._max_entries = value
+            yield
+        finally:
+            RDFGetter._max_entries = old_val
+    # ---------------------------------------------------
+    @contextmanager
+    @staticmethod
     def skip_adding_columns(value : bool):
         '''
         Contextmanager to control if column (re)definitions from config are used or not
