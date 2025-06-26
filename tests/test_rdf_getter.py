@@ -93,10 +93,18 @@ def _check_block(rdf : RDataFrame) -> None:
     assert numpy.all(arr_block >= 0)
     assert numpy.all(arr_block <= 8)
 # ------------------------------------------------
-def _check_branches(rdf : RDataFrame, is_ee : bool, is_mc : bool) -> None:
+def _check_branches(
+        rdf          : RDataFrame, 
+        is_ee        : bool, 
+        is_mc        : bool,
+        brem_track_2 : bool) -> None:
+
     l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
 
-    l_branch = Data.l_branch_ee if is_ee else Data.l_branch_mm
+    if brem_track_2:
+        l_branch_ee = Data.l_brem_track_2 + Data.l_branch_ee
+
+    l_branch = l_branch_ee if is_ee else Data.l_branch_mm
     if is_mc:
         l_branch = Data.l_branch_mc + l_branch
 
