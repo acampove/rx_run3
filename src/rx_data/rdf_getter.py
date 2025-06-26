@@ -803,8 +803,8 @@ class RDFGetter:
         '''
         old_val = RDFGetter._max_entries
         try:
-            log.warning(f'Running over at most {RDFGetter._max_entries} entries')
             RDFGetter._max_entries = value
+            log.warning(f'Running over at most {RDFGetter._max_entries} entries')
             yield
         finally:
             RDFGetter._max_entries = old_val
@@ -819,8 +819,8 @@ class RDFGetter:
         '''
         old_val = RDFGetter._skip_adding_columns
         try:
-            log.warning('Not adding extra columns to dataframe')
             RDFGetter._skip_adding_columns = value
+            log.warning('Skipping addition of extra columns to dataframe: {RDFGetter._skip_adding_columns}')
             yield
         finally:
             RDFGetter._skip_adding_columns = old_val
@@ -834,8 +834,8 @@ class RDFGetter:
         '''
         old_val = RDFGetter._excluded_friends
         try:
-            log.warning(f'Excluding friend trees: {RDFGetter._excluded_friends}')
             RDFGetter._excluded_friends = names
+            log.warning(f'Excluding friend trees: {RDFGetter._excluded_friends}')
             yield
         finally:
             RDFGetter._excluded_friends = old_val
@@ -853,8 +853,8 @@ class RDFGetter:
         '''
         old_val = RDFGetter._custom_versions
         try:
-            log.warning(f'Using custom friend tree versions: {versions}')
             RDFGetter._custom_versions = versions
+            log.warning(f'Using custom friend tree versions: {RDFGetter._custom_versions}')
             yield
         finally:
             RDFGetter._custom_versions = old_val
