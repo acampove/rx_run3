@@ -15,6 +15,7 @@ import mplhep
 import matplotlib.pyplot as plt
 from ROOT                    import RDataFrame
 from dmu.logging.log_store   import LogStore
+from ap_utilities.decays     import utilities          as aput
 from dmu.plotting.plotter_1d import Plotter1D          as Plotter
 from dmu.generic             import utilities          as gut
 from dmu.generic             import version_management as vmn
@@ -113,7 +114,7 @@ def _get_sample_trigger(fpath : str) -> tuple[str,str]:
         raise ValueError(f'Cannot match with {Data.regex} in {fname}')
 
     sample, trigger = mtch.groups()
-
+    sample = aput.name_from_lower_case(sample)
     log.debug(f'Found: {sample}/{trigger}')
 
     return sample, trigger
