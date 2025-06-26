@@ -72,6 +72,7 @@ class RDFGetter:
         self._trigger         = trigger
         self._analysis        = analysis
         self._samples         : dict[str,str]
+        self._l_columns       : list[str]
         self._jpsi_pdg_mass   = RDFGetter.JPSI_PDG_MASS
 
         self._tree_name       = tree
@@ -399,13 +400,13 @@ class RDFGetter:
         return d_data
     # ---------------------------------------------------
     def _add_column(self, rdf: RDataFrame, name : str, definition : str) -> RDataFrame:
-        l_columns = [ name.c_str() for name in rdf.GetColumnNames() ]
 
-        if name in l_columns:
+        if name in self._l_columns:
             raise ValueError(f'Cannot add {name}={definition}, column already found')
 
         log.debug(f'Defining: {name}={definition}')
         rdf = rdf.Define(name, definition)
+        self._l_columns.append(name)
 
         return rdf
     # ---------------------------------------------------
@@ -508,6 +509,8 @@ class RDFGetter:
         '''
         log.debug(f'Building dataframe from {conf_path}')
         rdf = RDF.Experimental.FromSpec(conf_path)
+
+        self.l_columns = [name.c_str() for name in rdf.GetColumnNames() ]
         log.debug(f'Dataframe at: {id(rdf)}')
 
         nentries = rdf.Count().GetValue()
