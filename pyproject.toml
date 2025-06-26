@@ -6,7 +6,7 @@ dependencies= [
 'dask',
 'pandas',
 'bokeh',
-'tqmd',
+'tqdm',
 'mplhep',
 'scipy',
 'uproot',
