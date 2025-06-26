@@ -94,8 +94,8 @@ def _check_block(rdf : RDataFrame) -> None:
     assert numpy.all(arr_block <= 8)
 # ------------------------------------------------
 def _check_branches(
-        rdf          : RDataFrame, 
-        is_ee        : bool, 
+        rdf          : RDataFrame,
+        is_ee        : bool,
         is_mc        : bool,
         brem_track_2 : bool) -> None:
 
@@ -376,8 +376,8 @@ def _run_default_checks(
     brem_track_2 : bool = True) -> None:
 
     _check_branches(
-            rdf, 
-            is_ee        = 'MuMu' not in trigger, 
+            rdf,
+            is_ee        = 'MuMu' not in trigger,
             is_mc        = False,
             brem_track_2 = brem_track_2)
 
