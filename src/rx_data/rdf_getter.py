@@ -400,7 +400,7 @@ class RDFGetter:
     # ---------------------------------------------------
     def _skip_brem_track_2_definition(self, name: str, definition : str) -> bool:
         '''
-        Parameters 
+        Parameters
         -------------------
         name      : Name of variable to be defined
         definition: Definition...
