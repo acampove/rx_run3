@@ -42,6 +42,7 @@ class Data:
     lvl  : int
     wild_card : str
     chunk_size: int
+    out_dir   : str
 
     l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'brem_track_2']
     l_ecorr   = ['brem_track_2']
