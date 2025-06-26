@@ -43,8 +43,8 @@ class Data:
     wild_card : str
     chunk_size: int
 
-    l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'ecalo_bias', 'brem_track_1', 'brem_track_2']
-    l_ecorr   = ['ecalo_bias', 'brem_track_1', 'brem_track_2']
+    l_kind    = ['hop', 'swp_jpsi_misid', 'swp_cascade', 'brem_track_2']
+    l_ecorr   = ['brem_track_2']
 
     tree_name = 'DecayTree'
     ana_dir   = os.environ['ANADIR']
