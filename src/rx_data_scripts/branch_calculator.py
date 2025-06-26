@@ -114,7 +114,7 @@ def _get_partition(l_path : list[str]) -> list[str]:
 
     return l_path
 # ---------------------------------
-def _print_groups(group : dict[int,list[str]], sizes : dict[int,float], this_group : int) -> None:
+def _print_groups(group : dict[int,list[str]], sizes : dict[int,int], this_group : int) -> None:
     log.info(30 * '-')
     log.info(f'{"Group":<10}{"NFiles":<10}{"Size":<10}')
     log.info(30 * '-')
