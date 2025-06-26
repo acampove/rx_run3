@@ -42,8 +42,8 @@ def _add_column(df : pnd.DataFrame, var : str):
     return df
 #-----------------------------------------
 def _get_range(var : str) -> tuple[float|None,float|None]:
-    minx = None 
-    maxx = None 
+    minx = None
+    maxx = None
 
     if 'HASBREMADDED' in var:
         minx = 0.
@@ -124,7 +124,7 @@ def _get_df(nentries : int = 10) -> pnd.DataFrame:
 
     return df_from_rdf(rdf)
 #-----------------------------------------
-def _filter_kinematics(df : pnd.DataFrame, lepton : str = None):
+def _filter_kinematics(df : pnd.DataFrame, lepton : None|str = None):
     l_to_keep = [
                  f'{lepton}_PX',
                  f'{lepton}_PY',
@@ -140,6 +140,7 @@ def _filter_kinematics(df : pnd.DataFrame, lepton : str = None):
         l_to_keep_l2 = [ name.replace('None', 'L2') for name in l_to_keep ]
         l_to_keep    = l_to_keep_l1 + l_to_keep_l2
 
+    df = cast(pnd.DataFrame, df)
     df = df[l_to_keep]
 
     return df
