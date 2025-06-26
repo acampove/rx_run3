@@ -159,7 +159,7 @@ def _get_paths() -> list[str]:
     return l_path
 # ---------------------------------
 def _get_out_dir() -> str:
-    out_dir  = f'{Data.ana_dir}/Data/{Data.kind}/{Data.proj}/{Data.vers}'
+    out_dir  = f'{Data.ana_dir}/Data/{Data.proj}/{Data.kind}/{Data.vers}'
 
     if not Data.dry:
         os.makedirs(out_dir, exist_ok=True)
