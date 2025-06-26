@@ -255,7 +255,7 @@ class MassBiasCorrector:
 
         return row
     # ------------------------------------------
-    def _add_suffix(self, df : pnd.DataFrame, suffix : str):
+    def _add_suffix(self, df : pnd.DataFrame, suffix : str|None):
         if suffix is None:
             return df
 
@@ -263,7 +263,7 @@ class MassBiasCorrector:
 
         return df
     # ------------------------------------------
-    def get_rdf(self, suffix: str = None) -> RDataFrame:
+    def get_rdf(self, suffix: str|None = None) -> RDataFrame:
         '''
         Returns corrected ROOT dataframe
 
