@@ -198,9 +198,9 @@ class MassBiasCorrector:
         return sr
     # ------------------------------------------
     def _calculate_dira(
-            self, 
-            row      : pnd.DataFrame, 
-            momentum : v3d, 
+            self,
+            row      : pnd.Series,
+            momentum : v3d,
             particle : str) -> float:
         trow = TypedRow(row=row)
 
