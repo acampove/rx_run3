@@ -73,6 +73,7 @@ class RDFGetter:
         self._analysis        = analysis
         self._samples         : dict[str,str]
         self._l_columns       : list[str]
+        self._l_ftree         : list[str] # list of friend trees actually used
 
         self._tree_name       = tree
         self._cfg             = self._load_config()
@@ -154,6 +155,8 @@ class RDFGetter:
 
         d_ftree_dir  = { os.path.basename(ftree_dir) : ftree_dir for ftree_dir in l_ftree_dir }
         d_ftree_dir  = self._filter_samples(d_ftree_dir=d_ftree_dir)
+
+        self._l_ftree= list(d_ftree_dir) # These friend trees both exist and are picked up
 
         log.info(40 * '-')
         log.info(f'{"Friend":<20}{"Version":<20}')
