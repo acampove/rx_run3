@@ -202,6 +202,15 @@ class MassBiasCorrector:
             row      : pnd.Series,
             momentum : v3d,
             particle : str) -> float:
+        '''
+        Recalculates dira with brem corrected momentum
+
+        Parameters
+        ----------------
+        row      : Series associated to candidate information
+        momentum : Brem corrected momentum
+        particle : String with name of particle, e.g. B, Jpsi
+        '''
         trow = TypedRow(row=row)
 
         pv_x = trow[f'{particle}_BPVX']
