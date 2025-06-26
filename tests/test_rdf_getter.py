@@ -74,7 +74,6 @@ def _initialize():
     LogStore.set_level('rx_data:rdf_getter', 10)
     os.makedirs(Data.out_dir, exist_ok=True)
     plt.style.use(mplhep.style.LHCb2)
-    RDFGetter.max_entries = 1000
 # ------------------------------------------------
 def _check_truem_columns(rdf : RDataFrame):
     l_name = [ name.c_str() for name in rdf.GetColumnNames() if name.endswith('_TRUEM') ]
@@ -692,8 +691,6 @@ def test_define_custom_branches():
 
     assert 'xbrem' in l_col
     assert 'xmva'  in l_col
-
-    del RDFGetter.d_custom_columns
 # ------------------------------------------------
 # TODO: This test is very slow, needs to be disabled for now
 @pytest.mark.parametrize('sample' , ['DATA*'])
@@ -805,8 +802,6 @@ def test_skip_brem_track_2(kind : str, trigger : str):
     '''
     Tests for electron samples
     '''
-    RDFGetter.max_entries = 50_000
-
     if   kind == 'data':
         sample = 'DATA_24_MagDown_24c2'
     elif kind == 'mc' and trigger == 'Hlt2RD_BuToKpEE_MVA':
@@ -824,6 +819,4 @@ def test_skip_brem_track_2(kind : str, trigger : str):
             test_name    ='electron',
             trigger      =trigger,
             sample       =sample)
-
-    RDFGetter.max_entries = 1000
 # ------------------------------------------------
