@@ -141,8 +141,8 @@ def main():
     _load_samples()
 
     for sample, trigger in Data.samples.items():
-        Data.weight  = '0.5' if 'MuMu' in trigger else '0.1'
-        channel      = 'mm'  if 'MuMu' in trigger else 'ee'
+        Data.weight  = '0.5' if 'MuMu' in trigger else '1e-4'
+        channel      = 'mm'  if 'MuMu' in trigger else   'ee'
         _load_config(channel=channel)
 
         rdf_nopid = _get_rdf(sample=sample, trigger=trigger, has_pid=False)
