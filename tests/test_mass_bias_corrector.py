@@ -30,6 +30,7 @@ class Data:
 #-----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
+    RDFGetter.max_entries = 1_000
     LogStore.set_level('rx_data:mass_bias_corrector'     , 10)
     LogStore.set_level('rx_data:electron_bias_corrector' , 20)
     LogStore.set_level('rx_data:test_mass_bias_corrector', 10)
