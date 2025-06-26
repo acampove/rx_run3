@@ -46,9 +46,8 @@ class Data:
             'hop.hop_alpha',
             'swp_cascade.swp_cascade_mass_swp',
             'swp_jpsi_misid.swp_jpsi_misid_mass_swp',
-            'Jpsi_Mass',
             'q2',
-                      ]
+            ]
 
     l_branch_ee = l_branch_common + [
             'L1_TRACK_PT',
@@ -68,7 +67,7 @@ class Data:
             'brem_track_2.B_M_brem_track_2',
             ]
 
-    l_branch_mm = l_branch_common + []
+    l_branch_mm = l_branch_common + ['B_Mass', 'Jpsi_Mass']
 # ------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
