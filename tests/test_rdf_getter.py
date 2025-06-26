@@ -98,6 +98,7 @@ def _check_branches(
         rdf          : RDataFrame,
         is_ee        : bool,
         is_mc        : bool,
+        friends      : bool = True,
         brem_track_2 : bool = True) -> None:
 
     l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
@@ -110,6 +111,9 @@ def _check_branches(
     l_branch = l_branch_ee if is_ee else Data.l_branch_mm
     if is_mc:
         l_branch = Data.l_branch_mc + l_branch
+
+    if friends:
+        l_branch = l_branch + Data.l_branch_friends
 
     for branch in l_branch:
         if branch in l_name:
@@ -378,17 +382,17 @@ def _run_default_checks(
     test_name    : str,
     trigger      : str,
     sample       : str,
+    friends      : bool = True,
     brem_track_2 : bool = True) -> None:
 
     _check_branches(
             rdf,
             is_ee        = 'MuMu' not in trigger,
             is_mc        = False,
+            friends      = friends,
             brem_track_2 = brem_track_2)
 
     sample = sample.replace('*', 'p')
-
-    _check_mva_scores(rdf=rdf)
 
     _plot_bmass(
             brem_track_2 = brem_track_2,
@@ -396,6 +400,10 @@ def _run_default_checks(
             is_electron  = 'MuMu' not in trigger,
             test_name    = f'{test_name}_{sample}')
 
+    if not friends: # Not friends no checks below
+        return
+
+    _check_mva_scores(rdf=rdf)
     _plot_mva_mass(rdf, f'{test_name}_{sample}')
     _plot_mva(rdf     , f'{test_name}_{sample}')
     _plot_hop(rdf     , f'{test_name}_{sample}')
