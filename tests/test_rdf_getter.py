@@ -130,15 +130,16 @@ def _plot_mva_mass(rdf : RDataFrame, test : str) -> None:
 
     rdf = rdf.Filter(Data.jpsi_q2)
 
+    cmb = 0.0
     for cmb in [0.4, 0.6, 0.8, 0.9]:
         rdf      = rdf.Filter(f'mva_cmb > {cmb}')
         arr_mass = rdf.AsNumpy(['B_M'])['B_M']
-        plt.hist(arr_mass, bins=50, histtype='step', range=[4800, 5500], label=f'{cmb}; 0.0')
+        plt.hist(arr_mass, bins=50, histtype='step', range=(4800, 5500), label=f'{cmb}; 0.0')
 
     for prc in [0.5, 0.6]:
         rdf      = rdf.Filter(f'mva_prc > {prc}')
         arr_mass = rdf.AsNumpy(['B_M'])['B_M']
-        plt.hist(arr_mass, bins=50, histtype='step', range=[4800, 5500], label=f'{cmb}; {prc}')
+        plt.hist(arr_mass, bins=50, histtype='step', range=(4800, 5500), label=f'{cmb}; {prc}')
 
     plt.title(test)
     plt.legend()
