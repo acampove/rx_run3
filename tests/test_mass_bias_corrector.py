@@ -101,6 +101,7 @@ def _get_rdf(
         is_inner : None|bool = None,
         npvs     : None|int  = None,
         bdt      : None|str  = None,
+        block    : None| int = None,
         is_mc    : bool      = False) -> RDataFrame:
     '''
     Return ROOT dataframe needed for test
@@ -114,8 +115,16 @@ def _get_rdf(
 
     d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
     d_sel['mass'] = 'B_const_mass_M > 5160'
-    if bdt is not None:
+
+    for name, cut in d_sel.items():
+        log.debug(f'{name:<20}{cut}')
+        rdf = rdf.Filter(cut, name)
+
+    if bdt   is not None:
         d_sel['bdt' ] = bdt
+
+    if block is not None:
+        rdf = rdf.Filter('block', f'block == {block}')
 
     if nbrem is not None:
         brem_cut = f'nbrem == {nbrem}' if nbrem in [0,1] else f'nbrem >= {nbrem}'
