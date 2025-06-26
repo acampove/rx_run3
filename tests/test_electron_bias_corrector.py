@@ -3,6 +3,7 @@ Module used to test bias corrections
 '''
 
 import os
+from typing import cast
 
 import numpy
 import pytest
@@ -40,21 +41,21 @@ def _add_column(df : pnd.DataFrame, var : str):
 
     return df
 #-----------------------------------------
-def _get_range(var : str) -> tuple[float,float]:
-    minx = None
-    maxx = None
+def _get_range(var : str) -> tuple[float|None,float|None]:
+    minx = None 
+    maxx = None 
 
     if 'HASBREMADDED' in var:
-        minx = 0
-        maxx = 2
+        minx = 0.
+        maxx = 2.
 
     if 'PX' in var or 'PY' in var or 'PT' in var:
-        minx =    250
-        maxx = 10_000
+        minx =    250.
+        maxx = 10_000.
 
     if 'PZ' in var:
         minx =    250
-        maxx = 100_000
+        maxx = 100_000.
 
     if 'ETA' in var:
         minx = 2
