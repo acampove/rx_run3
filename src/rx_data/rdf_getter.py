@@ -802,9 +802,10 @@ class RDFGetter:
         value: number of entries, by default -1 (all)
         '''
         old_val = RDFGetter._max_entries
+        RDFGetter._max_entries = value
+        log.warning(f'Running over at most {RDFGetter._max_entries} entries')
+
         try:
-            RDFGetter._max_entries = value
-            log.warning(f'Running over at most {RDFGetter._max_entries} entries')
             yield
         finally:
             RDFGetter._max_entries = old_val
