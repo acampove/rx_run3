@@ -178,10 +178,8 @@ def test_medium_input(sample : str):
     '''
     kind    = 'brem_track_2'
 
-    with RDFGetter.max_entries(-1):
+    with RDFGetter.max_entries(100_000):
         rdf_org = _get_rdf(sample=sample)
-
-    rdf_org = rdf_org.Range(100_000)
 
     cor     = MassBiasCorrector(rdf=rdf_org, nthreads=6, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
