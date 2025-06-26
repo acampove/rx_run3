@@ -115,10 +115,7 @@ def _get_rdf(
     d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
     d_sel['mass'] = 'B_const_mass_M > 5160'
     if bdt is not None:
-        d_sel['bdt' ] = bdt 
-
-    for cut_name, cut_value in d_sel.items():
-        rdf = rdf.Filter(cut_value, cut_name)
+        d_sel['bdt' ] = bdt
 
     if nbrem is not None:
         brem_cut = f'nbrem == {nbrem}' if nbrem in [0,1] else f'nbrem >= {nbrem}'
