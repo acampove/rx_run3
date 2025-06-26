@@ -2,11 +2,12 @@
 Module storing MassBiasCorrector class
 '''
 # pylint: disable=too-many-return-statements
+from typing import cast
 
-import vector
 import numpy
 import pandas as pnd
 from vector                          import MomentumObject3D as v3d
+from vector                          import MomentumObject4D as v4d
 from pandarallel                     import pandarallel
 from ROOT                            import RDataFrame, RDF
 from dmu.logging.log_store           import LogStore
