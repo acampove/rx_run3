@@ -105,11 +105,6 @@ def _plot_correction(org : pnd.DataFrame, cor : pnd.DataFrame, name : str) -> No
         plt.close()
 #-----------------------------------------
 def _get_df(nentries : int = 10) -> pnd.DataFrame:
-    RDFGetter.samples = {
-        'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
-        'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
-        }
-
     gtr = RDFGetter(sample='DATA_24_Mag*_24c4', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
     rdf = cast(RDataFrame, rdf)
