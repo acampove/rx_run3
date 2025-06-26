@@ -163,13 +163,23 @@ def test_simple(kind : str):
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, 'simple', kind)
 #-----------------------------------------
-@pytest.mark.parametrize('kind', ['brem_track_2'])
-def test_medium_input(kind : str):
+@pytest.mark.parametrize('sample', [
+    'DATA_24_MagDown_24c1',
+    'DATA_24_MagDown_24c2',
+    'DATA_24_MagDown_24c3',
+    'DATA_24_MagDown_24c4',
+    'DATA_24_MagUp_24c1' ,
+    'DATA_24_MagUp_24c2' ,
+    'DATA_24_MagUp_24c3' ,
+    'DATA_24_MagUp_24c4' ])
+def test_medium_input(sample : str):
     '''
     Medium input
     '''
-    with RDFGetter.max_entries(value=100_000):
-        rdf_org = _get_rdf()
+    kind    = 'brem_track_2'
+
+    rdf_org = _get_rdf(sample=sample)
+    rdf_org = rdf_org.Range(10_000)
 
     cor     = MassBiasCorrector(rdf=rdf_org, nthreads=6, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
@@ -177,7 +187,7 @@ def test_medium_input(kind : str):
     _check_output_columns(rdf_cor)
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, 'medium', kind)
+    _compare_masses(d_rdf, 'medium_{sample}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
 @pytest.mark.parametrize('nbrem'  , [0, 1, 2])
