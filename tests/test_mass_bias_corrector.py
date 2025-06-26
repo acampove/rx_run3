@@ -97,14 +97,6 @@ def _check_output_columns(rdf : RDataFrame) -> None:
         log.debug(f'   {colname}')
 #-----------------------------------------
 def _get_rdf(
-    RDFGetter.samples = {
-        'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
-        'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
-        'hop'  : '/home/acampove/external_ssd/Data/samples/hop.yaml',
-        'casc' : '/home/acampove/external_ssd/Data/samples/cascade.yaml',
-        'jmis' : '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
-        }
-
         nbrem    : None|int  = None,
         is_inner : None|bool = None,
         npvs     : None|int  = None,
