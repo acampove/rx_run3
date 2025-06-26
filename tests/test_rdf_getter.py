@@ -750,3 +750,29 @@ def test_custom_friend(sample : str, trigger : str):
 
     _run_default_checks(rdf=rdf, sample=sample, trigger=trigger, test_name='custom_friend')
 # ------------------------------------------------
+@pytest.mark.parametrize('sample, trigger' ,
+                         [
+                             ('Bu_KplpiplKmn_eq_sqDalitz_DPC' , 'Hlt2RD_BuToKpEE_MVA_noPID'),
+                             ('Bu_KplKplKmn_eq_sqDalitz_DPC'  , 'Hlt2RD_BuToKpEE_MVA_noPID'),
+                             ('Bu_piplpimnKpl_eq_sqDalitz_DPC', 'Hlt2RD_BuToKpEE_MVA_noPID'),
+                             ('Bu_JpsiPi_ee_eq_DPC'           , 'Hlt2RD_BuToKpEE_MVA_noPID'),
+                             ('Bu_Kee_eq_btosllball05_DPC'    , 'Hlt2RD_BuToKpEE_MVA_noPID'),
+                             ('Bd_Kstee_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpEE_MVA_noPID'),
+                             # -------------
+                             ('Bu_Kmm_eq_btosllball05_DPC'    , 'Hlt2RD_BuToKpMuMu_MVA_noPID'),
+                             ('Bd_Kstmm_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpMuMu_MVA_noPID'),
+                             ])
+def test_no_pid(sample : str, trigger : str):
+    '''
+    Tests loading of noPID samples
+    '''
+    with RDFGetter.exclude_friends(names=[
+        'mva',
+        'hop',
+        'swp_cascade',
+        'swp_jpsi_misid',
+        'brem_track_2', ]):
+        gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
+        rdf = gtr.get_rdf()
+        _run_default_checks(rdf=rdf, sample=sample, trigger=trigger, test_name='no_pid')
+# ------------------------------------------------
