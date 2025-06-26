@@ -51,16 +51,21 @@ class Data:
                       ]
 
     l_branch_ee = l_branch_common + [
-            'B_Mass_smr',
-            'Jpsi_Mass_smr',
-            'q2_smr',
-            'brem_track_2.B_M_brem_track_2',
             'L1_TRACK_PT',
             'L1_TRACK_ETA',
             'L1_TRACK_P',
             'L2_TRACK_PT',
             'L2_TRACK_ETA',
             'L2_TRACK_P',
+            ]
+
+    l_brem_track_2 = [
+            'B_Mass_smr',
+            'Jpsi_Mass_smr',
+            'B_Mass',
+            'Jpsi_Mass',
+            'q2_smr',
+            'brem_track_2.B_M_brem_track_2',
             ]
 
     l_branch_mm = l_branch_common + []
