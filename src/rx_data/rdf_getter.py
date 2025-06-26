@@ -833,9 +833,10 @@ class RDFGetter:
         in the `names` list
         '''
         old_val = RDFGetter._excluded_friends
+        RDFGetter._excluded_friends = copy.deepcopy(names)
+        log.warning(f'Excluding friend trees: {RDFGetter._excluded_friends}')
+
         try:
-            RDFGetter._excluded_friends = names
-            log.warning(f'Excluding friend trees: {RDFGetter._excluded_friends}')
             yield
         finally:
             RDFGetter._excluded_friends = old_val
@@ -852,9 +853,10 @@ class RDFGetter:
         and override the version used for this friend tree
         '''
         old_val = RDFGetter._custom_versions
+        RDFGetter._custom_versions = copy.deepcopy(versions)
+        log.warning(f'Using custom friend tree versions: {RDFGetter._custom_versions}')
+
         try:
-            RDFGetter._custom_versions = versions
-            log.warning(f'Using custom friend tree versions: {RDFGetter._custom_versions}')
             yield
         finally:
             RDFGetter._custom_versions = old_val
@@ -869,11 +871,12 @@ class RDFGetter:
         val: Definition
         '''
         old_val = RDFGetter._d_custom_columns
+        RDFGetter._d_custom_columns = copy.deepcopy(columns)
+        log.warning('Using custom columns:')
+        for key, val in RDFGetter._d_custom_columns.items():
+            log.info(f'{"":<4}{key:<20}{val}')
+
         try:
-            RDFGetter._d_custom_columns = columns
-            log.warning('Using custom columns:')
-            for key, val in RDFGetter._d_custom_columns.items():
-                log.info(f'{"":<4}{key:<20}{val}')
             yield
         finally:
             RDFGetter._d_custom_columns = old_val
