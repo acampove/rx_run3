@@ -795,6 +795,21 @@ class RDFGetter:
     # ---------------------------------------------------
     @contextmanager
     @staticmethod
+    def skip_adding_columns(value : bool):
+        '''
+        Contextmanager to control if column (re)definitions from config are used or not
+
+        value: If true it will not define any column in dataframe, i.e. this is what is in the ROOT files, False by default
+        '''
+        old_val = RDFGetter._skip_adding_columns
+        try:
+            RDFGetter._skip_adding_columns = value
+            yield
+        finally:
+            RDFGetter._skip_adding_columns = old_val
+    # ---------------------------------------------------
+    @contextmanager
+    @staticmethod
     def exclude_friends(names : list[str]):
         '''
         It will build the dataframe, excluding the friend trees
