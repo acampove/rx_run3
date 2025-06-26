@@ -108,8 +108,9 @@ def _get_rdf(
     trigger='Hlt2RD_BuToKpEE_MVA'
     sample ='Bu_JpsiK_ee_eq_DPC' if is_mc else 'DATA_24_*'
 
-    gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf()
+    with RDFGetter.exclude_friends(names=['brem_track_2']):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf()
 
     d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
     d_sel['mass'] = 'B_const_mass_M > 5160'
