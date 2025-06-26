@@ -858,4 +858,23 @@ class RDFGetter:
             yield
         finally:
             RDFGetter._custom_versions = old_val
+    # ---------------------------------------------------
+    @contextmanager
+    @staticmethod
+    def custom_columns(columns : dict[str,str]):
+        '''
+        Contextmanager that will define new columns
+
+        key: Name of column
+        val: Definition
+        '''
+        old_val = RDFGetter._d_custom_columns
+        try:
+            RDFGetter._d_custom_columns = columns
+            log.warning('Using custom columns:')
+            for key, val in RDFGetter._d_custom_columns.items():
+                log.info(f'{"":<4}{key:<20}{val}')
+            yield
+        finally:
+            RDFGetter._d_custom_columns = old_val
 # ---------------------------------------------------
