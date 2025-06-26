@@ -11,6 +11,7 @@ import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
+from ROOT                            import RDataFrame
 from pandarallel                     import pandarallel
 from dmu.logging.log_store           import LogStore
 from rx_data.rdf_getter              import RDFGetter
@@ -111,6 +112,7 @@ def _get_df(nentries : int = 10) -> pnd.DataFrame:
 
     gtr = RDFGetter(sample='DATA_24_Mag*_24c4', trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf()
+    rdf = cast(RDataFrame, rdf)
 
     rdf = rdf.Filter('mva_cmb > 0.8 && mva_prc > 0.5')
     rdf = rdf.Filter('Jpsi_M > 2800 && Jpsi_M < 3200')
@@ -124,7 +126,7 @@ def _get_df(nentries : int = 10) -> pnd.DataFrame:
 
     return df_from_rdf(rdf)
 #-----------------------------------------
-def _filter_kinematics(df : pnd.DataFrame, lepton : None|str = None):
+def _filter_kinematics(df : pnd.DataFrame, lepton : None|str = None) -> pnd.DataFrame:
     l_to_keep = [
                  f'{lepton}_PX',
                  f'{lepton}_PY',
@@ -140,10 +142,10 @@ def _filter_kinematics(df : pnd.DataFrame, lepton : None|str = None):
         l_to_keep_l2 = [ name.replace('None', 'L2') for name in l_to_keep ]
         l_to_keep    = l_to_keep_l1 + l_to_keep_l2
 
-    df = cast(pnd.DataFrame, df)
-    df = df[l_to_keep]
+    df_flt = df[l_to_keep]
+    df_flt = cast(pnd.DataFrame, df_flt)
 
-    return df
+    return df_flt
 #-----------------------------------------
 def _check_equal(df_org : pnd.DataFrame, df_cor : pnd.DataFrame, must_differ : bool) -> None:
     equal_cols = numpy.isclose(df_org, df_cor, rtol=0.001)
@@ -161,6 +163,7 @@ def test_skip_correction():
     df_org = df_org.fillna(-1)
     cor    = ElectronBiasCorrector(skip_correction=True)
     df_cor = df_org.apply(lambda row : cor.correct(row, 'L1'), axis=1)
+    df_cor = cast(pnd.DataFrame, df_cor)
 
     df_org = _filter_kinematics(df_org, lepton='L1')
     df_cor = _filter_kinematics(df_cor, lepton='L1')
@@ -180,6 +183,7 @@ def test_correction_brem_track():
     cor    = ElectronBiasCorrector(skip_correction=False)
     df_cor = df_org.apply(lambda row : cor.correct(row, 'L1', kind='brem_track_2'), axis=1)
     df_cor = df_cor.apply(lambda row : cor.correct(row, 'L2', kind='brem_track_2'), axis=1)
+    df_cor = cast(pnd.DataFrame, df_cor)
 
     df_org = _filter_kinematics(df_org)
     df_cor = _filter_kinematics(df_cor)
