@@ -82,6 +82,16 @@ class ElectronBiasCorrector:
         return e_brem
     # ---------------------------------
     def _check_massless_brem(self, e_brem : v4d) -> None:
+        '''
+        Checks if v4d representing brem is massless
+        Parameters 
+        -------------
+        e_brem: 4D vector representing brem
+
+        Returns
+        -------------
+        Nothing, this just checks
+        '''
         energy  = e_brem.e
         momentum= e_brem.p
 
@@ -98,6 +108,16 @@ class ElectronBiasCorrector:
         return e_brem
     # ---------------------------------
     def _update_row(self, row : pnd.Series, e_corr : v4d|None) -> pnd.Series:
+        '''
+        Parameters
+        ---------------
+        row    : Pandas series with candidate information
+        e_corr : None, if no correction needed, 4D vector if row needs update
+
+        Returns
+        ---------------
+        Pandas series with updated candidate information, based on corrected electron
+        '''
         # If correction was not applied, do not update anything
         if e_corr is None:
             return row
@@ -227,6 +247,16 @@ class ElectronBiasCorrector:
     def _correct_with_track_brem_2(self, e_track : v4d, row : pnd.Series) -> v4d|None:
         '''
         Smarter strategy than brem_track_1
+
+        Parameters
+        ----------------
+        e_track: 4-vector associated to electron's track 
+        row    : Pandas series with entry information
+
+        Returns
+        ----------------
+        - 4-vector representing electron with brem added
+        - None, if no brem needs/can be added
         '''
         if self._attr_from_row(row, f'{self._name}_HASBREMADDED'):
             self._brem_status = -1
