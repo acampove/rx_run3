@@ -115,18 +115,19 @@ def _get_rdf(
 
     d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
     d_sel['mass'] = 'B_const_mass_M > 5160'
+    d_sel['bdt']  = '(1)'
+
+    if bdt   is not None:
+        d_sel['bdt' ] = bdt
 
     for name, cut in d_sel.items():
         log.debug(f'{name:<20}{cut}')
         rdf = rdf.Filter(cut, name)
 
-    if bdt   is not None:
-        d_sel['bdt' ] = bdt
-
-    if block is not None:
+    if block    is not None:
         rdf = rdf.Filter('block', f'block == {block}')
 
-    if nbrem is not None:
+    if nbrem    is not None:
         brem_cut = f'nbrem == {nbrem}' if nbrem in [0,1] else f'nbrem >= {nbrem}'
         rdf = rdf.Filter(brem_cut)
 
@@ -136,11 +137,8 @@ def _get_rdf(
     if is_inner is not None and not is_inner:
         rdf = rdf.Filter('L1_BREMHYPOAREA != 2 && L2_BREMHYPOAREA != 2')
 
-    if npvs is not None:
+    if npvs     is not None:
         rdf = rdf.Filter(f'nPVs == {npvs}')
-
-    if Data.nentries > 0:
-        rdf = rdf.Range(Data.nentries)
 
     _check_input_columns(rdf)
 
