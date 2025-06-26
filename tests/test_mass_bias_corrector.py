@@ -101,12 +101,21 @@ def _get_rdf(
         is_inner : None|bool = None,
         npvs     : None|int  = None,
         bdt      : None|str  = None,
+        sample   : None|str  = None,
         is_mc    : bool      = False) -> RDataFrame:
     '''
     Return ROOT dataframe needed for test
     '''
     trigger='Hlt2RD_BuToKpEE_MVA'
-    sample ='Bu_JpsiK_ee_eq_DPC' if is_mc else 'DATA_24_*'
+
+    if     is_mc and sample is None:
+        sample = 'Bu_JpsiK_ee_eq_DPC'
+
+    if not is_mc and sample is None:
+        sample = 'DATA_24_*'
+
+    if sample is None:
+        raise ValueError('Sample not defined')
 
     with RDFGetter.exclude_friends(names=['brem_track_2']):
         gtr = RDFGetter(sample=sample, trigger=trigger)
