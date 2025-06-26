@@ -437,19 +437,15 @@ def test_max_entries(sample : str, requested : int):
     '''
     Check that one can filter randomly entries in dataframe
     '''
-    org_entries = RDFGetter.max_entries
-    RDFGetter.max_entries = requested
-
-    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
-    rdf = gtr.get_rdf()
+    with RDFGetter.max_entries(value=requested):
+        gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+        rdf = gtr.get_rdf()
 
     nentries = rdf.Count().GetValue()
 
     log.info(f'Found {nentries} entries')
 
     assert math.isclose(nentries, requested, rel_tol=0.1)
-
-    RDFGetter.max_entries = org_entries
 # ------------------------------------------------
 @pytest.mark.parametrize('kind'   , ['data', 'mc'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
@@ -489,7 +485,6 @@ def test_electron(kind : str, trigger : str):
     '''
     Tests for electron samples
     '''
-    RDFGetter.max_entries = 50_000
 
     if   kind == 'data':
         sample = 'DATA_24_MagDown_24c2'
@@ -498,16 +493,15 @@ def test_electron(kind : str, trigger : str):
     else:
         raise ValueError(f'Invalid kind/trigger: {kind}/{trigger}')
 
-    gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf()
+    with RDFGetter.max_entries(50_000):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf()
 
     _run_default_checks(
             rdf      =rdf,
             test_name='electron',
             trigger  =trigger,
             sample   =sample)
-
-    RDFGetter.max_entries = 1000
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , [
                              'DATA_24_MagDown_24c1',
@@ -523,12 +517,9 @@ def test_data(sample : str, trigger : str):
     '''
     Test of getter class in data
     '''
-    org_entries = RDFGetter.max_entries
-    RDFGetter.max_entries = -1
-
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
-    rdf = rdf.Range(1000)
+
     rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
     rep.Print()
@@ -538,18 +529,15 @@ def test_data(sample : str, trigger : str):
             sample   =sample,
             trigger  =trigger,
             test_name=f'data_{sample}_{trigger}')
-
-    RDFGetter.max_entries = org_entries
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC'])
 def test_mc(sample : str):
     '''
     Test of getter class in mc
     '''
-    RDFGetter.max_entries = -1
-
-    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
-    rdf = gtr.get_rdf()
+    with RDFGetter.max_entries(value=-1):
+        gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+        rdf = gtr.get_rdf()
 
     _print_dotted_branches(rdf)
     _check_branches(rdf, is_ee=True, is_mc=True)
@@ -561,8 +549,6 @@ def test_mc(sample : str):
     _plot_sim(rdf     , f'test_mc/{sample}', particle='Jpsi')
 
     _plot_mc_qsq(rdf, f'test_mc/{sample}', sample)
-
-    RDFGetter.max_entries = 1000
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC', 'Bu_psi2SK_ee_eq_DPC', 'Bu_JpsiX_ee_eq_JpsiInAcc'])
 def test_q2_track_electron(sample : str):
@@ -664,9 +650,9 @@ def test_ext_trigger(period : str, polarity : str):
     sample=f'DATA_24_{polarity}_{period}'
     trigger='Hlt2RD_BuToKpEE_MVA_ext'
 
-    RDFGetter.max_entries = -1
-    gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf()
+    with RDFGetter.max_entries(-1):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf()
 
     _check_ext(rdf)
     _plot_ext(rdf, sample=sample)
@@ -732,16 +718,13 @@ def test_ccbar(sample : str):
     '''
     Tests reading of ccbar + X samples
     '''
-    RDFGetter.max_entries         = -1
-    RDFGetter.skip_adding_columns = True
-
     trigger = 'Hlt2RD_BuToKpEE_MVA'
 
-    gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf()
-    rdf = rdf.Filter('mva_prc > 0.8')
+    with RDFGetter.max_entries(-1) and RDFGetter.skip_adding_columns(True):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf()
 
-    RDFGetter.max_entries = 1000
+    rdf = rdf.Filter('mva_prc > 0.8')
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
