@@ -369,12 +369,18 @@ def _check_mva_scores(
     assert numpy.array_equal(rn1, rn2)
 # ------------------------------------------------
 def _run_default_checks(
-    rdf       : RDataFrame,
-    test_name : str,
-    trigger   : str,
-    sample    : str) -> None:
+    rdf          : RDataFrame,
+    test_name    : str,
+    trigger      : str,
+    sample       : str,
+    brem_track_2 : bool = True) -> None:
 
-    _check_branches(rdf, is_ee = 'MuMu' not in trigger, is_mc = False)
+    _check_branches(
+            rdf, 
+            is_ee        = 'MuMu' not in trigger, 
+            is_mc        = False,
+            brem_track_2 = brem_track_2)
+
     sample = sample.replace('*', 'p')
 
     _check_mva_scores(rdf=rdf)
