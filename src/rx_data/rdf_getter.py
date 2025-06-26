@@ -552,6 +552,10 @@ class RDFGetter:
         log.debug(f'Dataframe at: {id(rdf)}')
 
         rdf = self._filter_dataframe(rdf=rdf)
+        rdf = self._add_columns(rdf=rdf)
+
+        return rdf
+    # ---------------------------------------------------
     def _filter_dataframe(self, rdf : RDataFrame) -> RDataFrame:
         '''
         Parameters
