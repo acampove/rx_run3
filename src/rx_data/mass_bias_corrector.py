@@ -154,10 +154,14 @@ class MassBiasCorrector:
         jp = l1 + l2
         bp = jp + kp
 
-        bmass = -1 if numpy.isnan(bp.mass) else float(bp.mass)
-        jmass = -1 if numpy.isnan(jp.mass) else float(jp.mass)
         jp = cast(v4d, jp)
         bp = cast(v4d, bp)
+
+        bmass = bp.mass
+        jmass = jp.mass
+
+        bmass = -1 if numpy.isnan(bmass) else float(bmass)
+        jmass = -1 if numpy.isnan(jmass) else float(jmass)
 
         # TODO: Needs to recalculate:
         # PIDe
