@@ -666,12 +666,9 @@ def test_define_custom_branches():
             'xmva'  : 'mva_cmb + mva_prc',
             }
 
-    RDFGetter.set_custom_columns(d_def = d_def)
-    with pytest.raises(AlreadySetColumns):
-        RDFGetter.set_custom_columns(d_def = d_def)
-
-    obj = RDFGetter(trigger='Hlt2RD_BuToKpEE_MVA', sample='DATA_24_MagDown_24c2')
-    rdf = obj.get_rdf()
+    with RDFGetter.custom_columns(columns = d_def):
+        obj = RDFGetter(trigger='Hlt2RD_BuToKpEE_MVA', sample='DATA_24_MagDown_24c2')
+        rdf = obj.get_rdf()
 
     l_col = [ col.c_str() for col in rdf.GetColumnNames() ]
 

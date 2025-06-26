@@ -696,21 +696,6 @@ class RDFGetter:
         return rdf
     # ---------------------------------------------------
     @staticmethod
-    def set_custom_columns(d_def : dict[str,str]) -> None:
-        '''
-        Defines custom columns that the getter class will use to
-        provide dataframes
-        '''
-        if hasattr(RDFGetter, '_d_custom_columns'):
-            raise AlreadySetColumns('Custom columns have already been set')
-
-        log.warning('Defining custom columns')
-        for column, definition in d_def.items():
-            log.info(f'{column:<30}{definition}')
-
-        RDFGetter._d_custom_columns = d_def
-    # ---------------------------------------------------
-    @staticmethod
     def split_per_file(data : dict, main : str) -> dict[str,str]:
         '''
         Parameters
