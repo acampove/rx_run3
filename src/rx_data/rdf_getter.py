@@ -479,7 +479,7 @@ class RDFGetter:
 
         d_def = self._cfg['definitions'][self._channel]
         if hasattr(RDFGetter, '_d_custom_columns'):
-            log.warning('Adding custom column definitions')
+            log.debug('Adding custom column definitions')
             d_def.update(RDFGetter._d_custom_columns)
 
         for name, definition in d_def.items():
