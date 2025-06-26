@@ -26,12 +26,13 @@ class MassBiasCorrector:
     - Differences in scale and resolution: For this we use the `Q2SmearCorrector`
     '''
     # ------------------------------------------
-    def __init__(self,
-                 rdf                   : RDataFrame,
-                 skip_correction       : bool  = False,
-                 nthreads              : int   = 1,
-                 brem_energy_threshold : float = 400,
-                 ecorr_kind            : str   = 'brem_track_2'):
+    def __init__(
+            self,
+            rdf                   : RDataFrame,
+            skip_correction       : bool  = False,
+            nthreads              : int   = 1,
+            brem_energy_threshold : float = 400,
+            ecorr_kind            : str   = 'brem_track_2'):
         '''
         rdf : ROOT dataframe
         skip_correction: Will do everything but not correction. Needed to check that only the correction is changing data.
