@@ -97,11 +97,6 @@ def _check_output_columns(rdf : RDataFrame) -> None:
         log.debug(f'   {colname}')
 #-----------------------------------------
 def _get_rdf(
-        nbrem    : int  = None,
-        is_inner : bool = None,
-        npvs     : int  = None,
-        bdt      : str  = None,
-        is_mc    : bool = False) -> RDataFrame:
     RDFGetter.samples = {
         'main' : '/home/acampove/external_ssd/Data/samples/main.yaml',
         'mva'  : '/home/acampove/external_ssd/Data/samples/mva.yaml',
@@ -110,6 +105,14 @@ def _get_rdf(
         'jmis' : '/home/acampove/external_ssd/Data/samples/jpsi_misid.yaml',
         }
 
+        nbrem    : None|int  = None,
+        is_inner : None|bool = None,
+        npvs     : None|int  = None,
+        bdt      : None|str  = None,
+        is_mc    : bool      = False) -> RDataFrame:
+    '''
+    Return ROOT dataframe needed for test
+    '''
     trigger='Hlt2RD_BuToKpEE_MVA'
     sample ='Bu_JpsiK_ee_eq_DPC' if is_mc else 'DATA_24_*'
 
