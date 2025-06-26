@@ -145,9 +145,11 @@ class MassBiasCorrector:
         return row
     # ------------------------------------------
     def _calculate_variables(self, row : pnd.Series) -> pnd.Series:
-        l1 = vector.obj(pt=row.L1_PT, phi=row.L1_PHI, eta=row.L1_ETA, m=self._emass)
-        l2 = vector.obj(pt=row.L2_PT, phi=row.L2_PHI, eta=row.L2_ETA, m=self._emass)
-        kp = vector.obj(pt=row.H_PT , phi=row.H_PHI , eta=row.H_ETA , m=self._kmass)
+        trow = TypedRow(row=row)
+
+        l1 = v4d(pt=trow.L1_PT, phi=trow.L1_PHI, eta=trow.L1_ETA, m=self._emass)
+        l2 = v4d(pt=trow.L2_PT, phi=trow.L2_PHI, eta=trow.L2_ETA, m=self._emass)
+        kp = v4d(pt=trow.H_PT , phi=trow.H_PHI , eta=trow.H_ETA , m=self._kmass)
 
         jp = l1 + l2
         bp = jp + kp
@@ -196,13 +198,15 @@ class MassBiasCorrector:
             row      : pnd.DataFrame, 
             momentum : v3d, 
             particle : str) -> float:
-        pv_x = row[f'{particle}_BPVX']
-        pv_y = row[f'{particle}_BPVY']
-        pv_z = row[f'{particle}_BPVZ']
+        trow = TypedRow(row=row)
 
-        sv_x = row[f'{particle}_END_VX']
-        sv_y = row[f'{particle}_END_VY']
-        sv_z = row[f'{particle}_END_VZ']
+        pv_x = trow[f'{particle}_BPVX']
+        pv_y = trow[f'{particle}_BPVY']
+        pv_z = trow[f'{particle}_BPVZ']
+
+        sv_x = trow[f'{particle}_END_VX']
+        sv_y = trow[f'{particle}_END_VY']
+        sv_z = trow[f'{particle}_END_VZ']
 
         pv   = v3d(x=pv_x, y=pv_y, z=pv_z)
         sv   = v3d(x=sv_x, y=sv_y, z=sv_z)
@@ -217,9 +221,11 @@ class MassBiasCorrector:
         if not self._is_mc:
             return reco
 
-        true    = row[f'{particle}_TRUEM']
-        nbrem   = row['L1_HASBREMADDED'] + row['L2_HASBREMADDED']
-        block   = row['block']
+        trow    = TypedRow(row)
+        true    = trow[f'{particle}_TRUEM']
+        nbrem   = trow['L1_HASBREMADDED'] + trow['L2_HASBREMADDED']
+        block   = trow['block']
+
         nbrem   = cast(int, nbrem)
         block   = cast(int, block)
 
