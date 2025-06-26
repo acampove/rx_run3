@@ -101,7 +101,6 @@ def _get_rdf(
         is_inner : None|bool = None,
         npvs     : None|int  = None,
         bdt      : None|str  = None,
-        block    : None| int = None,
         is_mc    : bool      = False) -> RDataFrame:
     '''
     Return ROOT dataframe needed for test
@@ -123,9 +122,6 @@ def _get_rdf(
     for name, cut in d_sel.items():
         log.debug(f'{name:<20}{cut}')
         rdf = rdf.Filter(cut, name)
-
-    if block    is not None:
-        rdf = rdf.Filter('block', f'block == {block}')
 
     if nbrem    is not None:
         brem_cut = f'nbrem == {nbrem}' if nbrem in [0,1] else f'nbrem >= {nbrem}'
