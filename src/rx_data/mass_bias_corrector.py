@@ -154,6 +154,8 @@ class MassBiasCorrector:
 
         bmass = -1 if numpy.isnan(bp.mass) else float(bp.mass)
         jmass = -1 if numpy.isnan(jp.mass) else float(jp.mass)
+        jp = cast(v4d, jp)
+        bp = cast(v4d, bp)
 
         # TODO: Needs to recalculate:
         # PIDe
@@ -205,6 +207,7 @@ class MassBiasCorrector:
         pv   = v3d(x=pv_x, y=pv_y, z=pv_z)
         sv   = v3d(x=sv_x, y=sv_y, z=sv_z)
         DR   = sv - pv
+        dr   = cast(v3d, dr)
 
         cos_theta = DR.dot(momentum) / (DR.mag * momentum.mag)
 
@@ -217,6 +220,9 @@ class MassBiasCorrector:
         true    = row[f'{particle}_TRUEM']
         nbrem   = row['L1_HASBREMADDED'] + row['L2_HASBREMADDED']
         block   = row['block']
+        nbrem   = cast(int, nbrem)
+        block   = cast(int, block)
+
         smeared = self._qsq_corr.get_mass(nbrem=nbrem, block=block, jpsi_mass_reco=reco, jpsi_mass_true=true)
 
         return smeared
@@ -252,6 +258,7 @@ class MassBiasCorrector:
         else:
             df_corr = df.apply(self._calculate_correction, axis=1)
 
+        df_corr = cast(pnd.DataFrame, df_corr)
         df_corr = self._add_suffix(df_corr, suffix)
         for variable in ['EVENTNUMBER', 'RUNNUMBER']:
             df_corr[variable] = df[variable]
