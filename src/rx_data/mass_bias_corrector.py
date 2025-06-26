@@ -223,10 +223,10 @@ class MassBiasCorrector:
 
         pv   = v3d(x=pv_x, y=pv_y, z=pv_z)
         sv   = v3d(x=sv_x, y=sv_y, z=sv_z)
-        DR   = sv - pv
+        dr   = sv - pv
         dr   = cast(v3d, dr)
 
-        cos_theta = DR.dot(momentum) / (DR.mag * momentum.mag)
+        cos_theta = dr.dot(momentum) / (dr.mag * momentum.mag)
 
         return cos_theta
     # ------------------------------------------
