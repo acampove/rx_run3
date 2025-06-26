@@ -67,6 +67,7 @@ class ElectronBiasCorrector:
 
         e_4d = v4d(pt=pt, eta=eta, phi=phi, mass=self._mass)
         e_4d = e_4d.to_pxpypzenergy()
+        e_4d = cast(v4d, e_4d)
 
         return e_4d
     # ---------------------------------
@@ -74,6 +75,7 @@ class ElectronBiasCorrector:
         e_full = self._get_electron(row, kind='')
         e_brem = e_full - e_track
         e_brem = e_brem.to_pxpypzenergy()
+        e_brem = cast(v4d, e_brem)
 
         self._check_massless_brem(e_brem)
 
@@ -95,7 +97,7 @@ class ElectronBiasCorrector:
 
         return e_brem
     # ---------------------------------
-    def _update_row(self, row : pnd.Series, e_corr : v4d) -> pnd.Series:
+    def _update_row(self, row : pnd.Series, e_corr : v4d|None) -> pnd.Series:
         # If correction was not applied, do not update anything
         if e_corr is None:
             return row
@@ -146,12 +148,18 @@ class ElectronBiasCorrector:
         if self._skip_correction:
             log.warning('Skipping electron correction')
             self._brem_status = -1
-            return e_track + e_brem
+            e_corr = e_track + e_brem
+            e_corr = cast(v4d, e_corr)
+
+            return e_corr
 
         # Will only correct brem, no brem => no correction
         if not self._attr_from_row(row, f'{self._name}_HASBREMADDED'):
             self._brem_status = -1
-            return e_track + e_brem
+            e_corr = e_track + e_brem
+            e_corr = cast(v4d, e_corr)
+
+            return e_corr
 
         log.info('Applying ecalo_bias correction')
 
@@ -159,7 +167,7 @@ class ElectronBiasCorrector:
         brem_col = self._attr_from_row(row, f'{self._name}_BREMHYPOCOL')
         brem_area= self._attr_from_row(row, f'{self._name}_BREMHYPOAREA')
 
-        e_brem_corr = self._bcor.correct(brem=e_brem, row=brem_row, col=brem_col, area=brem_area)
+        e_brem_corr = self._bcor.correct(brem=e_brem, row=int(brem_row), col=int(brem_col), area=int(brem_area))
 
         if e_brem_corr.isclose(e_brem, rtol=1e-5):
             momentum = e_brem.p
@@ -177,10 +185,11 @@ class ElectronBiasCorrector:
 
         self._brem_status = 1
         e_corr = e_track + e_brem_corr
+        e_corr = cast(v4d, e_corr)
 
         return e_corr
     # ---------------------------------
-    def _correct_with_track_brem_1(self, e_track : v4d, row : pnd.Series) -> v4d:
+    def _correct_with_track_brem_1(self, e_track : v4d, row : pnd.Series) -> v4d|None:
         '''
         Take electron from tracking system and brem, as well as dataframe row representing entry in TTree
         Create brem photon colinear to track, add it to track, return sum
@@ -210,7 +219,10 @@ class ElectronBiasCorrector:
         self._brem_status = 1
         self._check_massless_brem(gamma)
 
-        return e_track + gamma
+        e_corr = e_track + gamma
+        e_corr = cast(v4d, e_corr)
+
+        return e_corr
     # ---------------------------------
     def _correct_with_track_brem_2(self, e_track : v4d, row : pnd.Series) -> v4d|None:
         '''
