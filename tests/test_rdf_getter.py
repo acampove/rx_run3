@@ -186,8 +186,8 @@ def _plot_q2_track(rdf : RDataFrame, sample : str) -> None:
     arr_q2_track = rdf.AsNumpy(['q2_track'])['q2_track']
     arr_q2       = rdf.AsNumpy(['q2'      ])['q2'      ]
 
-    plt.hist(arr_q2_track, alpha=0.5      , range=[0, 22_000_000], bins=40, label='$q^2_{track}$')
-    plt.hist(arr_q2      , histtype='step', range=[0, 22_000_000], bins=40, label='$q^2$')
+    plt.hist(arr_q2_track, alpha=0.5      , range=(0, 22_000_000), bins=40, label='$q^2_{track}$')
+    plt.hist(arr_q2      , histtype='step', range=(0, 22_000_000), bins=40, label='$q^2$')
 
     plt.title(sample)
     plt.legend()
@@ -201,13 +201,13 @@ def _plot_sim(rdf : RDataFrame, test : str, particle : str) -> None:
     arr_mass = rdf.AsNumpy([f'{particle}_TRUEM'])[f'{particle}_TRUEM']
 
     if   particle == 'B':
-        plt.hist(arr_mass, bins=200, range=[5000, 5300], histtype='step', label='True')
+        plt.hist(arr_mass, bins=200, range=(5000, 5300), histtype='step', label='True')
         plt.axvline(x=5279.3, c='red', ls=':', label=r'$B^+$')
     elif particle == 'Jpsi' and 'Jpsi'     in test: # This will do the resonant sample
-        plt.hist(arr_mass, bins=200, range=[3090, 3100], histtype='step', label='True')
+        plt.hist(arr_mass, bins=200, range=(3090, 3100), histtype='step', label='True')
         plt.axvline(x=3096.9, c='red', ls=':', label=r'$J/\psi$')
     elif particle == 'Jpsi' and 'Jpsi' not in test: # This will do the rare one
-        plt.hist(arr_mass, bins=200, range=[   0, 4500], histtype='step', label='True')
+        plt.hist(arr_mass, bins=200, range=(   0, 4500), histtype='step', label='True')
     else:
         raise ValueError(f'Invalid test/particle: {test}/{particle}')
 
@@ -224,8 +224,8 @@ def _plot_mva(rdf : RDataFrame, test : str) -> None:
 
     arr_cmb = rdf.AsNumpy(['mva_cmb'])['mva_cmb']
     arr_prc = rdf.AsNumpy(['mva_prc'])['mva_prc']
-    plt.hist(arr_cmb, bins=40, histtype='step', range=[-1.1, 1.0], label='CMB')
-    plt.hist(arr_prc, bins=40, histtype='step', range=[-1.1, 1.0], label='PRC')
+    plt.hist(arr_cmb, bins=40, histtype='step', range=(-1.1, 1.0), label='CMB')
+    plt.hist(arr_prc, bins=40, histtype='step', range=(-1.1, 1.0), label='PRC')
 
     plt.title(test)
     plt.legend()
@@ -240,15 +240,15 @@ def _plot_hop(rdf : RDataFrame, test : str) -> None:
 
     arr_org = rdf.AsNumpy(['B_M' ])['B_M' ]
     arr_hop = rdf.AsNumpy(['hop_mass'])['hop_mass']
-    plt.hist(arr_org, bins=80, histtype='step', range=[3000, 7000], label='Original')
-    plt.hist(arr_hop, bins=80, histtype='step', range=[3000, 7000], label='HOP')
+    plt.hist(arr_org, bins=80, histtype='step', range=(3000, 7000), label='Original')
+    plt.hist(arr_hop, bins=80, histtype='step', range=(3000, 7000), label='HOP')
     plt.title(test)
     plt.legend()
     plt.savefig(f'{test_dir}/hop_mass.png')
     plt.close()
 
     arr_aph = rdf.AsNumpy(['hop_alpha'])['hop_alpha']
-    plt.hist(arr_aph, bins=40, histtype='step', range=[0, 5])
+    plt.hist(arr_aph, bins=40, histtype='step', range=(0, 5))
     plt.title(test)
     plt.savefig(f'{test_dir}/hop_alpha.png')
     plt.close()
@@ -277,12 +277,12 @@ def _plot_brem_track_2(rdf : RDataFrame, test : str, tree : str) -> None:
     os.makedirs(test_dir, exist_ok=True)
 
     d_var= {
-            'B_M'             : [4200,  6000],
-            'Jpsi_M'          : [2500,  3300],
-            'L1_PT'           : [   0, 10000],
-            'L2_PT'           : [   0, 10000],
-            'L1_HASBREMADDED' : [0, 2],
-            'L2_HASBREMADDED' : [0, 2],
+            'B_M'             : (4200,  6000),
+            'Jpsi_M'          : (2500,  3300),
+            'L1_PT'           : (   0, 10000),
+            'L2_PT'           : (   0, 10000),
+            'L1_HASBREMADDED' : (   0,     2),
+            'L2_HASBREMADDED' : (   0,     2),
             }
 
     kind = 'brem_track_2'
