@@ -285,10 +285,8 @@ class ElectronBiasCorrector:
         '''
         log.info(f'Correcting {name} with {kind}')
 
-        self._name       = name
-        self._brem_status= None
-
-        e_track = self._get_electron(row, kind='TRACK_')
+        self._name = name
+        e_track    = self._get_electron(row, kind='TRACK_')
 
         if   kind == 'ecalo_bias':
             e_brem = self._get_ebrem(row, e_track)
