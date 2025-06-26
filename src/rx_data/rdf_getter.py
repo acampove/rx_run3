@@ -45,17 +45,17 @@ class RDFGetter:
     main_tree   : Name of tree treated as the main tree when building dataframes with friend trees through `FromSpec`
     skip_adding_columns : By default false. If true, it will skip defining new columns.
     '''
-    max_entries         = -1
-    skip_adding_columns = False
+    _max_entries         = -1
+    _skip_adding_columns = False
 
-    custom_versions     : dict[str,str] = {}
-    main_tree           : str
+    _custom_versions     : dict[str,str] = {}
+    _main_tree           : str
 
-    cache_dir        = '/tmp/rx_data/cache/rdf_getter' # Here is where all the temporary output will go
-    excluded_friends = []
-    JPSI_PDG_MASS    = 3096.90 # https://pdg.lbl.gov/2018/listings/rpp2018-list-J-psi-1S.pdf
-    BPLS_PDG_MASS    = 5279.34 # https://pdg.lbl.gov/2022/tables/rpp2022-tab-mesons-bottom.pdf
-    d_custom_columns : dict[str,str]
+    _cache_dir        = '/tmp/rx_data/cache/rdf_getter' # Here is where all the temporary output will go
+    _excluded_friends = []
+    _JPSI_PDG_MASS    = 3096.90 # https://pdg.lbl.gov/2018/listings/rpp2018-list-J-psi-1S.pdf
+    _BPLS_PDG_MASS    = 5279.34 # https://pdg.lbl.gov/2022/tables/rpp2022-tab-mesons-bottom.pdf
+    _d_custom_columns : dict[str,str]
     # ---------------------------------------------------
     def __init__(
             self,
