@@ -138,13 +138,12 @@ def _get_rdf(
     return rdf
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
-def test_small_input(kind : str):
+def test_simple(kind : str):
     '''
-    Run over a few entries
+    Simplest test
     '''
     rdf_org = _get_rdf()
-    rdf_org = rdf_org.Range(10_000)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=1, ecorr_kind=kind)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=4, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
 
     _check_output_columns(rdf_cor)
