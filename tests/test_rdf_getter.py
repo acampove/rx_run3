@@ -36,16 +36,19 @@ class Data:
                'B_TRUEM',
             ]
 
-    l_branch_common = [
-            'th_l1_l2',
-            'th_l1_kp',
-            'th_l2_kp',
+    l_branch_friends = [
             'mva.mva_cmb',
             'mva.mva_prc',
             'hop.hop_mass',
             'hop.hop_alpha',
             'swp_cascade.swp_cascade_mass_swp',
             'swp_jpsi_misid.swp_jpsi_misid_mass_swp',
+            ]
+
+    l_branch_common = [
+            'th_l1_l2',
+            'th_l1_kp',
+            'th_l2_kp',
             'q2',
             ]
 
