@@ -414,7 +414,8 @@ class RDFGetter:
         False: Definition possible
         '''
 
-        if 'brem_track_2' not in RDFGetter._excluded_friends:
+        if 'brem_track_2' in self._l_ftree:
+            log.debug('Not skipping brem_track_2 definitions')
             return False
 
         # Variables containing these in their definitions, cannot be defined
