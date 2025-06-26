@@ -125,6 +125,8 @@ class MassBiasCorrector:
     # ------------------------------------------
     def _silence_logger(self, name) -> None:
         logger = LogStore.get_logger(name=name)
+        if logger is None:
+            raise ValueError(f'Cannot get logger: {name}')
 
         # If a logger has been put in debug level
         # then it is not meant to be silenced here
