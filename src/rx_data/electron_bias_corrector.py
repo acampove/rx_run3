@@ -37,10 +37,11 @@ class ElectronBiasCorrector:
         self._bcor            = BremBiasCorrector()
         self._name      : str
 
-        # -1 : If the electron is not touched
-        #  0 : If the electron is not assigned any brem
-        #  1 : If the electron is assigned brem
-        self._brem_status : int
+        # None: Uninitizialized
+        # -1  : If the electron is not touched
+        #  0  : If the electron is not assigned any brem
+        #  1  : If the electron is assigned brem
+        self._brem_status : int|None = None
 
         # This will turn ON/OFF the code that reads the regressor
         # to apply the energy scaling to electrons based on kinematic balance
