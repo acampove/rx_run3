@@ -102,6 +102,8 @@ def _check_branches(
 
     if brem_track_2:
         l_branch_ee = Data.l_brem_track_2 + Data.l_branch_ee
+    else:
+        l_branch_ee = Data.l_branch_ee
 
     l_branch = l_branch_ee if is_ee else Data.l_branch_mm
     if is_mc:
