@@ -797,9 +797,9 @@ class RDFGetter:
     @staticmethod
     def max_entries(value : int):
         '''
-        Contextmanager to limit number of entries in dataframe 
+        Contextmanager to limit number of entries in dataframe
 
-        value: number of entries, by default -1 (all) 
+        value: number of entries, by default -1 (all)
         '''
         old_val = RDFGetter._max_entries
         try:
