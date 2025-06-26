@@ -1,7 +1,7 @@
 general:
   size : [15, 10]
 selection:
-  max_ran_entries : 50000
+  max_ran_entries : -1 
   cuts:
     pide : L1_PID_E > 1 && L2_PID_E > 1
     pidk : K_PID_K > -2
@@ -11,13 +11,15 @@ plots:
     labels  : ['PID${}_{e}(e^+)$', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
     weights : weights
     name    : l1_pide
-    styling :
-      '0.1 x New':
+    styling : &style
+      '1e-4 x New':
         histtype : fill
-        color    : gray
-        alpha    : 0.2
+        color    : red 
+        alpha    : 0.4
       'Original':
-        color    : black
+        histtype : fill 
+        color    : green 
+        alpha    : 0.4
       'New with PID':
         color    : blue
   L2_PID_E:
@@ -30,11 +32,8 @@ plots:
     weights : weights
     name    : k_pidk
     styling :
-      '0.1 x New':
-        histtype : fill
-        color    : gray
-        alpha    : 0.2
-      'Original':
-        color    : black
-      'New with PID':
-        color    : blue
+      <<: *style
+plugin:
+  stats:
+    L1_PID_E:
+      sum : sum={:.0f}
