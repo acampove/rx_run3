@@ -158,13 +158,14 @@ def _plot_block(rdf : RDataFrame, name : str) -> None:
 def _plot_bmass(
         rdf         : RDataFrame,
         is_electron : bool,
+        brem_track_2: bool,
         test_name   : str) -> None:
     test_dir = f'{Data.out_dir}/{test_name}'
     os.makedirs(test_dir, exist_ok=True)
 
     minx = 4500
     maxx = 6000
-    if is_electron:
+    if is_electron and brem_track_2:
         masses = ['B_Mass_smr', 'B_M']
     else:
         masses = ['B_M']
@@ -388,9 +389,10 @@ def _run_default_checks(
     _check_mva_scores(rdf=rdf)
 
     _plot_bmass(
-            rdf        = rdf,
-            is_electron= 'MuMu' not in trigger,
-            test_name  = f'{test_name}_{sample}')
+            brem_track_2 = brem_track_2,
+            rdf          = rdf,
+            is_electron  = 'MuMu' not in trigger,
+            test_name    = f'{test_name}_{sample}')
 
     _plot_mva_mass(rdf, f'{test_name}_{sample}')
     _plot_mva(rdf     , f'{test_name}_{sample}')
