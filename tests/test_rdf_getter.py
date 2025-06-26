@@ -257,7 +257,7 @@ def _apply_selection(
         rdf      : RDataFrame,
         trigger  : str,
         sample   : str,
-        override : dict[str,str] = None) -> RDataFrame:
+        override : None|dict[str,str] = None) -> RDataFrame:
     '''
     Apply full selection but q2 and mass
     '''
