@@ -73,7 +73,6 @@ class RDFGetter:
         self._analysis        = analysis
         self._samples         : dict[str,str]
         self._l_columns       : list[str]
-        self._jpsi_pdg_mass   = RDFGetter.JPSI_PDG_MASS
 
         self._tree_name       = tree
         self._cfg             = self._load_config()
