@@ -187,7 +187,7 @@ def test_medium_input(sample : str):
     _check_output_columns(rdf_cor)
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, 'medium_{sample}', kind)
+    _compare_masses(d_rdf, f'medium_{sample}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
 @pytest.mark.parametrize('nbrem'  , [0, 1, 2])
