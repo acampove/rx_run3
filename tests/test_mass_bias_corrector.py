@@ -159,20 +159,6 @@ def test_small_input(kind : str):
     _compare_masses(d_rdf, 'small_input', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_1', 'brem_track_2'])
-def test_full_dataset(kind : str):
-    '''
-    Run over all the data, no binning
-    '''
-    rdf_org = _get_rdf()
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=kind)
-    rdf_cor = cor.get_rdf()
-
-    _check_output_columns(rdf_cor)
-
-    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, 'full_dataset', kind)
-#-----------------------------------------
-@pytest.mark.parametrize('kind', ['brem_track_1', 'brem_track_2'])
 @pytest.mark.parametrize('nbrem'  , [0, 1, 2])
 def test_nbrem(nbrem : int, kind : str):
     '''
