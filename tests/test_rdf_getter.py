@@ -770,8 +770,8 @@ def test_custom_friend(sample : str, trigger : str):
                              ('Bu_Kee_eq_btosllball05_DPC'    , 'Hlt2RD_BuToKpEE_MVA_noPID'),
                              ('Bd_Kstee_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpEE_MVA_noPID'),
                              # -------------
-                             ('Bu_Kmm_eq_btosllball05_DPC'    , 'Hlt2RD_BuToKpMuMu_MVA_noPID'),
-                             ('Bd_Kstmm_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpMuMu_MVA_noPID'),
+                             ('Bu_Kmumu_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpMuMu_MVA_noPID'),
+                             ('Bd_Kstmumu_eq_btosllball05_DPC', 'Hlt2RD_BuToKpMuMu_MVA_noPID'),
                              ])
 def test_no_pid(sample : str, trigger : str):
     '''
