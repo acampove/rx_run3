@@ -399,7 +399,42 @@ class RDFGetter:
 
         return d_data
     # ---------------------------------------------------
+    def _skip_brem_track_2_definition(self, name: str, definition : str) -> bool:
+        '''
+        Parameters 
+        -------------------
+        name      : Name of variable to be defined
+        definition: Definition...
+
+        Returns
+        -------------------
+        True: This definition is not possible, due to absence of brem_track_2
+        False: Definition possible
+        '''
+
+        if 'brem_track_2' not in RDFGetter.excluded_friends:
+            log.debug(f'Not skipping definition {name}={definition}')
+            return False
+
+        # Variables containing these in their definitions, cannot be defined
+        # without brem_track_2
+        l_substr = ['brem_track_2', '_smr ', 'Jpsi_Mass', 'B_Mass']
+
+        for substr in l_substr:
+            if substr in definition:
+                log.debug(f'Skipping definition {name}={definition}')
+                return True
+
+        log.debug(f'Not skipping definition {name}={definition}')
+
+        return False
+    # ---------------------------------------------------
     def _add_column(self, rdf: RDataFrame, name : str, definition : str) -> RDataFrame:
+        '''
+        Wrapper function to Define
+        '''
+        if self._skip_brem_track_2_definition(name=name, definition=definition):
+            return rdf
 
         if name in self._l_columns:
             raise ValueError(f'Cannot add {name}={definition}, column already found')
@@ -469,6 +504,9 @@ class RDFGetter:
                 log.debug('Sending pre-UT candidates to block 0')
             else:
                 log.debug(f'Redefining: {name}={definition}')
+
+            if self._skip_brem_track_2_definition(name=name, definition=definition):
+                continue
 
             rdf = rdf.Redefine(name, definition)
 
