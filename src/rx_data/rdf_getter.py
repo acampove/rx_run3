@@ -411,7 +411,6 @@ class RDFGetter:
         False: Definition possible
         '''
 
-            log.debug(f'Not skipping definition {name}={definition}')
         if 'brem_track_2' not in RDFGetter._excluded_friends:
             return False
 
