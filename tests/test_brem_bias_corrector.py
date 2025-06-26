@@ -27,6 +27,8 @@ def _initialize():
     df = df.drop(columns=['n', 'z'])
     df = df.sort_values(by = ['x', 'y'])
 
+    LogStore.set_level('rx_data:brem_bias_corrector', 10)
+
     Data.locations = df.values.tolist()
 # -----------------------------------------------
 def _get_input(energy : float):
