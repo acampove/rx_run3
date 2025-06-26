@@ -423,7 +423,17 @@ class RDFGetter:
         l_substr = ['brem_track_2', '_smr ', 'Jpsi_Mass', 'B_Mass']
 
         for substr in l_substr:
-            if substr in definition:
+            # This variable does not depend on this brem_track_2 substring
+            if substr not in definition:
+                continue
+
+            # Trees do not exist
+            if 'brem_track_2' not in RDFGetter._excluded_friends:
+                log.warning(f'Skipping definition {name}={definition}')
+                return True
+
+            # Trees might exist, but they were excluded by user
+            if 'brem_track_2'     in RDFGetter._excluded_friends:
                 log.debug(f'Skipping definition {name}={definition}')
                 return True
 
