@@ -156,7 +156,23 @@ def test_simple(kind : str):
     _check_output_columns(rdf_cor)
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, 'small_input', kind)
+    _compare_masses(d_rdf, 'simple', kind)
+#-----------------------------------------
+@pytest.mark.parametrize('kind', ['brem_track_2'])
+def test_medium_input(kind : str):
+    '''
+    Medium input
+    '''
+    with RDFGetter.max_entries(value=100_000):
+        rdf_org = _get_rdf()
+
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=6, ecorr_kind=kind)
+    rdf_cor = cor.get_rdf()
+
+    _check_output_columns(rdf_cor)
+
+    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+    _compare_masses(d_rdf, 'medium', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
 @pytest.mark.parametrize('nbrem'  , [0, 1, 2])
