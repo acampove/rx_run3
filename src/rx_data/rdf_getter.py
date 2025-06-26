@@ -96,12 +96,12 @@ class RDFGetter:
         self._initialize()
     # ---------------------------------------------------
     def _get_main_tree(self) -> str:
-        if not hasattr(RDFGetter, 'main_tree'):
+        if not hasattr(RDFGetter, '_main_tree'):
             return self._cfg['trees']['main']
 
-        log.warning(f'Overriding main tree with: {RDFGetter.main_tree}')
+        log.warning(f'Overriding main tree with: {RDFGetter._main_tree}')
 
-        return RDFGetter.main_tree
+        return RDFGetter._main_tree
     # ---------------------------------------------------
     def _channel_from_trigger(self) -> str:
         '''
@@ -134,7 +134,7 @@ class RDFGetter:
 
         If no samples found, will raise FileNotFoundError
         '''
-        os.makedirs(RDFGetter.cache_dir, exist_ok=True)
+        os.makedirs(RDFGetter._cache_dir, exist_ok=True)
         self._check_multithreading()
 
         self._samples = self._get_yaml_paths()
@@ -169,8 +169,8 @@ class RDFGetter:
         Finds latest/custom version and returns this path
         '''
         ftree = os.path.basename(ftree_dir)
-        if ftree in RDFGetter.custom_versions:
-            version     = RDFGetter.custom_versions[ftree]
+        if ftree in RDFGetter._custom_versions:
+            version     = RDFGetter._custom_versions[ftree]
             version_dir = f'{ftree_dir}/{version}'
 
             log.warning(f'{ftree:<20}{version:<20}')
@@ -197,7 +197,7 @@ class RDFGetter:
         val  = hashing.hash_object(data)
         val  = val[:10] # Ten characters are long enough for a hash
 
-        out_path = f'{RDFGetter.cache_dir}/{val}.yaml'
+        out_path = f'{RDFGetter._cache_dir}/{val}.yaml'
         log.debug(f'Saving friend tree structure to {out_path}')
 
         # In a cluster, two jobs might interfere each other
@@ -344,7 +344,7 @@ class RDFGetter:
         if ftree == self._main_tree:
             return False
 
-        if ftree in RDFGetter.excluded_friends:
+        if ftree in RDFGetter._excluded_friends:
             log.warning(f'Excluding friend tree: {ftree}')
             return True
 
@@ -411,8 +411,8 @@ class RDFGetter:
         False: Definition possible
         '''
 
-        if 'brem_track_2' not in RDFGetter.excluded_friends:
             log.debug(f'Not skipping definition {name}={definition}')
+        if 'brem_track_2' not in RDFGetter._excluded_friends:
             return False
 
         # Variables containing these in their definitions, cannot be defined
@@ -448,9 +448,9 @@ class RDFGetter:
         log.info('Adding common columns')
 
         d_def = self._cfg['definitions'][self._channel]
-        if hasattr(RDFGetter, 'd_custom_columns'):
+        if hasattr(RDFGetter, '_d_custom_columns'):
             log.warning('Adding custom column definitions')
-            d_def.update(RDFGetter.d_custom_columns)
+            d_def.update(RDFGetter._d_custom_columns)
 
         for name, definition in d_def.items():
             rdf = self._add_column(rdf, name, definition)
@@ -512,7 +512,7 @@ class RDFGetter:
         return rdf
     # ---------------------------------------------------
     def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
-        if RDFGetter.skip_adding_columns:
+        if RDFGetter._skip_adding_columns:
             log.warning('Not adding new columns')
             return rdf
 
@@ -567,13 +567,13 @@ class RDFGetter:
         '''
         nentries = rdf.Count().GetValue()
 
-        if RDFGetter.max_entries < 0 or RDFGetter.max_entries > nentries:
+        if RDFGetter._max_entries < 0 or RDFGetter._max_entries > nentries:
             return rdf
 
-        frac = RDFGetter.max_entries / nentries
+        frac = RDFGetter._max_entries / nentries
         part = math.ceil(1.0 / frac)
 
-        log.warning(f'Returning dataframe with around {RDFGetter.max_entries} entries')
+        log.warning(f'Returning dataframe with around {RDFGetter._max_entries} entries')
         log.debug(f'Filter 1 / {part} entries => {frac:.3f} fraction')
 
         rdf  = rdf.Filter(f'rdfentry_ % {part} == 0', f'random_{part:02}_part')
@@ -680,8 +680,8 @@ class RDFGetter:
         jps_4d  =f'auto jpsi_4d = {lv1} + {lv2};'
         bpl_4d  =f'auto bpls_4d = {lv1} + {lv2} + {lv3};'
 
-        expr_jp =f'{l1_3d}; {l2_3d}         ; {l1_4d}; {l2_4d}         ; {jps_4d}; auto val = jpsi_4d.M(); return val!=val ? {RDFGetter.JPSI_PDG_MASS} : val'
-        expr_bp =f'{l1_3d}; {l2_3d}; {kp_3d}; {l1_4d}; {l2_4d}; {kp_4d}; {bpl_4d}; auto val = bpls_4d.M(); return val!=val ? {RDFGetter.BPLS_PDG_MASS} : val'
+        expr_jp =f'{l1_3d}; {l2_3d}         ; {l1_4d}; {l2_4d}         ; {jps_4d}; auto val = jpsi_4d.M(); return val!=val ? {RDFGetter._JPSI_PDG_MASS} : val'
+        expr_bp =f'{l1_3d}; {l2_3d}; {kp_3d}; {l1_4d}; {l2_4d}; {kp_4d}; {bpl_4d}; auto val = bpls_4d.M(); return val!=val ? {RDFGetter._BPLS_PDG_MASS} : val'
 
         log.debug('Jpsi_TRUEM')
         log.debug('-->')
@@ -702,14 +702,14 @@ class RDFGetter:
         Defines custom columns that the getter class will use to
         provide dataframes
         '''
-        if hasattr(RDFGetter, 'd_custom_columns'):
+        if hasattr(RDFGetter, '_d_custom_columns'):
             raise AlreadySetColumns('Custom columns have already been set')
 
         log.warning('Defining custom columns')
         for column, definition in d_def.items():
             log.info(f'{column:<30}{definition}')
 
-        RDFGetter.d_custom_columns = d_def
+        RDFGetter._d_custom_columns = d_def
     # ---------------------------------------------------
     @staticmethod
     def split_per_file(data : dict, main : str) -> dict[str,str]:
@@ -788,7 +788,7 @@ class RDFGetter:
         hsh         = hashlib.sha256(bidentifier)
         hsh         = hsh.hexdigest()
         hsh         = hsh[:10]
-        tmp_path    = f'{RDFGetter.cache_dir}/config_{hsh}.json'
+        tmp_path    = f'{RDFGetter._cache_dir}/config_{hsh}.json'
 
         log.debug(f'Using config JSON: {tmp_path}')
 
@@ -801,12 +801,12 @@ class RDFGetter:
         It will build the dataframe, excluding the friend trees
         in the `names` list
         '''
-        old_val = RDFGetter.excluded_friends
+        old_val = RDFGetter._excluded_friends
         try:
-            RDFGetter.excluded_friends = names
+            RDFGetter._excluded_friends = names
             yield
         finally:
-            RDFGetter.excluded_friends = old_val
+            RDFGetter._excluded_friends = old_val
     # ---------------------------------------------------
     @contextmanager
     @staticmethod
@@ -819,10 +819,10 @@ class RDFGetter:
 
         and override the version used for this friend tree
         '''
-        old_val = RDFGetter.custom_versions
+        old_val = RDFGetter._custom_versions
         try:
-            RDFGetter.custom_versions = versions
+            RDFGetter._custom_versions = versions
             yield
         finally:
-            RDFGetter.custom_versions = old_val
+            RDFGetter._custom_versions = old_val
 # ---------------------------------------------------
