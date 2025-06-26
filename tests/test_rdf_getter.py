@@ -777,21 +777,15 @@ def test_no_pid(sample : str, trigger : str):
     '''
     Tests loading of noPID samples
     '''
-    with RDFGetter.exclude_friends(names=[
-        'mva',
-        'hop',
-        'swp_cascade',
-        'swp_jpsi_misid',
-        'brem_track_2', ]):
-        gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
-        rdf = gtr.get_rdf()
-        _run_default_checks(
-                rdf         = rdf,
-                sample      = sample,
-                trigger     = trigger,
-                friends     = False,
-                brem_track_2= False,
-                test_name   = 'no_pid')
+    gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
+    rdf = gtr.get_rdf()
+    _run_default_checks(
+            rdf         = rdf,
+            sample      = sample,
+            trigger     = trigger,
+            friends     = False,
+            brem_track_2= False,
+            test_name   = 'no_pid')
 # ------------------------------------------------
 @pytest.mark.parametrize('kind'   , ['data', 'mc'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
