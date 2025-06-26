@@ -30,10 +30,11 @@ class Data:
 #-----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    RDFGetter.max_entries = 1_000
+    RDFGetter.max_entries = 100
     LogStore.set_level('rx_data:mass_bias_corrector'     , 10)
     LogStore.set_level('rx_data:electron_bias_corrector' , 20)
     LogStore.set_level('rx_data:test_mass_bias_corrector', 10)
+    LogStore.set_level('rx_data:rdf_getter'              , 10)
 
     os.makedirs(Data.plt_dir, exist_ok=True)
     plt.style.use(mplhep.style.LHCb2)
@@ -143,7 +144,7 @@ def test_simple(kind : str):
     Simplest test
     '''
     rdf_org = _get_rdf()
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=4, ecorr_kind=kind)
+    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=6, ecorr_kind=kind)
     rdf_cor = cor.get_rdf()
 
     _check_output_columns(rdf_cor)
