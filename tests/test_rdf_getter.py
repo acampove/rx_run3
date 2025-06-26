@@ -96,7 +96,7 @@ def _check_branches(
         rdf          : RDataFrame,
         is_ee        : bool,
         is_mc        : bool,
-        brem_track_2 : bool) -> None:
+        brem_track_2 : bool = True) -> None:
 
     l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
 
