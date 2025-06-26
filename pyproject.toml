@@ -12,6 +12,7 @@ dependencies= [
 'particle',
 'vector',
 'pandarallel',
+'ecal_calibration',
 'data_manipulation_utilities',
 'ap_utilities'
 ]
