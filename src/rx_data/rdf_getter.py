@@ -596,19 +596,14 @@ class RDFGetter:
         Dataframe after optional filter
         '''
         nentries = rdf.Count().GetValue()
+        nent     = RDFGetter._max_entries
 
-        if RDFGetter._max_entries < 0 or RDFGetter._max_entries > nentries:
+        if nent < 0 or nent > nentries:
             return rdf
 
-        frac = RDFGetter._max_entries / nentries
-        part = math.ceil(1.0 / frac)
+        rdf  = rdf.Range(nent)
 
-        log.warning(f'Returning dataframe with around {RDFGetter._max_entries} entries')
-        log.debug(f'Filter 1 / {part} entries => {frac:.3f} fraction')
-
-        rdf  = rdf.Filter(f'rdfentry_ % {part} == 0', f'random_{part:02}_part')
-        nentries = rdf.Count().GetValue()
-        log.warning(f'New dataset size: {nentries}')
+        log.warning(f'Picking up the first {nent} entries')
 
         return rdf
     # ---------------------------------------------------
