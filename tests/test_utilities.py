@@ -2,9 +2,11 @@
 Script meant to be used to test functions in utilities.py module
 '''
 import os
-import yaml
+import re
+import glob
 import pytest
 
+from dmu.generic           import version_management as vman
 from dmu.logging.log_store import LogStore
 from rx_data               import utilities as ut
 
