@@ -133,8 +133,10 @@ class MCScaler:
     # ----------------------------------
     def get_scale(self) -> tuple[int,int,float]:
         '''
-        Returns tuple with three elements, nsig, nctr and scale,
-        where the former two are the signal and control yields and rat:
+        Returns
+        -------------------
+        Tuple with three elements, nsig, nctr and scale.
+        Where the former two are the signal and control yields and rat:
 
         Data_{x}^{Signal region} / MC_{x}^{signal region}
 
@@ -144,7 +146,7 @@ class MCScaler:
         rdf              = self._get_rdf()
         nsig_mc, nctr_mc = self._get_stats(rdf)
         nsig_dt          = self._get_nsignal()
-        scale            = self._get_ratio(num=nsig_dt, den=nsig_mc)
+        scale            = self._get_ratio(nsig_dt=nsig_dt, nsig_mc=nsig_mc)
 
         log.info(f'Scale for {self._sample}: {scale:.3f}')
 
