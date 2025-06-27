@@ -20,7 +20,7 @@ class Data:
 # -----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    LogStore.set_level('rx_data:utilities', 10)
+    LogStore.set_level('rx_data:utilities'     , 10)
 
     ana_dir   = os.environ['ANADIR']
     yaml_path = f'{ana_dir}/Data/samples/main.yaml'
