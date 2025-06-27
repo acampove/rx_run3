@@ -59,15 +59,19 @@ def test_info_from_path(sample : str, trigger : str):
     Tests extraction of information from paths to ROOT files
     '''
     log.info('')
+    sample = sample.lower()
     log.info(f'{sample}/{trigger}')
 
     l_path = _get_test_paths(sample, trigger)
 
-    for path in l_path[:1]:
+    for path in l_path:
         v1, v2 = ut.info_from_path(path)
 
-        log.info(v1)
-        log.info(v2)
+        log.debug(f'{v1} == {sample}' )
+        log.debug(f'{v2} == {trigger}')
+
+        assert sample  == v1
+        assert trigger == v2
 # -----------------------------------------
 def test_is_ee():
     '''
