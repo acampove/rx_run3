@@ -164,6 +164,16 @@ class MisIdPdf:
         raise ValueError(f'Found {nnan}/{size} NaNs in {sample}')
     # ----------------------------------------
     def _get_data(self) -> dict[str,pnd.DataFrame]:
+        '''
+        Loads from parquet files data used to make fit components
+
+        Returns
+        ------------
+        dictionary of pandas dataframes where:
+
+        key  : Sample identifier for each component, e.g. data, leaked MC
+        value: Pandas dataframe
+        '''
         file_wc = f'{self._mis_dir}/data/*{self._q2bin}.parquet'
         l_path  = glob.glob(file_wc)
 
