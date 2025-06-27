@@ -119,6 +119,9 @@ def test_is_reso():
                              ('MM', 'Hlt2RD_B0ToKpPimMuMu_MVA_noPID'),
                              ('MM', 'Hlt2RD_B0ToKpPimMuMu_SameSign_MVA')])
 def test_channel_from_trigger(channel : str, trigger : str):
+    '''
+    Test for function providing EE/MM for a given HLT2 trigger
+    '''
     assert channel == ut.channel_from_trigger(trigger=trigger)
 # -----------------------------------------
 @pytest.mark.parametrize('project,trigger', [
@@ -141,5 +144,8 @@ def test_channel_from_trigger(channel : str, trigger : str):
                              ('RKst', 'Hlt2RD_B0ToKpPimMuMu_MVA_noPID'),
                              ('RKst', 'Hlt2RD_B0ToKpPimMuMu_SameSign_MVA')])
 def test_project_from_trigger(project : str, trigger : str):
+    '''
+    Test for function providing RK/RKst for a given HLT2 trigger
+    '''
     assert project == ut.project_from_trigger(trigger=trigger)
 # -----------------------------------------
