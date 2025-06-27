@@ -199,6 +199,9 @@ class MisIdPdf:
         return d_df
     # ----------------------------------------
     def _extend_pdf(self, pdf : zpdf, data : zdata) -> zpdf:
+        if not isinstance(data.weights, tf.Tensor):
+            raise ValueError('No weights found for dataset')
+
         arr_wgt = data.weights.numpy()
         nentries= numpy.sum(arr_wgt)
 
