@@ -110,7 +110,7 @@ class MisIdPdf:
 
         return df
     # ----------------------------------------
-    def _check_columns(self, d_df : dict[str,list[str]]) -> None:
+    def _check_columns(self, d_df : dict[str,pnd.DataFrame]) -> None:
         d_col = { sample : df.columns.tolist() for sample, df in d_df.items() }
 
         last_col = None
@@ -210,7 +210,7 @@ class MisIdPdf:
 
         return pdf
     # ----------------------------------------
-    def get_data(self, kind : str = 'zfit') -> pnd.DataFrame:
+    def get_data(self, kind : str = 'zfit') -> pnd.DataFrame|zdata:
         '''
         Returns data used to make KDE
 
@@ -224,6 +224,7 @@ class MisIdPdf:
             return df
 
         data = zfit.data.Data.from_pandas(df=df, obs=self._obs, weights='weight')
+        data = cast(zdata, data)
 
         return data
     # ----------------------------------------
@@ -232,6 +233,7 @@ class MisIdPdf:
         Return KDE PDF used to model misID
         '''
         data = self.get_data(kind='zfit')
+        data = cast(zdata, data)
 
         log.info('Building MisID KDE')
         pdf  = zfit.pdf.KDE1DimISJ(data, padding=self._d_padding, name='MisID')
