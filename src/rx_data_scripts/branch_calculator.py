@@ -193,15 +193,6 @@ def _is_mc(path : str) -> bool:
 
     raise ValueError(f'Cannot determine if MC or data for: {path}')
 # ---------------------------------
-def _skip_qsq_smear(trigger: str, path : str) -> bool:
-    if not _is_mc(path):
-        return True
-
-    if not _is_electron(trigger):
-        return True
-
-    return False
-# ---------------------------------
 def _process_rdf(rdf : RDataFrame, trigger : str, path : str) -> Union[RDataFrame,None]:
     '''
     Takes:
