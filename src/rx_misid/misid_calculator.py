@@ -28,17 +28,21 @@ class MisIDCalculator:
         self._cfg = cfg
     # -----------------------------
     def _get_selection(self, cuts : dict[str,str]) -> dict[str,str]:
-        q2bin     = self._cfg['input']['q2bin']
-        sample    = self._cfg['input']['sample']
-        d_sel_org = sel.selection(project='RK', analysis='EE', q2bin=q2bin, process=sample)
-        d_sel = {}
+        '''
+        Parameters
+        ----------------
+        cuts: Dictionary with cuts defining control region
 
-        for cut_name, cut_expr in d_sel_org.items():
-            if 'pid_l' == cut_name:
-                d_sel[cut_name] = '(1)'
-            else:
-                d_sel[cut_name] = cut_expr
+        Returns
+        ----------------
+        Dictionary with full selection, plus control region
+        '''
+        trigger = self._cfg['input']['trigger']
+        q2bin   = self._cfg['input']['q2bin'  ]
+        sample  = self._cfg['input']['sample' ]
 
+        d_sel          = sel.selection(trigger=trigger, q2bin=q2bin, process=sample)
+        d_sel['pid_l'] = '(1)'
         d_sel.update(cuts)
 
         return d_sel
