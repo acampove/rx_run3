@@ -189,7 +189,11 @@ from rx_data.rdf_getter     import RDFGetter
 
 # This picks one sample for a given trigger
 # The sample accepts wildcards, e.g. `DATA_24_MagUp_24c*` for all the periods
-gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpMuMu_MVA')
+gtr = RDFGetter(
+    sample   ='DATA_24_Mag*_24c*', 
+    analysis = 'rx',                    # This is the default, could be nopid
+    tree     = 'DecayTree'              # This is the default, could be MCDecayTre
+    trigger  ='Hlt2RD_BuToKpMuMu_MVA')
 
 # If False (default) will return a single dataframe for the sample
 rdf = gtr.get_rdf(per_file=False)
