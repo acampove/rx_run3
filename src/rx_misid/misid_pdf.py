@@ -58,7 +58,7 @@ class MisIdPdf:
         self._q2bin = q2bin
         self._vers  = version
 
-        self._data  : zdata
+        self._data          : zdata
         self._ana_dir       = os.environ['ANADIR']
         self._mis_dir       = f'{self._ana_dir}/misid'
         self._nan_threshold = 0.02
