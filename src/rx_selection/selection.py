@@ -28,20 +28,6 @@ class Data:
     l_analysis = ['EE', 'MM'  ]
     l_q2bin    = ['low', 'central', 'jpsi', 'psi2S', 'high']
 
-
-    l_ee_rk_trigger = [
-            'Hlt2RD_BuToKpEE_MVA',
-            'Hlt2RD_BuToKpEE_MVA_noPID',
-            'Hlt2RD_BuToKpEE_MVA_cal',
-            'Hlt2RD_BuToKpEE_MVA_misid',
-            'Hlt2RD_BuToKpEE_MVA_ext',
-            'Hlt2RD_BuToKpEE_SameSign_MVA']
-
-    l_mm_rk_trigger = [
-            'Hlt2RD_BuToKpMuMu_MVA',
-            'Hlt2RD_BuToKpMuMu_MVA_noPID',
-            'Hlt2RD_BuToKpMuMu_SameSign_MVA']
-
     d_custom_selection : dict[str,str]
 #-----------------------
 class MultipleSelectionOverriding(Exception):
