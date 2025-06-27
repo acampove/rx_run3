@@ -28,6 +28,7 @@ class Data:
     ana_dir     = os.environ['ANADIR']
     default_q2  = 'central' # Any entry not in [low, central, high] bins will go to this bin for prediction
     version     : str
+    proj        : str
     force_new   : bool
     sample      : str
     trigger     : str
@@ -42,6 +43,7 @@ def _get_args():
     '''
     parser = argparse.ArgumentParser(description='Used to read classifier and write scores to input ntuple, producing output ntuple')
     parser.add_argument('-v', '--version'    , type=str, help='Version of classifier'                       , required=True)
+    parser.add_argument('-p', '--project'    , type=str, help='Project, e.g. rx, nopid'                     , required=True)
     parser.add_argument('-s', '--sample'     , type=str, help='Sample name'                                 , required=True)
     parser.add_argument('-t', '--trigger'    , type=str, help='HLT trigger'                                 , required=True)
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
@@ -247,7 +249,7 @@ def _get_mva_config() -> dict:
     return {'cmb' : d_path_cmb, 'prc' : d_path_prc}
 #---------------------------------
 def _get_out_path(input_path : str) -> str:
-    out_dir = f'{Data.ana_dir}/Data/mva/{Data.version}'
+    out_dir = f'{Data.ana_dir}/Data/{Data.proj}/mva/{Data.version}'
     name    = os.path.basename(input_path)
 
     os.makedirs(out_dir, exist_ok=True)
