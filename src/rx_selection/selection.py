@@ -81,8 +81,8 @@ def reset_custom_selection() -> None:
 def selection(
         q2bin    : str,
         process  : str,
-        smeared  : bool= True,
-        trigger  : str = None) -> dict[str,str]:
+        trigger  : str,
+        smeared  : bool= True) -> dict[str,str]:
     '''
     Picks up sample name, trigger, etc, returns dictionary with selection
 
