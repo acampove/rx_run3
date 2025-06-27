@@ -5,9 +5,11 @@ import os
 import re
 import glob
 import pickle
-import pandas          as pnd
-import boost_histogram as bh
-from dmu.logging.log_store     import LogStore
+from typing                 import cast
+
+import pandas  as pnd
+from boost_histogram        import Histogram as bh
+from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('rx_misid:weighter')
 # ------------------------------
