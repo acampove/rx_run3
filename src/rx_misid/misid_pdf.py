@@ -57,12 +57,13 @@ class MisIdPdf:
         self._obs   = obs
         self._q2bin = q2bin
         self._vers  = version
-        self._cfg   = self._get_config(version=version)
 
         self._data  : zdata
         self._nan_threshold = 0.02
         self._d_padding     = {'lowermirror' : 1.0, 'uppermirror' : 1.0}
         self._l_component   = ['signal', 'leakage'] # components that need to be subtracted from misID
+
+        self._cfg           = self._get_config(version=version)
         self._d_scale       = self._get_scales()
     # ----------------------------------------
     def _get_config(self, version : str) -> dict:
