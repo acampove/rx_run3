@@ -183,7 +183,10 @@ def _group_paths(l_path : list[str]) -> list[list[str]]:
         l_group = [ [path] for path in l_path ]
         return l_group
 
-    return numpy.array_split(l_path, Data.nprc)
+    l_arr_path = numpy.array_split(l_path, Data.nprc)
+    l_l_path   = [ arr_path.tolist() for arr_path in l_arr_path ]
+
+    return l_l_path
 # -----------------------------------------
 def _download_kind(kind : str):
     if kind == 'all':
