@@ -65,9 +65,13 @@ def is_reso(q2bin : str) -> bool:
 # ---------------------------------
 def info_from_path(path : str) -> tuple[str,str]:
     '''
-    Will pick a path to a ROOT file
-    Will return tuple with information associated to file
-    This is needed to name output file and directories
+    Parameters
+    -------------------
+    path: Path to a ROOT file
+
+    Returns 
+    -------------------
+    Tuple with sample and HLT2 trigger
     '''
 
     name = os.path.basename(path)
