@@ -79,6 +79,7 @@ class MisIdPdf:
         Config needed to build PDF
         '''
         cfg_path = files('rx_misid_data').joinpath(f'misid_{version}.yaml')
+        cfg_path = str(cfg_path)
         with open(cfg_path, encoding='utf-8') as ifile:
             cfg = yaml.safe_load(ifile)
 
