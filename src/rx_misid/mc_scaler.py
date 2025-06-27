@@ -107,11 +107,12 @@ class MCScaler:
         return nsig_dt / nsig_mc
     # ----------------------------------
     def _get_nsignal(self) -> float:
-        fit_dir = os.environ['FITDIR']
-        trigger = self._trigger.replace('_ext', '')
-
-        fit_dir = f'{fit_dir}/DATAp/{trigger}/v1/{self._q2bin}/no_misid'
-        log.debug(f'Reading signal yield from: {fit_dir}')
+        '''
+        Returns the signal yield in data associated to a component that might leak into the
+        control region
+        '''
+        # TODO: Need better interface to fitting code
+        return 0
 
         obj  = FitStats(fit_dir=fit_dir)
 
