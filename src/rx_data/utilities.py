@@ -39,55 +39,8 @@ def is_ee(trigger : str) -> bool:
     Given Hlt2 trigger name, it will tell if it belongs to
     muon or electron channel
     '''
-    # From https://gitlab.cern.ch/lhcb/Moore/-/blob/master/Hlt/Hlt2Conf/python/Hlt2Conf/lines/rd/b_to_xll_hlt2_mva.py?ref_type=heads
 
-    ee_trig = [
-            'Hlt2RD_BuToKpEE_MVA', 
-            'Hlt2RD_BuToKpEE_SameSign_MVA',
-            'Hlt2RD_BuToKpEE_MVA_misid',
-            'Hlt2RD_BuToKpEE_MVA_ext',
-            'Hlt2RD_BuToKpEE_MVA_cal',
-            # ----
-            'Hlt2RD_B0ToKpPimEE_MVA',
-            'Hlt2RD_B0ToKpPimEE_SameSign_MVA',
-            'Hlt2RD_B0ToKpPimEE_MVA_misid',
-            'Hlt2RD_B0ToKpPimEE_MVA_ext',
-            'Hlt2RD_B0ToKpPimEE_MVA_cal',
-            # ----
-            'Hlt2RD_LbTopKEE_MVA',
-            'Hlt2RD_LbTopKEE_SameSign_MVA',
-            'Hlt2RD_LbTopKEE_MVA_misid',
-            # ----
-            'Hlt2RD_BsToPhiEE_MVA',
-            'Hlt2RD_BsToPhiEE_SameSign_MVA',
-            'Hlt2RD_BsToPhiEE_MVA_misid']
-
-    mm_trig = [
-            'Hlt2RD_BuToKpMuMu_MVA',
-            'Hlt2RD_BuToKpMuMu_SameSign_MVA',
-            # ----
-            'Hlt2RD_B0ToKpPimMuMu_MVA',
-            'Hlt2RD_B0ToKpPimMuMu_SameSign_MVA',
-            # ----
-            'Hlt2RD_LbTopKMuMu_SameSign_MVA',
-            'Hlt2RD_LbTopKMuMu_MVA',
-            # ----
-            'Hlt2RD_BsToPhiMuMu_MVA',
-            'Hlt2RD_BsToPhiMuMu_SameSign_MVA']
-
-    em_trig = [
-            'Hlt2RD_BuToKpMuE_MVA',
-            'Hlt2RD_B0ToKpPimMuE_MVA',
-            'Hlt2RD_LbTopKMuE_MVA',
-            'Hlt2RD_BsToPhiMuE_MVA']
-
-    non_ee = mm_trig + em_trig
-
-    if trigger in ee_trig:
-        return True
-
-    if trigger in non_ee:
-        return False
+    return channel_from_trigger(trigger) == 'EE'
 
     raise ValueError(f'Trigger {trigger} not found')
 # ---------------------------------
