@@ -84,19 +84,27 @@ class MCScaler:
 
         return nsig, nctr
     # ----------------------------------
-    def _get_ratio(self, num : float, den : float) -> float:
+    def _get_ratio(self, nsig_dt : float, nsig_mc : float) -> float:
         '''
-        num: Is meant to be a data yield, from fits
-        den: Is meant to be a MC yield
+        Parameters
+        -------------------
+        nsig_x: For a process, e.g. Signal, this is the yield in the signal region, from MC (x=mc) or data fits (x=dt)
+
+        Returns
+        -------------------
+        Ratio between the data and MC yield
         '''
-        if num == 0:
+        if nsig_dt == 0:
             log.warning(f'Zero yield in data for {self._sample}/{self._q2bin} => scale is zero')
+            # If component does not exist in signal region, it won't exist in control region, ration = 0
             return 0
 
-        if den == 0:
+        if nsig_mc == 0:
+            # If component exists in signal region data, but MC has nothing, something is wrong.
+            # MC should always have candidates if candidates exist in data.
             raise ValueError(f'Zero yield in MC for {self._sample}/{self._q2bin} but not in data')
 
-        return num / den
+        return nsig_dt / nsig_mc
     # ----------------------------------
     def _get_nsignal(self) -> float:
         fit_dir = os.environ['FITDIR']
