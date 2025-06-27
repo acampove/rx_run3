@@ -36,6 +36,7 @@ class MisIdPdf:
         cut defining the signal region
         '''
         config_path = files('rx_misid_data').joinpath(f'misid_{version}.yaml')
+        config_path = str(config_path)
         with open(config_path, encoding='utf-8') as ifile:
             cfg = yaml.safe_load(ifile)
 
