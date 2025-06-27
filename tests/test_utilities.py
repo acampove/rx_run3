@@ -21,14 +21,33 @@ class Data:
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_data:utilities'     , 10)
+# -----------------------------------------
+def _right_trigger(path : str, trigger : str) -> bool:
+    fname = os.path.basename(path)
 
-    ana_dir   = os.environ['ANADIR']
-    yaml_path = f'{ana_dir}/Data/samples/main.yaml'
-    with open(yaml_path, encoding='utf-8') as ifile:
-        Data.d_sample = yaml.safe_load(ifile)
+    # If this is a derived trigger (TRIGGER_cal, TRIGGER_noPID)
+    # This is not the right trigger
+    # optional \w{10} should take into account MC samples
+    regex = f'.*{trigger}' + r'(_[A-Z,a-z]+)(_\w{10})?.root'
+    if re.match(regex, fname):
+        return False
+
+    return True
 # -----------------------------------------
 def _get_test_paths(sample : str, trigger : str) -> list[str]:
-    l_path = Data.d_sample[sample][trigger]
+    '''
+    Returns list of paths to ROOT files for a given sample and trigger
+    '''
+    ana_dir = os.environ['ANADIR']
+    path_ver= f'{ana_dir}/Data/rx/main'
+    path_ver= vman.get_last_version(dir_path=path_ver, version_only=False)
+
+    path_wc = f'{path_ver}/*{sample}_{trigger}*.root'
+    l_path  = glob.glob(path_wc)
+    l_path  = [ path for path in l_path if _right_trigger(path=path, trigger=trigger) ]
+
+    if len(l_path) == 0:
+        raise FileNotFoundError(f'Not found any path in: {path_wc}')
 
     return l_path
 # -----------------------------------------
