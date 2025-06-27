@@ -37,6 +37,25 @@ def is_mc(sample : str) -> bool:
 
     return True
 # ---------------------------------
+def channel_from_trigger(trigger : str) -> str:
+    '''
+    Parameters
+    ----------------
+    trigger: Hlt2 trigger name, e.g. HLT2_BuKp...
+
+    Returns
+    ----------------
+    Channel, i.e. EE, MM, EM
+    '''
+    for project in Data.triggers:
+        for channel in Data.triggers[project]:
+            if trigger not in Data.triggers[project][channel]:
+                continue
+
+            return channel
+
+    raise ValueError(f'Trigger {trigger} not found')
+# ---------------------------------
 def is_ee(trigger : str) -> bool:
     '''
     Given Hlt2 trigger name, it will tell if it belongs to
@@ -44,6 +63,23 @@ def is_ee(trigger : str) -> bool:
     '''
 
     return channel_from_trigger(trigger) == 'EE'
+# ---------------------------------
+def project_from_trigger(trigger : str) -> str:
+    '''
+    Parameters
+    -------------------
+    trigger: HLT2 trigger
+
+    Returns 
+    -------------------
+    Project, e.g RK, RKst 
+    '''
+    for project in Data.triggers:
+        for channel in Data.triggers[project]:
+            if trigger not in Data.triggers[project][channel]:
+                continue
+
+            return project 
 
     raise ValueError(f'Trigger {trigger} not found')
 # ---------------------------------
