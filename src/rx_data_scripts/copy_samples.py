@@ -39,7 +39,6 @@ class Data:
             'hop',
             'swp_jpsi_misid',
             'swp_cascade',
-            'ecalo_bias',
             'brem_track_2']
 # -----------------------------------------
 def _parse_args():
