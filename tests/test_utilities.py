@@ -16,11 +16,11 @@ class Data:
     '''
     Data class
     '''
-    d_sample : str
 # -----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_data:utilities'     , 10)
+    LogStore.set_level('rx_data:test_utilities', 10)
 # -----------------------------------------
 def _right_trigger(path : str, trigger : str) -> bool:
     fname = os.path.basename(path)
