@@ -155,8 +155,7 @@ class MisIdPdf:
         raise ValueError(f'Found {nnan}/{size} NaNs in {sample}')
     # ----------------------------------------
     def _get_data(self) -> dict[str,pnd.DataFrame]:
-        inp_dir = os.environ['MISIDDIR']
-        file_wc = f'{inp_dir}/data/*{self._q2bin}.parquet'
+        file_wc = f'{self._mis_dir}/data/*{self._q2bin}.parquet'
         l_path  = glob.glob(file_wc)
 
         npath   = len(l_path)
