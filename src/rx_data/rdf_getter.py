@@ -4,7 +4,6 @@ Module holding RDFGetter class
 from contextlib import contextmanager
 import os
 import glob
-import math
 import json
 import copy
 import pprint
@@ -348,7 +347,6 @@ class RDFGetter:
             return False
 
         if ftree in RDFGetter._excluded_friends:
-            log.warning(f'Excluding friend tree: {ftree}')
             return True
 
         if ftree in self._l_electron_only and 'MuMu' in self._trigger:
