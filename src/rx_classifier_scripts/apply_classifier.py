@@ -292,26 +292,6 @@ def _run(inp_path : str, rdf : RDataFrame) -> None:
     log.info(f'Saving to: {out_path}')
     rdf.Snapshot('DecayTree', out_path)
 #---------------------------------
-def _get_dataframes(trigger_suffix : str = '') -> dict[str,RDataFrame]:
-    '''
-    Provides dictionary of ROOT file path -> ROOT dataframe
-    '''
-    trigger = f'{Data.trigger}{trigger_suffix}'
-
-    log.info('Getting dataframes')
-    with RDFGetter.exclude_friends(names=['mva']):
-        gtr   = RDFGetter(sample=Data.sample, trigger=trigger, analysis=Data.project)
-        d_rdf = gtr.get_rdf(per_file=True)
-
-        if Data.project != 'nopid':
-            return d_rdf
-
-    # Add files with other triggers, derived from main triggers, e.g. _noPID
-    d_rdf_nopid = _get_dataframes(trigger_suffix='_noPID')
-    d_rdf.update(d_rdf_nopid)
-
-    return d_rdf
-#---------------------------------
 def main():
     '''
     Script starts here
@@ -319,7 +299,11 @@ def main():
     _get_args()
     _set_loggers()
 
-    d_rdf = _get_dataframes()
+    log.info('Getting dataframes')
+    with RDFGetter.exclude_friends(names=['mva']):
+        gtr   = RDFGetter(sample=Data.sample, trigger=Data.trigger, analysis=Data.project)
+        d_rdf = gtr.get_rdf(per_file=True)
+
     for inp_path, rdf in d_rdf.items():
         if _skip_rdf(inp_path=inp_path, rdf=rdf):
             continue
