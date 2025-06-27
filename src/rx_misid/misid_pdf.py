@@ -134,6 +134,15 @@ class MisIdPdf:
         raise ValueError('Columns differ')
     # ----------------------------------------
     def _add_samples(self, d_df : dict[str,pnd.DataFrame]) -> pnd.DataFrame:
+        '''
+        Parameters
+        -----------------
+        d_df: Dictionary with identifiers as keys and dataframes associated to data as values
+
+        Returns
+        -----------------
+        Dataframe with MC added with negative weights to real data
+        '''
         self._check_columns(d_df)
 
         log.debug('Adding samples')
