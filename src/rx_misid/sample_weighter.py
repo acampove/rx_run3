@@ -142,8 +142,9 @@ class SampleWeighter:
         ix = self._get_bin_index(hist, iaxis=0, value=x_value, name=varx)
         iy = self._get_bin_index(hist, iaxis=1, value=y_value, name=vary)
         eff= hist[ix, iy]
+        eff= cast(float, eff)
 
-        return eff.value
+        return eff
     # ------------------------------
     def _print_info_from_row(self, row : pnd.Series) -> None:
         log.info(40 * '-')
