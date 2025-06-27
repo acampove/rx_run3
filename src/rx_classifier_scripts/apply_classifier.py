@@ -299,11 +299,7 @@ def main():
     _get_args()
     _set_loggers()
 
-    log.info('Getting dataframe')
-    with RDFGetter.exclude_friends(names=['mva']):
-        gtr   = RDFGetter(sample=Data.sample, trigger=Data.trigger, analysis=Data.project)
-        d_rdf = gtr.get_rdf(per_file=True)
-
+    d_rdf = _get_dataframes()
     for inp_path, rdf in d_rdf.items():
         if _skip_rdf(inp_path=inp_path, rdf=rdf):
             continue
