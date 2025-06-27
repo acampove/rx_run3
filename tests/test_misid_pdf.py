@@ -2,6 +2,7 @@
 Script containing functions meant to test MisID_PDF class
 '''
 import os
+from typing import cast
 
 import matplotlib.pyplot as plt
 import pandas            as pnd
@@ -84,6 +85,7 @@ def test_pdf(q2bin : str):
     assert pdf.is_extended
 
     dat = obj.get_data(kind='zfit')
+    dat = cast(zdata, dat)
 
     _plot_pdf(pdf, dat, name='test_pdf', q2bin=q2bin)
 # ----------------------------
