@@ -53,6 +53,7 @@ def _get_args():
     args = parser.parse_args()
 
     Data.version     = args.version
+    Data.project     = args.project
     Data.sample      = args.sample
     Data.trigger     = args.trigger
     Data.log_level   = args.log_level
@@ -249,7 +250,7 @@ def _get_mva_config() -> dict:
     return {'cmb' : d_path_cmb, 'prc' : d_path_prc}
 #---------------------------------
 def _get_out_path(input_path : str) -> str:
-    out_dir = f'{Data.ana_dir}/Data/{Data.proj}/mva/{Data.version}'
+    out_dir = f'{Data.ana_dir}/Data/{Data.project}/mva/{Data.version}'
     name    = os.path.basename(input_path)
 
     os.makedirs(out_dir, exist_ok=True)
