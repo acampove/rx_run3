@@ -52,7 +52,16 @@ class MCScaler:
 
         return rdf
     # ----------------------------------
-    def _get_stats(self, rdf : RDataFrame) -> tuple[float,float]:
+    def _get_stats(self, rdf : RDataFrame) -> tuple[int,int]:
+        '''
+        Parameters
+        ---------------
+        rdf: ROOT DataFrame associated to MC for process that might leak to control region, e.g. signal, control
+
+        Returns
+        ---------------
+        Tuple with yield in signal and control region
+        '''
         log.debug(f'Getting ratio of MC yields with signal region: {self._sig_reg}')
 
         sig_reg = self._sig_reg
