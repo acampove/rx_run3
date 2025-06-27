@@ -175,15 +175,6 @@ def _get_out_path(path : str) -> str:
 
     return out_path
 # ---------------------------------
-def _is_electron(trigger : str) -> bool:
-    if 'MuMu_' in trigger:
-        return False
-
-    if 'EE_' in trigger:
-        return True
-
-    raise ValueError(f'Cannot determine if trigger is muon or electron: {trigger}')
-# ---------------------------------
 def _is_mc(path : str) -> bool:
     if '/data_24_mag' in path:
         return False
