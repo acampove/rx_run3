@@ -41,21 +41,6 @@ def _print_selection(d_cut : dict[str,str]) -> None:
     for name, expr in d_cut.items():
         log.debug(f'{name:<20}{expr}')
 #-----------------------
-def _get_analysis(trigger : str) -> str:
-    if dut.is_ee(trigger=trigger):
-        return 'EE'
-
-    return 'MM'
-#-----------------------
-def _project_from_trigger(trigger : str) -> str:
-    if trigger in Data.l_ee_rk_trigger:
-        return 'RK'
-
-    if trigger in Data.l_mm_rk_trigger:
-        return 'RK'
-
-    raise NotImplementedError(f'Cannot deduce project for trigger: {trigger}')
-#-----------------------
 def set_custom_selection(d_cut : dict[str,str]) -> None:
     '''
     This function is meant to override the analysis selection, such that
@@ -107,8 +92,8 @@ def selection(
     trigger  : E.g. Hlt2RD...
     '''
 
-    project  = _project_from_trigger(trigger=trigger)
-    analysis = _get_analysis(trigger)
+    project  = dut.project_from_trigger(trigger=trigger)
+    analysis = dut.channel_from_trigger(trigger=trigger)
 
     d_cut : dict[str,str] = {}
 
