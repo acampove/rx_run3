@@ -28,6 +28,7 @@ def _initialize():
 # ---------------------------------
 def _get_config() -> dict:
     config_path = files('rx_misid_data').joinpath(Data.config_name)
+    config_path = str(config_path)
     with open(config_path, encoding='utf-8') as ifile:
         data = yaml.safe_load(ifile)
 
