@@ -59,6 +59,8 @@ class MisIdPdf:
         self._vers  = version
 
         self._data  : zdata
+        self._ana_dir       = os.environ['ANADIR']
+        self._mis_dir       = f'{self._ana_dir}/misid'
         self._nan_threshold = 0.02
         self._d_padding     = {'lowermirror' : 1.0, 'uppermirror' : 1.0}
         self._l_component   = ['signal', 'leakage'] # components that need to be subtracted from misID
