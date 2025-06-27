@@ -9,6 +9,7 @@ from dataclasses            import dataclass
 
 import pandas as pnd
 from ROOT                   import RDataFrame
+from dmu.generic            import utilities  as gut
 from dmu.logging.log_store  import LogStore
 
 log   = LogStore.add_logger('rx_data:utilities')
@@ -23,6 +24,8 @@ class Data:
 
     dt_rgx  = r'(data_\d{2}_.*c\d)_(Hlt2RD_.*(?:EE|MuMu|misid|cal|MVA|LL|DD))_?(\d{3}_\d{3}|[a-z0-9]{10})?\.root'
     mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_(\d{3}_\d{3}|\w{10}).root'
+
+    triggers = gut.load_data(package='rx_data_data', fpath='rdf_getter/triggers.yaml')
 # ---------------------------------
 def is_mc(sample : str) -> bool:
     '''
