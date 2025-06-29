@@ -1,10 +1,17 @@
 '''
 Module used to test Cache class
 '''
+import pytest
 
-from dmu.generic        import utilities as gut
-from dmu.workflow.cache import Cache     as Wcache
+from dmu.generic           import utilities as gut
+from dmu.workflow.cache    import Cache     as Wcache
+from dmu.logging.log_store import LogStore
 
+log=LogStore.add_logger('dmu:workflow:test_cache')
+# -----------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('dmu:workflow:cache', 10)
 # -----------------------------------
 class Tester(Wcache):
     '''
