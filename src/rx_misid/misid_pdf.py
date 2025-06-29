@@ -137,40 +137,6 @@ class MisIdPdf:
         log.info(df)
         raise ValueError(f'Found {nnan}/{size} NaNs in {sample}')
     # ----------------------------------------
-    def _get_data(self) -> dict[str,pnd.DataFrame]:
-        '''
-        Loads from parquet files data used to make fit components
-
-        Returns
-        ------------
-        dictionary of pandas dataframes where:
-
-        key  : Sample identifier for each component, e.g. data, leaked MC
-        value: Pandas dataframe
-        '''
-        file_wc = f'{self._mis_dir}/data/*{self._q2bin}.parquet'
-        l_path  = glob.glob(file_wc)
-
-        npath   = len(l_path)
-        if npath == 0:
-            raise ValueError(f'Cannot find any dataset in: {file_wc}')
-
-        log.info(f'Found {npath} datasets')
-
-        d_df    = {}
-        for path in l_path:
-            fname = os.path.basename(path)
-            l_par = fname.split('_')
-            sample= l_par[0]
-
-            log.debug(f'Loading: {sample} : {path}')
-
-            df    = pnd.read_parquet(path)
-
-            d_df[sample] = df
-
-        return d_df
-    # ----------------------------------------
     def _extend_pdf(self, pdf : zpdf, data : zdata) -> zpdf:
         if not isinstance(data.weights, tf.Tensor):
             raise ValueError('No weights found for dataset')
@@ -193,7 +159,9 @@ class MisIdPdf:
 
         kind: zfit (default) provides a zfit data object, pandas provides a dataframe
         '''
-        d_df = self._get_data()
+        obj  = MisIDDataset(q2bin=self._q2bin)
+        d_df = obj.get_data()
+
         d_df = { sample : self._preprocess_df(df, sample) for sample, df in d_df.items() }
         df   = self._add_samples(d_df)
 
