@@ -66,25 +66,8 @@ class MisIdPdf:
         self._d_padding     = {'lowermirror' : 1.0, 'uppermirror' : 1.0}
         self._l_component   = ['signal', 'leakage'] # components that need to be subtracted from misID
 
-        self._cfg           = self._get_config(version=version)
+        self._cfg           = gut.load_data(package='rx_misid_data', fpath = f'misid_{version}.yaml')
         self._d_scale       = self._get_scales()
-    # ----------------------------------------
-    def _get_config(self, version : str) -> dict:
-        '''
-        Parameters
-        --------------
-        version : Version of config file
-
-        Returns
-        --------------
-        Config needed to build PDF
-        '''
-        cfg_path = files('rx_misid_data').joinpath(f'misid_{version}.yaml')
-        cfg_path = str(cfg_path)
-        with open(cfg_path, encoding='utf-8') as ifile:
-            cfg = yaml.safe_load(ifile)
-
-        return cfg
     # ----------------------------------------
     def _get_scales(self) -> dict[str,float]:
         d_scale = {'data' : 1.0}
