@@ -80,4 +80,5 @@ def test_update():
         out = gut.load_json(path=f'{odir}/values.json')
 
         assert out == [1] * val
+        log.info('')
 # -----------------------------------
