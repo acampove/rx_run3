@@ -1,8 +1,6 @@
 '''
 Module containing MCScaler class
 '''
-import os
-
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
 from dmu.stats.fit_stats    import FitStats
