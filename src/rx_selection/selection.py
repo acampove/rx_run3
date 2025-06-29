@@ -103,6 +103,7 @@ def selection(
     if process.startswith('DATA'):
         log.debug('Adding cleaning requirement for data')
         d_cut['clean'] = 'dataq == 1'
+        d_cut['block'] = 'block >= 1'
     else:
         log.debug('Adding truth matching requirement for MC')
         d_cut['truth'] = tm.get_truth(event_type)
