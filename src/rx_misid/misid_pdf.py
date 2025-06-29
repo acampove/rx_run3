@@ -14,8 +14,9 @@ import tensorflow as tf
 from zfit.core.data            import Data             as zdata
 from zfit.core.basepdf         import BasePDF          as zpdf
 from zfit.core.interfaces      import ZfitSpace        as zobs
+from dmu.generic               import utilities        as gut
 from dmu.logging.log_store     import LogStore
-from rx_misid.misid_calculator import MisIDCalculator
+from rx_misid.misid_dataset    import MisIDDataset
 from rx_misid.mc_scaler        import MCScaler
 
 log=LogStore.add_logger('rx_misid:misid_pdf')
