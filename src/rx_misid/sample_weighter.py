@@ -5,7 +5,6 @@ import os
 import re
 import glob
 import pickle
-from typing                 import cast
 
 import pandas  as pnd
 from boost_histogram        import Histogram as bh
@@ -142,7 +141,6 @@ class SampleWeighter:
         ix = self._get_bin_index(hist, iaxis=0, value=x_value, name=varx)
         iy = self._get_bin_index(hist, iaxis=1, value=y_value, name=vary)
         eff= hist[ix, iy]
-        eff= cast(float, eff)
 
         return eff
     # ------------------------------
