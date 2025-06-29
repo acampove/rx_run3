@@ -4,6 +4,7 @@ This module contains
 import os
 from pathlib import Path
 
+from dmu.generic           import utilities as gut
 from dmu.generic           import hashing
 from dmu.logging.log_store import LogStore
 
@@ -36,6 +37,7 @@ class Cache:
             log.debug(f'{key:<30}{val}')
 
         hsh = hashing.hash_object(self._dat_hash)
+        hsh = f'.hash_{hsh}.yaml'
 
         return hsh
     # ---------------------------
@@ -58,17 +60,16 @@ class Cache:
         No : Makes the file and removes old hash files, output was updated
         '''
         hsh       = self._get_hash()
-        hash_file = f'{self._dir_path}/.hash_{hsh}'
+        hash_file = f'{self._dir_path}/{hsh}'
         if os.path.isfile(hash_file):
             raise ValueError(f'Hash file found: {hash_file}')
 
-        for fpath in Path(self._dir_path).glob('._hash*'):
+        for fpath in Path(self._dir_path).glob('.hash*.yaml'):
             log.debug(f'Removing old hash file: {fpath}')
             fpath.unlink()
 
         log.debug(f'Writtng hash file: {hash_file}')
-        with open(hash_file, 'w', encoding='utf-8') as ofile:
-            ofile.write('')
+        gut.dump_json(self._dat_hash, hash_file)
     # ---------------------------
     def _is_cached(self) -> bool:
         '''
@@ -79,7 +80,7 @@ class Cache:
         True if the object, cached was found, false otherwise.
         '''
         hsh       = self._get_hash()
-        hash_file = f'{self._dir_path}/.hash_{hsh}'
+        hash_file = f'{self._dir_path}/{hsh}'
         found = os.path.isfile(hash_file)
 
         log.debug(f'Data was found: {found}')
