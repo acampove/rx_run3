@@ -3,6 +3,7 @@
 
 input :
   trigger  : Hlt2RD_BuToKpEE_MVA_ext
+output  : misid 
 weights : &mp
   path : /home/acampove/external_ssd/Calibration/mis_id/v11
   regions: # These are cuts that need to appear in the name of the pkl files with the PID maps
