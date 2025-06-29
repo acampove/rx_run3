@@ -7,7 +7,8 @@ import glob
 import pickle
 
 import pandas  as pnd
-from boost_histogram        import Histogram as bh
+from boost_histogram        import Histogram    as bh
+from boost_histogram        import accumulators as acc
 from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('rx_misid:weighter')
@@ -142,7 +143,14 @@ class SampleWeighter:
         iy = self._get_bin_index(hist, iaxis=1, value=y_value, name=vary)
         eff= hist[ix, iy]
 
-        return eff
+        if isinstance(eff, float):
+            return eff
+
+        if isinstance(eff, acc.WeightedSum):
+            return eff.value
+
+        etype = type(eff)
+        raise NotImplementedError(f'Unrecognized efficiency of type: {etype}')
     # ------------------------------
     def _print_info_from_row(self, row : pnd.Series) -> None:
         log.info(40 * '-')
