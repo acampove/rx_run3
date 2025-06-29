@@ -30,26 +30,6 @@ class MisIdPdf:
     - Provide it alongside with the data to the user
     '''
     # ----------------------------------------
-    @staticmethod
-    def get_signal_cut(version : str) -> str:
-        '''
-        Given the version of the config file (misid_vx.yaml) will return the
-        cut defining the signal region
-        '''
-        config_path = files('rx_misid_data').joinpath(f'misid_{version}.yaml')
-        config_path = str(config_path)
-        with open(config_path, encoding='utf-8') as ifile:
-            cfg = yaml.safe_load(ifile)
-
-        cut = cfg['splitting']['lepton_tagging']['pass']
-
-        log.info(f'Using signal cut: {cut}')
-
-        cut_l1 = cut.replace('LEP', 'L1')
-        cut_l2 = cut.replace('LEP', 'L2')
-
-        return f'({cut_l1}) && ({cut_l2})'
-    # ----------------------------------------
     def __init__(self, obs : zobs, q2bin : str, version : str):
         '''
         obs : Observable needed for KDE
@@ -237,4 +217,24 @@ class MisIdPdf:
         pdf  = self._extend_pdf(pdf, data)
 
         return pdf
+    # ----------------------------------------
+    @staticmethod
+    def get_signal_cut(version : str) -> str:
+        '''
+        Given the version of the config file (misid_vx.yaml) will return the
+        cut defining the signal region
+        '''
+        config_path = files('rx_misid_data').joinpath(f'misid_{version}.yaml')
+        config_path = str(config_path)
+        with open(config_path, encoding='utf-8') as ifile:
+            cfg = yaml.safe_load(ifile)
+
+        cut = cfg['splitting']['lepton_tagging']['pass']
+
+        log.info(f'Using signal cut: {cut}')
+
+        cut_l1 = cut.replace('LEP', 'L1')
+        cut_l2 = cut.replace('LEP', 'L2')
+
+        return f'({cut_l1}) && ({cut_l2})'
 # ----------------------------------------
