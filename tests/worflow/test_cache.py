@@ -37,16 +37,16 @@ class Tester(Wcache):
         '''
         Returns a list of 1's
         '''
-        if self._is_cached():
+        if self._copy_from_cache():
             log.warning('Output cached, not running')
             return
 
         log.info('Data not cached, running')
         res = [1] * self._nval
 
-        gut.dump_json(res, f'{self._out_dir}/values.json')
-
-        self._mark_as_cached()
+        obj_path = f'{self._out_dir}/values.json'
+        gut.dump_json(res, obj_path)
+        self._cache()
 # -----------------------------------
 def test_cache():
     '''
