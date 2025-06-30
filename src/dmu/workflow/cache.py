@@ -2,9 +2,9 @@
 This module contains
 '''
 import os
+import shutil
 from pathlib import Path
 
-from dmu.generic           import utilities as gut
 from dmu.generic           import hashing
 from dmu.logging.log_store import LogStore
 
