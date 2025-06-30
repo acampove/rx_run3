@@ -38,18 +38,24 @@ class Cache:
         self._cache_dir = self._get_dir(kind='cache')
         self._hash_dir  : str
     # ---------------------------
-    def _get_hash(self) -> str:
+    def _get_dir(self, kind : str) -> str:
         '''
-        Create hash with all the collected user inputs
+        Parameters
+        --------------
+        kind : Kind of directory, cash, hash
         '''
-        log.debug('Will use following keys and values for hashing')
-        for key, val in self._dat_hash.items():
-            log.debug(f'{key:<30}{val}')
+        if   kind == 'cache':
+            dir_path  = f'{self._out_path}/.cache'
+        elif kind == 'hash':
+            cache_dir = self._get_dir(kind='cache')
+            hsh       = hashing.hash_object(self._dat_hash)
+            dir_path  = f'{cache_dir}/{hsh}'
+        else:
+            raise ValueError(f'Invalid directory kind: {kind}')
 
-        hsh = hashing.hash_object(self._dat_hash)
-        hsh = f'.hash_{hsh}.yaml'
+        os.makedirs(dir_path, exist_ok=True)
 
-        return hsh
+        return dir_path
     # ---------------------------
     def _set_output(self, dir_path : str) -> None:
         '''
