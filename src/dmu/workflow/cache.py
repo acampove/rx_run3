@@ -57,16 +57,25 @@ class Cache:
 
         return dir_path
     # ---------------------------
-    def _set_output(self, dir_path : str) -> None:
+    def _cache(self) -> None:
         '''
-        Parameters
-        --------------
-        dir_path: Path to directory where outputs will be cached
+        Meant to be called after all the calculations finish
+        It will copy all the outputs of the processing
+        to a hashed directory
         '''
-        os.makedirs(dir_path, exist_ok=True)
-        self._dir_path = dir_path
+        log.info('Caching outputs')
 
-        log.debug(f'Will send outputs to: {self._dir_path}')
+        self._hash_dir  = self._get_dir(kind= 'hash')
+        for source in Path(self._out_path).glob('*'):
+            if str(source) == self._cache_dir:
+                continue
+
+            log.debug(f'{str(source):<50}{"-->"}{self._hash_dir}')
+
+            if source.is_dir():
+                shutil.copytree(source, self._hash_dir)
+            else:
+                shutil.copy2(source, self._hash_dir)
     # ---------------------------
     def _mark_as_cached(self) -> None:
         '''
