@@ -77,12 +77,22 @@ class Cache:
             else:
                 shutil.copy2(source, self._hash_dir)
     # ---------------------------
-    def _mark_as_cached(self) -> None:
+    def _delete_from_output(self) -> None:
         '''
-        Checks if hash file exists
+        Delete all objects from _out_path directory, except for `.cache`
+        '''
+        for path in Path(self._out_path).iterdir():
+            if str(path) == self._cache_dir:
+                continue
 
-        Yes: raises exception, if file exists, you would not be calling this method
-        No : Makes the file and removes old hash files, output was updated
+            log.debug(f'Deleting {path}, cache dir {self._cache_dir}')
+            log.debug(f'Cache dir: {self._cache_dir}')
+            log.debug(f'This dir: {path}')
+
+            if path.is_dir():
+                shutil.rmtree(path)
+            else:
+                path.unlink()
         '''
         hsh       = self._get_hash()
         hash_file = f'{self._dir_path}/{hsh}'
