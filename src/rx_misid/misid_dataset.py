@@ -22,7 +22,7 @@ class MisIDDataset:
     - In a dictionary of dataframes, one per sample, data, MC signal, etc
     '''
     # ---------------------------------
-    def __init__(self, q2bin : str, version : str):
+    def __init__(self, q2bin : str):
         '''
         Parameters:
         -----------------
@@ -30,7 +30,6 @@ class MisIDDataset:
         version: Needed to pick configuration
         '''
         self._q2bin     = q2bin
-        self._version   = version
 
         self._sample    : str
         self._out_dir   : str
@@ -38,7 +37,7 @@ class MisIDDataset:
         self._cfg       = self._get_config()
     # ---------------------------------
     def _get_config(self) -> dict:
-        cfg = gut.load_data(package='rx_misid_data', fpath=f'misid_{self._version}.yaml')
+        cfg = gut.load_data(package='rx_misid_data', fpath=f'misid.yaml')
         cfg['input']['q2bin' ] = self._q2bin
 
         return cfg
