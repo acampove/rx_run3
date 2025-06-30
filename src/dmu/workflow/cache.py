@@ -108,19 +108,26 @@ class Cache:
             else:
                 shutil.copy2(source, target)
     # ---------------------------
-    def _is_cached(self) -> bool:
+    def _copy_from_cache(self) -> bool:
         '''
-        Checks if hash file (empty file whose name is the hash) exists in directory with outputs
+        Checks if hash directory exists:
+
+        No : Returns False
+        Yes:
+            - Removes contents of `out_path`, except for .cache
+            - Copies the contents of `hash_dir` to `out_dir`
 
         Returns
         ---------------
         True if the object, cached was found, false otherwise.
         '''
-        hsh       = self._get_hash()
-        hash_file = f'{self._dir_path}/{hsh}'
-        found = os.path.isfile(hash_file)
+        if not hasattr(self, '_hash_dir'):
+            return False
 
-        log.debug(f'Data was found: {found}')
+        log.debug('No data was found in hash directory')
 
-        return found
+        self._delete_from_output()
+        self._copy_from_hashdir()
+
+        return True
 # ---------------------------
