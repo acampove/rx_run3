@@ -58,6 +58,7 @@ def test_cache():
     res = None
     odir= '/tmp/tests/dmu/workflow/cache/cache'
 
+    log.info('')
     for _ in range(5):
         obj = Tester(nval=10, out_dir=odir)
         obj.run()
