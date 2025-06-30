@@ -25,10 +25,10 @@ class Tester(Wcache):
         '''
         nval, some integer used to produce output data
         '''
-        super().__init__()
-
-        self._register(nval=nval, out_dir=out_dir)
-        self._set_output(dir_path=out_dir)
+        super().__init__(
+                out_path=out_dir,
+                nval    =nval,
+                out_dir =out_dir)
 
         self._out_dir = out_dir
         self._nval    = nval
