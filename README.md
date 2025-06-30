@@ -63,6 +63,63 @@ def _get_something() -> float:
 
 the cached data will go to JSON files in `/tmp/dmu/cache`.
 
+## Caching with a base class
+
+Caching functionalities can be added to a class through a base class as in:
+
+```python
+from dmu.workflow.cache    import Cache     as Wcache
+
+class Tester(Wcache):
+    '''
+    Testing class, produces outputs from simple inputs
+    '''
+    # -----------------------------------
+    def __init__(
+            self,
+            nval    : int,
+            out_dir : str):
+        '''
+        nval, some integer used to produce output data
+        '''
+        super().__init__(
+                out_path=out_dir,
+                nval    =nval,
+                out_dir =out_dir)
+
+        self._out_dir = out_dir
+        self._nval    = nval
+    # -----------------------------------
+    def run(self) -> None:
+        '''
+        Returns a list of 1's
+        '''
+        obj_path = f'{self._out_dir}/values.json'
+
+        if self._copy_from_cache():
+            log.warning('Output cached, not running')
+            return gut.load_json(obj_path)
+
+        log.info('Data not cached, running')
+        res = [1] * self._nval
+
+        gut.dump_json(res, obj_path)
+        self._cache()
+
+        return res
+```
+
+where the tester class has access to extra functionalities to:
+
+- Cache outputs to a hashed directory
+- For the next run, check if the directory exists, if so pick 
+the outputs and put them in the output directory
+- If not rerun the process
+
+Several hashed directories might exist, like in the diagram:
+
+()[doc/images/cache_hash.svg]
+
 ## Silencing import messages
 
 To silence messages given by modules not in the user's control do:
