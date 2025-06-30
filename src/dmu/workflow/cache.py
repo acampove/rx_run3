@@ -16,6 +16,13 @@ class Cache:
 
     - Keep track of the inputs through hashes
     - Load cached data, if found, and prevent calculations
+
+    The following directories will be important:
+
+    out_dir  : Directory where the outputs will go, specified by the user
+    cache_dir: Subdirectory of out_dir, ${out_dir}/.cache
+    hash_dir : Subdirectory of out_dir, ${out_dir}/.cache/{hash}
+               Where {hash} is a 10 alphanumeric representing the has of the inputs
     '''
     # ---------------------------
     def __init__(self):
