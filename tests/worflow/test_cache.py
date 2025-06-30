@@ -33,20 +33,23 @@ class Tester(Wcache):
         self._out_dir = out_dir
         self._nval    = nval
     # -----------------------------------
-    def run(self) -> None:
+    def run(self) -> list[int]:
         '''
         Returns a list of 1's
         '''
+        obj_path = f'{self._out_dir}/values.json'
+
         if self._copy_from_cache():
             log.warning('Output cached, not running')
-            return
+            return gut.load_json(obj_path)
 
         log.info('Data not cached, running')
         res = [1] * self._nval
 
-        obj_path = f'{self._out_dir}/values.json'
         gut.dump_json(res, obj_path)
         self._cache()
+
+        return res
 # -----------------------------------
 def test_cache():
     '''
