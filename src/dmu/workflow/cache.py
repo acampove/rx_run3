@@ -124,7 +124,7 @@ class Cache:
         if not hasattr(self, '_hash_dir'):
             return False
 
-        log.debug('No data was found in hash directory')
+        log.debug('Data found in hash directory: {self._hash_dir}')
 
         self._delete_from_output()
         self._copy_from_hashdir()
