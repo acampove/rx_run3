@@ -93,18 +93,20 @@ class Cache:
                 shutil.rmtree(path)
             else:
                 path.unlink()
+    # ---------------------------
+    def _copy_from_hashdir(self) -> None:
         '''
-        hsh       = self._get_hash()
-        hash_file = f'{self._dir_path}/{hsh}'
-        if os.path.isfile(hash_file):
-            raise ValueError(f'Hash file found: {hash_file}')
+        Copies all the objects from _hash_dir to _out_path
+        '''
+        for source in Path(self._hash_dir).iterdir():
+            target = f'{self._out_path}/{source.name}'
 
-        for fpath in Path(self._dir_path).glob('.hash*.yaml'):
-            log.debug(f'Removing old hash file: {fpath}')
-            fpath.unlink()
+            log.debug(f'{source:<50}{"-->"}{target}')
 
-        log.debug(f'Writtng hash file: {hash_file}')
-        gut.dump_json(self._dat_hash, hash_file)
+            if source.is_dir():
+                shutil.copytree(source, target)
+            else:
+                shutil.copy2(source, target)
     # ---------------------------
     def _is_cached(self) -> bool:
         '''
