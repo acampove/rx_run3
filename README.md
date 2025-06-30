@@ -118,7 +118,7 @@ the outputs and put them in the output directory
 
 Several hashed directories might exist, like in the diagram:
 
-()[doc/images/cache_hash.svg]
+[](doc/images/cache_hash.svg)
 
 ## Silencing import messages
 
