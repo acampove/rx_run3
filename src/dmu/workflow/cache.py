@@ -25,15 +25,18 @@ class Cache:
                Where {hash} is a 10 alphanumeric representing the has of the inputs
     '''
     # ---------------------------
-    def __init__(self):
-        self._dir_path : str
-        self._dat_hash : dict[str,str] = {}
-    # ---------------------------
-    def _register(self, **kwargs):
+    def __init__(self, out_path : str, **kwargs):
         '''
-        Takes arguments FULLY defining the output in the form of a keyword argument dictionary
+        Parameters
+        ---------------
+        out_path: Path to directory where outputs will go
+        kwargs  : Key word arguments symbolizing identity of inputs, used for hashing
         '''
-        self._dat_hash.update(kwargs)
+        self._out_path  = out_path
+        self._dat_hash  = kwargs
+
+        self._cache_dir = self._get_dir(kind='cache')
+        self._hash_dir  : str
     # ---------------------------
     def _get_hash(self) -> str:
         '''
