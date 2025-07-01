@@ -10,7 +10,6 @@ def test_simple():
     '''
     Simplest test
     '''
-    with RDFGetter.max_entries(value = 1000):
-        dst = MisIDDataset(q2bin='central')
-        d_df= dst.get_data()
+    dst = MisIDDataset(q2bin='central')
+    d_df= dst.get_data()
 # -----------------------------------------------
