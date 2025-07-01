@@ -28,12 +28,8 @@ class MisIDCalculator:
         '''
         self._cfg = cfg
     # -----------------------------
-    def _get_selection(self, cuts : dict[str,str]) -> dict[str,str]:
+    def _get_selection(self) -> dict[str,str]:
         '''
-        Parameters
-        ----------------
-        cuts: Dictionary with cuts defining control region
-
         Returns
         ----------------
         Dictionary with full selection, plus control region
@@ -44,7 +40,15 @@ class MisIDCalculator:
 
         d_sel          = sel.selection(trigger=trigger, q2bin=q2bin, process=sample)
         d_sel['pid_l'] = '(1)'
-        d_sel.update(cuts)
+
+        if 'selection' not in self._cfg['input']:
+            return d_sel
+
+        log.warning('Overriding selection')
+        d_cut   = self._cfg['input']['selection']
+        for name, expr in d_cut.items():
+            log.info(f'{name:<name}{expr}')
+            d_sel[name] = expr
 
         return d_sel
     # -----------------------------
@@ -52,10 +56,6 @@ class MisIDCalculator:
         sample  = self._cfg['input']['sample']
         trigger = self._cfg['input']['trigger']
 
-        d_cut = {}
-        if 'selection' in self._cfg['input']:
-            log.warning('Overriding selection')
-            d_cut   = self._cfg['input']['selection']
 
         obj     = RDFGetter(sample=sample, trigger=trigger)
         rdf     = obj.get_rdf()
