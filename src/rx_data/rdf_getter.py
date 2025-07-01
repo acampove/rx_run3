@@ -91,6 +91,7 @@ class RDFGetter:
                                  'Hlt2RD_BuToKpMuMu_SameSign_MVA']
 
         self._rdf    : RDataFrame         # This is where the dataframe will be stored, prevents recalculation
+        self._d_info : dict[str,str] = {} # Used to store information related to transformations done to dataframe (e.g. Range), needed for hashing
         self._l_path : list[str]     = [] # list of paths to all the ROOT files
         self._channel                = self._channel_from_trigger()
         self._initialize()
@@ -599,6 +600,10 @@ class RDFGetter:
         if nent < 0 or nent > nentries:
             return rdf
 
+        # Append information on transformations
+        # done to dataframe in order to calculate
+        # hash properly
+        self._d_info['range'] = 0, nent
         rdf  = rdf.Range(nent)
 
         log.warning(f'Picking up the first {nent} entries')
@@ -665,7 +670,7 @@ class RDFGetter:
             all_guuid += ifile.GetUUID().AsString()
             ifile.Close()
 
-        val = hashing.hash_object(all_guuid)
+        val = hashing.hash_object([ all_guuid, self._d_info ])
         val = val[:10]
 
         return val
