@@ -74,6 +74,8 @@ def pytest_sessionfinish():
 # -----------------------------------
 @pytest.fixture(autouse=True, scope='session')
 def _initialize():
-    LogStore.set_level('dmu:workflow:cache', 10)
+    LogStore.set_level('dmu:workflow:cache'   , 10)
+    LogStore.set_level('rx_data:rdf_getter'   , 10)
+    LogStore.set_level('rx_data:path_splitter', 10)
     yield
 # -----------------------------------
