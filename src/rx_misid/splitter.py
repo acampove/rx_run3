@@ -21,7 +21,7 @@ class SampleSplitter:
                  is_bplus : bool,
                  cfg      : dict):
         '''
-        rdf : Input dataframe with data to split
+        rdf     : Input dataframe with data to split, It should have attached a `uid` attribute, the unique identifier
         is_bplus: True if the sam ple that will be returned will contain B+ mesons, false for B-
         cfg     : Dictionary with configuration specifying how to split the samples
         '''
