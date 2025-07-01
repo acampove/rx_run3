@@ -30,14 +30,13 @@ class MisIdPdf:
     - Provide it alongside with the data to the user
     '''
     # ----------------------------------------
-    def __init__(self, obs : zobs, q2bin : str, version : str):
+    def __init__(self, obs : zobs, q2bin : str):
         '''
         obs : Observable needed for KDE
         q2bin: q2 bin
         '''
         self._obs   = obs
         self._q2bin = q2bin
-        self._vers  = version
 
         self._data          : zdata
         self._ana_dir       = os.environ['ANADIR']
@@ -46,14 +45,14 @@ class MisIdPdf:
         self._d_padding     = {'lowermirror' : 1.0, 'uppermirror' : 1.0}
         self._l_component   = ['signal', 'leakage'] # components that need to be subtracted from misID
 
-        self._cfg           = gut.load_data(package='rx_misid_data', fpath = f'misid_{version}.yaml')
+        self._cfg           = gut.load_data(package='rx_misid_data', fpath = 'misid.yaml')
         self._d_scale       = self._get_scales()
     # ----------------------------------------
     def _get_scales(self) -> dict[str,float]:
         d_scale = {'data' : 1.0}
         for name in self._l_component:
             [sample]      = self._cfg['splitting']['samples'][name]
-            sig_reg       = MisIdPdf.get_signal_cut(version=self._vers)
+            sig_reg       = MisIdPdf.get_signal_cut()
 
             scl           = MCScaler(q2bin=self._q2bin, sample=sample, sig_reg=sig_reg)
             _, _, scale   = scl.get_scale()
@@ -187,12 +186,11 @@ class MisIdPdf:
         return pdf
     # ----------------------------------------
     @staticmethod
-    def get_signal_cut(version : str) -> str:
+    def get_signal_cut() -> str:
         '''
-        Given the version of the config file (misid_vx.yaml) will return the
-        cut defining the signal region
+        Will return the cut defining the signal region
         '''
-        config_path = files('rx_misid_data').joinpath(f'misid_{version}.yaml')
+        config_path = files('rx_misid_data').joinpath('misid.yaml')
         config_path = str(config_path)
         with open(config_path, encoding='utf-8') as ifile:
             cfg = yaml.safe_load(ifile)
