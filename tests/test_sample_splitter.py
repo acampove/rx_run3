@@ -98,6 +98,7 @@ def test_simple(hadron_id : str, is_bplus : bool):
     spl   = SampleSplitter(rdf=rdf, hadron_id=hadron_id, is_bplus=is_bplus, cfg=cfg)
     df    = spl.get_samples()
 
+    log.info('Dataframe found, checking')
     _check_stats(df=df)
     _plot_pide(df=df, hadron_id=hadron_id, is_bplus=is_bplus)
 # -------------------------------------------------------
