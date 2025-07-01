@@ -62,21 +62,6 @@ def _check_stats(df : pnd.DataFrame):
 
     assert not fail
 # -------------------------------------------------------
-@pytest.mark.parametrize('hadron_id', Data.l_hadron_id)
-@pytest.mark.parametrize('is_bplus' ,    [True, False])
-def test_simple(hadron_id : str, is_bplus : bool):
-    '''
-    Tests simplest splitting
-    '''
-    rdf   = _get_rdf()
-    cfg   = _get_config()
-
-    spl   = SampleSplitter(rdf=rdf, hadron_id=hadron_id, is_bplus=is_bplus, cfg=cfg)
-    df    = spl.get_samples()
-
-    _check_stats(df=df)
-    _plot_pide(df=df, hadron_id=hadron_id, is_bplus=is_bplus)
-# -------------------------------------------------------
 def _plot_pide(df : pnd.DataFrame, hadron_id : str, is_bplus : bool) -> None:
     for kind, df_kind in df.groupby('kind'):
         ax = None
@@ -92,4 +77,19 @@ def _plot_pide(df : pnd.DataFrame, hadron_id : str, is_bplus : bool) -> None:
         plt.title(f'{hadron_id}; {bname}; {kind}')
         plt.savefig(plot_path)
         plt.close()
+# -------------------------------------------------------
+@pytest.mark.parametrize('hadron_id', Data.l_hadron_id)
+@pytest.mark.parametrize('is_bplus' ,    [True, False])
+def test_simple(hadron_id : str, is_bplus : bool):
+    '''
+    Tests simplest splitting
+    '''
+    rdf   = _get_rdf()
+    cfg   = _get_config()
+
+    spl   = SampleSplitter(rdf=rdf, hadron_id=hadron_id, is_bplus=is_bplus, cfg=cfg)
+    df    = spl.get_samples()
+
+    _check_stats(df=df)
+    _plot_pide(df=df, hadron_id=hadron_id, is_bplus=is_bplus)
 # -------------------------------------------------------
