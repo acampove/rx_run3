@@ -7,8 +7,8 @@ import yaml
 import numpy
 import pytest
 import pandas as pnd
-from dmu.logging.log_store   import LogStore
-from rx_misid.weighter       import SampleWeighter
+from dmu.logging.log_store    import LogStore
+from rx_misid.sample_weighter import SampleWeighter
 
 log=LogStore.add_logger('rx_misid:test_weighter')
 # -------------------------------------------------------
