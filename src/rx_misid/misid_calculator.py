@@ -4,6 +4,7 @@ Module holding MisIDCalculator class
 
 import pandas as pnd
 
+from ROOT                     import RDataFrame
 from dmu.logging.log_store    import LogStore
 from rx_selection             import selection as sel
 from rx_data.rdf_getter       import RDFGetter
