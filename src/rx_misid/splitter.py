@@ -6,10 +6,11 @@ import pandas as pnd
 from ROOT                   import RDataFrame
 from dmu.rdataframe         import utilities as ut
 from dmu.logging.log_store  import LogStore
+from dmu.workflow.cache     import Cache     as Wcache
 
 log=LogStore.add_logger('rx_misid:splitter')
 # --------------------------------
-class SampleSplitter:
+class SampleSplitter(Wcache):
     '''
     Class meant to split a dataframe into PassFail, FailPass and FailFail samples
     based on a configuration
@@ -25,6 +26,10 @@ class SampleSplitter:
         is_bplus: True if the sam ple that will be returned will contain B+ mesons, false for B-
         cfg     : Dictionary with configuration specifying how to split the samples
         '''
+        super().__init__(
+                out_path = '/tmp/sample_splitter',
+                args     = [rdf.uid, hadron_id, is_bplus, cfg])
+
         self._b_id     = 521
         self._is_bplus = is_bplus
         self._hadron_id= hadron_id
@@ -94,6 +99,11 @@ class SampleSplitter:
             - SS means same sign as the B and OS is opposite sign
             - These strings are stored in the column "kind"
         '''
+        json_path = f'{self._out_path}/sample.json'
+        if self._copy_from_cache():
+            log.warning('Cached object found')
+            return pnd.read_json(json_path)
+
         l_df = []
         for kind in self._l_kind:
             log.info(f'Calculating sample: {kind}')
@@ -109,6 +119,9 @@ class SampleSplitter:
 
         df_tot           = pnd.concat(l_df)
         df_tot['hadron'] = self._hadron_id
+
+        df_tot.to_json(json_path)
+        self._cache()
 
         return df_tot
 # --------------------------------
