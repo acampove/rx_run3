@@ -36,6 +36,9 @@ def _initialize():
     LogStore.set_level('rx_misid:misid_pdf'     , 10)
     LogStore.set_level('rx_misid:mc_scaler'     , 10)
 
+    LogStore.set_level('rx_data:rdf_getter'     , 30)
+    LogStore.set_level('rx_data:path_splitter'  , 30)
+
     os.makedirs(Data.out_dir, exist_ok=True)
 # ----------------------------
 def _plot_data(df : pnd.DataFrame, q2bin : str, name : str) -> None:
