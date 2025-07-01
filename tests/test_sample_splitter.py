@@ -26,7 +26,9 @@ class Data:
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    LogStore.set_level('rx_misid:splitter', 10)
+    LogStore.set_level('rx_misid:splitter'    , 10)
+    LogStore.set_level('rx_data:rdf_getter'   , 30)
+    LogStore.set_level('rx_data:path_splitter', 30)
 
     os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
