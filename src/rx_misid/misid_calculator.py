@@ -6,6 +6,8 @@ import pandas as pnd
 
 from ROOT                     import RDataFrame
 from dmu.logging.log_store    import LogStore
+from dmu.generic              import hashing
+
 from rx_selection             import selection as sel
 from rx_data.rdf_getter       import RDFGetter
 from rx_misid.splitter        import SampleSplitter
@@ -56,21 +58,10 @@ class MisIDCalculator:
         sample  = self._cfg['input']['sample']
         trigger = self._cfg['input']['trigger']
 
-
         obj     = RDFGetter(sample=sample, trigger=trigger)
         rdf     = obj.get_rdf()
-
-        entry_range = self._cfg['input'].get('range')
-        if entry_range is not None:
-            log.warning(f'Limitting dataframe to {entry_range}')
-            min_entry, max_entry = entry_range
-            rdf = rdf.Range(min_entry, max_entry)
-
-        d_sel   = self._get_selection(cuts=d_cut)
-        log.info('Applying selection')
-        for cut_name, cut_expr in d_sel.items():
-            log.debug(f'{cut_name:<30}{cut_expr}')
-            rdf = rdf.Filter(cut_expr, cut_name)
+        uid     = obj.get_uid()
+        rdf,uid = self._filter_rdf(rdf=rdf, uid=uid)
 
         log.info(f'Splitting samples: Bplus={is_bplus}, Hadron={hadron_id}')
         splitter = SampleSplitter(rdf=rdf, is_bplus=is_bplus, hadron_id=hadron_id, cfg=self._cfg['splitting'])
@@ -84,6 +75,38 @@ class MisIDCalculator:
         df['bmeson'] = 'bplus' if is_bplus else 'bminus'
 
         return df
+    # -----------------------------
+    def _filter_rdf(
+            self,
+            rdf : RDataFrame,
+            uid : str) -> tuple[RDataFrame,str]:
+        '''
+        Take ROOT dataframe and its UniqueIDentifier
+
+        Filter by:
+
+        - Select range of entries (optional)
+        - Apply analysis selection
+
+        Returns
+        -----------------
+        Filtered dataframe and updated UniqueIDentifier
+        '''
+        entry_range = self._cfg['input'].get('range')
+        if entry_range is not None:
+            log.warning(f'Limitting dataframe to {entry_range}')
+            min_entry, max_entry = entry_range
+            rdf = rdf.Range(min_entry, max_entry)
+
+        d_sel   = self._get_selection()
+        log.info('Applying selection')
+        for cut_name, cut_expr in d_sel.items():
+            log.debug(f'{cut_name:<30}{cut_expr}')
+            rdf = rdf.Filter(cut_expr, cut_name)
+
+        uid = hashing.hash_object(obj=[d_sel, uid, entry_range])
+
+        return rdf, uid
     # -----------------------------
     def get_misid(self) -> pnd.DataFrame:
         '''
