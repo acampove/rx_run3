@@ -4,6 +4,8 @@ Module holding SampleSplitter class
 
 import pandas as pnd
 from ROOT                   import RDataFrame
+
+import dmu.pdataframe.utilities as put
 from dmu.rdataframe         import utilities as ut
 from dmu.logging.log_store  import LogStore
 from dmu.workflow.cache     import Cache     as Wcache
@@ -99,10 +101,10 @@ class SampleSplitter(Wcache):
             - SS means same sign as the B and OS is opposite sign
             - These strings are stored in the column "kind"
         '''
-        json_path = f'{self._out_path}/sample.json'
+        yaml_path = f'{self._out_path}/sample.yaml'
         if self._copy_from_cache():
             log.warning('Cached object found')
-            return pnd.read_json(json_path)
+            return put.from_yaml(yaml_path)
 
         l_df = []
         for kind in self._l_kind:
@@ -120,7 +122,7 @@ class SampleSplitter(Wcache):
         df_tot           = pnd.concat(l_df)
         df_tot['hadron'] = self._hadron_id
 
-        df_tot.to_json(json_path)
+        put.to_yaml(df_tot, yaml_path)
         self._cache()
 
         return df_tot
