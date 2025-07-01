@@ -97,6 +97,7 @@ def test_data(q2bin : str):
 
     obj = MisIdPdf(obs=Data.obs, q2bin=q2bin, version=Data.version)
     df  = obj.get_data(kind='pandas')
+    df  = cast(pnd.DataFrame, df)
 
     _plot_data(df, q2bin, name='test_data')
 # ----------------------------
