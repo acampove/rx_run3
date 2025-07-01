@@ -427,8 +427,15 @@ def test_guid():
     uid22= gtr22.get_uid()
     gtr22.get_rdf()
 
+    # Filtering done here should change the sample's UID
+    with RDFGetter.max_entries(value = 100):
+        gtr23= RDFGetter(sample=sam2, trigger='Hlt2RD_BuToKpEE_MVA')
+        uid23= gtr23.get_uid()
+        gtr23.get_rdf()
+
     assert uid11 == uid12
     assert uid11 != uid22
+    assert uid22 != uid23
 # ------------------------------------------------
 def test_split_per_file():
     '''
