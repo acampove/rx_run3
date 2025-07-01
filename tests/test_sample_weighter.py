@@ -34,7 +34,8 @@ def _initialize():
     LogStore.set_level('rx_misid:weighter', 10)
 # -------------------------------------------------------
 def _get_config() -> dict:
-    cfg_path = files('rx_misid_data').joinpath('misid_v1.yaml')
+    cfg_path = files('rx_misid_data').joinpath('misid.yaml')
+    cfg_path = str(cfg_path)
     log.info(f'Picking up config from: {cfg_path}')
     with open(cfg_path, encoding='utf-8') as ifile:
         cfg = yaml.safe_load(ifile)
