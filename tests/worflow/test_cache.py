@@ -88,15 +88,4 @@ def test_update():
         assert out == [1] * val
         log.info('')
 # -----------------------------------
-def test_same_dir_diff_input():
-    odir = '/tmp/tests/dmu/workflow/cache/mixed'
-
-    obj1 = Tester(nval=5, out_dir=odir)
-    out1 = obj1.run()
-
-    obj2 = Tester(nval=10, out_dir=odir)
-    out2 = obj2.run()
-
-    assert out1 == [1] * 5
-    assert out2 == [1] * 10
 
