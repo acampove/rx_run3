@@ -45,6 +45,8 @@ def _get_config() -> dict:
 def _get_rdf():
     gtr = RDFGetter(sample='DATA_24_MagUp_24c2', trigger='Hlt2RD_BuToKpEE_MVA_ext')
     rdf = gtr.get_rdf()
+    uid = gtr.get_uid()
+    rdf.uid = uid
 
     return rdf
 # -------------------------------------------------------
