@@ -128,7 +128,7 @@ class Cache:
         '''
         hash_dir = self._get_dir(kind='hash', make=False)
         if not os.path.isdir(hash_dir):
-            log.debug('Hash directory {hash_dir} not found, not caching')
+            log.debug(f'Hash directory {hash_dir} not found, not caching')
             return False
 
         self._hash_dir = hash_dir
