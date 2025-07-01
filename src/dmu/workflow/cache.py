@@ -38,11 +38,15 @@ class Cache:
         self._cache_dir = self._get_dir(kind='cache')
         self._hash_dir  : str
     # ---------------------------
-    def _get_dir(self, kind : str) -> str:
+    def _get_dir(
+            self,
+            kind : str,
+            make : bool = True) -> str:
         '''
         Parameters
         --------------
         kind : Kind of directory, cash, hash
+        make : If True (default) will try to make directory
         '''
         if   kind == 'cache':
             dir_path  = f'{self._out_path}/.cache'
@@ -53,7 +57,8 @@ class Cache:
         else:
             raise ValueError(f'Invalid directory kind: {kind}')
 
-        os.makedirs(dir_path, exist_ok=True)
+        if make:
+            os.makedirs(dir_path, exist_ok=True)
 
         return dir_path
     # ---------------------------
