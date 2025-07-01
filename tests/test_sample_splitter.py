@@ -90,6 +90,7 @@ def test_simple(hadron_id : str, is_bplus : bool):
     '''
     Tests simplest splitting
     '''
+    log.info('')
     rdf   = _get_rdf()
     cfg   = _get_config()
 
