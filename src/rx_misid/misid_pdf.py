@@ -41,11 +41,12 @@ class MisIdPdf:
         self._data          : zdata
         self._ana_dir       = os.environ['ANADIR']
         self._mis_dir       = f'{self._ana_dir}/misid'
-        self._nan_threshold = 0.02
-        self._d_padding     = {'lowermirror' : 1.0, 'uppermirror' : 1.0}
-        self._l_component   = ['signal', 'leakage'] # components that need to be subtracted from misID
-
         self._cfg           = gut.load_data(package='rx_misid_data', fpath = 'misid.yaml')
+
+        self._nan_threshold = self._cfg['pdf']['nan_threshold']
+        self._l_component   = self._cfg['pdf']['subtract']
+        self._d_padding     = self._cfg['pdf']['padding']
+
         self._d_scale       = self._get_scales()
     # ----------------------------------------
     def _get_scales(self) -> dict[str,float]:
