@@ -19,11 +19,9 @@ splitting:
     leakage:
       - Bu_JpsiK_ee_eq_DPC
     data   :
-      - DATA_24_MagUp_24c1
       - DATA_24_MagUp_24c2
       - DATA_24_MagUp_24c3
       - DATA_24_MagUp_24c4
-      - DATA_24_MagDown_24c1
       - DATA_24_MagDown_24c2
       - DATA_24_MagDown_24c3
       - DATA_24_MagDown_24c4
