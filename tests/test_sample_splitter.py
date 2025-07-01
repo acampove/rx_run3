@@ -41,7 +41,7 @@ def _get_config() -> dict:
     return cfg['splitting']
 # -------------------------------------------------------
 def _get_rdf():
-    gtr = RDFGetter(sample='DATA_24_MagUp_24c1', trigger='Hlt2RD_BuToKpEE_MVA_ext')
+    gtr = RDFGetter(sample='DATA_24_MagUp_24c2', trigger='Hlt2RD_BuToKpEE_MVA_ext')
     rdf = gtr.get_rdf()
 
     return rdf
