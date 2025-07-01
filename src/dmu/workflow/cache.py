@@ -106,7 +106,7 @@ class Cache:
         for source in Path(self._hash_dir).iterdir():
             target = f'{self._out_path}/{source.name}'
 
-            log.debug(f'{source:<50}{"-->"}{target}')
+            log.debug(f'{str(source):<50}{"-->"}{target}')
 
             if source.is_dir():
                 shutil.copytree(source, target)
