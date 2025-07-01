@@ -29,7 +29,6 @@ class Data:
     obs_name= 'B_M_brem_track_2'
     obs     = zfit.Space(obs_name, limits=(minx, maxx))
     out_dir = '/tmp/tests/rx_misid/misid_pdf'
-    version = 'v1'
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
@@ -79,7 +78,7 @@ def test_pdf(q2bin : str):
     Tests PDF provided by tool
     '''
 
-    obj = MisIdPdf(obs=Data.obs, q2bin=q2bin, version=Data.version)
+    obj = MisIdPdf(obs=Data.obs, q2bin=q2bin)
     pdf = obj.get_pdf()
 
     assert pdf.is_extended
@@ -95,7 +94,7 @@ def test_data(q2bin : str):
     Tests that the tool can provide data
     '''
 
-    obj = MisIdPdf(obs=Data.obs, q2bin=q2bin, version=Data.version)
+    obj = MisIdPdf(obs=Data.obs, q2bin=q2bin)
     df  = obj.get_data(kind='pandas')
     df  = cast(pnd.DataFrame, df)
 
@@ -106,7 +105,7 @@ def test_fit(q2bin : str):
     '''
     Test fitting with PDF
     '''
-    obj = MisIdPdf(obs=Data.obs, q2bin=q2bin, version=Data.version)
+    obj = MisIdPdf(obs=Data.obs, q2bin=q2bin)
     mid = obj.get_pdf()
 
     lam = zfit.Parameter('c', -0.001, -0.01, 0)
@@ -129,7 +128,7 @@ def test_pdf_benchmark(benchmark, q2bin : str):
     '''
 
     def _retrieve_pdf():
-        obj = MisIdPdf(obs=Data.obs, q2bin=q2bin, version=Data.version)
+        obj = MisIdPdf(obs=Data.obs, q2bin=q2bin)
         return obj.get_pdf()
 
     pdf = benchmark(_retrieve_pdf)
