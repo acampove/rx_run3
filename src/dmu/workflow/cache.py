@@ -126,10 +126,13 @@ class Cache:
         ---------------
         True if the object, cached was found, false otherwise.
         '''
-        if not hasattr(self, '_hash_dir'):
+        hash_dir = self._get_dir(kind='hash', make=False)
+        if not os.path.isdir(hash_dir):
+            log.debug('Hash directory {hash_dir} not found, not caching')
             return False
 
-        log.debug('Data found in hash directory: {self._hash_dir}')
+        self._hash_dir = hash_dir
+        log.debug(f'Data found in hash directory: {self._hash_dir}')
 
         self._delete_from_output()
         self._copy_from_hashdir()
