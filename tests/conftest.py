@@ -4,9 +4,13 @@ Also pytest functions intended to be run after tests
 '''
 import os
 
+import pytest
 import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
+
+from rx_data.rdf_getter    import RDFGetter
+from dmu.logging.log_store import LogStore
 
 # -----------------------------------
 class DataCollector:
@@ -67,4 +71,9 @@ def pytest_sessionfinish():
 
         _plot_scales(df=df, name='simple', kind= 'scale')
         _plot_scales(df=df, name='simple', kind='ctr_dt')
+# -----------------------------------
+@pytest.fixture(autouse=True, scope='session')
+def _initialize():
+    LogStore.set_level('dmu:workflow:cache', 10)
+    yield
 # -----------------------------------
