@@ -68,9 +68,9 @@ class Cache:
         It will copy all the outputs of the processing
         to a hashed directory
         '''
-        log.info('Caching outputs')
-
         self._hash_dir  = self._get_dir(kind= 'hash')
+        log.info(f'Caching outputs to: {self._hash_dir}')
+
         for source in Path(self._out_path).glob('*'):
             if str(source) == self._cache_dir:
                 continue
