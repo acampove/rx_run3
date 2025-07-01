@@ -118,7 +118,9 @@ the outputs and put them in the output directory
 
 Several hashed directories might exist, like in the diagram:
 
-![cache structure](doc/images/cache_hash.svg)
+<div style="width: 100%; height: 600px; border: 1px solid #ccc;">
+  <iframe src="./doc/images/cache_hash.html" width="100%" height="100%" frameborder="0"></iframe>
+</div>
 
 ## Silencing import messages
 
