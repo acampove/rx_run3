@@ -90,9 +90,9 @@ class RDFGetter:
         self._l_mm_trigger    = ['Hlt2RD_BuToKpMuMu_MVA',
                                  'Hlt2RD_BuToKpMuMu_SameSign_MVA']
 
-        self._rdf    : RDataFrame     # This is where the dataframe will be stored, prevents recalculation
-        self._l_path : list[str] = [] # list of paths to all the ROOT files
-        self._channel            = self._channel_from_trigger()
+        self._rdf    : RDataFrame         # This is where the dataframe will be stored, prevents recalculation
+        self._l_path : list[str]     = [] # list of paths to all the ROOT files
+        self._channel                = self._channel_from_trigger()
         self._initialize()
     # ---------------------------------------------------
     def _get_main_tree(self) -> str:
