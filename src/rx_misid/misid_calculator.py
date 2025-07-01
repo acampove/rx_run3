@@ -62,6 +62,7 @@ class MisIDCalculator:
         rdf     = obj.get_rdf()
         uid     = obj.get_uid()
         rdf,uid = self._filter_rdf(rdf=rdf, uid=uid)
+        rdf.uid = uid
 
         log.info(f'Splitting samples: Bplus={is_bplus}, Hadron={hadron_id}')
         splitter = SampleSplitter(rdf=rdf, is_bplus=is_bplus, hadron_id=hadron_id, cfg=self._cfg['splitting'])
