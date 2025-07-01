@@ -100,10 +100,12 @@ class SampleSplitter(Wcache):
             - SS means same sign as the B and OS is opposite sign
             - These strings are stored in the column "kind"
         '''
-        yaml_path = f'{self._out_path}/sample.yaml'
+        parquet_path = f'{self._out_path}/sample.parquet'
         if self._copy_from_cache():
             log.warning('Cached object found')
-            return put.from_yaml(yaml_path)
+            df = pnd.read_parquet(parquet_path, engine='pyarrow')
+
+            return df
 
         l_df = []
         self._rdf = self._filter_rdf(rdf=self._rdf)
@@ -121,8 +123,8 @@ class SampleSplitter(Wcache):
 
         df_tot           = pnd.concat(l_df)
         df_tot['hadron'] = self._hadron_id
+        df_tot.to_parquet(parquet_path, engine='pyarrow')
 
-        put.to_yaml(df_tot, yaml_path)
         self._cache()
 
         return df_tot
