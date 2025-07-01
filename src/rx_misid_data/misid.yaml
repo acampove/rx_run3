@@ -48,3 +48,11 @@ splitting:
     fail : LEP_PROBNN_E < 0.2 || LEP_PID_E < 3.0
   maps:
     <<: *mp
+pdf :
+  nan_threshold : 0.02
+  padding       :
+    lowermirror : 1.0
+    uppermirror : 1.0
+  subtract      :
+    - signal
+    - leakage
