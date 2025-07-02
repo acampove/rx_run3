@@ -105,11 +105,10 @@ class Cache:
         '''
         for path in Path(self._out_path).iterdir():
             if str(path) == self._cache_dir:
+                log.debug(f'Skipping cache dir: {self._cache_dir}')
                 continue
 
-            log.debug(f'Deleting {path}, cache dir {self._cache_dir}')
-            log.debug(f'Cache dir: {self._cache_dir}')
-            log.debug(f'This dir: {path}')
+            log.debug(f'Deleting {path}')
 
             if path.is_dir():
                 shutil.rmtree(path)
