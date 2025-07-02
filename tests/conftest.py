@@ -9,8 +9,8 @@ import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from rx_data.rdf_getter    import RDFGetter
 from dmu.logging.log_store import LogStore
+from dmu.workflow.cache    import Cache     as Wcache
 
 # -----------------------------------
 class DataCollector:
@@ -73,9 +73,17 @@ def pytest_sessionfinish():
         _plot_scales(df=df, name='simple', kind='ctr_dt')
 # -----------------------------------
 @pytest.fixture(autouse=True, scope='session')
-def _initialize():
+def initialize():
+    '''
+    This will run before any test
+    '''
+    _set_logs()
+    Wcache.set_cache_root(root='/tmp/misid/cache')
+
+    yield
+# -----------------------------------
+def _set_logs():
     LogStore.set_level('dmu:workflow:cache'   , 10)
     LogStore.set_level('rx_data:rdf_getter'   , 30)
     LogStore.set_level('rx_data:path_splitter', 30)
-    yield
 # -----------------------------------
