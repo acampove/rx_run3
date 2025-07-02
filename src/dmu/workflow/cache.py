@@ -2,9 +2,11 @@
 This module contains
 '''
 import os
+import sys
 import shutil
 from pathlib import Path
 
+from git                   import Repo
 from dmu.generic           import hashing
 from dmu.logging.log_store import LogStore
 
@@ -36,6 +38,11 @@ class Cache:
         if Cache._cache_root is None:
             raise ValueError('Caching directory not set')
 
+        if 'code' in kwargs:
+            raise ValueError('Cannot append hashing data with key "code", already used')
+
+        kwargs['code']  = self._get_code_hash()
+
         self._out_path  = f'{Cache._cache_root}/{out_path}'
         self._dat_hash  = kwargs
 
@@ -54,6 +61,29 @@ class Cache:
         os.makedirs(root, exist_ok=True)
 
         cls._cache_root = root
+    # ---------------------------
+    def _get_code_hash(self) -> str:
+        '''
+        If `MyTool` inherits from `Cache`. `mytool.py` git commit hash
+        should be returned
+        '''
+        repo  = Repo('.')
+        cls   = self.__class__
+        mod   = sys.modules.get(cls.__module__)
+        if mod is None:
+            raise ValueError(f'Module not found: {cls.__module__}')
+
+        fname = str(mod.__file__)
+        fpath = os.path.abspath(fname)
+
+        genr=repo.iter_commits(paths=fpath, max_count=1)
+
+        [hsh] = list(genr)
+        val   = hsh.hexsha
+
+        log.debug(f'Using hash for: {fpath} = {val}')
+
+        return val
     # ---------------------------
     def _get_dir(
             self,
