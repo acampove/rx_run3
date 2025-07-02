@@ -107,6 +107,14 @@ class Tester(Wcache):
         self._cache()
 
         return res
+
+# This will set the root directory where cached data goes
+# The data will go to `/some/directory/tester`
+# This has to be done ONCE and only ONCE.
+Wcache.set_cache_root(root='/some/directory')
+
+obj = Tester(nval=3, out_dir='tester')
+...
 ```
 
 where the tester class has access to extra functionalities to:
