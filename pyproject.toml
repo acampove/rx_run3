@@ -24,7 +24,7 @@ dependencies= [
 [project.optional-dependencies]
 fit  = ['zfit']
 ml   = ['scikit-learn', 'joblib', 'optuna']
-dev  = ['pytest']
+dev  = ['pytest', 'gitpython']
 
 [tools.setuptools.packages.find]
 where   = ['src']
