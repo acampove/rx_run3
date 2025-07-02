@@ -1,9 +1,12 @@
 '''
 Module containing MCScaler class
 '''
+from typing                 import cast
+
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
-from dmu.stats.fit_stats    import FitStats
+from dmu.generic            import hashing
+
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
 
