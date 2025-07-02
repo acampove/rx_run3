@@ -6,13 +6,15 @@ from typing                 import cast
 from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
 from dmu.generic            import hashing
+from dmu.workflow.cache     import Cache     as Wcache
+from dmu.generic            import utilities as gut
 
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
 
 log=LogStore.add_logger('rx_misid:ms_scaler')
 # ----------------------------------
-class MCScaler:
+class MCScaler(Wcache):
     '''
     Class meant to provide scale factor to extrapolate leakage and signal yields
     to misID control regions
@@ -30,6 +32,16 @@ class MCScaler:
         self._trigger = 'Hlt2RD_BuToKpEE_MVA_ext'
         self._project = 'RK'
         self._rdf     = self._get_rdf()
+
+        super().__init__(
+                out_path = 'mcscaler',
+                info     = [
+                    q2bin,
+                    sample,
+                    sig_reg,
+                    self._trigger,
+                    self._project,
+                    self._rdf.uid])
     # ----------------------------------
     def _get_rdf(self) -> RDataFrame:
         '''
@@ -135,6 +147,10 @@ class MCScaler:
 
         i.e. the ratio of yields of the component "x" in the signal region in data and in MC.
         '''
+        out_path = f'{self._out_path}/values.json'
+        if self._copy_from_cache():
+            log.info(f'Copying mc scales from cache: {out_path}')
+            return gut.load_json(out_path)
 
         nsig_mc, nctr_mc = self._get_stats()
         nsig_dt          = self._get_nsignal()
@@ -142,6 +158,8 @@ class MCScaler:
 
         log.info(f'Scale for {self._sample}: {scale:.3f}')
         res = nsig_mc, nctr_mc, scale
+        gut.dump_json(res, out_path)
+        self._cache()
 
         return res
 # ----------------------------------
