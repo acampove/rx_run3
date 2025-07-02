@@ -118,24 +118,8 @@ class MCScaler:
         control region
         '''
         # TODO: Need better interface to fitting code
+        log.error('Using zero entries for scaling, this needs to be implemented')
         return 0
-
-        obj  = FitStats(fit_dir=fit_dir)
-
-        if   self._sample == 'Bu_JpsiK_ee_eq_DPC':
-            if self._q2bin in ['low', 'high']:
-                log.info('Assuming no leakage from Jpsi sample in low and high q2bin')
-                return 0
-
-            poi = 'nBu_JpsiK_ee_eq_DPC'
-        elif self._sample == 'Bu_Kee_eq_btosllball05_DPC':
-            poi = 'nsig'
-        else:
-            raise ValueError(f'Invalid sample: {self._sample}')
-
-        nsig = obj.get_value(name=poi, kind='value')
-
-        return nsig
     # ----------------------------------
     def get_scale(self) -> tuple[int,int,float]:
         '''
