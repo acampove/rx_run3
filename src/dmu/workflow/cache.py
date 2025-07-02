@@ -138,12 +138,13 @@ class Cache:
                 log.debug(f'Skipping cache dir: {self._cache_dir}')
                 continue
 
-            log.debug(f'Deleting {path}')
+            # These will always be symbolic links
+            if not path.is_symlink():
+                log.warning(f'Found a non-symlink not deleting: {path}')
+                continue
 
-            if path.is_dir():
-                shutil.rmtree(path)
-            else:
-                path.unlink()
+            log.debug(f'Deleting {path}')
+            path.unlink()
     # ---------------------------
     def _copy_from_hashdir(self) -> None:
         '''
