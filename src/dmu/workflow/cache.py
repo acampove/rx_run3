@@ -24,6 +24,7 @@ class Cache:
     hash_dir : Subdirectory of out_dir, ${out_dir}/.cache/{hash}
                Where {hash} is a 10 alphanumeric representing the has of the inputs
     '''
+    _cache_root : str|None = None
     # ---------------------------
     def __init__(self, out_path : str, **kwargs):
         '''
@@ -32,11 +33,27 @@ class Cache:
         out_path: Path to directory where outputs will go
         kwargs  : Key word arguments symbolizing identity of inputs, used for hashing
         '''
-        self._out_path  = out_path
+        if Cache._cache_root is None:
+            raise ValueError('Caching directory not set')
+
+        self._out_path  = f'{Cache._cache_root}/{out_path}'
         self._dat_hash  = kwargs
 
         self._cache_dir = self._get_dir(kind='cache')
         self._hash_dir  : str
+    # ---------------------------
+    @classmethod
+    def set_cache_root(cls, root : str) -> None:
+        '''
+        Sets the path to the directory WRT which the _out_path_
+        will be placed
+        '''
+        if cls._cache_root is not None:
+            raise ValueError(f'Trying to set {root}, but already found {cls._cache_root}')
+
+        os.makedirs(root, exist_ok=True)
+
+        cls._cache_root = root
     # ---------------------------
     def _get_dir(
             self,
