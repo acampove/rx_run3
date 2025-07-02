@@ -27,7 +27,7 @@ def test_simple(q2bin : str, sample : str):
     '''
     Test over all samples and q2 bins
     '''
-    sig_reg = MisIdPdf.get_signal_cut(Data.version)
+    sig_reg = MisIdPdf.get_signal_cut()
 
     scl = MCScaler(
             q2bin  =q2bin,
