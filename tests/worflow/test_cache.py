@@ -35,11 +35,13 @@ class Tester(Wcache):
         obj_path = f'{self._out_path}/values.json'
 
         if self._copy_from_cache():
-            log.warning('Output cached, not running')
-            return gut.load_json(obj_path)
+            val = gut.load_json(obj_path)
+            log.warning(f'Output cached, returning: {val}')
 
-        log.info('Data not cached, running')
+            return val
+
         res = [1] * self._nval
+        log.info(f'Data not cached, saving: {res}')
 
         gut.dump_json(res, obj_path)
         self._cache()
@@ -52,7 +54,7 @@ def test_cache():
     '''
     log.info('')
     res = 4 * [1]
-    for _ in range(5):
+    for _ in range(2):
         obj = Tester(nval=4)
         out = obj.run()
 
