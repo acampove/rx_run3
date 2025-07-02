@@ -18,26 +18,21 @@ class Tester(Wcache):
     Testing class, produces outputs from simple inputs
     '''
     # -----------------------------------
-    def __init__(
-            self,
-            nval    : int,
-            out_dir : str):
+    def __init__(self, nval : int):
         '''
         nval, some integer used to produce output data
         '''
         super().__init__(
-                out_path=out_dir,
-                nval    =nval,
-                out_dir =out_dir)
+                out_path='Tester',
+                nval    =nval)
 
-        self._out_dir = out_dir
         self._nval    = nval
     # -----------------------------------
     def run(self) -> list[int]:
         '''
         Returns a list of 1's
         '''
-        obj_path = f'{self._out_dir}/values.json'
+        obj_path = f'{self._out_path}/values.json'
 
         if self._copy_from_cache():
             log.warning('Output cached, not running')
