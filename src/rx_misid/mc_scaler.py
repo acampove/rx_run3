@@ -141,6 +141,7 @@ class MCScaler:
         scale            = self._get_ratio(nsig_dt=nsig_dt, nsig_mc=nsig_mc)
 
         log.info(f'Scale for {self._sample}: {scale:.3f}')
+        res = nsig_mc, nctr_mc, scale
 
-        return nsig_mc, nctr_mc, scale
+        return res
 # ----------------------------------
