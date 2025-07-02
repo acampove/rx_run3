@@ -28,7 +28,7 @@ class SampleSplitter(Wcache):
         cfg     : Dictionary with configuration specifying how to split the samples
         '''
         super().__init__(
-                out_path = '/tmp/sample_splitter',
+                out_path = 'sample_splitter',
                 args     = [rdf.uid, hadron_id, is_bplus, cfg])
 
         self._b_id     = 521
