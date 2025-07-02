@@ -29,6 +29,7 @@ class MCScaler:
         self._sig_reg = sig_reg
         self._trigger = 'Hlt2RD_BuToKpEE_MVA_ext'
         self._project = 'RK'
+        self._rdf     = self._get_rdf()
     # ----------------------------------
     def _get_rdf(self) -> RDataFrame:
         '''
@@ -63,12 +64,8 @@ class MCScaler:
 
         return rdf
     # ----------------------------------
-    def _get_stats(self, rdf : RDataFrame) -> tuple[int,int]:
+    def _get_stats(self) -> tuple[int,int]:
         '''
-        Parameters
-        ---------------
-        rdf: ROOT DataFrame associated to MC for process that might leak to control region, e.g. signal, control
-
         Returns
         ---------------
         Tuple with yield in signal and control region
@@ -78,6 +75,7 @@ class MCScaler:
         sig_reg = self._sig_reg
         ctr_reg = f'({self._sig_reg}) == 0'
 
+        rdf     = self._rdf
         rdf_sig = rdf.Filter(sig_reg, 'Signal' )
         rdf_ctr = rdf.Filter(ctr_reg, 'Control')
 
@@ -138,8 +136,7 @@ class MCScaler:
         i.e. the ratio of yields of the component "x" in the signal region in data and in MC.
         '''
 
-        rdf              = self._get_rdf()
-        nsig_mc, nctr_mc = self._get_stats(rdf)
+        nsig_mc, nctr_mc = self._get_stats()
         nsig_dt          = self._get_nsignal()
         scale            = self._get_ratio(nsig_dt=nsig_dt, nsig_mc=nsig_mc)
 
