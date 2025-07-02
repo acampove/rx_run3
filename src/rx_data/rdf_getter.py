@@ -595,10 +595,8 @@ class RDFGetter:
         ------------
         Dataframe after optional filter
         '''
-        nentries = rdf.Count().GetValue()
-        nent     = RDFGetter._max_entries
-
-        if nent < 0 or nent > nentries:
+        nent = RDFGetter._max_entries
+        if nent < 0:
             return rdf
 
         # Append information on transformations
