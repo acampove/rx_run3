@@ -1,9 +1,7 @@
 '''
 Module holding MisIDDataset class
 '''
-import os
 import copy
-import multiprocessing
 
 import pandas                as pnd
 import dmu.generic.utilities as gut
@@ -71,19 +69,7 @@ class MisIDDataset:
         d_component = self._cfg['splitting']['samples']
         d_df        = {}
         for component, l_sample in d_component.items():
-            nsample  = len(l_sample)
-            if nsample == 1:
-                [sample] = l_sample
-
-                d_df[component] = self._make_dataframe(sample=sample)
-                continue
-
-            # For components that contain multiple samples e.g. Data
-            # This can be parallelized
-            log.info(f'Using {nsample} processes')
-            with multiprocessing.Pool(processes=nsample) as pool:
-                l_df = pool.map(self._make_dataframe, l_sample)
-
+            l_df            = [ self._make_dataframe(sample=sample) for sample in l_sample ]
             d_df[component] = pnd.concat(l_df)
 
         return d_df
