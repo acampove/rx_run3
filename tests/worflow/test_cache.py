@@ -88,3 +88,4 @@ def test_update():
         assert out == [1] * val
         log.info('')
 # -----------------------------------
+
