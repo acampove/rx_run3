@@ -48,39 +48,25 @@ class Tester(Wcache):
 # -----------------------------------
 def test_cache():
     '''
-    Simplest test
+    Tests that value is the correct one when using same inputs
     '''
-    res = None
-    odir= '/tmp/tests/dmu/workflow/cache/cache'
-
     log.info('')
+    res = 4 * [1]
     for _ in range(5):
-        obj = Tester(nval=10, out_dir=odir)
-        obj.run()
-
-        out = gut.load_json(path=f'{odir}/values.json')
-
-        if res is None:
-            res = out
-            continue
+        obj = Tester(nval=4)
+        out = obj.run()
 
         assert res == out
-
-        res = out
 # -----------------------------------
 def test_update():
     '''
-    Tests
+    Tests case where inputs change
     '''
-    odir = '/tmp/tests/dmu/workflow/cache/update'
-
     for val in range(10):
-        obj = Tester(nval=val, out_dir=odir)
-        obj.run()
-
-        out = gut.load_json(path=f'{odir}/values.json')
+        log.info(f'Testing with: {val}')
+        obj = Tester(nval=val)
+        out = obj.run()
 
         assert out == [1] * val
         log.info('')
 # -----------------------------------
-
