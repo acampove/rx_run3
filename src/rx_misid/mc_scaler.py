@@ -40,6 +40,7 @@ class MCScaler:
         gtr = RDFGetter(sample=self._sample, trigger=self._trigger)
         rdf = gtr.get_rdf()
         rdf = cast(RDataFrame, rdf)
+        uid = gtr.get_uid()
 
         d_sel = sel.selection(
                 trigger=self._trigger,
@@ -55,6 +56,10 @@ class MCScaler:
         if log.getEffectiveLevel() == 10:
             rep = rdf.Report()
             rep.Print()
+
+        # After selection uid of dataframe needs to be updated
+        uid     = hashing.hash_object(obj=[d_sel, uid])
+        rdf.uid = uid
 
         return rdf
     # ----------------------------------
