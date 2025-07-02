@@ -55,24 +55,6 @@ class MisIDDataset:
 
         return df
     # ---------------------------------
-    def _cache_data(self, sample : str, df : pnd.DataFrame) -> None:
-        '''
-        Saves data for later use, if hash found to be the same
-
-        Parameters
-        ------------
-        sample: Name of sample associated to data, Data, signal, leakage
-        df    : Pandas dataframe with entries
-        '''
-        ana_dir = os.environ['ANADIR']
-        mis_dir = self._cfg['output']
-        out_dir = f'{ana_dir}/{mis_dir}/data'
-        os.makedirs(out_dir, exist_ok=True)
-
-        out_path = f'{out_dir}/{sample}_{self._q2bin}.parquet'
-        log.info(f'Saving to: {out_path}')
-        df.to_parquet(out_path)
-    # ---------------------------------
     def get_data(self) -> dict[str,pnd.DataFrame]:
         '''
         Returns
@@ -103,9 +85,6 @@ class MisIDDataset:
                 l_df = pool.map(self._make_dataframe, l_sample)
 
             d_df[component] = pnd.concat(l_df)
-
-        for sample, df in d_df.items():
-            self._cache_data(sample=sample, df=df)
 
         return d_df
 # ---------------------------------
