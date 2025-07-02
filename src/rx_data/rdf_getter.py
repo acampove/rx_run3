@@ -295,7 +295,7 @@ class RDFGetter:
 
         log.debug(f'Building section from: {yaml_path}')
         with open(yaml_path, encoding='utf-8') as ifile:
-            d_data = yaml.safe_load(ifile)
+            d_data = yaml.load(ifile, Loader=yaml.CSafeLoader)
 
         l_path = []
         nopath = False
