@@ -77,24 +77,22 @@ class Tester(Wcache):
     # -----------------------------------
     def __init__(
             self,
-            nval    : int,
-            out_dir : str):
+            nval : int):
         '''
         nval, some integer used to produce output data
         '''
         super().__init__(
-                out_path=out_dir,
-                nval    =nval,
-                out_dir =out_dir)
+                out_path='Tester',
+                nval    =nval)
 
-        self._out_dir = out_dir
         self._nval    = nval
     # -----------------------------------
     def run(self) -> None:
         '''
         Returns a list of 1's
         '''
-        obj_path = f'{self._out_dir}/values.json'
+        # _out_path belongs to the base class
+        obj_path = f'{self._out_path}/values.json'
 
         if self._copy_from_cache():
             log.warning('Output cached, not running')
@@ -109,11 +107,11 @@ class Tester(Wcache):
         return res
 
 # This will set the root directory where cached data goes
-# The data will go to `/some/directory/tester`
+# The data will go to `/some/directory/Tester`
 # This has to be done ONCE and only ONCE.
 Wcache.set_cache_root(root='/some/directory')
 
-obj = Tester(nval=3, out_dir='tester')
+obj = Tester(nval=3)
 ...
 ```
 
