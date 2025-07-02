@@ -36,7 +36,7 @@ class SampleSplitter(Wcache):
         self._hadron_id= hadron_id
         self._cfg      = cfg
         self._l_kind   = ['PassFail', 'FailPass', 'FailFail']
-        self._rdf      = rdf 
+        self._rdf      = rdf
     # --------------------------------
     def _filter_rdf(self, rdf : RDataFrame) -> RDataFrame:
         bid = self._b_id if self._is_bplus else - self._b_id
