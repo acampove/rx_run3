@@ -10,6 +10,7 @@ import pprint
 import hashlib
 import fnmatch
 from importlib.resources import files
+from typing              import Any
 
 import yaml
 import dmu.generic.utilities as gut
@@ -91,7 +92,7 @@ class RDFGetter:
                                  'Hlt2RD_BuToKpMuMu_SameSign_MVA']
 
         self._rdf    : RDataFrame         # This is where the dataframe will be stored, prevents recalculation
-        self._d_info : dict[str,str] = {} # Used to store information related to transformations done to dataframe (e.g. Range), needed for hashing
+        self._d_info : dict[str,Any] = {} # Used to store information related to transformations done to dataframe (e.g. Range), needed for hashing
         self._l_path : list[str]     = [] # list of paths to all the ROOT files
         self._channel                = self._channel_from_trigger()
         self._initialize()
