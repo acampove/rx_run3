@@ -39,6 +39,7 @@ class MCScaler:
 
         gtr = RDFGetter(sample=self._sample, trigger=self._trigger)
         rdf = gtr.get_rdf()
+        rdf = cast(RDataFrame, rdf)
 
         d_sel = sel.selection(
                 trigger=self._trigger,
