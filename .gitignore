@@ -177,3 +177,4 @@ pyrightconfig.json
 *.png
 misid_output/
 *.svg
+*.prof
