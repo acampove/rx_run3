@@ -5,7 +5,6 @@ Module holding SampleSplitter class
 import pandas as pnd
 from ROOT                   import RDataFrame
 
-import dmu.pdataframe.utilities as put
 from dmu.rdataframe         import utilities as ut
 from dmu.logging.log_store  import LogStore
 from dmu.workflow.cache     import Cache     as Wcache
