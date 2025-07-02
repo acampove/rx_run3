@@ -31,6 +31,10 @@ class MCScaler:
         self._project = 'RK'
     # ----------------------------------
     def _get_rdf(self) -> RDataFrame:
+        '''
+        Returns dataframe after selection
+        uid attribute with unique identifier is attached
+        '''
         log.debug('Retrieving dataframe')
 
         gtr = RDFGetter(sample=self._sample, trigger=self._trigger)
