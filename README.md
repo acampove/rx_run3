@@ -126,6 +126,9 @@ Several hashed directories might exist, like in the diagram:
 
 ![](doc/images/cache_hash.png)
 
+**Important**: This class will also use the hash of the module where the `Test`
+class is defined. Thus, changes in the code or in the input data, will invalidate the hash.
+
 ## Silencing import messages
 
 To silence messages given by modules not in the user's control do:
