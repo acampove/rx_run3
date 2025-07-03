@@ -60,11 +60,24 @@ def _get_out_dir() -> str:
 
     return out_dir
 # --------------------------------------
-def _get_samples() -> dict:
-    with open(Data.samples_path, encoding='utf-8') as ifile:
-        d_data = yaml.safe_load(ifile)
+def _get_paths() -> list[str]:
+    '''
+    Returns paths to ROOT files for a given sampe
+    '''
+    path_wc= f'{Data.samples_path}/*.root'
+    l_path = glob.glob(path_wc)
+    npath  = len(l_path)
+    if npath == 0:
+        raise ValueError(f'Found no files in {path_wc}')
 
-    return d_data
+    return l_path
+# --------------------------------------
+def _get_samples() -> dict:
+    l_path = _get_paths()
+    splt   = PathSplitter(paths=l_path)
+    d_path = splt.split(nested=True)
+
+    return d_path
 # ----------------------------
 def _merge_paths(l_path : list[str]) -> None:
     sample_name = Data.sample_name.lower()
