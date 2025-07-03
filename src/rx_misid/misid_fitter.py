@@ -2,11 +2,13 @@
 Module with MisIDFitter class
 '''
 from dmu.stats.zfit          import zfit
-from zfit.core.interfaces    import ZfitData   as zdata
-from zfit.core.interfaces    import ZfitPDF    as zpdf
 from dmu.logging.log_store   import LogStore
 from dmu.stats.model_factory import ModelFactory
 from dmu.stats.fitter        import Fitter
+
+from zfit.core.interfaces    import ZfitData   as zdata
+from zfit.core.interfaces    import ZfitPDF    as zpdf
+from rx_misid.pdf_maker      import PDFMaker
 
 log=LogStore.add_logger('rx_misid:misid_fitter')
 # --------------------------------------------------
