@@ -57,10 +57,11 @@ class MisIDCalculator:
     def _get_sample(self, is_bplus : bool, hadron_id : str) -> pnd.DataFrame:
         sample  = self._cfg['input']['sample']
         trigger = self._cfg['input']['trigger']
+        project = self._cfg['input']['project']
 
         log.debug(f'Loading sample: {sample}/{trigger}')
 
-        obj     = RDFGetter(sample=sample, trigger=trigger)
+        obj     = RDFGetter(sample=sample, trigger=trigger, analysis=project)
         rdf     = obj.get_rdf()
         uid     = obj.get_uid()
         rdf,uid = self._filter_rdf(rdf=rdf, uid=uid)
