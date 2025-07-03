@@ -150,3 +150,22 @@ def test_reset_custom_selection():
     sel.reset_custom_selection()
     sel.set_custom_selection(d_cut={'bdt' : mva_cut})
 # --------------------------
+@pytest.mark.parametrize('sample', [
+    'Bu_Kee_eq_btosllball05_DPC',
+    'Bu_KplKplKmn_eq_sqDalitz_DPC',
+    'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
+def test_truth_matching(sample : str):
+    '''
+    Tests truth matching
+    '''
+    trigger = 'Hlt2RD_BuToKpEE_MVA_noPID'
+    gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
+    rdf = gtr.get_rdf()
+
+    cut = tm.get_truth(sample)
+    ini = rdf.Count().GetValue()
+    rdf.Filter(cut, 'truth match')
+    fin = rdf.Count().GetValue()
+
+    assert 20 * fin > ini
+# --------------------------
