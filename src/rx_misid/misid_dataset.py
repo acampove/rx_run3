@@ -53,8 +53,14 @@ class MisIDDataset:
 
         return df
     # ---------------------------------
-    def get_data(self) -> dict[str,pnd.DataFrame]:
+    def get_data(
+            self,
+            only_data : bool = False) -> dict[str,pnd.DataFrame]:
         '''
+        Parameters
+        ----------------
+        only_data: If False (default) will provide data and leakage components
+
         Returns
         ----------------
         Dictionary between component name (signal, control) and dataset in form of dataframe.
@@ -69,6 +75,10 @@ class MisIDDataset:
         d_component = self._cfg['splitting']['samples']
         d_df        = {}
         for component, l_sample in d_component.items():
+            if only_data and component != 'data':
+                log.debug(f'Skipping non-data {component}')
+                continue
+
             l_df            = [ self._make_dataframe(sample=sample) for sample in l_sample ]
             d_df[component] = pnd.concat(l_df)
 
