@@ -59,6 +59,14 @@ def _plot_scales(df : pnd.DataFrame, name : str, kind : str) -> None:
     plt.savefig(f'{out_dir}/{kind}.png')
     plt.close()
 # -----------------------------------
+def pytest_sessionstart():
+    '''
+    This will run before any test
+    '''
+    plt.style.use(mplhep.style.LHCb2)
+    _set_logs()
+    Wcache.set_cache_root(root='/tmp/misid/cache')
+# -----------------------------------
 def pytest_sessionfinish():
     '''
     Runs at the end
@@ -71,16 +79,6 @@ def pytest_sessionfinish():
 
         _plot_scales(df=df, name='simple', kind= 'scale')
         _plot_scales(df=df, name='simple', kind='ctr_dt')
-# -----------------------------------
-@pytest.fixture(autouse=True, scope='session')
-def initialize():
-    '''
-    This will run before any test
-    '''
-    _set_logs()
-    Wcache.set_cache_root(root='/tmp/misid/cache')
-
-    yield
 # -----------------------------------
 def _set_logs():
     LogStore.set_level('dmu:workflow:cache'   , 10)
