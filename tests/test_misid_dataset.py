@@ -4,7 +4,7 @@ Module meant to test MisIDDataset class
 
 import pytest
 
-from rx_data.rdf_getter     import RDFGetter
+from dmu.logging.log_store  import LogStore
 from rx_misid.misid_dataset import MisIDDataset
 
 # -----------------------------------------------
