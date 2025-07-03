@@ -58,6 +58,8 @@ class MisIDCalculator:
         sample  = self._cfg['input']['sample']
         trigger = self._cfg['input']['trigger']
 
+        log.debug(f'Loading sample: {sample}/{trigger}')
+
         obj     = RDFGetter(sample=sample, trigger=trigger)
         rdf     = obj.get_rdf()
         uid     = obj.get_uid()
