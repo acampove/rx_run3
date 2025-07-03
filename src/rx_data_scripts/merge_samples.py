@@ -82,6 +82,10 @@ def _merge_paths(l_path : list[str]) -> None:
         fm.AddFile(path, cpProgress=False)
 
     fm.OutputFile(out_path, 'RECREATE')
+    if Data.dry_run:
+        log.warning('Skipping merging step for dry run')
+        return
+
     success = fm.Merge()
     if not success:
         raise RuntimeError('Merge failed')
