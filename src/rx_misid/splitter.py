@@ -75,6 +75,15 @@ class SampleSplitter(Wcache):
         return cut_ss, cut_os
     # --------------------------------
     def _rdf_to_df(self, rdf : RDataFrame) -> pnd.DataFrame:
+        '''
+        Parameters
+        ---------------
+        rdf: ROOT dataframe
+
+        Returns
+        ---------------
+        Pandas dataframe with subset of columns
+        '''
         l_branch = self._cfg['branches']
         log.debug('Storing branches')
         data     = rdf.AsNumpy(l_branch)
