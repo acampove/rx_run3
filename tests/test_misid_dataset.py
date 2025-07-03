@@ -14,12 +14,19 @@ def _initialize():
     LogStore.set_level('rx_misid:misid_calculator' , 10)
     LogStore.set_level('rx_misid:misid_dataset'    , 10)
 # -----------------------------------------------
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+def test_with_leakage(q2bin : str):
+    '''
+    Returns all components, data and MC
+    '''
+    dst = MisIDDataset(q2bin=q2bin)
+    d_df= dst.get_data(only_data=False)
 # -----------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-def test_simple(q2bin : str):
+def test_only_data(q2bin : str):
     '''
     Simplest test
     '''
     dst = MisIDDataset(q2bin=q2bin)
-    d_df= dst.get_data()
+    d_df= dst.get_data(only_data=True)
 # -----------------------------------------------
