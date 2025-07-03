@@ -3,7 +3,8 @@ This file contains tests for MisIDFitter
 '''
 
 from dmu.stats.zfit         import zfit
-from rx_misid.misid_dataset import MisIDDataset
+from dmu.stats              import utilities  as sut
+from zfit.core.interfaces   import ZfitData   as zdata
 from rx_misid.misid_fitter  import MisIDFitter
 
 # ---------------------------------------------------
@@ -13,17 +14,18 @@ class Data:
     '''
     obs = zfit.Space('mass', limits=(4500, 7000))
 # ---------------------------------------------------
+def _get_toy_data() -> zdata:
+    pdf = sut.get_model(kind='s+b')
+    sam = pdf.create_sampler(n=1000)
+
+    return sam
+# ---------------------------------------------------
 def test_simple():
     '''
     Simplest test
     '''
     q2bin = 'low'
+    data  = _get_toy_data()
 
-    obj  = MisIDDataset(q2bin=q2bin)
-    d_df = obj.get_data(only_data=True)
-    df   = d_df['data']
-
-    data = zfit.data.Data.from_pandas(df=df, obs=Data.obs)
-
-    ftr  = MisIDFitter(data=data)
-    pdf  = ftr.get_pdf()
+    ftr   = MisIDFitter(data=data, q2bin=q2bin)
+    pdf   = ftr.get_pdf()
