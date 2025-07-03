@@ -43,8 +43,8 @@ def _get_config() -> dict:
 
     return cfg['splitting']
 # -------------------------------------------------------
-def _get_rdf():
-    gtr = RDFGetter(sample='DATA_24_MagUp_24c2', trigger='Hlt2RD_BuToKpEE_MVA_ext')
+def _get_rdf(sample : str, trigger : str, project : str):
+    gtr = RDFGetter(sample=sample, trigger=trigger, analysis=project)
     rdf = gtr.get_rdf()
     uid = gtr.get_uid()
     rdf.uid = uid
