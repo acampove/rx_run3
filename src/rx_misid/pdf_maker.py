@@ -44,7 +44,6 @@ class PDFMaker:
         df : Pandas dataframe with observable and weights
         obs: Observable used for the PDF
         '''
-
         print(df)
     # -----------------------------------------
     def get_pdf(self, obs : zobs) -> zpdf:
