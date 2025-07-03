@@ -26,6 +26,17 @@ class Data:
     trigger_name : str
     out_dir      : str
 # --------------------------------------
+def _initialize():
+    ana_dir= os.environ['ANADIR']
+    sam_dir= f'{ana_dir}/Data/{Data.proj}/main'
+    if Data.vers is None:
+        sam_dir = vmn.get_last_version(dir_path=sam_dir, version_only=False)
+    else:
+        sam_dir = f'{sam_dir}/{Data.vers}'
+
+    Data.samples_path = sam_dir
+    Data.out_dir      = _get_out_dir()
+# --------------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to merge ROOT files from list of samples')
     parser.add_argument('-p', '--proj' , type=str, help='Project associated to samples, e.g. rx'            , required=True)
@@ -89,6 +100,8 @@ def main():
     Starts here
     '''
     _parse_args()
+    _initialize()
+
     d_data = _get_samples()
     if Data.sample_name not in d_data:
         raise ValueError(f'Sample {Data.sample_name} not found')
