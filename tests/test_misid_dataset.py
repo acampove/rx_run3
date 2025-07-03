@@ -7,6 +7,13 @@ import pytest
 from dmu.logging.log_store  import LogStore
 from rx_misid.misid_dataset import MisIDDataset
 
+log = LogStore.add_logger('rx_misid:test_misid_dataset')
+# -----------------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('rx_misid:misid_calculator' , 10)
+    LogStore.set_level('rx_misid:misid_dataset'    , 10)
+# -----------------------------------------------
 # -----------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 def test_simple(q2bin : str):
