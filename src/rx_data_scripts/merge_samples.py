@@ -108,9 +108,13 @@ def main():
 
     d_data = _get_samples()
     if Data.sample_name not in d_data:
+        for sample in d_data:
+            log.info(sample)
         raise ValueError(f'Sample {Data.sample_name} not found')
 
     if Data.trigger_name not in d_data[Data.sample_name]:
+        for trigger in d_data[Data.sample_name]:
+            log.info(trigger)
         raise ValueError(f'Trigger {Data.trigger_name} not found for sample {Data.sample_name}')
 
     l_path = d_data[Data.sample_name][Data.trigger_name]
