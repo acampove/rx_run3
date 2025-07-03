@@ -185,9 +185,6 @@ class MisIdPdf:
 
         return data
     # ----------------------------------------
-    def _misid_from_fit(self, data : zdata) -> zpdf:
-        raise NotImplementedError('PDF from fits not implemented')
-    # ----------------------------------------
     def get_pdf(self, from_fits : bool = False) -> zpdf:
         '''
         Parameters
@@ -215,7 +212,8 @@ class MisIdPdf:
             return pdf
 
         log.info('Retrieving PDF from fits')
-        pdf = _misid_from_fit(data)
+        ftr = MisIDFitter(data=data)
+        pdf = ftr.get_pdf()
 
         return pdf
     # ----------------------------------------
