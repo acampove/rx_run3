@@ -1,18 +1,57 @@
 '''
 Module meant to test MisIDDataset class
 '''
+import os
 
 import pytest
+import pandas            as pnd
+import matplotlib.pyplot as plt
 
 from dmu.logging.log_store  import LogStore
 from rx_misid.misid_dataset import MisIDDataset
 
 log = LogStore.add_logger('rx_misid:test_misid_dataset')
 # -----------------------------------------------
+class Data:
+    '''
+    Class used to store attributes
+    '''
+    plot_dir = '/tmp/tests/rx_misid/misid_dataset/'
+# -----------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_misid:misid_calculator' , 10)
     LogStore.set_level('rx_misid:misid_dataset'    , 10)
+
+    os.makedirs(Data.plot_dir, exist_ok=True)
+# -----------------------------------------------
+def _plot_data(
+        name : str,
+        q2bin: str,
+        d_df : dict[str,pnd.DataFrame]) -> None:
+    '''
+    Parameters
+    ------------------
+    name: Name of test
+    d_df: dictionary between category name and dataframe
+    Plots data
+    '''
+    plt_dir = f'{Data.plot_dir}/{name}'
+    os.makedirs(plt_dir, exist_ok=True)
+
+    ax = None
+    for category, df in d_df.items():
+        ax = df['B_M_brem_track_2'].plot.hist(
+                range=(4500,7000),
+                bins=40,
+                histtype='step',
+                label=category,
+                ax=ax)
+
+    plt.legend()
+    plt.title(f'{q2bin}; {name}')
+    plt.savefig(f'{plt_dir}/{q2bin}.png')
+    plt.close()
 # -----------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 def test_with_leakage(q2bin : str):
