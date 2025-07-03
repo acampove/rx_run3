@@ -21,13 +21,15 @@ def _initialize():
     LogStore.set_level('rx_data:rdf_getter'       , 10)
     LogStore.set_level('rx_misid:misid_calculator', 10)
 # ------------------------------------
-@pytest.mark.parametrize('sample', ['Bu_KplKplKmn_eq_sqDalitz_DPC'])
+@pytest.mark.parametrize('sample', [
+    #'Bu_KplKplKmn_eq_sqDalitz_DPC',   # To be uncommented once MC be reprocessed
+    'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
 def test_simple(sample : str):
     '''
     Simplest test
     '''
     q2bin = 'central'
 
-    mkr = PDFMaker(sample=sample, q2bin=q2bin)
+    mkr = PDFMaker(sample=sample, q2bin=q2bin, trigger=Data.trigger)
     mkr.get_pdf(obs=Data.obs)
 # ------------------------------------
