@@ -177,7 +177,7 @@ def get_truth(event_type : Union[int,str]) -> str:
         # Lb p pi Jpsi(-> ee)
         cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 5122 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443'
     # -------------
-    elif event_type in ['12123001', '12123002', '12123003', '12123005']:
+    elif event_type in ['12123001', '12123002', '12123003', '12123005', 'Bu_Kee_eq_btosllball05_DPC']:
         # B+ -> K+ee
         cut= 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 521 && TMath::Abs(L2_MC_MOTHER_ID) == 521 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 521'
     elif event_type == '12123021':
