@@ -48,6 +48,17 @@ class Tester(Wcache):
 
         return res
 # -----------------------------------
+def test_cache_once():
+    '''
+    Will run once
+    '''
+    log.info('')
+    res = 4 * [1]
+    obj = Tester(nval=4)
+    out = obj.run()
+
+    assert res == out
+# -----------------------------------
 def test_cache():
     '''
     Tests that value is the correct one when using same inputs
