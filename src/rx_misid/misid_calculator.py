@@ -59,7 +59,7 @@ class MisIDCalculator:
         trigger = self._cfg['input']['trigger']
         project = self._cfg['input']['project']
 
-        log.debug(f'Loading sample: {sample}/{trigger}')
+        log.debug(f'Loading: {sample}/{trigger}/{project}')
 
         obj     = RDFGetter(sample=sample, trigger=trigger, analysis=project)
         rdf     = obj.get_rdf()
