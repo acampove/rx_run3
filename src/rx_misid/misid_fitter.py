@@ -56,6 +56,32 @@ class MisIDFitter:
 
         return pdf
     # --------------------------------------------------
+    def _get_mc_component(self, kind : str) -> zpdf|None:
+        '''
+        Parameters
+        ---------------
+        kind : Describes mc component, e.g. KKK Kpipi, signal
+        '''
+        if kind == 'kkk':
+            log.warning(f'Skipping {kind} component, due to bugged MC')
+            return None
+
+        if kind not in self._allowed_component:
+            for val in self._allowed_component:
+                log.info(val)
+            raise ValueError(f'Invalid component {kind}')
+
+        sample = self._allowed_component[kind]
+
+        mkr    = PDFMaker(
+                sample =sample,
+                q2bin  =self._q2bin,
+                trigger=self._trigger)
+
+        pdf    = mkr.get_pdf(obs=self._obs)
+
+        return pdf
+    # --------------------------------------------------
     def _get_model(self) -> zpdf:
         '''
         Returns model needed to fit mass distribution in control region
