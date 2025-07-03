@@ -354,6 +354,7 @@ l_flt = ['mu', 'sg']                    # Will mark these parameters as floating
 d_rep = {'mu' : 'scale', 'sg' : 'reso'} # Optional, will reparametrize for scale and resolution
 d_fix = {'al_cbl' : 3, 'nr_cbr' : 1}    # Optional, will fix two parameters whose names start with the keys
 mod   = ModelFactory(
+    preffix = 'pref',   # Preffix for parameter naming
     obs     = Data.obs, 
     l_pdf   = l_pdf, 
     l_shared= l_shr, 
