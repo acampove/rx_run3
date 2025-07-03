@@ -21,6 +21,16 @@ def test_with_leakage(q2bin : str):
     '''
     dst = MisIDDataset(q2bin=q2bin)
     d_df= dst.get_data(only_data=False)
+
+    assert len(d_df) == 3
+    assert 'data'    in d_df
+    assert 'signal'  in d_df
+    assert 'leakage' in d_df
+
+    _plot_data(
+            d_df =d_df,
+            q2bin=q2bin,
+            name ='with_leakage')
 # -----------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 def test_only_data(q2bin : str):
@@ -29,4 +39,12 @@ def test_only_data(q2bin : str):
     '''
     dst = MisIDDataset(q2bin=q2bin)
     d_df= dst.get_data(only_data=True)
+
+    assert len(d_df) == 1
+    assert 'data'    in d_df
+
+    _plot_data(
+            d_df =d_df,
+            q2bin=q2bin,
+            name ='no_leakage')
 # -----------------------------------------------
