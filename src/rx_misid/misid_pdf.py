@@ -16,6 +16,7 @@ from zfit.core.basepdf         import BasePDF          as zpdf
 from zfit.core.interfaces      import ZfitSpace        as zobs
 from dmu.generic               import utilities        as gut
 from dmu.logging.log_store     import LogStore
+from rx_misid.misid_fitter     import MisIDFitter
 from rx_misid.misid_dataset    import MisIDDataset
 from rx_misid.mc_scaler        import MCScaler
 
@@ -212,7 +213,7 @@ class MisIdPdf:
             return pdf
 
         log.info('Retrieving PDF from fits')
-        ftr = MisIDFitter(data=data)
+        ftr = MisIDFitter(data=data, q2bin=self._q2bin)
         pdf = ftr.get_pdf()
 
         return pdf
