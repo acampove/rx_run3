@@ -3,12 +3,14 @@ Script used to merge ROOT files
 '''
 
 import os
+import glob
 import argparse
 import subprocess
 
-import yaml
 from ROOT                  import TFileMerger
 from dmu.logging.log_store import LogStore
+from dmu.generic           import version_management as vmn
+from rx_data.path_splitter import PathSplitter
 
 log = LogStore.add_logger('rx_data:merge_samples')
 # --------------------------------------
