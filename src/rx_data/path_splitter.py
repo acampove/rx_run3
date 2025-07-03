@@ -65,6 +65,29 @@ class PathSplitter:
 
         return d_renamed
     # ------------------------------------------
+    def _nest_structure(self, d_data : dict) -> dict:
+        '''
+        Takes a dictionary of the form:
+
+        (sample, trigger) : path_1
+
+        And nests it as:
+
+        sample:
+            trigger:
+                - path 1
+                - path 2
+                - path 3
+        '''
+        d_struc = {}
+        for (sample, line), l_path in d_data.items():
+            if sample not in d_struc:
+                d_struc[sample] = {}
+
+            d_struc[sample][line] = l_path
+
+        return d_struc
+    # ------------------------------------------
     def split(
             self,
             nested : bool = False) -> dict[tuple[str,str],list[str]]:
@@ -108,27 +131,4 @@ class PathSplitter:
             d_info_path = self._nest_structure(d_data = d_info_path)
 
         return d_info_path
-    # ------------------------------------------
-    def _nest_structure(self, d_data : dict) -> dict:
-        '''
-        Takes a dictionary of the form:
-
-        (sample, trigger) : path_1
-
-        And nests it as:
-
-        sample:
-            trigger:
-                - path 1
-                - path 2
-                - path 3
-        '''
-        d_struc = {}
-        for (sample, line), l_path in d_data.items():
-            if sample not in d_struc:
-                d_struc[sample] = {}
-
-            d_struc[sample][line] = l_path
-
-        return d_struc
 # ------------------------------------------
