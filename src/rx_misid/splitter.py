@@ -17,11 +17,12 @@ class SampleSplitter(Wcache):
     based on a configuration
     '''
     # --------------------------------
-    def __init__(self,
-                 rdf      : RDataFrame,
-                 hadron_id: str,
-                 is_bplus : bool,
-                 cfg      : dict):
+    def __init__(
+            self,
+            rdf      : RDataFrame,
+            hadron_id: str,
+            is_bplus : bool,
+            cfg      : dict):
         '''
         rdf     : Input dataframe with data to split, It should have attached a `uid` attribute, the unique identifier
         is_bplus: True if the sam ple that will be returned will contain B+ mesons, false for B-
