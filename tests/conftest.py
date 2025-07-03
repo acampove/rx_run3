@@ -21,6 +21,9 @@ def pytest_sessionfinish(session, exitstatus):
     '''
     plt.style.use(mplhep.style.LHCb2)
 
+    if 'selection' not in col.Collector.data:
+        return
+
     df = col.Collector.data['selection']
     _plot_selection(df = df)
 # ------------------------------
