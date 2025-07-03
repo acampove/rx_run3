@@ -153,14 +153,26 @@ class MisIdPdf:
 
         return pdf
     # ----------------------------------------
-    def get_data(self, kind : str = 'zfit') -> pnd.DataFrame|zdata:
+    def get_data(
+            self,
+            kind      : str  = 'zfit',
+            only_data : bool = False) -> pnd.DataFrame|zdata:
         '''
-        Returns data used to make KDE
+        Parameters
+        ----------------------
+        kind      : zfit (default) provides a zfit data object, pandas provides a dataframe
+        only_data : If False, it will provide dataset with both:
+                - Leakage: With negative, properly normalized weights
+                - Data:  With weights of 1
 
-        kind: zfit (default) provides a zfit data object, pandas provides a dataframe
+                Otherwise it will provide only data
+
+        Returns:
+        ----------------------
+        Data used to make KDE
         '''
         obj  = MisIDDataset(q2bin=self._q2bin)
-        d_df = obj.get_data()
+        d_df = obj.get_data(only_data=only_data)
 
         d_df = { sample : self._preprocess_df(df, sample) for sample, df in d_df.items() }
         df   = self._add_samples(d_df)
