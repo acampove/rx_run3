@@ -128,10 +128,15 @@ class Cache:
                 shutil.copytree(source, self._hash_dir)
             else:
                 shutil.copy2(source, self._hash_dir)
+
+        self._delete_from_output(only_links=False)
+        self._copy_from_hashdir()
     # ---------------------------
-    def _delete_from_output(self) -> None:
+    def _delete_from_output(self, only_links : bool = True) -> None:
         '''
         Delete all objects from _out_path directory, except for `.cache`
+
+        only_links: If true will only delete links 
         '''
         for path in Path(self._out_path).iterdir():
             if str(path) == self._cache_dir:
@@ -139,7 +144,7 @@ class Cache:
                 continue
 
             # These will always be symbolic links
-            if not path.is_symlink():
+            if only_links and not path.is_symlink():
                 log.warning(f'Found a non-symlink not deleting: {path}')
                 continue
 
