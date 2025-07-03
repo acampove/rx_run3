@@ -70,15 +70,15 @@ def _plot_pide(
         name    : str,
         q2bin   : str,
         plt_dir : str):
-    ax = None
+
     for category, df in d_df.items():
-        ax = df[var].plot.hist(
+        plt.hist(
+                df[var],
                 range   = (-2, 13),
                 bins    = 40,
                 histtype= 'step',
-                weights = df['weights'],
-                label   = category,
-                ax      = ax)
+                weights = df['weight'],
+                label   = category)
 
     plt.legend()
     plt.title(f'{q2bin}; {name}; {var}')
