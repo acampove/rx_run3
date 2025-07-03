@@ -36,9 +36,20 @@ def _plot_data(
     d_df: dictionary between category name and dataframe
     Plots data
     '''
+    # B_M_brem_track_2  block   L1_PID_E   L2_PID_E  ...  hadron  log10(L1_TRACK_PT)  log10(L2_TRACK_PT)  bmeson
+
     plt_dir = f'{Data.plot_dir}/{name}'
     os.makedirs(plt_dir, exist_ok=True)
 
+    _plot_mass(d_df=d_df, name=name, q2bin=q2bin, plt_dir=plt_dir)
+    _plot_pide(d_df=d_df, name=name, q2bin=q2bin, plt_dir=plt_dir, var='L1_PID_E')
+    _plot_pide(d_df=d_df, name=name, q2bin=q2bin, plt_dir=plt_dir, var='L2_PID_E')
+# -----------------------------------------------
+def _plot_mass(
+        d_df    : dict[str,pnd.DataFrame],
+        name    : str,
+        q2bin   : str,
+        plt_dir : str):
     ax = None
     for category, df in d_df.items():
         ax = df['B_M_brem_track_2'].plot.hist(
@@ -50,7 +61,27 @@ def _plot_data(
 
     plt.legend()
     plt.title(f'{q2bin}; {name}')
-    plt.savefig(f'{plt_dir}/{q2bin}.png')
+    plt.savefig(f'{plt_dir}/mass_{q2bin}.png')
+    plt.close()
+# -----------------------------------------------
+def _plot_pide(
+        d_df    : dict[str,pnd.DataFrame],
+        var     : str,
+        name    : str,
+        q2bin   : str,
+        plt_dir : str):
+    ax = None
+    for category, df in d_df.items():
+        ax = df[var].plot.hist(
+                range=(-10,10),
+                bins=40,
+                histtype='step',
+                label=category,
+                ax=ax)
+
+    plt.legend()
+    plt.title(f'{q2bin}; {name}; {var}')
+    plt.savefig(f'{plt_dir}/{var}_{q2bin}.png')
     plt.close()
 # -----------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
