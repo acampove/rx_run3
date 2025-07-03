@@ -28,6 +28,7 @@ splitting:
       - DATA_24_MagDown_24c4
   branches: # all these branches will be picked in the dataframe
     - B_M_brem_track_2
+    - B_Mass_smr
     - block
     - L1_PID_E
     - L2_PID_E
