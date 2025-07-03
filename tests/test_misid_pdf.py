@@ -78,7 +78,7 @@ def _plot_pdf(pdf  : zpdf,
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 def test_minimal_pass_fail(q2bin : str):
     '''
-    Tests PDF creation only, needed for benchmarking 
+    Tests PDF creation only, needed for benchmarking
     '''
 
     obj = MisIdPdf(obs=Data.obs, q2bin=q2bin)
