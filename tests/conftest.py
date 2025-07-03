@@ -4,7 +4,6 @@ Also pytest functions intended to be run after tests
 '''
 import os
 
-import pytest
 import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
@@ -71,8 +70,6 @@ def pytest_sessionfinish():
     '''
     Runs at the end
     '''
-    plt.style.use(mplhep.style.LHCb2)
-
     if 'simple' in DataCollector.d_df:
         df = DataCollector.d_df['simple']
         df['ctr_dt'] = df['scale'] * df['ctr_mc']
