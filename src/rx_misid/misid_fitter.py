@@ -31,9 +31,16 @@ class MisIDFitter:
         data: Zfit dataset representing data in the control (by PID) region
         q2bin: q2 bin, e.g. central
         '''
-        self._obs  = data.space
-        self._data = data
-        self._q2bin= q2bin
+        self._obs     = data.space
+        self._data    = data
+        self._q2bin   = q2bin
+        self._trigger = 'Hlt2RD_BuToKpEE_MVA_noPID'
+
+        self._allowed_component = {
+                'signal' : 'Bu_Kee_eq_btosllball05_DPC',
+                'leakage': 'Bu_JpsiK_ee_eq_DPC',
+                'kkk'    : 'Bu_KplKplKmn_eq_sqDalitz_DPC',
+                'kpipi'  : 'Bu_piplpimnKpl_eq_sqDalitz_DPC'}
     # --------------------------------------------------
     def _get_combinatorial(self) -> zpdf:
         obj  = ModelFactory(
