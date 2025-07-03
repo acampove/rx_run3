@@ -73,11 +73,12 @@ def _plot_pide(
     ax = None
     for category, df in d_df.items():
         ax = df[var].plot.hist(
-                range=(-10,10),
-                bins=40,
-                histtype='step',
-                label=category,
-                ax=ax)
+                range   = (-2, 13),
+                bins    = 40,
+                histtype= 'step',
+                weights = df['weights'],
+                label   = category,
+                ax      = ax)
 
     plt.legend()
     plt.title(f'{q2bin}; {name}; {var}')
