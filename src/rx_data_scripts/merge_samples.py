@@ -18,22 +18,28 @@ class Data:
     '''
     Class used to share attributes
     '''
+    dry_run      : bool
     samples_path : str
+    proj         : str
+    vers         : str|None
     sample_name  : str
     trigger_name : str
     out_dir      : str
 # --------------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to merge ROOT files from list of samples')
-    parser.add_argument('-p', '--path' , type=str, help='Path to file storing lists of samples', required=True)
-    parser.add_argument('-s', '--samp' , type=str, help='Name of sample to merge', required=True)
-    parser.add_argument('-t', '--trig' , type=str, help='Trigger'                , required=True)
+    parser.add_argument('-p', '--proj' , type=str, help='Project associated to samples, e.g. rx'            , required=True)
+    parser.add_argument('-s', '--samp' , type=str, help='Name of sample to merge, e.g. DATA_24_MagDown_24c3', required=True)
+    parser.add_argument('-t', '--trig' , type=str, help='Trigger, e.g Hlt2RD_BuToKpEE_MVA'                  , required=True)
+    parser.add_argument('-v', '--vers' , type=str, help='Version of ntuples, default latest')
+    parser.add_argument('-d', '--dryr' ,           help='If used, will do dry run'              , action='store_true')
     args = parser.parse_args()
 
-    Data.samples_path = args.path
+    Data.proj         = args.proj
+    Data.dry_run      = args.dryr
     Data.sample_name  = args.samp
     Data.trigger_name = args.trig
-    Data.out_dir      = _get_out_dir()
+    Data.vers         = args.vers
 # --------------------------------------
 def _get_out_dir() -> str:
     config_dir = os.path.dirname(Data.samples_path)
