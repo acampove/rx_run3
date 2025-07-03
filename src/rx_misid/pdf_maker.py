@@ -21,14 +21,17 @@ class PDFMaker:
     def __init__(
             self,
             sample : str,
+            trigger: str,
             q2bin  : str):
         '''
         Parameters
         ------------------
-        sample: e.g. Bu_KplKplKmn_eq_sqDalitz_DPC
-        q2bin : e.g. central
+        sample : e.g. Bu_KplKplKmn_eq_sqDalitz_DPC
+        trigger: HLT2 trigger, likely noPID trigger
+        q2bin  : e.g. central
         '''
         self._sample = sample
+        self._trigger= trigger
         self._q2bin  = q2bin
     # -----------------------------------------
     def _pdf_from_df(
@@ -57,6 +60,7 @@ class PDFMaker:
         cfg = gut.load_data(package='rx_misid_data', fpath = 'misid.yaml')
 
         cfg['input']['sample' ] = self._sample
+        cfg['input']['trigger'] = self._trigger
         cfg['input']['q2bin'  ] = self._q2bin
         cfg['input']['project'] = 'nopid'
 
