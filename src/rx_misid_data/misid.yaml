@@ -3,6 +3,7 @@
 
 input :
   trigger  : Hlt2RD_BuToKpEE_MVA_ext
+  project  : rx
 output  : misid 
 weights : &mp
   path : /home/acampove/external_ssd/Calibration/mis_id/v11
