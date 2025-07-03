@@ -61,10 +61,10 @@ class MisIDFitter:
         Returns model needed to fit mass distribution in control region
         '''
         pdf_cmb = self._get_combinatorial()
-        pdf_mi1 = self._get_misid(kind='kpipi')
-        pdf_mi2 = self._get_misid(kind= 'kkk')
-        pdf_sig = self._get_signal()
-        pdf_lek = self._get_leakage()
+        pdf_mi1 = self._get_mc_component(kind=  'kpipi')
+        pdf_mi2 = self._get_mc_component(kind=    'kkk')
+        pdf_sig = self._get_mc_component(kind= 'signal')
+        pdf_lek = self._get_mc_component(kind='leakage')
 
         l_pdf   = [ pdf_cmb, pdf_mi1, pdf_mi2, pdf_sig, pdf_lek ]
         l_pdf   = [ pdf for pdf in l_pdf if pdf is not None ]
