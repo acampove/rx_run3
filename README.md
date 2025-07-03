@@ -350,8 +350,17 @@ from dmu.stats.model_factory import ModelFactory
 
 l_pdf = ['cbr'] + 2 * ['cbl']
 l_shr = ['mu', 'sg']
-d_fix = {'al_cbl' : 3, 'nr_cbr' : 1} # This is optional and will fix two parameters whose names start with the keys
-mod   = ModelFactory(obs = Data.obs, l_pdf = l_pdf, l_shared=l_shr, d_fix=d_fix)
+l_flt = ['mu', 'sg']                    # Will mark these parameters as floating for the fit done afterwards
+d_rep = {'mu' : 'scale', 'sg' : 'reso'} # Optional, will reparametrize for scale and resolution
+d_fix = {'al_cbl' : 3, 'nr_cbr' : 1}    # Optional, will fix two parameters whose names start with the keys
+mod   = ModelFactory(
+    obs     = Data.obs, 
+    l_pdf   = l_pdf, 
+    l_shared= l_shr, 
+    l_float = l_float,
+    l_rep   = l_rep,    # Optional
+    l_fix   = d_fix)    # Optional
+
 pdf   = mod.get_pdf()
 ```
 
