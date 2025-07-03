@@ -164,8 +164,11 @@ def test_truth_matching(sample : str):
 
     cut = tm.get_truth(sample)
     ini = rdf.Count().GetValue()
-    rdf.Filter(cut, 'truth match')
+    rdf = rdf.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
+
+    rep = rdf.Report()
+    rep.Print()
 
     assert 20 * fin > ini
 # --------------------------
