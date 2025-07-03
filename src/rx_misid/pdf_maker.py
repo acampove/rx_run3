@@ -56,8 +56,9 @@ class PDFMaker:
         '''
         cfg = gut.load_data(package='rx_misid_data', fpath = 'misid.yaml')
 
-        cfg['input']['sample'] = self._sample
-        cfg['input']['q2bin' ] = self._q2bin
+        cfg['input']['sample' ] = self._sample
+        cfg['input']['q2bin'  ] = self._q2bin
+        cfg['input']['project'] = 'nopid'
 
         obj = MisIDCalculator(cfg=cfg)
         df  = obj.get_misid()
