@@ -57,7 +57,18 @@ class MisIDCalculator:
 
         return d_sel
     # -----------------------------
-    def _get_sample(self, is_bplus : bool, hadron_id : str) -> pnd.DataFrame:
+    def _get_sample(self, arg : tuple[bool,str]) -> pnd.DataFrame:
+        '''
+        Method in charge of steering:
+
+        - Reading of data
+        - Splitting 
+        - Weighting
+
+        This method needs to take one argument to be used with multiprocessing
+        '''
+        is_bplus, hadron_id = arg
+
         sample  = self._cfg['input']['sample']
         trigger = self._cfg['input']['trigger']
         project = self._cfg['input']['project']
