@@ -38,7 +38,7 @@ def _get_config() -> dict:
 # ---------------------------------
 def _get_sample(name : str) -> str:
     if name == 'data':
-        return 'DATA_24_MagUp_24c1'
+        return 'DATA_24_MagUp_24c3'
 
     if name == 'signal':
         return 'Bu_Kee_eq_btosllball05_DPC'
