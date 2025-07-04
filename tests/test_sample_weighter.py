@@ -36,6 +36,36 @@ def _initialize():
     LogStore.set_level('rx_misid:weighter', 10)
     os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
+def _validate_weights(df : pnd.DataFrame, lep : str) -> None:
+    df     = df[df['weight'] < 1.0]
+
+    arr_pt = df[f'{lep}_TRACK_PT' ].to_numpy()
+    arr_et = df[f'{lep}_TRACK_ETA'].to_numpy()
+    arr_wt = df['weight'          ].to_numpy()
+
+    arr_zr = arr_wt[arr_wt < 1e-6]
+    nzeros = len(arr_zr)
+    log.info(f'Zeroes= {nzeros}')
+
+    _, (ax1, ax2, ax3) = plt.subplots(ncols=3, figsize=(20, 7))
+
+    ax1.hist2d(arr_et, arr_pt, bins=50, cmap='viridis', vmin=0, vmax=60)
+    ax1.set_xlabel(r'$\eta$')
+    ax1.set_ylabel(r'$p_T$')
+    ax1.set_title('Unweighted')
+
+    ax2.hist2d(arr_et, arr_pt, bins=50, cmap='viridis', vmin=0, vmax=None, weights=arr_wt)
+    ax2.set_xlabel(r'$\eta$')
+    ax2.set_ylabel(r'$p_T$')
+    ax2.set_title('Weighted')
+
+    ax3.hist(arr_wt, bins=200, range=(0, 1))
+    #ax3.set_yscale('log')
+    ax3.set_xlabel('Weights')
+
+    plt.tight_layout()
+    plt.savefig(f'{Data.out_dir}/{lep}.png')
+# -------------------------------------------------------
 def _get_config() -> dict:
     cfg_path = files('rx_misid_data').joinpath('misid.yaml')
     cfg_path = str(cfg_path)
@@ -70,4 +100,5 @@ def test_simple():
     df  = wgt.get_weighted_data()
 
     _validate_weights(df=df, lep='L1')
+    _validate_weights(df=df, lep='L2')
 # ----------------------------
