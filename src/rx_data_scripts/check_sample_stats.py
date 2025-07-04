@@ -2,76 +2,92 @@
 Script used to print statistics on files stored in cluster
 '''
 import os
+import glob
 import argparse
-import pandas   as pnd
 
-import yaml
+import pandas   as pnd
+from ap_utilities.decays import utilities          as aput
+from dmu.generic         import version_management as vmn
+from rx_data             import utilities          as dut
+
 # --------------------------------------
 class Data:
     '''
     Class used to share attributes
     '''
-    samples_path : str
+    project : str
 # --------------------------------------
 def _parse_args():
-    parser = argparse.ArgumentParser(description='Script used to print statistics on files store in cluster')
-    parser.add_argument('-p', '--path' , type=str, help='Path to file storing lists of samples', required=True)
+    parser = argparse.ArgumentParser(description='Script used to print statistics on files stored in cluster')
+    parser.add_argument('-p', '--project', type=str, help='Path to file storing lists of samples', required=True)
     args = parser.parse_args()
 
-    Data.samples_path = args.path
+    Data.project = args.project
 # --------------------------------------
-def _get_samples() -> dict:
-    with open(Data.samples_path, encoding='utf-8') as ifile:
-        d_data = yaml.safe_load(ifile)
+def _get_friend_stats(frnd_dir : str) -> dict[str,int]:
+    '''
+    Parameters
+    --------------------
+    directory with friend tree files
 
-    return d_data
+    Returns
+    --------------------
+    dictionary where:
+
+    key  : Name of sample
+    value: Number of files
+    '''
+    fpath_wc = f'{frnd_dir}/*.root'
+    vers_dir = vmn.get_last_version(frnd_dir, version_only=False)
+
+    fpath_wc = f'{vers_dir}/*.root'
+    l_fpath  = glob.glob(fpath_wc)
+    if len(l_fpath) == 0:
+        raise ValueError(f'No file found in {fpath_wc}')
+
+    d_sample= {}
+    for fpath in l_fpath:
+        sample, _ = dut.info_from_path(path=fpath)
+        sample    = aput.name_from_lower_case(sample)
+        if sample not in d_sample:
+            d_sample[sample] = 1
+        else:
+            d_sample[sample]+= 1
+
+    return d_sample
 # --------------------------------------
-def _size_from_paths(l_path : str) -> int:
-    l_size = [ os.path.getsize(path) / (1024 ** 2) for path in l_path ]
-    size   = sum(l_size)
+def _get_df() -> pnd.DataFrame:
+    '''
+    Returns dataframe with friend trees as columns
+    Samples as the index and the number of files in the cells
+    '''
+    ana_dir   = os.environ['ANADIR']
+    root_path = f'{ana_dir}/Data/{Data.project}'
+    l_frnd_dir= glob.glob(f'{root_path}/*')
 
-    return int(size)
-# --------------------------------------
-def _data_to_size(d_data : dict) -> pnd.DataFrame:
-    d_size = {'Sample' : [], 'Trigger' : [], 'Size' : []}
-    for sample in d_data:
-        for trigger in d_data[sample]:
-            l_path = d_data[sample][trigger]
-            size   = _size_from_paths(l_path)
+    data = {}
+    for frnd_dir in l_frnd_dir:
+        frnd = os.path.basename(frnd_dir)
+        data[frnd] = _get_friend_stats(frnd_dir=frnd_dir)
 
-            d_size['Sample' ].append(sample)
-            d_size['Trigger'].append(trigger)
-            d_size['Size'   ].append(size)
-
-    df = pnd.DataFrame(d_size)
-    df = df.sort_values(by='Size', ascending=False)
+    df = pnd.DataFrame.from_dict(data, orient='columns')
 
     return df
-# --------------------------------------
-def _add_total(df : pnd.DataFrame) -> pnd.DataFrame:
-    total_size      = df.Size.sum()
-    df.loc[len(df)] = ['Total', 'Any', total_size]
-
-    return df
-# --------------------------------------
-def _save_table(df : pnd.DataFrame, file_name : str) -> None:
-    df = _add_total(df)
-    with open(file_name, 'w', encoding='utf-8') as ofile:
-        text = df.to_markdown(index=False)
-        ofile.write(text)
 # --------------------------------------
 def main():
     '''
     Starts here
     '''
     _parse_args()
-    d_data = _get_samples()
-    df     = _data_to_size(d_data)
-    df_dt  = df[ df.Sample.str.startswith('DATA_')]
-    df_mc  = df[~df.Sample.str.startswith('DATA_')]
+    df = _get_df()
+    df = df.sort_index()
 
-    _save_table(df_dt, 'data.md')
-    _save_table(df_mc,   'mc.md')
+    pnd.set_option('display.max_rows'    , None)
+    pnd.set_option('display.max_columns' ,   10)
+    pnd.set_option('display.width'       , None)
+    pnd.set_option('display.max_colwidth', None)
+
+    print(df)
 # --------------------------------------
 if __name__ == '__main__':
     main()
