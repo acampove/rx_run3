@@ -63,36 +63,46 @@ def _validate_df(
     plt.savefig(f'{Data.out_dir}/{sample}_{mode}_{q2bin}.png')
     plt.close()
 # ---------------------------------
-@pytest.mark.parametrize('name', ['data', 'signal', 'leakage'])
-def test_sample(name : str):
+@pytest.mark.parametrize('name, mode',
+                         [('data'   , 'transfer' ),
+                          #------
+                          ('signal' , 'transfer' ),
+                          ('signal' , 'signal'   ),
+                          ('signal' , 'control'  ),
+                          #------
+                          ('control', 'transfer' ),
+                          ('control', 'signal'   ),
+                          ('control', 'control'  )])
+def test_sample(name : str, mode : str):
     '''
     Simplest example of misid calculator with different samples
     '''
+    q2bin = 'central'
+
     cfg                    = _get_config()
     cfg['input']['sample'] = _get_sample(name=name)
-    cfg['input']['q2bin' ] = 'central'
+    cfg['input']['q2bin' ] = q2bin
 
-    obj = MisIDCalculator(cfg=cfg)
+    obj = MisIDCalculator(cfg=cfg, mode=mode)
     df  = obj.get_misid()
 
-    _validate_df(df=df, sample=name)
+    _validate_df(df=df, sample=name, mode=mode, q2bin=q2bin)
 # ---------------------------------
-@pytest.mark.parametrize('sample', [
-    #'Bu_KplKplKmn_eq_sqDalitz_DPC',
-    'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
-def test_misid(sample : str):
+@pytest.mark.parametrize('q2bin' , ['low', 'central'])
+@pytest.mark.parametrize('mode'  , ['signal', 'control'])
+@pytest.mark.parametrize('sample', ['Bu_piplpimnKpl_eq_sqDalitz_DPC'])
+def test_misid(sample : str, mode : str, q2bin : str):
     '''
     Test calculator with misID samples, for noPID trigger
     '''
-
     cfg                     = _get_config()
     cfg['input']['sample' ] = sample
-    cfg['input']['q2bin'  ] = 'central'
+    cfg['input']['q2bin'  ] = q2bin
     cfg['input']['project'] = 'nopid'
     cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_noPID'
 
-    obj = MisIDCalculator(cfg=cfg)
+    obj = MisIDCalculator(cfg=cfg, mode=mode)
     df  = obj.get_misid()
 
-    _validate_df(df=df, sample=sample)
+    _validate_df(df=df, sample=sample, mode=mode, q2bin=q2bin)
 # ---------------------------------
