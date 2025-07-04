@@ -748,9 +748,8 @@ class RDFGetter:
             pprint.pprint(data)
             raise KeyError('Cannot access list of files from JSON config needed by FromSpec') from exc
 
-        nfiles = len(l_file)
-
-        d_config = {}
+        nfiles     = len(l_file)
+        d_config   = {}
         for ifile in range(nfiles):
             data_copy, fpath = RDFGetter._remove_all_but(data, ifile, main)
             cpath            = RDFGetter.get_tmp_path(identifier=str(ifile), data=data_copy)
