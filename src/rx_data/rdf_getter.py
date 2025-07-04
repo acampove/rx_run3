@@ -229,6 +229,7 @@ class RDFGetter:
         Same as input, but after filtering for not needed samples
         '''
         d_ftree_dir_flt = { ftree : ftree_dir for ftree, ftree_dir in d_ftree_dir.items() if not self._skip_ftree(ftree=ftree) }
+        d_ftree_dir_flt = dict(sorted(d_ftree_dir_flt.items()))
 
         if self._tree_name == 'DecayTree':
             return d_ftree_dir_flt
