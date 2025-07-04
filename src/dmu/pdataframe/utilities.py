@@ -68,3 +68,27 @@ def from_yaml(path : str) -> pnd.DataFrame:
 
     return df
 # -------------------------------------
+def dropna(df : pnd.DataFrame, max_frac : float = 0.02) -> pnd.DataFrame:
+    '''
+    Parameters
+    ----------------
+    df      : Pandas dataframe potentially with NaNs
+    max_frac: Maximum fraction of the data that can be dropped, will raise exception beyond
+    '''
+
+    ini = len(df)
+    df  = df.dropna()
+    fin = len(df)
+
+    if ini == fin:
+        log.debug('No NaNs were found')
+        return df
+
+    # If fewer elements survive the filter, raise
+    if fin < ini * (1 - max_frac):
+        raise ValueError(f'Too man NaNs were detected: {ini} --> {fin}')
+
+    log.info(f'Found NaNs: {ini} --> {fin}')
+
+    return df
+# -------------------------------------

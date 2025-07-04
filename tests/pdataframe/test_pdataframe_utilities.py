@@ -3,6 +3,7 @@ Module will hold test for pandas dataframes utilities
 '''
 import os
 import pytest
+import numpy
 import pandas as pnd
 
 import dmu.pdataframe.utilities as put
@@ -77,4 +78,24 @@ def test_to_from_yaml(yml_path : str):
     assert df_1.equals(df_2)
 
     os.unlink(yml_path)
+# --------------------------------------
+@pytest.mark.parametrize('nan_frac', [0.00, 0.01, 0.05])
+def test_dropna(nan_frac : float):
+    '''
+    Tests wrapper to dropna from Pandas
+    '''
+    arr  = numpy.random.rand(10_000)
+    mask = numpy.random.rand(10_000) < nan_frac
+    arr[mask] = numpy.nan
+    df   = pnd.DataFrame({'a' : arr})
+
+    if nan_frac < 0.02:
+        df   = put.dropna(df)
+
+        assert not df.isna().any().any()
+
+        return
+
+    with pytest.raises(ValueError):
+        df   = put.dropna(df)
 # --------------------------------------
