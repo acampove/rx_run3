@@ -22,12 +22,21 @@ class SampleWeighter:
     - Apply weights to datasets and return them
     '''
     # ------------------------------
-    def __init__(self, df : pnd.DataFrame, cfg : dict):
+    def __init__(
+            self,
+            df   : pnd.DataFrame,
+            mode : str,
+            cfg  : dict):
         '''
         df  : Pandas dataframe with columns 'hadron', 'bmeson' and 'kind'. Used to assign weights
+        mode: Controls what kind of weight is assigned to candidate; transfer, control or signal
         cfg : Dictionary storing configuration
         '''
         self._cfg = cfg
+        if mode not in ['transfer', 'control', 'signal']:
+            raise ValueError(f'Invalid weight kind: {mode}')
+
+        self._mode = mode
 
         self._varx : str
         self._vary : str
