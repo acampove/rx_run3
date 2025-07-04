@@ -2,7 +2,7 @@
 Module holding MisIDCalculator class
 '''
 
-from typing import cast
+from multiprocessing import Pool
 
 import pandas as pnd
 
