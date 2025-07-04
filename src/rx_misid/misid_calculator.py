@@ -28,11 +28,13 @@ class MisIDCalculator:
     Leakage
     '''
     # -----------------------------
-    def __init__(self, cfg : dict):
+    def __init__(self, cfg : dict, mode : str):
         '''
-        cfg: Dictionary with configuration
+        cfg : Dictionary with configuration
+        mode: Kind of weights needed for datasets, transfer, signal, control
         '''
         self._cfg = cfg
+        self._mode= mode
     # -----------------------------
     def _get_selection(self) -> dict[str,str]:
         '''
@@ -92,7 +94,7 @@ class MisIDCalculator:
         df       = splitter.get_samples()
 
         log.info('Applying weights')
-        weighter = SampleWeighter(df=df, cfg=self._cfg['weights'])
+        weighter = SampleWeighter(df=df, cfg=self._cfg['weights'], mode=self._mode)
         df       = weighter.get_weighted_data()
 
         df['hadron'] = hadron_id
