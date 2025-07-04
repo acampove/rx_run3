@@ -119,8 +119,15 @@ class ZFitPlotter:
 
         l_error=[]
         for i in range(nbins):
-            low =  values[i] - segs[i][0][1]
-            up  = -values[i] + segs[i][1][1]
+            seg = segs[i]
+            val = values[i]
+
+            try:
+                low =  val - seg[0][1]
+                up  = -val + seg[1][1]
+            except IndexError as exc:
+                raise IndexError(f'Cannot read the upper/lower errors, found {seg}') from exc
+
             l_error.append((low, up))
 
         plt.close(tmp_fig)
