@@ -49,10 +49,13 @@ def _get_sample(name : str) -> str:
     return name
 # ---------------------------------
 def _validate_df(df : pnd.DataFrame, sample : str) -> None:
-    ax = None
-    ax = df.plot.hist('B_Mass_smr'      , bins=50, histtype='step', range=(4500, 6000), ax=ax)
-    ax = df.plot.hist('B_M_brem_track_2', bins=50, histtype='step', range=(4500, 6000), ax=ax)
+    log.info(f'Validating {sample}')
 
+    plt.hist(df['B_Mass_smr'      ], bins=50, histtype='step', range=(4500, 6000), label=    'Smeared')
+    plt.hist(df['B_M_brem_track_2'], bins=50, histtype='step', range=(4500, 6000), label='Non-smeared')
+
+    plt.legend()
+    plt.title(sample)
     plt.savefig(f'{Data.out_dir}/{sample}.png')
     plt.close()
 # ---------------------------------
