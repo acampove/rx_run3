@@ -91,11 +91,22 @@ def test_data(hadron_id : str, is_bplus : bool):
     '''
     Tests splitting in data
     '''
+    sample= 'DATA_24_MagUp_24c2'
     log.info('')
-    rdf   = _get_rdf(sample='DATA_24_MagUp_24c2', trigger='Hlt2RD_BuToKpEE_MVA_ext')
-    cfg   = _get_config()
 
-    spl   = SampleSplitter(rdf=rdf, hadron_id=hadron_id, is_bplus=is_bplus, cfg=cfg)
+    rdf   = _get_rdf(
+            sample = sample,
+            trigger= 'Hlt2RD_BuToKpEE_MVA_ext',
+            project= 'rx')
+
+    cfg   = _get_config()
+    spl   = SampleSplitter(
+            rdf      = rdf,
+            sample   = sample,
+            hadron_id= hadron_id,
+            is_bplus = is_bplus,
+            cfg      = cfg)
+
     df    = spl.get_samples()
 
     log.info('Dataframe found, checking')
@@ -108,14 +119,22 @@ def test_mc_misid(hadron_id : str, is_bplus : bool):
     '''
     Tests splitting for misid MC samples
     '''
+    sample = 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
     log.info('')
+
     rdf   = _get_rdf(
-            sample ='Bu_KplKplKmn_eq_sqDalitz_DPC',
-            trigger='Hlt2RD_BuToKpEE_MVA_noPID',
-            project='nopid')
+            sample = sample,
+            trigger= 'Hlt2RD_BuToKpEE_MVA_noPID',
+            project= 'nopid')
 
     cfg   = _get_config()
-    spl   = SampleSplitter(rdf=rdf, hadron_id=hadron_id, is_bplus=is_bplus, cfg=cfg)
+    spl   = SampleSplitter(
+            rdf      = rdf,
+            sample   = sample,
+            hadron_id= hadron_id,
+            is_bplus = is_bplus,
+            cfg      = cfg)
+
     df    = spl.get_samples()
 
     log.info('Dataframe found, checking')
