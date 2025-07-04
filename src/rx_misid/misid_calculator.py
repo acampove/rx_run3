@@ -55,7 +55,7 @@ class MisIDCalculator:
         log.warning('Overriding selection')
         d_cut   = self._cfg['input']['selection']
         for name, expr in d_cut.items():
-            log.info(f'{name:<name}{expr}')
+            log.info(f'{name:<20}{expr}')
             d_sel[name] = expr
 
         return d_sel
