@@ -191,15 +191,14 @@ class ZFitPlotter:
         data_hist = data_hist.Weight()
         data_hist.fill(dat, weight=wgt)
 
-        _ = mplhep.histplot(
-            data_hist,
-            yerr=True,
-            color="black",
-            histtype="errorbar",
-            label=self._leg.get("Data", "Data"),
-            ax=ax,
-            xerr=self.dat_xerr
-        )
+        mplhep.histplot(
+                data_hist,
+                yerr     = True,
+                color    = 'black',
+                histtype = 'errorbar',
+                label    = self._leg.get('Data', 'Data'),
+                ax       = ax,
+                xerr     = self.dat_xerr)
     #----------------------------------------
     def _pull_hist(self, pdf_hist, nbins, data_yield, l_range=None):
         pdf_values= pdf_hist.values()
