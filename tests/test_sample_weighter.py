@@ -1,12 +1,14 @@
 '''
 Script holding functions needed to test SampleWeighter class
 '''
+import os
 from importlib.resources import files
 
 import yaml
 import numpy
 import pytest
-import pandas as pnd
+import matplotlib.pyplot as plt
+import pandas            as pnd
 from dmu.logging.log_store    import LogStore
 from rx_misid.sample_weighter import SampleWeighter
 
