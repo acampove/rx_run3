@@ -9,6 +9,7 @@ import pandas            as pnd
 import matplotlib.pyplot as plt
 
 from dmu.logging.log_store import LogStore
+from dmu.generic           import utilities as gut
 from dmu.workflow.cache    import Cache     as Wcache
 
 # -----------------------------------
@@ -65,6 +66,8 @@ def pytest_sessionstart():
     plt.style.use(mplhep.style.LHCb2)
     _set_logs()
     Wcache.set_cache_root(root='/tmp/misid/cache')
+
+    gut.TIMER_ON = True
 # -----------------------------------
 def pytest_sessionfinish():
     '''
