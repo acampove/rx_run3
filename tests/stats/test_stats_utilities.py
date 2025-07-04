@@ -193,3 +193,12 @@ def test_save_fit_param_refreeze():
             res    =res,
             fit_dir=f'{Data.fit_dir}/save_fit/parametric')
 #----------------------------------
+def test_name_from_obs():
+    '''
+    Tests retrieval of name from observable
+    '''
+    obs  = zfit.Space('xyz', limits=(0, 10))
+    name = sut.name_from_obs(obs=obs)
+
+    assert name == 'xyz'
+#----------------------------------

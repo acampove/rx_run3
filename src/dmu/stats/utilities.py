@@ -23,6 +23,7 @@ from dmu.logging.log_store  import LogStore
 import tensorflow as tf
 
 from zfit.core.interfaces   import ZfitData   as zdata
+from zfit.core.interfaces   import ZfitSpace  as zobs
 from zfit.core.interfaces   import ZfitPDF    as zpdf
 from zfit.core.parameter    import Parameter  as zpar
 from zfit.result            import FitResult  as zres
@@ -34,6 +35,19 @@ class Data:
     Data class
     '''
     weight_name = 'weight'
+#-------------------------------------------------------
+def name_from_obs(obs : zobs) -> str:
+    '''
+    Takes zfit observable, returns its name
+    It is assumed this is a 1D observable
+    '''
+    if not isinstance(obs.obs, tuple):
+        raise ValueError(f'Cannot retrieve name for: {obs}')
+
+    if len(obs.obs) != 1:
+        raise ValueError(f'Observable is not 1D: {obs.obs}')
+
+    return obs.obs[0]
 #-------------------------------------------------------
 # Check PDF
 #-------------------------------------------------------
