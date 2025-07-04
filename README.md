@@ -26,9 +26,9 @@ export ANADIR=/eos/lhcb/wg/RD/RX_run3
 
 preferably in `~/.bashrc`.
 
-# Accessing ntuples
+## Accessing ntuples
 
-Once 
+Once
 
 ```python
 from rx_data.rdf_getter     import RDFGetter
@@ -36,7 +36,7 @@ from rx_data.rdf_getter     import RDFGetter
 # This picks one sample for a given trigger
 # The sample accepts wildcards, e.g. `DATA_24_MagUp_24c*` for all the periods
 gtr = RDFGetter(
-    sample   ='DATA_24_Mag*_24c*', 
+    sample   ='DATA_24_Mag*_24c*',
     analysis = 'rx',                    # This is the default, could be nopid
     tree     = 'DecayTree'              # This is the default, could be MCDecayTre
     trigger  ='Hlt2RD_BuToKpMuMu_MVA')
@@ -56,9 +56,51 @@ In the case of the MVA friend trees the branches added would be `mva.mva_cmb` an
 
 Thus, one can easily extend the ntuples with extra branches without remaking them.
 
+## Checking what samples exist
+
+For this run:
+
+```bash
+check_sample_stats -p rx
+```
+which will print something like:
+
+|                                   |   mva |   main |   swp_cascade |   brem_track_2 |   swp_jpsi_misid |   hop |
+|:----------------------------------|------:|-------:|--------------:|---------------:|-----------------:|------:|
+| Bd_JpsiX_ee_eq_JpsiInAcc          |    54 |    108 |           108 |            108 |              108 |   108 |
+| Bd_Kstee_eq_btosllball05_DPC      |     6 |      6 |             6 |              6 |                6 |     6 |
+| Bd_Kstmumu_eq_btosllball05_DPC    |     8 |      8 |             8 |            nan |                8 |     8 |
+| Bs_JpsiX_ee_eq_JpsiInAcc          |    54 |    108 |           108 |            108 |              108 |   108 |
+| Bs_phiee_eq_Ball_DPC              |     5 |      5 |             5 |              5 |                5 |     5 |
+| Bu_JpsiK_ee_eq_DPC                |    14 |     28 |            28 |             28 |               28 |    28 |
+| Bu_JpsiK_mm_eq_DPC                |    37 |     37 |            37 |            nan |               37 |    37 |
+| Bu_JpsiPi_ee_eq_DPC               |     6 |      6 |             6 |              6 |                6 |     6 |
+| Bu_JpsiPi_mm_eq_DPC               |    10 |     10 |            10 |            nan |               10 |    10 |
+| Bu_JpsiX_ee_eq_JpsiInAcc          |    77 |    154 |           154 |            154 |              154 |   154 |
+| Bu_K1ee_eq_DPC                    |    10 |     10 |            10 |             10 |               10 |    10 |
+| Bu_K2stee_Kpipi_eq_mK1430_DPC     |    11 |     11 |            11 |             11 |               11 |    11 |
+| Bu_Kee_eq_btosllball05_DPC        |     6 |      6 |             6 |              6 |                6 |     6 |
+| Bu_Kmumu_eq_btosllball05_DPC      |     5 |      5 |             5 |            nan |                5 |     5 |
+| Bu_KplKplKmn_eq_sqDalitz_DPC      |   nan |      9 |           nan |            nan |              nan |   nan |
+| Bu_KplpiplKmn_eq_sqDalitz_DPC     |   nan |      9 |           nan |            nan |              nan |   nan |
+| Bu_Kstee_Kpi0_eq_btosllball05_DPC |    10 |     10 |            10 |             10 |               10 |    10 |
+| Bu_piplpimnKpl_eq_sqDalitz_DPC    |   nan |      9 |           nan |            nan |              nan |   nan |
+| Bu_psi2SK_ee_eq_DPC               |     6 |      6 |             6 |              6 |                6 |     6 |
+| DATA_24_MagDown_24c1              |     5 |      6 |             6 |              4 |                6 |     6 |
+| DATA_24_MagDown_24c2              |     5 |      6 |             6 |              4 |                6 |     6 |
+| DATA_24_MagDown_24c3              |     5 |      6 |             6 |              4 |                6 |     6 |
+| DATA_24_MagDown_24c4              |     5 |      6 |             6 |              4 |                6 |     6 |
+| DATA_24_MagUp_24c1                |     5 |      6 |             6 |              4 |                6 |     6 |
+| DATA_24_MagUp_24c2                |     5 |      6 |             6 |              4 |                6 |     6 |
+| DATA_24_MagUp_24c3                |     5 |      6 |             6 |              4 |                6 |     6 |
+| DATA_24_MagUp_24c4                |     5 |      6 |             6 |              4 |                6 |     6 |
+
+Where the rows represent samples and the columns represent the friend trees.
+The numbers are the number of ntuples.
+
 ## Unique identifiers
 
-In order to get a string that fully identifies the underlying sample, 
+In order to get a string that fully identifies the underlying sample,
 i.e. a hash, do:
 
 ```python
@@ -83,7 +125,7 @@ that should leave the MVA branches out of the dataframe.
 
 Given that this `RDFGetter` can be used across multiple modules, the safest way to
 add extra columns is by specifying their definitions once at the beggining of the
-process (i.e. the initializer function called within the main function). 
+process (i.e. the initializer function called within the main function).
 This is done with:
 
 ```python
