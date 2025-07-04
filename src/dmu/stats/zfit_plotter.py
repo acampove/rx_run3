@@ -145,6 +145,8 @@ class ZFitPlotter:
 
         if l_range is None:
             [dat, wgt] = dmat.T
+            self._check_data(dat=dat, wgt=wgt)
+
             return dat, wgt
 
         l_dat = []
@@ -160,7 +162,27 @@ class ZFitPlotter:
         dat_f = np.concatenate(l_dat)
         wgt_f = np.concatenate(l_wgt)
 
+        self._check_data(dat=dat_f, wgt=wgt_f)
+
         return dat_f, wgt_f
+    #----------------------------------------
+    def _check_data(
+            self,
+            dat : np.ndarray,
+            wgt : np.ndarray) -> None:
+        '''
+        Checks for empty data, etc
+
+        Parameters
+        ------------
+        Numpy arrays with data and weights
+        '''
+
+        if dat.shape != wgt.shape:
+            raise ValueError(f'Shapes or data and weights differ: {dat.shape}/{wgt.shape}')
+
+        if len(dat) == 0:
+            raise ValueError('Dataset is empty')
     #----------------------------------------
     def _plot_data(self, ax, nbins=100, l_range=None):
         dat, wgt  = self._get_range_data(l_range, blind=True)
