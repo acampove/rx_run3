@@ -93,7 +93,14 @@ class ZFitPlotter:
         list of errors associated to histogram filled with data
         '''
         dat, wgt  = self._get_range_data(l_range=l_range, blind=False)
-        data_hist = hist.Hist.new.Regular(nbins, self.lower, self.upper, name=self.obs.obs[0], underflow=False, overflow=False)
+        data_hist = hist.Hist.new.Regular(
+                nbins,
+                self.lower,
+                self.upper,
+                name       =self.obs.obs[0],
+                underflow  =False,
+                overflow   =False)
+
         data_hist = data_hist.Weight()
         data_hist.fill(dat, weight=wgt)
 
