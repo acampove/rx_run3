@@ -142,17 +142,13 @@ class MisIDCalculator:
 
         For a given kind of inputs, e.g (Data, signal, leakage)
         '''
-        df = None
-        for is_bplus in [True, False]:
-            for hadron_id in ['kaon', 'pion']:
-                part =self._get_sample(is_bplus=is_bplus, hadron_id=hadron_id)
-                if df is None:
-                    df = part
-                else:
-                    df = pnd.concat([df, part])
+        l_arg = [ (x, y) for x in [True,False] for y in ['kaon', 'pion'] ]
+        nproc = len(l_arg)
 
-        # These is no way df is None here
-        df = cast(pnd.DataFrame, df)
+        with Pool(processes=nproc) as pool:
+            l_df = pool.map(self._get_sample, l_arg)
+
+        df = pnd.concat(l_df)
 
         return df
 # -----------------------------
