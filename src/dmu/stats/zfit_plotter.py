@@ -100,7 +100,6 @@ class ZFitPlotter:
         tmp_fig, tmp_ax = plt.subplots()
         errorbars       = mplhep.histplot(
             data_hist,
-        plt.close(tmp_fig)
             yerr     =True,
             color    ='white',
             histtype ='errorbar',
@@ -117,6 +116,8 @@ class ZFitPlotter:
             low =  values[i] - segs[i][0][1]
             up  = -values[i] + segs[i][1][1]
             l_error.append((low, up))
+
+        plt.close(tmp_fig)
 
         return l_error
     #----------------------------------------
