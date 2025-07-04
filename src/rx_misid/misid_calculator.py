@@ -98,7 +98,7 @@ class MisIDCalculator:
         df['hadron'] = hadron_id
         df['bmeson'] = 'bplus' if is_bplus else 'bminus'
 
-        df = put.dropna(df)
+        df = put.dropna(df, max_frac=0.04)
 
         return df
     # -----------------------------
