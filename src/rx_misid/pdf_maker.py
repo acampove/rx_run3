@@ -61,7 +61,7 @@ class PDFMaker:
 
         return pdf, data
     # -----------------------------------------
-    def get_pdf(self, obs : zobs) -> tuple[zpdf,zdata]:
+    def get_pdf(self, obs : zobs) -> zpdf:
         '''
         Parameters
         ---------------
@@ -69,7 +69,7 @@ class PDFMaker:
 
         Returns
         ---------------
-        PDF and data that was used to get it
+        zfit PDF the zfit data is attached as `dat`
         '''
         cfg = gut.load_data(package='rx_misid_data', fpath = 'misid.yaml')
 
@@ -80,7 +80,8 @@ class PDFMaker:
 
         obj = MisIDCalculator(cfg=cfg)
         df  = obj.get_misid()
-        pdf = self._pdf_from_df(df=df, obs=obs)
+        pdf, dat = self._pdf_from_df(df=df, obs=obs)
+        pdf.dat  = dat
 
         return pdf
 # ------------------------------------------------
