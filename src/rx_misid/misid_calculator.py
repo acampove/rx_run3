@@ -137,21 +137,31 @@ class MisIDCalculator:
 
         return rdf, uid
     # -----------------------------
-    def get_misid(self) -> pnd.DataFrame:
     @gut.timeit
+    def get_misid(self, multi_proc : bool = False) -> pnd.DataFrame:
         '''
-        Returns pandas dataframe with weighted entries with, extra columns
+        Parameters
+        -------------------
+        multi_proc: If true will process four (2 charges x 2 hadron IDs) in parallel, default False
+        
+        Returns 
+        -------------------
+        pandas dataframe with weighted entries with, extra columns
         hadron : kaon or pion
         bmeson : bplus or bminus
 
         For a given kind of inputs, e.g (Data, signal, leakage)
         '''
         l_arg = [ (x, y) for x in [True,False] for y in ['kaon', 'pion'] ]
-        nproc = len(l_arg)
 
-        with Pool(processes=nproc) as pool:
-            l_df = pool.map(self._get_sample, l_arg)
+        if multi_proc:
+            nproc = len(l_arg)
+            with Pool(processes=nproc) as pool:
+                l_df = pool.map(self._get_sample, l_arg)
+        else:
+            l_df = [ self._get_sample(arg) for arg in l_arg ]
 
+        log.debug('Merging dataframes')
         df = pnd.concat(l_df)
 
         return df
