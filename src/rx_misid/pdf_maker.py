@@ -4,6 +4,7 @@ Module holding PIDWeighter class
 import pandas            as pnd
 
 from dmu.stats.zfit            import zfit
+from dmu.stats                 import utilities  as sut
 from dmu.generic               import utilities  as gut
 from dmu.logging.log_store     import LogStore
 
@@ -40,14 +41,25 @@ class PDFMaker:
     def _pdf_from_df(
             self,
             df : pnd.DataFrame,
-            obs : zobs) -> zpdf:
+            obs : zobs) -> tuple[zpdf,zdata]:
         '''
         Parameters
         ---------------
         df : Pandas dataframe with observable and weights
         obs: Observable used for the PDF
+
+        Returns
+        ---------------
+        Tuple with PDF and data that was used to make it
         '''
-        print(df)
+        obsname  = sut.name_from_obs(obs=obs)
+        arr_mass = df[obsname].to_numpy()
+        arr_wgt  = df['weight'].to_numpy()
+
+        data     = zfit.Data.from_numpy (obs=obs, array=arr_mass, weights=arr_wgt)
+        pdf      = zfit.pdf.KDE1DimFFT(data=data, obs=obs)
+
+        return pdf, data
     # -----------------------------------------
     def get_pdf(self, obs : zobs) -> zpdf:
         '''
