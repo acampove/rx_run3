@@ -87,7 +87,7 @@ def main():
     pnd.set_option('display.width'       , None)
     pnd.set_option('display.max_colwidth', None)
 
-    print(df)
+    print(df.to_markdown())
 # --------------------------------------
 if __name__ == '__main__':
     main()
