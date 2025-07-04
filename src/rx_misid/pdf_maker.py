@@ -61,7 +61,7 @@ class PDFMaker:
 
         return pdf, data
     # -----------------------------------------
-    def get_pdf(self, obs : zobs) -> zpdf:
+    def get_pdf(self, obs : zobs) -> tuple[zpdf,zdata]:
         '''
         Parameters
         ---------------
@@ -69,7 +69,7 @@ class PDFMaker:
 
         Returns
         ---------------
-        pdf: Fitted PDF
+        PDF and data that was used to get it
         '''
         cfg = gut.load_data(package='rx_misid_data', fpath = 'misid.yaml')
 
