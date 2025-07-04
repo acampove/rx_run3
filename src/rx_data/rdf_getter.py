@@ -306,13 +306,16 @@ class RDFGetter:
 
             nosamp = False
             try:
-                d_trigger     = d_data[sample]
-                l_path_sample = self._get_trigger_paths(
-                        d_trigger= d_trigger,
-                        ftree    = ftree,
-                        sample   = sample)
+                d_trigger = d_data[sample]
             except KeyError as exc:
-                raise KeyError(f'For friend tree {ftree}, cannot access {yaml_path}:{sample}/{self._trigger}') from exc
+                for sample in d_data:
+                    log.info(sample)
+                raise KeyError(f'Sample {sample} not found') from exc
+
+            l_path_sample = self._get_trigger_paths(
+                d_trigger= d_trigger,
+                ftree    = ftree,
+                sample   = sample)
 
             nsamp = len(l_path_sample)
             if nsamp == 0:
