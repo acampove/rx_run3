@@ -50,5 +50,7 @@ def test_simple(sample : str):
     q2bin = 'central'
 
     mkr = PDFMaker(sample=sample, q2bin=q2bin, trigger=Data.trigger)
-    mkr.get_pdf(obs=Data.obs)
+    pdf, dat = mkr.get_pdf(obs=Data.obs)
+
+    _check_pdf(pdf=pdf, data=dat)
 # ------------------------------------
