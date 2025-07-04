@@ -113,7 +113,6 @@ class ZFitPlotter:
             label    =None,
             ax       =tmp_ax)
 
-
         lines  = errorbars[0].errorbar[2]
         segs   = lines[0].get_segments()
         values = data_hist.values()
