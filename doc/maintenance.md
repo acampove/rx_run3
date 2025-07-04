@@ -1,3 +1,5 @@
+[TOC]
+
 ## Listing available triggers
 
 In order to see what triggers are present in the current version of the ntuples do:
