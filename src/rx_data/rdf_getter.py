@@ -375,7 +375,8 @@ class RDFGetter:
         value: Path to JSON config file, needed to build dataframe though FromSpec
         '''
         d_data = self._get_samples()
-        this_id= str(id(self))
+        this_id= os.getpid()
+        log.debug(f'This instance/process ID is: {this_id}')
 
         if not per_file:
             log.debug('Not splitting per file')
