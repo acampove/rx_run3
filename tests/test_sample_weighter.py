@@ -18,7 +18,8 @@ class Data:
     '''
     Data class
     '''
-    nentries = 10_000
+    out_dir  = '/tmp/tests/rx_misid/sample_weighter'
+    nentries = 100_000
 
     l_block = [
         1,
@@ -28,12 +29,12 @@ class Data:
         5,
         6,
         7,
-        8,
-            ]
+        8]
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_misid:weighter', 10)
+    os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
 def _get_config() -> dict:
     cfg_path = files('rx_misid_data').joinpath('misid.yaml')
