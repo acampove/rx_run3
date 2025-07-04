@@ -177,6 +177,36 @@ class SampleWeighter:
             log.info('')
     # ------------------------------
     def _get_candidate_weight(self, row : pnd.Series) -> float:
+        if self._mode == 'transfer':
+            return self._get_transfer_weight(row=row)
+
+        return self._get_efficiency(row=row)
+    # ------------------------------
+    def _get_efficiency(self, row : pnd.Series) -> float:
+        '''
+        Parameter
+        ---------------
+        row: Dataframe row holding candidate and tracks information
+
+        Returns
+        ---------------
+        Efficiency associated to either signal or control region
+        '''
+        is_sig = { 'signal' : True, 'control' : False }[self._mode]
+
+        eff1 = self._get_lepton_eff(lep='L1', row=row, is_sig=is_sig)
+        eff2 = self._get_lepton_eff(lep='L2', row=row, is_sig=is_sig)
+        eff  = eff1 * eff2
+
+        if 1 < eff:
+            log.warning(f'Returning 1.0 instead of efficiency: {eff:.3f}')
+            return 1.0
+
+        if eff < 0:
+            log.warning(f'Returning 0.0 instead of efficiency: {eff:.3f}')
+            return 0.0
+
+        return eff
     # ------------------------------
     def _get_transfer_weight(self, row : pnd.Series) -> float:
         '''
