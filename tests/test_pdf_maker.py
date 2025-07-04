@@ -21,11 +21,24 @@ class Data:
     '''
     obs     = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     trigger = 'Hlt2RD_BuToKpEE_MVA_noPID'
+    out_dir = '/tmp/tests/rx_misid/pdf_maker'
 # ------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_data:rdf_getter'       , 10)
     LogStore.set_level('rx_misid:misid_calculator', 10)
+
+    os.makedirs(Data.out_dir, exist_ok=True)
+# ------------------------------------
+def _check_pdf(pdf : zpdf, data : zdata) -> None:
+    '''
+    Take zfit pdf and validate it
+    '''
+    obj= ZFitPlotter(data=data, model=pdf)
+    obj.plot()
+
+    plt.savefig(f'{Data.out_dir}/pdf.png')
+    plt.close()
 # ------------------------------------
 @pytest.mark.parametrize('sample', [
     #'Bu_KplKplKmn_eq_sqDalitz_DPC',   # To be uncommented once MC be reprocessed
