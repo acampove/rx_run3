@@ -48,7 +48,8 @@ def to_yaml(df : pnd.DataFrame, path : str):
     Makes the directory path if not found and saves data in YAML file
     '''
     dir_path = os.path.dirname(path)
-    os.makedirs(dir_path, exist_ok=True)
+    if dir_path != '':
+        os.makedirs(dir_path, exist_ok=True)
 
     data = df.to_dict()
 
