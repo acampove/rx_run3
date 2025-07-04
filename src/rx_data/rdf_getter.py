@@ -375,17 +375,18 @@ class RDFGetter:
         value: Path to JSON config file, needed to build dataframe though FromSpec
         '''
         d_data = self._get_samples()
+        this_id= str(id(self))
 
         if not per_file:
             log.debug('Not splitting per file')
-            cfg_path = RDFGetter.get_tmp_path(identifier='full_sample', data=d_data)
+            cfg_path = RDFGetter.get_tmp_path(identifier=f'full_sample_{this_id}', data=d_data)
             with open(cfg_path, 'w', encoding='utf-8') as ofile:
                 json.dump(d_data, ofile, indent=4, sort_keys=True)
 
             return {'' : cfg_path}
 
         log.debug('Splitting per file')
-        return RDFGetter.split_per_file(data=d_data, main=self._main_tree)
+        return RDFGetter.split_per_file(data=d_data, main=self._main_tree, identifier=this_id)
     # ---------------------------------------------------
     def _get_samples(self) -> dict:
         '''
@@ -728,12 +729,16 @@ class RDFGetter:
         return rdf
     # ---------------------------------------------------
     @staticmethod
-    def split_per_file(data : dict, main : str) -> dict[str,str]:
+    def split_per_file(
+            data       : dict,
+            main       : str,
+            identifier : str = '') -> dict[str,str]:
         '''
         Parameters
         --------------------
-        data: Dictionary representing _spec_ needed to build ROOT dataframe with friend trees
-        main: Name of the main category, e.g. not the friend trees.
+        data      : Dictionary representing _spec_ needed to build ROOT dataframe with friend trees
+        main      : Name of the main category, e.g. not the friend trees.
+        identifier: Can be used to identify this set of config files.
 
         Returns
         --------------------
@@ -752,7 +757,7 @@ class RDFGetter:
         d_config   = {}
         for ifile in range(nfiles):
             data_copy, fpath = RDFGetter._remove_all_but(data, ifile, main)
-            cpath            = RDFGetter.get_tmp_path(identifier=str(ifile), data=data_copy)
+            cpath            = RDFGetter.get_tmp_path(identifier=f'{identifier}_{ifile:03}', data=data_copy)
             gut.dump_json(data_copy, cpath)
             d_config[fpath]  = cpath
 
