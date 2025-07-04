@@ -2,6 +2,8 @@
 Module holding MisIDCalculator class
 '''
 
+from typing import cast
+
 import pandas as pnd
 
 from ROOT                     import RDataFrame
@@ -120,6 +122,8 @@ class MisIDCalculator:
 
         For a given kind of inputs, e.g (Data, signal, leakage)
         '''
+        # These is no way df is None here
+        df = cast(pnd.DataFrame, df)
 
         df_k_bp =self._get_sample(is_bplus= True, hadron_id='kaon')
         df_k_bm =self._get_sample(is_bplus=False, hadron_id='kaon')
