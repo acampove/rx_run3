@@ -54,7 +54,7 @@ def to_yaml(df : pnd.DataFrame, path : str):
     data = df.to_dict()
 
     with open(path, 'w', encoding='utf-8') as ofile:
-        yaml.safe_dump(data, ofile)
+        yaml.dump(data, ofile, Dumper=yaml.CDumper)
 # -------------------------------------
 def from_yaml(path : str) -> pnd.DataFrame:
     '''
@@ -62,7 +62,7 @@ def from_yaml(path : str) -> pnd.DataFrame:
     Makes dataframe from it and returns it
     '''
     with open(path, encoding='utf-8') as ifile:
-        data = yaml.safe_load(ifile)
+        data = yaml.load(ifile, Loader=yaml.CSafeLoader)
 
     df = pnd.DataFrame(data)
 
