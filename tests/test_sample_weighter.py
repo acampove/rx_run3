@@ -36,7 +36,11 @@ def _initialize():
     LogStore.set_level('rx_misid:weighter', 10)
     os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
-def _validate_weights(df : pnd.DataFrame, lep : str) -> None:
+def _validate_weights(
+        df  : pnd.DataFrame,
+        mode: str,
+        lep : str) -> None:
+
     df     = df[df['weight'] < 1.0]
 
     arr_pt = df[f'{lep}_TRACK_PT' ].to_numpy()
@@ -60,11 +64,10 @@ def _validate_weights(df : pnd.DataFrame, lep : str) -> None:
     ax2.set_title('Weighted')
 
     ax3.hist(arr_wt, bins=200, range=(0, 1))
-    #ax3.set_yscale('log')
     ax3.set_xlabel('Weights')
 
     plt.tight_layout()
-    plt.savefig(f'{Data.out_dir}/{lep}.png')
+    plt.savefig(f'{Data.out_dir}/{mode}_{lep}.png')
 # -------------------------------------------------------
 def _get_config() -> dict:
     cfg_path = files('rx_misid_data').joinpath('misid.yaml')
