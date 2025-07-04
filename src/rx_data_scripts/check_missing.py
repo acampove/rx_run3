@@ -269,7 +269,7 @@ def _compare_against_main(
             continue
 
         if _is_muon_sample(l_path) and frn_name in Data.l_electron_samples:
-            log.warning(f'Skipping {sample} for {frn_name}')
+            log.debug(f'Skipping {sample} for {frn_name}')
             continue
 
         d_diff[sample] = l_path
