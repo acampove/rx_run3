@@ -41,8 +41,6 @@ def _validate_weights(
         mode: str,
         lep : str) -> None:
 
-    df     = df[df['weight'] < 1.0]
-
     arr_pt = df[f'{lep}_TRACK_PT' ].to_numpy()
     arr_et = df[f'{lep}_TRACK_ETA'].to_numpy()
     arr_wt = df['weight'          ].to_numpy()
@@ -63,7 +61,12 @@ def _validate_weights(
     ax2.set_ylabel(r'$p_T$')
     ax2.set_title('Weighted')
 
-    ax3.hist(arr_wt, bins=200, range=(0, 1))
+    if mode == 'transfer':
+        rng = 0, 1.00
+    else:
+        rng = 0, 0.01
+
+    ax3.hist(arr_wt, bins=200, range=rng)
     ax3.set_xlabel('Weights')
 
     plt.tight_layout()
@@ -89,6 +92,9 @@ def _get_dataframe() -> pnd.DataFrame:
     for lep in ['L1', 'L2']:
         df[f'{lep}_TRACK_PT' ] = numpy.random.uniform(550, 20_000, Data.nentries)
         df[f'{lep}_TRACK_ETA'] = numpy.random.uniform(1.6, 4.0, Data.nentries)
+
+    df = df[ df['L1_TRACK_PT'] < (30_000 - 5_000 * df['L1_TRACK_ETA']) ]
+    df = df[ df['L2_TRACK_PT'] < (30_000 - 5_000 * df['L2_TRACK_ETA']) ]
 
     return df
 # ----------------------------
