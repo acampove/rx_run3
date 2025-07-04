@@ -98,18 +98,18 @@ class ZFitPlotter:
         data_hist.fill(dat, weight=wgt)
 
         tmp_fig, tmp_ax = plt.subplots()
-        errorbars = mplhep.histplot(
+        errorbars       = mplhep.histplot(
             data_hist,
-            yerr=True,
-            color='white',
-            histtype="errorbar",
-            label=None,
-            ax=tmp_ax,
-        )
         plt.close(tmp_fig)
+            yerr     =True,
+            color    ='white',
+            histtype ='errorbar',
+            label    =None,
+            ax       =tmp_ax)
 
-        lines = errorbars[0].errorbar[2]
-        segs = lines[0].get_segments()
+
+        lines  = errorbars[0].errorbar[2]
+        segs   = lines[0].get_segments()
         values = data_hist.values()
 
         l_error=[]
