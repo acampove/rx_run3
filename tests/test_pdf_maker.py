@@ -37,7 +37,10 @@ def _check_pdf(pdf : zpdf, data : zdata) -> None:
     obj= ZFitPlotter(data=data, model=pdf)
     obj.plot()
 
-    plt.savefig(f'{Data.out_dir}/pdf.png')
+    plot_path = f'{Data.out_dir}/pdf.png'
+    log.info(f'Saving to: {plot_path}')
+
+    plt.savefig(plot_path)
     plt.close()
 # ------------------------------------
 @pytest.mark.parametrize('sample', [
@@ -50,7 +53,7 @@ def test_simple(sample : str):
     q2bin = 'central'
 
     mkr = PDFMaker(sample=sample, q2bin=q2bin, trigger=Data.trigger)
-    pdf, dat = mkr.get_pdf(obs=Data.obs)
+    pdf = mkr.get_pdf(obs=Data.obs)
 
-    _check_pdf(pdf=pdf, data=dat)
+    _check_pdf(pdf=pdf, data=pdf.dat)
 # ------------------------------------
