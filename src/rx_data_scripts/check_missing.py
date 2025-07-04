@@ -6,7 +6,7 @@ import os
 import re
 import glob
 import argparse
-from typing import Union
+from typing import Union, cast
 
 import yaml
 from dmu.generic                    import utilities          as gut
@@ -254,6 +254,7 @@ def _compare_against_main(
 
     # If whole sample is missing, add 'all'
     d_diff = { sample : 'all' for sample in l_diff if _should_exist(frn_name=frn_name, sample=main_sam[sample])}
+    d_diff = cast(dict[str,str|list[str]], d_diff)
 
     # Else check which files are missing
     s_both = s_main_sample & s_frnd_sample
