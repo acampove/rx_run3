@@ -14,20 +14,7 @@ for all the $R_X$ like analyses.
 To install this project run:
 
 ```bash
-pip install rx_data
-
-# The line below will upgrade it, in case new samples are available, the list of LFNs is part of the
-# project itself
-pip install --upgrade rx_data
-```
-
-The download would require a grid proxy, which can be made with:
-
-```bash
-. /cvmfs/lhcb.cern.ch/lib/LbEnv
-
-# This will create a 100 hours long proxy
-lhcb-proxy-init -v 100:00
+pip install git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_data.git
 ```
 
 ## Listing available triggers
@@ -40,6 +27,15 @@ list_triggers -v v1 -k rx
 # And this will save them to a yaml file
 list_triggers -v v1 -k rx -o triggers.yaml
 ```
+
+The code below assumes that all the data is in `ANADIR`. If you want to use the data
+in EOS do:
+
+```bash
+export ANADIR=/eos/lhcb/wg/RD/RX_run3
+```
+
+preferably in `~/.bashrc`.
 
 ## Downloading the ntuples
 
