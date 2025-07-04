@@ -48,15 +48,19 @@ def _get_sample(name : str) -> str:
 
     return name
 # ---------------------------------
-def _validate_df(df : pnd.DataFrame, sample : str) -> None:
-    log.info(f'Validating {sample}')
+def _validate_df(
+        df     : pnd.DataFrame,
+        sample : str,
+        q2bin  : str,
+        mode   : str) -> None:
+    log.info(f'Validating {sample} {q2bin} {mode}')
 
-    plt.hist(df['B_Mass_smr'      ], bins=50, histtype='step', range=(4500, 6000), label=    'Smeared')
-    plt.hist(df['B_M_brem_track_2'], bins=50, histtype='step', range=(4500, 6000), label='Non-smeared')
+    plt.hist(df['B_Mass_smr'      ], bins=50, histtype='step', range=(4500, 6000), weights=df['weight'], label=    'Smeared')
+    plt.hist(df['B_M_brem_track_2'], bins=50, histtype='step', range=(4500, 6000), weights=df['weight'], label='Non-smeared')
 
     plt.legend()
-    plt.title(sample)
-    plt.savefig(f'{Data.out_dir}/{sample}.png')
+    plt.title(f'{sample}; {mode}; {q2bin}')
+    plt.savefig(f'{Data.out_dir}/{sample}_{mode}_{q2bin}.png')
     plt.close()
 # ---------------------------------
 @pytest.mark.parametrize('name', ['data', 'signal', 'leakage'])
