@@ -78,8 +78,21 @@ class ZFitPlotter:
 
         return data
     #----------------------------------------
-    def _get_errors(self, nbins=100, l_range=None):
-        dat, wgt  = self._get_range_data(l_range, blind=False)
+    def _get_errors(
+            self,
+            nbins  : int = 100,
+            l_range: list[tuple[float,float]]|None = None) -> list[float]:
+        '''
+        Parameters
+        ---------------------
+        nbins  : Number of bins
+        l_range: List of ranges where data should be picked, if None, will pick full range
+
+        Returns
+        ---------------------
+        list of errors associated to histogram filled with data
+        '''
+        dat, wgt  = self._get_range_data(l_range=l_range, blind=False)
         data_hist = hist.Hist.new.Regular(nbins, self.lower, self.upper, name=self.obs.obs[0], underflow=False, overflow=False)
         data_hist = data_hist.Weight()
         data_hist.fill(dat, weight=wgt)
@@ -107,7 +120,20 @@ class ZFitPlotter:
 
         return l_error
     #----------------------------------------
-    def _get_range_data(self, l_range, blind=True):
+    def _get_range_data(
+            self,
+            l_range : list[tuple[float,float]]|None,
+            blind   : bool =True) -> tuple[np.ndarray, np.ndarray]:
+        '''
+        Parameters
+        -----------------
+        l_range: List of ranges, i.e. tuples of bounds
+        blind  : If true (default) will blind the range specified, i.e. will exclude it
+
+        Returns
+        -----------------
+        Tuple with two numpy arrays defined in those ranges, with the observable and the weights.
+        '''
         sdat  = self.data_np
         swgt  = self.data_weight_np
         dmat  = np.array([sdat, swgt]).T
