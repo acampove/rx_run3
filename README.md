@@ -1080,6 +1080,20 @@ samples:
 
 These are thin layers of code that take pandas dataframes and carry out specific tasks
 
+### NaN filter
+
+The following snippet will remove NaNs from the dataframe
+if up to 2% of the rows have NaNs. Beyond that, an exception will be risen.
+
+```python
+import dmu.pdataframe.utilities as put
+
+# Default is 0.02
+df = put.dropna(df, nan_frac=0.02)
+```
+
+The usecase is cleaning up automatically, data that is not expected to be perfect.
+
 ### Dataframe to latex
 
 One can save a dataframe to latex with:
