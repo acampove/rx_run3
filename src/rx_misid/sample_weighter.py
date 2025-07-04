@@ -177,6 +177,18 @@ class SampleWeighter:
             log.info('')
     # ------------------------------
     def _get_candidate_weight(self, row : pnd.Series) -> float:
+    # ------------------------------
+    def _get_transfer_weight(self, row : pnd.Series) -> float:
+        '''
+        Parameter
+        ---------------
+        row: Dataframe row holding candidate and tracks information
+
+        Returns
+        ---------------
+        Weight used to _transfer_ candidate in PID control region to signal region
+        for FP, PF or FF regions.
+        '''
         if   row.kind == 'PassFail':
             num  = self._get_lepton_eff(lep='L2', row=row, is_sig= True)
             den  = self._get_lepton_eff(lep='L2', row=row, is_sig=False)
