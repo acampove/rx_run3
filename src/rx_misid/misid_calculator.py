@@ -63,7 +63,7 @@ class MisIDCalculator:
         Method in charge of steering:
 
         - Reading of data
-        - Splitting 
+        - Splitting
         - Weighting
 
         This method needs to take one argument to be used with multiprocessing
@@ -98,7 +98,7 @@ class MisIDCalculator:
         df['hadron'] = hadron_id
         df['bmeson'] = 'bplus' if is_bplus else 'bminus'
 
-        # TODO: Use replace_nan to replace nans with 1s 
+        # TODO: Use replace_nan to replace nans with 1s
         # This should drop up to 6% of the dataset
         # Due to NaNs in the PID maps.
         df = put.dropna(df, max_frac=0.06)
@@ -143,8 +143,8 @@ class MisIDCalculator:
         Parameters
         -------------------
         multi_proc: If true will process four (2 charges x 2 hadron IDs) in parallel, default False
-        
-        Returns 
+
+        Returns
         -------------------
         pandas dataframe with weighted entries with, extra columns
         hadron : kaon or pion
