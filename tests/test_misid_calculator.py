@@ -6,6 +6,8 @@ from importlib.resources import files
 
 import yaml
 import pytest
+import pandas            as pnd
+import matplotlib.pyplot as plt
 from dmu.logging.log_store     import LogStore
 from rx_misid.misid_calculator import MisIDCalculator
 
@@ -46,6 +48,14 @@ def _get_sample(name : str) -> str:
 
     return name
 # ---------------------------------
+def _validate_df(df : pnd.DataFrame, sample : str) -> None:
+    ax = None
+    ax = df.plot.hist('B_Mass_smr'      , bins=50, histtype='step', range=(4500, 6000), ax=ax)
+    ax = df.plot.hist('B_M_brem_track_2', bins=50, histtype='step', range=(4500, 6000), ax=ax)
+
+    plt.savefig(f'{Data.out_dir}/{sample}.png')
+    plt.close()
+# ---------------------------------
 @pytest.mark.parametrize('name', ['data', 'signal', 'leakage'])
 def test_sample(name : str):
     '''
@@ -58,5 +68,24 @@ def test_sample(name : str):
     obj = MisIDCalculator(cfg=cfg)
     df  = obj.get_misid()
 
-    df.to_parquet(f'{Data.out_dir}/misid_{name}.parquet')
+    _validate_df(df=df, sample=name)
+# ---------------------------------
+@pytest.mark.parametrize('sample', [
+    #'Bu_KplKplKmn_eq_sqDalitz_DPC',
+    'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
+def test_misid(sample : str):
+    '''
+    Test calculator with misID samples, for noPID trigger
+    '''
+
+    cfg                     = _get_config()
+    cfg['input']['sample' ] = sample
+    cfg['input']['q2bin'  ] = 'central'
+    cfg['input']['project'] = 'nopid'
+    cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_noPID'
+
+    obj = MisIDCalculator(cfg=cfg)
+    df  = obj.get_misid()
+
+    _validate_df(df=df, sample=sample)
 # ---------------------------------
