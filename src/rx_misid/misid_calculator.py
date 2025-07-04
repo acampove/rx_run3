@@ -9,6 +9,7 @@ import pandas as pnd
 from ROOT                     import RDataFrame
 from dmu.logging.log_store    import LogStore
 from dmu.generic              import hashing
+from dmu.pdataframe           import utilities as put
 
 from rx_selection             import selection as sel
 from rx_data.rdf_getter       import RDFGetter
@@ -79,6 +80,8 @@ class MisIDCalculator:
 
         df['hadron'] = hadron_id
         df['bmeson'] = 'bplus' if is_bplus else 'bminus'
+
+        df = put.dropna(df)
 
         return df
     # -----------------------------
