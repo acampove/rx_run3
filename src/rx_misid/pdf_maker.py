@@ -1,12 +1,15 @@
 '''
 Module holding PIDWeighter class
 '''
-import pandas as pnd
+import pandas            as pnd
 
-from zfit.core.interfaces      import ZfitData   as zobs
-from zfit.core.interfaces      import ZfitPDF    as zpdf
+from dmu.stats.zfit            import zfit
 from dmu.generic               import utilities  as gut
 from dmu.logging.log_store     import LogStore
+
+from zfit.core.interfaces      import ZfitSpace  as zobs
+from zfit.core.interfaces      import ZfitPDF    as zpdf
+from zfit.core.interfaces      import ZfitData   as zdata
 from rx_misid.misid_calculator import MisIDCalculator
 
 log=LogStore.add_logger('rx_misid:pdf_maker')
