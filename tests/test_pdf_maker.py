@@ -1,11 +1,17 @@
 '''
 File with tests for PIDWeigher class
 '''
+import os
 import pytest
+import matplotlib.pyplot as plt
 
-from dmu.stats.zfit        import zfit
-from dmu.logging.log_store import LogStore
-from rx_misid.pdf_maker    import PDFMaker
+from dmu.stats.zfit         import zfit
+
+from dmu.logging.log_store  import LogStore
+from dmu.stats.zfit_plotter import ZFitPlotter
+from zfit.core.interfaces   import ZfitPDF    as zpdf
+from zfit.core.interfaces   import ZfitData   as zdata
+from rx_misid.pdf_maker     import PDFMaker
 
 log=LogStore.add_logger('rx_misid:test_pdf_maker')
 # ------------------------------------
