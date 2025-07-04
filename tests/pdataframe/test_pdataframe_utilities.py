@@ -18,6 +18,10 @@ class Data:
     '''
     out_dir = '/tmp/tests/dmu/pdataframe/utilities'
 # --------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('dmu:pdataframe:utilities', 10)
+# --------------------------------------
 def _get_df() -> pnd.DataFrame:
     d_data = {}
     d_data['a'] = [1,2,3]
