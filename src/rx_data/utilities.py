@@ -139,7 +139,13 @@ def _info_from_mc_path(path : str) -> tuple[str,str]:
 # ---------------------------------
 def _info_from_data_path(path : str) -> tuple[str,str]:
     '''
-    Will get info from data path
+    Parameters
+    -----------------
+    path: Path to ROOT file 
+
+    Returns
+    -----------------
+    Tuple with sample name and trigger name
     '''
     name = os.path.basename(path)
     mtch = re.match(Data.dt_rgx, name)
