@@ -4,6 +4,7 @@ Module with SampleWeighter class
 import os
 import re
 import glob
+import math
 import pickle
 
 import pandas  as pnd
@@ -274,6 +275,14 @@ class SampleWeighter:
         '''
         if 0 <= eff <= 1:
             return eff
+
+        if math.isnan(eff):
+            log.warning('At:')
+            log.warning(f'X={x:.2f}')
+            log.warning(f'Y={y:.2f}')
+            log.warning(f'Eff={eff:0.3} returning 0')
+
+            return 0.0
 
         log.debug('At:')
         log.debug(f'X={x:.2f}')
