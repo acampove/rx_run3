@@ -62,7 +62,7 @@ def _validate_weights(
     ax2.set_ylabel(r'$p_T$')
     ax2.set_title('Weighted')
 
-    if sample in ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC']:
+    if sample in ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC', 'DATA_24_MagUp_24c2']:
         rng = 0, 2.00
         bins= 3
     else:
