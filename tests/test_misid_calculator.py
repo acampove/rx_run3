@@ -47,6 +47,7 @@ def _validate_df(
         plt.hist(df['B_Mass_smr'      ], bins=50, histtype='step', range=(4500, 6000), weights=df['weight'], label=    'Smeared')
 
     plt.hist(df['B_M_brem_track_2'], bins=50, histtype='step', range=(4500, 6000), weights=df['weight'], label='Non-smeared')
+    plt.axvline(x=5280, legend=r'$B^+$', ls=':', c='red')
 
     plt.legend()
     plt.title(f'{sample}; {mode}; {q2bin}')
