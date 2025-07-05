@@ -24,20 +24,22 @@ class SampleWeighter:
     # ------------------------------
     def __init__(
             self,
-            df   : pnd.DataFrame,
-            mode : str,
-            cfg  : dict):
+            df     : pnd.DataFrame,
+            mode   : str,
+            sample : str,
+            cfg    : dict):
         '''
-        df  : Pandas dataframe with columns 'hadron', 'bmeson' and 'kind'. Used to assign weights
-        mode: Controls what kind of weight is assigned to candidate; transfer, control or signal
-        cfg : Dictionary storing configuration
+        df    : Pandas dataframe with columns 'hadron', 'bmeson' and 'kind'. Used to assign weights
+        mode  : Controls what kind of weight is assigned to candidate; transfer, control or signal
+        sample: E.g. DATA_24_... Needed to pick maps based on actual particle identity
+        cfg   : Dictionary storing configuration
         '''
         self._cfg = cfg
         if mode not in ['transfer', 'control', 'signal']:
             raise ValueError(f'Invalid weight kind: {mode}')
 
         self._mode = mode
-
+        self._samp = sample
         self._varx : str
         self._vary : str
         self._set_variables()
