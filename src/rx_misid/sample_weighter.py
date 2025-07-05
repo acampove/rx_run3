@@ -253,26 +253,46 @@ class SampleWeighter:
         return self._get_efficiency(row=row)
     # ------------------------------
     def _get_efficiency(self, row : pnd.Series) -> float:
+    def _get_transfer_weight(self, row : pnd.Series) -> float:
         '''
+        transfer weight: What needs to be applied as weight to get sample in target region
+
         Parameter
         ---------------
         row: Dataframe row holding candidate and tracks information
 
         Returns
         ---------------
-        Efficiency associated to either signal or control region
+        Weight used to _transfer_ candidate in PID control region to signal region
+        for FP, PF or FF regions.
         '''
-        is_sig = { 'signal' : True, 'control' : False }[self._mode]
 
-        eff1 = self._get_lepton_eff(lep='L1', row=row, is_sig=is_sig)
-        eff2 = self._get_lepton_eff(lep='L2', row=row, is_sig=is_sig)
-        eff  = eff1 * eff2
+        # NOTE: For MC
+        # - We use noPID samples.
+        # - We have either PID maps (misid MC) or we cut (signal)
+        # The numerator is:
+        # - The cut outcome, indicating that the electron is in the signal/control region, i.e. 0 or 1
+        # - The efficiency from the maps for the signal/control region
+        # The candidate's transfer function is the **probability** calculated from these track probabilities.
 
-        if 1 < eff:
-            x = row['L1_TRACK_PT' ]
-            y = row['L2_TRACK_ETA']
-            log.warning(f'At ({x:.0f}, {y:.1f}) returning 1.0 instead of efficiency: {eff:.3f}')
-            return 1.0
+        if not self._sample.startswith('DATA_'):
+            trf_eff = self._get_mc_candidate_efficiency(row=row, is_sig=self._is_sig)
+            return trf_eff
+
+        # NOTE: For data
+        # - We cannot remove the PID.
+        # - The transfer function needs to remove the PID cut through maps.
+        # - The data will always be in the control region. We do not do this with data in signal region
+        # I.e. transfer function = eff_target / eff_control for each lepton
+
+        trf_eff = self._get_data_candidate_efficiency(row=row, is_sig=self._is_sig)
+        ctr_eff = self._get_data_candidate_efficiency(row=row, is_sig=       False)
+        if ctr_eff == 0:
+            log.warning('Control efficiency is zero at:')
+            self._print_info_from_row(row)
+            return 1
+
+        return trf_eff / ctr_eff
 
         if eff < 0:
             x = row['L1_TRACK_PT' ]
@@ -325,7 +345,7 @@ class SampleWeighter:
             return self._df
 
         try:
-            self._df['weight'] *= self._df.apply(self._get_candidate_weight, axis=1)
+            self._df['weight'] *= self._df.apply(self._get_transfer_weight, axis=1)
         except AttributeError as exc:
             log.info(self._df.dtypes)
             log.info(self._df.columns)
