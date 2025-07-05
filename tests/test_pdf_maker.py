@@ -50,7 +50,10 @@ def _check_pdf(
     plt.close()
 # ------------------------------------
 #'Bu_KplKplKmn_eq_sqDalitz_DPC',   # To be uncommented once MC be reprocessed
-@pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC', 'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
+@pytest.mark.parametrize('sample', [
+    'Bu_Kee_eq_btosllball05_DPC', 
+    'Bu_JpsiK_ee_eq_DPC', 
+    'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
 @pytest.mark.parametrize('region', ['signal', 'control'])
 def test_simple(sample : str, region : str):
     '''
