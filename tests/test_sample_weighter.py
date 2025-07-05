@@ -37,9 +37,10 @@ def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
 def _validate_weights(
-        df  : pnd.DataFrame,
-        mode: str,
-        lep : str) -> None:
+        sample : str,
+        df     : pnd.DataFrame,
+        mode   : str,
+        lep    : str) -> None:
 
     arr_pt = df[f'{lep}_TRACK_PT' ].to_numpy()
     arr_et = df[f'{lep}_TRACK_ETA'].to_numpy()
@@ -70,7 +71,7 @@ def _validate_weights(
     ax3.set_xlabel('Weights')
 
     plt.tight_layout()
-    plt.savefig(f'{Data.out_dir}/{mode}_{lep}.png')
+    plt.savefig(f'{Data.out_dir}/{mode}_{sample}_{lep}.png')
 # -------------------------------------------------------
 def _get_config() -> dict:
     cfg_path = files('rx_misid_data').joinpath('misid.yaml')
@@ -118,6 +119,6 @@ def test_simple(mode : str, sample : str):
 
     df  = wgt.get_weighted_data()
 
-    _validate_weights(df=df, mode=mode, lep='L1')
-    _validate_weights(df=df, mode=mode, lep='L2')
+    _validate_weights(df=df, mode=mode, sample=sample, lep='L1')
+    _validate_weights(df=df, mode=mode, sample=sample, lep='L2')
 # ----------------------------
