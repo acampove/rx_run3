@@ -109,6 +109,24 @@ class SampleSplitter(Wcache):
 
         return df
     # --------------------------------
+    def _hadron_from_sample(self) -> str:
+        '''
+        Returns name of misID hadron, given an MC sample
+        Needed to pick PID maps with efficiencies
+        '''
+        if self._sample == 'Bu_piplpimnKpl_eq_sqDalitz_DPC':
+            return 'Pi'
+
+        if self._sample == 'Bu_KplKplKmn_eq_sqDalitz_DPC':
+            return 'K'
+
+        # TODO: Efficiency maps from electrons should be named such that
+        # this switch could happen easily
+        if self._sample in ['Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC']:
+            return 'E'
+
+        raise ValueError(f'Unrecognized sample: {self._sample}')
+    # --------------------------------
     def get_samples(self) -> pnd.DataFrame:
         '''
         For data: Returns pandas dataframe with data split by:
@@ -133,6 +151,15 @@ class SampleSplitter(Wcache):
 
         l_df = []
         self._rdf = self._filter_rdf(rdf=self._rdf)
+
+        if not self._sample.startswith('DATA_'):
+            df = self._rdf_to_df(rdf=self._rdf)
+            df['hadron'] = self._hadron_from_sample()
+            df.to_parquet(parquet_path, engine='pyarrow')
+
+            self._cache()
+            return df
+
         for kind in self._l_kind:
             log.info(f'Calculating sample: {kind}')
             rdf            = self._rdf
