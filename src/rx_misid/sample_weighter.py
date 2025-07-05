@@ -146,6 +146,18 @@ class SampleWeighter:
             lep    : str,
             row    : pnd.Series,
             is_sig : bool) -> float:
+
+        if self._sample in self._l_electron_sample:
+            return self._get_true_lepton_eff(lep=lep, row=row, is_sig=is_sig)
+
+        is_hadron = self._sample in self._l_hadron_sample
+        is_data   = self._sample.startswith('DATA_')
+
+        if is_hadron or is_data:
+            return self._get_fake_lepton_eff(lep=lep, row=row, is_sig=is_sig)
+
+        raise NotImplementedError(f'Cannot obtain efficiency for {self._sample} sample')
+    # ------------------------------
         '''
         Reads loaded PID efficiency maps and returns efficiency, for a given lepton
 
