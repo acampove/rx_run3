@@ -94,8 +94,13 @@ class MisIDCalculator:
         df       = splitter.get_samples()
 
         log.info('Applying weights')
-        weighter = SampleWeighter(df=df, cfg=self._cfg['weights'], mode=self._mode)
-        df       = weighter.get_weighted_data()
+        weighter = SampleWeighter(
+                df    = df,
+                cfg   = self._cfg['weights'],
+                sample= sample,
+                mode  = self._mode)
+
+        df = weighter.get_weighted_data()
 
         df['hadron'] = hadron_id
         df['bmeson'] = 'bplus' if is_bplus else 'bminus'
