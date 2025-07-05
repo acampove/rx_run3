@@ -39,7 +39,7 @@ class SampleWeighter:
             raise ValueError(f'Invalid weight kind: {mode}')
 
         self._mode = mode
-        self._samp = sample
+        self._sample = sample
         self._varx : str
         self._vary : str
         self._set_variables()
