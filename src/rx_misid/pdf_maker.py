@@ -62,10 +62,15 @@ class PDFMaker:
         return pdf, data
     # -----------------------------------------
     def get_pdf(self, obs : zobs) -> zpdf:
+    def get_pdf(
+            self,
+            obs    : zobs,
+            region : str) -> zpdf:
         '''
         Parameters
         ---------------
-        obs: Obserbable used in PDF
+        obs    : Obserbable used in PDF
+        region : Region for which weights should be taken, signal or control
 
         Returns
         ---------------
@@ -78,7 +83,7 @@ class PDFMaker:
         cfg['input']['q2bin'  ] = self._q2bin
         cfg['input']['project'] = 'nopid'
 
-        obj = MisIDCalculator(cfg=cfg)
+        obj = MisIDCalculator(cfg=cfg, mode=region)
         df  = obj.get_misid()
         pdf, dat = self._pdf_from_df(df=df, obs=obs)
         pdf.dat  = dat
