@@ -38,19 +38,20 @@ class SampleWeighter:
         if mode not in ['transfer', 'control', 'signal']:
             raise ValueError(f'Invalid weight kind: {mode}')
 
-        self._mode = mode
+        self._mode   = mode
         self._sample = sample
-        self._varx : str
-        self._vary : str
-        self._set_variables()
-        self._df   = self._get_df(df)
+        self._varx   : str
+        self._vary   : str
 
         self._l_electron_sample = ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC']
         self._l_hadron_sample   = ['Bu_piplpimnKpl_eq_sqDalitz_DPC']
         self._regex             = r'.*_(block\d)(?:_v\d)?-(?:up|down)-(K|Pi)-.*'
 
-        self._d_map        : dict[str, bh] = self._load_maps()
         self._d_out_of_map : dict[str,dict[int,int]] = {}
+
+        self._set_variables()
+        self._df                           = self._get_df(df)
+        self._d_map        : dict[str, bh] = self._load_maps()
     # ------------------------------
     def _get_df(self, df : pnd.DataFrame) -> pnd.DataFrame:
         df = self._add_columns(df=df, particle='L1')
