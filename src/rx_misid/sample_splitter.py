@@ -9,7 +9,7 @@ from dmu.rdataframe         import utilities as ut
 from dmu.logging.log_store  import LogStore
 from dmu.workflow.cache     import Cache     as Wcache
 
-log=LogStore.add_logger('rx_misid:splitter')
+log=LogStore.add_logger('rx_misid:sample_splitter')
 # --------------------------------
 class SampleSplitter(Wcache):
     '''

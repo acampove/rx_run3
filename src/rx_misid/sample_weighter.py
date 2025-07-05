@@ -12,7 +12,7 @@ from boost_histogram        import Histogram    as bh
 from boost_histogram        import accumulators as acc
 from dmu.logging.log_store  import LogStore
 
-log=LogStore.add_logger('rx_misid:weighter')
+log=LogStore.add_logger('rx_misid:sample_weighter')
 # ------------------------------
 class SampleWeighter:
     '''

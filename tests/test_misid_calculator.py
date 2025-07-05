@@ -23,8 +23,8 @@ class Data:
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_misid:misid_calculator', 10)
-    LogStore.set_level('rx_misid:splitter'        , 10)
-    LogStore.set_level('rx_misid:weighter'        , 10)
+    LogStore.set_level('rx_misid:sample_splitter' , 10)
+    LogStore.set_level('rx_misid:sample_weighter' , 10)
 
     os.makedirs(Data.out_dir, exist_ok=True)
 # ---------------------------------
