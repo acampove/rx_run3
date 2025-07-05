@@ -139,7 +139,24 @@ class SampleWeighter:
 
         return index
     # ------------------------------
-    def _get_lepton_eff(self, lep : str, row : pnd.Series, is_sig : bool) -> float:
+    def _get_lepton_eff(
+            self,
+            lep    : str,
+            row    : pnd.Series,
+            is_sig : bool) -> float:
+        '''
+        Reads loaded PID efficiency maps and returns efficiency, for a given lepton
+
+        Parameters
+        ----------------
+        lep   : L1 or L2
+        row   : Contains candidate information
+        is_sig: Used to pick correct efficiency map
+
+        Returns
+        ----------------
+        Lepton PID efficiency
+        '''
         block   = int(row.block)
         key_map = f'block{block}_{row.hadron}_signal' if is_sig else f'block{block}_{row.hadron}_control'
         hist    = self._d_map[key_map]
