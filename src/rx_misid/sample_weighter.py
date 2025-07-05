@@ -301,13 +301,6 @@ class SampleWeighter:
             log.info(f'{vary:<20}{valy:20.2f}')
             log.info('')
     # ------------------------------
-    def _get_candidate_weight(self, row : pnd.Series) -> float:
-        if self._mode == 'transfer':
-            return self._get_transfer_weight(row=row)
-
-        return self._get_efficiency(row=row)
-    # ------------------------------
-    def _get_efficiency(self, row : pnd.Series) -> float:
     def _get_transfer_weight(self, row : pnd.Series) -> float:
         '''
         transfer weight: What needs to be applied as weight to get sample in target region
