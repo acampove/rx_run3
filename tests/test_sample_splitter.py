@@ -69,13 +69,18 @@ def _check_stats(df : pnd.DataFrame):
 
     assert not fail
 # -------------------------------------------------------
-def _plot_pide(df : pnd.DataFrame, hadron_id : str, is_bplus : bool) -> None:
+def _plot_pide(
+        df        : pnd.DataFrame,
+        hadron_id : str,
+        sample    : str,
+        is_bplus  : bool) -> None:
+
     for kind, df_kind in df.groupby('kind'):
         ax = None
         ax = df_kind.plot.scatter(x='L1_PID_E', y='L1_PROBNN_E', color='blue', s=1, label='$e_{SS}$', ax=ax)
         ax = df_kind.plot.scatter(x='L2_PID_E', y='L2_PROBNN_E', color='red' , s=1, label='$e_{OS}$', ax=ax)
 
-        plot_path = f'{Data.out_dir}/{hadron_id}_{is_bplus}_{kind}.png'
+        plot_path = f'{Data.out_dir}/{sample}_{hadron_id}_{is_bplus}_{kind}.png'
 
         ax.set_xlabel(r'$\Delta LL (e)$')
         ax.set_ylabel('ProbNN(e)')
