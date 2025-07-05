@@ -338,12 +338,27 @@ class SampleWeighter:
             return 1
 
         return trf_eff / ctr_eff
+    # ------------------------------
+    def _get_data_candidate_efficiency(self, row : pnd.Series, is_sig : bool) -> float:
+        '''
+        Parameters
+        ------------------
+        row   : Stores information on candidate
+        is_sig: If true the probability is for the signal region
 
-        if eff < 0:
-            x = row['L1_TRACK_PT' ]
-            y = row['L2_TRACK_ETA']
-            log.warning(f'At ({x:.0f}, {y:.1f}) returning 0.0 instead of efficiency: {eff:.3f}')
-            return 0.0
+        Returns
+        ------------------
+        probability for the candidate to be in the signal or control region
+        '''
+        if   row.kind in ['PassFail', 'FailPass']:
+            lep  = {'PassFail' : 'L2', 'FailPass' : 'L1'}[row.kind]
+            eff  = self._get_lepton_eff(lep= lep, row=row, is_sig=is_sig)
+        elif row.kind == 'FailFail':
+            eff1 = self._get_lepton_eff(lep='L1', row=row, is_sig=is_sig)
+            eff2 = self._get_lepton_eff(lep='L2', row=row, is_sig=is_sig)
+            eff  = eff1 * eff2
+        else:
+            raise ValueError(f'Invalid kind: {row.kind}')
 
         return eff
     # ------------------------------
