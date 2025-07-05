@@ -40,6 +40,7 @@ class MisIDCalculator:
         '''
         self._cfg   =    cfg
         self._is_sig= is_sig
+        self._b_id  = 521
     # -----------------------------
     def _get_selection(self) -> dict[str,str]:
         '''
@@ -86,7 +87,7 @@ class MisIDCalculator:
         obj     = RDFGetter(sample=sample, trigger=trigger, analysis=project)
         rdf     = obj.get_rdf()
         uid     = obj.get_uid()
-        rdf,uid = self._filter_rdf(rdf=rdf, uid=uid)
+        rdf,uid = self._filter_rdf(rdf=rdf, uid=uid, is_bplus=is_bplus)
         rdf.uid = uid
 
         log.info(f'Splitting samples: Bplus={is_bplus}, Hadron={hadron_id}')
@@ -119,10 +120,15 @@ class MisIDCalculator:
     # -----------------------------
     def _filter_rdf(
             self,
-            rdf : RDataFrame,
-            uid : str) -> tuple[RDataFrame,str]:
+            rdf      : RDataFrame,
+            is_bplus : bool,
+            uid      : str) -> tuple[RDataFrame,str]:
         '''
-        Take ROOT dataframe and its UniqueIDentifier
+        Parameters
+        ----------------
+        rdf     : ROOT dataframe 
+        uid     : Dataframe unique identifier
+        is_bplus: To get only B+ candidates
 
         Filter by:
 
@@ -139,7 +145,11 @@ class MisIDCalculator:
             min_entry, max_entry = entry_range
             rdf = rdf.Range(min_entry, max_entry)
 
-        d_sel   = self._get_selection()
+        bid            = self._b_id if is_bplus else -self._b_id
+        d_sel          = self._get_selection()
+        d_sel['block'] = 'block > 0'
+        d_sel['B_ID' ] =f'B_ID=={bid}'
+
         log.info('Applying selection')
         for cut_name, cut_expr in d_sel.items():
             log.debug(f'{cut_name:<30}{cut_expr}')
