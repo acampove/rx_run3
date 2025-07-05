@@ -98,15 +98,24 @@ def _get_dataframe() -> pnd.DataFrame:
 
     return df
 # ----------------------------
+@pytest.mark.parametrize('sample', [
+    'Bu_JpsiK_ee_eq_DPC',
+    'Bu_Kee_eq_btosllball05_DPC',
+    'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
 @pytest.mark.parametrize('mode', ['transfer', 'signal', 'control'])
-def test_simple(mode : str):
+def test_simple(mode : str, sample : str):
     '''
     Simplest test
     '''
     cfg = _get_config()
     df  = _get_dataframe()
 
-    wgt = SampleWeighter(df=df, cfg=cfg, mode=mode)
+    wgt = SampleWeighter(
+            df    = df,
+            cfg   = cfg,
+            sample= sample,
+            mode  = mode)
+
     df  = wgt.get_weighted_data()
 
     _validate_weights(df=df, mode=mode, lep='L1')
