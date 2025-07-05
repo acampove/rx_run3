@@ -111,6 +111,7 @@ def _get_dataframe() -> pnd.DataFrame:
     return df
 # ----------------------------
 @pytest.mark.parametrize('sample', [
+    'DATA_24_MagUp_24c2',
     'Bu_JpsiK_ee_eq_DPC',
     'Bu_Kee_eq_btosllball05_DPC',
     'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
