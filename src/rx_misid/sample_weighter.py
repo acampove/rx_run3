@@ -186,8 +186,34 @@ class SampleWeighter:
             lep    : str,
             row    : pnd.Series,
             is_sig : bool) -> float:
+        '''
+        Parameters
+        --------------------
+        lep   : E.g. L1 or L2
+        row   : Stores information on candidate, PID, PT, ETA, etc.
+        is_sig: If true, need the efficiency for signal region cut, otherwise, control region.
 
-        return 1.0
+        Returns
+        --------------------
+        Either 0 or 1, depending on wether the cut passes or fails
+        '''
+        # TODO: Replace this section with efficiency maps for electrons, when available
+        region = {True : 'signal', False : 'control'}[is_sig]
+        cut    = self._cfg['regions'][region]
+        cut    = cut.replace('DLLe'    , f'{lep}_PID_E')
+        cut    = cut.replace('PROBNN_E', f'{lep}_PROBNN_E')
+        cut    = cut.replace('|',  ' or ')
+        cut    = cut.replace('&', ' and ')
+
+        data   = row.to_dict()
+        try:
+            flag = eval(cut, {}, data)
+        except Exception as exc:
+            raise ValueError(f'Cannot evaluate {cut} on {data}') from exc
+
+        val = {True : 1.0, False : 0.0}[flag]
+
+        return val
     # ------------------------------
     def _get_fake_lepton_eff(
             self,
