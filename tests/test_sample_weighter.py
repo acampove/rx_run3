@@ -90,6 +90,11 @@ def _get_dataframe() -> pnd.DataFrame:
     df['block' ] = numpy.random.choice(Data.l_block, size=Data.nentries)
     df['weight'] = numpy.random.choice([1, 10], size=Data.nentries)
 
+    df['L1_PROBNN_E'] = numpy.random.random(size=Data.nentries)
+    df['L2_PROBNN_E'] = numpy.random.random(size=Data.nentries)
+    df['L1_PID_E'   ] = numpy.random.uniform(-10, 10, size=Data.nentries)
+    df['L2_PID_E'   ] = numpy.random.uniform(-10, 10, size=Data.nentries)
+
     for lep in ['L1', 'L2']:
         df[f'{lep}_TRACK_PT' ] = numpy.random.uniform(550, 20_000, Data.nentries)
         df[f'{lep}_TRACK_ETA'] = numpy.random.uniform(1.6, 4.0, Data.nentries)
