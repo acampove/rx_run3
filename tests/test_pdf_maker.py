@@ -30,14 +30,20 @@ def _initialize():
 
     os.makedirs(Data.out_dir, exist_ok=True)
 # ------------------------------------
-def _check_pdf(pdf : zpdf, data : zdata) -> None:
+def _check_pdf(
+        pdf    : zpdf,
+        data   : zdata,
+        sample : str,
+        region : str) -> None:
     '''
     Take zfit pdf and validate it
     '''
-    obj= ZFitPlotter(data=data, model=pdf)
-    obj.plot()
+    ext_text = f'{sample}\n{region}'
 
-    plot_path = f'{Data.out_dir}/pdf.png'
+    obj= ZFitPlotter(data=data, model=pdf)
+    obj.plot(ext_text=ext_text)
+
+    plot_path = f'{Data.out_dir}/{sample}_{region}.png'
     log.info(f'Saving to: {plot_path}')
 
     plt.savefig(plot_path)
