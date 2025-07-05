@@ -296,12 +296,11 @@ class SampleWeighter:
         Weight used to _transfer_ candidate in PID control region to signal region
         for FP, PF or FF regions.
         '''
-        if   row.kind == 'PassFail':
-            num  = self._get_lepton_eff(lep='L2', row=row, is_sig= True)
-            den  = self._get_lepton_eff(lep='L2', row=row, is_sig=False)
-        elif row.kind == 'FailPass':
-            num  = self._get_lepton_eff(lep='L1', row=row, is_sig= True)
-            den  = self._get_lepton_eff(lep='L1', row=row, is_sig=False)
+
+        if   row.kind in ['PassFail', 'FailPass']:
+            lep  = {'PassFail' : 'L2', 'FailPass' : 'L1'}[row.kind]
+            num  = self._get_lepton_eff(lep= lep, row=row, is_sig= True)
+            den  = self._get_lepton_eff(lep= lep, row=row, is_sig=False)
         elif row.kind == 'FailFail':
             eff1 = self._get_lepton_eff(lep='L1', row=row, is_sig= True)
             eff2 = self._get_lepton_eff(lep='L2', row=row, is_sig= True)
