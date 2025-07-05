@@ -111,7 +111,7 @@ class SampleSplitter(Wcache):
     # --------------------------------
     def get_samples(self) -> pnd.DataFrame:
         '''
-        Returns pandas dataframe with data split by:
+        For data: Returns pandas dataframe with data split by:
 
         PassFail: Pass (SS), Fail (OS)
         FailPass: Fail (SS), Pass (OS)
@@ -120,6 +120,9 @@ class SampleSplitter(Wcache):
         Where:
             - SS means same sign as the B and OS is opposite sign
             - These strings are stored in the column "kind"
+
+        For MC: It will only filter by charge and return dataframe without
+        PassFail, etc split
         '''
         parquet_path = f'{self._out_path}/sample.parquet'
         if self._copy_from_cache():
