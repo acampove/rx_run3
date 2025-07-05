@@ -62,12 +62,14 @@ def _validate_weights(
     ax2.set_ylabel(r'$p_T$')
     ax2.set_title('Weighted')
 
-    if mode == 'transfer':
-        rng = 0, 1.00
+    if sample in ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC']:
+        rng = 0, 2.00
+        bins= 3
     else:
         rng = 0, 0.01
+        bins= 200
 
-    ax3.hist(arr_wt, bins=200, range=rng)
+    ax3.hist(arr_wt, bins=bins, range=rng)
     ax3.set_xlabel('Weights')
 
     plt.tight_layout()
