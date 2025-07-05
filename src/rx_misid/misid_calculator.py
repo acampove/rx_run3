@@ -30,13 +30,16 @@ class MisIDCalculator:
     In either the signal or the control region
     '''
     # -----------------------------
-    def __init__(self, cfg : dict, mode : str):
+    def __init__(
+            self,
+            cfg    : dict,
+            is_sig : bool):
         '''
-        cfg : Dictionary with configuration
-        mode: Kind of weights needed for datasets, transfer, signal, control
+        cfg   : Dictionary with configuration
+        is_sig: If true/false, provides dataframes with weights to transfer sample to signal/contrl region
         '''
-        self._cfg = cfg
-        self._mode= mode
+        self._cfg   =    cfg
+        self._is_sig= is_sig
     # -----------------------------
     def _get_selection(self) -> dict[str,str]:
         '''
@@ -100,7 +103,7 @@ class MisIDCalculator:
                 df    = df,
                 cfg   = self._cfg['weights'],
                 sample= sample,
-                mode  = self._mode)
+                is_sig= self._is_sig)
 
         df = weighter.get_weighted_data()
 
