@@ -248,14 +248,19 @@ class SampleWeighter:
         iy = self._get_bin_index(hist, iaxis=1, value=y_value, name=vary)
         eff= hist[ix, iy]
 
-        if isinstance(eff, float):
+        if isinstance(eff, acc.WeightedSum):
+            eff = eff.value
+
+        if not isinstance(eff, float):
+            etype = type(eff)
+            raise NotImplementedError(f'Unrecognized efficiency of type: {etype}')
+
+        eff = self._check_eff(eff=eff, x=x_value, y=y_value)
+
+        return eff
             return eff
 
-        if isinstance(eff, acc.WeightedSum):
-            return eff.value
 
-        etype = type(eff)
-        raise NotImplementedError(f'Unrecognized efficiency of type: {etype}')
     # ------------------------------
     def _print_info_from_row(self, row : pnd.Series) -> None:
         log.info(40 * '-')
