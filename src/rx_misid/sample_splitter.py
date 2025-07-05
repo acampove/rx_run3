@@ -34,20 +34,12 @@ class SampleSplitter(Wcache):
                 out_path = f'sample_splitter_{sample}_{hadron_id}_{is_bplus}',
                 args     = [rdf.uid, hadron_id, is_bplus, cfg])
 
-        self._b_id     = 521
         self._sample   = sample
         self._is_bplus = is_bplus
         self._hadron_id= hadron_id
         self._cfg      = cfg
         self._l_kind   = ['PassFail', 'FailPass', 'FailFail']
         self._rdf      = rdf
-    # --------------------------------
-    def _filter_rdf(self, rdf : RDataFrame) -> RDataFrame:
-        bid = self._b_id if self._is_bplus else - self._b_id
-        rdf = rdf.Filter('block > 0', 'block')
-        rdf = rdf.Filter(f'B_ID=={bid}', f'B_ID=={bid}')
-
-        return rdf
     # --------------------------------
     def _get_data_cuts(self, kind : str) -> tuple[str,str]:
         '''
@@ -134,7 +126,6 @@ class SampleSplitter(Wcache):
             return df
 
         l_df = []
-        self._rdf = self._filter_rdf(rdf=self._rdf)
 
         if not self._sample.startswith('DATA_'):
             df = self._rdf_to_df(rdf=self._rdf)
