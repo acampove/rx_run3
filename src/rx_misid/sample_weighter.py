@@ -158,6 +158,14 @@ class SampleWeighter:
 
         raise NotImplementedError(f'Cannot obtain efficiency for {self._sample} sample')
     # ------------------------------
+    def _get_true_lepton_eff(
+            self,
+            lep    : str,
+            row    : pnd.Series,
+            is_sig : bool) -> float:
+
+        return 1.0
+    # ------------------------------
     def _get_fake_lepton_eff(
             self,
             lep    : str,
