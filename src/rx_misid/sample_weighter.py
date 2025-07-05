@@ -239,7 +239,12 @@ class SampleWeighter:
         '''
         block   = int(row.block)
         key_map = f'block{block}_{row.hadron}_signal' if is_sig else f'block{block}_{row.hadron}_control'
-        hist    = self._d_map[key_map]
+        try:
+            hist    = self._d_map[key_map]
+        except KeyError as exc:
+            for key in sorted(self._d_map):
+                log.info(key)
+            raise KeyError(f'Cannot pick up PID map: {key_map}') from exc
 
         varx = self._varx.replace('PARTICLE', lep)
         vary = self._vary.replace('PARTICLE', lep)
