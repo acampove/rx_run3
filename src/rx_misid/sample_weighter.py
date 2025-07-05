@@ -258,9 +258,33 @@ class SampleWeighter:
         eff = self._check_eff(eff=eff, x=x_value, y=y_value)
 
         return eff
+    # ------------------------------
+    def _check_eff(self, eff : float, x : float, y : float) -> float:
+        '''
+        Parameters
+        ---------------
+        eff: Efficiency
+        x/y: Coordinates in map associated to efficiency
+
+        Returns
+        ---------------
+        efficiency after sanitation step
+        '''
+        if 0 <= eff <= 1:
             return eff
 
+        log.debug('At:')
+        log.debug(f'X={x:.2f}')
+        log.debug(f'Y={y:.2f}')
+        log.info(f'Eff={eff:0.3}')
 
+        if eff < 0:
+            return 0.0
+
+        if eff > 1:
+            return 1.0
+
+        raise ValueError(f'Unexpected efficiency value: {eff}')
     # ------------------------------
     def _print_info_from_row(self, row : pnd.Series) -> None:
         log.info(40 * '-')
