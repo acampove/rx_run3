@@ -52,6 +52,27 @@ class SampleWeighter:
         self._set_variables()
         self._df                           = self._get_df(df)
         self._d_map        : dict[str, bh] = self._load_maps()
+        self._true_electron                = self._is_true_electron()
+    # ------------------------------
+    def _is_true_electron(self) -> bool:
+        '''
+        Returns
+        -------------
+        True : If sample has Lepton candidates meant to be treated as electrons, e.g signal sample
+        False: E.g. misID MC
+        '''
+        if self._sample in self._l_electron_sample:
+            log.info(f'Reading true electron efficiencies for: {self._sample}')
+            return True
+
+        is_hadron = self._sample in self._l_hadron_sample
+        is_data   = self._sample.startswith('DATA_')
+
+        if is_hadron or is_data:
+            log.info(f'Reading fake electron efficiencies for: {self._sample}')
+            return False
+
+        raise NotImplementedError(f'Cannot obtain efficiency for {self._sample} sample')
     # ------------------------------
     def _get_df(self, df : pnd.DataFrame) -> pnd.DataFrame:
         df = self._add_columns(df=df, particle='L1')
