@@ -36,18 +36,6 @@ def _get_config() -> dict:
 
     return data
 # ---------------------------------
-def _get_sample(name : str) -> str:
-    if name == 'data':
-        return 'DATA_24_MagUp_24c3'
-
-    if name == 'signal':
-        return 'Bu_Kee_eq_btosllball05_DPC'
-
-    if name == 'leakage':
-        return 'Bu_JpsiK_ee_eq_DPC'
-
-    return name
-# ---------------------------------
 def _validate_df(
         df     : pnd.DataFrame,
         sample : str,
@@ -63,30 +51,30 @@ def _validate_df(
     plt.savefig(f'{Data.out_dir}/{sample}_{mode}_{q2bin}.png')
     plt.close()
 # ---------------------------------
-@pytest.mark.parametrize('name, mode',
-                         [('data'   , 'transfer' ),
-                          #------
-                          ('signal' , 'transfer' ),
-                          ('signal' , 'signal'   ),
-                          ('signal' , 'control'  ),
-                          #------
-                          ('control', 'transfer' ),
-                          ('control', 'signal'   ),
-                          ('control', 'control'  )])
-def test_sample(name : str, mode : str):
+@pytest.mark.parametrize('q2bin' , ['low', 'central'])
+@pytest.mark.parametrize('mode'  , ['signal', 'control'])
+@pytest.mark.parametrize('sample', ['DATA_24_MagUp_24c3', 'Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC'])
+def test_non_misid(sample : str, mode : str, q2bin : str):
     '''
     Simplest example of misid calculator with different samples
     '''
-    q2bin = 'central'
-
     cfg                    = _get_config()
-    cfg['input']['sample'] = _get_sample(name=name)
+    cfg['input']['sample'] = sample
     cfg['input']['q2bin' ] = q2bin
 
-    obj = MisIDCalculator(cfg=cfg, mode=mode)
+    if sample.startswith('DATA'):
+        cfg['input']['project'] = 'rx'
+        cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_ext'
+    else:
+        cfg['input']['project'] = 'nopid'
+        cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_noPID'
+
+    is_sig = {'signal' : True, 'control' : False}[mode]
+
+    obj = MisIDCalculator(cfg=cfg, is_sig=is_sig)
     df  = obj.get_misid()
 
-    _validate_df(df=df, sample=name, mode=mode, q2bin=q2bin)
+    _validate_df(df=df, sample=sample, mode=mode, q2bin=q2bin)
 # ---------------------------------
 @pytest.mark.parametrize('q2bin' , ['low', 'central'])
 @pytest.mark.parametrize('mode'  , ['signal', 'control'])
@@ -101,7 +89,9 @@ def test_misid(sample : str, mode : str, q2bin : str):
     cfg['input']['project'] = 'nopid'
     cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_noPID'
 
-    obj = MisIDCalculator(cfg=cfg, mode=mode)
+    is_sig = {'signal' : True, 'control' : False}[mode]
+
+    obj = MisIDCalculator(cfg=cfg, is_sig=is_sig)
     df  = obj.get_misid()
 
     _validate_df(df=df, sample=sample, mode=mode, q2bin=q2bin)
