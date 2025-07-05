@@ -347,7 +347,7 @@ class SampleWeighter:
 
         return eff
     # ------------------------------
-    def _get_transfer_weight(self, row : pnd.Series) -> float:
+    def _get_mc_candidate_efficiency(self, row : pnd.Series, is_sig : bool) -> float:
         '''
         Parameter
         ---------------
@@ -355,31 +355,19 @@ class SampleWeighter:
 
         Returns
         ---------------
-        Weight used to _transfer_ candidate in PID control region to signal region
-        for FP, PF or FF regions.
+        Efficiency associated to either signal or control region
         '''
+        eff_p1 = self._get_lepton_eff(lep='L1', row=row, is_sig= True)
+        eff_p2 = self._get_lepton_eff(lep='L2', row=row, is_sig= True)
+        eff_f1 = self._get_lepton_eff(lep='L1', row=row, is_sig=False)
+        eff_f2 = self._get_lepton_eff(lep='L2', row=row, is_sig=False)
 
-        if   row.kind in ['PassFail', 'FailPass']:
-            lep  = {'PassFail' : 'L2', 'FailPass' : 'L1'}[row.kind]
-            num  = self._get_lepton_eff(lep= lep, row=row, is_sig= True)
-            den  = self._get_lepton_eff(lep= lep, row=row, is_sig=False)
-        elif row.kind == 'FailFail':
-            eff1 = self._get_lepton_eff(lep='L1', row=row, is_sig= True)
-            eff2 = self._get_lepton_eff(lep='L2', row=row, is_sig= True)
-            eff3 = self._get_lepton_eff(lep='L1', row=row, is_sig=False)
-            eff4 = self._get_lepton_eff(lep='L2', row=row, is_sig=False)
+        if is_sig: # This is the signal region
+            eff  = eff_p1 * eff_p2
+        else:      # This is the control region
+            eff  = eff_p1 * eff_f2 + eff_p2 * eff_f1 + eff_f1 * eff_f2
 
-            num  = eff1 * eff2
-            den  = eff3 * eff4
-        else:
-            raise ValueError(f'Invalid kind: {row.kind}')
-
-        if den == 0:
-            log.warning('Control efficiency is zero at:')
-            self._print_info_from_row(row)
-            return 1
-
-        return num / den
+        return eff
     # ------------------------------
     def get_weighted_data(self) -> pnd.DataFrame:
         '''
