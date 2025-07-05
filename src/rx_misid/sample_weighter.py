@@ -149,12 +149,14 @@ class SampleWeighter:
             is_sig : bool) -> float:
 
         if self._sample in self._l_electron_sample:
+            log.debug(f'Using true electron efficiencies for sample {self._sample}')
             return self._get_true_lepton_eff(lep=lep, row=row, is_sig=is_sig)
 
         is_hadron = self._sample in self._l_hadron_sample
         is_data   = self._sample.startswith('DATA_')
 
         if is_hadron or is_data:
+            log.debug(f'Using fake electron efficiencies for sample {self._sample}')
             return self._get_fake_lepton_eff(lep=lep, row=row, is_sig=is_sig)
 
         raise NotImplementedError(f'Cannot obtain efficiency for {self._sample} sample')
