@@ -113,8 +113,8 @@ def _get_dataframe() -> pnd.DataFrame:
     'Bu_JpsiK_ee_eq_DPC',
     'Bu_Kee_eq_btosllball05_DPC',
     'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
-@pytest.mark.parametrize('mode', ['transfer', 'signal', 'control'])
-def test_simple(mode : str, sample : str):
+@pytest.mark.parametrize('is_sig', [True, False])
+def test_simple(is_sig : bool, sample : str):
     '''
     Simplest test
     '''
@@ -125,9 +125,11 @@ def test_simple(mode : str, sample : str):
             df    = df,
             cfg   = cfg,
             sample= sample,
-            mode  = mode)
+            is_sig= is_sig)
 
     df  = wgt.get_weighted_data()
+
+    mode = {True : 'signal', False : 'control'}[is_sig]
 
     _validate_weights(df=df, mode=mode, sample=sample, lep='L1')
     _validate_weights(df=df, mode=mode, sample=sample, lep='L2')
