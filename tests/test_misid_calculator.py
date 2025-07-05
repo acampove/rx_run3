@@ -65,9 +65,12 @@ def test_non_misid(sample : str, mode : str, q2bin : str):
     cfg['input']['sample'] = sample
     cfg['input']['q2bin' ] = q2bin
 
-    if sample.startswith('DATA'):
+    if   sample.startswith('DATA'):
         cfg['input']['project'] = 'rx'
         cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_ext'
+    elif sample =='Bu_JpsiK_ee_eq_DPC':
+        cfg['input']['project'] = 'rx'
+        cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA'
     else:
         cfg['input']['project'] = 'nopid'
         cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_noPID'
