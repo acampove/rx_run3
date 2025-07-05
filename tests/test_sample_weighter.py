@@ -74,6 +74,7 @@ def _validate_weights(
 
     plt.tight_layout()
     plt.savefig(f'{Data.out_dir}/{mode}_{sample}_{lep}.png')
+    plt.close()
 # -------------------------------------------------------
 def _get_config() -> dict:
     cfg_path = files('rx_misid_data').joinpath('misid.yaml')
