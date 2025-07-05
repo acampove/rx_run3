@@ -270,11 +270,15 @@ class SampleWeighter:
         eff  = eff1 * eff2
 
         if 1 < eff:
-            log.warning(f'Returning 1.0 instead of efficiency: {eff:.3f}')
+            x = row['L1_TRACK_PT' ]
+            y = row['L2_TRACK_ETA']
+            log.warning(f'At ({x:.0f}, {y:.1f}) returning 1.0 instead of efficiency: {eff:.3f}')
             return 1.0
 
         if eff < 0:
-            log.warning(f'Returning 0.0 instead of efficiency: {eff:.3f}')
+            x = row['L1_TRACK_PT' ]
+            y = row['L2_TRACK_ETA']
+            log.warning(f'At ({x:.0f}, {y:.1f}) returning 0.0 instead of efficiency: {eff:.3f}')
             return 0.0
 
         return eff
