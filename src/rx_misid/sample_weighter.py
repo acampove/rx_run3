@@ -168,9 +168,17 @@ class SampleWeighter:
             lep    : str,
             row    : pnd.Series,
             is_sig : bool) -> float:
+        '''
+        This method will return lepton PID efficiencies for a given lepton
 
-        if self._sample in self._l_electron_sample:
-            log.debug(f'Using true electron efficiencies for sample {self._sample}')
+        Parameters
+        -----------------
+        lep   : L1 or L2
+        row   : Contains information on candidate
+        is_sig: If True will provide signal region efficiencies
+        '''
+        # NOTE: This method will be called per candidate
+        # Do not add heavy stuff
             return self._get_true_lepton_eff(lep=lep, row=row, is_sig=is_sig)
 
         is_hadron = self._sample in self._l_hadron_sample
