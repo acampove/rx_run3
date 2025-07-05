@@ -116,7 +116,7 @@ def test_data(hadron_id : str, is_bplus : bool):
 
     log.info('Dataframe found, checking')
     _check_stats(df=df)
-    _plot_pide(df=df, hadron_id=hadron_id, is_bplus=is_bplus)
+    _plot_pide(df=df, hadron_id=hadron_id, is_bplus=is_bplus, sample=sample)
 # -------------------------------------------------------
 @pytest.mark.parametrize('hadron_id', Data.l_hadron_id)
 @pytest.mark.parametrize('is_bplus' ,    [True, False])
@@ -144,5 +144,5 @@ def test_mc_misid(hadron_id : str, is_bplus : bool):
 
     log.info('Dataframe found, checking')
     _check_stats(df=df)
-    _plot_pide(df=df, hadron_id=hadron_id, is_bplus=is_bplus)
+    _plot_pide(df=df, hadron_id=hadron_id, is_bplus=is_bplus, sample=sample)
 # -------------------------------------------------------
