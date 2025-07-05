@@ -49,8 +49,10 @@ class SampleSplitter(Wcache):
 
         return rdf
     # --------------------------------
-    def _get_cuts(self, kind : str) -> tuple[str,str]:
+    def _get_data_cuts(self, kind : str) -> tuple[str,str]:
         '''
+        This method is only used for real data, not MC
+
         Parameters
         -----------------
         kind: PassFail/FailPass/FailFail
@@ -144,7 +146,7 @@ class SampleSplitter(Wcache):
         for kind in self._l_kind:
             log.info(f'Calculating sample: {kind}')
             rdf            = self._rdf
-            cut_os, cut_ss = self._get_cuts(kind=kind)
+            cut_os, cut_ss = self._get_data_cuts(kind=kind)
 
             rdf = rdf.Filter(cut_os, f'OS {kind}')
             rdf = rdf.Filter(cut_ss, f'SS {kind}')
