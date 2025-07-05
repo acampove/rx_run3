@@ -35,6 +35,7 @@ class SampleSplitter(Wcache):
                 args     = [rdf.uid, hadron_id, is_bplus, cfg])
 
         self._b_id     = 521
+        self._sample   = sample
         self._is_bplus = is_bplus
         self._hadron_id= hadron_id
         self._cfg      = cfg
@@ -49,6 +50,19 @@ class SampleSplitter(Wcache):
         return rdf
     # --------------------------------
     def _get_cuts(self, kind : str) -> tuple[str,str]:
+        '''
+        Parameters
+        -----------------
+        kind: PassFail/FailPass/FailFail
+
+        Returns
+        -----------------
+        Cut for the OS or SS candidates needed to get the data in the corresponding region
+        '''
+        if not self._sample.startswith('DATA_'):
+            log.info(f'Not applying OS/SS cuts on MC sample: {self._sample}')
+            return '(1)', '(1)'
+
         pass_cut = self._cfg['lepton_tagging']['pass']
         fail_cut = self._cfg['lepton_tagging']['fail']
         hadr_tag = self._cfg['hadron_tagging'][self._hadron_id]
