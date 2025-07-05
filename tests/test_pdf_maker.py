@@ -49,17 +49,21 @@ def _check_pdf(
     plt.savefig(plot_path)
     plt.close()
 # ------------------------------------
-@pytest.mark.parametrize('sample', [
-    #'Bu_KplKplKmn_eq_sqDalitz_DPC',   # To be uncommented once MC be reprocessed
-    'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
-def test_simple(sample : str):
+#'Bu_KplKplKmn_eq_sqDalitz_DPC',   # To be uncommented once MC be reprocessed
+@pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC', 'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
+@pytest.mark.parametrize('region', ['signal', 'control'])
+def test_simple(sample : str, region : str):
     '''
     Simplest test
     '''
     q2bin = 'central'
 
     mkr = PDFMaker(sample=sample, q2bin=q2bin, trigger=Data.trigger)
-    pdf = mkr.get_pdf(obs=Data.obs)
+    pdf = mkr.get_pdf(obs=Data.obs, region=region)
 
-    _check_pdf(pdf=pdf, data=pdf.dat)
+    _check_pdf(
+            pdf    = pdf,
+            data   = pdf.dat,
+            sample = sample,
+            region = region)
 # ------------------------------------
