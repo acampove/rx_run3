@@ -58,6 +58,11 @@ class SampleWeighter:
         True : If sample has Lepton candidates meant to be treated as electrons, e.g signal sample
         False: E.g. misID MC
         '''
+        # Data is always evaluated in control region
+        # Assume electrons are hadrons here
+        if self._sample.startswith('DATA_24_'):
+            return False
+
         if self._sample in self._l_electron_sample:
             log.info(f'Reading true electron efficiencies for: {self._sample}')
             return True
