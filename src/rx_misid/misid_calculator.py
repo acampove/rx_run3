@@ -21,11 +21,13 @@ log=LogStore.add_logger('rx_misid:misid_calculator')
 # ----------------------------
 class MisIDCalculator:
     '''
-    Class meant to apply contamination selection and reweighting for a given sample, e.g.
+    Class meant to provide a dataframe for a given sample among:
 
     Data
     Signal
     Leakage
+
+    In either the signal or the control region
     '''
     # -----------------------------
     def __init__(self, cfg : dict, mode : str):
