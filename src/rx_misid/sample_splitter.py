@@ -59,10 +59,6 @@ class SampleSplitter(Wcache):
         -----------------
         Cut for the OS or SS candidates needed to get the data in the corresponding region
         '''
-        if not self._sample.startswith('DATA_'):
-            log.info(f'Not applying OS/SS cuts on MC sample: {self._sample}')
-            return '(1)', '(1)'
-
         pass_cut = self._cfg['lepton_tagging']['pass']
         fail_cut = self._cfg['lepton_tagging']['fail']
         hadr_tag = self._cfg['hadron_tagging'][self._hadron_id]
