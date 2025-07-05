@@ -61,7 +61,16 @@ class PDFMaker:
 
         return pdf, data
     # -----------------------------------------
-    def get_pdf(self, obs : zobs) -> zpdf:
+    # TODO: Add resonant mode to noPID samples
+    def _get_project_trigger(self) -> tuple[str,str]:
+        if self._sample in ['Bu_JpsiK_ee_eq_DPC']:
+            log.warning(f'Using rx samples for {self._sample}')
+            trigger = self._trigger.replace('_noPID', '')
+
+            return 'rx', trigger
+
+        return 'nopid', self._trigger
+    # -----------------------------------------
     def get_pdf(
             self,
             obs    : zobs,
@@ -78,10 +87,12 @@ class PDFMaker:
         '''
         cfg = gut.load_data(package='rx_misid_data', fpath = 'misid.yaml')
 
+        project, trigger = self._get_project_trigger()
+
         cfg['input']['sample' ] = self._sample
-        cfg['input']['trigger'] = self._trigger
+        cfg['input']['trigger'] = trigger
         cfg['input']['q2bin'  ] = self._q2bin
-        cfg['input']['project'] = 'nopid'
+        cfg['input']['project'] = project
 
         obj = MisIDCalculator(cfg=cfg, mode=region)
         df  = obj.get_misid()
