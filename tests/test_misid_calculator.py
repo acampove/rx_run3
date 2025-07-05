@@ -43,7 +43,9 @@ def _validate_df(
         mode   : str) -> None:
     log.info(f'Validating {sample} {q2bin} {mode}')
 
-    plt.hist(df['B_Mass_smr'      ], bins=50, histtype='step', range=(4500, 6000), weights=df['weight'], label=    'Smeared')
+    if not sample.startswith('DATA_'):
+        plt.hist(df['B_Mass_smr'      ], bins=50, histtype='step', range=(4500, 6000), weights=df['weight'], label=    'Smeared')
+
     plt.hist(df['B_M_brem_track_2'], bins=50, histtype='step', range=(4500, 6000), weights=df['weight'], label='Non-smeared')
 
     plt.legend()
