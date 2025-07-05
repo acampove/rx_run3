@@ -62,10 +62,7 @@ class SampleWeighter:
             log.info(f'Reading true electron efficiencies for: {self._sample}')
             return True
 
-        is_hadron = self._sample in self._l_hadron_sample
-        is_data   = self._sample.startswith('DATA_')
-
-        if is_hadron or is_data:
+        if self._sample in self._l_hadron_sample:
             log.info(f'Reading fake electron efficiencies for: {self._sample}')
             return False
 
