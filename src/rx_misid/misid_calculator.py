@@ -14,7 +14,7 @@ from dmu.pdataframe           import utilities as put
 
 from rx_selection             import selection as sel
 from rx_data.rdf_getter       import RDFGetter
-from rx_misid.splitter        import SampleSplitter
+from rx_misid.sample_splitter import SampleSplitter
 from rx_misid.sample_weighter import SampleWeighter
 
 log=LogStore.add_logger('rx_misid:misid_calculator')
@@ -150,7 +150,7 @@ class MisIDCalculator:
         return rdf, uid
     # -----------------------------
     @gut.timeit
-    def get_misid(self, multi_proc : bool = False) -> pnd.DataFrame:
+    def get_misid(self, multi_proc : bool = True) -> pnd.DataFrame:
         '''
         Parameters
         -------------------
@@ -168,6 +168,7 @@ class MisIDCalculator:
 
         if multi_proc:
             nproc = len(l_arg)
+            log.warning(f'Using multiprocessing with {nproc} processes')
             with Pool(processes=nproc) as pool:
                 l_df = pool.map(self._get_sample, l_arg)
         else:
