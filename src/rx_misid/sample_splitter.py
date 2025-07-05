@@ -103,6 +103,27 @@ class SampleSplitter(Wcache):
 
         return df
     # --------------------------------
+    def _get_data_df(self) -> pnd.DataFrame:
+        '''
+        Using ROOT dataframe from data, after selection, will:
+        - Apply category splitting
+        - Build pandas dataframe and return it
+        '''
+        l_df = []
+        for kind in self._l_kind:
+            log.info(f'Calculating sample: {kind}')
+            rdf            = self._rdf
+            cut_os, cut_ss = self._get_data_cuts(kind=kind)
+
+            rdf = rdf.Filter(cut_os, f'OS {kind}')
+            rdf = rdf.Filter(cut_ss, f'SS {kind}')
+
+            df = self._rdf_to_df(rdf=rdf)
+            df['kind'] = kind
+            l_df.append(df)
+
+        df_tot = pnd.concat(l_df)
+        return df_tot
     def get_samples(self) -> pnd.DataFrame:
         '''
         For data: Returns pandas dataframe with data split by:
@@ -125,8 +146,6 @@ class SampleSplitter(Wcache):
 
             return df
 
-        l_df = []
-
         if not self._sample.startswith('DATA_'):
             df = self._rdf_to_df(rdf=self._rdf)
             df.to_parquet(parquet_path, engine='pyarrow')
@@ -134,19 +153,6 @@ class SampleSplitter(Wcache):
             self._cache()
             return df
 
-        for kind in self._l_kind:
-            log.info(f'Calculating sample: {kind}')
-            rdf            = self._rdf
-            cut_os, cut_ss = self._get_data_cuts(kind=kind)
-
-            rdf = rdf.Filter(cut_os, f'OS {kind}')
-            rdf = rdf.Filter(cut_ss, f'SS {kind}')
-
-            df = self._rdf_to_df(rdf=rdf)
-            df['kind'] = kind
-            l_df.append(df)
-
-        df_tot           = pnd.concat(l_df)
         df_tot.to_parquet(parquet_path, engine='pyarrow')
 
         self._cache()
