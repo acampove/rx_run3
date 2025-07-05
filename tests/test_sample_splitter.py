@@ -146,3 +146,34 @@ def test_mc_misid(hadron_id : str, is_bplus : bool):
     _check_stats(df=df)
     _plot_pide(df=df, hadron_id=hadron_id, is_bplus=is_bplus, sample=sample)
 # -------------------------------------------------------
+@pytest.mark.parametrize('hadron_id', Data.l_hadron_id)
+@pytest.mark.parametrize('is_bplus' , [True, False])
+@pytest.mark.parametrize('sample'   , ['Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC'])
+def test_mc_true_e(
+        hadron_id : str,
+        is_bplus  : bool,
+        sample    : str):
+    '''
+    Tests splitting for MC samples with true electrons
+    '''
+    log.info('')
+
+    rdf   = _get_rdf(
+        sample = sample,
+        trigger= 'Hlt2RD_BuToKpEE_MVA_noPID',
+        project= 'nopid')
+
+    cfg   = _get_config()
+    spl   = SampleSplitter(
+            rdf      = rdf,
+            sample   = sample,
+            hadron_id= hadron_id,
+            is_bplus = is_bplus,
+            cfg      = cfg)
+
+    df    = spl.get_samples()
+
+    log.info('Dataframe found, checking')
+    _check_stats(df=df)
+    _plot_pide(df=df, hadron_id=hadron_id, is_bplus=is_bplus, sample=sample)
+# -------------------------------------------------------
