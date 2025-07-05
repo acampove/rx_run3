@@ -25,20 +25,17 @@ class SampleWeighter:
     def __init__(
             self,
             df     : pnd.DataFrame,
-            mode   : str,
+            is_sig : bool,
             sample : str,
             cfg    : dict):
         '''
         df    : Pandas dataframe with columns 'hadron', 'bmeson' and 'kind'. Used to assign weights
-        mode  : Controls what kind of weight is assigned to candidate; transfer, control or signal
+        is_sig: If true, the weights will provide signal region sample, otherwise control region
         sample: E.g. DATA_24_... Needed to pick maps based on actual particle identity
         cfg   : Dictionary storing configuration
         '''
-        self._cfg = cfg
-        if mode not in ['transfer', 'control', 'signal']:
-            raise ValueError(f'Invalid weight kind: {mode}')
-
-        self._mode   = mode
+        self._cfg    = cfg
+        self._is_sig = is_sig
         self._sample = sample
         self._varx   : str
         self._vary   : str
