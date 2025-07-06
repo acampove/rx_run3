@@ -116,6 +116,7 @@ class SampleSplitter(Wcache):
 
         columns = self._cfg['branches']
         df = rut.rdf_to_df(rdf=self._rdf, columns=columns)
+        df['kind'] = 'full_sample' # MC is not split between PF,FP,FF, column is needed
 
         return df
     # --------------------------------
