@@ -57,12 +57,11 @@ def _check_pdf(
     'Bu_JpsiK_ee_eq_DPC',
     'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
 @pytest.mark.parametrize('is_sig', [True, False])
-def test_simple(sample : str, is_sig : bool):
+@pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
+def test_simple(sample : str, q2bin : str, is_sig : bool):
     '''
     Simplest test
     '''
-    q2bin = 'central'
-
     mkr = PDFMaker(sample=sample, q2bin=q2bin, trigger=Data.trigger)
     pdf = mkr.get_pdf(obs=Data.obs, is_sig=is_sig)
 
@@ -70,6 +69,7 @@ def test_simple(sample : str, is_sig : bool):
 
     _check_pdf(
         pdf    = pdf,
+        q2bin  = q2bin,
         data   = pdf.dat,
         sample = sample,
         region = region)
