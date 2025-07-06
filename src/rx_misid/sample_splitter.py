@@ -124,6 +124,7 @@ class SampleSplitter(Wcache):
 
         df_tot = pnd.concat(l_df)
         return df_tot
+    # --------------------------------
     def get_samples(self) -> pnd.DataFrame:
         '''
         For data: Returns pandas dataframe with data split by:
