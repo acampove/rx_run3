@@ -36,6 +36,26 @@ class MultipleSelectionOverriding(Exception):
     def __init__(self, message):
         super().__init__(message)
 #-----------------------
+@contextmanager
+def custom_selection(d_sel : dict[str,str]):
+    '''
+    This is a context manager meant to be used to add/overide
+    the selection specified in `d_sel` to default selection.
+
+    Parameters
+    ------------------
+    d_sel: Dictionary with
+        - key : Name of cut, e.g. brem
+        - value: Definition of cut, e.g. nbrem > 0
+    '''
+    org_val = Data.d_custom_selection
+
+    try:
+        Data.d_custom_selection = d_sel
+        yield
+    finally:
+        Data.d_custom_selection = org_val
+#-----------------------
 def _print_selection(d_cut : dict[str,str]) -> None:
     for name, expr in d_cut.items():
         log.debug(f'{name:<20}{expr}')
