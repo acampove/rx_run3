@@ -56,8 +56,11 @@ class PDFMaker:
         arr_mass = df[obsname].to_numpy()
         arr_wgt  = df['weight'].to_numpy()
 
-        data     = zfit.Data.from_numpy (obs=obs, array=arr_mass, weights=arr_wgt)
-        pdf      = zfit.pdf.KDE1DimFFT(data=data, obs=obs)
+        data     = zfit.Data.from_numpy(obs=obs, array=arr_mass, weights=arr_wgt)
+        pdf      = zfit.pdf.KDE1DimFFT(
+            data   = data,
+            obs    = obs,
+            padding= {'lowermirror' : 0.2, 'uppermirror' : 0.2})
 
         return pdf, data
     # -----------------------------------------
