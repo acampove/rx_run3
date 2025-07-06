@@ -64,10 +64,17 @@ class MisIDFitter:
         self._val_dir = value
     # --------------------------------------------------
     def _get_combinatorial(self) -> zpdf:
+        model = {'low' : 'hypexp', 'central' : 'exp', 'high' : 'suj'}[self._q2bin]
+        d_fix = {}
+        if self._q2bin == 'high':
+            d_fix = {'dl_suj' : 2.5,
+                    'gm_suj' : -10}
+
         obj  = ModelFactory(
             preffix = 'cmb',
             obs     = self._obs,
-            l_pdf   = ['exp'],
+            l_pdf   = [model],
+            d_fix   = d_fix,
             l_float = [],
             l_shared= [])
 
