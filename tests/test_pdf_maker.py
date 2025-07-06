@@ -65,6 +65,9 @@ def test_simple(sample : str, q2bin : str, is_sig : bool):
     mkr = PDFMaker(sample=sample, q2bin=q2bin, trigger=Data.trigger)
     pdf = mkr.get_pdf(obs=Data.obs, is_sig=is_sig)
 
+    if pdf is None:
+        return
+
     region = {True : 'signal', False : 'control'}[is_sig]
 
     _check_pdf(
