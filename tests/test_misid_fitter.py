@@ -19,7 +19,9 @@ class Data:
     '''
     Used to store attributes
     '''
-    obs = zfit.Space('mass', limits=(4500, 7000))
+    cache_dir = '/tmp/tests/rx_misid/misid_fitter'
+
+    os.makedirs(cache_dir, exist_ok=True)
 # ---------------------------------------------------
 def _get_toy_data() -> zdata:
     pdf = sut.get_model(kind='s+b')
