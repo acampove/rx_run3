@@ -247,6 +247,10 @@ class RDFGetter:
             ftree     : str,
             d_trigger : dict[str,list[str]]) -> list[str]:
         '''
+        On EXT trigger: This is a _fake_ trigger made from the merge of the OS electron trigger and
+        the misID trigger, when the later is given a weight of 10, to account for prescale in 2024 data.
+        For 2025, prescale is gone.
+
         Parameters
         ----------------
         d_trigger : Dictionary mapping HLT2 trigger names to lists of ROOT files
