@@ -118,3 +118,16 @@ def test_rdf_random(val : int):
 
     assert math.isclose(tar, res, rel_tol=0.01)
 # -------------------------------------------------
+def test_rdf_to_df():
+    '''
+    Will test method making pandas dataframe from ROOT dataframe
+    '''
+    d_data = {
+        'x' : numpy.random.uniform(0,1,1000),
+        'y' : numpy.random.uniform(0,1,1000)}
+
+    rdf  = RDF.FromNumpy(d_data)
+    df   = ut.rdf_to_df(rdf=rdf, columns=['x', 'y'])
+
+    print(df)
+# -------------------------------------------------
