@@ -2,12 +2,15 @@
 Module holding KDEOptimizer class
 '''
 
-from dmu.stats.zfit         import zfit
+from dmu.stats.zfit           import zfit
+from dmu.stats.gof_calculator import GofCalculator
+from dmu.logging.log_store    import LogStore
 
-from zfit.core.interfaces   import ZfitData   as zdata
-from zfit.core.interfaces   import ZfitPDF    as zpdf
-from zfit.core.interfaces   import ZfitSpace  as zobs
+from zfit.core.interfaces     import ZfitData   as zdata
+from zfit.core.interfaces     import ZfitPDF    as zpdf
+from zfit.core.interfaces     import ZfitSpace  as zobs
 
+log=LogStore.add_logger('dmu:stats:kde_optimizer')
 # -----------------------------------------------------
 class KDEOptimizer:
     '''
