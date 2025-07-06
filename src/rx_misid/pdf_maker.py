@@ -37,6 +37,9 @@ class PDFMaker:
         self._sample = sample
         self._trigger= trigger
         self._q2bin  = q2bin
+
+        # Will not make PDF with fewer than these entries
+        self._min_entries = 50
     # -----------------------------------------
     def _pdf_from_df(
             self,
@@ -67,7 +70,7 @@ class PDFMaker:
     def get_pdf(
             self,
             obs    : zobs,
-            is_sig : bool) -> zpdf:
+            is_sig : bool) -> zpdf|None:
         '''
         Parameters
         ---------------
@@ -77,6 +80,7 @@ class PDFMaker:
         Returns
         ---------------
         zfit PDF the zfit data is attached as `dat`
+        Or None if fewer than _min_entries were found
         '''
         cfg = gut.load_data(package='rx_misid_data', fpath = 'misid.yaml')
 
@@ -87,6 +91,11 @@ class PDFMaker:
 
         obj = MisIDCalculator(cfg=cfg, is_sig=is_sig)
         df  = obj.get_misid()
+
+        if len(df) < self._min_entries: # if there are fewer than this entries, ignore component
+            log.warning(f'No candidates found for: {self._sample}/{self._q2bin}/{self._trigger}')
+            return None
+
         pdf, dat = self._pdf_from_df(df=df, obs=obs)
         pdf.dat  = dat
 
