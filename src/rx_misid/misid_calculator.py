@@ -148,7 +148,14 @@ class MisIDCalculator:
             sample    : str,
             is_bplus  : bool,
             hadron_id : str) -> pnd.DataFrame:
+        '''
+        This method transform a ROOT dataframe into a pandas dataframe with:
 
+        - Only the columns needed
+        - With the information needed for adding PID weights:
+            1. Data: PassFail, FailPass, FailFails splitting
+            2. MC: Nothing else
+        '''
         sample = self._cfg['input']['sample']
         log.info(f'Splitting samples:\n   Bplus={is_bplus}\n   Hadron={hadron_id}\n   Sample={sample}')
 
