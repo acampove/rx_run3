@@ -40,10 +40,10 @@ class MisIDFitter:
         self._val_dir = None
 
         self._allowed_component = {
-                'signal' : 'Bu_Kee_eq_btosllball05_DPC',
-                'leakage': 'Bu_JpsiK_ee_eq_DPC',
-                'kkk'    : 'Bu_KplKplKmn_eq_sqDalitz_DPC',
-                'kpipi'  : 'Bu_piplpimnKpl_eq_sqDalitz_DPC'}
+            'signal' : 'Bu_Kee_eq_btosllball05_DPC',
+            'leakage': 'Bu_JpsiK_ee_eq_DPC',
+            'kkk'    : 'Bu_KplKplKmn_eq_sqDalitz_DPC',
+            'kpipi'  : 'Bu_piplpimnKpl_eq_sqDalitz_DPC'}
     # --------------------------------------------------
     @property
     def validation_directory(self) -> str|None:
