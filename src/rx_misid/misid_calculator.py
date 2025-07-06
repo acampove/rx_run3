@@ -134,7 +134,6 @@ class MisIDCalculator:
 
         df = weighter.get_weighted_data()
 
-
         # TODO: Use replace_nan to replace nans with 1s
         # This should drop up to 6% of the dataset
         # Due to NaNs in the PID maps.
