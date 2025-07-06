@@ -44,11 +44,11 @@ class MisIDFitter:
     # --------------------------------------------------
     def _get_combinatorial(self) -> zpdf:
         obj  = ModelFactory(
-                preffix = 'cmb',
-                obs     = self._obs,
-                l_pdf   = ['exp'],
-                l_float = [],
-                l_shared= [])
+            preffix = 'cmb',
+            obs     = self._obs,
+            l_pdf   = ['exp'],
+            l_float = [],
+            l_shared= [])
 
         pdf  = obj.get_pdf()
         ncmb = zfit.Parameter('ncmb', 10, 0, 10_000)
