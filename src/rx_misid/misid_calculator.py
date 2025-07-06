@@ -92,11 +92,11 @@ class MisIDCalculator:
 
         log.info(f'Splitting samples: Bplus={is_bplus}, Hadron={hadron_id}')
         splitter = SampleSplitter(
-                rdf      = rdf,
-                sample   = sample,
-                is_bplus = is_bplus,
-                hadron_id= hadron_id,
-                cfg      = self._cfg['splitting'])
+            rdf      = rdf,
+            sample   = sample,
+            is_bplus = is_bplus,
+            hadron_id= hadron_id,
+            cfg      = self._cfg['splitting'])
         df       = splitter.get_samples()
 
         log.info('Applying weights')
