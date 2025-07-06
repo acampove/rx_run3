@@ -39,14 +39,21 @@ def _get_df(q2bin : str) -> pnd.DataFrame:
 
     return df
 # ---------------------------------------------------
-def _validate_pdf(pdf : zpdf, name : str) -> None:
-    sam = pdf.create_sampler()
-    obj = ZFitPlotter(data=sam, model=pdf)
-    obj.plot(stacked=True)
+def _validate_data(df : pnd.DataFrame, name : str) -> None:
+    df.plot.scatter('L1_flag', 'L2_flag', s=100)
+    plt.savefig(f'{Data.cache_dir}/{name}_pass_fail.png')
+    plt.close()
 
     plt_path = f'{Data.cache_dir}/{name}.png'
     plt.savefig(plt_path)
     plt.close()
+# ---------------------------------------------------
+def _add_pass_flags(df : pnd.DataFrame, name : str) -> pnd.DataFrame:
+    df[f'{name}_pass'] = df.eval(f'{name}_PROBNN_E > 0.2 & {name}_PID_E > 3.0').astype(int)
+    df[f'{name}_fail'] = df.eval(f'{name}_PROBNN_E < 0.2 | {name}_PID_E < 3.0').astype(int)
+    df[f'{name}_flag'] = df[f'{name}_pass'] - df[f'{name}_fail']
+
+    return df
 # ---------------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 def test_simple(q2bin : str):
@@ -54,6 +61,11 @@ def test_simple(q2bin : str):
     Simplest test
     '''
     df      = _get_df(q2bin=q2bin)
+    df      = _add_pass_flags(df=df, name='L1')
+    df      = _add_pass_flags(df=df, name='L2')
+
+    _validate_data(df=df, name=f'simple_{q2bin}')
+
     arr_wgt = df['weight'    ].to_numpy()
     arr_mas = df['B_Mass_smr'].to_numpy()
     obs     = zfit.Space('B_Mass_smr', limits=(4500, 7000))
@@ -61,6 +73,4 @@ def test_simple(q2bin : str):
 
     ftr     = MisIDFitter(data=data, q2bin=q2bin)
     pdf     = ftr.get_pdf()
-
-    _validate_pdf(pdf=pdf, name=f'simple_{q2bin}')
 # ---------------------------------------------------
