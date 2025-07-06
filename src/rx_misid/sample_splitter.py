@@ -34,6 +34,7 @@ class SampleSplitter(Wcache):
                 out_path = f'sample_splitter_{sample}_{hadron_id}_{is_bplus}',
                 args     = [rdf.uid, hadron_id, is_bplus, cfg])
 
+        self._sample   = sample
         self._is_bplus = is_bplus
         self._hadron_id= hadron_id
         self._cfg      = cfg
@@ -101,6 +102,22 @@ class SampleSplitter(Wcache):
 
         df_tot = pnd.concat(l_df)
         return df_tot
+    # --------------------------------
+    def _get_df(self) -> pnd.DataFrame:
+        '''
+        This method is meant to be a switch between data and MC samples
+
+        Returns
+        ---------
+        Pandas dataframe with information needed for PID weighting
+        '''
+        if self._sample.startswith('DATA_'):
+            return self._get_data_df()
+
+        columns = self._cfg['branches']
+        df = rut.rdf_to_df(rdf=self._rdf, columns=columns)
+
+        return df
     # --------------------------------
     def get_samples(self) -> pnd.DataFrame:
         '''
