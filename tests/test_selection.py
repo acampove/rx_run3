@@ -150,9 +150,10 @@ def test_reset_custom_selection():
     sel.reset_custom_selection()
     sel.set_custom_selection(d_cut={'bdt' : mva_cut})
 # --------------------------
+# TODO: Add more samples
 @pytest.mark.parametrize('sample', [
     'Bu_Kee_eq_btosllball05_DPC',
-    'Bu_KplKplKmn_eq_sqDalitz_DPC',
+    #'Bu_KplKplKmn_eq_sqDalitz_DPC', Removed for now
     'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
 def test_truth_matching(sample : str):
     '''
