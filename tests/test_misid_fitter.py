@@ -44,8 +44,8 @@ def _validate_data(df : pnd.DataFrame, name : str) -> None:
     plt.savefig(f'{Data.cache_dir}/{name}_pass_fail.png')
     plt.close()
 
-    plt_path = f'{Data.cache_dir}/{name}.png'
-    plt.savefig(plt_path)
+    plt.hist(df['weight'], bins=10)
+    plt.savefig(f'{Data.cache_dir}/{name}_weights.png')
     plt.close()
 # ---------------------------------------------------
 def _add_pass_flags(df : pnd.DataFrame, name : str) -> pnd.DataFrame:
