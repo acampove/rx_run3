@@ -27,7 +27,7 @@ class Data:
     l_analysis = ['EE', 'MM'  ]
     l_q2bin    = ['low', 'central', 'jpsi', 'psi2S', 'high']
 
-    d_custom_selection : dict[str,str]
+    d_custom_selection : dict[str,str]|None = None
 #-----------------------
 class MultipleSelectionOverriding(Exception):
     '''
@@ -69,7 +69,7 @@ def set_custom_selection(d_cut : dict[str,str]) -> None:
 
     This function is meant to be called once, at the beginning of the process, e.g. main function.
     '''
-    if hasattr(Data, 'd_custom_selection'):
+    if Data.d_custom_selection is not None:
         raise MultipleSelectionOverriding('Custom selection can only be set once')
 
     log.warning('Setting custom selection')
@@ -89,13 +89,13 @@ def reset_custom_selection() -> None:
     parts of the code
     '''
 
-    if not hasattr(Data, 'd_custom_selection'):
+    if Data.d_custom_selection is None:
         log.warning('No custom selection found')
         return
 
     log.warning('Resetting custom selection')
 
-    del Data.d_custom_selection
+    Data.d_custom_selection = None
 #-----------------------
 def selection(
         q2bin    : str,
@@ -130,7 +130,7 @@ def selection(
     d_tmp = _get_selection(analysis, project, q2bin)
     d_cut.update(d_tmp)
 
-    if hasattr(Data, 'd_custom_selection'):
+    if Data.d_custom_selection is not None:
         d_cut.update(Data.d_custom_selection)
 
     d_cut = _update_mass_cuts(
