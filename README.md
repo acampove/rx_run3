@@ -40,15 +40,17 @@ The selection stored in the config files can be overriden with:
 ```python
 from rx_selection import selection as sel
 
-sel.set_custom_selection(d_cut = {'bdt' : 'mva_cmb > 0.1'})
+with sel.custom_selection(d_cut = {'bdt' : 'mva_cmb > 0.1'}):
+    run_function_that_uses_selection()
 ```
 
-which will **override** the `bdt` cut. By adding new entries one can also expand the selection.
-This function can only be called **ONCE** per session in order to prevent having different parts
-of the code running different selections.
+This will make sure that the `bdt` field:
 
-The purpose of this method is to provide the flexibility to run the analysis with a new selection
-while ensuring that all the parts of the analysis use the same selection.
+- Is added with a `mva_cmb > 0.1` cut, if it does not exist
+- Is updated, if it exists
+
+For `run_function_that_uses_selection` and outside that `with`
+section, the nominal the selection picked is the nominal.
 
 ## Resetting overriding selection
 
