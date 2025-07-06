@@ -54,7 +54,7 @@ class MisIDCalculator:
         '''
 
         sample = self._cfg['input']['sample']
-        if sample.startswith('DATA_'):
+        if sample.startswith('DATA'):
             return ['kaon', 'pion']
 
         if sample == 'Bu_piplpimnKpl_eq_sqDalitz_DPC':
