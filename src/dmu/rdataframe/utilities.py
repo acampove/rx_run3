@@ -145,28 +145,28 @@ def random_filter(rdf : RDataFrame, entries : int) -> RDataFrame:
 
     return rdf
 # ---------------------------------------------------------------------
- def rdf_to_df(
-         rdf     : RDataFrame,
-         columns : list[str]) -> pnd.DataFrame:
-     '''
-     Parameters
-     ---------------
-     rdf      : ROOT dataframe
-     branches : List of columns to keep in pandas dataframe
+def rdf_to_df(
+        rdf     : RDataFrame,
+        columns : list[str]) -> pnd.DataFrame:
+    '''
+    Parameters
+    ---------------
+    rdf      : ROOT dataframe
+    branches : List of columns to keep in pandas dataframe
 
-     Returns
-     ---------------
-     Pandas dataframe with subset of columns
-     '''
-     log.debug('Storing branches')
-     data     = rdf.AsNumpy(columns)
-     df       = pnd.DataFrame(data)
+    Returns
+    ---------------
+    Pandas dataframe with subset of columns
+    '''
+    log.debug('Storing branches')
+    data     = rdf.AsNumpy(columns)
+    df       = pnd.DataFrame(data)
 
-     if len(df) == 0:
-         rep      = rdf.Report()
-         cutflow  = rdf_report_to_df(rep)
-         log.warning('Empty dataset:\n')
-         log.info(cutflow)
+    if len(df) == 0:
+        rep      = rdf.Report()
+        cutflow  = rdf_report_to_df(rep)
+        log.warning('Empty dataset:\n')
+        log.info(cutflow)
 
-     return df
+    return df
 # ---------------------------------------------------------------------
