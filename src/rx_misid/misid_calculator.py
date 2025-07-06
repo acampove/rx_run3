@@ -117,7 +117,11 @@ class MisIDCalculator:
         rdf,uid = self._filter_rdf(rdf=rdf, uid=uid, is_bplus=is_bplus)
         rdf.uid = uid
 
-        df = self._get_df(rdf=rdf, sample=sample, is_bplus=is_bplus, hadron_id=hadron_id)
+        df = self._get_df(
+                rdf       = rdf,
+                sample    = sample,
+                is_bplus  = is_bplus,
+                hadron_id = hadron_id)
 
         log.info('Applying weights')
         weighter = SampleWeighter(
