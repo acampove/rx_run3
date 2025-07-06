@@ -146,6 +146,25 @@ def test_is_pdf_usable():
 
     is_pdf_usable(pdf)
 #----------------------------------
+def test_save_fit_with_plot():
+    '''
+    Tests saving fit and the plot
+    '''
+    pdf = _get_pdf(kind='simple')
+    dat = pdf.create_sampler(n=1000)
+
+    ptr = ZFitPlotter(data=dat, model=pdf)
+    ptr.plot()
+
+    obj = Fitter(pdf, dat)
+    res = obj.fit()
+
+    sut.save_fit(
+        data   =dat,
+        model  =pdf,
+        res    =res,
+        fit_dir=f'{Data.fit_dir}/save_fit/with_plot')
+#----------------------------------
 def test_save_fit_param():
     '''
     Tests saving fit with parameters
