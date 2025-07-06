@@ -5,7 +5,6 @@ Module holding SampleSplitter class
 import pandas as pnd
 from ROOT                   import RDataFrame
 
-from dmu.rdataframe         import utilities as ut
 from dmu.logging.log_store  import LogStore
 from dmu.workflow.cache     import Cache     as Wcache
 
@@ -78,29 +77,6 @@ class SampleSplitter(Wcache):
         log.debug(f'OS cut: {cut_os}')
 
         return cut_ss, cut_os
-    # --------------------------------
-    def _rdf_to_df(self, rdf : RDataFrame) -> pnd.DataFrame:
-        '''
-        Parameters
-        ---------------
-        rdf: ROOT dataframe
-
-        Returns
-        ---------------
-        Pandas dataframe with subset of columns
-        '''
-        l_branch = self._cfg['branches']
-        log.debug('Storing branches')
-        data     = rdf.AsNumpy(l_branch)
-        df       = pnd.DataFrame(data)
-
-        if len(df) == 0:
-            rep      = rdf.Report()
-            cutflow  = ut.rdf_report_to_df(rep)
-            log.warning('Empty dataset:\n')
-            log.info(cutflow)
-
-        return df
     # --------------------------------
     def _get_df(self) -> pnd.DataFrame:
         '''
