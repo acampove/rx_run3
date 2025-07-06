@@ -117,11 +117,14 @@ class MisIDCalculator:
         rdf,uid = self._filter_rdf(rdf=rdf, uid=uid, is_bplus=is_bplus)
         rdf.uid = uid
 
-        df = self._get_df(
-                rdf       = rdf,
-                sample    = sample,
-                is_bplus  = is_bplus,
-                hadron_id = hadron_id)
+        splitter     = SampleSplitter(
+            rdf      = rdf,
+            sample   = sample,
+            is_bplus = is_bplus,
+            hadron_id= hadron_id,
+            cfg      = self._cfg['splitting'])
+
+        df = splitter.get_samples()
 
         log.info('Applying weights')
         weighter = SampleWeighter(
@@ -141,36 +144,6 @@ class MisIDCalculator:
         df = put.dropna(df, max_frac=0.06)
 
         return df
-    # -----------------------------
-    def _get_df(
-            self,
-            rdf       : RDataFrame,
-            sample    : str,
-            is_bplus  : bool,
-            hadron_id : str) -> pnd.DataFrame:
-        '''
-        This method transform a ROOT dataframe into a pandas dataframe with:
-
-        - Only the columns needed
-        - With the information needed for adding PID weights:
-            1. Data: PassFail, FailPass, FailFails splitting
-            2. MC: Nothing else
-        '''
-        sample = self._cfg['input']['sample']
-        log.info(f'Splitting samples:\n   Bplus={is_bplus}\n   Hadron={hadron_id}\n   Sample={sample}')
-
-        if not sample.startswith('DATA_'):
-            columns = self._cfg['splitting']['branches']
-            return rut.rdf_to_df(rdf=rdf, columns=columns)
-
-        splitter     = SampleSplitter(
-            rdf      = rdf,
-            sample   = sample,
-            is_bplus = is_bplus,
-            hadron_id= hadron_id,
-            cfg      = self._cfg['splitting'])
-
-        return splitter.get_samples()
     # -----------------------------
     def _filter_rdf(
             self,
