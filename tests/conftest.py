@@ -84,7 +84,7 @@ def _set_logs():
     LogStore.set_level('dmu:workflow:cache'   , 10)
     LogStore.set_level('rx_data:rdf_getter'   , 30)
     LogStore.set_level('rx_data:path_splitter', 30)
-    LogStore.set_level('dmu:worflow:cacke'    , 30)
+    LogStore.set_level('dmu:worflow:cache'    , 30)
     LogStore.set_level('rx_selection:truth_matching', 30)
     LogStore.set_level('rx_selection:selection'     , 30)
 # -----------------------------------
