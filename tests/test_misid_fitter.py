@@ -72,5 +72,6 @@ def test_simple(q2bin : str):
     data    = zfit.data.from_numpy(obs=obs, array=arr_mas, weights=arr_wgt)
 
     ftr     = MisIDFitter(data=data, q2bin=q2bin)
+    ftr.validation_directory = f'{Data.cache_dir}/simple/{q2bin}'
     pdf     = ftr.get_pdf()
 # ---------------------------------------------------
