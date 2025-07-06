@@ -11,7 +11,6 @@ from dmu.logging.log_store    import LogStore
 from dmu.generic              import hashing
 from dmu.generic              import utilities as gut
 from dmu.pdataframe           import utilities as put
-from dmu.rdataframe           import utilities as rut
 
 from rx_selection             import selection as sel
 from rx_data.rdf_getter       import RDFGetter
