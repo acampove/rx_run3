@@ -11,6 +11,7 @@ from dmu.logging.log_store    import LogStore
 from dmu.generic              import hashing
 from dmu.generic              import utilities as gut
 from dmu.pdataframe           import utilities as put
+from dmu.rdataframe           import utilities as rut
 
 from rx_selection             import selection as sel
 from rx_data.rdf_getter       import RDFGetter
@@ -41,6 +42,32 @@ class MisIDCalculator:
         self._cfg   =    cfg
         self._is_sig= is_sig
         self._b_id  = 521
+
+        self._l_track = self._get_tracks()
+    # -----------------------------
+    def _get_tracks(self) -> list[str]:
+        '''
+        Given the data sample that this instance processes
+        this method will decide if the electron tracks should
+        be treated as kaons, pions, electrons
+
+        This is needed to switch between PID calibration maps
+        '''
+
+        sample = self._cfg['input']['sample']
+        if sample.startswith('DATA_'):
+            return ['kaon', 'pion']
+
+        if sample == 'Bu_piplpimnKpl_eq_sqDalitz_DPC':
+            return ['pion']
+
+        if sample == 'Bu_KplKplKmn_eq_sqDalitz_DPC':
+            return ['kaon']
+
+        if sample in ['Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC']:
+            return ['electron']
+
+        raise ValueError(f'Unrecognized sample: {sample}')
     # -----------------------------
     def _get_selection(self) -> dict[str,str]:
         '''
