@@ -689,12 +689,17 @@ this class supports:
 To save in one go everything regarding your fit do:
 
 ```python
-from dmu.stats import utilities as sut
+from dmu.stats              import utilities as sut
+from dmu.stats.zfit_plotter import ZFitPlotter
+
+ptr = ZFitPlotter(data=dat, model=pdf)
+ptr.plot()
 
 sut.save_fit(data=data, model=pdf, res=fit_result, fit_dir='/some/directory', d_const=constraints)
 ```
 
-and the function will save everything that you would normally need froma fit.
+and the function will save everything that you would normally need from a fit.
+If the lines with `ZFitPlotter` were called before `save_fit` the fit plot will also be saved.
 
 ## Placeholdef fits
 
