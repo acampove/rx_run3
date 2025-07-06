@@ -78,6 +78,8 @@ class MisIDFitter:
             q2bin  =self._q2bin,
             trigger=self._trigger)
         pdf = mkr.get_pdf(obs=self._obs, is_sig=False)
+        if pdf is None: # Early return for missing PDFs, due to low statistics dataset
+            return None
 
         nev = zfit.param.Parameter(f'n{kind}', 1000, 0, 1000_000)
         pdf.set_yield(nev)
