@@ -61,12 +61,12 @@ def test_fix_params():
     l_flt = ['mu', 'sg']
 
     mod   = ModelFactory(
-            preffix = 'unique',
-            obs     = Data.obs,
-            l_pdf   = l_pdf,
-            d_fix   = {'al_dscb' : 3, 'nr_dscb' : 1},
-            l_shared= l_shr,
-            l_float = l_flt)
+        preffix = 'unique',
+        obs     = Data.obs,
+        l_pdf   = l_pdf,
+        d_fix   = {'al_dscb' : 3, 'nr_dscb' : 1},
+        l_shared= l_shr,
+        l_float = l_flt)
 
     pdf   = mod.get_pdf()
 
