@@ -52,8 +52,8 @@ def _check_pdf(
 # ------------------------------------
 #'Bu_KplKplKmn_eq_sqDalitz_DPC',   # To be uncommented once MC be reprocessed
 @pytest.mark.parametrize('sample', [
-    'Bu_Kee_eq_btosllball05_DPC', 
-    'Bu_JpsiK_ee_eq_DPC', 
+    'Bu_Kee_eq_btosllball05_DPC',
+    'Bu_JpsiK_ee_eq_DPC',
     'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
 @pytest.mark.parametrize('is_sig', [True, False])
 def test_simple(sample : str, is_sig : bool):
