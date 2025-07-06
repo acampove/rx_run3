@@ -19,9 +19,7 @@ class Data:
     '''
     Data class
     '''
-    l_hadron_id = ['kaon', 'pion']
     plt.style.use(mplhep.style.LHCb2)
-
     out_dir = '/tmp/tests/rx_misid/sample_splitter'
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
