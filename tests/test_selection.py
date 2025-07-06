@@ -172,3 +172,16 @@ def test_truth_matching(sample : str):
 
     assert 20 * fin > ini
 # --------------------------
+@pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('q2bin' , ['low', 'central', 'jpsi', 'psi2', 'high'])
+def test_custom_selection(sample : str, q2bin : str):
+    '''
+    This function tests the custom_selection
+    context manager
+    '''
+    with sel.custom_selection(d_sel={'cut' : 'val'}):
+        d_cut = sel.selection(process=sample, q2bin=q2bin, trigger='Hlt2RD_BuToKpEE_MVA')
+
+    assert 'cut' in d_cut
+    assert d_cut['cut'] == 'val'
+# --------------------------
