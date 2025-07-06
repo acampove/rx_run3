@@ -54,7 +54,19 @@ def _validate_df(
     ax1.legend()
     ax1.set_title(f'{sample}; {mode}; {q2bin}')
 
-    ax2.hist(df['weight'], bins=50, histtype='step', range=(0.0, 1.1))
+    if sample   == 'Bu_piplpimnKpl_eq_sqDalitz_DPC':
+        rng = 0.0, 0.004 # PID weights will be small for misID MC
+        bins= 80
+    elif sample in ['Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC']:
+        rng = 0.0, 2.0 # These are true electrons, high efficiencies
+        bins= 2
+    elif sample.startswith('DATA_'):
+        rng = 0.0, 0.1 # Data transfer weights should be small
+        bins= 50
+    else:
+        raise ValueError(f'Invalid sample: {sample}')
+
+    ax2.hist(df['weight'], bins=bins, histtype='step', range=rng)
 
     plt.savefig(f'{Data.out_dir}/{sample}_{mode}_{q2bin}.png')
     plt.close()
