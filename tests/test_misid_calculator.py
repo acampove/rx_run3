@@ -135,8 +135,12 @@ def test_misid_by_brem(
     cfg                     = _get_config()
     cfg['input']['sample' ] = sample
     cfg['input']['q2bin'  ] = q2bin
-    cfg['input']['project'] = 'nopid'
-    cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_noPID'
+    if sample.startswith('DATA'):
+        cfg['input']['project'] = 'rx'
+        cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA'
+    else:
+        cfg['input']['project'] = 'nopid'
+        cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_noPID'
 
     is_sig   = {'signal' : True, 'control' : False}[mode]
     brem_cut = 'nbrem > 0' if has_brem else 'nbrem == 0'
