@@ -51,7 +51,7 @@ class MisIDFitter:
             l_shared= [])
 
         pdf  = obj.get_pdf()
-        ncmb = zfit.Parameter('ncmb', 10, 0, 10_000)
+        ncmb = zfit.Parameter('ncmb', 1000, 0, 10_000)
         pdf  = pdf.create_extended(ncmb, name='Combinatorial')
 
         return pdf
@@ -79,7 +79,7 @@ class MisIDFitter:
             trigger=self._trigger)
         pdf = mkr.get_pdf(obs=self._obs, is_sig=False)
 
-        nev = zfit.param.Parameter(f'n{kind}', 10, 0, 1000_000)
+        nev = zfit.param.Parameter(f'n{kind}', 1000, 0, 1000_000)
         pdf.set_yield(nev)
 
         return pdf
