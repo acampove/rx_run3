@@ -23,11 +23,24 @@ class Data:
 
     os.makedirs(cache_dir, exist_ok=True)
 # ---------------------------------------------------
-def _get_toy_data() -> zdata:
-    pdf = sut.get_model(kind='s+b')
-    sam = pdf.create_sampler(n=1000)
+def _get_df(q2bin : str) -> pnd.DataFrame:
+    data_path = f'{Data.cache_dir}/{q2bin}.parquet'
+    if os.path.isfile(data_path):
+        df = pnd.read_parquet(data_path)
+        return df
 
-    return sam
+    cfg = gut.load_data(package='rx_misid_data', fpath='misid.yaml')
+    cfg['input']['q2bin'  ] = q2bin
+    cfg['input']['sample' ] = 'DATA_24_MagUp_24c3'
+    cfg['input']['project'] = 'rx'
+    cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_ext'
+
+    obj = MisIDCalculator(cfg=cfg, is_sig=False)
+    df  = obj.get_misid()
+
+    df.to_parquet(data_path)
+
+    return df
 # ---------------------------------------------------
 def test_simple():
     '''
