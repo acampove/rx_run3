@@ -126,7 +126,7 @@ class MisIDCalculator:
         '''
         Parameters
         ----------------
-        rdf     : ROOT dataframe 
+        rdf     : ROOT dataframe
         uid     : Dataframe unique identifier
         is_bplus: To get only B+ candidates
 
