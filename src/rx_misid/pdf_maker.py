@@ -61,6 +61,7 @@ class PDFMaker:
 
         data     = zfit.Data.from_numpy(obs=obs, array=arr_mass, weights=arr_wgt)
         pdf      = zfit.pdf.KDE1DimFFT(
+            name   = self._sample,
             data   = data,
             obs    = obs,
             padding= {'lowermirror' : 0.2, 'uppermirror' : 0.2})
