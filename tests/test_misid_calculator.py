@@ -30,12 +30,9 @@ def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 # ---------------------------------
 def _get_config() -> dict:
-    config_path = files('rx_misid_data').joinpath(Data.config_name)
-    config_path = str(config_path)
-    with open(config_path, encoding='utf-8') as ifile:
-        data = yaml.safe_load(ifile)
+    cfg = gut.load_data(package='rx_misid_data', fpath='misid.yaml')
 
-    return data
+    return cfg
 # ---------------------------------
 def _validate_df(
         df     : pnd.DataFrame,
