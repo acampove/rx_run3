@@ -117,14 +117,7 @@ class MisIDCalculator:
         rdf,uid = self._filter_rdf(rdf=rdf, uid=uid, is_bplus=is_bplus)
         rdf.uid = uid
 
-        log.info(f'Splitting samples: Bplus={is_bplus}, Hadron={hadron_id}')
-        splitter = SampleSplitter(
-            rdf      = rdf,
-            sample   = sample,
-            is_bplus = is_bplus,
-            hadron_id= hadron_id,
-            cfg      = self._cfg['splitting'])
-        df       = splitter.get_samples()
+        df = self._get_df(rdf=rdf, sample=sample, is_bplus=is_bplus, hadron_id=hadron_id)
 
         log.info('Applying weights')
         weighter = SampleWeighter(
@@ -144,6 +137,29 @@ class MisIDCalculator:
         df = put.dropna(df, max_frac=0.06)
 
         return df
+    # -----------------------------
+    def _get_df(
+            self,
+            rdf       : RDataFrame,
+            sample    : str,
+            is_bplus  : bool,
+            hadron_id : str) -> pnd.DataFrame:
+
+        sample = self._cfg['input']['sample']
+        if not sample.startswith('DATA_'):
+            columns = self._cfg['splitting']['branches']
+            return rut.rdf_to_df(rdf=rdf, columns=columns)
+
+        log.info(f'Splitting samples: Bplus={is_bplus}, Hadron={hadron_id}')
+
+        splitter     = SampleSplitter(
+            rdf      = rdf,
+            sample   = sample,
+            is_bplus = is_bplus,
+            hadron_id= hadron_id,
+            cfg      = self._cfg['splitting'])
+
+        return splitter.get_samples()
     # -----------------------------
     def _filter_rdf(
             self,
