@@ -16,7 +16,6 @@ from ROOT import RDataFrame, RDF, Numba
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:rdataframe:utilities')
-
 # ---------------------------------------------------------------------
 @dataclass
 class Data:
