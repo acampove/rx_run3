@@ -142,7 +142,10 @@ class SampleSplitter(Wcache):
 
             return df
 
-        df = self._get_df()
+        df           = self._get_df()
+        df['hadron'] = self._hadron_id
+        df['bmeson'] = 'bplus' if self._is_bplus else 'bminus'
+
         df.to_parquet(parquet_path, engine='pyarrow')
         self._cache()
         return df

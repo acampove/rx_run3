@@ -134,8 +134,6 @@ class MisIDCalculator:
 
         df = weighter.get_weighted_data()
 
-        df['hadron'] = hadron_id
-        df['bmeson'] = 'bplus' if is_bplus else 'bminus'
 
         # TODO: Use replace_nan to replace nans with 1s
         # This should drop up to 6% of the dataset
