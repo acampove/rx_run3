@@ -2,15 +2,15 @@
 Script meant to test MisIDCalculator class
 '''
 import os
-from importlib.resources import files
 
-import yaml
 import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
+
+from dmu.generic               import utilities as gut
 from dmu.logging.log_store     import LogStore
-from rx_misid.misid_calculator import MisIDCalculator
 from rx_selection              import selection as sel
+from rx_misid.misid_calculator import MisIDCalculator
 
 log=LogStore.add_logger('rx_misid:test_misid_calculator')
 # -------------------------------------------------------
