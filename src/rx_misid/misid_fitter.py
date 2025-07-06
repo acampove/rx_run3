@@ -107,10 +107,13 @@ class MisIDFitter:
 
         return pdf
     # --------------------------------------------------
-    def _get_plot_text(self) -> str:
-        text = f'$q^2$: {self._q2bin}'
+    def _get_component_names(self) -> dict[str,str]:
+        d_name = {
+            'Bu_Kee_eq_btosllball05_DPC'    : r'$B^+\to K^+ e^+e^-$',
+            'Bu_piplpimnKpl_eq_sqDalitz_DPC': r'$B^+\to K^+ \pi^+\pi^-$',
+            'Bu_JpsiK_ee_eq_DPC'            : r'$B^+\to K^+ J/\psi(\to e^+e^-)$'}
 
-        return text
+        return d_name
     # --------------------------------------------------
     def _get_model(self) -> zpdf:
         '''
@@ -141,12 +144,13 @@ class MisIDFitter:
         res   = obj.fit()
 
         if self._val_dir is not None:
+            d_leg = self._get_component_names()
+
             obj= ZFitPlotter(data=self._data, model=model)
-            obj.plot(stacked=True, nbins=32)
+            obj.plot(stacked=True, nbins=32, d_leg=d_leg)
             ax = obj.axs[0]
 
-            title = self._get_plot_text()
-            ax.set_title(title)
+            ax.set_title(f'$q^2$: {self._q2bin}')
 
             sut.save_fit(
                 data   = self._data,
