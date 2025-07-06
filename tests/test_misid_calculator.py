@@ -38,8 +38,9 @@ def _validate_df(
         df     : pnd.DataFrame,
         sample : str,
         q2bin  : str,
+        test   : str,
         mode   : str) -> None:
-    log.info(f'Validating {sample} {q2bin} {mode}')
+    log.info(f'Validating {test} {sample} {q2bin} {mode}')
 
     _, (ax1, ax2) = plt.subplots(ncols=2, figsize=(20, 10))
 
@@ -68,7 +69,9 @@ def _validate_df(
 
     ax2.hist(df['weight'], bins=bins, histtype='step', range=rng)
 
-    plt.savefig(f'{Data.out_dir}/{sample}_{mode}_{q2bin}.png')
+    os.makedirs(f'{Data.out_dir}/{test}', exist_ok=True)
+
+    plt.savefig(f'{Data.out_dir}/{test}/{sample}_{mode}_{q2bin}.png')
     plt.close()
 # ---------------------------------
 @pytest.mark.parametrize('q2bin' , ['low', 'central'])
