@@ -107,6 +107,7 @@ class MisIDCalculator:
         obj     = RDFGetter(sample=sample, trigger=trigger, analysis=project)
         rdf     = obj.get_rdf()
         uid     = obj.get_uid()
+        log.info(f'Filtering for: {hadron_id}; is_bplus={is_bplus}')
         rdf,uid = self._filter_rdf(rdf=rdf, uid=uid, is_bplus=is_bplus)
         rdf.uid = uid
 
@@ -167,7 +168,6 @@ class MisIDCalculator:
         d_sel['block'] = 'block > 0'
         d_sel['B_ID' ] =f'B_ID=={bid}'
 
-        log.info('Applying selection')
         for cut_name, cut_expr in d_sel.items():
             log.debug(f'{cut_name:<30}{cut_expr}')
             rdf = rdf.Filter(cut_expr, cut_name)
