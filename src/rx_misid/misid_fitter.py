@@ -107,6 +107,11 @@ class MisIDFitter:
 
         return pdf
     # --------------------------------------------------
+    def _get_plot_text(self) -> str:
+        text = f'$q^2$: {self._q2bin}'
+
+        return text
+    # --------------------------------------------------
     def _get_model(self) -> zpdf:
         '''
         Returns model needed to fit mass distribution in control region
@@ -137,7 +142,11 @@ class MisIDFitter:
 
         if self._val_dir is not None:
             obj= ZFitPlotter(data=self._data, model=model)
-            obj.plot()
+            obj.plot(stacked=True, nbins=32)
+            ax = obj.axs[0]
+
+            title = self._get_plot_text()
+            ax.set_title(title)
 
             sut.save_fit(
                 data   = self._data,
