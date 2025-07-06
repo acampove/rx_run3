@@ -79,6 +79,9 @@ class MisIDFitter:
             trigger=self._trigger)
         pdf = mkr.get_pdf(obs=self._obs, is_sig=False)
 
+        nev = zfit.param.Parameter(f'n{kind}', 10, 0, 1000_000)
+        pdf.set_yield(nev)
+
         return pdf
     # --------------------------------------------------
     def _get_model(self) -> zpdf:
