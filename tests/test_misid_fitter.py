@@ -1,11 +1,18 @@
 '''
 This file contains tests for MisIDFitter
 '''
+import os
+import pytest
+import pandas            as pnd
+import matplotlib.pyplot as plt
 
-from dmu.stats.zfit         import zfit
-from dmu.stats              import utilities  as sut
-from zfit.core.interfaces   import ZfitData   as zdata
-from rx_misid.misid_fitter  import MisIDFitter
+from dmu.stats.zfit            import zfit
+from dmu.generic               import utilities  as gut
+from dmu.stats.zfit_plotter    import ZFitPlotter
+from zfit.core.interfaces      import ZfitData   as zdata
+from zfit.core.interfaces      import ZfitPDF    as zpdf
+from rx_misid.misid_fitter     import MisIDFitter
+from rx_misid.misid_calculator import MisIDCalculator
 
 # ---------------------------------------------------
 class Data:
