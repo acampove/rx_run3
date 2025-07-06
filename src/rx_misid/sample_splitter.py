@@ -79,7 +79,7 @@ class SampleSplitter(Wcache):
 
         return cut_ss, cut_os
     # --------------------------------
-    def _get_df(self) -> pnd.DataFrame:
+    def _get_data_df(self) -> pnd.DataFrame:
         '''
         Using ROOT dataframe from data, after selection, will:
         - Apply category splitting
