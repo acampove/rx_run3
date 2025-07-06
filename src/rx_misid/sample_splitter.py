@@ -34,7 +34,6 @@ class SampleSplitter(Wcache):
                 out_path = f'sample_splitter_{sample}_{hadron_id}_{is_bplus}',
                 args     = [rdf.uid, hadron_id, is_bplus, cfg])
 
-        self._sample   = sample
         self._is_bplus = is_bplus
         self._hadron_id= hadron_id
         self._cfg      = cfg
@@ -103,7 +102,7 @@ class SampleSplitter(Wcache):
 
         return df
     # --------------------------------
-    def _get_data_df(self) -> pnd.DataFrame:
+    def _get_df(self) -> pnd.DataFrame:
         '''
         Using ROOT dataframe from data, after selection, will:
         - Apply category splitting
@@ -147,16 +146,8 @@ class SampleSplitter(Wcache):
 
             return df
 
-        if not self._sample.startswith('DATA_'):
-            df = self._rdf_to_df(rdf=self._rdf)
-            df.to_parquet(parquet_path, engine='pyarrow')
-
-            self._cache()
-            return df
-
-        df_tot.to_parquet(parquet_path, engine='pyarrow')
-
+        df = self._get_df()
+        df.to_parquet(parquet_path, engine='pyarrow')
         self._cache()
-
-        return df_tot
+        return df
 # --------------------------------
