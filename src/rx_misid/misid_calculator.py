@@ -150,11 +150,11 @@ class MisIDCalculator:
             hadron_id : str) -> pnd.DataFrame:
 
         sample = self._cfg['input']['sample']
+        log.info(f'Splitting samples:\n   Bplus={is_bplus}\n   Hadron={hadron_id}\n   Sample={sample}')
+
         if not sample.startswith('DATA_'):
             columns = self._cfg['splitting']['branches']
             return rut.rdf_to_df(rdf=rdf, columns=columns)
-
-        log.info(f'Splitting samples: Bplus={is_bplus}, Hadron={hadron_id}')
 
         splitter     = SampleSplitter(
             rdf      = rdf,
