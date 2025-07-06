@@ -134,11 +134,11 @@ def selection(
         d_cut.update(Data.d_custom_selection)
 
     d_cut = _update_mass_cuts(
-            d_cut   =   d_cut,
-            q2bin   =   q2bin,
-            sample  = process,
-            trigger = trigger,
-            smeared = smeared)
+        d_cut   =   d_cut,
+        q2bin   =   q2bin,
+        sample  = process,
+        trigger = trigger,
+        smeared = smeared)
 
     _print_selection(d_cut)
 
