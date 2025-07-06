@@ -4,8 +4,10 @@ Module with MisIDFitter class
 import os
 
 from dmu.stats.zfit          import zfit
+from dmu.stats.zfit_plotter  import ZFitPlotter
 from dmu.logging.log_store   import LogStore
 from dmu.stats.model_factory import ModelFactory
+from dmu.stats               import utilities  as sut
 from dmu.stats.fitter        import Fitter
 
 from zfit.core.interfaces    import ZfitData   as zdata
@@ -130,18 +132,20 @@ class MisIDFitter:
         This should be the sum of all the backgrounds, i.e. KKK, Kpipi, etc
         '''
         model = self._get_model()
-        obj = Fitter(model, self._data)
-        res = obj.fit()
-        d_nevt = self._yield_from_result(res)
+        obj   = Fitter(model, self._data)
+        res   = obj.fit()
 
-        l_pdf = []
-        for sample, nevt in d_nevt.items():
-            rdf     = self._get_rdf(sample)
-            arr_wgt = self._get_weights(rdf, nevt)
-            pdf_sam = self._pdf_from_rdf(rdf=rdf, wgt=arr_wgt)
-            l_pdf.append(pdf_sam)
+        if self._val_dir is not None:
+            obj= ZFitPlotter(data=self._data, model=model)
+            obj.plot()
 
-        pdf = zfit.pdf.SumPDF(l_pdf)
+            sut.save_fit(
+                data   = self._data,
+                model  = model,
+                res    = res,
+                fit_dir= self._val_dir)
+        else:
+            log.warning('No validation directory found, not saving fit results')
 
-        return pdf
+        return model
 # --------------------------------------------------
