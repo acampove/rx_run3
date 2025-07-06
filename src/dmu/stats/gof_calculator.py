@@ -110,6 +110,13 @@ class GofCalculator:
         arr_data    = self._get_data_bin_contents()
         arr_modl    = self._get_pdf_bin_contents()
 
+        log.debug(40 * '-')
+        log.debug(f'{"Data":<20}{"Model":<20}')
+        log.debug(40 * '-')
+        for dval, mval in zip(arr_data, arr_modl):
+            log.debug(f'{dval:<20.3f}{mval:<20.3f}')
+        log.debug(40 * '-')
+
         norm        = numpy.sum(arr_data) / numpy.sum(arr_modl)
         arr_modl    = norm * arr_modl
         arr_res     = arr_modl - arr_data
