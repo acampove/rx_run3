@@ -221,6 +221,13 @@ def save_fit(
         d_const : dict[str,tuple[float,float]] = None) -> None:
     '''
     Function used to save fit results, meant to reduce boiler plate code
+
+    Plots: If:
+
+    ptr = ZFitPlotter(data=dat, model=pdf)
+    ptr.plot()
+
+    was done before calling this method, the plot will also be saved
     '''
     os.makedirs(fit_dir, exist_ok=True)
     log.info(f'Saving fit to: {fit_dir}')
