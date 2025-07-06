@@ -26,6 +26,7 @@ class Data:
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('rx_data:rdf_getter'       , 10)
+    LogStore.set_level('rx_misid:pdf_maker'       , 10)
     LogStore.set_level('rx_misid:misid_calculator', 10)
 
     os.makedirs(Data.out_dir, exist_ok=True)
@@ -54,19 +55,21 @@ def _check_pdf(
     'Bu_Kee_eq_btosllball05_DPC', 
     'Bu_JpsiK_ee_eq_DPC', 
     'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
-@pytest.mark.parametrize('region', ['signal', 'control'])
-def test_simple(sample : str, region : str):
+@pytest.mark.parametrize('is_sig', [True, False])
+def test_simple(sample : str, is_sig : bool):
     '''
     Simplest test
     '''
     q2bin = 'central'
 
     mkr = PDFMaker(sample=sample, q2bin=q2bin, trigger=Data.trigger)
-    pdf = mkr.get_pdf(obs=Data.obs, region=region)
+    pdf = mkr.get_pdf(obs=Data.obs, is_sig=is_sig)
+
+    region = {True : 'signal', False : 'control'}[is_sig]
 
     _check_pdf(
-            pdf    = pdf,
-            data   = pdf.dat,
-            sample = sample,
-            region = region)
+        pdf    = pdf,
+        data   = pdf.dat,
+        sample = sample,
+        region = region)
 # ------------------------------------
