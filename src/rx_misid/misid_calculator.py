@@ -217,7 +217,7 @@ class MisIDCalculator:
 
         For a given kind of inputs, e.g (Data, signal, leakage, hadronic misID)
         '''
-        l_arg = [ (x, y) for x in [True,False] for y in ['kaon', 'pion'] ]
+        l_arg = [ (x, y) for x in [True,False] for y in self._l_track ]
 
         if multi_proc:
             nproc = len(l_arg)
