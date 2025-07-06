@@ -5,8 +5,8 @@ Module containing the selection function, which returns a dictionary of cuts
 
 import os
 
-from dataclasses         import dataclass
 from importlib.resources import files
+from contextlib          import contextmanager
 
 import yaml
 import ap_utilities.decays.utilities as aput
@@ -19,7 +19,6 @@ from rx_selection import version_management as vman
 
 log=LogStore.add_logger('rx_selection:selection')
 #-----------------------
-@dataclass
 class Data:
     '''
     Class used to store share attributes
