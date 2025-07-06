@@ -172,7 +172,7 @@ class MisIDCalculator:
         hadron : kaon or pion
         bmeson : bplus or bminus
 
-        For a given kind of inputs, e.g (Data, signal, leakage)
+        For a given kind of inputs, e.g (Data, signal, leakage, hadronic misID)
         '''
         l_arg = [ (x, y) for x in [True,False] for y in ['kaon', 'pion'] ]
 
