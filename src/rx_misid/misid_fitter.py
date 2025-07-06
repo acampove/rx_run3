@@ -1,6 +1,8 @@
 '''
 Module with MisIDFitter class
 '''
+import os
+
 from dmu.stats.zfit          import zfit
 from dmu.logging.log_store   import LogStore
 from dmu.stats.model_factory import ModelFactory
@@ -35,12 +37,29 @@ class MisIDFitter:
         self._data    = data
         self._q2bin   = q2bin
         self._trigger = 'Hlt2RD_BuToKpEE_MVA_noPID'
+        self._val_dir = None
 
         self._allowed_component = {
                 'signal' : 'Bu_Kee_eq_btosllball05_DPC',
                 'leakage': 'Bu_JpsiK_ee_eq_DPC',
                 'kkk'    : 'Bu_KplKplKmn_eq_sqDalitz_DPC',
                 'kpipi'  : 'Bu_piplpimnKpl_eq_sqDalitz_DPC'}
+    # --------------------------------------------------
+    @property
+    def validation_directory(self) -> str|None:
+        '''
+        This is where validation outputs will go, e.g. fit plots.
+        '''
+        return self._val_dir
+    # --------------------------------------------------
+    @validation_directory.setter
+    def validation_directory(self, value : str) -> None:
+        '''
+        This is where validation outputs will go, e.g. fit plots.
+        '''
+        os.makedirs(value, exist_ok=True)
+
+        self._val_dir = value
     # --------------------------------------------------
     def _get_combinatorial(self) -> zpdf:
         obj  = ModelFactory(
