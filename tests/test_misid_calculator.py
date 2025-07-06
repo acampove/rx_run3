@@ -57,8 +57,11 @@ def _validate_df(
     elif sample in ['Bu_Kee_eq_btosllball05_DPC', 'Bu_JpsiK_ee_eq_DPC']:
         rng = 0.0, 2.0 # These are true electrons, high efficiencies
         bins= 2
-    elif sample.startswith('DATA_'):
+    elif sample.startswith('DATA_') and mode == 'signal':
         rng = 0.0, 0.1 # Data transfer weights should be small
+        bins= 50
+    elif sample.startswith('DATA_') and mode == 'control':
+        rng = 0.0, 11. # Data transfer weights should be small
         bins= 50
     else:
         raise ValueError(f'Invalid sample: {sample}')
