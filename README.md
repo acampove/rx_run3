@@ -360,7 +360,7 @@ mod   = ModelFactory(
     l_shared= l_shr, 
     l_float = l_float,
     l_rep   = l_rep,    # Optional
-    l_fix   = d_fix)    # Optional
+    d_fix   = d_fix)    # Optional
 
 pdf   = mod.get_pdf()
 ```
