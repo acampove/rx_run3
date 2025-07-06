@@ -43,11 +43,19 @@ def _get_df(q2bin : str) -> pnd.DataFrame:
     return df
 # ---------------------------------------------------
 def test_simple():
+@pytest.mark.parametrize('q2bin', ['low'])
+def test_simple(q2bin : str):
     '''
     Simplest test
     '''
-    q2bin = 'low'
-    data  = _get_toy_data()
+    df      = _get_df(q2bin=q2bin)
+    arr_wgt = df['weight'    ].to_numpy()
+    arr_mas = df['B_Mass_smr'].to_numpy()
+    obs     = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    data    = zfit.data.from_numpy(obs=obs, array=arr_mas, weights=arr_wgt)
 
-    ftr   = MisIDFitter(data=data, q2bin=q2bin)
-    pdf   = ftr.get_pdf()
+    ftr     = MisIDFitter(data=data, q2bin=q2bin)
+    pdf     = ftr.get_pdf()
+
+    _validate_pdf(pdf=pdf)
+# ---------------------------------------------------
