@@ -97,7 +97,7 @@ def test_non_misid(sample : str, mode : str, q2bin : str):
     obj = MisIDCalculator(cfg=cfg, is_sig=is_sig)
     df  = obj.get_misid()
 
-    _validate_df(df=df, sample=sample, mode=mode, q2bin=q2bin)
+    _validate_df(df=df, sample=sample, mode=mode, test='non_misid', q2bin=q2bin)
 # ---------------------------------
 @pytest.mark.parametrize('q2bin' , ['low', 'central'])
 @pytest.mark.parametrize('mode'  , ['signal', 'control'])
@@ -117,11 +117,11 @@ def test_misid(sample : str, mode : str, q2bin : str):
     obj = MisIDCalculator(cfg=cfg, is_sig=is_sig)
     df  = obj.get_misid()
 
-    _validate_df(df=df, sample=sample, mode=mode, q2bin=q2bin)
+    _validate_df(df=df, sample=sample, mode=mode, test='misid', q2bin=q2bin)
 # ---------------------------------
 @pytest.mark.parametrize('q2bin'   , ['low', 'central'])
 @pytest.mark.parametrize('mode'    , ['signal', 'control'])
-@pytest.mark.parametrize('sample'  , ['Bu_piplpimnKpl_eq_sqDalitz_DPC'])
+@pytest.mark.parametrize('sample'  , ['Bu_piplpimnKpl_eq_sqDalitz_DPC', 'DATA_24_MagUp_24c3'])
 @pytest.mark.parametrize('has_brem', [True, False])
 def test_misid_by_brem(
         has_brem : bool,
@@ -145,5 +145,7 @@ def test_misid_by_brem(
         obj = MisIDCalculator(cfg=cfg, is_sig=is_sig)
         df  = obj.get_misid()
 
-    _validate_df(df=df, sample=sample, mode=f'{mode}_{has_brem}', q2bin=q2bin)
+    brem_status = {True : 'with_brem', False : 'no_brem'}[has_brem]
+
+    _validate_df(df=df, sample=sample, mode=mode, test=brem_status, q2bin=q2bin)
 # ---------------------------------
