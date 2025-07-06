@@ -33,18 +33,19 @@ def _initialize():
 # ------------------------------------
 def _check_pdf(
         pdf    : zpdf,
+        q2bin  : str,
         data   : zdata,
         sample : str,
         region : str) -> None:
     '''
     Take zfit pdf and validate it
     '''
-    ext_text = f'{sample}\n{region}'
+    ext_text = f'{sample}\n{region}\n{q2bin}'
 
     obj= ZFitPlotter(data=data, model=pdf)
     obj.plot(ext_text=ext_text)
 
-    plot_path = f'{Data.out_dir}/{sample}_{region}.png'
+    plot_path = f'{Data.out_dir}/{sample}_{region}_{q2bin}.png'
     log.info(f'Saving to: {plot_path}')
 
     plt.savefig(plot_path)
