@@ -84,12 +84,6 @@ class MisIDCalculator:
         if 'selection' not in self._cfg['input']:
             return d_sel
 
-        log.warning('Overriding selection')
-        d_cut   = self._cfg['input']['selection']
-        for name, expr in d_cut.items():
-            log.info(f'{name:<20}{expr}')
-            d_sel[name] = expr
-
         return d_sel
     # -----------------------------
     def _get_sample(self, arg : tuple[bool,str]) -> pnd.DataFrame:
