@@ -25,7 +25,7 @@ class Data:
 # ------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    LogStore.set_level('rx_data:rdf_getter'       , 10)
+    LogStore.set_level('rx_data:rdf_getter'       , 30)
     LogStore.set_level('rx_misid:pdf_maker'       , 10)
     LogStore.set_level('rx_misid:misid_calculator', 10)
 
