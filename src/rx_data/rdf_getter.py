@@ -268,10 +268,14 @@ class RDFGetter:
             raise ValueError(f'Invalid trigger name {self._trigger} for sample {sample} and friend tree {ftree}')
 
         # TODO: When misid trigger be processed also for MC, this has to be updated
-        if not self._sample.startswith('DATA_24_'):
+        if self._sample.startswith('mc_'):
             trigger = self._trigger.replace('_ext', '')
             log.warning(f'For sample {self._sample} will use {trigger} instead of {self._trigger}')
             return d_trigger[trigger]
+
+        # NOTE: If it was not explicitly stated that this is 2024 data, ext trigger does not make sense
+        if not self._sample.startswith('DATA_24'):
+            raise ValueError(f'Requested EXT trigger for non-2024 data sample: {self._sample}')
 
         log.debug(f'Found extended trigger: {self._trigger}')
         trig_misid   = self._trigger.replace('_ext', '_misid')
