@@ -73,12 +73,11 @@ class MisIDFitter:
 
         sample = self._allowed_component[kind]
 
-        mkr    = PDFMaker(
-                sample =sample,
-                q2bin  =self._q2bin,
-                trigger=self._trigger)
-
-        pdf    = mkr.get_pdf(obs=self._obs)
+        mkr = PDFMaker(
+            sample =sample,
+            q2bin  =self._q2bin,
+            trigger=self._trigger)
+        pdf = mkr.get_pdf(obs=self._obs, is_sig=False)
 
         return pdf
     # --------------------------------------------------
