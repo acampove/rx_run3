@@ -282,10 +282,10 @@ class SampleWeighter:
             return eff
 
         if math.isnan(eff):
-            log.warning('At:')
-            log.warning(f'X={x:.2f}')
-            log.warning(f'Y={y:.2f}')
-            log.warning(f'Eff={eff:0.3} returning 0')
+            log.debug('At:')
+            log.debug(f'X={x:.2f}')
+            log.debug(f'Y={y:.2f}')
+            log.debug(f'Eff={eff:0.3} returning 0')
 
             return 0.0
 
