@@ -6,6 +6,7 @@ import pandas as pnd
 from ROOT                   import RDataFrame
 
 from dmu.logging.log_store  import LogStore
+from dmu.rdataframe         import utilities as rut
 from dmu.workflow.cache     import Cache     as Wcache
 
 log=LogStore.add_logger('rx_misid:sample_splitter')
@@ -93,7 +94,8 @@ class SampleSplitter(Wcache):
             rdf = rdf.Filter(cut_os, f'OS {kind}')
             rdf = rdf.Filter(cut_ss, f'SS {kind}')
 
-            df = self._rdf_to_df(rdf=rdf)
+            columns = self._cfg['branches']
+            df = rut.rdf_to_df(rdf=rdf, columns=columns)
             df['kind'] = kind
             l_df.append(df)
 
