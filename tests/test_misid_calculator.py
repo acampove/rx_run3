@@ -10,6 +10,7 @@ import pandas            as pnd
 import matplotlib.pyplot as plt
 from dmu.logging.log_store     import LogStore
 from rx_misid.misid_calculator import MisIDCalculator
+from rx_selection              import selection as sel
 
 log=LogStore.add_logger('rx_misid:test_misid_calculator')
 # -------------------------------------------------------
@@ -102,4 +103,32 @@ def test_misid(sample : str, mode : str, q2bin : str):
     df  = obj.get_misid()
 
     _validate_df(df=df, sample=sample, mode=mode, q2bin=q2bin)
+# ---------------------------------
+@pytest.mark.parametrize('q2bin'   , ['low', 'central'])
+@pytest.mark.parametrize('mode'    , ['signal', 'control'])
+@pytest.mark.parametrize('sample'  , ['Bu_piplpimnKpl_eq_sqDalitz_DPC'])
+@pytest.mark.parametrize('has_brem', [True, False])
+def test_misid_by_brem(
+        has_brem : bool,
+        sample   : str,
+        mode     : str,
+        q2bin    : str):
+    '''
+    Test calculator with misID samples, for noPID trigger and separately
+    for candidates with brem and without brem assigned
+    '''
+    cfg                     = _get_config()
+    cfg['input']['sample' ] = sample
+    cfg['input']['q2bin'  ] = q2bin
+    cfg['input']['project'] = 'nopid'
+    cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_noPID'
+
+    is_sig   = {'signal' : True, 'control' : False}[mode]
+    brem_cut = 'nbrem > 0' if has_brem else 'nbrem == 0'
+
+    with sel.custom_selection(d_sel={'nbrem' : brem_cut}):
+        obj = MisIDCalculator(cfg=cfg, is_sig=is_sig)
+        df  = obj.get_misid()
+
+    _validate_df(df=df, sample=sample, mode=f'{mode}_{has_brem}', q2bin=q2bin)
 # ---------------------------------
