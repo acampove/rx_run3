@@ -42,8 +42,16 @@ def _get_df(q2bin : str) -> pnd.DataFrame:
 
     return df
 # ---------------------------------------------------
-def test_simple():
-@pytest.mark.parametrize('q2bin', ['low'])
+def _validate_pdf(pdf : zpdf, name : str) -> None:
+    sam = pdf.create_sampler()
+    obj = ZFitPlotter(data=sam, model=pdf)
+    obj.plot(stacked=True)
+
+    plt_path = f'{Data.cache_dir}/{name}.png'
+    plt.savefig(plt_path)
+    plt.close()
+# ---------------------------------------------------
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 def test_simple(q2bin : str):
     '''
     Simplest test
@@ -57,5 +65,5 @@ def test_simple(q2bin : str):
     ftr     = MisIDFitter(data=data, q2bin=q2bin)
     pdf     = ftr.get_pdf()
 
-    _validate_pdf(pdf=pdf)
+    _validate_pdf(pdf=pdf, name=f'simple_{q2bin}')
 # ---------------------------------------------------
