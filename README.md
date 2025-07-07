@@ -25,6 +25,13 @@ The code structure can be seen below:
   <img src="doc/images/rx_misid.svg" alt="Rx MisID Diagram" style="width: 50%;">
 </div>
 
+### Caching
+
+Some of the outputs of the code are expensive to calculate. Therefore
+caching has been implemented through the 
+(Cache)[https://gitlab.cern.ch/rx_run3/dmu#caching-with-a-base-class] class
+Caching is implemented for a couple of classes as shown in the diagram above.
+
 ### Pass-Fail approach
 
 - Build the control regions with the weights (transfer function).
