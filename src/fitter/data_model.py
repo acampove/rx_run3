@@ -18,17 +18,53 @@ class DataModel(BaseModel):
     Model for fitting data samples
     '''
     # ------------------------
-    def __init__(self):
+    def __init__(
+            self,
+            cfg : DictConfig,
+            obs : zobs):
         '''
-
+        Parameters
+        ------------------
+        cfg : Configuration object
+        obs : zfit observable
         '''
-
+        self._cfg = cfg
+        self._obs = obs
     # ------------------------
-    def get_model(self, obs : zobs) -> zpdf:
+    def _extend(self, pdf : zpdf, name : str) -> zpdf:
+        '''
+        Parameters
+        -------------------
+        name: Name of component
+        pdf : zfit pdf
+
+        Returns
+        -------------------
+        PDF with yield
+        '''
+
+        nevt = zfit.param.Parameter(f'n{name}', 100, 0, 1000_000)
+        kdes = zfit.pdf.KDE1DimFFT, zfit.pdf.KDE1DimExact, zfit.pdf.KDE1DimISJ
+        if isinstance(pdf, kdes):
+            pdf.set_yield(nevt)
+            return pdf
+
+        pdf = pdf.create_extended(nevt, name=name)
+
+        return pdf
+    # ------------------------
+    def get_model(self) -> zpdf:
         '''
         Returns fitting model for data fit
         '''
+        l_pdf = []
+        for component, cfg_path in self._cfg.model:
+            cfg = gut.load_conf(package='fitter', fpath=cfg_path)
+            ftr = SimFitter(cfg=cfg, obs=self._obs)
+            pdf = ftr.get_model()
+            pdf = self._extend(pdf=pdf, name=component)
 
+        pdf = zfit.pdf.SumPDF(l_pdf)
 
         return pdf
 # ------------------------
