@@ -125,6 +125,7 @@ This class will create a PDF from an MC sample that:
 import zfit
 from rx_misid.pdf_maker     import PDFMaker
 
+# In the ntuples `B_Mass_smr` is the brem corrected and smeared mass
 obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
 mkr = PDFMaker(
     sample ='Bu_piplpimnKpl_eq_sqDalitz_DPC', # This should be MC always 
