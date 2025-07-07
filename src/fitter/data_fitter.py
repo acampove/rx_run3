@@ -41,7 +41,7 @@ class DataFitter(BaseFitter, Cache):
         Cache.__init__(
                 self,
                 out_path = cfg.output_directory,
-                config   = cfg)
+                config   = OmegaConf.to_container(cfg, resolve=True))
 
         self._obs = self._make_observable()
     # ------------------------
