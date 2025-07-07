@@ -91,19 +91,11 @@ class DataFitter(BaseFitter, Cache):
             project= self._project)
         model= mod.get_model()
 
-        res  = self._fit(data=data, model=model)
-
-        ptr = ZFitPlotter(data=data, model=model)
-        ptr.plot(**self._cfg.plots)
-
-        sut.save_fit(
-            data   = data,
-            model  = model,
-            res    = res,
-            fit_dir= self._out_path)
+        res  = self._fit(data=data, model=model, cfg=self._cfg.fit)
+        self._save_fit(data=data, model=model, res=res, out_path = self._out_path)
+        cres = sut.zres_to_cres(res=res)
 
         self._cache()
-        cres = sut.zres_to_cres(res=res)
 
         return cres
 # ------------------------
