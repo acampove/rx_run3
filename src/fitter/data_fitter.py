@@ -92,11 +92,11 @@ class DataFitter(BaseFitter, Cache):
             return res
 
         dpr  = DataPreprocessor(
-                obs    = self._obs,
-                q2bin  = self._q2bin,
-                sample = self._sample,
-                trigger= self._trigger,
-                project= self._project)
+            obs    = self._obs,
+            q2bin  = self._q2bin,
+            sample = self._sample,
+            trigger= self._trigger,
+            project= self._project)
         data = dpr.get_data()
 
         mod  = DataModel()
