@@ -87,14 +87,35 @@ class SimFitter(BaseFitter, Cache):
         ------------
         zfit PDF, not extended yet
         '''
-        pdf = self._get_pdf()
-        if 'simulation' not in self._cfg:
-            return pdf
+        model = self._get_pdf()
+        if 'sample' not in self._cfg:
+            return model
 
-        prp = DataPreprocessor(obs=self._obs, **self._cfg.simulation)
+        result_path = f'{self._out_path}/parameters.yaml'
+        if self._copy_from_cache():
+            res   = OmegaConf.load(result_path)
+            res   = cast(DictConfig, res)
+            model = self._fix_tails(pdf=model, pars=res)
+
+            return model
+
+        prp = DataPreprocessor(
+                obs=self._obs,
+                trigger= self._trigger,
+                project= self._project,
+                q2bin  = self._q2bin,
+                sample = self._cfg.sample)
         data= prp.get_data()
 
-        self._fit(data=data, pdf=pdf)
+        res  = self._fit(data=data, model=model, cfg=self._cfg.fit)
+        self._save_fit(
+            cfg      = self._cfg.plots,
+            data     = data,
+            model    = model,
+            res      = res,
+            out_path = self._out_path)
 
-        return pdf
+        self._cache()
+
+        return model
 # ------------------------
