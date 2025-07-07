@@ -5,9 +5,12 @@ fit:
     range:
       - 4500
       - 7000
-plots:
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 30
   stacked : True
+  d_leg :
+    Gauss_ext       : Signal
+    Exponential_ext : Combinatorial
 model:
   background : exp.yaml
   signal     : signal.yaml
