@@ -2,11 +2,12 @@
 Module containing DataModel class
 '''
 
+from dmu.stats.zfit         import zfit
 from zfit.core.interfaces   import ZfitPDF    as zpdf
+from zfit.core.interfaces   import ZfitSpace  as zobs
 
-from dmu.stats         import utilities as sut
-from fitter.base_model import BaseModel
-from fitter.sim_fitter import SimFitter
+from fitter.base_model      import BaseModel
+from fitter.sim_fitter      import SimFitter
 
 # ------------------------
 class DataModel(BaseModel):
