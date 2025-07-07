@@ -21,7 +21,9 @@ The configuration is located in `rx_misid_data/misid.yaml`.
 
 The code structure can be seen below:
 
-![Code structure](doc/images/rx_misid.svg)
+<p align="center">
+  <img src="doc/images/rx_misid.svg" alt="Rx MisID Diagram" width="60%">
+</p>
 
 ### Pass-Fail approach
 
