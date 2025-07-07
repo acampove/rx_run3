@@ -60,10 +60,14 @@ class DataModel(BaseModel):
         Returns fitting model for data fit
         '''
         l_pdf = []
-        for component, cfg_path in self._cfg.model:
-            cfg = gut.load_conf(package='fitter', fpath=cfg_path)
+        npdf  = len(self._cfg.model)
+        if npdf == 0:
             log.info(self._cfg.model)
+            raise ValueError('Found zero components in model')
+
         log.debug(f'Found {npdf} componets')
+        for component, cfg_path in self._cfg.model.items():
+            cfg = gut.load_conf(package='fitter_data', fpath=cfg_path)
             ftr = SimFitter(
                 name=component,
                 cfg =cfg,
