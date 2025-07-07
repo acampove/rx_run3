@@ -3,10 +3,15 @@ Module containing DataFitter class
 '''
 from typing import cast
 
-from omegaconf          import DictConfig, OmegaConf
-from dmu.workflow.cache import Cache
-from fitter.base_fitter import BaseFitter
-from fitter.data_model  import DataModel
+from omegaconf                import DictConfig, OmegaConf
+from dmu.workflow.cache       import Cache
+from dmu.stats.zfit           import zfit
+from dmu.stats.fitter         import Fitter
+from dmu.stats                import utilities  as sut
+from zfit.core.interfaces     import ZfitSpace  as zobs
+from fitter.data_preprocessor import DataPreprocessor
+from fitter.base_fitter       import BaseFitter
+from fitter.data_model        import DataModel
 
 # ------------------------
 class DataFitter(BaseFitter, Cache):
