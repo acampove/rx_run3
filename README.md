@@ -16,20 +16,12 @@ pip install rx_misid
 
 ## Usage
 
-The code will take as inputs:
+The code will calculate the misID through Pass-Fail and control region fits 
+The configuration is located in `rx_misid_data/misid.yaml`.
 
-- Ntuples with real data
-- MisID maps made with PIDCalib2
+The code structure can be seen below:
 
-The configuration specifying
-
-- The definition of the control and signal regions
-- The MVA working point
-- The path to the calibration maps
-
-among others can be found in `rx_misid_data/misid.yaml`.
-
-The code will:
+![Code structure](/doc/images/rx_misid.svg)
 
 ### Pass-Fail approach
 
