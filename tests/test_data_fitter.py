@@ -13,6 +13,11 @@ def test_simple():
             package='fitter_data',
             fpath  ='tests/data_fit.yaml')
 
-    ftr = DataFitter(cfg=cfg)
+    ftr = DataFitter(
+            sample = '',
+            trigger= '',
+            project= '',
+            q2bin  = '',
+            cfg    = cfg)
     res = ftr.run()
 # -------------------------------------------
