@@ -707,6 +707,31 @@ sut.save_fit(data=data, model=pdf, res=fit_result, fit_dir='/some/directory', d_
 and the function will save everything that you would normally need from a fit.
 If the lines with `ZFitPlotter` were called before `save_fit` the fit plot will also be saved.
 
+### Transforming fit results to DictConfig
+
+The `OmegaConf` library offers `DictConfig` objects, which are easier to handle
+when reading nested data. To transform a zfit result object into one of these 
+objects do:
+
+```python
+from dmu.stats import utilities as sut
+
+cres = sut.zres_to_cres(res=res)
+```
+
+and then one would access the information like:
+
+```python
+error = cres.mu.error
+value = cres.mu.value
+```
+
+and these objects can be saved to JSON with:
+
+```python
+OmegaConf.save(config=cres, f='results.yaml')
+```
+
 ## Placeholdef fits
 
 In order to create a _fake_ fit on top of which one could develop other tools, do:
