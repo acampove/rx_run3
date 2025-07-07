@@ -56,8 +56,8 @@ class DataFitter(BaseFitter, Cache):
         '''
         Will return zfit observable
         '''
-        name        = self._cfg.fit.observable.name
-        [minx, maxx]= self._cfg.fit.observable.range
+        name        = self._cfg.model.observable.name
+        [minx, maxx]= self._cfg.model.observable.range
 
         return zfit.Space(name, limits=(minx, maxx))
     # ------------------------
