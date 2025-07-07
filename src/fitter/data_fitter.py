@@ -105,7 +105,7 @@ class DataFitter(BaseFitter, Cache):
         res  = self._fit(data=data, model=model)
 
         ptr = ZFitPlotter(data=data, model=model)
-        ptr.plot()
+        ptr.plot(stacked=True)
 
         sut.save_fit(
             data   = data,
