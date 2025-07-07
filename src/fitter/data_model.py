@@ -22,16 +22,25 @@ class DataModel(BaseModel):
     # ------------------------
     def __init__(
             self,
-            cfg : DictConfig,
-            obs : zobs):
+            cfg     : DictConfig,
+            obs     : zobs,
+            trigger : str,
+            project : str,
+            q2bin   : str):
         '''
         Parameters
         ------------------
-        cfg : Configuration object
-        obs : zfit observable
+        cfg    : Configuration object
+        trigger: Hlt2RD...
+        project: E.g. rx
+        q2bin  : E.g. central
+        obs    : zfit observable
         '''
-        self._cfg = cfg
-        self._obs = obs
+        self._cfg    = cfg
+        self._obs    = obs
+        self._trigger= trigger
+        self._project= project
+        self._q2bin  = q2bin
     # ------------------------
     def _extend(self, pdf : zpdf, name : str) -> zpdf:
         '''
