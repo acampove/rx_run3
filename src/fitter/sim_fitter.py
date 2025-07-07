@@ -57,5 +57,10 @@ class SimFitter(BaseFitter):
         if 'simulation' not in self._cfg:
             return pdf
 
+        prp = DataPreprocessor(obs=self._obs, **self._cfg.simulation)
+        data= prp.get_data()
+
+        self._fit(data=data, pdf=pdf)
+
         return pdf
 # ------------------------
