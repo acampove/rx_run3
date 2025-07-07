@@ -1,0 +1,7 @@
+output_directory : signal
+models           :
+  - gauss
+shared        : []
+float         : []
+reparametrize : {}
+fix           : {}
