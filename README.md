@@ -129,6 +129,16 @@ Several hashed directories might exist, like in the diagram:
 **Important**: This class will also use the hash of the module where the `Test`
 class is defined. Thus, changes in the code or in the input data, will invalidate the hash.
 
+### Turning caching off
+
+This can be done temporarily with:
+
+```python
+with Wcache.turn_off_cache(val=True):
+    obj = Tester(nval=4)
+    out = obj.run()
+```
+
 ## Silencing import messages
 
 To silence messages given by modules not in the user's control do:
