@@ -112,3 +112,31 @@ df  = obj.get_misid()
 
 For data, the trigger and samples are different, because we cannot remove the
 PID from the data.
+
+### PDFMaker
+
+This class will create a PDF from an MC sample that:
+
+- Belongs to the noPID lines
+- Belongs to the control or signal region, through PID weights 
+  applied in the form of PIDCalib efficiencies.
+
+```python
+import zfit
+from rx_misid.pdf_maker     import PDFMaker
+
+obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+mkr = PDFMaker(
+    sample ='Bu_piplpimnKpl_eq_sqDalitz_DPC', # This should be MC always 
+    q2bin  ='central',                        # or low or high 
+    trigger='Hlt2RD_BuToKpEE_MVA_noPID')      # Always the noPID triggers
+pdf = mkr.get_pdf(obs=obs, is_sig=False)
+```
+
+this PDF should be usable to fit the control region and extract
+a data-driven estimage of the misID.
+
+**TODO:**
+- Can a parametric approach be used instead of KDE?
+- KDE is not reliable, due to underfitting or overfitting.
+
