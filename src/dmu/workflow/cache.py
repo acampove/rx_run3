@@ -4,7 +4,8 @@ This module contains
 import os
 import sys
 import shutil
-from pathlib import Path
+from pathlib    import Path
+from contextlib import contextmanager
 
 from git                   import Repo
 from dmu.generic           import hashing
@@ -27,6 +28,7 @@ class Cache:
                Where {hash} is a 10 alphanumeric representing the has of the inputs
     '''
     _cache_root : str|None = None
+    _donot_cache: bool     = False # If True, it will not pickup cached outputs
     # ---------------------------
     def __init__(self, out_path : str, **kwargs):
         '''
@@ -120,6 +122,10 @@ class Cache:
         It will copy all the outputs of the processing
         to a hashed directory
         '''
+        if Cache._donot_cache:
+            log.warning('Not caching outputs')
+            return
+
         self._hash_dir  = self._get_dir(kind= 'hash')
         log.info(f'Caching outputs to: {self._hash_dir}')
 
@@ -179,6 +185,10 @@ class Cache:
         ---------------
         True if the object, cached was found, false otherwise.
         '''
+        if Cache._donot_cache:
+            log.warning('Caching is turned off')
+            return False
+
         hash_dir = self._get_dir(kind='hash', make=False)
         if not os.path.isdir(hash_dir):
             log.debug(f'Hash directory {hash_dir} not found, not caching')
@@ -192,4 +202,18 @@ class Cache:
         self._copy_from_hashdir()
 
         return True
+    # ---------------------------
+    @contextmanager
+    @staticmethod
+    def turn_off_cache(val : bool):
+        '''
+        Can be used to turn off caching (or on, but this should be on by default)
+        '''
+        old_val = Cache._donot_cache
+
+        Cache._donot_cache = val
+        try:
+            yield
+        finally:
+            Cache._donot_cache = old_val
 # ---------------------------
