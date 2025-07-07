@@ -208,10 +208,10 @@ def test_save_fit_param_refreeze():
     res.freeze()
 
     sut.save_fit(
-            data   =dat,
-            model  =pdf,
-            res    =res,
-            fit_dir=f'{Data.fit_dir}/save_fit/parametric')
+        data   =dat,
+        model  =pdf,
+        res    =res,
+        fit_dir=f'{Data.fit_dir}/save_fit/parametric')
 #----------------------------------
 def test_name_from_obs():
     '''
