@@ -222,3 +222,19 @@ def test_name_from_obs():
 
     assert name == 'xyz'
 #----------------------------------
+def test_zres_to_cres():
+    '''
+    Tests conversion of zfit result object to
+    DictConfig
+    '''
+    pdf = _get_pdf(kind='simple')
+    dat = pdf.create_sampler(n=1000)
+
+    obj = Fitter(pdf, dat)
+    res = obj.fit()
+    res.freeze()
+
+    cres = sut.zres_to_cres(res=res)
+
+    print(cres)
+#----------------------------------
