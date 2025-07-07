@@ -295,7 +295,7 @@ def _format_float_str(val : str) -> str:
 
     return val
 #-------------------------------------------------------
-def _info_from_line(line : str) -> [tuple,None]:
+def _info_from_line(line : str) -> tuple|None:
     regex = r'(^\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)'
     mtch  = re.match(regex, line)
     if not mtch:
