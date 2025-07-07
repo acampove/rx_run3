@@ -281,13 +281,15 @@ def _reformat_expo(val : str) -> str:
     return f'{val}\cdot 10^{{{exp}}}'
 #-------------------------------------------------------
 def _format_float_str(val : str) -> str:
-    val = float(val)
+    '''
+    Takes number as string and returns a formatted version
+    '''
 
-    if abs(val) > 1000:
-        return f'{val:,.0f}'
+    fval = float(val)
+    if abs(fval) > 1000:
+        return f'{fval:,.0f}'
 
-    val = f'{val:.3g}'
-
+    val = f'{fval:.3g}'
     if 'e' in val:
         val = _reformat_expo(val)
 
