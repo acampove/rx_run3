@@ -88,7 +88,6 @@ class DataFitter(BaseFitter, Cache):
             cfg    = self._cfg,
             obs    = self._obs,
             q2bin  = self._q2bin,
-            sample = self._sample,
             trigger= self._trigger,
             project= self._project)
         model= mod.get_model()
