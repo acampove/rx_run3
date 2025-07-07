@@ -22,6 +22,7 @@ from dmu.logging.log_store  import LogStore
 
 import tensorflow as tf
 
+from omegaconf              import OmegaConf, DictConfig
 from zfit.core.interfaces   import ZfitData   as zdata
 from zfit.core.interfaces   import ZfitSpace  as zobs
 from zfit.core.interfaces   import ZfitPDF    as zpdf
@@ -446,4 +447,54 @@ def placeholder_fit(
         obj.plot(nbins=50)
 
     save_fit(data=data, model=pdf, res=res, fit_dir=fit_dir, d_const=d_const)
+#---------------------------------------------
+def _reformat_values(d_par : dict) -> dict:
+    '''
+    Parameters
+    --------------
+    d_par: Dictionary formatted as:
+
+        {'minuit_hesse': {'cl': 0.6,
+                         'error': np.float64(0.04),
+                         'weightcorr': <WeightCorr.FALSE: False>},
+         'value'       : 0.34},
+
+    Returns
+    --------------
+    Dictionary formatted as:
+
+    {
+        'error' : 0.04,
+        'value' : 0.34
+    }
+    '''
+
+    error = d_par['minuit_hesse']['error']
+    error = float(error)
+
+    value = d_par['value']
+
+    return {'value' : value, 'error' : error}
+#---------------------------------------------
+def zres_to_cres(res : zres) -> DictConfig:
+    '''
+    Parameters
+    --------------
+    res : Zfit result object
+
+    Returns 
+    --------------
+    OmegaConfig's DictConfig instance
+    '''
+    # This should prevent crash when result object was already frozen
+    try:
+        res.freeze()
+    except AttributeError:
+        pass
+
+    par   = res.params
+    d_par = { name : _reformat_values(d_par=d_par) for name, d_par in par.items()}
+    cfg   = OmegaConf.create(d_par)
+
+    return cfg
 #---------------------------------------------
