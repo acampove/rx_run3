@@ -21,7 +21,7 @@ The configuration is located in `rx_misid_data/misid.yaml`.
 
 The code structure can be seen below:
 
-![Code structure](/doc/images/rx_misid.svg)
+![Code structure](doc/images/rx_misid.svg)
 
 ### Pass-Fail approach
 
@@ -36,3 +36,4 @@ The code structure can be seen below:
 - Pick up noPID simulation and apply PID maps to put it in control region.
 - Fit data and extract normalization factors
 - Use PID maps for signal region to build misID model.
+
