@@ -60,7 +60,10 @@ class DataModel(BaseModel):
         l_pdf = []
         for component, cfg_path in self._cfg.model:
             cfg = gut.load_conf(package='fitter', fpath=cfg_path)
-            ftr = SimFitter(cfg=cfg, obs=self._obs)
+            ftr = SimFitter(
+                name=component,
+                cfg =cfg,
+                obs =self._obs)
             pdf = ftr.get_model()
             pdf = self._extend(pdf=pdf, name=component)
 
