@@ -10,6 +10,7 @@ dependencies= [
 'awkward',
 'tqdm',
 'numpy',
+'omegaconf',
 'toml',
 'uproot',
 'tensorflow', # Use latest tensorflow allowed by zfit

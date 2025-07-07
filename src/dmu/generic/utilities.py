@@ -12,6 +12,7 @@ from functools             import wraps
 from contextlib            import contextmanager
 
 import yaml
+from omegaconf             import OmegaConf, DictConfig
 from dmu.generic           import hashing
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
@@ -47,6 +48,25 @@ def load_data(package : str, fpath : str) -> Any:
     data  = load_json(cpath)
 
     return data
+# --------------------------------
+def load_conf(package : str, fpath : str) -> DictConfig:
+    '''
+    This function will load a YAML or JSON file from a data package
+
+    Parameters
+    ---------------------
+    package: Data package, e.g. `dmu_data`
+    path   : Path to YAML/JSON file, relative to the data package 
+
+    Returns
+    ---------------------
+    DictConfig class from the OmegaConf package
+    '''
+
+    cpath = files(package).joinpath(fpath)
+    cfg   = OmegaConf.load(cpath)
+
+    return cfg
 # --------------------------------
 def _get_module_name( fun : Callable) -> str:
     mod = inspect.getmodule(fun)

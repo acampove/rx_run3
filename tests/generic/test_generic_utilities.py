@@ -6,6 +6,7 @@ from typing import Any
 from time   import sleep
 
 import pytest
+from omegaconf import DictConfig
 import dmu.generic.utilities as gut
 
 # -------------------------
@@ -78,6 +79,19 @@ def test_load_data(ext : str):
             fpath  =f'tests/config.{ext}')
 
     assert data == expected
+# -------------------------
+@pytest.mark.parametrize('ext', ['yaml', 'json'])
+def test_load_conf(ext : str):
+    '''
+    Tests loading configuration 
+    '''
+    cfg = gut.load_conf(
+            package='dmu_data',
+            fpath  =f'tests/config.{ext}')
+
+    assert isinstance(cfg, DictConfig)
+
+    assert cfg.key == ['value1', 'value2', 'value3']
 # -------------------------
 @pytest.mark.parametrize('obj', [
     1,

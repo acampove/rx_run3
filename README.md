@@ -223,15 +223,21 @@ gut.dump_pickle(data, '/tmp/list.pkl')
 data = gut.load_pickle('/tmp/list.pkl')
 ```
 
-## Loader of files from data packages
+## Loader of files and configurations from data packages
 
 YAML and JSON files can be loaded from data packages with:
 
 ```python
 import dmu.generic.utilities as gut
 
-data = gut.load_data(package='dmu_data', fpath=f'tests/config.json')
+data = gut.load_data(package='dmu_data', fpath=f'tests/data.json')
+conf = gut.load_conf(package='dmu_data', fpath=f'tests/config.json')
 ```
+
+the former will return a python dictionary, list, etc. 
+The later will return a `DataConf` object from the `omegaconf` project.
+Check [this](https://omegaconf.readthedocs.io/en/2.3_branch/index.html) 
+for more information.
 
 # Physics
 
