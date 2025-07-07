@@ -65,7 +65,7 @@ class DataFitter(BaseFitter, Cache):
         --------------------
         DictConfig object with parameters names, values and errors
         '''
-        ftr = Fitter(pdf=model, dat=data)
+        ftr = Fitter(pdf=model, data=data)
         res = ftr.fit()
         res = sut.zres_to_cres(res=res)
 
