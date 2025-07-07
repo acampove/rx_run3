@@ -7,7 +7,6 @@ from omegaconf                import DictConfig, OmegaConf
 
 from dmu.workflow.cache       import Cache
 from dmu.stats.zfit           import zfit
-from dmu.stats.zfit_plotter   import ZFitPlotter
 from dmu.stats                import utilities  as sut
 from dmu.logging.log_store    import LogStore
 
