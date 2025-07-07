@@ -377,15 +377,21 @@ def pdf_to_tex(path : str, d_par : dict[str,str], skip_fixed : bool = True) -> N
 #---------------------------------------------
 # Fake/Placeholder fit
 #---------------------------------------------
-def get_model(kind : str, lam : float = -0.0001) -> zpdf:
+def get_model(
+        kind : str,
+        obs  : zobs|None = None,
+        lam  : float     = -0.0001) -> zpdf:
     '''
     Returns zfit PDF for tests
 
     Parameters:
 
     kind: 'signal' for Gaussian, 's+b' for Gaussian plus exponential
+    obs : If provided, will use it, by default None and will be built in function
+    lam : Decay constant of exponential component, set to -0.0001 by default
     '''
-    obs  = zfit.Space('mass', limits=(4500, 7000))
+    if obs is None:
+        obs  = zfit.Space('mass', limits=(4500, 7000))
 
     mu   = zfit.Parameter('mu', 5200, 4500, 6000)
     sg   = zfit.Parameter('sg',   50,   10, 200)
