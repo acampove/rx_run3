@@ -267,6 +267,10 @@ def save_fit(
     opath  = f'{fit_dir}/parameters.json'
     log.debug(f'Saving parameters to: {opath}')
     gut.dump_json(d_par, opath)
+
+    opath  = f'{fit_dir}/parameters.yaml'
+    cres   = zres_to_cres(res=res)
+    OmegaConf.save(cres, opath)
 #-------------------------------------------------------
 # Make latex table from text file
 #-------------------------------------------------------
