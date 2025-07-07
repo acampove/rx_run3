@@ -20,5 +20,6 @@ def pytest_configure(config : Config):
     # Use this as the root directory where everything gets
     # cached
     Cache.set_cache_root(root='/tmp/tests/fitter')
-
     _set_logs()
+
+# ----------------------------------------
