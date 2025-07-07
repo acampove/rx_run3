@@ -1,1 +1,7 @@
 output_directory : data_fitter
+fit:
+  observable:
+    name : B_Mass
+    range:
+      - 4500
+      - 7000
