@@ -1,3 +1,5 @@
+[TOC]
+
 # $R_X$ misID
 
 This project is meant to be used to extract the templates for the fully hadronic misID templates.
