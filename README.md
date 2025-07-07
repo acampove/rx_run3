@@ -25,61 +25,20 @@ The configuration specifying
 - The MVA working point
 - The path to the calibration maps
 
-among others can be found in `rx_misid_data/config.yaml`.
+among others can be found in `rx_misid_data/misid.yaml`.
 
 The code will:
+
+### Pass-Fail approach
 
 - Build the control regions with the weights (transfer function).
 - Store them in a pandas dataframe
 - Plot the data in different control regions.
 - Provide a KDE PDF that will be used for fits.
 
-## Building the Pandas dataframe with the weighted control regions
+### Fitting approach
 
-For this run:
-
-```bash
-make_misid -s leakage -q central -v v1
-```
-
-where:
-
-```
-options:
-  -h, --help            show this help message and exit
-  -s {data,signal,leakage}, --sample {data,signal,leakage}
-                        Sample name
-  -q {low,central,high}, --q2bin {low,central,high}
-                        Q2 bin
-  -v VERSION, --version VERSION
-                        Version
-```
-
-and leakage refers to the resonant mode's. Regarding the version, this corresponds to the
-configurations needed, which are stored in YAML files in `rx_misid_data/misid_v*.yaml`.
-The output will go to a pandas dataframe, which will be saved in `parquet` format.
-
-## Plotting
-
-Run:
-
-```bash
-# This plots from a file holding the pandas dataframe
-plot_misid -p /path/to/parquet/file.parquet
-```
-
-and the plots will end up in the same directory as the `parquet` file.
-
-## Accessing the Mis ID component
-
-When bulding the fitting model one can do:
-
-```python
-from rx_misid.misid_pdf     import MisIdPdf
-
-obj = MisIdPdf(obs=obs, q2bin='central', version='v1')
-pdf = obj.get_pdf()
-```
-
-to access a KDE PDF ready to be used as a component of a fitting model.
-
+- Pick up the data and provide it in control region
+- Pick up noPID simulation and apply PID maps to put it in control region.
+- Fit data and extract normalization factors
+- Use PID maps for signal region to build misID model.
