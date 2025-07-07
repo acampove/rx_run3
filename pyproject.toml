@@ -1,0 +1,14 @@
+[project]
+name        = 'fitter'
+description = 'Framework used to handle fits to data and simulation'
+version     = '0.0.1'
+readme      = 'README.md'
+dependencies= [
+]
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
