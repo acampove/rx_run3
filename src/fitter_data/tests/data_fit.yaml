@@ -15,5 +15,5 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
     Gauss_ext       : Signal
     Exponential_ext : Combinatorial
 model:
-  background : exp.yaml
-  signal     : signal.yaml
+  background : tests/exp.yaml
+  signal     : tests/signal.yaml
