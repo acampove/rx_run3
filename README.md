@@ -339,10 +339,10 @@ For quick tests, one can retrieve simple models with :
 from dmu.stats  import utilities as sut
 
 # For a Gaussian plus Exponential, extended
-pdf = sut.get_model(name='s+b')
+pdf = sut.get_model(kind='s+b')
 
 # For a Gaussian signal, non extended
-pdf = sut.get_model(name='signal')
+pdf = sut.get_model(kind='signal')
 ```
 
 ### Model building
