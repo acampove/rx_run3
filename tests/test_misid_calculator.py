@@ -137,7 +137,7 @@ def test_misid_by_brem(
     cfg['input']['q2bin'  ] = q2bin
     if sample.startswith('DATA'):
         cfg['input']['project'] = 'rx'
-        cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA'
+        cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_ext'
     else:
         cfg['input']['project'] = 'nopid'
         cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_noPID'
