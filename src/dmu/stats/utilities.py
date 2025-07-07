@@ -442,14 +442,14 @@ def placeholder_fit(
     else:
         data = zfit.Data.from_pandas(df, obs=pdf.space, weights=Data.weight_name)
 
-    d_const = {'sg' : [0.6, 0.1]}
+    d_const = {'sg' : [50, 3]}
 
     obj = Fitter(pdf, data)
     res = obj.fit(cfg={'constraints' : d_const})
 
     if plot_fit:
         obj   = ZFitPlotter(data=data, model=pdf)
-        obj.plot(nbins=50)
+        obj.plot(nbins=50, stacked=True)
 
     save_fit(data=data, model=pdf, res=res, fit_dir=fit_dir, d_const=d_const)
 #---------------------------------------------
