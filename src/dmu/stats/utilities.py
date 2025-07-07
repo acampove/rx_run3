@@ -385,24 +385,25 @@ def get_model(kind : str, lam : float = -0.0001) -> zpdf:
 
     kind: 'signal' for Gaussian, 's+b' for Gaussian plus exponential
     '''
-    obs   = zfit.Space('mass', limits=(0, 10))
-    mu    = zfit.Parameter('mu', 5.0, -1, 8)
-    sg    = zfit.Parameter('sg', 0.5,  0, 5)
-    gauss = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
+    obs  = zfit.Space('mass', limits=(4500, 7000))
+
+    mu   = zfit.Parameter('mu', 5200, 4500, 6000)
+    sg   = zfit.Parameter('sg',   50,   10, 200)
+    gaus = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
 
     if kind == 'signal':
-        return gauss
+        return gaus
 
-    c     = zfit.Parameter('c', lam, -1, 0)
-    expo  = zfit.pdf.Exponential(obs=obs, lam=c)
+    c   = zfit.Parameter('c', lam, -0.01, 0)
+    expo= zfit.pdf.Exponential(obs=obs, lam=c)
 
     if kind == 's+b':
-        nsig  = zfit.Parameter('nsig', 1000,  0, 1_000_000)
-        nbkg  = zfit.Parameter('nbkg', 1000,  0, 1_000_000)
+        nexpo = zfit.param.Parameter('nexp', 1000, 0, 1000_000)
+        ngaus = zfit.param.Parameter('gaus', 1000, 0, 1000_000)
 
-        sig   = gauss.create_extended(nsig)
-        bkg   = expo.create_extended(nbkg)
-        pdf   = zfit.pdf.SumPDF([sig, bkg])
+        bkg   = expo.create_extended(nexpo)
+        sig   = gaus.create_extended(ngaus)
+        pdf   = zfit.pdf.SumPDF([bkg, sig])
 
         return pdf
 
