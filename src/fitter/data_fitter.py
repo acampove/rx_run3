@@ -100,8 +100,12 @@ class DataFitter(BaseFitter, Cache):
         model= mod.get_model(obs=self._obs)
 
         res  = self._fit(data=data, model=model)
+        sut.save_fit(
+            data   = data,
+            model  = model,
+            res    = res,
+            fit_dir= self._out_path)
 
-        OmegaConf.save(res, result_path)
         self._cache()
 
         return res
