@@ -116,6 +116,7 @@ class DataFitter(BaseFitter, Cache):
             fit_dir= self._out_path)
 
         self._cache()
+        cres = sut.zres_to_cres(res=res)
 
-        return res
+        return cres
 # ------------------------
