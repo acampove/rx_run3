@@ -20,11 +20,14 @@ class DataModel(BaseModel):
 
         '''
     # ------------------------
-    def get_model(self) -> zpdf:
+    def get_model(self, obs : zobs) -> zpdf:
         '''
         Returns fitting model for data fit
         '''
-        pdf = sut.get_model(name='s+b')
+
+        mu  = zfit.Parameter('mu', 5200, 4500, 6000)
+        sg  = zfit.Parameter('sg',   10,   10, 200)
+        pdf = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
 
         return pdf
 # ------------------------
