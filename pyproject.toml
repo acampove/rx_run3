@@ -4,7 +4,8 @@ description = 'Framework used to handle fits to data and simulation'
 version     = '0.0.1'
 readme      = 'README.md'
 dependencies= [
-]
+'omegaconf',
+'data-manipulation-utilities']
 
 [project.optional-dependencies]
 dev  = ['pytest']
@@ -12,3 +13,5 @@ dev  = ['pytest']
 [tools.setuptools.packages.find]
 where   = ['src']
 
+[tool.setuptools.package-data]
+fitter_data=['**/*.yaml']
