@@ -124,11 +124,10 @@ def test_simple(is_sig : bool, sample : str):
     df  = _get_dataframe()
 
     wgt = SampleWeighter(
-            df    = df,
-            cfg   = cfg,
-            sample= sample,
-            is_sig= is_sig)
-
+        df    = df,
+        cfg   = cfg,
+        sample= sample,
+        is_sig= is_sig)
     df  = wgt.get_weighted_data()
 
     mode = {True : 'signal', False : 'control'}[is_sig]
