@@ -20,6 +20,7 @@ def pytest_configure(config : Config):
     '''
     _config = config
     numpy.random.seed(42)
+    zfit.settings.set_seed(seed=42)
 
     logging.getLogger('PIL').setLevel(logging.WARNING)
     logging.getLogger('matplotlib').setLevel(logging.WARNING)
