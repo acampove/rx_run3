@@ -65,7 +65,7 @@ class DataModel(BaseModel):
             log.info(self._cfg.model)
             raise ValueError('Found zero components in model')
 
-        log.debug(f'Found {npdf} componets')
+        log.debug(f'Found {npdf} components')
         for component, cfg_path in self._cfg.model.items():
             cfg = gut.load_conf(package='fitter_data', fpath=cfg_path)
             ftr = SimFitter(
