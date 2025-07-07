@@ -375,7 +375,7 @@ mod   = ModelFactory(
     l_pdf   = l_pdf, 
     l_shared= l_shr, 
     l_float = l_float,
-    l_rep   = l_rep,    # Optional
+    d_rep   = d_rep,    # Optional
     d_fix   = d_fix)    # Optional
 
 pdf   = mod.get_pdf()
