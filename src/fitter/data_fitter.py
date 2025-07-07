@@ -61,22 +61,6 @@ class DataFitter(BaseFitter, Cache):
 
         return zfit.Space(name, limits=(minx, maxx))
     # ------------------------
-    def _fit(self, data : zdata, model : zpdf) -> zres:
-        '''
-        Parameters
-        --------------------
-        data : Zfit data object
-        model: Zfit PDF
-
-        Returns
-        --------------------
-        DictConfig object with parameters names, values and errors
-        '''
-        ftr = Fitter(pdf=model, data=data)
-        res = ftr.fit()
-
-        return res
-    # ------------------------
     def run(self) -> DictConfig:
         '''
         Runs fit
