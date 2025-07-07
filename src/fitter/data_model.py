@@ -78,9 +78,12 @@ class DataModel(BaseModel):
         for component, cfg_path in self._cfg.model.items():
             cfg = gut.load_conf(package='fitter_data', fpath=cfg_path)
             ftr = SimFitter(
-                name=component,
-                cfg =cfg,
-                obs =self._obs)
+                name    = component,
+                trigger = self._trigger,
+                project = self._project,
+                q2bin   = self._q2bin,
+                cfg     = cfg,
+                obs     = self._obs)
             pdf = ftr.get_model()
 
             pdf = self._extend(pdf=pdf, name=component)
