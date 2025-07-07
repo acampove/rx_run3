@@ -377,7 +377,7 @@ def pdf_to_tex(path : str, d_par : dict[str,str], skip_fixed : bool = True) -> N
 #---------------------------------------------
 # Fake/Placeholder fit
 #---------------------------------------------
-def get_model(kind : str, lam : float = -0.1) -> zpdf:
+def get_model(kind : str, lam : float = -0.0001) -> zpdf:
     '''
     Returns zfit PDF for tests
 
@@ -422,8 +422,8 @@ def _pdf_to_data(pdf : zpdf, add_weights : bool) -> zdata:
 def placeholder_fit(
         kind     : str,
         fit_dir  : str,
-        df       : pnd.DataFrame = None,
-        plot_fit : bool          = True) -> None:
+        df       : pnd.DataFrame|None = None,
+        plot_fit : bool               = True) -> None:
     '''
     Function meant to run toy fits that produce output needed as an input
     to develop tools on top of them
