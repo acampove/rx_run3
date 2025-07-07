@@ -35,7 +35,12 @@ class DataFitter(BaseFitter, Cache):
             q2bin   : str,
             cfg     : DictConfig):
         '''
-        cfg : configuration for the fit as a DictConfig object
+        cfg    : configuration for the fit as a DictConfig object
+        sample : Identifies sample e.g. DATA_24_MagUp...
+        trigger: Hlt2RD...
+        project: E.g. rx
+        q2bin  : E.g. central
+        cfg    : Configuration for the fit to data
         '''
         self._sample = sample
         self._trigger= trigger
@@ -100,8 +105,12 @@ class DataFitter(BaseFitter, Cache):
         data = dpr.get_data()
 
         mod  = DataModel(
-            cfg=self._cfg,
-            obs=self._obs)
+            cfg    = self._cfg,
+            obs    = self._obs,
+            q2bin  = self._q2bin,
+            sample = self._sample,
+            trigger= self._trigger,
+            project= self._project)
         model= mod.get_model()
 
         res  = self._fit(data=data, model=model)
