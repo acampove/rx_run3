@@ -12,6 +12,7 @@ from dmu.logging.log_store    import LogStore
 from zfit.core.interfaces     import ZfitData   as zdata
 from zfit.core.interfaces     import ZfitPDF    as zpdf
 from zfit.core.interfaces     import ZfitSpace  as zobs
+from zfit.result              import FitResult  as zres
 from fitter.data_preprocessor import DataPreprocessor
 from fitter.base_fitter       import BaseFitter
 from fitter.data_model        import DataModel
@@ -56,7 +57,7 @@ class DataFitter(BaseFitter, Cache):
 
         return zfit.Space(name, limits=(minx, maxx))
     # ------------------------
-    def _fit(self, data : zdata, model : zpdf) -> DictConfig:
+    def _fit(self, data : zdata, model : zpdf) -> zres:
         '''
         Parameters
         --------------------
@@ -69,7 +70,6 @@ class DataFitter(BaseFitter, Cache):
         '''
         ftr = Fitter(pdf=model, data=data)
         res = ftr.fit()
-        res = sut.zres_to_cres(res=res)
 
         return res
     # ------------------------
