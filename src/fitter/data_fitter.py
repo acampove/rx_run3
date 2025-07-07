@@ -8,6 +8,8 @@ from dmu.workflow.cache       import Cache
 from dmu.stats.zfit           import zfit
 from dmu.stats.fitter         import Fitter
 from dmu.stats                import utilities  as sut
+from zfit.core.interfaces     import ZfitData   as zdata
+from zfit.core.interfaces     import ZfitPDF    as zpdf
 from zfit.core.interfaces     import ZfitSpace  as zobs
 from fitter.data_preprocessor import DataPreprocessor
 from fitter.base_fitter       import BaseFitter
