@@ -1,3 +1,6 @@
+# This is a config file used for tests
+# It illustrates how a fit would run for data
+
 output_directory : data_fitter
 fit:
   observable:
