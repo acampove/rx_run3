@@ -17,16 +17,34 @@ class SimFitter(BaseFitter):
     # ------------------------
     def __init__(
         self,
-        cfg : DictConfig,
-        obs : zobs):
+        name : str,
+        cfg  : DictConfig,
+        obs  : zobs):
         '''
         Parameters
         --------------------
-        obs : Observable
-        cfg : Object storing configuration for fit
+        obs  : Observable
+        name : Nickname of component, e.g. combinatorial
+        cfg  : Object storing configuration for fit
         '''
         self._cfg = cfg
         self._obs = obs
+        self._name= name
+    # ------------------------
+    def _get_pdf(self) -> zpdf:
+        l_model = self._cfg.models
+        mod     = ModelFactory(
+            preffix = self._name,
+            obs     = self._obs,
+            l_pdf   = l_model,
+            l_shared= self._cfg.shared,
+            l_float = self._cfg.float ,
+            d_rep   = self._cfg.reparametrize,
+            d_fix   = self._cfg.fix)
+
+        pdf = mod.get_pdf()
+
+        return pdf
     # ------------------------
     def get_model(self) -> zpdf:
         '''
@@ -34,4 +52,9 @@ class SimFitter(BaseFitter):
         ------------
         zfit PDF, not extended yet
         '''
+        pdf = self._get_pdf()
+        if 'simulation' not in self._cfg:
+            return pdf
+
+        return pdf
 # ------------------------
