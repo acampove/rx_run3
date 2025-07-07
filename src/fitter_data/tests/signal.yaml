@@ -1,12 +1,14 @@
 output_directory : signal
 models           :
   - gauss
-simulation: # These are the arguments of DataPreprocessor, except for the observable
-  sample : toy
-  trigger: signal
-  project: test
-  q2bin  : na
+sample        : gauss_toy
 shared        : []
 float         : []
 reparametrize : {}
 fix           : {}
+fit:
+  strategy  :
+    retry   :
+      ntries        : 10
+      pvalue_thresh : 0.05
+      ignore_status : true
