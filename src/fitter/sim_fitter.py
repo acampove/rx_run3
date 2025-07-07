@@ -2,12 +2,13 @@
 Module with SimFitter class
 '''
 
-from omegaconf               import DictConfig
-from zfit.core.interfaces    import ZfitPDF    as zpdf
-from zfit.core.interfaces    import ZfitSpace  as zobs
-from dmu.stats.model_factory import ModelFactory
-from fitter.base_fitter      import BaseFitter
-from fitter.sim_model        import SimModel
+from omegaconf                import DictConfig
+from zfit.core.interfaces     import ZfitPDF      as zpdf
+from zfit.core.interfaces     import ZfitSpace    as zobs
+from dmu.stats.model_factory  import ModelFactory
+from fitter.base_fitter       import BaseFitter
+from fitter.sim_model         import SimModel
+from fitter.data_preprocessor import DataPreprocessor
 
 # ------------------------
 class SimFitter(BaseFitter):
