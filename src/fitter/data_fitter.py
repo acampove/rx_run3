@@ -91,8 +91,7 @@ class DataFitter(BaseFitter, Cache):
                 q2bin  = self._q2bin,
                 sample = self._sample,
                 trigger= self._trigger,
-                project= self._project,
-                q2bin  = self._q2bin)
+                project= self._project)
         data = dpr.get_data()
 
         mod  = DataModel()
