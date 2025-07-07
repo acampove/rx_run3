@@ -3,7 +3,9 @@ models           :
   - gauss
 sample        : gauss_toy
 shared        : []
-float         : []
+float         :
+  - mu
+  - sg
 reparametrize : {}
 fix           : {}
 fit:
