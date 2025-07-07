@@ -104,12 +104,11 @@ def test_data(hadron_id : str, is_bplus : bool):
 
     cfg   = _get_config()
     spl   = SampleSplitter(
-            rdf      = rdf,
-            sample   = sample,
-            hadron_id= hadron_id,
-            is_bplus = is_bplus,
-            cfg      = cfg)
-
+        rdf      = rdf,
+        sample   = sample,
+        hadron_id= hadron_id,
+        is_bplus = is_bplus,
+        cfg      = cfg)
     df    = spl.get_samples()
 
     log.info('Dataframe found, checking')
