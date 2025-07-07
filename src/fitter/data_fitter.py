@@ -4,12 +4,14 @@ Module containing DataFitter class
 from typing import cast
 
 from omegaconf                import DictConfig, OmegaConf
+
 from dmu.workflow.cache       import Cache
 from dmu.stats.zfit           import zfit
 from dmu.stats.fitter         import Fitter
 from dmu.stats.zfit_plotter   import ZFitPlotter
 from dmu.stats                import utilities  as sut
 from dmu.logging.log_store    import LogStore
+
 from zfit.core.interfaces     import ZfitData   as zdata
 from zfit.core.interfaces     import ZfitPDF    as zpdf
 from zfit.core.interfaces     import ZfitSpace  as zobs
