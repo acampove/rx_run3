@@ -9,7 +9,11 @@ from dmu.logging.log_store import LogStore
 
 # ----------------------------------------
 def _set_logs() -> None:
-    LogStore.set_level('dmu:workflow:cache', 10)
+    LogStore.set_level('fitter:data_model'      , 10)
+
+    # Silence what is below
+    LogStore.set_level('dmu:workflow:cache'     , 30)
+    LogStore.set_level('dmu:stats:model_factory', 30)
 # ----------------------------------------
 def pytest_configure(config : Config):
     '''
@@ -21,5 +25,4 @@ def pytest_configure(config : Config):
     # cached
     Cache.set_cache_root(root='/tmp/tests/fitter')
     _set_logs()
-
 # ----------------------------------------
