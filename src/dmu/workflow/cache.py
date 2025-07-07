@@ -37,6 +37,8 @@ class Cache:
         '''
         if Cache._cache_root is None:
             raise ValueError('Caching directory not set')
+        else:
+            log.debug(f'Using {Cache._cache_root} root directory for caching')
 
         if 'code' in kwargs:
             raise ValueError('Cannot append hashing data with key "code", already used')
@@ -44,6 +46,7 @@ class Cache:
         kwargs['code']  = self._get_code_hash()
 
         self._out_path  = f'{Cache._cache_root}/{out_path}'
+        log.debug(f'Using {self._out_path} output path')
         os.makedirs(self._out_path, exist_ok=True)
 
         self._dat_hash  = kwargs
