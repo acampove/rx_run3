@@ -2,14 +2,18 @@
 Module with SimFitter class
 '''
 
-from omegaconf                import DictConfig
+from typing import cast
+
+from omegaconf                import DictConfig, OmegaConf
 from zfit.core.interfaces     import ZfitPDF      as zpdf
 from zfit.core.interfaces     import ZfitSpace    as zobs
+from dmu.workflow.cache       import Cache
 from dmu.stats.model_factory  import ModelFactory
+from dmu.logging.log_store    import LogStore
 from fitter.base_fitter       import BaseFitter
-from fitter.sim_model         import SimModel
 from fitter.data_preprocessor import DataPreprocessor
 
+log=LogStore.add_logger('fitter:sim_fitter')
 # ------------------------
 class SimFitter(BaseFitter):
     '''
