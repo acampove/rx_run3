@@ -39,3 +39,25 @@ The code structure can be seen below:
 - Fit data and extract normalization factors
 - Use PID maps for signal region to build misID model.
 
+## Classes
+
+### MisIDSplitter
+
+This class is meant to split data into `Pass-Fail`, `Fail-Pass` and
+`Fail-Fail` regions with the output filtered for:
+
+- The hadron to be either a kaon or pion.
+- The `B` meson to be a positive or negative
+
+```python
+from rx_misid.sample_splitter import SampleSplitter
+
+spl   = SampleSplitter(
+    rdf      = rdf,
+    sample   = sample,
+    hadron_id= 'kaon', # or pion
+    is_bplus = True,   # or False
+    cfg      = cfg)    # loaded misid.yaml
+df    = spl.get_samples()
+```
+
