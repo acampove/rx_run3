@@ -99,8 +99,10 @@ class DataFitter(BaseFitter, Cache):
             project= self._project)
         data = dpr.get_data()
 
-        mod  = DataModel()
-        model= mod.get_model(obs=self._obs)
+        mod  = DataModel(
+            cfg=self._cfg,
+            obs=self._obs)
+        model= mod.get_model()
 
         res  = self._fit(data=data, model=model)
 
