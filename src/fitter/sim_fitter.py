@@ -15,26 +15,35 @@ from fitter.data_preprocessor import DataPreprocessor
 
 log=LogStore.add_logger('fitter:sim_fitter')
 # ------------------------
-class SimFitter(BaseFitter):
+class SimFitter(BaseFitter, Cache):
     '''
     Fitter for simulation samples
     '''
     # ------------------------
     def __init__(
         self,
-        name : str,
-        cfg  : DictConfig,
-        obs  : zobs):
+        name    : str,
+        trigger : str,
+        project : str,
+        q2bin   : str,
+        cfg     : DictConfig,
+        obs     : zobs):
         '''
         Parameters
         --------------------
-        obs  : Observable
-        name : Nickname of component, e.g. combinatorial
-        cfg  : Object storing configuration for fit
+        obs    : Observable
+        name   : Nickname of component, e.g. combinatorial
+        trigger: Hlt2RD...
+        project: E.g. rx
+        q2bin  : E.g. central
+        cfg    : Object storing configuration for fit
         '''
-        self._cfg = cfg
-        self._obs = obs
-        self._name= name
+        self._name   = name
+        self._trigger= trigger
+        self._project= project
+        self._q2bin  = q2bin
+        self._cfg    = cfg
+        self._obs    = obs
     # ------------------------
     def _get_pdf(self) -> zpdf:
         l_model = self._cfg.models
