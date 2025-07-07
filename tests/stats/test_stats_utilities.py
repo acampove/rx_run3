@@ -4,6 +4,7 @@ Module with unit tests for functions in dmu.stat.utilities
 import os
 from importlib.resources import files
 
+from omegaconf              import OmegaConf
 from dmu.logging.log_store  import LogStore
 from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.stats              import utilities as sut
@@ -236,5 +237,5 @@ def test_zres_to_cres():
 
     cres = sut.zres_to_cres(res=res)
 
-    print(cres)
+    OmegaConf.save(config=cres, f='/tmp/results.yaml')
 #----------------------------------
