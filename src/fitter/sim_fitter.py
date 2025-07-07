@@ -75,7 +75,7 @@ class SimFitter(BaseFitter, Cache):
                 continue
 
             if par.name in pars:
-                par.set_value(pars.value)
+                par.set_value(pars[par.name].value)
                 log.debug(f'{par.name:<20}{"--->"}{pars.value:<20.3f}')
                 par.floating = False
 
