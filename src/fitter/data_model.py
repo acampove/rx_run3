@@ -75,6 +75,8 @@ class DataModel(BaseModel):
             pdf = ftr.get_model()
             pdf = self._extend(pdf=pdf, name=component)
 
+            l_pdf.append(pdf)
+
         pdf = zfit.pdf.SumPDF(l_pdf)
 
         return pdf
