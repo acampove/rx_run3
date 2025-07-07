@@ -81,7 +81,7 @@ class DataFitter(BaseFitter, Cache):
         ------------
         DictConfig object with fitting results
         '''
-        result_path = f'{self._cfg.output_directory}/parameters.yaml'
+        result_path = f'{self._out_path}/parameters.yaml'
         if self._copy_from_cache():
             res = OmegaConf.load(result_path)
             res = cast(DictConfig, res)
