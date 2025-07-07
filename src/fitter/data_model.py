@@ -4,6 +4,7 @@ Module containing DataModel class
 
 from dmu.stats.zfit         import zfit
 from dmu.generic            import utilities  as gut
+from dmu.logging.log_store  import LogStore
 
 from omegaconf              import DictConfig
 from zfit.core.interfaces   import ZfitPDF    as zpdf
@@ -12,6 +13,7 @@ from zfit.core.interfaces   import ZfitSpace  as zobs
 from fitter.base_model      import BaseModel
 from fitter.sim_fitter      import SimFitter
 
+log = LogStore.add_logger('fitter:data_model')
 # ------------------------
 class DataModel(BaseModel):
     '''
@@ -60,6 +62,8 @@ class DataModel(BaseModel):
         l_pdf = []
         for component, cfg_path in self._cfg.model:
             cfg = gut.load_conf(package='fitter', fpath=cfg_path)
+            log.info(self._cfg.model)
+        log.debug(f'Found {npdf} componets')
             ftr = SimFitter(
                 name=component,
                 cfg =cfg,
