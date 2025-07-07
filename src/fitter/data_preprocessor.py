@@ -44,7 +44,9 @@ class DataPreprocessor(Cache):
         '''
         Returns zfit data
         '''
-        arr  = numpy.random.normal(loc=5280, scale=50, size=10_000)
+        sig  = numpy.random.normal(loc=5280, scale=50, size=10_000)
+        bkg  = numpy.random.exponential(scale=10_000, size=100_000)
+        arr  = numpy.concatenate((sig, bkg))
         data = zfit.data.from_numpy(obs=self._obs, array=arr)
 
         return data
