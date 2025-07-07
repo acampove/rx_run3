@@ -5,3 +5,6 @@ fit:
     range:
       - 4500
       - 7000
+  components:
+    background : exp.yaml
+    signal     : signal.yaml
