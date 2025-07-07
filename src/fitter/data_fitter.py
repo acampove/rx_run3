@@ -19,17 +19,55 @@ class DataFitter(BaseFitter, Cache):
     Fitter for data
     '''
     # ------------------------
-    def __init__(self, cfg : DictConfig):
+    def __init__(
+            self,
+            sample  : str,
+            trigger : str,
+            project : str,
+            q2bin   : str,
+            cfg     : DictConfig):
         '''
         cfg : configuration for the fit as a DictConfig object
         '''
-        self._cfg = cfg
+        self._sample = sample
+        self._trigger= trigger
+        self._project= project
+        self._q2bin  = q2bin
+        self._cfg    = cfg
 
         BaseFitter.__init__(self)
         Cache.__init__(
                 self,
                 out_path = cfg.output_directory,
                 config   = cfg)
+
+        self._obs = self._make_observable()
+    # ------------------------
+    def _make_observable(self) -> zobs:
+        '''
+        Will return zfit observable
+        '''
+        name        = self._cfg.fit.observable.name
+        [minx, maxx]= self._cfg.fit.observable.range
+
+        return zfit.Space(name, limits=(minx, maxx))
+    # ------------------------
+    def _fit(self, data : zdata, model : zpdf) -> DictConfig:
+        '''
+        Parameters
+        --------------------
+        data : Zfit data object
+        model: Zfit PDF
+
+        Returns
+        --------------------
+        DictConfig object with parameters names, values and errors
+        '''
+        ftr = Fitter(pdf=model, dat=data)
+        res = ftr.fit()
+        res = sut.zres_to_cres(res=res)
+
+        return res
     # ------------------------
     def run(self) -> DictConfig:
         '''
@@ -46,8 +84,18 @@ class DataFitter(BaseFitter, Cache):
 
             return res
 
-        data = self._get_data()
-        model= self._get_model()
+        dpr  = DataPreprocessor(
+                obs    = self._obs,
+                q2bin  = self._q2bin,
+                sample = self._sample,
+                trigger= self._trigger,
+                project= self._project,
+                q2bin  = self._q2bin)
+        data = dpr.get_data()
+
+        mod  = DataModel()
+        model= mod.get_model()
+
         res  = self._fit(data=data, model=model)
 
         OmegaConf.save(res, result_path)
