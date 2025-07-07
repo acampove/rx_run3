@@ -18,13 +18,14 @@ class Tester(Wcache):
     Testing class, produces outputs from simple inputs
     '''
     # -----------------------------------
-    def __init__(self, nval : int):
+    def __init__(self, name : str, nval : int):
         '''
-        nval, some integer used to produce output data
+        name: Identifies instance of Tester
+        nval: Some integer used to produce output data
         '''
         super().__init__(
-                out_path='Tester',
-                nval    =nval)
+            out_path=name,
+            nval    =nval)
 
         self._nval    = nval
     # -----------------------------------
