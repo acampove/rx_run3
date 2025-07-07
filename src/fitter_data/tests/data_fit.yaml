@@ -2,18 +2,20 @@
 # It illustrates how a fit would run for data
 
 output_directory : data_fitter
-fit:
+model:
   observable:
     name : B_Mass
     range:
       - 4500
       - 7000
+  components:
+    background : tests/exp.yaml
+    signal     : tests/signal.yaml
+fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 30
   stacked : True
   d_leg :
     Gauss_ext       : Signal
     Exponential_ext : Combinatorial
-model:
-  background : tests/exp.yaml
-  signal     : tests/signal.yaml
+
