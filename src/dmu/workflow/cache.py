@@ -44,6 +44,8 @@ class Cache:
         kwargs['code']  = self._get_code_hash()
 
         self._out_path  = f'{Cache._cache_root}/{out_path}'
+        os.makedirs(self._out_path, exist_ok=True)
+
         self._dat_hash  = kwargs
 
         self._cache_dir = self._get_dir(kind='cache')
