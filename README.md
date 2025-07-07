@@ -61,3 +61,26 @@ spl   = SampleSplitter(
 df    = spl.get_samples()
 ```
 
+### SampleWeighter
+
+This class is meant to apply PID weights to data or simulation.
+
+- **Data** : Add transfer weights, meant to provide move data
+from control region to signal region.
+
+- **Simulation**: Add PID efficiencies, meant to move noPID samples
+to control or signal region.
+
+It's used as:
+
+```python
+from rx_misid.sample_weighter import SampleWeighter
+
+wgt = SampleWeighter(
+    df    = df,     # From SampleSplitter
+    cfg   = cfg,    # loaded misid.yaml
+    sample= sample, # e.g. DATA_24_MagUp_24c2
+    is_sig= True)   # or False for the control region
+df  = wgt.get_weighted_data()
+```
+
