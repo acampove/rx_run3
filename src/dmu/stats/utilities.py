@@ -482,7 +482,7 @@ def zres_to_cres(res : zres) -> DictConfig:
     --------------
     res : Zfit result object
 
-    Returns 
+    Returns
     --------------
     OmegaConfig's DictConfig instance
     '''
