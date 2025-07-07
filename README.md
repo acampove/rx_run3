@@ -84,3 +84,31 @@ wgt = SampleWeighter(
 df  = wgt.get_weighted_data()
 ```
 
+### MisIDCalculator
+
+This class accesses the ntuples and:
+
+- Plugs them in the `SampleSplitter`.
+- With the outputs, puts them _together_, given that they are 
+for a given `B` charge and hadron species.
+- Plugs them into the `SampleWeighter` to get them in the signal
+or control regions.
+- And provides a dataframe with the data in the region requested.
+
+It is used as below:
+
+```python
+from rx_misid.misid_calculator import MisIDCalculator
+
+cfg = load('path/to/misid.yaml')
+cfg['input']['sample' ] = 'Bu_piplpimnKpl_eq_sqDalitz_DPC' # or other sample
+cfg['input']['q2bin'  ] = 'central'                        # or low or high
+cfg['input']['project'] = 'nopid'                          # or rx for data
+cfg['input']['trigger'] = 'Hlt2RD_BuToKpEE_MVA_noPID'      # or Hlt2RD_BuToKpEE_MVA_ext for data
+
+obj = MisIDCalculator(cfg=cfg, is_sig=True) # or false for control region
+df  = obj.get_misid()
+```
+
+For data, the trigger and samples are different, because we cannot remove the
+PID from the data.
