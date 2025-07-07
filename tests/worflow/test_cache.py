@@ -55,7 +55,7 @@ def test_cache_once():
     '''
     log.info('')
     res = 4 * [1]
-    obj = Tester(nval=4)
+    obj = Tester(nval=4, name='cache_once')
     out = obj.run()
 
     assert res == out
@@ -67,7 +67,7 @@ def test_cache():
     log.info('')
     res = 4 * [1]
     for _ in range(2):
-        obj = Tester(nval=4)
+        obj = Tester(nval=4, name='cache')
         out = obj.run()
 
         assert res == out
@@ -78,9 +78,23 @@ def test_update():
     '''
     for val in range(10):
         log.info(f'Testing with: {val}')
-        obj = Tester(nval=val)
+        obj = Tester(nval=val, name='update')
         out = obj.run()
 
         assert out == [1] * val
         log.info('')
+# -----------------------------------
+# TODO: Improve this test
+def test_dont_cache():
+    '''
+    Tests running with caching turned off
+    '''
+    log.info('')
+    res = 4 * [1]
+    for _ in range(2):
+        with Wcache.turn_off_cache(val=True):
+            obj = Tester(nval=4, name='dont_cache')
+            out = obj.run()
+
+        assert res == out
 # -----------------------------------
