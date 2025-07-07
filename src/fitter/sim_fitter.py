@@ -60,6 +60,27 @@ class SimFitter(BaseFitter, Cache):
 
         return pdf
     # ------------------------
+    def _fix_tails(self, pdf : zpdf, pars : DictConfig) -> zpdf:
+        '''
+        Parameters
+        --------------
+        pdf : PDF after fit
+        pars:
+        '''
+        s_par = pdf.get_params()
+        for par in s_par:
+            # Model builder adds _flt to name
+            # of parameters meant to float
+            if par.name.endswith('_flt'):
+                continue
+
+            if par.name in pars:
+                par.set_value(pars.value)
+                log.debug(f'{par.name:<20}{"--->"}{pars.value:<20.3f}')
+                par.floating = False
+
+        return pdf
+    # ------------------------
     def get_model(self) -> zpdf:
         '''
         Returns
