@@ -1,4 +1,4 @@
-output_directory : rare_muon/combinatorial 
+output_directory : combinatorial
 models           :
   - exp
 shared        : []

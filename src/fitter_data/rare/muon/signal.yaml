@@ -1,4 +1,4 @@
-output_directory : rare_muon/signal
+output_directory : rare/muon/signal
 models           :
   - dscb
 sample        : Bu_Kmumu_eq_btosllball05_DPC

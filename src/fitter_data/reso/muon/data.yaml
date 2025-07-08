@@ -1,7 +1,7 @@
 # This is a config file used for tests
 # It illustrates how a fit would run for data
 
-output_directory : data_muon
+output_directory : reso/muon/data
 model:
   observable:
     name : B_Mass
@@ -9,8 +9,8 @@ model:
       - 5080
       - 5800
   components:
-    background : tests/exp.yaml
-    signal     : tests/signal_muon.yaml
+    background : reso/muon/exp.yaml
+    signal     : reso/muon/signal.yaml
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
