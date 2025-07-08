@@ -1,0 +1,7 @@
+output_directory : rare_muon/combinatorial 
+models           :
+  - exp
+shared        : []
+float         : []
+reparametrize : {}
+fix           : {}
