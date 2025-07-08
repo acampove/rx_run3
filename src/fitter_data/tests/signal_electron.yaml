@@ -1,5 +1,9 @@
 output_directory : reso/electron/signal 
 categories:
+  brem_zero: 
+    selection : nbrem == 0
+    model :
+      - cbl
   brem_one : 
     selection : nbrem == 1
     model :
