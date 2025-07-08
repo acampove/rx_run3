@@ -39,9 +39,8 @@ class Cache:
         '''
         if Cache._cache_root is None:
             raise ValueError('Caching directory not set')
-        else:
-            log.debug(f'Using {Cache._cache_root} root directory for caching')
 
+        log.debug(f'Using {Cache._cache_root} root directory for caching')
         if 'code' in kwargs:
             raise ValueError('Cannot append hashing data with key "code", already used')
 
