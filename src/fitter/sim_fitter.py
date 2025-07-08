@@ -47,7 +47,7 @@ class SimFitter(BaseFitter, Cache):
         self._cfg    = cfg
         self._obs    = obs
 
-        cfg.output_directory = f'{cfg.output_directory}/{cfg.sample}_{trigger}_{project}_{q2bin}'
+        cfg.output_directory = f'{cfg.output_directory}/{name}_{trigger}_{project}_{q2bin}'
 
         BaseFitter.__init__(self)
         Cache.__init__(

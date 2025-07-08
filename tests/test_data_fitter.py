@@ -34,9 +34,9 @@ def test_reso_muon():
         package='fitter_data',
         fpath  ='reso/muon/data.yaml')
 
-    with Cache.turn_off_cache(val=True), \
+    with Cache.turn_off_cache(val=False), \
          sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
-         RDFGetter.max_entries(value=300_000):
+         RDFGetter.max_entries(value=100_000):
 
         ftr = DataFitter(
                 sample = 'DATA_24_MagDown_24c2',
@@ -55,11 +55,12 @@ def test_rare_muon(q2bin : str):
         package='fitter_data',
         fpath  ='rare/muon/data.yaml')
 
-    ftr = DataFitter(
-        sample = 'DATA_24_*',
-        trigger= 'Hlt2RD_BuToKpMuMu_MVA',
-        project= 'rx',
-        q2bin  = q2bin,
-        cfg    = cfg)
-    ftr.run()
+    with Cache.turn_off_cache(val=False):
+        ftr = DataFitter(
+            sample = 'DATA_24_*',
+            trigger= 'Hlt2RD_BuToKpMuMu_MVA',
+            project= 'rx',
+            q2bin  = q2bin,
+            cfg    = cfg)
+        ftr.run()
 # -------------------------------------------
