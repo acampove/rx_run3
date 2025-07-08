@@ -9,10 +9,13 @@ from ROOT                   import RDataFrame
 from dmu.workflow.cache     import Cache
 from dmu.stats.zfit         import zfit
 from dmu.stats              import utilities  as sut
+from dmu.logging.log_store  import LogStore
 from zfit.core.interfaces   import ZfitData   as zdata
 from zfit.core.interfaces   import ZfitSpace  as zobs
 from rx_data.rdf_getter     import RDFGetter
+from rx_selection           import selection  as sel
 
+log=LogStore.add_logger('fitter:data_preprocessor')
 # ------------------------
 class DataPreprocessor(Cache):
     '''
@@ -63,15 +66,30 @@ class DataPreprocessor(Cache):
         raise NotImplementedError(f'Cannot retrive toy data for sample: {sample}')
     # ------------------------
     def _get_array(self) -> numpy.ndarray:
+        '''
+        Return a numpy array for the sample requested, this array is fully selected
+        '''
         if 'toy' in self._sample:
             return self._get_toy_array(sample=self._sample)
 
         gtr = RDFGetter(sample =self._sample, trigger=self._trigger)
         rdf = gtr.get_rdf()
         rdf = cast(RDataFrame, rdf)
+        rdf = sel.apply_full_selection(
+            rdf     = rdf,
+            q2bin   = self._q2bin,
+            trigger = self._trigger,
+            process = self._sample)
+
+        if log.getEffectiveLevel() < 20:
+            rep = rdf.Report()
+            rep.Print()
 
         name = sut.name_from_obs(obs=self._obs)
         arr  = rdf.AsNumpy([name])[name]
+
+        nevt = len(arr)
+        log.debug(f'Found {nevt} entries')
 
         return arr
     # ------------------------
