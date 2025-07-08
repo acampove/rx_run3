@@ -56,7 +56,7 @@ class SimFitter(BaseFitter, Cache):
         BaseFitter.__init__(self)
         Cache.__init__(
             self,
-            out_path = f'{self._base_path}_sim_fitter',
+            out_path = self._base_path,
             config   = OmegaConf.to_container(cfg, resolve=True))
     # ------------------------
     def _get_pdf(
