@@ -1,6 +1,7 @@
-output_directory : reso/muon/combinatorial
-models           :
-  - exp
+output_directory : combinatorial
+categories:
+  main:
+    models : [exp]
 shared        : []
 float         : []
 reparametrize : {}
