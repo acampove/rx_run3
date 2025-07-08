@@ -118,7 +118,7 @@ class SimFitter(BaseFitter, Cache):
                 sample = self._cfg.sample)
         data= prp.get_data()
 
-        res  = self._fit(data=data, model=model, cfg=self._cfg.fit)
+        res   = self._fit(data=data, model=model, cfg=self._cfg.fit)
         self._save_fit(
             cfg      = self._cfg.plots,
             data     = data,
