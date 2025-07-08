@@ -9,6 +9,7 @@ from dmu.workflow.cache       import Cache
 from dmu.stats.zfit           import zfit
 from dmu.stats                import utilities  as sut
 from dmu.logging.log_store    import LogStore
+from rx_selection             import selection  as sel
 
 from zfit.core.interfaces     import ZfitSpace  as zobs
 from fitter.data_preprocessor import DataPreprocessor
@@ -47,6 +48,7 @@ class DataFitter(BaseFitter, Cache):
         Cache.__init__(
                 self,
                 out_path = cfg.output_directory,
+                cuts     = sel.selection(process=sample, trigger=trigger, q2bin=q2bin),
                 config   = OmegaConf.to_container(cfg, resolve=True))
 
         self._obs = self._make_observable()
