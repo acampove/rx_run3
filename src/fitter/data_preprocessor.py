@@ -122,8 +122,21 @@ class DataPreprocessor(Cache):
         '''
         Returns zfit data
         '''
-        arr  = self._get_array()
-        data = zfit.data.from_numpy(obs=self._obs, array=arr)
+        data_path = f'{self._out_path}/data.npz'
+        if self._copy_from_cache():
+            log.warning(f'Data found cached, loading: {data_path}')
+            with numpy.load(data_path) as ifile:
+                arr = ifile['values' ]
+                wgt = ifile['weights']
+
+            data    = zfit.data.from_numpy(obs=self._obs, array=arr, weights=wgt)
+            return data
+
+        arr, wgt = self._get_array()
+        data     = zfit.data.from_numpy(obs=self._obs, array=arr, weights=wgt)
+
+        numpy.savez_compressed(data_path, values=arr, weights=wgt)
+        self._cache()
 
         return data
 # ------------------------
