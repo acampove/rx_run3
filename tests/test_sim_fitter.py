@@ -58,3 +58,20 @@ def test_nocat():
             q2bin   = 'jpsi')
         pdf = ftr.get_model()
 # ---------------------------------------------------
+def test_with_cat():
+    '''
+    Test for components with brem categories 
+    '''
+    obs = zfit.Space('B_Mass', limits=(4500, 7000))
+
+    cfg = gut.load_conf(package='fitter_data', fpath='tests/signal_electron.yaml')
+    with RDFGetter.max_entries(value=100_000):
+        ftr = SimFitter(
+            name    = 'signal_electron',
+            obs     = obs,
+            cfg     = cfg,
+            trigger = 'Hlt2RD_BuToKpEE_MVA',
+            project = 'rx',
+            q2bin   = 'jpsi')
+        pdf = ftr.get_model()
+# ---------------------------------------------------
