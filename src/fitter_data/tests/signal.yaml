@@ -1,4 +1,4 @@
-output_directory : signal
+output_directory : signal_fit
 models           :
   - gauss
 sample        : gauss_toy
