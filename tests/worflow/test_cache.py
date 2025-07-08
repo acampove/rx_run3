@@ -1,6 +1,7 @@
 '''
 Module used to test Cache class
 '''
+import os
 import pytest
 
 from dmu.generic           import utilities as gut
@@ -18,16 +19,22 @@ class Tester(Wcache):
     Testing class, produces outputs from simple inputs
     '''
     # -----------------------------------
-    def __init__(self, name : str, nval : int):
+    def __init__(
+        self,
+        name   : str,
+        nval   : int,
+        add_dir: bool = False):
         '''
-        name: Identifies instance of Tester
-        nval: Some integer used to produce output data
+        name   : Identifies instance of Tester
+        nval   : Some integer used to produce output data
+        add_dir: If true, will produce output with directory
         '''
         super().__init__(
             out_path=name,
             nval    =nval)
 
         self._nval    = nval
+        self._add_dir = add_dir
     # -----------------------------------
     def run(self) -> list[int]:
         '''
@@ -43,6 +50,14 @@ class Tester(Wcache):
 
         res = [1] * self._nval
         log.info(f'Data not cached, saving: {res}')
+
+        empty_dir_path = f'{self._out_path}/some_empty_dir'
+        full_dir_path  = f'{self._out_path}/some_dir'
+
+        os.makedirs(empty_dir_path)
+        os.makedirs(full_dir_path)
+        with open(f'{full_dir_path}/file.txt', 'w', encoding='utf-8') as ofile:
+            ofile.write('xxx')
 
         gut.dump_json(res, obj_path)
         self._cache()
