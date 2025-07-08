@@ -162,7 +162,10 @@ class Cache:
                 continue
 
             log.debug(f'Deleting {path}')
-            path.unlink()
+            if path.is_dir() and not path.is_symlink():
+                shutil.rmtree(path)
+            else:
+                path.unlink()
     # ---------------------------
     def _copy_from_hashdir(self) -> None:
         '''
