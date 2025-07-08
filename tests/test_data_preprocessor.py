@@ -47,7 +47,7 @@ def test_toy(sample : str):
 
     _validate_data(data=dat, name=sample)
 # -------------------------------------------------
-@pytest.mark.parametrize('sample', ['DATA_24_MagDown_24c1'])
+@pytest.mark.parametrize('sample', ['DATA_24_MagDown_24c2'])
 def test_muon_data(sample : str):
     '''
     Tests class with toys
