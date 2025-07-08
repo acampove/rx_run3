@@ -15,6 +15,7 @@ from dmu.logging.log_store    import LogStore
 from rx_selection             import selection    as sel
 from zfit.core.interfaces     import ZfitPDF      as zpdf
 from zfit.core.parameter      import Parameter    as zpar
+from zfit.result              import FitResult    as zres
 from zfit.core.interfaces     import ZfitSpace    as zobs
 from fitter.base_fitter       import BaseFitter
 from fitter.data_preprocessor import DataPreprocessor
