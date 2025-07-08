@@ -53,12 +53,43 @@ class SimFitter(BaseFitter, Cache):
         self._cfg       = cfg
         self._obs       = obs
         self._base_path = f'{cfg.output_directory}/{name}_{trigger}_{project}_{q2bin}'
+        self._l_rdf_uid = []
+        self._d_data    = self._get_data()
 
         BaseFitter.__init__(self)
         Cache.__init__(
             self,
             out_path = self._base_path,
+            l_rdf_uid= self._l_rdf_uid,
             config   = OmegaConf.to_container(cfg, resolve=True))
+    # ------------------------
+    def _get_data(self) -> dict[str,zdata]:
+        '''
+        Returns
+        --------------------
+        dictionary with:
+
+        Key  : Name of MC category, e.g. brem category
+        Value: Zfit dataset
+        '''
+        d_data = {}
+
+        for cat_name, data in self._cfg.categories.items():
+            cat_cut = None if 'selection' not in data else data[cat_name].selection
+
+            prp   = DataPreprocessor(
+                obs    = self._obs,
+                cut    = cat_cut,
+                trigger= self._trigger,
+                project= self._project,
+                q2bin  = self._q2bin,
+                out_dir= self._base_path,
+                sample = self._cfg.sample)
+            d_data[cat_name] = prp.get_data()
+
+            self._l_rdf_uid.append(prp.rdf_uid)
+
+        return d_data
     # ------------------------
     def _get_pdf(
             self,
@@ -143,14 +174,6 @@ class SimFitter(BaseFitter, Cache):
 
             return model
 
-        prp = DataPreprocessor(
-            obs    = self._obs,
-            trigger= self._trigger,
-            project= self._project,
-            q2bin  = self._q2bin,
-            out_dir= self._base_path,
-            sample = self._cfg.sample)
-        data= prp.get_data()
 
         res   = self._fit(data=data, model=model, cfg=self._cfg.fit)
         self._save_fit(
