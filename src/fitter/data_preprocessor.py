@@ -56,6 +56,7 @@ class DataPreprocessor(Cache):
 
         super().__init__(
             out_path = out_dir,
+            obs_name = sut.name_from_obs(obs),
             rdf_uid  = self._rdf_uid)
     # ------------------------
     def _get_rdf(self, cut : str|None) -> RDataFrame|None:
