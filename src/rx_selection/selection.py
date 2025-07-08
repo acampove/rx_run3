@@ -11,6 +11,7 @@ from contextlib          import contextmanager
 import yaml
 import ap_utilities.decays.utilities as aput
 from ROOT                   import RDataFrame
+from dmu.generic            import hashing
 from dmu.logging.log_store  import LogStore
 
 from rx_data      import utilities          as dut
@@ -253,14 +254,29 @@ def apply_full_selection(
         rdf      : RDataFrame,
         q2bin    : str,
         process  : str,
-        trigger  : str) -> dict[str,str]:
+        trigger  : str,
+        uid      : str|None = None) -> RDataFrame: 
     '''
     Will apply full selection on dataframe
+
+    Parameters
+    --------------------
+    uid: Unique identifier, used for hashing. If not passed no hashing will be done
+
+    Returns
+    --------------------
+    Dataframe after full selection.
+    If uid was passed, the uid will be recalculated and attached to the dataframe.
     '''
 
     d_sel = selection(q2bin=q2bin, process=process, trigger=trigger)
     for cut_name, cut_value in d_sel.items():
         rdf = rdf.Filter(cut_value, cut_name)
+
+    if uid is None:
+        return rdf
+
+    rdf.uid = hashing.hash_object([uid, d_sel])
 
     return rdf
 #-----------------------
