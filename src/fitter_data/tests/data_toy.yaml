@@ -10,10 +10,10 @@ model:
       - 7000
   components:
     background : tests/exp.yaml
-    signal     : tests/signal.yaml
+    signal     : tests/signal_toy.yaml
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
-  nbins   : 30
+  nbins   : 50
   stacked : True
   d_leg :
     Gauss_ext       : Signal
