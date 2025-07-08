@@ -37,7 +37,7 @@ class DataPreprocessor(Cache):
         '''
         Parameters
         --------------------
-        out_dir: Directory where caching will happen
+        out_dir: Directory where caching will happen, with respect to the _cache_root directory
         obs    : zfit observable
         sample : e.g. DATA_24_MagUp...
         trigger: e.g. Hlt2RD...
