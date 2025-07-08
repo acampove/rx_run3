@@ -9,6 +9,7 @@ dependencies= [
 'mplhep',
 'matplotlib',
 'rx_data',
+'rx_selection',
 'data-manipulation-utilities']
 
 [project.optional-dependencies]
