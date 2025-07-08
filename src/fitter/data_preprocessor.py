@@ -55,7 +55,7 @@ class DataPreprocessor(Cache):
 
         rdf_uid = None if self._rdf is None else self._rdf.uid
         super().__init__(
-                out_path = out_dir,
+                out_path = f'{out_dir}_data_preprocessor',
                 rdf_uid  = rdf_uid)
     # ------------------------
     def _get_rdf(self, cut : str|None) -> RDataFrame|None:
