@@ -508,18 +508,6 @@ print_pdf(pdf,
           txt_path = 'tests/stats/utilities/print_pdf/pdf_const.txt')
 ```
 
-### Check PDF usability
-
-In many cases, PDFs are not usable, the function below should check for this:
-
-```python
-from dmu.stats.utilities   import is_pdf_usable
-
-is_pdf_usable(pdf)
-```
-
-This is needed because when building a KDE with too little data, that KDE cannot be evaluated
-and when trying it, tensorflow emits an exception.
 
 ### Storing PDF as latex
 
@@ -809,6 +797,21 @@ fun  = Function.load(path)
 
 xval = numpy.lispace(0, 5, num=100)
 yval = fun(xval)
+```
+
+## Other utilities
+
+These are here to decrease boilerplate code
+
+```python
+from dmu.stats import utilities as sut
+
+# Retrieves name of observable from observable
+name = sut.name_from_obs(obs=obs)
+
+# This is needed because when building a KDE with too little data, that KDE cannot be evaluated
+# and when trying it, tensorflow emits an exception.
+is_pdf_usable(pdf)
 ```
 
 # Machine learning
