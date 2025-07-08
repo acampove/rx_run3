@@ -809,6 +809,9 @@ from dmu.stats import utilities as sut
 # Retrieves name of observable from observable
 name = sut.name_from_obs(obs=obs)
 
+# Retrieves range of observable from observable
+minx, maxx = sut.range_from_obs(obs=obs)
+
 # This is needed because when building a KDE with too little data, that KDE cannot be evaluated
 # and when trying it, tensorflow emits an exception.
 is_pdf_usable(pdf)

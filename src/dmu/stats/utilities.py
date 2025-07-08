@@ -50,6 +50,20 @@ def name_from_obs(obs : zobs) -> str:
 
     return obs.obs[0]
 #-------------------------------------------------------
+def range_from_obs(obs : zobs) -> tuple[float,float]:
+    '''
+    Takes zfit observable, returns tuple with two floats, representing range
+    '''
+    if not isinstance(obs.limits, tuple):
+        raise ValueError(f'Cannot retrieve name for: {obs}')
+
+    if len(obs.limits) != 2:
+        raise ValueError(f'Observable has more than one range: {obs.limits}')
+
+    minx, maxx = obs.limits
+
+    return float(minx[0][0]), float(maxx[0][0])
+#-------------------------------------------------------
 # Check PDF
 #-------------------------------------------------------
 def is_pdf_usable(pdf : zpdf) -> zpdf:

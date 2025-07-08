@@ -239,3 +239,13 @@ def test_zres_to_cres():
 
     OmegaConf.save(config=cres, f='/tmp/results.yaml')
 #----------------------------------
+def test_range_from_obs():
+    '''
+    Tests retrieval of range from observable
+    '''
+    obs        = zfit.Space('xyz', limits=(0, 10))
+    minx, maxx = sut.range_from_obs(obs=obs)
+
+    assert minx ==  0
+    assert maxx == 10
+#----------------------------------
