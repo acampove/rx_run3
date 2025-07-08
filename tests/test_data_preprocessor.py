@@ -69,5 +69,27 @@ def test_muon_data(sample : str):
             q2bin  = 'jpsi')
         dat = prp.get_data()
 
-    _validate_data(data=dat, name=sample)
+    _validate_data(data=dat, name=name)
+# -------------------------------------------------
+@pytest.mark.parametrize('sample'  , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('brem_cat', [0, 1, 2])
+def test_brem_cat_data(sample : str, brem_cat : int):
+    '''
+    Tests class with toys
+    '''
+    obs = zfit.Space('B_Mass', limits=(5180, 6000))
+    name= f'{sample}_brem_{brem_cat:03}'
+
+    with RDFGetter.max_entries(100_000):
+        prp = DataPreprocessor(
+            obs    = obs,
+            out_dir= name,
+            sample = sample,
+            trigger= 'Hlt2RD_BuToKpEE_MVA',
+            project= 'rx',
+            cut    =f'nbrem == {brem_cat}',
+            q2bin  = 'jpsi')
+        dat = prp.get_data()
+
+    _validate_data(data=dat, name=name)
 # -------------------------------------------------
