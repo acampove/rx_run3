@@ -65,9 +65,15 @@ class DataPreprocessor(Cache):
 
         Returns
         -------------------
-        ROOT dataframe after selection
-        and with Unique identifier attached as uid
+        Either:
+
+        - If dataset is not a toy, ROOT dataframe after selection and with Unique identifier attached as uid
+        - Otherwise, None
         '''
+        if 'toy' in self._sample:
+            log.debug(f'Cannot retrieve dataframe for toy sample: {self._sample}')
+            return None
+
         log.debug('Retrieving dataframe')
         gtr = RDFGetter(sample =self._sample, trigger=self._trigger)
         rdf = gtr.get_rdf()
