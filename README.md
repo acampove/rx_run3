@@ -40,7 +40,7 @@ The selection stored in the config files can be overriden with:
 ```python
 from rx_selection import selection as sel
 
-with sel.custom_selection(d_cut = {'bdt' : 'mva_cmb > 0.1'}):
+with sel.custom_selection(d_sel = {'bdt' : 'mva_cmb > 0.1'}):
     run_function_that_uses_selection()
 ```
 
