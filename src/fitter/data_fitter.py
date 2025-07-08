@@ -38,13 +38,13 @@ class DataFitter(BaseFitter, Cache):
         q2bin  : E.g. central
         cfg    : Configuration for the fit to data
         '''
-        self._sample = sample
-        self._trigger= trigger
-        self._project= project
-        self._q2bin  = q2bin
-        self._cfg    = cfg
 
         cfg.output_directory = f'{cfg.output_directory}/{sample}_{trigger}_{project}_{q2bin}'
+        self._sample    = sample
+        self._trigger   = trigger
+        self._project   = project
+        self._q2bin     = q2bin
+        self._cfg       = cfg
 
         BaseFitter.__init__(self)
         Cache.__init__(
