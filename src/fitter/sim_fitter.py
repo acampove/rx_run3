@@ -73,6 +73,10 @@ class SimFitter(BaseFitter, Cache):
         Value: Zfit dataset
         '''
         d_data = {}
+        # For components without an MC associated e.g. combinatorial
+        # return empty dataset
+        if 'sample' not in self._cfg:
+            return d_data
 
         for cat_name, data in self._cfg.categories.items():
             cat_cut = None if 'selection' not in data else data.selection
