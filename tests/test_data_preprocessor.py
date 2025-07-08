@@ -40,6 +40,7 @@ def test_toy(sample : str):
 
     prp = DataPreprocessor(
         obs    =obs,
+        out_dir=sample,
         sample =sample,
         trigger='',
         project='',
@@ -56,10 +57,12 @@ def test_muon_data(sample : str):
     Tests class with toys
     '''
     obs = zfit.Space('B_Mass', limits=(5180, 6000))
+    name= f'{sample}_muon_data'
 
     with RDFGetter.max_entries(100_000):
         prp = DataPreprocessor(
             obs    = obs,
+            out_dir= name,
             sample = sample,
             trigger= 'Hlt2RD_BuToKpMuMu_MVA',
             project= 'rx',
