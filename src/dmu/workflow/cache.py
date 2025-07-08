@@ -149,7 +149,7 @@ class Cache:
         '''
         Delete all objects from _out_path directory, except for `.cache`
 
-        only_links: If true will only delete links 
+        only_links: If true will only delete links
         '''
         for path in Path(self._out_path).iterdir():
             if str(path) == self._cache_dir:
