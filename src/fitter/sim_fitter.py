@@ -44,6 +44,12 @@ class SimFitter(BaseFitter, Cache):
         self._q2bin  = q2bin
         self._cfg    = cfg
         self._obs    = obs
+
+        BaseFitter.__init__(self)
+        Cache.__init__(
+                self,
+                out_path = cfg.output_directory,
+                config   = OmegaConf.to_container(cfg, resolve=True))
     # ------------------------
     def _get_pdf(self) -> zpdf:
         l_model = self._cfg.models
