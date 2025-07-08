@@ -6,6 +6,7 @@ from typing                   import cast
 from omegaconf                import OmegaConf, DictConfig
 from dmu.stats.fitter         import Fitter
 from dmu.stats.zfit_plotter   import ZFitPlotter
+from dmu.generic              import utilities  as gut
 from dmu.stats                import utilities  as sut
 from zfit.result              import FitResult  as zres
 from zfit.core.interfaces     import ZfitData   as zdata
@@ -51,6 +52,7 @@ class BaseFitter:
     # ------------------------
     def _save_fit(
             self,
+            cuts     : dict[str,str],
             cfg      : DictConfig,
             out_path : str,
             model    : zpdf,
@@ -59,6 +61,7 @@ class BaseFitter:
         '''
         Parameters
         --------------
+        cuts     : Selection used for fit
         cfg      : Plotting configuration
         out_path : Directory where fit will be saved
         model    : PDF from fit
@@ -69,6 +72,9 @@ class BaseFitter:
 
         ptr = ZFitPlotter(data=data, model=model)
         ptr.plot(**plt_cfg)
+
+        sel_path = f'{out_path}/selection.yaml'
+        gut.dump_json(cuts, sel_path)
 
         sut.save_fit(
             data   = data,
