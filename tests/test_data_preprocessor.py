@@ -77,7 +77,7 @@ def test_brem_cat_data(sample : str, brem_cat : int):
     '''
     Tests class with toys
     '''
-    obs = zfit.Space('B_Mass', limits=(5180, 6000))
+    obs = zfit.Space('B_Mass', limits=(4500, 6000))
     name= f'{sample}_brem_{brem_cat:03}'
 
     with RDFGetter.max_entries(100_000):
