@@ -168,26 +168,21 @@ class SimFitter(BaseFitter, Cache):
 
         result_path = f'{self._out_path}/parameters.yaml'
         if self._copy_from_cache():
-            res   = OmegaConf.load(result_path)
-            res   = cast(DictConfig, res)
-            model = self._fix_tails(pdf=model, pars=res)
+            res      = OmegaConf.load(result_path)
+            res      = cast(DictConfig, res)
+            # If caching, need only model, second return value
+            # Is an empty DictConfig, because no fit happened
+            model, _ = self._get_full_model(skip_fit=True)
+            model    = self._fix_tails(pdf=model, pars=res)
 
             return model
 
+        log.info(f'Fitting, could not find cached parameters in {result_path}')
 
-        res   = self._fit(data=data, model=model, cfg=self._cfg.fit)
-        self._save_fit(
-            cuts     = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin),
-            cfg      = self._cfg.plots,
-            data     = data,
-            model    = model,
-            res      = res,
-            out_path = self._out_path)
+        full_model, cres = self._get_full_model(skip_fit=False)
 
-        res   = sut.zres_to_cres(res=res)
-        model = self._fix_tails(pdf=model, pars=res)
+        OmegaConf.save(cres, result_path)
 
         self._cache()
-
-        return model
+        return full_model
 # ------------------------
