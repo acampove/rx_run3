@@ -7,6 +7,7 @@ from typing import cast
 from omegaconf                import DictConfig, OmegaConf
 from zfit.core.interfaces     import ZfitPDF      as zpdf
 from zfit.core.interfaces     import ZfitSpace    as zobs
+from dmu.stats                import utilities    as sut
 from dmu.workflow.cache       import Cache
 from dmu.stats.model_factory  import ModelFactory
 from dmu.logging.log_store    import LogStore
@@ -74,10 +75,14 @@ class SimFitter(BaseFitter, Cache):
         pars:
         '''
         s_par = pdf.get_params()
+        npar  = len(s_par)
+        log.debug(f'Found {npar} floating parameters')
+
         for par in s_par:
             # Model builder adds _flt to name
             # of parameters meant to float
             if par.name.endswith('_flt'):
+                log.debug(f'Not fixing: {par.name}')
                 continue
 
             if par.name in pars:
