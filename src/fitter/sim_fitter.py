@@ -40,14 +40,14 @@ class SimFitter(BaseFitter, Cache):
         q2bin  : E.g. central
         cfg    : Object storing configuration for fit
         '''
-        self._name   = name
-        self._trigger= trigger
-        self._project= project
-        self._q2bin  = q2bin
-        self._cfg    = cfg
-        self._obs    = obs
 
         cfg.output_directory = f'{cfg.output_directory}/{name}_{trigger}_{project}_{q2bin}'
+        self._name      = name
+        self._trigger   = trigger
+        self._project   = project
+        self._q2bin     = q2bin
+        self._cfg       = cfg
+        self._obs       = obs
 
         BaseFitter.__init__(self)
         Cache.__init__(
