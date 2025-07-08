@@ -157,6 +157,49 @@ class SimFitter(BaseFitter, Cache):
 
         return model
     # ------------------------
+    def _fit_category(
+            self,
+            skip_fit     : bool,
+            category     : str,
+            l_model_name : list[str]) -> tuple[zpdf,float|None,zres|None]:
+        '''
+        Parameters
+        ----------------
+        skip_fit     : If true, it will only return model, used if fit parameters were already found
+        category     : Name of fitting category
+        l_model_name : List of fitting models,  e.g. [cbr, cbl]
+
+        Returns
+        ----------------
+        Tuple with:
+            - fitted PDF
+            - size (sum of weights) of dataset in given category.
+              If fit is skipped, returns None, because this is used to set
+              the value of the fit fraction, which should already be in the cached data.
+            - zfit result object, if fit is skipped, returns None
+        '''
+        log.info(f'Fitting category {category}')
+
+        model = self._get_pdf(category=category, l_model=l_model_name)
+        data  = self._d_data[category]
+
+        sumw= data.weights.numpy().sum()
+        if skip_fit:
+            return model, sumw, None
+
+        res   = self._fit(data=data, model=model, cfg=self._cfg.fit)
+        self._save_fit(
+            cuts     = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin),
+            cfg      = self._cfg.plots,
+            data     = data,
+            model    = model,
+            res      = res,
+            out_path = f'{self._out_path}/{category}')
+
+        cres  = sut.zres_to_cres(res=res)
+        model = self._fix_tails(pdf=model, pars=cres)
+
+        return model, sumw, res
     # ------------------------
     # TODO: Fractions need to be parameters to be constrained
     def _get_fraction(
