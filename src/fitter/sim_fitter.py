@@ -114,7 +114,7 @@ class SimFitter(BaseFitter, Cache):
             return model
 
         prp = DataPreprocessor(
-                obs=self._obs,
+                obs    = self._obs,
                 trigger= self._trigger,
                 project= self._project,
                 q2bin  = self._q2bin,
