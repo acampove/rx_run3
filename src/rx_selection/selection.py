@@ -110,6 +110,9 @@ def selection(
     smeared  : If true (default), the selection will use cuts on smeared masses. Only makes sense for electron MC samples
     trigger  : E.g. Hlt2RD...
     '''
+    if 'toy' in process:
+        log.warning(f'Process {process} recognized as toy sample, returning empty selection')
+        return {}
 
     project  = dut.project_from_trigger(trigger=trigger)
     analysis = dut.channel_from_trigger(trigger=trigger)
