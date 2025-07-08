@@ -33,7 +33,8 @@ class DataPreprocessor(Cache):
             sample  : str,
             trigger : str,
             project : str,
-            q2bin   : str):
+            q2bin   : str,
+            cut     : str|None = None):
         '''
         Parameters
         --------------------
@@ -43,21 +44,28 @@ class DataPreprocessor(Cache):
         trigger: e.g. Hlt2RD...
         project: e.g. rx, nopid
         q2bin  : e.g. central
+        cut    : selection that can be added on top. Needed when fits are required in categories, optional
         '''
         self._obs    = obs
         self._sample = sample
         self._trigger= trigger
         self._project= project
         self._q2bin  = q2bin
-        self._rdf    = self._get_rdf()
+        self._rdf    = self._get_rdf(cut=cut)
 
         super().__init__(
                 out_path = out_dir,
                 rdf_uid  = self._rdf.uid)
     # ------------------------
-    def _get_rdf(self) -> RDataFrame:
+    def _get_rdf(self, cut : str|None) -> RDataFrame:
         '''
-        Returns ROOT dataframe after selection
+        Parameters
+        -------------------
+        category_cut: Selection to be added on top, used for categories
+
+        Returns
+        -------------------
+        ROOT dataframe after selection
         and with Unique identifier attached as uid
         '''
         log.debug('Retrieving dataframe')
@@ -72,7 +80,8 @@ class DataPreprocessor(Cache):
             uid     = uid,
             q2bin   = self._q2bin,
             trigger = self._trigger,
-            process = self._sample)
+            process = self._sample,
+            ext_cut = cut)
 
         return rdf
     # ------------------------
