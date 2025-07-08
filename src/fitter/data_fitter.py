@@ -95,11 +95,12 @@ class DataFitter(BaseFitter, Cache):
 
         res  = self._fit(data=data, model=model, cfg=self._cfg.fit)
         self._save_fit(
-                cfg      = self._cfg.plots,
-                data     = data,
-                model    = model,
-                res      = res,
-                out_path = self._out_path)
+            cuts     = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin),
+            cfg      = self._cfg.plots,
+            data     = data,
+            model    = model,
+            res      = res,
+            out_path = self._out_path)
 
         cres = sut.zres_to_cres(res=res)
 
