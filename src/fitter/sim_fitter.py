@@ -13,6 +13,7 @@ from dmu.stats.model_factory  import ModelFactory
 from dmu.logging.log_store    import LogStore
 
 from rx_selection             import selection    as sel
+from zfit.core.interfaces     import ZfitData     as zdata
 from zfit.core.interfaces     import ZfitPDF      as zpdf
 from zfit.core.parameter      import Parameter    as zpar
 from zfit.result              import FitResult    as zres
