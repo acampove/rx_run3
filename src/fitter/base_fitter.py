@@ -60,6 +60,7 @@ class BaseFitter:
         cfg      : Plotting configuration
         out_path : Directory where fit will be saved
         model    : PDF from fit
+        res      : Zfit result object
         data     : data from fit
         '''
         plt_cfg = OmegaConf.to_container(cfg, resolve=True)
