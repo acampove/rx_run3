@@ -47,6 +47,11 @@ class DataPreprocessor(Cache):
         self._trigger= trigger
         self._project= project
         self._q2bin  = q2bin
+        self._rdf    = self._get_rdf()
+
+        super().__init__(
+                out_path = f'{sample}_{trigger}_{project}_{q2bin}',
+                rdf_uid  = self._rdf.uid)
     # ------------------------
     def _get_rdf(self) -> RDataFrame:
         '''
