@@ -11,6 +11,7 @@ from dmu.stats                import utilities    as sut
 from dmu.workflow.cache       import Cache
 from dmu.stats.model_factory  import ModelFactory
 from dmu.logging.log_store    import LogStore
+from rx_selection             import selection    as sel
 from fitter.base_fitter       import BaseFitter
 from fitter.data_preprocessor import DataPreprocessor
 
