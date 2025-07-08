@@ -28,6 +28,7 @@ class DataPreprocessor(Cache):
     # ------------------------
     def __init__(
             self,
+            out_dir : str,
             obs     : zobs,
             sample  : str,
             trigger : str,
@@ -36,6 +37,7 @@ class DataPreprocessor(Cache):
         '''
         Parameters
         --------------------
+        out_dir: Directory where caching will happen
         obs    : zfit observable
         sample : e.g. DATA_24_MagUp...
         trigger: e.g. Hlt2RD...
@@ -50,7 +52,7 @@ class DataPreprocessor(Cache):
         self._rdf    = self._get_rdf()
 
         super().__init__(
-                out_path = f'{sample}_{trigger}_{project}_{q2bin}',
+                out_path = out_dir,
                 rdf_uid  = self._rdf.uid)
     # ------------------------
     def _get_rdf(self) -> RDataFrame:
