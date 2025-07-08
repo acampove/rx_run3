@@ -5,7 +5,8 @@ import os
 import pytest
 import matplotlib.pyplot as plt
 from dmu.stats.zfit           import zfit
-from zfit.core.interfaces     import ZfitData as zdata
+from dmu.stats                import utilities as sut
+from zfit.core.interfaces     import ZfitData  as zdata
 from fitter.data_preprocessor import DataPreprocessor
 
 # -------------------------------------------------
@@ -23,7 +24,9 @@ def _validate_data(data : zdata, name : str) -> None:
     plt_path = f'{Data.out_dir}/{name}.png'
 
     arr_data = data.numpy()
-    plt.hist(arr_data, bins=50, range=(4500, 7000))
+    rng      = sut.range_from_obs(obs=data.space)
+
+    plt.hist(arr_data, histtype='step', bins=100, range=rng)
     plt.savefig(plt_path)
     plt.close()
 # -------------------------------------------------
@@ -49,7 +52,7 @@ def test_muon_data(sample : str):
     '''
     Tests class with toys
     '''
-    obs = zfit.Space('B_Mass', limits=(4500, 7000))
+    obs = zfit.Space('B_Mass', limits=(5180, 6000))
 
     prp = DataPreprocessor(
         obs    = obs,
