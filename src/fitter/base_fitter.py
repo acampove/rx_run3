@@ -21,11 +21,6 @@ class BaseFitter:
     - Behave as a dependency sink, avoiding circular imports
     '''
     # ------------------------
-    def __init__(self):
-        '''
-
-        '''
-    # ------------------------
     def _fit(
             self,
             cfg   : DictConfig,
