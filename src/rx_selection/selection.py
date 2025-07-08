@@ -255,7 +255,7 @@ def apply_full_selection(
         q2bin    : str,
         process  : str,
         trigger  : str,
-        uid      : str|None = None) -> RDataFrame: 
+        uid      : str|None = None) -> RDataFrame:
     '''
     Will apply full selection on dataframe
 
