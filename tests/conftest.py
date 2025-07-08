@@ -17,9 +17,9 @@ def _set_logs() -> None:
     LogStore.set_level('fitter:data_preprocessor'   , 10)
 
     # Silence what is below
-    LogStore.set_level('rx_selection:truth_matching', 10)
-    LogStore.set_level('rx_data:path_splitter'      , 10)
-    LogStore.set_level('rx_data:rdf_getter'         , 10)
+    LogStore.set_level('rx_selection:truth_matching', 30)
+    LogStore.set_level('rx_data:path_splitter'      , 30)
+    LogStore.set_level('rx_data:rdf_getter'         , 30)
     LogStore.set_level('dmu:workflow:cache'         , 30)
     LogStore.set_level('dmu:stats:model_factory'    , 30)
 
