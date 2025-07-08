@@ -23,7 +23,7 @@ def test_toy():
                 project= '',
                 q2bin  = '',
                 cfg    = cfg)
-        res = ftr.run()
+        ftr.run()
 # -------------------------------------------
 def test_muon():
     '''
@@ -43,5 +43,5 @@ def test_muon():
                 project= 'rx',
                 q2bin  = 'jpsi',
                 cfg    = cfg)
-        res = ftr.run()
+        ftr.run()
 # -------------------------------------------
