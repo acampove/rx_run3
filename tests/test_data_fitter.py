@@ -55,12 +55,9 @@ def test_rare_muon(q2bin : str):
         package='fitter_data',
         fpath  ='rare/muon/data.yaml')
 
-    with Cache.turn_off_cache(val=True), \
-         sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
-         RDFGetter.max_entries(value=300_000):
-
+    with Cache.turn_off_cache(val=True):
         ftr = DataFitter(
-                sample = 'DATA_24_MagDown_24c2',
+                sample = 'DATA_24_*',
                 trigger= 'Hlt2RD_BuToKpMuMu_MVA',
                 project= 'rx',
                 q2bin  = q2bin,
