@@ -54,10 +54,22 @@ class SimFitter(BaseFitter, Cache):
                 out_path = self._base_path,
                 config   = OmegaConf.to_container(cfg, resolve=True))
     # ------------------------
-    def _get_pdf(self) -> zpdf:
-        l_model = self._cfg.models
+    def _get_pdf(
+            self,
+            category: str,
+            l_model : list[str]) -> zpdf:
+        '''
+        Parameters
+        ------------
+        category: If the MC is meant to be split (e.g. by brem) this should the the label of the category
+        l_model : List of model names, e.g. [cbl, cbr]
+
+        Returns
+        ------------
+        Fitting PDF built from the sum of those models
+        '''
         mod     = ModelFactory(
-            preffix = self._name,
+            preffix = f'{self._name}_{category}',
             obs     = self._obs,
             l_pdf   = l_model,
             l_shared= self._cfg.shared,
