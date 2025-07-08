@@ -1,10 +1,18 @@
-output_directory : reso/muon/signal 
-models           :
-  - dscb
-sample        : Bu_JpsiK_mm_eq_DPC
-categories    :
-  brem_one : nbrem == 1
-  brem_two : nbrem == 2
+output_directory : reso/electron/signal 
+categories:
+  brem_zero: 
+    selection : nbrem == 0
+    model :
+      - cbl
+  brem_one : 
+    selection : nbrem == 1
+    model :
+      - dscb
+  brem_two :
+    selection : nbrem == 2
+    model :
+      - dscb
+sample        : Bu_JpsiK_ee_eq_DPC
 shared        : []
 float         :
   - mu
