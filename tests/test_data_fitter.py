@@ -1,6 +1,7 @@
 '''
 Module meant to test DataFitter class
 '''
+import pytest
 
 from dmu.workflow.cache import Cache
 from dmu.generic        import utilities  as gut
@@ -25,13 +26,13 @@ def test_toy():
                 cfg    = cfg)
         ftr.run()
 # -------------------------------------------
-def test_muon():
+def test_reso_muon():
     '''
     Test using toy data
     '''
     cfg = gut.load_conf(
         package='fitter_data',
-        fpath  ='tests/data_muon.yaml')
+        fpath  ='reso/muon/data.yaml')
 
     with Cache.turn_off_cache(val=True), \
          sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
@@ -42,6 +43,27 @@ def test_muon():
                 trigger= 'Hlt2RD_BuToKpMuMu_MVA',
                 project= 'rx',
                 q2bin  = 'jpsi',
+                cfg    = cfg)
+        ftr.run()
+# -------------------------------------------
+@pytest.mark.parametrize('q2bin', ['central'])
+def test_rare_muon(q2bin : str):
+    '''
+    Test using toy data
+    '''
+    cfg = gut.load_conf(
+        package='fitter_data',
+        fpath  ='rare/muon/data.yaml')
+
+    with Cache.turn_off_cache(val=True), \
+         sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
+         RDFGetter.max_entries(value=300_000):
+
+        ftr = DataFitter(
+                sample = 'DATA_24_MagDown_24c2',
+                trigger= 'Hlt2RD_BuToKpMuMu_MVA',
+                project= 'rx',
+                q2bin  = q2bin,
                 cfg    = cfg)
         ftr.run()
 # -------------------------------------------
