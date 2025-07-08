@@ -44,3 +44,20 @@ def test_toy(sample : str):
 
     _validate_data(data=dat, name=sample)
 # -------------------------------------------------
+@pytest.mark.parametrize('sample', ['DATA_24_MagDown_24c1'])
+def test_muon_data(sample : str):
+    '''
+    Tests class with toys
+    '''
+    obs = zfit.Space('B_Mass', limits=(4500, 7000))
+
+    prp = DataPreprocessor(
+        obs    = obs,
+        sample = sample,
+        trigger= 'Hlt2RD_BuToKpMuMu_MVA',
+        project= 'rx',
+        q2bin  = 'jpsi')
+    dat = prp.get_data()
+
+    _validate_data(data=dat, name=sample)
+# -------------------------------------------------
