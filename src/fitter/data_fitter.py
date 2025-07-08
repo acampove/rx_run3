@@ -38,18 +38,17 @@ class DataFitter(BaseFitter, Cache):
         q2bin  : E.g. central
         cfg    : Configuration for the fit to data
         '''
-
-        cfg.output_directory = f'{cfg.output_directory}/{sample}_{trigger}_{project}_{q2bin}'
         self._sample    = sample
         self._trigger   = trigger
         self._project   = project
         self._q2bin     = q2bin
         self._cfg       = cfg
+        self._base_path = f'{cfg.output_directory}/{sample}_{trigger}_{project}_{q2bin}'
 
         BaseFitter.__init__(self)
         Cache.__init__(
             self,
-            out_path = cfg.output_directory,
+            out_path = self._base_path,
             cuts     = sel.selection(process=sample, trigger=trigger, q2bin=q2bin),
             config   = OmegaConf.to_container(cfg, resolve=True))
 
@@ -72,6 +71,7 @@ class DataFitter(BaseFitter, Cache):
         ------------
         DictConfig object with fitting results
         '''
+
         result_path = f'{self._out_path}/parameters.yaml'
         if self._copy_from_cache():
             res = OmegaConf.load(result_path)
@@ -84,7 +84,7 @@ class DataFitter(BaseFitter, Cache):
             q2bin  = self._q2bin,
             sample = self._sample,
             trigger= self._trigger,
-            out_dir= self._out_path,
+            out_dir= self._base_path,
             project= self._project)
         data = dpr.get_data()
 
