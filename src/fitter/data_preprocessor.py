@@ -114,10 +114,13 @@ class DataPreprocessor(Cache):
         for the sample requested, this array is fully selected
         '''
         if 'toy' in self._sample:
+            log.debug(f'Extracting toy data for sample {self._sample}')
             arr = self._get_toy_array(sample=self._sample)
             wgt = numpy.ones_like(arr)
 
             return arr, wgt
+
+        log.debug(f'Extracting data through RDFGetter for sample {self._sample}')
 
         rdf = self._rdf
         if log.getEffectiveLevel() < 20:
