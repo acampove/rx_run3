@@ -2,10 +2,11 @@
 This module is meant to test the SimFitter class
 '''
 
-from dmu.stats.zfit    import zfit
-from dmu.generic       import utilities as gut
+from dmu.stats.zfit     import zfit
+from dmu.generic        import utilities as gut
+from rx_data.rdf_getter import RDFGetter
 
-from fitter.sim_fitter import SimFitter
+from fitter.sim_fitter  import SimFitter
 
 # ---------------------------------------------------
 def test_nomc():
