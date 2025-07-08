@@ -87,7 +87,7 @@ class SimFitter(BaseFitter, Cache):
 
             if par.name in pars:
                 par.set_value(pars[par.name].value)
-                log.debug(f'{par.name:<20}{"--->"}{pars.value:<20.3f}')
+                log.debug(f'{par.name:<20}{"--->"}{pars[par.name].value:>20.3f}')
                 par.floating = False
 
         return pdf
@@ -125,6 +125,9 @@ class SimFitter(BaseFitter, Cache):
             model    = model,
             res      = res,
             out_path = self._out_path)
+
+        res   = sut.zres_to_cres(res=res)
+        model = self._fix_tails(pdf=model, pars=res)
 
         self._cache()
 
