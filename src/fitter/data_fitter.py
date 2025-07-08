@@ -48,10 +48,10 @@ class DataFitter(BaseFitter, Cache):
 
         BaseFitter.__init__(self)
         Cache.__init__(
-                self,
-                out_path = cfg.output_directory,
-                cuts     = sel.selection(process=sample, trigger=trigger, q2bin=q2bin),
-                config   = OmegaConf.to_container(cfg, resolve=True))
+            self,
+            out_path = cfg.output_directory,
+            cuts     = sel.selection(process=sample, trigger=trigger, q2bin=q2bin),
+            config   = OmegaConf.to_container(cfg, resolve=True))
 
         self._obs = self._make_observable()
     # ------------------------
