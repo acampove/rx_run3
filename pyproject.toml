@@ -5,6 +5,9 @@ version     = '0.0.1'
 readme      = 'README.md'
 dependencies= [
 'omegaconf',
+'numpy',
+'mplhep',
+'matplotlib',
 'data-manipulation-utilities']
 
 [project.optional-dependencies]
