@@ -140,9 +140,9 @@ def test_ranges():
     '''
     pdf   = sut.get_model('s+b')
     sam   = pdf.create_sampler(n=50_000)
-    pdf   = sut.get_model('s+b', lam = -0.3)
+    pdf   = sut.get_model('s+b', lam = -0.0003)
 
-    rng   = [[0, 3.5], [6.5, 10]]
+    rng   = [[4500, 5100], [5300, 6000]]
     cfg   = {'ranges': rng}
     obj   = Fitter(pdf, sam)
     res   = obj.fit(cfg)
