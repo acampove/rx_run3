@@ -418,8 +418,8 @@ def get_model(
     expo= zfit.pdf.Exponential(obs=obs, lam=c)
 
     if kind == 's+b':
-        nexpo = zfit.param.Parameter('nexp', 1000, 0, 1000_000)
-        ngaus = zfit.param.Parameter('gaus', 1000, 0, 1000_000)
+        nexpo = zfit.param.Parameter('nbkg', 1000, 0, 1000_000)
+        ngaus = zfit.param.Parameter('nsig', 1000, 0, 1000_000)
 
         bkg   = expo.create_extended(nexpo)
         sig   = gaus.create_extended(ngaus)
