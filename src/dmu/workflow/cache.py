@@ -138,7 +138,7 @@ class Cache:
             log.debug('')
 
             if source.is_dir():
-                shutil.copytree(source, self._hash_dir)
+                shutil.copytree(source, self._hash_dir, dirs_exist_ok=True)
             else:
                 shutil.copy2(source, self._hash_dir)
 
