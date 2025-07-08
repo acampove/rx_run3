@@ -66,7 +66,14 @@ class DataPreprocessor(Cache):
         if 'toy' in self._sample:
             return self._get_toy_array(sample=self._sample)
 
-        raise NotImplementedError(f'Cannot retrive data for sample: {self._sample}')
+        gtr = RDFGetter(sample =self._sample, trigger=self._trigger)
+        rdf = gtr.get_rdf()
+        rdf = cast(RDataFrame, rdf)
+
+        name = sut.name_from_obs(obs=self._obs)
+        arr  = rdf.AsNumpy([name])[name]
+
+        return arr
     # ------------------------
     def get_data(self) -> zdata:
         '''
