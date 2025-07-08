@@ -1,6 +1,7 @@
 output_directory : combinatorial
-models           :
-  - exp
+categories:
+  main:
+    models : [exp]
 shared        : []
 float         : []
 reparametrize : {}
