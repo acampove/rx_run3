@@ -255,6 +255,7 @@ def apply_full_selection(
         q2bin    : str,
         process  : str,
         trigger  : str,
+        ext_cut  : str|None = None,
         uid      : str|None = None) -> RDataFrame:
     '''
     Will apply full selection on dataframe.
@@ -263,6 +264,7 @@ def apply_full_selection(
     Parameters
     --------------------
     uid: Unique identifier, used for hashing. If not passed no hashing will be done
+    ext_cut: Extra cut, optional
 
     Returns
     --------------------
@@ -271,6 +273,9 @@ def apply_full_selection(
     '''
 
     d_sel = selection(q2bin=q2bin, process=process, trigger=trigger)
+    if ext_cut is not None:
+        d_sel['extra'] = ext_cut
+
     for cut_name, cut_value in d_sel.items():
         rdf = rdf.Filter(cut_value, cut_name)
 
