@@ -113,3 +113,18 @@ def test_dont_cache():
 
         assert res == out
 # -----------------------------------
+def test_cache_with_dir():
+    '''
+    Will cache where the outputs contain a directory
+    '''
+    log.info('')
+    res = 4 * [1]
+    for _ in range(2):
+        obj = Tester(
+            nval   = 4,
+            add_dir= True,
+            name   = 'cache_with_dir')
+        out = obj.run()
+
+        assert res == out
+# -----------------------------------
