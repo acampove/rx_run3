@@ -55,12 +55,11 @@ def test_rare_muon(q2bin : str):
         package='fitter_data',
         fpath  ='rare/muon/data.yaml')
 
-    with Cache.turn_off_cache(val=True):
-        ftr = DataFitter(
-                sample = 'DATA_24_*',
-                trigger= 'Hlt2RD_BuToKpMuMu_MVA',
-                project= 'rx',
-                q2bin  = q2bin,
-                cfg    = cfg)
-        ftr.run()
+    ftr = DataFitter(
+        sample = 'DATA_24_*',
+        trigger= 'Hlt2RD_BuToKpMuMu_MVA',
+        project= 'rx',
+        q2bin  = q2bin,
+        cfg    = cfg)
+    ftr.run()
 # -------------------------------------------
