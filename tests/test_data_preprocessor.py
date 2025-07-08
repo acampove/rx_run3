@@ -6,6 +6,7 @@ import pytest
 import matplotlib.pyplot as plt
 from dmu.stats.zfit           import zfit
 from dmu.stats                import utilities as sut
+from rx_data.rdf_getter       import RDFGetter
 from zfit.core.interfaces     import ZfitData  as zdata
 from fitter.data_preprocessor import DataPreprocessor
 
@@ -47,20 +48,23 @@ def test_toy(sample : str):
 
     _validate_data(data=dat, name=sample)
 # -------------------------------------------------
-@pytest.mark.parametrize('sample', ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('sample', [
+    'DATA_24_MagDown_24c2',
+    'Bu_JpsiK_mm_eq_DPC'])
 def test_muon_data(sample : str):
     '''
     Tests class with toys
     '''
     obs = zfit.Space('B_Mass', limits=(5180, 6000))
 
-    prp = DataPreprocessor(
-        obs    = obs,
-        sample = sample,
-        trigger= 'Hlt2RD_BuToKpMuMu_MVA',
-        project= 'rx',
-        q2bin  = 'jpsi')
-    dat = prp.get_data()
+    with RDFGetter.max_entries(100_000):
+        prp = DataPreprocessor(
+            obs    = obs,
+            sample = sample,
+            trigger= 'Hlt2RD_BuToKpMuMu_MVA',
+            project= 'rx',
+            q2bin  = 'jpsi')
+        dat = prp.get_data()
 
     _validate_data(data=dat, name=sample)
 # -------------------------------------------------
