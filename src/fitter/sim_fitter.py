@@ -5,13 +5,17 @@ Module with SimFitter class
 from typing import cast
 
 from omegaconf                import DictConfig, OmegaConf
-from zfit.core.interfaces     import ZfitPDF      as zpdf
-from zfit.core.interfaces     import ZfitSpace    as zobs
+
+from dmu.stats.zfit           import zfit
 from dmu.stats                import utilities    as sut
 from dmu.workflow.cache       import Cache
 from dmu.stats.model_factory  import ModelFactory
 from dmu.logging.log_store    import LogStore
+
 from rx_selection             import selection    as sel
+from zfit.core.interfaces     import ZfitPDF      as zpdf
+from zfit.core.parameter      import Parameter    as zpar
+from zfit.core.interfaces     import ZfitSpace    as zobs
 from fitter.base_fitter       import BaseFitter
 from fitter.data_preprocessor import DataPreprocessor
 
