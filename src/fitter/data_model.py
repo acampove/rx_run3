@@ -9,13 +9,11 @@ from dmu.logging.log_store  import LogStore
 from omegaconf              import DictConfig
 from zfit.core.interfaces   import ZfitPDF    as zpdf
 from zfit.core.interfaces   import ZfitSpace  as zobs
-
-from fitter.base_model      import BaseModel
 from fitter.sim_fitter      import SimFitter
 
 log = LogStore.add_logger('fitter:data_model')
 # ------------------------
-class DataModel(BaseModel):
+class DataModel:
     '''
     Model for fitting data samples
     '''
