@@ -1,0 +1,21 @@
+# This is a config file used for tests
+# It illustrates how a fit would run for data
+
+output_directory : reso/muon/data
+model:
+  observable:
+    name : B_Mass
+    range:
+      - 5080
+      - 5800
+  components:
+    background : reso/muon/exp.yaml
+    signal     : reso/muon/signal.yaml
+fit: {}
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 50
+  stacked : True
+  d_leg :
+    Gauss_ext       : Signal
+    Exponential_ext : Combinatorial
+
