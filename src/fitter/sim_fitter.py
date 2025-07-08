@@ -182,6 +182,48 @@ class SimFitter(BaseFitter, Cache):
         log.debug(f'{frac_name:<50}{value:<10.3f}')
 
         return par
+    # ------------------------
+    def _merge_categories(
+        self, 
+        l_pdf   : list[zpdf], 
+        l_yield : list[float],
+        l_cres  : list[DictConfig]) -> tuple[zpdf,DictConfig]:
+        '''
+        Parameters
+        -----------------
+        l_pdf  : List of zfit PDFs from fit, one per category
+        l_yield: List of yields from MC sample, not the fitted one
+        l_cres : List of result objects holding parameter values from fits
+
+        Returns
+        -----------------
+        Tuple with:
+
+        - Full PDF, i.e. sum of components
+        - Merged dictionary of parameters
+        '''
+
+        if len(l_pdf) == 1:
+            cres  = OmegaConf.merge(l_cres[0])
+
+            return l_pdf[0], cres
+
+        log.debug(60 * '-')
+        log.debug(f'{"Fraction":<50}{"Value":<10}')
+        log.debug(60 * '-')
+        l_frac = [
+                  self._get_fraction(
+                      sumw,
+                      total   = sum(l_yield),
+                      category= category)
+                  for sumw, category in zip(l_yield, self._cfg.categories) ]
+        log.debug(60 * '-')
+
+        full_model = zfit.pdf.SumPDF(l_pdf, l_frac)
+        full_cres  = OmegaConf.merge(*l_cres)
+
+        return full_model, full_cres
+    # ------------------------
     def get_model(self) -> zpdf:
         '''
         Returns
