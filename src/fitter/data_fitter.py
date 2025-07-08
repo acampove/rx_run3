@@ -84,6 +84,7 @@ class DataFitter(BaseFitter, Cache):
             q2bin  = self._q2bin,
             sample = self._sample,
             trigger= self._trigger,
+            out_dir= self._out_path,
             project= self._project)
         data = dpr.get_data()
 

@@ -118,6 +118,7 @@ class SimFitter(BaseFitter, Cache):
                 trigger= self._trigger,
                 project= self._project,
                 q2bin  = self._q2bin,
+                out_dir= self._out_path,
                 sample = self._cfg.sample)
         data= prp.get_data()
 
