@@ -231,9 +231,9 @@ def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
 def save_fit(
         data    : zdata,
         model   : zpdf,
-        res     : Union[zres, None],
+        res     : zres|None,
         fit_dir : str,
-        d_const : dict[str,tuple[float,float]] = None) -> None:
+        d_const : dict[str,tuple[float,float]]|None = None) -> None:
     '''
     Function used to save fit results, meant to reduce boiler plate code
 
