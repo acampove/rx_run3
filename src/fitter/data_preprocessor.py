@@ -91,12 +91,16 @@ class DataPreprocessor(Cache):
 
         raise NotImplementedError(f'Cannot retrive toy data for sample: {sample}')
     # ------------------------
-    def _get_array(self) -> numpy.ndarray:
+    def _get_array(self) -> tuple[numpy.ndarray,numpy.ndarray]:
         '''
-        Return a numpy array for the sample requested, this array is fully selected
+        Return a tuple of numpy arrays with the observable and weight
+        for the sample requested, this array is fully selected
         '''
         if 'toy' in self._sample:
-            return self._get_toy_array(sample=self._sample)
+            arr = self._get_toy_array(sample=self._sample)
+            wgt = numpy.ones_like(arr)
+
+            return arr, wgt
 
         rdf = self._rdf
         if log.getEffectiveLevel() < 20:
@@ -107,11 +111,12 @@ class DataPreprocessor(Cache):
 
         log.debug('Retrieving data')
         arr  = rdf.AsNumpy([name])[name]
+        wgt  = rdf.AsNumpy(['weight'])['weight']
 
         nevt = len(arr)
         log.debug(f'Found {nevt} entries')
 
-        return arr
+        return arr, wgt
     # ------------------------
     def get_data(self) -> zdata:
         '''
