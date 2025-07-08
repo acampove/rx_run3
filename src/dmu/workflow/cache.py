@@ -133,7 +133,9 @@ class Cache:
             if str(source) == self._cache_dir:
                 continue
 
-            log.debug(f'{str(source):<50}{"-->"}{self._hash_dir}')
+            log.debug(str(source))
+            log.debug("-->")
+            log.debug(self._hash_dir)
 
             if source.is_dir():
                 shutil.copytree(source, self._hash_dir)
