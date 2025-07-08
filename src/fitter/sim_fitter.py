@@ -183,6 +183,45 @@ class SimFitter(BaseFitter, Cache):
 
         return par
     # ------------------------
+    def _get_full_model(self, skip_fit : bool) -> tuple[zpdf,DictConfig]:
+        '''
+        Parameters
+        ---------------
+        skip_fit: If true, it will rturn the model without fitting
+
+        Returns
+        ---------------
+        Tuple with:
+
+        - PDF for the combined categories with the parameters set
+        to the fitted values
+        - Instance of DictConfig storing all the fitting parameters
+        '''
+        l_pdf   = []
+        l_yield = []
+        l_cres  = []
+        for category, data in self._cfg.categories.items():
+            l_model_name     = data['model']
+            model, sumw, res = self._fit_category(
+                skip_fit     = skip_fit,
+                category     = category,
+                l_model_name = l_model_name)
+
+            # Will be None if fit is cached
+            # and this is only returning model
+            cres = OmegaConf.create({})
+            if res is not None:
+                cres = sut.zres_to_cres(res)
+
+            l_pdf.append(model)
+            l_yield.append(sumw)
+            l_cres.append(cres)
+
+        return self._merge_categories(
+            l_pdf  =l_pdf,
+            l_yield=l_yield,
+            l_cres =l_cres)
+    # ------------------------
     def _merge_categories(
         self, 
         l_pdf   : list[zpdf], 
