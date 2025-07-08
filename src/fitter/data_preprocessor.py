@@ -139,6 +139,13 @@ class DataPreprocessor(Cache):
 
         return arr, wgt
     # ------------------------
+    @property
+    def rdf_uid(self) -> str|None:
+        '''
+        Unique identifier of ROOT dataframe after selection
+        '''
+        return self._rdf_uid
+    # ------------------------
     def get_data(self) -> zdata:
         '''
         Returns zfit data
