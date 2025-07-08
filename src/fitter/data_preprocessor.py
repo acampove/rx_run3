@@ -48,6 +48,27 @@ class DataPreprocessor(Cache):
         self._project= project
         self._q2bin  = q2bin
     # ------------------------
+    def _get_rdf(self) -> RDataFrame:
+        '''
+        Returns ROOT dataframe after selection
+        and with Unique identifier attached as uid
+        '''
+        log.debug('Retrieving dataframe')
+        gtr = RDFGetter(sample =self._sample, trigger=self._trigger)
+        rdf = gtr.get_rdf()
+        uid = gtr.get_uid()
+        rdf = cast(RDataFrame, rdf)
+
+        log.debug('Applying selection')
+        rdf = sel.apply_full_selection(
+            rdf     = rdf,
+            uid     = uid,
+            q2bin   = self._q2bin,
+            trigger = self._trigger,
+            process = self._sample)
+
+        return rdf
+    # ------------------------
     def _get_toy_array(self, sample : str) -> numpy.ndarray:
         '''
         Returns array with toy data
@@ -72,18 +93,7 @@ class DataPreprocessor(Cache):
         if 'toy' in self._sample:
             return self._get_toy_array(sample=self._sample)
 
-        log.debug('Retrieving dataframe')
-        gtr = RDFGetter(sample =self._sample, trigger=self._trigger)
-        rdf = gtr.get_rdf()
-        rdf = cast(RDataFrame, rdf)
-
-        log.debug('Applying selection')
-        rdf = sel.apply_full_selection(
-            rdf     = rdf,
-            q2bin   = self._q2bin,
-            trigger = self._trigger,
-            process = self._sample)
-
+        rdf = self._rdf
         if log.getEffectiveLevel() < 20:
             rep = rdf.Report()
             rep.Print()
