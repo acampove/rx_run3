@@ -1,4 +1,4 @@
-output_directory : reso/muon/signal 
+output_directory : reso/electron/signal 
 categories:
   brem_one : 
     selection : nbrem == 1
@@ -8,7 +8,7 @@ categories:
     selection : nbrem == 2
     model :
       - dscb
-sample        : Bu_JpsiK_mm_eq_DPC
+sample        : Bu_JpsiK_ee_eq_DPC
 shared        : []
 float         :
   - mu
