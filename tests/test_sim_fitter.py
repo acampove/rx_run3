@@ -41,3 +41,20 @@ def test_toy():
         q2bin   = '')
     pdf = ftr.get_model()
 # ---------------------------------------------------
+def test_nocat():
+    '''
+    Test for components without categories, e.g. muon
+    '''
+    obs = zfit.Space('B_Mass', limits=(5000, 5800))
+
+    cfg = gut.load_conf(package='fitter_data', fpath='tests/signal_muon.yaml')
+    with RDFGetter.max_entries(value=10_000):
+        ftr = SimFitter(
+            name    = 'signal_muon',
+            obs     = obs,
+            cfg     = cfg,
+            trigger = 'Hlt2RD_BuToKpMuMu_MVA',
+            project = 'rx',
+            q2bin   = 'jpsi')
+        pdf = ftr.get_model()
+# ---------------------------------------------------
