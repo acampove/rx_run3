@@ -1,6 +1,7 @@
 output_directory : signal_toy
-models           :
-  - dscb
+catetories:
+  main:
+    models : [dscb]
 sample        : gauss_toy
 shared        : []
 float         :
