@@ -40,13 +40,34 @@ class DataPreprocessor(Cache):
         self._project= project
         self._q2bin  = q2bin
     # ------------------------
+    def _get_toy_array(self, sample : str) -> numpy.ndarray:
+        '''
+        Returns array with toy data
+        '''
+        if sample == 'gauss_toy':
+            sig  = numpy.random.normal(loc=5280, scale=50, size=10_000)
+            return sig
+
+        if sample == 'data_toy':
+            sig = self._get_toy_array(sample='gauss_toy')
+            bkg = numpy.random.exponential(scale=10_000, size=100_000)
+            arr = numpy.concatenate((sig, bkg))
+
+            return arr
+
+        raise NotImplementedError(f'Cannot retrive toy data for sample: {sample}')
+    # ------------------------
+    def _get_array(self) -> numpy.ndarray:
+        if 'toy' in self._sample:
+            return self._get_toy_array(sample=self._sample)
+
+        raise NotImplementedError(f'Cannot retrive data for sample: {self._sample}')
+    # ------------------------
     def get_data(self) -> zdata:
         '''
         Returns zfit data
         '''
-        sig  = numpy.random.normal(loc=5280, scale=50, size=10_000)
-        bkg  = numpy.random.exponential(scale=10_000, size=100_000)
-        arr  = numpy.concatenate((sig, bkg))
+        arr  = self._get_array()
         data = zfit.data.from_numpy(obs=self._obs, array=arr)
 
         return data
