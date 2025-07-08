@@ -113,12 +113,12 @@ class SimFitter(BaseFitter, Cache):
             return model
 
         prp = DataPreprocessor(
-                obs    = self._obs,
-                trigger= self._trigger,
-                project= self._project,
-                q2bin  = self._q2bin,
-                out_dir= self._base_path,
-                sample = self._cfg.sample)
+            obs    = self._obs,
+            trigger= self._trigger,
+            project= self._project,
+            q2bin  = self._q2bin,
+            out_dir= self._base_path,
+            sample = self._cfg.sample)
         data= prp.get_data()
 
         res   = self._fit(data=data, model=model, cfg=self._cfg.fit)
