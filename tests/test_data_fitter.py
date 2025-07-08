@@ -16,7 +16,7 @@ def test_simple():
             fpath  ='tests/data_fit.yaml')
     with Cache.turn_off_cache(val=True):
         ftr = DataFitter(
-                sample = '',
+                sample = 'data_toy',
                 trigger= '',
                 project= '',
                 q2bin  = '',
