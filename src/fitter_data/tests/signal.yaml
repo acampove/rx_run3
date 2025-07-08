@@ -1,6 +1,6 @@
 output_directory : signal_fit
 models           :
-  - gauss
+  - dscb
 sample        : gauss_toy
 shared        : []
 float         :
