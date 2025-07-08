@@ -40,19 +40,18 @@ class SimFitter(BaseFitter, Cache):
         q2bin  : E.g. central
         cfg    : Object storing configuration for fit
         '''
-
-        cfg.output_directory = f'{cfg.output_directory}/{name}_{trigger}_{project}_{q2bin}'
         self._name      = name
         self._trigger   = trigger
         self._project   = project
         self._q2bin     = q2bin
         self._cfg       = cfg
         self._obs       = obs
+        self._base_path = f'{cfg.output_directory}/{name}_{trigger}_{project}_{q2bin}'
 
         BaseFitter.__init__(self)
         Cache.__init__(
                 self,
-                out_path = cfg.output_directory,
+                out_path = self._base_path,
                 config   = OmegaConf.to_container(cfg, resolve=True))
     # ------------------------
     def _get_pdf(self) -> zpdf:
@@ -118,7 +117,7 @@ class SimFitter(BaseFitter, Cache):
                 trigger= self._trigger,
                 project= self._project,
                 q2bin  = self._q2bin,
-                out_dir= self._out_path,
+                out_dir= self._base_path,
                 sample = self._cfg.sample)
         data= prp.get_data()
 
