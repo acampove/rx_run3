@@ -72,9 +72,12 @@ class DataPreprocessor(Cache):
         if 'toy' in self._sample:
             return self._get_toy_array(sample=self._sample)
 
+        log.debug('Retrieving dataframe')
         gtr = RDFGetter(sample =self._sample, trigger=self._trigger)
         rdf = gtr.get_rdf()
         rdf = cast(RDataFrame, rdf)
+
+        log.debug('Applying selection')
         rdf = sel.apply_full_selection(
             rdf     = rdf,
             q2bin   = self._q2bin,
@@ -86,6 +89,8 @@ class DataPreprocessor(Cache):
             rep.Print()
 
         name = sut.name_from_obs(obs=self._obs)
+
+        log.debug('Retrieving data')
         arr  = rdf.AsNumpy([name])[name]
 
         nevt = len(arr)
