@@ -157,6 +157,31 @@ class SimFitter(BaseFitter, Cache):
 
         return model
     # ------------------------
+    # ------------------------
+    # TODO: Fractions need to be parameters to be constrained
+    def _get_fraction(
+        self,
+        sumw     : float,
+        total    : float,
+        category : str) -> zpar:
+        '''
+        Parameters
+        -------------
+        sumw    : Yield in MC associated to this category
+        total   : Total yield
+        category: Name of this category
+
+        Returns
+        -------------
+        Fitting fraction parameter fixed
+        '''
+        frac_name = f'frac_{self._name}_{category}'
+        value     = sumw / total
+        par       = zfit.param.Parameter(frac_name, value, 0, 1)
+
+        log.debug(f'{frac_name:<50}{value:<10.3f}')
+
+        return par
     def get_model(self) -> zpdf:
         '''
         Returns
