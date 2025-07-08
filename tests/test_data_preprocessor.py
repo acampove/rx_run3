@@ -27,7 +27,7 @@ def _validate_data(data : zdata, name : str) -> None:
     plt.savefig(plt_path)
     plt.close()
 # -------------------------------------------------
-@pytest.mark.parametrize('sample', ['gauss_toy'])
+@pytest.mark.parametrize('sample', ['gauss_toy', 'data_toy'])
 def test_toy(sample : str):
     '''
     Tests class with toys
