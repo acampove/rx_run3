@@ -53,11 +53,12 @@ class DataPreprocessor(Cache):
         self._q2bin  = q2bin
         self._rdf    = self._get_rdf(cut=cut)
 
+        rdf_uid = None if self._rdf is None else self._rdf.uid
         super().__init__(
                 out_path = out_dir,
-                rdf_uid  = self._rdf.uid)
+                rdf_uid  = rdf_uid)
     # ------------------------
-    def _get_rdf(self, cut : str|None) -> RDataFrame:
+    def _get_rdf(self, cut : str|None) -> RDataFrame|None:
         '''
         Parameters
         -------------------
