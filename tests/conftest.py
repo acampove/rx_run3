@@ -2,6 +2,8 @@
 This file is needed by pytest
 '''
 import os
+import mplhep
+import matplotlib.pyplot as plt
 
 from _pytest.config import Config
 
@@ -30,4 +32,6 @@ def pytest_configure(config : Config):
     # cached
     Cache.set_cache_root(root='/tmp/tests/fitter')
     _set_logs()
+
+    plt.style.use(mplhep.style.LHCb2)
 # ----------------------------------------
