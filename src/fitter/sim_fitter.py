@@ -75,7 +75,7 @@ class SimFitter(BaseFitter, Cache):
         d_data = {}
 
         for cat_name, data in self._cfg.categories.items():
-            cat_cut = None if 'selection' not in data else data[cat_name].selection
+            cat_cut = None if 'selection' not in data else data.selection
 
             prp   = DataPreprocessor(
                 obs    = self._obs,
