@@ -106,15 +106,28 @@ class SimFitter(BaseFitter, Cache):
 
         return pdf
     # ------------------------
+    def _get_nomc_component(self) -> zpdf:
+        '''
+        This method will return a PDF when there is no simulation
+        associated to it, e.g. Combinatorial
+        '''
+        if 'main' not in self._cfg.categories:
+            log.info(OmegaConf.to_yaml(self._cfg))
+            raise ValueError(f'Cannot find main category in config associated to sample {self._name}')
+
+        l_model = self._cfg.categories.main.models
+        model   = self._get_pdf(l_model=l_model, category='main')
+
+        return model
+    # ------------------------
     def get_model(self) -> zpdf:
         '''
         Returns
         ------------
         zfit PDF, not extended yet
         '''
-        model = self._get_pdf()
         if 'sample' not in self._cfg:
-            return model
+            return self._get_nomc_component()
 
         result_path = f'{self._out_path}/parameters.yaml'
         if self._copy_from_cache():
