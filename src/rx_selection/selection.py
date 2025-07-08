@@ -257,7 +257,8 @@ def apply_full_selection(
         trigger  : str,
         uid      : str|None = None) -> RDataFrame:
     '''
-    Will apply full selection on dataframe
+    Will apply full selection on dataframe.
+    IMPORTANT: This HAS to be done lazily or else the rest of the code will be slowed down.
 
     Parameters
     --------------------
