@@ -1,4 +1,4 @@
-output_directory : background
+output_directory : combinatorial
 models           :
   - exp
 shared        : []
