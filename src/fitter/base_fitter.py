@@ -2,6 +2,7 @@
 This module contains BaseFitter
 '''
 from typing                   import cast
+import matplotlib.pyplot as plt
 
 from omegaconf                import OmegaConf, DictConfig
 from dmu.stats.fitter         import Fitter
@@ -66,8 +67,13 @@ class BaseFitter:
         plt_cfg = OmegaConf.to_container(cfg, resolve=True)
         plt_cfg = cast(dict, plt_cfg)
 
-        ptr = ZFitPlotter(data=data, model=model)
-        ptr.plot(**plt_cfg)
+        # If no entries were present
+        # There will not be PDF
+        if model is not None:
+            ptr = ZFitPlotter(data=data, model=model)
+            ptr.plot(**plt_cfg)
+        else:
+            plt.figure()
 
         sel_path = f'{out_path}/selection.yaml'
         gut.dump_json(cuts, sel_path)
