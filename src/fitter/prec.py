@@ -42,7 +42,8 @@ class PRec(Cache):
         samples  : list[str],
         trig     : str,
         q2bin    : str,
-        d_weight : dict[str,int]):
+        d_weight : dict[str,int],
+        out_dir  : str = ''):
         '''
         Parameters:
         -------------------------
