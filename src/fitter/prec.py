@@ -646,7 +646,7 @@ class PRec(Cache):
             pdf     : zpdf|None,
             name    : str,
             out_dir : str,
-            title   : str  |None = None,
+            title   : str        = '',
             maxy    : float|None = None) -> None:
         '''
         Utility method, meant to plot PDF after it was built
