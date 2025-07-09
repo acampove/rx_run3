@@ -66,7 +66,7 @@ def test_rare_muon(q2bin : str):
 # -------------------------------------------
 def test_reso_electron():
     '''
-    Test using toy data
+    Test fitting resonant electron channel
     '''
     cfg = gut.load_conf(
         package='fitter_data',
