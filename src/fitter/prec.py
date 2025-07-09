@@ -540,9 +540,10 @@ class PRec(Cache):
         nentries = len(arr_mass)
         if nentries > self._min_isj_entries:
             log.debug('Using ISJ KDE for high statistics sample')
-            pdf = zfit.pdf.KDE1DimISJ(arr_mass, weights=arr_wgt, **kwargs)
             if 'bandwidth' in kwargs: # ISJ does not accept this argument
                 del kwargs['bandwidth']
+
+            pdf = zfit.pdf.KDE1DimISJ(arr_mass, weights=arr_wgt, **kwargs)
         else:
             log.debug('Using FFT KDE for low statistics sample')
             pdf = zfit.pdf.KDE1DimFFT(arr_mass, weights=arr_wgt, **kwargs)
