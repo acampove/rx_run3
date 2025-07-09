@@ -13,7 +13,7 @@ log=LogStore.add_logger('dmu:generic.hashing')
 # ------------------------------------
 def _object_to_string(obj : Any) -> str:
     try:
-        string = json.dumps(obj)
+        string = json.dumps(obj, sort_keys=True)
     except Exception as exc:
         raise ValueError(f'Cannot hash object: {obj}') from exc
 
