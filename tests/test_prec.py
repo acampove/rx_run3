@@ -49,6 +49,7 @@ def test_reso(q2bin : str):
         'high'    : 'B_Mass_smr'}[q2bin]
 
     label  = {
+        'low'     :r'$M(K^+e^+e^-)$',
         'central' :r'$M(K^+e^+e^-)$',
         'jpsi'    :r'$M_{DTF}(K^+e^+e^-)$',
         'psi2'    :r'$M_{DTF}(K^+e^+e^-)$',
