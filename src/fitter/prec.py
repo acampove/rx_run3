@@ -563,6 +563,8 @@ class PRec(Cache):
         slug = slugify.slugify(name, lowercase=False)
         par  = zfit.param.Parameter(f'f_{slug}', frc, 0, 1)
 
+        par.floating = False
+
         return par
     #-----------------------------------------------------------
     def _yield_in_range(self, pdf : zpdf) -> float:
@@ -606,22 +608,11 @@ class PRec(Cache):
         -------------------
         Full pdf, i.e. all ccbar components added
         '''
-        d_pdf     = { ltex : self._get_pdf(
-            mass          =mass,
-            component_name=ltex,
-            df            =  df,
-            **kwargs)
-                     for ltex, df in  d_df.items()}
-
-        d_pdf     = { ltex : pdf
-                     for ltex, pdf in d_pdf.items() if pdf is not None}
-
-        l_pdf     = list(d_pdf.values())
-        l_wgt_yld = [ sum(pdf.arr_wgt) for pdf in l_pdf ]
-        l_frc     = [ wgt_yld / sum(l_wgt_yld) for wgt_yld in l_wgt_yld ]
-        l_yld     = [ self._frac_from_pdf(pdf=pdf, frc=frc) for pdf, frc in zip(l_pdf, l_frc)]
-        for yld in l_yld:
-            yld.floating = False
+        l_pdf     = [ self._get_pdf(mass = mass, component_name = ltex, df = df, **kwargs) for ltex, df in d_df.items()                    ]
+        l_pdf     = [                                                                  pdf for      pdf in l_pdf        if pdf is not None ]
+        l_wgt_yld = [ self._yield_in_range(pdf=pdf)                                        for      pdf in l_pdf                           ]
+        l_frc     = [ wgt_yld / sum(l_wgt_yld)                                             for  wgt_yld in l_wgt_yld                       ]
+        l_yld     = [ self._frac_from_pdf(pdf=pdf, frc=frc)                                for pdf, frc in zip(l_pdf, l_frc)               ]
 
         if   len(l_pdf) >= 2:
             pdf   = zfit.pdf.SumPDF(l_pdf, fracs=l_yld, name='ccbar PRec')
