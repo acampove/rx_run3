@@ -58,7 +58,7 @@ def test_reso(q2bin : str):
     maxy   = {
         'low'     :    200,
         'central' :   1000,
-        'jpsi'    : 10_000,
+        'jpsi'    :    500,
         'psi2'    :  2_000,
         'high'    :     25}[q2bin]
 
