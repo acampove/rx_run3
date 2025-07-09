@@ -121,10 +121,6 @@ class Cache:
         It will copy all the outputs of the processing
         to a hashed directory
         '''
-        if Cache._donot_cache:
-            log.warning('Not caching outputs')
-            return
-
         self._hash_dir  = self._get_dir(kind= 'hash')
         log.info(f'Caching outputs to: {self._hash_dir}')
 
