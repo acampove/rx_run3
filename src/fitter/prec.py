@@ -565,6 +565,29 @@ class PRec(Cache):
 
         return par
     #-----------------------------------------------------------
+    def _yield_in_range(self, pdf : zpdf) -> float:
+        '''
+        Parameters
+        ---------------
+        pdf: ZFit KDE PDF with array of weights and masses that were used to make it, attached
+
+        Returns
+        ---------------
+        The mass and weights are defined in the WHOLE range. This method extracts the yields
+        in the observable range. Needed to calculate fractions of componets, used to put
+        ccbar stuff together
+        '''
+        obs = pdf.space
+        wgt = pdf.arr_wgt
+        mas = pdf.arr_mass
+
+        minx, maxx = sut.range_from_obs(obs=obs)
+
+        mask= (minx < mas) & (mas < maxx)
+        wgt = wgt[mask]
+
+        return sum(wgt)
+    #-----------------------------------------------------------
     def _get_full_pdf(
         self,
         mass : str,
