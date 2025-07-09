@@ -1,6 +1,7 @@
 '''
 This module is meant to test the SimFitter class
 '''
+import pytest
 
 from dmu.stats.zfit     import zfit
 from dmu.generic        import utilities as gut
@@ -39,7 +40,7 @@ def test_toy():
         trigger = '',
         project = '',
         q2bin   = '')
-    pdf = ftr.get_model()
+    ftr.get_model()
 # ---------------------------------------------------
 def test_nocat():
     '''
