@@ -107,7 +107,20 @@ class PRec:
 
         return needed
     #-----------------------------------------------------------
-    def _filter_rdf(self, rdf : RDataFrame, sample : str) -> RDataFrame:
+    def _filter_rdf(
+        self,
+        rdf    : RDataFrame,
+        sample : str) -> RDataFrame:
+        '''
+        Parameters
+        -----------------
+        rdf    : ROOT dataframe before selection
+        sample : Sample for which selection is done, e.g. Bu_JpsiX...
+
+        Returns
+        -----------------
+        ROOT dataframe after selection
+        '''
         d_sel = sel.selection(trigger=self._trig, q2bin=self._q2bin, process=sample)
         for name, expr in d_sel.items():
             if name == 'mass':
