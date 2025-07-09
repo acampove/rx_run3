@@ -51,7 +51,7 @@ class BaseFitter:
             cuts     : dict[str,str],
             cfg      : DictConfig,
             out_path : str,
-            model    : zpdf,
+            model    : zpdf|None,
             res      : zres|None,
             data     : zdata) -> None:
         '''
@@ -60,7 +60,7 @@ class BaseFitter:
         cuts     : Selection used for fit
         cfg      : Plotting configuration
         out_path : Directory where fit will be saved
-        model    : PDF from fit
+        model    : PDF from fit, can be None if dataset was empty
         res      : Zfit result object, can be None if fit was to get a KDE
         data     : data from fit
         '''
