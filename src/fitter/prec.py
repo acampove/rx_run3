@@ -601,11 +601,11 @@ class PRec(Cache):
     #-----------------------------------------------------------
     @staticmethod
     def plot_pdf(
-            pdf     : zpdf,
+            pdf     : zpdf|None,
             name    : str,
             title   : str,
             out_dir : str,
-            maxy    : float = None) -> None:
+            maxy    : float|None = None) -> None:
         '''
         Utility method, meant to plot PDF after it was built
 
