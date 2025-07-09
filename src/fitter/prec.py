@@ -564,8 +564,8 @@ class PRec(Cache):
         -------------------
         Full pdf, i.e. all ccbar components added
         '''
-        d_pdf     = { name : self._get_pdf(mass=mass, df=df, **kwargs) for name, df  in  d_df.items()}
-        d_pdf     = { name : pdf                                       for name, pdf in d_pdf.items() if pdf is not None}
+        d_pdf     = { ltex : self._get_pdf(mass=mass, name=ltex, df=df, **kwargs) for ltex,  df in  d_df.items()}
+        d_pdf     = { ltex : pdf                                                  for ltex, pdf in d_pdf.items() if pdf is not None}
 
         l_pdf     = list(d_pdf.values())
         l_wgt_yld = [ sum(pdf.arr_wgt) for pdf in l_pdf ]
