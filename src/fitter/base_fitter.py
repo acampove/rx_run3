@@ -51,7 +51,7 @@ class BaseFitter:
             cfg      : DictConfig,
             out_path : str,
             model    : zpdf,
-            res      : zres,
+            res      : zres|None,
             data     : zdata) -> None:
         '''
         Parameters
@@ -60,7 +60,7 @@ class BaseFitter:
         cfg      : Plotting configuration
         out_path : Directory where fit will be saved
         model    : PDF from fit
-        res      : Zfit result object
+        res      : Zfit result object, can be None if fit was to get a KDE
         data     : data from fit
         '''
         plt_cfg = OmegaConf.to_container(cfg, resolve=True)
