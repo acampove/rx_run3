@@ -235,10 +235,16 @@ class ZFitPlotter:
             err = low if res > 0 else up
             pul = res / err
 
-            if abs(pul) > 5:
-                log.warning(f'Large pull: {pul:.2f}=({dat_val:.2f}-{pdf_val:.2f})/{err:.2f}')
+            # If the data is weighted
+            # and the data does not exist
+            # The pulls will have an error of zero => pull is inf
+            # Ignore these cases
+            if math.isinf(pul):
+                pass
+            elif abs(pul) > 5:
+                log.warning(f'Pull: {pul:.2f}=({dat_val:.2f}-{pdf_val:.2f})/{err:.2f}')
             else:
-                log.debug(f'Large pull: {pul:.2f}=({dat_val:.2f}-{pdf_val:.2f})/{err:.2f}')
+                log.debug(f'Pull: {pul:.2f}=({dat_val:.2f}-{pdf_val:.2f})/{err:.2f}')
 
             pulls.append(pul)
             pull_errors[0].append(low / err)
