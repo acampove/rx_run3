@@ -6,3 +6,7 @@ ccbar_samples:
 weights:
   dec : 1
   sam : 1
+fitting:
+  padding:
+    lowermirror : 0.2
+    uppermirror : 0.2
