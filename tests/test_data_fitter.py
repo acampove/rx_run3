@@ -83,3 +83,20 @@ def test_reso_electron():
                 cfg    = cfg)
         ftr.run()
 # -------------------------------------------
+def test_rare_electron():
+    '''
+    Test fitting rare electron channel
+    '''
+    cfg = gut.load_conf(
+        package='fitter_data',
+        fpath  ='rare/electron/data.yaml')
+
+    with Cache.turn_off_cache(val=False):
+        ftr = DataFitter(
+                sample = 'DATA_24_*',
+                trigger= 'Hlt2RD_BuToKpEE_MVA',
+                project= 'rx',
+                q2bin  = 'central',
+                cfg    = cfg)
+        ftr.run()
+# -------------------------------------------
