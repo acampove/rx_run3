@@ -829,11 +829,13 @@ class RDFGetter:
         '''
         Contextmanager to limit number of entries in dataframe
 
-        value: number of entries, by default -1 (all)
+        value: number of entries, by default -1 (all). If the value passed is negative, will do all entries
         '''
         old_val = RDFGetter._max_entries
         RDFGetter._max_entries = value
-        log.warning(f'Running over at most {RDFGetter._max_entries} entries')
+
+        if value > 0:
+            log.warning(f'Running over at most {RDFGetter._max_entries} entries')
 
         try:
             yield
