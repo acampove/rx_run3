@@ -588,10 +588,18 @@ class PRec(Cache):
         wgt = pdf.arr_wgt
         mas = pdf.arr_mass
 
+        return self._yield_from_arrays(arr_mass=mas, arr_weight=wgt, obs=obs)
+    #-----------------------------------------------------------
+    def _yield_from_arrays(
+        self,
+        obs        : zobs,
+        arr_mass   : numpy.ndarray,
+        arr_weight : numpy.ndarray) -> float:
+
         minx, maxx = sut.range_from_obs(obs=obs)
 
-        mask= (minx < mas) & (mas < maxx)
-        wgt = wgt[mask]
+        mask= (minx < arr_mass) & (arr_mass < maxx)
+        wgt = arr_weight[mask]
 
         return sum(wgt)
     #-----------------------------------------------------------
