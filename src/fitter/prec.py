@@ -468,7 +468,11 @@ class PRec(Cache):
         slug           = slugify.slugify(pdf_name, lowercase=False)
         kwargs['name'] = component_name
 
-        nentries     = len(df)
+        arr_mass = df[mass     ].to_numpy()
+        arr_wgt  = df['wgt_br' ].to_numpy()
+        obs      = kwargs['obs']
+
+        nentries = self._yield_from_arrays(arr_mass=arr_mass, arr_weight=arr_wgt, obs=obs)
         if nentries < self._min_entries:
             log.warning(f'Found fewer than {self._min_entries}: {nentries}, skipping PDF {component_name}')
             return None
@@ -476,8 +480,8 @@ class PRec(Cache):
         log.debug(f'Building PDF with {nentries} entries for {component_name}')
 
         pdf          = self._pdf_from_df(df=df, mass=mass, **kwargs)
-        pdf.arr_mass = df[mass     ].to_numpy()
-        pdf.arr_wgt  = df['wgt_br' ].to_numpy()
+        pdf.arr_mass = arr_mass
+        pdf.arr_wgt  = arr_wgt
         pdf.arr_sam  = df['wgt_sam'].to_numpy()
         pdf.arr_dec  = df['wgt_dec'].to_numpy()
 
