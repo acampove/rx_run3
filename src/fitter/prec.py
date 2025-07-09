@@ -75,9 +75,14 @@ class PRec(Cache):
             d_wg     = d_weight,
             d_match  = self._d_match)
     #-----------------------------------------------------------
-    def _get_df(self) -> pnd.DataFrame:
+    def _get_df(self) -> dict[str,pnd.DataFrame]:
         '''
-        Returns dataframe with masses and weights
+        Returns
+        -------------------
+        Dictionary where:
+
+        Key  : Identifier for ccbar component, e.g. "$B_d\to c\bar{c}(\to ee)H_s$"
+        Value: Dataframe with candidates belonging to that component
         '''
         d_df = self._get_samples_df()
         d_df = { sample : self._add_dec_weights(sample, df) for sample, df in d_df.items() }
@@ -85,12 +90,14 @@ class PRec(Cache):
         df   = self._add_sam_weights(df)
 
         if len(df) == 0:
-            return df
+            return {}
 
         arr_wgt      = df.wgt_dec.to_numpy() * df.wgt_sam.to_numpy()
         df['wgt_br'] = self._normalize_weights(arr_wgt)
 
-        return df
+        d_df = { component : df.query(cut) for component, cut in self._d_match }
+
+        return d_df
     #-----------------------------------------------------------
     def _need_var(self, name : str) -> bool:
         needed = False
