@@ -243,6 +243,10 @@ def save_fit(
     ptr.plot()
 
     was done before calling this method, the plot will also be saved
+
+    Parameters
+    --------------------
+    model: PDF to be plotted, if None, will skip steps
     '''
     os.makedirs(fit_dir, exist_ok=True)
     log.info(f'Saving fit to: {fit_dir}')
