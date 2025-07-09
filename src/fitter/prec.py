@@ -428,8 +428,8 @@ class PRec(Cache):
     def _get_pdf(
         self,
         mass : str,
-        cut  : str,
-        **kwargs) -> Union[zpdf,None]:
+        df   : pnd.DataFrame,
+        **kwargs) -> zpdf|None:
         '''
         Parameters
         ------------------
@@ -437,8 +437,14 @@ class PRec(Cache):
             mass     : Non constrained B mass
             mass_jpsi: Jpsi constrained B mass
             mass_psi2: Psi2S constrained B mass
-        cut     : Selection for ccbar entries. Intended to be used to split ccbar entries into categories
+        df      : DataCorresponding to given ccbar component
         **kwargs: These are all arguments for KDE1DimISJ or KDE1DimFFT
+
+        Returns
+        ------------------
+        Either:
+        None   : If there are fewer than _min_entries
+        KDE PDF: Otherwise
         '''
         identifier = self._get_identifier(mass, cut, **kwargs)
         cache_path = self._path_from_identifier(identifier)
