@@ -90,7 +90,9 @@ class PRec(Cache):
         Dictionary where:
 
         Key  : Identifier for ccbar component, e.g. "$B_d\to c\bar{c}(\to ee)H_s$"
-        Value: Dataframe with candidates belonging to that component
+        Value: Dictionary with:
+            Key  : Name of component
+            Value: Dataframe with entries for only that component
         '''
         d_df = self._get_samples_df()
         d_df = { sample : self._add_dec_weights(sample, df) for sample, df in d_df.items() }
