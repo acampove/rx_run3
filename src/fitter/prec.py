@@ -463,6 +463,8 @@ class PRec(Cache):
         '''
         # This kwargs reffers to this particular PDF
         kwargs         = copy.deepcopy(kwargs)
+        pdf_name       = kwargs['name']
+        slug           = slugify.slugify(pdf_name, lowercase=False)
         kwargs['name'] = component_name
 
         nentries     = len(df)
@@ -481,6 +483,12 @@ class PRec(Cache):
         if not is_pdf_usable(pdf):
             log.warning(f'PDF {component_name} is not usable')
             return None
+
+        PRec.plot_pdf(
+            pdf,
+            title  =component_name,
+            name   =component_name,
+            out_dir=f'{self._out_path}/{slug}')
 
         return pdf
     #-----------------------------------------------------------
