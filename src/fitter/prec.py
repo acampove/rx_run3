@@ -464,7 +464,7 @@ class PRec(Cache):
             log.warning(f'Found fewer than {self._min_entries}: {nentries}, skipping PDF {name}')
             return None
 
-        log.info(f'Building PDF with {nentries} entries for {component_name}')
+        log.debug(f'Building PDF with {nentries} entries for {component_name}')
 
         pdf          = self._pdf_from_df(df=df, mass=mass, **kwargs)
         pdf.arr_mass = df[mass     ].to_numpy()
@@ -520,10 +520,10 @@ class PRec(Cache):
         '''
         nentries = len(arr_mass)
         if nentries < self._min_isj_entries:
-            log.info('Using FFT KDE for low statistics sample')
+            log.debug('Using FFT KDE for low statistics sample')
             pdf = zfit.pdf.KDE1DimISJ(arr_mass, weights=arr_wgt, **kwargs)
         else:
-            log.info('Using ISJ KDE for high statistics sample')
+            log.debug('Using ISJ KDE for high statistics sample')
             if 'bandwidth' in kwargs: # ISJ does not accept this argument
                 del kwargs['bandwidth']
 
