@@ -167,6 +167,21 @@ class PRec:
             full_uid     += uid
 
         return d_rdf, full_uid
+    #-----------------------------------------------------------
+    def _get_samples_df(self) -> dict[str,pnd.DataFrame]:
+        '''
+        Returns
+        ------------------
+        Dictionary with:
+
+        - Key: Name of ccbar sample
+        - Value: Pandas dataframe with only the needed columns
+        '''
+        d_df = {}
+        log.debug('Building pandas dataframes:')
+        for sample, rdf in self._d_rdf.items():
+            log.debug(f'    {sample}')
+
             l_var      = [ name.c_str() for name in rdf.GetColumnNames() if self._need_var( name.c_str() )]
             data       = rdf.AsNumpy(l_var)
             df         = pnd.DataFrame(data)
