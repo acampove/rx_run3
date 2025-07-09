@@ -74,11 +74,18 @@ def test_reso(q2bin : str):
         'Bd_JpsiX_ee_eq_JpsiInAcc',
         'Bs_JpsiX_ee_eq_JpsiInAcc']
 
+    d_maxe = {
+        'low'     : -1,
+        'central' : -1,
+        'jpsi'    : 50_000,
+        'psi2'    : 50_000,
+        'high'    : -1}
+
     obs=zfit.Space(label, limits=(4500, 6900))
 
     test = f'reso/{q2bin}'
-
-    with RDFGetter.max_entries(value = 50_000):
+    maxe = d_maxe[q2bin]
+    with RDFGetter.max_entries(value = maxe):
         d_wgt= {'dec' : 0, 'sam' : 0}
         obp_4=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
         pdf_4=obp_4.get_sum(mass=mass, name='PRec_4', obs=obs)
