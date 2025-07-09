@@ -76,20 +76,21 @@ def test_with_cat():
             q2bin   = 'jpsi')
         pdf = ftr.get_model()
 # ---------------------------------------------------
-def test_kde():
+@pytest.mark.parametrize('component', ['bdkstee', 'bukstee', 'bsphiee'])
+def test_kde(component : str):
     '''
     Test fitting with KDE
     '''
     obs = zfit.Space('B_Mass', limits=(4500, 7000))
 
-    cfg = gut.load_conf(package='fitter_data', fpath='tests/bdkstee.yaml')
+    cfg = gut.load_conf(package='fitter_data', fpath=f'tests/{component}.yaml')
     with RDFGetter.max_entries(value=100_000):
         ftr = SimFitter(
-            name    = 'bdkstee',
+            name    = component,
             obs     = obs,
             cfg     = cfg,
             trigger = 'Hlt2RD_BuToKpEE_MVA',
             project = 'rx',
             q2bin   = 'central')
-        pdf = ftr.get_model()
+        ftr.get_model()
 # ---------------------------------------------------
