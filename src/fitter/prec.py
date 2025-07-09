@@ -455,16 +455,7 @@ class PRec(Cache):
 
         log.info(f'Building PDF with {nentries} entries for {name}')
 
-        if nentries < self._min_isj_entries:
-            log.info('Using FFT KDE for low statistics sample')
-            pdf      = self._pdf_from_df(df=df, mass=mass, **kwargs)
-        else:
-            log.info('Using ISJ KDE for high statistics sample')
-            if 'bandwidth' in kwargs: # ISJ does not accept this argument
-                del kwargs['bandwidth']
-
-            pdf      = zfit.pdf.KDE1DimISJ(arr_mass, weights=df.wgt_br.to_numpy(), **kwargs)
-
+        pdf          = self._pdf_from_df(df=df, mass=mass, **kwargs)
         pdf.arr_mass = arr_mass
         pdf.arr_wgt  = df.wgt_br.to_numpy()
         pdf.arr_sam  = df.wgt_sam.to_numpy()
