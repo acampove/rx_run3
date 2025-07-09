@@ -554,24 +554,19 @@ class PRec(Cache):
 
         return par
     #-----------------------------------------------------------
-    def get_sum(self, mass : str, name='unnamed', **kwargs) -> Union[zpdf,None]:
-        '''Provides extended PDF that is the sum of multiple KDEs representing PRec background
-
-        Parameters:
-        mass (str) : Defines which mass constrain to use, choose between "B_M", "B_const_mass_M", "B_const_mass_psi2S_M"
-        name (str) : PDF name
-        **kwargs: Arguments meant to be taken by zfit KDE1DimFFT
-
-        Returns:
-        zfit.pdf.SumPDF instance
+    def _get_full_pdf(self, mass : str, **kwargs) -> zpdf|None:
         '''
-        self._df   = self._get_df()
-        self._name = name
+        Parameters
+        -------------------
+        mass  : Name of the column in the dataframe, which will be used to build KDE
+        kwars : Key word arguments needed to build KDE PDF
 
-        # These cuts are not meant to override the selection, they are used to classify the fully selected data
-        # into physically meaningful categories, such that they can be used later, together
-        d_pdf     = { name : self._get_pdf(mass, cut, name=name, **kwargs) for name, cut in self._d_match.items()}
-        d_pdf     = { name : pdf                                           for name, pdf in d_pdf.items() if pdf is not None}
+        Returns
+        -------------------
+        Full pdf, i.e. all ccbar components added
+        '''
+        d_pdf     = { name : self._get_pdf(mass=mass, df=df, **kwargs) for name, df  in self._d_df.items()}
+        d_pdf     = { name : pdf                                       for name, pdf in d_pdf.items() if pdf is not None}
 
         l_pdf     = list(d_pdf.values())
         l_wgt_yld = [ sum(pdf.arr_wgt) for pdf in l_pdf ]
