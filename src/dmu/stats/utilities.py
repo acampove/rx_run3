@@ -230,7 +230,7 @@ def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
 #---------------------------------------------
 def save_fit(
         data    : zdata,
-        model   : zpdf,
+        model   : zpdf|None,
         res     : zres|None,
         fit_dir : str,
         d_const : dict[str,tuple[float,float]]|None = None) -> None:
