@@ -397,11 +397,11 @@ class SimFitter(BaseFitter, Cache):
         ------------
         zfit PDF, not extended yet
         '''
-        if 'sample' not in self._cfg:
-            return self._get_nomc_component()
-
         if 'ccbar_samples' in self._cfg:
             return self._get_ccbar_component()
+
+        if 'sample' not in self._cfg:
+            return self._get_nomc_component()
 
         result_path = f'{self._out_path}/parameters.yaml'
         if self._copy_from_cache():
