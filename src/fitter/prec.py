@@ -138,9 +138,6 @@ class PRec(Cache):
             log.debug(f'{name:<20}{expr}')
             rdf = rdf.Filter(expr, name)
 
-        rep = rdf.Report()
-        rep.Print()
-
         uid = hashing.hash_object([uid, d_sel])
 
         return rdf, uid
@@ -185,6 +182,9 @@ class PRec(Cache):
         log.debug('Building pandas dataframes:')
         for sample, rdf in self._d_rdf.items():
             log.debug(f'    {sample}')
+
+            rep = rdf.Report()
+            rep.Print()
 
             l_var      = [ name.c_str() for name in rdf.GetColumnNames() if self._need_var( name.c_str() )]
             data       = rdf.AsNumpy(l_var)
