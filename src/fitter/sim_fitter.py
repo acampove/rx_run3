@@ -56,6 +56,9 @@ class SimFitter(BaseFitter, Cache):
         self._l_rdf_uid = []
         self._d_data    = self._get_data()
 
+        # Will not build KDE if fewer than these entries in dataset
+        self._min_kde_entries = 50
+
         BaseFitter.__init__(self)
         Cache.__init__(
             self,
@@ -330,20 +333,24 @@ class SimFitter(BaseFitter, Cache):
 
         raise ValueError(f'Invalid PDF found: {model_name}')
     # ------------------------
-    def _get_kde(self) -> zpdf:
+    def _get_kde(self) -> zpdf|None:
         '''
         - Makes KDE PDF 
         - Saves fit (plot, list of parameters, etc)
 
         Returns
         ------------------
-        KDE PDF after fit
+        - KDE PDF after fit
+        - NOne if there are fewer than _min_kde_entries
         '''
         model_name = self._cfg.categories.main.model
         data       = self._d_data['main']
 
         KdeBuilder = getattr(zfit.pdf, model_name)
-        pdf        = KdeBuilder(obs=self._obs, data=data)
+        if data.n_events < self._min_kde_entries:
+            pdf = None
+        else:
+            pdf = KdeBuilder(obs=self._obs, data=data)
 
         self._save_fit(
             cuts     = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin),
