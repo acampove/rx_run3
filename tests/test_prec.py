@@ -76,33 +76,33 @@ def test_reso(q2bin : str):
 
     test = f'reso/{q2bin}'
 
-    d_wgt= {'dec' : 0, 'sam' : 0}
-    obp_4=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
-    pdf_4=obp_4.get_sum(mass=mass, name='PRec_4', obs=obs)
+    with RDFGetter.max_entries(value = 50_000):
+        d_wgt= {'dec' : 0, 'sam' : 0}
+        obp_4=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        pdf_4=obp_4.get_sum(mass=mass, name='PRec_4', obs=obs)
 
-    title=f'$q^2$: {q2}, uncorrected'
-    PRec.plot_pdf(pdf_4, name='uncorrected', maxy=maxy, title=title, out_dir=f'{Data.out_dir}/{test}')
+        title=f'$q^2$: {q2}, uncorrected'
+        PRec.plot_pdf(pdf_4, name='uncorrected', maxy=maxy, title=title, out_dir=f'{Data.out_dir}/{test}')
 
-    d_wgt= {'dec' : 0, 'sam' : 1}
-    obp_3=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
-    pdf_3=obp_3.get_sum(mass=mass, name='PRec_3', obs=obs)
+        d_wgt= {'dec' : 0, 'sam' : 1}
+        obp_3=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        pdf_3=obp_3.get_sum(mass=mass, name='PRec_3', obs=obs)
 
-    title=f'$q^2$: {q2}, sample weights'
-    PRec.plot_pdf(pdf_3, name='sample_weights', maxy=maxy, title=title, out_dir=f'{Data.out_dir}/{test}')
+        title=f'$q^2$: {q2}, sample weights'
+        PRec.plot_pdf(pdf_3, name='sample_weights', maxy=maxy, title=title, out_dir=f'{Data.out_dir}/{test}')
 
-    d_wgt= {'dec' : 1, 'sam' : 0}
-    obp_2=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
-    pdf_2=obp_2.get_sum(mass=mass, name='PRec_2', obs=obs)
+        d_wgt= {'dec' : 1, 'sam' : 0}
+        obp_2=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        pdf_2=obp_2.get_sum(mass=mass, name='PRec_2', obs=obs)
 
-    title=f'$q^2$: {q2}, decay weights'
-    PRec.plot_pdf(pdf_2, name='decay_weights', maxy=maxy, title=title, out_dir=f'{Data.out_dir}/{test}')
+        title=f'$q^2$: {q2}, decay weights'
+        PRec.plot_pdf(pdf_2, name='decay_weights', maxy=maxy, title=title, out_dir=f'{Data.out_dir}/{test}')
 
-    d_wgt= {'dec' : 1, 'sam' : 1}
-    obp_1=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
-    pdf_1=obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
+        d_wgt= {'dec' : 1, 'sam' : 1}
+        obp_1=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        pdf_1=obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 
-    title=f'$q^2$: {q2}, both weights'
-    PRec.plot_pdf(pdf_1, name='both_weights', maxy=maxy, title=title, out_dir=f'{Data.out_dir}/{test}')
+        title=f'$q^2$: {q2}, both weights'
 #-----------------------------------------------
 def test_fit():
     '''
