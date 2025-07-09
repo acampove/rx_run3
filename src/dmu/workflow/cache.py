@@ -27,8 +27,8 @@ class Cache:
     hash_dir : Subdirectory of out_dir, ${out_dir}/.cache/{hash}
                Where {hash} is a 10 alphanumeric representing the has of the inputs
     '''
-    _cache_root : str|None = None
-    _donot_cache: bool     = False # If True, it will not pickup cached outputs
+    _cache_root     : str|None = None
+    _pick_from_cache: bool     = True # If False it will not pick cached data, but remake it
     # ---------------------------
     def __init__(self, out_path : str, **kwargs):
         '''
