@@ -434,9 +434,9 @@ class PRec(Cache):
     #-----------------------------------------------------------
     def _get_pdf(
         self,
-        mass : str,
-        name : str,
-        df   : pnd.DataFrame,
+        mass           : str,
+        df             : pnd.DataFrame,
+        component_name : str,
         **kwargs) -> zpdf|None:
         '''
         Parameters
@@ -457,14 +457,14 @@ class PRec(Cache):
         '''
         # This kwargs reffers to this particular PDF
         kwargs         = copy.deepcopy(kwargs)
-        kwargs['name'] = name
+        kwargs['name'] = component_name
 
         nentries     = len(df)
         if nentries < self._min_entries:
             log.warning(f'Found fewer than {self._min_entries}: {nentries}, skipping PDF {name}')
             return None
 
-        log.info(f'Building PDF with {nentries} entries for {name}')
+        log.info(f'Building PDF with {nentries} entries for {component_name}')
 
         pdf          = self._pdf_from_df(df=df, mass=mass, **kwargs)
         pdf.arr_mass = df[mass     ].to_numpy()
