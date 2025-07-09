@@ -35,13 +35,18 @@ class PRec:
     '''
     use_cache = True # Use cached if found
     #-----------------------------------------------------------
-    def __init__(self, samples : list[str], trig : str, q2bin : str, d_weight : dict[str,int]):
+    def __init__(
+        self, 
+        samples  : list[str], 
+        trig     : str, 
+        q2bin    : str, 
+        d_weight : dict[str,int]):
         '''
         Parameters:
         -------------------------
-        samples (str): MC samples
-        trig (str): HLT2 trigger.
-        q2bin(str): q2 bin
+        samples (str)  : MC samples
+        trig (str)     : HLT2 trigger.
+        q2bin(str)     : q2 bin
         d_weight (dict): Dictionary specifying which weights to use, e.g. {'dec' : 1, 'sam' : 1}
         '''
 
