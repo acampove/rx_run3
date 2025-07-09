@@ -330,6 +330,31 @@ class SimFitter(BaseFitter, Cache):
 
         raise ValueError(f'Invalid PDF found: {model_name}')
     # ------------------------
+    def _get_kde(self) -> zpdf:
+        '''
+        - Makes KDE PDF 
+        - Saves fit (plot, list of parameters, etc)
+
+        Returns
+        ------------------
+        KDE PDF after fit
+        '''
+        model_name = self._cfg.categories.main.model
+        data       = self._d_data['main']
+
+        KdeBuilder = getattr(zfit.pdf, model_name)
+        pdf        = KdeBuilder(obs=self._obs, data=data)
+
+        self._save_fit(
+            cuts     = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin),
+            cfg      = self._cfg.plots,
+            data     = data,
+            model    = pdf,
+            res      = None,
+            out_path = f'{self._out_path}/main')
+
+        return pdf
+    # ------------------------
     def get_model(self) -> zpdf:
         '''
         Returns
