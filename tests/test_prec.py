@@ -165,9 +165,9 @@ def test_bdt(q2bin : str, bdt_cut : str, name : str):
     mass   = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
     maxy   = {'jpsi' : 20_000          , 'psi2' :                  4_000}[q2bin]
     l_samp = [
-            'Bu_JpsiX_ee_eq_JpsiInAcc',
-            'Bd_JpsiX_ee_eq_JpsiInAcc',
-            'Bs_JpsiX_ee_eq_JpsiInAcc']
+        'Bu_JpsiX_ee_eq_JpsiInAcc',
+        'Bd_JpsiX_ee_eq_JpsiInAcc',
+        'Bs_JpsiX_ee_eq_JpsiInAcc']
 
     test = f'bdt/{q2bin}'
 
