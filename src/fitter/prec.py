@@ -50,7 +50,6 @@ class PRec(Cache):
         q2bin(str)     : q2 bin
         d_weight (dict): Dictionary specifying which weights to use, e.g. {'dec' : 1, 'sam' : 1}
         '''
-
         self._l_sample = samples
         self._trig     = trig
         self._q2bin    = q2bin
