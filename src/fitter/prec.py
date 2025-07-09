@@ -641,8 +641,8 @@ class PRec(Cache):
     def plot_pdf(
             pdf     : zpdf|None,
             name    : str,
-            title   : str,
             out_dir : str,
+            title   : str  |None = None,
             maxy    : float|None = None) -> None:
         '''
         Utility method, meant to plot PDF after it was built
