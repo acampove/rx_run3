@@ -56,7 +56,6 @@ class PRec(Cache):
         self._d_wg     = copy.deepcopy(d_weight)
 
         self._name     : str
-        self._d_df     : dict[str,pnd.DataFrame] = {}
         self._d_fstat  = {}
         d_rdf, uid     = self._get_samples_rdf()
         self._d_rdf    = d_rdf
