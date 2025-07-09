@@ -24,6 +24,7 @@ from dmu.workflow.cache     import Cache
 
 from zfit.core.parameter   import Parameter as zpar
 from zfit.core.basepdf     import BasePDF   as zpdf
+from zfit.core.interfaces  import ZfitSpace as zobs
 from rx_selection          import selection as sel
 from rx_data.rdf_getter    import RDFGetter
 from ROOT                  import RDataFrame
