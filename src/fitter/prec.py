@@ -633,6 +633,8 @@ class PRec(Cache):
             log.info(f'   {path}')
             df.to_parquet(path)
 
+        PRec.plot_pdf(pdf, name=name, out_dir=f'{self._out_path}/{name}')
+
         self._cache()
 
         return pdf
