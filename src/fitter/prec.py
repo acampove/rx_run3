@@ -619,17 +619,22 @@ class PRec(Cache):
         d_path      = { ltex : f'{self._out_path}/{slug}.parquet'     for ltex, slug in d_ltex_slug.items() }
 
         if self._copy_from_cache():
+            log.info(f'Data found cached, reloading from {self._out_path}')
             d_df = { ltex : pnd.read_parquet(path) for ltex , path in d_path.items() }
             pdf        = self._get_full_pdf(mass=mass, d_df=d_df, **kwargs)
             return pdf
+
+        log.info('Cached data not found, recalculating')
 
         d_df = self._get_df()
         pdf  = self._get_full_pdf(mass=mass, d_df=d_df, **kwargs)
 
         # Save dataframes before caching
         # Cache at the very end
+        log.info('Saving dataframes:')
         for ltex, df in d_df.items():
             path = d_path[ltex]
+            log.info(f'   {path}')
             df.to_parquet(path)
 
         self._cache()
