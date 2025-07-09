@@ -12,6 +12,7 @@ import slugify
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
+from omegaconf              import OmegaConf
 from dmu.stats.zfit         import zfit
 from dmu.generic            import hashing
 from dmu.logging.log_store  import LogStore
@@ -71,11 +72,15 @@ class PRec(Cache):
         self._check_valid(self._q2bin, ['low', 'central', 'jpsi', 'psi2', 'high'], 'q2bin')
         self._check_weights()
 
+        # This should be usable to make hashes
+        # backlashes and dollar signs are not hashable in strings
+        d_hash_match = { slugify.slugify(ltex) : value for ltex, value in self._d_match.items() }
+
         super().__init__(
-            out_path = f'{out_dir}/prec_{trig}_{q2bin}',
+            out_path = out_dir,
             uid      = uid,
-            d_wg     = d_weight,
-            d_match  = self._d_match)
+            d_wg     = OmegaConf.to_container(d_weight, resolve=True),
+            d_match  = d_hash_match)
     #-----------------------------------------------------------
     def _get_df(self) -> dict[str,pnd.DataFrame]:
         '''
