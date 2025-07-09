@@ -112,29 +112,34 @@ class PRec:
     def _filter_rdf(
         self,
         rdf    : RDataFrame,
-        sample : str) -> RDataFrame:
+        uid    : str,
+        sample : str) -> tuple[RDataFrame,str]:
         '''
         Parameters
         -----------------
         rdf    : ROOT dataframe before selection
+        uid    : Unique identifier of dataframe
         sample : Sample for which selection is done, e.g. Bu_JpsiX...
 
         Returns
         -----------------
-        ROOT dataframe after selection
-        '''
-        d_sel = sel.selection(trigger=self._trig, q2bin=self._q2bin, process=sample)
-        for name, expr in d_sel.items():
-            if name == 'mass':
-                continue
+        Tuple with:
 
+        - ROOT dataframe after selection
+        - Updated Unique identifier that takes into account the selection
+        '''
+        d_sel         = sel.selection(trigger=self._trig, q2bin=self._q2bin, process=sample)
+        d_sel['mass'] = '(1)'
+        for name, expr in d_sel.items():
             log.debug(f'{name:<20}{expr}')
             rdf = rdf.Filter(expr, name)
 
         rep = rdf.Report()
         rep.Print()
 
-        return rdf
+        uid = hashing.hash_object([uid, d_sel])
+
+        return rdf, uid
     #-----------------------------------------------------------
     def _get_samples_df(self) -> dict[str,pnd.DataFrame]:
         '''
