@@ -196,6 +196,12 @@ class PRec:
             raise ValueError
     #-----------------------------------------------------------
     def _get_match_str(self) -> dict[str,str]:
+        '''
+        Returns
+        ----------------
+        _selection_ needed to split the charmonium sample into components
+        for plotting
+        '''
         if   self._q2bin == 'jpsi':
             d_match = self._get_match_str_jpsi()
         elif self._q2bin == 'psi2':
