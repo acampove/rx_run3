@@ -266,6 +266,11 @@ def save_fit(
     log.debug(f'Saving data to: {opath}')
     df.to_json(opath, indent=2)
 
+    if model is None:
+        return
+
+    print_pdf(model, txt_path=f'{fit_dir}/post_fit.txt', d_const=d_const)
+    pdf_to_tex(path=f'{fit_dir}/post_fit.txt', d_par={'mu' : r'$\mu$'}, skip_fixed=True)
 #-------------------------------------------------------
 def _save_result(fit_dir : str, res : zres|None) -> None:
     '''
