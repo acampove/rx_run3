@@ -621,6 +621,7 @@ class PRec(Cache):
         zfit.pdf.SumPDF instance
         '''
         kwargs['name'] = name
+        slug           = slugify.slugify(name, lowercase=False)
 
         l_ltex      = list(self._d_match) # Get component names in latex and map them to parquet files to save
         d_ltex_slug = { ltex : slugify.slugify(ltex, lowercase=False) for ltex       in l_ltex }
@@ -630,6 +631,13 @@ class PRec(Cache):
             log.info(f'Data found cached, reloading from {self._out_path}')
             d_df = { ltex : pnd.read_parquet(path) for ltex , path in d_path.items() }
             pdf        = self._get_full_pdf(mass=mass, d_df=d_df, **kwargs)
+
+            PRec.plot_pdf(
+                pdf,
+                title  =name,
+                name   =name,
+                out_dir=f'{self._out_path}/{slug}')
+
             return pdf
 
         log.info(f'Recalculating, cached data not found in: {self._out_path}')
@@ -645,7 +653,6 @@ class PRec(Cache):
             log.info(f'   {path}')
             df.to_parquet(path)
 
-        slug = slugify.slugify(name, lowercase=False)
         PRec.plot_pdf(
             pdf,
             title  =name,
