@@ -446,34 +446,8 @@ class PRec(Cache):
         None   : If there are fewer than _min_entries
         KDE PDF: Otherwise
         '''
-        identifier = self._get_identifier(mass, cut, **kwargs)
-        cache_path = self._path_from_identifier(identifier)
 
-        if os.path.isfile(cache_path) and PRec.use_cache:
-            log.warning(f'Cached PDF found, loading: {cache_path}')
-            log.debug(f'Cut: {cut}')
-            df = pnd.read_json(cache_path)
-            if len(df) == 0:
-                return None
-        else:
-            self._initialize()
-            if len(self._df) == 0:
-                return None
-
-            if PRec.use_cache:
-                log.info('Cached PDF not found, calculating it')
-            else:
-                log.warning('Caching turned off, recalculating PDF')
-
-            df = self._filter_cut(cut)
-            df = self._filter_mass(df, mass, kwargs['obs'])
-            log.info(f'Using mass: {mass} for component {kwargs["name"]}')
-            self._print_cutflow()
-            df=self._drop_before_saving(df)
-            df.to_json(cache_path, indent=4)
-
-        arr_mass     = df[mass].to_numpy()
-        nentries     = len(arr_mass)
+        nentries     = len(df)
         name         = kwargs['name']
         if nentries < self._min_entries:
             log.warning(f'Found fewer than {self._min_entries}: {nentries}, skipping PDF {name}')
