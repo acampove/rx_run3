@@ -66,18 +66,10 @@ class PRec(Cache):
         self._l_mass          = ['B_Mass', 'B_Mass_smr', 'B_const_mass_M', 'B_const_mass_psi2S_M']
         self._min_entries     = 40 # Will not build KDE if fewer entries than this are found
         self._min_isj_entries = 500 #if Fewer entries than this, switch from ISJ to FFT
-        self._initialized     = False
-    #-----------------------------------------------------------
-    def _initialize(self):
-        if self._initialized:
-            return
 
         self._check_valid(self._q2bin, ['low', 'central', 'jpsi', 'psi2', 'high'], 'q2bin')
         self._check_weights()
 
-        self._df      = self._get_df()
-
-        self._initialized = True
         super().__init__(
             out_path = f'prec_{trig}_{q2bin}',
             uid      = uid,
