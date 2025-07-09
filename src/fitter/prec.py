@@ -479,6 +479,7 @@ class PRec(Cache):
         pdf.arr_dec  = df['wgt_dec'].to_numpy()
 
         if not is_pdf_usable(pdf):
+            log.warning(f'PDF {component_name} is not usable')
             return None
 
         return pdf
