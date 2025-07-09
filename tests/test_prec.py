@@ -60,13 +60,13 @@ def test_reso(q2bin : str):
         'central' :   1000,
         'jpsi'    : 10_000,
         'psi2'    :  2_000,
-        'high'    :    150}[q2bin]
+        'high'    :     25}[q2bin]
 
     q2     = {
         'low'     : 'Low',
         'central' : 'Central',
         'jpsi'    : r'$J/\psi$',
-        'psi2'    : r'\psi(2S)',
+        'psi2'    : r'$\psi(2S)$',
         'high'    : r'High'}[q2bin]
 
     l_samp = [
