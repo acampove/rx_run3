@@ -259,14 +259,23 @@ def save_fit(
     else:
         log.info('No fit plot found')
 
-    print_pdf(model, txt_path=f'{fit_dir}/post_fit.txt', d_const=d_const)
-    pdf_to_tex(path=f'{fit_dir}/post_fit.txt', d_par={'mu' : r'$\mu$'}, skip_fixed=True)
+    _save_result(fit_dir=fit_dir, res=res)
 
     df     = data.to_pandas(weightsname=Data.weight_name)
     opath  = f'{fit_dir}/data.json'
     log.debug(f'Saving data to: {opath}')
     df.to_json(opath, indent=2)
 
+#-------------------------------------------------------
+def _save_result(fit_dir : str, res : zres|None) -> None:
+    '''
+    Saves result as yaml, JSON, pkl
+
+    Parameters
+    ---------------
+    fit_dir: Directory where fit result will go
+    res    : Zfit result object
+    '''
     if res is None:
         log.info('No result object found, not saving parameters in pkl or JSON')
         return
