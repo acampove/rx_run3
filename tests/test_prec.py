@@ -63,6 +63,7 @@ def test_reso(q2bin : str):
         'high'    :    150}[q2bin]
 
     q2     = {
+        'low'     : 'Low',
         'central' : 'Central',
         'jpsi'    : r'$J/\psi$',
         'psi2'    : r'\psi(2S)',
