@@ -58,6 +58,8 @@ class PRec:
         self._name     : str
         self._df       : pnd.DataFrame
         self._d_fstat  = {}
+        d_rdf, uid     = self._get_samples_rdf()
+        self._d_rdf    = d_rdf
 
         self._d_match         = self._get_match_str()
         self._l_mass          = ['B_Mass', 'B_Mass_smr', 'B_const_mass_M', 'B_const_mass_psi2S_M']
