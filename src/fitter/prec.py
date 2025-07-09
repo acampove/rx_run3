@@ -8,6 +8,7 @@ from typing     import Union
 from contextlib import contextmanager
 
 import numpy
+import slugify
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
@@ -596,6 +597,40 @@ class PRec(Cache):
         pdf.arr_wgt  = numpy.concatenate(l_arr_wgt )
         pdf.arr_dec  = numpy.concatenate(l_arr_dec )
         pdf.arr_sam  = numpy.concatenate(l_arr_sam )
+
+        return pdf
+    #-----------------------------------------------------------
+    def get_sum(self, mass : str, name='unnamed', **kwargs) -> Union[zpdf,None]:
+        '''Provides extended PDF that is the sum of multiple KDEs representing PRec background
+
+        Parameters:
+        mass (str) : Defines which mass constrain to use, choose between "B_M", "B_const_mass_M", "B_const_mass_psi2S_M"
+        name (str) : PDF name
+        **kwargs   : Arguments meant to be taken by zfit KDE1DimFFT
+
+        Returns:
+        zfit.pdf.SumPDF instance
+        '''
+
+        l_ltex      = list(self._d_match) # Get component names in latex and map them to parquet files to save
+        d_ltex_slug = { ltex : slugify.slugify(ltex, lowercase=False) for ltex       in l_ltex }
+        d_path      = { ltex : f'{self._out_path}/{slug}.parquet'     for ltex, slug in d_ltex_slug.items() }
+
+        if self._copy_from_cache():
+            d_df = { ltex : pnd.read_parquet(path) for ltex , path in d_path.items() }
+            pdf        = self._get_full_pdf(mass=mass, d_df=d_df, **kwargs)
+            return pdf
+
+        d_df = self._get_df()
+        pdf  = self._get_full_pdf(mass=mass, d_df=d_df, **kwargs)
+
+        # Save dataframes before caching
+        # Cache at the very end
+        for ltex, df in d_df.items():
+            path = d_path[ltex]
+            df.to_parquet(path)
+
+        self._cache()
 
         return pdf
     #-----------------------------------------------------------
