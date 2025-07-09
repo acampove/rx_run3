@@ -56,7 +56,8 @@ def test_reso(q2bin : str):
         'high'    :r'$M(K^+e^+e^-)$'}[q2bin]
 
     maxy   = {
-        'central' : 1000,
+        'low'     :    200,
+        'central' :   1000,
         'jpsi'    : 10_000,
         'psi2'    :  2_000,
         'high'    :    150}[q2bin]
