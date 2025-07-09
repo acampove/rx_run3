@@ -1,0 +1,21 @@
+# This is a config file used for tests
+# It illustrates how a fit would run for data
+
+output_directory : rare/electron/data
+model:
+  observable:
+    name : B_Mass_smr
+    range:
+      - 4500 
+      - 7000
+  components:
+    combinatorial : rare/electron/combinatorial.yaml
+    bdkstee       : rare/electron/bdkstee.yaml
+    signal        : rare/electron/signal.yaml
+fit: {}
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 50
+  stacked : True
+  d_leg :
+    Gauss_ext       : Signal
+    Exponential_ext : Combinatorial

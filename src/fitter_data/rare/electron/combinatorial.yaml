@@ -1,0 +1,8 @@
+output_directory : combinatorial
+categories:
+  main:
+    models : [exp]
+shared        : []
+float         : []
+reparametrize : {}
+fix           : {}
