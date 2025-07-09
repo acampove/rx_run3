@@ -20,6 +20,7 @@ from zfit.result              import FitResult    as zres
 from zfit.core.interfaces     import ZfitSpace    as zobs
 from fitter.base_fitter       import BaseFitter
 from fitter.data_preprocessor import DataPreprocessor
+from fitter.prec              import PRec
 
 log=LogStore.add_logger('fitter:sim_fitter')
 # ------------------------
@@ -362,7 +363,35 @@ class SimFitter(BaseFitter, Cache):
 
         return pdf
     # ------------------------
-    def get_model(self) -> zpdf:
+    def _get_ccbar_component(self) -> zpdf|None:
+        '''
+        This is an interace to the PRec class, which is in
+        charge of building the KDE for ccbar sample
+
+        Returns
+        ----------------
+        Either:
+
+        - PDF with KDEs added corresponding to different groups of ccbar decays
+        - None, if no data was found
+        '''
+        ftr=PRec(
+            trig    = self._trigger,
+            q2bin   = self._q2bin  ,
+            d_weight= self._cfg.weights,
+            out_dir = self._cfg.output_directory,
+            samples = self._cfg.ccbar_samples)
+
+        obs_name = sut.name_from_obs(self._obs)
+
+        pdf =ftr.get_sum(
+            mass = obs_name,
+            name = r'$c\bar{c}+X$',
+            obs  = self._obs)
+
+        return pdf
+    # ------------------------
+    def get_model(self) -> zpdf|None:
         '''
         Returns
         ------------
@@ -370,6 +399,9 @@ class SimFitter(BaseFitter, Cache):
         '''
         if 'sample' not in self._cfg:
             return self._get_nomc_component()
+
+        if 'ccbar_sample' in self._cfg:
+            return self._get_ccbar_component()
 
         result_path = f'{self._out_path}/parameters.yaml'
         if self._copy_from_cache():
