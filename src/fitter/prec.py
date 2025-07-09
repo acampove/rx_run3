@@ -423,7 +423,7 @@ class PRec:
 
         if nentries < self._min_isj_entries:
             log.info('Using FFT KDE for low statistics sample')
-            pdf      = zfit.pdf.KDE1DimFFT(arr_mass, weights=df.wgt_br.to_numpy(), **kwargs)
+            pdf      = self._pdf_from_df(df=df, mass=mass, **kwargs)
         else:
             log.info('Using ISJ KDE for high statistics sample')
             if 'bandwidth' in kwargs: # ISJ does not accept this argument
@@ -438,6 +438,30 @@ class PRec:
 
         if not is_pdf_usable(pdf):
             return None
+
+        return pdf
+    #-----------------------------------------------------------
+    def _pdf_from_df(self, df : pnd.DataFrame, mass : str, **kwargs) -> zpdf:
+        '''
+        Will build KDE from dataframe with information needed
+
+        Parameters
+        ---------------
+        df     : DataFrame with weights and masses, the weight is assumed to be in 'wgt_br'
+        mass   : Name of the column with mass to be fitted
+        kwargs : Keyword arguments meant to be passed to KDE1DimFFT
+        '''
+        arr_mass = df[mass    ].to_numpy()
+        arr_wgt  = df['wgt_br'].to_numpy()
+        arr_wgt  = arr_wgt.astype(float)
+
+        try:
+            pdf  = zfit.pdf.KDE1DimFFT(arr_mass, weights=arr_wgt, **kwargs)
+        except Exception as exc:
+            for setting, value in kwargs.items():
+                log.info(f'{setting:<30}{value:<30}')
+
+            raise Exception('Failed to build KDE') from exc
 
         return pdf
     #-----------------------------------------------------------
