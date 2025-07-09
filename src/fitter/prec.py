@@ -47,10 +47,11 @@ class PRec(Cache):
         '''
         Parameters:
         -------------------------
-        samples (str)  : MC samples
-        trig (str)     : HLT2 trigger.
-        q2bin(str)     : q2 bin
-        d_weight (dict): Dictionary specifying which weights to use, e.g. {'dec' : 1, 'sam' : 1}
+        samples  : MC samples
+        trig     : HLT2 trigger.
+        q2bin    : q2 bin
+        d_weight : Dictionary specifying which weights to use, e.g. {'dec' : 1, 'sam' : 1}
+        out_dir  : Directory where cached outputs will go WRT _cache_root, default empty
         '''
         self._l_sample = samples
         self._trig     = trig
@@ -71,7 +72,7 @@ class PRec(Cache):
         self._check_weights()
 
         super().__init__(
-            out_path = f'prec_{trig}_{q2bin}',
+            out_path = f'{out_dir}/prec_{trig}_{q2bin}',
             uid      = uid,
             d_wg     = d_weight,
             d_match  = self._d_match)
