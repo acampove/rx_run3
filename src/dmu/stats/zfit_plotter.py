@@ -242,7 +242,7 @@ class ZFitPlotter:
             if math.isinf(pul):
                 pass
             elif abs(pul) > 5:
-                log.warning(f'Pull: {pul:.2f}=({dat_val:.2f}-{pdf_val:.2f})/{err:.2f}')
+                log.info(f'Pull: {pul:.2f}=({dat_val:.2f}-{pdf_val:.2f})/{err:.2f}')
             else:
                 log.debug(f'Pull: {pul:.2f}=({dat_val:.2f}-{pdf_val:.2f})/{err:.2f}')
 
