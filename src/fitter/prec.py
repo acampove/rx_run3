@@ -640,7 +640,8 @@ class PRec(Cache):
             log.info(f'   {path}')
             df.to_parquet(path)
 
-        PRec.plot_pdf(pdf, name=name, out_dir=f'{self._out_path}/{name}')
+        slug = slugify.slugify(name, lowercase=False)
+        PRec.plot_pdf(pdf, name=name, out_dir=f'{self._out_path}/{slug}')
 
         self._cache()
 
