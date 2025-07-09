@@ -379,7 +379,7 @@ class SimFitter(BaseFitter, Cache):
             trig    = self._trigger,
             q2bin   = self._q2bin  ,
             d_weight= self._cfg.weights,
-            out_dir = self._cfg.output_directory,
+            out_dir = self._base_path,
             samples = self._cfg.ccbar_samples)
 
         obs_name = sut.name_from_obs(self._obs)
