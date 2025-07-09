@@ -475,7 +475,11 @@ class PRec(Cache):
 
         return pdf
     #-----------------------------------------------------------
-    def _pdf_from_df(self, df : pnd.DataFrame, mass : str, **kwargs) -> zpdf:
+    def _pdf_from_df(
+        self,
+        df   : pnd.DataFrame,
+        mass : str,
+        **kwargs) -> zpdf:
         '''
         Will build KDE from dataframe with information needed
 
@@ -483,14 +487,14 @@ class PRec(Cache):
         ---------------
         df     : DataFrame with weights and masses, the weight is assumed to be in 'wgt_br'
         mass   : Name of the column with mass to be fitted
-        kwargs : Keyword arguments meant to be passed to KDE1DimFFT
+        kwargs : Keyword arguments meant to be passed to KDE1Dim*
         '''
         arr_mass = df[mass    ].to_numpy()
         arr_wgt  = df['wgt_br'].to_numpy()
         arr_wgt  = arr_wgt.astype(float)
 
         try:
-            pdf  = zfit.pdf.KDE1DimFFT(arr_mass, weights=arr_wgt, **kwargs)
+            pdf = self._build_kde(arr_mass=arr_mass, arr_wgt=arr_wgt, **kwargs)
         except Exception as exc:
             for setting, value in kwargs.items():
                 log.info(f'{setting:<30}{value:<30}')
