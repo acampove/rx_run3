@@ -99,7 +99,7 @@ def test_ccbar_reso():
     Tests retriveval of PDF associated to ccbar inclusive decays
     '''
     component = 'ccbar'
-    obs       = zfit.Space('B_const_mass_M', limits=(5000, 6000))
+    obs       = zfit.Space('B_const_mass_M', limits=(4700, 6000))
     cfg       = gut.load_conf(package='fitter_data', fpath=f'tests/{component}.yaml')
 
     with RDFGetter.max_entries(value=100_000):
