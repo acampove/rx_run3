@@ -212,13 +212,14 @@ class Cache:
     @staticmethod
     def turn_off_cache(val : bool):
         '''
-        Can be used to turn off caching (or on, but this should be on by default)
+        If true it will not PICK the outputs from cache.
+        However it will still take the newly produced outputs and cache them
         '''
-        old_val = Cache._donot_cache
+        old_val = Cache._pick_from_cache
 
-        Cache._donot_cache = val
+        Cache._pick_from_cache = val
         try:
             yield
         finally:
-            Cache._donot_cache = old_val
+            Cache._pick_from_cache = old_val
 # ---------------------------
