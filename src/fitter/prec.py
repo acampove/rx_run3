@@ -79,10 +79,10 @@ class PRec(Cache):
         '''
         Returns dataframe with masses and weights
         '''
-        d_df         = self._get_samples_df()
-        d_df         = { sample : self._add_dec_weights(sample, df) for sample, df in d_df.items() }
-        df           = pnd.concat(d_df.values(), axis=0)
-        df           = self._add_sam_weights(df)
+        d_df = self._get_samples_df()
+        d_df = { sample : self._add_dec_weights(sample, df) for sample, df in d_df.items() }
+        df   = pnd.concat(d_df.values(), axis=0)
+        df   = self._add_sam_weights(df)
 
         if len(df) == 0:
             return df
