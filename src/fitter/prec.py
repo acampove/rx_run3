@@ -457,7 +457,7 @@ class PRec(Cache):
 
         nentries     = len(df)
         if nentries < self._min_entries:
-            log.warning(f'Found fewer than {self._min_entries}: {nentries}, skipping PDF {name}')
+            log.warning(f'Found fewer than {self._min_entries}: {nentries}, skipping PDF {component_name}')
             return None
 
         log.debug(f'Building PDF with {nentries} entries for {component_name}')
