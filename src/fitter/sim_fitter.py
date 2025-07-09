@@ -270,8 +270,8 @@ class SimFitter(BaseFitter, Cache):
             l_cres =l_cres)
     # ------------------------
     def _merge_categories(
-        self, 
-        l_pdf   : list[zpdf], 
+        self,
+        l_pdf   : list[zpdf],
         l_yield : list[float],
         l_cres  : list[DictConfig]) -> tuple[zpdf,DictConfig]:
         '''
