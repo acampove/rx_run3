@@ -606,6 +606,7 @@ class PRec(Cache):
         Returns:
         zfit.pdf.SumPDF instance
         '''
+        kwargs['name'] = name
 
         l_ltex      = list(self._d_match) # Get component names in latex and map them to parquet files to save
         d_ltex_slug = { ltex : slugify.slugify(ltex, lowercase=False) for ltex       in l_ltex }
