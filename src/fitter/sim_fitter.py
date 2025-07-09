@@ -400,7 +400,7 @@ class SimFitter(BaseFitter, Cache):
         if 'sample' not in self._cfg:
             return self._get_nomc_component()
 
-        if 'ccbar_sample' in self._cfg:
+        if 'ccbar_samples' in self._cfg:
             return self._get_ccbar_component()
 
         result_path = f'{self._out_path}/parameters.yaml'
