@@ -463,10 +463,10 @@ class PRec(Cache):
         log.info(f'Building PDF with {nentries} entries for {name}')
 
         pdf          = self._pdf_from_df(df=df, mass=mass, **kwargs)
-        pdf.arr_mass = arr_mass
-        pdf.arr_wgt  = df.wgt_br.to_numpy()
-        pdf.arr_sam  = df.wgt_sam.to_numpy()
-        pdf.arr_dec  = df.wgt_dec.to_numpy()
+        pdf.arr_mass = df[mass     ].to_numpy()
+        pdf.arr_wgt  = df['wgt_br' ].to_numpy()
+        pdf.arr_sam  = df['wgt_sam'].to_numpy()
+        pdf.arr_dec  = df['wgt_dec'].to_numpy()
 
         if not is_pdf_usable(pdf):
             return None
