@@ -435,11 +435,13 @@ class PRec(Cache):
     def _get_pdf(
         self,
         mass : str,
+        name : str,
         df   : pnd.DataFrame,
         **kwargs) -> zpdf|None:
         '''
         Parameters
         ------------------
+        name    : Latex name of PDF component
         mass    : Mass, with values in:
             mass     : Non constrained B mass
             mass_jpsi: Jpsi constrained B mass
@@ -453,9 +455,11 @@ class PRec(Cache):
         None   : If there are fewer than _min_entries
         KDE PDF: Otherwise
         '''
+        # This kwargs reffers to this particular PDF
+        kwargs         = copy.deepcopy(kwargs)
+        kwargs['name'] = name
 
         nentries     = len(df)
-        name         = kwargs['name']
         if nentries < self._min_entries:
             log.warning(f'Found fewer than {self._min_entries}: {nentries}, skipping PDF {name}')
             return None
