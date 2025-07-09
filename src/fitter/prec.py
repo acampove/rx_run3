@@ -4,6 +4,7 @@ Module containing PRec
 import os
 import copy
 import json
+import pprint
 from typing     import Union
 from contextlib import contextmanager
 
@@ -521,6 +522,10 @@ class PRec(Cache):
         --------------
         Either FFT or ISJ KDE
         '''
+        if log.getEffectiveLevel() < 20:
+            log.debug('Using fitting options:')
+            pprint.pprint(kwargs)
+
         nentries = len(arr_mass)
         if nentries < self._min_isj_entries:
             log.debug('Using FFT KDE for low statistics sample')
