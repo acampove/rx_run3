@@ -24,6 +24,7 @@ def _set_logs() -> None:
     LogStore.set_level('rx_data:rdf_getter'         , 30)
     LogStore.set_level('dmu:workflow:cache'         , 30)
     LogStore.set_level('dmu:stats:model_factory'    , 30)
+    LogStore.set_level('dmu:zfit_plotter'           , 30)
 
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     os.environ['GRPC_VERBOSITY'] = 'ERROR'
