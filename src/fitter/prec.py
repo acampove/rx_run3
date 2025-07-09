@@ -693,7 +693,9 @@ class PRec(Cache):
 
         os.makedirs(out_dir, exist_ok=True)
 
-        plot_path = f'{out_dir}/{name}.png'
+        slug = slugify.slugify(name, lowercase=False)
+
+        plot_path = f'{out_dir}/{slug}.png'
         log.info(f'Saving to: {plot_path}')
         plt.savefig(plot_path)
         plt.close('all')
@@ -704,7 +706,7 @@ class PRec(Cache):
 
         plt.legend()
         plt.title(title)
-        plt.savefig(f'{out_dir}/{name}_wgt.png')
+        plt.savefig(f'{out_dir}/{slug}_wgt.png')
         plt.close('all')
 
         text_path = plot_path.replace('png', 'txt')
