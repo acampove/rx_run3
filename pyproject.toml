@@ -8,6 +8,7 @@ dependencies= [
 'numpy',
 'mplhep',
 'matplotlib',
+'python-slugify',
 'rx_data',
 'rx_selection',
 'data-manipulation-utilities']
