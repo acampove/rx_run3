@@ -557,6 +557,7 @@ class PRec(Cache):
         Returns:
         zfit.pdf.SumPDF instance
         '''
+        self._df   = self._get_df()
         self._name = name
 
         # These cuts are not meant to override the selection, they are used to classify the fully selected data
