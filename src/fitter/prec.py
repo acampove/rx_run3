@@ -36,10 +36,10 @@ class PRec:
     use_cache = True # Use cached if found
     #-----------------------------------------------------------
     def __init__(
-        self, 
-        samples  : list[str], 
-        trig     : str, 
-        q2bin    : str, 
+        self,
+        samples  : list[str],
+        trig     : str,
+        q2bin    : str,
         d_weight : dict[str,int]):
         '''
         Parameters:
