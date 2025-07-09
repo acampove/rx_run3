@@ -519,6 +519,32 @@ class PRec(Cache):
 
         return pdf
     #-----------------------------------------------------------
+    def _build_kde(
+            self,
+            arr_mass : numpy.ndarray,
+            arr_wgt  : numpy.ndarray, **kwargs) -> zpdf:
+        '''
+        Parameters
+        --------------
+        arr_xxx: Contains mass and weights needed for KDE
+
+        Returns
+        --------------
+        Either FFT or ISJ KDE
+        '''
+        nentries = len(arr_mass)
+        if nentries < self._min_isj_entries:
+            log.info('Using FFT KDE for low statistics sample')
+            pdf = zfit.pdf.KDE1DimISJ(arr_mass, weights=arr_wgt, **kwargs)
+        else:
+            log.info('Using ISJ KDE for high statistics sample')
+            if 'bandwidth' in kwargs: # ISJ does not accept this argument
+                del kwargs['bandwidth']
+
+            pdf = zfit.pdf.KDE1DimFFT(arr_mass, weights=arr_wgt, **kwargs)
+
+        return pdf
+    #-----------------------------------------------------------
     def _print_cutflow(self) -> None:
         log.debug('-' * 50)
         log.debug(f'{"Cut":<30}{"Total":<20}{"Passed":<20}')
