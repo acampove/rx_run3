@@ -541,20 +541,8 @@ class PRec(Cache):
     #-----------------------------------------------------------
     def _frac_from_pdf(self, pdf : zpdf, frc : float) -> zpar:
         name = pdf.name
-        name = name.replace(r' ', '_')
-        name = name.replace(r'$', '_')
-        name = name.replace(r'{', '_')
-        name = name.replace(r'}', '_')
-        name = name.replace(r'(', '_')
-        name = name.replace(r')', '_')
-        name = name.replace(r'>', '_')
-        name = name.replace(r'-', '_')
-        name = name.replace('\\', '_')
-        name = name.replace(r'/', '_')
-        name = name.replace(r'+', '_')
-        name = name.replace(r'^', '_')
-
-        par  = zfit.param.Parameter(f'f_{name}', frc, 0, 1)
+        slug = slugify.slugify(name, lowercase=False)
+        par  = zfit.param.Parameter(f'f_{slug}', frc, 0, 1)
 
         return par
     #-----------------------------------------------------------
