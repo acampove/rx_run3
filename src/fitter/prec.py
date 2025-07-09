@@ -554,18 +554,25 @@ class PRec(Cache):
 
         return par
     #-----------------------------------------------------------
-    def _get_full_pdf(self, mass : str, **kwargs) -> zpdf|None:
+    def _get_full_pdf(
+        self,
+        mass : str,
+        d_df : dict[str,pnd.DataFrame],
+        **kwargs) -> zpdf|None:
         '''
         Parameters
         -------------------
         mass  : Name of the column in the dataframe, which will be used to build KDE
         kwars : Key word arguments needed to build KDE PDF
+        d_df  : Dictionary with:
+            Key  : Latex name of component, not necessarily Bu/Bd... This was re-split
+            Value: Dataframe with data to fit
 
         Returns
         -------------------
         Full pdf, i.e. all ccbar components added
         '''
-        d_pdf     = { name : self._get_pdf(mass=mass, df=df, **kwargs) for name, df  in self._d_df.items()}
+        d_pdf     = { name : self._get_pdf(mass=mass, df=df, **kwargs) for name, df  in  d_df.items()}
         d_pdf     = { name : pdf                                       for name, pdf in d_pdf.items() if pdf is not None}
 
         l_pdf     = list(d_pdf.values())
