@@ -141,15 +141,32 @@ class PRec:
 
         return rdf, uid
     #-----------------------------------------------------------
-    def _get_samples_df(self) -> dict[str,pnd.DataFrame]:
+    def _get_samples_rdf(self) -> tuple[dict[str,RDataFrame],str]:
         '''
-        Returns dataframes for each sample
+        IMPORTANT: This method has to run dataframe creation lazily
+
+        Returns
+        -----------------
+        Tuple of 2 elements:
+
+        - Dictionary with
+            - Key: Name of the ccbar sample
+            - Value: ROOT dataframe after the selection
+
+        - Concatenation of unique identifiers
         '''
-        d_df = {}
+        d_rdf    = {}
+        full_uid = ''
         for sample in self._l_sample:
             gtr        = RDFGetter(sample=sample, trigger=self._trig)
             rdf        = gtr.get_rdf()
-            rdf        = self._filter_rdf(rdf, sample)
+            uid        = gtr.get_uid()
+            rdf, uid   = self._filter_rdf(rdf=rdf, sample=sample, uid=uid)
+
+            d_rdf[sample] = rdf
+            full_uid     += uid
+
+        return d_rdf, full_uid
             l_var      = [ name.c_str() for name in rdf.GetColumnNames() if self._need_var( name.c_str() )]
             data       = rdf.AsNumpy(l_var)
             df         = pnd.DataFrame(data)
