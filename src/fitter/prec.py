@@ -108,9 +108,6 @@ class PRec(Cache):
         if name in self._l_mass:
             needed = True
 
-        if needed:
-            log.debug(f'Picking up {name}')
-
         return needed
     #-----------------------------------------------------------
     def _filter_rdf(
@@ -135,7 +132,6 @@ class PRec(Cache):
         d_sel         = sel.selection(trigger=self._trig, q2bin=self._q2bin, process=sample)
         d_sel['mass'] = '(1)'
         for name, expr in d_sel.items():
-            log.debug(f'{name:<20}{expr}')
             rdf = rdf.Filter(expr, name)
 
         uid = hashing.hash_object([uid, d_sel])
