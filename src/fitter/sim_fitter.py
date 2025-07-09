@@ -377,6 +377,9 @@ class SimFitter(BaseFitter, Cache):
 
         log.info(f'Fitting, could not find cached parameters in {result_path}')
 
+        if self._is_kde():
+            return self._get_kde()
+
         full_model, cres = self._get_full_model(skip_fit=False)
 
         OmegaConf.save(cres, result_path)
