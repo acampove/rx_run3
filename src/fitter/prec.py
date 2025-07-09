@@ -620,7 +620,7 @@ class PRec(Cache):
             pdf        = self._get_full_pdf(mass=mass, d_df=d_df, **kwargs)
             return pdf
 
-        log.info('Cached data not found, recalculating')
+        log.info('Recalculating, cached data not found in: {self._out_path}')
 
         d_df = self._get_df()
         pdf  = self._get_full_pdf(mass=mass, d_df=d_df, **kwargs)
