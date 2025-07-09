@@ -186,8 +186,12 @@ class Cache:
         ---------------
         True if the object, cached was found, false otherwise.
         '''
-        if Cache._donot_cache:
-            log.warning('Caching is turned off')
+        if not Cache._pick_from_cache:
+            # If not copying from cache, will need to remove what is
+            # in the output directory, so that it gets replaced with
+            # new outputs
+            self._delete_from_output()
+            log.warning('Not picking already cached outputs, remaking them')
             return False
 
         hash_dir = self._get_dir(kind='hash', make=False)
