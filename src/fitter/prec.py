@@ -428,19 +428,19 @@ class PRec:
 
         return df
     #-----------------------------------------------------------
-    def _get_pdf(self, mass : str, cut : str, **kwargs) -> Union[zpdf,None]:
+    def _get_pdf(
+        self,
+        mass : str,
+        cut  : str,
+        **kwargs) -> Union[zpdf,None]:
         '''
-        Will take the mass, with values in:
-
-        mass: Non constrained B mass
-        mass_jpsi: Jpsi constrained B mass
-        mass_psi2: Psi2S constrained B mass
-
-        The observable.
-
-        Optional arguments:
-        Cut
-
+        Parameters
+        ------------------
+        mass    : Mass, with values in:
+            mass     : Non constrained B mass
+            mass_jpsi: Jpsi constrained B mass
+            mass_psi2: Psi2S constrained B mass
+        cut     : Selection for ccbar entries. Intended to be used to split ccbar entries into categories
         **kwargs: These are all arguments for KDE1DimISJ or KDE1DimFFT
         '''
         identifier = self._get_identifier(mass, cut, **kwargs)
