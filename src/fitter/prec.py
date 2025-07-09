@@ -95,7 +95,7 @@ class PRec(Cache):
         arr_wgt      = df.wgt_dec.to_numpy() * df.wgt_sam.to_numpy()
         df['wgt_br'] = self._normalize_weights(arr_wgt)
 
-        d_df = { component : df.query(cut) for component, cut in self._d_match }
+        d_df = { component : df.query(cut) for component, cut in self._d_match.items() }
 
         return d_df
     #-----------------------------------------------------------
