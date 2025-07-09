@@ -103,6 +103,7 @@ def test_reso(q2bin : str):
         pdf_1=obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 
         title=f'$q^2$: {q2}, both weights'
+        PRec.plot_pdf(pdf_1, name='both_weights', maxy=maxy, title=title, out_dir=f'{Data.out_dir}/{test}')
 #-----------------------------------------------
 def test_fit():
     '''
