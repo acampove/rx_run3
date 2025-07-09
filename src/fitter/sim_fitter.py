@@ -336,7 +336,7 @@ class SimFitter(BaseFitter, Cache):
     # ------------------------
     def _get_kde(self) -> zpdf|None:
         '''
-        - Makes KDE PDF 
+        - Makes KDE PDF
         - Saves fit (plot, list of parameters, etc)
 
         Returns
