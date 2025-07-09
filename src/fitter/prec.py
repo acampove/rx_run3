@@ -17,6 +17,7 @@ from dmu.logging.log_store  import LogStore
 from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.stats.utilities    import is_pdf_usable
 from dmu.stats              import utilities as sut
+from dmu.workflow.cache     import Cache
 
 from zfit.core.parameter   import Parameter as zpar
 from zfit.core.basepdf     import BasePDF   as zpdf
@@ -29,7 +30,7 @@ from fitter.inclusive_sample_weights import Reader as inclusive_sample_weights
 
 log=LogStore.add_logger('fitter:prec')
 #-----------------------------------------------------------
-class PRec:
+class PRec(Cache):
     '''
     Class used to calculate the PDF associated to the partially reconstructed background
     '''
@@ -77,6 +78,11 @@ class PRec:
         self._df      = self._get_df()
 
         self._initialized = True
+        super().__init__(
+            out_path = f'prec_{trig}_{q2bin}',
+            uid      = uid,
+            d_wg     = d_weight,
+            d_match  = self._d_match)
     #-----------------------------------------------------------
     def _get_df(self) -> pnd.DataFrame:
         '''
