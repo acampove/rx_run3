@@ -24,7 +24,8 @@ class DataModel:
             obs     : zobs,
             trigger : str,
             project : str,
-            q2bin   : str):
+            q2bin   : str,
+            name    : str|None=None):
         '''
         Parameters
         ------------------
@@ -33,12 +34,14 @@ class DataModel:
         project: E.g. rx
         q2bin  : E.g. central
         obs    : zfit observable
+        name   : Optional, identifier for this model
         '''
         self._cfg    = cfg
         self._obs    = obs
         self._trigger= trigger
         self._project= project
         self._q2bin  = q2bin
+        self._name   = name
     # ------------------------
     def _extend(self, pdf : zpdf, name : str) -> zpdf:
         '''
@@ -74,6 +77,9 @@ class DataModel:
 
         log.debug(f'Found {npdf} components')
         for component, cfg_path in self._cfg.model.components.items():
+            if self._name is not None:
+                component = f'{self._name}_{component}'
+
             cfg = gut.load_conf(package='fitter_data', fpath=cfg_path)
             ftr = SimFitter(
                 name    = component,
