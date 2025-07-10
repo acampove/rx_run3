@@ -32,12 +32,13 @@ train_cone v4 train_turbo_mva_prc
 The following versions use brem corrected variables and the following changes
 for high q2.
 
-| Version | $q^2$ Cut Type     | Background Proxy        |
-|---------|--------------------|-------------------------|
-| v7p0    | $q^2$              | OS data (default)       |
-| v7p1    | $q^2_{track}$      | OS data (default)       |
-| v7p2    | $q^2_{dtf}$        | OS data (default)       |
-| v7p3    | $q^2_{dtf}$        | SS data                 |
-| v7p4    | $q^2$              | SS data                 |
-| v7p5    | $q^2$              | SS data no upper SB     |
-| v7p6    | $q^2$              | v7p0 better hyper parameters|
+| Version | $q^2$ Cut Type | Background Proxy                |
+| ------- | -------------- | ------------------------------- |
+| v7p0    | $q^2$          | OS data (default)               |
+| v7p1    | $q^2_{track}$  | OS data (default)               |
+| v7p2    | $q^2_{dtf}$    | OS data (default)               |
+| v7p3    | $q^2_{dtf}$    | SS data                         |
+| v7p4    | $q^2$          | SS data                         |
+| v7p5    | $q^2$          | SS data no upper SB             |
+| v7p6    | $q^2$          | v7p0 better hyper parameters    |
+| v7p7    | $q^2$          | Trained on electron MC for Prec |
