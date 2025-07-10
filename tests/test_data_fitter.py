@@ -73,7 +73,9 @@ def test_reso_electron():
         fpath  ='reso/electron/data.yaml')
 
     with Cache.turn_off_cache(val=False), \
-        sel.custom_selection(d_sel={'block' : 'block == 1 || block == 2'}):
+        sel.custom_selection(d_sel={
+            'block' : 'block == 1 || block == 2',
+            'mass'  : '(1)'}):
 
         ftr = DataFitter(
             sample = 'DATA_24_*',
