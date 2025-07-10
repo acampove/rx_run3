@@ -70,13 +70,13 @@ def test_reso_electron():
     '''
     cfg = gut.load_conf(
         package='fitter_data',
-        fpath  ='test/electron/data.yaml')
+        fpath  ='reso/electron/data.yaml')
 
     with Cache.turn_off_cache(val=False), \
         sel.custom_selection(d_sel={'block' : 'block == 1 || block == 2'}):
 
         ftr = DataFitter(
-            sample = 'DATA_24_MagDown_24c2',
+            sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
             project= 'rx',
             q2bin  = 'jpsi',
