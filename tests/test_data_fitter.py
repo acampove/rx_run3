@@ -73,7 +73,7 @@ def test_reso_electron():
         fpath  ='reso/electron/data.yaml')
 
     with Cache.turn_off_cache(val=False), \
-         RDFGetter.max_entries(value=100_000):
+        RDFGetter.max_entries(value=100_000):
 
         ftr = DataFitter(
             sample = 'DATA_24_MagDown_24c2',
