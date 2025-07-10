@@ -70,10 +70,10 @@ def test_reso_electron():
     '''
     cfg = gut.load_conf(
         package='fitter_data',
-        fpath  ='reso/electron/data.yaml')
+        fpath  ='test/electron/data.yaml')
 
     with Cache.turn_off_cache(val=False), \
-        RDFGetter.max_entries(value=100_000):
+        sel.custom_selection(d_sel={'block' : 'block == 1 || block == 2'}):
 
         ftr = DataFitter(
             sample = 'DATA_24_MagDown_24c2',
