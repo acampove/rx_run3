@@ -45,7 +45,8 @@ class DataFitter(BaseFitter, Cache):
         self._project   = project
         self._q2bin     = q2bin
         self._cfg       = cfg
-        self._base_path = f'{cfg.output_directory}/{sample}_{trigger}_{project}_{q2bin}'
+        self._name      = name
+        self._base_path = self._get_base_path()
 
         BaseFitter.__init__(self)
         Cache.__init__(
@@ -55,6 +56,16 @@ class DataFitter(BaseFitter, Cache):
             config   = OmegaConf.to_container(cfg, resolve=True))
 
         self._obs = self._make_observable()
+    # ------------------------
+    def _get_base_path(self) -> str:
+        '''
+        Returns directory where outputs will go
+        '''
+        sample = self._sample.replace('*', 'p')
+        if self._name is not None:
+            sample = f'{self._name}_{sample}'
+
+        return f'{self._cfg.output_directory}/{sample}_{self._trigger}_{self._project}_{self._q2bin}'
     # ------------------------
     def _make_observable(self) -> zobs:
         '''
