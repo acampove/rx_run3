@@ -12,12 +12,10 @@ from dmu.logging.log_store import LogStore
 log=LogStore.add_logger('dmu:generic.hashing')
 # ------------------------------------
 def _object_to_string(obj : Any) -> str:
-    try:
-        string = json.dumps(obj, sort_keys=True)
-    except Exception as exc:
-        raise ValueError(f'Cannot hash object: {obj}') from exc
+    def default_encoder(x):
+        raise TypeError(f"Unserializable type: {type(x)}")
 
-    return string
+    return json.dumps(obj, sort_keys=True, default=default_encoder)
 # ------------------------------------
 def _dataframe_to_hash(df : pnd.DataFrame) -> str:
     sr_hash = pnd.util.hash_pandas_object(df, index=True)
