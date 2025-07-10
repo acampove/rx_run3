@@ -19,11 +19,11 @@ def test_toy():
         fpath  ='tests/data_toy.yaml')
     with Cache.turn_off_cache(val=True):
         ftr = DataFitter(
-                sample = 'data_toy',
-                trigger= '',
-                project= '',
-                q2bin  = '',
-                cfg    = cfg)
+            sample = 'data_toy',
+            trigger= '',
+            project= '',
+            q2bin  = '',
+            cfg    = cfg)
         ftr.run()
 # -------------------------------------------
 def test_reso_muon():
