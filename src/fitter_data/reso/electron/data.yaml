@@ -11,6 +11,7 @@ model:
   components:
     background : reso/electron/combinatorial.yaml
     signal     : reso/electron/signal.yaml
+    ccbar      : reso/electron/ccbar.yaml
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
