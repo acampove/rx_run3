@@ -191,7 +191,7 @@ class Cache:
             # in the output directory, so that it gets replaced with
             # new outputs
             self._delete_from_output()
-            log.warning('Not picking already cached outputs, remaking them')
+            log.info('Not picking already cached outputs, remaking them')
             return False
 
         hash_dir = self._get_dir(kind='hash', make=False)
