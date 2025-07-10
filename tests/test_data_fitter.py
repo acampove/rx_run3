@@ -93,10 +93,10 @@ def test_rare_electron():
 
     with Cache.turn_off_cache(val=False):
         ftr = DataFitter(
-                sample = 'DATA_24_*',
-                trigger= 'Hlt2RD_BuToKpEE_MVA',
-                project= 'rx',
-                q2bin  = 'central',
-                cfg    = cfg)
+            sample = 'DATA_24_*',
+            trigger= 'Hlt2RD_BuToKpEE_MVA',
+            project= 'rx',
+            q2bin  = 'central',
+            cfg    = cfg)
         ftr.run()
 # -------------------------------------------
