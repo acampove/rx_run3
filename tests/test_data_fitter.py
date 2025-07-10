@@ -10,6 +10,18 @@ from rx_selection       import selection  as sel
 from fitter.data_fitter import DataFitter
 
 # -------------------------------------------
+class Data:
+    '''
+    Used to share attributes
+    '''
+    d_block_cut = {
+        'b12': 'block == 1 || block == 2',
+        'b3' : 'block == 3',
+        'b4' : 'block == 4',
+        'b5' : 'block == 5',
+        'b6' : 'block == 6',
+        'b78': 'block == 7 || block == 8'}
+# -------------------------------------------
 def test_toy():
     '''
     Test using toy data
@@ -64,7 +76,8 @@ def test_rare_muon(q2bin : str):
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
-def test_reso_electron():
+@pytest.mark.parametrize('block', ['b12', 'b3', 'b4', 'b5', 'b6', 'b78'])
+def test_reso_electron(block : str):
     '''
     Test fitting resonant electron channel
     '''
@@ -72,12 +85,15 @@ def test_reso_electron():
         package='fitter_data',
         fpath  ='reso/electron/data.yaml')
 
+    block_cut = Data.d_block_cut[block]
+
     with Cache.turn_off_cache(val=False), \
         sel.custom_selection(d_sel={
-            'block' : 'block == 1 || block == 2',
+            'block' : block_cut,
             'mass'  : '(1)'}):
 
         ftr = DataFitter(
+            name   = block,
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
             project= 'rx',
