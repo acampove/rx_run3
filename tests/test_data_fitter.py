@@ -39,11 +39,11 @@ def test_reso_muon():
          RDFGetter.max_entries(value=100_000):
 
         ftr = DataFitter(
-                sample = 'DATA_24_MagDown_24c2',
-                trigger= 'Hlt2RD_BuToKpMuMu_MVA',
-                project= 'rx',
-                q2bin  = 'jpsi',
-                cfg    = cfg)
+            sample = 'DATA_24_MagDown_24c2',
+            trigger= 'Hlt2RD_BuToKpMuMu_MVA',
+            project= 'rx',
+            q2bin  = 'jpsi',
+            cfg    = cfg)
         ftr.run()
 # -------------------------------------------
 @pytest.mark.parametrize('q2bin', ['central'])
@@ -76,11 +76,11 @@ def test_reso_electron():
          RDFGetter.max_entries(value=100_000):
 
         ftr = DataFitter(
-                sample = 'DATA_24_MagDown_24c2',
-                trigger= 'Hlt2RD_BuToKpEE_MVA',
-                project= 'rx',
-                q2bin  = 'jpsi',
-                cfg    = cfg)
+            sample = 'DATA_24_MagDown_24c2',
+            trigger= 'Hlt2RD_BuToKpEE_MVA',
+            project= 'rx',
+            q2bin  = 'jpsi',
+            cfg    = cfg)
         ftr.run()
 # -------------------------------------------
 def test_rare_electron():
