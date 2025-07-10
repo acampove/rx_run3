@@ -29,8 +29,10 @@ class DataFitter(BaseFitter, Cache):
             trigger : str,
             project : str,
             q2bin   : str,
-            cfg     : DictConfig):
+            cfg     : DictConfig,
+            name    : str|None = None):
         '''
+        name   : Identifier for fit, e.g. block. This is optional
         cfg    : configuration for the fit as a DictConfig object
         sample : Identifies sample e.g. DATA_24_MagUp...
         trigger: Hlt2RD...
