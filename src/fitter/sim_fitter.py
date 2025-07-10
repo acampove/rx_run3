@@ -41,7 +41,7 @@ class SimFitter(BaseFitter, Cache):
         Parameters
         --------------------
         obs    : Observable
-        name   : Nickname of component, e.g. combinatorial
+        name   : Nickname of component, e.g. combinatorial, only used for naming
         trigger: Hlt2RD...
         project: E.g. rx
         q2bin  : E.g. central
