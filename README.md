@@ -150,9 +150,11 @@ with gut.silent_import():
     import tensorflow
 ```
 
-## Silencing messages going to __stderr__
+## Silencing messages going to __stderr__ originating deep from C++ code
 
-In order to do that, do:
+This is an issue with frameworks like `Tensorflow`. Some messages are impossible
+to kill, which interferes with the debugging process. In order hide selectively
+those messages, do:
 
 ```python
 from dmu.logging import messages as mes 
