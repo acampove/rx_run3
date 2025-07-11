@@ -197,7 +197,7 @@ class SimFitter(BaseFitter, Cache):
         model = self._get_pdf(category=category, l_model=l_model_name)
         data  = self._d_data[category]
 
-        sumw= data.weights.numpy().sum()
+        sumw  = sut.yield_from_zdata(data=data)
         if skip_fit:
             return model, sumw, None
 
