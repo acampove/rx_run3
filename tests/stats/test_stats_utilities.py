@@ -4,6 +4,7 @@ Module with unit tests for functions in dmu.stat.utilities
 import os
 from importlib.resources import files
 
+import numpy
 from omegaconf              import OmegaConf
 from dmu.logging.log_store  import LogStore
 from dmu.stats.zfit_plotter import ZFitPlotter
@@ -64,6 +65,23 @@ def _get_pdf_composed_nonextended() -> zpdf:
     pdf = zfit.pdf.SumPDF([pd1, pd2], fracs=[fr1, fr2])
 
     return pdf
+#----------------------------------
+def _get_zdata(weighted : bool) -> zdata:
+    '''
+    Returns zfit data, weighted or not and yield
+    '''
+    arr_val = numpy.random.uniform(0, 1 , size=100)
+    if weighted:
+        arr_wgt = numpy.random.normal(1, 0.1, size=100)
+        target  = arr_wgt.sum()
+    else:
+        arr_wgt = None
+        target  = 100
+
+    obs  = zfit.Space('x', limits=(0, 1))
+    data = zfit.data.from_numpy(obs=obs, array=arr_val, weights=arr_wgt)
+
+    return data, target
 #----------------------------------
 def _get_pdf(kind : str ='simple') -> zpdf:
     if   kind == 'simple':
