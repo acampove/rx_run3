@@ -229,6 +229,20 @@ def load_selection_config() -> dict:
     return d_sel
 #-----------------------
 def _get_selection(chan : str, proj: str, q2_bin : str) -> dict[str,str]:
+    '''
+    Parameters
+    -----------------
+    chan  : Channel, e.g. EE, MM
+    proj  : Project, e.g. RK, RKst
+    q2_bin: q2 bin e.g. central, needed to pick for q2 dependent cuts
+
+    Returns 
+    -----------------
+    Dictionary with:
+
+    key  : Label of cut, e.g. q2
+    value: Cut expression e.g. q2 > 1e6
+    '''
     cfg = load_selection_config()
 
     if proj not in cfg:
