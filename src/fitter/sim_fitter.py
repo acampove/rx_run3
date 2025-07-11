@@ -173,7 +173,7 @@ class SimFitter(BaseFitter, Cache):
             self,
             skip_fit     : bool,
             category     : str,
-            l_model_name : list[str]) -> tuple[zpdf,float|None,zres|None]:
+            l_model_name : list[str]) -> tuple[zpdf|None,float|None,zres|None]:
         '''
         Parameters
         ----------------
@@ -184,8 +184,8 @@ class SimFitter(BaseFitter, Cache):
         Returns
         ----------------
         Tuple with:
-            - fitted PDF
-            - size (sum of weights) of dataset in given category.
+            - Fitted PDF, None if problems were found building it, e.g. too few entries
+            - Size (sum of weights) of dataset in given category.
               If fit is skipped, returns None, because this is used to set
               the value of the fit fraction, which should already be in the cached data.
             - zfit result object, if fit is skipped, returns None
