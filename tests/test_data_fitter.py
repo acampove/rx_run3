@@ -87,10 +87,10 @@ def test_reso_electron(block : str):
 
     block_cut = Data.d_block_cut[block]
 
-    with Cache.turn_off_cache(val=False), \
+    with Cache.turn_off_cache(val=True), \
         sel.custom_selection(d_sel={
             'block' : block_cut,
-            'nbrem' : 'nbrem != 0',
+            'brm12' : 'nbrem != 0',
             'mass'  : '(1)'}):
 
         ftr = DataFitter(
