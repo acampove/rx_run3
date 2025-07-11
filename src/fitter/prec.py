@@ -519,7 +519,11 @@ class PRec(Cache):
             pdf = self._build_kde(arr_mass=arr_mass, arr_wgt=arr_wgt, **kwargs)
         except Exception as exc:
             for setting, value in kwargs.items():
-                log.info(f'{setting:<30}{value:<30}')
+                if not isinstance(value, (str,float,int)):
+                    log.info(f'{setting:<30}{"--->"}')
+                    log.info(value)
+                else:
+                    log.info(f'{setting:<30}{value:<30}')
 
             raise Exception('Failed to build KDE') from exc
 
