@@ -251,12 +251,12 @@ def _get_selection(chan : str, proj: str, q2_bin : str) -> dict[str,str]:
     return d_new
 #-----------------------
 def apply_full_selection(
-        rdf      : RDataFrame,
-        q2bin    : str,
-        process  : str,
-        trigger  : str,
-        ext_cut  : str|None = None,
-        uid      : str|None = None) -> RDataFrame:
+    rdf      : RDataFrame,
+    q2bin    : str,
+    process  : str,
+    trigger  : str,
+    ext_cut  : str|None = None,
+    uid      : str|None = None) -> RDataFrame:
     '''
     Will apply full selection on dataframe.
     IMPORTANT: This HAS to be done lazily or else the rest of the code will be slowed down.
