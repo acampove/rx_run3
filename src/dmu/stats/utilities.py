@@ -64,6 +64,28 @@ def range_from_obs(obs : zobs) -> tuple[float,float]:
 
     return float(minx[0][0]), float(maxx[0][0])
 #-------------------------------------------------------
+def yield_from_zdata(data : zdata) -> float:
+    '''
+    Parameter
+    --------------
+    data : Zfit dataset
+
+    Returns
+    --------------
+    Yield, i.e. number of entries or sum of weights if weighted dataset
+    '''
+
+    if data.weights is not None:
+        val     = data.weights.numpy().sum()
+    else:
+        arr_val = data.to_numpy()
+        val     = len(arr_val)
+
+    if val < 0:
+        raise ValueError(f'Yield cannot be negative, found {val}')
+
+    return val
+#-------------------------------------------------------
 # Check PDF
 #-------------------------------------------------------
 def is_pdf_usable(pdf : zpdf) -> zpdf:
