@@ -36,7 +36,7 @@ def load_data(package : str, fpath : str) -> Any:
     Parameters
     ---------------------
     package: Data package, e.g. `dmu_data`
-    path   : Path to YAML/JSON file, relative to the data package 
+    path   : Path to YAML/JSON file, relative to the data package
 
     Returns
     ---------------------
@@ -56,7 +56,7 @@ def load_conf(package : str, fpath : str) -> DictConfig:
     Parameters
     ---------------------
     package: Data package, e.g. `dmu_data`
-    path   : Path to YAML/JSON file, relative to the data package 
+    path   : Path to YAML/JSON file, relative to the data package
 
     Returns
     ---------------------
@@ -80,7 +80,7 @@ def timeit(f):
     Decorator used to time functions, it is turned off by default, can be turned on with:
 
     from dmu.generic.utilities import TIMER_ON
-    from dmu.generic.utilities import timeit 
+    from dmu.generic.utilities import timeit
 
     TIMER_ON=True
 
@@ -132,7 +132,7 @@ def load_json(path : str):
     Loads data from JSON or YAML, depending on extension of files, supported .json, .yaml, .yml
 
     Parameters
-    path     : Path to outut file where data is saved 
+    path     : Path to outut file where data is saved
     '''
 
     with open(path, encoding='utf-8') as ofile:
@@ -148,7 +148,7 @@ def load_json(path : str):
 # --------------------------------
 def dump_pickle(data, path : str) -> None:
     '''
-    Saves data as pickle file 
+    Saves data as pickle file
 
     Parameters
     data     : dictionary, list, etc
@@ -162,7 +162,7 @@ def dump_pickle(data, path : str) -> None:
 # --------------------------------
 def load_pickle(path : str) -> None:
     '''
-    loads data file 
+    loads data file
 
     Parameters
     path     : Path to output file where to save it
@@ -219,7 +219,7 @@ def load_cached(hash_obj : Any, on_fail : Any = None) -> Any:
     Parameters
     ---------------
     hash_obj: Object used to calculate hash, which is in the file name
-    on_fail : Value returned if no data was found. 
+    on_fail : Value returned if no data was found.
               By default None, and it will just raise a FileNotFoundError
     '''
     val  = hashing.hash_object(hash_obj)
