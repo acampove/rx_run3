@@ -98,4 +98,3 @@ class ParameterLibrary:
         df.loc[location, 'high'] = high
 # --------------------------------
 ParameterLibrary._load_data()
-
