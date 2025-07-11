@@ -4,6 +4,7 @@ third party tools
 '''
 import os
 import sys
+import time
 import threading
 from io                    import StringIO
 from contextlib            import contextmanager
@@ -66,13 +67,20 @@ def filter_stderr(
     os.dup2(write_fd, 2)
     os.close(write_fd)
 
-    filtered = FilteredStderr(banned_substrings, capture_stream)
+    filtered        = FilteredStderr(banned_substrings, capture_stream)
+    reader_finished = threading.Event()
 
     def reader():
-        with os.fdopen(read_fd, 'r') as pipe:
-            for line in pipe:
-                filtered.write(line)
-            filtered.flush()
+        try:
+            with os.fdopen(read_fd, 'r', buffering=1) as pipe:
+                while True:
+                    line = pipe.readline()
+                    if not line:
+                        break
+                    filtered.write(line)
+                filtered.flush()
+        finally:
+            reader_finished.set()
 
     thread = threading.Thread(target=reader, daemon=True)
     thread.start()
@@ -82,4 +90,7 @@ def filter_stderr(
     finally:
         os.dup2(saved_fd, 2)
         os.close(saved_fd)
+
+        time.sleep(0.1)
+        reader_finished.wait(timeout=1.0)
 # --------------------------------
