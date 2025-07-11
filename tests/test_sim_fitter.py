@@ -5,6 +5,7 @@ import pytest
 
 from dmu.stats.zfit         import zfit
 from dmu.generic            import utilities as gut
+from dmu.workflow.cache     import Cache
 from rx_data.rdf_getter     import RDFGetter
 from rx_selection           import selection as sel
 
@@ -122,6 +123,7 @@ def test_signal_reso():
     cfg       = gut.load_conf(package='fitter_data', fpath=f'tests/{component}.yaml')
 
     with RDFGetter.max_entries(value=200_000),\
+        Cache.turn_off_cache(val=True), \
         sel.custom_selection(d_sel={
             'mass'  : '(1)',
             'nbrem' : 'nbrem != 0'}):
