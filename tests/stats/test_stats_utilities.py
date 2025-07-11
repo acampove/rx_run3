@@ -17,7 +17,8 @@ from dmu.stats.utilities    import is_pdf_usable
 
 import pytest
 import pandas as pnd
-from zfit.core.basepdf import ZfitPDF
+from zfit.core.interfaces   import ZfitData   as zdata
+from zfit.core.interfaces   import ZfitPDF    as zpdf
 
 log = LogStore.add_logger('dmu:tests:stats:test_utilities')
 #----------------------------------
@@ -34,7 +35,7 @@ def _initialize():
     os.makedirs(Data.fit_dir, exist_ok=True)
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 #----------------------------------
-def _get_pdf_simple() -> ZfitPDF:
+def _get_pdf_simple() -> zpdf:
     obs = zfit.Space('m',    limits=(-10, 10))
     mu  = zfit.Parameter("mu", 0.4,   -5,     5)
     sg  = zfit.Parameter("sg", 1.3,  0.5,     2)
@@ -47,7 +48,7 @@ def _get_pdf_simple() -> ZfitPDF:
 
     return epdf
 #----------------------------------
-def _get_pdf_composed_nonextended() -> ZfitPDF:
+def _get_pdf_composed_nonextended() -> zpdf:
     obs = zfit.Space('m', limits=(-10, 10))
     mu1 = zfit.Parameter("mu1", 0.4, -5, 5)
     sg1 = zfit.Parameter("sg1", 1.3,  0, 5)
@@ -64,7 +65,7 @@ def _get_pdf_composed_nonextended() -> ZfitPDF:
 
     return pdf
 #----------------------------------
-def _get_pdf(kind : str ='simple') -> ZfitPDF:
+def _get_pdf(kind : str ='simple') -> zpdf:
     if   kind == 'simple':
         return _get_pdf_simple()
 
