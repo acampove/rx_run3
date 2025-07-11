@@ -1,7 +1,7 @@
 '''
 Module with tests for functions in generic/utilities.py
 '''
-import sys
+import os
 import math
 from io     import StringIO
 from typing import Any
