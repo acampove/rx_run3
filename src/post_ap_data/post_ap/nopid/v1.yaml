@@ -39,6 +39,11 @@ tests:
     test_w35_37_v1r3334_ee: v1r3334
     test_w37_39_v1r3334_ee: v1r3334
     test_w40_42_v1r3334_ee: v1r3334
+    # ----------
+    test_w31_34_v1r3399_ee: v1r3399
+    test_w35_37_v1r3399_ee: v1r3399
+    test_w37_39_v1r3399_ee: v1r3399
+    test_w40_42_v1r3399_ee: v1r3399
   samples: &tst_sam
     test_w31_34_v1r3334_ee:
       - mc_24_w31_34_magup_sim10d_12123001_bu_kee_eq_btosllball_dpc_tuple
