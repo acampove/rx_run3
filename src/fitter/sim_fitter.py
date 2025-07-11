@@ -60,6 +60,10 @@ class SimFitter(BaseFitter, Cache):
         # Will not build KDE if fewer than these entries in dataset
         self._min_kde_entries = 50
 
+        # Will not build (fit) a parametric PDF if fewer than these entries
+        # will return None
+        self._min_fit_entries = 100
+
         BaseFitter.__init__(self)
         Cache.__init__(
             self,
@@ -195,6 +199,10 @@ class SimFitter(BaseFitter, Cache):
         if skip_fit:
             return model, sumw, None
 
+        if sumw < self._min_fit_entries:
+            log.warning(f'Found to few entries {sumw:.1f} < {self._min_fit_entries}, skipping component')
+            return None, 0, None
+
         res   = self._fit(data=data, model=model, cfg=self._cfg.fit)
         self._save_fit(
             cuts     = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin),
@@ -257,6 +265,10 @@ class SimFitter(BaseFitter, Cache):
                 skip_fit     = skip_fit,
                 category     = category,
                 l_model_name = l_model_name)
+
+            if model is None:
+                log.warning(f'Skipping cateogory {category}')
+                continue
 
             # Will be None if fit is cached
             # and this is only returning model
