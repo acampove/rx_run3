@@ -188,11 +188,11 @@ class DataPreprocessor(Cache):
                 arr = ifile['values' ]
                 wgt = ifile['weights']
 
-            data    = zfit.data.from_numpy(obs=self._obs, array=arr, weights=wgt)
+            data    = self._data_from_numpy(arr_value=arr, arr_weight=wgt)
             return data
 
         arr, wgt = self._get_array()
-        data     = zfit.data.from_numpy(obs=self._obs, array=arr, weights=wgt)
+        data     = self._data_from_numpy(arr_value=arr, arr_weight=wgt)
 
         numpy.savez_compressed(data_path, values=arr, weights=wgt)
         self._cache()
