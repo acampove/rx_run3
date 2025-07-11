@@ -217,7 +217,7 @@ class Cache:
         '''
         old_val = Cache._pick_from_cache
 
-        Cache._pick_from_cache = val
+        Cache._pick_from_cache = not val
         try:
             yield
         finally:
