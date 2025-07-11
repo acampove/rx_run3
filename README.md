@@ -155,16 +155,16 @@ with gut.silent_import():
 In order to do that, do:
 
 ```python
-from dmu.generic import utilities as gut
+from dmu.logging import messages as mes 
 
-l_msg = ['duck', 'rabbit']
-with gut.filter_stderr(banned_substrings=l_msg):
-    print('one rabbig', file=sys.stderr)
-    print('two ducks' , file=sys.stderr)
-    print('three dogs', file=sys.stderr)
+l_msg = ['ONE', 'TWO']
+with mes.filter_stderr(banned_substrings=l_msg):
+        os.write(2, b'MSG ONE\n')
+        os.write(2, b'MSG TWO\n')
+        os.write(2, b'MSG THREE\n')
 ```
 
-The context manager above will only allow `three dogs` into the error stream.
+The context manager above will only allow `THREE` into the error stream.
 
 ## YAML
 
