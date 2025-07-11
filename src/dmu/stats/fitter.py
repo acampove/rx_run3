@@ -10,6 +10,7 @@ from functools                import lru_cache
 import numpy
 import pandas as pd
 
+from dmu.generic              import utilities as gut
 from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
 
@@ -44,6 +45,8 @@ class Fitter:
         self._data_np : numpy.ndarray
         self._obs     : zfit.Space
         self._d_par   : dict
+
+        self._l_hidden_tf_lines= ['abnormal_detected_host @']
 
         self._ndof           = 10
         self._pval_threshold = 0.01
@@ -363,7 +366,10 @@ class Fitter:
     #------------------------------
     def _minimize(self, nll, cfg : dict) -> tuple[zres, tuple]:
         mnm = zfit.minimize.Minuit()
-        res = mnm.minimize(nll)
+
+        with gut.filter_stderr(banned_substrings=self._l_hidden_tf_lines):
+            res = mnm.minimize(nll)
+
         res = self._calculate_error(res)
 
         try:
