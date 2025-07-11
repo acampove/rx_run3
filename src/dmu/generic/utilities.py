@@ -2,11 +2,11 @@
 Module containing generic utility functions
 '''
 import os
-import sys
 import time
 import json
 import pickle
 import inspect
+import threading
 from importlib.resources   import files
 from io                    import StringIO
 from typing                import Callable, Any
