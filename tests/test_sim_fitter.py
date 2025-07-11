@@ -3,9 +3,10 @@ This module is meant to test the SimFitter class
 '''
 import pytest
 
-from dmu.stats.zfit     import zfit
-from dmu.generic        import utilities as gut
-from rx_data.rdf_getter import RDFGetter
+from dmu.stats.zfit         import zfit
+from dmu.generic            import utilities as gut
+from rx_data.rdf_getter     import RDFGetter
+from rx_selection           import selection as sel
 
 from fitter.sim_fitter  import SimFitter
 
