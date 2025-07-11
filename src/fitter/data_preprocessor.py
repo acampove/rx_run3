@@ -147,6 +147,36 @@ class DataPreprocessor(Cache):
         '''
         return self._rdf_uid
     # ------------------------
+    def _data_from_numpy(
+            self,
+            arr_value : numpy.ndarray,
+            arr_weight: numpy.ndarray) -> zdata:
+        '''
+        We should not use weights if they are all 1s due to problems in zfit
+
+        Parameters
+        ------------
+        arr_value : Array with values to be fitted
+        arr_weight: Array with weights
+
+        Returns
+        ------------
+        zfit data.
+        '''
+
+        arr_is_close = numpy.isclose(arr_weight, 1.0, rtol=1e-5)
+
+        if numpy.all(arr_is_close):
+            log.debug('Not using weights for dataset where all weights are 1')
+            wgt = None
+        else:
+            log.debug('Using weights in dataset')
+            wgt = arr_weight
+
+        data = zfit.data.from_numpy(obs=self._obs, array=arr_value, weights=wgt)
+
+        return data
+    # ------------------------
     def get_data(self) -> zdata:
         '''
         Returns zfit data
