@@ -6,7 +6,7 @@ model:
   observable:
     name : B_const_mass_M
     range:
-      - 5000
+      - 4800
       - 6000
   components:
     background : reso/electron/combinatorial.yaml
