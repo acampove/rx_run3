@@ -98,7 +98,7 @@ def test_print_pdf():
     '''
     pdf = _get_pdf(kind='composed_nonextended')
 
-    d_const = {'mu1' : [0.0, 0.1], 'sg1' : [1.0, 0.1]}
+    d_const = {'mu1' : (0.0, 0.1), 'sg1' : (1.0, 0.1)}
     #-----------------
     print_pdf(pdf)
 
@@ -134,6 +134,7 @@ def test_pdf_to_tex():
             }
 
     path = files('dmu_data').joinpath('tests/pdf_to_tex.txt')
+    path = str(path)
     pdf_to_tex(path=path, d_par=d_par)
 #----------------------------------
 @pytest.mark.parametrize('make_plot', [True, False])
