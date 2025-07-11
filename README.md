@@ -150,6 +150,22 @@ with gut.silent_import():
     import tensorflow
 ```
 
+## Silencing messages going to __stderr__
+
+In order to do that, do:
+
+```python
+from dmu.generic import utilities as gut
+
+l_msg = ['duck', 'rabbit']
+with gut.filter_stderr(banned_substrings=l_msg):
+    print('one rabbig', file=sys.stderr)
+    print('two ducks' , file=sys.stderr)
+    print('three dogs', file=sys.stderr)
+```
+
+The context manager above will only allow `three dogs` into the error stream.
+
 ## YAML
 
 When dumping data to yaml files do it like:
