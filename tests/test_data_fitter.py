@@ -90,6 +90,7 @@ def test_reso_electron(block : str):
     with Cache.turn_off_cache(val=False), \
         sel.custom_selection(d_sel={
             'block' : block_cut,
+            'nbrem' : 'nbrem != 0',
             'mass'  : '(1)'}):
 
         ftr = DataFitter(
