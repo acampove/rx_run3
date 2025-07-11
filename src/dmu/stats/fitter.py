@@ -46,7 +46,11 @@ class Fitter:
         self._obs     : zfit.Space
         self._d_par   : dict
 
-        self._l_hidden_tf_lines= ['abnormal_detected_host @']
+        # These are substrings found in tensorflow messages
+        # that are pretty useless and need to be hidden
+        self._l_hidden_tf_lines= [
+            'abnormal_detected_host @',
+            'All log messages before absl::InitializeLog()']
 
         self._ndof           = 10
         self._pval_threshold = 0.01
