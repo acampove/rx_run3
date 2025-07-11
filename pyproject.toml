@@ -23,7 +23,7 @@ dependencies= [
 'pandas']
 
 [project.optional-dependencies]
-fit  = ['zfit']
+fit  = ['zfit==0.26.0']
 ml   = ['scikit-learn', 'joblib', 'optuna']
 dev  = ['pytest', 'gitpython']
 
