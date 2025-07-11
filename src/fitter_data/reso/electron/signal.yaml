@@ -24,7 +24,7 @@ fit:
     retry   :
       ntries        : 15
       pvalue_thresh : 0.05
-      ignore_status : true
+      ignore_status : false 
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
   stacked : True
