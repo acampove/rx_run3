@@ -11,6 +11,7 @@ import numpy
 import pandas as pd
 
 from dmu.generic              import utilities as gut
+from dmu.logging              import messages  as mes
 from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
 
@@ -367,7 +368,7 @@ class Fitter:
     def _minimize(self, nll, cfg : dict) -> tuple[zres, tuple]:
         mnm = zfit.minimize.Minuit()
 
-        with gut.filter_stderr(banned_substrings=self._l_hidden_tf_lines):
+        with mes.filter_stderr(banned_substrings=self._l_hidden_tf_lines):
             res = mnm.minimize(nll)
 
         res = self._calculate_error(res)
