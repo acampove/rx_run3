@@ -269,3 +269,14 @@ def test_range_from_obs():
     assert minx ==  0
     assert maxx == 10
 #----------------------------------
+@pytest.mark.parametrize('weighted', [True, False])
+def test_yield_from_zdata(weighted : bool):
+    '''
+    Tests function that does retrieval of yield from zfit data
+    '''
+    data, target = _get_zdata(weighted=weighted)
+
+    val = sut.yield_from_zdata(data=data)
+
+    assert abs(val - target) < 1e-5
+#----------------------------------
