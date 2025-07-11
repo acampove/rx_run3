@@ -2,11 +2,13 @@
 Module containing generic utility functions
 '''
 import os
+import sys
 import time
 import json
 import pickle
 import inspect
 from importlib.resources   import files
+from io                    import StringIO
 from typing                import Callable, Any
 from functools             import wraps
 from contextlib            import contextmanager
@@ -20,6 +22,39 @@ from dmu.logging.log_store import LogStore
 TIMER_ON=False
 
 log = LogStore.add_logger('dmu:generic:utilities')
+# --------------------------------
+class FilteredStderr:
+    '''
+    This class is meant to be used to filter the messages
+    in the error stream by substrings
+    '''
+    # --------------------------------
+    def __init__(
+            self,
+            banned_substrings : list[str],
+            capture_stream    : StringIO):
+        '''
+        Parameters
+        -------------
+        banned_substrings : List of substrings that, if found in error message, will drop error
+        capture_stream    : Used to store error stream filtered messages, expected to be sys.__stderr__
+        '''
+        self._banned         = banned_substrings
+        self._capture_stream = capture_stream
+    # --------------------------------
+    def write(self, message : str):
+        '''
+        Should allow filtering error messages
+        '''
+        if not any(bad in message for bad in self._banned):
+            # This will make it to the error messages
+            self._capture_stream.write(message)
+    # --------------------------------
+    def flush(self):
+        '''
+        Should override the error stream's flush method
+        '''
+        self._capture_stream.flush()
 # --------------------------------
 class BlockStyleDumper(yaml.SafeDumper):
     '''
@@ -191,6 +226,36 @@ def silent_import():
             os.dup2(saved_stderr_fd, 2)
             os.close(saved_stdout_fd)
             os.close(saved_stderr_fd)
+# --------------------------------
+@contextmanager
+def filter_stderr(
+        banned_substrings : list[str],
+        capture_stream    : StringIO|None=None):
+    '''
+    This contextmanager will suppress error messages
+
+    Parameters
+    -----------------
+    banned_substrings : List of substrings that need to be found in error messages
+                        in order for them to be suppressed
+    capture_stream    : Buffer needed to run tests, not needed for normal use
+    '''
+    if capture_stream is None:
+        capture_stream = sys.__stderr__
+
+    if capture_stream is None:
+        raise ValueError('Error stream is None')
+
+    filtered = FilteredStderr(
+        banned_substrings= banned_substrings,
+        capture_stream   = capture_stream)
+
+    original_stream = sys.__stderr__
+    sys.stderr      = filtered
+    try:
+        yield capture_stream
+    finally:
+        sys.stderr = original_stream
 # --------------------------------
 # Caching
 # --------------------------------
