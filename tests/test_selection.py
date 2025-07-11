@@ -186,3 +186,24 @@ def test_custom_selection(sample : str, q2bin : str):
     assert 'cut' in d_cut
     assert d_cut['cut'] == 'val'
 # --------------------------
+@pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('block' , [1, 2, 3, 4, 5, 6, 7, 8])
+def test_block_overriding(sample : str, block : int):
+    '''
+    Tests overriding of block cut for simulation
+    '''
+    old_cut_block = f'block == {block}'
+    rep_cut_block =  'block == 2'
+    with sel.custom_selection(d_sel={'block' : old_cut_block}):
+        d_sel = sel.selection(q2bin='central', process=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+
+    new_cut_block = d_sel['block']
+    if sample == 'DATA_24_MagDown_24c2':
+        assert old_cut_block == new_cut_block
+        return
+
+    if block in [3, 4]:
+        assert new_cut_block == rep_cut_block
+    else:
+        assert old_cut_block == new_cut_block
+# --------------------------
