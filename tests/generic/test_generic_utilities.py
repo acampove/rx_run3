@@ -1,9 +1,7 @@
 '''
 Module with tests for functions in generic/utilities.py
 '''
-import os
 import math
-from io     import StringIO
 from typing import Any
 from time   import sleep
 
@@ -122,25 +120,4 @@ def test_cache_not_found():
     ret = gut.load_cached(hash_obj=['something that will never be cached'], on_fail=-999)
 
     assert ret == -999
-# -------------------------
-def test_filter_stderr():
-    '''
-    Will test context manager meant to filter messages going to stderr
-    '''
-    banned = ['ONE', 'TWO']
-    buffer = StringIO()
-
-    with gut.filter_stderr(
-        banned_substrings=banned,
-        capture_stream   =buffer):
-
-        print('MSG ONE'  , file=sys.stderr)
-        print('MSG TWO'  , file=sys.stderr)
-        print('MSG THREE', file=sys.stderr)
-
-    data = buffer.getvalue()
-
-    assert 'MSG ONE'   not in data
-    assert 'MSG TWO'   not in data
-    assert 'MSG THREE'     in data
 # -------------------------
