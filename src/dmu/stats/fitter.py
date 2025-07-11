@@ -10,7 +10,6 @@ from functools                import lru_cache
 import numpy
 import pandas as pd
 
-from dmu.generic              import utilities as gut
 from dmu.logging              import messages  as mes
 from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
