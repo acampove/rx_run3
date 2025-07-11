@@ -83,7 +83,7 @@ def test_load_data(ext : str):
 @pytest.mark.parametrize('ext', ['yaml', 'json'])
 def test_load_conf(ext : str):
     '''
-    Tests loading configuration 
+    Tests loading configuration
     '''
     cfg = gut.load_conf(
             package='dmu_data',
