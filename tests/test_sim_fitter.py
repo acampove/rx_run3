@@ -113,3 +113,24 @@ def test_ccbar_reso():
             q2bin   = 'jpsi')
         ftr.get_model()
 # ---------------------------------------------------
+def test_signal_reso():
+    '''
+    Tests retriveval of PDF associated to ccbar inclusive decays
+    '''
+    component = 'signal_electron'
+    obs       = zfit.Space('B_const_mass_M', limits=(5000, 5600))
+    cfg       = gut.load_conf(package='fitter_data', fpath=f'tests/{component}.yaml')
+
+    with RDFGetter.max_entries(value=200_000),\
+        sel.custom_selection(d_sel={
+            'mass'  : '(1)',
+            'nbrem' : 'nbrem != 0'}):
+        ftr = SimFitter(
+            name    = component,
+            obs     = obs,
+            cfg     = cfg,
+            trigger = 'Hlt2RD_BuToKpEE_MVA',
+            project = 'rx',
+            q2bin   = 'jpsi')
+        ftr.get_model()
+# ---------------------------------------------------
