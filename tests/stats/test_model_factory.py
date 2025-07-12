@@ -198,8 +198,8 @@ def test_shared_parameters():
     l_shr = ['mu', 'sg']
     l_flt = ['mu', 'sg']
 
-    mu = zfit.param.Parameter('mu', 5280, 5000, 5500)
-    sg = zfit.param.Parameter('sg',   80,   20,  100)
+    mu = zfit.param.Parameter('mu_flt', 5280, 5000, 5500)
+    sg = zfit.param.Parameter('sg_flt',   80,   20,  100)
 
     mod_1 = ModelFactory(
         preffix = 'cbl',
