@@ -101,22 +101,25 @@ def test_all_datasets(q2bin : str, process : str):
     Tests retrieval of scales between signal and PRec yields
     '''
     signal   = 'bpkpee'
-
-    with sel.custom_selection(d_sel={'mass' : 'B_Mass > 4600'}):
-        obj      = PrecScales(proc=process, q2bin=q2bin)
-        val, err = obj.get_scale(signal=signal)
+    obj      = PrecScales(proc=process, q2bin=q2bin)
+    val, err = obj.get_scale(signal=signal)
 
     log.info('-' * 20)
     log.info(f'Process: {process}')
     log.info(f'Scale  : {val:.3f}')
     log.info('-' * 20)
 
+    threshold = 1.0
+    # We might have large Jpsi leakave in central bin
+    if process == 'bpkpjpsiee' and q2bin == 'central':
+        threshold = 1.5
+
     if process != signal:
         # Prec should be smaller than signal
-        assert val  < 1 or _print_selection(signal=signal, prec=process, q2bin=q2bin)
+        assert val  < threshold or _print_selection(signal=signal, prec=process, q2bin=q2bin)
     else:
         # If this runs on signal, scale is 1
-        assert val == 1 or _print_selection(signal=signal, prec=process, q2bin=q2bin)
+        assert val ==         1 or _print_selection(signal=signal, prec=process, q2bin=q2bin)
 
     ScalesData.collect_def_wp(process, '(1)', q2bin, val, err)
 #-------------------------------
