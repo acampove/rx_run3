@@ -66,32 +66,17 @@ class PrecScales:
 
         self._initialized = True
     #------------------------------------------
-    #------------------------------------------
-    def _calculate_efficiencies(self, yaml_path : str) -> None:
-        log.debug('Efficiencies not found, calculating them')
-        out_dir     = os.path.dirname(yaml_path)
-        obj         = EfficiencyCalculator(q2bin=self._q2bin)
-        obj.out_dir = out_dir
-        df          = obj.get_stats()
-        d_data      = df.to_dict()
-        with open(yaml_path, 'w', encoding='utf-8') as ofile:
-            yaml.safe_dump(d_data, ofile)
-    #------------------------------------------
-    def _load_efficiencies(self):
-        log.debug('Getting efficiencies')
+    def _load_efficiencies(self) -> None:
+        '''
+        This method will call the efficiency calculator and set
+        _df_eff with the dataframe with passed and total yields
+        for different samples.
 
-        eff_dir  = files('rx_efficiencies_data').joinpath('prec_sf')
-        eff_path = get_last_version(dir_path=eff_dir, version_only=False)
-        eff_path = f'{eff_path}/efficiencies_{self._q2bin}/{self._hash}/data.yaml'
-
-        if not os.path.isfile(eff_path):
-            self._calculate_efficiencies(yaml_path=eff_path)
-
-        with open(eff_path, encoding='utf-8') as ifile:
-            data = yaml.safe_load(ifile)
-
-        df = pnd.DataFrame(data)
-
+        Should be fast, EfficiencyCalculator uses caching
+        '''
+        log.debug('Loading efficiencies')
+        obj          = EfficiencyCalculator(q2bin=self._q2bin)
+        df           = obj.get_stats()
         self._df_eff = df
     #------------------------------------------
     def _get_fr(self, proc : str) -> float:
