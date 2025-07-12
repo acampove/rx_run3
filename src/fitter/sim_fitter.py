@@ -64,9 +64,9 @@ class SimFitter(BaseFitter, Cache):
         # will return None
         self._min_fit_entries = 100
 
-        # All the PDFs will share the mu and sigma below
-        self._mu_par = zfit.param.Parameter('mu', 5280, 5000, 5500)
-        self._sg_par = zfit.param.Parameter('sg',   15,    5,  300)
+        # All the PDFs will share the mu and sigma below and these will float
+        self._mu_par = zfit.param.Parameter('mu_flt', 5280, 5000, 5500)
+        self._sg_par = zfit.param.Parameter('sg_flt',   15,    5,  300)
 
         BaseFitter.__init__(self)
         Cache.__init__(
