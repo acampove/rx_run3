@@ -78,7 +78,7 @@ class Cache:
             raise ValueError(f'Module not found: {cls.__module__}')
 
         if mod.__file__ is None:
-            raise ValueError(f'Cannot extract file path for module: {cls.__module__b}')
+            raise ValueError(f'Cannot extract file path for module: {cls.__module__}')
 
         fname = mod.__file__
         fpath = os.path.abspath(fname)
