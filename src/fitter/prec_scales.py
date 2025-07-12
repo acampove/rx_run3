@@ -61,7 +61,7 @@ class PrecScales:
             return
 
         log.debug('Initializing')
-        self._load_fractions()
+        self._d_frbf = gut.load_data(package='rx_efficiencies_data', fpath='scales/fr_bf.yaml')
         self._load_efficiencies()
 
         self._initialized = True
