@@ -7,7 +7,9 @@ from dmu.generic            import utilities  as gut
 from dmu.logging.log_store  import LogStore
 
 from omegaconf              import DictConfig
+from zfit                   import ComposedParameter
 from zfit.core.interfaces   import ZfitPDF    as zpdf
+from zfit.core.parameter    import Parameter  as zpar
 from zfit.core.interfaces   import ZfitSpace  as zobs
 from fitter.sim_fitter      import SimFitter
 
