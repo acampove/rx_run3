@@ -132,54 +132,6 @@ options:
 **RX jobs**: See [this](doc/rx_jobs.md).   
 **LbpKmumu jobs**: See [this](doc/lbpkmm_jobs.md)
 
-## Wrapping the submission script
-
-A realistic way to send the jobs would be thorugh a script that calls `job_filter_ganga` like:
-
-```bash
-#!/usr/bin/env bash
-
-VENV=037
-CFG=/home/acampove/Packages/run3/post_ap/src/post_ap_data/post_ap/nopid/v1.yaml
-PROD=btoxll_mva_2024_nopid
-
-send_test_job()
-{
-    SAMPLE=$1
-    job_filter_ganga -n $SAMPLE"_001" -p $PROD -s $SAMPLE -f $CFG -b Dirac -v $VENV -t
-}
-
-send_job()
-{
-    SAMPLE=$1
-    job_filter_ganga -n $SAMPLE       -p $PROD -s $SAMPLE -f $CFG -b Dirac -v $VENV 
-}
-
-send_dt()
-{
-    send_job data_turbo_24c1
-    send_job data_turbo_24c2
-    send_job data_turbo_24c3
-    send_job data_turbo_24c4
-}
-
-send_mc()
-{
-    send_job w31_34_v1r3399
-    send_job w35_37_v1r3399
-    send_job w37_39_v1r3399
-    send_job w40_42_v1r3399
-
-    send_job w31_34_v1r3411
-    send_job w35_37_v1r3411
-    send_job w37_39_v1r3411
-    send_job w40_42_v1r3411
-}
-
-send_mc
-#send_dt
-```
-
 ## Check latest version of virtual environment
 
 The jobs below will run with code from a virtual environment that is already in the grid. One should use the
