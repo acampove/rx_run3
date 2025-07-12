@@ -44,6 +44,31 @@ class DataModel:
         self._project= project
         self._q2bin  = q2bin
         self._name   = name
+        self._nsig   = zfit.param.Parameter('nsignal', 100, 0, 1000_000)
+    # ------------------------
+    def _get_yield(self, name : str) -> zpar|ComposedParameter:
+        '''
+        Parameters
+        --------------
+        name: Component name, in data.yaml config
+
+        Returns
+        --------------
+        zfit parameter used for extending it
+        '''
+        if name == 'signal':
+            return self._nsig
+
+        if name not in self._cfg.model.constraints.yields:
+            log.debug(f'Yield for component {name} will be unconstrained')
+            return zfit.param.Parameter(f'n{name}', 100, 0, 1000_000)
+
+        # This scale should normally be below 1
+        # It is nbackground / nsig
+        scale= zfit.Parameter(f's{name}', 0, 0, 10)
+        nevt = zfit.ComposedParameter(f'n{name}', lambda x : x['nsig'] * x['scale'], params={'nsig' : self._nsig, 'scale' : scale})
+
+        return nevt
     # ------------------------
     def _extend(self, pdf : zpdf, name : str) -> zpdf:
         '''
