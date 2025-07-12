@@ -13,7 +13,9 @@ categories:
     model :
       - dscb
 sample        : Bu_JpsiK_ee_eq_DPC
-shared        : []
+shared        :
+  - mu
+  - sg
 float         :
   - mu
   - sg
