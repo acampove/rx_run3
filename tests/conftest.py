@@ -8,8 +8,18 @@ import mplhep
 import matplotlib.pyplot as plt
 from _pytest.config import Config
 
-from dmu.workflow.cache import Cache
+from dmu.workflow.cache    import Cache
+from dmu.logging.log_store import LogStore
 
+# ------------------------------
+def _set_logs():
+    logging.getLogger('PIL').setLevel(logging.WARNING)
+    logging.getLogger('matplotlib').setLevel(logging.WARNING)
+
+    LogStore.set_level('rx_data:path_splitter'      , 30)
+    LogStore.set_level('rx_data:rdf_getter'         , 30)
+    LogStore.set_level('rx_selection:selection'     , 30)
+    LogStore.set_level('rx_selection:truth_matching', 30)
 # ------------------------------
 def pytest_configure(config : Config):
     '''
@@ -18,8 +28,7 @@ def pytest_configure(config : Config):
     _config = config
     numpy.random.seed(42)
 
-    logging.getLogger('PIL').setLevel(logging.WARNING)
-    logging.getLogger('matplotlib').setLevel(logging.WARNING)
+    _set_logs()
 
     Cache.set_cache_root(root='/tmp/tests/rx_efficiencies')
 
