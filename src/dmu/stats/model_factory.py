@@ -162,7 +162,7 @@ class ModelFactory:
         ---------------
         Name of parameter which:
 
-        - mu          if parameter is shared and meant to be reused
+        - mu          if parameter is meant to be reused, e.g. same mu for all PDFs
         - mu_preffix, if parameter is shared
         - mu_preffix3 if not shared but not floating
         - mu_preffix3_flt if not shared and floating
