@@ -109,7 +109,7 @@ def test_repeated_pdf():
     print_pdf(pdf)
 #--------------------------
 @pytest.mark.parametrize('name', MethodRegistry.get_pdf_names())
-def test_all_pdf(name : list[str]):
+def test_all_pdf(name : str):
     '''
     Will create a PDF for each of the models supported
     '''
