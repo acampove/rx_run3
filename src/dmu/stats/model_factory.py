@@ -167,9 +167,12 @@ class ModelFactory:
         - mu_preffix3 if not shared but not floating
         - mu_preffix3_flt if not shared and floating
         '''
+        # pname = phyical name, is something like mu or sg
         pname, xname = self._split_name(name)
 
         log.debug(f'Using physical name: {pname}')
+        if pname in self._d_reuse:
+            return pname
 
         if pname in self._l_shr:
             name = f'{pname}_{self._preffix}'
@@ -204,6 +207,9 @@ class ModelFactory:
 
         par_name = self._get_parameter_name(f'{name}_{kind}', suffix)
         log.debug(f'Assigning name: {par_name}')
+
+        if par_name in self._d_reuse:
+            return self._d_reuse[par_name]
 
         if par_name in self._d_par:
             return self._d_par[par_name]
