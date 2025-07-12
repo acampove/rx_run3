@@ -16,7 +16,7 @@ class Data:
     Class used to store shared data
     '''
     gut.TIMER_ON=True
-    l_arg_simple : list[tuple[str,str,int]] = [
+    l_arg_rd_ap_2024 : list[tuple[str,str,int]] = [
             ('rd_ap_2024', 'test_w31_34_v1r2266_ee', 1),
             ('rd_ap_2024', 'test_w35_37_v1r2266_ee', 1),
             ('rd_ap_2024', 'test_w37_39_v1r2266_ee', 1),
