@@ -56,4 +56,4 @@ def test_simple(production : str, nickname : str, expected : int):
     d_pfn  = reader.get_pfns(production=production, nickname=nickname)
     npfn   = len(d_pfn)
 
-    assert npfn != 0
+    assert npfn == expected
