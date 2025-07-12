@@ -5,6 +5,8 @@ Module containing tests for ZModel class
 from dataclasses import dataclass
 
 import zfit
+from zfit.core.interfaces   import ZfitPDF    as zpdf
+
 import pytest
 from dmu.stats.utilities     import print_pdf
 from dmu.logging.log_store   import LogStore
@@ -51,6 +53,11 @@ class Data:
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('dmu:stats:model_factory', 10)
+#--------------------------
+def _add_pdfs(l_pdf : list[zpdf]) -> None:
+    l_par = [ zfit.param.Parameter(f'p{pdf.name}', 1000, 0, 1000) for pdf in l_pdf ]
+
+    pdf = zfit.pdf.SumPDF(l_pdf, l_par)
 #--------------------------
 def test_fix_params():
     '''
