@@ -171,10 +171,17 @@ class ModelFactory:
         '''
         # pname = physical name, is something like mu or sg
         pname, xname = self._split_name(name)
-
         log.debug(f'Using physical name: {pname}')
-        if pname in self._d_reuse:
-            log.debug(f'Picking name {pname} for reused parameter')
+
+        if pname in self._l_flt:
+            # If reused parameter is floating
+            # find it with flt
+            reuse_name = f'{pname}_flt'
+        else:
+            reuse_name = pname
+
+        if reuse_name in self._d_reuse:
+            log.debug(f'Picking name {reuse_name} for reused parameter')
             return self._add_float(pname=pname, name=pname)
 
         if pname in self._l_shr:
