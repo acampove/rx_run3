@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from conftest                    import ScalesData
 from dmu.logging.log_store       import LogStore
 from rx_efficiencies.decay_names import DecayNames as dn
+from rx_selection                import selection  as sel
 from fitter.prec_scales          import PrecScales
 
 log=LogStore.add_logger('fitter:test_prec_scales')
@@ -19,6 +20,7 @@ class Data:
     '''
     Data class
     '''
+    trigger   = 'Hlt2RD_BuToKpEE_MVA'
     l_mva_cmb = [ f'mva_cmb > {wp:.3f}' for wp in numpy.arange(0.8, 1.0, 0.02) ]
     l_mva_prc = [ f'mva_prc > {wp:.3f}' for wp in numpy.arange(0.8, 1.0, 0.02) ]
 
@@ -46,6 +48,30 @@ class Data:
 def _initialize():
     LogStore.set_level('rx_fitter:prec_scales', 10)
     LogStore.set_level('rx_efficiencies:efficiency_calculator', 10)
+#-------------------------------
+def _print_selection(
+        signal : str,
+        prec   : str,
+        q2bin  : str) -> None:
+    '''
+    Parameters
+    --------------
+
+    prec   : Nickname for background sample
+    q2bin  : e.g. central
+    trigger: HLT2 trigger
+    '''
+    process= dn.sample_from_decay(signal)
+    d_sel  = sel.selection(q2bin=q2bin, process=process, trigger=Data.trigger)
+    _print_cuts(d_sel=d_sel)
+
+    process= dn.sample_from_decay(prec  )
+    d_sel  = sel.selection(q2bin=q2bin, process=process, trigger=Data.trigger)
+    _print_cuts(d_sel=d_sel)
+#-------------------------------
+def _print_cuts(d_sel : dict[str,str]) -> None:
+    for name, expr in d_sel.items():
+        log.info(f'{name:<20}{expr}')
 #-------------------------------
 def _plot_df(df, trig):
     df = df[df.trig == trig]
@@ -77,8 +103,10 @@ def test_all_datasets(q2bin : str, process : str):
     val, err = obj.get_scale(signal=signal)
 
     if process != signal:
+        _print_selection(signal=signal, prec=process, q2bin=q2bin)
         assert val  < 1   # Prec should be smaller than signal
     else:
+        _print_selection(signal=signal, prec=process, q2bin=q2bin)
         assert val == 1   # If this runs on signal, scale is 1
 
     ScalesData.collect_def_wp(process, '(1)', q2bin, val, err)
