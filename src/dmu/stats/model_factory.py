@@ -152,6 +152,21 @@ class ModelFactory:
         return pname, xname
     #-----------------------------------------
     def _get_parameter_name(self, name : str, suffix : str) -> str:
+        '''
+        Parameters
+        ---------------
+        name  : Name of pdf and physical name, e.g mu_gauss
+        suffix: Identifies this PDF, e.g. index of 3rd gaussian
+
+        Returns
+        ---------------
+        Name of parameter which:
+
+        - mu          if parameter is shared and meant to be reused
+        - mu_preffix, if parameter is shared
+        - mu_preffix3 if not shared but not floating
+        - mu_preffix3_flt if not shared and floating
+        '''
         pname, xname = self._split_name(name)
 
         log.debug(f'Using physical name: {pname}')
@@ -172,8 +187,19 @@ class ModelFactory:
             name   : str,
             suffix : str) -> zpar:
         '''
-        kind: Identifies PDF, e.g. gaus
-        name: Name of parameter, e.g. mu
+        Parameters
+        ----------------
+        kind  : Identifies PDF, e.g. gaus
+        name  : Physical name of parameter, e.g. mu
+        suffix: If multiple PDFs of this kind, it will be some sort of index, e.g. gaus(1), gaus(2)
+
+        Returns
+        ----------------
+        Parameter, if it was :
+
+        - Provided as part of l_reuse (e.g. mu), it will pick it up instead of building it
+        - Specified as shared, it will build it once and then reuse that one.
+        - Otherwise, it will make a new one, with a suffix to diferentiate it from whatever was already created 
         '''
 
         par_name = self._get_parameter_name(f'{name}_{kind}', suffix)
