@@ -2,19 +2,14 @@
 Module containing class ModelScales and helper functions
 '''
 
-import os
 import math
-from importlib.resources import files
-
-import yaml
 import numpy
-import pandas                   as pnd
-import jacobi                   as jac
+import pandas   as pnd
+import jacobi   as jac
 
 from dmu.logging.log_store                 import LogStore
 from dmu.generic                           import hashing
 from dmu.generic                           import utilities  as gut
-from dmu.generic.version_management        import get_last_version
 from rx_selection                          import selection  as sel
 from rx_efficiencies.decay_names           import DecayNames as dn
 from rx_efficiencies.efficiency_calculator import EfficiencyCalculator
