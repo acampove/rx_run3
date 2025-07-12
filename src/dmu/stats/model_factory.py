@@ -185,8 +185,22 @@ class ModelFactory:
             log.debug(f'Using component specific parameter {name}')
 
         return self._add_float(pname=pname, name=name)
+    #-----------------------------------------
+    def _add_float(self, pname : str, name : str) -> str:
+        '''
+        Parameters
+        -------------
+        pname : Physical name, e.g. mu
+        name  : Actual parameter name, e.g. mu_cbl_3
 
-        return name
+        Returns
+        -------------
+        Actual parameter name with _flt appended if the physical version is meant to float
+        '''
+        if pname not in self._l_flt:
+            return name
+
+        return f'{name}_flt'
     #-----------------------------------------
     def _get_parameter(
             self,
