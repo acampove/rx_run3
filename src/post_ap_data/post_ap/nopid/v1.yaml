@@ -1,3 +1,5 @@
+# This config is meant to be used to send jobs to filter nopid samples
+
 # -----------------------------------
 di_track_angles_rk: &angles
   th_l1_l2 : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(L2_PX, L2_PY, L2_PZ); return v1.Angle(v2);
