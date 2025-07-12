@@ -152,7 +152,7 @@ class EfficiencyCalculator(Cache):
 
         nsel     = gut.load_cached(hash_obj=[uid, d_sel], on_fail=-999)
         if nsel != -999:
-            log.info(f'Using cached selected yield: {nsel}')
+            log.info(f'For {proc}, using cached selected yield: {nsel}')
             return nsel
 
         log.info('No cached selected yield found, recalculating it')
