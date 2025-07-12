@@ -186,7 +186,16 @@ class EfficiencyScanner:
     def run(self) -> pnd.DataFrame:
         '''
         return dataframe with efficiency and values of variables in scan
+
+        Caching and Hashing
+        -----------
+        This method caches the efficiencies and uses hashing
+        The hashing uses:
+
+        - The identity of the input data
+        - The configuration, which specifies the variables to scan and where
         '''
+
         rdf, hsh = self._get_rdf()
 
         data = gut.load_cached(hash_obj=[hsh, self._cfg], on_fail=-999)
