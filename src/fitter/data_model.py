@@ -56,8 +56,8 @@ class DataModel:
         -------------------
         PDF with yield
         '''
+        nevt = self._get_yield(name=name)
 
-        nevt = zfit.param.Parameter(f'n{name}', 100, 0, 1000_000)
         kdes = zfit.pdf.KDE1DimFFT, zfit.pdf.KDE1DimExact, zfit.pdf.KDE1DimISJ
         if isinstance(pdf, kdes):
             pdf.set_yield(nevt)
