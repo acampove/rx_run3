@@ -35,47 +35,47 @@ RK:
 # -----------------------------------
 tests:
   versions: &tst_ver
-    test_w31_34_v1r3334_ee: v1r3334
-    test_w35_37_v1r3334_ee: v1r3334
-    test_w37_39_v1r3334_ee: v1r3334
-    test_w40_42_v1r3334_ee: v1r3334
+    test_w31_34_v1r3334: v1r3334
+    test_w35_37_v1r3334: v1r3334
+    test_w37_39_v1r3334: v1r3334
+    test_w40_42_v1r3334: v1r3334
     # ----------
-    test_w31_34_v1r3399_ee: v1r3399
-    test_w35_37_v1r3399_ee: v1r3399
-    test_w37_39_v1r3399_ee: v1r3399
-    test_w40_42_v1r3399_ee: v1r3399
+    test_w31_34_v1r3399: v1r3399
+    test_w35_37_v1r3399: v1r3399
+    test_w37_39_v1r3399: v1r3399
+    test_w40_42_v1r3399: v1r3399
     # ----------
-    test_w31_34_v1r3411_ee: v1r3411
-    test_w35_37_v1r3411_ee: v1r3411
-    test_w37_39_v1r3411_ee: v1r3411
-    test_w40_42_v1r3411_ee: v1r3411
+    test_w31_34_v1r3411: v1r3411
+    test_w35_37_v1r3411: v1r3411
+    test_w37_39_v1r3411: v1r3411
+    test_w40_42_v1r3411: v1r3411
   samples: &tst_sam
-    test_w31_34_v1r3334_ee:
+    test_w31_34_v1r3334:
       - mc_24_w31_34_magup_sim10d_12123001_bu_kee_eq_btosllball_dpc_tuple
-    test_w35_37_v1r3334_ee:
+    test_w35_37_v1r3334:
       - mc_24_w35_37_magup_sim10d_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
-    test_w37_39_v1r3334_ee:
+    test_w37_39_v1r3334:
       - mc_24_w37_39_magdown_sim10d_12103030_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
-    test_w40_42_v1r3334_ee:
+    test_w40_42_v1r3334:
       - mc_24_w40_42_magdown_sim10d_11124002_bd_kstee_eq_btosllball05_dpc_tuple
     # ---------------
-    test_w31_34_v1r3399_ee:
+    test_w31_34_v1r3399:
       - mc_24_w31_34_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
-    test_w35_37_v1r3399_ee:
+    test_w35_37_v1r3399:
       - mc_24_w35_37_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
-    test_w37_39_v1r3399_ee:
+    test_w37_39_v1r3399:
       - mc_24_w37_39_magdown_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
-    test_w40_42_v1r3399_ee:
+    test_w40_42_v1r3399:
       - mc_24_w40_42_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
       - mc_24_w40_42_magdown_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
     # -----------------
-    test_w31_34_v1r3411_ee:
+    test_w31_34_v1r3411:
       - mc_24_w31_34_magup_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
-    test_w35_37_v1r3411_ee:
+    test_w35_37_v1r3411:
       - mc_24_w35_37_magup_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
-    test_w37_39_v1r3411_ee:
+    test_w37_39_v1r3411:
       - mc_24_w37_39_magdown_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
-    test_w40_42_v1r3411_ee:
+    test_w40_42_v1r3411:
       - mc_24_w40_42_magup_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
       - mc_24_w40_42_magdown_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
 working_group: rd
@@ -86,6 +86,17 @@ productions:
       w35_37_v1r3334: v1r3334
       w37_39_v1r3334: v1r3334
       w40_42_v1r3334: v1r3334
+      # --------------
+      w31_34_v1r3399: v1r3399
+      w35_37_v1r3399: v1r3399
+      w37_39_v1r3399: v1r3399
+      w40_42_v1r3399: v1r3399
+      # --------------
+      w31_34_v1r3411: v1r3411
+      w35_37_v1r3411: v1r3411
+      w37_39_v1r3411: v1r3411
+      w40_42_v1r3411: v1r3411
+      # --------------
       <<: *tst_ver
     samples:
       w31_34_v1r3334:
@@ -137,23 +148,23 @@ productions:
         - mc_24_w40_42_magup_sim10d_12143010_bu_jpsipi_mm_eq_dpc_tuple
         - mc_24_w40_42_magup_sim10d_12153020_bu_jpsipi_ee_eq_dpc_tuple
       # -----------------
-      w31_34_v1r3399_ee:
+      w31_34_v1r3399:
         - mc_24_w31_34_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
-      w35_37_v1r3399_ee:
+      w35_37_v1r3399:
         - mc_24_w35_37_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
-      w37_39_v1r3399_ee:
+      w37_39_v1r3399:
         - mc_24_w37_39_magdown_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
-      w40_42_v1r3399_ee:
+      w40_42_v1r3399:
         - mc_24_w40_42_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
         - mc_24_w40_42_magdown_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
       # -----------------
-      w31_34_v1r3411_ee:
+      w31_34_v1r3411:
         - mc_24_w31_34_magup_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
-      w35_37_v1r3411_ee:
+      w35_37_v1r3411:
         - mc_24_w35_37_magup_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
-      w37_39_v1r3411_ee:
+      w37_39_v1r3411:
         - mc_24_w37_39_magdown_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
-      w40_42_v1r3411_ee:
+      w40_42_v1r3411:
         - mc_24_w40_42_magup_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
         - mc_24_w40_42_magdown_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
       <<: *tst_sam
