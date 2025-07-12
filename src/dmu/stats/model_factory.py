@@ -174,8 +174,8 @@ class ModelFactory:
 
         log.debug(f'Using physical name: {pname}')
         if pname in self._d_reuse:
-            return pname
             log.debug(f'Reusing {pname}')
+            return self._add_float(pname=pname, name=pname)
 
         if pname in self._l_shr:
             name = f'{pname}_{self._preffix}'
@@ -184,8 +184,7 @@ class ModelFactory:
             name = f'{pname}_{xname}_{self._preffix}{suffix}'
             log.debug(f'Using component specific parameter {name}')
 
-        if pname in self._l_flt:
-            return f'{name}_flt'
+        return self._add_float(pname=pname, name=name)
 
         return name
     #-----------------------------------------
