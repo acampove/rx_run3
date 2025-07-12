@@ -91,7 +91,16 @@ class PrecScales:
 
         return fx
     #------------------------------------------
-    def _mult_brs(self, l_br : list[tuple[float,float]]):
+    def _mult_brs(self, l_br : list[tuple[float,float]]) -> tuple[float,float]:
+        '''
+        Parameters
+        -----------------------
+        l_br: List of branching fraction, branching fraction error tuples
+
+        Returns
+        -----------------------
+        A tuple with the product of those branching fractions and the error in the product
+        '''
         log.debug('Multiplying branching fractions')
 
         l_br_val = [ float(br[0]) for br in l_br ] # These numbers come from YAML files
