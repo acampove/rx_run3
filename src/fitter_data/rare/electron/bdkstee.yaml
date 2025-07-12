@@ -1,17 +1,7 @@
 output_directory : rare/electron/bdkstee
 categories:
-  brem_zero: 
-    selection : nbrem == 0
-    model :
-      - dscb 
-  brem_one : 
-    selection : nbrem == 1
-    model :
-      - dscb
-  brem_two :
-    selection : nbrem == 2
-    model :
-      - dscb
+  main: 
+    model : KDE1DimFFT
 sample    : Bd_Kstee_eq_btosllball05_DPC
 fit:
   strategy  : KDE1DimFFT
