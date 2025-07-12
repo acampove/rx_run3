@@ -7,7 +7,7 @@ import pytest
 import matplotlib.pyplot as plt
 import pandas            as pnd
 
-from dmu.logging.log_store import LogStore
+from dmu.logging.log_store              import LogStore
 from rx_efficiencies.efficiency_scanner import EfficiencyScanner
 
 log = LogStore.add_logger('rx_efficiencies:test_efficiency_scanner')
