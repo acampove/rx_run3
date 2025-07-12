@@ -94,6 +94,7 @@ class ModelFactory:
         l_pdf    : list[str],
         l_shared : list[str],
         l_float  : list[str],
+        l_reuse  : list[zpar],
         d_fix    : None | dict[str,float] = None,
         d_rep    : None | dict[str,str]   = None):
         '''
@@ -113,6 +114,7 @@ class ModelFactory:
         self._l_flt           = l_float
         self._d_fix           = d_fix
         self._d_rep           = d_rep
+        self._d_reuse         = { par.name : par for par in l_reuse }
         self._obs             = obs
 
         self._d_par : dict[str,zpar] = {}
