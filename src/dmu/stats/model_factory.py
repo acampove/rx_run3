@@ -120,6 +120,13 @@ class ModelFactory:
         self._check_reparametrization()
     #-----------------------------------------
     def _check_reparametrization(self) -> None:
+        '''
+        This method:
+
+        - Returns if no reparametrization has been requested
+        - Raises if reparametrization is on any fixed parameter
+        - Raises if trying to reparametrize anything that is not scales and resolutions
+        '''
         if self._d_rep is None:
             return
 
