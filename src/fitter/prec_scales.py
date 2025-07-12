@@ -105,9 +105,15 @@ class PrecScales:
 
         l_br_val = [ float(br[0]) for br in l_br ] # These numbers come from YAML files
         l_br_err = [ float(br[1]) for br in l_br ] # when using "e" in scientific notation, these numbers are made into strings
+
         br_cov   = numpy.diag(l_br_err) ** 2
-        val, var = jac.propagate(math.prod, l_br_val, br_cov)
+        val, var = jac.propagate(
+            math.prod,
+            l_br_val,
+            br_cov)
+
         err      = math.sqrt(var)
+        val      = float(val)
 
         return val, err
     #------------------------------------------
