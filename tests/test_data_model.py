@@ -9,7 +9,7 @@ from fitter.data_model     import DataModel
 
 log=LogStore.add_logger('fitter:test_data_model')
 # --------------------------
-def test_resonant():
+def test_resonant(skip_mass_cut):
     '''
     Simplest test
     '''
