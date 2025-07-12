@@ -125,7 +125,16 @@ class PrecScales:
 
         return self._mult_brs(l_bf)
     #------------------------------------------
-    def _get_ef(self, proc : str):
+    def _get_ef(self, proc : str) -> tuple[float,float]:
+        '''
+        Parameters
+        --------------
+        proc: Nickname to process, e.g. bpkpee
+
+        Returns
+        --------------
+        Tuple with efficiency value and error
+        '''
         log.debug(f'Calculating efficiencies for {proc}')
 
         df = self._df_eff
