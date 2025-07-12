@@ -52,8 +52,7 @@ def test_rare():
             obs     = obs,
             trigger = 'Hlt2RD_BuToKpEE_MVA',
             project = 'rx',
-            q2bin   = 'central',
-            name    = 'simple')
+            q2bin   = 'central')
         pdf = dmd.get_model()
 
     sut.print_pdf(pdf)
