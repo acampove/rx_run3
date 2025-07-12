@@ -33,13 +33,7 @@ class Data:
             ('rd_ap_2024', 'test_w35_37_v1r2437_mm', 1),
             ('rd_ap_2024', 'test_w37_39_v1r2437_mm', 1),
             ('rd_ap_2024', 'test_w40_42_v1r2437_mm', 1)]
-# -----------------------------
-def _get_cfg() -> dict:
-    config_path = files('post_ap_data').joinpath('post_ap/rx/v6.yaml')
-    config_path = str(config_path)
 
-    with open(config_path, encoding='utf-8') as ifile:
-        return yaml.safe_load(ifile)
     l_arg_nopid      : list[tuple[str,str,int]] = [
         ('btoxll_mva_2024_nopid', 'w31_34_v1r3399', 1),
         ('btoxll_mva_2024_nopid', 'w35_37_v1r3399', 1),
