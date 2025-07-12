@@ -190,3 +190,35 @@ def test_override_parameter(kind: str):
 
     print_pdf(pdf)
 #--------------------------
+def test_shared_parameters():
+    '''
+    Will create a PDF for each of the models supported
+    '''
+
+    l_shr = ['mu', 'sg']
+    l_flt = ['mu', 'sg']
+
+    mu = zfit.param.Parameter('mu', 5280, 5000, 5500)
+    sg = zfit.param.Parameter('sg',   80,   20,  100)
+
+    mod_1 = ModelFactory(
+        preffix = 'cbl',
+        obs     = Data.obs,
+        l_pdf   = ['cbl'],
+        l_shared= l_shr,
+        l_reuse = [mu, sg],
+        l_float = l_flt)
+    pdf_1 = mod_1.get_pdf()
+
+    mod_2 = ModelFactory(
+        preffix = 'cbr',
+        obs     = Data.obs,
+        l_pdf   = ['cbr'],
+        l_shared= l_shr,
+        l_reuse = [mu, sg],
+        l_float = l_flt)
+    pdf_2 = mod_2.get_pdf()
+
+    print_pdf(pdf_1)
+    print_pdf(pdf_2)
+#--------------------------
