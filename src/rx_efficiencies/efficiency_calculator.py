@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from ROOT                              import RDataFrame
 from dmu.logging.log_store             import LogStore
 from dmu.generic                       import utilities as gut
+from dmu.workflow.cache                import Cache
 from rx_data.rdf_getter                import RDFGetter
 from rx_selection                      import selection as sel
 from rx_efficiencies.acceptance_reader import AcceptanceReader
@@ -19,7 +20,7 @@ from rx_efficiencies.decay_names       import DecayNames
 
 log=LogStore.add_logger('rx_efficiencies:efficiency_calculator')
 #------------------------------------------
-class EfficiencyCalculator:
+class EfficiencyCalculator(Cache):
     '''
     Class used to calculate efficiencies for:
 
@@ -38,9 +39,12 @@ class EfficiencyCalculator:
         self._d_sel      = {'Process' : [], 'Value' : [], 'Error' : []}
         self._l_proc     = DecayNames.get_decays()
         self._trigger    = 'Hlt2RD_BuToKpEE_MVA'
-        self._out_dir : str
 
         plt.style.use(mplhep.style.LHCb2)
+
+        super().__init__(
+            out_path = f'{q2bin}_{self._year}',
+            trigger  = self._trigger)
 
         self._initialized=False
     #------------------------------------------
@@ -177,19 +181,22 @@ class EfficiencyCalculator:
 
         return df
     #------------------------------------------
-    def get_efficiency(self, sample : str) -> float:
+    def _efficiency_from_sample(
+            self,
+            sample : str,
+            df     : pnd.DataFrame) -> float:
         '''
         Parameters
-        -------------
-        sample: Sample name, e.g. Bu_JpsiK_ee_eq_DPC
+        -----------------
+        df     : Dataframe with yields, passed and failed for each sample
+        sample : Nickname to MC signal sample
 
         Returns
-        -------------
-        Efficiency associated to sample
+        -----------------
+        Efficiency
         '''
         nickname = DecayNames.nic_from_sample(sample)
 
-        df = self.get_stats()
         df = df[ df['Process'] == nickname ]
         df = cast(pnd.DataFrame, df)
 
@@ -201,4 +208,27 @@ class EfficiencyCalculator:
         tot = df['Total' ].iloc[0]
 
         return pas / float(tot)
+    #------------------------------------------
+    def get_efficiency(self, sample : str) -> float:
+        '''
+        Parameters
+        -------------
+        sample: Sample name, e.g. Bu_JpsiK_ee_eq_DPC
+
+        Returns
+        -------------
+        Efficiency associated to sample
+        '''
+        data_path = f'{self._out_path}/yields.parquet'
+        if self._copy_from_cache():
+            log.info(f'Found yields cached, loading: {data_path}')
+            df = pnd.read_parquet(data_path)
+            return self._efficiency_from_sample(df=df, sample=sample)
+
+        log.warning('Recalculating dataframe with yields')
+        df = self.get_stats()
+        df.to_parquet(data_path)
+
+        self._cache()
+        return self._efficiency_from_sample(df=df, sample=sample)
 #------------------------------------------
