@@ -60,6 +60,7 @@ class PFNReader:
         if not isinstance(collection, SampleCollection):
             raise ValueError('Cannot retrieve a collection of samples for {production}:{nickname}')
 
+        log.info(f'Retrieving production/nickname: {production}/{nickname}')
         l_sample   = self._cfg['productions'][production]['samples' ][nickname]
         version    = self._cfg['productions'][production]['versions'][nickname]
 
