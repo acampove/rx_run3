@@ -51,12 +51,12 @@ def _get_cfg() -> dict:
         ('btoxll_mva_2024_nopid', 'w40_42_v1r3411', 2)]
 # -----------------------------
 @gut.timeit
-@pytest.mark.parametrize('production, nickname, expected', Data.l_arg_simple)
+@pytest.mark.parametrize('production, nickname, expected', Data.l_arg_nopid)
 def test_simple(production : str, nickname : str, expected : int):
     '''
     Test simple reading
     '''
-    cfg    = _get_cfg()
+    cfg    = gut.load_data(package='post_ap_data', fpath='post_ap/nopid/v1.yaml')
 
     reader = PFNReader(cfg=cfg)
     d_pfn  = reader.get_pfns(production=production, nickname=nickname)
