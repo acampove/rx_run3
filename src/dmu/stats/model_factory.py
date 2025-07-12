@@ -94,7 +94,7 @@ class ModelFactory:
         l_pdf    : list[str],
         l_shared : list[str],
         l_float  : list[str],
-        l_reuse  : list[zpar],
+        l_reuse  : None | list[zpar]      = None,
         d_fix    : None | dict[str,float] = None,
         d_rep    : None | dict[str,str]   = None):
         '''
@@ -103,10 +103,12 @@ class ModelFactory:
         l_pdf:    List of PDF nicknames which are registered below
         l_shared: List of parameter names that are shared
         l_float:  List of parameter names to allow to float
+        l_reuse:  Optional. List of parameters that if given will be used instead of built by factory
         d_fix:    Dictionary with keys as the beginning of the name of a parameter and value as the number
                   to which it has to be fixed. If not one and only one parameter is found, ValueError is raised
         d_rep:    Dictionary with keys as variables that will be reparametrized
         '''
+        l_reuse = [] if l_reuse is None else l_reuse
 
         self._preffix         = preffix
         self._l_pdf           = l_pdf
