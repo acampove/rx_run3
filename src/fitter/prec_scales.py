@@ -169,15 +169,17 @@ class PrecScales:
     #------------------------------------------
     def get_scale(self, signal : str) -> tuple[float,float]:
         '''
-        Returns scale factor k and error, meant to be used in:
+        Parameters
+        -----------------------
+        signal: String representing signal WRT which to scale, e.g. bpkpee
+
+        Returns 
+        ---------------
+        Scale factor k and error, meant to be used in:
 
         Nprec = k * Nsignal
 
         reparametrization, during fit.
-
-        Parameters
-        -----------------------
-        signal: String representing signal WRT which to scale, e.g. bpkpee
         '''
         self._initialize()
 
