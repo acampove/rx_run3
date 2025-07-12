@@ -147,6 +147,12 @@ class PrecScales:
         passed, total = df.iloc[-1][['Passed', 'Total']]
 
         eff = passed / total
+
+        log.debug('')
+        log.debug(f'Process: {proc}')
+        log.debug(f'{eff:.7f}{"="}{passed:<10.0f}{"/":<}{total:<20.0f}')
+        log.debug('')
+
         err = math.sqrt(eff * (1 - eff) / total)
 
         return eff, err
