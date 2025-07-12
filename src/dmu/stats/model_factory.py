@@ -89,13 +89,13 @@ class ModelFactory:
     '''
     #-----------------------------------------
     def __init__(self,
-                 preffix  : str,
-                 obs      : zobs,
-                 l_pdf    : list[str],
-                 l_shared : list[str],
-                 l_float  : list[str],
-                 d_fix    : None | dict[str,float] = None,
-                 d_rep    : None | dict[str,str]   = None):
+        preffix  : str,
+        obs      : zobs,
+        l_pdf    : list[str],
+        l_shared : list[str],
+        l_float  : list[str],
+        d_fix    : None | dict[str,float] = None,
+        d_rep    : None | dict[str,str]   = None):
         '''
         preffix:  used to identify PDF, will be used to name every parameter
         obs:      zfit obserbable
