@@ -53,6 +53,16 @@ tests:
       - mc_24_w37_39_magdown_sim10d_12103030_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
     test_w40_42_v1r3334_ee:
       - mc_24_w40_42_magdown_sim10d_11124002_bd_kstee_eq_btosllball05_dpc_tuple
+    # ---------------
+    test_w31_34_v1r3399_ee:
+      - mc_24_w31_34_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
+    test_w35_37_v1r3399_ee:
+      - mc_24_w35_37_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
+    test_w37_39_v1r3399_ee:
+      - mc_24_w37_39_magdown_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
+    test_w40_42_v1r3399_ee:
+      - mc_24_w40_42_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
+      - mc_24_w40_42_magdown_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
 working_group: rd
 productions:
   btoxll_mva_2024_nopid:
@@ -111,6 +121,16 @@ productions:
         - mc_24_w40_42_magup_sim10d_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
         - mc_24_w40_42_magup_sim10d_12143010_bu_jpsipi_mm_eq_dpc_tuple
         - mc_24_w40_42_magup_sim10d_12153020_bu_jpsipi_ee_eq_dpc_tuple
+      # -----------------
+      w31_34_v1r3399_ee:
+        - mc_24_w31_34_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
+      w35_37_v1r3399_ee:
+        - mc_24_w35_37_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
+      w37_39_v1r3399_ee:
+        - mc_24_w37_39_magdown_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
+      w40_42_v1r3399_ee:
+        - mc_24_w40_42_magup_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12103017_bu_kplkplkmn_eq_sqdalitz_dpc_tuple
       <<: *tst_sam
 # ------------------------------------------------
 transformations:
