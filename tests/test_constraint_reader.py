@@ -44,10 +44,6 @@ class Data:
         'nsig',
     ]
 # --------------------------------------------------------------
-@pytest.fixture(scope='session', autouse=True)
-def _intialize():
-    LogStore.set_level('rx_fitter:constraint_reader', 10)
-# --------------------------------------------------------------
 def _print_constraints(d_cns : dict[str, tuple[float,float]]) -> None:
     for name, (value, error) in d_cns.items():
         log.info(f'{name:<40}{value:<20.3f}{error:<20.3f}')
