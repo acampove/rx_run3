@@ -143,7 +143,7 @@ class PrecScales:
         -----------------------
         signal: String representing signal WRT which to scale, e.g. bpkpee
 
-        Returns 
+        Returns
         ---------------
         Scale factor k and error, meant to be used in:
 
