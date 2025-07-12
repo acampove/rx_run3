@@ -72,19 +72,17 @@ class Cache:
         If `MyTool` inherits from `Cache`. `mytool.py` git commit hash
         should be returned
         '''
-        repo  = Repo('.')
         cls   = self.__class__
         mod   = sys.modules.get(cls.__module__)
         if mod is None:
             raise ValueError(f'Module not found: {cls.__module__}')
 
-        fname = str(mod.__file__)
+        if mod.__file__ is None:
+            raise ValueError(f'Cannot extract file path for module: {cls.__module__b}')
+
+        fname = mod.__file__
         fpath = os.path.abspath(fname)
-
-        genr=repo.iter_commits(paths=fpath, max_count=1)
-
-        [hsh] = list(genr)
-        val   = hsh.hexsha
+        val   = hashing.hash_file(path=fpath)
 
         log.debug(f'Using hash for: {fpath} = {val}')
 
