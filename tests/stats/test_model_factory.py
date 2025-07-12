@@ -228,4 +228,6 @@ def test_shared_parameters():
 
     print_pdf(pdf_1)
     print_pdf(pdf_2)
+
+    _add_pdfs(l_pdf=[pdf_1, pdf_2])
 #--------------------------
