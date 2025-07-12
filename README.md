@@ -387,12 +387,21 @@ l_shr = ['mu', 'sg']
 l_flt = ['mu', 'sg']                    # Will mark these parameters as floating for the fit done afterwards
 d_rep = {'mu' : 'scale', 'sg' : 'reso'} # Optional, will reparametrize for scale and resolution
 d_fix = {'al_cbl' : 3, 'nr_cbr' : 1}    # Optional, will fix two parameters whose names start with the keys
+
+# If mu and sg are meant to be shared among all the models
+# The parameters can be passed here.
+# In this case, they are also meant to be floating
+mu = zfit.param.Parameter('mu_flt', 5280, 5000, 5500)
+sg = zfit.param.Parameter('sg_flt',   80,   20,  100)
+l_reuse = [mu, sg]
+
 mod   = ModelFactory(
     preffix = 'pref',   # Preffix for parameter naming
     obs     = Data.obs, 
     l_pdf   = l_pdf, 
     l_shared= l_shr, 
     l_float = l_float,
+    l_reuse = l_reuse,  # Optional
     d_rep   = d_rep,    # Optional
     d_fix   = d_fix)    # Optional
 
