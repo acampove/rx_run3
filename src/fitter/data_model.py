@@ -92,6 +92,10 @@ class DataModel:
                 obs     = self._obs)
             pdf = ftr.get_model()
 
+            if pdf is None:
+                log.warning(f'Skipping comonent: {component}')
+                continue
+
             pdf = self._extend(pdf=pdf, name=component)
             l_pdf.append(pdf)
 
