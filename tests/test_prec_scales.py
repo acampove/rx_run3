@@ -52,7 +52,7 @@ def _initialize():
 def _print_selection(
         signal : str,
         prec   : str,
-        q2bin  : str) -> None:
+        q2bin  : str) -> bool:
     '''
     Parameters
     --------------
@@ -68,6 +68,8 @@ def _print_selection(
     process= dn.sample_from_decay(prec  )
     d_sel  = sel.selection(q2bin=q2bin, process=process, trigger=Data.trigger)
     _print_cuts(d_sel=d_sel)
+
+    return False
 #-------------------------------
 def _print_cuts(d_sel : dict[str,str]) -> None:
     for name, expr in d_sel.items():
