@@ -123,6 +123,8 @@ class SimFitter(BaseFitter, Cache):
         ------------
         Fitting PDF built from the sum of those models
         '''
+        log.info(f'Building {self._name} for category {category} with: {l_model}')
+
         mod     = ModelFactory(
             preffix = f'{self._name}_{category}',
             obs     = self._obs,
