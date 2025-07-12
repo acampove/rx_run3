@@ -34,3 +34,27 @@ def test_resonant():
 
     sut.print_pdf(pdf)
 # --------------------------
+def test_rare():
+    '''
+    Simplest test for rare mode
+    '''
+
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    cfg = gut.load_conf(
+        package='fitter_data',
+        fpath  ='rare/electron/data.yaml')
+
+    with sel.custom_selection(d_sel =
+                              {'mass' : '(1)',
+                               'brmp' : 'nbrem != 0'}):
+        dmd = DataModel(
+            cfg     = cfg,
+            obs     = obs,
+            trigger = 'Hlt2RD_BuToKpEE_MVA',
+            project = 'rx',
+            q2bin   = 'central',
+            name    = 'simple')
+        pdf = dmd.get_model()
+
+    sut.print_pdf(pdf)
+# --------------------------
