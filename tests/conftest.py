@@ -5,7 +5,10 @@ import os
 import mplhep
 import matplotlib.pyplot as plt
 
-from _pytest.config import Config
+import pytest
+
+from rx_selection          import selection as sel
+from _pytest.config        import Config
 
 from dmu.workflow.cache    import Cache
 from dmu.logging.log_store import LogStore
@@ -41,4 +44,13 @@ def pytest_configure(config : Config):
     _set_logs()
 
     plt.style.use(mplhep.style.LHCb2)
+# ----------------------------------------
+@pytest.fixture
+def skip_mass_cut():
+    '''
+    This is a fixture meant to be passed as an argumen to tests
+    It will ensure that the test is ran with data without the mass cut
+    '''
+    with sel.custom_selection(d_sel = {'mass' : '(1)'}):
+        yield
 # ----------------------------------------
