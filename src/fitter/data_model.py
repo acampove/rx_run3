@@ -56,7 +56,7 @@ class DataModel:
         --------------
         zfit parameter used for extending it
         '''
-        if name == 'signal':
+        if name.endswith('signal'):
             return self._nsig
 
         if name not in self._cfg.model.constraints.yields:
