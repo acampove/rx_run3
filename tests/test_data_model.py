@@ -1,6 +1,7 @@
 '''
 This module has tests for the DataModel class
 '''
+from rx_selection          import selection as sel
 from dmu.stats.zfit        import zfit
 from dmu.generic           import utilities as gut
 from dmu.stats             import utilities as sut
@@ -9,7 +10,7 @@ from fitter.data_model     import DataModel
 
 log=LogStore.add_logger('fitter:test_data_model')
 # --------------------------
-def test_resonant(skip_mass_cut):
+def test_resonant():
     '''
     Simplest test
     '''
@@ -19,14 +20,17 @@ def test_resonant(skip_mass_cut):
         package='fitter_data',
         fpath  ='reso/electron/data.yaml')
 
-    dmd = DataModel(
-        cfg     = cfg,
-        obs     = obs,
-        trigger = 'Hlt2RD_BuToKpEE_MVA',
-        project = 'rx',
-        q2bin   = 'jpsi',
-        name    = 'simple')
-    pdf = dmd.get_model()
+    with sel.custom_selection(d_sel = {
+        'mass' : '(1)',
+        'block': 'block == 1 || block == 2'}):
+        dmd = DataModel(
+            cfg     = cfg,
+            obs     = obs,
+            trigger = 'Hlt2RD_BuToKpEE_MVA',
+            project = 'rx',
+            q2bin   = 'jpsi',
+            name    = 'simple')
+        pdf = dmd.get_model()
 
     sut.print_pdf(pdf)
 # --------------------------
