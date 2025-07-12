@@ -182,6 +182,8 @@ to make sure the indentation is correct.
 
 ## Hashing
 
+### Hashing python objects
+
 The snippet below:
 
 ```python
@@ -198,6 +200,19 @@ will:
 - Make a 64 characters hash out of it
 
 in two lines, thus keeping the user's code clean.
+
+### Hashing files
+
+The following snippet:
+
+```python
+from dmu.generic  import hashing
+
+path = '/some/file/path.txt'
+val  = hashing.hash_file(path=obj)
+```
+
+should provide a hash to a file, given its path.
 
 ## Timer
 
