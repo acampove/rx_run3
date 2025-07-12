@@ -174,15 +174,15 @@ class ModelFactory:
 
         log.debug(f'Using physical name: {pname}')
         if pname in self._d_reuse:
-            log.debug(f'Reusing {pname}')
+            log.debug(f'Picking name {pname} for reused parameter')
             return self._add_float(pname=pname, name=pname)
 
         if pname in self._l_shr:
             name = f'{pname}_{self._preffix}'
-            log.debug(f'Using model specific parameter {name}')
+            log.debug(f'Using model specific parameter name {name}')
         else:
             name = f'{pname}_{xname}_{self._preffix}{suffix}'
-            log.debug(f'Using component specific parameter {name}')
+            log.debug(f'Using component specific parameter name {name}')
 
         return self._add_float(pname=pname, name=name)
     #-----------------------------------------
@@ -230,6 +230,7 @@ class ModelFactory:
             return self._d_reuse[par_name]
 
         if par_name in self._d_par:
+            log.info(f'Picking already made parameter {par_name}')
             return self._d_par[par_name]
 
         is_reparametrized = self._is_reparametrized(name)
@@ -238,6 +239,7 @@ class ModelFactory:
 
         if is_reparametrized:
             init_name, _ = self._split_name(par_name)
+            log.info(f'Reparametrizing {par_name}')
             par  = self._get_reparametrization(par_name, init_name, val, low, high)
         else:
             if val == low == high:
@@ -245,6 +247,7 @@ class ModelFactory:
                 par  = zfit.param.Parameter(par_name, val, low - 1 , high + 1)
                 par.floating = False
             else:
+                log.debug(f'Creating new parameter {par_name}')
                 par  = zfit.param.Parameter(par_name, val, low, high)
 
         self._d_par[par_name] = par
