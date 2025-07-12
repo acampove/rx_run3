@@ -175,11 +175,14 @@ class ModelFactory:
         log.debug(f'Using physical name: {pname}')
         if pname in self._d_reuse:
             return pname
+            log.debug(f'Reusing {pname}')
 
         if pname in self._l_shr:
             name = f'{pname}_{self._preffix}'
+            log.debug(f'Using model specific parameter {name}')
         else:
             name = f'{pname}_{xname}_{self._preffix}{suffix}'
+            log.debug(f'Using component specific parameter {name}')
 
         if pname in self._l_flt:
             return f'{name}_flt'
