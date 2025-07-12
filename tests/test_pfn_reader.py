@@ -40,6 +40,15 @@ def _get_cfg() -> dict:
 
     with open(config_path, encoding='utf-8') as ifile:
         return yaml.safe_load(ifile)
+    l_arg_nopid      : list[tuple[str,str,int]] = [
+        ('btoxll_mva_2024_nopid', 'w31_34_v1r3399', 1),
+        ('btoxll_mva_2024_nopid', 'w35_37_v1r3399', 1),
+        ('btoxll_mva_2024_nopid', 'w37_39_v1r3399', 1),
+        ('btoxll_mva_2024_nopid', 'w40_42_v1r3399', 2),
+        ('btoxll_mva_2024_nopid', 'w31_34_v1r3411', 1),
+        ('btoxll_mva_2024_nopid', 'w35_37_v1r3411', 1),
+        ('btoxll_mva_2024_nopid', 'w37_39_v1r3411', 1),
+        ('btoxll_mva_2024_nopid', 'w40_42_v1r3411', 2)]
 # -----------------------------
 @gut.timeit
 @pytest.mark.parametrize('production, nickname, expected', Data.l_arg_simple)
