@@ -13,7 +13,7 @@ from dmu.logging.log_store       import LogStore
 from rx_efficiencies.decay_names import DecayNames as dn
 from fitter.prec_scales          import PrecScales
 
-log=LogStore.add_logger('rx_fitter:test_prec_scales')
+log=LogStore.add_logger('fitter:test_prec_scales')
 # -----------------------------------
 class Data:
     '''
