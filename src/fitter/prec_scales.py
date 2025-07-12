@@ -114,7 +114,7 @@ class PrecScales:
     def _get_br(self, proc : str) -> tuple[float,float]:
         log.debug(f'Calculating BR for {proc}')
 
-        l_dec = dn.subdecays_from_decay(proc)
+        l_dec = dn.subdecays_from_nickname(proc)
         l_bf  = [ self._d_frbf['bf'][dec] for dec in l_dec ]
 
         return self._mult_brs(l_bf)
