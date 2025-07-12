@@ -38,6 +38,7 @@ def test_rare():
     '''
     Simplest test for rare mode
     '''
+    q2bin = 'central'
 
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     cfg = gut.load_conf(
@@ -52,7 +53,7 @@ def test_rare():
             obs     = obs,
             trigger = 'Hlt2RD_BuToKpEE_MVA',
             project = 'rx',
-            q2bin   = 'central')
+            q2bin   = q2bin)
         pdf = dmd.get_model()
 
     sut.print_pdf(pdf)
