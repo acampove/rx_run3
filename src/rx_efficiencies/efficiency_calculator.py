@@ -13,6 +13,8 @@ from ROOT                              import RDataFrame
 from dmu.logging.log_store             import LogStore
 from dmu.generic                       import utilities as gut
 from dmu.workflow.cache                import Cache
+from dmu.generic                       import hashing
+
 from rx_data.rdf_getter                import RDFGetter
 from rx_selection                      import selection as sel
 from rx_efficiencies.acceptance_reader import AcceptanceReader
@@ -44,9 +46,24 @@ class EfficiencyCalculator(Cache):
 
         super().__init__(
             out_path = f'{q2bin}_{self._year}',
+            d_sel    = self._get_selection_hash(),
             trigger  = self._trigger)
 
         self._initialized=False
+    #------------------------------------------
+    def _get_selection_hash(self) -> str:
+        '''
+        Returns
+        ------------
+        Hash associated to selection for all the processes used, trigger and q2bin
+        '''
+        hsh = ''
+        for decay in self._l_proc:
+            sample = DecayNames.sample_from_decay(decay=decay)
+            d_sel  = sel.selection(q2bin=self._q2bin, trigger=self._trigger, process=sample)
+            hsh   += hashing.hash_object(d_sel)
+
+        return hsh
     #------------------------------------------
     @property
     def out_dir(self) -> str|None:
