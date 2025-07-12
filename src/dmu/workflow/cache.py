@@ -7,7 +7,6 @@ import shutil
 from pathlib    import Path
 from contextlib import contextmanager
 
-from git                   import Repo
 from dmu.generic           import hashing
 from dmu.logging.log_store import LogStore
 
