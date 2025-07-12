@@ -66,16 +66,6 @@ class PrecScales:
 
         self._initialized = True
     #------------------------------------------
-    def _load_fractions(self):
-        log.debug('Getting hadronization fractions and branching ratios')
-
-        frbf_dir  = files('rx_efficiencies_data').joinpath('prec_sf')
-        frbf_path = get_last_version(dir_path=frbf_dir, version_only=False)
-        frbf_path = f'{frbf_path}/fr_bf.yaml'
-
-        log.debug(f'Picking up branching fractions from: {frbf_path}')
-        with open(frbf_path, encoding='utf-8') as ifile:
-            self._d_frbf = yaml.safe_load(ifile)
     #------------------------------------------
     def _calculate_efficiencies(self, yaml_path : str) -> None:
         log.debug('Efficiencies not found, calculating them')
