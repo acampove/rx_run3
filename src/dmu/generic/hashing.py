@@ -50,7 +50,7 @@ def hash_file(path : str) -> str:
     '''
     Parameters
     ----------------
-    path: Path to file whose content has to be hashes
+    path: Path to file whose content has to be hashed
 
     Returns
     ----------------
