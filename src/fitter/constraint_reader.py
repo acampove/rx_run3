@@ -3,7 +3,6 @@ Script holding ConstraintReader class
 '''
 from dmu.logging.log_store       import LogStore
 from rx_efficiencies.decay_names import DecayNames as dn
-from fitter.signal_scales        import FitParameters
 from fitter.prec_scales          import PrecScales
 
 log=LogStore.add_logger('fitter:constraint_reader')
@@ -26,19 +25,7 @@ class ConstraintReader:
         self._signal  = 'bpkpee' # This is the signal decay nickname, needed for PRec scales constraints
     # -------------------------------------------------------------
     def _add_signal_constraints(self) -> None:
-        obj = FitParameters()
-
-        for par in self._l_par:
-            if 'Signal' in par:
-                val, err = obj.get_parameter_scale(name=par)
-            elif par.startswith('frac_brem_'):
-                val, err = obj.get_brem_fraction(name=par)
-            else:
-                continue
-
-            log.debug(f'Adding constrint for: {par}')
-
-            self._d_const[par] = val, err
+        raise NotImplementedError(f'This needs to be implemented with DataFitter')
     # -------------------------------------------------------------
     def _proc_from_par(self, par_name : str) -> str:
         sample = par_name[1:] # Parameter name is expected to look like sSAMPLE_NICKNAME
@@ -75,7 +62,6 @@ class ConstraintReader:
         Key  : Name of fitting parameter
         Value: Tuple with mu and error
         '''
-        self._add_signal_constraints()
         self._add_prec_constraints()
 
         return self._d_const
