@@ -104,6 +104,7 @@ def _set_logs() -> None:
     LogStore.set_level('fitter:sim_fitter'          , 10)
     LogStore.set_level('fitter:data_preprocessor'   , 10)
     LogStore.set_level('fitter:prec'                , 10)
+    LogStore.set_level('fitter:prec_scales'         , 10)
 
     # Silence what is below
     LogStore.set_level('rx_selection:selection'     , 30)
