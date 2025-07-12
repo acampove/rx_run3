@@ -50,13 +50,14 @@ class DataModel:
         '''
         Parameters
         --------------
-        name: Component name, in data.yaml config
+        name: Sample name, e.g. Bu_Kee_eq_btosllball05_DPC.
+              If component does not have MC associated, component name e.g. combinatorial
 
         Returns
         --------------
         zfit parameter used for extending it
         '''
-        if name.endswith('signal'):
+        if name == 'signal':
             return self._nsig
 
         if name not in self._cfg.model.constraints.yields:
@@ -121,7 +122,12 @@ class DataModel:
                 log.warning(f'Skipping comonent: {component}')
                 continue
 
-            pdf = self._extend(pdf=pdf, name=component)
+            if component == 'signal':
+                sample = component
+            else:
+                sample = cfg.get(key='sample', default_value=component)
+
+            pdf    = self._extend(pdf=pdf, name=sample)
             l_pdf.append(pdf)
 
         pdf = zfit.pdf.SumPDF(l_pdf)
