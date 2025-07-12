@@ -33,6 +33,7 @@ class Data:
     l_prec_par  = [
         'sBd_Kstee_eq_btosllball05_DPC',
         'sBu_Kstee_Kpi0_eq_btosllball05_DPC',
+        'sBs_phiee_eq_Ball_DPC',
     ]
 
     l_invalid = [
@@ -64,12 +65,11 @@ def test_signal():
 
     assert len(d_cns) > 0
 # --------------------------------------------------------------
-def test_prec():
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+def test_prec(q2bin : str):
     '''
     Tests getting constraints for prec parameters
     '''
-    q2bin     = 'central'
-
     obj     = ConstraintReader(parameters = Data.l_prec_par, q2bin=q2bin)
     d_cns   = obj.get_constraints()
     _print_constraints(d_cns)
