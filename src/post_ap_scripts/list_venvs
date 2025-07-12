@@ -36,7 +36,7 @@ get_opts()
 # -------------------------------
 check_env()
 {
-    which dirac-dms-user-lfns > /dev/null 2>&1
+    which lb-dirac > /dev/null 2>&1
     if [[ $? -ne 0 ]];then
         echo "Dirac not available, run lb_dirac to be in the right environment"
         exit 1
@@ -52,7 +52,7 @@ print_latest()
 {
     LFNPATH=/lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv
     FILENAME=dcheck.tar
-    dirac-dms-user-lfns -w $FILENAME -b $LFNPATH > /dev/null 2>&1
+    lb-dirac dirac-dms-user-lfns -w $FILENAME -b $LFNPATH > /dev/null 2>&1
 
     LFNLIST=lhcb-user-${LXNAME:0:1}-$LXNAME-run3-venv.lfns
 
