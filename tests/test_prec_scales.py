@@ -110,7 +110,7 @@ def test_all_datasets(q2bin : str, process : str):
     log.info('-' * 20)
 
     threshold = 1.0
-    # We might have large Jpsi leakave in central bin
+    # We might have large Jpsi leakage in central bin
     if process == 'bpkpjpsiee' and q2bin == 'central':
         threshold = 1.5
 
