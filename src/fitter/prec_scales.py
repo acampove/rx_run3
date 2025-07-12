@@ -13,12 +13,13 @@ import jacobi                   as jac
 
 from dmu.logging.log_store                 import LogStore
 from dmu.generic                           import hashing
+from dmu.generic                           import utilities  as gut
 from dmu.generic.version_management        import get_last_version
 from rx_selection                          import selection  as sel
 from rx_efficiencies.decay_names           import DecayNames as dn
 from rx_efficiencies.efficiency_calculator import EfficiencyCalculator
 
-log=LogStore.add_logger('rx_fitter:prec_scales')
+log=LogStore.add_logger('fitter:prec_scales')
 #------------------------------------------
 class PrecScales:
     '''
