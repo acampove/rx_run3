@@ -2,6 +2,7 @@
 Module with functions needed to provide hashes
 '''
 
+import os
 import json
 import hashlib
 from typing import Any
@@ -44,4 +45,26 @@ def hash_object(obj : Any) -> str:
     value      = value[:10]
 
     return value
+# ------------------------------------
+def hash_file(path : str) -> str:
+    '''
+    Parameters
+    ----------------
+    path: Path to file whose content has to be hashes
+
+    Returns
+    ----------------
+    A string representing the hash
+    '''
+    if not os.path.isfile(path):
+        raise FileNotFoundError(f'Cannot find: {path}')
+
+    h = hashlib.sha256()
+    with open(path, 'rb') as f:
+        for chunk in iter(lambda: f.read(8192), b''):
+            h.update(chunk)
+
+    value = h.hexdigest()
+
+    return value[:10]
 # ------------------------------------
