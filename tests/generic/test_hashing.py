@@ -39,3 +39,11 @@ def test_hash_pandas():
 
     assert len(val) == 10
 # --------------------------------------
+def test_hash_file():
+    '''
+    Tests the hashing of a file
+    '''
+    val = hashing.hash_file(path=__file__)
+
+    assert isinstance(val, str)
+# --------------------------------------
