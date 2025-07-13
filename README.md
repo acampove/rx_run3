@@ -134,10 +134,13 @@ class is defined. Thus, changes in the code or in the input data, will invalidat
 This can be done temporarily with:
 
 ```python
-with Wcache.turn_off_cache(val=True):
+with Wcache.turn_off_cache(val=['Tester']):
     obj = Tester(nval=4)
     out = obj.run()
 ```
+
+for any list of classes that inherit from `Cache` by passing the list of class names.
+If `val=None` is passed, ALL the classes caching is turned off.
 
 ## Silencing import messages
 
