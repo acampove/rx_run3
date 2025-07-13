@@ -59,7 +59,8 @@ class BaseFitter:
             out_path : str,
             model    : zpdf|None,
             res      : zres|None,
-            data     : zdata) -> None:
+            data     : zdata,
+            d_cns    : dict[str,tuple[float,float]]|None=None) -> None:
         '''
         Parameters
         --------------
@@ -69,6 +70,8 @@ class BaseFitter:
         model    : PDF from fit, can be None if dataset was empty
         res      : Zfit result object, can be None if fit was to get a KDE
         data     : data from fit
+        d_cns    : Dictionary mapping parameter name to value error tuple. 
+                   Used for constraining that parameter
         '''
         plt_cfg = OmegaConf.to_container(cfg, resolve=True)
         plt_cfg = cast(dict, plt_cfg)
@@ -88,5 +91,6 @@ class BaseFitter:
             data   = data,
             model  = model,
             res    = res,
+            d_const= d_cns,
             fit_dir= out_path)
 # ------------------------
