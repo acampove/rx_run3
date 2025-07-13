@@ -5,6 +5,9 @@ categories:
 sample    : Bu_JpsiK_ee_eq_DPC
 fit:
   strategy  : KDE1DimFFT
+  options : # These options will be passed to the KDE1DimFFT as **kwargs
+    padding:
+      lowermirror : 0.3
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
   stacked : True
