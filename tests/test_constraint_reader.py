@@ -76,11 +76,11 @@ def test_all():
     '''
     Tests getting constraints all model parameters
     '''
-    q2bin     = 'central'
-    l_sig_par = Data.l_sig_par + Data.l_brem_frac + Data.l_prec_par
+    q2bin = 'central'
+    l_par = Data.l_sig_par + Data.l_brem_frac + Data.l_prec_par
 
-    obj     = ConstraintReader(parameters = l_sig_par, q2bin=q2bin)
-    d_cns   = obj.get_constraints()
+    obj   = ConstraintReader(parameters = l_par, q2bin=q2bin)
+    d_cns = obj.get_constraints()
     _print_constraints(d_cns)
 
     assert len(d_cns) > 0
