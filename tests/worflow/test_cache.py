@@ -107,7 +107,7 @@ def test_dont_cache():
     log.info('')
     res = 4 * [1]
     for _ in range(2):
-        with Wcache.turn_off_cache(val=True):
+        with Wcache.turn_off_cache(val=['Tester']):
             obj = Tester(nval=4, name='dont_cache')
             out = obj.run()
 
