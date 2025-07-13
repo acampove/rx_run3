@@ -12,6 +12,7 @@ from dmu.workflow.cache       import Cache
 from dmu.stats.model_factory  import ModelFactory
 from dmu.logging.log_store    import LogStore
 
+from rx_efficiencies.decay_names import DecayNames
 from rx_selection             import selection    as sel
 from zfit.core.interfaces     import ZfitData     as zdata
 from zfit.core.interfaces     import ZfitPDF      as zpdf
@@ -47,6 +48,9 @@ class SimFitter(BaseFitter, Cache):
         q2bin  : E.g. central
         cfg    : Object storing configuration for fit
         '''
+        BaseFitter.__init__(self)
+
+        self._sample    = DecayNames.sample_from_decay(name, fall_back='NA')
         self._name      = name
         self._trigger   = trigger
         self._project   = project
@@ -68,7 +72,6 @@ class SimFitter(BaseFitter, Cache):
         self._mu_par = zfit.param.Parameter('mu_flt', 5280, 5000, 5500)
         self._sg_par = zfit.param.Parameter('sg_flt',   15,    5,  300)
 
-        BaseFitter.__init__(self)
         Cache.__init__(
             self,
             out_path = self._base_path,
