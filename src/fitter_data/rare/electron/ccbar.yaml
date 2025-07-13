@@ -7,4 +7,4 @@ weights:
   dec : 1
   sam : 1
 fitting:
-  bandwidth : 20
+  bandwidth : 40
