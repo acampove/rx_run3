@@ -22,7 +22,7 @@ model:
       - Bs_phiee_eq_Ball_DPC
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
-  nbins   : 50
+  nbins   : 30
   stacked : True
   d_leg :
     leakage       : $B^+\to K^+ J/\psi(\to e^+e^-)$ 
