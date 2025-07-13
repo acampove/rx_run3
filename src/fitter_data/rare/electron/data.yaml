@@ -11,10 +11,14 @@ model:
   components:
     combinatorial : rare/electron/combinatorial.yaml
     bdkstee       : rare/electron/bdkstee.yaml
+    bukstee       : rare/electron/bukstee.yaml
+    bsphiee       : rare/electron/bsphiee.yaml
     signal        : rare/electron/signal.yaml
   constraints:
     yields :
       - Bd_Kstee_eq_btosllball05_DPC
+      - Bu_Kstee_Kpi0_eq_btosllball05_DPC
+      - Bs_phiee_eq_Ball_DPC
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
