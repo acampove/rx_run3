@@ -10,6 +10,7 @@ from dmu.stats.zfit_plotter   import ZFitPlotter
 from dmu.generic              import utilities  as gut
 from dmu.stats                import utilities  as sut
 from dmu.logging.log_store    import LogStore
+from rx_selection             import selection  as sel
 from zfit.result              import FitResult  as zres
 from zfit.core.interfaces     import ZfitData   as zdata
 from zfit.core.interfaces     import ZfitPDF    as zpdf
@@ -23,6 +24,15 @@ class BaseFitter:
     - Provide basic functionality to fiters for data and simulation
     - Behave as a dependency sink, avoiding circular imports
     '''
+    # ------------------------
+    def __init__(self):
+        '''
+        Used to hold attributes passed from derived classes
+        '''
+        self._sample  : str = ''
+        self._trigger : str = ''
+        self._project : str = ''
+        self._q2bin   : str = ''
     # ------------------------
     def _fit(
             self,
