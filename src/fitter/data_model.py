@@ -45,6 +45,9 @@ class DataModel:
         self._q2bin  = q2bin
         self._name   = name
         self._nsig   = zfit.param.Parameter('nsignal', 100, 0, 1000_000)
+
+        self._prc_pref = 'pscale' # This is the partially reconstructed scale preffix.
+                                  # The name here mirrors what is in ConstraintReader.
     # ------------------------
     def _get_yield(self, name : str) -> zpar|ComposedParameter:
         '''
@@ -69,7 +72,7 @@ class DataModel:
         # It is nbackground / nsig
         # The parameter HAS TO start with pscale such that it is picked
         # by ConstraintReader
-        scale= zfit.Parameter(f'pscale{name}', 0, 0, 10)
+        scale= zfit.Parameter(f'{self._prc_pref}{name}', 0, 0, 10)
         nevt = zfit.ComposedParameter(f'n{name}', lambda x : x['nsig'] * x['scale'], params={'nsig' : self._nsig, 'scale' : scale})
 
         return nevt
