@@ -113,7 +113,7 @@ class BaseFitter:
 
         Returns
         ---------------
-        Number of entries in data that were used for the fit, 
+        Number of entries in data that were used for the fit,
         which are in the fit observable range
         '''
         obs          = data.space
