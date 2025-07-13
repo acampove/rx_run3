@@ -110,10 +110,7 @@ def test_rare_electron():
         package='fitter_data',
         fpath  ='rare/electron/data.yaml')
 
-    with Cache.turn_off_cache(val=False), \
-        sel.custom_selection(d_sel={
-            'mass' : 'B_Mass > 4600 && B_Mass < 6900'}):
-
+    with Cache.turn_off_cache(val=False):
         ftr = DataFitter(
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
