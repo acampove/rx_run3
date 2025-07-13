@@ -72,7 +72,7 @@ class BaseFitter:
         model    : PDF from fit, can be None if dataset was empty
         res      : Zfit result object, can be None if fit was to get a KDE
         data     : data from fit
-        d_cns    : Dictionary mapping parameter name to value error tuple. 
+        d_cns    : Dictionary mapping parameter name to value error tuple.
                    Used for constraining that parameter
         '''
         plt_cfg = OmegaConf.to_container(cfg, resolve=True)
