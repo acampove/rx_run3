@@ -94,7 +94,8 @@ class DataFitter(BaseFitter, Cache):
         log.info('Getting constraints')
 
         s_par   = model.get_params()
-        obj     = ConstraintReader(parameters = s_par, q2bin=self._q2bin)
+        l_par   = [ par.name for par in s_par ]
+        obj     = ConstraintReader(parameters = l_par, q2bin=self._q2bin)
         d_cns   = obj.get_constraints()
 
         log.debug(60 * '-')
@@ -141,7 +142,7 @@ class DataFitter(BaseFitter, Cache):
         model= mod.get_model()
         d_cns= self._constraints_from_model(model=model)
 
-        res  = self._fit(data=data, model=model, cns=d_cns, cfg=self._cfg.fit)
+        res  = self._fit(data=data, model=model, d_cns=d_cns, cfg=self._cfg.fit)
         self._save_fit(
             cuts     = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin),
             cfg      = self._cfg.plots,
