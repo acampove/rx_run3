@@ -78,6 +78,34 @@ class DataFitter(BaseFitter, Cache):
 
         return zfit.Space(name, limits=(minx, maxx))
     # ------------------------
+    def _constraints_from_model(self, model : zpdf) -> dict[str,tuple[float,float]]:
+        '''
+        Parameters
+        ----------------
+        model: Model needed to fit the data
+
+        Returns
+        ----------------
+        Dictionary with:
+
+        Key: Name of parameter
+        Value: Tuple value, error. Needed to apply constraints
+        '''
+        log.info('Getting constraints')
+
+        s_par   = model.get_params()
+        obj     = ConstraintReader(parameters = s_par, q2bin=self._q2bin)
+        d_cns   = obj.get_constraints()
+
+        log.debug(60 * '-')
+        log.debug(f'{"Name":<20}{"Value":<20}{"Error":<20}')
+        log.debug(60 * '-')
+        for name, (val, err) in d_cns.items():
+            log.debug(f'{name:<20}{val:<20.3f}{err:<20.3f}')
+        log.debug(60 * '-')
+
+        return d_cns
+    # ------------------------
     def run(self) -> DictConfig:
         '''
         Runs fit
