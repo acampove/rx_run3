@@ -1,4 +1,4 @@
-output_directory : rare/electron/leakage
+output_directory : rare/electron/jpsi_leakage
 categories:
   main: 
     model : KDE1DimFFT
