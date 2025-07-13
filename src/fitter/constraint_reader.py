@@ -25,7 +25,7 @@ class ConstraintReader:
         self._signal  = 'bpkpee' # This is the signal decay nickname, needed for PRec scales constraints
     # -------------------------------------------------------------
     def _add_signal_constraints(self) -> None:
-        raise NotImplementedError(f'This needs to be implemented with DataFitter')
+        raise NotImplementedError('This needs to be implemented with DataFitter')
     # -------------------------------------------------------------
     def _proc_from_par(self, par_name : str) -> str:
         sample = par_name[1:] # Parameter name is expected to look like sSAMPLE_NICKNAME
