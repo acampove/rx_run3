@@ -363,7 +363,7 @@ class SimFitter(BaseFitter, Cache):
         Returns
         ------------------
         - KDE PDF after fit
-        - NOne if there are fewer than _min_kde_entries
+        - None if there are fewer than _min_kde_entries
         '''
         model_name = self._cfg.categories.main.model
         data       = self._d_data['main']
