@@ -128,14 +128,31 @@ class BaseFitter:
             return '', ''
 
         brem_cuts = self._brem_cuts_from_cuts(cuts=cuts)
-
+        # Pick default selection
         with sel.custom_selection(d_sel={}):
             d_sel_def = sel.selection(
                 process=self._sample,
                 trigger=self._trigger,
                 q2bin  =self._q2bin)
 
-        return '', brem_cuts
+        l_expr = []
+        # Collect all the cuts that are different
+        # from default selection
+        for name, expr in cuts.items():
+            if name not in d_sel_def:
+                expr = cuts[name]
+                l_expr.append(expr)
+                continue
+
+            def_expr = d_sel_def[name]
+            if expr != def_expr:
+                l_expr.append(expr)
+
+        # Remove differences in brem, will be done separately
+        l_expr_no_brem = [ expr for expr in l_expr if 'nbrem' not in expr ]
+        new_cuts       = '\n'.join(l_expr_no_brem)
+
+        return new_cuts, brem_cuts
     # --------------------------
     def _entries_from_data(self, data : zdata) -> int:
         '''
