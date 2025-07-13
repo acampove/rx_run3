@@ -54,6 +54,95 @@ class BaseFitter:
 
         return res
     # ------------------------
+    def _get_sensitivity(self, res : zres|None) -> float:
+        '''
+        Parameters
+        --------------
+        res: Result object from fit
+
+        Returns
+        --------------
+        fit sensitivity in %
+        '''
+        if res is None:
+            log.debug('Missing result object, cannot get sensitivity')
+            return -1
+
+        cres = sut.zres_to_cres(res=res)
+
+        if 'nsignal' not in cres:
+            log.debug('Missing nsig entry, cannot get sensitivity')
+            return -1
+
+        value = cres['nsignal']['value']
+        error = cres['nsignal']['error']
+
+        return 100 * error / value 
+    # --------------------------
+    def _get_selection_text(self, cuts : dict[str,str]) -> tuple[str,str]:
+        '''
+        Parameters
+        --------------
+        cuts: Dictionary with cuts used for fit
+
+        Returns
+        --------------
+        Tuple with:
+
+        - Multiple lines with cuts that were used for fit, but are not default, plus MVA cut
+        - Brem categories choice
+        '''
+
+        return '', ''
+    # --------------------------
+    def _entries_from_data(self, data : zdata) -> int:
+        '''
+        Parameters
+        ---------------
+        data: Dataset used in the fit
+
+        Returns
+        ---------------
+        Number of entries in data that were used for the fit, 
+        which are in the fit observable range
+        '''
+        obs          = data.space
+        [minx, maxx] = sut.range_from_obs(obs=obs)
+
+        arr_mass = data.to_numpy()
+        mask     = (minx < arr_mass) & (arr_mass < maxx)
+        arr_mass = arr_mass[mask]
+        nentries = len(arr_mass)
+
+        return nentries
+    # --------------------------
+    def _get_text(
+            self,
+            data : zdata,
+            res  : zres|None,
+            cuts : dict[str,str]) -> tuple[str,str]:
+        '''
+        Parameters
+        --------------
+        data: Zfit data used for fit
+        res : zfit result object
+        cuts: Dictionary with cuts used to get data
+
+        Returns
+        --------------
+        Tuple with:
+
+        - Title for fit plot
+        - Text that goes inside plot with selection information
+        '''
+        nentries          = self._entries_from_data(data=data)
+        sel_txt, brem_txt = self._get_selection_text(cuts=cuts)
+
+        sensitivity = self._get_sensitivity(res=res)
+        title       = f'$\\delta={sensitivity:.2f}$%; Entries={nentries:.0f}; Brem:{brem_txt}'
+
+        return title, sel_txt
+    # ------------------------
     def _save_fit(
             self,
             cuts     : dict[str,str],
