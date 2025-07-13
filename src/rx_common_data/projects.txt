@@ -7,7 +7,7 @@ master rx_common
 master rx_calibration 
 master rx_efficiencies
 master rx_classifier  
-master rx_fitter      
+master fitter      
 master rx_misid       
 master rx_pid         
 master rx_plots       
