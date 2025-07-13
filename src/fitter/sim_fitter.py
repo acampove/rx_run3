@@ -114,12 +114,14 @@ class SimFitter(BaseFitter, Cache):
     # ------------------------
     def _get_pdf(
             self,
+            cfg     : DictConfig,
             category: str,
             l_model : list[str]) -> zpdf:
         '''
         Parameters
         ------------
         category: If the MC is meant to be split (e.g. by brem) this should the the label of the category
+        cfg     : DictConfig with model configuration, stores parameters that are floating, fixed, etc
         l_model : List of model names, e.g. [cbl, cbr]
 
         Returns
@@ -133,10 +135,10 @@ class SimFitter(BaseFitter, Cache):
             obs     = self._obs,
             l_pdf   = l_model,
             l_reuse = [self._mu_par, self._sg_par],
-            l_shared= self._cfg.shared,
-            l_float = self._cfg.float ,
-            d_rep   = self._cfg.reparametrize,
-            d_fix   = self._cfg.fix)
+            l_shared= cfg.shared,
+            l_float = cfg.float ,
+            d_rep   = cfg.reparametrize,
+            d_fix   = cfg.fix)
 
         pdf = mod.get_pdf()
 
@@ -177,7 +179,12 @@ class SimFitter(BaseFitter, Cache):
             raise ValueError(f'Cannot find main category in config associated to sample {self._name}')
 
         l_model = self._cfg.categories.main.models[self._q2bin]
-        model   = self._get_pdf(l_model=l_model, category='main')
+        cfg     = self._cfg[self._q2bin]
+
+        model   = self._get_pdf(
+            l_model = l_model,
+            cfg     = cfg,
+            category= 'main')
 
         return model
     # ------------------------
@@ -204,7 +211,11 @@ class SimFitter(BaseFitter, Cache):
         '''
         log.info(f'Fitting category {category}')
 
-        model = self._get_pdf(category=category, l_model=l_model_name)
+        model = self._get_pdf(
+            category= category,
+            cfg     = self._cfg,
+            l_model = l_model_name)
+
         data  = self._d_data[category]
 
         sumw  = sut.yield_from_zdata(data=data)
