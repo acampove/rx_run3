@@ -26,13 +26,16 @@ class BaseFitter:
             self,
             cfg   : DictConfig,
             data  : zdata,
-            model : zpdf) -> zres:
+            model : zpdf,
+            d_cns : dict[str,tuple[float,float]]|None = None) -> zres:
         '''
         Parameters
         --------------------
         cfg  : Fitting configuration
         data : Zfit data object
         model: Zfit PDF
+        d_cns: Dictionary mapping parameter names to tuples of value and error
+               This is needed to apply constraints to fit
 
         Returns
         --------------------
@@ -40,6 +43,9 @@ class BaseFitter:
         '''
         fit_cfg = OmegaConf.to_container(cfg, resolve=True)
         fit_cfg = cast(dict, fit_cfg)
+
+        if d_cns is not None:
+            fit_cfg['constraints'] = d_cns
 
         ftr = Fitter(pdf=model, data=data)
         res = ftr.fit(cfg=fit_cfg)
