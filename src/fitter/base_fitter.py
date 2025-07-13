@@ -89,6 +89,26 @@ class BaseFitter:
 
         return 100 * error / value
     # --------------------------
+    def _brem_cuts_from_cuts(self, cuts : dict[str,str]) -> str:
+        '''
+        Parameters
+        --------------
+        cuts: Dictionary with cuts used for fit
+
+        Returns
+        --------------
+        String with brem requirements
+        '''
+        l_brem_cut = []
+        for cut in cuts.values():
+            if 'nbrem' not in cut:
+                continue
+            l_brem_cut.append(cut)
+
+        brem_cuts = '; '.join(l_brem_cut)
+
+        return brem_cuts
+    # --------------------------
     def _get_selection_text(self, cuts : dict[str,str]) -> tuple[str,str]:
         '''
         Parameters
