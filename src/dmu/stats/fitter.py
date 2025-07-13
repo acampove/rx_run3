@@ -52,6 +52,7 @@ class Fitter:
             'abnormal_detected_host @',
             'Skipping loop optimization for Merge',
             'Creating GpuSolver handles for stream',
+            'Loaded cuDNN version',
             'All log messages before absl::InitializeLog()']
 
         self._ndof           = 10
