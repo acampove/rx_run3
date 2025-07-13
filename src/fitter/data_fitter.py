@@ -139,8 +139,9 @@ class DataFitter(BaseFitter, Cache):
             trigger= self._trigger,
             project= self._project)
         model= mod.get_model()
+        d_cns= self._constraints_from_model(model=model)
 
-        res  = self._fit(data=data, model=model, cfg=self._cfg.fit)
+        res  = self._fit(data=data, model=model, cns=d_cns, cfg=self._cfg.fit)
         self._save_fit(
             cuts     = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin),
             cfg      = self._cfg.plots,
