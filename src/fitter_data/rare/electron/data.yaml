@@ -9,11 +9,13 @@ model:
       - 4500 
       - 6900
   components:
+    ccbar         : rare/electron/ccbar.yaml
     combinatorial : rare/electron/combinatorial.yaml
     bdkstee       : rare/electron/bdkstee.yaml
     bukstee       : rare/electron/bukstee.yaml
     bsphiee       : rare/electron/bsphiee.yaml
-    leakage       : rare/electron/leakage.yaml
+    jpsi_leakage  : rare/electron/jpsi_leakage.yaml
+    psi2_leakage  : rare/electron/psi2_leakage.yaml
     signal        : rare/electron/signal_non_parametric.yaml
   constraints:
     yields :
@@ -25,9 +27,11 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
   nbins   : 30
   stacked : True
   d_leg :
-    leakage       : $B^+\to K^+ J/\psi(\to e^+e^-)$ 
+    jpsi_leakage  : $B^+\to K^+ J/\psi(\to e^+e^-)$ 
+    psi2_leakage  : $B^+\to K^+ \psi(2S)(\to e^+e^-)$ 
     bukstee       : $B^+\to K^{*+}(\to K^+\pi^0)e^+e^-$ 
     bdkstee       : $B^0\to K^{*0}(\to K^+\pi^-)e^+e^-$ 
     bsphiee       : $B_s\to \phi(\to K^+K^-)e^+e^-$ 
     combinatorial : Combinatorial
     signal        : $B^+\to K^+ e^+e^-$ 
+    ccbar         : $B\to c\bar{c}(\to e^+e^-) + X$
