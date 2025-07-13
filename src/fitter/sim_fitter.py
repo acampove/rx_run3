@@ -372,7 +372,13 @@ class SimFitter(BaseFitter, Cache):
         if data.n_events < self._min_kde_entries:
             pdf = None
         else:
-            pdf = KdeBuilder(obs=self._obs, data=data, name=self._name)
+            if 'options' in self._cfg.fit:
+                cfg_fit= self._cfg.fit.get('options')
+                kwargs = OmegaConf.to_container(cfg_fit, resolve=True)
+            else:
+                kwargs = {}
+
+            pdf = KdeBuilder(obs=self._obs, data=data, name=self._name, **kwargs)
 
         self._save_fit(
             cuts     = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin),
