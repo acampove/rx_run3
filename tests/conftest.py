@@ -133,7 +133,7 @@ def pytest_configure(config : Config):
     # cached
 
     user = os.environ['USER']
-    Cache.set_cache_root(root='/tmp/{user}/tests/fitter')
+    Cache.set_cache_root(root=f'/tmp/{user}/tests/fitter')
     _set_logs()
 
     plt.style.use(mplhep.style.LHCb2)
