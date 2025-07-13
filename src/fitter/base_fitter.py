@@ -80,6 +80,10 @@ class BaseFitter:
 
         # If no entries were present
         # There will not be PDF
+        title, text         = self._get_text(data=data, res=res, cuts=cuts)
+        plt_cfg['title'   ] = title
+        plt_cfg['ext_text'] = text
+
         if model is not None:
             ptr = ZFitPlotter(data=data, model=model)
             ptr.plot(**plt_cfg)
