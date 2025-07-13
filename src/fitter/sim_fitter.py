@@ -176,7 +176,7 @@ class SimFitter(BaseFitter, Cache):
             log.info(OmegaConf.to_yaml(self._cfg))
             raise ValueError(f'Cannot find main category in config associated to sample {self._name}')
 
-        l_model = self._cfg.categories.main.models
+        l_model = self._cfg.categories.main.models[self._q2bin]
         model   = self._get_pdf(l_model=l_model, category='main')
 
         return model
