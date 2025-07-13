@@ -87,7 +87,7 @@ class BaseFitter:
         value = cres['nsignal']['value']
         error = cres['nsignal']['error']
 
-        return 100 * error / value 
+        return 100 * error / value
     # --------------------------
     def _get_selection_text(self, cuts : dict[str,str]) -> tuple[str,str]:
         '''
