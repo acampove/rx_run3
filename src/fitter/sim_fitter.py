@@ -372,7 +372,7 @@ class SimFitter(BaseFitter, Cache):
         if data.n_events < self._min_kde_entries:
             pdf = None
         else:
-            pdf = KdeBuilder(obs=self._obs, data=data)
+            pdf = KdeBuilder(obs=self._obs, data=data, name=self._name)
 
         self._save_fit(
             cuts     = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin),
