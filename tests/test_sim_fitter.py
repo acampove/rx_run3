@@ -114,6 +114,31 @@ def test_ccbar_reso():
             q2bin   = 'jpsi')
         ftr.get_model()
 # ---------------------------------------------------
+def test_ccbar_rare():
+    '''
+    Tests retriveval of PDF associated to ccbar inclusive decays
+    for rare modes, i.e. without jpsi mass constraint
+    '''
+    component = 'ccbar'
+    mass      = 'B_Mass'
+    q2bin     = 'high'
+
+    obs       = zfit.Space(mass, limits=(4500, 6000))
+    cfg       = gut.load_conf(package='fitter_data', fpath=f'rare/electron/{component}.yaml')
+
+    with Cache.turn_off_cache(val=['SimFitter']),\
+        sel.custom_selection(d_sel={
+            'nobr0' : 'nbrem != 0',
+            'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
+        ftr = SimFitter(
+            name    = component,
+            obs     = obs,
+            cfg     = cfg,
+            trigger = 'Hlt2RD_BuToKpEE_MVA',
+            project = 'rx',
+            q2bin   = q2bin)
+        ftr.get_model()
+# ---------------------------------------------------
 def test_signal_reso():
     '''
     Tests retriveval of PDF associated to ccbar inclusive decays
