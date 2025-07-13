@@ -9,10 +9,12 @@ from dmu.stats.fitter         import Fitter
 from dmu.stats.zfit_plotter   import ZFitPlotter
 from dmu.generic              import utilities  as gut
 from dmu.stats                import utilities  as sut
+from dmu.logging.log_store    import LogStore
 from zfit.result              import FitResult  as zres
 from zfit.core.interfaces     import ZfitData   as zdata
 from zfit.core.interfaces     import ZfitPDF    as zpdf
 
+log=LogStore.add_logger('fitter:base_fitter')
 # ------------------------
 class BaseFitter:
     '''
