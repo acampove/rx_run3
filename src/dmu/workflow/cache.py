@@ -187,20 +187,20 @@ class Cache:
             # If not copying from cache, will need to remove what is
             # in the output directory, so that it gets replaced with
             # new outputs
-            self._delete_from_output()
+            self._delete_from_output(only_links=False)
             log.info('Not picking already cached outputs, remaking them')
             return False
 
         hash_dir = self._get_dir(kind='hash', make=False)
         if not os.path.isdir(hash_dir):
             log.debug(f'Hash directory {hash_dir} not found, not caching')
-            self._delete_from_output()
+            self._delete_from_output(only_links=False)
             return False
 
         self._hash_dir = hash_dir
         log.debug(f'Data found in hash directory: {self._hash_dir}')
 
-        self._delete_from_output()
+        self._delete_from_output(only_links=False)
         self._copy_from_hashdir()
 
         return True
