@@ -122,8 +122,20 @@ class BaseFitter:
         - Multiple lines with cuts that were used for fit, but are not default, plus MVA cut
         - Brem categories choice
         '''
+        # For components like combinatorial, there is no MC sample
+        # Therefore the selection or brem category does not make sense
+        if self._sample == 'NA':
+            return '', ''
 
-        return '', ''
+        brem_cuts = self._brem_cuts_from_cuts(cuts=cuts)
+
+        with sel.custom_selection(d_sel={}):
+            d_sel_def = sel.selection(
+                process=self._sample,
+                trigger=self._trigger,
+                q2bin  =self._q2bin)
+
+        return '', brem_cuts
     # --------------------------
     def _entries_from_data(self, data : zdata) -> int:
         '''
