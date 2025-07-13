@@ -1,7 +1,10 @@
 output_directory : combinatorial
 categories:
   main:
-    models : [exp]
+    models : 
+      low     : [hypexp]
+      central : [exp]
+      high    : [suj]
 shared        : []
 float         : []
 reparametrize : {}
