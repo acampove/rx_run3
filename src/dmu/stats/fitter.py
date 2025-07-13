@@ -50,6 +50,8 @@ class Fitter:
         # that are pretty useless and need to be hidden
         self._l_hidden_tf_lines= [
             'abnormal_detected_host @',
+            'Skipping loop optimization for Merge',
+            'Creating GpuSolver handles for stream',
             'All log messages before absl::InitializeLog()']
 
         self._ndof           = 10
