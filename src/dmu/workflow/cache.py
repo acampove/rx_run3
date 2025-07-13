@@ -138,7 +138,7 @@ class Cache:
         self._delete_from_output(only_links=False)
         self._copy_from_hashdir()
     # ---------------------------
-    def _delete_from_output(self, only_links : bool = True) -> None:
+    def _delete_from_output(self, only_links : bool) -> None:
         '''
         Delete all objects from _out_path directory, except for `.cache`
 
