@@ -42,6 +42,8 @@ class DataFitter(BaseFitter, Cache):
         q2bin  : E.g. central
         cfg    : Configuration for the fit to data
         '''
+        BaseFitter.__init__(self)
+
         self._sample    = sample
         self._trigger   = trigger
         self._project   = project
@@ -50,7 +52,6 @@ class DataFitter(BaseFitter, Cache):
         self._name      = name
         self._base_path = self._get_base_path()
 
-        BaseFitter.__init__(self)
         Cache.__init__(
             self,
             out_path = self._base_path,
