@@ -14,7 +14,7 @@ model:
     bukstee       : rare/electron/bukstee.yaml
     bsphiee       : rare/electron/bsphiee.yaml
     leakage       : rare/electron/leakage.yaml
-    signal        : rare/electron/signal.yaml
+    signal        : rare/electron/signal_non_parametric.yaml
   constraints:
     yields :
       - Bd_Kstee_eq_btosllball05_DPC
