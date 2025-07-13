@@ -108,16 +108,28 @@ class DecayNames:
         return DecayNames.nic[sample]
     # -----------------------------------
     @staticmethod
-    def sample_from_decay(decay : str) -> str:
+    def sample_from_decay(decay : str, fall_back : str|None=None) -> str:
         '''
-        Takes nickname of decay, returns nickname of sample
-        '''
-        if decay not in DecayNames.sam:
-            for elm in DecayNames.sam:
-                log.info(elm)
-            raise ValueError(f'Decay {decay} not found')
+        Parameters
+        ---------------
+        decay: Nickname of decay, e.g. bukee
+        fall_back: Optional, if given and if the nickname is not found, will return this string
 
-        return DecayNames.sam[decay]
+        Returns
+        ---------------
+        Nickname of sample, e.g. Bu_Kee_eq_btosllball05_DPC or fall_back
+        If no fall back was specified and sample is not found, will raise
+        '''
+        if decay in DecayNames.sam:
+            return DecayNames.sam[decay]
+
+        if fall_back is not None:
+            return fall_back
+
+        for elm in DecayNames.sam:
+            log.info(elm)
+
+        raise ValueError(f'Decay {decay} not found')
     # -----------------------------------
     @staticmethod
     def subdecays_from_nickname(nickname : str) -> list[str]:
