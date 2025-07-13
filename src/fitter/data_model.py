@@ -61,9 +61,10 @@ class DataModel:
             return self._nsig
 
         if name not in self._cfg.model.constraints.yields:
-            log.debug(f'Yield for component {name} will be unconstrained')
+            log.debug(f'Yield for component {name} will be non-composed')
             return zfit.param.Parameter(f'n{name}', 100, 0, 1000_000)
 
+        log.info(f'Yield for component {name} will be composed')
         # This scale should normally be below 1
         # It is nbackground / nsig
         # The parameter HAS TO start with pscale such that it is picked
