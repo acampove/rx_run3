@@ -66,7 +66,9 @@ class DataModel:
 
         # This scale should normally be below 1
         # It is nbackground / nsig
-        scale= zfit.Parameter(f's{name}', 0, 0, 10)
+        # The parameter HAS TO start with pscale such that it is picked
+        # by ConstraintReader
+        scale= zfit.Parameter(f'pscale{name}', 0, 0, 10)
         nevt = zfit.ComposedParameter(f'n{name}', lambda x : x['nsig'] * x['scale'], params={'nsig' : self._nsig, 'scale' : scale})
 
         return nevt
