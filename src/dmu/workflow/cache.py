@@ -4,6 +4,7 @@ This module contains
 import os
 import sys
 import shutil
+from types      import NoneType
 from pathlib    import Path
 from contextlib import contextmanager
 
@@ -25,9 +26,17 @@ class Cache:
     cache_dir: Subdirectory of out_dir, ${out_dir}/.cache
     hash_dir : Subdirectory of out_dir, ${out_dir}/.cache/{hash}
                Where {hash} is a 10 alphanumeric representing the has of the inputs
+
+    # On skipping caching
+
+    This is controlled by `_l_skip_class` which is a list of class names:
+
+    - These classes will have the caching turned off
+    - If the list is empty, caching runs for everything
+    - If the list is None, caching is turned off for everything
     '''
     _cache_root     : str|None = None
-    _pick_from_cache: bool     = True # If False it will not pick cached data, but remake it
+    _l_skip_class   : list[str]|None = []
     # ---------------------------
     def __init__(self, out_path : str, **kwargs):
         '''
@@ -170,6 +179,34 @@ class Cache:
 
             os.symlink(source, target)
     # ---------------------------
+    def _dont_cache(self) -> bool:
+        '''
+        Returns
+        ---------------
+        Flag that if:
+
+        True : Will stop the derived class from using caching (i.e. caching is off)
+        False: Cache
+        '''
+        if Cache._l_skip_class is None:
+            log.info('No class will be cached')
+            return True
+
+        if len(Cache._l_skip_class) == 0:
+            log.debug('All classes will be cached')
+            return False
+
+        class_name = self.__class__.__name__
+
+        skip = class_name in Cache._l_skip_class
+
+        if skip:
+            log.warning(f'Caching turned off for {class_name}')
+        else:
+            log.debug(f'Caching turned on  for {class_name}')
+
+        return skip
+    # ---------------------------
     def _copy_from_cache(self) -> bool:
         '''
         Checks if hash directory exists:
@@ -183,7 +220,7 @@ class Cache:
         ---------------
         True if the object, cached was found, false otherwise.
         '''
-        if not Cache._pick_from_cache:
+        if self._dont_cache():
             # If not copying from cache, will need to remove what is
             # in the output directory, so that it gets replaced with
             # new outputs
@@ -207,16 +244,23 @@ class Cache:
     # ---------------------------
     @contextmanager
     @staticmethod
-    def turn_off_cache(val : bool):
+    def turn_off_cache(val : list[str]|None):
         '''
-        If true it will not PICK the outputs from cache.
-        However it will still take the newly produced outputs and cache them
+        Parameters
+        ------------------
+        val: List of names of classes that inherit from `Cache`.
+        If None, will not cache for any class.
+        By default this is an empty list and it will cache for every class
         '''
-        old_val = Cache._pick_from_cache
+        if not isinstance(val, (NoneType, list)):
+            log.error('This manager expects: list[str]|None')
+            raise ValueError(f'Invalid value: {val}')
 
-        Cache._pick_from_cache = not val
+        old_val = Cache._l_skip_class
+
+        Cache._l_skip_class = val
         try:
             yield
         finally:
-            Cache._pick_from_cache = old_val
+            Cache._l_skip_class = old_val
 # ---------------------------
