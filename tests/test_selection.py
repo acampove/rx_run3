@@ -207,3 +207,24 @@ def test_block_overriding(sample : str, block : int):
     else:
         assert old_cut_block == new_cut_block
 # --------------------------
+def test_custom_selection_nested():
+    '''
+    Check that nesting of context managers does not break upstream (original) custom selection
+    '''
+    csel_000 = sel.Data.d_custom_selection
+    with sel.custom_selection(d_sel={'cut_1' : 'val_1'}):
+        csel_001 = sel.Data.d_custom_selection
+        with sel.custom_selection(d_sel={'cut_2' : 'val_2'}):
+            csel_002 = sel.Data.d_custom_selection
+            with sel.custom_selection(d_sel={'cut_3' : 'val_3'}):
+                csel_003 = sel.Data.d_custom_selection
+
+            csel_012  = sel.Data.d_custom_selection
+        csel_011  = sel.Data.d_custom_selection
+    csel_010  = sel.Data.d_custom_selection
+
+    assert csel_000 == csel_010
+    assert csel_001 == csel_011
+    assert csel_002 == csel_012
+    assert csel_003 == {'cut_3' : 'val_3'}
+# --------------------------
