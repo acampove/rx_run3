@@ -102,7 +102,8 @@ def test_reso_electron(block : str):
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
-def test_rare_electron():
+@pytest.mark.parametrize('q2bin', ['low', 'central'])
+def test_rare_electron(q2bin : str):
     '''
     Test fitting rare electron channel
     '''
@@ -118,7 +119,7 @@ def test_rare_electron():
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
             project= 'rx',
-            q2bin  = 'central',
+            q2bin  = q2bin,
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
