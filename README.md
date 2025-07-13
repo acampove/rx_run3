@@ -20,7 +20,7 @@ And be used as an input for:
 Ideally with minimal changes for new observables.
 The class is organized as in the diagram below:
 
-[](doc/images/fitter.png)
+![project diagram](./doc/images/fitter.png)
 
 This project makes heavy use of caching through the [Cache](https://github.com/acampove/dmu?tab=readme-ov-file#caching-with-a-base-class)
 class and thus:
