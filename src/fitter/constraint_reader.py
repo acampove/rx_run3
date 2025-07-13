@@ -23,12 +23,15 @@ class ConstraintReader:
 
         self._d_const = {}
         self._signal  = 'bpkpee' # This is the signal decay nickname, needed for PRec scales constraints
+        self._prc_pref= 'pscale' # This is the partially reconstructed scale preffix.
+                                 # Yields are of the form: pscale{SAMPLENAME}
+                                 # pscale needs to be removed to access sample name
     # -------------------------------------------------------------
     def _add_signal_constraints(self) -> None:
         raise NotImplementedError('This needs to be implemented with DataFitter')
     # -------------------------------------------------------------
     def _proc_from_par(self, par_name : str) -> str:
-        sample = par_name[1:] # Parameter name is expected to look like sSAMPLE_NICKNAME
+        sample = par_name.lstrip(self._prc_pref)
         decay  = dn.nic_from_sample(sample)
 
         return decay
