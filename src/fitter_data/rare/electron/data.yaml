@@ -13,6 +13,7 @@ model:
     bdkstee       : rare/electron/bdkstee.yaml
     bukstee       : rare/electron/bukstee.yaml
     bsphiee       : rare/electron/bsphiee.yaml
+    leakage       : rare/electron/leakage.yaml
     signal        : rare/electron/signal.yaml
   constraints:
     yields :
