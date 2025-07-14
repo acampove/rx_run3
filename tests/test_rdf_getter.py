@@ -816,20 +816,23 @@ def test_no_pid(sample : str, trigger : str):
             brem_track_2= False,
             test_name   = 'no_pid')
 # ------------------------------------------------
-def test_multithreading():
+# TODO: Check for negative numbers
+@pytest.mark.parametrize('nthreads', [1, 6])
+def test_multithreading(nthreads : int):
     '''
     This will test the context manager used to enable multithreading
     '''
     sample   = 'Bu_JpsiK_ee_eq_DPC'
-    nthreads = 4
+    nentries = 1000 if nthreads == 1 else -1
+    nthcheck =    0 if nthreads == 1 else nthreads
 
     with RDFGetter.multithreading(nthreads=nthreads), \
-         RDFGetter.max_entries(value=-1):
-
-        assert GetThreadPoolSize() == nthreads
+         RDFGetter.max_entries(value=nentries):
 
         gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
         rdf = gtr.get_rdf()
+
+        assert GetThreadPoolSize() == nthcheck
 
         _print_dotted_branches(rdf)
         _check_branches(rdf, is_ee=True, is_mc=True)
