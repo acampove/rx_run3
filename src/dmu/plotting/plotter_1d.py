@@ -196,6 +196,7 @@ class Plotter1D(Plotter):
             self._run_plugins(arr_val, arr_wgt, hst, name, var)
             style = self._get_style_config(var=var, label=label)
 
+            log.debug(f'Style: {style}')
             hst.plot(**style)
             l_bc_all    += hst.values().tolist()
 
