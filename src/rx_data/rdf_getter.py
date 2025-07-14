@@ -924,4 +924,29 @@ class RDFGetter:
             yield
         finally:
             RDFGetter._d_custom_columns = old_val
+    # ---------------------------------------------------
+    @contextmanager
+    @staticmethod
+    def multithreading(nthreads : int):
+        '''
+        Multithreading should be used with care. This should be the only
+        place where multithreading is allowed to be turned on.
+
+        Parameters
+        ----------------
+        nthreads: Number of threads for EnableImplicitMT
+        '''
+        old_val = RDFGetter._allow_multithreading
+        old_nth = RDFGetter._nthreads
+
+        RDFGetter._allow_multithreading = True
+        RDFGetter._nthreads             = nthreads
+
+        EnableImplicitMT(nthreads)
+        try:
+            yield
+        finally:
+            DisableImplicitMT()
+            RDFGetter._allow_multithreading = old_val
+            RDFGetter._nthreads             = old_nth
 # ---------------------------------------------------
