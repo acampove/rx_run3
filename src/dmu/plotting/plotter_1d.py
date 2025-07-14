@@ -210,13 +210,17 @@ class Plotter1D(Plotter):
                 'histtype'  : 'errorbar', 
                 'linestyle' : 'none'}
 
-        try:
-            custom_style = self._d_cfg['plots'][var]['styling'][label]
-            style.update(custom_style)
+        if 'styling' not in self._d_cfg['plots'][var]:
+            log.debug(f'Styling not specified for {var}')
+            return style
 
-            log.debug(f'Using custom styling for {var}/{label}')
-        except KeyError:
-            style['marker'] = '.'
+        if label     not in self._d_cfg['plots'][var]['styling']:
+            log.debug(f'Styling not specified for {var}/{label}')
+            return style
+
+        custom_style = self._d_cfg['plots'][var]['styling'][label]
+        style.update(custom_style)
+        log.debug(f'Using custom styling for {var}/{label}')
 
         return style
     # --------------------------------------------
