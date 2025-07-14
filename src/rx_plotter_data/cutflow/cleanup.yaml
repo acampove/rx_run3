@@ -104,9 +104,18 @@ plots:
     B_M:
         binning    : [4500, 6500, 60]
         yscale     : 'linear'
-        labels     : ['$B(M)\;[\text{MeV}]$', 'Entries']
+        labels     : ['$M(B^+)\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : 'bmass'
+        normalized : false
+        styling:
+          <<: *style
+    B_Mass:
+        binning    : [4500, 6500, 60]
+        yscale     : 'linear'
+        labels     : ['$M_{corr}(B^+)\;[\text{MeV}]$', 'Entries']
+        title      : ''
+        name       : 'bmass_brem_corr'
         normalized : false
         styling:
           <<: *style
