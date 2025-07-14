@@ -98,6 +98,22 @@ which will print something like:
 Where the rows represent samples and the columns represent the friend trees.
 The numbers are the number of ntuples.
 
+## Multithreading
+
+Multithreading with ROOT dataframes at the moment is dangerous and should be done only in a few places.
+To turn this on run:
+
+```python
+nthreads = 3 # Or any reasonable number
+with RDFGetter.multithreading(nthreads=nthreads):
+    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+    rdf = gtr.get_rdf()
+
+    process_rdf(rdf)
+```
+
+Once outside the manager, multithreading will be off.
+
 ## Unique identifiers
 
 In order to get a string that fully identifies the underlying sample,
