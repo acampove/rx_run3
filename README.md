@@ -112,7 +112,9 @@ with RDFGetter.multithreading(nthreads=nthreads):
     process_rdf(rdf)
 ```
 
-Once outside the manager, multithreading will be off.
+- Once outside the manager, multithreading will be off.
+- One can use `nthreads=1` to turn off mulithreading
+- Negative or zero threads will raise exception.
 
 ## Unique identifiers
 
