@@ -15,7 +15,7 @@ from typing              import Any
 import yaml
 import dmu.generic.utilities as gut
 
-from ROOT                  import RDF, RDataFrame, GetThreadPoolSize, TFile
+from ROOT                  import RDF, RDataFrame, GetThreadPoolSize, TFile, EnableImplicitMT, DisableImplicitMT
 from dmu.generic           import version_management as vmn
 from dmu.generic           import hashing
 from dmu.logging.log_store import LogStore
