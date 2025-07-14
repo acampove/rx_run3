@@ -120,13 +120,7 @@ def _parse_args() -> None:
     Data.nthreads = args.nthreads
 # ---------------------------------
 def _get_cfg() -> dict:
-    cfg_path = files('rx_plotter_data').joinpath(f'cutflow/{Data.config}.yaml')
-    cfg_path = str(cfg_path)
-    log.info(f'Picking configuration from: {cfg_path}')
-
-    with open(cfg_path, encoding='utf=8') as ifile:
-        cfg = yaml.safe_load(ifile)
-
+    cfg           = gut.load_data(package='rx_plotter_data', fpath=f'cutflow/{Data.config}.yaml')
     plt_dir       = cfg['saving']['plt_dir']
     cfg['saving'] = {'plt_dir' : _get_out_dir(plt_dir) }
 
