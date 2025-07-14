@@ -3,7 +3,7 @@
 general:
   size : [15, 10]
 selection:
-  mva       : mva_cmb > 0.8 && mva_prc > 0.8
+  bdt       : mva_cmb > 0.8 && mva_prc > 0.8
   hop       : (1)
   cascade   : (1)
   jpsi_misid: (1)
