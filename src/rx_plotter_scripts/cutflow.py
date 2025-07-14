@@ -166,8 +166,21 @@ def _get_inp() -> dict[str,RDataFrame]:
 
     return d_rdf
 # ---------------------------------
+def _fix_ranges(cfg : dict) -> dict:
+    '''
+    Takes configuration and makes sure mass ranges make sense
+    '''
+
+    cfg_plt = cfg['plots']
+    if 'B_M' in cfg_plt:
+        [_, _, nbins] = cfg_plt['B_M']['binning']
+        cfg_plt['B_M']['binning'] = [5150, 5800, nbins]
+
+    return cfg
+# ---------------------------------
 def _plot(d_rdf : dict[str,RDataFrame]) -> None:
     cfg= _get_cfg()
+    cfg= _fix_ranges(cfg)
 
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
