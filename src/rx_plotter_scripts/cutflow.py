@@ -116,11 +116,11 @@ def _parse_args() -> None:
     parser.add_argument('-n', '--nthreads',type=int, help='Number of threads, if using multithreading', default=1)
     args = parser.parse_args()
 
-    Data.q2_bin = args.q2bin
-    Data.sample = args.sample
-    Data.trigger= args.trigger
-    Data.config = args.config
-    Data.substr = args.substr
+    Data.q2_bin   = args.q2bin
+    Data.sample   = args.sample
+    Data.trigger  = args.trigger
+    Data.config   = args.config
+    Data.substr   = args.substr
     Data.nthreads = args.nthreads
 # ---------------------------------
 def _get_cfg() -> dict:
@@ -187,7 +187,7 @@ def main():
     '''
     _parse_args()
 
-    with RDFGetter.multithreading(nthreads=Data.nthreads)
+    with RDFGetter.multithreading(nthreads=Data.nthreads):
         d_rdf = _get_inp()
         _plot(d_rdf)
 # ---------------------------------
