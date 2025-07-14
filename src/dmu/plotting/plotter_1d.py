@@ -198,6 +198,7 @@ class Plotter1D(Plotter):
 
             log.debug(f'Style: {style}')
             hst.plot(**style)
+
             l_bc_all    += hst.values().tolist()
 
         max_y = max(l_bc_all)
