@@ -214,9 +214,18 @@ class RDFGetter:
         return out_path
     # ---------------------------------------------------
     def _check_multithreading(self) -> None:
+        '''
+        This method will raise if running with mulithreading and if it was not explicitly allowed
+        '''
+        if RDFGetter._allow_multithreading:
+            log.info(f'Using {RDFGetter._nthreads} threads')
+            return
+
         nthreads = GetThreadPoolSize()
         if nthreads > 1:
             raise ValueError(f'Cannot run with mulithreading, using {nthreads} threads')
+
+        log.debug('Not using multithreading')
     # ---------------------------------------------------
     def _filter_samples(self, d_ftree_dir : dict[str,str]) -> dict[str,str]:
         '''
