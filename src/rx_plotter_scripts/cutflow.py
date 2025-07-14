@@ -36,6 +36,7 @@ class Data:
     q2_bin  : str
     config  : str
     plt_dir : str
+    nthreads: int
 
     l_ee_trees = ['brem_track_2', 'ecalo_bias']
     l_keep     = []
@@ -112,6 +113,7 @@ def _parse_args() -> None:
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True)
     parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True) 
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
+    parser.add_argument('-n', '--nthreads',type=int, help='Number of threads, if using multithreading', default=1)
     args = parser.parse_args()
 
     Data.q2_bin = args.q2bin
@@ -119,6 +121,7 @@ def _parse_args() -> None:
     Data.trigger= args.trigger
     Data.config = args.config
     Data.substr = args.substr
+    Data.nthreads = args.nthreads
 # ---------------------------------
 def _get_cfg() -> dict:
     cfg_path = files('rx_plotter_data').joinpath(f'cutflow/{Data.config}.yaml')
@@ -184,8 +187,9 @@ def main():
     '''
     _parse_args()
 
-    d_rdf = _get_inp()
-    _plot(d_rdf)
+    with RDFGetter.multithreading(nthreads=Data.nthreads)
+        d_rdf = _get_inp()
+        _plot(d_rdf)
 # ---------------------------------
 if __name__ == 'main':
     main()
