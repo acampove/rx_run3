@@ -109,4 +109,4 @@ plots:
 style:
   skip_lines : false
 saving:
-  plt_dir : plots/cutflow/cleanup
+  plt_dir : cutflow/cleanup
