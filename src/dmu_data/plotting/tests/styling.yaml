@@ -11,6 +11,8 @@ plots:
         alpha    : 0.3
       class B:
         color    : red 
+        histtype : step 
+        linestyle: '-'
   y :
     binning : [-5.0, 8.0, 40]
     title   : y distribution
