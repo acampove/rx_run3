@@ -53,59 +53,63 @@ cutflow:
     $J/\psi$ misID: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
 plots:
     otk_mas:
-        binning    : [2000, 8000, 100]
+        binning    : [2000, 8000, 60]
         yscale     : 'linear'
-        labels     : ['Iso${}_{1Trk}^{Mass}$', 'Entries']
+        labels     : ['Iso${}_{1Trk}^{Mass}\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : '1Trk_mas'
         normalized : false
         styling:
-          linestyle: '-'
+          <<: *style
     ttk_mas:
-        binning    : [2000, 8000, 100]
+        binning    : [2000, 8000, 60]
         yscale     : 'linear'
-        labels     : ['Iso${}_{2Trk}^{Mass}$', 'Entries']
+        labels     : ['Iso${}_{2Trk}^{Mass}\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : '2Trk_mas'
         normalized : false
         styling:
-          linestyle: '-'
+          <<: *style
     swp_cascade_mass_swp:
-        binning    : [1000, 3000, 100]
+        binning    : [1000, 3000, 60]
         yscale     : 'linear'
-        labels     : ['M$(K,\ell_{\to\pi})$', 'Entries']
+        labels     : ['M$(K,\ell_{\to\pi})\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : 'mass_cascade'
         normalized : false
         styling:
-          linestyle: '-'
+          <<: *style
     swp_jpsi_misid_mass_swp:
-        binning    : [1500, 3500, 100]
+        binning    : [1500, 3500, 60]
         yscale     : 'linear'
-        labels     : ['M$(K_{\to\ell},\ell)$', 'Entries']
+        labels     : ['M$(K_{\to\ell},\ell)\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : 'mass_jpsi_misid'
         normalized : false
         styling:
-          linestyle: '-'
+          <<: *style
     hop_mass:
         binning    : [0, 7000, 60]
         yscale     : 'linear'
-        labels     : ['$M_{HOP}(B^+)$', 'Entries']
+        labels     : ['$M_{HOP}(B^+)\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : 'bmass_hop'
         normalized : false
         styling:
-          linestyle: '-'
+          <<: *style
+        vline:
+          x     : 4500
+          c     : gray
+          ls    : ':'
     B_M:
         binning    : [4500, 6500, 60]
         yscale     : 'linear'
-        labels     : ['$B(M)$', 'Entries']
+        labels     : ['$B(M)\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : 'bmass'
         normalized : false
         styling:
-          linestyle: '-'
+          <<: *style
     mva_cmb:
         binning    : [0.7, 1.0, 60]
         yscale     : 'linear'
@@ -114,16 +118,16 @@ plots:
         name       : 'mva_cmb'
         normalized : false
         styling:
-          linestyle: '-'
+          <<: *style
     q2:
         binning    : [0.0, 22000000, 60]
         yscale     : 'linear'
-        labels     : ['$q^2$', 'Entries']
+        labels     : ['$q^2\;[\text{GeV}^2]$', 'Entries']
         title      : ''
         name       : 'q2'
         normalized : false
         styling:
-          linestyle: '-'
+          <<: *style
 style:
   skip_lines : false
 saving:
