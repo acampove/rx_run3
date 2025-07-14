@@ -18,7 +18,7 @@ styling: &style
 general:
   size : [15, 10]
 selection:
-  bdt       : mva_cmb > 0.8 && mva_prc > 0.8
+  bdt       : (1)
   hop       : (1)
   cascade   : (1)
   jpsi_misid: (1)
