@@ -3,7 +3,10 @@
 general:
   size : [15, 10]
 selection:
-  mva : mva_cmb > 0.7 && mva_prc > 0.0
+  mva       : mva_cmb > 0.8 && mva_prc > 0.8
+  hop       : (1)
+  cascade   : (1)
+  jpsi_misid: (1)
 definitions:
   otk_mas : B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
   ttk_mas : B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
