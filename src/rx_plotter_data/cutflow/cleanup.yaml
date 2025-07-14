@@ -1,5 +1,20 @@
 # Config used to make cutflow plot showing effect of vetoes
 
+styling: &style
+  None:
+    histtype : fill 
+    linestyle: '-'
+    alpha    : 0.3
+  HOP:
+    histtype : step
+    linestyle: '-'
+  Cascade:
+    histtype : step
+    linestyle: '-'
+  $J/\psi$ misID:
+    histtype : step
+    linestyle: '-'
+
 general:
   size : [15, 10]
 selection:
