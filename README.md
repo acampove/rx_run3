@@ -1408,14 +1408,16 @@ plots:
         styling :
         # This section will update the styling of each category
         # The categories (class A, etc) are the keys of the dictionary of dataframes
-          styling : 
-            class A:
-              # These are the arguments of plt.hist(...)
-              histtype : fill 
-              color    : gray
-              alpha    : 0.3
-            class B:
-              color    : red 
+        class A:
+            # These are the arguments of plt.hist(...)
+            histtype : fill 
+            color    : gray
+            alpha    : 0.3
+        class B:
+            color    : red 
+            histtype : step
+            linestyle: '-'  # Linestyle is by default 'none', 
+                            # needs to be overriden to see _steps_
         # This will add vertical lines to plots, the arguments are the same
         # as the ones passed to axvline
         vline   :
