@@ -34,6 +34,7 @@ class Data:
     plt_dir : str
     nthreads: int
     cfg     : dict
+    d_def   : dict[str,str] = {}
 
     l_ee_trees = ['brem_track_2', 'ecalo_bias']
     l_keep     = []
@@ -125,6 +126,7 @@ def _get_cfg() -> dict:
     cfg['saving'] = {'plt_dir' : _get_out_dir(plt_dir) }
 
     if 'definitions' in cfg:
+        Data.d_def = cfg['definitions']
         del cfg['definitions']
 
     cfg = _add_title(cfg)
