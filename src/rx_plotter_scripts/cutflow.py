@@ -178,8 +178,8 @@ def main():
     '''
     _parse_args()
 
-    Data.cfg   = _get_cfg()
     with RDFGetter.multithreading(nthreads=Data.nthreads):
+    Data.cfg = _get_cfg()
         d_rdf = _get_inp()
         _plot(d_rdf)
 # ---------------------------------
