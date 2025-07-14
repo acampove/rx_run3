@@ -172,7 +172,7 @@ def _fix_ranges(cfg : dict) -> dict:
     '''
 
     cfg_plt = cfg['plots']
-    if 'B_M' in cfg_plt:
+    if 'B_M' in cfg_plt and 'MuMu' in Data.trigger:
         [_, _, nbins] = cfg_plt['B_M']['binning']
         cfg_plt['B_M']['binning'] = [5150, 5800, nbins]
 
