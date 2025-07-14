@@ -37,6 +37,7 @@ class Data:
     config  : str
     plt_dir : str
     nthreads: int
+    cfg     : dict
 
     l_ee_trees = ['brem_track_2', 'ecalo_bias']
     l_keep     = []
@@ -85,11 +86,10 @@ def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
 # ---------------------------------
 @gut.timeit
 def _get_rdf() -> RDataFrame:
-    cfg = _get_cfg()
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
     rdf = gtr.get_rdf()
-    rdf = _apply_definitions(rdf, cfg)
-    rdf = _apply_selection(rdf, cfg)
+    rdf = _apply_definitions(rdf, Data.cfg)
+    rdf = _apply_selection(rdf, Data.cfg)
 
     return rdf
 # ---------------------------------
@@ -159,13 +159,12 @@ def _get_out_dir(plt_dir : str) -> str:
     return out_dir
 # ---------------------------------
 def _get_inp() -> dict[str,RDataFrame]:
-    cfg   = _get_cfg()
     rdf   = _get_rdf()
 
-    if 'cutflow' not in cfg:
+    if 'cutflow' not in Data.cfg:
         return {'None' : rdf}
 
-    d_cut = cfg['cutflow'][Data.q2_bin]
+    d_cut = Data.cfg['cutflow'][Data.q2_bin]
     d_rdf = {}
     log.info('Applying cutflow')
     for name, cut in d_cut.items():
@@ -187,6 +186,7 @@ def main():
     '''
     _parse_args()
 
+    Data.cfg   = _get_cfg()
     with RDFGetter.multithreading(nthreads=Data.nthreads):
         d_rdf = _get_inp()
         _plot(d_rdf)
