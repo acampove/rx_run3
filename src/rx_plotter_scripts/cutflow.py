@@ -1,5 +1,5 @@
 '''
-Script used to plot cutflows 
+Script used to plot cutflows
 '''
 import os
 import argparse
@@ -108,7 +108,7 @@ def _parse_args() -> None:
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high', 'high_dtf'])
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
     parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True)
-    parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True) 
+    parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True)
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     parser.add_argument('-n', '--nthreads',type=int, help='Number of threads, if using multithreading', default=1)
     args = parser.parse_args()
