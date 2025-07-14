@@ -10,7 +10,7 @@ import pandas            as pnd
 import pytest
 import mplhep
 import numpy
-from ROOT                    import RDataFrame
+from ROOT                    import RDataFrame, GetThreadPoolSize
 from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter_2d import Plotter2D
 from dmu.generic             import utilities as gut
