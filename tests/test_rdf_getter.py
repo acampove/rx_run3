@@ -816,3 +816,29 @@ def test_no_pid(sample : str, trigger : str):
             brem_track_2= False,
             test_name   = 'no_pid')
 # ------------------------------------------------
+def test_multithreading():
+    '''
+    This will test the context manager used to enable multithreading
+    '''
+    sample   = 'Bu_JpsiK_ee_eq_DPC'
+    nthreads = 4
+
+    with RDFGetter.multithreading(nthreads=nthreads), \
+         RDFGetter.max_entries(value=-1):
+
+        assert GetThreadPoolSize() == nthreads
+
+        gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+        rdf = gtr.get_rdf()
+
+        _print_dotted_branches(rdf)
+        _check_branches(rdf, is_ee=True, is_mc=True)
+
+        _plot_mva_mass(rdf, f'test_mc/{sample}')
+        _plot_mva(rdf     , f'test_mc/{sample}')
+        _plot_hop(rdf     , f'test_mc/{sample}')
+        _plot_sim(rdf     , f'test_mc/{sample}', particle=   'B')
+        _plot_sim(rdf     , f'test_mc/{sample}', particle='Jpsi')
+
+        _plot_mc_qsq(rdf, f'test_multithreading/{sample}', sample)
+# ------------------------------------------------
