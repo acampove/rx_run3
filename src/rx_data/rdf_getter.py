@@ -624,6 +624,7 @@ class RDFGetter:
         if nent < 0:
             return rdf
 
+        log.debug(f'Filtering for a range of {nent} entries')
         # Append information on transformations
         # done to dataframe in order to calculate
         # hash properly
@@ -845,8 +846,7 @@ class RDFGetter:
         old_val = RDFGetter._max_entries
         RDFGetter._max_entries = value
 
-        if value > 0:
-            log.warning(f'Running over at most {RDFGetter._max_entries} entries')
+        log.warning(f'Running over at most {RDFGetter._max_entries} entries')
 
         try:
             yield
