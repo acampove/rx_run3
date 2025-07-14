@@ -934,8 +934,16 @@ class RDFGetter:
 
         Parameters
         ----------------
-        nthreads: Number of threads for EnableImplicitMT
+        nthreads: Number of threads for EnableImplicitMT. If number
+        of threads is 1, multithreading will be off
         '''
+        if nthreads <= 0:
+            raise ValueError(f'Invalid number of threads: {nthreads}')
+
+        if nthreads == 1:
+            yield
+            return
+
         old_val = RDFGetter._allow_multithreading
         old_nth = RDFGetter._nthreads
 
