@@ -3,10 +3,7 @@ Script used to plot cutflows
 '''
 import os
 import argparse
-from importlib.resources import files
-from dataclasses         import dataclass
 
-import yaml
 import mplhep
 import dmu.generic.utilities as gut
 from ROOT                    import RDataFrame
@@ -17,7 +14,6 @@ from rx_selection            import selection
 
 log=LogStore.add_logger('rx_selection:cutflow')
 # ---------------------------------
-@dataclass
 class Data:
     '''
     Class used to share attributes
