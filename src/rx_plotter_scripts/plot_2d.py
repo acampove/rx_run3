@@ -114,17 +114,16 @@ def main():
     _initialize()
 
     cfg = _get_cfg()
-    if 'definitions' in cfg:
-        log.warning('Adding custom definitions')
-        RDFGetter.set_custom_columns(d_def = cfg['definitions'])
+    with RDFGetter.multithreading(nthreads=Data.nthreads), \
+        RDFGetter.custom_columns(columns = cfg['definitions']):
+        gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
+        rdf = gtr.get_rdf()
+        rdf = _apply_selection(rdf=rdf, cfg=cfg)
+
         del cfg['definitions']
 
-    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
-    rdf = gtr.get_rdf()
-    rdf = _apply_selection(rdf=rdf, cfg=cfg)
-
-    ptr=Plotter2D(rdf=rdf, cfg=cfg)
-    ptr.run()
+        ptr=Plotter2D(rdf=rdf, cfg=cfg)
+        ptr.run()
 # ---------------------------------
 if __name__ == 'main':
     main()
