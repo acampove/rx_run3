@@ -20,37 +20,14 @@ class Data:
     '''
     mplhep.style.use('LHCb2')
 
-    nthreads: int      = 1
-    loglvl  : int      = 20
-    q2bin   : str|None = None
-    trigger : str|None = None
-    config  : str|None = None
-    sample  : str|None = None
-    trigger : str|None = None
-    ana_dir : str      = os.environ['ANADIR']
-# ---------------------------------
-def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
-    d_cut = cfg['selection']['cuts']
-    if Data.q2bin is None:
-        q2bin       = 'jpsi' # Need dummy cut for selection code
-        d_cut['q2'] = '(1)'
-    else:
-        q2bin       = Data.q2bin
-
-    sel.set_custom_selection(d_cut = d_cut)
-
-    d_sel = sel.selection(trigger=Data.trigger, q2bin=q2bin, process=Data.sample)
-
-    for cut_name, cut_expr in d_sel.items():
-        log.debug(f'{cut_name:<20}{cut_expr}')
-        rdf = rdf.Filter(cut_expr, cut_name)
-
-    rep = rdf.Report()
-    rep.Print()
-
-    del cfg['selection']
-
-    return rdf
+    nthreads: int = 1
+    loglvl  : int = 20
+    q2bin   : str = ''
+    trigger : str = ''
+    config  : str = ''
+    sample  : str = ''
+    trigger : str = ''
+    ana_dir : str = os.environ['ANADIR']
 # ---------------------------------
 def _set_logs() -> None:
     LogStore.set_level('rx_selection:plot_2d'  , Data.loglvl)
