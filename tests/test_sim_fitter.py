@@ -102,9 +102,10 @@ def test_ccbar_reso():
     '''
     component = 'ccbar'
     obs       = zfit.Space('B_const_mass_M', limits=(4500, 6000))
-    cfg       = gut.load_conf(package='fitter_data', fpath=f'tests/{component}.yaml')
+    cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
 
-    with RDFGetter.max_entries(value=100_000):
+    with RDFGetter.max_entries(value=-1),\
+        RDFGetter.multithreading(nthreads=6):
         ftr = SimFitter(
             name    = component,
             obs     = obs,
