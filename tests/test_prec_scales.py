@@ -95,7 +95,7 @@ def _plot_df(df, trig):
     plt.close('all')
 #-------------------------------
 @pytest.mark.parametrize('q2bin'  , ['low', 'central', 'high'])
-@pytest.mark.parametrize('process', dn.get_decays())
+@pytest.mark.parametrize('process', ['bdkskpiee', 'bpkskpiee', 'bsphiee'])
 def test_all_datasets(q2bin : str, process : str):
     '''
     Tests retrieval of scales between signal and PRec yields
