@@ -52,13 +52,19 @@ def _parse_args() -> None:
     Data.config   = args.config
     Data.nthreads = args.nthreads
 # ---------------------------------
+def _override_output(cfg : dict) -> dict:
+    '''
+    Parameters
+    ---------------
+    cfg: Dictionary with plotting configuration
 
-    return _override_cfg(cfg)
-# ---------------------------------
-def _override_cfg(cfg : dict) -> dict:
-    if Data.sample is None:
-        raise ValueError('No sample passed')
+    Returns
+    ---------------
+    This method returns configuration with:
 
+    - Plotting directory overriden
+    - Name of output file overriden
+    '''
     sample = Data.sample.replace('*', 'p')
 
     plt_dir = cfg['saving']['plt_dir']
