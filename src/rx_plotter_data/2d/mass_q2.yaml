@@ -3,7 +3,7 @@
 saving:
     plt_dir : plots/2d/mass_q2
 definitions:
-  q2_def    : q2_smr / 1000000
+  q2_def    : q2 / 1000000 # This will use non-smeared mass when using MC!!!
 selection:
   cuts:
     q2  : (1)
