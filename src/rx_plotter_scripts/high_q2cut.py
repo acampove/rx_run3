@@ -4,6 +4,7 @@ to get signal in high q2 bin
 '''
 import os
 import argparse
+from typing import cast
 
 import numpy
 import mplhep
@@ -143,6 +144,7 @@ def _rdf_to_df(rdf : RDataFrame) -> pnd.DataFrame:
 def _plot(rdf : RDataFrame) -> None:
     df   = _rdf_to_df(rdf)
     for brem, df_brem in df.groupby('nbrem'):
+        brem = cast(str, brem)
         _plot_reco_q2(brem, df=df_brem)
         _plot_true_q2(brem, df=df_brem)
 
@@ -155,7 +157,7 @@ def _plot_eff(arr_val : numpy.ndarray, color : str, ax) -> None:
 
     ax.plot(sorted_data, eff, color=color)
 # ---------------------------
-def _plot_reco_q2(brem : int, df : pnd.DataFrame) -> None:
+def _plot_reco_q2(brem : int|str, df : pnd.DataFrame) -> None:
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(30, 10))
 
     ax1.hist(df['q2_smr'  ], bins=60, range=[0, Data.max_q2], density=True, label='$q^2$'        , alpha = 0.2, color='blue' )
@@ -207,7 +209,7 @@ def _plot_reco_q2(brem : int, df : pnd.DataFrame) -> None:
     plt.savefig(plot_path)
     plt.close()
 # ---------------------------
-def _plot_true_q2(brem : int, df : pnd.DataFrame) -> None:
+def _plot_true_q2(brem : int|str, df : pnd.DataFrame) -> None:
     if 'DATA' in Data.sample:
         return
 
