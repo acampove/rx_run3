@@ -102,16 +102,12 @@ def _override_cfg(cfg : dict) -> dict:
 
     return cfg
 # ---------------------------------
-def _initialize():
-    _set_logs()
-    Data.ana_dir = os.environ['ANADIR']
-# ---------------------------------
 def main():
     '''
     Script starts here
     '''
     _parse_args()
-    _initialize()
+    _set_logs()
 
     cfg = _get_cfg()
     with RDFGetter.multithreading(nthreads=Data.nthreads), \
