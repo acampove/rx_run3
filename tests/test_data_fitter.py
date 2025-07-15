@@ -123,3 +123,24 @@ def test_rare_electron(q2bin : str):
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
+def test_high_q2_track():
+    '''
+    Test fitting rare electron in high q2
+    with track based cut and adding brem 0 category
+    '''
+    cfg = gut.load_conf(
+        package='fitter_data',
+        fpath  ='rare/electron/data.yaml')
+
+    with Cache.turn_off_cache(val=['DataFitter']),\
+        sel.custom_selection(d_sel={
+            'q2'    : 'q2_track > 14300000 && q2_track < 22000000',
+            'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
+        ftr = DataFitter(
+            sample = 'DATA_24_*',
+            trigger= 'Hlt2RD_BuToKpEE_MVA',
+            project= 'rx',
+            q2bin  = 'high',
+            cfg    = cfg)
+        ftr.run()
+# -------------------------------------------
