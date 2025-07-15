@@ -41,7 +41,3 @@ plots:
     name    : k_pidk
     styling :
       <<: *style
-plugin:
-  stats:
-    L1_PID_E:
-      sum : sum={:.0f}
