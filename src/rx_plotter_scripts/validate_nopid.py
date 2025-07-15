@@ -147,7 +147,9 @@ def main():
     _load_samples()
 
     for sample, trigger in Data.samples.items():
-        Data.weight  = '0.5' if 'MuMu' in trigger else '1e-4'
+        if sample in ['Bu_JpsiK_ee_eq_DPC']:
+            continue
+
         if 'btosllball' in sample:
             Data.weight  = '0.5' if 'MuMu' in trigger else '0.1'
         else:
