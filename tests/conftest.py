@@ -2,6 +2,8 @@
 This file is needed by pytest
 '''
 import os
+from typing import cast
+
 import mplhep
 import matplotlib.pyplot as plt
 import pandas            as pnd
@@ -15,6 +17,7 @@ from dmu.workflow.cache          import Cache
 from dmu.logging.log_store       import LogStore
 
 executed_tests = set()
+log = LogStore.add_logger('rx_efficiencies:conftest')
 # -----------------------------------
 class ScalesData:
     '''
@@ -51,20 +54,22 @@ class ScalesData:
 
         plt.figure(figsize=(15,10))
         for proc, df_proc in df.groupby('Process'):
+            proc = cast(str, proc)
             if proc == 'bpkpee':
                 continue
 
-            decay = dn.tex_from_decay(proc)
+            decay = dn.tex_from_decay(decay=proc)
             plt.plot(df_proc.Q2, df_proc.Value, label=decay)
             plt.fill_between(df_proc.Q2, df_proc.Value - df_proc.Error, df_proc.Value + df_proc.Error, alpha=0.2)
 
         out_dir = 'plots/prec_scales'
         os.makedirs(out_dir, exist_ok=True)
 
+        log.warning(f'Sending plots to: {out_dir}')
+
         plt.grid()
-        plt.title(mva_cut)
         plt.legend()
-        plt.ylim(0.0, 0.40)
+        plt.ylim(0.0, 0.15)
         plt.xlabel('')
         plt.ylabel(r'$N_{PRec}/N_{Signal}$')
         plt.savefig(f'{out_dir}/scales_def_wp.png')
