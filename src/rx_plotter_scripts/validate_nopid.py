@@ -152,6 +152,8 @@ def main():
 
         if 'btosllball' in sample:
             Data.weight  = '0.5' if 'MuMu' in trigger else '0.1'
+        elif sample in ['Bu_JpsiPi_ee_eq_DPC']:
+            Data.weight  = '0.5' if 'MuMu' in trigger else '1e-2'
         else:
             Data.weight  = '0.5' if 'MuMu' in trigger else '1e-4'
 
