@@ -83,14 +83,26 @@ def main():
     _parse_args()
     _set_logs()
 
-    cfg = _get_cfg()
+    cfg   = gut.load_data(package='rx_plotter_data', fpath=f'2d/{Data.config}.yaml')
+    cfg   = _override_output(cfg=cfg)
+    d_cut = cfg['selection']['cuts']
+    d_def = cfg['definitions']
+
     with RDFGetter.multithreading(nthreads=Data.nthreads), \
-        RDFGetter.custom_columns(columns = cfg['definitions']):
-        gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
-        rdf = gtr.get_rdf()
-        rdf = _apply_selection(rdf=rdf, cfg=cfg)
+        RDFGetter.custom_columns(columns = d_def),\
+        sel.custom_selection(d_sel=d_cut):
 
         del cfg['definitions']
+        del cfg['selection']['cuts']
+
+        gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
+        rdf = gtr.get_rdf()
+
+        rdf = sel.apply_full_selection(
+            process= Data.sample,
+            trigger= Data.trigger,
+            q2bin  = Data.q2bin,
+            rdf    = rdf)
 
         ptr=Plotter2D(rdf=rdf, cfg=cfg)
         ptr.run()
