@@ -14,7 +14,6 @@ from rx_data.rdf_getter      import RDFGetter
 
 log=LogStore.add_logger('rx_selection:plot_2d')
 # ---------------------------------
-@dataclass
 class Data:
     '''
     Class used to share attributes
