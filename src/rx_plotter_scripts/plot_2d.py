@@ -70,9 +70,6 @@ def _override_output(cfg : dict) -> dict:
     plt_dir = cfg['saving']['plt_dir']
     cfg['saving']['plt_dir']   = f'{Data.ana_dir}/{plt_dir}/{Data.trigger}/{sample}'
 
-    if Data.q2bin is None:
-        return cfg
-
     for l_setting in cfg['plots_2d']:
         name = l_setting[3]
         l_setting[3] = f'{name}_{Data.q2bin}'
