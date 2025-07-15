@@ -61,7 +61,7 @@ class Data:
     l_q2var = ['q2_true', 'q2_smr', 'q2_track', 'q2_dtf', 'nbrem', 'B_Mass_smr']
 # ---------------------------
 def _parse_args():
-    parser = argparse.ArgumentParser(description='Used to perform several operations on TCKs')
+    parser = argparse.ArgumentParser(description='Used to check efficiency vs q2 for different q2 definitions')
     parser.add_argument('-s', '--sample', type=str, help='MC sample', required=True, choices=list(Data.d_samples))
     parser.add_argument('-r', '--run'   , type=str, help='Run from which to plot', default='run3', choices=['run12', 'run3'])
     args = parser.parse_args()
