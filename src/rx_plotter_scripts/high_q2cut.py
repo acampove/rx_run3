@@ -185,7 +185,7 @@ def _plot_reco_q2(brem : int|str, df : pnd.DataFrame) -> None:
     _plot_eff(arr_q2dtf, color='green', ax=ax3)
     _plot_eff(arr_q2trk, color='red'  , ax=ax3)
 
-    ax1.set_xlabel('$q^2$[GeV$/c^{2}$]')
+    ax1.set_xlabel(r'$q^2_{reco}$[GeV$/c^{2}$]')
     ax2.set_xlabel(r'$M(K^+e^+e^-)$')
     ax3.tick_params(axis='y', labelcolor='green')
     ax3.set_ylabel('Efficiency', color='green')
@@ -233,7 +233,7 @@ def _plot_true_q2(brem : int|str, df : pnd.DataFrame) -> None:
     ax1.legend(loc='upper right', bbox_to_anchor=(1.0, 1.0))
     ax2.legend(loc='upper right', bbox_to_anchor=(1.0, 1.0))
 
-    ax1.set_xlabel(r'$q^2_{True}$')
+    ax1.set_xlabel(r'$q^2_{true}$[GeV$/c^{2}$]')
     ax2.set_xlabel(r'$M(K^+e^+e^-)$')
 
     title = _get_efficiencies_title(
@@ -277,7 +277,7 @@ def _get_efficiencies_title(
 
     return title
 # ---------------------------
-def _get_title(brem : str) -> str:
+def _get_title(brem : str|int) -> str:
     latex = Data.d_latex[Data.sample]
 
     return f'Brem = {brem}; {latex}'
