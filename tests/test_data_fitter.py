@@ -134,7 +134,7 @@ def test_high_q2_track():
 
     with Cache.turn_off_cache(val=['DataFitter']),\
         sel.custom_selection(d_sel={
-            'q2'    : 'q2_track > 14300000 && q2_track < 22000000',
+            'q2'    : 'q2_track > 14300000 && q2 < 22000000',
             'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
         ftr = DataFitter(
             sample = 'DATA_24_*',
