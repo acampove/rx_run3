@@ -60,6 +60,7 @@ def _set_logs() -> None:
     LogStore.set_level('rx_selection:plot_2d'  , Data.loglvl)
     LogStore.set_level('dmu:plotting:Plotter2D', Data.loglvl)
     LogStore.set_level('dmu:plotting:Plotter'  , Data.loglvl)
+    LogStore.set_level('rx_data:rdf_getter'    , Data.loglvl)
 # ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make 2D plots')
@@ -88,6 +89,9 @@ def _get_cfg() -> dict:
     return _override_cfg(cfg)
 # ---------------------------------
 def _override_cfg(cfg : dict) -> dict:
+    if Data.sample is None:
+        raise ValueError('No sample passed')
+
     sample = Data.sample.replace('*', 'p')
 
     plt_dir = cfg['saving']['plt_dir']
