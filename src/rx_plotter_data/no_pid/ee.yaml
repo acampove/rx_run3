@@ -12,6 +12,10 @@ plots:
     weights : weights
     name    : l1_pide
     styling : &style
+      '0.1 x New':
+        histtype : fill
+        color    : red 
+        alpha    : 0.4
       '1e-4 x New':
         histtype : fill
         color    : red 
