@@ -37,7 +37,7 @@ definitions:
     nbrem             : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2) # Will use the new definition of brem
     <<: *common
   MM:
-    Jpsi_Mass         : Jpsi_M
+    Jpsi_Mass         : Jpsi_M # For electrons brem correction makes no sense, so name brem corrected = original
     B_Mass            : B_M
     nbrem             : '0'
     <<: *common
