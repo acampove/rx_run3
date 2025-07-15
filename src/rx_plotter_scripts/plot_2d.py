@@ -24,13 +24,14 @@ class Data:
     '''
     mplhep.style.use('LHCb2')
 
-    loglvl  : int
-    q2bin   : str
-    trigger : str
-    config  : str
-    sample  : str
-    trigger : str
-    ana_dir : str
+    nthreads: int      = 1
+    loglvl  : int      = 20
+    q2bin   : str|None = None
+    trigger : str|None = None
+    config  : str|None = None
+    sample  : str|None = None
+    trigger : str|None = None
+    ana_dir : str      = os.environ['ANADIR']
 # ---------------------------------
 def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
     d_cut = cfg['selection']['cuts']
