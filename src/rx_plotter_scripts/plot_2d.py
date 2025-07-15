@@ -37,7 +37,7 @@ def _set_logs() -> None:
 # ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make 2D plots')
-    parser.add_argument('-q', '--q2bin'   , type=str, help='q2 bin, optional' , choices=['low', 'central', 'jpsi', 'psi2', 'high'])
+    parser.add_argument('-q', '--q2bin'   , type=str, help='q2 bin, optional' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
     parser.add_argument('-c', '--config'  , type=str, help='Settings, i.e. mass_q2', required=True)
     parser.add_argument('-s', '--sample'  , type=str, help='Name of sample, can use wildcards', required=True)
     parser.add_argument('-t', '--trigger' , type=str, help='Name of trigger', required=True)
