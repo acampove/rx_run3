@@ -3,10 +3,10 @@
 saving:
     plt_dir : plots/2d/mass_q2
 definitions:
-  q2_org     : q2_smr / 1000000
-  q2_org_wide: q2_smr / 1000000
-  q2_org_low : q2_smr / 1000000
-  q2_org_all : q2_smr / 1000000
+  q2_def     : q2_smr / 1000000
+  q2_def_wide: q2_smr / 1000000
+  q2_def_low : q2_smr / 1000000
+  q2_def_all : q2_smr / 1000000
   # -------
   q2_trk     : q2_track / 1000000
   q2_trk_wide: q2_track / 1000000
@@ -24,10 +24,10 @@ selection:
 general:
     size : [15, 12]
 plots_2d:
-    - [B_Mass, q2_org     , null, Bmass_q2_org      , true]
-    - [B_Mass, q2_org_low , null, Bmass_q2_org_low  , true]
-    - [B_Mass, q2_org_wide, null, Bmass_q2_org_wide , true]
-    - [B_Mass, q2_org_all , null, Bmass_q2_org_all  , true]
+    - [B_Mass, q2_def     , null, Bmass_q2_def      , true]
+    - [B_Mass, q2_def_low , null, Bmass_q2_def_low  , true]
+    - [B_Mass, q2_def_wide, null, Bmass_q2_def_wide , true]
+    - [B_Mass, q2_def_all , null, Bmass_q2_def_all  , true]
     # ----------
     - [B_Mass, q2_trk     , null, Bmass_q2_trk      , true]
     - [B_Mass, q2_trk_low , null, Bmass_q2_trk_low  , true]
@@ -46,16 +46,16 @@ axes:
         binning : [4500, 7000, 100]
         label   : '$M_{corr}(B^+)$[MeV]'
     # --------------------
-    q2_org :
+    q2_def :
         binning : [13, 24, 100]
         label   : '$q^2_{corr}$[GeV${}^2$]'
-    q2_org_wide :
+    q2_def_wide :
         binning : [10, 30, 100]
         label   : '$q^2_{corr}$[GeV${}^2$]'
-    q2_org_low  :
+    q2_def_low  :
         binning : [0 , 10, 100]
         label   : '$q^2_{corr}$[GeV${}^2$]'
-    q2_org_all  :
+    q2_def_all  :
         binning : [0, 24, 100]
         label   : '$q^2_{corr}$[GeV${}^2$]'
     # --------------------
