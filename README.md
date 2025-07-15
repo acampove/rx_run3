@@ -120,6 +120,16 @@ the brem corrected vs smeared vs non smeared masses in the selection do:
 leakage
 ```
 
+### No PID samples validation
+
+For this run:
+
+```bash
+validate_nopid
+```
+
+which will use the config in `no_pid/ee.yaml`.
+
 **TODO**: This should be improved
 
 ### $q^2$ cut on different variables to get high-q2 signal region 
