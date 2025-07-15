@@ -45,9 +45,15 @@ def _get_rdf(sample : str, trigger : str, has_pid : bool) -> RDataFrame:
 
     weight = '1.0' if has_pid else Data.weight
 
-    gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
-    rdf = gtr.get_rdf()
-    rdf = rdf.Define('weights', weight)
+    with RDFGetter.exclude_friends(names=[
+        'brem_track_2',
+        'hop',
+        'mva',
+        'swp_cascade',
+        'swp_jpsi_misid']):
+        gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
+        rdf = gtr.get_rdf()
+        rdf = rdf.Define('weights', weight)
 
     return rdf
 # ----------------------------
