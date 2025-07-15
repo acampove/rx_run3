@@ -63,18 +63,20 @@ def _set_logs() -> None:
 # ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make 2D plots')
-    parser.add_argument('-q', '--q2bin' , type=str, help='q2 bin, optional' , choices=['low', 'central', 'jpsi', 'psi2', 'high'])
-    parser.add_argument('-c', '--config', type=str, help='Settings, i.e. mass_q2', required=True)
-    parser.add_argument('-s', '--sample', type=str, help='Name of sample, can use wildcards', required=True)
-    parser.add_argument('-t', '--trigger', type=str, help='Name of trigger', required=True)
-    parser.add_argument('-l', '--loglvl', type=int, help='Log level', choices=[10, 20, 30], default=20)
+    parser.add_argument('-q', '--q2bin'   , type=str, help='q2 bin, optional' , choices=['low', 'central', 'jpsi', 'psi2', 'high'])
+    parser.add_argument('-c', '--config'  , type=str, help='Settings, i.e. mass_q2', required=True)
+    parser.add_argument('-s', '--sample'  , type=str, help='Name of sample, can use wildcards', required=True)
+    parser.add_argument('-t', '--trigger' , type=str, help='Name of trigger', required=True)
+    parser.add_argument('-l', '--loglvl'  , type=int, help='Log level', choices=[10, 20, 30], default=20)
+    parser.add_argument('-n', '--nthreads', type=int, help='Number of threads', default=Data.nthreads)
     args = parser.parse_args()
 
-    Data.sample = args.sample
-    Data.trigger= args.trigger
-    Data.loglvl = args.loglvl
-    Data.q2bin  = args.q2bin
-    Data.config = args.config
+    Data.sample   = args.sample
+    Data.trigger  = args.trigger
+    Data.loglvl   = args.loglvl
+    Data.q2bin    = args.q2bin
+    Data.config   = args.config
+    Data.nthreads = args.nthreads
 # ---------------------------------
 def _get_cfg() -> dict:
     config_path = files('rx_plotter_data').joinpath(f'2d/{Data.config}.yaml')
