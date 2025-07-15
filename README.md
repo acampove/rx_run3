@@ -149,7 +149,7 @@ This is done with:
 ```python
 from rx_data.rdf_getter     import RDFGetter
 
-RDFGetter.set_custom_columns(d_def = d_def)
+RDFGetter.custom_columns(d_def = d_def)
 ```
 
 If custom columns are defined in more than one place in the code, the function will
