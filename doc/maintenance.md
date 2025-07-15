@@ -185,6 +185,7 @@ where:
 `-k` Kind of files to be copied, i.e. friend tree like `mva`, `main`, `hop` etc. For everything use `all`.   
 `-c` Name of config specifying what to copy, e.g. `rk`   
 `-p` Projecte.g. `rx` (default), `nopid`, etc. These correspond to the subdirectory in `$ANADIR/Data`
+`-v` Version of files to download. By default it should get the latest.
 
 The config files live in `src/rx_data_data/copy_files` and can be adapted for new samples or different source paths.
 
