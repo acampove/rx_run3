@@ -16,7 +16,7 @@ plots:
         histtype : fill
         color    : red 
         alpha    : 0.4
-      '0.2 x New':
+      '2e-2 x New':
         histtype : fill
         color    : red 
         alpha    : 0.4
