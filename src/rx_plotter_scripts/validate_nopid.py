@@ -148,6 +148,11 @@ def main():
 
     for sample, trigger in Data.samples.items():
         Data.weight  = '0.5' if 'MuMu' in trigger else '1e-4'
+        if 'btosllball' in sample:
+            Data.weight  = '0.5' if 'MuMu' in trigger else '0.1'
+        else:
+            Data.weight  = '0.5' if 'MuMu' in trigger else '1e-4'
+
         channel      = 'mm'  if 'MuMu' in trigger else   'ee'
         _load_config(channel=channel)
 
