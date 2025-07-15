@@ -52,12 +52,6 @@ def _parse_args() -> None:
     Data.config   = args.config
     Data.nthreads = args.nthreads
 # ---------------------------------
-def _get_cfg() -> dict:
-    config_path = files('rx_plotter_data').joinpath(f'2d/{Data.config}.yaml')
-    config_path = str(config_path)
-
-    with open(config_path, encoding='utf=8') as ifile:
-        cfg = yaml.safe_load(ifile)
 
     return _override_cfg(cfg)
 # ---------------------------------
