@@ -14,7 +14,6 @@ styling: &style
   $J/\psi$ misID:
     histtype : step
     linestyle: '-'
-
 general:
   size : [15, 10]
 selection:
@@ -48,7 +47,7 @@ cutflow:
     $J/\psi$ misID: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
   high:
     None          : hop_mass >  0
-    HOP           : hop_mass >  4500
+    HOP           : hop_mass >  3000
     Cascade       : swp_cascade_mass_swp    > 1900
     $J/\psi$ misID: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
 plots:
