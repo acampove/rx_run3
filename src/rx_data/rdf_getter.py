@@ -58,6 +58,7 @@ class RDFGetter:
     _d_custom_columns : dict[str,str] = {}
     _allow_multithreading             = False
     _nthreads                         = None
+    _lock_mthread                     = False # This will be made True if multithreading is set.
     # ---------------------------------------------------
     def __init__(
             self,
