@@ -4,6 +4,7 @@ Class testing RDFGetter
 import os
 import glob
 import math
+from typing import cast
 
 import matplotlib.pyplot as plt
 import pandas            as pnd
@@ -16,7 +17,7 @@ from dmu.plotting.plotter_2d import Plotter2D
 from dmu.generic             import utilities as gut
 
 from rx_selection           import selection as sel
-from rx_data.rdf_getter     import RDFGetter, AlreadySetColumns
+from rx_data.rdf_getter     import RDFGetter
 
 log=LogStore.add_logger('rx_data:test_rdf_getter')
 # ------------------------------------------------
