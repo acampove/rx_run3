@@ -764,7 +764,7 @@ def test_ccbar(sample : str):
     '''
     trigger = 'Hlt2RD_BuToKpEE_MVA'
 
-    with RDFGetter.max_entries(-1) and RDFGetter.skip_adding_columns(True):
+    with RDFGetter.max_entries(-1), RDFGetter.skip_adding_columns(True):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf()
 
