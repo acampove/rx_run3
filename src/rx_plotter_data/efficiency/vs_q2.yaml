@@ -7,3 +7,19 @@ input:
    rk_mm:
     - Bu_Kmumu_eq_btosllball05_DPC
     - Hlt2RD_BuToKpMuMu_MVA
+hist_conf:
+  name  : q2
+  bins  : 50
+  start : 0
+  stop  : 22
+  label : r'$q^2 [\text{GeV}^2]$'
+lines:
+  bounds:
+    Low       : 1.0 
+    Central   : 6.0
+    $J/\psi$  : 13.0
+    $\psi(2S)$: 13.0
+    High      : 15.0
+  styling:
+    color : gray
+    style : --
