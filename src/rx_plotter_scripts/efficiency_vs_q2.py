@@ -116,7 +116,7 @@ def main():
     Entry point
     '''
     _parse_args()
-    Data.cfg = gut.load_conf(package='rx_efficiency_data', fpath='efficiency/vs_q2')
+    Data.cfg = gut.load_conf(package='rx_plotter_data', fpath='efficiency/vs_q2.yaml')
 
     df = _get_data()
     print(df)
