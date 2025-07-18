@@ -857,23 +857,26 @@ class RDFGetter:
 
         return tmp_path
     # ---------------------------------------------------
-    @contextmanager
-    @staticmethod
-    def max_entries(value : int):
+    @classmethod
+    def max_entries(cls, value : int):
         '''
         Contextmanager to limit number of entries in dataframe
 
         value: number of entries, by default -1 (all). If the value passed is negative, will do all entries
         '''
-        old_val = RDFGetter._max_entries
-        RDFGetter._max_entries = value
+        @contextmanager
+        def _context():
+            old_val = cls._max_entries
+            cls._max_entries = value
 
-        log.warning(f'Running over at most {RDFGetter._max_entries} entries')
+            log.warning(f'Running over at most {cls._max_entries} entries')
 
-        try:
-            yield
-        finally:
-            RDFGetter._max_entries = old_val
+            try:
+                yield
+            finally:
+                cls._max_entries = old_val
+
+        return _context()
     # ---------------------------------------------------
     @contextmanager
     @staticmethod
