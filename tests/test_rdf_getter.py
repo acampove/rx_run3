@@ -378,6 +378,27 @@ def _check_mva_scores(
     assert numpy.array_equal(ev1, ev2)
     assert numpy.array_equal(rn1, rn2)
 # ------------------------------------------------
+def _check_mcdt(rdf : RDataFrame, name : str) -> None:
+    '''
+    Parameters
+    -------------
+    rdf: ROOT DataFrame with MCDecayTree
+    name: Name of test, for outputs
+
+    Returns
+    -------------
+    None
+    '''
+    arr_q2 = rdf.AsNumpy(['q2'])['q2']
+    arr_q2 = arr_q2 / 1000_000
+
+    test_dir = f'{Data.out_dir}/{name}'
+    os.makedirs(test_dir, exist_ok=True)
+
+    plt.hist(arr_q2, bins=60, range=(0, 22), histtype='step')
+    plt.savefig(f'{test_dir}/q2.png')
+    plt.close()
+# ------------------------------------------------
 def _run_default_checks(
     rdf          : RDataFrame,
     test_name    : str,
