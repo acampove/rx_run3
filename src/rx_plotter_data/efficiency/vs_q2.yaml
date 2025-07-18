@@ -12,10 +12,10 @@ hist_conf:
   bins  : 50
   start : 0
   stop  : 22
-  label : r'$q^2 [\text{GeV}^2]$'
+  label : $q_{true}^2 [\text{GeV}^2]$
 lines:
   bounds:
-    Low       : 1.0 
+    Low       : 1.0
     Central   : 6.0
     $J/\psi$  : 13.0
     $\psi(2S)$: 13.0

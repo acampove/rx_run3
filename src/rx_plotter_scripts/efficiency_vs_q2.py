@@ -174,8 +174,8 @@ def _add_lines() -> None:
     color = cfg.lines.styling.color
     style = cfg.lines.styling.style
 
-    for label, bound in cfg.lines.bounds.items():
-        plt.axvline(x=bound, color=color, linestyle=style, label=label)
+    for bound in cfg.lines.bounds.values():
+        plt.axvline(x=bound, color=color, linestyle=style)
 # ----------------------
 def _plot_efficiencies(df : pnd.DataFrame) -> None:
     '''
