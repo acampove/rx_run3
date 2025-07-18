@@ -567,9 +567,30 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
+    def _add_mcdt_columns(self, rdf : RDataFrame) -> RDataFrame:
+        '''
+        Parameters
+        -------------
+        rdf: ROOT dataframe symbolizing MCDecatTree
+
+        Returns
+        -------------
+        Same dataframe with extra variables added
+        '''
+        log.debug('Adding MCDT columns')
+
+        q2_def = self._cfg['MCDT'][self._channel]['q2']
+        rdf    = self._add_column(rdf=rdf, name='q2', definition=q2_def)
+
+        return rdf
+    # ---------------------------------------------------
     def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
         if RDFGetter._skip_adding_columns:
             log.warning('Not adding new columns')
+            return rdf
+
+        if self._tree_name == 'MCDecayTree':
+            rdf = self._add_mcdt_columns(rdf=rdf)
             return rdf
 
         if self._tree_name != 'DecayTree':
