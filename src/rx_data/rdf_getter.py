@@ -878,21 +878,24 @@ class RDFGetter:
 
         return _context()
     # ---------------------------------------------------
-    @contextmanager
-    @staticmethod
-    def skip_adding_columns(value : bool):
+    @classmethod
+    def skip_adding_columns(cls, value : bool):
         '''
         Contextmanager to control if column (re)definitions from config are used or not
 
         value: If true it will not define any column in dataframe, i.e. this is what is in the ROOT files, False by default
         '''
-        old_val = RDFGetter._skip_adding_columns
-        try:
-            RDFGetter._skip_adding_columns = value
-            log.warning('Skipping addition of extra columns to dataframe: {RDFGetter._skip_adding_columns}')
-            yield
-        finally:
-            RDFGetter._skip_adding_columns = old_val
+        @contextmanager
+        def _context():
+            old_val = RDFGetter._skip_adding_columns
+            try:
+                RDFGetter._skip_adding_columns = value
+                log.warning('Skipping addition of extra columns to dataframe: {RDFGetter._skip_adding_columns}')
+                yield
+            finally:
+                RDFGetter._skip_adding_columns = old_val
+
+        return _context()
     # ---------------------------------------------------
     @contextmanager
     @staticmethod
