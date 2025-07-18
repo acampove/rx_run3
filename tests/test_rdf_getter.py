@@ -704,7 +704,7 @@ def test_ext_trigger(period : str, polarity : str):
     _check_ext(rdf)
     _plot_ext(rdf, sample=sample)
 # ------------------------------------------------
-def test_define_custom_branches():
+def test_custom_columns():
     '''
     Tests defining of new custom columns
     '''
