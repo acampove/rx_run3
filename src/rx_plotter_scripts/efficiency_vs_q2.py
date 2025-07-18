@@ -116,16 +116,94 @@ def _get_data() -> pnd.DataFrame:
 
     return df
 # ----------------------
+def _get_hist(df : pnd.DataFrame, axis : Regular, flag : str) -> Hist:
+    '''
+    Parameters
+    -------------
+    df : DataFrame with q2_true column and flags
+
+    Returns
+    -------------
+    Histogram with q2 distribution
+    '''
+    df_filt = df[df[flag] == 1]
+    df_filt = cast(pnd.DataFrame, df_filt)
+
+    arr_q2  = df_filt['q2_true'].to_numpy()
+    arr_q2  = arr_q2 / 1000_000.
+
+    histogram = Hist(axis)
+    histogram.fill(q2=arr_q2)
+
+    return histogram
+# ----------------------
+def _check_none(obj : DictConfig|None, kind : str) -> DictConfig:
+    '''
+    Parameters
+    -------------
+    obj : omegaconf dictionary with configuration
+    kind: Key that has to exist in config
+
+    Returns
+    -------------
+    The config if it passes checks
+    '''
+    if obj is None:
+        raise ValueError(f'Config {kind} not found')
+
+    if kind not in obj:
+        raise ValueError(f'Cannot find key {kind} in config')
+
+    return obj
+# ----------------------
+def _add_lines() -> None:
+    '''
+    Parameters
+    -------------
+    None
+
+    Returns
+    -------------
+    None
+    '''
+    cfg   = _check_none(obj=Data.cfg, kind='lines')
+    color = cfg.lines.styling.color
+    style = cfg.lines.styling.style
+
+    for label, bound in cfg.lines.bounds.items():
+        plt.axvline(x=bound, color=color, linestyle=style, label=label)
+# ----------------------
+def _plot_efficiencies(df : pnd.DataFrame) -> None:
+    '''
+    Parameters
+    -------------
+    df: Pandas dataframe with: q2_true, pass_all and pass_sel
+
+    Returns
+    -------------
+    Nothing, this should only plot efficiencies
+    '''
+    cfg       = _check_none(obj=Data.cfg, kind='hist_conf')
+    hist_conf = cfg.hist_conf
+
+    axis  = Regular(**hist_conf)
+    h_sel = _get_hist(df=df, axis=axis, flag='pass_sel')
+    h_all = _get_hist(df=df, axis=axis, flag='pass_all')
+
+    h_sel.plot()
+    _add_lines()
+    plt.show()
+# ----------------------
 def main():
     '''
     Entry point
     '''
     _parse_args()
+    log.debug('Loading configuration')
     Data.cfg = gut.load_conf(package='rx_plotter_data', fpath='efficiency/vs_q2.yaml')
 
     df = _get_data()
-    print(df)
-    #_plot_efficiencies()
+    _plot_efficiencies(df=df)
 # ----------------------
 if __name__ == '__main__':
     main()
