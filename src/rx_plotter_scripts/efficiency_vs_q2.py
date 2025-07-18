@@ -30,6 +30,7 @@ class Data:
 
     pass_all = 'pass_all'
     pass_sel = 'pass_sel'
+    mplhep.style.use('LHCb2')
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script needed to plot efficiency vs true q2')
@@ -54,6 +55,7 @@ def _string_from_dictionary(data :  dict[str,str]) -> str:
     l_expr = [f'({expr})' for expr in l_expr ]
 
     full_expr = ' && '.join(l_expr)
+    full_expr = f'int({full_expr})'
 
     return full_expr
 # ----------------------
@@ -103,6 +105,8 @@ def _get_data() -> pnd.DataFrame:
     '''
     if Data.cfg is None:
         raise ValueError('Config not set')
+
+    log.debug('Loading data')
 
     [sample, trigger] = Data.cfg.input[f'{Data.analysis}_{Data.channel}']
 
