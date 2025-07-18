@@ -939,25 +939,28 @@ class RDFGetter:
 
         return _context()
     # ---------------------------------------------------
-    @contextmanager
-    @staticmethod
-    def custom_columns(columns : dict[str,str]):
+    @classmethod
+    def custom_columns(cls, columns : dict[str,str]):
         '''
         Contextmanager that will define new columns
 
         key: Name of column
         val: Definition
         '''
-        old_val = RDFGetter._d_custom_columns
-        RDFGetter._d_custom_columns = copy.deepcopy(columns)
-        log.warning('Using custom columns:')
-        for key, val in RDFGetter._d_custom_columns.items():
-            log.info(f'{"":<4}{key:<20}{val}')
+        @contextmanager
+        def _context():
+            old_val = cls._d_custom_columns
+            cls._d_custom_columns = copy.deepcopy(columns)
+            log.warning('Using custom columns:')
+            for key, val in cls._d_custom_columns.items():
+                log.info(f'{"":<4}{key:<20}{val}')
 
-        try:
-            yield
-        finally:
-            RDFGetter._d_custom_columns = old_val
+            try:
+                yield
+            finally:
+                cls._d_custom_columns = old_val
+
+        return _context()
     # ---------------------------------------------------
     @contextmanager
     @staticmethod
