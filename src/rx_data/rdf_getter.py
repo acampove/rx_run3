@@ -916,9 +916,8 @@ class RDFGetter:
 
         return _context()
     # ---------------------------------------------------
-    @contextmanager
-    @staticmethod
-    def custom_friends(versions : dict[str,str]):
+    @classmethod
+    def custom_friends(cls, versions : dict[str,str]):
         '''
         It will pick a dictionary between:
 
@@ -927,14 +926,18 @@ class RDFGetter:
 
         and override the version used for this friend tree
         '''
-        old_val = RDFGetter._custom_versions
-        RDFGetter._custom_versions = copy.deepcopy(versions)
-        log.warning(f'Using custom friend tree versions: {RDFGetter._custom_versions}')
+        @contextmanager
+        def _context():
+            old_val = cls._custom_versions
+            cls._custom_versions = copy.deepcopy(versions)
+            log.warning(f'Using custom friend tree versions: {cls._custom_versions}')
 
-        try:
-            yield
-        finally:
-            RDFGetter._custom_versions = old_val
+            try:
+                yield
+            finally:
+                cls._custom_versions = old_val
+
+        return _context()
     # ---------------------------------------------------
     @contextmanager
     @staticmethod
