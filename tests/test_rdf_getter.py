@@ -874,6 +874,31 @@ def test_multithreading(nthreads : int):
 
         _plot_mc_qsq(rdf, f'test_multithreading/{sample}', sample)
 # ------------------------------------------------
+@pytest.mark.parametrize('nthreads', [-3, 0])
+def test_multithreading_invalid(nthreads : int):
+    '''
+    This will test the context manager used to enable multithreading
+    with invalid number of threads
+    '''
+    sample   = 'Bu_JpsiK_ee_eq_DPC'
+    with pytest.raises(ValueError):
+        with RDFGetter.multithreading(nthreads=nthreads):
+            gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+            gtr.get_rdf()
+# ------------------------------------------------
+def test_multithreading_locked():
+    '''
+    This will test multithreading with locked class
+    '''
+    nthreads = 2
+    sample   = 'Bu_JpsiK_ee_eq_DPC'
+
+    with pytest.raises(ValueError):
+        with RDFGetter.multithreading(nthreads=nthreads):
+            with RDFGetter.multithreading(nthreads=nthreads):
+                gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+                gtr.get_rdf()
+# ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_JpsiX_ee_eq_JpsiInAcc'] )
 def test_skip_adding_columns(sample : str):
     '''
