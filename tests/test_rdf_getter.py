@@ -874,3 +874,25 @@ def test_multithreading(nthreads : int):
 
         _plot_mc_qsq(rdf, f'test_multithreading/{sample}', sample)
 # ------------------------------------------------
+@pytest.mark.parametrize('sample', ['Bu_JpsiX_ee_eq_JpsiInAcc'] )
+def test_skip_adding_columns(sample : str):
+    '''
+    Tests reading of ccbar + X samples
+    '''
+    trigger = 'Hlt2RD_BuToKpEE_MVA'
+
+    gtr_1 = RDFGetter(sample=sample, trigger=trigger)
+    rdf_1 = gtr_1.get_rdf()
+
+    with RDFGetter.skip_adding_columns(True):
+        gtr_2 = RDFGetter(sample=sample, trigger=trigger)
+        rdf_2 = gtr_2.get_rdf()
+
+    assert not isinstance(rdf_1, dict)
+    assert not isinstance(rdf_2, dict)
+
+    l_col_1 = [ name.c_str() for name in rdf_1.GetColumnNames() ]
+    l_col_2 = [ name.c_str() for name in rdf_2.GetColumnNames() ]
+
+    assert len(l_col_1) > len(l_col_2)
+# ------------------------------------------------
