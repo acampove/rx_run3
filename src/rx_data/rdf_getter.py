@@ -962,9 +962,8 @@ class RDFGetter:
 
         return _context()
     # ---------------------------------------------------
-    @contextmanager
-    @staticmethod
-    def multithreading(nthreads : int):
+    @classmethod
+    def multithreading(cls, nthreads : int):
         '''
         Multithreading should be used with care. This should be the only
         place where multithreading is allowed to be turned on.
@@ -974,24 +973,32 @@ class RDFGetter:
         nthreads: Number of threads for EnableImplicitMT. If number
         of threads is 1, multithreading will be off
         '''
+
         if nthreads <= 0:
             raise ValueError(f'Invalid number of threads: {nthreads}')
 
-        if nthreads == 1:
-            yield
-            return
+        if cls._allow_multithreading:
+            raise ValueError(f'Multithreading was already set to {cls._nthreads}, cannot set to {nthreads}')
 
-        old_val = RDFGetter._allow_multithreading
-        old_nth = RDFGetter._nthreads
+        @contextmanager
+        def _context():
+            if nthreads == 1:
+                yield
+                return
 
-        RDFGetter._allow_multithreading = True
-        RDFGetter._nthreads             = nthreads
+            old_val = cls._allow_multithreading
+            old_nth = cls._nthreads
 
-        EnableImplicitMT(nthreads)
-        try:
-            yield
-        finally:
-            DisableImplicitMT()
-            RDFGetter._allow_multithreading = old_val
-            RDFGetter._nthreads             = old_nth
+            cls._nthreads             = nthreads
+            cls._allow_multithreading = True
+            EnableImplicitMT(nthreads)
+
+            try:
+                yield
+            finally:
+                DisableImplicitMT()
+                cls._allow_multithreading = old_val
+                cls._nthreads             = old_nth
+
+        return _context()
 # ---------------------------------------------------
