@@ -579,7 +579,7 @@ class RDFGetter:
         '''
         log.debug('Adding MCDT columns')
 
-        q2_def = self._cfg['MCDT'][self._channel]['q2']
+        q2_def = self._cfg['definitions']['MCDT'][self._channel]['q2']
         rdf    = self._add_column(rdf=rdf, name='q2', definition=q2_def)
 
         return rdf
