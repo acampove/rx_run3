@@ -897,21 +897,24 @@ class RDFGetter:
 
         return _context()
     # ---------------------------------------------------
-    @contextmanager
-    @staticmethod
-    def exclude_friends(names : list[str]):
+    @classmethod
+    def exclude_friends(cls, names : list[str]):
         '''
         It will build the dataframe, excluding the friend trees
         in the `names` list
         '''
-        old_val = RDFGetter._excluded_friends
-        RDFGetter._excluded_friends = copy.deepcopy(names)
-        log.warning(f'Excluding friend trees: {RDFGetter._excluded_friends}')
+        @contextmanager
+        def _context():
+            old_val = cls._excluded_friends
+            cls._excluded_friends = copy.deepcopy(names)
+            log.warning(f'Excluding friend trees: {cls._excluded_friends}')
 
-        try:
-            yield
-        finally:
-            RDFGetter._excluded_friends = old_val
+            try:
+                yield
+            finally:
+                cls._excluded_friends = old_val
+
+        return _context()
     # ---------------------------------------------------
     @contextmanager
     @staticmethod
