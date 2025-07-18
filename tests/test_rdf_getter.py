@@ -646,19 +646,26 @@ def test_check_vars(sample : str):
 
     _print_dotted_branches(rdf)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC'])
-def test_mcdecaytree(sample : str):
+@pytest.mark.parametrize('sample, trigger',
+                         [
+                         ('Bu_Kee_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpEE_MVA'),
+                         ('Bu_Kmumu_eq_btosllball05_DPC', 'Hlt2RD_BuToKpMuMu_MVA')])
+def test_mcdecaytree(sample : str, trigger : str):
     '''
     Builds dataframe from MCDecayTree
     '''
-    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA', tree='MCDecayTree')
-    rdf = gtr.get_rdf()
+    with RDFGetter.max_entries(value=10_000):
+        gtr = RDFGetter(sample=sample, trigger=trigger, tree='MCDecayTree')
+        rdf = gtr.get_rdf()
 
+    rdf      = cast(RDataFrame, rdf)
     nentries = rdf.Count().GetValue()
 
     log.info(f'Found {nentries} entries')
 
     assert nentries > 0
+
+    _check_mcdt(rdf=rdf, name=f'mcdt/{sample}')
 # ------------------------------------------------
 @pytest.mark.parametrize('period'  ,['24c1','24c2','24c3','24c4'])
 @pytest.mark.parametrize('polarity',['MagUp', 'MagDown'])
