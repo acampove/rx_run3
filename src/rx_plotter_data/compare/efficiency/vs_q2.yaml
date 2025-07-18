@@ -1,0 +1,9 @@
+# This config file is meant to be used with `efficiency_vs_q2`
+
+input:
+  rk_ee:
+    - Bu_Kee_eq_btosllball05_DPC
+    - Hlt2RD_BuToKpEE_MVA
+   rk_mm:
+    - Bu_Kmumu_eq_btosllball05_DPC
+    - Hlt2RD_BuToKpMuMu_MVA
