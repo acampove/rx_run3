@@ -104,10 +104,9 @@ def _get_mcdt_q2(sample : str, trigger : str) -> numpy.ndarray:
     -------------
     Numpy array with q2 values from MCDT divided by 1000_000
     '''
-    gtr = RDFGetter(sample=sample, trigger=trigger, tree='MCDecayTree')
-    rdf = gtr.get_rdf()
-    rdf = cast(RDataFrame, rdf)
-
+    gtr    = RDFGetter(sample=sample, trigger=trigger, tree='MCDecayTree')
+    rdf    = gtr.get_rdf()
+    rdf    = cast(RDataFrame, rdf)
     arr_q2 = rdf.AsNumpy(['q2'])['q2']
 
     return arr_q2
