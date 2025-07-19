@@ -1,6 +1,6 @@
-image: docker.io/acampove/rx_run3:v2
 # -----------
 default:
+  image: docker.io/acampove/rx_run3:v2
   tags:
     - cvmfs
   id_tokens:
