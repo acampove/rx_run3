@@ -1,4 +1,4 @@
-image: docker.io/acampove/rx_run3:v1
+image: docker.io/acampove/rx_run3:v2
 # -----------
 default:
   tags:
