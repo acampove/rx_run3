@@ -6,12 +6,14 @@ import copy
 import argparse
 from typing       import cast
 
+import numpy
 import mplhep
 import matplotlib.pyplot   as plt
 import pandas              as pnd
 from hist                  import Hist
 from hist.axis             import Regular
 from ROOT                  import RDataFrame
+from boost_histogram.axis  import Axis
 from omegaconf             import DictConfig
 from dmu.logging.log_store import LogStore
 from dmu.generic           import utilities as gut
