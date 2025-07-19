@@ -226,9 +226,10 @@ def _plot_efficiencies(df : pnd.DataFrame) -> None:
     h_eff_sel = h_sel / h_den
     h_eff_tot = h_all / h_den
 
-    h_eff_sel.plot(color='blue', alpha=0.3, label='No MVA')
+    h_eff_sel.plot(color='blue', histtype='fill', alpha=0.3, label='No MVA')
     h_eff_tot.plot(color='red', histtype='step', label='Full efficiency')
     _add_lines()
+    plt.ylabel(r'\varepsilon')
     plt.legend()
     plt.show()
 # ----------------------
