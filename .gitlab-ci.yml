@@ -11,7 +11,6 @@ before_script:
 # -----------
 stages :
   - build
-  - test
 # -----------
 build:
   cache:
@@ -33,11 +32,8 @@ build:
     - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install apd
     - eval "$(apd-login)"  # authenticate with Analysis Productions using this JWT
     - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install -e .
-# -----------
-test_eos:
   variables:
     ANADIR : $PWD/output
-  stage: test
   script:
     - mkdir -p $ANADIR
     - efficiency_vs_q2 -c ee -a rk 
