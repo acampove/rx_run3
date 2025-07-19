@@ -3,6 +3,13 @@ image: docker.io/acampove/rx_run3:v2
 default:
   tags:
     - cvmfs
+  id_tokens:
+    LBAP_CI_JOB_JWT:  # generates a JSON Web Token (JWT) and assigns it to the env var $LBAP_CI_JOB_JWT
+      aud: https://lbap.app.cern.ch
+before_script:
+    - source /cvmfs/lhcb.cern.ch/lib/LbEnv # Source the LHCb environment
+    - eval "$(apd-login)"  # authenticate with Analysis Productions using this JWT
+    - git config --global color.ui always # Enable colored output for git
 # -----------
 stages :
   - build
@@ -27,5 +34,5 @@ build:
 test_eos:
   stage: test
   script:
-    - ls /eos/lhcb/wg/RD/RX_run3
+    root -l -q /eos/lhcb/wg/RD/RX_run3/Data/rx/hop/v3/mc_magup_13454001_bs_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_cal_72a6fc3576.root
 # -----------
