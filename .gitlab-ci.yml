@@ -35,7 +35,10 @@ build:
     - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install -e .
 # -----------
 test_eos:
+  variables:
+    ANADIR : $PWD/output
   stage: test
   script:
-    - root -l -q root://eoslhcb.cern.ch//eos/lhcb/wg/RD/RX_run3/Data/rx/hop/v3/mc_magup_13454001_bs_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_cal_72a6fc3576.root
+    - mkdir -p $ANADIR
+    - efficiency_vs_q2 -c ee -a rk 
 # -----------
