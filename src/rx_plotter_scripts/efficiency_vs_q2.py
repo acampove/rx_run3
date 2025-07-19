@@ -120,10 +120,14 @@ def _get_data() -> tuple[pnd.DataFrame, numpy.ndarray]:
 
     Returns
     -------------
-    Pandas DataFrame with:
-    - True q2
-    - Selection flag, true for entries passing selection except for MVA
-    - MVA flag, true for entries passing selection, including MVA
+    Tuple with:
+
+    - Pandas DataFrame with:
+        - True q2
+        - Selection flag, true for entries passing selection except for MVA
+        - MVA flag, true for entries passing selection, including MVA
+
+    - Array with q2 form MCDT tree
     '''
     if Data.cfg is None:
         raise ValueError('Config not set')
