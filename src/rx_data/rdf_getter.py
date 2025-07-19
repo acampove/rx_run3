@@ -94,7 +94,7 @@ class RDFGetter:
             'Hlt2RD_BuToKpMuMu_MVA',
             'Hlt2RD_BuToKpMuMu_SameSign_MVA']
 
-        self._rdf    : RDataFrame         # This is where the dataframe will be stored, prevents recalculation
+        self._rdf    : RDF.RNode          # This is where the dataframe will be stored, prevents recalculation
         self._d_info : dict[str,Any] = {} # Used to store information related to transformations done to dataframe (e.g. Range), needed for hashing
         self._l_path : list[str]     = [] # list of paths to all the ROOT files
         self._channel                = self._channel_from_trigger()
@@ -484,7 +484,7 @@ class RDFGetter:
         '''
         return self._skip_brem_track_2_definition(name, definition)
     # ---------------------------------------------------
-    def _add_column(self, rdf: RDataFrame, name : str, definition : str) -> RDataFrame:
+    def _add_column(self, rdf : RDF.RNode, name : str, definition : str) -> RDF.RNode:
         '''
         Wrapper function to Define
         '''
@@ -500,7 +500,7 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def _define_common_columns(self, rdf : RDataFrame) -> RDataFrame:
+    def _define_common_columns(self, rdf : RDF.RNode) -> RDF.RNode:
         log.info('Adding common columns')
 
         d_def = self._cfg['definitions'][self._channel]
@@ -521,7 +521,7 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def _define_mc_columns(self, rdf : RDataFrame) -> RDataFrame:
+    def _define_mc_columns(self, rdf : RDF.RNode) -> RDF.RNode:
         if self._sample.startswith('DATA'):
             log.debug(f'Not adding MC only columns for: {self._sample}')
             return rdf
@@ -538,7 +538,7 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def _define_data_columns(self, rdf : RDataFrame) -> RDataFrame:
+    def _define_data_columns(self, rdf : RDF.RNode) -> RDF.RNode:
         if not self._sample.startswith('DATA'):
             log.info(f'Not adding data columns for: {self._sample}')
             return rdf
@@ -550,7 +550,7 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def _redefine_columns(self, rdf : RDataFrame) -> RDataFrame:
+    def _redefine_columns(self, rdf : RDF.RNode) -> RDF.RNode:
         log.info('Redefining columns')
 
         d_def = self._cfg['redefinitions']
@@ -567,7 +567,7 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def _add_mcdt_columns(self, rdf : RDataFrame) -> RDataFrame:
+    def _add_mcdt_columns(self, rdf : RDF.RNode) -> RDF.RNode:
         '''
         Parameters
         -------------
@@ -584,7 +584,7 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
+    def _add_columns(self, rdf : RDF.RNode) -> RDF.RNode:
         if RDFGetter._skip_adding_columns:
             log.warning('Not adding new columns')
             return rdf
@@ -611,7 +611,7 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def _rdf_from_conf(self, conf_path : str) -> RDataFrame:
+    def _rdf_from_conf(self, conf_path : str) -> RDF.RNode:
         '''
         Parameters
         ------------------
@@ -632,7 +632,7 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def _filter_dataframe(self, rdf : RDataFrame) -> RDataFrame:
+    def _filter_dataframe(self, rdf : RDF.RNode) -> RDF.RNode:
         '''
         Parameters
         ------------
@@ -659,7 +659,7 @@ class RDFGetter:
     # ---------------------------------------------------
     def get_rdf(
             self,
-            per_file : bool = False) -> RDataFrame|dict[str,RDataFrame]:
+            per_file : bool = False) -> RDF.RNode|dict[str,RDF.RNode]:
         '''
         Returns sample in the form of dataframes
 
@@ -723,7 +723,7 @@ class RDFGetter:
         return val
     # ---------------------------------------------------
     @staticmethod
-    def add_truem(rdf : RDataFrame) -> RDataFrame:
+    def add_truem(rdf : RDF.RNode) -> RDF.RNode:
         '''
         Takes ROOT dataframe associated to MC sample:
 

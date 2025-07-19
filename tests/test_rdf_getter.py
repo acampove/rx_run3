@@ -11,7 +11,7 @@ import pandas            as pnd
 import pytest
 import mplhep
 import numpy
-from ROOT                    import RDataFrame, GetThreadPoolSize
+from ROOT                    import RDataFrame, GetThreadPoolSize, RDF
 from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter_2d import Plotter2D
 from dmu.generic             import utilities as gut
@@ -79,7 +79,7 @@ def _initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
     plt.style.use(mplhep.style.LHCb2)
 # ------------------------------------------------
-def _check_truem_columns(rdf : RDataFrame):
+def _check_truem_columns(rdf : RDF.RNode):
     l_name = [ name.c_str() for name in rdf.GetColumnNames() if name.endswith('_TRUEM') ]
     d_data = rdf.AsNumpy(l_name)
     df     = pnd.DataFrame(d_data)
@@ -89,7 +89,7 @@ def _check_truem_columns(rdf : RDataFrame):
     if nnan > 0:
         raise ValueError(f'Found {nnan}/{ntot} NaNs in dataframe')
 # ------------------------------------------------
-def _check_block(rdf : RDataFrame) -> None:
+def _check_block(rdf : RDF.RNode) -> None:
     arr_block = rdf.AsNumpy(['block'])['block']
 
     assert numpy.all(arr_block >= 0)
@@ -122,7 +122,7 @@ def _check_branches(
 
         raise ValueError(f'Branch missing: {branch}')
 # ------------------------------------------------
-def _print_dotted_branches(rdf : RDataFrame) -> None:
+def _print_dotted_branches(rdf : RDF.RNode) -> None:
     l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
 
     for name in l_name:
@@ -131,7 +131,7 @@ def _print_dotted_branches(rdf : RDataFrame) -> None:
 
         log.info(name)
 # ------------------------------------------------
-def _plot_mva_mass(rdf : RDataFrame, test : str) -> None:
+def _plot_mva_mass(rdf : RDF.RNode, test : str) -> None:
     test_dir = f'{Data.out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
 
@@ -153,7 +153,7 @@ def _plot_mva_mass(rdf : RDataFrame, test : str) -> None:
     plt.savefig(f'{test_dir}/mva_mass.png')
     plt.close()
 # ------------------------------------------------
-def _plot_block(rdf : RDataFrame, name : str) -> None:
+def _plot_block(rdf : RDF.RNode, name : str) -> None:
     arr_block = rdf.AsNumpy(['block'])['block']
 
     os.makedirs(f'{Data.out_dir}/{name}', exist_ok=True)
@@ -187,7 +187,7 @@ def _plot_bmass(
     plt.savefig(f'{test_dir}/bmass.png')
     plt.close()
 # ------------------------------------------------
-def _plot_q2_track(rdf : RDataFrame, sample : str) -> None:
+def _plot_q2_track(rdf : RDF.RNode, sample : str) -> None:
     test_dir = f'{Data.out_dir}/{sample}'
     os.makedirs(test_dir, exist_ok=True)
 
@@ -202,7 +202,7 @@ def _plot_q2_track(rdf : RDataFrame, sample : str) -> None:
     plt.savefig(f'{test_dir}/q2_track.png')
     plt.close()
 # ------------------------------------------------
-def _plot_sim(rdf : RDataFrame, test : str, particle : str) -> None:
+def _plot_sim(rdf : RDF.RNode, test : str, particle : str) -> None:
     test_dir = f'{Data.out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
 
@@ -224,7 +224,7 @@ def _plot_sim(rdf : RDataFrame, test : str, particle : str) -> None:
     plt.savefig(f'{test_dir}/{particle}_truem.png')
     plt.close()
 # ------------------------------------------------
-def _plot_mva(rdf : RDataFrame, test : str) -> None:
+def _plot_mva(rdf : RDF.RNode, test : str) -> None:
     test_dir = f'{Data.out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
 
@@ -240,7 +240,7 @@ def _plot_mva(rdf : RDataFrame, test : str) -> None:
     plt.savefig(f'{test_dir}/mva.png')
     plt.close()
 # ------------------------------------------------
-def _plot_hop(rdf : RDataFrame, test : str) -> None:
+def _plot_hop(rdf : RDF.RNode, test : str) -> None:
     test_dir = f'{Data.out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
 
@@ -280,7 +280,7 @@ def _apply_selection(
 
     return rdf
 # ------------------------------------------------
-def _plot_brem_track_2(rdf : RDataFrame, test : str, tree : str) -> None:
+def _plot_brem_track_2(rdf : RDF.RNode, test : str, tree : str) -> None:
     test_dir = f'{Data.out_dir}/{test}/{tree}'
     os.makedirs(test_dir, exist_ok=True)
 
@@ -307,7 +307,7 @@ def _plot_brem_track_2(rdf : RDataFrame, test : str, tree : str) -> None:
         plt.savefig(f'{test_dir}/{var}.png')
         plt.close()
 # ------------------------------------------------
-def _plot_mc_qsq(rdf : RDataFrame, test : str, sample : str) -> None:
+def _plot_mc_qsq(rdf : RDF.RNode, test : str, sample : str) -> None:
     test_dir = f'{Data.out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
 
@@ -327,7 +327,7 @@ def _plot_mc_qsq(rdf : RDataFrame, test : str, sample : str) -> None:
     plt.savefig(f'{test_dir}/q2.png')
     plt.close()
 # ------------------------------------------------
-def _plot_ext(rdf : RDataFrame, sample : str) -> None:
+def _plot_ext(rdf : RDF.RNode, sample : str) -> None:
     cfg = {
             'saving'   : {'plt_dir' : f'{Data.out_dir}/ext'},
             'general'  : {'size' : [20, 10]},
@@ -344,7 +344,7 @@ def _plot_ext(rdf : RDataFrame, sample : str) -> None:
     ptr=Plotter2D(rdf=rdf, cfg=cfg)
     ptr.run()
 # ------------------------------------------------
-def _check_ext(rdf : RDataFrame) -> None:
+def _check_ext(rdf : RDF.RNode) -> None:
     rdf_ana = rdf.Filter('L1_PID_E > 1 && L2_PID_E > 1')
     rdf_mis = rdf.Filter('L1_PID_E < 1 || L2_PID_E < 1')
 
@@ -355,7 +355,7 @@ def _check_ext(rdf : RDataFrame) -> None:
     log.info(f'MisID   : {count_mis}')
 # ------------------------------------------------
 def _check_mva_scores(
-        rdf : RDataFrame,
+        rdf : RDF.RNode,
         ) -> None:
     '''
     Checks that the event number and run number are aligned between
@@ -378,7 +378,7 @@ def _check_mva_scores(
     assert numpy.array_equal(ev1, ev2)
     assert numpy.array_equal(rn1, rn2)
 # ------------------------------------------------
-def _check_mcdt(rdf : RDataFrame, name : str) -> None:
+def _check_mcdt(rdf : RDF.RNode, name : str) -> None:
     '''
     Parameters
     -------------
