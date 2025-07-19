@@ -79,7 +79,8 @@ def _add_flags(
     - pass_all: True if passes full selection
     '''
     d_full_sel = sel.selection(q2bin='jpsi', process=sample, trigger=trigger)
-    d_full_sel['q2'] = '(1)'
+    d_full_sel['q2']   = '(1)'
+    d_full_sel['mass'] = '(1)'
 
     d_part_sel = copy.deepcopy(d_full_sel)
     d_part_sel['bdt'] = '(1)'
