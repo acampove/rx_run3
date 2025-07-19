@@ -12,7 +12,7 @@ dependencies= [
 'uproot',
 'vector',
 'numpy',
-'data-manipulation-utilities @ git+ssh://git@github.com:/rx_run3/dmu.git@master',
+'data-manipulation-utilities @ git+ssh://git@github.com/acampove/dmu.git@master',
 ]
 
 [project.optional-dependencies]
