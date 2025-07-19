@@ -112,7 +112,7 @@ def _get_mcdt_q2(sample : str, trigger : str) -> numpy.ndarray:
 
     return arr_q2
 # ----------------------
-def _get_data() -> tuple[pnd.DataFrame, numpy.ndarray]:
+def _get_data() -> pnd.DataFrame:
     '''
     Parameters
     -------------
@@ -120,14 +120,11 @@ def _get_data() -> tuple[pnd.DataFrame, numpy.ndarray]:
 
     Returns
     -------------
-    Tuple with:
-
-    - Pandas DataFrame with:
+    Pandas DataFrame with:
         - True q2
         - Selection flag, true for entries passing selection except for MVA
         - MVA flag, true for entries passing selection, including MVA
-
-    - Array with q2 form MCDT tree
+        - Array of true q2 attached as an atribute with key "total"
     '''
     if Data.cfg is None:
         raise ValueError('Config not set')
@@ -143,6 +140,8 @@ def _get_data() -> tuple[pnd.DataFrame, numpy.ndarray]:
     l_col = ['q2_true', 'pass_all', 'pass_sel']
     data  = rdf.AsNumpy(l_col)
     df    = pnd.DataFrame(data)
+
+    df.attrs['total'] = _get_mcdt_q2(sample=sample, trigger=trigger)
 
     return df
 # ----------------------
@@ -208,6 +207,7 @@ def _plot_efficiencies(df : pnd.DataFrame) -> None:
     Parameters
     -------------
     df: Pandas dataframe with: q2_true, pass_all and pass_sel
+    with numpy array with q2 from MCDecayTree attached with key `total`
 
     Returns
     -------------
