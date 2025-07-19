@@ -4,7 +4,13 @@ version     = '0.0.1'
 readme      = 'README.md'
 dependencies= [
 'data-manipulation-utilities',
+'hist',
+'boost-histogram',
 'mplhep',
+'matplotlib',
+'pandas',
+'numpy',
+'omegaconf',
 'rx_selection',
 'rx_data',
 ]
