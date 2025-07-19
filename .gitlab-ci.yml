@@ -21,7 +21,7 @@ build:
       - ~/.cache/pip
   stage: build 
   variables:
-    ANADIR : ~/output
+    ANADIR : /eos/lhcb/wg/RD/RX_run3
   script:
     - source /opt/root-install/bin/thisroot.sh
     - mkdir -p ~/.ssh
