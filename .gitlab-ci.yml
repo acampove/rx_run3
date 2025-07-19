@@ -17,16 +17,16 @@ stages :
 ssh:
   stage: authenticate
   script:
-    - mkdir -p ~/.ssh
-    - echo "$SSH_USER_KEY" | tr -d '\r' > ~/.ssh/id_rsa_user
-    - chmod 600 ~/.ssh/id_rsa_user
+    - mkdir -p .ssh
+    - echo "$SSH_USER_KEY" | tr -d '\r' > .ssh/id_rsa_user
+    - chmod 600 .ssh/id_rsa_user
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 # -----------
 apd:
   stage: authenticate
   script:
-    - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install apd
+    - GIT_SSH_COMMAND='ssh -i .ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install apd
     - eval "$(apd-login)"  # authenticate with Analysis Productions using this JWT
 # -----------
 build:
@@ -38,7 +38,7 @@ build:
       - ~/.cache/pip
   stage: build
   script:
-    - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install -e .
+    - GIT_SSH_COMMAND='ssh -i .ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install -e .
 # -----------
 test_eos:
   stage: test
