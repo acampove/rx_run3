@@ -197,6 +197,10 @@ def _add_lines() -> None:
     -------------
     None
     '''
+    if 'lines' not in Data.cfg:
+        log.warning('Not adding lines')
+        return
+
     cfg   = _check_none(obj=Data.cfg, kind='lines')
     color = cfg.lines.styling.color
     style = cfg.lines.styling.style
