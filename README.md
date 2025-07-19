@@ -130,8 +130,6 @@ validate_nopid
 
 which will use the config in `no_pid/ee.yaml`.
 
-**TODO**: This should be improved
-
 ### $q^2$ cut on different variables to get high-q2 signal region 
 
 To study this run:
@@ -140,4 +138,11 @@ To study this run:
 high_q2cut
 ```
 
+### Efficiencies vs true q2
 
+For this run:
+
+```bash
+efficiency_vs_q2 -c ee -a rk
+efficiency_vs_q2 -c mm -a rk
+```
