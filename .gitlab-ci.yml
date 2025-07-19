@@ -9,7 +9,9 @@ stages :
 # -----------
 build:
   cache:
-    key: pip-cache
+    key:
+      files :
+        - pyproject.toml
     paths:
       - ~/.cache/pip
   stage: build
