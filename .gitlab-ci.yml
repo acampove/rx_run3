@@ -1,30 +1,15 @@
-image: docker.io/acampove/rx_run3:v2
-# -----------
-default:
-  tags:
-    - cvmfs
-# -----------
-stages :
-  - build
-  - test
-# -----------
-build:
-  cache:
-    key:
-      files :
-        - pyproject.toml
-    paths:
-      - ~/.cache/pip
-  stage: build
+stages:
+  - test_ssh
+
+test_ssh:
+  stage: test_ssh
+  image: alpine/ssh:latest  # lightweight image with ssh client
+  variables:
+    GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
   script:
     - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -p 7999 gitlab.cern.ch >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-    - pip install -e .
-# -----------
-test_ssh:
-  stage: test
-  script:
-    - ssh -T -p 7999 git@gitlab.cern.ch || true
+    - ssh -i ~/.ssh/id_rsa -p 7999 -v git@gitlab.cern.ch || true
