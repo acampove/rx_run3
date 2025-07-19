@@ -88,8 +88,8 @@ def _add_flags(
     part_sel = _string_from_dictionary(data=d_part_sel)
     full_sel = _string_from_dictionary(data=d_full_sel)
 
-    rdf = rdf.Define(Data.pass_sel, full_sel)
-    rdf = rdf.Define(Data.pass_all, part_sel)
+    rdf = rdf.Define(Data.pass_sel, part_sel)
+    rdf = rdf.Define(Data.pass_all, full_sel)
 
     return rdf
 # ----------------------
