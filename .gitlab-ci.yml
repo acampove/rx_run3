@@ -6,6 +6,7 @@ default:
 # -----------
 stages :
   - build
+  - test
 # -----------
 build:
   cache:
@@ -22,4 +23,9 @@ build:
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
     - pip install -e .
+# -----------
+test_eos:
+  stage: test
+  script:
+    - ls /eos/lhcb/wg/RD/RX_run3
 # -----------
