@@ -10,12 +10,11 @@ before_script:
     - git config --global color.ui always # Enable colored output for git
 # -----------
 stages :
-  - authenticate
   - build
   - test
 # -----------
 ssh:
-  stage: authenticate
+  stage: build 
   script:
     - mkdir -p .ssh
     - echo "$SSH_USER_KEY" | tr -d '\r' > .ssh/id_rsa_user
@@ -26,12 +25,12 @@ ssh:
     - chmod 644 ~/.ssh/known_hosts
 # -----------
 apd:
-  stage: authenticate
+  stage: build 
   script:
     - GIT_SSH_COMMAND='ssh -i .ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install apd
     - eval "$(apd-login)"  # authenticate with Analysis Productions using this JWT
 # -----------
-build:
+install:
   cache:
     key:
       files :
