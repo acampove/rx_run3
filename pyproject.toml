@@ -13,7 +13,7 @@ dependencies= [
 'vector',
 'numpy',
 'torch',
-'data_manipulation_utilities',
+'data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git@master',
 ]
 
 [project.optional-dependencies]
