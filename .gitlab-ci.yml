@@ -1,0 +1,17 @@
+image: docker.io/acampove/rx_run3:v1
+# -----------
+default:
+  tags:
+    - cvmfs
+# -----------
+stages :
+  - build
+# -----------
+build:
+  cache:
+    key: pip-cache
+    paths:
+      - ~/.cache/pip
+  stage: build
+  script:
+    - pip install -e .
