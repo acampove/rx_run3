@@ -3,7 +3,7 @@ stages:
 
 test_ssh:
   stage: test_ssh
-  image: alpine/ssh:latest  # lightweight image with ssh client
+  image: docker.io/acampove/rx_run3:v2
   variables:
     GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
   script:
