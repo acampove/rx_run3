@@ -2,6 +2,7 @@
 This script is meant to make plots of the efficiency in MC
 in function of the true q2
 '''
+import os
 import copy
 import random
 import argparse
@@ -34,6 +35,8 @@ class Data:
     pass_all = 'pass_all'
     pass_sel = 'pass_sel'
     mplhep.style.use('LHCb2')
+
+    ana_dir  = os.environ['ANADIR']
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script needed to plot efficiency vs true q2')
@@ -237,9 +240,24 @@ def _plot_efficiencies(df : pnd.DataFrame) -> None:
     h_eff_sel.plot(color='blue' , histtype='fill', alpha=0.3, label='No MVA')
     h_eff_tot.plot(color='red'  , histtype='step', label='Full efficiency')
     _add_lines()
-    plt.ylabel(r'$\varepsilon \cdot RDM$')
+    plt.ylabel('A.U.')
     plt.legend()
-    plt.show()
+# ----------------------
+def _get_out_path() -> str:
+    '''
+    Returns
+    -------------
+    Path to PNG file where plot should go
+    '''
+    cfg = _check_none(obj=Data.cfg, kind='input')
+    [sample, trigger] = cfg.input[f'{Data.analysis}_{Data.channel}']
+
+    out_dir = f'{Data.ana_dir}/efficiencies/differential/q2'
+    os.makedirs(out_dir, exist_ok=True)
+
+    out_path = f'{out_dir}/{sample}_{trigger}.png'
+
+    return out_path
 # ----------------------
 def main():
     '''
@@ -251,6 +269,9 @@ def main():
 
     df = _get_data()
     _plot_efficiencies(df=df)
+
+    out_path = _get_out_path()
+    plt.savefig(out_path)
 # ----------------------
 if __name__ == '__main__':
     main()
