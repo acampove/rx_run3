@@ -22,22 +22,22 @@ build:
       - ~/.cache/pip
   stage: build 
   script:
-    - mkdir -p .ssh
-    - echo "$SSH_USER_KEY" | tr -d '\r' > .ssh/id_rsa_user
-    - chmod 600 .ssh/id_rsa_user
-    - echo $PWD/.ssh
-    - ls $PWD/.ssh
+    - mkdir -p ~/.ssh
+    - echo "$SSH_USER_KEY" | tr -d '\r' > ~/.ssh/id_rsa_user
+    - chmod 600 ~/.ssh/id_rsa_user
+    - echo ~/.ssh
+    - ls ~/.ssh
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 # -----------
-    - echo $PWD/.ssh
-    - ls $PWD/.ssh
-    - GIT_SSH_COMMAND='ssh -i .ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install apd
+    - echo ~/.ssh
+    - ls ~/.ssh
+    - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install apd
     - eval "$(apd-login)"  # authenticate with Analysis Productions using this JWT
 # -----------
-    - echo $PWD/.ssh
-    - ls $PWD/.ssh
-    - GIT_SSH_COMMAND='ssh -i .ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install -e .
+    - echo ~/.ssh
+    - ls ~/.ssh
+    - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install -e .
 # -----------
 test_eos:
   stage: test
