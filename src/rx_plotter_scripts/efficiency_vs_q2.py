@@ -92,7 +92,27 @@ def _add_flags(
 
     return rdf
 # ----------------------
-def _get_data() -> pnd.DataFrame:
+def _get_mcdt_q2(sample : str, trigger : str) -> numpy.ndarray:
+    '''
+    Parameters
+    -------------
+    sample: MC sample, e.g. mc_bdksee...
+    trigger: HLT2 trigger
+
+    Returns
+    -------------
+    Numpy array with q2 values from MCDT divided by 1000_000
+    '''
+    gtr = RDFGetter(sample=sample, trigger=trigger, tree='MCDecayTree')
+    rdf = gtr.get_rdf()
+    rdf = cast(RDataFrame, rdf)
+
+    arr_q2 = rdf.AsNumpy(['q2'])['q2']
+    arr_q2 = arr_q2 / 1000_000
+
+    return arr_q2
+# ----------------------
+def _get_data() -> tuple[pnd.DataFrame, numpy.ndarray]:
     '''
     Parameters
     -------------
