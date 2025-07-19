@@ -1,18 +1,18 @@
 [project]
-name        = 'rx_plotter'
-version     = '0.0.1'
-readme      = 'README.md'
-dependencies= [
-'hist',
-'boost-histogram',
-'mplhep',
-'matplotlib',
-'pandas',
-'numpy',
-'omegaconf',
-{git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/data-manipulation-utilities.git'},
-{git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/rx_selection.git'},
-{git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/rx_data.git'},
+name         = 'rx_plotter'
+version      = '0.0.1'
+readme       = 'README.md'
+dependencies = [
+  'hist',
+  'boost-histogram',
+  'mplhep',
+  'matplotlib',
+  'pandas',
+  'numpy',
+  'omegaconf',
+  'data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git@master',
+  'rx-selection @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_selection.git@master',
+  'rx-data @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_data.git@master',
 ]
 
 [project.optional-dependencies]
