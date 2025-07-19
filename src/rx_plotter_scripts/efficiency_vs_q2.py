@@ -109,7 +109,6 @@ def _get_mcdt_q2(sample : str, trigger : str) -> numpy.ndarray:
     rdf = cast(RDataFrame, rdf)
 
     arr_q2 = rdf.AsNumpy(['q2'])['q2']
-    arr_q2 = arr_q2 / 1000_000
 
     return arr_q2
 # ----------------------
@@ -161,10 +160,9 @@ def _get_hist(df : pnd.DataFrame, axis : Axis, flag : str) -> Hist:
     else:
         df_filt = df[df[flag] == 1]
         df_filt = cast(pnd.DataFrame, df_filt)
-
         arr_q2  = df_filt['q2_true'].to_numpy()
-        arr_q2  = arr_q2 / 1000_000.
 
+    arr_q2    = arr_q2 / 1000_000.
     histogram = Hist(axis)
     histogram.fill(q2=arr_q2)
 
