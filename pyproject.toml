@@ -11,9 +11,9 @@ dependencies= [
 'particle',
 'vector',
 'pandarallel',
-'ecal_calibration @ git+ssh://git@github.com:acampove/ecal_calibration.git@master',
-'ap_utilities @ git+ssh://git@github.com:acampove/ap_utilities.git@master',
-'data-manipulation-utilities @ git+ssh://git@github.com:acampove/dmu.git@master',
+'ecal_calibration @ git+ssh://git@github.com/acampove/ecal_calibration.git@master',
+'ap_utilities @ git+ssh://git@github.com/acampove/ap_utilities.git@master',
+'data-manipulation-utilities @ git+ssh://git@github.com/acampove/dmu.git@master',
 ]
 
 [project.optional-dependencies]
