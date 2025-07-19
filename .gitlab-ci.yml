@@ -20,6 +20,8 @@ ssh:
     - mkdir -p .ssh
     - echo "$SSH_USER_KEY" | tr -d '\r' > .ssh/id_rsa_user
     - chmod 600 .ssh/id_rsa_user
+    - echo $PWD/.ssh
+    - ls $PWD/.ssh
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 # -----------
@@ -38,6 +40,8 @@ build:
       - ~/.cache/pip
   stage: build
   script:
+    - echo $PWD/.ssh
+    - ls $PWD/.ssh
     - GIT_SSH_COMMAND='ssh -i .ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install -e .
 # -----------
 test_eos:
