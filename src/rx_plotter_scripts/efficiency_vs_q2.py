@@ -240,6 +240,11 @@ def _plot_efficiencies(df : pnd.DataFrame) -> None:
     h_eff_sel.plot(color='blue' , histtype='fill', alpha=0.3, label='No MVA')
     h_eff_tot.plot(color='red'  , histtype='step', label='Full efficiency')
     _add_lines()
+
+    cfg = _check_none(obj=Data.cfg, kind='input')
+    [sample, trigger] = cfg.input[f'{Data.analysis}_{Data.channel}']
+
+    plt.title(f'{sample}; {trigger}')
     plt.ylabel('A.U.')
     plt.legend()
 # ----------------------
