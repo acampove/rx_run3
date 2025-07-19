@@ -20,6 +20,8 @@ build:
     paths:
       - ~/.cache/pip
   stage: build 
+  variables:
+    ANADIR : $PWD/output
   script:
     - mkdir -p ~/.ssh
     - echo "$SSH_USER_KEY" | tr -d '\r' > ~/.ssh/id_rsa_user
@@ -32,9 +34,6 @@ build:
     - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install apd
     - eval "$(apd-login)"  # authenticate with Analysis Productions using this JWT
     - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install -e .
-  variables:
-    ANADIR : $PWD/output
-  script:
     - mkdir -p $ANADIR
     - efficiency_vs_q2 -c ee -a rk 
 # -----------
