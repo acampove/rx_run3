@@ -5,7 +5,6 @@ version     = '0.1.9'
 readme      = 'README.md'
 dependencies= [
 'tqdm',
-'xrootd==5.8.3',
 'uproot',
 'tabulate',
 'mplhep',
@@ -19,6 +18,7 @@ dependencies= [
 
 [project.optional-dependencies]
 dev  = ['pytest']
+net  = ['xrootd']
 
 [tools.setuptools.packages.find]
 where= ['src']
