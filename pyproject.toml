@@ -12,12 +12,12 @@ dependencies= [
 'uproot',
 'vector',
 'numpy',
-'torch',
 'data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git@master',
 ]
 
 [project.optional-dependencies]
 dev  = ['pytest']
+ml   = ['torch']
 
 [tools.setuptools.packages.find]
 where   = ['src']
