@@ -221,8 +221,6 @@ def _plot_efficiencies(df : pnd.DataFrame) -> None:
 
     axis  = Regular(**hist_conf)
 
-    df.attrs['total'] = arr_q2
-
     h_all = _get_hist(df=df, axis=axis, flag='pass_all')
     h_sel = _get_hist(df=df, axis=axis, flag='pass_sel')
     h_den = _get_hist(df=df, axis=axis, flag='total'   )
