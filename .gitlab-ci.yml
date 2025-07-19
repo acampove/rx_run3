@@ -1,6 +1,6 @@
 # -----------
 default:
-  image: docker.io/acampove/rx_run3:v2
+  image: docker.io/acampove/rx_run3:v3
   tags:
     - cvmfs
   id_tokens:
@@ -23,6 +23,7 @@ build:
   variables:
     ANADIR : $PWD/output
   script:
+    - source /opt/root-install/bin/thisroot.sh
     - mkdir -p ~/.ssh
     - echo "$SSH_USER_KEY" | tr -d '\r' > ~/.ssh/id_rsa_user
     - chmod 600 ~/.ssh/id_rsa_user
