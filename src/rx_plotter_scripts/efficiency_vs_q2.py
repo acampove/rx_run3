@@ -133,14 +133,15 @@ def _get_data() -> pnd.DataFrame:
 
     [sample, trigger] = Data.cfg.input[f'{Data.analysis}_{Data.channel}']
 
-    gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf()
-    rdf = _add_flags(rdf=rdf, sample=sample, trigger=trigger)
+    with RDFGetter.multithreading(nthreads=5):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf()
+        rdf = _add_flags(rdf=rdf, sample=sample, trigger=trigger)
 
-    l_col = ['q2_true', 'pass_all', 'pass_sel']
-    data  = rdf.AsNumpy(l_col)
+        l_col = ['q2_true', 'pass_all', 'pass_sel']
+        data  = rdf.AsNumpy(l_col)
+
     df    = pnd.DataFrame(data)
-
     df.attrs['total'] = _get_mcdt_q2(sample=sample, trigger=trigger)
 
     return df
