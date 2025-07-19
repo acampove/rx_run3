@@ -10,9 +10,9 @@ dependencies = [
   'pandas',
   'numpy',
   'omegaconf',
-  'data-manipulation-utilities @ git+ssh://git@github.com:acampove/dmu.git@master',
-  'rx-selection @ git+ssh://git@github.com:RX-Run3/rx_selection.git@master',
-  'rx-data @ git+ssh://git@github.com:RX-Run3/rx_data.git@master',
+  'data-manipulation-utilities @ git+ssh://git@github.com/acampove/dmu.git@master',
+  'rx-selection @ git+ssh://git@github.com/RX-Run3/rx_selection.git@master',
+  'rx-data @ git+ssh://git@github.com/RX-Run3/rx_data.git@master',
 ]
 
 [project.optional-dependencies]
