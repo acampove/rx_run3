@@ -21,7 +21,7 @@ build:
       - ~/.cache/pip
   stage: build 
   variables:
-    ANADIR : $PWD/output
+    ANADIR : ~/output
   script:
     - source /opt/root-install/bin/thisroot.sh
     - mkdir -p ~/.ssh
