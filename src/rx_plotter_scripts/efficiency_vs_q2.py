@@ -14,7 +14,7 @@ import matplotlib.pyplot   as plt
 import pandas              as pnd
 from hist                  import Hist
 from hist.axis             import Regular
-from ROOT                  import RDataFrame
+from ROOT                  import RDataFrame, RDF
 from boost_histogram.axis  import Axis
 from omegaconf             import DictConfig
 from dmu.logging.log_store import LogStore
@@ -66,9 +66,9 @@ def _string_from_dictionary(data :  dict[str,str]) -> str:
     return full_expr
 # ----------------------
 def _add_flags(
-    rdf     : RDataFrame,
+    rdf     : RDF.RNode,
     sample  : str,
-    trigger : str) -> RDataFrame:
+    trigger : str) -> RDF.RNode:
     '''
     Parameters
     -------------
