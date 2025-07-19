@@ -220,11 +220,20 @@ def _plot_efficiencies(df : pnd.DataFrame) -> None:
     hist_conf = cfg.hist_conf
 
     axis  = Regular(**hist_conf)
-    h_sel = _get_hist(df=df, axis=axis, flag='pass_sel')
-    h_all = _get_hist(df=df, axis=axis, flag='pass_all')
 
-    h_sel.plot()
+    df.attrs['total'] = arr_q2
+
+    h_all = _get_hist(df=df, axis=axis, flag='pass_all')
+    h_sel = _get_hist(df=df, axis=axis, flag='pass_sel')
+    h_den = _get_hist(df=df, axis=axis, flag='total'   )
+
+    h_eff_sel = h_sel / h_den
+    h_eff_tot = h_all / h_den
+
+    h_eff_sel.plot(color='blue', alpha=0.3, label='No MVA')
+    h_eff_tot.plot(color='red', histtype='step', label='Full efficiency')
     _add_lines()
+    plt.legend()
     plt.show()
 # ----------------------
 def main():
