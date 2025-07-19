@@ -13,7 +13,13 @@ stages :
   - build
   - test
 # -----------
-ssh:
+build:
+  cache:
+    key:
+      files :
+        - pyproject.toml
+    paths:
+      - ~/.cache/pip
   stage: build 
   script:
     - mkdir -p .ssh
@@ -24,21 +30,11 @@ ssh:
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 # -----------
-apd:
-  stage: build 
-  script:
+    - echo $PWD/.ssh
+    - ls $PWD/.ssh
     - GIT_SSH_COMMAND='ssh -i .ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install apd
     - eval "$(apd-login)"  # authenticate with Analysis Productions using this JWT
 # -----------
-install:
-  cache:
-    key:
-      files :
-        - pyproject.toml
-    paths:
-      - ~/.cache/pip
-  stage: build
-  script:
     - echo $PWD/.ssh
     - ls $PWD/.ssh
     - GIT_SSH_COMMAND='ssh -i .ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install -e .
