@@ -146,7 +146,7 @@ def _get_data() -> tuple[pnd.DataFrame, numpy.ndarray]:
 
     return df
 # ----------------------
-def _get_hist(df : pnd.DataFrame, axis : Regular, flag : str) -> Hist:
+def _get_hist(df : pnd.DataFrame, axis : Axis, flag : str) -> Hist:
     '''
     Parameters
     -------------
