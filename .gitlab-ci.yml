@@ -8,7 +8,7 @@ default:
       aud: https://lbap.app.cern.ch
 before_script:
     - source /cvmfs/lhcb.cern.ch/lib/LbEnv # Source the LHCb environment
-    - eval "$(apd-login)"  # authenticate with Analysis Productions using this JWT
+    #- eval "$(apd-login)"  # authenticate with Analysis Productions using this JWT
     - git config --global color.ui always # Enable colored output for git
 # -----------
 stages :
