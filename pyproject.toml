@@ -3,7 +3,6 @@ name        = 'rx_plotter'
 version     = '0.0.1'
 readme      = 'README.md'
 dependencies= [
-'data-manipulation-utilities',
 'hist',
 'boost-histogram',
 'mplhep',
@@ -11,8 +10,9 @@ dependencies= [
 'pandas',
 'numpy',
 'omegaconf',
-'rx_selection',
-'rx_data',
+{git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/data-manipulation-utilities.git'},
+{git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/rx_selection.git'},
+{git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/rx_data.git'},
 ]
 
 [project.optional-dependencies]
