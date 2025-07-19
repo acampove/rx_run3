@@ -42,5 +42,6 @@ build:
 test_eos:
   stage: test
   script:
-    root -l -q /eos/lhcb/wg/RD/RX_run3/Data/rx/hop/v3/mc_magup_13454001_bs_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_cal_72a6fc3576.root
+    - ls         /eos/lhcb/wg/RD/RX_run3/Data/rx/hop/v3/
+    - root -l -q /eos/lhcb/wg/RD/RX_run3/Data/rx/hop/v3/mc_magup_13454001_bs_jpsix_ee_eq_jpsiinacc_Hlt2RD_BuToKpEE_MVA_cal_72a6fc3576.root
 # -----------
