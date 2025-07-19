@@ -3,6 +3,7 @@ This script is meant to make plots of the efficiency in MC
 in function of the true q2
 '''
 import copy
+import random
 import argparse
 from typing       import cast
 
@@ -223,13 +224,15 @@ def _plot_efficiencies(df : pnd.DataFrame) -> None:
     h_sel = _get_hist(df=df, axis=axis, flag='pass_sel')
     h_den = _get_hist(df=df, axis=axis, flag='total'   )
 
-    h_eff_sel = h_sel / h_den
-    h_eff_tot = h_all / h_den
+    ran   = random.random()
 
-    h_eff_sel.plot(color='blue', histtype='fill', alpha=0.3, label='No MVA')
-    h_eff_tot.plot(color='red', histtype='step', label='Full efficiency')
+    h_eff_sel = ran * h_sel / h_den
+    h_eff_tot = ran * h_all / h_den
+
+    h_eff_sel.plot(color='blue' , histtype='fill', alpha=0.3, label='No MVA')
+    h_eff_tot.plot(color='red'  , histtype='step', label='Full efficiency')
     _add_lines()
-    plt.ylabel(r'\varepsilon')
+    plt.ylabel(r'$\varepsilon \cdot RDM$')
     plt.legend()
     plt.show()
 # ----------------------
