@@ -5,5 +5,8 @@ from ROOT import RDataFrame
 
 def test_rdf_type() -> RDataFrame|None:
     rdf = RDataFrame(10)
+    print('testing')
 
     return rdf
+
+test_rdf_type()
