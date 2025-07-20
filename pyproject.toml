@@ -11,6 +11,7 @@ dependencies= [
 'scipy',
 'uproot',
 'vector',
+'dask[distributed]',
 'numpy',
 'data-manipulation-utilities',
 ]
