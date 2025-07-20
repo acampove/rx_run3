@@ -12,7 +12,7 @@ dependencies= [
 'uproot',
 'vector',
 'numpy',
-'data-manipulation-utilities @ git+ssh://git@github.com/acampove/dmu.git@master',
+'data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/ecal_calibration.git@master',
 ]
 
 [project.optional-dependencies]
