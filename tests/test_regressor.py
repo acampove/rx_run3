@@ -63,7 +63,7 @@ def test_flat_bias():
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
 
-    ddf = cut.get_ddf(bias=1.1, kind='flat')
+    ddf = cut.get_ddf(name='fake_data', bias=1.1, kind='flat')
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
 
@@ -96,7 +96,7 @@ def test_constant_predict(bias : float):
     corr= 1.0 / bias
 
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    ddf = cut.get_ddf(bias=bias, kind='flat')
+    ddf = cut.get_ddf(name='fake_data', bias=1.1, kind='flat')
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
 
@@ -122,7 +122,7 @@ def test_predict_flat_bias(bias : float):
     corr= 1.0 / bias
 
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    ddf = cut.get_ddf(bias=bias, kind='flat')
+    ddf = cut.get_ddf(name='fake_data', bias=1.1, kind='flat')
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
 
@@ -146,7 +146,7 @@ def test_predict_bias(_dask_client : Client, kind : str):
     - Training a real model that outputs the correction
     '''
     cfg = cut.load_cfg(name='tests/preprocessor/simple')
-    ddf = cut.get_ddf(name='real_data', bias=None, kind=kind)
+    ddf = cut.get_ddf(name='fake_data', bias=None, kind=kind)
 
     pre = PreProcessor(ddf=ddf, cfg=cfg)
     ddf = pre.get_data()
