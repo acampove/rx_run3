@@ -112,7 +112,7 @@ def test_get_ddf_flat_bias(bias : float):
     '''
     Tests getter of dask dataframe
     '''
-    ddf = cut.get_ddf(bias=bias, kind='flat')
+    ddf = cut.get_ddf(name='fake_data', bias=bias, kind='flat')
     df  = ddf.compute()
 
     assert len(df) == 100_000
