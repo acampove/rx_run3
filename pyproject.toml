@@ -1,8 +1,8 @@
 [project]
-name        = 'ecal_calibration'
-version     = '0.0.1'
-readme      = 'README.md'
-dependencies= [
+name            = 'ecal_calibration'
+readme          = 'README.md'
+requires-python = '>=3.10'
+dependencies    = [
 'dask',
 'pandas',
 'bokeh',
@@ -16,6 +16,14 @@ dependencies= [
 'numpy',
 'data-manipulation-utilities',
 ]
+
+[build-system]
+requires = ['setuptools>=61', 'setuptools_scm', 'wheel']
+build-backend = 'setuptools.build_meta'
+
+[tool.setuptools_scm]
+version_scheme = 'guess-next-dev'
+local_scheme   = 'node-and-date'
 
 [project.optional-dependencies]
 dev  = ['pytest']
