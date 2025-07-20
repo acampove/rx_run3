@@ -8,6 +8,8 @@ jobs:
       max-parallel: 5
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name: Set up micromamba
       uses: mamba-org/setup-micromamba@v1
       with:
@@ -26,6 +28,14 @@ jobs:
     
         mkdir -p $ANADIR
     #-----------
+    - name: Install pypa/build
+      run: >-
+        micromamba run -n myenv  python3 -m
+        pip install
+        build
+        setuptools_scm
+        --user
+    #-----------
     - name: Install project 
       run: |
         micromamba run -n myenv pip install .[fit,ml,dev]
@@ -33,13 +43,6 @@ jobs:
     - name: Test
       run: |
         micromamba run -n myenv pytest tests
-    #-----------
-    - name: Install pypa/build
-      run: >-
-        micromamba run -n myenv  python3 -m
-        pip install
-        build
-        --user
     #-----------
     - name: Build a binary wheel and a source tarball
       run:  micromamba run -n myenv python3 -m build
@@ -53,7 +56,6 @@ jobs:
   publish-to-pypi:
     name: >-
       Publish Python 🐍 distribution 📦 to PyPI
-    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
     needs:
     - build
     runs-on: ubuntu-latest
