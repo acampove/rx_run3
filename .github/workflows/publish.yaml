@@ -28,6 +28,16 @@ jobs:
     
         mkdir -p $ANADIR
     #-----------
+    - name: Cache dependencies installed with poetry 
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/pypoetry
+          ~/.cache/pip
+        key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-poetry-
+    #-----------
     - name: Install pypa/build
       run: >-
         micromamba run -n myenv  python3 -m
