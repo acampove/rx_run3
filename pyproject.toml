@@ -19,6 +19,12 @@ dependencies = [
 
 [project.optional-dependencies]
 dev  = ['pytest']
+# When running pipelines, the packages should be taken from the master in gitlab
+ci   = [
+  'data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git@master',
+  'rx-selection @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_selection.git@master',
+  'rx-data @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_data.git@master',
+]
 
 [tools.setuptools.packages.find]
 where   = ['src']
