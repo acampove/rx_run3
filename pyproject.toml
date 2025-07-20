@@ -3,6 +3,7 @@ name         = 'rx_plotter'
 version      = '0.0.1'
 readme       = 'README.md'
 dependencies = [
+  'apd',
   'hist',
   'boost-histogram',
   'mplhep',
