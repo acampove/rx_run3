@@ -28,9 +28,9 @@ local_scheme   = 'node-and-date'
 [project.optional-dependencies]
 dev  = ['pytest']
 ml   = ['torch']
-ci   = ['data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/ecal_calibration.git@master']
+ci   = ['data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/data-manipulation-utilities.git@master']
 
-[tools.setuptools.packages.find]
+[tool.setuptools.packages.find]
 where   = ['src']
 
 [project.scripts]
