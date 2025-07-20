@@ -1,6 +1,7 @@
 [tool.poetry]
 name        = 'ecal_calibration'
 description = 'Project meant to apply offline corrections to electrons in LHCb'
+version     = 'v0.0.0'
 readme      = 'README.md'
 
 [tool.poetry.dependencies]
