@@ -35,5 +35,6 @@ build:
     - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install apd
     - eval "$(apd-login)"  # authenticate with Analysis Productions using this JWT
     - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install -e .
-    - efficiency_vs_q2 -c ee -a rk 
+    #- efficiency_vs_q2 -c ee -a rk 
+    - root -l -q root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/2024/TUPLE.ROOT/00298319/0000/00298319_00000001_1.tuple.root
 # -----------
