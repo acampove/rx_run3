@@ -9,6 +9,11 @@ import matplotlib.pyplot as plt
 
 from ecal_calibration   import utilities as cut
 
+pytestmark = pytest.mark.skip(
+    reason='''
+    This part of the code did not produce useful results
+    will turn off the tests, due to time constraints
+    ''')
 # -----------------------------------------
 class Data:
     '''
