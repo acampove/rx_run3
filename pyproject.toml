@@ -12,9 +12,9 @@ dependencies = [
   'pandas',
   'numpy',
   'omegaconf',
-  'data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git@master',
-  'rx-selection @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_selection.git@master',
-  'rx-data @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_data.git@master',
+  'data-manipulation-utilities',
+  'rx-selection',
+  'rx-data',
 ]
 
 [project.optional-dependencies]
