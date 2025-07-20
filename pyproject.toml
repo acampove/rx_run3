@@ -1,21 +1,25 @@
-[project]
-name            = 'ecal_calibration'
-readme          = 'README.md'
-requires-python = '>=3.10'
-dependencies    = [
-'dask',
-'pandas',
-'bokeh',
-'tqdm',
-'mplhep',
-'scipy',
-'uproot',
-'vector',
-'pyarrow',
-'dask[distributed]',
-'numpy',
-'data-manipulation-utilities',
-]
+[tool.poetry]
+name        = 'ecal_calibration'
+description = 'Project meant to apply offline corrections to electrons in LHCb'
+readme      = 'README.md'
+
+[tool.poetry.dependencies]
+python  = '>=3.10'
+pandas  = '*'
+bokeh   = '*'
+tqdm    = '*'
+mplhep  = '*'
+scipy   = '*'
+uproot  = '*'
+vector  = '*'
+pyarrow = '*'
+numpy   = '*'
+dask                        = {version = '*', extras=['distributed']} 
+data-manipulation-utilities = {version = '*', allow-prereleases=true}
+
+[tool.poetry.extras]
+dev  = ['pytest']
+ml   = ['torch']
 
 [build-system]
 requires = ['setuptools>=61', 'setuptools_scm', 'wheel']
@@ -24,14 +28,6 @@ build-backend = 'setuptools.build_meta'
 [tool.setuptools_scm]
 version_scheme = 'guess-next-dev'
 local_scheme   = 'node-and-date'
-
-[project.optional-dependencies]
-dev  = ['pytest']
-ml   = ['torch']
-ci   = ['data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/data-manipulation-utilities.git@master']
-
-[tool.setuptools.packages.find]
-where   = ['src']
 
 [project.scripts]
 make_toy_decays ='ecal_calibration_scripts.make_toy_decays:main'
@@ -42,3 +38,6 @@ ecal_calibration_data=[
 '**/*.json',
 '**/*.csv',
 ]
+
+[tool.setuptools.packages.find]
+where   = ['src']
