@@ -45,8 +45,9 @@ jobs:
       run: >-
         micromamba run -n myenv  python3 -m
         pip install
+        poetry
         build
-        --user
+        setuptools_scm
     #-----------
     - name: Test
       run: |
