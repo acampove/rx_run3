@@ -12,12 +12,13 @@ dependencies= [
 'uproot',
 'vector',
 'numpy',
-'data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/ecal_calibration.git@master',
+'data-manipulation-utilities',
 ]
 
 [project.optional-dependencies]
 dev  = ['pytest']
 ml   = ['torch']
+ci   = ['data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/ecal_calibration.git@master']
 
 [tools.setuptools.packages.find]
 where   = ['src']
