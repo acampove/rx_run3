@@ -21,7 +21,9 @@ data-manipulation-utilities = {version = '*', allow-prereleases=true}
 [tool.poetry.extras]
 dev  = ['pytest']
 ml   = ['torch']
-
+# -----------------------------------------
+# Setuptools
+# -----------------------------------------
 [project]
 name        = 'ecal_calibration'
 description = 'Project meant to apply offline corrections to electrons in LHCb'
