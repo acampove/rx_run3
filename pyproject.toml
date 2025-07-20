@@ -42,6 +42,3 @@ ecal_calibration_data=[
 '**/*.json',
 '**/*.csv',
 ]
-
-[tool.setuptools]
-#script-files=['src/dmu_scripts/git/publish']
