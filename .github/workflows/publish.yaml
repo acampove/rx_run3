@@ -38,7 +38,7 @@ jobs:
     #-----------
     - name: Install project dependencies
       run: |
-        micromamba run -n myenv poetry install --extras "dev ml"
+        micromamba run -n myenv poetry install --extras 'dev,ml'
     - name: Install project itself 
       run: |
         micromamba run -n myenv pip install --no-deps .
