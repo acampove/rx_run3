@@ -32,13 +32,19 @@ jobs:
       run: >-
         micromamba run -n myenv  python3 -m
         pip install
+        poetry
         build
         setuptools_scm
-        --user
     #-----------
-    - name: Install project 
+    - name: Install project dependencies
       run: |
-        micromamba run -n myenv pip install .[fit,ml,dev]
+        micromamba run -n myenv poetry install --extras "dev,ml"
+    - name: Install project itself 
+      run: |
+        micromamba run -n myenv pip install --no-deps .
+    - name: Show computed version
+      run: |
+        micromamba run -n myenv python -c "import importlib.metadata; print(importlib.metadata.version('ecal_calibration'))"
     #-----------
     - name: Test
       run: |
