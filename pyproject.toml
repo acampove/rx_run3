@@ -1,8 +1,9 @@
 [tool.poetry]
-name        = 'data_manipulation_utilities'
-description = 'Project storing utilities needed to reduce boilerplate code when analyzing data'
-version     = 'v0.0.0'
-readme      = 'README.md'
+name           = 'data_manipulation_utilities'
+description    = 'Project storing utilities needed to reduce boilerplate code when analyzing data'
+version        = 'v0.0.0'
+readme         = 'README.md'
+package-mode   = false
 
 [tool.poetry.dependencies]
 python         = '>=3.10, <3.13'
