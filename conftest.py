@@ -9,6 +9,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 from dask.distributed      import Client
+from dmu.logging.log_store import LogStore
+
 # ---------------------------------------
 def pytest_configure(config : pytest.Config) -> None:
     '''
@@ -23,6 +25,8 @@ def pytest_configure(config : pytest.Config) -> None:
 
     logging.getLogger("PIL.PngImagePlugin").setLevel(logging.WARNING)
     logging.getLogger("matplotlib.font_manager").setLevel(logging.WARNING)
+
+    LogStore.set_level('ecal_calibration:regressor', 10)
 # ---------------------------------------
 @pytest.fixture(scope='session')
 def _dask_client():
