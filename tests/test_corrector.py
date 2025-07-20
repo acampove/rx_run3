@@ -45,12 +45,12 @@ def test_calibrate_simple(_dask_client):
     Tests `corrector` from the Corrector class
     '''
 
-    data     = _load_data(name='row')
-    sr       = pnd.Series(data)
-    sr       = PreProcessor.build_features(
-            row        =  sr,
-            lep        ='L1',
-            skip_target=True)
+    data = _load_data(name='row')
+    sr   = pnd.Series(data)
+    sr   = PreProcessor.build_features(
+        row        =  sr,
+        lep        ='L1',
+        skip_target=True)
     cor      = _get_corrector()
 
     for val in [100, 200, 300, 400, 500]:
