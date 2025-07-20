@@ -7,11 +7,11 @@ dependencies = [
   'hist',
   'boost-histogram',
   'mplhep',
+  'prefect==3.4.9', # Latest up to July 2025
   'matplotlib',
   'pandas',
   'numpy',
   'omegaconf',
-
   'data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git@master',
   'rx-selection @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_selection.git@master',
   'rx-data @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_data.git@master',
