@@ -23,7 +23,7 @@ dev  = ['pytest']
 ci   = [
   'data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git@master',
   'rx-selection @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_selection.git@master',
-  'rx-data @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_data.git@master',
+  'rx-data[ci] @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_data.git@master',
 ]
 
 [tools.setuptools.packages.find]
