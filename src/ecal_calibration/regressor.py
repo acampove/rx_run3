@@ -337,7 +337,7 @@ class Regressor:
         return features, targets
     # ---------------------------------------------
     @staticmethod
-    def load(model_dir : str) -> Network:
+    def load(model_dir : str) -> Network|None:
         '''
         Parameters
         ----------------
