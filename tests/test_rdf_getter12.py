@@ -14,6 +14,11 @@ class Data:
     Data class
     '''
     l_dset = ['2011', '2012', '2015', '2016', '2017', '2018', 'all']
+    l_samp = [
+        'Bu_Kee_eq_btosllball05_DPC',
+        'Bu_Kmumu_eq_btosllball05_DPC',
+        'Bu_JpsiK_ee_eq_DPC',
+        'Bu_JpsiK_mm_eq_DPC']
 # ---------------------------------------------
 def _check_rdf(rdf : RDataFrame, name : str) -> None:
     nentries = rdf.Count().GetValue()
