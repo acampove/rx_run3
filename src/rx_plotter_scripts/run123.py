@@ -9,6 +9,7 @@ from omegaconf               import DictConfig
 from dmu.generic             import utilities as gut
 from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter_1d import Plotter1D
+from rx_selection            import selection as sel
 from rx_data.rdf_getter      import RDFGetter
 from rx_data.rdf_getter12    import RDFGetter12
 
@@ -49,14 +50,13 @@ def _get_rdf(dset : str) -> RDF.RNode:
     if   dset == '2024':
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf()
-        rdf = _apply_run3_selection(rdf=rdf)
+        rdf = sel.apply_full_selection(rdf=rdf, q2bin='jpsi', process=sample, trigger=trigger)
     elif dset == 'run12':
         gtr = RDFGetter12(
             sample =sample,
             trigger=trigger,
             dset   ='all')
         rdf = gtr.get_rdf()
-        rdf = _apply_run12_selection(rdf=rdf)
     else:
         raise NotImplementedError(f'Invalid dataset {dset}')
 
@@ -88,7 +88,11 @@ def main():
     Entry point
     '''
     _initialize()
-    d_rdf = _get_dataframes()
+    d_sel = Data.cfg.cuts
+
+    with sel.custom_selection(d_sel=d_sel),\
+        RDFGetter12.add_selection(d_sel=d_sel):
+        d_rdf = _get_dataframes()
 
     ptr   = Plotter1D(d_rdf=d_rdf, cfg=Data.cfg)
     ptr.run()
