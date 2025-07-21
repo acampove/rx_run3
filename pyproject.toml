@@ -20,18 +20,16 @@ mplhep                     = '*'
 particle                   = '*'
 vector                     = '*'
 pandarallel                = '*'
+ap_utilities               = {version = '*', allow-prereleases=true}
 data-manipulation-utilities= {version = '*', allow-prereleases=true}
 ecal_calibration           = {version = '*', allow-prereleases=true, optional=true}
-ap_utilities               = {version = '*', allow-prereleases=true, optional=true}
 pytest                     = {version = '*',                         optional=true}
 xrootd                     = {version = '*',                         optional=true}
 
 [tool.poetry.extras]
-tst = ['pytest'] # When developing
-net = ['xrootd'] # When doing things that require access to remote files
-ci  = [          # When running pipelines
-'ecal_calibration',
-'ap_utilities']
+tst = ['pytest']           # When developing
+net = ['xrootd']           # When doing things that require access to remote files
+ci  = ['ecal_calibration'] # When running pipelines
 
 [build-system]
 requires      = [
