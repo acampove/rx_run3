@@ -60,11 +60,11 @@ class RDFGetter:
     _nthreads                         = None
     # ---------------------------------------------------
     def __init__(
-            self,
-            sample  : str,
-            trigger : str,
-            analysis: str = 'rx',
-            tree    : str = 'DecayTree'):
+        self,
+        sample  : str,
+        trigger : str,
+        analysis: str = 'rx',
+        tree    : str = 'DecayTree'):
         '''
         Sample: Sample's nickname, e.g. DATA_24_MagDown_24c2
         Trigger: HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA
