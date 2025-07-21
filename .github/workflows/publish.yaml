@@ -44,14 +44,10 @@ jobs:
         pip install
         poetry
         build
-        setuptools_scm
     #-----------
     - name: Install project dependencies
       run: |
         micromamba run -n myenv poetry install --extras 'fit ml dev'
-    - name: Install project itself 
-      run: |
-        micromamba run -n myenv pip install --no-deps .
     #-----------
     - name: Test
       run: |
