@@ -8,6 +8,13 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+    - name: Fetch tags
+      run: git fetch --tags --force
+    - name: Debug git info
+      run: |
+        git describe --tags --dirty || echo "No tags found"
+        git tag --list | head -10
+        git log --oneline --decorate -5
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
