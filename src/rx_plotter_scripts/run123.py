@@ -4,6 +4,7 @@ Script meant to do comparisons of variables between Run1,2 and 3
 import os
 import argparse
 
+import mplhep
 from ROOT                    import RDF
 from omegaconf               import DictConfig
 from dmu.generic             import utilities as gut
@@ -31,6 +32,8 @@ def _initialize() -> None:
 
     plt_dir  = cfg.saving.plt_dir
     cfg.saving.plt_dir = f'{Data.ana_dir}/{plt_dir}'
+
+    mplhep.style.use('LHCb2')
 
     Data.cfg = cfg
 # ----------------------
