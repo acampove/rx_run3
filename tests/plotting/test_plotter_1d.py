@@ -13,7 +13,7 @@ import yaml
 import numpy
 import mplhep
 
-from ROOT                    import RDF, RDataFrame
+from ROOT                    import RDF
 from dmu.plotting.plotter_1d import Plotter1D as Plotter
 from dmu.logging.log_store   import LogStore
 
@@ -35,7 +35,7 @@ def _initialize():
     LogStore.set_level('dmu:plotting:Plotter'  , 10)
     LogStore.set_level('dmu:plotting:Plotter1D', 10)
 #---------------------------------------
-def _get_rdf(kind : str, test : str, nentries : Union[int,None] = None) -> RDataFrame:
+def _get_rdf(kind : str, test : str, nentries : Union[int,None] = None) -> RDF.RNode:
     '''
     kind (str): "class A" or "class B", equivalent to data or mc, but general
     test (str): Identifies specific test
