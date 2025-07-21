@@ -1,35 +1,43 @@
-[project]
+[tool.poetry]
 name         = 'rx_plotter'
-version      = '0.0.1'
+version      = '0.0.0'
+description  = 'Project meant to create simple plots for RX studies' 
 readme       = 'README.md'
-dependencies = [
-  'apd',
-  'hist',
-  'boost-histogram',
-  'mplhep',
-  'prefect==3.4.9', # Latest up to July 2025
-  'matplotlib',
-  'pandas',
-  'numpy',
-  'omegaconf',
-  'data-manipulation-utilities',
-  'rx-selection',
-  'rx-data',
+packages     = [{include='rx_plotter', from='src'}]
+include      = ['src/rx_plotter_data/**/*.yaml']
+
+[tool.poetry.dependencies]
+python                     = '>=3.10,<3.13'
+prefect                    = '^3.4.9'
+apd                        = '*'
+hist                       = '*'
+boost-histogram            = '*'
+mplhep                     = '*'
+matplotlib                 = '*'
+pandas                     = '*'
+numpy                      = '*'
+omegaconf                  = '*'
+data-manipulation-utilities= {version = '*', allow-prereleases=true}
+rx-selection               = {version = '*', allow-prereleases=true}
+rx-data                    = {version = '*', allow-prereleases=true}
+pytest                     = {version = '*', optional         =true}
+
+[build-system]
+requires      = [
+    'poetry-core>=1.0.0',
+    'poetry-dynamic-versioning>=1.0.0'
 ]
+build-backend = "poetry_dynamic_versioning.backend"
 
-[project.optional-dependencies]
-dev  = ['pytest']
-# When running pipelines, the packages should be taken from the master in gitlab
-ci   = [
-  'data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git@master',
-  'rx-selection @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_selection.git@master',
-  'rx-data[ci] @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/rx_data.git@master',
-]
+[tool.poetry.extras]
+dev    = ['pytest']
 
-[tools.setuptools.packages.find]
-where   = ['src']
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs    = 'git'
+style  = 'pep440'
 
-[project.scripts]
+[tool.poetry.scripts]
 high_q2cut          ='rx_plotter_scripts.high_q2cut:main'
 leakage             ='rx_plotter_scripts.leakage:main'
 compare             ='rx_plotter_scripts.compare:main'
@@ -41,6 +49,3 @@ plot_2d             ='rx_plotter_scripts.plot_2d:main'
 validate_nopid      ='rx_plotter_scripts.validate_nopid:main'
 mass_bias_correction='rx_plotter_scripts.mass_bias_correction:main'
 efficiency_vs_q2    ='rx_plotter_scripts.efficiency_vs_q2:main'
-
-[tool.setuptools.package-data]
-rx_plotter_data=['*/*.yaml']
