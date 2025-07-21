@@ -20,36 +20,37 @@ class RDFGetter12:
         trigger: Hlt2 trigger, e.g. Hlt2RD_BuToKpEE_MVA, meant to be translated as ETOS or MTOS
         dset   : Year, e.g. 2018
         '''
-        self._sample = self._get_sample(sample)
-        self._trigger= self._get_trigger(trigger)
-        self._dset   = self._get_dset(dset)
-
+        self._dset   = '*' if dset == 'all' else dset
         self._ntp_dir= 'no_bdt_q2_mass'
         self._version= 'v10.21p3'
-    # --------------------------
-    def _get_dset(self, dset : str) -> str:
-        if dset == 'all':
-            return '*'
 
-        return dset
+        self._l_sig_sample = ['Bu_Kee_eq_btosllball05_DPC', 'Bu_Kmumu_eq_btosllball05_DPC']
+        self._l_ctr_sample = ['Bu_JpsiK_ee_eq_DPC'        , 'Bu_JpsiK_mm_eq_DPC']
+
+        self._d_trigger    = {
+            'Hlt2RD_BuToKpEE_MVA'  : 'ETOS',
+            'Hlt2RD_BuToKpMuMu_MVA': 'MTOS'}
+
+        self._sample = self._get_sample(sample)
+        self._trigger= self._d_trigger[trigger]
     # --------------------------
     def _get_sample(self, sample : str) -> str:
-        if sample in ['Bu_Kee_eq_btosllball05_DPC', 'Bu_Kmumu_eq_btosllball05_DPC']:
+        '''
+        Parameters
+        --------------
+        sample: Run 3 sample name, e.g. Bu_Kee_eq_btosllball05_DPC
+
+        Returns
+        --------------
+        Run1/2 sample name, e.g. sign
+        '''
+        if sample in self._l_sig_sample:
             return 'sign'
 
-        if sample in ['Bu_JpsiK_ee_eq_DPC', 'Bu_JpsiK_mm_eq_DPC']:
+        if sample in self._l_ctr_sample:
             return 'ctrl'
 
         raise NotImplementedError(f'Invalid sample: {sample}')
-    # --------------------------
-    def _get_trigger(self, trigger : str) -> str:
-        if trigger == 'Hlt2RD_BuToKpEE_MVA':
-            return 'ETOS'
-
-        if trigger == 'Hlt2RD_BuToKpMuMu_MVA':
-            return 'MTOS'
-
-        raise NotImplementedError(f'Invalid trigger: {trigger}')
     # --------------------------
     def get_rdf(self) -> RDF.RNode:
         '''
