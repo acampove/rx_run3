@@ -85,6 +85,30 @@ class RDFGetter12:
 
         raise NotImplementedError(f'Invalid sample: {sample}')
     # --------------------------
+    def _apply_selection(self, rdf : RDF.RNode) -> RDF.RNode:
+        '''
+        Parameters
+        -------------
+        rdf : ROOT dataframe before selection
+
+        Returns
+        -------------
+        Dataframe after selection
+        '''
+        if len(RDFGetter12._d_sel) == 0:
+            return rdf
+
+        log.info('Applying custom selection')
+        for name, expr in RDFGetter12._d_sel.items():
+            log.debug(f'{name:<30}{expr}')
+            rdf = rdf.Filter(expr, name)
+
+        if log.getEffectiveLevel() < 20:
+            rep = rdf.Report()
+            rep.Print()
+
+        return rdf
+    # --------------------------
     def get_rdf(self) -> RDF.RNode:
         '''
         Returns ROOT dataframe with dataset
@@ -104,6 +128,7 @@ class RDFGetter12:
 
         rdf = RDataFrame(self._trigger, l_path)
         rdf = self._add_columns(rdf=rdf)
+        rdf = self._apply_selection(rdf=rdf)
 
         return rdf
     # ----------------------
