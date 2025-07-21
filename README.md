@@ -172,9 +172,8 @@ which will produce `metadata.yaml`.
 For now these samples are only in the UCAS cluster and only
 the rare electron signal has been made available through:
 
-```
+```python
 from rx_data.rdf_getter12 import RDFGetter12
-
 
 gtr = RDFGetter12(
     sample ='Bu_Kee_eq_btosllball05_DPC', # BuKee
@@ -186,3 +185,21 @@ rdf = gtr.get_rdf()
 
 this dataframe has had the full selection applied, except for the
 `MVA`, `q2` and `mass` cuts.
+
+Cuts can be added with:
+
+```python
+from rx_data.rdf_getter12 import RDFGetter12
+
+d_sel   = {
+    'bdt' : 'mva_cmb > 0.5 & mva_prc > 0.5',
+    'q2'  : 'q2_track > 14300000'}
+
+with RDFGetter12.add_selection(d_sel = d_sel):
+    gtr = RDFGetter12(
+        sample =sample,
+        trigger=trigger,
+        dset   =dset)
+
+    rdf = gtr.get_rdf()
+```
