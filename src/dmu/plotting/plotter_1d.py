@@ -290,14 +290,6 @@ class Plotter1D(Plotter):
         if 'vline' in var_cfg:
             line_cfg = var_cfg['vline']
             plt.axvline(**line_cfg)
-
-        if 'style' in self._d_cfg and 'skip_lines' in self._d_cfg['style'] and self._d_cfg['style']['skip_lines']:
-            return
-
-        if var in ['B_const_mass_M', 'B_M', 'B_Mass', 'B_Mass_smr']:
-            plt.axvline(x=5280, color='r', label=r'$B^+$'   , linestyle=':')
-        elif var == 'Jpsi_M':
-            plt.axvline(x=3096, color='r', label=r'$J/\psi$', linestyle=':')
     # --------------------------------------------
     def run(self):
         '''
