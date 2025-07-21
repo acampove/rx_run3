@@ -10,6 +10,7 @@ import numpy
 import matplotlib.pyplot as plt
 
 from ROOT                  import RDataFrame
+from omegaconf             import DictConfig
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:plotting:Plotter')
@@ -19,8 +20,20 @@ class Plotter:
     Base class of Plotter1D and Plotter2D
     '''
     #-------------------------------------
-    def __init__(self, d_rdf=None, cfg=None):
-        if not isinstance(  cfg, dict):
+    def __init__(
+            self,
+            d_rdf: dict|None            =None,
+            cfg  : dict|DictConfig|None =None):
+        '''
+        Parameters
+        --------------
+        d_rdf: Dictionary where
+            key  : Identifier of dataset
+            value: ROOT dataframe representing dataset
+
+        cfg  : Dictionary or DictConfig instance holding configuration
+        '''
+        if not isinstance(  cfg, (dict,DictConfig)):
             raise ValueError('Config dictionary not passed')
 
         if not isinstance(d_rdf, dict):
