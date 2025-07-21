@@ -9,7 +9,7 @@ import math
 import numpy
 import matplotlib.pyplot as plt
 
-from ROOT                  import RDataFrame
+from ROOT                  import RDataFrame, RDF
 from omegaconf             import DictConfig
 from dmu.logging.log_store import LogStore
 
@@ -40,7 +40,7 @@ class Plotter:
             raise ValueError('Dataframe dictionary not passed')
 
         self._d_cfg = cfg
-        self._d_rdf : dict[str, RDataFrame]    = { name : self._preprocess_rdf(rdf) for name, rdf in d_rdf.items()}
+        self._d_rdf : dict[str, RDF.RNode]    = { name : self._preprocess_rdf(rdf) for name, rdf in d_rdf.items()}
         self._d_wgt : dict[str, numpy.ndarray|None] | None
 
         self._title : str = ''
@@ -80,9 +80,9 @@ class Plotter:
 
         return minx, maxx
     #-------------------------------------
-    def _preprocess_rdf(self, rdf : RDataFrame) -> RDataFrame:
+    def _preprocess_rdf(self, rdf : RDF.RNode) -> RDF.RNode:
         '''
-        rdf (RDataFrame): ROOT dataframe
+        rdf (RDF.RNode): ROOT dataframe
 
         returns preprocessed dataframe
         '''
@@ -198,7 +198,7 @@ class Plotter:
 
         return d_weight
     # --------------------------------------------
-    def _read_weights(self, name : str, rdf : RDataFrame) -> numpy.ndarray:
+    def _read_weights(self, name : str, rdf : RDF.RNode) -> numpy.ndarray:
         v_col = rdf.GetColumnNames()
         l_col = [ col.c_str() for col in v_col ]
 
