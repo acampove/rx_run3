@@ -166,3 +166,23 @@ dump_metadata -f root://x509up_u12477@eoslhcb.cern.ch//eos/lhcb/grid/user/lhcb/u
 ```
 
 which will produce `metadata.yaml`.
+
+## Run1/2 samples
+
+For now these samples are only in the UCAS cluster and only
+the rare electron signal has been made available through:
+
+```
+from rx_data.rdf_getter12 import RDFGetter12
+
+
+gtr = RDFGetter12(
+    sample ='Bu_Kee_eq_btosllball05_DPC', # BuKee
+    trigger='Hlt2RD_BuToKpEE_MVA',        # This will be the eTOS trigger
+    dset   ='2018')                       # Can be any year in Run1/2 or all for the full sample
+
+rdf = gtr.get_rdf()
+```
+
+this dataframe has had the full selection applied, except for the
+`MVA`, `q2` and `mass` cuts.
