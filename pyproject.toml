@@ -1,5 +1,5 @@
 [tool.poetry]
-name           = 'dmu'
+name           = 'data-manipulation-utilities'
 description    = 'Project storing utilities needed to reduce boilerplate code when analyzing data'
 version        = '0.0.0'
 readme         = 'README.md'
