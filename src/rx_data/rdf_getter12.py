@@ -4,7 +4,7 @@ Module use to hold RDFGetter12 class
 import os
 import glob
 
-from ROOT                  import RDataFrame
+from ROOT                  import RDataFrame, RDF
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_data:rdf_getter12')
@@ -51,7 +51,7 @@ class RDFGetter12:
 
         raise NotImplementedError(f'Invalid trigger: {trigger}')
     # --------------------------
-    def get_rdf(self) -> RDataFrame:
+    def get_rdf(self) -> RDF.RNode:
         '''
         Returns ROOT dataframe with dataset
         '''
