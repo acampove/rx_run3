@@ -3,7 +3,7 @@ name         = 'rx_data'
 description  = 'Project with lists of LFNs and utilities needed to download filteres ntuples'
 version      = '0.0.0'
 readme       = 'README.md'
-package-mode = true 
+package-mode = true
 packages     = [
 {include='rx_data',      from='src'},
 {include='rx_data_lfns', from='src'},
