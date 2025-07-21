@@ -7,7 +7,7 @@ general:
   size : [15, 10]
 comparison:
   - run12
-  - 2024
+  - '2024'
 definitions:
   bmass :    B_M
   jmass : Jpsi_M
