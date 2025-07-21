@@ -3,12 +3,14 @@ name         = 'rx_data'
 description  = 'Project with lists of LFNs and utilities needed to download filteres ntuples'
 version      = '0.1.9'
 readme       = 'README.md'
-packages     = [{include='rx_data', from='src'}]
-include      = [
-'src/rx_data_data/**/*.yaml', 
-'src/rx_data_data/**/*.json', 
-'src/rx_data_data/**/*.csv' , 
-]
+package-mode = true 
+packages     = [
+{include='rx_data',      from='src'},
+{include='rx_data_lfns', from='src'},
+{include='rx_data_data', from='src'}]
+
+[tool.poetry.package-data]
+rx_data_data = ['**/*.yaml', '**/*.json', '**/*.csv']
 
 [tool.poetry.dependencies]
 python                     = '>=3.10,<3.13'
