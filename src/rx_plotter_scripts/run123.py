@@ -1,6 +1,7 @@
 '''
 Script meant to do comparisons of variables between Run1,2 and 3
 '''
+import os
 import argparse
 
 from ROOT                    import RDF
@@ -17,15 +18,20 @@ class Data:
     '''
     Class meant to be used to share attributes
     '''
-    cfg : DictConfig
+    cfg     : DictConfig
+    ana_dir = os.environ['ANADIR']
 # ----------------------
 def _initialize() -> None:
     '''
     Nothing, this function initializes the state of the Data class
     '''
     args = _parse_args()
+    cfg  = gut.load_conf(package='rx_plotter_data', fpath=f'run123/{args.conf}.yaml')
 
-    Data.cfg = gut.load_conf(package='rx_plotter_data', fpath=f'run123/{args.conf}.yaml')
+    plt_dir  = cfg.saving.plt_dir
+    cfg.saving.plt_dir = f'{Data.ana_dir}/{plt_dir}'
+
+    Data.cfg = cfg
 # ----------------------
 def _get_rdf(dset : str) -> RDF.RNode:
     '''
