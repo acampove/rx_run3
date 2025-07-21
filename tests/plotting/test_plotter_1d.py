@@ -3,6 +3,7 @@ Unit test for plotter class in dmu.plotting
 '''
 #pylint: disable=no-name-in-module
 
+from typing              import cast
 from importlib.resources import files
 from dataclasses         import dataclass
 
@@ -13,6 +14,7 @@ import numpy
 import mplhep
 
 from ROOT                    import RDF
+from omegaconf               import DictConfig, OmegaConf
 from dmu.plotting.plotter_1d import Plotter1D as Plotter
 from dmu.logging.log_store   import LogStore
 
@@ -61,7 +63,7 @@ def _get_rdf(kind : str, test : str, nentries : int|None = None) -> RDF.RNode:
 
     return rdf
 #---------------------------------------
-def _load_config(test : str):
+def _load_config(test : str, as_dict : bool = True) -> dict|DictConfig:
     '''
     test (str): Identifies specific test
     '''
@@ -74,7 +76,13 @@ def _load_config(test : str):
     plt_dir = cfg['saving']['plt_dir']
     cfg['saving']['plt_dir'] = f'/tmp/tests/dmu/{plt_dir}'
 
-    return cfg
+    if as_dict:
+        return cfg
+
+    ocfg = OmegaConf.create(cfg)
+    ocfg = cast(DictConfig, ocfg)
+
+    return ocfg
 #---------------------------------------
 def test_simple():
     '''
