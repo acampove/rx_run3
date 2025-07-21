@@ -56,8 +56,11 @@ class RDFGetter12:
             d_def_mc = self._cfg.definitions['MC']
             d_def.update(d_def_mc)
 
+        if len(d_def) == 0:
+            raise ValueError('No column definitions found')
+
         for name, expr in d_def.items():
-            log.info(f'{name:<30}{expr}')
+            log.debug(f'{name:<30}{expr}')
             rdf = rdf.Define(name, expr)
 
         return rdf
@@ -84,12 +87,13 @@ class RDFGetter12:
         '''
         Returns ROOT dataframe with dataset
         '''
-
         cas_dir = os.environ['CASDIR']
         ntp_wc  = (
             f'{cas_dir}/tools/apply_selection/'
             f'{self._ntp_dir}/{self._sample}/'
             f'{self._version}/{self._dset}_{self._trigger}/*.root')
+
+        log.info(f'Picking paths from {ntp_wc}')
 
         l_path = glob.glob(ntp_wc)
         npath  = len(l_path)
@@ -97,7 +101,6 @@ class RDFGetter12:
             raise ValueError(f'No file found in: {ntp_wc}')
 
         rdf = RDataFrame(self._trigger, l_path)
-
         rdf = self._add_columns(rdf=rdf)
 
         return rdf
