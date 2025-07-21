@@ -1,34 +1,51 @@
-[project]
+[tool.poetry]
 name        = 'rx_data'
 description = 'Project with lists of LFNs and utilities needed to download filteres ntuples'
 version     = '0.1.9'
 readme      = 'README.md'
-dependencies= [
-'tqdm',
-'uproot',
-'tabulate',
-'mplhep',
-'particle',
-'vector',
-'pandarallel',
+packages     = [{include='rx_data', from='src'}]
+include      = [
+'src/rx_data_data/**/*.yaml', 
+'src/rx_data_data/**/*.json', 
+'src/rx_data_data/**/*.csv' , 
+]
+
+[tool.poetry.dependencies]
+python                     = '>=3.10,<3.13'
+prefect                    = '^3.4.9'
+tqdm                       = '*'
+uproot                     = '*'
+tabulate                   = '*'
+mplhep                     = '*'
+particle                   = '*'
+vector                     = '*'
+pandarallel                = '*'
+data-manipulation-utilities= {version = '*', allow-prereleases=true}
+ecal_calibration           = {version = '*', allow-prereleases=true, optional=true}
+ap_utilities               = {version = '*', allow-prereleases=true, optional=true}
+pytest                     = {version = '*',                         optional=true}
+xrootd                     = {version = '*',                         optional=true}
+
+[tool.poetry.extras]
+tst = ['pytest'] # When developing
+net = ['xrootd'] # When doing things that require access to remote files
+ci  = [          # When running pipelines
 'ecal_calibration',
-'ap_utilities',
-'data-manipulation-utilities',
+'ap_utilities']
+
+[build-system]
+requires      = [
+    'poetry-core>=1.0.0',
+    'poetry-dynamic-versioning>=1.0.0'
 ]
+build-backend = 'poetry_dynamic_versioning.backend'
 
-[project.optional-dependencies]
-dev  = ['pytest'] # When developing
-net  = ['xrootd'] # When doing things that require access to remote files
-ci   = [          # When running pipelines
-'ecal_calibration[ci] @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/ecal_calibration.git@master',
-'ap_utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/ap_utilities.git@master',
-'data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git@master',
-]
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs    = 'git'
+style  = 'pep440'
 
-[tools.setuptools.packages.find]
-where= ['src']
-
-[project.scripts]
+[tool.poetry.scripts]
 make_mva_joblist   ='rx_data_scripts.make_mva_joblist:main'
 check_missing      ='rx_data_scripts.check_missing:main'
 check_corrupted    ='rx_data_scripts.check_corrupted:main'
@@ -40,7 +57,3 @@ dump_metadata      ='rx_data_scripts.dump_metadata:main'
 download_rx_data   ='rx_data_scripts.download_rx_data:main'
 make_tree_structure='rx_data_scripts.make_tree_structure:main'
 list_triggers      ='rx_data_scripts.list_triggers:main'
-
-[tool.setuptools.package-data]
-'rx_data_lfns' = ['**/*.json']
-'rx_data_data' = ['*/*.json', '*/*.yaml', '*/*.csv']
