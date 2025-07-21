@@ -1,25 +1,8 @@
 # This config file is used to configure the behaviour of RDFGetter12
 
 definitions:
-  common: &common
-    L1_TRACK_ETA      : ROOT::Math::XYZVector lep(L1_TRACK_PX, L1_TRACK_PY, L1_TRACK_PZ); return lep.eta();
-    L1_TRACK_PHI      : ROOT::Math::XYZVector lep(L1_TRACK_PX, L1_TRACK_PY, L1_TRACK_PZ); return lep.phi();
-
-    L2_TRACK_ETA      : ROOT::Math::XYZVector lep(L2_TRACK_PX, L2_TRACK_PY, L2_TRACK_PZ); return lep.eta();
-    L2_TRACK_PHI      : ROOT::Math::XYZVector lep(L2_TRACK_PX, L2_TRACK_PY, L2_TRACK_PZ); return lep.phi();
-    q2                : Jpsi_M * Jpsi_M # Ntuples from post_ap already have q2 calculated without correction
-  MC:
-    q2_true           : ROOT::Math::PxPyPzEVector l1(L1_TRUEPX, L1_TRUEPY, L1_TRUEPZ, L1_TRUEENERGY);
-                        ROOT::Math::PxPyPzEVector l2(L2_TRUEPX, L2_TRUEPY, L2_TRUEPZ, L2_TRUEENERGY);
-                        auto ll = l1 + l2;
-                        return ll.M2();
+  MC: {}
   EE:
-    q2_track          : ROOT::Math::PtEtaPhiMVector l1(L1_TRACK_PT, L1_TRACK_ETA, L1_TRACK_PHI, 0.511);
-                        ROOT::Math::PtEtaPhiMVector l2(L2_TRACK_PT, L2_TRACK_ETA, L2_TRACK_PHI, 0.511);
-                        auto ll = l1 + l2;
-                        return ll.M2();
-    nbrem             : int(L1_HasBremAdded) + int(L2_HasBremAdded)
-    <<: *common
+    q2 : Jpsi_M * Jpsi_M
   MM:
-    nbrem             : '0'
-    <<: *common
+    q2 : Jpsi_M * Jpsi_M
