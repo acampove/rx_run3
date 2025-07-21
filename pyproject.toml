@@ -4,12 +4,25 @@ description    = 'Project storing utilities needed to reduce boilerplate code wh
 version        = '0.0.0'
 readme         = 'README.md'
 package-mode   = true 
-packages       = [{include='dmu', from='src'}]
-include        = [
-'src/dmu_data/**/*.yaml',
-'src/dmu_data/**/*.toml',
-'src/dmu_data/**/*.json',
-'src/dmu_data/**/*.txt']
+packages       = [
+{include='dmu'     , from='src'},
+{include='dmu_data', from='src'}]
+
+[[tool.poetry.include]]
+path = "src/dmu_data/**/*.yaml"
+format = "wheel"
+
+[[tool.poetry.include]]
+path = "src/dmu_data/**/*.toml"
+format = "wheel"
+
+[[tool.poetry.include]]
+path = "src/dmu_data/**/*.json"
+format = "wheel"
+
+[[tool.poetry.include]]
+path = "src/dmu_data/**/*.txt"
+format = "wheel"
 
 [tool.poetry.dependencies]
 python         = '>=3.10, <3.13'
