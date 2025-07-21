@@ -45,3 +45,24 @@ def test_simple(sample : str, dset : str):
 
     _check_rdf(rdf=rdf, name = f'simple_{sample}_{dset}')
 # ---------------------------------------------
+@pytest.mark.parametrize('sample', Data.l_samp)
+@pytest.mark.parametrize('dset'  , Data.l_dset)
+def test_add_selection(sample : str, dset : str):
+    '''
+    Simplest test
+    '''
+    trigger = 'Hlt2RD_BuToKpEE_MVA' if 'ee_eq' in sample else 'Hlt2RD_BuToKpMuMu_MVA'
+    d_sel   = {
+        'bdt' : 'mva_cmb > 0.5 & mva_prc > 0.5',
+        'q2'  : 'q2_track > 14300000'}
+
+    with RDFGetter12.add_selection(d_sel = d_sel):
+        gtr = RDFGetter12(
+            sample =sample,
+            trigger=trigger,
+            dset   =dset)
+
+        rdf = gtr.get_rdf()
+
+    _check_rdf(rdf=rdf, name = f'simple_{sample}_{dset}')
+# ---------------------------------------------
