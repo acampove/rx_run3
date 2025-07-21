@@ -1448,6 +1448,7 @@ stats:
 ```
 
 it's up to the user to build this dictionary and load it.
+this can also be a `DictConfig` from the `OmegaConf` project.
 
 ### Pluggins
 
