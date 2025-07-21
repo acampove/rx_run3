@@ -41,10 +41,17 @@ requires      = [
 build-backend = 'poetry_dynamic_versioning.backend'
 
 [tool.poetry-dynamic-versioning]
-enable  = true
-vcs     = 'git'
-style   = 'pep440'
-pattern = 'default-unprefixed'
+enable       = true
+vcs          = 'git'
+style        = 'pep440'
+pattern      = 'default-unprefixed'
+format-jinja = """
+{%- if distance == 0 -%}
+{{ base }}
+{%- else -%}
+{{ base }}.post{{ distance }}.dev0
+{%- endif -%}
+"""
 
 [tool.poetry.scripts]
 make_mva_joblist   ='rx_data_scripts.make_mva_joblist:main'
