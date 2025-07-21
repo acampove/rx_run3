@@ -1,9 +1,15 @@
 [tool.poetry]
 name           = 'data_manipulation_utilities'
 description    = 'Project storing utilities needed to reduce boilerplate code when analyzing data'
-version        = 'v0.0.0'
+version        = '0.0.0'
 readme         = 'README.md'
 package-mode   = false
+packages       = [{include='dmu', from='src'}]
+include        = [
+'src/dmu_data/**/*.yaml',
+'src/dmu_data/**/*.toml',
+'src/dmu_data/**/*.json',
+'src/dmu_data/**/*.txt']
 
 [tool.poetry.dependencies]
 python         = '>=3.10, <3.13'
@@ -21,9 +27,8 @@ mplhep         = '*'
 pandas         = '*'
 tensorflow     = '*'
 awkward-pandas = '*'
-dask           = {version='*', extras=['dataframe','distributed']}
-hist           = {version='*', extras=['plot']}
-
+dask           = {version='*'     , extras  =['dataframe','distributed']}
+hist           = {version='*'     , extras  =['plot']}
 zfit           = {version='0.26.0', optional=true}
 scikit-learn   = {version='*'     , optional=true}
 joblib         = {version='*'     , optional=true}
@@ -34,46 +39,31 @@ pytest         = {version='*'     , optional=true}
 fit  = ['zfit']
 ml   = ['scikit-learn', 'joblib', 'optuna']
 dev  = ['pytest']
-# -----------------------------------------
-# Setuptools
-# -----------------------------------------
-[project]
-name            = 'data_manipulation_utilities'
-description     = 'Project storing utilities needed to reduce boilerplate code when analyzing data'
-readme          = 'README.md'
-dynamic         = ['version']
 
 [build-system]
-requires      = ['setuptools>=61', 'setuptools_scm', 'wheel']
-build-backend = 'setuptools.build_meta'
+requires      = [
+    'poetry-core>=1.0.0',
+    'poetry-dynamic-versioning>=1.0.0'
+]
+build-backend = 'poetry_dynamic_versioning.backend'
 
-[tool.setuptools_scm]
-version_scheme = 'guess-next-dev'
-local_scheme   = 'no-local-version'
+[tool.poetry-dynamic-versioning]
+enable       = true
+vcs          = 'git'
+style        = 'pep440'
+pattern      = 'default-unprefixed'
+format-jinja = """
+{%- if distance == 0 -%}
+{{ base }}
+{%- else -%}
+{{ serialize_pep440(bump_version(base), dev=distance) }}
+{%- endif -%}
+"""
 
-[project.scripts]
+[tool.poetry.scripts]
 transform_text       ='dmu_scripts.text.transform_text:main'
 coned                ='dmu_scripts.ssh.coned:main'
 check_truth          ='dmu_scripts.physics.check_truth:main'
 print_trees          ='dmu_scripts.rfile.print_trees:main'
 compare_root_files   ='dmu_scripts.rfile.compare_root_files:main'
 compare_classifiers  ='dmu_scripts.ml.compare_classifiers:main'
-
-[tool.setuptools.package-data]
-dmu_data=[
-'rfile/*.yaml',
-'text/*.txt',
-'text/*.toml',
-'ml/*/*.yaml',
-'plotting/*/*.yaml',
-'tests/*.txt',
-'tests/*.yaml',
-'tests/*.json',
-'stats/parameters/data.yaml',
-]
-
-[tools.setuptools.packages.find]
-where   = ['src']
-
-[tool.setuptools]
-script-files=['src/dmu_scripts/git/publish']
