@@ -3,6 +3,7 @@ Module use to hold RDFGetter12 class
 '''
 import os
 import glob
+from contextlib import contextmanager
 
 from ROOT                  import RDataFrame, RDF
 from dmu.logging.log_store import LogStore
@@ -14,6 +15,7 @@ class RDFGetter12:
     '''
     This class is meant to allow access to Run1/2 ntuples
     '''
+    _d_sel : dict[str,str] = {}
     # --------------------------
     def __init__(self, sample : str, trigger : str, dset : str):
         '''
@@ -104,4 +106,23 @@ class RDFGetter12:
         rdf = self._add_columns(rdf=rdf)
 
         return rdf
+    # ----------------------
+    @classmethod
+    def add_selection(cls, d_sel : dict[str,str]):
+        '''
+        Parameters
+        -------------
+        d_sel : Dictionary with selection, the keys are the labels and
+                the values are the expressions
+        '''
+        @contextmanager
+        def _context():
+            old_val    = cls._d_sel
+            cls._d_sel = d_sel
+            try:
+                yield
+            finally:
+                cls._d_sel = old_val
+
+        return _context()
 # --------------------------
