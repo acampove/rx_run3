@@ -5,7 +5,7 @@ version        = '0.0.0'
 readme         = 'README.md'
 package-mode   = true 
 packages       = [
-{include='dmu'     , from='src'},
+{include='dmu',      from='src'},
 {include='dmu_data', from='src'}]
 
 [[tool.poetry.include]]
