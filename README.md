@@ -146,3 +146,18 @@ For this run:
 efficiency_vs_q2 -c ee -a rk
 efficiency_vs_q2 -c mm -a rk
 ```
+
+## Run1,2 and 3 comparisons
+
+For this use the `run123` command line utility with a custom config file.
+
+### Mass resolution
+
+For this run:
+
+```bash
+run123 -c mass
+```
+
+it will show the comparison of the uncorrected mass distribution for run3
+with the mass distribution for Run1+2, also the $q^2_{track}$.
