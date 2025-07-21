@@ -30,9 +30,9 @@ def test_simple(sample : str, dset : str):
     trigger = 'Hlt2RD_BuToKpEE_MVA'
 
     gtr = RDFGetter12(
-            sample =sample,
-            trigger=trigger,
-            dset   =dset)
+        sample =sample,
+        trigger=trigger,
+        dset   =dset)
 
     rdf = gtr.get_rdf()
 
