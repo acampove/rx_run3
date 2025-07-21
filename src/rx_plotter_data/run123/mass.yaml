@@ -1,11 +1,27 @@
 # This file is used to configure comparisons between
 # Run1,2 and 3 datasets
+
+lines: &lines
+  ls    : --
+  c     : black 
+  lw    : 2
+
+styling: &style
+  run12:
+    histtype  : fill
+    alpha     : 0.3
+    color     : green 
+  '2024':
+    histtype  : step 
+    linestyle : '-'
+    color     : blue 
+# --------------------
 input:
   sample : Bu_Kee_eq_btosllball05_DPC
   trigger: Hlt2RD_BuToKpEE_MVA
 cuts: # Do not call this section 'selection'. The Plotter class would pick that up
   bdt : (1)
-  q2  : q2_track > 14300000 && q2 < 22000000
+  q2  : (1) 
   mass: (1)
 general:
   size : [15, 10]
@@ -13,36 +29,41 @@ comparison:
   - run12
   - '2024'
 definitions:
-  bmass :    B_M
-  jmass : Jpsi_M
+  bmass :                B_M
+  q2_trk: q2_track / 1000000
 saving:
   plt_dir : plots/run123
 plots:
-  bmass:
+  B_Mass:
     binning    : [4500, 6000, 40]
-    yscale     : linear
-    labels     : ['M$(B^+)$[MeV]', 'Normalized']
-    name       : bmass
+    labels     : ['$M_{corr}(B^+)$[MeV]', 'Normalized']
+    name       : bmass_corr
     normalized : true
     styling:
-      linestyle : '-'
+      <<: *style
     vline   :
       x     : 5280 
       label : $B^+$ 
-      ls    : --
-      c     : black 
-      lw    : 2
-  jmass:
-    binning    : [2300, 3700, 40]
-    yscale     : linear
-    labels     : ['M$(J/\psi)$[MeV]', 'Normalized']
-    name       : jmass 
+      <<: *lines
+  bmass:
+    binning    : [4500, 6000, 40]
+    labels     : ['$M(B^+)$[MeV]', 'Normalized']
+    name       : bmass
     normalized : true
     styling:
-      linestyle : '-'
+      <<: *style
     vline   :
-      x     : 3097
-      label : $J/\psi$ 
-      ls    : --
-      c     : black 
-      lw    : 2
+      x     : 5280 
+      label : $B^+$ 
+      <<: *lines
+  q2_trk:
+    binning    : [0, 21, 60]
+    labels     : ['$q^2_{track}$', 'Normalized']
+    name       : q2_trk 
+    normalized : true
+    styling:
+      <<: *style
+    vline   :
+      x     : 14.3 
+      label : Signal region 
+      <<: *lines
