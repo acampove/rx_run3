@@ -1,38 +1,44 @@
-[project]
-name        = 'rx_selection'
-description = 'Project used to apply selection to ntuples used for RX measurements filtered and skimmed by post_ap project'
-version     = '0.1.8'
-readme      = 'README.md'
-dependencies= [
-'data-manipulation-utilities',
-'rx_data',
-'numexpr',
-'numpy',
-'jacobi',
-'joblib',
-'pandas',
-'numpy',
-'matplotlib',
-'ap_utilities'
+[tool.poetry]
+name         = 'rx_selection'
+description  = 'Project used to apply selection to ntuples used for RX measurements filtered and skimmed by post_ap project'
+version      = '0.0.0'
+readme       = 'README.md'
+package-mode = true 
+packages     = [
+{include='rx_selection'     , from='src'},
+{include='rx_selection_data', from='src'}]
+
+[[tool.poetry.include]]
+path = "src/rx_selection_data/**/*.yaml"
+format = "wheel"
+
+[tool.poetry.dependencies]
+python                     = '>=3.10,<3.13'
+prefect                    = '^3.4.9'
+numexpr                    = {version = '>=0.0.0'}
+numpy                      = {version = '>=0.0.0'}
+jacobi                     = {version = '>=0.0.0'}
+joblib                     = {version = '>=0.0.0'}
+pandas                     = {version = '>=0.0.0'}
+numpy                      = {version = '>=0.0.0'}
+matplotlib                 = {version = '>=0.0.0'}
+ap_utilities               = {version = '>=0.0.0', allow-prereleases=true}
+data-manipulation-utilities= {version = '>=0.0.0', allow-prereleases=true}
+rx_data                    = {version = '>=0.0.0', allow-prereleases=true}
+pytest                     = {version = '>=0.0.0',          optional=true}
+
+[tool.poetry.extras]
+tst = ['pytest']           # When developing
+
+[build-system]
+requires      = [
+    'poetry-core>=1.0.0',
+    'poetry-dynamic-versioning>=1.0.0'
 ]
+build-backend = 'poetry_dynamic_versioning.backend'
 
-[project.optional-dependencies]
-dev  = ['pytest']
-
-[tools.setuptools.packages.find]
-where   = ['src']
-
-[project.scripts]
+[tool.poetry.scripts]
 apply_selection ='rx_selection_scripts.apply_selection:main'
 make_jobs_list  ='rx_selection_scripts.make_jobs_list:main'
 validate_sample ='rx_selection_scripts.validate_sample:main'
 jmanager_ihep   ='rx_selection_scripts.jmanager_ihep:main'
-
-[tool.setuptools.package-data]
-'rx_selection_data' = ['selection/*.yaml', 'validation/*.yaml']
-
-[tool.setuptools]
-script-files=[
-'src/rx_selection_scripts/submit_selection',
-'src/rx_selection_scripts/job_sel_ihep',
-]
