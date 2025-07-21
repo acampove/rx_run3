@@ -5,7 +5,6 @@ Module containing plotter class
 import os
 import json
 import math
-from typing import Union
 
 import numpy
 import matplotlib.pyplot as plt
@@ -29,7 +28,7 @@ class Plotter:
 
         self._d_cfg = cfg
         self._d_rdf : dict[str, RDataFrame]    = { name : self._preprocess_rdf(rdf) for name, rdf in d_rdf.items()}
-        self._d_wgt : Union[dict[str, Union[numpy.ndarray, None]], None]
+        self._d_wgt : dict[str, numpy.ndarray|None] | None
 
         self._title : str = ''
     #-------------------------------------
@@ -146,7 +145,7 @@ class Plotter:
 
         return rdf
     # --------------------------------------------
-    def _print_weights(self, arr_wgt : Union[numpy.ndarray, None], var : str, sample : str) -> None:
+    def _print_weights(self, arr_wgt : numpy.ndarray|None, var : str, sample : str) -> None:
         if arr_wgt is None:
             log.debug(f'Not using weights for {sample}:{var}')
             return
@@ -171,7 +170,7 @@ class Plotter:
 
         return fig_size
     #-------------------------------------
-    def _get_weights(self, var) -> Union[dict[str, Union[numpy.ndarray, None]], None]:
+    def _get_weights(self, var) -> dict[str, numpy.ndarray|None]| None:
         d_cfg = self._d_cfg['plots'][var]
         if 'weights' not in d_cfg:
             return None
