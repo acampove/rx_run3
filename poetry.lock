@@ -79,10 +79,9 @@ trio = ["trio (>=0.26.1)"]
 name = "ap-utilities"
 version = "0.2.8"
 description = "Utilities needed for analysis productions in LHCb"
-optional = true
+optional = false
 python-versions = "*"
 groups = ["main"]
-markers = "extra == \"ci\""
 files = [
     {file = "ap_utilities-0.2.8-py3-none-any.whl", hash = "sha256:6dec1879698f627082e21279673b6e88483aabe40955d9286b70e43c3ac282a7"},
     {file = "ap_utilities-0.2.8.tar.gz", hash = "sha256:9dc28b804ad666a857852bc34cd8698cbe08d8d9b3e33c8ca9d2f0fd12f5f811"},
@@ -4127,11 +4126,11 @@ test = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more_it
 type = ["pytest-mypy"]
 
 [extras]
-ci = ["ap_utilities", "ecal_calibration"]
+ci = ["ecal_calibration"]
 net = ["xrootd"]
 tst = ["pytest"]
 
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.13"
-content-hash = "3eadf394b57db9f4da44c9a4447fd3798fac1d3e4f5e2c02b9b0f5e7fbfba089"
+content-hash = "de5aaadb14bb6c1efdf8433be72236aaa624cad7cb0b72e62b2edf295fc16c6e"
