@@ -3,6 +3,10 @@
 input:
   sample : Bu_Kee_eq_btosllball05_DPC
   trigger: Hlt2RD_BuToKpEE_MVA
+cuts: # Do not call this section 'selection'. The Plotter class would pick that up
+  bdt : (1)
+  q2  : q2_track > 14300000 && q2 < 22000000
+  mass: (1)
 general:
   size : [15, 10]
 comparison:
