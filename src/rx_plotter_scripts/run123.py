@@ -48,15 +48,19 @@ def _get_rdf(dset : str) -> RDF.RNode:
 
     if   dset == '2024':
         gtr = RDFGetter(sample=sample, trigger=trigger)
-    elif dset in 'run12':
+        rdf = gtr.get_rdf()
+        rdf = _apply_run3_selection(rdf=rdf)
+    elif dset == 'run12':
         gtr = RDFGetter12(
             sample =sample,
             trigger=trigger,
             dset   ='all')
+        rdf = gtr.get_rdf()
+        rdf = _apply_run12_selection(rdf=rdf)
     else:
         raise NotImplementedError(f'Invalid dataset {dset}')
 
-    return gtr.get_rdf()
+    return rdf
 # ----------------------
 def _get_dataframes() -> dict[str,RDF.RNode]:
     '''
