@@ -58,10 +58,9 @@ class RDFGetter12:
 
         cas_dir = os.environ['CASDIR']
         ntp_wc  = (
-                f'{cas_dir}/tools/apply_selection/'
-                f'{self._ntp_dir}/{self._sample}/'
-                f'{self._version}/{self._dset}_{self._trigger}/*.root'
-                )
+            f'{cas_dir}/tools/apply_selection/'
+            f'{self._ntp_dir}/{self._sample}/'
+            f'{self._version}/{self._dset}_{self._trigger}/*.root')
 
         l_path = glob.glob(ntp_wc)
         npath  = len(l_path)
