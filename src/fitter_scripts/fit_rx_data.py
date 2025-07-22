@@ -41,16 +41,26 @@ def _parse_args() -> None:
     Data.mva_prc = args.mva_prc
     Data.config  = gut.load_conf(package='fitter_data', fpath=f'{args.config}/data.yaml')
 # ----------------------
+def _get_fit_name() -> str:
+    '''
+    Builds fit identifier from MVA working points
+    '''
+    cmb  = int(100 * Data.mva_cmb)
+    prc  = int(100 * Data.mva_prc)
+    name = f'{cmb:03d}_{prc:03d}'
+
+    return name
+# ----------------------
 def _fit() -> None:
     '''
     This is where DataFitter is used
     '''
-    with Cache.turn_off_cache(val=['DataFitter']),\
+    with Cache.turn_off_cache(val=[]),\
          sel.custom_selection(d_sel={
         'nobr0' : 'nbrem != 0',
         'bdt'   :f'mva_cmb > {Data.mva_cmb} && mva_prc > {Data.mva_prc}'}):
         ftr = DataFitter(
-            name   = '060_040',
+            name   = _get_fit_name(),
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
             project= 'rx',
