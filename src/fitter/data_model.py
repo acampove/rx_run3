@@ -111,9 +111,6 @@ class DataModel:
 
         log.debug(f'Found {npdf} components')
         for component, cfg_path in self._cfg.model.components.items():
-            if self._name is not None:
-                component = f'{self._name}_{component}'
-
             cfg = gut.load_conf(package='fitter_data', fpath=cfg_path)
             ftr = SimFitter(
                 name     = self._name,
