@@ -20,7 +20,7 @@ def test_nomc():
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/combinatorial.yaml')
     ftr = SimFitter(
-        name    = 'combinatorial',
+        component= 'combinatorial',
         obs     = obs,
         cfg     = cfg,
         trigger = '',
@@ -36,7 +36,7 @@ def test_toy():
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/signal_toy.yaml')
     ftr = SimFitter(
-        name    = 'gauss_toy',
+        component= 'gauss_toy',
         obs     = obs,
         cfg     = cfg,
         trigger = '',
@@ -53,7 +53,7 @@ def test_nocat():
     cfg = gut.load_conf(package='fitter_data', fpath='tests/signal_muon.yaml')
     with RDFGetter.max_entries(value=10_000):
         ftr = SimFitter(
-            name    = 'signal_muon',
+            component= 'signal_muon',
             obs     = obs,
             cfg     = cfg,
             trigger = 'Hlt2RD_BuToKpMuMu_MVA',
@@ -70,7 +70,7 @@ def test_with_cat():
     cfg = gut.load_conf(package='fitter_data', fpath='tests/signal_electron.yaml')
     with RDFGetter.max_entries(value=100_000):
         ftr = SimFitter(
-            name    = 'signal_electron',
+            component= 'signal_electron',
             obs     = obs,
             cfg     = cfg,
             trigger = 'Hlt2RD_BuToKpEE_MVA',
@@ -88,7 +88,7 @@ def test_kde(component : str):
     cfg = gut.load_conf(package='fitter_data', fpath=f'tests/{component}.yaml')
     with RDFGetter.max_entries(value=100_000):
         ftr = SimFitter(
-            name    = component,
+            component= component,
             obs     = obs,
             cfg     = cfg,
             trigger = 'Hlt2RD_BuToKpEE_MVA',
@@ -107,7 +107,7 @@ def test_ccbar_reso():
     with RDFGetter.max_entries(value=-1),\
         RDFGetter.multithreading(nthreads=6):
         ftr = SimFitter(
-            name    = component,
+            component= component,
             obs     = obs,
             cfg     = cfg,
             trigger = 'Hlt2RD_BuToKpEE_MVA',
@@ -132,7 +132,7 @@ def test_ccbar_rare():
             'nobr0' : 'nbrem != 0',
             'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
         ftr = SimFitter(
-            name    = component,
+            component= component,
             obs     = obs,
             cfg     = cfg,
             trigger = 'Hlt2RD_BuToKpEE_MVA',
@@ -154,7 +154,7 @@ def test_signal_reso():
             'mass'  : '(1)',
             'nbrem' : 'nbrem != 0'}):
         ftr = SimFitter(
-            name    = component,
+            component= component,
             obs     = obs,
             cfg     = cfg,
             trigger = 'Hlt2RD_BuToKpEE_MVA',
