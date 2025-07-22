@@ -1,27 +1,28 @@
-# Config used to make 2D plots PIDe between two electrons 
+# Config used to make 2D plots of the momenta of the electrons 
 
+definitions : 
+  ep_mom : L1_P / 1000
+  em_mom : L2_P / 1000
 saving:
-    plt_dir : plots/2d/ep_em_pide
+    plt_dir : plots/2d/ep_em_momentum
 selection:
   cuts:
-    pid_l : (1) 
+    bdt : mva_cmb > 0.95 && mva_prc > 0.80
 general:
-    size : [20, 10]
+    size : [15, 10]
 plots_2d:
-    - [L1_PID_E   , L2_PID_E   , null  , PID_E_raw, true]
-    - [L1_PID_E   , L2_PID_E   , weight, PID_E_wgt, true]
-    - [L1_PROBNN_E, L2_PROBNN_E, null  , PRB_E_raw, true]
-    - [L1_PROBNN_E, L2_PROBNN_E, weight, PRB_E_wgt, true]
+  - [ep_mom, em_mom        , null, ep_em_momentum, true]
+  - [B_Mass, B_const_mass_M, null, mass_raw_dtf  , true]
 axes:
-    L1_PID_E:
-        binning : [-5, 13, 60]
-        label   : '$\Delta LL(e^+)$'
-    L2_PID_E:
-        binning : [-5, 13, 60]
-        label   : '$\Delta LL(e^-)$'
-    L1_PROBNN_E:
-        binning : [0, 1, 40]
-        label   : 'ProbNNe ${}_(e^+)$'
-    L2_PROBNN_E:
-        binning : [0, 1, 40]
-        label   : 'ProbNNe ${}_(e^-)$'
+  ep_mom:
+      binning : [0, 200, 60]
+      label   : '$p(e^+)[GeV]$'
+  em_mom:
+      binning : [0, 200, 60]
+      label   : '$p(e^-)[GeV]$'
+  B_Mass:
+      binning : [4500, 6000, 40]
+      label   : '$M_{corr}(B^+)[MeV]$'
+  B_const_mass_M:
+      binning : [4500, 6000, 40]
+      label   : '$M_{DTF}(B^+)[MeV]$'
