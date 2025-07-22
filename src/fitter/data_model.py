@@ -123,7 +123,7 @@ class DataModel:
             pdf = ftr.get_model()
 
             if pdf is None:
-                log.warning(f'Skipping comonent: {component}')
+                log.warning(f'Skipping component: {component}')
                 continue
 
             if component == 'signal':
