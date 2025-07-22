@@ -32,13 +32,13 @@ class SimFitter(BaseFitter, Cache):
     # ------------------------
     def __init__(
         self,
-        name      : str|None = None,
         component : str,
         trigger : str,
         project : str,
         q2bin   : str,
         cfg     : DictConfig,
-        obs     : zobs):
+        obs     : zobs,
+        name    : str|None = None):
         '''
         Parameters
         --------------------
