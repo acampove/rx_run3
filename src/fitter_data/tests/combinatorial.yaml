@@ -1,7 +1,8 @@
 output_directory : combinatorial
 categories:
   main:
-    models : [exp]
+    models: 
+      test_bin : [exp]
 shared        : []
 float         : []
 reparametrize : {}
