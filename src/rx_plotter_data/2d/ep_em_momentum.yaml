@@ -25,10 +25,10 @@ axes:
       binning : [0, 3, 60]
       label   : '$\chi^2(e_2)[GeV]$'
   ep_mom:
-      binning : [0, 200, 60]
+      binning : [3, 200, 60]
       label   : '$p(e_1)[GeV]$'
   em_mom:
-      binning : [0, 200, 60]
+      binning : [3, 200, 60]
       label   : '$p(e_2)[GeV]$'
   B_Mass:
       binning : [4500, 6000, 40]
