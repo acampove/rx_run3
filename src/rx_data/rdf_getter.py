@@ -15,7 +15,7 @@ from typing              import Any
 import yaml
 import dmu.generic.utilities as gut
 
-from ROOT                  import RDF, RDataFrame, GetThreadPoolSize, TFile, EnableImplicitMT, DisableImplicitMT
+from ROOT                  import RDF, GetThreadPoolSize, TFile, EnableImplicitMT, DisableImplicitMT
 from dmu.generic           import version_management as vmn
 from dmu.generic           import hashing
 from dmu.logging.log_store import LogStore
@@ -131,6 +131,13 @@ class RDFGetter:
 
         return cfg
     # ---------------------------------------------------
+    def _set_logs(self) -> None:
+        '''
+        Set log levels of dependent tools to WARNING
+        to reduce noise
+        '''
+        LogStore.set_level('rx_data:path_splitter', 30)
+    # ---------------------------------------------------
     def _initialize(self) -> None:
         '''
         Function will:
@@ -143,6 +150,7 @@ class RDFGetter:
         self._check_multithreading()
 
         self._samples = self._get_yaml_paths()
+        self._set_logs()
     # ---------------------------------------------------
     def _get_yaml_paths(self) -> dict[str,str]:
         '''
