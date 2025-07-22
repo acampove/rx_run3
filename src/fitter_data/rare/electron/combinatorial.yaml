@@ -1,4 +1,4 @@
-output_directory : combinatorial
+output_directory : rare/electron/combinatorial
 categories:
   main:
     models : 
