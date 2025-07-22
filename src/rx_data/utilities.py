@@ -89,7 +89,7 @@ def is_reso(q2bin : str) -> bool:
     charmonium component. If not, returns false.
     '''
     reso = ['jpsi', 'psi2']
-    rare = ['low', 'central', 'high']
+    rare = ['low', 'cen_low', 'central', 'cen_high', 'high']
 
     if q2bin in reso:
         return True
