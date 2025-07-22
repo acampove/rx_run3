@@ -135,10 +135,10 @@ class SimFitter(BaseFitter, Cache):
         ------------
         Fitting PDF built from the sum of those models
         '''
-        log.info(f'Building {self._name} for category {category} with: {l_model}')
+        log.info(f'Building {self._component} for category {category} with: {l_model}')
 
         mod     = ModelFactory(
-            preffix = f'{self._name}_{category}',
+            preffix = f'{self._component}_{category}',
             obs     = self._obs,
             l_pdf   = l_model,
             l_reuse = [self._mu_par, self._sg_par],
@@ -183,7 +183,7 @@ class SimFitter(BaseFitter, Cache):
         '''
         if 'main' not in self._cfg.categories:
             log.info(OmegaConf.to_yaml(self._cfg))
-            raise ValueError(f'Cannot find main category in config associated to sample {self._name}')
+            raise ValueError(f'Cannot find main category in config associated to sample {self._component}')
 
         l_model = self._cfg.categories.main.models[self._q2bin]
         cfg     = self._cfg[self._q2bin]
@@ -264,7 +264,7 @@ class SimFitter(BaseFitter, Cache):
         -------------
         Fitting fraction parameter fixed
         '''
-        frac_name = f'frac_{self._name}_{category}'
+        frac_name = f'frac_{self._component}_{category}'
         value     = sumw / total
         par       = zfit.param.Parameter(frac_name, value, 0, 1)
 
@@ -399,7 +399,7 @@ class SimFitter(BaseFitter, Cache):
             else:
                 kwargs = {}
 
-            pdf = KdeBuilder(obs=self._obs, data=data, name=self._name, **kwargs)
+            pdf = KdeBuilder(obs=self._obs, data=data, name=self._component, **kwargs)
 
         self._save_fit(
             cuts     = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin),
