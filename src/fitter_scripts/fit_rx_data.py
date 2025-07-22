@@ -3,6 +3,7 @@ Script used to interact with DataFitter tool
 and run fits
 '''
 
+import os
 import argparse
 from typing import ClassVar
 
@@ -57,11 +58,21 @@ def _fit() -> None:
             cfg    = Data.config)
         ftr.run()
 # ----------------------
+def _set_output_directory() -> None:
+    '''
+    This function tells the Cache class where to
+    put the outputs. i.e. where the fit outputs will go
+    '''
+    ana_dir = os.environ['ANADIR']
+    out_dir = f'{ana_dir}/fits/data'
+    Cache.set_cache_root(root=out_dir)
+# ----------------------
 def main():
     '''
     Entry point
     '''
     _parse_args()
+    _set_output_directory()
     _fit()
 # ----------------------
 if __name__ == '__main__':
