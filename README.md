@@ -33,6 +33,35 @@ Then, for each remote it pushes the tags and the commits.
 
 This section describes generic tools that could not be put in a specific category, but tend to be useful.
 
+## Naming
+
+### Name cleaning
+
+This is an alternative to projects like `slugify`. The function will
+take strings with characters that are not easy to use when naming files and
+will clean it up with:
+
+```python
+
+from dmu.generic import naming
+
+value = naming.clean_special_characters(name=name)
+```
+
+e.g.:
+
+```
+a  b'    ->  'a_b'
+a$b'     ->  'a_b'
+a > b'   ->  'a_gt_b'
+a < b'   ->  'a_lt_b'
+a = b'   ->  'a_eq_b'
+{a}'     ->  '_a_'
+a.b'     ->  'apb'
+a && b'  ->  'a_and_b'
+a || b'  ->  'a_or_b'
+```
+
 ## Caching data
 
 In order to reuse data that is hard to calculate one would need:
