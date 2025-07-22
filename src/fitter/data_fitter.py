@@ -66,9 +66,11 @@ class DataFitter(BaseFitter, Cache):
         '''
         sample = self._sample.replace('*', 'p')
         if self._name is not None:
-            sample = f'{self._name}_{sample}'
+            sample = f'{self._cfg.output_directory}/{sample}/{self._name}/{self._trigger}_{self._project}_{self._q2bin}'
+        else:
+            sample = f'{self._cfg.output_directory}/{sample}/{self._trigger}_{self._project}_{self._q2bin}'
 
-        return f'{self._cfg.output_directory}/{sample}_{self._trigger}_{self._project}_{self._q2bin}'
+        return sample
     # ------------------------
     def _make_observable(self) -> zobs:
         '''
