@@ -162,3 +162,24 @@ def test_signal_reso():
             q2bin   = 'jpsi')
         ftr.get_model()
 # ---------------------------------------------------
+@pytest.mark.parametrize('name', ['name_001', 'name_002'])
+def test_name(name : str):
+    '''
+    Will run test and specify the name argument
+    '''
+    component = 'ccbar'
+    obs       = zfit.Space('B_const_mass_M', limits=(4500, 6000))
+    cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
+
+    with RDFGetter.max_entries(value=-1),\
+        RDFGetter.multithreading(nthreads=6):
+        ftr = SimFitter(
+            name     = name,
+            component= component,
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = 'Hlt2RD_BuToKpEE_MVA',
+            project  = 'rx',
+            q2bin    = 'jpsi')
+        ftr.get_model()
+# ---------------------------------------------------
