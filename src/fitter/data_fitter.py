@@ -136,6 +136,7 @@ class DataFitter(BaseFitter, Cache):
         data = dpr.get_data()
 
         mod  = DataModel(
+            name   = self._name,
             cfg    = self._cfg,
             obs    = self._obs,
             q2bin  = self._q2bin,
