@@ -149,7 +149,7 @@ def test_signal_reso():
     cfg       = gut.load_conf(package='fitter_data', fpath=f'tests/{component}.yaml')
 
     with RDFGetter.max_entries(value=200_000),\
-        Cache.turn_off_cache(val=True), \
+        Cache.turn_off_cache(val=None), \
         sel.custom_selection(d_sel={
             'mass'  : '(1)',
             'nbrem' : 'nbrem != 0'}):
