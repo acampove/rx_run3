@@ -3,6 +3,7 @@ Module used to postprocess outputs generated during tests
 '''
 import os
 import mplhep
+import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
 from _pytest.config        import Config
@@ -17,6 +18,22 @@ class Data:
     Data class
     '''
     out_dir = '/tmp/tests/rx_selection'
+# ------------------------------
+def pytest_configure(config : Config):
+    '''
+    This will run before any test by pytest
+    '''
+    _config = config
+    LogStore.set_level('rx_data:rdf_getter12', 30)
+    LogStore.set_level('rx_data:rdf_getter'  , 30)
+# ------------------------------
+@pytest.fixture(scope="session", autouse=True)
+def set_max_entries():
+    """
+    Applies RDFGetter.max_entries(1000) for the entire test session.
+    """
+    with RDFGetter.max_entries(value=1000):
+        yield
 # ------------------------------
 def pytest_sessionfinish(session, exitstatus):
     '''
