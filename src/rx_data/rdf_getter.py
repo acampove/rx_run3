@@ -98,6 +98,8 @@ class RDFGetter:
         self._d_info : dict[str,Any] = {} # Used to store information related to transformations done to dataframe (e.g. Range), needed for hashing
         self._l_path : list[str]     = [] # list of paths to all the ROOT files
         self._channel                = self._channel_from_trigger()
+
+        self._set_logs()
         self._initialize()
     # ---------------------------------------------------
     def _get_main_tree(self) -> str:
@@ -150,7 +152,6 @@ class RDFGetter:
         self._check_multithreading()
 
         self._samples = self._get_yaml_paths()
-        self._set_logs()
     # ---------------------------------------------------
     def _get_yaml_paths(self) -> dict[str,str]:
         '''
