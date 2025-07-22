@@ -30,7 +30,7 @@ class Data:
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to fit RX data')
-    parser.add_argument('-c', '--config' , type=str  , help='Name of configuration, e.g. rare_electron', required=True)
+    parser.add_argument('-c', '--config' , type=str  , help='Name of configuration, e.g. rare/electron', required=True)
     parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin',              choices=Data.l_q2bin, required=True)
     parser.add_argument('-C', '--mva_cmb', type=float, help='Cut on combinatorial MVA working point'   , required=True)
     parser.add_argument('-P', '--mva_prc', type=float, help='Cut on part reco MVA working point'       , required=True)
