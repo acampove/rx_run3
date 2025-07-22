@@ -3,7 +3,7 @@ categories:
   main:
     models : 
       low     : [hypexp]
-      central : [exp]
+      central : [hypexp]
       high    : [suj]
 low:
   shared        : []
