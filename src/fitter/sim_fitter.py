@@ -32,7 +32,8 @@ class SimFitter(BaseFitter, Cache):
     # ------------------------
     def __init__(
         self,
-        name    : str,
+        name      : str|None = None,
+        component : str,
         trigger : str,
         project : str,
         q2bin   : str,
@@ -51,14 +52,19 @@ class SimFitter(BaseFitter, Cache):
         '''
         BaseFitter.__init__(self)
 
-        self._sample    = DecayNames.sample_from_decay(name, fall_back='NA')
+        self._sample    = DecayNames.sample_from_decay(component, fall_back='NA')
         self._name      = name
+        self._component = component
         self._trigger   = trigger
         self._project   = project
         self._q2bin     = q2bin
         self._cfg       = cfg
         self._obs       = obs
-        self._base_path = f'{cfg.output_directory}/{name}_{trigger}_{project}_{q2bin}'
+        if name is None:
+            self._base_path = f'{cfg.output_directory}/{component}_{trigger}_{project}_{q2bin}'
+        else:
+            self._base_path = f'{cfg.output_directory}/{name}/{component}_{trigger}_{project}_{q2bin}'
+
         self._l_rdf_uid = []
         self._d_data    = self._get_data()
 
