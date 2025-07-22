@@ -86,8 +86,10 @@ def test_full_selection_electron(sample : str, q2bin : str):
     Applies full selection to all q2 bins in electron channel
     '''
     trigger = 'Hlt2RD_BuToKpEE_MVA'
-    gtr     = RDFGetter(sample=sample, trigger=trigger)
-    rdf     = gtr.get_rdf()
+    with RDFGetter.max_entries(value=100_000):
+        gtr     = RDFGetter(sample=sample, trigger=trigger)
+        rdf     = gtr.get_rdf()
+
     rdf     = sel.apply_full_selection(rdf = rdf, trigger=trigger, q2bin=q2bin, process=sample)
 
     rep     = rdf.Report()
@@ -106,10 +108,11 @@ def test_full_selection_muon(sample : str, q2bin : str):
     Applies full selection to all q2 bins in muon channel
     '''
     trigger = 'Hlt2RD_BuToKpMuMu_MVA'
-    gtr     = RDFGetter(sample=sample, trigger=trigger)
-    rdf     = gtr.get_rdf()
-    rdf     = sel.apply_full_selection(rdf = rdf, trigger=trigger, q2bin=q2bin, process=sample)
+    with RDFGetter.max_entries(value=100_000):
+        gtr     = RDFGetter(sample=sample, trigger=trigger)
+        rdf     = gtr.get_rdf()
 
+    rdf     = sel.apply_full_selection(rdf = rdf, trigger=trigger, q2bin=q2bin, process=sample)
     rep     = rdf.Report()
     rep.Print()
 
