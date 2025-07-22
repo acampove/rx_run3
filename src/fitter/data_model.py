@@ -116,12 +116,13 @@ class DataModel:
 
             cfg = gut.load_conf(package='fitter_data', fpath=cfg_path)
             ftr = SimFitter(
-                name    = component,
-                trigger = self._trigger,
-                project = self._project,
-                q2bin   = self._q2bin,
-                cfg     = cfg,
-                obs     = self._obs)
+                name     = self._name,
+                component= component,
+                trigger  = self._trigger,
+                project  = self._project,
+                q2bin    = self._q2bin,
+                cfg      = cfg,
+                obs      = self._obs)
             pdf = ftr.get_model()
 
             if pdf is None:
