@@ -109,6 +109,12 @@ This will provide plots showing
 - Correlations
 - Mass vs q2
 
+Below is a list of the commands for each 2D plot:
+
+| Arguments                                                              | Description                                                       |
+| ---------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `-q jpsi -c ep_em_momentum -s "DATA*" -t Hlt2RD_BuToKpEE_SameSign_MVA` | This should make plots of the electrons momenta for the SS sample |
+
 ## Other studies
 
 ### Leakage from $B^+\to K^+ J/\psi(\to ee)$ into central $q^2$ bin
