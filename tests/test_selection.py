@@ -59,7 +59,6 @@ def test_selection(sample : str, smeared : bool, q2bin : str):
 
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf()
-    rdf = rdf.Range(10_000)
 
     d_sel = sel.selection(
             trigger=trigger,
