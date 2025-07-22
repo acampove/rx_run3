@@ -61,9 +61,11 @@ class SimFitter(BaseFitter, Cache):
         self._cfg       = cfg
         self._obs       = obs
         if name is None:
-            self._base_path = f'{cfg.output_directory}/{component}_{trigger}_{project}_{q2bin}'
+            self._base_path = f'{cfg.output_directory}/{trigger}_{project}_{q2bin}'
         else:
-            self._base_path = f'{cfg.output_directory}/{name}/{component}_{trigger}_{project}_{q2bin}'
+            self._base_path = f'{cfg.output_directory}/{name}/{trigger}_{project}_{q2bin}'
+
+        log.debug(f'For component {self._component} using output: {self._base_path}')
 
         self._l_rdf_uid = []
         self._d_data    = self._get_data()
