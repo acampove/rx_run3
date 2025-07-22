@@ -19,6 +19,7 @@ class Data:
     data class
     '''
     DATADIR = os.environ['ANADIR'] + '/Data'
+    l_q2bin = ['low', 'cen_low', 'central', 'cen_high', 'psi2', 'high']
 
     out_dir = '/tmp/tests/rx_selection/selection'
 # --------------------------
@@ -38,7 +39,7 @@ def _print_dotted_branches(rdf : RDataFrame) -> None:
         log.debug(name)
 # --------------------------
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA'])
-@pytest.mark.parametrize('q2bin'  , ['low', 'central', 'high'])
+@pytest.mark.parametrize('q2bin'  , Data.l_q2bin)
 def test_read_selection(trigger : str, q2bin : str):
     '''
     Test reading the selection
@@ -49,7 +50,7 @@ def test_read_selection(trigger : str, q2bin : str):
 # --------------------------
 @pytest.mark.parametrize('sample' , ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC', 'DATA*'])
 @pytest.mark.parametrize('smeared', [True, False])
-@pytest.mark.parametrize('q2bin'  , ['low', 'central', 'jpsi', 'psi2', 'high'])
+@pytest.mark.parametrize('q2bin'  , Data.l_q2bin)
 def test_selection(sample : str, smeared : bool, q2bin : str):
     '''
     Basic test of selection
@@ -80,7 +81,7 @@ def test_selection(sample : str, smeared : bool, q2bin : str):
     _print_dotted_branches(rdf)
 # --------------------------
 @pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
-@pytest.mark.parametrize('q2bin' , ['low', 'central', 'jpsi', 'psi2', 'high'])
+@pytest.mark.parametrize('q2bin' , Data.l_q2bin)
 def test_full_selection_electron(sample : str, q2bin : str):
     '''
     Applies full selection to all q2 bins in electron channel
@@ -100,7 +101,7 @@ def test_full_selection_electron(sample : str, q2bin : str):
     _print_dotted_branches(rdf)
 # --------------------------
 @pytest.mark.parametrize('sample', ['Bu_Kmumu_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
-@pytest.mark.parametrize('q2bin' , ['low', 'central', 'jpsi', 'psi2', 'high'])
+@pytest.mark.parametrize('q2bin' , Data.l_q2bin)
 def test_full_selection_muon(sample : str, q2bin : str):
     '''
     Applies full selection to all q2 bins in muon channel
@@ -174,7 +175,7 @@ def test_truth_matching(sample : str):
     assert 20 * fin > ini
 # --------------------------
 @pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
-@pytest.mark.parametrize('q2bin' , ['low', 'central', 'jpsi', 'psi2', 'high'])
+@pytest.mark.parametrize('q2bin' , Data.l_q2bin)
 def test_custom_selection(sample : str, q2bin : str):
     '''
     This function tests the custom_selection
