@@ -116,6 +116,7 @@ def test_rare_electron(q2bin : str):
             'nobr0' : 'nbrem != 0',
             'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
         ftr = DataFitter(
+            name   = '080_080',
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
             project= 'rx',
