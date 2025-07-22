@@ -18,14 +18,14 @@ def test_nomc():
     '''
     obs = zfit.Space('B_Mass', limits=(4500, 7000))
 
-    cfg = gut.load_conf(package='fitter_data', fpath='tests/combinatorial.yaml')
+    cfg = gut.load_conf(package='fitter_data', fpath='rare/electron/combinatorial.yaml')
     ftr = SimFitter(
         component= 'combinatorial',
         obs     = obs,
         cfg     = cfg,
-        trigger = '',
-        project = '',
-        q2bin   = '')
+        trigger = 'Hlt2RD_BuToKpEE_MVA',
+        project = 'rx',
+        q2bin   = 'low')
     pdf = ftr.get_model()
 # ---------------------------------------------------
 def test_toy():
