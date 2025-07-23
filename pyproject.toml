@@ -1,26 +1,55 @@
 [project]
-name        = 'rx_fitter'
-description = 'Framework used to handle fits to data and simulation'
-version     = '0.0.1'
-readme      = 'README.md'
-dependencies= [
-'omegaconf',
-'numpy',
-'mplhep',
-'matplotlib',
-'python-slugify',
-'rx_data',
-'rx_selection',
-'data-manipulation-utilities']
+name            = 'rx_fitter'
+description     = 'Framework used to handle fits to data and simulation'
+readme          = 'README.md'
+dynamic         = ['version']
+requires-python = '>=3.10, <3.13'
+dependencies    = [
+    'omegaconf',
+    'numpy',
+    'mplhep',
+    'matplotlib',
+    'python-slugify',
+]
 
-[project.optional-dependencies]
-dev  = ['pytest']
-
-[tools.setuptools.packages.find]
-where   = ['src']
-
-[tool.setuptools.package-data]
-fitter_data=['**/*.yaml']
+[tool.poetry.dependencies]
+rx-data                     = {version = '>=0.0.0', allow-prereleases = true}
+rx-selection                = {version = '>=0.0.0', allow-prereleases = true}
+data-manipulation-utilities = {version = '>=0.0.0', allow-prereleases = true}
 
 [project.scripts]
-fit_rx_data ='fitter_scripts.fit_rx_data:main'
+fit_rx_data = 'fitter_scripts.fit_rx_data:main'
+
+[project.optional-dependencies]
+dev = ['pytest']
+
+[tool.poetry]
+package-mode = true
+packages     = [
+    {include = 'fitter', from = 'src'},
+    {include = 'fitter_data', from = 'src'}
+]
+include      = [
+    "src/fitter_data/**/*.yaml"
+]
+version = '0.0.1'
+
+[build-system]
+requires = [
+    'poetry-core>=1.0.0',
+    'poetry-dynamic-versioning>=1.0.0'
+]
+build-backend = 'poetry_dynamic_versioning.backend'
+
+[tool.poetry-dynamic-versioning]
+enable       = true
+vcs          = 'git'
+style        = 'pep440'
+pattern      = 'default-unprefixed'
+format-jinja = """
+{%- if distance == 0 -%}
+{{ base }}
+{%- else -%}
+{{ serialize_pep440(bump_version(base), dev=distance) }}
+{%- endif -%}
+"""
