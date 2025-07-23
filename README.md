@@ -1,3 +1,5 @@
+[TOC]
+
 # $R_X$ common
 
 The purpose of this project is to:
