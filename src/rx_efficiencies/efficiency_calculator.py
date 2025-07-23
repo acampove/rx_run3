@@ -231,7 +231,7 @@ class EfficiencyCalculator(Cache):
 
         return eff, err
     #------------------------------------------
-    def get_efficiency(self, sample : str) -> float:
+    def get_efficiency(self, sample : str) -> tuple[float,float]:
         '''
         Parameters
         -------------
@@ -239,7 +239,7 @@ class EfficiencyCalculator(Cache):
 
         Returns
         -------------
-        Efficiency associated to sample
+        Tuple with effiency and error associated
         '''
         data_path = f'{self._out_path}/yields.parquet'
         if self._copy_from_cache():
@@ -248,7 +248,7 @@ class EfficiencyCalculator(Cache):
             return self._efficiency_from_sample(df=df, sample=sample)
 
         log.warning('Recalculating dataframe with yields')
-        df = self.get_stats()
+        df = self._get_stats()
         df.to_parquet(data_path)
 
         self._cache()
