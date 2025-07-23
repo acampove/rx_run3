@@ -1,12 +1,9 @@
 '''
 Module used to test PrecScales class
 '''
-# TODO: Scanning of rare prec scales over MVA WP needs to be tested properly, for now disabled.
 
-import os
 import numpy
 import pytest
-import matplotlib.pyplot as plt
 
 from conftest                    import ScalesData
 from dmu.logging.log_store       import LogStore
@@ -75,25 +72,6 @@ def _print_cuts(d_sel : dict[str,str]) -> None:
     for name, expr in d_sel.items():
         log.info(f'{name:<20}{expr}')
 #-------------------------------
-def _plot_df(df, trig):
-    df = df[df.trig == trig]
-    ax = None
-    for proc, df_p in df.groupby('kind'):
-        label = dn.tex_from_decay(proc)
-        ax=df_p.plot(x='year', y='val', yerr='err', ax=ax, label=label, linestyle='none', marker='o')
-
-    os.makedirs('tests/scales/all_datasets', exist_ok=True)
-
-    plt_path = f'tests/scales/all_datasets/{trig}.png'
-    log.info(f'Saving to: {plt_path}')
-    plt.grid()
-    plt.ylabel('Scale')
-    plt.ylim(0.0, 0.5)
-    plt.xlabel('')
-    plt.tight_layout()
-    plt.savefig(plt_path)
-    plt.close('all')
-#-------------------------------
 @pytest.mark.parametrize('q2bin'  , ['low', 'central', 'high'])
 @pytest.mark.parametrize('process', ['bdkskpiee', 'bpkskpiee', 'bsphiee'])
 def test_all_datasets(q2bin : str, process : str):
@@ -122,22 +100,6 @@ def test_all_datasets(q2bin : str, process : str):
         assert val ==         1 or _print_selection(signal=signal, prec=process, q2bin=q2bin)
 
     ScalesData.collect_def_wp(process, '(1)', q2bin, val, err)
-#-------------------------------
-@pytest.mark.parametrize('mva_cmb', Data.l_mva_cmb)
-@pytest.mark.parametrize('mva_prc', Data.l_mva_prc)
-def test_sim_scan_scales(mva_cmb : str, mva_prc : str):
-    '''
-    Tests retrieval of scales between signal and PRec yields
-    '''
-    process  = 'bdkskpiee'
-    q2bin    = 'central'
-    signal   = 'bpkpee'
-    mva_cut  = f'({mva_cmb}) && ({mva_prc})'
-
-    obj      = PrecScales(proc=process, q2bin=q2bin)
-    val, err = obj.get_scale(signal=signal)
-
-    ScalesData.collect_mva_wp(process, mva_cut, q2bin, val, err)
 #-------------------------------
 @pytest.mark.parametrize('process', ['bdkskpiee', 'bpkskpiee', 'bsphiee'])
 @pytest.mark.parametrize('q2bin'  , ['low', 'central', 'high'])
