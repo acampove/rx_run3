@@ -25,7 +25,8 @@ class Data:
     '''
     q2bin   = ''
     ana_dir = os.environ['ANADIR']
-    d_data  = {'mva_cmb' : [], 'mva_prc' : [], 'nbkg' : [], 'sign' : []}
+    out_dir = f'{ana_dir}/mva/optimization/wp'
+    d_data  = {'mva_cmb' : [], 'mva_prc' : [], 'nbkg' : [], 'sign' : [], 'sosqsb' : []}
     regex   = r'.*\/(\d{3})_(\d{3})\/.*'
 # ----------------------
 def _parse_args() -> None:
@@ -112,6 +113,13 @@ def _load_data() -> pnd.DataFrame:
     df = pnd.DataFrame(Data.d_data)
 
     return df
+# ----------------------
+def _initialize() -> None:
+    '''
+    This function should initialize style, loggers, etc
+    '''
+    mplhep.style.use('LHCb2')
+    os.makedirs(Data.out_dir, exist_ok=True)
 # ----------------------
 def _plot_data(df : pnd.DataFrame) -> None:
     '''
