@@ -47,7 +47,7 @@ jobs:
     #-----------
     - name: Install project dependencies
       run: |
-        micromamba run -n myenv poetry install
+        micromamba run -n myenv poetry install --extras dev
     #-----------
     - name: Build a binary wheel and a source tarball
       run:  micromamba run -n myenv python3 -m build
