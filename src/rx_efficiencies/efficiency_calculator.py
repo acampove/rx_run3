@@ -180,7 +180,7 @@ class EfficiencyCalculator(Cache):
 
         return nentries
     #------------------------------------------
-    def get_stats(self) -> pnd.DataFrame:
+    def _get_stats(self) -> pnd.DataFrame:
         '''
         Returns pandas dataframe with `Passed` and `Total` yields for a given `Process`
         '''
