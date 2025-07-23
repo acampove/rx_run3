@@ -5,6 +5,7 @@ the MVA scores
 
 import os
 import numpy
+import argparse
 import matplotlib.pyplot as plt
 import matplotlib.image  as mpimg
 from matplotlib.widgets    import Slider
@@ -20,7 +21,7 @@ class Data:
     '''
     Class meant to be used to share attributes
     '''
-    q2bin    = 'high'
+    q2bin    : str
     ax_x     : Axes
     ax_y     : Axes
 
@@ -77,10 +78,19 @@ def _make_figure() -> None:
     Data.im   = im
     Data.fig  = fig
 # ----------------------
+def _parse_args() -> None:
+    parser = argparse.ArgumentParser(description='Used to create an interactive window to explore fits for different parameters')
+    parser.add_argument('-q', '-q2bin' , type=str, help='q2 bin', choices=['low', 'central', 'high'], required=True)
+    args = parser.parse_args()
+
+    Data.q2bin = args.q2bin
+# ----------------------
 def main():
     '''
     Entry point
     '''
+    _parse_args()
+
     x_vals = list(range(60, 100, 4))
     y_vals = list(range(60, 100, 4))
     init_x = x_vals[0]
@@ -94,7 +104,6 @@ def main():
 
     Data.slider_x.on_changed(_update)
     Data.slider_y.on_changed(_update)
-
     plt.show()
 # ----------------------
 if __name__ == '__main__':
