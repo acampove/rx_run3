@@ -60,7 +60,6 @@ def _fit() -> None:
         'nobr0' : 'nbrem != 0',
         'bdt'   :f'mva_cmb > {Data.mva_cmb} && mva_prc > {Data.mva_prc}'}):
         ftr = DataFitter(
-            name   = _get_fit_name(),
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
             project= 'rx',
@@ -73,8 +72,9 @@ def _set_output_directory() -> None:
     This function tells the Cache class where to
     put the outputs. i.e. where the fit outputs will go
     '''
+    name    = _get_fit_name()
     ana_dir = os.environ['ANADIR']
-    out_dir = f'{ana_dir}/fits/data'
+    out_dir = f'{ana_dir}/fits/data/{name}'
     Cache.set_cache_root(root=out_dir)
 # ----------------------
 def main():
