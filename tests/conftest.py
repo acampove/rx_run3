@@ -62,12 +62,15 @@ class ScalesData:
             plt.plot(df_proc.Q2, df_proc.Value, label=decay)
             plt.fill_between(df_proc.Q2, df_proc.Value - df_proc.Error, df_proc.Value + df_proc.Error, alpha=0.2)
 
-        out_dir = 'plots/prec_scales'
+        user    = os.environ['USER']
+        out_dir = f'/tmp/{user}/tests/fitter'
+        out_dir = f'{out_dir}/prec_scales/plots/prec_scales'
         os.makedirs(out_dir, exist_ok=True)
 
         log.warning(f'Sending plots to: {out_dir}')
 
         plt.grid()
+        plt.title(mva_cut)
         plt.legend()
         plt.ylim(0.0, 0.15)
         plt.xlabel('')
@@ -87,11 +90,14 @@ class ScalesData:
 
         plt.figure(figsize=(30,20))
         for process, df in df_mva.groupby('Process'):
-            decay = dn.tex_from_decay(process)
+            process= cast(str, process)
+            decay  = dn.tex_from_decay(process)
             plt.plot(df.mva_cut, df.Value, label=decay)
             plt.fill_between(df.mva_cut, df.Value - df.Error, df.Value + df.Error, alpha=0.2)
 
-        out_dir = 'plots/prec_scales'
+        user    = os.environ['USER']
+        out_dir = f'/tmp/{user}/tests/fitter'
+        out_dir = f'{out_dir}/prec_scales/plots/prec_scales'
         os.makedirs(out_dir, exist_ok=True)
 
         plt.legend()
@@ -169,5 +175,6 @@ def pytest_sessionfinish():
 
     if any('test_seq_scan_scales' in test for test in executed_tests):
         for q2bin, df_q2 in ScalesData.df_mva_wp.groupby('Q2'):
+            q2bin = cast(str, q2bin)
             ScalesData.plot_scales_mva_wp(df_mva = df_q2, q2bin=q2bin)
 # -----------------------------------
