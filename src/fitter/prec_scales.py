@@ -36,9 +36,7 @@ class PrecScales:
         self._hash        = self._get_hash()
     #------------------------------------------
     def _get_hash(self) -> str:
-        project = {'Hlt2RD_BuToKpEE_MVA' : 'RK'}[self._trigger]
         process = dn.sample_from_decay(self._proc)
-
         d_sel   = sel.selection(trigger=self._trigger, q2bin=self._q2bin, process=process)
         hsh     = hashing.hash_object([self._proc, self._q2bin, d_sel])
 
