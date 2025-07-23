@@ -242,9 +242,8 @@ class Cache:
 
         return True
     # ---------------------------
-    @contextmanager
-    @staticmethod
-    def turn_off_cache(val : list[str]|None):
+    @classmethod
+    def turn_off_cache(cls, val):
         '''
         Parameters
         ------------------
@@ -256,11 +255,14 @@ class Cache:
             log.error('This manager expects: list[str]|None')
             raise ValueError(f'Invalid value: {val}')
 
-        old_val = Cache._l_skip_class
+        old_val = cls._l_skip_class
+        @contextmanager
+        def _context():
+            cls._l_skip_class = val
+            try:
+                yield
+            finally:
+                cls._l_skip_class = old_val
 
-        Cache._l_skip_class = val
-        try:
-            yield
-        finally:
-            Cache._l_skip_class = old_val
+        return _context()
 # ---------------------------
