@@ -28,6 +28,7 @@ class Data:
         Will tighten one at a time and return list of cuts
         '''
         l_wp = []
+        wp_cmb_str = '(1)'
         wp_prc_str = f'mva_prc > {min_prc:.3f}'
         for wp_cmb in numpy.arange(min_cmb, 1, step):
             wp_cmb_str = f'mva_cmb > {wp_cmb:.3f}'
