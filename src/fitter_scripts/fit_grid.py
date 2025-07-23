@@ -8,7 +8,11 @@ import re
 import glob
 import math
 import argparse
-import pandas   as pnd
+
+import mplhep
+import seaborn           as sns
+import matplotlib.pyplot as plt
+import pandas            as pnd
 
 from dmu.logging.log_store import LogStore
 from dmu.generic           import utilities as gut
