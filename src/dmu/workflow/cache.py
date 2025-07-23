@@ -63,19 +63,6 @@ class Cache:
         self._cache_dir = self._get_dir(kind='cache')
         self._hash_dir  : str
     # ---------------------------
-    @classmethod
-    def set_cache_root(cls, root : str) -> None:
-        '''
-        Sets the path to the directory WRT which the _out_path_
-        will be placed
-        '''
-        if cls._cache_root is not None:
-            raise ValueError(f'Trying to set {root}, but already found {cls._cache_root}')
-
-        os.makedirs(root, exist_ok=True)
-
-        cls._cache_root = root
-    # ---------------------------
     def _get_code_hash(self) -> str:
         '''
         If `MyTool` inherits from `Cache`. `mytool.py` git commit hash
@@ -265,4 +252,17 @@ class Cache:
                 cls._l_skip_class = old_val
 
         return _context()
+    # ---------------------------
+    @classmethod
+    def set_cache_root(cls, root : str) -> None:
+        '''
+        Sets the path to the directory WRT which the _out_path_
+        will be placed
+        '''
+        if cls._cache_root is not None:
+            raise ValueError(f'Trying to set {root}, but already found {cls._cache_root}')
+
+        os.makedirs(root, exist_ok=True)
+
+        cls._cache_root = root
 # ---------------------------
