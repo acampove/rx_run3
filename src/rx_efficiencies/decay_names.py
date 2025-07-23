@@ -17,40 +17,40 @@ class DecayNames:
     # so that code downstream uses this name to pick up hadronization fractions
 
     l_nick_name = [
-            'bdkskpiee',
-            'bpkpee',
-            'bpkpjpsiee',
-            'bpkskpiee',
-            'bsphiee',
-            'bpk1kpipiee',
-            'bpk2kpipiee']
+        'bdkskpiee',
+        'bpkpee',
+        'bpkpjpsiee',
+        'bpkskpiee',
+        'bsphiee',
+        'bpk1kpipiee',
+        'bpk2kpipiee']
 
     l_latex     = [
-            r'$B_d\to K^{*0}(\to K^+\pi^-)e^+e^-$',
-            r'$B^+\to K^+e^+e^-$',
-            r'$B^+\to K^+ J/\psi(\to e^+e^-)$',
-            r'$B^+\to K^{*+}(\to K^+\pi^0)e^+e^-$',
-            r'$B_s\to \phi(1020)e^+e^-$',
-            r'$B^+\to K_1(1270)^+(\to K^+\pi^+\pi^-)e^+e^-$',
-            r'$B^+\to K_2(1430)^+(\to X \to K^+\pi^+\pi^-)e^+e^-$']
+        r'$B_d\to K^{*0}(\to K^+\pi^-)e^+e^-$',
+        r'$B^+\to K^+e^+e^-$',
+        r'$B^+\to K^+ J/\psi(\to e^+e^-)$',
+        r'$B^+\to K^{*+}(\to K^+\pi^0)e^+e^-$',
+        r'$B_s\to \phi(1020)e^+e^-$',
+        r'$B^+\to K_1(1270)^+(\to K^+\pi^+\pi^-)e^+e^-$',
+        r'$B^+\to K_2(1430)^+(\to X \to K^+\pi^+\pi^-)e^+e^-$']
 
     l_sample    = [
-            'Bd_Kstee_eq_btosllball05_DPC',
-            'Bu_Kee_eq_btosllball05_DPC',
-            'Bu_JpsiK_ee_eq_DPC',
-            'Bu_Kstee_Kpi0_eq_btosllball05_DPC',
-            'Bs_phiee_eq_Ball_DPC',
-            'Bu_K1ee_eq_DPC',
-            'Bu_K2stee_Kpipi_eq_mK1430_DPC']
+        'Bd_Kstee_eq_btosllball05_DPC',
+        'Bu_Kee_eq_btosllball05_DPC',
+        'Bu_JpsiK_ee_eq_DPC',
+        'Bu_Kstee_Kpi0_eq_btosllball05_DPC',
+        'Bs_phiee_eq_Ball_DPC',
+        'Bu_K1ee_eq_DPC',
+        'Bu_K2stee_Kpipi_eq_mK1430_DPC']
 
     l_dec       = [
-            ['bdks', 'k+kp'],
-            ['bpkp'],
-            ['bpjk', 'jpee'],
-            ['bpks', 'kokp'],
-            ['bsph', 'phkk'],
-            ['bpk1', 'k13h'],
-            ['bpk2', 'k23h']]
+        ['bdks', 'k+kp'],
+        ['bpkp'],
+        ['bpjk', 'jpee'],
+        ['bpks', 'kokp'],
+        ['bsph', 'phkk'],
+        ['bpk1', 'k13h'],
+        ['bpk2', 'k23h']]
     # --------------------------
     # correspondence between decay variables and latex
     # --------------------------
