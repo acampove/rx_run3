@@ -118,11 +118,13 @@ class PrecScales:
         --------------
         Tuple with efficiency value and error
         '''
-        log.debug(f'Calculating efficiencies for {proc}')
-        obj = EfficiencyCalculator(q2bin=self._q2bin)
-        val = obj.get_efficiency(sample=proc)
+        sample = dn.sample_from_decay(proc)
 
-        return val 
+        log.debug(f'Calculating efficiencies for {sample}')
+        obj = EfficiencyCalculator(q2bin=self._q2bin)
+        val = obj.get_efficiency(sample=sample)
+
+        return val
     #------------------------------------------
     def _print_vars(self, l_tup : list[tuple[float,float]], proc : str) -> None:
         log.debug('')
