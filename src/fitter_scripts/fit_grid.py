@@ -145,8 +145,10 @@ def _plot_variable(df : pnd.DataFrame, variable : str) -> None:
     pivot = pivot.sort_index(ascending=False)
     pivot = pivot.sort_index(axis=1)
 
+    max_sig = {'sign' : 20, 'sosqsb' : None}[variable]
+
     plt.figure(num=variable, figsize=(15, 10))
-    sns.heatmap(pivot, annot=True, fmt='.2f', cmap='viridis')
+    sns.heatmap(pivot, annot=True, fmt='.2f', cmap='viridis', vmin=0, vmax=max_sig)
     plt.title('Significance vs MVA WP')
     plt.xlabel(r'$MVA_{cmb}$')
     plt.ylabel(r'$MVA_{prc}$')
