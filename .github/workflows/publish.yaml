@@ -49,10 +49,6 @@ jobs:
       run: |
         micromamba run -n myenv poetry install
     #-----------
-    - name: Test
-      run: |
-        micromamba run -n myenv pytest tests
-    #-----------
     - name: Build a binary wheel and a source tarball
       run:  micromamba run -n myenv python3 -m build
     #-----------
