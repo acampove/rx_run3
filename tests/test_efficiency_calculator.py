@@ -20,8 +20,9 @@ def test_efficiency(q2bin : str, sample : str):
     for given sample
     '''
     with sel.custom_selection(d_sel={'bdt' : '1'}):
-        obj         = EfficiencyCalculator(q2bin=q2bin)
-        eff         = obj.get_efficiency(sample=sample)
+        obj      = EfficiencyCalculator(q2bin=q2bin)
+        eff, err = obj.get_efficiency(sample=sample)
 
     assert 0 <= eff < 1
+    assert err > 0 or eff == 0
 #-------------------------------------------------
