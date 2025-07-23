@@ -45,7 +45,7 @@ class EfficiencyCalculator(Cache):
         plt.style.use(mplhep.style.LHCb2)
 
         super().__init__(
-            out_path = f'{q2bin}_{self._year}',
+            out_path = f'efficiencies/{q2bin}_{self._year}',
             d_sel    = self._get_selection_hash(),
             trigger  = self._trigger)
 
