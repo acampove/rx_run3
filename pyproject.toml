@@ -17,4 +17,4 @@ where= ['src']
 [tool.setuptools]
 script-files=[
 'src/rx_common_scripts/rx_setup',
-]
+'src/rx_common_scripts/rx_sync']
