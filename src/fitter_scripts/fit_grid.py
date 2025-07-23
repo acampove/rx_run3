@@ -6,6 +6,7 @@ for different MVA scores
 import os
 import re
 import glob
+import math
 import argparse
 import pandas   as pnd
 
@@ -30,7 +31,7 @@ def _parse_args() -> None:
 
     Data.q2bin = args.q2bin
 # ----------------------
-def _read_values(path : str) -> tuple[float,float]:
+def _read_values(path : str) -> tuple[float,float,float]:
     '''
     Parameters
     -------------
@@ -38,28 +39,34 @@ def _read_values(path : str) -> tuple[float,float]:
 
     Returns
     -------------
-    Tuple with background yield and significance
+    Tuple with:
+        - Background yield
+        - Significance, defined as errorN/N
+        - S/sqrt(S+B)
     '''
     data = gut.load_json(path=path)
 
     significance = -1
     nbkg         =  0
+    nsig         =  0
     for name, d_pars in data.items():
         if not name.startswith('n'):
             continue
 
         if name == 'nsignal':
-            nsignal = d_pars['value']
-            esignal = d_pars['error']
+            nsig = d_pars['value']
+            esig = d_pars['error']
 
-            significance = 100 * esignal / nsignal
+            significance = 100 * esig / nsig
             continue
 
         log.debug(f'Using background {name}')
 
         nbkg += d_pars['value']
 
-    return nbkg, significance
+    sosqsb = nsig / math.sqrt(nsig + nbkg)
+
+    return nbkg, significance, sosqsb
 # ----------------------
 def _fill_data(path : str) -> None:
     '''
@@ -76,12 +83,13 @@ def _fill_data(path : str) -> None:
     mva_cmb = float(str_mva_cmb) / 100.
     mva_prc = float(str_mva_prc) / 100.
 
-    nbkg, sign = _read_values(path=path)
+    nbkg, sign, sosqsb = _read_values(path=path)
 
     Data.d_data['mva_cmb'].append(mva_cmb)
     Data.d_data['mva_prc'].append(mva_prc)
     Data.d_data['nbkg'   ].append(nbkg   )
     Data.d_data['sign'   ].append(sign   )
+    Data.d_data['sosqsb' ].append(sosqsb )
 # ----------------------
 def _load_data() -> pnd.DataFrame:
     '''
