@@ -10,6 +10,7 @@ import argparse
 import pandas   as pnd
 
 from dmu.logging.log_store import LogStore
+from dmu.generic           import utilities as gut
 
 log=LogStore.add_logger('rx_fitter:fit_grid')
 # ----------------------
@@ -39,7 +40,26 @@ def _read_values(path : str) -> tuple[float,float]:
     -------------
     Tuple with background yield and significance
     '''
-    return 1, 2
+    data = gut.load_json(path=path)
+
+    significance = -1
+    nbkg         =  0
+    for name, d_pars in data.items():
+        if not name.startswith('n'):
+            continue
+
+        if name == 'nsignal':
+            nsignal = d_pars['value']
+            esignal = d_pars['error']
+
+            significance = 100 * esignal / nsignal
+            continue
+
+        log.debug(f'Using background {name}')
+
+        nbkg += d_pars['value']
+
+    return nbkg, significance
 # ----------------------
 def _fill_data(path : str) -> None:
     '''
