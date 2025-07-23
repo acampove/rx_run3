@@ -30,7 +30,6 @@ class PrecScales:
         self._q2bin       = q2bin
 
         self._d_frbf      : dict
-        self._df_eff      : pnd.DataFrame
         self._trigger     = 'Hlt2RD_BuToKpEE_MVA'
         self._initialized = False
 
@@ -57,22 +56,8 @@ class PrecScales:
 
         log.debug('Initializing')
         self._d_frbf = gut.load_data(package='rx_efficiencies_data', fpath='scales/fr_bf.yaml')
-        self._load_efficiencies()
 
         self._initialized = True
-    #------------------------------------------
-    def _load_efficiencies(self) -> None:
-        '''
-        This method will call the efficiency calculator and set
-        _df_eff with the dataframe with passed and total yields
-        for different samples.
-
-        Should be fast, EfficiencyCalculator uses caching
-        '''
-        log.debug('Loading efficiencies')
-        obj          = EfficiencyCalculator(q2bin=self._q2bin)
-        df           = obj.get_stats()
-        self._df_eff = df
     #------------------------------------------
     def _get_fr(self, proc : str) -> float:
         '''
@@ -136,26 +121,10 @@ class PrecScales:
         Tuple with efficiency value and error
         '''
         log.debug(f'Calculating efficiencies for {proc}')
+        obj = EfficiencyCalculator(q2bin=self._q2bin)
+        val = obj.get_efficiency(sample=proc)
 
-        df = self._df_eff
-        df = df[df.Process == proc]
-
-        if len(df) != 1:
-            print(df)
-            raise ValueError('Expected one and only one row for process {proc}')
-
-        passed, total = df.iloc[-1][['Passed', 'Total']]
-
-        eff = passed / total
-
-        log.debug('')
-        log.debug(f'Process: {proc}')
-        log.debug(f'{eff:.7f}{"="}{passed:<10.0f}{"/":<}{total:<20.0f}')
-        log.debug('')
-
-        err = math.sqrt(eff * (1 - eff) / total)
-
-        return eff, err
+        return val 
     #------------------------------------------
     def _print_vars(self, l_tup : list[tuple[float,float]], proc : str) -> None:
         log.debug('')
