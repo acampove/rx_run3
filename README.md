@@ -1,3 +1,5 @@
+[TOC]
+
 # Fitter
 
 This project is meant to automate:
