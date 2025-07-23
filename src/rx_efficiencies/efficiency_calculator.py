@@ -201,7 +201,7 @@ class EfficiencyCalculator(Cache):
     def _efficiency_from_sample(
             self,
             sample : str,
-            df     : pnd.DataFrame) -> float:
+            df     : pnd.DataFrame) -> tuple[float,float]:
         '''
         Parameters
         -----------------
@@ -210,7 +210,9 @@ class EfficiencyCalculator(Cache):
 
         Returns
         -----------------
-        Efficiency
+        Tuple with:
+           Efficiency value
+           Error in efficiency
         '''
         nickname = DecayNames.nic_from_sample(sample)
 
@@ -224,7 +226,10 @@ class EfficiencyCalculator(Cache):
         pas = df['Passed'].iloc[0]
         tot = df['Total' ].iloc[0]
 
-        return pas / float(tot)
+        eff = pas / tot
+        err = math.sqrt(eff * (1 - eff) / tot)
+
+        return eff, err
     #------------------------------------------
     def get_efficiency(self, sample : str) -> float:
         '''
