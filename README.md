@@ -43,3 +43,14 @@ To check if the project you will run over are the right ones, one can run a dry 
 ```bash
 rx_setup -k sync -i 1 -d 1
 ```
+
+## Transfer of outputs
+
+To transfer outputs from the `$ANADIR` at CERN or IHEP from to your local `$ANADIR` do:
+
+```bash
+rx_sync -s IHEP -k FITS -d 0
+```
+
+which will transfer the fits from IHEP to your laptop
+`-d` allows this not to be a dry run, by default it is a dry run.
