@@ -131,13 +131,36 @@ def _plot_data(df : pnd.DataFrame) -> None:
     -------------
     This method is in charge of making plots
     '''
-    print(df)
+    _plot_variable(df=df, variable=  'sign')
+    _plot_variable(df=df, variable='sosqsb')
+# ----------------------
+def _plot_variable(df : pnd.DataFrame, variable : str) -> None:
+    '''
+    Parameters
+    -------------
+    df: DataFrame with data
+    variable: Name of variable for Z axis
+    '''
+    pivot = df.pivot_table(index='mva_prc', columns='mva_cmb', values=variable)
+    pivot = pivot.sort_index(ascending=False)
+    pivot = pivot.sort_index(axis=1)
+
+    plt.figure(num=variable, figsize=(15, 10))
+    sns.heatmap(pivot, annot=True, fmt='.2f', cmap='viridis')
+    plt.title('Significance vs MVA WP')
+    plt.xlabel(r'$MVA_{cmb}$')
+    plt.ylabel(r'$MVA_{prc}$')
+    plt.yticks(rotation=0)
+    plt.tight_layout()
+    plt.savefig(f'{Data.out_dir}/{variable}_{Data.q2bin}.png')
+    plt.close(variable)
 # ----------------------
 def main():
     '''
     Entry point
     '''
     _parse_args()
+    _initialize()
     df = _load_data()
     _plot_data(df=df)
 # ----------------------
