@@ -101,16 +101,16 @@ def main():
     _make_figure()
 
     Data.slider_x = Slider(
-        Data.ax_x, 'X (mva_cmb)', min(x_vals), max(x_vals),
-        valinit=init_x, valstep=4,
-        handle_style=dict(size=20)  # Default is 10
-    )
-    
+        Data.ax_x, 'CMB', min(x_vals), max(x_vals),
+        valinit     = init_x,
+        valstep     = 4,
+        handle_style= {'size' : 20})
+
     Data.slider_y = Slider(
-        Data.ax_y, 'Y (mva_prc)', min(y_vals), max(y_vals),
-        valinit=init_y, valstep=4,
-        handle_style=dict(size=20)
-    )
+        Data.ax_y, 'PRC', min(x_vals), max(x_vals),
+        valinit     = init_y,
+        valstep     = 4,
+        handle_style= {'size' : 20})
 
     Data.slider_x.on_changed(_update)
     Data.slider_y.on_changed(_update)
