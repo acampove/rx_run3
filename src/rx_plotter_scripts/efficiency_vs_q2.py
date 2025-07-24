@@ -256,7 +256,7 @@ def _plot_efficiencies(
     plt.ylabel('A.U.')
     plt.legend()
 # ----------------------
-def _get_out_path() -> str:
+def _get_out_path(var : str) -> str:
     '''
     Parameters
     -------------
@@ -272,7 +272,7 @@ def _get_out_path() -> str:
     out_dir = f'{Data.ana_dir}/efficiencies/differential/q2'
     os.makedirs(out_dir, exist_ok=True)
 
-    out_path = f'{out_dir}/{sample}_{trigger}.png'
+    out_path = f'{out_dir}/{var}_{sample}_{trigger}.png'
 
     return out_path
 # ----------------------
