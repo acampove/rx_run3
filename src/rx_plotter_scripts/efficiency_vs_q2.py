@@ -246,7 +246,7 @@ def _plot_efficiencies(
     h_eff_tot = ran * h_all / h_den
 
     h_eff_sel.plot(color='blue' , histtype='fill', alpha=0.3, label='No MVA')
-    h_eff_tot.plot(color='red'  , histtype='step', label='Full efficiency')
+    h_eff_tot.plot(color='red'  , histtype='step', label='Full selection')
     _add_lines()
 
     cfg = _check_none(obj=Data.cfg, kind='input')
