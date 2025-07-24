@@ -218,7 +218,9 @@ def _add_lines() -> None:
     for bound in cfg.lines.bounds.values():
         plt.axvline(x=bound, color=color, linestyle=style)
 # ----------------------
-def _plot_efficiencies(df : pnd.DataFrame) -> None:
+def _plot_efficiencies(
+        df : pnd.DataFrame,
+        var: str) -> None:
     '''
     Parameters
     -------------
@@ -233,12 +235,11 @@ def _plot_efficiencies(df : pnd.DataFrame) -> None:
     cfg       = _check_none(obj=Data.cfg, kind='hist_conf')
     hist_conf = cfg.hist_conf
 
-    axis  = Regular(**hist_conf)
+    axis  = Regular(**hist_conf[var])
 
-    h_all = _get_hist(df=df, axis=axis, flag='pass_all')
-    h_sel = _get_hist(df=df, axis=axis, flag='pass_sel')
-    h_den = _get_hist(df=df, axis=axis, flag='total'   )
-
+    h_all = _get_hist(df=df, axis=axis, flag='pass_all', var=var)
+    h_sel = _get_hist(df=df, axis=axis, flag='pass_sel', var=var)
+    h_den = _get_hist(df=df, axis=axis, flag='total'   , var=var)
     ran   = random.random()
 
     h_eff_sel = ran * h_sel / h_den
