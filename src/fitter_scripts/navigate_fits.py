@@ -80,7 +80,7 @@ def _make_figure() -> None:
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Used to create an interactive window to explore fits for different parameters')
-    parser.add_argument('-q', '-q2bin' , type=str, help='q2 bin', choices=['low', 'central', 'high'], required=True)
+    parser.add_argument('-q', '--q2bin' , type=str, help='q2 bin', choices=['low', 'central', 'high'], required=True)
     args = parser.parse_args()
 
     Data.q2bin = args.q2bin
