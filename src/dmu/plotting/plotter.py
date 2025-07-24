@@ -40,7 +40,7 @@ class Plotter:
             raise ValueError('Dataframe dictionary not passed')
 
         self._d_cfg = cfg
-        self._d_rdf : dict[str, RDF.RNode]    = { name : self._preprocess_rdf(rdf) for name, rdf in d_rdf.items()}
+        self._d_rdf : dict[str, RDF.RNode]    = { name : self._preprocess_rdf(rdf=rdf, name=name) for name, rdf in d_rdf.items()}
         self._d_wgt : dict[str, numpy.ndarray|None] | None
 
         self._title : str = ''
@@ -80,12 +80,21 @@ class Plotter:
 
         return minx, maxx
     #-------------------------------------
-    def _preprocess_rdf(self, rdf : RDF.RNode) -> RDF.RNode:
+    def _preprocess_rdf(
+        self,
+        rdf  : RDF.RNode,
+        name : str) -> RDF.RNode:
         '''
-        rdf (RDF.RNode): ROOT dataframe
+        Parameters
+        --------------
+        rdf  : ROOT dataframe
+        name : Name of sample associated to dataframe
 
-        returns preprocessed dataframe
+        Returns
+        --------------
+        Preprocessed dataframe
         '''
+        log.debug(f'Preprocessing dataframe for {name}')
 
         rdf = self._define_vars(rdf)
         if 'selection' in self._d_cfg:
