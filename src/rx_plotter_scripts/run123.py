@@ -28,6 +28,7 @@ def _initialize() -> None:
     Nothing, this function initializes the state of the Data class
     '''
     args = _parse_args()
+    _set_logs(level=args.logl)
     cfg  = gut.load_conf(package='rx_plotter_data', fpath=f'run123/{args.conf}.yaml')
 
     plt_dir  = cfg.saving.plt_dir
@@ -36,6 +37,18 @@ def _initialize() -> None:
     mplhep.style.use('LHCb2')
 
     Data.cfg = cfg
+# ----------------------
+def _set_logs(level : int) -> None:
+    '''
+    Parameters
+    -------------
+    level: Logging level
+
+    Returns
+    -------------
+    Nothing
+    '''
+    LogStore.set_level(name='dmu:plotting:Plotter', value=level)
 # ----------------------
 def _get_rdf(dset : str) -> RDF.RNode:
     '''
