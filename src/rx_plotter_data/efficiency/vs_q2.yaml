@@ -8,11 +8,18 @@ input:
     - Bu_Kmumu_eq_btosllball05_DPC
     - Hlt2RD_BuToKpMuMu_MVA
 hist_conf:
-  name  : q2
-  bins  : 50
-  start : 0
-  stop  : 22
-  label : $q_{true}^2 [\text{GeV}^2]$
+  q2_true:
+    name  : q2_true
+    bins  : 50
+    start : 0
+    stop  : 22
+    label : $q_{true}^2 [\text{GeV}^2]$
+  q2:
+    name  : q2
+    bins  : 50
+    start : 0
+    stop  : 22
+    label : $q^2 [\text{GeV}^2]$
 lines:
   bounds:
     Low       : 1.0
