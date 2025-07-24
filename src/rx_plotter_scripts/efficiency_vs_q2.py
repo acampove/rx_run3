@@ -15,7 +15,6 @@ import pandas              as pnd
 from hist                  import Hist
 from hist.axis             import Regular
 from ROOT                  import RDataFrame, RDF
-from boost_histogram.axis  import Axis
 from omegaconf             import DictConfig
 from dmu.logging.log_store import LogStore
 from dmu.generic           import utilities as gut
@@ -36,6 +35,7 @@ class Data:
     pass_sel = 'pass_sel'
     mplhep.style.use('LHCb2')
 
+    l_col    = ['q2', 'q2_true', 'pass_all', 'pass_sel']
     ana_dir  = os.environ['ANADIR']
 # ----------------------
 def _parse_args() -> None:
