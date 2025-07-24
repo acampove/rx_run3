@@ -76,6 +76,28 @@ def _get_rdf(dset : str) -> RDF.RNode:
     else:
         raise NotImplementedError(f'Invalid dataset {dset}')
 
+    rdf = _apply_definitions(rdf=rdf, dset=dset)
+
+    return rdf
+# ----------------------
+def _apply_definitions(rdf : RDF.RNode, dset : str) -> RDF.RNode:
+    '''
+    Parameters
+    -------------
+    rdf: ROOT dataframe
+    dset: Dataset identifying definitions, i.e. run12
+
+    Returns
+    -------------
+    Dataframe with definitions applied
+    '''
+    log.info(f'Applying definitions for: {dset}')
+
+    d_def = Data.cfg.branches[dset]
+    for name, expr in d_def.items():
+        log.debug(f'{name:<30}{expr}')
+        rdf = rdf.Define(name, expr)
+
     return rdf
 # ----------------------
 def _get_dataframes() -> dict[str,RDF.RNode]:
