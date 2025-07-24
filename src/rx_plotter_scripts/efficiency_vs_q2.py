@@ -151,7 +151,11 @@ def _get_hist(df : pnd.DataFrame, axis : Axis, flag : str) -> Hist:
     '''
     Parameters
     -------------
-    df : DataFrame with q2_true column and flags
+    df  : DataFrame with q2_true column and flags
+    axis: Hist's X axis, needed to make histogram
+    var : q2 name, for numerator histogram, q2 or q2_true
+    flag: Either 'total', 'pass_sel' or 'pass_all'.
+          Needed to control what histogram is made
 
     Returns
     -------------
@@ -214,8 +218,9 @@ def _plot_efficiencies(df : pnd.DataFrame) -> None:
     '''
     Parameters
     -------------
-    df: Pandas dataframe with: q2_true, pass_all and pass_sel
-    with numpy array with q2 from MCDecayTree attached with key `total`
+    df : Pandas dataframe with: q2_true, pass_all and pass_sel
+        with numpy array with q2 from MCDecayTree attached with key `total`
+    var: Name of the q2 variable used to parametrize the efficiency
 
     Returns
     -------------
@@ -248,6 +253,10 @@ def _plot_efficiencies(df : pnd.DataFrame) -> None:
 # ----------------------
 def _get_out_path() -> str:
     '''
+    Parameters
+    -------------
+    var: Name of variable in function of which efficiency is measured
+
     Returns
     -------------
     Path to PNG file where plot should go
