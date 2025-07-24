@@ -49,14 +49,14 @@ saving:
   plt_dir : plots/run123
 plots:
   ep_res:
-    binning    : [0, 20000, 60]
+    binning    : [0, 1, 60]
     labels     : ['($p_{true}(e^+)-p_{track}(e^+))/p_{true}(e^+)$', 'Normalized']
     name       : ep_res 
     normalized : true
     styling:
       <<: *style
   em_res:
-    binning    : [0, 20000, 60]
+    binning    : [0, 1, 60]
     labels     : ['($p_{true}(e^-)-p_{track}(e^-))/p_{true}(e^-)$', 'Normalized']
     name       : em_res 
     normalized : true
