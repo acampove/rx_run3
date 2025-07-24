@@ -276,6 +276,18 @@ def _get_out_path(var : str) -> str:
 
     return out_path
 # ----------------------
+def _plot(df : pnd.DataFrame, var : str) -> None:
+    '''
+    Parameters
+    -------------
+    df: Pandas dataframe with q2 and MVA scores
+    var: Name of q2 variable to use for plots
+    '''
+    _plot_efficiencies(df=df, var=var)
+    out_path = _get_out_path(var=var)
+    plt.savefig(out_path)
+    plt.close()
+# ----------------------
 def main():
     '''
     Entry point
@@ -285,10 +297,8 @@ def main():
     Data.cfg = gut.load_conf(package='rx_plotter_data', fpath='efficiency/vs_q2.yaml')
 
     df = _get_data()
-    _plot_efficiencies(df=df)
-
-    out_path = _get_out_path()
-    plt.savefig(out_path)
+    _plot(df=df, var='q2'     )
+    _plot(df=df, var='q2_true')
 # ----------------------
 if __name__ == '__main__':
     main()
