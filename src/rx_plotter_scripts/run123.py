@@ -117,6 +117,7 @@ def _get_dataframes() -> dict[str,RDF.RNode]:
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Script used to make comparisons of variables between Run1,2 and 3')
     parser.add_argument('-c', '--conf' , type=str, help='Name of config file, e.g. mass', required=True)
+    parser.add_argument('-l', '--logl' , type=int, help='Logging level', default=20)
     args = parser.parse_args()
 
     return args
