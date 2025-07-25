@@ -351,6 +351,16 @@ class ZFitPlotter:
         self,
         add_pars   : list[str]|None,
         skip_pulls : bool) -> tuple[Axes,...]:
+        '''
+        Parameters
+        ----------------
+        add_pars  : Parameters with values to add in figure, by default None
+        skip_pulls: If true will only draw fit
+
+        Returns
+        ----------------
+        Tuple with axes for main fit and pull
+        '''
         plt.style.use(mplhep.style.LHCb2)
         if skip_pulls:
             _, (ax) = plt.subplots(1)
