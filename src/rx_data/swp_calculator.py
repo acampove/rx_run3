@@ -93,7 +93,18 @@ class SWPCalculator:
 
         return vec
     #---------------------------------
-    def _build_mass(self, row, d_part) -> float:
+    def _build_mass(
+        self,
+        row    : pnd.Series,
+        d_part : dict[str,int]) -> float:
+        '''
+        Parameters
+        -----------------
+        row: Pandas dataframe row representing candidate
+        d_part: Dictionary with:
+            key  : Name of particle
+            value: PDGID needed for mass swap
+        '''
         l_vec = []
         for name, new_id in d_part.items():
             vec_1 = self._get_4vec(row, name)
