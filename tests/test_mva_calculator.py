@@ -56,10 +56,9 @@ def _validate_rdf(
 @pytest.mark.parametrize('trigger', Data.l_trigger)
 def test_data(trigger : str, out_dir : str) -> None:
     '''
-    Simplest test validating MVACalculator
+    Test MVACalculator with data
     '''
     sample = 'DATA_24*'
-    version= 'v7p7'
 
     with RDFGetter.max_entries(value=Data.nentries):
         gtr = RDFGetter(sample=sample, trigger=trigger)
@@ -69,10 +68,10 @@ def test_data(trigger : str, out_dir : str) -> None:
     rdf     = rdf,
     sample  = sample,
     trigger = trigger,
-    version = version)
+    version = Data.version)
 
     rdf = cal.get_rdf()
-    _validate_rdf(rdf=rdf, out_dir=f'{out_dir}/data', name='data')
+    _validate_rdf(rdf=rdf, out_dir=f'{out_dir}/data', name=f'data_{trigger}')
 # --------------------------------
 @pytest.mark.parametrize('trigger, sample', Data.l_mc)
 def test_mc(trigger : str, sample : str, out_dir : str) -> None:
