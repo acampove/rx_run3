@@ -186,12 +186,13 @@ def _is_mc(path : str) -> bool:
 
     raise ValueError(f'Cannot determine if MC or data for: {path}')
 # ---------------------------------
-def _process_rdf(rdf : RDataFrame, trigger : str, path : str) -> Union[RDataFrame,None]:
+def _process_rdf(
+        rdf     : RDataFrame,
+        path    : str) -> Union[RDataFrame,None]:
     '''
     Takes:
 
-    rdf: Dataframe to have the columns added
-    trigger: HLT2 trigger
+    rdf : Dataframe to have the columns added
     path: Full path to corresponding ROOT file
 
     Returns:
@@ -246,7 +247,12 @@ def _split_rdf(rdf : RDataFrame) -> list[RDataFrame]:
     return l_rdf
 # ---------------------------------
 @gut.timeit
-def _create_file(path : str, trigger : str) -> None:
+def _create_file(path : str) -> None:
+    '''
+    Parameters
+    ------------------
+    path : ROOT file path 
+    '''
     out_path = _get_out_path(path)
     if os.path.isfile(out_path):
         log.warning(f'Output found, skipping {out_path}')
@@ -275,7 +281,7 @@ def _create_file(path : str, trigger : str) -> None:
     if nchunk == 1:
         log.info('File will be processed in a single chunk')
         rdf = l_rdf[0]
-        rdf = _process_rdf(rdf, trigger, path)
+        rdf = _process_rdf(rdf, path)
         if rdf is not None:
             rdf.Snapshot(Data.tree_name, out_path)
 
@@ -284,7 +290,7 @@ def _create_file(path : str, trigger : str) -> None:
     log.info(f'File will be processed in {nchunk} chunks')
     fmrg = TFileMerger()
     for index, rdf_in in enumerate(tqdm.tqdm(l_rdf, ascii=' -')):
-        rdf_out  = _process_rdf(rdf_in, trigger, path)
+        rdf_out  = _process_rdf(rdf_in, path)
         if rdf_out is None:
             continue
 
@@ -314,9 +320,8 @@ def main():
     Data.out_dir = _get_out_dir()
     log.info('Processing paths')
     for path in tqdm.tqdm(l_path, ascii=' -'):
-        trigger = _trigger_from_path(path)
         log.debug(f'{"":<4}{path}')
-        _create_file(path, trigger)
+        _create_file(path=path)
 # ---------------------------------
 if __name__ == '__main__':
     main()
