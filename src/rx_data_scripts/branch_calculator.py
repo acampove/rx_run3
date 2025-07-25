@@ -200,6 +200,7 @@ def _process_rdf(
     - Dataframe with columns needed
     - None, in case it does not make sense to add the columns to this type of file
     '''
+    trigger, sample = utilities.info_from_path(path=path)
     nentries = rdf.Count().GetValue()
     if nentries == 0:
         log.warning(f'Found empty input file: {path}/{Data.tree_name}')
@@ -231,6 +232,9 @@ def _process_rdf(
     elif Data.kind == 'swp_cascade'   :
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
         rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
+    elif Data.kind == 'mva'   :
+        obj = MVACalculator(rdf=rdf, sample=sample, trigger=trigger)
+        rdf = obj.get_rdf()
     else:
         raise ValueError(f'Invalid kind: {Data.kind}')
 
