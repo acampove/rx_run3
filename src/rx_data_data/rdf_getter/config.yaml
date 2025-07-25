@@ -38,6 +38,7 @@ definitions:
     <<: *common
   MM:
     Jpsi_Mass                                 : Jpsi_M # For electrons brem correction makes no sense, so name brem corrected = original
+    brem_track_2_B_M_brem_track_2             : B_M
     B_M_brem_track_2                          : B_M
     B_Mass                                    : B_M
     nbrem                                     : '0'
