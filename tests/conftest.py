@@ -20,8 +20,6 @@ def _set_logs() -> None:
     LogStore.set_level('rx_selection:selection'           , 30)
     LogStore.set_level('rx_data:rdf_getter'               , 30)
     LogStore.set_level('dmu:ml:cv_predict'                , 30)
-    LogStore.set_level('rx_classifier:mva_calculator'     , 10)
-    LogStore.set_level('rx_classifier:test_mva_calculator', 10)
 
     logging.getLogger('PIL').setLevel(logging.WARNING)
     logging.getLogger('matplotlib').setLevel(logging.WARNING)
