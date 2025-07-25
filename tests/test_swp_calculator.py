@@ -18,7 +18,9 @@ class Data:
     '''
     Class used to share attributes
     '''
-    out_dir : str = '/tmp/tests/rx_data/swap_calculator'
+    nentries= -1
+    user    = os.environ['USER']
+    out_dir = f'/tmp/{user}/tests/rx_data/swap_calculator'
 # ----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
