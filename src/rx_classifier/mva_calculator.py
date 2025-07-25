@@ -153,7 +153,7 @@ class MVACalculator:
 
         return arr_res
     # ----------------------------------------
-    def _scores_from_rdf(
+    def _get_scores(
         self,
         d_path : dict[str,str]) -> numpy.ndarray:
         '''
@@ -228,7 +228,7 @@ class MVACalculator:
         d_mva_kind  = self._get_mva_dir()
         d_mva_score = {}
         for name, d_path in d_mva_kind.items():
-            arr_score = self._scores_from_rdf(d_path=d_path)
+            arr_score = self._get_scores(d_path=d_path)
             d_mva_score[f'mva_{name}'] = arr_score
 
         d_data      = self._rdf.AsNumpy(['RUNNUMBER', 'EVENTNUMBER'])
