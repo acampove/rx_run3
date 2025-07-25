@@ -37,7 +37,7 @@ def _make_dirs(name : str, versions : list[str]) -> str:
     '''
     Parameters
     -------------
-    name    : Test name 
+    name    : Test name
     versions: Names of versioned directories
 
     Returns
@@ -54,10 +54,22 @@ def _make_dirs(name : str, versions : list[str]) -> str:
     return path
 #-----------------------------------------------------------
 def _get_dir(name : str) -> tuple[str,str]:
+    # -------------------------------------------
+    # This should fail the test
+    # -------------------------------------------
     if   name == 'non_numeric':
         l_ver = ['vx', 'vy', 'vz']
+    elif name == 'extra_file':
+        l_ver = ['some_dir', 'v7p6', 'v7p7']
+    elif name == 'collisions':
+        l_ver = ['v7.6', 'v7p6', 'v7p7']
+    elif name == 'with_commas':
+        l_ver = ['v1,3', 'v7,6', 'v7,7']
+    # -------------------------------------------
+    # This should not fail the test
+    # -------------------------------------------
     elif name == 'with_p':
-        l_ver = ['v1p1', 'v1p2', 'v1p3']
+        l_ver = ['v7', 'v7p6', 'v7p7']
     elif name == 'numeric':
         l_ver = ['v1', 'v2', 'v3']
     elif name == 'numeric_period':
@@ -69,17 +81,29 @@ def _get_dir(name : str) -> tuple[str,str]:
 
     return path, l_ver[-1]
 #-----------------------------------------------------------
-@pytest.mark.parametrize('kind', ['non_numeric', 'with_p', 'numeric', 'numeric_period'])
+@pytest.mark.parametrize('kind', ['with_p', 'numeric', 'numeric_period'])
 def test_versioning_formats(kind : str):
     '''
     Tests getting last version for different versioning formats
     '''
     log.info('')
     dir_path, iversion = _get_dir(name=kind)
-    oversion=get_last_version(dir_path=dir_path, version_only=True)
+    oversion           = get_last_version(dir_path=dir_path, version_only=True)
+
     log.info(f'{kind:<20}{iversion:<10}{oversion:<10}')
 
     assert iversion == oversion
+#-----------------------------------------------------------
+@pytest.mark.parametrize('kind', ['non_numeric', 'extra_file', 'collisions', 'with_commas'])
+def test_must_fail(kind : str):
+    '''
+    Check cases where the version finder will raise
+    '''
+    log.info('')
+    dir_path, _ = _get_dir(name=kind)
+
+    with pytest.raises(ValueError):
+        get_last_version(dir_path=dir_path, version_only=True)
 #-----------------------------------------------------------
 def test_files():
     '''
