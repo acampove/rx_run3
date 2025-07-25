@@ -21,6 +21,8 @@ class PDFMaker:
     Class meant to:
 
     - For a given sample and q2bin provide the corresponding fitted PDF
+
+    This is used to get PDF components to fit the control region
     '''
     # -----------------------------------------
     def __init__(
