@@ -55,11 +55,12 @@ def test_nonnumeric():
 
     assert iversion == oversion
 #-----------------------------------------------------------
-def test_simple():
+@pytest.mark.parametrize('kind', ['non_numeric', 'with_p', 'numeric', 'numeric_period'])
+def test_versioning_formats(kind : str):
     '''
-    Tests getting last version
+    Tests getting last version for different versioning formats
     '''
-    dir_path, iversion = _get_dir('simple')
+    dir_path, iversion = _get_dir(name=kind)
     oversion=get_last_version(dir_path=dir_path, version_only=True)
 
     assert iversion == oversion
