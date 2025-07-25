@@ -91,3 +91,20 @@ def test_mc(trigger : str, sample : str, out_dir : str) -> None:
     rdf = cal.get_rdf()
     _validate_rdf(rdf=rdf, out_dir=f'{out_dir}/mc', name=f'{sample}_{trigger}')
 # ----------------------
+@pytest.mark.parametrize('trigger, sample', Data.l_mc)
+def test_mc_noversion(trigger : str, sample : str, out_dir : str) -> None:
+    '''
+    Test MVACalculator with default (should be lates) version
+    '''
+    with RDFGetter.max_entries(value=Data.nentries):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf()
+
+    cal = MVACalculator(
+    rdf     = rdf,
+    sample  = sample,
+    trigger = trigger)
+
+    rdf = cal.get_rdf()
+    _validate_rdf(rdf=rdf, out_dir=f'{out_dir}/mc_def_vers', name=f'{sample}_{trigger}')
+# --------------------------------
