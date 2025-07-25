@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 from ROOT                         import RDF, RDataFrame
 from dmu.logging.log_store        import LogStore
 from rx_data.rdf_getter           import RDFGetter
-from rx_classifier.mva_calculator import MVACalculator
+from rx_data.mva_calculator       import MVACalculator
 
-log=LogStore.add_logger('rx_classifier:test_mva_calculator')
+log=LogStore.add_logger('rx_data:test_mva_calculator')
 # ----------------------
 class Data:
     '''

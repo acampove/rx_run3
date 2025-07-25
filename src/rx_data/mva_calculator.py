@@ -13,7 +13,7 @@ from dmu.ml.cv_predict     import CVClassifier, CVPredict
 from dmu.logging.log_store import LogStore
 from rx_selection          import selection as sel
 
-log = LogStore.add_logger('rx_classifier:mva_calculator')
+log = LogStore.add_logger('rx_data:mva_calculator')
 
 # TODO: This should get the latest mva version
 # by default if no version is passed
