@@ -50,8 +50,10 @@ def _get_rdf(kind : str) -> RDataFrame:
     else:
         raise ValueError(f'Invalid dataset of kind: {kind}')
 
-    gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf()
+    with RDFGetter.max_entries(value = Data.nentries):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf()
+
     rdf = _apply_selection(rdf, trigger, sample)
 
     nentries = rdf.Count().GetValue()
@@ -68,7 +70,7 @@ def _apply_selection(rdf : RDataFrame, trigger : str, sample : str) -> RDataFram
     d_sel['jpsi_misid'] = '(1)'
     d_sel['cascade']    = '(1)'
     d_sel['hop']        = '(1)'
-    d_sel['bdt']        = '(1)'
+    d_sel['bdt']        = 'mva_cmb > 0.9'
 
     for cut_name, cut_expr in d_sel.items():
         log.debug(f'{cut_name:<20}{cut_expr}')
