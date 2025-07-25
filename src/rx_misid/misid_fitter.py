@@ -35,7 +35,7 @@ class MisIDFitter:
         data: Zfit dataset representing data in the control (by PID) region
         q2bin: q2 bin, e.g. central
         '''
-        self._obs     = data.space
+        self._obs     = getattr(data, 'space')
         self._data    = data
         self._q2bin   = q2bin
         self._trigger = 'Hlt2RD_BuToKpEE_MVA_noPID'
