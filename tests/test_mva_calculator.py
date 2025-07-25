@@ -76,7 +76,7 @@ def test_data(trigger : str, out_dir : str) -> None:
 @pytest.mark.parametrize('trigger, sample', Data.l_mc)
 def test_mc(trigger : str, sample : str, out_dir : str) -> None:
     '''
-    Test MVACalculator with data
+    Test MVACalculator with simulation
     '''
     with RDFGetter.max_entries(value=Data.nentries):
         gtr = RDFGetter(sample=sample, trigger=trigger)
