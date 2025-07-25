@@ -51,7 +51,6 @@ which kinit
 
 and make sure that your kinit does not come from a virtual environment but it is the one in the LHCb stack or the native one.
 
-
 ## Organizing paths
 
 ### Building directory structure
@@ -65,69 +64,15 @@ make_tree_structure -i /path/to/downloaded/.data/v1 -o /path/to/directory/struct
 
 this will not make a copy of the ntuples, it will only create symbolic links to them.
 
-### Making YAML with files list
+### Merging data files
 
-If instead one does:
-
-```bash
-make_tree_structure -i /path/to/downloaded/.data/v1 -f samples.yaml
-```
-
-the links won't be made, instead a YAML file will be created with the list of files for each sample and trigger.
-
-### Lists from files in the grid
-
-If instead of taking the downloaded files, one wants the ones in the grid, one can do:
+After the preselection the data files are very small and there are many of them. The following line can be used to merge them:
 
 ```bash
-make_tree_structure -v v4 -f samples.yaml
+merge_samples -p rx -s DATA_24_MagDown_24c3 -t Hlt2RD_BuToKpMuMu_MVA -v v7
 ```
 
-where `v4` is the version of the JSON files holding the LFNs. In case one needs the old naming, used in Run1 and Run2
-one would run:
-
-```bash
-make_tree_structure -v v4 -f samples.yaml -n old
-```
-
-**This will likely drop samples that have no old naming, because they were not used in the past.**
-
-### Dropping triggers
-
-The YAML outputs of the commands above will be very large and not all of it will be needed. One can drop triggers by:
-
-```bash
-# This will dump a list of triggers to triggers.yaml
-# You can optionally remove not needed triggers
-list_triggers -v v4 -o triggers.yaml -k rx
-
-# This will use those triggers only to make samples.yaml
-make_tree_structure -v v4 -f samples.yaml -t triggers.yaml
-```
-
-### Sending files to user's CERNBOX
-
-In order to share files one can:
-
-- Use the CERNBOX [website](https://cernbox.cern.ch) to upload the files. These files will endup in EOS. One can upload entire directories.
-- Use `make_tree_structure` to dump to YAML the list of PFNs with:
-
-```bash
-make_tree_structure -i /publicfs/ucas/user/campoverde/Data/RX_run3/v5/mva/v1 -f rx_mva.yaml -p /eos/user/a/acampove/Data/mva/v1
-```
-
-Where `-p` is the directory in EOS where the files will go.
-
-### Summary
-
-Due to the complexity of this command, the table below was made to sumarize its functionality:
-
-| To build:                   | Input                                                                     | Output                                |
-| --------------------------- | ------------------------------------------------------------------------- | ------------------------------------- |
-| Tree structure              | `-i /path/to/directory/*root`                                             | `-o /path/to/start/of/tree/structure` |
-| YAML list with local files  | `-i /path/to/directory/*root`                                             | `-f /path/to/samples.yaml`            |
-| YAML list with PFNs         | `-v v4` where the LFNs are files, part of the project                     | `-f samples.yaml`                     |
-| YAML with PFNs in users EOS | `-i /path/to/directory/*.root -p /eos/user/x/uname/directory_with_files/` | `-f samples.yaml`                     |
+where the command will merge all the files associated to a given sample and trigger.
 
 ## Samples naming
 
@@ -158,16 +103,6 @@ to print a table to markdown with the sizes of each sample in Megabytes. e.g.:
 | Bu_JpsiK_ee_eq_DPC                          | Hlt2RD_BuToKpEE_MVA            |   8488 |
 ...
 ```
-
-## Merging files
-
-After the preselection the data files are very small and there are many of them. The following line can be used to merge them:
-
-```bash
-merge_samples -p rx -s DATA_24_MagDown_24c3 -t Hlt2RD_BuToKpMuMu_MVA -v v7
-```
-
-where the command will merge all the files associated to a given sample and trigger.
 
 ## Copying files
 
@@ -290,6 +225,7 @@ If samples are missing, one could do:
 check_missing -p rx
 ```
 
+other options are:
 
 ```
 options:
@@ -313,5 +249,4 @@ In this case `missing` is relative to the samples and files in the `main` sample
 For this one would have to use the `get_lumi` script in this project, together
 with the one in [this](https://gitlab.cern.ch/lhcb-luminosity/lumi_calib/-/blob/master/get_lumi.py?ref_type=heads)
 project. This should, at some point, be cleaned up.
-
 
