@@ -1,8 +1,10 @@
 '''
 File needed by pytest
 '''
+import os
 import logging
 
+import pytest
 import numpy
 import mplhep
 import matplotlib.pyplot as plt
