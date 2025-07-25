@@ -27,14 +27,14 @@ class MVACalculator:
         rdf     : RDF.RNode,
         sample  : str,
         trigger : str,
-        version : str,
+        version : str  = 'latest',
         nfold   : int  = 10,
         dry_run : bool = False) -> None:
         '''
         Parameters
         -------------
         rdf    : Dataframe with main sample
-        version: Version of classifier
+        version: Version of classifier, by default latest
         sample : E.g. DATA_24... # Needed to get q2 selection
         trigger: HLT2 triger     # to switch models
         nfold  : Number of expected folds, 10 by default. Used to validate inputs
