@@ -2,7 +2,7 @@
 Module containing tests for MVACalculator class
 '''
 
-from ROOT                         import RDF
+from ROOT                         import RDF, RDataFrame
 from dmu.logging.log_store        import LogStore
 from rx_data.rdf_getter           import RDFGetter
 from rx_classifier.mva_calculator import MVACalculator
@@ -15,7 +15,7 @@ def _validate_rdf(rdf : RDF.RNode) -> None:
     -------------
     rdf: ROOT dataframe with MVA scores
     '''
-    assert isinstance(rdf, RDF.RNode)
+    assert isinstance(rdf, (RDF.RNode, RDataFrame))
 
     nentries = rdf.Count().GetValue()
     assert nentries > 0
