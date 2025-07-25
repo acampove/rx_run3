@@ -52,6 +52,12 @@ def _get_rdf(kind : str) -> RDataFrame:
     rdf = gtr.get_rdf()
     rdf = _apply_selection(rdf, trigger, sample)
 
+    nentries = rdf.Count().GetValue()
+    if nentries == 0:
+        rep = rdf.Report()
+        rep.Print()
+        raise ValueError(f'No entry passed for {kind}/{trigger}')
+
     return rdf
 # ----------------------------------
 def _apply_selection(rdf : RDataFrame, trigger : str, sample : str) -> RDataFrame:
