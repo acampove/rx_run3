@@ -17,7 +17,7 @@ class Data:
     '''
     l_trigger= ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_BuToKpEE_MVA']
     nentries = 30_000
-    version  = 'v7p7'
+    version  = 'v7p6'
     l_mc     = [
         ('Hlt2RD_BuToKpEE_MVA'  , 'Bu_Kee_eq_btosllball05_DPC'  ),
         ('Hlt2RD_BuToKpMuMu_MVA', 'Bu_Kmumu_eq_btosllball05_DPC')]
