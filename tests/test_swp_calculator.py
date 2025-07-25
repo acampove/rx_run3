@@ -34,13 +34,13 @@ def _get_rdf(kind : str) -> RDataFrame:
         sample = 'DATA_24_MagUp_24c3'
         trigger= 'Hlt2RD_BuToKpEE_SameSign_MVA'
     elif kind == 'dt_ee':
-        sample = 'DATA_24_*'
+        sample = 'DATA_24_MagUp_24c2'
         trigger= 'Hlt2RD_BuToKpEE_MVA'
     elif kind == 'dt_mi':
-        sample = 'DATA_*'
+        sample = 'DATA_24_MagUp_24c4'
         trigger= 'Hlt2RD_BuToKpEE_MVA_misid'
     elif kind == 'dt_mm':
-        sample = 'DATA_*'
+        sample = 'DATA_24_MagDown_24c4'
         trigger= 'Hlt2RD_BuToKpMuMu_MVA'
     elif kind == 'mc':
         sample = 'Bu_Kee_eq_btosllball05_DPC'
