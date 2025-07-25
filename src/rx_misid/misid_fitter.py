@@ -26,9 +26,9 @@ class MisIDFitter:
     '''
     # --------------------------------------------------
     def __init__(
-            self,
-            data  : zdata,
-            q2bin : str):
+        self,
+        data  : zdata,
+        q2bin : str):
         '''
         Parameters
         -----------------
