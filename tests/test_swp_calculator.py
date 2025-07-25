@@ -6,7 +6,7 @@ import os
 import mplhep
 import pytest
 import matplotlib.pyplot as plt
-from ROOT                   import RDataFrame, EnableImplicitMT
+from ROOT                   import RDataFrame
 from dmu.logging.log_store  import LogStore
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
@@ -26,7 +26,6 @@ def _initialize():
     LogStore.set_level('rx_data:swp_calculator'     , 20)
     LogStore.set_level('rx_data:test_swp_calculator', 10)
     LogStore.set_level('rx_data:rdf_getter'         , 10)
-    EnableImplicitMT(10)
 
     plt.style.use(mplhep.style.LHCb2)
 # ----------------------------------
