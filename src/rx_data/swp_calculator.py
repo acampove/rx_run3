@@ -111,6 +111,9 @@ class SWPCalculator:
             old_id= row[f'{name}_ID']
             par   = part.from_pdgid(new_id)
             ms    = par.mass
+            if not isinstance(ms, float):
+                raise TypeError(f'Failed to determine the mass for particle with PDGID: {new_id}')
+
             log.debug(f'{name}: {vec_1.mass:0f}({old_id}) -> {ms:.0f}({new_id})')
 
             vec_2 = v4d(pt=vec_1.pt, eta=vec_1.eta, phi=vec_1.phi, mass=ms)
