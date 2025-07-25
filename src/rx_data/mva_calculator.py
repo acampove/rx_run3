@@ -185,6 +185,28 @@ class MVACalculator:
 
         return arr_mva
     # ----------------------
+    def _get_latest_version(self, q2bin : str, kind : str) -> str:
+        '''
+        Parameters
+        -------------
+        q2bin: E.g. central
+        kind : E.g. cmb, prc
+
+        Returns
+        -------------
+        Path to directory with latest version
+        '''
+        root_path    = f'{self._ana_dir}/mva/{kind}'
+        latest_path  = vman.get_last_version(dir_path=root_path, version_only=False)
+        version_name = os.path.basename(latest_path)
+        if not re.match(r'v\d+p\d+', version_name):
+            raise ValueError(f'Version {version_name} is invalid')
+
+        log.debug('Picking up latest version')
+        path = f'{latest_path}/{q2bin}'
+
+        return path
+    # ----------------------
     def _get_mva_dir(self, q2bin : str, kind : str) -> str:
         '''
         Parameters
@@ -200,10 +222,7 @@ class MVACalculator:
             log.warning(f'Picking up version {self._version} instead of latest')
             path        = f'{self._ana_dir}/mva/{kind}/{self._version}/{q2bin}'
         else:
-            root_path   = f'{self._ana_dir}/mva/{kind}'
-            latest_path = vman.get_last_version(dir_path=root_path, version_only=False)
-            log.debug('Picking up latest version')
-            path        = f'{latest_path}/{q2bin}'
+            path = self._get_latest_version(q2bin=q2bin, kind=kind)
 
         log.debug(f'For {q2bin}/{kind}, using models from: {path}')
 
