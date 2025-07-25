@@ -185,17 +185,18 @@ class MVACalculator:
 
         return arr_mva
     # ----------------------
-    def _get_q2_path(self, q2bin : str) -> str:
+    def _get_q2_path(self, q2bin : str, kind : str) -> str:
         '''
         Parameters
         -------------
         q2bin: E.g. central
+        kind : Kind of classifier, e.g. cmb, prc
 
         Returns
         -------------
         Path to directory with classifier models
         '''
-        path = f'{self._ana_dir}/mva/cmb/{self._version}/{q2bin}'
+        path = f'{self._ana_dir}/mva/{kind}/{self._version}/{q2bin}'
         fail = False
         for ifold in range(self._nfold):
             model_path = f'{path}/model_{ifold:03}.pkl'
@@ -215,8 +216,8 @@ class MVACalculator:
         Dictionary with paths to directories with classifier models
         '''
         l_q2bin    = ['low', 'central', 'high']
-        d_path_cmb = { q2bin : self._get_q2_path(q2bin=q2bin) for q2bin in l_q2bin }
-        d_path_prc = { q2bin : self._get_q2_path(q2bin=q2bin) for q2bin in l_q2bin }
+        d_path_cmb = { q2bin : self._get_q2_path(q2bin=q2bin, kind='cmb') for q2bin in l_q2bin }
+        d_path_prc = { q2bin : self._get_q2_path(q2bin=q2bin, kind='prc') for q2bin in l_q2bin }
 
         return {'cmb' : d_path_cmb, 'prc' : d_path_prc}
     # ----------------------------------------
