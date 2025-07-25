@@ -55,11 +55,12 @@ def _get_rdf(kind : str) -> RDataFrame:
     return rdf
 # ----------------------------------
 def _apply_selection(rdf : RDataFrame, trigger : str, sample : str) -> RDataFrame:
-    d_sel = sel.selection(project='RK', trigger=trigger, q2bin='jpsi', process=sample)
+    d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
     d_sel['pid_l']      = '(1)'
     d_sel['jpsi_misid'] = '(1)'
     d_sel['cascade']    = '(1)'
     d_sel['hop']        = '(1)'
+    d_sel['bdt']        = '(1)'
 
     for cut_name, cut_expr in d_sel.items():
         log.debug(f'{cut_name:<20}{cut_expr}')
