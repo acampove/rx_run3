@@ -129,10 +129,15 @@ class SWPCalculator:
 
         return mass
     #---------------------------------
-    def _combine(self, row : pnd.Series, had_name, kind : str, new_had_id : int) ->  float:
         old_had_id = row[f'{had_name}_ID']
         had        = part.from_pdgid(old_had_id)
         l_mass     = []
+    def _combine(
+        self,
+        row        : pnd.Series,
+        had_name   : str,
+        kind       : str,
+        new_had_id : int) ->  float:
         '''
         Parameters
         ----------------------
