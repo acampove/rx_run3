@@ -195,7 +195,17 @@ class MVACalculator:
         -------------
         Path to directory with classifier models
         '''
-        path = f'{self._ana_dir}/mva/{kind}/{self._version}/{q2bin}'
+        if self._version != 'latest':
+            log.warning(f'Picking up version {self._version} instead of latest')
+            path        = f'{self._ana_dir}/mva/{kind}/{self._version}/{q2bin}'
+        else:
+            root_path   = f'{self._ana_dir}/mva/{kind}'
+            latest_path = vman.get_last_version(dir_path=root_path, version_only=False)
+            log.debug('Picking up latest version')
+            path        = f'{latest_path}/{q2bin}'
+
+        log.debug(f'For {q2bin}/{kind}, using models from: {path}')
+
         fail = False
         for ifold in range(self._nfold):
             model_path = f'{path}/model_{ifold:03}.pkl'
