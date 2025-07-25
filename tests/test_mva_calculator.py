@@ -26,7 +26,7 @@ def test_simple() -> None:
     '''
     sample = 'DATA_24*'
     trigger= 'Hlt2RD_BuToKpMuMu_MVA'
-    version= 'v7.7'
+    version= 'v7p7'
 
     with RDFGetter.max_entries(value=100):
         gtr = RDFGetter(sample=sample, trigger=trigger)
@@ -38,6 +38,6 @@ def test_simple() -> None:
     trigger = trigger,
     version = version)
 
-    rdf = cal.get_rdf(rdf=rdf)
+    rdf = cal.get_rdf()
     _validate_rdf(rdf=rdf)
 # --------------------------------
