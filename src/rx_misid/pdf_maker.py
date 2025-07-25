@@ -10,8 +10,8 @@ from dmu.generic               import utilities  as gut
 from dmu.logging.log_store     import LogStore
 
 from zfit.util.ztyping         import XTypeInput as zdata
-from zfit.core.interfaces      import ZfitSpace  as zobs
-from zfit.core.interfaces      import ZfitPDF    as zpdf
+from zfit.interface            import ZfitSpace  as zobs
+from zfit.interface            import ZfitPDF    as zpdf
 from rx_misid.misid_calculator import MisIDCalculator
 
 log=LogStore.add_logger('rx_misid:pdf_maker')
