@@ -24,10 +24,10 @@ class PDFMaker:
     '''
     # -----------------------------------------
     def __init__(
-            self,
-            sample : str,
-            trigger: str,
-            q2bin  : str):
+        self,
+        sample : str,
+        trigger: str,
+        q2bin  : str):
         '''
         Parameters
         ------------------
@@ -43,9 +43,9 @@ class PDFMaker:
         self._min_entries = 50
     # -----------------------------------------
     def _pdf_from_df(
-            self,
-            df : pnd.DataFrame,
-            obs : zobs) -> tuple[zpdf,zdata]:
+        self,
+        df  : pnd.DataFrame,
+        obs : zobs) -> tuple[zpdf,zdata]:
         '''
         Parameters
         ---------------
