@@ -1706,7 +1706,8 @@ oversion=get_last_version(dir_path=dir_path, version_only=True)  # This will ret
 oversion=get_last_version(dir_path=dir_path, version_only=False) # This will return full path, e.g. /a/b/c/v3.2
 ```
 
-The function above should work for numeric (e.g. `v1.2`) and non-numeric (e.g. `va`, `vb`) versions.
+The `get_last_version` function works for versions of the form `vN`, `vN.M` and `vNpM`. 
+Where `N` and `M` are integers.
 
 # Text manipulation
 
