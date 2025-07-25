@@ -139,10 +139,12 @@ class MisIdPdf:
         raise ValueError(f'Found {nnan}/{size} NaNs in {sample}')
     # ----------------------------------------
     def _extend_pdf(self, pdf : zpdf, data : zdata) -> zpdf:
-        if not isinstance(data.weights, tf.Tensor):
+        weights = getattr(data, 'weights', None)
+        if not isinstance(weights, tf.Tensor):
             raise ValueError('No weights found for dataset')
 
-        arr_wgt = data.weights.numpy()
+        weights = cast(tf.Tensor, weights)
+        arr_wgt = weights.numpy()
         nentries= numpy.sum(arr_wgt)
 
         log.debug(f'Extending PDF with {nentries:.0f} entries')
