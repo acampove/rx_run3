@@ -3,6 +3,7 @@ This module contains the MVACalculator class
 '''
 
 import os
+import re
 import glob
 import joblib
 import numpy
