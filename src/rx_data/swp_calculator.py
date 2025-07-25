@@ -133,6 +133,18 @@ class SWPCalculator:
         old_had_id = row[f'{had_name}_ID']
         had        = part.from_pdgid(old_had_id)
         l_mass     = []
+        '''
+        Parameters
+        ----------------------
+        row        : Pandas dataframe row representing an entry in a ROOT tree, i.e. a candidate
+        had_name   : Name of prefix for hadron in tree, e.g. H
+        kind       : Type of mass, e.g. org, swp. For swap of mass hypotheses or original ones
+        new_had_id : PDGID for hadron when swapping of hypotheses is needed
+
+        Returns
+        ----------------------
+        Mass of the combination of particles
+        '''
         for lep_name, new_lep_id in self._d_lep.items():
             old_lep_id = row[f'{lep_name}_ID']
             lep        = part.from_pdgid(old_lep_id)
