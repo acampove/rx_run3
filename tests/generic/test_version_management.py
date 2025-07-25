@@ -16,8 +16,8 @@ class Data:
     '''
     Class used to share attributes
     '''
-    out_dir = '/tmp/dmu/tests/version_manager/'
-    nver    = 19
+    user    = os.environ['USER']
+    out_dir = f'/tmp/{user}/tests/version_manager/'
 #-----------------------------------------------------------
 def _create_files(nfiles : int) -> str:
     '''
