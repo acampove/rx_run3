@@ -33,6 +33,22 @@ Then, for each remote it pushes the tags and the commits.
 
 This section describes generic tools that could not be put in a specific category, but tend to be useful.
 
+## Typing
+
+### Pandas types
+
+The following snippet
+
+```python
+from dmu.generic.typing_utilities import numeric_from_series
+
+age = numeric_from_series(row, 'age', int)
+```
+
+will extract the value of the `age` column from the `row` series
+and will return an `int`. This can also be used with `float` and `bool`
+and will allow pyright to run without errors. 
+
 ## Naming
 
 ### Name cleaning
