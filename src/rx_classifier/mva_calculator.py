@@ -225,7 +225,7 @@ class MVACalculator:
 
         return {'cmb' : d_path_cmb, 'prc' : d_path_prc}
     # ----------------------------------------
-    def apply_classifier(self, rdf : RDF.RNode) -> RDF.RNode:
+    def get_rdf(self, rdf : RDF.RNode) -> RDF.RNode:
         '''
         Takes name of dataset and corresponding ROOT dataframe
         return dataframe with a classifier probability column added
