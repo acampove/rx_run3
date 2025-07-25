@@ -19,7 +19,18 @@ class SWPCalculator:
     Class used to calculate di-track masses, after mass hypothesis swaps
     '''
     #---------------------------------
-    def __init__(self, rdf : RDataFrame, d_lep : dict[str,int], d_had : dict[str,int]):
+    def __init__(
+        self,
+        rdf   : RDataFrame,
+        d_lep : dict[str,int],
+        d_had : dict[str,int]):
+        '''
+        Parameters
+        --------------
+        rdf   : ROOT dataframe
+        d_lep : Dictionary mapping lepton names with mass hypotheses to swap, e.g. {L1 : 13, L2 : 13}
+        d_had : Dictionary mapping hadron names with mass hypetheses to swap, e.g. {H : 312}
+        '''
         self._rdf    = rdf
         self._d_lep  = d_lep
         self._d_had  = d_had
