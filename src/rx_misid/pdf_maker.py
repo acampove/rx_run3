@@ -73,9 +73,9 @@ class PDFMaker:
         return pdf, data
     # -----------------------------------------
     def get_pdf(
-            self,
-            obs    : zobs,
-            is_sig : bool) -> zpdf|None:
+        self,
+        obs    : zobs,
+        is_sig : bool) -> zpdf|None:
         '''
         Parameters
         ---------------
