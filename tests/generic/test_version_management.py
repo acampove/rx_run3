@@ -4,6 +4,7 @@ Module containing tests for version management functions
 import os
 import shutil
 
+import pytest
 from dmu.generic.version_management import get_last_version
 from dmu.generic.version_management import get_next_version
 from dmu.generic.version_management import get_latest_file
