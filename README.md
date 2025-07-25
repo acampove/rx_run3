@@ -15,7 +15,9 @@ for all the $R_X$ like analyses. For instructions on how to:
 - Copying ntuples from cluster to laptop
 - Outdated instructions that hasn't been removed yet
 
-Check [this](doc/maintenance.md)
+Check [this](doc/maintenance.md). 
+
+Below are the instructions on how to access data from EOS. 
 
 ## Installation
 
