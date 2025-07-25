@@ -14,6 +14,7 @@ import tensorflow            as tf
 import pandas                as pd
 import numpy                 as np
 import matplotlib.pyplot     as plt
+from matplotlib.axes        import Axes
 from zfit.core.basepdf      import BasePDF    as zpdf
 
 import dmu.generic.utilities as gut
@@ -51,7 +52,7 @@ class ZFitPlotter:
         self._col              = {}
         self._l_blind          = None
         self._l_plot_components= None
-        self.axs               = None
+        self.axs               : tuple[Axes,...]
         self._figsize          = None
         self._leg_loc          = None
 
@@ -346,18 +347,22 @@ class ZFitPlotter:
 
         plt.text(0.65, 0.75, line, fontsize=12, transform=plt.gcf().transFigure)
     #----------------------------------------
-    def _get_axis(self, add_pars, skip_pulls):
+    def _get_axis(
+        self,
+        add_pars   : list[str]|None,
+        skip_pulls : bool) -> tuple[Axes,...]:
         plt.style.use(mplhep.style.LHCb2)
         if skip_pulls:
             _, (ax) = plt.subplots(1)
-            return [ax]
+            return (ax,)
 
         if add_pars is None:
             fig       = plt.figure()
             gs        = fig.add_gridspec(nrows=2, ncols=1, hspace=0.1, height_ratios=[4, 1])
             axs       = gs.subplots(sharex=True)
+            taxs      = tuple(axs.flat)
 
-            return axs.flat
+            return taxs
 
         fig = plt.figure(figsize=self._figsize)
         ax1 = plt.subplot2grid((4,40),(0, 0), rowspan=3, colspan=25)
@@ -366,7 +371,7 @@ class ZFitPlotter:
 
         self._add_pars_box(add_pars)
 
-        return [ax1, ax2]
+        return ax1, ax2
     #----------------------------------------
     def _get_component_yield(self, model, par):
         if model.is_extended:
