@@ -129,9 +129,6 @@ class SWPCalculator:
 
         return mass
     #---------------------------------
-        old_had_id = row[f'{had_name}_ID']
-        had        = part.from_pdgid(old_had_id)
-        l_mass     = []
     def _combine(
         self,
         row        : pnd.Series,
@@ -150,6 +147,9 @@ class SWPCalculator:
         ----------------------
         Mass of the combination of particles
         '''
+        old_had_id = numeric_from_series(row, f'{had_name}_ID', int)
+        had              = part.from_pdgid(old_had_id)
+        l_mass           = []
         for lep_name, new_lep_id in self._d_lep.items():
             old_lep_id = row[f'{lep_name}_ID']
             lep        = part.from_pdgid(old_lep_id)
