@@ -303,19 +303,6 @@ def _create_file(path : str, trigger : str) -> None:
     for tmp_path in glob.glob(tmp_wc):
         os.remove(tmp_path)
 # ---------------------------------
-def _trigger_from_path(path : str) -> str:
-    ichar   = path.index('Hlt2')
-    fchar   = path.index('_MVA') + 4
-
-    if ichar >= fchar:
-        raise ValueError(f'Cannot extract trigger name from: {path}')
-
-    trigger = path[ichar:fchar]
-
-    log.debug(f'Using trigger: {trigger}')
-
-    return trigger
-# ---------------------------------
 def main():
     '''
     Script starts here
