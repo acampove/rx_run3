@@ -6,6 +6,7 @@ import os
 import glob
 import joblib
 import numpy
+import pandas as pnd
 
 from ROOT                  import RDF
 from dmu.ml.cv_predict     import CVClassifier, CVPredict
@@ -221,20 +222,39 @@ class MVACalculator:
 
         return {'cmb' : d_path_cmb, 'prc' : d_path_prc}
     # ----------------------------------------
-    def get_rdf(self) -> RDF.RNode:
+    def get_rdf(self, kind : str = 'root') -> RDF.RNode|pnd.DataFrame:
         '''
-        Takes name of dataset and corresponding ROOT dataframe
-        return dataframe with a classifier probability column added
+        Parameters
+        ----------------
+        kind : Either 'root' or 'pandas'
+
+        Returns
+        ----------------
+        Either a ROOT or a pandas dataframe
         '''
+        if kind not in ['root', 'pandas']:
+            raise NotImplementedError(f'Invalid format {kind}')
+
         d_mva_kind  = self._get_mva_dir()
         d_mva_score = {}
         for name, d_path in d_mva_kind.items():
+            log.info(f'Calculating {name} scores')
             arr_score = self._get_scores(d_path=d_path)
             d_mva_score[f'mva_{name}'] = arr_score
 
-        d_data      = self._rdf.AsNumpy(['RUNNUMBER', 'EVENTNUMBER'])
-        d_data.update(d_mva_score)
-        rdf         = RDF.FromNumpy(d_data)
+        log.info('Retrieving run number and event number columns')
+        d_data = self._rdf.AsNumpy(['RUNNUMBER', 'EVENTNUMBER'])
 
-        return rdf
+        log.info('Adding classifier columns')
+        d_data.update(d_mva_score)
+
+        log.info('Building dataframe from Numpy')
+        if kind == 'root':
+            df = RDF.FromNumpy(d_data)
+        elif kind == 'pandas':
+            df = pnd.DataFrame(d_data)
+        else:
+            raise NotImplementedError(f'Invalid format {kind}')
+
+        return df
 #---------------------------------
