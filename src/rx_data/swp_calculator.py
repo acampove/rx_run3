@@ -230,7 +230,14 @@ class SWPCalculator:
         d_extra = self._rdf.AsNumpy(self._extra_branches)
         d_data.update(d_extra)
 
-        rdf    = RDF.FromNumpy(d_data)
+        try:
+            rdf = RDF.FromNumpy(d_data)
+        except RuntimeError as exc:
+            for name, arr_val in d_data.items():
+                log.error(f'{name}:')
+                log.error(arr_val)
+                log.error('')
+            raise RuntimeError('Cannot create ROOT dataframe') from exc
 
         return rdf
 #---------------------------------
