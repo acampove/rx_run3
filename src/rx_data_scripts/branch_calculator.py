@@ -11,7 +11,6 @@ import glob
 import fnmatch
 import argparse
 from typing      import Union
-from dataclasses import dataclass
 
 import tqdm
 import dmu.generic.utilities as gut
@@ -29,7 +28,6 @@ from rx_data.mass_bias_corrector import MassBiasCorrector
 
 log = LogStore.add_logger('rx_data:branch_calculator')
 # ---------------------------------
-@dataclass
 class Data:
     '''
     Class used to hold shared data
