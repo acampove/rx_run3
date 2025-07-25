@@ -17,6 +17,10 @@ class Data:
     '''
     l_trigger= ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_BuToKpEE_MVA']
     nentries = 30_000
+    version  = 'v7p7'
+    l_mc     = [
+        ('Hlt2RD_BuToKpEE_MVA'  , 'Bu_Kee_eq_btosllball05_DPC'  ),
+        ('Hlt2RD_BuToKpMuMu_MVA', 'Bu_Kmumu_eq_btosllball05_DPC')]
 # ----------------------
 def _validate_rdf(
     rdf     : RDF.RNode,
@@ -70,3 +74,21 @@ def test_data(trigger : str, out_dir : str) -> None:
     rdf = cal.get_rdf()
     _validate_rdf(rdf=rdf, out_dir=f'{out_dir}/data', name='data')
 # --------------------------------
+@pytest.mark.parametrize('trigger, sample', Data.l_mc)
+def test_mc(trigger : str, sample : str, out_dir : str) -> None:
+    '''
+    Test MVACalculator with data
+    '''
+    with RDFGetter.max_entries(value=Data.nentries):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf()
+
+    cal = MVACalculator(
+    rdf     = rdf,
+    sample  = sample,
+    trigger = trigger,
+    version = Data.version)
+
+    rdf = cal.get_rdf()
+    _validate_rdf(rdf=rdf, out_dir=f'{out_dir}/mc', name=f'{sample}_{trigger}')
+# ----------------------
