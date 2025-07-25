@@ -151,8 +151,8 @@ class SWPCalculator:
         had              = part.from_pdgid(old_had_id)
         l_mass           = []
         for lep_name, new_lep_id in self._d_lep.items():
-            old_lep_id = row[f'{lep_name}_ID']
-            lep        = part.from_pdgid(old_lep_id)
+            old_lep_id = numeric_from_series(row, f'{lep_name}_ID', int)
+            lep              = part.from_pdgid(old_lep_id)
 
             if lep.charge == had.charge and not self._use_ss:
                 continue
