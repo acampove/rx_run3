@@ -74,8 +74,10 @@ def test_versioning_formats(kind : str):
     '''
     Tests getting last version for different versioning formats
     '''
+    log.info('')
     dir_path, iversion = _get_dir(name=kind)
     oversion=get_last_version(dir_path=dir_path, version_only=True)
+    log.info(f'{kind:<20}{iversion:<10}{oversion:<10}')
 
     assert iversion == oversion
 #-----------------------------------------------------------
