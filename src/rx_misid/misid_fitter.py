@@ -10,7 +10,7 @@ from dmu.stats.model_factory import ModelFactory
 from dmu.stats               import utilities  as sut
 from dmu.stats.fitter        import Fitter
 
-from zfit.core.interfaces    import ZfitData   as zdata
+from zfit.util.ztyping       import XTypeInput as zdata
 from zfit.core.interfaces    import ZfitPDF    as zpdf
 from rx_misid.pdf_maker      import PDFMaker
 
