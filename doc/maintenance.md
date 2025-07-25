@@ -161,11 +161,17 @@ Thus, this can be parallelized by running the line above 40 times in 40 jobs.
 
 Currently the command can add:
 
-`swp_jpsi_misid`: Branches corresponding to lepton kaon swaps that make the resonant mode leak into rare modes. Where the swap is inverted and the $J/\psi$ mass provided
+- `swp_jpsi_misid`: Branches corresponding to lepton kaon swaps that make the resonant mode leak into rare modes. Where the swap is inverted and the $J/\psi$ mass provided
 
-`swp_cascade`: Branches corresponding to $D\to K\pi$ with $\pi\to\ell$ swaps, where the swap is inverted and the $D$ mass provided.
+- `swp_cascade`: Branches corresponding to $D\to K\pi$ with $\pi\to\ell$ swaps, where the swap is inverted and the $D$ mass provided.
 
-`hop`: With the $\alpha$ and mass branches calculated
+- `hop`: With the $\alpha$ and mass branches calculated
+
+- `brem_track_2`: This will calculate branches associated to the brem correction. 
+    The branches will include:
+    - Masses of B and Jpsi.
+    - Momenta of mesons and electrons.
+    - Derived quantities like `DIRA` or the `brem` categories.
 
 ## Calculating MVA branches
 
