@@ -138,7 +138,10 @@ class MisIdPdf:
         log.info(df)
         raise ValueError(f'Found {nnan}/{size} NaNs in {sample}')
     # ----------------------------------------
-    def _extend_pdf(self, pdf : zpdf, data : zdata) -> zpdf:
+    def _extend_pdf(
+            self,
+            pdf  : zpdf,
+            data : zdata) -> zpdf:
         weights = getattr(data, 'weights', None)
         if not isinstance(weights, tf.Tensor):
             raise ValueError('No weights found for dataset')
