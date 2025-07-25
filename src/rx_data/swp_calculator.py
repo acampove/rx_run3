@@ -197,10 +197,11 @@ class SWPCalculator:
 
         return sr_mass
     #---------------------------------
-    def get_rdf(self,
-                preffix      : str,
-                progress_bar : bool = False,
-                use_ss       : bool = False) -> RDataFrame:
+    def get_rdf(
+        self,
+        preffix      : str,
+        progress_bar : bool = False,
+        use_ss       : bool = False) -> RDataFrame:
         '''
         Parameters:
         ------------------
