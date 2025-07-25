@@ -103,15 +103,13 @@ class MVACalculator:
 
         return rdf
     # ----------------------------------------
-    def _q2_scores_from_rdf(
+    def _q2_scores(
         self,
-        rdf    : RDF.RNode,
         d_path : dict[str,str],
         q2bin  : str) -> numpy.ndarray:
         '''
         Parameters
         -----------
-        rdf   : DataFrame with input data, it has to be indexed with an `index` column
         d_path: Dictionary mapping q2bin to path to models
         q2bin : q2 bin
 
@@ -119,7 +117,7 @@ class MVACalculator:
         -----------
         2D Array with indexes and MVA scores
         '''
-        rdf     = self._apply_q2_cut(rdf=rdf, q2bin=q2bin)
+        rdf     = self._apply_q2_cut(rdf=self._rdf, q2bin=q2bin)
         nentries= rdf.Count().GetValue()
         if nentries == 0:
             log.warning(f'No entries found for q2 bin: {q2bin}')
@@ -157,29 +155,26 @@ class MVACalculator:
     # ----------------------------------------
     def _scores_from_rdf(
         self,
-        rdf    : RDF.RNode,
         d_path : dict[str,str]) -> numpy.ndarray:
         '''
         Parameters
         ------------------
-        rdf   : DataFrame with inputs
         d_path: Dictionary mapping q2bin to path to models
 
         Returns
         ------------------
         Array of signal probabilities
         '''
-        nentries = rdf.Count().GetValue()
-
-        arr_low     = self._q2_scores_from_rdf(rdf=rdf, d_path=d_path, q2bin='low'    )
-        arr_central = self._q2_scores_from_rdf(rdf=rdf, d_path=d_path, q2bin='central')
-        arr_high    = self._q2_scores_from_rdf(rdf=rdf, d_path=d_path, q2bin='high'   )
-        arr_rest    = self._q2_scores_from_rdf(rdf=rdf, d_path=d_path, q2bin='rest'   )
+        arr_low     = self._q2_scores(d_path=d_path, q2bin='low'    )
+        arr_central = self._q2_scores(d_path=d_path, q2bin='central')
+        arr_high    = self._q2_scores(d_path=d_path, q2bin='high'   )
+        arr_rest    = self._q2_scores(d_path=d_path, q2bin='rest'   )
         arr_all     = numpy.concatenate((arr_low, arr_central, arr_high, arr_rest))
 
         arr_ind = arr_all.T[0]
         arr_val = arr_all.T[1]
 
+        nentries     = self._rdf.Count().GetValue()
         arr_obtained = numpy.sort(arr_ind)
         arr_expected = numpy.arange(nentries + 1)
         if  numpy.array_equal(arr_obtained, arr_expected):
@@ -225,7 +220,7 @@ class MVACalculator:
 
         return {'cmb' : d_path_cmb, 'prc' : d_path_prc}
     # ----------------------------------------
-    def get_rdf(self, rdf : RDF.RNode) -> RDF.RNode:
+    def get_rdf(self) -> RDF.RNode:
         '''
         Takes name of dataset and corresponding ROOT dataframe
         return dataframe with a classifier probability column added
@@ -233,10 +228,10 @@ class MVACalculator:
         d_mva_kind  = self._get_mva_dir()
         d_mva_score = {}
         for name, d_path in d_mva_kind.items():
-            arr_score = self._scores_from_rdf(rdf=rdf, d_path=d_path)
+            arr_score = self._scores_from_rdf(d_path=d_path)
             d_mva_score[f'mva_{name}'] = arr_score
 
-        d_data      = rdf.AsNumpy(['RUNNUMBER', 'EVENTNUMBER'])
+        d_data      = self._rdf.AsNumpy(['RUNNUMBER', 'EVENTNUMBER'])
         d_data.update(d_mva_score)
         rdf         = RDF.FromNumpy(d_data)
 
