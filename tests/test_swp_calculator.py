@@ -76,8 +76,14 @@ def test_dzero_misid(kind : str):
     Tests dzero decay contamination
     '''
     rdf = _get_rdf(kind=kind)
+    ientries = rdf.Count().GetValue()
+
     obj = SWPCalculator(rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
     rdf = obj.get_rdf(preffix='dzero_misid', progress_bar=True, use_ss= 'ss' in kind)
+
+    oentries = rdf.Count().GetValue()
+
+    assert ientries == oentries
 
     _plot(rdf, preffix='dzero_misid', kind=kind)
 # ----------------------------------
