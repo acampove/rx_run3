@@ -81,12 +81,12 @@ class SWPCalculator:
         This function is needed because the PE (energy) of the particle was not stored
         in the ntuples
         '''
-        px     = row[f'{name}_PX']
-        py     = row[f'{name}_PY']
-        pz     = row[f'{name}_PZ']
+        px     = numeric_from_series(row, f'{name}_PX', float)
+        py     = numeric_from_series(row, f'{name}_PY', float)
+        pz     = numeric_from_series(row, f'{name}_PZ', float)
         par_3d = v3d(px=px, py=py, pz=pz)
 
-        par_id = row[f'{name}_ID']
+        par_id = numeric_from_series(row, f'{name}_ID', int)
         par    = part.from_pdgid(par_id)
         ms     = par.mass
         vec    = v4d(pt=par_3d.pt, eta=par_3d.eta, phi=par_3d.phi, m=ms)
