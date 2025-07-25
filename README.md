@@ -7,7 +7,15 @@ This repository contains:
 - Versioned lists of LFNs
 - Utilities to download them and link them into a tree structure
 
-for all the $R_X$ like analyses.
+for all the $R_X$ like analyses. For instructions on how to:
+
+- Produce new ntuples with friend trees
+- Downloading filtered ntuples from the grid
+- Merging data ntuples
+- Copying ntuples from cluster to laptop
+- Outdated instructions that hasn't been removed yet
+
+Check [this](doc/maintenance.md)
 
 ## Installation
 
