@@ -184,7 +184,7 @@ class MVACalculator:
 
         return arr_mva
     # ----------------------
-    def _get_q2_path(self, q2bin : str, kind : str) -> str:
+    def _get_mva_dir(self, q2bin : str, kind : str) -> str:
         '''
         Parameters
         -------------
@@ -208,15 +208,15 @@ class MVACalculator:
 
         return path
     # ----------------------
-    def _get_mva_dir(self) -> dict:
+    def _get_mva_dirs(self) -> dict:
         '''
         Returns
         -----------
         Dictionary with paths to directories with classifier models
         '''
         l_q2bin    = ['low', 'central', 'high']
-        d_path_cmb = { q2bin : self._get_q2_path(q2bin=q2bin, kind='cmb') for q2bin in l_q2bin }
-        d_path_prc = { q2bin : self._get_q2_path(q2bin=q2bin, kind='prc') for q2bin in l_q2bin }
+        d_path_cmb = { q2bin : self._get_mva_dir(q2bin=q2bin, kind='cmb') for q2bin in l_q2bin }
+        d_path_prc = { q2bin : self._get_mva_dir(q2bin=q2bin, kind='prc') for q2bin in l_q2bin }
 
         return {'cmb' : d_path_cmb, 'prc' : d_path_prc}
     # ----------------------------------------
@@ -233,7 +233,7 @@ class MVACalculator:
         if kind not in ['root', 'pandas']:
             raise NotImplementedError(f'Invalid format {kind}')
 
-        d_mva_kind  = self._get_mva_dir()
+        d_mva_kind  = self._get_mva_dirs()
         d_mva_score = {}
         for name, d_path in d_mva_kind.items():
             log.info(f'Calculating {name} scores')
