@@ -32,28 +32,42 @@ def _create_files(nfiles : int) -> str:
             ofile.close()
 
     return test_dir
-#-----------------------------------------------------------
-def _get_dir(name) -> tuple[str,str]:
-    path_dir = f'{Data.out_dir}/{name}'
-    shutil.rmtree(path_dir, ignore_errors=True)
-    for ver in range(Data.nver + 1):
-        os.makedirs(f'{path_dir}/v{ver}', exist_ok=True)
-
-    if name == 'non_numeric':
-        os.makedirs(f'{path_dir}/vx', exist_ok=True)
-        os.makedirs(f'{path_dir}/vy', exist_ok=True)
-        os.makedirs(f'{path_dir}/vz', exist_ok=True)
-
-    return path_dir, f'v{ver}'
-#-----------------------------------------------------------
-def test_nonnumeric():
+# ----------------------
+def _make_dirs(name : str, versions : list[str]) -> str:
     '''
-    Tests getting last version
-    '''
-    dir_path, iversion = _get_dir('nonnumeric')
-    oversion=get_last_version(dir_path=dir_path, version_only=True)
+    Parameters
+    -------------
+    name    : Test name 
+    versions: Names of versioned directories
 
-    assert iversion == oversion
+    Returns
+    -------------
+    path to directory containing versioned directories
+    '''
+    path = f'{Data.out_dir}/{name}'
+    shutil.rmtree(path, ignore_errors=True)
+
+    for version in versions:
+        versioned_path = f'{path}/{version}'
+        os.makedirs(versioned_path, exist_ok=True)
+
+    return path
+#-----------------------------------------------------------
+def _get_dir(name : str) -> tuple[str,str]:
+    if   name == 'non_numeric':
+        l_ver = ['vx', 'vy', 'vz']
+    elif name == 'with_p':
+        l_ver = ['v1p1', 'v1p2', 'v1p3']
+    elif name == 'numeric':
+        l_ver = ['v1', 'v2', 'v3']
+    elif name == 'numeric_period':
+        l_ver = ['v1.1', 'v1.2', 'v1.3']
+    else:
+        raise ValueError(f'Invalid kind of version: {name}')
+
+    path = _make_dirs(name=name, versions=l_ver)
+
+    return path, l_ver[-1]
 #-----------------------------------------------------------
 @pytest.mark.parametrize('kind', ['non_numeric', 'with_p', 'numeric', 'numeric_period'])
 def test_versioning_formats(kind : str):
