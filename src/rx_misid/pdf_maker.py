@@ -63,6 +63,7 @@ class PDFMaker:
         arr_wgt  = df['weight'].to_numpy()
 
         data     = zfit.Data.from_numpy(obs=obs, array=arr_mass, weights=arr_wgt)
+        data     = cast(zfit.Data, data)
         pdf      = zfit.pdf.KDE1DimFFT(
             name   = self._sample,
             data   = data,
