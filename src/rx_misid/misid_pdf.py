@@ -11,7 +11,7 @@ import numpy
 import pandas     as pnd
 import tensorflow as tf
 
-from zfit.core.data            import Data             as zdata
+from zfit.util.ztyping         import XTypeInput       as zdata
 from zfit.core.basepdf         import BasePDF          as zpdf
 from zfit.core.interfaces      import ZfitSpace        as zobs
 from dmu.generic               import utilities        as gut

@@ -1,6 +1,7 @@
 '''
 Module holding PIDWeighter class
 '''
+from typing import cast
 import pandas            as pnd
 
 from dmu.stats.zfit            import zfit
@@ -8,9 +9,9 @@ from dmu.stats                 import utilities  as sut
 from dmu.generic               import utilities  as gut
 from dmu.logging.log_store     import LogStore
 
+from zfit.util.ztyping         import XTypeInput as zdata
 from zfit.core.interfaces      import ZfitSpace  as zobs
 from zfit.core.interfaces      import ZfitPDF    as zpdf
-from zfit.core.interfaces      import ZfitData   as zdata
 from rx_misid.misid_calculator import MisIDCalculator
 
 log=LogStore.add_logger('rx_misid:pdf_maker')
