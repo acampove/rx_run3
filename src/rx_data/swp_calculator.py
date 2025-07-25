@@ -1,14 +1,16 @@
 '''
 Module with class used to swap mass hypotheses
 '''
-
 import pandas as pnd
+
 from ROOT                  import RDataFrame, RDF
 from tqdm                  import tqdm
 from particle              import Particle         as part
 from vector                import MomentumObject3D as v3d
 from vector                import MomentumObject4D as v4d
-from dmu.logging.log_store import LogStore
+
+from dmu.generic.typing_utilities import numeric_from_series
+from dmu.logging.log_store        import LogStore
 
 log = LogStore.add_logger('rx_data:swp_calculator')
 #---------------------------------
