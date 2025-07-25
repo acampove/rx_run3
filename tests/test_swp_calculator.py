@@ -18,7 +18,7 @@ class Data:
     '''
     Class used to share attributes
     '''
-    nentries= -1
+    nentries= 100_000
     user    = os.environ['USER']
     out_dir = f'/tmp/{user}/tests/rx_data/swap_calculator'
 # ----------------------------------
