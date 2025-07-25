@@ -220,7 +220,7 @@ class MVACalculator:
         '''
         if self._version != 'latest':
             log.warning(f'Picking up version {self._version} instead of latest')
-            path        = f'{self._ana_dir}/mva/{kind}/{self._version}/{q2bin}'
+            path = f'{self._ana_dir}/mva/{kind}/{self._version}/{q2bin}'
         else:
             path = self._get_latest_version(q2bin=q2bin, kind=kind)
 
