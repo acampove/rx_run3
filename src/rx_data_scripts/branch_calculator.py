@@ -119,7 +119,7 @@ def _get_partition(l_path : list[str]) -> list[str]:
     group_sizes = {i: 0  for i in range(ngroup)}
 
     for file_path, size in sorted_files:
-        min_group = min(group_sizes, key=group_sizes.get)
+        min_group = min(group_sizes, key=lambda index : group_sizes[index])
         groups[min_group].append(file_path)
         group_sizes[min_group] += size
 
