@@ -606,9 +606,6 @@ class RDFGetter:
             else:
                 log.debug(f'Redefining: {name}={definition}')
 
-            if self._skip_definition(name=name, definition=definition):
-                continue
-
             rdf = self._add_column(redefine=True, rdf=rdf, name=name, definition=definition)
 
         return rdf
