@@ -296,6 +296,9 @@ def _create_file(path : str) -> None:
         return
 
     rdf   = _get_input_rdf(path=path)
+    if rdf is None:
+        return
+
     l_rdf = _split_rdf(rdf=rdf)
 
     if Data.dry:
