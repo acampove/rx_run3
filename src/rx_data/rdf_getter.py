@@ -477,28 +477,11 @@ class RDFGetter:
 
         return False
     # ---------------------------------------------------
-    def _skip_definition(self, name: str, definition : str) -> bool:
-        '''
-        Will check if definition has to be skipped, due to absence of variables in function of
-        which definition happens
-
-        Parameters
-        -------------------
-        name      : Name of variable to be defined
-        definition: Definition...
-
-        Returns
-        -------------------
-        True: Definition not possible
-        False: Definition possible
-        '''
-        return self._skip_brem_track_2_definition(name, definition)
-    # ---------------------------------------------------
     def _add_column(self, rdf : RDF.RNode, name : str, definition : str) -> RDF.RNode:
         '''
         Wrapper function to Define
         '''
-        if self._skip_definition(name=name, definition=definition):
+        if self._skip_brem_track_2_definition(name, definition):
             return rdf
 
         if name in self._l_columns:
