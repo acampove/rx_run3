@@ -451,7 +451,7 @@ class RDFGetter:
         False: Definition possible
         '''
 
-        if 'brem_track_2' in self._l_ftree:
+        if 'brem_track_2' in self._s_ftree:
             log.debug('Not skipping brem_track_2 definitions')
             return False
 
