@@ -766,6 +766,16 @@ class RDFGetter:
 
         return val
     # ---------------------------------------------------
+    @property
+    def friend_trees(self) -> set[str]:
+        '''
+        Returns
+        -----------------
+        The list of friend tree names that are
+        used for this dataframe, e.g. ['mva', 'hop']
+        '''
+        return self._s_ftree
+    # ---------------------------------------------------
     @staticmethod
     def split_per_file(
         data       : dict,
