@@ -487,7 +487,7 @@ class RDFGetter:
                 log.debug(f'Skipping definition {name}={definition}')
                 return True
 
-        log.debug(f'Not skipping definition {name}={definition}')
+        log.debug(f'Not a brem track 2 definition: {definition}')
 
         return False
     # ---------------------------------------------------
