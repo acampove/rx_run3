@@ -185,8 +185,8 @@ def _is_mc(path : str) -> bool:
     raise ValueError(f'Cannot determine if MC or data for: {path}')
 # ---------------------------------
 def _process_rdf(
-        rdf     : RDataFrame,
-        path    : str) -> Union[RDataFrame,None]:
+    rdf     : RDataFrame,
+    path    : str) -> Union[RDataFrame,None]:
     '''
     Takes:
 
