@@ -525,7 +525,15 @@ class RDFGetter:
         name      : Name of the column to be (re)defined
         definition: Expression to be used in (re)definition
         '''
+        # If this is a brem_track_2 dependent definition
+        # and the definition is not possible, skip
         if self._skip_brem_track_2_definition(name, definition):
+            return rdf
+
+        if redefine:
+            log.debug(f'Redefining: {name}={definition}')
+            rdf = rdf.Redefine(name, definition)
+
             return rdf
 
         if name in self._l_columns:
@@ -533,6 +541,7 @@ class RDFGetter:
 
         log.debug(f'Defining: {name}={definition}')
         rdf = rdf.Define(name, definition)
+
         self._l_columns.append(name)
 
         return rdf
