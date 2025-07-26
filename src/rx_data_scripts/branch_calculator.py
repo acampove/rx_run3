@@ -248,7 +248,7 @@ def _split_rdf(rdf : RDataFrame) -> list[RDataFrame]:
 
     return l_rdf
 # ----------------------
-def _get_input_rdf(path : str) -> RDF.RNode:
+def _get_input_rdf(path : str) -> RDF.RNode|None:
     '''
     Parameters
     -------------
@@ -272,7 +272,7 @@ def _get_input_rdf(path : str) -> RDF.RNode:
     nentries = rdf.Count().GetValue()
     if nentries == 0:
         log.warning('Found empty file, skipping')
-        return
+        return None
 
     if _is_mc(path=path):
         rdf = RDFGetter.add_truem(rdf)
@@ -280,6 +280,8 @@ def _get_input_rdf(path : str) -> RDF.RNode:
     if Data.nmax is not None:
         log.warning(f'Limitting dataframe to {Data.nmax} entries')
         rdf=rdf.Range(Data.nmax)
+
+    return rdf
 # ---------------------------------
 @gut.timeit
 def _create_file(path : str) -> None:
