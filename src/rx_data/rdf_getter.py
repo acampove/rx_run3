@@ -1015,6 +1015,7 @@ class RDFGetter:
                 cls._allow_multithreading = old_val
                 cls._nthreads             = old_nth
 
+        return _context()
     # ---------------------------------------------------
     @classmethod
     def only_friends(cls, s_friend : set[str]):
