@@ -766,7 +766,7 @@ def test_ccbar(sample : str):
 
     with RDFGetter.max_entries(-1), RDFGetter.skip_adding_columns(True):
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     rdf = rdf.Filter('mva_prc > 0.8')
 # ------------------------------------------------
@@ -778,7 +778,7 @@ def test_exclude_friends(sample : str, trigger : str):
     '''
     with RDFGetter.exclude_friends(names=['mva']):
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     l_col = [ name.c_str() for name in rdf.GetColumnNames()        ]
     l_mva = [ name         for name in l_col if ('mva_cmb' in name) or ('mva_prc' in name) ]
