@@ -578,10 +578,6 @@ class RDFGetter:
         return rdf
     # ---------------------------------------------------
     def _add_columns(self, rdf : RDF.RNode) -> RDF.RNode:
-        if RDFGetter._skip_adding_columns:
-            log.warning('Not adding new columns')
-            return rdf
-
         if self._tree_name == 'MCDecayTree':
             rdf = self._add_mcdt_columns(rdf=rdf)
             return rdf
@@ -671,6 +667,10 @@ class RDFGetter:
         log.debug(f'Dataframe at: {id(rdf)}')
 
         rdf = self._filter_dataframe(rdf=rdf)
+        if RDFGetter._skip_adding_columns:
+            log.warning('Not adding new columns')
+            return rdf
+
         rdf = self._add_columns(rdf=rdf)
 
         return rdf
