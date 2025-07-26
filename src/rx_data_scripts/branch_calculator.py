@@ -19,7 +19,6 @@ from dmu.logging.log_store  import LogStore
 from dmu.generic            import version_management as vman
 
 from rx_data                     import utilities
-from rx_data                     import RDFGetter
 from rx_data.mva_calculator      import MVACalculator
 from rx_data.rdf_getter          import RDFGetter
 from rx_data.mis_calculator      import MisCalculator
