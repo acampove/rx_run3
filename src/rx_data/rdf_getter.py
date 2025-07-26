@@ -536,7 +536,7 @@ class RDFGetter:
             d_def.update(RDFGetter._d_custom_columns)
 
         for name, definition in d_def.items():
-            rdf = self._add_column(rdf, name, definition)
+            rdf = self._add_column(redefine=False, rdf=rdf, name=name, definition=definition)
 
         # TODO: The weight (taking into account prescale) should be removed
         # for 2025 data
@@ -556,7 +556,7 @@ class RDFGetter:
         log.info('Adding MC only columns')
         d_def = self._cfg['definitions']['MC']
         for var, expr in d_def.items():
-            rdf = self._add_column(rdf=rdf, name=var, definition=expr)
+            rdf = self._add_column(redefine=False, rdf=rdf, name=var, definition=expr)
 
         try:
             rdf = RDFGetter.add_truem(rdf=rdf)
@@ -573,7 +573,7 @@ class RDFGetter:
         log.info('Adding data only columns')
         d_def = self._cfg['definitions']['DATA']
         for name, definition in d_def.items():
-            rdf = self._add_column(rdf, name, definition)
+            rdf = self._add_column(redefine=False, rdf=rdf, name=name, definition=definition)
 
         return rdf
     # ---------------------------------------------------
@@ -590,7 +590,7 @@ class RDFGetter:
             if self._skip_definition(name=name, definition=definition):
                 continue
 
-            rdf = rdf.Redefine(name, definition)
+            rdf = self._add_column(redefine=True, rdf=rdf, name=name, definition=definition)
 
         return rdf
     # ---------------------------------------------------
@@ -607,7 +607,7 @@ class RDFGetter:
         log.debug('Adding MCDT columns')
 
         q2_def = self._cfg['definitions']['MCDT'][self._channel]['q2']
-        rdf    = self._add_column(rdf=rdf, name='q2', definition=q2_def)
+        rdf    = self._add_column(redefine=False, rdf=rdf, name='q2', definition=q2_def)
 
         return rdf
     # ---------------------------------------------------
