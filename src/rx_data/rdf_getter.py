@@ -488,6 +488,27 @@ class RDFGetter:
 
         return False
     # ---------------------------------------------------
+    def _ftree_was_excluded(self, ftree : str) -> bool:
+        '''
+        Parameters
+        -------------
+        ftree: Name of friend tree
+
+        Returns
+        -------------
+        True if the user excluded it
+        '''
+        if ftree in self._s_ftree:
+            return False
+
+        if ftree in RDFGetter._excluded_friends:
+            return True
+
+        if RDFGetter._only_friends is None:
+            return False
+
+        return ftree not in RDFGetter._only_friends
+    # ---------------------------------------------------
     def _add_column(self, rdf : RDF.RNode, name : str, definition : str) -> RDF.RNode:
         '''
         Wrapper function to Define
