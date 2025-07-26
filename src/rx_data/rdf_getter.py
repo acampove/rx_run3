@@ -53,6 +53,7 @@ class RDFGetter:
 
     _cache_dir                        = '/tmp/rx_data/cache/rdf_getter' # Here is where all the temporary output will go
     _excluded_friends                 = []      # Will not pick up any of the friend trees in this list
+    _only_friends : set[str]|None     = None    # Will only pick up the friend trees in this list, if the list is not None
     _JPSI_PDG_MASS                    = 3096.90 # https://pdg.lbl.gov/2018/listings/rpp2018-list-J-psi-1S.pdf
     _BPLS_PDG_MASS                    = 5279.34 # https://pdg.lbl.gov/2022/tables/rpp2022-tab-mesons-bottom.pdf
     _d_custom_columns : dict[str,str] = {}
@@ -386,6 +387,15 @@ class RDFGetter:
         if ftree in self._l_electron_only and 'MuMu' in self._trigger:
             log.info(f'Excluding friend tree {ftree} for muon trigger {self._trigger}')
             return True
+
+        if RDFGetter._only_friends is None: # If _only_friends is unset, do not skip current tree
+            return False
+
+        # This check is needed to silence pyright error
+        # otherwise the line above should be enough
+        if RDFGetter._only_friends is not None:
+            if ftree not in RDFGetter._only_friends: # If _only_friends was set and ftree is not one of them, skip
+                return True
 
         return False
     # ---------------------------------------------------
@@ -1004,6 +1014,27 @@ class RDFGetter:
                 DisableImplicitMT()
                 cls._allow_multithreading = old_val
                 cls._nthreads             = old_nth
+
+    # ---------------------------------------------------
+    @classmethod
+    def only_friends(cls, s_friend : set[str]):
+        '''
+        This context manager sets the accepted friend trees
+        to what is passed. Every other friend tree will be dropped
+
+        Parameters
+        --------------
+        s_friend : Set of friend tree names, e.g ['mva', 'hop']
+        '''
+
+        old_val = cls._only_friends
+        cls._only_friends = s_friend
+        @contextmanager
+        def _context():
+            try:
+                yield
+            finally:
+                cls._only_friends = old_val
 
         return _context()
 # ---------------------------------------------------
