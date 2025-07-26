@@ -921,3 +921,15 @@ def test_skip_adding_columns(sample : str):
 
     assert len(l_col_1) > len(l_col_2)
 # ------------------------------------------------
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
+def test_only_friends(sample : str, trigger : str):
+    '''
+    Tests the only_friends manager, which allows only a subset of friend trees
+    '''
+    s_friend = {'mva', 'hop'}
+    with RDFGetter.only_friends(s_friend=s_friend):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+
+    assert gtr.friend_trees == s_friend
+# ------------------------------------------------
