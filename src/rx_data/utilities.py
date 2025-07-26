@@ -72,16 +72,16 @@ def project_from_trigger(trigger : str) -> str:
     -------------------
     trigger: HLT2 trigger
 
-    Returns 
+    Returns
     -------------------
-    Project, e.g RK, RKst 
+    Project, e.g RK, RKst
     '''
     for project in Data.triggers:
         for channel in Data.triggers[project]:
             if trigger not in Data.triggers[project][channel]:
                 continue
 
-            return project 
+            return project
 
     raise ValueError(f'Trigger {trigger} not found')
 # ---------------------------------
