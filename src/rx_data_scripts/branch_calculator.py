@@ -290,6 +290,10 @@ def _create_file(path : str) -> None:
 
         return
 
+    tmp_wc = out_path.replace('.root', '_*_pre_merge.root')
+    log.info(f'Removing temporary files from: {tmp_wc}')
+    for tmp_path in glob.glob(tmp_wc):
+        os.remove(tmp_path)
     log.info(f'File will be processed in {nchunk} chunks')
     fmrg = TFileMerger()
     for index, rdf_in in enumerate(tqdm.tqdm(l_rdf, ascii=' -')):
@@ -306,11 +310,6 @@ def _create_file(path : str) -> None:
 
     log.info(f'Merging temporary files into: {out_path}')
     fmrg.Merge()
-
-    tmp_wc = out_path.replace('.root', '_*_pre_merge.root')
-    log.info(f'Removing temporary files from: {tmp_wc}')
-    for tmp_path in glob.glob(tmp_wc):
-        os.remove(tmp_path)
 # ---------------------------------
 def main():
     '''
