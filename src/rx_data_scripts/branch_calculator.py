@@ -81,6 +81,15 @@ def _parse_args() -> None:
     LogStore.set_level('rx_data:branch_calculator', Data.lvl)
 # ---------------------------------
 def _get_path_size(path : str) -> int:
+    '''
+    Parameters
+    ----------------
+    path : Path to ROOT file
+
+    Returns
+    ----------------
+    Size in Megabytes
+    '''
     path = os.path.realpath(path)
     size = os.path.getsize(path)
     size = size / 1024 ** 2
@@ -89,6 +98,16 @@ def _get_path_size(path : str) -> int:
     return size
 # ---------------------------------
 def _get_partition(l_path : list[str]) -> list[str]:
+    '''
+    Parameters
+    -----------------
+    l_path : List of paths to ROOT files
+
+    Returns
+    -----------------
+    List of paths to ROOT files corresponding to
+    igroup, when splitting into equally sized (in Megabytes) ngroup groups
+    '''
     igroup, ngroup = Data.part
     igroup = int(igroup)
     ngroup = int(ngroup)
