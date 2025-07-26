@@ -735,9 +735,12 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def get_rdf(
-            self,
-            per_file : bool = False) -> RDF.RNode|dict[str,RDF.RNode]:
+    @overload
+    def get_rdf(self, per_file : Literal[False]) -> RDF.RNode:...
+    @overload
+    def get_rdf(self, per_file : Literal[True ]) -> dict[str,RDF.RNode]:...
+    # ---------------------------------------------------
+    def get_rdf(self, per_file :  bool = False ) -> RDF.RNode|dict[str,RDF.RNode]:
         '''
         Returns sample in the form of dataframes
 
