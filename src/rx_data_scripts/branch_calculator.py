@@ -290,14 +290,34 @@ def _create_file(path : str) -> None:
 
         return
 
+    _process_and_merge(
+        l_rdf     = l_rdf,
+        input_path= path,
+        out_path  = out_path,
+        nchunk    = nchunk)
+
     tmp_wc = out_path.replace('.root', '_*_pre_merge.root')
     log.info(f'Removing temporary files from: {tmp_wc}')
     for tmp_path in glob.glob(tmp_wc):
         os.remove(tmp_path)
+# ----------------------
+def _process_and_merge(
+    l_rdf     : list[RDF.RNode],
+    nchunk    : int,
+    out_path  : str,
+    input_path: str) -> None:
+    '''
+    Parameters
+    -------------
+    l_rdf   : List of ROOT dataframes
+    nchunk  : Number of chunks into which the dataframe was processed
+    out_path: Path to output file
+    path    : Path to merged ROOT output file
+    '''
     log.info(f'File will be processed in {nchunk} chunks')
     fmrg = TFileMerger()
     for index, rdf_in in enumerate(tqdm.tqdm(l_rdf, ascii=' -')):
-        rdf_out  = _process_rdf(rdf_in, path)
+        rdf_out  = _process_rdf(rdf_in, input_path)
         if rdf_out is None:
             continue
 
