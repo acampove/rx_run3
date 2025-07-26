@@ -248,20 +248,28 @@ def _split_rdf(rdf : RDataFrame) -> list[RDataFrame]:
                 for start in l_size ]
 
     return l_rdf
-# ---------------------------------
-@gut.timeit
-def _create_file(path : str) -> None:
+# ----------------------
+def _get_input_rdf(path : str) -> RDF.RNode:
     '''
     Parameters
-    ------------------
-    path : ROOT file path 
-    '''
-    out_path = _get_out_path(path)
-    if os.path.isfile(out_path):
-        log.warning(f'Output found, skipping {out_path}')
-        return
+    -------------
+    path: Path to ROOT file
 
-    rdf = RDataFrame(Data.tree_name, path)
+    Returns
+    -------------
+    ROOT dataframe associated
+    '''
+    sample, trigger = utilities.info_from_path(path=path, sample_lowercase=False)
+
+    s_friend : set[str] = set()
+    if Data.kind == 'mva':
+        s_friend = {'brem_track_2'}
+
+    with RDFGetter.only_friends(s_friend=s_friend):
+        gtr   = RDFGetter(sample=sample, trigger=trigger, analysis=Data.proj)
+        d_rdf = gtr.get_rdf(per_file=True)
+
+    rdf      = d_rdf[path]
     nentries = rdf.Count().GetValue()
     if nentries == 0:
         log.warning('Found empty file, skipping')
@@ -273,7 +281,20 @@ def _create_file(path : str) -> None:
     if Data.nmax is not None:
         log.warning(f'Limitting dataframe to {Data.nmax} entries')
         rdf=rdf.Range(Data.nmax)
+# ---------------------------------
+@gut.timeit
+def _create_file(path : str) -> None:
+    '''
+    Parameters
+    ------------------
+    path : ROOT file path
+    '''
+    out_path = _get_out_path(path)
+    if os.path.isfile(out_path):
+        log.warning(f'Output found, skipping {out_path}')
+        return
 
+    rdf   = _get_input_rdf(path=path)
     l_rdf = _split_rdf(rdf=rdf)
 
     if Data.dry:
