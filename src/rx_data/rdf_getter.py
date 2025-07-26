@@ -483,9 +483,8 @@ class RDFGetter:
                 return True
 
             # Trees might exist, but they were excluded by user
-            if 'brem_track_2'     in RDFGetter._excluded_friends:
-                log.debug(f'Skipping definition {name}={definition}')
-                return True
+            log.debug(f'Skipping definition {name}={definition}')
+            return True
 
         log.debug(f'Not a brem track 2 definition: {definition}')
 
