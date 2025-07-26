@@ -511,9 +511,19 @@ class RDFGetter:
 
         return ftree not in RDFGetter._only_friends
     # ---------------------------------------------------
-    def _add_column(self, rdf : RDF.RNode, name : str, definition : str) -> RDF.RNode:
+    def _add_column(
+        self,
+        redefine   : bool,
+        rdf        : RDF.RNode,
+        name       : str,
+        definition : str) -> RDF.RNode:
         '''
-        Wrapper function to Define
+        Parameters
+        ------------------
+        redefine  : If true will redefine or else define a dataframe column
+        rdf       : ROOT dataframe where columns will be added
+        name      : Name of the column to be (re)defined
+        definition: Expression to be used in (re)definition
         '''
         if self._skip_brem_track_2_definition(name, definition):
             return rdf
