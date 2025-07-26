@@ -198,7 +198,7 @@ def _process_rdf(
     - Dataframe with columns needed
     - None, in case it does not make sense to add the columns to this type of file
     '''
-    trigger, sample = utilities.info_from_path(path=path)
+    sample, trigger = utilities.info_from_path(path=path, sample_lowercase=False)
     nentries = rdf.Count().GetValue()
     if nentries == 0:
         log.warning(f'Found empty input file: {path}/{Data.tree_name}')
