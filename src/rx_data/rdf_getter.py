@@ -450,6 +450,9 @@ class RDFGetter:
     # ---------------------------------------------------
     def _skip_brem_track_2_definition(self, name: str, definition : str) -> bool:
         '''
+        This method checks if this is a brem_track_2 definition. If not, returns False.
+        If it is AND if the brem_track_2 tree is missing, return True.
+
         Parameters
         -------------------
         name      : Name of variable to be defined
