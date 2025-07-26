@@ -152,7 +152,7 @@ def _info_from_data_path(path : str) -> tuple[str,str]:
     '''
     Parameters
     -----------------
-    path: Path to ROOT file 
+    path: Path to ROOT file
 
     Returns
     -----------------
