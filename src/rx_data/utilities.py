@@ -101,13 +101,16 @@ def is_reso(q2bin : str) -> bool:
 
     raise ValueError(f'Invalid q2bin: {q2bin}')
 # ---------------------------------
-def info_from_path(path : str) -> tuple[str,str]:
+def info_from_path(
+    path             : str,
+    sample_lowercase : bool = True) -> tuple[str,str]:
     '''
-    Parameters
+    Parameter
     -------------------
     path: Path to a ROOT file
+    sample_lowercase: If True (default), it will provide all lowecase sample names
 
-    Returns 
+    Returns
     -------------------
     Tuple with sample and HLT2 trigger
     '''
@@ -121,7 +124,13 @@ def info_from_path(path : str) -> tuple[str,str]:
         log.error(f'File name is not for data or MC: {name}')
         raise ValueError
 
-    return info
+    if sample_lowercase:
+        return info
+
+    sample, trigger = info
+    sample = aput.name_from_lower_case(sample)
+
+    return sample, trigger
 # ---------------------------------
 def _info_from_mc_path(path : str) -> tuple[str,str]:
     '''
