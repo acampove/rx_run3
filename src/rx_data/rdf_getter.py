@@ -478,7 +478,7 @@ class RDFGetter:
                 continue
 
             # Trees do not exist
-            if 'brem_track_2' not in RDFGetter._excluded_friends:
+            if not self._ftree_was_excluded(ftree='brem_track_2'):
                 log.warning(f'Skipping definition {name}={definition}')
                 return True
 
