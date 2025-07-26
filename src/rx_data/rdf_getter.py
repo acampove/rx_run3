@@ -436,6 +436,7 @@ class RDFGetter:
 
         return d_data
     # ---------------------------------------------------
+    # ---------------------------------------------------
     def _skip_brem_track_2_definition(self, name: str, definition : str) -> bool:
         '''
         Parameters
@@ -619,6 +620,7 @@ class RDFGetter:
         rdf = self._redefine_columns(rdf=rdf)
 
         return rdf
+    # ---------------------------------------------------
     # ---------------------------------------------------
     def _rdf_from_conf(self, conf_path : str) -> RDF.RNode:
         '''
