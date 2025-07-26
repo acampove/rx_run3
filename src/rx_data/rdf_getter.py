@@ -377,7 +377,7 @@ class RDFGetter:
         if ftree == 'not_used': # This is the directory where old samples will go
             return True
 
-        if ftree == self._main_tree:
+        if ftree == self._main_tree: # should always do main tree
             return False
 
         if ftree in RDFGetter._excluded_friends:
@@ -435,6 +435,8 @@ class RDFGetter:
 
         return d_data
     # ---------------------------------------------------
+    # TODO: This class is pretty large, all the lines below
+    # have one job, adding columns to dataframe, put them in a class
     # ---------------------------------------------------
     def _skip_brem_track_2_definition(self, name: str, definition : str) -> bool:
         '''
