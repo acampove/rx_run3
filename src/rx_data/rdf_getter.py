@@ -784,9 +784,9 @@ class RDFGetter:
     # ---------------------------------------------------
     @staticmethod
     def split_per_file(
-            data       : dict,
-            main       : str,
-            identifier : str = '') -> dict[str,str]:
+        data       : dict,
+        main       : str,
+        identifier : str = '') -> dict[str,str]:
         '''
         Parameters
         --------------------
