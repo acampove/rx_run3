@@ -20,5 +20,3 @@ test_split: # Use for dry runs
   mva            : 3
   swp_cascade    : 2
   swp_jpsi_misid : 2
-dependencies:
-  mva : brem_track_2
