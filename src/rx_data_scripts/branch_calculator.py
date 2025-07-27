@@ -294,9 +294,6 @@ def _get_input_rdf(path : str) -> RDF.RNode|None:
         log.warning('Found empty file, skipping')
         return None
 
-    if _is_mc(path=path):
-        rdf = RDFGetter.add_truem(rdf)
-
     if Data.nmax is not None:
         log.warning(f'Limitting dataframe to {Data.nmax} entries')
         rdf=rdf.Range(Data.nmax)
