@@ -308,7 +308,7 @@ def _create_file(path : str) -> None:
     '''
     out_path = _get_out_path(path)
     if os.path.isfile(out_path):
-        log.warning(f'Output found, skipping {out_path}')
+        log.debug(f'Output found, skipping {out_path}')
         return
 
     rdf   = _get_input_rdf(path=path)
@@ -318,7 +318,7 @@ def _create_file(path : str) -> None:
     l_rdf = _split_rdf(rdf=rdf)
 
     if Data.dry:
-        log.warning('Doing dry run')
+        log.debug('Doing dry run')
         return
 
     nchunk = len(l_rdf)
@@ -382,6 +382,9 @@ def main():
     l_path       = _get_paths()
     Data.out_dir = _get_out_dir()
     log.info('Processing paths')
+    if Data.dry:
+        log.warning('This is a dry run')
+
     for path in tqdm.tqdm(l_path, ascii=' -'):
         log.debug(f'{"":<4}{path}')
         _create_file(path=path)
