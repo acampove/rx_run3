@@ -79,6 +79,7 @@ def _parse_args() -> None:
     Data.chunk_size= args.chunk
 
     LogStore.set_level('rx_data:branch_calculator', Data.lvl)
+    LogStore.set_level('rx_data:rdf_getter'       ,       30)
 # ---------------------------------
 def _get_path_size(path : str) -> int:
     '''
