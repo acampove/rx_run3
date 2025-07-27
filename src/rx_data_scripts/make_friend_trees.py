@@ -44,7 +44,54 @@ def _initialize() -> None:
     '''
     Initializes the configuration, etc
     '''
+# ----------------------
+def _make_file_kind(kind : str) -> str:
+    '''
+    Parameters
+    -------------
+    kind : Kind of tree, e.g. hop, mva
 
+    Returns
+    -------------
+    Path to text file where the commands go
+    '''
+    version = Data.cfg.versions[kind]
+    npart   = Data.cfg.test_split[kind] if Data.dry_run else Data.cfg.splitting[kind]
+
+    l_line = []
+    for part in range(npart):
+        line = f'branch_calculator -k {kind} -P {Data.cfg_name} -v {version} -p {part} {npart} -b'
+        if Data.dry_run:
+            line = line + ' -d'
+
+        l_line.append(line)
+
+    fpath = f'{Data.tmp_path}/{kind}.txt'
+    with open(fpath, 'w', encoding='utf-8') as ofile:
+        data = '\n'.join(l_line)
+        ofile.write(data)
+
+    log.debug(f'Writting: {fpath}')
+
+    return fpath
+# ----------------------
+def _make_submission_files() -> list[str]:
+    '''
+    Using the configuration, build text files with commands to run in jobs
+
+    Returns
+    -------------
+    List of paths to files with commands
+    '''
+    l_path = []
+    for kind in Data.cfg.versions:
+        path = _make_file_kind(kind=kind)
+        l_path.append(path)
+
+    npath=len(l_path)
+    log.info(f'Built {npath} submission files')
+
+    return l_path
 # ----------------------
 def main():
     '''
