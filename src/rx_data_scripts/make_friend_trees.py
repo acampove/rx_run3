@@ -44,6 +44,8 @@ def _initialize() -> None:
     '''
     Initializes the configuration, etc
     '''
+    os.makedirs(Data.tmp_path, exist_ok=True)
+    LogStore.set_level('rx_data:make_friend_trees', Data.log_lvl)
 # ----------------------
 def _make_file_kind(kind : str) -> str:
     '''
