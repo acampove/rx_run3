@@ -300,7 +300,6 @@ def _get_input_rdf(path : str) -> RDF.RNode|None:
 
     return rdf
 # ---------------------------------
-@gut.timeit
 def _create_file(path : str) -> None:
     '''
     Parameters
