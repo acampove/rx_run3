@@ -3,6 +3,7 @@ Script meant to steer calculation of friend trees
 based on config file
 '''
 
+import os
 import argparse
 from omegaconf import DictConfig
 
@@ -15,10 +16,14 @@ class Data:
     '''
     Class meant to be used to share attributes
     '''
+    user     = os.environ['USER']
+    tmp_path = f'/tmp/{user}/rx_data/jobs/friend_trees'
     cfg_name = ''
     exclude  = []
     only     = None
     cfg      : DictConfig
+    dry_run  = False
+    log_lvl  = 20
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script meant to steer calculation of friend trees in HTCondor at IHEP')
