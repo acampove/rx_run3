@@ -60,7 +60,7 @@ def _parse_args() -> None:
     parser.add_argument('-v', '--vers', type=str, help='Version of outputs', required=True)
     parser.add_argument('-w', '--wc'  , type=str, help='Wildcard, if passed will be used to match paths')
     parser.add_argument('-n', '--nmax', type=int, help='If used, limit number of entries to process to this value')
-    parser.add_argument('-s', '--chunk',type=int, help='It will set the chunk size, dataframes will be split before processing', default=100_000)
+    parser.add_argument('-s', '--chunk',type=int, help='It will set the number of entries the dataframes will be split on before processing', default=100_000)
     parser.add_argument('-p', '--part', nargs= 2, help='Partitioning, first number is the index, second is the number of parts', required=True)
     parser.add_argument('-b', '--pbar',           help='If used, will show progress bar whenever it is available', action='store_true')
     parser.add_argument('-d', '--dry' ,           help='If used, will do dry drun, e.g. stop before processing', action='store_true')
