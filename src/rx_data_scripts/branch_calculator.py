@@ -250,7 +250,7 @@ def _process_rdf(
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
         rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
     elif Data.kind == 'mva'   :
-        obj = MVACalculator(rdf=rdf, sample=sample, trigger=trigger)
+        obj = MVACalculator(rdf=rdf, sample=sample, trigger=trigger, version=Data.vers)
         rdf = obj.get_rdf()
     else:
         raise ValueError(f'Invalid kind: {Data.kind}')
