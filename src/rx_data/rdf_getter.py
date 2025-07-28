@@ -363,6 +363,8 @@ class RDFGetter:
             raise ValueError('Samples with paths missing')
 
         if nosamp:
+            data = yaml.dump(d_data, sort_keys=False)
+            log.error(data)
             raise ValueError(f'Could not find any sample matching {self._sample} with friend tree {ftree} in {yaml_path}')
 
         self._l_path      += l_path
