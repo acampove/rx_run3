@@ -131,7 +131,7 @@ def main():
     _initialize()
     d_job = _get_job_dictionary()
     sbt   = JobSubmitter(jobs=d_job, environment=Data.cfg.environment)
-    sbt.run(skip_submit=True)
+    sbt.run(skip_submit=Data.dry_run)
 # ----------------------
 if __name__ == '__main__':
     main()
