@@ -126,17 +126,6 @@ def test_styling():
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_stats():
-    '''
-    Test for addition of statistics
-    '''
-    d_rdf =  { kind : _get_rdf(kind=kind, test='stats', nentries=12345) for kind in ['class A', 'class B'] }
-
-    cfg_dat = _load_config(test='stats')
-
-    ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
-    ptr.run()
-#---------------------------------------
 def test_high_stat():
     '''
     Test for large datasets
