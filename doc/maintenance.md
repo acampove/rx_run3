@@ -167,32 +167,33 @@ Currently the command can add:
 
 - `hop`: With the $\alpha$ and mass branches calculated
 
+- `mva`: With the BDT branches 
+
 - `brem_track_2`: This will calculate branches associated to the brem correction. 
     The branches will include:
     - Masses of B and Jpsi.
     - Momenta of mesons and electrons.
     - Derived quantities like `DIRA` or the `brem` categories.
 
-## Calculating MVA branches
+### Calculating friend trees with jobs
 
-The code needed to calculate the trees with the MVA branches is different. For this do:
-
-```bash
-apply_classifier -v VERSION -s SAMPLE -t HLTTRIGGER
-```
-
-for a given sample. The code will 
-
-- Search each file
-- Create another file with the friend tree
-
-To run this as a job, all the commands can be dumped in a text file with:
+These trees take time to calculate, therefore one has to send jobs to the cluster in IHEP 
+(LXPLUS HTCondor is not supported). For that do:
 
 ```bash
-make_mva_joblist -v VERSION
+make_friend_trees -c nopid -e mva
+make_friend_trees -c nopid -o mva 
 ```
 
-where `VERSION` is the version of the MVA classifier 
+Where:
+
+- `-c` will point the script to the configuration file
+`src/rx_data_data/friend_trees/nopid.yaml`.
+- `-e` will tell what trees to exclude.
+- `-o` will tell that only these trees need to be processed.
+
+These last two flags are needed because the `mva` trees are calculated with the `brem_track_2`
+trees. Therefore they can only be processed afterwards.
 
 ## Missing files
 
