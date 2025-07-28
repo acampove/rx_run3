@@ -21,6 +21,8 @@ class Data:
     l_mc     = [
         ('Hlt2RD_BuToKpEE_MVA'  , 'Bu_Kee_eq_btosllball05_DPC'  ),
         ('Hlt2RD_BuToKpMuMu_MVA', 'Bu_Kmumu_eq_btosllball05_DPC')]
+
+    l_nopid  = [('Hlt2RD_BuToKpEE_MVA', 'Bu_JpsiK_ee_eq_DPC')]
 # ----------------------
 def _validate_rdf(
     rdf     : RDF.RNode,
