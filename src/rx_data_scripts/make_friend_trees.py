@@ -73,6 +73,27 @@ def _get_commands(kind : str) -> list[str]:
 
     return l_line
 # ----------------------
+def _skip_kind(kind : str) -> bool:
+    '''
+    Parameters
+    -------------
+    kind: Type of job, e.g. mva, hop
+
+    Returns
+    -------------
+    True if this is meant to be skipped
+    '''
+    if kind in Data.exclude:
+        return True
+
+    if Data.only is None:
+        return False
+
+    if kind != Data.only:
+        return True
+
+    return False
+# ----------------------
 def _get_job_dictionary() -> dict[str,list[str]]:
     '''
     Returns
