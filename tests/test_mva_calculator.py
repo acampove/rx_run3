@@ -98,7 +98,7 @@ def test_mc_noversion(trigger : str, sample : str, out_dir : str) -> None:
     '''
     with RDFGetter.max_entries(value=Data.nentries):
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     cal = MVACalculator(
     rdf     = rdf,
