@@ -77,6 +77,11 @@ class CVPredict:
         '''
         This method will search in the configuration the definitions used
         on the dataframe before the dataframe was used to train the model.
+
+        Returns
+        -----------
+        dictionary with definitions, generic, signal specific, both or none
+        (i.e. empty dictionary) depending on how model was trained
         '''
         cfg   = self._l_model[0].cfg
         d_def = {}
