@@ -48,7 +48,7 @@ class CVPredict:
         self._rdf       = self._remove_periods(self._rdf)
         self._rdf       = self._define_columns(self._rdf)
         self._d_nan_rep = self._get_nan_replacements()
-        self._l_column  = [ name.c_str() for name in self._rdf.GetColumnNames() ]
+        self._l_column  = sorted([ name.c_str() for name in self._rdf.GetColumnNames() ])
         self._nrows     = self._rdf.Count().GetValue()
     # ----------------------------------
     def _remove_periods(self, rdf : RDataFrame) -> RDataFrame:
