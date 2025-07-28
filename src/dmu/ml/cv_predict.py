@@ -48,8 +48,30 @@ class CVPredict:
         self._rdf       = self._remove_periods(self._rdf)
         self._rdf       = self._define_columns(self._rdf)
         self._d_nan_rep = self._get_nan_replacements()
-        self._l_column  = sorted([ name.c_str() for name in self._rdf.GetColumnNames() ])
+        self._l_column  = self._get_column_names()
         self._nrows     = self._rdf.Count().GetValue()
+    # ----------------------
+    def _get_column_names(self) -> list[str]:
+        '''
+        Returns
+        -------------
+        List of columns sorted and with friend tree preffixes removed, i.e. hop.hop_mass -> hop_mass
+        '''
+        l_name = []
+        for name in self._rdf.GetColumnNames():
+            name = name.c_str()
+            if name.count('.') > 1:
+                raise ValueError(f'Invalid column name {name}')
+
+            if '.' not in name:
+                l_name.append(name)
+                continue
+
+            [_, name] = name.split('.')
+
+            l_name.append(name)
+
+        return sorted(l_name)
     # ----------------------------------
     def _remove_periods(self, rdf : RDataFrame) -> RDataFrame:
         '''
