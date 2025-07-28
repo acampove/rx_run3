@@ -412,7 +412,8 @@ class RDFGetter:
         ----------------------
         Dictionary with:
 
-        key  : Path to the ROOT file, '' if per_file is False
+        key  : Path to the main sample ROOT file, i.e. the file that is not the main tree. 
+               If per_file is False, key will be ''
         value: Path to JSON config file, needed to build dataframe though FromSpec
         '''
         d_data = self._get_samples()
