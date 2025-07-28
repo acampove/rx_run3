@@ -55,7 +55,7 @@ class CVPredict:
         '''
         This will redefine all columns associated to friend trees as:
 
-        friend_preffix.branch_name -> friend_preffix.branch_name
+        friend_preffix.branch_name -> friend_preffix_branch_name
         '''
         l_col = [ col.c_str() for col in rdf.GetColumnNames() ]
         l_col = [ col         for col in l_col if '.' in col  ]
