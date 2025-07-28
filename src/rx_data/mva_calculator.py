@@ -199,7 +199,7 @@ class MVACalculator:
         root_path    = f'{self._ana_dir}/mva/{kind}'
         latest_path  = vman.get_last_version(dir_path=root_path, version_only=False)
         version_name = os.path.basename(latest_path)
-        if not re.match(r'v\d+p\d+', version_name):
+        if not re.match(r'^v\d+\.\d+$', version_name):
             raise ValueError(f'Version {version_name} is invalid')
 
         log.debug('Picking up latest version')
