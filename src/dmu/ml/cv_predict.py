@@ -20,9 +20,9 @@ class CVPredict:
     dataframe and a set of models. The models were trained with CVClassifier
     '''
     def __init__(
-            self,
-            rdf    : RDataFrame,
-            models : list[CVClassifier]):
+        self,
+        rdf    : RDataFrame,
+        models : list[CVClassifier]):
         '''
         Will take a list of CVClassifier models and a ROOT dataframe
 
