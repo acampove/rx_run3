@@ -756,6 +756,31 @@ class RDFGetter:
         log.warning(f'Picking up the first {nent} entries')
 
         return rdf
+    # ----------------------
+    def _add_unpreffixed_columns(self, rdf : RDF.RNode) -> RDF.RNode:
+        '''
+        Parameters
+        -------------
+        rdf : ROOT dataframe
+
+        Returns
+        -------------
+        ROOT dataframe with branches like preffix.name
+        used to create branches without `preffix`
+        '''
+
+        for column in self._l_columns:
+            if column.count('.') == 0:
+                continue
+
+            if column.count('.') >  1:
+                raise ValueError(f'Found branch with invalid name: {column}')
+
+            [_, name ] = column.split('.')
+
+            rdf = self._add_column(redefine=False, rdf=rdf, name=name, definition=column)
+
+        return rdf
     # ---------------------------------------------------
     @overload
     def get_rdf(self, per_file : Literal[False]) -> RDF.RNode:...
