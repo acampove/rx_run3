@@ -285,7 +285,7 @@ def _get_input_rdf(path : str) -> RDF.RNode|None:
 
     s_friend : set[str] = set()
     if Data.kind == 'mva':
-        s_friend = {'brem_track_2'}
+        s_friend = {'brem_track_2', 'hop'}
 
     with RDFGetter.only_friends(s_friend=s_friend):
         gtr   = RDFGetter(sample=sample, trigger=trigger, analysis=Data.proj)
