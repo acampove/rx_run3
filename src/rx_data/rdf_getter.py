@@ -879,17 +879,17 @@ class RDFGetter:
         - Return the copy after removal alongside the path not removed AND beloging to the main sample
         '''
 
-        datac = copy.deepcopy(data)
-        fpath = data['samples'][main]['files'][ifile]
+        datac      = copy.deepcopy(data)
+        fpath_main = data['samples'][main]['files'][ifile]
 
-        datac['samples'][main]['files'] = [fpath]
+        datac['samples'][main]['files'] = [fpath_main]
 
         data_frnd = data['friends']
         for kind, data_kind in data_frnd.items():
             fpath = data_kind['files'][ifile]
             datac['friends'][kind]['files'] = [fpath]
 
-        return datac, fpath
+        return datac, fpath_main
     # ---------------------------------------------------
     @staticmethod
     def get_tmp_path(identifier : str, data : dict) -> str:
