@@ -653,6 +653,8 @@ class RDFGetter:
         # E.g. q2 -> Jpsi_Mass
         rdf = self._redefine_columns(rdf=rdf)
 
+        rdf = self._add_unpreffixed_columns(rdf=self._rdf)
+
         return rdf
     # ---------------------------------------------------
     @staticmethod
@@ -799,7 +801,6 @@ class RDFGetter:
 
         self._rdf = self._rdf_from_conf(conf_path)
 
-        rdf = self._add_unpreffixed_branches(rdf=self._rdf)
 
         return rdf
     # ---------------------------------------------------
