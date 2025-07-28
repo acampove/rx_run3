@@ -886,8 +886,8 @@ class RDFGetter:
 
         data_frnd = data['friends']
         for kind, data_kind in data_frnd.items():
-            fpath = data_kind['files'][ifile]
-            datac['friends'][kind]['files'] = [fpath]
+            fpath_friend = data_kind['files'][ifile]
+            datac['friends'][kind]['files'] = [fpath_friend]
 
         return datac, fpath_main
     # ---------------------------------------------------
