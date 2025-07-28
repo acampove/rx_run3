@@ -3,66 +3,35 @@
 general:
   size : [15, 10]
 selection :
-  bdt        : (1) 
-  mass       : (1)
-  q2         : (1)
+  bdt        : mva_cmb > 0.8 && mva_prc > 0.8
 veto : &cuts
 cutflow:
   low :
     None           : (1)
-    HOP            : hop_mass > 4500 
-    Cascade        : swp_cascade_mass_swp    > 1900
-    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   central:
     None           : (1)
-    HOP            : hop_mass > 4500 
-    Cascade        : swp_cascade_mass_swp    > 1900
-    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   jpsi:
     None           : (1)
-    HOP            : hop_mass > 4500 
-    Cascade        : swp_cascade_mass_swp    > 1900
-    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   psi2:
     None           : (1)
-    HOP            : hop_mass > 4500 
-    Cascade        : swp_cascade_mass_swp    > 1900
-    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
   high:
     None        : (1)
-    $q^2_{DTF}$   : q2_dtf > 15000000 && q2_dtf < 22000000
-    #$q^2_{track}$ : q2_track > 15000000
-    #$q^2$         : q2 > 15000000 && q2 < 22000000
 saving:
   plt_dir : cutflow/ss_shape
 plots:
-    B_M_brem_track_2 :
-      binning    : [4500, 7200, 50]
-      yscale     : 'linear'
-      labels     : ['$M_{corr}(B^+)$ MeV', 'Normalized']
+    B_Mass:
+      binning    : [4500, 7000, 50]
+      yscale     : linear
+      labels     : ['$M_{corr}(B^+)$ MeV', 'Entries/50 MeV']
       title      : ''
-      name       : 'bmass_brem_track_2'
-      normalized : true
+      name       : bmass_corr
+      normalized : False 
       styling:
-        histtype : step
-      vline   :
-        x     : 4600 
-        ls    : --
-        c     : gray 
-        lw    : 1
-    B_M :
-      binning    : [4500, 7200, 50]
-      yscale     : 'linear'
-      labels     : ['$M(B^+)$ MeV', 'Normalized']
-      title      : ''
-      name       : 'bmass'
-      normalized : true
-      styling:
-        histtype : step
-      vline   :
-        x     : 4600 
-        ls    : --
-        c     : gray 
-        lw    : 1
-style:
-  skip_lines : true
+        None:
+          histtype : fill 
+          color    : gray 
+          alpha    : 0.5
+plugin:
+  stats:
+    B_Mass:
+      sum  : 'Entries={:.0f}'
