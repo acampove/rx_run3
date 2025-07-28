@@ -799,7 +799,9 @@ class RDFGetter:
 
         self._rdf = self._rdf_from_conf(conf_path)
 
-        return self._rdf
+        rdf = self._add_unpreffixed_branches(rdf=self._rdf)
+
+        return rdf
     # ---------------------------------------------------
     def get_uid(self) -> str:
         '''
