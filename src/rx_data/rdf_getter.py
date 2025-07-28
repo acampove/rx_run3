@@ -327,6 +327,9 @@ class RDFGetter:
         with open(yaml_path, encoding='utf-8') as ifile:
             d_data = yaml.load(ifile, Loader=yaml.CSafeLoader)
 
+        if d_data is None:
+            raise ValueError(f'Cannot load {yaml_path}')
+
         l_path = []
         nopath = False
         nosamp = True
