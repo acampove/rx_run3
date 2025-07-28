@@ -291,7 +291,12 @@ def _get_input_rdf(path : str) -> RDF.RNode|None:
         gtr   = RDFGetter(sample=sample, trigger=trigger, analysis=Data.proj)
         d_rdf = gtr.get_rdf(per_file=True)
 
-    rdf      = d_rdf[path]
+    rdf = d_rdf.get(path)
+    if rdf is None:
+        for path_found in d_rdf:
+            log.info(path_found)
+        raise ValueError(f'Cannot find dataframe for: {path}')
+
     nentries = rdf.Count().GetValue()
     if nentries == 0:
         log.warning('Found empty file, skipping')
