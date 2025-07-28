@@ -309,9 +309,9 @@ class RDFGetter:
         return l_path
     # ---------------------------------------------------
     def _get_section(
-            self,
-            yaml_path : str,
-            ftree     : str) -> dict:
+        self,
+        yaml_path : str,
+        ftree     : str) -> dict:
         '''
         This method should return the different sections (friend/main tree)
         needed to make the JSON file taken by FromSpec
