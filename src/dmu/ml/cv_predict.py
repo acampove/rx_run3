@@ -187,16 +187,13 @@ class CVPredict:
         -------------
         Pandas dataframe with features
         '''
-        missing = False
+        l_missing_feature = []
         for feature in features:
             if feature not in self._l_column:
                 log.error(f' Missing {feature} feature')
-                missing = True
+                l_missing_feature.append(feature)
 
-        if missing:
-            for column in self._l_column:
-                log.debug(column)
-
+        if l_missing_feature:
             raise ValueError('At least one column is missing')
 
         data = self._rdf.AsNumpy(features)
