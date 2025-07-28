@@ -1488,8 +1488,6 @@ style:
   legend:
     # The line below would place the legend outside the figure to avoid ovelaps with the histogram
     bbox_to_anchor : [1.2, 1]
-stats:
-  sumw : '{:.2f}' # This will add sum of weights to label. If no weights, then it will be the nentries value
 ```
 
 it's up to the user to build this dictionary and load it.
