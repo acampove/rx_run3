@@ -168,7 +168,7 @@ class CVPredict:
 
         if missing:
             for column in self._l_column:
-                log.info(column)
+                log.debug(column)
 
             raise ValueError('At least one column is missing')
 
