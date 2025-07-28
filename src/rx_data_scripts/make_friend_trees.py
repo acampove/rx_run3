@@ -47,7 +47,7 @@ def _initialize() -> None:
     os.makedirs(Data.tmp_path, exist_ok=True)
     LogStore.set_level('rx_data:make_friend_trees', Data.log_lvl)
 # ----------------------
-def _make_file_kind(kind : str) -> str:
+def _get_commands(kind : str) -> list[str]:
     '''
     Parameters
     -------------
@@ -55,7 +55,7 @@ def _make_file_kind(kind : str) -> str:
 
     Returns
     -------------
-    Path to text file where the commands go
+    List of strings, each symbolizing a branch making process
     '''
     version = Data.cfg.versions[kind]
     npart   = Data.cfg.test_split[kind] if Data.dry_run else Data.cfg.splitting[kind]
@@ -68,32 +68,32 @@ def _make_file_kind(kind : str) -> str:
 
         l_line.append(line)
 
-    fpath = f'{Data.tmp_path}/{kind}.txt'
-    with open(fpath, 'w', encoding='utf-8') as ofile:
-        data = '\n'.join(l_line)
-        ofile.write(data)
-
-    log.debug(f'Writting: {fpath}')
-
-    return fpath
+    return l_line
 # ----------------------
-def _make_submission_files() -> list[str]:
+def _get_job_dictionary() -> dict[str,list[str]]:
     '''
-    Using the configuration, build text files with commands to run in jobs
-
     Returns
     -------------
-    List of paths to files with commands
+    Dictionary where:
+        Key  : Job identifier, e.g. mva, hop
+        Value: List of commands to run for given job
     '''
-    l_path = []
+    d_job = {}
+    log.debug(40 * '-')
+    log.debug(f'{"Job Type":<20}{"Number of jobs"}')
+    log.debug(40 * '-')
     for kind in Data.cfg.versions:
-        path = _make_file_kind(kind=kind)
-        l_path.append(path)
+        l_command   = _get_commands(kind=kind)
+        ncommand    = len(l_command)
 
-    npath=len(l_path)
-    log.info(f'Built {npath} submission files')
+        log.debug(f'{kind:<20}{ncommand}')
 
-    return l_path
+        d_job[kind] = l_command
+
+    njob=len(d_job)
+    log.info(f'Built {njob} job lists')
+
+    return d_job
 # ----------------------
 def main():
     '''
@@ -101,10 +101,9 @@ def main():
     '''
     _parse_args()
     _initialize()
-    l_path = _make_submission_files()
-    for path in l_path:
-        sbt = JobSubmitter(path=path, environment=Data.cfg.environment)
-        sbt.run()
+    d_job = _get_job_dictionary()
+    sbt   = JobSubmitter(jobs=d_job, environment=Data.cfg.environment)
+    sbt.run(skip_submit=True)
 # ----------------------
 if __name__ == '__main__':
     main()
