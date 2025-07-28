@@ -799,8 +799,7 @@ class RDFGetter:
 
         self._rdf = self._rdf_from_conf(conf_path)
 
-
-        return rdf
+        return self._rdf
     # ---------------------------------------------------
     def get_uid(self) -> str:
         '''
