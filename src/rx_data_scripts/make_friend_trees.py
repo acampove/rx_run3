@@ -8,6 +8,7 @@ import argparse
 from omegaconf import DictConfig
 
 from ihep_utilities        import JobSubmitter
+from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_data:make_friend_trees')
@@ -44,6 +45,8 @@ def _initialize() -> None:
     '''
     Initializes the configuration, etc
     '''
+    Data.cfg = gut.load_conf(package='rx_data_data', fpath='friend_trees/nopid.yaml')
+
     os.makedirs(Data.tmp_path, exist_ok=True)
     LogStore.set_level('rx_data:make_friend_trees', Data.log_lvl)
 # ----------------------
