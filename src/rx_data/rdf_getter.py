@@ -418,6 +418,7 @@ class RDFGetter:
         '''
         d_data = self._get_samples()
         this_id= os.getpid()
+        this_id= str(this_id)
         log.debug(f'This instance/process ID is: {this_id}')
 
         if not per_file:
