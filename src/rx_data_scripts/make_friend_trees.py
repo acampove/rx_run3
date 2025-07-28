@@ -107,6 +107,10 @@ def _get_job_dictionary() -> dict[str,list[str]]:
     log.debug(f'{"Job Type":<20}{"Number of jobs"}')
     log.debug(40 * '-')
     for kind in Data.cfg.versions:
+        if _skip_kind(kind=kind):
+            log.info(f'Excluding tree: {kind}')
+            continue
+
         l_command   = _get_commands(kind=kind)
         ncommand    = len(l_command)
 
