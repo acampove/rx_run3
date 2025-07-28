@@ -60,7 +60,7 @@ def _parse_args() -> None:
     parser.add_argument('-v', '--vers', type=str, help='Version of outputs', required=True)
     parser.add_argument('-w', '--wc'  , type=str, help='Wildcard, if passed will be used to match paths')
     parser.add_argument('-n', '--nmax', type=int, help='If used, limit number of entries to process to this value')
-    parser.add_argument('-s', '--chunk',type=int, help='It will set the chunk size, dataframes will be split before processing', default=100_000)
+    parser.add_argument('-s', '--chunk',type=int, help='It will set the number of entries the dataframes will be split on before processing', default=100_000)
     parser.add_argument('-p', '--part', nargs= 2, help='Partitioning, first number is the index, second is the number of parts', required=True)
     parser.add_argument('-b', '--pbar',           help='If used, will show progress bar whenever it is available', action='store_true')
     parser.add_argument('-d', '--dry' ,           help='If used, will do dry drun, e.g. stop before processing', action='store_true')
@@ -79,6 +79,10 @@ def _parse_args() -> None:
     Data.chunk_size= args.chunk
 
     LogStore.set_level('rx_data:branch_calculator', Data.lvl)
+    LogStore.set_level('rx_data:rdf_getter'       ,       30)
+
+    if Data.lvl < 20:
+        LogStore.set_level('rx_data:rdf_getter', Data.lvl)
 # ---------------------------------
 def _get_path_size(path : str) -> int:
     '''
@@ -293,16 +297,12 @@ def _get_input_rdf(path : str) -> RDF.RNode|None:
         log.warning('Found empty file, skipping')
         return None
 
-    if _is_mc(path=path):
-        rdf = RDFGetter.add_truem(rdf)
-
     if Data.nmax is not None:
         log.warning(f'Limitting dataframe to {Data.nmax} entries')
         rdf=rdf.Range(Data.nmax)
 
     return rdf
 # ---------------------------------
-@gut.timeit
 def _create_file(path : str) -> None:
     '''
     Parameters
@@ -311,7 +311,7 @@ def _create_file(path : str) -> None:
     '''
     out_path = _get_out_path(path)
     if os.path.isfile(out_path):
-        log.warning(f'Output found, skipping {out_path}')
+        log.debug(f'Output found, skipping {out_path}')
         return
 
     rdf   = _get_input_rdf(path=path)
@@ -321,7 +321,7 @@ def _create_file(path : str) -> None:
     l_rdf = _split_rdf(rdf=rdf)
 
     if Data.dry:
-        log.warning('Doing dry run')
+        log.debug('Doing dry run')
         return
 
     nchunk = len(l_rdf)
@@ -385,6 +385,9 @@ def main():
     l_path       = _get_paths()
     Data.out_dir = _get_out_dir()
     log.info('Processing paths')
+    if Data.dry:
+        log.warning('This is a dry run')
+
     for path in tqdm.tqdm(l_path, ascii=' -'):
         log.debug(f'{"":<4}{path}')
         _create_file(path=path)
