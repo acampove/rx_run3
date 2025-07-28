@@ -156,8 +156,7 @@ class CVPredict:
         '''
         model = self._l_model[0]
         l_ft  = model.features
-        d_data= self._rdf.AsNumpy(l_ft)
-        df_ft = pnd.DataFrame(d_data)
+        df_ft = self._df_from_rdf(features=l_ft)
         df_ft = self._replace_nans(df_ft=df_ft)
         df_ft = self._tag_skipped(df_ft=df_ft)
         df_ft = ut.tag_nans(
