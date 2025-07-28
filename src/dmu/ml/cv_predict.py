@@ -150,6 +150,33 @@ class CVPredict:
 
         return df_ft
     # --------------------------------------------
+    def _df_from_rdf(self, features : list[str]) -> pnd.DataFrame:
+        '''
+        Parameters
+        -------------
+        features: List of feature names
+
+        Returns
+        -------------
+        Pandas dataframe with features
+        '''
+        missing = False
+        for feature in features:
+            if feature not in self._l_column:
+                log.error(f' Missing {feature} feature')
+                missing = True
+
+        if missing:
+            for column in self._l_column:
+                log.info(column)
+
+            raise ValueError('At least one column is missing')
+
+        data = self._rdf.AsNumpy(features)
+        df   = pnd.DataFrame(data)
+
+        return df
+    # --------------------------------------------
     def _get_df(self) -> pnd.DataFrame:
         '''
         Will make ROOT rdf into dataframe and return it
