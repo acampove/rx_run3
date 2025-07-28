@@ -110,3 +110,21 @@ def test_mc_noversion(trigger : str, sample : str, out_dir : str) -> None:
     rdf = cal.get_rdf()
     _validate_rdf(rdf=rdf, out_dir=f'{out_dir}/mc_def_vers', name=f'{sample}_{trigger}')
 # --------------------------------
+@pytest.mark.parametrize('trigger, sample', Data.l_nopid)
+def test_nopid(trigger : str, sample : str, out_dir : str) -> None:
+    '''
+    Test MVACalculator with default (should be lates) version
+    '''
+    with RDFGetter.max_entries(value=Data.nentries),\
+        RDFGetter.exclude_friends(names=['mva']):
+        gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
+        rdf = gtr.get_rdf(per_file=False)
+
+    cal = MVACalculator(
+    rdf     = rdf,
+    sample  = sample,
+    trigger = trigger)
+
+    rdf = cal.get_rdf()
+    _validate_rdf(rdf=rdf, out_dir=f'{out_dir}/mc_def_vers', name=f'{sample}_{trigger}')
+# --------------------------------
