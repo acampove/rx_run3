@@ -21,6 +21,7 @@ class Data:
     '''
     l_particle : list[str] = ['e', 'Pi', 'K', 'Mu', 'P']
 
+    kind    : str
     out_dir : str
     cfg_vers: str
     bin_vers: str
@@ -34,17 +35,19 @@ class Data:
 # --------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to calculate PID efficiencies using PIDCalib2')
-    parser.add_argument('-c', '--cfg_vers', type=str, help='Version of configuration file'         , required=True)
-    parser.add_argument('-b', '--bin_vers', type=str, help='Version of binning file'               , required=True)
-    parser.add_argument('-p', '--particle', type=str, help='Particle name', choices=Data.l_particle, required=True)
-    parser.add_argument('-s', '--sample'  , type=str, help='Sample/block, e.g. b1, b2...'          , required=True)
-    parser.add_argument('-o', '--out_dir' , type=str, help='Directory where pkl files will go'     , required=True)
-    parser.add_argument('-d', '--dry-run' ,           help='Enable dry-run mode (default: False)'  , action='store_true')
+    parser.add_argument('-c', '--cfg_vers', type=str, help='Version of configuration file'             , required=True)
+    parser.add_argument('-k', '--kind'    , type=str, help='Kind of map', choices=['signal', 'control'], required=True)
+    parser.add_argument('-b', '--bin_vers', type=str, help='Version of binning file'                   , required=True)
+    parser.add_argument('-p', '--particle', type=str, help='Particle name', choices=Data.l_particle    , required=True)
+    parser.add_argument('-s', '--sample'  , type=str, help='Sample/block, e.g. b1, b2...'              , required=True)
+    parser.add_argument('-o', '--out_dir' , type=str, help='Directory where pkl files will go'         , required=True)
+    parser.add_argument('-d', '--dry-run' ,           help='Enable dry-run mode (default: False)'      , action='store_true')
     # These are by default None and will be used as in PIDCalib2's make_eff_hists
     parser.add_argument('-M', '--maxfiles', type=int, help='Limit number of files to this value')
     parser.add_argument('-v', '--verbose' , help='Will print debug messages', action='store_true')
 
     args          = parser.parse_args()
+    Data.kind     = args.kind
     Data.out_dir  = args.out_dir
     Data.cfg_vers = args.cfg_vers
     Data.bin_vers = args.bin_vers
