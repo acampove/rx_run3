@@ -1,12 +1,14 @@
 output_directory : misid/electron/signal
 categories:
   main:
-    model : KDE1DimFFT
-sample :  Bu_piplpimnKpl_eq_sqDalitz_DPC
+    model    : KDE1DimFFT  # Use KDE
+    selection: 
+      pid_l : (1)  # Built removing PID on leptons
+    weights : 
+      - weights/pid_l.yaml               # And applying weights through this config
+sample :  Bu_piplpimnKpl_eq_sqDalitz_DPC # Using this MC sample
 fit:
   strategy  : KDE1DimFFT
-weights:
-  - pid
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 30
   stacked : True

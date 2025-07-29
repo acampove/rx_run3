@@ -1,7 +1,11 @@
 output_directory : misid/electron/signal 
 categories:
   main: 
-    model : KDE1DimFFT
+    model    : KDE1DimFFT  # Use KDE
+    selection: 
+      pid_l : (1)  # Built removing PID on leptons
+    weights : 
+      - misid/electron/weights/pid_l.yaml               # And applying weights through this config
 sample    : Bu_KplKplKmn_eq_sqDalitz_DPC
 fit:
   strategy  : KDE1DimFFT
