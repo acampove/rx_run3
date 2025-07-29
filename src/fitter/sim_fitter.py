@@ -102,14 +102,11 @@ class SimFitter(BaseFitter, Cache):
         if 'sample' not in self._cfg:
             return d_data
 
-        for cat_name, data in self._cfg.categories.items():
-            cat_cut = None if 'selection' not in data else data.selection
-
-            log.debug(f'Using category {cat_name} with cut {cat_cut}')
-
+        for cat_name, cat_cfg in self._cfg.categories.items():
             prp   = DataPreprocessor(
                 obs    = self._obs,
-                cut    = cat_cut,
+                cut    = cat_cfg.get('selection'),
+                wgt_cfg= cat_cfg.get('weights'),
                 trigger= self._trigger,
                 project= self._project,
                 q2bin  = self._q2bin,
