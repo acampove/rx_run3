@@ -112,6 +112,22 @@ class DataPreprocessor(Cache):
             return arr
 
         raise NotImplementedError(f'Cannot retrive toy data for sample: {sample}')
+    # ----------------------
+    def _add_extra_weights(self, wgt : numpy.ndarray) -> numpy.ndarray:
+        '''
+        Parameters
+        -------------
+        wgt: Array of weights already held in ROOT dataframe
+
+        Returns
+        -------------
+        Optionally augmented weights
+        '''
+        if self._wgt_cfg is None:
+            log.debug('No weight configuration found, using only default weights')
+            return wgt
+
+        return wgt
     # ------------------------
     def _get_array(self) -> tuple[numpy.ndarray,numpy.ndarray]:
         '''
@@ -137,6 +153,7 @@ class DataPreprocessor(Cache):
         log.debug('Retrieving data')
         arr  = rdf.AsNumpy([name])[name]
         wgt  = rdf.AsNumpy(['weight'])['weight']
+        wgt  = self._add_extra_weights(wgt=wgt)
 
         nevt = len(arr)
         log.debug(f'Found {nevt} entries')
