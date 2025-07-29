@@ -4,11 +4,11 @@ style: &style
     histtype : fill 
     color    : gray 
     alpha    : 0.5
-  Jpsi veto:
+  $M_{DTF}^{J/\psi}$ veto:
     histtype : step 
     color    : blue 
     linestyle: '-'
-  psi2S veto:
+  $M_{DTF}^{\psi(2S)}$ veto:
     histtype : step 
     color    : black 
     linestyle: '-'
@@ -22,9 +22,9 @@ cutflow:
   low :
     None           : (1)
   central:
-    None           : (1)
-    Jpsi veto      : "TMath::Abs(B_const_mass_M       - 5280) > 200"
-    psi2S veto     : "TMath::Abs(B_const_mass_psi2S_M - 5280) > 100"
+    None             : (1)
+    $M_{DTF}^{J/\psi}$ veto   : "TMath::Abs(B_const_mass_M       - 5280) > 200"
+    $M_{DTF}^{\psi(2S)}$ veto : "TMath::Abs(B_const_mass_psi2S_M - 5280) > 100"
   jpsi:
     None           : (1)
   psi2:
