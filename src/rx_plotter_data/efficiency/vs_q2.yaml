@@ -22,11 +22,11 @@ hist_conf:
     label : $q^2 [\text{GeV}^2]$
 lines:
   bounds:
-    Low       : 1.0
+    Low       : 1.1
     Central   : 6.0
-    $J/\psi$  : 13.0
-    $\psi(2S)$: 13.0
-    High      : 15.0
+    $J/\psi$  : 11.0
+    $\psi(2S)$: 15.0
+    High      : 22.0
   styling:
     color : gray
     style : --
