@@ -48,7 +48,8 @@ fitting:
 selection:
   bdt  : (1)
   mass : (1)
-  #veto : TMath::Abs(B_const_mass_M - 5280) > 200 && TMath::Abs(B_const_mass_psi2S_M - 5280) > 100 
+  jpsi veto : TMath::Abs(B_const_mass_M - 5280) > 200
+  psi2 veto : TMath::Abs(B_const_mass_psi2S_M - 5280) > 100 
 cutflow:
   mix:
     $BDT_{prc} > 0.00$ && $BDT_{cmb} > 0.00$ : mva_prc > 0.00 && mva_cmb > 0.00
