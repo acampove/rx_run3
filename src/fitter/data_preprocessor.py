@@ -77,7 +77,11 @@ class DataPreprocessor(Cache):
             return None
 
         log.debug('Retrieving dataframe')
-        gtr = RDFGetter(sample =self._sample, trigger=self._trigger)
+        gtr = RDFGetter(
+            sample  =self._sample,
+            trigger =self._trigger,
+            analysis=self._project)
+
         rdf = gtr.get_rdf()
         uid = gtr.get_uid()
         rdf = cast(RDataFrame, rdf)
