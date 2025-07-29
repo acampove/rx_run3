@@ -199,7 +199,9 @@ class DataPreprocessor(Cache):
     # ------------------------
     def get_data(self) -> zdata:
         '''
-        Returns zfit data
+        Returns
+        ---------------------
+        zfit data, should be ready to be used in fit
         '''
         data_path = f'{self._out_path}/data.npz'
         if self._copy_from_cache():
