@@ -340,7 +340,7 @@ def main():
     Data.cfg = gut.load_conf(package='rx_plotter_data', fpath='efficiency/vs_q2.yaml')
 
     df = _get_data()
-    for q2bin in ['none', 'low', 'central', 'high']:
+    for q2bin in ['none', 'low', 'central', 'jpsi', 'psi2', 'high']:
         _plot(df=df, var='q2'     , q2bin=q2bin)
         _plot(df=df, var='q2_true', q2bin=q2bin)
 # ----------------------
