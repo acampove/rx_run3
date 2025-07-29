@@ -10,8 +10,8 @@ from dmu.workflow.cache     import Cache
 from dmu.stats.zfit         import zfit
 from dmu.stats              import utilities  as sut
 from dmu.logging.log_store  import LogStore
-from zfit.core.interfaces   import ZfitData   as zdata
-from zfit.core.interfaces   import ZfitSpace  as zobs
+from zfit.interface         import ZfitData   as zdata
+from zfit.interface         import ZfitSpace  as zobs
 from rx_data.rdf_getter     import RDFGetter
 from rx_selection           import selection  as sel
 

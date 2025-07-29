@@ -14,11 +14,11 @@ from dmu.logging.log_store    import LogStore
 
 from rx_efficiencies.decay_names import DecayNames
 from rx_selection             import selection    as sel
-from zfit.core.interfaces     import ZfitData     as zdata
-from zfit.core.interfaces     import ZfitPDF      as zpdf
-from zfit.core.parameter      import Parameter    as zpar
-from zfit.result              import FitResult    as zres
-from zfit.core.interfaces     import ZfitSpace    as zobs
+from zfit.interface           import ZfitData         as zdata
+from zfit.interface           import ZfitPDF          as zpdf
+from zfit.interface           import ZfitParameter    as zpar
+from zfit.interface           import ZfitSpace        as zobs
+from zfit.result              import FitResult        as zres
 from fitter.base_fitter       import BaseFitter
 from fitter.data_preprocessor import DataPreprocessor
 from fitter.prec              import PRec

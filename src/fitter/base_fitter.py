@@ -12,8 +12,8 @@ from dmu.stats                import utilities  as sut
 from dmu.logging.log_store    import LogStore
 from rx_selection             import selection  as sel
 from zfit.result              import FitResult  as zres
-from zfit.core.interfaces     import ZfitData   as zdata
-from zfit.core.interfaces     import ZfitPDF    as zpdf
+from zfit.interface           import ZfitData   as zdata
+from zfit.interface           import ZfitPDF    as zpdf
 
 log=LogStore.add_logger('fitter:base_fitter')
 # ------------------------
