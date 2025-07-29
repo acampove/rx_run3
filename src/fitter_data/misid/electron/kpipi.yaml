@@ -1,6 +1,6 @@
-output_directory : misid/electron/signal 
+output_directory : misid/electron/signal
 categories:
-  main: 
+  main:
     model : KDE1DimFFT
 sample :  Bu_piplpimnKpl_eq_sqDalitz_DPC
 fit:
