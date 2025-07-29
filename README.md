@@ -14,7 +14,7 @@ A preliminary version of the histograms can be produce by running:
 ```bash
 # For tests run over one file only with -M 1
 # For vebose messages use -v
-create_pid_maps -c v1 -b v1 -s b1 -p Pi -o /output/directory
+create_pid_maps -c v3 -k signal -b v1 -p Pi -s b1 -o /path/to/maps -M 1 -v
 ```
 
 where:
@@ -24,12 +24,14 @@ options:
   -h, --help            show this help message and exit
   -c CFG_VERS, --cfg_vers CFG_VERS
                         Version of configuration file
+  -k {signal,control}, --kind {signal,control}
+                        Kind of map
   -b BIN_VERS, --bin_vers BIN_VERS
                         Version of binning file
   -p {e,Pi,K,Mu,P}, --particle {e,Pi,K,Mu,P}
                         Particle name
   -s SAMPLE, --sample SAMPLE
-                        Sample
+                        Sample/block, e.g. b1, b2...
   -o OUT_DIR, --out_dir OUT_DIR
                         Directory where pkl files will go
   -d, --dry-run         Enable dry-run mode (default: False)
@@ -41,7 +43,7 @@ options:
 the config and binning files are in:
 
 ```
-rx_pid_data/config
+rx_pid_data/config/[control,signal]/v*.yaml
 rx_pid_data/binning
 ```
 
