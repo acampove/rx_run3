@@ -22,6 +22,7 @@ data-manipulation-utilities = {version = '>=0.0.0', allow-prereleases = true}
 fit_rx_data  = 'fitter_scripts.fit_rx_data:main'
 fit_grid     = 'fitter_scripts.fit_grid:main'
 navigate_fits= 'fitter_scripts.navigate_fits:main'
+validate_cmb = 'fitter_scripts.validate_cmb:main'
 
 [project.optional-dependencies]
 dev = ['pytest']
