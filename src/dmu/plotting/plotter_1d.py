@@ -98,6 +98,30 @@ class Plotter1D(Plotter):
                 name    = name,
                 varname = varname,
                 cfg     = cfg)
+    # ----------------------
+    def _trim_to_range(
+        self,
+        name: str,
+        val : numpy.ndarray,
+        wgt : numpy.ndarray) -> tuple[numpy.ndarray, numpy.ndarray]:
+        '''
+        Parameters
+        -------------
+        name: Name of variable
+        val : Array of values in the 'x' axis
+        wgt : Array of weights
+
+        Returns
+        -------------
+        Tuple with the values and weights, but in the plotting range only
+        '''
+        [minx, maxx, _] = self._d_cfg['plots'][name]['binning']
+
+        flags = (minx < val) & (val < maxx)
+        val   = val[flags]
+        wgt   = wgt[flags]
+
+        return val, wgt
     #-------------------------------------
     def _run_stats(
         self,
@@ -115,6 +139,7 @@ class Plotter1D(Plotter):
         name    : Name of the label, when plotting multiple distributions
         cfg     : Configuration for the statistics plugin
         '''
+        arr_val, arr_wgt = self._trim_to_range(name=varname, val=arr_val, wgt=arr_wgt)
 
         this_title = ''
         data       = {}
