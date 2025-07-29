@@ -216,8 +216,8 @@ class Plotter1D(Plotter):
     # --------------------------------------------
     def _get_style_config(self, var : str, label : str) -> dict[str,str]:
         style = {
-            'label'     : label, 
-            'histtype'  : 'errorbar', 
+            'label'     : label,
+            'histtype'  : 'errorbar',
             'linestyle' : 'none'}
 
         if 'styling' not in self._d_cfg['plots'][var]:
