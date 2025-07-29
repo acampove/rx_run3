@@ -26,14 +26,15 @@ class DataPreprocessor(Cache):
     '''
     # ------------------------
     def __init__(
-            self,
-            out_dir : str,
-            obs     : zobs,
-            sample  : str,
-            trigger : str,
-            project : str,
-            q2bin   : str,
-            cut     : str|None = None):
+        self,
+        out_dir : str,
+        obs     : zobs,
+        sample  : str,
+        trigger : str,
+        project : str,
+        q2bin   : str,
+        wgt_cfg : ListConfig|None,
+        cut     : str|None = None):
         '''
         Parameters
         --------------------
@@ -43,6 +44,8 @@ class DataPreprocessor(Cache):
         trigger: e.g. Hlt2RD...
         project: e.g. rx, nopid
         q2bin  : e.g. central
+        wgt_cfg: OmegaConf's version of a list of strings, each representing a path to a YAML file with configs
+                 to extract weights
         cut    : selection that can be added on top. Needed when fits are required in categories, optional
         '''
         self._obs    = obs
@@ -50,6 +53,7 @@ class DataPreprocessor(Cache):
         self._trigger= trigger
         self._project= project
         self._q2bin  = q2bin
+        self._wgt_cfg= wgt_cfg
         self._rdf    = self._get_rdf(cut=cut)
         self._rdf_uid= None if self._rdf is None else self._rdf.uid
 
