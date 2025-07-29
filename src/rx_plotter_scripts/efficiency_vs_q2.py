@@ -257,11 +257,12 @@ def _plot_efficiencies(
     plt.ylabel('A.U.')
     plt.legend()
 # ----------------------
-def _get_out_path(var : str) -> str:
+def _get_out_path(var : str, q2bin : str) -> str:
     '''
     Parameters
     -------------
-    var: Name of variable in function of which efficiency is measured
+    var  : Name of variable in function of which efficiency is measured
+    q2bin: E.g. central
 
     Returns
     -------------
@@ -270,7 +271,7 @@ def _get_out_path(var : str) -> str:
     cfg = _check_none(obj=Data.cfg, kind='input')
     [sample, trigger] = cfg.input[f'{Data.analysis}_{Data.channel}']
 
-    out_dir = f'{Data.ana_dir}/efficiencies/differential/q2'
+    out_dir = f'{Data.ana_dir}/plots/efficiencies/differential/q2/{q2bin}'
     os.makedirs(out_dir, exist_ok=True)
 
     out_path = f'{out_dir}/{var}_{sample}_{trigger}.png'
@@ -315,7 +316,7 @@ def _plot(
     df = _select_dataframe(df=df, q2bin=q2bin)
 
     _plot_efficiencies(df=df, var=var)
-    out_path = _get_out_path(var=f'{var}_{q2bin}')
+    out_path = _get_out_path(var=var, q2bin=q2bin)
 
     log.info(f'Saving to: {out_path}')
     plt.savefig(out_path)
