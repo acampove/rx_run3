@@ -62,7 +62,7 @@ class DataPreprocessor(Cache):
             obs_name = sut.name_from_obs(obs),
             rdf_uid  = self._rdf_uid)
     # ------------------------
-    def _get_rdf(self, cut : str|None) -> RDataFrame|None:
+    def _get_rdf(self, cut : str|None) -> RDataFrame:
         '''
         Parameters
         -------------------
@@ -70,10 +70,7 @@ class DataPreprocessor(Cache):
 
         Returns
         -------------------
-        Either:
-
-        - If dataset is not a toy, ROOT dataframe after selection and with Unique identifier attached as uid
-        - Otherwise, None
+        ROOT dataframe after selection and with Unique identifier attached as uid
         '''
         if 'toy' in self._sample:
             log.debug(f'Cannot retrieve dataframe for toy sample: {self._sample}')
@@ -85,9 +82,8 @@ class DataPreprocessor(Cache):
             trigger =self._trigger,
             analysis=self._project)
 
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
         uid = gtr.get_uid()
-        rdf = cast(RDataFrame, rdf)
 
         log.debug('Applying selection')
         rdf = sel.apply_full_selection(
