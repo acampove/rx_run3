@@ -316,14 +316,25 @@ def _plot(
 
     _plot_efficiencies(df=df, var=var)
     out_path = _get_out_path(var=f'{var}_{q2bin}')
+
+    log.info(f'Saving to: {out_path}')
     plt.savefig(out_path)
     plt.close()
+# ----------------------
+def _set_logs() -> None:
+    '''
+    Will set the log level of different tools
+    '''
+    LogStore.set_level('rx_selection:truth_matching', 30)
+    LogStore.set_level('rx_selection:selection'     , 30)
+    LogStore.set_level('rx_data:rdf_getter'         , 30)
 # ----------------------
 def main():
     '''
     Entry point
     '''
     _parse_args()
+    _set_logs()
     log.debug('Loading configuration')
     Data.cfg = gut.load_conf(package='rx_plotter_data', fpath='efficiency/vs_q2.yaml')
 
