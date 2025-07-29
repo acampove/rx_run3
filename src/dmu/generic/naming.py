@@ -19,6 +19,7 @@ def clean_special_characters(name : str) -> str:
     ----------------
     Cleaned string, where special signs were removed or replaced
     '''
+    name = name.replace('/' ,  '_')
     name = name.replace('\\',  '_')
     name = name.replace('||', 'or')
     name = name.replace(' ' ,  '_')
