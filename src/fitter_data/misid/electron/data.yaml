@@ -1,0 +1,28 @@
+# This is a config file used for tests
+# It illustrates how a fit would run for data
+
+output_directory : misid/electron/data
+model:
+  observable:
+    name : B_Mass_smr
+    range:
+      - 4500 
+      - 6900
+  components:
+    combinatorial : misid/electron/combinatorial.yaml
+    jpsi_leakage  : misid/electron/jpsi_leakage.yaml
+    signal        : misid/electron/signal.yaml
+    kpik          : misid/electron/kpik.yaml
+    kkk           : misid/electron/kkk.yaml
+  constraints:
+    yields : []
+fit: {}
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 30
+  stacked : True
+  d_leg :
+    jpsi_leakage  : $B^+\to K^+ J/\psi(\to e^+e^-)$ 
+    combinatorial : Combinatorial
+    signal        : $B^+\to K^+ e^+e^-$ 
+    kpik          : $B^+\to K^+\pi^-K^+$
+    kkk           : $B^+\to K^+K^-K^+$
