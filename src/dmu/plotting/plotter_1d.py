@@ -106,6 +106,15 @@ class Plotter1D(Plotter):
         varname : str,
         name    : str,
         cfg     : dict[str,str]) -> None:
+        '''
+        Parameters
+        -------------------
+        arr_val : Array of X axis values to plot
+        arr_wgt : Array of weights
+        varname : Variable name
+        name    : Name of the label, when plotting multiple distributions
+        cfg     : Configuration for the statistics plugin
+        '''
 
         this_title = ''
         data       = {}
