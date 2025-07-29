@@ -105,7 +105,7 @@ class Plotter1D(Plotter):
         arr_wgt : numpy.ndarray,
         varname : str,
         name    : str,
-        cfg     : dict[str:str]) -> None:
+        cfg     : dict[str,str]) -> None:
 
         this_title = ''
         data       = {}
