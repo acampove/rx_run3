@@ -58,6 +58,7 @@ requirements (HOP, Cascade, $J/\psi$ mis ID veto). Below each config description
 | vetoes  | Check effect on `B_M` original and corrected of vetoes |
 | bdt     | Check effect on `B_M` original and correcte of BDT     |
 | cleanup | Same as vetoes but checks effect on multiple variables |
+| ss_shape| Checks the SS shape with and without vetoes on resonant|
 
 ### Block quality
 
