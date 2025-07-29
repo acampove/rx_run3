@@ -277,15 +277,26 @@ def _get_out_path(var : str) -> str:
 
     return out_path
 # ----------------------
-def _plot(df : pnd.DataFrame, var : str) -> None:
     '''
     Parameters
     -------------
-    df: Pandas dataframe with q2 and MVA scores
-    var: Name of q2 variable to use for plots
     '''
+def _plot(
+    df   : pnd.DataFrame,
+    var  : str,
+    q2bin: str) -> None:
+    '''
+    Parameters
+    -------------
+    df   : Pandas dataframe with q2 and MVA scores
+    var  : Name of q2 variable to use for plots
+    q2bin: E.g. central, high
+    '''
+
+    df = _select_dataframe(df=df, q2bin=q2bin)
+
     _plot_efficiencies(df=df, var=var)
-    out_path = _get_out_path(var=var)
+    out_path = _get_out_path(var=f'{var}_{q2bin}')
     plt.savefig(out_path)
     plt.close()
 # ----------------------
