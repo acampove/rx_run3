@@ -17,6 +17,7 @@ matplotlib                 = '*'
 pandas                     = '*'
 numpy                      = '*'
 omegaconf                  = '*'
+formulate                  = '*'
 data-manipulation-utilities= {version = '*', allow-prereleases=true}
 rx-selection               = {version = '*', allow-prereleases=true}
 rx-data                    = {version = '*', allow-prereleases=true}
