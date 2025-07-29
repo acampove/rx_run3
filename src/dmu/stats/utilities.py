@@ -22,12 +22,12 @@ from dmu.logging.log_store  import LogStore
 
 import tensorflow as tf
 
-from omegaconf              import OmegaConf, DictConfig
-from zfit.core.interfaces   import ZfitData   as zdata
-from zfit.core.interfaces   import ZfitSpace  as zobs
-from zfit.core.interfaces   import ZfitPDF    as zpdf
-from zfit.core.parameter    import Parameter  as zpar
-from zfit.result            import FitResult  as zres
+from omegaconf        import OmegaConf, DictConfig
+from zfit.interface   import ZfitData      as zdata
+from zfit.interface   import ZfitSpace     as zobs
+from zfit.interface   import ZfitPDF       as zpdf
+from zfit.interface   import ZfitParameter as zpar
+from zfit.result      import FitResult     as zres
 
 log = LogStore.add_logger('dmu:stats:utilities')
 #-------------------------------------------------------

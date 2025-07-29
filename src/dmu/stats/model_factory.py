@@ -8,9 +8,10 @@ from typing import Callable, Union
 
 import zfit
 
-from zfit.core.interfaces   import ZfitSpace as zobs
-from zfit.core.basepdf      import BasePDF   as zpdf
-from zfit.core.parameter    import Parameter as zpar
+from zfit.interface         import ZfitSpace     as zobs
+from zfit.interface         import ZfitPDF       as zpdf
+from zfit.interface         import ZfitParameter as zpar
+
 from dmu.stats.parameters   import ParameterLibrary as PL
 from dmu.stats.zfit_models  import HypExp
 from dmu.stats.zfit_models  import ModExp

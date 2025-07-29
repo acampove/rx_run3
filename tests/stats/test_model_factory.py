@@ -5,7 +5,7 @@ Module containing tests for ZModel class
 from dataclasses import dataclass
 
 import zfit
-from zfit.core.interfaces   import ZfitPDF    as zpdf
+from zfit.interface   import ZfitPDF    as zpdf
 
 import pytest
 from dmu.stats.utilities     import print_pdf

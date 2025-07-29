@@ -6,11 +6,10 @@ from typing import Union
 import zfit
 import numpy
 import pandas as pnd
-from zfit.core.interfaces  import ZfitSpace  as zobs
-from zfit.core.data        import Data       as zdata
+from zfit.interface import ZfitSpace  as zobs
+from zfit.interface import ZfitData   as zdata
 
 from dmu.logging.log_store import LogStore
-
 
 log=LogStore.add_logger('dmu:stats:wdata')
 # -------------------------------
