@@ -42,7 +42,7 @@ tensorflow     = '*'
 awkward-pandas = '*'
 dask           = {version='*',      extras  =['dataframe','distributed']}
 hist           = {version='*',      extras  =['plot']}
-zfit           = {version='0.26.0', optional=true}
+zfit           = {version='*',      optional=true}
 scikit-learn   = {version='*',      optional=true}
 joblib         = {version='*',      optional=true}
 optuna         = {version='*',      optional=true}
