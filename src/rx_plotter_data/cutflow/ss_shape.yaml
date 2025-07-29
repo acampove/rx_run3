@@ -6,11 +6,11 @@ style: &style
     alpha    : 0.5
   $M_{DTF}^{J/\psi}$ veto:
     histtype : step 
-    color    : blue 
+    color    : black 
     linestyle: '-'
   $M_{DTF}^{\psi(2S)}$ veto:
     histtype : step 
-    color    : black 
+    color    : blue 
     linestyle: '-'
 general:
   size : [15, 10]
