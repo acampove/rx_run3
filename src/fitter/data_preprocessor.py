@@ -127,6 +127,9 @@ class DataPreprocessor(Cache):
             log.debug('No weight configuration found, using only default weights')
             return wgt
 
+        for cfg_path in self._wgt_cfg:
+            wgt *= self._get_extra_weight(path=cfg_path)
+
         return wgt
     # ------------------------
     def _get_array(self) -> tuple[numpy.ndarray,numpy.ndarray]:
