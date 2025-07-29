@@ -91,10 +91,6 @@ def _get_rdf() ->  RDF.RNode:
         q2bin  =Data.q2bin,
         process=Data.sample)
 
-    if log.getEffectiveLevel() < 20:
-        rep = rdf.Report()
-        rep.Print()
-
     return rdf
 # --------------------------------
 @gut.timeit
@@ -224,6 +220,9 @@ def _data_from_rdf(
     zfit data object
     '''
     log.info(f'  {name}')
+    if log.getEffectiveLevel() < 20:
+        rep = rdf.Report()
+        rep.Print()
 
     arr_mass = rdf.AsNumpy([Data.mass])[Data.mass]
     data     = zfit.Data.from_numpy(obs=Data.obs, array=arr_mass)
