@@ -277,10 +277,29 @@ def _get_out_path(var : str) -> str:
 
     return out_path
 # ----------------------
+def _select_dataframe(df : pnd.DataFrame, q2bin : str) -> pnd.DataFrame:
     '''
     Parameters
     -------------
+    df    : Pandas dataframe
+    q2bin : E.g. low, central...
+
+    Returns
+    -------------
+    Dataframe after cut was applied
     '''
+    if q2bin == 'none':
+        log.debug('Skipping q2 cut')
+        return df
+
+    d_sel = sel.load_selection_config()
+    q2cut = d_sel['q2_common'][q2bin]
+    q2cut = formulate.from_root(string=q2cut)
+    q2cut = q2cut.to_numexpr()
+    df    = df.query(q2cut)
+
+    return df
+# ----------------------
 def _plot(
     df   : pnd.DataFrame,
     var  : str,
