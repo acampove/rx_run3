@@ -151,9 +151,9 @@ class DataPreprocessor(Cache):
         return self._rdf_uid
     # ------------------------
     def _data_from_numpy(
-            self,
-            arr_value : numpy.ndarray,
-            arr_weight: numpy.ndarray) -> zdata:
+        self,
+        arr_value : numpy.ndarray,
+        arr_weight: numpy.ndarray) -> zdata:
         '''
         We should not use weights if they are all 1s due to problems in zfit
 
