@@ -93,11 +93,11 @@ class Plotter1D(Plotter):
             log.debug(f'stats plugin found for variable {varname}')
             cfg = self._d_cfg['plugin']['stats'][varname]
             self._run_stats(
-                    arr_val = arr_val,
-                    arr_wgt = arr_wgt,
-                    name    = name,
-                    varname = varname,
-                    cfg     = cfg)
+                arr_val = arr_val,
+                arr_wgt = arr_wgt,
+                name    = name,
+                varname = varname,
+                cfg     = cfg)
     #-------------------------------------
     def _run_stats(
         self,
