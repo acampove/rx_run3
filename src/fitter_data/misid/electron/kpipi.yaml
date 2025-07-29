@@ -2,7 +2,7 @@ output_directory : misid/electron/signal
 categories:
   main: 
     model : KDE1DimFFT
-sample    : Bu_KplpiplKmn_eq_sqDalitz_DPC
+sample :  Bu_piplpimnKpl_eq_sqDalitz_DPC
 fit:
   strategy  : KDE1DimFFT
 weights:
