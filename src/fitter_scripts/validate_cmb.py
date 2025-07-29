@@ -19,7 +19,7 @@ from zfit.interface         import ZfitPDF   as zpdf
 from zfit.interface         import ZfitSpace as zobs
 from rx_data.rdf_getter     import RDFGetter
 from rx_selection           import selection as sel
-from rx_fitter              import models
+from fitter                 import models
 
 log=LogStore.add_logger('rx_fitter:validate_cmb')
 # --------------------------------
