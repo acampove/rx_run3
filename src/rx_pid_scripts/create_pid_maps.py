@@ -69,11 +69,13 @@ def _get_bin_vars() -> str:
 def _path_from_kind(kind : str) -> str:
     if   kind == 'config':
         version = Data.cfg_vers
-        path    = files('rx_pid_data').joinpath(f'{kind}/{version}.yaml')
+        path    = files('rx_pid_data').joinpath(f'{kind}/{Data.kind}/{version}.yaml')
+        path    = str(path)
     elif kind == 'binning':
         version = Data.bin_vers
         bin_vars= _get_bin_vars()
         path    = files('rx_pid_data').joinpath(f'{kind}/{bin_vars}/{version}.yaml')
+        path    = str(path)
         path    = _replace_binning_path(path)
     else:
         raise ValueError(f'Invalid kind: {kind}')
