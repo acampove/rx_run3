@@ -63,7 +63,7 @@ def test_nocat():
 # ---------------------------------------------------
 def test_with_cat():
     '''
-    Test for components with brem categories 
+    Test for components with brem categories
     '''
     obs = zfit.Space('B_Mass', limits=(4500, 7000))
 
