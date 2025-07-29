@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from dmu.logging.log_store import LogStore
 from dmu.plotting.plotter  import Plotter
 from dmu.plotting.fwhm     import FWHM
+from dmu.generic           import naming
 
 log = LogStore.add_logger('dmu:plotting:Plotter1D')
 # --------------------------------------------
@@ -162,7 +163,8 @@ class Plotter1D(Plotter):
             this_title += form.format(rms ) + '; '
             data['rms'] = rms
 
-        self._data_to_json(data = data, name = f'stats_{varname}_{name}')
+        label = naming.clean_special_characters(name=name)
+        self._data_to_json(data = data, name = f'stats_{varname}_{label}')
 
         self._title+= f'\n{name}: {this_title}'
     #-------------------------------------
