@@ -30,6 +30,7 @@ def clean_special_characters(name : str) -> str:
     name = name.replace('}' ,  '_')
     name = name.replace('.' ,  'p')
     name = name.replace('$' ,  '_')
+    name = name.replace('^' ,'hat')
     name = name.replace('&&','and')
     name = re.sub(r'_+' , '_', name)
 
