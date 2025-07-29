@@ -1,10 +1,9 @@
 '''
 Module holding DataPreprocessor class
 '''
-from typing import cast
-
 import numpy
 
+from omegaconf              import ListConfig
 from ROOT                   import RDataFrame
 from dmu.workflow.cache     import Cache
 from dmu.stats.zfit         import zfit
