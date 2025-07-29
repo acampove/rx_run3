@@ -169,7 +169,7 @@ def _set_logs() -> None:
 def _initialize() -> None:
     _set_logs()
 
-    Data.cfg = gut.load_data(package='rx_fitter_data', fpath=f'combinatorial/{Data.config}.yaml')
+    Data.cfg = gut.load_data(package='fitter_data', fpath=f'combinatorial/{Data.config}.yaml')
     d_obs    = Data.cfg['fits'][Data.q2bin]
 
     Data.minx= d_obs['observable']['minx']
