@@ -1533,6 +1533,7 @@ plugin:
 ```
 
 Can be used to print statistics, mean, rms and weighted sum of entries for each distribution.
+The statistics, reffer to the data **only inside** the plotting range.
 
 ## 2D plots
 
