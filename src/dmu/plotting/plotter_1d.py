@@ -100,12 +100,12 @@ class Plotter1D(Plotter):
                     cfg     = cfg)
     #-------------------------------------
     def _run_stats(
-            self,
-            arr_val : numpy.ndarray,
-            arr_wgt : numpy.ndarray,
-            varname : str,
-            name    : str,
-            cfg     : dict[str:str]) -> None:
+        self,
+        arr_val : numpy.ndarray,
+        arr_wgt : numpy.ndarray,
+        varname : str,
+        name    : str,
+        cfg     : dict[str:str]) -> None:
 
         this_title = ''
         data       = {}
