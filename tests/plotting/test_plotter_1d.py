@@ -55,6 +55,9 @@ def _get_rdf(kind : str, test : str, nentries : int|None = None) -> RDF.RNode:
     elif kind == 'class B':
         d_data['x'] = numpy.random.normal(1, 1, size=nentries)
         d_data['y'] = numpy.random.normal(1, 2, size=nentries)
+    elif kind == 'class C':
+        d_data['x'] = numpy.random.uniform(-10, +10, size=nentries)
+        d_data['y'] = numpy.random.uniform(-10, +10, size=nentries)
     else:
         raise ValueError(f'Invalid class: {kind}')
 
@@ -229,7 +232,7 @@ def test_plugin_stats():
     Will test stats plugin
     '''
     log.info('')
-    d_rdf   =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+    d_rdf   =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B', 'class C'] }
     cfg_dat = _load_config(test='plug_stats')
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
