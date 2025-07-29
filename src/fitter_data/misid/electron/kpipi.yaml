@@ -5,6 +5,8 @@ categories:
 sample    : Bu_KplpiplKmn_eq_sqDalitz_DPC
 fit:
   strategy  : KDE1DimFFT
+weights:
+  - pid
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 30
   stacked : True
