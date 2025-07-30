@@ -2,14 +2,13 @@
 Script holding functions needed to test SampleWeighter class
 '''
 import os
-from importlib.resources import files
 
-import yaml
 import numpy
 import pytest
 import matplotlib.pyplot as plt
 import pandas            as pnd
 from dmu.logging.log_store    import LogStore
+from dmu.generic              import utilities      as gut
 from rx_misid.sample_weighter import SampleWeighter
 
 log=LogStore.add_logger('rx_misid:test_weighter')
@@ -76,15 +75,6 @@ def _validate_weights(
     plt.savefig(f'{Data.out_dir}/{mode}_{sample}_{lep}.png')
     plt.close()
 # -------------------------------------------------------
-def _get_config() -> dict:
-    cfg_path = files('rx_misid_data').joinpath('misid.yaml')
-    cfg_path = str(cfg_path)
-    log.info(f'Picking up config from: {cfg_path}')
-    with open(cfg_path, encoding='utf-8') as ifile:
-        cfg = yaml.safe_load(ifile)
-
-    return cfg['weights']
-# ----------------------------
 def _get_dataframe() -> pnd.DataFrame:
     df           = pnd.DataFrame(index=range(Data.nentries))
     df['hadron'] = numpy.random.choice(['kaon' ,   'pion'], size=Data.nentries)
