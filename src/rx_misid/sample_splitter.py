@@ -18,17 +18,18 @@ class SampleSplitter(Wcache):
     '''
     # --------------------------------
     def __init__(
-            self,
-            rdf      : RDataFrame,
-            sample   : str,
-            hadron_id: str,
-            is_bplus : bool,
-            cfg      : dict):
+        self,
+        rdf      : RDataFrame,
+        sample   : str,
+        hadron_id: str,
+        is_bplus : bool,
+        cfg      : dict):
         '''
-        rdf     : Input dataframe with data to split, It should have attached a `uid` attribute, the unique identifier
-        sample  : Sample name, e.g. DATA_24_..., needed for output naming
-        is_bplus: True if the sam ple that will be returned will contain B+ mesons, false for B-
-        cfg     : Dictionary with configuration specifying how to split the samples
+        rdf      : Input dataframe with data to split, It should have attached a `uid` attribute, the unique identifier
+        sample   : Sample name, e.g. DATA_24_..., needed for output naming
+        hadron_id: kaon or pion, needed to extract hadron tagging cuts, when doing data
+        is_bplus : True if the sam ple that will be returned will contain B+ mesons, false for B-
+        cfg      : Dictionary with configuration specifying how to split the samples
         '''
         super().__init__(
                 out_path = f'sample_splitter_{sample}_{hadron_id}_{is_bplus}',
