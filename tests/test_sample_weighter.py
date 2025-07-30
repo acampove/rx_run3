@@ -17,7 +17,8 @@ class Data:
     '''
     Data class
     '''
-    out_dir  = '/tmp/tests/rx_misid/sample_weighter'
+    user     = os.environ['USER']
+    out_dir  = f'/tmp/{user}/tests/rx_misid/sample_weighter'
     nentries = 100_000
 
     l_block = [
