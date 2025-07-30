@@ -8,6 +8,7 @@ import math
 import pickle
 
 import pandas  as pnd
+from omegaconf              import DictConfig
 from boost_histogram        import Histogram    as bh
 from boost_histogram        import accumulators as acc
 from dmu.logging.log_store  import LogStore
@@ -24,16 +25,16 @@ class SampleWeighter:
     '''
     # ------------------------------
     def __init__(
-            self,
-            df     : pnd.DataFrame,
-            is_sig : bool,
-            sample : str,
-            cfg    : dict):
+        self,
+        df     : pnd.DataFrame,
+        is_sig : bool,
+        sample : str,
+        cfg    : DictConfig):
         '''
         df    : Pandas dataframe with columns 'hadron', 'bmeson' and 'kind'. Used to assign weights
         is_sig: If true, the weights will provide signal region sample, otherwise control region
         sample: E.g. DATA_24_... Needed to pick maps based on actual particle identity
-        cfg   : Dictionary storing configuration
+        cfg   : omegaconf dictionary storing configuration
         '''
         self._cfg    = cfg
         self._is_sig = is_sig
