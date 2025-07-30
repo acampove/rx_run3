@@ -183,7 +183,7 @@ def test_name(name : str):
             q2bin    = 'jpsi')
         ftr.get_model()
 # ---------------------------------------------------
-@pytest.mark.parametrize('component', ['kpipi'])
+@pytest.mark.parametrize('component', ['kpipi', 'kkk'])
 def test_weights(component : str):
     '''
     Test fitting weighted MC sample
@@ -191,7 +191,7 @@ def test_weights(component : str):
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
 
     cfg = gut.load_conf(package='fitter_data', fpath=f'misid/electron/{component}.yaml')
-    with RDFGetter.max_entries(value=100_000):
+    with RDFGetter.max_entries(value=-1):
         ftr = SimFitter(
             component= component,
             obs     = obs,
