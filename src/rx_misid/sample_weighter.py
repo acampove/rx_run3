@@ -430,10 +430,14 @@ class SampleWeighter:
 
         return eff
     # ----------------------
-    def _print_stats(self) -> None:
+    def _print_stats(self, wgt : numpy.ndarray) -> None:
         '''
         This method will print a summary of the number of entries that
         ended up outside the maps, too high or too low
+
+        Parameters
+        ----------------
+        wgt: Array of weights
         '''
         log.info(f'Processed {len(self._df)} entries')
         log.info(40 * '-')
@@ -444,6 +448,12 @@ class SampleWeighter:
             val_high = d_frq.get(True ,0)
             log.info(f'{var:<20}{val_low:<10}{val_high:<20}')
         log.info(40 * '-')
+
+        nwgt = len(wgt)
+        sumw = numpy.sum(wgt)
+
+        log.info(f'{"Entries":<20}{nwgt:<20}')
+        log.info(f'{"SumW   ":<20}{sumw:<20}')
     # ------------------------------
     def get_weighted_data(self) -> pnd.DataFrame:
         '''
