@@ -130,7 +130,7 @@ class DataSampleSplitter(Wcache):
 
         return df
     # --------------------------------
-    def get_samples(self) -> pnd.DataFrame:
+    def get_sample(self) -> pnd.DataFrame:
         '''
         For data: Returns pandas dataframe with data split by:
 
@@ -152,10 +152,10 @@ class DataSampleSplitter(Wcache):
 
             return df
 
-        df           = self._get_df()
-        df['hadron'] = self._hadron_id
-        df['bmeson'] = 'bplus' if self._is_bplus else 'bminus'
+        df_pi = self._get_df(hadron='pion')
+        df_kp = self._get_df(hadron='kaon')
 
+        df = pnd.concat([df_kp, df_pi])
         df.to_parquet(parquet_path, engine='pyarrow')
         self._cache()
         return df
