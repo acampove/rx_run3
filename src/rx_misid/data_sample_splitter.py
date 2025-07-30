@@ -3,8 +3,9 @@ Module holding SampleSplitter class
 '''
 
 import pandas as pnd
-from ROOT                   import RDataFrame
 
+from ROOT                   import RDataFrame
+from omegaconf              import DictConfig, OmegaConf
 from dmu.logging.log_store  import LogStore
 from dmu.rdataframe         import utilities as rut
 from dmu.workflow.cache     import Cache     as Wcache
