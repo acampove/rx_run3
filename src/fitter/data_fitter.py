@@ -132,7 +132,8 @@ class DataFitter(BaseFitter, Cache):
             sample = self._sample,
             trigger= self._trigger,
             out_dir= self._base_path,
-            project= self._project)
+            project= self._project,
+            wgt_cfg= None) # Do not need weights for data
         data = dpr.get_data()
 
         mod  = DataModel(
