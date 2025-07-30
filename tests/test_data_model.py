@@ -45,9 +45,7 @@ def test_rare():
         package='fitter_data',
         fpath  ='rare/electron/data.yaml')
 
-    with sel.custom_selection(d_sel =
-                              {'mass' : '(1)',
-                               'brmp' : 'nbrem != 0'}):
+    with sel.custom_selection(d_sel = {'mass' : '(1)', 'brmp' : 'nbrem != 0'}):
         dmd = DataModel(
             cfg     = cfg,
             obs     = obs,
