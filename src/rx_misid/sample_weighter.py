@@ -77,12 +77,33 @@ class SampleWeighter:
         raise NotImplementedError(f'Cannot obtain efficiency for {self._sample} sample')
     # ------------------------------
     def _get_df(self, df : pnd.DataFrame) -> pnd.DataFrame:
+        '''
+        Parameters
+        ---------------
+        df : Pandas dataframe with input
+
+        Returns
+        ---------------
+        Input dataframe with columns added.
+        '''
+
         df = self._add_columns(df=df, particle='L1')
         df = self._add_columns(df=df, particle='L2')
 
         return df
     # ------------------------------
     def _add_columns(self, df : pnd.DataFrame, particle : str) -> pnd.DataFrame:
+        '''
+        Parameters
+        ---------------
+        df      : Pandas dataframe with input
+        particle: Name of particle for which columns are needed, e.g. L1
+
+        Returns
+        ---------------
+        Dataframe with columns for X and Y axes added. These axes are the ones
+        in function of which PIDCalib maps are parametrized
+        '''
         for var in [self._varx, self._vary]:
             var = var.replace('PARTICLE', particle)
             if var in df.columns:
