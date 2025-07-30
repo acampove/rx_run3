@@ -19,7 +19,8 @@ class Data:
     Data class
     '''
     plt.style.use(mplhep.style.LHCb2)
-    out_dir = '/tmp/tests/rx_misid/sample_splitter'
+    user    = os.environ['USER']
+    out_dir = f'/tmp/{user}/tests/rx_misid/sample_splitter'
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
