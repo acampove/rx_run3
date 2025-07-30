@@ -117,6 +117,9 @@ def test_simple(is_sig : bool, sample : str):
     cfg = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
     df  = _get_dataframe()
 
+    if not sample.startswith('DATA_'):
+        df = df.drop(columns=['kind'])
+
     wgt = SampleWeighter(
         df    = df,
         cfg   = cfg,
