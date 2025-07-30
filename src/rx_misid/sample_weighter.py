@@ -45,7 +45,7 @@ class SampleWeighter:
         self._vary   : str
 
         self._l_electron_sample = ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC']
-        self._l_hadron_sample   = ['Bu_piplpimnKpl_eq_sqDalitz_DPC']
+        self._l_hadron_sample   = ['Bu_piplpimnKpl_eq_sqDalitz_DPC', 'Bu_KplKplKmn_eq_sqDalitz_DPC']
         self._regex             = r'.*_(block\d)(?:_v\d)?-(?:up|down)-(K|Pi)-.*'
 
         self._d_out_of_map : dict[str,dict[int,int]] = {}
