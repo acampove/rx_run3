@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import pandas as pnd
 from dmu.generic              import utilities   as gut
 from dmu.logging.log_store    import LogStore
+from rx_selection             import selection   as sel
 from rx_data.rdf_getter       import RDFGetter
 from rx_misid.sample_splitter import SampleSplitter
 
@@ -33,9 +34,15 @@ def _initialize():
 # -------------------------------------------------------
 def _get_rdf(sample : str, trigger : str, project : str):
     gtr = RDFGetter(sample=sample, trigger=trigger, analysis=project)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
     uid = gtr.get_uid()
-    rdf.uid = uid
+    with sel.custom_selection(d_sel = {'pid_l' : '(1)'}):
+        rdf = sel.apply_full_selection(
+            rdf    = rdf,
+            uid    = uid,
+            q2bin  = 'central',
+            process= sample,
+            trigger= trigger)
 
     return rdf
 # -------------------------------------------------------
