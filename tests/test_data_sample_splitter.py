@@ -10,7 +10,7 @@ import pandas as pnd
 from dmu.generic                   import utilities   as gut
 from dmu.logging.log_store         import LogStore
 from rx_data.rdf_getter            import RDFGetter
-from rx_misid.data_sample_splitter import DataSampleSplitter
+from rx_misid.data_sample_splitter import SampleSplitter
 
 log=LogStore.add_logger('rx_misid:test_data_splitter')
 # -------------------------------------------------------
@@ -93,7 +93,7 @@ def test_data():
         project= 'rx')
 
     cfg   = gut.load_conf(package='rx_misid_data', fpath='splitting.yaml') 
-    spl   = DataSampleSplitter(rdf = rdf, cfg = cfg)
+    spl   = SampleSplitter(rdf = rdf, cfg = cfg)
     df    = spl.get_sample()
 
     log.info('Dataframe found, checking')

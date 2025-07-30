@@ -13,7 +13,7 @@ from dmu.workflow.cache     import Cache     as Wcache
 
 log=LogStore.add_logger('rx_misid:data_sample_splitter')
 # --------------------------------
-class DataSampleSplitter(Wcache):
+class SampleSplitter(Wcache):
     '''
     What this returns
     -----------------------
