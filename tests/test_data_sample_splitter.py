@@ -57,26 +57,28 @@ def _check_stats(df : pnd.DataFrame):
 
     assert not fail
 # -------------------------------------------------------
-def _plot_pide(
-        df        : pnd.DataFrame,
-        hadron_id : str,
-        sample    : str,
-        is_bplus  : bool) -> None:
-
+def _plot_pide(df : pnd.DataFrame, sample : str) -> None:
+    '''
+    Parameters
+    ---------------
+    df    : Pandas dataframe with tagged candidates
+    sample: E.g. DATA_24...
+    '''
     for kind, df_kind in df.groupby('kind'):
-        ax = None
-        ax = df_kind.plot.scatter(x='L1_PID_E', y='L1_PROBNN_E', color='blue', s=1, label='$e_{SS}$', ax=ax)
-        ax = df_kind.plot.scatter(x='L2_PID_E', y='L2_PROBNN_E', color='red' , s=1, label='$e_{OS}$', ax=ax)
+        for hadron, df_hadr in df_kind.groupby('hadron'):
+            ax = None
+            ax = df_hadr.plot.scatter(x='L1_PID_E', y='L1_PROBNN_E', color='blue', s=1, label='$e_{SS}$', ax=ax)
+            ax = df_hadr.plot.scatter(x='L2_PID_E', y='L2_PROBNN_E', color='red' , s=1, label='$e_{OS}$', ax=ax)
 
-        plot_path = f'{Data.out_dir}/{sample}_{hadron_id}_{is_bplus}_{kind}.png'
+            plot_path = f'{Data.out_dir}/{sample}_{hadron}_{kind}.png'
 
-        ax.set_xlabel(r'$\Delta LL (e)$')
-        ax.set_ylabel('ProbNN(e)')
+            ax.set_xlabel(r'$\Delta LL (e)$')
+            ax.set_ylabel('ProbNN(e)')
 
-        bname = '$B^+$' if is_bplus else '$B^-$'
-        plt.title(f'{hadron_id}; {bname}; {kind}')
-        plt.savefig(plot_path)
-        plt.close()
+            bname = '$B^+$'
+            plt.title(f'{hadron}; {bname}; {kind}')
+            plt.savefig(plot_path)
+            plt.close()
 # -------------------------------------------------------
 @pytest.mark.parametrize('hadron_id', ['pion', 'kaon'])
 @pytest.mark.parametrize('is_bplus' ,    [True, False])
