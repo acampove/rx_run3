@@ -142,10 +142,16 @@ class DataSampleSplitter(Wcache):
 
             return df
 
-        df_pi = self._get_df(hadron='pion')
-        df_kp = self._get_df(hadron='kaon')
+        hadron = self._hadron_from_simulation()
+        if hadron is not None:
+            columns      = self._cfg['branches']
+            df           = rut.rdf_to_df(rdf=self._rdf, columns=columns)
+            df['hadron'] = hadron
+        else:
+            df_pi = self._get_df(hadron='pion')
+            df_kp = self._get_df(hadron='kaon')
+            df    = pnd.concat([df_kp, df_pi])
 
-        df = pnd.concat([df_kp, df_pi])
         df.to_parquet(parquet_path, engine='pyarrow')
         self._cache()
         return df
