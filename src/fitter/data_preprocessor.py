@@ -67,11 +67,11 @@ class DataPreprocessor(Cache):
             obs_name = sut.name_from_obs(obs),
             rdf_uid  = self._rdf_uid)
     # ------------------------
-    def _get_rdf(self, cut : str|None) -> RDataFrame:
+    def _get_rdf(self, cut : dict[str,str]|None) -> RDataFrame:
         '''
         Parameters
         -------------------
-        category_cut: Selection to be added on top, used for categories
+        category_cut: Selection to be added on top, used for categories.
 
         Returns
         -------------------
@@ -87,13 +87,14 @@ class DataPreprocessor(Cache):
         uid = gtr.get_uid()
 
         log.debug('Applying selection')
-        rdf = sel.apply_full_selection(
-            rdf     = rdf,
-            uid     = uid,
-            q2bin   = self._q2bin,
-            trigger = self._trigger,
-            process = self._sample,
-            ext_cut = cut)
+        cut = {} if cut is None else cut
+        with sel.custom_selection(d_sel=cut):
+            rdf = sel.apply_full_selection(
+                rdf     = rdf,
+                uid     = uid,
+                q2bin   = self._q2bin,
+                trigger = self._trigger,
+                process = self._sample)
 
         return rdf
     # ------------------------
