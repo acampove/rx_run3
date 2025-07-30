@@ -101,7 +101,8 @@ class DataSampleSplitter(Wcache):
         ---------------
         hadron: Either pion or kaon, needed for hadron tagging cut
         '''
-        l_df = []
+        columns      = self._cfg['branches']
+        l_df         = []
         for kind in self._l_kind:
             log.info(f'Calculating sample: {kind}/{hadron}')
             rdf            = self._rdf
@@ -110,7 +111,6 @@ class DataSampleSplitter(Wcache):
             rdf = rdf.Filter(cut_os, f'OS {kind}')
             rdf = rdf.Filter(cut_ss, f'SS {kind}')
 
-            columns = self._cfg['branches']
             df = rut.rdf_to_df(rdf=rdf, columns=columns)
             df['kind'] = kind
             l_df.append(df)
