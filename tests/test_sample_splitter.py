@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import pandas as pnd
 from dmu.logging.log_store    import LogStore
 from rx_data.rdf_getter       import RDFGetter
-from rx_misid.sample_splitter import SampleSplitter
+from rx_misid.sample_splitter import DataSampleSplitter
 
 log=LogStore.add_logger('rx_misid:test_splitter')
 # -------------------------------------------------------
@@ -103,7 +103,7 @@ def test_data(hadron_id : str, is_bplus : bool):
             project= 'rx')
 
     cfg   = _get_config()
-    spl   = SampleSplitter(
+    spl   = DataSampleSplitter(
         rdf      = rdf,
         sample   = sample,
         hadron_id= hadron_id,
@@ -131,7 +131,7 @@ def test_mc_misid(is_bplus : bool):
         project= 'nopid')
 
     cfg   = _get_config()
-    spl   = SampleSplitter(
+    spl   = DataSampleSplitter(
         rdf      = rdf,
         sample   = sample,
         hadron_id= hadron_id,
@@ -163,7 +163,7 @@ def test_mc_true_e(
         project= 'nopid')
 
     cfg   = _get_config()
-    spl   = SampleSplitter(
+    spl   = DataSampleSplitter(
             rdf      = rdf,
             sample   = sample,
             hadron_id= hadron_id,

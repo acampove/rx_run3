@@ -11,7 +11,7 @@ from dmu.workflow.cache     import Cache     as Wcache
 
 log=LogStore.add_logger('rx_misid:sample_splitter')
 # --------------------------------
-class SampleSplitter(Wcache):
+class DataSampleSplitter(Wcache):
     '''
     Class meant to split a dataframe with **real data** into PassFail, FailPass and 
     FailFail samples based on a configuration

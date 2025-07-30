@@ -14,7 +14,7 @@ from dmu.pdataframe           import utilities as put
 
 from rx_selection             import selection as sel
 from rx_data.rdf_getter       import RDFGetter
-from rx_misid.sample_splitter import SampleSplitter
+from rx_misid.sample_splitter import DataSampleSplitter
 from rx_misid.sample_weighter import SampleWeighter
 
 log=LogStore.add_logger('rx_misid:misid_calculator')
@@ -111,7 +111,7 @@ class MisIDCalculator:
         rdf,uid = self._filter_rdf(rdf=rdf, uid=uid, is_bplus=is_bplus)
         rdf.uid = uid
 
-        splitter     = SampleSplitter(
+        splitter     = DataSampleSplitter(
             rdf      = rdf,
             sample   = sample,
             is_bplus = is_bplus,
