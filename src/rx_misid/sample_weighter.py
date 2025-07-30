@@ -453,8 +453,8 @@ class SampleWeighter:
         nwgt = len(wgt)
         sumw = numpy.sum(wgt)
 
-        log.info(f'{"Entries":<20}{nwgt:<20}')
-        log.info(f'{"SumW   ":<20}{sumw:<20}')
+        log.info(f'{"Entries":<20}{nwgt:<20}'   )
+        log.info(f'{"SumW   ":<20}{sumw:<20.2f}')
     # ------------------------------
     def get_weighted_data(self) -> pnd.DataFrame:
         '''
