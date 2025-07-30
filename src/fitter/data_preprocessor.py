@@ -15,6 +15,8 @@ from zfit.interface         import ZfitData   as zdata
 from zfit.interface         import ZfitSpace  as zobs
 from rx_data.rdf_getter     import RDFGetter
 from rx_selection           import selection  as sel
+from rx_misid.sample_splitter import SampleSplitter
+from rx_misid.sample_weighter import SampleWeighter
 
 log=LogStore.add_logger('fitter:data_preprocessor')
 # ------------------------
