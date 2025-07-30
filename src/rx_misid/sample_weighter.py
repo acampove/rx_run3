@@ -471,7 +471,8 @@ class SampleWeighter:
             return self._df
 
         try:
-            arr_wgt = self._df.apply(self._get_transfer_weight, axis=1)
+            sr_wgt = self._df.apply(self._get_transfer_weight, axis=1)
+            arr_wgt= sr_wgt.to_numpy()
         except AttributeError as exc:
             log.warning('Found columns:')
             for column in self._df.columns:
