@@ -135,6 +135,8 @@ def test_simple(is_sig : bool, sample : str):
     # array of block numbers
     assert numpy.array_equal(arr_block_inp, arr_block_out)
 
+    assert 'pid_weights' in df.attrs
+
     _validate_weights(df=df, mode=mode, sample=sample, lep='L1')
     _validate_weights(df=df, mode=mode, sample=sample, lep='L2')
 # ----------------------------
