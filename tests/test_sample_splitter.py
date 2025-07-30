@@ -104,7 +104,7 @@ def _plot_simulation_pide(df : pnd.DataFrame, sample : str) -> None:
 # -------------------------------------------------------
 def test_data():
     '''
-    Tests getting split dataset 
+    Tests getting split dataset
     '''
     sample= 'DATA_24_MagUp_24c2'
     log.info('')
@@ -114,7 +114,7 @@ def test_data():
         trigger= 'Hlt2RD_BuToKpEE_MVA_ext',
         project= 'rx')
 
-    cfg   = gut.load_conf(package='rx_misid_data', fpath='splitting.yaml') 
+    cfg   = gut.load_conf(package='rx_misid_data', fpath='splitting.yaml')
     spl   = SampleSplitter(rdf = rdf, cfg = cfg)
     df    = spl.get_sample()
 
