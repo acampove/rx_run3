@@ -2,13 +2,12 @@
 Module with functions meant to test SampleSplitter class
 '''
 import os
-from importlib.resources import files
 
-import yaml
 import pytest
 import mplhep
 import matplotlib.pyplot as plt
 import pandas as pnd
+from dmu.generic                   import utilities   as gut
 from dmu.logging.log_store         import LogStore
 from rx_data.rdf_getter            import RDFGetter
 from rx_misid.data_sample_splitter import DataSampleSplitter
@@ -30,16 +29,6 @@ def _initialize():
     LogStore.set_level('rx_data:path_splitter' , 30)
 
     os.makedirs(Data.out_dir, exist_ok=True)
-# -------------------------------------------------------
-def _get_config() -> dict:
-    cfg_path = files('rx_misid_data').joinpath('misid.yaml')
-    cfg_path = str(cfg_path)
-
-    log.info(f'Picking up config from: {cfg_path}')
-    with open(cfg_path, encoding='utf-8') as ifile:
-        cfg = yaml.safe_load(ifile)
-
-    return cfg['splitting']
 # -------------------------------------------------------
 def _get_rdf(sample : str, trigger : str, project : str):
     gtr = RDFGetter(sample=sample, trigger=trigger, analysis=project)
