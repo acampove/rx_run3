@@ -429,6 +429,21 @@ class SampleWeighter:
             eff  = eff_p1 * eff_f2 + eff_p2 * eff_f1 + eff_f1 * eff_f2
 
         return eff
+    # ----------------------
+    def _print_stats(self) -> None:
+        '''
+        This method will print a summary of the number of entries that
+        ended up outside the maps, too high or too low
+        '''
+        log.info(f'Processed {len(self._df)} entries')
+        log.info(40 * '-')
+        log.info(f'{"Variable":<20}{"Low":<10}{"High":<20}')
+        log.info(40 * '-')
+        for var, d_frq in self._d_out_of_map.items():
+            val_low  = d_frq.get(False,0)
+            val_high = d_frq.get(True ,0)
+            log.info(f'{var:<20}{val_low:<10}{val_high:<20}')
+        log.info(40 * '-')
     # ------------------------------
     def get_weighted_data(self) -> pnd.DataFrame:
         '''
@@ -446,15 +461,7 @@ class SampleWeighter:
                 log.info(f'    {column}')
             raise AttributeError('Cannot assign weight') from exc
 
-        log.info(f'Processed {len(self._df)} entries')
-        log.info(40 * '-')
-        log.info(f'{"Variable":<20}{"Low":<10}{"High":<20}')
-        log.info(40 * '-')
-        for var, d_frq in self._d_out_of_map.items():
-            val_low  = d_frq.get(False,0)
-            val_high = d_frq.get(True ,0)
-            log.info(f'{var:<20}{val_low:<10}{val_high:<20}')
-        log.info(40 * '-')
+        self._print_stats()
 
         return self._df
 # ------------------------------
