@@ -27,7 +27,7 @@ def _get_rdf() -> RDataFrame|RDF.RNode:
     '''
     gtr = RDFGetter(
         sample  ='Bu_JpsiPi_ee_eq_DPC',
-        trigger ='Hlt2RD_BuToKpEE_noPID_MVA',
+        trigger ='Hlt2RD_BuToKpEE_MVA_noPID',
         analysis='nopid')
 
     rdf = gtr.get_rdf(per_file=False)
