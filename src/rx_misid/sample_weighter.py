@@ -247,10 +247,10 @@ class SampleWeighter:
         return val
     # ------------------------------
     def _get_fake_lepton_eff(
-            self,
-            lep    : str,
-            row    : pnd.Series,
-            is_sig : bool) -> float:
+        self,
+        lep    : str,
+        row    : pnd.Series,
+        is_sig : bool) -> float:
         '''
         Reads loaded PID efficiency maps and returns efficiency, for a given particle
         This method assumes that the particles is not a true electron, but a hadron
