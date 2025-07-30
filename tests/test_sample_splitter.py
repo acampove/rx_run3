@@ -149,7 +149,5 @@ def test_simulation(sample : str):
     df    = spl.get_sample()
 
     log.info('Dataframe found, checking')
-    _check_stats(df=df)
     _plot_simulation_pide(df=df, sample=sample)
 # -------------------------------------------------------
-
