@@ -25,6 +25,8 @@ class DataSampleSplitter(Wcache):
         is_bplus : bool,
         cfg      : dict):
         '''
+        Parameters
+        --------------------
         rdf      : Input dataframe with data to split, It should have attached a `uid` attribute, the unique identifier
         sample   : Sample name, e.g. DATA_24_..., needed for output naming
         hadron_id: kaon or pion, needed to extract hadron tagging cuts, when doing data
