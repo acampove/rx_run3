@@ -1,15 +1,3 @@
-samples:
-  signal :
-    - Bu_Kee_eq_btosllball05_DPC
-  leakage:
-    - Bu_JpsiK_ee_eq_DPC
-  data   :
-    - DATA_24_MagUp_24c2
-    - DATA_24_MagUp_24c3
-    - DATA_24_MagUp_24c4
-    - DATA_24_MagDown_24c2
-    - DATA_24_MagDown_24c3
-    - DATA_24_MagDown_24c4
 branches: # all these branches will be picked in the dataframe
   - B_Mass
   - B_Mass_smr
