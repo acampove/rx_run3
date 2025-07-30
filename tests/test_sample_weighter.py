@@ -108,7 +108,11 @@ def _get_dataframe() -> pnd.DataFrame:
 @pytest.mark.parametrize('is_sig', [True, False])
 def test_simple(is_sig : bool, sample : str):
     '''
-    Simplest test
+    Parameters
+    -------------
+    is_sig: If true, it will weight sample to put it in the signal region
+            Otherwise it will go to control region
+    sample: MC and data samples need to be weighted in different ways
     '''
     cfg = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
     df  = _get_dataframe()
