@@ -120,5 +120,5 @@ def test_data():
 
     log.info('Dataframe found, checking')
     _check_stats(df=df)
-    _plot_pide(df=df, sample=sample)
+    _plot_data_pide(df=df, sample=sample)
 # -------------------------------------------------------
