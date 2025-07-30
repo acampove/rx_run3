@@ -1,4 +1,4 @@
-output_directory : misid/electron/signal
+output_directory : misid/electron/kpipi
 categories:
   main:
     model    : KDE1DimFFT  # Use KDE
