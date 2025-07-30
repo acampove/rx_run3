@@ -78,7 +78,6 @@ def _validate_weights(
 def _get_dataframe() -> pnd.DataFrame:
     df           = pnd.DataFrame(index=range(Data.nentries))
     df['hadron'] = numpy.random.choice(['kaon' ,   'pion'], size=Data.nentries)
-    df['bmeson'] = numpy.random.choice(['bplus', 'bminus'], size=Data.nentries)
     df['kind'  ] = numpy.random.choice(['PassFail', 'FailPass', 'FailFail'], size=Data.nentries)
     df['block' ] = numpy.random.choice(Data.l_block, size=Data.nentries)
     df['weight'] = numpy.random.choice([1, 10], size=Data.nentries)
