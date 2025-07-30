@@ -90,17 +90,21 @@ class DataSampleSplitter(Wcache):
 
         return cut_ss, cut_os
     # --------------------------------
-    def _get_data_df(self) -> pnd.DataFrame:
+    def _get_df(self, hadron : str) -> pnd.DataFrame:
         '''
         Using ROOT dataframe from data, after selection, will:
         - Apply category splitting
         - Build pandas dataframe and return it
+
+        Parameters
+        ---------------
+        hadron: Either pion or kaon, needed for hadron tagging cut
         '''
         l_df = []
         for kind in self._l_kind:
-            log.info(f'Calculating sample: {kind}')
+            log.info(f'Calculating sample: {kind}/{hadron}')
             rdf            = self._rdf
-            cut_os, cut_ss = self._get_data_cuts(kind=kind)
+            cut_os, cut_ss = self._get_cuts(kind=kind, hadron=hadron)
 
             rdf = rdf.Filter(cut_os, f'OS {kind}')
             rdf = rdf.Filter(cut_ss, f'SS {kind}')
@@ -110,25 +114,10 @@ class DataSampleSplitter(Wcache):
             df['kind'] = kind
             l_df.append(df)
 
-        df_tot = pnd.concat(l_df)
+        df_tot           = pnd.concat(l_df)
+        df_tot['hadron'] = hadron
+
         return df_tot
-    # --------------------------------
-    def _get_df(self) -> pnd.DataFrame:
-        '''
-        This method is meant to be a switch between data and MC samples
-
-        Returns
-        ---------
-        Pandas dataframe with information needed for PID weighting
-        '''
-        if self._sample.startswith('DATA_'):
-            return self._get_data_df()
-
-        columns = self._cfg['branches']
-        df = rut.rdf_to_df(rdf=self._rdf, columns=columns)
-        df['kind'] = 'full_sample' # MC is not split between PF,FP,FF, column is needed
-
-        return df
     # --------------------------------
     def get_sample(self) -> pnd.DataFrame:
         '''
