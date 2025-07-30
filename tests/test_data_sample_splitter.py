@@ -80,11 +80,9 @@ def _plot_pide(df : pnd.DataFrame, sample : str) -> None:
             plt.savefig(plot_path)
             plt.close()
 # -------------------------------------------------------
-@pytest.mark.parametrize('hadron_id', ['pion', 'kaon'])
-@pytest.mark.parametrize('is_bplus' ,    [True, False])
-def test_data(hadron_id : str, is_bplus : bool):
+def test_data():
     '''
-    Tests splitting in data
+    Tests getting split dataset 
     '''
     sample= 'DATA_24_MagUp_24c2'
     log.info('')
@@ -94,16 +92,11 @@ def test_data(hadron_id : str, is_bplus : bool):
         trigger= 'Hlt2RD_BuToKpEE_MVA_ext',
         project= 'rx')
 
-    cfg   = _get_config()
-    spl   = DataSampleSplitter(
-        rdf      = rdf,
-        sample   = sample,
-        hadron_id= hadron_id,
-        is_bplus = is_bplus,
-        cfg      = cfg)
-    df    = spl.get_samples()
+    cfg   = gut.load_conf(package='rx_misid_data', fpath='splitting.yaml') 
+    spl   = DataSampleSplitter(rdf = rdf, cfg = cfg)
+    df    = spl.get_sample()
 
     log.info('Dataframe found, checking')
     _check_stats(df=df)
-    _plot_pide(df=df, hadron_id=hadron_id, is_bplus=is_bplus, sample=sample)
+    _plot_pide(df=df, sample=sample)
 # -------------------------------------------------------
