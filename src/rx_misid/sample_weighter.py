@@ -447,7 +447,13 @@ class SampleWeighter:
     # ------------------------------
     def get_weighted_data(self) -> pnd.DataFrame:
         '''
-        Returns instance of weighted data
+        Returns 
+        --------------------
+        Input dataframe with:
+
+        - Variables to read X and Y axis defined
+        - Updated `weight` column with PID weights
+        - Attached `pid_weights` column
         '''
         if len(self._df) == 0:
             log.warning('Empty dataframe, not assigning any weight')
