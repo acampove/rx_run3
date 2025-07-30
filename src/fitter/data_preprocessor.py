@@ -114,6 +114,46 @@ class DataPreprocessor(Cache):
             wgt *= self._get_extra_weight(kind=kind)
 
         return wgt
+    # ----------------------
+    def _get_extra_weight(self, kind : str) -> numpy.ndarray:
+        '''
+        Parameters
+        -------------
+        kind: E.g. PID, Dalitz
+
+        Returns
+        -------------
+        Array of weights
+        '''
+        if kind == 'PID':
+            arr_wgt = self._get_pid_weights()
+        else:
+            raise ValueError(f'Invalid type of weight {kind}')
+
+        return arr_wgt
+    # ----------------------
+    def _get_pid_weights(self) -> numpy.ndarray:
+        '''
+        Returns
+        -------------
+        Array with PID weights
+        '''
+        # Use default config in rx_misid
+        cfg   = gut.load_conf(package='rx_misid_data', fpath='splitting.yaml')
+        spl   = SampleSplitter(rdf = self._rdf, cfg = cfg)
+        df    = spl.get_sample()
+
+        cfg   = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
+        wgt   = SampleWeighter(
+            df    = df,
+            cfg   = cfg,
+            sample= self._sample,
+            is_sig= False) # We want weights for the control region
+        df  = wgt.get_weighted_data()
+
+        arr_wgt = df.attrs['pid_weights']
+
+        return arr_wgt
     # ------------------------
     def _get_array(self) -> tuple[numpy.ndarray,numpy.ndarray]:
         '''
