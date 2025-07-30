@@ -126,9 +126,9 @@ def test_mc_misid(is_bplus : bool):
     log.info('')
 
     rdf   = _get_rdf(
-            sample = sample,
-            trigger= 'Hlt2RD_BuToKpEE_MVA_noPID',
-            project= 'nopid')
+        sample = sample,
+        trigger= 'Hlt2RD_BuToKpEE_MVA_noPID',
+        project= 'nopid')
 
     cfg   = _get_config()
     spl   = SampleSplitter(
