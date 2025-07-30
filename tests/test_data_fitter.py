@@ -145,3 +145,25 @@ def test_high_q2_track():
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+def test_rare_misid_electron(q2bin : str):
+    '''
+    Test fitting rare electron channel
+    '''
+    cfg = gut.load_conf(
+        package='fitter_data',
+        fpath  ='misid/electron/data.yaml')
+
+    with Cache.turn_off_cache(val=['DataFitter']),\
+        sel.custom_selection(d_sel={
+            'nobr0' : 'nbrem != 0',
+            'bdt'   : 'mva_cmb > 0.80 && mva_prc > 0.60'}):
+        ftr = DataFitter(
+            name   = '080_060',
+            sample = 'DATA_24_*',
+            trigger= 'Hlt2RD_BuToKpEE_MVA_noPID',
+            project= 'nopid',
+            q2bin  = q2bin,
+            cfg    = cfg)
+        ftr.run()
+# -------------------------------------------
