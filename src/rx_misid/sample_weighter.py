@@ -213,6 +213,7 @@ class SampleWeighter:
         cut    = cut.replace('DLLe'    , f'{lep}_PID_E')
         cut    = cut.replace('PROBNN_E', f'{lep}_PROBNN_E')
         data   = row.to_dict()
+
         try:
             flag = numexpr.evaluate(cut, local_dict=data)
             flag = bool(flag)
