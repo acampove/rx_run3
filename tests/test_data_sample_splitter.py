@@ -9,11 +9,11 @@ import pytest
 import mplhep
 import matplotlib.pyplot as plt
 import pandas as pnd
-from dmu.logging.log_store    import LogStore
-from rx_data.rdf_getter       import RDFGetter
-from rx_misid.sample_splitter import DataSampleSplitter
+from dmu.logging.log_store         import LogStore
+from rx_data.rdf_getter            import RDFGetter
+from rx_misid.data_sample_splitter import DataSampleSplitter
 
-log=LogStore.add_logger('rx_misid:test_splitter')
+log=LogStore.add_logger('rx_misid:test_data_splitter')
 # -------------------------------------------------------
 class Data:
     '''
