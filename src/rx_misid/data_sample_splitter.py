@@ -127,6 +127,60 @@ class DataSampleSplitter(Wcache):
         df_tot['hadron'] = hadron
 
         return df_tot
+    # ----------------------
+    def _id_from_array(self, array : numpy.ndarray) -> int:
+        '''
+        Parameters
+        -------------
+        array: Numpy array with particle IDs
+
+        Returns
+        -------------
+        Absolute value of particle ID. If multiple IDs are found, raise.
+        '''
+        if not numpy.all(array == array[0]):
+            raise ValueError('Array of IDs contains multiple values')
+
+        particle_id = array[0]
+
+        return abs(particle_id)
+    # ----------------------
+    def _particle_from_simulation(self) -> str|None:
+        '''
+        Returns
+        -------------
+        Name of particle associated to MC L1 and L2 leptons, pion, kaon or electron
+        If this is not MC, return None.
+        If particle is neither raise
+        '''
+        l_col = [ name.c_str() for name in self._rdf.GetColumnNames() ]
+
+        if 'L1_TRUEID' not in l_col or 'L2_TRUEID' not in l_col:
+            log.debug('No simulation hadron ID found, sample is data')
+            return None
+
+        d_trueid = self._rdf.AsNumpy(['L1_TRUEID', 'L2_TRUEID'])
+        arr_l1id = d_trueid['L1_TRUEID']
+        arr_l2id = d_trueid['L2_TRUEID']
+
+        lep1_id  = self._id_from_array(array=arr_l1id)
+        lep2_id  = self._id_from_array(array=arr_l2id)
+
+        if lep1_id != lep2_id:
+            raise ValueError(f'Lepton IDs differ: {lep1_id} != {lep2_id}')
+
+        if   lep1_id == 211:
+            particle = 'pion'
+        elif lep1_id == 321:
+            particle = 'kaon'
+        elif lep1_id ==  11:
+            particle = 'electron'
+        else:
+            raise ValueError(f'Unexpected lepton ID: {lep1_id}')
+
+        log.debug(f'Found hadron: {particle}')
+
+        return particle
     # --------------------------------
     def get_sample(self) -> pnd.DataFrame:
         '''
