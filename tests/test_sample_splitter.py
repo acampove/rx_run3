@@ -7,6 +7,7 @@ import pytest
 import mplhep
 import matplotlib.pyplot as plt
 import pandas as pnd
+from ROOT                     import RDataFrame
 from dmu.generic              import utilities   as gut
 from dmu.logging.log_store    import LogStore
 from rx_selection             import selection   as sel
