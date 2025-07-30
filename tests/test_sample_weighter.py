@@ -116,6 +116,7 @@ def test_simple(is_sig : bool, sample : str):
     '''
     cfg = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
     df  = _get_dataframe()
+    arr_block_inp = df['block'].to_numpy()
 
     if not sample.startswith('DATA_'):
         df = df.drop(columns=['kind'])
@@ -126,8 +127,13 @@ def test_simple(is_sig : bool, sample : str):
         sample= sample,
         is_sig= is_sig)
     df  = wgt.get_weighted_data()
+    arr_block_out = df['block'].to_numpy()
 
     mode = {True : 'signal', False : 'control'}[is_sig]
+
+    # Check that no shuffling of entries happened, using
+    # array of block numbers
+    assert numpy.array_equal(arr_block_inp, arr_block_out)
 
     _validate_weights(df=df, mode=mode, sample=sample, lep='L1')
     _validate_weights(df=df, mode=mode, sample=sample, lep='L2')
