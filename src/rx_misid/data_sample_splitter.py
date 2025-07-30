@@ -51,21 +51,22 @@ class DataSampleSplitter(Wcache):
         self._rdf      = rdf
         self._l_kind   = ['PassFail', 'FailPass', 'FailFail']
     # --------------------------------
-    def _get_data_cuts(self, kind : str) -> tuple[str,str]:
+    def _get_cuts(self, kind : str, hadron : str) -> tuple[str,str]:
         '''
         This method is only used for real data, not MC
 
         Parameters
         -----------------
-        kind: PassFail/FailPass/FailFail
+        kind  : PassFail/FailPass/FailFail
+        hadron: Either pion or kaon
 
         Returns
         -----------------
-        Cut for the OS or SS candidates needed to get the data in the corresponding region
+        Cut for the OS or SS tracks, needed to get the data in the corresponding region
         '''
         pass_cut = self._cfg['lepton_tagging']['pass']
         fail_cut = self._cfg['lepton_tagging']['fail']
-        hadr_tag = self._cfg['hadron_tagging'][self._hadron_id]
+        hadr_tag = self._cfg['hadron_tagging'][hadron]
 
         fail_cut = f'({fail_cut}) && ({hadr_tag})'
 
