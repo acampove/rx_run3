@@ -171,6 +171,7 @@ class DataPreprocessor(Cache):
             wgt = arr_weight
 
         data = zfit.data.from_numpy(obs=self._obs, array=arr_value, weights=wgt)
+        data = cast(zdata, data)
 
         return data
     # ------------------------
