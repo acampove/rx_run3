@@ -38,7 +38,7 @@ class DataPreprocessor(Cache):
         project : str,
         q2bin   : str,
         wgt_cfg : ListConfig|None,
-        cut     : str|None = None):
+        cut     : dict[str,str]|None = None):
         '''
         Parameters
         --------------------
@@ -50,7 +50,8 @@ class DataPreprocessor(Cache):
         q2bin  : e.g. central
         wgt_cfg: OmegaConf's version of a list of strings, each representing a path to a YAML file with configs
                  to extract weights
-        cut    : selection that can be added on top. Needed when fits are required in categories, optional
+        cut    : Selection defining this component category, represented by dictionary where the key are labels
+                 and the values are the expressions of the cut
         '''
         self._obs    = obs
         self._sample = sample
