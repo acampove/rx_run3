@@ -138,12 +138,14 @@ class SampleSplitter(Wcache):
         -------------
         Absolute value of particle ID. If multiple IDs are found, raise.
         '''
+        array = numpy.abs(array)
         if not numpy.all(array == array[0]):
+            log.info(array)
             raise ValueError('Array of IDs contains multiple values')
 
         particle_id = array[0]
 
-        return abs(particle_id)
+        return particle_id
     # ----------------------
     def _particle_from_simulation(self) -> str|None:
         '''
