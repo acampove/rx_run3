@@ -35,29 +35,21 @@ class DataSampleSplitter(Wcache):
     def __init__(
         self,
         rdf      : RDataFrame,
-        sample   : str,
-        hadron_id: str,
-        is_bplus : bool,
-        cfg      : dict):
+        cfg      : DictConfig):
         '''
         Parameters
         --------------------
         rdf      : Input dataframe with data to split, It should have attached a `uid` attribute, the unique identifier
-        sample   : Sample name, e.g. DATA_24_..., needed for output naming
-        hadron_id: kaon or pion, needed to extract hadron tagging cuts, when doing data
-        is_bplus : True if the sam ple that will be returned will contain B+ mesons, false for B-
-        cfg      : Dictionary with configuration specifying how to split the samples
+        cfg      : omegaconf dictionary with configuration specifying how to split the samples
         '''
+        cfg_data = OmegaConf.to_container(cfg, resolve=True)
         super().__init__(
-            out_path = f'sample_splitter_{sample}_{hadron_id}_{is_bplus}',
-            args     = [rdf.uid, hadron_id, is_bplus, cfg])
+            out_path = 'data_sample_splitter',
+            args     = [rdf.uid, cfg_data])
 
-        self._sample   = sample
-        self._is_bplus = is_bplus
-        self._hadron_id= hadron_id
         self._cfg      = cfg
-        self._l_kind   = ['PassFail', 'FailPass', 'FailFail']
         self._rdf      = rdf
+        self._l_kind   = ['PassFail', 'FailPass', 'FailFail']
     # --------------------------------
     def _get_data_cuts(self, kind : str) -> tuple[str,str]:
         '''
