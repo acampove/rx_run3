@@ -8,6 +8,7 @@ import math
 import pickle
 import numexpr
 
+import numpy
 import pandas  as pnd
 from omegaconf              import DictConfig
 from boost_histogram        import Histogram    as bh
@@ -477,7 +478,7 @@ class SampleWeighter:
                 log.info(f'    {column}')
             raise AttributeError('Cannot assign weight') from exc
 
-        self._print_stats()
+        self._print_stats(wgt=arr_wgt)
 
         self._df['weight']           *= arr_wgt
         self._df.attrs['pid_weights'] = arr_wgt
