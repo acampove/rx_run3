@@ -122,3 +122,27 @@ def test_data():
     _check_stats(df=df)
     _plot_data_pide(df=df, sample=sample)
 # -------------------------------------------------------
+@pytest.mark.parametrize('sample', [
+    'Bu_Kee_eq_btosllball05_DPC',
+    'Bu_piplpimnKpl_eq_sqDalitz_DPC',
+    'Bu_KplKplKmn_eq_sqDalitz_DPC'])
+def test_simulation(sample : str):
+    '''
+    Tests getting split dataset
+    '''
+    log.info('')
+
+    rdf   = _get_rdf(
+        sample = sample,
+        trigger= 'Hlt2RD_BuToKpEE_MVA_noPID',
+        project= 'nopid')
+
+    cfg   = gut.load_conf(package='rx_misid_data', fpath='splitting.yaml')
+    spl   = SampleSplitter(rdf = rdf, cfg = cfg)
+    df    = spl.get_sample()
+
+    log.info('Dataframe found, checking')
+    _check_stats(df=df)
+    _plot_simulation_pide(df=df, sample=sample)
+# -------------------------------------------------------
+
