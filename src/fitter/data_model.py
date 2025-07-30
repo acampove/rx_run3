@@ -8,9 +8,9 @@ from dmu.logging.log_store  import LogStore
 
 from omegaconf              import DictConfig
 from zfit                   import ComposedParameter
-from zfit.core.interfaces   import ZfitPDF    as zpdf
-from zfit.core.parameter    import Parameter  as zpar
-from zfit.core.interfaces   import ZfitSpace  as zobs
+from zfit.interface         import ZfitPDF       as zpdf
+from zfit.interface         import ZfitParameter as zpar
+from zfit.interface         import ZfitSpace     as zobs
 from fitter.sim_fitter      import SimFitter
 
 log = LogStore.add_logger('fitter:data_model')
