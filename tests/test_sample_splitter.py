@@ -152,7 +152,7 @@ def test_data():
     df    = spl.get_sample()
 
     log.info('Dataframe found, checking')
-    _check_stats(df=df)
+    _check_dt_stats(df=df, rdf=rdf)
     _plot_data_pide(df=df, sample=sample)
 # -------------------------------------------------------
 @pytest.mark.parametrize('sample', [
@@ -176,4 +176,5 @@ def test_simulation(sample : str):
 
     log.info('Dataframe found, checking')
     _plot_simulation_pide(df=df, sample=sample)
+    _check_mc_stats(rdf=rdf, df=df)
 # -------------------------------------------------------
