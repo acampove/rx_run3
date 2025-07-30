@@ -72,10 +72,6 @@ class DataPreprocessor(Cache):
         -------------------
         ROOT dataframe after selection and with Unique identifier attached as uid
         '''
-        if 'toy' in self._sample:
-            log.debug(f'Cannot retrieve dataframe for toy sample: {self._sample}')
-            return None
-
         log.debug('Retrieving dataframe')
         gtr = RDFGetter(
             sample  =self._sample,
@@ -96,23 +92,6 @@ class DataPreprocessor(Cache):
 
         return rdf
     # ------------------------
-    def _get_toy_array(self, sample : str) -> numpy.ndarray:
-        '''
-        Returns array with toy data
-        '''
-        if sample == 'gauss_toy':
-            sig  = numpy.random.normal(loc=5280, scale=50, size=10_000)
-            return sig
-
-        if sample == 'data_toy':
-            sig = self._get_toy_array(sample='gauss_toy')
-            bkg = numpy.random.exponential(scale=10_000, size=100_000)
-            arr = numpy.concatenate((sig, bkg))
-
-            return arr
-
-        raise NotImplementedError(f'Cannot retrive toy data for sample: {sample}')
-    # ----------------------
     def _add_extra_weights(self, wgt : numpy.ndarray) -> numpy.ndarray:
         '''
         Parameters
@@ -137,13 +116,6 @@ class DataPreprocessor(Cache):
         Return a tuple of numpy arrays with the observable and weight
         for the sample requested, this array is fully selected
         '''
-        if 'toy' in self._sample:
-            log.debug(f'Extracting toy data for sample {self._sample}')
-            arr = self._get_toy_array(sample=self._sample)
-            wgt = numpy.ones_like(arr)
-
-            return arr, wgt
-
         log.debug(f'Extracting data through RDFGetter for sample {self._sample}')
 
         rdf = self._rdf
