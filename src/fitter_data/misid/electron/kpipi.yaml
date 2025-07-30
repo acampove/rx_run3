@@ -5,7 +5,7 @@ categories:
     selection: 
       pid_l : (1)  # Built removing PID on leptons
     weights : 
-      - weights/pid_l.yaml               # And applying weights through this config
+      - PID 
 sample :  Bu_piplpimnKpl_eq_sqDalitz_DPC # Using this MC sample
 fit:
   strategy  : KDE1DimFFT
