@@ -113,7 +113,12 @@ class SampleWeighter:
         return f'{block}_{part}_{region}'
     # ------------------------------
     def _load_maps(self) -> dict[str, bh]:
-        pkl_dir = self._cfg['path']
+        '''
+        Loads pickle files with PIDCalib2 efficiencies for
+        kaons or pions
+        '''
+        ana_dir = os.environ['ANADIR']
+        pkl_dir = f'{ana_dir}/{self._cfg.path}'
         path_wc = f'{pkl_dir}/*.pkl'
 
         d_map = {}
