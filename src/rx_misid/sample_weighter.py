@@ -6,6 +6,7 @@ import re
 import glob
 import math
 import pickle
+import numexpr
 
 import pandas  as pnd
 from omegaconf              import DictConfig
@@ -211,12 +212,10 @@ class SampleWeighter:
         cut    = self._cfg['regions'][region]
         cut    = cut.replace('DLLe'    , f'{lep}_PID_E')
         cut    = cut.replace('PROBNN_E', f'{lep}_PROBNN_E')
-        cut    = cut.replace('|',  ' or ')
-        cut    = cut.replace('&', ' and ')
-
         data   = row.to_dict()
         try:
-            flag = eval(cut, {}, data)
+            flag = numexpr.evaluate(cut, local_dict=data)
+            flag = bool(flag)
         except Exception as exc:
             raise ValueError(f'Cannot evaluate {cut} on {data}') from exc
 
