@@ -154,15 +154,19 @@ def test_rare_misid_electron(q2bin : str):
         package='fitter_data',
         fpath  ='misid/electron/data.yaml')
 
+    l1_in_cr = '(L1_PROBNN_E < 0.2) || (L1_PID_E < 3.0)'
+    l2_in_cr = '(L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)'
+
     with Cache.turn_off_cache(val=['DataFitter']),\
         sel.custom_selection(d_sel={
             'nobr0' : 'nbrem != 0',
+            'pid_l' : f'({l1_in_cr}) || ({l2_in_cr})',
             'bdt'   : 'mva_cmb > 0.80 && mva_prc > 0.60'}):
         ftr = DataFitter(
             name   = '080_060',
             sample = 'DATA_24_*',
-            trigger= 'Hlt2RD_BuToKpEE_MVA_noPID',
-            project= 'nopid',
+            trigger= 'Hlt2RD_BuToKpEE_MVA_ext',
+            project= 'rx',
             q2bin  = q2bin,
             cfg    = cfg)
         ftr.run()
