@@ -3,6 +3,7 @@ Module with functions meant to test SampleSplitter class
 '''
 import os
 
+import numpy
 import pytest
 import mplhep
 import matplotlib.pyplot as plt
@@ -134,6 +135,13 @@ def _check_mc_stats(rdf : RDataFrame, df : pnd.DataFrame) -> None:
     noutput= len(df)
 
     assert ninput == noutput
+
+    arr_block_rdf = rdf.AsNumpy(['block'])['block']
+    arr_block_pnd = df['block'].to_numpy()
+
+    # Use sequence of blocks to check that
+    # There is no shufflign of entries for MC
+    assert numpy.array_equal(arr_block_rdf, arr_block_pnd)
 # -------------------------------------------------------
 def test_data():
     '''
