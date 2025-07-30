@@ -422,7 +422,7 @@ class SampleWeighter:
         except AttributeError as exc:
             log.warning('Found columns:')
             for column in self._df.columns:
-                log.info('    ' + column)
+                log.info(f'    {column}')
             raise AttributeError('Cannot assign weight') from exc
 
         log.info(f'Processed {len(self._df)} entries')
