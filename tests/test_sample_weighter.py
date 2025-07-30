@@ -110,7 +110,7 @@ def test_simple(is_sig : bool, sample : str):
     '''
     Simplest test
     '''
-    cfg = _get_config()
+    cfg = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
     df  = _get_dataframe()
 
     wgt = SampleWeighter(
