@@ -174,6 +174,7 @@ class DataPreprocessor(Cache):
         log.debug('Retrieving data')
         arr  = rdf.AsNumpy([name])[name]
         wgt  = rdf.AsNumpy(['weight'])['weight']
+        wgt  = wgt.astype(float)
         wgt  = self._add_extra_weights(wgt=wgt)
 
         nevt = len(arr)
