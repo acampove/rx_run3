@@ -113,7 +113,13 @@ class DataPreprocessor(Cache):
             return wgt
 
         for kind in self._wgt_cfg:
-            wgt *= self._get_extra_weight(kind=kind)
+            new_wgt = self._get_extra_weight(kind=kind)
+            if new_wgt.shape != wgt.shape:
+                raise ValueError(
+                    f'''Shapes of original array and {kind} weights differ:
+                        {new_wgt.shape} != {wgt.shape}''')
+
+            wgt = wgt * new_wgt
 
         return wgt
     # ----------------------
