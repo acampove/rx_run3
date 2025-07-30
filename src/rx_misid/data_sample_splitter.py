@@ -150,11 +150,11 @@ class DataSampleSplitter(Wcache):
 
             return df
 
-        hadron = self._hadron_from_simulation()
-        if hadron is not None:
+        particle = self._particle_from_simulation()
+        if particle is not None:
             columns      = self._cfg['branches']
             df           = rut.rdf_to_df(rdf=self._rdf, columns=columns)
-            df['hadron'] = hadron
+            df['hadron'] = particle
         else:
             df_pi = self._get_df(hadron='pion')
             df_kp = self._get_df(hadron='kaon')
