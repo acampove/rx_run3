@@ -56,3 +56,25 @@ def test_rare():
 
     sut.print_pdf(pdf)
 # --------------------------
+def test_misid_rare():
+    '''
+    Test getting model for misid control region
+    '''
+    q2bin = 'central'
+
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    cfg = gut.load_conf(
+        package='fitter_data',
+        fpath  ='rare/electron/data.yaml')
+
+    with sel.custom_selection(d_sel = {'mass' : '(1)', 'brmp' : 'nbrem != 0'}):
+        dmd = DataModel(
+            cfg     = cfg,
+            obs     = obs,
+            trigger = 'Hlt2RD_BuToKpEE_MVA_noPID',
+            project = 'nopid',
+            q2bin   = q2bin)
+        pdf = dmd.get_model()
+
+    sut.print_pdf(pdf)
+# --------------------------
