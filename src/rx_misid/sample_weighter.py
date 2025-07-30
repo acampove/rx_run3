@@ -31,7 +31,7 @@ class SampleWeighter:
         sample : str,
         cfg    : DictConfig):
         '''
-        df    : Pandas dataframe with columns 'hadron', 'bmeson' and 'kind'. Used to assign weights
+        df    : Pandas dataframe with columns including 'hadron' and 'kind'. Used to assign weights
         is_sig: If true, the weights will provide signal region sample, otherwise control region
         sample: E.g. DATA_24_... Needed to pick maps based on actual particle identity
         cfg   : omegaconf dictionary storing configuration
