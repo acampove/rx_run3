@@ -14,8 +14,22 @@ log=LogStore.add_logger('rx_misid:data_sample_splitter')
 # --------------------------------
 class DataSampleSplitter(Wcache):
     '''
+    What this returns
+    -----------------------
     Class meant to split a dataframe with **real data** into PassFail, FailPass and 
-    FailFail samples based on a configuration
+    FailFail samples based on a configuration, it also adds columns:
+
+    - hadron: pion or kaon, depending on hadron tagging cut from config, 
+              if candidate is tagged as pion (kaon) then both tracks will be pions (kaons)
+    - kind  : With values PassFail, FailPass, FailFail
+
+    SS, OS convention:
+    -----------------------
+    When we refer to PassFail, we mean that the, SS track is the Pass and the OS is the Fail
+
+    **IMPORTANT:** This code drops KpiK and KKpi entries. Therefore number ouf candidates in the output
+    is smaller than int he input. This is due to the fact that B->KpiK has a branching fraction ten times
+    smaller than B-> Kpipi
     '''
     # --------------------------------
     def __init__(
