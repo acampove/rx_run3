@@ -2,6 +2,7 @@
 Module holding SampleSplitter class
 '''
 
+import numpy
 import pandas as pnd
 
 from ROOT                   import RDataFrame
@@ -16,12 +17,19 @@ class DataSampleSplitter(Wcache):
     '''
     What this returns
     -----------------------
-    Class meant to split a dataframe with **real data** into PassFail, FailPass and 
-    FailFail samples based on a configuration, it also adds columns:
+    Class meant to split a dataframe
 
-    - hadron: pion or kaon, depending on hadron tagging cut from config, 
+    - With real data into PassFail, FailPass and
+      FailFail samples based on a configuration
+
+    - With simulated data it will just tag events
+      using the `kind` column as kaon or pion events.
+
+    It also adds columns:
+
+    - hadron: pion or kaon, depending on hadron tagging cut from config,
               if candidate is tagged as pion (kaon) then both tracks will be pions (kaons)
-    - kind  : With values PassFail, FailPass, FailFail
+    - kind  : With values PassFail, FailPass, FailFail, only for data
 
     SS, OS convention:
     -----------------------
