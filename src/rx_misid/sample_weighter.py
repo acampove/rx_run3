@@ -460,7 +460,7 @@ class SampleWeighter:
             return self._df
 
         try:
-            self._df['weight'] *= self._df.apply(self._get_transfer_weight, axis=1)
+            arr_wgt = self._df.apply(self._get_transfer_weight, axis=1)
         except AttributeError as exc:
             log.warning('Found columns:')
             for column in self._df.columns:
@@ -468,6 +468,9 @@ class SampleWeighter:
             raise AttributeError('Cannot assign weight') from exc
 
         self._print_stats()
+
+        self._df['weight']           *= arr_wgt
+        self._df.attrs['pid_weights'] = arr_wgt
 
         return self._df
 # ------------------------------
