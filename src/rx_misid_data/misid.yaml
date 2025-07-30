@@ -6,6 +6,7 @@ input :
   project  : rx
 output     : misid
 splitting  : splitting.yaml
+maps       : weigths.yaml
 pdf :
   nan_threshold : 0.02
   padding       :
