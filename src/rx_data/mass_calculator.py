@@ -71,6 +71,32 @@ class MassCalculator:
 
         return candidate.mass
     # ----------------------
+    def _column_name_from_pdgid(
+        self,
+        pid     : int,
+        preffix : str) -> str:
+        '''
+        Parameters
+        -------------
+        pid    : Particle PDG ID
+        preffix: E.g. L1
+
+        Returns
+        -------------
+        Name of column in original ROOT dataframe, e.g.:
+        11 (electron) => {preffix}
+        211(pion)     => {preffix}_TRACK
+        '''
+        # If one needs to build with Hee or Hmumu, the kinematic branches are L*_P*
+        if pid in [11, 13]:
+            return preffix
+
+        # If one needs to build with Hhh, the kinematic branches are L*_TRACK_P*
+        if pid in [211, 321]:
+            return f'{preffix}_TRACK'
+
+        raise ValueError(f'Invalid PID: {pid}')
+    # ----------------------
     def _build_particle(
         self,
         row  : pnd.Series,
