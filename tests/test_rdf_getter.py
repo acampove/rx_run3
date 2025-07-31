@@ -439,21 +439,21 @@ def test_guid():
 
     gtr11= RDFGetter(sample=sam1, trigger='Hlt2RD_BuToKpEE_MVA')
     uid11= gtr11.get_uid()
-    gtr11.get_rdf()
+    gtr11.get_rdf(per_file=False)
 
     gtr12= RDFGetter(sample=sam1, trigger='Hlt2RD_BuToKpEE_MVA')
     uid12= gtr12.get_uid()
-    gtr12.get_rdf()
+    gtr12.get_rdf(per_file=False)
 
     gtr22= RDFGetter(sample=sam2, trigger='Hlt2RD_BuToKpEE_MVA')
     uid22= gtr22.get_uid()
-    gtr22.get_rdf()
+    gtr22.get_rdf(per_file=False)
 
     # Filtering done here should change the sample's UID
     with RDFGetter.max_entries(value = 100):
         gtr23= RDFGetter(sample=sam2, trigger='Hlt2RD_BuToKpEE_MVA')
         uid23= gtr23.get_uid()
-        gtr23.get_rdf()
+        gtr23.get_rdf(per_file=False)
 
     assert uid11 == uid12
     assert uid11 != uid22
@@ -479,7 +479,7 @@ def test_max_entries(sample : str, requested : int):
     '''
     with RDFGetter.max_entries(value=requested):
         gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     nentries = rdf.Count().GetValue()
 
@@ -535,7 +535,7 @@ def test_electron(kind : str, trigger : str):
 
     with RDFGetter.max_entries(50_000):
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     _run_default_checks(
             rdf      =rdf,
@@ -558,7 +558,7 @@ def test_data(sample : str, trigger : str):
     Test of getter class in data
     '''
     gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
 
     rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
@@ -577,7 +577,7 @@ def test_mc(sample : str):
     '''
     with RDFGetter.max_entries(value=-1):
         gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     _print_dotted_branches(rdf)
     _check_branches(rdf, is_ee=True, is_mc=True)
@@ -598,7 +598,7 @@ def test_q2_track_electron(sample : str):
     trigger = 'Hlt2RD_BuToKpEE_MVA'
 
     gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
     rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
     rep.Print()
@@ -618,7 +618,7 @@ def test_q2_track_muon(sample : str):
     trigger = 'Hlt2RD_BuToKpMuMu_MVA'
 
     gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
     rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
     rep.Print()
@@ -638,7 +638,7 @@ def test_brem_track_2(sample : str, trigger : str):
     Test brem_track_2 correction
     '''
     gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
     rdf = _apply_selection(rdf=rdf, trigger=trigger, override = {'mass' : 'B_const_mass_M > 5160'}, sample=sample)
     rep = rdf.Report()
     rep.Print()
@@ -660,7 +660,7 @@ def test_check_vars(sample : str):
     Can be accessed
     '''
     gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
 
     is_mc = not sample.startswith('DATA_24_')
     _check_branches(rdf, is_ee=True, is_mc=is_mc)
@@ -677,7 +677,7 @@ def test_mcdecaytree(sample : str, trigger : str):
     '''
     with RDFGetter.max_entries(value=10_000):
         gtr = RDFGetter(sample=sample, trigger=trigger, tree='MCDecayTree')
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     rdf      = cast(RDataFrame, rdf)
     nentries = rdf.Count().GetValue()
@@ -699,7 +699,7 @@ def test_ext_trigger(period : str, polarity : str):
 
     with RDFGetter.max_entries(-1):
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     _check_ext(rdf)
     _plot_ext(rdf, sample=sample)
@@ -715,7 +715,7 @@ def test_custom_columns():
 
     with RDFGetter.custom_columns(columns = d_def):
         obj = RDFGetter(trigger='Hlt2RD_BuToKpEE_MVA', sample='DATA_24_MagDown_24c2')
-        rdf = obj.get_rdf()
+        rdf = obj.get_rdf(per_file=False)
 
     l_col = [ col.c_str() for col in rdf.GetColumnNames() ]
 
@@ -730,7 +730,7 @@ def skip_test_block(sample : str, trigger : str):
     Test of getter class with check for block assignment
     '''
     gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
     rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
     rep.Print()
@@ -793,7 +793,7 @@ def test_custom_friend(sample : str, trigger : str):
     '''
     with RDFGetter.custom_friends(versions={'mva' : 'v7.7'}):
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     _run_default_checks(rdf=rdf, sample=sample, trigger=trigger, test_name='custom_friend')
 # ------------------------------------------------
@@ -812,7 +812,7 @@ def test_skip_brem_track_2(kind : str, trigger : str):
 
     with RDFGetter.exclude_friends(names=['brem_track_2']):
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     _run_default_checks(
             rdf          =rdf,
@@ -836,7 +836,7 @@ def test_no_pid(sample : str, trigger : str):
     Tests loading of noPID samples
     '''
     gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
     _run_default_checks(
             rdf         = rdf,
             sample      = sample,
@@ -859,7 +859,7 @@ def test_multithreading(nthreads : int):
          RDFGetter.max_entries(value=nentries):
 
         gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
         assert GetThreadPoolSize() == nthcheck
 
@@ -884,7 +884,7 @@ def test_multithreading_invalid(nthreads : int):
     with pytest.raises(ValueError):
         with RDFGetter.multithreading(nthreads=nthreads):
             gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
-            gtr.get_rdf()
+            gtr.get_rdf(per_file=False)
 # ------------------------------------------------
 def test_multithreading_locked():
     '''
@@ -897,7 +897,7 @@ def test_multithreading_locked():
         with RDFGetter.multithreading(nthreads=nthreads):
             with RDFGetter.multithreading(nthreads=nthreads):
                 gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
-                gtr.get_rdf()
+                gtr.get_rdf(per_file=False)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_JpsiX_ee_eq_JpsiInAcc'] )
 def test_skip_adding_columns(sample : str):
@@ -907,11 +907,11 @@ def test_skip_adding_columns(sample : str):
     trigger = 'Hlt2RD_BuToKpEE_MVA'
 
     gtr_1 = RDFGetter(sample=sample, trigger=trigger)
-    rdf_1 = gtr_1.get_rdf()
+    rdf_1 = gtr_1.get_rdf(per_file=False)
 
     with RDFGetter.skip_adding_columns(True):
         gtr_2 = RDFGetter(sample=sample, trigger=trigger)
-        rdf_2 = gtr_2.get_rdf()
+        rdf_2 = gtr_2.get_rdf(per_file=False)
 
     assert not isinstance(rdf_1, dict)
     assert not isinstance(rdf_2, dict)
