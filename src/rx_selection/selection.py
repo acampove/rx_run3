@@ -39,7 +39,7 @@ class MultipleSelectionOverriding(Exception):
         super().__init__(message)
 #-----------------------
 @contextmanager
-def custom_selection(d_sel : dict[str,str]):
+def custom_selection(d_sel : dict[str,str]|None, force_override : bool = False):
     '''
     This is a context manager meant to be used to add/overide
     the selection specified in `d_sel` to default selection.
@@ -47,11 +47,22 @@ def custom_selection(d_sel : dict[str,str]):
     Parameters
     ------------------
     d_sel: Dictionary with
-        - key : Name of cut, e.g. brem
+        - key  : Name of cut, e.g. brem
         - value: Definition of cut, e.g. nbrem > 0
+        If dictionary is None, will not touch the selection
+        If dictionary is empty, will return default (not overriden) selection, if force_override=True
+
+    force_override: If False (default) will raise if manager has been already called
+                    This should prevent multiple selections to be used accidentally.
+                    However user will have to explicitly force override when this behaviour
+                    is intended
     '''
-    if Data.d_custom_selection is not None:
-        raise ValueError('Custom selection already set, cannot set it twice')
+    if d_sel is None:
+        yield
+        return
+
+    if not force_override and Data.d_custom_selection is not None:
+        raise MultipleSelectionOverriding('Custom selection already set, cannot set it twice')
 
     org_val = Data.d_custom_selection
 
