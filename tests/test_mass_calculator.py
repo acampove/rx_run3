@@ -10,12 +10,30 @@ from rx_data.mass_calculator import MassCalculator
 log=LogStore.add_logger('rx_data:mass_calculatr')
 # ----------------------
 def _validate_rdf(rdf : RDataFrame|RDF.RNode) -> None:
+# ----------------------
+def _validate_rdf(
+        rdf_in : RDataFrame|RDF.RNode,
+        rdf_ot : RDataFrame|RDF.RNode) -> None:
     '''
     Parameters
     -------------
-    rdf: DataFrame with EVENTNUMBER, RUNNUMBER and masses
+    rdf_in: Original dataframe
+    rdf_ot: DataFrame with EVENTNUMBER, RUNNUMBER and masses
     '''
-    rdf.Display().Print()
+    nent_in = rdf_in.Count().GetValue()
+    nent_ot = rdf_ot.Count().GetValue()
+
+    assert nent_in == nent_ot
+
+    s_col = { name.c_str() for name in rdf_ot.GetColumnNames() }
+    assert s_col == {'EVENTNUMBER', 'RUNNUMBER', 'B_Mass_kkk', 'B_Mass_kpipi', 'B_M', 'B_Mass_check'}
+
+    data = rdf_ot.AsNumpy(['B_M', 'B_Mass_kpipi', 'B_Mass_kkk', 'B_Mass_check'])
+    df   = pnd.DataFrame(data)
+
+    df.plot.hist(range=(3000, 7000), bins=100, histtype='step')
+    plt.axvline(x=5280, label='PDG', linestyle=':')
+    plt.show()
 # ----------------------
 def test_hadronic():
     '''
