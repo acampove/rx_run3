@@ -59,12 +59,12 @@ class MassCalculator:
         -------------
         Value of mass when leptons get pion, hadron, etc mass hypothesis
         '''
-        if x not in [211, 321] or y not in [211, 321]:
-            raise ValueError('For non kaon/pion target particles, track kinematics might be wrong')
+        name_1 = self._column_name_from_pdgid(pid=x, preffix='L1')
+        name_2 = self._column_name_from_pdgid(pid=y, preffix='L2')
 
         had_4d = self._get_hadronic_system_4d(row=row)
-        par_1  = self._build_particle(row=row, name='L1_TRACK', pid=x)
-        par_2  = self._build_particle(row=row, name='L2_TRACK', pid=y)
+        par_1  = self._build_particle(row=row, name=name_1, pid=x)
+        par_2  = self._build_particle(row=row, name=name_2, pid=y)
 
         candidate = had_4d + par_1 + par_2
         candidate = cast(v4d, candidate)
