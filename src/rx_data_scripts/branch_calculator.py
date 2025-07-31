@@ -24,6 +24,7 @@ from rx_data.rdf_getter          import RDFGetter
 from rx_data.mis_calculator      import MisCalculator
 from rx_data.hop_calculator      import HOPCalculator
 from rx_data.swp_calculator      import SWPCalculator
+from rx_data.mass_calculator     import MassCalculator
 from rx_data.mass_bias_corrector import MassBiasCorrector
 
 log = LogStore.add_logger('rx_data:branch_calculator')
@@ -255,6 +256,9 @@ def _process_rdf(
         rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
     elif Data.kind == 'mva'   :
         obj = MVACalculator(rdf=rdf, sample=sample, trigger=trigger, version=Data.vers)
+        rdf = obj.get_rdf()
+    elif Data.kind == 'mass':
+        obj = MassCalculator(rdf=rdf)
         rdf = obj.get_rdf()
     else:
         raise ValueError(f'Invalid kind: {Data.kind}')
