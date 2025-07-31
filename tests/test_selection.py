@@ -189,6 +189,40 @@ def test_custom_selection(sample : str, q2bin : str):
     assert 'cut' in d_cut
     assert d_cut['cut'] == 'val'
 # --------------------------
+def test_multiple_custom_selection():
+    '''
+    Tests that we cannot call custom_selection manager in a nested way
+    '''
+    sample = 'Bu_Kee_eq_btosllball05_DPC'
+    q2bin  = 'central'
+    trigger= 'Hlt2RD_BuToKpEE_MVA'
+
+    with pytest.raises(sel.MultipleSelectionOverriding):
+        with sel.custom_selection(d_sel={'cut' : 'val'}):
+            with sel.custom_selection(d_sel={'cut' : 'vol'}):
+                sel.selection(process=sample, q2bin=q2bin, trigger=trigger)
+# --------------------------
+def test_multiple_custom_selection_override():
+    '''
+    Tests calling custom_selection with overriding flag
+    '''
+    sample = 'Bu_Kee_eq_btosllball05_DPC'
+    q2bin  = 'central'
+    trigger= 'Hlt2RD_BuToKpEE_MVA'
+
+    with sel.custom_selection(d_sel={'cut' : 'val'}, force_override=True):
+        d_cut_1 = sel.selection(process=sample, q2bin=q2bin, trigger=trigger)
+        assert d_cut_1['cut'] == 'val'
+        with sel.custom_selection(d_sel={'cut' : 'vol'}, force_override=True):
+            d_cut_2 = sel.selection(process=sample, q2bin=q2bin, trigger=trigger)
+            assert d_cut_2['cut'] == 'vol'
+
+        d_cut_1 = sel.selection(process=sample, q2bin=q2bin, trigger=trigger)
+        assert d_cut_1['cut'] == 'val'
+
+    d_cut = sel.selection(process=sample, q2bin=q2bin, trigger=trigger)
+    assert 'cut' not in d_cut
+# --------------------------
 @pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('block' , [1, 2, 3, 4, 5, 6, 7, 8])
 def test_block_overriding(sample : str, block : int):
