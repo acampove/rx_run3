@@ -1,13 +1,14 @@
 '''
 Module testing the MassCalculator class
 '''
+
+from ROOT                    import RDataFrame, RDF
 from dmu.logging.log_store   import LogStore
 from rx_data.rdf_getter      import RDFGetter
 from rx_data.mass_calculator import MassCalculator
 
 log=LogStore.add_logger('rx_data:mass_calculatr')
 # ----------------------
-def test_simple():
 def _validate_rdf(rdf : RDataFrame|RDF.RNode) -> None:
     '''
     Parameters
