@@ -20,13 +20,18 @@ class MassCalculator:
     hypotheses for the tracks
     '''
     # ----------------------
-    def __init__(self, rdf : RDataFrame|RDF.RNode) -> None:
+    def __init__(
+        self,
+        rdf : RDataFrame|RDF.RNode,
+        with_validation : bool = False) -> None:
         '''
         Parameters
         -------------
-        rdf : ROOT dataframe
+        rdf            : ROOT dataframe
+        with_validation: If True, will add extra columns needed for tests, default False
         '''
-        self._rdf = rdf
+        self._rdf             = rdf
+        self._with_validation = with_validation
     # ----------------------
     def _get_columns(self, row) -> pnd.Series:
         '''
