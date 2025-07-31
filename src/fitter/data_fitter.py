@@ -81,6 +81,9 @@ class DataFitter(BaseFitter, Cache):
 
         return zfit.Space(name, limits=(minx, maxx))
     # ------------------------
+    # TODO: ConstraintReader needs to be taken out of this class
+    # It should be initialized outside and passed
+    # Because the class needs DataFitter to calculate constraints
     def _constraints_from_model(self, model : zpdf) -> dict[str,tuple[float,float]]:
         '''
         Parameters
