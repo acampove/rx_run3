@@ -98,7 +98,7 @@ class DataFitter(BaseFitter, Cache):
 
         s_par   = model.get_params()
         l_par   = [ par.name for par in s_par ]
-        obj     = ConstraintReader(parameters = l_par, q2bin=self._q2bin)
+        obj     = ConstraintReader(parameters = l_par, q2bin = self._q2bin)
         d_cns   = obj.get_constraints()
 
         log.debug(90 * '-')
