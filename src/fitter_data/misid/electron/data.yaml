@@ -12,7 +12,7 @@ model:
     combinatorial : misid/electron/combinatorial.yaml
     jpsi_leakage  : misid/electron/jpsi_leakage.yaml
     signal        : misid/electron/signal.yaml
-    kpik          : misid/electron/kpik.yaml
+    kpipi         : misid/electron/kpipi.yaml
     kkk           : misid/electron/kkk.yaml
   constraints:
     yields : []
@@ -24,5 +24,5 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
     jpsi_leakage  : $B^+\to K^+ J/\psi(\to e^+e^-)$ 
     combinatorial : Combinatorial
     signal        : $B^+\to K^+ e^+e^-$ 
-    kpik          : $B^+\to K^+\pi^-K^+$
+    kpipi         : $B^+\to K^+\pi^-\pi^+$
     kkk           : $B^+\to K^+K^-K^+$
