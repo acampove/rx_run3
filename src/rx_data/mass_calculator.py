@@ -189,6 +189,8 @@ class MassCalculator:
         -------------
         pandas dataframe with only necessary information
         '''
+        log.debug('Getting pandas dataframe from ROOT dataframe')
+
         l_col = [ name.c_str() for name in self._rdf.GetColumnNames() ]
         l_col = [ name         for name in l_col if self._is_valid_column(name=name) ]
 
@@ -205,8 +207,12 @@ class MassCalculator:
         EVENTNUMBER and RUNNUMBER
         '''
         df  = self._get_dataframe()
+
+        log.debug('Calculating masses')
         df  = df.apply(self._get_columns, axis=1)
         df  = cast(pnd.DataFrame, df)
+
+        log.debug('Building ROOT dataframe with required information')
         data= { col_name : df[col_name].to_numpy() for col_name in df.columns }
         rdf = RDF.FromNumpy(data)
 
