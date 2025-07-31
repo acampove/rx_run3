@@ -24,7 +24,7 @@ class MassCalculator:
         '''
         Parameters
         -------------
-        rdf : ROOT dataframe 
+        rdf : ROOT dataframe
         '''
         self._rdf = rdf
     # ----------------------
