@@ -109,6 +109,26 @@ class DataFitter(BaseFitter, Cache):
         log.debug(90 * '-')
 
         return d_cns
+    # ----------------------
+    def _update_trigger_project(self) -> tuple[str,str]:
+        '''
+        Returns
+        -------------
+        Tuple with trigger and project. If trigger does not end with ext
+        return _trigger and _project
+
+        If trigger ends with ext, switch to noPID trigger and nopid project
+        because we are working with PID control region.
+        '''
+        if not self._trigger.endswith('_ext'):
+            return self._trigger, self._project
+
+        trigger = self._trigger.replace('_ext', '_noPID')
+        project = 'nopid'
+
+        log.info('Found ext trigger, overriding with: {trigger}/{project}')
+
+        return trigger, project
     # ------------------------
     def run(self) -> DictConfig:
         '''
@@ -136,13 +156,15 @@ class DataFitter(BaseFitter, Cache):
             wgt_cfg= None) # Do not need weights for data
         data = dpr.get_data()
 
+        trigger, project = self._update_trigger_project()
+
         mod  = DataModel(
             name   = self._name,
             cfg    = self._cfg,
             obs    = self._obs,
             q2bin  = self._q2bin,
-            trigger= self._trigger,
-            project= self._project)
+            trigger= trigger,
+            project= project)
         model= mod.get_model()
         d_cns= self._constraints_from_model(model=model)
 
