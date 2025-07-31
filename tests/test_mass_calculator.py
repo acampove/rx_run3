@@ -16,14 +16,17 @@ def _validate_rdf(rdf : RDataFrame|RDF.RNode) -> None:
     '''
     rdf.Display().Print()
 # ----------------------
+def test_hadronic():
     '''
-    Simplest test
+    Will run test where
+    Kee -> KKK   in B_Mass_kkk
+    Kee -> Kpipi in B_Mass_kpipi
     '''
     gtr = RDFGetter(
         sample='Bu_Kee_eq_btosllball05_DPC',
         trigger='Hlt2RD_BuToKpEE_MVA')
     rdf = gtr.get_rdf(per_file=False)
-    rdf = rdf.Range(10)
+    rdf = rdf.Range(1000)
 
     cal = MassCalculator(rdf=rdf)
     rdf = cal.get_rdf()
