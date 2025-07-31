@@ -41,12 +41,15 @@ class MassCalculator:
         '''
         evt = tut.numeric_from_series(row, 'EVENTNUMBER',   int)
         run = tut.numeric_from_series(row, 'RUNNUMBER'  ,   int)
-        mas = tut.numeric_from_series(row, 'B_M'        , float)
-
-        out = pnd.Series({'EVENTNUMBER' : evt, 'RUNNUMBER' : run, 'B_M' : mas})
+        out = pnd.Series({'EVENTNUMBER' : evt, 'RUNNUMBER' : run})
 
         out.loc['B_Mass_kpipi'] = self._get_hxy_mass(row=row, x=211, y=211)
         out.loc['B_Mass_kkk'  ] = self._get_hxy_mass(row=row, x=321, y=321)
+
+        if not self._with_validation:
+            return out
+
+        out.loc['B_M'         ] = tut.numeric_from_series(row, 'B_M', float)
         out.loc['B_Mass_check'] = self._get_hxy_mass(row=row, x= 11, y= 11)
 
         return out
