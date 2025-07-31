@@ -50,6 +50,9 @@ def custom_selection(d_sel : dict[str,str]):
         - key : Name of cut, e.g. brem
         - value: Definition of cut, e.g. nbrem > 0
     '''
+    if Data.d_custom_selection is not None:
+        raise ValueError('Custom selection already set, cannot set it twice')
+
     org_val = Data.d_custom_selection
 
     try:
