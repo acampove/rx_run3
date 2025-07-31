@@ -87,7 +87,7 @@ class DataPreprocessor(Cache):
         uid = gtr.get_uid()
 
         log.debug(f'Applying selection to {self._sample}/{self._trigger}')
-        
+
         # overriding only happens for simulation samples
         with sel.custom_selection(d_sel=cut, force_override=True):
             rdf = sel.apply_full_selection(
