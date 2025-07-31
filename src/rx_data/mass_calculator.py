@@ -121,7 +121,10 @@ class MassCalculator:
         -------------
         4D vector for particle
         '''
-        particle_id = tut.numeric_from_series(row, f'{name}_ID' ,   int)
+        # X_TRACK_ID does not exist => X_TRACK -> X
+        name_no_track = name.replace('_TRACK', '')
+        particle_id = tut.numeric_from_series(row, f'{name_no_track}_ID' ,   int)
+
         pt = tut.numeric_from_series(row, f'{name}_PT' , float)
         et = tut.numeric_from_series(row, f'{name}_ETA', float)
         ph = tut.numeric_from_series(row, f'{name}_PHI', float)
