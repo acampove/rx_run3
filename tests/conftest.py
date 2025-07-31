@@ -18,6 +18,7 @@ def pytest_configure(config : Config):
     '''
     _config = config
 
+    LogStore.set_level('rx_data:mass_calculator'          , 10)
     LogStore.set_level('rx_data:mva_calculator'           , 10)
     LogStore.set_level('rx_data:test_mva_calculator'      , 10)
     LogStore.set_level('rx_data:rdf_getter12'             , 10)
