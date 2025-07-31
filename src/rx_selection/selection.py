@@ -103,10 +103,10 @@ def reset_custom_selection() -> None:
     Data.d_custom_selection = None
 #-----------------------
 def selection(
-        q2bin    : str,
-        process  : str,
-        trigger  : str,
-        smeared  : bool= True) -> dict[str,str]:
+    q2bin    : str,
+    process  : str,
+    trigger  : str,
+    smeared  : bool= True) -> dict[str,str]:
     '''
     Picks up sample name, trigger, etc, returns dictionary with selection
 
