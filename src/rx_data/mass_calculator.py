@@ -39,6 +39,9 @@ class MassCalculator:
 
         out = pnd.Series({'EVENTNUMBER' : evt, 'RUNNUMBER' : run})
 
+        out.loc['B_Mass_kpipi'] = self._get_hxy_mass(row=row, x=211, y=211)
+        out.loc['B_Mass_kkk'  ] = self._get_hxy_mass(row=row, x=321, y=321)
+
         return out
     # ----------------------
     def _get_hxy_mass(
