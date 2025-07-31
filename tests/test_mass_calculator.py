@@ -8,6 +8,14 @@ from rx_data.mass_calculator import MassCalculator
 log=LogStore.add_logger('rx_data:mass_calculatr')
 # ----------------------
 def test_simple():
+def _validate_rdf(rdf : RDataFrame|RDF.RNode) -> None:
+    '''
+    Parameters
+    -------------
+    rdf: DataFrame with EVENTNUMBER, RUNNUMBER and masses
+    '''
+    rdf.Display().Print()
+# ----------------------
     '''
     Simplest test
     '''
@@ -20,5 +28,5 @@ def test_simple():
     cal = MassCalculator(rdf=rdf)
     rdf = cal.get_rdf()
 
-    rdf.Display().Print()
+    _validate_rdf(rdf)
 # ----------------------
