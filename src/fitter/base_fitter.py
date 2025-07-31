@@ -129,7 +129,7 @@ class BaseFitter:
 
         brem_cuts = self._brem_cuts_from_cuts(cuts=cuts)
         # Pick default selection
-        with sel.custom_selection(d_sel={}):
+        with sel.custom_selection(d_sel={}, force_override=True):
             d_sel_def = sel.selection(
                 process=self._sample,
                 trigger=self._trigger,
