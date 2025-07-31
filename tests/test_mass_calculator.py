@@ -1,15 +1,23 @@
 '''
 Module testing the MassCalculator class
 '''
+import os
+import pandas            as pnd
+import matplotlib.pyplot as plt
 
 from ROOT                    import RDataFrame, RDF
 from dmu.logging.log_store   import LogStore
 from rx_data.rdf_getter      import RDFGetter
 from rx_data.mass_calculator import MassCalculator
 
-log=LogStore.add_logger('rx_data:mass_calculatr')
+log=LogStore.add_logger('rx_data:test_mass_calculator')
 # ----------------------
-def _validate_rdf(rdf : RDataFrame|RDF.RNode) -> None:
+class Data:
+    '''
+    Class meant to be used to share attributes
+    '''
+    user     = os.environ['USER']
+    plot_dir = f'/tmp/{user}/tests/rx_data/mass_calculator'
 # ----------------------
 def _validate_rdf(
         rdf_in : RDataFrame|RDF.RNode,
