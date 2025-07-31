@@ -141,12 +141,19 @@ class MassCalculator:
 
         return res
     # ----------------------
-    def _get_particle(self, row : pnd.Series, name : str) -> v4d:
+    def _get_particle(
+        self,
+        row      : pnd.Series,
+        name     : str,
+        pdg_mass : bool = True) -> v4d:
         '''
         Parameters
         -------------
-        row: Pandas series with event information
-        name: Name of particle whose 4D vector to extract
+        row     : Pandas series with event information
+        name    : Name of particle whose 4D vector to extract
+        pdg_mass: If true, will use particle PDG ID to get mass
+                  otherwise will get it from input ROOT dataframe
+                  by accessing {name}_M from row
 
         Returns
         -------------
@@ -154,12 +161,15 @@ class MassCalculator:
         '''
         # X_TRACK_ID does not exist => X_TRACK -> X
         name_no_track = name.replace('_TRACK', '')
-        particle_id = tut.numeric_from_series(row, f'{name_no_track}_ID' ,   int)
 
         pt = tut.numeric_from_series(row, f'{name}_PT' , float)
         et = tut.numeric_from_series(row, f'{name}_ETA', float)
         ph = tut.numeric_from_series(row, f'{name}_PHI', float)
-        mass = self._mass_from_pid(pid=particle_id)
+        if pdg_mass:
+            particle_id = tut.numeric_from_series(row, f'{name_no_track}_ID' ,   int)
+            mass = self._mass_from_pid(pid=particle_id)
+        else:
+            mass = tut.numeric_from_series(row, f'{name}_M', float)
 
         return v4d(pt=pt, eta=et, phi=ph, mass=mass)
     # ----------------------
