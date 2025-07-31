@@ -129,7 +129,7 @@ class DataFitter(BaseFitter, Cache):
         trigger = self._trigger.replace('_ext', '_noPID')
         project = 'nopid'
 
-        log.info('Found ext trigger, overriding with: {trigger}/{project}')
+        log.info(f'Found ext trigger, overriding with: {trigger}/{project}')
 
         return trigger, project
     # ------------------------
