@@ -132,7 +132,7 @@ class MassCalculator:
         -------------
         Four momentum vector of hadronic system
         '''
-        b_4d  = self._get_particle(row=row, name='B')
+        b_4d  = self._get_particle(row=row, name= 'B', pdg_mass=False)
         l1_4d = self._get_particle(row=row, name='L1')
         l2_4d = self._get_particle(row=row, name='L2')
 
