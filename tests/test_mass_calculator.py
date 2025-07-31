@@ -23,14 +23,14 @@ def test_hadronic():
     Kee -> KKK   in B_Mass_kkk
     Kee -> Kpipi in B_Mass_kpipi
     '''
-    gtr = RDFGetter(
-        sample='Bu_Kee_eq_btosllball05_DPC',
-        trigger='Hlt2RD_BuToKpEE_MVA')
-    rdf = gtr.get_rdf(per_file=False)
-    rdf = rdf.Range(1000)
+    with RDFGetter.max_entries(value=10_000):
+        gtr = RDFGetter(
+            sample ='Bu_Kee_eq_btosllball05_DPC',
+            trigger='Hlt2RD_BuToKpEE_MVA')
+        rdf_in = gtr.get_rdf(per_file=False)
 
-    cal = MassCalculator(rdf=rdf)
-    rdf = cal.get_rdf()
+    cal    = MassCalculator(rdf=rdf_in)
+    rdf_ot = cal.get_rdf()
 
-    _validate_rdf(rdf)
+    _validate_rdf(rdf_in=rdf_in, rdf_ot=rdf_ot)
 # ----------------------
