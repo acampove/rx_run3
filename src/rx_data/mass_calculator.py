@@ -60,6 +60,10 @@ class MassCalculator:
         if name in ['L2_TRACK_PT', 'L2_TRACK_ETA', 'L2_TRACK_PHI']:
             return True
 
+        # Need the original masses
+        if name in ['B_ID', 'L1_ID', 'L2_ID']:
+            return True
+
         return False
     # ----------------------
     def _get_dataframe(self) -> pnd.DataFrame:
