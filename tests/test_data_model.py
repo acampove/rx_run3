@@ -65,9 +65,15 @@ def test_misid_rare():
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     cfg = gut.load_conf(
         package='fitter_data',
-        fpath  ='rare/electron/data.yaml')
+        fpath  ='misid/electron/data.yaml')
 
-    with sel.custom_selection(d_sel = {'mass' : '(1)', 'brmp' : 'nbrem != 0'}):
+    l1_in_cr = '(L1_PROBNN_E < 0.2) || (L1_PID_E < 3.0)'
+    l2_in_cr = '(L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)'
+
+    with sel.custom_selection(d_sel = {
+        'nobr0' : 'nbrem != 0',
+        'pid_l' : f'({l1_in_cr}) || ({l2_in_cr})',
+        'bdt'   : 'mva_cmb > 0.80 && mva_prc > 0.60'}):
         dmd = DataModel(
             cfg     = cfg,
             obs     = obs,
