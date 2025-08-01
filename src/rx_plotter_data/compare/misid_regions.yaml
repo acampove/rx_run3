@@ -4,6 +4,7 @@ general:
   size : [15, 10]
 selection:
   pid_l : (L1_PROBNN_E < 0.2 || L1_PID_E < 3.0) && (L2_PROBNN_E < 0.2 || L2_PID_E < 3.0)
+  bdt   : mva_cmb > 0.8 && mva_prc > 0.6
 comparison:
   Signal:
     vars:
