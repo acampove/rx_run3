@@ -95,11 +95,14 @@ def _check_entries(rdf : RDataFrame) -> None:
     raise ValueError('Found zero entries in dataframe')
 # ---------------------------------
 def _update_with_brem(d_sel : dict[str,str]) -> dict[str,str]:
-    if Data.brem is None:
+    if Data.brem == -1:
         log.info('Not filtering by brem')
         return d_sel
 
-    d_sel['nbrem'] = f'nbrem == {Data.brem}'
+    if Data.brem == 12:
+        d_sel['nbrem'] = 'nbrem == 1 || nbrem == 2'
+    else:
+        d_sel['nbrem'] = f'nbrem == {Data.brem}'
 
     return d_sel
 # ---------------------------------
