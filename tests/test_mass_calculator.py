@@ -65,11 +65,13 @@ def _validate_rdf(
     'Bu_Kee_eq_btosllball05_DPC',
     'Bu_piplpimnKpl_eq_sqDalitz_DPC',
     'Bu_KplKplKmn_eq_sqDalitz_DPC'])
-def test_hadronic(sample : str):
+def test_hadronic_mc(sample : str):
     '''
     Will run test where
     Kee -> KKK   in B_Mass_kkk
     Kee -> Kpipi in B_Mass_kpipi
+
+    for simulated samples
     '''
     with RDFGetter.max_entries(value=10_000):
         gtr = RDFGetter(
