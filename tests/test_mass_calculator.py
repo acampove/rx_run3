@@ -2,6 +2,7 @@
 Module testing the MassCalculator class
 '''
 import os
+import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
@@ -20,11 +21,15 @@ class Data:
     plot_dir = f'/tmp/{user}/tests/rx_data/mass_calculator'
 # ----------------------
 def _validate_rdf(
-        rdf_in : RDataFrame|RDF.RNode,
-        rdf_ot : RDataFrame|RDF.RNode) -> None:
+    test   : str,
+    name   : str,
+    rdf_in : RDataFrame|RDF.RNode,
+    rdf_ot : RDataFrame|RDF.RNode) -> None:
     '''
     Parameters
     -------------
+    test  : Test name, for naming output directory
+    name  : Name of output in test, used for naming output plots
     rdf_in: Original dataframe
     rdf_ot: DataFrame with EVENTNUMBER, RUNNUMBER and masses
     '''
@@ -39,11 +44,20 @@ def _validate_rdf(
     data = rdf_ot.AsNumpy(['B_M', 'B_Mass_kpipi', 'B_Mass_kkk', 'B_Mass_check'])
     df   = pnd.DataFrame(data)
 
-    df.plot.hist(range=(3000, 7000), bins=100, histtype='step')
+    df.plot.hist(range=(4500, 6500), bins=100, histtype='step')
     plt.axvline(x=5280, label='PDG', linestyle=':')
-    plt.show()
+
+    out_dir = f'{Data.plot_dir}/{test}'
+    os.makedirs(out_dir, exist_ok=True)
+
+    plt.savefig(f'{out_dir}/{name}.png')
+    plt.close()
 # ----------------------
-def test_hadronic():
+@pytest.mark.parametrize('sample', [
+    'Bu_Kee_eq_btosllball05_DPC',
+    'Bu_piplpimnKpl_eq_sqDalitz_DPC',
+    'Bu_KplKplKmn_eq_sqDalitz_DPC'])
+def test_hadronic(sample : str):
     '''
     Will run test where
     Kee -> KKK   in B_Mass_kkk
@@ -51,12 +65,13 @@ def test_hadronic():
     '''
     with RDFGetter.max_entries(value=10_000):
         gtr = RDFGetter(
-            sample ='Bu_Kee_eq_btosllball05_DPC',
-            trigger='Hlt2RD_BuToKpEE_MVA')
+            sample  = sample,
+            trigger = 'Hlt2RD_BuToKpEE_MVA_noPID',
+            analysis= 'nopid')
         rdf_in = gtr.get_rdf(per_file=False)
 
-    cal    = MassCalculator(rdf=rdf_in)
+    cal    = MassCalculator(rdf=rdf_in, with_validation=True)
     rdf_ot = cal.get_rdf()
 
-    _validate_rdf(rdf_in=rdf_in, rdf_ot=rdf_ot)
+    _validate_rdf(rdf_in=rdf_in, rdf_ot=rdf_ot, test='hadronic', name=sample)
 # ----------------------
