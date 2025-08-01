@@ -18,11 +18,11 @@ saving:
   plt_dir : plots/misid_regions
 plots:
   bmass:
-    binning    : [4500, 7000, 100]
+    binning    : [4500, 7000, 50]
     yscale     : linear
-    labels     : ['M$(K^+e^+e^-)$[MeV]', 'Normalized']
+    labels     : ['M$(K^+e^+e^-)$[MeV]', 'Entries/50 MeV']
     name       : bmass
-    normalized : true
+    normalized : false 
     styling:
       Signal:
         histtype : fill
