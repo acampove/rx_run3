@@ -176,6 +176,8 @@ class RDFGetter:
         log.info(40 * '-')
         d_vers_dir   = { ftree_name : self._versioned_from_ftrees(ftree_dir)        for ftree_name, ftree_dir in d_ftree_dir.items() }
         d_yaml_path  = { ftree_name : self._yaml_path_from_ftree(dir_path=vers_dir) for ftree_name,  vers_dir in d_vers_dir.items()  }
+        log.info(40 * '-')
+        log.info('')
 
         return d_yaml_path
     # ---------------------------------------------------
