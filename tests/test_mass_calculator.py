@@ -3,6 +3,7 @@ Module testing the MassCalculator class
 '''
 import os
 import pytest
+import numpy
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
@@ -43,6 +44,11 @@ def _validate_rdf(
 
     data = rdf_ot.AsNumpy(['B_M', 'B_Mass_kpipi', 'B_Mass_kkk', 'B_Mass_check'])
     df   = pnd.DataFrame(data)
+
+    arr_mass_def = df['B_M'         ].dropna().to_numpy()
+    arr_mass_cal = df['B_Mass_check'].dropna().to_numpy()
+
+    assert numpy.allclose(arr_mass_def, arr_mass_cal, rtol=0.001)
 
     df.plot.hist(range=(4500, 6500), bins=100, histtype='step')
     plt.axvline(x=5280, label='PDG', linestyle=':')
