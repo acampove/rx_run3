@@ -83,5 +83,27 @@ def test_hadronic_mc(sample : str):
     cal    = MassCalculator(rdf=rdf_in, with_validation=True)
     rdf_ot = cal.get_rdf()
 
-    _validate_rdf(rdf_in=rdf_in, rdf_ot=rdf_ot, test='hadronic', name=sample)
+    _validate_rdf(rdf_in=rdf_in, rdf_ot=rdf_ot, test='hadronic_mc', name=sample)
+# ----------------------
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpEE_MVA_misid'])
+def test_hadronic_data(sample : str, trigger : str):
+    '''
+    Will run test where
+    Kee -> KKK   in B_Mass_kkk
+    Kee -> Kpipi in B_Mass_kpipi
+
+    for data samples
+    '''
+    with RDFGetter.max_entries(value=10_000):
+        gtr = RDFGetter(
+            sample  = sample,
+            trigger = trigger,
+            analysis= 'rx')
+        rdf_in = gtr.get_rdf(per_file=False)
+
+    cal    = MassCalculator(rdf=rdf_in, with_validation=True)
+    rdf_ot = cal.get_rdf()
+
+    _validate_rdf(rdf_in=rdf_in, rdf_ot=rdf_ot, test='hadronic_data', name=f'{sample}_{trigger}')
 # ----------------------
