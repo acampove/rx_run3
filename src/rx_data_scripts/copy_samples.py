@@ -33,13 +33,14 @@ class Data:
 
     vers    = None
     l_kind  = [
-            'all',
-            'main',
-            'mva',
-            'hop',
-            'swp_jpsi_misid',
-            'swp_cascade',
-            'brem_track_2']
+        'all',
+        'main',
+        'mva',
+        'hop',
+        'mass',
+        'swp_jpsi_misid',
+        'swp_cascade',
+        'brem_track_2']
 # -----------------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
