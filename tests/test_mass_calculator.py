@@ -50,6 +50,7 @@ def _validate_rdf(
 
     assert numpy.allclose(arr_mass_def, arr_mass_cal, rtol=0.001)
 
+    df= df.drop(columns=['B_Mass_check'])
     df.plot.hist(range=(4500, 6500), bins=100, histtype='step')
     plt.axvline(x=5280, label='PDG', linestyle=':')
 
