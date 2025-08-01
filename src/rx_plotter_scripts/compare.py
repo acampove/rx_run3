@@ -115,7 +115,7 @@ def _update_with_block(d_sel : dict[str,str]) -> dict[str,str]:
 @gut.timeit
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
     rdf = _apply_definitions(rdf)
     d_sel = sel.selection(trigger=Data.trigger, q2bin=Data.q2_bin, process=Data.sample)
 
