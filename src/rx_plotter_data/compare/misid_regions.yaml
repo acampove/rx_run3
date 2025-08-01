@@ -1,0 +1,45 @@
+# Config used to compare different regions used in fits to extract hadronic misid 
+
+general:
+  size : [15, 10]
+selection:
+  pid_l : (L1_PROBNN_E < 0.2 || L1_PID_E < 3.0) && (L2_PROBNN_E < 0.2 || L2_PID_E < 3.0)
+  nobr0 : nbrem != 0
+comparison:
+  Signal:
+    vars:
+      bmass : B_Mass
+  Pion like:
+    vars:
+      bmass : B_Mass_kpipi 
+  Kaon like:
+    vars:
+      bmass : B_Mass_kkk
+saving:
+  plt_dir : plots/misid_regions
+plots:
+  bmass:
+    binning    : [4500, 7000, 100]
+    yscale     : linear
+    labels     : ['M$(K^+e^+e^-)$[MeV]', 'Normalized']
+    name       : bmass
+    normalized : true
+    styling:
+      Signal:
+        histtype : fill
+        alpha    : 0.3
+        color    : gray
+      Kaon like:
+        histtype : step 
+        linestyle: '-'
+        color    : blue
+      Pion like:
+        histtype : step 
+        linestyle: '-'
+        color    : red 
+    vline   :
+      x     : 5280 
+      label : $B^+$ 
+      ls    : --
+      c     : black 
+      lw    : 1
