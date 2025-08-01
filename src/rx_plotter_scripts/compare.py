@@ -118,7 +118,9 @@ def _update_with_block(d_sel : dict[str,str]) -> dict[str,str]:
 # ---------------------------------
 @gut.timeit
 def _get_rdf() -> RDataFrame:
-    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
+    analysis = 'nopid' if Data.trigger.endswith('_noPID') else 'rx'
+
+    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger, analysis=analysis)
     rdf = gtr.get_rdf(per_file=False)
     rdf = _apply_definitions(rdf)
     d_sel = sel.selection(trigger=Data.trigger, q2bin=Data.q2_bin, process=Data.sample)
@@ -145,7 +147,7 @@ def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make comparison plots between distributions in the same dataframe')
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
-    parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True, choices=[Data.trigger_mm, Data.trigger_ee, 'Hlt2RD_BuToKpEE_MVA_ext'])
+    parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True, choices=[Data.trigger_mm, Data.trigger_ee, 'Hlt2RD_BuToKpEE_MVA_ext', 'Hlt2RD_BuToKpEE_MVA_noPID'])
     parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True)
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category, 12 = 1 or 2, -1 = all' , choices=[-1, 0, 1, 2, 12], required=True)
