@@ -23,6 +23,7 @@ plots:
     labels     : ['M$(K^+e^+e^-)$[MeV]', 'Entries/50 MeV']
     name       : bmass
     normalized : false 
+    weights    : weight
     styling:
       Signal:
         histtype : fill
