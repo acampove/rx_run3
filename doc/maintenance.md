@@ -189,11 +189,12 @@ Where:
 
 - `-c` will point the script to the configuration file
 `src/rx_data_data/friend_trees/nopid.yaml`.
-- `-e` will tell what trees to exclude.
-- `-o` will tell that only these trees need to be processed.
+- `-w` Optional, this is a wild card, e.g. `data*.root` will only allow processing of data files
+- `-e` Optional, will tell what trees to exclude.
+- `-o` Optional, will tell that only these trees need to be processed.
 
-These last two flags are needed because the `mva` trees are calculated with the `brem_track_2`
-trees. Therefore they can only be processed afterwards.
+In this case, these last two flags are needed because the `mva` trees are calculated with the `brem_track_2`
+trees as input. Therefore they can only be processed afterwards.
 
 ## Missing files
 
