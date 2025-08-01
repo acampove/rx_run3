@@ -1,4 +1,4 @@
-# Config used to compare different regions used in fits to extract hadronic misid 
+# Config used to compare different regions used in fits to extract hadronic misid
 
 general:
   size : [15, 10]
@@ -11,7 +11,7 @@ comparison:
       bmass : B_Mass
   Pion like:
     vars:
-      bmass : B_Mass_kpipi 
+      bmass : B_Mass_kpipi
   Kaon like:
     vars:
       bmass : B_Mass_kkk
@@ -30,16 +30,16 @@ plots:
         alpha    : 0.3
         color    : gray
       Kaon like:
-        histtype : step 
+        histtype : step
         linestyle: '-'
         color    : blue
       Pion like:
-        histtype : step 
+        histtype : step
         linestyle: '-'
-        color    : red 
+        color    : red
     vline   :
-      x     : 5280 
-      label : $B^+$ 
+      x     : 5280
+      label : $B^+$
       ls    : --
-      c     : black 
+      c     : black
       lw    : 1
