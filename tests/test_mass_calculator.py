@@ -56,6 +56,7 @@ def _validate_rdf(
     out_dir = f'{Data.plot_dir}/{test}'
     os.makedirs(out_dir, exist_ok=True)
 
+    plt.title(f'Sample={name}')
     plt.savefig(f'{out_dir}/{name}.png')
     plt.close()
 # ----------------------
