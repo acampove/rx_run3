@@ -20,6 +20,7 @@ class Data:
     user     = os.environ['USER']
     tmp_path = f'/tmp/{user}/rx_data/jobs/friend_trees'
     cfg_name = ''
+    wildcard = '*' # by default do all files
     exclude  = []
     only     = None
     cfg      : DictConfig
@@ -31,6 +32,7 @@ def _parse_args() -> None:
     parser.add_argument('-c', '--config' , type=str , help='Name of config file, e.g. nopid', required=True)
     parser.add_argument('-e', '--exclude', nargs='+', help='List of names of friend trees to exclude', default=[])
     parser.add_argument('-o', '--only'   , type=str , help='Name the the only friend tree')
+    parser.add_argument('-w', '--wcard'  , type=str , help='Wildcard to match files', default=Data.wildcard)
     parser.add_argument('-d', '--dry_run', action='store_true', help='If used, it will do a dry run, fewer jobs and no outputs')
     parser.add_argument('-l', '--log_lvl', type=int , help='Logging level' , choices=[10, 20, 30], default=20)
     args = parser.parse_args()
@@ -39,6 +41,7 @@ def _parse_args() -> None:
     Data.exclude  = args.exclude
     Data.only     = args.only
     Data.dry_run  = args.dry_run
+    Data.wildcard = args.wcard
     Data.log_lvl  = args.log_lvl
 # ----------------------
 def _initialize() -> None:
@@ -65,7 +68,7 @@ def _get_commands(kind : str) -> list[str]:
 
     l_line = []
     for part in range(npart):
-        line = f'branch_calculator -k {kind} -P {Data.cfg_name} -v {version} -p {part} {npart} -b'
+        line = f'branch_calculator -k {kind} -P {Data.cfg_name} -v {version} -w "{Data.wildcard}" -p {part} {npart} -b'
         if Data.dry_run:
             line = line + ' -d'
 
