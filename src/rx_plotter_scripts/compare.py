@@ -41,6 +41,7 @@ class Data:
     nomva   : bool
     chanel  : str
     cfg     : dict
+    nthread : int = 0
 
     l_col  = []
 # ---------------------------------
@@ -148,6 +149,7 @@ def _parse_args() -> None:
     parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True)
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category, 12 = 1 or 2, -1 = all' , choices=[-1, 0, 1, 2, 12], required=True)
+    parser.add_argument('-n', '--nthread', type=int, help='Number of threads' , default=Data.nthreads)
     # TODO: We need MC for blocks 0, 4 and 3
     parser.add_argument('-B', '--block'  , type=int, help='Block to which data belongs, -1 will put all the data together', choices=[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8], required=True)
     parser.add_argument('-r', '--nomva'  ,           help='If used, it will remove the MVA requirement', action='store_true')
@@ -162,6 +164,7 @@ def _parse_args() -> None:
     Data.brem   = args.brem
     Data.block  = args.block
     Data.nomva  = args.nomva
+    Data.nthread= args.nthread
 # ---------------------------------
 def _get_out_dir(plt_dir : str) -> str:
     brem, block = _get_brem_block()
@@ -216,9 +219,9 @@ def main():
     '''
     _parse_args()
     _initialize()
-
-    d_rdf = _get_inp()
-    _plot(d_rdf)
+    with RDFGetter.multithreading(nthreads=Data.nthread):
+        d_rdf = _get_inp()
+        _plot(d_rdf)
 # ---------------------------------
 if __name__ == 'main':
     main()
