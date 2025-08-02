@@ -150,7 +150,11 @@ def selection(
     d_cut.update(d_tmp)
 
     if Data.d_custom_selection is not None:
-        d_cut.update(Data.d_custom_selection)
+        try:
+            d_cut.update(Data.d_custom_selection)
+        except ValueError as exc:
+            log.error(yaml.dump(Data.d_custom_selection))
+            raise ValueError('Cannot update selection') from exc
 
     d_cut = _update_mass_cuts(
         d_cut   =   d_cut,
