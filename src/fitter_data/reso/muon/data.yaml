@@ -9,7 +9,7 @@ model:
       - 5080
       - 5800
   components:
-    background : reso/muon/exp.yaml
+    background : reso/muon/combinatorial.yaml
     signal     : reso/muon/signal.yaml
   constraints:
     yields : []
