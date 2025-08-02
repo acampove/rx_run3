@@ -22,22 +22,6 @@ class Data:
         'b6' : 'block == 6',
         'b78': 'block == 7 || block == 8'}
 # -------------------------------------------
-def test_toy():
-    '''
-    Test using toy data
-    '''
-    cfg = gut.load_conf(
-        package='fitter_data',
-        fpath  ='tests/data_toy.yaml')
-    with Cache.turn_off_cache(val=True):
-        ftr = LikelihoodFactory(
-            sample = 'data_toy',
-            trigger= '',
-            project= '',
-            q2bin  = '',
-            cfg    = cfg)
-        ftr.run()
-# -------------------------------------------
 def test_reso_muon():
     '''
     Test using toy data
