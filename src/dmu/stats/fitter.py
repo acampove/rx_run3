@@ -529,7 +529,7 @@ class Fitter:
 
         return res
     #------------------------------
-    def fit(self, cfg : Union[dict, None] = None) -> zres:
+    def fit(self, cfg : dict|None = None) -> zres:
         '''
         Runs the fit using the configuration specified by the cfg dictionary
         Parameters
