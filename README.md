@@ -843,6 +843,29 @@ val = obj.get_value(name='var_name', kind='value or error')
 
 and the tool will retrieve the value. This is useful when the values are needed elsewhere
 in the code, i.e. it would connect the fitting part with other parts.
+
+## Constraints
+
+### Constraint getting utility
+
+Given a dictionary with the parameters and values of the
+mean and width of a Gaussian constraint, e.g.:
+
+```python
+d_const = {'mu' : (10, 1), 'sg' : (1, 0)}
+```
+
+use
+
+```python
+from dmu.stats.fitter import Fitter
+
+cons = Fitter.get_gaussian_constraints(obj=pdf, cfg=d_const)
+```
+
+to extract the `GaussianConstraints` object associated to the
+`pdf`. The PDF can also be a zfit likelihood.
+
 ## Arrays
 
 ### Scaling by non-integer
