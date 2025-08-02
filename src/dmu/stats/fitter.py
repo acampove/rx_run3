@@ -335,12 +335,12 @@ class Fitter:
         except FitterGofError as exc:
             raise FitterGofError('Cannot calculate GOF') from exc
 
-        stat           = res.status
+        stat = res.status
 
         log.info(f'{chi2:<10.3f}{pval:<10.3e}{stat:<10}')
         self._print_pars(cfg)
 
-        return res, gof
+        return res, (chi2, pval)
     #------------------------------
     def _gof_is_bad(self, gof : tuple[float, int, float]) -> bool:
         chi2, ndof, pval = gof
