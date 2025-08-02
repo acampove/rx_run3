@@ -51,7 +51,7 @@ def test_rare_muon(q2bin : str):
         package='fitter_data',
         fpath  ='rare/muon/data.yaml')
 
-    with Cache.turn_off_cache(val=False):
+    with Cache.turn_off_cache(val=['LikelihoodFactory']):
         ftr = LikelihoodFactory(
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpMuMu_MVA',
@@ -71,7 +71,7 @@ def test_reso_electron(block : str):
 
     block_cut = Data.d_block_cut[block]
 
-    with Cache.turn_off_cache(val=True), \
+    with Cache.turn_off_cache(val=['LikelihoodFactory']), \
         sel.custom_selection(d_sel={
             'block' : block_cut,
             'brm12' : 'nbrem != 0',
@@ -95,7 +95,7 @@ def test_rare_electron(q2bin : str):
         package='fitter_data',
         fpath  ='rare/electron/data.yaml')
 
-    with Cache.turn_off_cache(val=['DataFitter']),\
+    with Cache.turn_off_cache(val=['LikelihoodFactory']),\
         sel.custom_selection(d_sel={
             'nobr0' : 'nbrem != 0',
             'bdt'   : 'mva_cmb > 0.60 && mva_prc > 0.40'}):
@@ -117,7 +117,7 @@ def test_high_q2_track():
         package='fitter_data',
         fpath  ='rare/electron/data.yaml')
 
-    with Cache.turn_off_cache(val=['DataFitter']),\
+    with Cache.turn_off_cache(val=['LikelihoodFactory']),\
         sel.custom_selection(d_sel={
             'q2'    : 'q2_track > 14300000 && q2 < 22000000',
             'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
@@ -141,7 +141,7 @@ def test_rare_misid_electron(q2bin : str):
     l1_in_cr = '(L1_PROBNN_E < 0.2) || (L1_PID_E < 3.0)'
     l2_in_cr = '(L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)'
 
-    with Cache.turn_off_cache(val=['DataFitter']),\
+    with Cache.turn_off_cache(val=['LikelihoodFactory']),\
         sel.custom_selection(d_sel={
             'nobr0' : 'nbrem != 0',
             'pid_l' : f'({l1_in_cr}) || ({l2_in_cr})',
