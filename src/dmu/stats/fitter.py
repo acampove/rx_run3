@@ -238,13 +238,12 @@ class Fitter:
             log.debug('Not using any constraint')
             return []
 
-        d_const = cfg['constraints']
         s_par   = obj.get_params(floating=True)
         d_par   = { par.name : par for par in s_par}
 
         log.info('Adding constraints:')
         l_const = []
-        for par_name, (par_mu, par_sg) in d_const.items():
+        for par_name, (par_mu, par_sg) in cfg.items():
             if par_name not in d_par:
                 log.error(s_par)
                 raise ValueError(f'Parameter {par_name} not found among floating parameters of model, above')
