@@ -7,22 +7,23 @@ from omegaconf                import DictConfig, OmegaConf
 
 from dmu.workflow.cache       import Cache
 from dmu.stats.zfit           import zfit
-from dmu.stats                import utilities  as sut
 from dmu.logging.log_store    import LogStore
 from rx_selection             import selection  as sel
 
-from zfit.interface           import ZfitPDF    as zpdf
+from zfit.interface           import ZfitLoss
 from zfit.interface           import ZfitSpace  as zobs
 from fitter.data_preprocessor import DataPreprocessor
 from fitter.base_fitter       import BaseFitter
 from fitter.data_model        import DataModel
-from fitter.constraint_reader import ConstraintReader
 
-log=LogStore.add_logger('fitter:data_fitter')
+log=LogStore.add_logger('fitter:LikelihoodFactory')
 # ------------------------
-class DataFitter(BaseFitter, Cache):
+class LikelihoodFactory(BaseFitter, Cache):
     '''
-    Fitter for data
+    Builder of likelihoods given a:
+
+    - Data sample
+    - Configuration describing the models to use
     '''
     # ------------------------
     def __init__(
@@ -81,38 +82,6 @@ class DataFitter(BaseFitter, Cache):
 
         return zfit.Space(name, limits=(minx, maxx))
     # ------------------------
-    # TODO: ConstraintReader needs to be taken out of this class
-    # It should be initialized outside and passed
-    # Because the class needs DataFitter to calculate constraints
-    def _constraints_from_model(self, model : zpdf) -> dict[str,tuple[float,float]]:
-        '''
-        Parameters
-        ----------------
-        model: Model needed to fit the data
-
-        Returns
-        ----------------
-        Dictionary with:
-
-        Key: Name of parameter
-        Value: Tuple value, error. Needed to apply constraints
-        '''
-        log.info('Getting constraints')
-
-        s_par   = model.get_params()
-        l_par   = [ par.name for par in s_par ]
-        obj     = ConstraintReader(parameters = l_par, q2bin = self._q2bin)
-        d_cns   = obj.get_constraints()
-
-        log.debug(90 * '-')
-        log.debug(f'{"Name":<20}{"Value":<20}{"Error":<20}')
-        log.debug(90 * '-')
-        for name, (val, err) in d_cns.items():
-            log.debug(f'{name:<50}{val:<20.3f}{err:<20.3f}')
-        log.debug(90 * '-')
-
-        return d_cns
-    # ----------------------
     def _update_trigger_project(self) -> tuple[str,str]:
         '''
         Returns
@@ -133,13 +102,13 @@ class DataFitter(BaseFitter, Cache):
 
         return trigger, project
     # ------------------------
-    def run(self) -> DictConfig:
+    def run(self) -> ZfitLoss:
         '''
         Runs fit
 
         Returns
         ------------
-        DictConfig object with fitting results
+        Zfit likelihood
         '''
 
         result_path = f'{self._out_path}/parameters.yaml'
@@ -169,21 +138,10 @@ class DataFitter(BaseFitter, Cache):
             trigger= trigger,
             project= project)
         model= mod.get_model()
-        d_cns= self._constraints_from_model(model=model)
-
-        res  = self._fit(data=data, model=model, d_cns=d_cns, cfg=self._cfg.fit)
-        self._save_fit(
-            cuts     = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin),
-            cfg      = self._cfg.plots,
-            data     = data,
-            model    = model,
-            res      = res,
-            d_cns    = d_cns,
-            out_path = self._out_path)
-
-        cres = sut.zres_to_cres(res=res)
 
         self._cache()
 
-        return cres
+        nll = zfit.loss.ExtendedUnbinnedNLL(model=model, data=data)
+
+        return nll
 # ------------------------

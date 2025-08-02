@@ -7,7 +7,7 @@ from dmu.workflow.cache import Cache
 from dmu.generic        import utilities  as gut
 from rx_data.rdf_getter import RDFGetter
 from rx_selection       import selection  as sel
-from fitter.data_fitter import DataFitter
+from fitter.likelihoodFactory import LikelihoodFactory
 
 # -------------------------------------------
 class Data:
@@ -30,7 +30,7 @@ def test_toy():
         package='fitter_data',
         fpath  ='tests/data_toy.yaml')
     with Cache.turn_off_cache(val=True):
-        ftr = DataFitter(
+        ftr = LikelihoodFactory(
             sample = 'data_toy',
             trigger= '',
             project= '',
@@ -50,7 +50,7 @@ def test_reso_muon():
          sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
          RDFGetter.max_entries(value=100_000):
 
-        ftr = DataFitter(
+        ftr = LikelihoodFactory(
             sample = 'DATA_24_MagDown_24c2',
             trigger= 'Hlt2RD_BuToKpMuMu_MVA',
             project= 'rx',
@@ -68,7 +68,7 @@ def test_rare_muon(q2bin : str):
         fpath  ='rare/muon/data.yaml')
 
     with Cache.turn_off_cache(val=False):
-        ftr = DataFitter(
+        ftr = LikelihoodFactory(
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpMuMu_MVA',
             project= 'rx',
@@ -93,7 +93,7 @@ def test_reso_electron(block : str):
             'brm12' : 'nbrem != 0',
             'mass'  : '(1)'}):
 
-        ftr = DataFitter(
+        ftr = LikelihoodFactory(
             name   = block,
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
@@ -115,7 +115,7 @@ def test_rare_electron(q2bin : str):
         sel.custom_selection(d_sel={
             'nobr0' : 'nbrem != 0',
             'bdt'   : 'mva_cmb > 0.60 && mva_prc > 0.40'}):
-        ftr = DataFitter(
+        ftr = LikelihoodFactory(
             name   = '060_040',
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
@@ -137,7 +137,7 @@ def test_high_q2_track():
         sel.custom_selection(d_sel={
             'q2'    : 'q2_track > 14300000 && q2 < 22000000',
             'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
-        ftr = DataFitter(
+        ftr = LikelihoodFactory(
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
             project= 'rx',
@@ -162,7 +162,7 @@ def test_rare_misid_electron(q2bin : str):
             'nobr0' : 'nbrem != 0',
             'pid_l' : f'({l1_in_cr}) || ({l2_in_cr})',
             'bdt'   : 'mva_cmb > 0.80 && mva_prc > 0.60'}):
-        ftr = DataFitter(
+        ftr = LikelihoodFactory(
             name   = '080_060',
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA_ext',
