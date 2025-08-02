@@ -297,30 +297,6 @@ class Fitter:
 
         return nll
     #------------------------------
-    def _calc_gof(self):
-        log.debug('Calculating GOF')
-
-        arr_data    = self._bin_data()
-        arr_modl    = self._bin_pdf()
-        norm        = numpy.sum(arr_data) / numpy.sum(arr_modl)
-        arr_modl    = norm * arr_modl
-        arr_res     = arr_modl - arr_data
-
-        arr_chi2    = numpy.divide(arr_res ** 2, arr_data, out=numpy.zeros_like(arr_data), where=arr_data!=0)
-        sum_chi2    = numpy.sum(arr_chi2)
-        pvalue      = 1 - stats.chi2.cdf(sum_chi2, self._ndof)
-
-        log.debug(f'{"Data":<20}{"Model":<20}{"chi2":<20}')
-        if pvalue < self._pval_threshold:
-            for data, modl, chi2 in zip(arr_data, arr_modl, arr_chi2):
-                log.debug(f'{data:<20.0f}{modl:<20.3f}{chi2:<20.3f}')
-
-        log.debug(f'Chi2: {sum_chi2:.3f}')
-        log.debug(f'Ndof: {self._ndof}')
-        log.debug(f'pval: {pvalue:<.3e}')
-
-        return sum_chi2, self._ndof, pvalue
-    #------------------------------
     def _print_pars(self, cfg : dict):
         '''
         Will print current values parameters in cfg['print_pars'] list, if present
@@ -352,12 +328,13 @@ class Fitter:
 
         res.hesse(name='minuit_hesse')
 
+        gcl = GofCalculator(nll, ndof=ndof)
         try:
-            gof = self._calc_gof()
+            pval = gcl.get_gof(kind='pvalue')
+            chi2 = gcl.get_gof(kind='chi2')
         except FitterGofError as exc:
             raise FitterGofError('Cannot calculate GOF') from exc
 
-        chi2, _, pval  = gof
         stat           = res.status
 
         log.info(f'{chi2:<10.3f}{pval:<10.3e}{stat:<10}')
