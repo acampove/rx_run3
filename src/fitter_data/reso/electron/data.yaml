@@ -12,6 +12,8 @@ model:
     background : reso/electron/combinatorial.yaml
     signal     : reso/electron/signal.yaml
     ccbar      : reso/electron/ccbar.yaml
+  constraints:
+    yields : []
 fit:
   strategy  :
     retry   :
