@@ -529,11 +529,16 @@ class Fitter:
 
         return res
     #------------------------------
-    def fit(self, cfg : Union[dict, None] = None):
+    def fit(self, cfg : Union[dict, None] = None) -> zres:
         '''
         Runs the fit using the configuration specified by the cfg dictionary
+        Parameters
+        ----------------------
+        cfg : Fit configuration
 
-        Returns fit result
+        Returns
+        ----------------------
+        zres: Fit result
         '''
         self._initialize()
 
