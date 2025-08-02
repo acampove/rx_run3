@@ -219,14 +219,16 @@ class Fitter:
     @staticmethod
     def get_gaussian_constraints(
         obj : zpdf|ExtendedUnbinnedNLL,
-        cfg : dict|None) -> list[zfit.constraint.GaussianConstraint]:
+        cfg : dict[str,tuple[str,str]]|None) -> list[zfit.constraint.GaussianConstraint]:
         '''
         Parameters
         --------------
         obj: Zfit PDF or Likelihood, whose parameters will be constrained
         cfg: Dictionary specifying what variables to constrain and values of constraints, e.g.
-             mu : [5, 1.0]
+             mu : (5, 1.0)
              sg : (0, 0.1)
+
+        e.g. dictionary with parameter name and tuple. Latter holds mean value and width
 
         Returns
         --------------
