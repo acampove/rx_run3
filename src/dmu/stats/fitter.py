@@ -377,7 +377,7 @@ class Fitter:
 
             chi2, _, pval   = gof
 
-            if self._gof_is_bad(gof):
+            if self._gof_is_bad(gof=gof):
                 log.debug('Reshufling and skipping, found bad gof')
                 self._reshuffle_pdf_pars()
                 continue
