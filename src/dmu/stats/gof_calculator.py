@@ -29,7 +29,7 @@ class GofCalculator:
         self._data_zf = zfit.Data.from_numpy(obs=self._pdf.space, array=self._data_np)
     # ---------------------
     def _data_np_from_data(self, dat) -> numpy.ndarray:
-        if   isinstance(dat, numpy.ndarray):
+        if isinstance(dat, numpy.ndarray):
             return dat
 
         if isinstance(dat, zfit.Data):
