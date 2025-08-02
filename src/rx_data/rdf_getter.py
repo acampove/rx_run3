@@ -1033,6 +1033,26 @@ class RDFGetter:
         return _context()
     # ---------------------------------------------------
     @classmethod
+    def default_excluded(cls, names : list[str]):
+        '''
+        Contextmanager that will (re)define which
+        trees are excluded as friend trees by default
+        '''
+        log.debug(f'Default excluding: {names}')
+
+        @contextmanager
+        def _context():
+            old_val = cls._default_excluded
+            cls._default_excluded = names
+
+            try:
+                yield
+            finally:
+                cls._default_excluded = old_val
+
+        return _context()
+    # ---------------------------------------------------
+    @classmethod
     def multithreading(cls, nthreads : int):
         '''
         Multithreading should be used with care. This should be the only
