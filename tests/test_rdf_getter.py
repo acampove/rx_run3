@@ -519,12 +519,12 @@ def test_per_file(kind : str, trigger : str):
         _plot_mva(rdf     , f'{name}_{sample}')
         _plot_hop(rdf     , f'{name}_{sample}')
 # ------------------------------------------------
-@pytest.mark.parametrize('kind'   , ['data', 'mc'])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
-def test_electron(kind : str, trigger : str):
+@pytest.mark.parametrize('kind', ['data', 'mc'])
+def test_electron(kind : str):
     '''
     Tests for electron samples
     '''
+    trigger = 'Hlt2RD_BuToKpEE_MVA'
 
     if   kind == 'data':
         sample = 'DATA_24_MagDown_24c2'
