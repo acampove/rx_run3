@@ -216,51 +216,6 @@ class Fitter:
             log.debug(f'{"":<4}{par.name:<20}{"->":<10}{val:<20.3e}')
             par.set_value(val)
     #------------------------------
-    @staticmethod
-    def get_gaussian_constraints(
-        obj : zpdf|ExtendedUnbinnedNLL,
-        cfg : dict[str,tuple[str,str]]|None) -> list[zfit.constraint.GaussianConstraint]:
-        '''
-        Parameters
-        --------------
-        obj: Zfit PDF or Likelihood, whose parameters will be constrained
-        cfg: Dictionary specifying what variables to constrain and values of constraints, e.g.
-             mu : (5, 1.0)
-             sg : (0, 0.1)
-
-        e.g. dictionary with parameter name and tuple. Latter holds mean value and width
-
-        Returns
-        --------------
-        List of Gaussian constraints
-        '''
-        if cfg is None:
-            log.debug('Not using any constraint')
-            return []
-
-        s_par   = obj.get_params(floating=True)
-        d_par   = { par.name : par for par in s_par}
-
-        log.info('Adding constraints:')
-        l_const = []
-        for par_name, (par_mu, par_sg) in cfg.items():
-            if par_name not in d_par:
-                log.error(s_par)
-                raise ValueError(f'Parameter {par_name} not found among floating parameters of model, above')
-
-            par = d_par[par_name]
-
-            if par_sg == 0:
-                par.floating = False
-                log.info(f'{"":<4}{par_name:<15}{par_mu:<15.3e}{par_sg:<15.3e}')
-                continue
-
-            const = zfit.constraint.GaussianConstraint(params=par, observation=float(par_mu), uncertainty=float(par_sg))
-            log.info(f'{"":<4}{par_name:<45}{par_mu:<15.3e}{par_sg:<15.3e}')
-            l_const.append(const)
-
-        return l_const
-    #------------------------------
     def _get_ranges(self, cfg : dict) -> list:
         if 'ranges' not in cfg:
             return [None]
@@ -546,6 +501,51 @@ class Fitter:
         res.hesse(name='minuit_hesse')
 
         return res
+    #------------------------------
+    @staticmethod
+    def get_gaussian_constraints(
+        obj : zpdf|ExtendedUnbinnedNLL,
+        cfg : dict[str,tuple[str,str]]|None) -> list[zfit.constraint.GaussianConstraint]:
+        '''
+        Parameters
+        --------------
+        obj: Zfit PDF or Likelihood, whose parameters will be constrained
+        cfg: Dictionary specifying what variables to constrain and values of constraints, e.g.
+             mu : (5, 1.0)
+             sg : (0, 0.1)
+
+        e.g. dictionary with parameter name and tuple. Latter holds mean value and width
+
+        Returns
+        --------------
+        List of Gaussian constraints
+        '''
+        if cfg is None:
+            log.debug('Not using any constraint')
+            return []
+
+        s_par   = obj.get_params(floating=True)
+        d_par   = { par.name : par for par in s_par}
+
+        log.info('Adding constraints:')
+        l_const = []
+        for par_name, (par_mu, par_sg) in cfg.items():
+            if par_name not in d_par:
+                log.error(s_par)
+                raise ValueError(f'Parameter {par_name} not found among floating parameters of model, above')
+
+            par = d_par[par_name]
+
+            if par_sg == 0:
+                par.floating = False
+                log.info(f'{"":<4}{par_name:<15}{par_mu:<15.3e}{par_sg:<15.3e}')
+                continue
+
+            const = zfit.constraint.GaussianConstraint(params=par, observation=float(par_mu), uncertainty=float(par_sg))
+            log.info(f'{"":<4}{par_name:<45}{par_mu:<15.3e}{par_sg:<15.3e}')
+            l_const.append(const)
+
+        return l_const
     #------------------------------
     def fit(self, cfg : dict|None = None) -> zres:
         '''
