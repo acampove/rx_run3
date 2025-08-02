@@ -12,7 +12,7 @@ from dmu.generic           import utilities as gut
 from dmu.workflow.cache    import Cache
 from dmu.logging.log_store import LogStore
 
-from fitter.data_fitter    import DataFitter
+from fitter.likelihood_factory import LikelihoodFactory
 from rx_selection          import selection as sel
 
 log=LogStore.add_logger('fitter:fit_rx_data')
@@ -59,7 +59,7 @@ def _fit() -> None:
          sel.custom_selection(d_sel={
         'nobr0' : 'nbrem != 0',
         'bdt'   :f'mva_cmb > {Data.mva_cmb} && mva_prc > {Data.mva_prc}'}):
-        ftr = DataFitter(
+        ftr = LikelihoodFactory(
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
             project= 'rx',
