@@ -320,7 +320,7 @@ class Fitter:
         log.info(header)
         log.info(parval)
     #------------------------------
-    def _minimize(self, nll, cfg : dict) -> tuple[zres, tuple]:
+    def _minimize(self, nll, cfg : dict, ndof : int) -> tuple[zres, tuple]:
         mnm = zfit.minimize.Minuit()
 
         with mes.filter_stderr(banned_substrings=self._l_hidden_tf_lines):
@@ -361,7 +361,7 @@ class Fitter:
         last_res   = None
         for i_try in range(ntries):
             try:
-                res, gof = self._minimize(nll, cfg)
+                res, gof = self._minimize(nll, cfg, ndof=self._ndof)
             except (FailMinimizeNaN, FitterGofError, RuntimeError):
                 self._reshuffle_pdf_pars()
                 log.warning(f'Fit {i_try:03}/{ntries:03} failed due to exception')
@@ -427,13 +427,13 @@ class Fitter:
             cfg_step['nentries'] = nsample
 
             nll    = self._get_full_nll(cfg = cfg_step)
-            res, _ = self._minimize(nll, cfg_step)
+            res, _ = self._minimize(nll, cfg_step, ndof=self._ndof)
             res.hesse(method='minuit_hesse')
             self._update_par_bounds(res, nsigma=nsigma, yields=l_yield)
 
         log.info('Fitting full sample')
         nll    = self._get_full_nll(cfg = cfg)
-        res, _ = self._minimize(nll, cfg)
+        res, _ = self._minimize(nll, cfg, ndof=self._ndof)
 
         if res is None:
             nsteps = len(l_nsample)
@@ -537,7 +537,7 @@ class Fitter:
         log.info(f'{"chi2":<10}{"pval":<10}{"stat":<10}')
         if 'strategy' not in cfg:
             nll    = self._get_full_nll(cfg = cfg)
-            res, _ = self._minimize(nll, cfg)
+            res, _ = self._minimize(nll, cfg, ndof=self._ndof)
         elif 'retry' in cfg['strategy']:
             d_pval_res, last_res = self._fit_retries(cfg)
             res = self._pick_best_fit(d_pval_res, last_res)
