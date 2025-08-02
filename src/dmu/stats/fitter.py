@@ -14,9 +14,11 @@ from dmu.logging              import messages  as mes
 from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
 
+from zfit.loss                import ExtendedUnbinnedNLL
 from zfit.minimizers.strategy import FailMinimizeNaN
 from zfit.core.data           import Data
 from zfit.result              import FitResult  as zres
+from zfit.interface           import ZfitModel  as zpdf
 from scipy                    import stats
 
 log = LogStore.add_logger('dmu:statistics:fitter')
