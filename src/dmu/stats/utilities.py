@@ -432,9 +432,9 @@ def pdf_to_tex(path : str, d_par : dict[str,str], skip_fixed : bool = True) -> N
 # Fake/Placeholder fit
 #---------------------------------------------
 def get_model(
-        kind : str,
-        obs  : zobs|None = None,
-        lam  : float     = -0.0001) -> zpdf:
+    kind : str,
+    obs  : zobs|None = None,
+    lam  : float     = -0.0001) -> zpdf:
     '''
     Returns zfit PDF for tests
 
