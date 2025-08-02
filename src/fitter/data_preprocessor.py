@@ -77,7 +77,7 @@ class DataPreprocessor(Cache):
         -------------------
         ROOT dataframe after selection and with Unique identifier attached as uid
         '''
-        log.debug(f'Retrieving dataframe for {self._sample}/{self._trigger}')
+        log.debug(f'Retrieving dataframe for {self._sample}/{self._trigger}/{self._project}')
         gtr = RDFGetter(
             sample  =self._sample,
             trigger =self._trigger,
