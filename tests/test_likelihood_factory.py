@@ -30,7 +30,7 @@ def test_reso_muon():
         package='fitter_data',
         fpath  ='reso/muon/data.yaml')
 
-    with Cache.turn_off_cache(val=False), \
+    with Cache.turn_off_cache(val=['LikelihoodFactory']), \
          sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
          RDFGetter.max_entries(value=100_000):
 
