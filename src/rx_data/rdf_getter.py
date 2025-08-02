@@ -52,6 +52,7 @@ class RDFGetter:
     _main_tree           : str
 
     _cache_dir                        = '/tmp/rx_data/cache/rdf_getter' # Here is where all the temporary output will go
+    _default_excluded                 = ['mass']# These friend trees will always be excluded, unless explicitly changed
     _excluded_friends                 = []      # Will not pick up any of the friend trees in this list
     _only_friends : set[str]|None     = None    # Will only pick up the friend trees in this list, if the list is not None
     _JPSI_PDG_MASS                    = 3096.90 # https://pdg.lbl.gov/2018/listings/rpp2018-list-J-psi-1S.pdf
@@ -389,6 +390,9 @@ class RDFGetter:
             return False
 
         if ftree in RDFGetter._excluded_friends:
+            return True
+
+        if ftree in RDFGetter._default_excluded:
             return True
 
         if ftree in self._l_electron_only and 'MuMu' in self._trigger:
