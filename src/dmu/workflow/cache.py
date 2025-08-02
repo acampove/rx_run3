@@ -230,7 +230,7 @@ class Cache:
         return True
     # ---------------------------
     @classmethod
-    def turn_off_cache(cls, val):
+    def turn_off_cache(cls, val : list[str]|None):
         '''
         Parameters
         ------------------
