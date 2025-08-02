@@ -135,9 +135,13 @@ class GofCalculator:
     # ---------------------
     def get_gof(self, kind : str) -> float:
         '''
-        Returns good ness of fit of a given kind
+        Parameters
+        -----------------
+        kind: Type of goodness of fit: pvalue, chi2, chi2/ndof
 
-        kind: Type of goodness of fit, e.g. pvalue
+        Returns 
+        -----------------
+        Goodness of fit of a given kind
         '''
 
         chi2, ndof, pval = self._calculate_gof()
