@@ -4,7 +4,7 @@ Module holding zfitter class
 # pylint: disable=wrong-import-order, import-error
 
 import pprint
-from typing                   import Union
+from typing                   import Union, cast
 from functools                import lru_cache
 
 import numpy
