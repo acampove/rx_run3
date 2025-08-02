@@ -342,7 +342,10 @@ class Fitter:
         raise ValueError('Likelihood was neither Binned nor Unbinned nor Extended nor non-extended')
     #------------------------------
     def _get_full_nll(self, cfg : dict):
-        constraints = self._get_constraints(cfg)
+        constraints = Fitter.get_gaussian_constraints(
+            obj = self._pdf,
+            cfg = cfg.get('constraints'))
+
         ranges      = self._get_ranges(cfg)
         data_zf     = self._get_subdataset(cfg)
         l_nll       = [ self._get_nll(data_zf, constraints, frange, cfg) for frange in ranges ]
