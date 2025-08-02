@@ -7,7 +7,7 @@ from dmu.workflow.cache import Cache
 from dmu.generic        import utilities  as gut
 from rx_data.rdf_getter import RDFGetter
 from rx_selection       import selection  as sel
-from fitter.likelihoodFactory import LikelihoodFactory
+from fitter.likelihood_factory import LikelihoodFactory
 
 # -------------------------------------------
 class Data:
