@@ -390,9 +390,11 @@ class RDFGetter:
             return False
 
         if ftree in RDFGetter._excluded_friends:
+            log.debug(f'Excluding {ftree}')
             return True
 
         if ftree in RDFGetter._default_excluded:
+            log.debug(f'Default excluding {ftree}')
             return True
 
         if ftree in self._l_electron_only and 'MuMu' in self._trigger:
