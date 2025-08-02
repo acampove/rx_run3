@@ -72,6 +72,7 @@ def test_reso_electron(block : str):
     block_cut = Data.d_block_cut[block]
 
     with Cache.turn_off_cache(val=['LikelihoodFactory']), \
+        RDFGetter.multithreading(nthreads=8),\
         sel.custom_selection(d_sel={
             'block' : block_cut,
             'brm12' : 'nbrem != 0',
