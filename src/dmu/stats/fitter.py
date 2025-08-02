@@ -216,16 +216,28 @@ class Fitter:
             log.debug(f'{"":<4}{par.name:<20}{"->":<10}{val:<20.3e}')
             par.set_value(val)
     #------------------------------
-    def _get_constraints(self, cfg : dict) -> list[zfit.constraint.GaussianConstraint]:
+    @staticmethod
+    def get_gaussian_constraints(
+        obj : zpdf|ExtendedUnbinnedNLL,
+        cfg : dict|None) -> list[zfit.constraint.GaussianConstraint]:
         '''
-        Takes dictionary of constraints as floats, returns list of GaussianConstraint objects
+        Parameters
+        --------------
+        obj: Zfit PDF or Likelihood, whose parameters will be constrained
+        cfg: Dictionary specifying what variables to constrain and values of constraints, e.g.
+             mu : [5, 1.0]
+             sg : (0, 0.1)
+
+        Returns
+        --------------
+        List of Gaussian constraints
         '''
-        if 'constraints' not in cfg:
+        if cfg is None:
             log.debug('Not using any constraint')
             return []
 
         d_const = cfg['constraints']
-        s_par   = self._pdf.get_params(floating=True)
+        s_par   = obj.get_params(floating=True)
         d_par   = { par.name : par for par in s_par}
 
         log.info('Adding constraints:')
