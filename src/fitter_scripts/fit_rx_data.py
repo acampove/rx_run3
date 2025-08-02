@@ -7,13 +7,14 @@ import os
 import argparse
 from typing import ClassVar
 
-from omegaconf             import DictConfig
-from dmu.generic           import utilities as gut
-from dmu.workflow.cache    import Cache
-from dmu.logging.log_store import LogStore
+from omegaconf                 import DictConfig
+from dmu.generic               import utilities as gut
+from dmu.workflow.cache        import Cache
+from dmu.logging.log_store     import LogStore
 
+from fitter.data_fitter        import DataFitter
 from fitter.likelihood_factory import LikelihoodFactory
-from rx_selection          import selection as sel
+from rx_selection              import selection as sel
 
 log=LogStore.add_logger('fitter:fit_rx_data')
 # ----------------------
