@@ -350,7 +350,7 @@ class Fitter:
         with mes.filter_stderr(banned_substrings=self._l_hidden_tf_lines):
             res = mnm.minimize(nll)
 
-        res = self._calculate_error(res)
+        res.hesse(name='minuit_hesse')
 
         try:
             gof = self._calc_gof()
@@ -496,11 +496,6 @@ class Fitter:
             shape.upper = val + nsigma * err
 
             log.info(f'{name:<20}{val - err:<20.3e}{val + err:<20.3e}')
-    #------------------------------
-    def _calculate_error(self, res : zres) -> zres:
-        res.hesse(name='minuit_hesse')
-
-        return res
     #------------------------------
     @staticmethod
     def get_gaussian_constraints(
