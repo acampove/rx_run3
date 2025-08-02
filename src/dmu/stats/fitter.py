@@ -4,7 +4,7 @@ Module holding zfitter class
 # pylint: disable=wrong-import-order, import-error
 
 import pprint
-from typing                   import Union, cast
+from typing                   import Union
 from functools                import lru_cache
 
 import numpy
@@ -13,13 +13,13 @@ import pandas as pd
 from dmu.logging              import messages  as mes
 from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
+from dmu.stats.gof_calculator import GofCalculator
 
 from zfit.loss                import ExtendedUnbinnedNLL
 from zfit.minimizers.strategy import FailMinimizeNaN
 from zfit.core.data           import Data
 from zfit.result              import FitResult  as zres
 from zfit.interface           import ZfitModel  as zpdf
-from scipy                    import stats
 
 log = LogStore.add_logger('dmu:statistics:fitter')
 #------------------------------
