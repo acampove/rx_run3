@@ -9,8 +9,10 @@ model:
       - 5080
       - 5800
   components:
-    background : rare/muon/exp.yaml
+    background : rare/muon/combinatorial.yaml
     signal     : rare/muon/signal.yaml
+  constraints:
+    yields : []
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
