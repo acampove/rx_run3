@@ -66,7 +66,10 @@ def _fit() -> None:
             project= 'rx',
             q2bin  = Data.q2bin,
             cfg    = Data.config)
-        ftr.run()
+        nll = ftr.run()
+
+    ftr = DataFitter(d_nll={'signal' : nll}, cfg=Data.config)
+    ftr.run()
 # ----------------------
 def _set_output_directory() -> None:
     '''
