@@ -340,7 +340,7 @@ class Fitter:
         log.info(f'{chi2:<10.3f}{pval:<10.3e}{stat:<10}')
         self._print_pars(cfg)
 
-        return res, (chi2, pval)
+        return res, (chi2, ndof, pval)
     #------------------------------
     def _gof_is_bad(self, gof : tuple[float, int, float]) -> bool:
         chi2, ndof, pval = gof
