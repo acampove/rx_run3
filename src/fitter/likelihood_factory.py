@@ -10,7 +10,7 @@ from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
 from rx_selection             import selection  as sel
 
-from zfit.interface           import ZfitLoss
+from zfit.loss                import ExtendedUnbinnedNLL
 from zfit.interface           import ZfitSpace  as zobs
 from fitter.data_preprocessor import DataPreprocessor
 from fitter.base_fitter       import BaseFitter
@@ -102,7 +102,7 @@ class LikelihoodFactory(BaseFitter, Cache):
 
         return trigger, project
     # ------------------------
-    def run(self) -> ZfitLoss:
+    def run(self) -> ExtendedUnbinnedNLL:
         '''
         Runs fit
 
