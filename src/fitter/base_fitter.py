@@ -226,9 +226,6 @@ class BaseFitter:
         d_cns    : Dictionary mapping parameter name to value error tuple.
                    Used for constraining that parameter
         '''
-        plt_cfg = OmegaConf.to_container(cfg, resolve=True)
-        plt_cfg = cast(dict, plt_cfg)
-
         # If no entries were present
         # There will not be PDF
         title, text         = self._get_text(data=data, res=res, cuts=cuts)
@@ -237,7 +234,7 @@ class BaseFitter:
 
         if model is not None:
             ptr = ZFitPlotter(data=data, model=model)
-            ptr.plot(**plt_cfg)
+            ptr.plot(**cast(Mapping[str, Any], plt_cfg)) # Need this casting to remove error from pyright
         else:
             plt.figure()
 
