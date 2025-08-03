@@ -1,6 +1,7 @@
 '''
 File needed by pytest
 '''
+import os
 import logging
 
 import numpy
@@ -27,5 +28,6 @@ def pytest_configure(config : Config):
     logging.getLogger('git.cmd').setLevel(logging.WARNING)
 
     plt.style.use(mplhep.style.LHCb2)
-    Wcache.set_cache_root(root='/tmp/tests/dmu/cache/cache_dir')
+    user = os.environ['USER']
+    Wcache.set_cache_root(root=f'/tmp/{user}/tests/dmu/cache/cache_dir')
 # ------------------------------
