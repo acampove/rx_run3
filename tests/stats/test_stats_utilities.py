@@ -146,7 +146,10 @@ def test_placeholder_fit(make_plot : bool) -> None:
     kind    = 'plotted' if make_plot else 'unplotted'
     fit_dir = f'{Data.fit_dir}/placeholder_{kind}'
 
-    placeholder_fit(kind='s+b', fit_dir=fit_dir, plot_fit=make_plot)
+    placeholder_fit(
+        kind     = 's+b',
+        fit_dir  = fit_dir,
+        plot_fit = make_plot)
 #----------------------------------
 def test_reuse_data() -> None:
     '''
