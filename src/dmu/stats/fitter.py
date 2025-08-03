@@ -56,7 +56,6 @@ class Fitter:
         self._data_zf : zfit.data.Data
         self._data_np : numpy.ndarray
         self._obs     : zfit.Space
-        self._d_par   : dict
 
         self._ndof           = 10
         self._pval_threshold = 0.01
