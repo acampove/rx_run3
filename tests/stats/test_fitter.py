@@ -12,6 +12,7 @@ import pandas              as pnd
 import matplotlib.pyplot   as plt
 
 from dmu.stats              import utilities as sut
+from dmu.stats.gof_calculator import GofCalculator
 from dmu.stats.zfit         import zfit
 from dmu.stats.fitter       import Fitter
 from dmu.stats.zfit_plotter import ZFitPlotter
@@ -144,8 +145,10 @@ def test_ranges():
 
     rng   = [[4500, 5100], [5300, 6000]]
     cfg   = {'ranges': rng}
-    obj   = Fitter(pdf, sam)
-    res   = obj.fit(cfg)
+
+    with GofCalculator.disabled(value=True):
+        obj   = Fitter(pdf, sam)
+        res   = obj.fit(cfg)
 
     print(res)
     assert res.valid
