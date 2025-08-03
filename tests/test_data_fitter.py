@@ -50,7 +50,7 @@ def test_two_regions() -> None:
     }
 
     with goc.GofCalculator.disabled(True):
-        cfg = gut.load_conf(package='fitter_data', fpath='tests/single_region.yaml')
+        cfg = gut.load_conf(package='fitter_data', fpath='tests/two_regions.yaml')
         ftr = DataFitter(d_nll=d_nll, cfg=cfg)
         ftr.run()
 # ----------------------
