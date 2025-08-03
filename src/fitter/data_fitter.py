@@ -79,6 +79,17 @@ class DataFitter(BaseFitter, Cache):
 
         return d_cns
     # ----------------------
+    def _get_full_nll(self) -> NLL:
+        '''
+        Returns
+        -------------
+        Full likelihood, i.e. sum over all the models
+        '''
+        l_nll = [ nll for nll, _ in self._d_nll.values() ]
+        nll   = sum(l_nll[1:], l_nll[0])
+
+        return nll
+    # ----------------------
     def run(self) -> DictConfig:
         '''
         Entry point for fitter
@@ -87,8 +98,7 @@ class DataFitter(BaseFitter, Cache):
         -------------
         OmegaConf DictConfig with fitting parameters
         '''
-        l_nll  = list(self._d_nll.values())
-        nll    = sum(l_nll[1:], l_nll[0])
+        nll    = self._get_full_nll()
         d_cns  = self._constraints_from_likelihoood(nll=nll)
         cns    = Fitter.get_gaussian_constraints(obj=nll, cfg=d_cns)
         nll    = nll.create_new(constraints=cns)
