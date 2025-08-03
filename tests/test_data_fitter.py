@@ -24,3 +24,4 @@ def test_single_region() -> None:
 
     ftr = DataFitter(d_nll=d_nll, cfg=cfg)
     ftr.run()
+# ----------------------
