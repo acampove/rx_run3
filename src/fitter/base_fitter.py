@@ -204,8 +204,8 @@ class BaseFitter:
     # ------------------------
     def _save_fit(
         self,
-        cuts     : dict[str,str],
-        cfg      : DictConfig,
+        cut_cfg  : DictConfig,
+        plt_cfg  : DictConfig,
         out_path : str,
         model    : zpdf|None,
         res      : zres|None,
@@ -214,8 +214,10 @@ class BaseFitter:
         '''
         Parameters
         --------------
-        cuts     : Selection used for fit
-        cfg      : Plotting configuration
+        cut_cfg  : Selection used for fit in DictConfig object
+                   Should contain keys `default` and `fit` the values
+                   are the selection.
+        plt_cfg  : Plotting configuration
         out_path : Directory where fit will be saved
         model    : PDF from fit, can be None if dataset was empty
         res      : Zfit result object, can be None if fit was to get a KDE
