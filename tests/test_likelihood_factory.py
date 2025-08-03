@@ -22,6 +22,37 @@ class Data:
         'b6' : 'block == 6',
         'b78': 'block == 7 || block == 8'}
 # -------------------------------------------
+def test_config():
+    '''
+    Tests the config method
+    '''
+    cfg = gut.load_conf(
+        package='fitter_data',
+        fpath  ='reso/muon/data.yaml')
+
+    with Cache.turn_off_cache(val=['LikelihoodFactory']), \
+         sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
+         RDFGetter.max_entries(value=100_000):
+
+        ftr = LikelihoodFactory(
+            sample = 'DATA_24_MagDown_24c2',
+            trigger= 'Hlt2RD_BuToKpMuMu_MVA',
+            project= 'rx',
+            q2bin  = 'jpsi',
+            cfg    = cfg)
+        cfg = ftr.get_config()
+
+    assert 'selection' in cfg
+    assert 'default'   in cfg.selection
+    assert 'fit'       in cfg.selection
+
+    sel_def = cfg.selection.default
+    sel_fit = cfg.selection.fit
+
+    assert sel_def.keys() == sel_fit.keys()
+    assert sel_def.bdt    != sel_fit.bdt
+    assert sel_fit.bdt    == '(1)'
+# -------------------------------------------
 def test_reso_muon():
     '''
     Test using toy data

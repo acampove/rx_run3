@@ -144,4 +144,32 @@ class LikelihoodFactory(BaseFitter, Cache):
         nll = zfit.loss.ExtendedUnbinnedNLL(model=model, data=data)
 
         return nll
+    # ----------------------
+    def get_config(self) -> DictConfig:
+        '''
+        Returns
+        -------------
+        OmegaConf dictionary storing the configuration, which includes:
+
+        - Selection
+        '''
+        cuts_fit = sel.selection(
+            process=self._sample,
+            trigger=self._trigger,
+            q2bin  =self._q2bin)
+
+        with sel.custom_selection(d_sel={}, force_override=True):
+            cuts_def = sel.selection(
+                process=self._sample,
+                trigger=self._trigger,
+                q2bin  =self._q2bin)
+
+        cfg = {
+            'selection' :
+            {
+                'default' : cuts_def,
+                'fit'     : cuts_fit}
+        }
+
+        return OmegaConf.create(obj=cfg)
 # ------------------------
