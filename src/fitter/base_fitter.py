@@ -108,11 +108,13 @@ class BaseFitter:
 
         return brem_cuts
     # --------------------------
-    def _get_selection_text(self, cuts : dict[str,str]) -> tuple[str,str]:
+    def _get_selection_text(self, selection : DictConfig) -> tuple[str,str]:
         '''
         Parameters
         --------------
-        cuts: Dictionary with cuts used for fit
+        selection: Object holding fitting and default selection
+                   It should contain the fit and default selections in
+                   the `fit` and `default` keys
 
         Returns
         --------------
