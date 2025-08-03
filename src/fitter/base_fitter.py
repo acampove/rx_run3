@@ -175,16 +175,16 @@ class BaseFitter:
         return nentries
     # --------------------------
     def _get_text(
-            self,
-            data : zdata,
-            res  : zres|None,
-            cuts : dict[str,str]) -> tuple[str,str]:
+        self,
+        data      : zdata,
+        res       : zres|None,
+        selection : DictConfig) -> tuple[str,str]:
         '''
         Parameters
         --------------
         data: Zfit data used for fit
         res : zfit result object
-        cuts: Dictionary with cuts used to get data
+        Selection: Object storing selections for `fit` and `default` keys
 
         Returns
         --------------
