@@ -323,6 +323,20 @@ class Fitter:
     #------------------------------
     @staticmethod
     def minimize(nll, cfg : dict, ndof : int) -> tuple[zres, tuple]:
+        '''
+        Parameters
+        --------------
+        nll : Negative log likelihood
+        cfg : Configuration dictionary used for minimization
+        ndof: Number of degrees of freedom needed for goodness of fit calculation through chi2
+
+        Returns
+        --------------
+        Tuple with:
+
+        - Zfit result object
+        - Tuple with goodness of fit (pvalue, ndof, chi2)
+        '''
         mnm = zfit.minimize.Minuit()
 
         with mes.filter_stderr(banned_substrings=Fitter._l_hidden_tf_lines):
