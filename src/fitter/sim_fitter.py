@@ -409,8 +409,7 @@ class SimFitter(BaseFitter, Cache):
             pdf = None
         else:
             if 'options' in self._cfg.fit:
-                cfg_fit= self._cfg.fit.get('options')
-                kwargs = OmegaConf.to_container(cfg_fit, resolve=True)
+                kwargs = self._cfg.fit.get('options')
             else:
                 kwargs = {}
 
