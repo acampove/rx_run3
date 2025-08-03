@@ -1,12 +1,13 @@
 '''
 Module with tests for functions in generic/utilities.py
 '''
+import os
 import math
 from typing import Any
 from time   import sleep
 
 import pytest
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 import dmu.generic.utilities as gut
 
 # -------------------------
