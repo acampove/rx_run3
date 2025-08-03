@@ -43,9 +43,7 @@ class DataFitter(BaseFitter, Cache):
             out_path = 'DataFitter',
             cfg      = cfg)
     # ----------------------
-    def _constraints_from_likelihoood(
-        self,
-        nll : ExtendedUnbinnedNLL) -> dict[str,tuple[float,float]]:
+    def _constraints_from_likelihoood(self, nll : NLL) -> dict[str,tuple[float,float]]:
         '''
         Parameters
         ----------------
@@ -88,7 +86,7 @@ class DataFitter(BaseFitter, Cache):
         cns   = Fitter.get_gaussian_constraints(obj=nll, cfg=cns)
         nll   = nll.create_new(constraints=cns)
 
-        res, _ = Fitter.minimize(nll=nll, cfg=self._cfg.fitting)
+        res, _ = Fitter.minimize(nll=nll, cfg=self._cfg.fit)
 
         res.hesse(name='minuit_hesse')
 # ----------------------
