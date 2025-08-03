@@ -60,7 +60,7 @@ def test_with_cat():
             trigger = 'Hlt2RD_BuToKpEE_MVA',
             project = 'rx',
             q2bin   = 'jpsi')
-        pdf = ftr.get_model()
+        _ = ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('component', ['bdkstee', 'bukstee', 'bsphiee'])
 def test_kde(component : str):
