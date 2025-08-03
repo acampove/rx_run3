@@ -1,7 +1,7 @@
 '''
 This module contains BaseFitter
 '''
-from typing                   import cast
+from typing                   import Mapping, cast, Any
 import matplotlib.pyplot as plt
 
 from omegaconf                import OmegaConf, DictConfig
@@ -10,7 +10,6 @@ from dmu.stats.zfit_plotter   import ZFitPlotter
 from dmu.generic              import utilities  as gut
 from dmu.stats                import utilities  as sut
 from dmu.logging.log_store    import LogStore
-from rx_selection             import selection  as sel
 from zfit.result              import FitResult  as zres
 from zfit.interface           import ZfitData   as zdata
 from zfit.interface           import ZfitPDF    as zpdf
