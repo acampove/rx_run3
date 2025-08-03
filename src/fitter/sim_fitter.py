@@ -246,6 +246,21 @@ class SimFitter(BaseFitter, Cache):
         model = self._fix_tails(pdf=model, pars=cres)
 
         return model, sumw, res
+    # ----------------------
+    def _get_cut_config(self) -> DictConfig:
+        '''
+        Returns
+        -------------
+        Dictionary with:
+            Keys  : `fit`, `default`
+            Values: Selection for data that was fitted and default
+        '''
+        cfg        = {}
+        cfg['fit'] = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin)
+        with sel.custom_selection(d_sel={}, force_override=True):
+            cfg['default'] = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin)
+
+        return OmegaConf.create(cfg)
     # ------------------------
     # TODO: Fractions need to be parameters to be constrained
     def _get_fraction(
