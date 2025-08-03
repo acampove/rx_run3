@@ -52,8 +52,9 @@ class GofCalculator:
     # ---------------------
     def _pdf_from_nll(self) -> zpdf:
         l_model = self._nll.model
-        if len(l_model) != 1:
-            raise ValueError('Not found one and only one model')
+        nmodel = len(l_model)
+        if nmodel != 1:
+            raise ValueError(f'Not found one and only one model, but {nmodel}')
 
         return l_model[0]
     # ---------------------
