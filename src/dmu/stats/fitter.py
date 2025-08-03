@@ -298,7 +298,8 @@ class Fitter:
 
         return nll
     #------------------------------
-    def _print_pars(self, cfg : dict):
+    @staticmethod
+    def print_pars(cfg : dict, d_par : dict[str,zpar]) -> None:
         '''
         Will print current values parameters in cfg['print_pars'] list, if present
         '''
@@ -307,7 +308,7 @@ class Fitter:
             return
 
         l_par_name = cfg['print_pars']
-        d_par_val  = { name : par.value().numpy() for name, par in self._d_par.items() if name in l_par_name}
+        d_par_val  = { name : par.value().numpy() for name, par in d_par.items() if name in l_par_name}
 
         l_name = list(d_par_val.keys())
         l_value= list(d_par_val.values())
