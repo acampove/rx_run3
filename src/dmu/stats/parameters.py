@@ -60,7 +60,14 @@ class ParameterLibrary:
     @staticmethod
     def get_values(kind : str, parameter : str) -> tuple[float,float,float]:
         '''
-        Takes PDF and parameter names and returns default value, low value and high value
+        Parameters
+        --------------
+        kind     : Kind of PDF, e.g. gaus, cbl, cbr, suj
+        parameter: Name of parameter for PDF, e.g. mu, sg
+
+        Returns
+        --------------
+        Tuple with central value, minimum and maximum
         '''
         df = ParameterLibrary.df_parameters
 
