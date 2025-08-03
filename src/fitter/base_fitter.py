@@ -196,7 +196,7 @@ class BaseFitter:
         - Text that goes inside plot with selection information
         '''
         nentries          = self._entries_from_data(data=data)
-        sel_txt, brem_txt = self._get_selection_text(cuts=cuts)
+        sel_txt, brem_txt = self._get_selection_text(selection=selection)
 
         sensitivity = self._get_sensitivity(res=res)
         title       = f'$\\delta={sensitivity:.2f}$%; Entries={nentries:.0f}; Brem:{brem_txt}'
@@ -228,7 +228,7 @@ class BaseFitter:
         '''
         # If no entries were present
         # There will not be PDF
-        title, text         = self._get_text(data=data, res=res, cuts=cuts)
+        title, text         = self._get_text(data=data, res=res, selection=cut_cfg)
         plt_cfg['title'   ] = title
         plt_cfg['ext_text'] = text
 
