@@ -2,6 +2,7 @@
 Module used to test DataFitter
 '''
 
+from omegaconf             import OmegaConf
 from dmu.stats.zfit        import zfit
 from dmu.stats             import utilities as sut
 from dmu.logging.log_store import LogStore
