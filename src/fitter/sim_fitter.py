@@ -417,8 +417,8 @@ class SimFitter(BaseFitter, Cache):
             pdf = kde_builder(obs=self._obs, data=data, name=self._component, **kwargs)
 
         self._save_fit(
-            cuts     = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin),
-            cfg      = self._cfg.plots,
+            cut_cfg  = self._get_cut_config(),
+            plt_cfg  = self._cfg.plots,
             data     = data,
             model    = pdf,
             res      = None,
