@@ -4,8 +4,9 @@ Module used to test DataFitter
 
 from omegaconf             import OmegaConf
 from dmu.stats.zfit        import zfit
-from dmu.stats             import utilities as sut
-from dmu.generic           import utilities as gut
+from dmu.stats             import gof_calculator as goc
+from dmu.stats             import utilities      as sut
+from dmu.generic           import utilities      as gut
 from dmu.logging.log_store import LogStore
 from fitter.data_fitter    import DataFitter
 
