@@ -187,5 +187,5 @@ class GofCalculator:
             finally:
                 cls._disabled = old_val
 
-        return _context
+        return _context()
 # ------------------------
