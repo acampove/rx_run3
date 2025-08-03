@@ -334,13 +334,14 @@ class Fitter:
         log.info(parval)
     #------------------------------
     @staticmethod
-    def minimize(nll, cfg : dict, ndof : int) -> tuple[zres, tuple]:
+    def minimize(nll, cfg : dict, ndof : int = 10) -> tuple[zres, tuple]:
         '''
         Parameters
         --------------
         nll : Negative log likelihood
         cfg : Configuration dictionary used for minimization
         ndof: Number of degrees of freedom needed for goodness of fit calculation through chi2
+              by default 10 as recommended by statistics experts
 
         Returns
         --------------
