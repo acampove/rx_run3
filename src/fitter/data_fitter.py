@@ -24,14 +24,20 @@ class DataFitter(BaseFitter, Cache):
     # ----------------------
     def __init__(
         self,
-        d_nll : dict[str,NLL],
+        d_nll : dict[str,tuple[NLL,DictConfig]],
         cfg   : DictConfig) -> None:
         '''
         Parameters
         -------------
         d_nll:  Dictionary with:
             Key  : Name of region where to fig, e.g. signal, control
-            Value: ExtendedBinnedNLL instance
+            Value:
+                - ExtendedBinnedNLL instance
+                - Configuration storing the selections used by default and in the fit
+        cfg  : Dictionary with configuration used for fit with:
+            - Output directory
+            - Fit settings
+            - Plotting settings
         '''
         self._d_nll = d_nll
         self._cfg   = cfg
