@@ -100,6 +100,7 @@ class DataFitter(BaseFitter, Cache):
         '''
         nll    = self._get_full_nll()
         l_cfg  = [ cfg for _, cfg in self._d_nll.values() ]
+        l_nam  = list(self._d_nll)
         d_cns  = self._constraints_from_likelihoood(nll=nll)
         cns    = Fitter.get_gaussian_constraints(obj=nll, cfg=d_cns)
         nll    = nll.create_new(constraints=cns)
@@ -107,15 +108,17 @@ class DataFitter(BaseFitter, Cache):
 
         res.hesse(name='minuit_hesse')
 
-        for model, data, cfg in zip(nll.model, nll.data, l_cfg):
+        for model, data, cut_cfg, name in zip(nll.model, nll.data, l_cfg, l_nam):
+            out_path = f'{self._out_path}/{name}'
+
             self._save_fit(
-                cut_cfg  = cfg,
+                cut_cfg  = cut_cfg,
                 plt_cfg  = self._cfg.plots,
                 data     = data,
                 model    = model,
                 res      = res,
                 d_cns    = d_cns,
-                out_path = self._out_path)
+                out_path = out_path)
 
         cres = sut.zres_to_cres(res=res)
 
