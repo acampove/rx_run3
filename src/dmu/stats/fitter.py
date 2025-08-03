@@ -509,7 +509,7 @@ class Fitter:
     @staticmethod
     def get_gaussian_constraints(
         obj : zpdf|ExtendedUnbinnedNLL,
-        cfg : dict[str,tuple[str,str]]|None) -> list[zfit.constraint.GaussianConstraint]:
+        cfg : dict[str,tuple[float,float]]|None) -> list[zfit.constraint.GaussianConstraint]:
         '''
         Parameters
         --------------
