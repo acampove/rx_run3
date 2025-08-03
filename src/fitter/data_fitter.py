@@ -80,11 +80,11 @@ class DataFitter(BaseFitter, Cache):
         -------------
         OmegaConf DictConfig with fitting parameters
         '''
-        l_nll = list(self._d_nll.values())
-        nll   = sum(l_nll[1:], l_nll[0])
-        cns   = self._constraints_from_likelihoood(nll=nll)
-        cns   = Fitter.get_gaussian_constraints(obj=nll, cfg=cns)
-        nll   = nll.create_new(constraints=cns)
+        l_nll  = list(self._d_nll.values())
+        nll    = sum(l_nll[1:], l_nll[0])
+        cns    = self._constraints_from_likelihoood(nll=nll)
+        cns    = Fitter.get_gaussian_constraints(obj=nll, cfg=cns)
+        nll    = nll.create_new(constraints=cns)
 
         res, _ = Fitter.minimize(nll=nll, cfg=self._cfg.fit)
 
