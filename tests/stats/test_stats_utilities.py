@@ -150,6 +150,16 @@ def test_placeholder_fit(make_plot : bool) -> None:
         kind     = 's+b',
         fit_dir  = fit_dir,
         plot_fit = make_plot)
+# ----------------------
+@pytest.mark.parametrize('suffix', [None ,   'suff'])
+@pytest.mark.parametrize('kind'  , ['s+b', 'signal'])
+def test_get_placeholder_model(
+    kind   : str,
+    suffix : str|None) -> None:
+    '''
+    Test of get_model
+    '''
+    _ = sut.get_model(kind=kind, suffix=suffix)
 #----------------------------------
 def test_reuse_data() -> None:
     '''
