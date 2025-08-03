@@ -19,14 +19,11 @@ def test_single_region() -> None:
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
 
-    cfg   = {'selection': {
-           'default' : {},
-           'fit'     : {}}}
-    cfg   = OmegaConf.create(obj=cfg)
-    d_nll = {'signal' : (nll, cfg)}
+    sel_cfg = {'default' : {}, 'fit' : {}}
+    sel_cfg = OmegaConf.create(obj=sel_cfg)
+    d_nll   = {'signal_region' : (nll, sel_cfg)}
 
-    cfg   = gut.load_conf(package='fitter_data', fpath='tests/single_region.yaml')
-
+    cfg = gut.load_conf(package='fitter_data', fpath='tests/single_region.yaml')
     ftr = DataFitter(d_nll=d_nll, cfg=cfg)
     ftr.run()
 # ----------------------
