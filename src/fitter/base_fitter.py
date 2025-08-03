@@ -203,14 +203,14 @@ class BaseFitter:
         return title, sel_txt
     # ------------------------
     def _save_fit(
-            self,
-            cuts     : dict[str,str],
-            cfg      : DictConfig,
-            out_path : str,
-            model    : zpdf|None,
-            res      : zres|None,
-            data     : zdata,
-            d_cns    : dict[str,tuple[float,float]]|None=None) -> None:
+        self,
+        cuts     : dict[str,str],
+        cfg      : DictConfig,
+        out_path : str,
+        model    : zpdf|None,
+        res      : zres|None,
+        data     : zdata,
+        d_cns    : dict[str,tuple[float,float]]|None=None) -> None:
         '''
         Parameters
         --------------
