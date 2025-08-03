@@ -104,7 +104,10 @@ def timeit(f):
         return result
     return wrap
 # --------------------------------
-def dump_json(data, path : str, sort_keys : bool = False) -> None:
+def dump_json(
+    data      : dict|str|list|set|tuple|DictConfig|ListConfig,
+    path      : str,
+    sort_keys : bool = False) -> None:
     '''
     Saves data as JSON or YAML, depending on the extension, supported .json, .yaml, .yml
 
