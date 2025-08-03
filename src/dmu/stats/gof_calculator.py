@@ -1,6 +1,7 @@
 '''
 Module holding GofCalculator class
 '''
+from contextlib import contextmanager
 from functools import lru_cache
 
 import zfit
@@ -18,8 +19,12 @@ class GofCalculator:
     '''
     Class used to calculate goodness of fit from zfit NLL
     '''
+    _disabled = False # If true, it will not run, returning chi2=0 and pvalue=1
     # ---------------------
     def __init__(self, nll, ndof : int = 10):
+        if GofCalculator._disabled:
+            return
+
         self._nll     = nll
         self._ndof    = ndof
 
@@ -143,6 +148,8 @@ class GofCalculator:
         -----------------
         Goodness of fit of a given kind
         '''
+        if GofCalculator._disabled:
+            return {'pvalue' : 1, 'chi2' : 0, 'chi2/ndof' : 0}[kind]
 
         chi2, ndof, pval = self._calculate_gof()
 
@@ -156,4 +163,25 @@ class GofCalculator:
             return chi2
 
         raise NotImplementedError(f'Invalid goodness of fit: {kind}')
+    # ---------------------
+    @classmethod
+    def disabled(cls, value : bool):
+        '''
+        Context manager used to disable this tool
+
+        Parameters
+        ---------------
+        value: If true it will disable the tool
+        '''
+        old_val = cls._disabled
+        cls._disabled = value
+
+        @contextmanager
+        def _context():
+            try:
+                yield
+            finally:
+                cls._disabled = old_val
+
+        return _context
 # ------------------------
