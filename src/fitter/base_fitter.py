@@ -135,15 +135,14 @@ class BaseFitter:
         l_expr = []
         # Collect all the cuts that are different
         # from default selection
-        for name, expr in cuts.items():
-            if name not in d_sel_def:
-                expr = cuts[name]
-                l_expr.append(expr)
+        for name, fit_expr in cuts_fit.items():
+            if name not in cuts_def:
+                l_expr.append(fit_expr)
                 continue
 
-            def_expr = d_sel_def[name]
-            if expr != def_expr:
-                l_expr.append(expr)
+            def_expr = cuts_def[name]
+            if fit_expr != def_expr:
+                l_expr.append(fit_expr)
 
         # Remove differences in brem, will be done separately
         l_expr_no_brem = [ expr for expr in l_expr if 'nbrem' not in expr ]
