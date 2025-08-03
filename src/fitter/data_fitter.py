@@ -99,6 +99,7 @@ class DataFitter(BaseFitter, Cache):
         OmegaConf DictConfig with fitting parameters
         '''
         nll    = self._get_full_nll()
+        l_cfg  = [ cfg for _, cfg in self._d_nll.values() ]
         d_cns  = self._constraints_from_likelihoood(nll=nll)
         cns    = Fitter.get_gaussian_constraints(obj=nll, cfg=d_cns)
         nll    = nll.create_new(constraints=cns)
@@ -106,10 +107,10 @@ class DataFitter(BaseFitter, Cache):
 
         res.hesse(name='minuit_hesse')
 
-        for model, data in zip(nll.model, nll.data):
+        for model, data, cfg in zip(nll.model, nll.data, l_cfg):
             self._save_fit(
-                cuts     = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin),
-                cfg      = self._cfg.plots,
+                cut_cfg  = cfg,
+                plt_cfg  = self._cfg.plots,
                 data     = data,
                 model    = model,
                 res      = res,
