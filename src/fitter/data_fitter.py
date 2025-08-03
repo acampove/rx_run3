@@ -5,6 +5,8 @@ from omegaconf                 import DictConfig
 from dmu.logging.log_store     import LogStore
 from dmu.workflow.cache        import Cache
 from dmu.stats.fitter          import Fitter
+from dmu.stats                 import utilities as sut
+from rx_selection              import selection as sel
 from fitter.base_fitter        import BaseFitter
 from fitter.constraint_reader  import ConstraintReader
 from zfit.loss                 import ExtendedUnbinnedNLL as NLL
