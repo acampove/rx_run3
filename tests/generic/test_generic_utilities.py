@@ -27,7 +27,18 @@ def test_dump_json(ext : str):
     '''
     Tests dump_json
     '''
-    gut.dump_json([1,2,3,4], f'/tmp/tests/dmu/generic/list.{ext}')
+    l_data = [1,2,3,4]
+    d_data = {1 : 'a', 'b' : 2}
+    user   = os.environ['USER']
+
+    gut.dump_json(l_data, f'/tmp/{user}/tests/dmu/generic/list.{ext}')
+    gut.dump_json(d_data, f'/tmp/{user}/tests/dmu/generic/dict.{ext}')
+
+    oc_l_data = OmegaConf.create(l_data)
+    oc_d_data = OmegaConf.create(d_data)
+
+    gut.dump_json(oc_l_data, f'/tmp/{user}/tests/dmu/generic/oc_list.{ext}')
+    gut.dump_json(oc_d_data, f'/tmp/{user}/tests/dmu/generic/od_dict.{ext}')
 # -------------------------
 @pytest.mark.parametrize('ext', ['json', 'yaml'])
 def test_load_json(ext : str):
