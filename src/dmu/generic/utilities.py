@@ -12,7 +12,7 @@ from functools             import wraps
 from contextlib            import contextmanager
 
 import yaml
-from omegaconf             import OmegaConf, DictConfig
+from omegaconf             import ListConfig, OmegaConf, DictConfig
 from dmu.generic           import hashing
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
@@ -113,16 +113,21 @@ def dump_json(data, path : str, sort_keys : bool = False) -> None:
     path     : Path to output file where to save it
     sort_keys: Will set sort_keys argument of json.dump function
     '''
+    if isinstance(data, (DictConfig, ListConfig)):
+        py_data = OmegaConf.to_container(data)
+    else:
+        py_data = data
+
     dir_name = os.path.dirname(path)
     os.makedirs(dir_name, exist_ok=True)
 
     with open(path, 'w', encoding='utf-8') as ofile:
         if path.endswith('.json'):
-            json.dump(data, ofile, indent=4, sort_keys=sort_keys)
+            json.dump(py_data, ofile, indent=4, sort_keys=sort_keys)
             return
 
         if path.endswith('.yaml') or path.endswith('.yml'):
-            yaml.dump(data, ofile, Dumper=BlockStyleDumper, sort_keys=sort_keys)
+            yaml.dump(py_data, ofile, Dumper=BlockStyleDumper, sort_keys=sort_keys)
             return
 
         raise NotImplementedError(f'Cannot deduce format from extension in path: {path}')
