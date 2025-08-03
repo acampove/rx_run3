@@ -149,16 +149,27 @@ class Fitter:
 
         return nbins, min_x, max_x
     #------------------------------
-    def _get_float_pars(self):
+    @staticmethod
+    def get_float_pars(pdf : zpdf) -> dict[str,zpar]:
+        '''
+        Parameters
+        ---------------
+        pdf: Zfit PDF
+
+        Returns
+        ---------------
+        Dictionary with keys as parameter names 
+        and values as floating parameters
+        '''
         npar     = 0
-        s_par    = self._pdf.get_params()
+        s_par    = pdf.get_params()
         for par in s_par:
             if par.floating:
                 npar+=1
 
-        self._d_par = {par.name : par for par in s_par}
+        d_par = {par.name : par for par in s_par}
 
-        return npar
+        return d_par
     #------------------------------
     def _reshuffle_pdf_pars(self):
         '''
