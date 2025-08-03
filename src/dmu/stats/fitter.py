@@ -18,8 +18,9 @@ from dmu.stats.gof_calculator import GofCalculator
 from zfit.loss                import ExtendedUnbinnedNLL
 from zfit.minimizers.strategy import FailMinimizeNaN
 from zfit.core.data           import Data
-from zfit.result              import FitResult  as zres
-from zfit.interface           import ZfitModel  as zpdf
+from zfit.result              import FitResult     as zres
+from zfit.interface           import ZfitModel     as zpdf
+from zfit.interface           import ZfitParameter as zpar
 
 log = LogStore.add_logger('dmu:statistics:fitter')
 #------------------------------
