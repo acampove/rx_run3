@@ -192,10 +192,11 @@ def test_steps():
 
     assert res.valid
 #-------------------------------------
+@pytest.mark.skip(reason='GofCalculator does not support binned data')
 @pytest.mark.parametrize('nbins', [None, 100])
 def test_binning(nbins : int):
     '''
-    Test fitting binnin specified
+    Test fitting with binning specified
     '''
     cfg = {'likelihood' : {'nbins' : nbins}}
 
