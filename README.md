@@ -820,7 +820,29 @@ and these objects can be saved to JSON with:
 OmegaConf.save(config=cres, f='results.yaml')
 ```
 
-## Placeholdef fits
+## Placeholders 
+
+### Models
+
+To get toy models do:
+
+```python
+from dmu.stats import utilities
+
+suffix= 'test_001' # Optional, if used will name parameters like this
+
+# Kind can be signal for a single gaussian
+pdf = sut.get_model(kind='s+b', suffix=suffix)
+```
+
+Which will create a simple PDF to do quick tests.
+To get data do:
+
+```python
+data = pdf.create_sampler(10_000)
+```
+
+### Fits
 
 In order to create a _fake_ fit on top of which one could develop other tools, do:
 
