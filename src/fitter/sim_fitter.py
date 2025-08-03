@@ -404,8 +404,8 @@ class SimFitter(BaseFitter, Cache):
         model_name  = self._cfg.categories.main.model
         data        = self._d_data['main']
 
-        if data.n_events < self._min_kde_entries:
         kde_builder = getattr(zfit.pdf, model_name)
+        if data.nevents < self._min_kde_entries:
             pdf = None
         else:
             if 'options' in self._cfg.fit:
