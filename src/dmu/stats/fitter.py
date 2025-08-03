@@ -38,6 +38,15 @@ class Fitter:
     Class meant to be an interface to underlying fitters
     '''
     # pylint: disable=too-many-instance-attributes
+
+    # These are substrings found in tensorflow messages
+    # that are pretty useless and need to be hidden
+    _l_hidden_tf_lines= [
+        'abnormal_detected_host @',
+        'Skipping loop optimization for Merge',
+        'Creating GpuSolver handles for stream',
+        'Loaded cuDNN version',
+        'All log messages before absl::InitializeLog()']
     #------------------------------
     def __init__(self, pdf, data):
         self._data_in = data
@@ -47,15 +56,6 @@ class Fitter:
         self._data_np : numpy.ndarray
         self._obs     : zfit.Space
         self._d_par   : dict
-
-        # These are substrings found in tensorflow messages
-        # that are pretty useless and need to be hidden
-        self._l_hidden_tf_lines= [
-            'abnormal_detected_host @',
-            'Skipping loop optimization for Merge',
-            'Creating GpuSolver handles for stream',
-            'Loaded cuDNN version',
-            'All log messages before absl::InitializeLog()']
 
         self._ndof           = 10
         self._pval_threshold = 0.01
