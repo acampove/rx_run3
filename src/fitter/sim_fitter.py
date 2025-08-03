@@ -404,8 +404,8 @@ class SimFitter(BaseFitter, Cache):
         model_name = self._cfg.categories.main.model
         data       = self._d_data['main']
 
-        KdeBuilder = getattr(zfit.pdf, model_name)
         if data.n_events < self._min_kde_entries:
+        kde_builder = getattr(zfit.pdf, model_name)
             pdf = None
         else:
             if 'options' in self._cfg.fit:
@@ -414,7 +414,7 @@ class SimFitter(BaseFitter, Cache):
             else:
                 kwargs = {}
 
-            pdf = KdeBuilder(obs=self._obs, data=data, name=self._component, **kwargs)
+            pdf = kde_builder(obs=self._obs, data=data, name=self._component, **kwargs)
 
         self._save_fit(
             cuts     = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin),
