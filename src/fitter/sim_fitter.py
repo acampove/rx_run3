@@ -233,9 +233,10 @@ class SimFitter(BaseFitter, Cache):
             return None, 0, None
 
         res   = self._fit(data=data, model=model, cfg=self._cfg.fit)
+
         self._save_fit(
-            cuts     = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin),
-            cfg      = self._cfg.plots,
+            cut_cfg  = self._get_cut_config(),
+            plt_cfg  = self._cfg.plots,
             data     = data,
             model    = model,
             res      = res,
