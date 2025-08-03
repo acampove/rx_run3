@@ -15,9 +15,11 @@ def test_single_region() -> None:
     '''
     pdf = sut.get_model(kind='s+b')
     dat = pdf.create_sampler(10_000)
-    nll = zfit.loss.ExtendedBinnedNLL(data=dat, model=pdf)
+    nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
 
     d_nll = {'signal' : nll}
+    cfg = {'fit' : {}}
+    cfg = OmegaConf.create(cfg)
 
-    ftr = DataFitter(d_nll=d_nll, cfg={})
+    ftr = DataFitter(d_nll=d_nll, cfg=cfg)
     ftr.run()
