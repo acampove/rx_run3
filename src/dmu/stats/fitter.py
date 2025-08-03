@@ -354,7 +354,9 @@ class Fitter:
         stat = res.status
 
         log.info(f'{chi2:<10.3f}{pval:<10.3e}{stat:<10}')
-        self._print_pars(cfg)
+        pdf   = nll.model
+        d_par = Fitter.get_float_pars(pdf=pdf)
+        Fitter.print_pars(cfg, d_par=d_par)
 
         return res, (chi2, ndof, pval)
     #------------------------------
