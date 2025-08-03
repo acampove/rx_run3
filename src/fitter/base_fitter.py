@@ -239,7 +239,7 @@ class BaseFitter:
             plt.figure()
 
         sel_path = f'{out_path}/selection.yaml'
-        gut.dump_json(cuts, sel_path)
+        gut.dump_json(cut_cfg, sel_path)
 
         sut.save_fit(
             data   = data,
