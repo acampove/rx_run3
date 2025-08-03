@@ -366,7 +366,8 @@ class Fitter:
         stat = res.status
 
         log.info(f'{chi2:<10.3f}{pval:<10.3e}{stat:<10}')
-        pdf   = nll.model
+        pdf   = nll.model[0] # This class is not meant for simultaneous fits
+                             # There should only be one PDF
         d_par = Fitter.get_float_pars(pdf=pdf)
         Fitter.print_pars(cfg, d_par=d_par)
 
