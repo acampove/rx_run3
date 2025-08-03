@@ -141,7 +141,8 @@ class Fitter:
     def _get_binning(self):
         min_x = numpy.min(self._data_np)
         max_x = numpy.max(self._data_np)
-        nbins = self._ndof + self._get_float_pars()
+        d_par = self.get_float_pars(pdf=self._pdf)
+        nbins = self._ndof + len(d_par)
 
         log.debug(f'Nbins: {nbins}')
         log.debug(f'Range: [{min_x:.3f}, {max_x:.3f}]')
