@@ -128,13 +128,9 @@ class BaseFitter:
         if self._sample == 'NA':
             return '', ''
 
-        brem_cuts = self._brem_cuts_from_cuts(cuts=cuts)
-        # Pick default selection
-        with sel.custom_selection(d_sel={}, force_override=True):
-            d_sel_def = sel.selection(
-                process=self._sample,
-                trigger=self._trigger,
-                q2bin  =self._q2bin)
+        cuts_def  = selection.default
+        cuts_fit  = selection.fit
+        brem_cuts = self._brem_cuts_from_cuts(cuts=cuts_fit)
 
         l_expr = []
         # Collect all the cuts that are different
