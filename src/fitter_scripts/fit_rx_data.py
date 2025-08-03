@@ -67,8 +67,9 @@ def _fit() -> None:
             q2bin  = Data.q2bin,
             cfg    = Data.config)
         nll = ftr.run()
+        cfg = ftr.get_config()
 
-    ftr = DataFitter(d_nll={'signal' : nll}, cfg=Data.config)
+    ftr = DataFitter(d_nll={'signal' : (nll, cfg)}, cfg=Data.config)
     ftr.run()
 # ----------------------
 def _set_output_directory() -> None:
