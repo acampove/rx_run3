@@ -84,11 +84,24 @@ class DataFitter(BaseFitter, Cache):
         '''
         l_nll  = list(self._d_nll.values())
         nll    = sum(l_nll[1:], l_nll[0])
-        cns    = self._constraints_from_likelihoood(nll=nll)
-        cns    = Fitter.get_gaussian_constraints(obj=nll, cfg=cns)
+        d_cns  = self._constraints_from_likelihoood(nll=nll)
+        cns    = Fitter.get_gaussian_constraints(obj=nll, cfg=d_cns)
         nll    = nll.create_new(constraints=cns)
-
         res, _ = Fitter.minimize(nll=nll, cfg=self._cfg.fit)
 
         res.hesse(name='minuit_hesse')
+
+        for model, data in zip(nll.model, nll.data):
+            self._save_fit(
+                cuts     = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin),
+                cfg      = self._cfg.plots,
+                data     = data,
+                model    = model,
+                res      = res,
+                d_cns    = d_cns,
+                out_path = self._out_path)
+
+        cres = sut.zres_to_cres(res=res)
+
+        return cres
 # ----------------------
