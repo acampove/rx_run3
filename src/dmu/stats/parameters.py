@@ -6,7 +6,8 @@ from importlib.resources import files
 import yaml
 import pandas as pnd
 
-from dmu.logging.log_store import LogStore
+from dmu.generic.typing_utilities import numeric_from_series
+from dmu.logging.log_store        import LogStore
 
 log=LogStore.add_logger('dmu:parameters')
 # --------------------------------
