@@ -16,7 +16,7 @@ class ParameterLibrary:
     - Connect to database (YAML file) with parameter values and make them available
     - Allow parameter values to be overriden
     '''
-    df_parameters : pnd.DataFrame
+    _values : DictConfig
     # --------------------------------
     @staticmethod
     def _load_data() -> None:
