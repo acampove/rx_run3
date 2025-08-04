@@ -57,7 +57,7 @@ class ParameterLibrary:
         Tuple with central value, minimum and maximum
         '''
         if kind not in cls._values:
-            raise ValueError('Cannot find PDF of kind: {kind}')
+            raise ValueError(f'Cannot find PDF of kind: {kind}')
 
         if parameter not in cls._values[kind]:
             raise ValueError(f'For PDF {kind}, cannot find parameter: {parameter}')
