@@ -32,16 +32,17 @@ class ParameterLibrary:
 
         cls._values = values
     # --------------------------------
-    @staticmethod
-    def print_parameters(kind : str) -> None:
+    @classmethod
+    def print_parameters(cls, kind : str) -> None:
         '''
         Method taking the kind of PDF to which the parameters are associated
         and printing the values.
         '''
-        df = ParameterLibrary.df_parameters
-        df = df[ df['kind'] == kind ]
+        cfg = cls._values
+        if kind not in cfg:
+            raise ValueError(f'Cannot find parameters for PDF of kind: {kind}')
 
-        print(df)
+        log.info(cfg[kind])
     # --------------------------------
     @staticmethod
     def get_values(kind : str, parameter : str) -> tuple[float,float,float]:
