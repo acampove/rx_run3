@@ -18,32 +18,19 @@ class ParameterLibrary:
     '''
     _values : DictConfig
     # --------------------------------
-    @staticmethod
-    def _load_data() -> None:
-        if hasattr(ParameterLibrary, 'df_parameters'):
+    @classmethod
+    def _load_data(cls) -> None:
+        if hasattr(cls, '_values'):
             return
 
         data_path = files('dmu_data').joinpath('stats/parameters/data.yaml')
         data_path = str(data_path)
 
-        d_data = {'parameter' : [], 'kind' : [], 'val' : [], 'low' : [], 'high' : []}
-        with open(data_path, encoding='utf-8') as ifile:
-            data = yaml.safe_load(ifile)
-            for kind, d_par in data.items():
-                for parameter, d_kind in d_par.items():
-                    val = d_kind['val' ]
-                    low = d_kind['low' ]
-                    high= d_kind['high']
+        values = OmegaConf.load(data_path)
+        if not isinstance(values, DictConfig):
+            raise TypeError(f'Wrong (not dictionary) data loaded from: {data_path}')
 
-                    d_data['parameter'].append(parameter)
-                    d_data['kind'     ].append(kind     )
-                    d_data['val'      ].append(val      )
-                    d_data['low'      ].append(low      )
-                    d_data['high'     ].append(high     )
-
-        df = pnd.DataFrame(d_data)
-
-        ParameterLibrary.df_parameters = df
+        cls._values = values
     # --------------------------------
     @staticmethod
     def print_parameters(kind : str) -> None:
