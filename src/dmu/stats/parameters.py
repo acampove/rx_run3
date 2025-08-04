@@ -1,12 +1,10 @@
 '''
 Module with ParameterLibrary class
 '''
+from contextlib          import contextmanager
 from importlib.resources import files
 
-import yaml
-import pandas as pnd
-
-from dmu.generic.typing_utilities import numeric_from_series
+from omegaconf                    import DictConfig, OmegaConf
 from dmu.logging.log_store        import LogStore
 
 log=LogStore.add_logger('dmu:parameters')
