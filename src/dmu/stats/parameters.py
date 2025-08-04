@@ -70,20 +70,21 @@ class ParameterLibrary:
         --------------
         Tuple with central value, minimum and maximum
         '''
-        df = ParameterLibrary.df_parameters
+        df_a = ParameterLibrary.df_parameters # type: pnd.DataFrame
+        df_k = df_a[df_a['kind']     ==     kind]
+        df_p = df_k[df_k['parameter']==parameter]
 
-        df = df[df['kind']     ==     kind]
-        df = df[df['parameter']==parameter]
-
-        if len(df) != 1:
-            log.info(df)
+        if len(df_p) != 1:
+            log.info(df_p)
             raise ValueError(f'Could not find one and only one row for: {kind}/{parameter}')
 
-        val = df['val'].iloc[0]
-        low = df['low'].iloc[0]
-        high= df['high'].iloc[0]
+        row = df_p.iloc[0]
 
-        return val, low, high
+        val = numeric_from_series(row=row, name='val' , numeric=float)
+        low = numeric_from_series(row=row, name='low' , numeric=float)
+        hig = numeric_from_series(row=row, name='high', numeric=float)
+
+        return val, low, hig
     # --------------------------------
     @staticmethod
     def set_values(
