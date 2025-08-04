@@ -51,7 +51,7 @@ pytest         = {version='*',      optional=true}
 [tool.poetry.extras]
 fit  = ['zfit']
 ml   = ['scikit-learn', 'joblib', 'optuna']
-dev  = ['pytest']
+dev  = ['pytest', 'pandas-stubs']
 
 [build-system]
 requires      = [
