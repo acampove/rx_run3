@@ -179,16 +179,17 @@ def test_override_parameter(kind: str):
     l_flt = ['mu']
 
     ParameterLibrary.print_parameters(kind=kind)
-    ParameterLibrary.set_values(parameter='mu', kind=kind, val=3100, low=2200, high=3500)
-    ParameterLibrary.set_values(parameter='sg', kind=kind, val=  30, low=  30, high=  30)
 
-    mod   = ModelFactory(
+    with ParameterLibrary.values(parameter='mu', kind=kind, val=3100, low=2200, high=3500),\
+         ParameterLibrary.values(parameter='sg', kind=kind, val=  30, low=  30, high=  30):
+
+        mod   = ModelFactory(
             preffix = kind,
             obs     = Data.obs,
             l_pdf   = [kind],
             l_shared= l_shr,
             l_float = l_flt)
-    pdf   = mod.get_pdf()
+        pdf   = mod.get_pdf()
 
     s_par = pdf.get_params(floating=False)
     [sg]  = [ par for par in s_par if par.name == f'sg_{kind}' ]
