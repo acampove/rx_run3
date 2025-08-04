@@ -68,24 +68,28 @@ class ParameterLibrary:
 
         return val, low, hig
     # --------------------------------
-    @staticmethod
-    def set_values(
-        parameter : str,
+    @classmethod
+    def values(
+        cls,
         kind      : str,
+        parameter : str,
         val       : float,
         low       : float,
-        high      : float) -> None:
+        high      : float):
         '''
         This function will override the value and range for the given parameter
         It should be typically used before using the ModelFactory class
         '''
+        old_val, old_low, old_high   = cls.get_values(kind=kind, parameter=parameter)
+        cls._values[kind][parameter] = {'val' : val, 'low' : low, 'high' : high}
 
-        df = ParameterLibrary.df_parameters
+        @contextmanager
+        def _context():
+            try:
+                yield
+            finally:
+                cls._values[kind][parameter] = {'val' : old_val, 'low' : old_low, 'high' : old_high}
 
-        location = (df['parameter'] == parameter) & (df['kind'] == kind)
-
-        df.loc[location, 'val' ] = val
-        df.loc[location, 'low' ] = low
-        df.loc[location, 'high'] = high
+        return _context()
 # --------------------------------
 ParameterLibrary._load_data()
