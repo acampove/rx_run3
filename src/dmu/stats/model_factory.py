@@ -211,10 +211,10 @@ class ModelFactory:
         return f'{name}_flt'
     #-----------------------------------------
     def _get_parameter(
-            self,
-            kind   : str,
-            name   : str,
-            suffix : str) -> zpar:
+        self,
+        kind   : str,
+        name   : str,
+        suffix : str) -> zpar:
         '''
         Parameters
         ----------------
