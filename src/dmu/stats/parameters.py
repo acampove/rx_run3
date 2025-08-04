@@ -44,8 +44,8 @@ class ParameterLibrary:
 
         log.info(cfg[kind])
     # --------------------------------
-    @staticmethod
-    def get_values(kind : str, parameter : str) -> tuple[float,float,float]:
+    @classmethod
+    def get_values(cls, kind : str, parameter : str) -> tuple[float,float,float]:
         '''
         Parameters
         --------------
@@ -56,19 +56,15 @@ class ParameterLibrary:
         --------------
         Tuple with central value, minimum and maximum
         '''
-        df_a = ParameterLibrary.df_parameters # type: pnd.DataFrame
-        df_k = df_a[df_a['kind']     ==     kind]
-        df_p = df_k[df_k['parameter']==parameter]
+        if kind not in cls._values:
+            raise ValueError('Cannot find PDF of kind: {kind}')
 
-        if len(df_p) != 1:
-            log.info(df_p)
-            raise ValueError(f'Could not find one and only one row for: {kind}/{parameter}')
+        if parameter not in cls._values[kind]:
+            raise ValueError(f'For PDF {kind}, cannot find parameter: {parameter}')
 
-        row = df_p.iloc[0]
-
-        val = numeric_from_series(row=row, name='val' , numeric=float)
-        low = numeric_from_series(row=row, name='low' , numeric=float)
-        hig = numeric_from_series(row=row, name='high', numeric=float)
+        val = cls._values[kind][parameter]['val' ]
+        low = cls._values[kind][parameter]['low' ]
+        hig = cls._values[kind][parameter]['high']
 
         return val, low, hig
     # --------------------------------
