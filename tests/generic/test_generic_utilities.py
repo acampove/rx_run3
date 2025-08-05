@@ -111,6 +111,22 @@ def test_load_conf_format(ext : str):
     assert isinstance(cfg, DictConfig)
 
     assert cfg.key == ['value1', 'value2', 'value3']
+# ----------------------
+def test_load_conf_reference() -> None:
+    '''
+    Tests loading of config when fields are paths to sub-configs
+    '''
+    log.info('')
+    name = 'with_references.yaml'
+
+    cfg = gut.load_conf(
+        package='dmu_data',
+        fpath  =f'tests/generic/{name}')
+
+    assert cfg.config_1.key         == [ 1,   2,   3 ]
+    assert cfg.section.config_2.key == ['a', 'b', 'c']
+
+    log.debug(OmegaConf.to_yaml(cfg))
 # -------------------------
 @pytest.mark.parametrize('obj', [
     1,
