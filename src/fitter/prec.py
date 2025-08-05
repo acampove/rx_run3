@@ -477,7 +477,7 @@ class PRec(Cache):
             log.warning(f'Found fewer than {self._min_entries}: {nentries:.0f}, skipping PDF {component_name}')
             return None
 
-        log.debug(f'Building PDF with {nentries} entries for {component_name}')
+        log.debug(f'Building PDF with {nentries:.0f} entries for {component_name}')
 
         pdf          = self._pdf_from_df(df=df, mass=mass, **kwargs)
         pdf.arr_mass = arr_mass
