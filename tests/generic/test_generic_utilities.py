@@ -6,10 +6,17 @@ import math
 from typing import Any
 from time   import sleep
 
-import pytest
-from omegaconf import DictConfig, OmegaConf
 import dmu.generic.utilities as gut
+import pytest
+from omegaconf             import DictConfig, OmegaConf
+from dmu.logging.log_store import LogStore
 
+log=LogStore.add_logger('dmu:test_generic_utilities')
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('dmu:generic:utilities'     , 10)    
+    LogStore.set_level('dmu:test_generic_utilities', 10)    
 # -------------------------
 def test_timeit():
     '''
