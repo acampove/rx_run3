@@ -3,6 +3,7 @@
 
 output_directory : rare/electron/data
 model:
+  yields    : model/yields_rare_electron.yaml
   observable:
     name : B_Mass_smr
     range:
