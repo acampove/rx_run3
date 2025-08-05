@@ -1,0 +1,19 @@
+# This config file defines the yields and the relationships between them
+# For misid fits, this will be reused by both Kpipi and KKK regions to get
+# the yields
+
+yields: &yields
+  val : 1
+  min : 0
+  max : 10000
+
+ncombinatorial:
+  <<: *yields
+nkpipi:
+  <<: *yields
+nkkk:
+  <<: *yields
+nkpipi_kkk:     # Kpipi yield in KKK region
+  <<: *yields
+nkkk_kpipi:     # KKK yield in Kpipi region
+  <<: *yields
