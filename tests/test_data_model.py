@@ -106,10 +106,11 @@ def test_misid_rare(tag_cut : str, observable : str):
         package='fitter_data',
         fpath  ='misid/electron/data.yaml')
 
-    l1_in_cr = '((L1_PROBNN_E < 0.2) || (L1_PID_E < 3.0)) && L1_PROBNN_K < 0.1'
-    l2_in_cr = '((L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)) && L1_PROBNN_K < 0.1'
-
-    cfg_par = _cfg_par_from_cfg(cfg=cfg)
+    l1_in_cr = f'((L1_PROBNN_E < 0.2) || (L1_PID_E < 3.0)) && L1_{tag_cut}'
+    l2_in_cr = f'((L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)) && L2_{tag_cut}'
+    out_dir  = f'{cfg.output_directory}/{observable}'
+    cfg.output_directory = out_dir
+    cfg_par  = _cfg_par_from_cfg(cfg=cfg)
 
     with PL.parameter_schema(cfg=cfg_par),\
         RDFGetter.default_excluded(names=[]),\
