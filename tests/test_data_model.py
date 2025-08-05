@@ -99,9 +99,12 @@ def test_misid_rare():
     l1_in_cr = '(L1_PROBNN_E < 0.2) || (L1_PID_E < 3.0)'
     l2_in_cr = '(L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)'
 
-    with sel.custom_selection(d_sel = {
+    cfg_par = _cfg_par_from_cfg(cfg=cfg)
+
+    with PL.parameter_schema(cfg=cfg_par),\
+        sel.custom_selection(d_sel = {
         'nobr0' : 'nbrem != 0',
-        'pid_l' : f'({l1_in_cr}) || ({l2_in_cr})',
+        'pid_l' : f'({l1_in_cr}) && ({l2_in_cr})',
         'bdt'   : 'mva_cmb > 0.80 && mva_prc > 0.60'}):
         dmd = DataModel(
             cfg     = cfg,
