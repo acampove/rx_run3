@@ -75,6 +75,35 @@ def load_conf(
     cfg   = OmegaConf.load(cpath)
     cfg   = cast(DictConfig, cfg)
 
+    if not resolve_paths:
+        return cfg
+
+    return _resolve_sub_configs(cfg=cfg, package=package)
+# ----------------------
+def _resolve_sub_configs(cfg : DictConfig, package : str) -> DictConfig:
+    '''
+    Parameters
+    -------------
+    cfg    : Configuration dictionary
+    package: Name of data package where secondary configurations will live
+
+    Returns
+    -------------
+    Input dictionary where yaml paths have been replaced by actual configuration
+    '''
+    for key, val in cfg.items():
+        if isinstance(val, DictConfig):
+            _resolve_sub_configs(cfg=val, package=package)
+            continue
+
+        if not isinstance(val, str):
+            continue
+
+        if not val.endswith('.yaml'):
+            continue
+
+        log.debug(f'Resolving sub-config: {val}')
+        cfg[key] = load_conf(package=package, fpath=val)
 
     return cfg
 # --------------------------------
