@@ -337,7 +337,7 @@ key:
   - value1
   - value2
   - value3
-config_1 : path/with_respect_to/data_package/config_1.yaml
+config_1 : path/with_respect_to/data_package/config_1.yaml # can also use yml extension
 section:
   config_2 : path/with_respect_to/data_package/config_2.yaml
 ```

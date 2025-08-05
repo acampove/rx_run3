@@ -102,6 +102,9 @@ def _resolve_sub_configs(cfg : DictConfig, package : str) -> DictConfig:
         if not val.endswith('.yaml'):
             continue
 
+        if not val.endswith('.yml'):
+            continue
+
         log.debug(f'Resolving sub-config: {val}')
         cfg[key] = load_conf(package=package, fpath=val)
 
