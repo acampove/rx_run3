@@ -436,6 +436,88 @@ pdf = sut.get_model(kind='s+b')
 pdf = sut.get_model(kind='signal')
 ```
 
+### Parameter building
+
+In order to build models one needs parameters. The parameters need to be defined
+by an initial value and a range. These values can be stored in a database and
+used later to build models. The parameters available can be printed with:
+
+```python
+from dmu.stats.parameters  import ParameterLibrary as PL
+
+PL.print_parameters(kind='gauss')
+```
+
+for a specific PDF, other PDFs can be seen in the section below. These will be 
+used by default to build models and are meant to be reasonable starting points 
+for `B` physics analyses.
+
+#### Overriding parameters
+
+This can be done with:
+
+```python
+from dmu.stats.parameters  import ParameterLibrary as PL
+
+with PL.values(kind='gauss', parameter='mu', val=5000, low=5280, high=5400):
+    model = build_model() # These lines would involve the ModelFactory
+                          # which is discussed below
+```
+
+#### Configuring yields
+
+Yields can be obtained by doing:
+
+```python
+from dmu.stats.parameters  import ParameterLibrary as PL
+
+par = PL.get_yield(name='nCombinatorial')
+```
+
+and these can be _injected_ during the model building.
+
+However, there are two cases that might require further flexibility:
+
+- The yield is the product of multiple parameters, e.g a scale and a different yield
+- The yield is the product of other model parameters.
+
+To deal with this one can define a schema as below:
+
+```yaml
+nBuKee:         # Normal parameter
+  val : 1
+  min : 0
+  max : 10
+RK:
+  val : 1.0
+  min : 0.8
+  max : 1.2
+iCK:            # Constant parameter, fixed at 1.0
+  val : 1.0
+  min : 1.0
+  max : 1.0
+nBdKstee:       # nBdKstee = s_nBdKstee * nBdKstee
+  scl : [nBuKee]
+  val : 0       # These numbers are associated to the scale parameter
+  min : 0
+  max : 1
+nBuKmm:         # Not an actual parameter but: nBuKmm = iCK * RK * nBuKee
+  alias : [iCK, RK, nBuKee]
+```
+
+and this configuration can be loaded into the code, before running the model
+building with:
+
+```python
+from dmu.stats             import utilities        as gut
+from dmu.stats.parameters  import ParameterLibrary as PL
+
+cfg = gut.load_conf(package='dmu_data', fpath='configuration.yaml')
+
+with PL.parameter_schema(cfg=cfg):
+    model = build_model()
+```
+
 ### Model building
 
 In order to do complex fits, one often needs PDFs with many parameters, which need to be added.
