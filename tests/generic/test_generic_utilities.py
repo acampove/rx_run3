@@ -106,7 +106,7 @@ def test_load_conf_format(ext : str):
     '''
     cfg = gut.load_conf(
         package='dmu_data',
-        fpath  =f'generic/tests/config.{ext}')
+        fpath  =f'tests/generic/config.{ext}')
 
     assert isinstance(cfg, DictConfig)
 
