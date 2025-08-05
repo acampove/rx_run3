@@ -7,13 +7,13 @@ yields: &yields
 
 signal:
   <<: *yields
-bdkstee:
+Bd_Kstee_eq_btosllball05_DPC:
   scl : [signal]
   <<: *yields
-bukstee:
+Bu_Kstee_Kpi0_eq_btosllball05_DPC:
   scl : [signal]
   <<: *yields
-bsphiee:
+Bs_phiee_eq_Ball_DPC:
   scl : [signal]
   <<: *yields
 ccbar:
