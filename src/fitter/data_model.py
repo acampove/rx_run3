@@ -54,8 +54,7 @@ class DataModel:
         -------------------
         PDF with yield
         '''
-        nevt = self._get_yield(name=name)
-
+        nevt = PL.get_yield(name=name)
         kdes = zfit.pdf.KDE1DimFFT, zfit.pdf.KDE1DimExact, zfit.pdf.KDE1DimISJ
         if isinstance(pdf, kdes):
             pdf.set_yield(nevt)
@@ -92,12 +91,7 @@ class DataModel:
                 log.warning(f'Skipping component: {component}')
                 continue
 
-            if component == 'signal':
-                sample = component
-            else:
-                sample = cfg.get(key='sample', default_value=component)
-
-            pdf    = self._extend(pdf=pdf, name=sample)
+            pdf    = self._extend(pdf=pdf, name=component)
             l_pdf.append(pdf)
 
         pdf = zfit.pdf.SumPDF(l_pdf)
