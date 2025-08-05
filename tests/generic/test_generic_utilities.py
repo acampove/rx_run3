@@ -93,13 +93,13 @@ def test_load_data(ext : str):
     assert data == expected
 # -------------------------
 @pytest.mark.parametrize('ext', ['yaml', 'json'])
-def test_load_conf(ext : str):
+def test_load_conf_format(ext : str):
     '''
-    Tests loading configuration
+    Tests loading configuration from different formats
     '''
     cfg = gut.load_conf(
-            package='dmu_data',
-            fpath  =f'tests/config.{ext}')
+        package='dmu_data',
+        fpath  =f'generic/tests/config.{ext}')
 
     assert isinstance(cfg, DictConfig)
 
