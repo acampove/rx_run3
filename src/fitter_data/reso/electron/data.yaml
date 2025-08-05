@@ -27,4 +27,3 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
   d_leg :
     Gauss_ext       : Signal
     Exponential_ext : Combinatorial
-
