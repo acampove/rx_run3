@@ -10,6 +10,29 @@ from dmu.stats.parameters  import ParameterLibrary as PL
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:test_parameter_library')
+
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    '''
+    This runs before the tests
+    '''
+    LogStore.set_level('dmu:parameters', 10)
+# ----------------------
+def _check_parameter(par : zpar) -> None:
+    '''
+    Parameters
+    -------------
+    par: Zfit parameter
+    '''
+    if not isinstance(par, (zfit.Parameter, zfit.ComposedParameter)):
+        type_name = type(par)
+        raise TypeError(f'Object is not a parameter but: {type_name}')
+
+    log.info(par)
+
+    val = par.value().numpy() # type: ignore
+    assert isinstance(val, float)
 # ------------------------------------
 @pytest.mark.parametrize('kind', ['gauss', 'cbl', 'cbr', 'suj'])
 def test_print(kind : str):
@@ -52,3 +75,13 @@ def test_values(parameter : str):
     assert y_in != y_out
     assert z_in != z_out
 # ------------------------------------
+def test_get_yield() -> None:
+    '''
+    Tests get_yield method
+    '''
+    cfg = gut.load_conf(package='dmu_data', fpath='tests/stats/parameters/parameters_library.yaml')
+    with PL.parameter_schema(cfg=cfg):
+        for parname in cfg:
+            parname = str(parname)
+            par = PL.get_yield(name=parname)
+            _check_parameter(par=par)
