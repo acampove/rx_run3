@@ -27,14 +27,14 @@ class LikelihoodFactory(BaseFitter, Cache):
     '''
     # ------------------------
     def __init__(
-            self,
-            obs     : zobs,
-            sample  : str,
-            trigger : str,
-            project : str,
-            q2bin   : str,
-            cfg     : DictConfig,
-            name    : str|None = None):
+        self,
+        obs     : zobs,
+        sample  : str,
+        trigger : str,
+        project : str,
+        q2bin   : str,
+        cfg     : DictConfig,
+        name    : str|None = None):
         '''
         name   : Identifier for fit, e.g. block. This is optional
         cfg    : configuration for the fit as a DictConfig object
