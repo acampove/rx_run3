@@ -7,7 +7,7 @@ import json
 import pickle
 import inspect
 from importlib.resources   import files
-from typing                import Callable, Any
+from typing                import Callable, Any, cast
 from functools             import wraps
 from contextlib            import contextmanager
 
@@ -49,14 +49,21 @@ def load_data(package : str, fpath : str) -> Any:
 
     return data
 # --------------------------------
-def load_conf(package : str, fpath : str) -> DictConfig:
+def load_conf(
+    package       : str,
+    fpath         : str,
+    resolve_paths : bool = True) -> DictConfig:
     '''
     This function will load a YAML or JSON file from a data package
 
     Parameters
     ---------------------
     package: Data package, e.g. `dmu_data`
-    path   : Path to YAML/JSON file, relative to the data package
+    fpath  : Path to YAML/JSON file, relative to the data package
+    resolve_paths: When the config is too complex, instead of including it
+                   in the main YAML file, one includes the path to another
+                   YAML file. Those paths will be replaced by the actual config
+                   when this flag is True
 
     Returns
     ---------------------
