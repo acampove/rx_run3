@@ -21,13 +21,13 @@ class DataModel:
     '''
     # ------------------------
     def __init__(
-            self,
-            cfg     : DictConfig,
-            obs     : zobs,
-            trigger : str,
-            project : str,
-            q2bin   : str,
-            name    : str|None=None):
+        self,
+        cfg     : DictConfig,
+        obs     : zobs,
+        trigger : str,
+        project : str,
+        q2bin   : str,
+        name    : str|None=None):
         '''
         Parameters
         ------------------
