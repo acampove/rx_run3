@@ -98,5 +98,121 @@ class ParameterLibrary:
                 cls._values[kind][parameter] = {'val' : old_val, 'low' : old_low, 'high' : old_high}
 
         return _context()
+    # ----------------------
+    @classmethod
+    def parameter_schema(cls, cfg : DictConfig):
+        '''
+        This context manager sets `_yld_cfg`, which defines
+
+        - How parameters are related. I.e. if they are multiplied
+        - What their values are
+
+        Parameters
+        -------------
+        cfg: DictConfig representing the values and relationships between paramaters
+        '''
+        old_val      = cls._yld_cfg
+        cls._yld_cfg = cfg
+
+        @contextmanager
+        def _context():
+            try:
+                yield
+            finally:
+                cls._yld_cfg = old_val
+
+        return _context()
+    # ----------------------
+    @classmethod
+    def get_yield(cls, name : str) -> zpar:
+        '''
+        Parameters
+        -------------
+        name: Name of parameter
+
+        Returns
+        -------------
+        Zfit parameter
+        '''
+        log.debug(f'Picking up parameter: {name}')
+        if name in cls._d_par:
+            return cls._d_par[name]
+
+        if cls._yld_cfg is None:
+            raise ValueError('Yields configuration not initialized')
+        else:
+            yld_cfg = cls._yld_cfg
+
+        if name not in yld_cfg:
+            log.error(yaml.dump(cls._yld_cfg))
+            raise ValueError(f'Parameter {name} not found in configuration')
+
+        if 'alias' in yld_cfg[name]:
+            l_par    = [ cls.get_yield(name=comp_name) for comp_name in yld_cfg[name]['alias'] ]
+            comp_par = cls._multiply_pars(name=name, pars=l_par)
+            cls._d_par[name] = comp_par
+            return comp_par
+
+        # This is a non-alias, non-scl parameter, e.g. simple one
+        if 'scl' not in yld_cfg[name]:
+            par = cls._parameter_from_conf(name=name, cfg=yld_cfg)
+            cls._d_par[name] = par
+            return par
+
+        # scl and non alias
+        l_par    = [ cls.get_yield(name=comp_name) for comp_name in yld_cfg[name]['scl'] ]
+        par      = cls._parameter_from_conf(name=name, cfg=yld_cfg, is_scale=True)
+        l_par.append(par)
+        comp_par = cls._multiply_pars(name=name, pars=l_par)
+
+        return comp_par
+    # ----------------------
+    @classmethod
+    def _multiply_pars(cls, name : str, pars : list[zpar]) -> zpar:
+        '''
+        Parameters
+        -------------
+        name: Name of product parameter
+        pars: List of parameters
+
+        Returns
+        -------------
+        Product of parameters
+        '''
+        if len(pars) == 0:
+            raise ValueError(f'No factor parameters found for: {name}')
+
+        comp_par = zfit.ComposedParameter(name, lambda pars : math.prod(pars), params=pars)
+
+        return comp_par
+    # ----------------------
+    @classmethod
+    def _parameter_from_conf(cls, name : str, cfg : DictConfig, is_scale : bool = False) -> zpar:
+        '''
+        Parameters
+        -------------
+        name    : Name of parameter to be returned
+        cfg     : Config defining values of parameter bounds and default value of parameter
+        is_scale: If True, this parameter is a scale, not an actual yield. Scales on yield nPar is called s_nPar
+
+        Returns
+        -------------
+        A zfit parameter
+        '''
+        val = cfg[name]['val']
+        minv= cfg[name]['min']
+        maxv= cfg[name]['max']
+
+        par_name = f's_{name}' if is_scale else name
+
+        if minv > maxv:
+            raise ValueError(f'For parameter {name}, minimum edge is larger: {minv:.3e} > {maxv:.3e}')
+
+        if math.isclose(minv, maxv, rel_tol=1e-5):
+            par = zfit.Parameter(par_name, val, minv, maxv + 1, floating=False)
+        else:
+            par = zfit.Parameter(par_name, val, minv, maxv + 0, floating= True)
+
+        return par
 # --------------------------------
 ParameterLibrary._load_data()
