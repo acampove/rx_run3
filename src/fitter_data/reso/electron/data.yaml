@@ -10,9 +10,9 @@ model:
       - 5000
       - 6000
   components:
-    background : reso/electron/combinatorial.yaml
-    signal     : reso/electron/signal.yaml
-    ccbar      : reso/electron/ccbar.yaml
+    combinatorial : reso/electron/combinatorial.yaml
+    ccbar         : reso/electron/ccbar.yaml
+    signal        : reso/electron/signal.yaml
   constraints:
     yields : []
 fit:
