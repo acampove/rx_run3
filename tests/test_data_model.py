@@ -1,6 +1,7 @@
 '''
 This module has tests for the DataModel class
 '''
+import pytest
 
 from omegaconf             import DictConfig, OmegaConf
 from rx_selection          import selection as sel
@@ -13,6 +14,11 @@ from dmu.logging.log_store import LogStore
 from fitter.data_model     import DataModel
 
 log=LogStore.add_logger('fitter:test_data_model')
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('fitter:data_model' , 10)
+    LogStore.set_level('rx_data:rdf_getter', 30)
 # ----------------------
 def _cfg_par_from_cfg(cfg : DictConfig) -> DictConfig:
     '''
