@@ -22,6 +22,8 @@ class ParameterLibrary:
     - Allow parameter values to be overriden
     '''
     _values : DictConfig
+    _yld_cfg: DictConfig|None = None # Configuration used for yields
+    _d_par  : dict[str,zpar]  = {}   # When building parameters, they will be stored here, such that they can be reused, for simultaneous fits
     # --------------------------------
     @classmethod
     def _load_data(cls) -> None:
