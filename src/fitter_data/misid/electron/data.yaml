@@ -4,11 +4,6 @@
 output_directory : misid/electron/data
 model:
   yields    : model/yields_misid_electron.yaml
-  observable:
-    name : B_Mass_kpipi
-    range:
-      - 4500 
-      - 6900
   components:
     combinatorial : misid/electron/combinatorial.yaml
     kpipi         : misid/electron/kpipi.yaml
