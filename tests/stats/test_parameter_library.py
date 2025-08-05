@@ -3,6 +3,9 @@ Module with tests for ParameterLibrary class
 '''
 
 import pytest
+from zfit.interface        import ZfitParameter    as zpar
+from dmu.stats.zfit        import zfit
+from dmu.generic           import utilities        as gut
 from dmu.stats.parameters  import ParameterLibrary as PL
 from dmu.logging.log_store import LogStore
 
