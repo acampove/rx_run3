@@ -7,13 +7,13 @@ yields: &yields
   min : 0
   max : 10000
 
-ncombinatorial:
+combinatorial:
   <<: *yields
-nkpipi:
+kpipi:
   <<: *yields
-nkkk:
+kkk:
   <<: *yields
-nkpipi_kkk:     # Kpipi yield in KKK region
+kpipi_kkk:     # Kpipi yield in KKK region
   <<: *yields
-nkkk_kpipi:     # KKK yield in Kpipi region
+kkk_kpipi:     # KKK yield in Kpipi region
   <<: *yields
