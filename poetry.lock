@@ -4066,4 +4066,4 @@ ml = ["joblib", "optuna", "scikit-learn"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10, <3.13"
-content-hash = "e10ef9c884b927a60136ddb0ad4056a473bd8946438ea2799073fc0f8e72e232"
+content-hash = "3171c19a9ad6b5bcd5a4111d3d9a713f8f64423f8de590cd4594080f855647a5"
