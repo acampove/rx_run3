@@ -322,13 +322,28 @@ YAML and JSON files can be loaded from data packages with:
 import dmu.generic.utilities as gut
 
 data = gut.load_data(package='dmu_data', fpath=f'tests/data.json')
-conf = gut.load_conf(package='dmu_data', fpath=f'tests/config.json')
+conf = gut.load_conf(package='dmu_data', fpath=f'tests/config.yaml', resolve_paths=True)
 ```
 
 the former will return a python dictionary, list, etc. 
 The later will return a `DataConf` object from the `omegaconf` project.
 Check [this](https://omegaconf.readthedocs.io/en/2.3_branch/index.html) 
 for more information.
+
+The config file can look like:
+
+```yaml
+key:
+  - value1
+  - value2
+  - value3
+config_1 : path/with_respect_to/data_package/config_1.yaml
+section:
+  config_2 : path/with_respect_to/data_package/config_2.yaml
+```
+
+in which case the argument `resolve_paths=True` (default) will make sure
+these paths are expanded to the corresponding config.
 
 # Physics
 
