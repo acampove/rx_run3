@@ -139,7 +139,7 @@ class ParameterLibrary:
             return cls._d_par[name]
 
         if cls._yld_cfg is None:
-            raise ValueError('Yields configuration not initialized')
+            raise ValueError('Parameter schema not set')
         else:
             yld_cfg = cls._yld_cfg
 
