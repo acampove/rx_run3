@@ -1,0 +1,26 @@
+# This config file defines the yields and the relationships between them
+# For the fit of the rare electron channel 
+yields: &yields
+  val : 0
+  min : 0
+  max : 100000
+
+signal:
+  <<: *yields
+bdkstee:
+  scl : [signal]
+  <<: *yields
+bukstee:
+  scl : [signal]
+  <<: *yields
+bsphiee:
+  scl : [signal]
+  <<: *yields
+ccbar:
+  <<: *yields
+combinatorial:
+  <<: *yields
+jpsi_leakage:
+  <<: *yields
+psi2_leakage: 
+  <<: *yields
