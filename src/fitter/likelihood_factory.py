@@ -28,6 +28,7 @@ class LikelihoodFactory(BaseFitter, Cache):
     # ------------------------
     def __init__(
             self,
+            obs     : zobs,
             sample  : str,
             trigger : str,
             project : str,
@@ -45,6 +46,7 @@ class LikelihoodFactory(BaseFitter, Cache):
         '''
         BaseFitter.__init__(self)
 
+        self._obs       = obs
         self._sample    = sample
         self._trigger   = trigger
         self._project   = project
@@ -58,8 +60,6 @@ class LikelihoodFactory(BaseFitter, Cache):
             out_path = self._base_path,
             cuts     = sel.selection(process=sample, trigger=trigger, q2bin=q2bin),
             config   = OmegaConf.to_container(cfg, resolve=True))
-
-        self._obs = self._make_observable()
     # ------------------------
     def _get_base_path(self) -> str:
         '''
@@ -72,15 +72,6 @@ class LikelihoodFactory(BaseFitter, Cache):
             sample = f'{self._cfg.output_directory}/{sample}/{self._trigger}_{self._project}_{self._q2bin}'
 
         return sample
-    # ------------------------
-    def _make_observable(self) -> zobs:
-        '''
-        Will return zfit observable
-        '''
-        name        = self._cfg.model.observable.name
-        [minx, maxx]= self._cfg.model.observable.range
-
-        return zfit.Space(name, limits=(minx, maxx))
     # ------------------------
     def _update_trigger_project(self) -> tuple[str,str]:
         '''
