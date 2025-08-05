@@ -71,8 +71,10 @@ def test_rare():
     cfg = gut.load_conf(
         package='fitter_data',
         fpath  ='rare/electron/data.yaml')
+    cfg_par = _cfg_par_from_cfg(cfg=cfg)
 
-    with sel.custom_selection(d_sel = {'mass' : '(1)', 'brmp' : 'nbrem != 0'}):
+    with PL.parameter_schema(cfg=cfg_par),\
+         sel.custom_selection(d_sel = {'mass' : '(1)', 'brmp' : 'nbrem != 0'}):
         dmd = DataModel(
             cfg     = cfg,
             obs     = obs,
