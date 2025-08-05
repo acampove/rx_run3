@@ -80,14 +80,18 @@ def test_kde(component : str):
             q2bin   = 'central')
         ftr.get_model()
 # ---------------------------------------------------
-def test_ccbar_reso():
+@pytest.mark.parametrize('limits', ['wide', 'narrow'])
+def test_ccbar_reso(limits : str):
     '''
     Tests retriveval of PDF associated to ccbar inclusive decays
     '''
+    tp_limits = {'wide' : (4500, 6000), 'narrow' : (5000, 6000)}[limits]
     component = 'ccbar'
-    obs       = zfit.Space('B_const_mass_M', limits=(4500, 6000))
+    obs       = zfit.Space('B_const_mass_M', limits=tp_limits)
     cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
 
+    out_dir   = f'{cfg.output_directory}/{limits}'
+    cfg.output_directory = out_dir
     with RDFGetter.max_entries(value=-1),\
         RDFGetter.multithreading(nthreads=6):
         ftr = SimFitter(
