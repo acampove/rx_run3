@@ -5,11 +5,9 @@ Module containing DataModel class
 from dmu.stats.zfit         import zfit
 from dmu.generic            import utilities  as gut
 from dmu.logging.log_store  import LogStore
-
+from dmu.stats.parameters   import ParameterLibrary as PL
 from omegaconf              import DictConfig
-from zfit                   import ComposedParameter
 from zfit.interface         import ZfitPDF       as zpdf
-from zfit.interface         import ZfitParameter as zpar
 from zfit.interface         import ZfitSpace     as zobs
 from fitter.sim_fitter      import SimFitter
 
