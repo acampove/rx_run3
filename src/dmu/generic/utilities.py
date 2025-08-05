@@ -99,10 +99,7 @@ def _resolve_sub_configs(cfg : DictConfig, package : str) -> DictConfig:
         if not isinstance(val, str):
             continue
 
-        if not val.endswith('.yaml'):
-            continue
-
-        if not val.endswith('.yml'):
+        if not val.endswith(('.yaml','.yml')):
             continue
 
         log.debug(f'Resolving sub-config: {val}')
