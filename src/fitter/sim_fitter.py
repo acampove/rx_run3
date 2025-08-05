@@ -412,6 +412,7 @@ class SimFitter(BaseFitter, Cache):
             if 'options' in self._cfg.fit:
                 cfg    = self._cfg.fit.get('options')
                 kwargs = OmegaConf.to_container(cfg, resolve=True)
+                kwargs = cast(dict, kwargs)
             else:
                 kwargs = {}
 
