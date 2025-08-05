@@ -10,14 +10,14 @@ model:
       - 4500 
       - 6900
   components:
-    ccbar         : rare/electron/ccbar.yaml
-    combinatorial : rare/electron/combinatorial.yaml
-    bdkstee       : rare/electron/bdkstee.yaml
-    bukstee       : rare/electron/bukstee.yaml
-    bsphiee       : rare/electron/bsphiee.yaml
-    jpsi_leakage  : rare/electron/jpsi_leakage.yaml
-    psi2_leakage  : rare/electron/psi2_leakage.yaml
-    signal        : rare/electron/signal_non_parametric.yaml
+    ccbar                             : rare/electron/ccbar.yaml
+    combinatorial                     : rare/electron/combinatorial.yaml
+    Bd_Kstee_eq_btosllball05_DPC      : rare/electron/bdkstee.yaml
+    Bu_Kstee_Kpi0_eq_btosllball05_DPC : rare/electron/bukstee.yaml
+    Bs_phiee_eq_Ball_DPC              : rare/electron/bsphiee.yaml
+    jpsi_leakage                      : rare/electron/jpsi_leakage.yaml
+    psi2_leakage                      : rare/electron/psi2_leakage.yaml
+    signal                            : rare/electron/signal_non_parametric.yaml
   constraints:
     yields :
       - Bd_Kstee_eq_btosllball05_DPC
