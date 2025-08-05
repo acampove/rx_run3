@@ -1,7 +1,11 @@
 '''
 This module has tests for the DataModel class
 '''
+
+from omegaconf             import DictConfig, OmegaConf
 from rx_selection          import selection as sel
+from rx_data.rdf_getter    import RDFGetter 
+from dmu.stats.parameters  import ParameterLibrary as PL
 from dmu.stats.zfit        import zfit
 from dmu.generic           import utilities as gut
 from dmu.stats             import utilities as sut
