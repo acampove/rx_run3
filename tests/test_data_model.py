@@ -13,6 +13,25 @@ from dmu.logging.log_store import LogStore
 from fitter.data_model     import DataModel
 
 log=LogStore.add_logger('fitter:test_data_model')
+# ----------------------
+def _cfg_par_from_cfg(cfg : DictConfig) -> DictConfig:
+    '''
+    Parameters
+    -------------
+    cfg: Dictionary with configuration for full model
+
+    Returns
+    -------------
+    Configuration for yield parameters
+    '''
+    if 'yields' not in cfg.model:
+        log.error(OmegaConf.to_yaml(cfg))
+        raise ValueError('No yields section found in model config')
+
+    cfg_path = cfg.model.yields
+    cfg      = gut.load_conf(package='fitter_data', fpath=cfg_path)
+
+    return cfg
 # --------------------------
 def test_resonant():
     '''
@@ -24,7 +43,11 @@ def test_resonant():
         package='fitter_data',
         fpath  ='reso/electron/data.yaml')
 
-    with sel.custom_selection(d_sel = {
+    cfg_par = _cfg_par_from_cfg(cfg=cfg)
+
+    with RDFGetter.max_entries(value=-1),\
+         PL.parameter_schema(cfg=cfg_par),\
+         sel.custom_selection(d_sel = {
         'mass' : '(1)',
         'block': 'block == 1 || block == 2'}):
         dmd = DataModel(
