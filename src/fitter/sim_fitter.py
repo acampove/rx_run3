@@ -4,6 +4,7 @@ Module with SimFitter class
 
 from typing import cast
 
+import yaml
 from omegaconf                import DictConfig, OmegaConf
 
 from dmu.stats.zfit           import zfit
@@ -412,6 +413,9 @@ class SimFitter(BaseFitter, Cache):
                 kwargs = self._cfg.fit.get('options')
             else:
                 kwargs = {}
+
+            log.debug('KDE options:')
+            log.debug(yaml.dump(kwargs))
 
             pdf = kde_builder(obs=self._obs, data=data, name=self._component, **kwargs)
 
