@@ -42,38 +42,6 @@ class DataModel:
         self._project= project
         self._q2bin  = q2bin
         self._name   = name
-        self._nsig   = zfit.param.Parameter('nsignal', 100, 0, 1000_000)
-
-        self._prc_pref = 'pscale' # This is the partially reconstructed scale preffix.
-                                  # The name here mirrors what is in ConstraintReader.
-    # ------------------------
-    def _get_yield(self, name : str) -> zpar|ComposedParameter:
-        '''
-        Parameters
-        --------------
-        name: Sample name, e.g. Bu_Kee_eq_btosllball05_DPC.
-              If component does not have MC associated, component name e.g. combinatorial
-
-        Returns
-        --------------
-        zfit parameter used for extending it
-        '''
-        if name == 'signal':
-            return self._nsig
-
-        if name not in self._cfg.model.constraints.yields:
-            log.debug(f'Yield for component {name} will be non-composed')
-            return zfit.param.Parameter(f'n{name}', 100, 0, 1000_000)
-
-        log.info(f'Yield for component {name} will be composed')
-        # This scale should normally be below 1
-        # It is nbackground / nsig
-        # The parameter HAS TO start with pscale such that it is picked
-        # by ConstraintReader
-        scale= zfit.Parameter(f'{self._prc_pref}{name}', 0, 0, 10)
-        nevt = zfit.ComposedParameter(f'n{name}', lambda x : x['nsig'] * x['scale'], params={'nsig' : self._nsig, 'scale' : scale})
-
-        return nevt
     # ------------------------
     def _extend(self, pdf : zpdf, name : str) -> zpdf:
         '''
