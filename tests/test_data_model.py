@@ -91,13 +91,17 @@ def test_rare():
 
     sut.print_pdf(pdf)
 # --------------------------
-def test_misid_rare():
+@pytest.mark.parametrize('tag_cut, observable', [
+    ('PROBNN_K < 0.1', 'kpipi'),
+    ('PROBNN_K > 0.1', 'kkk'  ),
+])
+def test_misid_rare(tag_cut : str, observable : str):
     '''
     Test getting model for misid control region
     '''
     q2bin = 'central'
 
-    obs = zfit.Space('B_Mass_kpipi', limits=(4500, 7000))
+    obs = zfit.Space(f'B_Mass_{observable}', limits=(4500, 7000))
     cfg = gut.load_conf(
         package='fitter_data',
         fpath  ='misid/electron/data.yaml')
