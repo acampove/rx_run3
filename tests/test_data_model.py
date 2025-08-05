@@ -97,20 +97,22 @@ def test_misid_rare():
     '''
     q2bin = 'central'
 
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    obs = zfit.Space('B_Mass_kpipi', limits=(4500, 7000))
     cfg = gut.load_conf(
         package='fitter_data',
         fpath  ='misid/electron/data.yaml')
 
-    l1_in_cr = '(L1_PROBNN_E < 0.2) || (L1_PID_E < 3.0)'
-    l2_in_cr = '(L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)'
+    l1_in_cr = '((L1_PROBNN_E < 0.2) || (L1_PID_E < 3.0)) && L1_PROBNN_K < 0.1'
+    l2_in_cr = '((L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)) && L1_PROBNN_K < 0.1'
 
     cfg_par = _cfg_par_from_cfg(cfg=cfg)
 
     with PL.parameter_schema(cfg=cfg_par),\
+        RDFGetter.default_excluded(names=[]),\
         sel.custom_selection(d_sel = {
         'nobr0' : 'nbrem != 0',
         'pid_l' : f'({l1_in_cr}) && ({l2_in_cr})',
+        'mass'  : '(1)',
         'bdt'   : 'mva_cmb > 0.80 && mva_prc > 0.60'}):
         dmd = DataModel(
             cfg     = cfg,
