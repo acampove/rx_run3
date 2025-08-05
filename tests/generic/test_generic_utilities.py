@@ -94,8 +94,8 @@ def test_load_data(ext : str):
             }
 
     data = gut.load_data(
-            package='dmu_data',
-            fpath  =f'tests/config.{ext}')
+        package='dmu_data',
+        fpath  =f'tests/generic/config.{ext}')
 
     assert data == expected
 # -------------------------
