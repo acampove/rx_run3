@@ -33,6 +33,34 @@ def _check_parameter(par : zpar) -> None:
 
     val = par.value().numpy() # type: ignore
     assert isinstance(val, float)
+
+    if 'BdKstee' in par.name:
+        assert _composed_has_par(name='s_BdKstee'         , par=par)
+
+    if 'BuKstee' in par.name:
+        assert _composed_has_par(name='my_preffix_BuKstee', par=par)
+# ----------------------
+def _composed_has_par(name : str, par : zpar) -> bool:
+    '''
+    Parameters
+    -------------
+    name: Name of the component parameter to find
+    par : Composed parameter
+
+    Returns
+    -------------
+    True if `name` parameter exists in `par`
+    '''
+    s_flt = par.get_params(floating= True)
+    s_fix = par.get_params(floating=False)
+
+    s_all = s_flt | s_fix
+
+    for sub_par in s_all:
+        if sub_par.name == name:
+            return True
+
+    return False
 # ------------------------------------
 @pytest.mark.parametrize('kind', ['gauss', 'cbl', 'cbr', 'suj'])
 def test_print(kind : str):
