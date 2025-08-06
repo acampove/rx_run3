@@ -3,6 +3,7 @@
 
 output_directory : rare/muon/data
 model:
+  yields    : model/yields/rare_muon.yaml
   observable:
     name : B_Mass
     range:
