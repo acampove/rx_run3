@@ -39,6 +39,7 @@ class DataPreprocessor(Cache):
         project : str,
         q2bin   : str,
         wgt_cfg : DictConfig|None,
+        is_sig  : bool               = True,
         cut     : dict[str,str]|None = None):
         '''
         Parameters
@@ -53,6 +54,8 @@ class DataPreprocessor(Cache):
                  key: Representing kind of weight, e.g. pid
                  value: Actual configuration for kind of weight
 
+        is_sig : If true (default) it will pick PID weights for signal region.
+                 Otherwise it will use misID control region weights.
         cut    : Selection defining this component category, represented by dictionary where the key are labels
                  and the values are the expressions of the cut
         '''
@@ -63,6 +66,7 @@ class DataPreprocessor(Cache):
         self._q2bin  = q2bin
         self._wgt_cfg= wgt_cfg
         self._rdf    = self._get_rdf(cut=cut)
+        self._is_sig = is_sig
         self._rdf_uid= None if self._rdf is None else self._rdf.uid
 
         super().__init__(
@@ -164,7 +168,7 @@ class DataPreprocessor(Cache):
             df    = df,
             cfg   = cfg.weights,
             sample= self._sample,
-            is_sig= False) # We want weights for the control region
+            is_sig= self._is_sig) # We want weights for the control region
         df  = wgt.get_weighted_data()
 
         arr_wgt = df.attrs['pid_weights']
