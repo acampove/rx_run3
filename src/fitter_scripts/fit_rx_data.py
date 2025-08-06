@@ -9,6 +9,7 @@ from typing import ClassVar
 
 from omegaconf                 import DictConfig
 from dmu.stats.zfit            import zfit
+from dmu.stats.parameters      import ParameterLibrary as PL
 from dmu.generic               import utilities as gut
 from dmu.workflow.cache        import Cache
 from dmu.logging.log_store     import LogStore
@@ -59,7 +60,8 @@ def _fit() -> None:
     '''
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
 
-    with Cache.turn_off_cache(val=[]),\
+    with PL.parameter_schema(cfg=Data.config.model.yields),\
+         Cache.turn_off_cache(val=[]),\
          sel.custom_selection(d_sel={
         'nobr0' : 'nbrem != 0',
         'bdt'   :f'mva_cmb > {Data.mva_cmb} && mva_prc > {Data.mva_prc}'}):
