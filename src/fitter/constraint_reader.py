@@ -48,7 +48,7 @@ class ConstraintReader:
         raise NotImplementedError('This needs to be implemented with DataFitter')
     # -------------------------------------------------------------
     def _proc_from_par(self, par_name : str) -> str:
-        sample = par_name.lstrip(self._prc_pref)
+        sample = par_name.removeprefix(self._prc_pref + '_')
         decay  = dn.nic_from_sample(sample)
 
         return decay
