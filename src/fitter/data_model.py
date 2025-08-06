@@ -3,7 +3,6 @@ Module containing DataModel class
 '''
 
 from dmu.stats.zfit         import zfit
-from dmu.generic            import utilities  as gut
 from dmu.logging.log_store  import LogStore
 from dmu.stats.parameters   import ParameterLibrary as PL
 from omegaconf              import DictConfig
@@ -75,8 +74,7 @@ class DataModel:
             raise ValueError('Found zero components in model')
 
         log.debug(f'Found {npdf} components')
-        for component, cfg_path in self._cfg.model.components.items():
-            cfg = gut.load_conf(package='fitter_data', fpath=cfg_path)
+        for component, cfg in self._cfg.model.components.items():
             ftr = SimFitter(
                 name     = self._name,
                 component= component,
