@@ -10,6 +10,10 @@ from fitter.prec_scales          import PrecScales
 
 log=LogStore.add_logger('fitter:constraint_reader')
 # -------------------------------------------------------------
+class ParameterHolder(Protocol):
+    def get_params(self, floating : bool) -> set[zpar]:
+        ...
+# -------------------------------------------------------------
 class ConstraintReader:
     '''
     Class meant to provide constraints for fitting model
