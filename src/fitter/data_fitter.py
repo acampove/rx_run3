@@ -47,7 +47,7 @@ class DataFitter(BaseFitter, Cache):
         # If so, it should be here
         Cache.__init__(
             self,
-            out_path = 'DataFitter',
+            out_path = self._cfg.output_directory,
             cfg      = cfg)
     # ----------------------
     def _constraints_from_likelihoood(self, nll : NLL) -> dict[str,tuple[float,float]]:
