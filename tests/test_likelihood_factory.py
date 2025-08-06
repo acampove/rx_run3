@@ -37,6 +37,7 @@ def test_config():
          RDFGetter.max_entries(value=100_000):
 
         ftr = LikelihoodFactory(
+            name   = 'likelihood_factory',
             obs    = obs,
             sample = 'DATA_24_MagDown_24c2',
             trigger= 'Hlt2RD_BuToKpMuMu_MVA',
@@ -143,7 +144,6 @@ def test_rare_electron(q2bin : str):
             'bdt'   : 'mva_cmb > 0.60 && mva_prc > 0.40'}):
         ftr = LikelihoodFactory(
             obs    = obs,
-            name   = '060_040',
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
             project= 'rx',
