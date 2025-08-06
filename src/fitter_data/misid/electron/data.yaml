@@ -3,7 +3,7 @@
 
 output_directory : misid/electron/data
 model:
-  yields    : model/yields_misid_electron.yaml
+  yields    : model/yields/misid_electron.yaml
   components:
     combinatorial : misid/electron/combinatorial.yaml
     kpipi         : misid/electron/kpipi.yaml

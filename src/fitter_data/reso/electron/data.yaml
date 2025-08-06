@@ -3,7 +3,7 @@
 
 output_directory : reso/electron/data
 model:
-  yields    : model/yields_reso_electron.yaml
+  yields    : model/yields/reso_electron.yaml
   observable:
     name : B_const_mass_M
     range:
