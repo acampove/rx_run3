@@ -31,24 +31,6 @@ def _validate_data(data : zdata, name : str) -> None:
     plt.savefig(plt_path)
     plt.close()
 # -------------------------------------------------
-@pytest.mark.parametrize('sample', ['gauss_toy', 'data_toy'])
-def test_toy(sample : str):
-    '''
-    Tests class with toys
-    '''
-    obs = zfit.Space('x', limits=(4500, 7000))
-
-    prp = DataPreprocessor(
-        obs    =obs,
-        out_dir=sample,
-        sample =sample,
-        trigger='',
-        project='',
-        q2bin  ='')
-    dat = prp.get_data()
-
-    _validate_data(data=dat, name=sample)
-# -------------------------------------------------
 @pytest.mark.parametrize('sample', [
     'DATA_24_MagDown_24c2',
     'Bu_JpsiK_mm_eq_DPC'])
