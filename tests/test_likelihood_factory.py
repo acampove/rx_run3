@@ -3,7 +3,8 @@ Module meant to test DataFitter class
 '''
 import pytest
 
-from dmu.workflow.cache import Cache
+from dmu.stats.parameters  import ParameterLibrary as PL
+from dmu.stats.zfit     import zfit
 from dmu.generic        import utilities  as gut
 from rx_data.rdf_getter import RDFGetter
 from rx_selection       import selection  as sel
