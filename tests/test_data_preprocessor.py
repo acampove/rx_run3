@@ -7,11 +7,13 @@ import matplotlib.pyplot as plt
 from dmu.stats.zfit           import zfit
 from dmu.generic              import utilities as gut
 from dmu.stats                import utilities as sut
+from dmu.logging.log_store    import LogStore
 from omegaconf                import OmegaConf
 from rx_data.rdf_getter       import RDFGetter
 from zfit.core.interfaces     import ZfitData  as zdata
 from fitter.data_preprocessor import DataPreprocessor
 
+log=LogStore.add_logger('fitter:test_data_preprocessor')
 # -------------------------------------------------
 class Data:
     '''
@@ -30,6 +32,7 @@ def _validate_data(data : zdata, name : str) -> None:
     rng      = sut.range_from_obs(obs=data.space)
 
     plt.hist(arr_data, histtype='step', bins=100, range=rng)
+    log.info(f'Saving to: {plt_path}')
     plt.savefig(plt_path)
     plt.close()
 # -------------------------------------------------
