@@ -86,7 +86,7 @@ class ConstraintTester:
 # --------------------------------------------------------------
 def _print_constraints(d_cns : dict[str, tuple[float,float]]) -> None:
     for name, (value, error) in d_cns.items():
-        log.info(f'{name:<40}{value:<20.3f}{error:<20.3f}')
+        log.info(f'{name:<50}{value:<20.3f}{error:<20.3f}')
 # --------------------------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 @pytest.mark.parametrize('kind' , ['sig_par', 'rare_prec', 'invalid', 'brem_frac'])
