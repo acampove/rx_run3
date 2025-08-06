@@ -54,7 +54,9 @@ def test_muon_data(sample : str):
 
     _validate_data(data=dat, name=name)
 # -------------------------------------------------
-@pytest.mark.parametrize('sample'  , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('sample', [
+    'DATA_24_MagDown_24c2',
+    'Bu_JpsiK_ee_eq_DPC'])
 @pytest.mark.parametrize('brem_cat', [0, 1, 2])
 def test_brem_cat_data(sample : str, brem_cat : int):
     '''
