@@ -82,3 +82,38 @@ def test_brem_cat_data(sample : str, brem_cat : int):
 
     _validate_data(data=dat, name=name)
 # -------------------------------------------------
+@pytest.mark.parametrize('sample', [
+    'Bu_piplpimnKpl_eq_sqDalitz_DPC',
+    'Bu_KplKplKmn_eq_sqDalitz_DPC'])
+def test_with_pid_weights(sample : str) -> None:
+    '''
+    Parameters
+    -------------
+    sample: MC sample, weights are not applied to data
+    '''
+    cfg_spl = gut.load_conf(package='fitter_data', fpath='model/weights/splitting.yaml')
+    cfg_wgt = gut.load_conf(package='fitter_data', fpath='model/weights/weights.yaml')
+
+    wgt_cfg = {'pid' : {
+           'splitting' : cfg_spl,
+           'weights'   : cfg_wgt}}
+
+    obs     = zfit.Space('B_Mass_kpipi', limits=(4500, 6000))
+    wgt_cfg = OmegaConf.create(wgt_cfg)
+    cut     = {'brem' : 'nbrem == 1'}
+    name    = 'with_pid_weights'
+
+    with RDFGetter.max_entries(100_000):
+        prp = DataPreprocessor(
+            obs    = obs,
+            out_dir= name,
+            sample = sample,
+            trigger= 'Hlt2RD_BuToKpEE_MVA',
+            project= 'nopid',
+            cut    = cut, 
+            wgt_cfg= wgt_cfg,
+            q2bin  = 'jpsi')
+        dat = prp.get_data()
+
+    _validate_data(data=dat, name=name)
+# -------------------------------------------------
