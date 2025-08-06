@@ -31,11 +31,13 @@ def test_config():
         package='fitter_data',
         fpath  ='reso/muon/data.yaml')
 
-    with Cache.turn_off_cache(val=['LikelihoodFactory']), \
-         sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
+    obs = zfit.Space('B_Mass', limits=(4500, 7000))
+    with PL.parameter_schema(cfg=cfg.model.yields),\
+         sel.custom_selection(d_sel = {'bdt' : '(1)'}),\
          RDFGetter.max_entries(value=100_000):
 
         ftr = LikelihoodFactory(
+            obs    = obs,
             sample = 'DATA_24_MagDown_24c2',
             trigger= 'Hlt2RD_BuToKpMuMu_MVA',
             project= 'rx',
@@ -62,11 +64,13 @@ def test_reso_muon():
         package='fitter_data',
         fpath  ='reso/muon/data.yaml')
 
-    with Cache.turn_off_cache(val=['LikelihoodFactory']), \
+    obs = zfit.Space('B_Mass', limits=(4500, 7000))
+    with PL.parameter_schema(cfg=cfg.model.yields),\
          sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
          RDFGetter.max_entries(value=100_000):
 
         ftr = LikelihoodFactory(
+            obs    = obs,
             sample = 'DATA_24_MagDown_24c2',
             trigger= 'Hlt2RD_BuToKpMuMu_MVA',
             project= 'rx',
@@ -83,8 +87,10 @@ def test_rare_muon(q2bin : str):
         package='fitter_data',
         fpath  ='rare/muon/data.yaml')
 
-    with Cache.turn_off_cache(val=['LikelihoodFactory']):
+    obs = zfit.Space('B_Mass', limits=(4500, 7000))
+    with PL.parameter_schema(cfg=cfg.model.yields):
         ftr = LikelihoodFactory(
+            obs    = obs,
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpMuMu_MVA',
             project= 'rx',
@@ -103,14 +109,16 @@ def test_reso_electron(block : str):
 
     block_cut = Data.d_block_cut[block]
 
-    with Cache.turn_off_cache(val=['LikelihoodFactory']), \
-        RDFGetter.multithreading(nthreads=8),\
-        sel.custom_selection(d_sel={
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    with PL.parameter_schema(cfg=cfg.model.yields),\
+         RDFGetter.multithreading(nthreads=8),\
+         sel.custom_selection(d_sel={
             'block' : block_cut,
             'brm12' : 'nbrem != 0',
             'mass'  : '(1)'}):
 
         ftr = LikelihoodFactory(
+            obs    = obs,
             name   = block,
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
@@ -128,11 +136,13 @@ def test_rare_electron(q2bin : str):
         package='fitter_data',
         fpath  ='rare/electron/data.yaml')
 
-    with Cache.turn_off_cache(val=['LikelihoodFactory']),\
-        sel.custom_selection(d_sel={
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    with PL.parameter_schema(cfg=cfg.model.yields),\
+         sel.custom_selection(d_sel={
             'nobr0' : 'nbrem != 0',
             'bdt'   : 'mva_cmb > 0.60 && mva_prc > 0.40'}):
         ftr = LikelihoodFactory(
+            obs    = obs,
             name   = '060_040',
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
@@ -150,11 +160,14 @@ def test_high_q2_track():
         package='fitter_data',
         fpath  ='rare/electron/data.yaml')
 
-    with Cache.turn_off_cache(val=['LikelihoodFactory']),\
-        sel.custom_selection(d_sel={
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+
+    with PL.parameter_schema(cfg=cfg.model.yields),\
+         sel.custom_selection(d_sel={
             'q2'    : 'q2_track > 14300000 && q2 < 22000000',
             'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
         ftr = LikelihoodFactory(
+            obs    = obs,
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
             project= 'rx',
