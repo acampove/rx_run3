@@ -90,13 +90,18 @@ def test_brem_cat_data(sample : str, brem_cat : int):
 @pytest.mark.parametrize('sample', [
     'Bu_piplpimnKpl_eq_sqDalitz_DPC',
     'Bu_KplKplKmn_eq_sqDalitz_DPC'])
-@pytest.mark.parametrize('region', ['kpipi', 'kkk'])
-def test_with_pid_weights(sample : str, region : str) -> None:
+@pytest.mark.parametrize('region', ['kpipi' ,     'kkk'])
+@pytest.mark.parametrize('kind'  , ['signal', 'control'])
+def test_with_pid_weights(
+    sample : str,
+    region : str, 
+    kind   : str) -> None:
     '''
     Parameters
     -------------
     sample: MC sample, weights are not applied to data
     region: Kind of control region
+    kind  : Either 'signal' or 'control'
     '''
     cfg_spl = gut.load_conf(package='fitter_data', fpath='model/weights/splitting.yaml')
     cfg_wgt = gut.load_conf(package='fitter_data', fpath='model/weights/weights.yaml')
@@ -111,7 +116,7 @@ def test_with_pid_weights(sample : str, region : str) -> None:
         'brem' : 'nbrem == 1',
         'pid_l': '(1)'}
 
-    name = f'with_pid_weights_{sample}_{region}'
+    name = f'with_pid_weights_{sample}_{region}_{kind}'
     with RDFGetter.max_entries(1000_000),\
          RDFGetter.default_excluded(names=[]):
         prp = DataPreprocessor(
@@ -122,6 +127,7 @@ def test_with_pid_weights(sample : str, region : str) -> None:
             project= 'nopid',
             cut    = cut, 
             wgt_cfg= wgt_cfg,
+            is_sig = kind == 'signal',
             q2bin  = 'jpsi')
         dat = prp.get_data()
 
