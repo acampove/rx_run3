@@ -89,14 +89,6 @@ class LikelihoodFactory:
         ------------
         Zfit likelihood
         '''
-
-        result_path = f'{self._out_path}/parameters.yaml'
-        if self._copy_from_cache():
-            res = OmegaConf.load(result_path)
-            res = cast(DictConfig, res)
-
-            return res
-
         dpr  = DataPreprocessor(
             obs    = self._obs,
             q2bin  = self._q2bin,
