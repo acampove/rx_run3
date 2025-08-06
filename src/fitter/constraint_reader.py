@@ -54,6 +54,7 @@ class ConstraintReader:
         return decay
     # -------------------------------------------------------------
     def _add_prec_constraints(self) -> None:
+        log.info('Adding partially reconstructed component constraint')
         for par in self._l_par:
             if not par.startswith('pscale'): # PRec constraints are scales, starting with "s"
                 continue
