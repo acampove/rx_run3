@@ -203,7 +203,8 @@ class ParameterLibrary:
         minv= cfg[name]['min']
         maxv= cfg[name]['max']
 
-        par_name = f's_{name}' if is_scale else name
+        preffix  = cfg[name].get('preffix', 's')
+        par_name = f'{preffix}_{name}' if is_scale else name
 
         if minv > maxv:
             raise ValueError(f'For parameter {name}, minimum edge is larger: {minv:.3e} > {maxv:.3e}')
