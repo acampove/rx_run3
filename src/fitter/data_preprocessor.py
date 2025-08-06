@@ -36,7 +36,7 @@ class DataPreprocessor(Cache):
         trigger : str,
         project : str,
         q2bin   : str,
-        wgt_cfg : ListConfig|None,
+        wgt_cfg : DictConfig|None,
         cut     : dict[str,str]|None = None):
         '''
         Parameters
@@ -47,8 +47,10 @@ class DataPreprocessor(Cache):
         trigger: e.g. Hlt2RD...
         project: e.g. rx, nopid
         q2bin  : e.g. central
-        wgt_cfg: OmegaConf's version of a list of strings, each representing a path to a YAML file with configs
-                 to extract weights
+        wgt_cfg: Dictionary with:
+                 key: Representing kind of weight, e.g. pid
+                 value: Actual configuration for kind of weight
+
         cut    : Selection defining this component category, represented by dictionary where the key are labels
                  and the values are the expressions of the cut
         '''
