@@ -1,11 +1,8 @@
 '''
 Module containing DataFitter class
 '''
-from typing import cast
-
 from omegaconf                import DictConfig, OmegaConf
 
-from dmu.workflow.cache       import Cache
 from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
 from rx_selection             import selection  as sel
@@ -13,7 +10,6 @@ from rx_selection             import selection  as sel
 from zfit.loss                import ExtendedUnbinnedNLL
 from zfit.interface           import ZfitSpace  as zobs
 from fitter.data_preprocessor import DataPreprocessor
-from fitter.base_fitter       import BaseFitter
 from fitter.data_model        import DataModel
 
 log=LogStore.add_logger('fitter:LikelihoodFactory')
