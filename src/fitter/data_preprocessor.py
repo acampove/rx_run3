@@ -4,11 +4,10 @@ Module holding DataPreprocessor class
 from typing  import cast
 
 import numpy
-from omegaconf              import ListConfig
+from omegaconf              import DictConfig
 from ROOT                   import RDataFrame
 from dmu.workflow.cache     import Cache
 from dmu.stats.zfit         import zfit
-from dmu.generic            import utilities  as gut
 from dmu.stats              import utilities  as sut
 from dmu.logging.log_store  import LogStore
 from zfit.interface         import ZfitData   as zdata
