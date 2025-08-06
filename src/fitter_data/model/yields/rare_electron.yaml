@@ -6,21 +6,24 @@ yields: &yields
   max : 100000
 
 signal:
-  <<: *yields
+  <<      : *yields
 Bd_Kstee_eq_btosllball05_DPC:
-  scl : [signal]
-  <<: *yields
+  scl     : [signal]
+  preffix : pscale
+  <<      : *yields
 Bu_Kstee_Kpi0_eq_btosllball05_DPC:
-  scl : [signal]
-  <<: *yields
+  scl     : [signal]
+  preffix : pscale
+  <<      : *yields
 Bs_phiee_eq_Ball_DPC:
-  scl : [signal]
-  <<: *yields
+  scl     : [signal]
+  preffix : pscale
+  <<      : *yields
 ccbar:
-  <<: *yields
+  <<      : *yields
 combinatorial:
-  <<: *yields
+  <<      : *yields
 jpsi_leakage:
-  <<: *yields
+  <<      : *yields
 psi2_leakage: 
-  <<: *yields
+  <<      : *yields
