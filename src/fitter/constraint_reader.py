@@ -19,20 +19,30 @@ class ConstraintReader:
     Class meant to provide constraints for fitting model
     '''
     # -------------------------------------------------------------
-    def __init__(self, parameters : list[str], q2bin : str):
+    def __init__(
+        self, 
+        obj   : ParameterHolder, 
+        q2bin : str,
+        signal: str = 'bpkpee',
+        pprefx: str = 'pscale'):
         '''
-        Parameters: List of parameter names as in the PDF
-        q2bin     : q2 bin
+        Parameters
+        -------------------
+        obj   : Object for which `get_parms` is defined, e.g. PDF, likelihood, etc
+        q2bin : q2 bin
+        signal: Process considered as the signal when calculating denominator of rare Partially
+                reconstructed scale constraints
+        pprefx: Preffix of rare partially reconstructed parameters, to tell the code
+                to read their constraints, if found
         '''
 
-        self._l_par   = parameters
+        s_par         = obj.get_params(floating=True) 
+        self._l_par   = [ par.name for par in s_par ] 
         self._q2bin   = q2bin
 
         self._d_const = {}
-        self._signal  = 'bpkpee' # This is the signal decay nickname, needed for PRec scales constraints
-        self._prc_pref= 'pscale' # This is the partially reconstructed scale preffix.
-                                 # Yields are of the form: pscale{SAMPLENAME}
-                                 # pscale needs to be removed to access sample name
+        self._signal  = signal 
+        self._prc_pref= pprefx 
     # -------------------------------------------------------------
     def _add_signal_constraints(self) -> None:
         raise NotImplementedError('This needs to be implemented with DataFitter')
