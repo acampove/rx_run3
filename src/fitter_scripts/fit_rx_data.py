@@ -8,6 +8,7 @@ import argparse
 from typing import ClassVar
 
 from omegaconf                 import DictConfig
+from dmu.stats.zfit            import zfit
 from dmu.generic               import utilities as gut
 from dmu.workflow.cache        import Cache
 from dmu.logging.log_store     import LogStore
@@ -56,11 +57,14 @@ def _fit() -> None:
     '''
     This is where DataFitter is used
     '''
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+
     with Cache.turn_off_cache(val=[]),\
          sel.custom_selection(d_sel={
         'nobr0' : 'nbrem != 0',
         'bdt'   :f'mva_cmb > {Data.mva_cmb} && mva_prc > {Data.mva_prc}'}):
         ftr = LikelihoodFactory(
+            obs    = obs,
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
             project= 'rx',
