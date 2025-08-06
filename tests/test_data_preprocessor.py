@@ -48,6 +48,7 @@ def test_muon_data(sample : str):
             sample = sample,
             trigger= 'Hlt2RD_BuToKpMuMu_MVA',
             project= 'rx',
+            wgt_cfg= None,
             q2bin  = 'jpsi')
         dat = prp.get_data()
 
@@ -61,6 +62,7 @@ def test_brem_cat_data(sample : str, brem_cat : int):
     '''
     obs = zfit.Space('B_Mass', limits=(4500, 6000))
     name= f'{sample}_brem_{brem_cat:03}'
+    cut = {'brem' : f'nbrem == {brem_cat}'}
 
     with RDFGetter.max_entries(100_000):
         prp = DataPreprocessor(
@@ -69,7 +71,8 @@ def test_brem_cat_data(sample : str, brem_cat : int):
             sample = sample,
             trigger= 'Hlt2RD_BuToKpEE_MVA',
             project= 'rx',
-            cut    =f'nbrem == {brem_cat}',
+            cut    =  cut, 
+            wgt_cfg= None,
             q2bin  = 'jpsi')
         dat = prp.get_data()
 
