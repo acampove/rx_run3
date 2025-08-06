@@ -1,6 +1,7 @@
 '''
 Module meant to test DataFitter class
 '''
+from dmu.stats.fitter import LogStore
 import pytest
 
 from dmu.stats.parameters  import ParameterLibrary as PL
@@ -22,6 +23,11 @@ class Data:
         'b5' : 'block == 5',
         'b6' : 'block == 6',
         'b78': 'block == 7 || block == 8'}
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def _initialize():
+    LogStore.set_level('rx_data:rdf_getter'      , 30)
+    LogStore.set_level('rx_misid:sample_weighter', 30)
 # -------------------------------------------
 def test_config():
     '''
