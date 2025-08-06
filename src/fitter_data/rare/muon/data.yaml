@@ -10,8 +10,8 @@ model:
       - 5080
       - 5800
   components:
-    background : rare/muon/combinatorial.yaml
-    signal     : rare/muon/signal.yaml
+    combinatorial : rare/muon/combinatorial.yaml
+    signal        : rare/muon/signal.yaml
   constraints:
     yields : []
 fit: {}
