@@ -5,7 +5,9 @@ import os
 import pytest
 import matplotlib.pyplot as plt
 from dmu.stats.zfit           import zfit
+from dmu.generic              import utilities as gut
 from dmu.stats                import utilities as sut
+from omegaconf                import OmegaConf
 from rx_data.rdf_getter       import RDFGetter
 from zfit.core.interfaces     import ZfitData  as zdata
 from fitter.data_preprocessor import DataPreprocessor
