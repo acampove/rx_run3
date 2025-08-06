@@ -90,11 +90,13 @@ def test_brem_cat_data(sample : str, brem_cat : int):
 @pytest.mark.parametrize('sample', [
     'Bu_piplpimnKpl_eq_sqDalitz_DPC',
     'Bu_KplKplKmn_eq_sqDalitz_DPC'])
-def test_with_pid_weights(sample : str) -> None:
+@pytest.mark.parametrize('region', ['kpipi', 'kkk'])
+def test_with_pid_weights(sample : str, region : str) -> None:
     '''
     Parameters
     -------------
     sample: MC sample, weights are not applied to data
+    region: Kind of control region
     '''
     cfg_spl = gut.load_conf(package='fitter_data', fpath='model/weights/splitting.yaml')
     cfg_wgt = gut.load_conf(package='fitter_data', fpath='model/weights/weights.yaml')
@@ -103,14 +105,13 @@ def test_with_pid_weights(sample : str) -> None:
            'splitting' : cfg_spl,
            'weights'   : cfg_wgt}}
 
-    obs     = zfit.Space('B_Mass_kpipi', limits=(4500, 6000))
+    obs     = zfit.Space(f'B_Mass_{region}', limits=(4500, 6000))
     wgt_cfg = OmegaConf.create(wgt_cfg)
     cut     = {
         'brem' : 'nbrem == 1',
         'pid_l': '(1)'}
 
-    name    = 'with_pid_weights'
-
+    name = f'with_pid_weights_{sample}_{region}'
     with RDFGetter.max_entries(1000_000),\
          RDFGetter.default_excluded(names=[]):
         prp = DataPreprocessor(
