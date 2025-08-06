@@ -64,7 +64,7 @@ def test_reso_muon():
         package='fitter_data',
         fpath  ='reso/muon/data.yaml')
 
-    obs = zfit.Space('B_Mass', limits=(4500, 7000))
+    obs = zfit.Space('B_Mass', limits=(5000, 6000))
     with PL.parameter_schema(cfg=cfg.model.yields),\
          sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
          RDFGetter.max_entries(value=100_000):
@@ -87,7 +87,7 @@ def test_rare_muon(q2bin : str):
         package='fitter_data',
         fpath  ='rare/muon/data.yaml')
 
-    obs = zfit.Space('B_Mass', limits=(4500, 7000))
+    obs = zfit.Space('B_Mass', limits=(5000, 6000))
     with PL.parameter_schema(cfg=cfg.model.yields):
         ftr = LikelihoodFactory(
             obs    = obs,
@@ -109,7 +109,7 @@ def test_reso_electron(block : str):
 
     block_cut = Data.d_block_cut[block]
 
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    obs = zfit.Space('B_Mass_smr', limits=(4800, 6000))
     with PL.parameter_schema(cfg=cfg.model.yields),\
          RDFGetter.multithreading(nthreads=8),\
          sel.custom_selection(d_sel={
