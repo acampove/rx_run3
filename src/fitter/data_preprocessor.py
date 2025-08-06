@@ -144,21 +144,23 @@ class DataPreprocessor(Cache):
 
         return arr_wgt
     # ----------------------
-    def _get_pid_weights(self) -> numpy.ndarray:
+    def _get_pid_weights(self, cfg : DictConfig) -> numpy.ndarray:
         '''
+        Parameters
+        -------------
+        cfg : Dictionary containing configuration for PID, i.e. it should have keys
+              `splitting` and `weights` as used in the rx_misid project
+
         Returns
         -------------
         Array with PID weights
         '''
-        # Use default config in rx_misid
-        cfg   = gut.load_conf(package='rx_misid_data', fpath='splitting.yaml')
-        spl   = SampleSplitter(rdf = self._rdf, cfg = cfg)
+        spl   = SampleSplitter(rdf = self._rdf, cfg = cfg.splitting)
         df    = spl.get_sample()
 
-        cfg   = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
         wgt   = SampleWeighter(
             df    = df,
-            cfg   = cfg,
+            cfg   = cfg.weights,
             sample= self._sample,
             is_sig= False) # We want weights for the control region
         df  = wgt.get_weighted_data()
