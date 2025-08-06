@@ -30,10 +30,19 @@ class Data:
     q2bin  : str   = ''
     mva_cmb: float = 0.0
     mva_prc: float = 0.0
+    log_lvl: int   = 20
+# ----------------------
+def _set_logs() -> None:
+    '''
+    Will put classes in a given logging level
+    '''
+    LogStore.set_level('fitter:constraint_reader', Data.log_lvl)
+    LogStore.set_level('fitter:fit_rx_data'      , Data.log_lvl)
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to fit RX data')
     parser.add_argument('-c', '--config' , type=str  , help='Name of configuration, e.g. rare/electron', required=True)
+    parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[10, 20, 30], default=Data.log_lvl)
     parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin',              choices=Data.l_q2bin, required=True)
     parser.add_argument('-C', '--mva_cmb', type=float, help='Cut on combinatorial MVA working point'   , required=True)
     parser.add_argument('-P', '--mva_prc', type=float, help='Cut on part reco MVA working point'       , required=True)
@@ -42,6 +51,7 @@ def _parse_args() -> None:
     Data.q2bin   = args.q2bin
     Data.mva_cmb = args.mva_cmb
     Data.mva_prc = args.mva_prc
+    Data.log_lvl = args.log_lvl
     Data.config  = gut.load_conf(package='fitter_data', fpath=f'{args.config}/data.yaml')
 # ----------------------
 def _get_fit_name() -> str:
@@ -93,6 +103,7 @@ def main():
     Entry point
     '''
     _parse_args()
+    _set_logs()
     _set_output_directory()
     _fit()
 # ----------------------
