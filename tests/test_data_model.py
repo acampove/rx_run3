@@ -3,7 +3,6 @@ This module has tests for the DataModel class
 '''
 import pytest
 
-from omegaconf             import DictConfig, OmegaConf
 from rx_selection          import selection as sel
 from rx_data.rdf_getter    import RDFGetter 
 from dmu.stats.parameters  import ParameterLibrary as PL
