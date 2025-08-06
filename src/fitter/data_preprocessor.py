@@ -19,6 +19,8 @@ from rx_misid.sample_weighter import SampleWeighter
 
 log=LogStore.add_logger('fitter:data_preprocessor')
 # ------------------------
+# TODO: Shold this class take a dictionary of cuts? 
+# Should this be made into a context manager?
 class DataPreprocessor(Cache):
     '''
     Class in charge of providing datasets for fitting by:
