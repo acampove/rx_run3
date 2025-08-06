@@ -88,9 +88,8 @@ def test_misid_rare(tag_cut : str, observable : str):
     l2_in_cr = f'((L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)) && L2_{tag_cut}'
     out_dir  = f'{cfg.output_directory}/{observable}'
     cfg.output_directory = out_dir
-    cfg_par  = _cfg_par_from_cfg(cfg=cfg)
 
-    with PL.parameter_schema(cfg=cfg_par),\
+    with PL.parameter_schema(cfg=cfg.model.yields),\
         RDFGetter.default_excluded(names=[]),\
         sel.custom_selection(d_sel = {
         'nobr0' : 'nbrem != 0',
