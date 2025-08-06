@@ -94,21 +94,25 @@ def test_with_pid_weights(sample : str) -> None:
     cfg_spl = gut.load_conf(package='fitter_data', fpath='model/weights/splitting.yaml')
     cfg_wgt = gut.load_conf(package='fitter_data', fpath='model/weights/weights.yaml')
 
-    wgt_cfg = {'pid' : {
+    wgt_cfg = {'PID' : {
            'splitting' : cfg_spl,
            'weights'   : cfg_wgt}}
 
     obs     = zfit.Space('B_Mass_kpipi', limits=(4500, 6000))
     wgt_cfg = OmegaConf.create(wgt_cfg)
-    cut     = {'brem' : 'nbrem == 1'}
+    cut     = {
+        'brem' : 'nbrem == 1',
+        'pid_l': '(1)'}
+
     name    = 'with_pid_weights'
 
-    with RDFGetter.max_entries(100_000):
+    with RDFGetter.max_entries(1000_000),\
+         RDFGetter.default_excluded(names=[]):
         prp = DataPreprocessor(
             obs    = obs,
             out_dir= name,
             sample = sample,
-            trigger= 'Hlt2RD_BuToKpEE_MVA',
+            trigger= 'Hlt2RD_BuToKpEE_MVA_noPID',
             project= 'nopid',
             cut    = cut, 
             wgt_cfg= wgt_cfg,
