@@ -499,7 +499,7 @@ However, there are two cases that might require further flexibility:
 To deal with this one can define a schema as below:
 
 ```yaml
-nBuKee:         # Normal parameter
+BuKee:         # Normal parameter
   val : 1
   min : 0
   max : 10
@@ -511,13 +511,19 @@ iCK:            # Constant parameter, fixed at 1.0
   val : 1.0
   min : 1.0
   max : 1.0
-nBdKstee:       # nBdKstee = s_nBdKstee * nBdKstee
-  scl : [nBuKee]
-  val : 0       # These numbers are associated to the scale parameter
+BdKstee:               # BdKstee = s_BdKstee * BuKee
+  scl : [BuKee]
+  val : 0              # These numbers are associated to the scale parameter
   min : 0
   max : 1
-nBuKmm:         # Not an actual parameter but: nBuKmm = iCK * RK * nBuKee
-  alias : [iCK, RK, nBuKee]
+BuKstee:               # BuKstee = my_preffix_BuKstee * BuKee
+  scl     : [BuKee]
+  preffix : my_preffix # In this case the scale will be named my_preffix_BuKee
+  val     : 0          # These numbers are associated to the scale parameter
+  min     : 0
+  max     : 1
+BuKmm:         # Not an actual parameter but: BuKmm = iCK * RK * BuKee
+  alias : [iCK, RK, BuKee]
 ```
 
 and this configuration can be loaded into the code, before running the model
