@@ -110,8 +110,6 @@ class LikelihoodFactory:
             project= project)
         model= mod.get_model()
 
-        self._cache()
-
         nll = zfit.loss.ExtendedUnbinnedNLL(model=model, data=data)
 
         return nll
