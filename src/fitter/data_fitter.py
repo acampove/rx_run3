@@ -103,7 +103,7 @@ class DataFitter(BaseFitter, Cache):
         l_nam  = list(self._d_nll)
         d_cns  = self._constraints_from_likelihoood(nll=nll)
         cns    = Fitter.get_gaussian_constraints(obj=nll, cfg=d_cns)
-        nll    = nll.create_new(constraints=cns)
+        nll    = nll.create_new(constraints=cns) # type: ignore
         res, _ = Fitter.minimize(nll=nll, cfg=self._cfg.fit)
 
         res.hesse(name='minuit_hesse')
