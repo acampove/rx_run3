@@ -126,18 +126,19 @@ class DataPreprocessor(Cache):
 
         return wgt
     # ----------------------
-    def _get_extra_weight(self, kind : str) -> numpy.ndarray:
+    def _get_extra_weight(self, kind : str, cfg : DictConfig) -> numpy.ndarray:
         '''
         Parameters
         -------------
         kind: E.g. PID, Dalitz
+        cfg : Configuration needed to extract weights
 
         Returns
         -------------
         Array of weights
         '''
         if kind == 'PID':
-            arr_wgt = self._get_pid_weights()
+            arr_wgt = self._get_pid_weights(cfg=cfg)
         else:
             raise ValueError(f'Invalid type of weight {kind}')
 
