@@ -14,7 +14,7 @@ from fitter.data_model        import DataModel
 
 log=LogStore.add_logger('fitter:LikelihoodFactory')
 # ------------------------
-class LikelihoodFactory(BaseFitter, Cache):
+class LikelihoodFactory:
     '''
     Builder of likelihoods given a:
 
@@ -40,8 +40,6 @@ class LikelihoodFactory(BaseFitter, Cache):
         q2bin  : E.g. central
         cfg    : Configuration for the fit to data
         '''
-        BaseFitter.__init__(self)
-
         self._obs       = obs
         self._sample    = sample
         self._trigger   = trigger
@@ -50,12 +48,6 @@ class LikelihoodFactory(BaseFitter, Cache):
         self._cfg       = cfg
         self._name      = name
         self._base_path = self._get_base_path()
-
-        Cache.__init__(
-            self,
-            out_path = self._base_path,
-            cuts     = sel.selection(process=sample, trigger=trigger, q2bin=q2bin),
-            config   = OmegaConf.to_container(cfg, resolve=True))
     # ------------------------
     def _get_base_path(self) -> str:
         '''
