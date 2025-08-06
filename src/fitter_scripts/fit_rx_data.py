@@ -75,7 +75,7 @@ def _fit() -> None:
         nll = ftr.run()
         cfg = ftr.get_config()
 
-    ftr = DataFitter(d_nll={'signal' : (nll, cfg)}, cfg=Data.config)
+    ftr = DataFitter(d_nll={'signal_region' : (nll, cfg)}, cfg=Data.config)
     ftr.run()
 # ----------------------
 def _set_output_directory() -> None:
