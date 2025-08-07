@@ -213,7 +213,7 @@ def print_pdf(
     d_const  : None|dict[str,tuple[float, float]] = None,
     txt_path : str|None                           = None,
     level    : int                                = 20,
-    blind    : None|list[str]                     = None):
+    blind    : None|list[str]                     = None) -> list[str]:
     '''
     Function used to print zfit PDFs
 
@@ -224,6 +224,11 @@ def print_pdf(
     txt_path (str): Optionally, dump output to text in this path
     level (str)   : Optionally set the level at which the printing happens in screen, default info
     blind (list)  : List of regular expressions matching variable names to blind in printout
+
+    Returns
+    -------------------
+    List of strings with contents of file to be written.
+    Needed for testing
     '''
     blind  = [] if blind is None else blind
     blind += Data.l_blind_vars
@@ -239,7 +244,7 @@ def print_pdf(
         with open(txt_path, 'w', encoding='utf-8') as ofile:
             ofile.write(message)
 
-        return
+        return l_msg
 
     for msg in l_msg:
         if   level == 20:
@@ -248,6 +253,8 @@ def print_pdf(
             log.debug(msg)
         else:
             raise ValueError(f'Invalid level: {level}')
+
+    return l_msg
 #---------------------------------------------
 def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
     d_par = {}
