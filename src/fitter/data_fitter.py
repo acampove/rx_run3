@@ -85,6 +85,9 @@ class DataFitter(BaseFitter, Cache):
         if len(value) == 0:
             raise ValueError('Passed empty dictionary of constraints')
 
+        if self._d_cns is not None:
+            raise ValueError('Cannot set constraints, constraints were already set')
+
         log.info('Using constraints')
 
         log.debug(80 * '-')
