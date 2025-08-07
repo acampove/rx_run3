@@ -138,23 +138,19 @@ class EfficiencyScanner:
         ------------------
         Same dataframe with eff column added
         '''
+        if self._yld_default < 0:
+            raise ValueError(f'Default WP yield (unitizialized?) found to be negative: {self._yld_default}')
+
+        if self._yld_default == 0:
+            raise ValueError('Default WP yield is zero')
+
         sample = self._cfg['input']['sample']
-        nick   = DecayNames.nic_from_sample(sample)
+        obj    = EfficiencyCalculator(q2bin='central', sample=sample)
+        eff, _ = obj.get_efficiency(sample = sample)
 
-        # We only need the denominator,
-        # the q2bin only matters for the numerator of the
-        # total efficiency
-        obj = EfficiencyCalculator(q2bin='central')
-        df  = obj.get_stats()
-        df  = df[df['Process'] == nick]
-
-        if len(df) != 1:
-            log.error(df)
-            raise ValueError('Not found one and only one efficiency for: {sample}/{nick}')
-
-        total = df['Total'].iloc[0]
-
-        df_tgt['eff'] = df_tgt['yield'] / total
+        # eff = self._yld_default / yld_total
+        # Therefore this should provide efficiency at given WP
+        df_tgt['eff'] = eff * df_tgt['yield'] / self._yld_default
 
         return df_tgt
     # --------------------------------
