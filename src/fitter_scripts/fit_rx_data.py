@@ -13,6 +13,7 @@ from dmu.stats.parameters      import ParameterLibrary as PL
 from dmu.generic               import utilities as gut
 from dmu.workflow.cache        import Cache
 from dmu.logging.log_store     import LogStore
+from zfit.interface            import ZfitSpace as zobs
 
 from fitter.constraint_reader  import ConstraintReader
 from fitter.data_fitter        import DataFitter
@@ -32,6 +33,7 @@ class Data:
     mva_cmb: float = 0.0
     mva_prc: float = 0.0
     log_lvl: int   = 20
+    obs    : zobs
 # ----------------------
 def _set_logs() -> None:
     '''
@@ -59,6 +61,19 @@ def _parse_args() -> None:
     Data.mva_prc = args.mva_prc
     Data.log_lvl = args.log_lvl
     Data.config  = gut.load_conf(package='fitter_data', fpath=f'{args.config}/data.yaml')
+    Data.obs     = _get_observable()
+# ----------------------
+def _get_observable() -> zobs:
+    '''
+    Returns
+    -------------
+    Zfit observable
+    '''
+    cfg_obs      = Data.config.model.observable
+    [minx, maxx] = cfg_obs.range
+    obs = zfit.Space(cfg_obs.name, minx, maxx)
+
+    return obs
 # ----------------------
 def _get_fit_name() -> str:
     '''
@@ -74,19 +89,17 @@ def _fit() -> None:
     '''
     This is where DataFitter is used
     '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 6900))
-
     with PL.parameter_schema(cfg=Data.config.model.yields),\
          Cache.turn_off_cache(val=[]),\
          sel.custom_selection(d_sel={
         'nobr0' : 'nbrem != 0',
         'bdt'   :f'mva_cmb > {Data.mva_cmb} && mva_prc > {Data.mva_prc}'}):
         ftr = LikelihoodFactory(
-            obs    = obs,
+            obs    = Data.obs,
+            q2bin  = Data.q2bin,
             sample = 'DATA_24_*',
             trigger= 'Hlt2RD_BuToKpEE_MVA',
             project= 'rx',
-            q2bin  = Data.q2bin,
             cfg    = Data.config)
         nll = ftr.run()
         cfg = ftr.get_config()
