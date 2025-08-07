@@ -91,3 +91,27 @@ def test_two_regions_common_pars() -> None:
         ftr = DataFitter(d_nll=d_nll, cfg=cfg)
         ftr.run()
 # ----------------------
+def test_with_constraints() -> None:
+    '''
+    Test fitting with constraints
+    '''
+    pdf = sut.get_model(kind='s+b')
+    dat = pdf.create_sampler(10_000)
+    nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
+
+    sel_cfg = OmegaConf.create(obj=_sel_cfg)
+    d_nll   = {'signal_region' : (nll, sel_cfg)}
+
+    cfg = gut.load_conf(package='fitter_data', fpath='tests/single_region.yaml')
+    ftr = DataFitter(d_nll=d_nll, cfg=cfg)
+
+    with pytest.raises(ValueError):
+        ftr.constraints = {} 
+
+    ftr.constraints = _constraints
+
+    with pytest.raises(ValueError):
+        ftr.constraints = _constraints
+
+    ftr.run()
+# ----------------------
