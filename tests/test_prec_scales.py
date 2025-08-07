@@ -117,12 +117,12 @@ def test_seq_scan_scales(mva_cut : str, q2bin : str, process : str) -> None:
 
     ScalesData.collect_mva_wp(process, mva_cut, q2bin, val, err)
 #-------------------------------
-def test_central_bpkst() -> None:
+@pytest.mark.parametrize('process', ['bpkskpiee', 'bdkskpiee'])
+def test_central_bxkst(process : str) -> None:
     '''
     Retrieve scales for central q2 bpkskpiee
     '''
     q2bin  = 'central'
-    process= 'bpkskpiee'
     signal = 'bpkpee'
     mva_cut= 'mva_cmb > 0.96 && mva_prc > 0.64'
     with Cache.turn_off_cache(val=['EfficiencyCalculator']),\
