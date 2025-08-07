@@ -398,12 +398,12 @@ def _df_from_lines(l_line : list[str]) -> pnd.DataFrame:
 #-------------------------------------------------------
 def pdf_to_tex(path : str, d_par : dict[str,str], skip_fixed : bool = True) -> None:
     '''
-    Takes
-
-    path: path to a `txt` file produced by stats/utilities:print_pdf
-    d_par: Dictionary mapping parameter names in this file to proper latex names
-
     Creates a latex table with the same name as `path` but `txt` extension replaced by `tex`
+
+    Parameters
+    -----------------
+    path : Path to a `txt` file produced by stats/utilities:print_pdf
+    d_par: Dictionary mapping parameter names in this file to proper latex names
     '''
 
     path = str(path)
