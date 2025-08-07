@@ -5,9 +5,9 @@ yields: &yields
   min : 0
   max : 1000000
 
-signal:
+yld_signal:
   <<: *yields
-ccbar:
+yld_ccbar:
   <<: *yields
-combinatorial:
+yld_combinatorial:
   <<: *yields
