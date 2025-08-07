@@ -3,7 +3,7 @@ Module containing EfficiencyCalculator class
 '''
 import os
 import math
-from typing import cast
+from typing import Literal, cast, overload
 
 import mplhep
 import pandas            as pnd
@@ -216,11 +216,13 @@ class EfficiencyCalculator(Cache):
     def _efficiency_from_sample(
             self,
             sample : str,
-            df     : pnd.DataFrame) -> tuple[float,float]:
+            kind   : str,
+            df     : pnd.DataFrame) -> tuple[float,float]|pnd.DataFrame:
         '''
         Parameters
         -----------------
         df     : Dataframe with yields, passed and failed for each sample
+        kind   : Controls what to return, either `value` or `dataframe`
         sample : Nickname to MC signal sample
 
         Returns
@@ -228,7 +230,17 @@ class EfficiencyCalculator(Cache):
         Tuple with:
            Efficiency value
            Error in efficiency
+
+        OR
+
+        Pandas dataframe with passed and total yields for each sample
         '''
+        if kind not in ['value', 'dataframe']:
+            raise ValueError(f'Invalid kind of return: {kind}')
+
+        if kind == 'dataframe':
+            return df
+
         nickname = DecayNames.nic_from_sample(sample)
 
         df = df[ df['Process'] == nickname ]
