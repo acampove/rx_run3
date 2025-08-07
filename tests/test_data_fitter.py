@@ -12,6 +12,15 @@ from dmu.logging.log_store import LogStore
 from fitter.data_fitter    import DataFitter
 
 log=LogStore.add_logger('fitter:test_data_fitter')
+
+_sel_cfg = {
+    'selection' : {'default' : {}, 'fit' : {}}
+}
+
+_constraints : dict[str,tuple[float,float]]= {
+    'mu' : (5280, 10),
+    'sg' : (  10,  1),
+}
 # ----------------------
 def test_single_region() -> None:
     '''
