@@ -2,6 +2,7 @@
 Module with unit tests for functions in dmu.stat.utilities
 '''
 import os
+import re
 from importlib.resources import files
 
 import numpy
@@ -119,6 +120,21 @@ def test_print_pdf():
     print_pdf(pdf,
               d_const  = d_const,
               txt_path = f'{Data.fit_dir}/utilities/print_pdf/pdf_const.txt')
+# ----------------------
+def test_blind_manager():
+    '''
+    Tests blinded_variables context manager
+    '''
+    pdf   = _get_pdf(kind='composed_nonextended')
+    regex = r'mu.*'
+
+    with sut.blinded_variables(regex_list=[regex]):
+        l_msg = print_pdf(pdf=pdf)
+
+    assert isinstance(l_msg, list)
+
+    for line in l_msg:
+        assert not re.match(regex, line)
 #----------------------------------
 def test_pdf_to_tex():
     '''
