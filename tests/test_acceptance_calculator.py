@@ -40,7 +40,7 @@ def _get_rdf(sample : str, energy : str) -> RDataFrame:
 
     return rdf
 #--------------------------
-@pytest.mark.parametrize('sample', [dn.bdkskpiee, dn.bpkskpiee, dn.bsphiee])
+@pytest.mark.parametrize('sample', dn.get_decays())
 @pytest.mark.parametrize('energy', ['8TeV', '13TeV', '14TeV'])
 def test_sample(sample : str, energy : str):
     '''
