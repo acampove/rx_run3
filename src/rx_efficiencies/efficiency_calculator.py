@@ -3,7 +3,7 @@ Module containing EfficiencyCalculator class
 '''
 import os
 import math
-from typing import Literal, cast, overload
+from typing import cast
 
 import mplhep
 import pandas            as pnd
@@ -216,13 +216,11 @@ class EfficiencyCalculator(Cache):
     def _efficiency_from_sample(
             self,
             sample : str,
-            kind   : str,
-            df     : pnd.DataFrame) -> tuple[float,float]|pnd.DataFrame:
+            df     : pnd.DataFrame) -> tuple[float,float]:
         '''
         Parameters
         -----------------
         df     : Dataframe with yields, passed and failed for each sample
-        kind   : Controls what to return, either `value` or `dataframe`
         sample : Nickname to MC signal sample
 
         Returns
@@ -230,17 +228,7 @@ class EfficiencyCalculator(Cache):
         Tuple with:
            Efficiency value
            Error in efficiency
-
-        OR
-
-        Pandas dataframe with passed and total yields for each sample
         '''
-        if kind not in ['value', 'dataframe']:
-            raise ValueError(f'Invalid kind of return: {kind}')
-
-        if kind == 'dataframe':
-            return df
-
         nickname = DecayNames.nic_from_sample(sample)
 
         df = df[ df['Process'] == nickname ]
@@ -258,13 +246,7 @@ class EfficiencyCalculator(Cache):
 
         return eff, err
     #------------------------------------------
-    @overload
-    def get_efficiency(self, sample : str, kind : Literal['value'] = 'value') -> tuple[float,float]:
-        ...
-    @overload
-    def get_efficiency(self, sample : str, kind : Literal['dataframe']) -> pnd.DataFrame:
-        ...
-    def get_efficiency(self, sample : str, kind : Literal['value', 'dataframe']= 'value') -> tuple[float,float]|pnd.DataFrame:
+    def get_efficiency(self, sample : str) -> tuple[float,float]:
         '''
         Parameters
         -------------
@@ -280,12 +262,12 @@ class EfficiencyCalculator(Cache):
         if self._copy_from_cache():
             log.info(f'Found yields cached, loading: {data_path}')
             df = pnd.read_parquet(data_path)
-            return self._efficiency_from_sample(df=df, sample=sample, kind=kind)
+            return self._efficiency_from_sample(df=df, sample=sample)
 
         log.warning('Recalculating dataframe with yields')
         df = self._get_stats()
         df.to_parquet(data_path)
 
         self._cache()
-        return self._efficiency_from_sample(df=df, sample=sample, kind=kind)
+        return self._efficiency_from_sample(df=df, sample=sample)
 #------------------------------------------
