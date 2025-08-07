@@ -2,6 +2,7 @@
 Module with functions needed to test EfficiencyCalculator class
 '''
 import pytest
+from dmu.workflow.cache                    import Cache
 from dmu.logging.log_store                 import LogStore
 from rx_selection                          import selection as sel
 from rx_efficiencies.efficiency_calculator import EfficiencyCalculator
