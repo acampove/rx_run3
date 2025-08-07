@@ -1,173 +1,117 @@
 '''
-Module meant to test DataFitter class
+Module used to test DataFitter
 '''
 import pytest
 
-from dmu.workflow.cache import Cache
-from dmu.generic        import utilities  as gut
-from rx_data.rdf_getter import RDFGetter
-from rx_selection       import selection  as sel
-from fitter.data_fitter import DataFitter
+from omegaconf             import OmegaConf
+from dmu.stats.zfit        import zfit
+from dmu.stats             import gof_calculator as goc
+from dmu.stats             import utilities      as sut
+from dmu.generic           import utilities      as gut
+from dmu.logging.log_store import LogStore
+from fitter.data_fitter    import DataFitter
 
-# -------------------------------------------
-class Data:
+log=LogStore.add_logger('fitter:test_data_fitter')
+
+_sel_cfg = {
+    'selection' : {'default' : {}, 'fit' : {}}
+}
+
+_constraints : dict[str,tuple[float,float]]= {
+    'mu' : (5280, 10),
+    'sg' : (  10,  1),
+}
+# ----------------------
+def test_single_region() -> None:
     '''
-    Used to share attributes
+    Test fitting with single signal region
     '''
-    d_block_cut = {
-        'b12': 'block == 1 || block == 2',
-        'b3' : 'block == 3',
-        'b4' : 'block == 4',
-        'b5' : 'block == 5',
-        'b6' : 'block == 6',
-        'b78': 'block == 7 || block == 8'}
-# -------------------------------------------
-def test_toy():
+    pdf = sut.get_model(kind='s+b')
+    dat = pdf.create_sampler(10_000)
+    nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
+
+    sel_cfg = {'default' : {}, 'fit' : {}}
+    sel_cfg = OmegaConf.create(obj=sel_cfg)
+    d_nll   = {'signal_region' : (nll, sel_cfg)}
+
+    cfg = gut.load_conf(package='fitter_data', fpath='tests/single_region.yaml')
+    ftr = DataFitter(d_nll=d_nll, cfg=cfg)
+    ftr.run()
+# ----------------------
+def test_two_regions() -> None:
     '''
-    Test using toy data
+    Test simultaneous fit with two regions
     '''
-    cfg = gut.load_conf(
-        package='fitter_data',
-        fpath  ='tests/data_toy.yaml')
-    with Cache.turn_off_cache(val=True):
-        ftr = DataFitter(
-            sample = 'data_toy',
-            trigger= '',
-            project= '',
-            q2bin  = '',
-            cfg    = cfg)
+    obs     = None
+
+    pdf_001 = sut.get_model(obs=obs, kind='s+b', suffix='001')
+    dat_001 = pdf_001.create_sampler(10_000)
+    nll_001 = zfit.loss.ExtendedUnbinnedNLL(data=dat_001, model=pdf_001)
+
+    pdf_002 = sut.get_model(obs=obs, kind='s+b', suffix='002')
+    dat_002 = pdf_002.create_sampler(10_000)
+    nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
+
+    sel_cfg = {'default' : {}, 'fit' : {}}
+    sel_cfg = OmegaConf.create(obj=sel_cfg)
+    d_nll   = {
+        'region_001' : (nll_001, sel_cfg),
+        'region_002' : (nll_002, sel_cfg),
+    }
+
+    with goc.GofCalculator.disabled(True):
+        cfg = gut.load_conf(package='fitter_data', fpath='tests/two_regions.yaml')
+        ftr = DataFitter(d_nll=d_nll, cfg=cfg)
         ftr.run()
-# -------------------------------------------
-def test_reso_muon():
+# ----------------------
+def test_two_regions_common_pars() -> None:
     '''
-    Test using toy data
+    Test simultaneous fit with two regions
+    and common parameters
     '''
-    cfg = gut.load_conf(
-        package='fitter_data',
-        fpath  ='reso/muon/data.yaml')
+    obs     = None
 
-    with Cache.turn_off_cache(val=False), \
-         sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
-         RDFGetter.max_entries(value=100_000):
+    pdf_001 = sut.get_model(obs=obs, kind='s+b', suffix='001')
+    dat_001 = pdf_001.create_sampler(10_000)
+    nll_001 = zfit.loss.ExtendedUnbinnedNLL(data=dat_001, model=pdf_001)
 
-        ftr = DataFitter(
-            sample = 'DATA_24_MagDown_24c2',
-            trigger= 'Hlt2RD_BuToKpMuMu_MVA',
-            project= 'rx',
-            q2bin  = 'jpsi',
-            cfg    = cfg)
+    pdf_002 = sut.get_model(obs=obs, kind='s+b', suffix='002')
+    dat_002 = pdf_002.create_sampler(10_000)
+    nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
+
+    sel_cfg = {'default' : {}, 'fit' : {}}
+    sel_cfg = OmegaConf.create(obj=sel_cfg)
+    d_nll   = {
+        'region_001' : (nll_001, sel_cfg),
+        'region_002' : (nll_002, sel_cfg),
+    }
+
+    with goc.GofCalculator.disabled(True):
+        cfg = gut.load_conf(package='fitter_data', fpath='tests/two_regions.yaml')
+        ftr = DataFitter(d_nll=d_nll, cfg=cfg)
         ftr.run()
-# -------------------------------------------
-@pytest.mark.parametrize('q2bin', ['central'])
-def test_rare_muon(q2bin : str):
+# ----------------------
+def test_with_constraints() -> None:
     '''
-    Test using toy data
+    Test fitting with constraints
     '''
-    cfg = gut.load_conf(
-        package='fitter_data',
-        fpath  ='rare/muon/data.yaml')
+    pdf = sut.get_model(kind='s+b')
+    dat = pdf.create_sampler(10_000)
+    nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
 
-    with Cache.turn_off_cache(val=False):
-        ftr = DataFitter(
-            sample = 'DATA_24_*',
-            trigger= 'Hlt2RD_BuToKpMuMu_MVA',
-            project= 'rx',
-            q2bin  = q2bin,
-            cfg    = cfg)
-        ftr.run()
-# -------------------------------------------
-@pytest.mark.parametrize('block', ['b12', 'b3', 'b4', 'b5', 'b6', 'b78'])
-def test_reso_electron(block : str):
-    '''
-    Test fitting resonant electron channel
-    '''
-    cfg = gut.load_conf(
-        package='fitter_data',
-        fpath  ='reso/electron/data.yaml')
+    sel_cfg = OmegaConf.create(obj=_sel_cfg)
+    d_nll   = {'signal_region' : (nll, sel_cfg)}
 
-    block_cut = Data.d_block_cut[block]
+    cfg = gut.load_conf(package='fitter_data', fpath='tests/single_region.yaml')
+    ftr = DataFitter(d_nll=d_nll, cfg=cfg)
 
-    with Cache.turn_off_cache(val=True), \
-        sel.custom_selection(d_sel={
-            'block' : block_cut,
-            'brm12' : 'nbrem != 0',
-            'mass'  : '(1)'}):
+    with pytest.raises(ValueError):
+        ftr.constraints = {} 
 
-        ftr = DataFitter(
-            name   = block,
-            sample = 'DATA_24_*',
-            trigger= 'Hlt2RD_BuToKpEE_MVA',
-            project= 'rx',
-            q2bin  = 'jpsi',
-            cfg    = cfg)
-        ftr.run()
-# -------------------------------------------
-@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-def test_rare_electron(q2bin : str):
-    '''
-    Test fitting rare electron channel
-    '''
-    cfg = gut.load_conf(
-        package='fitter_data',
-        fpath  ='rare/electron/data.yaml')
+    ftr.constraints = _constraints
 
-    with Cache.turn_off_cache(val=['DataFitter']),\
-        sel.custom_selection(d_sel={
-            'nobr0' : 'nbrem != 0',
-            'bdt'   : 'mva_cmb > 0.60 && mva_prc > 0.40'}):
-        ftr = DataFitter(
-            name   = '060_040',
-            sample = 'DATA_24_*',
-            trigger= 'Hlt2RD_BuToKpEE_MVA',
-            project= 'rx',
-            q2bin  = q2bin,
-            cfg    = cfg)
-        ftr.run()
-# -------------------------------------------
-def test_high_q2_track():
-    '''
-    Test fitting rare electron in high q2
-    with track based cut and adding brem 0 category
-    '''
-    cfg = gut.load_conf(
-        package='fitter_data',
-        fpath  ='rare/electron/data.yaml')
+    with pytest.raises(ValueError):
+        ftr.constraints = _constraints
 
-    with Cache.turn_off_cache(val=['DataFitter']),\
-        sel.custom_selection(d_sel={
-            'q2'    : 'q2_track > 14300000 && q2 < 22000000',
-            'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
-        ftr = DataFitter(
-            sample = 'DATA_24_*',
-            trigger= 'Hlt2RD_BuToKpEE_MVA',
-            project= 'rx',
-            q2bin  = 'high',
-            cfg    = cfg)
-        ftr.run()
-# -------------------------------------------
-@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-def test_rare_misid_electron(q2bin : str):
-    '''
-    Test fitting rare electron channel
-    '''
-    cfg = gut.load_conf(
-        package='fitter_data',
-        fpath  ='misid/electron/data.yaml')
-
-    l1_in_cr = '(L1_PROBNN_E < 0.2) || (L1_PID_E < 3.0)'
-    l2_in_cr = '(L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)'
-
-    with Cache.turn_off_cache(val=['DataFitter']),\
-        sel.custom_selection(d_sel={
-            'nobr0' : 'nbrem != 0',
-            'pid_l' : f'({l1_in_cr}) || ({l2_in_cr})',
-            'bdt'   : 'mva_cmb > 0.80 && mva_prc > 0.60'}):
-        ftr = DataFitter(
-            name   = '080_060',
-            sample = 'DATA_24_*',
-            trigger= 'Hlt2RD_BuToKpEE_MVA_ext',
-            project= 'rx',
-            q2bin  = q2bin,
-            cfg    = cfg)
-        ftr.run()
-# -------------------------------------------
+    ftr.run()
+# ----------------------

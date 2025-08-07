@@ -3,15 +3,18 @@
 
 output_directory : reso/electron/data
 model:
+  yields    : model/yields/reso_electron.yaml
   observable:
     name : B_const_mass_M
     range:
       - 5000
       - 6000
   components:
-    background : reso/electron/combinatorial.yaml
-    signal     : reso/electron/signal.yaml
-    ccbar      : reso/electron/ccbar.yaml
+    combinatorial : reso/electron/combinatorial.yaml
+    ccbar         : reso/electron/ccbar.yaml
+    signal        : reso/electron/signal.yaml
+  constraints:
+    yields : []
 fit:
   strategy  :
     retry   :
@@ -24,4 +27,3 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
   d_leg :
     Gauss_ext       : Signal
     Exponential_ext : Combinatorial
-

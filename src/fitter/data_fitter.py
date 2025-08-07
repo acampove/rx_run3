@@ -1,189 +1,137 @@
 '''
 Module containing DataFitter class
 '''
-from typing import cast
-
-from omegaconf                import DictConfig, OmegaConf
-
-from dmu.workflow.cache       import Cache
-from dmu.stats.zfit           import zfit
-from dmu.stats                import utilities  as sut
-from dmu.logging.log_store    import LogStore
-from rx_selection             import selection  as sel
-
-from zfit.interface           import ZfitPDF    as zpdf
-from zfit.interface           import ZfitSpace  as zobs
-from fitter.data_preprocessor import DataPreprocessor
-from fitter.base_fitter       import BaseFitter
-from fitter.data_model        import DataModel
-from fitter.constraint_reader import ConstraintReader
+from omegaconf                 import DictConfig
+from dmu.logging.log_store     import LogStore
+from dmu.workflow.cache        import Cache
+from dmu.stats.fitter          import Fitter
+from dmu.stats                 import utilities as sut
+from fitter.base_fitter        import BaseFitter
+from zfit.loss                 import ExtendedUnbinnedNLL as NLL
 
 log=LogStore.add_logger('fitter:data_fitter')
-# ------------------------
+# ----------------------
 class DataFitter(BaseFitter, Cache):
     '''
-    Fitter for data
+    Class meant to take likelihoods for different regions
+    and fitting configuration, e.g. constraints and:
+
+    - Build single likelihood with proper constraints
+    - Minimize it
+    - Save results including plots
     '''
-    # ------------------------
+    # ----------------------
     def __init__(
-            self,
-            sample  : str,
-            trigger : str,
-            project : str,
-            q2bin   : str,
-            cfg     : DictConfig,
-            name    : str|None = None):
-        '''
-        name   : Identifier for fit, e.g. block. This is optional
-        cfg    : configuration for the fit as a DictConfig object
-        sample : Identifies sample e.g. DATA_24_MagUp...
-        trigger: Hlt2RD...
-        project: E.g. rx
-        q2bin  : E.g. central
-        cfg    : Configuration for the fit to data
-        '''
-        BaseFitter.__init__(self)
-
-        self._sample    = sample
-        self._trigger   = trigger
-        self._project   = project
-        self._q2bin     = q2bin
-        self._cfg       = cfg
-        self._name      = name
-        self._base_path = self._get_base_path()
-
-        Cache.__init__(
-            self,
-            out_path = self._base_path,
-            cuts     = sel.selection(process=sample, trigger=trigger, q2bin=q2bin),
-            config   = OmegaConf.to_container(cfg, resolve=True))
-
-        self._obs = self._make_observable()
-    # ------------------------
-    def _get_base_path(self) -> str:
-        '''
-        Returns directory where outputs will go
-        '''
-        sample = self._sample.replace('*', 'p')
-        if self._name is not None:
-            sample = f'{self._cfg.output_directory}/{sample}/{self._name}/{self._trigger}_{self._project}_{self._q2bin}'
-        else:
-            sample = f'{self._cfg.output_directory}/{sample}/{self._trigger}_{self._project}_{self._q2bin}'
-
-        return sample
-    # ------------------------
-    def _make_observable(self) -> zobs:
-        '''
-        Will return zfit observable
-        '''
-        name        = self._cfg.model.observable.name
-        [minx, maxx]= self._cfg.model.observable.range
-
-        return zfit.Space(name, limits=(minx, maxx))
-    # ------------------------
-    # TODO: ConstraintReader needs to be taken out of this class
-    # It should be initialized outside and passed
-    # Because the class needs DataFitter to calculate constraints
-    def _constraints_from_model(self, model : zpdf) -> dict[str,tuple[float,float]]:
+        self,
+        d_nll : dict[str,tuple[NLL,DictConfig]],
+        cfg   : DictConfig) -> None:
         '''
         Parameters
-        ----------------
-        model: Model needed to fit the data
-
-        Returns
-        ----------------
-        Dictionary with:
-
-        Key: Name of parameter
-        Value: Tuple value, error. Needed to apply constraints
+        -------------
+        d_nll:  Dictionary with:
+            Key  : Name of region where to fig, e.g. signal, control
+            Value:
+                - ExtendedBinnedNLL instance
+                - Configuration storing the selections used by default and in the fit
+        cfg  : Dictionary with configuration used for fit with:
+            - Output directory
+            - Fit settings
+            - Plotting settings
         '''
-        log.info('Getting constraints')
+        self._d_nll = d_nll
+        self._cfg   = cfg
+        self._d_cns : dict[str,tuple[float,float]]|None = None
 
-        s_par   = model.get_params()
-        l_par   = [ par.name for par in s_par ]
-        obj     = ConstraintReader(parameters = l_par, q2bin = self._q2bin)
-        d_cns   = obj.get_constraints()
-
-        log.debug(90 * '-')
-        log.debug(f'{"Name":<20}{"Value":<20}{"Error":<20}')
-        log.debug(90 * '-')
-        for name, (val, err) in d_cns.items():
-            log.debug(f'{name:<50}{val:<20.3f}{err:<20.3f}')
-        log.debug(90 * '-')
-
-        return d_cns
+        BaseFitter.__init__(self)
+        # TODO: Is the likelihood hashable?
+        # If so, it should be here
+        Cache.__init__(
+            self,
+            out_path = self._cfg.output_directory,
+            cfg      = cfg)
     # ----------------------
-    def _update_trigger_project(self) -> tuple[str,str]:
+    def _get_full_nll(self) -> NLL:
         '''
         Returns
         -------------
-        Tuple with trigger and project. If trigger does not end with ext
-        return _trigger and _project
-
-        If trigger ends with ext, switch to noPID trigger and nopid project
-        because we are working with PID control region.
+        Full likelihood, i.e. sum over all the models
         '''
-        if not self._trigger.endswith('_ext'):
-            return self._trigger, self._project
+        l_nll = [ nll for nll, _ in self._d_nll.values() ]
+        nll   = sum(l_nll[1:], l_nll[0])
 
-        trigger = self._trigger.replace('_ext', '_noPID')
-        project = 'nopid'
+        return nll
+    # ----------------------
+    @property
+    def constraints(self) -> dict[str,tuple[float,float]]:
+        '''
+        Returns dictionary with constraints where:
+        Key  : Name of parameter to constrain
+        Value: Tuple with mu and sigma for Gaussian constrain
+        '''
+        if self._d_cfg is None:
+            return {}
 
-        log.info(f'Found ext trigger, overriding with: {trigger}/{project}')
+        return self._d_cfg
+    # ----------------------
+    @constraints.setter
+    def constraints(self, value : dict[str,tuple[float,float]]):
+        '''
+        Parameters
+        -------------
+        value: Dictionary with:
+            key  : Name of the parameter to constrain
+            value: Tuple with mu and sigma associated to constrain
+        '''
+        if len(value) == 0:
+            raise ValueError('Passed empty dictionary of constraints')
 
-        return trigger, project
-    # ------------------------
+        if self._d_cns is not None:
+            raise ValueError('Cannot set constraints, constraints were already set')
+
+        log.info('Using constraints')
+
+        log.debug(80 * '-')
+        log.debug(f'{"Parameter":<50}{"Value":<15}{"Error":<15}')
+        log.debug(80 * '-')
+        for par_name, (val, err) in value.items():
+            log.debug(f'{par_name:<50}{val:<15.3f}{err:<15.3f}')
+        log.debug(80 * '-')
+
+        self._d_cns = value
+    # ----------------------
     def run(self) -> DictConfig:
         '''
-        Runs fit
+        Entry point for fitter
 
         Returns
-        ------------
-        DictConfig object with fitting results
+        -------------
+        OmegaConf DictConfig with fitting parameters
         '''
+        nll    = self._get_full_nll()
+        l_cfg  = [ cfg for _, cfg in self._d_nll.values() ]
+        l_nam  = list(self._d_nll)
 
-        result_path = f'{self._out_path}/parameters.yaml'
-        if self._copy_from_cache():
-            res = OmegaConf.load(result_path)
-            res = cast(DictConfig, res)
+        if self._d_cns is not None:
+            cns= Fitter.get_gaussian_constraints(obj=nll, cfg=self._d_cns)
+            nll= nll.create_new(constraints=cns) # type: ignore
 
-            return res
+        res, _ = Fitter.minimize(nll=nll, cfg=self._cfg.fit)
 
-        dpr  = DataPreprocessor(
-            obs    = self._obs,
-            q2bin  = self._q2bin,
-            sample = self._sample,
-            trigger= self._trigger,
-            out_dir= self._base_path,
-            project= self._project,
-            wgt_cfg= None) # Do not need weights for data
-        data = dpr.get_data()
+        res.hesse(name='minuit_hesse')
 
-        trigger, project = self._update_trigger_project()
+        for model, data, cfg, name in zip(nll.model, nll.data, l_cfg, l_nam):
+            out_path = f'{self._out_path}/{name}'
 
-        mod  = DataModel(
-            name   = self._name,
-            cfg    = self._cfg,
-            obs    = self._obs,
-            q2bin  = self._q2bin,
-            trigger= trigger,
-            project= project)
-        model= mod.get_model()
-        d_cns= self._constraints_from_model(model=model)
-
-        res  = self._fit(data=data, model=model, d_cns=d_cns, cfg=self._cfg.fit)
-        self._save_fit(
-            cuts     = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin),
-            cfg      = self._cfg.plots,
-            data     = data,
-            model    = model,
-            res      = res,
-            d_cns    = d_cns,
-            out_path = self._out_path)
+            self._save_fit(
+                cut_cfg  = cfg.selection,
+                plt_cfg  = self._cfg.plots,
+                data     = data,
+                model    = model,
+                res      = res,
+                d_cns    = self._d_cns,
+                out_path = out_path)
 
         cres = sut.zres_to_cres(res=res)
 
-        self._cache()
-
         return cres
-# ------------------------
+# ----------------------

@@ -4,11 +4,10 @@ Module holding DataPreprocessor class
 from typing  import cast
 
 import numpy
-from omegaconf              import ListConfig
+from omegaconf              import DictConfig
 from ROOT                   import RDataFrame
 from dmu.workflow.cache     import Cache
 from dmu.stats.zfit         import zfit
-from dmu.generic            import utilities  as gut
 from dmu.stats              import utilities  as sut
 from dmu.logging.log_store  import LogStore
 from zfit.interface         import ZfitData   as zdata
@@ -20,6 +19,8 @@ from rx_misid.sample_weighter import SampleWeighter
 
 log=LogStore.add_logger('fitter:data_preprocessor')
 # ------------------------
+# TODO: Shold this class take a dictionary of cuts? 
+# Should this be made into a context manager?
 class DataPreprocessor(Cache):
     '''
     Class in charge of providing datasets for fitting by:
@@ -37,7 +38,8 @@ class DataPreprocessor(Cache):
         trigger : str,
         project : str,
         q2bin   : str,
-        wgt_cfg : ListConfig|None,
+        wgt_cfg : DictConfig|None,
+        is_sig  : bool               = True,
         cut     : dict[str,str]|None = None):
         '''
         Parameters
@@ -48,8 +50,12 @@ class DataPreprocessor(Cache):
         trigger: e.g. Hlt2RD...
         project: e.g. rx, nopid
         q2bin  : e.g. central
-        wgt_cfg: OmegaConf's version of a list of strings, each representing a path to a YAML file with configs
-                 to extract weights
+        wgt_cfg: Dictionary with:
+                 key: Representing kind of weight, e.g. pid
+                 value: Actual configuration for kind of weight
+
+        is_sig : If true (default) it will pick PID weights for signal region.
+                 Otherwise it will use misID control region weights.
         cut    : Selection defining this component category, represented by dictionary where the key are labels
                  and the values are the expressions of the cut
         '''
@@ -60,6 +66,7 @@ class DataPreprocessor(Cache):
         self._q2bin  = q2bin
         self._wgt_cfg= wgt_cfg
         self._rdf    = self._get_rdf(cut=cut)
+        self._is_sig = is_sig
         self._rdf_uid= None if self._rdf is None else self._rdf.uid
 
         super().__init__(
@@ -77,7 +84,7 @@ class DataPreprocessor(Cache):
         -------------------
         ROOT dataframe after selection and with Unique identifier attached as uid
         '''
-        log.debug(f'Retrieving dataframe for {self._sample}/{self._trigger}')
+        log.debug(f'Retrieving dataframe for {self._sample}/{self._trigger}/{self._project}')
         gtr = RDFGetter(
             sample  =self._sample,
             trigger =self._trigger,
@@ -113,8 +120,9 @@ class DataPreprocessor(Cache):
             log.debug('No weight configuration found, using only default weights')
             return wgt
 
-        for kind in self._wgt_cfg:
-            new_wgt = self._get_extra_weight(kind=kind)
+        for kind, cfg in self._wgt_cfg.items():
+            kind    = str(kind)
+            new_wgt = self._get_extra_weight(kind=kind, cfg=cfg)
             if new_wgt.shape != wgt.shape:
                 raise ValueError(
                     f'''Shapes of original array and {kind} weights differ:
@@ -124,40 +132,43 @@ class DataPreprocessor(Cache):
 
         return wgt
     # ----------------------
-    def _get_extra_weight(self, kind : str) -> numpy.ndarray:
+    def _get_extra_weight(self, kind : str, cfg : DictConfig) -> numpy.ndarray:
         '''
         Parameters
         -------------
         kind: E.g. PID, Dalitz
+        cfg : Configuration needed to extract weights
 
         Returns
         -------------
         Array of weights
         '''
         if kind == 'PID':
-            arr_wgt = self._get_pid_weights()
+            arr_wgt = self._get_pid_weights(cfg=cfg)
         else:
             raise ValueError(f'Invalid type of weight {kind}')
 
         return arr_wgt
     # ----------------------
-    def _get_pid_weights(self) -> numpy.ndarray:
+    def _get_pid_weights(self, cfg : DictConfig) -> numpy.ndarray:
         '''
+        Parameters
+        -------------
+        cfg : Dictionary containing configuration for PID, i.e. it should have keys
+              `splitting` and `weights` as used in the rx_misid project
+
         Returns
         -------------
         Array with PID weights
         '''
-        # Use default config in rx_misid
-        cfg   = gut.load_conf(package='rx_misid_data', fpath='splitting.yaml')
-        spl   = SampleSplitter(rdf = self._rdf, cfg = cfg)
+        spl   = SampleSplitter(rdf = self._rdf, cfg = cfg.splitting)
         df    = spl.get_sample()
 
-        cfg   = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
         wgt   = SampleWeighter(
             df    = df,
-            cfg   = cfg,
+            cfg   = cfg.weights,
             sample= self._sample,
-            is_sig= False) # We want weights for the control region
+            is_sig= self._is_sig) # We want weights for the control region
         df  = wgt.get_weighted_data()
 
         arr_wgt = df.attrs['pid_weights']

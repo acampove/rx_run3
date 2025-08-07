@@ -4,6 +4,7 @@ Module with SimFitter class
 
 from typing import cast
 
+import yaml
 from omegaconf                import DictConfig, OmegaConf
 
 from dmu.stats.zfit           import zfit
@@ -33,12 +34,12 @@ class SimFitter(BaseFitter, Cache):
     def __init__(
         self,
         component : str,
-        trigger : str,
-        project : str,
-        q2bin   : str,
-        cfg     : DictConfig,
-        obs     : zobs,
-        name    : str|None = None):
+        trigger   : str,
+        project   : str,
+        q2bin     : str,
+        cfg       : DictConfig,
+        obs       : zobs,
+        name      : str|None = None):
         '''
         Parameters
         --------------------
@@ -233,9 +234,10 @@ class SimFitter(BaseFitter, Cache):
             return None, 0, None
 
         res   = self._fit(data=data, model=model, cfg=self._cfg.fit)
+
         self._save_fit(
-            cuts     = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin),
-            cfg      = self._cfg.plots,
+            cut_cfg  = self._get_cut_config(),
+            plt_cfg  = self._cfg.plots,
             data     = data,
             model    = model,
             res      = res,
@@ -245,6 +247,21 @@ class SimFitter(BaseFitter, Cache):
         model = self._fix_tails(pdf=model, pars=cres)
 
         return model, sumw, res
+    # ----------------------
+    def _get_cut_config(self) -> DictConfig:
+        '''
+        Returns
+        -------------
+        Dictionary with:
+            Keys  : `fit`, `default`
+            Values: Selection for data that was fitted and default
+        '''
+        cfg        = {}
+        cfg['fit'] = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin)
+        with sel.custom_selection(d_sel={}, force_override=True):
+            cfg['default'] = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin)
+
+        return OmegaConf.create(cfg)
     # ------------------------
     # TODO: Fractions need to be parameters to be constrained
     def _get_fraction(
@@ -385,24 +402,28 @@ class SimFitter(BaseFitter, Cache):
         - KDE PDF after fit
         - None if there are fewer than _min_kde_entries
         '''
-        model_name = self._cfg.categories.main.model
-        data       = self._d_data['main']
+        model_name  = self._cfg.categories.main.model
+        data        = self._d_data['main']
 
-        KdeBuilder = getattr(zfit.pdf, model_name)
-        if data.n_events < self._min_kde_entries:
+        kde_builder = getattr(zfit.pdf, model_name)
+        if data.nevents < self._min_kde_entries:
             pdf = None
         else:
             if 'options' in self._cfg.fit:
-                cfg_fit= self._cfg.fit.get('options')
-                kwargs = OmegaConf.to_container(cfg_fit, resolve=True)
+                cfg    = self._cfg.fit.get('options')
+                kwargs = OmegaConf.to_container(cfg, resolve=True)
+                kwargs = cast(dict, kwargs)
             else:
                 kwargs = {}
 
-            pdf = KdeBuilder(obs=self._obs, data=data, name=self._component, **kwargs)
+            log.debug('KDE options:')
+            log.debug(yaml.dump(kwargs))
+
+            pdf = kde_builder(obs=self._obs, data=data, name=self._component, **kwargs)
 
         self._save_fit(
-            cuts     = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin),
-            cfg      = self._cfg.plots,
+            cut_cfg  = self._get_cut_config(),
+            plt_cfg  = self._cfg.plots,
             data     = data,
             model    = pdf,
             res      = None,

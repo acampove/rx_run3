@@ -1,11 +1,13 @@
 output_directory : reso/electron/signal
 categories:
   brem_one :
-    selection : nbrem == 1
+    selection : 
+      brem1 : nbrem == 1
     model :
       - dscb
   brem_two :
-    selection : nbrem == 2
+    selection : 
+      brem2 : nbrem == 2
     model :
       - dscb
 sample        : Bu_JpsiK_ee_eq_DPC

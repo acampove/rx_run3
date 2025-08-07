@@ -1,7 +1,7 @@
 '''
 This module contains BaseFitter
 '''
-from typing                   import cast
+from typing                   import Mapping, cast, Any
 import matplotlib.pyplot as plt
 
 from omegaconf                import OmegaConf, DictConfig
@@ -10,7 +10,6 @@ from dmu.stats.zfit_plotter   import ZFitPlotter
 from dmu.generic              import utilities  as gut
 from dmu.stats                import utilities  as sut
 from dmu.logging.log_store    import LogStore
-from rx_selection             import selection  as sel
 from zfit.result              import FitResult  as zres
 from zfit.interface           import ZfitData   as zdata
 from zfit.interface           import ZfitPDF    as zpdf
@@ -33,6 +32,7 @@ class BaseFitter:
         self._trigger : str = ''
         self._project : str = ''
         self._q2bin   : str = ''
+        self._sig_yld : str = 'yld_signal' # Used to locate signal yield in order to calculate sensitivity
     # ------------------------
     def _fit(
             self,
@@ -80,12 +80,12 @@ class BaseFitter:
 
         cres = sut.zres_to_cres(res=res)
 
-        if 'nsignal' not in cres:
-            log.debug('Missing nsig entry, cannot get sensitivity')
+        if self._sig_yld not in cres:
+            log.info('Missing nsig entry, cannot get sensitivity')
             return -1
 
-        value = cres['nsignal']['value']
-        error = cres['nsignal']['error']
+        value = cres[self._sig_yld]['value']
+        error = cres[self._sig_yld]['error']
 
         return 100 * error / value
     # --------------------------
@@ -109,11 +109,13 @@ class BaseFitter:
 
         return brem_cuts
     # --------------------------
-    def _get_selection_text(self, cuts : dict[str,str]) -> tuple[str,str]:
+    def _get_selection_text(self, selection : DictConfig) -> tuple[str,str]:
         '''
         Parameters
         --------------
-        cuts: Dictionary with cuts used for fit
+        selection: Object holding fitting and default selection
+                   It should contain the fit and default selections in
+                   the `fit` and `default` keys
 
         Returns
         --------------
@@ -127,26 +129,21 @@ class BaseFitter:
         if self._sample == 'NA':
             return '', ''
 
-        brem_cuts = self._brem_cuts_from_cuts(cuts=cuts)
-        # Pick default selection
-        with sel.custom_selection(d_sel={}, force_override=True):
-            d_sel_def = sel.selection(
-                process=self._sample,
-                trigger=self._trigger,
-                q2bin  =self._q2bin)
+        cuts_def  = selection.default
+        cuts_fit  = selection.fit
+        brem_cuts = self._brem_cuts_from_cuts(cuts=cuts_fit)
 
         l_expr = []
         # Collect all the cuts that are different
         # from default selection
-        for name, expr in cuts.items():
-            if name not in d_sel_def:
-                expr = cuts[name]
-                l_expr.append(expr)
+        for name, fit_expr in cuts_fit.items():
+            if name not in cuts_def:
+                l_expr.append(fit_expr)
                 continue
 
-            def_expr = d_sel_def[name]
-            if expr != def_expr:
-                l_expr.append(expr)
+            def_expr = cuts_def[name]
+            if fit_expr != def_expr:
+                l_expr.append(fit_expr)
 
         # Remove differences in brem, will be done separately
         l_expr_no_brem = [ expr for expr in l_expr if 'nbrem' not in expr ]
@@ -176,16 +173,16 @@ class BaseFitter:
         return nentries
     # --------------------------
     def _get_text(
-            self,
-            data : zdata,
-            res  : zres|None,
-            cuts : dict[str,str]) -> tuple[str,str]:
+        self,
+        data      : zdata,
+        res       : zres|None,
+        selection : DictConfig) -> tuple[str,str]:
         '''
         Parameters
         --------------
         data: Zfit data used for fit
         res : zfit result object
-        cuts: Dictionary with cuts used to get data
+        Selection: Object storing selections for `fit` and `default` keys
 
         Returns
         --------------
@@ -195,7 +192,7 @@ class BaseFitter:
         - Text that goes inside plot with selection information
         '''
         nentries          = self._entries_from_data(data=data)
-        sel_txt, brem_txt = self._get_selection_text(cuts=cuts)
+        sel_txt, brem_txt = self._get_selection_text(selection=selection)
 
         sensitivity = self._get_sensitivity(res=res)
         title       = f'$\\delta={sensitivity:.2f}$%; Entries={nentries:.0f}; Brem:{brem_txt}'
@@ -203,19 +200,21 @@ class BaseFitter:
         return title, sel_txt
     # ------------------------
     def _save_fit(
-            self,
-            cuts     : dict[str,str],
-            cfg      : DictConfig,
-            out_path : str,
-            model    : zpdf|None,
-            res      : zres|None,
-            data     : zdata,
-            d_cns    : dict[str,tuple[float,float]]|None=None) -> None:
+        self,
+        cut_cfg  : DictConfig,
+        plt_cfg  : DictConfig,
+        out_path : str,
+        model    : zpdf|None,
+        res      : zres|None,
+        data     : zdata,
+        d_cns    : dict[str,tuple[float,float]]|None=None) -> None:
         '''
         Parameters
         --------------
-        cuts     : Selection used for fit
-        cfg      : Plotting configuration
+        cut_cfg  : Selection used for fit in DictConfig object
+                   Should contain keys `default` and `fit` the values
+                   are the selection.
+        plt_cfg  : Plotting configuration
         out_path : Directory where fit will be saved
         model    : PDF from fit, can be None if dataset was empty
         res      : Zfit result object, can be None if fit was to get a KDE
@@ -223,23 +222,20 @@ class BaseFitter:
         d_cns    : Dictionary mapping parameter name to value error tuple.
                    Used for constraining that parameter
         '''
-        plt_cfg = OmegaConf.to_container(cfg, resolve=True)
-        plt_cfg = cast(dict, plt_cfg)
-
         # If no entries were present
         # There will not be PDF
-        title, text         = self._get_text(data=data, res=res, cuts=cuts)
+        title, text         = self._get_text(data=data, res=res, selection=cut_cfg)
         plt_cfg['title'   ] = title
         plt_cfg['ext_text'] = text
 
         if model is not None:
             ptr = ZFitPlotter(data=data, model=model)
-            ptr.plot(**plt_cfg)
+            ptr.plot(**cast(Mapping[str, Any], plt_cfg)) # Need this casting to remove error from pyright
         else:
             plt.figure()
 
         sel_path = f'{out_path}/selection.yaml'
-        gut.dump_json(cuts, sel_path)
+        gut.dump_json(cut_cfg, sel_path)
 
         sut.save_fit(
             data   = data,

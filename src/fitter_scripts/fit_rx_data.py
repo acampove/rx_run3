@@ -7,13 +7,19 @@ import os
 import argparse
 from typing import ClassVar
 
-from omegaconf             import DictConfig
-from dmu.generic           import utilities as gut
-from dmu.workflow.cache    import Cache
-from dmu.logging.log_store import LogStore
+from omegaconf                 import DictConfig
+from dmu.stats.zfit            import zfit
+from dmu.stats.parameters      import ParameterLibrary as PL
+from dmu.generic               import utilities as gut
+from dmu.stats                 import utilities as sut
+from dmu.workflow.cache        import Cache
+from dmu.logging.log_store     import LogStore
+from zfit.interface            import ZfitSpace as zobs
 
-from fitter.data_fitter    import DataFitter
-from rx_selection          import selection as sel
+from fitter.constraint_reader  import ConstraintReader
+from fitter.data_fitter        import DataFitter
+from fitter.likelihood_factory import LikelihoodFactory
+from rx_selection              import selection as sel
 
 log=LogStore.add_logger('fitter:fit_rx_data')
 # ----------------------
@@ -27,10 +33,26 @@ class Data:
     q2bin  : str   = ''
     mva_cmb: float = 0.0
     mva_prc: float = 0.0
+    log_lvl: int   = 20
+    obs    : zobs
+# ----------------------
+def _set_logs() -> None:
+    '''
+    Will put classes in a given logging level
+    '''
+    LogStore.set_level('dmu:stats:model_factory'              ,           30)
+    LogStore.set_level('rx_data:rdf_getter'                   ,           30)
+    LogStore.set_level('rx_efficiencies:efficiency_calculator',           30)
+    LogStore.set_level('rx_selection:truth_matching'          ,           30)
+    LogStore.set_level('rx_selection:selection'               ,           30)
+    LogStore.set_level('fitter:prec_scales'                   , Data.log_lvl)
+    LogStore.set_level('fitter:constraint_reader'             , Data.log_lvl)
+    LogStore.set_level('fitter:fit_rx_data'                   , Data.log_lvl)
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to fit RX data')
     parser.add_argument('-c', '--config' , type=str  , help='Name of configuration, e.g. rare/electron', required=True)
+    parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[10, 20, 30], default=Data.log_lvl)
     parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin',              choices=Data.l_q2bin, required=True)
     parser.add_argument('-C', '--mva_cmb', type=float, help='Cut on combinatorial MVA working point'   , required=True)
     parser.add_argument('-P', '--mva_prc', type=float, help='Cut on part reco MVA working point'       , required=True)
@@ -39,7 +61,21 @@ def _parse_args() -> None:
     Data.q2bin   = args.q2bin
     Data.mva_cmb = args.mva_cmb
     Data.mva_prc = args.mva_prc
+    Data.log_lvl = args.log_lvl
     Data.config  = gut.load_conf(package='fitter_data', fpath=f'{args.config}/data.yaml')
+    Data.obs     = _get_observable()
+# ----------------------
+def _get_observable() -> zobs:
+    '''
+    Returns
+    -------------
+    Zfit observable
+    '''
+    cfg_obs      = Data.config.model.observable
+    [minx, maxx] = cfg_obs.range
+    obs = zfit.Space(cfg_obs.name, minx, maxx)
+
+    return obs
 # ----------------------
 def _get_fit_name() -> str:
     '''
@@ -55,17 +91,20 @@ def _fit() -> None:
     '''
     This is where DataFitter is used
     '''
-    with Cache.turn_off_cache(val=[]),\
-         sel.custom_selection(d_sel={
-        'nobr0' : 'nbrem != 0',
-        'bdt'   :f'mva_cmb > {Data.mva_cmb} && mva_prc > {Data.mva_prc}'}):
-        ftr = DataFitter(
-            sample = 'DATA_24_*',
-            trigger= 'Hlt2RD_BuToKpEE_MVA',
-            project= 'rx',
-            q2bin  = Data.q2bin,
-            cfg    = Data.config)
-        ftr.run()
+    ftr = LikelihoodFactory(
+        obs    = Data.obs,
+        q2bin  = Data.q2bin,
+        sample = 'DATA_24_*',
+        trigger= 'Hlt2RD_BuToKpEE_MVA',
+        project= 'rx',
+        cfg    = Data.config)
+    nll = ftr.run()
+    cfg = ftr.get_config()
+
+    crd = ConstraintReader(obj=nll, q2bin=Data.q2bin)
+    ftr = DataFitter(d_nll={'signal_region' : (nll, cfg)}, cfg=Data.config)
+    ftr.constraints = crd.get_constraints()
+    ftr.run()
 # ----------------------
 def _set_output_directory() -> None:
     '''
@@ -82,8 +121,17 @@ def main():
     Entry point
     '''
     _parse_args()
+    _set_logs()
     _set_output_directory()
-    _fit()
+
+    with PL.parameter_schema(cfg=Data.config.model.yields),\
+         Cache.turn_off_cache(val=[]),\
+         sut.blinded_variables(regex_list=['.*signal.*']),\
+         sel.custom_selection(d_sel={
+        'nobr0' : 'nbrem != 0',
+        'bdt'   :f'mva_cmb > {Data.mva_cmb} && mva_prc > {Data.mva_prc}'}):
+
+        _fit()
 # ----------------------
 if __name__ == '__main__':
     main()

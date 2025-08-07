@@ -1,6 +1,8 @@
 output_directory : rare/muon/signal
-models           :
-  - dscb
+categories:
+  main:
+    model :
+      - dscb
 sample        : Bu_Kmumu_eq_btosllball05_DPC
 shared        : []
 float         :
