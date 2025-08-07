@@ -160,15 +160,10 @@ class EfficiencyCalculator(Cache):
     #------------------------------------------
     def _get_sel_yld(self, proc : str) -> int:
         sample   = DecayNames.sample_from_decay(proc)
-        rdf, uid = self._get_rdf(proc=proc, tree_name='DecayTree')
+        rdf      = self._get_rdf(proc=proc, tree_name='DecayTree')
         d_sel    = sel.selection(trigger=self._trigger, q2bin=self._q2bin, process=sample)
 
-        nsel     = gut.load_cached(hash_obj=[uid, d_sel], on_fail=-999)
-        if nsel != -999:
-            log.info(f'For {proc}, using cached selected yield: {nsel}')
-            return nsel
-
-        log.info('No cached selected yield found, recalculating it')
+        log.info('Calculating selected yield')
         for cut_name, cut_expr in d_sel.items():
             log.debug(f'{cut_name:<20}{cut_expr}')
             rdf = rdf.Filter(cut_expr, cut_name)
@@ -176,8 +171,8 @@ class EfficiencyCalculator(Cache):
         if log.getEffectiveLevel() < 20:
             rep = rdf.Report()
             rep.Print()
+
         nsel = rdf.Count().GetValue()
-        gut.cache_data(nsel, hash_obj=[uid, d_sel])
 
         return nsel
     #------------------------------------------
