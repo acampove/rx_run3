@@ -21,15 +21,20 @@ log = LogStore.add_logger('rx_efficiencies:test_efficiency_calculator')
 def _initialize():
     LogStore.set_level('rx_efficiencies:efficiency_calculator', 10)
 #-------------------------------------------------
-@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC'])
+@pytest.mark.parametrize('sample',                _samples_rx)
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_efficiency(q2bin : str, sample : str):
+def test_rx_efficiency(q2bin : str, sample : str):
     '''
     Tests retrieval of total efficiency (acceptance x reco x selection)
-    for given sample
+    for RX project samples
     '''
-    with sel.custom_selection(d_sel={'bdt' : '1'}):
-        obj      = EfficiencyCalculator(q2bin=q2bin)
+    with Cache.turn_off_cache(val=['EfficiencyCalculator']),\
+         sel.custom_selection(d_sel={'bdt' : '(1)'}):
+        obj      = EfficiencyCalculator(q2bin=q2bin, analysis='rx')
+        eff, err = obj.get_efficiency(sample=sample)
+
+    assert 0 <= eff < 1
+    assert err > 0 or eff == 0
         eff, err = obj.get_efficiency(sample=sample)
 
     assert 0 <= eff < 1
