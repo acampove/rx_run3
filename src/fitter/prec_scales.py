@@ -120,7 +120,7 @@ class PrecScales:
         sample = dn.sample_from_decay(proc)
 
         log.debug(f'Calculating efficiencies for {sample}')
-        obj = EfficiencyCalculator(q2bin=self._q2bin)
+        obj = EfficiencyCalculator(q2bin=self._q2bin, sample=sample)
         val = obj.get_efficiency(sample=sample)
 
         return val
