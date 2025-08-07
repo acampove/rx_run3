@@ -29,24 +29,37 @@ class EfficiencyCalculator(Cache):
     - Full selection defined as the product of the acceptance, selection and reconstruction efficiencies
     '''
     #------------------------------------------
-    def __init__(self, q2bin : str):
+    def __init__(
+        self, 
+        q2bin   : str, 
+        trigger : str      = 'Hlt2RD_BuToKpEE_MVA',
+        analysis: str      = 'rx',
+        sample  : str|None = None):
         '''
-        Proc: Nickname of process, if not passed, will do all processes.
-
-        q2bin : Either low, central or high
+        Parameters
+        -----------------
+        q2bin   : Either low, central or high
+        trigger : By default Hlt2RD_BuToKpEE_MVA
+        analysis: By default rx, can be nopid
+        sample  : MC sample for which the efficiency is calculated, e.g. Bu_JpsiK_ee_eq_DPC. 
+                 If None, will calculate it for all samples found through DecayNames.get_decays() 
         '''
         self._q2bin      = q2bin
         self._year       = '2024'
+        self._analysis   = analysis
+        self._trigger    = trigger 
         self._d_sel      = {'Process' : [], 'Value' : [], 'Error' : []}
-        self._l_proc     = DecayNames.get_decays()
-        self._trigger    = 'Hlt2RD_BuToKpEE_MVA'
+        self._l_proc     = DecayNames.get_decays() if sample is None else [DecayNames.nic_from_sample(sample=sample)]
 
         plt.style.use(mplhep.style.LHCb2)
 
         super().__init__(
             out_path = f'efficiencies/{q2bin}_{self._year}',
             d_sel    = self._get_selection_hash(),
-            trigger  = self._trigger)
+            q2bin    = self._q2bin,
+            trigger  = self._trigger,
+            analysis = self._analysis,
+            sample   = sample)
 
         self._initialized=False
     #------------------------------------------
