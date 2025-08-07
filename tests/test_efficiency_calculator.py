@@ -35,6 +35,21 @@ def test_rx_efficiency(q2bin : str, sample : str):
 
     assert 0 <= eff < 1
     assert err > 0 or eff == 0
+#-------------------------------------------------
+@pytest.mark.parametrize('sample',             _samples_nopid)
+@pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
+def test_nopid_efficiency(q2bin : str, sample : str):
+    '''
+    Tests retrieval of total efficiency (acceptance x reco x selection)
+    for RX project samples
+    '''
+    with Cache.turn_off_cache(val=['EfficiencyCalculator']),\
+         sel.custom_selection(d_sel={'bdt' : '(1)'}):
+        obj      = EfficiencyCalculator(
+            q2bin   = q2bin, 
+            sample  = sample,
+            analysis= 'nopid', 
+            trigger = 'Hlt2RD_BuToKpEE_MVA')
         eff, err = obj.get_efficiency(sample=sample)
 
     assert 0 <= eff < 1
