@@ -7,6 +7,14 @@ from dmu.logging.log_store                 import LogStore
 from rx_selection                          import selection as sel
 from rx_efficiencies.efficiency_calculator import EfficiencyCalculator
 
+_samples_rx = [
+    'Bu_JpsiK_ee_eq_DPC',
+    'Bu_Kee_eq_btosllball05_DPC']
+
+_samples_nopid = [
+    'Bu_JpsiK_ee_eq_DPC',
+    'Bu_Kee_eq_btosllball05_DPC']
+
 log = LogStore.add_logger('rx_efficiencies:test_efficiency_calculator')
 #-------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
