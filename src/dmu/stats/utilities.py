@@ -36,6 +36,7 @@ class Data:
     Data class
     '''
     weight_name = 'weight'
+    l_blind_vars= []
 #-------------------------------------------------------
 def name_from_obs(obs : zobs) -> str:
     '''
@@ -205,6 +206,9 @@ def print_pdf(
     level (str)   : Optionally set the level at which the printing happens in screen, default info
     blind (list)  : List of regular expressions matching variable names to blind in printout
     '''
+    blind  = [] if blind is None else blind
+    blind += Data.l_blind_vars
+
     l_par_flt, l_par_fix = _get_pars(pdf, blind)
     l_msg                = _get_messages(pdf, l_par_flt, l_par_fix, d_const)
 
