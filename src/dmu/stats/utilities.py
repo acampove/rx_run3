@@ -266,6 +266,10 @@ def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
     log.debug('Reading parameters')
     log.debug(60 * '-')
     for name, d_val in result.params.items():
+        name = str(name) # Result object is frozen already, name should be a string
+        if _is_par_blinded(name=name, l_blind=Data.l_blind_vars):
+            continue
+
         value = d_val['value']
         error = None
         if 'hesse'         in d_val:
