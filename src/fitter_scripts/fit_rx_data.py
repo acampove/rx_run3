@@ -11,6 +11,7 @@ from omegaconf                 import DictConfig
 from dmu.stats.zfit            import zfit
 from dmu.stats.parameters      import ParameterLibrary as PL
 from dmu.generic               import utilities as gut
+from dmu.stats                 import utilities as sut
 from dmu.workflow.cache        import Cache
 from dmu.logging.log_store     import LogStore
 from zfit.interface            import ZfitSpace as zobs
@@ -90,20 +91,15 @@ def _fit() -> None:
     '''
     This is where DataFitter is used
     '''
-    with PL.parameter_schema(cfg=Data.config.model.yields),\
-         Cache.turn_off_cache(val=[]),\
-         sel.custom_selection(d_sel={
-        'nobr0' : 'nbrem != 0',
-        'bdt'   :f'mva_cmb > {Data.mva_cmb} && mva_prc > {Data.mva_prc}'}):
-        ftr = LikelihoodFactory(
-            obs    = Data.obs,
-            q2bin  = Data.q2bin,
-            sample = 'DATA_24_*',
-            trigger= 'Hlt2RD_BuToKpEE_MVA',
-            project= 'rx',
-            cfg    = Data.config)
-        nll = ftr.run()
-        cfg = ftr.get_config()
+    ftr = LikelihoodFactory(
+        obs    = Data.obs,
+        q2bin  = Data.q2bin,
+        sample = 'DATA_24_*',
+        trigger= 'Hlt2RD_BuToKpEE_MVA',
+        project= 'rx',
+        cfg    = Data.config)
+    nll = ftr.run()
+    cfg = ftr.get_config()
 
     crd = ConstraintReader(obj=nll, q2bin=Data.q2bin)
     ftr = DataFitter(d_nll={'signal_region' : (nll, cfg)}, cfg=Data.config)
@@ -127,7 +123,15 @@ def main():
     _parse_args()
     _set_logs()
     _set_output_directory()
-    _fit()
+
+    with PL.parameter_schema(cfg=Data.config.model.yields),\
+         Cache.turn_off_cache(val=[]),\
+         sut.blinded_variables(regex_list=['.*signal.*']),\
+         sel.custom_selection(d_sel={
+        'nobr0' : 'nbrem != 0',
+        'bdt'   :f'mva_cmb > {Data.mva_cmb} && mva_prc > {Data.mva_prc}'}):
+
+        _fit()
 # ----------------------
 if __name__ == '__main__':
     main()
