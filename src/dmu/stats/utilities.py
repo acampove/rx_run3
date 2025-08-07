@@ -160,7 +160,7 @@ def _get_messages(
         pdf       : zpdf,
         l_par_flt : list,
         l_par_fix : list,
-        d_const   : Union[None, dict[str,list[float]]] = None) -> list[str]:
+        d_const   : None|dict[str,tuple[float,float]] = None) -> list[str]:
 
     str_space = str(pdf.space)
 
@@ -189,11 +189,11 @@ def _get_messages(
     return l_msg
 #-------------------------------------------------------
 def print_pdf(
-        pdf      : zpdf,
-        d_const  : Union[None, dict[str,tuple[float, float]]] = None,
-        txt_path : Union[str,None]                            = None,
-        level    : int                                        = 20,
-        blind    : Union[None, list[str]]                     = None):
+    pdf      : zpdf,
+    d_const  : None|dict[str,tuple[float, float]] = None,
+    txt_path : str|None                           = None,
+    level    : int                                = 20,
+    blind    : None|list[str]                     = None):
     '''
     Function used to print zfit PDFs
 
