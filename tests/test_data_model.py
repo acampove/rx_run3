@@ -45,9 +45,9 @@ def test_resonant():
 
     sut.print_pdf(pdf)
 # --------------------------
-def test_rare():
+def test_rare_electron():
     '''
-    Simplest test for rare mode
+    Simplest test for rare electron mode
     '''
     q2bin = 'central'
 
