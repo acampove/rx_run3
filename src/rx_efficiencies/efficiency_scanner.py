@@ -35,6 +35,8 @@ class EfficiencyScanner:
         self._xvar = xvar
         self._yvar = yvar
         self._zvar = 'yield'
+
+        self._yld_default : int = -1
     # --------------------------------
     def _get_selection(self) -> dict[str,str]:
         log.debug('Getting selection')
@@ -182,6 +184,25 @@ class EfficiencyScanner:
             d_data[self._zvar].append(zval)
 
         return pnd.DataFrame(d_data)
+    # ----------------------
+    def _set_default_wp_yield(self, rdf : RDataFrame) -> None:
+        '''
+        This method sets _yld_default value. I.e. yield of MC sample
+        for default selection.
+
+        Parameters
+        -------------
+        rdf: ROOT dataframe before selection
+        '''
+        sample  = self._cfg['input']['sample']
+        trigger = self._cfg['input']['trigger']
+        q2bin   = self._cfg['input']['q2bin']
+
+        rdf_sel = sel.apply_full_selection(rdf=rdf, q2bin=q2bin, trigger=trigger, process=sample)
+
+        self._yld_default = rdf_sel.Count().GetValue()
+
+        log.info(f'Setting default WP yield to: {self._yld_default}')
     # --------------------------------
     def run(self) -> pnd.DataFrame:
         '''
@@ -205,6 +226,8 @@ class EfficiencyScanner:
             return df
 
         log.info('Efficiencies not cached, recalculating them')
+        self._set_default_wp_yield(rdf=rdf)
+
         df = self._get_yields(rdf=rdf)
         df = self._eff_from_yield(df_tgt=df)
 
