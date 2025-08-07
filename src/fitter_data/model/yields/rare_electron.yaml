@@ -5,25 +5,25 @@ yields: &yields
   min : 0
   max : 100000
 
-nsignal:
+yld_signal:
   <<      : *yields
-nBd_Kstee_eq_btosllball05_DPC:
-  scl     : [nsignal]
+yld_Bd_Kstee_eq_btosllball05_DPC:
+  scl     : [yld_signal]
   preffix : pscale
   <<      : *yields
-nBu_Kstee_Kpi0_eq_btosllball05_DPC:
-  scl     : [nsignal]
+yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC:
+  scl     : [yld_signal]
   preffix : pscale
   <<      : *yields
-nBs_phiee_eq_Ball_DPC:
-  scl     : [nsignal]
+yld_Bs_phiee_eq_Ball_DPC:
+  scl     : [yld_signal]
   preffix : pscale
   <<      : *yields
-nccbar:
+yld_ccbar:
   <<      : *yields
-ncombinatorial:
+yld_combinatorial:
   <<      : *yields
-njpsi_leakage:
+yld_jpsi_leakage:
   <<      : *yields
-npsi2_leakage: 
+yld_psi2_leakage: 
   <<      : *yields
