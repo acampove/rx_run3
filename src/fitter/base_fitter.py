@@ -32,6 +32,7 @@ class BaseFitter:
         self._trigger : str = ''
         self._project : str = ''
         self._q2bin   : str = ''
+        self._sig_yld : str = 'yld_signal' # Used to locate signal yield in order to calculate sensitivity
     # ------------------------
     def _fit(
             self,
@@ -79,12 +80,12 @@ class BaseFitter:
 
         cres = sut.zres_to_cres(res=res)
 
-        if 'nsignal' not in cres:
-            log.debug('Missing nsig entry, cannot get sensitivity')
+        if self._sig_yld not in cres:
+            log.info('Missing nsig entry, cannot get sensitivity')
             return -1
 
-        value = cres['nsignal']['value']
-        error = cres['nsignal']['error']
+        value = cres[self._sig_yld]['value']
+        error = cres[self._sig_yld]['error']
 
         return 100 * error / value
     # --------------------------

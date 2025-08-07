@@ -28,6 +28,7 @@ class Data:
     out_dir = f'{ana_dir}/mva/optimization/wp'
     d_data  = {'mva_cmb' : [], 'mva_prc' : [], 'nbkg' : [], 'sign' : [], 'sosqsb' : []}
     regex   = r'.*\/(\d{3})_(\d{3})\/.*'
+    sig_yld = 'yld_signal'
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='This script is used to plot fitting parameters in a grid')
@@ -58,7 +59,7 @@ def _read_values(path : str) -> tuple[float,float,float]:
         if not name.startswith('n'):
             continue
 
-        if name == 'nsignal':
+        if name == Data.sig_yld:
             nsig = d_pars['value']
             esig = d_pars['error']
 
