@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 
 from ROOT                              import RDataFrame
 from dmu.logging.log_store             import LogStore
-from dmu.generic                       import utilities as gut
 from dmu.workflow.cache                import Cache
 from dmu.generic                       import hashing
 
