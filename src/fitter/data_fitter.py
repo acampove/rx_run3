@@ -7,7 +7,6 @@ from dmu.workflow.cache        import Cache
 from dmu.stats.fitter          import Fitter
 from dmu.stats                 import utilities as sut
 from fitter.base_fitter        import BaseFitter
-from fitter.constraint_reader  import ConstraintReader
 from zfit.loss                 import ExtendedUnbinnedNLL as NLL
 
 log=LogStore.add_logger('fitter:data_fitter')
@@ -50,35 +49,6 @@ class DataFitter(BaseFitter, Cache):
             self,
             out_path = self._cfg.output_directory,
             cfg      = cfg)
-    # ----------------------
-    def _constraints_from_likelihoood(self, nll : NLL) -> dict[str,tuple[float,float]]:
-        '''
-        Parameters
-        ----------------
-        nll: Negative log likelihood
-
-        Returns
-        ----------------
-        Dictionary with:
-
-        Key: Name of parameter
-        Value: Tuple value, error. Needed to apply constraints
-        '''
-        log.info('Getting constraints')
-
-        s_par   = nll.get_params()
-        l_par   = [ par.name for par in s_par ]
-        obj     = ConstraintReader(parameters = l_par, q2bin = self._q2bin)
-        d_cns   = obj.get_constraints()
-
-        log.debug(90 * '-')
-        log.debug(f'{"Name":<20}{"Value":<20}{"Error":<20}')
-        log.debug(90 * '-')
-        for name, (val, err) in d_cns.items():
-            log.debug(f'{name:<50}{val:<20.3f}{err:<20.3f}')
-        log.debug(90 * '-')
-
-        return d_cns
     # ----------------------
     def _get_full_nll(self) -> NLL:
         '''
