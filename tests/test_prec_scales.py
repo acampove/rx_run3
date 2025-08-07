@@ -116,3 +116,18 @@ def test_seq_scan_scales(mva_cut : str, q2bin : str, process : str) -> None:
 
     ScalesData.collect_mva_wp(process, mva_cut, q2bin, val, err)
 #-------------------------------
+def test_central_bpkst() -> None:
+    '''
+    Retrieve scales for central q2 bpkskpiee
+    '''
+    q2bin  = 'central'
+    process= 'bpkskpiee'
+    signal = 'bpkpee'
+    mva_cut= 'mva_cmb > 0.96 && mva_prc > 0.64'
+    with sel.custom_selection(d_sel={'bdt' : mva_cut}):
+        obj      = PrecScales(proc=process, q2bin=q2bin)
+        val, err = obj.get_scale(signal=signal)
+
+    log.info(f'val: {val:.5f}')
+    log.info(f'err: {err:.5f}')
+#-------------------------------
