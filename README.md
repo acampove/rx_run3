@@ -701,6 +701,17 @@ print_pdf(pdf,
           txt_path = 'tests/stats/utilities/print_pdf/pdf_const.txt')
 ```
 
+The blinding of the parameters can also be achieved with a context manager:
+
+```python
+from dmu.stats import utilities as sut
+
+pdf   = _get_pdf(kind='composed_nonextended')
+regex = r'mu.*'
+
+with sut.blinded_variables(regex_list=[regex]):
+    print_pdf(pdf=pdf)
+```
 
 ### Storing PDF as latex
 
