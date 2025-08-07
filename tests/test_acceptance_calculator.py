@@ -19,7 +19,8 @@ class Data:
     Data class
     '''
     out_dir = '/tmp/tests/rx_efficiencies/acceptance_calculator'
-    rsm_dir = os.environ['RAPIDSIM_NTUPLES']
+    ana_dir = os.environ['ANADIR']
+    rsm_dir = f'{ana_dir}/Rapidsim'
 
     plt.style.use(mplhep.style.LHCb2)
 #--------------------------
