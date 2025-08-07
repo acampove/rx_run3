@@ -14,6 +14,7 @@ from dmu.generic               import utilities as gut
 from dmu.workflow.cache        import Cache
 from dmu.logging.log_store     import LogStore
 
+from fitter.constraint_reader  import ConstraintReader
 from fitter.data_fitter        import DataFitter
 from fitter.likelihood_factory import LikelihoodFactory
 from rx_selection              import selection as sel
@@ -85,7 +86,9 @@ def _fit() -> None:
         nll = ftr.run()
         cfg = ftr.get_config()
 
+    crd = ConstraintReader(obj=nll, q2bin=Data.q2bin)
     ftr = DataFitter(d_nll={'signal_region' : (nll, cfg)}, cfg=Data.config)
+    ftr.constraints = crd.get_constraints()
     ftr.run()
 # ----------------------
 def _set_output_directory() -> None:
