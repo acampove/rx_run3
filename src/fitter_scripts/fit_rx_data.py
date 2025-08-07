@@ -74,7 +74,7 @@ def _fit() -> None:
     '''
     This is where DataFitter is used
     '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 6900))
 
     with PL.parameter_schema(cfg=Data.config.model.yields),\
          Cache.turn_off_cache(val=[]),\
