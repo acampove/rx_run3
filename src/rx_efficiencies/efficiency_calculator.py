@@ -258,11 +258,19 @@ class EfficiencyCalculator(Cache):
 
         return eff, err
     #------------------------------------------
-    def get_efficiency(self, sample : str) -> tuple[float,float]:
+    @overload
+    def get_efficiency(self, sample : str, kind : Literal['value'] = 'value') -> tuple[float,float]:
+        ...
+    @overload
+    def get_efficiency(self, sample : str, kind : Literal['dataframe']) -> pnd.DataFrame:
+        ...
+    def get_efficiency(self, sample : str, kind : Literal['value', 'dataframe']= 'value') -> tuple[float,float]|pnd.DataFrame:
         '''
         Parameters
         -------------
         sample: Sample name, e.g. Bu_JpsiK_ee_eq_DPC
+        kind  : Either `value` (default) or `dataframe`. 
+                It controls what object should be returned
 
         Returns
         -------------
@@ -272,12 +280,12 @@ class EfficiencyCalculator(Cache):
         if self._copy_from_cache():
             log.info(f'Found yields cached, loading: {data_path}')
             df = pnd.read_parquet(data_path)
-            return self._efficiency_from_sample(df=df, sample=sample)
+            return self._efficiency_from_sample(df=df, sample=sample, kind=kind)
 
         log.warning('Recalculating dataframe with yields')
         df = self._get_stats()
         df.to_parquet(data_path)
 
         self._cache()
-        return self._efficiency_from_sample(df=df, sample=sample)
+        return self._efficiency_from_sample(df=df, sample=sample, kind=kind)
 #------------------------------------------
