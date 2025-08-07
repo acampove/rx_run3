@@ -151,6 +151,15 @@ def _blind_vars(s_par : set, l_blind : Union[list[str], None] = None) -> set[zpa
     if l_blind is None:
         return s_par
 
+    s_par_blind = set()
+    for par in s_par:
+        if _is_par_blinded(name=par.name, l_blind=l_blind):
+            continue
+
+        log.debug(f'Not blinding {par.name}')
+        s_par_blind.add(par)
+
+    return s_par_blind
 # ----------------------
 def _is_par_blinded(name : str, l_blind : list[str]) -> bool:
     '''
