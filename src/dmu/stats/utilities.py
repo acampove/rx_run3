@@ -348,13 +348,14 @@ def _save_result(fit_dir : str, res : zres|None) -> None:
         pickle.dump(res, ofile)
 
     d_par  = _parameters_from_result(result=res)
+
     opath  = f'{fit_dir}/parameters.json'
     log.debug(f'Saving parameters to: {opath}')
     gut.dump_json(d_par, opath)
 
     opath  = f'{fit_dir}/parameters.yaml'
-    cres   = zres_to_cres(res=res)
-    OmegaConf.save(cres, opath)
+    log.debug(f'Saving parameters to: {opath}')
+    gut.dump_json(d_par, opath)
 #-------------------------------------------------------
 # Make latex table from text file
 #-------------------------------------------------------
