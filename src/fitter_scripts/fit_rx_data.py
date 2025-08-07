@@ -39,13 +39,14 @@ def _set_logs() -> None:
     '''
     Will put classes in a given logging level
     '''
-    LogStore.set_level('dmu:stats:model_factory'            ,           30)
-    LogStore.set_level('rx_data:rdf_getter'                 ,           30)
-    LogStore.set_level('rx_efficiency:efficiency_calculator',           30)
-    LogStore.set_level('rx_selection:truth_matching'        ,           30)
-    LogStore.set_level('rx_selection:selection'             ,           30)
-    LogStore.set_level('fitter:constraint_reader'           , Data.log_lvl)
-    LogStore.set_level('fitter:fit_rx_data'                 , Data.log_lvl)
+    LogStore.set_level('dmu:stats:model_factory'              ,           30)
+    LogStore.set_level('rx_data:rdf_getter'                   ,           30)
+    LogStore.set_level('rx_efficiencies:efficiency_calculator',           30)
+    LogStore.set_level('rx_selection:truth_matching'          ,           30)
+    LogStore.set_level('rx_selection:selection'               ,           30)
+    LogStore.set_level('fitter:prec_scales'                   , Data.log_lvl)
+    LogStore.set_level('fitter:constraint_reader'             , Data.log_lvl)
+    LogStore.set_level('fitter:fit_rx_data'                   , Data.log_lvl)
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to fit RX data')
