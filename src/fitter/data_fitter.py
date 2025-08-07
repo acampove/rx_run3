@@ -97,7 +97,7 @@ class DataFitter(BaseFitter, Cache):
             log.debug(f'{par_name:<50}{val:<15.3f}{err:<15.3f}')
         log.debug(80 * '-')
 
-        self._d_cfg = value
+        self._d_cns = value
     # ----------------------
     def run(self) -> DictConfig:
         '''
