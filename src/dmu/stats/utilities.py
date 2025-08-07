@@ -3,6 +3,7 @@ Module with utility functions related to the dmu.stats project
 '''
 # pylint: disable=import-error
 
+from contextlib import contextmanager
 import os
 import re
 import pickle
@@ -37,6 +38,24 @@ class Data:
     '''
     weight_name = 'weight'
     l_blind_vars= []
+# ----------------------
+@contextmanager
+def blinded_variables(regex_list : list[str]|None = None):
+    '''
+    Parameters
+    -------------
+    regex_list: List of regular expressions for variable names to be blinded
+    '''
+    if regex_list is None:
+        raise ValueError('No regex list of variables to blind passed')
+
+    old_val = Data.l_blind_vars
+    Data.l_blind_vars = regex_list
+
+    try:
+        yield
+    finally:
+        Data.l_blind_vars = old_val
 #-------------------------------------------------------
 def name_from_obs(obs : zobs) -> str:
     '''
