@@ -8,6 +8,7 @@ import pytest
 import mplhep
 import matplotlib.pyplot as plt
 from ROOT                                  import RDataFrame
+from dmu.generic                           import version_management    as vmn
 from dmu.logging.log_store                 import LogStore
 from rx_efficiencies.acceptance_calculator import AcceptanceCalculator
 from rx_efficiencies.decay_names           import DecayNames as dn
@@ -19,14 +20,19 @@ class Data:
     Data class
     '''
     out_dir = '/tmp/tests/rx_efficiencies/acceptance_calculator'
-    ana_dir = os.environ['ANADIR']
-    rsm_dir = f'{ana_dir}/Rapidsim'
+    rsm_dir : str
 
     plt.style.use(mplhep.style.LHCb2)
 #--------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before any test
+    '''
     LogStore.set_level('rx_efficiencies:test_acceptance_calculator', 10)
+
+    ana_dir      = os.environ['ANADIR']
+    Data.rsm_dir = vmn.get_last_version(dir_path=f'{ana_dir}/Rapidsim', version_only=False)
 #--------------------------
 def _get_rdf(sample : str, energy : str) -> RDataFrame:
     file_path = f'{Data.rsm_dir}/{sample}/{energy}/{sample}_tree.root'
