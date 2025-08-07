@@ -89,7 +89,7 @@ class DataModel:
                 log.warning(f'Skipping component: {component}')
                 continue
 
-            pdf    = self._extend(pdf=pdf, name=f'n{component}')
+            pdf    = self._extend(pdf=pdf, name=f'yld_{component}')
             l_pdf.append(pdf)
 
         pdf = zfit.pdf.SumPDF(l_pdf)

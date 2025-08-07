@@ -40,9 +40,9 @@ class ConstraintTester:
         '''
         if   kind == 'rare_prec':
             l_par_name = [
-                'pscale_Bd_Kstee_eq_btosllball05_DPC',
-                'pscale_Bu_Kstee_Kpi0_eq_btosllball05_DPC',
-                'pscale_Bs_phiee_eq_Ball_DPC']
+                'pscale_yld_Bd_Kstee_eq_btosllball05_DPC',
+                'pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC',
+                'pscale_yld_Bs_phiee_eq_Ball_DPC']
         elif kind == 'brem_frac':
             l_par_name = [
                 'frac_brem_000',
