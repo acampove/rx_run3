@@ -1,6 +1,7 @@
 '''
 Module used to test DataFitter
 '''
+import pytest
 
 from omegaconf             import OmegaConf
 from dmu.stats.zfit        import zfit
