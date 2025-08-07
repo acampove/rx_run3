@@ -4,7 +4,6 @@ Module containing class ModelScales and helper functions
 
 import math
 import numpy
-import pandas   as pnd
 import jacobi   as jac
 
 from dmu.logging.log_store                 import LogStore
