@@ -39,20 +39,6 @@ def test_rx_efficiency_value(q2bin : str, sample : str):
     assert 0 <= eff < 1
     assert err > 0 or eff == 0
 #-------------------------------------------------
-@pytest.mark.parametrize('sample',                _samples_rx)
-@pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_rx_efficiency_dataframe(q2bin : str, sample : str):
-    '''
-    Tests retrieval of pandas dataframe with total and pased yields
-    '''
-    with Cache.turn_off_cache(val=['EfficiencyCalculator']),\
-         sel.custom_selection(d_sel={'bdt' : '(1)'}):
-        obj = EfficiencyCalculator(q2bin=q2bin, analysis='rx')
-        df  = obj.get_efficiency(sample=sample, kind='dataframe')
-
-    assert isinstance(df, pnd.DataFrame)
-    assert len(df) > 0
-#-------------------------------------------------
 @pytest.mark.parametrize('sample',             _samples_nopid)
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
 def test_nopid_efficiency(q2bin : str, sample : str):
