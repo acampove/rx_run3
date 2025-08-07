@@ -151,12 +151,25 @@ def _blind_vars(s_par : set, l_blind : Union[list[str], None] = None) -> set[zpa
     if l_blind is None:
         return s_par
 
+# ----------------------
+def _is_par_blinded(name : str, l_blind : list[str]) -> bool:
+    '''
+    Parameters
+    -------------
+    name   : Name of parameter
+    l_blind: List of regular expressions corresponding to parameters to blind
+
+    Returns
+    -------------
+    True if it is meant to be blinded
+    '''
     rgx_ors = '|'.join(l_blind)
     regex   = f'({rgx_ors})'
 
-    s_par_blind = { par for par in s_par if not re.match(regex, par.name) }
+    if re.match(regex, name):
+        return True
 
-    return s_par_blind
+    return False
 #-------------------------------------------------------
 def _get_pars(
         pdf   : zpdf,
