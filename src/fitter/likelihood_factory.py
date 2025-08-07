@@ -89,6 +89,7 @@ class LikelihoodFactory:
         ------------
         Zfit likelihood
         '''
+        log.info('Getting data')
         dpr  = DataPreprocessor(
             obs    = self._obs,
             q2bin  = self._q2bin,
@@ -101,6 +102,7 @@ class LikelihoodFactory:
 
         trigger, project = self._update_trigger_project()
 
+        log.info('Getting model')
         mod  = DataModel(
             name   = self._name,
             cfg    = self._cfg,
@@ -110,6 +112,7 @@ class LikelihoodFactory:
             project= project)
         model= mod.get_model()
 
+        log.info('Making likelihood')
         nll = zfit.loss.ExtendedUnbinnedNLL(model=model, data=data)
 
         return nll
@@ -122,6 +125,8 @@ class LikelihoodFactory:
 
         - Selection
         '''
+        log.debug('Retrieving NLL configuration')
+
         cuts_fit = sel.selection(
             process=self._sample,
             trigger=self._trigger,
