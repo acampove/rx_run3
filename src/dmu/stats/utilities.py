@@ -259,7 +259,7 @@ def print_pdf(
 def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
     d_par = {}
     log.debug('Reading parameters from:')
-    if log.getEffectiveLevel() == 10:
+    if log.getEffectiveLevel() < 20:
         print(result)
 
     log.debug(60 * '-')
