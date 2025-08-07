@@ -155,7 +155,7 @@ class DataFitter(BaseFitter, Cache):
                 data     = data,
                 model    = model,
                 res      = res,
-                d_cns    = d_cns,
+                d_cns    = self._d_cns,
                 out_path = out_path)
 
         cres = sut.zres_to_cres(res=res)
