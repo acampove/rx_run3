@@ -102,6 +102,7 @@ class EfficiencyCalculator(Cache):
         Will plot selection efficiency for each process if _out_dir was specified
         '''
         if not hasattr(self, '_out_dir'):
+            log.info('No plotting directory passed through out_dir property, skipping plots')
             return
 
         log.debug('Plotting selection efficiencies')
@@ -172,6 +173,9 @@ class EfficiencyCalculator(Cache):
             log.debug(f'{cut_name:<20}{cut_expr}')
             rdf = rdf.Filter(cut_expr, cut_name)
 
+        if log.getEffectiveLevel() < 20:
+            rep = rdf.Report()
+            rep.Print()
         nsel = rdf.Count().GetValue()
         gut.cache_data(nsel, hash_obj=[uid, d_sel])
 
@@ -198,6 +202,7 @@ class EfficiencyCalculator(Cache):
         '''
         d_data = {'Process' : [], 'Passed' : [], 'Total' : []}
         for proc in self._l_proc:
+            log.info(f'Calculating yields for process: {proc}')
             pas, tot = self._get_yields(proc=proc)
 
             d_data['Process'].append(proc)
