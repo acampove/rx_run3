@@ -99,6 +99,47 @@ def test_load_data(ext : str):
 
     assert data == expected
 # -------------------------
+def test_load_conf_schema_validation_no_file():
+    '''
+    Tests that the validation fails when no schema was found
+    '''
+    with pytest.raises(FileNotFoundError),\
+        gut.enforce_schema_validation(value=True):
+        cfg = gut.load_conf(
+            package='dmu_data',
+            fpath  ='tests/generic/config.yaml')
+
+        assert isinstance(cfg, DictConfig)
+
+        assert cfg.key == ['value1', 'value2', 'value3']
+# -------------------------
+def test_load_conf_schema_validation():
+    '''
+    Tests that the validation passes 
+    '''
+    with gut.enforce_schema_validation(value=True):
+        cfg = gut.load_conf(
+            package='dmu_data',
+            fpath  ='tests/generic/validate.yaml')
+
+        assert isinstance(cfg, DictConfig)
+
+        assert cfg.key == ['value1', 'value2', 'value3']
+# -------------------------
+def test_load_conf_schema_validation_fail():
+    '''
+    Tests that the validation fails 
+    '''
+    with pytest.raises(RuntimeError),\
+         gut.enforce_schema_validation(value=True):
+        cfg = gut.load_conf(
+            package='dmu_data',
+            fpath  ='tests/generic/fail_validate.yaml')
+
+        assert isinstance(cfg, DictConfig)
+
+        assert cfg.key == ['value1', 'value2', 'value3']
+# -------------------------
 @pytest.mark.parametrize('ext', ['yaml', 'json'])
 def test_load_conf_format(ext : str):
     '''
