@@ -5,11 +5,12 @@ Module containing tests for MisID class
 from dmu.stats.zfit        import zfit
 from dmu.logging.log_store import LogStore
 from dmu.generic           import utilities as gut
-from fitter.misid          import misid
+from zfit.interface        import ZfitPDF   as zpdf
+from fitter.misid          import MisID 
 
 log=LogStore.add_logger('fitter:test_misid')
 # ----------------------
-def _validate_pdf(pdf ; zpdf) -> None:
+def _validate_pdf(pdf : zpdf) -> None:
     '''
     Parameters
     -------------
@@ -26,10 +27,11 @@ def test_simple() -> None:
     cfg = gut.load_conf(package='fitter_data', fpath='rare/electron/misid.yaml')
 
     obj = MisID(
-            component= 'kkk',
-            obs      = obs,
-            cfg      = cfg,
-            q2bin    = 'central')
-    pdf = get_pdf()
+        component= 'kkk',
+        obs      = obs,
+        cfg      = cfg,
+        q2bin    = 'central')
+    pdf = obj.get_pdf()
 
     _validate_pdf(pdf=pdf)
+# ----------------------
