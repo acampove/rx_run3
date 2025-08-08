@@ -121,6 +121,8 @@ def _validate_schema(
     package: Name of data package where config to be validated lives
     fpath  : Relative (to package) path to config file
     '''
+    package = package.removesuffix('_data')
+    package = f'{package}_schema'
 
     sname = os.path.basename(fpath).replace('.yaml', '_config.py')
     spath = files(package).joinpath(sname)
