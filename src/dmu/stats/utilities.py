@@ -143,7 +143,7 @@ def _get_const(par : zpar , d_const : Union[None, dict[str, tuple[float,float]]]
 
     return val
 #-------------------------------------------------------
-def _get_blinded_vars(
+def _get_unblinded_vars(
     s_par   : set, 
     l_blind : list[str]|None = None) -> set[zpar]:
     '''
@@ -154,21 +154,19 @@ def _get_blinded_vars(
 
     Returns
     -----------------
-    set of zfit parameters that should be blinded
+    set of zfit parameters that should be unblinded
     '''
-    s_par_blind = set()
-
-    if l_blind is None:
-        return s_par_blind  # Do not blind anything
+    s_par_unblinded = set()
+    l_blind_regex   = [] if l_blind is None else l_blind
 
     for par in s_par:
-        if not _is_par_blinded(name=par.name, l_blind=l_blind):
+        if _is_par_blinded(name=par.name, l_blind=l_blind_regex):
             continue
 
         log.debug(f'Blinding {par.name}')
-        s_par_blind.add(par)
+        s_par_unblinded.add(par)
 
-    return s_par_blind
+    return s_par_unblinded
 # ----------------------
 def _is_par_blinded(name : str, l_blind : list[str]) -> bool:
     '''
@@ -201,8 +199,8 @@ def _get_pars(
     s_par_flt = pdf.get_params(floating= True)
     s_par_fix = pdf.get_params(floating=False)
 
-    s_par_flt = _get_blinded_vars(s_par_flt, l_blind=blind)
-    s_par_fix = _get_blinded_vars(s_par_fix, l_blind=blind)
+    s_par_flt = _get_unblinded_vars(s_par_flt, l_blind=blind)
+    s_par_fix = _get_unblinded_vars(s_par_fix, l_blind=blind)
 
     l_par_flt = list(s_par_flt)
     l_par_fix = list(s_par_fix)
