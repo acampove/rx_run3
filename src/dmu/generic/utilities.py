@@ -150,13 +150,13 @@ def _validate_schema(
 
     ConfigSchema = getattr(smodule, ConfigValidation.schema_name)
     schema = OmegaConf.structured(ConfigSchema)
-    cfg_val= OmegaConf.merge(schema, cfg)
 
     try:
+        cfg_val = OmegaConf.merge(schema, cfg)
         OmegaConf.to_object(cfg_val)
-    except ValidationError as exc:
+    except (ValidationError, ConfigKeyError) as exc:
         if ConfigValidation.enforce:
-            raise ValidationError(f'Failed to validate {package}/{fpath}') from exc
+            raise RuntimeError(f'Failed to validate {package}/{fpath}') from exc
 # ----------------------
 def _resolve_sub_configs(cfg : DictConfig, package : str) -> DictConfig:
     '''
