@@ -181,7 +181,12 @@ def _resolve_sub_configs(cfg : DictConfig, package : str) -> DictConfig:
             continue
 
         log.debug(f'Resolving sub-config: {val}')
-        cfg[key] = load_conf(package=package, fpath=val)
+        # Do not enforce validation for sub-configs
+        # They might not have a schema associated
+        # And their validation should be done explicitly
+        # I.e. only validate top level configs
+        with enforce_schema_validation(value=False):
+            cfg[key] = load_conf(package=package, fpath=val)
 
     return cfg
 # --------------------------------
