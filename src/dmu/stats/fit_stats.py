@@ -62,9 +62,13 @@ class FitStats:
         for line in l_line:
             row = self._row_from_line(line)
             if row is None:
+                log.debug(f'Row not found in line: {line}')
                 continue
 
             df.loc[len(df)] = row
+
+        if len(df) == 0:
+            raise ValueError(f'Empty dataframe with statistics built from: {fit_path}')
 
         df = self._attach_errors(df)
         log.debug(df)
