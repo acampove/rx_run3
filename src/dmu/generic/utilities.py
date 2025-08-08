@@ -124,7 +124,7 @@ def _validate_schema(
     sname = os.path.basename(fpath).replace('.yaml', '_config.py')
     spath = files(package).joinpath(sname)
     spath = str(spath)
-    if _ENFORCE_SCHEMA_VALIDATION and not os.path.isfile(spath):
+    if ConfigValidation.enforce and not os.path.isfile(spath):
         raise FileNotFoundError(f'Missing config schema: {spath}')
 
     if not os.path.isfile(spath):
@@ -142,17 +142,17 @@ def _validate_schema(
 
     loader.exec_module(smodule)
 
-    if not hasattr(smodule, _SCHEMA_NAME):
-        raise AttributeError(f'Cannot find {_SCHEMA_NAME} in module {spath}')
+    if not hasattr(smodule, ConfigValidation.schema_name):
+        raise AttributeError(f'Cannot find {ConfigValidation.schema_name} in module {spath}')
 
-    ConfigSchema = getattr(smodule, _SCHEMA_NAME)
+    ConfigSchema = getattr(smodule, ConfigValidation.schema_name)
     schema = OmegaConf.structured(ConfigSchema)
     cfg_val= OmegaConf.merge(schema, cfg)
 
     try:
         OmegaConf.to_object(cfg_val)
     except ValidationError as exc:
-        if _ENFORCE_SCHEMA_VALIDATION:
+        if ConfigValidation.enforce:
             raise ValidationError(f'Failed to validate {package}/{fpath}') from exc
 # ----------------------
 def _resolve_sub_configs(cfg : DictConfig, package : str) -> DictConfig:
