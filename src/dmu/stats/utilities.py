@@ -181,6 +181,11 @@ def _is_par_blinded(name : str, l_blind : list[str]) -> bool:
     -------------
     True if it is meant to be blinded
     '''
+    if len(l_blind) == 0:
+        return False
+
+    log.debug(f'Blinding any of: {l_blind}')
+
     rgx_ors = '|'.join(l_blind)
     regex   = f'({rgx_ors})'
 
