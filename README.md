@@ -345,6 +345,29 @@ section:
 in which case the argument `resolve_paths=True` (default) will make sure
 these paths are expanded to the corresponding config.
 
+### Validating config
+
+In order to validate the configuration `settings.yaml` of project `example_name`:
+
+- Create a data package `example_schema` 
+- Place inside `settings_config.py` with the proper validation schema.
+
+The validation will run optionally if `settings_config.py` exists.
+
+To force validation, use the following context manager:
+
+```python
+import dmu.generic.utilities as gut
+
+with gut.enforce_schema_validation(value=True):
+    cfg = gut.load_conf(
+        package='example_name',
+        fpath  ='configs/settins.yaml')
+```
+
+which raises `RunTimeError` if the schema 
+(i.e. `example_schema/settings.config.py`) is missing.
+
 # Physics
 
 ## Truth matching
