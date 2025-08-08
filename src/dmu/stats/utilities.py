@@ -201,8 +201,8 @@ def _get_pars(
     s_par_flt = pdf.get_params(floating= True)
     s_par_fix = pdf.get_params(floating=False)
 
-    s_par_flt = _blind_vars(s_par_flt, l_blind=blind)
-    s_par_fix = _blind_vars(s_par_fix, l_blind=blind)
+    s_par_flt = _get_blinded_vars(s_par_flt, l_blind=blind)
+    s_par_fix = _get_blinded_vars(s_par_fix, l_blind=blind)
 
     l_par_flt = list(s_par_flt)
     l_par_fix = list(s_par_fix)
