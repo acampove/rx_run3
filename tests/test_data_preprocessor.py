@@ -10,7 +10,7 @@ from dmu.stats                import utilities as sut
 from dmu.logging.log_store    import LogStore
 from omegaconf                import OmegaConf
 from rx_data.rdf_getter       import RDFGetter
-from zfit.core.interfaces     import ZfitData  as zdata
+from zfit.interface           import ZfitData  as zdata
 from fitter.data_preprocessor import DataPreprocessor
 
 log=LogStore.add_logger('fitter:test_data_preprocessor')
