@@ -5,6 +5,7 @@ Module containing the MisID class
 from omegaconf      import DictConfig, OmegaConf
 from zfit.interface import ZfitSpace as zobs
 from zfit.interface import ZfitPDF   as zpdf
+from zfit.loss      import ExtendedUnbinnedNLL
 
 from dmu.logging.log_store import LogStore
 from dmu.workflow.cache    import Cache
@@ -55,16 +56,20 @@ class MisID(Cache):
         pars_path = f'{self._out_path}/parameters.yaml'
         if self._copy_from_cache():
             pars = OmegaConf.load(pars_path)
-            model= self._model_from_pars(pars=pars)
+            if not isinstance(pars, DictConfig):
+                raise ValueError(f'Parameters are not a dictionary: {pars_path}')
+
+            npar = self._normalization_from_control_region(pars=pars)
+            model= self._model_from_pars(npar=npar)
 
         nll_kpp = self._get_control_nll(kind='kpipi')
         nll_kkk = self._get_control_nll(kind='kkk')
         d_nll   = {'kpp_region' : nll_kpp, 'kkk_region' : nll_kkk}
         ftr     = DataFitter(d_nll=d_nll, cfg=self._cfg.control_fit)
         pars    = ftr.run()
-
-        model= self._model_from_pars(pars=pars)
-        OmegaConf.save(cres, pars_path)
+        OmegaConf.save(pars, pars_path)
+        npar    = self._normalization_from_control_region(pars=pars)
+        model   = self._model_from_pars(npar=npar)
 
         self._cache()
 
