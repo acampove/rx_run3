@@ -95,7 +95,7 @@ class FitStats:
             return d_data['minuit_hesse']['error']
 
         pprint.pprint(d_data)
-        raise KeyError(f'Cannot find error in dictionary')
+        raise KeyError('Cannot find error in dictionary')
     # -------------------------------
     def _attach_errors(self, df : pnd.DataFrame) -> pnd.DataFrame:
         pkl_path = f'{self._fit_dir}/fit.pkl'
