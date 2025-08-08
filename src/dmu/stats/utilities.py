@@ -143,20 +143,29 @@ def _get_const(par : zpar , d_const : Union[None, dict[str, tuple[float,float]]]
 
     return val
 #-------------------------------------------------------
-def _blind_vars(s_par : set, l_blind : Union[list[str], None] = None) -> set[zpar]:
+def _get_blinded_vars(
+    s_par   : set, 
+    l_blind : list[str]|None = None) -> set[zpar]:
     '''
-    Takes set of zfit parameters and list of parameter names to blind
-    returns set of zfit parameters that should be blinded
-    '''
-    if l_blind is None:
-        return s_par
+    Parameters
+    -----------------
+    s_par  : PDF parameters
+    l_blind: List of regular expressions that will be used to select parameters to blind 
 
+    Returns
+    -----------------
+    set of zfit parameters that should be blinded
+    '''
     s_par_blind = set()
+
+    if l_blind is None:
+        return s_par_blind  # Do not blind anything
+
     for par in s_par:
-        if _is_par_blinded(name=par.name, l_blind=l_blind):
+        if not _is_par_blinded(name=par.name, l_blind=l_blind):
             continue
 
-        log.debug(f'Not blinding {par.name}')
+        log.debug(f'Blinding {par.name}')
         s_par_blind.add(par)
 
     return s_par_blind
