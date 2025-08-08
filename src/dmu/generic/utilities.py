@@ -13,6 +13,7 @@ from contextlib            import contextmanager
 
 import importlib.util
 import yaml
+from omegaconf.errors      import ConfigKeyError
 from omegaconf             import ListConfig, OmegaConf, DictConfig, ValidationError
 from dmu.generic           import hashing
 from dmu.generic           import utilities as gut
