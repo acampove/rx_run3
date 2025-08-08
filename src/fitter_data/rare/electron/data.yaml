@@ -18,6 +18,7 @@ model:
     jpsi_leakage                      : rare/electron/jpsi_leakage.yaml
     psi2_leakage                      : rare/electron/psi2_leakage.yaml
     signal                            : rare/electron/signal_non_parametric.yaml
+    misid                             : rare/electron/misid.yaml
   constraints:
     yields :
       - Bd_Kstee_eq_btosllball05_DPC
