@@ -2,15 +2,18 @@
 Module containing the MisID class
 '''
 
-from omegaconf      import DictConfig
+from omegaconf      import DictConfig, OmegaConf
 from zfit.interface import ZfitSpace as zobs
 from zfit.interface import ZfitPDF   as zpdf
 
 from dmu.logging.log_store import LogStore
+from dmu.workflow.cache    import Cache
+
+from fitter.data_fitter import DataFitter
 
 log=LogStore.add_logger('fitter:misid')
 # -------------------------        
-class MisID:
+class MisID(Cache):
     '''
     Class meant to provide PDFs for:
 
@@ -36,6 +39,12 @@ class MisID:
         self._obs       = obs
         self._cfg       = cfg
         self._q2bin     = q2bin
+
+        Cache.__init__(
+            self,
+            out_path = f'{self._cfg.out_path}/{component}',
+            config   = cfg,
+        )
     # ----------------------
     def get_pdf(self) -> zpdf:
         '''
@@ -43,5 +52,21 @@ class MisID:
         -------------
         zfit PDF with misid component
         '''
-        return
+        pars_path = f'{self._out_path}/parameters.yaml'
+        if self._copy_from_cache():
+            pars = OmegaConf.load(pars_path)
+            model= self._model_from_pars(pars=pars)
+
+        nll_kpp = self._get_control_nll(kind='kpipi')
+        nll_kkk = self._get_control_nll(kind='kkk')
+        d_nll   = {'kpp_region' : nll_kpp, 'kkk_region' : nll_kkk}
+        ftr     = DataFitter(d_nll=d_nll, cfg=self._cfg.control_fit)
+        pars    = ftr.run()
+
+        model= self._model_from_pars(pars=pars)
+        OmegaConf.save(cres, pars_path)
+
+        self._cache()
+
+        return model
 # -------------------------        
