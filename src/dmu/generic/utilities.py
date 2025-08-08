@@ -40,6 +40,22 @@ class BlockStyleDumper(yaml.SafeDumper):
     def increase_indent(self, flow=False, indentless=False):
         return super().increase_indent(flow=flow, indentless=False)
 # ---------------------------------
+@contextmanager
+def enforce_schema_validation(value : bool):
+    '''
+    Parameters
+    -------------
+    value:  If True it will raise ValidationError if validation of config fails because of:
+            - Schema file not found
+            - Problems with the config
+    '''
+    old_val = ConfigValidation.enforce 
+    ConfigValidation.enforce = value
+    try:
+        yield
+    finally:
+        ConfigValidation.enforce =old_val
+# ---------------------------------
 def load_data(package : str, fpath : str) -> Any:
     '''
     This function will load a YAML or JSON file from a data package
