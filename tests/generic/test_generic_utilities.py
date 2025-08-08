@@ -8,7 +8,7 @@ from time   import sleep
 
 import dmu.generic.utilities as gut
 import pytest
-from omegaconf             import DictConfig, OmegaConf
+from omegaconf             import DictConfig, OmegaConf, ValidationError
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:test_generic_utilities')
