@@ -39,9 +39,12 @@ def test_config(name : str) -> None:
     This test validates the schema of `data.yaml`
     configs
     '''
+    log.info('Testing config')
+
     l_fpath = _get_all_confs(name=name)
 
     with gut.enforce_schema_validation(value=True):
         for fpath in l_fpath:
+            log.info(fpath)
             gut.load_conf(package='fitter_data', fpath=fpath)
 # ----------------------
