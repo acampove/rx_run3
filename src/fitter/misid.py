@@ -47,6 +47,45 @@ class MisID(Cache):
             config   = cfg,
         )
     # ----------------------
+    def _model_from_pars(self, npar : DictConfig) -> zpdf:
+        '''
+        Parameters
+        -------------
+        npars: Dictionary where:
+              key  : Name of normalization parameter, e.g. nkpipi, nkkk
+              value: Value of parameter
+
+        Returns
+        -------------
+        Zfit PDF representing misID PDF
+        '''
+
+    # ----------------------
+    def _normalization_from_control_region(self, pars : DictConfig) -> DictConfig:
+        '''
+        Parameters
+        -------------
+        pars: Dictionary with parameters from fit to control region
+
+        Returns
+        -------------
+        Dictionary with yields in signal region
+        '''
+    # ----------------------
+    def _get_control_nll(self, kind : str) -> tuple[ExtendedUnbinnedNLL,DictConfig]:
+        '''
+        Parameters
+        -------------
+        kind: Control region type, e.g. kkk, kpipi
+
+        Returns
+        -------------
+        Tuple with:
+            - Likelihood build for requested control region
+            - Configuration used to build that likelihood
+        '''
+                
+    # ----------------------
     def get_pdf(self) -> zpdf:
         '''
         Returns
