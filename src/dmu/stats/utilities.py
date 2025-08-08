@@ -195,8 +195,8 @@ def _is_par_blinded(name : str, l_blind : list[str]) -> bool:
     return False
 #-------------------------------------------------------
 def _get_pars(
-        pdf   : zpdf,
-        blind : Union[None, list[str]]) -> tuple[list, list]:
+    pdf   : zpdf,
+    blind : Union[None, list[str]]) -> tuple[list, list]:
 
     s_par_flt = pdf.get_params(floating= True)
     s_par_fix = pdf.get_params(floating=False)
