@@ -26,7 +26,7 @@ class ModelConfig:
     constraints: dict[str, list[str]] = field(default_factory=dict)
 
 @dataclass
-class DataConfig:
+class ConfigSchema:
     output_directory: str            = MISSING
     model           : ModelConfig    = MISSING
     fit             : dict[str, Any] = field(default_factory=dict)   # If unspecified now
