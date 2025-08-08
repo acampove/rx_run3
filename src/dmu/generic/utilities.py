@@ -19,14 +19,18 @@ from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 
 TIMER_ON=False
-# If True, it will require:
-# - Existence of schema
-# - That validation passes
-# Or else an exception will be risen
-_ENFORCE_SCHEMA_VALIDATION=False          
-_SCHEMA_NAME              ='ConfigSchema' # When validating OmegaConf configs, this will be the top level class name of the schema
-
 log = LogStore.add_logger('dmu:generic:utilities')
+# --------------------------------
+class ConfigValidation:
+    '''
+    Class used to hold config validation data
+    '''
+    # If True, it will require:
+    # - Existence of schema
+    # - That validation passes
+    # Or else an exception will be risen
+    enforce     = False          
+    schema_name = 'ConfigSchema' # When validating OmegaConf configs, this will be the top level class name of the schema
 # --------------------------------
 class BlockStyleDumper(yaml.SafeDumper):
     '''
