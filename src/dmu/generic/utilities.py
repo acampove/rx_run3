@@ -76,11 +76,13 @@ def load_conf(
     ---------------------
     DictConfig class from the OmegaConf package
     '''
-
     cpath = files(package).joinpath(fpath)
     cpath = cast(str, cpath)
+
     cfg   = OmegaConf.load(cpath)
     cfg   = cast(DictConfig, cfg)
+
+    _validate_schema(cfg=cfg, package=package, fpath=fpath)
 
     if not resolve_paths:
         return cfg
