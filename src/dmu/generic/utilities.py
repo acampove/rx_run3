@@ -11,8 +11,9 @@ from typing                import Callable, Any, cast
 from functools             import wraps
 from contextlib            import contextmanager
 
+import importlib.util
 import yaml
-from omegaconf             import ListConfig, OmegaConf, DictConfig
+from omegaconf             import ListConfig, OmegaConf, DictConfig, ValidationError
 from dmu.generic           import hashing
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
