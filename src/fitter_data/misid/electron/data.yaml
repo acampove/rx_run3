@@ -4,6 +4,11 @@
 output_directory : misid/electron/data
 model:
   yields    : model/yields/misid_electron.yaml
+  observable:   # This should not be used, but if not included
+    name : B_M  # schema validation would fail
+    range:
+      - 4500
+      - 6000
   components:
     combinatorial : misid/electron/combinatorial.yaml
     kpipi         : misid/electron/kpipi.yaml
