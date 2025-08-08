@@ -307,11 +307,11 @@ def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
     return d_par
 #---------------------------------------------
 def save_fit(
-        data    : zdata,
-        model   : zpdf|None,
-        res     : zres|None,
-        fit_dir : str,
-        d_const : dict[str,tuple[float,float]]|None = None) -> None:
+    data    : zdata,
+    model   : zpdf|None,
+    res     : zres|None,
+    fit_dir : str,
+    d_const : dict[str,tuple[float,float]]|None = None) -> None:
     '''
     Function used to save fit results, meant to reduce boiler plate code
 
