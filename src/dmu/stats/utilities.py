@@ -194,8 +194,20 @@ def _is_par_blinded(name : str, l_blind : list[str]) -> bool:
 #-------------------------------------------------------
 def _get_pars(
     pdf   : zpdf,
-    blind : Union[None, list[str]]) -> tuple[list, list]:
+    blind : None|list[str]) -> tuple[list, list]:
+    '''
+    Parameters
+    ----------------
+    pdf  : zfit PDF
+    blind: List of regular expressions that match all variables to be blinded, or None in case of no blinding
 
+    Returns
+    ----------------
+    Tuple with:
+    - List of floating(fixed) parameters
+
+    Blinded parameters are removed from this list
+    '''
     s_par_flt = pdf.get_params(floating= True)
     s_par_fix = pdf.get_params(floating=False)
 
