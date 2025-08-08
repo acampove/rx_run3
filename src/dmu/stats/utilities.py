@@ -545,10 +545,10 @@ def _pdf_to_data(pdf : zpdf, add_weights : bool) -> zdata:
     return data
 #---------------------------------------------
 def placeholder_fit(
-        kind     : str,
-        fit_dir  : str,
-        df       : pnd.DataFrame|None = None,
-        plot_fit : bool               = True) -> None:
+    kind     : str,
+    fit_dir  : str,
+    df       : pnd.DataFrame|None = None,
+    plot_fit : bool               = True) -> None:
     '''
     Function meant to run toy fits that produce output needed as an input
     to develop tools on top of them
