@@ -177,7 +177,7 @@ class MisID(Cache):
             key  : Name of fitting parameter
             value: Tuple with mu and sigma of constraint
         '''
-        
+        return {}
     # ----------------------
     def get_pdf(self) -> zpdf:
         '''
@@ -196,7 +196,7 @@ class MisID(Cache):
             return model
 
         nll_kpp = self._get_control_nll(kind='kpipi')
-        nll_kkk = self._get_control_nll(kind='kkk')
+        nll_kkk = self._get_control_nll(kind='kkk'  )
         d_nll   = {'kpp_region' : nll_kpp, 'kkk_region' : nll_kkk}
 
         ftr     = DataFitter(d_nll=d_nll, cfg=self._cfg.control_fit)
