@@ -50,8 +50,8 @@ class MisID(Cache):
 
         Cache.__init__(
             self,
-            out_path = f'{self._cfg.out_path}/{component}',
-            config   = cfg,
+            out_path = f'{self._cfg.output_directory}/{component}',
+            config   = OmegaConf.to_container(cfg, resolve=True)
         )
     # ----------------------
     def _model_from_pars(self, npars : DictConfig) -> zpdf:
@@ -129,8 +129,8 @@ class MisID(Cache):
         '''
         cut = cfg.selection[kind]
 
-        cut_l1 = cut.rename('PAR_', 'L1_')
-        cut_l2 = cut.rename('PAR_', 'L2_')
+        cut_l1 = cut.replace('LEP_', 'L1_')
+        cut_l2 = cut.replace('LEP_', 'L2_')
 
         # This is the FF region
         return f'({cut_l1}) && ({cut_l2})'
