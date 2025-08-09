@@ -65,9 +65,9 @@ def custom_selection(d_sel : dict[str,str]|None, force_override : bool = False):
         raise MultipleSelectionOverriding('Custom selection already set, cannot set it twice')
 
     org_val = Data.d_custom_selection
+    Data.d_custom_selection = d_sel
 
     try:
-        Data.d_custom_selection = d_sel
         yield
     finally:
         Data.d_custom_selection = org_val
