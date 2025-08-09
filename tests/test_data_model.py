@@ -42,8 +42,7 @@ def test_resonant():
             obs     = obs,
             trigger = 'Hlt2RD_BuToKpEE_MVA',
             project = 'rx',
-            q2bin   = 'jpsi',
-            name    = 'simple')
+            q2bin   = 'jpsi')
         pdf = dmd.get_model()
 
     sut.print_pdf(pdf)
