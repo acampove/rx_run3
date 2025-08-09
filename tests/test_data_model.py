@@ -98,7 +98,6 @@ def test_misid_rare(tag_cut : str, observable : str):
         'mass'  : '(1)',
         'bdt'   : 'mva_cmb > 0.80 && mva_prc > 0.60'}):
         dmd = DataModel(
-            name    = observable,
             cfg     = cfg,
             obs     = obs,
             trigger = 'Hlt2RD_BuToKpEE_MVA_noPID',
