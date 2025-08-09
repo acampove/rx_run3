@@ -24,7 +24,7 @@ def test_simple() -> None:
     '''
     obs = zfit.Space('B_Mass_smr', limits=(4500, 6000))
 
-    cfg = gut.load_conf(package='fitter_data', fpath='rare/electron/misid.yaml')
+    cfg = gut.load_conf(package='fitter_data', fpath='misid/electron/data_misid.yaml')
 
     obj = MisID(
         component= 'kkk',
