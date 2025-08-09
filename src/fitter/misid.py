@@ -6,7 +6,6 @@ from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
 
 from dmu.stats.parameters  import ParameterLibrary as PL
-from dmu.generic           import utilities        as gut
 from dmu.stats.zfit        import zfit
 from dmu.logging.log_store import LogStore
 from dmu.workflow.cache    import Cache
@@ -16,6 +15,7 @@ from zfit.interface import ZfitSpace as zobs
 from zfit.interface import ZfitPDF   as zpdf
 from zfit.loss      import ExtendedUnbinnedNLL
 
+from fitter.sim_fitter         import SimFitter
 from fitter.data_fitter        import DataFitter
 from fitter.likelihood_factory import LikelihoodFactory
 
