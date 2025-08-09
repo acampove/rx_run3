@@ -13,7 +13,7 @@ from dmu.workflow.cache    import Cache
 from omegaconf      import DictConfig, OmegaConf
 from zfit.interface import ZfitSpace as zobs
 from zfit.interface import ZfitPDF   as zpdf
-from zfit.loss      import ExtendedUnbinnedNLL
+from zfit.interface import ZfitLoss  as zlos 
 
 from fitter.sim_fitter         import SimFitter
 from fitter.data_fitter        import DataFitter
@@ -132,7 +132,7 @@ class MisID(Cache):
         # This is the FF region
         return f'({cut_l1}) && ({cut_l2})'
     # ----------------------
-    def _get_control_nll(self, kind : str) -> tuple[ExtendedUnbinnedNLL,DictConfig]:
+    def _get_control_nll(self, kind : str) -> tuple[zlos,DictConfig]:
         '''
         Parameters
         -------------
