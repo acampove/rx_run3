@@ -154,7 +154,7 @@ class MisID(Cache):
 
             ftr = LikelihoodFactory(
                 obs    = obs,
-                name   = f'likelihood_factory/{kind}',
+                name   = kind,
                 sample = 'DATA_24_*',
                 trigger= 'Hlt2RD_BuToKpEE_MVA_ext',
                 project= 'rx',
