@@ -40,7 +40,9 @@ class MultipleSelectionOverriding(Exception):
         super().__init__(message)
 #-----------------------
 @contextmanager
-def custom_selection(d_sel : dict[str,str]|None, force_override : bool = False):
+def custom_selection(
+    d_sel          : dict[str,str]|None, 
+    force_override : bool = False):
     '''
     This is a context manager meant to be used to add and/or overide 
     the default selection with the selection specified in `d_sel`.
