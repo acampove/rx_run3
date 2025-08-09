@@ -76,10 +76,10 @@ class DataFitter(BaseFitter, Cache):
         Key  : Name of parameter to constrain
         Value: Tuple with mu and sigma for Gaussian constrain
         '''
-        if self._d_cfg is None:
+        if self._d_cns is None:
             return {}
 
-        return self._d_cfg
+        return self._d_cns
     # ----------------------
     @constraints.setter
     def constraints(self, value : dict[str,tuple[float,float]]):
