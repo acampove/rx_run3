@@ -138,7 +138,7 @@ class SimFitter(BaseFitter, Cache):
         log.info(f'Building {self._component} for category {category} with: {l_model}')
 
         mod         = ModelFactory(
-            preffix = f'{self._component}_{category}',
+            preffix = self._get_suffix(category=category),
             obs     = self._obs,
             l_pdf   = l_model,
             l_reuse = [self._mu_par, self._sg_par],
@@ -150,6 +150,21 @@ class SimFitter(BaseFitter, Cache):
         pdf = mod.get_pdf()
 
         return pdf
+    # ----------------------
+    def _get_suffix(self, category : str) -> str:
+        '''
+        Parameters
+        -------------
+        category: Usually `main` otherwise could be brem0, etc
+
+        Returns
+        -------------
+        Name of suffix for naming parameters
+        '''
+        if self._name is None:
+            return f'{self._component}_{category}'
+
+        return f'{self._component}_{category}_{self._name}'
     # ------------------------
     def _fix_tails(self, pdf : zpdf, pars : DictConfig) -> zpdf:
         '''
