@@ -15,7 +15,10 @@ from fitter.data_model     import DataModel
 log=LogStore.add_logger('fitter:test_data_model')
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before any test
+    '''
     LogStore.set_level('fitter:data_model' , 10)
     LogStore.set_level('rx_data:rdf_getter', 30)
 # --------------------------
