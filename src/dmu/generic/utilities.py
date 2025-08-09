@@ -7,6 +7,7 @@ import json
 import pickle
 import inspect
 from importlib.resources   import files
+from importlib.util        import find_spec
 from typing                import Callable, Any, cast
 from functools             import wraps
 from contextlib            import contextmanager
@@ -121,16 +122,8 @@ def _validate_schema(
     package: Name of data package where config to be validated lives
     fpath  : Relative (to package) path to config file
     '''
-    package = package.removesuffix('_data')
-    package = f'{package}_schema'
-
-    sname = os.path.basename(fpath).replace('.yaml', '_config.py')
-    spath = files(package).joinpath(sname)
-    spath = str(spath)
-    if ConfigValidation.enforce and not os.path.isfile(spath):
-        raise FileNotFoundError(f'Missing config schema: {spath}')
-
-    if not os.path.isfile(spath):
+    spath   = _get_schema_path(package=package, fpath=fpath)
+    if spath is None: 
         log.debug(f'No schema found in: {spath}')
         return
 
