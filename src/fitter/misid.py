@@ -111,6 +111,10 @@ class MisID(Cache):
         -------------
         Dictionary with yields in signal region
         '''
+        data = {'nkkk' : 1, 'nkpipi' : 1}
+        pars = OmegaConf.create(data)
+
+        return pars
     # ----------------------
     def _get_pid_cut(self, cfg : DictConfig, kind : str) -> str:
         '''
