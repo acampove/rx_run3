@@ -65,6 +65,7 @@ def custom_selection(
         return
 
     if not force_override and Data.d_custom_selection is not None:
+        log.error(yaml.dump(d_sel))
         raise MultipleSelectionOverriding('Custom selection already set, cannot set it twice')
 
     org_val = Data.d_custom_selection
