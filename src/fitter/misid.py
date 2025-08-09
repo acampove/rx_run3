@@ -77,6 +77,30 @@ class MisID(Cache):
 
         return zfit.pdf.SumPDF([pdf_kkk, pdf_kpipi])
     # ----------------------
+    def _get_misid_pdf(self, kind : str) -> zpdf:
+        '''
+        Parameters
+        -------------
+        kind: kind of PDF, e.g. kkk
+
+        Returns
+        -------------
+        PDF
+        '''
+        cfg = self._cfg.model.components[kind]
+        ftr = SimFitter(
+            component= kind,
+            cfg      = cfg,
+            obs      = self._obs,
+            trigger  = 'Hlt2RD_BuToKpEE_MVA_noPID',
+            project  = 'nopid',
+            q2bin    = self._q2bin)
+        pdf = ftr.get_model()
+        if pdf is None:
+            raise ValueError(f'Could not retrieve PDF for: {kind}')
+
+        return pdf
+    # ----------------------
     def _normalization_from_control_region(self, pars : DictConfig) -> DictConfig:
         '''
         Parameters
