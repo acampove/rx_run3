@@ -7,7 +7,9 @@ yields: &yields
   min : 0
   max : 10000
 
-yld_combinatorial:
+yld_combinatorial_kkk:
+  <<: *yields
+yld_combinatorial_kpipi:
   <<: *yields
 yld_kpipi_kpipi:
   <<: *yields
