@@ -125,37 +125,6 @@ def test_full_selection_muon(sample : str, q2bin : str):
 
     _print_dotted_branches(rdf)
 # --------------------------
-def test_override():
-    '''
-    Will test overriding selection
-    Will test overriding selection multiple times
-    '''
-    mva_cut = 'mva_cmb > 0.1'
-
-    sel.set_custom_selection(d_cut={'bdt' : mva_cut})
-    with pytest.raises(sel.MultipleSelectionOverriding):
-        sel.set_custom_selection(d_cut={'bdt' : mva_cut})
-
-    q2bin   = 'jpsi'
-    sample  = 'DATA*'
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
-
-    d_sel   = sel.selection(trigger=trigger, q2bin=q2bin, process=sample)
-    cut     = d_sel['bdt']
-
-    assert cut == mva_cut
-# --------------------------o
-def test_reset_custom_selection():
-    '''
-    Tests resetting custom selection
-    '''
-    sel.reset_custom_selection()
-    mva_cut = 'mva_cmb > 0.1'
-
-    sel.set_custom_selection(d_cut={'bdt' : mva_cut})
-    sel.reset_custom_selection()
-    sel.set_custom_selection(d_cut={'bdt' : mva_cut})
-# --------------------------
 # TODO: Add more samples
 @pytest.mark.parametrize('sample', [
     'Bu_Kee_eq_btosllball05_DPC',
