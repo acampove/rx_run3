@@ -17,10 +17,10 @@ from dmu.stats.gof_calculator import GofCalculator
 
 from zfit.loss                import ExtendedUnbinnedNLL
 from zfit.minimizers.strategy import FailMinimizeNaN
-from zfit.core.data           import Data
 from zfit.result              import FitResult     as zres
 from zfit.interface           import ZfitModel     as zpdf
 from zfit.interface           import ZfitParameter as zpar
+from zfit.interface           import ZfitData      as zdat
 
 log = LogStore.add_logger('dmu:statistics:fitter')
 #------------------------------
@@ -53,7 +53,7 @@ class Fitter:
         self._data_in = data
         self._pdf     = pdf
 
-        self._data_zf : zfit.data.Data
+        self._data_zf : zdat 
         self._data_np : numpy.ndarray
         self._obs     : zfit.Space
 
@@ -219,7 +219,7 @@ class Fitter:
 
         return ranges
     #------------------------------
-    def _get_subdataset(self, cfg : dict) -> Data:
+    def _get_subdataset(self, cfg : dict) -> zdat:
         if 'nentries' not in cfg:
             return self._data_zf
 
