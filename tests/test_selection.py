@@ -223,9 +223,9 @@ def test_custom_selection_nested():
     csel_000 = sel.Data.d_custom_selection
     with sel.custom_selection(d_sel={'cut_1' : 'val_1'}):
         csel_001 = sel.Data.d_custom_selection
-        with sel.custom_selection(d_sel={'cut_2' : 'val_2'}):
+        with sel.custom_selection(d_sel={'cut_2' : 'val_2'}, force_override=True):
             csel_002 = sel.Data.d_custom_selection
-            with sel.custom_selection(d_sel={'cut_3' : 'val_3'}):
+            with sel.custom_selection(d_sel={'cut_3' : 'val_3'}, force_override=True):
                 csel_003 = sel.Data.d_custom_selection
 
             csel_012  = sel.Data.d_custom_selection
@@ -269,5 +269,4 @@ def test_update_selection():
 
     assert    isel_001  ==    osel_002
     assert id(isel_001) != id(osel_002)
-
 # --------------------------
