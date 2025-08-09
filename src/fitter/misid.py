@@ -67,8 +67,8 @@ class MisID(Cache):
         pdf_kkk   = self._get_misid_pdf(kind='kkk'  ) 
         pdf_kpipi = self._get_misid_pdf(kind='kpipi') 
 
-        nkkk      = zfit.param.ConstantParameter('nkkk'  , npars.kkk  )
-        nkpipi    = zfit.param.ConstantParameter('nkpipi', npars.kpipi)
+        nkkk      = zfit.param.ConstantParameter('nkkk'  , npars.nkkk  )
+        nkpipi    = zfit.param.ConstantParameter('nkpipi', npars.nkpipi)
 
         pdf_kkk.set_yield(nkkk)
         pdf_kpipi.set_yield(nkpipi)
