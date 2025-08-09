@@ -54,7 +54,7 @@ class MisID(Cache):
             config   = cfg,
         )
     # ----------------------
-    def _model_from_pars(self, npar : DictConfig) -> zpdf:
+    def _model_from_pars(self, npars : DictConfig) -> zpdf:
         '''
         Parameters
         -------------
@@ -146,8 +146,9 @@ class MisID(Cache):
             if not isinstance(pars, DictConfig):
                 raise ValueError(f'Parameters are not a dictionary: {pars_path}')
 
-            npar = self._normalization_from_control_region(pars=pars)
-            model= self._model_from_pars(npar=npar)
+            npars = self._normalization_from_control_region(pars=pars)
+            model = self._model_from_pars(npars=npars)
+            return model
 
         nll_kpp = self._get_control_nll(kind='kpipi')
         nll_kkk = self._get_control_nll(kind='kkk')
@@ -155,8 +156,8 @@ class MisID(Cache):
         ftr     = DataFitter(d_nll=d_nll, cfg=self._cfg.control_fit)
         pars    = ftr.run()
         OmegaConf.save(pars, pars_path)
-        npar    = self._normalization_from_control_region(pars=pars)
-        model   = self._model_from_pars(npar=npar)
+        npars   = self._normalization_from_control_region(pars=pars)
+        model   = self._model_from_pars(npars=npars)
 
         self._cache()
 
