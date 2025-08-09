@@ -111,12 +111,12 @@ class MisID(Cache):
             - Configuration used to build that likelihood
         '''
 
-        obs   = zfit.Space(f'B_Mass_{kind}', limits=(4500, 7000))
-        d_sel = self._get_pid_cut(cfg=self._cfg, kind=kind)
+        obs     = zfit.Space(f'B_Mass_{kind}', limits=(4500, 7000))
+        pid_cut = self._get_pid_cut(cfg=self._cfg, kind=kind)
 
         with PL.parameter_schema(cfg=self._cfg.model.yields),\
              RDFGetter.default_excluded(names=[]),\
-             sel.update_selection(d_sel=d_sel):
+            sel.update_selection(d_sel={'pid_l' : pid_cut}):
             ftr = LikelihoodFactory(
                 obs    = obs,
                 name   = f'likelihood_factory/{kind}',
