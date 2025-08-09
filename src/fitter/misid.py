@@ -153,7 +153,8 @@ class MisID(Cache):
 
         with PL.parameter_schema(cfg=self._cfg.model.yields),\
              RDFGetter.default_excluded(names=[]),\
-            sel.update_selection(d_sel={'pid_l' : pid_cut}):
+             sel.update_selection(d_sel={'pid_l' : pid_cut}):
+
             ftr = LikelihoodFactory(
                 obs    = obs,
                 name   = f'likelihood_factory/{kind}',
