@@ -27,6 +27,7 @@ from omegaconf        import OmegaConf, DictConfig
 from zfit.interface   import ZfitData      as zdata
 from zfit.interface   import ZfitSpace     as zobs
 from zfit.interface   import ZfitPDF       as zpdf
+from zfit.interface   import ZfitModel     as zmod
 from zfit.interface   import ZfitParameter as zpar
 from zfit.result      import FitResult     as zres
 
@@ -255,7 +256,7 @@ def _get_messages(
     return l_msg
 #-------------------------------------------------------
 def print_pdf(
-    pdf      : zpdf,
+    pdf      : zpdf|zmod,
     d_const  : None|dict[str,tuple[float, float]] = None,
     txt_path : str|None                           = None,
     level    : int                                = 20,
