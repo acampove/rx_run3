@@ -151,6 +151,41 @@ def _validate_schema(
         if ConfigValidation.enforce:
             raise RuntimeError(f'Failed to validate {package}/{fpath}') from exc
 # ----------------------
+def _get_schema_path(package : str, fpath : str) -> str|None:
+    '''
+    Parameters
+    -------------
+    package: Name of data package with configs
+    fpath  : Path to config relative to `package`
+
+    Returns
+    -------------
+    Either:
+
+    - Path to schema file, a python module
+    - None, if no package was found and schema validation is not enforced 
+    '''
+    package = package.removesuffix('_data')
+    package = f'{package}_schema'
+    sname   = os.path.basename(fpath).replace('.yaml', '_config.py')
+
+    if not find_spec(package) and ConfigValidation.enforce:
+        raise FileNotFoundError(f'Cannot find schema package: {package}')
+
+    if not find_spec(package):
+        return None
+
+    spath = files(package).joinpath(sname)
+    spath = str(spath)
+
+    if not os.path.isfile(spath) and ConfigValidation.enforce:
+        raise FileNotFoundError('Missing config schema')
+
+    if not os.path.isfile(spath):
+        return None
+
+    return spath
+# ----------------------
 def _resolve_sub_configs(cfg : DictConfig, package : str) -> DictConfig:
     '''
     Parameters
