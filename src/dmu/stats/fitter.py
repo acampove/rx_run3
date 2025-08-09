@@ -251,7 +251,7 @@ class Fitter:
         else:
             arr_wgt = None
 
-        data = zfit.data.from_numpy(array=arr_out, weights=arr_wgt, obs=self._data_zf.obs)
+        data = zfit.data.from_numpy(array=arr_out, weights=arr_wgt, obs=self._data_zf.space)
 
         return data
     #------------------------------
