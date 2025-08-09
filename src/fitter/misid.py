@@ -79,6 +79,25 @@ class MisID(Cache):
         Dictionary with yields in signal region
         '''
     # ----------------------
+    def _get_pid_cut(self, cfg : DictConfig, kind : str) -> str:
+        '''
+        Parameters
+        -------------
+        cfg : Config taken from YAML file for data, e.g. data.yaml
+        kind: Type of control region, e.g. kkk or kpipi
+
+        Returns
+        -------------
+        PID cut needed to build control region
+        '''
+        cut = cfg.selection[kind]
+
+        cut_l1 = cut.rename('PAR_', 'L1_')
+        cut_l2 = cut.rename('PAR_', 'L2_')
+
+        # This is the FF region
+        return f'({cut_l1}) && ({cut_l2})'
+    # ----------------------
     def _get_control_nll(self, kind : str) -> tuple[ExtendedUnbinnedNLL,DictConfig]:
         '''
         Parameters
