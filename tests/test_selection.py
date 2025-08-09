@@ -3,7 +3,7 @@ Script with functions needed to test functions in selection.py
 '''
 import os
 import pytest
-from ROOT                   import RDataFrame
+from ROOT                   import RDataFrame # type: ignore
 
 from dmu.logging.log_store  import LogStore
 from dmu.rdataframe         import utilities as ut
@@ -58,7 +58,7 @@ def test_selection(sample : str, smeared : bool, q2bin : str):
     trigger = 'Hlt2RD_BuToKpEE_MVA'
 
     gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
 
     d_sel = sel.selection(
             trigger=trigger,
@@ -71,6 +71,9 @@ def test_selection(sample : str, smeared : bool, q2bin : str):
 
     rep = rdf.Report()
     df  = ut.rdf_report_to_df(rep)
+    if df is None:
+        raise ValueError('Empty cutflow')
+
     df['sample' ] = sample
     df['smeared'] = smeared
     df['q2bin'  ] = q2bin
@@ -87,8 +90,8 @@ def test_full_selection_electron(sample : str, q2bin : str):
     '''
     trigger = 'Hlt2RD_BuToKpEE_MVA'
     with RDFGetter.max_entries(value=100_000):
-        gtr     = RDFGetter(sample=sample, trigger=trigger)
-        rdf     = gtr.get_rdf()
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf(per_file=False)
 
     rdf     = sel.apply_full_selection(rdf = rdf, trigger=trigger, q2bin=q2bin, process=sample)
 
@@ -109,8 +112,8 @@ def test_full_selection_muon(sample : str, q2bin : str):
     '''
     trigger = 'Hlt2RD_BuToKpMuMu_MVA'
     with RDFGetter.max_entries(value=100_000):
-        gtr     = RDFGetter(sample=sample, trigger=trigger)
-        rdf     = gtr.get_rdf()
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf(per_file=False)
 
     rdf     = sel.apply_full_selection(rdf = rdf, trigger=trigger, q2bin=q2bin, process=sample)
     rep     = rdf.Report()
@@ -164,7 +167,7 @@ def test_truth_matching(sample : str):
     '''
     trigger = 'Hlt2RD_BuToKpEE_MVA_noPID'
     gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
 
     cut = tm.get_truth(sample)
     ini = rdf.Count().GetValue()
