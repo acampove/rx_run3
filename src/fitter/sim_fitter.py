@@ -137,7 +137,7 @@ class SimFitter(BaseFitter, Cache):
         '''
         log.info(f'Building {self._component} for category {category} with: {l_model}')
 
-        mod     = ModelFactory(
+        mod         = ModelFactory(
             preffix = f'{self._component}_{category}',
             obs     = self._obs,
             l_pdf   = l_model,
