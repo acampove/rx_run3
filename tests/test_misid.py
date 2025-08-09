@@ -1,6 +1,7 @@
 '''
 Module containing tests for MisID class
 '''
+import pytest
 
 from dmu.stats.zfit        import zfit
 from dmu.logging.log_store import LogStore
@@ -9,6 +10,13 @@ from zfit.interface        import ZfitPDF   as zpdf
 from fitter.misid          import MisID 
 
 log=LogStore.add_logger('fitter:test_misid')
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('dmu:workflow:cache', 10)
 # ----------------------
 def _validate_pdf(pdf : zpdf) -> None:
     '''
