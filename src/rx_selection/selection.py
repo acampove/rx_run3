@@ -5,6 +5,7 @@ Module containing the selection function, which returns a dictionary of cuts
 
 import os
 import re
+import copy
 
 from importlib.resources import files
 from contextlib          import contextmanager
@@ -66,6 +67,27 @@ def custom_selection(d_sel : dict[str,str]|None, force_override : bool = False):
 
     org_val = Data.d_custom_selection
     Data.d_custom_selection = d_sel
+
+    try:
+        yield
+    finally:
+        Data.d_custom_selection = org_val
+# ----------------------
+@contextmanager
+def update_selection(d_sel : dict[str,str]):
+    '''
+    This manager will _update_ the **FULL** selection, i.e. default plus custom one.
+
+    Parameters
+    -------------
+    d_sel: Selection that will be used to update custom + default selection
+    '''
+    org_val = None if Data.d_custom_selection is None else copy.deepcopy(Data.d_custom_selection)
+
+    if Data.d_custom_selection is None:
+        Data.d_custom_selection = {} 
+
+    Data.d_custom_selection.update(d_sel)
 
     try:
         yield
