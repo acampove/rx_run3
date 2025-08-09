@@ -31,26 +31,23 @@ class MisID(Cache):
     # ----------------------
     def __init__(
         self, 
-        component : str, 
         obs       : zobs,
         cfg       : DictConfig, 
         q2bin     : str):
         '''
         Parameters
         -------------
-        component: MisID component, e.g. kkk
         obs      : zfit observable
         cfg      : configuration needed to build PDF
         q2bin    : E.g. central
         '''
-        self._component = component
         self._obs       = obs
         self._cfg       = cfg
         self._q2bin     = q2bin
 
         Cache.__init__(
             self,
-            out_path = f'{self._cfg.output_directory}/{component}',
+            out_path = self._cfg.output_directory,
             config   = OmegaConf.to_container(cfg, resolve=True)
         )
     # ----------------------

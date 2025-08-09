@@ -27,7 +27,6 @@ def test_simple() -> None:
     cfg = gut.load_conf(package='fitter_data', fpath='misid/electron/data_misid.yaml')
 
     obj = MisID(
-        component= 'kkk',
         obs      = obs,
         cfg      = cfg,
         q2bin    = 'central')
