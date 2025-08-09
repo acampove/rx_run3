@@ -320,7 +320,7 @@ class SampleWeighter:
         log.debug('At:')
         log.debug(f'X={x:.2f}')
         log.debug(f'Y={y:.2f}')
-        log.info(f'Eff={eff:0.3}')
+        log.debug(f'Eff={eff:0.3}')
 
         if eff < 0:
             return 0.0
@@ -469,6 +469,8 @@ class SampleWeighter:
         if len(self._df) == 0:
             log.warning('Empty dataframe, not assigning any weight')
             return self._df
+
+        log.info(f'Getting signal={self._is_sig} PID weights for sample {self._sample}')
 
         try:
             sr_wgt = self._df.apply(self._get_transfer_weight, axis=1)
