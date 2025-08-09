@@ -8,8 +8,7 @@ from dmu.generic            import utilities as gut
 from dmu.workflow.cache     import Cache
 from rx_data.rdf_getter     import RDFGetter
 from rx_selection           import selection as sel
-
-from fitter.sim_fitter  import SimFitter
+from fitter.sim_fitter      import SimFitter
 
 # ---------------------------------------------------
 def test_nomc():
