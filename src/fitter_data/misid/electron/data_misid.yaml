@@ -1,14 +1,23 @@
-# This is a config file used for tests
-# It illustrates how a fit would run for data
+# This config is used to control how the data model
+# is built for the fit to the misID control regions
 
 output_directory : misid/electron/data
+selection:
+  kkk  : (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K > 0.1
+  kpipi: (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K < 0.1
 model:
   yields    : model/yields/misid_electron.yaml
-  observable:   # This should not be used, but if not included
-    name : B_M  # schema validation would fail
-    range:
-      - 4500
-      - 6000
+  observable:
+    kpipi:
+      name : B_Mass_kpipi
+      range:
+        - 4500
+        - 6000
+    kkk:
+      name : B_Mass_kkk
+      range:
+        - 4500
+        - 6000
   components:
     combinatorial : misid/electron/combinatorial.yaml
     kpipi         : misid/electron/kpipi.yaml
