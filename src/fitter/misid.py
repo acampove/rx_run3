@@ -66,7 +66,16 @@ class MisID(Cache):
         -------------
         Zfit PDF representing misID PDF
         '''
+        pdf_kkk   = self._get_misid_pdf(kind='kkk'  ) 
+        pdf_kpipi = self._get_misid_pdf(kind='kpipi') 
 
+        nkkk      = zfit.param.ConstantParameter('nkkk'  , npars.kkk  )
+        nkpipi    = zfit.param.ConstantParameter('nkpipi', npars.kpipi)
+
+        pdf_kkk.set_yield(nkkk)
+        pdf_kpipi.set_yield(nkpipi)
+
+        return zfit.pdf.SumPDF([pdf_kkk, pdf_kpipi])
     # ----------------------
     def _normalization_from_control_region(self, pars : DictConfig) -> DictConfig:
         '''
