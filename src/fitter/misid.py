@@ -111,6 +111,28 @@ class MisID(Cache):
             - Configuration used to build that likelihood
         '''
                 
+        cfg = gut.load_conf(
+            package='fitter_data',
+            fpath  ='misid/electron/data_misid.yaml')
+
+        obs   = zfit.Space(f'B_Mass_{kind}', limits=(4500, 7000))
+        d_sel = self._get_pid_cut(cfg=cfg, kind=kind)
+
+        with PL.parameter_schema(cfg=cfg.model.yields),\
+             RDFGetter.default_excluded(names=[]),\
+             sel.update_selection(d_sel=d_sel):
+            ftr = LikelihoodFactory(
+                obs    = obs,
+                name   = f'likelihood_factory/{kind}',
+                sample = 'DATA_24_*',
+                trigger= 'Hlt2RD_BuToKpEE_MVA_ext',
+                project= 'rx',
+                q2bin  = self._q2bin,
+                cfg    = cfg)
+            nll = ftr.run()
+            cfg = ftr.get_config()
+
+        return nll, cfg
     # ----------------------
     def get_pdf(self) -> zpdf:
         '''
