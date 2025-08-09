@@ -120,10 +120,10 @@ class SimFitter(BaseFitter, Cache):
         return d_data
     # ------------------------
     def _get_pdf(
-            self,
-            cfg     : DictConfig,
-            category: str,
-            l_model : list[str]) -> zpdf:
+        self,
+        cfg     : DictConfig,
+        category: str,
+        l_model : list[str]) -> zpdf:
         '''
         Parameters
         ------------
