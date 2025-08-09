@@ -110,15 +110,11 @@ class MisID(Cache):
             - Likelihood build for requested control region
             - Configuration used to build that likelihood
         '''
-                
-        cfg = gut.load_conf(
-            package='fitter_data',
-            fpath  ='misid/electron/data_misid.yaml')
 
         obs   = zfit.Space(f'B_Mass_{kind}', limits=(4500, 7000))
-        d_sel = self._get_pid_cut(cfg=cfg, kind=kind)
+        d_sel = self._get_pid_cut(cfg=self._cfg, kind=kind)
 
-        with PL.parameter_schema(cfg=cfg.model.yields),\
+        with PL.parameter_schema(cfg=self._cfg.model.yields),\
              RDFGetter.default_excluded(names=[]),\
              sel.update_selection(d_sel=d_sel):
             ftr = LikelihoodFactory(
@@ -128,7 +124,7 @@ class MisID(Cache):
                 trigger= 'Hlt2RD_BuToKpEE_MVA_ext',
                 project= 'rx',
                 q2bin  = self._q2bin,
-                cfg    = cfg)
+                cfg    = self._cfg)
             nll = ftr.run()
             cfg = ftr.get_config()
 
