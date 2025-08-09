@@ -58,7 +58,14 @@ class DataFitter(BaseFitter, Cache):
         Full likelihood, i.e. sum over all the models
         '''
         l_nll = [ nll for nll, _ in self._d_nll.values() ]
-        nll   = sum(l_nll[1:], l_nll[0])
+        try:
+            nll   = sum(l_nll[1:], l_nll[0])
+        except ParamNameNotUniqueError:
+            for nll in l_nll:
+                pdf = nll.model[0]
+                sut.print_pdf(pdf=pdf)
+
+            raise ParamNameNotUniqueError('Models contain multiple parameters with the same name')
 
         return nll
     # ----------------------
