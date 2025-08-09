@@ -134,6 +134,18 @@ class MisID(Cache):
 
         return nll, cfg
     # ----------------------
+    def _get_constraints(self) -> dict[str,tuple[float,float]]:
+        '''
+        This method should provide constraints for ratio of PID efficiencies
+
+        Returns
+        -------------
+        Dictionary where:
+            key  : Name of fitting parameter
+            value: Tuple with mu and sigma of constraint
+        '''
+        
+    # ----------------------
     def get_pdf(self) -> zpdf:
         '''
         Returns
@@ -154,6 +166,7 @@ class MisID(Cache):
         nll_kkk = self._get_control_nll(kind='kkk')
         d_nll   = {'kpp_region' : nll_kpp, 'kkk_region' : nll_kkk}
         ftr     = DataFitter(d_nll=d_nll, cfg=self._cfg.control_fit)
+        ftr.constraints = self._get_constraints()
         pars    = ftr.run()
         OmegaConf.save(pars, pars_path)
         npars   = self._normalization_from_control_region(pars=pars)
