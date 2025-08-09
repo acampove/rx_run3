@@ -32,7 +32,10 @@ class Data:
         8]
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before any test
+    '''
     LogStore.set_level('rx_misid:weighter', 10)
     os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
