@@ -101,43 +101,6 @@ def _print_selection(d_cut : dict[str,str]) -> None:
     for name, expr in d_cut.items():
         log.debug(f'{name:<20}{expr}')
 #-----------------------
-def set_custom_selection(d_cut : dict[str,str]) -> None:
-    '''
-    This function is meant to override the analysis selection, such that
-
-    - Every tool that uses the selection picks up the same selection
-    - Cuts are added (e.g. brem category) or modified (e.g. MVA WP)
-
-    This function is meant to be called once, at the beginning of the process, e.g. main function.
-    '''
-    if Data.d_custom_selection is not None:
-        raise MultipleSelectionOverriding('Custom selection can only be set once')
-
-    log.warning('Setting custom selection')
-    for cut_name, cut_expr in d_cut.items():
-        log.info(f'{cut_name:<20}{cut_expr}')
-
-    Data.d_custom_selection = d_cut
-#-----------------------
-def reset_custom_selection() -> None:
-    '''
-    This function can be called to remove the custom selection.
-
-    Why should I need this?
-
-    Mostly because you want to try different selections in parametrized tests
-    If used elsewhere it might lead to an analysis running different selections in different
-    parts of the code
-    '''
-
-    if Data.d_custom_selection is None:
-        log.warning('No custom selection found')
-        return
-
-    log.warning('Resetting custom selection')
-
-    Data.d_custom_selection = None
-#-----------------------
 def selection(
     q2bin    : str,
     process  : str,
