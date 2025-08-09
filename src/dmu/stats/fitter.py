@@ -43,6 +43,7 @@ class Fitter:
     # These are substrings found in tensorflow messages
     # that are pretty useless and need to be hidden
     _l_hidden_tf_lines= [
+        'Loaded cuDNN version',
         'abnormal_detected_host @',
         'Skipping loop optimization for Merge',
         'Creating GpuSolver handles for stream',
