@@ -5,7 +5,7 @@ from typing  import cast
 
 import numpy
 from omegaconf              import DictConfig
-from ROOT                   import RDataFrame
+from ROOT                   import RDataFrame # type: ignore
 from dmu.workflow.cache     import Cache
 from dmu.stats.zfit         import zfit
 from dmu.stats              import utilities  as sut
@@ -161,9 +161,11 @@ class DataPreprocessor(Cache):
         -------------
         Array with PID weights
         '''
+        log.info(f'Splitting sample: {self._sample}/{self._q2bin}')
         spl   = SampleSplitter(rdf = self._rdf, cfg = cfg.splitting)
         df    = spl.get_sample()
 
+        log.info(f'Getting PID weights for: {self._sample}/{self._q2bin}')
         wgt   = SampleWeighter(
             df    = df,
             cfg   = cfg.weights,
