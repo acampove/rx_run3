@@ -127,6 +127,9 @@ class DataFitter(BaseFitter, Cache):
 
         res.hesse(name='minuit_hesse')
 
+        if nll is None:
+            raise ValueError('Likelihood is missing')
+
         for model, data, cfg, name in zip(nll.model, nll.data, l_cfg, l_nam):
             out_path = f'{self._out_path}/{name}'
 
