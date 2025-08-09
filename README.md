@@ -33,7 +33,9 @@ rep = rdf.Report()
 rep.Print()
 ```
 
-## Overriding selection
+## Changing selection
+
+### Overriding default
 
 The selection stored in the config files can be overriden with:
 
@@ -49,16 +51,38 @@ This will make sure that the `bdt` field:
 - Is added with a `mva_cmb > 0.1` cut, if it does not exist
 - Is updated, if it exists
 
-For `run_function_that_uses_selection` and outside that `with`
-section, the nominal the selection picked is the nominal.
+inside the context, outside, the nominal selection will be used.
 
-## Resetting overriding selection
+This manager implements a _lock_ that prevents custom selections
+from been set more than once in a nested way.
 
-In order to do tests of parts of the code with different selections, one would have to
-override the selection multiple times. This is not allowed, unless the selection is reset with:
+If the user **has to** use a ustom selection inside a context 
+already using a custom selection, he has to use:
 
 ```python
 from rx_selection import selection as sel
 
-sel.reset_custom_selection()
+with sel.custom_selection(d_sel = {'bdt_cmb' : 'mva_cmb > 0.1'}):
+    # mva_cmb cut added on top of default selection
+    run_with_cmb_cut()
+    with sel.custom_selection(d_sel = {'bdt_prc' : 'mva_prc > 0.2'}, force_override=True):
+        # mva_prc cut added on top of default selection
+        run_with_prc_cut()
 ```
+
+### Overriding current selection
+
+In order to override whatever is the current selection do:
+
+```python
+from rx_selection import selection as sel
+
+with sel.custom_selection(d_sel = {'bdt' : 'mva_cmb > 0.1'}):
+    # Here you run with mva_cmb only
+    with sel.update_selection(d_sel = {'bdt_prc' : 'mva_prc > 0.2'}):
+        # Here you run with both mva_cmb and mva_prc
+        run_function_that_uses_selection()
+```
+
+This will not override the default selection, as `custom_selection` does.
+It will override the **current** selection, which might be a custom selection.
