@@ -186,6 +186,8 @@ class MisID(Cache):
         '''
         pars_path = f'{self._out_path}/parameters.yaml'
         if self._copy_from_cache():
+            log.info(f'Found cached: {pars_path}')
+
             pars = OmegaConf.load(pars_path)
             if not isinstance(pars, DictConfig):
                 raise ValueError(f'Parameters are not a dictionary: {pars_path}')
@@ -194,6 +196,7 @@ class MisID(Cache):
             model = self._model_from_pars(npars=npars)
             return model
 
+        log.info(f'Running full calculation, nothing cached in: {pars_path}')
         nll_kpp = self._get_control_nll(kind='kpipi')
         nll_kkk = self._get_control_nll(kind='kkk'  )
         d_nll   = {'kpipi' : nll_kpp, 'kkk' : nll_kkk}
@@ -210,4 +213,4 @@ class MisID(Cache):
         self._cache()
 
         return model
-# -------------------------        
+# -------------------------
