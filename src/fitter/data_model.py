@@ -33,7 +33,8 @@ class DataModel:
         project: E.g. rx
         q2bin  : E.g. central
         obs    : zfit observable
-        name   : Optional, identifier for this model
+        name   : Optional, identifier for this model, 
+                 if passed, used also as suffix of yields, e.g. yld_combinatorial_{name}
         '''
         self._cfg    = cfg
         self._obs    = obs
@@ -65,7 +66,9 @@ class DataModel:
     # ------------------------
     def get_model(self) -> zpdf:
         '''
-        Returns fitting model for data fit
+        Returns 
+        ----------------
+        Fitting model for data fit
         '''
         l_pdf = []
         npdf  = len(self._cfg.model)
