@@ -23,6 +23,14 @@ from zfit.interface           import ZfitData      as zdat
 
 log = LogStore.add_logger('dmu:statistics:fitter')
 #------------------------------
+class ParameterHolder(Protocol):
+    '''
+    Class representing object with `get_params` method
+    '''
+    # ----------------------
+    def get_params(self, floating : bool) -> set[zpar]:
+        ...
+#------------------------------
 class FitterGofError(Exception):
     '''
     Exception used when GoF cannot be calculated
@@ -508,12 +516,12 @@ class Fitter:
     #------------------------------
     @staticmethod
     def get_gaussian_constraints(
-        obj : zpdf|ExtendedUnbinnedNLL,
+        obj : ParameterHolder,
         cfg : dict[str,tuple[float,float]]|None) -> list[zfit.constraint.GaussianConstraint]:
         '''
         Parameters
         --------------
-        obj: Zfit PDF or Likelihood, whose parameters will be constrained
+        obj: Object from which `get_params` can be called, such that its parameters will be constrained
         cfg: Dictionary specifying what variables to constrain and values of constraints, e.g.
              mu : (5, 1.0)
              sg : (0, 0.1)
