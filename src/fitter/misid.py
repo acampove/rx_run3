@@ -161,9 +161,11 @@ class MisID(Cache):
         nll_kpp = self._get_control_nll(kind='kpipi')
         nll_kkk = self._get_control_nll(kind='kkk')
         d_nll   = {'kpp_region' : nll_kpp, 'kkk_region' : nll_kkk}
+
         ftr     = DataFitter(d_nll=d_nll, cfg=self._cfg.control_fit)
         ftr.constraints = self._get_constraints()
         pars    = ftr.run()
+
         OmegaConf.save(pars, pars_path)
         npars   = self._normalization_from_control_region(pars=pars)
         model   = self._model_from_pars(npars=npars)
