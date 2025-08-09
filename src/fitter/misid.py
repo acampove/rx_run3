@@ -2,6 +2,7 @@
 Module containing the MisID class
 '''
 
+from dmu.stats.fitter import GofCalculator
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
 
@@ -197,9 +198,10 @@ class MisID(Cache):
         nll_kkk = self._get_control_nll(kind='kkk'  )
         d_nll   = {'kpp_region' : nll_kpp, 'kkk_region' : nll_kkk}
 
-        ftr     = DataFitter(d_nll=d_nll, cfg=self._cfg.control_fit)
-        ftr.constraints = self._get_constraints()
-        pars    = ftr.run()
+        with GofCalculator.disabled(value=False):
+            ftr     = DataFitter(d_nll=d_nll, cfg=self._cfg)
+            #ftr.constraints = self._get_constraints()
+            pars    = ftr.run()
 
         OmegaConf.save(pars, pars_path)
         npars   = self._normalization_from_control_region(pars=pars)
