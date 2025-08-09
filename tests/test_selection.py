@@ -265,3 +265,37 @@ def test_custom_selection_nested():
     assert csel_002 == csel_012
     assert csel_003 == {'cut_3' : 'val_3'}
 # --------------------------
+def test_update_selection():
+    '''
+    Tests that manger can add cuts to existing selection
+    '''
+    isel_001 = {'cut_1' : 'val_1'}
+    with sel.update_selection(d_sel=isel_001):
+        osel_001 = sel.Data.d_custom_selection
+
+    assert    isel_001  ==    osel_001
+    assert id(isel_001) != id(osel_001)
+
+    csel_001 = {'cut_1' : 'val_1'}
+    isel_001 = {'cut_2' : 'val_2'}
+    with sel.custom_selection(d_sel=csel_001):
+        with sel.update_selection(d_sel=isel_001):
+            osel_001 = sel.Data.d_custom_selection
+
+    csel_001.update(isel_001)
+
+    assert    csel_001  == osel_001
+    assert id(isel_001) != id(osel_001)
+
+    isel_001 = {'cut_1' : 'val_1'}
+    isel_002 = {'cut_2' : 'val_2'}
+    with sel.update_selection(d_sel=isel_001):
+        with sel.update_selection(d_sel=isel_002):
+            osel_002 = sel.Data.d_custom_selection
+
+    isel_001.update(isel_002)
+
+    assert    isel_001  ==    osel_002
+    assert id(isel_001) != id(osel_002)
+
+# --------------------------
