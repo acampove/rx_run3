@@ -54,7 +54,9 @@ class DataModel:
         -------------------
         PDF with yield
         '''
-        nevt = PL.get_yield(name=name)
+        yield_name = f'yld_{name}' if self._name is None else f'yld_{name}_{self._name}'
+
+        nevt = PL.get_yield(name=yield_name)
         kdes = zfit.pdf.KDE1DimFFT, zfit.pdf.KDE1DimExact, zfit.pdf.KDE1DimISJ
         if isinstance(pdf, kdes):
             pdf.set_yield(nevt)
@@ -92,7 +94,7 @@ class DataModel:
                 log.warning(f'Skipping component: {component}')
                 continue
 
-            pdf    = self._extend(pdf=pdf, name=f'yld_{component}')
+            pdf    = self._extend(pdf=pdf, name=component)
             l_pdf.append(pdf)
 
         pdf = zfit.pdf.SumPDF(l_pdf)
