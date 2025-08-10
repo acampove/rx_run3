@@ -196,8 +196,6 @@ class SampleWeighter:
         new_value = min(new_value, maxv)
 
         if old_value != new_value:
-            #log.debug(f'Moving {name} value inside map {old_value:.5f} -> {new_value:.5f}')
-
             is_max = old_value > maxv
             if name not in self._d_out_of_map:
                 self._d_out_of_map[name] = {True : 0, False : 0}
@@ -458,12 +456,12 @@ class SampleWeighter:
         '''
         log.info(f'Processed {len(self._df)} entries')
         log.info(40 * '-')
-        log.info(f'{"Variable":<20}{"Low":<10}{"High":<20}')
+        log.info(f'{"Variable":<20}{"Low":<10}{"High":<10}')
         log.info(40 * '-')
         for var, d_frq in self._d_out_of_map.items():
             val_low  = d_frq.get(False,0)
             val_high = d_frq.get(True ,0)
-            log.info(f'{var:<20}{val_low:<10}{val_high:<20}')
+            log.info(f'{var:<20}{val_low:<10}{val_high:<10}')
         log.info(40 * '-')
 
         nwgt = len(wgt)
