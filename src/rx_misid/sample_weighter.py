@@ -48,7 +48,10 @@ class SampleWeighter:
         self._l_hadron_sample   = ['Bu_piplpimnKpl_eq_sqDalitz_DPC', 'Bu_KplKplKmn_eq_sqDalitz_DPC']
         self._regex             = r'.*_(block\d)(?:_v\d)?-(?:up|down)-(K|Pi)-.*'
 
-        self._d_out_of_map : dict[str,dict[int,int]] = {}
+        #PT:
+        #    True : 10
+        #    False: 20
+        self._d_out_of_map : dict[str,dict[bool,int]] = {}
 
         self._set_variables()
         self._df                           = self._get_df(df)
