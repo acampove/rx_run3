@@ -166,11 +166,24 @@ class SampleWeighter:
         self._varx = l_var[0]
         self._vary = l_var[1]
     # ------------------------------
-    def _get_bin_index(self,
-                       hist  : bh,
-                       iaxis : int,
-                       value : float,
-                       name  : str) -> int:
+    def _get_bin_index(
+        self,
+        hist  : bh,
+        iaxis : int,
+        value : float,
+        name  : str) -> int:
+        '''
+        Parameters
+        ------------------
+        hist : Boost histogram
+        iaxis: Axis index, 0 or 1
+        value: Value of variable whose intex is read for `iaxis`
+        name : Name of the variable corresponding to `iaxis`
+
+        Returns
+        ------------------
+        Index of bin in map for given `value` in given histogram
+        '''
         axis = hist.axes[iaxis]
         minv = axis.edges[ 0] * 1.001
         maxv = axis.edges[-1] * 0.999
