@@ -99,6 +99,22 @@ def test_load_data(ext : str):
 
     assert data == expected
 # -------------------------
+def test_load_conf_schema_validation_no_package(no_schema_pkg):
+    '''
+    Tests that the validation fails when no schema data package is found 
+    '''
+    cfg = gut.load_conf(
+        package='fake_data',
+        fpath  ='config.yaml')
+
+    assert cfg == {'dummy' : 'data'}
+
+    with pytest.raises(FileNotFoundError),\
+        gut.enforce_schema_validation(value=True):
+        cfg = gut.load_conf(
+            package='fake_data',
+            fpath  ='config.yaml')
+# -------------------------
 def test_load_conf_schema_validation_no_file():
     '''
     Tests that the validation fails when no schema was found
