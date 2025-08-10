@@ -79,7 +79,7 @@ def _validate_weights(
     plt.savefig(f'{Data.out_dir}/{mode}_{sample}_{lep}.png')
     plt.close()
 # -------------------------------------------------------
-def _get_dataframe() -> pnd.DataFrame:
+def _get_dataframe(good_phase_space :  bool = True) -> pnd.DataFrame:
     df           = pnd.DataFrame(index=range(Data.nentries))
     df['hadron'] = numpy.random.choice(['kaon' ,   'pion'], size=Data.nentries)
     df['kind'  ] = numpy.random.choice(['PassFail', 'FailPass', 'FailFail'], size=Data.nentries)
@@ -94,6 +94,9 @@ def _get_dataframe() -> pnd.DataFrame:
     for lep in ['L1', 'L2']:
         df[f'{lep}_TRACK_PT' ] = numpy.random.uniform(550, 20_000, Data.nentries)
         df[f'{lep}_TRACK_ETA'] = numpy.random.uniform(1.6, 4.0, Data.nentries)
+
+    if not good_phase_space:
+        return df
 
     df = df[ df['L1_TRACK_PT'] < (30_000 - 5_000 * df['L1_TRACK_ETA']) ]
     df = df[ df['L2_TRACK_PT'] < (30_000 - 5_000 * df['L2_TRACK_ETA']) ]
