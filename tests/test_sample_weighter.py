@@ -110,6 +110,7 @@ def _get_dataframe(good_phase_space :  bool = True) -> pnd.DataFrame:
     'DATA_24_MagUp_24c2',
     'Bu_JpsiK_ee_eq_DPC',
     'Bu_Kee_eq_btosllball05_DPC',
+    'Bu_KplKplKmn_eq_sqDalitz_DPC',
     'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
 @pytest.mark.parametrize('is_sig', [True, False])
 def test_simple(is_sig : bool, sample : str):
