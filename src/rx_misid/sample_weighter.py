@@ -482,6 +482,13 @@ class SampleWeighter:
         ----------------
         wgt: Array of weights
         '''
+        log.info(40 * '-')
+        log.info(f'{"Value":<20}{"Frequency":<20}')
+        log.info(40 * '-')
+        for kind, val in self._d_quality.items():
+            log.info(f'{kind:<20}{val:<20}')
+        log.info(40 * '-')
+        log.info('')
         log.info(f'Processed {len(self._df)} entries')
         log.info(40 * '-')
         log.info(f'{"Variable":<20}{"Low":<10}{"High":<10}')
@@ -491,7 +498,7 @@ class SampleWeighter:
             val_high = d_frq.get(True ,0)
             log.info(f'{var:<20}{val_low:<10}{val_high:<10}')
         log.info(40 * '-')
-
+        log.info('')
         nwgt = len(wgt)
         sumw = numpy.sum(wgt)
 
