@@ -36,7 +36,7 @@ def initialize():
     '''
     This runs before any test
     '''
-    LogStore.set_level('rx_misid:sample_weighter', 10)
+    LogStore.set_level('rx_misid:sample_weighter', 20)
     os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
 def _validate_weights(
@@ -122,7 +122,7 @@ def test_simple(is_sig : bool, sample : str):
     sample: MC and data samples need to be weighted in different ways
     '''
     cfg = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
-    df  = _get_dataframe()
+    df  = _get_dataframe(good_phase_space=False)
     arr_block_inp = df['block'].to_numpy()
 
     if not sample.startswith('DATA_'):
