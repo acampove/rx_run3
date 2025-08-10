@@ -52,6 +52,14 @@ class SampleWeighter:
         #    True : 10
         #    False: 20
         self._d_out_of_map : dict[str,dict[bool,int]] = {}
+        self._d_quality    : dict[str,int] = {
+            'NaN'      : 0, 
+            'Inf'      : 0, 
+            'Negative' : 0, 
+            'Zeroes'   : 0, 
+            'Good'     : 0,
+            'Ones'     : 0,
+            'Above 1'  : 0} 
 
         self._set_variables()
         self._df                           = self._get_df(df)
@@ -321,13 +329,30 @@ class SampleWeighter:
         efficiency after sanitation step
         '''
         if 0 <= eff <= 1:
+            if   math.isclose(eff, 0, rel_tol=1e-5):
+                self._d_quality['Zeroes'] += 1
+            elif math.isclose(eff, 1, rel_tol=1e-5):
+                self._d_quality['Ones'] += 1
+            else:
+                self._d_quality['Good'] += 1
+
             return eff
+
+        if math.isinf(eff):
+            log.debug('At:')
+            log.debug(f'X={x:.2f}')
+            log.debug(f'Y={y:.2f}')
+            log.debug(f'Eff={eff:0.3} returning 0')
+            self._d_quality['Inf'] += 1
+
+            return 0.0
 
         if math.isnan(eff):
             log.debug('At:')
             log.debug(f'X={x:.2f}')
             log.debug(f'Y={y:.2f}')
             log.debug(f'Eff={eff:0.3} returning 0')
+            self._d_quality['NaN'] += 1
 
             return 0.0
 
@@ -337,9 +362,11 @@ class SampleWeighter:
         log.debug(f'Eff={eff:0.3}')
 
         if eff < 0:
+            self._d_quality['Negative'] += 1
             return 0.0
 
         if eff > 1:
+            self._d_quality['Above 1'] += 1
             return 1.0
 
         raise ValueError(f'Unexpected efficiency value: {eff}')
