@@ -462,13 +462,14 @@ class SampleWeighter:
         '''
         eff_p1 = self._get_lepton_eff(lep='L1', row=row, is_sig= True)
         eff_p2 = self._get_lepton_eff(lep='L2', row=row, is_sig= True)
-        eff_f1 = self._get_lepton_eff(lep='L1', row=row, is_sig=False)
-        eff_f2 = self._get_lepton_eff(lep='L2', row=row, is_sig=False)
 
         if is_sig: # This is the signal region
             eff  = eff_p1 * eff_p2
-        else:      # This is the control region
-            eff  = eff_p1 * eff_f2 + eff_p2 * eff_f1 + eff_f1 * eff_f2
+            return eff
+
+        eff_f1 = self._get_lepton_eff(lep='L1', row=row, is_sig=False)
+        eff_f2 = self._get_lepton_eff(lep='L2', row=row, is_sig=False)
+        eff    = eff_p1 * eff_f2 + eff_p2 * eff_f1 + eff_f1 * eff_f2
 
         return eff
     # ----------------------
