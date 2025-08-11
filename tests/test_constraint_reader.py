@@ -56,6 +56,10 @@ class ParametersHolder:
                 'pscale_yld_Bd_Kstee_eq_btosllball05_DPC',
                 'pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC',
                 'pscale_yld_Bs_phiee_eq_Ball_DPC']
+        elif kind == 'rare_misid':
+            l_par_name = [
+                'yld_kpipi',
+                'yld_kkk']
         elif kind == 'brem_frac':
             l_par_name = [
                 'frac_brem_000',
