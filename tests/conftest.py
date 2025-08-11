@@ -37,6 +37,7 @@ class ParametersHolder:
         self._obs   = obs
         self._s_par = self._get_pars(kind=kind)
     # ----------------------
+    @property
     def space(self) -> zobs:
         '''
         Returns
@@ -55,7 +56,9 @@ class ParametersHolder:
         -------------
         Set of zfit parameters
         '''
-        if   kind == 'rare_prec':
+        if   kind == 'dummy':
+            return set()
+        elif kind == 'rare_prec':
             l_par_name = [
                 'pscale_yld_Bd_Kstee_eq_btosllball05_DPC',
                 'pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC',
@@ -245,7 +248,7 @@ def skip_mass_cut():
         yield
 # ----------------------
 @pytest.fixture
-def get_parameter_holder() -> type[ParametersHolder]:
+def get_parameters_holder() -> type[ParametersHolder]:
     '''
     Returns
     -------------
