@@ -126,7 +126,7 @@ class MisIDConstraints(Cache):
         '''
         d_yield   = {}
         for nickname in ['kpipi', 'kkk']:
-            d_yield[nickname] = self._get_signal_region_yield(nickname = nickname, pars=pars) 
+            d_yield[f'yld_{nickname}'] = self._get_signal_region_yield(nickname = nickname, pars=pars) 
 
         return d_yield 
     # ----------------------
