@@ -188,13 +188,7 @@ class MisIDConstraints(Cache):
             else:
                 ctr_yld = yld
 
-        # Use it to scale yield from control region in data
-        signal_yield = control_yield * (sig_yld / ctr_yld)
-        log.info(f'Control yield: {control_yield:.3f}')
-        log.info(f'Signal yield: {signal_yield:.3f}')
-        log.info(20 * '-')
-
-        return signal_yield 
+        return sig_yld / ctr_yld
     # ----------------------
     def _get_pid_cut(self, cfg : DictConfig, kind : str) -> str:
         '''
