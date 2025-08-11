@@ -145,6 +145,21 @@ class MisIDConstraints(Cache):
         log.info(20 * '-')
 
         return value, error
+    # ----------------------
+    def _get_transfer_factor(self, nickname : str) -> float:
+        '''
+        Parameters
+        -------------
+        nickname: Sample nickname, e.g. kkk, kpipi        
+
+        Returns
+        -------------
+        Ratio of PID efficiencies between signal and control region
+        Needed to translate MisID yields in control region to expectation
+        in signal region
+        '''
+        sample  = self._cfg.model.components[nickname]['sample']
+        wgt_cfg = self._cfg.model.components[nickname].categories.main.weights
 
         sig_yld, ctr_yld = 0, 0 
         pid_sel          = {'pid_l' : '(1)'}
