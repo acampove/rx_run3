@@ -66,7 +66,7 @@ def test_kde(component : str):
     '''
     Test fitting with KDE
     '''
-    obs = zfit.Space('B_Mass', limits=(4500, 7000))
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
 
     cfg = gut.load_conf(package='fitter_data', fpath=f'tests/{component}.yaml')
     with RDFGetter.max_entries(value=100_000):
