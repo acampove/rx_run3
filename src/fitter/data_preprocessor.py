@@ -74,7 +74,7 @@ class DataPreprocessor(Cache):
             obs_name = sut.name_from_obs(obs=obs),
             obs_range= sut.range_from_obs(obs=obs),
             is_sig   = is_sig,
-            wgt_cfg  = OmegaConf.to_container(self._wgt_cfg, resolve=True),
+            wgt_cfg  = {} if self._wgt_cfg is None else OmegaConf.to_container(self._wgt_cfg, resolve=True),
             rdf_uid  = self._rdf_uid)
     # ------------------------
     def _get_rdf(self, cut : dict[str,str]|None) -> RDataFrame:
