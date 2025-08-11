@@ -204,7 +204,7 @@ def test_rare_misid_electron(q2bin : str, region : str, tag_cut : str):
          sel.custom_selection(d_sel={
             'nobr0' : 'nbrem != 0',
             'mass'  : '(1)',
-            'pid_l' : f'({l1_in_cr}) || ({l2_in_cr})',
+            'pid_l' : f'({l1_in_cr}) && ({l2_in_cr})',
             'bdt'   : 'mva_cmb > 0.80 && mva_prc > 0.60'}):
         ftr = LikelihoodFactory(
             obs    = obs,
