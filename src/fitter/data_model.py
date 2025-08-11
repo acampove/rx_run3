@@ -103,21 +103,24 @@ class DataModel:
 
         log.debug(f'Found {npdf} components')
         for component, cfg in self._cfg.model.components.items():
-            ftr = SimFitter(
-                name     = self._name,
-                component= component,
-                trigger  = self._trigger,
-                project  = self._project,
-                q2bin    = self._q2bin,
-                cfg      = cfg,
-                obs      = self._obs)
-            pdf = ftr.get_model()
+            if component == 'MisID':
+                pdf = self._get_misid_pdf(cfg=cfg)
+            else:
+                ftr = SimFitter(
+                    name     = self._name,
+                    component= component,
+                    trigger  = self._trigger,
+                    project  = self._project,
+                    q2bin    = self._q2bin,
+                    cfg      = cfg,
+                    obs      = self._obs)
+                pdf = ftr.get_model()
 
             if pdf is None:
                 log.warning(f'Skipping component: {component}')
                 continue
 
-            pdf    = self._extend(pdf=pdf, name=component)
+            pdf = self._extend(pdf=pdf, name=component)
             l_pdf.append(pdf)
 
         pdf = zfit.pdf.SumPDF(l_pdf)
