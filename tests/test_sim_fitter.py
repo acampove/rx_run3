@@ -72,11 +72,11 @@ def test_kde(component : str):
     with RDFGetter.max_entries(value=100_000):
         ftr = SimFitter(
             component= component,
-            obs     = obs,
-            cfg     = cfg,
-            trigger = 'Hlt2RD_BuToKpEE_MVA',
-            project = 'rx',
-            q2bin   = 'central')
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = 'Hlt2RD_BuToKpEE_MVA',
+            project  = 'rx',
+            q2bin    = 'central')
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('limits', ['wide', 'narrow'])
