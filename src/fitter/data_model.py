@@ -83,8 +83,8 @@ class DataModel:
             ftr = SimFitter(
                 name     = self._name,
                 component= component,
-                trigger  = self._trigger,
-                project  = self._project,
+                trigger  = cfg.get('trigger', self._trigger),
+                project  = cfg.get('project', self._project),
                 q2bin    = self._q2bin,
                 cfg      = cfg,
                 obs      = self._obs)
