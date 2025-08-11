@@ -1,18 +1,13 @@
 '''
 Script holding ConstraintReader class
 '''
-from typing import Protocol
 
-from zfit.interface              import ZfitParameter as zpar
 from dmu.logging.log_store       import LogStore
 from rx_efficiencies.decay_names import DecayNames    as dn
 from fitter.prec_scales          import PrecScales
+from fitter.protocol             import ParameterHolder
 
 log=LogStore.add_logger('fitter:constraint_reader')
-# -------------------------------------------------------------
-class ParameterHolder(Protocol):
-    def get_params(self, floating : bool) -> set[zpar]:
-        ...
 # -------------------------------------------------------------
 class ConstraintReader:
     '''
