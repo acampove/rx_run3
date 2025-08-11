@@ -54,7 +54,7 @@ class MisIDConstraints(Cache):
 
         Cache.__init__(
             self,
-            out_path = self._cfg.output_directory,
+            out_path = f'{self._cfg.output_directory}/{q2bin}',
             q2bin    = self._q2bin,
             config   = OmegaConf.to_container(cfg, resolve=True)
         )
