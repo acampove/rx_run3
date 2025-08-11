@@ -46,6 +46,7 @@ def _validate_pdf(pdf : zpdf, name : str) -> None:
 
     obj   = ZFitPlotter(data=dat, model=pdf)
     obj.plot()
+    obj.axs[0].set_title(name)
     plt.savefig(f'{Data.out_dir}/{name}.png')
 # ----------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
