@@ -70,23 +70,17 @@ def test_rare_electron():
 
     sut.print_pdf(pdf)
 # --------------------------
-@pytest.mark.parametrize('tag_cut, observable', [
-    ('PROBNN_K < 0.1', 'kpipi'),
-    ('PROBNN_K > 0.1', 'kkk'  ),
-])
-def test_misid_rare(tag_cut : str, observable : str):
+@pytest.mark.parametrize('observable', ['kpipi', 'kkk'])
+@pytest.mark.parametrize('q2bin'     , ['low', 'central', 'high'])
+def test_misid_rare(observable : str, q2bin : str):
     '''
     Test getting model for misid control region
     '''
-    q2bin = 'central'
-
     obs = zfit.Space(f'B_Mass_{observable}', limits=(4500, 7000))
     cfg = gut.load_conf(
         package='fitter_data',
         fpath  ='misid/electron/data_misid.yaml')
 
-    l1_in_cr = f'((L1_PROBNN_E < 0.2) || (L1_PID_E < 3.0)) && L1_{tag_cut}'
-    l2_in_cr = f'((L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)) && L2_{tag_cut}'
     out_dir  = f'{cfg.output_directory}/{observable}'
     cfg.output_directory = out_dir
 
@@ -94,15 +88,14 @@ def test_misid_rare(tag_cut : str, observable : str):
         RDFGetter.default_excluded(names=[]),\
         sel.custom_selection(d_sel = {
         'nobr0' : 'nbrem != 0',
-        'pid_l' : f'({l1_in_cr}) && ({l2_in_cr})',
         'mass'  : '(1)',
         'bdt'   : 'mva_cmb > 0.80 && mva_prc > 0.60'}):
         dmd = DataModel(
             name    = observable,
             cfg     = cfg,
             obs     = obs,
-            trigger = 'Hlt2RD_BuToKpEE_MVA_noPID',
-            project = 'nopid',
+            trigger = 'N/A', # These should be picked up from config
+            project = 'N/A',
             q2bin   = q2bin)
         pdf = dmd.get_model()
 
