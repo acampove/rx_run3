@@ -18,7 +18,7 @@ model:
     jpsi_leakage                      : rare/electron/jpsi_leakage.yaml
     psi2_leakage                      : rare/electron/psi2_leakage.yaml
     signal                            : rare/electron/signal_non_parametric.yaml
-    #misid                             : rare/electron/misid.yaml
+    misid                             : rare/electron/misid.yaml
   constraints:
     yields :
       - Bd_Kstee_eq_btosllball05_DPC
@@ -37,3 +37,4 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
     yld_combinatorial                 : Combinatorial
     signal                            : $B^+\to K^+ e^+e^-$ 
     ccbar                             : $B\to c\bar{c}(\to e^+e^-) + X$
+    misid                             : MisID
