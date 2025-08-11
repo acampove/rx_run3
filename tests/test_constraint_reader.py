@@ -22,7 +22,10 @@ class Data:
         'brem_frac']
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before any test
+    '''
     LogStore.set_level('fitter:constraint_reader', 10)
 # --------------------------------------------------------------
 class ConstraintTester:
