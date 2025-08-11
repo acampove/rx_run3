@@ -51,11 +51,19 @@ class MisIDConstraints(Cache):
         self._obs       = obs
         self._cfg       = cfg
         self._q2bin     = q2bin
+        self._trigger   = 'Hlt2RD_BuToKpEE_MVA_noPID'
+        self._project   = 'nopid'
+
+        d_sel = sel.selection(
+            q2bin   = self._q2bin, 
+            trigger = self._trigger, 
+            process = 'DATA_24_*'),
 
         Cache.__init__(
             self,
             out_path = f'{self._cfg.output_directory}/{q2bin}',
             q2bin    = self._q2bin,
+            d_sel    = d_sel, 
             config   = OmegaConf.to_container(cfg, resolve=True)
         )
     # ----------------------
