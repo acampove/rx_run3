@@ -105,7 +105,7 @@ class MisIDConstraints(Cache):
 
         return pdf
     # ----------------------
-    def _normalization_from_control_region(self, pars : DictConfig) -> DictConfig:
+    def _get_constraints(self, pars : DictConfig) -> dict[str,tuple[float,float]]:
         '''
         Parameters
         -------------
@@ -115,13 +115,11 @@ class MisIDConstraints(Cache):
         -------------
         Dictionary with yields in signal region
         '''
-        yld_kpipi = self._get_signal_region_yield(nickname = 'kpipi', pars=pars) 
-        yld_kkk   = self._get_signal_region_yield(nickname = 'kkk'  , pars=pars)
+        d_yield   = {}
+        for nickname in ['kpipi', 'kkk']:
+            d_yield[nickname] = self._get_signal_region_yield(nickname = nickname, pars=pars) 
 
-        data      = {'nkkk' : yld_kkk, 'nkpipi' : yld_kpipi}
-        yields    = OmegaConf.create(data)
-
-        return yields 
+        return d_yield 
     # ----------------------
     def _get_signal_region_yield(self, nickname : str, pars : DictConfig) -> tuple[float,float]:
         '''
