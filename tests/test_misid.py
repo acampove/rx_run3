@@ -1,15 +1,26 @@
 '''
 Module containing tests for MisID class
 '''
+import os
 import pytest
+import matplotlib.pyplot as plt
 
-from dmu.stats.zfit        import zfit
-from dmu.logging.log_store import LogStore
-from dmu.generic           import utilities as gut
-from zfit.interface        import ZfitPDF   as zpdf
-from fitter.misid          import MisID 
+from dmu.stats.zfit         import zfit
+from dmu.logging.log_store  import LogStore
+from dmu.generic            import utilities as gut
+from dmu.stats.zfit_plotter import ZFitPlotter
+from zfit.interface         import ZfitPDF   as zpdf
+from fitter.misid           import MisID 
 
 log=LogStore.add_logger('fitter:test_misid')
+
+# ----------------------
+class Data:
+    '''
+    Class meant to be used to share attributes
+    '''
+    user    = os.environ['USER']
+    out_dir = f'/tmp/{user}/tests/misid'
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -18,14 +29,21 @@ def initialize():
     '''
     LogStore.set_level('dmu:workflow:cache'      , 30)
     LogStore.set_level('rx_misid:sample_weighter', 20)
+
+    os.makedirs(Data.out_dir, exist_ok=True)
 # ----------------------
-def _validate_pdf(pdf : zpdf) -> None:
+def _validate_pdf(pdf : zpdf, name : str) -> None:
     '''
     Parameters
     -------------
-    pdf: KDE to validate
+    pdf : KDE to validate
+    name: Needed for naming plot
     '''
-    pass
+    dat = pdf.create_sampler()
+
+    obj   = ZFitPlotter(data=dat, model=pdf)
+    obj.plot()
+    plt.savefig(f'{Data.out_dir}/{name}.png')
 # ----------------------
 def test_simple() -> None:
     '''
@@ -41,5 +59,5 @@ def test_simple() -> None:
         q2bin    = 'central')
     pdf = obj.get_pdf()
 
-    _validate_pdf(pdf=pdf)
+    _validate_pdf(pdf=pdf, name = 'misid_in_sig_region')
 # ----------------------
