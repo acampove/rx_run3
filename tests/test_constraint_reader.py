@@ -106,7 +106,7 @@ def _print_constraints(d_cns : dict[str, tuple[float,float]]) -> None:
         log.info(f'{name:<50}{value:<20.3f}{error:<20.3f}')
 # --------------------------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-@pytest.mark.parametrize('kind' , ['sig_par', 'rare_prec', 'invalid', 'brem_frac'])
+@pytest.mark.parametrize('kind' , Data.l_kind)
 def test_simple(kind : str, q2bin : str):
     '''
     Tests getting constraints
