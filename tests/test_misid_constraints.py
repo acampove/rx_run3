@@ -5,6 +5,7 @@ import os
 import pytest
 import yaml
 
+from rx_selection             import selection as sel
 from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
 from dmu.generic              import utilities as gut
@@ -41,11 +42,12 @@ def test_simple(q2bin : str) -> None:
 
     cfg = gut.load_conf(package='fitter_data', fpath='misid/electron/data_misid.yaml')
 
-    obj = MisIDConstraints(
-        obs      = obs,
-        cfg      = cfg,
-        q2bin    = q2bin)
-    d_cns = obj.get_constraints()
+    with sel.custom_selection(d_sel={'nobrm0' : 'nbrem != 0'}):
+        obj = MisIDConstraints(
+            obs      = obs,
+            cfg      = cfg,
+            q2bin    = q2bin)
+        d_cns = obj.get_constraints()
 
     data = yaml.dump(d_cns)
     log.info(data)
