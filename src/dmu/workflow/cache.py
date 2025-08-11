@@ -44,15 +44,17 @@ class Cache:
         ---------------
         out_path: Path to directory where outputs will go
         kwargs  : Key word arguments symbolizing identity of inputs, used for hashing
+                  If argument `code` is already in kwargs, it will not calculate the
+                  code's hash, i.e. Code changes do not invalidate the hash, useful for testing
         '''
         if Cache._cache_root is None:
             raise ValueError('Caching directory not set')
 
         log.debug(f'Using {Cache._cache_root} root directory for caching')
-        if 'code' in kwargs:
-            raise ValueError('Cannot append hashing data with key "code", already used')
-
-        kwargs['code']  = self._get_code_hash()
+        if 'code' not in kwargs:
+            kwargs['code']  = self._get_code_hash()
+        else:
+            log.warning('Not using code for hashing')
 
         self._out_path  = os.path.normpath(f'{Cache._cache_root}/{out_path}')
         log.debug(f'Using {self._out_path} output path')
