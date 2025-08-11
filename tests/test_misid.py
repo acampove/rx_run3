@@ -48,7 +48,8 @@ def _validate_pdf(pdf : zpdf, name : str) -> None:
     obj.plot()
     plt.savefig(f'{Data.out_dir}/{name}.png')
 # ----------------------
-def test_simple() -> None:
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+def test_simple(q2bin : str) -> None:
     '''
     Basic test for building misID component
     '''
@@ -59,8 +60,8 @@ def test_simple() -> None:
     obj = MisID(
         obs      = obs,
         cfg      = cfg,
-        q2bin    = 'central')
+        q2bin    = q2bin)
     pdf = obj.get_pdf()
 
-    _validate_pdf(pdf=pdf, name = 'misid_in_sig_region')
+    _validate_pdf(pdf=pdf, name = f'misid_in_sig_region_{q2bin}')
 # ----------------------
