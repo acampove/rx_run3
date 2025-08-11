@@ -8,7 +8,7 @@ import yaml
 from rx_selection             import selection as sel
 from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
-from dmu.generic              import utilities as gut
+from dmu.generic              import utilities     as gut
 from fitter.misid_constraints import MisIDConstraints 
 
 log=LogStore.add_logger('fitter:test_misid_constraints')
@@ -19,7 +19,7 @@ class Data:
     '''
     user    = os.environ['USER']
     out_dir = f'/tmp/{user}/tests/misid'
-# ----------------------
+# --------------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
     '''
