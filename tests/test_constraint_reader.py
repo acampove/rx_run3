@@ -11,6 +11,16 @@ from fitter.constraint_reader import ConstraintReader
 log=LogStore.add_logger('fitter:test_constraint_reader')
 
 # ----------------------
+class Data:
+    '''
+    Class meant to be used to share attributes
+    '''
+    l_kind = [
+        'sig_par', 
+        'rare_prec', 
+        'invalid', 
+        'brem_frac']
+# ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('fitter:constraint_reader', 10)
