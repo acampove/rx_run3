@@ -44,7 +44,7 @@ def test_simple(q2bin : str, get_parameters_holder) -> None:
     cfg = gut.load_conf(package='fitter_data', fpath='misid/electron/data_misid.yaml')
     with sel.custom_selection(d_sel={'nobrm0' : 'nbrem != 0'}):
         obj = MisIDConstraints(
-            obs      = obj,
+            obj      = obj,
             cfg      = cfg,
             q2bin    = q2bin)
         d_cns = obj.get_constraints()
