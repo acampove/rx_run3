@@ -187,6 +187,30 @@ with Wcache.turn_off_cache(val=['Tester']):
 for any list of classes that inherit from `Cache` by passing the list of class names.
 If `val=None` is passed, ALL the classes caching is turned off.
 
+### Turning off code hashing
+
+If the module where the cached class lives changes, the hash will be invalidated.
+This is going to make development slower. To turn off the module hashing do:
+
+```python
+class Tester(Wcache):
+    '''
+    Testing class, produces outputs from simple inputs
+    '''
+    # -----------------------------------
+    def __init__(
+            self,
+            nval : int):
+        '''
+        nval, some integer used to produce output data
+        '''
+        super().__init__(
+                out_path='Tester',
+                code    ='dummy',  # <--- Add the a dummy value for code argument
+                nval    =nval)
+        ...
+```
+
 ## Silencing import messages
 
 To silence messages given by modules not in the user's control do:
