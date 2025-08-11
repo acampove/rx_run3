@@ -28,7 +28,7 @@ def initialize():
     '''
     LogStore.set_level('fitter:constraint_reader', 10)
 # --------------------------------------------------------------
-class ConstraintTester:
+class ParametersHolder:
     '''
     Class used to instantiate objects needed to test ConstraintReader
     '''
@@ -112,8 +112,8 @@ def test_simple(kind : str, q2bin : str):
     kind : Type of parameters
     q2bin: q2 bin
     '''
-    obj     = ConstraintTester(kind=kind)
-    obj     = ConstraintReader(obj = obj, q2bin=q2bin)
+    obj     = ParametersHolder(kind=kind)
+    obj     = ConstraintReader(obj=obj, q2bin=q2bin)
     d_cns   = obj.get_constraints()
     _print_constraints(d_cns)
 
