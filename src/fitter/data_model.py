@@ -9,6 +9,7 @@ from omegaconf              import DictConfig
 from zfit.interface         import ZfitPDF       as zpdf
 from zfit.interface         import ZfitSpace     as zobs
 from fitter.sim_fitter      import SimFitter
+from fitter.misid           import MisID
 
 log = LogStore.add_logger('fitter:data_model')
 # ------------------------
@@ -63,6 +64,28 @@ class DataModel:
             return pdf
 
         pdf = pdf.create_extended(nevt, name=name)
+
+        return pdf
+    # ------------------------
+    def _get_misid_pdf(self, cfg : DictConfig) -> zpdf:
+        '''
+        Parameters
+        -------------
+        cfg: Dictionary with configuration needed to build PDF
+
+        Returns
+        -------------
+        zfit PDF representing MisID component
+        '''
+        
+        obj = MisID(
+            obs      = self._obs,
+            cfg      = cfg,
+            q2bin    = self._q2bin)
+        pdf = obj.get_pdf()
+
+        if pdf is None:
+            raise ValueError('No PDF found for MisID')
 
         return pdf
     # ------------------------
