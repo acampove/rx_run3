@@ -4,7 +4,7 @@ Module holding DataPreprocessor class
 from typing  import cast
 
 import numpy
-from omegaconf              import DictConfig
+from omegaconf              import DictConfig, OmegaConf
 from ROOT                   import RDataFrame # type: ignore
 from dmu.workflow.cache     import Cache
 from dmu.stats.zfit         import zfit
@@ -71,7 +71,10 @@ class DataPreprocessor(Cache):
 
         super().__init__(
             out_path = out_dir,
-            obs_name = sut.name_from_obs(obs),
+            obs_name = sut.name_from_obs(obs=obs),
+            obs_range= sut.range_from_obs(obs=obs),
+            is_sig   = is_sig,
+            wgt_cfg  = OmegaConf.to_container(self._wgt_cfg, resolve=True),
             rdf_uid  = self._rdf_uid)
     # ------------------------
     def _get_rdf(self, cut : dict[str,str]|None) -> RDataFrame:
