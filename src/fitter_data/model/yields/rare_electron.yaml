@@ -5,6 +5,10 @@ yields: &yields
   min : 0
   max : 100000
 
+yld_kpipi:
+  <<      : *yields
+yld_kkk:
+  <<      : *yields
 yld_signal:
   <<      : *yields
 yld_Bd_Kstee_eq_btosllball05_DPC:
