@@ -80,7 +80,8 @@ def test_kde(component : str):
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('component', ['kkk', 'kpipi'])
-def test_misid(component : str):
+@pytest.mark.parametrize('q2bin'    , ['low', 'central', 'high'])
+def test_misid(component : str, q2bin : str):
     '''
     Test fitting misID simulation 
     '''
@@ -93,7 +94,7 @@ def test_misid(component : str):
         cfg      = cfg,
         trigger  = 'Hlt2RD_BuToKpEE_MVA_noPID',
         project  = 'nopid',
-        q2bin    = 'central')
+        q2bin    = q2bin)
     ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('limits', ['wide', 'narrow'])
