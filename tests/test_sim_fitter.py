@@ -79,6 +79,23 @@ def test_kde(component : str):
             q2bin    = 'central')
         ftr.get_model()
 # ---------------------------------------------------
+@pytest.mark.parametrize('component', ['kkk', 'kpipi'])
+def test_misid(component : str):
+    '''
+    Test fitting misID simulation 
+    '''
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+
+    cfg = gut.load_conf(package='fitter_data', fpath=f'rare/electron/{component}.yaml')
+    ftr = SimFitter(
+        component= component,
+        obs      = obs,
+        cfg      = cfg,
+        trigger  = 'Hlt2RD_BuToKpEE_MVA_noPID',
+        project  = 'nopid',
+        q2bin    = 'central')
+    ftr.get_model()
+# ---------------------------------------------------
 @pytest.mark.parametrize('limits', ['wide', 'narrow'])
 def test_ccbar_reso(limits : str):
     '''
