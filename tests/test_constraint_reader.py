@@ -32,7 +32,7 @@ def _print_constraints(d_cns : dict[str, tuple[float,float]]) -> None:
 # --------------------------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 @pytest.mark.parametrize('kind' , Data.l_kind)
-def test_simple(kind : str, q2bin : str):
+def test_simple(kind : str, q2bin : str, get_parameters_holder):
     '''
     Tests getting constraints
 
@@ -41,7 +41,9 @@ def test_simple(kind : str, q2bin : str):
     kind : Type of parameters
     q2bin: q2 bin
     '''
-    obj     = ParametersHolder(kind=kind)
+    obs     = zfit.Space('dummy', limits=(4500, 6000))
+    obj     = get_parameters_holder(kind=kind, obs=obs)
+
     obj     = ConstraintReader(obj=obj, q2bin=q2bin)
     d_cns   = obj.get_constraints()
     _print_constraints(d_cns)
