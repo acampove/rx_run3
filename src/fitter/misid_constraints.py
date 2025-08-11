@@ -266,7 +266,7 @@ class MisIDConstraints(Cache):
         d_nll   = {'kpipi' : nll_kpp, 'kkk' : nll_kkk}
 
         with GofCalculator.disabled(value=True):
-            ftr  = DataFitter(d_nll=d_nll, cfg=self._cfg)
+            ftr  = DataFitter(name=self._q2bin, d_nll=d_nll, cfg=self._cfg)
             pars = ftr.run()
 
         d_cns = self._get_constraints(pars=pars)

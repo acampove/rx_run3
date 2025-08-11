@@ -24,12 +24,14 @@ class DataFitter(BaseFitter, Cache):
     # ----------------------
     def __init__(
         self,
+        name  : str,
         d_nll : dict[str,tuple[NLL,DictConfig]],
         cfg   : DictConfig) -> None:
         '''
         Parameters
         -------------
-        d_nll:  Dictionary with:
+        name : Identifier for this fit, e.g. q2bin, needed to name outputs
+        d_nll: Dictionary with:
             Key  : Name of region where to fig, e.g. signal, control
             Value:
                 - ExtendedBinnedNLL instance
@@ -48,7 +50,7 @@ class DataFitter(BaseFitter, Cache):
         # If so, it should be here
         Cache.__init__(
             self,
-            out_path = self._cfg.output_directory,
+            out_path = f'{self._cfg.output_directory}/{name}',
             cfg      = cfg)
     # ----------------------
     def _get_full_nll(self) -> NLL:
