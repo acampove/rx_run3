@@ -13,8 +13,11 @@ from rx_selection                import selection  as sel
 from rx_efficiencies.decay_names import DecayNames as dn
 from _pytest.config              import Config
 
+from dmu.stats.zfit              import zfit
 from dmu.workflow.cache          import Cache
 from dmu.logging.log_store       import LogStore
+from zfit.interface              import ZfitParameter as zpar
+from zfit.interface              import ZfitSpace     as zobs
 
 executed_tests = set()
 log = LogStore.add_logger('rx_efficiencies:conftest')
