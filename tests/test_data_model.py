@@ -94,8 +94,8 @@ def test_misid_rare(observable : str, q2bin : str):
             name    = observable,
             cfg     = cfg,
             obs     = obs,
-            trigger = 'N/A', # These should be picked up from config
-            project = 'N/A',
+            trigger = 'custom', # These should be picked up from config
+            project = 'custom',
             q2bin   = q2bin)
         pdf = dmd.get_model()
 
