@@ -123,7 +123,7 @@ class MisIDConstraints(Cache):
 
         return yields 
     # ----------------------
-    def _get_signal_region_yield(self, nickname : str, pars : DictConfig) -> float:
+    def _get_signal_region_yield(self, nickname : str, pars : DictConfig) -> tuple[float,float]:
         '''
         Parameters
         -------------
@@ -132,11 +132,21 @@ class MisIDConstraints(Cache):
 
         Returns
         -------------
-        Expected signal region yield
+        Tuple with expected signal region yield and error
         '''
         control_yield = pars[f'yld_{nickname}_{nickname}'].value
-        sample        = self._cfg.model.components[nickname]['sample']
-        wgt_cfg       = self._cfg.model.components[nickname].categories.main.weights
+        control_error = pars[f'yld_{nickname}_{nickname}'].error
+        scale         = self._get_transfer_factor(nickname=nickname)
+
+        # Use it to scale yield from control region in data
+        value = control_yield * scale
+        error = control_error * scale
+
+        log.info(f'Control yield: {control_yield:.3f}')
+        log.info(f'Signal yield: {value:.3f}')
+        log.info(20 * '-')
+
+        return value, error
 
         sig_yld, ctr_yld = 0, 0 
         pid_sel          = {'pid_l' : '(1)'}
