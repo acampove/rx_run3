@@ -21,7 +21,7 @@ from fitter.data_fitter        import DataFitter
 from fitter.likelihood_factory import LikelihoodFactory
 from fitter.data_preprocessor  import DataPreprocessor
 
-log=LogStore.add_logger('fitter:misid')
+log=LogStore.add_logger('fitter:misid_constraints')
 # -------------------------        
 class MisIDConstraints(Cache):
     '''

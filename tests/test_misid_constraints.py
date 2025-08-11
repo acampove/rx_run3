@@ -1,19 +1,16 @@
 '''
-Module containing tests for MisID class
+Module containing tests for MisIDConstraints class
 '''
 import os
 import pytest
-import matplotlib.pyplot as plt
+import yaml
 
-from dmu.stats.zfit         import zfit
-from dmu.logging.log_store  import LogStore
-from dmu.generic            import utilities as gut
-from dmu.stats.zfit_plotter import ZFitPlotter
-from zfit.interface         import ZfitPDF   as zpdf
-from fitter.misid           import MisID 
+from dmu.stats.zfit           import zfit
+from dmu.logging.log_store    import LogStore
+from dmu.generic              import utilities as gut
+from fitter.misid_constraints import MisIDConstraints 
 
-log=LogStore.add_logger('fitter:test_misid')
-
+log=LogStore.add_logger('fitter:test_misid_constraints')
 # ----------------------
 class Data:
     '''
@@ -35,20 +32,6 @@ def initialize():
 
     os.makedirs(Data.out_dir, exist_ok=True)
 # ----------------------
-def _validate_pdf(pdf : zpdf, name : str) -> None:
-    '''
-    Parameters
-    -------------
-    pdf : KDE to validate
-    name: Needed for naming plot
-    '''
-    dat = pdf.create_sampler()
-
-    obj   = ZFitPlotter(data=dat, model=pdf)
-    obj.plot()
-    obj.axs[0].set_title(name)
-    plt.savefig(f'{Data.out_dir}/{name}.png')
-# ----------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 def test_simple(q2bin : str) -> None:
     '''
@@ -58,11 +41,12 @@ def test_simple(q2bin : str) -> None:
 
     cfg = gut.load_conf(package='fitter_data', fpath='misid/electron/data_misid.yaml')
 
-    obj = MisID(
+    obj = MisIDConstraints(
         obs      = obs,
         cfg      = cfg,
         q2bin    = q2bin)
-    pdf = obj.get_pdf()
+    d_cns = obj.get_constraints()
 
-    _validate_pdf(pdf=pdf, name = f'misid_in_sig_region_{q2bin}')
+    data = yaml.dump(d_cns)
+    log.info(data)
 # ----------------------
