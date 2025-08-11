@@ -109,10 +109,13 @@ class MisID(Cache):
         -------------
         Dictionary with yields in signal region
         '''
-        data = {'nkkk' : 1, 'nkpipi' : 1}
-        pars = OmegaConf.create(data)
+        yld_kpipi = self._get_signal_region_yield(nickname = 'kpipi', pars=pars) 
+        yld_kkk   = self._get_signal_region_yield(nickname = 'kkk'  , pars=pars)
 
-        return pars
+        data      = {'nkkk' : yld_kkk, 'nkpipi' : yld_kpipi}
+        yields    = OmegaConf.create(data)
+
+        return yields 
     # ----------------------
     def _get_pid_cut(self, cfg : DictConfig, kind : str) -> str:
         '''
