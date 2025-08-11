@@ -9,7 +9,6 @@ from omegaconf              import DictConfig
 from zfit.interface         import ZfitPDF       as zpdf
 from zfit.interface         import ZfitSpace     as zobs
 from fitter.sim_fitter      import SimFitter
-from fitter.misid           import MisID
 
 log = LogStore.add_logger('fitter:data_model')
 # ------------------------
@@ -67,28 +66,6 @@ class DataModel:
 
         return pdf
     # ------------------------
-    def _get_misid_pdf(self, cfg : DictConfig) -> zpdf:
-        '''
-        Parameters
-        -------------
-        cfg: Dictionary with configuration needed to build PDF
-
-        Returns
-        -------------
-        zfit PDF representing MisID component
-        '''
-        
-        obj = MisID(
-            obs      = self._obs,
-            cfg      = cfg,
-            q2bin    = self._q2bin)
-        pdf = obj.get_pdf()
-
-        if pdf is None:
-            raise ValueError('No PDF found for MisID')
-
-        return pdf
-    # ------------------------
     def get_model(self) -> zpdf:
         '''
         Returns 
@@ -103,18 +80,15 @@ class DataModel:
 
         log.debug(f'Found {npdf} components')
         for component, cfg in self._cfg.model.components.items():
-            if component == 'MisID':
-                pdf = self._get_misid_pdf(cfg=cfg)
-            else:
-                ftr = SimFitter(
-                    name     = self._name,
-                    component= component,
-                    trigger  = self._trigger,
-                    project  = self._project,
-                    q2bin    = self._q2bin,
-                    cfg      = cfg,
-                    obs      = self._obs)
-                pdf = ftr.get_model()
+            ftr = SimFitter(
+                name     = self._name,
+                component= component,
+                trigger  = self._trigger,
+                project  = self._project,
+                q2bin    = self._q2bin,
+                cfg      = cfg,
+                obs      = self._obs)
+            pdf = ftr.get_model()
 
             if pdf is None:
                 log.warning(f'Skipping component: {component}')
