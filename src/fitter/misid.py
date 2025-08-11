@@ -19,6 +19,7 @@ from zfit.interface import ZfitLoss  as zlos
 from fitter.sim_fitter         import SimFitter
 from fitter.data_fitter        import DataFitter
 from fitter.likelihood_factory import LikelihoodFactory
+from fitter.data_preprocessor  import DataPreprocessor
 
 log=LogStore.add_logger('fitter:misid')
 # -------------------------        
@@ -116,6 +117,56 @@ class MisID(Cache):
         yields    = OmegaConf.create(data)
 
         return yields 
+    # ----------------------
+    def _get_signal_region_yield(self, nickname : str, pars : DictConfig) -> float:
+        '''
+        Parameters
+        -------------
+        nickname : Nickname of fully hadronic misID sample, e.g. kpipi
+        pars     : Dictionary with fitting parameters for fit to control region
+
+        Returns
+        -------------
+        Expected signal region yield
+        '''
+        control_yield = pars[f'yld_{nickname}_{nickname}'].value
+        sample        = self._cfg.model.components[nickname]['sample']
+        wgt_cfg       = self._cfg.model.components[nickname].categories.main.weights
+
+        sig_yld, ctr_yld = 0, 0 
+        pid_sel          = {'pid_l' : '(1)'}
+
+        # Extract yields from weighted (PID) no PID misID MC
+        log.info(20 * '-')
+        for is_sig in [True, False]:
+            prp = DataPreprocessor(
+                obs    = self._obs,
+                out_dir= nickname,
+                sample = sample,
+                trigger= 'Hlt2RD_BuToKpEE_MVA_noPID',
+                project= 'nopid',
+                wgt_cfg= wgt_cfg,
+                is_sig = is_sig,
+                cut    = pid_sel,
+                q2bin  = self._q2bin)
+            dat = prp.get_data()
+            yld = dat.weights.numpy().sum()
+            yld = float(yld)
+
+            log.info(f'IsSig {is_sig} MC yield: {yld:.3f}')
+
+            if is_sig:
+                sig_yld = yld
+            else:
+                ctr_yld = yld
+
+        # Use it to scale yield from control region in data
+        signal_yield = control_yield * (sig_yld / ctr_yld)
+        log.info(f'Control yield: {control_yield:.3f}')
+        log.info(f'Signal yield: {signal_yield:.3f}')
+        log.info(20 * '-')
+
+        return signal_yield 
     # ----------------------
     def _get_pid_cut(self, cfg : DictConfig, kind : str) -> str:
         '''
