@@ -21,6 +21,89 @@ from zfit.interface              import ZfitSpace     as zobs
 
 executed_tests = set()
 log = LogStore.add_logger('rx_efficiencies:conftest')
+# --------------------------------------------------------------
+class ParametersHolder:
+    '''
+    Class used to instantiate objects needed to test ConstraintReader
+    '''
+    # ----------------------
+    def __init__(self, kind : str, obs : zobs) -> None:
+        '''
+        Parameters
+        -------------
+        kind: Defines what parameters will be returning depending on test
+        obs : Observable
+        '''
+        self._obs   = obs
+        self._s_par = self._get_pars(kind=kind)
+    # ----------------------
+    def space(self) -> zobs:
+        '''
+        Returns
+        -------------
+        Observable
+        '''
+        return self._obs
+    # ----------------------
+    def _get_pars(self, kind : str) -> set[zpar]:
+        '''
+        Parameters
+        -------------
+        kind: Type of parameters
+
+        Returns
+        -------------
+        Set of zfit parameters
+        '''
+        if   kind == 'rare_prec':
+            l_par_name = [
+                'pscale_yld_Bd_Kstee_eq_btosllball05_DPC',
+                'pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC',
+                'pscale_yld_Bs_phiee_eq_Ball_DPC']
+        elif kind == 'rare_misid':
+            l_par_name = [
+                'yld_kpipi',
+                'yld_kkk']
+        elif kind == 'brem_frac':
+            l_par_name = [
+                'frac_brem_000',
+                'frac_brem_001',
+                'frac_brem_002']
+        elif kind == 'sig_par':
+            l_par_name = [
+                'ar_dscb_Signal_002_1_reso_flt',
+                'mu_Signal_000_scale_flt',
+                'mu_Signal_001_scale_flt',
+                'mu_Signal_002_scale_flt',
+                'nl_dscb_Signal_001_1_reso_flt',
+                'nr_dscb_Signal_002_1_reso_flt',
+                'sg_Signal_000_reso_flt',
+                'sg_Signal_001_reso_flt',
+                'sg_Signal_002_reso_flt',
+            ]
+        elif kind == 'invalid':
+            l_par_name = [
+                'ap_hypexp',
+                'bt_hypexp',
+                'mu_hypexp',
+                'ncmb',
+                'nsig']
+        else:
+            raise ValueError(f'Invalid kind of parameters: {kind}')
+
+        return { zfit.Parameter(name, 0, 0, 1) for name in l_par_name }
+    # ----------------------
+    def get_params(self, floating : bool) -> set[zpar]:
+        '''
+        Parameters
+        -------------
+        floating: Bool, meant to be True
+
+        Returns
+        -------------
+        Set of zfit parameters
+        '''
+        return self._s_par 
 # -----------------------------------
 class ScalesData:
     '''
@@ -160,6 +243,15 @@ def skip_mass_cut():
     '''
     with sel.custom_selection(d_sel = {'mass' : '(1)'}):
         yield
+# ----------------------
+@pytest.fixture
+def get_parameter_holder() -> type[ParametersHolder]:
+    '''
+    Returns
+    -------------
+    Returns ParametersHolder class (not instance)
+    '''
+    return ParametersHolder
 # -----------------------------------
 def pytest_runtest_logreport(report):
     '''
