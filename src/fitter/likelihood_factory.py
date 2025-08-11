@@ -16,7 +16,7 @@ log=LogStore.add_logger('fitter:LikelihoodFactory')
 # ------------------------
 class LikelihoodFactory:
     '''
-    Builder of likelihoods given a:
+    Builder of likelihoods for real data (not MC) given a:
 
     - Data sample
     - Configuration describing the models to use
@@ -102,7 +102,7 @@ class LikelihoodFactory:
 
         trigger, project = self._update_trigger_project()
 
-        log.info('Getting model')
+        log.info('Getting full data model')
         mod  = DataModel(
             name   = self._name,
             cfg    = self._cfg,
