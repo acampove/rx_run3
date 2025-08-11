@@ -30,8 +30,11 @@ def _validate_data(data : zdata, name : str) -> None:
     plt_path = f'{Data.out_dir}/{name}.png'
 
     arr_data = data.numpy()
-    arr_wgt  = data.weights.numpy()
     rng      = sut.range_from_obs(obs=data.space)
+    if data.weights is None:
+        arr_wgt = None
+    else:
+        arr_wgt = data.weights.numpy()
 
     log.info(f'Saving to: {plt_path}')
     plt.hist(arr_data, histtype='step', bins=100, range=rng, weights=arr_wgt)
