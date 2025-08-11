@@ -23,12 +23,17 @@ from fitter.data_preprocessor  import DataPreprocessor
 
 log=LogStore.add_logger('fitter:misid')
 # -------------------------        
-class MisID(Cache):
+class MisIDConstraints(Cache):
     '''
-    Class meant to provide PDFs for:
+    Class meant to provide constraints for the yields of different
+    misID components, e.g.:
 
-    - Kpip
-    - KKK
+    - kpip:
+        - 3
+        - 1
+    - kkk:
+        - 4
+        - 2
     '''
     # ----------------------
     def __init__(
