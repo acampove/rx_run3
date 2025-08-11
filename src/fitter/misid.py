@@ -225,38 +225,36 @@ class MisIDConstraints(Cache):
 
         return nll, cfg
     # ----------------------
-    def get_pdf(self) -> zpdf:
+    def get_constraints(self) -> dict[str,tuple[float,float]]:
         '''
         Returns
         -------------
-        zfit PDF with misid component
+        Constraints on normalization of misID components, i.e.:
+
+        kkk   : (yield, error)
+        kpipi : (yield, error)
         '''
-        pars_path = f'{self._out_path}/parameters.yaml'
+        cons_path = f'{self._out_path}/constraints.yaml'
         if self._copy_from_cache():
-            log.info(f'Found cached: {pars_path}')
+            log.info(f'Found cached: {cons_path}')
 
-            pars = OmegaConf.load(pars_path)
-            if not isinstance(pars, DictConfig):
-                raise ValueError(f'Parameters are not a dictionary: {pars_path}')
+            d_cns = gut.load_json(cons_path)
 
-            npars = self._normalization_from_control_region(pars=pars)
-            model = self._model_from_pars(npars=npars)
-            return model
+            return d_cns 
 
-        log.info(f'Running full calculation, nothing cached in: {pars_path}')
+        log.info(f'Running full calculation, nothing cached in: {cons_path}')
         nll_kpp = self._get_control_nll(kind='kpipi')
         nll_kkk = self._get_control_nll(kind='kkk'  )
         d_nll   = {'kpipi' : nll_kpp, 'kkk' : nll_kkk}
 
         with GofCalculator.disabled(value=True):
-            ftr     = DataFitter(d_nll=d_nll, cfg=self._cfg)
-            pars    = ftr.run()
+            ftr  = DataFitter(d_nll=d_nll, cfg=self._cfg)
+            pars = ftr.run()
 
-        OmegaConf.save(pars, pars_path)
-        npars   = self._normalization_from_control_region(pars=pars)
-        model   = self._model_from_pars(npars=npars)
+        d_cns = self._get_constraints(pars=pars)
+        gut.dump_json(data=d_cns, path=cons_path)
 
         self._cache()
 
-        return model
+        return d_cns 
 # -------------------------
