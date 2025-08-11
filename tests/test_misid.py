@@ -28,6 +28,9 @@ def initialize():
     This will run before any test
     '''
     LogStore.set_level('dmu:workflow:cache'      , 30)
+    LogStore.set_level('fitter:sim_fitter'       , 30)
+    LogStore.set_level('fitter:base_fitter'      , 30)
+    LogStore.set_level('fitter:data_preprocessor', 10)
     LogStore.set_level('rx_misid:sample_weighter', 20)
 
     os.makedirs(Data.out_dir, exist_ok=True)
