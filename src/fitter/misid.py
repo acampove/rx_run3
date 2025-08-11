@@ -1,11 +1,11 @@
 '''
-Module containing the MisID class
+Module containing the MisIDConstraints class
 '''
-
 from dmu.stats.fitter import GofCalculator
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
 
+from dmu.generic           import utilities        as gut
 from dmu.stats.parameters  import ParameterLibrary as PL
 from dmu.stats.zfit        import zfit
 from dmu.logging.log_store import LogStore
