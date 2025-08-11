@@ -2,6 +2,12 @@ output_directory : rare/electron/kpipi
 categories:
   main: 
     model : KDE1DimFFT
+    selection: 
+      pid_l : (1)  # Built removing PID on leptons
+    weights : 
+      PID:
+        splitting : model/weights/splitting.yaml
+        weights   : model/weights/weights.yaml
 sample    : Bu_piplpimnKpl_eq_sqDalitz_DPC
 fit:
   strategy  : KDE1DimFFT
