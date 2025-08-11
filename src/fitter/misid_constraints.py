@@ -97,8 +97,8 @@ class MisIDConstraints(Cache):
             component= kind,
             cfg      = cfg,
             obs      = self._obs,
-            trigger  = 'Hlt2RD_BuToKpEE_MVA_noPID',
-            project  = 'nopid',
+            trigger  = self._trigger,
+            project  = self._project,
             q2bin    = self._q2bin)
         pdf = ftr.get_model()
         if pdf is None:
