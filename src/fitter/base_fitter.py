@@ -233,6 +233,7 @@ class BaseFitter:
             ptr = ZFitPlotter(data=data, model=model)
             ptr.plot(**cast(Mapping[str, Any], plt_cfg)) # Need this casting to remove error from pyright
         else:
+            log.warning('Model not found, not plotting')
             plt.figure()
 
         sel_path = f'{out_path}/selection.yaml'
