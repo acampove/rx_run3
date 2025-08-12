@@ -216,7 +216,14 @@ class MisIDConstraints(Cache):
         cut_l2 = cut.replace('LEP_', 'L2_')
 
         # This is the FF region
-        return f'({cut_l1}) && ({cut_l2})'
+        cut = f'({cut_l1}) && ({cut_l2})'
+
+        log.info('')
+        log.info(f'Building {kind} PID control region with:')
+        log.info(cut)
+        log.info('')
+
+        return cut
     # ----------------------
     def _get_control_nll(self, kind : str) -> tuple[zlos,DictConfig]:
         '''

@@ -112,7 +112,10 @@ class LikelihoodFactory:
             project= project)
         model= mod.get_model()
 
-        log.info('Making likelihood')
+        log.info(50 * '-')
+        log.info(f'Making likelihood for: {self._sample}/{self._trigger}/{self._project}/{self._q2bin}')
+        log.info(50 * '-')
+
         nll = zfit.loss.ExtendedUnbinnedNLL(model=model, data=data)
 
         return nll
