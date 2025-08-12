@@ -38,6 +38,13 @@ def test_df_to_tex_simple():
     df = _get_df()
     put.df_to_tex(df, f'{Data.out_dir}/df_to_tex/simple.tex')
 # --------------------------------------
+def test_df_to_markdown():
+    '''
+    Saving dataframe to markdown 
+    '''
+    df = _get_df()
+    put.to_markdown(df, f'{Data.out_dir}/df_to_markdown/simple.md')
+# --------------------------------------
 def test_df_to_tex_format():
     '''
     Saving dataframe to latex table with formatting for columns
