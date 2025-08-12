@@ -251,7 +251,7 @@ class DataPreprocessor(Cache):
         '''
         data_path = f'{self._out_path}/data.npz'
         if self._copy_from_cache():
-            log.warning(f'Data found cached, loading: {data_path}')
+            log.info(f'Data found cached, loading: {data_path}')
             with numpy.load(data_path) as ifile:
                 arr = ifile['values' ]
                 wgt = ifile['weights']
