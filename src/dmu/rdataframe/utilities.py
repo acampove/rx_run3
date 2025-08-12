@@ -97,16 +97,19 @@ def add_column_with_numba(
 
     return rdf
 # ---------------------------------------------------------------------
-def rdf_report_to_df(rep : RDF.RCutFlowReport) -> Union[pnd.DataFrame, None]:
+def rdf_report_to_df(rep : RDF.RCutFlowReport) -> pnd.DataFrame:
     '''
-    Takes the output of rdf.Report(), i.e. an RDataFrame cutflow report.
+    Parameters
+    ------------------
+    rep: output of rdf.Report(), i.e. an RDataFrame cutflow report.
 
-    Produces a pandas dataframe with the total, failed, efficiency, and cummulative efficiency
-    If no cut was applied, i.e. the cutflow is empty, will return None and show warning
+    Returns 
+    ------------------
+    A pandas dataframe with the total, failed, efficiency, and cumulative efficiency
+    If no cut was applied, raises ValueError 
     '''
     if rep.begin() == rep.end():
-        log.warning('Empty cutflow')
-        return None
+        raise ValueError('Empty cutflow report')
 
     d_data = {'cut' : [], 'All' : [], 'Passed' : []}
     for cut in rep:
@@ -119,10 +122,10 @@ def rdf_report_to_df(rep : RDF.RCutFlowReport) -> Union[pnd.DataFrame, None]:
         d_data['Passed'].append(pas)
 
     df = pnd.DataFrame(d_data)
-    df['Efficiency' ] = df['Passed'] / df['All']
+    df['Efficiency' ] = df['Passed'] / df['All'].replace(0, pnd.NA)
     df['Cummulative'] = df['Efficiency'].cumprod()
 
-    return df
+    return df 
 # ---------------------------------------------------------------------
 def random_filter(rdf : RDataFrame, entries : int) -> RDataFrame:
     '''
