@@ -1479,6 +1479,16 @@ df_2 = put.from_yaml(yml_path)
 ```
 
 and is meant to be less verbose than doing it through the YAML module.
+
+### Dataframe to markdown
+
+```python
+import dmu.pdataframe.utilities as put
+
+df = _get_df()
+put.to_markdown(df, '/path/to/simple.md')
+```
+
 # Rdataframes
 
 These are utility functions meant to be used with ROOT dataframes.
