@@ -34,7 +34,7 @@ class Data:
     cfg    : ClassVar[DictConfig]
     l_q2bin= ['low', 'cen_low', 'central', 'cen_high', 'jpsi', 'psi2', 'high']
 
-    nthreads: int   = 1
+    nthread : int   = 1
     q2bin   : str   = ''
     mva_cmb : float = 0.0
     mva_prc : float = 0.0
@@ -59,7 +59,7 @@ def _set_logs() -> None:
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to fit RX data')
     parser.add_argument('-c', '--config' , type=str  , help='Name of configuration, e.g. rare/electron' , required=True)
-    parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                 , default=Data.nthreads)
+    parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                 , default=Data.nthread)
     parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[10, 20, 30], default=Data.log_lvl)
     parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin',              choices=Data.l_q2bin , required=True)
     parser.add_argument('-C', '--mva_cmb', type=float, help='Cut on combinatorial MVA working point'    , required=True)
@@ -67,7 +67,7 @@ def _parse_args() -> None:
     args = parser.parse_args()
 
     Data.q2bin   = args.q2bin
-    Data.nthreads= args.nthreads
+    Data.nthread = args.nthread
     Data.mva_cmb = args.mva_cmb
     Data.mva_prc = args.mva_prc
     Data.log_lvl = args.log_lvl
@@ -166,7 +166,7 @@ def main():
     _set_output_directory()
 
     with PL.parameter_schema(cfg=Data.cfg.model.yields),\
-         RDFGetter.multithreading(nthreads=Data.nthreads),\
+         RDFGetter.multithreading(nthreads=Data.nthread),\
          Cache.turn_off_cache(val=[]),\
          sut.blinded_variables(regex_list=['.*signal.*']),\
          sel.custom_selection(d_sel={
