@@ -21,7 +21,8 @@ model:
     kkk                               : rare/electron/kkk.yaml
     kpipi                             : rare/electron/kpipi.yaml
   constraints:
-    yields :
+    misid     : misid/rare_electron/data_misid.yaml
+    prec_rare :
       - Bd_Kstee_eq_btosllball05_DPC
       - Bu_Kstee_Kpi0_eq_btosllball05_DPC
       - Bs_phiee_eq_Ball_DPC
