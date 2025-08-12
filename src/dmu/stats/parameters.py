@@ -140,11 +140,10 @@ class ParameterLibrary:
 
         if cls._yld_cfg is None:
             raise ValueError('Parameter schema not set')
-        else:
-            yld_cfg = cls._yld_cfg
 
+        yld_cfg = cls._yld_cfg
         if name not in yld_cfg:
-            log.error(yaml.dump(cls._yld_cfg))
+            log.error(yaml.dump(yld_cfg))
             raise ValueError(f'Parameter {name} not found in configuration')
 
         if 'alias' in yld_cfg[name]:
