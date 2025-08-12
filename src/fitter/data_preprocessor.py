@@ -270,6 +270,9 @@ class DataPreprocessor(Cache):
         arr, wgt = self._get_array()
         data     = self._data_from_numpy(arr_value=arr, arr_weight=wgt)
 
+        cuts_path = data_path.replace('.npz', '.yaml')
+        gut.dump_json(data=self._d_sel, path=cuts_path)
+
         numpy.savez_compressed(data_path, values=arr, weights=wgt)
         self._cache()
 
