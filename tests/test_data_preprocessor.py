@@ -20,7 +20,7 @@ class Data:
     Meant to hold shared attributes
     '''
     user    = os.environ['USER']
-    out_dir = f'/tmp/{user}/tests/fitter/data_preprocessor'
+    out_dir = f'/tmp/{user}/tests/fitter'
     os.makedirs(out_dir, exist_ok=True)
 # -------------------------------------------------
 def _validate_data(data : zdata, name : str) -> None:
