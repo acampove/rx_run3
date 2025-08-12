@@ -165,8 +165,8 @@ def main():
          Cache.turn_off_cache(val=[]),\
          sut.blinded_variables(regex_list=['.*signal.*']),\
          sel.custom_selection(d_sel={
-        'nobr0' : 'nbrem != 0',
-        'bdt'   :f'mva_cmb > {Data.mva_cmb} && mva_prc > {Data.mva_prc}'}):
+        'nobrm0': 'nbrem != 0',
+        'bdt'   :f'(mva_cmb > {Data.mva_cmb}) && (mva_prc > {Data.mva_prc})'}):
 
         _fit()
 # ----------------------
