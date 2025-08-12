@@ -115,16 +115,23 @@ def yield_from_zdata(data : zdata) -> float:
 #-------------------------------------------------------
 # Check PDF
 #-------------------------------------------------------
-def is_pdf_usable(pdf : zpdf) -> zpdf:
+def is_pdf_usable(pdf : zpdf) -> bool:
     '''
-    Will check if the PDF is usable
+    Parameters
+    ---------------
+    pdf: PDF to check
+
+    Returns
+    ---------------
+    True if PDF is usable
     '''
-    [[[minx]], [[maxx]]]= pdf.space.limits
+    minx, maxx = range_from_obs(obs=pdf.space)
 
     arr_x = numpy.linspace(minx, maxx, 100)
+    tf_x  = tf.convert_to_tensor(arr_x)
 
     try:
-        pdf.pdf(arr_x)
+        pdf.pdf(tf_x)
     except tf.errors.InvalidArgumentError:
         log.warning('PDF cannot be evaluated')
         return False
