@@ -124,13 +124,14 @@ class DataFitter(BaseFitter, Cache):
         if self._d_cns is not None:
             cns= Fitter.get_gaussian_constraints(obj=nll, cfg=self._d_cns)
             nll= nll.create_new(constraints=cns) # type: ignore
-
-        res, _ = Fitter.minimize(nll=nll, cfg=self._cfg.fit)
-
-        res.hesse(name='minuit_hesse')
+        else:
+            log.warning('Not using any constraints')
 
         if nll is None:
             raise ValueError('Likelihood is missing')
+
+        res, _ = Fitter.minimize(nll=nll, cfg=self._cfg.fit)
+        res.hesse(name='minuit_hesse')
 
         for model, data, cfg, name in zip(nll.model, nll.data, l_cfg, l_nam):
             out_path = f'{self._out_path}/{name}'
