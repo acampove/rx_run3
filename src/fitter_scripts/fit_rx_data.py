@@ -7,6 +7,7 @@ import os
 import argparse
 from typing import ClassVar
 
+import yaml
 from omegaconf                 import DictConfig
 from dmu.stats.zfit            import zfit
 from dmu.stats.parameters      import ParameterLibrary as PL
@@ -110,7 +111,12 @@ def _get_constraints(nll : zloss) -> dict[str,tuple[float,float]]:
         q2bin = Data.q2bin)
     d_cns_2 = mrd.get_constraints()
 
-    return {**d_cns_1, **d_cns_2}
+    d_cns = {**d_cns_1, **d_cns_2}
+
+    log.info('Constraints:')
+    log.info(yaml.dump(d_cns))
+
+    return d_cns
 # ----------------------
 def _fit() -> None:
     '''
