@@ -55,6 +55,21 @@ def to_yaml(df : pnd.DataFrame, path : str):
 
     with open(path, 'w', encoding='utf-8') as ofile:
         yaml.dump(data, ofile, Dumper=yaml.CDumper)
+# ----------------------
+def to_markdown(df : pnd.DataFrame, path : str) -> None:
+    '''
+    Parameters
+    -------------
+    df  : Pandas dataframe
+    path: Path to markdown file
+    '''
+    dir_path = os.path.dirname(path)
+    if dir_path != '':
+        os.makedirs(dir_path, exist_ok=True)
+
+    text = df.to_markdown()
+    with open(path, 'w', encoding='utf-8') as ofile:
+        ofile.write(text)
 # -------------------------------------
 def from_yaml(path : str) -> pnd.DataFrame:
     '''
