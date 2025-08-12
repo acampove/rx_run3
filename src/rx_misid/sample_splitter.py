@@ -201,7 +201,7 @@ class SampleSplitter(Wcache):
         '''
         parquet_path = f'{self._out_path}/sample.parquet'
         if self._copy_from_cache():
-            log.warning('Cached object found')
+            log.warning(f'Cached path found, reusing: {parquet_path}')
             df = pnd.read_parquet(parquet_path, engine='pyarrow')
 
             return df
