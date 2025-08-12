@@ -69,9 +69,12 @@ class DataPreprocessor(Cache):
         self._project= project
         self._q2bin  = q2bin
         self._wgt_cfg= wgt_cfg
-        rdf , d_sel  = self._get_rdf(cut=cut)
+
+        rdf , d_sel, df_ctf  = self._get_rdf(cut=cut)
         self._rdf    = rdf 
         self._d_sel  = d_sel
+        self._df_ctf = df_ctf
+
         self._is_sig = is_sig
         self._rdf_uid= None if self._rdf is None else self._rdf.uid
 
@@ -84,7 +87,7 @@ class DataPreprocessor(Cache):
             wgt_cfg  = {} if self._wgt_cfg is None else OmegaConf.to_container(self._wgt_cfg, resolve=True),
             rdf_uid  = self._rdf_uid)
     # ------------------------
-    def _get_rdf(self, cut : dict[str,str]|None) -> tuple[RDataFrame, dict[str,str]]:
+    def _get_rdf(self, cut : dict[str,str]|None) -> tuple[RDataFrame, dict[str,str], pnd.DataFrame]:
         '''
         Parameters
         -------------------
@@ -95,6 +98,7 @@ class DataPreprocessor(Cache):
         Tuple with:
            - ROOT dataframe after selection and with Unique identifier attached as uid
            - Dictionary storing selection
+           - Pandas dataframe with cutflow
         '''
         log.debug(f'Retrieving dataframe for {self._sample}/{self._trigger}/{self._project}')
         gtr = RDFGetter(
@@ -117,8 +121,10 @@ class DataPreprocessor(Cache):
                 process = self._sample)
 
             cfg_sel = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin)
+            rep = rdf.Report()
+            df  = rut.rdf_report_to_df(rep=rep)
 
-        return rdf, cfg_sel
+        return rdf, cfg_sel, df
     # ------------------------
     def _add_extra_weights(self, wgt : numpy.ndarray) -> numpy.ndarray:
         '''
@@ -273,8 +279,11 @@ class DataPreprocessor(Cache):
         arr, wgt = self._get_array()
         data     = self._data_from_numpy(arr_value=arr, arr_weight=wgt)
 
-        cuts_path = data_path.replace('.npz', '.yaml')
-        gut.dump_json(data=self._d_sel, path=cuts_path)
+        cuts_path = data_path.replace('.npz' , '.yaml')
+        gut.dump_json(data=self._d_sel , path=cuts_path)
+
+        ctfl_path = cuts_path.replace('.yaml',   '.md')
+        put.to_markdown(df=self._df_ctf, path=ctfl_path)
 
         numpy.savez_compressed(data_path, values=arr, weights=wgt)
         self._cache()
