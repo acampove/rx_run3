@@ -83,6 +83,12 @@ def range_from_obs(obs : zobs) -> tuple[float,float]:
 
     minx, maxx = obs.limits
 
+    if not isinstance(minx, numpy.ndarray):
+        raise ValueError(f'Minx is not an array but: {minx}')
+
+    if not isinstance(maxx, numpy.ndarray):
+        raise ValueError(f'Minx is not an array but: {maxx}')
+
     return float(minx[0][0]), float(maxx[0][0])
 #-------------------------------------------------------
 def yield_from_zdata(data : zdata) -> float:
