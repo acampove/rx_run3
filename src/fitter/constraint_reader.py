@@ -5,7 +5,7 @@ Script holding ConstraintReader class
 from dmu.logging.log_store       import LogStore
 from rx_efficiencies.decay_names import DecayNames    as dn
 from fitter.prec_scales          import PrecScales
-from fitter.protocol             import ParameterHolder
+from fitter.protocols            import ParameterHolder
 
 log=LogStore.add_logger('fitter:constraint_reader')
 # -------------------------------------------------------------
