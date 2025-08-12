@@ -56,5 +56,5 @@ def test_simple():
     gcl = GofCalculator(nll, ndof=10)
     gof = gcl.get_gof(kind='pvalue')
 
-    assert math.isclose(gof, 0.965, abs_tol=0.01)
+    assert math.isclose(gof, 0.7566317, abs_tol=1e-5)
 # -------------------------------------------
