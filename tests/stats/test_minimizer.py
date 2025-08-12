@@ -36,6 +36,7 @@ def _get_model():
     return pdf
 # -------------------------------------------
 def _get_data():
+    numpy.random.seed(42)
     data_1  = numpy.random.normal(0, 1.0, size=15_000)
     data_2  = numpy.random.normal(0, 1.2, size= 1_500)
     data_np = numpy.concatenate([data_1, data_2])

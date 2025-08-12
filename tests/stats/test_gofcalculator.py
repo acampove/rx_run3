@@ -33,6 +33,7 @@ def _get_model():
     return pdf
 # -------------------------------------------
 def _get_data():
+    numpy.random.seed(42)
     data_np = numpy.random.normal(0, 1, size=10000)
     data_zf = zfit.Data.from_numpy(obs=Data.obs, array=data_np)
 
