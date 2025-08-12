@@ -49,7 +49,7 @@ def test_muon_data(sample : str):
     Tests class with toys
     '''
     obs = zfit.Space('B_Mass', limits=(5180, 6000))
-    name= f'{sample}_muon_data'
+    name= f'data_preprocessor/{sample}_muon_data'
 
     with RDFGetter.max_entries(100_000):
         prp = DataPreprocessor(
@@ -73,7 +73,7 @@ def test_brem_cat_data(sample : str, brem_cat : int):
     Tests class with toys
     '''
     obs = zfit.Space('B_Mass', limits=(4500, 6000))
-    name= f'{sample}_brem_{brem_cat:03}'
+    name= f'data_preprocessor/{sample}_brem_{brem_cat:03}'
     cut = {'brem' : f'nbrem == {brem_cat}'}
 
     with RDFGetter.max_entries(100_000):
@@ -119,7 +119,7 @@ def test_with_pid_weights(
         'brem' : 'nbrem == 1',
         'pid_l': '(1)'}
 
-    name = f'with_pid_weights_{sample}_{region}_{kind}'
+    name = f'data_preprocessor/with_pid_weights_{sample}_{region}_{kind}'
     with RDFGetter.max_entries(1000_000),\
          RDFGetter.default_excluded(names=[]):
         prp = DataPreprocessor(
