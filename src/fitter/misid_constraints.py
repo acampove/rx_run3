@@ -1,7 +1,6 @@
 '''
 Module containing the MisIDConstraints class
 '''
-from typing                import Protocol
 from dmu.stats.fitter      import GofCalculator
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
