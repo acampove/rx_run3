@@ -672,7 +672,12 @@ def zres_to_cres(res : zres) -> DictConfig:
         pass
 
     par   = res.params
-    d_par = { name : _reformat_values(d_par=d_par) for name, d_par in par.items()}
+    try:
+        d_par = { name : _reformat_values(d_par=d_par) for name, d_par in par.items()}
+    except KeyError as exc:
+        print(res)
+        raise KeyError('Fit parameters cannot be used') from exc
+
     cfg   = OmegaConf.create(d_par)
 
     return cfg
