@@ -21,7 +21,6 @@ from ROOT                   import RDF, gInterpreter
 
 log = LogStore.add_logger('dmu:logging:test_fitter')
 #-------------------------------------
-@dataclass
 class Data:
     '''
     Data class used to store share data
