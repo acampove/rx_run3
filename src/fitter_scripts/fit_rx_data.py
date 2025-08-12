@@ -29,7 +29,7 @@ class Data:
     '''
     Class meant to be used to share attributes
     '''
-    config : ClassVar[DictConfig]
+    cfg    : ClassVar[DictConfig]
     l_q2bin= ['low', 'cen_low', 'central', 'cen_high', 'jpsi', 'psi2', 'high']
 
     q2bin  : str   = ''
@@ -64,7 +64,7 @@ def _parse_args() -> None:
     Data.mva_cmb = args.mva_cmb
     Data.mva_prc = args.mva_prc
     Data.log_lvl = args.log_lvl
-    Data.config  = gut.load_conf(package='fitter_data', fpath=f'{args.config}/data.yaml')
+    Data.cfg     = gut.load_conf(package='fitter_data', fpath=f'{args.config}/data.yaml')
     Data.obs     = _get_observable()
 # ----------------------
 def _get_observable() -> zobs:
@@ -73,7 +73,7 @@ def _get_observable() -> zobs:
     -------------
     Zfit observable
     '''
-    cfg_obs      = Data.config.model.observable
+    cfg_obs      = Data.cfg.model.observable
     [minx, maxx] = cfg_obs.range
     obs = zfit.Space(cfg_obs.name, minx, maxx)
 
@@ -99,13 +99,16 @@ def _fit() -> None:
         sample = 'DATA_24_*',
         trigger= 'Hlt2RD_BuToKpEE_MVA',
         project= 'rx',
-        cfg    = Data.config)
+        cfg    = Data.cfg)
     nll = ftr.run()
     cfg = ftr.get_config()
 
     crd = ConstraintReader(obj=nll, q2bin=Data.q2bin)
-    ftr = DataFitter(d_nll={'signal_region' : (nll, cfg)}, cfg=Data.config)
     ftr.constraints = crd.get_constraints()
+    ftr = DataFitter(
+        name = Data.q2bin,
+        d_nll= {'signal_region' : (nll, cfg)}, 
+        cfg  = Data.cfg)
     ftr.run()
 # ----------------------
 def _set_output_directory() -> None:
@@ -126,7 +129,7 @@ def main():
     _set_logs()
     _set_output_directory()
 
-    with PL.parameter_schema(cfg=Data.config.model.yields),\
+    with PL.parameter_schema(cfg=Data.cfg.model.yields),\
          Cache.turn_off_cache(val=[]),\
          sut.blinded_variables(regex_list=['.*signal.*']),\
          sel.custom_selection(d_sel={
