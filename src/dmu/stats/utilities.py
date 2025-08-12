@@ -207,7 +207,7 @@ def _is_par_blinded(name : str, l_blind : list[str]) -> bool:
     return False
 #-------------------------------------------------------
 def _get_pars(
-    pdf   : zpdf,
+    pdf   : zpdf|zmod,
     blind : None|list[str]) -> tuple[list, list]:
     '''
     Parameters
@@ -237,7 +237,7 @@ def _get_pars(
     return l_par_flt, l_par_fix
 #-------------------------------------------------------
 def _get_messages(
-    pdf       : zpdf,
+    pdf       : zpdf|zmod,
     l_par_flt : list,
     l_par_fix : list,
     d_const   : None|dict[str,tuple[float,float]] = None) -> list[str]:
