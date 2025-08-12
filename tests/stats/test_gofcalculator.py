@@ -24,7 +24,6 @@ class Data:
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
     LogStore.set_level('dmu:stats:gofcalculator', 10)
-    numpy.random.seed(42)
 #---------------------------------------------
 def _get_model():
     mu  = zfit.Parameter('mu', 3, -1, 5)

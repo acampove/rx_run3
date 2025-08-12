@@ -645,7 +645,6 @@ def test_xerror(val : Union[float,bool], name : str):
     val : Value of xerr
     name: name of plot
     '''
-    numpy.random.seed(42)
     arr = numpy.random.normal(0, 1, size=1000)
 
     obs = zfit.Space('m', limits=(-10, 10))

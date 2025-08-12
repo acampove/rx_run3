@@ -21,7 +21,6 @@ class Data:
 #---------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
-    numpy.random.seed(3)
     LogStore.set_level('dmu:ml:minimizers', 10)
 #---------------------------------------------
 def _get_model():
