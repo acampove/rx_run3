@@ -11,7 +11,7 @@ import pandas  as pnd
 import awkward as ak
 import numpy
 
-from ROOT import RDataFrame, RDF, Numba
+from ROOT import RDataFrame, RDF, Numba # type: ignore
 
 from dmu.logging.log_store import LogStore
 
