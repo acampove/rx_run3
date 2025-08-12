@@ -41,8 +41,7 @@ class LogStore:
     backend       = 'logging'
     #--------------------------
     @staticmethod
-    @contextlib.contextmanager
-    def level(name : str, lvl : int) -> None:
+    def level(name : str, lvl : int):
         '''
         Context manager used to set the logging level of a given logger
 
@@ -51,17 +50,22 @@ class LogStore:
         name : Name of logger
         lvl  : Integer representing logging level
         '''
-        log       = LogStore.get_logger(name=name)
+        log = LogStore.get_logger(name=name)
         if log is None:
             raise ValueError(f'Cannot find logger {name}')
 
         old_lvl = log.getEffectiveLevel()
 
         LogStore.set_level(name, lvl)
-        try:
-            yield
-        finally:
-            LogStore.set_level(name, old_lvl)
+
+        @contextlib.contextmanager
+        def _context():
+            try:
+                yield
+            finally:
+                LogStore.set_level(name, old_lvl)
+
+        return _context()
     #--------------------------
     @staticmethod
     def get_logger(name : str) -> Union[Logger,None]:
