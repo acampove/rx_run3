@@ -126,12 +126,13 @@ def _fit() -> None:
     nll = ftr.run()
     cfg = ftr.get_config()
 
-    crd = ConstraintReader(obj=nll, q2bin=Data.q2bin)
-    ftr.constraints = crd.get_constraints()
+    d_cns   = _get_constraints(nll=nll)
+
     ftr = DataFitter(
         name = Data.q2bin,
         d_nll= {'signal_region' : (nll, cfg)}, 
         cfg  = Data.cfg)
+    ftr.constraints = d_cns 
     ftr.run()
 # ----------------------
 def _set_output_directory() -> None:
