@@ -34,17 +34,15 @@ def initialize():
     os.makedirs(Data.out_dir, exist_ok=True)
 # ----------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-def test_simple(q2bin : str, get_parameters_holder) -> None:
+def test_simple(q2bin : str) -> None:
     '''
     Basic test for building misID component
     '''
     obs = zfit.Space('B_Mass_smr', limits=(4500, 6000))
-    obj = get_parameters_holder(obs=obs, kind='dummy')
-
     cfg = gut.load_conf(package='fitter_data', fpath='misid/electron/data_misid.yaml')
     with sel.custom_selection(d_sel={'nobrm0' : 'nbrem != 0'}):
         obj = MisIDConstraints(
-            obj      = obj,
+            obj      = obs,
             cfg      = cfg,
             q2bin    = q2bin)
         d_cns = obj.get_constraints()
