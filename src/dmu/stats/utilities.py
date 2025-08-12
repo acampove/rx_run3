@@ -597,7 +597,7 @@ def placeholder_fit(
     else:
         data = zfit.Data.from_pandas(df, obs=pdf.space, weights=Data.weight_name)
 
-    d_const = {'sg' : [50, 3]}
+    d_const = {'sg' : (50., 3.)}
 
     obj = Fitter(pdf, data)
     res = obj.fit(cfg={'constraints' : d_const})
