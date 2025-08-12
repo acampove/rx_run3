@@ -24,16 +24,6 @@ from fitter.data_preprocessor  import DataPreprocessor
 
 log=LogStore.add_logger('fitter:misid_constraints')
 # -------------------------        
-class ObservableHolder(Protocol):
-    @property
-    def space(self) -> zobs:
-        '''
-        Returns
-        -------------
-        Observable associated to a model
-        '''
-        ...
-# -------------------------        
 class MisIDConstraints(Cache):
     '''
     Class meant to provide constraints for the yields of different
@@ -49,7 +39,7 @@ class MisIDConstraints(Cache):
     # ----------------------
     def __init__(
         self, 
-        obj       : ObservableHolder,
+        obs       : zobs,
         cfg       : DictConfig, 
         q2bin     : str):
         '''
@@ -59,7 +49,7 @@ class MisIDConstraints(Cache):
         cfg      : configuration needed to build PDF
         q2bin    : E.g. central
         '''
-        self._obs       = obj.space
+        self._obs       = obs
         self._cfg       = cfg
         self._q2bin     = q2bin
         self._trigger   = 'Hlt2RD_BuToKpEE_MVA_noPID'
