@@ -22,6 +22,7 @@ from fitter.constraint_reader  import ConstraintReader
 from fitter.data_fitter        import DataFitter
 from fitter.likelihood_factory import LikelihoodFactory
 from fitter.misid_constraints  import MisIDConstraints 
+from rx_data.rdf_getter        import RDFGetter
 from rx_selection              import selection as sel
 
 log=LogStore.add_logger('fitter:fit_rx_data')
@@ -33,11 +34,12 @@ class Data:
     cfg    : ClassVar[DictConfig]
     l_q2bin= ['low', 'cen_low', 'central', 'cen_high', 'jpsi', 'psi2', 'high']
 
-    q2bin  : str   = ''
-    mva_cmb: float = 0.0
-    mva_prc: float = 0.0
-    log_lvl: int   = 20
-    obs    : zobs
+    nthreads: int   = 1
+    q2bin   : str   = ''
+    mva_cmb : float = 0.0
+    mva_prc : float = 0.0
+    log_lvl : int   = 20
+    obs     : zobs
 # ----------------------
 def _set_logs() -> None:
     '''
