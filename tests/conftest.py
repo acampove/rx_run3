@@ -22,9 +22,10 @@ from zfit.interface              import ZfitSpace     as zobs
 executed_tests = set()
 log = LogStore.add_logger('rx_efficiencies:conftest')
 # --------------------------------------------------------------
-class ParametersHolder:
+class TestingParametersHolder:
     '''
-    Class used to instantiate objects needed to test ConstraintReader
+    Class used to instantiate objects holding parameters and observables
+    They are needed in tests
     '''
     # ----------------------
     def __init__(self, kind : str, obs : zobs) -> None:
@@ -248,13 +249,13 @@ def skip_mass_cut():
         yield
 # ----------------------
 @pytest.fixture
-def get_parameters_holder() -> type[ParametersHolder]:
+def get_parameters_holder() -> type[TestingParametersHolder]:
     '''
     Returns
     -------------
-    Returns ParametersHolder class (not instance)
+    Returns TestingParametersHolder class (not instance)
     '''
-    return ParametersHolder
+    return TestingParametersHolder
 # -----------------------------------
 def pytest_runtest_logreport(report):
     '''
