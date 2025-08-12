@@ -16,7 +16,8 @@ class Data:
     '''
     Data class
     '''
-    out_dir = '/tmp/tests/dmu/pdataframe/utilities'
+    user    = os.environ['USER']
+    out_dir = f'/tmp/{user}/tests/dmu/pdataframe/utilities'
 # --------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
