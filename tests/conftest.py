@@ -13,9 +13,11 @@ import matplotlib.pyplot as plt
 from _pytest.config import Config
 # Needed to make sure zfit gets imported properly
 # before any test runs
-from dmu.stats.zfit     import zfit
-from dmu.workflow.cache import Cache as Wcache
+from dmu.stats.zfit        import zfit
+from dmu.workflow.cache    import Cache as Wcache
+from dmu.logging.log_store import LogStore
 
+log=LogStore.add_logger('dmu:conftest')
 # ------------------------------
 def pytest_configure(config : Config):
     '''
