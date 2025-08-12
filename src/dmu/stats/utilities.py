@@ -9,6 +9,7 @@ import re
 import pickle
 from typing import Union
 
+import yaml
 import numpy
 import pandas            as pnd
 import matplotlib.pyplot as plt
@@ -642,7 +643,12 @@ def _reformat_values(d_par : dict) -> dict:
     }
     '''
 
-    error = d_par['minuit_hesse']['error']
+    try:
+        error = d_par['minuit_hesse']['error']
+    except KeyError as exc:
+        log.error(yaml.dump(d_par))
+        raise KeyError('Cannot extract error from parameters') from exc
+
     error = float(error)
 
     value = d_par['value']
