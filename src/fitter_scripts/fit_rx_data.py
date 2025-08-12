@@ -89,6 +89,29 @@ def _get_fit_name() -> str:
 
     return name
 # ----------------------
+def _get_constraints(nll : zloss) -> dict[str,tuple[float,float]]:
+    '''
+    Parameters
+    -------------
+    nll: Likelihood
+
+    Returns
+    -------------
+    Dictionary with:
+        key  : Name of parameter
+        Value: Tuple with mu and sigma for constraining parameter
+    '''
+    crd     = ConstraintReader(obj=nll, q2bin=Data.q2bin)
+    d_cns_1 = crd.get_constraints()
+
+    mrd     = MisIDConstraints(
+        obs   = Data.obs,
+        cfg   = Data.cfg.model.constraints.misid,
+        q2bin = Data.q2bin)
+    d_cns_2 = mrd.get_constraints()
+
+    return {**d_cns_1, **d_cns_2}
+# ----------------------
 def _fit() -> None:
     '''
     This is where DataFitter is used
