@@ -9,6 +9,7 @@ from ROOT                     import RDataFrame # type: ignore
 from dmu.workflow.cache       import Cache
 from dmu.stats.zfit           import zfit
 from dmu.stats                import utilities  as sut
+from dmu.generic              import utilities  as gut
 from dmu.logging.log_store    import LogStore
 from zfit.interface           import ZfitData   as zdata
 from zfit.interface           import ZfitSpace  as zobs
@@ -65,7 +66,9 @@ class DataPreprocessor(Cache):
         self._project= project
         self._q2bin  = q2bin
         self._wgt_cfg= wgt_cfg
-        self._rdf    = self._get_rdf(cut=cut)
+        rdf , d_sel  = self._get_rdf(cut=cut)
+        self._rdf    = rdf 
+        self._d_sel  = d_sel
         self._is_sig = is_sig
         self._rdf_uid= None if self._rdf is None else self._rdf.uid
 
@@ -73,11 +76,12 @@ class DataPreprocessor(Cache):
             out_path = out_dir,
             obs_name = sut.name_from_obs(obs=obs),
             obs_range= sut.range_from_obs(obs=obs),
+            d_sel    = d_sel,
             is_sig   = is_sig,
             wgt_cfg  = {} if self._wgt_cfg is None else OmegaConf.to_container(self._wgt_cfg, resolve=True),
             rdf_uid  = self._rdf_uid)
     # ------------------------
-    def _get_rdf(self, cut : dict[str,str]|None) -> RDataFrame:
+    def _get_rdf(self, cut : dict[str,str]|None) -> tuple[RDataFrame, dict[str,str]]:
         '''
         Parameters
         -------------------
@@ -85,7 +89,9 @@ class DataPreprocessor(Cache):
 
         Returns
         -------------------
-        ROOT dataframe after selection and with Unique identifier attached as uid
+        Tuple with:
+           - ROOT dataframe after selection and with Unique identifier attached as uid
+           - Dictionary storing selection
         '''
         log.debug(f'Retrieving dataframe for {self._sample}/{self._trigger}/{self._project}')
         gtr = RDFGetter(
@@ -107,7 +113,9 @@ class DataPreprocessor(Cache):
                 trigger = self._trigger,
                 process = self._sample)
 
-        return rdf
+            cfg_sel = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin)
+
+        return rdf, cfg_sel
     # ------------------------
     def _add_extra_weights(self, wgt : numpy.ndarray) -> numpy.ndarray:
         '''
