@@ -1016,7 +1016,7 @@ utilities.placeholder_fit(kind='s+b', fit_dir='/some/directory')
 ### Likelihooods
 
 ```python
-from dmu.stats import utilities
+from dmu.stats import utilities as sut
 
 nll = sut.get_nll(kind='s+b')
 ```
