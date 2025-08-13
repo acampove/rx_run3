@@ -126,11 +126,11 @@ def test_all_pdf(name : str):
     l_flt = ['mu', 'sg']
 
     mod   = ModelFactory(
-            preffix = name,
-            obs     = Data.obs,
-            l_pdf   = [name],
-            l_shared= l_shr,
-            l_float = l_flt)
+        preffix = name,
+        obs     = Data.obs,
+        l_pdf   = [name],
+        l_shared= l_shr,
+        l_float = l_flt)
     pdf   = mod.get_pdf()
 
     print_pdf(pdf)
