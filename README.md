@@ -1013,6 +1013,17 @@ from dmu.stats import utilities
 utilities.placeholder_fit(kind='s+b', fit_dir='/some/directory')
 ```
 
+### Likelihooods
+
+```python
+from dmu.stats import utilities
+
+nll = sut.get_nll(kind='s+b')
+```
+
+`s+b` will return an extended likelihood   
+`signal` will return a non-extended likelihood
+
 ## Retrieving information on fits
 
 Once the fit has be done and the results are saved to a given directory one can do:
