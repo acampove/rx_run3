@@ -535,6 +535,7 @@ def pdf_to_tex(path : str, d_par : dict[str,str], skip_fixed : bool = True) -> N
 #---------------------------------------------
 def get_model(
     kind   : str,
+    nsample: int       = 1000,
     obs    : zobs|None = None,
     suffix : str|None  = None,
     lam    : float     = -0.0001) -> zpdf:
@@ -543,10 +544,11 @@ def get_model(
 
     Parameters:
 
-    kind  : 'signal' for Gaussian, 's+b' for Gaussian plus exponential
-    obs   : If provided, will use it, by default None and will be built in function
-    suffix: Optional, can be used in case multiple models are needed
-    lam   : Decay constant of exponential component, set to -0.0001 by default
+    kind   : 'signal' for Gaussian, 's+b' for Gaussian plus exponential
+    nsample: Number of entries for normalization of each component, default 1000
+    obs    : If provided, will use it, by default None and will be built in function
+    suffix : Optional, can be used in case multiple models are needed
+    lam    : Decay constant of exponential component, set to -0.0001 by default
     '''
     if suffix is not None:
         suffix = f'_{suffix}'
@@ -567,8 +569,8 @@ def get_model(
     expo= zfit.pdf.Exponential(obs=obs, lam=c)
 
     if kind == 's+b':
-        nexpo = zfit.param.Parameter(f'nbkg{suffix}', 1000, 0, 1000_000)
-        ngaus = zfit.param.Parameter(f'nsig{suffix}', 1000, 0, 1000_000)
+        nexpo = zfit.param.Parameter(f'nbkg{suffix}', nsample, 0, 1000_000)
+        ngaus = zfit.param.Parameter(f'nsig{suffix}', nsample, 0, 1000_000)
 
         bkg   = expo.create_extended(nexpo)
         sig   = gaus.create_extended(ngaus)
@@ -589,7 +591,6 @@ def get_nll(kind : str) -> ZfitLoss:
     Extended NLL from a gaussian plus exponential model
     '''
     pdf = get_model(kind=kind)
-
 
     if kind == 's+b':
         dat = pdf.create_sampler()
