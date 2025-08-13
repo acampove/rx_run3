@@ -176,6 +176,13 @@ def test_get_placeholder_model(
     Test of get_model
     '''
     _ = sut.get_model(kind=kind, suffix=suffix)
+# ----------------------
+@pytest.mark.parametrize('kind'  , ['s+b', 'signal'])
+def test_get_placeholder_nll(kind : str) -> None:
+    '''
+    Test of get_nll
+    '''
+    _ = sut.get_nll(kind=kind)
 #----------------------------------
 def test_reuse_data() -> None:
     '''
