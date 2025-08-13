@@ -175,7 +175,8 @@ def test_get_placeholder_model(
     '''
     Test of get_model
     '''
-    _ = sut.get_model(kind=kind, suffix=suffix)
+    pdf = sut.get_model(kind=kind, suffix=suffix)
+    sut.is_pdf_usable(pdf=pdf)
 # ----------------------
 @pytest.mark.parametrize('kind'  , ['s+b', 'signal'])
 def test_get_placeholder_nll(kind : str) -> None:
