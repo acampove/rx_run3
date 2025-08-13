@@ -25,7 +25,7 @@ from dmu.logging.log_store  import LogStore
 import tensorflow as tf
 
 from omegaconf        import OmegaConf, DictConfig
-from zfit.interface   import ZfitData      as zdata
+from zfit.interface   import ZfitData      as zdata, ZfitLoss
 from zfit.interface   import ZfitSpace     as zobs
 from zfit.interface   import ZfitPDF       as zpdf
 from zfit.interface   import ZfitModel     as zmod
@@ -577,6 +577,29 @@ def get_model(
         return pdf
 
     raise NotImplementedError(f'Invalid kind of fit: {kind}')
+# ----------------------
+def get_nll(kind : str) -> ZfitLoss:
+    '''
+    Parameters
+    -------------
+    kind : Type of model, e.g. s+b, signal
+
+    Returns
+    -------------
+    Extended NLL from a gaussian plus exponential model
+    '''
+    pdf = get_model(kind=kind)
+
+
+    if kind == 's+b':
+        dat = pdf.create_sampler()
+        return zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
+
+    if kind == 'signal':
+        dat = pdf.create_sampler(n=1000)
+        return zfit.loss.UnbinnedNLL(model=pdf, data=dat)
+
+    raise NotImplementedError(f'Invalid kind: {kind}')
 #---------------------------------------------
 def _pdf_to_data(pdf : zpdf, add_weights : bool) -> zdata:
     nentries = 10_000
