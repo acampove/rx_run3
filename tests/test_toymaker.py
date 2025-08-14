@@ -23,6 +23,9 @@ def test_simple() -> None:
 
     mkr   = ToyMaker(nll=nll, res=res, ntoys=ntoys)
     df    = mkr.get_parameter_information()
+    l_col = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Converged']
+
+    assert df.columns == l_col
 
     pars  = nll.get_params()
     assert len(df) == ntoys * len(pars) 
