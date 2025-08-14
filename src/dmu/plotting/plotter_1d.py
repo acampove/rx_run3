@@ -278,7 +278,20 @@ class Plotter1D(Plotter):
 
         return f'{name:<15}{nentries:<10}'
     # --------------------------------------------
-    def _normalize_weights(self, arr_wgt : numpy.ndarray, var : str) -> numpy.ndarray:
+    def _normalize_weights(
+        self, 
+        arr_wgt : numpy.ndarray, 
+        var     : str) -> numpy.ndarray:
+        '''
+        Parameters
+        --------------
+        arr_wgt : Array of weights
+        var     : Plotting variable, needed to access normalization flag
+
+        Returns
+        --------------
+        Array of weights, normalized to 1 or not
+        '''
         cfg_var = self._d_cfg['plots'][var]
         if 'normalized' not in cfg_var:
             log.debug(f'Not normalizing for variable: {var}')
