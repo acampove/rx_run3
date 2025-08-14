@@ -1,9 +1,14 @@
 saving:
-  plt_dir: plotting/pulls
+  plt_dir: plotting/pluggins/pulls
 plots:
   x_pul:
     binning: [-4.0, 4.0, 60]
     labels : ['x Pull', 'Entries']
+    styling:
+      pull:
+        histtype : fill
+        color    : blue
+        alpha    : 0.5
   y_pul:
     binning: [-4.0, 4.0, 60]
     labels : ['y Pull', 'Entries']
