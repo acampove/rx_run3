@@ -7,3 +7,6 @@ plots:
   y_pul:
     binning: [-4.0, 4.0, 60]
     labels : ['y Pull', 'Entries']
+plugin:
+  pulls:
+    x : {}
