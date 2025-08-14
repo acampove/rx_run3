@@ -66,7 +66,12 @@ class Plotter1D(Plotter):
             hst     : Hist,
             name    : str,
             varname : str) -> None:
-
+        '''
+        arr_val: Array of values of variable to plot
+        arr_wgt: Array of weights
+        hst    : Histogram, needed to plot extra information
+        name   : Name of variable
+        '''
         if 'plugin' not in self._d_cfg:
             log.debug('No plugins found')
             return
