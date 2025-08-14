@@ -42,15 +42,16 @@ def _get_df(ntoys : int, l_var : tuple[str]) -> pnd.DataFrame:
 
     return df
 # ----------------------
+def _get_cfg() -> DictConfig:
+    cfg = gut.load_conf(package='fitter_data', fpath='toys/tests.yaml')
+
+    return cfg 
+# ----------------------
 def test_simple() -> None:
     '''
     This is the simplest test of ToyPlotter
     '''
     df = _get_df(ntoys=10_000, l_var=('a', 'b'))
-    print('')
-    print(df)
-    print(df.shape)
-
     cfg= _get_cfg()
 
     ptr= ToyPlotter(df=df, cfg=cfg)
