@@ -6,7 +6,11 @@ from functools import lru_cache
 import numpy
 import pandas as pnd
 
+from omegaconf             import DictConfig
+from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
+
+from fitter.toy_plotter    import ToyPlotter
 
 log=LogStore.add_logger('fitter:test_toy_plotter')
 # ----------------------
