@@ -99,8 +99,6 @@ class ToyPlotter:
         np_data = { name : numpy.array(vals, dtype='float') for name, vals in py_data.items() }
         rdf     = RDF.FromNumpy(np_data)
 
-        rdf.Display().Print()
-
         return rdf
     # ----------------------
     def _reformat_df(self, df : pnd.DataFrame, name : str) -> pnd.DataFrame:
