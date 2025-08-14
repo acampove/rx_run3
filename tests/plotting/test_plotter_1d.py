@@ -27,9 +27,9 @@ class Data:
     '''
 #---------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
     '''
-    This needs to be ran before any test
+    This will be ran before any test
     '''
     plt.style.use(mplhep.style.LHCb2)
 
