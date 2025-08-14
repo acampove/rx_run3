@@ -24,11 +24,11 @@ plots:
   a_err:
     binning: [0.6, 1.4, 60]
     yscale: 'linear'
-    labels: ['a', 'Entries']
+    labels: ['$\varepsilon(a)$', 'Entries']
   b_err:
     binning: [0.6, 1.4, 60]
     yscale: 'linear'
-    labels: ['b', 'Entries']
+    labels: ['$\varepsilon(b)$', 'Entries']
 style:
   skip_lines: true
   legend:
