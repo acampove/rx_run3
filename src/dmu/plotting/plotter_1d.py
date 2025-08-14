@@ -59,6 +59,8 @@ class Plotter1D(Plotter):
 
         return minx, maxx, bins
     #-------------------------------------
+    # TODO: Might need to move all plugins code elsewhere
+    # and somehow register these plugins through config
     def _run_plugins(
             self,
             arr_val : numpy.ndarray,
