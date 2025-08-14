@@ -340,9 +340,12 @@ class Plotter1D(Plotter):
             log.debug(f'Not normalizing for variable: {var}')
             return arr_wgt
 
+        [minx, maxx, nbins] = self._d_cfg['plots'][var]['binning']
+
         log.debug(f'Normalizing for variable: {var}')
-        total   = numpy.sum(arr_wgt)
-        arr_wgt = arr_wgt / total
+        bw      = (maxx - minx) / nbins
+        area    = bw * numpy.sum(arr_wgt)
+        arr_wgt = arr_wgt / area 
 
         return arr_wgt
     # --------------------------------------------
