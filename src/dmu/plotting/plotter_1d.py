@@ -136,9 +136,6 @@ class Plotter1D(Plotter):
         cfg     : Configuration for the statistics plugin
         '''
         mu, sg = norm.fit(arr_val)
-
-        title  = f'$\\mu={mu:.3f}$; $\\sigma={sg:.3f}$'
-
         nbins  = 200
         arr_x  = numpy.linspace(minx, maxx, nbins)
         arr_y  = norm.pdf(arr_x, mu, sg)
@@ -147,7 +144,15 @@ class Plotter1D(Plotter):
         arr_y  = arr_y / area 
 
         plt.plot(arr_x, arr_y, label='Fit', color='black')
-        plt.title(title)
+
+        stats = rf'''
+        $\mu={mu:.3f}$
+        $\sigma={sg:.3f}$
+        '''
+        ax = plt.gca()
+
+        maxy  = max(arr_y)
+        ax.text(x=-4.5, y=0.93 * maxy, s=stats, fontsize=30)
     # ----------------------
     def _trim_to_range(
         self,
