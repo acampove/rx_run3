@@ -4,6 +4,7 @@ This module tests the class ToyMaker
 from fitter.toy_maker      import ToyMaker
 from dmu.stats             import utilities as sut
 from dmu.logging.log_store import LogStore
+from dmu.stats.fitter      import Fitter
 
 log=LogStore.add_logger('fitter:test_toymaker')
 # ----------------------
@@ -15,10 +16,12 @@ def test_simple() -> None:
     -------------
     none
     '''
+    log.info('')
     nll   = sut.get_nll(kind='s+b')
-    ntoys = 10
+    res, _= Fitter.minimize(nll=nll, cfg={})
+    ntoys = 20
 
-    mkr   = ToyMaker(nll=nll, ntoys=ntoys)
+    mkr   = ToyMaker(nll=nll, res=res, ntoys=ntoys)
     df    = mkr.get_parameter_information()
 
     pars  = nll.get_params()
