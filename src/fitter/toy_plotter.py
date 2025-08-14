@@ -1,6 +1,7 @@
 '''
 Module holding ToyPlotter class
 '''
+import os
 import pandas as pnd
 import numpy
 
@@ -31,7 +32,23 @@ class ToyPlotter:
         cfg: Configuration specifying how to plot
         '''
         self._rdf = self._rdf_from_df(df=df)
-        self._cfg = cfg
+        self._cfg = self._get_config(cfg=cfg)
+    # ----------------------
+    def _get_config(self, cfg : DictConfig) -> DictConfig:
+        '''
+        Parameters
+        -------------
+        cfg: Configuration used for plotting
+
+        Returns
+        -------------
+        Same configuration, with overriden values, e.g. plt_dir
+        '''
+        ana_dir = os.environ['ANADIR']
+        plt_dir = cfg.saving.plt_dir
+        cfg.saving.plt_dir = f'{ana_dir}/{plt_dir}'
+
+        return cfg
     # ----------------------
     def _rdf_from_df(self, df : pnd.DataFrame) -> RDataFrame:
         '''
