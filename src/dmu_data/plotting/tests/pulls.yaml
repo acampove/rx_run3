@@ -1,5 +1,5 @@
 saving:
-  plt_dir: tests/plotting/pulls
+  plt_dir: plotting/pulls
 plots:
   x_pul:
     binning: [-4.0, 4.0, 60]
