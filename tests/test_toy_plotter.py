@@ -6,7 +6,6 @@ from functools import lru_cache
 import numpy
 import pandas as pnd
 
-from omegaconf             import DictConfig
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 
@@ -23,8 +22,9 @@ def _get_df(ntoys : int, l_var : tuple[str]) -> pnd.DataFrame:
     '''
     l_df_var = []
     for var in l_var:
-        df_var              = pnd.DataFrame(columns=['Parameter', 'Value', 'Error', 'Toy', 'GOF', 'Converged'])
+        df_var              = pnd.DataFrame(columns=['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Converged'])
         df_var['Parameter'] = ntoys * [var]
+        df_var['Gen'      ] = numpy.zeros(ntoys)
         df_var['Value'    ] = numpy.random.normal(loc=0.0, scale=1.0, size=ntoys)
         df_var['Error'    ] = numpy.random.normal(loc=1.0, scale=0.1, size=ntoys)
 
@@ -42,17 +42,12 @@ def _get_df(ntoys : int, l_var : tuple[str]) -> pnd.DataFrame:
 
     return df
 # ----------------------
-def _get_cfg() -> DictConfig:
-    cfg = gut.load_conf(package='fitter_data', fpath='toys/tests.yaml')
-
-    return cfg 
-# ----------------------
 def test_simple() -> None:
     '''
     This is the simplest test of ToyPlotter
     '''
     df = _get_df(ntoys=10_000, l_var=('a', 'b'))
-    cfg= _get_cfg()
+    cfg= gut.load_conf(package='fitter_data', fpath='toys/test.yaml')
 
     ptr= ToyPlotter(df=df, cfg=cfg)
     ptr.plot()
