@@ -36,11 +36,11 @@ def _get_df(ntoys : int, l_var : tuple[str]) -> pnd.DataFrame:
 
     npar = len(l_var)
     for itoy in range(ntoys):
-        arr_gof = numpy.random.uniform(low=0, high=1, size=npar)
-        arr_cnv = numpy.random.choice(a=[True, False], p=[0.95, 0.05], size=npar)
+        gof = numpy.random.uniform(low=0, high=1, size=1)
+        cnv = numpy.random.choice(a=[True, False], p=[0.95, 0.05], size=1)
 
-        df.loc[df.Toy == itoy,       'GOF'] = arr_gof
-        df.loc[df.Toy == itoy, 'Converged'] = arr_cnv 
+        df.loc[df.Toy == itoy,       'GOF'] = npar * [gof]
+        df.loc[df.Toy == itoy, 'Converged'] = npar * [cnv]
 
     df['GOF']       = df['GOF'      ].astype(float)
     df['Converged'] = df['Converged'].astype(bool )
