@@ -2,8 +2,9 @@ saving:
   plt_dir: plotting/pluggins/pulls
 plots:
   x_pul:
-    binning: [-4.0, 4.0, 60]
-    labels : ['x Pull', 'Entries']
+    binning   : [-4.0, 4.0, 60]
+    labels    : ['x Pull', 'Entries']
+    normalized: true
     styling:
       pull:
         histtype : fill
@@ -14,4 +15,4 @@ plots:
     labels : ['y Pull', 'Entries']
 plugin:
   pulls:
-    x : {}
+    x_pul : {}
