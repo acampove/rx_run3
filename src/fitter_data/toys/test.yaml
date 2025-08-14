@@ -30,7 +30,7 @@ plots:
     binning: [0.6, 1.4, 60]
     yscale: 'linear'
     labels: ['$\varepsilon(b)$', 'Entries']
-style:
-  skip_lines: true
-  legend:
-    bbox_to_anchor: [1.2, 1]
+plugin:
+  pulls:
+    a_pul : {}
+    b_pul : {}
