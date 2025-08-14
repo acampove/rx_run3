@@ -29,3 +29,4 @@ def test_simple() -> None:
 
     pars  = nll.get_params()
     assert len(df) == ntoys * len(pars) 
+# ----------------------
