@@ -3,6 +3,7 @@ Unit test for plotter class in dmu.plotting
 '''
 #pylint: disable=no-name-in-module
 
+import os
 from typing              import cast
 from importlib.resources import files
 from dataclasses         import dataclass
@@ -86,7 +87,8 @@ def _load_config(test : str, as_dict : bool = True) -> dict|DictConfig:
         cfg = yaml.safe_load(ifile)
 
     plt_dir = cfg['saving']['plt_dir']
-    cfg['saving']['plt_dir'] = f'/tmp/tests/dmu/{plt_dir}'
+    user    = os.environ['USER']
+    cfg['saving']['plt_dir'] = f'/tmp/{user}/tests/dmu/{plt_dir}'
 
     if as_dict:
         return cfg
