@@ -7,6 +7,11 @@ general:
 saving:
   plt_dir: toys/tests
 
+pulls:
+  binning: [-4, +4, 60]
+  yscale: 'linear'
+  labels: ['VAR Pull', 'Entries']
+
 plots:
   a_val:
     binning: [-4.0, 4.0, 60]
