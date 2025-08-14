@@ -104,6 +104,38 @@ class Plotter1D(Plotter):
                 name    = name,
                 varname = varname,
                 cfg     = cfg)
+
+        if 'pulls' in self._d_cfg['plugin']:
+            if varname not in self._d_cfg['plugin']['pulls']:
+                log.debug(f'No pulls plugin found for variable {varname}')
+                return
+
+            log.debug(f'pulls plugin found for variable {varname}')
+            cfg = self._d_cfg['plugin']['pulls'][varname]
+            self._run_pulls(
+                arr_val = arr_val,
+                arr_wgt = arr_wgt,
+                name    = name,
+                varname = varname,
+                cfg     = cfg)
+    # ----------------------
+    def _run_pulls(
+        self,
+        arr_val : numpy.ndarray,
+        arr_wgt : numpy.ndarray,
+        varname : str,
+        name    : str,
+        cfg     : dict[str,str]) -> None:
+        '''
+        Parameters
+        -------------------
+        arr_val : Array of X axis values to plot
+        arr_wgt : Array of weights
+        varname : Variable name
+        name    : Name of the label, when plotting multiple distributions
+        cfg     : Configuration for the statistics plugin
+        '''
+        pass
     # ----------------------
     def _trim_to_range(
         self,
