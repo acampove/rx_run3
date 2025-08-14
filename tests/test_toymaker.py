@@ -25,7 +25,7 @@ def test_simple() -> None:
     df    = mkr.get_parameter_information()
     l_col = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Converged']
 
-    assert df.columns == l_col
+    assert df.columns.to_list() == l_col
 
     pars  = nll.get_params()
     assert len(df) == ntoys * len(pars) 
