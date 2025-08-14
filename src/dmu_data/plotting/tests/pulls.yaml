@@ -9,10 +9,10 @@ plots:
       pull:
         histtype : fill
         color    : blue
-        alpha    : 0.5
+        alpha    : 0.3
   y_pul:
     binning: [-4.0, 4.0, 60]
-    labels : ['y Pull', 'Entries']
+    labels : ['y Pull', 'Normalized']
 plugin:
   pulls:
     x_pul : {}
