@@ -49,6 +49,32 @@ class ToyPlotter:
         plt_dir = cfg.saving.plt_dir
         cfg.saving.plt_dir = f'{ana_dir}/{plt_dir}'
 
+        cfg = self._add_pull_config(cfg=cfg)
+
+        return cfg
+    # ----------------------
+    def _add_pull_config(self, cfg : DictConfig) -> DictConfig:
+        '''
+        Parameters
+        -------------
+        cfg : Plotting configuration dictionary
+
+        Returns
+        -------------
+        Same dictionary as input with the configuration for the pull plots
+        added to the `plots` field.
+        '''
+        for par_name in self._l_par:
+            var_name= cfg.plots[f'{par_name}_val'].labels[0]
+
+            cfg_pul = cfg.pulls
+            xlabel  = cfg_pul.labels[0]
+            xlabel  = xlabel.replace('VAR', var_name)
+
+            cfg_pul.labels[0] = xlabel
+
+            cfg.plots[f'{par_name}_pul'] = cfg_pul
+
         return cfg
     # ----------------------
     def _rdf_from_df(self, df : pnd.DataFrame) -> RDataFrame:
