@@ -22,11 +22,20 @@ class ToyMaker:
     - Collect the results of the fits in a pandas dataframe and return it
     '''
     # ----------------------
-    def __init__(self, nll : ZfitLoss):
+    def __init__(
+        self,
+        nll   : zlos,
+        res   : zres,
+        ntoys : int):
         '''
         Parameters
         -------------
-        nll: Zfit negativve log likelihood instance
+        nll  : Zfit negativve log likelihood instance
+        res  : Result of actual fit to data. Used to make sure
+               toys are generaged with the correct initial parameters
+        ntoys: Number of toys to generate
         '''
-        self._nll = nll
+        self._nll   = nll
+        self._res   = res
+        self._ntoys = ntoys
 
