@@ -4,9 +4,10 @@ Module holding ToyPlotter class
 import pandas as pnd
 import numpy
 
-from ROOT                  import RDataFrame, RDF # type: ignore
-from omegaconf             import DictConfig
-from dmu.logging.log_store import LogStore
+from ROOT                    import RDataFrame, RDF # type: ignore
+from omegaconf               import DictConfig
+from dmu.logging.log_store   import LogStore
+from dmu.plotting.plotter_1d import Plotter1D
 
 log=LogStore.add_logger('fitter:toy_plotter')
 # ----------------------
@@ -93,4 +94,6 @@ class ToyPlotter:
         -------------
         none
         '''
+        ptr = Plotter1D(d_rdf={'none' : self._rdf}, cfg=self._cfg)
+        ptr.run()
 # ----------------------
