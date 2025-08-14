@@ -38,4 +38,29 @@ class ToyMaker:
         self._nll   = nll
         self._res   = res
         self._ntoys = ntoys
+    # ----------------------
+    def _add_parameters(
+        self, 
+        df  : pnd.DataFrame, 
+        res : zres, 
+        gof : tuple[float,int,float],
+        itoy: int) -> pnd.DataFrame:
+        '''
+        Parameters
+        -------------
+        df: Pandas dataframe with potentially information already in it
+        res: FitResult object from last fit
+        gof: Tuple with pvalue, nodf and chi2 
+        itoy:Index for current fit
 
+        Returns
+        -------------
+        Input pandas dataframe with extra rows added
+        It will add one row per parameter
+        '''
+        cres  = sut.zres_to_cres(res=res)
+        for name, cfg_par in cres.items():
+            nrows = len(df)
+            df.loc[nrows] = [name, cfg_par.value, cfg_par.error, itoy, gof[0], res.converged]
+
+        return df
