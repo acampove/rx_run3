@@ -57,8 +57,8 @@ def _get_rdf(
 
     d_data = {}
     if   kind == 'pull':
-        d_data['x'] = numpy.random.normal(0, 1, size=nentries)
-        d_data['y'] = numpy.random.normal(0, 1, size=nentries)
+        d_data['x_pul'] = numpy.random.normal(0, 1, size=nentries)
+        d_data['y_pul'] = numpy.random.normal(0, 1, size=nentries)
     elif kind == 'class A':
         d_data['x'] = numpy.random.normal(0, 1, size=nentries)
         d_data['y'] = numpy.random.normal(0, 2, size=nentries)
@@ -253,7 +253,7 @@ def test_pull_plugin():
     Test plotting of pull distributions
     '''
     d_rdf   =  { kind : _get_rdf(kind=kind, ) for kind in ['pull'] }
-    cfg_dat = _load_config(test='simple')
+    cfg_dat = _load_config(test='pulls')
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
