@@ -27,18 +27,27 @@ def _get_df(ntoys : int, l_var : tuple[str]) -> pnd.DataFrame:
         df_var['Gen'      ] = numpy.zeros(ntoys)
         df_var['Value'    ] = numpy.random.normal(loc=0.0, scale=1.0, size=ntoys)
         df_var['Error'    ] = numpy.random.normal(loc=1.0, scale=0.1, size=ntoys)
+        df_var['Toy'      ] = numpy.arange(ntoys) 
 
         l_df_var.append(df_var)
 
     df = pnd.concat(l_df_var)
-    df['Toy'] = df.index 
     df = df.reset_index(drop=True)
 
-    arr_gof = numpy.random.uniform(low=0, high=1, size=ntoys)
-    arr_cnv = numpy.random.choice(a=[True, False], p=[0.95, 0.05], size=ntoys)
+    npar = len(l_var)
     for itoy in range(ntoys):
-        df.loc[df.Toy == itoy,       'GOF'] = arr_gof[itoy]
-        df.loc[df.Toy == itoy, 'Converged'] = arr_cnv[itoy] 
+        arr_gof = numpy.random.uniform(low=0, high=1, size=npar)
+        arr_cnv = numpy.random.choice(a=[True, False], p=[0.95, 0.05], size=npar)
+
+        df.loc[df.Toy == itoy,       'GOF'] = arr_gof
+        df.loc[df.Toy == itoy, 'Converged'] = arr_cnv 
+
+    df['GOF']       = df['GOF'      ].astype(float)
+    df['Converged'] = df['Converged'].astype(bool )
+
+    for numeric in ['Value', 'Error', 'Gen', 'Toy', 'GOF']:
+        log.info(f'Checking: {numeric}')
+        assert numpy.isfinite(df[numeric]).all()
 
     return df
 # ----------------------
