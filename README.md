@@ -1762,6 +1762,26 @@ plugin:
 Can be used to print statistics, mean, rms and weighted sum of entries for each distribution.
 The statistics, reffer to the data **only inside** the plotting range.
 
+#### Pulls
+
+If a given variable is a pull, one can add:
+
+- Fitted Gaussian
+- Fitter parameters
+- Lines representing the mean and width
+
+on the plot with:
+
+```yaml
+plugin:
+  pulls:
+    x_pul : {}
+```
+
+assuming that the variable holding the pulls is `x_pul`.
+The pulls will be drawn from -4 to +4. No configuration
+is available at the moment.
+
 ## 2D plots
 
 For the 2D case it would look like:
