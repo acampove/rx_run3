@@ -1,0 +1,9 @@
+saving:
+  plt_dir: tests/plotting/pulls
+plots:
+  x_pul:
+    binning: [-4.0, 4.0, 60]
+    labels : ['x Pull', 'Entries']
+  y_pul:
+    binning: [-4.0, 4.0, 60]
+    labels : ['y Pull', 'Entries']
