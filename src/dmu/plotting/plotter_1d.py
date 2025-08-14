@@ -115,13 +115,12 @@ class Plotter1D(Plotter):
 
             log.debug(f'pulls plugin found for variable {varname}')
             cfg = self._d_cfg['plugin']['pulls'][varname]
-            [minx, maxx, nbins] = self._d_cfg['plots' ][varname]['binning']
+            [minx, maxx, _] = self._d_cfg['plots' ][varname]['binning']
 
             self._run_pulls(
                 arr_val = arr_val,
                 minx    = minx,
                 maxx    = maxx,
-                nbins   = nbins,
                 cfg     = cfg)
     # ----------------------
     def _run_pulls(
@@ -129,7 +128,6 @@ class Plotter1D(Plotter):
         arr_val : numpy.ndarray,
         minx    : float,
         maxx    : float,
-        nbins   : int,
         cfg     : dict[str,str]) -> None:
         '''
         Parameters
@@ -141,6 +139,7 @@ class Plotter1D(Plotter):
 
         title  = f'$\\mu={mu:.3f}$; $\\sigma={sg:.3f}$'
 
+        nbins  = 200
         arr_x  = numpy.linspace(minx, maxx, nbins)
         arr_y  = norm.pdf(arr_x, mu, sg)
         bw     = (maxx - minx) / nbins
