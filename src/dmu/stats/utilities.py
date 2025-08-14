@@ -30,7 +30,8 @@ from zfit.interface   import ZfitSpace     as zobs
 from zfit.interface   import ZfitPDF       as zpdf
 from zfit.interface   import ZfitModel     as zmod
 from zfit.interface   import ZfitParameter as zpar
-from zfit.result      import FitResult     as zres
+
+from zfit.minimizers.interface   import ZfitResult    as zres
 
 log = LogStore.add_logger('dmu:stats:utilities')
 #-------------------------------------------------------
