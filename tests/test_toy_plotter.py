@@ -55,6 +55,7 @@ def test_simple() -> None:
     '''
     This is the simplest test of ToyPlotter
     '''
+    log.info('')
     df = _get_df(ntoys=10_000, l_var=('a', 'b'))
     cfg= gut.load_conf(package='fitter_data', fpath='toys/test.yaml')
 
