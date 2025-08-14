@@ -8,9 +8,10 @@ saving:
   plt_dir: toys/tests
 
 pulls:
-  binning: [-4, +4, 60]
-  yscale: 'linear'
-  labels: ['VAR Pull', 'Entries']
+  binning   : [-4, +4, 60]
+  yscale    : 'linear'
+  labels    : ['VAR Pull', 'Entries']
+  normalized: true
 
 plots:
   a_val:
