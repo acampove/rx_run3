@@ -13,7 +13,7 @@ import yaml
 import numpy
 import mplhep
 
-from ROOT                    import RDF
+from ROOT                    import RDF # type: ignore
 from omegaconf               import DictConfig, OmegaConf
 from dmu.plotting.plotter_1d import Plotter1D as Plotter
 from dmu.logging.log_store   import LogStore
