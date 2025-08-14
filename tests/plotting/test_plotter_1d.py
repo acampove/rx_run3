@@ -102,7 +102,7 @@ def test_simple():
     '''
     Minimal test
     '''
-    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+    d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
     cfg_dat = _load_config(test='simple')
 
@@ -113,7 +113,7 @@ def test_omega_conf():
     '''
     Testing config passed through DictConfig
     '''
-    d_rdf   =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+    d_rdf   =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
     cfg_dat = _load_config(test='simple', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
@@ -123,7 +123,7 @@ def test_line():
     '''
     Tests config that places lines on figure
     '''
-    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+    d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
     cfg_dat = _load_config(test='line')
 
@@ -134,7 +134,7 @@ def test_styling():
     '''
     Change style of histogram plots
     '''
-    d_rdf   =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+    d_rdf   =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
     cfg_dat = _load_config(test='styling')
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
@@ -155,7 +155,7 @@ def test_no_bounds():
     '''
     Test for case where plot bounds are not explicitly passed
     '''
-    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+    d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
     cfg_dat = _load_config(test='no_bounds')
 
@@ -166,7 +166,7 @@ def test_fig_size():
     '''
     Test for fig size setting
     '''
-    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+    d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
     cfg_dat = _load_config(test='fig_size')
 
@@ -177,7 +177,7 @@ def test_title():
     '''
     Test for title
     '''
-    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+    d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
     cfg_dat = _load_config(test='title')
 
@@ -188,7 +188,7 @@ def test_weights():
     '''
     Tests plotting with weights
     '''
-    d_rdf =  { kind : _get_rdf(kind=kind, test='weights') for kind in ['class A', 'class B'] }
+    d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
     cfg_dat = _load_config(test='weights')
 
@@ -199,7 +199,7 @@ def test_name():
     '''
     Testing the use of the name key, to name PNG files
     '''
-    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+    d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
     cfg_dat = _load_config(test='name')
 
@@ -210,7 +210,7 @@ def test_normalized():
     '''
     Will test the plot of normalized histograms
     '''
-    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+    d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
     cfg_dat = _load_config(test='normalized')
 
@@ -221,7 +221,7 @@ def test_legend():
     '''
     Tests legend options
     '''
-    d_rdf =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+    d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
     cfg_dat = _load_config(test='legend')
 
@@ -233,7 +233,7 @@ def test_plugin_fwhm():
     Will test fwhm plugin
     '''
     log.info('')
-    d_rdf   =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B'] }
+    d_rdf   =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
     cfg_dat = _load_config(test='plug_fwhm')
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
@@ -243,7 +243,7 @@ def test_plugin_stats():
     Will test stats plugin
     '''
     log.info('')
-    d_rdf   =  { kind : _get_rdf(kind=kind, test='simple') for kind in ['class A', 'class B', 'class C'] }
+    d_rdf   =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B', 'class C'] }
     cfg_dat = _load_config(test='plug_stats')
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
