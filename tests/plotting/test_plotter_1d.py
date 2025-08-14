@@ -55,7 +55,10 @@ def _get_rdf(
         raise ValueError(f'Invalid kind of test: {test}')
 
     d_data = {}
-    if   kind == 'class A':
+    if   kind == 'pull':
+        d_data['x'] = numpy.random.normal(0, 1, size=nentries)
+        d_data['y'] = numpy.random.normal(0, 1, size=nentries)
+    elif kind == 'class A':
         d_data['x'] = numpy.random.normal(0, 1, size=nentries)
         d_data['y'] = numpy.random.normal(0, 2, size=nentries)
     elif kind == 'class B':
