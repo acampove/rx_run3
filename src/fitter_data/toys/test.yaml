@@ -1,0 +1,6 @@
+# This config is meant to specify how plotting of toys should be done
+# when running the test for ToyPlotter
+
+output: toys/test
+
+
