@@ -36,17 +36,23 @@ def initialize():
     LogStore.set_level('dmu:plotting:Plotter'  , 10)
     LogStore.set_level('dmu:plotting:Plotter1D', 10)
 #---------------------------------------
-def _get_rdf(kind : str, test : str, nentries : int|None = None) -> RDF.RNode:
+def _get_rdf(
+    kind     : str, 
+    test     : str      = 'standard', 
+    nentries : int|None = None) -> RDF.RNode:
     '''
     kind (str): "class A" or "class B", equivalent to data or mc, but general
     test (str): Identifies specific test
+    nentries  : Number of entries to use in dataframe
     '''
     if nentries is not None:
         pass
     elif test == 'high_stat':
         nentries = 1_000_000
-    else:
+    elif test == 'standard':
         nentries =   100_000
+    else:
+        raise ValueError(f'Invalid kind of test: {test}')
 
     d_data = {}
     if   kind == 'class A':
