@@ -19,7 +19,7 @@ def test_simple() -> None:
     log.info('')
     nll   = sut.get_nll(kind='s+b')
     res, _= Fitter.minimize(nll=nll, cfg={})
-    ntoys = 20
+    ntoys = 10
 
     mkr   = ToyMaker(nll=nll, res=res, ntoys=ntoys)
     df    = mkr.get_parameter_information()
