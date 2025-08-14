@@ -61,7 +61,9 @@ class ToyMaker:
         cres  = sut.zres_to_cres(res=res)
         for name, cfg_par in cres.items():
             nrows = len(df)
-            df.loc[nrows] = [name, cfg_par.value, cfg_par.error, itoy, gof[0], res.converged]
+            name  = str(name)
+            gen   = self._res.values[name] 
+            df.loc[nrows] = [name, cfg_par.value, cfg_par.error, gen, itoy, gof[0], res.converged]
 
         return df
     # ----------------------
@@ -71,7 +73,7 @@ class ToyMaker:
         ------------
         Pandas dataframe where each row represents a parameter
         '''
-        df = pnd.DataFrame(columns=['Parameter', 'Value', 'Error', 'Toy', 'GOF', 'Converged'])
+        df = pnd.DataFrame(columns=['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Converged'])
         for itoy in tqdm.tqdm(range(self._ntoys), ascii=' -'):
             with self._res:
                 nll = self._nll.create_toy()
