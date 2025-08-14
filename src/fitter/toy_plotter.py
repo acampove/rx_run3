@@ -31,8 +31,9 @@ class ToyPlotter:
         df : Pandas dataframe with information from toy fits
         cfg: Configuration specifying how to plot
         '''
-        self._rdf = self._rdf_from_df(df=df)
-        self._cfg = self._get_config(cfg=cfg)
+        self._l_par = df['Parameter'].unique().tolist()
+        self._rdf   = self._rdf_from_df(df=df)
+        self._cfg   = self._get_config(cfg=cfg)
     # ----------------------
     def _get_config(self, cfg : DictConfig) -> DictConfig:
         '''
