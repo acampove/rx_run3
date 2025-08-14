@@ -64,3 +64,20 @@ class ToyMaker:
             df.loc[nrows] = [name, cfg_par.value, cfg_par.error, itoy, gof[0], res.converged]
 
         return df
+    # ----------------------
+    def get_parameter_information(self) -> pnd.DataFrame:
+        '''
+        Returns
+        ------------
+        Pandas dataframe where each row represents a parameter
+        '''
+        df = pnd.DataFrame(columns=['Parameter', 'Value', 'Error', 'Toy', 'GOF', 'Converged'])
+        for itoy in tqdm.tqdm(range(self._ntoys), ascii=' -'):
+            with self._res:
+                nll = self._nll.create_toy()
+
+            res, gof = Fitter.minimize(nll=nll, cfg={})
+            df = self._add_parameters(df=df, res=res, gof=gof, itoy=itoy)
+
+        return df
+# ----------------------
