@@ -91,10 +91,10 @@ class ToyPlotter:
         for name, df in df.groupby('Parameter'):
             name = str(name)
             df_ref = self._reformat_df(df=df, name=name)
+            df_ref = df_ref.reset_index(drop=True)
             l_df.append(df_ref)
 
-        df = pnd.concat(objs=l_df, axis=0)
-
+        df      = pnd.concat(objs=l_df, axis=1, ignore_index=False)
         py_data = df.to_dict(orient='list')
         np_data = { name : numpy.array(vals, dtype='float') for name, vals in py_data.items() }
         rdf     = RDF.FromNumpy(np_data)
