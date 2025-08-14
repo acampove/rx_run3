@@ -1,6 +1,30 @@
 # This config is meant to specify how plotting of toys should be done
 # when running the test for ToyPlotter
 
-output: toys/test
+general:
+  size: [20, 10]
 
+saving:
+  plt_dir: toys/tests
 
+plots:
+  a_val:
+    binning: [-4.0, 4.0, 60]
+    yscale: 'linear'
+    labels: ['a', 'Entries']
+  b_val:
+    binning: [-4.0, 4.0, 60]
+    yscale: 'linear'
+    labels: ['b', 'Entries']
+  a_err:
+    binning: [0.6, 1.4, 60]
+    yscale: 'linear'
+    labels: ['a', 'Entries']
+  b_err:
+    binning: [0.6, 1.4, 60]
+    yscale: 'linear'
+    labels: ['b', 'Entries']
+style:
+  skip_lines: true
+  legend:
+    bbox_to_anchor: [1.2, 1]
