@@ -9,6 +9,7 @@ from hist import Hist
 import numpy
 import matplotlib.pyplot as plt
 
+from scipy.stats           import norm
 from dmu.logging.log_store import LogStore
 from dmu.plotting.plotter  import Plotter
 from dmu.plotting.fwhm     import FWHM
@@ -114,30 +115,40 @@ class Plotter1D(Plotter):
 
             log.debug(f'pulls plugin found for variable {varname}')
             cfg = self._d_cfg['plugin']['pulls'][varname]
+            [minx, maxx, nbins] = self._d_cfg['plots' ][varname]['binning']
+
             self._run_pulls(
                 arr_val = arr_val,
-                arr_wgt = arr_wgt,
-                name    = name,
-                varname = varname,
+                minx    = minx,
+                maxx    = maxx,
+                nbins   = nbins,
                 cfg     = cfg)
     # ----------------------
     def _run_pulls(
         self,
         arr_val : numpy.ndarray,
-        arr_wgt : numpy.ndarray,
-        varname : str,
-        name    : str,
+        minx    : float,
+        maxx    : float,
+        nbins   : int,
         cfg     : dict[str,str]) -> None:
         '''
         Parameters
         -------------------
         arr_val : Array of X axis values to plot
-        arr_wgt : Array of weights
-        varname : Variable name
-        name    : Name of the label, when plotting multiple distributions
         cfg     : Configuration for the statistics plugin
         '''
-        pass
+        mu, sg = norm.fit(arr_val)
+
+        title  = f'$\\mu={mu:.3f}$; $\\sigma={sg:.3f}$'
+
+        arr_x  = numpy.linspace(minx, maxx, nbins)
+        arr_y  = norm.pdf(arr_x, mu, sg)
+        bw     = (maxx - minx) / nbins
+        area   = bw * arr_y.sum()
+        arr_y  = arr_y / area 
+
+        plt.plot(arr_x, arr_y, label='Fit', color='black')
+        plt.title(title)
     # ----------------------
     def _trim_to_range(
         self,
