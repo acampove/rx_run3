@@ -1782,6 +1782,23 @@ assuming that the variable holding the pulls is `x_pul`.
 The pulls will be drawn from -4 to +4. No configuration
 is available at the moment.
 
+#### Errors
+
+If the variable is meant to be plotted as an error
+this pluggin will:
+
+- Add a median line
+- Add a label with the median value
+
+The config section is:
+
+```yaml
+plugin:
+  errors:
+    x_err : # This is the variable's name, meant to be treated as an error
+      format : '{:.2f}' # The error will be show in the label with this formatting
+```
+
 ## 2D plots
 
 For the 2D case it would look like:
