@@ -2,7 +2,7 @@ saving:
   plt_dir: plotting/pluggins/errors
 plots:
   x_err:
-    binning   : [0, 4.0, 60]
+    binning   : [0, 8.0, 60]
     labels    : ['x Error', 'Entries']
     normalized: true
     styling:
