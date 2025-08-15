@@ -39,8 +39,8 @@ def _get_df(ntoys : int, l_var : tuple[str]) -> pnd.DataFrame:
             df_var['Error'    ] = numpy.random.normal(loc=1.0, scale=0.1, size=ntoys)
         else:
             df_var['Gen'      ] = numpy.array(ntoys * [1000])
-            df_var['Value'    ] = numpy.random.poisson(lam=1000, size=ntoys)
-            df_var['Error'    ] = numpy.random.normal(loc=30, scale=10, size=ntoys)
+            df_var['Value'    ] = numpy.random.normal(loc=1000, scale=30, size=ntoys)
+            df_var['Error'    ] = numpy.random.normal(loc=  30, scale= 1, size=ntoys)
         df_var['Toy'      ] = numpy.arange(ntoys) 
 
         l_df_var.append(df_var)
