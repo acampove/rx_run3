@@ -1,3 +1,6 @@
+minimization:
+  mode     : 0    # Default of zfit is 1. 0 does not recalculate Hessian in minimization steps
+  gradient : zfit # Seems faster than with iminuit internal gradient calculation
 # The strategies below are exclusive, only can should be used at a time
 strategy      :
       # This strategy will fit multiple times and retry the fit until either
@@ -6,17 +9,6 @@ strategy      :
           ntries        : 4    #Number of tries
           pvalue_thresh : 0.05 #Pvalue threshold, if the fit is better than this, the loop ends
           ignore_status : true #Will pick invalid fits if this is true, otherwise only valid fits will be counted
-      # This will fit smaller datasets and get the value of the shape parameters to allow
-      # these shapes to float only around this value and within nsigma
-      # Fit can be carried out multiple times with larger and larger samples to tighten parameters
-      steps   :
-          nsteps   : [1e3, 1e4] #Number of entries to use
-          nsigma   : [5.0, 2.0] #Number of sigmas for the range of the parameter, for each step
-# The lines below will split the range of the data [0-10] into two subranges, such that the NLL is built
-# only in those ranges. The ranges need to be tuples
-ranges        : 
-      - !!python/tuple [0, 3]
-      - !!python/tuple [6, 9]
 #The lines below will allow using contraints for each parameter, where the first element is the mean and the second
 #the width of a Gaussian constraint. No correlations are implemented, yet.
 constraints   :
