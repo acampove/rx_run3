@@ -74,9 +74,12 @@ class ToyMaker:
         Pandas dataframe where each row represents a parameter
         '''
         df = pnd.DataFrame(columns=['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Converged'])
+
+        l_sampler = [ model.create_sampler() for model in self._nll.model ]
+        nll       = self._nll.create_new(data=l_sampler)
         for itoy in tqdm.tqdm(range(self._ntoys), ascii=' -'):
-            with self._res:
-                nll = self._nll.create_toy()
+            for sampler in l_sampler:
+                sampler.resample()
 
             res, gof = Fitter.minimize(nll=nll, cfg={})
             df = self._add_parameters(df=df, res=res, gof=gof, itoy=itoy)
