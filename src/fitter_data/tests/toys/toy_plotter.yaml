@@ -2,7 +2,7 @@
 # when running the test for ToyPlotter
 
 general:
-  size: [20, 10]
+  size: [15, 10]
 
 saving:
   plt_dir: toys/tests
