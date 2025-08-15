@@ -34,7 +34,7 @@ def test_single_region() -> None:
     nll = cast(ZfitLoss, nll)
 
     sel_cfg = {'default' : {}, 'fit' : {}}
-    sel_cfg = OmegaConf.create(obj=sel_cfg)
+    sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/single_region.yaml')
@@ -61,7 +61,7 @@ def test_two_regions() -> None:
     nll_002 = cast(ZfitLoss, nll_002)
 
     sel_cfg = {'default' : {}, 'fit' : {}}
-    sel_cfg = OmegaConf.create(obj=sel_cfg)
+    sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {
         'region_001' : (nll_001, sel_cfg),
         'region_002' : (nll_002, sel_cfg),
@@ -93,7 +93,7 @@ def test_two_regions_common_pars() -> None:
     nll_002 = cast(ZfitLoss, nll_002)
 
     sel_cfg = {'default' : {}, 'fit' : {}}
-    sel_cfg = OmegaConf.create(obj=sel_cfg)
+    sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {
         'region_001' : (nll_001, sel_cfg),
         'region_002' : (nll_002, sel_cfg),
