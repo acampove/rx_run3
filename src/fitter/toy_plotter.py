@@ -136,6 +136,6 @@ class ToyPlotter:
         -------------
         none
         '''
-        ptr = Plotter1D(d_rdf={'Pulls' : self._rdf}, cfg=self._cfg)
+        ptr = Plotter1D(d_rdf={'Toys' : self._rdf}, cfg=self._cfg)
         ptr.run()
 # ----------------------
