@@ -2,7 +2,8 @@
 Module holding ToyMaker class
 '''
 import tqdm
-import pandas as pnd
+import pandas     as pnd
+import tensorflow as tf
 
 from omegaconf                  import DictConfig
 from zfit.interface             import ZfitLoss   as zlos
@@ -41,6 +42,16 @@ class ToyMaker:
         self._cfg   = cfg 
 
         self._check_gof()
+        self._check_gpu()
+    # ----------------------
+    def _check_gpu(self) -> None:
+        '''
+        Check if using GPU
+        '''
+        if tf.config.list_physical_devices('GPU'):
+            log.warning('Running with GPU')
+        else:
+            log.debug('Running with CPU')
     # ----------------------
     def _check_gof(self) -> None:
         '''
