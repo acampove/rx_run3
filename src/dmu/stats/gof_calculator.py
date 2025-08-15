@@ -180,7 +180,7 @@ class GofCalculator:
         cls._disabled = value
 
         if value:
-            log.warning('GofCalculator is turned off')
+            log.info('GofCalculator is turned off')
 
         @contextmanager
         def _context():
