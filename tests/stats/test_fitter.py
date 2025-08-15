@@ -43,8 +43,11 @@ class Data:
     l_arg_simple = [arr, df, zf]
 #-------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
-    LogStore.set_level('dmu:logging:Fitter', 10)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('dmu:statistics:fitter', 10)
     os.makedirs(Data.plt_dir, exist_ok=True)
 #-------------------------------------
 @cache
