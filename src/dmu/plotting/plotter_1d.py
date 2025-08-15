@@ -130,7 +130,7 @@ class Plotter1D(Plotter):
         arr_val : numpy.ndarray,
         minx    : float,
         maxx    : float,
-        cfg     : dict[str,str]) -> None:
+        cfg     : DictConfig) -> None:
         '''
         Parameters
         -------------------
