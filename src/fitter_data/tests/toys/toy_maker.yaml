@@ -1,3 +1,8 @@
 # This config is used for testing the ToyMaker class
 
-ntoys : 100
+ntoys  : 10
+run_gof: False
+fitting:
+  minimization:
+    mode     : 0
+    gradient : zfit
