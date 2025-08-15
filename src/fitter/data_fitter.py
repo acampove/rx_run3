@@ -111,9 +111,17 @@ class DataFitter(BaseFitter, Cache):
 
         self._d_cns = value
     # ----------------------
-    def run(self) -> DictConfig:
+    @overload
+    def run(self, kind : Literal['zfit']) -> zres:...
+    @overload
+    def run(self, kind : Literal['conf']) -> DictConfig:...
+    def run(self, kind :             str) -> zres|DictConfig:
         '''
         Entry point for fitter
+
+        Parameters
+        -------------
+        kind: Type of return value, zfit or conf
 
         Returns
         -------------
@@ -146,6 +154,9 @@ class DataFitter(BaseFitter, Cache):
                 res      = res,
                 d_cns    = self._d_cns,
                 out_path = out_path)
+
+        if kind == 'zfit':
+            return res
 
         cres = sut.zres_to_cres(res=res)
 
