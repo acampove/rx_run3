@@ -3,6 +3,7 @@ This module tests the class ToyMaker
 '''
 from fitter.toy_maker      import ToyMaker
 from dmu.stats             import utilities as sut
+from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 from dmu.stats.fitter      import Fitter
 
@@ -19,14 +20,23 @@ def test_simple() -> None:
     log.info('')
     nll   = sut.get_nll(kind='s+b')
     res, _= Fitter.minimize(nll=nll, cfg={})
-    ntoys = 10
 
-    mkr   = ToyMaker(nll=nll, res=res, ntoys=ntoys)
+    cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
+
+    mkr   = ToyMaker(nll=nll, res=res, cfg=cfg)
     df    = mkr.get_parameter_information()
     l_col = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Converged']
 
     assert df.columns.to_list() == l_col
 
     pars  = nll.get_params()
-    assert len(df) == ntoys * len(pars) 
+    assert len(df) == cfg.ntoys * len(pars) 
 # ----------------------
+def main():
+    '''
+    Entry point
+    '''
+    test_simple()
+# ----------------------
+if __name__ == '__main__':
+    main()
