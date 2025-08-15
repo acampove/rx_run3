@@ -261,3 +261,13 @@ def test_pull_plugin():
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
+def test_errors_plugin():
+    '''
+    Test plotting of pull distributions
+    '''
+    d_rdf   =  { kind : _get_rdf(kind=kind, ) for kind in ['errors'] }
+    cfg_dat = _load_config(test='errors')
+
+    ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
+    ptr.run()
+#---------------------------------------
