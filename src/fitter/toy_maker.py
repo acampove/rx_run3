@@ -4,6 +4,7 @@ Module holding ToyMaker class
 import tqdm
 import pandas as pnd
 
+from omegaconf                  import DictConfig
 from zfit.interface             import ZfitLoss   as zlos
 from zfit.minimizers.interface  import ZfitResult as zres
 from dmu.stats                  import utilities  as sut
@@ -26,18 +27,18 @@ class ToyMaker:
         self,
         nll   : zlos,
         res   : zres,
-        ntoys : int):
+        cfg   : DictConfig):
         '''
         Parameters
         -------------
         nll  : Zfit negativve log likelihood instance
         res  : Result of actual fit to data. Used to make sure
                toys are generaged with the correct initial parameters
-        ntoys: Number of toys to generate
+        cfg  : omegaconf dictionary controlling configuration
         '''
         self._nll   = nll
         self._res   = res
-        self._ntoys = ntoys
+        self._cfg   = cfg 
     # ----------------------
     def _add_parameters(
         self, 
@@ -77,7 +78,7 @@ class ToyMaker:
 
         l_sampler = [ model.create_sampler() for model in self._nll.model ]
         nll       = self._nll.create_new(data=l_sampler)
-        for itoy in tqdm.tqdm(range(self._ntoys), ascii=' -'):
+        for itoy in tqdm.tqdm(range(self._cfg.ntoys), ascii=' -'):
             for sampler in l_sampler:
                 sampler.resample()
 
