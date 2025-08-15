@@ -1,6 +1,6 @@
 # This config is used for testing the ToyMaker class
 
-ntoys  : 10
+ntoys  : 50
 run_gof: False
 fitting:
   minimization:
