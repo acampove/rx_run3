@@ -2,7 +2,7 @@
 This file is needed by pytest
 '''
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ["CUDA_VISIBLE_DEVICES"] = '-1'
 from typing import cast
 
 import mplhep
