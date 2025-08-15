@@ -124,6 +124,41 @@ class Plotter1D(Plotter):
                 minx    = minx,
                 maxx    = maxx,
                 cfg     = cfg)
+
+        if 'errors' in self._d_cfg['plugin']:
+            if varname not in self._d_cfg['plugin']['errors']:
+                log.debug(f'No errors plugin found for variable {varname}')
+                return
+
+            log.debug(f'errors plugin found for variable {varname}')
+            cfg = self._d_cfg['plugin']['errors'][varname]
+
+            self._run_errors(
+                arr_val = arr_val,
+                cfg     = cfg)
+    # ----------------------
+    def _run_errors(
+        self,
+        arr_val : numpy.ndarray, 
+        cfg     : DictConfig) -> None:
+        '''
+        Parameters
+        -------------
+        arr_val: Numpy array storing errors
+        cfg    : Configuration
+        '''
+
+        median = numpy.median(arr_val)
+        median = float(median)
+        if 'format' not in cfg:
+            val = f'{median:.3f}'
+        else:
+            fmt = cfg['format']
+            val = fmt.format(median)
+
+        label = rf'$\mathrm{{Med}}(\varepsilon)={val}$' 
+
+        plt.axvline(x=median, ls=':', label=label, c='red')
     # ----------------------
     def _run_pulls(
         self,
