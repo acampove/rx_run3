@@ -54,6 +54,8 @@ class GofCalculator:
         l_model = self._nll.model
         nmodel = len(l_model)
         if nmodel != 1:
+            for model in l_model:
+                log.error(model)
             raise ValueError(f'Not found one and only one model, but {nmodel}')
 
         return l_model[0]
