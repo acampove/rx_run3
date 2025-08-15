@@ -9,7 +9,7 @@ from zfit.interface             import ZfitLoss   as zlos
 from zfit.minimizers.interface  import ZfitResult as zres
 from dmu.stats                  import utilities  as sut
 from dmu.logging.log_store      import LogStore
-from dmu.stats.fitter           import Fitter
+from dmu.stats.fitter           import Fitter, GofCalculator
 
 log=LogStore.add_logger('fitter:zfit_maker')
 # ----------------------
@@ -39,6 +39,22 @@ class ToyMaker:
         self._nll   = nll
         self._res   = res
         self._cfg   = cfg 
+
+        self._check_gof()
+    # ----------------------
+    def _check_gof(self) -> None:
+        '''
+        Check if GOF setting was specified
+        If running GOF show warning
+        '''
+        if 'run_gof' not in self._cfg:
+            raise ValueError('GOF setting not found in config')
+
+        if self._cfg.run_gof:
+            log.warning('Running GOF calculation')
+            return
+
+        log.debug('Running with GOF disabled')
     # ----------------------
     def _add_parameters(
         self, 
