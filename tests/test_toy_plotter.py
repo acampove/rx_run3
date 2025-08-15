@@ -71,7 +71,7 @@ def test_simple() -> None:
     '''
     log.info('')
     df = _get_df(ntoys=1000, l_var=('a', 'b'))
-    cfg= gut.load_conf(package='fitter_data', fpath='toys/test.yaml')
+    cfg= gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter.yaml')
 
     ptr= ToyPlotter(df=df, cfg=cfg)
     ptr.plot()
