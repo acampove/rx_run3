@@ -98,7 +98,9 @@ class ToyMaker:
             for sampler in l_sampler:
                 sampler.resample()
 
-            res, gof = Fitter.minimize(nll=nll, cfg={})
+            with GofCalculator.disabled(value = not self._cfg.run_gof):
+                res, gof = Fitter.minimize(nll=nll, cfg=self._cfg.fitting)
+
             df = self._add_parameters(df=df, res=res, gof=gof, itoy=itoy)
 
         return df
