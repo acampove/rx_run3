@@ -57,7 +57,13 @@ class Fitter:
         'Loaded cuDNN version',
         'All log messages before absl::InitializeLog()']
     #------------------------------
-    def __init__(self, pdf, data):
+    def __init__(self, pdf : zpdf, data : zdat):
+        '''
+        Parameters
+        ---------------
+        pdf : PDF to fit
+        data: Datasets to fit
+        '''
         self._data_in = data
         self._pdf     = pdf
 
