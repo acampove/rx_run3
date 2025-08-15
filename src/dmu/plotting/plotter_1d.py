@@ -83,12 +83,9 @@ class Plotter1D(Plotter):
 
         if 'fwhm' in self._d_cfg['plugin']:
             if varname not in self._d_cfg['plugin']['fwhm']:
-                log.debug(f'No FWHM plugin found for variable {varname}')
-                return
-
-            log.debug(f'FWHM plugin found for variable {varname}')
-            cfg = self._d_cfg['plugin']['fwhm'][varname]
-            self._run_fwhm(
+                log.debug(f'FWHM plugin found for variable {varname}')
+                cfg = self._d_cfg['plugin']['fwhm'][varname]
+                self._run_fwhm(
                     arr_val = arr_val,
                     arr_wgt = arr_wgt,
                     hst     = hst,
@@ -97,45 +94,36 @@ class Plotter1D(Plotter):
                     cfg     = cfg)
 
         if 'stats' in self._d_cfg['plugin']:
-            if varname not in self._d_cfg['plugin']['stats']:
-                log.debug(f'No stats plugin found for variable {varname}')
-                return
-
-            log.debug(f'stats plugin found for variable {varname}')
-            cfg = self._d_cfg['plugin']['stats'][varname]
-            self._run_stats(
-                arr_val = arr_val,
-                arr_wgt = arr_wgt,
-                name    = name,
-                varname = varname,
-                cfg     = cfg)
+            if varname in self._d_cfg['plugin']['stats']:
+                log.debug(f'stats plugin found for variable {varname}')
+                cfg = self._d_cfg['plugin']['stats'][varname]
+                self._run_stats(
+                    arr_val = arr_val,
+                    arr_wgt = arr_wgt,
+                    name    = name,
+                    varname = varname,
+                    cfg     = cfg)
 
         if 'pulls' in self._d_cfg['plugin']:
-            if varname not in self._d_cfg['plugin']['pulls']:
-                log.debug(f'No pulls plugin found for variable {varname}')
-                return
+            if varname in self._d_cfg['plugin']['pulls']:
+                log.debug(f'pulls plugin found for variable {varname}')
+                cfg = self._d_cfg['plugin']['pulls'][varname]
+                [minx, maxx, _] = self._d_cfg['plots' ][varname]['binning']
 
-            log.debug(f'pulls plugin found for variable {varname}')
-            cfg = self._d_cfg['plugin']['pulls'][varname]
-            [minx, maxx, _] = self._d_cfg['plots' ][varname]['binning']
-
-            self._run_pulls(
-                arr_val = arr_val,
-                minx    = minx,
-                maxx    = maxx,
-                cfg     = cfg)
+                self._run_pulls(
+                    arr_val = arr_val,
+                    minx    = minx,
+                    maxx    = maxx,
+                    cfg     = cfg)
 
         if 'errors' in self._d_cfg['plugin']:
-            if varname not in self._d_cfg['plugin']['errors']:
-                log.debug(f'No errors plugin found for variable {varname}')
-                return
+            if varname in self._d_cfg['plugin']['errors']:
+                log.debug(f'errors plugin found for variable {varname}')
+                cfg = self._d_cfg['plugin']['errors'][varname]
 
-            log.debug(f'errors plugin found for variable {varname}')
-            cfg = self._d_cfg['plugin']['errors'][varname]
-
-            self._run_errors(
-                arr_val = arr_val,
-                cfg     = cfg)
+                self._run_errors(
+                    arr_val = arr_val,
+                    cfg     = cfg)
     # ----------------------
     def _run_errors(
         self,
