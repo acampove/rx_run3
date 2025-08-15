@@ -56,7 +56,10 @@ def _get_rdf(
         raise ValueError(f'Invalid kind of test: {test}')
 
     d_data = {}
-    if   kind == 'pull':
+    if   kind == 'errors':
+        d_data['x_err'] = numpy.random.chisquare(df=4, size=nentries)
+        d_data['y_err'] = numpy.random.chisquare(df=4, size=nentries)
+    elif kind == 'pull':
         d_data['x_pul'] = numpy.random.normal(0, 1, size=nentries)
         d_data['y_pul'] = numpy.random.normal(0, 1, size=nentries)
     elif kind == 'class A':
