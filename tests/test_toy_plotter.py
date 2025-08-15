@@ -28,16 +28,19 @@ def _get_df(ntoys : int, l_var : tuple[str]) -> pnd.DataFrame:
     ------------------
     dataframe with fake fit parameter information
     '''
+    numpy.random.seed(42)
     l_df_var = []
     for var in l_var:
         df_var              = pnd.DataFrame(columns=['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Converged'])
         df_var['Parameter'] = ntoys * [var]
-        df_var['Gen'      ] = numpy.zeros(ntoys)
-        df_var['Value'    ] = numpy.random.normal(loc=0.0, scale=1.0, size=ntoys)
         if var != 'b':
+            df_var['Gen'      ] = numpy.zeros(ntoys)
+            df_var['Value'    ] = numpy.random.normal(loc=0.0, scale=1.0, size=ntoys)
             df_var['Error'    ] = numpy.random.normal(loc=1.0, scale=0.1, size=ntoys)
         else:
-            df_var['Error'    ] = numpy.random.poisson(lam=1000, size=ntoys)
+            df_var['Gen'      ] = numpy.array(ntoys * [1000])
+            df_var['Value'    ] = numpy.random.poisson(lam=1000, size=ntoys)
+            df_var['Error'    ] = numpy.random.normal(loc=30, scale=10, size=ntoys)
         df_var['Toy'      ] = numpy.arange(ntoys) 
 
         l_df_var.append(df_var)
