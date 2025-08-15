@@ -27,10 +27,15 @@ plots:
     yscale: 'linear'
     labels: ['$\varepsilon(a)$', 'Entries']
   b_err:
-    binning: [0.6, 1.4, 60]
+    binning: [800, 2000, 60]
     yscale: 'linear'
     labels: ['$\varepsilon(b)$', 'Entries']
 plugin:
   pulls:
     a_pul : {}
     b_pul : {}
+  errors:
+    a_err :
+      format : '{:.3f}'
+    b_err :
+      format : '{:.0f}'
