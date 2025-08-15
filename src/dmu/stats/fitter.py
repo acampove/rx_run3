@@ -372,7 +372,16 @@ class Fitter:
         - Zfit result object
         - Tuple with goodness of fit (pvalue, ndof, chi2)
         '''
-        mnm = zfit.minimize.Minuit()
+        min_cfg = {} if 'minimization' not in cfg else cfg['minimization']
+
+        if not min_cfg:
+            log.debug('Using default zfit minimization options')
+        else:
+            log.debug('Overriding default zfit minimization config with')
+            for key, val in min_cfg.items():
+                log.debug(f'{key:<30}{val:<30}')
+
+        mnm     = zfit.minimize.Minuit(**min_cfg)
 
         with mes.filter_stderr(banned_substrings=Fitter._l_hidden_tf_lines):
             res = mnm.minimize(nll)
