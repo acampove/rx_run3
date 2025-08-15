@@ -1,0 +1,16 @@
+saving:
+  plt_dir: plotting/pluggins/errors
+plots:
+  x_err:
+    binning   : [0, 4.0, 60]
+    labels    : ['x Error', 'Entries']
+    normalized: true
+    styling:
+      errors:
+        histtype : fill
+        color    : blue
+        alpha    : 0.3
+plugin:
+  errors:
+    x_err :
+      format : '{:.2f}'
