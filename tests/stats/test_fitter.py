@@ -3,21 +3,22 @@ Module containing unit tests for Fitter class
 '''
 
 import os
-from dataclasses import dataclass
 from functools   import cache
 
 import numpy
+from omegaconf import OmegaConf
 import pytest
 import pandas              as pnd
 import matplotlib.pyplot   as plt
 
-from dmu.stats              import utilities as sut
 from dmu.stats.gof_calculator import GofCalculator
+from dmu.stats              import utilities as sut
+from dmu.generic            import utilities as gut
 from dmu.stats.zfit         import zfit
 from dmu.stats.fitter       import Fitter
 from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.logging.log_store  import LogStore
-from ROOT                   import RDF, gInterpreter
+from ROOT                   import RDF, gInterpreter # type: ignore
 
 log = LogStore.add_logger('dmu:logging:test_fitter')
 #-------------------------------------
