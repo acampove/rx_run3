@@ -3,6 +3,7 @@ Module containing plotter class
 '''
 # pylint: disable=too-many-positional-arguments, too-many-arguments
 
+import math
 import cppyy
 from hist import Hist
 
@@ -135,7 +136,11 @@ class Plotter1D(Plotter):
         arr_val : Array of X axis values to plot
         cfg     : Configuration for the statistics plugin
         '''
+        size   = len(arr_val)
         mu, sg = norm.fit(arr_val)
+        em     = sg / math.sqrt(2 * (size - 1))
+        es     = sg / math.sqrt(size)
+
         nbins  = 200
         arr_x  = numpy.linspace(minx, maxx, nbins)
         arr_y  = norm.pdf(arr_x, mu, sg)
@@ -146,8 +151,8 @@ class Plotter1D(Plotter):
         plt.plot(arr_x, arr_y, label='Fit', color='black')
 
         stats = rf'''
-        $\mu={mu:.3f}$
-        $\sigma={sg:.3f}$
+        $\mu={mu:.3f}\pm {em:.3f}$
+        $\sigma={sg:.3f}\pm {es:.3f}$
         '''
         ax = plt.gca()
 
