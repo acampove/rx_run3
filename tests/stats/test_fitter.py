@@ -95,9 +95,15 @@ def test_simple(dat):
     '''
     Simples fitting test
     '''
+    obj = gut.load_conf(package='dmu_data', fpath='stats/fitter/test_simple.yaml')
+    cfg = OmegaConf.to_container(obj, resolve=True)
+
+    if not isinstance(cfg, dict):
+        raise ValueError('Cannot load config')
+
     pdf = _get_pdf()
     obj = Fitter(pdf, dat)
-    res = obj.fit()
+    res = obj.fit(cfg=cfg)
 
     assert res.valid
 #-------------------------------------
