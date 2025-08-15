@@ -3,6 +3,7 @@ Module with functions meant to test the ToyPlotter class
 '''
 from functools import lru_cache
 
+import pytest
 import numpy
 import pandas as pnd
 
@@ -12,6 +13,13 @@ from dmu.logging.log_store import LogStore
 from fitter.toy_plotter    import ToyPlotter
 
 log=LogStore.add_logger('fitter:test_toy_plotter')
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('dmu:plotting:Plotter1D', 10)
 # ----------------------
 @lru_cache(maxsize=3)
 def _get_df(ntoys : int, l_var : tuple[str]) -> pnd.DataFrame:
