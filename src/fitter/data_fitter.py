@@ -1,6 +1,7 @@
 '''
 Module containing DataFitter class
 '''
+from typing                    import Literal, overload
 from omegaconf                 import DictConfig
 from dmu.logging.log_store     import LogStore
 from dmu.workflow.cache        import Cache
@@ -8,7 +9,8 @@ from dmu.stats.fitter          import Fitter
 from dmu.stats                 import utilities as sut
 from zfit.exception            import ParamNameNotUniqueError
 from fitter.base_fitter        import BaseFitter
-from zfit.interface            import ZfitLoss            as NLL
+from zfit.minimizers.interface import ZfitResult as zres
+from zfit.interface            import ZfitLoss   as NLL
 
 log=LogStore.add_logger('fitter:data_fitter')
 # ----------------------
