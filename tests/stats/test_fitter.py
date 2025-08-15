@@ -28,6 +28,7 @@ class Data:
     '''
     nsample = 100_000
     plt_dir = '/tmp/tests/dmu/stats/fitter'
+    numpy.random.seed(42)
 
     arr_sig = numpy.random.normal(5.0, 0.5, size=10_000)
     arr_bkg = numpy.random.exponential(scale=10, size=10_000)
