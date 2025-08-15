@@ -5,7 +5,8 @@ Module containing plotter class
 
 import math
 import cppyy
-from hist import Hist
+from hist      import Hist
+from omegaconf import DictConfig
 
 import numpy
 import matplotlib.pyplot as plt
