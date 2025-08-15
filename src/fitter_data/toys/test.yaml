@@ -18,16 +18,16 @@ plots:
     binning: [-4.0, 4.0, 60]
     yscale: 'linear'
     labels: ['a', 'Entries']
-  b_val:
-    binning: [-4.0, 4.0, 60]
-    yscale: 'linear'
-    labels: ['b', 'Entries']
   a_err:
     binning: [0.6, 1.4, 60]
     yscale: 'linear'
     labels: ['$\varepsilon(a)$', 'Entries']
-  b_err:
+  b_val:
     binning: [800, 2000, 60]
+    yscale: 'linear'
+    labels: ['b', 'Entries']
+  b_err:
+    binning: [0, 60, 60]
     yscale: 'linear'
     labels: ['$\varepsilon(b)$', 'Entries']
 plugin:
@@ -38,4 +38,4 @@ plugin:
     a_err :
       format : '{:.3f}'
     b_err :
-      format : '{:.0f}'
+      format : '{:.2f}'
