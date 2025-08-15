@@ -353,7 +353,15 @@ class Fitter:
         Parameters
         --------------
         nll : Negative log likelihood
-        cfg : Configuration dictionary used for minimization
+        cfg : Configuration dictionary used for minimization, it should look like:
+              print_pars: # Optional, if not passed, will not print parameter values
+                - par 1
+                - par 2
+                ...
+              minimization: # Optional, if used, will pass these settings to zfit.minimizers.Minuit()
+                setting : value
+                setting : value
+                ...
         ndof: Number of degrees of freedom needed for goodness of fit calculation through chi2
               by default 10 as recommended by statistics experts
 
