@@ -33,7 +33,6 @@ def test_single_region() -> None:
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
     nll = cast(ZfitLoss, nll)
 
-    sel_cfg = {'default' : {}, 'fit' : {}}
     sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
 
@@ -60,7 +59,6 @@ def test_two_regions() -> None:
     nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
     nll_002 = cast(ZfitLoss, nll_002)
 
-    sel_cfg = {'default' : {}, 'fit' : {}}
     sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {
         'region_001' : (nll_001, sel_cfg),
@@ -92,7 +90,6 @@ def test_two_regions_common_pars() -> None:
     nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
     nll_002 = cast(ZfitLoss, nll_002)
 
-    sel_cfg = {'default' : {}, 'fit' : {}}
     sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {
         'region_001' : (nll_001, sel_cfg),
