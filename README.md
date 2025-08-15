@@ -823,6 +823,9 @@ In order to customize the way the fitting is done one would pass a configuration
 function. This dictionary can be represented in YAML as:
 
 ```yaml
+minimization:
+  mode     : 0    # Default of zfit is 1. 0 does not recalculate Hessian in minimization steps
+  gradient : zfit # Seems faster than with iminuit internal gradient calculation
 # The strategies below are exclusive, only can should be used at a time
 strategy      :
       # This strategy will fit multiple times and retry the fit until either
