@@ -1,6 +1,8 @@
 '''
 This module tests the class ToyMaker
 '''
+import pytest
+
 from fitter.toy_maker      import ToyMaker
 from dmu.stats             import utilities as sut
 from dmu.generic           import utilities as gut
@@ -8,6 +10,14 @@ from dmu.logging.log_store import LogStore
 from dmu.stats.fitter      import Fitter
 
 log=LogStore.add_logger('fitter:test_toymaker')
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('dmu:stats:gofcalculator', 30)
+    LogStore.set_level('dmu:statistics:fitter'  , 20)
 # ----------------------
 def test_simple() -> None:
     '''
