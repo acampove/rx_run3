@@ -2,6 +2,7 @@
 Module holding ToyPlotter class
 '''
 import os
+import copy
 import pandas as pnd
 import numpy
 
@@ -65,12 +66,11 @@ class ToyPlotter:
         added to the `plots` field.
         '''
         for par_name in self._l_par:
-            var_name= cfg.plots[f'{par_name}_val'].labels[0]
-
             cfg_pul = cfg.pulls
             xlabel  = cfg_pul.labels[0]
-            xlabel  = xlabel.replace('VAR', var_name)
+            xlabel  = xlabel.replace('VAR', par_name)
 
+            cfg_pul = copy.deepcopy(cfg_pul)
             cfg_pul.labels[0] = xlabel
 
             cfg.plots[f'{par_name}_pul'] = cfg_pul
