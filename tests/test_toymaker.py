@@ -42,11 +42,3 @@ def test_simple() -> None:
     pars  = nll.get_params()
     assert len(df) == cfg.ntoys * len(pars) 
 # ----------------------
-def main():
-    '''
-    Entry point
-    '''
-    test_simple()
-# ----------------------
-if __name__ == '__main__':
-    main()
