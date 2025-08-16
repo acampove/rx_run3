@@ -62,8 +62,9 @@ def _set_logs() -> None:
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to fit RX data')
-    parser.add_argument('-c', '--config' , type=str  , help='Name of configuration, e.g. rare/electron' , required=True)
-    parser.add_argument('-t', '--ntoys'  , type=int  , help='Number of toys, by default 0, only fit'    , default    =0)
+    parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/electron' , required=True)
+    parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'  , default =  '')
+    parser.add_argument('-n', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default    =0)
     parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                 , default=Data.nthread)
     parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[10, 20, 30], default=Data.log_lvl)
     parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin',              choices=Data.l_q2bin , required=True)
@@ -72,13 +73,24 @@ def _parse_args() -> None:
     args = parser.parse_args()
 
     Data.q2bin   = args.q2bin
-    Data.ntoys   = args.ntoys
     Data.nthread = args.nthread
     Data.mva_cmb = args.mva_cmb
     Data.mva_prc = args.mva_prc
     Data.log_lvl = args.log_lvl
-    Data.cfg     = gut.load_conf(package='fitter_data', fpath=f'{args.config}/data.yaml')
+    Data.fit_cfg = gut.load_conf(package='fitter_data', fpath=f'{args.fit_cfg}/data.yaml')
+    Data.toy_cfg = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
     Data.obs     = _get_observable()
+
+    if Data.toy_cfg is None:
+        log.debug('No toy configuration passed, skipping toys')
+        return
+
+    if args.ntoys == 0:
+        log.debug('Not overriding ntoy configuration')
+        return
+
+    log.warning(f'Overriding number of toys with {args.ntoys}')
+    Data.toy_cfg.ntoys = args.ntoys
 # ----------------------
 def _get_observable() -> zobs:
     '''
