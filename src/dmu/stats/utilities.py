@@ -623,10 +623,16 @@ def placeholder_fit(
     Function meant to run toy fits that produce output needed as an input
     to develop tools on top of them
 
-    kind: Kind of fit, e.g. s+b for the simples signal plus background fit
-    fit_dir: Directory where the output of the fit will go
-    df: pandas dataframe if passed, will reuse that data, needed to test data caching
+    Parameters
+    --------------
+    kind    : Kind of fit, e.g. s+b for the simples signal plus background fit
+    fit_dir : Directory where the output of the fit will go, if None, it won't save anything
+    df      : pandas dataframe if passed, will reuse that data, needed to test data caching
     plot_fit: Will plot the fit or not, by default True
+
+    Returns
+    --------------
+    FitResult object
     '''
     pdf  = get_model(kind)
     print_pdf(pdf, txt_path=f'{fit_dir}/pre_fit.txt')
