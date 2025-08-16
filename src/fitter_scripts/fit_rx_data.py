@@ -64,7 +64,7 @@ def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to fit RX data')
     parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/electron' , required=True)
     parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'  , default =  '')
-    parser.add_argument('-n', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default    =0)
+    parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default    =0)
     parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                 , default=Data.nthread)
     parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[10, 20, 30], default=Data.log_lvl)
     parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin',              choices=Data.l_q2bin , required=True)
@@ -171,9 +171,7 @@ def _fit() -> None:
 
     log.info(f'Making {Data.toy_cfg.ntoys} toys')
     mkr = ToyMaker(nll=nll, res=res, cfg=Data.toy_cfg)
-    df  = mkr.get_parameter_information()
-
-    log.info(df)
+    mkr.get_parameter_information()
 # ----------------------
 def _set_output_directory() -> None:
     '''
