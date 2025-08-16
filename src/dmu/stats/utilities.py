@@ -665,7 +665,7 @@ def placeholder_fit(
 
     return res
 #---------------------------------------------
-def _reformat_values(d_par : dict) -> dict:
+def _reformat_values(d_par : dict, fall_back_error : float|None = None) -> dict:
     '''
     Parameters
     --------------
@@ -675,6 +675,8 @@ def _reformat_values(d_par : dict) -> dict:
                          'error': np.float64(0.04),
                          'weightcorr': <WeightCorr.FALSE: False>},
          'value'       : 0.34},
+
+    fall_back_error: If specified (default None), will pick that value, if error not found
 
     Returns
     --------------
@@ -689,8 +691,11 @@ def _reformat_values(d_par : dict) -> dict:
     try:
         error = d_par['minuit_hesse']['error']
     except KeyError as exc:
-        log.error(yaml.dump(d_par))
-        raise KeyError('Cannot extract error from parameters') from exc
+        if fall_back_error is not None:
+            error = fall_back_error
+        else:
+            log.error(yaml.dump(d_par))
+            raise KeyError('Cannot extract error from parameters') from exc
 
     error = float(error)
 
