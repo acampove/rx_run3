@@ -31,8 +31,8 @@ dev = ['pytest']
 [tool.poetry]
 package-mode = true
 packages     = [
-    {include = 'fitter'       , from = 'src'},
-    {include = 'fitter_data'  , from = 'src'},
+    {include = 'fitter',        from = 'src'},
+    {include = 'fitter_data',   from = 'src'},
     {include = 'fitter_schema', from = 'src'},
 ]
 include      = [
