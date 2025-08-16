@@ -78,10 +78,10 @@ def _parse_args() -> None:
     Data.mva_prc = args.mva_prc
     Data.log_lvl = args.log_lvl
     Data.fit_cfg = gut.load_conf(package='fitter_data', fpath=f'{args.fit_cfg}/data.yaml')
-    Data.toy_cfg = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
     Data.obs     = _get_observable()
 
-    if Data.toy_cfg is None:
+    toy_cfg      = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
+    Data.toy_cfg = _override_toy_cfg(toy_cfg = toy_cfg, ntoys=args.ntoys) 
         log.debug('No toy configuration passed, skipping toys')
         return
 
