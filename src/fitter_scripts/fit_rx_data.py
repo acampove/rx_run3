@@ -82,15 +82,35 @@ def _parse_args() -> None:
 
     toy_cfg      = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
     Data.toy_cfg = _override_toy_cfg(toy_cfg = toy_cfg, ntoys=args.ntoys) 
+# ----------------------
+def _override_toy_cfg(
+    ntoys   : int,
+    toy_cfg : DictConfig|None) -> DictConfig|None:
+    '''
+    Parameters
+    -------------
+    ntoys  : Number of toys specified by user
+    toy_cfg: Config dictionary used for toy generation
+
+    Returns
+    -------------
+    Input config after checks and overriding of fields
+    '''
+    if toy_cfg is None:
         log.debug('No toy configuration passed, skipping toys')
-        return
+        return None
 
-    if args.ntoys == 0:
-        log.debug('Not overriding ntoy configuration')
-        return
+    if ntoys != 0:
+        log.warning(f'Overriding number of toys with {ntoys}')
+        toy_cfg.ntoys = ntoys
 
-    log.warning(f'Overriding number of toys with {args.ntoys}')
-    Data.toy_cfg.ntoys = args.ntoys
+    root_dir= _get_output_directory()
+    out_dir = f'{root_dir}/{Data.fit_cfg.output_directory}/toys'
+
+    log.info(f'Sending toys to: {out_dir}')
+    toy_cfg.out_dir = out_dir
+
+    return toy_cfg
 # ----------------------
 def _get_observable() -> zobs:
     '''
