@@ -3,6 +3,7 @@ Module with unit tests for functions in dmu.stat.utilities
 '''
 import os
 import re
+import math
 from importlib.resources import files
 
 import numpy
@@ -317,3 +318,20 @@ def test_yield_from_zdata(weighted : bool):
 
     assert abs(val - target) < 1e-5
 #----------------------------------
+def test_val_from_zres() -> None:
+    '''
+    Tests `val_from_zres`
+    '''
+    expected = 5199.939434538848
+
+    res = placeholder_fit(kind='s+b', fit_dir=None)
+
+    val = sut.val_from_zres(res=res, name='mu')
+    assert math.isclose(val, expected, rel_tol=1e-5)
+
+    res.freeze()
+    val = sut.val_from_zres(res=res, name='mu')
+    assert math.isclose(val, expected, rel_tol=1e-5)
+
+    with pytest.raises(ValueError):
+        sut.val_from_zres(res=res, name='fake')
