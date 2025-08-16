@@ -46,7 +46,9 @@ class Fitter:
     '''
     Class meant to be an interface to underlying fitters
     '''
-    # pylint: disable=too-many-instance-attributes
+    # This is meant to be used through a context manager
+    # To allow the errors to be calculated or not
+    _turn_off_errors  = False
 
     # These are substrings found in tensorflow messages
     # that are pretty useless and need to be hidden
@@ -386,7 +388,11 @@ class Fitter:
         with mes.filter_stderr(banned_substrings=Fitter._l_hidden_tf_lines):
             res = mnm.minimize(nll)
 
-        res.hesse(name='minuit_hesse')
+        if not Fitter._turn_off_errors:
+            log.debug('Calculating errors')
+            res.hesse(name='minuit_hesse')
+        else:
+            log.warning('Not calculating errors')
 
         gcl = GofCalculator(nll, ndof=ndof)
         try:
