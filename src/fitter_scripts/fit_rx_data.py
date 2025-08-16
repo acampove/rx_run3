@@ -32,10 +32,10 @@ class Data:
     '''
     Class meant to be used to share attributes
     '''
-    cfg    : ClassVar[DictConfig]
+    fit_cfg : ClassVar[DictConfig]
+    toy_cfg : DictConfig|None
     l_q2bin= ['low', 'cen_low', 'central', 'cen_high', 'jpsi', 'psi2', 'high']
 
-    ntoys   : int   = 0
     nthread : int   = 1
     q2bin   : str   = ''
     mva_cmb : float = 0.0
