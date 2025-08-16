@@ -729,7 +729,7 @@ def zres_to_cres(res : zres, fall_back_error : float|None = None) -> DictConfig:
         print(res)
         raise KeyError('Fit parameters cannot be used') from exc
 
-    cfg   = OmegaConf.create(d_par)
+    cfg = OmegaConf.create(d_par)
 
     return cfg
 # ----------------------
