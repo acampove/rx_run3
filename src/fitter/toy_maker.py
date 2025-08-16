@@ -1,6 +1,8 @@
 '''
 Module holding ToyMaker class
 '''
+import os
+import random
 import tqdm
 import pandas     as pnd
 import tensorflow as tf
