@@ -151,7 +151,19 @@ def _fit() -> None:
         d_nll= {'signal_region' : (nll, cfg)}, 
         cfg  = Data.cfg)
     ftr.constraints = d_cns 
-    ftr.run()
+    res = ftr.run(kind='zfit')
+
+    if Data.ntoys == 0:
+        log.info('Not making toys')
+        return
+
+    log.info(f'Making {Data.ntoys} toys')
+    toy_cfg = gut.load_conf(package='fitter_data', fpath='toys/maker.yaml')
+    toy_cfg.ntoys = Data.ntoys 
+    mkr = ToyMaker(nll=nll, res=res, cfg=toy_cfg)
+    df  = mkr.get_parameter_information()
+
+    log.info(df)
 # ----------------------
 def _set_output_directory() -> None:
     '''
