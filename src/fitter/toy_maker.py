@@ -14,7 +14,7 @@ from dmu.stats                  import utilities  as sut
 from dmu.logging.log_store      import LogStore
 from dmu.stats.fitter           import Fitter, GofCalculator
 
-log=LogStore.add_logger('fitter:zfit_maker')
+log=LogStore.add_logger('fitter:toy_maker')
 # ----------------------
 class ToyMaker:
     '''
