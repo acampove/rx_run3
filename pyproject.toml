@@ -11,7 +11,7 @@ dependencies    = [
     'mplhep',
     'matplotlib',
     'python-slugify',
-    'zfit=0.26.0', # Do not use later versions due to https://github.com/zfit/zfit/issues/649#issuecomment-3153176246
+    'zfit',
 ]
 
 [tool.poetry.dependencies]
