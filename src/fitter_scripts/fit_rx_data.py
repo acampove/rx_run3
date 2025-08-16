@@ -212,8 +212,9 @@ def main():
     '''
     _parse_args()
     _set_logs()
-    _set_output_directory()
 
+    out_dir = _get_output_directory()
+    Cache.set_cache_root(root=out_dir)
     with PL.parameter_schema(cfg=Data.fit_cfg.model.yields),\
          RDFGetter.multithreading(nthreads=Data.nthread),\
          Cache.turn_off_cache(val=[]),\
