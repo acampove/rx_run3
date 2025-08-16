@@ -968,7 +968,10 @@ objects do:
 ```python
 from dmu.stats import utilities as sut
 
-cres = sut.zres_to_cres(res=res)
+# fall_back_error is optional
+# if not passed and error is not found
+# It will raise KeyError
+cres = sut.zres_to_cres(res=res, fall_back_error=-1)
 ```
 
 and then one would access the information like:
