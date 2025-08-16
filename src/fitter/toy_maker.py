@@ -41,10 +41,34 @@ class ToyMaker:
         '''
         self._nll   = nll
         self._res   = res
-        self._cfg   = cfg 
+        self._cfg   = self._check_config(cfg=cfg) 
 
         self._check_gof()
         self._check_gpu()
+    # ----------------------
+    def _check_config(self, cfg : DictConfig) -> DictConfig:
+        '''
+        Parameters
+        -------------
+        cfg: Config passed by user before check
+
+        Returns
+        -------------
+        Config after check, if checks passed
+        '''
+        if 'out_dir' not in cfg:
+            raise ValueError('No "out_dir" key found')
+
+        ana_dir = os.environ['ANADIR']
+        out_dir = f'{ana_dir}/{cfg.out_dir}'
+
+        log.debug(f'Using output directory: {out_dir}')
+
+        os.makedirs(out_dir, exist_ok=True)
+
+        cfg.out_dir = out_dir
+
+        return cfg
     # ----------------------
     def _check_gpu(self) -> None:
         '''
