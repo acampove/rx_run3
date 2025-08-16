@@ -90,7 +90,7 @@ class ToyMaker:
         for name, cfg_par in cres.items():
             nrows = len(df)
             name  = str(name)
-            gen   = self._res.values[name] 
+            gen   = sut.val_from_zres(res=self._res, name=name)
             df.loc[nrows] = [name, cfg_par.value, cfg_par.error, gen, itoy, gof[0], res.converged]
 
         return df
