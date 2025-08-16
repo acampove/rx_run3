@@ -1,6 +1,7 @@
 # This config is used for testing the ToyMaker class
 
-ntoys  : 50
+out_dir: toys/test
+ntoys  : 20
 run_gof: false
 fitting:
   minimization:
