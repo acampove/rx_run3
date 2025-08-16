@@ -50,6 +50,7 @@ def _set_logs() -> None:
     LogStore.set_level('dmu:workflow:cache'                   ,           30)
     LogStore.set_level('dmu:stats:utilities'                  ,           30)
     LogStore.set_level('dmu:stats:model_factory'              ,           30)
+    LogStore.set_level('dmu:stats:gofcalculator'              ,           30)
     LogStore.set_level('rx_data:rdf_getter'                   ,           30)
     LogStore.set_level('rx_efficiencies:efficiency_calculator',           30)
     LogStore.set_level('rx_selection:truth_matching'          ,           30)
