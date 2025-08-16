@@ -705,11 +705,12 @@ def _reformat_values(d_par : dict, fall_back_error : float|None = None) -> dict:
 #---------------------------------------------
 # Zfit utilities 
 #---------------------------------------------
-def zres_to_cres(res : zres) -> DictConfig:
+def zres_to_cres(res : zres, fall_back_error : float|None = None) -> DictConfig:
     '''
     Parameters
     --------------
-    res : Zfit result object
+    res            : Zfit result object
+    fall_back_error: If specified (default None), will pick that value, if error not found
 
     Returns
     --------------
@@ -723,7 +724,7 @@ def zres_to_cres(res : zres) -> DictConfig:
 
     par   = res.params
     try:
-        d_par = { name : _reformat_values(d_par=d_par) for name, d_par in par.items()}
+        d_par = { name : _reformat_values(d_par=d_par, fall_back_error=fall_back_error) for name, d_par in par.items()}
     except KeyError as exc:
         print(res)
         raise KeyError('Fit parameters cannot be used') from exc
