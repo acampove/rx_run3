@@ -98,7 +98,7 @@ def _get_observable() -> zobs:
     -------------
     Zfit observable
     '''
-    cfg_obs      = Data.cfg.model.observable
+    cfg_obs      = Data.fit_cfg.model.observable
     [minx, maxx] = cfg_obs.range
     obs = zfit.Space(cfg_obs.name, minx, maxx)
 
@@ -131,7 +131,7 @@ def _get_constraints(nll : zloss) -> dict[str,tuple[float,float]]:
 
     mrd     = MisIDConstraints(
         obs   = Data.obs,
-        cfg   = Data.cfg.model.constraints.misid,
+        cfg   = Data.fit_cfg.model.constraints.misid,
         q2bin = Data.q2bin)
     d_cns_2 = mrd.get_constraints()
 
@@ -152,7 +152,7 @@ def _fit() -> None:
         sample = 'DATA_24_*',
         trigger= 'Hlt2RD_BuToKpEE_MVA',
         project= 'rx',
-        cfg    = Data.cfg)
+        cfg    = Data.fit_cfg)
     nll = ftr.run()
     cfg = ftr.get_config()
 
@@ -161,7 +161,7 @@ def _fit() -> None:
     ftr = DataFitter(
         name = Data.q2bin,
         d_nll= {'signal_region' : (nll, cfg)}, 
-        cfg  = Data.cfg)
+        cfg  = Data.fit_cfg)
     ftr.constraints = d_cns 
     res = ftr.run(kind='zfit')
 
@@ -195,7 +195,7 @@ def main():
     _set_logs()
     _set_output_directory()
 
-    with PL.parameter_schema(cfg=Data.cfg.model.yields),\
+    with PL.parameter_schema(cfg=Data.fit_cfg.model.yields),\
          RDFGetter.multithreading(nthreads=Data.nthread),\
          Cache.turn_off_cache(val=[]),\
          sut.blinded_variables(regex_list=['.*signal.*']),\
