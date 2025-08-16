@@ -142,7 +142,9 @@ def test_with_constraints() -> None:
 
     ftr.run(kind='conf')
 # ----------------------
-def test_with_toys() -> None:
+slow_with_toys = pytest.param(500, marks=pytest.mark.slow)
+@pytest.mark.parametrize('ntoys', [50, slow_with_toys])
+def test_with_toys(ntoys : int) -> None:
     '''
     Integration test
 
@@ -166,9 +168,11 @@ def test_with_toys() -> None:
     res = ftr.run(kind='zfit')
 
     toy_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
+    toy_cfg.ntoys = ntoys
     mkr = ToyMaker(nll=nll, res=res, cfg=toy_cfg)
     df  = mkr.get_parameter_information()
 
     plt_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')
     ptr = ToyPlotter(df=df, cfg=plt_cfg)
     ptr.plot()
+# ----------------------
