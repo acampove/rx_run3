@@ -282,7 +282,7 @@ class MisIDConstraints(Cache):
 
         with GofCalculator.disabled(value=True):
             ftr  = DataFitter(name=self._q2bin, d_nll=d_nll, cfg=self._cfg)
-            pars = ftr.run()
+            pars = ftr.run(kind='conf')
 
         d_cns = self._get_constraints(pars=pars)
         gut.dump_json(data=d_cns, path=cons_path)
