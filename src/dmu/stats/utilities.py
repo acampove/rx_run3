@@ -695,6 +695,8 @@ def _reformat_values(d_par : dict) -> dict:
 
     return {'value' : value, 'error' : error}
 #---------------------------------------------
+# Zfit utilities 
+#---------------------------------------------
 def zres_to_cres(res : zres) -> DictConfig:
     '''
     Parameters
