@@ -1063,6 +1063,19 @@ cons = Fitter.get_gaussian_constraints(obj=pdf, cfg=d_const)
 to extract the `GaussianConstraints` object associated to the
 `pdf`. The PDF can also be a zfit likelihood.
 
+## Fit results
+
+### Values of parameters
+
+In order to retrieve the value of a fitted parameter 
+from a `FitResult` instance do:
+
+```python
+from dmu.stats import utilities as sut
+
+val = sut.val_from_zres(res=res, name='mu')
+```
+
 ## Arrays
 
 ### Scaling by non-integer
