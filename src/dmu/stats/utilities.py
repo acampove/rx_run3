@@ -723,4 +723,23 @@ def zres_to_cres(res : zres) -> DictConfig:
     cfg   = OmegaConf.create(d_par)
 
     return cfg
+# ----------------------
+def val_from_zres(res : zres, name : str) -> float:
+    '''
+    Parameters
+    -------------
+    res: Zfit result, before or after freezing
+    name: Name of fitting parameter
+
+    Returns
+    -------------
+    Numerical value of fitting parameter
+    '''
+    for par, d_val in res.params.items():
+        par_name = par if isinstance(par, str) else par.name
+        if par_name == name:
+            return d_val['value']
+
+    log.info(res)
+    raise ValueError(f'Cannot find parameter: {name}')
 #---------------------------------------------
