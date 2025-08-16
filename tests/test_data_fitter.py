@@ -12,6 +12,8 @@ from dmu.generic           import utilities      as gut
 from dmu.logging.log_store import LogStore
 from zfit.core.loss import ZfitLoss
 from fitter.data_fitter    import DataFitter
+from fitter.toy_maker      import ToyMaker
+from fitter.toy_plotter    import ToyPlotter
 
 log=LogStore.add_logger('fitter:test_data_fitter')
 
@@ -23,6 +25,14 @@ _constraints : dict[str,tuple[float,float]]= {
     'mu' : (5280, 10),
     'sg' : (  10,  1),
 }
+
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('dmu:stats:gofcalculator', 30)
 # ----------------------
 def test_single_region() -> None:
     '''
@@ -132,3 +142,33 @@ def test_with_constraints() -> None:
 
     ftr.run(kind='conf')
 # ----------------------
+def test_with_toys() -> None:
+    '''
+    Integration test
+
+    - Fitting 
+    - Making toys
+    - Plotting
+    '''
+    pdf = sut.get_model(kind='s+b')
+    dat = pdf.create_sampler(10_000)
+    nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
+    nll = cast(ZfitLoss, nll)
+
+    sel_cfg = OmegaConf.create(obj=_sel_cfg)
+    d_nll   = {'signal_region' : (nll, sel_cfg)}
+
+    fit_cfg = gut.load_conf(package='fitter_data', fpath='tests/single_region.yaml')
+    ftr = DataFitter(
+        name = 'with_toys',
+        d_nll= d_nll, 
+        cfg  = fit_cfg)
+    res = ftr.run(kind='zfit')
+
+    toy_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
+    mkr = ToyMaker(nll=nll, res=res, cfg=toy_cfg)
+    df  = mkr.get_parameter_information()
+
+    plt_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')
+    ptr = ToyPlotter(df=df, cfg=plt_cfg)
+    ptr.plot()
