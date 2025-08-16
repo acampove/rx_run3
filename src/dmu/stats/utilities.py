@@ -604,6 +604,9 @@ def get_nll(kind : str) -> ZfitLoss:
     raise NotImplementedError(f'Invalid kind: {kind}')
 #---------------------------------------------
 def _pdf_to_data(pdf : zpdf, add_weights : bool) -> zdata:
+    numpy.random.seed(42)
+    zfit.settings.set_seed(seed=42)
+
     nentries = 10_000
     data     = pdf.create_sampler(n=nentries)
     if not add_weights:
