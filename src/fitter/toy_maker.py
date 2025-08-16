@@ -59,14 +59,9 @@ class ToyMaker:
         if 'out_dir' not in cfg:
             raise ValueError('No "out_dir" key found')
 
-        ana_dir = os.environ['ANADIR']
-        out_dir = f'{ana_dir}/{cfg.out_dir}'
-
+        out_dir = cfg.out_dir
         log.debug(f'Using output directory: {out_dir}')
-
         os.makedirs(out_dir, exist_ok=True)
-
-        cfg.out_dir = out_dir
 
         return cfg
     # ----------------------
