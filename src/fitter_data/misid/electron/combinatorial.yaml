@@ -19,6 +19,4 @@ high:
   shared        : []
   float         : []
   reparametrize : {}
-  fix           :
-    dl_suj : 2.5
-    gm_suj : -10
+  fix           : {}
