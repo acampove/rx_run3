@@ -18,6 +18,7 @@ def initialize():
     '''
     LogStore.set_level('dmu:stats:gofcalculator', 30)
     LogStore.set_level('dmu:statistics:fitter'  , 20)
+    LogStore.set_level('fitter:toy_maker'       , 10)
 # ----------------------
 def test_simple() -> None:
     '''
