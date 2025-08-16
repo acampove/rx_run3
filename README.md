@@ -818,6 +818,17 @@ obj = Fitter(pdf, dat)
 res = obj.fit()
 ```
 
+by default this class runs the error calculation with `minuit_hesse`.
+The error calculation can be turned off with:
+
+```python
+from dmu.stats.fitter      import Fitter
+
+with Fitter.errors_disabled(value=True):
+    obj = Fitter(pdf, dat)
+    res = obj.fit()
+```
+
 ### Customizations
 In order to customize the way the fitting is done one would pass a configuration dictionary to the `fit(cfg=config)`
 function. This dictionary can be represented in YAML as:
