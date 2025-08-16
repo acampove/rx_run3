@@ -22,6 +22,7 @@ from fitter.constraint_reader  import ConstraintReader
 from fitter.data_fitter        import DataFitter
 from fitter.likelihood_factory import LikelihoodFactory
 from fitter.misid_constraints  import MisIDConstraints 
+from fitter.toy_maker          import ToyMaker
 from rx_data.rdf_getter        import RDFGetter
 from rx_selection              import selection as sel
 
@@ -34,6 +35,7 @@ class Data:
     cfg    : ClassVar[DictConfig]
     l_q2bin= ['low', 'cen_low', 'central', 'cen_high', 'jpsi', 'psi2', 'high']
 
+    ntoys   : int   = 0
     nthread : int   = 1
     q2bin   : str   = ''
     mva_cmb : float = 0.0
@@ -60,6 +62,7 @@ def _set_logs() -> None:
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to fit RX data')
     parser.add_argument('-c', '--config' , type=str  , help='Name of configuration, e.g. rare/electron' , required=True)
+    parser.add_argument('-t', '--ntoys'  , type=int  , help='Number of toys, by default 0, only fit'    , default    =0)
     parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                 , default=Data.nthread)
     parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[10, 20, 30], default=Data.log_lvl)
     parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin',              choices=Data.l_q2bin , required=True)
@@ -68,6 +71,7 @@ def _parse_args() -> None:
     args = parser.parse_args()
 
     Data.q2bin   = args.q2bin
+    Data.ntoys   = args.ntoys
     Data.nthread = args.nthread
     Data.mva_cmb = args.mva_cmb
     Data.mva_prc = args.mva_prc
