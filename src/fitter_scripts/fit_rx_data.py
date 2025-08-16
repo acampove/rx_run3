@@ -165,14 +165,12 @@ def _fit() -> None:
     ftr.constraints = d_cns 
     res = ftr.run(kind='zfit')
 
-    if Data.ntoys == 0:
+    if Data.toy_cfg is None:
         log.info('Not making toys')
         return
 
-    log.info(f'Making {Data.ntoys} toys')
-    toy_cfg = gut.load_conf(package='fitter_data', fpath='toys/maker.yaml')
-    toy_cfg.ntoys = Data.ntoys 
-    mkr = ToyMaker(nll=nll, res=res, cfg=toy_cfg)
+    log.info(f'Making {Data.toy_cfg.ntoys} toys')
+    mkr = ToyMaker(nll=nll, res=res, cfg=Data.toy_cfg)
     df  = mkr.get_parameter_information()
 
     log.info(df)
