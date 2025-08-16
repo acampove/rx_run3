@@ -3,6 +3,7 @@ Module holding zfitter class
 '''
 # pylint: disable=wrong-import-order, import-error
 
+import contextlib
 import pprint
 from typing                   import Protocol, Union
 from functools                import lru_cache
@@ -609,4 +610,23 @@ class Fitter:
             raise ValueError('Unsupported fitting strategy')
 
         return res
+    # ----------------------
+    @classmethod
+    def errors_disabled(cls, value : bool):
+        '''
+        Parameters
+        -------------
+        value: If true, will not run error calculation
+        '''
+        old_val = Fitter._turn_off_errors
+        Fitter._turn_off_errors = value
+
+        @contextlib.contextmanager
+        def _context():
+            try:
+                yield
+            finally:
+                Fitter._turn_off_errors = old_val
+
+        return _context()
 #------------------------------
