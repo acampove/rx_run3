@@ -121,6 +121,20 @@ class ToyMaker:
 
         return df
     # ----------------------
+    def _get_out_path(self) -> str:
+        '''
+        Returns
+        -------------
+        Full path to parquet file where dataframe will be saved
+        '''
+        val = random.randint(0, 1000_000)
+        val = f'{val:07}'
+
+        out_path = f'{self._cfg.out_dir}/parameters_{val}.parquet'
+        log.info(f'Saving parameters to: {out_path}')
+
+        return out_path
+    # ----------------------
     def get_parameter_information(self) -> pnd.DataFrame:
         '''
         Returns
@@ -139,6 +153,9 @@ class ToyMaker:
                 res, gof = Fitter.minimize(nll=nll, cfg=self._cfg.fitting)
 
             df = self._add_parameters(df=df, res=res, gof=gof, itoy=itoy)
+
+        out_path = self._get_out_path()
+        df.to_parquet(out_path)
 
         return df
 # ----------------------
