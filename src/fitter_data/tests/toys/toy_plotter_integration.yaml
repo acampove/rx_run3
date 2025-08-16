@@ -1,0 +1,50 @@
+# This config is meant to specify how plotting of toys should be done
+# when running the test for ToyPlotter
+
+general:
+  size: [15, 10]
+
+saving:
+  plt_dir: toys/tests/integration
+
+pulls:
+  binning   : [-4, +4, 60]
+  yscale    : 'linear'
+  labels    : ['VAR Pull', 'Entries']
+  normalized: true
+
+plots:
+  mu_val:
+    binning: [5180, 5220, 60]
+    yscale: 'linear'
+    labels: ['$\mu$', 'Entries']
+  mu_err:
+    binning: [0.7, 0.9, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(\mu)$', 'Entries']
+  sg_val:
+    binning: [45, 55, 60]
+    yscale: 'linear'
+    labels: ['$\sigma$', 'Entries']
+  sg_err:
+    binning: [0.5, 1.0, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(\sigma)$', 'Entries']
+plugin:
+  pulls:
+    c_pul   : {}
+    mu_pul  : {}
+    sg_pul  : {}
+    nbkg_pul: {}
+    nsig_pul: {}
+  errors:
+    c_err  :
+      format : '{:.3f}'
+    mu_err :
+      format : '{:.3f}'
+    sg_err :
+      format : '{:.2f}'
+    nbkg_err :
+      format : '{:.3f}'
+    nsig_err :
+      format : '{:.2f}'
