@@ -193,15 +193,18 @@ def _fit() -> None:
     mkr = ToyMaker(nll=nll, res=res, cfg=Data.toy_cfg)
     mkr.get_parameter_information()
 # ----------------------
-def _set_output_directory() -> None:
+def _get_output_directory() -> str:
     '''
-    This function tells the Cache class where to
-    put the outputs. i.e. where the fit outputs will go
+    Returns
+    -----------------
+    This function will return the directory WRT which
+    the `output_directory` key in the fit config will be defined
     '''
     name    = _get_fit_name()
     ana_dir = os.environ['ANADIR']
     out_dir = f'{ana_dir}/fits/data/{name}'
-    Cache.set_cache_root(root=out_dir)
+
+    return out_dir
 # ----------------------
 def main():
     '''
