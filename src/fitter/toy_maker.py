@@ -86,7 +86,7 @@ class ToyMaker:
         Input pandas dataframe with extra rows added
         It will add one row per parameter
         '''
-        cres  = sut.zres_to_cres(res=res)
+        cres  = sut.zres_to_cres(res=res, fall_back_error=-1)
         for name, cfg_par in cres.items():
             nrows = len(df)
             name  = str(name)
