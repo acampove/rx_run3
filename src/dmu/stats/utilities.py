@@ -616,9 +616,9 @@ def _pdf_to_data(pdf : zpdf, add_weights : bool) -> zdata:
 #---------------------------------------------
 def placeholder_fit(
     kind     : str,
-    fit_dir  : str,
+    fit_dir  : str|None,
     df       : pnd.DataFrame|None = None,
-    plot_fit : bool               = True) -> None:
+    plot_fit : bool               = True) -> zres:
     '''
     Function meant to run toy fits that produce output needed as an input
     to develop tools on top of them
@@ -635,7 +635,9 @@ def placeholder_fit(
     FitResult object
     '''
     pdf  = get_model(kind)
-    print_pdf(pdf, txt_path=f'{fit_dir}/pre_fit.txt')
+    if fit_dir is not None:
+        print_pdf(pdf, txt_path=f'{fit_dir}/pre_fit.txt')
+
     if df is None:
         log.warning('Using user provided data')
         data = _pdf_to_data(pdf=pdf, add_weights=True)
@@ -647,11 +649,18 @@ def placeholder_fit(
     obj = Fitter(pdf, data)
     res = obj.fit(cfg={'constraints' : d_const})
 
+    if fit_dir is None:
+        log.debug('Not saving placeholder fit')
+        return res
+
+    log.debug('Saving placeholder fit')
     if plot_fit:
         obj   = ZFitPlotter(data=data, model=pdf)
         obj.plot(nbins=50, stacked=True)
 
     save_fit(data=data, model=pdf, res=res, fit_dir=fit_dir, d_const=d_const)
+
+    return res
 #---------------------------------------------
 def _reformat_values(d_par : dict) -> dict:
     '''
