@@ -381,8 +381,7 @@ class Fitter:
             for key, val in min_cfg.items():
                 log.debug(f'{key:<30}{val:<30}')
 
-        mnm     = zfit.minimize.Minuit(**min_cfg)
-
+        mnm = zfit.minimize.Minuit(**min_cfg)
         with mes.filter_stderr(banned_substrings=Fitter._l_hidden_tf_lines):
             res = mnm.minimize(nll)
 
