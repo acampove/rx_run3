@@ -325,6 +325,7 @@ def test_val_from_zres() -> None:
     expected = 5199.939434538848
 
     res = placeholder_fit(kind='s+b', fit_dir=None)
+    log.info(res)
 
     val = sut.val_from_zres(res=res, name='mu')
     assert math.isclose(val, expected, rel_tol=1e-5)
