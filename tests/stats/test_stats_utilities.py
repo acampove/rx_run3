@@ -297,6 +297,26 @@ def test_zres_to_cres():
 
     OmegaConf.save(config=cres, f='/tmp/results.yaml')
 #----------------------------------
+def test_zres_to_cres_fallback():
+    '''
+    Tests conversion of zfit result object to
+    DictConfig when errors are missing
+    '''
+    pdf = _get_pdf(kind='simple')
+    dat = pdf.create_sampler(n=1000)
+
+    with Fitter.errors_disabled(value=True):
+        obj = Fitter(pdf, dat)
+        res = obj.fit()
+        res.freeze()
+
+    with pytest.raises(KeyError):
+        sut.zres_to_cres(res=res)
+
+    cres = sut.zres_to_cres(res=res, fall_back_error=-1)
+    for data in cres.values():
+        assert math.isclose(data.error, -1.0, rel_tol=1e-5)
+#----------------------------------
 def test_range_from_obs():
     '''
     Tests retrieval of range from observable
