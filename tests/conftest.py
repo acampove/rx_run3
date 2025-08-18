@@ -45,7 +45,8 @@ def out_dir() -> str:
     to the tests to make the path to the output directory
     available to them
     '''
-    path = '/tmp/acampove/tests/rx_data'
+    user = os.environ['USER']
+    path = f'/tmp/{user}/tests/rx_data'
     os.makedirs(path, exist_ok=True)
 
     return path
