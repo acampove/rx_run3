@@ -237,7 +237,6 @@ def pytest_configure(config : Config):
     user      = os.environ['USER']
     cache_dir = f'/tmp/{user}/tests/fitter'
     Cache.set_cache_root(root=cache_dir)
-    os.environ['ANADIR'] = cache_dir
 
     _set_logs()
 
