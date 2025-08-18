@@ -69,7 +69,7 @@ def test_kde(component : str):
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
 
     cfg = gut.load_conf(package='fitter_data', fpath=f'tests/{component}.yaml')
-    with RDFGetter.max_entries(value=100_000):
+    with Cache.turn_off_cache(val = ['SimFitter', 'DataPreprocessor']):
         ftr = SimFitter(
             component= component,
             obs      = obs,
