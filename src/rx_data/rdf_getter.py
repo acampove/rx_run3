@@ -60,6 +60,9 @@ class RDFGetter:
     _d_custom_columns : dict[str,str] = {}
     _allow_multithreading             = False
     _nthreads                         = None
+    _identifier                       = 'none'  # In order to create YAML and JSON files with file lists, this string
+                                                # will be used to identify those files. This is needed to avoide collisions
+                                                # when sending jobs to clusters with shared file systems
     # ---------------------------------------------------
     def __init__(
         self,
@@ -1113,6 +1116,31 @@ class RDFGetter:
                 yield
             finally:
                 cls._only_friends = old_val
+
+        return _context()
+    # ----------------------
+    @classmethod
+    def identifier(cls, value : str):
+        '''
+        Parameters
+        -------------
+        value: String identifying the process (not instance) using this
+               class. If this manager is not called, the identifier's value 
+               will be the string 'none'
+
+        Returns
+        -------------
+        Context manager
+        '''
+        old_val = cls._identifier
+        cls._identifier = value
+
+        @contextmanager
+        def _context():
+            try:
+                yield
+            finally:
+                cls._identifier = old_val
 
         return _context()
 # ---------------------------------------------------
