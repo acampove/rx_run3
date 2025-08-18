@@ -219,13 +219,9 @@ class RDFGetter:
         val  = hashing.hash_object(data)
         val  = val[:10] # Ten characters are long enough for a hash
 
-        out_path = f'{RDFGetter._cache_dir}/{val}.yaml'
+        out_path = f'{RDFGetter._cache_dir}/{val}_{RDF._identifier}.yaml'
         log.debug(f'Saving friend tree structure to {out_path}')
-
-        # In a cluster, two jobs might interfere each other
-        # If the YAML file was made by one job, do not make it in another
-        if not os.path.isfile(out_path):
-            gut.dump_json(data, out_path)
+        gut.dump_json(data, out_path)
 
         return out_path
     # ---------------------------------------------------
@@ -430,20 +426,18 @@ class RDFGetter:
         value: Path to JSON config file, needed to build dataframe though FromSpec
         '''
         d_data = self._get_samples()
-        this_id= os.getpid()
-        this_id= str(this_id)
-        log.debug(f'This instance/process ID is: {this_id}')
+        log.debug(f'This instance/process ID is: {RDFGetter._identifier}')
 
         if not per_file:
             log.debug('Not splitting per file')
-            cfg_path = RDFGetter.get_tmp_path(identifier=f'full_sample_{this_id}', data=d_data)
+            cfg_path = RDFGetter.get_tmp_path(identifier=f'full_sample_{RDFGetter._identifier}', data=d_data)
             with open(cfg_path, 'w', encoding='utf-8') as ofile:
                 json.dump(d_data, ofile, indent=4, sort_keys=True)
 
             return {'' : cfg_path}
 
         log.debug('Splitting per file')
-        return RDFGetter.split_per_file(data=d_data, main=self._main_tree, identifier=this_id)
+        return RDFGetter.split_per_file(data=d_data, main=self._main_tree, identifier=RDFGetter._identifier)
     # ---------------------------------------------------
     def _get_samples(self) -> dict:
         '''
