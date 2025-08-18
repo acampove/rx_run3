@@ -77,6 +77,8 @@ class RDFGetter:
         Trigger: HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA
         Tree: E.g. DecayTree or MCDecayTree, default DecayTree
         '''
+        os.makedirs(RDFGetter._cache_dir, exist_ok=True)
+
         self._sample          = sample
         self._trigger         = trigger
         self._analysis        = analysis
