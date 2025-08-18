@@ -22,6 +22,14 @@ from zfit.interface              import ZfitSpace     as zobs
 
 executed_tests = set()
 log = LogStore.add_logger('rx_efficiencies:conftest')
+
+# --------------------------------------------------------------
+def pytest_addoption(parser):
+    parser.addoption('--ntoys', type=int, default=-1, help='Override number of toys, by default will do what is in the config')
+
+@pytest.fixture
+def ntoys(request):
+    return request.config.getoption('--ntoys')
 # --------------------------------------------------------------
 class TestingParametersHolder:
     '''
