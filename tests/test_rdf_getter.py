@@ -80,9 +80,10 @@ def initialize(out_dir):
     This will run before any test
     '''
     LogStore.set_level('rx_data:rdf_getter', 10)
-    os.makedirs(Data.out_dir, exist_ok=True)
     plt.style.use(mplhep.style.LHCb2)
+
     Data.out_dir = f'{out_dir}/rdf_getter'
+    os.makedirs(Data.out_dir, exist_ok=True)
 # ------------------------------------------------
 def _check_truem_columns(rdf : RDF.RNode):
     l_name = [ name.c_str() for name in rdf.GetColumnNames() if name.endswith('_TRUEM') ]
