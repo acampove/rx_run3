@@ -113,7 +113,9 @@ class RDFGetter:
         self._channel                = self._channel_from_trigger()
 
         self._set_logs()
-        self._initialize()
+        self._check_multithreading()
+
+        self._samples = self._get_yaml_paths()
     # ---------------------------------------------------
     def _get_main_tree(self) -> str:
         if not hasattr(RDFGetter, '_main_tree'):
@@ -152,19 +154,6 @@ class RDFGetter:
         to reduce noise
         '''
         LogStore.set_level('rx_data:path_splitter', 30)
-    # ---------------------------------------------------
-    def _initialize(self) -> None:
-        '''
-        Function will:
-        - Find samples, assuming they are in $ANADIR/Data/self._analysis as friend tree directories
-        - Add them to the samples attribute of RDFGetter
-
-        If no samples found, will raise FileNotFoundError
-        '''
-        os.makedirs(RDFGetter._cache_dir, exist_ok=True)
-        self._check_multithreading()
-
-        self._samples = self._get_yaml_paths()
     # ---------------------------------------------------
     def _get_yaml_paths(self) -> dict[str,str]:
         '''
