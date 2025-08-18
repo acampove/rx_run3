@@ -430,29 +430,35 @@ def _run_default_checks(
     _plot_mva(rdf     , f'{test_name}_{sample}')
     _plot_hop(rdf     , f'{test_name}_{sample}')
 # ------------------------------------------------
-def test_guid():
+@pytest.mark.parametrize('per_file', [True, False])
+def test_guid(per_file : bool):
     '''
     Tests retrieval of unique identifier for underlying data
     '''
     sam1= 'Bu_JpsiK_ee_eq_DPC'
     sam2= 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
 
+    with pytest.raises(ValueError):
+        gtr11= RDFGetter(sample=sam1, trigger='Hlt2RD_BuToKpEE_MVA')
+        gtr11.get_uid()
+        gtr11.get_rdf(per_file=per_file)
+
     gtr11= RDFGetter(sample=sam1, trigger='Hlt2RD_BuToKpEE_MVA')
-    gtr11.get_rdf(per_file=False)
+    gtr11.get_rdf(per_file=per_file)
     uid11= gtr11.get_uid()
 
     gtr12= RDFGetter(sample=sam1, trigger='Hlt2RD_BuToKpEE_MVA')
-    gtr12.get_rdf(per_file=False)
+    gtr12.get_rdf(per_file=per_file)
     uid12= gtr12.get_uid()
 
     gtr22= RDFGetter(sample=sam2, trigger='Hlt2RD_BuToKpEE_MVA')
-    gtr22.get_rdf(per_file=False)
+    gtr22.get_rdf(per_file=per_file)
     uid22= gtr22.get_uid()
 
     # Filtering done here should change the sample's UID
     with RDFGetter.max_entries(value = 100):
         gtr23= RDFGetter(sample=sam2, trigger='Hlt2RD_BuToKpEE_MVA')
-        gtr23.get_rdf(per_file=False)
+        gtr23.get_rdf(per_file=per_file)
         uid23= gtr23.get_uid()
 
     assert uid11 == uid12
