@@ -801,9 +801,9 @@ class RDFGetter:
         d_sample = self._get_paths_to_conf(per_file=per_file)
         if per_file:
             log.info('Building one dataframe per file')
-            d_rdf = { fpath : self._rdf_from_conf(conf_path) for fpath, conf_path in d_sample.items() }
+            self._d_rdf = { fpath : self._rdf_from_conf(conf_path) for fpath, conf_path in d_sample.items() }
 
-            return d_rdf
+            return self._d_rdf
 
         nconf = len(d_sample)
         if nconf != 1:
