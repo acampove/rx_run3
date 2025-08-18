@@ -944,4 +944,15 @@ def test_only_friends(sample : str, trigger : str):
 
     assert gtr.friend_trees == s_friend
 # ------------------------------------------------
+@pytest.mark.parametrize('per_file', [True, False])
+def test_identifier(per_file : bool):
+    '''
+    Tests context manager that sets identifier needed
+    to name YAML and JSON files with sample lists
+    '''
+    sample = 'Bu_JpsiK_ee_eq_DPC'
+    with RDFGetter.identifier(value=f'per_file_eq_{per_file}'):
+        gtr= RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+        gtr.get_rdf(per_file=per_file)
+# ------------------------------------------------
 # TODO: Need test for default_skip manager
