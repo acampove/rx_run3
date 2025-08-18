@@ -20,19 +20,26 @@ def initialize():
     LogStore.set_level('dmu:statistics:fitter'  , 20)
     LogStore.set_level('fitter:toy_maker'       , 10)
 # ----------------------
-def test_simple() -> None:
+def test_simple(ntoys) -> None:
     '''
     Simplest test of ToyMaker
 
     Parameters 
     -------------
-    none
+    ntoys : Mean to pick number from:
+            pytest --ntoys XXX
     '''
     log.info('')
     nll   = sut.get_nll(kind='s+b')
     res, _= Fitter.minimize(nll=nll, cfg={})
 
     cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
+    if ntoys > 0:
+        log.warning(f'Using user defined number of toys: {ntoys}')
+        cfg.ntoys = ntoys
+    else:
+        ntoys = cfg.ntoys
+        log.info('Not overriding number of toys from config: {ntoys}')
 
     mkr   = ToyMaker(nll=nll, res=res, cfg=cfg)
     df    = mkr.get_parameter_information()
