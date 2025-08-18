@@ -45,13 +45,15 @@ class RDFGetter:
     main_tree   : Name of tree treated as the main tree when building dataframes with friend trees through `FromSpec`
     skip_adding_columns : By default false. If true, it will skip defining new columns.
     '''
+    _user      = os.environ['USER']
+    _cache_dir = f'/tmp/{_user}/rx_data/cache/rdf_getter' # Here is where all the temporary output will go
+
     _max_entries         = -1
     _skip_adding_columns = False
 
     _custom_versions     : dict[str,str] = {}
     _main_tree           : str
 
-    _cache_dir                        = '/tmp/rx_data/cache/rdf_getter' # Here is where all the temporary output will go
     _default_excluded                 = ['mass']# These friend trees will always be excluded, unless explicitly changed
     _excluded_friends                 = []      # Will not pick up any of the friend trees in this list
     _only_friends : set[str]|None     = None    # Will only pick up the friend trees in this list, if the list is not None
