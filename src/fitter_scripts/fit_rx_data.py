@@ -214,10 +214,12 @@ def main():
     _parse_args()
     _set_logs()
 
-    out_dir = _get_output_directory()
+    fit_name = _get_fit_name()
+    out_dir  = _get_output_directory()
     Cache.set_cache_root(root=out_dir)
     with PL.parameter_schema(cfg=Data.fit_cfg.model.yields),\
          RDFGetter.multithreading(nthreads=Data.nthread),\
+         RDFGetter.identifier(value=fit_name),\
          Cache.turn_off_cache(val=[]),\
          sut.blinded_variables(regex_list=['.*signal.*']),\
          sel.custom_selection(d_sel={
