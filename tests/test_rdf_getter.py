@@ -438,22 +438,22 @@ def test_guid():
     sam2= 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
 
     gtr11= RDFGetter(sample=sam1, trigger='Hlt2RD_BuToKpEE_MVA')
-    uid11= gtr11.get_uid()
     gtr11.get_rdf(per_file=False)
+    uid11= gtr11.get_uid()
 
     gtr12= RDFGetter(sample=sam1, trigger='Hlt2RD_BuToKpEE_MVA')
-    uid12= gtr12.get_uid()
     gtr12.get_rdf(per_file=False)
+    uid12= gtr12.get_uid()
 
     gtr22= RDFGetter(sample=sam2, trigger='Hlt2RD_BuToKpEE_MVA')
-    uid22= gtr22.get_uid()
     gtr22.get_rdf(per_file=False)
+    uid22= gtr22.get_uid()
 
     # Filtering done here should change the sample's UID
     with RDFGetter.max_entries(value = 100):
         gtr23= RDFGetter(sample=sam2, trigger='Hlt2RD_BuToKpEE_MVA')
-        uid23= gtr23.get_uid()
         gtr23.get_rdf(per_file=False)
+        uid23= gtr23.get_uid()
 
     assert uid11 == uid12
     assert uid11 != uid22
