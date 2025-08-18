@@ -36,6 +36,20 @@ export ANADIR=/eos/lhcb/wg/RD/RX_run3
 
 preferably in `~/.bashrc`.
 
+## How the the code makes the ROOT dataframes
+
+When creating datframes, the code will:
+
+- Check the directories where the ROOT files are
+- Make lists of paths
+- Create dictionaries with these paths, split into samples
+and save them in `yaml` files. Each `yaml` file is associated to
+a different friend tree or the main tree.
+- For a given sample, pick up the lists of paths from the `yaml`
+files and create a `JSON` file
+- Use the `JSON` file to make the ROOT dataframe
+by using `from_spec` RDataFrame's method
+
 ## Accessing ntuples
 
 Once
@@ -135,6 +149,25 @@ i.e. a hash, do:
 gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpMuMu_MVA')
 uid = gtr.get_uid()
 ```
+
+## Identifiers for cluster jobs
+
+When sending jobs to a computing cluster, each job will try to read the
+data. Thus, it will create the `JSON` and `YAML` files
+mentioned above. If two jobs run in the same machine, this could
+create clashes and failed jobs. To avoid this do:
+
+```python
+from rx_data.rdf_getter    import RDFGetter
+
+sample = 'Bu_JpsiK_ee_eq_DPC'
+with RDFGetter.identifier(value='job_001'):
+    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+    rdf = gtr.get_rdf(per_file=False)
+```
+
+i.e. wrap the code in the `identifier` manager, which will name
+the files based on the job.
 
 ## Excluding datasets
 
