@@ -468,6 +468,7 @@ class SimFitter(BaseFitter, Cache):
         obs_name = sut.name_from_obs(self._obs)
 
         kwargs   = OmegaConf.to_container(self._cfg.fitting, resolve=True)
+        kwargs   = cast(dict, kwargs)
 
         pdf =ftr.get_sum(
             mass   = obs_name,
