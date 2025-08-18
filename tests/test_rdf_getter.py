@@ -25,7 +25,8 @@ class Data:
     '''
     Class used to share attributes
     '''
-    out_dir    = '/tmp/tests/rx_data/rdf_getter'
+    # ----------------------
+    out_dir    : str 
     low_q2     = '(Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1000000)'
     central_q2 = '(Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000)'
     jpsi_q2    = '(Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)'
@@ -74,10 +75,14 @@ class Data:
     l_branch_mm = l_branch_common + ['B_Mass', 'Jpsi_Mass']
 # ------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize(out_dir):
+    '''
+    This will run before any test
+    '''
     LogStore.set_level('rx_data:rdf_getter', 10)
     os.makedirs(Data.out_dir, exist_ok=True)
     plt.style.use(mplhep.style.LHCb2)
+    Data.out_dir = f'{out_dir}/rdf_getter'
 # ------------------------------------------------
 def _check_truem_columns(rdf : RDF.RNode):
     l_name = [ name.c_str() for name in rdf.GetColumnNames() if name.endswith('_TRUEM') ]
