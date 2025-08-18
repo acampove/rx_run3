@@ -4,6 +4,7 @@ and run fits
 '''
 
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 import argparse
 from typing import ClassVar
 
