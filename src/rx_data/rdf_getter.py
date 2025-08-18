@@ -821,7 +821,8 @@ class RDFGetter:
         Retrieves unique identifier for this sample
         Build on top of the UUID from each file
         '''
-        self.get_rdf() # Full RDF calculation needs to kick in before calculating GUID
+        if not hasattr(self, '_rdf') and not hasattr(self, '_d_rdf'):
+            raise ValueError('get_uid can only be called after get_rdf')
 
         if len(self._l_path) == 0:
             raise ValueError('No path to ROOT files was found')
