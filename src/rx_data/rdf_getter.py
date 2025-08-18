@@ -223,7 +223,7 @@ class RDFGetter:
         val  = hashing.hash_object(data)
         val  = val[:10] # Ten characters are long enough for a hash
 
-        out_path = f'{RDFGetter._cache_dir}/{val}_{RDF._identifier}.yaml'
+        out_path = f'{RDFGetter._cache_dir}/{val}_{RDFGetter._identifier}.yaml'
         log.debug(f'Saving friend tree structure to {out_path}')
         gut.dump_json(data, out_path)
 
