@@ -99,7 +99,11 @@ class RDFGetter:
             'Hlt2RD_BuToKpMuMu_MVA',
             'Hlt2RD_BuToKpMuMu_SameSign_MVA']
 
-        self._rdf    : RDF.RNode          # This is where the dataframe will be stored, prevents recalculation
+        self._rdf    : RDF.RNode                # This is where the dataframe will be stored, prevents recalculation
+        self._d_rdf  : dict[str,RDF.RNode] = {} # This is where the dataframes are stored, when per_file splitting was
+                                                # requested. They keys are the main tree file path, the value is the dataframe
+                                                # with the main and friend trees
+
         self._d_info : dict[str,Any] = {} # Used to store information related to transformations done to dataframe (e.g. Range), needed for hashing
         self._l_path : list[str]     = [] # list of paths to all the ROOT files
         self._channel                = self._channel_from_trigger()
@@ -782,9 +786,13 @@ class RDFGetter:
         - A dictionary with the key as the path to the ROOT file and the value as the dataframe
         - The dataframe for the full sample
         '''
-        if hasattr(self, '_rdf'):
-            log.debug('Returned already calculated dataframe')
+        if hasattr(self, '_rdf')   and not per_file:
+            log.debug('Returning already calculated dataframe')
             return self._rdf
+
+        if hasattr(self, '_d_rdf') and     per_file:
+            log.debug('Returning already calculated dataframe dictionary')
+            return self._d_rdf
 
         # This is a dictionary with:
         #
