@@ -8,3 +8,4 @@ weights:
   sam : 1
 fitting:
   bandwidth : 20
+  padding   : False
