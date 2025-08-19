@@ -47,9 +47,10 @@ class ToyPlotter:
         added to the `plots` field.
         '''
         for par_name in self._l_par:
-            cfg_pul = cfg.pulls
-            xlabel  = cfg_pul.labels[0]
-            xlabel  = xlabel.replace('VAR', par_name)
+            cfg_pul    = cfg.pulls
+            xlabel     = cfg_pul.labels[0]
+            latex_name = cfg.plots[f'{par_name}_val'].labels[0]
+            xlabel     = xlabel.replace('VAR', latex_name)
 
             cfg_pul = copy.deepcopy(cfg_pul)
             cfg_pul.labels[0] = xlabel
