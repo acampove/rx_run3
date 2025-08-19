@@ -1,0 +1,44 @@
+# This config is meant to specify how plotting of toys should be done
+# when running ToyPlotter
+
+sources:
+  IHEP: 
+
+general:
+  size: [15, 10]
+
+saving:
+  plt_dir: toys/plots
+
+pulls:
+  binning   : [-4, +4, 60]
+  yscale    : 'linear'
+  labels    : ['VAR Pull', 'Entries']
+  normalized: true
+
+plots:
+  a_val:
+    binning: [-4.0, 4.0, 60]
+    yscale: 'linear'
+    labels: ['a', 'Entries']
+  a_err:
+    binning: [0.6, 1.4, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(a)$', 'Entries']
+  b_val:
+    binning: [800, 2000, 60]
+    yscale: 'linear'
+    labels: ['b', 'Entries']
+  b_err:
+    binning: [0, 60, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(b)$', 'Entries']
+plugin:
+  pulls:
+    a_pul : {}
+    b_pul : {}
+  errors:
+    a_err :
+      format : '{:.3f}'
+    b_err :
+      format : '{:.2f}'
