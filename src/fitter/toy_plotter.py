@@ -4,6 +4,7 @@ Module holding ToyPlotter class
 import copy
 import pandas as pnd
 import numpy
+import omegaconf
 
 from ROOT                    import RDataFrame, RDF # type: ignore
 from omegaconf               import DictConfig
@@ -11,6 +12,16 @@ from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter_1d import Plotter1D
 
 log=LogStore.add_logger('fitter:toy_plotter')
+
+# ----------------------
+class MissingVariableConfiguration(Exception):
+    '''
+    This exception will be risen if a variable is needed that
+    does not have a configuration associated 
+    '''
+    def __init__(self, message : str) -> None:
+        super().__init__(message)
+        self.message = message
 # ----------------------
 class ToyPlotter:
     '''
@@ -49,7 +60,12 @@ class ToyPlotter:
         for par_name in self._l_par:
             cfg_pul    = cfg.pulls
             xlabel     = cfg_pul.labels[0]
-            latex_name = cfg.plots[f'{par_name}_val'].labels[0]
+            try:
+                latex_name = cfg.plots[f'{par_name}_val'].labels[0]
+            except omegaconf.errors.ConfigKeyError as exc:
+                self._print_params()
+                raise MissingVariableConfiguration(f'Failed to find configuration for {par_name}') from exc
+
             xlabel     = xlabel.replace('VAR', latex_name)
 
             cfg_pul = copy.deepcopy(cfg_pul)
@@ -134,5 +150,5 @@ class ToyPlotter:
             ptr.run()
         except ValueError as exc:
             self._print_params()
-            raise ValueError('Cannot plot variable, one of the variables was likely missing') from exc
+            raise MissingVariableConfiguration('Cannot plot variable, one of the variables was likely missing') from exc
 # ----------------------
