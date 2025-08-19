@@ -17,26 +17,93 @@ plots:
   yld_signal_val:
     binning: [0, 5000, 60]
     yscale: 'linear'
-    labels: ['$n_{sig}$', 'Entries']
+    labels: ['$N_{sig}$', 'Entries']
   yld_signal_err:
-    binning: [0, 500 , 60]
+    binning: [0, 500, 60]
     yscale: 'linear'
-    labels: ['$\varepsilon(n_{sig})$', 'Entries']
+    labels: ['$\varepsilon(N_{sig})$', 'Entries']
+    format: '{:.0f}'
+
+  yld_combinatorial_val:
+    binning: [0, 5000, 60]
+    yscale: 'linear'
+    labels: ['Combinatorial', 'Entries']
+  yld_combinatorial_err:
+    binning: [0, 500, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(Combinatorial)$', 'Entries']
+    format: '{:.0f}'
+
+  yld_jpsi_leakage_val:
+    binning: [0, 5000, 60]
+    yscale: 'linear'
+    labels: ['$J/\psi\text{ leakage}$', 'Entries']
+  yld_jpsi_leakage_err:
+    binning: [0, 500, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(J/\psi\text{ leakage})$', 'Entries']
+    format: '{:.0f}'
+
+  yld_kkk_val:
+    binning: [0, 4, 60]
+    yscale: 'linear'
+    labels: ['$B^+\to KKK$', 'Entries']
+  yld_kkk_err:
+    binning: [0, 4, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(B^+\to KKK)$', 'Entries']
+    format: '{:.0f}'
+
+  yld_kpipi_val:
+    binning: [0, 10, 60]
+    yscale: 'linear'
+    labels: ['$B^+\to K\pi\pi$', 'Entries']
+  yld_kpipi_err:
+    binning: [0, 10, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(B^+\to K\pi\pi)$', 'Entries']
+    format: '{:.0f}'
+
+  pscale_yld_Bd_Kstee_eq_btosllball05_DPC_val:
+    binning: [0, 1, 60]
+    yscale: 'linear'
+    labels: ['$s(B_d\to K^{*0}e^+e^-)$', 'Entries']
+  pscale_yld_Bd_Kstee_eq_btosllball05_DPC_err:
+    binning: [0, 0.8, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(s(B_d\to K^{*0}e^+e^-))$', 'Entries']
+    format: '{:.3f}'
+
+  pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC_val:
+    binning: [0, 1, 60]
+    yscale: 'linear'
+    labels: ['$s(B_u\to K^{*+}e^+e^-)$', 'Entries']
+  pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC_err:
+    binning: [0, 0.8, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(s(B_u\to K^{*+}e^+e^-))$', 'Entries']
+    format: '{:.3f}'
 plugin:
   pulls:
     yld_signal_pul : {}
+    yld_combinatorial_pul: {}
+    yld_jpsi_leakage_pul: {}
+    yld_kkk_pul: {}
+    yld_kpipi_pul: {}
+    pscale_yld_Bd_Kstee_eq_btosllball05_DPC_pul: {}
+    pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC_pul: {}
   errors:
     yld_signal_err :
       format : '{:.0f}'
-
-
-#ap_hypexp_combinatorial_main_1
-#bt_hypexp_combinatorial_main_1
-#mu_hypexp_combinatorial_main_1
-#pscale_yld_Bd_Kstee_eq_btosllball05_DPC
-#pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC
-#yld_combinatorial
-#yld_jpsi_leakage
-#yld_kkk
-#yld_kpipi
-#yld_signal
+    yld_combinatorial_err:
+      format: '{:.0f}'
+    yld_jpsi_leakage_err:
+      format: '{:.0f}'
+    yld_kkk_err:
+      format: '{:.0f}'
+    yld_kpipi_err:
+      format: '{:.0f}'
+    pscale_yld_Bd_Kstee_eq_btosllball05_DPC_err:
+      format: '{:.3f}'
+    pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC_err:
+      format: '{:.3f}'
