@@ -1,6 +1,10 @@
 saving:
   plt_dir: plotting/pluggins/errors
 plots:
+  x_unc:
+    binning   : [0, 100, 200]
+    labels    : ['$\delta(x)[\%]$', 'Entries']
+    normalized: true
   x_err:
     binning   : [0, 8.0, 60]
     labels    : ['x Error', 'Entries']
@@ -14,3 +18,6 @@ plugin:
   errors:
     x_err :
       format : '{:.2f}'
+    x_unc :
+      format : '{:.2f}'
+      symbol : '\delta'
