@@ -22,7 +22,10 @@ plots:
     binning: [0, 500, 60]
     yscale: 'linear'
     labels: ['$\varepsilon(N_{sig})$', 'Entries']
-    format: '{:.0f}'
+  yld_signal_unc:
+    binning: [-3, 10, 60]
+    yscale: 'linear'
+    labels: ['$\delta(N_{sig})[\%]$', 'Entries']
 
   yld_combinatorial_val:
     binning: [0, 5000, 60]
@@ -126,6 +129,9 @@ plugin:
     ap_hypexp_combinatorial_main_1_pul: {}
     bt_hypexp_combinatorial_main_1_pul: {}
   errors:
+    yld_signal_unc:
+      format : '{:.0f}'
+      symbol : '\delta'
     yld_signal_err :
       format : '{:.0f}'
     yld_combinatorial_err:
