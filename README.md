@@ -1812,9 +1812,9 @@ assuming that the variable holding the pulls is `x_pul`.
 The pulls will be drawn from -4 to +4. No configuration
 is available at the moment.
 
-#### Errors
+#### Errors and Uncertainties
 
-If the variable is meant to be plotted as an error
+If the variable is meant to be plotted as an error or uncertainty
 this pluggin will:
 
 - Add a median line
@@ -1827,6 +1827,8 @@ plugin:
   errors:
     x_err : # This is the variable's name, meant to be treated as an error
       format : '{:.2f}' # The error will be show in the label with this formatting
+      symbol : '\delta(x)' # This will switch the epsilon to delta in the line's
+                           # legend. DO NOT use dollar signs
 ```
 
 ## 2D plots
