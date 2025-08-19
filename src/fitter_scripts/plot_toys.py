@@ -1,0 +1,96 @@
+'''
+Script used to plot distributions from toy fits
+by loading pandas dataframes stored as parquet files
+'''
+import os
+import glob
+import argparse
+
+import pandas as pnd
+from omegaconf             import DictConfig
+from dmu.generic           import utilities as gut
+from dmu.logging.log_store import LogStore
+from fitter.toy_plotter    import ToyPlotter
+
+log=LogStore.add_logger('fitter:plot_toys')
+# ----------------------
+class Data:
+    '''
+    Class meant to be used to share attributes
+    '''
+    source     : str
+    identifier : str
+    PARAM_WCARD= 'parameters_*.parquet'
+# ----------------------
+def _parse_args() -> None:
+    parser = argparse.ArgumentParser(description='Script used to make plots from outputs of toy fits')
+    parser.add_argument('-s', '--source'     , type=str, help='Identifier of place where parquet files are', required=True)
+    parser.add_argument('-i', '--identifier' , type=str, help='Identifier of toy, if not passed, will do all toys')
+    args = parser.parse_args()
+
+    Data.source     = args.source
+    Data.identifier = args.identifier
+# ----------------------
+def _get_dataframes(source_path : str) -> dict[str, pnd.DataFrame]:
+    '''
+    Parameters
+    -------------
+    source_path: Path where the search for PARAM_WCARD files are searched
+
+    Returns
+    -------------
+    List of dataframes where each dataframe contains all the parameters
+    for the toy fits to a given model
+    '''
+    path_wc= f'{source_path}/**/{Data.PARAM_WCARD}'
+    l_path = glob.glob(path_wc)
+    if hasattr(Data, 'identifier'):
+        l_path = [ path for path in l_path if Data.identifier in path ]
+
+    npath = len(l_path)
+    if npath == 0:
+        raise ValueError(f'No paths found in {path_wc}')
+
+    log.info(f'Found {npath} dataframes')
+    d_df = { path : pnd.read_parquet(path) for path in l_path }
+
+    return d_df
+# ----------------------
+def _update_config(cfg : DictConfig, path : str) -> DictConfig:
+    '''
+    Parameters
+    -------------
+    cfg: Config as loaded from YAML
+    path: Path to parquet file with dataframe data
+
+    Returns
+    -------------
+    Config with values overriden:
+    - Path to output has to be same as path to input, but in local machine
+    '''
+    source_path = cfg.paths[Data.source]
+    target_path = os.environ['ANADIR']
+    path        = path.replace(source_path, target_path)
+
+    log.debug(f'Saving to: {path}')
+
+    cfg.paths.saving.plt_dir = path
+
+    return cfg
+# ----------------------
+def main():
+    '''
+    Entry point
+    '''
+    _parse_args()
+
+    cfg         = gut.load_conf(package='fitter_data', fpath='toys/plotter.yaml')
+    source_path = cfg.paths[Data.source]
+    d_df        = _get_dataframes(source_path=source_path)
+    for path, df in d_df.items():
+        cfg = _update_config(cfg=cfg, path=path)
+        ptr = ToyPlotter(df=df, cfg=cfg)
+        ptr.plot()
+# ----------------------
+if __name__ == '__main__':
+    main()
