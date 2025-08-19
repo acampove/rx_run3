@@ -69,13 +69,15 @@ def _get_paths(source_path : Path) -> list[Path]:
     l_path = source_path.rglob(Data.PARAM_WCARD)
     l_path = list(l_path)
     l_path.sort()
-
-    if isinstance(Data.identifier, str):
-        l_path = [ path for path in l_path if Data.identifier in path.name ]
-
     npath = len(l_path)
     if npath == 0:
         raise ValueError(f'No paths to {Data.PARAM_WCARD} found in {source_path}')
+
+    if isinstance(Data.identifier, str):
+        l_path = [ path for path in l_path if Data.identifier in str(path) ]
+        npath  = len(l_path)
+        if npath == 0:
+            raise ValueError(f'No paths to {Data.PARAM_WCARD} found in {source_path} and with substring {Data.identifier}')
 
     log.info(f'Found {npath} paths')
 
