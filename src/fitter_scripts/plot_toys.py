@@ -20,6 +20,7 @@ class Data:
     '''
     log_lvl    : int
     source     : str
+    version    : str
     identifier : str
     dry_run    : bool
     PARAM_WCARD= 'parameters_*.parquet'
@@ -33,12 +34,14 @@ def _set_logs() -> None:
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make plots from outputs of toy fits')
+    parser.add_argument('-v', '--version'    , type=str, help='Version of toy fits, e.g. v2', required=True)
     parser.add_argument('-s', '--source'     , type=str, help='Identifier of place where parquet files are', required=True)
     parser.add_argument('-i', '--identifier' , type=str, help='Identifier of toy, if not passed, will do all toys')
     parser.add_argument('-l', '--log_level'  , type=int, help='Log level', default=20)
     parser.add_argument('-d', '--dry_run'    , help='If used, will skip plotting step', action='store_true')
     args = parser.parse_args()
 
+    Data.version    = args.version
     Data.source     = args.source
     Data.identifier = args.identifier
     Data.log_lvl    = args.log_level
@@ -84,6 +87,7 @@ def _update_config(cfg : DictConfig, path : str) -> DictConfig:
     source_path = cfg.paths[Data.source]
     target_path = os.environ['ANADIR']
     path        = path.replace(source_path, target_path)
+    path        = f'{path}/{Data.version}'
 
     log.debug(f'Saving to: {path}')
 
