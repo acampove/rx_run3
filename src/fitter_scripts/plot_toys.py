@@ -18,18 +18,31 @@ class Data:
     '''
     Class meant to be used to share attributes
     '''
+    log_lvl    : int
     source     : str
     identifier : str
+    dry_run    : bool
     PARAM_WCARD= 'parameters_*.parquet'
+# ----------------------
+def _set_logs() -> None:
+    '''
+    This method will set the log level of this
+    and other tools
+    '''
+    LogStore.set_level('fitter:plot_toys', Data.log_lvl)
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make plots from outputs of toy fits')
     parser.add_argument('-s', '--source'     , type=str, help='Identifier of place where parquet files are', required=True)
     parser.add_argument('-i', '--identifier' , type=str, help='Identifier of toy, if not passed, will do all toys')
+    parser.add_argument('-l', '--log_level'  , type=int, help='Log level', default=20)
+    parser.add_argument('-d', '--dry_run'    , help='If used, will skip plotting step', action='store_true')
     args = parser.parse_args()
 
     Data.source     = args.source
     Data.identifier = args.identifier
+    Data.log_lvl    = args.log_level
+    Data.dry_run    = args.dry_run
 # ----------------------
 def _get_dataframes(source_path : str) -> dict[str, pnd.DataFrame]:
     '''
