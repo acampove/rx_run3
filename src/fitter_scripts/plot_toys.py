@@ -21,6 +21,7 @@ class Data:
     '''
     Class meant to be used to share attributes
     '''
+    nworkers   : int
     log_lvl    : int
     version    : str
     identifier : str
@@ -46,6 +47,7 @@ def _parse_args() -> None:
     parser.add_argument('-v', '--version'    , type=str, help='Version of toy fits, e.g. v2', required=True)
     parser.add_argument('-i', '--identifier' , type=str, help='Identifier of toy, if not passed, will do all toys')
     parser.add_argument('-l', '--log_level'  , type=int, help='Log level', default=20)
+    parser.add_argument('-n', '--nworkers'   , type=int, help='Number of workers, to process in parallel', default=1)
     parser.add_argument('-d', '--dry_run'    , help='If used, will skip plotting step', action='store_true')
     args = parser.parse_args()
 
@@ -53,6 +55,7 @@ def _parse_args() -> None:
     Data.identifier = args.identifier
     Data.log_lvl    = args.log_level
     Data.dry_run    = args.dry_run
+    Data.nworkers   = args.nworkers
 # ----------------------
 def _get_paths(source_path : Path) -> list[Path]:
     '''
@@ -109,7 +112,7 @@ def main():
 
     log.info('Plotting:')
 
-    process_map(_run, l_path, max_workers=6, ascii=' -')
+    process_map(_run, l_path, max_workers=Data.nworkers, ascii=' -')
 # ----------------------
 if __name__ == '__main__':
     main()
