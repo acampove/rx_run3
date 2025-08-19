@@ -1,7 +1,6 @@
 '''
 Module holding ToyPlotter class
 '''
-import os
 import copy
 import pandas as pnd
 import numpy
