@@ -3,6 +3,7 @@ Module with functions meant to test the ToyPlotter class
 '''
 from functools import lru_cache
 
+import logging
 import pytest
 import numpy
 import pandas as pnd
@@ -75,4 +76,30 @@ def test_simple() -> None:
 
     ptr= ToyPlotter(df=df, cfg=cfg)
     ptr.plot()
-    
+ # ----------------------
+def test_missing_variable(caplog) -> None:
+    '''
+    Test that plotter class:
+
+    - Raises re ValueError when variable is missing
+    - Shows list of variables found instead
+    '''
+    log.info('')
+    df = _get_df(ntoys=1000, l_var=('c', 'b'))
+    cfg= gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter.yaml')
+
+    logger = LogStore.get_logger(name='fitter:toy_plotter')
+    if logger is None:
+        raise ValueError('Invalid logger name')
+    logger.addHandler(caplog.handler)
+
+    caplog.set_level(logging.INFO)
+    with pytest.raises(ValueError):
+        ptr= ToyPlotter(df=df, cfg=cfg)
+        ptr.plot()
+
+    l_message= [ record.getMessage() for record in caplog.records ] 
+
+    assert l_message == ['Parameters found:', 'b', 'c']
+
+       
