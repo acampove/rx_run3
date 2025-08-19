@@ -13,6 +13,13 @@ pulls:
   labels    : ['VAR Pull', 'Entries']
   normalized: true
 
+generated:
+  x     : -1 
+  label : Generated
+  ls    : --
+  c     : red
+  lw    : 1
+
 plots:
   yld_signal_val:
     binning: [0, 5000, 60]
