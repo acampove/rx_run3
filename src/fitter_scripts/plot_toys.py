@@ -3,8 +3,9 @@ Script used to plot distributions from toy fits
 by loading pandas dataframes stored as parquet files
 '''
 import os
-import glob
 import argparse
+from pathlib import Path
+from typing  import Iterable
 
 import pandas as pnd
 from omegaconf             import DictConfig
@@ -46,6 +47,14 @@ def _parse_args() -> None:
     Data.identifier = args.identifier
     Data.log_lvl    = args.log_level
     Data.dry_run    = args.dry_run
+# ----------------------
+def _scandir_recursive(source_path : str, pattern='*.parquet')-> Iterable[str]:
+    path = Path(source_path)
+    for entry in os.scandir(path=path):
+        if entry.is_dir(follow_symlinks=False):
+            yield from _scandir_recursive(source_path=entry.path, pattern=pattern)
+        elif entry.is_file() and entry.name.endswith(pattern[1:]):  # '*.parquet' -> 'parquet'
+            yield entry.path
 # ----------------------
 def _get_dataframes(source_path : str) -> dict[str, pnd.DataFrame]:
     '''
