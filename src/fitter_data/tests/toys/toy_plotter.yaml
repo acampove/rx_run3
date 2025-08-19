@@ -7,6 +7,13 @@ general:
 saving:
   plt_dir: toys/tests
 
+generated:
+  x     : -1 
+  label : Generated
+  ls    : --
+  c     : red
+  lw    : 1
+
 pulls:
   binning   : [-4, +4, 60]
   yscale    : 'linear'
@@ -27,11 +34,11 @@ plots:
     yscale: 'linear'
     labels: ['$\varepsilon(a)$', 'Entries']
   b_val:
-    binning: [800, 2000, 60]
+    binning: [800, 1200, 60]
     yscale: 'linear'
     labels: ['b', 'Entries']
   b_err:
-    binning: [0, 60, 60]
+    binning: [25, 35, 60]
     yscale: 'linear'
     labels: ['$\varepsilon(b)$', 'Entries']
 plugin:
