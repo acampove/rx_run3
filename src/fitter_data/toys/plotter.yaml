@@ -2,7 +2,7 @@
 # when running ToyPlotter
 
 paths:
-  IHEP: /publicfs/ucas/user/campoverde/Data
+  IHEP: /publicfs/ucas/user/campoverde/Data/fits/data
 
 general:
   size: [15, 10]
