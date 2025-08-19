@@ -12,7 +12,7 @@ import pandas as pnd
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 
-from fitter.toy_plotter    import ToyPlotter
+from fitter.toy_plotter    import ToyPlotter, MissingVariableConfiguration
 
 log=LogStore.add_logger('fitter:test_toy_plotter')
 # ----------------------
@@ -97,7 +97,7 @@ def test_missing_variable(caplog, test_dir : Path) -> None:
     logger.addHandler(caplog.handler)
 
     caplog.set_level(logging.INFO)
-    with pytest.raises(ValueError):
+    with pytest.raises(MissingVariableConfiguration):
         ptr= ToyPlotter(df=df, cfg=cfg)
         ptr.plot()
 
