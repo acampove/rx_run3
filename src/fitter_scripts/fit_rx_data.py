@@ -106,7 +106,7 @@ def _override_toy_cfg(
         toy_cfg.ntoys = ntoys
 
     root_dir= _get_output_directory()
-    out_dir = f'{root_dir}/{Data.fit_cfg.output_directory}/toys'
+    out_dir = f'{root_dir}/{Data.fit_cfg.output_directory}/{Data.q2bin}'
 
     log.info(f'Sending toys to: {out_dir}')
     toy_cfg.out_dir = out_dir
@@ -181,7 +181,7 @@ def _fit() -> None:
 
     ftr = DataFitter(
         name = Data.q2bin,
-        d_nll= {'signal_region' : (nll, cfg)}, 
+        d_nll= {'' : (nll, cfg)}, 
         cfg  = Data.fit_cfg)
     ftr.constraints = d_cns 
     res = ftr.run(kind='zfit')
