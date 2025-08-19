@@ -3,7 +3,8 @@ This file is needed by pytest
 '''
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = '-1'
-from typing import cast
+from pathlib import Path
+from typing  import cast
 
 import mplhep
 import matplotlib.pyplot as plt
@@ -30,6 +31,14 @@ def pytest_addoption(parser):
 @pytest.fixture
 def ntoys(request):
     return request.config.getoption('--ntoys')
+
+@pytest.fixture(scope='session')
+def test_dir() -> Path:
+    user     = os.environ.get('USER', 'unknown')
+    dir_path = Path(f'/tmp/{user}/tests/fitter')
+    dir_path.mkdir(parents=True, exist_ok=True)
+
+    return dir_path
 # --------------------------------------------------------------
 class TestingParametersHolder:
     '''
