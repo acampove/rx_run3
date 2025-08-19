@@ -85,14 +85,16 @@ def main():
     _set_logs()
 
     cfg         = gut.load_conf(package='fitter_data', fpath='toys/plotter.yaml')
-    source_path = cfg.paths[Data.source]
-    d_df        = _get_dataframes(source_path=source_path)
+    root_dir    = os.environ['ANADIR']
+    d_df        = _get_dataframes(source_path=f'{root_dir}/fits/data')
 
     log.info('Plotting:')
-    for path, df in d_df.items():
-        cfg = _update_config(cfg=cfg, path=path)
+    for input_path, df in d_df.items():
+        # Output will be in `plots` directory next to parquet file
+        cfg.saving.plt_dir = f'{input_path}/plots' 
+
         if Data.dry_run:
-            log.debug(f'    {path}')
+            log.debug(f'    {input_path}')
             continue
 
         ptr = ToyPlotter(df=df, cfg=cfg)
