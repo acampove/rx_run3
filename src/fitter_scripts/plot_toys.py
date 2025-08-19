@@ -5,7 +5,9 @@ by loading pandas dataframes stored as parquet files
 import os
 import glob
 import argparse
+from pathlib import Path
 
+import mplhep
 import pandas as pnd
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
@@ -48,7 +50,7 @@ def _parse_args() -> None:
     Data.log_lvl    = args.log_level
     Data.dry_run    = args.dry_run
 # ----------------------
-def _get_dataframes(source_path : str) -> dict[str, pnd.DataFrame]:
+def _get_dataframes(source_path : str) -> dict[Path, pnd.DataFrame]:
     '''
     Parameters
     -------------
@@ -68,7 +70,7 @@ def _get_dataframes(source_path : str) -> dict[str, pnd.DataFrame]:
         raise ValueError(f'No paths to {Data.PARAM_WCARD} found in {source_path}')
 
     log.info(f'Found {npath} dataframes')
-    d_df = { path : pnd.read_parquet(path) for path in l_path }
+    d_df = { Path(path) : pnd.read_parquet(path) for path in l_path }
 
     return d_df
 # ----------------------
@@ -78,6 +80,7 @@ def main():
     '''
     _parse_args()
     _set_logs()
+    mplhep.style.use('LHCb2')
 
     cfg      = gut.load_conf(package='fitter_data', fpath='toys/plotter.yaml')
     root_dir = os.environ['ANADIR']
@@ -86,7 +89,8 @@ def main():
     log.info('Plotting:')
     for input_path, df in d_df.items():
         # Output will be in `plots` directory next to parquet file
-        cfg.saving.plt_dir = f'{input_path}/plots' 
+
+        cfg.saving.plt_dir = input_path.parent/'plots'
 
         if Data.dry_run:
             log.debug(f'    {input_path}')
