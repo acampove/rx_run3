@@ -60,21 +60,21 @@ def _get_dataframes(source_path : str) -> dict[str, pnd.DataFrame]:
     '''
     Parameters
     -------------
-    source_path: Path where the search for PARAM_WCARD files are searched
-
-    Returns
+    source_path: Path where the search for PARAM_WCARD files are searched Returns
     -------------
     List of dataframes where each dataframe contains all the parameters
     for the toy fits to a given model
     '''
-    path_wc= f'{source_path}/**/{Data.PARAM_WCARD}'
-    l_path = glob.glob(path_wc, recursive=True)
+    log.debug('Looking for files in: {source_path}/**/{Data.PARAM_WCARD}')
+    iterator = _scandir_recursive(source_path=source_path, pattern=Data.PARAM_WCARD)
     if hasattr(Data, 'identifier'):
-        l_path = [ path for path in l_path if Data.identifier in path ]
+        l_path = [ path for path in iterator if Data.identifier in path ]
+    else:
+        l_path = list(iterator)
 
     npath = len(l_path)
     if npath == 0:
-        raise ValueError(f'No paths found in {path_wc}')
+        raise ValueError(f'No paths to {Data.PARAM_WCARD} found in {source_path}')
 
     log.info(f'Found {npath} dataframes')
     d_df = { path : pnd.read_parquet(path) for path in l_path }
