@@ -28,7 +28,12 @@ def _set_logs() -> None:
     This method will set the log level of this
     and other tools
     '''
-    LogStore.set_level('fitter:plot_toys', Data.log_lvl)
+    LogStore.set_level('fitter:plot_toys'  , Data.log_lvl)
+
+    if log.getEffectiveLevel() < 20:
+        LogStore.set_level('fitter:toy_plotter', Data.log_lvl)
+    else:
+        LogStore.set_level('fitter:toy_plotter',           30)
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make plots from outputs of toy fits')
