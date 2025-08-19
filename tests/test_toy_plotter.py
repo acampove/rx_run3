@@ -79,7 +79,7 @@ def test_simple(test_dir : Path) -> None:
     ptr= ToyPlotter(df=df, cfg=cfg)
     ptr.plot()
  # ----------------------
-def test_missing_variable(caplog) -> None:
+def test_missing_variable(caplog, test_dir : Path) -> None:
     '''
     Test that plotter class:
 
@@ -89,6 +89,7 @@ def test_missing_variable(caplog) -> None:
     log.info('')
     df = _get_df(ntoys=1000, l_var=('c', 'b'))
     cfg= gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter.yaml')
+    cfg.saving.plt_dir = test_dir/cfg.saving.plt_dir
 
     logger = LogStore.get_logger(name='fitter:toy_plotter')
     if logger is None:
