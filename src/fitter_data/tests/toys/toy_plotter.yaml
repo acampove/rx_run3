@@ -14,6 +14,10 @@ pulls:
   normalized: true
 
 plots:
+  a_unc:
+    binning: [0, 100, 60]
+    yscale: 'linear'
+    labels: ['$\delta(a)[\%]$', 'Entries']
   a_val:
     binning: [-4.0, 4.0, 60]
     yscale: 'linear'
