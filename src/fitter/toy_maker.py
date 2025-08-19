@@ -2,7 +2,6 @@
 Module holding ToyMaker class
 '''
 import os
-import random
 import tqdm
 import pandas     as pnd
 import tensorflow as tf
@@ -122,10 +121,7 @@ class ToyMaker:
         -------------
         Full path to parquet file where dataframe will be saved
         '''
-        val = random.randint(0, 1000_000)
-        val = f'{val:07}'
-
-        out_path = f'{self._cfg.out_dir}/parameters_{val}.parquet'
+        out_path = f'{self._cfg.out_dir}/toys.parquet'
         log.info(f'Saving parameters to: {out_path}')
 
         return out_path
