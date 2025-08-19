@@ -79,9 +79,9 @@ def main():
     _parse_args()
     _set_logs()
 
-    cfg         = gut.load_conf(package='fitter_data', fpath='toys/plotter.yaml')
-    root_dir    = os.environ['ANADIR']
-    d_df        = _get_dataframes(source_path=f'{root_dir}/fits/data/{Data.version}')
+    cfg      = gut.load_conf(package='fitter_data', fpath='toys/plotter.yaml')
+    root_dir = os.environ['ANADIR']
+    d_df     = _get_dataframes(source_path=f'{root_dir}/fits/data/{Data.version}')
 
     log.info('Plotting:')
     for input_path, df in d_df.items():
