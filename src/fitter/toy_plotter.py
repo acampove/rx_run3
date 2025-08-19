@@ -111,10 +111,12 @@ class ToyPlotter:
         Dataframe with columns as quantities associated to one parameter (`a_val`, `a_err`, `a_pul`...)
         '''
         df['Pull'] = (df['Value'] - df['Gen']) / df['Error']
+        df['Unc' ] = 100 * df['Error'] / df['Value']
 
         d_name = {
             'Gen'   : f'{name}_gen',
             'Pull'  : f'{name}_pul',
+            'Unc'   : f'{name}_unc',
             'Value' : f'{name}_val', 
             'Error' : f'{name}_err'}
 
