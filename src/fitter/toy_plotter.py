@@ -43,8 +43,59 @@ class ToyPlotter:
         cfg: Configuration specifying how to plot
         '''
         self._l_par = df['Parameter'].unique().tolist()
+        self._d_gen = self._get_gen_values(df=df)
         self._rdf   = self._rdf_from_df(df=df)
-        self._cfg   = self._add_pull_config(cfg=cfg)
+
+        cfg = self._add_pull_config(cfg=cfg)
+        cfg = self._add_gen_config(cfg=cfg)
+        self._cfg   = cfg
+    # ----------------------
+    def _get_gen_values(self, df : pnd.DataFrame) -> dict[str,float]:
+        '''
+        Parameters
+        -------------
+        df: DataFrame with parameter information
+
+        Returns
+        -------------
+        Dictionary mapping parameter name to generated value (used to make toys)
+        '''
+        fail = False
+        d_gen= {}
+        for par_name, df_par in df.groupby('Parameter'):
+            l_gen_val = df_par['Gen'].unique().tolist()
+            if len(l_gen_val) != 1:
+                fail = True
+                log.error(f'Not one and only one Gen value for: {par_name}')
+                continue
+
+            d_gen[par_name] = l_gen_val[0]
+
+        if fail:
+            raise ValueError('Multiple generating values')
+
+        return d_gen
+    # ----------------------
+    def _add_gen_config(self, cfg : DictConfig) -> DictConfig:
+        '''
+        Parameters
+        -------------
+        cfg : Config file pased to initializer
+
+        Returns
+        -------------
+        Config file with `vline` sections added to `_val` plots
+        and with the generation value
+        '''
+        cfg_gen = cfg.generated
+        cfg_gen = copy.deepcopy(cfg_gen)
+
+        for par_name in self._l_par:
+            cfg_gen.x = self._d_gen[par_name] 
+
+            cfg.plots[f'{par_name}_val']['vline'] = cfg_gen
+
+        return cfg
     # ----------------------
     def _add_pull_config(self, cfg : DictConfig) -> DictConfig:
         '''
