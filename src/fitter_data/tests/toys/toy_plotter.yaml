@@ -15,7 +15,7 @@ pulls:
 
 plots:
   a_unc:
-    binning: [0, 100, 60]
+    binning: [0, 200, 60]
     yscale: 'linear'
     labels: ['$\delta(a)[\%]$', 'Entries']
   a_val:
@@ -43,3 +43,6 @@ plugin:
       format : '{:.3f}'
     b_err :
       format : '{:.2f}'
+    a_unc:
+      format : '{:.2f}'
+      symbol : '\delta(a)'
