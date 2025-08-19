@@ -126,6 +126,17 @@ class ToyPlotter:
 
         return df
     # ----------------------
+    def _print_params(self):
+        '''
+        Prints columns available in input dataframe
+        '''
+        s_parameter = set(self._l_par)
+        l_parameter = sorted(list(s_parameter))
+
+        log.info('Parameters found:')
+        for name in l_parameter:
+            log.info(name)
+    # ----------------------
     def plot(self) -> None:
         '''
         Parameters
@@ -136,6 +147,10 @@ class ToyPlotter:
         -------------
         none
         '''
-        ptr = Plotter1D(d_rdf={'Toys' : self._rdf}, cfg=self._cfg)
-        ptr.run()
+        try:
+            ptr = Plotter1D(d_rdf={'Toys' : self._rdf}, cfg=self._cfg)
+            ptr.run()
+        except ValueError as exc:
+            self._print_params()
+            raise ValueError('Cannot plot variable, one of the variables was likely missing') from exc
 # ----------------------
