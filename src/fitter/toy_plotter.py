@@ -34,25 +34,7 @@ class ToyPlotter:
         '''
         self._l_par = df['Parameter'].unique().tolist()
         self._rdf   = self._rdf_from_df(df=df)
-        self._cfg   = self._get_config(cfg=cfg)
-    # ----------------------
-    def _get_config(self, cfg : DictConfig) -> DictConfig:
-        '''
-        Parameters
-        -------------
-        cfg: Configuration used for plotting
-
-        Returns
-        -------------
-        Same configuration, with overriden values, e.g. plt_dir
-        '''
-        ana_dir = os.environ['ANADIR']
-        plt_dir = cfg.saving.plt_dir
-        cfg.saving.plt_dir = f'{ana_dir}/{plt_dir}'
-
-        cfg = self._add_pull_config(cfg=cfg)
-
-        return cfg
+        self._cfg   = self._add_pull_config(cfg=cfg)
     # ----------------------
     def _add_pull_config(self, cfg : DictConfig) -> DictConfig:
         '''
