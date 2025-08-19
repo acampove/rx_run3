@@ -1,9 +1,6 @@
 # This config is meant to specify how plotting of toys should be done
 # when running ToyPlotter
 
-paths:
-  IHEP: /publicfs/ucas/user/campoverde/Data/fits/data
-
 general:
   size: [15, 10]
 
