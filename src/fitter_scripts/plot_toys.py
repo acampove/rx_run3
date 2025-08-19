@@ -59,7 +59,7 @@ def _get_dataframes(source_path : str) -> dict[str, pnd.DataFrame]:
     for the toy fits to a given model
     '''
     path_wc= f'{source_path}/**/{Data.PARAM_WCARD}'
-    l_path = glob.glob(path_wc)
+    l_path = glob.glob(path_wc, recursive=True)
     if hasattr(Data, 'identifier'):
         l_path = [ path for path in l_path if Data.identifier in path ]
 
