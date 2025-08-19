@@ -83,6 +83,36 @@ plots:
     yscale: 'linear'
     labels: ['$\varepsilon(s(B_u\to K^{*+}e^+e^-))$', 'Entries']
     format: '{:.3f}'
+
+  mu_hypexp_combinatorial_main_1_val:
+    binning: [4000, 5000, 60]
+    yscale: 'linear'
+    labels: ['$\mu_{HypExp}$', 'Entries']
+  mu_hypexp_combinatorial_main_1_err:
+    binning: [0, 100, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(\mu_{HypExp})$', 'Entries']
+    format: '{:.0f}'
+
+  ap_hypexp_combinatorial_main_1_val:
+    binning: [0, 0.1, 60]
+    yscale: 'linear'
+    labels: ['$\alpha_{HypExp}$', 'Entries']
+  ap_hypexp_combinatorial_main_1_err:
+    binning: [0, 0.01, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(\alpha_{HypExp})$', 'Entries']
+    format: '{:.3f}'
+
+  bt_hypexp_combinatorial_main_1_val:
+    binning: [0, 0.003, 60]
+    yscale: 'linear'
+    labels: ['$\beta_{HypExp}$', 'Entries']
+  bt_hypexp_combinatorial_main_1_err:
+    binning: [0, 0.003, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(\beta_{HypExp})$', 'Entries']
+    format: '{:.3f}'
 plugin:
   pulls:
     yld_signal_pul : {}
@@ -92,6 +122,9 @@ plugin:
     yld_kpipi_pul: {}
     pscale_yld_Bd_Kstee_eq_btosllball05_DPC_pul: {}
     pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC_pul: {}
+    mu_hypexp_combinatorial_main_1_pul: {}
+    ap_hypexp_combinatorial_main_1_pul: {}
+    bt_hypexp_combinatorial_main_1_pul: {}
   errors:
     yld_signal_err :
       format : '{:.0f}'
@@ -107,3 +140,9 @@ plugin:
       format: '{:.3f}'
     pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC_err:
       format: '{:.3f}'
+    ap_hypexp_combinatorial_main_1_err:
+      format: '{:.3f}'
+    bt_hypexp_combinatorial_main_1_err:
+      format: '{:.3f}'
+    mu_hypexp_combinatorial_main_1_err:
+      format: '{:.0f}'
