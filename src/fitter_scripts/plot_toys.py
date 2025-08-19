@@ -3,15 +3,17 @@ Script used to plot distributions from toy fits
 by loading pandas dataframes stored as parquet files
 '''
 import os
-import glob
+import copy
 import argparse
 from pathlib import Path
 
 import mplhep
 import pandas as pnd
-from dmu.generic           import utilities as gut
-from dmu.logging.log_store import LogStore
-from fitter.toy_plotter    import ToyPlotter
+from omegaconf               import DictConfig
+from tqdm.contrib.concurrent import process_map
+from dmu.generic             import utilities as gut
+from dmu.logging.log_store   import LogStore
+from fitter.toy_plotter      import ToyPlotter
 
 log=LogStore.add_logger('fitter:plot_toys')
 # ----------------------
@@ -23,6 +25,7 @@ class Data:
     version    : str
     identifier : str
     dry_run    : bool
+    cfg        : DictConfig
     PARAM_WCARD= 'parameters_*.parquet'
 # ----------------------
 def _set_logs() -> None:
@@ -30,12 +33,13 @@ def _set_logs() -> None:
     This method will set the log level of this
     and other tools
     '''
-    LogStore.set_level('fitter:plot_toys'  , Data.log_lvl)
+    LogStore.set_level('fitter:plot_toys', Data.log_lvl)
 
     if log.getEffectiveLevel() < 20:
         LogStore.set_level('fitter:toy_plotter', Data.log_lvl)
     else:
-        LogStore.set_level('fitter:toy_plotter',           30)
+        LogStore.set_level('fitter:toy_plotter'  , 30)
+        LogStore.set_level('dmu:plotting:Plotter', 30)
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make plots from outputs of toy fits')
@@ -50,29 +54,46 @@ def _parse_args() -> None:
     Data.log_lvl    = args.log_level
     Data.dry_run    = args.dry_run
 # ----------------------
-def _get_dataframes(source_path : str) -> dict[Path, pnd.DataFrame]:
+def _get_paths(source_path : Path) -> list[Path]:
     '''
     Parameters
     -------------
     source_path: Path where the search for PARAM_WCARD files are searched Returns
     -------------
-    List of dataframes where each dataframe contains all the parameters
-    for the toy fits to a given model
+    List of paths to parquet files with dataframes
     '''
-    path_wc  = f'{source_path}/**/{Data.PARAM_WCARD}'
-    log.debug(f'Looking for files in: {path_wc}')
-    l_path   = glob.glob(path_wc, recursive=True)
+    log.debug(f'Looking for files in: {source_path}')
+    l_path = source_path.rglob(Data.PARAM_WCARD)
+    l_path = list(l_path)
+    l_path.sort()
+
     if isinstance(Data.identifier, str):
-        l_path = [ path for path in l_path if Data.identifier in path ]
+        l_path = [ path for path in l_path if Data.identifier in path.name ]
 
     npath = len(l_path)
     if npath == 0:
         raise ValueError(f'No paths to {Data.PARAM_WCARD} found in {source_path}')
 
-    log.info(f'Found {npath} dataframes')
-    d_df = { Path(path) : pnd.read_parquet(path) for path in l_path }
+    log.info(f'Found {npath} paths')
 
-    return d_df
+    return l_path 
+# ----------------------
+def _run(input_path : Path) -> None:
+    '''
+    Parameters
+    -------------
+    input_path: Path to parquet file
+    '''
+    cfg = copy.deepcopy(Data.cfg)
+    cfg.saving.plt_dir = input_path.parent/'plots'
+
+    if Data.dry_run:
+        log.debug(f'    {input_path}')
+        return
+
+    df  = pnd.read_parquet(input_path)
+    ptr = ToyPlotter(df=df, cfg=cfg)
+    ptr.plot()
 # ----------------------
 def main():
     '''
@@ -82,22 +103,13 @@ def main():
     _set_logs()
     mplhep.style.use('LHCb2')
 
-    cfg      = gut.load_conf(package='fitter_data', fpath='toys/plotter.yaml')
-    root_dir = os.environ['ANADIR']
-    d_df     = _get_dataframes(source_path=f'{root_dir}/fits/data/{Data.version}')
+    Data.cfg = gut.load_conf(package='fitter_data', fpath='toys/plotter.yaml')
+    root_dir = Path(os.environ['ANADIR'])
+    l_path   = _get_paths(source_path=root_dir/'fits/data'/Data.version)
 
     log.info('Plotting:')
-    for input_path, df in d_df.items():
-        # Output will be in `plots` directory next to parquet file
 
-        cfg.saving.plt_dir = input_path.parent/'plots'
-
-        if Data.dry_run:
-            log.debug(f'    {input_path}')
-            continue
-
-        ptr = ToyPlotter(df=df, cfg=cfg)
-        ptr.plot()
+    process_map(_run, l_path, max_workers=6, ascii=' -')
 # ----------------------
 if __name__ == '__main__':
     main()
