@@ -96,12 +96,16 @@ def main():
     Entry point
     '''
     _parse_args()
+    _set_logs()
 
     cfg         = gut.load_conf(package='fitter_data', fpath='toys/plotter.yaml')
     source_path = cfg.paths[Data.source]
     d_df        = _get_dataframes(source_path=source_path)
     for path, df in d_df.items():
         cfg = _update_config(cfg=cfg, path=path)
+        if Data.dry_run:
+            continue
+
         ptr = ToyPlotter(df=df, cfg=cfg)
         ptr.plot()
 # ----------------------
