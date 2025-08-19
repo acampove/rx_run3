@@ -161,7 +161,9 @@ class Plotter1D(Plotter):
         cfg     : Configuration for the statistics plugin
         '''
         size   = len(arr_val)
-        mu, sg = norm.fit(arr_val)
+        mask   = (arr_val > -4) & (arr_val < 4)
+
+        mu, sg = norm.fit(arr_val[mask])
         em     = sg / math.sqrt(2 * (size - 1))
         es     = sg / math.sqrt(size)
 
