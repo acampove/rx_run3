@@ -65,7 +65,7 @@ def _get_dataframes(source_path : str) -> dict[str, pnd.DataFrame]:
     List of dataframes where each dataframe contains all the parameters
     for the toy fits to a given model
     '''
-    log.debug('Looking for files in: {source_path}/**/{Data.PARAM_WCARD}')
+    log.debug(f'Looking for files in: {source_path}/**/{Data.PARAM_WCARD}')
     iterator = _scandir_recursive(source_path=source_path, pattern=Data.PARAM_WCARD)
     if hasattr(Data, 'identifier'):
         l_path = [ path for path in iterator if Data.identifier in path ]
