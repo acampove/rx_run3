@@ -135,6 +135,9 @@ class Plotter1D(Plotter):
         arr_val: Numpy array storing errors
         cfg    : Configuration
         '''
+        symbol = r'\varepsilon'
+        if 'symbol' in cfg:
+            symbol = cfg['symbol']
 
         median = numpy.median(arr_val)
         median = float(median)
@@ -144,7 +147,7 @@ class Plotter1D(Plotter):
             fmt = cfg['format']
             val = fmt.format(median)
 
-        label = rf'$\mathrm{{Med}}(\varepsilon)={val}$' 
+        label = rf'$\mathrm{{Med}}({symbol})={val}$' 
 
         plt.axvline(x=median, ls=':', label=label, c='red')
     # ----------------------
