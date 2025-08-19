@@ -3,9 +3,8 @@ Script used to plot distributions from toy fits
 by loading pandas dataframes stored as parquet files
 '''
 import os
+import glob
 import argparse
-from pathlib import Path
-from typing  import Iterable
 
 import pandas as pnd
 from dmu.generic           import utilities as gut
@@ -44,14 +43,6 @@ def _parse_args() -> None:
     Data.log_lvl    = args.log_level
     Data.dry_run    = args.dry_run
 # ----------------------
-def _scandir_recursive(source_path : str, pattern='*.parquet')-> Iterable[str]:
-    path = Path(source_path)
-    for entry in os.scandir(path=path):
-        if entry.is_dir(follow_symlinks=False):
-            yield from _scandir_recursive(source_path=entry.path, pattern=pattern)
-        elif entry.is_file() and entry.name.endswith(pattern[1:]):  # '*.parquet' -> 'parquet'
-            yield entry.path
-# ----------------------
 def _get_dataframes(source_path : str) -> dict[str, pnd.DataFrame]:
     '''
     Parameters
@@ -61,12 +52,11 @@ def _get_dataframes(source_path : str) -> dict[str, pnd.DataFrame]:
     List of dataframes where each dataframe contains all the parameters
     for the toy fits to a given model
     '''
-    log.debug(f'Looking for files in: {source_path}/**/{Data.PARAM_WCARD}')
-    iterator = _scandir_recursive(source_path=source_path, pattern=Data.PARAM_WCARD)
-    if hasattr(Data, 'identifier'):
-        l_path = [ path for path in iterator if Data.identifier in path ]
-    else:
-        l_path = list(iterator)
+    path_wc  = f'{source_path}/**/{Data.PARAM_WCARD}'
+    log.debug(f'Looking for files in: {path_wc}')
+    l_path   = glob.glob(path_wc, recursive=True)
+    if isinstance(Data.identifier, str):
+        l_path = [ path for path in l_path if Data.identifier in path ]
 
     npath = len(l_path)
     if npath == 0:
