@@ -9,7 +9,7 @@ import math
 import numpy
 import matplotlib.pyplot as plt
 
-from ROOT                  import RDF
+from ROOT                  import RDF # type: ignore
 from omegaconf             import DictConfig
 from dmu.logging.log_store import LogStore
 
