@@ -998,6 +998,50 @@ and these objects can be saved to JSON with:
 OmegaConf.save(config=cres, f='results.yaml')
 ```
 
+## Constraints
+
+One way to introduce constraints in a model could be to modify the likelihood as in:
+
+```python
+from dmu.stats.constraint_adder import ConstraintAdder
+
+cad = ConstraintAdder(nll=nll, cns=cns)
+nll = cad.get_nll(mode=mode)
+```
+
+where `cns` is a `DictConfig` instance where the full configuration
+has been specified as in:
+
+```yaml
+signal_shape:
+  kind        : GaussianConstraint 
+  parameters  :
+    - mu
+    - sg
+  observation : 
+    - 5080
+    - 10
+  cov: 
+    - [100, 10]
+    - [ 10,  4]
+yields:
+  kind        : PoissonConstraint
+  parameters  :
+    - nsig 
+    - nbkg 
+  observation : 
+    - 1000 
+    - 1000 
+```
+
+such that:
+
+- The shape parameters are constrained by a 2D Gaussian, which
+is associated to a covariance matrix.
+- The yields are constrained by Poisson distributions. No correlation is used.
+
+The parameters in the `parameters` sections must be found in the likelihood, `nll`
+
 ## Placeholders 
 
 ### Models
