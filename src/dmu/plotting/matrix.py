@@ -10,6 +10,7 @@ from dmu.logging.log_store import LogStore
 
 Array2D = Annotated[npt.NDArray[numpy.float64], '(n,n)']
 log     = LogStore.add_logger('dmu:plotting:matrix')
+# TODO: This class needs to become an interface to seaborn
 #-------------------------------------------------------
 class MatrixPlotter:
     '''
