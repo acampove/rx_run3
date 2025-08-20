@@ -41,13 +41,40 @@ class ToyPlotter:
         df : Pandas dataframe with information from toy fits
         cfg: Configuration specifying how to plot
         '''
-        self._d_tex = self._get_latex_names()
+        self._d_tex = self._get_latex_names(df=df, cfg=cfg)
         self._d_gen = self._get_gen_values(df=df)
         self._rdf   = self._rdf_from_df(df=df)
 
         cfg = self._add_pull_config(cfg=cfg)
         cfg = self._add_gen_config(cfg=cfg)
         self._cfg   = cfg
+    # ----------------------
+    def _get_latex_names(
+        self, 
+        df : pnd.DataFrame,
+        cfg: DictConfig) -> dict[str,str]:
+        '''
+        Parameters
+        -------------
+        df : Dataframe passed to initializer 
+        cfg: Dictionary with configuration
+
+        Returns
+        -------------
+        Dictionary mapping parameter names with their latex version
+        '''
+        l_par_name = df['Parameter'].unique().tolist()
+        d_latex    = {} 
+        for par_name in l_par_name:
+            try:
+                latex_name = cfg.plots[f'{par_name}_val'].labels[0]
+            except omegaconf.errors.ConfigKeyError as exc:
+                self._print_params()
+                raise MissingVariableConfiguration(f'Failed to find configuration for {par_name}') from exc
+
+            d_latex[par_name] = latex_name
+
+        return d_latex 
     # ----------------------
     def _get_gen_values(self, df : pnd.DataFrame) -> dict[str,float]:
         '''
