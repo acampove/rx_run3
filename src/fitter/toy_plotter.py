@@ -107,16 +107,10 @@ class ToyPlotter:
         Same dictionary as input with the configuration for the pull plots
         added to the `plots` field.
         '''
-        for par_name in self._l_par:
-            cfg_pul    = cfg.pulls
-            xlabel     = cfg_pul.labels[0]
-            try:
-                latex_name = cfg.plots[f'{par_name}_val'].labels[0]
-            except omegaconf.errors.ConfigKeyError as exc:
-                self._print_params()
-                raise MissingVariableConfiguration(f'Failed to find configuration for {par_name}') from exc
-
-            xlabel     = xlabel.replace('VAR', latex_name)
+        for par_name, latex_name in self._d_tex.items():
+            cfg_pul = cfg.pulls
+            xlabel  = cfg_pul.labels[0]
+            xlabel  = xlabel.replace('VAR', latex_name)
 
             cfg_pul = copy.deepcopy(cfg_pul)
             cfg_pul.labels[0] = xlabel
