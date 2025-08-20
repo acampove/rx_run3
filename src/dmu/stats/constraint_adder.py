@@ -98,6 +98,7 @@ class ConstraintAdder:
         Zfit gaussian constrain
         '''
         observation = self._get_observation(cfg=cfg, mode=mode)
+        log.debug(f'Gaussian observation: {observation}')
 
         s_par = { self._d_par[name] for name in cfg.parameters }
         cns   = zfit.constraint.GaussianConstraint(
@@ -119,6 +120,7 @@ class ConstraintAdder:
         Zfit constraint
         '''
         observation = self._get_observation(cfg=cfg, mode=mode)
+        log.debug(f'Poisson observation: {observation}')
 
         s_par = { self._d_par[name] for name in cfg.parameters }
         cns   = zfit.constraint.PoissonConstraint(
