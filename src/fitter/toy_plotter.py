@@ -143,10 +143,12 @@ class ToyPlotter:
             df_ref = df_ref.reset_index(drop=True)
             l_df.append(df_ref)
 
-        df      = pnd.concat(objs=l_df, axis=1, ignore_index=False)
-        py_data = df.to_dict(orient='list')
-        np_data = { name : numpy.array(vals, dtype='float') for name, vals in py_data.items() }
-        rdf     = RDF.FromNumpy(np_data)
+        conv_sr    = df['Converged'].reset_index(drop=True)
+        df         = pnd.concat(objs=l_df, axis=1, ignore_index=False)
+        df['conv'] = conv_sr
+        py_data    = df.to_dict(orient='list')
+        np_data    = { name : numpy.array(vals, dtype='float') for name, vals in py_data.items() }
+        rdf        = RDF.FromNumpy(np_data)
 
         return rdf
     # ----------------------
