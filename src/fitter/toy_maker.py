@@ -141,8 +141,8 @@ class ToyMaker:
             for sampler in l_sampler:
                 sampler.resample()
 
-            cad = ConstraintAdder(nll=nll, d_cns=self._cfg.constraints)
-            nll = cad.get_nll(mode='toys')
+            cad = ConstraintAdder(nll=nll, cns=self._cfg.constraints)
+            nll = cad.get_nll(mode='toy')
 
             with GofCalculator.disabled(value = not self._cfg.run_gof):
                 res, gof = Fitter.minimize(nll=nll, cfg=self._cfg.fitting)
