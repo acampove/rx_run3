@@ -1,4 +1,4 @@
-signal_mean:
+signal_shape:
   kind        : GaussianConstraint 
   parameters  :
     - mu
@@ -9,3 +9,11 @@ signal_mean:
   cov: 
     - [100, 10]
     - [ 10,  4]
+yields:
+  kind        : PoissonConstraint
+  parameters  :
+    - nsig 
+    - nbkg 
+  observation : 
+    - 1000 
+    - 1000 
