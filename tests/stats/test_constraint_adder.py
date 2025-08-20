@@ -1,6 +1,8 @@
 '''
 This module contains tests for the ConstraintAdder class
 '''
+
+import numpy
 import pytest
 from dmu.stats.constraint_adder import ConstraintAdder
 from dmu.stats                  import utilities as sut
@@ -31,3 +33,15 @@ def test_simple(mode : str) -> None:
 
     cad = ConstraintAdder(nll=nll, cns=cns)
     nll = cad.get_nll(mode=mode)
+
+    cov_gauss_out = nll.constraints[0].covariance.numpy()
+    cov_gauss_inp = numpy.array(cns.signal_shape.cov)
+    assert numpy.isclose(cov_gauss_out, cov_gauss_inp, rtol=1e-5).all()
+
+    obs_gauss_out = numpy.array(nll.constraints[0].observation)
+    obs_gauss_inp = numpy.array(cns.signal_shape.observation)
+    assert numpy.isclose(obs_gauss_out, obs_gauss_inp, rtol=1e-5).all()
+
+    obs_poiss_out = numpy.array(nll.constraints[1].observation)
+    obs_poiss_inp = numpy.array(cns.yields.observation)
+    assert numpy.isclose(obs_poiss_out, obs_poiss_inp, rtol=1e-5).all()
