@@ -57,29 +57,36 @@ class ConstraintAdder:
 
         return { par.name : cast(Parameter, par) for par in s_par }
     # ----------------------
-    def _get_gaussian_constraint(self, cfg : DictConfig) -> GaussianConstraint:
         '''
         Parameters
         -------------
-        cfg: Configuration specifying how to build the Gaussian constraint
+    def _get_gaussian_constraint(self, cfg : DictConfig, mode : str) -> GaussianConstraint:
+        '''
+        Parameters
+        -------------
+        cfg  : Configuration specifying how to build the Gaussian constraint
+        mode : Controls the observation value. Either toy or real.
 
         Returns
         -------------
         Zfit gaussian constrain
         '''
+        observation = self._get_observation(cfg=cfg, mode=mode)
+
         s_par = { self._d_par[name] for name in cfg.parameters }
         cns   = zfit.constraint.GaussianConstraint(
             params      = s_par, 
-            observation = cfg.observation,
+            observation = observation,
             cov         = cfg.cov)
 
         return cns
     # ----------------------
-    def _get_poisson_constraint(self, cfg : DictConfig) -> PoissonConstraint:
+    def _get_poisson_constraint(self, cfg : DictConfig, mode : str) -> PoissonConstraint:
         '''
         Parameters
         -------------
-        cfg : Configuration needed to build constraint
+        cfg  : Configuration needed to build constraint
+        mode : Controls the observation value. Either toy or real.
 
         Returns
         -------------
