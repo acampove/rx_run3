@@ -16,16 +16,15 @@ def test_simple():
     LogStore.set_level('dmu:plotting:matrix', 10)
 
     cfg = {
-            'labels'     : ['x', 'y', 'z'],
-            'title'      : 'Some title',
-            'label_angle': 45,
-            'upper'      : True,
-            'zrange'     : [0, 10],
-            'format'     : '{:.3f}',
-            'size'       : [7, 7],
-            'fontsize'   : 12,
-            'mask_value' : 0,
-            }
+        'labels'     : ['x', 'y', 'z'],
+        'title'      : 'Some title',
+        'label_angle': 45,
+        'upper'      : True,
+        'zrange'     : [0, 10],
+        'format'     : '{:.3f}',
+        'size'       : [7, 7],
+        'fontsize'   : 12,
+        'mask_value' : 0}
 
     mat = [
             [1, 2, 3],
