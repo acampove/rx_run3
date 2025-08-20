@@ -37,9 +37,25 @@ class ConstraintAdder:
         self._nll = nll
         self._cns = cns
 
+        self._d_par       = self._get_params(nll=nll)
         self._valid_modes = ['real', 'toy']
     # ----------------------
-    def get_nll(self, mode : str) -> zlos:
+    def _get_params(self, nll : Loss) -> dict[str, Parameter]:
+        '''
+        Parameters
+        -------------
+        nll: Likelihood holding parameters
+
+        Returns
+        -------------
+        Dictionary mapping parameter names with parameters
+        '''
+        s_par = nll.get_params(floating=True)
+        if len(s_par) == 0:
+            raise ValueError('No floating parameter found in likelihood')
+
+        return { par.name : cast(Parameter, par) for par in s_par }
+    def get_nll(self, mode : str) -> Loss:
         '''
         Parameters
         -------------
