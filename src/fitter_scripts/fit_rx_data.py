@@ -14,6 +14,7 @@ from dmu.stats.zfit            import zfit
 from dmu.stats.parameters      import ParameterLibrary as PL
 from dmu.generic               import utilities as gut
 from dmu.stats                 import utilities as sut
+from dmu.stats.constraint_adder import ConstraintAdder
 from dmu.workflow.cache        import Cache
 from dmu.logging.log_store     import LogStore
 from zfit.interface            import ZfitLoss  as zloss
@@ -177,18 +178,21 @@ def _fit() -> None:
     nll = ftr.run()
     cfg = ftr.get_config()
 
-    d_cns   = _get_constraints(nll=nll)
+    d_cns = _get_constraints(nll=nll)
+    cad   = ConstraintAdder(nll=nll, d_cns=d_cns)
+    nll   = cad.get_nll(mode='real_fit')
 
     ftr = DataFitter(
         name = Data.q2bin,
         d_nll= {'' : (nll, cfg)}, 
         cfg  = Data.fit_cfg)
-    ftr.constraints = d_cns 
     res = ftr.run(kind='zfit')
 
     if Data.toy_cfg is None:
         log.info('Not making toys')
         return
+
+    Data.toy_cfg['constraints'] = d_cns
 
     log.info(f'Making {Data.toy_cfg.ntoys} toys')
     mkr = ToyMaker(nll=nll, res=res, cfg=Data.toy_cfg)
