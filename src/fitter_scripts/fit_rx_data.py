@@ -9,16 +9,16 @@ import argparse
 from typing import ClassVar
 
 import yaml
-from omegaconf                 import DictConfig
-from dmu.stats.zfit            import zfit
-from dmu.stats.parameters      import ParameterLibrary as PL
-from dmu.generic               import utilities as gut
-from dmu.stats                 import utilities as sut
+from omegaconf                  import DictConfig
+from dmu.stats.zfit             import zfit
+from dmu.stats.parameters       import ParameterLibrary as PL
+from dmu.generic                import utilities as gut
+from dmu.stats                  import utilities as sut
 from dmu.stats.constraint_adder import ConstraintAdder
-from dmu.workflow.cache        import Cache
-from dmu.logging.log_store     import LogStore
-from zfit.interface            import ZfitLoss  as zloss
-from zfit.interface            import ZfitSpace as zobs
+from dmu.workflow.cache         import Cache
+from dmu.logging.log_store      import LogStore
+from zfit.interface             import ZfitLoss  as zloss
+from zfit.interface             import ZfitSpace as zobs
 
 from fitter.constraint_reader  import ConstraintReader
 from fitter.data_fitter        import DataFitter
