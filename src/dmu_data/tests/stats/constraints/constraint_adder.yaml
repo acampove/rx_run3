@@ -2,7 +2,10 @@ signal_mean:
   kind        : GaussianConstraint 
   parameters  :
     - mu
+    - sg
   observation : 
     - 5080
-  sigma       : 
     - 10
+  cov: 
+    - [100, 10]
+    - [ 10,  4]
