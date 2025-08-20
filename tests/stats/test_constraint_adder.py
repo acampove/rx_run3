@@ -10,6 +10,13 @@ from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:stats:test_constraint_adder')
 # ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('dmu:stats:constraint_adder', 10)
+# ----------------------
 @pytest.mark.parametrize('mode', ['toy', 'real'])
 def test_simple(mode : str) -> None:
     '''
