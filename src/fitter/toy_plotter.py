@@ -221,16 +221,24 @@ class ToyPlotter:
         '''
         cfg_cor = self._cfg.correlation
         cfg_cor = copy.deepcopy(cfg_cor)
+        xrot    = cfg_cor.rotation.x
+        size    = cfg_cor.size
+        title   = cfg_cor.title
+        del cfg_cor['size']
+        del cfg_cor['title']
+        del cfg_cor['rotation']
 
-        cfg_cor.labels = list(self._d_tex.values())
+        d_tex = { f'{key}_val' : val for key, val in self._d_tex.items() }
+        data  = self._rdf.AsNumpy(list(d_tex))
+        df    = pnd.DataFrame(data)
+        df    = df.rename(columns=d_tex)
+        corr  = df.corr()
+        mask  = numpy.triu(numpy.ones_like(corr, dtype=bool), k=1)
 
-        l_var = [ f'{var}_val' for var in self._d_tex ] 
-        data  = self._rdf.AsNumpy(l_var)
-        data  = [ column_values for column_values in data.values() ]
-        mat   = numpy.corrcoef(data, rowvar=True)
-
-        ptr   = MatrixPlotter(mat=mat, cfg=cfg_cor)
-        ptr.plot()
+        plt.figure(figsize=size)
+        sns.heatmap(corr, mask=mask, **cfg_cor)
+        plt.title(title)
+        plt.xticks(rotation=xrot)
         plt.savefig(plt_path)
         plt.close()
     # ----------------------
