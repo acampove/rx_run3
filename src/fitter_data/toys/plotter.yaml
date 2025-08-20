@@ -8,6 +8,7 @@ saving:
   plt_dir: toys/plots
 
 correlation:
+  size       : [20, 20]
   title      : Correlation matrix 
   label_angle: 45
   upper      : True

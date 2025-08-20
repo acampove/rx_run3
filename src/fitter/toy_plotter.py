@@ -222,7 +222,6 @@ class ToyPlotter:
         cfg_cor = self._cfg.correlation
         cfg_cor = copy.deepcopy(cfg_cor)
 
-        cfg_cor.size   = self._cfg.general.size
         cfg_cor.labels = list(self._d_tex.values())
 
         l_var = [ f'{var}_val' for var in self._d_tex ] 
