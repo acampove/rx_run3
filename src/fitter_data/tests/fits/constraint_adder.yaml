@@ -4,8 +4,8 @@ signal_shape:
     - mu
     - sg
   observation : 
-    - 5080
-    - 10
+    - 5200
+    - 50
   cov: 
     - [100, 10]
     - [ 10,  4]
