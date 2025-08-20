@@ -179,8 +179,8 @@ def _fit() -> None:
     cfg = ftr.get_config()
 
     d_cns = _get_constraints(nll=nll)
-    cad   = ConstraintAdder(nll=nll, d_cns=d_cns)
-    nll   = cad.get_nll(mode='real_fit')
+    cad   = ConstraintAdder(nll=nll, cns=d_cns)
+    nll   = cad.get_nll(mode='real')
 
     ftr = DataFitter(
         name = Data.q2bin,
