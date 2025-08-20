@@ -1,9 +1,10 @@
 '''
 This module tests the class ToyMaker
 '''
-from omegaconf import DictConfig
 import pytest
 
+from pathlib               import Path
+from fitter.toy_plotter    import ToyPlotter
 from fitter.toy_maker      import ToyMaker
 from dmu.stats             import utilities as sut
 from dmu.generic           import utilities as gut
