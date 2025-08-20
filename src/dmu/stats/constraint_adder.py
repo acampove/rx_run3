@@ -55,6 +55,56 @@ class ConstraintAdder:
             raise ValueError('No floating parameter found in likelihood')
 
         return { par.name : cast(Parameter, par) for par in s_par }
+    # ----------------------
+    def _get_gaussian_constraint(self, cfg : DictConfig) -> GaussianConstraint:
+        '''
+        Parameters
+        -------------
+        cfg: Configuration specifying how to build the Gaussian constraint
+
+        Returns
+        -------------
+        Zfit gaussian constrain
+        '''
+        s_par = { self._d_par[name] for name in cfg.parameters }
+        cns   = zfit.constraint.GaussianConstraint(
+            params      = s_par, 
+            observation = cfg.observation,
+            cov         = cfg.cov)
+
+        return cns
+    # ----------------------
+    def _get_poisson_constraint(self, cfg : DictConfig) -> PoissonConstraint:
+        '''
+        Parameters
+        -------------
+        cfg : Configuration needed to build constraint
+
+        Returns
+        -------------
+        Zfit constraint
+        '''
+        raise NotImplementedError
+    # ----------------------
+    def _create_constraint(self, block : DictKeyType) -> Constraint:
+        '''
+        Parameters
+        -------------
+        block: Name of the constrain block in the configuration passed in initializer
+
+        Returns
+        -------------
+        Zfit constrain object
+        '''
+        cfg = self._cns[block]
+        if cfg.kind == 'GaussianConstraint':
+            return self._get_gaussian_constraint(cfg=cfg)
+
+        if cfg.kind == 'PoissonConstraint':
+            return self._get_poisson_constraint(cfg=cfg)
+
+        raise ValueError(f'Invalid constraint type: {cfg.kind}')
+    # ----------------------
     def get_nll(self, mode : str) -> Loss:
         '''
         Parameters
