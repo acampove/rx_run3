@@ -1,13 +1,19 @@
 '''
 This module contains the ConstraintAdder class
 '''
+from typing          import Union, cast
 
-from omegaconf      import DictConfig
-from zfit.interface import ZfitLoss as zlos
+import zfit
+from omegaconf       import DictConfig, DictKeyType
+from zfit            import Parameter
+from zfit.constraint import GaussianConstraint, PoissonConstraint
+from zfit.loss       import ExtendedUnbinnedNLL, UnbinnedNLL
 
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:stats:constraint_adder')
+Constraint = Union[GaussianConstraint, PoissonConstraint]
+Loss       = Union[ExtendedUnbinnedNLL, UnbinnedNLL]
 # ----------------------
 class ConstraintAdder:
     '''
