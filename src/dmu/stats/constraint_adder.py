@@ -57,9 +57,35 @@ class ConstraintAdder:
 
         return { par.name : cast(Parameter, par) for par in s_par }
     # ----------------------
+    def _get_observation(self, cfg : DictConfig, mode : str) -> list[float]:
         '''
         Parameters
         -------------
+        cfg  : Configuration specifying how to build the Gaussian constraint
+        mode : Controls the observation value. Either toy or real.
+
+        Returns
+        -------------
+        List of observations for parameters:
+
+        mode=real : Use the user defined values
+        mode=toy  : Use randomly generated values from constraining PDF
+        '''
+        if mode == 'real':
+            return cfg.observation
+
+        mu  = cfg.observation
+        if cfg.kind == 'PoissonConstraint':
+            arr = numpy.random.poisson(mu, size=len(mu))
+            return arr.tolist()
+
+        cov = cfg.cov
+        if cfg.kind == 'GaussianConstraint':
+            arr = numpy.random.multivariate_normal(mu, cov, size=1)
+            return arr.tolist()
+
+        raise ValueError(f'Toy observation not defined for: {cfg.kind}')
+    # ----------------------
     def _get_gaussian_constraint(self, cfg : DictConfig, mode : str) -> GaussianConstraint:
         '''
         Parameters
