@@ -4,6 +4,28 @@
 general:
   size: [15, 10]
 
+
+correlation:
+  size     : [20, 15]
+  title    : Correlation matrix 
+  annot    : true
+  fmt      : '.3f'
+  vmin     : 0.0
+  vmax     : 1.0
+  cmap     : Spectral 
+  linewidth: 0.5
+  annot_kws:
+    size : 12 
+  rotation :
+    x    : 45
+
+generated:
+  x     : -1 
+  label : Generated
+  ls    : --
+  c     : red
+  lw    : 1
+
 saving:
   plt_dir: toys/tests/integration
 
@@ -22,6 +44,25 @@ plots:
     binning: [0.7, 0.9, 60]
     yscale: 'linear'
     labels: ['$\varepsilon(\mu)$', 'Entries']
+  
+  nbkg_val:
+    binning: [0, 2000, 60]
+    yscale: 'linear'
+    labels: ['nbkg', 'Entries']
+  nbkg_err:
+    binning: [0, 2000, 60]
+    yscale: 'linear'
+    labels: ['nbkg_err', 'Entries']
+  
+  nsig_val:
+    binning: [0, 2000, 60]
+    yscale: 'linear'
+    labels: ['nsig', 'Entries']
+  nsig_err:
+    binning: [0, 2000, 60]
+    yscale: 'linear'
+    labels: ['nsig_err', 'Entries']
+
   sg_val:
     binning: [45, 55, 60]
     yscale: 'linear'
@@ -30,6 +71,15 @@ plots:
     binning: [0.5, 1.0, 60]
     yscale: 'linear'
     labels: ['$\varepsilon(\sigma)$', 'Entries']
+
+  c_val:
+    binning: [-0.001, 0.0, 60]
+    yscale: 'linear'
+    labels: ['c val', 'Entries']
+  c_err:
+    binning: [0.0, 0.01, 60]
+    yscale: 'linear'
+    labels: ['c err', 'Entries']
 plugin:
   pulls:
     c_pul   : {}
