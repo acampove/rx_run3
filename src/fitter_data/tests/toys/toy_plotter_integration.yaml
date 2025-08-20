@@ -41,16 +41,16 @@ plots:
     yscale: 'linear'
     labels: ['$\mu$', 'Entries']
   mu_err:
-    binning: [0.0, 20., 60]
+    binning: [0.0, 5., 60]
     yscale: 'linear'
     labels: ['$\varepsilon(\mu)$', 'Entries']
   
   nbkg_val:
-    binning: [0, 2000, 60]
+    binning: [700, 1300, 60]
     yscale: 'linear'
     labels: ['nbkg', 'Entries']
   nbkg_err:
-    binning: [0, 200, 60]
+    binning: [0, 50, 60]
     yscale: 'linear'
     labels: ['nbkg_err', 'Entries']
   
@@ -59,7 +59,7 @@ plots:
     yscale: 'linear'
     labels: ['nsig', 'Entries']
   nsig_err:
-    binning: [0, 2000, 60]
+    binning: [0, 100, 60]
     yscale: 'linear'
     labels: ['nsig_err', 'Entries']
 
@@ -68,16 +68,16 @@ plots:
     yscale: 'linear'
     labels: ['$\sigma$', 'Entries']
   sg_err:
-    binning: [0.0, 10, 60]
+    binning: [0.0, 4, 60]
     yscale: 'linear'
     labels: ['$\varepsilon(\sigma)$', 'Entries']
 
   c_val:
-    binning: [-0.02, 0.0, 60]
+    binning: [-0.002, 0.0, 60]
     yscale: 'linear'
     labels: ['c val', 'Entries']
   c_err:
-    binning: [0.0, 0.001, 60]
+    binning: [0.0, 0.0001, 60]
     yscale: 'linear'
     labels: ['c err', 'Entries']
 plugin:
