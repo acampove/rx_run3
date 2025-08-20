@@ -7,11 +7,14 @@ general:
 saving:
   plt_dir: toys/plots
 
-pulls:
-  binning   : [-4, +4, 60]
-  yscale    : 'linear'
-  labels    : ['VAR Pull', 'Entries']
-  normalized: true
+correlation:
+  title      : Correlation matrix 
+  label_angle: 45
+  upper      : True
+  zrange     : [0, 10]
+  format     : '{:.3f}'
+  fontsize   : 12
+  mask_value : 0
 
 generated:
   x     : -1 
@@ -19,6 +22,12 @@ generated:
   ls    : --
   c     : red
   lw    : 1
+
+pulls:
+  binning   : [-4, +4, 60]
+  yscale    : 'linear'
+  labels    : ['VAR Pull', 'Entries']
+  normalized: true
 
 plots:
   conv:
