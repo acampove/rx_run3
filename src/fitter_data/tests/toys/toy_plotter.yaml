@@ -21,6 +21,14 @@ pulls:
   normalized: true
 
 plots:
+  conv:
+    binning: [-1, 3, 4]
+    yscale: 'linear'
+    labels: ['Convergence', 'Entries']
+    styling:
+      Toys:
+        histtype : step
+        linestyle: '-'
   a_unc:
     binning: [0, 200, 60]
     yscale: 'linear'
@@ -53,3 +61,6 @@ plugin:
     a_unc:
       format : '{:.2f}'
       symbol : '\delta(a)'
+  stats:
+    conv:
+      mean : convergence rate={:.1%}
