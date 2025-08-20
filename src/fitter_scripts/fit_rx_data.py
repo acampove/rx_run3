@@ -178,9 +178,9 @@ def _fit() -> None:
     nll = ftr.run()
     cfg = ftr.get_config()
 
-    d_cns = _get_constraints(nll=nll)
-    cad   = ConstraintAdder(nll=nll, cns=d_cns)
-    nll   = cad.get_nll(mode='real')
+    cfg_cns = _get_constraints(nll=nll)
+    cad     = ConstraintAdder(nll=nll, cns=cfg_cns)
+    nll     = cad.get_nll(mode='real')
 
     ftr = DataFitter(
         name = Data.q2bin,
@@ -192,7 +192,7 @@ def _fit() -> None:
         log.info('Not making toys')
         return
 
-    Data.toy_cfg['constraints'] = d_cns
+    Data.toy_cfg['constraints'] = cfg_cns
 
     log.info(f'Making {Data.toy_cfg.ntoys} toys')
     mkr = ToyMaker(nll=nll, res=res, cfg=Data.toy_cfg)
