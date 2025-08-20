@@ -23,7 +23,7 @@ class ConstraintAdder:
     - Using those constraints to update the NLL
     '''
     # ----------------------
-    def __init__(self, nll : zlos, cns : DictConfig):
+    def __init__(self, nll : Loss, cns : DictConfig):
         '''
         Parameters
         -------------
@@ -54,5 +54,11 @@ class ConstraintAdder:
         if mode not in self._valid_modes:
             raise ValueError(f'Invalide mode {mode} pick among: {self._valid_modes}')
 
-        return self._nll
+        l_const = [ self._create_constraint(block=block) for block in self._cns ]
+
+        nll = self._nll.create_new(constraints=l_const) # type: ignore
+        if nll is None:
+            raise ValueError('Could not create a new likelihood')
+
+        return nll
 # ----------------------
