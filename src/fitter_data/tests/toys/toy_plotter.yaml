@@ -7,6 +7,15 @@ general:
 saving:
   plt_dir: toys/tests
 
+correlation:
+  title      : Correlation matrix 
+  label_angle: 45
+  upper      : True
+  zrange     : [0, 10]
+  format     : '{:.3f}'
+  fontsize   : 12
+  mask_value : 0
+
 generated:
   x     : -1 
   label : Generated
