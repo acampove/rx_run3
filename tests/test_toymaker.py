@@ -1,6 +1,7 @@
 '''
 This module tests the class ToyMaker
 '''
+from omegaconf import DictConfig
 import pytest
 
 from fitter.toy_maker      import ToyMaker
@@ -20,7 +21,8 @@ def initialize():
     LogStore.set_level('dmu:statistics:fitter'  , 20)
     LogStore.set_level('fitter:toy_maker'       , 10)
 # ----------------------
-def test_simple(ntoys) -> None:
+@pytest.mark.parametrize('use_constraints', [True, False])
+def test_simple(ntoys : int, use_constraints : bool) -> None:
     '''
     Simplest test of ToyMaker
 
@@ -34,6 +36,9 @@ def test_simple(ntoys) -> None:
     res, _= Fitter.minimize(nll=nll, cfg={})
 
     cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
+    if use_constraints:
+        cfg.constraints = gut.load_conf(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
+
     if ntoys > 0:
         log.warning(f'Using user defined number of toys: {ntoys}')
         cfg.ntoys = ntoys
