@@ -43,6 +43,7 @@ class ToyPlotter:
         df : Pandas dataframe with information from toy fits
         cfg: Configuration specifying how to plot
         '''
+        self._df    = df
         self._d_tex = self._get_latex_names(df=df, cfg=cfg)
         self._d_gen = self._get_gen_values(df=df)
         self._rdf   = self._rdf_from_df(df=df)
@@ -205,8 +206,8 @@ class ToyPlotter:
         '''
         Prints columns available in input dataframe
         '''
-        s_parameter = set(self._d_tex)
-        l_parameter = sorted(list(s_parameter))
+        l_parameter = self._df['Parameter'].unique().tolist()
+        l_parameter = sorted(l_parameter)
 
         log.info('Parameters found:')
         for name in l_parameter:
