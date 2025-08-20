@@ -1,0 +1,8 @@
+signal_mean:
+  kind        : GaussianConstraint 
+  parameters  :
+    - mu
+  observation : 
+    - 5080
+  sigma       : 
+    - 10
