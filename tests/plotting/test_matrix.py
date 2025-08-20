@@ -3,10 +3,8 @@ Module with test for MatrixPlotter class
 '''
 
 import numpy
-import matplotlib.pyplot as plt
 
-from dmu.plotting.matrix import MatrixPlotter
-
+from dmu.plotting.matrix   import MatrixPlotter
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:plotting:test_matrix')
