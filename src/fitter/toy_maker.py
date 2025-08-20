@@ -137,12 +137,21 @@ class ToyMaker:
 
         l_sampler = [ model.create_sampler() for model in self._nll.model ]
         nll       = self._nll.create_new(data=l_sampler)
+        if nll is None:
+            raise ValueError('Faled to create NLL with sampler')
+
+        if 'constraints' not in self._cfg:
+            log.warning('Running toys without constraints on any model parameter')
+        else:
+            log.debug('Using constraints in toy fitting model')
+
         for itoy in tqdm.tqdm(range(self._cfg.ntoys), ascii=' -'):
             for sampler in l_sampler:
                 sampler.resample()
 
-            cad = ConstraintAdder(nll=nll, cns=self._cfg.constraints)
-            nll = cad.get_nll(mode='toy')
+            if 'constraints' in self._cfg:
+                cad = ConstraintAdder(nll=nll, cns=self._cfg.constraints)
+                nll = cad.get_nll(mode='toy')
 
             with GofCalculator.disabled(value = not self._cfg.run_gof):
                 res, gof = Fitter.minimize(nll=nll, cfg=self._cfg.fitting)
