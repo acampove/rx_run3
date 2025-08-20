@@ -82,7 +82,7 @@ class ConstraintAdder:
         cov = cfg.cov
         if cfg.kind == 'GaussianConstraint':
             arr = numpy.random.multivariate_normal(mu, cov, size=1)
-            return arr.tolist()
+            return arr[0].tolist()
 
         raise ValueError(f'Toy observation not defined for: {cfg.kind}')
     # ----------------------
