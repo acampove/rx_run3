@@ -45,7 +45,6 @@ class DataFitter(BaseFitter, Cache):
         '''
         self._d_nll = d_nll
         self._cfg   = cfg
-        self._d_cns : dict[str,tuple[float,float]]|None = None
 
         BaseFitter.__init__(self)
         # TODO: Is the likelihood hashable?
@@ -73,44 +72,6 @@ class DataFitter(BaseFitter, Cache):
 
         return nll
     # ----------------------
-    @property
-    def constraints(self) -> dict[str,tuple[float,float]]:
-        '''
-        Returns dictionary with constraints where:
-        Key  : Name of parameter to constrain
-        Value: Tuple with mu and sigma for Gaussian constrain
-        '''
-        if self._d_cns is None:
-            return {}
-
-        return self._d_cns
-    # ----------------------
-    @constraints.setter
-    def constraints(self, value : dict[str,tuple[float,float]]):
-        '''
-        Parameters
-        -------------
-        value: Dictionary with:
-            key  : Name of the parameter to constrain
-            value: Tuple with mu and sigma associated to constrain
-        '''
-        if len(value) == 0:
-            raise ValueError('Passed empty dictionary of constraints')
-
-        if self._d_cns is not None:
-            raise ValueError('Cannot set constraints, constraints were already set')
-
-        log.info('Using constraints')
-
-        log.debug(80 * '-')
-        log.debug(f'{"Parameter":<50}{"Value":<15}{"Error":<15}')
-        log.debug(80 * '-')
-        for par_name, (val, err) in value.items():
-            log.debug(f'{par_name:<50}{val:<15.3f}{err:<15.3f}')
-        log.debug(80 * '-')
-
-        self._d_cns = value
-    # ----------------------
     @overload
     def run(self, kind : Literal['zfit']) -> zres:...
     @overload
@@ -130,12 +91,6 @@ class DataFitter(BaseFitter, Cache):
         nll    = self._get_full_nll()
         l_cfg  = [ cfg for _, cfg in self._d_nll.values() ]
         l_nam  = list(self._d_nll)
-
-        if self._d_cns is not None:
-            cns= Fitter.get_gaussian_constraints(obj=nll, cfg=self._d_cns)
-            nll= nll.create_new(constraints=cns) # type: ignore
-        else:
-            log.warning('Not using any constraints')
 
         if nll is None:
             raise ValueError('Likelihood is missing')
