@@ -17,7 +17,7 @@ from dmu.stats                  import utilities as sut
 from dmu.stats.constraint_adder import ConstraintAdder
 from dmu.workflow.cache         import Cache
 from dmu.logging.log_store      import LogStore
-from zfit.interface             import ZfitLoss  as zloss
+from zfit.loss                  import ExtendedUnbinnedNLL
 from zfit.interface             import ZfitSpace as zobs
 
 from fitter.constraint_reader  import ConstraintReader
@@ -136,7 +136,7 @@ def _get_fit_name() -> str:
 
     return name
 # ----------------------
-def _get_constraints(nll : zloss) -> dict[str,tuple[float,float]]:
+def _get_constraints(nll : ExtendedUnbinnedNLL) -> DictConfig:
     '''
     Parameters
     -------------
