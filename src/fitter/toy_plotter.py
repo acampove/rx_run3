@@ -5,11 +5,13 @@ import copy
 import pandas as pnd
 import numpy
 import omegaconf
+import matplotlib.pyplot as plt
 
 from ROOT                    import RDataFrame, RDF # type: ignore
 from omegaconf               import DictConfig
 from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter_1d import Plotter1D
+from dmu.plotting.matrix     import MatrixPlotter 
 
 log=LogStore.add_logger('fitter:toy_plotter')
 # ----------------------
