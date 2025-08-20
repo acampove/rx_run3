@@ -8,14 +8,18 @@ saving:
   plt_dir: toys/plots
 
 correlation:
-  size       : [20, 20]
-  title      : Correlation matrix 
-  label_angle: 45
-  upper      : True
-  zrange     : [0, 10]
-  format     : '{:.3f}'
-  fontsize   : 12
-  mask_value : 0
+  size     : [20, 15]
+  title    : Correlation matrix 
+  annot    : true
+  fmt      : '.3f'
+  vmin     : -1.0
+  vmax     : +1.0
+  cmap     : Spectral 
+  linewidth: 0.5
+  annot_kws:
+    size : 15 
+  rotation :
+    x    : 45
 
 generated:
   x     : -1 
