@@ -1006,7 +1006,7 @@ One way to introduce constraints in a model could be to modify the likelihood as
 from dmu.stats.constraint_adder import ConstraintAdder
 
 cad = ConstraintAdder(nll=nll, cns=cns)
-nll = cad.get_nll(mode=mode)
+nll = cad.get_nll(mode='real') # or toy
 ```
 
 where `cns` is a `DictConfig` instance where the full configuration
@@ -1041,6 +1041,16 @@ is associated to a covariance matrix.
 - The yields are constrained by Poisson distributions. No correlation is used.
 
 The parameters in the `parameters` sections must be found in the likelihood, `nll`
+
+### On the mode parameter
+
+When setting constraints, these are measured from real data and/or simulation.
+If a fit is done to the actual data one should use the constraints are measured,
+this is achieved by `mode='real'`.
+
+On the other hand, if one runs fits to toys, the constraints have to be replaced
+by _toy constraints_ i.e. the measured expected value is replaced by a value
+drawn from the constraining PDF. This is achieved with `mode='toy'`.
 
 ## Placeholders 
 
