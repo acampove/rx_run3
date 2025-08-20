@@ -3,6 +3,7 @@ This module contains the ConstraintAdder class
 '''
 from typing          import Union, cast
 
+import numpy
 import zfit
 from omegaconf       import DictConfig, DictKeyType
 from zfit            import Parameter
@@ -86,11 +87,12 @@ class ConstraintAdder:
         '''
         raise NotImplementedError
     # ----------------------
-    def _create_constraint(self, block : DictKeyType) -> Constraint:
+    def _create_constraint(self, block : DictKeyType, mode : str) -> Constraint:
         '''
         Parameters
         -------------
         block: Name of the constrain block in the configuration passed in initializer
+        mode : Controls the observation value. Either toy or real.
 
         Returns
         -------------
@@ -98,10 +100,10 @@ class ConstraintAdder:
         '''
         cfg = self._cns[block]
         if cfg.kind == 'GaussianConstraint':
-            return self._get_gaussian_constraint(cfg=cfg)
+            return self._get_gaussian_constraint(cfg=cfg, mode=mode)
 
         if cfg.kind == 'PoissonConstraint':
-            return self._get_poisson_constraint(cfg=cfg)
+            return self._get_poisson_constraint(cfg=cfg, mode=mode)
 
         raise ValueError(f'Invalid constraint type: {cfg.kind}')
     # ----------------------
@@ -120,7 +122,7 @@ class ConstraintAdder:
         if mode not in self._valid_modes:
             raise ValueError(f'Invalide mode {mode} pick among: {self._valid_modes}')
 
-        l_const = [ self._create_constraint(block=block) for block in self._cns ]
+        l_const = [ self._create_constraint(block=block, mode=mode) for block in self._cns ]
 
         nll = self._nll.create_new(constraints=l_const) # type: ignore
         if nll is None:
