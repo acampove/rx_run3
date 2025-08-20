@@ -12,7 +12,6 @@ from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter_1d import Plotter1D
 
 log=LogStore.add_logger('fitter:toy_plotter')
-
 # ----------------------
 class MissingVariableConfiguration(Exception):
     '''
@@ -42,7 +41,7 @@ class ToyPlotter:
         df : Pandas dataframe with information from toy fits
         cfg: Configuration specifying how to plot
         '''
-        self._l_par = df['Parameter'].unique().tolist()
+        self._d_tex = self._get_latex_names()
         self._d_gen = self._get_gen_values(df=df)
         self._rdf   = self._rdf_from_df(df=df)
 
@@ -90,7 +89,7 @@ class ToyPlotter:
         cfg_gen = cfg.generated
         cfg_gen = copy.deepcopy(cfg_gen)
 
-        for par_name in self._l_par:
+        for par_name in self._d_tex:
             cfg_gen.x = self._d_gen[par_name] 
 
             cfg.plots[f'{par_name}_val']['vline'] = cfg_gen
@@ -183,7 +182,7 @@ class ToyPlotter:
         '''
         Prints columns available in input dataframe
         '''
-        s_parameter = set(self._l_par)
+        s_parameter = set(self._d_tex)
         l_parameter = sorted(list(s_parameter))
 
         log.info('Parameters found:')
