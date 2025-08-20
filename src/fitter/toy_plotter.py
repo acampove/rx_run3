@@ -213,6 +213,28 @@ class ToyPlotter:
         for name in l_parameter:
             log.info(name)
     # ----------------------
+    def _plot_correlation_matrix(self, plt_path : str) -> None:
+        '''
+        - Formats the config for the correlation matrix plotting
+        - Calculates correlation matrix from input data
+        - Plots the correlations through MatrixPlotter
+        '''
+        cfg_cor = self._cfg.correlation
+        cfg_cor = copy.deepcopy(cfg_cor)
+
+        cfg_cor.size   = self._cfg.general.size
+        cfg_cor.labels = list(self._d_tex.values())
+
+        l_var = [ f'{var}_val' for var in self._d_tex ] 
+        data  = self._rdf.AsNumpy(l_var)
+        data  = [ column_values for column_values in data.values() ]
+        mat   = numpy.corrcoef(data, rowvar=True)
+
+        ptr   = MatrixPlotter(mat=mat, cfg=cfg_cor)
+        ptr.plot()
+        plt.savefig(plt_path)
+        plt.close()
+    # ----------------------
     def plot(self) -> None:
         '''
         Parameters
@@ -229,4 +251,7 @@ class ToyPlotter:
         except ValueError as exc:
             self._print_params()
             raise MissingVariableConfiguration('Cannot plot variable, one of the variables was likely missing') from exc
+
+        plt_path = f'{self._cfg.saving.plt_dir}/correlations.png'
+        self._plot_correlation_matrix(plt_path=plt_path)
 # ----------------------
