@@ -118,7 +118,14 @@ class ConstraintAdder:
         -------------
         Zfit constraint
         '''
-        raise NotImplementedError
+        observation = self._get_observation(cfg=cfg, mode=mode)
+
+        s_par = { self._d_par[name] for name in cfg.parameters }
+        cns   = zfit.constraint.PoissonConstraint(
+            params      = s_par, 
+            observation = observation)
+
+        return cns
     # ----------------------
     def _create_constraint(self, block : DictKeyType, mode : str) -> Constraint:
         '''
