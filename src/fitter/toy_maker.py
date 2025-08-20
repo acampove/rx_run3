@@ -12,6 +12,7 @@ from zfit.minimizers.interface  import ZfitResult as zres
 from dmu.stats                  import utilities  as sut
 from dmu.logging.log_store      import LogStore
 from dmu.stats.fitter           import Fitter, GofCalculator
+from dmu.stats.constraint_adder import ConstraintAdder
 
 log=LogStore.add_logger('fitter:toy_maker')
 # ----------------------
@@ -139,6 +140,9 @@ class ToyMaker:
         for itoy in tqdm.tqdm(range(self._cfg.ntoys), ascii=' -'):
             for sampler in l_sampler:
                 sampler.resample()
+
+            cad = ConstraintAdder(nll=nll, d_cns=self._cfg.constraints)
+            nll = cad.get_nll(mode='toys')
 
             with GofCalculator.disabled(value = not self._cfg.run_gof):
                 res, gof = Fitter.minimize(nll=nll, cfg=self._cfg.fitting)
