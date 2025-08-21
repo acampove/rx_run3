@@ -5,6 +5,7 @@ import pytest
 
 from omegaconf             import OmegaConf
 from dmu.stats.zfit        import zfit
+from dmu.stats             import constraint_adder as cad 
 from dmu.stats             import gof_calculator as goc
 from dmu.stats             import utilities      as sut
 from dmu.generic           import utilities      as gut
@@ -118,19 +119,16 @@ def test_with_constraints() -> None:
     sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
 
+    cns     = cad.ConstraintAdder.dict_to_cons(d_cns=_constraints, name='test', kind='GaussianConstraint')
+    adr     = cad.ConstraintAdder(nll=nll, cns=cns)
+    nll     = adr.get_nll(mode='real') 
+
     cfg = gut.load_conf(package='fitter_data', fpath='tests/single_region.yaml')
+    cfg.constraints = cns
     ftr = DataFitter(
         name = 'with_const',
         d_nll= d_nll, 
         cfg  = cfg)
-
-    with pytest.raises(ValueError):
-        ftr.constraints = {} 
-
-    ftr.constraints = _constraints
-
-    with pytest.raises(ValueError):
-        ftr.constraints = _constraints
 
     ftr.run(kind='conf')
 # ----------------------
