@@ -187,6 +187,7 @@ def _fit() -> None:
     if not isinstance(nll, ExtendedUnbinnedNLL):
         raise ValueError('Likelihood is not extended and unbinned')
 
+    Data.fit_cfg['constraints'] = cfg_cns
     ftr = DataFitter(
         name = Data.q2bin,
         d_nll= {'' : (nll, cfg)}, 
@@ -198,7 +199,6 @@ def _fit() -> None:
         return
 
     Data.toy_cfg['constraints'] = cfg_cns
-
     log.info(f'Making {Data.toy_cfg.ntoys} toys')
     mkr = ToyMaker(nll=nll, res=res, cfg=Data.toy_cfg)
     mkr.get_parameter_information()
