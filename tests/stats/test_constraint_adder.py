@@ -43,11 +43,19 @@ def test_simple(mode : str) -> None:
 
     obs_gauss_out = numpy.array(nll.constraints[0].observation)
     obs_gauss_inp = numpy.array(cns.signal_shape.observation)
-    assert numpy.isclose(obs_gauss_out, obs_gauss_inp, rtol=1e-5).all()
 
     obs_poiss_out = numpy.array(nll.constraints[1].observation)
     obs_poiss_inp = numpy.array(cns.yields.observation)
-    assert numpy.isclose(obs_poiss_out, obs_poiss_inp, rtol=1e-5).all()
+
+    # In toy mode the mean of the normal and lambda of the poisson
+    # will be sampled from the constraining PDF and will not be
+    # close to the inputs
+    if mode == 'real':
+        assert numpy.isclose(obs_gauss_out, obs_gauss_inp, rtol=1e-5).all()
+        assert numpy.isclose(obs_poiss_out, obs_poiss_inp, rtol=1e-5).all()
+    else:
+        assert not numpy.isclose(obs_gauss_out, obs_gauss_inp, rtol=1e-5).any()
+        assert not numpy.isclose(obs_poiss_out, obs_poiss_inp, rtol=1e-5).any()
 # ----------------------
 @pytest.mark.parametrize('kind', ['GaussianConstraint', 'PoissonConstraint'])
 def test_dict_to_const(kind : str) -> None:
