@@ -18,6 +18,8 @@ def initialize():
     '''
     This will run before any test
     '''
+    numpy.random.seed(42)
+
     LogStore.set_level('dmu:stats:constraint_adder', 10)
 # ----------------------
 @pytest.mark.parametrize('mode', ['toy', 'real'])
