@@ -9,7 +9,7 @@ from dmu.stats.fitter          import Fitter
 from dmu.stats                 import utilities as sut
 from zfit.exception            import ParamNameNotUniqueError
 from fitter.base_fitter        import BaseFitter
-from zfit.minimizers.interface import ZfitResult as zres
+from zfit.result               import FitResult           as zres
 from zfit.loss                 import ExtendedUnbinnedNLL as NLL
 
 log=LogStore.add_logger('fitter:data_fitter')
