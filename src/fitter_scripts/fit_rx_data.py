@@ -162,7 +162,7 @@ def _get_constraints(nll : ExtendedUnbinnedNLL) -> DictConfig:
 
     log.info('Constraints:')
     cons_str = OmegaConf.to_yaml(cons)
-    log.info(cons_str)
+    log.info('\n\n' + cons_str)
 
     return cons 
 # ----------------------
