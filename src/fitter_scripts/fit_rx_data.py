@@ -9,7 +9,7 @@ import argparse
 from typing import ClassVar
 
 import yaml
-from omegaconf                  import DictConfig
+from omegaconf                  import DictConfig, OmegaConf
 from dmu.stats.zfit             import zfit
 from dmu.stats.parameters       import ParameterLibrary as PL
 from dmu.generic                import utilities as gut
@@ -158,10 +158,11 @@ def _get_constraints(nll : ExtendedUnbinnedNLL) -> DictConfig:
     d_cns_2 = mrd.get_constraints()
 
     d_cns = {**d_cns_1, **d_cns_2}
-    cons  = ConstraintAdder.dict_to_cons(d_cns=d_cns, kind='poisson')
+    cons  = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='poisson', kind='PoissonConstraint')
 
     log.info('Constraints:')
-    log.info(yaml.dump(cons))
+    cons_str = OmegaConf.to_yaml(cons)
+    log.info(cons_str)
 
     return cons 
 # ----------------------
