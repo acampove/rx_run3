@@ -6,7 +6,7 @@ import tqdm
 import pandas     as pnd
 import tensorflow as tf
 
-from omegaconf                  import DictConfig
+from omegaconf                  import DictConfig, OmegaConf
 from dmu.stats                  import utilities  as sut
 from dmu.logging.log_store      import LogStore
 from dmu.stats.fitter           import Fitter, GofCalculator
