@@ -3,6 +3,7 @@ This module contains tests for the ConstraintAdder class
 '''
 
 import numpy
+from omegaconf import OmegaConf
 import pytest
 from dmu.stats.constraint_adder import ConstraintAdder
 from dmu.stats                  import utilities as sut
@@ -45,3 +46,18 @@ def test_simple(mode : str) -> None:
     obs_poiss_out = numpy.array(nll.constraints[1].observation)
     obs_poiss_inp = numpy.array(cns.yields.observation)
     assert numpy.isclose(obs_poiss_out, obs_poiss_inp, rtol=1e-5).all()
+# ----------------------
+@pytest.mark.parametrize('kind', ['GaussianConstraint', 'PoissonConstraint'])
+def test_dict_to_const(kind : str) -> None:
+    '''
+    This tests utility that converts python dictionary to
+    DictConfig used to hold constraints
+    '''
+    d_cns = {
+        'a' : (0., 1.),
+        'b' : (5., 2.),
+    }    
+
+    # TODO: Improve test with assertions
+    cns = ConstraintAdder.dict_to_cons(d_cns=d_cns, kind=kind)
+    log.info(OmegaConf.to_yaml(cns))
