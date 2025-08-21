@@ -1,7 +1,6 @@
 '''
 Module used to test DataFitter
 '''
-from typing import cast
 import pytest
 
 from omegaconf             import OmegaConf
@@ -10,7 +9,6 @@ from dmu.stats             import gof_calculator as goc
 from dmu.stats             import utilities      as sut
 from dmu.generic           import utilities      as gut
 from dmu.logging.log_store import LogStore
-from zfit.core.loss import ZfitLoss
 from fitter.data_fitter    import DataFitter
 from fitter.toy_maker      import ToyMaker
 from fitter.toy_plotter    import ToyPlotter
@@ -41,7 +39,6 @@ def test_single_region() -> None:
     pdf = sut.get_model(kind='s+b')
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
-    nll = cast(ZfitLoss, nll)
 
     sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
@@ -62,12 +59,10 @@ def test_two_regions() -> None:
     pdf_001 = sut.get_model(obs=obs, kind='s+b', suffix='001')
     dat_001 = pdf_001.create_sampler(10_000)
     nll_001 = zfit.loss.ExtendedUnbinnedNLL(data=dat_001, model=pdf_001)
-    nll_001 = cast(ZfitLoss, nll_001)
 
     pdf_002 = sut.get_model(obs=obs, kind='s+b', suffix='002')
     dat_002 = pdf_002.create_sampler(10_000)
     nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
-    nll_002 = cast(ZfitLoss, nll_002)
 
     sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {
@@ -93,12 +88,10 @@ def test_two_regions_common_pars() -> None:
     pdf_001 = sut.get_model(obs=obs, kind='s+b', suffix='001')
     dat_001 = pdf_001.create_sampler(10_000)
     nll_001 = zfit.loss.ExtendedUnbinnedNLL(data=dat_001, model=pdf_001)
-    nll_001 = cast(ZfitLoss, nll_001)
 
     pdf_002 = sut.get_model(obs=obs, kind='s+b', suffix='002')
     dat_002 = pdf_002.create_sampler(10_000)
     nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
-    nll_002 = cast(ZfitLoss, nll_002)
 
     sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {
@@ -121,7 +114,6 @@ def test_with_constraints() -> None:
     pdf = sut.get_model(kind='s+b')
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
-    nll = cast(ZfitLoss, nll)
 
     sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
