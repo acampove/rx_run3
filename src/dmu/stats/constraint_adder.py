@@ -150,6 +150,55 @@ class ConstraintAdder:
 
         raise ValueError(f'Invalid constraint type: {cfg.kind}')
     # ----------------------
+    @classmethod
+    def dict_to_cons(
+        cls,
+        d_cns : dict[str,tuple[float,float]], 
+        kind  : str) -> DictConfig:
+        '''
+        Parameters
+        -------------
+        d_cns: Dictionary mapping variable name to tuple with value and error
+        kind : Type of constraints, e.g. GaussianConstraint, PoissonConstraint
+
+        Returns
+        -------------
+        Config object
+        '''
+
+        if kind not in cls._valid_constraints:
+            raise ValueError(f'Invalid kind {kind} choose from: {cls._valid_constraints}')
+
+        data = None
+        if kind == 'PoissonConstraint':
+            data = {
+                'kind'       : kind,
+                'parameters' : list(d_cns),
+                'observation': [ val[0] for val in d_cns.values() ]
+            }
+
+        if kind == 'GaussianConstraint':
+            npar = len(d_cns)
+            cov  = []
+            for ival, val in enumerate(d_cns.values()):
+                zeros       = npar   * [0.]
+                var         = val[1] ** 2
+                zeros[ival] = var
+
+                cov.append(zeros)
+
+            data = {
+                'kind'       : kind,
+                'parameters' : list(d_cns),
+                'observation': [ val[0] for val in d_cns.values() ],
+                'cov'        : cov,
+            }
+
+        if data is None:
+            raise ValueError('Could not create data needed for constraint object')
+
+        return OmegaConf.create(data)
+    # ----------------------
     def get_nll(self, mode : str) -> Loss:
         '''
         Parameters
