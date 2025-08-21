@@ -183,6 +183,10 @@ def _fit() -> None:
     cad     = ConstraintAdder(nll=nll, cns=cfg_cns)
     nll     = cad.get_nll(mode='real')
 
+    # Type analyser needs to be told this is the right type
+    if not isinstance(nll, ExtendedUnbinnedNLL):
+        raise ValueError('Likelihood is not extended and unbinned')
+
     ftr = DataFitter(
         name = Data.q2bin,
         d_nll= {'' : (nll, cfg)}, 
