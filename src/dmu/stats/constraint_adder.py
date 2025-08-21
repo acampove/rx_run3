@@ -206,8 +206,8 @@ class ConstraintAdder:
         Parameters
         -------------
         mode: Describes what kind of constraint to attach
-                real_fit: Pick parameters as they are in the input config
-                toys    : Draw parameters from distribution. Meant to be used for toy fitting
+                real: Pick parameters as they are in the input config
+                toy : Draw parameters from distribution. Meant to be used for toy fitting
 
         Returns
         -------------
