@@ -155,7 +155,6 @@ def test_with_toys(ntoys : int) -> None:
     pdf = sut.get_model(kind='s+b')
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
-    nll = cast(ZfitLoss, nll)
 
     sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
