@@ -158,11 +158,12 @@ def _get_constraints(nll : ExtendedUnbinnedNLL) -> DictConfig:
     d_cns_2 = mrd.get_constraints()
 
     d_cns = {**d_cns_1, **d_cns_2}
+    cons  = ConstraintAdder.dict_to_cons(d_cns=d_cns, kind='poisson')
 
     log.info('Constraints:')
-    log.info(yaml.dump(d_cns))
+    log.info(yaml.dump(cons))
 
-    return d_cns
+    return cons 
 # ----------------------
 def _fit() -> None:
     '''
