@@ -3,6 +3,7 @@ This module contains BaseFitter
 '''
 from typing                   import Mapping, cast, Any
 import matplotlib.pyplot as plt
+import textwrap
 
 from omegaconf                import OmegaConf, DictConfig
 from dmu.stats.fitter         import Fitter
@@ -226,6 +227,7 @@ class BaseFitter:
         # If no entries were present
         # There will not be PDF
         title, text         = self._get_text(data=data, res=res, selection=cut_cfg)
+        text                = '\n'.join(textwrap.wrap(text, width=40))
         plt_cfg['title'   ] = title
         plt_cfg['ext_text'] = text
 
