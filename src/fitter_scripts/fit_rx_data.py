@@ -57,6 +57,7 @@ def _set_logs() -> None:
     LogStore.set_level('rx_selection:truth_matching'          ,           30)
     LogStore.set_level('rx_selection:selection'               ,           30)
     LogStore.set_level('fitter:prec'                          ,           30)
+    LogStore.set_level('dmu:stats:constraint_adder'           , Data.log_lvl)
     LogStore.set_level('fitter:prec_scales'                   , Data.log_lvl)
     LogStore.set_level('fitter:constraint_reader'             , Data.log_lvl)
     LogStore.set_level('fitter:fit_rx_data'                   , Data.log_lvl)
