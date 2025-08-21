@@ -69,5 +69,5 @@ def test_dict_to_const(kind : str) -> None:
     }    
 
     # TODO: Improve test with assertions
-    cns = ConstraintAdder.dict_to_cons(d_cns=d_cns, kind=kind)
-    log.info(OmegaConf.to_yaml(cns))
+    cns = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='test', kind=kind)
+    log.info('\n\n' + OmegaConf.to_yaml(cns))
