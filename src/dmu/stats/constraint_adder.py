@@ -23,6 +23,8 @@ class ConstraintAdder:
     - Transforming a config object into constrain objects
     - Using those constraints to update the NLL
     '''
+    _valid_modes       = ['real', 'toy']
+    _valid_constraints = ['GaussianConstraint', 'PoissonConstraint']
     # ----------------------
     def __init__(self, nll : Loss, cns : DictConfig):
         '''
@@ -38,8 +40,7 @@ class ConstraintAdder:
         self._nll = nll
         self._cns = cns
 
-        self._d_par       = self._get_params(nll=nll)
-        self._valid_modes = ['real', 'toy']
+        self._d_par = self._get_params(nll=nll)
     # ----------------------
     def _get_params(self, nll : Loss) -> dict[str, Parameter]:
         '''
