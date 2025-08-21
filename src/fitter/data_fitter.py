@@ -2,7 +2,7 @@
 Module containing DataFitter class
 '''
 from typing                    import Literal, overload
-from omegaconf                 import DictConfig
+from omegaconf                 import DictConfig, OmegaConf
 from dmu.logging.log_store     import LogStore
 from dmu.workflow.cache        import Cache
 from dmu.stats.fitter          import Fitter
@@ -72,6 +72,22 @@ class DataFitter(BaseFitter, Cache):
 
         return nll
     # ----------------------
+    def _save_constraints(self, out_dir : str) -> None:
+        '''
+        Parameters
+        -------------
+        out_dir: Path to output directory
+        '''
+        if 'constraints' not in self._cfg:
+            log.info('Constraints not found, not saving them')
+            return
+
+        cfg_cns = self._cfg.constraints
+        out_path= f'{out_dir}/constraints.yaml'
+        log.info(f'Saving constraints to: {out_path}')
+
+        OmegaConf.save(config=cfg_cns, f=out_path, resolve=True)
+    # ----------------------
     @overload
     def run(self, kind : Literal['zfit']) -> zres:...
     @overload
@@ -107,8 +123,9 @@ class DataFitter(BaseFitter, Cache):
                 data     = data,
                 model    = model,
                 res      = res,
-                d_cns    = self._d_cns,
                 out_path = out_path)
+
+            self._save_constraints(out_dir=out_path)
 
         if kind == 'zfit':
             return res
