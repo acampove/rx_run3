@@ -1,4 +1,4 @@
-output_directory : misid/electron/combinatorial
+output_directory : rare/electron/misid/combinatorial
 categories:
   main:
     models : 

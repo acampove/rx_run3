@@ -1,7 +1,7 @@
 sample           : Bu_piplpimnKpl_eq_sqDalitz_DPC
 trigger          : Hlt2RD_BuToKpEE_MVA_noPID
 project          : nopid
-output_directory : misid/electron/kpipi
+output_directory : rare/electron/misid/kpipi
 categories:
   main:
     model    : KDE1DimFFT  # Use KDE
