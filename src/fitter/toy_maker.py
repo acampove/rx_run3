@@ -145,6 +145,10 @@ class ToyMaker:
         else:
             log.debug('Using constraints in toy fitting model')
 
+        log.debug('Running toys with config:')
+        cfg_str = OmegaConf.to_yaml(self._cfg)
+        log.debug('\n' + cfg_str)
+
         for itoy in tqdm.tqdm(range(self._cfg.ntoys), ascii=' -'):
             for sampler in l_sampler:
                 sampler.resample()
