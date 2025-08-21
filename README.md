@@ -1052,6 +1052,37 @@ On the other hand, if one runs fits to toys, the constraints have to be replaced
 by _toy constraints_ i.e. the measured expected value is replaced by a value
 drawn from the constraining PDF. This is achieved with `mode='toy'`.
 
+### Helpers
+
+To transform dictionaries with the value and error for each variable into
+a config object do:
+
+```python
+from dmu.stats.constraint_adder import ConstraintAdder
+
+d_cns = {
+    'a' : (0., 1.),
+    'b' : (5., 2.),
+}    
+
+cns = ConstraintAdder.dict_to_cons(d_cns=d_cns, kind='GaussianConstraint')
+```
+
+### Constraint getting utility
+
+One can bypass the constraint adder and get zfit constraints
+from a python dictionary with:
+
+```python
+from dmu.stats.fitter import Fitter
+
+d_const = {'mu' : (10, 1), 'sg' : (1, 0)}
+cons    = Fitter.get_gaussian_constraints(obj=pdf, cfg=d_const)
+```
+
+to extract the `GaussianConstraints` object associated to the
+`pdf`. The PDF can also be a zfit likelihood.
+
 ## Placeholders 
 
 ### Models
@@ -1108,28 +1139,6 @@ val = obj.get_value(name='var_name', kind='value or error')
 
 and the tool will retrieve the value. This is useful when the values are needed elsewhere
 in the code, i.e. it would connect the fitting part with other parts.
-
-## Constraints
-
-### Constraint getting utility
-
-Given a dictionary with the parameters and values of the
-mean and width of a Gaussian constraint, e.g.:
-
-```python
-d_const = {'mu' : (10, 1), 'sg' : (1, 0)}
-```
-
-use
-
-```python
-from dmu.stats.fitter import Fitter
-
-cons = Fitter.get_gaussian_constraints(obj=pdf, cfg=d_const)
-```
-
-to extract the `GaussianConstraints` object associated to the
-`pdf`. The PDF can also be a zfit likelihood.
 
 ## Fit results
 
