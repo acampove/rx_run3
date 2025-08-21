@@ -154,11 +154,13 @@ class ConstraintAdder:
     def dict_to_cons(
         cls,
         d_cns : dict[str,tuple[float,float]], 
+        name  : str,
         kind  : str) -> DictConfig:
         '''
         Parameters
         -------------
         d_cns: Dictionary mapping variable name to tuple with value and error
+        name : Name of block to which these constraints belong, e.g. shape
         kind : Type of constraints, e.g. GaussianConstraint, PoissonConstraint
 
         Returns
@@ -197,7 +199,7 @@ class ConstraintAdder:
         if data is None:
             raise ValueError('Could not create data needed for constraint object')
 
-        return OmegaConf.create(data)
+        return OmegaConf.create({name : data})
     # ----------------------
     def get_nll(self, mode : str) -> Loss:
         '''
