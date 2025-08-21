@@ -8,7 +8,6 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 import argparse
 from typing import ClassVar
 
-import yaml
 from omegaconf                  import DictConfig, OmegaConf
 from dmu.stats.zfit             import zfit
 from dmu.stats.parameters       import ParameterLibrary as PL
@@ -150,15 +149,18 @@ def _get_constraints(nll : ExtendedUnbinnedNLL) -> DictConfig:
     '''
     crd     = ConstraintReader(obj=nll, q2bin=Data.q2bin)
     d_cns_1 = crd.get_constraints()
+    cons_1  = ConstraintAdder.dict_to_cons(d_cns=d_cns_1, name='scales', kind='GaussianConstraint')
 
     mrd     = MisIDConstraints(
         obs   = Data.obs,
         cfg   = Data.fit_cfg.model.constraints.misid,
         q2bin = Data.q2bin)
     d_cns_2 = mrd.get_constraints()
+    cons_2  = ConstraintAdder.dict_to_cons(d_cns=d_cns_2, name='misid' , kind='PoissonConstraint')
 
-    d_cns = {**d_cns_1, **d_cns_2}
-    cons  = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='poisson', kind='PoissonConstraint')
+    cons = OmegaConf.merge(cons_1, cons_2)
+    if not isinstance(cons, DictConfig):
+        raise ValueError('Configuration is not a DictConfig')
 
     log.info('Constraints:')
     cons_str = OmegaConf.to_yaml(cons)
