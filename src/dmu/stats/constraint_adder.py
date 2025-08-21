@@ -78,6 +78,9 @@ class ConstraintAdder:
         mu  = cfg.observation
         if cfg.kind == 'PoissonConstraint':
             arr = numpy.random.poisson(mu, size=len(mu))
+            # Cannot use a lambda=0 for a Poisson distribution
+            # Use very small lambda, if RNG gives zero
+            arr = numpy.where(arr == 0, 1e-2, arr)
             return arr.tolist()
 
         cov = cfg.cov
