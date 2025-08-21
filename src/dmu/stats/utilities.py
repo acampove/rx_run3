@@ -1,7 +1,6 @@
 '''
 Module with utility functions related to the dmu.stats project
 '''
-# pylint: disable=import-error
 
 from contextlib import contextmanager
 import os
