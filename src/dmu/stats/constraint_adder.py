@@ -5,7 +5,7 @@ from typing          import Union, cast
 
 import numpy
 import zfit
-from omegaconf       import DictConfig, DictKeyType
+from omegaconf       import DictConfig, DictKeyType, OmegaConf
 from zfit            import Parameter
 from zfit.constraint import GaussianConstraint, PoissonConstraint
 from zfit.loss       import ExtendedUnbinnedNLL, UnbinnedNLL
