@@ -4,6 +4,8 @@ This module tests the class ToyMaker
 import pytest
 
 from pathlib               import Path
+
+from zfit.loss             import ExtendedUnbinnedNLL
 from fitter.toy_plotter    import ToyPlotter
 from fitter.toy_maker      import ToyMaker
 from dmu.stats             import utilities as sut
@@ -34,6 +36,9 @@ def test_simple(ntoys : int, use_constraints : bool) -> None:
     '''
     log.info('')
     nll   = sut.get_nll(kind='s+b')
+    if not isinstance(nll, ExtendedUnbinnedNLL):
+        raise ValueError('Likelihood is not unbinned and or extended')
+
     res, _= Fitter.minimize(nll=nll, cfg={})
 
     cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
@@ -73,6 +78,9 @@ def test_integration(
     '''
     log.info('')
     nll   = sut.get_nll(kind='s+b')
+    if not isinstance(nll, ExtendedUnbinnedNLL):
+        raise ValueError('Likelihood is not unbinned and or extended')
+
     res, _= Fitter.minimize(nll=nll, cfg={})
 
     cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
