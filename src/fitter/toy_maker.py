@@ -7,12 +7,12 @@ import pandas     as pnd
 import tensorflow as tf
 
 from omegaconf                  import DictConfig
-from zfit.interface             import ZfitLoss   as zlos
 from zfit.minimizers.interface  import ZfitResult as zres
 from dmu.stats                  import utilities  as sut
 from dmu.logging.log_store      import LogStore
 from dmu.stats.fitter           import Fitter, GofCalculator
 from dmu.stats.constraint_adder import ConstraintAdder
+from zfit.loss                  import ExtendedUnbinnedNLL as Loss
 
 log=LogStore.add_logger('fitter:toy_maker')
 # ----------------------
@@ -28,7 +28,7 @@ class ToyMaker:
     # ----------------------
     def __init__(
         self,
-        nll   : zlos,
+        nll   : Loss,
         res   : zres,
         cfg   : DictConfig):
         '''
