@@ -160,7 +160,7 @@ plugin:
     bt_hypexp_combinatorial_main_1_pul: {}
   errors:
     yld_signal_unc:
-      format : '{:.0f}'
+      format : '{:.2f}'
       symbol : '\delta'
     yld_signal_err :
       format : '{:.0f}'
