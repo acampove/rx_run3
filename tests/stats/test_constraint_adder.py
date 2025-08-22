@@ -135,7 +135,7 @@ def test_toy() -> None:
     Tests toy constraint addition in a loop
     with timeout extended in order to profile
     '''
-    ntoy= 100
+    ntoy= 400
     nll = sut.get_nll(kind='s+b')
     cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/constraint_adder.yaml')
     sam = nll.data[0]
@@ -144,7 +144,14 @@ def test_toy() -> None:
     cad = ConstraintAdder(nll=nll, cns=cns)
     nll = cad.get_nll()
 
+    l_df = []
     for _ in tqdm.trange(ntoy, ascii=' -'):
         cad.resample()
         sam.resample()
         mnm.minimize(nll)
+
+        df = _extract_observables(nll=nll)
+        l_df.append(df)
+
+    df = pnd.concat(l_df)
+    _validate(df=df, cfg=cns)
