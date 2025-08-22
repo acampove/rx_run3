@@ -578,10 +578,10 @@ def test_data(sample : str, trigger : str):
     rep.Print()
 
     _run_default_checks(
-            rdf      =rdf,
-            sample   =sample,
-            trigger  =trigger,
-            test_name=f'data_{sample}_{trigger}')
+        rdf      =rdf,
+        sample   =sample,
+        trigger  =trigger,
+        test_name=f'data_{sample}_{trigger}')
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC'])
 def test_mc(sample : str):
