@@ -5,11 +5,12 @@ Module containing unit tests for Fitter class
 import os
 from functools   import cache
 
+import tqdm
 import numpy
-from omegaconf import OmegaConf
 import pytest
 import pandas              as pnd
 import matplotlib.pyplot   as plt
+from omegaconf        import OmegaConf
 
 from dmu.stats.gof_calculator import GofCalculator
 from dmu.stats              import utilities as sut
