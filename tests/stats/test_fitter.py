@@ -233,5 +233,18 @@ def test_minimizer() -> None:
          'gradient' : 'zfit'} 
     }
 
-    Fitter.minimize(nll=nll, cfg=cfg)
+    with GofCalculator.disabled(value=True):
+        Fitter.minimize(nll=nll, cfg=cfg)
 # ----------------------
+@pytest.mark.timeout(100)
+def test_profiling_minimizer() -> None:
+    '''
+    Simplest test of minimizer static method
+    '''
+    ntoys = 30
+    nll   = sut.get_nll(kind='s+b')
+    sam   = nll.data[0]
+    for _ in tqdm.trange(ntoys, ascii=' -'):
+        sam.resample()
+        Fitter.minimize(nll=nll, cfg={})
+
