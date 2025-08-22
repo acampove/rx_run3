@@ -177,3 +177,5 @@ pyrightconfig.json
 *.svg
 *.dat
 tmp/
+*.bin
+*.html
