@@ -139,25 +139,28 @@ class ConstraintAdder:
 
         return cns
     # ----------------------
-    def _get_poisson_constraint(self, cfg : DictConfig, mode : str) -> PoissonConstraint:
+    def _get_poisson_constraint(self, cfg : DictConfig) -> PoissonConstraint:
         '''
         Parameters
         -------------
         cfg  : Configuration needed to build constraint
-        mode : Controls the observation value. Either toy or real.
 
         Returns
         -------------
         Zfit constraint
         '''
-        observation = self._get_observation(cfg=cfg, mode=mode)
+        l_name    = cfg.parameters
+        l_obs_par = self._get_observation(cfg=cfg)
+        l_obs_val = [ obs.value for obs in l_obs_par ]
+        self._d_cns.update(dict(zip(l_name, l_obs_par)))
+
         log.verbose('Creating Poisson constraint')
-        log.verbose(f'Observation:\n{observation}')
+        log.verbose(f'Observation:\n{l_obs_val}')
 
         s_par = { self._d_par[name] for name in cfg.parameters }
         cns   = zfit.constraint.PoissonConstraint(
             params      = s_par, 
-            observation = observation)
+            observation = l_obs_par)
 
         return cns
     # ----------------------
