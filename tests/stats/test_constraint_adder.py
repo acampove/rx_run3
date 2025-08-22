@@ -72,3 +72,17 @@ def test_dict_to_const(kind : str) -> None:
     # TODO: Improve test with assertions
     cns = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='test', kind=kind)
     log.info('\n\n' + OmegaConf.to_yaml(cns))
+# ----------------------
+@profile
+@pytest.mark.timeout(100)
+def test_toy() -> None:
+    '''
+    Tests toy constraint addition
+    '''
+    ntoy= 1000
+    nll = sut.get_nll(kind='s+b')
+    cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/constraint_adder.yaml')
+
+    for _ in tqdm.trange(ntoy, ascii=' -'):
+        cad = ConstraintAdder(nll=nll, cns=cns)
+        nll = cad.get_nll(mode='toy')
