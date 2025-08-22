@@ -26,7 +26,70 @@ def initialize():
     '''
     numpy.random.seed(42)
 
-    LogStore.set_level('dmu:stats:constraint_adder', 10)
+    LogStore.set_level('dmu:stats:constraint_adder'     , 10)
+    LogStore.set_level('dmu:stats:test_constraint_adder', 10)
+# ----------------------
+def _extract_observables(nll : Loss) -> pnd.DataFrame:
+    '''
+    Parameters
+    -------------
+    nll : Likelihood, with constraints
+
+    Returns
+    -------------
+    Pandas series with observed value, parameter name and toy index
+    '''
+    df = pnd.DataFrame(columns=['Parameter', 'Value'])
+
+    l_val = []
+    l_nam = []
+    for constraint in nll.constraints:
+        l_obs = constraint.observation
+        l_val+= [ obs.value().numpy()           for obs in l_obs ]
+        l_nam+= [ obs.name.removesuffix('_cns') for obs in l_obs ]
+
+    df['Parameter'] = l_nam
+    df['Value'    ] = l_val
+
+    return df
+# ----------------------
+def _validate(df : pnd.DataFrame, cfg : DictConfig) -> None:
+    '''
+    Parameters
+    -------------
+    df : Dataframe with parameter name, observed value and toy inde
+    cfg: Config with user defined information 
+    '''
+    for par, df_par in df.groupby('Parameter'):
+        for kind, cfg_block in cfg.items():
+            log.debug(f'Kind: {kind}')
+
+            l_par = cfg_block.parameters
+            if par not in l_par:
+                continue
+
+            l_obs = cfg_block.observation
+            if kind == 'signal_shape':
+                mat   = cfg_block.cov
+                l_var = numpy.diag(mat)
+            else:
+                l_var = l_obs
+
+            d_par_obs = dict(zip(l_par, l_obs))
+            d_par_var = dict(zip(l_par, l_var))
+
+            tmp  = df_par['Value'].mean()
+            mean = float(tmp)
+            expc = d_par_obs[par]
+            log.debug(f'Mean: {mean:.0f}/{expc}')
+            assert math.isclose(mean, expc, rel_tol=0.15) 
+
+            tmp  = df_par['Value'].var()
+            mean = float(tmp)
+            expc = d_par_var[par]
+
+            log.debug(f'Variance: {mean:.0f}/{expc}')
+            assert math.isclose(mean, expc, rel_tol=0.15) 
 # ----------------------
 def test_simple() -> None:
     '''
