@@ -23,7 +23,6 @@ class ConstraintAdder:
     - Transforming a config object into constrain objects
     - Using those constraints to update the NLL
     '''
-    _valid_modes       = ['real', 'toy']
     _valid_constraints = ['GaussianConstraint', 'PoissonConstraint']
     # ----------------------
     def __init__(self, nll : Loss, cns : DictConfig):
@@ -41,6 +40,7 @@ class ConstraintAdder:
         self._cns = cns
 
         self._d_par = self._get_params(nll=nll)
+        self._d_cns : dict[str,Parameter] = {}
     # ----------------------
     def _get_params(self, nll : Loss) -> dict[str, Parameter]:
         '''
@@ -58,7 +58,7 @@ class ConstraintAdder:
 
         return { par.name : cast(Parameter, par) for par in s_par }
     # ----------------------
-    def _get_observation(self, cfg : DictConfig, mode : str) -> list[float]:
+    def _get_observation(self, cfg : DictConfig) -> list[Parameter]:
         '''
         Parameters
         -------------
