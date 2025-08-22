@@ -67,14 +67,12 @@ class ConstraintAdder:
 
         Returns
         -------------
-        List of observations for parameters:
-
-        mode=real : Use the user defined values
-        mode=toy  : Use randomly generated values from constraining PDF
+        List of observations as parameters
         '''
-        if mode == 'real':
-            return cfg.observation
+        l_val = cfg.observation
+        l_par = [ zfit.Parameter(f'par_{ival:03}', fval) for ival, fval in enumerate(l_val) ]
 
+        return l_par
         mu  = cfg.observation
         if cfg.kind == 'PoissonConstraint':
             arr = numpy.random.poisson(mu, size=len(mu))
