@@ -1700,13 +1700,14 @@ from dmu.logging.log_store import LogStore
 
 LogStore.backend = 'logging' # This line is optional, the default backend is logging, but logzero is also supported
 log = LogStore.add_logger('msg')
-LogStore.set_level('msg', 10)
+LogStore.set_level('msg', 5)
 
-log.debug('debug')
-log.info('info')
-log.warning('warning')
-log.error('error')
-log.critical('critical')
+log.verbose('verbose')  # level 5
+log.debug('debug')      # level 10
+log.info('info')        # level 20
+log.warning('warning')  # level 30
+log.error('error')      # level 40
+log.critical('critical')# level 50
 ```
 
 In order to get a specific logger do:
