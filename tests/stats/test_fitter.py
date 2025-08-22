@@ -220,3 +220,17 @@ def test_binning(nbins : int):
     log.info(res)
 
     assert res.valid
+# ----------------------
+def test_minimizer() -> None:
+    '''
+    Simplest test of minimizer static method
+    '''
+    nll = sut.get_nll(kind='s+b')
+    cfg = {
+        'minimization' : 
+        {'mode'     : 0,
+         'gradient' : 'zfit'} 
+    }
+
+    Fitter.minimize(nll=nll, cfg=cfg)
+# ----------------------
