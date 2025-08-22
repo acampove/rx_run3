@@ -1006,7 +1006,7 @@ One way to introduce constraints in a model could be to modify the likelihood as
 from dmu.stats.constraint_adder import ConstraintAdder
 
 cad = ConstraintAdder(nll=nll, cns=cns)
-nll = cad.get_nll(mode='real') # or toy
+nll = cad.get_nll()
 ```
 
 where `cns` is a `DictConfig` instance where the full configuration
@@ -1042,15 +1042,24 @@ is associated to a covariance matrix.
 
 The parameters in the `parameters` sections must be found in the likelihood, `nll`
 
-### On the mode parameter
+### Resampling for toy fits
 
-When setting constraints, these are measured from real data and/or simulation.
-If a fit is done to the actual data one should use the constraints are measured,
-this is achieved by `mode='real'`.
+One should resample the constraints when making toy fits. This is done with:
 
-On the other hand, if one runs fits to toys, the constraints have to be replaced
-by _toy constraints_ i.e. the measured expected value is replaced by a value
-drawn from the constraining PDF. This is achieved with `mode='toy'`.
+```python
+import zfit
+from dmu.stats.constraint_adder import ConstraintAdder
+
+cad = ConstraintAdder(nll=nll, cns=cns)
+nll = cad.get_nll()
+
+min = zfit.minimize.Minuit()
+for _ in range(ntoys):
+    cad.resample()
+    data.resample()
+
+    res = min.minimize(nll)
+```
 
 ### Helpers
 
