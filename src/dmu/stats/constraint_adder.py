@@ -106,7 +106,7 @@ class ConstraintAdder:
         names : Names of parameters used to constrain likelihood
         '''
         for name, value in zip(names, values):
-            log.debug(f'Setting {name}={value}')
+            log.verbose(f'Setting {name}={value}')
 
             if name not in self._d_cns:
                 raise ValueError(f'Cannot find constraining parameter: {name}')
@@ -256,6 +256,6 @@ class ConstraintAdder:
         Will update the parameters associated to constraint
         '''
         for name, cfg_block in self._cns.items():
-            log.debug(f'Resampling block: {name}')
+            log.verbose(f'Resampling block: {name}')
             self._resample_block(cfg=cfg_block)
 # ----------------------
