@@ -73,18 +73,23 @@ class ConstraintAdder:
         l_par = [ zfit.Parameter(f'par_{ival:03}', fval) for ival, fval in enumerate(l_val) ]
 
         return l_par
+    # ----------------------
+    def _resample_block(self, cfg : DictConfig) -> None:
+        '''
+        Updates observation values for parameters of a given block of constraints
+        '''
         mu  = cfg.observation
         if cfg.kind == 'PoissonConstraint':
             arr = numpy.random.poisson(mu, size=len(mu))
             # Cannot use a lambda=0 for a Poisson distribution
             # Use very small lambda, if RNG gives zero
             arr = numpy.where(arr == 0, 1e-2, arr)
-            return arr.tolist()
+            self._update_observations(values=arr, names=cfg.parameters)
 
         cov = cfg.cov
         if cfg.kind == 'GaussianConstraint':
             arr = numpy.random.multivariate_normal(mu, cov, size=1)
-            return arr[0].tolist()
+            self._update_observations(values=arr, names=cfg.parameters)
 
         raise ValueError(f'Toy observation not defined for: {cfg.kind}')
     # ----------------------
