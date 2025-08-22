@@ -67,7 +67,7 @@ def test_toy() -> None:
     Tests toy constraint addition in a loop
     with timeout extended in order to profile
     '''
-    ntoy= 30
+    ntoy= 100
     nll = sut.get_nll(kind='s+b')
     cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/constraint_adder.yaml')
     sam = nll.data[0]
