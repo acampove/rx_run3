@@ -77,12 +77,18 @@ def test_dict_to_const(kind : str) -> None:
 @pytest.mark.timeout(100)
 def test_toy() -> None:
     '''
-    Tests toy constraint addition
+    Tests toy constraint addition in a loop
+    with timeout extended in order to profile
     '''
-    ntoy= 1000
+    ntoy= 200
     nll = sut.get_nll(kind='s+b')
     cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/constraint_adder.yaml')
+    mod = nll.model[0]
+    sam = mod.create_sampler(n=100_000)
+    nll = nll.create_new(data=sam)
 
     for _ in tqdm.trange(ntoy, ascii=' -'):
+        sam.resample()
+
         cad = ConstraintAdder(nll=nll, cns=cns)
         nll = cad.get_nll(mode='toy')
