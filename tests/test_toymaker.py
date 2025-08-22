@@ -103,3 +103,27 @@ def test_integration(
     ptr = ToyPlotter(df=df, cfg=cfg)
     ptr.plot()
 # ----------------------
+@pytest.mark.parametrize('use_constraints', [True, False])
+def test_profile(ntoys : int, use_constraints : bool) -> None:
+    '''
+    Test used for profiling
+
+    Parameters 
+    -------------
+    ntoys : Mean to pick number from:
+            pytest --ntoys XXX
+    '''
+    log.info('')
+    nll   = sut.get_nll(kind='s+b')
+    if not isinstance(nll, ExtendedUnbinnedNLL):
+        raise ValueError('Likelihood is not unbinned and or extended')
+
+    res, _= Fitter.minimize(nll=nll, cfg={})
+    cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
+    if use_constraints:
+        cfg.constraints = gut.load_conf(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
+
+    cfg.ntoys = ntoys
+
+    mkr= ToyMaker(nll=nll, res=res, cfg=cfg)
+    mkr.get_parameter_information()
