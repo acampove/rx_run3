@@ -50,7 +50,7 @@ def test_simple(ntoys : int, use_constraints : bool) -> None:
         cfg.ntoys = ntoys
     else:
         ntoys = cfg.ntoys
-        log.info('Not overriding number of toys from config: {ntoys}')
+        log.info(f'Not overriding number of toys from config: {ntoys}')
 
     mkr   = ToyMaker(nll=nll, res=res, cfg=cfg)
     df    = mkr.get_parameter_information()
