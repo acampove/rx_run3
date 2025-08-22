@@ -5,20 +5,30 @@ import logging
 import contextlib
 from typing import Union
 
-from logging import Logger
-import logzero
+from logging import Logger as StdLogger
 
+VERBOSE = 5
+setattr(logging, 'VERBOSE', VERBOSE)
+#------------------------------------------------------------
+class Logger(StdLogger):
+    def verbose(self, msg, *args, **kwargs):
+        if self.isEnabledFor(VERBOSE):
+            kwargs.setdefault('stacklevel', 2)
+            self._log(VERBOSE, msg, args, **kwargs)
+
+logging.setLoggerClass(Logger)
 #------------------------------------------------------------
 class StoreFormater(logging.Formatter):
     '''
     Custom formatter
     '''
     LOG_COLORS = {
-        logging.DEBUG   : '\033[94m',     # Gray
-        logging.INFO    : '\033[37m',     # White
-        logging.WARNING : '\033[93m',     # Yellow
-        logging.ERROR   : '\033[91m',     # Red
-        logging.CRITICAL: '\033[1;91m'    # Bold Red
+        logging.VERBOSE : '\033[32m',      # Green
+        logging.DEBUG   : '\033[94m',      # Gray
+        logging.INFO    : '\033[37m',      # White
+        logging.WARNING : '\033[93m',      # Yellow
+        logging.ERROR   : '\033[38;5;208m',# Orange 
+        logging.CRITICAL: '\033[91m'       # Red
     }
 
     RESET_COLOR = '\033[0m'  # Reset color to default
