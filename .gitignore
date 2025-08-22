@@ -179,3 +179,5 @@ pyrightconfig.json
 tmp/
 missing.yaml
 prof/
+*.bin
+*.html
