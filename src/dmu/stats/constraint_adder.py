@@ -93,7 +93,25 @@ class ConstraintAdder:
 
         raise ValueError(f'Toy observation not defined for: {cfg.kind}')
     # ----------------------
-    def _get_gaussian_constraint(self, cfg : DictConfig, mode : str) -> GaussianConstraint:
+    def _update_observations(self, values : numpy.ndarray, names : list[str]) -> None:
+        '''
+        This method sets the values of the constraining parameters from resampled values
+
+        Parameters
+        -------------
+        values: Array with resampled observations
+        names : Names of parameters used to constrain likelihood
+        '''
+        for name, value in zip(names, values):
+            log.debug(f'Setting {name}={value}')
+
+            if name not in self._d_cns:
+                raise ValueError(f'Cannot find constraining parameter: {name}')
+
+            par = self._d_cns[name]
+            par.set_value(value)
+    # ----------------------
+    def _get_gaussian_constraint(self, cfg : DictConfig) -> GaussianConstraint:
         '''
         Parameters
         -------------
