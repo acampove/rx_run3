@@ -149,13 +149,13 @@ class ToyMaker:
         cfg_str = OmegaConf.to_yaml(self._cfg)
         log.debug('\n' + cfg_str)
 
+        cad = ConstraintAdder(nll=nll, cns=self._cfg.constraints)
+        nll = cad.get_nll()
+
         for itoy in tqdm.tqdm(range(self._cfg.ntoys), ascii=' -'):
+            cad.resample()
             for sampler in l_sampler:
                 sampler.resample()
-
-            if 'constraints' in self._cfg:
-                cad = ConstraintAdder(nll=nll, cns=self._cfg.constraints)
-                nll = cad.get_nll(mode='toy')
 
             with GofCalculator.disabled(value = not self._cfg.run_gof):
                 res, gof = Fitter.minimize(nll=nll, cfg=self._cfg.fitting)
