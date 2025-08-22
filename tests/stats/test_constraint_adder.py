@@ -1,18 +1,23 @@
 '''
 This module contains tests for the ConstraintAdder class
 '''
+from typing import Union
 
+import math
 import zfit
 import tqdm
 import numpy
-from omegaconf import OmegaConf
+import pandas as pnd
 import pytest
+from zfit.loss                  import ExtendedUnbinnedNLL, UnbinnedNLL 
+from omegaconf                  import OmegaConf, DictConfig
 from dmu.stats.constraint_adder import ConstraintAdder
 from dmu.stats                  import utilities as sut
 from dmu.generic                import utilities as gut
 from dmu.logging.log_store      import LogStore
 
 log=LogStore.add_logger('dmu:stats:test_constraint_adder')
+Loss=Union[ExtendedUnbinnedNLL,UnbinnedNLL]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
