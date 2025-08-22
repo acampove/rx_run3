@@ -247,4 +247,12 @@ class ConstraintAdder:
             raise ValueError('Could not create a new likelihood')
 
         return nll
+    # ----------------------
+    def resample(self) -> None:
+        '''
+        Will update the parameters associated to constraint
+        '''
+        for name, cfg_block in self._cns.items():
+            log.debug(f'Resampling block: {name}')
+            self._resample_block(cfg=cfg_block)
 # ----------------------
