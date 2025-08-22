@@ -161,12 +161,11 @@ class ConstraintAdder:
 
         return cns
     # ----------------------
-    def _create_constraint(self, block : DictKeyType, mode : str) -> Constraint:
+    def _create_constraint(self, block : DictKeyType) -> Constraint:
         '''
         Parameters
         -------------
         block: Name of the constrain block in the configuration passed in initializer
-        mode : Controls the observation value. Either toy or real.
 
         Returns
         -------------
@@ -174,10 +173,10 @@ class ConstraintAdder:
         '''
         cfg = self._cns[block]
         if cfg.kind == 'GaussianConstraint':
-            return self._get_gaussian_constraint(cfg=cfg, mode=mode)
+            return self._get_gaussian_constraint(cfg=cfg)
 
         if cfg.kind == 'PoissonConstraint':
-            return self._get_poisson_constraint(cfg=cfg, mode=mode)
+            return self._get_poisson_constraint(cfg=cfg)
 
         raise ValueError(f'Invalid constraint type: {cfg.kind}')
     # ----------------------
@@ -232,22 +231,13 @@ class ConstraintAdder:
 
         return OmegaConf.create({name : data})
     # ----------------------
-    def get_nll(self, mode : str) -> Loss:
+    def get_nll(self) -> Loss:
         '''
-        Parameters
-        -------------
-        mode: Describes what kind of constraint to attach
-                real: Pick parameters as they are in the input config
-                toy : Draw parameters from distribution. Meant to be used for toy fitting
-
         Returns
         -------------
         Likelihood with constrain added
         '''
-        if mode not in self._valid_modes:
-            raise ValueError(f'Invalide mode {mode} pick among: {self._valid_modes}')
-
-        l_const = [ self._create_constraint(block=block, mode=mode) for block in self._cns ]
+        l_const = [ self._create_constraint(block=block) for block in self._cns ]
 
         nll = self._nll.create_new(constraints=l_const) # type: ignore
         if nll is None:
