@@ -41,7 +41,7 @@ class StoreFormater(logging.Formatter):
 #------------------------------------------------------------
 class LogStore:
     '''
-    Class used to make loggers, set log levels, print loggers, e.g. interface to logging/logzero, etc.
+    Class used to make loggers, set log levels, print loggers, e.g. interface to logging, etc.
     '''
     #pylint: disable = invalid-name
     d_logger      : dict[str,Logger] = {}
@@ -87,14 +87,13 @@ class LogStore:
     @staticmethod
     def add_logger(name : str, exists_ok : bool = False) -> Logger:
         '''
-        Will use underlying logging library logzero/logging, etc to make logger
+        Will use underlying logging library logging, etc to make logger
 
         name (str): Name of logger
         '''
 
         if name in LogStore.d_logger and not exists_ok:
             raise ValueError(f'Logger name {name} already found')
-
 
         if name in LogStore.d_logger and     exists_ok:
             print(f'Logger {name} already found, reusing it')
@@ -104,21 +103,12 @@ class LogStore:
 
         if   LogStore.backend == 'logging':
             logger = LogStore._get_logging_logger(name, level)
-        elif LogStore.backend == 'logzero':
-            logger = LogStore._get_logzero_logger(name, level)
         else:
             raise ValueError(f'Invalid backend: {LogStore.backend}')
 
         LogStore.d_logger[name] = logger
 
         return logger
-    #--------------------------
-    @staticmethod
-    def _get_logzero_logger(name : str, level : int) -> Logger:
-        log = logzero.setup_logger(name=name)
-        log.setLevel(level)
-
-        return log
     #--------------------------
     @staticmethod
     def _get_logging_logger(name : str, level : int) -> Logger:
