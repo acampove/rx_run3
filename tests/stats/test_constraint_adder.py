@@ -2,11 +2,11 @@
 This module contains tests for the ConstraintAdder class
 '''
 
+import zfit
 import tqdm
 import numpy
 from omegaconf import OmegaConf
 import pytest
-from memory_profiler            import profile
 from dmu.stats.constraint_adder import ConstraintAdder
 from dmu.stats                  import utilities as sut
 from dmu.generic                import utilities as gut
@@ -73,22 +73,24 @@ def test_dict_to_const(kind : str) -> None:
     cns = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='test', kind=kind)
     log.info('\n\n' + OmegaConf.to_yaml(cns))
 # ----------------------
-@profile
 @pytest.mark.timeout(100)
 def test_toy() -> None:
     '''
     Tests toy constraint addition in a loop
     with timeout extended in order to profile
     '''
-    ntoy= 200
+    ntoy= 30
     nll = sut.get_nll(kind='s+b')
     cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/constraint_adder.yaml')
     mod = nll.model[0]
     sam = mod.create_sampler(n=100_000)
     nll = nll.create_new(data=sam)
 
-    for _ in tqdm.trange(ntoy, ascii=' -'):
-        sam.resample()
+    mnm = zfit.minimize.Minuit()
+    cad = ConstraintAdder(nll=nll, cns=cns)
+    nll = cad.get_nll()
 
-        cad = ConstraintAdder(nll=nll, cns=cns)
-        nll = cad.get_nll(mode='toy')
+    for _ in tqdm.trange(ntoy, ascii=' -'):
+        cad.resample()
+        sam.resample()
+        mnm.minimize(nll)
