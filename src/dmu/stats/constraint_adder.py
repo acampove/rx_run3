@@ -122,15 +122,19 @@ class ConstraintAdder:
         -------------
         Zfit gaussian constrain
         '''
-        observation = self._get_observation(cfg=cfg, mode=mode)
+        l_name    = cfg.parameters
+        l_obs_par = self._get_observation(cfg=cfg)
+        l_obs_val = [ par.value for par in l_obs_par ]
+        self._d_cns.update(dict(zip(l_name, l_obs_par)))
+
         log.verbose('Creating Gaussian constraint')
-        log.verbose(f'Observation:\n {observation}')
+        log.verbose(f'Observation:\n {l_obs_val}')
         log.verbose(f'Covariance :\n {cfg.cov}')
 
         s_par = { self._d_par[name] for name in cfg.parameters }
         cns   = zfit.constraint.GaussianConstraint(
             params      = s_par, 
-            observation = observation,
+            observation = l_obs_par,
             cov         = cfg.cov)
 
         return cns
