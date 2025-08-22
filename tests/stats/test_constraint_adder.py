@@ -2,14 +2,15 @@
 This module contains tests for the ConstraintAdder class
 '''
 
+import tqdm
 import numpy
 from omegaconf import OmegaConf
 import pytest
+from memory_profiler            import profile
 from dmu.stats.constraint_adder import ConstraintAdder
 from dmu.stats                  import utilities as sut
 from dmu.generic                import utilities as gut
-
-from dmu.logging.log_store import LogStore
+from dmu.logging.log_store      import LogStore
 
 log=LogStore.add_logger('dmu:stats:test_constraint_adder')
 # ----------------------
