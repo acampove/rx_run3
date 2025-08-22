@@ -69,8 +69,9 @@ class ConstraintAdder:
         -------------
         List of observations as parameters
         '''
+        l_nam = cfg.parameters
         l_val = cfg.observation
-        l_par = [ zfit.Parameter(f'par_{ival:03}', fval) for ival, fval in enumerate(l_val) ]
+        l_par = [ zfit.Parameter(f'{nam}_cns', fval) for nam, fval in zip(l_nam, l_val) ]
 
         return l_par
     # ----------------------
