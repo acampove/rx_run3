@@ -20,7 +20,7 @@ from zfit.minimizers.strategy import FailMinimizeNaN
 from zfit.result              import FitResult     as zres
 from zfit.interface           import ZfitModel     as zpdf
 from zfit.interface           import ZfitParameter as zpar
-from zfit.interface           import ZfitData      as zdat
+from zfit.data                import Data          as zdat
 
 log = LogStore.add_logger('dmu:statistics:fitter')
 #------------------------------
