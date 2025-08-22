@@ -555,15 +555,16 @@ def test_electron(kind : str):
             trigger  =trigger,
             sample   =sample)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , [
-                             'DATA_24_MagDown_24c1',
-                             'DATA_24_MagDown_24c2',
-                             'DATA_24_MagDown_24c3',
-                             'DATA_24_MagDown_24c4',
-                             'DATA_24_MagUp_24c1',
-                             'DATA_24_MagUp_24c2',
-                             'DATA_24_MagUp_24c3',
-                             'DATA_24_MagUp_24c4'])
+@pytest.mark.parametrize(
+    'sample' , [
+    'DATA_24_MagDown_24c1',
+    'DATA_24_MagDown_24c2',
+    'DATA_24_MagDown_24c3',
+    'DATA_24_MagDown_24c4',
+    'DATA_24_MagUp_24c1',
+    'DATA_24_MagUp_24c2',
+    'DATA_24_MagUp_24c3',
+    'DATA_24_MagUp_24c4'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
 def test_data(sample : str, trigger : str):
     '''

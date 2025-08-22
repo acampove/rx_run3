@@ -722,7 +722,7 @@ class RDFGetter:
         log.debug(f'Building dataframe from {conf_path}')
         rdf = RDF.Experimental.FromSpec(conf_path)
 
-        self._l_columns = [name.c_str() for name in rdf.GetColumnNames() ]
+        self._l_columns = [ name.c_str() for name in rdf.GetColumnNames() ]
         log.debug(f'Dataframe at: {id(rdf)}')
 
         rdf = self._filter_dataframe(rdf=rdf)
