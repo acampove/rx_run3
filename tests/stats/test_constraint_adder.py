@@ -82,9 +82,7 @@ def test_toy() -> None:
     ntoy= 30
     nll = sut.get_nll(kind='s+b')
     cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/constraint_adder.yaml')
-    mod = nll.model[0]
-    sam = mod.create_sampler(n=100_000)
-    nll = nll.create_new(data=sam)
+    sam = nll.data[0]
 
     mnm = zfit.minimize.Minuit()
     cad = ConstraintAdder(nll=nll, cns=cns)
