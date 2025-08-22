@@ -85,11 +85,13 @@ class ConstraintAdder:
             # Use very small lambda, if RNG gives zero
             arr = numpy.where(arr == 0, 1e-2, arr)
             self._update_observations(values=arr, names=cfg.parameters)
+            return
 
         cov = cfg.cov
         if cfg.kind == 'GaussianConstraint':
             arr = numpy.random.multivariate_normal(mu, cov, size=1)
-            self._update_observations(values=arr, names=cfg.parameters)
+            self._update_observations(values=arr[0], names=cfg.parameters)
+            return
 
         raise ValueError(f'Toy observation not defined for: {cfg.kind}')
     # ----------------------
