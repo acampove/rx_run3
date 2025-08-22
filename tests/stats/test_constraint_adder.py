@@ -23,24 +23,18 @@ def initialize():
 
     LogStore.set_level('dmu:stats:constraint_adder', 10)
 # ----------------------
-@pytest.mark.parametrize('mode', ['toy', 'real'])
-def test_simple(mode : str) -> None:
+def test_simple() -> None:
     '''
     This is the simplest test of ConstraintAdder
-
-    Parameters 
-    -------------
-    mode : Kind of constraints that will be added
     '''
     nll = sut.get_nll(kind='s+b')
     cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/constraint_adder.yaml')
 
     cad = ConstraintAdder(nll=nll, cns=cns)
-    nll = cad.get_nll(mode=mode)
+    nll = cad.get_nll()
 
     cov_gauss_out = nll.constraints[0].covariance.numpy()
     cov_gauss_inp = numpy.array(cns.signal_shape.cov)
-    assert numpy.isclose(cov_gauss_out, cov_gauss_inp, rtol=1e-5).all()
 
     obs_gauss_out = numpy.array(nll.constraints[0].observation)
     obs_gauss_inp = numpy.array(cns.signal_shape.observation)
@@ -48,15 +42,9 @@ def test_simple(mode : str) -> None:
     obs_poiss_out = numpy.array(nll.constraints[1].observation)
     obs_poiss_inp = numpy.array(cns.yields.observation)
 
-    # In toy mode the mean of the normal and lambda of the poisson
-    # will be sampled from the constraining PDF and will not be
-    # close to the inputs
-    if mode == 'real':
-        assert numpy.isclose(obs_gauss_out, obs_gauss_inp, rtol=1e-5).all()
-        assert numpy.isclose(obs_poiss_out, obs_poiss_inp, rtol=1e-5).all()
-    else:
-        assert not numpy.isclose(obs_gauss_out, obs_gauss_inp, rtol=1e-5).any()
-        assert not numpy.isclose(obs_poiss_out, obs_poiss_inp, rtol=1e-5).any()
+    assert numpy.isclose(cov_gauss_out, cov_gauss_inp, rtol=1e-5).all()
+    assert numpy.isclose(obs_gauss_out, obs_gauss_inp, rtol=1e-5).all()
+    assert numpy.isclose(obs_poiss_out, obs_poiss_inp, rtol=1e-5).all()
 # ----------------------
 @pytest.mark.parametrize('kind', ['GaussianConstraint', 'PoissonConstraint'])
 def test_dict_to_const(kind : str) -> None:
