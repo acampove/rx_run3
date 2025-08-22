@@ -179,6 +179,7 @@ pyrightconfig.json
 *.png
 *.pkl
 *.root
+*.dat
 
 tests/*/*/*.json
 src/dmu_data/tests/*.tex
