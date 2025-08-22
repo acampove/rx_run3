@@ -185,7 +185,7 @@ def _fit() -> None:
 
     cfg_cns = _get_constraints(nll=nll)
     cad     = ConstraintAdder(nll=nll, cns=cfg_cns)
-    nll     = cad.get_nll(mode='real')
+    nll     = cad.get_nll()
 
     # Type analyser needs to be told this is the right type
     if not isinstance(nll, ExtendedUnbinnedNLL):
