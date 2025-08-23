@@ -1,10 +1,13 @@
 '''
 Module with functions meant to test the ToyPlotter class
 '''
+import math
+
 from pathlib   import Path
 from functools import lru_cache
 
 import logging
+from omegaconf import OmegaConf
 import pytest
 import numpy
 import pandas as pnd
@@ -76,8 +79,12 @@ def test_simple(test_dir : Path) -> None:
     cfg= gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter.yaml')
     cfg.saving.plt_dir = test_dir/cfg.saving.plt_dir
 
-    ptr= ToyPlotter(df=df, cfg=cfg)
-    ptr.plot()
+    ptr = ToyPlotter(df=df, cfg=cfg)
+    cfg = ptr.plot()
+
+    assert math.isclose(cfg.median_a_unc, 153.3263369554583, rel_tol=1e-5)
+    assert math.isclose(cfg.median_b_unc, 2.998985959009677, rel_tol=1e-5)
+    assert math.isclose(cfg.mean_conv   , 0.948            , rel_tol=1e-5)
  # ----------------------
 def test_missing_variable(caplog, test_dir : Path) -> None:
     '''
