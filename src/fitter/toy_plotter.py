@@ -166,7 +166,8 @@ class ToyPlotter:
         conv_sr    = df['Converged'].reset_index(drop=True)
         df         = pnd.concat(objs=l_df, axis=1, ignore_index=False)
         df['conv'] = conv_sr
-        py_data    = df.to_dict(orient='list')
+
+        return df
         np_data    = { name : numpy.array(vals, dtype='float') for name, vals in py_data.items() }
         rdf        = RDF.FromNumpy(np_data)
 
