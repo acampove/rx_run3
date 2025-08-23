@@ -218,11 +218,19 @@ class ToyPlotter:
         for name in l_parameter:
             log.info(name)
     # ----------------------
-    def _plot_correlation_matrix(self, plt_path : str) -> None:
+    def _plot_correlation_matrix(
+        self, 
+        rdf      : RDataFrame,
+        plt_path : str) -> None:
         '''
         - Formats the config for the correlation matrix plotting
         - Calculates correlation matrix from input data
         - Plots the correlations through MatrixPlotter
+
+        Parameters
+        -----------------
+        rdf     : ROOT dataframe
+        plt_path: Path to output plot
         '''
         cfg_cor = self._cfg.correlation
         cfg_cor = copy.deepcopy(cfg_cor)
