@@ -54,21 +54,18 @@ class ToyPlotter:
     # ----------------------
     def _get_latex_names(
         self, 
-        df : pnd.DataFrame,
         cfg: DictConfig) -> dict[str,str]:
         '''
         Parameters
         -------------
-        df : Dataframe passed to initializer 
         cfg: Dictionary with configuration
 
         Returns
         -------------
         Dictionary mapping parameter names with their latex version
         '''
-        l_par_name = df['Parameter'].unique().tolist()
         d_latex    = {} 
-        for par_name in l_par_name:
+        for par_name in self._l_par:
             try:
                 latex_name = cfg.plots[f'{par_name}_val'].labels[0]
             except omegaconf.errors.ConfigKeyError as exc:
