@@ -35,10 +35,10 @@ pulls:
   normalized: true
 
 plots:
-  conv:
+  valid:
     binning: [-1, 3, 4]
     yscale: 'linear'
-    labels: ['Convergence', 'Entries']
+    labels: ['Validity', 'Entries']
     styling:
       Toys:
         histtype : step
@@ -183,13 +183,13 @@ plugin:
     mu_hypexp_combinatorial_main_1_err:
       format: '{:.0f}'
   stats:
-    conv:
-      mean : convergence rate={:.1%}
+    valid:
+      mean : validity rate={:.1%}
 
 summary:
   median : 
     - yld_signal_unc
   mean : 
-    - conv
+    - valid
   pulls:
     - yld_signal_pul
