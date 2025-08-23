@@ -164,9 +164,9 @@ class ToyPlotter:
             df_ref = df_ref.reset_index(drop=True)
             l_df.append(df_ref)
 
-        conv_sr    = df['Converged'].reset_index(drop=True)
-        df         = pnd.concat(objs=l_df, axis=1, ignore_index=False)
-        df['conv'] = conv_sr
+        valid_sr    = df['Valid'].reset_index(drop=True)
+        df          = pnd.concat(objs=l_df, axis=1, ignore_index=False)
+        df['valid'] = valid_sr
 
         return df
     # ----------------------
