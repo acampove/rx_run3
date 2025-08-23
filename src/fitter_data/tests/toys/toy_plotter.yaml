@@ -78,3 +78,10 @@ plugin:
   stats:
     conv:
       mean : convergence rate={:.1%}
+
+summary:
+  median : 
+    - a_unc
+    - b_unc
+  mean : 
+    - conv
