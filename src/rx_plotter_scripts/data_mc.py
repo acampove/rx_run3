@@ -10,7 +10,7 @@ from dataclasses         import dataclass
 import yaml
 import mplhep
 import dmu.generic.utilities as gut
-from ROOT                    import RDataFrame
+from ROOT                    import RDataFrame # type: ignore
 from dmu.plotting.plotter_1d import Plotter1D
 from dmu.logging.log_store   import LogStore
 from rx_data.rdf_getter      import RDFGetter
