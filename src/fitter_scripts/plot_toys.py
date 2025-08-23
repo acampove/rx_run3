@@ -103,7 +103,7 @@ def _run(input_path : Path) -> DictConfig|None:
 
     return cfg
 # ----------------------
-def _save_summary(out_dir : Path) -> None:
+def _save_summary(out_dir : Path, l_cfg : list) -> None:
     '''
     This function will save a summary of the fits for all working
     poings in a YAML file
@@ -111,12 +111,16 @@ def _save_summary(out_dir : Path) -> None:
     Parameters
     -------------
     out_dir: Output directory
+    l_cfg  : List of config dictionaries, one per toy 
     '''
     out_path = out_dir/'summary.yaml'
 
     log.info(f'Saving summary to: {out_path}')
 
-    OmegaConf.save(config=Data.summary, f=out_path)
+    d_cfg = { itoy : cfg for itoy, cfg in enumerate(l_cfg) }
+    cfg   = OmegaConf.create(obj=d_cfg)
+
+    OmegaConf.save(config=cfg, f=out_path)
 # ----------------------
 def main():
     '''
@@ -133,8 +137,8 @@ def main():
 
     log.info('Plotting:')
 
-    process_map(_run, l_path, max_workers=Data.nworkers, ascii=' -')
-    _save_summary(out_dir=inpt_dir)
+    l_cfg = process_map(_run, l_path, max_workers=Data.nworkers, ascii=' -')
+    _save_summary(out_dir=inpt_dir, l_cfg=l_cfg)
 # ----------------------
 if __name__ == '__main__':
     main()
