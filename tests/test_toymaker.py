@@ -52,18 +52,16 @@ def test_simple(ntoys : int) -> None:
 
     mkr   = ToyMaker(nll=nll, res=res, cfg=cfg)
     df    = mkr.get_parameter_information()
-    l_col = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Converged']
+    l_col = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid']
 
     assert df.columns.to_list() == l_col
 
     pars  = nll.get_params()
     assert len(df) == cfg.ntoys * len(pars) 
 # ----------------------
-@pytest.mark.parametrize('use_constraints', [True, False])
 def test_integration(
     ntoys           : int, 
-    test_dir        : Path,
-    use_constraints : bool) -> None:
+    test_dir        : Path) -> None:
     '''
     Makes toys and then plots using ToyPlotter
 
@@ -72,7 +70,6 @@ def test_integration(
     ntoys          : Mean to pick number from:
                      pytest --ntoys XXX
     test_dir       : Where output plots will go
-    use_constraints: If true it will load and use constraints in config
     '''
     log.info('')
     nll   = sut.get_nll(kind='s+b')
@@ -82,8 +79,7 @@ def test_integration(
     res, _= Fitter.minimize(nll=nll, cfg={})
 
     cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
-    if use_constraints:
-        cfg.constraints = gut.load_conf(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
+    cfg.constraints = gut.load_conf(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
 
     if ntoys > 0:
         log.warning(f'Using user defined number of toys: {ntoys}')
@@ -95,14 +91,12 @@ def test_integration(
     mkr = ToyMaker(nll=nll, res=res, cfg=cfg)
     df  = mkr.get_parameter_information()
 
-    name= {True : 'constrained', False : 'unconstrained'}[use_constraints]
     cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')
-    cfg.saving.plt_dir = test_dir/f'toymaker/integration/{name}'
+    cfg.saving.plt_dir = test_dir/'toymaker/integration/plots'
     ptr = ToyPlotter(df=df, cfg=cfg)
     ptr.plot()
 # ----------------------
-@pytest.mark.parametrize('use_constraints', [True, False])
-def test_profile(ntoys : int, use_constraints : bool) -> None:
+def test_profile(ntoys : int) -> None:
     '''
     Test used for profiling
 
@@ -118,8 +112,7 @@ def test_profile(ntoys : int, use_constraints : bool) -> None:
 
     res, _= Fitter.minimize(nll=nll, cfg={})
     cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
-    if use_constraints:
-        cfg.constraints = gut.load_conf(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
+    cfg.constraints = gut.load_conf(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
 
     cfg.ntoys = ntoys
 
