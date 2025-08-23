@@ -8,6 +8,7 @@ import pandas            as pnd
 import seaborn           as sns
 import matplotlib.pyplot as plt
 
+from scipy.stats             import norm
 from ROOT                    import RDataFrame, RDF # type: ignore
 from omegaconf               import DictConfig, OmegaConf
 from dmu.logging.log_store   import LogStore
@@ -261,6 +262,8 @@ class ToyPlotter:
         -------------
         Dictionary with key-value pairs summarizing fits
         '''
+        log.debug('Getting toys summary')
+
         cfg     = self._cfg.summary
         summary = {}
 
