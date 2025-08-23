@@ -112,7 +112,7 @@ class ToyMaker:
             nrows = len(df)
             name  = str(name)
             gen   = sut.val_from_zres(res=self._res, name=name)
-            df.loc[nrows] = [name, cfg_par.value, cfg_par.error, gen, itoy, gof[0], res.converged]
+            df.loc[nrows] = [name, cfg_par.value, cfg_par.error, gen, itoy, gof[0], res.valid]
 
         return df
     # ----------------------
@@ -133,7 +133,7 @@ class ToyMaker:
         ------------
         Pandas dataframe where each row represents a parameter
         '''
-        df = pnd.DataFrame(columns=['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Converged'])
+        df = pnd.DataFrame(columns=['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid'])
 
         l_sampler = [ model.create_sampler() for model in self._nll.model ]
         nll       = self._nll.create_new(data=l_sampler)
