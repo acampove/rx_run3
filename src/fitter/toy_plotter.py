@@ -234,7 +234,7 @@ class ToyPlotter:
         del cfg_cor['rotation']
 
         d_tex = { f'{key}_val' : val for key, val in self._d_tex.items() }
-        data  = self._rdf.AsNumpy(list(d_tex))
+        data  = rdf.AsNumpy(list(d_tex))
         df    = pnd.DataFrame(data)
         df    = df.rename(columns=d_tex)
         corr  = df.corr()
