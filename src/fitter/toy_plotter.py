@@ -43,10 +43,10 @@ class ToyPlotter:
         df : Pandas dataframe with information from toy fits
         cfg: Configuration specifying how to plot
         '''
-        self._df    = df
-        self._d_tex = self._get_latex_names(df=df, cfg=cfg)
+        self._l_par = df['Parameter'].unique().tolist()
+        self._df    = self._preprocess_df(df=df)
+        self._d_tex = self._get_latex_names(cfg=cfg)
         self._d_gen = self._get_gen_values(df=df)
-        self._rdf   = self._rdf_from_df(df=df)
 
         cfg = self._add_pull_config(cfg=cfg)
         cfg = self._add_gen_config(cfg=cfg)
