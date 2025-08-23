@@ -6,6 +6,7 @@ import os
 import copy
 import argparse
 from pathlib import Path
+from typing  import Any
 
 import mplhep
 import pandas as pnd
@@ -27,7 +28,6 @@ class Data:
     identifier : str
     dry_run    : bool
     cfg        : DictConfig
-    summary    : DictConfig|None = None
     FILENAME   = 'toys.parquet'
 # ----------------------
 def _set_logs() -> None:
@@ -84,7 +84,7 @@ def _get_paths(source_path : Path) -> list[Path]:
 
     return l_path 
 # ----------------------
-def _run(input_path : Path) -> None:
+def _run(input_path : Path) -> DictConfig|None:
     '''
     Parameters
     -------------
@@ -95,21 +95,13 @@ def _run(input_path : Path) -> None:
 
     if Data.dry_run:
         log.debug(f'    {input_path}')
-        return
+        return None
 
     df  = pnd.read_parquet(input_path)
     ptr = ToyPlotter(df=df, cfg=cfg)
     cfg = ptr.plot()
 
-    if Data.summary is None:
-        Data.summary = cfg
-        return
-
-    cfg = OmegaConf.merge(Data.summary, cfg)
-    if not isinstance(cfg, DictConfig):
-        raise ValueError('Merged summary is not a DictConfig')
-
-    Data.summary = cfg
+    return cfg
 # ----------------------
 def _save_summary(out_dir : Path) -> None:
     '''
