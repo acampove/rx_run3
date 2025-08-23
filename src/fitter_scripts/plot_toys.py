@@ -124,7 +124,7 @@ def _save_summary(out_dir : Path) -> None:
 
     log.info(f'Saving summary to: {out_path}')
 
-    OmegaConf.save(config=Data.cfg, f=out_path)
+    OmegaConf.save(config=Data.summary, f=out_path)
 # ----------------------
 def main():
     '''
