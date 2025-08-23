@@ -7,7 +7,6 @@ from pathlib   import Path
 from functools import lru_cache
 
 import logging
-from omegaconf import OmegaConf
 import pytest
 import numpy
 import pandas as pnd
@@ -36,7 +35,7 @@ def _get_df(ntoys : int, l_var : tuple[str]) -> pnd.DataFrame:
     numpy.random.seed(42)
     l_df_var = []
     for var in l_var:
-        df_var              = pnd.DataFrame(columns=['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Converged'])
+        df_var              = pnd.DataFrame(columns=['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid'])
         df_var['Parameter'] = ntoys * [var]
         if var != 'b':
             df_var['Gen'      ] = numpy.zeros(ntoys)
@@ -58,11 +57,11 @@ def _get_df(ntoys : int, l_var : tuple[str]) -> pnd.DataFrame:
         gof = numpy.random.uniform(low=0, high=1, size=1)
         cnv = numpy.random.choice(a=[True, False], p=[0.95, 0.05], size=1)
 
-        df.loc[df.Toy == itoy,       'GOF'] = npar * [gof]
-        df.loc[df.Toy == itoy, 'Converged'] = npar * [cnv]
+        df.loc[df.Toy == itoy,   'GOF'] = npar * [gof]
+        df.loc[df.Toy == itoy, 'Valid'] = npar * [cnv]
 
-    df['GOF']       = df['GOF'      ].astype(float)
-    df['Converged'] = df['Converged'].astype(bool )
+    df['GOF']   = df['GOF'  ].astype(float)
+    df['Valid'] = df['Valid'].astype(bool )
 
     for numeric in ['Value', 'Error', 'Gen', 'Toy', 'GOF']:
         log.info(f'Checking: {numeric}')
@@ -84,7 +83,7 @@ def test_simple(test_dir : Path) -> None:
 
     assert math.isclose(cfg.median_a_unc, 153.3263369554583, rel_tol=1e-5)
     assert math.isclose(cfg.median_b_unc, 2.998985959009677, rel_tol=1e-5)
-    assert math.isclose(cfg.mean_conv   , 0.948            , rel_tol=1e-5)
+    assert math.isclose(cfg.mean_valid  , 0.948            , rel_tol=1e-5)
 
     assert math.isclose(cfg.a_pul.mu, 0.02316429312808755, rel_tol=1e-5)
     assert math.isclose(cfg.a_pul.sg, 0.982856552637077  , rel_tol=1e-5)
