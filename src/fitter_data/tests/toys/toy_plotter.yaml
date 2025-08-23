@@ -18,6 +18,8 @@ correlation:
   linewidth: 0.5
   annot_kws:
     size : 12 
+  rotation :
+    x    : 45
 
 generated:
   x     : -1 
