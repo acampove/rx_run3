@@ -212,8 +212,7 @@ class ToyPlotter:
         '''
         Prints columns available in input dataframe
         '''
-        l_parameter = self._df['Parameter'].unique().tolist()
-        l_parameter = sorted(l_parameter)
+        l_parameter = sorted(self._l_par)
 
         log.info('Parameters found:')
         for name in l_parameter:
