@@ -255,23 +255,21 @@ class ToyPlotter:
         plt.savefig(plt_path)
         plt.close()
     # ----------------------
-    def plot(self) -> None:
+    def plot(self) -> DictConfig:
         '''
-        Parameters
-        -------------
-        none
-
         Returns
         -------------
-        none
+        Dictionary with summary information for current toy
         '''
+        rdf = self._get_rdf()
+
         try:
-            ptr = Plotter1D(d_rdf={'Toys' : self._rdf}, cfg=self._cfg)
+            ptr = Plotter1D(d_rdf={'Toys' : rdf}, cfg=self._cfg)
             ptr.run()
         except ValueError as exc:
             self._print_params()
             raise MissingVariableConfiguration('Cannot plot variable, one of the variables was likely missing') from exc
 
         plt_path = f'{self._cfg.saving.plt_dir}/correlations.png'
-        self._plot_correlation_matrix(plt_path=plt_path)
+        self._plot_correlation_matrix(rdf=rdf, plt_path=plt_path)
 # ----------------------
