@@ -3,10 +3,10 @@ Script used to plot distributions from toy fits
 by loading pandas dataframes stored as parquet files
 '''
 import os
+import re
 import copy
 import argparse
 from pathlib import Path
-from typing  import Any
 
 import mplhep
 import pandas as pnd
@@ -100,6 +100,7 @@ def _run(input_path : Path) -> DictConfig|None:
     df  = pnd.read_parquet(input_path)
     ptr = ToyPlotter(df=df, cfg=cfg)
     cfg = ptr.plot()
+    cfg = _attach_wp(cfg=cfg, path=input_path)
 
     return cfg
 # ----------------------
@@ -121,6 +122,30 @@ def _save_summary(out_dir : Path, l_cfg : list) -> None:
     cfg   = OmegaConf.create(obj=d_cfg)
 
     OmegaConf.save(config=cfg, f=out_path)
+# ----------------------
+def _attach_wp(cfg : DictConfig, path : Path) -> DictConfig:
+    '''
+    Parameters
+    -------------
+    cfg : Config with summary of toy fit
+    path: Path to directory with outputs of fit
+
+    Returns
+    -------------
+    Updated config with working point attached
+    '''
+    mtch = re.search(r'(\d{3})_(\d{3})', str(path))
+    if not mtch:
+        raise ValueError(f'Cannot extract MVA WP substring from: {path}')
+
+    [cmb, prc] = mtch.groups() 
+
+    cmb = float(cmb) / 100.
+    prc = float(prc) / 100.
+
+    cfg['wp'] = {'cmb' : cmb, 'prc' : prc}
+
+    return cfg
 # ----------------------
 def main():
     '''
