@@ -104,5 +104,3 @@ def test_missing_variable(caplog, test_dir : Path) -> None:
     l_message= [ record.getMessage() for record in caplog.records ] 
 
     assert l_message == ['Parameters found:', 'b', 'c']
-
-       
