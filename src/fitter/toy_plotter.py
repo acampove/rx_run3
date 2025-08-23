@@ -275,7 +275,31 @@ class ToyPlotter:
             val=self._df[col_name].mean()
             summary[f'mean_{col_name}'] = float(val)
 
+        for col_name in cfg.pulls:
+            d_par = self._get_pull_fit_pars(name=col_name)
+            summary[col_name] = d_par
+
         return OmegaConf.create(summary)
+    # ----------------------
+    def _get_pull_fit_pars(self, name : str) -> dict[str,float]:
+        '''
+        Parameters
+        -------------
+        name: Name of column with pulls, e.g. a_pull
+
+        Returns
+        -------------
+        Dictionary with keys as parameter names and values as fitted values 
+        '''
+        log.debug(f'Getting pull parameters for {name}')
+
+        df = self._df
+        df = df[(df[name] > -4) & (df[name] < +4)]
+        arr= df[name].to_numpy()
+
+        mu, sg = norm.fit(arr)
+
+        return {'mu' : float(mu), 'sg' : float(sg)}
     # ----------------------
     def plot(self) -> DictConfig:
         '''
