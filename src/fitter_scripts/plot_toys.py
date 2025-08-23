@@ -9,7 +9,7 @@ from pathlib import Path
 
 import mplhep
 import pandas as pnd
-from omegaconf               import DictConfig
+from omegaconf               import DictConfig, OmegaConf
 from tqdm.contrib.concurrent import process_map
 from dmu.generic             import utilities as gut
 from dmu.logging.log_store   import LogStore
@@ -27,6 +27,7 @@ class Data:
     identifier : str
     dry_run    : bool
     cfg        : DictConfig
+    summary    : DictConfig|None = None
     FILENAME   = 'toys.parquet'
 # ----------------------
 def _set_logs() -> None:
@@ -98,7 +99,32 @@ def _run(input_path : Path) -> None:
 
     df  = pnd.read_parquet(input_path)
     ptr = ToyPlotter(df=df, cfg=cfg)
-    ptr.plot()
+    cfg = ptr.plot()
+
+    if Data.summary is None:
+        Data.summary = cfg
+        return
+
+    cfg = OmegaConf.merge(Data.summary, cfg)
+    if not isinstance(cfg, DictConfig):
+        raise ValueError('Merged summary is not a DictConfig')
+
+    Data.summary = cfg
+# ----------------------
+def _save_summary(out_dir : Path) -> None:
+    '''
+    This function will save a summary of the fits for all working
+    poings in a YAML file
+
+    Parameters
+    -------------
+    out_dir: Output directory
+    '''
+    out_path = out_dir/'summary.yaml'
+
+    log.info(f'Saving summary to: {out_path}')
+
+    OmegaConf.save(config=Data.cfg, f=out_path)
 # ----------------------
 def main():
     '''
@@ -110,11 +136,13 @@ def main():
 
     Data.cfg = gut.load_conf(package='fitter_data', fpath='toys/plotter.yaml')
     root_dir = Path(os.environ['ANADIR'])
-    l_path   = _get_paths(source_path=root_dir/'fits/data'/Data.version)
+    inpt_dir = root_dir/'fits/data'/Data.version
+    l_path   = _get_paths(source_path=inpt_dir)
 
     log.info('Plotting:')
 
     process_map(_run, l_path, max_workers=Data.nworkers, ascii=' -')
+    _save_summary(out_dir=inpt_dir)
 # ----------------------
 if __name__ == '__main__':
     main()
