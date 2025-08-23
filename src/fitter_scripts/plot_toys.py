@@ -27,7 +27,7 @@ class Data:
     identifier : str
     dry_run    : bool
     cfg        : DictConfig
-    PARAM_WCARD= 'parameters_*.parquet'
+    FILENAME   = 'toys.parquet'
 # ----------------------
 def _set_logs() -> None:
     '''
@@ -61,23 +61,23 @@ def _get_paths(source_path : Path) -> list[Path]:
     '''
     Parameters
     -------------
-    source_path: Path where the search for PARAM_WCARD files are searched Returns
+    source_path: Path where the search for FNAME files are searched Returns
     -------------
     List of paths to parquet files with dataframes
     '''
     log.debug(f'Looking for files in: {source_path}')
-    l_path = source_path.rglob(Data.PARAM_WCARD)
+    l_path = source_path.rglob(Data.FILENAME)
     l_path = list(l_path)
     l_path.sort()
     npath = len(l_path)
     if npath == 0:
-        raise ValueError(f'No paths to {Data.PARAM_WCARD} found in {source_path}')
+        raise ValueError(f'No paths to {Data.FILENAME} found in {source_path}')
 
     if isinstance(Data.identifier, str):
         l_path = [ path for path in l_path if Data.identifier in str(path) ]
         npath  = len(l_path)
         if npath == 0:
-            raise ValueError(f'No paths to {Data.PARAM_WCARD} found in {source_path} and with substring {Data.identifier}')
+            raise ValueError(f'No paths to {Data.FILENAME} found in {source_path} and with substring {Data.identifier}')
 
     log.info(f'Found {npath} paths')
 
