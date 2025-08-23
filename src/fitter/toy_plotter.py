@@ -168,6 +168,14 @@ class ToyPlotter:
         df['conv'] = conv_sr
 
         return df
+    # ----------------------
+    def _get_rdf(self) -> RDataFrame:
+        '''
+        Returns
+        -------------
+        ROOT dataframe meant to be passed to Plotter1d
+        '''
+        py_data    = self._df.to_dict(orient='list')
         np_data    = { name : numpy.array(vals, dtype='float') for name, vals in py_data.items() }
         rdf        = RDF.FromNumpy(np_data)
 
