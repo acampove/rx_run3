@@ -98,3 +98,12 @@ plugin:
       format : '{:.3f}'
     nsig_err :
       format : '{:.2f}'
+
+summary:
+  median : 
+    - mu_err
+    - sg_err
+  mean : 
+    - valid 
+  pulls:
+    - mu_pul
