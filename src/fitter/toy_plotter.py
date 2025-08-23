@@ -9,7 +9,7 @@ import seaborn           as sns
 import matplotlib.pyplot as plt
 
 from ROOT                    import RDataFrame, RDF # type: ignore
-from omegaconf               import DictConfig
+from omegaconf               import DictConfig, OmegaConf
 from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter_1d import Plotter1D
 
@@ -255,6 +255,25 @@ class ToyPlotter:
         plt.savefig(plt_path)
         plt.close()
     # ----------------------
+    def _get_toys_summary(self) -> DictConfig:
+        '''
+        Returns
+        -------------
+        Dictionary with key-value pairs summarizing fits
+        '''
+        cfg     = self._cfg.summary
+        summary = {}
+
+        for col_name in cfg.median:
+            val=self._df[col_name].median()
+            summary[f'median_{col_name}'] = float(val)
+
+        for col_name in cfg.mean:
+            val=self._df[col_name].mean()
+            summary[f'mean_{col_name}'] = float(val)
+
+        return OmegaConf.create(summary)
+    # ----------------------
     def plot(self) -> DictConfig:
         '''
         Returns
@@ -272,4 +291,7 @@ class ToyPlotter:
 
         plt_path = f'{self._cfg.saving.plt_dir}/correlations.png'
         self._plot_correlation_matrix(rdf=rdf, plt_path=plt_path)
+        cfg_sum = self._get_toys_summary()
+
+        return cfg_sum
 # ----------------------
