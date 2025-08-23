@@ -146,15 +146,15 @@ class ToyPlotter:
 
         return cfg
     # ----------------------
-    def _rdf_from_df(self, df : pnd.DataFrame) -> RDataFrame:
+    def _preprocess_df(self, df : pnd.DataFrame) -> pnd.DataFrame:
         '''
         Parameters
         -------------
-        df : Pandas dataframe produced by ToyMaker
+        df: Pandas dataframe from user
 
         Returns
         -------------
-        ROOT dataframe meant to be passed to Plotter1d
+        Dataframe with columns added, renamed, etc
         '''
         l_df = []
         for name, df in df.groupby('Parameter'):
