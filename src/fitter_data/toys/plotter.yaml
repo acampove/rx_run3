@@ -185,3 +185,11 @@ plugin:
   stats:
     conv:
       mean : convergence rate={:.1%}
+
+summary:
+  median : 
+    - yld_signal_unc
+  mean : 
+    - conv
+  pulls:
+    - yld_signal_pul
