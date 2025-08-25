@@ -168,12 +168,15 @@ def main():
     Start here
     '''
     _parse_args()
-    _initialize()
+    if Data.verbose:
+        LogStore.set_level('rx_pid:create_pid_maps', 10)
+
+    cfg = _get_config()
 
     if Data.dry_run:
         return
 
-    make_eff_hists(Data.conf)
+    make_eff_hists(cfg)
 # --------------------------------
 if __name__ == '__main__':
     main()
