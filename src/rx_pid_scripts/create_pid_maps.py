@@ -21,7 +21,6 @@ class Data:
     '''
     l_particle : list[str] = ['e', 'Pi', 'K', 'Mu', 'P']
 
-    kind    : str
     brem    : str
     particle: str
     sample  : str
@@ -34,7 +33,6 @@ class Data:
 # --------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to calculate PID efficiencies using PIDCalib2')
-    parser.add_argument('-k', '--kind'    , type=str, help='Kind of map', choices=['signal', 'control'], required=True)
     parser.add_argument('-b', '--brem', type=str, help='Version of binning file'                   , required=True)
     parser.add_argument('-p', '--particle', type=str, help='Particle name', choices=Data.l_particle    , required=True)
     parser.add_argument('-s', '--sample'  , type=str, help='Sample/block, e.g. b1, b2...'              , required=True)
@@ -46,7 +44,6 @@ def _parse_args() -> None:
     parser.add_argument('-v', '--verbose' , help='Will print debug messages', action='store_true')
 
     args          = parser.parse_args()
-    Data.kind     = args.kind
     Data.brem     = args.brem
     Data.region   = args.region
     Data.out_dir  = args.out_dir
