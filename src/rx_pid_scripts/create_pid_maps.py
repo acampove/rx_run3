@@ -4,9 +4,9 @@ Script meant to be used to create PID maps
 # pylint: disable=line-too-long
 import os
 import argparse
-from importlib.resources      import files
+from typing import cast
 
-import yaml
+from omegaconf                import DictConfig, OmegaConf 
 from pidcalib2.make_eff_hists import make_eff_hists
 
 import dmu.generic.utilities as gut
