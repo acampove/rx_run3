@@ -20,13 +20,13 @@ selection :
 binning: 
   nominal : config/binning.yaml
 # -----------------------------------------------
+subselection:
+    nobrem : PARTICLE_HASBREM==0
+    brem   : PARTICLE_HASBREM==1
 subregions:
   hadron_tagging:
     Pi     : PARTICLE_PROBNN_K < 0.1
     K      : PARTICLE_PROBNN_K > 0.1
-  brem:
-    nobrem : PARTICLE_HASBREM==0
-    brem   : PARTICLE_HASBREM==1
 # -----------------------------------------------
 regions:
   control:
