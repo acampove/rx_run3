@@ -56,36 +56,25 @@ def _parse_args() -> None:
     Data.verbose  = args.verbose
     Data.max_files= args.maxfiles
 # --------------------------------
-def _get_bin_vars() -> str:
-    if not hasattr(Data, 'conf'):
-        raise AttributeError('Data class does not have a config dictionary')
+def _get_binning_path(conf : DictConfig) -> str:
+    '''
+    Parameters
+    ---------------
+    conf : Configuration passed by user
 
-    l_var   = Data.conf['bin_vars']
-    var_str = '_'.join(l_var)
-
-    return var_str
-# --------------------------------
-def _path_from_kind(kind : str) -> str:
-    if   kind == 'config':
-        version = Data.cfg_vers
-        path    = files('rx_pid_data').joinpath(f'{kind}/{Data.kind}/{version}.yaml')
-        path    = str(path)
-    elif kind == 'binning':
-        version = Data.bin_vers
-        bin_vars= _get_bin_vars()
-        path    = files('rx_pid_data').joinpath(f'{kind}/{bin_vars}/{version}.yaml')
-        path    = str(path)
-        path    = _replace_binning_path(path)
-    else:
-        raise ValueError(f'Invalid kind: {kind}')
-
-    return path
-# --------------------------------
-def _replace_binning_path(yaml_path : str) -> str:
-    with open(yaml_path, encoding='utf-8') as ifile:
-        data = yaml.safe_load(ifile)
-
+    Returns
+    ---------------
+    Path to JSON file with binning
+    '''
+    fpath    = conf['binning']['nominal']
+    data     = gut.load_conf(package='rx_pid_data', fpath=fpath)
     data     = data[Data.sample]
+    data     = OmegaConf.to_container(cfg=data, resolve=True)
+    if not isinstance(data, dict):
+        raise ValueError('Binning configuration not a dictionary')
+
+    data     = cast(dict[str,str], data)
+    data     = { key.replace('PARTICLE', Data.particle) : val for key, val in data.items() }
     hash_val = hashing.hash_object(data)
 
     os.makedirs('.binning', exist_ok=True)
