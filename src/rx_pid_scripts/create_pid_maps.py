@@ -96,17 +96,20 @@ def _replace_binning_path(yaml_path : str) -> str:
 
     return json_path
 # --------------------------------
-def _load_data(kind : str) -> dict:
-    path = _path_from_kind(kind)
+def _get_prior_cuts(conf : DictConfig) -> list[str]:
+    '''
+    Parameters
+    ---------------
+    conf : Dictionary with configuration
 
-    with open(path, encoding='utf-8') as ifile:
-        data = yaml.safe_load(ifile)
-
-    return data
-# --------------------------------
-def _get_cuts() -> list[str]:
-    l_cut = Data.conf['selection_ee'] if Data.particle == 'e' else Data.conf['selection']
+    Returns
+    ---------------
+    List of cuts needed to align calibration samples to analysis sample
+    '''
+    l_cut = conf['selection']
     l_cut = [ cut.replace('PARTICLE', Data.particle) for cut in l_cut ]
+    # Tree has pion branch with lowercase "p"
+    # PIDCalib2 has them with uppercase
     l_cut = [ cut.replace('Pi_'     ,         'pi_') for cut in l_cut ]
 
     log.debug('Using cuts:')
