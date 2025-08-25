@@ -115,11 +115,24 @@ def _get_cuts() -> list[str]:
 
     return l_cut
 # --------------------------------
-def _get_pid_cuts() -> str:
-    l_cut = Data.conf['particles'][Data.particle]['pid_cuts']
-    l_cut = [ f'({cut})' for cut in l_cut ]
+def _get_pid_cuts(conf : DictConfig) -> str:
+    '''
+    Parameters
+    ----------------
+    conf: Dictionary with configuration, loaded from YAML file
 
-    cut   = ' & '.join(l_cut)
+    Returns
+    ----------------
+    Cut whose efficiency will be measured
+    - Signal, control region cut
+    - Hadron tagging cut
+    - Brem or no brem cut
+    '''
+    l_cut   = conf['regions'   ][Data.region]
+    tag_cut = conf['subregions']['hadron_tagging'][Data.particle]
+    brm_cut = conf['subregions']['brem'][Data.brem]
+    l_cut   = l_cut + [tag_cut, brm_cut]
+    cut     = ' & '.join(l_cut)
 
     log.debug(f'Using PID cut: {cut}')
 
