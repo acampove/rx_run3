@@ -24,18 +24,15 @@ get_opts()
     fi  
 
     OPATH=/eos/home-a/acampove/calibration/mis_id/scan
-    BINNING=v1
     TEST=0
-    while getopts :hf:k:i:t:o:b: option; do 
+    while getopts :hf:i:t:o: option; do 
         case "${option}" in
             h)  
                 display_help
                 exit 0
                 ;;  
-            t)  TEST=${OPTARG};;
             i)  JOBID=${OPTARG};;
-            b)  BINNING=${OPTARG};;
-            k)  KIND=${OPTARG};;
+            t)  TEST=${OPTARG};;
            \?)  echo "Invalid option: -${OPTARG}"
                 display_help
                 exit 1
