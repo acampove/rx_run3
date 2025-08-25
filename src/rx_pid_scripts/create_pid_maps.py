@@ -53,7 +53,7 @@ def _parse_args() -> None:
     Data.verbose  = args.verbose
     Data.max_files= args.maxfiles
 # --------------------------------
-def _get_binning_path(conf : DictConfig) -> str:
+def _get_binning(conf : DictConfig) -> dict:
     '''
     Parameters
     ---------------
@@ -63,8 +63,7 @@ def _get_binning_path(conf : DictConfig) -> str:
     ---------------
     Path to JSON file with binning
     '''
-    fpath    = conf['binning']['nominal']
-    data     = gut.load_conf(package='rx_pid_data', fpath=fpath)
+    data     = conf['binning']['nominal']
     data     = data[Data.sample]
     data     = OmegaConf.to_container(cfg=data, resolve=True)
     if not isinstance(data, dict):
@@ -72,7 +71,8 @@ def _get_binning_path(conf : DictConfig) -> str:
 
     data     = cast(dict[str,str], data)
     data     = { _assign_particle_name(name=key) : val for key, val in data.items() }
-    hash_val = hashing.hash_object(data)
+
+    return { Data.particle : data }
 
     os.makedirs('.binning', exist_ok=True)
 
