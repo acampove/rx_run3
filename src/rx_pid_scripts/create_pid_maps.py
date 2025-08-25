@@ -74,7 +74,7 @@ def _get_binning_path(conf : DictConfig) -> str:
         raise ValueError('Binning configuration not a dictionary')
 
     data     = cast(dict[str,str], data)
-    data     = { key.replace('PARTICLE', Data.particle) : val for key, val in data.items() }
+    data     = { _assign_particle_name(name=key) : val for key, val in data.items() }
     hash_val = hashing.hash_object(data)
 
     os.makedirs('.binning', exist_ok=True)
@@ -96,10 +96,7 @@ def _get_prior_cuts(conf : DictConfig) -> list[str]:
     List of cuts needed to align calibration samples to analysis sample
     '''
     l_cut = conf['selection']
-    l_cut = [ cut.replace('PARTICLE', Data.particle) for cut in l_cut ]
-    # Tree has pion branch with lowercase "p"
-    # PIDCalib2 has them with uppercase
-    l_cut = [ cut.replace('Pi_'     ,         'pi_') for cut in l_cut ]
+    l_cut = [ _assign_particle_name(name=cut) for cut in l_cut ]
 
     log.debug('Using cuts:')
     for cut in l_cut:
