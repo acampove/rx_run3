@@ -5,15 +5,15 @@ display_help()
 {
     echo "Script used to make PID maps, meant to be used by HTCondor submit script that will do:"
     echo ""
-    echo "# 7 (Blocks) x 2 (Particles) x 2 (Signal and control region) = 28 jobs"
+    echo "# 7 (Blocks) x 2 (Particles) x 2 (Signal and control region) x 2 (Brem categories) = 56 jobs"
     echo ""
     echo "With options:"
-    echo "-t: Test flag, if 1 will do only one file and with pidcalib2's --verbose, by default 0"
-    echo "-k: Kind of map, e.g. signal, control" 
-    echo "-i: Index of the job. Such that each job will run with a different configuration, from 0 to 27, inclusive"
+    echo "-i: Index of the job. Such that each job will run with a different configuration, from 0 to 55, inclusive"
+    echo "-t: Test flag:"
+    echo "  0: Will actually run the job" 
+    echo "  1: Will do only one file and with pidcalib2's --verbose, by default 0"
+    echo "  2: Will skip everything and just print what would have been run"
     echo "-o: Path to output directory, by default $OPATH"
-    echo "-b: Version of binning, default $BINNING" 
-    echo "-c :Name of config file"
 }
 # -----------------------------------------------------
 get_opts()
