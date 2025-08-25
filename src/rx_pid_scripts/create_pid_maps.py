@@ -138,8 +138,11 @@ def _get_prior_cuts(conf : DictConfig) -> list[str]:
     ---------------
     List of cuts needed to align calibration samples to analysis sample
     '''
-    l_cut = conf['selection']
-    l_cut = [ _assign_particle_name(name=cut) for cut in l_cut ]
+    l_cut    = conf['selection']
+    l_cut    = [ _assign_particle_name(name=cut) for cut in l_cut ]
+    brem_cut = conf['subselection'][Data.brem]
+    brem_cut = _assign_particle_name(name=brem_cut)
+    l_cut.append(brem_cut)
 
     log.debug('Using cuts:')
     for cut in l_cut:
@@ -162,8 +165,7 @@ def _get_pid_cuts(conf : DictConfig) -> str:
     '''
     l_cut   = conf['regions'   ][Data.region]
     tag_cut = conf['subregions']['hadron_tagging'][Data.particle]
-    brm_cut = conf['subregions']['brem'][Data.brem]
-    l_cut   = l_cut + [tag_cut, brm_cut]
+    l_cut   = l_cut + [tag_cut]
     l_cut   = [ _assign_particle_name(name=cut) for cut in l_cut ]
     cut     = ' & '.join(l_cut)
 
