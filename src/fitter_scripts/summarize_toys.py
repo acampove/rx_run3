@@ -7,7 +7,7 @@ import argparse
 import seaborn           as sns
 import matplotlib.pyplot as plt
 import mplhep
-from pathlib        import Path
+from pathlib import Path
 
 import pandas as pnd
 from omegaconf             import DictConfig, OmegaConf
