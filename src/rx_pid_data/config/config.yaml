@@ -1,0 +1,40 @@
+# This file is used to measure PIDe efficiencies for pions, kaons and electrons
+# in the control region for Analysis samples, with PIDe in [1,inf]
+#
+# -----------------------------------------------
+samples  :
+  b1  : 2024_WithUT_block1_v2
+  b2  : 2024_WithUT_block2_v1
+  b3  : 2024_WithUT_block3_v1
+  b5  : 2024_WithUT_block5_v1
+  b6  : 2024_WithUT_block6_v1
+  b7  : 2024_WithUT_block7_v1
+  b8  : 2024_WithUT_block8_v1
+selection :
+  - PARTICLE_PT        > 250
+  - PARTICLE_P         > 3000
+  - PARTICLE_GHOSTPROB < 0.3
+  - PARTICLE_BPVIPCHI2 > 9
+  - PARTICLE_PPHASRICH
+  - PARTICLE_INECAL
+maps:
+  binning: config/binning.yaml
+  vars:
+    - log10(PARTICLE_PT)
+    - ETA
+# -----------------------------------------------
+subregions:
+  hadron_tagging:
+    Pi     : PARTICLE_PROBNN_K < 0.1
+    K      : PARTICLE_PROBNN_K > 0.1
+  brem:
+    nobrem : PARTICLE_HASBREM==0
+    brem   : PARTICLE_HASBREM==1
+# -----------------------------------------------
+regions:
+  control:
+    - PROBNN_E < 0.2 | DLLe < 3.0
+    - DLLe     >-1.0
+  signal:
+    - PROBNN_E > 0.2
+    - DLLe     > 3.0
