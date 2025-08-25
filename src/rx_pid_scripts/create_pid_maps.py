@@ -73,12 +73,40 @@ def _get_binning(conf : DictConfig) -> dict:
     data     = { _assign_particle_name(name=key) : val for key, val in data.items() }
 
     return { Data.particle : data }
+# ----------------------
+def _get_binning_vars(binning: dict) -> list[str]:
+    '''
+    Parameters
+    -------------
+    binning: Nested dictionary with binning information
+
+    Returns
+    -------------
+    List of strings, symbolizing variable names used for axes in maps
+    '''
+    particle_binning = binning[Data.particle]
+    l_var = list(particle_binning.keys())
+
+    return l_var
+# ----------------------
+def _get_binning_path(binning : dict) -> str:
+    '''
+    Parameters
+    ---------------
+    binning: Nested dictionary with binning for current sample (block)
+
+    Returns
+    ---------------
+    Path to JSON file with binning
+    '''
+
+    hash_val = hashing.hash_object(binning)
 
     os.makedirs('.binning', exist_ok=True)
 
     json_path = f'.binning/{hash_val}.json'
     log.debug(f'Using binning path: {json_path}')
-    gut.dump_json(data, json_path)
+    gut.dump_json(binning, json_path)
 
     return json_path
 # ----------------------
