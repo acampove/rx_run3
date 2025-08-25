@@ -33,14 +33,14 @@ class Data:
 # --------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to calculate PID efficiencies using PIDCalib2')
-    parser.add_argument('-b', '--brem', type=str, help='Version of binning file'                   , required=True)
+    parser.add_argument('-b', '--brem', type=str, help='Version of binning file', choices=['nobrem', 'brem'], required=True)
     parser.add_argument('-p', '--particle', type=str, help='Particle name', choices=Data.l_particle    , required=True)
     parser.add_argument('-s', '--sample'  , type=str, help='Sample/block, e.g. b1, b2...'              , required=True)
     parser.add_argument('-o', '--out_dir' , type=str, help='Directory where pkl files will go'         , required=True)
     parser.add_argument('-r', '--region'  , type=str, help='Used to define selection', choices=['signal', 'control'], required=True)
     parser.add_argument('-d', '--dry-run' ,           help='Enable dry-run mode (default: False)'      , action='store_true')
     # These are by default None and will be used as in PIDCalib2's make_eff_hists
-    parser.add_argument('-M', '--maxfiles', type=int, help='Limit number of files to this value')
+    parser.add_argument('-m', '--maxfiles', type=int, help='Limit number of files to this value')
     parser.add_argument('-v', '--verbose' , help='Will print debug messages', action='store_true')
 
     args          = parser.parse_args()
