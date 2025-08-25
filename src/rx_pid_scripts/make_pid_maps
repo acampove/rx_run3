@@ -67,23 +67,28 @@ setup()
 run()
 {
     let INDEX=0
-    for CONF in v1 v2 v3 v4 v5 v6;do
-        for BLOCK in b1 b2 b3 b5 b6 b7 b8;do
-            for PARTICLE in Pi K;do
-                if [[ $INDEX -eq $JOBID ]];then
-                    echo "Running at $INDEX with: $BLOCK, $PARTICLE, $CONF"
-                    if [[ $TEST -eq 0 ]];then
-                        create_pid_maps -c $CONF -k $KIND -b $BINNING -s $BLOCK -p $PARTICLE -o $OPATH/$CONF
-                    elif [[ $TEST -eq 1 ]];then
-                        echo "Running test"
-                        create_pid_maps -c $CONF -k $KIND -b $BINNING -s $BLOCK -p $PARTICLE -o $OPATH/$CONF -M 1 -v
-                    else
-                        echo "Invalid value for test argument $TEST"
-                        exit 1
+    for BREM in nobrem brem;do
+        for REGION in signal control;do
+            for BLOCK in b1 b2 b3 b5 b6 b7 b8;do
+                for PARTICLE in Pi K;do
+                    if [[ $INDEX -eq $JOBID ]];then
+                        echo "Running at $INDEX with: $BLOCK, $PARTICLE, $CONF"
+                        if [[ $TEST -eq 0 ]];then
+                            create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$CONF
+                        elif [[ $TEST -eq 1 ]];then
+                            echo "Running test"
+                            create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$CONF -m 1 -v
+                        elif [[ $TEST -eq 2 ]];then
+                            echo "Would have ran:"
+                            echo "create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$CONF -m 1 -v"
+                        else
+                            echo "Invalid value for test argument $TEST"
+                            exit 1
+                        fi
+                        return
                     fi
-                    return
-                fi
-                let INDEX+=1
+                    let INDEX+=1
+                done
             done
         done
     done
