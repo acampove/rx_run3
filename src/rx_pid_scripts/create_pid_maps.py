@@ -22,12 +22,11 @@ class Data:
     l_particle : list[str] = ['e', 'Pi', 'K', 'Mu', 'P']
 
     kind    : str
-    out_dir : str
-    cfg_vers: str
-    bin_vers: str
+    brem    : str
     particle: str
     sample  : str
-    conf    : dict
+    out_dir : str
+    region  : str
     dry_run : bool
 
     max_files: int
