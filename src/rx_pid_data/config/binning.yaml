@@ -33,14 +33,11 @@ bin: &bin_com
   - 4.5
   - 5.5
 # --------------------------------
-block_common: &b_com
-  PARTICLE : *bin_com
-# --------------------------------
-b1: *b_com
-b2: *b_com
-b3: *b_com
-b4: *b_com
-b5: *b_com
-b6: *b_com
-b7: *b_com
-b8: *b_com
+b1: *bin_com
+b2: *bin_com
+b3: *bin_com
+b4: *bin_com
+b5: *bin_com
+b6: *bin_com
+b7: *bin_com
+b8: *bin_com
