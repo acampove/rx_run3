@@ -161,13 +161,15 @@ def _get_config() -> dict[str,Any]:
     Returns configuration dictionary needed by PIDCalib2
     `make_eff_hists` method
     '''
-    conf = gut.load_conf(package='rx_pid_data', fpath='config/config.yaml')
+    conf    = gut.load_conf(package='rx_pid_data', fpath='config/config.yaml')
+    binning = _get_binning(conf=conf)
 
     cfg : dict              = {}
     cfg['sample']           = conf['samples'][Data.sample]
     cfg['pid_cuts']         = [ _get_pid_cuts(conf=conf) ] # PIDCalib2 expects a list of cuts, we use one cut, make list of one element...
     cfg['cuts']             = _get_prior_cuts(conf=conf)
-    cfg['binning_file']     = _get_binning_path(conf=conf)
+    cfg['binning_file']     = _get_binning_path(binning=binning)
+    cfg['bin_vars']         = _get_binning_vars(binning=binning)
     cfg['magnet']           = _get_polarity()
     cfg['particle']         = Data.particle
     cfg['output_dir']       = Data.out_dir
