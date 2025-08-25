@@ -137,31 +137,30 @@ def _get_polarity() -> str:
 
     return polarity
 # --------------------------------
-def _initialize() -> None:
-    if Data.verbose:
-        LogStore.set_level('rx_pid:create_pid_maps', 10)
+def _get_config() -> dict[str,Any]:
+    '''
+    Returns
+    --------------
+    Returns configuration dictionary needed by PIDCalib2
+    `make_eff_hists` method
+    '''
+    conf = gut.load_conf(package='rx_pid_data', fpath='config/config.yaml')
 
-    Data.conf                 = _load_data(kind='config')
+    cfg : dict              = {}
+    cfg['sample']           = conf['samples'][Data.sample]
+    cfg['pid_cuts']         = [ _get_pid_cuts(conf=conf) ] # PIDCalib2 expects a list of cuts, we use one cut, make list of one element...
+    cfg['cuts']             = _get_prior_cuts(conf=conf)
+    cfg['binning_file']     = _get_binning_path(conf=conf)
+    cfg['magnet']           = _get_polarity()
+    cfg['particle']         = Data.particle
+    cfg['output_dir']       = Data.out_dir
+    cfg['max_files']        = Data.max_files
+    cfg['verbose']          = Data.verbose
+    cfg['local_dataframe']  = None
+    cfg['file_list']        = None
+    cfg['samples_file']     = None
 
-    Data.conf['sample']       = Data.conf['samples'][Data.sample]
-    del Data.conf['samples']
-
-    Data.conf['pid_cuts']     = [ _get_pid_cuts() ] # PIDCalib2 expects a list of cuts, we use one cut, make list of one element...
-    Data.conf['bin_vars']     = Data.conf['particles'][Data.particle]['bin_vars']
-    del Data.conf['particles']
-
-    Data.conf['cuts']         = _get_cuts()
-    del Data.conf['selection']
-
-    Data.conf['magnet']       = _get_polarity()
-    Data.conf['particle']     = Data.particle
-    Data.conf['output_dir']   = Data.out_dir
-    Data.conf['binning_file'] = _path_from_kind(kind='binning')
-    Data.conf['max_files']       = Data.max_files
-    Data.conf['verbose']         = Data.verbose
-    Data.conf['local_dataframe'] = None
-    Data.conf['file_list']       = None
-    Data.conf['samples_file']    = None
+    return cfg 
 # --------------------------------
 def main():
     '''
