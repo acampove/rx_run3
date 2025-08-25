@@ -164,6 +164,7 @@ def _get_pid_cuts(conf : DictConfig) -> str:
     tag_cut = conf['subregions']['hadron_tagging'][Data.particle]
     brm_cut = conf['subregions']['brem'][Data.brem]
     l_cut   = l_cut + [tag_cut, brm_cut]
+    l_cut   = [ _assign_particle_name(name=cut) for cut in l_cut ]
     cut     = ' & '.join(l_cut)
 
     log.debug(f'Using PID cut: {cut}')
