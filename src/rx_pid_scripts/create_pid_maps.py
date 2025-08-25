@@ -84,6 +84,24 @@ def _get_binning_path(conf : DictConfig) -> str:
     gut.dump_json(data, json_path)
 
     return json_path
+# ----------------------
+def _assign_particle_name(name : str) -> str:
+    '''
+    Parameters
+    -------------
+    name: String containing PARTICLE substring
+
+    Returns
+    -------------
+    Input string with substring replaced with proper name
+    '''
+    name = name.replace('PARTICLE', Data.particle)
+
+    # Tree has pion branch with lowercase "p"
+    # PIDCalib2 has them with uppercase
+    name = name.replace('Pi_', 'pi_')
+
+    return name
 # --------------------------------
 def _get_prior_cuts(conf : DictConfig) -> list[str]:
     '''
