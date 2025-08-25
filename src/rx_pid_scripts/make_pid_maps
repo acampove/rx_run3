@@ -47,6 +47,11 @@ get_opts()
 # -----------------------------------------------------
 setup()
 {
+    if [[ $TEST -eq 2 ]];then
+        echo "Skipping setup"
+        return
+    fi
+
     . /cvmfs/lhcb.cern.ch/lib/LbEnv
     lb-conda-dev virtual-env default venv
 
