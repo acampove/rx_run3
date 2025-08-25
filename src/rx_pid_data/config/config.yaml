@@ -17,11 +17,8 @@ selection :
   - PARTICLE_BPVIPCHI2 > 9
   - PARTICLE_PPHASRICH
   - PARTICLE_INECAL
-maps:
-  binning: config/binning.yaml
-  vars:
-    - log10(PARTICLE_PT)
-    - ETA
+binning: 
+  nominal : config/binning.yaml
 # -----------------------------------------------
 subregions:
   hadron_tagging:
