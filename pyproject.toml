@@ -9,7 +9,7 @@ dependencies= [
 'mplhep',
 'fsspec-xrootd',
 'omegaconf>=2.3.0',
-'dmu @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git@master',
+'data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git@master',
 'pidcalib2']
 
 [project.optional-dependencies]
