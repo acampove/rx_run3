@@ -171,18 +171,19 @@ def _get_constraints(nll : ExtendedUnbinnedNLL) -> DictConfig:
         key  : Name of parameter
         Value: Tuple with mu and sigma for constraining parameter
     '''
-    crd     = ConstraintReader(obj=nll, q2bin=Data.q2bin)
-    d_cns_1 = crd.get_constraints()
-    cons_1  = ConstraintAdder.dict_to_cons(d_cns=d_cns_1, name='scales', kind='GaussianConstraint')
+    crd   = ConstraintReader(obj=nll, q2bin=Data.q2bin)
+    d_cns = crd.get_constraints()
+    cons  = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='scales', kind='GaussianConstraint')
 
-    mrd     = MisIDConstraints(
-        obs   = Data.obs,
-        cfg   = Data.fit_cfg.model.constraints.misid,
-        q2bin = Data.q2bin)
-    d_cns_2 = mrd.get_constraints()
-    cons_2  = ConstraintAdder.dict_to_cons(d_cns=d_cns_2, name='misid' , kind='PoissonConstraint')
+    if _use_constraints(kind='misid'):
+        mrd     = MisIDConstraints(
+            obs   = Data.obs,
+            cfg   = Data.fit_cfg.model.constraints.misid,
+            q2bin = Data.q2bin)
+        d_cns   = mrd.get_constraints()
+        tmp     = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='misid' , kind='PoissonConstraint')
+        cons    = OmegaConf.merge(cons, tmp)
 
-    cons = OmegaConf.merge(cons_1, cons_2)
     if not isinstance(cons, DictConfig):
         raise ValueError('Configuration is not a DictConfig')
 
