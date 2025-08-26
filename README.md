@@ -190,5 +190,9 @@ This will:
 The outputs will go next to the `toys.parquet` file in the `plots` directory
 
 A summary of the toy fits will be saved in the `summary.yaml` file within the
-`v3` directory.
+`v3` directory, plots can be made from it by running:
+
+```bash
+summarize_toys -v v3
+```
 
