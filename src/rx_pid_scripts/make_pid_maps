@@ -23,7 +23,7 @@ get_opts()
         exit 1
     fi  
 
-    OPATH=/eos/home-a/acampove/calibration/mis_id/scan
+    OPATH=/eos/home-a/acampove/calibration/mis_id
     TEST=0
     while getopts :hf:i:t:o: option; do 
         case "${option}" in
@@ -72,15 +72,15 @@ run()
             for BLOCK in b1 b2 b3 b5 b6 b7 b8;do
                 for PARTICLE in Pi K;do
                     if [[ $INDEX -eq $JOBID ]];then
-                        echo "Running at $INDEX with: $BLOCK, $PARTICLE, $CONF"
+                        echo "Running at $INDEX with: $BREM, $REGION, $BLOCK, $PARTICLE"
                         if [[ $TEST -eq 0 ]];then
-                            create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$CONF
+                            create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$BREM
                         elif [[ $TEST -eq 1 ]];then
                             echo "Running test"
-                            create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$CONF -m 5 -v
+                            create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$BREM -m 5 -v
                         elif [[ $TEST -eq 2 ]];then
                             echo "Would have ran:"
-                            echo "create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$CONF -m 5 -v"
+                            echo "create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$BREM -m 5 -v"
                         else
                             echo "Invalid value for test argument $TEST"
                             exit 1
