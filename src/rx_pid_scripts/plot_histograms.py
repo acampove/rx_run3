@@ -166,8 +166,8 @@ def _divide_hists(sig : bh, ctr : bh) -> bh:
 
     return rat
 # ------------------------------------
-def _plot_maps(l_path : list[str], kind : str) -> None:
-    for sig_pkl_path in l_path:
+def _plot_maps(l_path : list[str], brem : str) -> None:
+    for sig_pkl_path in tqdm.tqdm(l_path, ascii=' -'):
         sig_hist = _hist_from_path(sig_pkl_path)
         if sig_hist is None:
             continue
