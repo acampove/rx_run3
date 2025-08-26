@@ -15,7 +15,7 @@ import matplotlib.pyplot   as plt
 import pandas              as pnd
 from hist                  import Hist
 from hist.axis             import Regular
-from ROOT                  import RDataFrame, RDF
+from ROOT                  import RDataFrame, RDF # type: ignore
 from omegaconf             import DictConfig
 from dmu.logging.log_store import LogStore
 from dmu.generic           import utilities as gut
