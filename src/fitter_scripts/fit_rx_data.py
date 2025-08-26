@@ -68,7 +68,7 @@ def _parse_args() -> None:
     parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'  , default =  '')
     parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default    =0)
     parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                 , default=Data.nthread)
-    parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[10, 20, 30], default=Data.log_lvl)
+    parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[5, 10, 20, 30], default=Data.log_lvl)
     parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin',              choices=Data.l_q2bin , required=True)
     parser.add_argument('-C', '--mva_cmb', type=float, help='Cut on combinatorial MVA working point'    , required=True)
     parser.add_argument('-P', '--mva_prc', type=float, help='Cut on part reco MVA working point'        , required=True)
@@ -184,7 +184,7 @@ def _get_constraints(nll : ExtendedUnbinnedNLL) -> DictConfig:
         tmp     = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='misid' , kind='PoissonConstraint')
         cons    = OmegaConf.merge(cons, tmp)
     else:
-        log.info('Skipping misid constraings')
+        log.info('Skipping misid constraints')
 
     if not isinstance(cons, DictConfig):
         raise ValueError('Configuration is not a DictConfig')
