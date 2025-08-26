@@ -28,9 +28,9 @@ model:
     Bs_phiee_eq_Ball_DPC              : rare/electron/bsphiee.yaml
     jpsi_leakage                      : rare/electron/jpsi_leakage.yaml
     psi2_leakage                      : rare/electron/psi2_leakage.yaml
-    signal                            : rare/electron/signal_non_parametric.yaml
     kkk                               : rare/electron/kkk.yaml
     kpipi                             : rare/electron/kpipi.yaml
+    signal                            : rare/electron/signal_non_parametric.yaml
   constraints:
     misid     : misid/electron/data_misid.yaml
     prec_rare :
