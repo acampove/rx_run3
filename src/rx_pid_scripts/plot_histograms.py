@@ -70,7 +70,7 @@ def _get_pkl_paths(kind : str, brem : str) -> list[str]:
 
     return l_path
 # ------------------------------------
-def _hist_from_path(pkl_path : str) -> Union[bh,None]:
+def _hist_from_path(pkl_path : str) -> bh|None:
     with open(pkl_path, 'rb') as ifile:
         try:
             hist = pickle.load(ifile)
@@ -143,7 +143,7 @@ def _add_info(
     plt.ylabel(ylabel)
     plt.title(title)
 # ------------------------------------
-def _divide_hists(sig : str, ctr : str) -> bh:
+def _divide_hists(sig : bh, ctr : bh) -> bh:
     vfun    = numpy.vectorize(lambda x : x[0])
 
     values1 = sig.view()
