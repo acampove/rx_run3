@@ -6,8 +6,9 @@ import re
 import glob
 import pickle
 import argparse
-from typing import TypeAlias, Union
+from typing import TypeAlias
 
+import tqdm
 import numpy
 import mplhep
 import matplotlib.pyplot as plt
