@@ -110,7 +110,7 @@ def _get_mcdt_q2(sample : str, trigger : str) -> numpy.ndarray:
     Numpy array with q2 values from MCDT divided by 1000_000
     '''
     gtr    = RDFGetter(sample=sample, trigger=trigger, tree='MCDecayTree')
-    rdf    = gtr.get_rdf()
+    rdf    = gtr.get_rdf(per_file=False)
     rdf    = cast(RDataFrame, rdf)
     arr_q2 = rdf.AsNumpy(['q2'])['q2']
 
@@ -139,7 +139,7 @@ def _get_data() -> pnd.DataFrame:
 
     with RDFGetter.multithreading(nthreads=5):
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
         rdf = _add_flags(rdf=rdf, sample=sample, trigger=trigger)
         data= rdf.AsNumpy(Data.l_col)
 
