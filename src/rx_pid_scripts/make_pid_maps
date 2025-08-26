@@ -77,7 +77,7 @@ run()
                             create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$CONF
                         elif [[ $TEST -eq 1 ]];then
                             echo "Running test"
-                            create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$CONF -m 1 -v
+                            create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$CONF -m 5 -v
                         elif [[ $TEST -eq 2 ]];then
                             echo "Would have ran:"
                             echo "create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$CONF -m 5 -v"
