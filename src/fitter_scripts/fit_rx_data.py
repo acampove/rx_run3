@@ -120,7 +120,7 @@ def _get_observable() -> zobs:
     -------------
     Zfit observable
     '''
-    cfg_obs      = Data.fit_cfg.model.observable
+    cfg_obs      = Data.fit_cfg.model.observable[Data.q2bin]
     [minx, maxx] = cfg_obs.range
     obs = zfit.Space(cfg_obs.name, minx, maxx)
 
