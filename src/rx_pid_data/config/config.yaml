@@ -25,13 +25,13 @@ subselection:
     brem   : PARTICLE_HASBREM==1
 subregions:
   hadron_tagging:
-    Pi     : PARTICLE_PROBNN_K < 0.1
-    K      : PARTICLE_PROBNN_K > 0.1
+    Pi     : (PARTICLE_PROBNN_K < 0.1)
+    K      : (PARTICLE_PROBNN_K > 0.1)
 # -----------------------------------------------
 regions:
   control:
-    - PROBNN_E < 0.2 | DLLe < 3.0
-    - DLLe     >-1.0
+    - (PROBNN_E < 0.2 | DLLe < 3.0)
+    - (DLLe     >-1.0)
   signal:
-    - PROBNN_E > 0.2
-    - DLLe     > 3.0
+    - (PROBNN_E > 0.2)
+    - (DLLe     > 3.0)
