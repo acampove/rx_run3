@@ -80,7 +80,7 @@ run()
                             create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$CONF -m 1 -v
                         elif [[ $TEST -eq 2 ]];then
                             echo "Would have ran:"
-                            echo "create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$CONF -m 1 -v"
+                            echo "create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$CONF -m 5 -v"
                         else
                             echo "Invalid value for test argument $TEST"
                             exit 1
