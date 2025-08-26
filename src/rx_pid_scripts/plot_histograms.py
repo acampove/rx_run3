@@ -95,12 +95,18 @@ def _get_values(hist : bh) -> numpy.ndarray:
 
     return counts
 # ------------------------------------
-def _plot_hist(hist : bh, pkl_path : str, is_ratio : bool = False) -> None:
+def _plot_hist(
+    hist     : bh, 
+    pkl_path : str,
+    brem     : str,
+    is_ratio : bool = False) -> None:
     x_edges    = hist.axes[0].edges
     y_edges    = hist.axes[1].edges
     counts     = _get_values(hist)
 
     arr_x, arr_y = numpy.meshgrid(x_edges, y_edges)
+
+    plt.figure(figsize=(20, 15))
 
     if is_ratio:
         max_rat = Data.max_rat_pi if '-Pi-' in pkl_path else Data.max_rat_k
