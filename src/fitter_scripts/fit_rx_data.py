@@ -136,6 +136,29 @@ def _get_fit_name() -> str:
 
     return name
 # ----------------------
+def _use_constraints(kind : str) -> bool:
+    '''
+    Parameters
+    -------------
+    kind: Label for constraints, e.g. misid
+
+    Returns
+    -------------
+    It will check in the config and will return true to run on these constraints
+    E.g. components not in the model, do not need constraints
+    '''
+    if kind not in ['misid']:
+        raise ValueError(f'Invalid kind: {kind}')
+
+    l_misid   = ['kkk', 'kpipi']
+    components= Data.fit_cfg.model.components
+    all_found = all(component in components for component in l_misid)
+
+    if kind == 'misid' and all_found:
+        return True
+
+    return False
+# ----------------------
 def _get_constraints(nll : ExtendedUnbinnedNLL) -> DictConfig:
     '''
     Parameters
