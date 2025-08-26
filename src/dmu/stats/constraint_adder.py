@@ -131,12 +131,13 @@ class ConstraintAdder:
         self._d_cns.update(dict(zip(l_name, l_obs_par)))
 
         log.verbose('Creating Gaussian constraint')
+        log.verbose(f'Parameters :\n {l_name}')
         log.verbose(f'Observation:\n {l_obs_val}')
         log.verbose(f'Covariance :\n {cfg.cov}')
 
-        s_par = { self._d_par[name] for name in cfg.parameters }
+        l_par = [ self._d_par[name] for name in cfg.parameters ]
         cns   = zfit.constraint.GaussianConstraint(
-            params      = s_par, 
+            params      = l_par, 
             observation = l_obs_par,
             cov         = cfg.cov)
 
@@ -158,11 +159,12 @@ class ConstraintAdder:
         self._d_cns.update(dict(zip(l_name, l_obs_par)))
 
         log.verbose('Creating Poisson constraint')
+        log.verbose(f'Parameters :\n{l_name}')
         log.verbose(f'Observation:\n{l_obs_val}')
 
-        s_par = { self._d_par[name] for name in cfg.parameters }
+        l_par = [ self._d_par[name] for name in cfg.parameters ]
         cns   = zfit.constraint.PoissonConstraint(
-            params      = s_par, 
+            params      = l_par, 
             observation = l_obs_par)
 
         return cns
