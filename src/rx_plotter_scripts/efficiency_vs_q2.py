@@ -28,7 +28,7 @@ class Data:
     '''
     Class meant to be used to share attributes
     '''
-    cfg     : DictConfig|None = None
+    cfg     : DictConfig
     channel : str|None        = None
     analysis: str|None        = None
 
