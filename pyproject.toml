@@ -8,7 +8,8 @@ dependencies= [
 'numpy',
 'mplhep',
 'fsspec-xrootd',
-'data-manipulation-utilities',
+'omegaconf>=2.3.0',
+'dmu @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git@master',
 'pidcalib2']
 
 [project.optional-dependencies]
