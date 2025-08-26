@@ -59,9 +59,9 @@ def _parse_args():
 
     Data.dir_path = args.dir_path
 # ------------------------------------
-def _get_pkl_paths(kind : str) -> list[str]:
+def _get_pkl_paths(kind : str, brem : str) -> list[str]:
     particle = {'kaon' : 'K', 'pion' : 'Pi'}[kind]
-    path_wc  = f'{Data.dir_path}/*-{particle}-*{Data.sig_cut}*.pkl'
+    path_wc  = f'{Data.dir_path}/{brem}/*-{particle}-*{Data.sig_cut}*.pkl'
     l_path   = glob.glob(path_wc)
     npath    = len(l_path)
 
@@ -111,7 +111,7 @@ def _plot_hist(hist : bh, pkl_path : str, is_ratio : bool = False) -> None:
         plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None, vmin=Data.min_eff, vmax=max_eff)
         plt.colorbar(label='Efficiency')
 
-    _add_info(pkl_path, is_ratio)
+    _add_info(pkl_path, is_ratio, brem)
 
     ext      = '_ratio.png' if is_ratio else '.png'
     out_path = pkl_path.replace('.pkl', ext)
@@ -119,7 +119,10 @@ def _plot_hist(hist : bh, pkl_path : str, is_ratio : bool = False) -> None:
     plt.savefig(out_path)
     plt.close()
 # ------------------------------------
-def _add_info(pkl_path : str, is_ratio : bool) -> None:
+def _add_info(
+    pkl_path : str, 
+    is_ratio : bool,
+    brem     : str)-> None:
     file_name = os.path.basename(pkl_path)
     mtch      = re.match(Data.regex, file_name)
     if not mtch:
@@ -128,7 +131,9 @@ def _add_info(pkl_path : str, is_ratio : bool) -> None:
     [block, pol, par, cut, xlabel, ylabel] = mtch.groups()
 
     par   = {'K' : 'Kaon', 'Pi' : 'Pion'}[par]
-    title = f'{par}; Mag {pol}; {block}'
+    brem  = {'brem' : 'brem != 0', 'nobrem' : 'brem == 0'}[brem]
+
+    title = f'{par}; Mag {pol}; {block}, {brem}'
     if not is_ratio:
         title += f';\n{cut}'
     else:
@@ -161,17 +166,17 @@ def _plot_maps(l_path : list[str], kind : str) -> None:
         if sig_hist is None:
             continue
 
-        _plot_hist(hist=sig_hist, pkl_path=sig_pkl_path)
+        _plot_hist(hist=sig_hist, pkl_path=sig_pkl_path, brem=brem)
 
         ctr_pkl_path = sig_pkl_path.replace(Data.sig_cut, Data.ctr_cut)
         ctr_hist = _hist_from_path(ctr_pkl_path)
         if ctr_hist is None:
             continue
 
-        _plot_hist(hist=ctr_hist, pkl_path=ctr_pkl_path)
+        _plot_hist(hist=ctr_hist, pkl_path=ctr_pkl_path, brem=brem)
 
         rat_hist = _divide_hists(sig=sig_hist, ctr=ctr_hist)
-        _plot_hist(hist=rat_hist, pkl_path=sig_pkl_path, is_ratio=True)
+        _plot_hist(hist=rat_hist, pkl_path=sig_pkl_path, brem=brem, is_ratio=True)
 # ------------------------------------
 def main():
     '''
@@ -181,8 +186,9 @@ def main():
     _initialize()
 
     for kind in ['kaon', 'pion']:
-        l_path = _get_pkl_paths(kind)
-        _plot_maps(l_path, kind)
+        for brem in ['brem', 'nobrem']:
+            l_path = _get_pkl_paths(kind, brem)
+            _plot_maps(l_path, brem)
 # ------------------------------------
 if __name__ == "__main__":
     main()
