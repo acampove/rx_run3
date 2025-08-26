@@ -183,6 +183,8 @@ def _get_constraints(nll : ExtendedUnbinnedNLL) -> DictConfig:
         d_cns   = mrd.get_constraints()
         tmp     = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='misid' , kind='PoissonConstraint')
         cons    = OmegaConf.merge(cons, tmp)
+    else:
+        log.info('Skipping misid constraings')
 
     if not isinstance(cons, DictConfig):
         raise ValueError('Configuration is not a DictConfig')
