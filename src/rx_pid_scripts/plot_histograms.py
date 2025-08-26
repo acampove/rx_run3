@@ -28,7 +28,7 @@ class Data:
     d_hadron_cut = {'pion' : '&(PROBNN_K<0.1)', 'kaon' : '&(PROBNN_K>0.1)'}
 
     max_eff_pi : float = 0.05
-    max_eff_k  : float = 0.05
+    max_eff_k  : float = 0.20
     min_eff    : float = 0.00
 
     max_rat_pi : float = 2.5
@@ -40,7 +40,7 @@ class Data:
     fontsize   : int
     fancy      : bool = True
     skip_values: bool = True
-    regex      : str  = r'effhists-2024_WithUT_(block\d)(?:_v1)?-(up|down)-([A-Z,a-z,0-9]+)-(.*)-([\w,(,)]+)\.(\w+)\.pkl'
+    regex      : str  = r'effhists-2024_WithUT_(block\d)(?:_v\d+)?-(up|down)-([A-Z,a-z,0-9]+)-(.*)-([\w,(,)]+)\.(\w+)\.pkl'
 # ---------------------------------
 def _initialize() -> None:
     plt.style.use(mplhep.style.LHCb2)
