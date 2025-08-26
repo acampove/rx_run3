@@ -211,11 +211,8 @@ def _add_lines() -> None:
         return
 
     cfg   = _check_none(obj=Data.cfg, kind='lines')
-    color = cfg.lines.styling.color
-    style = cfg.lines.styling.style
-
     for bound in cfg.lines.bounds.values():
-        plt.axvline(x=bound, color=color, linestyle=style)
+        plt.axvline(x=bound, **cfg.lines.styling)
 # ----------------------
 def _plot_efficiencies(
         df : pnd.DataFrame,
