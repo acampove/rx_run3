@@ -130,8 +130,6 @@ def _get_data() -> pnd.DataFrame:
         - MVA flag, true for entries passing selection, including MVA
         - Array of true q2 attached as an atribute with key "total"
     '''
-    if Data.cfg is None:
-        raise ValueError('Config not set')
 
     log.debug('Loading data')
 
