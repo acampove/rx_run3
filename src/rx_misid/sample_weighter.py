@@ -174,7 +174,7 @@ class SampleWeighter:
         boosthistogram object
         '''
         ana_dir = os.environ['ANADIR']
-        pkl_dir = f'{ana_dir}/{self._cfg.path}/{kind}'
+        pkl_dir = f'{ana_dir}/{self._cfg.maps_path}/{kind}'
         path_wc = f'{pkl_dir}/*.pkl'
 
         d_map = {}
