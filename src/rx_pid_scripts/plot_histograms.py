@@ -97,6 +97,21 @@ def _get_values(hist : bh) -> numpy.ndarray:
 
     return counts
 # ------------------------------------
+def _annotate_pcolormesh(arr_x, arr_y, counts, **kwargs):
+    norm = Normalize(vmin=0, vmax=kwargs['maxz'])
+    cmap = cm.get_cmap('viridis')
+
+    for i in range(len(arr_x)-1):
+        for j in range(len(arr_y)-1):
+            x_center = (arr_x[i] + arr_x[i+1]) / 2
+            y_center = (arr_y[j] + arr_y[j+1]) / 2
+
+            value = counts[i,j]
+            rgba  = cmap(norm(value))
+            brightness = 0.299 * rgba[0] + 0.587 * rgba[1] + 0.114 * rgba[2]
+            color = 'black' if brightness > 0.5 else 'white'
+            plt.text(x_center, y_center, f'{value:.2f}', ha='center', va='center', color=color)
+# ------------------------------------
 def _plot_hist(
     hist     : bh, 
     pkl_path : str,
