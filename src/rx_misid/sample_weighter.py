@@ -339,6 +339,27 @@ class SampleWeighter:
         eff = self._check_eff(eff=eff, x=x_value, y=y_value)
 
         return eff
+    # ----------------------
+    def _get_brem_key(self, lep : str, row : pnd.Series) -> str:
+        '''
+        Parameters
+        -------------
+        lep: Name of lepton in this iteration, e.g. L1
+        row: Row containing information of candidate
+
+        Returns
+        -------------
+        Identifier for brem category, e.g brem, nobrem
+        '''
+        name  = f'{lep}_HASBREM'
+        value = row[name]
+
+        if value == 1:
+            return BREM 
+        if value == 0:
+            return NOBREM 
+
+        raise ValueError(f'Invalid {name} value: {value}')
     # ------------------------------
     def _check_eff(self, eff : float, x : float, y : float) -> float:
         '''
