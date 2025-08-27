@@ -2,7 +2,7 @@
 Module containing functions used to test PIDWeighter
 '''
 import numpy
-from ROOT                  import RDF, RDataFrame
+from ROOT                  import RDF, RDataFrame # type: ignore
 from dmu.logging.log_store import LogStore
 from rx_data.rdf_getter    import RDFGetter
 from rx_misid.pid_weighter import PIDWeighter
