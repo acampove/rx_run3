@@ -166,5 +166,4 @@ def test_simple(is_sig : bool, sample : str):
 
     _validate_weights(df=df, mode=mode, sample=sample, lep='L1', brem=False)
     _validate_weights(df=df, mode=mode, sample=sample, lep='L2', brem=False)
-
 # ----------------------------
