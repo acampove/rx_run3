@@ -164,8 +164,10 @@ def _get_pid_cuts(conf : DictConfig) -> str:
     - Brem or no brem cut
     '''
     l_cut   = conf['regions'   ][Data.region]
-    tag_cut = conf['subregions']['hadron_tagging'][Data.particle]
-    l_cut   = l_cut + [tag_cut]
+    if Data.region == 'control':
+        tag_cut = conf['subregions']['hadron_tagging'][Data.particle]
+        l_cut   = l_cut + [tag_cut]
+
     l_cut   = [ _assign_particle_name(name=cut) for cut in l_cut ]
     cut     = ' & '.join(l_cut)
 
