@@ -39,61 +39,6 @@ def initialize():
     LogStore.set_level('rx_misid:sample_weighter', 20)
     os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
-def _validate_weights(
-    sample : str,
-    df     : pnd.DataFrame,
-    mode   : str,
-    brem   : bool,
-    lep    : str) -> None:
-    '''
-    Parameters
-    ----------------
-    mode: control or signal
-    brem: True if track has brem (i.e. efficiency came from brem map)
-    lep : E.g. L1, L2
-    '''
-    df     = df[df[f'{lep}_HASBREM'] == int(brem) ]
-    arr_pt = df[f'{lep}_TRACK_PT' ].to_numpy()
-    arr_et = df[f'{lep}_TRACK_ETA'].to_numpy()
-    arr_wt = df['weight'          ].to_numpy()
-
-    arr_zr = arr_wt[arr_wt < 1e-6]
-    nzeros = len(arr_zr)
-    log.info(f'Zeroes= {nzeros}')
-
-    _, (ax1, ax2, ax3) = plt.subplots(ncols=3, figsize=(20, 7))
-
-    ax1.hist2d(arr_et, arr_pt, bins=50, cmap='viridis', vmin=0, vmax=60)
-    ax1.set_xlabel(r'$\eta$')
-    ax1.set_ylabel(r'$p_T$')
-    ax1.set_title('Unweighted')
-
-    ax2.hist2d(arr_et, arr_pt, bins=50, cmap='viridis', vmin=0, vmax=None, weights=arr_wt)
-    ax2.set_xlabel(r'$\eta$')
-    ax2.set_ylabel(r'$p_T$')
-    ax2.set_title('Weighted')
-
-    if sample in ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC', 'DATA_24_MagUp_24c2']:
-        rng = 0, 2.00
-        bins= 3
-    elif mode == 'control':
-        rng = 1e-3, 20
-        bins= 200
-    elif mode == 'signal':
-        rng = 1e-3, 1
-        bins= 200
-    else:
-        raise ValueError(f'Invalid mode: {mode}')
-
-    ax3.hist(100 * arr_wt, bins=bins, range=rng)
-    ax3.set_xlabel('Efficiencies [%]')
-
-    brem_name = {True : 'brem', False : 'nobrem'}[brem]
-
-    plt.tight_layout()
-    plt.savefig(f'{Data.out_dir}/{mode}_{sample}_{lep}_{brem_name}.png')
-    plt.close()
-# -------------------------------------------------------
 def _get_dataframe(good_phase_space :  bool = True) -> pnd.DataFrame:
     df           = pnd.DataFrame(index=range(Data.nentries))
     df['hadron'] = numpy.random.choice(['kaon' ,   'pion'], size=Data.nentries)
@@ -153,17 +98,8 @@ def test_simple(is_sig : bool, sample : str):
     df  = wgt.get_weighted_data()
     arr_block_out = df['block'].to_numpy()
 
-    mode = {True : 'signal', False : 'control'}[is_sig]
-
     # Check that no shuffling of entries happened, using
     # array of block numbers
     assert numpy.array_equal(arr_block_inp, arr_block_out)
-
     assert 'pid_weights' in df.attrs
-
-    _validate_weights(df=df, mode=mode, sample=sample, lep='L1', brem=True)
-    _validate_weights(df=df, mode=mode, sample=sample, lep='L2', brem=True)
-
-    _validate_weights(df=df, mode=mode, sample=sample, lep='L1', brem=False)
-    _validate_weights(df=df, mode=mode, sample=sample, lep='L2', brem=False)
 # ----------------------------
