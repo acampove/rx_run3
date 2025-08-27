@@ -5,7 +5,6 @@ import os
 
 import numpy
 import pytest
-import matplotlib.pyplot as plt
 import pandas            as pnd
 from dmu.logging.log_store    import LogStore
 from dmu.generic              import utilities      as gut
