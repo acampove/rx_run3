@@ -7,9 +7,12 @@ import glob
 import math
 import pickle
 import numexpr
+from pathlib import Path
 
 import numpy
-import pandas  as pnd
+import matplotlib.pyplot as plt
+import pandas            as pnd
+from numpy import typing as numpy_typing
 from omegaconf              import DictConfig
 from boost_histogram        import Histogram    as bh
 from boost_histogram        import accumulators as acc
@@ -17,8 +20,9 @@ from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('rx_misid:sample_weighter')
 
-BREM  ='brem'
-NOBREM='nobrem'
+BREM       ='brem'
+NOBREM     ='nobrem'
+FloatArray = numpy_typing.NDArray[numpy.float64]
 # ------------------------------
 class SampleWeighter:
     '''
