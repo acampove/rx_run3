@@ -46,6 +46,7 @@ class SampleWeighter:
 
         self._l_electron_sample = ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC']
         self._l_hadron_sample   = ['Bu_piplpimnKpl_eq_sqDalitz_DPC', 'Bu_KplKplKmn_eq_sqDalitz_DPC']
+        self._l_kind            = ['brem', 'nobrem']
         self._regex             = r'.*_(block\d)(?:_v\d)?-(?:up|down)-(K|Pi)-.*'
 
         #PT:
@@ -62,9 +63,9 @@ class SampleWeighter:
             'Above 1'  : 0} 
 
         self._set_variables()
-        self._df                           = self._get_df(df)
-        self._d_map        : dict[str, bh] = self._load_maps()
-        self._true_electron                = self._is_true_electron()
+        self._df                              = self._get_df(df)
+        self._d_map : dict[str, dict[str,bh]] = { kind : self._get_maps(kind=kind) for kind in self._l_kind }
+        self._true_electron                   = self._is_true_electron()
     # ------------------------------
     def _is_true_electron(self) -> bool:
         '''
