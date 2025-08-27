@@ -631,6 +631,17 @@ class SampleWeighter:
         plt_dir.mkdir(exist_ok=True)
         plt.savefig(plt_dir/fname)
         plt.close()
+
+        fname_wgt = Path(f'weights_{fname}')
+        self._plot_weights(arr_wt=arr_wt, fname=fname_wgt)
+    # ----------------------
+    def _plot_weights(self, arr_wt : FloatArray, fname : Path) -> None:
+        '''
+        Parameters
+        -------------
+        arr_wt: Array of PID weights
+        fname: Name of PNG file where plot will go
+        '''
         # These are transfer weights, should be
         # smaller than 1
         if self._sample.startswith('DATA'):
@@ -643,31 +654,24 @@ class SampleWeighter:
         # These are meant to be Khh samples
         elif self._is_sig: 
             rng = 1e-3, 1  # Low efficiency in signal region
-            bins= 200
+            bins= 100
         else:
             rng = 1e-3, 20 # High efficiency in control region
-            bins= 200
+            bins= 100
     
         if self._sample.startswith('DATA'):
-            ax3.set_xlabel('Transfer weight')
+            plt.xlabel('Transfer weight')
         else:
             arr_wt = 100 * arr_wt
-            ax3.set_xlabel('Efficiencies [%]')
+            plt.xlabel('Efficiencies [%]')
 
-        ax3.hist(arr_wt, bins=bins, range=rng)
+        plt.hist(arr_wt, bins=bins, range=rng, alpha=0.5, label='Weights')
         median_weight = numpy.mean(arr_wt)
         mean_weight   = numpy.median(arr_wt)
-        ax3.axvline(median_weight, label=f'Median: {median_weight:.3f}', color='red', ls=':')
-        ax3.axvline(mean_weight  , label=f'Mean: {mean_weight:.3f}', color='green', ls='--')
-        ax3.legend()
-
-        brem_name   =  'with_brem' if     has_brem else 'no_brem'
-        region_name = 'signal'     if self._is_sig else 'control'
-
-        fname = f'{self._sample}_{brem_name}_{region_name}.png'
-        plt_dir = Path(self._cfg.plots_path)
-        plt_dir.mkdir(exist_ok=True)
-        plt.savefig(plt_dir/fname)
+        plt.axvline(float(median_weight), label=f'Median: {median_weight:.3f}', color='red', ls=':')
+        plt.axvline(float(mean_weight  ), label=f'Mean: {mean_weight:.3f}', color='green', ls='--')
+        plt.legend()
+        plt.savefig(self._cfg.plots_path/fname)
         plt.close()
     # ------------------------------
     def get_weighted_data(self) -> pnd.DataFrame:
