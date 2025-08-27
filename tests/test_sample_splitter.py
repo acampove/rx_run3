@@ -198,7 +198,7 @@ def test_data():
     log.info('Dataframe found, checking')
     _check_dt_stats(df=df, rdf=rdf)
     _plot_data_pide(df=df, sample=sample)
-    _check_columns(df=df)
+    _check_columns(df =df, is_mc = False)
 # -------------------------------------------------------
 @pytest.mark.parametrize('sample', [
     'Bu_Kee_eq_btosllball05_DPC',
@@ -222,5 +222,5 @@ def test_simulation(sample : str):
     log.info('Dataframe found, checking')
     _plot_simulation_pide(df=df, sample=sample)
     _check_mc_stats(rdf=rdf, df=df)
-    _check_columns(df=df)
+    _check_columns(df=df, is_mc = True)
 # -------------------------------------------------------
