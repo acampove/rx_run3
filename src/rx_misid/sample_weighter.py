@@ -128,6 +128,15 @@ class SampleWeighter:
         return df
     # ------------------------------
     def _key_from_path(self, path : str) -> str:
+        '''
+        Parameters
+        ---------------
+        path: Path to pickle file holding the calibration map
+
+        Returns
+        ---------------
+        Identifier, needed as key of dictionary holding maps
+        '''
         file_name = os.path.basename(path)
         mtch = re.match(self._regex, file_name)
         if not mtch:
