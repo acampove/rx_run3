@@ -159,7 +159,16 @@ class SampleWeighter:
     def _load_maps(self) -> dict[str, bh]:
         '''
         Loads pickle files with PIDCalib2 efficiencies for
-        kaons or pions
+        kaons or pions and returns them
+
+        Parameters
+        ----------------
+        kind: Describes things like brem or no brem or different binnings 
+
+        Returns
+        ----------------
+        Dictionary mapping string identfying maps and
+        boosthistogram object
         '''
         ana_dir = os.environ['ANADIR']
         pkl_dir = f'{ana_dir}/{self._cfg.path}'
