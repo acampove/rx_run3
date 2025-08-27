@@ -156,7 +156,7 @@ class SampleWeighter:
 
         return f'{block}_{part}_{region}'
     # ------------------------------
-    def _load_maps(self) -> dict[str, bh]:
+    def _get_maps(self, kind : str) -> dict[str, bh]:
         '''
         Loads pickle files with PIDCalib2 efficiencies for
         kaons or pions and returns them
@@ -171,7 +171,7 @@ class SampleWeighter:
         boosthistogram object
         '''
         ana_dir = os.environ['ANADIR']
-        pkl_dir = f'{ana_dir}/{self._cfg.path}'
+        pkl_dir = f'{ana_dir}/{self._cfg.path}/{kind}'
         path_wc = f'{pkl_dir}/*.pkl'
 
         d_map = {}
@@ -308,8 +308,9 @@ class SampleWeighter:
         '''
         block   = int(row.block)
         key_map = f'block{block}_{row.hadron}_signal' if is_sig else f'block{block}_{row.hadron}_control'
+        brem_key= self._get_brem_key(lep=lep, row=row)
         try:
-            hist    = self._d_map[key_map]
+            hist    = self._d_map[brem_key][key_map]
         except KeyError as exc:
             for key in sorted(self._d_map):
                 log.info(key)
