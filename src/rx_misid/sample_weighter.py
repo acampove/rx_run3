@@ -601,7 +601,7 @@ class SampleWeighter:
         log.info(f'Saving plots in: {self._cfg.plots_path}')
 
         arr_pt, arr_et, arr_wt = self._get_arrays(has_brem=has_brem)
-        _, (ax1, ax2, ax3) = plt.subplots(ncols=3, figsize=(24, 8))
+        _, ((ax1, ax2), (ax3, ax4)) = plt.subplots(ncols=2, nrows=2, figsize=(20, 15))
 
         ax1.hist2d(arr_et, arr_pt, bins=50, cmap='viridis', vmin=0)
         ax1.set_xlabel(r'$\eta$')
@@ -613,6 +613,24 @@ class SampleWeighter:
         ax2.set_ylabel(r'$p_T$')
         ax2.set_title('Weighted')
 
+        ax3.hist(arr_pt, density=True, histtype='step', bins=100, range=(0, 20_000), label='Original', color='black')
+        ax3.hist(arr_pt, density=True, histtype='step', bins=100, range=(0, 20_000), label='Weighted', color='blue' , weights=arr_wt)
+        ax3.set_xlabel(r'$p_T$')
+        ax3.legend()
+
+        ax4.hist(arr_et, density=True, histtype='step', bins=100, range=(0,      5), label='Original', color='black')
+        ax4.hist(arr_et, density=True, histtype='step', bins=100, range=(0,      5), label='Weighted', color='blue' , weights=arr_wt)
+        ax4.set_xlabel(r'$\eta$')
+        ax4.legend()
+
+        brem_name   =  'with_brem' if     has_brem else 'no_brem'
+        region_name = 'signal'     if self._is_sig else 'control'
+
+        fname = f'{self._sample}_{brem_name}_{region_name}.png'
+        plt_dir = Path(self._cfg.plots_path)
+        plt_dir.mkdir(exist_ok=True)
+        plt.savefig(plt_dir/fname)
+        plt.close()
         # These are transfer weights, should be
         # smaller than 1
         if self._sample.startswith('DATA'):
