@@ -108,17 +108,19 @@ def _plot_hist(
 
     arr_x, arr_y = numpy.meshgrid(x_edges, y_edges)
 
-    plt.figure(figsize=(20, 15))
+    plt.figure(figsize=(30, 15))
 
     if is_ratio:
-        max_rat = Data.max_rat_pi if '-Pi-' in pkl_path else Data.max_rat_k
-        plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None, vmin=Data.min_rat, vmax=max_rat)
+        maxz = Data.max_rat_pi if '-Pi-' in pkl_path else Data.max_rat_k
+        plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None, vmin=Data.min_rat, vmax=maxz)
         plt.colorbar(label='$w_{fake}$')
     else:
-        max_eff = Data.max_eff_pi if '-Pi-' in pkl_path else Data.max_eff_k
-        plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None, vmin=Data.min_eff, vmax=max_eff)
-        plt.colorbar(label='Efficiency')
+        counts  = 100 * counts
+        maxz = Data.max_eff_pi if '-Pi-' in pkl_path else Data.max_eff_k
+        plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None, vmin=Data.min_eff, vmax=maxz)
+        plt.colorbar(label='Efficiency [%]')
 
+    _annotate_pcolormesh(x_edges, y_edges, counts, maxz=maxz)
     _add_info(pkl_path, is_ratio, brem)
 
     ext      = '_ratio.png' if is_ratio else '.png'
