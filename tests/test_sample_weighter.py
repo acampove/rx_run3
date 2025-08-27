@@ -76,12 +76,17 @@ def _validate_weights(
     if sample in ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC', 'DATA_24_MagUp_24c2']:
         rng = 0, 2.00
         bins= 3
-    else:
-        rng = 0, 0.01
+    elif mode == 'control':
+        rng = 1e-3, 20
         bins= 200
+    elif mode == 'signal':
+        rng = 1e-3, 1
+        bins= 200
+    else:
+        raise ValueError(f'Invalid mode: {mode}')
 
-    ax3.hist(arr_wt, bins=bins, range=rng)
-    ax3.set_xlabel('Weights')
+    ax3.hist(100 * arr_wt, bins=bins, range=rng)
+    ax3.set_xlabel('Efficiencies [%]')
 
     brem_name = {True : 'brem', False : 'nobrem'}[brem]
 
