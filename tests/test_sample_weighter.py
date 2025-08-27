@@ -43,8 +43,10 @@ def _validate_weights(
     sample : str,
     df     : pnd.DataFrame,
     mode   : str,
+    brem   : bool,
     lep    : str) -> None:
 
+    df     = df[df[f'{lep}_HASBREM'] == int(brem) ]
     arr_pt = df[f'{lep}_TRACK_PT' ].to_numpy()
     arr_et = df[f'{lep}_TRACK_ETA'].to_numpy()
     arr_wt = df['weight'          ].to_numpy()
@@ -75,8 +77,10 @@ def _validate_weights(
     ax3.hist(arr_wt, bins=bins, range=rng)
     ax3.set_xlabel('Weights')
 
+    brem_name = {True : 'brem', False : 'nobrem'}[brem]
+
     plt.tight_layout()
-    plt.savefig(f'{Data.out_dir}/{mode}_{sample}_{lep}.png')
+    plt.savefig(f'{Data.out_dir}/{mode}_{sample}_{lep}_{brem_name}.png')
     plt.close()
 # -------------------------------------------------------
 def _get_dataframe(good_phase_space :  bool = True) -> pnd.DataFrame:
@@ -146,6 +150,10 @@ def test_simple(is_sig : bool, sample : str):
 
     assert 'pid_weights' in df.attrs
 
-    _validate_weights(df=df, mode=mode, sample=sample, lep='L1')
-    _validate_weights(df=df, mode=mode, sample=sample, lep='L2')
+    _validate_weights(df=df, mode=mode, sample=sample, lep='L1', brem=True)
+    _validate_weights(df=df, mode=mode, sample=sample, lep='L2', brem=True)
+
+    _validate_weights(df=df, mode=mode, sample=sample, lep='L1', brem=False)
+    _validate_weights(df=df, mode=mode, sample=sample, lep='L2', brem=False)
+
 # ----------------------------
