@@ -145,6 +145,31 @@ def _check_mc_stats(rdf : RDataFrame, df : pnd.DataFrame) -> None:
     # Use sequence of blocks to check that
     # There is no shufflign of entries for MC
     assert numpy.array_equal(arr_block_rdf, arr_block_pnd)
+# ----------------------
+def _check_columns(df : pnd.DataFrame) -> None:
+    '''
+    Parameters
+    -------------
+    df: Pandas dataframe produced by SampleSplitter
+    '''
+    s_expected = {
+        'B_Mass',
+        'B_Mass_smr',
+        'block',
+        'L1_HASBREM',
+        'L2_HASBREM',
+        'L1_PID_E',
+        'L2_PID_E',
+        'L1_PROBNN_E',
+        'L2_PROBNN_E',
+        'L1_TRACK_PT',
+        'L1_TRACK_ETA',
+        'L2_TRACK_PT',
+        'L2_TRACK_ETA',
+        'weight',
+        'hadron'}
+
+    assert set(df.columns) == s_expected
 # -------------------------------------------------------
 def test_data():
     '''
