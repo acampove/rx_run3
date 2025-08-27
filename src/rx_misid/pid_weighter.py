@@ -4,7 +4,7 @@ Module containing PIDWeighter class
 
 import numpy
 from omegaconf import DictConfig
-from ROOT      import RDF, RDataFrame
+from ROOT      import RDF, RDataFrame # type: ignore
 
 from dmu.logging.log_store import LogStore
 

@@ -5,7 +5,7 @@ Module holding SampleSplitter class
 import numpy
 import pandas as pnd
 
-from ROOT                   import RDataFrame
+from ROOT                   import RDataFrame # type: ignore
 from omegaconf              import DictConfig, OmegaConf
 from dmu.logging.log_store  import LogStore
 from dmu.rdataframe         import utilities as rut
