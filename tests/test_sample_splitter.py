@@ -146,12 +146,19 @@ def _check_mc_stats(rdf : RDataFrame, df : pnd.DataFrame) -> None:
     # There is no shufflign of entries for MC
     assert numpy.array_equal(arr_block_rdf, arr_block_pnd)
 # ----------------------
-def _check_columns(df : pnd.DataFrame) -> None:
+def _check_columns(df : pnd.DataFrame, is_mc : bool) -> None:
     '''
     Parameters
     -------------
     df: Pandas dataframe produced by SampleSplitter
     '''
+    kinds = df['kind'].unique() 
+
+    if not is_mc:
+        assert set(kinds) <= {'FailFail', 'FailPass', 'PassFail'}
+    else:
+        assert set(kinds) <= {'N/A'}
+
     s_expected = {
         'B_Mass',
         'B_Mass_smr',
@@ -166,6 +173,7 @@ def _check_columns(df : pnd.DataFrame) -> None:
         'L1_TRACK_ETA',
         'L2_TRACK_PT',
         'L2_TRACK_ETA',
+        'kind',
         'weight',
         'hadron'}
 
