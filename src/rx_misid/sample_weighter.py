@@ -552,6 +552,105 @@ class SampleWeighter:
 
         log.info(f'{"Entries":<20}{nwgt:<20}'   )
         log.info(f'{"SumW   ":<20}{sumw:<20.2f}')
+    # ----------------------
+    def _get_arrays(self, has_brem : bool) -> tuple[FloatArray, FloatArray, FloatArray]:
+        '''
+        Parameters
+        -------------
+        has_brem: True to pick up only tracks with brem
+
+        Returns
+        -------------
+        Tuple with arrays with PT, ETA and Weights for tracks with(out)
+        brem depending on `has_brem`. These arrays should contain both leptons
+        '''
+        brem_val   = 1 if has_brem else 0
+        df_l1      = self._df[self._df['L1_HASBREM'] == brem_val]
+        df_l2      = self._df[self._df['L2_HASBREM'] == brem_val]
+
+        arr_l1_pt  = df_l1['L1_PT' ].to_numpy()
+        arr_l2_pt  = df_l2['L2_PT' ].to_numpy()
+
+        arr_l1_eta = df_l1['L1_ETA'].to_numpy()
+        arr_l2_eta = df_l2['L2_ETA'].to_numpy()
+
+        arr_l1_wgt = df_l1['weight'].to_numpy()
+        arr_l2_wgt = df_l2['weight'].to_numpy()
+
+        arr_pt = numpy.concatenate((arr_l1_pt , arr_l2_pt ))
+        arr_eta= numpy.concatenate((arr_l1_eta, arr_l2_eta))
+        arr_wgt= numpy.concatenate((arr_l1_wgt, arr_l2_wgt))
+
+        return arr_pt, arr_eta, arr_wgt
+    # ----------------------
+    def _make_diagnostic_plots(self, has_brem : bool) -> None:
+        '''
+        Will plot:
+
+        - Data in 2D histogram with and without weights
+        - Distribution of weights
+
+        Parameters
+        -----------------
+        has_brem: Will plot the distributions for tracks with brem or not
+        '''
+        if 'plots_path' not in self._cfg:
+            log.warning('Plotting path not found in config, not plotting')
+            return
+
+        log.info(f'Saving plots in: {self._cfg.plots_path}')
+
+        arr_pt, arr_et, arr_wt = self._get_arrays(has_brem=has_brem)
+        _, (ax1, ax2, ax3) = plt.subplots(ncols=3, figsize=(24, 8))
+
+        ax1.hist2d(arr_et, arr_pt, bins=50, cmap='viridis', vmin=0)
+        ax1.set_xlabel(r'$\eta$')
+        ax1.set_ylabel(r'$p_T$')
+        ax1.set_title('Unweighted')
+
+        ax2.hist2d(arr_et, arr_pt, bins=50, cmap='viridis', vmin=0, weights=arr_wt)
+        ax2.set_xlabel(r'$\eta$')
+        ax2.set_ylabel(r'$p_T$')
+        ax2.set_title('Weighted')
+
+        # These are transfer weights, should be
+        # smaller than 1
+        if self._sample.startswith('DATA'):
+            rng = 0, 1.00
+            bins= 100 
+        # For now these are just 1 and 0 flags, taken from MC
+        elif self._sample in self._l_electron_sample: 
+            rng = 0, 2.00
+            bins= 3
+        # These are meant to be Khh samples
+        elif self._is_sig: 
+            rng = 1e-3, 1  # Low efficiency in signal region
+            bins= 200
+        else:
+            rng = 1e-3, 20 # High efficiency in control region
+            bins= 200
+    
+        if self._sample.startswith('DATA'):
+            ax3.set_xlabel('Transfer weight')
+        else:
+            arr_wt = 100 * arr_wt
+            ax3.set_xlabel('Efficiencies [%]')
+
+        ax3.hist(arr_wt, bins=bins, range=rng)
+        median_weight = numpy.mean(arr_wt)
+        mean_weight   = numpy.median(arr_wt)
+        ax3.axvline(median_weight, label=f'Median: {median_weight:.3f}', color='red', ls=':')
+        ax3.axvline(mean_weight  , label=f'Mean: {mean_weight:.3f}', color='green', ls='--')
+        ax3.legend()
+
+        brem_name   =  'with_brem' if     has_brem else 'no_brem'
+        region_name = 'signal'     if self._is_sig else 'control'
+
+        fname = f'{self._sample}_{brem_name}_{region_name}.png'
+        plt_dir = Path(self._cfg.plots_path)
+        plt_dir.mkdir(exist_ok=True)
+        plt.savefig(plt_dir/fname)
+        plt.close()
     # ------------------------------
     def get_weighted_data(self) -> pnd.DataFrame:
         '''
@@ -582,6 +681,9 @@ class SampleWeighter:
 
         self._df['weight']           *= arr_wgt
         self._df.attrs['pid_weights'] = arr_wgt.tolist()
+
+        self._make_diagnostic_plots(has_brem=True)
+        self._make_diagnostic_plots(has_brem=False)
 
         return self._df
 # ------------------------------
