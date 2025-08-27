@@ -30,7 +30,7 @@ subregions:
 # -----------------------------------------------
 regions:
   control:
-    - (PROBNN_E < 0.2 | DLLe < 3.0)
+    - ((PROBNN_E < 0.2) | (DLLe < 3.0))
     - (DLLe     >-1.0)
   signal:
     - (PROBNN_E > 0.2)
