@@ -45,7 +45,13 @@ def _validate_weights(
     mode   : str,
     brem   : bool,
     lep    : str) -> None:
-
+    '''
+    Parameters
+    ----------------
+    mode: control or signal
+    brem: True if track has brem (i.e. efficiency came from brem map)
+    lep : E.g. L1, L2
+    '''
     df     = df[df[f'{lep}_HASBREM'] == int(brem) ]
     arr_pt = df[f'{lep}_TRACK_PT' ].to_numpy()
     arr_et = df[f'{lep}_TRACK_ETA'].to_numpy()
