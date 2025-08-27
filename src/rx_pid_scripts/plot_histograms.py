@@ -12,6 +12,8 @@ import tqdm
 import numpy
 import mplhep
 import matplotlib.pyplot as plt
+import matplotlib.cm     as cm
+from matplotlib.colors import Normalize
 from boost_histogram       import Histogram as bh
 from dmu.logging.log_store import LogStore
 
