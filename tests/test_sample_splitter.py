@@ -26,7 +26,10 @@ class Data:
     out_dir = f'/tmp/{user}/tests/rx_misid/sample_splitter'
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before any test
+    '''
     LogStore.set_level('rx_misid:test_splitter', 10)
     LogStore.set_level('rx_misid:splitter'     , 10)
     LogStore.set_level('rx_data:rdf_getter'    , 30)
