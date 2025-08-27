@@ -90,6 +90,8 @@ def test_simple(is_sig : bool, sample : str):
     if not sample.startswith('DATA_'):
         df = df.drop(columns=['kind'])
 
+    cfg.plots_path = Data.out_dir
+
     wgt = SampleWeighter(
         df    = df,
         cfg   = cfg,
