@@ -26,12 +26,12 @@ class Data:
     Data class
     '''
     sig_cut      = '(PROBNN_E>0.2)&(DLLe>3.0)'
-    ctr_cut      = '(PROBNN_E<0.2|DLLe<3.0)&(DLLe>-1.0)'
+    ctr_cut      = '((PROBNN_E<0.2)|(DLLe<3.0))&(DLLe>-1.0)'
     d_hadron_cut = {'pion' : '&(PROBNN_K<0.1)', 'kaon' : '&(PROBNN_K>0.1)'}
 
-    max_eff_pi : float = 0.20
-    max_eff_k  : float = 0.20
-    min_eff    : float = 0.00
+    max_eff_pi : float = 20
+    max_eff_k  : float = 20
+    min_eff    : float = 0.
 
     max_rat_pi : float = 2.5
     max_rat_k  : float = 0.4
