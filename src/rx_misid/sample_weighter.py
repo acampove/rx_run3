@@ -16,6 +16,9 @@ from boost_histogram        import accumulators as acc
 from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('rx_misid:sample_weighter')
+
+BREM  ='brem'
+NOBREM='nobrem'
 # ------------------------------
 class SampleWeighter:
     '''
@@ -46,7 +49,7 @@ class SampleWeighter:
 
         self._l_electron_sample = ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC']
         self._l_hadron_sample   = ['Bu_piplpimnKpl_eq_sqDalitz_DPC', 'Bu_KplKplKmn_eq_sqDalitz_DPC']
-        self._l_kind            = ['brem', 'nobrem']
+        self._l_kind            = [BREM, NOBREM]
         self._regex             = r'.*_(block\d)(?:_v\d)?-(?:up|down)-(K|Pi)-.*'
 
         #PT:
