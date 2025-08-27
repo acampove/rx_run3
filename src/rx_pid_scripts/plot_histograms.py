@@ -29,8 +29,8 @@ class Data:
     ctr_cut      = '((PROBNN_E<0.2)|(DLLe<3.0))&(DLLe>-1.0)'
     d_hadron_cut = {'pion' : '&(PROBNN_K<0.1)', 'kaon' : '&(PROBNN_K>0.1)'}
 
-    max_eff_pi : float = 20
-    max_eff_k  : float = 20
+    max_eff_sg : float =  7
+    max_eff_ct : float = 15 
     min_eff    : float = 0.
 
     max_rat_pi : float = 2.5
@@ -131,7 +131,7 @@ def _plot_hist(
         plt.colorbar(label='$w_{fake}$')
     else:
         counts  = 100 * counts
-        maxz = Data.max_eff_pi if '-Pi-' in pkl_path else Data.max_eff_k
+        maxz = Data.max_eff_ct if '((PROBNN_E<0.2)|(DLLe<3.0))' in pkl_path else Data.max_eff_sg
         plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None, vmin=Data.min_eff, vmax=maxz)
         plt.colorbar(label='Efficiency [%]')
 
