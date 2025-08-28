@@ -64,14 +64,27 @@ def _parse_args():
     Data.dir_path = args.dir_path
     Data.log_levl = args.log_levl
 # ------------------------------------
-def _get_pkl_paths(kind : str, brem : str) -> list[str]:
-    particle = {'kaon' : 'K', 'pion' : 'Pi'}[kind]
-    path_wc  = f'{Data.dir_path}/{brem}/*-{particle}-*{Data.sig_cut}*.pkl'
+def _get_pkl_paths(brem : str) -> list[str]:
+    '''
+    Parameters
+    -----------------
+    brem: Either brem or nobrem. Needed to pick maps
+
+    Returns
+    -----------------
+    Path to pkl files for the control region
+    '''
+    path_wc  = f'{Data.dir_path}/{brem}/*{Data.ctr_cut}*.pkl'
     l_path   = glob.glob(path_wc)
+    l_path   = sorted(l_path)
     npath    = len(l_path)
 
     if npath == 0:
         raise FileNotFoundError(f'No files found in {path_wc}')
+
+    log.info(f'Found {npath} paths')
+    for path in l_path:
+        log.debug(path)
 
     return l_path
 # ------------------------------------
