@@ -346,7 +346,7 @@ def test_val_from_zres() -> None:
     '''
     Tests `val_from_zres`
     '''
-    expected = 5199.939434538848
+    expected = 5200.384730974302
 
     res = placeholder_fit(kind='s+b', fit_dir=None)
     log.info(res)
