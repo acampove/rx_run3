@@ -149,9 +149,9 @@ def test_signal_reso():
     '''
     Tests retriveval of PDF associated to ccbar inclusive decays
     '''
-    component = 'signal_electron'
+    component = 'signal'
     obs       = zfit.Space('B_const_mass_M', limits=(5000, 6900))
-    cfg       = gut.load_conf(package='fitter_data', fpath=f'tests/{component}.yaml')
+    cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
 
     with RDFGetter.max_entries(value=-1),\
         Cache.turn_off_cache(val=None), \
