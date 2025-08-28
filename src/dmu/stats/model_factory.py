@@ -165,9 +165,8 @@ class ModelFactory:
         ---------------
         Name of parameter which:
 
-        - mu          if parameter is meant to be reused, e.g. same mu for all PDFs
-        - mu_preffix, if parameter is shared
-        - mu_preffix3 if not shared but not floating
+        - mu_preffix,     if parameter is shared
+        - mu_preffix3     if not shared but not floating
         - mu_preffix3_flt if not shared and floating
         '''
         # pname = physical name, is something like mu or sg
@@ -177,9 +176,9 @@ class ModelFactory:
         if pname in self._l_flt:
             # If reused parameter is floating
             # find it with flt
-            reuse_name = f'{pname}_flt'
+            reuse_name = f'{pname}_{suffix}_flt'
         else:
-            reuse_name = pname
+            reuse_name = f'{pname}_{suffix}'
 
         if reuse_name in self._d_reuse:
             log.debug(f'Picking name {reuse_name} for reused parameter')
