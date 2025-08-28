@@ -207,7 +207,7 @@ def test_is_pdf_usable():
     '''
     pdf = _get_pdf(kind='composed_nonextended')
 
-    is_pdf_usable(pdf)
+    is_pdf_usable(pdf=pdf)
 #----------------------------------
 def test_save_fit_simple():
     '''
