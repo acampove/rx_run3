@@ -9,7 +9,6 @@ from importlib.resources import files
 import numpy
 from omegaconf              import OmegaConf
 from dmu.logging.log_store  import LogStore
-from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.stats              import utilities as sut
 from dmu.stats.zfit         import zfit
 from dmu.stats.fitter       import Fitter
@@ -29,7 +28,8 @@ class Data:
     '''
     data class
     '''
-    fit_dir = '/tmp/tests/dmu/stats'
+    user    = os.environ['USER']
+    fit_dir = f'/tmp/{user}/tests/dmu/stats'
 #----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def _initialize():
