@@ -358,32 +358,14 @@ def save_fit(
     model   : zpdf|zmod|None,
     res     : zres|None,
     fit_dir : str,
+    plt_cfg : DictConfig,
     d_const : dict[str,tuple[float,float]]|None = None) -> None:
     '''
-    Function used to save fit results, meant to reduce boiler plate code
-
-    Plots: If:
-
-    ptr = ZFitPlotter(data=dat, model=pdf)
-    ptr.plot()
-
-    was done before calling this method, the plot will also be saved
-
     Parameters
     --------------------
     model: PDF to be plotted, if None, will skip steps
     '''
-    os.makedirs(fit_dir, exist_ok=True)
-    log.info(f'Saving fit to: {fit_dir}')
-
-    if plt.get_fignums():
-        fit_path = f'{fit_dir}/fit.png'
-        log.info(f'Saving fit to: {fit_path}')
-        plt.savefig(fit_path)
-        plt.close('all')
-    else:
-        log.info('No fit plot found')
-
+    _save_fit_plot(data=data, model=model, cfg=plt_cfg, fit_dir=fit_dir)
     _save_result(fit_dir=fit_dir, res=res)
 
     df     = data.to_pandas(weightsname=Data.weight_name)
@@ -396,6 +378,43 @@ def save_fit(
 
     print_pdf(model, txt_path=f'{fit_dir}/post_fit.txt', d_const=d_const)
     pdf_to_tex(path=f'{fit_dir}/post_fit.txt', d_par={'mu' : r'$\mu$'}, skip_fixed=True)
+# ----------------------
+def _save_fit_plot(
+    data   : zdata, 
+    model  : zpdf|zmod|None, 
+    fit_dir: str,
+    cfg    : DictConfig) -> None:
+    '''
+    Parameters
+    -------------
+    data   : Data from fit
+    model  : Fitted model
+    fit_dir: Directory where plot will go
+    cfg    : Config used for plotting
+    '''
+    os.makedirs(fit_dir, exist_ok=True)
+    fit_path_lin = f'{fit_dir}/fit_linear.png'
+    fit_path_log = f'{fit_dir}/fit_log.png'
+    log.info(f'Saving fit to: {fit_dir}')
+
+    if model is None:
+        log.warning('Model not found, saving dummy plot')
+        plt.figure()
+        plt.savefig(fit_path_lin)
+        plt.savefig(fit_path_log)
+        plt.close('all')
+        return
+
+    ptr = ZFitPlotter(data=data, model=model)
+    ptr.plot(**cast(Mapping[str, Any], cfg)) # Need this casting to remove error from pyright
+
+    log.info(f'Saving fit to: {fit_path_lin}')
+    plt.savefig(fit_path_lin)
+
+    ptr.axs[0].set_yscale('log')
+    log.info(f'Saving fit to: {fit_path_log}')
+    plt.savefig(fit_path_log)
+    plt.close()
 #-------------------------------------------------------
 def _save_result(fit_dir : str, res : zres|None) -> None:
     '''
