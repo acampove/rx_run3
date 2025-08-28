@@ -120,9 +120,9 @@ def _plot_hist(
     pkl_path : str,
     brem     : str,
     is_ratio : bool = False) -> None:
-    x_edges    = hist.axes[0].edges
-    y_edges    = hist.axes[1].edges
-    counts     = _get_values(hist)
+    x_edges  = hist.axes[0].edges
+    y_edges  = hist.axes[1].edges
+    counts   = _get_values(hist)
 
     arr_x, arr_y = numpy.meshgrid(x_edges, y_edges)
 
