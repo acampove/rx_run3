@@ -43,6 +43,7 @@ class Data:
     fancy      : bool = True
     skip_values: bool = True
     regex      : str  = r'effhists-2024_WithUT_(block\d)(?:_v\d+)?-(up|down)-([A-Z,a-z,0-9]+)-(.*)-([\w,(,)]+)\.(\w+)\.pkl'
+    log_levl   : int  = 20
 # ---------------------------------
 def _initialize() -> None:
     plt.style.use(mplhep.style.LHCb2)
@@ -57,9 +58,11 @@ def _initialize() -> None:
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to plot histograms in pkl files created by PIDCalib2')
     parser.add_argument('-d', '--dir_path', type=str, help='Path to directory with PKL files')
+    parser.add_argument('-l', '--log_levl', type=int, help='Logging level, to control verbosity', default=Data.log_levl)
     args   = parser.parse_args()
 
     Data.dir_path = args.dir_path
+    Data.log_levl = args.log_levl
 # ------------------------------------
 def _get_pkl_paths(kind : str, brem : str) -> list[str]:
     particle = {'kaon' : 'K', 'pion' : 'Pi'}[kind]
@@ -209,6 +212,8 @@ def main():
     '''
     _parse_args()
     _initialize()
+
+    LogStore.set_level('rx_pid:plot_histograms', Data.log_levl)
 
     for kind in ['kaon', 'pion']:
         for brem in ['brem', 'nobrem']:
