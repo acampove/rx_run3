@@ -28,7 +28,7 @@ class MisIDConstraints(Cache):
     Class meant to provide constraints for the yields of different
     misID components, e.g.:
 
-    - kpip:
+    - kpipi:
         - 3
         - 1
     - kkk:
