@@ -247,11 +247,11 @@ def _get_output_directory() -> str:
     if Data.block == 'uninitialized':
         block_name = 'all'
     else:
-        block_name = Data.block 
+        block_name = f'b{Data.block}'
 
     name    = _get_fit_name()
     ana_dir = os.environ['ANADIR']
-    out_dir = f'{ana_dir}/fits/data/{name}_block_{block_name}'
+    out_dir = f'{ana_dir}/fits/data/{name}_{block_name}'
 
     return out_dir
 # ----------------------
