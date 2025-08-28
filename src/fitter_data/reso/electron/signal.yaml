@@ -4,12 +4,14 @@ categories:
     selection : 
       brem1 : nbrem == 1
     model :
-      - dscb
+      - dscb 
+      - cbl
   brem_two :
     selection : 
       brem2 : nbrem == 2
     model :
-      - dscb
+      - dscb 
+      - cbl
 sample        : Bu_JpsiK_ee_eq_DPC
 shared        :
   - mu
