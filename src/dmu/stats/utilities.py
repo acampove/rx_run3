@@ -368,8 +368,8 @@ def save_fit(
     _save_fit_plot(data=data, model=model, cfg=plt_cfg, fit_dir=fit_dir)
     _save_result(fit_dir=fit_dir, res=res)
 
-    df     = data.to_pandas(weightsname=Data.weight_name)
-    opath  = f'{fit_dir}/data.json'
+    df    = data.to_pandas(weightsname=Data.weight_name)
+    opath = f'{fit_dir}/data.json'
     log.debug(f'Saving data to: {opath}')
     df.to_json(opath, indent=2)
 
