@@ -202,19 +202,22 @@ def _divide_hists(sig : bh, ctr : bh) -> bh:
     return rat
 # ------------------------------------
 def _plot_maps(l_path : list[str], brem : str) -> None:
-    for sig_pkl_path in tqdm.tqdm(l_path, ascii=' -'):
-        sig_hist = _hist_from_path(sig_pkl_path)
-        if sig_hist is None:
-            continue
-
-        _plot_hist(hist=sig_hist, pkl_path=sig_pkl_path, brem=brem)
-
-        ctr_pkl_path = sig_pkl_path.replace(Data.sig_cut, Data.ctr_cut)
+    for ctr_pkl_path in tqdm.tqdm(l_path, ascii=' -'):
         ctr_hist = _hist_from_path(ctr_pkl_path)
         if ctr_hist is None:
             continue
 
         _plot_hist(hist=ctr_hist, pkl_path=ctr_pkl_path, brem=brem)
+
+        sig_pkl_path = ctr_pkl_path.replace(Data.ctr_cut, Data.sig_cut)
+        for tag_cut in Data.d_hadron_cut.values():
+            sig_pkl_path = sig_pkl_path.replace(tag_cut, '')
+
+        sig_hist = _hist_from_path(sig_pkl_path)
+        if sig_hist is None:
+            continue
+
+        _plot_hist(hist=sig_hist, pkl_path=sig_pkl_path, brem=brem)
 
         rat_hist = _divide_hists(sig=sig_hist, ctr=ctr_hist)
         _plot_hist(hist=rat_hist, pkl_path=sig_pkl_path, brem=brem, is_ratio=True)
