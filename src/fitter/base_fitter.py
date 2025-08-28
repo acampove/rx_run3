@@ -229,13 +229,6 @@ class BaseFitter:
         plt_cfg['title'   ] = title
         plt_cfg['ext_text'] = text
 
-        if model is not None:
-            ptr = ZFitPlotter(data=data, model=model)
-            ptr.plot(**cast(Mapping[str, Any], plt_cfg)) # Need this casting to remove error from pyright
-        else:
-            log.warning('Model not found, not plotting')
-            plt.figure()
-
         sel_path = f'{out_path}/selection.yaml'
         gut.dump_json(cut_cfg, sel_path)
 
@@ -244,5 +237,6 @@ class BaseFitter:
             model  = model,
             res    = res,
             d_const= d_cns,
+            plt_cfg= plt_cfg,
             fit_dir= out_path)
 # ------------------------
