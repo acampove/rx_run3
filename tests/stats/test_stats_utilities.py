@@ -223,7 +223,8 @@ def test_save_fit_simple():
         data   =dat,
         model  =pdf,
         res    =res,
-        fit_dir=f'{Data.fit_dir}/save_fit/with_plot')
+        plt_cfg={'nbins' : 50, 'stacked' : True},
+        fit_dir=f'{Data.fit_dir}/save_fit/simple')
 #----------------------------------
 def test_save_fit_param():
     '''
@@ -236,10 +237,11 @@ def test_save_fit_param():
     res = obj.fit()
 
     sut.save_fit(
-            data   =dat,
-            model  =pdf,
-            res    =res,
-            fit_dir=f'{Data.fit_dir}/save_fit/parametric')
+        data   =dat,
+        model  =pdf,
+        res    =res,
+        plt_cfg={'nbins' : 50, 'stacked' : True},
+        fit_dir=f'{Data.fit_dir}/save_fit/parametric')
 #----------------------------------
 def test_save_fit_nonparam():
     '''
@@ -249,10 +251,11 @@ def test_save_fit_nonparam():
     dat = pdf.create_sampler(n=1000)
 
     sut.save_fit(
-            data   =dat,
-            model  =pdf,
-            res    =None,
-            fit_dir=f'{Data.fit_dir}/save_fit/non_parametric')
+        data   =dat,
+        model  =pdf,
+        res    =None,
+        plt_cfg={'nbins' : 50, 'stacked' : True},
+        fit_dir=f'{Data.fit_dir}/save_fit/non_parametric')
 #----------------------------------
 def test_save_fit_param_refreeze():
     '''
@@ -270,6 +273,7 @@ def test_save_fit_param_refreeze():
         data   =dat,
         model  =pdf,
         res    =res,
+        plt_cfg={'nbins' : 50, 'stacked' : True},
         fit_dir=f'{Data.fit_dir}/save_fit/parametric')
 #----------------------------------
 def test_name_from_obs():
