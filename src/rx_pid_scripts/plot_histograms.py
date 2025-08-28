@@ -27,7 +27,7 @@ class Data:
     '''
     sig_cut      = '(PROBNN_E>0.2)&(DLLe>3.0)'
     ctr_cut      = '((PROBNN_E<0.2)|(DLLe<3.0))&(DLLe>-1.0)'
-    d_hadron_cut = {'pion' : '&(PROBNN_K<0.1)', 'kaon' : '&(PROBNN_K>0.1)'}
+    d_hadron_cut = {'pion' : '&(pi_PROBNN_K<0.1)', 'kaon' : '&(K_PROBNN_K>0.1)'}
 
     max_eff_sg : float =  7
     max_eff_ct : float = 15 
