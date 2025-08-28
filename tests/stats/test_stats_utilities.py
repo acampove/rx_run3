@@ -223,7 +223,7 @@ def test_save_fit_simple():
         data   =dat,
         model  =pdf,
         res    =res,
-        plt_cfg={'nbins' : 50, 'stacked' : True},
+        plt_cfg={'nbins' : 50, 'stacked' : True, 'plot_range' : [-5, +6]},
         fit_dir=f'{Data.fit_dir}/save_fit/simple')
 #----------------------------------
 def test_save_fit_param():
