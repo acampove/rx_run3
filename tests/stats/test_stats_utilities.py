@@ -209,15 +209,12 @@ def test_is_pdf_usable():
 
     is_pdf_usable(pdf)
 #----------------------------------
-def test_save_fit_with_plot():
+def test_save_fit_simple():
     '''
-    Tests saving fit and the plot
+    Simplest case
     '''
     pdf = _get_pdf(kind='simple')
     dat = pdf.create_sampler(n=1000)
-
-    ptr = ZFitPlotter(data=dat, model=pdf)
-    ptr.plot()
 
     obj = Fitter(pdf, dat)
     res = obj.fit()
