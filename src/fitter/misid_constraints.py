@@ -12,9 +12,9 @@ from dmu.logging.log_store import LogStore
 from dmu.workflow.cache    import Cache
 
 from omegaconf      import DictConfig, OmegaConf
-from zfit.interface import ZfitSpace as zobs
-from zfit.interface import ZfitPDF   as zpdf
-from zfit.interface import ZfitLoss  as zlos 
+from zfit.interface import ZfitSpace           as zobs
+from zfit.interface import ZfitPDF             as zpdf
+from zfit.loss      import ExtendedUnbinnedNLL as zlos
 
 from fitter.sim_fitter         import SimFitter
 from fitter.data_fitter        import DataFitter
