@@ -265,7 +265,7 @@ def main():
     if Data.block == 'uninitialized':
         block_cut = 'block == (1)'
     else:
-        block_cut = 'block == {Data.block}'
+        block_cut =f'block == {Data.block}'
 
     fit_name = _get_fit_name()
     out_dir  = _get_output_directory()
