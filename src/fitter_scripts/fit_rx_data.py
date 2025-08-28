@@ -36,8 +36,8 @@ class Data:
     fit_cfg : ClassVar[DictConfig]
     toy_cfg : DictConfig|None
     l_q2bin = ['low', 'cen_low', 'central', 'cen_high', 'jpsi', 'psi2', 'high']
-    l_block = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8']
-    block   = 'uninitialized'
+    l_block = [1, 2, 3, 4, 5, 6, 7, 8]
+    block   = -1 
 
     nthread : int   = 1
     q2bin   : str   = ''
@@ -66,7 +66,7 @@ def _set_logs() -> None:
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to fit RX data')
-    parser.add_argument('-b', '--block'  , type=str  , help='Block number, if not passed will do all data', choices=Data.l_block)
+    parser.add_argument('-b', '--block'  , type=int  , help='Block number, if not passed will do all data', choices=Data.l_block)
     parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/electron' , required=True)
     parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'  , default =  '')
     parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default    =0)
@@ -262,7 +262,7 @@ def main():
     _parse_args()
     _set_logs()
 
-    if Data.block == 'uninitialized':
+    if Data.block == -1:
         block_cut = 'block == (1)'
     else:
         block_cut =f'block == {Data.block}'
