@@ -32,7 +32,10 @@ class Data:
     fit_dir = f'/tmp/{user}/tests/dmu/stats'
 #----------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This will run before any test
+    '''
     LogStore.set_level('dmu:stats:utilities', 10)
 
     os.makedirs(Data.fit_dir, exist_ok=True)
