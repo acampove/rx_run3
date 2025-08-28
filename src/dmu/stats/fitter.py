@@ -394,6 +394,9 @@ class Fitter:
         else:
             log.warning('Not calculating errors')
 
+        # TODO: Add a check to make sure the errors are added here
+        # if not, raise
+
         gcl = GofCalculator(nll, ndof=ndof)
         try:
             pval = gcl.get_gof(kind='pvalue')
