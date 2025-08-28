@@ -681,7 +681,13 @@ def placeholder_fit(
         obj   = ZFitPlotter(data=data, model=pdf)
         obj.plot(nbins=50, stacked=True)
 
-    save_fit(data=data, model=pdf, res=res, fit_dir=fit_dir, d_const=d_const)
+    save_fit(
+        data   =data, 
+        model  =pdf, 
+        res    =res, 
+        fit_dir=fit_dir, 
+        plt_cfg={'nbins' : 50, 'stacked' : True},
+        d_const=d_const)
 
     return res
 #---------------------------------------------
