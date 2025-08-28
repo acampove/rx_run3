@@ -35,7 +35,9 @@ class Data:
     '''
     fit_cfg : ClassVar[DictConfig]
     toy_cfg : DictConfig|None
-    l_q2bin= ['low', 'cen_low', 'central', 'cen_high', 'jpsi', 'psi2', 'high']
+    l_q2bin = ['low', 'cen_low', 'central', 'cen_high', 'jpsi', 'psi2', 'high']
+    l_block = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8']
+    block   = 'uninitialized'
 
     nthread : int   = 1
     q2bin   : str   = ''
@@ -64,6 +66,7 @@ def _set_logs() -> None:
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to fit RX data')
+    parser.add_argument('-b', '--block'  , type=str  , help='Block number, if not passed will do all data', choices=Data.l_block)
     parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/electron' , required=True)
     parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'  , default =  '')
     parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default    =0)
@@ -74,6 +77,7 @@ def _parse_args() -> None:
     parser.add_argument('-P', '--mva_prc', type=float, help='Cut on part reco MVA working point'        , required=True)
     args = parser.parse_args()
 
+    Data.block   = args.block
     Data.q2bin   = args.q2bin
     Data.nthread = args.nthread
     Data.mva_cmb = args.mva_cmb
@@ -240,9 +244,14 @@ def _get_output_directory() -> str:
     This function will return the directory WRT which
     the `output_directory` key in the fit config will be defined
     '''
+    if Data.block == 'uninitialized':
+        block_name = 'all'
+    else:
+        block_name = Data.block 
+
     name    = _get_fit_name()
     ana_dir = os.environ['ANADIR']
-    out_dir = f'{ana_dir}/fits/data/{name}'
+    out_dir = f'{ana_dir}/fits/data/{name}_block_{block_name}'
 
     return out_dir
 # ----------------------
@@ -253,6 +262,11 @@ def main():
     _parse_args()
     _set_logs()
 
+    if Data.block == 'uninitialized':
+        block_cut = 'block == (1)'
+    else:
+        block_cut = 'block == {Data.block}'
+
     fit_name = _get_fit_name()
     out_dir  = _get_output_directory()
     Cache.set_cache_root(root=out_dir)
@@ -262,6 +276,7 @@ def main():
          Cache.turn_off_cache(val=[]),\
          sut.blinded_variables(regex_list=['.*signal.*']),\
          sel.custom_selection(d_sel={
+        'block' : block_cut,
         'nobrm0': 'nbrem != 0',
         'bdt'   :f'(mva_cmb > {Data.mva_cmb}) && (mva_prc > {Data.mva_prc})'}):
 
