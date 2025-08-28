@@ -215,10 +215,9 @@ def main():
 
     LogStore.set_level('rx_pid:plot_histograms', Data.log_levl)
 
-    for kind in ['kaon', 'pion']:
-        for brem in ['brem', 'nobrem']:
-            l_path = _get_pkl_paths(kind, brem)
-            _plot_maps(l_path, brem)
+    for brem in ['brem', 'nobrem']:
+        l_path = _get_pkl_paths(brem)
+        _plot_maps(l_path, brem)
 # ------------------------------------
 if __name__ == "__main__":
     main()
