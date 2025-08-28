@@ -1,13 +1,11 @@
 '''
 This module contains BaseFitter
 '''
-from typing                   import Mapping, cast, Any
-import matplotlib.pyplot as plt
+from typing                   import cast
 import textwrap
 
 from omegaconf                import OmegaConf, DictConfig
 from dmu.stats.fitter         import Fitter
-from dmu.stats.zfit_plotter   import ZFitPlotter
 from dmu.generic              import utilities  as gut
 from dmu.stats                import utilities  as sut
 from dmu.logging.log_store    import LogStore
