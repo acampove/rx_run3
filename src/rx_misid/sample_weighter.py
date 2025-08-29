@@ -178,14 +178,18 @@ class SampleWeighter:
         Dictionary mapping string identfying maps and
         boosthistogram object
         '''
+        log.info(f'Reading maps from: {self._cfg.maps_path}')
+
         ana_dir = os.environ['ANADIR']
         pkl_dir = f'{ana_dir}/{self._cfg.maps_path}/{kind}'
         path_wc = f'{pkl_dir}/*.pkl'
+        l_path  = glob.glob(path_wc)
 
         d_map = {}
-        for path in glob.glob(path_wc):
-            key = self._key_from_path(path)
+        for path in sorted(l_path):
+            log.debug(f'Reading: {path}')
 
+            key = self._key_from_path(path)
             with open(path, 'rb') as ifile:
                 try:
                     hist = pickle.load(ifile)
