@@ -72,6 +72,15 @@ class FitConfig:
         LogStore.set_level('fitter:fit_rx_data'                   , self.log_lvl)
     # ----------------------
     @cached_property
+    def mva_cut(self) -> str:
+        '''
+        Returns
+        -------------
+        Cut used for MVA
+        '''
+        return f'(mva_cmb > {self.mva_cmb}) && (mva_prc > {self.mva_prc})'
+    # ----------------------
+    @cached_property
     def block_cut(self) -> str:
         '''
         Returns
