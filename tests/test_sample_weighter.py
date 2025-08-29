@@ -90,13 +90,13 @@ def _check_weights(df : pnd.DataFrame) -> None:
     df: Pandas dataframe to be checked
     '''
     
-    assert 'pid_weights' in df.attrs
-    assert 'pid_eff_l1'  in df.attrs
-    assert 'pid_eff_l2'  in df.attrs
+    assert 'pid_weights' in df.columns
+    assert 'pid_eff_l1'  in df.columns
+    assert 'pid_eff_l2'  in df.columns
 
-    arr_wgt_tot = numpy.array(df.attrs['pid_weights'])
-    arr_wgt_l1  = numpy.array(df.attrs['pid_eff_l1' ])
-    arr_wgt_l2  = numpy.array(df.attrs['pid_eff_l2' ])
+    arr_wgt_tot = df['pid_weights'].to_numpy()
+    arr_wgt_l1  = df['pid_eff_l1' ].to_numpy()
+    arr_wgt_l2  = df['pid_eff_l2' ].to_numpy()
 
     assert numpy.isclose(arr_wgt_tot, arr_wgt_l1 * arr_wgt_l2, rtol=1e-5).all()
 # ----------------------
