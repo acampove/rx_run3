@@ -420,9 +420,9 @@ class SampleWeighter:
         raise ValueError(f'Unexpected efficiency value: {eff}')
     # ------------------------------
     def _print_info_from_row(self, row : pnd.Series) -> None:
-        log.info(40 * '-')
-        log.info(f'Block/Hadron: {row.block}/{row.hadron}')
-        log.info(40 * '-')
+        log.verbose(40 * '-')
+        log.verbose(f'Block/Hadron: {row.block}/{row.hadron}')
+        log.verbose(40 * '-')
         for lepton in ['L1', 'L2']:
             varx = self._varx.replace('PARTICLE', lepton)
             vary = self._vary.replace('PARTICLE', lepton)
@@ -430,9 +430,9 @@ class SampleWeighter:
             valx = getattr(row, varx)
             valy = getattr(row, vary)
 
-            log.info(f'{varx:<20}{valx:20.2f}')
-            log.info(f'{vary:<20}{valy:20.2f}')
-            log.info('')
+            log.verbose(f'{varx:<20}{valx:20.2f}')
+            log.verbose(f'{vary:<20}{valy:20.2f}')
+            log.verbose('')
     # ------------------------------
     def _get_transfer_weight(self, row : pnd.Series) -> float:
         '''
@@ -469,7 +469,7 @@ class SampleWeighter:
         trf_eff = self._get_data_candidate_efficiency(row=row, is_sig=self._is_sig)
         ctr_eff = self._get_data_candidate_efficiency(row=row, is_sig=       False)
         if ctr_eff == 0:
-            log.warning('Control efficiency is zero at:')
+            log.debug('Control efficiency is zero at:')
             self._print_info_from_row(row)
             return 1
 
