@@ -667,8 +667,8 @@ class SampleWeighter:
             plt.xlabel('Efficiencies [%]')
 
         plt.hist(arr_wt, bins=bins, range=rng, alpha=0.5, label='Weights')
-        median_weight = numpy.mean(arr_wt)
-        mean_weight   = numpy.median(arr_wt)
+        median_weight = numpy.median(arr_wt)
+        mean_weight   = numpy.mean(arr_wt)
         plt.axvline(float(median_weight), label=f'Median: {median_weight:.3f}', color='red', ls=':')
         plt.axvline(float(mean_weight  ), label=f'Mean: {mean_weight:.3f}', color='green', ls='--')
         plt.legend()
