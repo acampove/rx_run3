@@ -34,6 +34,12 @@ class FitConfig:
         '''
         self._set_logs()
         self._initialize_toy_config()
+
+        if not (0 <= self.mva_cmb < 1):
+            raise ValueError(f'Invalid value for combinatorial MVA WP: {self.mva_cmb}')
+
+        if not (0 <= self.mva_prc < 1):
+            raise ValueError(f'Invalid value for part reco MVA WP: {self.mva_prc}')
     # ----------------------
     def _initialize_toy_config(self) -> None:
         if self.toy_cfg is None:
