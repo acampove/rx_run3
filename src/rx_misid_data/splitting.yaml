@@ -8,10 +8,10 @@ branches: # all these branches will be picked in the dataframe
   - L2_PID_E
   - L1_PROBNN_E
   - L2_PROBNN_E
-  - L1_PT
-  - L1_ETA
-  - L2_PT
-  - L2_ETA
+  - L1_TRACK_PT
+  - L1_TRACK_ETA
+  - L2_TRACK_PT
+  - L2_TRACK_ETA
   - weight # Data: This is where the prescale weight of 10 should be
 tracks: # This is needed to assign the right electrons to PassFail, FailPass ... datasets
   ss : L1 # Lepton with same charge as B

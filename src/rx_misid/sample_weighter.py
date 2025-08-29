@@ -568,11 +568,11 @@ class SampleWeighter:
         df_l1      = self._df[self._df['L1_HASBREM'] == brem_val]
         df_l2      = self._df[self._df['L2_HASBREM'] == brem_val]
 
-        arr_l1_pt  = df_l1['L1_PT' ].to_numpy()
-        arr_l2_pt  = df_l2['L2_PT' ].to_numpy()
+        arr_l1_pt  = df_l1['L1_TRACK_PT' ].to_numpy()
+        arr_l2_pt  = df_l2['L2_TRACK_PT' ].to_numpy()
 
-        arr_l1_eta = df_l1['L1_ETA'].to_numpy()
-        arr_l2_eta = df_l2['L2_ETA'].to_numpy()
+        arr_l1_eta = df_l1['L1_TRACK_ETA'].to_numpy()
+        arr_l2_eta = df_l2['L2_TRACK_ETA'].to_numpy()
 
         arr_l1_wgt = df_l1['weight'].to_numpy()
         arr_l2_wgt = df_l2['weight'].to_numpy()

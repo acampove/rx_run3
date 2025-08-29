@@ -53,17 +53,17 @@ def _get_dataframe(good_phase_space :  bool = True) -> pnd.DataFrame:
     df['L2_PID_E'   ] = numpy.random.uniform(-10, 10, size=Data.nentries)
 
     for lep in ['L1', 'L2']:
-        df[f'{lep}_PT' ] = numpy.random.uniform(550, 20_000, Data.nentries)
-        df[f'{lep}_ETA'] = numpy.random.uniform(1.6, 4.0, Data.nentries)
+        df[f'{lep}_TRACK_PT' ] = 10 ** numpy.random.uniform(2, 5, Data.nentries)
+        df[f'{lep}_TRACK_ETA'] = numpy.random.uniform(2.0,     5.5, Data.nentries)
 
     if not good_phase_space:
         return df
 
-    df = df[ df['L1_PT'] < (30_000 - 5_000 * df['L1_ETA']) ]
-    df = df[ df['L2_PT'] < (30_000 - 5_000 * df['L2_ETA']) ]
+    df = df[ df['L1_TRACK_PT'] < (30_000 - 5_000 * df['L1_TRACK_ETA']) ]
+    df = df[ df['L2_TRACK_PT'] < (30_000 - 5_000 * df['L2_TRACK_ETA']) ]
 
-    df = df[ df['L1_PT'] > ( 8_000 - 2_000 * df['L1_ETA']) ]
-    df = df[ df['L2_PT'] > ( 8_000 - 2_000 * df['L2_ETA']) ]
+    df = df[ df['L1_TRACK_PT'] > ( 8_000 - 2_000 * df['L1_TRACK_ETA']) ]
+    df = df[ df['L2_TRACK_PT'] > ( 8_000 - 2_000 * df['L2_TRACK_ETA']) ]
 
     return df
 # ----------------------------
