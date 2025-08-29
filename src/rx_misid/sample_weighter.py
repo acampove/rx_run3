@@ -394,28 +394,30 @@ class SampleWeighter:
 
             return eff
 
+        log.verbose('')
+
         if math.isinf(eff):
-            log.debug('At:')
-            log.debug(f'X={x:.2f}')
-            log.debug(f'Y={y:.2f}')
-            log.debug(f'Eff={eff:0.3} returning 0')
+            log.verbose('At:')
+            log.verbose(f'X={x:.2f}')
+            log.verbose(f'Y={y:.2f}')
+            log.verbose(f'Eff={eff:0.3} returning 0')
             self._d_quality['Inf'] += 1
 
             return 0.0
 
         if math.isnan(eff):
-            log.debug('At:')
-            log.debug(f'X={x:.2f}')
-            log.debug(f'Y={y:.2f}')
-            log.debug(f'Eff={eff:0.3} returning 0')
+            log.verbose('At:')
+            log.verbose(f'X={x:.2f}')
+            log.verbose(f'Y={y:.2f}')
+            log.verbose(f'Eff={eff:0.3} returning 0')
             self._d_quality['NaN'] += 1
 
             return 0.0
 
-        log.debug('At:')
-        log.debug(f'X={x:.2f}')
-        log.debug(f'Y={y:.2f}')
-        log.debug(f'Eff={eff:0.3}')
+        log.verbose('At:')
+        log.verbose(f'X={x:.2f}')
+        log.verbose(f'Y={y:.2f}')
+        log.verbose(f'Eff={eff:0.3}')
 
         if eff < 0:
             self._d_quality['Negative'] += 1
