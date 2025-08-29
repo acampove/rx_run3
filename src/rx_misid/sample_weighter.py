@@ -247,8 +247,8 @@ class SampleWeighter:
     # ------------------------------
     def _get_lepton_eff(
         self,
-        lep    : str,
         row    : pnd.Series,
+        lep    : str,
         is_sig : bool) -> float:
         '''
         This method will return lepton PID efficiencies for a given lepton
