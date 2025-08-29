@@ -15,7 +15,6 @@ from omegaconf              import DictConfig
 from numpy                  import typing       as numpy_typing
 from boost_histogram        import Histogram    as bh
 from boost_histogram        import accumulators as acc
-from dmu.generic            import utilities    as gut
 from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('rx_misid:sample_weighter')
@@ -186,7 +185,7 @@ class SampleWeighter:
 
         d_map = {}
         for path in sorted(l_path):
-            log.debug(f'Reading: {path}')
+            log.verbose(f'Reading: {path}')
 
             key = self._key_from_path(path)
             with open(path, 'rb') as ifile:
