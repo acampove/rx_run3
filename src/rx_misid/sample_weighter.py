@@ -614,84 +614,6 @@ class SampleWeighter:
 
         return numpy.array(l_x), numpy.array(l_y)
     # ----------------------
-    def _make_diagnostic_plots(self, has_brem : bool) -> None:
-        '''
-        Will plot:
-
-        - Data in 2D histogram with and without weights
-        - Distribution of weights
-
-        Parameters
-        -----------------
-        has_brem: Will plot the distributions for tracks with brem or not
-        '''
-        if 'plots_path' not in self._cfg:
-            log.warning('Plotting path not found in config, not plotting')
-            return
-
-        log.info(f'Saving plots in: {self._cfg.plots_path}')
-
-        arr_pt, arr_et, arr_wt = self._get_arrays(has_brem=has_brem)
-        binning = self._get_maps_binning()
-
-        hist_raw, xe, ye = numpy.histogram2d(arr_pt, arr_et, bins=binning, weights=  None)
-        hist_wgt,  _,  _ = numpy.histogram2d(arr_pt, arr_et, bins=binning, weights=arr_wt)
-        hist_rat         = numpy.where(hist_wgt > 1e-5, hist_wgt / hist_raw, numpy.nan)
-
-        plt.pcolormesh(xe, ye, hist_rat.T, cmap='viridis')
-        plt.colorbar(label='Efficiency')
-
-        brem_name   =  'with_brem' if     has_brem else 'no_brem'
-        region_name = 'signal'     if self._is_sig else 'control'
-
-        fname = f'{self._sample}_{brem_name}_{region_name}.png'
-        plt_dir = Path(self._cfg.plots_path)
-        plt_dir.mkdir(exist_ok=True)
-        plt.savefig(plt_dir/fname)
-        plt.close()
-
-        fname_wgt = Path(f'weights_{fname}')
-        self._plot_weights(arr_wt=arr_wt, fname=fname_wgt)
-    # ----------------------
-    def _plot_weights(self, arr_wt : FloatArray, fname : Path) -> None:
-        '''
-        Parameters
-        -------------
-        arr_wt: Array of PID weights
-        fname: Name of PNG file where plot will go
-        '''
-        # These are transfer weights, should be
-        # smaller than 1
-        if self._sample.startswith('DATA'):
-            rng = 0, 1.00
-            bins= 100 
-        # For now these are just 1 and 0 flags, taken from MC
-        elif self._sample in self._l_electron_sample: 
-            rng = 0, 2.00
-            bins= 3
-        # These are meant to be Khh samples
-        elif self._is_sig: 
-            rng = 1e-3, 1  # Low efficiency in signal region
-            bins= 100
-        else:
-            rng = 1e-3, 20 # High efficiency in control region
-            bins= 100
-    
-        if self._sample.startswith('DATA'):
-            plt.xlabel('Transfer weight')
-        else:
-            arr_wt = 100 * arr_wt
-            plt.xlabel('Efficiencies [%]')
-
-        plt.hist(arr_wt, bins=bins, range=rng, alpha=0.5, label='Weights')
-        median_weight = numpy.median(arr_wt)
-        mean_weight   = numpy.mean(arr_wt)
-        plt.axvline(float(median_weight), label=f'Median: {median_weight:.3f}', color='red', ls=':')
-        plt.axvline(float(mean_weight  ), label=f'Mean: {mean_weight:.3f}', color='green', ls='--')
-        plt.legend()
-        plt.savefig(self._cfg.plots_path/fname)
-        plt.close()
-    # ------------------------------
     def get_weighted_data(self) -> pnd.DataFrame:
         '''
         Returns 
@@ -721,9 +643,6 @@ class SampleWeighter:
 
         self._df['weight']           *= arr_wgt
         self._df.attrs['pid_weights'] = arr_wgt.tolist()
-
-        self._make_diagnostic_plots(has_brem=True)
-        self._make_diagnostic_plots(has_brem=False)
 
         return self._df
 # ------------------------------
