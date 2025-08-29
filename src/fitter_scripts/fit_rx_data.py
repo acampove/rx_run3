@@ -6,10 +6,9 @@ and run fits
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 import argparse
-from typing import ClassVar
+from contextlib import ExitStack
 
 from omegaconf                  import DictConfig, OmegaConf
-from dmu.stats.zfit             import zfit
 from dmu.stats.parameters       import ParameterLibrary as PL
 from dmu.generic                import utilities as gut
 from dmu.stats                  import utilities as sut
@@ -17,8 +16,8 @@ from dmu.stats.constraint_adder import ConstraintAdder
 from dmu.workflow.cache         import Cache
 from dmu.logging.log_store      import LogStore
 from zfit.loss                  import ExtendedUnbinnedNLL
-from zfit.interface             import ZfitSpace as zobs
 
+from fitter.fit_config         import FitConfig
 from fitter.constraint_reader  import ConstraintReader
 from fitter.data_fitter        import DataFitter
 from fitter.likelihood_factory import LikelihoodFactory
