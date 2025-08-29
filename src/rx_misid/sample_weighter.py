@@ -544,10 +544,10 @@ class SampleWeighter:
 
         self._print_stats(wgt=arr_wgt)
 
-        self._df['weight']           *= arr_wgt
-        self._df.attrs['pid_eff_l1']  = arr_eff_l1.tolist()
-        self._df.attrs['pid_eff_l2']  = arr_eff_l2.tolist()
-        self._df.attrs['pid_weights'] = arr_wgt.tolist()
+        self._df['weight']     *= arr_wgt
+        self._df['pid_eff_l1']  = arr_eff_l1
+        self._df['pid_eff_l2']  = arr_eff_l2
+        self._df['pid_weights'] = arr_wgt
 
         return self._df
 # ------------------------------
