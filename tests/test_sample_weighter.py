@@ -41,14 +41,26 @@ def initialize():
     LogStore.set_level('rx_misid:sample_weighter', 10)
     os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
-@lru_cache(maxsize=None)
-def _get_dataframe(good_phase_space :  bool = True) -> pnd.DataFrame:
-    df           = pnd.DataFrame(index=range(Data.nentries))
-    df['hadron'] = numpy.random.choice(['kaon' ,   'pion'], size=Data.nentries)
-    df['kind'  ] = numpy.random.choice(['PassFail', 'FailPass', 'FailFail'], size=Data.nentries)
-    df['block' ] = numpy.random.choice(Data.l_block, size=Data.nentries)
-    df['weight'] = numpy.random.choice([1, 10], size=Data.nentries)
+@lru_cache(maxsize=100)
+def _get_dataframe(
+    sample           : str,
+    block            : int,
+    good_phase_space : bool = True) -> pnd.DataFrame:
 
+    df = pnd.DataFrame(index=range(Data.nentries))
+
+    if 'DATA' in sample:
+        particles = ['kaon', 'pion']
+    elif sample == 'Bu_KplKplKmn_eq_sqDalitz_DPC':
+        particles = ['kaon']
+    elif sample == 'Bu_piplpimnKpl_eq_sqDalitz_DPC':
+        particles = ['pion']
+    else:
+        raise ValueError(f'Invalid sample: {sample}')
+
+    df['block' ]      = block 
+    df['hadron']      = numpy.random.choice(particles   , size=Data.nentries)
+    df['weight']      = numpy.random.choice([1, 10]     , size=Data.nentries)
     df['L1_HASBREM' ] = numpy.random.choice(a = [0, 1], p = [0.5, 0.5], size = Data.nentries)
     df['L2_HASBREM' ] = numpy.random.choice(a = [0, 1], p = [0.5, 0.5], size = Data.nentries)
     df['L1_PROBNN_E'] = numpy.random.random(size=Data.nentries)
