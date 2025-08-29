@@ -581,8 +581,21 @@ class SampleWeighter:
         arr_pt = numpy.concatenate((arr_l1_pt , arr_l2_pt ))
         arr_eta= numpy.concatenate((arr_l1_eta, arr_l2_eta))
         arr_wgt= numpy.concatenate((arr_l1_wgt, arr_l2_wgt))
+        arr_pt = numpy.log10(arr_pt)
 
         return arr_pt, arr_eta, arr_wgt
+    # ----------------------
+    def _get_maps_binning(self) -> tuple[FloatArray, FloatArray]:
+        '''
+        Returns
+        -------------
+        Tuple with arrays for X and Y variable
+        '''
+        cfg = gut.load_conf(package='rx_pid_data', fpath='config/binning.yaml')
+        l_x = cfg['b1']['log10(PARTICLE_TRACK_PT)']
+        l_y = cfg['b1']['PARTICLE_TRACK_ETA']
+
+        return numpy.array(l_x), numpy.array(l_y)
     # ----------------------
     def _make_diagnostic_plots(self, has_brem : bool) -> None:
         '''
@@ -602,27 +615,14 @@ class SampleWeighter:
         log.info(f'Saving plots in: {self._cfg.plots_path}')
 
         arr_pt, arr_et, arr_wt = self._get_arrays(has_brem=has_brem)
-        _, ((ax1, ax2), (ax3, ax4)) = plt.subplots(ncols=2, nrows=2, figsize=(20, 15))
+        binning = self._get_maps_binning()
 
-        ax1.hist2d(arr_et, arr_pt, bins=50, cmap='viridis', vmin=0)
-        ax1.set_xlabel(r'$\eta$')
-        ax1.set_ylabel(r'$p_T$')
-        ax1.set_title('Unweighted')
+        hist_raw, xe, ye = numpy.histogram2d(arr_pt, arr_et, bins=binning, weights=  None)
+        hist_wgt,  _,  _ = numpy.histogram2d(arr_pt, arr_et, bins=binning, weights=arr_wt)
+        hist_rat         = numpy.where(hist_wgt > 1e-5, hist_wgt / hist_raw, numpy.nan)
 
-        ax2.hist2d(arr_et, arr_pt, bins=50, cmap='viridis', vmin=0, weights=arr_wt)
-        ax2.set_xlabel(r'$\eta$')
-        ax2.set_ylabel(r'$p_T$')
-        ax2.set_title('Weighted')
-
-        ax3.hist(arr_pt, density=True, histtype='step', bins=100, range=(0, 20_000), label='Original', color='black')
-        ax3.hist(arr_pt, density=True, histtype='step', bins=100, range=(0, 20_000), label='Weighted', color='blue' , weights=arr_wt)
-        ax3.set_xlabel(r'$p_T$')
-        ax3.legend()
-
-        ax4.hist(arr_et, density=True, histtype='step', bins=100, range=(0,      5), label='Original', color='black')
-        ax4.hist(arr_et, density=True, histtype='step', bins=100, range=(0,      5), label='Weighted', color='blue' , weights=arr_wt)
-        ax4.set_xlabel(r'$\eta$')
-        ax4.legend()
+        plt.pcolormesh(xe, ye, hist_rat.T, cmap='viridis')
+        plt.colorbar(label='Efficiency')
 
         brem_name   =  'with_brem' if     has_brem else 'no_brem'
         region_name = 'signal'     if self._is_sig else 'control'
