@@ -2,7 +2,7 @@
 # meant to be used with PIDCalib2 through rx_pid. It is closer to what was used in Run1/2
 # --------------------------------
 bin: &bin_com
-  log10(PARTICLE_PT):
+  log10(PARTICLE_TRACK_PT):
   - 2.000
   - 2.700
   - 2.900
@@ -23,7 +23,7 @@ bin: &bin_com
   - 4.400
   - 4.600
   - 5.000
-  PARTICLE_ETA:
+  PARTICLE_TRACK_ETA:
   - 2.0
   - 2.5
   - 2.9
