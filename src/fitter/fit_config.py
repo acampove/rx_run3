@@ -33,6 +33,19 @@ class FitConfig:
         This runs after initialization
         '''
         self._set_logs()
+        self._initialize_toy_config()
+    # ----------------------
+    def _initialize_toy_config(self) -> None:
+        if self.toy_cfg is None:
+            return
+
+        out_dir = f'{self.output_directory}/{self.fit_cfg.output_directory}/{self.q2bin}'
+    
+        log.info(f'Sending toys to: {out_dir}')
+        self.toy_cfg.out_dir = out_dir
+    
+        log.warning(f'Setting number of toys to: {self.ntoys}')
+        self.toy_cfg.ntoys = self.ntoys 
     # ----------------------
     def _set_logs(self) -> None:
         '''
@@ -96,27 +109,4 @@ class FitConfig:
         obs          = zfit.Space(cfg_obs.name, minx, maxx)
     
         return obs
-    # ----------------------
-    def override_toy_cfg(
-        self,
-        ntoys   : int,
-        toy_cfg : DictConfig|None) -> None:
-        '''
-        Parameters
-        -------------
-        ntoys  : Number of toys specified by user
-        toy_cfg: Config dictionary used for toy generation
-        '''
-        if toy_cfg is None:
-            log.debug('No toy configuration passed, skipping toys')
-            return
-    
-        if ntoys != 0:
-            log.warning(f'Overriding number of toys with {ntoys}')
-            toy_cfg.ntoys = ntoys
-    
-        out_dir = f'{self.output_directory}/{self.fit_cfg.output_directory}/{self.q2bin}'
-    
-        log.info(f'Sending toys to: {out_dir}')
-        toy_cfg.out_dir = out_dir
 # ----------------------
