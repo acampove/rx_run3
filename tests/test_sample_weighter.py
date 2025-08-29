@@ -1,6 +1,7 @@
 '''
 Script holding functions needed to test SampleWeighter class
 '''
+from functools import lru_cache
 import os
 
 import numpy
@@ -36,9 +37,10 @@ def initialize():
     This runs before any test
     '''
     numpy.random.seed(42)
-    LogStore.set_level('rx_misid:sample_weighter', 20)
+    LogStore.set_level('rx_misid:sample_weighter', 10)
     os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
+@lru_cache(maxsize=None)
 def _get_dataframe(good_phase_space :  bool = True) -> pnd.DataFrame:
     df           = pnd.DataFrame(index=range(Data.nentries))
     df['hadron'] = numpy.random.choice(['kaon' ,   'pion'], size=Data.nentries)
