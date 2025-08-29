@@ -28,40 +28,8 @@ from rx_selection              import selection as sel
 
 log=LogStore.add_logger('fitter:fit_rx_data')
 # ----------------------
-class Data:
     '''
-    Class meant to be used to share attributes
     '''
-    fit_cfg : ClassVar[DictConfig]
-    toy_cfg : DictConfig|None
-    l_q2bin = ['low', 'cen_low', 'central', 'cen_high', 'jpsi', 'psi2', 'high']
-    l_block = [1, 2, 3, 4, 5, 6, 7, 8]
-    block   = -1 
-
-    nthread : int   = 1
-    q2bin   : str   = ''
-    mva_cmb : float = 0.0
-    mva_prc : float = 0.0
-    log_lvl : int   = 20
-    obs     : zobs
-# ----------------------
-def _set_logs() -> None:
-    '''
-    Will put classes in a given logging level
-    '''
-    LogStore.set_level('dmu:workflow:cache'                   ,           30)
-    LogStore.set_level('dmu:stats:utilities'                  ,           30)
-    LogStore.set_level('dmu:stats:model_factory'              ,           30)
-    LogStore.set_level('dmu:stats:gofcalculator'              ,           30)
-    LogStore.set_level('rx_data:rdf_getter'                   ,           30)
-    LogStore.set_level('rx_efficiencies:efficiency_calculator',           30)
-    LogStore.set_level('rx_selection:truth_matching'          ,           30)
-    LogStore.set_level('rx_selection:selection'               ,           30)
-    LogStore.set_level('fitter:prec'                          ,           30)
-    LogStore.set_level('dmu:stats:constraint_adder'           , Data.log_lvl)
-    LogStore.set_level('fitter:prec_scales'                   , Data.log_lvl)
-    LogStore.set_level('fitter:constraint_reader'             , Data.log_lvl)
-    LogStore.set_level('fitter:fit_rx_data'                   , Data.log_lvl)
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to fit RX data')
@@ -87,57 +55,6 @@ def _parse_args() -> None:
 
     toy_cfg      = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
     Data.toy_cfg = _override_toy_cfg(toy_cfg = toy_cfg, ntoys=args.ntoys) 
-# ----------------------
-def _override_toy_cfg(
-    ntoys   : int,
-    toy_cfg : DictConfig|None) -> DictConfig|None:
-    '''
-    Parameters
-    -------------
-    ntoys  : Number of toys specified by user
-    toy_cfg: Config dictionary used for toy generation
-
-    Returns
-    -------------
-    Input config after checks and overriding of fields
-    '''
-    if toy_cfg is None:
-        log.debug('No toy configuration passed, skipping toys')
-        return None
-
-    if ntoys != 0:
-        log.warning(f'Overriding number of toys with {ntoys}')
-        toy_cfg.ntoys = ntoys
-
-    root_dir= _get_output_directory()
-    out_dir = f'{root_dir}/{Data.fit_cfg.output_directory}/{Data.q2bin}'
-
-    log.info(f'Sending toys to: {out_dir}')
-    toy_cfg.out_dir = out_dir
-
-    return toy_cfg
-# ----------------------
-def _get_observable() -> zobs:
-    '''
-    Returns
-    -------------
-    Zfit observable
-    '''
-    cfg_obs      = Data.fit_cfg.model.observable[Data.q2bin]
-    [minx, maxx] = cfg_obs.range
-    obs = zfit.Space(cfg_obs.name, minx, maxx)
-
-    return obs
-# ----------------------
-def _get_fit_name() -> str:
-    '''
-    Builds fit identifier from MVA working points
-    '''
-    cmb  = int(100 * Data.mva_cmb)
-    prc  = int(100 * Data.mva_prc)
-    name = f'{cmb:03d}_{prc:03d}'
-
-    return name
 # ----------------------
 def _use_constraints(kind : str) -> bool:
     '''
@@ -235,24 +152,6 @@ def _fit() -> None:
     log.info(f'Making {Data.toy_cfg.ntoys} toys')
     mkr = ToyMaker(nll=nll, res=res, cfg=Data.toy_cfg)
     mkr.get_parameter_information()
-# ----------------------
-def _get_output_directory() -> str:
-    '''
-    Returns
-    -----------------
-    This function will return the directory WRT which
-    the `output_directory` key in the fit config will be defined
-    '''
-    if Data.block == 'uninitialized':
-        block_name = 'all'
-    else:
-        block_name = f'b{Data.block}'
-
-    name    = _get_fit_name()
-    ana_dir = os.environ['ANADIR']
-    out_dir = f'{ana_dir}/fits/data/{name}_{block_name}'
-
-    return out_dir
 # ----------------------
 def main():
     '''
