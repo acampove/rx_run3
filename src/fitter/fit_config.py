@@ -66,6 +66,20 @@ class FitConfig:
         LogStore.set_level('fitter:fit_rx_data'                   , self.log_lvl)
     # ----------------------
     @cached_property
+    def block_cut(self) -> str:
+        '''
+        Returns
+        -------------
+        String used to select block, e.g. `block == 3`
+        '''
+        if self.block == -1:
+            block_cut = 'block == (1)'
+        else:
+            block_cut =f'block == {self.block}'
+
+        return block_cut
+    # ----------------------
+    @cached_property
     def fit_name(self) -> str:
         '''
         Builds fit identifier from MVA working points
