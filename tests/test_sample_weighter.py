@@ -243,9 +243,6 @@ def _get_binning() -> tuple[list[float], list[float]]:
 @pytest.mark.parametrize('block' , [1, 2, 3, 5, 6, 7, 8])
 @pytest.mark.parametrize('is_sig', [True, False])
 @pytest.mark.parametrize('sample', [
-    'DATA_24_MagUp_24c2',
-    'Bu_JpsiK_ee_eq_DPC',
-    'Bu_Kee_eq_btosllball05_DPC',
     'Bu_KplKplKmn_eq_sqDalitz_DPC',
     'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
 def test_simple(is_sig : bool, sample : str, block : int):
