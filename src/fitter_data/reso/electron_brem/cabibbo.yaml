@@ -1,22 +1,14 @@
 output_directory : reso/electron/cabibbo
 categories:
-  brem_one :
-    selection : 
-      brem1 : nbrem == 1
+  main:
     model :
       - dscb 
       - cbl
-  brem_two :
-    selection : 
-      brem2 : nbrem == 2
-    model :
-      - dscb 
-      - cbl
-sample        : Bu_JpsiPi_ee_eq_DPC
-shared        :
+sample : Bu_JpsiPi_ee_eq_DPC
+shared :
   - mu
   - sg
-float         :
+float  :
   - mu
   - sg
 reparametrize : {}
