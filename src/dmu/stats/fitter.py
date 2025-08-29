@@ -436,7 +436,7 @@ class Fitter:
                 res, gof = self.minimize(nll, cfg, ndof=self._ndof)
             except (FailMinimizeNaN, FitterGofError, RuntimeError):
                 self._reshuffle_pdf_pars()
-                log.warning(f'Fit {i_try:03}/{ntries:03} failed due to exception')
+                log.warning(f'{i_try:03}/{ntries:03} failed due to exception')
                 continue
 
             last_res = res
@@ -444,7 +444,7 @@ class Fitter:
 
             if not ignore_status and bad_fit:
                 self._reshuffle_pdf_pars()
-                log.info(f'Fit {i_try:03}/{ntries:03} failed, status/validity: {res.status}/{res.valid}')
+                log.info(f'{i_try:03}/{ntries:03} failed, status/validity: {res.status}/{res.valid}')
                 continue
 
             chi2, _, pval   = gof
@@ -460,6 +460,7 @@ class Fitter:
                 log.info(f'Reached {pval:.3f} (> {pvalue_thresh:.3f}) threshold after {i_try + 1} attempts')
                 return {chi2 : res}, res
 
+            log.info(f'{i_try:03}/{ntries:03} good fit: {res.status}/{res.valid}')
             self._reshuffle_pdf_pars()
 
         if last_res is None:
