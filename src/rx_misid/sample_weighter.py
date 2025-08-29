@@ -7,13 +7,12 @@ import glob
 import math
 import pickle
 import numexpr
-from pathlib import Path
 
 import numpy
-import matplotlib.pyplot as plt
-import pandas            as pnd
-from numpy import typing as numpy_typing
+import pandas as pnd
+
 from omegaconf              import DictConfig
+from numpy                  import typing       as numpy_typing
 from boost_histogram        import Histogram    as bh
 from boost_histogram        import accumulators as acc
 from dmu.generic            import utilities    as gut
