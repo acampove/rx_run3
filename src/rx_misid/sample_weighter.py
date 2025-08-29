@@ -16,6 +16,7 @@ from numpy import typing as numpy_typing
 from omegaconf              import DictConfig
 from boost_histogram        import Histogram    as bh
 from boost_histogram        import accumulators as acc
+from dmu.generic            import utilities    as gut
 from dmu.logging.log_store  import LogStore
 
 log=LogStore.add_logger('rx_misid:sample_weighter')
@@ -561,7 +562,7 @@ class SampleWeighter:
 
         Returns
         -------------
-        Tuple with arrays with PT, ETA and Weights for tracks with(out)
+        Tuple with arrays with log(PT), ETA and Weights for tracks with(out)
         brem depending on `has_brem`. These arrays should contain both leptons
         '''
         brem_val   = 1 if has_brem else 0
