@@ -5,7 +5,7 @@ import os
 import dataclasses
 from functools import cached_property
 
-import zfit
+from dmu.stats.zfit         import zfit
 from omegaconf              import DictConfig
 from dmu.logging.log_store  import LogStore
 from zfit                   import Space      as zobs
