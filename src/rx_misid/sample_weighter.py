@@ -699,7 +699,7 @@ class SampleWeighter:
         Input dataframe with:
 
         - Variables to read X and Y axis defined
-        - Updated `weight` column with PID weights
+        - Updated `weight` column with PID weights, e.g. product of efficiencies for each track
         - Attached `pid_weights` column
         '''
         if len(self._df) == 0:
