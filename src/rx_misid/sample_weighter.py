@@ -71,29 +71,6 @@ class SampleWeighter:
         self._set_variables()
         self._df                              = self._get_df(df)
         self._d_map : dict[str, dict[str,bh]] = { kind : self._get_maps(kind=kind) for kind in self._l_kind }
-        self._true_electron                   = self._is_true_electron()
-    # ------------------------------
-    def _is_true_electron(self) -> bool:
-        '''
-        Returns
-        -------------
-        True : If sample has Lepton candidates meant to be treated as electrons, e.g signal sample
-        False: E.g. misID MC
-        '''
-        # Data is always evaluated in control region
-        # Assume electrons are hadrons here
-        if self._sample.startswith('DATA_24_'):
-            return False
-
-        if self._sample in self._l_electron_sample:
-            log.info(f'Reading true electron efficiencies for: {self._sample}')
-            return True
-
-        if self._sample in self._l_hadron_sample:
-            log.info(f'Reading fake electron efficiencies for: {self._sample}')
-            return False
-
-        raise NotImplementedError(f'Cannot obtain efficiency for {self._sample} sample')
     # ------------------------------
     def _get_df(self, df : pnd.DataFrame) -> pnd.DataFrame:
         '''
@@ -247,60 +224,6 @@ class SampleWeighter:
         self,
         row    : pnd.Series,
         lep    : str,
-        is_sig : bool) -> float:
-        '''
-        This method will return lepton PID efficiencies for a given lepton
-
-        Parameters
-        -----------------
-        row   : Contains information on candidate
-        lep   : L1 or L2
-        is_sig: If True will provide signal region efficiencies
-        '''
-        # NOTE: This method will be called per candidate
-        # Do not add heavy stuff
-        if self._true_electron:
-            return self._get_true_lepton_eff(lep=lep, row=row, is_sig=is_sig)
-
-        return self._get_fake_lepton_eff(lep=lep, row=row, is_sig=is_sig)
-    # ------------------------------
-    def _get_true_lepton_eff(
-        self,
-        lep    : str,
-        row    : pnd.Series,
-        is_sig : bool) -> float:
-        '''
-        Parameters
-        --------------------
-        lep   : E.g. L1 or L2
-        row   : Stores information on candidate, PID, PT, ETA, etc.
-        is_sig: If true, need the efficiency for signal region cut, otherwise, control region.
-
-        Returns
-        --------------------
-        Either 0 or 1, depending on wether the cut passes or fails
-        '''
-        # TODO: Replace this section with efficiency maps for electrons, when available
-        region = {True : 'signal', False : 'control'}[is_sig]
-        cut    = self._cfg['regions'][region]
-        cut    = cut.replace('DLLe'    , f'{lep}_PID_E')
-        cut    = cut.replace('PROBNN_E', f'{lep}_PROBNN_E')
-        data   = row.to_dict()
-
-        try:
-            flag = numexpr.evaluate(cut, local_dict=data)
-            flag = bool(flag)
-        except Exception as exc:
-            raise ValueError(f'Cannot evaluate {cut} on {data}') from exc
-
-        val = {True : 1.0, False : 0.0}[flag]
-
-        return val
-    # ------------------------------
-    def _get_fake_lepton_eff(
-        self,
-        lep    : str,
-        row    : pnd.Series,
         is_sig : bool) -> float:
         '''
         Reads loaded PID efficiency maps and returns efficiency, for a given particle
