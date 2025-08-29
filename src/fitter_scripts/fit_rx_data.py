@@ -169,28 +169,23 @@ def main():
     '''
     Entry point
     '''
-    _parse_args()
-    _set_logs()
+    cfg = _parse_args()
 
-    if Data.block == -1:
-        block_cut = 'block == (1)'
-    else:
-        block_cut =f'block == {Data.block}'
-
-    fit_name = _get_fit_name()
-    out_dir  = _get_output_directory()
-    Cache.set_cache_root(root=out_dir)
-    with PL.parameter_schema(cfg=Data.fit_cfg.model.yields),\
-         RDFGetter.multithreading(nthreads=Data.nthread),\
-         RDFGetter.identifier(value=fit_name),\
-         Cache.turn_off_cache(val=[]),\
-         sut.blinded_variables(regex_list=['.*signal.*']),\
-         sel.custom_selection(d_sel={
-        'block' : block_cut,
+    overriding_selection = {
+        'block' : cfg.block_cut,
         'nobrm0': 'nbrem != 0',
-        'bdt'   :f'(mva_cmb > {Data.mva_cmb}) && (mva_prc > {Data.mva_prc})'}):
+        'bdt'   : cfg.mva_cut}
 
-        _fit()
+    Cache.set_cache_root(root=cfg.output_directory)
+    with ExitStack() as stack:
+        stack.enter_context(PL.parameter_schema(cfg=cfg.fit_cfg.model.yields))
+        stack.enter_context(RDFGetter.multithreading(nthreads=cfg.nthread))
+        stack.enter_context(RDFGetter.identifier(value=cfg.fit_name))
+        stack.enter_context(Cache.turn_off_cache(val=[]))
+        stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))
+        stack.enter_context(sel.custom_selection(d_sel=overriding_selection))
+
+        _fit(cfg=cfg)
 # ----------------------
 if __name__ == '__main__':
     main()
