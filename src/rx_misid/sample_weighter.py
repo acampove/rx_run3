@@ -324,8 +324,11 @@ class SampleWeighter:
         try:
             hist    = self._d_map[brem_key][key_map]
         except KeyError as exc:
-            for key in sorted(self._d_map):
+            for key, d_map in sorted(self._d_map.items()):
                 log.info(key)
+                for key in sorted(d_map):
+                    log.info(f'   {key}')
+
             raise KeyError(f'Cannot pick up PID map: {key_map}') from exc
 
         varx = self._varx.replace('PARTICLE', lep)
