@@ -62,11 +62,14 @@ def _parse_args() -> FitConfig:
 
     return cfg
 # ----------------------
-def _use_constraints(kind : str) -> bool:
+def _use_constraints(
+    kind : str,
+    cfg  : FitConfig) -> bool:
     '''
     Parameters
     -------------
     kind: Label for constraints, e.g. misid
+    cfg : Object holding configuration for fit 
 
     Returns
     -------------
@@ -77,7 +80,7 @@ def _use_constraints(kind : str) -> bool:
         raise ValueError(f'Invalid kind: {kind}')
 
     l_misid   = ['kkk', 'kpipi']
-    components= Data.fit_cfg.model.components
+    components= cfg.fit_cfg.model.components
     all_found = all(component in components for component in l_misid)
 
     if kind == 'misid' and all_found:
@@ -85,11 +88,14 @@ def _use_constraints(kind : str) -> bool:
 
     return False
 # ----------------------
-def _get_constraints(nll : ExtendedUnbinnedNLL) -> DictConfig:
+def _get_constraints(
+    nll : ExtendedUnbinnedNLL,
+    cfg : FitConfig) -> DictConfig:
     '''
     Parameters
     -------------
     nll: Likelihood
+    cfg: Object holding configuration for fit 
 
     Returns
     -------------
@@ -97,15 +103,15 @@ def _get_constraints(nll : ExtendedUnbinnedNLL) -> DictConfig:
         key  : Name of parameter
         Value: Tuple with mu and sigma for constraining parameter
     '''
-    crd   = ConstraintReader(obj=nll, q2bin=Data.q2bin)
+    crd   = ConstraintReader(obj=nll, q2bin=cfg.q2bin)
     d_cns = crd.get_constraints()
     cons  = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='scales', kind='GaussianConstraint')
 
-    if _use_constraints(kind='misid'):
-        mrd     = MisIDConstraints(
-            obs   = Data.obs,
-            cfg   = Data.fit_cfg.model.constraints.misid,
-            q2bin = Data.q2bin)
+    if _use_constraints(kind='misid', cfg=cfg):
+        mrd       = MisIDConstraints(
+            obs   = cfg.observable,
+            cfg   = cfg.fit_cfg.model.constraints.misid,
+            q2bin = cfg.q2bin)
         d_cns   = mrd.get_constraints()
         tmp     = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='misid' , kind='PoissonConstraint')
         cons    = OmegaConf.merge(cons, tmp)
@@ -121,21 +127,21 @@ def _get_constraints(nll : ExtendedUnbinnedNLL) -> DictConfig:
 
     return cons 
 # ----------------------
-def _fit() -> None:
+def _fit(cfg : FitConfig) -> None:
     '''
     This is where DataFitter is used
     '''
     ftr = LikelihoodFactory(
-        obs    = Data.obs,
-        q2bin  = Data.q2bin,
+        obs    = cfg.observable,
+        q2bin  = cfg.q2bin,
         sample = 'DATA_24_*',
         trigger= 'Hlt2RD_BuToKpEE_MVA',
         project= 'rx',
-        cfg    = Data.fit_cfg)
+        cfg    = cfg.fit_cfg)
     nll = ftr.run()
-    cfg = ftr.get_config()
+    cfg_mod = ftr.get_config()
 
-    cfg_cns = _get_constraints(nll=nll)
+    cfg_cns = _get_constraints(nll=nll, cfg=cfg)
     cad     = ConstraintAdder(nll=nll, cns=cfg_cns)
     nll     = cad.get_nll()
 
@@ -143,20 +149,20 @@ def _fit() -> None:
     if not isinstance(nll, ExtendedUnbinnedNLL):
         raise ValueError('Likelihood is not extended and unbinned')
 
-    Data.fit_cfg['constraints'] = cfg_cns
+    cfg.fit_cfg['constraints'] = cfg_cns
     ftr = DataFitter(
-        name = Data.q2bin,
-        d_nll= {'' : (nll, cfg)}, 
-        cfg  = Data.fit_cfg)
+        name = cfg.q2bin,
+        d_nll= {'' : (nll, cfg_mod)}, 
+        cfg  = cfg.fit_cfg)
     res = ftr.run(kind='zfit')
 
-    if Data.toy_cfg is None:
+    if cfg.toy_cfg is None:
         log.info('Not making toys')
         return
 
-    Data.toy_cfg['constraints'] = cfg_cns
-    log.info(f'Making {Data.toy_cfg.ntoys} toys')
-    mkr = ToyMaker(nll=nll, res=res, cfg=Data.toy_cfg)
+    cfg.toy_cfg['constraints'] = cfg_cns
+    log.info(f'Making {cfg.toy_cfg.ntoys} toys')
+    mkr = ToyMaker(nll=nll, res=res, cfg=cfg.toy_cfg)
     mkr.get_parameter_information()
 # ----------------------
 def main():
