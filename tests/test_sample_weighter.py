@@ -248,20 +248,18 @@ def _get_binning() -> tuple[list[float], list[float]]:
     'Bu_Kee_eq_btosllball05_DPC',
     'Bu_KplKplKmn_eq_sqDalitz_DPC',
     'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
-def test_simple(is_sig : bool, sample : str):
+def test_simple(is_sig : bool, sample : str, block : int):
     '''
     Parameters
     -------------
     is_sig: If true, it will weight sample to put it in the signal region
             Otherwise it will go to control region
     sample: MC and data samples need to be weighted in different ways
+    block : Number from 1 to 8
     '''
     cfg = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
-    df  = _get_dataframe(good_phase_space=False)
+    df  = _get_dataframe(good_phase_space=False, sample=sample, block=block)
     arr_block_inp = df['block'].to_numpy()
-
-    if not sample.startswith('DATA_'):
-        df = df.drop(columns=['kind'])
 
     cfg.plots_path = Data.out_dir
 
@@ -274,4 +272,5 @@ def test_simple(is_sig : bool, sample : str):
 
     _check_blocks(df=df, arr_block_inp=arr_block_inp)
     _check_weights(df=df)
+    _closure_check(df=df, is_sig=is_sig, sample=sample, block=block)
 # ----------------------------
