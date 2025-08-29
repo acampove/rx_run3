@@ -631,8 +631,12 @@ class SampleWeighter:
         log.info(f'Getting signal={self._is_sig} PID weights for sample {self._sample}')
 
         try:
-            sr_wgt = self._df.apply(self._get_transfer_weight, axis=1)
-            arr_wgt= sr_wgt.to_numpy()
+            sr_eff_l1 = self._df.apply(self._get_lepton_eff, args=('L1', self._is_sig), axis=1)
+            sr_eff_l2 = self._df.apply(self._get_lepton_eff, args=('L2', self._is_sig), axis=1)
+
+            arr_eff_l1 = sr_eff_l1.to_numpy()
+            arr_eff_l2 = sr_eff_l2.to_numpy()
+            arr_wgt    = arr_eff_l1 * arr_eff_l2
         except AttributeError as exc:
             log.warning('Found columns:')
             for column in self._df.columns:
@@ -642,6 +646,8 @@ class SampleWeighter:
         self._print_stats(wgt=arr_wgt)
 
         self._df['weight']           *= arr_wgt
+        self._df.attrs['pid_eff_l1']  = arr_eff_l1.tolist()
+        self._df.attrs['pid_eff_l2']  = arr_eff_l2.tolist()
         self._df.attrs['pid_weights'] = arr_wgt.tolist()
 
         return self._df
