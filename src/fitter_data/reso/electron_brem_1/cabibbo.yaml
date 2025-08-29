@@ -1,0 +1,35 @@
+output_directory : reso/electron/cabibbo
+categories:
+  brem_one :
+    selection : 
+      brem1 : nbrem == 1
+    model :
+      - dscb 
+      - cbl
+  brem_two :
+    selection : 
+      brem2 : nbrem == 2
+    model :
+      - dscb 
+      - cbl
+sample        : Bu_JpsiPi_ee_eq_DPC
+shared        :
+  - mu
+  - sg
+float         :
+  - mu
+  - sg
+reparametrize : {}
+fix           : {}
+fit:
+  strategy  :
+    retry   :
+      ntries        : 15
+      pvalue_thresh : 0.05
+      ignore_status : false
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins     : 50
+  stacked   : True
+  plot_range: 
+    - 5100
+    - 5700

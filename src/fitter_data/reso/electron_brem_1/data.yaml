@@ -8,17 +8,18 @@ model:
     jpsi:
       name : B_const_mass_M
       range:
-        - 5000 
-        - 6900
+        - 4800 
+        - 6000
     psi2:
       name : B_const_mass_psi2S_M
       range:
-        - 5000 
-        - 6900
+        - 4800 
+        - 6000
   components:
     combinatorial : reso/electron/combinatorial.yaml
     ccbar         : reso/electron/ccbar.yaml
-    signal        : reso/electron/signal.yaml
+    cabibbo       : reso/electron/cabibbo.yaml
+    resonant      : reso/electron/signal.yaml
   constraints:
     yields : []
 fit:
@@ -28,8 +29,13 @@ fit:
       pvalue_thresh : 0.05
       ignore_status : false 
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
-  nbins   : 50
-  stacked : True
+  nbins           : 50
+  stacked         : True
+  plot_components : ccbar
+  plot_range :
+    - 4800
+    - 6000
   d_leg :
-    Gauss_ext       : Signal
-    Exponential_ext : Combinatorial
+    resonant      : Signal
+    cabibbo       : $B^+\to J/\psi(\to e^+e^-)\pi^+$
+    combinatorial : Combinatorial
