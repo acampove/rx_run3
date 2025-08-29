@@ -9,7 +9,7 @@ import pytest
 import pandas            as pnd
 from dmu.logging.log_store    import LogStore
 from dmu.generic              import utilities      as gut
-from rx_misid.sample_weighter import SampleWeighter
+from rx_misid.sample_weighter import FloatArray, SampleWeighter
 
 log=LogStore.add_logger('rx_misid:test_weighter')
 # -------------------------------------------------------
@@ -69,6 +69,38 @@ def _get_dataframe(good_phase_space :  bool = True) -> pnd.DataFrame:
     df = df[ df['L2_TRACK_PT'] > ( 8_000 - 2_000 * df['L2_TRACK_ETA']) ]
 
     return df
+# ----------------------
+def _check_weights(df : pnd.DataFrame) -> None:
+    '''
+    Parameters
+    -------------
+    df: Pandas dataframe to be checked
+    '''
+    
+    assert 'pid_weights' in df.attrs
+    assert 'pid_eff_l1'  in df.attrs
+    assert 'pid_eff_l2'  in df.attrs
+
+    arr_wgt_tot = numpy.array(df.attrs['pid_weights'])
+    arr_wgt_l1  = numpy.array(df.attrs['pid_eff_l1' ])
+    arr_wgt_l2  = numpy.array(df.attrs['pid_eff_l2' ])
+
+    assert numpy.isclose(arr_wgt_tot, arr_wgt_l1 * arr_wgt_l2, rtol=1e-5).all()
+# ----------------------
+def _check_blocks(
+    df            : pnd.DataFrame,
+    arr_block_inp : FloatArray) -> None:
+    '''
+    Parameters
+    -------------
+    df           : DataFrame to check
+    arr_block_inp: Array of blocks in the input data 
+    '''
+    arr_block_out = df['block'].to_numpy()
+
+    # Check that no shuffling of entries happened, using
+    # array of block numbers
+    assert numpy.array_equal(arr_block_inp, arr_block_out)
 # ----------------------------
 @pytest.mark.parametrize('is_sig', [True, False])
 @pytest.mark.parametrize('sample', [
@@ -100,10 +132,7 @@ def test_simple(is_sig : bool, sample : str):
         sample= sample,
         is_sig= is_sig)
     df  = wgt.get_weighted_data()
-    arr_block_out = df['block'].to_numpy()
 
-    # Check that no shuffling of entries happened, using
-    # array of block numbers
-    assert numpy.array_equal(arr_block_inp, arr_block_out)
-    assert 'pid_weights' in df.attrs
+    _check_blocks(df=df, arr_block_inp=arr_block_inp)
+    _check_weights(df=df)
 # ----------------------------
