@@ -514,18 +514,6 @@ class SampleWeighter:
 
         return arr_pt, arr_eta, arr_wgt
     # ----------------------
-    def _get_maps_binning(self) -> tuple[FloatArray, FloatArray]:
-        '''
-        Returns
-        -------------
-        Tuple with arrays for X and Y variable
-        '''
-        cfg = gut.load_conf(package='rx_pid_data', fpath='config/binning.yaml')
-        l_x = cfg['b1']['log10(PARTICLE_TRACK_PT)']
-        l_y = cfg['b1']['PARTICLE_TRACK_ETA']
-
-        return numpy.array(l_x), numpy.array(l_y)
-    # ----------------------
     def get_weighted_data(self) -> pnd.DataFrame:
         '''
         Returns 
