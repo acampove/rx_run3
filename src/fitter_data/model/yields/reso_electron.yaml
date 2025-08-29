@@ -5,7 +5,9 @@ yields: &yields
   min : 0
   max : 1000000
 
-yld_signal:
+yld_cabibbo:
+  <<: *yields
+yld_resonant:
   <<: *yields
 yld_ccbar:
   <<: *yields
