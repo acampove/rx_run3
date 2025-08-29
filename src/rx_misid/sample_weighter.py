@@ -255,8 +255,8 @@ class SampleWeighter:
 
         Parameters
         -----------------
-        lep   : L1 or L2
         row   : Contains information on candidate
+        lep   : L1 or L2
         is_sig: If True will provide signal region efficiencies
         '''
         # NOTE: This method will be called per candidate
@@ -368,6 +368,7 @@ class SampleWeighter:
 
         if value == 1:
             return BREM 
+
         if value == 0:
             return NOBREM 
 
@@ -430,6 +431,13 @@ class SampleWeighter:
         raise ValueError(f'Unexpected efficiency value: {eff}')
     # ------------------------------
     def _print_info_from_row(self, row : pnd.Series) -> None:
+        '''
+        Prints coordinates at current point
+
+        Parameters
+        -----------------
+        row: Pandas series representing entry in tree
+        '''
         log.verbose(40 * '-')
         log.verbose(f'Block/Hadron: {row.block}/{row.hadron}')
         log.verbose(40 * '-')
