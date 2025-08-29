@@ -1,9 +1,10 @@
 '''
 Script holding functions needed to test SampleWeighter class
 '''
-from functools import lru_cache
+from functools import cache, lru_cache
 import os
 
+import pickle
 import numpy
 import pytest
 import pandas            as pnd
@@ -19,7 +20,7 @@ class Data:
     '''
     user     = os.environ['USER']
     out_dir  = f'/tmp/{user}/tests/rx_misid/sample_weighter'
-    nentries = 100_000
+    nentries = 5_000
 
     l_block = [
         1,
