@@ -18,14 +18,15 @@ class FitConfig:
     Class used to store configuration needed for fits
     '''
     fit_cfg : DictConfig
-
-    block   : int             = -1 
     toy_cfg : DictConfig|None = None
-    nthread : int             = 1
-    q2bin   : str             = ''
-    mva_cmb : float           = 0.0
-    mva_prc : float           = 0.0
-    log_lvl : int             = 20
+
+    block   : int  = -1 
+    nthread : int  = 1
+    q2bin   : str  = ''
+    mva_cmb : float= 0.0
+    mva_prc : float= 0.0
+    log_lvl : int  = 20
+    ntoys   : int  = 0
     # ----------------------
     def __post_init__(self):
         '''
