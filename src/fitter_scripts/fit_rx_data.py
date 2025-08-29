@@ -28,33 +28,39 @@ from rx_selection              import selection as sel
 
 log=LogStore.add_logger('fitter:fit_rx_data')
 # ----------------------
+def _parse_args() -> FitConfig:
     '''
+    Returns
+    --------------
+    Instance of configuration class, built from arguments
     '''
-# ----------------------
-def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to fit RX data')
-    parser.add_argument('-b', '--block'  , type=int  , help='Block number, if not passed will do all data', choices=Data.l_block)
-    parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/electron' , required=True)
-    parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'  , default =  '')
-    parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default    =0)
-    parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                 , default=Data.nthread)
-    parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[5, 10, 20, 30], default=Data.log_lvl)
-    parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin',              choices=Data.l_q2bin , required=True)
-    parser.add_argument('-C', '--mva_cmb', type=float, help='Cut on combinatorial MVA working point'    , required=True)
-    parser.add_argument('-P', '--mva_prc', type=float, help='Cut on part reco MVA working point'        , required=True)
+    parser.add_argument('-b', '--block'  , type=int  , help='Block number, if not passed will do all data'    , choices =[1,2,3,4,5,6,7,8])
+    parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/electron'       , required=True)
+    parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'        , default =  '')
+    parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default =0)
+    parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                               , default =1)
+    parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[5, 10, 20, 30]          , default =20)
+    parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin'      , choices=['low', 'central', 'high'], required=True)
+    parser.add_argument('-C', '--mva_cmb', type=float, help='Cut on combinatorial MVA working point'          , required=True)
+    parser.add_argument('-P', '--mva_prc', type=float, help='Cut on part reco MVA working point'              , required=True)
     args = parser.parse_args()
 
-    Data.block   = args.block
-    Data.q2bin   = args.q2bin
-    Data.nthread = args.nthread
-    Data.mva_cmb = args.mva_cmb
-    Data.mva_prc = args.mva_prc
-    Data.log_lvl = args.log_lvl
-    Data.fit_cfg = gut.load_conf(package='fitter_data', fpath=f'{args.fit_cfg}/data.yaml')
-    Data.obs     = _get_observable()
+    fit_cfg = gut.load_conf(package='fitter_data', fpath=f'{args.fit_cfg}/data.yaml')
+    toy_cfg = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
 
-    toy_cfg      = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
-    Data.toy_cfg = _override_toy_cfg(toy_cfg = toy_cfg, ntoys=args.ntoys) 
+    cfg         = FitConfig(
+        fit_cfg = fit_cfg, 
+        toy_cfg = toy_cfg,
+        block   = args.block,
+        q2bin   = args.q2bin,
+        nthread = args.nthread,
+        mva_cmb = args.mva_cmb,
+        mva_prc = args.mva_prc,
+        log_lvl = args.log_lvl,
+        ntoys   = args.ntoys)
+
+    return cfg
 # ----------------------
 def _use_constraints(kind : str) -> bool:
     '''
