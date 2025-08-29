@@ -35,6 +35,7 @@ def initialize():
     '''
     This runs before any test
     '''
+    numpy.random.seed(42)
     LogStore.set_level('rx_misid:sample_weighter', 20)
     os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
