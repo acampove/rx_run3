@@ -43,77 +43,7 @@ class SampleSplitter(Wcache):
 
         self._cfg      = cfg
         self._rdf      = rdf
-        self._l_kind   = ['PassFail', 'FailPass', 'FailFail']
     # --------------------------------
-    def _get_cuts(self, kind : str, hadron : str) -> tuple[str,str]:
-        '''
-        This method is only used for real data, not MC
-
-        Parameters
-        -----------------
-        kind  : PassFail/FailPass/FailFail
-        hadron: Either pion or kaon
-
-        Returns
-        -----------------
-        Cut for the OS or SS tracks, needed to get the data in the corresponding region
-        '''
-        pass_cut = self._cfg['lepton_tagging']['pass']
-        fail_cut = self._cfg['lepton_tagging']['fail']
-        hadr_tag = self._cfg['hadron_tagging'][hadron]
-
-        fail_cut = f'({fail_cut}) && ({hadr_tag})'
-
-        lep_ss   = self._cfg['tracks']['ss']
-        lep_os   = self._cfg['tracks']['os']
-
-        if   kind == 'PassFail':
-            cut_ss   = pass_cut.replace('LEP_', lep_ss + '_')
-            cut_os   = fail_cut.replace('LEP_', lep_os + '_')
-        elif kind == 'FailPass':
-            cut_ss   = fail_cut.replace('LEP_', lep_ss + '_')
-            cut_os   = pass_cut.replace('LEP_', lep_os + '_')
-        elif kind == 'FailFail':
-            cut_ss   = fail_cut.replace('LEP_', lep_ss + '_')
-            cut_os   = fail_cut.replace('LEP_', lep_os + '_')
-        else:
-            raise ValueError(f'Invalid kind: {kind}')
-
-        log.debug(f'Kind: {kind}')
-        log.debug(f'SS cut: {cut_ss}')
-        log.debug(f'OS cut: {cut_os}')
-
-        return cut_ss, cut_os
-    # --------------------------------
-    def _get_df(self, hadron : str) -> pnd.DataFrame:
-        '''
-        Using ROOT dataframe from data, after selection, will:
-        - Apply category splitting
-        - Build pandas dataframe and return it
-
-        Parameters
-        ---------------
-        hadron: Either pion or kaon, needed for hadron tagging cut
-        '''
-        columns      = self._cfg['branches']
-        l_df         = []
-        for kind in self._l_kind:
-            log.info(f'Calculating sample: {kind}/{hadron}')
-            rdf            = self._rdf
-            cut_os, cut_ss = self._get_cuts(kind=kind, hadron=hadron)
-
-            rdf = rdf.Filter(cut_os, f'OS {kind}')
-            rdf = rdf.Filter(cut_ss, f'SS {kind}')
-
-            df = rut.rdf_to_df(rdf=rdf, columns=columns)
-            df['kind'] = kind
-            l_df.append(df)
-
-        df_tot           = pnd.concat(l_df)
-        df_tot['hadron'] = hadron
-
-        return df_tot
-    # ----------------------
     def _id_from_array(self, array : numpy.ndarray) -> int:
         '''
         Parameters
