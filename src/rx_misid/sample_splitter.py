@@ -111,16 +111,10 @@ class SampleSplitter(Wcache):
 
             return df
 
-        particle = self._particle_from_simulation()
-        if particle is not None: # This block runs for simulation
-            columns      = self._cfg['branches']
-            df           = rut.rdf_to_df(rdf=self._rdf, columns=columns)
-            df['hadron'] = particle
-            df['kind']   = 'N/A' # in simulation we do not have FF,PF,FP splitting
-        else: # This one runs for data
-            df_pi = self._get_df(hadron='pion')
-            df_kp = self._get_df(hadron='kaon')
-            df    = pnd.concat([df_kp, df_pi])
+        particle     = self._particle_from_simulation()
+        columns      = self._cfg['branches']
+        df           = rut.rdf_to_df(rdf=self._rdf, columns=columns)
+        df['hadron'] = particle
 
         df.to_parquet(parquet_path, engine='pyarrow')
         self._cache()
