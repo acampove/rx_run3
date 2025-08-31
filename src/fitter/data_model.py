@@ -6,7 +6,7 @@ from dmu.stats.zfit         import zfit
 from dmu.logging.log_store  import LogStore
 from dmu.stats.parameters   import ParameterLibrary as PL
 from omegaconf              import DictConfig
-from zfit.interface         import ZfitPDF       as zpdf
+from zfit.pdf               import BasePDF       as zpdf
 from zfit.interface         import ZfitSpace     as zobs
 from fitter.sim_fitter      import SimFitter
 

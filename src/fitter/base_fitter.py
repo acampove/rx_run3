@@ -10,7 +10,7 @@ from dmu.generic              import utilities  as gut
 from dmu.stats                import utilities  as sut
 from dmu.logging.log_store    import LogStore
 from zfit.result              import FitResult  as zres
-from zfit.interface           import ZfitData   as zdata
+from zfit.data                import Data       as zdata
 from zfit.interface           import ZfitPDF    as zpdf
 from zfit.interface           import ZfitModel  as zmod
 

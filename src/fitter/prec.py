@@ -5,7 +5,6 @@ import os
 import copy
 import json
 import pprint
-from typing     import Union
 from contextlib import contextmanager
 
 import numpy
@@ -23,11 +22,11 @@ from dmu.stats              import utilities as sut
 from dmu.workflow.cache     import Cache
 
 from zfit.interface        import ZfitParameter as zpar
-from zfit.interface        import ZfitPDF       as zpdf
+from zfit.pdf              import BasePDF          as zpdf
 from zfit.interface        import ZfitSpace     as zobs
 from rx_selection          import selection     as sel
 from rx_data.rdf_getter    import RDFGetter
-from ROOT                  import RDataFrame
+from ROOT                  import RDataFrame # type: ignore
 
 from fitter.inclusive_decays_weights import Reader as inclusive_decays_weights
 from fitter.inclusive_sample_weights import Reader as inclusive_sample_weights
