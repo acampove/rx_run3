@@ -48,7 +48,7 @@ class Reader:
             return pu.get_bf('B+ --> J/psi(1S) K+') / 0.1596
 
         if proc == self._bd_proc:
-            return pu.get_bf('B0 --> J/psi(1S) K0') / 0.1920
+            return pu.get_bf('B0 --> J/psi(1S) K*(892)0') / 0.1920
 
         if proc == self._bs_proc:
             return pu.get_bf('B_s()0 --> J/psi(1S) phi') / 0.1077
