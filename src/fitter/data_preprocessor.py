@@ -14,7 +14,7 @@ from dmu.generic              import utilities  as gut
 from dmu.rdataframe           import utilities  as rut
 from dmu.pdataframe           import utilities  as put
 from dmu.logging.log_store    import LogStore
-from zfit.interface           import ZfitData   as zdata
+from zfit.data                import Data
 from zfit.interface           import ZfitSpace  as zobs
 from rx_data.rdf_getter       import RDFGetter
 from rx_selection             import selection  as sel
@@ -232,7 +232,7 @@ class DataPreprocessor(Cache):
     def _data_from_numpy(
         self,
         arr_value : numpy.ndarray,
-        arr_weight: numpy.ndarray) -> zdata:
+        arr_weight: numpy.ndarray) -> Data:
         '''
         We should not use weights if they are all 1s due to problems in zfit
 
@@ -255,12 +255,11 @@ class DataPreprocessor(Cache):
             log.debug('Using weights in dataset')
             wgt = arr_weight
 
-        data = zfit.data.from_numpy(obs=self._obs, array=arr_value, weights=wgt)
-        data = cast(zdata, data)
+        data = Data.from_numpy(obs=self._obs, array=arr_value, weights=wgt)
 
         return data
     # ------------------------
-    def get_data(self) -> zdata:
+    def get_data(self) -> Data:
         '''
         Returns
         ---------------------
