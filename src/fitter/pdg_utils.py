@@ -1,8 +1,8 @@
 '''
 Module with functions intended to interface with the PDG API
 '''
-
 import pdg
+from pdg.particle import PdgParticle
 
 from dmu.logging.log_store import LogStore
 
@@ -15,9 +15,19 @@ def get_bf(decay : str) -> float:
     '''
     Returns branching fraction for a given decay
     '''
+    # See: https://github.com/particledatagroup/api/issues/28
+    if decay == 'B0 --> J/psi(1S) K*(892)0':
+        return 1.27e-3
+
     api    = pdg.connect()
     mother = decay.split('-->')[0].replace(' ', '')
-    for bf in api.get_particle_by_name(mother).exclusive_branching_fractions():
+    part   = api.get_particle_by_name(mother)
+    if not isinstance(part, PdgParticle):
+        raise TypeError('Expected list of PDGParticles')
+
+    l_bfrc = part.exclusive_branching_fractions()
+
+    for bf in l_bfrc: 
         if bf.is_limit:
             continue
 
