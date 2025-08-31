@@ -389,20 +389,6 @@ class PRec(Cache):
 
         return df
     #-----------------------------------------------------------
-    def _filter_cut(self, cut : str) -> pnd.DataFrame:
-        if cut is None:
-            log.debug('Not applying any cut')
-            return self._df
-
-        log.info(f'Applying cut: {cut}')
-        inum = self._df.shape[0]
-        df   = self._df.query(cut)
-        fnum = df.shape[0]
-
-        self._d_fstat[cut] = inum, fnum
-
-        return df
-    #-----------------------------------------------------------
     def _get_identifier(self, mass : str, cut : str, **kwargs) -> str:
         cwargs = copy.deepcopy(kwargs)
         del cwargs['obs']
