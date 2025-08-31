@@ -17,7 +17,6 @@ from rx_efficiencies.decay_names import DecayNames
 from rx_selection             import selection        as sel
 from zfit.data                import Data             as zdata
 from zfit.pdf                 import BasePDF          as zpdf
-from zfit.pdf                 import SumPDF 
 from zfit.param               import Parameter
 from zfit.interface           import ZfitSpace        as zobs
 from zfit.result              import FitResult        as zres
@@ -385,7 +384,7 @@ class SimFitter(BaseFitter, Cache):
                   for sumw, category in zip(l_yield, self._cfg.categories) ]
         log.debug(60 * '-')
 
-        full_model = SumPDF(l_pdf, l_frac)
+        full_model = zfit.pdf.SumPDF(l_pdf, l_frac)
         full_cres  = OmegaConf.merge(*l_cres)
         if not isinstance(full_cres, DictConfig):
             raise TypeError('Merged dictionary not a DictConfig')
