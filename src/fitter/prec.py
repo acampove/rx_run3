@@ -166,7 +166,7 @@ class PRec(Cache):
         full_uid = ''
         for sample in self._l_sample:
             gtr        = RDFGetter(sample=sample, trigger=self._trig)
-            rdf        = gtr.get_rdf()
+            rdf        = gtr.get_rdf(per_file=False)
             uid        = gtr.get_uid()
             rdf, uid   = self._filter_rdf(rdf=rdf, sample=sample, uid=uid)
 
