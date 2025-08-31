@@ -80,8 +80,8 @@ class SimFitter(BaseFitter, Cache):
         self._min_fit_entries = 100
 
         # All the PDFs will share the mu and sigma below and these will float
-        self._mu_par = zfit.param.Parameter('mu_flt', 5280, 5000, 5500)
-        self._sg_par = zfit.param.Parameter('sg_flt',   15,    5,  300)
+        self._mu_par = Parameter('mu_flt', 5280, 5000, 5500)
+        self._sg_par = Parameter('sg_flt',   15,    5,  300)
 
         Cache.__init__(
             self,
@@ -284,7 +284,7 @@ class SimFitter(BaseFitter, Cache):
         self,
         sumw     : float,
         total    : float,
-        category : str) -> zpar:
+        category : str) -> Parameter:
         '''
         Parameters
         -------------
@@ -298,7 +298,7 @@ class SimFitter(BaseFitter, Cache):
         '''
         frac_name = f'frac_{self._component}_{category}'
         value     = sumw / total
-        par       = zfit.param.Parameter(frac_name, value, 0, 1)
+        par       = Parameter(frac_name, value, 0, 1)
 
         log.debug(f'{frac_name:<50}{value:<10.3f}')
 
@@ -383,7 +383,7 @@ class SimFitter(BaseFitter, Cache):
                   for sumw, category in zip(l_yield, self._cfg.categories) ]
         log.debug(60 * '-')
 
-        full_model = zfit.pdf.SumPDF(l_pdf, l_frac)
+        full_model = SumPDF(l_pdf, l_frac)
         full_cres  = OmegaConf.merge(*l_cres)
 
         return full_model, full_cres
