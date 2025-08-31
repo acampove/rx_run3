@@ -369,6 +369,8 @@ class SimFitter(BaseFitter, Cache):
 
         if len(l_pdf) == 1:
             cres  = OmegaConf.merge(l_cres[0])
+            if not isinstance(cres, DictConfig):
+                raise TypeError('Merged parameters are not a DictConfig')
 
             return l_pdf[0], cres
 
@@ -385,6 +387,8 @@ class SimFitter(BaseFitter, Cache):
 
         full_model = SumPDF(l_pdf, l_frac)
         full_cres  = OmegaConf.merge(*l_cres)
+        if not isinstance(full_cres, DictConfig):
+            raise TypeError('Merged dictionary not a DictConfig')
 
         return full_model, full_cres
     # ------------------------
