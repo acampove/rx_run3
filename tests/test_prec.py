@@ -176,8 +176,9 @@ def test_bdt(q2bin : str, bdt_cut : str, name : str):
     test = f'bdt/{q2bin}'
 
     d_wgt= {'dec' : 1, 'sam' : 1}
-    obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
-    pdf=obp.get_sum(mass=mass, name='PRec_1', obs=obs)
+    with sel.custom_selection(d_sel={'bdt' : bdt_cut}):
+        obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        pdf=obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 
     wp    = name.replace('p', '.')
     title = f'$MVA_{{cmb}} > {wp}$ && $MVA_{{prc}} > {wp}$'
@@ -204,8 +205,9 @@ def test_brem(brem_cut : str, name : str):
     test = f'brem/{q2bin}'
 
     d_wgt= {'dec' : 1, 'sam' : 1}
-    obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
-    pdf=obp.get_sum(mass=mass, name='PRec_1', obs=obs)
+    with sel.custom_selection(d_sel={'brem' : brem_cut}):
+        obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        pdf=obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 
     brem  = {'z' : 0, 'o' : 1, 't' : 2}[name]
     title = f'Brem: {brem}'
@@ -265,9 +267,10 @@ def test_low_stats():
             'Bs_JpsiX_ee_eq_JpsiInAcc',
             ]
 
-    d_wgt= {'dec' : 1, 'sam' : 1}
-    obp=PRec(samples=l_samp, trig=trig, q2bin='high', d_weight=d_wgt)
-    pdf=obp.get_sum(mass='B_Mass_smr', name='PRec_1', obs=obs)
+    d_wgt = {'dec' : 1, 'sam' : 1}
+    with sel.custom_selection(d_sel={'brem' : 'mva_cmb > 0.9 && mva_prc > 0.9'}):
+        obp=PRec(samples=l_samp, trig=trig, q2bin='high', d_weight=d_wgt)
+        pdf=obp.get_sum(mass='B_Mass_smr', name='PRec_1', obs=obs)
 
     PRec.plot_pdf(pdf, name='pdf', title='', out_dir=f'{Data.out_dir}/low_stats')
 #-----------------------------------------------
