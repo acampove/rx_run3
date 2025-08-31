@@ -100,18 +100,9 @@ class SampleSplitter(Wcache):
     # --------------------------------
     def get_sample(self) -> pnd.DataFrame:
         '''
-        For data: Returns pandas dataframe with data split by:
-
-        PassFail: Pass (SS), Fail (OS)
-        FailPass: Fail (SS), Pass (OS)
-        FailFail: Both electrons fail the PID cut
-
-        Where:
-            - SS means same sign as the B and OS is opposite sign
-            - These strings are stored in the column "kind"
-
-        For MC: It will only filter by charge and return dataframe without
-        PassFail, etc split
+        Returns pandas dataframe with data from input ROOT dataframe 
+        the output contains the `hadron` column, signaling if this is
+        a kaon (kkk) or pion sample (kpipi)
         '''
         parquet_path = f'{self._out_path}/sample.parquet'
         if self._copy_from_cache():
