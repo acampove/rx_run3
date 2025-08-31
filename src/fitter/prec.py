@@ -80,7 +80,7 @@ class PRec(Cache):
         super().__init__(
             out_path = out_dir,
             uid      = uid,
-            d_wg     = OmegaConf.to_container(d_weight, resolve=True),
+            d_wg     = d_weight,
             d_match  = d_hash_match)
     #-----------------------------------------------------------
     def _get_df(self) -> dict[str,pnd.DataFrame]:
