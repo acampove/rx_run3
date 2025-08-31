@@ -8,11 +8,11 @@ from dmu.stats.zfit_models  import ModExp
 from dmu.logging.log_store  import LogStore
 
 from zfit.interface         import ZfitSpace as zobs
-from zfit.interface         import ZfitPDF   as zpdf
+from zfit.pdf               import BasePDF 
 
 log = LogStore.add_logger('rx_fitter:models')
 # ---------------------------------------------
-def _get_suj(obs : zobs) -> zpdf:
+def _get_suj(obs : zobs) -> BasePDF:
     mu  = zfit.Parameter('mu', 5000, 4000, 6000)
     lb  = zfit.Parameter('lb',  100,   10, 1000)
     dl  = zfit.Parameter('dl',  2.5,    1,   10)
@@ -25,14 +25,14 @@ def _get_suj(obs : zobs) -> zpdf:
 
     return pdf
 # ---------------------------------------------
-def _get_pol2(obs : zobs) -> zpdf:
+def _get_pol2(obs : zobs) -> BasePDF:
     a   = zfit.Parameter('a', -0.005, -0.95, 0.00)
     b   = zfit.Parameter('b',  0.000, -0.95, 0.95)
     pdf = zfit.pdf.Chebyshev(obs=obs, coeffs=[a, b], name='Chebyshev 2nd')
 
     return pdf
 # ---------------------------------------------
-def _get_pol3(obs : zobs) -> zpdf:
+def _get_pol3(obs : zobs) -> BasePDF:
     a   = zfit.Parameter('a', -0.005, -0.95, 0.00)
     b   = zfit.Parameter('b',  0.000, -0.95, 0.95)
     c   = zfit.Parameter('c',  0.000, -0.95, 0.95)
@@ -40,13 +40,13 @@ def _get_pol3(obs : zobs) -> zpdf:
 
     return pdf
 # ---------------------------------------------
-def _get_exponential(obs : zobs) -> zpdf:
+def _get_exponential(obs : zobs) -> BasePDF:
     c  = zfit.Parameter('c', -0.002, -0.003, 0.0)
     pdf= zfit.pdf.Exponential(obs=obs, lam=c)
 
     return pdf
 # ---------------------------------------------
-def _get_hypexp(obs : zobs) -> zpdf:
+def _get_hypexp(obs : zobs) -> BasePDF:
     mu = zfit.Parameter('mu',  5000,   4000,  6000)
     ap = zfit.Parameter('ap', 0.020,      0,  0.10)
     bt = zfit.Parameter('bt', 0.002, 0.0001, 0.003)
@@ -55,7 +55,7 @@ def _get_hypexp(obs : zobs) -> zpdf:
 
     return pdf
 # ---------------------------------------------
-def _get_modexp(obs : zobs) -> zpdf:
+def _get_modexp(obs : zobs) -> BasePDF:
     mu = zfit.Parameter('mu',  4500,  4000,  6000)
     ap = zfit.Parameter('ap', 0.020,     0,   0.1)
     bt = zfit.Parameter('bt', 0.002, 0.001, 0.005)
@@ -64,7 +64,7 @@ def _get_modexp(obs : zobs) -> zpdf:
 
     return pdf
 # ---------------------------------------------
-def get_pdf(obs : zobs, name : str) -> zpdf:
+def get_pdf(obs : zobs, name : str) -> BasePDF:
     '''
     Function returning a zfit PDF from observable and name.
     Raises NotImplementedError if PDF is missing
