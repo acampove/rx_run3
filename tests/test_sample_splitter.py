@@ -51,29 +51,6 @@ def _get_rdf(sample : str, trigger : str, project : str):
 
     return rdf
 # -------------------------------------------------------
-def _plot_data_pide(df : pnd.DataFrame, sample : str) -> None:
-    '''
-    Parameters
-    ---------------
-    df    : Pandas dataframe with tagged candidates
-    sample: E.g. DATA_24...
-    '''
-    for kind, df_kind in df.groupby('kind'):
-        for hadron, df_hadr in df_kind.groupby('hadron'):
-            ax = None
-            ax = df_hadr.plot.scatter(x='L1_PID_E', y='L1_PROBNN_E', color='blue', s=1, label='$e_{SS}$', ax=ax)
-            ax = df_hadr.plot.scatter(x='L2_PID_E', y='L2_PROBNN_E', color='red' , s=1, label='$e_{OS}$', ax=ax)
-
-            plot_path = f'{Data.out_dir}/{sample}_{hadron}_{kind}.png'
-
-            ax.set_xlabel(r'$\Delta LL (e)$')
-            ax.set_ylabel('ProbNN(e)')
-
-            bname = '$B^+$'
-            plt.title(f'{hadron}; {bname}; {kind}')
-            plt.savefig(plot_path)
-            plt.close()
-# -------------------------------------------------------
 def _plot_simulation_pide(df : pnd.DataFrame, sample : str) -> None:
     '''
     Parameters
@@ -96,37 +73,6 @@ def _plot_simulation_pide(df : pnd.DataFrame, sample : str) -> None:
         plt.savefig(plot_path)
         plt.close()
 # -------------------------------------------------------
-def _check_dt_stats(rdf : RDataFrame, df : pnd.DataFrame):
-    '''
-    Parameters
-    -------------
-    rdf : ROOT dataframe used as input when doing data tests
-    df  : Pandas dataframe in the output
-    '''
-    ninput = rdf.Count().GetValue()
-    noutput= len(df)
-
-    # The input contains the signal region
-    # The output contains FF, PF, FP only
-    assert noutput < ninput
-
-    fail = False
-    log.info(40 * '-')
-    log.info(f'{"Kind":<20}{"Entries":<20}')
-    log.info(40 * '-')
-    for kind, df_kind in df.groupby('kind'):
-        if len(df_kind) == 0:
-            log.warning(f'Empty sample: {kind}')
-            fail=True
-            continue
-
-        nentries = len(df_kind)
-
-        log.info(f'{kind:<20}{nentries:<20}')
-    log.info(40 * '-')
-
-    assert not fail
-# ----------------------
 def _check_mc_stats(rdf : RDataFrame, df : pnd.DataFrame) -> None:
     '''
     Parameters
