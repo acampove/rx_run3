@@ -91,8 +91,6 @@ class SampleSplitter(Wcache):
             particle = 'pion'
         elif lep1_id == 321:
             particle = 'kaon'
-        elif lep1_id ==  11:
-            particle = 'electron'
         else:
             raise ValueError(f'Unexpected lepton ID: {lep1_id}')
 
