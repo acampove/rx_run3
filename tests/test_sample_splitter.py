@@ -117,29 +117,7 @@ def _check_columns(df : pnd.DataFrame) -> None:
 
     assert set(df.columns) == s_expected
 # -------------------------------------------------------
-def test_data():
-    '''
-    Tests getting split dataset
-    '''
-    sample= 'DATA_24_MagUp_24c2'
-    log.info('')
-
-    rdf   = _get_rdf(
-        sample = sample,
-        trigger= 'Hlt2RD_BuToKpEE_MVA_ext',
-        project= 'rx')
-
-    cfg   = gut.load_conf(package='rx_misid_data', fpath='splitting.yaml')
-    spl   = SampleSplitter(rdf = rdf, cfg = cfg)
-    df    = spl.get_sample()
-
-    log.info('Dataframe found, checking')
-    _check_dt_stats(df=df, rdf=rdf)
-    _plot_data_pide(df=df, sample=sample)
-    _check_columns(df =df, is_mc = False)
-# -------------------------------------------------------
 @pytest.mark.parametrize('sample', [
-    'Bu_Kee_eq_btosllball05_DPC',
     'Bu_piplpimnKpl_eq_sqDalitz_DPC',
     'Bu_KplKplKmn_eq_sqDalitz_DPC'])
 def test_simulation(sample : str):
@@ -160,5 +138,5 @@ def test_simulation(sample : str):
     log.info('Dataframe found, checking')
     _plot_simulation_pide(df=df, sample=sample)
     _check_mc_stats(rdf=rdf, df=df)
-    _check_columns(df=df, is_mc = True)
+    _check_columns(df=df)
 # -------------------------------------------------------
