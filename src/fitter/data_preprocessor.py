@@ -256,6 +256,8 @@ class DataPreprocessor(Cache):
             wgt = arr_weight
 
         data = Data.from_numpy(obs=self._obs, array=arr_value, weights=wgt)
+        if not isinstance(data, Data):
+            raise TypeError('Return type of unbinned data is not Data')
 
         return data
     # ------------------------
