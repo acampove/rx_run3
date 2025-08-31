@@ -650,7 +650,7 @@ class PRec(Cache):
 
         return pdf
     #-----------------------------------------------------------
-    def get_sum(self, mass : str, name='unnamed', **kwargs) -> Union[zpdf,None]:
+    def get_sum(self, mass : str, name='unnamed', **kwargs) -> zpdf|None:
         '''Provides extended PDF that is the sum of multiple KDEs representing PRec background
 
         Parameters:
