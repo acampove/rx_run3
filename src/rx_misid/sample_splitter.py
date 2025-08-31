@@ -17,27 +17,13 @@ class SampleSplitter(Wcache):
     '''
     What this returns
     -----------------------
-    Class meant to split a dataframe
+    Class meant to split a dataframe with simulated 
+    data it will tag events using the `kind` column as kaon or pion events.
 
-    - With real data into PassFail, FailPass and
-      FailFail samples based on a configuration
-
-    - With simulated data it will just tag events
-      using the `kind` column as kaon or pion events.
-
-    It also adds columns:
+    It adds columns:
 
     - hadron: pion or kaon, depending on hadron tagging cut from config,
               if candidate is tagged as pion (kaon) then both tracks will be pions (kaons)
-    - kind  : With values PassFail, FailPass, FailFail, only for data
-
-    SS, OS convention:
-    -----------------------
-    When we refer to PassFail, we mean that the, SS track is the Pass and the OS is the Fail
-
-    **IMPORTANT:** This code drops KpiK and KKpi entries. Therefore number ouf candidates in the output
-    is smaller than int he input. This is due to the fact that B->KpiK has a branching fraction ten times
-    smaller than B-> Kpipi
     '''
     # --------------------------------
     def __init__(
