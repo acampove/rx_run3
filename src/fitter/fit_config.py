@@ -88,7 +88,7 @@ class FitConfig:
         String used to select block, e.g. `block == 3`
         '''
         if self.block == -1:
-            block_cut = 'block == (1)'
+            block_cut = '(1)'
         else:
             block_cut =f'block == {self.block}'
 
