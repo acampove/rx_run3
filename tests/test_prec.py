@@ -147,11 +147,12 @@ def test_fit():
     res = obj.fit()
 
     sut.save_fit(
-            data   =sam,
-            model  =pdf,
-            res    =res,
-            fit_dir=f'{Data.out_dir}/{test}',
-            d_const={})
+        data   =sam,
+        model  =pdf,
+        res    =res,
+        plt_cfg=None,
+        fit_dir=f'{Data.out_dir}/{test}',
+        d_const={})
 #-----------------------------------------------
 @pytest.mark.parametrize('bdt_cut, name', [
     ('mva.mva_prc > 0.0 && mva.mva_cmb > 0.0', '0p0'),
