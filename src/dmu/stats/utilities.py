@@ -681,6 +681,8 @@ def placeholder_fit(
         data = zfit.Data.from_pandas(df, obs=pdf.space, weights=Data.weight_name)
 
     d_const = {'sg' : (50., 3.)}
+    if not isinstance(data, zdata):
+        raise TypeError('Data is not a zfit Data object')
 
     obj = Fitter(pdf, data)
     res = obj.fit(cfg={'constraints' : d_const})
