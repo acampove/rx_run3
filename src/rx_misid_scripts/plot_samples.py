@@ -83,20 +83,37 @@ class PlotConfig:
 
         self.nplots = nplots
     # ----------------------
-    def _resolve_sample(self) -> str:
+    @staticmethod
+    def sample_from_particle(particle : str) -> str:
         '''
         Transform nickname into actual sample name
         '''
-        if self.particle == 'all':
+        if particle == 'all':
             return 'all'
 
-        if self.particle == 'kaon':
+        if particle == 'kaon':
             return 'Bu_KplKplKmn_eq_sqDalitz_DPC'
 
-        if self.particle == 'pion':
+        if particle == 'pion':
             return 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
 
-        raise NotImplementedError(f'Invalid particle: {self.particle}')
+        raise NotImplementedError(f'Invalid particle: {particle}')
+    # ----------------------
+    @staticmethod
+    def particle_from_sample(sample : str) -> str:
+        '''
+        Transform sample into nickname 
+        '''
+        if sample == 'all':
+            return 'all'
+
+        if sample == 'Bu_KplKplKmn_eq_sqDalitz_DPC':
+            return 'kaon'
+
+        if sample == 'pion':
+            return 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
+
+        raise NotImplementedError(f'Invalid sample: {sample}')
     # ----------------------
     def _build_rdf_getter(self, cfg : DictConfig) -> None:
         '''
