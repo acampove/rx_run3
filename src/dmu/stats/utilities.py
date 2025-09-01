@@ -24,14 +24,14 @@ from dmu.logging.log_store  import LogStore
 import tensorflow as tf
 
 from omegaconf        import OmegaConf, DictConfig
-from zfit.interface   import ZfitData      as zdata
+from zfit.data        import Data          as zdata
 from zfit.interface   import ZfitSpace     as zobs
-from zfit.interface   import ZfitModel     as zmod
-from zfit.interface   import ZfitParameter as zpar
+from zfit.pdf         import BasePDF       as zmod
+from zfit.param       import Parameter     as zpar
 from zfit.loss        import ExtendedUnbinnedNLL, UnbinnedNLL
 from zfit.pdf         import BasePDF       as zpdf
 
-from zfit.minimizers.interface   import ZfitResult    as zres
+from zfit.minimizers.fitresult import FitResult as zres
 
 log = LogStore.add_logger('dmu:stats:utilities')
 Loss= Union[ExtendedUnbinnedNLL, UnbinnedNLL]
