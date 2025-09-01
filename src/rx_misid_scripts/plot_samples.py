@@ -106,8 +106,10 @@ def _get_df(cfg : PlotConfig) -> pnd.DataFrame:
     gtr   = RDFGetter(**cfg.rdf_cfg)
     rdf   = gtr.get_rdf(per_file=False)
     uid   = gtr.get_uid()
+    cuts  = {
+        'pid_l' : '(1)', 
+        'brem'  : 'nbrem != 0'} # Do not care about brem 0 candidates
 
-    cuts  = _get_selection(cfg=cfg)
     with sel.custom_selection(d_sel = cuts):
         rdf = sel.apply_full_selection(
             rdf    = rdf,
