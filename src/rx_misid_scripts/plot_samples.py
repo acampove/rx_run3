@@ -179,7 +179,7 @@ def _get_df(
     -------------
     Pandas dataframe with PID weighted sample
     '''
-    gtr   = RDFGetter(**cfg.rdf_cfg)
+    gtr   = RDFGetter(**cfg.rdf_cfg, sample=sample)
     rdf   = gtr.get_rdf(per_file=False)
     uid   = gtr.get_uid()
     cuts  = {
@@ -324,11 +324,12 @@ def main():
     pbar = tqdm.tqdm(total=cfg.nplots, ascii=' -')
 
     for bremcat in PlotConfig.BREMCATS:
-        if bremcat != 'all' and cfg.bremcat != bremcat:
+        if cfg.bremcat != 'all' and cfg.bremcat != bremcat:
+            log.debug(f'Skip {bremcat}')
             continue
 
         for region in PlotConfig.REGIONS:
-            if region != 'all' and cfg.region != region:
+            if cfg.region != 'all' and cfg.region != region:
                 log.debug(f'Skip {region}')
                 continue
 
@@ -349,7 +350,7 @@ def main():
                             continue
 
                         df_block  = df[df['block'] == block]
-                        key       = f'block{block}_{cfg.particle}_{cfg.region}'
+                        key       = f'block{block}_{particle}_{region}'
                         hist      = d_hist[key]
 
                         log.debug(f'Plotting block: {block}')
