@@ -66,7 +66,7 @@ class SampleWeighter:
 
         self._set_variables()
         self._df                              = self._get_df(df)
-        self._d_map : dict[str, dict[str,bh]] = { kind : self._get_maps(kind=kind) for kind in self._l_kind }
+        self._d_map : dict[str, dict[str,bh]] = { kind : self.get_maps(cfg = cfg, kind = kind) for kind in self._l_kind }
     # ------------------------------
     def _get_df(self, df : pnd.DataFrame) -> pnd.DataFrame:
         '''
@@ -107,18 +107,20 @@ class SampleWeighter:
 
         return df
     # ------------------------------
-    def _key_from_path(self, path : str) -> str:
+    @staticmethod
+    def _key_from_path(path : str, cfg : DictConfig) -> str:
         '''
         Parameters
         ---------------
         path: Path to pickle file holding the calibration map
+        cfg : Configuration used for weights, usually called weights.yaml
 
         Returns
         ---------------
         Identifier, needed as key of dictionary holding maps
         '''
         file_name = os.path.basename(path)
-        mtch = re.match(self._regex, file_name)
+        mtch = re.match(SampleWeighter._regex, file_name)
         if not mtch:
             raise ValueError(f'Cannot find block and particle in: {file_name}')
 
@@ -126,33 +128,38 @@ class SampleWeighter:
 
         part = {'K': 'kaon', 'Pi' : 'pion'}[part]
 
-        if   self._cfg['regions']['signal']  in file_name:
+        if   cfg['regions']['signal']  in file_name:
             region = 'signal'
-        elif self._cfg['regions']['control'] in file_name:
+        elif cfg['regions']['control'] in file_name:
             region = 'control'
         else:
             raise ValueError(f'Cannot determine region from: {file_name}')
 
         return f'{block}_{part}_{region}'
     # ------------------------------
-    def _get_maps(self, kind : str) -> dict[str, bh]:
+    @staticmethod
+    def get_maps(
+        cfg       : DictConfig,
+        kind      : str) -> dict[str, bh]:
         '''
         Loads pickle files with PIDCalib2 efficiencies for
         kaons or pions and returns them
 
         Parameters
         ----------------
-        kind: Describes things like brem or no brem or different binnings 
+        kind     : Describes things like brem or no brem or different binnings 
+        cfg      : Configuration meant to control weights
+        maps_path: Path containing `brem`, `nobrem` directories, inside ANADIR 
 
         Returns
         ----------------
         Dictionary mapping string identfying maps and
         boosthistogram object
         '''
-        log.info(f'Reading maps from: {self._cfg.maps_path}')
+        log.info(f'Reading maps from: {cfg.maps_path}')
 
         ana_dir = os.environ['ANADIR']
-        pkl_dir = f'{ana_dir}/{self._cfg.maps_path}/{kind}'
+        pkl_dir = f'{ana_dir}/{cfg.maps_path}/{kind}'
         path_wc = f'{pkl_dir}/*.pkl'
         l_path  = glob.glob(path_wc)
 
@@ -160,7 +167,7 @@ class SampleWeighter:
         for path in sorted(l_path):
             log.verbose(f'Reading: {path}')
 
-            key = self._key_from_path(path)
+            key = SampleWeighter._key_from_path(path=path, cfg = cfg)
             with open(path, 'rb') as ifile:
                 try:
                     hist = pickle.load(ifile)
