@@ -349,6 +349,7 @@ def main():
                             log.debug(f'Skip {block}')
                             continue
 
+                        particle  = PlotConfig.particle_from_sample(sample=sample) 
                         df_block  = df[df['block'] == block]
                         key       = f'block{block}_{particle}_{region}'
                         hist      = d_hist[key]
