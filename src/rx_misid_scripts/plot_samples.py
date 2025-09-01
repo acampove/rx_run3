@@ -23,19 +23,21 @@ log=LogStore.add_logger('rx_misid:plot_samples')
 # ----------------------
 @dataclass
 class PlotConfig:
-    samples    : list[str]     = ['kkk', 'kpipi']
-    blocks     : list[str]     = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8']
-    bremcats   : list[int]     = [0, 1]
+    sample   : str
 
-    block      : str           = field(init=False) 
-    bremcat    : int           = field(init=False) 
-    is_sig     : bool          = field(init=False) 
-    sample     : str           = field(init=False) 
+    SAMPLES  = ['kkk', 'kpipi']
+    BLOCKS   = [1, 2, 3, 4, 5, 6, 7, 8]
+    BREMCATS = [0, 1]
+    Q2BIN    = ['low', 'central', 'high']
 
-    rdf_getter : dict[str,str] = field(init=False) 
-    weighter   : DictConfig    = field(init=False)
-    weighter   : DictConfig    = field(init=False)
-    splitter   : DictConfig    = field(init=False)
+    block    : str        = field(init=False) 
+    q2bin    : str        = field(init=False) 
+    bremcat  : int        = field(init=False) 
+    is_sig   : bool       = field(init=False) 
+
+    rdf_cfg  : dict       = field(init=False) 
+    weighter : DictConfig = field(init=False)
+    splitter : DictConfig = field(init=False)
     # ----------------------
     def __post_init__(self):
         cfg = gut.load_conf(package='rx_misid_data', fpath='sample_plotting.yaml')
