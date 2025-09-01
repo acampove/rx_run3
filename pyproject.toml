@@ -18,8 +18,7 @@ dependencies= [
 dev  = ['pytest']
 
 [project.scripts]
-plot_misid='rx_misid_scripts.plot_misid:main'
-make_misid='rx_misid_scripts.make_misid:main'
+plot_misid='rx_misid_scripts.plot_samples:main'
 
 [tools.setuptools.packages.find]
 where   = ['src']
