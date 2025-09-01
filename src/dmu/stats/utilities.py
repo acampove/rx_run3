@@ -358,13 +358,24 @@ def save_fit(
     model   : zpdf|zmod|None,
     res     : zres|None,
     fit_dir : str,
-    plt_cfg : DictConfig,
+    plt_cfg : DictConfig|dict|None,
     d_const : dict[str,tuple[float,float]]|None = None) -> None:
     '''
     Parameters
     --------------------
-    model: PDF to be plotted, if None, will skip steps
+    data   : Data that was fitted
+    model  : PDF to be plotted, if None, will skip steps
+    res    : FitResult instance
+    fit_dir: Directory where outputs are meant to go
+    plt_cfg: Plotting configuration, as taken by ZfitPlotter
+    d_const: Dictionary storing constraints
     '''
+    if plt_cfg is None:
+        return
+
+    if isinstance(plt_cfg, dict):
+        plt_cfg = OmegaConf.create(plt_cfg)
+
     _save_fit_plot(data=data, model=model, cfg=plt_cfg, fit_dir=fit_dir)
     _save_result(fit_dir=fit_dir, res=res)
 
