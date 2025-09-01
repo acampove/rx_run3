@@ -132,6 +132,8 @@ def test_fit():
     d_wgt= {'dec' : 1, 'sam' : 1}
     obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
     pdf=obp.get_sum(mass=mass, name='PRec_1', obs=obs)
+    if pdf is None:
+        return
 
     title=f'$q^2$: {q2}, both weights'
     PRec.plot_pdf(pdf, name='both_weights', maxy=maxy, title=title, out_dir=f'{Data.out_dir}/{test}')
