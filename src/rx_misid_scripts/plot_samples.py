@@ -295,28 +295,6 @@ def _get_array(
 
     return numpy.concatenate((arr_l1, arr_l2))
 # ----------------------
-def _get_histogram(
-    d_hist : dict[str,bh], 
-    cfg    : PlotConfig,
-    block  : int) -> tuple[bh, str]:
-    '''
-    Parameters
-    -------------
-    d_hist: Dictionary mapping string to histograms with calibration maps
-    block : Block number been plotted
-    cfg   : Configuration used for plotting
-
-    Returns
-    -------------
-    Tuple with:
-
-    - Boost histogram from PIDCalib2 corresponding to current iteration
-    - String identifying histogram
-    '''
-    key = f'block{block}_{cfg.particle}_{cfg.region}'
-
-    return d_hist[key], key
-# ----------------------
 def main():
     '''
     Entry point
