@@ -40,6 +40,7 @@ df    = spl.get_sample()
 This can be done with:
 
 ```python
+from dmu.generic              import utilities   as gut
 from rx_misid.sample_weighter import SampleWeighter
 
 cfg = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
