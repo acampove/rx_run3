@@ -146,7 +146,12 @@ def main():
     cfg = _parse_args()
     df  = _get_df(cfg=cfg)
 
-    _plot_projections(df=df, cfg=cfg)
+    for block, df_block in df.groupby('block'):
+        if block != cfg.block:
+            continue
+
+        log.info(f'Plotting block: {block}')
+        _plot_projections(df=df_block, cfg=cfg)
 # ----------------------
 if __name__ == '__main__':
     main()
