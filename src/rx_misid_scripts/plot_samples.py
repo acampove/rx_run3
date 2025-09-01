@@ -136,8 +136,8 @@ def _get_df(
         rdf = sel.apply_full_selection(
             rdf    = rdf,
             uid    = uid,
-            q2bin  = cfg.q2bin,
-            process= cfg.rdf_cfg['sample'],
+            q2bin  = q2bin,
+            process= sample, 
             trigger= cfg.rdf_cfg['trigger'])
 
     spl   = SampleSplitter(rdf = rdf, cfg = cfg.splitter)
@@ -146,8 +146,8 @@ def _get_df(
     wgt   = SampleWeighter(
         df    = df,
         cfg   = cfg.weighter,
-        sample= cfg.sample,
-        is_sig= cfg.is_sig)
+        sample= sample,
+        is_sig= region == 'signal')
     df  = wgt.get_weighted_data()
 
     return df
