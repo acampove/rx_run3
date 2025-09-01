@@ -60,3 +60,28 @@ The weights are selected such that:
 - They are picked up based on the Bremsstrahlung category
 
 The weights go in the `weight` column
+
+### Validating maps
+
+In order to validate the maps one needs to:
+
+#### Overlay the maps with the misID samples
+
+In order to check the coverage, this is done with:
+
+```bash
+plot_samples
+```
+
+which will:
+
+- Open the calibration maps and plot them
+- Open the misID samples
+- Apply the full selection but the PID
+- Apply the block requirement (plots are per block)
+- Apply `brem!=0` requirement
+- Calculate the $1\sigma$, $2\sigma$ and $3\sigma$ contours
+- Overlay them with the maps
+
+Separate, bins, blocks, samples, etc can be specified separately,
+check with `-h`.
