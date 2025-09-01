@@ -93,24 +93,6 @@ def _parse_args() -> PlotConfig:
 
     return cfg
 # ----------------------
-def _get_selection(cfg : PlotConfig) -> dict[str,str]:
-    '''
-    Parameters
-    -------------
-    cfg: Configuration holding block, etc
-
-    Returns
-    -------------
-    Dictionary with overriding selection
-    '''
-    block_cut = f'block == {cfg.block}'
-    brem_cut  = f'nbrem == {cfg.bremcat}'
-
-    return {
-        'pid_l' : '(1)', 
-        'brem'  : brem_cut,
-        'block' : block_cut}
-# ----------------------
 def _get_df(cfg : PlotConfig) -> pnd.DataFrame:
     '''
     Parameters
