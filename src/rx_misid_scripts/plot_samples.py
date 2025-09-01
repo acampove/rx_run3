@@ -6,9 +6,11 @@ This script is meant to:
 
 where the misID samples are B-> KKK and B -> Kpipi
 '''
+import os
 import argparse
 from dataclasses import dataclass, field
 
+import numpy
 import pandas       as pnd
 from omegaconf                import DictConfig, OmegaConf
 from rx_data.rdf_getter       import RDFGetter
@@ -41,7 +43,8 @@ class PlotConfig:
     # ----------------------
     def __post_init__(self):
         cfg = gut.load_conf(package='rx_misid_data', fpath='sample_plotting.yaml')
-        Wcache.set_cache_root('.cache')
+        this_dir = os.getcwd()
+        Wcache.set_cache_root(f'{this_dir}/.cache')
 
         self._build_rdf_getter(cfg=cfg)
         self.weighter = cfg.wgt_cfg
