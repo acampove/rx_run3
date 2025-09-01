@@ -473,7 +473,7 @@ def _reformat_expo(val : str) -> str:
     [val, exp] = mtch.groups()
     exp        = int(exp)
 
-    return f'{val}\cdot 10^{{{exp}}}'
+    return rf'{val}\cdot 10^{{{exp}}}'
 #-------------------------------------------------------
 def _format_float_str(val : str) -> str:
     '''
@@ -509,7 +509,7 @@ def _info_from_line(line : str) -> tuple|None:
         mu   = _format_float_str(mu)
         sg   = _format_float_str(sg)
 
-        cons = f'$\mu={mu}; \sigma={sg}$'
+        cons = rf'$\mu={mu}; \sigma={sg}$'
 
     return par, low, high, floating, cons
 #-------------------------------------------------------
