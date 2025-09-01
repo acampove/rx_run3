@@ -30,6 +30,7 @@ class SampleWeighter:
     - Pick datasets
     - Apply weights to datasets and return them
     '''
+    _regex  = r'.*_(block\d)(?:_v\d)?-(?:up|down)-(K|Pi)-.*'
     # ------------------------------
     def __init__(
         self,
@@ -49,7 +50,6 @@ class SampleWeighter:
         self._varx   : str
         self._vary   : str
         self._l_kind = [BREM, NOBREM]
-        self._regex  = r'.*_(block\d)(?:_v\d)?-(?:up|down)-(K|Pi)-.*'
 
         #PT:
         #    True : 10
