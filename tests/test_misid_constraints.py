@@ -3,6 +3,7 @@ Module containing tests for MisIDConstraints class
 '''
 import os
 import pytest
+from rx_data.rdf_getter import RDFGetter
 import yaml
 
 from rx_selection             import selection as sel
@@ -40,12 +41,15 @@ def test_simple(q2bin : str) -> None:
     '''
     obs = zfit.Space('B_Mass_smr', limits=(4500, 6000))
     cfg = gut.load_conf(package='fitter_data', fpath='misid/electron/data_misid.yaml')
+    cfg.output_directory = Data.out_dir
+
     with sel.custom_selection(d_sel={'nobrm0' : 'nbrem != 0'}):
-        obj = MisIDConstraints(
-            obs      = obs,
-            cfg      = cfg,
-            q2bin    = q2bin)
-        d_cns = obj.get_constraints()
+        with RDFGetter.multithreading(nthreads=8):
+            obj = MisIDConstraints(
+                obs      = obs,
+                cfg      = cfg,
+                q2bin    = q2bin)
+            d_cns = obj.get_constraints()
 
     data = yaml.dump(d_cns)
     log.info(data)
