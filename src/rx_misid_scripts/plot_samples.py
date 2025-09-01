@@ -11,7 +11,10 @@ import argparse
 from dataclasses import dataclass, field
 
 import numpy
-import pandas       as pnd
+import mplhep
+import seaborn           as sns
+import pandas            as pnd
+import matplotlib.pyplot as plt
 from omegaconf                import DictConfig, OmegaConf
 from rx_data.rdf_getter       import RDFGetter
 from rx_misid.sample_splitter import SampleSplitter
@@ -140,6 +143,27 @@ def _plot_projections(df : pnd.DataFrame, cfg : PlotConfig) -> None:
     arr_pt = _get_array(df=df, quantity='TRACK_PT' , cfg=cfg)
     arr_et = _get_array(df=df, quantity='TRACK_ETA', cfg=cfg)
     arr_wt = _get_array(df=df, quantity='weight'   , cfg=cfg)
+    arr_pt = numpy.log10(arr_pt)
+
+    levels = [0.68, 0.95, 0.997]
+    colors = ['r', 'g', 'b']
+
+    for level, color in zip(levels, colors):
+        sns.kdeplot(x=arr_pt, y=arr_et, weights=None, levels=[level], c=color, lw=1.5)
+
+    for level, color in zip(levels, colors):
+        sns.kdeplot(
+            x=arr_pt, 
+            y=arr_et, 
+            weights=arr_wt, 
+            levels=[level], 
+            c=color, 
+            lw=1.5,
+            linestyles=3 * ['dashed'])
+
+    plt.xlim(2, 4)
+    plt.scatter(arr_pt, arr_et, s=1, alpha=0.3)
+    plt.show()
 # ----------------------
 def _get_array(
     df       : pnd.DataFrame,
@@ -170,6 +194,7 @@ def main():
     '''
     Entry point
     '''
+    mplhep.style.use('LHCb2')
     cfg = _parse_args()
     df  = _get_df(cfg=cfg)
 
