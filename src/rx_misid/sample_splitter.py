@@ -115,6 +115,7 @@ class SampleSplitter(Wcache):
         columns      = self._cfg['branches']
         df           = rut.rdf_to_df(rdf=self._rdf, columns=columns)
         df['hadron'] = particle
+        df['block']  = df['block'].astype(int)
 
         df.to_parquet(parquet_path, engine='pyarrow')
         self._cache()
