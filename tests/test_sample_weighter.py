@@ -8,6 +8,7 @@ import pickle
 import numpy
 import pytest
 import pandas            as pnd
+from boost_histogram          import Histogram
 from dmu.logging.log_store    import LogStore
 from dmu.generic              import utilities      as gut
 from rx_misid.sample_weighter import FloatArray, SampleWeighter
@@ -271,3 +272,13 @@ def test_simple(is_sig : bool, sample : str, block : int):
     _check_weights(df=df)
     _closure_check(df=df, is_sig=is_sig, sample=sample, block=block)
 # ----------------------------
+def test_get_maps():
+    '''
+    Test of get_maps method
+    '''
+    cfg = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
+    d_map = SampleWeighter.get_maps(cfg=cfg, kind='brem')
+
+    assert len(d_map) == 32
+    for hist in d_map.values():
+        assert isinstance(hist, Histogram)
