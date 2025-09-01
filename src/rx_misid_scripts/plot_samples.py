@@ -152,62 +152,137 @@ def _get_df(
 
     return df
 # ----------------------
-def _plot_projections(df : pnd.DataFrame, cfg : PlotConfig) -> None:
+def _plot_overlay(
+    df     : pnd.DataFrame, 
+    hist   : bh,
+    key    : str,
+    bremcat: str,
+    cfg    : PlotConfig) -> None:
     '''
     Parameters
     -------------
-    df : DataFrame with data to be plotted
-    cfg: Configuration to make plots
+    df     : DataFrame with data to be plotted
+    bh     : Histogram with calibration map
+    key    : Map identifier
+    cfg    : Configuration to make plots
+    bremcat: brem or nobrem
     '''
-    arr_pt = _get_array(df=df, quantity='TRACK_PT' , cfg=cfg)
-    arr_et = _get_array(df=df, quantity='TRACK_ETA', cfg=cfg)
-    arr_wt = _get_array(df=df, quantity='weight'   , cfg=cfg)
+    arr_pt = _get_array(df=df, quantity='TRACK_PT' , bremcat=bremcat)
+    arr_et = _get_array(df=df, quantity='TRACK_ETA', bremcat=bremcat)
     arr_pt = numpy.log10(arr_pt)
 
     levels = [0.68, 0.95, 0.997]
-    colors = ['r', 'g', 'b']
+    styles = ['dotted', 'dashed', 'solid']
 
-    for level, color in zip(levels, colors):
-        sns.kdeplot(x=arr_pt, y=arr_et, weights=None, levels=[level], c=color, lw=1.5)
-
-    for level, color in zip(levels, colors):
+    _plot_map(hist=hist)
+    for level, style in zip(levels, styles):
         sns.kdeplot(
-            x=arr_pt, 
-            y=arr_et, 
-            weights=arr_wt, 
-            levels=[level], 
-            c=color, 
-            lw=1.5,
-            linestyles=3 * ['dashed'])
+            x         =arr_pt, 
+            y         =arr_et, 
+            levels    =[1 - level], 
+            c         ='red', 
+            lw        =0.5,
+            linestyles=style)
 
-    plt.xlim(2, 4)
-    plt.scatter(arr_pt, arr_et, s=1, alpha=0.3)
-    plt.show()
+    plt.scatter(
+        arr_pt, 
+        arr_et, 
+        s     =0.2, 
+        marker='.', 
+        color ='green')
+
+    plot_path = _get_map_path(key=key, cfg=cfg)
+    plt.title(f'{key}; Entries={len(df)}')
+    plt.xlabel(r'$\log_{10}(p_T)$ MeV')
+    plt.ylabel(r'$\eta$')
+    plt.savefig(plot_path)
+    plt.close()
+# ----------------------
+def _get_map_path(key : str, cfg : PlotConfig) -> Path:
+    '''
+    Parameters
+    -------------
+    key: Identifier of map been saved
+    cfg: Configuration object
+
+    Returns
+    -------------
+    Path to PNG file
+    '''
+    maps_path = Path(cfg.weighter.maps_path)
+    ana_dir   = os.environ['ANADIR']
+    out_dir   =ana_dir/maps_path/'coverage'
+    out_dir.mkdir(exist_ok=True)
+
+    return out_dir/f'{key}.png'
+# ----------------------
+def _plot_map(hist : bh) -> None:
+    '''
+    Parameters
+    -------------
+    hist: Calibration map
+    '''
+    x_edges      = hist.axes[0].edges
+    y_edges      = hist.axes[1].edges
+    bin_values   = hist.view()['value']
+    if not isinstance(bin_values, numpy.ndarray):
+        raise TypeError('Bin values not a numpy array')
+
+    arr_x, arr_y = numpy.meshgrid(x_edges, y_edges)
+
+    counts  = 100 * bin_values 
+    maxz    = 20 
+    plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None, vmin=0, vmax=maxz)
+    plt.colorbar(label='Efficiency [%]')
 # ----------------------
 def _get_array(
     df       : pnd.DataFrame,
     quantity : str,
-    cfg      : PlotConfig) -> numpy.ndarray:
+    bremcat  : str) -> numpy.ndarray:
     '''
     Parameters
     -------------
     df      : DataFrame with data to be plotted
     quantity: E.g. PT
-    cfg     : Object with full configuration
+    bremcat : E.g. nobrem
 
     Returns
     -------------
     Array of `quantity` for L1 and L2
     '''
-    df_l1 = df[ df['L1_HASBREM'] == cfg.bremcat ]
+    cat = {'nobrem' : 0, 'brem' : 1}[bremcat]
+
+    df_l1 = df[ df['L1_HASBREM'] == cat ]
     name  = 'pid_eff_l1' if quantity == 'weight' else f'L1_{quantity}'
     arr_l1= df_l1[name].to_numpy()
 
-    df_l2 = df[ df['L2_HASBREM'] == cfg.bremcat ]
+    df_l2 = df[ df['L2_HASBREM'] == cat ]
     name  = 'pid_eff_l2' if quantity == 'weight' else f'L2_{quantity}'
     arr_l2= df_l2[name].to_numpy()
 
     return numpy.concatenate((arr_l1, arr_l2))
+# ----------------------
+def _get_histogram(
+    d_hist : dict[str,bh], 
+    cfg    : PlotConfig,
+    block  : int) -> tuple[bh, str]:
+    '''
+    Parameters
+    -------------
+    d_hist: Dictionary mapping string to histograms with calibration maps
+    block : Block number been plotted
+    cfg   : Configuration used for plotting
+
+    Returns
+    -------------
+    Tuple with:
+
+    - Boost histogram from PIDCalib2 corresponding to current iteration
+    - String identifying histogram
+    '''
+    key = f'block{block}_{cfg.particle}_{cfg.region}'
+
+    return d_hist[key], key
 # ----------------------
 def main():
     '''
@@ -215,14 +290,43 @@ def main():
     '''
     mplhep.style.use('LHCb2')
     cfg = _parse_args()
-    df  = _get_df(cfg=cfg)
 
-    for block, df_block in df.groupby('block'):
-        if block != cfg.block:
+    d_hist= {}
+    d_hist.update(SampleWeighter.get_maps(cfg=cfg.weighter, kind=  'brem'))
+    d_hist.update(SampleWeighter.get_maps(cfg=cfg.weighter, kind='nobrem'))
+
+    for bremcat in PlotConfig.BREMCATS:
+        if bremcat != 'all' and cfg.bremcat != bremcat:
             continue
 
-        log.info(f'Plotting block: {block}')
-        _plot_projections(df=df_block, cfg=cfg)
+        for region in PlotConfig.REGIONS:
+            if region != 'all' and cfg.region != region:
+                log.debug(f'Skip {region}')
+                continue
+
+            for q2bin in PlotConfig.Q2BIN:
+                if cfg.q2bin != 'all' and cfg.q2bin != q2bin:
+                    log.debug(f'Skip {q2bin}')
+                    continue
+
+                for sample in PlotConfig.SAMPLES:
+                    if cfg.sample != 'all' and cfg.sample != sample:
+                        log.debug(f'Skip {sample}')
+                        continue
+
+                    df  = _get_df(cfg=cfg, region=region, q2bin=q2bin, sample=sample)
+                    for block, df_block in df.groupby('block'):
+                        if not isinstance(block, int):
+                            raise ValueError(f'Block is not an int, but {type(block)}')
+
+                        if cfg.block != -1 and cfg.block != block:
+                            log.debug(f'Skip {block}')
+                            continue
+
+                        hist, key = _get_histogram(d_hist=d_hist, block=block, cfg=cfg)
+
+                        log.info(f'Plotting block: {block}')
+                        _plot_overlay(df=df_block, cfg=cfg, hist=hist, bremcat=bremcat, key=f'{key}_{bremcat}_{q2bin}')
 # ----------------------
 if __name__ == '__main__':
     main()
