@@ -14,8 +14,10 @@ from omegaconf                import DictConfig, OmegaConf
 from rx_data.rdf_getter       import RDFGetter
 from rx_misid.sample_splitter import SampleSplitter
 from rx_misid.sample_weighter import SampleWeighter
+from rx_selection             import selection  as sel
 from dmu.logging.log_store    import LogStore
 from dmu.generic              import utilities  as gut
+from dmu.workflow.cache       import Cache      as Wcache
 
 log=LogStore.add_logger('rx_misid:plot_samples')
 # ----------------------
