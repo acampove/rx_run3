@@ -62,13 +62,16 @@ class PlotConfig:
         '''
         Transform nickname into actual sample name
         '''
-        if self.sample == 'kkk':
+        if self.particle == 'all':
+            return 'all'
+
+        if self.particle == 'kaon':
             return 'Bu_KplKplKmn_eq_sqDalitz_DPC'
 
-        if self.sample == 'kpipi':
+        if self.particle == 'pion':
             return 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
 
-        raise NotImplementedError(f'Invalid sample: {self.sample}')
+        raise NotImplementedError(f'Invalid particle: {self.particle}')
     # ----------------------
     def _build_rdf_getter(self, cfg : DictConfig) -> None:
         '''
