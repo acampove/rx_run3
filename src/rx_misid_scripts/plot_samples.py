@@ -83,32 +83,43 @@ class PlotConfig:
         if not isinstance(d_cfg, dict):
             raise TypeError('Config is not a dictionary')
 
-        d_cfg['sample'] = self._resolve_sample()
+        self.sample     = self._resolve_sample()
+        d_cfg['sample'] = self.sample
 
         self.rdf_cfg = d_cfg
 # ----------------------
 def _parse_args() -> PlotConfig:
     parser = argparse.ArgumentParser(description='Script used to make diagnostic plots')
-    parser.add_argument('-r', '--region' , type=int, help='Signal region (1) or control region', choices=[0, 1]             , required=True)
-    parser.add_argument('-q', '--q2bin'  , type=str, help='Q2 bin'                             , choices=PlotConfig.Q2BIN   , required=True)
-    parser.add_argument('-s', '--sample' , type=str, help='Sample nickname'                    , choices=PlotConfig.SAMPLES , required=True)
-    parser.add_argument('-b', '--block'  , type=int, help='Block'                              , choices=PlotConfig.BLOCKS  , required=True)
-    parser.add_argument('-B', '--bremcat', type=int, help='Brem category'                      , choices=PlotConfig.BREMCATS, required=True)
+    parser.add_argument('-p', '--particle', type=str, help='Particle'                , choices=PlotConfig.PARTICLES, default='all')
+    parser.add_argument('-r', '--region'  , type=str, help='Region associated to map', choices=PlotConfig.REGIONS  , default='all')
+    parser.add_argument('-q', '--q2bin'   , type=str, help='Q2 bin'                  , choices=PlotConfig.Q2BIN    , default='all')
+    parser.add_argument('-B', '--bremcat' , type=str, help='Brem category'           , choices=PlotConfig.BREMCATS , default='all')
+    parser.add_argument('-b', '--block'   , type=int, help='Block'                   , choices=PlotConfig.BLOCKS   , default=   -1)
+    parser.add_argument('-l', '--log_lvl' , type=int, help='Logging level'           , choices=[10, 20, 30, 40, 50], default=   20)
     args = parser.parse_args()
 
-    cfg        = PlotConfig(sample=args.sample)
-    cfg.is_sig = bool(args.region)
-    cfg.q2bin  = args.q2bin
-    cfg.block  = args.block
-    cfg.bremcat= args.bremcat
+    cfg         = PlotConfig(particle=args.particle)
+    cfg.region  = args.region
+    cfg.q2bin   = args.q2bin
+    cfg.bremcat = args.bremcat
+    cfg.block   = args.block
+
+    LogStore.set_level('rx_misid:plot_samples', args.log_lvl)
 
     return cfg
 # ----------------------
-def _get_df(cfg : PlotConfig) -> pnd.DataFrame:
+def _get_df(
+    cfg    : PlotConfig, 
+    q2bin  : str,
+    sample : str,
+    region : str) -> pnd.DataFrame:
     '''
     Parameters
     -------------
-    cfg: Configuration needed to make dataframe
+    cfg   : Configuration needed to make dataframe
+    q2bin : E.g. central 
+    sample: MC sample, e.g. mc_bukee...
+    region: signal or control
 
     Returns
     -------------
