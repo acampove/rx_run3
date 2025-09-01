@@ -11,6 +11,7 @@ import argparse
 from dataclasses import dataclass, field
 from pathlib     import Path
 
+import tqdm
 import numpy
 import mplhep
 import seaborn           as sns
@@ -37,8 +38,9 @@ class PlotConfig:
     BLOCKS   = [1, 2, 3, 4, 5, 6, 7, 8]
     BREMCATS = ['nobrem', 'brem']
     REGIONS  = ['signal', 'control']
-    Q2BIN    = ['low', 'central', 'high']
+    Q2BINS   = ['low', 'central', 'high']
 
+    nplots   : int        = field(init=False) 
     block    : int        = field(init=False) 
     sample   : str        = field(init=False) 
     q2bin    : str        = field(init=False) 
@@ -57,6 +59,29 @@ class PlotConfig:
         self._build_rdf_getter(cfg=cfg)
         self.weighter = cfg.wgt_cfg
         self.splitter = cfg.spl_cfg
+    # ----------------------
+    def calculate_plots(self) -> None:
+        '''
+        Calculates number of plots to be make
+        and assigns them to self.nplots
+        '''
+        nplots = 1
+        if self.block   ==    -1:
+            nplots *= len(self.BLOCKS)
+        
+        if self.sample  == 'all':
+            nplots *= len(self.SAMPLES)
+
+        if self.q2bin   == 'all':
+            nplots *= len(self.Q2BINS)
+
+        if self.bremcat == 'all':
+            nplots *= len(self.BREMCATS)
+
+        if self.region  == 'all':
+            nplots *= len(self.REGIONS)
+
+        self.nplots = nplots
     # ----------------------
     def _resolve_sample(self) -> str:
         '''
@@ -92,7 +117,7 @@ def _parse_args() -> PlotConfig:
     parser = argparse.ArgumentParser(description='Script used to make diagnostic plots')
     parser.add_argument('-p', '--particle', type=str, help='Particle'                , choices=PlotConfig.PARTICLES, default='all')
     parser.add_argument('-r', '--region'  , type=str, help='Region associated to map', choices=PlotConfig.REGIONS  , default='all')
-    parser.add_argument('-q', '--q2bin'   , type=str, help='Q2 bin'                  , choices=PlotConfig.Q2BIN    , default='all')
+    parser.add_argument('-q', '--q2bin'   , type=str, help='Q2 bin'                  , choices=PlotConfig.Q2BINS    , default='all')
     parser.add_argument('-B', '--bremcat' , type=str, help='Brem category'           , choices=PlotConfig.BREMCATS , default='all')
     parser.add_argument('-b', '--block'   , type=int, help='Block'                   , choices=PlotConfig.BLOCKS   , default=   -1)
     parser.add_argument('-l', '--log_lvl' , type=int, help='Logging level'           , choices=[10, 20, 30, 40, 50], default=   20)
@@ -103,10 +128,24 @@ def _parse_args() -> PlotConfig:
     cfg.q2bin   = args.q2bin
     cfg.bremcat = args.bremcat
     cfg.block   = args.block
+    cfg.calculate_plots()
 
-    LogStore.set_level('rx_misid:plot_samples', args.log_lvl)
+    _set_logs(level = args.log_lvl)
 
     return cfg
+# ----------------------
+def _set_logs(level : int) -> None:
+    '''
+    Parameters
+    -------------
+    level: Logging level
+    '''
+    LogStore.set_level('rx_selection:selection'     ,    30)
+    LogStore.set_level('rx_selection:truth_matching',    30)
+    LogStore.set_level('rx_data:rdf_getter'         ,    30)
+    LogStore.set_level('rx_misid:sample_splitter'   ,    40)
+    LogStore.set_level('rx_misid:sample_weighter'   ,    30)
+    LogStore.set_level('rx_misid:plot_samples'      , level)
 # ----------------------
 def _get_df(
     cfg    : PlotConfig, 
@@ -224,7 +263,8 @@ def _plot_map(hist : bh) -> None:
     arr_x, arr_y = numpy.meshgrid(x_edges, y_edges)
 
     counts  = 100 * bin_values 
-    maxz    = numpy.nanmax(counts) 
+    tmp     = numpy.where((counts < 100) & (counts >= 0), counts, 0)
+    maxz    = numpy.max(tmp)
     plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None, vmin=0, vmax=maxz)
     plt.colorbar(label='Efficiency [%]')
 # ----------------------
@@ -288,6 +328,8 @@ def main():
     d_hist.update(SampleWeighter.get_maps(cfg=cfg.weighter, kind=  'brem'))
     d_hist.update(SampleWeighter.get_maps(cfg=cfg.weighter, kind='nobrem'))
 
+    pbar = tqdm.tqdm(total=cfg.nplots, ascii=' -')
+
     for bremcat in PlotConfig.BREMCATS:
         if bremcat != 'all' and cfg.bremcat != bremcat:
             continue
@@ -297,7 +339,7 @@ def main():
                 log.debug(f'Skip {region}')
                 continue
 
-            for q2bin in PlotConfig.Q2BIN:
+            for q2bin in PlotConfig.Q2BINS:
                 if cfg.q2bin != 'all' and cfg.q2bin != q2bin:
                     log.debug(f'Skip {q2bin}')
                     continue
@@ -308,18 +350,18 @@ def main():
                         continue
 
                     df  = _get_df(cfg=cfg, region=region, q2bin=q2bin, sample=sample)
-                    for block, df_block in df.groupby('block'):
-                        if not isinstance(block, int):
-                            raise ValueError(f'Block is not an int, but {type(block)}')
-
+                    for block in PlotConfig.BLOCKS:
                         if cfg.block != -1 and cfg.block != block:
                             log.debug(f'Skip {block}')
                             continue
 
-                        hist, key = _get_histogram(d_hist=d_hist, block=block, cfg=cfg)
+                        df_block  = df[df['block'] == block]
+                        key       = f'block{block}_{cfg.particle}_{cfg.region}'
+                        hist      = d_hist[key]
 
-                        log.info(f'Plotting block: {block}')
+                        log.debug(f'Plotting block: {block}')
                         _plot_overlay(df=df_block, cfg=cfg, hist=hist, bremcat=bremcat, key=f'{key}_{bremcat}_{q2bin}')
+                        pbar.update(1)
 # ----------------------
 if __name__ == '__main__':
     main()
