@@ -133,7 +133,7 @@ def test_fit():
     obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
     pdf=obp.get_sum(mass=mass, name='PRec_1', obs=obs)
     if pdf is None:
-        return
+        raise ValueError('No PDF found')
 
     title=f'$q^2$: {q2}, both weights'
     PRec.plot_pdf(pdf, name='both_weights', maxy=maxy, title=title, out_dir=f'{Data.out_dir}/{test}')
