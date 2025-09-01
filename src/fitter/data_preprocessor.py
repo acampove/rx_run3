@@ -193,9 +193,7 @@ class DataPreprocessor(Cache):
             is_sig= self._is_sig) # We want weights for the control region
         df  = wgt.get_weighted_data()
 
-        l_wgt = df.attrs['pid_weights']
-
-        return numpy.array(l_wgt)
+        return df['pid_weights'].to_numpy()
     # ------------------------
     def _get_array(self) -> tuple[numpy.ndarray,numpy.ndarray]:
         '''
