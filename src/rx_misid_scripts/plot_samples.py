@@ -242,6 +242,8 @@ def _plot_overlay(
     plt.title(f'{key}; Entries={len(df)}')
     plt.xlabel(r'$\log_{10}(p_T)$ MeV')
     plt.ylabel(r'$\eta$')
+    plt.xlim(2.0, 5.0)
+    plt.ylim(0.0, 5.5)
     plt.savefig(plot_path)
     plt.close()
 # ----------------------
