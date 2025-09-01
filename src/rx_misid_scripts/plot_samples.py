@@ -137,7 +137,34 @@ def _plot_projections(df : pnd.DataFrame, cfg : PlotConfig) -> None:
     df : DataFrame with data to be plotted
     cfg: Configuration to make plots
     '''
-    pass
+    arr_pt = _get_array(df=df, quantity='TRACK_PT' , cfg=cfg)
+    arr_et = _get_array(df=df, quantity='TRACK_ETA', cfg=cfg)
+    arr_wt = _get_array(df=df, quantity='weight'   , cfg=cfg)
+# ----------------------
+def _get_array(
+    df       : pnd.DataFrame,
+    quantity : str,
+    cfg      : PlotConfig) -> numpy.ndarray:
+    '''
+    Parameters
+    -------------
+    df      : DataFrame with data to be plotted
+    quantity: E.g. PT
+    cfg     : Object with full configuration
+
+    Returns
+    -------------
+    Array of `quantity` for L1 and L2
+    '''
+    df_l1 = df[ df['L1_HASBREM'] == cfg.bremcat ]
+    name  = 'pid_eff_l1' if quantity == 'weight' else f'L1_{quantity}'
+    arr_l1= df_l1[name].to_numpy()
+
+    df_l2 = df[ df['L2_HASBREM'] == cfg.bremcat ]
+    name  = 'pid_eff_l2' if quantity == 'weight' else f'L2_{quantity}'
+    arr_l2= df_l2[name].to_numpy()
+
+    return numpy.concatenate((arr_l1, arr_l2))
 # ----------------------
 def main():
     '''
