@@ -30,17 +30,20 @@ log=LogStore.add_logger('rx_misid:plot_samples')
 # ----------------------
 @dataclass
 class PlotConfig:
-    sample   : str
+    particle : str
 
-    SAMPLES  = ['kkk', 'kpipi']
+    SAMPLES  = ['Bu_piplpimnKpl_eq_sqDalitz_DPC', 'Bu_KplKplKmn_eq_sqDalitz_DPC']
+    PARTICLES= ['kaon', 'pion']
     BLOCKS   = [1, 2, 3, 4, 5, 6, 7, 8]
-    BREMCATS = [0, 1]
+    BREMCATS = ['nobrem', 'brem']
+    REGIONS  = ['signal', 'control']
     Q2BIN    = ['low', 'central', 'high']
 
-    block    : str        = field(init=False) 
+    block    : int        = field(init=False) 
+    sample   : str        = field(init=False) 
     q2bin    : str        = field(init=False) 
-    bremcat  : int        = field(init=False) 
-    is_sig   : bool       = field(init=False) 
+    bremcat  : str        = field(init=False) 
+    region   : str        = field(init=False) 
 
     rdf_cfg  : dict       = field(init=False) 
     weighter : DictConfig = field(init=False)
