@@ -835,8 +835,8 @@ def test_skip_brem_track_2(kind : str, trigger : str):
             sample       =sample)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample, trigger' , [
-    ('Bu_KplpiplKmn_eq_sqDalitz_DPC' , 'Hlt2RD_BuToKpEE_MVA_noPID'),
-    #('Bu_KplKplKmn_eq_sqDalitz_DPC'  , 'Hlt2RD_BuToKpEE_MVA_noPID'),
+    #('Bu_KplpiplKmn_eq_sqDalitz_DPC' , 'Hlt2RD_BuToKpEE_MVA_noPID'),
+    ('Bu_KplKplKmn_eq_sqDalitz_DPC'  , 'Hlt2RD_BuToKpEE_MVA_noPID'),
     ('Bu_piplpimnKpl_eq_sqDalitz_DPC', 'Hlt2RD_BuToKpEE_MVA_noPID'),
     ('Bu_JpsiPi_ee_eq_DPC'           , 'Hlt2RD_BuToKpEE_MVA_noPID'),
     ('Bu_Kee_eq_btosllball05_DPC'    , 'Hlt2RD_BuToKpEE_MVA_noPID'),
