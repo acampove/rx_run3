@@ -110,8 +110,8 @@ class PlotConfig:
         if sample == 'Bu_KplKplKmn_eq_sqDalitz_DPC':
             return 'kaon'
 
-        if sample == 'pion':
-            return 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
+        if sample == 'Bu_piplpimnKpl_eq_sqDalitz_DPC':
+            return 'pion'
 
         raise NotImplementedError(f'Invalid sample: {sample}')
     # ----------------------
