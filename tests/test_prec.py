@@ -255,6 +255,8 @@ def test_extended():
     d_wgt= {'dec' : 1, 'sam' : 1}
     obp=PRec(samples=l_samp, trig=trig, q2bin='jpsi', d_weight=d_wgt)
     pdf=obp.get_sum(mass='B_Mass_smr', name='PRec_1', obs=obs)
+    if pdf is None:
+        raise ValueError('No PDF found')
 
     assert pdf.is_extended is False
 #-----------------------------------------------
