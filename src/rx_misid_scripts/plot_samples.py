@@ -184,13 +184,6 @@ def _plot_overlay(
             lw        =0.5,
             linestyles=style)
 
-    plt.scatter(
-        arr_pt, 
-        arr_et, 
-        s     =0.2, 
-        marker='.', 
-        color ='green')
-
     plot_path = _get_map_path(key=key, cfg=cfg)
     plt.title(f'{key}; Entries={len(df)}')
     plt.xlabel(r'$\log_{10}(p_T)$ MeV')
@@ -231,7 +224,7 @@ def _plot_map(hist : bh) -> None:
     arr_x, arr_y = numpy.meshgrid(x_edges, y_edges)
 
     counts  = 100 * bin_values 
-    maxz    = 20 
+    maxz    = numpy.nanmax(counts) 
     plt.pcolormesh(arr_x, arr_y, counts.T, shading='auto', norm=None, vmin=0, vmax=maxz)
     plt.colorbar(label='Efficiency [%]')
 # ----------------------
