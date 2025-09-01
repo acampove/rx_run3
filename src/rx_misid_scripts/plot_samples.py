@@ -41,21 +41,21 @@ class PlotConfig:
     # ----------------------
     def __post_init__(self):
         cfg = gut.load_conf(package='rx_misid_data', fpath='sample_plotting.yaml')
-        self._resolve_sample()
-        self._build_rdf_getter(cfg=cfg)
+        Wcache.set_cache_root('.cache')
 
-        self._weighter = cfg.wgt_cfg
-        self._splitter = cfg.spl_cfg
+        self._build_rdf_getter(cfg=cfg)
+        self.weighter = cfg.wgt_cfg
+        self.splitter = cfg.spl_cfg
     # ----------------------
-    def _resolve_sample(self) -> None:
+    def _resolve_sample(self) -> str:
         '''
         Transform nickname into actual sample name
         '''
         if self.sample == 'kkk':
-            self.sample = 'Bu_KplKplKmn_eq_sqDalitz_DPC'
+            return 'Bu_KplKplKmn_eq_sqDalitz_DPC'
 
         if self.sample == 'kpipi':
-            self.sample = 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
+            return 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
 
         raise NotImplementedError(f'Invalid sample: {self.sample}')
     # ----------------------
@@ -65,25 +65,48 @@ class PlotConfig:
         -------------
         cfg : Configuration from yaml, needed to update current class
         '''
-        cfg.sample = self.sample 
+        d_cfg      = OmegaConf.to_container(cfg.rdf_getter, resolve=True)
+        if not isinstance(d_cfg, dict):
+            raise TypeError('Config is not a dictionary')
 
-        self.cfg = OmegaConf.to_container(cfg, resolve=True)
+        d_cfg['sample'] = self._resolve_sample()
+
+        self.rdf_cfg = d_cfg
 # ----------------------
 def _parse_args() -> PlotConfig:
-    cfg    = PlotConfig()
     parser = argparse.ArgumentParser(description='Script used to make diagnostic plots')
-    parser.add_argument('-r', '--region' , type=int, help='Signal region (1) or control region', choices=[0, 1]      , required=True)
-    parser.add_argument('-s', '--sample' , type=str, help='Sample nickname'                    , choices=cfg.samples , required=True)
-    parser.add_argument('-b', '--block'  , type=str, help='Block'                              , choices=cfg.blocks  , required=True)
-    parser.add_argument('-B', '--bremcat', type=int, help='Brem category'                      , choices=cfg.bremcats, required=True)
+    parser.add_argument('-r', '--region' , type=int, help='Signal region (1) or control region', choices=[0, 1]             , required=True)
+    parser.add_argument('-q', '--q2bin'  , type=str, help='Q2 bin'                             , choices=PlotConfig.Q2BIN   , required=True)
+    parser.add_argument('-s', '--sample' , type=str, help='Sample nickname'                    , choices=PlotConfig.SAMPLES , required=True)
+    parser.add_argument('-b', '--block'  , type=int, help='Block'                              , choices=PlotConfig.BLOCKS  , required=True)
+    parser.add_argument('-B', '--bremcat', type=int, help='Brem category'                      , choices=PlotConfig.BREMCATS, required=True)
     args = parser.parse_args()
 
+    cfg        = PlotConfig(sample=args.sample)
     cfg.is_sig = bool(args.region)
-    cfg.sample = args.sample
+    cfg.q2bin  = args.q2bin
     cfg.block  = args.block
     cfg.bremcat= args.bremcat
 
     return cfg
+# ----------------------
+def _get_selection(cfg : PlotConfig) -> dict[str,str]:
+    '''
+    Parameters
+    -------------
+    cfg: Configuration holding block, etc
+
+    Returns
+    -------------
+    Dictionary with overriding selection
+    '''
+    block_cut = f'block == {cfg.block}'
+    brem_cut  = f'nbrem == {cfg.bremcat}'
+
+    return {
+        'pid_l' : '(1)', 
+        'brem'  : brem_cut,
+        'block' : block_cut}
 # ----------------------
 def _get_df(cfg : PlotConfig) -> pnd.DataFrame:
     '''
@@ -95,8 +118,18 @@ def _get_df(cfg : PlotConfig) -> pnd.DataFrame:
     -------------
     Pandas dataframe with PID weighted sample
     '''
-    gtr   = RDFGetter(**cfg.rdf_getter)
+    gtr   = RDFGetter(**cfg.rdf_cfg)
     rdf   = gtr.get_rdf(per_file=False)
+    uid   = gtr.get_uid()
+
+    cuts  = _get_selection(cfg=cfg)
+    with sel.custom_selection(d_sel = cuts):
+        rdf = sel.apply_full_selection(
+            rdf    = rdf,
+            uid    = uid,
+            q2bin  = cfg.q2bin,
+            process= cfg.rdf_cfg['sample'],
+            trigger= cfg.rdf_cfg['trigger'])
 
     spl   = SampleSplitter(rdf = rdf, cfg = cfg.splitter)
     df    = spl.get_sample()
