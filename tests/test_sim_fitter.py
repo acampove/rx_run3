@@ -31,10 +31,14 @@ def test_nocat():
     '''
     Test for components without categories, e.g. muon
     '''
-    obs = zfit.Space('B_Mass', limits=(5000, 5800))
+    block = 1
+    obs   = zfit.Space('B_Mass', limits=(5000, 5800))
+    cfg   = gut.load_conf(package='fitter_data', fpath='rare/muon/signal.yaml')
 
-    cfg = gut.load_conf(package='fitter_data', fpath='tests/signal_muon.yaml')
-    with RDFGetter.max_entries(value=10_000):
+    with RDFGetter.max_entries(value=-1),\
+        RDFGetter.multithreading(nthreads=8),\
+        sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
+
         ftr = SimFitter(
             component= 'signal_muon',
             obs     = obs,
@@ -42,16 +46,20 @@ def test_nocat():
             trigger = 'Hlt2RD_BuToKpMuMu_MVA',
             project = 'rx',
             q2bin   = 'jpsi')
-        pdf = ftr.get_model()
+        ftr.get_model()
 # ---------------------------------------------------
 def test_with_cat():
     '''
     Test for components with brem categories
     '''
-    obs = zfit.Space('B_Mass', limits=(4500, 7000))
+    block = 1
+    obs   = zfit.Space('B_Mass', limits=(4500, 7000))
+    cfg   = gut.load_conf(package='fitter_data', fpath='rare/electron/signal_parametric.yaml')
 
-    cfg = gut.load_conf(package='fitter_data', fpath='tests/signal_electron.yaml')
-    with RDFGetter.max_entries(value=100_000):
+    with RDFGetter.max_entries(value=-1),\
+        RDFGetter.multithreading(nthreads=8),\
+        sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
+
         ftr = SimFitter(
             component= 'signal_electron',
             obs     = obs,
@@ -66,10 +74,14 @@ def test_kde(component : str):
     '''
     Test fitting with KDE
     '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    block = 1
+    obs   = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    cfg   = gut.load_conf(package='fitter_data', fpath=f'rare/electron/{component}.yaml')
 
-    cfg = gut.load_conf(package='fitter_data', fpath=f'tests/{component}.yaml')
-    with Cache.turn_off_cache(val = ['SimFitter', 'DataPreprocessor']):
+    with Cache.turn_off_cache(val = ['SimFitter', 'DataPreprocessor']),\
+        RDFGetter.multithreading(nthreads=8),\
+        sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
+
         ftr = SimFitter(
             component= component,
             obs      = obs,
@@ -85,23 +97,28 @@ def test_misid(component : str, q2bin : str):
     '''
     Test fitting misID simulation 
     '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    block = 1
+    obs   = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    cfg   = gut.load_conf(package='fitter_data', fpath=f'rare/electron/{component}.yaml')
 
-    cfg = gut.load_conf(package='fitter_data', fpath=f'rare/electron/{component}.yaml')
-    ftr = SimFitter(
-        component= component,
-        obs      = obs,
-        cfg      = cfg,
-        trigger  = 'Hlt2RD_BuToKpEE_MVA_noPID',
-        project  = 'nopid',
-        q2bin    = q2bin)
-    ftr.get_model()
+    with RDFGetter.multithreading(nthreads=8),\
+        sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
+
+        ftr = SimFitter(
+            component= component,
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = 'Hlt2RD_BuToKpEE_MVA_noPID',
+            project  = 'nopid',
+            q2bin    = q2bin)
+        ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('limits', ['wide', 'narrow'])
 def test_ccbar_reso(limits : str):
     '''
     Tests retriveval of PDF associated to ccbar inclusive decays
     '''
+    block     = 1
     tp_limits = {'wide' : (4500, 6000), 'narrow' : (5000, 6000)}[limits]
     component = 'ccbar'
     obs       = zfit.Space('B_const_mass_M', limits=tp_limits)
@@ -110,7 +127,8 @@ def test_ccbar_reso(limits : str):
     out_dir   = f'{cfg.output_directory}/{limits}'
     cfg.output_directory = out_dir
     with RDFGetter.max_entries(value=-1),\
-        RDFGetter.multithreading(nthreads=8):
+        RDFGetter.multithreading(nthreads=8),\
+        sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
 
         ftr = SimFitter(
             component= component,
@@ -126,15 +144,16 @@ def test_ccbar_rare():
     Tests retriveval of PDF associated to ccbar inclusive decays
     for rare modes, i.e. without jpsi mass constraint
     '''
+    block     = 1
     component = 'ccbar'
     mass      = 'B_Mass'
     q2bin     = 'high'
-
     obs       = zfit.Space(mass, limits=(4500, 6000))
     cfg       = gut.load_conf(package='fitter_data', fpath=f'rare/electron/{component}.yaml')
 
     with Cache.turn_off_cache(val=['SimFitter']),\
         sel.custom_selection(d_sel={
+            'block' :f'block == {block}',
             'nobr0' : 'nbrem != 0',
             'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
         ftr = SimFitter(
@@ -152,13 +171,15 @@ def test_mc_reso(component : str, brem : int):
     '''
     Tests retriveval of PDF associated to ccbar inclusive decays
     '''
-    obs = zfit.Space('B_const_mass_M', limits=(5000, 6900))
-    cfg = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
+    block = 1
+    obs   = zfit.Space('B_const_mass_M', limits=(5000, 6900))
+    cfg   = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
 
     with RDFGetter.max_entries(value=-1),\
         RDFGetter.multithreading(nthreads=8),\
         Cache.turn_off_cache(val=None), \
         sel.custom_selection(d_sel={
+            'block' :f'block == {block}',
             'mass'  : '(1)',
             'nbrem' :f'nbrem == {brem}'}):
         ftr = SimFitter(
@@ -175,12 +196,14 @@ def test_name(name : str):
     '''
     Will run test and specify the name argument
     '''
+    block     = 1
     component = 'ccbar'
     obs       = zfit.Space('B_const_mass_M', limits=(4500, 6000))
     cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
 
     with RDFGetter.max_entries(value=-1),\
-        RDFGetter.multithreading(nthreads=8):
+        RDFGetter.multithreading(nthreads=8),\
+        sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
         ftr = SimFitter(
             name     = name,
             component= component,
@@ -196,11 +219,13 @@ def test_weights(component : str):
     '''
     Test fitting weighted MC sample
     '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    block = 1
+    obs   = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    cfg   = gut.load_conf(package='fitter_data', fpath=f'misid/electron/{component}.yaml')
 
-    cfg = gut.load_conf(package='fitter_data', fpath=f'misid/electron/{component}.yaml')
     with RDFGetter.max_entries(value=-1),\
-        RDFGetter.multithreading(nthreads=8):
+        RDFGetter.multithreading(nthreads=8),\
+        sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
         ftr = SimFitter(
             component= component,
             obs     = obs,
