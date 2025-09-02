@@ -5,6 +5,7 @@ import pytest
 
 from dmu.stats.zfit         import zfit
 from dmu.generic            import utilities as gut
+from dmu.stats              import utilities as sut
 from dmu.workflow.cache     import Cache
 from rx_data.rdf_getter     import RDFGetter
 from rx_selection           import selection as sel
@@ -132,12 +133,16 @@ def test_ccbar_reso(limits : str):
 
         ftr = SimFitter(
             component= component,
-            obs     = obs,
-            cfg     = cfg,
-            trigger = 'Hlt2RD_BuToKpEE_MVA',
-            project = 'rx',
-            q2bin   = 'jpsi')
-        ftr.get_model()
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = 'Hlt2RD_BuToKpEE_MVA',
+            project  = 'rx',
+            q2bin    = 'jpsi')
+        pdf = ftr.get_model()
+
+    assert pdf is not None
+
+    sut.print_pdf(pdf)
 # ---------------------------------------------------
 def test_ccbar_rare():
     '''
