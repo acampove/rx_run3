@@ -8,12 +8,17 @@ import hashlib
 from typing import Any
 
 import pandas as pnd
+from omegaconf             import DictConfig, OmegaConf
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:generic.hashing')
 # ------------------------------------
 def _object_to_string(obj : Any) -> str:
     def default_encoder(x):
+        if isinstance(x, DictConfig):
+            return OmegaConf.to_container(cfg=x, resolve=True)
+
+        log.info(x)
         raise TypeError(f"Unserializable type: {type(x)}")
 
     return json.dumps(obj, sort_keys=True, default=default_encoder)
