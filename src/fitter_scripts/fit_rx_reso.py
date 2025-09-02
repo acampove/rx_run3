@@ -58,11 +58,10 @@ def _parse_args() -> FitConfig:
 
     return cfg
 # ----------------------
-def _get_nll(cfg : FitConfig, name : str) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
+def _get_nll(cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
     '''
     Parameters
     -------------
-    name: Identifier for this particular likelihood, e.g. brem_001
     cfg : Fit configuration
 
     Returns
@@ -72,7 +71,7 @@ def _get_nll(cfg : FitConfig, name : str) -> tuple[ExtendedUnbinnedNLL, DictConf
         - Config related to model 
     '''
     ftr = LikelihoodFactory(
-        name   = name,
+        name   = cfg.name,
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
         sample = 'DATA_24_*',
