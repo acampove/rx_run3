@@ -18,7 +18,6 @@ model:
   components:
     combinatorial : reso/electron/combinatorial.yaml
     ccbar         : reso/electron/ccbar.yaml
-    cabibbo       : reso/electron/cabibbo.yaml
     resonant      : reso/electron/signal.yaml
   constraints:
     yields : []
