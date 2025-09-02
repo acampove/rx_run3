@@ -1,9 +1,0 @@
-output_directory : combinatorial
-categories:
-  main:
-    models: 
-      test_bin : [exp]
-shared        : []
-float         : []
-reparametrize : {}
-fix           : {}

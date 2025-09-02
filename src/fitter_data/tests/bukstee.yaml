@@ -1,9 +1,0 @@
-output_directory : rare/electron/bukstee
-categories:
-  main: 
-    model : KDE1DimFFT
-sample    : Bu_Kstee_Kpi0_eq_btosllball05_DPC
-fit : {}
-plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
-  nbins   : 50
-  stacked : True
