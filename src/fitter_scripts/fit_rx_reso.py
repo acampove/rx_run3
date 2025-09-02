@@ -137,7 +137,7 @@ def main():
     overriding_selection = {
         'mass'  : '(1)',
         'block' : cfg.block_cut,
-        'nobrm0': 'nbrem != 0',
+        'nobrm0': cfg.brem_cut,
         'bdt'   : cfg.mva_cut}
 
     Cache.set_cache_root(root=cfg.output_directory)
@@ -149,7 +149,10 @@ def main():
         stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))
         stack.enter_context(sel.custom_selection(d_sel=overriding_selection))
 
-        _fit(cfg=cfg)
+        if cfg.is_electron: 
+            _fit_electron(cfg=cfg)
+        else:
+            _fit_muon(cfg=cfg)
 # ----------------------
 if __name__ == '__main__':
     main()
