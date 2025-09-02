@@ -19,7 +19,7 @@ model:
   components:
     combinatorial : reso/muon/combinatorial.yaml
     jpsi          : reso/muon/jpsi.yaml
-    psi2          : reso/muon/psi2.yaml
+    #psi2          : reso/muon/psi2.yaml
   constraints:
     yields : []
 fit: {}
