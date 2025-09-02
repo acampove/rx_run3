@@ -4,6 +4,7 @@ Module with functions needed to test functions in generic/hashing.py module
 
 import pandas as pnd
 
+from omegaconf             import OmegaConf
 from dmu.generic           import hashing
 from dmu.logging.log_store import LogStore
 
@@ -47,3 +48,11 @@ def test_hash_file():
 
     assert isinstance(val, str)
 # --------------------------------------
+def test_hash_omegadict():
+    '''
+    Tests hashing when the dictionary
+    is an OmegaConf DictConfig
+    '''
+    data = OmegaConf.create({'a' : 1})
+
+    hashing.hash_object(obj=data)
