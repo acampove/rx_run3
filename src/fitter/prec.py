@@ -12,7 +12,6 @@ import slugify
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from omegaconf              import OmegaConf
 from dmu.stats.zfit         import zfit
 from dmu.generic            import hashing
 from dmu.logging.log_store  import LogStore
