@@ -3,15 +3,15 @@ yield:
   min : 0
   max : 10
 fraction:
-  val : 0.5
+  val : 0.2
   min : 0.0
   max : 1.0 
 
 yield_001:
-  alias:
+  mul:
     - yield
     - fraction
 yield_002:
-  alias:
+  dif:
     - yield
-    - 1 - fraction
+    - yield_001 
