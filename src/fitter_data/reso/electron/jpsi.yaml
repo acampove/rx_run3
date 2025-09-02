@@ -1,4 +1,4 @@
-output_directory : reso/electron/signal/brem_xxx
+output_directory : reso/electron/jpsi/brem_xxx
 categories:
   brem_xxx:
     model :
