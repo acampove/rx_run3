@@ -93,10 +93,14 @@ def _fit(cfg : FitConfig) -> None:
     d_nll = {}
 
     with sel.update_selection(d_sel = {'brem_cat' : 'nbrem == 1'}):
-        d_nll['brem_001'] = _get_nll(cfg=cfg, name='brem_001')
+        cfg.name = 'brem_001'
+        cfg.replace(substring='brem_xxx', value=cfg.name)
+        d_nll[cfg.name] = _get_nll(cfg=cfg)
 
     with sel.update_selection(d_sel = {'brem_cat' : 'nbrem == 2'}):
-        d_nll['brem_002'] = _get_nll(cfg=cfg, name='brem_002')
+        cfg.name = 'brem_002'
+        cfg.replace(substring='brem_001', value=cfg.name)
+        d_nll[cfg.name] = _get_nll(cfg=cfg)
 
     ftr = DataFitter(
         name = cfg.q2bin,
