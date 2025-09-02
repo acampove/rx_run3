@@ -1,6 +1,7 @@
 # This is a config file used for tests
 # It illustrates how a fit would run for data
 
+trigger          : Hlt2RD_BuToKpMuMu_MVA 
 output_directory : reso/muon/data
 model:
   yields    : model/yields/reso_muon.yaml
