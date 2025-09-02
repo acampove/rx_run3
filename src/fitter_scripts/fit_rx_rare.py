@@ -26,7 +26,7 @@ from fitter.toy_maker          import ToyMaker
 from rx_data.rdf_getter        import RDFGetter
 from rx_selection              import selection as sel
 
-log=LogStore.add_logger('fitter:fit_rx_data')
+log=LogStore.add_logger('fitter:fit_rx_rare')
 # ----------------------
 def _parse_args() -> FitConfig:
     '''
