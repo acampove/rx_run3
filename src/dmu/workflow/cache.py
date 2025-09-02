@@ -35,14 +35,14 @@ class Cache:
     - If the list is empty, caching runs for everything
     - If the list is None, caching is turned off for everything
     '''
-    _cache_root     : str|None = None
+    _cache_root     : str|None       = None
     _l_skip_class   : list[str]|None = []
     # ---------------------------
     def __init__(self, out_path : str, **kwargs):
         '''
         Parameters
         ---------------
-        out_path: Path to directory where outputs will go
+        out_path: Relative path to _cache_root where outputs will go
         kwargs  : Key word arguments symbolizing identity of inputs, used for hashing
                   If argument `code` is already in kwargs, it will not calculate the
                   code's hash, i.e. Code changes do not invalidate the hash, useful for testing
