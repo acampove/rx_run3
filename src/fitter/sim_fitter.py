@@ -100,8 +100,11 @@ class SimFitter(BaseFitter, Cache):
         Either:
 
         - Category name if there is one category (neded for backwards compatibility)
-        - None, if there are multiple categories
+        - None, if there are multiple categories or no categories (e.g. ccbar)
         '''
+        if 'categories' not in cfg:
+            return None
+
         names = list(cfg.categories)
         if len(names) > 1:
             return None
