@@ -374,6 +374,10 @@ class Fitter:
 
         - Zfit result object
         - Tuple with goodness of fit (pvalue, ndof, chi2)
+
+        Raises
+        --------------
+        RuntimeError: If the errors could not be calculated
         '''
         min_cfg = {} if 'minimization' not in cfg else cfg['minimization']
 
@@ -390,7 +394,7 @@ class Fitter:
 
         if not Fitter._turn_off_errors:
             log.debug('Calculating errors')
-            res.hesse(name='minuit_hesse')
+            res = Fitter._calculate_errors(res=res)
         else:
             log.warning('Not calculating errors')
 
@@ -413,6 +417,43 @@ class Fitter:
         Fitter.print_pars(cfg, d_par=d_par)
 
         return res, (chi2, ndof, pval)
+    # ----------------------
+    @staticmethod
+    def _calculate_errors(res : zres) -> zres:
+        '''
+        Parameters
+        -------------
+        res: Result of fit, before error calculation
+
+        Returns
+        -------------
+        Result of fit after error calculation
+        None if error could not be calculated after 10 attempts
+        '''
+        found_error = False
+        counter     = 0
+        while not found_error and counter < 10:
+            res.hesse(name='minuit_hesse')
+            counter += 1
+            d_val = list(res.params.values())[0]
+
+            if 'hesse' in d_val:
+                found_error = True
+                break
+
+            # Good fit, and cannot get error => Keep trying
+            if res.valid:
+                print(res)
+                log.warning('Error not set, recalculating it')
+            # Bad fit cand cannot get error => Forget about fit
+            else:
+                raise RuntimeError('Fit error could not be found')
+
+        # Good fit and could not find error
+        if not found_error:
+            raise RuntimeError('Fit error could not be found')
+
+        return res
     #------------------------------
     def _gof_is_bad(self, gof : tuple[float, int, float]) -> bool:
         chi2, ndof, pval = gof
