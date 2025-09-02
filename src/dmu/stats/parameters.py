@@ -149,6 +149,12 @@ class ParameterLibrary:
             l_par    = [ cls.get_yield(name=comp_name) for comp_name in yld_cfg[name]['alias'] ]
             comp_par = cls._multiply_pars(name=name, pars=l_par)
             cls._d_par[name] = comp_par
+        if 'dif' in this_yld:
+            par_1 = cls.get_yield(name=this_yld.dif[0])
+            par_2 = cls.get_yield(name=this_yld.dif[1])
+            comp_par = cls._subtract_pars(name = name, par_1=par_1, par_2=par_2)
+            cls._d_par[name] = comp_par
+
             return comp_par
 
         # This is a non-alias, non-scl parameter, e.g. simple one
@@ -162,6 +168,22 @@ class ParameterLibrary:
         par      = cls._parameter_from_conf(name=name, cfg=yld_cfg, is_scale=True)
         l_par.append(par)
         comp_par = cls._multiply_pars(name=name, pars=l_par)
+
+        return comp_par
+    # ----------------------
+    @classmethod
+    def _subtract_pars(cls, name : str, par_1 : zpar, par_2 : zpar) -> zpar:
+        '''
+        Parameters
+        -------------
+        name   : Name of product parameter
+        par_1/2: Parameters to be subtracted 
+
+        Returns
+        -------------
+        Product of parameters
+        '''
+        comp_par = zfit.ComposedParameter(name, lambda pars : pars[0] - pars[1], params=[par_1, par_2])
 
         return comp_par
     # ----------------------
