@@ -30,6 +30,60 @@ class FitConfig:
     log_lvl : int  = 20
     ntoys   : int  = 0
     # ----------------------
+    def replace(self, substring : str, value : str) -> None:
+        '''
+        Parameters
+        -------------
+        substring: All the fields in the configs will have this substring replaced
+        value    : Replacement value for substring
+        '''
+        fit_cfg = self._replace_in_config(cfg = self.fit_cfg, substring=substring, value=value)
+        if not isinstance(fit_cfg, DictConfig):
+            raise TypeError('After replacement, a non DictConfig was returned')
+
+        self.fit_cfg = fit_cfg 
+
+        if self.toy_cfg is not None:
+            toy_cfg = self._replace_in_config(cfg = self.toy_cfg, substring=substring, value=value)
+            if not isinstance(toy_cfg, DictConfig):
+                raise TypeError('After replacement, a non DictConfig was returned')
+
+            self.toy_cfg = toy_cfg
+    # ----------------------
+    def _replace_in_config(
+        self, 
+        cfg       : Any, 
+        substring : str, 
+        value     : str) -> Any: 
+        '''
+        Parameters
+        -------------
+        cfg      : Config where replacement will happen
+        substring: All the fields in the configs will have this substring replaced
+        value    : Replacement value for substring
+
+        Returns
+        -------------
+        Config with replacements
+        '''
+        if isinstance(cfg, DictConfig):
+            for k, v in cfg.items():
+                del cfg[k]
+                if not isinstance(k, str):
+                    raise TypeError('Key of config is not a string: {k}')
+
+                k      = k.replace(substring, value)
+                cfg[k] = self._replace_in_config(v, substring=substring, value=value)
+            return cfg
+
+        if isinstance(cfg, list):
+            return [ self._replace_in_config(cfg=sub_cfg, substring=substring, value=value) for sub_cfg in cfg]
+
+        if isinstance(cfg, str):
+            return cfg.replace(substring, value)
+
+        return cfg
+    # ----------------------
     def __post_init__(self):
         '''
         This runs after initialization
