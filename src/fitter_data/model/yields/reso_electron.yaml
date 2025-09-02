@@ -4,7 +4,11 @@ yields: &yields
   val : 0
   min : 0
   max : 1000000
-fraction:
+jpsi_fraction:
+  val : 0.5
+  min : 0.0
+  max : 1.0 
+psi2_fraction:
   val : 0.5
   min : 0.0
   max : 1.0 
@@ -21,14 +25,25 @@ yld_ccbar_brem_002:
   <<: *yields
 yld_combinatorial_brem_002:
   <<: *yields
-yld_resonant:
+yld_jpsi:
+  <<: *yields
+yld_psi2:
   <<: *yields
 # -------------------------
-yld_resonant_brem_001:
+yld_jpsi_brem_001:
   mul: 
-    - yld_resonant
-    - fraction
-yld_resonant_brem_002:
+    - yld_jpsi
+    - jpsi_fraction
+yld_jpsi_brem_002:
   dif: 
-    - yld_resonant
-    - yld_resonant_brem_001 
+    - yld_jpsi
+    - yld_jpsi_brem_001 
+# -------------------------
+yld_psi2_brem_001:
+  mul: 
+    - yld_psi2
+    - psi2_fraction
+yld_psi2_brem_002:
+  dif: 
+    - yld_psi2
+    - yld_psi2_brem_001 
