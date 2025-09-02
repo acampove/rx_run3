@@ -380,11 +380,11 @@ class SimFitter(BaseFitter, Cache):
         log.debug(f'{"Fraction":<50}{"Value":<10}')
         log.debug(60 * '-')
         l_frac = [
-                  self._get_fraction(
-                      sumw,
-                      total   = sum(l_yield),
-                      category= category)
-                  for sumw, category in zip(l_yield, self._cfg.categories) ]
+            self._get_fraction(
+                sumw,
+                total   = sum(l_yield),
+                category= category)
+            for sumw, category in zip(l_yield, self._cfg.categories) ]
         log.debug(60 * '-')
 
         full_model = zfit.pdf.SumPDF(l_pdf, l_frac)
