@@ -145,20 +145,21 @@ def test_ccbar_rare():
             q2bin   = q2bin)
         ftr.get_model()
 # ---------------------------------------------------
-def test_signal_reso():
+@pytest.mark.parametrize('component', ['signal', 'cabibbo'])
+@pytest.mark.parametrize('brem'     , [1, 2])
+def test_mc_reso(component : str, brem : int):
     '''
     Tests retriveval of PDF associated to ccbar inclusive decays
     '''
-    component = 'signal'
-    obs       = zfit.Space('B_const_mass_M', limits=(5000, 6900))
-    cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
+    obs = zfit.Space('B_const_mass_M', limits=(5000, 6900))
+    cfg = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
 
     with RDFGetter.max_entries(value=-1),\
         Cache.turn_off_cache(val=None), \
         sel.custom_selection(d_sel={
             'block' : 'block == 1',
             'mass'  : '(1)',
-            'nbrem' : 'nbrem != 0'}):
+            'nbrem' :f'nbrem == {brem}'}):
         ftr = SimFitter(
             component= component,
             obs     = obs,
