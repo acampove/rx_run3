@@ -103,11 +103,12 @@ def test_values(parameter : str):
     assert y_in != y_out
     assert z_in != z_out
 # ------------------------------------
-def test_get_yield() -> None:
+@pytest.mark.parametrize('config', ['scales', 'simultaneous'])
+def test_get_yield(config : str) -> None:
     '''
     Tests get_yield method
     '''
-    cfg = gut.load_conf(package='dmu_data', fpath='tests/stats/parameters/parameters_library.yaml')
+    cfg = gut.load_conf(package='dmu_data', fpath=f'tests/stats/parameters/{config}.yaml')
     with PL.parameter_schema(cfg=cfg):
         for parname in cfg:
             parname = str(parname)
