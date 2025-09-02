@@ -18,8 +18,7 @@ class Data:
     '''
     Class meant to be used to share attributes
     '''
-    user    = os.environ['USER']
-    out_dir = f'/tmp/{user}/tests/misid'
+    rel_dir = 'misid_constraints'
 # --------------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -32,7 +31,7 @@ def initialize():
     LogStore.set_level('fitter:data_preprocessor', 10)
     LogStore.set_level('rx_misid:sample_weighter', 20)
 
-    os.makedirs(Data.out_dir, exist_ok=True)
+    os.makedirs(Data.rel_dir, exist_ok=True)
 # ----------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 def test_simple(q2bin : str) -> None:
@@ -41,7 +40,7 @@ def test_simple(q2bin : str) -> None:
     '''
     obs = zfit.Space('B_Mass_smr', limits=(4500, 6000))
     cfg = gut.load_conf(package='fitter_data', fpath='misid/electron/data_misid.yaml')
-    cfg.output_directory = Data.out_dir
+    cfg.output_directory = Data.rel_dir
 
     with sel.custom_selection(d_sel={'nobrm0' : 'nbrem != 0'}):
         with RDFGetter.multithreading(nthreads=8):
