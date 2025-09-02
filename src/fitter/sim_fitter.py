@@ -303,7 +303,7 @@ class SimFitter(BaseFitter, Cache):
 
         return par
     # ------------------------
-    def _get_full_model(self, skip_fit : bool) -> tuple[zpdf,DictConfig]:
+    def _get_full_model(self, skip_fit : bool) -> tuple[zpdf,DictConfig]|None:
         '''
         Parameters
         ---------------
@@ -340,6 +340,9 @@ class SimFitter(BaseFitter, Cache):
             l_pdf.append(model)
             l_yield.append(sumw)
             l_cres.append(cres)
+
+        if len(l_pdf) == 0:
+            return None
 
         return self._merge_categories(
             l_pdf  =l_pdf,
@@ -486,7 +489,10 @@ class SimFitter(BaseFitter, Cache):
         '''
         Returns
         ------------
-        zfit PDF, not extended yet
+        Either:
+
+        - zfit PDF, not extended yet
+        - None, if statistics are too low to build PDF
         '''
         if 'ccbar_samples' in self._cfg:
             return self._get_ccbar_component()
@@ -500,7 +506,11 @@ class SimFitter(BaseFitter, Cache):
             res      = cast(DictConfig, res)
             # If caching, need only model, second return value
             # Is an empty DictConfig, because no fit happened
-            model, _ = self._get_full_model(skip_fit=True)
+            val      = self._get_full_model(skip_fit=True)
+            if val is None:
+                return None
+
+            model, _ = val 
             model    = self._fix_tails(pdf=model, pars=res)
 
             return model
@@ -510,7 +520,11 @@ class SimFitter(BaseFitter, Cache):
         if self._is_kde():
             return self._get_kde()
 
-        full_model, cres = self._get_full_model(skip_fit=False)
+        val = self._get_full_model(skip_fit=False)
+        if val is None:
+            return None
+
+        full_model, cres = val
 
         OmegaConf.save(cres, result_path)
 
