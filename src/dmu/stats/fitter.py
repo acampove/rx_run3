@@ -437,7 +437,7 @@ class Fitter:
             counter += 1
             d_val = list(res.params.values())[0]
 
-            if 'hesse' in d_val:
+            if 'minuit_hesse' in d_val:
                 found_error = True
                 break
 
