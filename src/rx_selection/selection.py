@@ -304,20 +304,11 @@ def _override_block(
         log.debug(f'Block not found in: {cut_block}')
         return cut_block
 
-    regex = r'block\s*==\s*(\d)'
+    new_cut = re.sub(r'block\s*==\s*[34]', 'block == 2', cut_block)
 
-    mtch  = re.match(regex, cut_block)
-    if not mtch:
-        raise ValueError(f'Cannot match {regex} to {cut_block}')
-
-    block = mtch.group(1)
-    if block not in ['3', '4']:
-        return cut_block
-
-    new_cut = f'block == {2}'
-
-    log.warning(f'For sample {process} replacing:')
-    log.warning(f'{cut_block:<20}{"--->":<20}{new_cut:<20}')
+    if new_cut != cut_block:
+        log.warning(f'For sample {process} replacing:')
+        log.warning(f'{cut_block:<20}{"--->":<20}{new_cut:<20}')
 
     return new_cut
 #-----------------------
