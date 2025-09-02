@@ -511,9 +511,20 @@ class Fitter:
             self._reshuffle_pdf_pars()
 
         if last_res is None:
+            self._plot_data(nll=nll)
             raise FitterFailedFit('Cannot find any valid fit')
 
         return d_pval_res, last_res
+    #------------------------------
+    def _plot_data(self, nll : Loss) -> None:
+        data = nll.data[0]
+        arr  = data.to_numpy()
+
+        rms  = numpy.std(arr)
+        mean = numpy.mean(arr)
+
+        plt.hist(arr, bins=100, range=(mean - 10 * rms, mean + 10 * rms))
+        plt.show()
     #------------------------------
     def _pick_best_fit(self, d_pval_res : dict, last_res : zres) -> zres:
         nsucc = len(d_pval_res)
