@@ -158,6 +158,36 @@ class FitConfig:
         raise ValueError(f'Invalid block {self.block}')
     # ----------------------
     @cached_property
+    def brem_cut(self) -> str:
+        '''
+        Returns
+        -------------
+        Cut on nbrem, normally exclude brem 0 for electron and do nothing for muon
+        '''
+        if self.fit_cfg.trigger == 'Hlt2RD_BuToKpEE_MVA':
+            return 'nbrem != 0'
+
+        if self.fit_cfg.trigger == 'Hlt2RD_BuToKpMuMu_MVA':
+            return 'nbrem == 0'
+
+        raise ValueError(f'Invalid trigger: {self.fit_cfg.trigger}')
+    # ----------------------
+    @cached_property
+    def is_electron(self) -> bool:
+        '''
+        Returns
+        -------------
+        True if using electron trigger, false otherwise
+        '''
+        if self.fit_cfg.trigger == 'Hlt2RD_BuToKpEE_MVA':
+            return True 
+
+        if self.fit_cfg.trigger == 'Hlt2RD_BuToKpMuMu_MVA':
+            return False 
+
+        raise ValueError(f'Invalid trigger: {self.fit_cfg.trigger}')
+    # ----------------------
+    @cached_property
     def fit_name(self) -> str:
         '''
         Builds fit identifier from MVA working points
