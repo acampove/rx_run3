@@ -58,14 +58,21 @@ def _parse_args() -> FitConfig:
 
     return cfg
 # ----------------------
+def _get_nll(cfg : FitConfig, name : str) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
     '''
     Parameters
     -------------
+    name: Identifier for this particular likelihood, e.g. brem_001
+    cfg : Fit configuration
 
     Returns
     -------------
+    Tuple with:
+        - Negative log likelihood
+        - Config related to model 
     '''
     ftr = LikelihoodFactory(
+        name   = name,
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
         sample = 'DATA_24_*',
@@ -76,6 +83,9 @@ def _parse_args() -> FitConfig:
     cfg_mod = ftr.get_config()
 
     if not isinstance(nll, ExtendedUnbinnedNLL):
+        raise TypeError('Likelihood object is not an ExtendedUnbinnedNLL')
+
+    return nll, cfg_mod
 
     ftr = DataFitter(
         name = cfg.q2bin,
