@@ -77,8 +77,8 @@ def _get_nll(cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
         sample = 'DATA_24_*',
-        trigger= 'Hlt2RD_BuToKpEE_MVA',
         project= 'rx',
+        trigger= cfg.fit_cfg.trigger,
         cfg    = cfg.fit_cfg)
     nll = ftr.run()
     cfg_mod = ftr.get_config()
@@ -88,12 +88,11 @@ def _get_nll(cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
 
     return nll, cfg_mod
 # ----------------------
-def _fit(cfg : FitConfig) -> None:
+def _fit_electron(cfg : FitConfig) -> None:
     '''
     This is where DataFitter is used
     '''
     d_nll = {}
-
     with sel.update_selection(d_sel = {'brem_cat' : 'nbrem == 1'}):
         cfg.name = 'brem_001'
         cfg.replace(substring='brem_xxx', value=cfg.name)
@@ -105,6 +104,23 @@ def _fit(cfg : FitConfig) -> None:
         d_nll[cfg.name] = _get_nll(cfg=cfg)
 
     cfg.fit_cfg.output_directory = 'reso/electron/data'
+    with GofCalculator.disabled(value=True):
+        ftr = DataFitter(
+            name = cfg.q2bin,
+            d_nll= d_nll, 
+            cfg  = cfg.fit_cfg)
+        ftr.run(kind='zfit')
+# ----------------------
+def _fit_muon(cfg : FitConfig) -> None:
+    '''
+    This is where DataFitter is used
+    '''
+    d_nll    = {}
+    cfg.name = 'brem_000'
+    cfg.replace(substring='brem_000', value=cfg.name)
+    d_nll[cfg.name] = _get_nll(cfg=cfg)
+
+    cfg.fit_cfg.output_directory = 'reso/muon/data'
     with GofCalculator.disabled(value=True):
         ftr = DataFitter(
             name = cfg.q2bin,
