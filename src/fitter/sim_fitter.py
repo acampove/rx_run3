@@ -421,20 +421,9 @@ class SimFitter(BaseFitter, Cache):
         Returns true if the PDF is meant to be a single KDE
         False if it is meant to be a parametric PDF
         '''
-        if len(self._cfg.categories) > 1:
-            return False
+        yaml_str = OmegaConf.to_yaml(self._cfg.categories)
 
-        # By convention, if there is a single category
-        # It will be the main category
-        model_name = self._cfg.categories.main.model
-
-        if not isinstance(model_name, str):
-            return False
-
-        if model_name.startswith('KDE'):
-            return True
-
-        raise ValueError(f'Invalid PDF found: {model_name}')
+        return 'KDE1Dim' in yaml_str
     # ------------------------
     def _get_kde(self) -> zpdf|None:
         '''
