@@ -446,8 +446,11 @@ class SimFitter(BaseFitter, Cache):
         - KDE PDF after fit
         - None if there are fewer than _min_kde_entries
         '''
-        model_name  = self._cfg.categories.main.model
-        data        = self._d_data['main']
+        if not isinstance(self._category, str):
+            raise ValueError(f'Category not valid: {self._category}')
+
+        model_name  = self._cfg.categories[self._category].model
+        data        = self._d_data[self._category]
 
         kde_builder = getattr(zfit.pdf, model_name)
         if data.nevents < self._min_kde_entries:
@@ -471,7 +474,7 @@ class SimFitter(BaseFitter, Cache):
             data     = data,
             model    = pdf,
             res      = None,
-            out_path = f'{self._out_path}/main')
+            out_path = f'{self._out_path}/{self._category}')
 
         return pdf
     # ------------------------
