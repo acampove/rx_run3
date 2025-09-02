@@ -551,15 +551,6 @@ class PRec(Cache):
             log.debug(f'{cut:<30}{inum:<20}{fnum:<20}')
         log.debug('-' * 50)
     #-----------------------------------------------------------
-    def _frac_from_pdf(self, pdf : zpdf, frc : float) -> zpar:
-        name = pdf.name
-        slug = slugify.slugify(name, lowercase=False)
-        par  = zfit.param.Parameter(f'f_{slug}', frc, 0, 1)
-
-        par.floating = False
-
-        return par
-    #-----------------------------------------------------------
     def _yield_in_range(self, pdf : zpdf) -> float:
         '''
         Parameters
@@ -613,10 +604,9 @@ class PRec(Cache):
         l_pdf     = [                                                                  pdf for      pdf in l_pdf        if pdf is not None ]
         l_wgt_yld = [ self._yield_in_range(pdf=pdf)                                        for      pdf in l_pdf                           ]
         l_frc     = [ wgt_yld / sum(l_wgt_yld)                                             for  wgt_yld in l_wgt_yld                       ]
-        l_yld     = [ self._frac_from_pdf(pdf=pdf, frc=frc)                                for pdf, frc in zip(l_pdf, l_frc)               ]
 
         if   len(l_pdf) >= 2:
-            pdf   = zfit.pdf.SumPDF(l_pdf, fracs=l_yld, name='ccbar PRec')
+            pdf   = zfit.pdf.SumPDF(l_pdf, fracs=l_frc, name='ccbar PRec')
         elif len(l_pdf) == 1:
             [pdf] = l_pdf
         else:
