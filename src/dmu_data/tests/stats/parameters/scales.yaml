@@ -1,0 +1,26 @@
+BuKee:
+  val : 2.0
+  min : 0.0
+  max : 10
+RK:
+  val : 3.0
+  min : 0.8
+  max : 5.0
+iCK:
+  val : 4.0
+  min : 1.0
+  max : 8.0
+# ---------------------
+BdKstee:
+  scl     : [BuKee]
+  val     : 0
+  min     : 0
+  max     : 1
+BuKstee:
+  scl     : [BuKee]
+  preffix : 'my_preffix'
+  val     : 0
+  min     : 0
+  max     : 1
+nBuKmm:
+  mul : [iCK, RK, BuKee]
