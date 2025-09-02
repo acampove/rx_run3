@@ -60,7 +60,7 @@ cbr:
   mu:
     val : 5300
     low : 5100
-    high: 5500
+    high: 6000
   sg:
     val : 50
     low : 2
@@ -94,7 +94,7 @@ cbl:
   mu:
     val : 5300
     low : 5100
-    high: 5500
+    high: 6000
   sg:
     val : 50
     low : 2
@@ -120,7 +120,7 @@ dscb:
   mu:
     val : 5300
     low : 5000
-    high: 5400
+    high: 6000
   sg:
     val : 50
     low :  5 
