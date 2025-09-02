@@ -109,8 +109,9 @@ def test_ccbar_reso(limits : str):
 
     out_dir   = f'{cfg.output_directory}/{limits}'
     cfg.output_directory = out_dir
-    with RDFGetter.max_entries(value=30_000),\
-        RDFGetter.multithreading(nthreads=6):
+    with RDFGetter.max_entries(value=-1),\
+        RDFGetter.multithreading(nthreads=8):
+
         ftr = SimFitter(
             component= component,
             obs     = obs,
@@ -154,7 +155,8 @@ def test_mc_reso(component : str, brem : int):
     obs = zfit.Space('B_const_mass_M', limits=(5000, 6900))
     cfg = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
 
-    with RDFGetter.max_entries(value=30_000),\
+    with RDFGetter.max_entries(value=-1),\
+        RDFGetter.multithreading(nthreads=8),\
         Cache.turn_off_cache(val=None), \
         sel.custom_selection(d_sel={
             'mass'  : '(1)',
@@ -177,8 +179,8 @@ def test_name(name : str):
     obs       = zfit.Space('B_const_mass_M', limits=(4500, 6000))
     cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
 
-    with RDFGetter.max_entries(value=30_000),\
-        RDFGetter.multithreading(nthreads=6):
+    with RDFGetter.max_entries(value=-1),\
+        RDFGetter.multithreading(nthreads=8):
         ftr = SimFitter(
             name     = name,
             component= component,
@@ -197,7 +199,8 @@ def test_weights(component : str):
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
 
     cfg = gut.load_conf(package='fitter_data', fpath=f'misid/electron/{component}.yaml')
-    with RDFGetter.max_entries(value=30_000):
+    with RDFGetter.max_entries(value=-1),\
+        RDFGetter.multithreading(nthreads=8):
         ftr = SimFitter(
             component= component,
             obs     = obs,
