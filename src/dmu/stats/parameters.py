@@ -145,10 +145,15 @@ class ParameterLibrary:
             log.error(OmegaConf.to_yaml(yld_cfg))
             raise ValueError(f'Parameter {name} not found in configuration')
 
-        if 'alias' in yld_cfg[name]:
-            l_par    = [ cls.get_yield(name=comp_name) for comp_name in yld_cfg[name]['alias'] ]
+        this_yld = yld_cfg[name]
+
+        if 'mul' in this_yld:
+            l_par    = [ cls.get_yield(name=comp_name) for comp_name in this_yld.mul ]
             comp_par = cls._multiply_pars(name=name, pars=l_par)
             cls._d_par[name] = comp_par
+
+            return comp_par
+
         if 'dif' in this_yld:
             par_1 = cls.get_yield(name=this_yld.dif[0])
             par_2 = cls.get_yield(name=this_yld.dif[1])
