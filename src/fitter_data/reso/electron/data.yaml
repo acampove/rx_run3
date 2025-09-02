@@ -19,7 +19,8 @@ model:
   components:
     combinatorial : reso/electron/combinatorial.yaml
     ccbar         : reso/electron/ccbar.yaml
-    resonant      : reso/electron/signal.yaml
+    jpsi          : reso/electron/jpsi.yaml
+    psi2          : reso/electron/psi2.yaml
   constraints:
     yields : []
 fit:
@@ -36,6 +37,7 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
     - 4800
     - 6500
   d_leg :
-    resonant      : $B^+\to J/\psi(\to e^+e^-) K^+$
+    jpsi          : $B^+\to J/\psi(\to e^+e^-) K^+$
+    psi2          : $B^+\to \psi(2S)(\to e^+e^-) K^+$
     cabibbo       : $B^+\to J/\psi(\to e^+e^-)\pi^+$
     combinatorial : Combinatorial
