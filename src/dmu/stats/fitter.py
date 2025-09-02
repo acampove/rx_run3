@@ -9,20 +9,23 @@ from typing                   import Protocol, Union
 from functools                import lru_cache
 
 import numpy
-import pandas as pd
+import pandas            as pd
+import matplotlib.pyplot as plt
 
 from dmu.logging              import messages  as mes
 from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
 from dmu.stats.gof_calculator import GofCalculator
 
+from zfit.loss                import ExtendedUnbinnedNLL, UnbinnedNLL
 from zfit.minimizers.strategy import FailMinimizeNaN
 from zfit.result              import FitResult     as zres
-from zfit.interface           import ZfitModel     as zpdf
-from zfit.interface           import ZfitParameter as zpar
+from zfit.pdf                 import BasePDF       as zpdf
+from zfit.param               import Parameter     as zpar
 from zfit.data                import Data          as zdat
 
 log = LogStore.add_logger('dmu:statistics:fitter')
+Loss= Union[ExtendedUnbinnedNLL, UnbinnedNLL]
 #------------------------------
 class ParameterHolder(Protocol):
     '''
