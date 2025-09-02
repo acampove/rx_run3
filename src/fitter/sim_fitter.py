@@ -328,7 +328,7 @@ class SimFitter(BaseFitter, Cache):
                 l_model_name = l_model_name)
 
             if model is None:
-                log.warning(f'Skipping cateogory {category}')
+                log.warning(f'Skipping category {category}')
                 continue
 
             # Will be None if fit is cached
