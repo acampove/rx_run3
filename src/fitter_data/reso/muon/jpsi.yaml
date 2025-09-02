@@ -1,4 +1,4 @@
-output_directory : reso/muon/signal
+output_directory : reso/muon/jpsi
 categories:
   main:
     model :
@@ -19,3 +19,6 @@ fit:
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
   stacked : True
+  plot_range:
+    - 5100
+    - 5500
