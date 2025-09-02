@@ -5,11 +5,19 @@ yields: &yields
   min : 0
   max : 1000000
 
-yld_cabibbo:
+yld_cabibbo_brem_001:
   <<: *yields
-yld_resonant:
+yld_resonant_brem_001:
   <<: *yields
-yld_ccbar:
+yld_ccbar_brem_001:
   <<: *yields
-yld_combinatorial:
+yld_combinatorial_brem_001:
+  <<: *yields
+yld_cabibbo_brem_002:
+  <<: *yields
+yld_resonant_brem_002:
+  <<: *yields
+yld_ccbar_brem_002:
+  <<: *yields
+yld_combinatorial_brem_002:
   <<: *yields
