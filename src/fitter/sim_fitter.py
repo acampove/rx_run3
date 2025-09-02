@@ -55,6 +55,7 @@ class SimFitter(BaseFitter, Cache):
 
         self._sample    = DecayNames.sample_from_decay(component, fall_back='NA')
         self._name      = name
+        self._category  = self._get_category(cfg=cfg)
         self._component = component
         self._trigger   = trigger
         self._project   = project
@@ -87,6 +88,28 @@ class SimFitter(BaseFitter, Cache):
             out_path = self._base_path,
             l_rdf_uid= self._l_rdf_uid,
             config   = OmegaConf.to_container(cfg, resolve=True))
+    # ----------------------
+    def _get_category(self, cfg : DictConfig) -> str|None:
+        '''
+        Parameters
+        -------------
+        cfg: Config used for fit
+
+        Returns
+        -------------
+        Either:
+
+        - Category name if there is one category (neded for backwards compatibility)
+        - None, if there are multiple categories
+        '''
+        names = list(cfg.categories)
+        if len(names) > 1:
+            return None
+
+        if len(names) == 0:
+            raise ValueError('No categories found')
+
+        return names[0]
     # ------------------------
     def _get_data(self) -> dict[str,zdata]:
         '''
