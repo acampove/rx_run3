@@ -20,7 +20,8 @@ rx-selection                = {version = '>=0.0.0', allow-prereleases = true}
 data-manipulation-utilities = {version = '>=0.0.0', allow-prereleases = true}
 
 [project.scripts]
-fit_rx_data  = 'fitter_scripts.fit_rx_data:main'
+fit_rx_rare  = 'fitter_scripts.fit_rx_rare:main'
+fit_rx_reso  = 'fitter_scripts.fit_rx_reso:main'
 fit_grid     = 'fitter_scripts.fit_grid:main'
 navigate_fits= 'fitter_scripts.navigate_fits:main'
 validate_cmb = 'fitter_scripts.validate_cmb:main'
