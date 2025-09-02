@@ -571,7 +571,7 @@ BuKstee:               # BuKstee = my_preffix_BuKstee * BuKee
   min     : 0
   max     : 1
 BuKmm:         # Not an actual parameter but: BuKmm = iCK * RK * BuKee
-  alias : [iCK, RK, BuKee]
+  mul : [iCK, RK, BuKee]
 ```
 
 and this configuration can be loaded into the code, before running the model
@@ -586,6 +586,31 @@ cfg = gut.load_conf(package='dmu_data', fpath='configuration.yaml')
 with PL.parameter_schema(cfg=cfg):
     model = build_model()
 ```
+
+Another configuration could look like:
+
+```yaml
+yield:
+  val : 1
+  min : 0
+  max : 10
+fraction:
+  val : 0.2
+  min : 0.0
+  max : 1.0 
+
+yield_001:
+  mul:
+    - yield
+    - fraction
+yield_002:
+  dif:            # Difference
+    - yield
+    - yield_001 
+```
+
+which can be used to reparametrize the yields of two components in a simultaneous fit as
+`total` yield and `fraction`.
 
 ### Model building
 
