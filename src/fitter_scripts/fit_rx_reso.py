@@ -1,6 +1,6 @@
 '''
 Script used to interact with DataFitter tool
-and run fits
+and run fits to the resonant mode
 '''
 
 import os
@@ -8,21 +8,17 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 import argparse
 from contextlib import ExitStack
 
-from omegaconf                  import DictConfig, OmegaConf
+from omegaconf                  import DictConfig
 from dmu.stats.parameters       import ParameterLibrary as PL
 from dmu.generic                import utilities as gut
 from dmu.stats                  import utilities as sut
-from dmu.stats.constraint_adder import ConstraintAdder
 from dmu.workflow.cache         import Cache
 from dmu.logging.log_store      import LogStore
 from zfit.loss                  import ExtendedUnbinnedNLL
 
 from fitter.fit_config         import FitConfig
-from fitter.constraint_reader  import ConstraintReader
 from fitter.data_fitter        import DataFitter
 from fitter.likelihood_factory import LikelihoodFactory
-from fitter.misid_constraints  import MisIDConstraints 
-from fitter.toy_maker          import ToyMaker
 from rx_data.rdf_getter        import RDFGetter
 from rx_selection              import selection as sel
 
