@@ -7,17 +7,18 @@ yields: &yields
 
 yld_cabibbo_brem_001:
   <<: *yields
-yld_resonant_brem_001:
-  <<: *yields
 yld_ccbar_brem_001:
   <<: *yields
 yld_combinatorial_brem_001:
   <<: *yields
 yld_cabibbo_brem_002:
   <<: *yields
-yld_resonant_brem_002:
-  <<: *yields
 yld_ccbar_brem_002:
   <<: *yields
 yld_combinatorial_brem_002:
+  <<: *yields
+# -------------------------
+yld_resonant_brem_001:
+  <<: *yields
+yld_resonant_brem_002:
   <<: *yields
