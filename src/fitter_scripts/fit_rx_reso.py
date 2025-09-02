@@ -37,7 +37,7 @@ def _parse_args() -> FitConfig:
     parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default =0)
     parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                               , default =1)
     parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[5, 10, 20, 30]          , default =20)
-    parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin'      , choices=['low', 'central', 'high'], required=True)
+    parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin'      , choices=['jpsi', 'psi2']          , required=True)
     parser.add_argument('-C', '--mva_cmb', type=float, help='Cut on combinatorial MVA working point'          , required=True)
     parser.add_argument('-P', '--mva_prc', type=float, help='Cut on part reco MVA working point'              , required=True)
     args = parser.parse_args()
