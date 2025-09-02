@@ -272,6 +272,7 @@ will:
 - Make a 64 characters hash out of it
 
 in two lines, thus keeping the user's code clean.
+The `obj` can also be an `omegaconf` `DictConfig`
 
 ### Hashing files
 
