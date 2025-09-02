@@ -4,6 +4,7 @@ Module containing FitConfig class
 import os
 import dataclasses
 from functools import cached_property
+from typing import Any
 
 from dmu.stats.zfit         import zfit
 from omegaconf              import DictConfig
@@ -19,6 +20,7 @@ class FitConfig:
     '''
     fit_cfg : DictConfig
     toy_cfg : DictConfig|None = None
+    name    : str|None        = None 
 
     block   : int  = -1 
     nthread : int  = 1
