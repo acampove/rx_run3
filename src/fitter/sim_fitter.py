@@ -178,7 +178,7 @@ class SimFitter(BaseFitter, Cache):
         '''
         Parameters
         -------------
-        category: Usually `main` otherwise could be brem0, etc
+        category: Name of model category 
 
         Returns
         -------------
@@ -219,17 +219,16 @@ class SimFitter(BaseFitter, Cache):
         This method will return a PDF when there is no simulation
         associated to it, e.g. Combinatorial
         '''
-        if 'main' not in self._cfg.categories:
-            log.info(OmegaConf.to_yaml(self._cfg))
-            raise ValueError(f'Cannot find main category in config associated to sample {self._component}')
+        if self._category is None:
+            raise ValueError('Not one and only one category found')
 
-        l_model = self._cfg.categories.main.models[self._q2bin]
+        l_model = self._cfg.categories[self._category].models[self._q2bin]
         cfg     = self._cfg[self._q2bin]
 
         model   = self._get_pdf(
             l_model = l_model,
             cfg     = cfg,
-            category= 'main')
+            category= self._category)
 
         return model
     # ------------------------
