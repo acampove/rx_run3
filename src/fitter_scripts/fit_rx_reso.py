@@ -86,12 +86,24 @@ def _get_nll(cfg : FitConfig, name : str) -> tuple[ExtendedUnbinnedNLL, DictConf
         raise TypeError('Likelihood object is not an ExtendedUnbinnedNLL')
 
     return nll, cfg_mod
+# ----------------------
+def _fit(cfg : FitConfig) -> None:
+    '''
+    This is where DataFitter is used
+    '''
+    d_nll = {}
+
+    with sel.update_selection(d_sel = {'brem_cat' : 'nbrem == 1'}):
+        d_nll['brem_001'] = _get_nll(cfg=cfg, name='brem_001')
+
+    with sel.update_selection(d_sel = {'brem_cat' : 'nbrem == 2'}):
+        d_nll['brem_002'] = _get_nll(cfg=cfg, name='brem_002')
 
     ftr = DataFitter(
         name = cfg.q2bin,
+        d_nll= d_nll, 
         cfg  = cfg.fit_cfg)
-
-
+    ftr.run(kind='zfit')
 # ----------------------
 def main():
     '''
