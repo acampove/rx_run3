@@ -4,6 +4,8 @@ and run fits to the resonant mode
 '''
 
 import os
+
+from dmu.stats.fitter import GofCalculator
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 import argparse
 from contextlib import ExitStack
@@ -102,11 +104,12 @@ def _fit(cfg : FitConfig) -> None:
         cfg.replace(substring='brem_001', value=cfg.name)
         d_nll[cfg.name] = _get_nll(cfg=cfg)
 
-    ftr = DataFitter(
-        name = cfg.q2bin,
-        d_nll= d_nll, 
-        cfg  = cfg.fit_cfg)
-    ftr.run(kind='zfit')
+    with GofCalculator.disabled(value=True):
+        ftr = DataFitter(
+            name = cfg.q2bin,
+            d_nll= d_nll, 
+            cfg  = cfg.fit_cfg)
+        ftr.run(kind='zfit')
 # ----------------------
 def main():
     '''
