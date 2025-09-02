@@ -106,7 +106,10 @@ class Fitter:
         data_np       = self._check_numpy_data(data_np)
         self._data_np = data_np
         if not isinstance(self._data_in, zfit.Data):
-            self._data_zf = zfit.Data.from_numpy(obs=self._pdf.space, array=data_np)
+            data = zfit.Data.from_numpy(obs=self._pdf.space, array=data_np)
+            if not isinstance(data, zdat):
+                raise ValueError(f'Expected data object, found: {type(data)}')
+            self._data_zf = data
         else:
             self._data_zf = self._data_in
     #------------------------------
