@@ -104,6 +104,7 @@ def _fit(cfg : FitConfig) -> None:
         cfg.replace(substring='brem_001', value=cfg.name)
         d_nll[cfg.name] = _get_nll(cfg=cfg)
 
+    cfg.fit_cfg.output_directory = 'reso/electron/data'
     with GofCalculator.disabled(value=True):
         ftr = DataFitter(
             name = cfg.q2bin,
@@ -118,6 +119,7 @@ def main():
     cfg = _parse_args()
 
     overriding_selection = {
+        'mass'  : '(1)',
         'block' : cfg.block_cut,
         'nobrm0': 'nbrem != 0',
         'bdt'   : cfg.mva_cut}
