@@ -1,6 +1,6 @@
-output_directory : reso/electron/signal
+output_directory : reso/electron/signal/brem_xxx
 categories:
-  main:
+  brem_xxx:
     model :
       - dscb 
       - cbl

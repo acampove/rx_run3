@@ -1,6 +1,6 @@
-output_directory : reso/electron/cabibbo
+output_directory : reso/electron/cabibbo/brem_xxx
 categories:
-  main:
+  brem_xxx:
     model :
       - dscb 
       - cbl

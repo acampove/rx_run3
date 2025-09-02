@@ -1,7 +1,7 @@
 # This is a config file used for tests
 # It illustrates how a fit would run for data
 
-output_directory : reso/electron/data
+output_directory : reso/electron/data/brem_xxx
 model:
   yields    : model/yields/reso_electron.yaml
   observable:
