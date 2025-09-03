@@ -23,7 +23,6 @@ class SampleConfig:
 
         self._cfg_set = gut.load_conf(package='ap_utilities_data', fpath=f'samples/{settings}.yaml')
         self._cfg_sam = gut.load_conf(package='ap_utilities_data', fpath=f'analyses/{samples}.yaml')
-
     # ----------------------
     def get_config(self, categories : list[str]) -> DictConfig:
         '''
@@ -35,14 +34,17 @@ class SampleConfig:
         -------------
         Configuration with both samples and settings
         '''
-        all_event_types = {}
+        all_event_types = []
         for name, event_types in self._cfg_sam.items():
             if name not in categories:
                 continue
 
-            all_event_types.update(event_types)
+            all_event_types += list(event_types)
 
-        for section in self._cfg_set.values():
+        ntypes = len(all_event_types)
+        log.info(f'Found {ntypes} event types')
+
+        for section in self._cfg_set.sections.values():
             section['evt_type'] = all_event_types
 
         return self._cfg_set
