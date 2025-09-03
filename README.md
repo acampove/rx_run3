@@ -14,6 +14,21 @@ The following variables _can_ be defined:
 
 `ANADIR`: Where outputs will be saved, if not specified, outputs will go to `/tmp`
 
+## Add samples
+
+In order to add new samples to the analysis do:
+
+- Open `src/ap_utilities_data/analyses/by_priority.yaml`
+- Add the event type to the `all` section
+- Run
+
+```bash
+analyze_samples -c by_priority
+```
+
+this should create `summary.yaml`, which will show the samples not found already in
+`by_priority.yaml`. Add the lines to the sections according to the priority.
+
 ## How to add a decay 
 
 ### Add the decay matching lines 
