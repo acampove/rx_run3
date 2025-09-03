@@ -119,7 +119,7 @@ class Data:
             }
 # ---------------------------
 def _load_decays() -> None:
-    dec_path = files('ap_utilities_data').joinpath('evt_dec.yaml')
+    dec_path = files('ap_utilities_data').joinpath('naming/evt_dec.yaml')
     dec_path = str(dec_path)
     with open(dec_path, encoding='utf-8') as ifile:
         Data.d_decay = yaml.safe_load(ifile)
