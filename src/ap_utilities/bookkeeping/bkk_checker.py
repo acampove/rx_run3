@@ -120,22 +120,40 @@ class BkkChecker:
         return found
     # -------------------------
     def _find_bkk(self, bkk : str) -> bool:
-        cmd_bkk = ['dirac-bookkeeping-get-stats', '-B' , bkk]
-        result  = subprocess.run(cmd_bkk, capture_output=True, text=True, check=False)
-        nfile   = self._nfiles_from_stdout(result.stdout, bkk)
-        found   = nfile != 0
+        '''
+        Parameters
+        ------------------
+        bkk: Bookkeeping path to MC sample
 
-        name    =  bkk.replace(r'/', '_')
-        name    = name.replace(r'.', '_')
-        name    = name.replace(r'-', '_')
-        self._save_text(data=result.stdout, path=f'{self._out_dir}/{name}.txt')
+        Returns 
+        ------------------
+        True if the path was found with at least one file
+        It also saves path to text
+        '''
+        if not self._dry:
+            cmd_bkk = ['dirac-bookkeeping-get-stats', '-B' , bkk]
+            result  = subprocess.run(cmd_bkk, capture_output=True, text=True, check=False)
+            nfile   = self._nfiles_from_stdout(result.stdout, bkk)
+            found   = nfile != 0
+            stdout  = result.stdout
+        else:
+            found   = True
+            stdout  = 'from dry-run'
 
-        return found
-    # -------------------------
-    def _save_text(self, data : str, path : str) -> None:
+        if not found:
+            log.debug(f'Missing: {bkk}')
+            return False
+
+        name =  bkk.replace(r'/', '_')
+        name = name.replace(r'.', '_')
+        name = name.replace(r'-', '_')
+        path =f'{self._out_dir}/{name}.txt'
+
         log.info(f'Saving to: {path}')
         with open(path, 'w', encoding='utf-8') as ofile:
-            ofile.write(data)
+            ofile.write(stdout)
+
+        return found
     # -------------------------
     def _get_samples_with_threads(self, nthreads : int) -> list[str]:
         l_found : list[bool] = []
