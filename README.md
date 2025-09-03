@@ -59,7 +59,8 @@ Given a set of settings specified in `ap_utilities_data/samples/2024.yaml` file 
 ```yaml
 settings_common: &common
     year      : 2024
-    mc_path   : 2024.W31.34
+    block_id  : 2024.W31.34
+    hlt_conf  : 2024.W31.34
     polarity  : MagUp
     nu_path   : Nu6.3
     sim_vers  : Sim10d

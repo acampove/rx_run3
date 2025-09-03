@@ -112,10 +112,10 @@ class BkkChecker:
         True if a sample exist for the event type
         '''
         cfg   = self._cfg.settings
-        if cfg.mc_path == '2024.W31.34':
-            bkk   = f'/MC/{cfg.year}/Beam6800GeV-{cfg.mc_path}-{cfg.polarity}-{cfg.nu_path}-25ns-{cfg.generator}/{cfg.sim_vers}/HLT1_2024.W31.34_noUT/HLT2-{cfg.mc_path}/{event_type}/HLT2.DST'
+        if cfg.block_id == '2024.W31.34':
+            bkk   = f'/MC/{cfg.year}/Beam6800GeV-{cfg.block_id}-{cfg.polarity}-{cfg.nu_path}-25ns-{cfg.generator}/{cfg.sim_vers}/HLT1_2024.W31.34_noUT/HLT2-{cfg.hlt_conf}/{event_type}/HLT2.DST'
         else:
-            bkk   = f'/MC/{cfg.year}/Beam6800GeV-{cfg.mc_path}-{cfg.polarity}-{cfg.nu_path}-25ns-{cfg.generator}/{cfg.sim_vers}/HLT2-{cfg.mc_path}/{event_type}/HLT2.DST'
+            bkk   = f'/MC/{cfg.year}/Beam6800GeV-{cfg.block_id}-{cfg.polarity}-{cfg.nu_path}-25ns-{cfg.generator}/{cfg.sim_vers}/HLT2-{cfg.hlt_conf}/{event_type}/HLT2.DST'
 
         log.info(f'{"":<4}{bkk:<100}')
 
@@ -177,7 +177,7 @@ class BkkChecker:
             nick_name_org   = aput.read_decay_name(evt_type)
             nick_name       = f'"{nick_name_org}{self._suffix}"'
             sim_vers        = f'"{cfg.sim_vers}"'
-            text           += f'({nick_name:<60}, "{evt_type}" , "{cfg.mc_path}", "{cfg.polarity}"  , "{cfg.ctags}", "{cfg.dtags}", "{cfg.nu_path}", "{nu_name}", {sim_vers:<20}, "{cfg.generator}" ),\n'
+            text           += f'({nick_name:<60}, "{evt_type}" , "{cfg.block_id}", "{cfg.polarity}"  , "{cfg.ctags}", "{cfg.dtags}", "{cfg.nu_path}", "{nu_name}", {sim_vers:<20}, "{cfg.generator}" ),\n'
 
         output_path = f'{self._out_dir}/info_{self._name}.yaml'
         log.info(f'Saving to: {output_path}')
