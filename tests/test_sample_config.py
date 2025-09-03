@@ -8,7 +8,6 @@ from ap_utilities.bookkeeping   import sample_config as scf
 
 log=LogStore.add_logger('ap_utilities:test_sample_config')
 # ----------------------
-
 def test_simple():
     '''
     Simplest test
