@@ -53,7 +53,7 @@ def main():
     for name, section in cfg.sections.items():
         log.info(f'Processing section: {name}')
         obj=BkkChecker(name, section)
-        obj.save(nthreads=Data.nthread, dry=True)
+        obj.save(nthreads=Data.nthread)
 # --------------------------------
 if __name__ == '__main__':
     main()
