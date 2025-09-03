@@ -3,8 +3,8 @@
 # It describes them by sections, each corresponding to a new block.
 # It will have to be updated once new sim versions are available
 #
-# This file needs to be combined with the contents of `analyses/by_priority.yaml`
-# which contains the list of event times needed
+# This file needs to be combined with the contents of `analyses/by_priority.yaml` (which contains the list of event times needed)
+# by adding an `evt_type` dictionary for each block
 # The output should be used by BkkChecker to find the samples in bookkeeping
 
 settings_common: &set
