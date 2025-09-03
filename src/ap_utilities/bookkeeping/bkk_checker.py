@@ -4,13 +4,14 @@ Module with BkkChecker class
 
 import os
 import re
-from concurrent.futures     import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 
 import subprocess
 import yaml
 
 import ap_utilities.decays.utilities as aput
 from ap_utilities.logging.log_store  import LogStore
+from omegaconf                       import DictConfig
 
 log=LogStore.add_logger('ap_utilities:Bookkeeping.bkk_checker')
 # ---------------------------------
