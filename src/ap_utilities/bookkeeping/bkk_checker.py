@@ -20,30 +20,25 @@ class BkkChecker:
     Class meant to check if samples exist in Bookkeeping using multithreading.
     This is useful with large lists of samples, due to low performance of Dirac
     '''
-    # pylint: disable=too-few-public-methods
     # -------------------------
-    def __init__(self, name : str, d_section : dict):
+    def __init__(
+        self, 
+        name : str, 
+        cfg  : DictConfig):
         '''
-        Takes:
+        Parameters:
 
         name     : Name of section, needed to dump output
-        d_Section: A dictionary representing sections of samples
+        d_section: A dictionary representing sections of samples
         '''
 
-        self._suffix       : str = '' if 'suffix' not in d_section else d_section['suffix']
-        self._name         : str = name
+        self._suffix = '' if 'suffix' not in cfg else cfg.suffix
+        self._name   = name
+        self._dry    = False
+        self._cfg    = cfg
+        self._out_dir= self._get_out_dir()
 
-        self._year         : str = d_section['settings']['year']
-        self._mc_path      : str = d_section['settings']['mc_path']
-        self._nu_path      : str = d_section['settings']['nu_path']
-        self._polarity     : str = d_section['settings']['polarity']
-        self._generator    : str = d_section['settings']['generator']
-        self._sim_version  : str = d_section['settings']['sim_vers']
-        self._ctags        : str = d_section['settings']['ctags']
-        self._dtags        : str = d_section['settings']['dtags']
-        self._out_dir      = self._get_out_dir()
-
-        self._l_event_type : list[str] = self._get_event_types(d_section)
+        self._l_event_type : list[str] = self._get_event_types()
     # -------------------------
     def _get_out_dir(self) -> str:
         if 'ANADIR' not in os.environ:
