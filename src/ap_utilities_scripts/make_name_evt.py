@@ -13,7 +13,7 @@ from ap_utilities.logging.log_store import LogStore
 log = LogStore.add_logger('ap_utilities:make_name_evt')
 # ------------------------------
 def _get_data() -> dict[str,str]:
-    cfg_path = files('ap_utilities_data').joinpath('evt_name.yaml')
+    cfg_path = files('ap_utilities_data').joinpath('naming/evt_name.yaml')
     cfg_path = str(cfg_path)
     with open(cfg_path, encoding='utf-8') as ifile:
         d_evt_name = yaml.safe_load(ifile)
@@ -41,7 +41,7 @@ def main():
     d_evt_name = _get_data()
     d_name_evt = _invert_dict(d_evt_name)
 
-    ofile_path = files('ap_utilities_data').joinpath('name_evt.yaml')
+    ofile_path = files('ap_utilities_data').joinpath('naming/name_evt.yaml')
     ofile_path = str(ofile_path)
 
     log.info(f'Saving to: {ofile_path}')

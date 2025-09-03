@@ -22,7 +22,7 @@ def _add_data_low_org(d_low_org : dict[str,str]) -> dict[str,str]:
     return d_low_org
 # --------------------------------
 def _load_file(file_name : str) -> dict[str,str]:
-    file_path = files('ap_utilities_data').joinpath(file_name)
+    file_path = files('ap_utilities_data').joinpath(f'naming/{file_name}')
     file_path = str(file_path)
 
     with open(file_path, encoding='utf-8') as ifile:
