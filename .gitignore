@@ -184,3 +184,4 @@ info_*.yaml
 info.yaml
 validation_*.yaml
 decays.yaml
+summary.yaml
