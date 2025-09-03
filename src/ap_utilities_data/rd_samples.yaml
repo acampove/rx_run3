@@ -17,6 +17,7 @@ sections:
       - '11102211'
       - '11102202'
   two:
+    suffix : _second
     settings:
       <<        : *common
       sim_vers  : Sim10d-SplitSim02
