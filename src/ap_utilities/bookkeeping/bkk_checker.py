@@ -51,12 +51,12 @@ class BkkChecker:
 
         return out_dir
     # -------------------------
-    def _get_event_types(self, d_section : dict) -> list[str]:
-        l_evt  = self._list_from_dict(d_section, 'evt_type')
+    def _get_event_types(self) -> list[str]:
+        l_evt  = self._list_from_dict('evt_type')
         nevt = len(l_evt)
         log.debug(f'Found {nevt} event types')
 
-        l_nick = self._list_from_dict(d_section, 'nickname')
+        l_nick = self._list_from_dict('nickname')
         nnick = len(l_nick)
         log.debug(f'Found {nnick} nicknames')
 
