@@ -1,10 +1,11 @@
 # This config is used to _describe_ all samples in 2024
 #
 # It describes them by sections, each corresponding to a new block.
-# It will have to be updated once:
+# It will have to be updated once new sim versions are available
 #
-# - New sim versions are available
-# - New samples are needed, by adding a new event type
+# This file needs to be combined with the contents of `analyses/by_priority.yaml`
+# which contains the list of event times needed
+# The output should be used by BkkChecker to find the samples in bookkeeping
 
 settings_common: &set
   year      : 2024
@@ -12,14 +13,8 @@ settings_common: &set
   generator : Pythia8
   dtags     : dddb-20240427
 # -------------------------------------------
-evt_type: &evt
-  - 12103025
-  - 12103030
-  - 12103017 
-# -------------------------------------------
 sections:
   block_12:
-    evt_type : *evt
     settings:
       <<: *set
       mc_path : 2024.W31.34
@@ -27,7 +22,6 @@ sections:
       nu_path : Nu6.3
       ctags   : sim10-2024.Q3.4-v1.3-mu100    
   block_3:
-    evt_type : *evt
     settings:
       <<: *set
       mc_path : 2024.W29.30
@@ -35,7 +29,6 @@ sections:
       nu_path : Nu6.3
       ctags   : sim10-2024.W29.30-v00.00-mu100
   block_4:
-    evt_type : *evt
     settings:
       <<: *set
       mc_path : 2024.W25.27
@@ -43,7 +36,6 @@ sections:
       nu_path : Nu6.3
       ctags   : sim10-2024.W25.27-v00.00-md100
   block_5:
-    evt_type : *evt
     settings:
       <<: *set
       mc_path : 2024.W35.37
@@ -51,7 +43,6 @@ sections:
       nu_path : Nu6.3
       ctags   : sim10-2024.W35.37-v00.00-mu100
   block_6:
-    evt_type : *evt
     settings:
       <<: *set
       mc_path : 2024.W37.39
@@ -59,7 +50,6 @@ sections:
       nu_path : Nu6.3
       ctags   : sim10-2024.W37.39-v00.00-md100
   block_7:
-    evt_type : *evt
     settings:
       <<: *set
       mc_path : 2024.W40.42
@@ -67,7 +57,6 @@ sections:
       nu_path : Nu7.6
       ctags   : sim10-2024.W40.42-v00.00-md100
   block_8:
-    evt_type : *evt
     settings:
       <<: *set
       mc_path : 2024.W40.42
