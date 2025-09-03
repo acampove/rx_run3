@@ -22,22 +22,22 @@ sections:
       polarity: MagUp
       nu_path : Nu6.3
       ctags   : sim10-2024.Q3.4-v1.3-mu100    
-  block_3:
-    settings:
-      <<: *set
-      block_id: 2024.W29.30
-      hlt_conf: 2024.W29.30
-      polarity: MagUp
-      nu_path : Nu6.3
-      ctags   : sim10-2024.W29.30-v00.00-mu100
-  block_4:
-    settings:
-      <<: *set
-      block_id: 2024.W25.27
-      hlt_conf: 2024.W25.27
-      polarity: MagDown
-      nu_path : Nu6.3
-      ctags   : sim10-2024.W25.27-v00.00-md100
+#  block_3:
+#    settings:
+#      <<: *set
+#      block_id: 2024.W29.30
+#      hlt_conf: 2024.W29.30
+#      polarity: MagUp
+#      nu_path : Nu6.3
+#      ctags   : sim10-2024.W29.30-v00.00-mu100
+#  block_4:
+#    settings:
+#      <<: *set
+#      block_id: 2024.W25.27
+#      hlt_conf: 2024.W25.27
+#      polarity: MagDown
+#      nu_path : Nu6.3
+#      ctags   : sim10-2024.W25.27-v00.00-md100
   block_5:
     settings:
       <<: *set
