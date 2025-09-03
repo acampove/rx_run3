@@ -1,24 +1,19 @@
 '''
 Module with tests for BkkChecker class
 '''
-from importlib.resources import files
-
 import pytest
-import yaml
 
 from ap_utilities.logging.log_store       import LogStore
 from ap_utilities.bookkeeping.bkk_checker import BkkChecker
+from dmu.generic                          import utilities  as gut
 
 log = LogStore.add_logger('ap_utilities:tests:test_bkk_check')
 # ----------------------------------------
-def _sections_from_path( path : str) -> dict[str, dict]:
-    with open(path, encoding='utf-8') as ifile:
-        d_cfg = yaml.safe_load(ifile)
-
-    return d_cfg
-# ----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before any test
+    '''
     LogStore.set_level('ap_utilities:Bookkeeping.bkk_checker', 10)
 # ----------------------------------------
 def test_simple():
