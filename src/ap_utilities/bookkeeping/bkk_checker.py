@@ -167,12 +167,13 @@ class BkkChecker:
     # -------------------------
     def _save_info_yaml(self, l_event_type : list[str]) -> None:
         text = ''
+        cfg  = self._cfg.settings
         for evt_type in l_event_type:
-            nu_name         = self._nu_path.replace('.', 'p')
+            nu_name         = cfg.nu_path.replace('.', 'p')
             nick_name_org   = aput.read_decay_name(evt_type)
-            nick_name       = f'"{nick_name_org}{self._suffix}"'
-            sim_vers        = f'"{self._sim_version}"'
-            text           += f'({nick_name:<60}, "{evt_type}" , "{self._mc_path}", "{self._polarity}"  , "{self._ctags}", "{self._dtags}", "{self._nu_path}", "{nu_name}", {sim_vers:<20}, "{self._generator}" ),\n'
+            nick_name       = f'"{nick_name_org}{self._cfg.suffix}"'
+            sim_vers        = f'"{cfg.sim_vers}"'
+            text           += f'({nick_name:<60}, "{evt_type}" , "{cfg.mc_path}", "{cfg.polarity}"  , "{cfg.ctags}", "{cfg.dtags}", "{cfg.nu_path}", "{nu_name}", {sim_vers:<20}, "{cfg.generator}" ),\n'
 
         output_path = f'{self._out_dir}/info_{self._name}.yaml'
         log.info(f'Saving to: {output_path}')
