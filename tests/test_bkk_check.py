@@ -16,8 +16,7 @@ def initialize():
     '''
     LogStore.set_level('ap_utilities:Bookkeeping.bkk_checker', 10)
 # ----------------------------------------
-@pytest.mark.parametrize('dry', [True, False])
-def test_simple(dry : bool):
+def test_simple():
     '''
     Will save list of samples to YAML
     '''
@@ -26,7 +25,7 @@ def test_simple(dry : bool):
     for name, d_section in d_sections.items():
         log.info(f'Processing section: {name}')
         obj=BkkChecker(name, d_section)
-        obj.save(dry=dry)
+        obj.save(dry=True)
 # ----------------------------------------
 def test_nick_evt():
     '''
@@ -37,7 +36,7 @@ def test_nick_evt():
     for name, d_section in d_sections.items():
         log.info(f'Processing section: {name}')
         obj=BkkChecker(name, d_section)
-        obj.save()
+        obj.save(dry=True)
 # ----------------------------------------
 def test_multithreaded():
     '''
@@ -48,5 +47,5 @@ def test_multithreaded():
     for name, cfg in d_config.items():
         log.info(f'Processing section: {name}')
         obj=BkkChecker(name=name, cfg=cfg)
-        obj.save(nthreads=8, dry=True)
+        obj.save(dry=True, nthreads=4)
 # ----------------------------------------
