@@ -75,7 +75,7 @@ class BkkChecker:
         try:
             [line] = [ line for line in l_line if line.startswith('Nb of Files') ]
         except ValueError:
-            log.warning(f'Cannot find number of files in: \n{stdout}')
+            log.debug(f'Cannot find number of files in: \n{stdout}')
             return 'None'
 
         return line
@@ -88,8 +88,8 @@ class BkkChecker:
         mtch  = re.match(regex, line)
 
         if not mtch:
-            log.warning(f'For BKK: {bkk}')
-            log.warning(f'No match found in: \n{stdout}')
+            log.debug(f'For BKK: {bkk}')
+            log.debug(f'No match found in: \n{stdout}')
             return 0
 
         nsample = mtch.group(1)
