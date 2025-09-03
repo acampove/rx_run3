@@ -16,28 +16,23 @@ def initialize():
     '''
     LogStore.set_level('ap_utilities:Bookkeeping.bkk_checker', 10)
 # ----------------------------------------
-def test_simple():
+@pytest.mark.parametrize('dry', [True, False])
+def test_simple(dry : bool):
     '''
     Will save list of samples to YAML
     '''
-    samples_path = files('ap_utilities_data').joinpath('rd_samples.yaml')
-    samples_path = str(samples_path)
-
-    d_cfg      = _sections_from_path(samples_path)
+    d_cfg      = gut.load_conf(package='ap_utilities_data', fpath='rd_samples.yaml')
     d_sections = d_cfg['sections']
     for name, d_section in d_sections.items():
         log.info(f'Processing section: {name}')
         obj=BkkChecker(name, d_section)
-        obj.save()
+        obj.save(dry=dry)
 # ----------------------------------------
 def test_nick_evt():
     '''
     Will test reading when there are both evt_type and nickname sections 
     '''
-    samples_path = files('ap_utilities_data').joinpath('nick_evt.yaml')
-    samples_path = str(samples_path)
-
-    d_cfg        = _sections_from_path(samples_path)
+    d_cfg        = gut.load_conf(package='ap_utilities_data', fpath='nick_evt.yaml')
     d_sections   = d_cfg['sections']
     for name, d_section in d_sections.items():
         log.info(f'Processing section: {name}')
@@ -48,13 +43,10 @@ def test_multithreaded():
     '''
     Will save list of samples to YAML using 4 threads
     '''
-    samples_path = files('ap_utilities_data').joinpath('rd_samples.yaml')
-    samples_path = str(samples_path)
-
-    d_cfg = _sections_from_path(samples_path)
-    d_sections = d_cfg['sections']
-    for name, d_section in d_sections.items():
+    d_cfg    = gut.load_conf(package='ap_utilities_data', fpath='rd_samples.yaml')
+    d_config = d_cfg['sections']
+    for name, cfg in d_config.items():
         log.info(f'Processing section: {name}')
-        obj=BkkChecker(name, d_section)
-        obj.save(nthreads=8)
+        obj=BkkChecker(name=name, cfg=cfg)
+        obj.save(nthreads=8, dry=True)
 # ----------------------------------------
