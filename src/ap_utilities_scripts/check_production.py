@@ -135,7 +135,7 @@ def _flatten_list(lst : list) -> list:
     return l_val
 # -------------------------
 def _get_analysis_nicknames() -> set[str]:
-    evt_path = files('ap_utilities_data').joinpath('analyses.yaml')
+    evt_path = files('ap_utilities_data').joinpath('analyses/analyses.yaml')
     evt_path = str(evt_path)
 
     with open(evt_path, encoding='utf-8') as ifile:
