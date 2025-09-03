@@ -171,7 +171,7 @@ class BkkChecker:
         for evt_type in l_event_type:
             nu_name         = cfg.nu_path.replace('.', 'p')
             nick_name_org   = aput.read_decay_name(evt_type)
-            nick_name       = f'"{nick_name_org}{self._cfg.suffix}"'
+            nick_name       = f'"{nick_name_org}{self._suffix}"'
             sim_vers        = f'"{cfg.sim_vers}"'
             text           += f'({nick_name:<60}, "{evt_type}" , "{cfg.mc_path}", "{cfg.polarity}"  , "{cfg.ctags}", "{cfg.dtags}", "{cfg.nu_path}", "{nu_name}", {sim_vers:<20}, "{cfg.generator}" ),\n'
 
