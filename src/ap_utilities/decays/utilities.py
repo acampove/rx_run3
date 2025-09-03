@@ -52,7 +52,7 @@ def _apply_format(d_format : dict[str,str], name : str) -> str:
 # ---------------------------------
 @cache
 def _load_data(file_name : str) -> dict:
-    file_path = files('ap_utilities_data').joinpath(file_name)
+    file_path = files('ap_utilities_data').joinpath(f'naming/{file_name}')
     file_path = str(file_path)
     with open(file_path, encoding='utf-8') as ifile:
         d_data = yaml.safe_load(ifile)
