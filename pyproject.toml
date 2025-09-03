@@ -37,10 +37,10 @@ numpy          = '*'
 matplotlib     = '*'
 mplhep         = '*'
 pandas         = '*'
-tensorflow     = '*'
 awkward-pandas = '*'
 dask           = {version='*',      extras  =['dataframe','distributed']}
 hist           = {version='*',      extras  =['plot']}
+tensorflow     = {version='*',      optional=true}
 zfit           = {version='*',      optional=true}
 scikit-learn   = {version='*',      optional=true}
 joblib         = {version='*',      optional=true}
@@ -48,7 +48,7 @@ optuna         = {version='*',      optional=true}
 pytest         = {version='*',      optional=true}
 
 [tool.poetry.extras]
-fit  = ['zfit']
+fit  = ['zfit', 'tensorflow']
 ml   = ['scikit-learn', 'joblib', 'optuna']
 dev  = ['pytest', 'pandas-stubs', 'memory-profiler']
 
