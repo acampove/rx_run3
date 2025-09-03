@@ -64,11 +64,11 @@ class BkkChecker:
 
         return l_evt
     # -------------------------
-    def _list_from_dict(self, d_section : dict, key : str) -> list[str]:
-        if key not in d_section:
+    def _list_from_dict(self, key : str) -> list[str]:
+        if key not in self._cfg:
             return []
 
-        return d_section[key]
+        return self._cfg[key]
     # -------------------------
     def _nfiles_line_from_stdout(self, stdout : str) -> str:
         l_line = stdout.split('\n')
@@ -102,17 +102,22 @@ class BkkChecker:
         return int(nsample)
     # -------------------------
     def _was_found(self, event_type : str) -> bool:
-        bkk   = self._get_bkk(event_type)
+        '''
+        Parameters
+        -------------------
+        event_type: EventType, e.g. 12153001
+
+        Returns
+        -------------------
+        True if a sample exist for the event type
+        '''
+        cfg   = self._cfg.settings
+        bkk   = f'/MC/{cfg.year}/Beam6800GeV-{cfg.mc_path}-{cfg.polarity}-{cfg.nu_path}-25ns-{cfg.generator}/{cfg.sim_vers}/HLT2-{cfg.mc_path}/{event_type}/HLT2.DST'
+        log.debug(f'{"":<4}{bkk:<100}')
+
         found = self._find_bkk(bkk)
 
         return found
-    # -------------------------
-    def _get_bkk(self, event_type : str) -> str:
-        sample_path = f'/MC/{self._year}/Beam6800GeV-{self._mc_path}-{self._polarity}-{self._nu_path}-25ns-{self._generator}/{self._sim_version}/HLT2-{self._mc_path}/{event_type}/HLT2.DST'
-
-        log.debug(f'{"":<4}{sample_path:<100}')
-
-        return sample_path
     # -------------------------
     def _find_bkk(self, bkk : str) -> bool:
         cmd_bkk = ['dirac-bookkeeping-get-stats', '-B' , bkk]
