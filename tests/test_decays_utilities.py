@@ -28,10 +28,6 @@ class Data:
         ]
 
     l_new_nick = [
-            'Bd_Ksteta_gg_eq_DPC_SS',
-            'Bs_PhiEta_gg_eq_DPC_SS',
-            'Bs_Phipi0_gg_eq_DPC_SS',
-            'Bu_Kstgamma_Kst_eq_KSpi_DPC_SS',
             'Bd_Dmnpipl_eq_DPC',
             'Bd_Dmnpipl_eq_DPC',
             'Bd_Dstplenu_eq_PHSP_TC',
