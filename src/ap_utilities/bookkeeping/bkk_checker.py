@@ -191,11 +191,20 @@ class BkkChecker:
         with open(output_path, 'w', encoding='utf-8') as ofile:
             yaml.safe_dump(d_data, ofile, width=200)
     # -------------------------
-    def save(self, nthreads : int = 1) -> None:
+    def save(
+        self, 
+        nthreads : int  = 1,
+        dry      : bool = False) -> None:
         '''
         Will check if samples exist in grid
         Will save list of found samples to text file with same name as input YAML, but with txt extension
+
+        Parameters
+        ----------------
+        nthreads: Number of threads to use for check
+        dry     : If True will stop before calling Dirac, default False 
         '''
+        self._dry = dry
 
         log.info('Filtering input')
         if nthreads == 1:
