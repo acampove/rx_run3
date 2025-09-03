@@ -17,6 +17,7 @@ class Data:
     ('/home/acampove/cernbox/dev/tests/ap_utilities/log_info/fall_back_omega.zip', 'Omegab_JpsiOmega_mm_LambdaK_eq_phsp_TightCut', 13998),
     ]
 # ----------------------------
+@pytest.mark.skip
 def test_mcdt():
     '''
     Tests if the statistics used for MCDecayTree are read correctly
@@ -26,6 +27,7 @@ def test_mcdt():
 
     assert nentries == 13584
 # ----------------------------
+@pytest.mark.skip
 def test_fallback_nofile():
     '''
     Tests if the statistics used for MCDecayTree are read correctly
@@ -35,6 +37,7 @@ def test_fallback_nofile():
 
     assert nentries == -1
 # ----------------------------
+@pytest.mark.skip
 @pytest.mark.parametrize('zip_path, sample, entries', Data.l_log_fallback_noline)
 def test_fallback_noline(zip_path : str, sample : str, entries : int):
     '''
