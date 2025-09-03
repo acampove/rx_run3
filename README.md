@@ -54,50 +54,48 @@ Bd_Denu_Kstenu_eq_VisibleInAcceptance_HighVisMass_EGDWC:
 ### Add the list of samples 
 
 The list goes in `rd_ap_2024/info.yaml`. For this, the [installation](doc/installation.md#with-access-to-dirac) that allows access to DIRAC is needed. 
-Given a set of MC samples specified in a YAML file like:
+Given a set of settings specified in `ap_utilities_data/samples/2024.yaml` file like:
 
 ```yaml
 settings_common: &common
-  year      : 2024
-  mc_path   : 2024.W31.34
-  polarity  : MagUp
-  nu_path   : Nu6.3
-  sim_vers  : Sim10d
-  generator : Pythia8
-  ctags     : sim10-2024.Q3.4-v1.3-mu100
-  dtags     : dddb-20240427
+    year      : 2024
+    mc_path   : 2024.W31.34
+    polarity  : MagUp
+    nu_path   : Nu6.3
+    sim_vers  : Sim10d
+    generator : Pythia8
+    ctags     : sim10-2024.Q3.4-v1.3-mu100
+    dtags     : dddb-20240427
 # -------------------------------------------
 sections:
-  one:
-    settings:
-      <<: *common
-    evt_type:
-      - '11102211'
-      - '11102202'
-  two:
-    settings:
-      <<        : *common
-      sim_vers  : Sim10d-SplitSim02
-    evt_type:
-      - '11102211'
-      - '11102202'
-  three:
-    settings:
-      <<        : *common
-      generator : BcVegPyPythia8
-    evt_type:
-      - '14143013'
-      - '14113032'
+    one:
+      settings:
+        <<: *common
+    two:
+      settings:
+        <<        : *common
+        sim_vers  : Sim10d-SplitSim02
+    three:
+      settings:
+        <<        : *common
+        generator : BcVegPyPythia8
+```
+
+and a set of samples specified in `ap_utilities_data/analysis/by_priority.yaml` like:
+
+```yaml
+high:
+  12123003  : $B_u \to K^+ e^+ e^-$
+  11114002  : $B_d \to K^{*0} \mu^+ \mu^-$
+medium:
+  12153020  : $B_u \to J/\psi(e^+ e^-) \pi^+$
+  12143010  : $B_u \to J/\psi(\mu^+ \mu^-) \pi^+$
 ```
 
 run:
 
 ```bash
-# This would pick the config.yaml from the project's data directory
-check_samples -c config.yaml -n 6
-
-# This would take the path to the file
-check_samples -f /paht/to/config.yaml -n 6
+check_samples -c 2024 -s by_priority -n 6
 ```
 
 to check if the samples exist using 6 threads (default is 1). The script will produce:
