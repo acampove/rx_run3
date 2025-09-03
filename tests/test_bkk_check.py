@@ -21,7 +21,7 @@ def test_simple(dry : bool):
     '''
     Will save list of samples to YAML
     '''
-    d_cfg      = gut.load_conf(package='ap_utilities_data', fpath='rd_samples.yaml')
+    d_cfg      = gut.load_conf(package='ap_utilities_data', fpath='tests/rd_samples.yaml')
     d_sections = d_cfg['sections']
     for name, d_section in d_sections.items():
         log.info(f'Processing section: {name}')
@@ -32,7 +32,7 @@ def test_nick_evt():
     '''
     Will test reading when there are both evt_type and nickname sections 
     '''
-    d_cfg        = gut.load_conf(package='ap_utilities_data', fpath='nick_evt.yaml')
+    d_cfg        = gut.load_conf(package='ap_utilities_data', fpath='tests/nick_evt.yaml')
     d_sections   = d_cfg['sections']
     for name, d_section in d_sections.items():
         log.info(f'Processing section: {name}')
@@ -43,7 +43,7 @@ def test_multithreaded():
     '''
     Will save list of samples to YAML using 4 threads
     '''
-    d_cfg    = gut.load_conf(package='ap_utilities_data', fpath='rd_samples.yaml')
+    d_cfg    = gut.load_conf(package='ap_utilities_data', fpath='tests/rd_samples.yaml')
     d_config = d_cfg['sections']
     for name, cfg in d_config.items():
         log.info(f'Processing section: {name}')
