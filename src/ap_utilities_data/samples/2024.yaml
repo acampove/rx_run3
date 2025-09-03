@@ -38,14 +38,14 @@ sections:
   block_5:
     settings:
       <<: *set
-      mc_path : 2024.W35.37
+      mc_path : 2024.W35.39
       polarity: MagUp
       nu_path : Nu6.3
       ctags   : sim10-2024.W35.37-v00.00-mu100
   block_6:
     settings:
       <<: *set
-      mc_path : 2024.W37.39
+      mc_path : 2024.W35.39
       polarity: MagDown
       nu_path : Nu6.3
       ctags   : sim10-2024.W37.39-v00.00-md100
