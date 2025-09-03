@@ -13,7 +13,7 @@ import ap_utilities.decays.utilities as aput
 from ap_utilities.logging.log_store  import LogStore
 from omegaconf                       import DictConfig
 
-log=LogStore.add_logger('ap_utilities:Bookkeeping.bkk_checker')
+log=LogStore.add_logger('ap_utilities:bkk_checker')
 # ---------------------------------
 class BkkChecker:
     '''
@@ -149,7 +149,7 @@ class BkkChecker:
         name = name.replace(r'-', '_')
         path =f'{self._out_dir}/{name}.txt'
 
-        log.info(f'Saving to: {path}')
+        log.debug(f'Saving to: {path}')
         with open(path, 'w', encoding='utf-8') as ofile:
             ofile.write(stdout)
 
