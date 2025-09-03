@@ -112,8 +112,12 @@ class BkkChecker:
         True if a sample exist for the event type
         '''
         cfg   = self._cfg.settings
-        bkk   = f'/MC/{cfg.year}/Beam6800GeV-{cfg.mc_path}-{cfg.polarity}-{cfg.nu_path}-25ns-{cfg.generator}/{cfg.sim_vers}/HLT2-{cfg.mc_path}/{event_type}/HLT2.DST'
-        log.debug(f'{"":<4}{bkk:<100}')
+        if cfg.mc_path == '2024.W31.34':
+            bkk   = f'/MC/{cfg.year}/Beam6800GeV-{cfg.mc_path}-{cfg.polarity}-{cfg.nu_path}-25ns-{cfg.generator}/{cfg.sim_vers}/HLT1_2024.W31.34_noUT/HLT2-{cfg.mc_path}/{event_type}/HLT2.DST'
+        else:
+            bkk   = f'/MC/{cfg.year}/Beam6800GeV-{cfg.mc_path}-{cfg.polarity}-{cfg.nu_path}-25ns-{cfg.generator}/{cfg.sim_vers}/HLT2-{cfg.mc_path}/{event_type}/HLT2.DST'
+
+        log.info(f'{"":<4}{bkk:<100}')
 
         found = self._find_bkk(bkk)
 
