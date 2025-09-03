@@ -11,7 +11,8 @@ import argparse
 
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
-from omegaconf import DictConfig
+from omegaconf             import DictConfig
+from ap_utilities.decays   import utilities as aput
 
 log=LogStore.add_logger('ap_utilities:analyze_samples')
 # ----------------------
@@ -43,8 +44,9 @@ def _analyze_conf(cfg : DictConfig) -> None:
         if _found_in_any_section(evt_type=evt_type, cfg=cfg):
             continue
 
-        d_missing[evt_type] = _decay_from_evttype(evt_type=evt_type)
+        d_missing[evt_type] = aput.read_decay_name(event_type=evt_type)
 
+    d_missing = dict(sorted(d_missing.items(), key=lambda item: item[1]))
     d_summary = { 'new' : d_new, 'missing' : d_missing }
     gut.dump_json(data=d_summary, path='./summary.yaml')
 # ----------------------
@@ -69,18 +71,6 @@ def _found_in_any_section(evt_type : int, cfg : DictConfig) -> bool:
             return True
 
     return False
-# ----------------------
-def _decay_from_evttype(evt_type : int) -> str:
-    '''
-    Parameters
-    -------------
-    evt_type: Event type
-
-    Returns
-    -------------
-    Latex string associated to event
-    '''
-    return str(evt_type)
 # ----------------------
 def main():
     '''
