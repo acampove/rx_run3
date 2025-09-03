@@ -14,7 +14,7 @@ import tqdm
 import yaml
 import pandas as pnd
 
-from ROOT                            import TFile, TDirectoryFile, TTree
+from ROOT                            import TFile, TDirectoryFile, TTree # type: ignore
 from ap_utilities.logging.log_store  import LogStore
 from ap_utilities.logfiles.log_info  import LogInfo
 
