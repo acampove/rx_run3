@@ -145,7 +145,7 @@ class BkkChecker:
             stdout  = 'from dry-run'
 
         if not found:
-            log.debug(f'Missing: {bkk}')
+            log.error(f'Missing: {bkk}')
             return False
 
         name =  bkk.replace(r'/', '_')
