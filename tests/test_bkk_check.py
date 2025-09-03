@@ -5,7 +5,8 @@ import pytest
 
 from ap_utilities.logging.log_store       import LogStore
 from ap_utilities.bookkeeping.bkk_checker import BkkChecker
-from dmu.generic                          import utilities  as gut
+from ap_utilities.bookkeeping             import sample_config as scf 
+from dmu.generic                          import utilities     as gut
 
 log = LogStore.add_logger('ap_utilities:tests:test_bkk_check')
 # ----------------------------------------
@@ -49,3 +50,15 @@ def test_multithreaded():
         obj=BkkChecker(name=name, cfg=cfg)
         obj.save(dry=True, nthreads=4)
 # ----------------------------------------
+def test_with_sample_config():
+    '''
+    Tests using config made with SampleConfig
+    '''
+    obj = scf.SampleConfig(settings='2024', samples='by_priority')
+    cfg = obj.get_config(categories=['high', 'medium', 'low'])
+
+    for name, section in cfg.sections.items():
+        log.info(f'Processing section: {name}')
+        obj=BkkChecker(name, section)
+        obj.save(dry=True)
+
