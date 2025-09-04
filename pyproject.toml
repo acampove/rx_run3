@@ -4,6 +4,7 @@ description = 'Utilities needed for analysis productions in LHCb'
 version     = '0.2.9'
 readme      = 'README.md'
 dependencies= [
+'apd',
 'PyYAML', 
 'data-manipulation-utilities',
 'omegaconf',
