@@ -48,7 +48,11 @@ def main():
     _set_logs()
 
     obj = scf.SampleConfig(settings='2024', samples='by_priority')
-    cfg = obj.get_config(categories=['high', 'medium', 'low'])
+    cfg = obj.get_config(categories=[
+        'high_priority', 
+        'medium_priority', 
+        'low_priority', 
+        'very_low_priority'])
 
     for name, section in cfg.sections.items():
         log.info(f'Processing section: {name}')
