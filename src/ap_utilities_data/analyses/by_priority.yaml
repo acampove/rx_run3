@@ -2,59 +2,59 @@
 
 missing:
   W31_34:
-    - 12583022
-    - 11574090
-    - 11114000
-    - 12155010
-    - 13144025
-    - 12145072
-    - 15114000
-    - 15154011
+    12583022: Bu_D0enu_Kenu_eq_TC
+    11574090: Bd_Dstplmunu_eq_PHSP_TC
+    11114000: Bd_Kpimumu_eq_DPC
+    12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+    13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+    12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+    15114000: Lb_Lambda1520mumu_eq_phsp
+    15154011: Lb_psi2SpK_ee_eq_phsp_DPC
   W35_37:
-    - 12583022
-    - 11574090
-    - 11584030
-    - 11114000
-    - 12155010
-    - 13144025
-    - 12145072
-    - 15114000
-    - 15154011
-  W37_39:                                                   
-    - 12583022
-    - 11584030
-    - 11574090
-    - 11114000
-    - 12145072
-    - 13144025
-    - 12155010
-    - 15114000
-    - 15154011
-  W40_42_mu:                                                   
-    - 12583022
-    - 11584030
-    - 11574090
-    - 11114000
-    - 12155010
-    - 12145072
-    - 13144025
-    - 15124001
-    - 15114000
-    - 15114001
-    - 15154011
-    - 15144011
+    12583022: Bu_D0enu_Kenu_eq_TC
+    11574090: Bd_Dstplmunu_eq_PHSP_TC
+    11584030: Bd_Dstplenu_eq_PHSP_TC
+    11114000: Bd_Kpimumu_eq_DPC
+    12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+    13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+    12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+    15114000: Lb_Lambda1520mumu_eq_phsp
+    15154011: Lb_psi2SpK_ee_eq_phsp_DPC
+  W37_39:
+    12583022: Bu_D0enu_Kenu_eq_TC
+    11584030: Bd_Dstplenu_eq_PHSP_TC
+    11574090: Bd_Dstplmunu_eq_PHSP_TC
+    11114000: Bd_Kpimumu_eq_DPC
+    12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+    13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+    12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+    15114000: Lb_Lambda1520mumu_eq_phsp
+    15154011: Lb_psi2SpK_ee_eq_phsp_DPC
+  W40_42_mu:
+    12583022: Bu_D0enu_Kenu_eq_TC
+    11584030: Bd_Dstplenu_eq_PHSP_TC
+    11574090: Bd_Dstplmunu_eq_PHSP_TC
+    11114000: Bd_Kpimumu_eq_DPC
+    12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+    12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+    13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+    15124001: Lb_Lambda1520ee_eq_phsp_DPC
+    15114000: Lb_Lambda1520mumu_eq_phsp
+    15114001: Lb_Lambda1520mumu_eq_phsp_DPC
+    15154011: Lb_psi2SpK_ee_eq_phsp_DPC
+    15144011: Lb_psi2SpK_mm_eq_phsp_DPC
   W40_42_md:
-    - 11574090
-    - 12583022
-    - 13144025
-    - 11114000
-    - 12155010
-    - 15114000
-    - 12145072
-    - 15124001
-    - 15114001
-    - 15144011
-    - 15154011
+    11574090: Bd_Dstplmunu_eq_PHSP_TC
+    12583022: Bu_D0enu_Kenu_eq_TC
+    13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+    11114000: Bd_Kpimumu_eq_DPC
+    12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+    15114000: Lb_Lambda1520mumu_eq_phsp
+    12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+    15124001: Lb_Lambda1520ee_eq_phsp_DPC
+    15114001: Lb_Lambda1520mumu_eq_phsp_DPC
+    15144011: Lb_psi2SpK_mm_eq_phsp_DPC
+    15154011: Lb_psi2SpK_ee_eq_phsp_DPC
 
 high:
   12123003  : $B^+ \to K^+ e^+ e^-$
