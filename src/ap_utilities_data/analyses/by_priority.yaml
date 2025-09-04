@@ -1,5 +1,8 @@
 # These are the event types needed by RX in Run3 by priority and with the latex decay mapped
 
+# ----------------
+# These are missing samples for each block
+# ----------------
 missing for W31_34:
   12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
   11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
@@ -54,6 +57,9 @@ missing for W40_42_md:
   15114001: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
   15144011: $\Lambda_b \to \psi(2S)(\to \mu^+ \mu^-)\, p K^-$
   15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
+# ----------------
+# These samples are all the samples, sorted by priority
+# ----------------
 high priority:
   12123003  : $B^+ \to K^+ e^+ e^-$
   11124002  : $B^0 \to K^{*0} e^+ e^-$
@@ -143,6 +149,9 @@ very_low_priority:
   15454101  : $\Lambda_b \to J/\psi(\to e^+ e^-)\, X$
   15454001  : $\Lambda_b \to J/\psi(\to e^+ e^-)\, p K^- X$
   12123444  : $B^+ \to K^{*+}(\to K^+ \pi^0)\, e^+ e^-$ # btosllall sample available already
+# ----------------
+# These are all the samples
+# ----------------
 all:
   - 13144025
   - 11114000
@@ -245,3 +254,6 @@ all:
   - 12103017
   - 12103025
   - 12155110
+  - 11104000
+  - 13104048
+  - 11104041
