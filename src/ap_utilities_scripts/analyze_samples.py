@@ -33,7 +33,7 @@ def _analyze_conf(cfg : DictConfig) -> None:
     '''
     d_new = {}
     for section, d_evt_type in cfg.items():
-        if section in ['all', 'missing']:
+        if section == 'all':
             continue
 
         tmp = { key : val for key, val in d_evt_type.items() if key not in cfg.all }
@@ -72,18 +72,6 @@ def _found_in_any_section(evt_type : int, cfg : DictConfig) -> bool:
 
     return False
 # ----------------------
-def _analyze_missing(cfg : DictConfig) -> None:
-    '''
-    Parameters
-    -------------
-    cfg: Config with samples from YAML file
-    '''
-    data = {}
-    for block, event_types in cfg.missing.items():
-        data[block] = { etype : aput.read_decay_name(event_type=etype) for etype in event_types }
-
-    gut.dump_json(data=data, path='./missing.yaml')
-# ----------------------
 def main():
     '''
     Entry point
@@ -92,7 +80,6 @@ def main():
     cfg  = gut.load_conf(package='ap_utilities_data', fpath=f'analyses/{args.config}.yaml')
 
     _analyze_conf(cfg=cfg)
-    _analyze_missing(cfg=cfg)
 # ----------------------
 if __name__ == '__main__':
     main()
