@@ -29,27 +29,8 @@ analyze_samples -c by_priority
 this should create `summary.yaml`, which will show the samples not found already in
 `by_priority.yaml`. Add the lines to the sections according to the priority.
 
-## How to add a decay 
-
-### Add the decay matching lines 
-This is done in `rd_ap_2024/tupling/config/mcfuntuple.yaml`. Each section in this file looks like:
-
-```yaml
-# This is a nickname for the sample
-Bd_Denu_Kstenu_eq_VisibleInAcceptance_HighVisMass_EGDWC:
-# This is the decay descriptor and how to match particles to branch names
-  Bd   : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
-  D    : '[B0  ==>  ^(  D-  ==>   (  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
-  Em   : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+  pi-  )  ^e-  anti-nu_e  )   e+  nu_e  ]CC'
-  Ep   : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )  ^e+  nu_e  ]CC'
-  Kp   : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==> ^K+  pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
-  Kst  : '[B0  ==>   (  D-  ==>  ^(  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
-  nu   : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )   e+ ^nu_e  ]CC'
-  pim  : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+ ^pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
-```
-
-- To get the sample nickname follow [this](doc/nicknames.md)
-- To get the descriptors one can either write them down in the case of a few samples or run follow [these](doc/descriptors.md) instructions in case of multiple.
+Samples in `all` but not `priority` section     will go in `missing`   
+Samples in `priority` section, but not in `all` will go in `new`
 
 ### Add the list of samples 
 
@@ -85,13 +66,15 @@ sections:
 and a set of samples specified in `ap_utilities_data/analysis/by_priority.yaml` like:
 
 ```yaml
-high:
+high_priority:
   12123003  : $B_u \to K^+ e^+ e^-$
   11114002  : $B_d \to K^{*0} \mu^+ \mu^-$
-medium:
+medium_priority:
   12153020  : $B_u \to J/\psi(e^+ e^-) \pi^+$
   12143010  : $B_u \to J/\psi(\mu^+ \mu^-) \pi^+$
 ```
+
+### Check existing samples 
 
 run:
 
@@ -109,6 +92,29 @@ Once this has been done, the lines needed for the `info.yaml` can be obtained by
 ```bash
 cat info_*.yaml > samples.yaml
 ```
+
+## How to add a decay 
+
+### Add the decay matching lines 
+This is done in `rd_ap_2024/tupling/config/mcfuntuple.yaml`. Each section in this file looks like:
+
+```yaml
+# This is a nickname for the sample
+Bd_Denu_Kstenu_eq_VisibleInAcceptance_HighVisMass_EGDWC:
+# This is the decay descriptor and how to match particles to branch names
+  Bd   : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
+  D    : '[B0  ==>  ^(  D-  ==>   (  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
+  Em   : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+  pi-  )  ^e-  anti-nu_e  )   e+  nu_e  ]CC'
+  Ep   : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )  ^e+  nu_e  ]CC'
+  Kp   : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==> ^K+  pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
+  Kst  : '[B0  ==>   (  D-  ==>  ^(  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
+  nu   : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+  pi-  )   e-  anti-nu_e  )   e+ ^nu_e  ]CC'
+  pim  : '[B0  ==>   (  D-  ==>   (  K*(892)0  ==>  K+ ^pi-  )   e-  anti-nu_e  )   e+  nu_e  ]CC'
+```
+
+- To get the sample nickname follow [this](doc/nicknames.md)
+- To get the descriptors one can either write them down in the case of a few samples or run follow [these](doc/descriptors.md) instructions in case of multiple.
+
 
 ### Updating `tupling/config/samples.yaml`
 
