@@ -24,6 +24,7 @@ update_decinfo     ='ap_utilities_scripts.update_decinfo:main'
 update_formatting  ='ap_utilities_scripts.update_formatting:main'
 validate_ap_tuples ='ap_utilities_scripts.validate_ap_tuples:main'
 analyze_samples    ='ap_utilities_scripts.analyze_samples:main'
+make_samples_table ='ap_utilities_scripts.make_samples_table:main'
 
 [tool.setuptools.package-data]
 'ap_utilities_data' = ['*.json', '*.toml', '*.yaml']
