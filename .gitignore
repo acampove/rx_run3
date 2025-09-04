@@ -185,3 +185,4 @@ info.yaml
 validation_*.yaml
 decays.yaml
 summary.yaml
+table.tex
