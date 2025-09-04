@@ -4,59 +4,144 @@
 # These are missing samples for each block
 # ----------------
 missing for W31_34:
-  12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
-  11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
-  11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
-  12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
-  13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
-  12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
-  15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-  15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
+  12583022: Bu_D0enu_Kenu_eq_TC
+  11104000: Bd_piplpimnKst_eq_sqDalitz_DPC
+  11114000: Bd_Kpimumu_eq_DPC
+  11574090: Bd_Dstplmunu_eq_PHSP_TC
+  13104048: Bs_Kst0rho0_Kmnpiplpimnpipl_eq_DPC
+  11104041: Bd_Kst0rho0_Kplpimnpiplpimn_eq_DPC
+  12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+  12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+  13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+  15114000: Lb_Lambda1520mumu_eq_phsp
+  15154011: Lb_psi2SpK_ee_eq_phsp_DPC
+  12155030: Bu_psi2SK_Jpsipipi_ee_eq_DPC
+  12103024: Bu_Kmnpiplpipl_eq_phsp_DPC
+  12155110: Bu_psi2SKst_ee_eq_DPC
+  13144020: Bs_psi2Sphi_mm_eq_CPV_DPC
+  13154011: Bs_psi2Sphi_ee_eq_CPV_DPC
+  12115020: Bu_Kpipimumu_eq_DPC_LSFLAT
+  12125000: Bu_Kpipiee_eq_DPC_LSFLAT
+  12215002: Bu_K1mumu_phsp_eq_DPC
+  12155100: Bu_JpsiKst_ee_eq_DPC
+  11453012: Bd_psi2SX_ee_eq_JpsiInAcc
+  15454001: Lb_JpsipKX_ee_eq_JpsiInAcc
+  11874092: Bd_D0Xmunu_D0_eq_cocktail_pipi_D0muInAcc
+  12123444: Bu_Kstee_Kpi0_eq_DPC
 missing for W35_37:
-  12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
-  11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
-  11584030: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, e^+ \nu_e$
-  11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
-  12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
-  13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
-  12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
-  15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-  15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
+  12583022: Bu_D0enu_Kenu_eq_TC
+  11584030: Bd_Dstplenu_eq_PHSP_TC
+  11574090: Bd_Dstplmunu_eq_PHSP_TC
+  11104041: Bd_Kst0rho0_Kplpimnpiplpimn_eq_DPC
+  11104000: Bd_piplpimnKst_eq_sqDalitz_DPC
+  11114000: Bd_Kpimumu_eq_DPC
+  13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+  12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+  12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+  13104048: Bs_Kst0rho0_Kmnpiplpimnpipl_eq_DPC
+  15114000: Lb_Lambda1520mumu_eq_phsp
+  15154011: Lb_psi2SpK_ee_eq_phsp_DPC
+  13154011: Bs_psi2Sphi_ee_eq_CPV_DPC
+  12115020: Bu_Kpipimumu_eq_DPC_LSFLAT
+  12215002: Bu_K1mumu_phsp_eq_DPC
+  12155030: Bu_psi2SK_Jpsipipi_ee_eq_DPC
+  13144020: Bs_psi2Sphi_mm_eq_CPV_DPC
+  12103024: Bu_Kmnpiplpipl_eq_phsp_DPC
+  12125000: Bu_Kpipiee_eq_DPC_LSFLAT
+  11584041: Bd_D0Xenu_D0_eq_cocktail
+  12155110: Bu_psi2SKst_ee_eq_DPC
+  12155100: Bu_JpsiKst_ee_eq_DPC
+  15454001: Lb_JpsipKX_ee_eq_JpsiInAcc
+  11453012: Bd_psi2SX_ee_eq_JpsiInAcc
+  11874092: Bd_D0Xmunu_D0_eq_cocktail_pipi_D0muInAcc
+  12123444: Bu_Kstee_Kpi0_eq_DPC
 missing for W37_39:
-  12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
-  11584030: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, e^+ \nu_e$
-  11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
-  11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
-  12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
-  13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
-  12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
-  15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-  15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
+  12583022: Bu_D0enu_Kenu_eq_TC
+  11584030: Bd_Dstplenu_eq_PHSP_TC
+  11574090: Bd_Dstplmunu_eq_PHSP_TC
+  11114000: Bd_Kpimumu_eq_DPC
+  13104048: Bs_Kst0rho0_Kmnpiplpimnpipl_eq_DPC
+  11104000: Bd_piplpimnKst_eq_sqDalitz_DPC
+  11104041: Bd_Kst0rho0_Kplpimnpiplpimn_eq_DPC
+  12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+  13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+  12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+  15114000: Lb_Lambda1520mumu_eq_phsp
+  15154011: Lb_psi2SpK_ee_eq_phsp_DPC
+  12103024: Bu_Kmnpiplpipl_eq_phsp_DPC
+  12155110: Bu_psi2SKst_ee_eq_DPC
+  12155030: Bu_psi2SK_Jpsipipi_ee_eq_DPC
+  13154011: Bs_psi2Sphi_ee_eq_CPV_DPC
+  12125000: Bu_Kpipiee_eq_DPC_LSFLAT
+  12215002: Bu_K1mumu_phsp_eq_DPC
+  13144020: Bs_psi2Sphi_mm_eq_CPV_DPC
+  12115020: Bu_Kpipimumu_eq_DPC_LSFLAT
+  12155100: Bu_JpsiKst_ee_eq_DPC
+  11453012: Bd_psi2SX_ee_eq_JpsiInAcc
+  12123444: Bu_Kstee_Kpi0_eq_DPC
+  11584041: Bd_D0Xenu_D0_eq_cocktail
+  11874092: Bd_D0Xmunu_D0_eq_cocktail_pipi_D0muInAcc
+  15454001: Lb_JpsipKX_ee_eq_JpsiInAcc
 missing for W40_42_mu:
-  12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
-  11584030: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, e^+ \nu_e$
-  11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
-  11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
-  12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
-  12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
-  13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
-  15124001: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, e^+ e^-$
-  15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-  15114001: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-  15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
-  15144011: $\Lambda_b \to \psi(2S)(\to \mu^+ \mu^-)\, p K^-$
+  12583022: Bu_D0enu_Kenu_eq_TC
+  11584030: Bd_Dstplenu_eq_PHSP_TC
+  11574090: Bd_Dstplmunu_eq_PHSP_TC
+  11114000: Bd_Kpimumu_eq_DPC
+  13104048: Bs_Kst0rho0_Kmnpiplpimnpipl_eq_DPC
+  11104041: Bd_Kst0rho0_Kplpimnpiplpimn_eq_DPC
+  11104000: Bd_piplpimnKst_eq_sqDalitz_DPC
+  12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+  13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+  12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+  15124001: Lb_Lambda1520ee_eq_phsp_DPC
+  15114000: Lb_Lambda1520mumu_eq_phsp
+  15114001: Lb_Lambda1520mumu_eq_phsp_DPC
+  15154011: Lb_psi2SpK_ee_eq_phsp_DPC
+  12155030: Bu_psi2SK_Jpsipipi_ee_eq_DPC
+  15144011: Lb_psi2SpK_mm_eq_phsp_DPC
+  13114006: Bs_phimumu_eq_Ball_DPC
+  12125000: Bu_Kpipiee_eq_DPC_LSFLAT
+  13144020: Bs_psi2Sphi_mm_eq_CPV_DPC
+  12215002: Bu_K1mumu_phsp_eq_DPC
+  13154011: Bs_psi2Sphi_ee_eq_CPV_DPC
+  12103024: Bu_Kmnpiplpipl_eq_phsp_DPC
+  12155110: Bu_psi2SKst_ee_eq_DPC
+  12115020: Bu_Kpipimumu_eq_DPC_LSFLAT
+  12155100: Bu_JpsiKst_ee_eq_DPC
+  11584041: Bd_D0Xenu_D0_eq_cocktail
+  11874092: Bd_D0Xmunu_D0_eq_cocktail_pipi_D0muInAcc
+  12123444: Bu_Kstee_Kpi0_eq_DPC
+  11453012: Bd_psi2SX_ee_eq_JpsiInAcc
+  15454001: Lb_JpsipKX_ee_eq_JpsiInAcc
 missing for W40_42_md:
-  11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
-  12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
-  13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
-  11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
-  12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
-  15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-  12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
-  15124001: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, e^+ e^-$
-  15114001: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-  15144011: $\Lambda_b \to \psi(2S)(\to \mu^+ \mu^-)\, p K^-$
-  15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
+  12583022: Bu_D0enu_Kenu_eq_TC
+  11574090: Bd_Dstplmunu_eq_PHSP_TC
+  11114000: Bd_Kpimumu_eq_DPC
+  11104041: Bd_Kst0rho0_Kplpimnpiplpimn_eq_DPC
+  11104000: Bd_piplpimnKst_eq_sqDalitz_DPC
+  13104048: Bs_Kst0rho0_Kmnpiplpimnpipl_eq_DPC
+  12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+  12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+  13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+  15114001: Lb_Lambda1520mumu_eq_phsp_DPC
+  15124001: Lb_Lambda1520ee_eq_phsp_DPC
+  15114000: Lb_Lambda1520mumu_eq_phsp
+  15154011: Lb_psi2SpK_ee_eq_phsp_DPC
+  15144011: Lb_psi2SpK_mm_eq_phsp_DPC
+  13154011: Bs_psi2Sphi_ee_eq_CPV_DPC
+  13114006: Bs_phimumu_eq_Ball_DPC
+  12155030: Bu_psi2SK_Jpsipipi_ee_eq_DPC
+  13144020: Bs_psi2Sphi_mm_eq_CPV_DPC
+  12125000: Bu_Kpipiee_eq_DPC_LSFLAT
+  12115020: Bu_Kpipimumu_eq_DPC_LSFLAT
+  12155110: Bu_psi2SKst_ee_eq_DPC
+  12103024: Bu_Kmnpiplpipl_eq_phsp_DPC
+  12215002: Bu_K1mumu_phsp_eq_DPC
+  12155100: Bu_JpsiKst_ee_eq_DPC
+  11874092: Bd_D0Xmunu_D0_eq_cocktail_pipi_D0muInAcc
+  11453012: Bd_psi2SX_ee_eq_JpsiInAcc
+  15454001: Lb_JpsipKX_ee_eq_JpsiInAcc
+  12123444: Bu_Kstee_Kpi0_eq_DPC
 # ----------------
 # These samples are all the samples, sorted by priority
 # ----------------
