@@ -1,66 +1,60 @@
 # These are the event types needed by RX in Run3 by priority and with the latex decay mapped
 
-missing:
-  W31_34:
-    12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
-    11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
-    11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
-    12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
-    13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
-    12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
-    15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-    15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
-
-  W35_37:
-    12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
-    11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
-    11584030: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, e^+ \nu_e$
-    11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
-    12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
-    13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
-    12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
-    15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-    15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
-
-  W37_39:
-    12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
-    11584030: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, e^+ \nu_e$
-    11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
-    11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
-    12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
-    13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
-    12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
-    15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-    15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
-
-  W40_42_mu:
-    12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
-    11584030: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, e^+ \nu_e$
-    11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
-    11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
-    12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
-    12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
-    13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
-    15124001: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, e^+ e^-$
-    15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-    15114001: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-    15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
-    15144011: $\Lambda_b \to \psi(2S)(\to \mu^+ \mu^-)\, p K^-$
-
-  W40_42_md:
-    11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
-    12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
-    13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
-    11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
-    12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
-    15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-    12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
-    15124001: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, e^+ e^-$
-    15114001: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
-    15144011: $\Lambda_b \to \psi(2S)(\to \mu^+ \mu^-)\, p K^-$
-    15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
-
-high:
+missing for W31_34:
+  12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
+  11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
+  11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
+  12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
+  13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
+  12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
+  15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
+  15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
+missing for W35_37:
+  12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
+  11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
+  11584030: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, e^+ \nu_e$
+  11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
+  12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
+  13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
+  12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
+  15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
+  15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
+missing for W37_39:
+  12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
+  11584030: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, e^+ \nu_e$
+  11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
+  11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
+  12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
+  13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
+  12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
+  15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
+  15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
+missing for W40_42_mu:
+  12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
+  11584030: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, e^+ \nu_e$
+  11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
+  11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
+  12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
+  12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
+  13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
+  15124001: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, e^+ e^-$
+  15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
+  15114001: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
+  15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
+  15144011: $\Lambda_b \to \psi(2S)(\to \mu^+ \mu^-)\, p K^-$
+missing for W40_42_md:
+  11574090: $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
+  12583022: $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
+  13144025: $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
+  11114000: $B^0 \to K^+ \pi^- \mu^+ \mu^-$
+  12155010: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
+  15114000: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
+  12145072: $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
+  15124001: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, e^+ e^-$
+  15114001: $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
+  15144011: $\Lambda_b \to \psi(2S)(\to \mu^+ \mu^-)\, p K^-$
+  15154011: $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
+high priority:
   12123003  : $B^+ \to K^+ e^+ e^-$
   11124002  : $B^0 \to K^{*0} e^+ e^-$
   12113002  : $B^+ \to K^+ \mu^+ \mu^-$
@@ -75,7 +69,7 @@ high:
   12153012  : $B^+ \to \psi(2S)(\to e^+ e^-) K^+$
   11144011  : $B^0 \to \psi(2S)(\to \mu^+ \mu^-) K^{*0}$
   12143020  : $B^+ \to \psi(2S)(\to \mu^+ \mu^-) K^+$
-medium:
+medium priority:
   12153020  : $B^+ \to J/\psi(\to e^+ e^-) \pi^+$
   12143010  : $B^+ \to J/\psi(\to \mu^+ \mu^-) \pi^+$
   # -----------
@@ -114,7 +108,7 @@ medium:
   # --------
   12155010  : $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
   12145072  : $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
-low:
+low priority:
   12425000  : $B^+ \to K_1^+(\to K^+ \pi^+ \pi^-)\, e^+ e^-$
   12425011  : $B^+ \to K_2^+(\to K^+ \pi^+ \pi^-)\, e^+ e^-$
   15124001  : $\Lambda_b \to \Lambda(1520)(\to p K^-)\, e^+ e^-$
@@ -124,7 +118,7 @@ low:
   15114011  : $\Lambda_b \to p K^- \mu^+ \mu^-$
   15154011  : $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
   15144011  : $\Lambda_b \to \psi(2S)(\to \mu^+ \mu^-)\, p K^-$
-run12_rx:
+dropped:
   12155100  : $B^+ \to J/\psi(\to e^+ e^-)\, K^{*+}(\to K^+ \pi^0)$
   12155110  : $B^+ \to \psi(2S)(\to e^+ e^-)\, K^{*+}(\to K^+ \pi^0)$
   12103030  : $B^+ \to K^+ \pi^+ \pi^- K^-$
