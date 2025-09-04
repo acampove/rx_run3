@@ -26,11 +26,15 @@ In order to add new samples to the analysis do:
 analyze_samples -c by_priority
 ```
 
-this should create `summary.yaml`, which will show the samples not found already in
-`by_priority.yaml`. Add the lines to the sections according to the priority.
+this should create: 
 
+**summary.yaml**: which will show the samples not found already in
+`by_priority.yaml`. Add the lines to the sections according to the priority.
 Samples in `all` but not `priority` section     will go in `missing`   
-Samples in `priority` section, but not in `all` will go in `new`
+Samples in `priority` section, but not in `all` will go in `new`.
+
+**missing.yaml**: If the missing sections were filled with lists of event types, `missing.yaml`
+will contain the mappings with the decay string.
 
 ### Add the list of samples 
 
