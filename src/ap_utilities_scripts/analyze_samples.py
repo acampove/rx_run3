@@ -11,7 +11,7 @@ import argparse
 
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
-from omegaconf             import DictConfig
+from omegaconf             import DictConfig, ListConfig
 from ap_utilities.decays   import utilities as aput
 
 log=LogStore.add_logger('ap_utilities:analyze_samples')
@@ -32,12 +32,22 @@ def _analyze_conf(cfg : DictConfig) -> None:
     cfg: Object storing event types, etc
     '''
     d_new = {}
+    d_mis = {}
     for section, d_evt_type in cfg.items():
+        if not isinstance(section, str):
+            raise TypeError('Section name not a string')
+
         if section == 'all':
             continue
 
-        tmp = { key : val for key, val in d_evt_type.items() if key not in cfg.all }
-        d_new.update(tmp)
+        if section.startswith('missing') and isinstance(d_evt_type, ListConfig):
+            d_mis[section] = { etype : aput.read_decay_name(event_type=etype) for etype in d_evt_type }
+
+        if isinstance(d_evt_type, dict):
+            tmp = { key : val for key, val in d_evt_type.items() if key not in cfg.all }
+            d_new.update(tmp)
+
+    gut.dump_json(data=d_mis, path='./missing.yaml')
 
     d_missing = {}
     for evt_type in cfg.all:
