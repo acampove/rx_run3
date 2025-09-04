@@ -37,6 +37,7 @@ class SampleConfig:
         all_event_types = []
         for name, event_types in self._cfg_sam.items():
             if name not in categories:
+                log.debug(f'Skipping {name}')
                 continue
 
             all_event_types += list(event_types)
