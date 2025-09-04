@@ -179,7 +179,7 @@ class BkkChecker:
             sim_vers        = f'"{cfg.sim_vers}"'
             text           += f'({nick_name:<60}, "{evt_type}" , "{cfg.block_id}", "{cfg.polarity}"  , "{cfg.ctags}", "{cfg.dtags}", "{cfg.nu_path}", "{nu_name}", {sim_vers:<20}, "{cfg.generator}" ),\n'
 
-        output_path = f'{self._out_dir}/info_{self._name}.yaml'
+        output_path = f'{self._out_dir}/info.yaml'
         log.info(f'Saving to: {output_path}')
         with open(output_path, 'w', encoding='utf-8') as ofile:
             ofile.write(text)
@@ -190,7 +190,7 @@ class BkkChecker:
             nick_name = aput.read_decay_name(event_type)
             d_data['samples'][nick_name] = ['any']
 
-        output_path = f'{self._out_dir}/validation_{self._name}.yaml'
+        output_path = f'{self._out_dir}/validation.yaml'
         log.info(f'Saving to: {output_path}')
         with open(output_path, 'w', encoding='utf-8') as ofile:
             yaml.safe_dump(d_data, ofile, width=200)
