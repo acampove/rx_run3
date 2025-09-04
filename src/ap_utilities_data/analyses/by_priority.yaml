@@ -60,7 +60,7 @@ missing for W40_42_md:
 # ----------------
 # These samples are all the samples, sorted by priority
 # ----------------
-high priority:
+high_priority:
   12123003  : $B^+ \to K^+ e^+ e^-$
   11124002  : $B^0 \to K^{*0} e^+ e^-$
   12113002  : $B^+ \to K^+ \mu^+ \mu^-$
@@ -75,7 +75,7 @@ high priority:
   12153012  : $B^+ \to \psi(2S)(\to e^+ e^-) K^+$
   11144011  : $B^0 \to \psi(2S)(\to \mu^+ \mu^-) K^{*0}$
   12143020  : $B^+ \to \psi(2S)(\to \mu^+ \mu^-) K^+$
-medium priority:
+medium_priority:
   12153020  : $B^+ \to J/\psi(\to e^+ e^-) \pi^+$
   12143010  : $B^+ \to J/\psi(\to \mu^+ \mu^-) \pi^+$
   # -----------
@@ -118,7 +118,7 @@ medium priority:
   # --------
   12155010  : $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
   12145072  : $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
-low priority:
+low_priority:
   12103030  : $B^+ \to K^+ \pi^+ K^-$
   12425000  : $B^+ \to K_1^+(\to K^+ \pi^+ \pi^-)\, e^+ e^-$
   12425011  : $B^+ \to K_2^+(\to K^+ \pi^+ \pi^-)\, e^+ e^-$
