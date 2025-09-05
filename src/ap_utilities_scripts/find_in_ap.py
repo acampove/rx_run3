@@ -133,11 +133,14 @@ def main():
 
     total     = len(t_info)
     missing   = len(l_missing)
+    out_file  = './info.yaml'
 
     log.info(f'Missing: {missing}/{total}')
-    with open('info.yaml', 'w') as ofile:
+    with open(out_file, 'w') as ofile:
         for line in l_missing:
             ofile.write(f'{line}\n')
+
+    log.info(f'Saving lines for missing ntuples to: {out_file}')
 # ----------------------
 if __name__ == '__main__':
     main()
