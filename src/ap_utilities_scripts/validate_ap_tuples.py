@@ -5,6 +5,7 @@ import os
 import glob
 import shutil
 import argparse
+from importlib.resources import files
 from typing              import Union
 from typing              import ClassVar
 from dataclasses         import dataclass
@@ -26,7 +27,7 @@ class Data:
     Class holding shared attributes
     '''
     pipeline_id : int
-    config_path : str
+    config_name : str
     nthread     : int
     cfg         : dict
 
@@ -47,22 +48,25 @@ def _check_path(path : str) -> None:
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Makes a list of PFNs for a specific set of eventIDs in case we need to reprocess them')
     parser.add_argument('-p','--pipeline', type=int, help='Pipeline ID', required=True)
-    parser.add_argument('-f','--cfg_path', type=str, help='Path to config file with the description of how to validate', required=True)
+    parser.add_argument('-c','--config'  , type=str, help='Name of config file specifying what to validate', required=True)
     parser.add_argument('-l','--log_lvl' , type=int, help='Logging level', default=20, choices=[10,20,30])
     parser.add_argument('-t','--nthread' , type=int, help='Number of threads', default=1)
     args = parser.parse_args()
 
     Data.pipeline_id = args.pipeline
-    Data.config_path = args.cfg_path
+    Data.config_name = args.config
     Data.nthread     = args.nthread
 
     LogStore.set_level('ap_utilities_scripts:validate_ap_tuples', args.log_lvl)
 # -------------------------------
 def _load_config() -> None:
-    if not os.path.isfile(Data.config_path):
-        raise FileNotFoundError(f'Could not find: {Data.config_path}')
+    config_path = files('ap_utilities_data').joinpath(f'validation/{Data.config_name}.yaml')
+    config_path = str(config_path)
 
-    with open(Data.config_path, encoding='utf-8') as ifile:
+    if not os.path.isfile(config_path):
+        raise FileNotFoundError(f'Could not find: {config_path}')
+
+    with open(config_path, encoding='utf-8') as ifile:
         Data.cfg = yaml.safe_load(ifile)
 # -------------------------------
 def _get_out_paths() -> list[str]:
