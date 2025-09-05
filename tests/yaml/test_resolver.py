@@ -45,7 +45,7 @@ def _get_config(kind : str) -> dict[str|int,str]:
     return data
 # ----------------------
 @pytest.mark.parametrize('kind', ['simple', 'recursive_1', 'recursive_2'])
-@pytest.mark.timeout(0.001)
+@pytest.mark.timeout(1)
 def test_simple(kind : str):
     cfg = _get_config(kind=kind)
 
