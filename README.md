@@ -131,7 +131,7 @@ Bd_Denu_Kstenu_eq_VisibleInAcceptance_HighVisMass_EGDWC:
 - To get the descriptors one can either write them down in the case of a few samples or run follow [these](doc/descriptors.md) instructions in case of multiple.
 
 
-### Updating `tupling/config/samples.yaml`
+### Updating `tupling/config/samples_turbo_lines_mapping.yaml`
 
 This file lists the samples together with the _analyses_ like in:
 

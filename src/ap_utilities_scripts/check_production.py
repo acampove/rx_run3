@@ -120,7 +120,7 @@ def _load_samples() -> None:
 # -------------------------
 def _nickname_from_evt_type(evt_type : int) -> str:
     etype    = str(evt_type)
-    nickname = aput.read_decay_name(event_type=etype, style= 'safe_1')
+    nickname = aput.read_decay_name(event_type=etype)
 
     return nickname
 # -------------------------
