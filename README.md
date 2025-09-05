@@ -224,7 +224,7 @@ This is done in an environment with access to EOS. To gain EOS access from outsi
 # This project is in pip
 pip install ap_utilities
 
-validate_ap_tuples -p PIPELINE -c 05_09_2024 -t 5
+validate_ap_tuples -p 18455 -c 05_09_2024 -t 4
 ```
 
 Where:   

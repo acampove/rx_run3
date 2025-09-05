@@ -29,7 +29,7 @@ make_samples_table ='ap_utilities_scripts.make_samples_table:main'
 find_in_ap         ='ap_utilities_scripts.find_in_ap:main'
 
 [tool.setuptools.package-data]
-'ap_utilities_data' = ['*.json', '*.toml', '*.yaml']
+'ap_utilities_data' = ['*/**.json', '*/**.toml', '*/**.yaml']
 
 [tool.setuptools]
 script-files=[
