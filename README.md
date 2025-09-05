@@ -93,9 +93,20 @@ to check if the samples exist using 6 threads (default is 1). The script will pr
 
 Once this has been done, the lines needed for the `info.yaml` can be obtained by concatenating the partial outputs with:
 
+### Pick only samples that do not exist as ntuples
+
+Currently there are 241 AP jobs associated to the MC. Only 35 are missing, in order to find out
+what ntupling jobs need to be send do:
+
 ```bash
-cat info_*.yaml > samples.yaml
+find_in_ap
 ```
+
+which will:
+
+- Read the `info.yaml` files created above
+- Check, using `apd`, what samples are missing
+- Create a `info.yaml` in the current directory, only with those samples.
 
 ## How to add a decay 
 
