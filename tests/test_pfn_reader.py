@@ -1,11 +1,7 @@
 '''
 Script with tests for PFNReader class
 '''
-from importlib.resources import files
-
-import yaml
 import pytest
-
 import dmu.generic.utilities as gut
 
 from post_ap.pfn_reader import PFNReader
@@ -17,22 +13,22 @@ class Data:
     '''
     gut.TIMER_ON=True
     l_arg_rd_ap_2024 : list[tuple[str,str,int]] = [
-            ('rd_ap_2024', 'test_w31_34_v1r2266_ee', 1),
-            ('rd_ap_2024', 'test_w35_37_v1r2266_ee', 1),
-            ('rd_ap_2024', 'test_w37_39_v1r2266_ee', 1),
-            ('rd_ap_2024', 'test_w40_42_v1r2266_ee', 1),
-            ('rd_ap_2024', 'test_w31_34_v1r2266_mm', 1),
-            ('rd_ap_2024', 'test_w35_37_v1r2266_mm', 1),
-            ('rd_ap_2024', 'test_w37_39_v1r2266_mm', 1),
-            ('rd_ap_2024', 'test_w40_42_v1r2266_mm', 1),
-            ('rd_ap_2024', 'test_w31_34_v1r2437_ee', 1),
-            ('rd_ap_2024', 'test_w35_37_v1r2437_ee', 1),
-            ('rd_ap_2024', 'test_w37_39_v1r2437_ee', 1),
-            ('rd_ap_2024', 'test_w40_42_v1r2437_ee', 1),
-            ('rd_ap_2024', 'test_w31_34_v1r2437_mm', 1),
-            ('rd_ap_2024', 'test_w35_37_v1r2437_mm', 1),
-            ('rd_ap_2024', 'test_w37_39_v1r2437_mm', 1),
-            ('rd_ap_2024', 'test_w40_42_v1r2437_mm', 1)]
+        ('rd_ap_2024', 'test_w31_34_v1r2266_ee', 1),
+        ('rd_ap_2024', 'test_w35_37_v1r2266_ee', 1),
+        ('rd_ap_2024', 'test_w37_39_v1r2266_ee', 1),
+        ('rd_ap_2024', 'test_w40_42_v1r2266_ee', 1),
+        ('rd_ap_2024', 'test_w31_34_v1r2266_mm', 1),
+        ('rd_ap_2024', 'test_w35_37_v1r2266_mm', 1),
+        ('rd_ap_2024', 'test_w37_39_v1r2266_mm', 1),
+        ('rd_ap_2024', 'test_w40_42_v1r2266_mm', 1),
+        ('rd_ap_2024', 'test_w31_34_v1r2437_ee', 1),
+        ('rd_ap_2024', 'test_w35_37_v1r2437_ee', 1),
+        ('rd_ap_2024', 'test_w37_39_v1r2437_ee', 1),
+        ('rd_ap_2024', 'test_w40_42_v1r2437_ee', 1),
+        ('rd_ap_2024', 'test_w31_34_v1r2437_mm', 1),
+        ('rd_ap_2024', 'test_w35_37_v1r2437_mm', 1),
+        ('rd_ap_2024', 'test_w37_39_v1r2437_mm', 1),
+        ('rd_ap_2024', 'test_w40_42_v1r2437_mm', 1)]
 
     l_arg_nopid      : list[tuple[str,str,int]] = [
         ('btoxll_mva_2024_nopid', 'w31_34_v1r3399', 1),
