@@ -135,6 +135,11 @@ def _flatten_list(lst : list) -> list:
     return l_val
 # -------------------------
 def _get_analysis_nicknames() -> set[str]:
+    '''
+    Returns
+    ---------------
+    set of strings representing nicknames for event types in `analysis.yaml`
+    '''
     evt_path = files('ap_utilities_data').joinpath('analyses/analyses.yaml')
     evt_path = str(evt_path)
 
