@@ -1,0 +1,34 @@
+'''
+Tests for YamlResolver class
+'''
+
+from dmu.configuration.yaml_resolver import YamlResolver
+
+from dmu.logging.log_store import LogStore
+
+log=LogStore.add_logger('dmu:yaml_resolver')
+
+# ----------------------
+def _get_config() -> dict[str,str]:
+    '''
+    Returns
+    -------------
+    Dictionary with configuration
+    '''
+    data      = {}
+    data['d'] = 'nested'
+    data['a'] = 'something {d} '
+    data['b'] = 'here' 
+    data['c'] = '{a} {b}' 
+
+    return data
+# ----------------------
+def test_simple():
+    cfg = _get_config()
+
+    yrs = YamlResolver(cfg=cfg)
+    cfg = yrs.resolve()
+
+    assert cfg['c'] == 'something nested here'
+
+
