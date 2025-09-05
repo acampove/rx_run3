@@ -4,6 +4,11 @@ This module contains the YamlResolver class
 
 from typing import Mapping
 
+from dmu.logging.log_store import LogStore
+
+# TODO: Improve detection of cycles
+log=LogStore.add_logger('dmu:yaml:resolver')
+# ----------------------
 class Resolver:
     '''
     This class will:
@@ -21,7 +26,8 @@ class Resolver:
         -------------
         cfg: Dictionary like object with potentially unresolved, but resolvable fields
         '''
-        self._cfg = { str(key) : value for key, value in cfg.items()}
+        self._cfg            = { str(key) : value for key, value in cfg.items()}
+        self._max_iterations = 20
     # ----------------------
     def __call__(self, key : str|int) -> str:
         '''
@@ -39,18 +45,19 @@ class Resolver:
             raise KeyError(f'Cannot find {key}')
 
         expr = self._cfg[key]
-        seen = set()
-        prev = None
-        while prev != expr:
-            if expr in seen:
-                raise ValueError(f'Circular reference detected while resolving: {expr}')
+        if f'{{{key}}}' in expr:
+            raise ValueError(f'Circular reference at first level for key: {key}')
 
-            seen.add(expr)
+        prev    = None
+        counter = 0
+        while prev != expr and counter < self._max_iterations:
+            log.debug(f'Resolving: {expr}')
 
-            prev = expr
-            try:
-                expr = expr.format(**self._cfg)
-            except KeyError:
-                break
+            prev     = expr
+            counter += 1
+            expr     = expr.format(**self._cfg)
+
+        if counter == self._max_iterations:
+            raise ValueError(f'Maximum number of itearations, {self._max_iterations} reached, circular reference is likely')
 
         return expr

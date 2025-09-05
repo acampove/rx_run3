@@ -242,6 +242,7 @@ The context manager above will only allow `THREE` into the error stream.
 
 ## YAML
 
+### BlockStyleDumper
 When dumping data to yaml files do it like:
 
 ```python
@@ -251,6 +252,32 @@ yaml.dump(data, Dumper=gut.BlockStyleDumper)
 ```
 
 to make sure the indentation is correct.
+
+### Resolver
+
+When writting configurations the following layout might be needed:
+
+```yaml
+a: some value
+b: other value
+c: last value 
+
+composite_1: '{a} or  {b}'
+composite_2: '{a} and {b}'
+composite_3: '{composite_1} and {c}'
+```
+
+i.e. for brevity keys could be referenced in latter definitions.
+This structure needs to be resolved and this can be done with:
+
+```python
+from dmu.yaml.resolver     import Resolver
+
+yrs = Resolver(cfg=cfg)
+val = yrs('composite_3')
+```
+
+where `cfg` is the dictionary respresenting the configuration
 
 ## Hashing
 
