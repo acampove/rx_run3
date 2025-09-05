@@ -27,8 +27,7 @@ def test_simple():
     cfg = _get_config()
 
     yrs = YamlResolver(cfg=cfg)
-    cfg = yrs.resolve()
 
-    assert cfg['c'] == 'something nested here'
+    assert yrs('c') == 'something nested here'
 
 
