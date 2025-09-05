@@ -34,9 +34,9 @@ def _info_from_line(line : str) -> tuple[str, str, str]:
     Block, e.g w32_32
     Line meant to be added to info.yaml
     '''
-    line    = line.replace('(', '').replace(')', '')
-    line    = line.replace('"', '').replace('"', '')
-    l_field = line.split(',')
+    reform  = line.replace('(', '').replace(')', '')
+    reform  = reform.replace('"', '').replace('"', '')
+    l_field = reform.split(',')
     evt_type= l_field[1].replace(' ', '')
     block   = l_field[2].replace('2024.', '').replace('.', '_').lower().replace(' ', '')
 
