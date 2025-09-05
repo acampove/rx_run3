@@ -59,7 +59,7 @@ def _get_info() -> list[tuple[str, str, str]]:
     l_line  = []
     log.info('Reading files')
     for path in l_path:
-        log.debug(f'    {path}')
+        log.info(f'    {path}')
         with open(path) as ifile:
             l_line += ifile.read().splitlines()
 
@@ -89,7 +89,7 @@ def _found_type(
 
     for name in df['name']:
         if block not in name:
-            log.verbose(f'Block {block}({type(block)}) not in {name}({type(name)})')
+            log.verbose(f'Block {block} not in {name}')
             continue
 
         if not name.endswith('_tuple'):
@@ -100,13 +100,12 @@ def _found_type(
             log.verbose(f'{name} contains _spr,')
             continue
 
+        log.debug(f'Found {evt_type}/{block} in {name}')
         found = True
         break
 
     if not found:
         log.debug(f'Cannot find: {evt_type}/{block}')
-    else:
-        log.debug(f'Found: {evt_type}/{block}')
 
     return found 
 # ----------------------
