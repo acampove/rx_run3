@@ -4,8 +4,8 @@ Module storing PFNReader class
 
 import apd
 
-from apd import SampleCollection
-
+from apd       import SampleCollection
+from omegaconf import DictConfig, OmegaConf
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('post_ap:pfn_reader')
@@ -15,10 +15,13 @@ class PFNReader:
     Thin wrapper around apd used to get list of PFNs
     '''
     #------------------------------------
-    def __init__(self, cfg : dict):
+    def __init__(self, cfg : dict|DictConfig):
         '''
         cfg: Dictionary with configuration needed to read PFNs
         '''
+        if isinstance(cfg, dict):
+            cfg = OmegaConf.create(cfg)
+
         self._cfg = cfg
     #------------------------------------
     def _paths_from_collection(self, collection : SampleCollection, l_sample : list[str], version : str) -> dict[str,list[str]]:
@@ -54,15 +57,15 @@ class PFNReader:
 
         Dictionary matching sample name and list of ROOT files
         '''
-        wg         = self._cfg['working_group']
+        wg         = self._cfg.working_group
         apo        = apd.get_analysis_data(analysis=production, working_group=wg)
         collection = apo.all_samples()
         if not isinstance(collection, SampleCollection):
             raise ValueError('Cannot retrieve a collection of samples for {production}:{nickname}')
 
         log.info(f'Retrieving production/nickname: {production}/{nickname}')
-        l_sample   = self._cfg['productions'][production]['samples' ][nickname]
-        version    = self._cfg['productions'][production]['versions'][nickname]
+        l_sample   = self._cfg.productions[production].samples[nickname]
+        version    = self._cfg.productions[production].versions[nickname]
 
         d_path     = self._paths_from_collection(collection, l_sample, version)
 
