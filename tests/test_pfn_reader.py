@@ -46,7 +46,7 @@ def test_simple(production : str, nickname : str, expected : int):
     '''
     Test simple reading
     '''
-    cfg    = gut.load_data(package='post_ap_data', fpath='post_ap/nopid/v1.yaml')
+    cfg    = gut.load_conf(package='post_ap_data', fpath='post_ap/nopid/v1.yaml')
 
     reader = PFNReader(cfg=cfg)
     d_pfn  = reader.get_pfns(production=production, nickname=nickname)
