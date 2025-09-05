@@ -448,7 +448,7 @@ class Fitter:
                 break
 
             # Good fit, and cannot get error => Keep trying
-            if res.valid:
+            if res.converged:
                 if log.getEffectiveLevel() < 20:
                     print(res)
                 log.warning(f'Error not calculated, retrying: {counter}/10')
