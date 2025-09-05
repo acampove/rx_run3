@@ -1,0 +1,51 @@
+# -----------------------------------------
+# This is meant to be used to validate ntuples
+# made on September 5th. These ntuples are meant to
+# complete most of the MC used by RX, specially they include
+# backgrounds for RK*
+# -----------------------------------------
+paths:
+  pipeline_dir : /eos/lhcb/wg/dpa/wp2/ci
+  analysis_dir : rd_ap_2024
+# -----------------------------------------
+samples:
+  Bd_Denu_Kstenu_eq_VIA_HVM_EGDWC:
+    - any 
+  Bd_D0Xenu_D0_eq_cocktail:
+    - any 
+  Bu_K1ee_eq_DPC:
+    - any 
+  Bu_JpsiX_mm_eq_JpsiInAcc:
+    - any
+  Lb_JpsipK_ee_eq_phsp_DPC:
+    - any
+  Lb_pKee_eq_phsp_DPC:
+    - any
+  Lb_pKmumu_eq_phsp_DPC:
+    - any
+  Bs_JpsiX_mm_eq_JpsiInAcc:
+    - any
+  Bu_Kee_eq_btosllball05_DPC:
+    - Hlt2RD_B0ToKpPimEE_MVA
+    - Hlt2RD_BuToKpEE_MVA
+  Bd_Kstee_eq_btosllball05_DPC:
+    - Hlt2RD_B0ToKpPimEE_MVA
+    - Hlt2RD_BuToKpEE_MVA
+  Bu_Kmumu_eq_btosllball05_DPC:
+    - Hlt2RD_B0ToKpPimMuMu_MVA
+    - Hlt2RD_BuToKpMuMu_MVA
+  Bd_psi2SKst_mm_eq_DPC:
+    - Hlt2RD_B0ToKpPimMuMu_MVA
+    - Hlt2RD_BuToKpMuMu_MVA
+  Bu_psi2SK_ee_eq_DPC:
+    - Hlt2RD_B0ToKpPimEE_MVA
+    - Hlt2RD_BuToKpEE_MVA
+  Bu_psi2SK_mm_eq_DPC:
+    - Hlt2RD_B0ToKpPimMuMu_MVA
+    - Hlt2RD_BuToKpMuMu_MVA
+  Bs_phiee_eq_Ball_DPC:
+    - Hlt2RD_B0ToKpPimEE_MVA
+    - Hlt2RD_BuToKpEE_MVA
+  Bu_JpsiPi_ee_eq_DPC:
+    - Hlt2RD_B0ToKpPimEE_MVA
+    - Hlt2RD_BuToKpEE_MVA
