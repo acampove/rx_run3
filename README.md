@@ -224,14 +224,14 @@ This is done in an environment with access to EOS. To gain EOS access from outsi
 # This project is in pip
 pip install ap_utilities
 
-validate_ap_tuples -p PIPELINE -f ntuple_scheme.yaml -t 5
+validate_ap_tuples -p PIPELINE -c 05_09_2024 -t 5
 ```
 
 Where:   
 `-l`: Logging level, by default 20 (info), but it can be 10 (debug) or 30 (warning)   
 `-t`: Is the number of threads to use, if not passed, it will use one.   
 `-p`: Is the pipeline number, needed to find the ROOT files in EOS   
-`-f`: passes the file with the configuration   
+`-c`: Name of config file written as shown below 
 
 ```yaml
 # -----------------------------------------
@@ -255,4 +255,4 @@ samples:
     - Hlt2RD_B0ToKpPimEE_MVA
 ```
 
-a few examples of config files can be found [here](https://github.com/acampove/config_files/tree/main/ap_utilities/validate_ap)
+The configs will be already in the package in `ap_utilities_data/validation/`
