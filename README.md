@@ -150,21 +150,42 @@ Where the _analyses_ are sets of HLT2 lines described in `tupling/config/analyse
 
 ### Before pipelines 
 
+There are four files relevant to the production:
+
+#### tupling/config/samples_turbo_lines_mapping.yaml
+
+This is where the sample $\to$ HLT line category is specified. I.e. each sample
+will be processed under a certain group of lines, `rx_muon` lines, `rx_electron` lines etc.
+
+#### tupling/config/mcfuntuple.yaml
+
+This is where the decay destriptors used for the `MCDecayTree` building are specified
+
+#### info.yaml 
+
+This is where the samples that are made into ntuples will be specified.
+
+#### Reference event types
+
+Which are stored in this project, in:
+
+```bash
+ap_utilities/src/ap_utilities_data/analyses/analyses.yaml
+```
+
+and which describes, for each analysis (currently `rk` and `rx`), what event types should be used.
+
+One needs to make sure that samples that will be made: 
+- Have a descriptor for the `MCDecayTree`.
+- Are in the reference `analyses.yaml` file
+
+Etc
+
 In order to do these checks run:
 
 ```bash
-check_production -p /home/acampove/Packages/AnalysisProductions/rd_ap_2024
+check_production -p /home/acampove/Packages/AnalysisProductions/rd_ap_2024 -a rx
 ```
-
-Where the path is the path to the production directory. This script will check:
-
-1. If the samples (by nickname) in `info.yaml` are different. Same nicknames are not expected.
-1. If the entries in `mcfuntuple.yaml` are different.
-1. If there are samples in `info.yaml` are not found in `mcfuntuple.yaml`. In which case `MCDecayTree` will not be
-made.
-
-The second argument is a list of strings representing samples. Here they represent inclusive samples, which should
-be skipped; this argument is optional. 
 
 This script will produce `report.yaml`, which looks like:
 
@@ -172,27 +193,26 @@ This script will produce `report.yaml`, which looks like:
 # Print nicknames of samples going above 100 characters
 long_nicknames: ['105', 'some_long_sample_name']
 missing:
-  info.yaml_mcfuntuple.yaml:
-    only info.yaml:
-      - Bd_KstPi0gamma_Kpi_eq_DPC_SS
-      - Bd_Ksteta_gg_eq_DPC_SS
-    only mcfuntuple.yaml:
-      - Bd_KplKmn_eq_DPC
-      - Bd_Kplpimn_eq_CPV2017_DPC
-  info.yaml_samples.yaml:
-    only info.yaml:
-      - Bd_Denu_Kstenu_eq_VIA_HVM_EGDWC
-      - Bd_Dmunu_Kstmunu_eq_DPC
-    only samples.yaml:
-      - Bd_KplKmn_eq_DPC
-      - Bd_Kplpimn_eq_CPV2017_DPC
-  mcfuntuple.yaml_samples.yaml:
-    only mcfuntuple.yaml:
-      - Bd_Denu_Kstenu_eq_VIA_HVM_EGDWC
-      - Bd_Dmunu_Kstmunu_eq_DPC
-    only samples.yaml:
-      - Dst_D0pi_KK_TightCut
-      - Dst_D0pi_KPi_TightCut
+  info_mcfuntuple:
+    only info:        # Samples specified for production, but without MCDecayTree
+      - ...
+    only mcfuntuple:  # Samples with MCDecayTree but not been made
+      - ...
+  info_rx:
+    only info:        # Samples been made, but not in the reference file
+      - ...
+    only rx:          # Samples in the reference file but not been made
+      - ...
+  info_samples:
+    only info:        # Samples been made, but without trigger association (DANGER: this wil break the pipeline)
+      - ...
+    only samples:     # Samples with trigger association and not been ntupled
+      - ...
+  mcfuntuple_samples:
+    only mcfuntuple:  # Samples with MCDecayTree but not been ntupled
+      - ...
+    only samples:     # Samples with HLT trigger association but no MCDecayTree.
+      - ...
 ```
 
 ### After pipelines
