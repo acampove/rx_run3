@@ -96,8 +96,8 @@ missing for W40_42_mu:
   15124001: Lb_Lambda1520ee_eq_phsp_DPC
   15114000: Lb_Lambda1520mumu_eq_phsp
   15114001: Lb_Lambda1520mumu_eq_phsp_DPC
-  15154011: Lb_psi2SpK_ee_eq_phsp_DPC
   12155030: Bu_psi2SK_Jpsipipi_ee_eq_DPC
+  15154011: Lb_psi2SpK_ee_eq_phsp_DPC
   15144011: Lb_psi2SpK_mm_eq_phsp_DPC
   13114006: Bs_phimumu_eq_Ball_DPC
   12125000: Bu_Kpipiee_eq_DPC_LSFLAT
@@ -311,7 +311,6 @@ all:
   - 12103025
   - 12153012
   - 12143001
-  - 12425000
   - 12153001
   - 12123445
   - 12143020
@@ -320,7 +319,6 @@ all:
   - 11154001
   - 12155100
   - 11154011
-  - 12425011
   - 12952000
   - 11453001
   - 13454001
