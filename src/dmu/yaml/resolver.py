@@ -4,7 +4,6 @@ This module contains the YamlResolver class
 
 from typing import Mapping
 
-
 class Resolver:
     '''
     This class will:
