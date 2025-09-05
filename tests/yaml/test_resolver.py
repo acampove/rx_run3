@@ -2,8 +2,7 @@
 Tests for YamlResolver class
 '''
 
-from dmu.configuration.yaml_resolver import YamlResolver
-
+from dmu.yaml.resolver     import YamlResolver
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:yaml_resolver')
