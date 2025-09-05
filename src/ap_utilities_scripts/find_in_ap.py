@@ -10,6 +10,7 @@ $ANADIR/bkk_checker/block_*/info.yaml
 '''
 import os
 import glob
+import argparse
 
 import apd
 import pandas as pnd
@@ -109,11 +110,18 @@ def _found_type(
 
     return found 
 # ----------------------
+def _parse_args() -> None:
+    parser = argparse.ArgumentParser(description='Script used to find missing ntupled samples')
+    parser.add_argument('-l', '--log_level' , type=int, help='Logging level', choices=[5, 10, 20, 30, 40], default=20)
+    args = parser.parse_args()
+
+    LogStore.set_level('ap_utilities:find_in_ap', args.log_level)
+# ----------------------
 def main():
     '''
     Entry point
     '''
-    LogStore.set_level('ap_utilities:find_in_ap', 20)
+    _parse_args()
 
     dset      = apd.get_analysis_data(working_group='RD', analysis='rd_ap_2024')
     scol      = dset.all_samples()
