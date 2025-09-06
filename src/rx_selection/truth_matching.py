@@ -72,14 +72,14 @@ def get_truth(arg : int|str) -> str:
     --------------------------
     For MC, truth matching string. For data it will return '(1)'
     '''
-    if isinstance(event_type, int):
-        event_type=str(event_type)
+    if isinstance(arg, str) and arg.startswith('DATA_'):
+        return '(1)'
+
+    event_type = _get_event_type(arg=arg)
 
     log.info(f'Applying truth matching to event_type: {event_type}')
 
-    if     event_type.startswith('DATA_'):
-        cut = '(1)'
-    elif   event_type in ['12113001', '12113002', '12113004']:
+    if   event_type in ['12113001', '12113002', '12113004']:
         # B+ Kp mumu
         cut= 'TMath::Abs(B_TRUEID) == 521 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 521 && TMath::Abs(L2_MC_MOTHER_ID) == 521 && TMath::Abs(H_TRUEID) == 321 && TMath::Abs(H_MC_MOTHER_ID) == 521'
     # ---------------------
