@@ -1,7 +1,6 @@
 '''
 Module containing the selection function, which returns a dictionary of cuts
 '''
-# pylint: disable=too-many-positional-arguments, too-many-arguments, import-error
 
 import os
 import re
@@ -12,7 +11,7 @@ from contextlib          import contextmanager
 
 import yaml
 import ap_utilities.decays.utilities as aput
-from ROOT                   import RDataFrame
+from ROOT                   import RDataFrame # type: ignore
 from dmu.generic            import hashing
 from dmu.logging.log_store  import LogStore
 
