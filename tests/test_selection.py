@@ -8,9 +8,8 @@ from ROOT                   import RDataFrame # type: ignore
 from dmu.logging.log_store  import LogStore
 from dmu.rdataframe         import utilities as ut
 from rx_data.rdf_getter     import RDFGetter
-from rx_selection           import selection      as sel
-from rx_selection           import collector      as col
-from rx_selection           import truth_matching as tm
+from rx_selection           import selection as sel
+from rx_selection           import collector as col
 
 log=LogStore.add_logger('rx_selection:test_selection')
 # --------------------------
