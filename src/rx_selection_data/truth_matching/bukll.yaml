@@ -29,10 +29,12 @@ l1_from_bplus     : 'TMath::Abs(L1_MC_MOTHER_ID) == 521'
 l2_from_bplus     : 'TMath::Abs(L2_MC_MOTHER_ID) == 521'
 # ----------
 h_is_pion         : 'TMath::Abs(H_TRUEID)       == 211' 
+h_is_kshort       : 'TMath::Abs(H_MC_MOTHER_ID) == 310'
 h_is_kaon         : 'TMath::Abs(H_TRUEID)       == 321' 
 
 h_from_phi        : 'TMath::Abs(H_MC_MOTHER_ID) == 333'
 h_from_dzero      : 'TMath::Abs(H_MC_MOTHER_ID) == 421'
+h_from_dplus      : 'TMath::Abs(H_MC_MOTHER_ID) == 411'
 h_from_kstzero    : 'TMath::Abs(H_MC_MOTHER_ID) == 313'
 h_from_kstplus    : 'TMath::Abs(H_MC_MOTHER_ID) == 323'
 h_from_bzero      : 'TMath::Abs(H_MC_MOTHER_ID) == 511'
@@ -68,9 +70,16 @@ b_is_bstrn        : 'TMath::Abs(B_TRUEID) == 531'
 # ----------
 tracks_from_bp    : '{h_from_bplus} && {lep_from_bplus}'
 # -----------------
+not_fail_lep      : 'TMath::Abs(L1_TRUEID) != 0 && TMath::Abs(L2_TRUEID)   != 0'
+not_fail_mes      : 'TMath::Abs(B_TRUEID)  != 0 && TMath::Abs(Jpsi_TRUEID) != 0 && TMath::Abs(H_TRUEID) != 0'
+not_fail_moth_1   : 'TMath::Abs(L1_MC_MOTHER_ID)   != 0 && TMath::Abs(L2_MC_MOTHER_ID) != 0'
+not_fail_moth_2   : 'TMath::Abs(Jpsi_MC_MOTHER_ID) != 0 && TMath::Abs(H_MC_MOTHER_ID)  != 0'
+not_fail          : '{not_fail_lep} && {not_fail_mes} && {not_fail_moth_1} && {not_fail_moth_2}' 
+
 ll_mother         : '(({ll_is_jpsi} && {lep_from_jpsi}) || ({ll_is_psi2} && {lep_from_psi2}))'
-inclusive_bzero   : '{lep_are_electrons} && {ll_mother} && {b_is_bzero}'
-inclusive_bplus   : '{lep_are_electrons} && {ll_mother} && {b_is_bplus}'
+inclusive_bzero   : '{lep_are_electrons} && {ll_mother} && {b_is_bzero}  && {not_fail}'
+inclusive_bplus   : '{lep_are_electrons} && {ll_mother} && {b_is_bplus}  && {not_fail}'
+inclusive_bstrn   : '{lep_are_electrons} && {ll_mother} && {b_is_bstrn}  && {not_fail}'
 # -----------------
 bukpmm   : '{lep_are_muons} && {tracks_from_bp} && {b_is_bplus} && {h_is_kaon}'
 12113001 : '{bukpmm}'
@@ -87,7 +96,7 @@ ll_cut   : '({l1_cut}) || ({l2_cut})'
 13584000 : '({bp_hp}) && ({ll_cut})'
 # -----------------
 # Bd pi+ D-(Kp pi+ pi-)
-bp_hp    : '{b_is_bzero} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 411'
+bp_hp    : '{b_is_bzero} && {h_is_kaon} && {h_from_dplus}'
 l1_cut   : '{lep_are_pions} && {l1_from_bzero} && {l2_from_dminus}'
 l2_cut   : '{lep_are_pions} && {l2_from_bzero} && {l1_from_dminus}'
 ll_cut   : '({l1_cut}) || ({l2_cut})'
@@ -196,7 +205,7 @@ ll_cut   : '({l1_cut}) || ({l2_cut})'
 #reso jpsi pi ee
 12153020 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_pion} && {h_from_bplus}'
 #reso B+ -> (K*+ -> (K_S0 -> pi+ pi-) pi+) e+ e-
-12125101 : '{b_is_bplus} && {lep_from_electrons} && {lep_from_bplus} && {h_is_pion} && (TMath::Abs(H_MC_MOTHER_ID) == 310 || {h_from_kstplus})'
+12125101 : '{b_is_bplus} && {lep_from_electrons} && {lep_from_bplus} && {h_is_pion} && ({h_is_kshort} || {h_from_kstplus})'
 #-------------------------------------------------------------
 #Bd->XcHs
 pick     = _get_inclusive_match(lep=11, mes=511)
@@ -249,15 +258,15 @@ elif event_type == '15442001':
     cut      = '({pick}) && ({no_reso})'
 #-------------------------------------------------------------
 #exclusive jpsi kst ee Bu
-12155100 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_pion} && ({h_from_kstplus} or TMath::Abs(H_MC_MOTHER_ID) == 310) && (TMath::Abs(H_MC_GD_MOTHER_ID) == 521 or TMath::Abs(H_MC_GD_MOTHER_ID) == 323)'
+12155100 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_pion} && ({h_from_kstplus} or {h_is_kshort}) && (TMath::Abs(H_MC_GD_MOTHER_ID) == 521 or TMath::Abs(H_MC_GD_MOTHER_ID) == 323)'
 #  B0 -> (KS0 -> pi+ pi-) (J/psi(1S) -> e+ e-)
-11154100 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_pion} && TMath::Abs(H_MC_MOTHER_ID) == 310'
+11154100 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_pion} && {h_is_kshort}'
 # Bd -> Jpsi(ee) Kst
 11154001 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstzero}'
 # Bd -> Jpsi(mm) Kst
 11144001 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_muons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstzero}'
 # Bd -> Jpsi(mm) KS(pipi)
-11144103 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_muons} && {lep_from_jpsi} && {h_is_pion} && TMath::Abs(H_MC_MOTHER_ID) == 310'
+11144103 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_muons} && {lep_from_jpsi} && {h_is_pion} && {h_is_kshort}'
 #reso jpsi kst ee Bs
 13454001 : '{b_is_bstrn} && {ll_is_jpsi} && {ll_from_bstrn} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstzero}'
 # Bs Jpsi(mm) Phi(kk)
@@ -311,7 +320,7 @@ elif event_type == '15442001':
 13102465_SS   : '({id_cut}) && ({mo_cut})'
 # B+ -> (K*+(KS(pipi)pi) gamma
 12203302_SS_1 : '{b_is_bplus} && {lep_are_electrons} && {h_is_pion} && {ll_is_gamma}'
-12203302_SS_2 : '{lep_from_gamma} && (TMath::Abs(H_MC_MOTHER_ID) == 310 || {h_from_kstplus})  && TMath::Abs(Jpsi_MC_MOTHER_ID) == 321'
+12203302_SS_2 : '{lep_from_gamma} && ({h_is_kshort} || {h_from_kstplus})  && {ll_from_bplus}'
 12203302_SS   : '({id_cut}) && ({mo_cut})'
 #Bs -> phi(-> KK) pi0(-> ee gamma)
 13124402 : '{b_is_bstrn} && {lep_are_electrons} && {lep_from_pizero} &&  {h_is_kaon} && {h_from_phi}'
@@ -322,15 +331,15 @@ elif event_type == '15442001':
 #B+ -> K_1(K pipi) Jpsi(ee)
 12145090 : '{b_is_bplus} && {lep_are_muons}     && {lep_from_jpsi}  && ({h_is_kaon} || {h_is_pion}) && TMath::Abs(H_MC_MOTHER_ID) == 10323'
 #B+ -> K_2(X -> K pipi) ee
-12425011 : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} && ({h_is_kaon} || {h_is_pion}) && (TMath::Abs(H_MC_MOTHER_ID) ==   325 || TMath::Abs(H_MC_MOTHER_ID) == 113 || TMath::Abs(H_MC_MOTHER_ID) == 223 || {h_from_kstzero})'
+12425011 : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} && ({h_is_kaon} || {h_is_pion}) && (TMath::Abs(H_MC_MOTHER_ID) == 325 || TMath::Abs(H_MC_MOTHER_ID) == 113 || TMath::Abs(H_MC_MOTHER_ID) == 223 || {h_from_kstzero})'
 #B+->K*+ psi2S(-> ee)
-12155110 : '{b_is_bplus} && {lep_are_electrons} && {lep_from_psi2}  && {h_is_pion} && ({h_from_kstplus} or TMath::Abs(H_MC_MOTHER_ID) == 310)'
+12155110 : '{b_is_bplus} && {lep_are_electrons} && {lep_from_psi2}  && {h_is_pion} && ({h_from_kstplus} or {h_is_kshort})'
 #B+ -> K+ pi pi
-12103025 : '{b_is_bplus} && {lep_are_pions}     && {lep_from_bplus} && {h_is_kaon}   &&  {h_from_bplus}'
+12103025 : '{b_is_bplus} && {lep_are_pions}     && {lep_from_bplus} && {h_is_kaon} && {h_from_bplus}'
+#B+ -> K+ K K
+12103017 : '{b_is_bplus} && {lep_are_kaons}     && {lep_from_bplus} && {h_is_kaon} && {h_from_bplus}'
 #B+ -> K+ pi+ K-
 12103030 : '{b_is_bplus} && {l1_is_pion}        && {l2_is_kaon}     && {lep_from_bplus} &&  {h_is_kaon} && {h_from_bplus}'
-#B+ -> K+ K K
-12103017 : '{b_is_bplus} && {lep_are_kaons}     && {lep_from_bplus}  &&  {h_is_kaon} && {h_from_bplus}'
 #------------------------------------------------------------
 #bpd0kpenuenu
 12583022_1 : '{b_is_bplus}    && {lep_are_electrons}'
@@ -379,5 +388,3 @@ elif event_type == '15442001':
 12175101_6 : '(TMath::Abs(H_TRUEID)        == 211 || TMath::Abs(H_TRUEID)        == 2212)'
 12175101   : '{12175101_1} && {12175101_2} && {12175101_3} && {12175101_4} && {12175101_5} && {12175101_6}'
 #------------------------------------------------------------
-elif event_type == 'fail':
-    cut= 'TMath::Abs(B_TRUEID) == 0 || TMath::Abs(Jpsi_TRUEID) == 0 || TMath::Abs(Jpsi_MC_MOTHER_ID) == 0 || TMath::Abs(L1_TRUEID) == 0 || TMath::Abs(L2_TRUEID) == 0 || TMath::Abs(L1_MC_MOTHER_ID) == 0 || TMath::Abs(L2_MC_MOTHER_ID) == 0 || TMath::Abs(H_TRUEID) == 0 || TMath::Abs(H_MC_MOTHER_ID) == 0'
