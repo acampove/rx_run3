@@ -24,16 +24,16 @@ def _get_no_reso(channel : str) -> str:
     Needed when using inclusive samples
     '''
     if channel == 'ee':
-        ctrl_ee    = get_truth('12153001')
-        psi2_ee    = get_truth('12153012')
-        ctrl_pi_ee = get_truth('12153020')
+        ctrl_ee    = get_truth_bukee('12153001')
+        psi2_ee    = get_truth_bukee('12153012')
+        ctrl_pi_ee = get_truth_bukee('12153020')
 
         return f'!({ctrl_ee}) && !({psi2_ee}) && !({ctrl_pi_ee})'
 
     if channel == 'mm':
-        ctrl_mm    = get_truth('12143001')
-        psi2_mm    = get_truth('12143020')
-        ctrl_pi_mm = get_truth('12143010')
+        ctrl_mm    = get_truth_bukee('12143001')
+        psi2_mm    = get_truth_bukee('12143020')
+        ctrl_pi_mm = get_truth_bukee('12143010')
 
         return f'!({ctrl_mm}) && !({psi2_mm}) && !({ctrl_pi_mm})'
 
@@ -62,7 +62,7 @@ def _get_event_type(arg : int|str) -> str:
 
     return event_type
 # ----------------------------------------------------------
-def get_truth(arg : int|str) -> str:
+def get_truth_bukee(arg : int|str) -> str:
     '''
     Parameters:
     --------------------------
@@ -71,6 +71,8 @@ def get_truth(arg : int|str) -> str:
     Returns:
     --------------------------
     For MC, truth matching string. For data it will return '(1)'
+    The truth matching string will assume that the candidates were reconstructed
+    as $B^+\to K^+e^+e^-$ candidates
     '''
     if isinstance(arg, str) and arg.startswith('DATA_'):
         return '(1)'
