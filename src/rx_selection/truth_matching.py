@@ -38,6 +38,29 @@ def _get_no_reso(channel : str) -> str:
         return f'!({ctrl_mm}) && !({psi2_mm}) && !({ctrl_pi_mm})'
 
     raise ValueError(f'Invalid channel: {channel}')
+# ----------------------
+def _get_event_type(arg : int|str) -> str:
+    '''
+    Parameters
+    -------------
+    arg: Either event type or nickname for decay
+
+    Returns
+    -------------
+    Event type
+    '''
+    if isinstance(arg, int):
+        return str(arg)
+
+    if arg.isdigit():
+        return arg
+
+    try:
+        event_type = aput.read_event_type(nickname=arg)
+    except ValueError as exc:
+        raise ValueError(f'Argument {arg} is neither data nor can be interpreted into an event type') from exc
+
+    return event_type
 # ----------------------------------------------------------
 def get_truth(arg : int|str) -> str:
     '''
