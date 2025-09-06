@@ -24,16 +24,16 @@ def _get_no_reso(channel : str) -> str:
     Needed when using inclusive samples
     '''
     if channel == 'ee':
-        ctrl_ee    = get_truth_bukee('12153001')
-        psi2_ee    = get_truth_bukee('12153012')
-        ctrl_pi_ee = get_truth_bukee('12153020')
+        ctrl_ee    = get_truth_bukll('12153001')
+        psi2_ee    = get_truth_bukll('12153012')
+        ctrl_pi_ee = get_truth_bukll('12153020')
 
         return f'!({ctrl_ee}) && !({psi2_ee}) && !({ctrl_pi_ee})'
 
     if channel == 'mm':
-        ctrl_mm    = get_truth_bukee('12143001')
-        psi2_mm    = get_truth_bukee('12143020')
-        ctrl_pi_mm = get_truth_bukee('12143010')
+        ctrl_mm    = get_truth_bukll('12143001')
+        psi2_mm    = get_truth_bukll('12143020')
+        ctrl_pi_mm = get_truth_bukll('12143010')
 
         return f'!({ctrl_mm}) && !({psi2_mm}) && !({ctrl_pi_mm})'
 
@@ -62,8 +62,8 @@ def _get_event_type(arg : int|str) -> str:
 
     return event_type
 # ----------------------------------------------------------
-def get_truth_bukee(arg : int|str) -> str:
-    '''
+def get_truth_bukll(arg : int|str) -> str:
+    r'''
     Parameters:
     --------------------------
     arg: Event type or decay nickname

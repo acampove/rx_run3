@@ -115,7 +115,7 @@ def _get_truth(event_type : int|str, trigger : str) -> str:
         raise NotImplementedError(f'Cannot truth match with RKstar line: {trigger}')
 
     if trigger in ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_BuToKpEE_MVA']:
-        return tm.get_truth_bukee(arg=event_type)
+        return tm.get_truth_bukll(arg=event_type)
 
     raise ValueError(f'Invalid trigger name: {trigger}')
 #-----------------------
