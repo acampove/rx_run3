@@ -23,7 +23,10 @@ class Data:
     out_dir = '/tmp/tests/rx_selection/selection'
 # --------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before any test
+    '''
     LogStore.set_level('rx_selection:selection'     , 10)
     LogStore.set_level('rx_selection:test_selection', 10)
 
