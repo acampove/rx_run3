@@ -39,7 +39,7 @@ def test_nopid(sample : str):
     gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
     rdf = gtr.get_rdf(per_file=False)
 
-    cut = tm.get_truth_bukee(sample)
+    cut = tm.get_truth_bukll(sample)
     ini = rdf.Count().GetValue()
     rdf = rdf.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
@@ -50,7 +50,7 @@ def test_nopid(sample : str):
     assert 20 * fin > ini
 # --------------------------
 @pytest.mark.parametrize('sample', l_sample_ee)
-def test_ee(sample : str):
+def test_bukee(sample : str):
     '''
     Tests truth matching
     '''
@@ -58,7 +58,7 @@ def test_ee(sample : str):
     gtr = RDFGetter(sample=sample, trigger=trigger, analysis='rx')
     rdf = gtr.get_rdf(per_file=False)
 
-    cut = tm.get_truth_bukee(sample)
+    cut = tm.get_truth_bukll(sample)
     ini = rdf.Count().GetValue()
     rdf = rdf.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
@@ -69,7 +69,7 @@ def test_ee(sample : str):
     assert 20 * fin > ini
 # --------------------------
 @pytest.mark.parametrize('sample', l_sample_mm)
-def test_mm(sample : str):
+def test_bukmm(sample : str):
     '''
     Tests truth matching
     '''
@@ -77,6 +77,15 @@ def test_mm(sample : str):
     gtr = RDFGetter(sample=sample, trigger=trigger, analysis='rx')
     rdf = gtr.get_rdf(per_file=False)
 
+    cut = tm.get_truth_bukll(sample)
+    ini = rdf.Count().GetValue()
+    rdf = rdf.Filter(cut, 'truth match')
+    fin = rdf.Count().GetValue()
+
+    rep = rdf.Report()
+    rep.Print()
+
+    assert 20 * fin > ini
     cut = tm.get_truth_bukee(sample)
     ini = rdf.Count().GetValue()
     rdf = rdf.Filter(cut, 'truth match')
