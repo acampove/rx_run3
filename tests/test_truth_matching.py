@@ -86,7 +86,17 @@ def test_bukmm(sample : str):
     rep.Print()
 
     assert 20 * fin > ini
-    cut = tm.get_truth_bukee(sample)
+# --------------------------
+@pytest.mark.parametrize('sample', l_sample_ee)
+def test_bdkstee(sample : str):
+    '''
+    Tests truth matching
+    '''
+    trigger = 'Hlt2RD_B0ToKpPimEE_MVA'
+    gtr = RDFGetter(sample=sample, trigger=trigger, analysis='rx')
+    rdf = gtr.get_rdf(per_file=False)
+
+    cut = tm.get_truth_bukll(sample)
     ini = rdf.Count().GetValue()
     rdf = rdf.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
@@ -95,3 +105,4 @@ def test_bukmm(sample : str):
     rep.Print()
 
     assert 20 * fin > ini
+
