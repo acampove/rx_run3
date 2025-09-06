@@ -39,10 +39,15 @@ def _get_no_reso(channel : str) -> str:
 
     raise ValueError(f'Invalid channel: {channel}')
 # ----------------------------------------------------------
-def get_truth(event_type : Union[int,str]) -> str:
+def get_truth(arg : int|str) -> str:
     '''
-    Function meant to return truth matching string from event type string
-    For data it will return '(1)'
+    Parameters:
+    --------------------------
+    arg: Event type or decay nickname
+
+    Returns:
+    --------------------------
+    For MC, truth matching string. For data it will return '(1)'
     '''
     if isinstance(event_type, int):
         event_type=str(event_type)
@@ -450,7 +455,7 @@ def get_truth(event_type : Union[int,str]) -> str:
         raise ValueError(f'Event type {event_type} not recognized')
 
     return cut
-
+# ----------------------------------------------------------
 
 # TODO: Tests are failing for:
 
