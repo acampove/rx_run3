@@ -1,15 +1,11 @@
 '''
 Module containing functions used for truth matching
 '''
-# pylint: disable=line-too-long, import-error, too-many-statements, invalid-name, too-many-branches
 
-from typing import Union
-
+from ap_utilities.decays    import utilities as aput
 from dmu.logging.log_store  import LogStore
 
-
 log=LogStore.add_logger('rx_selection:truth_matching')
-
 # ----------------------------------------------------------
 def _get_inclusive_match(lep : int, mes : int) -> str:
     '''
