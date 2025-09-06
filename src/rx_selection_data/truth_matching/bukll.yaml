@@ -7,18 +7,43 @@ l1_is_muon        : 'TMath::Abs(L1_TRUEID) == 13'
 l2_is_muon        : 'TMath::Abs(L2_TRUEID) == 13'
 l1_is_pion        : 'TMath::Abs(L1_TRUEID) == 211'
 l2_is_pion        : 'TMath::Abs(L2_TRUEID) == 211'
+
+l1_from_dminus    : 'TMath::Abs(L1_MC_MOTHER_ID) == 411'
+l2_from_dminus    : 'TMath::Abs(L2_MC_MOTHER_ID) == 411'
+
+l1_from_dzero     : 'TMath::Abs(L1_MC_MOTHER_ID) == 421'
+l2_from_dzero     : 'TMath::Abs(L2_MC_MOTHER_ID) == 421'
+
+l1_from_bzero     : 'TMath::Abs(L1_MC_MOTHER_ID) == 511'
+l2_from_bzero     : 'TMath::Abs(L2_MC_MOTHER_ID) == 511'
+
+l1_from_bplus     : 'TMath::Abs(L1_MC_MOTHER_ID) == 521'
+l2_from_bplus     : 'TMath::Abs(L2_MC_MOTHER_ID) == 521'
 # ----------
-h_is_kaon         : '{h_is_kaon}' 
-h_is_pion         : 'TMath::Abs(H_TRUEID) == 211' 
+h_is_pion         : 'TMath::Abs(H_TRUEID)       == 211' 
+h_is_kaon         : 'TMath::Abs(H_TRUEID)       == 321' 
+h_from_phi        : 'TMath::Abs(H_MC_MOTHER_ID) == 333'
+h_from_bzero      : 'TMath::Abs(H_MC_MOTHER_ID) == 511'
+h_from_bplus      : 'TMath::Abs(H_MC_MOTHER_ID) == 521'
 # ----------
 lep_are_muons     : '{l1_is_muon}     && {l2_is_muon}    '
 lep_are_electrons : '{l1_is_electron} && {l2_is_electron}'
 lep_are_pions     : '{l1_is_pion}     && {l2_is_pion}    '
+
+lep_from_jpsi     : 'TMath::Abs(L1_MC_MOTHER_ID)==   443) && (TMath::Abs(L2_MC_MOTHER_ID)==   443'
+lep_from_psi2     : 'TMath::Abs(L1_MC_MOTHER_ID)==100443) && (TMath::Abs(L2_MC_MOTHER_ID)==100443'
 # ----------
-b_is_bplus        : '{b_is_bplus}'
+ll_is_jpsi        : 'TMath::Abs(Jpsi_TRUEID)==   443'
+ll_is_psi2        : 'TMath::Abs(Jpsi_TRUEID)==100443'
+# ----------
 b_is_bzero        : 'TMath::Abs(B_TRUEID) == 511'
+b_is_bplus        : 'TMath::Abs(B_TRUEID) == 521'
 # ----------
-tracks_from_bp    : 'TMath::Abs(H_MC_MOTHER_ID) == 521 && TMath::Abs(L1_MC_MOTHER_ID) == 521 && TMath::Abs(L2_MC_MOTHER_ID) == 521'
+tracks_from_bp    : '{h_from_bplus} && {l1_from_bplus} && {l2_from_bplus}'
+# -----------------
+ll_mother         : '(({ll_is_jpsi} && {lep_from_jpsi}) || ({ll_is_psi2} && {lep_from_psi2}))'
+inclusive_bzero   : '{lep_are_electrons} && {ll_mother} && {b_is_bzero}'
+inclusive_bplus   : '{lep_are_electrons} && {ll_mother} && {b_is_bplus}'
 # -----------------
 bukpmm   : '{lep_are_muons} && {tracks_from_bp} && {b_is_bplus} && {h_is_kaon}'
 12113001 : '{bukpmm}'
@@ -28,7 +53,7 @@ bukpmm   : '{lep_are_muons} && {tracks_from_bp} && {b_is_bplus} && {h_is_kaon}'
 12113024 : '{lep_are_muons} && {tracks_from_bp} && {b_is_bplus} && {h_is_pion}'
 # -----------------
 # Bs -> (Ds- -> (Phi KK) em nu) ep nu
-bp_hp    : '{b_is_bplus} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 333'
+bp_hp    : '{b_is_bplus} && {h_is_kaon} && {h_from_phi}'
 l1_cut   : 'TMath::Abs(L1_MC_MOTHER_ID) == 531 && {lep_are_electrons}  && TMath::Abs(L2_MC_MOTHER_ID) == 431'
 l2_cut   : 'TMath::Abs(L2_MC_MOTHER_ID) == 531 && {lep_are_electrons}  && TMath::Abs(L1_MC_MOTHER_ID) == 431'
 ll_cut   : '({l1_cut}) || ({l2_cut})'
@@ -36,381 +61,365 @@ ll_cut   : '({l1_cut}) || ({l2_cut})'
 # -----------------
 # Bd pi+ D-(Kp pi+ pi-)
 bp_hp    : '{b_is_bzero} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 411'
-l1_cut   : '{lep_are_pions} && TMath::Abs(L1_MC_MOTHER_ID) == 511 && TMath::Abs(L2_MC_MOTHER_ID) == 411'
-l2_cut   : '{lep_are_pions} && TMath::Abs(L2_MC_MOTHER_ID) == 511 && TMath::Abs(L1_MC_MOTHER_ID) == 411'
+l1_cut   : '{lep_are_pions} && {l1_from_bzero} && {l2_from_dminus}'
+l2_cut   : '{lep_are_pions} && {l2_from_bzero} && {l1_from_dminus}'
 ll_cut   : '({l1_cut}) || ({l2_cut})'
 11264001 : '({bp_hp}) && ({ll_cut})'
 # -----------------
 # B+ pi+ D0(Kp mu nu)
 bp_hp    : '{b_is_bplus} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 421'
-l1_cut   : '{l1_is_muon} && {l2_is_pion} && TMath::Abs(L1_MC_MOTHER_ID) == 421 && TMath::Abs(L2_MC_MOTHER_ID) == 521'
-l2_cut   : '{l2_is_muon} && {l1_is_pion} && TMath::Abs(L2_MC_MOTHER_ID) == 421 && TMath::Abs(L1_MC_MOTHER_ID) == 521'
+l1_cut   : '{l1_is_muon} && {l2_is_pion} && {l1_from_dzero} && {l2_from_bplus}'
+l2_cut   : '{l2_is_muon} && {l1_is_pion} && {l2_from_dzero} && {l1_from_bplus}'
 ll_cut   : '({l1_cut}) || ({l2_cut})'
 12573050 : '({bp_hp}) && ({ll_cut})'
 # -----------------
+# B+ mu+nu D0(Kp pi)
+bp_hp    : '{b_is_bplus} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 421'
+l1_cut   : '{l1_is_muon} && {l1_from_bplus} && {l2_is_pion} && {l2_from_dzero}'
+l2_cut   : '{l2_is_muon} && {l2_from_bplus} && {l1_is_pion} && {l1_from_dzero}'
+ll_cut   : '({l1_cut}) || ({l2_cut})'
+12873002 : '({bp_hp}) && ({ll_cut})'
+# -----------------
+# B0 e+nu D0(Kp pi)
+bp_hp    : '{b_is_bzero} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 421'
+l1_cut   : '{l1_is_electron} && {l1_from_bzero} && {l2_is_pion} && {l2_from_dzero}'
+l2_cut   : '{l2_is_electron} && {l2_from_bzero} && {l1_is_pion} && {l1_from_dzero}'
+ll_cut   : '({l1_cut}) || ({l2_cut})'
+11584041 : '({bp_hp}) && ({ll_cut})'
+# ---------------------
+# B0 -> (D- -> (K* K pi) em nu) ep nu
+bp_hp    : '{b_is_bzero} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
+l1_cut   : '{lep_are_electrons} && {l1_from_bzero} && {l2_from_dminus}'
+l2_cut   : '{lep_are_electrons} && {l2_from_bzero} && {l1_from_dminus}'
+ll_cut   : '({l1_cut}) || ({l2_cut})'
+11584022 : '({bp_hp})  && ({ll_cut})'
+# ---------------------
+# B0 -> (D- -> (K* K pi) mu nu) mu nu
+bp_hp    : '{b_is_bzero} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
+l1_cut   : '{lep_are_muons} && {l1_from_bzero} && {l2_from_dminus}'
+l2_cut   : '{lep_are_muons} && {l2_from_bzero} && {l1_from_dminus}'
+ll_cut   : '({l1_cut}) || ({l2_cut})'
+11574030 : '({bp_hp})  && ({ll_cut})'
+# ---------------------
+# B+ e+ nu D0(Kp e- nu)
+bp_hp    : '{b_is_bplus} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 421'
+l1_cut   : '{lep_are_electrons} && {l1_from_dzero} && {l2_from_bplus}'
+l2_cut   : '{lep_are_electrons} && {l2_from_dzero} && {l1_from_bplus}'
+ll_cut   : '({l1_cut}) || ({l2_cut})'
+12583020 : '({bp_hp}) && ({ll_cut})'
+# ---------------------
+# B0 e+ nu D-( D0(Kp pi-) pi-)
+bp_hp    : '{b_is_bzero} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 421'
+l1_cut   : '{l1_is_electron} && {l1_from_bzero} && {l2_is_pion}     && ({l2_from_dzero} || TMath::Abs(L2_MC_MOTHER_ID) == 413)'
+l2_cut   : '{l2_is_electron} && {l2_from_dzero} && {l1_is_electron} && ({l1_from_dzero} || TMath::Abs(L1_MC_MOTHER_ID) == 413)'
+ll_cut   : '({l1_cut}) || ({l2_cut})'
+11584030 : '({bp_hp})  && ({ll_cut})'
+# ---------------------
+# B+ mu+ nu D0(Kp mu- nu)
+bp_hp    : '{b_is_bplus} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 421'
+l1_cut   : '{l1_is_muon} && {l1_from_dzero} && {l2_is_muon} && {l2_from_bplus}'
+l2_cut   : '{l2_is_muon} && {l2_from_dzero} && {l1_is_muon} && {l1_from_bplus}'
+ll_cut   : '({l1_cut}) || ({l2_cut})'
+12573040 : '({bp_hp})  && ({ll_cut})'
+# ---------------------
+elif   event_type == '15114011':
+    # Lb p K mumu
+    cut= 'TMath::Abs(B_TRUEID) == 5122 && {l1_is_muon} && {l2_is_muon} && TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) == 5122 && ({h_is_kaon} || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122'
+elif   event_type == '15114021':
+    # Lb p pi mumu
+    cut= 'TMath::Abs(B_TRUEID) == 5122 && {l1_is_muon} && {l2_is_muon} && TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) == 5122 && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122'
+# -------------
+elif   event_type == '15124011':
+    # Lb p K ee
+    cut= 'TMath::Abs(B_TRUEID) == 5122 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) == 5122 && ({h_is_kaon} || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122'
+elif   event_type == '15124021':
+    # Lb p pi ee
+    cut= 'TMath::Abs(B_TRUEID) == 5122 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) == 5122 && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122'
+# -------------
+elif   event_type == '15144001':
+    # Lb p K Jpsi(-> mm)
+    cut= 'TMath::Abs(B_TRUEID) == 5122 && {l1_is_muon} && {l2_is_muon} && ({h_is_kaon} || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 5122 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443'
+elif   event_type == '15144021':
+    # Lb p pi Jpsi(-> mm)
+    cut= 'TMath::Abs(B_TRUEID) == 5122 && {l1_is_muon} && {l2_is_muon} && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 5122 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443'
+# -------------
+elif   event_type == '15154001':
+    # Lb p K Jpsi(-> ee)
+    cut= 'TMath::Abs(B_TRUEID) == 5122 && {l1_is_electron} && {l2_is_electron} && ({h_is_kaon} || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 5122 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443'
+elif   event_type == '15154021':
+    # Lb p pi Jpsi(-> ee)
+    cut= 'TMath::Abs(B_TRUEID) == 5122 && {l1_is_electron} && {l2_is_electron} && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 5122 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443'
+# -------------
+elif event_type in ['12123001', '12123002', '12123003', '12123005', 'Bu_Kee_eq_btosllball05_DPC']:
+    # B+ -> K+ee
+    cut= '{b_is_bplus} && {l1_is_electron} && {l2_is_electron} && {l1_from_bplus} && {l2_from_bplus} && {h_is_kaon} && {h_from_bplus}'
+elif event_type == '12123021':
+    # B+ -> pi+ee
+    cut= '{b_is_bplus} && {l1_is_electron} && {l2_is_electron} && {l1_from_bplus} && {l2_from_bplus} && TMath::Abs(H_TRUEID) == 211 && {h_from_bplus}'
+elif event_type in ['12143001']:
+    #reso Jpsi mumu
+    cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && {l1_is_muon} && {l2_is_muon} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && {h_from_bplus}'#reso Jpsi mumu
+elif event_type in ['12153001', 'Bu_JpsiK_ee_eq_DPC']:
+    #B+ -> K+ Jpsi ee
+    cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && {h_from_bplus}'
+elif event_type == '12153420':
+    #B+ -> K*+(Kpi0) Jpsi ee
+    cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 323'
+elif event_type in ['12153001']:
+    #B+ -> K*+(-> K+ pi0) Jpsi ee
+    cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 323'
+elif event_type in ['12143020']:
+    #reso Psi mumu
+    cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 100443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && {l1_is_muon} && {l2_is_muon} && TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && {h_is_kaon} && {h_from_bplus}'#reso Psi mumu
+elif event_type in ['12153012']:
+    #reso Psi ee
+    cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 100443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && {h_is_kaon} && {h_from_bplus}'#reso Psi ee
+elif event_type in ['12153430']:
+    #B+ psi2S(ee) K*+(Kpi0)
+    cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 100443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 323'
+elif event_type in ['12143010']:
+    #reso jpsi pi mumu
+    cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && {l1_is_muon} && {l2_is_muon} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 211 && {h_from_bplus}'#reso jpsi pi mumu
+elif event_type in ['12153020']:
+    #reso jpsi pi ee
+    cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 211 && {h_from_bplus}'#reso jpsi pi ee
+elif event_type in ['12125101']:
+    #reso B+ -> (K*+ -> (K_S0 -> pi+ pi-) pi+) e+ e-
+    cut= '{b_is_bplus} && {l1_is_electron} && {l2_is_electron} && {l1_from_bplus} && {l2_from_bplus} && TMath::Abs(H_TRUEID) == 211 && (TMath::Abs(H_MC_MOTHER_ID) == 310 || TMath::Abs(H_MC_MOTHER_ID) == 323)'
+#-------------------------------------------------------------
+#Bd->XcHs
+pick     = _get_inclusive_match(lep=11, mes=511)
+no_reso  = _get_no_reso(channel = 'ee')
 
-    elif   event_type == '12873002':
-        # B+ mu+nu D0(Kp pi)
-        bp_hp  = '{b_is_bplus} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 421'
-        l1_cut = 'TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 521 && TMath::Abs(L2_TRUEID) == 211 && TMath::Abs(L2_MC_MOTHER_ID) == 421'
-        l2_cut = 'TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L2_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 211 && TMath::Abs(L1_MC_MOTHER_ID) == 421'
-        ll_cut = f'({l1_cut}) || ({l2_cut})'
+11453001 : '({pick}) && ({no_reso})'
+#-------------------------------------------------------------
+elif event_type == '12952000':
+    #B+->XcHs
+    pick     = _get_inclusive_match(lep=11, mes=521)
+    no_reso  = _get_no_reso(channel = 'ee')
 
-        return f'({bp_hp}) && ({ll_cut})'
-    elif   event_type == '11584041':
-        # B0 e+nu D0(Kp pi)
-        bp_hp  = 'TMath::Abs(B_TRUEID) == 511 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 421'
-        l1_cut = 'TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 511 && TMath::Abs(L2_TRUEID) == 211 && TMath::Abs(L2_MC_MOTHER_ID) == 421'
-        l2_cut = 'TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L2_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) == 211 && TMath::Abs(L1_MC_MOTHER_ID) == 421'
-        ll_cut = f'({l1_cut}) || ({l2_cut})'
+    cut      = '({pick}) && ({no_reso})'
+elif event_type == '13454001':
+    #Bs->XcHs
+    pick     = _get_inclusive_match(lep=11, mes=531)
+    no_reso  = _get_no_reso(channel = 'ee')
 
-        return f'({bp_hp}) && ({ll_cut})'
-    # ---------------------
-    elif   event_type == '11584022':
-        # B0 -> (D- -> (K* K pi) em nu) ep nu
-        bp_hp  = 'TMath::Abs(B_TRUEID) == 511 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
-        l1_cut = 'TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 511 && TMath::Abs(L2_TRUEID) ==  11 && TMath::Abs(L2_MC_MOTHER_ID) == 411'
-        l2_cut = 'TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L2_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) ==  11 && TMath::Abs(L1_MC_MOTHER_ID) == 411'
-        ll_cut = f'({l1_cut}) || ({l2_cut})'
+    cut      = '({pick}) && ({no_reso})'
+elif event_type == '15454101':
+    # LbXcHs_ee
+    pick     = _get_inclusive_match(lep=11, mes=5122)
+    no_reso  = _get_no_reso(channel = 'ee')
 
-        return f'({bp_hp}) && ({ll_cut})'
-    # ---------------------
-    # ---------------------
-    elif   event_type == '11574030':
-        # B0 -> (D- -> (K* K pi) mu nu) mu nu
-        bp_hp  = 'TMath::Abs(B_TRUEID) == 511 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
-        l1_cut = 'TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 511 && TMath::Abs(L2_TRUEID) ==  13 && TMath::Abs(L2_MC_MOTHER_ID) == 411'
-        l2_cut = 'TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L2_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) ==  13 && TMath::Abs(L1_MC_MOTHER_ID) == 411'
-        ll_cut = f'({l1_cut}) || ({l2_cut})'
+    cut      = '({pick}) && ({no_reso})'
+#-------------------------------------------------------------
+elif event_type == '11442001':
+    # bdXcHs_mm
+    pick     = _get_inclusive_match(lep=13, mes=511)
+    no_reso  = _get_no_reso(channel = 'mm')
 
-        return f'({bp_hp}) && ({ll_cut})'
-    elif   event_type == '12583020':
-        # B+ e+ nu D0(Kp e- nu)
-        bp_hp  = '{b_is_bplus} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 421'
-        l1_cut = 'TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 421 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L2_MC_MOTHER_ID) == 521'
-        l2_cut = 'TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L2_MC_MOTHER_ID) == 421 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 521'
-        ll_cut = f'({l1_cut}) || ({l2_cut})'
+    cut      = '({pick}) && ({no_reso})'
+elif event_type == '12442001':
+    # bpXcHs_mm
+    pick     = _get_inclusive_match(lep=13, mes=521)
+    no_reso  = _get_no_reso(channel = 'mm')
 
-        return f'({bp_hp}) && ({ll_cut})'
-    elif   event_type == '11584030':
-        # B0 e+ nu D-( D0(Kp pi-) pi-)
-        bp_hp  = 'TMath::Abs(B_TRUEID) == 511 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 421'
-        l1_cut = 'TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 511 && TMath::Abs(L2_TRUEID) ==211 && (TMath::Abs(L2_MC_MOTHER_ID) == 421 || TMath::Abs(L2_MC_MOTHER_ID) == 413)'
-        l2_cut = 'TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L2_MC_MOTHER_ID) == 421 && TMath::Abs(L1_TRUEID) == 11 && (TMath::Abs(L1_MC_MOTHER_ID) == 421 || TMath::Abs(L1_MC_MOTHER_ID) == 413)'
+    cut      = '({pick}) && ({no_reso})'
+elif event_type == '13442001':
+    # bsXcHs_mm
+    pick     = _get_inclusive_match(lep=13, mes=531)
+    no_reso  = _get_no_reso(channel = 'mm')
 
-        ll_cut = f'({l1_cut}) || ({l2_cut})'
+    cut      = '({pick}) && ({no_reso})'
+elif event_type == '15442001':
+    # LbXcHs_mm
+    pick     = _get_inclusive_match(lep=13, mes=5122)
+    no_reso  = _get_no_reso(channel = 'mm')
 
-        return f'({bp_hp}) && ({ll_cut})'
-    elif   event_type == '12573040':
-        # B+ mu+ nu D0(Kp mu- nu)
-        bp_hp  = '{b_is_bplus} && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 421'
-        l1_cut = 'TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 421 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L2_MC_MOTHER_ID) == 521'
-        l2_cut = 'TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L2_MC_MOTHER_ID) == 421 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 521'
-        ll_cut = f'({l1_cut}) || ({l2_cut})'
+    cut      = '({pick}) && ({no_reso})'
+#-------------------------------------------------------------
+elif event_type == '12155100':
+    #exclusive jpsi kst ee Bu
+    cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 211 && (TMath::Abs(H_MC_MOTHER_ID) == 323 or TMath::Abs(H_MC_MOTHER_ID) == 310) && (TMath::Abs(H_MC_GD_MOTHER_ID) == 521 or TMath::Abs(H_MC_GD_MOTHER_ID) == 323)'#exclusive Jpsi kst ee
+elif event_type == '11154100':
+    #  B0 -> (KS0 -> pi+ pi-) (J/psi(1S) -> e+ e-)
+    cut= '{b_is_bzero} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 211 && TMath::Abs(H_MC_MOTHER_ID) == 310'
+elif event_type == '11154001':
+    # Bd -> Jpsi(ee) Kst
+    cut= '{b_is_bzero} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
+elif event_type == '11144001':
+    # Bd -> Jpsi(mm) Kst
+    cut= '{b_is_bzero} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && {l1_is_muon} && {l2_is_muon} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
+elif event_type == '11144103':
+    # Bd -> Jpsi(mm) KS(pipi)
+    cut= '{b_is_bzero} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && {l1_is_muon} && {l2_is_muon} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 211 && TMath::Abs(H_MC_MOTHER_ID) == 310'
+elif event_type == '13454001':
+    #reso jpsi kst ee Bs
+    cut= 'TMath::Abs(B_TRUEID) == 531 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 531 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'#reso Jpsi kst ee
+elif event_type in ['13144001', '13144010', '13144011']:
+    # Bs Jpsi(mm) Phi(kk)
+    cut= 'TMath::Abs(B_TRUEID) == 531 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 531 && {l1_is_muon} && {l2_is_muon} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && {h_from_phi}'
+elif event_type == '13114006':
+    # Bs mm Phi(kk)
+    cut= 'TMath::Abs(B_TRUEID) == 531 && {l1_is_muon} && {l2_is_muon} && TMath::Abs(L1_MC_MOTHER_ID) == 531 && TMath::Abs(L2_MC_MOTHER_ID) == 531 && {h_is_kaon} && {h_from_phi}'
+elif event_type in ['13154001']:
+    # Bs Jpsi(ee) Phi(kk)
+    cut= 'TMath::Abs(B_TRUEID) == 531 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 531 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && {h_from_phi}'#reso Jpsi kst ee
+elif event_type in ['11154011']:
+    #Bd->psi2S(=>ee) K*
+    cut= '{b_is_bzero} && TMath::Abs(Jpsi_TRUEID) == 100443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
+elif event_type in ['11124402']:
+    #Bd->pi0(->ee gamma) K*0(Kpi)
+    cut= '{b_is_bzero} && TMath::Abs(Jpsi_TRUEID) == 111 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 111 && TMath::Abs(L2_MC_MOTHER_ID) == 111 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
+elif event_type == '11202603':
+    #Bd-> K_1 (k pi pi0) gamma
+    jpsi_cut = 'TMath::Abs(Jpsi_TRUEID) ==  22 && (TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 || TMath::Abs(Jpsi_MC_MOTHER_ID) == 111)'
 
-        return f'({bp_hp}) && ({ll_cut})'
-    # ---------------------
-    # -------------
-    elif   event_type == '15114011':
-        # Lb p K mumu
-        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) == 5122 && ({h_is_kaon} || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122'
-    elif   event_type == '15114021':
-        # Lb p pi mumu
-        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) == 5122 && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122'
-    # -------------
-    elif   event_type == '15124011':
-        # Lb p K ee
-        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) == 5122 && ({h_is_kaon} || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122'
-    elif   event_type == '15124021':
-        # Lb p pi ee
-        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) == 5122 && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122'
-    # -------------
-    elif   event_type == '15144001':
-        # Lb p K Jpsi(-> mm)
-        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && ({h_is_kaon} || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 5122 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443'
-    elif   event_type == '15144021':
-        # Lb p pi Jpsi(-> mm)
-        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 5122 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443'
-    # -------------
-    elif   event_type == '15154001':
-        # Lb p K Jpsi(-> ee)
-        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && ({h_is_kaon} || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 5122 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443'
-    elif   event_type == '15154021':
-        # Lb p pi Jpsi(-> ee)
-        cut= 'TMath::Abs(B_TRUEID) == 5122 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && (TMath::Abs(H_TRUEID) == 211 || TMath::Abs(H_TRUEID) == 2212) && TMath::Abs(H_MC_MOTHER_ID) == 5122 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 5122 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443'
-    # -------------
-    elif event_type in ['12123001', '12123002', '12123003', '12123005', 'Bu_Kee_eq_btosllball05_DPC']:
-        # B+ -> K+ee
-        cut= '{b_is_bplus} && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 521 && TMath::Abs(L2_MC_MOTHER_ID) == 521 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 521'
-    elif event_type == '12123021':
-        # B+ -> pi+ee
-        cut= '{b_is_bplus} && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 521 && TMath::Abs(L2_MC_MOTHER_ID) == 521 && TMath::Abs(H_TRUEID) == 211 && TMath::Abs(H_MC_MOTHER_ID) == 521'
-    elif event_type in ['12143001']:
-        #reso Jpsi mumu
-        cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 521'#reso Jpsi mumu
-    elif event_type in ['12153001', 'Bu_JpsiK_ee_eq_DPC']:
-        #B+ -> K+ Jpsi ee
-        cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 521'
-    elif event_type == '12153420':
-        #B+ -> K*+(Kpi0) Jpsi ee
-        cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 323'
-    elif event_type in ['12153001']:
-        #B+ -> K*+(-> K+ pi0) Jpsi ee
-        cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 323'
-    elif event_type in ['12143020']:
-        #reso Psi mumu
-        cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 100443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 521'#reso Psi mumu
-    elif event_type in ['12153012']:
-        #reso Psi ee
-        cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 100443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 521'#reso Psi ee
-    elif event_type in ['12153430']:
-        #B+ psi2S(ee) K*+(Kpi0)
-        cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 100443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 323'
-    elif event_type in ['12143010']:
-        #reso jpsi pi mumu
-        cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 211 && TMath::Abs(H_MC_MOTHER_ID) == 521'#reso jpsi pi mumu
-    elif event_type in ['12153020']:
-        #reso jpsi pi ee
-        cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 211 && TMath::Abs(H_MC_MOTHER_ID) == 521'#reso jpsi pi ee
-    elif event_type in ['12125101']:
-        #reso B+ -> (K*+ -> (K_S0 -> pi+ pi-) pi+) e+ e-
-        cut= '{b_is_bplus} && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 521 && TMath::Abs(L2_MC_MOTHER_ID) == 521 && TMath::Abs(H_TRUEID) == 211 && (TMath::Abs(H_MC_MOTHER_ID) == 310 || TMath::Abs(H_MC_MOTHER_ID) == 323)'
-    #-------------------------------------------------------------
-    elif event_type == '11453001':
-        #Bd->XcHs
-        pick     = _get_inclusive_match(lep=11, mes=511)
-        no_reso  = _get_no_reso(channel = 'ee')
+    cut= '{b_is_bzero} && {jpsi_cut} && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) ==  22 && TMath::Abs(L2_MC_MOTHER_ID) ==  22 && {h_is_kaon}'
+elif event_type in ['11102453']:
+    #Bd->pi0(->gamma gamma) K*0(Kpi)
+    cut= '{b_is_bzero} && TMath::Abs(Jpsi_TRUEID) ==  22 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 111 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) ==  22 && TMath::Abs(L2_MC_MOTHER_ID) ==  22 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
+elif event_type in ['11102202']:
+    #Bd-> gamma K*0(Kpi)
+    cut= '{b_is_bzero} && TMath::Abs(Jpsi_TRUEID) ==  22 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) ==  22 && TMath::Abs(L2_MC_MOTHER_ID) ==  22 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
+elif event_type == '11453012':
+    #reso Psi X
+    cut= '{b_is_bzero} && TMath::Abs(Jpsi_TRUEID) == 100443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && {l1_is_electron} && {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443'#reso Psi(ee) X
+elif event_type == '11124002':
+    #Bd K*(k pi) ee.
+    cut= '{b_is_bzero} && {l1_is_electron} && {l2_is_electron} && {l1_from_bzero} && {l2_from_bzero} && ({h_is_kaon} or TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 313'
+elif event_type == '11124037':
+    #Bd (k pi) ee.
+    cut= '{b_is_bzero} && {l1_is_electron} && {l2_is_electron} && {l1_from_bzero} && {l2_from_bzero} && ({h_is_kaon} or TMath::Abs(H_TRUEID) == 211) && {h_from_bzero}'
+elif event_type == '11114014':
+    #Bd K*(k pi) mm
+    cut= '{b_is_bzero} && {l1_is_muon} && {l2_is_muon} && {l1_from_bzero} && {l2_from_bzero} && ({h_is_kaon} or TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 313'
+elif event_type == '12123445':
+    #B+ -> K*+ ee
+    cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  {l2_from_bplus} &&  {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 323'
+elif event_type == '12125040':
+    #B+ -> phi(-> KK) K ee
+    cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  {l2_from_bplus} &&  {h_is_kaon} && ({h_from_phi} || {h_from_bplus})'
+elif event_type == '13124006':
+    #Bs -> phi(-> KK) ee
+    cut= 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} &&  TMath::Abs(L1_MC_MOTHER_ID)  == 531 &&  TMath::Abs(L2_MC_MOTHER_ID) == 531 &&  {h_is_kaon} && {h_from_phi}'
+elif event_type == '13124401':
+    # Bs -> phi(-> KK) eta(-> ee gamma)
+    cut= 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} &&  TMath::Abs(L1_MC_MOTHER_ID)  == 221 &&  TMath::Abs(L2_MC_MOTHER_ID) == 221 &&  {h_is_kaon} && {h_from_phi}'
+elif event_type == '11124401':
+    # B0 -> (eta -> e+ e- gamma) (K*0 -> K+ pi- )
+    cut= '{b_is_bzero} &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} &&  TMath::Abs(L1_MC_MOTHER_ID)  == 221 &&  TMath::Abs(L2_MC_MOTHER_ID) == 221 && ({h_is_kaon} ||  TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 313'
+elif event_type == '11102441_SS':
+    # B0 -> (eta -> gamma gamma) (K*0 -> K+ pi- ), either or both photons convert
+    id_cut = '{b_is_bzero} &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} && ({h_is_kaon} ||  TMath::Abs(H_TRUEID) == 211) && TMath::Abs(Jpsi_TRUEID) ==  22'
+    mo_cut = 'TMath::Abs(L1_MC_MOTHER_ID)  ==  22 &&  TMath::Abs(L2_MC_MOTHER_ID) ==  22 && TMath::Abs(H_MC_MOTHER_ID) == 313  && TMath::Abs(Jpsi_MC_MOTHER_ID) == 221'
 
-        cut      = f'({pick}) && ({no_reso})'
-    elif event_type == '12952000':
-        #B+->XcHs
-        pick     = _get_inclusive_match(lep=11, mes=521)
-        no_reso  = _get_no_reso(channel = 'ee')
+    return '({id_cut}) && ({mo_cut})'
+elif event_type == '13102464_SS':
+    # Bs -> (eta -> gamma gamma) (phi -> K+ K- ), either or both photons convert
+    id_cut = 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} && {h_is_kaon} && TMath::Abs(Jpsi_TRUEID) == 22'
+    mo_cut = 'TMath::Abs(L1_MC_MOTHER_ID)  ==  22 &&  TMath::Abs(L2_MC_MOTHER_ID) ==  22 && {h_from_phi}  && TMath::Abs(Jpsi_MC_MOTHER_ID) == 221'
 
-        cut      = f'({pick}) && ({no_reso})'
-    elif event_type == '13454001':
-        #Bs->XcHs
-        pick     = _get_inclusive_match(lep=11, mes=531)
-        no_reso  = _get_no_reso(channel = 'ee')
+    return '({id_cut}) && ({mo_cut})'
+elif event_type == '13102465_SS':
+    # Bs -> (pi0 -> gamma gamma) (phi -> K+ K- ), either or both photons convert
+    id_cut = 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} && {h_is_kaon} && TMath::Abs(Jpsi_TRUEID) == 22'
+    mo_cut = 'TMath::Abs(L1_MC_MOTHER_ID)  ==  22 &&  TMath::Abs(L2_MC_MOTHER_ID) ==  22 && {h_from_phi}  && TMath::Abs(Jpsi_MC_MOTHER_ID) == 111'
 
-        cut      = f'({pick}) && ({no_reso})'
-    elif event_type == '15454101':
-        # LbXcHs_ee
-        pick     = _get_inclusive_match(lep=11, mes=5122)
-        no_reso  = _get_no_reso(channel = 'ee')
+    return '({id_cut}) && ({mo_cut})'
+elif event_type == '12203302_SS':
+    # B+ -> (K*+(KS(pipi)pi) gamma
+    id_cut = '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} && TMath::Abs(H_TRUEID) == 211 && TMath::Abs(Jpsi_TRUEID) == 22'
+    mo_cut = 'TMath::Abs(L1_MC_MOTHER_ID)  ==  22 &&  TMath::Abs(L2_MC_MOTHER_ID) ==  22 && (TMath::Abs(H_MC_MOTHER_ID) == 310 || TMath::Abs(H_MC_MOTHER_ID) == 323)  && TMath::Abs(Jpsi_MC_MOTHER_ID) == 321'
 
-        cut      = f'({pick}) && ({no_reso})'
-    #-------------------------------------------------------------
-    elif event_type == '11442001':
-        # bdXcHs_mm
-        pick     = _get_inclusive_match(lep=13, mes=511)
-        no_reso  = _get_no_reso(channel = 'mm')
+    return '({id_cut}) && ({mo_cut})'
+elif event_type == '13124402':
+    #Bs -> phi(-> KK) pi0(-> ee gamma)
+    cut= 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} &&  TMath::Abs(L1_MC_MOTHER_ID)  == 111 &&  TMath::Abs(L2_MC_MOTHER_ID) == 111 &&  {h_is_kaon} && {h_from_phi}'
+elif event_type == '12425000':
+    #B+ -> K_1(K pipi) ee
+    cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  {l2_from_bplus} &&  ({h_is_kaon} || TMath::Abs(H_TRUEID) == 211) && (TMath::Abs(H_MC_MOTHER_ID) == 10323 || TMath::Abs(H_MC_MOTHER_ID) == 113 || TMath::Abs(H_MC_MOTHER_ID) == 223 || TMath::Abs(H_MC_MOTHER_ID) == 313)'
+elif event_type == '12155020':
+    #B+ -> K_1(K pipi) Jpsi(ee)
+    cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} &&  TMath::Abs(L1_MC_MOTHER_ID)  == 443 &&  TMath::Abs(L2_MC_MOTHER_ID) == 443 &&  ({h_is_kaon} || TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 10323'
+elif event_type == '12145090':
+    #B+ -> K_1(K pipi) Jpsi(ee)
+    cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  13 &&  {l2_is_muon} &&  TMath::Abs(L1_MC_MOTHER_ID)  == 443 &&  TMath::Abs(L2_MC_MOTHER_ID) == 443 &&  ({h_is_kaon} || TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 10323'
+elif event_type == '12425011':
+    #B+ -> K_2(X -> K pipi) ee
+    cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  {l2_from_bplus} &&  ({h_is_kaon} || TMath::Abs(H_TRUEID) == 211) && (TMath::Abs(H_MC_MOTHER_ID) ==   325 || TMath::Abs(H_MC_MOTHER_ID) == 113 || TMath::Abs(H_MC_MOTHER_ID) == 223 || TMath::Abs(H_MC_MOTHER_ID) == 313)'
+elif event_type == '12155110':
+    #B+->K*+ psi2S(-> ee)
+    cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  {l2_is_electron} && TMath::Abs(L1_MC_MOTHER_ID)  == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(H_TRUEID) == 211 && (TMath::Abs(H_MC_MOTHER_ID) == 323 or TMath::Abs(H_MC_MOTHER_ID) == 310)'
+elif event_type in ['12103025', 'Bu_piplpimnKpl_eq_sqDalitz_DPC']:
+    #B+ -> K+ pi pi
+    cut= 'TMath::Abs(B_TRUEID)  == 521 &&  TMath::Abs(L1_TRUEID)  == 211 &&  {l2_is_pion} &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  {l2_from_bplus} &&  {h_is_kaon} &&  {h_from_bplus}'
+elif event_type == '12103030':
+    #B+ -> K+ pi+ K-
+    cut= 'TMath::Abs(B_TRUEID)  == 521 &&  TMath::Abs(L1_TRUEID)  == 211 &&  TMath::Abs(L2_TRUEID) == 321 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  {l2_from_bplus} &&  {h_is_kaon} &&  {h_from_bplus}'
+elif event_type in ['12103017', 'Bu_KplKplKmn_eq_sqDalitz_DPC']:
+    #B+ -> K+ K K
+    cut= 'TMath::Abs(B_TRUEID)  == 521 &&  TMath::Abs(L1_TRUEID)  == 321 &&  TMath::Abs(L2_TRUEID) == 321 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  {l2_from_bplus} &&  {h_is_kaon} &&  {h_from_bplus}'
+elif event_type == '12583021':
+    #bpd0kpenuenu
+    tm_par = 'TMath::Abs(B_TRUEID)  == 521 &&  TMath::Abs(L1_TRUEID)  == 11 &&  {l2_is_electron}'
+    tm_dt1 = 'TMath::Abs(L1_MC_MOTHER_ID)  == 521 || {l1_from_dzero}'
+    tm_dt2 = 'TMath::Abs(L2_MC_MOTHER_ID)  == 521 || {l2_from_dzero}'
+    cut    = '({tm_par}) && ({tm_dt1}) && ({tm_dt2}) && {h_is_kaon} &&  TMath::Abs(H_MC_MOTHER_ID) == 421'
+elif event_type == '12183004':
+    # bpd0kpenupi
+    tm_par = 'TMath::Abs(B_TRUEID)  == 521 &&  (TMath::Abs(L1_TRUEID)  == 11 || TMath::Abs(L1_TRUEID)  == 211) &&  ({l2_is_electron} || {l2_is_pion})'
+    tm_dt1 = 'TMath::Abs(L1_MC_MOTHER_ID)  == 521 || {l1_from_dzero}'
+    tm_dt2 = 'TMath::Abs(L2_MC_MOTHER_ID)  == 521 || {l2_from_dzero}'
+    cut    = '({tm_par}) && ({tm_dt1}) && ({tm_dt2}) && {h_is_kaon} &&  TMath::Abs(H_MC_MOTHER_ID) == 421'
+elif event_type == '12583013':
+    # bpd0kppienu
+    tm_par = 'TMath::Abs(B_TRUEID)  == 521 &&  (TMath::Abs(L1_TRUEID)  == 11 || TMath::Abs(L1_TRUEID)  == 211) &&  ({l2_is_electron} || {l2_is_pion})'
+    tm_dt1 = 'TMath::Abs(L1_MC_MOTHER_ID)  == 521 || {l1_from_dzero}'
+    tm_dt2 = 'TMath::Abs(L2_MC_MOTHER_ID)  == 521 || {l2_from_dzero}'
+    cut    = '({tm_par}) && ({tm_dt1}) && ({tm_dt2}) && {h_is_kaon} &&  TMath::Abs(H_MC_MOTHER_ID) == 421'
+#------------------------------------------------------------
+elif event_type == '11154011':
+    tm_par = 'TMath::Abs(B_TRUEID)        == 511    && TMath::Abs(L1_TRUEID)       == 11     && TMath::Abs(L2_TRUEID)   == 11 && {h_is_kaon}'
+    tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(Jpsi_TRUEID) == 100443'
+    tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 313'
 
-        cut      = f'({pick}) && ({no_reso})'
-    elif event_type == '12442001':
-        # bpXcHs_mm
-        pick     = _get_inclusive_match(lep=13, mes=521)
-        no_reso  = _get_no_reso(channel = 'mm')
+    cut    = '{tm_par} && {tm_psi} && {tm_kst}'
+elif event_type == '11144011':
+    tm_par = 'TMath::Abs(B_TRUEID)        == 511    && TMath::Abs(L1_TRUEID)       == 13     && TMath::Abs(L2_TRUEID)   == 13 && {h_is_kaon}'
+    tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(Jpsi_TRUEID) == 100443'
+    tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 313'
 
-        cut      = f'({pick}) && ({no_reso})'
-    elif event_type == '13442001':
-        # bsXcHs_mm
-        pick     = _get_inclusive_match(lep=13, mes=531)
-        no_reso  = _get_no_reso(channel = 'mm')
+    cut    = '{tm_par} && {tm_psi} && {tm_kst}'
+elif event_type == '11114002':
+    # B0-> mu+ mu- (K*(892)0 -> K+ pi-)
+    tm_par = 'TMath::Abs(B_TRUEID)        == 511    && TMath::Abs(L1_TRUEID)       == 13     && TMath::Abs(L2_TRUEID)   == 13 && {h_is_kaon}'
+    tm_psi = '{l1_from_bzero}    && {l2_from_bzero}'
+    tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 313'
 
-        cut      = f'({pick}) && ({no_reso})'
-    elif event_type == '15442001':
-        # LbXcHs_mm
-        pick     = _get_inclusive_match(lep=13, mes=5122)
-        no_reso  = _get_no_reso(channel = 'mm')
+    cut    = '{tm_par} && {tm_psi} && {tm_kst}'
+#------------------------------------------------------------
+elif event_type == '12155110':
+    tm_par = 'TMath::Abs(B_TRUEID)        == 521    && TMath::Abs(L1_TRUEID)       == 11     && TMath::Abs(L2_TRUEID)   == 11 && TMath::Abs(H_TRUEID) == 211'
+    tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(Jpsi_TRUEID) == 100443'
+    tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 323'
 
-        cut      = f'({pick}) && ({no_reso})'
-    #-------------------------------------------------------------
-    elif event_type == '12155100':
-        #exclusive jpsi kst ee Bu
-        cut= '{b_is_bplus} && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 521 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 211 && (TMath::Abs(H_MC_MOTHER_ID) == 323 or TMath::Abs(H_MC_MOTHER_ID) == 310) && (TMath::Abs(H_MC_GD_MOTHER_ID) == 521 or TMath::Abs(H_MC_GD_MOTHER_ID) == 323)'#exclusive Jpsi kst ee
-    elif event_type == '11154100':
-        #  B0 -> (KS0 -> pi+ pi-) (J/psi(1S) -> e+ e-)
-        cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 211 && TMath::Abs(H_MC_MOTHER_ID) == 310'
-    elif event_type == '11154001':
-        # Bd -> Jpsi(ee) Kst
-        cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
-    elif event_type == '11144001':
-        # Bd -> Jpsi(mm) Kst
-        cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
-    elif event_type == '11144103':
-        # Bd -> Jpsi(mm) KS(pipi)
-        cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && TMath::Abs(H_TRUEID) == 211 && TMath::Abs(H_MC_MOTHER_ID) == 310'
-    elif event_type == '13454001':
-        #reso jpsi kst ee Bs
-        cut= 'TMath::Abs(B_TRUEID) == 531 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 531 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'#reso Jpsi kst ee
-    elif event_type in ['13144001', '13144010', '13144011']:
-        # Bs Jpsi(mm) Phi(kk)
-        cut= 'TMath::Abs(B_TRUEID) == 531 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 531 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 333'
-    elif event_type == '13114006':
-        # Bs mm Phi(kk)
-        cut= 'TMath::Abs(B_TRUEID) == 531 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 531 && TMath::Abs(L2_MC_MOTHER_ID) == 531 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 333'
-    elif event_type in ['13154001']:
-        # Bs Jpsi(ee) Phi(kk)
-        cut= 'TMath::Abs(B_TRUEID) == 531 && TMath::Abs(Jpsi_TRUEID) == 443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 531 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 443 && TMath::Abs(L2_MC_MOTHER_ID) == 443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 333'#reso Jpsi kst ee
-    elif event_type in ['11154011']:
-        #Bd->psi2S(=>ee) K*
-        cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(Jpsi_TRUEID) == 100443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
-    elif event_type in ['11124402']:
-        #Bd->pi0(->ee gamma) K*0(Kpi)
-        cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(Jpsi_TRUEID) == 111 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 111 && TMath::Abs(L2_MC_MOTHER_ID) == 111 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
-    elif event_type == '11202603':
-        #Bd-> K_1 (k pi pi0) gamma
-        jpsi_cut = 'TMath::Abs(Jpsi_TRUEID) ==  22 && (TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 || TMath::Abs(Jpsi_MC_MOTHER_ID) == 111)'
+    cut    = '{tm_par} && {tm_psi} && {tm_kst}'
+elif event_type == '12145120':
+    tm_par = 'TMath::Abs(B_TRUEID)        == 521    && TMath::Abs(L1_TRUEID)       == 13     && TMath::Abs(L2_TRUEID)   == 13 && TMath::Abs(H_TRUEID) == 211'
+    tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(Jpsi_TRUEID) == 100443'
+    tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 323'
 
-        cut= f'TMath::Abs(B_TRUEID) == 511 && {jpsi_cut} && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) ==  22 && TMath::Abs(L2_MC_MOTHER_ID) ==  22 && {h_is_kaon}'
-    elif event_type in ['11102453']:
-        #Bd->pi0(->gamma gamma) K*0(Kpi)
-        cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(Jpsi_TRUEID) ==  22 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 111 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) ==  22 && TMath::Abs(L2_MC_MOTHER_ID) ==  22 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
-    elif event_type in ['11102202']:
-        #Bd-> gamma K*0(Kpi)
-        cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(Jpsi_TRUEID) ==  22 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) ==  22 && TMath::Abs(L2_MC_MOTHER_ID) ==  22 && {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 313'
-    elif event_type == '11453012':
-        #reso Psi X
-        cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(Jpsi_TRUEID) == 100443 && TMath::Abs(Jpsi_MC_MOTHER_ID) == 511 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443'#reso Psi(ee) X
-    elif event_type == '11124002':
-        #Bd K*(k pi) ee.
-        cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 511 && TMath::Abs(L2_MC_MOTHER_ID) == 511 && ({h_is_kaon} or TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 313'
-    elif event_type == '11124037':
-        #Bd (k pi) ee.
-        cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(L1_TRUEID) == 11 && TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID) == 511 && TMath::Abs(L2_MC_MOTHER_ID) == 511 && ({h_is_kaon} or TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 511'
-    elif event_type == '11114014':
-        #Bd K*(k pi) mm
-        cut= 'TMath::Abs(B_TRUEID) == 511 && TMath::Abs(L1_TRUEID) == 13 && TMath::Abs(L2_TRUEID) == 13 && TMath::Abs(L1_MC_MOTHER_ID) == 511 && TMath::Abs(L2_MC_MOTHER_ID) == 511 && ({h_is_kaon} or TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 313'
-    elif event_type == '12123445':
-        #B+ -> K*+ ee
-        cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  TMath::Abs(L2_MC_MOTHER_ID) == 521 &&  {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 323'
-    elif event_type == '12125040':
-        #B+ -> phi(-> KK) K ee
-        cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  TMath::Abs(L2_MC_MOTHER_ID) == 521 &&  {h_is_kaon} && (TMath::Abs(H_MC_MOTHER_ID) == 333 || TMath::Abs(H_MC_MOTHER_ID) == 521)'
-    elif event_type == '13124006':
-        #Bs -> phi(-> KK) ee
-        cut= 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 531 &&  TMath::Abs(L2_MC_MOTHER_ID) == 531 &&  {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 333'
-    elif event_type == '13124401':
-        # Bs -> phi(-> KK) eta(-> ee gamma)
-        cut= 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 221 &&  TMath::Abs(L2_MC_MOTHER_ID) == 221 &&  {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 333'
-    elif event_type == '11124401':
-        # B0 -> (eta -> e+ e- gamma) (K*0 -> K+ pi- )
-        cut= 'TMath::Abs(B_TRUEID) == 511 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 221 &&  TMath::Abs(L2_MC_MOTHER_ID) == 221 && ({h_is_kaon} ||  TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 313'
-    elif event_type == '11102441_SS':
-        # B0 -> (eta -> gamma gamma) (K*0 -> K+ pi- ), either or both photons convert
-        id_cut = 'TMath::Abs(B_TRUEID) == 511 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 && ({h_is_kaon} ||  TMath::Abs(H_TRUEID) == 211) && TMath::Abs(Jpsi_TRUEID) ==  22'
-        mo_cut = 'TMath::Abs(L1_MC_MOTHER_ID)  ==  22 &&  TMath::Abs(L2_MC_MOTHER_ID) ==  22 && TMath::Abs(H_MC_MOTHER_ID) == 313  && TMath::Abs(Jpsi_MC_MOTHER_ID) == 221'
+    cut    = '{tm_par} && {tm_psi} && {tm_kst}'
+#------------------------------------------------------------
+elif event_type == '12175101':
+    beauty = 'TMath::Abs(B_TRUEID)  == 511'
+    lep_1  = 'TMath::Abs(L1_TRUEID) ==  13     && TMath::Abs(L2_TRUEID)   == 211'
+    lep_2  = '{l1_is_pion}     && TMath::Abs(L2_TRUEID)   ==  13'
+    lep    = '({lep_1}) || ({lep_2})'
+    had_mo = 'TMath::Abs(H_MC_MOTHER_ID)  == 521 || TMath::Abs(H_MC_MOTHER_ID)  == 3122'
+    had_pi = 'TMath::Abs(H_TRUEID)        == 211 || TMath::Abs(H_TRUEID)        == 2212'
 
-        return f'({id_cut}) && ({mo_cut})'
-    elif event_type == '13102464_SS':
-        # Bs -> (eta -> gamma gamma) (phi -> K+ K- ), either or both photons convert
-        id_cut = 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 && {h_is_kaon} && TMath::Abs(Jpsi_TRUEID) == 22'
-        mo_cut = 'TMath::Abs(L1_MC_MOTHER_ID)  ==  22 &&  TMath::Abs(L2_MC_MOTHER_ID) ==  22 && TMath::Abs(H_MC_MOTHER_ID) == 333  && TMath::Abs(Jpsi_MC_MOTHER_ID) == 221'
-
-        return f'({id_cut}) && ({mo_cut})'
-    elif event_type == '13102465_SS':
-        # Bs -> (pi0 -> gamma gamma) (phi -> K+ K- ), either or both photons convert
-        id_cut = 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 && {h_is_kaon} && TMath::Abs(Jpsi_TRUEID) == 22'
-        mo_cut = 'TMath::Abs(L1_MC_MOTHER_ID)  ==  22 &&  TMath::Abs(L2_MC_MOTHER_ID) ==  22 && TMath::Abs(H_MC_MOTHER_ID) == 333  && TMath::Abs(Jpsi_MC_MOTHER_ID) == 111'
-
-        return f'({id_cut}) && ({mo_cut})'
-    elif event_type == '12203302_SS':
-        # B+ -> (K*+(KS(pipi)pi) gamma
-        id_cut = '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(H_TRUEID) == 211 && TMath::Abs(Jpsi_TRUEID) == 22'
-        mo_cut = 'TMath::Abs(L1_MC_MOTHER_ID)  ==  22 &&  TMath::Abs(L2_MC_MOTHER_ID) ==  22 && (TMath::Abs(H_MC_MOTHER_ID) == 310 || TMath::Abs(H_MC_MOTHER_ID) == 323)  && TMath::Abs(Jpsi_MC_MOTHER_ID) == 321'
-
-        return f'({id_cut}) && ({mo_cut})'
-    elif event_type == '13124402':
-        #Bs -> phi(-> KK) pi0(-> ee gamma)
-        cut= 'TMath::Abs(B_TRUEID) == 531 &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 111 &&  TMath::Abs(L2_MC_MOTHER_ID) == 111 &&  {h_is_kaon} && TMath::Abs(H_MC_MOTHER_ID) == 333'
-    elif event_type == '12425000':
-        #B+ -> K_1(K pipi) ee
-        cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  TMath::Abs(L2_MC_MOTHER_ID) == 521 &&  ({h_is_kaon} || TMath::Abs(H_TRUEID) == 211) && (TMath::Abs(H_MC_MOTHER_ID) == 10323 || TMath::Abs(H_MC_MOTHER_ID) == 113 || TMath::Abs(H_MC_MOTHER_ID) == 223 || TMath::Abs(H_MC_MOTHER_ID) == 313)'
-    elif event_type == '12155020':
-        #B+ -> K_1(K pipi) Jpsi(ee)
-        cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 443 &&  TMath::Abs(L2_MC_MOTHER_ID) == 443 &&  ({h_is_kaon} || TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 10323'
-    elif event_type == '12145090':
-        #B+ -> K_1(K pipi) Jpsi(ee)
-        cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  13 &&  TMath::Abs(L2_TRUEID) == 13 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 443 &&  TMath::Abs(L2_MC_MOTHER_ID) == 443 &&  ({h_is_kaon} || TMath::Abs(H_TRUEID) == 211) && TMath::Abs(H_MC_MOTHER_ID) == 10323'
-    elif event_type == '12425011':
-        #B+ -> K_2(X -> K pipi) ee
-        cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  TMath::Abs(L2_MC_MOTHER_ID) == 521 &&  ({h_is_kaon} || TMath::Abs(H_TRUEID) == 211) && (TMath::Abs(H_MC_MOTHER_ID) ==   325 || TMath::Abs(H_MC_MOTHER_ID) == 113 || TMath::Abs(H_MC_MOTHER_ID) == 223 || TMath::Abs(H_MC_MOTHER_ID) == 313)'
-    elif event_type == '12155110':
-        #B+->K*+ psi2S(-> ee)
-        cut= '{b_is_bplus} &&  TMath::Abs(L1_TRUEID) ==  11 &&  TMath::Abs(L2_TRUEID) == 11 && TMath::Abs(L1_MC_MOTHER_ID)  == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(H_TRUEID) == 211 && (TMath::Abs(H_MC_MOTHER_ID) == 323 or TMath::Abs(H_MC_MOTHER_ID) == 310)'
-    elif event_type in ['12103025', 'Bu_piplpimnKpl_eq_sqDalitz_DPC']:
-        #B+ -> K+ pi pi
-        cut= 'TMath::Abs(B_TRUEID)  == 521 &&  TMath::Abs(L1_TRUEID)  == 211 &&  TMath::Abs(L2_TRUEID) == 211 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  TMath::Abs(L2_MC_MOTHER_ID) == 521 &&  {h_is_kaon} &&  TMath::Abs(H_MC_MOTHER_ID) == 521'
-    elif event_type == '12103030':
-        #B+ -> K+ pi+ K-
-        cut= 'TMath::Abs(B_TRUEID)  == 521 &&  TMath::Abs(L1_TRUEID)  == 211 &&  TMath::Abs(L2_TRUEID) == 321 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  TMath::Abs(L2_MC_MOTHER_ID) == 521 &&  {h_is_kaon} &&  TMath::Abs(H_MC_MOTHER_ID) == 521'
-    elif event_type in ['12103017', 'Bu_KplKplKmn_eq_sqDalitz_DPC']:
-        #B+ -> K+ K K
-        cut= 'TMath::Abs(B_TRUEID)  == 521 &&  TMath::Abs(L1_TRUEID)  == 321 &&  TMath::Abs(L2_TRUEID) == 321 &&  TMath::Abs(L1_MC_MOTHER_ID)  == 521 &&  TMath::Abs(L2_MC_MOTHER_ID) == 521 &&  {h_is_kaon} &&  TMath::Abs(H_MC_MOTHER_ID) == 521'
-    elif event_type == '12583021':
-        #bpd0kpenuenu
-        tm_par = 'TMath::Abs(B_TRUEID)  == 521 &&  TMath::Abs(L1_TRUEID)  == 11 &&  TMath::Abs(L2_TRUEID) == 11'
-        tm_dt1 = 'TMath::Abs(L1_MC_MOTHER_ID)  == 521 || TMath::Abs(L1_MC_MOTHER_ID) == 421'
-        tm_dt2 = 'TMath::Abs(L2_MC_MOTHER_ID)  == 521 || TMath::Abs(L2_MC_MOTHER_ID) == 421'
-        cut    = f'({tm_par}) && ({tm_dt1}) && ({tm_dt2}) && {h_is_kaon} &&  TMath::Abs(H_MC_MOTHER_ID) == 421'
-    elif event_type == '12183004':
-        # bpd0kpenupi
-        tm_par = 'TMath::Abs(B_TRUEID)  == 521 &&  (TMath::Abs(L1_TRUEID)  == 11 || TMath::Abs(L1_TRUEID)  == 211) &&  (TMath::Abs(L2_TRUEID) == 11 || TMath::Abs(L2_TRUEID) == 211)'
-        tm_dt1 = 'TMath::Abs(L1_MC_MOTHER_ID)  == 521 || TMath::Abs(L1_MC_MOTHER_ID) == 421'
-        tm_dt2 = 'TMath::Abs(L2_MC_MOTHER_ID)  == 521 || TMath::Abs(L2_MC_MOTHER_ID) == 421'
-        cut    = f'({tm_par}) && ({tm_dt1}) && ({tm_dt2}) && {h_is_kaon} &&  TMath::Abs(H_MC_MOTHER_ID) == 421'
-    elif event_type == '12583013':
-        # bpd0kppienu
-        tm_par = 'TMath::Abs(B_TRUEID)  == 521 &&  (TMath::Abs(L1_TRUEID)  == 11 || TMath::Abs(L1_TRUEID)  == 211) &&  (TMath::Abs(L2_TRUEID) == 11 || TMath::Abs(L2_TRUEID) == 211)'
-        tm_dt1 = 'TMath::Abs(L1_MC_MOTHER_ID)  == 521 || TMath::Abs(L1_MC_MOTHER_ID) == 421'
-        tm_dt2 = 'TMath::Abs(L2_MC_MOTHER_ID)  == 521 || TMath::Abs(L2_MC_MOTHER_ID) == 421'
-        cut    = f'({tm_par}) && ({tm_dt1}) && ({tm_dt2}) && {h_is_kaon} &&  TMath::Abs(H_MC_MOTHER_ID) == 421'
-    #------------------------------------------------------------
-    elif event_type == '11154011':
-        tm_par = 'TMath::Abs(B_TRUEID)        == 511    && TMath::Abs(L1_TRUEID)       == 11     && TMath::Abs(L2_TRUEID)   == 11 && {h_is_kaon}'
-        tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(Jpsi_TRUEID) == 100443'
-        tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 313'
-
-        cut    = f'{tm_par} && {tm_psi} && {tm_kst}'
-    elif event_type == '11144011':
-        tm_par = 'TMath::Abs(B_TRUEID)        == 511    && TMath::Abs(L1_TRUEID)       == 13     && TMath::Abs(L2_TRUEID)   == 13 && {h_is_kaon}'
-        tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(Jpsi_TRUEID) == 100443'
-        tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 313'
-
-        cut    = f'{tm_par} && {tm_psi} && {tm_kst}'
-    elif event_type == '11114002':
-        # B0-> mu+ mu- (K*(892)0 -> K+ pi-)
-        tm_par = 'TMath::Abs(B_TRUEID)        == 511    && TMath::Abs(L1_TRUEID)       == 13     && TMath::Abs(L2_TRUEID)   == 13 && {h_is_kaon}'
-        tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 511    && TMath::Abs(L2_MC_MOTHER_ID) == 511'
-        tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 313'
-
-        cut    = f'{tm_par} && {tm_psi} && {tm_kst}'
-    #------------------------------------------------------------
-    elif event_type == '12155110':
-        tm_par = 'TMath::Abs(B_TRUEID)        == 521    && TMath::Abs(L1_TRUEID)       == 11     && TMath::Abs(L2_TRUEID)   == 11 && TMath::Abs(H_TRUEID) == 211'
-        tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(Jpsi_TRUEID) == 100443'
-        tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 323'
-
-        cut    = f'{tm_par} && {tm_psi} && {tm_kst}'
-    elif event_type == '12145120':
-        tm_par = 'TMath::Abs(B_TRUEID)        == 521    && TMath::Abs(L1_TRUEID)       == 13     && TMath::Abs(L2_TRUEID)   == 13 && TMath::Abs(H_TRUEID) == 211'
-        tm_psi = 'TMath::Abs(L1_MC_MOTHER_ID) == 100443 && TMath::Abs(L2_MC_MOTHER_ID) == 100443 && TMath::Abs(Jpsi_TRUEID) == 100443'
-        tm_kst = 'TMath::Abs(H_MC_MOTHER_ID)  == 323'
-
-        cut    = f'{tm_par} && {tm_psi} && {tm_kst}'
-    #------------------------------------------------------------
-    elif event_type == '12175101':
-        beauty = 'TMath::Abs(B_TRUEID)  == 511'
-        lep_1  = 'TMath::Abs(L1_TRUEID) ==  13     && TMath::Abs(L2_TRUEID)   == 211'
-        lep_2  = 'TMath::Abs(L1_TRUEID) == 211     && TMath::Abs(L2_TRUEID)   ==  13'
-        lep    = f'({lep_1}) || ({lep_2})'
-        had_mo = 'TMath::Abs(H_MC_MOTHER_ID)  == 521 || TMath::Abs(H_MC_MOTHER_ID)  == 3122'
-        had_pi = 'TMath::Abs(H_TRUEID)        == 211 || TMath::Abs(H_TRUEID)        == 2212'
-
-        cut    = f'({beauty}) && ({lep}) && ({had_mo}) && ({had_pi})'
-    #------------------------------------------------------------
-    elif event_type == 'fail':
-        cut= 'TMath::Abs(B_TRUEID) == 0 || TMath::Abs(Jpsi_TRUEID) == 0 || TMath::Abs(Jpsi_MC_MOTHER_ID) == 0 || TMath::Abs(L1_TRUEID) == 0 || TMath::Abs(L2_TRUEID) == 0 || TMath::Abs(L1_MC_MOTHER_ID) == 0 || TMath::Abs(L2_MC_MOTHER_ID) == 0 || TMath::Abs(H_TRUEID) == 0 || TMath::Abs(H_MC_MOTHER_ID) == 0'
-    else:
-        raise ValueError(f'Event type {event_type} not recognized')
+    cut    = '({beauty}) && ({lep}) && ({had_mo}) && ({had_pi})'
+#------------------------------------------------------------
+elif event_type == 'fail':
+    cut= 'TMath::Abs(B_TRUEID) == 0 || TMath::Abs(Jpsi_TRUEID) == 0 || TMath::Abs(Jpsi_MC_MOTHER_ID) == 0 || TMath::Abs(L1_TRUEID) == 0 || TMath::Abs(L2_TRUEID) == 0 || TMath::Abs(L1_MC_MOTHER_ID) == 0 || TMath::Abs(L2_MC_MOTHER_ID) == 0 || TMath::Abs(H_TRUEID) == 0 || TMath::Abs(H_MC_MOTHER_ID) == 0'
