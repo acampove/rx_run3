@@ -102,6 +102,8 @@ def load_conf(
     cpath = files(package).joinpath(fpath)
     cpath = cast(str, cpath)
 
+    log.debug(f'Loading configuration from: {cpath}')
+
     cfg   = OmegaConf.load(cpath)
     cfg   = cast(DictConfig, cfg)
 
