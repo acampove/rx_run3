@@ -9,7 +9,7 @@ import inspect
 from importlib.resources   import files
 from importlib.util        import find_spec
 from typing                import Callable, Any, cast
-from functools             import cache, wraps
+from functools             import wraps
 from contextlib            import contextmanager
 
 import importlib.util
@@ -78,7 +78,6 @@ def load_data(package : str, fpath : str) -> Any:
 
     return data
 # --------------------------------
-@cache
 def load_conf(
     package       : str,
     fpath         : str,
