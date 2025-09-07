@@ -67,6 +67,7 @@ ll_from_bstrn     : 'TMath::Abs(Jpsi_MC_MOTHER_ID) == 531'
 b_is_bzero        : 'TMath::Abs(B_TRUEID) == 511'
 b_is_bplus        : 'TMath::Abs(B_TRUEID) == 521'
 b_is_bstrn        : 'TMath::Abs(B_TRUEID) == 531'
+b_is_lambd        : 'TMath::Abs(B_TRUEID) == 5122'
 # ----------
 tracks_from_bp    : '{h_from_bplus} && {lep_from_bplus}'
 # -----------------
@@ -75,11 +76,27 @@ not_fail_mes      : 'TMath::Abs(B_TRUEID)  != 0 && TMath::Abs(Jpsi_TRUEID) != 0 
 not_fail_moth_1   : 'TMath::Abs(L1_MC_MOTHER_ID)   != 0 && TMath::Abs(L2_MC_MOTHER_ID) != 0'
 not_fail_moth_2   : 'TMath::Abs(Jpsi_MC_MOTHER_ID) != 0 && TMath::Abs(H_MC_MOTHER_ID)  != 0'
 not_fail          : '{not_fail_lep} && {not_fail_mes} && {not_fail_moth_1} && {not_fail_moth_2}' 
-
+not_reso_ee       : '({12153001} == 0) && ({12153020} == 0)'
+not_reso_mm       : '({12143001} == 0) && ({12143010} == 0)'
 ll_mother         : '(({ll_is_jpsi} && {lep_from_jpsi}) || ({ll_is_psi2} && {lep_from_psi2}))'
-inclusive_bzero   : '{lep_are_electrons} && {ll_mother} && {b_is_bzero}  && {not_fail}'
-inclusive_bplus   : '{lep_are_electrons} && {ll_mother} && {b_is_bplus}  && {not_fail}'
-inclusive_bstrn   : '{lep_are_electrons} && {ll_mother} && {b_is_bstrn}  && {not_fail}'
+#-------------------------------------------------------------
+# BdXcHs_ee
+11453001 : '{lep_are_electrons} && {ll_mother} && {b_is_bzero} && {not_fail} && {not_reso_ee}'
+# B+XcHs_ee
+12952000 : '{lep_are_electrons} && {ll_mother} && {b_is_bplus} && {not_fail} && {not_reso_ee}'
+# BsXcHs_ee
+13454001 : '{lep_are_electrons} && {ll_mother} && {b_is_bstrn} && {not_fail} && {not_reso_ee}'
+# LbXcHs_ee
+15454101 : '{lep_are_electrons} && {ll_mother} && {b_is_lambd} && {not_fail} && {not_reso_ee}'
+#-------------------------------------------------------------
+# bdXcHs_mm
+11442001: '{lep_are_muons}      && {ll_mother} && {b_is_bzero} && {not_fail} && {not_reso_mm}'
+# bpXcHs_mm
+12442001: '{lep_are_muons}      && {ll_mother} && {b_is_bplus} && {not_fail} && {not_reso_mm}'
+# bsXcHs_mm
+13442001: '{lep_are_muons}      && {ll_mother} && {b_is_bstrn} && {not_fail} && {not_reso_mm}'
+# LbXcHs_mm
+15442001: '{lep_are_muons}      && {ll_mother} && {b_is_lambd} && {not_fail} && {not_reso_mm}'
 # -----------------
 bukpmm   : '{lep_are_muons} && {tracks_from_bp} && {b_is_bplus} && {h_is_kaon}'
 12113001 : '{bukpmm}'
