@@ -14,6 +14,7 @@ from contextlib            import contextmanager
 
 import importlib.util
 import yaml
+from yaml.constructor      import ConstructorError
 from omegaconf.errors      import ConfigKeyError
 from omegaconf             import ListConfig, OmegaConf, DictConfig, ValidationError
 from dmu.generic           import hashing
@@ -103,7 +104,11 @@ def load_conf(
 
     log.debug(f'Loading configuration from: {cpath}')
 
-    cfg   = OmegaConf.load(cpath)
+    try:
+        cfg = OmegaConf.load(cpath)
+    except ConstructorError as exc:
+        raise ConstructorError(f'Cannot load {cpath}') from exc
+
     cfg   = cast(DictConfig, cfg)
 
     _validate_schema(cfg=cfg, package=package, fpath=fpath)
