@@ -39,7 +39,7 @@ def test_nopid(sample : str):
     gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
     rdf = gtr.get_rdf(per_file=False)
 
-    cut = tm.get_truth_bukll(sample)
+    cut = tm.get_truth(sample, kind='bukll')
     ini = rdf.Count().GetValue()
     rdf = rdf.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
@@ -58,7 +58,7 @@ def test_bukee(sample : str):
     gtr = RDFGetter(sample=sample, trigger=trigger, analysis='rx')
     rdf = gtr.get_rdf(per_file=False)
 
-    cut = tm.get_truth_bukll(sample)
+    cut = tm.get_truth(sample, kind='bukll')
     ini = rdf.Count().GetValue()
     rdf = rdf.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
@@ -77,7 +77,7 @@ def test_bukmm(sample : str):
     gtr = RDFGetter(sample=sample, trigger=trigger, analysis='rx')
     rdf = gtr.get_rdf(per_file=False)
 
-    cut = tm.get_truth_bukll(sample)
+    cut = tm.get_truth(sample, kind='bukll')
     ini = rdf.Count().GetValue()
     rdf = rdf.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
@@ -96,7 +96,7 @@ def test_bdkstee(sample : str):
     gtr = RDFGetter(sample=sample, trigger=trigger, analysis='rx')
     rdf = gtr.get_rdf(per_file=False)
 
-    cut = tm.get_truth_bukll(sample)
+    cut = tm.get_truth(sample, kind='bukll')
     ini = rdf.Count().GetValue()
     rdf = rdf.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
