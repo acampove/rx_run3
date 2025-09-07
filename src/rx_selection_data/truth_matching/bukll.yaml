@@ -58,6 +58,7 @@ lep_from_bstrn    : 'TMath::Abs(L1_MC_MOTHER_ID)==   531 && TMath::Abs(L2_MC_MOT
 lep_from_lambd    : 'TMath::Abs(L1_MC_MOTHER_ID) == 5122 && TMath::Abs(L2_MC_MOTHER_ID) ==  5122'
 # ----------
 ll_is_gamma       : 'TMath::Abs(Jpsi_TRUEID) ==    22'
+ll_is_pizero      : 'TMath::Abs(Jpsi_TRUEID) ==   111'
 ll_is_jpsi        : 'TMath::Abs(Jpsi_TRUEID) ==   443'
 ll_is_psi2        : 'TMath::Abs(Jpsi_TRUEID) ==100443'
 
