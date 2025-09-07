@@ -29,7 +29,16 @@ class Resolver:
         self._cfg            = { str(key) : value for key, value in cfg.items()}
         self._max_iterations = 20
     # ----------------------
-    def __call__(self, key : str|int) -> str:
+    def __contains__(self, item : str|int) -> bool:
+        '''
+        Parameters
+        -------------
+        item: Key of underlying dictionary 
+        '''
+
+        return item in self._cfg
+    # ----------------------
+    def __getitem__(self, key : str|int) -> str:
         '''
         Parameters
         -------------
@@ -61,3 +70,4 @@ class Resolver:
             raise ValueError(f'Maximum number of itearations, {self._max_iterations} reached, circular reference is likely')
 
         return expr
+# ----------------------

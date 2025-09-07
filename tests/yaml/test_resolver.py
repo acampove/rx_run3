@@ -51,13 +51,17 @@ def test_simple(kind : str):
 
     yrs = Resolver(cfg=cfg)
 
+    assert 'c' in yrs
+
+    assert 'missing' not in yrs
+
     if kind == 'simple':
-        assert yrs('c') == 'something nested here'
+        assert yrs['c'] == 'something nested here'
         return
 
     if kind in ['recursive_1', 'recursive_2']:
         with pytest.raises(ValueError):
-            yrs('a')
+            yrs['a']
 
         return
 
