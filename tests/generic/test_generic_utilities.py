@@ -14,7 +14,10 @@ from dmu.logging.log_store import LogStore
 log=LogStore.add_logger('dmu:test_generic_utilities')
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before any test
+    '''
     LogStore.set_level('dmu:generic:utilities'     , 10)    
     LogStore.set_level('dmu:test_generic_utilities', 10)    
 # -------------------------
@@ -113,7 +116,7 @@ def test_load_conf_schema_validation_no_package(no_schema_pkg):
         gut.enforce_schema_validation(value=True):
         cfg = gut.load_conf(
             package='fake_data',
-            fpath  ='config.yaml')
+            fpath  ='missing_config.yaml')
 # -------------------------
 def test_load_conf_schema_validation_no_file():
     '''
