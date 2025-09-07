@@ -224,55 +224,6 @@ ll_cut   : '({l1_cut}) || ({l2_cut})'
 #reso B+ -> (K*+ -> (K_S0 -> pi+ pi-) pi+) e+ e-
 12125101 : '{b_is_bplus} && {lep_from_electrons} && {lep_from_bplus} && {h_is_pion} && ({h_is_kshort} || {h_from_kstplus})'
 #-------------------------------------------------------------
-#Bd->XcHs
-pick     = _get_inclusive_match(lep=11, mes=511)
-no_reso  = _get_no_reso(channel = 'ee')
-
-11453001 : '({pick}) && ({no_reso})'
-#-------------------------------------------------------------
-elif event_type == '12952000':
-    #B+->XcHs
-    pick     = _get_inclusive_match(lep=11, mes=521)
-    no_reso  = _get_no_reso(channel = 'ee')
-
-    cut      = '({pick}) && ({no_reso})'
-elif event_type == '13454001':
-    #Bs->XcHs
-    pick     = _get_inclusive_match(lep=11, mes=531)
-    no_reso  = _get_no_reso(channel = 'ee')
-
-    cut      = '({pick}) && ({no_reso})'
-elif event_type == '15454101':
-    # LbXcHs_ee
-    pick     = _get_inclusive_match(lep=11, mes=5122)
-    no_reso  = _get_no_reso(channel = 'ee')
-
-    cut      = '({pick}) && ({no_reso})'
-#-------------------------------------------------------------
-elif event_type == '11442001':
-    # bdXcHs_mm
-    pick     = _get_inclusive_match(lep=13, mes=511)
-    no_reso  = _get_no_reso(channel = 'mm')
-
-    cut      = '({pick}) && ({no_reso})'
-elif event_type == '12442001':
-    # bpXcHs_mm
-    pick     = _get_inclusive_match(lep=13, mes=521)
-    no_reso  = _get_no_reso(channel = 'mm')
-
-    cut      = '({pick}) && ({no_reso})'
-elif event_type == '13442001':
-    # bsXcHs_mm
-    pick     = _get_inclusive_match(lep=13, mes=531)
-    no_reso  = _get_no_reso(channel = 'mm')
-
-    cut      = '({pick}) && ({no_reso})'
-elif event_type == '15442001':
-    # LbXcHs_mm
-    pick     = _get_inclusive_match(lep=13, mes=5122)
-    no_reso  = _get_no_reso(channel = 'mm')
-
-    cut      = '({pick}) && ({no_reso})'
 #-------------------------------------------------------------
 #exclusive jpsi kst ee Bu
 12155100 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_pion} && ({h_from_kstplus} or {h_is_kshort}) && (TMath::Abs(H_MC_GD_MOTHER_ID) == 521 or TMath::Abs(H_MC_GD_MOTHER_ID) == 323)'
