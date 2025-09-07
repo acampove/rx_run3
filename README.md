@@ -274,7 +274,7 @@ This structure needs to be resolved and this can be done with:
 from dmu.yaml.resolver     import Resolver
 
 yrs = Resolver(cfg=cfg)
-val = yrs('composite_3')
+val = yrs['composite_3']
 ```
 
 where `cfg` is the dictionary respresenting the configuration
