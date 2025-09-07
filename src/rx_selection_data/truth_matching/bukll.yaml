@@ -186,9 +186,9 @@ ll_cut   : '({l1_cut}) || ({l2_cut})'
 15114021 : '{b_is_lambd} && {lep_from_muons} && {lep_from_lambd} && ({h_is_pion} || {h_is_proton}) && {h_from_lambd}'
 # -------------
 # Lb p K ee
-15124011 : '{b_is_lambd} && {lep_from_electrons} && {lep_from_lambd} && ({h_is_kaon} || {h_is_proton}) && {h_from_lambd}'
+15124011 : '{b_is_lambd} && {lep_are_electrons} && {lep_from_lambd} && ({h_is_kaon} || {h_is_proton}) && {h_from_lambd}'
 # Lb p pi ee
-15124021 : '{b_is_lambd} && {lep_from_electrons} && {lep_from_lambd} && ({h_is_pion} || {h_is_proton}) && {h_from_lambd}'
+15124021 : '{b_is_lambd} && {lep_are_electrons} && {lep_from_lambd} && ({h_is_pion} || {h_is_proton}) && {h_from_lambd}'
 # -------------
 # Lb p K Jpsi(-> mm)
 15144001 : '{b_is_lambd} && {lep_from_muons}    && ({h_is_kaon} || {h_is_proton}) && {h_from_lambd} && {ll_is_jpsi} && {ll_from_lambd} && {lep_from_jpsi}'
@@ -215,33 +215,33 @@ ll_cut   : '({l1_cut}) || ({l2_cut})'
 #B+ -> Jpsi ee K*+(Kpi0)
 12153420 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons}  && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstplus}'
 #B+ -> K*+(-> K+ pi0) Jpsi ee
-12153001 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstplus}'
+12153001 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstplus}'
 #reso Psi mumu
 12143020 : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_from_muons}     && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
 #reso Psi ee
-12153012 : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_from_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
+12153012 : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
 #B+ psi2S(ee) K*+(Kpi0)
-12153430 : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_from_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_kstplus}'
+12153430 : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_kstplus}'
 #reso jpsi pi mumu
 12143010 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_from_muons}     && {lep_from_jpsi} && {h_is_pion} && {h_from_bplus}'
 #reso jpsi pi ee
-12153020 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_pion} && {h_from_bplus}'
+12153020 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_pion} && {h_from_bplus}'
 #reso B+ -> (K*+ -> (K_S0 -> pi+ pi-) pi+) e+ e-
-12125101 : '{b_is_bplus} && {lep_from_electrons} && {lep_from_bplus} && {h_is_pion} && ({h_from_kshort} || {h_from_kstplus})'
+12125101 : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} && {h_is_pion} && ({h_from_kshort} || {h_from_kstplus})'
 #-------------------------------------------------------------
 #-------------------------------------------------------------
 #exclusive jpsi kst ee Bu
-12155100 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_pion} && ({h_from_kstplus} or {h_from_kshort}) && (TMath::Abs(H_MC_GD_MOTHER_ID) == 521 or TMath::Abs(H_MC_GD_MOTHER_ID) == 323)'
+12155100 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_pion} && ({h_from_kstplus} or {h_from_kshort}) && (TMath::Abs(H_MC_GD_MOTHER_ID) == 521 or TMath::Abs(H_MC_GD_MOTHER_ID) == 323)'
 #  B0 -> (KS0 -> pi+ pi-) (J/psi(1S) -> e+ e-)
-11154100 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_pion} && {h_from_kshort}'
+11154100 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_pion} && {h_from_kshort}'
 # Bd -> Jpsi(ee) Kst
-11154001 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstzero}'
+11154001 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstzero}'
 # Bd -> Jpsi(mm) Kst
 11144001 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_muons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstzero}'
 # Bd -> Jpsi(mm) KS(pipi)
 11144103 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_muons} && {lep_from_jpsi} && {h_is_pion} && {h_from_kshort}'
 #reso jpsi kst ee Bs
-13454001 : '{b_is_bstrn} && {ll_is_jpsi} && {ll_from_bstrn} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstzero}'
+13454001 : '{b_is_bstrn} && {ll_is_jpsi} && {ll_from_bstrn} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstzero}'
 # Bs Jpsi(mm) Phi(kk)
 13144001: '{b_is_bstrn} && {ll_is_jpsi} && {ll_from_bstrn} && {lep_from_muons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_phi}'
 13144010: '{b_is_bstrn} && {ll_is_jpsi} && {ll_from_bstrn} && {lep_from_muons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_phi}'
@@ -249,24 +249,24 @@ ll_cut   : '({l1_cut}) || ({l2_cut})'
 # Bs mm Phi(kk)
 13114006 : '{b_is_bstrn} && {lep_from_muons} && {lep_from_bstrn} && {h_is_kaon} && {h_from_phi}'
 # Bs Jpsi(ee) Phi(kk)
-13154001 : '{b_is_bstrn} && {ll_is_jpsi} && {ll_from_bstrn} && {lep_from_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_phi}'
+13154001 : '{b_is_bstrn} && {ll_is_jpsi} && {ll_from_bstrn} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_phi}'
 #Bd->psi2S(=>ee) K*
-11154011 : '{b_is_bzero} && {ll_is_psi2} && {ll_from_bzero} && {lep_from_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_kstzero}'
+11154011 : '{b_is_bzero} && {ll_is_psi2} && {ll_from_bzero} && {lep_are_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_kstzero}'
 #Bd->pi0(->ee gamma) K*0(Kpi)
-11124402 : '{b_is_bzero} && TMath::Abs(Jpsi_TRUEID) == 111 && {ll_from_bzero} && {lep_from_electrons} && TMath::Abs(L1_MC_MOTHER_ID) == 111 && TMath::Abs(L2_MC_MOTHER_ID) == 111 && {h_is_kaon} && {h_from_kstzero}'
+11124402 : '{b_is_bzero} && {ll_is_pizero} && {ll_from_bzero} && {lep_are_electrons} && {lep_from_pizero} && {h_is_kaon} && {h_from_kstzero}'
 #Bd-> K_1 (k pi pi0) gamma
 11202603_1 : '{ll_is_gamma} && ({ll_from_bzero} || {ll_from_pizero})'
-11202603 : '{b_is_bzero} && {11202603_1} && {lep_from_electrons} && {lep_from_gamma} && {h_is_kaon}'
+11202603 : '{b_is_bzero} && {11202603_1} && {lep_are_electrons} && {lep_from_gamma} && {h_is_kaon}'
 #Bd->pi0(->gamma gamma) K*0(Kpi)
-11102453 : '{b_is_bzero} && {ll_is_gamma} && {ll_from_pizero} && {lep_from_electrons} && {lep_from_gamma} && {h_is_kaon} && {h_from_kstzero}'
+11102453 : '{b_is_bzero} && {ll_is_gamma} && {ll_from_pizero} && {lep_are_electrons} && {lep_from_gamma} && {h_is_kaon} && {h_from_kstzero}'
 #Bd-> gamma K*0(Kpi)
-11102202 : '{b_is_bzero} && {ll_is_gamma} && {ll_from_bzero} && {lep_from_electrons} && {lep_from_gamma} && {h_is_kaon} && {h_from_kstzero}'
+11102202 : '{b_is_bzero} && {ll_is_gamma} && {ll_from_bzero} && {lep_are_electrons} && {lep_from_gamma} && {h_is_kaon} && {h_from_kstzero}'
 #reso Psi X
-11453012 : '{b_is_bzero} && {ll_is_psi2} && {ll_from_bzero} && {lep_from_electrons} && {lep_from_psi2}'
+11453012 : '{b_is_bzero} && {ll_is_psi2} && {ll_from_bzero} && {lep_are_electrons} && {lep_from_psi2}'
 #Bd K*(k pi) ee.
-11124002 : '{b_is_bzero} && {lep_from_electrons} && {l1_from_bzero} && {l2_from_bzero} && ({h_is_kaon} || {h_is_pion}) && {h_from_kstzero}'
+11124002 : '{b_is_bzero} && {lep_are_electrons} && {l1_from_bzero} && {l2_from_bzero} && ({h_is_kaon} || {h_is_pion}) && {h_from_kstzero}'
 #Bd (k pi) ee.
-11124037 : '{b_is_bzero} && {lep_from_electrons} && {l1_from_bzero} && {l2_from_bzero} && ({h_is_kaon} || {h_is_pion}) && {h_from_bzero}'
+11124037 : '{b_is_bzero} && {lep_are_electrons} && {l1_from_bzero} && {l2_from_bzero} && ({h_is_kaon} || {h_is_pion}) && {h_from_bzero}'
 #Bd K*(k pi) mm
 11114014 : '{b_is_bzero} && {lep_from_muons}    &&  {l1_from_bzero} && {l2_from_bzero} && ({h_is_kaon} || {h_is_pion}) && {h_from_kstzero}'
 #B+ -> K*+ ee
