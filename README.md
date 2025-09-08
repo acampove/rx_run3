@@ -80,7 +80,7 @@ In the case of the MVA friend trees the branches added would be `mva.mva_cmb` an
 
 Thus, one can easily extend the ntuples with extra branches without remaking them.
 
-## Checking what samples exist
+## Checking what samples exist as ntuples in ANADIR
 
 For this run:
 
