@@ -256,3 +256,15 @@ samples:
 ```
 
 The configs will be already in the package in `ap_utilities_data/validation/`
+
+## Utilities
+
+### Listing ntupled samples
+
+In order to list the samples ntupled and belonging to `rd_ap_2024` (can be made more flexible in the future) do:
+
+```bash
+list_ap_samples -v v1r3788
+```
+
+where the version is associated to the AP MR.
