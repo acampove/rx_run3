@@ -1,20 +1,18 @@
 [TOC]
 
-# ap_utilities
-
 - For instructions on how to install this project, check [this](doc/installation.md)   
 - For documentation specific to MVA lines of the RD group, check [this](doc/mva_lines.md)   
 - For tools to deal with nicknames check [this](doc/nicknames.md)
 - For instructions to mount EOS in your laptop check [this](doc/mounting_eos.md)
 - For instructions on how to make the decay descriptor fields check [this](doc/descriptors.md)
 
-## Environment
+# Environment
 
 The following variables _can_ be defined:
 
 `ANADIR`: Where outputs will be saved, if not specified, outputs will go to `/tmp`
 
-## Add samples
+# Add samples
 
 In order to add new samples to the analysis do:
 
@@ -36,7 +34,7 @@ Samples in `priority` section, but not in `all` will go in `new`.
 **missing.yaml**: If the missing sections were filled with lists of event types, `missing.yaml`
 will contain the mappings with the decay string.
 
-### Add the list of samples 
+## Add the list of samples 
 
 The list goes in `rd_ap_2024/info.yaml`. For this, the [installation](doc/installation.md#with-access-to-dirac) that allows access to DIRAC is needed. 
 Given a set of settings specified in `ap_utilities_data/samples/2024.yaml` file like:
@@ -78,7 +76,7 @@ medium_priority:
   12143010  : $B_u \to J/\psi(\mu^+ \mu^-) \pi^+$
 ```
 
-### Check existing samples 
+## Check existing samples 
 
 run:
 
@@ -93,7 +91,7 @@ to check if the samples exist using 6 threads (default is 1). The script will pr
 
 Once this has been done, the lines needed for the `info.yaml` can be obtained by concatenating the partial outputs with:
 
-### Pick only samples that do not exist as ntuples
+## Pick only samples that do not exist as ntuples
 
 Currently there are 241 AP jobs associated to the MC. Only 35 are missing, in order to find out
 what ntupling jobs need to be send do:
@@ -108,9 +106,9 @@ which will:
 - Check, using `apd`, what samples are missing
 - Create a `info.yaml` in the current directory, only with those samples.
 
-## How to add a decay 
+# How to add a decay 
 
-### Add the decay matching lines 
+## Add the decay matching lines 
 This is done in `rd_ap_2024/tupling/config/mcfuntuple.yaml`. Each section in this file looks like:
 
 ```yaml
@@ -131,7 +129,7 @@ Bd_Denu_Kstenu_eq_VisibleInAcceptance_HighVisMass_EGDWC:
 - To get the descriptors one can either write them down in the case of a few samples or run follow [these](doc/descriptors.md) instructions in case of multiple.
 
 
-### Updating `tupling/config/samples_turbo_lines_mapping.yaml`
+## Updating `tupling/config/samples_turbo_lines_mapping.yaml`
 
 This file lists the samples together with the _analyses_ like in:
 
@@ -146,26 +144,26 @@ Bc_pimumu_eq_PHSP_BcVegPy_DPC:
 
 Where the _analyses_ are sets of HLT2 lines described in `tupling/config/analyses.yaml`.
 
-## Checks 
+# Checks 
 
-### Before pipelines 
+## Before pipelines 
 
 There are four files relevant to the production:
 
-#### tupling/config/samples_turbo_lines_mapping.yaml
+## tupling/config/samples_turbo_lines_mapping.yaml
 
 This is where the sample $\to$ HLT line category is specified. I.e. each sample
 will be processed under a certain group of lines, `rx_muon` lines, `rx_electron` lines etc.
 
-#### tupling/config/mcfuntuple.yaml
+## tupling/config/mcfuntuple.yaml
 
 This is where the decay destriptors used for the `MCDecayTree` building are specified
 
-#### info.yaml 
+## info.yaml 
 
 This is where the samples that are made into ntuples will be specified.
 
-#### Reference event types
+## Reference event types
 
 Which are stored in this project, in:
 
@@ -215,7 +213,7 @@ missing:
       - ...
 ```
 
-### After pipelines
+## After pipelines
 
 This is done in an environment with access to EOS. To gain EOS access from outside of LXPLUS (e.g. a laptop) follow 
 [these](doc/mounting_eos.md) instructions. After that do:
@@ -257,9 +255,9 @@ samples:
 
 The configs will be already in the package in `ap_utilities_data/validation/`
 
-## Utilities
+# Utilities
 
-### Listing ntupled samples
+## Listing ntupled samples
 
 In order to list the samples ntupled and belonging to `rd_ap_2024` (can be made more flexible in the future) do:
 
