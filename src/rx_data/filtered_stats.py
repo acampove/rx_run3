@@ -9,7 +9,8 @@ from importlib.resources import files
 from pathlib             import Path
 
 import pandas as pnd
-from dmu.generic import utilities as gut
+from dmu.generic        import utilities as gut
+from rx_data.ganga_info import GangaInfo
 
 from dmu.logging.log_store import LogStore
 
@@ -46,6 +47,7 @@ class FilteredStats:
         self._evt_rgx  : str           = r'_(\d{8})_'
         self._trg_rgx  : str           = r'_(Hlt2RD_.*_MVA)_'
         self._sam_rgx  : str           = r'(^mc_.*)_Hlt2RD_.*'
+        self._inf = GangaInfo()
 
         if max_lfns is None:
             return
@@ -207,6 +209,7 @@ class FilteredStats:
         row['Trigger'  ] = self._info_from_row(path=row.path, kind='trigger', regex=self._trg_rgx)
         row['Version'  ] = self._d_lfn[row.path]
         row['Sample'   ] = self._sample_from_row(row=row)
+        row['block'    ] = self._inf.block_from_fname(fname=row.path)
 
         return row 
     # ----------------------
