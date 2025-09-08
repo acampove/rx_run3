@@ -150,20 +150,20 @@ Where the _analyses_ are sets of HLT2 lines described in `tupling/config/analyse
 
 There are four files relevant to the production:
 
-## tupling/config/samples_turbo_lines_mapping.yaml
+### tupling/config/samples_turbo_lines_mapping.yaml
 
 This is where the sample $\to$ HLT line category is specified. I.e. each sample
 will be processed under a certain group of lines, `rx_muon` lines, `rx_electron` lines etc.
 
-## tupling/config/mcfuntuple.yaml
+### tupling/config/mcfuntuple.yaml
 
 This is where the decay destriptors used for the `MCDecayTree` building are specified
 
-## info.yaml 
+### info.yaml 
 
 This is where the samples that are made into ntuples will be specified.
 
-## Reference event types
+### Reference event types
 
 Which are stored in this project, in:
 
