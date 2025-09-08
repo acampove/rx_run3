@@ -101,11 +101,13 @@ class FilteredStats:
 
         return False
     # ----------------------
-    def _get_paths(self) -> list[Path]:
+    def _get_paths(self) -> dict[Path, int]:
         '''
         Returns
         -------------
-        List of paths to JSON files with LFNs
+        Dictionary with:
+        Key   : Path to JSON file with LFNs
+        value : Version of LFNs, e.g. 10
         '''
         base = files('rx_data_lfns').joinpath(self._analysis)
         base = Path(str(base))
@@ -116,7 +118,7 @@ class FilteredStats:
             raise ValueError(f'No LFN directories found in: {base}')
         l_dir= sorted(l_dir, key=self._version_from_path)
 
-        l_file = []
+        d_file : dict[Path, int] = {} 
         log.info(80 * '-')
         log.info(f'{"Files":<10}{"LFNs":<20}{"Path"}')
         log.info(80 * '-')
@@ -133,40 +135,49 @@ class FilteredStats:
             else:
                 log.info(f'{nfiles:<10}{nlines:<20,}{dir_path}')
 
-            l_file += jfiles
+            d_tmp : dict[Path, int] = { path : self._version_from_path(dir_path) for path in jfiles }
+            d_file.update(d_tmp)
+
         log.info(80 * '-')
 
-        ntot_files = len(l_file)
+        ntot_files = len(d_file)
         log.info(f'Found {ntot_files} LFNs')
 
-        return l_file
+        return d_file
     # ----------------------
-    def _lfns_from_paths(self, l_path : list[Path]) -> list[str]:
+    def _lfns_from_paths(self, d_path : dict[Path, int]) -> dict[str,int]:
         '''
         Parameters
         -------------
-        l_path: List of paths to JSON files storing LFNs
+        d_path: Dictionary with:
+            Key  : Path to JSON file with LFNs
+            Value: Version that JSON file belongs to, e.g. 10
 
         Returns
         -------------
-        List of LFNs
+        Dictionary with:
+            Key  : LFN
+            Value: Version, e.g. 10
         '''
-        l_lfn : list[str] = []
-        for path in l_path:
-            value  = gut.load_json(path=path)
+        log.debug('Getting LFNs from paths')
+
+        d_lfn : dict[str,int] = {} 
+        for path, version in d_path.items():
+            lfns = gut.load_json(path=path)
             # TODO: improve this check
-            if not isinstance(value, list):
+            if not isinstance(lfns, list):
                 raise TypeError(f'Could not load list of strings from: {path}')
 
-            l_lfn += value 
+            d_tmp = {os.path.basename(lfn) : version for lfn in lfns}
+            d_lfn.update(d_tmp)
 
-        nlfn = len(l_lfn)
+        nlfn = len(d_lfn)
         if nlfn == 0:
             raise ValueError('No LFNs found')
 
         log.debug(f'Found {nlfn} LFNs')
 
-        return l_lfn
+        return d_lfn
     # ----------------------
     def get_df(self) -> pnd.DataFrame:
         '''
@@ -174,11 +185,9 @@ class FilteredStats:
         -------------
         Pandas dataframe with requested information
         '''
-        l_path = self._get_paths()
-        l_lfn  = self._lfns_from_paths(l_path = l_path)
+        d_path       = self._get_paths()
+        self._d_lfn  = self._lfns_from_paths(d_path = d_path)
 
-        return
-        df     = self._df_from_lfns(l_lfn = l_lfn)
 
         return df
 # -------------------------------
