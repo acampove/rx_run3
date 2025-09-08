@@ -1,7 +1,10 @@
 '''
 This module contains the FilteredStats class
 '''
+import os
+import re
 
+from tqdm                import tqdm
 from importlib.resources import files
 from pathlib             import Path
 
@@ -35,6 +38,12 @@ class FilteredStats:
         '''
         self._analysis = analysis
         self._min_vers = min_vers
+        self._d_lfn    : dict[str,int] = {} 
+        self._columns  : list[str]     = ['EventType', 'Sample', 'Trigger', 'Version']
+
+        self._evt_rgx  : str           = r'_(\d{8})_'
+        self._trg_rgx  : str           = r'_(Hlt2RD_.*_MVA)_'
+        self._sam_rgx  : str           = r'(^mc_.*)_Hlt2RD_.*'
     # ----------------------
     def _lines_from_files(self, l_path : list[Path]) -> int:
         '''
