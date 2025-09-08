@@ -29,12 +29,14 @@ class FilteredStats:
     def __init__(
         self, 
         analysis : str,
-        min_vers : int) -> None:
+        min_vers : int,
+        max_lfns : int|None=None) -> None:
         '''
         Parameters
         -------------
-        analysis: E.g. rx, nopid
-        min_vers: Minimum version, will ignore anything before this
+        analysis : E.g. rx, nopid
+        min_vers : Minimum version, will ignore anything before this
+        max_lfns : Maximum number of LFNs per JSON file
         '''
         self._analysis = analysis
         self._min_vers = min_vers
@@ -44,6 +46,14 @@ class FilteredStats:
         self._evt_rgx  : str           = r'_(\d{8})_'
         self._trg_rgx  : str           = r'_(Hlt2RD_.*_MVA)_'
         self._sam_rgx  : str           = r'(^mc_.*)_Hlt2RD_.*'
+
+        if max_lfns is None:
+            return
+
+        if not isinstance(max_lfns, int):
+            raise TypeError(f'Invalid value of max_lfns: {max_lfns}')
+
+        self._max_lfns = max_lfns
     # ----------------------
     def _lines_from_files(self, l_path : list[Path]) -> int:
         '''
@@ -168,6 +178,9 @@ class FilteredStats:
             if not isinstance(lfns, list):
                 raise TypeError(f'Could not load list of strings from: {path}')
 
+            if self._max_lfns is not None:
+                lfns = lfns[:self._max_lfns]
+
             d_tmp = {os.path.basename(lfn) : version for lfn in lfns}
             d_lfn.update(d_tmp)
 
@@ -270,7 +283,7 @@ class FilteredStats:
         log.info('Filling dataframe')
         df         = pnd.DataFrame(columns=self._columns, index=indexes)
         df['path'] = list(self._d_lfn)
-        df         = df.progress_apply(self._add_information, axis=1)
+        df         = df.progress_apply(self._add_information, axis=1) # type: ignore
         df         = df.drop(columns=['path'])
 
         return df
