@@ -179,6 +179,83 @@ class FilteredStats:
 
         return d_lfn
     # ----------------------
+    def _add_information(self, row : pnd.Series) -> pnd.Series:
+        '''
+        Parameters
+        -------------
+        row: Pandas series representing row of empty dataframe 
+
+        Returns
+        -------------
+        Series representing updated row
+        '''
+
+        row['EventType'] = self._event_type_from_row(row=row) 
+        row['Trigger'  ] = self._info_from_row(path=row.path, kind='trigger', regex=self._trg_rgx)
+        row['Version'  ] = self._d_lfn[row.path]
+        row['Sample'   ] = self._sample_from_row(row=row)
+
+        return row 
+    # ----------------------
+    def _sample_from_row(self, row : pnd.Series) -> str:
+        '''
+        Parameters
+        -------------
+        row: Pandas series with path
+
+        Returns
+        -------------
+        Name of sample
+        '''
+        path = row.path
+        if path.startswith('data'):
+            return 'data'
+
+        return self._info_from_row(path=row.path, kind='sample', regex=self._sam_rgx)
+    # ----------------------
+    def _event_type_from_row(self, row : pnd.Series) -> str:
+        '''
+        Parameters
+        -------------
+        row: Row of dataframe with information
+
+        Returns
+        -------------
+        Event type
+        '''
+        path = row.path
+        if path.startswith('data'):
+            return 'data'
+
+        return self._info_from_row(path=path, kind='event type', regex=self._evt_rgx)
+    # ----------------------
+    def _info_from_row(
+        self, 
+        path  : str,
+        kind  : str, 
+        regex : str) -> str:
+        '''
+        Parameters
+        -------------
+        path: Name of sample, e.g. mc_magdown_11264001_bd_dmnpipl_eq_dpc_Hlt2RD_BuToKpEE_MVA_5e3bdf6390
+        kind: E.g. 'event type'
+        regex: E.g. self._evt_rgx
+
+        Returns
+        -------------
+        Information requested
+        '''
+
+        val  = re.search(regex, path)
+        if val is None:
+            raise ValueError(f'Cannot extract {kind} from: {path}')
+
+        l_info = val.groups()
+        if len(l_info) != 1:
+            raise ValueError(f'Cannot extract event type from: {path}')
+
+        return l_info[0]
+    # ----------------------
     def get_df(self) -> pnd.DataFrame:
         '''
         Returns
@@ -187,7 +264,14 @@ class FilteredStats:
         '''
         d_path       = self._get_paths()
         self._d_lfn  = self._lfns_from_paths(d_path = d_path)
+        indexes      = range(len(self._d_lfn))
 
+        tqdm.pandas()
+        log.info('Filling dataframe')
+        df         = pnd.DataFrame(columns=self._columns, index=indexes)
+        df['path'] = list(self._d_lfn)
+        df         = df.progress_apply(self._add_information, axis=1)
+        df         = df.drop(columns=['path'])
 
         return df
 # -------------------------------
