@@ -164,7 +164,7 @@ class GangaInfo:
         l_cmd    = [ line for line in lines if 'execmd' in line ]
         cmd_line = l_cmd[0]
 
-        mtch     = re.match(GangaInfo.BLOCK_RGX, cmd_line)
+        mtch     = re.search(GangaInfo.BLOCK_RGX, cmd_line)
         if not mtch:
             raise ValueError(f'Cannot find block information in: {cmd_line}')
 
@@ -192,7 +192,6 @@ class GangaInfo:
         if not dir_path.is_dir():
             raise FileNotFoundError(f'Cannot untar {tar_fpath} into {untar_dir}')
 
-        inp_file = dir_path/'exe-script.py'
         if not inp_file.is_file():
             raise FileNotFoundError(f'Cannot find exe-script.py in: {dir_path}')
 
