@@ -101,6 +101,10 @@ class GangaInfo:
             tar_fname = subjob_dir/f'input/_input_sandbox_{job_id}_{subjob}.tgz'
             inp_fname = self._file_from_tarball(tar_fpath=tar_fname)
 
+            if not out_fname.is_file():
+                log.info(f'Cannot find output for job: {job_id}/{subjob}')
+                continue
+
             log.debug('')
             log.debug(f'Searching: {subjob_dir}')
             info : dict[str,str] = self._info_from_logs(
