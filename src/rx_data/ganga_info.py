@@ -26,7 +26,7 @@ class GangaInfo:
 
     CACHE_DIR : Final[Path] = Path(f'/tmp/{user}/cache/ganga_info')
     BLOCK_RGX : Final[str ] = r'(w\d{2}_\d{2})_v\dr\d{4}'
-    OFILE_RGX : Final[str ] = r'\'(data|mc)_.*\.root\''
+    OFILE_RGX : Final[str ] = r'\'((?:data|mc)_.*\.root)\''
     # ----------------------
     def __init__(self, job_ids : list[int]) -> None:
         '''
@@ -57,6 +57,9 @@ class GangaInfo:
             info = self._info_from_job_id(job_id=job_id)
             data.update(info)
 
+        if len(data) == 0:
+            raise ValueError('Empty filename -> block container')
+
         return data
     # ----------------------
     def _info_from_job_id(self, job_id : int) -> dict[str,str]:
@@ -83,6 +86,8 @@ class GangaInfo:
             tar_fname = subjob_dir/f'input/_input_sandbox_{job_id}_{subjob}.tgz'
             inp_fname = self._file_from_tarball(tar_fpath=tar_fname)
 
+            log.debug('')
+            log.debug(f'Searching: {subjob_dir}')
             info : dict[str,str] = self._info_from_logs(
                 input =inp_fname, 
                 output=out_fname)
@@ -107,6 +112,9 @@ class GangaInfo:
         '''
         block    = self._block_from_input(path=input)
         l_sample = self._samples_from_output(path=output)
+
+        log.debug(f'Block: {block}')
+        log.debug(f'Samples: {l_sample}')
 
         return { sample : block for sample in l_sample }
     # ----------------------
@@ -228,6 +236,9 @@ class GangaInfo:
         block identifier, e.g. w40_42
         '''
         if fname not in self._data:
+            for key, val in self._data.items():
+                log.info(f'{key:<30}{val}')
+
             raise ValueError(f'File {fname} not found')
 
         return self._data[fname]
