@@ -1,0 +1,233 @@
+'''
+Module with the GangaInfo class
+'''
+import os
+import re
+import tarfile
+
+from pathlib import Path
+from typing import Final
+
+from dmu.logging.log_store import LogStore
+
+log=LogStore.add_logger('rx_data:ganga_info')
+# -------------------------------
+class GangaInfo:
+    '''
+    This class is meant to:
+
+    - Look for Ganga sandbox
+    - Read from exe-script.py and Script1_Ganga_Executable.log mapping between
+      sample names and block information
+    - Make them available to the user
+    '''
+    user = os.environ['USER']
+
+    CACHE_DIR : Final[Path] = Path(f'/tmp/{user}/cache/ganga_info')
+    BLOCK_RGX : Final[str ] = r'(w\d{2}_\d{2})_v\dr\d{4}'
+    OFILE_RGX : Final[str ] = r'\'(data|mc)_.*\.root\''
+    # ----------------------
+    def __init__(self, job_ids : list[int]) -> None:
+        '''
+        Parameters
+        -------------
+        job_ids: List of Ganga job IDs where search will happen
+        '''
+        self._ganga_dir : Path          = Path(os.environ['GANGADIR']) 
+        self._data      : dict[str,str] = self._load_data(job_ids=job_ids)
+
+        GangaInfo.CACHE_DIR.mkdir(exist_ok=True)
+    # ----------------------
+    def _load_data(self, job_ids : list[int]) -> dict[str,str]:
+        '''
+        Parameters
+        -------------
+        job_ids: List of integers representing job ganga IDs
+
+        Returns
+        -------------
+        dictionary with:
+
+        Key  : ROOT file name
+        Value: Block information
+        '''
+        data : dict[str,str] = {}
+        for job_id in job_ids:
+            info = self._info_from_job_id(job_id=job_id)
+            data.update(info)
+
+        return data
+    # ----------------------
+    def _info_from_job_id(self, job_id : int) -> dict[str,str]:
+        '''
+        Parameters
+        -------------
+        job_id: Ganga job ID
+
+        Returns
+        -------------
+        dictionary with:
+
+        Key  : ROOT file name
+        Value: Block information
+        '''
+        job_dir : Path         = self._ganga_dir/f'{job_id}'
+        l_subjob_dir           = job_dir.glob('*')
+        d_data : dict[str,str] = {}
+
+        for subjob_dir in l_subjob_dir:
+            subjob    = subjob_dir.name
+
+            out_fname = subjob_dir/'output/Script1_Ganga_Executable.log'
+            tar_fname = subjob_dir/f'input/_input_sandbox_{job_id}_{subjob}.tgz'
+            inp_fname = self._file_from_tarball(tar_fpath=tar_fname)
+
+            info : dict[str,str] = self._info_from_logs(
+                input =inp_fname, 
+                output=out_fname)
+
+            d_data.update(info)
+
+        return d_data
+    # ----------------------
+    def _info_from_logs(self, input : Path, output : Path) -> dict[str,str]:
+        '''
+        Parameters
+        -------------
+        input: Path to exe-script.py file
+        output: Path to log file with job output information
+
+        Returns
+        -------------
+        dictionary with:
+
+        Key  : sample name
+        Value: block information
+        '''
+        block    = self._block_from_input(path=input)
+        l_sample = self._samples_from_output(path=output)
+
+        return { sample : block for sample in l_sample }
+    # ----------------------
+    def _samples_from_output(self, path : Path) -> list[str]:
+        '''
+        Parameters
+        -------------
+        path: Path to log file with job output information
+
+        Returns
+        -------------
+        List of ROOT file names produced by job
+        '''
+        with open(path, 'r') as ifile:
+            lines = ifile.readlines()
+
+        try:
+            [line] = [ line for line in lines if 'files on WN:' in line ]
+        except ValueError as exc:
+            raise ValueError(f'Cannot find list of outputs in log: {path}') from exc
+
+        # Many jobs have no output files
+        mtch = re.match(GangaInfo.OFILE_RGX, line)
+        if not mtch:
+            log.debug(f'Missing outputs in {GangaInfo.OFILE_RGX}')
+            return []
+
+        l_group = mtch.groups()
+        if isinstance(l_group, list) and all(isinstance(x, str) for x in l_group):
+            return l_group
+
+        raise ValueError(f'Returned list of output files is not a list: {l_group}')
+    # ----------------------
+    def _block_from_input(self, path : Path) -> str:
+        '''
+        Parameters
+        -------------
+        input: Path to exe-script.py file
+
+        Returns
+        -------------
+        block information
+        '''
+        with open(path, 'r') as ifile:
+            lines = ifile.readlines()
+
+        l_cmd    = [ line for line in lines if 'execmd' in line ]
+        cmd_line = l_cmd[0]
+
+        mtch     = re.match(GangaInfo.BLOCK_RGX, cmd_line)
+        if not mtch:
+            raise ValueError(f'Cannot find block information in: {cmd_line}')
+
+        return mtch.group(1)
+    # ----------------------
+    def _file_from_tarball(self, tar_fpath : Path) -> Path:
+        '''
+        Parameters
+        -------------
+        tar_fpath: Path to tarball containing input files
+
+        Returns
+        -------------
+        Path to input file, after opening tarball. 
+        This should go to a caching directory 
+        in order not to pullute the ganga sandbox
+        '''
+        untar_dir = GangaInfo.CACHE_DIR/'input_logs'
+        untar_dir.mkdir(exist_ok=True)
+
+        with tarfile.open(tar_fpath, 'r:gz') as tar:
+            tar.extractall(path=untar_dir)
+
+        dir_path = untar_dir/tar_fpath.name.replace('.tgz', '')
+        if not dir_path.is_dir():
+            raise FileNotFoundError(f'Cannot untar {tar_fpath} into {untar_dir}')
+
+        inp_file = dir_path/'exe-script.py'
+        if not inp_file.is_file():
+            raise FileNotFoundError(f'Cannot find exe-script.py in: {dir_path}')
+
+        return inp_file
+    # ----------------------
+    @property
+    def ganga_dir(self) -> Path:
+        '''
+        Returns 
+        --------------
+        Path to Ganga sandbox directory
+        '''
+        if self._ganga_dir is None:
+            raise ValueError('Ganga directory not defined')
+
+        return self._ganga_dir
+    # ----------------------
+    @ganga_dir.setter
+    def ganga_dir(self, value : Path) -> None:
+        '''
+        Parameters
+        --------------
+        value: Path to Ganga sandbox, containing numbered directories
+        '''
+        if self._ganga_dir is not None:
+            raise ValueError(f'Ganga directory already set to: {self._ganga_dir}')
+
+        if not value.is_dir():
+            raise FileNotFoundError(f'Directory not found: {value}')
+
+        self._ganga_dir = value
+    # ----------------------
+    def block_from_fname(self, fname : str) -> str:
+        '''
+        Parameters
+        -------------
+        fname: Name of ROOT file produced by filtering step
+
+        Returns
+        -------------
+        block identifier, e.g. w40_42
+        '''
+        if fname not in self._data:
+            raise ValueError(f'File {fname} not found')
+
+        return self._data[fname]
+# ----------------------
