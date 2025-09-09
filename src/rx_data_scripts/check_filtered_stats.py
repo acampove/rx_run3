@@ -21,7 +21,7 @@ log=LogStore.add_logger('rx_data:check_filtered_stats')
 # ----------------------
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Script used to check statistics from filtered ntuples in the grid')
-    parser.add_argument('-m', '--min_vers' , type=int, help='Minimum version from which to start check, e.g 5 (v5)', required=True)
+    parser.add_argument('-v', '--versions' , nargs='+', help='Versions to use', required=True)
     args = parser.parse_args()
 
     return args
@@ -43,7 +43,9 @@ def _get_df(cfg : argparse.Namespace) -> pnd.DataFrame:
         log.info(f'Loading from: {out_path}')
         return pnd.read_parquet(out_path)
 
-    fst = FilteredStats(analysis='rx', min_vers=cfg.min_vers)
+    log.info(f'Using min vers: {cfg.min_vers}')
+
+    fst = FilteredStats(analysis='rx', versions=cfg.versions)
     df  = fst.get_df()
 
     df.to_parquet(out_path)
