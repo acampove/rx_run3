@@ -299,12 +299,24 @@ class FilteredStats:
 
         return l_jobid
     # ----------------------
-    def get_df(self) -> pnd.DataFrame:
+    def get_df(self, force_update : bool = False) -> pnd.DataFrame:
         '''
+        Parameters
+        -------------
+        force_update: If true, won't use cached dataframe
+
         Returns
         -------------
         Pandas dataframe with requested information
         '''
+        versions  = '_'.join([str(version) for version in self._versions])
+        cache_dir = Path('.cache/')
+        cache_dir.mkdir(exist_ok=True)
+        out_path = cache_dir/f'data_{versions}.parquet'
+        if out_path.is_file() and not force_update:
+            log.info(f'Loading from: {out_path}')
+            return pnd.read_parquet(out_path)
+
         d_path       = self._get_paths()
         job_ids      = self._job_ids_from_paths(d_path=d_path)
         self._inf    = GangaInfo(job_ids=job_ids)
@@ -317,6 +329,11 @@ class FilteredStats:
         df['path'] = list(self._d_lfn)
         df         = df.progress_apply(self._add_information, axis=1) # type: ignore
         df         = df.drop(columns=['path'])
+        df         = df[df['block' ] != 'missing']
+        df         = df.drop_duplicates()
+
+        df.to_parquet(out_path)
+        log.info(f'Caching to: {out_path}')
 
         return df
 # -------------------------------
