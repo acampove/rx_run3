@@ -9,6 +9,7 @@ import tarfile
 from pathlib import Path
 from typing import Final
 
+from dmu.generic.utilities import gut, hashing
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_data:ganga_info')
@@ -52,6 +53,14 @@ class GangaInfo:
         Key  : ROOT file name
         Value: Block information
         '''
+        hash_obj = self._ganga_dir, job_ids 
+        val      = hashing.hash_object(hash_obj)
+        opath    = GangaInfo.CACHE_DIR/f'{val}.json'
+        if opath.is_file():
+            log.info(f'Loading from: {opath}')
+            data = gut.load_json(path=opath)
+            return data
+
         data : dict[str,str] = {}
         for job_id in job_ids:
             info = self._info_from_job_id(job_id=job_id)
@@ -59,6 +68,9 @@ class GangaInfo:
 
         if len(data) == 0:
             raise ValueError('Empty filename -> block container')
+
+        log.info(f'Caching to: {opath}')
+        gut.dump_json(data=data, path=opath)
 
         return data
     # ----------------------
