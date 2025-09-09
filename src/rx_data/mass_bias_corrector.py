@@ -9,7 +9,7 @@ import pandas as pnd
 from vector                          import MomentumObject3D as v3d
 from vector                          import MomentumObject4D as v4d
 from pandarallel                     import pandarallel
-from ROOT                            import RDataFrame, RDF
+from ROOT                            import RDataFrame, RDF # type: ignore
 from dmu.logging.log_store           import LogStore
 from rx_q2.q2smear_corrector         import Q2SmearCorrector
 
@@ -84,12 +84,12 @@ class MassBiasCorrector:
     '''
     # ------------------------------------------
     def __init__(
-            self,
-            rdf                   : RDataFrame,
-            skip_correction       : bool  = False,
-            nthreads              : int   = 1,
-            brem_energy_threshold : float = 400,
-            ecorr_kind            : str   = 'brem_track_2'):
+        self,
+        rdf                   : RDataFrame,
+        skip_correction       : bool  = False,
+        nthreads              : int   = 1,
+        brem_energy_threshold : float = 400,
+        ecorr_kind            : str   = 'brem_track_2'):
         '''
         rdf : ROOT dataframe
         skip_correction: Will do everything but not correction. Needed to check that only the correction is changing data.
