@@ -2,14 +2,13 @@
 Module with functions needed to test BremBiasCorrector class
 '''
 import os
-import numpy
 import pytest
 import matplotlib.pyplot as plt
 
 from vector                      import MomentumObject4D as v4d
 from dmu.logging.log_store       import LogStore
+from ecal_calibration            import calo_translator as ctran
 from rx_data.brem_bias_corrector import BremBiasCorrector
-from rx_data                     import calo_translator as ctran
 
 log=LogStore.add_logger('rx_data:test_brem_bias_corrector')
 # -----------------------------------------------
