@@ -30,17 +30,17 @@ class FilteredStats:
     def __init__(
         self, 
         analysis : str,
-        min_vers : int,
+        versions : list[int],
         max_lfns : int|None=None) -> None:
         '''
         Parameters
         -------------
         analysis : E.g. rx, nopid
-        min_vers : Minimum version, will ignore anything before this
+        versions : Versions of JSON files to check 
         max_lfns : Maximum number of LFNs per JSON file
         '''
         self._analysis = analysis
-        self._min_vers = min_vers
+        self._versions = versions 
         self._max_lfns = max_lfns
         self._columns  : list[str] = ['EventType', 'Sample', 'Trigger', 'Version']
 
@@ -103,7 +103,7 @@ class FilteredStats:
         '''
         numeric_version = self._version_from_path(element=path)
 
-        if numeric_version < self._min_vers:
+        if numeric_version not in self._versions:
             return True
 
         return False
