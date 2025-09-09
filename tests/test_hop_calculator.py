@@ -43,11 +43,11 @@ def _plot_variables(rdf : RDataFrame, rdf_hop : RDataFrame, name : str) -> None:
     d_data = rdf_hop.AsNumpy(['hop_alpha', 'hop_mass'])
     arr_ms = rdf.AsNumpy(['B_M'])['B_M']
 
-    plt.hist(d_data['hop_alpha'], bins=40, range=[0,5])
+    plt.hist(d_data['hop_alpha'], bins=40, range=(0,5))
     plt.savefig(f'{out_dir}/alpha.png')
     plt.close()
 
-    plt.hist(d_data['hop_mass'], bins=40, histtype='step', label='HOP', range=[0, 10_000])
+    plt.hist(d_data['hop_mass'], bins=40, histtype='step', label='HOP', range=(0, 10_000))
     plt.hist(            arr_ms, bins=40, histtype='step', label='Original')
     plt.legend()
     plt.title(name)
@@ -61,8 +61,8 @@ def _compare_sig_bkg(rdf_sig : RDataFrame, rdf_bkg : RDataFrame, name : str) -> 
     arr_sig = rdf_sig.AsNumpy(['hop_mass'])['hop_mass']
     arr_bkg = rdf_bkg.AsNumpy(['hop_mass'])['hop_mass']
 
-    plt.hist(arr_sig, range=[3000, 6000], bins=50, histtype='step', density=True, label='Signal')
-    plt.hist(arr_bkg, range=[3000, 6000], bins=50, histtype='step', density=True, label='Background')
+    plt.hist(arr_sig, range=(3000, 6000), bins=50, histtype='step', density=True, label='Signal')
+    plt.hist(arr_bkg, range=(3000, 6000), bins=50, histtype='step', density=True, label='Background')
 
     plt.legend()
     plt.savefig(f'{out_dir}/mass.png')
