@@ -6,10 +6,11 @@ import os
 import yaml
 import pytest
 import matplotlib.pyplot as plt
-from ROOT                   import RDataFrame
+from ROOT                   import RDataFrame # type: ignore
 from dmu.logging.log_store  import LogStore
 from rx_data.hop_calculator import HOPCalculator
 from rx_data.mis_calculator import MisCalculator
+from rx_data.rdf_getter     import RDFGetter
 
 # ----------------------------
 class Data:
@@ -19,20 +20,15 @@ class Data:
     out_dir = '/tmp/rx_data/tests/hop_calculator'
 # ----------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This will run before tests
+    '''
     LogStore.set_level('rx_data:hop_calculator', 10)
 # ----------------------------
-def _get_samples() -> dict:
-    samples_list='/publicfs/ucas/user/campoverde/Data/RX_run3/v5/rx_samples.yaml'
-    with open(samples_list, encoding='utf-8') as ifile:
-        cfg = yaml.safe_load(ifile)
-
-    return cfg
-# ----------------------------
 def _get_rdf(sample : str, trigger : str) -> RDataFrame:
-    cfg    = _get_samples()
-    l_path = cfg[sample][trigger]
-    rdf    = RDataFrame('DecayTree', l_path[0])
+    gtr    = RDFGetter(sample=sample, trigger=trigger)
+    rdf    = gtr.get_rdf(per_file=False)
     rdf    = rdf.Range(10_000)
 
     mcl    = MisCalculator(rdf=rdf, trigger=trigger)
