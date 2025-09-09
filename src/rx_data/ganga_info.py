@@ -183,7 +183,12 @@ class GangaInfo:
         in order not to pullute the ganga sandbox
         '''
         untar_dir = GangaInfo.CACHE_DIR/'input_logs'
-        untar_dir.mkdir(exist_ok=True)
+        untar_dir.mkdir(exist_ok=True, parents=True)
+
+        inp_file = untar_dir/'exe-script.py'
+        if inp_file.is_file():
+            log.debug(f'Input file already found: {inp_file}')
+            return inp_file
 
         with tarfile.open(tar_fpath, 'r:gz') as tar:
             tar.extractall(path=untar_dir)
