@@ -1,6 +1,7 @@
 '''
 Module with the GangaInfo class
 '''
+from contextlib import contextmanager
 import os
 import re
 import tarfile
@@ -230,4 +231,36 @@ class GangaInfo:
             raise ValueError(f'File {fname} not found')
 
         return self._data[fname]
+    # ----------------------
+    @classmethod
+    def set_ganga_dir(cls, dir : Path|str):
+        '''
+        This is a context manager meant to override the value of
+        GANGADIR, which is the location of the sandbox, i.e. the
+        directory where the numbered directory jobs are located.
+
+        Parameters
+        -------------
+        dir: Directory path for Ganga sandbox
+        '''
+        if isinstance(dir, str):
+            dir = Path(dir)
+
+        if not dir.is_dir():
+            raise FileNotFoundError(f'Non-existent path: {dir}')
+
+        old_dir = os.environ.get('GANGADIR')
+
+        @contextmanager
+        def _context():
+            try:
+                os.environ['GANGADIR'] = str(dir)
+                yield
+            finally:
+                if old_dir is None:
+                    os.environ.pop('GANGADIR', None)
+                else:
+                    os.environ['GANGADIR'] = old_dir
+
+        return _context()
 # ----------------------
