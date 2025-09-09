@@ -132,6 +132,10 @@ def _get_rdf(
     if bdt   is not None:
         d_sel['bdt' ] = bdt
 
+    # We run over 1000 entries to speed up tests
+    # Those are from pre-UT data, which the block
+    # requirement removes. Need to drop that requirement
+    del d_sel['block']
     for name, cut in d_sel.items():
         log.debug(f'{name:<20}{cut}')
         rdf = rdf.Filter(cut, name)
