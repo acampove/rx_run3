@@ -11,7 +11,7 @@ import pytest
 import yaml
 import matplotlib.pyplot as plt
 
-from ROOT                        import RDataFrame
+from ROOT                        import RDataFrame # type: ignore
 from dmu.logging.log_store       import LogStore
 from dmu.plotting.plotter_1d     import Plotter1D as Plotter
 from rx_selection                import selection as sel
@@ -29,7 +29,10 @@ class Data:
     nentries   = -1
 #-----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before tests
+    '''
     LogStore.set_level('rx_data:mass_bias_corrector'     , 10)
     LogStore.set_level('rx_data:electron_bias_corrector' , 20)
     LogStore.set_level('rx_data:test_mass_bias_corrector', 10)
@@ -40,6 +43,7 @@ def _initialize():
 #-----------------------------------------
 def _load_conf() -> dict:
     cfg_path = files('rx_data_data').joinpath('tests/mass_bias_corrector/mass_overlay.yaml')
+    cfg_path = str(cfg_path)
     with open(cfg_path, encoding='utf-8') as ifile:
         cfg = yaml.safe_load(ifile)
 
@@ -119,7 +123,7 @@ def _get_rdf(
 
     with RDFGetter.exclude_friends(names=['brem_track_2']):
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
     d_sel['mass'] = 'B_const_mass_M > 5160'
