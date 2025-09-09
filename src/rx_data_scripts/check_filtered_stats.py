@@ -12,7 +12,6 @@ This script will:
 
 import argparse
 import pandas as pnd
-from pathlib import Path
 
 from rx_data.filtered_stats import FilteredStats
 from dmu.logging.log_store  import LogStore
@@ -36,21 +35,8 @@ def _get_df(cfg : argparse.Namespace) -> pnd.DataFrame:
     -------------
     Pandas dataframe with information
     '''
-    versions  = '_'.join([str(version) for version in cfg.versions])
-    cache_dir = Path('.cache/')
-    cache_dir.mkdir(exist_ok=True)
-    out_path = cache_dir/f'data_{versions}.parquet'
-    if out_path.is_file():
-        log.info(f'Loading from: {out_path}')
-        return pnd.read_parquet(out_path)
-
-    log.info(f'Using min vers: {versions}')
-
     fst = FilteredStats(analysis='rx', versions=cfg.versions)
     df  = fst.get_df()
-
-    df.to_parquet(out_path)
-    log.info(f'Caching to: {out_path}')
 
     return df
 # ----------------------
