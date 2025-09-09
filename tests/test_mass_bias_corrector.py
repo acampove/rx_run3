@@ -155,6 +155,14 @@ def _get_rdf(
 
     _check_input_columns(rdf)
 
+    nentries = rdf.Count().GetValue()
+    if nentries == 0:
+        rep = rdf.Report()
+        rep.Print()
+        raise ValueError('Empty dataframe found')
+    else:
+        log.info(f'Found {nentries} entries')
+
     return rdf
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
