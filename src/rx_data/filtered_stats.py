@@ -45,8 +45,8 @@ class FilteredStats:
         self._columns  : list[str] = ['EventType', 'Sample', 'Trigger', 'Version', 'Mag']
 
         self._evt_rgx        : str = r'_(\d{8})_'
-        self._trg_rgx        : str = r'_(Hlt2RD_.*_MVA)_'
-        self._sam_rgx        : str = r'(^mc_.*)_Hlt2RD_.*'
+        self._trg_rgx        : str = r'_(Hlt2RD_.*)_\w{10}\.root'
+        self._sam_rgx        : str = r'^mc_.*_\d{8}_(\w+)_Hlt2RD_.*'
         self._mag_rgx        : str = r'_(magup|magdown)_' 
         self._fname_json_rgx : str = r'lfn_(\d{3})\.json'
 
@@ -172,6 +172,8 @@ class FilteredStats:
         d_lfn : dict[str,int] = {} 
         for path, version in d_path.items():
             lfns = gut.load_json(path=path)
+            lfns = [ lfn for lfn in lfns if '_MVA_cal_' not in lfn ]
+
             # TODO: improve this check
             if not isinstance(lfns, list):
                 raise TypeError(f'Could not load list of strings from: {path}')
