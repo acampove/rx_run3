@@ -54,6 +54,9 @@ class GangaInfo:
         Key  : ROOT file name
         Value: Block information
         '''
+        if len(job_ids) == 0:
+            raise ValueError('Empty job IDs list passed')
+
         hash_obj = self._ganga_dir, job_ids 
         val      = hashing.hash_object(hash_obj)
         opath    = GangaInfo.CACHE_DIR/f'{val}.json'
