@@ -41,13 +41,15 @@ class FilteredStats:
         '''
         self._analysis = analysis
         self._min_vers = min_vers
-        self._d_lfn    : dict[str,int] = {} 
-        self._columns  : list[str]     = ['EventType', 'Sample', 'Trigger', 'Version']
+        self._columns  : list[str] = ['EventType', 'Sample', 'Trigger', 'Version']
 
-        self._evt_rgx  : str           = r'_(\d{8})_'
-        self._trg_rgx  : str           = r'_(Hlt2RD_.*_MVA)_'
-        self._sam_rgx  : str           = r'(^mc_.*)_Hlt2RD_.*'
-        self._inf = GangaInfo()
+        self._evt_rgx        : str = r'_(\d{8})_'
+        self._trg_rgx        : str = r'_(Hlt2RD_.*_MVA)_'
+        self._sam_rgx        : str = r'(^mc_.*)_Hlt2RD_.*'
+        self._fname_json_rgx : str = r'lfn_(\d{3})\.json'
+
+        self._d_lfn : dict[str,int] = {} 
+        self._inf   : GangaInfo
 
         if max_lfns is None:
             return
