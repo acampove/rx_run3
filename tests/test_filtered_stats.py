@@ -23,7 +23,7 @@ def test_simple():
     '''
     Simplest test of class
     '''
-    fst = FilteredStats(analysis='rx', min_vers=8, max_lfns=3)
+    fst = FilteredStats(analysis='rx', versions=[7, 10])
     df  = fst.get_df()
 
     print(df)
@@ -32,7 +32,7 @@ def test_all_lfns():
     '''
     Search for information for all the LFNs in the JSON files
     '''
-    fst = FilteredStats(analysis='rx', min_vers=8)
+    fst = FilteredStats(analysis='rx', versions=[7, 10])
     df  = fst.get_df()
 
     print(df)
