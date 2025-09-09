@@ -80,6 +80,29 @@ In the case of the MVA friend trees the branches added would be `mva.mva_cmb` an
 
 Thus, one can easily extend the ntuples with extra branches without remaking them.
 
+## Checking what samples exist as filtered ntuples in the grid
+
+This is useful to avoid filtering the same samples multiple times, which would
+
+- Slow down the analysis due to the large ammount of data needed to download
+- Occupy more space in the user's grid
+
+For this run:
+
+```python
+from rx_data.filtered_stats import FilteredStats
+
+fst = FilteredStats(analysis='rx', versions=[7, 10])
+fst.exists(event_type='12153001', block='w31_34', polarity='magup')
+```
+
+This will check if a specific sample exist in the versions 7 or 10 of the filtering.
+Where these versions are the versions of the directories in `rx_data_lfns/rx`.
+
+This will require access to the user's ganga sandbox through the `GANGADIR` variable.
+This should be improved eventually, ideally by integrating the filtering with the
+analysis productions pipeline.
+
 ## Checking what samples exist as ntuples in ANADIR (locally)
 
 For this run:
