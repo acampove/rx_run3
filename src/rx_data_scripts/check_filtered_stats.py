@@ -17,7 +17,7 @@ from pathlib import Path
 from rx_data.filtered_stats import FilteredStats
 from dmu.logging.log_store  import LogStore
 
-log=LogStore.add_logger('rx_data:filtered_stats')
+log=LogStore.add_logger('rx_data:check_filtered_stats')
 # ----------------------
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Script used to check statistics from filtered ntuples in the grid')
