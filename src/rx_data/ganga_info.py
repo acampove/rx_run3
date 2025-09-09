@@ -26,7 +26,8 @@ class GangaInfo:
     user = os.environ['USER']
 
     CACHE_DIR : Final[Path] = Path(f'/tmp/{user}/cache/ganga_info')
-    BLOCK_RGX : Final[str ] = r'(w\d{2}_\d{2})_v\dr\d{4}'
+    MC_BK_RGX : Final[str ] = r'(w\d{2}_\d{2})_v\dr\d{4}'
+    DT_BK_RGX : Final[str ] = r'\'(data_turbo_2\dc\d)\''
     OFILE_RGX : Final[str ] = r'\'((?:data|mc)_\w*\.root)\''
     # ----------------------
     def __init__(self, job_ids : list[int]) -> None:
@@ -178,11 +179,15 @@ class GangaInfo:
         l_cmd    = [ line for line in lines if 'execmd' in line ]
         cmd_line = l_cmd[0]
 
-        mtch     = re.search(GangaInfo.BLOCK_RGX, cmd_line)
-        if not mtch:
-            raise ValueError(f'Cannot find block information in: {cmd_line}')
+        mtch     = re.search(GangaInfo.MC_BK_RGX, cmd_line)
+        if mtch:
+            return mtch.group(1)
 
-        return mtch.group(1)
+        mtch     = re.search(GangaInfo.DT_BK_RGX, cmd_line)
+        if mtch:
+            return mtch.group(1)
+
+        raise ValueError(f'Cannot find block information in: {cmd_line}')
     # ----------------------
     def _file_from_tarball(self, tar_fpath : Path) -> Path:
         '''
