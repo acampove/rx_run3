@@ -1,9 +1,20 @@
 '''
 This module has tests for the GangaInfo class
 '''
+import pytest
 from pathlib            import Path
+
+from dmu.generic.utilities import LogStore
 from rx_data.ganga_info import GangaInfo
 
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('rx_data:ganga_info', 10)
+# ----------------------
 def test_ganga_info():
     block = 'w40_42'
     fname = 'mc_magup_11264001_bd_dmnpipl_eq_dpc_Hlt2RD_BuToKpEE_MVA_bd46a6ff81.root'
