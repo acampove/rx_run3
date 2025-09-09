@@ -42,11 +42,12 @@ class FilteredStats:
         self._analysis = analysis
         self._versions = versions 
         self._max_lfns = max_lfns
-        self._columns  : list[str] = ['EventType', 'Sample', 'Trigger', 'Version']
+        self._columns  : list[str] = ['EventType', 'Sample', 'Trigger', 'Version', 'Mag']
 
         self._evt_rgx        : str = r'_(\d{8})_'
         self._trg_rgx        : str = r'_(Hlt2RD_.*_MVA)_'
         self._sam_rgx        : str = r'(^mc_.*)_Hlt2RD_.*'
+        self._mag_rgx        : str = r'_(magup|magdown)_' 
         self._fname_json_rgx : str = r'lfn_(\d{3})\.json'
 
         self._d_lfn : dict[str,int] = {} 
@@ -205,6 +206,7 @@ class FilteredStats:
         row['Version'  ] = self._d_lfn[row.path]
         row['Sample'   ] = self._sample_from_row(row=row)
         row['block'    ] = self._inf.block_from_fname(fname=row.path, fallback='missing')
+        row['Mag'      ] = self._info_from_row(path=row.path, kind='trigger', regex=self._mag_rgx)
 
         return row 
     # ----------------------
