@@ -36,3 +36,10 @@ def test_all_lfns():
     df  = fst.get_df()
 
     print(df)
+# ----------------------
+def test_exists():
+    '''
+    Test for exists method
+    '''
+    fst = FilteredStats(analysis='rx', versions=[7, 10])
+    assert fst.exists(event_type='12153001', block='w31_34', polarity='magup')
