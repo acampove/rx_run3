@@ -42,4 +42,7 @@ def test_exists():
     Test for exists method
     '''
     fst = FilteredStats(analysis='rx', versions=[7, 10])
-    assert fst.exists(event_type='12153001', block='w31_34', polarity='magup')
+    assert     fst.exists(event_type='12153001', block='w31_34', polarity='magup')
+    assert not fst.exists(event_type='12345678', block='w31_34', polarity='magup')
+    assert not fst.exists(event_type='12153001', block='wxx_xx', polarity='magup')
+    assert not fst.exists(event_type='12153001', block='w31_34', polarity='magxx')
