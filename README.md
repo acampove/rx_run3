@@ -80,12 +80,12 @@ In the case of the MVA friend trees the branches added would be `mva.mva_cmb` an
 
 Thus, one can easily extend the ntuples with extra branches without remaking them.
 
-## Checking what samples exist as ntuples in ANADIR
+## Checking what samples exist as ntuples in ANADIR (locally)
 
 For this run:
 
 ```bash
-check_sample_stats -p rx
+check_local_stats -p rx
 ```
 which will print something like:
 
