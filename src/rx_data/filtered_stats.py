@@ -211,7 +211,7 @@ class FilteredStats:
         row['Trigger'  ] = self._info_from_row(path=row.path, kind='trigger', regex=self._trg_rgx)
         row['Version'  ] = self._d_lfn[row.path]
         row['Sample'   ] = self._sample_from_row(row=row)
-        row['block'    ] = self._inf.block_from_fname(fname=row.path)
+        row['block'    ] = self._inf.block_from_fname(fname=row.path, fallback='missing')
 
         return row 
     # ----------------------
