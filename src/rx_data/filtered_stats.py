@@ -50,7 +50,8 @@ class FilteredStats:
         self._mag_rgx        : str = r'_(magup|magdown)_' 
         self._fname_json_rgx : str = r'lfn_(\d{3})\.json'
 
-        self._d_lfn : dict[str,int] = {} 
+        self._d_lfn : dict[str,int]      = {} 
+        self._df    : pnd.DataFrame|None = None
         self._inf   : GangaInfo
     # ----------------------
     def _lines_from_files(self, l_path : list[Path]) -> int:
@@ -353,8 +354,10 @@ class FilteredStats:
         -------------
         True, if the sample exists among the versions provided
         '''
-        df = self.get_df()
+        if self._df is None:
+            self._df = self.get_df()
 
+        df   = self._df
         mask = (df['EventType'] == event_type) & (df['block'] == block) & (df['Mag'] == polarity)
         df   = df[mask]
 
