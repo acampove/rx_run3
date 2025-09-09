@@ -194,7 +194,7 @@ class GangaInfo:
         This should go to a caching directory 
         in order not to pullute the ganga sandbox
         '''
-        untar_dir = GangaInfo.CACHE_DIR/'input_logs'
+        untar_dir = GangaInfo.CACHE_DIR/'input_logs'/tar_fpath.name.replace('.tgz', '')
         untar_dir.mkdir(exist_ok=True, parents=True)
 
         inp_file = untar_dir/'exe-script.py'
@@ -205,12 +205,11 @@ class GangaInfo:
         with tarfile.open(tar_fpath, 'r:gz') as tar:
             tar.extractall(path=untar_dir)
 
-        dir_path = untar_dir/tar_fpath.name.replace('.tgz', '')
-        if not dir_path.is_dir():
+        if not untar_dir.is_dir():
             raise FileNotFoundError(f'Cannot untar {tar_fpath} into {untar_dir}')
 
         if not inp_file.is_file():
-            raise FileNotFoundError(f'Cannot find exe-script.py in: {dir_path}')
+            raise FileNotFoundError(f'Cannot find exe-script.py in: {untar_dir}')
 
         return inp_file
     # ----------------------
