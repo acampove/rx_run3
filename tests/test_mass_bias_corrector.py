@@ -101,12 +101,12 @@ def _check_output_columns(rdf : RDataFrame) -> None:
         log.debug(f'   {colname}')
 #-----------------------------------------
 def _get_rdf(
-        nbrem    : None|int  = None,
-        is_inner : None|bool = None,
-        npvs     : None|int  = None,
-        bdt      : None|str  = None,
-        sample   : None|str  = None,
-        is_mc    : bool      = False) -> RDataFrame:
+    nbrem    : None|int  = None,
+    is_inner : None|bool = None,
+    npvs     : None|int  = None,
+    bdt      : None|str  = None,
+    sample   : None|str  = None,
+    is_mc    : bool      = False) -> RDataFrame:
     '''
     Return ROOT dataframe needed for test
     '''
