@@ -27,3 +27,12 @@ def test_simple():
     df  = fst.get_df()
 
     print(df)
+# ----------------------
+def test_all_lfns():
+    '''
+    Search for information for all the LFNs in the JSON files
+    '''
+    fst = FilteredStats(analysis='rx', min_vers=8)
+    df  = fst.get_df()
+
+    print(df)
