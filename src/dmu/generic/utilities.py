@@ -279,15 +279,17 @@ def dump_json(
     else:
         py_data = data
 
-    dir_name = os.path.dirname(path)
-    os.makedirs(dir_name, exist_ok=True)
+    if isinstance(path, str):
+        path = Path(path)
+
+    path.parent.mkdir(exist_ok=True, parents=True)
 
     with open(path, 'w', encoding='utf-8') as ofile:
-        if path.endswith('.json'):
+        if path.name.endswith('.json'):
             json.dump(py_data, ofile, indent=4, sort_keys=sort_keys)
             return
 
-        if path.endswith('.yaml') or path.endswith('.yml'):
+        if path.name.endswith('.yaml') or path.name.endswith('.yml'):
             yaml.dump(py_data, ofile, Dumper=BlockStyleDumper, sort_keys=sort_keys)
             return
 
