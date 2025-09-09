@@ -336,4 +336,36 @@ class FilteredStats:
         log.info(f'Caching to: {out_path}')
 
         return df
+    # ----------------------
+    def exists(
+        self, 
+        event_type : str, 
+        block      : str, 
+        polarity   : str) -> bool:
+        '''
+        Parameters
+        -------------
+        event_type: Event type of sample searched
+        block     : E.g. w31_34
+        polarity  : magup, magdown
+
+        Returns
+        -------------
+        True, if the sample exists among the versions provided
+        '''
+        df = self.get_df()
+
+        mask = (df['EventType'] == event_type) & (df['block'] == block) & (df['Mag'] == polarity)
+        df   = df[mask]
+
+        if len(df) == 0:
+            log.debug(f'No sample matched: {event_type}/{block}/{polarity}')
+            return False
+
+        if len(df) == 1:
+            log.debug(df)
+            return True
+
+        log.info(df)
+        raise ValueError(f'Multiple samples matched: {event_type}/{block}/{polarity}')
 # -------------------------------
