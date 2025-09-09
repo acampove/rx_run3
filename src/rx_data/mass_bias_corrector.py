@@ -113,6 +113,7 @@ class MassBiasCorrector:
         self._silence_logger(name = 'rx_data:electron_bias_corrector')
 
         if self._nthreads > 1:
+            log.info(f'Using multiprocessing with {self._nthreads} processes')
             pandarallel.initialize(nb_workers=self._nthreads, progress_bar=True)
     # ------------------------------------------
     def _rdf_is_mc(self, rdf : RDataFrame) -> bool:
