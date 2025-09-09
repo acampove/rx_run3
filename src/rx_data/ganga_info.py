@@ -27,7 +27,7 @@ class GangaInfo:
 
     CACHE_DIR : Final[Path] = Path(f'/tmp/{user}/cache/ganga_info')
     BLOCK_RGX : Final[str ] = r'(w\d{2}_\d{2})_v\dr\d{4}'
-    OFILE_RGX : Final[str ] = r'\'((?:data|mc)_.*\.root)\''
+    OFILE_RGX : Final[str ] = r'\'((?:data|mc)_\w*\.root)\''
     # ----------------------
     def __init__(self, job_ids : list[int]) -> None:
         '''
@@ -92,7 +92,9 @@ class GangaInfo:
         d_data : dict[str,str] = {}
 
         for subjob_dir in l_subjob_dir:
-            subjob    = subjob_dir.name
+            subjob : str = subjob_dir.name
+            if not subjob.isdigit():
+                continue
 
             out_fname = subjob_dir/'output/Script1_Ganga_Executable.log'
             tar_fname = subjob_dir/f'input/_input_sandbox_{job_id}_{subjob}.tgz'
