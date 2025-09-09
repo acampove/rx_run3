@@ -82,7 +82,7 @@ class Plotter1D(Plotter):
             return
 
         if 'fwhm' in self._d_cfg['plugin']:
-            if varname not in self._d_cfg['plugin']['fwhm']:
+            if varname in self._d_cfg['plugin']['fwhm']:
                 log.debug(f'FWHM plugin found for variable {varname}')
                 cfg = self._d_cfg['plugin']['fwhm'][varname]
                 self._run_fwhm(
