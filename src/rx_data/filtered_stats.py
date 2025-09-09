@@ -41,6 +41,7 @@ class FilteredStats:
         '''
         self._analysis = analysis
         self._min_vers = min_vers
+        self._max_lfns = max_lfns
         self._columns  : list[str] = ['EventType', 'Sample', 'Trigger', 'Version']
 
         self._evt_rgx        : str = r'_(\d{8})_'
@@ -50,14 +51,6 @@ class FilteredStats:
 
         self._d_lfn : dict[str,int] = {} 
         self._inf   : GangaInfo
-
-        if max_lfns is None:
-            return
-
-        if not isinstance(max_lfns, int):
-            raise TypeError(f'Invalid value of max_lfns: {max_lfns}')
-
-        self._max_lfns = max_lfns
     # ----------------------
     def _lines_from_files(self, l_path : list[Path]) -> int:
         '''
