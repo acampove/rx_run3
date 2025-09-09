@@ -44,8 +44,28 @@ def main():
     '''
     Entry point
     '''
+    pnd.set_option('display.max_columns' , None)
+    pnd.set_option('display.max_colwidth', None)
+    pnd.set_option('display.width'       ,    0)
+
     cfg = _parse_args()
     df  = _get_df(cfg)
+
+    df  = df[df['Sample'] != 'data'   ]
+    df  = df[df['block' ] != 'missing']
+
+    for block, df_block in df.groupby('block'):
+        log.info('')
+        log.info(f'Block: {block}')
+        df_block = df_block.drop(columns=['block'])
+
+        for mag, df_mag in df_block.groupby('Mag'):
+            log.info(f'Mag: {mag}')
+            df_mag = df_mag.drop(columns=['Mag'])
+            df_mag = df_mag.reset_index(drop=True)
+
+            df_mag = df_mag.sort_values(by='Version')
+            print(df_mag)
 # ----------------------
 if __name__ == '__main__':
     main()
