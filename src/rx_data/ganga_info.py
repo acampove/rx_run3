@@ -137,16 +137,16 @@ class GangaInfo:
             raise ValueError(f'Cannot find list of outputs in log: {path}') from exc
 
         # Many jobs have no output files
-        mtch = re.match(GangaInfo.OFILE_RGX, line)
+        mtch = re.search(GangaInfo.OFILE_RGX, line)
         if not mtch:
-            log.debug(f'Missing outputs in {GangaInfo.OFILE_RGX}')
+            log.debug(f'Missing file names in {line}')
             return []
 
-        l_group = mtch.groups()
-        if isinstance(l_group, list) and all(isinstance(x, str) for x in l_group):
-            return l_group
+        t_group = mtch.groups()
+        if isinstance(t_group, tuple) and all(isinstance(x, str) for x in t_group):
+            return list(t_group)
 
-        raise ValueError(f'Returned list of output files is not a list: {l_group}')
+        raise ValueError(f'Returned list of output files is not a list: {t_group}')
     # ----------------------
     def _block_from_input(self, path : Path) -> str:
         '''
