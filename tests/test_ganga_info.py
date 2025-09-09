@@ -27,8 +27,9 @@ def test_small():
         inf = GangaInfo(job_ids=[257])
         assert block == inf.block_from_fname(fname=fname)
 # ----------------------
-def test_full():
+@pytest.mark.parametrize('job_id', [257, 258])
+def test_full(job_id : int):
     '''
     Tests with all inputs
     '''
-    inf = GangaInfo(job_ids=[257])
+    inf = GangaInfo(job_ids=[job_id])
