@@ -5,7 +5,8 @@ Module with functions needed to provide hashes
 import os
 import json
 import hashlib
-from typing import Any
+from typing  import Any
+from pathlib import Path
 
 import pandas as pnd
 from omegaconf             import DictConfig, OmegaConf
@@ -17,6 +18,9 @@ def _object_to_string(obj : Any) -> str:
     def default_encoder(x):
         if isinstance(x, DictConfig):
             return OmegaConf.to_container(cfg=x, resolve=True)
+
+        if isinstance(x, Path):
+            return str(x)
 
         log.info(x)
         raise TypeError(f"Unserializable type: {type(x)}")
