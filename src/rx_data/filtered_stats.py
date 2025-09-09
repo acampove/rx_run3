@@ -105,6 +105,7 @@ class FilteredStats:
         numeric_version = self._version_from_path(element=path)
 
         if numeric_version not in self._versions:
+            log.debug(f'{numeric_version} not in {self._versions}')
             return True
 
         return False
@@ -149,6 +150,9 @@ class FilteredStats:
         log.info(80 * '-')
 
         ntot_files = len(d_file)
+        if ntot_files == 0:
+            raise ValueError('No JSON files found')
+
         log.info(f'Found {ntot_files} LFNs')
 
         return d_file
