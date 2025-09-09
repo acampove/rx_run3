@@ -2,6 +2,7 @@
 Module containing generic utility functions
 '''
 import os
+from pathlib import Path
 import time
 import json
 import pickle
@@ -263,7 +264,7 @@ def timeit(f):
 # --------------------------------
 def dump_json(
     data      : dict|str|list|set|tuple|DictConfig|ListConfig,
-    path      : str,
+    path      : str|Path,
     sort_keys : bool = False) -> None:
     '''
     Saves data as JSON or YAML, depending on the extension, supported .json, .yaml, .yml
@@ -292,20 +293,25 @@ def dump_json(
 
         raise NotImplementedError(f'Cannot deduce format from extension in path: {path}')
 # --------------------------------
-def load_json(path : str):
+def load_json(path : str|Path):
     '''
     Loads data from JSON or YAML, depending on extension of files, supported .json, .yaml, .yml
 
     Parameters
     path     : Path to outut file where data is saved
     '''
+    if isinstance(path, str):
+        path = Path(path)
+
+    if not path.is_file:
+        raise FileNotFoundError(f'Cannot find: {path}')
 
     with open(path, encoding='utf-8') as ofile:
-        if path.endswith('.json'):
+        if path.name.endswith('.json'):
             data = json.load(ofile)
             return data
 
-        if path.endswith('.yaml') or path.endswith('.yml'):
+        if path.name.endswith('.yaml') or path.name.endswith('.yml'):
             data = yaml.safe_load(ofile)
             return data
 
