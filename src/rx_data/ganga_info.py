@@ -251,17 +251,21 @@ class GangaInfo:
 
         self._ganga_dir = value
     # ----------------------
-    def block_from_fname(self, fname : str) -> str:
+    def block_from_fname(self, fname : str, fallback : str|None = None) -> str:
         '''
         Parameters
         -------------
-        fname: Name of ROOT file produced by filtering step
+        fname   : Name of ROOT file produced by filtering step
+        fallback: If specified, will use that value for file names without blocks 
 
         Returns
         -------------
         block identifier, e.g. w40_42
         '''
         if fname not in self._data:
+            if fallback is not None:
+                return fallback
+
             for key, val in self._data.items():
                 log.info(f'{key:<30}{val}')
 
