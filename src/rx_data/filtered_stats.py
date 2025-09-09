@@ -272,6 +272,30 @@ class FilteredStats:
 
         return l_info[0]
     # ----------------------
+    def _job_ids_from_paths(self, d_path : dict[Path,int]) -> list[int]:
+        '''
+        Parameters
+        -------------
+        d_path: Dictionary with:
+           Key  : Path to JSON file with LFNs
+           Value: Version of production, not needed here 
+
+        Returns
+        -------------
+        List of ganga jobs associated
+        '''
+        l_name = [ json_path.name for json_path in d_path ]
+        l_jobid= []
+        for name in l_name:
+            mtch = re.match(self._fname_json_rgx, name)
+            if not mtch:
+                raise ValueError(f'Cannot extract ganga Job ID from: {name}')
+
+            [job_id] = mtch.groups()
+            l_jobid.append(job_id)
+
+        return l_jobid
+    # ----------------------
     def get_df(self) -> pnd.DataFrame:
         '''
         Returns
@@ -279,6 +303,8 @@ class FilteredStats:
         Pandas dataframe with requested information
         '''
         d_path       = self._get_paths()
+        job_ids      = self._job_ids_from_paths(d_path=d_path)
+        self._inf    = GangaInfo(job_ids=job_ids)
         self._d_lfn  = self._lfns_from_paths(d_path = d_path)
         indexes      = range(len(self._d_lfn))
 
