@@ -171,12 +171,39 @@ def _types_from_analysis(analysis : str) -> list[str]:
 
     raise ValueError(f'Invalid analysis: {analysis}')
 # ----------------------
+def _remove_already_filtered(l_sample : list[Sample]) -> list[Sample]:
+    '''
+    Parameters
+    -------------
+    l_sample: List of instances of Sample
+
+    Returns
+    -------------
+    Same list, but with the samples already filtered, removed
+    '''
+    l_sample_flt = []
+    log.info('Picking unfiltered samples')
+    for sample in l_sample:
+        etp = sample.event_type
+        blk = sample.block
+        mag = sample.polarity
+
+        if fst.exists(event_type=etp, block=blk, polarity=mag):
+            continue
+
+        log.info(f'    {sample.name}/{sample.version}')
+
+        l_sample_flt.append(sample)
+
+    return l_sample_flt
+# ----------------------
 def main():
     '''
     Entry point
     '''
     cfg      = _parse_args()
     l_sample = _get_samples(cfg=cfg)
+    l_sample = _remove_already_filtered(l_sample=l_sample)
 
     #_build_config(samples=l_sample)
 # ----------------------
