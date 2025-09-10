@@ -640,13 +640,13 @@ transformations:
     wild_card  : []
   hlt_lines:
     lines_phys_ee_mva:
-      - Hlt2RD_BuToKpEE_MVA
-      - Hlt2RD_BuToKpEE_SameSign_MVA
-      - Hlt2RD_BuToKpEE_MVA_cal
-      - Hlt2RD_BuToKpEE_MVA_misid
+      - Hlt2RD_B0ToKpPimEE_MVA
+      - Hlt2RD_B0ToKpPimEE_SameSign_MVA
+      - Hlt2RD_B0ToKpPimEE_MVA_cal
+      - Hlt2RD_B0ToKpPimEE_MVA_misid
     lines_phys_mm_mva:
-      - Hlt2RD_BuToKpMuMu_MVA
-      - Hlt2RD_BuToKpMuMu_SameSign_MVA
+      - Hlt2RD_B0ToKpPimMuMu_MVA
+      - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
   categories:
     bdkstee:
       - Hlt2RD_B0ToKpPimEE_MVA
