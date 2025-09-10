@@ -172,13 +172,15 @@ def _types_from_analysis(analysis : str) -> list[str]:
     cfg = gut.load_conf(package='ap_utilities_data', fpath='analyses/analyses.yaml')
     if analysis == 'rk':
         l_et = cfg.rk[0]
-        return list(map(str, l_et ))
+        l_et = list(map(str, l_et ))
+        return sorted(l_et)
 
     if analysis == 'rkst':
         rk = cfg.rk[0]
         rx = cfg.rx[0] + cfg.rx[1]
         l_et = [ etype for etype in rx if etype not in rk ]
-        return list(map(str, l_et))
+        l_et = list(map(str, l_et ))
+        return sorted(l_et)
 
     raise ValueError(f'Invalid analysis: {analysis}')
 # ----------------------
