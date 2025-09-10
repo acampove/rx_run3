@@ -108,9 +108,15 @@ def _get_df() -> pnd.DataFrame:
     data = {}
     for frnd_dir in l_frnd_dir:
         frnd = os.path.basename(frnd_dir)
-        data[frnd] = _get_friend_stats(frnd_dir=frnd_dir)
+        data[frnd] = _get_friend_stats(frnd_dir=frnd_dir, kind='number')
+
+    for frnd_dir in l_frnd_dir:
+        frnd = os.path.basename(frnd_dir)
+        size = _get_friend_stats(frnd_dir=frnd_dir, kind='size')
+        data = _update_sizes(data=data, sizes=size)
 
     df = pnd.DataFrame.from_dict(data, orient='columns')
+    df = df.rename(columns={'Sizes' : 'Size [Mb]'})
 
     return df
 # --------------------------------------
