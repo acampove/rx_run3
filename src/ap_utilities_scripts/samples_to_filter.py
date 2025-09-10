@@ -219,8 +219,6 @@ def main():
     cfg      = _parse_args()
     l_sample = _get_samples(cfg=cfg)
     l_sample = _remove_already_filtered(l_sample=l_sample)
-
-    #_build_config(samples=l_sample)
 # ----------------------
 if __name__ == '__main__':
     main()
