@@ -64,4 +64,7 @@ Same as v11, but removing altogether PID selection for electrons and Kaon. Neede
 
 ## v13
 
-Used to submit remaining RK samples and all the RKstar ones.
+This should be the last set of samples for RK, includes
+
+- Signal samples for blocks 7 and 8, not processed before
+- Inclusive muon samples 
