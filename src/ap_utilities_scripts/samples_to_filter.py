@@ -7,13 +7,15 @@ import re
 import argparse
 
 import apd
-from typing                import Any, Final
-from apd                   import SampleCollection
-from dataclasses           import dataclass
-from dmu.logging.log_store import LogStore
-from dmu.generic           import utilities as gut
+from typing                 import Any, Final
+from apd                    import SampleCollection
+from dataclasses            import dataclass
+from dmu.logging.log_store  import LogStore
+from dmu.generic            import utilities as gut
+from rx_data.filtered_stats import FilteredStats
 
-log=LogStore.add_logger('ap_utilities:samples_to_filter')
+log = LogStore.add_logger('ap_utilities:samples_to_filter')
+fst = FilteredStats(analysis='rx', versions=[7, 10])
 # ----------------------
 @dataclass
 class Sample:
