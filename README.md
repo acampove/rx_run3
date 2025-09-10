@@ -46,7 +46,9 @@ which is needed to download the ntuples and is not a python project, therefore
 it cannot be installed with `pip`.
 
 - Install this project
-<span style="color:red"> in non editable mode.</span>
+```diff
+- in non editable mode.
+```
 
 ```bash
 pip install post_ap
