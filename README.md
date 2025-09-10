@@ -23,7 +23,7 @@ the location of the virtual environment. This is too complicated and should not 
 
 ```bash
 # python 3.11 is used by DIRAC and it's better to also use it here 
-micromamba create -n post_ap python==3.11
+micromamba create -n post_ap python==3.12
 micromamba activate post_ap
 ```
 
@@ -31,7 +31,7 @@ micromamba activate post_ap
 is installed, e.g.:
 
 ```bash
-export POSTAP_PATH=/home/acampove/micromamba/envs/run3/bin
+export POSTAP_PATH=/home/acampove/micromamba/envs/post_ap/bin
 ```
 
 which is needed to find the executables.
@@ -46,6 +46,7 @@ which is needed to download the ntuples and is not a python project, therefore
 it cannot be installed with `pip`.
 
 - Install this project
+<span style="color:red"> in non editable mode.</span>
 
 ```bash
 pip install post_ap
@@ -57,12 +58,13 @@ pip install post_ap
 import sys
 
 # Or the proper place where the environment is installed in your system
-sys.path.append('/home/acampove/micromamba/envs/post_ap/lib/python3.11/site-packages')
+sys.path.append('/home/acampove/micromamba/envs/post_ap/lib/python3.12/site-packages')
 ```
 
 - This project is used from inside Ganga. To have access to Ganga do:
 
 ```bash
+# Setup LHCb environment
 . /cvmfs/lhcb.cern.ch/lib/LbEnv
 
 # Make a proxy that lasts 100 hours
