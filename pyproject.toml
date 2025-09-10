@@ -8,7 +8,6 @@ include      = ['src/rx_plotter_data/**/*.yaml']
 
 [tool.poetry.dependencies]
 python                     = '>=3.10,<3.13'
-prefect                    = '^3.4.9'
 apd                        = '*'
 hist                       = '*'
 boost-histogram            = '*'
