@@ -57,7 +57,7 @@ def _get_samples(cfg : Config) -> list[Sample]:
     -------------
     List of instances of Sample, storing needed information on samples
     '''
-    log.info('Retriving samples')
+    log.info('Retrieving samples')
 
     dset = apd.get_analysis_data(working_group='RD', analysis='rd_ap_2024')
     scol = dset.all_samples()
@@ -94,7 +94,7 @@ def _samples_from_collection(scol : SampleCollection, analysis : str, version : 
 
         l_sample += [ _build_sample(version=version, event_type=evt_type, scol=entry) for entry in scol_flt if entry is not None ]
 
-    log.info(f'Found {len(l_sample)}/{len(l_evt_type)} samples')
+    log.info(f'Found {len(l_sample)} samples')
     log.info('')
 
     return l_sample
