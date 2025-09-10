@@ -1,5 +1,5 @@
 # -----------------------------------
-di_track_angles_rk: &angles
+di_track_angles_rkst: &angles
   th_l1_l2 : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(L2_PX, L2_PY, L2_PZ); return v1.Angle(v2);
   th_l1_kp : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(H1_PX, H1_PY, H1_PZ); return v1.Angle(v2);
   th_l1_pm : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(H2_PX, H2_PY, H2_PZ); return v1.Angle(v2);
@@ -563,9 +563,9 @@ transformations:
     q2       : Jpsi_M * Jpsi_M
     nTracks  : nBackTracks + nDownstreamTracks + nLongTracks + nTTracks + nUpstreamTracks + nVeloTracks
   define:
-    bukee:
+    bdkstee:
       <<: *angles
-    bukmm:
+    bdkstmm:
       <<: *angles
   rename:
     B_DTF_Jpsi_MASS                   : B_const_mass_M
