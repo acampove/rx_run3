@@ -185,6 +185,9 @@ transformations:
       - Hlt2RD_BuToKpEE_SameSign_MVA
       - Hlt2RD_BuToKpEE_MVA_cal
       - Hlt2RD_BuToKpEE_MVA_misid
+    lines_phys_mm_mva:
+      - Hlt2RD_BuToKpMuMu_MVA
+      - Hlt2RD_BuToKpMuMu_SameSign_MVA
   categories:
     bukee:
       - Hlt2RD_BuToKpEE_MVA
