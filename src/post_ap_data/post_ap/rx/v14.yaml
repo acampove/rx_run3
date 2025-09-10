@@ -620,6 +620,8 @@ transformations:
     B_BPVIPCHI2                       : B_IPCHI2_OWNPV
     Jpsi_BPVIPCHI2                    : Jpsi_IPCHI2_OWNPV
     H_BPVIPCHI2                       : H_IPCHI2_OWNPV
+    H1_BPVIPCHI2                      : H1_IPCHI2_OWNPV
+    H2_BPVIPCHI2                      : H2_IPCHI2_OWNPV
     L1_BPVIPCHI2                      : L1_IPCHI2_OWNPV
     L2_BPVIPCHI2                      : L2_IPCHI2_OWNPV
     # -----
