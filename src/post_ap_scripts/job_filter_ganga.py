@@ -40,7 +40,7 @@ class Data:
     venv     : str
     back     : str
     env_lfn  : str
-    conf     : str
+    cfg_path : str
     logl     : int
     njob     : int
     test     : bool
@@ -98,7 +98,7 @@ def _get_splitter_args() -> list[list]:
         log.warning('Using only one job')
         njob = 1
 
-    conf = os.path.basename(Data.conf)
+    conf = os.path.basename(Data.cfg_path)
 
     return [ [Data.prod, Data.samp, conf, Data.njob, i_job, Data.env_path, Data.user] for i_job in range(njob) ]
 # -------------------------------------------------
@@ -140,10 +140,12 @@ def _parse_args() -> None:
     Data.venv = args.venv
     Data.test = args.test
     Data.logl = args.logl
-    Data.conf = args.conf
 
     Data.dry_run = args.dry_run
     Data.cfg     = gut.load_conf(package='post_ap_data', fpath=args.conf)
+
+    conf_path    = files('post_ap_data').joinpath(args.conf) 
+    Data.cfg_path    = str(conf_path)
 # -------------------------------------------------
 def _get_executable() -> Executable:
     runner_path = files('post_ap_grid').joinpath(Data.runner)
@@ -167,7 +169,7 @@ def _get_output_files() -> list[Union[DiracFile,LocalFile]]:
 def _get_job() -> Job:
     job              = Job(name = Data.name)
     job.application  = _get_executable()
-    job.inputfiles   = [ LocalFile(Data.conf), LocalFile(Data.pfn_path), DiracFile(Data.env_lfn) ]
+    job.inputfiles   = [ LocalFile(Data.cfg_path), LocalFile(Data.pfn_path), DiracFile(Data.env_lfn) ]
     job.splitter     = _get_splitter()
     job.backend      = _get_backend()
     job.outputfiles  = _get_output_files()
