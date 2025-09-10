@@ -40,6 +40,7 @@ class Data:
     venv     : str
     back     : str
     env_lfn  : str
+    conf     : str
     logl     : int
     njob     : int
     test     : bool
@@ -139,9 +140,10 @@ def _parse_args() -> None:
     Data.venv = args.venv
     Data.test = args.test
     Data.logl = args.logl
+    Data.conf = args.conf
 
     Data.dry_run = args.dry_run
-    Data.cfg     = gut.load_conf(package='post_ap_data', fpath=conf_path)
+    Data.cfg     = gut.load_conf(package='post_ap_data', fpath=args.conf)
 # -------------------------------------------------
 def _get_executable() -> Executable:
     runner_path = files('post_ap_grid').joinpath(Data.runner)
