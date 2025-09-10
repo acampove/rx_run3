@@ -60,8 +60,29 @@ def _get_friend_stats(frnd_dir : str, kind : str) -> dict[str,int]:
     if len(l_fpath) == 0:
         raise ValueError(f'No file found in {fpath_wc}')
 
+# ----------------------
+def _stat_from_path(fpath : str, kind : str) -> int:
+    '''
+    Parameters
+    -------------
+    fpath : Path to file
+    kind  : Property of path
 
-    return d_sample
+
+    Returns
+    -------------
+    Size in Mb
+    '''
+    if kind == 'number':
+        return 1
+
+    if kind == 'size':
+        path = Path(fpath)
+        size = path.stat().st_size / 1_000_000
+
+        return int(size)
+
+    raise ValueError(f'Invalid property: {kind}')
 # --------------------------------------
 def _get_df() -> pnd.DataFrame:
     '''
