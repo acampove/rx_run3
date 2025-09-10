@@ -45,9 +45,10 @@ micromamba install xrootd
 which is needed to download the ntuples and is not a python project, therefore
 it cannot be installed with `pip`.
 
-- Install this project **in non editable mode**.
+- Install this project.
 
 ```bash
+# can also be installed in editable mode
 pip install post_ap
 ```
 
@@ -104,15 +105,19 @@ which will leave you in a new shell with the required environment variables
 For this one would run a line like:
 
 ```bash
-job_filter_ganga -n job_name -p PRODUCTION -s SAMPLE -f /path/to/config/file.yaml -b BACKEND -v VERSION_OF_ENV 
+job_filter_ganga -n job_name -p PRODUCTION -s SAMPLE -c rx/v13.yaml -b BACKEND -v VERSION_OF_ENV 
+
+# For example
+job_filter_ganga -n flt_002 -p rd_ap_2024 -s w37_39_v1r3788 -c rx/v13.yaml -b Dirac -v 037
 ```
+
 - The number of jobs will be equal to the number of PFNs, up to 500 jobs.
 - The code used to filter reside in the grid and the only thing the user has to do is to provide the latest version
 
 The options that can be used are:
 
 ```bash
-usage: job_filter_ganga [-h] -n NAME -p PROD -s SAMP [-f PATH] [-c CONF] [-b {Interactive,Local,Dirac}] [-t] -v VENV [-d]
+usage: job_filter_ganga [-h] -n NAME -p PROD -s SAMP -c CONF [-b {Interactive,Local,Dirac}] [-t] -v VENV [-d]
 
 Script used to send ntuple filtering jobs to the Grid, through ganga
 
@@ -121,8 +126,7 @@ options:
   -n NAME, --name NAME  Job name
   -p PROD, --prod PROD  Production
   -s SAMP, --samp SAMP  Sample
-  -f PATH, --path PATH  Path to config file, provided by user
-  -c CONF, --conf CONF  Version of config file belonging to project itself
+  -c CONF, --conf CONF  Relative path to config file 
   -b {Interactive,Local,Dirac}, --back {Interactive,Local,Dirac}
                         Backend
   -t, --test            Will run one job only if used
