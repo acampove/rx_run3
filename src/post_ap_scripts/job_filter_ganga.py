@@ -186,6 +186,7 @@ def main():
     _initialize()
 
     if Data.dry_run:
+        log.info('Ending dry run execution')
         return
 
     job=_get_job()
