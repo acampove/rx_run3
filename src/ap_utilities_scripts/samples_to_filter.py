@@ -26,6 +26,7 @@ class Sample:
     name       : str
     version    : str
     block      : str
+    polarity   : str
 # ----------------------
 @dataclass
 class Config:
@@ -125,9 +126,17 @@ def _build_sample(version : str, event_type : str, scol : dict[str,Any]) -> Samp
 
     block = val.group(1)
 
+    if   '_magup_'   in name:
+        polarity = 'magup'
+    elif '_magdown_' in name:
+        polarity = 'magdown'
+    else:
+        raise ValueError(f'Cannot find polarity in: {name}')
+
     return Sample(
         name      = name,
         event_type= event_type,
+        polarity  = polarity,
         block     = block,
         version   = version)
 # ----------------------
