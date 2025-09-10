@@ -3,13 +3,17 @@ Script used to print statistics on files stored in cluster
 '''
 import os
 import glob
+import math
 import argparse
+from pathlib import Path
 
 import pandas   as pnd
-from ap_utilities.decays import utilities          as aput
-from dmu.generic         import version_management as vmn
-from rx_data             import utilities          as dut
+from ap_utilities.decays   import utilities          as aput
+from dmu.generic           import version_management as vmn
+from dmu.logging.log_store import LogStore
+from rx_data               import utilities          as dut
 
+log=LogStore.add_logger('rx_data:check_local_stats')
 # --------------------------------------
 class Data:
     '''
