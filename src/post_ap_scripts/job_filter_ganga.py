@@ -142,9 +142,11 @@ def _parse_args() -> None:
     Data.logl = args.logl
 
     Data.dry_run = args.dry_run
-    Data.cfg     = gut.load_conf(package='post_ap_data', fpath=args.conf)
 
-    conf_path    = files('post_ap_data').joinpath(args.conf) 
+    cpath        =f'post_ap/{args.conf}'
+    Data.cfg     = gut.load_conf(package='post_ap_data', fpath=cpath)
+
+    conf_path    = files('post_ap_data').joinpath(cpath)
     Data.cfg_path= str(conf_path)
 # -------------------------------------------------
 def _get_executable() -> Executable:
