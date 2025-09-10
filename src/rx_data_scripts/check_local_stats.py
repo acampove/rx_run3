@@ -119,6 +119,35 @@ def _get_df() -> pnd.DataFrame:
     df = df.rename(columns={'Sizes' : 'Size [Mb]'})
 
     return df
+# ----------------------
+def _update_sizes(data : dict[str,dict[str,int]], sizes : dict[str,int]) -> dict[str,dict[str,int]]:
+    '''
+    Parameters
+    -------------
+    data: Dictionary where:
+        Key  : Friend trees names 
+        Value: Dictionary with:
+            key as Sample name and value as number of files
+            key as Sample size and value as size in Mb
+
+    sizes: Dictionary with:
+        Key  : Sample nickname
+        value: Current friend tree size
+
+    Returns
+    -------------
+    data dictionary with updated sizes
+    '''
+    for sample, size in sizes.items():
+        if 'Sizes' not in data: 
+            data['Sizes'] = {sample : 0}
+
+        if sample not in data['Sizes']:
+            data['Sizes'][sample] = 0
+
+        data['Sizes'][sample] += size 
+
+    return data
 # --------------------------------------
 def main():
     '''
