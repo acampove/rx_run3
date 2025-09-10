@@ -31,8 +31,8 @@ job_filter_dirac     ='post_ap_scripts.job_filter_dirac:main'
 job_filter_ganga     ='post_ap_scripts.job_filter_ganga:main'
 
 [tool.setuptools.package-data]
-'post_ap_data' = ['*/*.json', '*/*.yaml']
-'post_ap_grid' = ['run_filter']
+post_ap_data = ['**/*.json', '**/*.yaml']
+post_ap_grid = ['run_filter']
 
 [tool.setuptools]
 script-files=[
