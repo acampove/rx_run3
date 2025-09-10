@@ -11,8 +11,6 @@ from typing              import Union
 from dataclasses         import dataclass
 from importlib.resources import files
 
-import yaml
-
 from ganga import ganga
 from ganga import Job
 from ganga import Executable
@@ -23,7 +21,10 @@ from ganga import GenericSplitter
 from ganga import Dirac
 from ganga import Local
 from ganga import File
+
+from omegaconf                 import DictConfig
 from dmu.logging.log_store     import LogStore
+from dmu.generic               import utilities as gut
 from post_ap.pfn_reader        import PFNReader
 
 log = LogStore.add_logger('post_ap:job_filter_ganga')
@@ -36,15 +37,14 @@ class Data:
     name     : str
     prod     : str
     samp     : str
-    conf     : str
     venv     : str
     back     : str
     env_lfn  : str
     logl     : int
     njob     : int
     test     : bool
-    cfg      : dict
     dry_run  : bool
+    cfg      : DictConfig 
 
     maxj     = 500
     env_path = '/home/acampove/VENVS'
@@ -59,8 +59,6 @@ def _initialize() -> None:
     LogStore.set_level('post_ap:pfn_reader'      , Data.logl)
 
     Data.env_lfn = f'LFN:/lhcb/user/{Data.user[0]}/{Data.user}/run3/venv/{Data.venv}/dcheck.tar'
-    with open(Data.conf, encoding='utf-8') as ifile:
-        Data.cfg = yaml.safe_load(ifile)
 
     _save_pfns()
 # -------------------------------------------------
@@ -126,8 +124,7 @@ def _parse_args() -> None:
     parser.add_argument('-n' , '--name', type=str, help='Job name'           , required=True)
     parser.add_argument('-p' , '--prod', type=str, help='Production'         , required=True)
     parser.add_argument('-s' , '--samp', type=str, help='Sample'             , required=True)
-    parser.add_argument('-f' , '--path', type=str, help='Path to config file, provided by user')
-    parser.add_argument('-c' , '--conf', type=str, help='Version of config file belonging to project itself')
+    parser.add_argument('-c' , '--conf', type=str, help='Relative path to config file, e.g. rx/v13.yaml', required=True)
     parser.add_argument('-b' , '--back', type=str, help='Backend'            , choices=['Interactive', 'Local', 'Dirac'], default='Interactive')
     parser.add_argument('-t' , '--test',           help='Will run one job only if used'                       , action='store_true')
     parser.add_argument('-v' , '--venv', type=str, help='Version of virtual environment used to run filtering', required=True)
@@ -144,31 +141,7 @@ def _parse_args() -> None:
     Data.logl = args.logl
 
     Data.dry_run = args.dry_run
-    Data.conf    = _get_conf_path(args)
-# -------------------------------------------------
-def _get_conf_path(args : argparse.Namespace) -> str:
-    '''
-    Returns path to yaml config file from argparser
-    '''
-    if args.path is     None and args.conf is     None:
-        raise ValueError('Neither path to config, nor version were specified')
-
-    if args.path is not None and args.conf is not None:
-        raise ValueError('Both path to config and version were specified')
-
-    if args.path is not None:
-        return args.path
-
-    version   = args.conf
-    conf_path = files('post_ap_data').joinpath(f'post_ap/{version}.yaml')
-    conf_path = str(conf_path)
-
-    if not os.path.isfile(conf_path):
-        raise FileNotFoundError(f'Cannot find: {conf_path}')
-
-    log.info(f'Using config: {conf_path}')
-
-    return conf_path
+    Data.cfg     = gut.load_conf(package='post_ap_data', fpath=conf_path)
 # -------------------------------------------------
 def _get_executable() -> Executable:
     runner_path = files('post_ap_grid').joinpath(Data.runner)
