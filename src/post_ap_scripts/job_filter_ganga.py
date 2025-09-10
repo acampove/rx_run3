@@ -145,7 +145,7 @@ def _parse_args() -> None:
     Data.cfg     = gut.load_conf(package='post_ap_data', fpath=args.conf)
 
     conf_path    = files('post_ap_data').joinpath(args.conf) 
-    Data.cfg_path    = str(conf_path)
+    Data.cfg_path= str(conf_path)
 # -------------------------------------------------
 def _get_executable() -> Executable:
     runner_path = files('post_ap_grid').joinpath(Data.runner)
