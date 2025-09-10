@@ -36,26 +36,14 @@ working_group: rd
 productions:
   rd_ap_2024:
     versions:
-      data_turbo_24c1 : v1r1670
-      data_turbo_24c2 : v1r1670
-      data_turbo_24c3 : v1r1670
-      data_turbo_24c4 : v1r1670
-      # ---------
-      w31_34_v1r2266: v1r2266
-      w35_37_v1r2266: v1r2266
-      w37_39_v1r2266: v1r2266
-      w40_42_v1r2266: v1r2266
-      # ---------
-      w31_34_v1r2437: v1r2437
-      w35_37_v1r2437: v1r2437
-      w37_39_v1r2437: v1r2437
-      w40_42_v1r2437: v1r2437
-      <<: *tst_ver
+      w35_37_v1r3788: v1r3788
+      w37_39_v1r3788: v1r3788
+      w40_42_v1r3788: v1r3788
     samples:
-      w35_37_v1r2266:
+      w35_37_v1r3788:
         - mc_24_w35_37_magup_sim10d_12442001_bu_jpsix_mm_eq_jpsiinacc_tuple
         - mc_24_w35_37_magup_sim10d_13442001_bs_jpsix_mm_eq_jpsiinacc_tuple
-      w37_39_v1r2266:
+      w37_39_v1r3788:
         - mc_24_w37_39_magdown_sim10d_12442001_bu_jpsix_mm_eq_jpsiinacc_tuple
         - mc_24_w37_39_magdown_sim10d_13442001_bs_jpsix_mm_eq_jpsiinacc_tuple
       w40_42_v1r3788:
