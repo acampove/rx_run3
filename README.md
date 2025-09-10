@@ -45,10 +45,7 @@ micromamba install xrootd
 which is needed to download the ntuples and is not a python project, therefore
 it cannot be installed with `pip`.
 
-- Install this project
-```diff
-- in non editable mode.
-```
+- Install this project **in non editable mode**.
 
 ```bash
 pip install post_ap
