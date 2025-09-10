@@ -68,3 +68,7 @@ This should be the last set of samples for RK, includes
 
 - Signal samples for blocks 7 and 8, not processed before
 - Inclusive muon samples 
+
+## v14
+
+Used for Rkstar trigger in data and MC for both channels
