@@ -204,9 +204,11 @@ def _remove_already_filtered(l_sample : list[Sample]) -> list[Sample]:
         if fst.exists(event_type=etp, block=blk, polarity=mag):
             continue
 
-        log.info(f'    {sample.name}/{sample.version}')
+        log.info(f'{sample.version:<15}{sample.name}')
 
         l_sample_flt.append(sample)
+
+    log.info(f'Found {len(l_sample_flt)} samples')
 
     return l_sample_flt
 # ----------------------
