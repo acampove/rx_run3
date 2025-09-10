@@ -52,6 +52,17 @@ def _get_friend_stats(frnd_dir : str, kind : str) -> dict[str,int]:
             d_sample[sample]+= _stat_from_path(fpath=fpath, kind=kind) 
 
     return d_sample
+# ----------------------
+def _paths_from_friend_dir(frnd_dir : str) -> list[str]:
+    '''
+    Parameters
+    -------------
+    frnd_dir: Directory with friend trees
+
+    Returns
+    -------------
+    List of ROOT files
+    '''
     fpath_wc = f'{frnd_dir}/*.root'
     vers_dir = vmn.get_last_version(frnd_dir, version_only=False)
 
@@ -60,6 +71,7 @@ def _get_friend_stats(frnd_dir : str, kind : str) -> dict[str,int]:
     if len(l_fpath) == 0:
         raise ValueError(f'No file found in {fpath_wc}')
 
+    return l_fpath
 # ----------------------
 def _stat_from_path(fpath : str, kind : str) -> int:
     '''
