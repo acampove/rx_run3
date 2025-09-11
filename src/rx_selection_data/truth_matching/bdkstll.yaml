@@ -1,0 +1,63 @@
+# This file contains all the truth matching strings needed by
+# MC reconstructed as Bd -> K^* \ell\ell
+
+input: 
+  - rx_selection_data
+  - truth_matching/common.yaml
+# ----------
+not_fail_lep      : 'TMath::Abs(L1_TRUEID) != 0 && TMath::Abs(L2_TRUEID)   != 0'
+not_fail_mes      : 'TMath::Abs(B_TRUEID)  != 0 && TMath::Abs(Jpsi_TRUEID) != 0 && TMath::Abs(H1_TRUEID) != 0 && TMath::Abs(H2_TRUEID) != 0'
+not_fail_moth_1   : 'TMath::Abs(L1_MC_MOTHER_ID)   != 0 && TMath::Abs(L2_MC_MOTHER_ID) != 0'
+not_fail_moth_2   : 'TMath::Abs(Jpsi_MC_MOTHER_ID) != 0 && TMath::Abs(H1_MC_MOTHER_ID)  != 0 && TMath::Abs(H2_MC_MOTHER_ID)  != 0'
+not_fail          : '{not_fail_lep} && {not_fail_mes} && {not_fail_moth_1} && {not_fail_moth_2}' 
+not_reso_ee       : '{jpsi_ee_kst} == 0'
+not_reso_mm       : '{jpsi_mm_kst} == 0'
+ll_mother         : '(({ll_is_jpsi} && {lep_from_jpsi}) || ({ll_is_psi2} && {lep_from_psi2}))'
+# ----------
+h1_is_pion        : 'TMath::Abs(H1_TRUEID)       == 211' 
+h1_is_kaon        : 'TMath::Abs(H1_TRUEID)       == 321' 
+h1_is_proton      : 'TMath::Abs(H1_TRUEID)       == 2212'
+
+h1_from_phi       : 'TMath::Abs(H1_MC_MOTHER_ID) == 333'
+h1_from_dzero     : 'TMath::Abs(H1_MC_MOTHER_ID) == 421'
+h1_from_dplus     : 'TMath::Abs(H1_MC_MOTHER_ID) == 411'
+h1_from_kshort    : 'TMath::Abs(H1_MC_MOTHER_ID) == 310'
+h1_from_kstzero   : 'TMath::Abs(H1_MC_MOTHER_ID) == 313'
+h1_from_kstplus   : 'TMath::Abs(H1_MC_MOTHER_ID) == 323'
+h1_from_bzero     : 'TMath::Abs(H1_MC_MOTHER_ID) == 511'
+h1_from_bplus     : 'TMath::Abs(H1_MC_MOTHER_ID) == 521'
+h1_from_lzero     : 'TMath::Abs(H1_MC_MOTHER_ID) == 3122'
+h1_from_lambd     : 'TMath::Abs(H1_MC_MOTHER_ID) == 5122'
+
+h2_is_pion        : 'TMath::Abs(H2_TRUEID)       == 211' 
+h2_is_kaon        : 'TMath::Abs(H2_TRUEID)       == 321' 
+h2_is_proton      : 'TMath::Abs(H2_TRUEID)       == 2212'
+
+h2_from_phi       : 'TMath::Abs(H2_MC_MOTHER_ID) == 333'
+h2_from_dzero     : 'TMath::Abs(H2_MC_MOTHER_ID) == 421'
+h2_from_dplus     : 'TMath::Abs(H2_MC_MOTHER_ID) == 411'
+h2_from_kshort    : 'TMath::Abs(H2_MC_MOTHER_ID) == 310'
+h2_from_kstzero   : 'TMath::Abs(H2_MC_MOTHER_ID) == 313'
+h2_from_kstplus   : 'TMath::Abs(H2_MC_MOTHER_ID) == 323'
+h2_from_bzero     : 'TMath::Abs(H2_MC_MOTHER_ID) == 511'
+h2_from_bplus     : 'TMath::Abs(H2_MC_MOTHER_ID) == 521'
+h2_from_lzero     : 'TMath::Abs(H2_MC_MOTHER_ID) == 3122'
+h2_from_lambd     : 'TMath::Abs(H2_MC_MOTHER_ID) == 5122'
+
+had_are_kpi       : '{h1_is_kaon}      && {h2_is_pion}'
+had_from_kst      : '{h1_from_kstzero} && {h2_from_kstzero}'
+
+hh_is_kstzero     : 'TMath::Abs(Kst_TRUEID) == 313'
+
+hh_from_bzero     : 'TMath::Abs(H1_MC_MOTHER_ID) == 511 && TMath::Abs(H2_MC_MOTHER_ID) == 511'
+# ----------
+tracks_from_bd    : '{hh_from_bzero} && {lep_from_bzero}'
+#-------------------------------------------------------------
+# BdXcHs_ee
+11453001 : '{lep_are_electrons} && {ll_mother} && {b_is_bzero} && {not_fail} && {not_reso_ee}'
+# B+XcHs_ee
+12952000 : '{lep_are_electrons} && {ll_mother} && {b_is_bplus} && {not_fail} && {not_reso_ee}'
+# BsXcHs_ee
+13454001 : '{lep_are_electrons} && {ll_mother} && {b_is_bstrn} && {not_fail} && {not_reso_ee}'
+# LbXcHs_ee
+15454101 : '{lep_are_electrons} && {ll_mother} && {b_is_lambd} && {not_fail} && {not_reso_ee}'
