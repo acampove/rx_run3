@@ -91,6 +91,7 @@ def test_bukmm(sample : str):
     assert 20 * fin > ini
 # --------------------------
 @pytest.mark.parametrize('sample', l_sample_ee)
+@pytest.mark.skip(reason='Missing Rk* ntuples')
 def test_bdkstee(sample : str):
     '''
     Tests truth matching
@@ -108,4 +109,4 @@ def test_bdkstee(sample : str):
     rep.Print()
 
     assert 20 * fin > ini
-
+# --------------------------
