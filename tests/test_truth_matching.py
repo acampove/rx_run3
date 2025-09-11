@@ -8,7 +8,7 @@ from rx_data.rdf_getter    import RDFGetter
 from dmu.logging.log_store import LogStore
 
 # TODO: Add more samples
-l_sample_ee = [
+l_sample_kpee = [
     'Bd_JpsiX_ee_eq_JpsiInAcc',
     'Bd_Kstee_eq_btosllball05_DPC',
     'Bs_JpsiX_ee_eq_JpsiInAcc',
@@ -22,13 +22,29 @@ l_sample_ee = [
     'Bu_Kstee_Kpi0_eq_btosllball05_DPC',
     'Bu_psi2SK_ee_eq_DPC',
 ]
-l_sample_mm = [
+
+l_sample_kstee = [
+    'Bu_JpsiX_ee_eq_JpsiInAcc',
+    'Bd_JpsiX_ee_eq_JpsiInAcc',
+    'Bs_JpsiX_ee_eq_JpsiInAcc',
+    # ----
+    'Bd_Kstee_eq_btosllball05_DPC',
+]
+
+l_sample_kpmm = [
     'Bd_Kstmumu_eq_btosllball05_DPC',
     'Bu_JpsiK_mm_eq_DPC',
     'Bu_JpsiPi_mm_eq_DPC',
     'Bu_Kmumu_eq_btosllball05_DPC',
 ]
 
+l_sample_kstmm = [
+    'Bu_JpsiX_mm_eq_JpsiInAcc',
+    'Bd_JpsiX_mm_eq_JpsiInAcc',
+    'Bs_JpsiX_mm_eq_JpsiInAcc',
+    # ----
+    'Bd_Kstmumu_eq_btosllball05_DPC',
+]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
