@@ -261,23 +261,23 @@ jpsi_ee_pi: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electro
 #B+ -> K+ pi+ K-
 12103030 : '{b_is_bplus} && {l1_is_pion}        && {l2_is_kaon}     && {lep_from_bplus} &&  {h_is_kaon} && {h_from_bplus}'
 #------------------------------------------------------------
+# Semi-leptonic
+#------------------------------------------------------------
+l1b_l2d    : '{l1_from_bplus} && {l2_from_dzero}'
+l2b_l1d    : '{l2_from_bplus} && {l1_from_dzero}'
+l12_bd     : (({l1b_l2d}) || ({l2b_l1d}))
+
 #bpd0kpenuenu
 12583022u1 : '{b_is_bplus}    && {lep_are_electrons}'
-12583022u2 : '{l1_from_bplus} && {l2_from_dzero}'
-12583022u3 : '{l2_from_bplus} && {l1_from_dzero}'
-12583022   : '{12583022u1} && ({12583022u2} || {12583022u3}) && {h_is_kaon} && {h_from_dzero}'
+12583022   : '{12583022u1} && {l12_bd} && {h_is_kaon} && {h_from_dzero}'
 #------------------------------------------------------------
 # bpd0kpenupi
 12183004u1 : '{b_is_bplus} &&  ({l1_is_electron} || {l1_is_pion}) &&  ({l2_is_electron} || {l2_is_pion})'
-12183004u2 : '{l1_from_bplus} && {l2_from_dzero}'
-12183004u3 : '{l2_from_bplus} && {l1_from_dzero}'
-12183004   : '{12183004u1} && ({12183004u2} || {12183004u3}) && {h_is_kaon} && {h_from_dzero}'
+12183004   : '{12183004u1} && {l12_bd} && {h_is_kaon} && {h_from_dzero}'
 #------------------------------------------------------------
 # bpd0kppienu
 12583013u1 : '{b_is_bplus} &&  ({l1_is_electron} || {l1_is_pion}) &&  ({l2_is_electron} || {l2_is_pion})'
-12583013u2 : '{l1_from_bplus} && {l2_from_dzero}'
-12583013u3 : '{l2_from_bplus} && {l1_from_dzero}'
-12583013   : '{12583013u1} && ({12583013u2} || {12583013u3}) && {h_is_kaon} && {h_from_dzero}'
+12583013   : '{12583013u1} && {l12_bd} && {h_is_kaon} && {h_from_dzero}'
 #------------------------------------------------------------
 # Bd -> psi2S(ee) Kst
 11154011u1 : '{b_is_bzero}    && {lep_are_electrons} && {h_is_kaon}'
