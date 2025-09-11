@@ -245,8 +245,8 @@ jpsi_ee_pi: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electro
 11144001 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_are_muons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstzero}'
 # Bd -> Jpsi(mm) KS(pipi)
 11144103 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_are_muons} && {lep_from_jpsi} && {h_is_pion} && {h_from_kshort}'
-#reso jpsi kst ee Bs
-13454001 : '{b_is_bstrn} && {ll_is_jpsi} && {ll_from_bstrn} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstzero}'
+# Bs -> Jpsi(mm) Kst
+13144025 : '{b_is_bstrn} && {ll_is_jpsi} && {ll_from_bstrn} && {lep_are_muons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstzero}'
 # Bs Jpsi(mm) Phi(kk)
 13144001: '{b_is_bstrn} && {ll_is_jpsi} && {ll_from_bstrn} && {lep_are_muons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_phi}'
 13144010: '{b_is_bstrn} && {ll_is_jpsi} && {ll_from_bstrn} && {lep_are_muons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_phi}'
