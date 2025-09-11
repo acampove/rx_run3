@@ -279,11 +279,13 @@ jpsi_ee_pi: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electro
 12583013u3 : '{l2_from_bplus} && {l1_from_dzero}'
 12583013   : '{12583013u1} && ({12583013u2} || {12583013u3}) && {h_is_kaon} && {h_from_dzero}'
 #------------------------------------------------------------
+# Bd -> psi2S(ee) Kst
 11154011u1 : '{b_is_bzero}    && {lep_are_electrons} && {h_is_kaon}'
 11154011u2 : '{lep_from_psi2} && {ll_is_psi2} && {h_from_kstzero}'
 11154011   : '{11154011u1} && {11154011u2}'
 #------------------------------------------------------------
-11144011u1 : '{b_is_bzero}    && {lep_are_muons} && {h_is_kaon}'
+# Bd -> psi2S(mm) Kst
+11144011u1 : '{b_is_bzero}    && {lep_are_muons}     && {h_is_kaon}'
 11144011u2 : '{lep_from_psi2} && {ll_is_psi2} && {h_from_kstzero}'
 11144011   : '{11144011u1} && {11144011u2}'
 #------------------------------------------------------------
