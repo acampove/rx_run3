@@ -258,6 +258,10 @@ to make sure the indentation is correct.
 When writting configurations the following layout might be needed:
 
 ```yaml
+input : 
+    - my_package
+    - path/to/file.yaml
+
 a: some value
 b: other value
 c: last value 
@@ -277,7 +281,36 @@ yrs = Resolver(cfg=cfg)
 val = yrs['composite_3']
 ```
 
-where `cfg` is the dictionary respresenting the configuration
+where `cfg` is the dictionary respresenting the configuration.
+
+An `input` key was present. This is a special key that will map to
+a data package that might contain another config file that can optionally
+be resolved. If `file.yaml` were:
+
+```yaml
+x : 1
+y : 
+    - alpha
+    - beta
+```
+
+then the config would be equivalent to:
+
+```yaml
+x : 1
+y : 
+    - alpha
+    - beta
+
+a: some value
+b: other value
+c: last value 
+
+composite_1: '{a} or  {b}'
+composite_2: '{a} and {b}'
+composite_3: '{composite_1} and {c}'
+```
+
 
 ## Hashing
 
