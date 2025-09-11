@@ -74,7 +74,7 @@ def test_nopid(sample : str):
 
     assert 20 * fin > ini
 # --------------------------
-@pytest.mark.parametrize('sample', l_sample_ee)
+@pytest.mark.parametrize('sample', l_sample_kpee)
 def test_bukee(sample : str):
     '''
     Tests truth matching
@@ -94,7 +94,7 @@ def test_bukee(sample : str):
 
     assert 20 * fin > ini
 # --------------------------
-@pytest.mark.parametrize('sample', l_sample_mm)
+@pytest.mark.parametrize('sample', l_sample_kpmm)
 def test_bukmm(sample : str):
     '''
     Tests truth matching
@@ -110,17 +110,35 @@ def test_bukmm(sample : str):
 
     assert 20 * fin > ini
 # --------------------------
-@pytest.mark.parametrize('sample', l_sample_ee)
-@pytest.mark.skip(reason='Missing Rk* ntuples')
+@pytest.mark.parametrize('sample', l_sample_kstee)
 def test_bdkstee(sample : str):
     '''
     Tests truth matching
     '''
+    cut = tm.get_truth(sample, kind='bdkstll')
+    return
     trigger = 'Hlt2RD_B0ToKpPimEE_MVA'
     gtr = RDFGetter(sample=sample, trigger=trigger, analysis='rx')
     rdf = gtr.get_rdf(per_file=False)
 
-    cut = tm.get_truth(sample, kind='bukll')
+    ini = rdf.Count().GetValue()
+    rdf = rdf.Filter(cut, 'truth match')
+    fin = rdf.Count().GetValue()
+
+    assert 20 * fin > ini
+# --------------------------
+@pytest.mark.parametrize('sample', l_sample_kstmm)
+def test_bdkstmm(sample : str):
+    '''
+    Tests truth matching
+    '''
+    cut = tm.get_truth(sample, kind='bdkstll')
+    return
+
+    trigger = 'Hlt2RD_B0ToKpPimMuMu_MVA'
+    gtr = RDFGetter(sample=sample, trigger=trigger, analysis='rx')
+    rdf = gtr.get_rdf(per_file=False)
+
     ini = rdf.Count().GetValue()
     rdf = rdf.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
