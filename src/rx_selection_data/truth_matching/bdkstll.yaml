@@ -63,6 +63,15 @@ tracks_from_bd    : '{hh_from_bzero} && {lep_from_bzero}'
 13454001 : '{lep_are_electrons} && {ll_mother} && {b_is_bstrn} && {not_fail} && {not_reso_ee}'
 # LbXcHs_ee
 15454101 : '{lep_are_electrons} && {ll_mother} && {b_is_lambd} && {not_fail} && {not_reso_ee}'
+
+# BdXcHs_mm
+11442001 : '{lep_are_muons}     && {ll_mother} && {b_is_bzero} && {not_fail} && {not_reso_mm}'
+# B+XcHs_mm
+12442001 : '{lep_are_muons}     && {ll_mother} && {b_is_bplus} && {not_fail} && {not_reso_mm}'
+# BsXcHs_mm
+13442001 : '{lep_are_muons}     && {ll_mother} && {b_is_bstrn} && {not_fail} && {not_reso_mm}'
+# LbXcHs_mm
+15442001 : '{lep_are_muons}     && {ll_mother} && {b_is_lambd} && {not_fail} && {not_reso_mm}'
 #-------------------------------------------------------------
 # Resonant
 #-------------------------------------------------------------
