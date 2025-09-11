@@ -216,7 +216,7 @@ ll_cut   : '({l1_cut}) || ({l2_cut})'
 #B+ -> Jpsi ee K*+(Kpi0)
 12153420 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons}  && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstplus}'
 #B+ -> K*+(-> K+ pi0) Jpsi ee
-12153001 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstplus}'
+12153420 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstplus}'
 #reso Psi mumu
 12143020 : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_muons}     && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
 #reso Psi ee
