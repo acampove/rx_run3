@@ -66,8 +66,13 @@ def test_bukee(sample : str):
     rdf = rdf.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
 
-    rep = rdf.Report()
-    rep.Print()
+    if fin == 0:
+        rep = rdf.Report()
+        rep.Print()
+
+        etype = tm.get_event_type(sample)
+
+        raise ValueError(f'Got no entries for {sample}/{etype} and cut {cut}')
 
     assert 20 * fin > ini
 # --------------------------
