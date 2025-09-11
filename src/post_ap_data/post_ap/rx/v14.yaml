@@ -61,9 +61,6 @@ productions:
       w37_39_v1r3788  : v1r3788
       w40_42_v1r3788  : v1r3788
     samples:
-      data_turbo_24c1:
-        - data_24_magdown_turbo_24c1
-        - data_24_magup_turbo_24c1
       data_turbo_24c2:
         - data_24_magdown_turbo_24c2
         - data_24_magup_turbo_24c2
