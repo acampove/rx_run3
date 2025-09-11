@@ -56,9 +56,6 @@ def test_nopid(sample : str):
     except Exception: 
         raise RuntimeError(f'Cannot apply cut: "{cut}"')
 
-    rep = rdf.Report()
-    rep.Print()
-
     assert 20 * fin > ini
 # --------------------------
 @pytest.mark.parametrize('sample', l_sample_ee)
@@ -76,11 +73,7 @@ def test_bukee(sample : str):
     fin = rdf.Count().GetValue()
 
     if fin == 0:
-        rep = rdf.Report()
-        rep.Print()
-
         etype = tm.get_event_type(sample)
-
         raise ValueError(f'Got no entries for {sample}/{etype} and cut {cut}')
 
     assert 20 * fin > ini
@@ -99,9 +92,6 @@ def test_bukmm(sample : str):
     rdf = rdf.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
 
-    rep = rdf.Report()
-    rep.Print()
-
     assert 20 * fin > ini
 # --------------------------
 @pytest.mark.parametrize('sample', l_sample_ee)
@@ -118,9 +108,6 @@ def test_bdkstee(sample : str):
     ini = rdf.Count().GetValue()
     rdf = rdf.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
-
-    rep = rdf.Report()
-    rep.Print()
 
     assert 20 * fin > ini
 # --------------------------
