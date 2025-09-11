@@ -2,9 +2,10 @@
 Module containing functions used for truth matching
 '''
 
-from ap_utilities.decays    import utilities as aput
-from dmu.logging.log_store  import LogStore
-from dmu.generic            import utilities as gut
+from ap_utilities.decays   import utilities as aput
+from dmu.logging.log_store import LogStore
+from dmu.generic           import utilities as gut
+from dmu.yaml.resolver     import Resolver
 
 log=LogStore.add_logger('rx_selection:truth_matching')
 # ----------------------
