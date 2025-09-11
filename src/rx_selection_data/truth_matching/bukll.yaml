@@ -213,21 +213,21 @@ jpsi_ee_pi: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electro
 #reso Psi X
 11453012 : '{b_is_bzero} && {ll_is_psi2} && {ll_from_bzero} && {lep_are_electrons} && {lep_from_psi2}'
 #Bd K*(k pi) ee.
-11124002 : '{b_is_bzero} && {lep_are_electrons} && {l1_from_bzero} && {l2_from_bzero} && ({h_is_kaon} || {h_is_pion}) && {h_from_kstzero}'
+11124002 : '{b_is_bzero} && {lep_are_electrons} && {lep_from_bzero} && ({h_is_kaon} || {h_is_pion}) && {h_from_kstzero}'
 #Bd (k pi) ee.
-11124037 : '{b_is_bzero} && {lep_are_electrons} && {l1_from_bzero} && {l2_from_bzero} && ({h_is_kaon} || {h_is_pion}) && {h_from_bzero}'
+11124037 : '{b_is_bzero} && {lep_are_electrons} && {lep_from_bzero} && ({h_is_kaon} || {h_is_pion}) && {h_from_bzero}'
 #Bd K*(k pi) mm
-11114014 : '{b_is_bzero} && {lep_are_muons}    &&  {l1_from_bzero} && {l2_from_bzero} && ({h_is_kaon} || {h_is_pion}) && {h_from_kstzero}'
+11114014 : '{b_is_bzero} && {lep_are_muons}     && {lep_from_bzero} && ({h_is_kaon} || {h_is_pion}) && {h_from_kstzero}'
 #B+ -> K*+ ee
-12123445 : '{b_is_bplus} && {lep_are_electrons} &&  {lep_from_bplus} &&  {h_is_kaon} && {h_from_kstplus}'
+12123445 : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} &&  {h_is_kaon} && {h_from_kstplus}'
 #B+ -> phi(-> KK) K ee
-12125040 : '{b_is_bplus} && {lep_are_electrons} &&  {lep_from_bplus} &&  {h_is_kaon} && ({h_from_phi} || {h_from_bplus})'
+12125040 : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} &&  {h_is_kaon} && ({h_from_phi} || {h_from_bplus})'
 #Bs -> phi(-> KK) ee
-13124006 : '{b_is_bstrn} && {lep_are_electrons} &&  {lep_from_bstrn} &&  {h_is_kaon} && {h_from_phi}'
+13124006 : '{b_is_bstrn} && {lep_are_electrons} && {lep_from_bstrn} &&  {h_is_kaon} && {h_from_phi}'
 # Bs -> phi(-> KK) eta(-> ee gamma)
-13124401 : '{b_is_bstrn} && {lep_are_electrons} &&  {lep_from_eta}   &&  {h_is_kaon} && {h_from_phi}'
+13124401 : '{b_is_bstrn} && {lep_are_electrons} && {lep_from_eta}   &&  {h_is_kaon} && {h_from_phi}'
 # B0 -> (eta -> e+ e- gamma) (K*0 -> K+ pi- )
-11124401 : '{b_is_bzero} && {lep_are_electrons} &&  {lep_from_eta}   && ({h_is_kaon} ||  {h_is_pion}) && {h_from_kstzero}'
+11124401 : '{b_is_bzero} && {lep_are_electrons} && {lep_from_eta}   && ({h_is_kaon} ||  {h_is_pion}) && {h_from_kstzero}'
 # B0 -> (eta -> gamma gamma) (K*0 -> K+ pi- ), either or both photons convert
 11102441_SS_1 : '{b_is_bzero} && {lep_are_electrons} && ({h_is_kaon} ||  {h_is_pion}) && {ll_is_gamma}'
 11102441_SS_2 : '{lep_from_gamma} && {h_from_kstzero}  && {ll_from_eta}'
