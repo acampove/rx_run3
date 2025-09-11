@@ -283,19 +283,19 @@ ll_cut   : '({l1_cut}) || ({l2_cut})'
 # B0 -> (eta -> gamma gamma) (K*0 -> K+ pi- ), either or both photons convert
 11102441_SS_1 : '{b_is_bzero} && {lep_are_electrons} && ({h_is_kaon} ||  {h_is_pion}) && {ll_is_gamma}'
 11102441_SS_2 : '{lep_from_gamma} && {h_from_kstzero}  && {ll_from_eta}'
-11102441_SS   : '({id_cut}) && ({mo_cut})'
+11102441_SS   : '{11102441_SS_1} && {11102441_SS_2}'
 # Bs -> (eta -> gamma gamma) (phi -> K+ K- ), either or both photons convert
 13102464_SS_1 : '{b_is_bstrn} && {lep_are_electrons} && {h_is_kaon} && {ll_is_gamma}'
 13102464_SS_2 : '{lep_from_gamma} && {h_from_phi}  && {ll_from_eta}'
-13102464_SS   : '({id_cut}) && ({mo_cut})'
+13102464_SS   : '{13102464_SS_1} && {13102464_SS_2)'
 # Bs -> (pi0 -> gamma gamma) (phi -> K+ K- ), either or both photons convert
 13102465_SS_1 : '{b_is_bstrn}     && {lep_are_electrons} && {h_is_kaon} && {ll_is_gamma}'
-13102465_SS_1 : '{lep_from_gamma} && {h_from_phi}  && {ll_from_pizero}'
-13102465_SS   : '({id_cut}) && ({mo_cut})'
+13102465_SS_2 : '{lep_from_gamma} && {h_from_phi}  && {ll_from_pizero}'
+13102465_SS   : '({13102465_SS_1}) && ({13102465_SS_2})'
 # B+ -> (K*+(KS(pipi)pi) gamma
 12203302_SS_1 : '{b_is_bplus} && {lep_are_electrons} && {h_is_pion} && {ll_is_gamma}'
 12203302_SS_2 : '{lep_from_gamma} && ({h_from_kshort} || {h_from_kstplus})  && {ll_from_bplus}'
-12203302_SS   : '({id_cut}) && ({mo_cut})'
+12203302_SS   : '({12203302_SS_1}) && ({12203302_SS_2})'
 #Bs -> phi(-> KK) pi0(-> ee gamma)
 13124402 : '{b_is_bstrn} && {lep_are_electrons} && {lep_from_pizero} &&  {h_is_kaon} && {h_from_phi}'
 #B+ -> K_1(K pipi) ee
