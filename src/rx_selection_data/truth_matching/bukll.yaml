@@ -163,9 +163,9 @@ jpsi_ee_kp: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electro
 12153420  : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons}  && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstplus}'
 #B+ -> K*+(-> K+ pi0) Jpsi ee
 12153420  : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstplus}'
-#reso Psi mumu
+#B+ -> Psi(mm) K+
 12143020  : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_muons}     && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
-#reso Psi ee
+#B+ -> Psi(ee) K+
 12153012  : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
 #B+ psi2S(ee) K*+(Kpi0)
 12153430  : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_kstplus}'
@@ -179,7 +179,7 @@ jpsi_ee_pi: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electro
 12125101 : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} && {h_is_pion} && ({h_from_kshort} || {h_from_kstplus})'
 #-------------------------------------------------------------
 #-------------------------------------------------------------
-#exclusive jpsi kst ee Bu
+#  Bu -> Jpsi(ee) Kst(KS(-> pipi) pi)
 12155100 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_pion} && ({h_from_kstplus} || {h_from_kshort}) && (TMath::Abs(H_MC_GD_MOTHER_ID) == 521 || TMath::Abs(H_MC_GD_MOTHER_ID) == 323)'
 #  B0 -> (KS0 -> pi+ pi-) (J/psi(1S) -> e+ e-)
 11154100 : '{b_is_bzero} && {ll_is_jpsi} && {ll_from_bzero} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_pion} && {h_from_kshort}'
