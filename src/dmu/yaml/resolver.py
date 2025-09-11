@@ -2,9 +2,10 @@
 This module contains the YamlResolver class
 '''
 
-from typing import Mapping
+from typing import Any, Mapping
 
 from dmu.logging.log_store import LogStore
+from dmu.generic           import utilities as gut
 
 # TODO: Improve detection of cycles
 log=LogStore.add_logger('dmu:yaml:resolver')
@@ -26,8 +27,31 @@ class Resolver:
         -------------
         cfg: Dictionary like object with potentially unresolved, but resolvable fields
         '''
-        self._cfg            = { str(key) : value for key, value in cfg.items()}
+        self._cfg            = self._config_from_input(cfg=cfg)
         self._max_iterations = 20
+    # ----------------------
+    def _config_from_input(self, cfg : Mapping[str|int,str]) -> dict[str,str]:
+        '''
+        Parameters
+        -------------
+        cfg: Config as given by user
+
+        Returns
+        -------------
+        Config after preprocessing
+        '''
+        cfg_rep : dict[str,str] = { str(key) : value for key, value in cfg.items()}
+        if 'input' not in cfg_rep:
+            return cfg_rep
+
+        [package, fpath] = cfg_rep['input']
+        cfg_ext = gut.load_conf(package=package, fpath=fpath)
+
+        del cfg_rep['input']
+
+        cfg_rep.update(cfg_ext)
+
+        return cfg_rep
     # ----------------------
     def __contains__(self, item : str|int) -> bool:
         '''
