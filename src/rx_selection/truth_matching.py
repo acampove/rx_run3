@@ -52,9 +52,11 @@ def get_truth(arg : int|str, kind : str) -> str:
 
     event_type = _get_event_type(arg=arg)
     cfg        = gut.load_conf(package='rx_selection_data', fpath=f'truth_matching/{kind}.yaml')
+    yrs        = Resolver(cfg=cfg)
 
-    if event_type not in cfg:
+    if event_type not in yrs:
         raise KeyError(f'Could not find event type {event_type} in config')
 
-    return cfg[event_type]
+    return yrs[event_type]
 # ----------------------------------------------------------
+
