@@ -3,8 +3,9 @@ Module needed to test truth matching
 '''
 
 import pytest
-from rx_selection           import truth_matching as tm
-from rx_data.rdf_getter     import RDFGetter
+from rx_selection          import truth_matching as tm
+from rx_data.rdf_getter    import RDFGetter
+from dmu.logging.log_store import LogStore
 
 # TODO: Add more samples
 l_sample_ee = [
@@ -27,6 +28,14 @@ l_sample_mm = [
     'Bu_JpsiPi_mm_eq_DPC',
     'Bu_Kmumu_eq_btosllball05_DPC',
 ]
+
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('rx_data:rdf_getter', 40)
 # --------------------------
 @pytest.mark.parametrize('sample', [
     'Bu_Kee_eq_btosllball05_DPC',
