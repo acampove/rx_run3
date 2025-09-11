@@ -23,7 +23,10 @@ def _get_config(kind : str) -> dict[str|int,str]:
     Dictionary with configuration
     '''
     data      = {}
-    if kind == 'simple':
+    if kind == 'input':
+        data['input'] = ['dmu_data', 'tests/yaml/to_resolve.yaml']
+
+    if kind in ['simple', 'input']:
         data['d'] = 'nested'
         data['a'] = 'something {d}'
         data['b'] = 'here' 
@@ -41,10 +44,9 @@ def _get_config(kind : str) -> dict[str|int,str]:
         data['b'] = 'here' 
         data['c'] = '{a} {b}' 
 
-
     return data
 # ----------------------
-@pytest.mark.parametrize('kind', ['simple', 'recursive_1', 'recursive_2'])
+@pytest.mark.parametrize('kind', ['simple', 'input', 'recursive_1', 'recursive_2'])
 @pytest.mark.timeout(1)
 def test_simple(kind : str):
     cfg = _get_config(kind=kind)
@@ -55,15 +57,13 @@ def test_simple(kind : str):
 
     assert 'missing' not in yrs
 
-    if kind == 'simple':
+    if kind in ['simple', 'input']:
         assert yrs['c'] == 'something nested here'
-        return
 
     if kind in ['recursive_1', 'recursive_2']:
         with pytest.raises(ValueError):
             yrs['a']
 
-        return
-
-    raise ValueError(f'Invalid kind: {kind}')
-
+    if kind == 'input':
+        assert yrs['x'] == 1
+        assert yrs['y'] == [2, 3]
