@@ -53,6 +53,8 @@ hh_from_bzero     : 'TMath::Abs(H1_MC_MOTHER_ID) == 511 && TMath::Abs(H2_MC_MOTH
 # ----------
 tracks_from_bd    : '{hh_from_bzero} && {lep_from_bzero}'
 #-------------------------------------------------------------
+# Inclusive
+#-------------------------------------------------------------
 # BdXcHs_ee
 11453001 : '{lep_are_electrons} && {ll_mother} && {b_is_bzero} && {not_fail} && {not_reso_ee}'
 # B+XcHs_ee
@@ -61,6 +63,8 @@ tracks_from_bd    : '{hh_from_bzero} && {lep_from_bzero}'
 13454001 : '{lep_are_electrons} && {ll_mother} && {b_is_bstrn} && {not_fail} && {not_reso_ee}'
 # LbXcHs_ee
 15454101 : '{lep_are_electrons} && {ll_mother} && {b_is_lambd} && {not_fail} && {not_reso_ee}'
+#-------------------------------------------------------------
+# Resonant
 #-------------------------------------------------------------
 # Bd -> Jpsi(ee) Kst(Kpi)
 11154001        : '{lep_are_electrons} && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero}'
@@ -77,3 +81,10 @@ jpsi_mm_kstzero : '{lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {ha
 
 # Bd -> psi2(ee) Kst(Kpi)
 11154011        : '{lep_are_electrons} && {ll_is_psi2} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero}'
+#-------------------------------------------------------------
+# Rare
+#-------------------------------------------------------------
+# Bd K*0(k pi) ee.
+11124002        : '{b_is_bzero} && {lep_are_electrons} && {lep_from_bzero} && {had_are_kpi} && {had_from_kstzero} && {hh_is_kstzero}' 
+# Bd K*0(k pi) mm.
+11114002        : '{b_is_bzero} && {lep_are_muons}     && {lep_from_bzero} && {had_are_kpi} && {had_from_kstzero} && {hh_is_kstzero}' 
