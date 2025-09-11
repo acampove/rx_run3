@@ -82,8 +82,8 @@ not_fail_mes      : 'TMath::Abs(B_TRUEID)  != 0 && TMath::Abs(Jpsi_TRUEID) != 0 
 not_fail_moth_1   : 'TMath::Abs(L1_MC_MOTHER_ID)   != 0 && TMath::Abs(L2_MC_MOTHER_ID) != 0'
 not_fail_moth_2   : 'TMath::Abs(Jpsi_MC_MOTHER_ID) != 0 && TMath::Abs(H_MC_MOTHER_ID)  != 0'
 not_fail          : '{not_fail_lep} && {not_fail_mes} && {not_fail_moth_1} && {not_fail_moth_2}' 
-not_reso_ee       : '({12153001} == 0) && ({12153020} == 0)'
-not_reso_mm       : '({12143001} == 0) && ({12143010} == 0)'
+not_reso_ee       : '({jpsi_ee_kp} == 0) && ({jpsi_ee_pi} == 0)'
+not_reso_mm       : '({jpsi_mm_kp} == 0) && ({jpsi_mm_pi} == 0)'
 ll_mother         : '(({ll_is_jpsi} && {lep_from_jpsi}) || ({ll_is_psi2} && {lep_from_psi2}))'
 #-------------------------------------------------------------
 # BdXcHs_ee
