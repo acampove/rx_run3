@@ -9,7 +9,7 @@ from dmu.yaml.resolver     import Resolver
 
 log=LogStore.add_logger('rx_selection:truth_matching')
 # ----------------------
-def _get_event_type(arg : int|str) -> str:
+def get_event_type(arg : int|str) -> str:
     '''
     Parameters
     -------------
@@ -50,7 +50,7 @@ def get_truth(arg : int|str, kind : str) -> str:
     if isinstance(arg, str) and arg.startswith('DATA_'):
         return '(1)'
 
-    event_type = _get_event_type(arg=arg)
+    event_type = get_event_type(arg=arg)
     cfg        = gut.load_conf(package='rx_selection_data', fpath=f'truth_matching/{kind}.yaml')
     yrs        = Resolver(cfg=cfg)
 
