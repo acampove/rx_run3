@@ -62,7 +62,7 @@ class Resolver:
 
         return item in self._cfg
     # ----------------------
-    def __getitem__(self, key : str|int) -> str:
+    def __getitem__(self, key : str|int) -> Any:
         '''
         Parameters
         -------------
@@ -70,7 +70,7 @@ class Resolver:
 
         Returns
         -------------
-        String corresponding to value of mapping
+        Integer, float, string, etc
         '''
         key = str(key)
 
@@ -78,6 +78,9 @@ class Resolver:
             raise KeyError(f'Cannot find {key}')
 
         expr = self._cfg[key]
+        if not isinstance(expr, str):
+            return expr
+
         if f'{{{key}}}' in expr:
             raise ValueError(f'Circular reference at first level for key: {key}')
 
