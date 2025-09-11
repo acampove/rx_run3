@@ -260,8 +260,8 @@ jpsi_ee_pi: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electro
 #Bd->pi0(->ee gamma) K*0(Kpi)
 11124402 : '{b_is_bzero} && {ll_is_pizero} && {ll_from_bzero} && {lep_are_electrons} && {lep_from_pizero} && {h_is_kaon} && {h_from_kstzero}'
 #Bd-> K_1 (k pi pi0) gamma
-11202603_1 : '{ll_is_gamma} && ({ll_from_bzero} || {ll_from_pizero})'
-11202603 : '{b_is_bzero} && {11202603_1} && {lep_are_electrons} && {lep_from_gamma} && {h_is_kaon}'
+11202603u1 : '{ll_is_gamma} && ({ll_from_bzero} || {ll_from_pizero})'
+11202603 : '{b_is_bzero} && {11202603u1} && {lep_are_electrons} && {lep_from_gamma} && {h_is_kaon}'
 #Bd->pi0(->gamma gamma) K*0(Kpi)
 11102453 : '{b_is_bzero} && {ll_is_gamma} && {ll_from_pizero} && {lep_are_electrons} && {lep_from_gamma} && {h_is_kaon} && {h_from_kstzero}'
 #Bd-> gamma K*0(Kpi)
@@ -320,49 +320,49 @@ jpsi_ee_pi: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electro
 12103030 : '{b_is_bplus} && {l1_is_pion}        && {l2_is_kaon}     && {lep_from_bplus} &&  {h_is_kaon} && {h_from_bplus}'
 #------------------------------------------------------------
 #bpd0kpenuenu
-12583022_1 : '{b_is_bplus}    && {lep_are_electrons}'
-12583022_2 : '{l1_from_bplus} && {l2_from_dzero}'
-12583022_3 : '{l2_from_bplus} && {l1_from_dzero}'
-12583022   : '{12583022_1} && ({12583022_2} || {12583022_3}) && {h_is_kaon} && {h_from_dzero}'
+12583022u1 : '{b_is_bplus}    && {lep_are_electrons}'
+12583022u2 : '{l1_from_bplus} && {l2_from_dzero}'
+12583022u3 : '{l2_from_bplus} && {l1_from_dzero}'
+12583022   : '{12583022u1} && ({12583022u2} || {12583022u3}) && {h_is_kaon} && {h_from_dzero}'
 #------------------------------------------------------------
 # bpd0kpenupi
-12183004_1 : '{b_is_bplus} &&  ({l1_is_electron} || {l1_is_pion}) &&  ({l2_is_electron} || {l2_is_pion})'
-12183004_2 : '{l1_from_bplus} && {l2_from_dzero}'
-12183004_3 : '{l2_from_bplus} && {l1_from_dzero}'
-12183004   : '{12183004_1} && ({12183004_2} || {12183004_3}) && {h_is_kaon} && {h_from_dzero}'
+12183004u1 : '{b_is_bplus} &&  ({l1_is_electron} || {l1_is_pion}) &&  ({l2_is_electron} || {l2_is_pion})'
+12183004u2 : '{l1_from_bplus} && {l2_from_dzero}'
+12183004u3 : '{l2_from_bplus} && {l1_from_dzero}'
+12183004   : '{12183004u1} && ({12183004u2} || {12183004u3}) && {h_is_kaon} && {h_from_dzero}'
 #------------------------------------------------------------
 # bpd0kppienu
-12583013_1 : '{b_is_bplus} &&  ({l1_is_electron} || {l1_is_pion}) &&  ({l2_is_electron} || {l2_is_pion})'
-12583013_2 : '{l1_from_bplus} && {l2_from_dzero}'
-12583013_3 : '{l2_from_bplus} && {l1_from_dzero}'
-12583013   : '{12583013_1} && ({12583013_2} || {12583013_3}) && {h_is_kaon} && {h_from_dzero}'
+12583013u1 : '{b_is_bplus} &&  ({l1_is_electron} || {l1_is_pion}) &&  ({l2_is_electron} || {l2_is_pion})'
+12583013u2 : '{l1_from_bplus} && {l2_from_dzero}'
+12583013u3 : '{l2_from_bplus} && {l1_from_dzero}'
+12583013   : '{12583013u1} && ({12583013u2} || {12583013u3}) && {h_is_kaon} && {h_from_dzero}'
 #------------------------------------------------------------
-11154011_1 : '{b_is_bzero}    && {lep_are_electrons} && {h_is_kaon}'
-11154011_2 : '{lep_from_psi2} && {ll_is_psi2} && {h_from_kstzero}'
-11154011   : '{11154011_1} && {11154011_2}'
+11154011u1 : '{b_is_bzero}    && {lep_are_electrons} && {h_is_kaon}'
+11154011u2 : '{lep_from_psi2} && {ll_is_psi2} && {h_from_kstzero}'
+11154011   : '{11154011u1} && {11154011u2}'
 #------------------------------------------------------------
-11144011_1 : '{b_is_bzero}    && {lep_are_muons} && {h_is_kaon}'
-11144011_2 : '{lep_from_psi2} && {ll_is_psi2} && {h_from_kstzero}'
-11144011   : '{11144011_1} && {11144011_2}'
+11144011u1 : '{b_is_bzero}    && {lep_are_muons} && {h_is_kaon}'
+11144011u2 : '{lep_from_psi2} && {ll_is_psi2} && {h_from_kstzero}'
+11144011   : '{11144011u1} && {11144011u2}'
 #------------------------------------------------------------
 # B0-> mu+ mu- (K*(892)0 -> K+ pi-)
-11114002_1 : '{b_is_bzero} && {lep_are_muons} && {h_is_kaon}'
-11114002_2 : '{lep_from_bzero} && {h_from_kstzero}'
-11114002   : '{11114002_1} && {11114002_2}'
+11114002u1 : '{b_is_bzero} && {lep_are_muons} && {h_is_kaon}'
+11114002u2 : '{lep_from_bzero} && {h_from_kstzero}'
+11114002   : '{11114002u1} && {11114002u2}'
 #------------------------------------------------------------
-12155110_1 : '{b_is_bplus} && {lep_are_electrons} && {h_is_pion}'
-12155110_2 : '{lep_from_psi2} && {ll_is_psi2} && {h_from_kstplus}'
-12155110   : '{12155110_1} && {12155110_2}'
+12155110u1 : '{b_is_bplus} && {lep_are_electrons} && {h_is_pion}'
+12155110u2 : '{lep_from_psi2} && {ll_is_psi2} && {h_from_kstplus}'
+12155110   : '{12155110u1} && {12155110u2}'
 #------------------------------------------------------------
-12145120_1 : '{b_is_bplus}    && {lep_are_muons} && {h_is_pion}'
-12145120_2 : '{lep_from_psi2} && {ll_is_psi2} && {h_from_kstplus}'
-12145120   : '{12145120_1}    && {12145120_2}'
+12145120u1 : '{b_is_bplus}    && {lep_are_muons} && {h_is_pion}'
+12145120u2 : '{lep_from_psi2} && {ll_is_psi2} && {h_from_kstplus}'
+12145120   : '{12145120u1}    && {12145120u2}'
 #------------------------------------------------------------
-#12175101_1 : '{b_is_lzero}'
-#12175101_2 : '({l1_is_muon}   && {l2_is_pion})'
-#12175101_3 : '({l1_is_pion}   && {l2_is_muon})'
-#12175101_4 : '({12175101_2}   || {12175101_3})'
-#12175101_5 : '({h_from_bplus} || {h_from_lzero})'
-#12175101_6 : '({h_is_pion}    || {h_is_proton} )'
-#12175101   : '{12175101_1} && {12175101_4} && {12175101_5} && {12175101_6}'
+#12175101u1 : '{b_is_lzero}'
+#12175101u2 : '({l1_is_muon}   && {l2_is_pion})'
+#12175101u3 : '({l1_is_pion}   && {l2_is_muon})'
+#12175101u4 : '({12175101u2}   || {12175101u3})'
+#12175101u5 : '({h_from_bplus} || {h_from_lzero})'
+#12175101u6 : '({h_is_pion}    || {h_is_proton} )'
+#12175101   : '{12175101u1} && {12175101u4} && {12175101u5} && {12175101u6}'
 #------------------------------------------------------------
