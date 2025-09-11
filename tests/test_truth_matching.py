@@ -42,7 +42,10 @@ def test_nopid(sample : str):
     cut = tm.get_truth(sample, kind='bukll')
     ini = rdf.Count().GetValue()
     rdf = rdf.Filter(cut, 'truth match')
-    fin = rdf.Count().GetValue()
+    try:
+        fin = rdf.Count().GetValue()
+    except Exception: 
+        raise RuntimeError(f'Cannot apply cut: "{cut}"')
 
     rep = rdf.Report()
     rep.Print()
