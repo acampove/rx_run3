@@ -159,8 +159,6 @@ jpsi_mm_kp: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_muons} 
 # B+ -> Jpsi(-> e  e ) K+
 12153001  : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons}  && {lep_from_jpsi} && {h_is_kaon} && {h_from_bplus}'
 jpsi_ee_kp: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons}  && {lep_from_jpsi} && {h_is_kaon} && {h_from_bplus}'
-#B+ -> Jpsi ee K*+(Kpi0)
-12153420  : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons}  && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstplus}'
 #B+ -> K*+(-> K+ pi0) Jpsi ee
 12153420  : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstplus}'
 #B+ -> Psi(mm) K+
