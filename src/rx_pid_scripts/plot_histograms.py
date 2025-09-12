@@ -133,6 +133,14 @@ def _plot_hist(
     pkl_path : str,
     brem     : str,
     is_ratio : bool = False) -> None:
+    '''
+    Parameters
+    ----------------
+    hist    : Calibration histogram
+    pkl_path: Path where histogram was found
+    brem    : `nobrem` or `brem`
+    is_ratio: If true this is the ratio signal/control
+    '''
     x_edges  = hist.axes[0].edges
     y_edges  = hist.axes[1].edges
     counts   = _get_values(hist)
