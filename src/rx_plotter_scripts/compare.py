@@ -143,7 +143,7 @@ def _get_rdf() -> RDataFrame:
 
     return rdf
 # ---------------------------------
-def _parse_args() -> None:
+def _parse_args(argv : list[str]|None = None) -> None:
     parser = argparse.ArgumentParser(description='Script used to make comparison plots between distributions in the same dataframe')
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
@@ -155,7 +155,7 @@ def _parse_args() -> None:
     parser.add_argument('-B', '--block'  , type=int, help='Block to which data belongs, -1 will put all the data together', choices=[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8], required=True)
     parser.add_argument('-r', '--nomva'  ,           help='If used, it will remove the MVA requirement', action='store_true')
 
-    args = parser.parse_args()
+    args = parser.parse_args(args=argv)
 
     Data.q2_bin = args.q2bin
     Data.sample = args.sample
@@ -214,11 +214,11 @@ def _plot(d_rdf : dict[str,RDataFrame]) -> None:
     ptr=Plotter1D(d_rdf=d_rdf, cfg=Data.cfg)
     ptr.run()
 # ---------------------------------
-def main():
+def main(argv : list[str]|None = None):
     '''
     Script starts here
     '''
-    _parse_args()
+    _parse_args(argv=argv)
     _initialize()
     with RDFGetter.multithreading(nthreads=Data.nthread):
         d_rdf = _get_inp()
