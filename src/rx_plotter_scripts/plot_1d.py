@@ -193,7 +193,7 @@ def _plot(kind : str, d_rdf : dict[str,RDataFrame]) -> None:
 # ---------------------------------
 def main():
     '''
-    Script starts here
+    Entry point
     '''
     _parse_args()
     _initialize()
