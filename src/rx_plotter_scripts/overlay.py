@@ -12,7 +12,7 @@ from dataclasses         import dataclass
 import yaml
 import mplhep
 import dmu.generic.utilities as gut
-from ROOT                    import RDataFrame, EnableImplicitMT
+from ROOT                    import RDataFrame, EnableImplicitMT # type: ignore
 from dmu.plotting.plotter_1d import Plotter1D
 from dmu.logging.log_store   import LogStore
 from rx_data.rdf_getter      import RDFGetter
@@ -202,5 +202,5 @@ def main():
     d_rdf = _get_inp()
     _plot(d_rdf)
 # ---------------------------------
-if __name__ == 'main':
+if __name__ == '__main__':
     main()

@@ -12,7 +12,7 @@ from dataclasses         import dataclass
 import yaml
 import mplhep
 import dmu.generic.utilities as gut
-from ROOT                    import RDataFrame, EnableImplicitMT
+from ROOT                    import RDataFrame, EnableImplicitMT # type: ignore
 from dmu.plotting.plotter_1d import Plotter1D
 from dmu.logging.log_store   import LogStore
 from dmu.generic             import version_management as vmn
@@ -204,5 +204,5 @@ def main():
     _plot(kind='cutflow', d_rdf = d_rdf)
     _plot(kind='last'   , d_rdf = d_rdf)
 # ---------------------------------
-if __name__ == 'main':
+if __name__ == '__main__':
     main()

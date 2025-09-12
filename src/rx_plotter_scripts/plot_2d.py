@@ -108,5 +108,5 @@ def main():
         ptr=Plotter2D(rdf=rdf, cfg=cfg)
         ptr.run()
 # ---------------------------------
-if __name__ == 'main':
+if __name__ == '__main__':
     main()

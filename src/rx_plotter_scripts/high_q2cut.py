@@ -11,7 +11,7 @@ import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from ROOT                  import RDataFrame
+from ROOT                  import RDataFrame # type: ignore
 from rx_data.rdf_getter    import RDFGetter
 from rx_data.rdf_getter12  import RDFGetter12
 from rx_selection          import selection as sel

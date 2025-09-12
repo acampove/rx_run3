@@ -13,7 +13,7 @@ import argparse
 
 import mplhep
 import matplotlib.pyplot as plt
-from ROOT                    import RDataFrame
+from ROOT                    import RDataFrame # type: ignore
 from dmu.logging.log_store   import LogStore
 from ap_utilities.decays     import utilities          as aput
 from dmu.plotting.plotter_1d import Plotter1D          as Plotter

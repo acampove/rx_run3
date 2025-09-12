@@ -197,5 +197,5 @@ def main():
     d_rdf = _get_inp()
     _plot(d_rdf)
 # ---------------------------------
-if __name__ == 'main':
+if __name__ == '__main__':
     main()
