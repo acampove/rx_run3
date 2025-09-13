@@ -6,6 +6,7 @@ from the grid
 import os
 import math
 import json
+import time
 import glob
 import random
 import argparse
@@ -13,7 +14,6 @@ import argparse
 from typing                 import Union
 from importlib.resources    import files
 from concurrent.futures     import ThreadPoolExecutor
-from dataclasses            import dataclass
 
 import tqdm
 import yaml
@@ -24,10 +24,7 @@ from dmu.logging.log_store  import LogStore
 from rx_data                import utilities as ut
 
 log = LogStore.add_logger('rx_data:download_rx_data')
-
-# pylint: disable=line-too-long
 # --------------------------------------------------
-@dataclass
 class Data:
     '''
     Class used to store attributes to be shared in script
