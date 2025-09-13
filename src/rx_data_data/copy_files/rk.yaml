@@ -37,6 +37,7 @@ samples :
     - 12143010 # Muon cabibbo
     - 12153020 # Electron cabibbo
     - 12153012 # B+ -> psi2S(-> ee) K+
+    - 12143020 # B+ -> psi2S(-> mm) K+
   prec:
     - 13124006 # Bs -> phi ee
     - 12123445 # K*+ee
