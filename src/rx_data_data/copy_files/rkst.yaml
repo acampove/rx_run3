@@ -32,17 +32,14 @@ samples :
     - 12952000 # Bp eeX
     - 13454001 # Lb eeX
   resonant:
-    - 12143001 # Muon Jpsi
-    - 12153001 # Electron Jpsi
-    - 12143010 # Muon cabibbo
-    - 12153020 # Electron cabibbo
-    - 12153012 # B+ -> psi2S(-> ee) K+
+    - 11144001 # Bd -> Jpsi(mm) Kst
+    - 11154001 # Bd -> Jpsi(ee) Kst
+    - 11144011 # Bd -> Psi2(mm) Kst
+    - 11154011 # Bd -> Psi2(ee) Kst
   prec:
     - 13124006 # Bs -> phi ee
     - 12123445 # K*+ee
     - 12425000 # B+ -> K1 K pipi ee
     - 12425011 # B+ -> K2 K pipi ee
   misid:
-    - 12103017 # B -> KKK
-    - 12103030 # B -> KKpi
-    - 12103025 # B -> Kpipi
+    - 11104000 # B0 -> pipi K*(-> Kpi)
