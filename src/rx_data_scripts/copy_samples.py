@@ -45,7 +45,6 @@ class Data:
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
     parser.add_argument('-k', '--kind', type=str, help='Type of files', choices=Data.l_kind, required=True)
-    parser.add_argument('-p', '--proj', type=str, help='Project, e.g. rx, lbpkmm'         ,   default='rx')
     parser.add_argument('-c', '--conf', type=str, help='Name of YAML config file, e.g. rk', required=True, choices=['rk', 'rkst'])
     parser.add_argument('-l', '--logl', type=int, help='Logger level', choices=[10, 20, 30], default=20)
     parser.add_argument('-n', '--nprc', type=int, help='Number of process to download with', default=1)
@@ -54,7 +53,6 @@ def _parse_args():
     args = parser.parse_args()
 
     Data.kind = args.kind
-    Data.proj = args.proj
     Data.conf = args.conf
     Data.vers = args.vers
     Data.dry  = args.dry
@@ -139,10 +137,10 @@ def _initialize() -> None:
         conf = yaml.safe_load(ifile)
 
     inp_dir = conf['inp_dir']
-    conf['inp_dir'] = f'{inp_dir}/{Data.proj}'
+    conf['inp_dir'] = f'{inp_dir}/{Data.conf}'
 
     out_dir = conf['out_dir']
-    conf['out_dir'] = f'{out_dir}/{Data.proj}'
+    conf['out_dir'] = f'{out_dir}/{Data.conf}'
 
     Data.d_conf = conf
 # -----------------------------------------
