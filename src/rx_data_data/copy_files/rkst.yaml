@@ -36,6 +36,11 @@ samples :
     - 11154001 # Bd -> Jpsi(ee) Kst
     - 11144011 # Bd -> Psi2(mm) Kst
     - 11154011 # Bd -> Psi2(ee) Kst
+  reso_bkg:
+    - 15154001 # Lb -> Jpsi(ee) pK
+    - 15144001 # Lb -> Jpsi(mm) pK
+    - 13154001 # Bs -> Jpsi(ee) phi
+    - 13144001 # Bs -> Jpsi(mm) phi
   prec:
     - 13124006 # Bs -> phi ee
     - 12123445 # K*+ee
