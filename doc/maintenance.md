@@ -51,18 +51,20 @@ which kinit
 
 and make sure that your kinit does not come from a virtual environment but it is the one in the LHCb stack or the native one.
 
-## Organizing paths
+## Checking for corrupted files
 
-### Building directory structure
-
-All the ntuples will be downloaded in a single directory.
-In order to group them by sample and trigger run:
+For this run:
 
 ```bash
-make_tree_structure -i /path/to/downloaded/.data/v1 -o /path/to/directory/structure
+check_corrupted -p /path/to/directory/with/files -x "data_*_MVA_*.root"
 ```
 
-this will not make a copy of the ntuples, it will only create symbolic links to them.
+Which will check for corrupted files and will remove them.
+`-x` can be used to pass wildcards, in the case above, it would target only data.
+After removal, the download can be tried again, which would run only on the missing samples.
+This might allow for these files to be fixed, assuming that they were broken due to network issues. 
+
+## Organizing paths
 
 ### Merging data files
 
@@ -124,20 +126,8 @@ where:
 
 The config files live in `src/rx_data_data/copy_files` and can be adapted for new samples or different source paths.
 
-## Checking for corrupted files
 
-For this run:
-
-```bash
-check_corrupted -p /path/to/directory/with/files -x "data_*_MVA_*.root"
-```
-
-Which will check for corrupted files and will remove them.
-`-x` can be used to pass wildcards, in the case above, it would target only data.
-After removal, the download can be tried again, which would run only on the missing samples.
-This might allow for these files to be fixed, assuming that they were broken due to network issues. 
-
-## Calculating extra branches (no MVA)
+## Calculating extra branches
 
 Given the files produced by `post_ap`, new branches can be attached. These branches can be calculated using
 `branch_calculator` and can be placed in small files. These latter files would be made into friends of the main files.
