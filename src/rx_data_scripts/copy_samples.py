@@ -86,7 +86,7 @@ def _get_source_paths() -> list[str]:
 
     nsource = len(l_source)
     if nsource == 0:
-        raise ValueError('Will not copy any file')
+        raise ValueError('No files found')
 
     log.info(f'Will copy {nsource} files')
     for source in l_source:
