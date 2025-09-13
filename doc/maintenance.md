@@ -118,9 +118,9 @@ copy_samples -k all -c rk
 where:
 
 `-k` Kind of files to be copied, i.e. friend tree like `mva`, `main`, `hop` etc. For everything use `all`.   
-`-c` Name of config specifying what to copy, e.g. `rk`   
-`-p` Projecte.g. `rx` (default), `nopid`, etc. These correspond to the subdirectory in `$ANADIR/Data`
-`-v` Version of files to download. By default it should get the latest.
+`-c` Name of config specifying what to copy, e.g. `rk`, `rkst`. This is also the project directory.
+`-v` Version of files to download. By default it should get the latest. This should be used only if `k` is not `all`
+     given that different types of friend trees will have different versions.
 
 The config files live in `src/rx_data_data/copy_files` and can be adapted for new samples or different source paths.
 
