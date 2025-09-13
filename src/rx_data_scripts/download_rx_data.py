@@ -66,7 +66,11 @@ def _download(pfn : str) -> None:
 # --------------------------------------------------
 def _download_group(l_pfn : list[str], pbar : tqdm.std.tqdm):
     for pfn in l_pfn:
-        _download(pfn)
+        try:
+            _download(pfn)
+        except Exception:
+            log.error(f'Failed to download: {pfn}')
+
         pbar.update(1)
 # --------------------------------------------------
 def _check_status(status, kind):
