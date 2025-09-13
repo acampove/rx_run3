@@ -8,7 +8,6 @@ out_dir : /home/acampove/external_ssd/Data
 triggers:
   - Hlt2RD_BuToKpEE_MVA
   - Hlt2RD_BuToKpEE_MVA_noPID
-  - Hlt2RD_BuToKpEE_MVA_cal
   - Hlt2RD_BuToKpEE_MVA_misid
   - Hlt2RD_BuToKpEE_SameSign_MVA
   - Hlt2RD_BuToKpMuMu_MVA
@@ -16,11 +15,9 @@ triggers:
   - Hlt2RD_BuToKpMuMu_SameSign_MVA
 samples :
   data:
-    - data_24_magdown_24c1
     - data_24_magdown_24c2
     - data_24_magdown_24c3
     - data_24_magdown_24c4
-    - data_24_magup_24c1
     - data_24_magup_24c2
     - data_24_magup_24c3
     - data_24_magup_24c4
