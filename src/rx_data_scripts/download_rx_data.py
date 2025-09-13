@@ -313,10 +313,12 @@ def main():
     if not Data.l_failed:
         return
 
+    l_failed = sorted(Data.l_failed)
+
     log.error(20 * '-')
-    log.error(f'Failed to download {len(Data.l_failed)} files:')
+    log.error(f'Failed to download {len(l_failed)} files:')
     log.error(20 * '-')
-    for pfn in Data.l_failed:
+    for pfn in l_failed:
         log.info(pfn)
 # --------------------------------------------------
 if __name__ == '__main__':
