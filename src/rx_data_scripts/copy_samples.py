@@ -27,6 +27,7 @@ class Data:
     conf    : str
     dry     : bool
     nprc    : int
+    chck    : bool
     d_conf  : dict
     d_data  : dict
     out_dir : Path
@@ -51,6 +52,7 @@ def _parse_args():
     parser.add_argument('-n', '--nprc', type=int, help='Number of process to download with', default=1)
     parser.add_argument('-v', '--vers', type=str, help='Version of files, only makes sense if kind is not "all"')
     parser.add_argument('-d', '--dry' ,           help='If used, will do not copy files', action='store_true')
+    parser.add_argument('-C', '--chck',           help='If used it will run check between source and target files', action='store_true')
     args = parser.parse_args()
 
     Data.kind = args.kind
@@ -58,6 +60,7 @@ def _parse_args():
     Data.vers = args.vers
     Data.dry  = args.dry
     Data.nprc = args.nprc
+    Data.chck = args.chck
 
     LogStore.set_level('rx_data:copy_samples', args.logl)
 # -----------------------------------------
@@ -153,6 +156,13 @@ def _check_paths(source : Path, target : Path) -> None:
     source: Path to file to be copied
     target: Path to copied file
     '''
+    if not Data.chck:
+        return
+
+    if source.stat().st_size != target.stat().st_size:
+        log.warning('Files differ in size:')
+        log.info(source)
+        log.info(target)
 # -----------------------------------------
 def _copy_sample(source : Path) -> int:
     target= Data.out_dir/source.name
