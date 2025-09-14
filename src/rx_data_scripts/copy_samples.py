@@ -64,7 +64,7 @@ def _parse_args():
 
     LogStore.set_level('rx_data:copy_samples', args.logl)
 # -----------------------------------------
-def _is_right_trigger(path : str) -> bool:
+def _is_right_trigger(path : Path) -> bool:
     l_trigger  = Data.d_conf['triggers']
     _, trigger = ut.info_from_path(path)
 
