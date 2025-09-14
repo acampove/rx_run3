@@ -102,7 +102,7 @@ def is_reso(q2bin : str) -> bool:
     raise ValueError(f'Invalid q2bin: {q2bin}')
 # ---------------------------------
 def info_from_path(
-    path             : str,
+    path             : str|Path,
     sample_lowercase : bool = True) -> tuple[str,str]:
     '''
     Parameter
@@ -114,14 +114,15 @@ def info_from_path(
     -------------------
     Tuple with sample and HLT2 trigger
     '''
+    if isinstance(path, str):
+        path = Path(path)
 
-    name = os.path.basename(path)
-    if   name.startswith('dt_') or name.startswith('data_'):
-        info = _info_from_data_path(path)
-    elif name.startswith('mc_'):
-        info = _info_from_mc_path(path)
+    if   path.name.startswith('dt_') or path.name.startswith('data_'):
+        info = _info_from_data_path(path=path)
+    elif path.name.startswith('mc_'):
+        info = _info_from_mc_path(path=path)
     else:
-        log.error(f'File name is not for data or MC: {name}')
+        log.error(f'File name is not for data or MC: {path.name}')
         raise ValueError
 
     if sample_lowercase:
@@ -132,14 +133,13 @@ def info_from_path(
 
     return sample, trigger
 # ---------------------------------
-def _info_from_mc_path(path : str) -> tuple[str,str]:
+def _info_from_mc_path(path : Path) -> tuple[str,str]:
     '''
     Will return information from path to file
     '''
-    name = os.path.basename(path)
-    mtch = re.match(Data.mc_rgx, name)
+    mtch = re.match(Data.mc_rgx, path.name)
     if not mtch:
-        raise ValueError(f'Cannot extract information from MC file:\n\n{name}\n\nUsing {Data.mc_rgx}')
+        raise ValueError(f'Cannot extract information from MC file:\n\n{path.name}\n\nUsing {Data.mc_rgx}')
 
     try:
         [sample, line, _] = mtch.groups()
@@ -148,7 +148,7 @@ def _info_from_mc_path(path : str) -> tuple[str,str]:
 
     return sample, line
 # ---------------------------------
-def _info_from_data_path(path : str) -> tuple[str,str]:
+def _info_from_data_path(path : Path) -> tuple[str,str]:
     '''
     Parameters
     -----------------
@@ -158,10 +158,9 @@ def _info_from_data_path(path : str) -> tuple[str,str]:
     -----------------
     Tuple with sample name and trigger name
     '''
-    name = os.path.basename(path)
-    mtch = re.match(Data.dt_rgx, name)
+    mtch = re.match(Data.dt_rgx, path.name)
     if not mtch:
-        raise ValueError(f'Cannot find kind in:\n\n{name}\n\nusing\n\n{Data.dt_rgx}')
+        raise ValueError(f'Cannot find kind in:\n\n{path.name}\n\nusing\n\n{Data.dt_rgx}')
 
     try:
         [sample, line, _] = mtch.groups()
