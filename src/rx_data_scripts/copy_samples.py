@@ -143,11 +143,22 @@ def _initialize() -> None:
     conf['out_dir'] = f'{out_dir}/{Data.conf}'
 
     Data.d_conf = conf
+# ----------------------
+def _check_paths(source : Path, target : Path) -> None:
+    '''
+    This function checks that copied path and original are identical
+
+    Parameters
+    -------------
+    source: Path to file to be copied
+    target: Path to copied file
+    '''
 # -----------------------------------------
 def _copy_sample(source : Path) -> int:
     target= Data.out_dir/source.name
 
     if os.path.isfile(target):
+        _check_paths(source=source, target=target)
         log.debug(f'Target found, skipping: {target}')
         return 0
 
