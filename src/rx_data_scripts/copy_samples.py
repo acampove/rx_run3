@@ -7,6 +7,7 @@ import shutil
 import argparse
 import multiprocessing
 from importlib.resources import files
+from pathlib             import Path
 
 import tqdm
 import yaml
@@ -28,7 +29,7 @@ class Data:
     nprc    : int
     d_conf  : dict
     d_data  : dict
-    out_dir : str
+    out_dir : Path
     l_source: list[str]
 
     vers    = None
