@@ -31,6 +31,14 @@ samples :
     - 11453001 # Bd eeX
     - 12952000 # Bp eeX
     - 13454001 # Lb eeX
+  inc_mm:
+    - 11442001
+    - 12442001
+    - 13442001
+  semileptonic:
+    - 12583013 # B -> D(K pi) enu
+    - 12583021 # B -> D(e nu) enu
+    - 12183004 # B -> D(K pi) pi
   resonant:
     - 12143001 # Muon Jpsi
     - 12153001 # Electron Jpsi
