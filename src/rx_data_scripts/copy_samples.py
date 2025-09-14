@@ -178,13 +178,13 @@ def _copy_sample(source : Path) -> int:
         return 0
 
     Data.copied_files += 1
+    log.debug('')
+    log.debug(source)
+    log.debug('--->')
+    log.debug(target)
+    log.debug('')
 
     if not Data.dry:
-        log.debug('')
-        log.debug(source)
-        log.debug('--->')
-        log.debug(target)
-        log.debug('')
         shutil.copy(source, target)
         return 1
 
