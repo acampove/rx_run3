@@ -49,7 +49,7 @@ def _parse_args():
     parser.add_argument('-k', '--kind', type=str, help='Type of files', choices=Data.l_kind, required=True)
     parser.add_argument('-c', '--conf', type=str, help='Name of YAML config file, e.g. rk', required=True, choices=['rk', 'rkst'])
     parser.add_argument('-l', '--logl', type=int, help='Logger level', choices=[5, 10, 20, 30], default=20)
-    parser.add_argument('-n', '--nprc', type=int, help='Number of process to download with', default=1)
+    parser.add_argument('-n', '--nprc', type=int, help='Number of process to download with, with zero, will download all files at once', default=1)
     parser.add_argument('-v', '--vers', type=str, help='Version of files, only makes sense if kind is not "all"')
     parser.add_argument('-d', '--dry' ,           help='If used, will do not copy files', action='store_true')
     args = parser.parse_args()
@@ -200,8 +200,20 @@ def _download_group(group : list[Path]) -> int:
     return ncopied
 # -----------------------------------------
 def _group_paths(l_path : list[Path]) -> list[list[Path]]:
-    if Data.nprc <  1:
+    '''
+    Parameters
+    --------------------
+    l_path: List of paths of files to download
+
+    Returns
+    --------------------
+    Group of lists of files to download. Each group will be downloaded separately
+    '''
+    if Data.nprc <  0:
         raise ValueError(f'Number of processes has to be larger or equal to 1, found: {Data.nprc}')
+
+    if Data.nprc == 0:
+        return [ l_path ]
 
     if Data.nprc == 1:
         l_group = [ [path] for path in l_path ]
