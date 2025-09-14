@@ -39,6 +39,9 @@ samples :
     - 12583013 # B -> D(K pi) enu
     - 12583021 # B -> D(e nu) enu
     - 12183004 # B -> D(K pi) pi
+  #-------
+    - 12573040 # B -> D(mu nu) munu
+    - 12573050 # B -> D(K pi) munu
   resonant:
     - 12143001 # Muon Jpsi
     - 12153001 # Electron Jpsi
