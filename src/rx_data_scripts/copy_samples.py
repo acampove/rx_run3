@@ -144,9 +144,8 @@ def _initialize() -> None:
 
     Data.d_conf = conf
 # -----------------------------------------
-def _copy_sample(source : str) -> int:
-    fname = os.path.basename(source)
-    target= f'{Data.out_dir}/{fname}'
+def _copy_sample(source : Path) -> int:
+    target= Data.out_dir/source.name
 
     if os.path.isfile(target):
         log.debug(f'Target found, skipping: {target}')
