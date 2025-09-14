@@ -144,7 +144,7 @@ def _initialize() -> None:
 
     Data.d_conf = conf
 # ----------------------
-def _check_paths(source : Path, target : Path) -> None:
+def _not_corrupted(source : Path, target : Path) -> bool:
     '''
     This function checks that copied path and original are identical
 
@@ -152,20 +152,25 @@ def _check_paths(source : Path, target : Path) -> None:
     -------------
     source: Path to file to be copied
     target: Path to copied file
-    '''
-    if not Data.chck:
-        return
 
+    Returns
+    -------------
+    True if the file is not corrupted, False otherwise
+    If it is corrupted, will remove target (local) file
+    '''
     if source.stat().st_size != target.stat().st_size:
-        log.warning('Files differ in size:')
-        log.info(source)
-        log.info(target)
+        log.warning(f'Files differ in size for: {target.name}')
+        log.warning(f'Removing local {target.name}')
+        target.unlink()
+        return False
+
+    log.debug(f'Files agree in size for: {source.name}')
+    return True
 # -----------------------------------------
 def _copy_sample(source : Path) -> int:
     target= Data.out_dir/source.name
 
-    if os.path.isfile(target):
-        _check_paths(source=source, target=target)
+    if os.path.isfile(target) and _not_corrupted(source=source, target=target):
         log.debug(f'Target found, skipping: {target}')
         return 0
 
