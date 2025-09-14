@@ -26,7 +26,6 @@ class Data:
     conf    : str
     dry     : bool
     nprc    : int
-    chck    : bool
     d_conf  : DictConfig 
     d_data  : dict
     out_dir : Path
@@ -52,7 +51,6 @@ def _parse_args():
     parser.add_argument('-n', '--nprc', type=int, help='Number of process to download with', default=1)
     parser.add_argument('-v', '--vers', type=str, help='Version of files, only makes sense if kind is not "all"')
     parser.add_argument('-d', '--dry' ,           help='If used, will do not copy files', action='store_true')
-    parser.add_argument('-C', '--chck',           help='If used it will run check between source and target files', action='store_true')
     args = parser.parse_args()
 
     Data.kind = args.kind
@@ -60,7 +58,6 @@ def _parse_args():
     Data.vers = args.vers
     Data.dry  = args.dry
     Data.nprc = args.nprc
-    Data.chck = args.chck
 
     LogStore.set_level('rx_data:copy_samples', args.logl)
 # -----------------------------------------
@@ -240,9 +237,6 @@ def main():
         l_kind = Data.l_kind
     else:
         l_kind = [Data.kind]
-
-    if Data.chck:
-        log.warning('Will run check for file consistency')
 
     for kind in l_kind:
         _download_kind(kind)
