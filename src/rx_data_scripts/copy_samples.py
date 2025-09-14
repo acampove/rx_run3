@@ -41,7 +41,8 @@ class Data:
         'swp_jpsi_misid',
         'swp_cascade',
         'brem_track_2']
-    copied_files : int = 0
+    copied_files : int   = 0
+    copied_size  : float = 0
 # -----------------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
@@ -175,6 +176,7 @@ def _copy_sample(source : Path) -> int:
         return 0
 
     Data.copied_files += 1
+    Data.copied_size  += source.stat().st_size / 1_000_000_000
     log.debug('')
     log.debug(source)
     log.debug('--->')
@@ -241,7 +243,7 @@ def main():
     for kind in l_kind:
         _download_kind(kind)
 
-    log.info(f'Copied {Data.copied_files} files in total')
+    log.info(f'Copied {Data.copied_files} ({Data.copied_size:.2f} Gb) files in total')
 # -----------------------------------------
 if __name__ == '__main__':
     main()
