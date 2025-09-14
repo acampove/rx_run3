@@ -27,7 +27,7 @@ class Data:
     dry     : bool
     nprc    : int
     chck    : bool
-    d_conf  : dict
+    d_conf  : DictConfig 
     d_data  : dict
     out_dir : Path
     l_source: list[Path]
@@ -133,12 +133,9 @@ def _initialize_kind(kind : str):
     Data.l_source = l_path
 # -----------------------------------------
 def _initialize() -> None:
-    cfg_path = files('rx_data_data').joinpath(f'copy_files/{Data.conf}.yaml')
-    cfg_path = str(cfg_path)
-    with open(cfg_path, encoding='utf-8') as ifile:
-        conf = yaml.safe_load(ifile)
-
+    conf    = gut.load_conf(package='rx_data_data', fpath=f'copy_files/{Data.conf}.yaml')
     inp_dir = conf['inp_dir']
+
     conf['inp_dir'] = f'{inp_dir}/{Data.conf}'
 
     out_dir = conf['out_dir']
