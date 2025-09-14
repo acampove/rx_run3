@@ -67,7 +67,7 @@ def _is_right_trigger(path : str) -> bool:
 
     return trigger in l_trigger
 # -----------------------------------------
-def _get_source_paths() -> list[str]:
+def _get_source_paths() -> list[Path]:
     d_samp   = Data.d_conf['samples']
     l_source = []
     log.info(70 * '-')
@@ -115,10 +115,9 @@ def _initialize_kind(kind : str):
     path_wc = f'{inp_dir}/*.root'
     l_path  = glob.glob(path_wc)
 
-    out_dir = Data.d_conf['out_dir']
-    Data.out_dir = f'{out_dir}/{kind}/{vers}'
-    os.makedirs(Data.out_dir, exist_ok=True)
-
+    out_dir = Path(Data.d_conf['out_dir'])
+    Data.out_dir = out_dir/f'{kind}/{vers}'
+    Data.out_dir.mkdir(parents=True, exist_ok=True)
 
     log.info(f'Source: {inp_dir}')
     log.info(f'Target: {Data.out_dir}')
@@ -164,9 +163,9 @@ def _copy_sample(source : str) -> int:
 
     return 0
 # -----------------------------------------
-def _download_group(group : list[str]) -> int:
+def _download_group(group : list[Path]) -> int:
     if len(group) == 1:
-        ncopied = _copy_sample(group[0])
+        ncopied = _copy_sample(source=group[0])
         return ncopied
 
     with multiprocessing.Pool() as pool:
@@ -175,7 +174,7 @@ def _download_group(group : list[str]) -> int:
 
     return ncopied
 # -----------------------------------------
-def _group_paths(l_path : list[str]) -> list[list[str]]:
+def _group_paths(l_path : list[Path]) -> list[list[Path]]:
     if Data.nprc <  1:
         raise ValueError(f'Number of processes has to be larger or equal to 1, found: {Data.nprc}')
 
