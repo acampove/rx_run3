@@ -186,9 +186,8 @@ def _copy_sample(source : Path) -> int:
 
     if not Data.dry:
         shutil.copy(source, target)
-        return 1
 
-    return 0
+    return 1
 # -----------------------------------------
 def _download_group(group : list[Path]) -> int:
     if len(group) == 1:
@@ -248,7 +247,7 @@ def main():
     for kind in l_kind:
         _download_kind(kind)
 
-    log.info(f'Should have copied {Data.copied_files} files in total')
+    log.info(f'Copied {Data.copied_files} files in total')
 # -----------------------------------------
 if __name__ == '__main__':
     main()
