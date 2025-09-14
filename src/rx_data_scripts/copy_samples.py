@@ -192,7 +192,8 @@ def _group_paths(l_path : list[Path]) -> list[list[Path]]:
         l_group = [ [path] for path in l_path ]
         return l_group
 
-    l_arr_path = numpy.array_split(l_path, Data.nprc)
+    arr_path   = numpy.array(l_path, dtype=object)
+    l_arr_path = numpy.array_split(arr_path, Data.nprc)
     l_l_path   = [ arr_path.tolist() for arr_path in l_arr_path ]
 
     return l_l_path
