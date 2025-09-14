@@ -42,6 +42,7 @@ class Data:
         'swp_jpsi_misid',
         'swp_cascade',
         'brem_track_2']
+    copied_files : int = 0
 # -----------------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
@@ -168,6 +169,8 @@ def _copy_sample(source : Path) -> int:
         log.debug(f'Target found, skipping: {target}')
         return 0
 
+    Data.copied_files += 1
+
     if not Data.dry:
         log.debug('')
         log.debug(source)
@@ -236,6 +239,8 @@ def main():
 
     for kind in l_kind:
         _download_kind(kind)
+
+    log.info(f'Should have copied {Data.copied_files} files in total')
 # -----------------------------------------
 if __name__ == '__main__':
     main()
