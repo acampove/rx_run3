@@ -3,14 +3,14 @@ Module with utility functions
 '''
 # pylint: disable=too-many-return-statements
 
-import os
 import re
-from dataclasses            import dataclass
+from dataclasses  import dataclass
+from pathlib      import Path
 
 import ap_utilities.decays.utilities as aput
 import pandas                        as pnd
 
-from ROOT                   import RDataFrame
+from ROOT                   import RDataFrame # type: ignore
 from dmu.generic            import utilities  as gut
 from dmu.logging.log_store  import LogStore
 
