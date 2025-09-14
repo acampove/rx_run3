@@ -43,7 +43,3 @@ samples :
     - 12123445 # K*+ee
     - 12425000 # B+ -> K1 K pipi ee
     - 12425011 # B+ -> K2 K pipi ee
-  misid:
-    - 12103017 # B -> KKK
-    - 12103030 # B -> KKpi
-    - 12103025 # B -> Kpipi
