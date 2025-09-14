@@ -114,10 +114,9 @@ def _initialize_kind(kind : str):
         raise ValueError(f'Specified version {Data.vers} for kind {Data.kind}')
 
     vers    = _get_version(kind)
-    inp_dir = Data.d_conf['inp_dir']
-    inp_dir = f'{inp_dir}/{kind}/{vers}'
-    path_wc = f'{inp_dir}/*.root'
-    l_path  = glob.glob(path_wc)
+    inp_dir = Path(Data.d_conf['inp_dir'])
+    inp_dir = inp_dir/f'{kind}/{vers}'
+    l_path  = list(inp_dir.glob('*.root'))
 
     out_dir = Path(Data.d_conf['out_dir'])
     Data.out_dir = out_dir/f'{kind}/{vers}'
@@ -128,7 +127,7 @@ def _initialize_kind(kind : str):
 
     nsource = len(l_path)
     if nsource == 0:
-        raise ValueError(f'No files found in: {path_wc}')
+        raise ValueError(f'No files found in: {inp_dir}')
 
     log.info(f'Found {nsource} files')
 
