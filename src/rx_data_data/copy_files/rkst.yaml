@@ -38,6 +38,9 @@ samples :
   semileptonic:
     - 11584030 # B -> D*(D(Kpi)  pi) enu
     - 11584022 # B -> D(K*(Kpi) enu) enu
+  #-------
+    - 11574030 # B -> D(K*(Kpi) munu) munu
+    #- 11574090 # B -> D*(D(Kpi)   pi) munu
   resonant:
     - 11144001 # Bd -> Jpsi(mm) Kst
     - 11154001 # Bd -> Jpsi(ee) Kst
