@@ -48,7 +48,7 @@ def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
     parser.add_argument('-k', '--kind', type=str, help='Type of files', choices=Data.l_kind, required=True)
     parser.add_argument('-c', '--conf', type=str, help='Name of YAML config file, e.g. rk', required=True, choices=['rk', 'rkst'])
-    parser.add_argument('-l', '--logl', type=int, help='Logger level', choices=[10, 20, 30], default=20)
+    parser.add_argument('-l', '--logl', type=int, help='Logger level', choices=[5, 10, 20, 30], default=20)
     parser.add_argument('-n', '--nprc', type=int, help='Number of process to download with', default=1)
     parser.add_argument('-v', '--vers', type=str, help='Version of files, only makes sense if kind is not "all"')
     parser.add_argument('-d', '--dry' ,           help='If used, will do not copy files', action='store_true')
@@ -91,9 +91,9 @@ def _get_source_paths() -> list[Path]:
     if nsource == 0:
         raise ValueError('No files found')
 
-    log.info(f'Will copy {nsource} files')
+    log.info(f'Found {nsource} files in source path')
     for source in l_source:
-        log.debug(source)
+        log.verbose(source)
 
     return l_source
 # -----------------------------------------
@@ -164,14 +164,17 @@ def _not_corrupted(source : Path, target : Path) -> bool:
         target.unlink()
         return False
 
-    log.debug(f'Files agree in size for: {source.name}')
+    size = source.stat().st_size
+    log.verbose(f'Files agree in size ({size}) for: {source.name}')
+
     return True
 # -----------------------------------------
 def _copy_sample(source : Path) -> int:
     target= Data.out_dir/source.name
 
     if os.path.isfile(target) and _not_corrupted(source=source, target=target):
-        log.debug(f'Target found, skipping: {target}')
+        log.verbose(f'Target found, skipping: {target}')
+        log.verbose('')
         return 0
 
     Data.copied_files += 1
