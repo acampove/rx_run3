@@ -123,6 +123,8 @@ where:
      given that different types of friend trees will have different versions.
 
 The config files live in `src/rx_data_data/copy_files` and can be adapted for new samples or different source paths.
+If the files to be copied already exist locally, it will check that the sizes are the same, if not, it will remove the
+local file and copy again.
 
 ## Checking for corrupted files
 
