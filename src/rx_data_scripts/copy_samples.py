@@ -2,16 +2,15 @@
 Script used to copy ntuples from mounted filesystem
 '''
 import os
-import glob
 import shutil
 import argparse
 import multiprocessing
-from importlib.resources import files
 from pathlib             import Path
 
 import tqdm
-import yaml
 import numpy
+from omegaconf                      import DictConfig
+from dmu.generic                    import utilities as gut
 from dmu.generic.version_management import get_last_version
 from dmu.logging.log_store          import LogStore
 from rx_data                        import utilities as ut
