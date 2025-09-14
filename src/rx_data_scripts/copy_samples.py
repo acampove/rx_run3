@@ -79,7 +79,7 @@ def _get_source_paths() -> list[Path]:
     for sample, l_identifier in d_samp.items():
         for identifier in l_identifier:
             identifier    = str(identifier)
-            l_source_samp = [ Path(source) for source in Data.l_source if identifier in source and _is_right_trigger(source) ]
+            l_source_samp = [ source for source in Data.l_source if identifier in source.name and _is_right_trigger(source) ]
 
             npath     = len(l_source_samp)
             log.info(f'{sample:<20}{identifier:<30}{npath:<20}')
