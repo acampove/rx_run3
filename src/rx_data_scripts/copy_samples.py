@@ -231,6 +231,9 @@ def main():
     else:
         l_kind = [Data.kind]
 
+    if Data.chck:
+        log.warning('Will run check for file consistency')
+
     for kind in l_kind:
         _download_kind(kind)
 # -----------------------------------------
