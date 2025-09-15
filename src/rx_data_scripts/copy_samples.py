@@ -10,7 +10,6 @@ from pathlib             import Path
 import tqdm
 import numpy
 from omegaconf                      import DictConfig
-from dmu.generic                    import utilities as gut
 from dmu.generic.version_management import get_last_version
 from dmu.logging.log_store          import LogStore
 from rx_data                        import utilities as ut
@@ -131,17 +130,6 @@ def _initialize_kind(kind : str):
     log.info(f'Found {nsource} files')
 
     Data.l_source = l_path
-# -----------------------------------------
-def _initialize() -> None:
-    conf    = gut.load_conf(package='rx_data_data', fpath=f'copy_files/{Data.conf}.yaml')
-    inp_dir = conf['inp_dir']
-
-    conf['inp_dir'] = f'{inp_dir}/{Data.conf}'
-
-    out_dir = conf['out_dir']
-    conf['out_dir'] = f'{out_dir}/{Data.conf}'
-
-    Data.d_conf = conf
 # ----------------------
 def _not_corrupted(source : Path, target : Path) -> bool:
     '''
@@ -246,7 +234,6 @@ def main():
     Starts here
     '''
     _parse_args()
-    _initialize()
 
     if Data.kind == 'all':
         l_kind = Data.l_kind
