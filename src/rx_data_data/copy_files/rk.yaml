@@ -4,7 +4,7 @@
 # What samples should be copied
 
 inp_dir : /publicfs/ucas/user/campoverde/Data/Data
-out_dir : /home/acampove/external_02/Data
+out_dir : Data
 triggers:
   - Hlt2RD_BuToKpEE_MVA
   - Hlt2RD_BuToKpEE_MVA_noPID
