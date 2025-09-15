@@ -1,7 +1,7 @@
 [tool.poetry]
 name           = 'data-manipulation-utilities'
 description    = 'Project storing utilities needed to reduce boilerplate code when analyzing data'
-version        = '0.0.0'
+version        = '0.3.0'
 readme         = 'README.md'
 package-mode   = true 
 packages       = [
