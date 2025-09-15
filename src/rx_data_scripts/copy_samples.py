@@ -148,6 +148,7 @@ def _not_corrupted(source : Path, target : Path) -> bool:
     If it is corrupted, will remove target (local) file
     '''
     if source.stat().st_size != target.stat().st_size:
+        log.warning('')
         log.warning(f'Files differ in size for: {target.name}')
         log.warning(f'Removing local {target.name}')
         target.unlink()
