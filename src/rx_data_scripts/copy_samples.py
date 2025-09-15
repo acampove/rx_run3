@@ -70,7 +70,7 @@ def _is_right_trigger(path : Path) -> bool:
     return trigger in l_trigger
 # -----------------------------------------
 def _get_source_paths() -> list[Path]:
-    d_samp   = Data.d_conf['samples']
+    d_samp   = Data.d_conf.samples
     l_source = []
     log.info(70 * '-')
     log.info(f'{"Sample":<20}{"Identifier":<30}{"Paths":<20}')
@@ -100,8 +100,7 @@ def _get_version(kind : str) -> str:
     if Data.vers is not None:
         return Data.vers
 
-    inp_dir = Data.d_conf['inp_dir']
-    knd_dir = f'{inp_dir}/{kind}'
+    knd_dir = f'{Data.pfs_dir}/{kind}'
     vers    = get_last_version(dir_path = knd_dir, version_only=True)
 
     log.debug(f'Latest version {vers} found in {knd_dir}')
@@ -113,12 +112,10 @@ def _initialize_kind(kind : str):
         raise ValueError(f'Specified version {Data.vers} for kind {Data.kind}')
 
     vers    = _get_version(kind)
-    inp_dir = Path(Data.d_conf['inp_dir'])
-    inp_dir = inp_dir/f'{kind}/{vers}'
+    inp_dir = Data.pfs_dir/f'{Data.conf}/{kind}/{vers}'
     l_path  = list(inp_dir.glob('*.root'))
 
-    out_dir      = Data.ana_dir/Data.d_conf.out_dir
-    Data.out_dir = out_dir/f'{kind}/{vers}'
+    Data.out_dir = Data.ana_dir/f'{Data.conf}/{kind}/{vers}'
     Data.out_dir.mkdir(parents=True, exist_ok=True)
 
     log.info(f'Source: {inp_dir}')
