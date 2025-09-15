@@ -110,7 +110,7 @@ def _get_version(kind : str) -> str:
 
     return vers
 # -----------------------------------------
-def _initialize_kind(kind : str):
+def _initialize(kind : str):
     if Data.vers is not None and Data.kind == 'all':
         raise ValueError(f'Specified version {Data.vers} for kind {Data.kind}')
 
@@ -220,7 +220,7 @@ def _download_kind(kind : str):
         return
 
     log.info(f'Copying files for kind {kind}')
-    _initialize_kind(kind)
+    _initialize(kind)
 
     l_path = _get_source_paths()
     l_group= _group_paths(l_path)
