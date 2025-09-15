@@ -147,10 +147,13 @@ def _not_corrupted(source : Path, target : Path) -> bool:
     True if the file is not corrupted, False otherwise
     If it is corrupted, will remove target (local) file
     '''
-    if source.stat().st_size != target.stat().st_size:
+    src_size = source.stat().st_size
+    tgt_size = target.stat().st_size
+    if src_size != tgt_size:
         log.warning('')
         log.warning(f'Files differ in size for: {target.name}')
         log.warning(f'Removing local {target.name}')
+        log.warning(f'{src_size/1000_000:.0f} != {tgt_size/1000_000:.0f}')
         target.unlink()
         return False
 
