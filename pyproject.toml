@@ -22,24 +22,23 @@ path = "src/rx_data_data/**/*.csv"
 format = "wheel"
 
 [tool.poetry.dependencies]
-python                     = '>=3.10,<3.13'
-tqdm                       = '>=0.0.0'
-uproot                     = '>=0.0.0'
-tabulate                   = '>=0.0.0'
-mplhep                     = '>=0.0.0'
-particle                   = '>=0.0.0'
-vector                     = '>=0.0.0'
-pandarallel                = '>=0.0.0'
-ap_utilities               = {version = '>=0.0.0', allow-prereleases=true}
-data-manipulation-utilities= {version = '>=0.0.0', allow-prereleases=true}
-ecal_calibration           = {version = '>=0.0.0', allow-prereleases=true, optional=true}
-pytest                     = {version = '>=0.0.0',                         optional=true}
-xrootd                     = {version = '>=0.0.0',                         optional=true}
+python                      = '>=3.10,<3.13'
+tqdm                        = '>=0.0.0'
+uproot                      = '>=0.0.0'
+tabulate                    = '>=0.0.0'
+mplhep                      = '>=0.0.0'
+particle                    = '>=0.0.0'
+vector                      = '>=0.0.0'
+pandarallel                 = '>=0.0.0'
+pytest                      = {version = '>=0.0.0',                         optional=true}
+xrootd                      = {version = '>=0.0.0',                         optional=true}
+ap_utilities                = { git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/ap_utilities.git'    , branch = 'master' }
+data-manipulation-utilities = { git = "ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git"             , branch = "master" }
+ecal_calibration            = { git = "ssh://git@gitlab.cern.ch:7999/rx_run3/ecal_calibration.git", branch = "master" }
 
 [tool.poetry.extras]
 tst = ['pytest']           # When developing
 net = ['xrootd']           # When doing things that require access to remote files
-ci  = ['ecal_calibration'] # When running pipelines
 
 [build-system]
 requires      = [
