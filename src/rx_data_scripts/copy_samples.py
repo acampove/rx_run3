@@ -97,6 +97,9 @@ def _get_source_paths() -> list[Path]:
     return l_source
 # -----------------------------------------
 def _get_version(kind : str) -> str:
+    '''
+    Get latest or user defined version for given kind of friend trees 
+    '''
     if Data.vers is not None:
         return Data.vers
 
