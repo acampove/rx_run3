@@ -27,10 +27,11 @@ class Data:
     nprc    : int
     d_conf  : DictConfig 
     d_data  : dict
-    out_dir : Path
     l_source: list[Path]
 
-    ana_dir = Path(os.environ['ANADIR'])
+    out_dir : Path # Path to ana_dir/{kind}/{version}
+    pfs_dir = Path(os.environ['PFS_ANADIR'])/'Data'
+    ana_dir = Path(os.environ['ANADIR'    ])/'Data'
     vers    = None
     l_kind  = [
         'all',
