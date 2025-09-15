@@ -5,7 +5,7 @@
 This repository contains:
 
 - Versioned lists of LFNs
-- Utilities to download them and link them into a tree structure
+- Utilities to download them
 
 for all the $R_X$ like analyses. For instructions on how to:
 
