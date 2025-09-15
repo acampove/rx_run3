@@ -12,6 +12,7 @@ import numpy
 from omegaconf                      import DictConfig
 from dmu.generic.version_management import get_last_version
 from dmu.logging.log_store          import LogStore
+from dmu.generic                    import utilities as gut
 from rx_data                        import utilities as ut
 
 log = LogStore.add_logger('rx_data:copy_samples')
@@ -22,10 +23,9 @@ class Data:
     '''
     kind    : str
     proj    : str
-    conf    : str
     dry     : bool
     nprc    : int
-    d_conf  : DictConfig 
+    conf  : DictConfig 
     d_data  : dict
     l_source: list[Path]
 
@@ -48,7 +48,7 @@ class Data:
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
     parser.add_argument('-k', '--kind', type=str, help='Type of files', choices=Data.l_kind, required=True)
-    parser.add_argument('-c', '--conf', type=str, help='Name of YAML config file, e.g. rk', required=True, choices=['rk', 'rkst'])
+    parser.add_argument('-p', '--proj', type=str, help='Name of YAML config file, e.g. rk', required=True, choices=['rk', 'rkst'])
     parser.add_argument('-l', '--logl', type=int, help='Logger level', choices=[5, 10, 20, 30], default=20)
     parser.add_argument('-n', '--nprc', type=int, help='Number of process to download with, with zero, will download all files at once', default=1)
     parser.add_argument('-v', '--vers', type=str, help='Version of files, only makes sense if kind is not "all"')
@@ -56,7 +56,8 @@ def _parse_args():
     args = parser.parse_args()
 
     Data.kind = args.kind
-    Data.conf = args.conf
+    Data.proj = args.proj
+    Data.conf = gut.load_conf(package='rx_data_data', fpath=f'copy_files/{args.proj}.yaml')
     Data.vers = args.vers
     Data.dry  = args.dry
     Data.nprc = args.nprc
@@ -103,7 +104,7 @@ def _get_version(kind : str) -> str:
     if Data.vers is not None:
         return Data.vers
 
-    knd_dir = f'{Data.pfs_dir}/{kind}'
+    knd_dir = f'{Data.pfs_dir}/{Data.proj}/{kind}'
     vers    = get_last_version(dir_path = knd_dir, version_only=True)
 
     log.debug(f'Latest version {vers} found in {knd_dir}')
@@ -115,10 +116,10 @@ def _initialize(kind : str):
         raise ValueError(f'Specified version {Data.vers} for kind {Data.kind}')
 
     vers    = _get_version(kind)
-    inp_dir = Data.pfs_dir/f'{Data.conf}/{kind}/{vers}'
+    inp_dir = Data.pfs_dir/f'{Data.proj}/{kind}/{vers}'
     l_path  = list(inp_dir.glob('*.root'))
 
-    Data.out_dir = Data.ana_dir/f'{Data.conf}/{kind}/{vers}'
+    Data.out_dir = Data.ana_dir/f'{Data.proj}/{kind}/{vers}'
     Data.out_dir.mkdir(parents=True, exist_ok=True)
 
     log.info(f'Source: {inp_dir}')
