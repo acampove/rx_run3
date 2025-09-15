@@ -43,6 +43,7 @@ class Data:
     ran_pfn : bool
     force   : bool
     trg_path: str
+    l_failed: list[str] = []
 
     pfn_preffix = 'root://x509up_u1000@eoslhcb.cern.ch//eos/lhcb/grid/user'
     nthread     = 1
@@ -63,7 +64,13 @@ def _download(pfn : str) -> None:
 # --------------------------------------------------
 def _download_group(l_pfn : list[str], pbar : tqdm.std.tqdm):
     for pfn in l_pfn:
-        _download(pfn)
+        try:
+            _download(pfn)
+        except Exception:
+            log.debug(f'Failed to download: {pfn}')
+            lfn = pfn.removeprefix(Data.pfn_preffix)
+            Data.l_failed.append(lfn)
+
         pbar.update(1)
 # --------------------------------------------------
 def _check_status(status, kind):
@@ -300,6 +307,19 @@ def main():
         for future in l_future:
             if future.exception():
                 print(future.exception())
+
+    time.sleep(1)
+
+    if not Data.l_failed:
+        return
+
+    l_failed = sorted(Data.l_failed)
+
+    log.error(20 * '-')
+    log.error(f'Failed to download {len(l_failed)} files:')
+    log.error(20 * '-')
+    for pfn in l_failed:
+        log.info(pfn)
 # --------------------------------------------------
 if __name__ == '__main__':
     main()
