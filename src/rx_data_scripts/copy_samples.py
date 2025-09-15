@@ -31,6 +31,7 @@ class Data:
     out_dir : Path
     l_source: list[Path]
 
+    ana_dir = Path(os.environ['ANADIR'])
     vers    = None
     l_kind  = [
         'all',
@@ -116,7 +117,7 @@ def _initialize_kind(kind : str):
     inp_dir = inp_dir/f'{kind}/{vers}'
     l_path  = list(inp_dir.glob('*.root'))
 
-    out_dir = Path(Data.d_conf['out_dir'])
+    out_dir      = Data.ana_dir/Data.d_conf.out_dir
     Data.out_dir = out_dir/f'{kind}/{vers}'
     Data.out_dir.mkdir(parents=True, exist_ok=True)
 
