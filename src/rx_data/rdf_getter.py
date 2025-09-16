@@ -70,7 +70,7 @@ class RDFGetter:
         self,
         sample  : str,
         trigger : str,
-        analysis: str = 'rx',
+        analysis: str = 'rk',
         tree    : str = 'DecayTree'):
         '''
         Sample: Sample's nickname, e.g. DATA_24_MagDown_24c2
