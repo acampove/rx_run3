@@ -58,23 +58,24 @@ def test_channel_from_trigger(channel : str, trigger : str):
     assert channel == info.channel_from_trigger(trigger=trigger)
 # -----------------------------------------
 @pytest.mark.parametrize('project,trigger', [
+    ('RK_noPID'  , 'Hlt2RD_BuToKpEE_MVA_noPID'),
+    ('RK_noPID'  , 'Hlt2RD_BuToKpMuMu_MVA_noPID'),
+    ('RKst_noPID', 'Hlt2RD_B0ToKpPimEE_MVA_noPID'),
+    ('RKst_noPID', 'Hlt2RD_B0ToKpPimMuMu_MVA_noPID'),
+    # --------
     ('RK', 'Hlt2RD_BuToKpEE_MVA'),
-    ('RK', 'Hlt2RD_BuToKpEE_MVA_noPID'),
     ('RK', 'Hlt2RD_BuToKpEE_SameSign_MVA'),
     ('RK', 'Hlt2RD_BuToKpEE_MVA_misid'),
     ('RK', 'Hlt2RD_BuToKpEE_MVA_ext'),
     ('RK', 'Hlt2RD_BuToKpEE_MVA_cal'),
     ('RK', 'Hlt2RD_BuToKpMuMu_MVA'),
-    ('RK', 'Hlt2RD_BuToKpMuMu_MVA_noPID'),
     ('RK', 'Hlt2RD_BuToKpMuMu_SameSign_MVA'),
     ('RKst', 'Hlt2RD_B0ToKpPimEE_MVA'),
-    ('RKst', 'Hlt2RD_B0ToKpPimEE_MVA_noPID'),
     ('RKst', 'Hlt2RD_B0ToKpPimEE_SameSign_MVA'),
     ('RKst', 'Hlt2RD_B0ToKpPimEE_MVA_misid'),
     ('RKst', 'Hlt2RD_B0ToKpPimEE_MVA_ext'),
     ('RKst', 'Hlt2RD_B0ToKpPimEE_MVA_cal'),
     ('RKst', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
-    ('RKst', 'Hlt2RD_B0ToKpPimMuMu_MVA_noPID'),
     ('RKst', 'Hlt2RD_B0ToKpPimMuMu_SameSign_MVA')])
 def test_project_from_trigger(project : str, trigger : str):
     '''
