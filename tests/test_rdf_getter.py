@@ -852,7 +852,7 @@ def test_no_pid(sample : str, trigger : str):
     '''
     Tests loading of noPID samples
     '''
-    gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
+    gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
     _run_default_checks(
             rdf         = rdf,
