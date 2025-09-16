@@ -11,7 +11,6 @@ import ap_utilities.decays.utilities as aput
 import pandas                        as pnd
 
 from ROOT                   import RDataFrame # type: ignore
-from dmu.generic            import utilities  as gut
 from dmu.logging.log_store  import LogStore
 
 log   = LogStore.add_logger('rx_data:utilities')
@@ -26,80 +25,6 @@ class Data:
 
     dt_rgx  = r'(data_\d{2}_.*c\d)_(Hlt2RD_.*(?:EE|MuMu|misid|cal|MVA|LL|DD))_?(\d{3}_\d{3}|[a-z0-9]{10})?\.root'
     mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_(\d{3}_\d{3}|\w{10}).root'
-
-    triggers = gut.load_data(package='rx_data_data', fpath='rdf_getter/triggers.yaml')
-# ---------------------------------
-def is_mc(sample : str) -> bool:
-    '''
-    Given a sample name, it will check if it is MC or data
-    '''
-
-    if sample.startswith('DATA'):
-        return False
-
-    return True
-# ---------------------------------
-def channel_from_trigger(trigger : str) -> str:
-    '''
-    Parameters
-    ----------------
-    trigger: Hlt2 trigger name, e.g. HLT2_BuKp...
-
-    Returns
-    ----------------
-    Channel, i.e. EE, MM, EM
-    '''
-    for project in Data.triggers:
-        for channel in Data.triggers[project]:
-            if trigger not in Data.triggers[project][channel]:
-                continue
-
-            return channel
-
-    raise ValueError(f'Trigger {trigger} not found')
-# ---------------------------------
-def is_ee(trigger : str) -> bool:
-    '''
-    Given Hlt2 trigger name, it will tell if it belongs to
-    muon or electron channel
-    '''
-
-    return channel_from_trigger(trigger) == 'EE'
-# ---------------------------------
-def project_from_trigger(trigger : str) -> str:
-    '''
-    Parameters
-    -------------------
-    trigger: HLT2 trigger
-
-    Returns
-    -------------------
-    Project, e.g RK, RKst
-    '''
-    for project in Data.triggers:
-        for channel in Data.triggers[project]:
-            if trigger not in Data.triggers[project][channel]:
-                continue
-
-            return project
-
-    raise ValueError(f'Trigger {trigger} not found')
-# ---------------------------------
-def is_reso(q2bin : str) -> bool:
-    '''
-    Takes q2bin name, returns true if it has associated
-    charmonium component. If not, returns false.
-    '''
-    reso = ['jpsi', 'psi2']
-    rare = ['low', 'cen_low', 'central', 'cen_high', 'high']
-
-    if q2bin in reso:
-        return True
-
-    if q2bin in rare:
-        return False
-
-    raise ValueError(f'Invalid q2bin: {q2bin}')
 # ---------------------------------
 def info_from_path(
     path             : str|Path,
