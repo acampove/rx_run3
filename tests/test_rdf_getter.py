@@ -488,14 +488,15 @@ def test_split_per_file():
         log.info(f'{"Conf path":<20}{cpath}')
         log.info('')
 # ------------------------------------------------
-@pytest.mark.parametrize('sample'   , ['Bu_JpsiK_ee_eq_DPC'])
+@pytest.mark.parametrize('sample'   , ['Bd_Kstee_eq_btosllball05_DPC'])
+@pytest.mark.parametrize('trigger'  , ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('requested', [1_000, 10_000, 20_000])
-def test_max_entries(sample : str, requested : int):
+def test_max_entries(sample : str, requested : int, trigger : str, only_main):
     '''
     Check that one can filter randomly entries in dataframe
     '''
     with RDFGetter.max_entries(value=requested):
-        gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+        gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
 
     nentries = rdf.Count().GetValue()
@@ -505,17 +506,17 @@ def test_max_entries(sample : str, requested : int):
     assert math.isclose(nentries, requested, rel_tol=0.1)
 # ------------------------------------------------
 @pytest.mark.parametrize('kind'   , ['data', 'mc'])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 def test_per_file(kind : str, trigger : str):
     '''
     Test of per_file flag set to True
     '''
     if   kind == 'data':
         sample = 'DATA_24_MagDown_24c2'
-    elif kind == 'mc' and trigger == 'Hlt2RD_BuToKpEE_MVA':
-        sample = 'Bu_JpsiK_ee_eq_DPC'
-    elif kind == 'mc' and trigger == 'Hlt2RD_BuToKpMuMu_MVA':
-        sample = 'Bu_Kmumu_eq_btosllball05_DPC'
+    elif kind == 'mc' and 'EE'   in trigger:
+        sample = 'Bd_Kstee_eq_btosllball05_DPC'
+    elif kind == 'mc' and 'MuMu' in trigger:
+        sample = 'Bd_Kstmumu_eq_btosllball05_DPC'
     else:
         raise ValueError(f'Invalid kind/trigger: {kind}/{trigger}')
 
@@ -527,6 +528,10 @@ def test_per_file(kind : str, trigger : str):
         name = abs(name)
         name = str(name)
         name = name[:10]
+
+        # TODO: Remove when we have friend trees for RKst
+        if 'B0ToKpPim' in trigger:
+            continue
 
         _check_branches(rdf, is_ee = 'MuMu' not in trigger, is_mc = False)
 
