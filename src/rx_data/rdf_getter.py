@@ -19,6 +19,7 @@ from ROOT                  import RDF, GetThreadPoolSize, TFile, EnableImplicitM
 from dmu.generic           import version_management as vmn
 from dmu.generic           import hashing
 from dmu.logging.log_store import LogStore
+from rx_common             import info
 from rx_data.path_splitter import PathSplitter
 
 log=LogStore.add_logger('rx_data:rdf_getter')
@@ -70,7 +71,6 @@ class RDFGetter:
         self,
         sample  : str,
         trigger : str,
-        analysis: str = 'rk',
         tree    : str = 'DecayTree'):
         '''
         Sample: Sample's nickname, e.g. DATA_24_MagDown_24c2
@@ -81,7 +81,7 @@ class RDFGetter:
 
         self._sample          = sample
         self._trigger         = trigger
-        self._analysis        = analysis
+        self._analysis        = info.project_from_trigger(trigger=trigger, lower_case=True) 
         self._samples         : dict[str,str]
         self._l_columns       : list[str]
         self._s_ftree         : set[str] # list of friend trees actually used
