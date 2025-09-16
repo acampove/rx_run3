@@ -32,6 +32,7 @@ vector                      = '>=0.0.0'
 pandarallel                 = '>=0.0.0'
 pytest                      = {version = '>=0.0.0',                         optional=true}
 xrootd                      = {version = '>=0.0.0',                         optional=true}
+rx_selection                = { git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/rx_selection.git',     branch = 'master' }
 ap_utilities                = { git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/ap_utilities.git',     branch = 'master' }
 data-manipulation-utilities = { git = "ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git",              branch = "master" }
 ecal_calibration            = { git = "ssh://git@gitlab.cern.ch:7999/rx_run3/ecal_calibration.git", branch = "master" }
