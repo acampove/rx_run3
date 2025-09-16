@@ -12,7 +12,7 @@ dev  = ['pytest']
 where= ['src']
 
 [tool.setuptools.package-data]
-'rx_comon_data' = ['*.txt']
+'rx_comon_data' = ['*.txt', '*.yaml']
 
 [tool.setuptools]
 script-files=[
