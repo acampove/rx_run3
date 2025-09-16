@@ -442,7 +442,7 @@ def _run_default_checks(
 # ------------------------------------------------
 @pytest.mark.parametrize('per_file', [True, False])
 @pytest.mark.parametrize('trigger' , ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_guid(trigger : str, per_file : bool, only_main):
+def test_guid(trigger : str, per_file : bool):
     '''
     Tests retrieval of unique identifier for underlying data
     '''
@@ -491,7 +491,7 @@ def test_split_per_file():
 @pytest.mark.parametrize('sample'   , ['Bd_Kstee_eq_btosllball05_DPC'])
 @pytest.mark.parametrize('trigger'  , ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('requested', [1_000, 10_000, 20_000])
-def test_max_entries(sample : str, requested : int, trigger : str, only_main):
+def test_max_entries(sample : str, requested : int, trigger : str):
     '''
     Check that one can filter randomly entries in dataframe
     '''
