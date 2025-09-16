@@ -29,7 +29,6 @@ ana = ['rx_common', 'ap_utilities', 'data-manipulation-utilities']
 
 [tool.poetry.group.dev.dependencies]
 pytest  = '*'
-rx_data = { git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/rx_data.git', branch = 'master' }
 
 [build-system]
 requires      = [
