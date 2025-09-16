@@ -601,32 +601,37 @@ def test_data(sample : str, trigger : str):
         trigger  =trigger,
         test_name=f'data_{sample}_{trigger}')
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC'])
-def test_mc(sample : str):
+@pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_mc(sample : str, trigger : str):
     '''
     Test of getter class in mc
     '''
     with RDFGetter.max_entries(value=-1):
-        gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+        gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
+
+    _plot_sim(rdf     , f'test_mc/{sample}', particle=   'B')
+    _plot_sim(rdf     , f'test_mc/{sample}', particle='Jpsi')
+
+
+    if 'B0ToKpPim' in trigger:
+        return
 
     _print_dotted_branches(rdf)
     _check_branches(rdf, is_ee=True, is_mc=True)
 
+    _plot_mc_qsq(rdf, f'test_mc/{sample}', sample)
     _plot_mva_mass(rdf, f'test_mc/{sample}')
     _plot_mva(rdf     , f'test_mc/{sample}')
     _plot_hop(rdf     , f'test_mc/{sample}')
-    _plot_sim(rdf     , f'test_mc/{sample}', particle=   'B')
-    _plot_sim(rdf     , f'test_mc/{sample}', particle='Jpsi')
-
-    _plot_mc_qsq(rdf, f'test_mc/{sample}', sample)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC', 'Bu_psi2SK_ee_eq_DPC', 'Bu_JpsiX_ee_eq_JpsiInAcc'])
-def test_q2_track_electron(sample : str):
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bd_Kstee_eq_btosllball05_DPC'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_q2_track_electron(sample : str, trigger : str):
     '''
     Checks the distributions of q2_track vs normal q2
     '''
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
 
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
@@ -634,12 +639,14 @@ def test_q2_track_electron(sample : str):
     rep = rdf.Report()
     rep.Print()
 
+    sample = sample.replace('*', 'p')
+    _plot_q2_track(rdf, sample)
+
+    if 'B0ToKpPim' in trigger:
+        return
+
     is_mc = not sample.startswith('DATA_24_')
     _check_branches(rdf, is_ee=True, is_mc = is_mc)
-
-    sample = sample.replace('*', 'p')
-
-    _plot_q2_track(rdf, sample)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_Kmumu_eq_btosllball05_DPC'])
 def test_q2_track_muon(sample : str):
