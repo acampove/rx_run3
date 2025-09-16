@@ -9,7 +9,6 @@ import copy
 import pprint
 import hashlib
 import fnmatch
-from importlib.resources import files
 from typing              import Any, overload, Literal
 
 import yaml
@@ -19,6 +18,7 @@ from ROOT                  import RDF, GetThreadPoolSize, TFile, EnableImplicitM
 from dmu.generic           import version_management as vmn
 from dmu.generic           import hashing
 from dmu.logging.log_store import LogStore
+from omegaconf             import DictConfig, OmegaConf
 from rx_common             import info
 from rx_data.path_splitter import PathSplitter
 
@@ -87,7 +87,7 @@ class RDFGetter:
         self._s_ftree         : set[str] # list of friend trees actually used
 
         self._tree_name       = tree
-        self._cfg             = self._load_config()
+        self._cfg : DictConfig= self._load_config()
         self._main_tree       = self._get_main_tree()
         self._l_electron_only = self._cfg['trees']['electron_only']
         self._ext_weight      = '(L1_PID_E > 1 && L2_PID_E > 1) ? 1 : 10'
@@ -155,11 +155,16 @@ class RDFGetter:
 
         raise NotImplementedError(f'Cannot deduce channel from trigger: {self._trigger}')
     # ---------------------------------------------------
-    def _load_config(self) -> dict:
-        config_path = files('rx_data_data').joinpath(f'rdf_getter/{self._analysis}.yaml')
-        config_path = str(config_path)
-        with open(config_path, encoding='utf-8') as ifile:
-            cfg = yaml.safe_load(ifile)
+    def _load_config(self) -> DictConfig:
+        '''
+        Loads yaml files with configuration needed to rename and define
+        new columns in dataframe
+        '''
+        cfg_com = gut.load_conf(package='rx_data_data', fpath='rdf_getter/common.yaml')
+        cfg_ana = gut.load_conf(package='rx_data_data', fpath=f'rdf_getter/{self._analysis}.yaml')
+        cfg     = OmegaConf.merge(cfg_com, cfg_ana)
+        if not isinstance(cfg, DictConfig):
+            raise ValueError('Merged config not a DictConfig')
 
         return cfg
     # ---------------------------------------------------
