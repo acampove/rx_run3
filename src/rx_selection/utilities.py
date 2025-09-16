@@ -1,14 +1,12 @@
 '''
 Module containing utility functions
 '''
-# pylint: disable=import-error
-
 import os
 import json
 
 import numpy
 
-from ROOT                   import RDataFrame
+from ROOT                   import RDataFrame # type: ignore
 from dmu.rdataframe.atr_mgr import AtrMgr
 from dmu.logging.log_store  import LogStore
 
