@@ -14,19 +14,19 @@ format = "wheel"
 
 [tool.poetry.dependencies]
 python                     = '>=3.10,<3.13'
-prefect                    = '^3.4.9'
 numexpr                    = {version = '>=0.0.0'}
 jacobi                     = {version = '>=0.0.0'}
 joblib                     = {version = '>=0.0.0'}
 pandas                     = {version = '>=0.0.0'}
 numpy                      = {version = '>=0.0.0'}
 matplotlib                 = {version = '>=0.0.0'}
-pytest                     = {version = '>=0.0.0',          optional=true}
-ap_utilities                = { git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/ap_utilities.git',     branch = 'master' }
-data-manipulation-utilities = { git = "ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git",              branch = "master" }
+rx_common                   = { git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/rx_common.git'    , branch = 'master'}
+ap_utilities                = { git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/ap_utilities.git' , branch = 'master'}
+data-manipulation-utilities = { git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git'          , branch = 'master'}
 
-[tool.poetry.extras]
-tst = ['pytest']           # When developing
+[tool.poetry.group.dev.dependencies]
+pytest  = '*'
+rx_data = { git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/rx_data.git', branch = 'master' }
 
 [build-system]
 requires      = [
