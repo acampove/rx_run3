@@ -3,13 +3,10 @@
 Script used to apply selections to ROOT files
 provided by DaVinci
 '''
-# pylint: disable=line-too-long
 
 import os
 import argparse
-from dmu.generic            import version_management as vman
-from dmu.logging.log_store  import LogStore
-
+from dmu.logging.log_store   import LogStore
 from rx_selection.cache_data import CacheData
 
 log=LogStore.add_logger('rx_selection:apply_selection')

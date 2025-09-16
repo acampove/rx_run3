@@ -100,6 +100,25 @@ def _print_selection(d_cut : dict[str,str]) -> None:
     for name, expr in d_cut.items():
         log.debug(f'{name:<20}{expr}')
 #-----------------------
+def _get_truth(event_type : int|str, trigger : str) -> str:
+    '''
+    Parameters
+    -----------------
+    event_type: Event type or decay's nickname. For data it should start with `DATA_`
+    trigger   : Hlt2 trigger, needed to pick truth matching method
+
+    Returns
+    -----------------
+    Truth matching string
+    '''
+    if trigger in ['Hlt2RD_B0ToKpPimMuMu_MVA', 'Hlt2RD_B0ToKpPimEE_MVA']:
+        return tm.get_truth(arg=event_type, kind='bdkstll')
+
+    if trigger in ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_BuToKpEE_MVA']:
+        return tm.get_truth(arg=event_type, kind='bukll')
+
+    raise ValueError(f'Invalid trigger name: {trigger}')
+#-----------------------
 def selection(
     q2bin    : str,
     process  : str,
@@ -131,7 +150,7 @@ def selection(
         d_cut['block'] = 'block >= 1'
     else:
         log.debug('Adding truth matching requirement for MC')
-        d_cut['truth'] = tm.get_truth(event_type)
+        d_cut['truth'] = _get_truth(event_type=event_type, trigger=trigger)
 
     d_tmp = _get_selection(analysis, project, q2bin)
     d_cut.update(d_tmp)
