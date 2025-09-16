@@ -18,7 +18,10 @@ class Data:
     '''
 # -----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before any test
+    '''
     LogStore.set_level('rx_data:utilities'     , 10)
     LogStore.set_level('rx_data:test_utilities', 10)
 # -----------------------------------------
