@@ -28,7 +28,7 @@ definitions:
                         ROOT::Math::PxPyPzEVector l2(L2_TRUEPX, L2_TRUEPY, L2_TRUEPZ, L2_TRUEENERGY);
                         auto ll = l1 + l2;
                         return ll.M2();
-    Jpsi              : ROOT::Math::PxPyPzEVector l1(L1_TRUEPX, L1_TRUEPY, L1_TRUEPZ, L1_TRUEENERGY);
+    Jpsi_TRUEM        : ROOT::Math::PxPyPzEVector l1(L1_TRUEPX, L1_TRUEPY, L1_TRUEPZ, L1_TRUEENERGY);
                         ROOT::Math::PxPyPzEVector l2(L2_TRUEPX, L2_TRUEPY, L2_TRUEPZ, L2_TRUEENERGY);
                         auto ll = l1 + l2;
                         return ll.M();
