@@ -600,7 +600,7 @@ class RDFGetter:
             return rdf
 
         log.info('Adding MC only columns')
-        d_def = self._cfg['definitions']['MC']
+        d_def = self._cfg.definitions.MC
         for var, expr in d_def.items():
             rdf = self._add_column(redefine=False, rdf=rdf, name=var, definition=expr)
 
@@ -691,11 +691,9 @@ class RDFGetter:
         '''
         log.info('Adding TRUEM branches')
 
-        rdf = rdf.Define('Jpsi_TRUEM', cfg.TRUEM.Jp)
-        rdf = rdf.Define(   'B_TRUEM', cfg.TRUEM.Bu)
+        rdf = rdf.Define('B_TRUEM', cfg.TRUEM.Bu)
 
         return rdf
-    # ---------------------------------------------------
     # ---------------------------------------------------
     def _rdf_from_conf(self, conf_path : str) -> RDF.RNode:
         '''
