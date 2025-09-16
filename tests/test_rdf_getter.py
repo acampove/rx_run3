@@ -648,26 +648,28 @@ def test_q2_track_electron(sample : str, trigger : str):
     is_mc = not sample.startswith('DATA_24_')
     _check_branches(rdf, is_ee=True, is_mc = is_mc)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_Kmumu_eq_btosllball05_DPC'])
-def test_q2_track_muon(sample : str):
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bd_Kstmumu_eq_btosllball05_DPC'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_B0ToKpPimMuMu_MVA'])
+def test_q2_track_muon(sample : str, trigger : str):
     '''
     Checks the distributions of q2_track vs normal q2
     '''
-    trigger = 'Hlt2RD_BuToKpMuMu_MVA'
-
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
     rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
     rep.Print()
 
-    is_mc = not sample.startswith('DATA_24_')
-    _check_branches(rdf, is_ee=False, is_mc=is_mc)
-
     sample     = sample.replace('*', 'p')
     identifier = f'{trigger}_{sample}'
 
     _plot_q2_track(rdf, identifier)
+
+    if 'B0ToKpPim' in trigger:
+        return
+
+    is_mc = not sample.startswith('DATA_24_')
+    _check_branches(rdf, is_ee=False, is_mc=is_mc)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
