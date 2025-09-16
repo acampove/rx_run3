@@ -760,18 +760,20 @@ def skip_test_block(sample : str, trigger : str):
 
     _plot_block(rdf=rdf, name=name)
 # ------------------------------------------------
-def test_add_truem():
+@pytest.mark.parametrize('project', ['rk'])
+def test_add_truem(project : str):
     '''
     Tests function that adds TRUEM columns to dataframe
     '''
     ana_dir = os.environ['ANADIR']
-    path_wc = f'{ana_dir}/Data/*/main/*/mc*.root'
+    path_wc = f'{ana_dir}/Data/{project}/main/*/mc*.root'
     l_path  = glob.glob(path_wc)
     l_path  = sorted(l_path)
     fpath   = l_path[-1]
 
+    cfg     = gut.load_conf(package='rx_data_data', fpath=f'rdf_getter/{project}.yaml')
     rdf     = RDataFrame('DecayTree', fpath)
-    rdf     = RDFGetter.add_truem(rdf=rdf)
+    rdf     = RDFGetter.add_truem(rdf=rdf, cfg=cfg)
 
     _check_truem_columns(rdf)
 # ------------------------------------------------
