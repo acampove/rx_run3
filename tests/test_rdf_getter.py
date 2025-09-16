@@ -760,7 +760,7 @@ def skip_test_block(sample : str, trigger : str):
 
     _plot_block(rdf=rdf, name=name)
 # ------------------------------------------------
-@pytest.mark.parametrize('project', ['rk'])
+@pytest.mark.parametrize('project', ['rk', 'rkst'])
 def test_add_truem(project : str):
     '''
     Tests function that adds TRUEM columns to dataframe
