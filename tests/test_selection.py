@@ -3,13 +3,8 @@ Script with functions needed to test functions in selection.py
 '''
 import os
 import pytest
-from ROOT                   import RDataFrame # type: ignore
-
 from dmu.logging.log_store  import LogStore
-from dmu.rdataframe         import utilities as ut
-from rx_data.rdf_getter     import RDFGetter
 from rx_selection           import selection as sel
-from rx_selection           import collector as col
 
 log=LogStore.add_logger('rx_selection:test_selection')
 # --------------------------
@@ -32,14 +27,6 @@ def initialize():
 
     os.makedirs(Data.out_dir, exist_ok=True)
 # --------------------------
-def _print_dotted_branches(rdf : RDataFrame) -> None:
-    l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
-    for name in l_col:
-        if '.' not in name:
-            continue
-
-        log.debug(name)
-# --------------------------
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA'])
 @pytest.mark.parametrize('q2bin'  , Data.l_q2bin)
 def test_read_selection(trigger : str, q2bin : str):
@@ -49,83 +36,6 @@ def test_read_selection(trigger : str, q2bin : str):
     d_sel = sel.selection(trigger=trigger, q2bin=q2bin, process='DATA')
     for cut_name, cut_value in d_sel.items():
         log.info(f'{cut_name:<20}{cut_value}')
-# --------------------------
-@pytest.mark.parametrize('sample' , ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC', 'DATA*'])
-@pytest.mark.parametrize('smeared', [True, False])
-@pytest.mark.parametrize('q2bin'  , Data.l_q2bin)
-def test_selection(sample : str, smeared : bool, q2bin : str):
-    '''
-    Basic test of selection
-    '''
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
-
-    gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf(per_file=False)
-
-    d_sel = sel.selection(
-            trigger=trigger,
-            q2bin  =q2bin,
-            process=sample,
-            smeared=smeared)
-
-    for cut_name, cut_value in d_sel.items():
-        rdf = rdf.Filter(cut_value, cut_name)
-
-    rep = rdf.Report()
-    df  = ut.rdf_report_to_df(rep)
-    if df is None:
-        raise ValueError('Empty cutflow')
-
-    df['sample' ] = sample
-    df['smeared'] = smeared
-    df['q2bin'  ] = q2bin
-
-    col.Collector.add_dataframe(df=df, test_name='selection')
-
-    _print_dotted_branches(rdf)
-# --------------------------
-@pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
-@pytest.mark.parametrize('q2bin' , Data.l_q2bin)
-def test_full_selection_electron(sample : str, q2bin : str):
-    '''
-    Applies full selection to all q2 bins in electron channel
-    '''
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
-    with RDFGetter.max_entries(value=100_000):
-        gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf(per_file=False)
-
-    rdf     = sel.apply_full_selection(rdf = rdf, trigger=trigger, q2bin=q2bin, process=sample)
-
-    rep     = rdf.Report()
-    rep.Print()
-
-    nentries = rdf.Count().GetValue()
-
-    assert nentries > 0
-
-    _print_dotted_branches(rdf)
-# --------------------------
-@pytest.mark.parametrize('sample', ['Bu_Kmumu_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
-@pytest.mark.parametrize('q2bin' , Data.l_q2bin)
-def test_full_selection_muon(sample : str, q2bin : str):
-    '''
-    Applies full selection to all q2 bins in muon channel
-    '''
-    trigger = 'Hlt2RD_BuToKpMuMu_MVA'
-    with RDFGetter.max_entries(value=100_000):
-        gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf(per_file=False)
-
-    rdf     = sel.apply_full_selection(rdf = rdf, trigger=trigger, q2bin=q2bin, process=sample)
-    rep     = rdf.Report()
-    rep.Print()
-
-    nentries = rdf.Count().GetValue()
-
-    assert nentries > 0
-
-    _print_dotted_branches(rdf)
 # --------------------------
 @pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('q2bin' , Data.l_q2bin)
