@@ -43,6 +43,14 @@ def set_max_entries():
     with RDFGetter.max_entries(value=1000):
         yield
 # -----------------------------------------------
+@pytest.fixture
+def only_main():
+    """
+    Turns off all the friend trees
+    """
+    with RDFGetter.only_friends(s_friend=set()):
+        yield
+# -----------------------------------------------
 @pytest.fixture(autouse=True)
 def rdf_getter_configuration():
     '''
