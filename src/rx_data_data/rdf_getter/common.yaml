@@ -47,7 +47,6 @@ definitions:
     brem_track_2_L2_PT_brem_track_2           : L2_PT           # classifier will be trained on brem corrected electron
     brem_track_2_B_DIRA_OWNPV_brem_track_2    : B_DIRA_OWNPV    # and expects brem corrected features in muon trees
     B_DIRA_OWNPV_brem_track_2                 : B_DIRA_OWNPV
-    brem_track_2_B_PT_brem_track_2            : B_PT
     B_PT_brem_track_2                         : B_PT
     brem_track_2_Jpsi_DIRA_OWNPV_brem_track_2 : Jpsi_DIRA_OWNPV
     brem_track_2_Jpsi_PT_brem_track_2         : Jpsi_PT
