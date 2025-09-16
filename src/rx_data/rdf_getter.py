@@ -156,7 +156,7 @@ class RDFGetter:
         raise NotImplementedError(f'Cannot deduce channel from trigger: {self._trigger}')
     # ---------------------------------------------------
     def _load_config(self) -> dict:
-        config_path = files('rx_data_data').joinpath('rdf_getter/config.yaml')
+        config_path = files('rx_data_data').joinpath(f'rdf_getter/{self._analysis}.yaml')
         config_path = str(config_path)
         with open(config_path, encoding='utf-8') as ifile:
             cfg = yaml.safe_load(ifile)
