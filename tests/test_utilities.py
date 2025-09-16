@@ -39,7 +39,7 @@ def _get_test_paths(sample : str, trigger : str) -> list[str]:
     Returns list of paths to ROOT files for a given sample and trigger
     '''
     ana_dir = os.environ['ANADIR']
-    path_ver= f'{ana_dir}/Data/rx/main'
+    path_ver= f'{ana_dir}/Data/rk/main'
     path_ver= vman.get_last_version(dir_path=path_ver, version_only=False)
 
     path_wc = f'{path_ver}/*{sample}_{trigger}*.root'
