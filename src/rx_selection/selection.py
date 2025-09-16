@@ -15,7 +15,7 @@ from ROOT                   import RDataFrame # type: ignore
 from dmu.generic            import hashing
 from dmu.logging.log_store  import LogStore
 
-from rx_data      import utilities          as dut
+from rx_common    import info
 from rx_selection import truth_matching     as tm
 from rx_selection import version_management as vman
 
@@ -117,8 +117,8 @@ def selection(
         log.warning(f'Process {process} recognized as toy sample, returning empty selection')
         return {}
 
-    project  = dut.project_from_trigger(trigger=trigger)
-    analysis = dut.channel_from_trigger(trigger=trigger)
+    project  = info.project_from_trigger(trigger=trigger)
+    analysis = info.channel_from_trigger(trigger=trigger)
 
     d_cut : dict[str,str] = {}
 
@@ -165,7 +165,7 @@ def _update_mass_cuts(
         trigger : str,
         smeared : bool) -> dict[str,str]:
 
-    should_smear = dut.is_mc(sample=sample) and dut.is_ee(trigger=trigger)
+    should_smear = info.is_mc(sample=sample) and info.is_ee(trigger=trigger)
 
     if not should_smear:
         log.debug(f'Not using cuts on smeared masses for {sample}/{trigger}')
@@ -197,7 +197,7 @@ def _use_smeared_masses(cuts : dict[str,str], q2bin : str) -> dict[str,str]:
         # correct smearing factors here
         log.warning(f'Not overriding with smeared version q2 cut: {cut_org}')
 
-    if dut.is_reso(q2bin):
+    if info.is_reso(q2bin):
         log.debug(f'Not overriding mass cut for resonant bin: {q2bin}')
         return cuts
 
