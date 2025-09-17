@@ -8,6 +8,7 @@ import numpy
 from ROOT                   import RDataFrame, RDF  # type: ignore
 from ROOT.Math              import LorentzVector, XYZVector # type: ignore
 from dmu.logging.log_store  import LogStore
+from rx_common              import info
 
 log = LogStore.add_logger('rx_data:hop_calculator')
 
