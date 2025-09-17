@@ -47,14 +47,14 @@ def _get_rdf(kind : str, prefix : str) -> RDataFrame:
     elif kind == 'dt_mm':
         sample = 'DATA_24_MagDown_24c4'
         trigger= f'{prefix}_MVA'
-    elif kind == 'mc' and prefix.endswith('_EE'):
+    elif kind == 'mc_ee' and prefix.endswith('EE'):
         sample = 'Bd_Kstee_eq_btosllball05_DPC'
         trigger= f'{prefix}_MVA'
-    elif kind == 'mc' and prefix.endswith('_MuMu'):
+    elif kind == 'mc_mm' and prefix.endswith('MuMu'):
         sample = 'Bd_Kstmumu_eq_btosllball05_DPC'
         trigger= f'{prefix}_MVA'
     else:
-        raise ValueError(f'Invalid dataset of kind: {kind}')
+        raise ValueError(f'Invalid dataset of kind/prefix: {kind}/{prefix}')
 
     with RDFGetter.max_entries(value = Data.nentries):
         gtr = RDFGetter(sample=sample, trigger=trigger)
