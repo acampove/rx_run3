@@ -5,11 +5,13 @@ import math
 from typing import Union
 
 import numpy
-from ROOT      import RDataFrame, RDF
-from ROOT.Math import LorentzVector, XYZVector
+from ROOT                   import RDataFrame, RDF  # type: ignore
+from ROOT.Math              import LorentzVector, XYZVector # type: ignore
 from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('rx_data:hop_calculator')
+
+Vector=Union[LorentzVector, XYZVector]
 # -------------------------------
 class HOPCalculator:
     '''
