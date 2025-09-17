@@ -21,8 +21,19 @@ class HOPCalculator:
     https://cds.cern.ch/record/2102345/files/LHCb-INT-2015-037.pdf
     '''
     # -------------------------------
-    def __init__(self, rdf : RDataFrame):
+    def __init__(
+        self, 
+        rdf    : RDataFrame,
+        trigger: str):
+        '''
+        Parameters
+        -----------------
+        rdf: ROOT dataframe with input needed to calculate HOP varibles
+        trigger: HLT2 trigger name, needed to decide how to add vectors
+        '''
+
         self._rdf           = rdf
+        self._trigger       = trigger
         self._extra_branches= ['EVENTNUMBER', 'RUNNUMBER']
     # -------------------------------
     def _val_to_vector(self, arr_val : numpy.ndarray, ndim : int) -> Union[LorentzVector, XYZVector]:
