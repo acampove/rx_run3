@@ -106,9 +106,24 @@ def _get_hadron_mapping(prefix : str) -> dict[str,int]:
 
     raise ValueError(f'Invalid prefix: {prefix}')
 # ----------------------------------
-@pytest.mark.parametrize('prefix', ['Hlt2RD_BuToKpEE', 'Hlt2RD_B0ToKpPimEE'])
-@pytest.mark.parametrize('kind', ['mc', 'dt_ss', 'dt_ee', 'dt_mi', 'dt_mm'])
-def test_dzero_misid(kind : str, prefix : str):
+@pytest.mark.parametrize('prefix, kind',
+    [
+    ('Hlt2RD_BuToKpEE'     , 'mc_ee'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_ss'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_ee'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_mi'),
+    # -----------
+    ('Hlt2RD_B0ToKpPimEE'  , 'mc_ee'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ss'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ee'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_mi'),
+    # -----------
+    ('Hlt2RD_BuToKpMuMu'   , 'mc_mm'),
+    ('Hlt2RD_BuToKpMuMu'   , 'dt_mm'),
+    # -----------
+    ('Hlt2RD_B0ToKpPimMuMu', 'mc_mm'),
+    ('Hlt2RD_B0ToKpPimMuMu', 'dt_mm')])
+def test_dzero_misid(prefix : str, kind : str):
     '''
     Tests dzero decay contamination
     '''
@@ -160,8 +175,24 @@ def test_phi_misid(prefix : str, kind : str):
 
     _plot(rdf, preffix='phi_misid', kind=kind)
 # ----------------------------------
-@pytest.mark.parametrize('kind', ['mc', 'dt_ss', 'dt_ee', 'dt_mm'])
-def test_jpsi_misid(kind : str):
+@pytest.mark.parametrize('prefix, kind',
+    [
+    ('Hlt2RD_BuToKpEE'     , 'mc_ee'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_ss'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_ee'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_mi'),
+    # -----------
+    ('Hlt2RD_B0ToKpPimEE'  , 'mc_ee'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ss'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ee'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_mi'),
+    # -----------
+    ('Hlt2RD_BuToKpMuMu'   , 'mc_mm'),
+    ('Hlt2RD_BuToKpMuMu'   , 'dt_mm'),
+    # -----------
+    ('Hlt2RD_B0ToKpPimMuMu', 'mc_mm'),
+    ('Hlt2RD_B0ToKpPimMuMu', 'dt_mm')])
+def test_jpsi_misid(prefix : str, kind : str):
     '''
     Tests jpsi misid contamination
     '''
