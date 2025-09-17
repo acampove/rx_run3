@@ -49,6 +49,30 @@ class HOPCalculator:
         return vector
     # -------------------------------
     def _get_xvector(self, name : str, ndim : int) -> list[Vector]:
+        '''
+        Parameters
+        -----------------
+        name: Identifier of the object, i.e L1_P, Hadrons, etc.
+        ndim: Number of dimensions for associated vector
+
+        Returns
+        -----------------
+        List of vectors in dataframe, associated to object
+        '''
+        project  = info.project_from_trigger(trigger=self._trigger, lower_case=True)
+        if   name == 'Hadrons' and project == 'rkst':
+            l_h1 = self._get_xvector(name='H1_P', ndim=ndim)
+            l_h2 = self._get_xvector(name='H2_P', ndim=ndim)
+            l_hh = [ h1 + h2 for h1, h2 in zip(l_h1, l_h2) ]
+
+            return l_hh
+        elif name == 'Hadrons' and project == 'rk':
+            name = 'H_P'
+        elif name in ['L1_P', 'L2_P', 'H1_P', 'H2_P', 'B_BPV', 'B_END_V']:
+            pass
+        else:
+            raise ValueError(f'Invalid project/name: {project}/{name}')
+
         if   ndim == 4:
             l_branch = [f'{name}X', f'{name}Y', f'{name}Z', f'{name}E']
         elif ndim == 3:
