@@ -125,17 +125,32 @@ def test_dzero_misid(kind : str, prefix : str):
 
     _plot(rdf, preffix='dzero_misid', kind=kind)
 # ----------------------------------
-@pytest.mark.parametrize('prefix', ['Hlt2RD_BuToKpEE', 'Hlt2RD_B0ToKpPimEE'])
-@pytest.mark.parametrize('kind'  , ['mc', 'dt_ss', 'dt_ee', 'dt_mi', 'dt_mm'])
-def test_phi_misid(kind : str, prefix : str):
+@pytest.mark.parametrize('prefix, kind',
+    [
+    ('Hlt2RD_BuToKpEE'     , 'mc_ee'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_ss'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_ee'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_mi'),
+    # -----------
+    ('Hlt2RD_B0ToKpPimEE'  , 'mc_ee'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ss'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ee'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_mi'),
+    # -----------
+    ('Hlt2RD_BuToKpMuMu'   , 'mc_mm'),
+    ('Hlt2RD_BuToKpMuMu'   , 'dt_mm'),
+    # -----------
+    ('Hlt2RD_B0ToKpPimMuMu', 'mc_mm'),
+    ('Hlt2RD_B0ToKpPimMuMu', 'dt_mm')])
+def test_phi_misid(prefix : str, kind : str):
     '''
     Tests phi decay contamination
     '''
     rdf   = _get_rdf(kind=kind, prefix=prefix)
 
-    if   prefix == 'Hlt2RD_BuToKpEE':
+    if   prefix in ['Hlt2RD_BuToKpEE', 'Hlt2RD_BuToKpMuMu']:
         obj = SWPCalculator(rdf, d_lep={'L1' : 321, 'L2' : 321}, d_had={'H' : 321})
-    elif prefix == 'Hlt2RD_B0ToKpPimEE':
+    elif prefix in ['Hlt2RD_B0ToKpPimEE', 'Hlt2RD_B0ToKpPimMuMu']:
         obj = SWPCalculator(rdf, d_lep={'H1' : 321}, d_had={'H2' : 321})
     else:
         raise ValueError(f'Invalid prefix: {prefix}')
