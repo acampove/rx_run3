@@ -3,10 +3,10 @@ Module containing tests for HOPVarAdder
 '''
 import os
 
-import yaml
 import pytest
 import matplotlib.pyplot as plt
 from ROOT                   import RDataFrame # type: ignore
+from pathlib                import Path
 from dmu.logging.log_store  import LogStore
 from rx_data.hop_calculator import HOPCalculator
 from rx_data.mis_calculator import MisCalculator
@@ -17,7 +17,9 @@ class Data:
     '''
     Class used to share attributes
     '''
-    out_dir = '/tmp/rx_data/tests/hop_calculator'
+    nentries= 100_000
+    user    = os.environ['USER']
+    out_dir = Path(f'/tmp/{user}/rx_data/tests/hop_calculator')
 # ----------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -29,7 +31,7 @@ def initialize():
 def _get_rdf(sample : str, trigger : str) -> RDataFrame:
     gtr    = RDFGetter(sample=sample, trigger=trigger)
     rdf    = gtr.get_rdf(per_file=False)
-    rdf    = rdf.Range(10_000)
+    rdf    = rdf.Range(Data.nentries)
 
     mcl    = MisCalculator(rdf=rdf, trigger=trigger)
     rdf    = mcl.get_rdf()
