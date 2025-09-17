@@ -48,8 +48,8 @@ def _plot_variables(rdf : RDataFrame, rdf_hop : RDataFrame, name : str) -> None:
     plt.savefig(f'{out_dir}/alpha.png')
     plt.close()
 
-    plt.hist(d_data['hop_mass'], bins=40, histtype='step', label='HOP', range=(0, 10_000))
-    plt.hist(            arr_ms, bins=40, histtype='step', label='Original')
+    plt.hist(d_data['hop_mass'], bins=40, histtype='step', label='HOP'     , range=(3_000, 8_000))
+    plt.hist(            arr_ms, bins=40, histtype='step', label='Original', range=(3_000, 8_000))
     plt.legend()
     plt.title(name)
     plt.savefig(f'{out_dir}/mass.png')
