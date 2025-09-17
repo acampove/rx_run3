@@ -34,22 +34,22 @@ def initialize():
 
     plt.style.use(mplhep.style.LHCb2)
 # ----------------------------------
-def _get_rdf(kind : str) -> RDataFrame:
+def _get_rdf(kind : str, prefix : str) -> RDataFrame:
     if   kind == 'dt_ss':
         sample = 'DATA_24_MagUp_24c3'
-        trigger= 'Hlt2RD_BuToKpEE_SameSign_MVA'
+        trigger= f'{prefix}_SameSign_MVA'
     elif kind == 'dt_ee':
         sample = 'DATA_24_MagUp_24c2'
-        trigger= 'Hlt2RD_BuToKpEE_MVA'
+        trigger= f'{prefix}_MVA'
     elif kind == 'dt_mi':
         sample = 'DATA_24_MagUp_24c4'
-        trigger= 'Hlt2RD_BuToKpEE_MVA_misid'
+        trigger= f'{prefix}_MVA_misid'
     elif kind == 'dt_mm':
         sample = 'DATA_24_MagDown_24c4'
-        trigger= 'Hlt2RD_BuToKpMuMu_MVA'
+        trigger= f'{prefix}_MVA'
     elif kind == 'mc':
         sample = 'Bu_Kee_eq_btosllball05_DPC'
-        trigger= 'Hlt2RD_BuToKpEE_MVA'
+        trigger= f'{prefix}_MVA'
     else:
         raise ValueError(f'Invalid dataset of kind: {kind}')
 
