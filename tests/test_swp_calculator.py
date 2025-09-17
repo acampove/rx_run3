@@ -59,7 +59,7 @@ def _get_rdf(kind : str, prefix : str) -> RDataFrame:
 
     with RDFGetter.max_entries(value = Data.nentries):
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     rdf = _apply_selection(rdf, trigger, sample)
 
