@@ -122,13 +122,21 @@ def test_dzero_misid(kind : str, prefix : str):
 
     _plot(rdf, preffix='dzero_misid', kind=kind)
 # ----------------------------------
-@pytest.mark.parametrize('kind', ['mc', 'dt_ss', 'dt_ee', 'dt_mi', 'dt_mm'])
-def test_phi_misid(kind : str):
+@pytest.mark.parametrize('prefix', ['Hlt2RD_BuToKpEE', 'Hlt2RD_B0ToKpPimEE'])
+@pytest.mark.parametrize('kind'  , ['mc', 'dt_ss', 'dt_ee', 'dt_mi', 'dt_mm'])
+def test_phi_misid(kind : str, prefix : str):
     '''
     Tests phi decay contamination
     '''
-    rdf = _get_rdf(kind=kind)
-    obj = SWPCalculator(rdf, d_lep={'L1' : 321, 'L2' : 321}, d_had={'H' : 321})
+    rdf   = _get_rdf(kind=kind, prefix=prefix)
+
+    if   prefix == 'Hlt2RD_BuToKpEE':
+        obj = SWPCalculator(rdf, d_lep={'L1' : 321, 'L2' : 321}, d_had={'H' : 321})
+    elif prefix == 'Hlt2RD_B0ToKpPimEE':
+        obj = SWPCalculator(rdf, d_lep={'H1' : 321}, d_had={'H2' : 321})
+    else:
+        raise ValueError(f'Invalid prefix: {prefix}')
+
     rdf = obj.get_rdf(preffix='phi_misid', progress_bar=True, use_ss= 'ss' in kind)
 
     _plot(rdf, preffix='phi_misid', kind=kind)
