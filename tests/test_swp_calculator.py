@@ -6,7 +6,7 @@ import os
 import mplhep
 import pytest
 import matplotlib.pyplot as plt
-from ROOT                   import RDataFrame
+from ROOT                   import RDataFrame # type: ignore
 from dmu.logging.log_store  import LogStore
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
@@ -23,7 +23,10 @@ class Data:
     out_dir = f'/tmp/{user}/tests/rx_data/swap_calculator'
 # ----------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before any test
+    '''
     os.makedirs(Data.out_dir, exist_ok=True)
     LogStore.set_level('rx_data:swp_calculator'     , 20)
     LogStore.set_level('rx_data:test_swp_calculator', 10)
