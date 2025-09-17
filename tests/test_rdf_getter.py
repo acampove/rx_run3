@@ -100,6 +100,23 @@ def _check_block(rdf : RDF.RNode) -> None:
 
     assert numpy.all(arr_block >= 0)
     assert numpy.all(arr_block <= 8)
+# ----------------------
+def _name_from_raw_name(name : str) -> str:
+    '''
+    Parameters
+    -------------
+    name: Branch name as taken from dataframe
+
+    Returns
+    -------------
+    Branch name as needed for check
+    '''
+    if '.' not in name:
+        return name
+
+    l_name = name.split('.')
+
+    return l_name[-1]
 # ------------------------------------------------
 def _check_branches(
         rdf          : RDataFrame,
@@ -108,7 +125,7 @@ def _check_branches(
         friends      : bool = True,
         brem_track_2 : bool = True) -> None:
 
-    l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
+    l_name = [ _name_from_raw_name(name=name) for name in rdf.GetColumnNames() ]
 
     if brem_track_2:
         l_branch_ee = Data.l_brem_track_2 + Data.l_branch_ee
