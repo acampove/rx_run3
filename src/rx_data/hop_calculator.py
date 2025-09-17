@@ -36,7 +36,7 @@ class HOPCalculator:
         self._trigger       = trigger
         self._extra_branches= ['EVENTNUMBER', 'RUNNUMBER']
     # -------------------------------
-    def _val_to_vector(self, arr_val : numpy.ndarray, ndim : int) -> Union[LorentzVector, XYZVector]:
+    def _val_to_vector(self, arr_val : numpy.ndarray, ndim : int) -> Vector:
         if   ndim == 4:
             [px, py, pz, pe] = arr_val.tolist()
             vector = LorentzVector('ROOT::Math::PxPyPzE4D<double>')(px, py, pz, pe)
@@ -48,7 +48,7 @@ class HOPCalculator:
 
         return vector
     # -------------------------------
-    def _get_xvector(self, name : str, ndim : int) -> list[LorentzVector]:
+    def _get_xvector(self, name : str, ndim : int) -> list[Vector]:
         if   ndim == 4:
             l_branch = [f'{name}X', f'{name}Y', f'{name}Z', f'{name}E']
         elif ndim == 3:
