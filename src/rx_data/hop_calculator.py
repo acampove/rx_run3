@@ -87,7 +87,25 @@ class HOPCalculator:
 
         return l_vec
     # -------------------------------
-    def _get_alpha(self, pv : XYZVector, sv : XYZVector, l1 : LorentzVector, l2 : LorentzVector, kp : LorentzVector) -> float:
+    def _get_alpha(
+        self, 
+        pv : XYZVector, 
+        sv : XYZVector, 
+        l1 : LorentzVector, 
+        l2 : LorentzVector, 
+        hd : LorentzVector) -> float:
+        '''
+        Parameters
+        -----------------
+        pv(sv): 3D vector corresponding to position of primary (secondary) vertex
+        l1(2) : Lorentz vector for lepton
+        hd    : Lorentz vector for hadronic system, for Rk, kaon, for RKstar, sum of Kaon and Pion
+
+        Returns
+        -----------------
+        Ratio of transverse momentum, (in reference frame perpendicular to direction of flight of B meson)
+        of dilepton and hadronic system
+        '''
         l1_3v     = l1.Vect()
         l2_3v     = l2.Vect()
         ll_3v     = l1_3v + l2_3v
