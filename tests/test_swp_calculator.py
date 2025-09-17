@@ -139,7 +139,7 @@ def test_dzero_misid(prefix : str, kind : str):
 
     assert ientries == oentries
 
-    _plot(rdf, preffix='dzero_misid', kind=kind)
+    _plot(rdf, test='dzero_misid', kind=kind, prefix=prefix)
 # ----------------------------------
 @pytest.mark.parametrize('prefix, kind',
     [
@@ -173,7 +173,7 @@ def test_phi_misid(prefix : str, kind : str):
 
     rdf = obj.get_rdf(preffix='phi_misid', progress_bar=True, use_ss= 'ss' in kind)
 
-    _plot(rdf, preffix='phi_misid', kind=kind)
+    _plot(rdf, test='phi_misid', kind=kind, prefix=prefix)
 # ----------------------------------
 @pytest.mark.parametrize('prefix, kind',
     [
@@ -200,7 +200,7 @@ def test_jpsi_misid(prefix : str, kind : str):
     obj = SWPCalculator(rdf, d_lep={'L1' : 13, 'L2' : 13}, d_had={'H' : 13})
     rdf = obj.get_rdf(preffix='jpsi_misid', progress_bar=True, use_ss= 'ss' in kind)
 
-    _plot(rdf, preffix='jpsi_misid', kind=kind)
+    _plot(rdf, test='jpsi_misid', kind=kind, prefix=prefix)
 # ----------------------------------
 def _plot(rdf : RDataFrame, preffix : str, kind : str):
     d_data = rdf.AsNumpy([f'{preffix}_mass_swp', f'{preffix}_mass_org'])
