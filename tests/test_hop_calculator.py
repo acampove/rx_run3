@@ -70,25 +70,23 @@ def _compare_sig_bkg(rdf_sig : RDataFrame, rdf_bkg : RDataFrame, name : str) -> 
     plt.savefig(f'{out_dir}/mass.png')
     plt.close()
 # ----------------------------
-def _get_hop(sample : str, trigger : str) -> tuple[RDataFrame, RDataFrame]:
-    rdf     = _get_rdf(sample = sample, trigger=trigger)
-    obj     = HOPCalculator(rdf=rdf)
+def _get_hop(rdf : RDataFrame, trigger : str) -> tuple[RDataFrame, RDataFrame]:
+    obj     = HOPCalculator(rdf=rdf, trigger=trigger)
     rdf_hop = obj.get_rdf(preffix='hop')
 
     return rdf_hop, rdf
 # ----------------------------
-@pytest.mark.parametrize('sample, trigger',
-                         [('Bd_Kstmumu_eq_btosllball05_DPC' , 'Hlt2RD_BuToKpMuMu_MVA'),
-                          ('Bu_Kmumu_eq_btosllball05_DPC'   , 'Hlt2RD_BuToKpMuMu_MVA'),
-                          ('Bd_Kstee_eq_btosllball05_DPC'   , 'Hlt2RD_BuToKpEE_MVA'  ),
-                          ('Bu_Kee_eq_btosllball05_DPC'     , 'Hlt2RD_BuToKpEE_MVA'  )])
-def test_mc(sample : str, trigger : str):
+@pytest.mark.parametrize('prefix, kind', tst.l_prefix_kind)
+def test_mc(prefix : str, kind : str):
     '''
     Test on MC
     '''
-    rdf_hop, rdf_org = _get_hop(sample = sample, trigger=trigger)
+    trigger          = tst.get_trigger(kind=kind, prefix=prefix)
 
-    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'mc_{sample}_{trigger}')
+    rdf              = _get_rdf(kind=kind, prefix=prefix)
+    rdf_hop, rdf_org = _get_hop(rdf=rdf, trigger=trigger)
+
+    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'mc_{prefix}_{kind}')
 # ----------------------------
 def test_compare():
     '''
