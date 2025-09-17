@@ -48,7 +48,7 @@ def _get_rdf(kind : str, prefix : str) -> RDataFrame:
         sample = 'DATA_24_MagDown_24c4'
         trigger= f'{prefix}_MVA'
     elif kind == 'mc':
-        sample = 'Bu_Kee_eq_btosllball05_DPC'
+        sample = 'Bd_Kstee_eq_btosllball05_DPC'
         trigger= f'{prefix}_MVA'
     else:
         raise ValueError(f'Invalid dataset of kind: {kind}')
