@@ -4,7 +4,7 @@ Module with MisCalculator class
 
 import fnmatch
 
-from ROOT import RDataFrame
+from ROOT import RDataFrame # type: ignore
 from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('rx_data:mis_calculator')
