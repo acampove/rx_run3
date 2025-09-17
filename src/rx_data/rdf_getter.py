@@ -622,6 +622,32 @@ class RDFGetter:
             rdf = self._add_column(redefine=False, rdf=rdf, name=name, definition=definition)
 
         return rdf
+    # ----------------------
+    def _define_temporary_columns(self, rdf : RDF.RNode) -> RDF.RNode:
+        '''
+        Parameters
+        -------------
+        rdf: ROOT dataframe
+
+        Returns
+        -------------
+        Dataframe with new columns defined
+        '''
+        if 'temporary_definitions' not in self._cfg:
+            log.debug('No temporary definitions found')
+            return rdf
+
+        log.warning('Found temporary definitions')
+        for name, expr in self._cfg.temporary_definitions.items():
+            log.debug(f'{name:20}{expr}')
+            if name in self._l_columns:
+                log.warning('Already defined column')
+                log.warning(f'dropping temporary definition: {name}')
+                continue
+
+            rdf = rdf.Define(name, expr)
+
+        return rdf
     # ---------------------------------------------------
     def _redefine_columns(self, rdf : RDF.RNode) -> RDF.RNode:
         log.info('Redefining columns')
@@ -674,6 +700,11 @@ class RDFGetter:
         # Because they might be in function of defined columns
         # E.g. q2 -> Jpsi_Mass
         rdf = self._redefine_columns(rdf=rdf)
+
+        # This should add placeholder branches for columns
+        # not yet added to dataframe.
+        # It needs to go at the end of function
+        rdf = self._define_temporary_columns(rdf=rdf)
 
         return rdf
     # ---------------------------------------------------
