@@ -878,12 +878,12 @@ def test_no_pid(sample : str, trigger : str):
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
     _run_default_checks(
-            rdf         = rdf,
-            sample      = sample,
-            trigger     = trigger,
-            friends     = False,
-            brem_track_2= False,
-            test_name   = 'no_pid')
+        rdf         = rdf,
+        sample      = sample,
+        trigger     = trigger,
+        friends     = False,
+        brem_track_2= False,
+        test_name   = 'no_pid')
 # ------------------------------------------------
 # TODO: Check for negative numbers
 @pytest.mark.parametrize('nthreads', [1, 6])
