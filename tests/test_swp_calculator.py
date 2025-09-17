@@ -83,6 +83,24 @@ def _apply_selection(rdf : RDataFrame, trigger : str, sample : str) -> RDataFram
     rep.Print()
 
     return rdf
+# ----------------------
+def _get_hadron_mapping(prefix : str) -> dict[str,int]:
+    '''
+    Parameters
+    -------------
+    preffix: Used to distinguish between triggers
+
+    Returns
+    -------------
+    dictionary specifying how to swap masses
+    '''
+    if prefix in ['Hlt2RD_BuToKpEE', 'Hlt2RD_BuToKpMuMu']:
+        return {'H' : 321}
+
+    if prefix in ['Hlt2RD_B0ToKpPimEE', 'Hlt2RD_B0ToKpPimMuMu']:
+        return {'H1' : 321}
+
+    raise ValueError(f'Invalid prefix: {prefix}')
 # ----------------------------------
 @pytest.mark.parametrize('prefix', ['Hlt2RD_BuToKpEE', 'Hlt2RD_B0ToKpPimEE'])
 @pytest.mark.parametrize('kind', ['mc', 'dt_ss', 'dt_ee', 'dt_mi', 'dt_mm'])
@@ -93,7 +111,9 @@ def test_dzero_misid(kind : str, prefix : str):
     rdf = _get_rdf(kind=kind, prefix=prefix)
     ientries = rdf.Count().GetValue()
 
-    obj = SWPCalculator(rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
+    d_had = _get_hadron_mapping(prefix=prefix)
+
+    obj = SWPCalculator(rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had=d_had)
     rdf = obj.get_rdf(preffix='dzero_misid', progress_bar=True, use_ss= 'ss' in kind)
 
     oentries = rdf.Count().GetValue()
