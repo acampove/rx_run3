@@ -110,3 +110,25 @@ def _apply_selection(rdf : RDataFrame, trigger : str, sample : str) -> RDataFram
     rep.Print()
 
     return rdf
+# ----------------------
+def get_trigger(kind : str, prefix : str) -> str:
+    '''
+    Parameters
+    -------------
+    kind: Signals sample type
+    prefis: Start of the trigger name
+
+    Returns
+    -------------
+    HLT2 trigger name
+    '''
+    if kind.endswith('_ss'):
+        suffix = '_SameSign_MVA'
+    elif kind.endswith('_mi'):
+        suffix = '_MVA_misid'
+    elif kind.endswith(('_ee', '_mm')):
+        suffix = '_MVA'
+    else:
+        raise ValueError(f'Invalid kind: {kind}')
+
+    return f'{prefix}{suffix}'
