@@ -136,7 +136,13 @@ class HOPCalculator:
     # -------------------------------
     def get_rdf(self, preffix : str) -> RDataFrame:
         '''
-        Returns ROOT dataframe with HOP variables
+        Parameters
+        ----------------
+        prefix: Prefix used for HOP variables, i.e. {prefix}_alpha, {prefix}_mass, ...
+
+        Returns 
+        ----------------
+        ROOT dataframe with HOP variables
         '''
 
         l_alpha, l_mass = self._get_values()
