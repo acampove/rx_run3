@@ -103,6 +103,22 @@ def test_compare_bukee():
 
     _compare_sig_bkg(rdf_sig, rdf_bkg, 'compare_bukee')
 # ----------------------------
+def test_compare_bdkstee():
+    '''
+    Compare signal with background for Bd -> Kpi ee decays
+    '''
+    trigger = 'Hlt2RD_B0ToKpPimEE_MVA'
+    sig_sam = 'Bd_Kstee_eq_btosllball05_DPC'
+    bkg_sam = 'Bu_K1ee_eq_DPC'
+
+    rdf_sig = tst.rdf_from_sample(sample=sig_sam, trigger=trigger)
+    rdf_bkg = tst.rdf_from_sample(sample=bkg_sam, trigger=trigger)
+
+    rdf_sig, _ = _get_hop(rdf = rdf_sig, trigger=trigger)
+    rdf_bkg, _ = _get_hop(rdf = rdf_bkg, trigger=trigger)
+
+    _compare_sig_bkg(rdf_sig, rdf_bkg, 'compare_bdkstee')
+# ----------------------------
 def test_extra_branches():
     '''
     Testing adding extra branches to RDF
