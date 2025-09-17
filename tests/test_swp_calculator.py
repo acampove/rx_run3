@@ -9,9 +9,8 @@ import matplotlib.pyplot as plt
 from ROOT                   import RDataFrame # type: ignore
 from pathlib                import Path
 from dmu.logging.log_store  import LogStore
-from rx_selection           import selection as sel
-from rx_data.rdf_getter     import RDFGetter
 from rx_data.swp_calculator import SWPCalculator
+from rx_data                import testing  as tst
 
 log = LogStore.add_logger('rx_data:test_swp_calculator')
 # ----------------------------------
@@ -19,7 +18,6 @@ class Data:
     '''
     Class used to share attributes
     '''
-    nentries= 100_000
     user    = os.environ['USER']
     out_dir = Path(f'/tmp/{user}/tests/rx_data/swap_calculator')
 # ----------------------------------
@@ -34,59 +32,6 @@ def initialize():
     LogStore.set_level('rx_data:rdf_getter'         , 10)
 
     plt.style.use(mplhep.style.LHCb2)
-# ----------------------------------
-def _get_rdf(kind : str, prefix : str) -> RDataFrame:
-    if   kind == 'dt_ss':
-        sample = 'DATA_24_MagUp_24c3'
-        trigger= f'{prefix}_SameSign_MVA'
-    elif kind == 'dt_ee':
-        sample = 'DATA_24_MagUp_24c2'
-        trigger= f'{prefix}_MVA'
-    elif kind == 'dt_mi':
-        sample = 'DATA_24_MagUp_24c4'
-        trigger= f'{prefix}_MVA_misid'
-    elif kind == 'dt_mm':
-        sample = 'DATA_24_MagDown_24c4'
-        trigger= f'{prefix}_MVA'
-    elif kind == 'mc_ee' and prefix.endswith('EE'):
-        sample = 'Bd_Kstee_eq_btosllball05_DPC'
-        trigger= f'{prefix}_MVA'
-    elif kind == 'mc_mm' and prefix.endswith('MuMu'):
-        sample = 'Bd_Kstmumu_eq_btosllball05_DPC'
-        trigger= f'{prefix}_MVA'
-    else:
-        raise ValueError(f'Invalid dataset of kind/prefix: {kind}/{prefix}')
-
-    with RDFGetter.max_entries(value = Data.nentries):
-        gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf(per_file=False)
-
-    rdf = _apply_selection(rdf, trigger, sample)
-
-    nentries = rdf.Count().GetValue()
-    if nentries == 0:
-        rep = rdf.Report()
-        rep.Print()
-        raise ValueError(f'No entry passed for {kind}/{trigger}')
-
-    return rdf
-# ----------------------------------
-def _apply_selection(rdf : RDataFrame, trigger : str, sample : str) -> RDataFrame:
-    d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
-    d_sel['pid_l']      = '(1)'
-    d_sel['jpsi_misid'] = '(1)'
-    d_sel['cascade']    = '(1)'
-    d_sel['hop']        = '(1)'
-    d_sel['bdt']        = 'mva_cmb > 0.9'
-
-    for cut_name, cut_expr in d_sel.items():
-        log.debug(f'{cut_name:<20}{cut_expr}')
-        rdf = rdf.Filter(cut_expr, cut_name)
-
-    rep   = rdf.Report()
-    rep.Print()
-
-    return rdf
 # ----------------------
 def _get_hadron_mapping(prefix : str) -> dict[str,int]:
     '''
@@ -127,7 +72,7 @@ def test_dzero_misid(prefix : str, kind : str):
     '''
     Tests dzero decay contamination
     '''
-    rdf = _get_rdf(kind=kind, prefix=prefix)
+    rdf = tst.get_rdf(kind=kind, prefix=prefix)
     ientries = rdf.Count().GetValue()
 
     d_had = _get_hadron_mapping(prefix=prefix)
@@ -162,7 +107,7 @@ def test_phi_misid(prefix : str, kind : str):
     '''
     Tests phi decay contamination
     '''
-    rdf   = _get_rdf(kind=kind, prefix=prefix)
+    rdf   = tst.get_rdf(kind=kind, prefix=prefix)
 
     if   prefix in ['Hlt2RD_BuToKpEE', 'Hlt2RD_BuToKpMuMu']:
         obj = SWPCalculator(rdf, d_lep={'L1' : 321, 'L2' : 321}, d_had={'H' : 321})
@@ -188,7 +133,7 @@ def test_jpsi_misid_bplus(prefix : str, kind : str):
     '''
     Tests jpsi misid contamination when the decay is B -> K ell ell
     '''
-    rdf = _get_rdf(kind=kind, prefix=prefix)
+    rdf = tst.get_rdf(kind=kind, prefix=prefix)
     name= 'jpsi_misid_bplus'
 
     if 'MuMu' in prefix:
@@ -215,7 +160,7 @@ def test_jpsi_misid_bzero(prefix : str, kind : str):
     '''
     Tests jpsi misid contamination
     '''
-    rdf    = _get_rdf(kind=kind, prefix=prefix)
+    rdf    = tst.get_rdf(kind=kind, prefix=prefix)
     lep_id = 13 if 'MuMu' in prefix else 11
 
     name_1= 'jpsi_misid_bzero_kaon'
