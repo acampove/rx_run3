@@ -80,6 +80,9 @@ def get_rdf(kind : str, prefix : str) -> RDataFrame:
     else:
         raise ValueError(f'Invalid dataset of kind/prefix: {kind}/{prefix}')
 
+    return rdf_from_sample(sample=sample, trigger=trigger)
+# ----------------------------------
+def rdf_from_sample(sample : str, trigger : str) -> RDataFrame:
     with RDFGetter.max_entries(value = Data.nentries):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -90,7 +93,7 @@ def get_rdf(kind : str, prefix : str) -> RDataFrame:
     if nentries == 0:
         rep = rdf.Report()
         rep.Print()
-        raise ValueError(f'No entry passed for {kind}/{trigger}')
+        raise ValueError(f'No entry passed for {sample}/{trigger}')
 
     return rdf
 # ----------------------------------
