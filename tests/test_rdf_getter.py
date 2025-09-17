@@ -997,15 +997,14 @@ def test_selection(
     '''
     Basic test of selection
     '''
-
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
 
     d_sel = sel.selection(
-            trigger=trigger,
-            q2bin  =q2bin,
-            process=sample,
-            smeared=smeared)
+        trigger=trigger,
+        q2bin  =q2bin,
+        process=sample,
+        smeared=smeared)
 
     for cut_name, cut_value in d_sel.items():
         rdf = rdf.Filter(cut_value, cut_name)
