@@ -182,33 +182,52 @@ def test_phi_misid(prefix : str, kind : str):
     ('Hlt2RD_BuToKpEE'     , 'dt_ee'),
     ('Hlt2RD_BuToKpEE'     , 'dt_mi'),
     # -----------
+    ('Hlt2RD_BuToKpMuMu'   , 'mc_mm'),
+    ('Hlt2RD_BuToKpMuMu'   , 'dt_mm')])
+def test_jpsi_misid_bplus(prefix : str, kind : str):
+    '''
+    Tests jpsi misid contamination when the decay is B -> K ell ell
+    '''
+    rdf = _get_rdf(kind=kind, prefix=prefix)
+    name= 'jpsi_misid_bplus'
+
+    if 'MuMu' in prefix:
+        obj = SWPCalculator(rdf, d_lep={'L1' : 13, 'L2' : 13}, d_had={'H' : 13})
+    elif 'EE' in prefix:
+        obj = SWPCalculator(rdf, d_lep={'L1' : 11, 'L2' : 11}, d_had={'H' : 11})
+    else:
+        raise ValueError(f'Invalid prefix: {prefix}')
+
+    rdf = obj.get_rdf(preffix=name, progress_bar=True, use_ss= 'ss' in kind)
+
+    _plot(rdf, test=name, kind=kind, prefix=prefix)
+# ----------------------------------
+@pytest.mark.parametrize('prefix, kind',
+    [
     ('Hlt2RD_B0ToKpPimEE'  , 'mc_ee'),
     ('Hlt2RD_B0ToKpPimEE'  , 'dt_ss'),
     ('Hlt2RD_B0ToKpPimEE'  , 'dt_ee'),
     ('Hlt2RD_B0ToKpPimEE'  , 'dt_mi'),
     # -----------
-    ('Hlt2RD_BuToKpMuMu'   , 'mc_mm'),
-    ('Hlt2RD_BuToKpMuMu'   , 'dt_mm'),
-    # -----------
     ('Hlt2RD_B0ToKpPimMuMu', 'mc_mm'),
     ('Hlt2RD_B0ToKpPimMuMu', 'dt_mm')])
-def test_jpsi_misid(prefix : str, kind : str):
+def test_jpsi_misid_bzero(prefix : str, kind : str):
     '''
     Tests jpsi misid contamination
     '''
-    rdf      = _get_rdf(kind=kind, prefix=prefix)
-    had_name = 'H' if prefix in ['Hlt2RD_BuToKpMuMu', 'Hlt2RD_BuToKpEE'] else 'H1'
+    rdf    = _get_rdf(kind=kind, prefix=prefix)
+    lep_id = 13 if 'MuMu' in prefix else 11
 
-    if 'MuMu' in prefix:
-        obj = SWPCalculator(rdf, d_lep={'L1' : 13, 'L2' : 13}, d_had={had_name : 13})
-    elif 'EE' in prefix:
-        obj = SWPCalculator(rdf, d_lep={'L1' : 11, 'L2' : 11}, d_had={had_name : 11})
-    else:
-        raise ValueError(f'Invalid prefix: {prefix}')
+    name_1= 'jpsi_misid_bzero_kaon'
+    obj_1 = SWPCalculator(rdf, d_lep={'L1' : lep_id, 'L2' : lep_id}, d_had={'H1' : lep_id})
+    rdf_1 = obj_1.get_rdf(preffix=name_1, progress_bar=True, use_ss= 'ss' in kind)
 
-    rdf = obj.get_rdf(preffix='jpsi_misid', progress_bar=True, use_ss= 'ss' in kind)
+    name_2= 'jpsi_misid_bzero_pion'
+    obj_2 = SWPCalculator(rdf, d_lep={'L1' : lep_id, 'L2' : lep_id}, d_had={'H2' : lep_id})
+    rdf_2 = obj_2.get_rdf(preffix=name_2, progress_bar=True, use_ss= 'ss' in kind)
 
-    _plot(rdf, test='jpsi_misid', kind=kind, prefix=prefix)
+    _plot(rdf_1, test=name_1, kind=kind, prefix=prefix)
+    _plot(rdf_2, test=name_2, kind=kind, prefix=prefix)
 # ----------------------------------
 def _plot(rdf : RDataFrame, test : str, kind : str, prefix : str):
     d_data = rdf.AsNumpy([f'{test}_mass_swp', f'{test}_mass_org'])
