@@ -91,12 +91,12 @@ class HOPCalculator:
         l1_3v     = l1.Vect()
         l2_3v     = l2.Vect()
         ll_3v     = l1_3v + l2_3v
-        kp_3v     = kp.Vect()
+        hd_3v     = hd.Vect()
         bp_dr     = sv - pv
 
-        cos_thhad = bp_dr.Dot(kp_3v) / (kp_3v.R() * bp_dr.R())
+        cos_thhad = bp_dr.Dot(hd_3v) / (hd_3v.R() * bp_dr.R())
         sin_thhad = math.sqrt(1.0 - cos_thhad ** 2)
-        had_pt    = kp_3v.R() * sin_thhad
+        had_pt    = hd_3v.R() * sin_thhad
 
         cos_thll  = bp_dr.Dot(ll_3v) / (ll_3v.R() * bp_dr.R())
         sin_thll  = math.sqrt(1.0 - cos_thll ** 2 )
@@ -117,17 +117,17 @@ class HOPCalculator:
     def _get_values(self) -> tuple[list[float], list[float]]:
         l_l1 = self._get_xvector(ndim=4, name='L1_P'   )
         l_l2 = self._get_xvector(ndim=4, name='L2_P'   )
-        l_kp = self._get_xvector(ndim=4, name='H_P'    )
+        l_hd = self._get_xvector(ndim=4, name='Hadrons')
         l_pv = self._get_xvector(ndim=3, name='B_BPV'  )
         l_sv = self._get_xvector(ndim=3, name='B_END_V')
 
         l_alpha = []
         l_mass  = []
-        for pv, sv, l1, l2, kp in zip(l_pv, l_sv, l_l1, l_l2, l_kp):
-            alpha   = self._get_alpha(pv, sv, l1, l2, kp)
+        for pv, sv, l1, l2, hd in zip(l_pv, l_sv, l_l1, l_l2, l_hd):
+            alpha   = self._get_alpha(pv, sv, l1, l2, hd)
             l1_corr = self._correct_kinematics(alpha, l1)
             l2_corr = self._correct_kinematics(alpha, l2)
-            mass    = (l1_corr + l2_corr + kp).M()
+            mass    = (l1_corr + l2_corr + hd).M()
 
             l_alpha.append(alpha)
             l_mass.append(mass)
