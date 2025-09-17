@@ -84,12 +84,13 @@ def _apply_selection(rdf : RDataFrame, trigger : str, sample : str) -> RDataFram
 
     return rdf
 # ----------------------------------
+@pytest.mark.parametrize('prefix', ['Hlt2RD_BuToKpEE', 'Hlt2RD_B0ToKpPimEE'])
 @pytest.mark.parametrize('kind', ['mc', 'dt_ss', 'dt_ee', 'dt_mi', 'dt_mm'])
-def test_dzero_misid(kind : str):
+def test_dzero_misid(kind : str, prefix : str):
     '''
     Tests dzero decay contamination
     '''
-    rdf = _get_rdf(kind=kind)
+    rdf = _get_rdf(kind=kind, prefix=prefix)
     ientries = rdf.Count().GetValue()
 
     obj = SWPCalculator(rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
