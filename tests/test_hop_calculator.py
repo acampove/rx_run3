@@ -87,15 +87,21 @@ def test_mc(prefix : str, kind : str):
 
     _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'mc_{prefix}_{kind}')
 # ----------------------------
-def test_compare():
+def test_compare_bukee():
     '''
-    Compare signal with background
+    Compare signal with background for Bu -> K ee decays
     '''
-    trigger    = 'Hlt2RD_BuToKpEE_MVA'
-    rdf_bkg, _ = _get_hop(sample = 'Bd_Kstee_eq_btosllball05_DPC', trigger=trigger)
-    rdf_sig, _ = _get_hop(sample = 'Bu_Kee_eq_btosllball05_DPC'  , trigger=trigger)
+    trigger = 'Hlt2RD_BuToKpEE_MVA'
+    sig_sam = 'Bu_Kee_eq_btosllball05_DPC'  
+    bkg_sam = 'Bd_Kstee_eq_btosllball05_DPC'
 
-    _compare_sig_bkg(rdf_sig, rdf_bkg, 'compare')
+    rdf_sig = tst.rdf_from_sample(sample=sig_sam, trigger=trigger)
+    rdf_bkg = tst.rdf_from_sample(sample=bkg_sam, trigger=trigger)
+
+    rdf_sig, _ = _get_hop(rdf = rdf_sig, trigger=trigger)
+    rdf_bkg, _ = _get_hop(rdf = rdf_bkg, trigger=trigger)
+
+    _compare_sig_bkg(rdf_sig, rdf_bkg, 'compare_bukee')
 # ----------------------------
 def test_extra_branches():
     '''
