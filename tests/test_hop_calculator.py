@@ -11,6 +11,7 @@ from dmu.logging.log_store  import LogStore
 from rx_data.hop_calculator import HOPCalculator
 from rx_data.mis_calculator import MisCalculator
 from rx_data.rdf_getter     import RDFGetter
+from rx_data                import testing as tst
 
 # ----------------------------
 class Data:
@@ -28,13 +29,12 @@ def initialize():
     '''
     LogStore.set_level('rx_data:hop_calculator', 10)
 # ----------------------------
-def _get_rdf(sample : str, trigger : str) -> RDataFrame:
-    gtr    = RDFGetter(sample=sample, trigger=trigger)
-    rdf    = gtr.get_rdf(per_file=False)
-    rdf    = rdf.Range(Data.nentries)
+def _get_rdf(kind : str, prefix : str) -> RDataFrame:
+    trigger = tst.get_trigger(kind=kind, prefix=prefix)
 
-    mcl    = MisCalculator(rdf=rdf, trigger=trigger)
-    rdf    = mcl.get_rdf()
+    rdf = tst.get_rdf(kind=kind, prefix=prefix)
+    mcl = MisCalculator(rdf=rdf, trigger=trigger)
+    rdf = mcl.get_rdf()
 
     return rdf
 # ----------------------------
