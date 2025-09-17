@@ -37,43 +37,39 @@ class Data:
     high_q2    = '(Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)'
 
     l_branch_mc = [
-            'Jpsi_TRUEM',
-               'B_TRUEM',
-            ]
+        'Jpsi_TRUEM',
+        'B_TRUEM']
 
     l_branch_friends = [
-            'mva.mva_cmb',
-            'mva.mva_prc',
-            'hop.hop_mass',
-            'hop.hop_alpha',
-            'swp_cascade.swp_cascade_mass_swp',
-            'swp_jpsi_misid.swp_jpsi_misid_mass_swp',
-            ]
+        'mva_cmb',
+        'mva_prc',
+        'hop_mass',
+        'hop_alpha',
+        'swp_cascade_mass_swp',
+        'swp_jpsi_misid_mass_swp',
+        ]
 
     l_branch_common = [
-            'th_l1_l2',
-            'th_l1_kp',
-            'th_l2_kp',
-            'q2',
-            ]
+        'th_l1_l2',
+        'th_l1_kp',
+        'th_l2_kp',
+        'q2']
 
     l_branch_ee = l_branch_common + [
-            'L1_TRACK_PT',
-            'L1_TRACK_ETA',
-            'L1_TRACK_P',
-            'L2_TRACK_PT',
-            'L2_TRACK_ETA',
-            'L2_TRACK_P',
-            ]
+        'L1_TRACK_PT',
+        'L1_TRACK_ETA',
+        'L1_TRACK_P',
+        'L2_TRACK_PT',
+        'L2_TRACK_ETA',
+        'L2_TRACK_P']
 
     l_brem_track_2 = [
-            'B_Mass_smr',
-            'Jpsi_Mass_smr',
-            'B_Mass',
-            'Jpsi_Mass',
-            'q2_smr',
-            'brem_track_2.B_M_brem_track_2',
-            ]
+        'B_Mass_smr',
+        'Jpsi_Mass_smr',
+        'B_Mass',
+        'Jpsi_Mass',
+        'q2_smr',
+        'B_M_brem_track_2']
 
     l_branch_mm = l_branch_common + ['B_Mass', 'Jpsi_Mass']
     l_q2bin     = ['low', 'cen_low', 'central', 'cen_high', 'psi2', 'high']
@@ -295,13 +291,13 @@ def _plot_brem_track_2(rdf : RDF.RNode, test : str, tree : str) -> None:
     os.makedirs(test_dir, exist_ok=True)
 
     d_var= {
-            'B_M'             : (4200,  6000),
-            'Jpsi_M'          : (2500,  3300),
-            'L1_PT'           : (   0, 10000),
-            'L2_PT'           : (   0, 10000),
-            'L1_HASBREMADDED' : (   0,     2),
-            'L2_HASBREMADDED' : (   0,     2),
-            }
+        'B_M'             : (4200,  6000),
+        'Jpsi_M'          : (2500,  3300),
+        'L1_PT'           : (   0, 10000),
+        'L2_PT'           : (   0, 10000),
+        'L1_HASBREMADDED' : (   0,     2),
+        'L2_HASBREMADDED' : (   0,     2),
+        }
 
     kind = 'brem_track_2'
     for var, rng in d_var.items():
@@ -418,19 +414,19 @@ def _run_default_checks(
     brem_track_2 : bool = True) -> None:
 
     _check_branches(
-            rdf,
-            is_ee        = 'MuMu' not in trigger,
-            is_mc        = False,
-            friends      = friends,
-            brem_track_2 = brem_track_2)
+        rdf,
+        is_ee        = 'MuMu' not in trigger,
+        is_mc        = False,
+        friends      = friends,
+        brem_track_2 = brem_track_2)
 
     sample = sample.replace('*', 'p')
 
     _plot_bmass(
-            brem_track_2 = brem_track_2,
-            rdf          = rdf,
-            is_electron  = 'MuMu' not in trigger,
-            test_name    = f'{test_name}_{sample}')
+        brem_track_2 = brem_track_2,
+        rdf          = rdf,
+        is_electron  = 'MuMu' not in trigger,
+        test_name    = f'{test_name}_{sample}')
 
     if not friends: # Not friends no checks below
         return
