@@ -83,9 +83,9 @@ class HOPCalculator:
         d_data   = self._rdf.AsNumpy(l_branch)
         l_array  = [ d_data[branch] for branch in l_branch ]
         arr_dat  = numpy.array(l_array).T
-        l_4vec   = [ self._val_to_vector(arr_val, ndim) for arr_val in arr_dat ]
+        l_vec    = [ self._val_to_vector(arr_val, ndim) for arr_val in arr_dat ]
 
-        return l_4vec
+        return l_vec
     # -------------------------------
     def _get_alpha(self, pv : XYZVector, sv : XYZVector, l1 : LorentzVector, l2 : LorentzVector, kp : LorentzVector) -> float:
         l1_3v     = l1.Vect()
