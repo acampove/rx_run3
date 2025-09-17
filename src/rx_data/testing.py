@@ -27,6 +27,18 @@ l_prefix_kind = [
     ('Hlt2RD_B0ToKpPimMuMu', 'mc_mm'),
     ('Hlt2RD_B0ToKpPimMuMu', 'dt_mm')]
 
+l_prefix_kind_data = [
+    ('Hlt2RD_BuToKpEE'     , 'dt_ss'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_ee'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_mi'),
+    # -----------
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ss'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ee'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_mi'),
+    # -----------
+    ('Hlt2RD_BuToKpMuMu'   , 'dt_mm'),
+    ('Hlt2RD_B0ToKpPimMuMu', 'dt_mm')]
+
 l_prefix_kind_bplus = [
     ('Hlt2RD_BuToKpEE'     , 'mc_ee'),
     ('Hlt2RD_BuToKpEE'     , 'dt_ss'),
