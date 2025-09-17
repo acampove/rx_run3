@@ -10,7 +10,6 @@ from pathlib                import Path
 from dmu.logging.log_store  import LogStore
 from rx_data.hop_calculator import HOPCalculator
 from rx_data.mis_calculator import MisCalculator
-from rx_data.rdf_getter     import RDFGetter
 from rx_data                import testing as tst
 
 # ----------------------------
@@ -20,7 +19,7 @@ class Data:
     '''
     nentries= 100_000
     user    = os.environ['USER']
-    out_dir = Path(f'/tmp/{user}/rx_data/tests/hop_calculator')
+    out_dir = Path(f'/tmp/{user}/tests/rx_data/hop_calculator')
 # ----------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -39,8 +38,8 @@ def _get_rdf(kind : str, prefix : str) -> RDataFrame:
     return rdf
 # ----------------------------
 def _plot_variables(rdf : RDataFrame, rdf_hop : RDataFrame, name : str) -> None:
-    out_dir = f'{Data.out_dir}/{name}'
-    os.makedirs(out_dir, exist_ok=True)
+    out_dir = Data.out_dir/name
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     d_data = rdf_hop.AsNumpy(['hop_alpha', 'hop_mass'])
     arr_ms = rdf.AsNumpy(['B_M'])['B_M']
