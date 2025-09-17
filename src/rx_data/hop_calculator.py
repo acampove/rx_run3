@@ -134,14 +134,6 @@ class HOPCalculator:
 
         return l_alpha, l_mass
     # -------------------------------
-    def _attach_extra_branches(self, d_data : dict) -> RDataFrame:
-        log.debug(f'Attaching extra branches: {self._extra_branches}')
-
-        d_ext = self._rdf.AsNumpy(self._extra_branches)
-        d_data.update(d_ext)
-
-        return d_data
-    # -------------------------------
     def get_rdf(self, preffix : str) -> RDataFrame:
         '''
         Returns ROOT dataframe with HOP variables
@@ -151,7 +143,10 @@ class HOPCalculator:
         arr_alpha       = numpy.array(l_alpha)
         arr_mass        = numpy.array(l_mass )
         d_data          = {f'{preffix}_alpha' : arr_alpha, f'{preffix}_mass' : arr_mass}
-        d_data          = self._attach_extra_branches(d_data)
+
+        # Add EVENTNUMBER, RUNNUMBER, etc
+        d_ext           = self._rdf.AsNumpy(self._extra_branches)
+        d_data.update(d_ext)
 
         rdf = RDF.FromNumpy(d_data)
 
