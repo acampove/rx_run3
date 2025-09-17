@@ -7,6 +7,7 @@ import mplhep
 import pytest
 import matplotlib.pyplot as plt
 from ROOT                   import RDataFrame # type: ignore
+from pathlib                import Path
 from dmu.logging.log_store  import LogStore
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
@@ -20,7 +21,7 @@ class Data:
     '''
     nentries= 100_000
     user    = os.environ['USER']
-    out_dir = f'/tmp/{user}/tests/rx_data/swap_calculator'
+    out_dir = Path(f'/tmp/{user}/tests/rx_data/swap_calculator')
 # ----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
