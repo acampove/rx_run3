@@ -196,8 +196,16 @@ def test_jpsi_misid(prefix : str, kind : str):
     '''
     Tests jpsi misid contamination
     '''
-    rdf = _get_rdf(kind=kind)
-    obj = SWPCalculator(rdf, d_lep={'L1' : 13, 'L2' : 13}, d_had={'H' : 13})
+    rdf      = _get_rdf(kind=kind, prefix=prefix)
+    had_name = 'H' if prefix in ['Hlt2RD_BuToKpMuMu', 'Hlt2RD_BuToKpEE'] else 'H1'
+
+    if 'MuMu' in prefix:
+        obj = SWPCalculator(rdf, d_lep={'L1' : 13, 'L2' : 13}, d_had={had_name : 13})
+    elif 'EE' in prefix:
+        obj = SWPCalculator(rdf, d_lep={'L1' : 11, 'L2' : 11}, d_had={had_name : 11})
+    else:
+        raise ValueError(f'Invalid prefix: {prefix}')
+
     rdf = obj.get_rdf(preffix='jpsi_misid', progress_bar=True, use_ss= 'ss' in kind)
 
     _plot(rdf, test='jpsi_misid', kind=kind, prefix=prefix)
