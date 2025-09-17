@@ -119,27 +119,30 @@ def test_compare_bdkstee():
 
     _compare_sig_bkg(rdf_sig, rdf_bkg, 'compare_bdkstee')
 # ----------------------------
-def test_extra_branches():
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_extra_branches(trigger : str):
     '''
     Testing adding extra branches to RDF
     '''
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
-    rdf     = _get_rdf(sample = 'Bu_Kee_eq_btosllball05_DPC', trigger=trigger)
+    sample  = 'Bd_Kstee_eq_btosllball05_DPC'
+    rdf     = tst.rdf_from_sample(sample = sample, trigger=trigger)
 
-    obj     = HOPCalculator(rdf=rdf)
+    obj     = HOPCalculator(rdf=rdf, trigger=trigger)
     rdf_hop = obj.get_rdf(preffix='hop')
     l_col   = [ name.c_str() for name in rdf_hop.GetColumnNames() ]
 
     assert 'EVENTNUMBER' in l_col
     assert 'RUNNUMBER'   in l_col
 # ----------------------------
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA'])
-@pytest.mark.parametrize('sample', ['DATA_24_MagDown_24c1'])
-def test_data(sample : str, trigger : str):
+@pytest.mark.parametrize('prefix, kind', tst.l_prefix_kind_data)
+def test_data(kind : str, prefix : str):
     '''
     Test with data
     '''
-    rdf_hop, rdf_org = _get_hop(sample = sample, trigger=trigger)
+    trigger = tst.get_trigger(kind=kind, prefix=prefix)
+    rdf     = _get_rdf(kind=kind, prefix=prefix)
 
-    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'data_{sample}_{trigger}')
+    rdf_hop, rdf_org = _get_hop(rdf=rdf, trigger=trigger)
+
+    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'data_{kind}_{trigger}')
 # ----------------------------
