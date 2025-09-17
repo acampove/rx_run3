@@ -235,20 +235,24 @@ def _plot(rdf : RDataFrame, test : str, kind : str, prefix : str):
     arr_org= d_data[f'{test}_mass_org']
 
     mass_rng = {
-        'jpsi_misid' : (2700, 3300),
-        'dzero_misid': (1700, 2000),
-        'phi_misid'  : ( 980, 1100)}[test]
+        'jpsi_misid_bplus'      : (2700, 3300),
+        'jpsi_misid_bzero_kaon' : (2700, 3300),
+        'jpsi_misid_bzero_pion' : (2700, 3300),
+        'dzero_misid'           : (1700, 2000),
+        'phi_misid'             : ( 980, 1100)}[test]
 
     plt.hist(arr_org, bins=80, range=mass_rng, alpha=0.5, label='Original', color='gray')
     plt.hist(arr_swp, bins=80, range=mass_rng, histtype='step', label='Swapped', color='blue')
     plt.grid(False)
 
-    if test == 'phi_misid':
+    if   test.startswith('phi_misid'):
         plt.axvline(x=1020, color='r', label=r'$\phi$', linestyle=':')
-    elif test == 'jpsi_misid':
+    elif test.startswith('jpsi_misid'):
         plt.axvline(x=3100, color='r', label=r'$J/\psi$', linestyle=':')
-    else:
+    elif test.startswith('dzero_misid'):
         plt.axvline(x=1864, color='r', label='$D_0$', linestyle=':')
+    else:
+        raise ValueError(f'Invalid test name: {test}')
 
     out_dir = Data.out_dir/test
     out_dir.mkdir(parents=True, exist_ok=True)
