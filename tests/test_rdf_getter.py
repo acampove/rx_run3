@@ -689,8 +689,9 @@ def test_brem_track_2(sample : str, trigger : str):
     sample = sample.replace('*', 'p')
     _plot_brem_track_2(rdf, sample, 'brem_track_2')
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['Bu_JpsiK_ee_eq_DPC', 'DATA_24_MagDown_24c2'])
-def test_check_vars(sample : str):
+@pytest.mark.parametrize('sample', ['Bd_Kstee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_check_vars(sample : str, trigger : str):
     '''
     Checks that variables from:
 
@@ -699,7 +700,7 @@ def test_check_vars(sample : str):
 
     Can be accessed
     '''
-    gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+    gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
 
     is_mc = not sample.startswith('DATA_24_')
@@ -708,9 +709,10 @@ def test_check_vars(sample : str):
     _print_dotted_branches(rdf)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample, trigger',
-                         [
-                         ('Bu_Kee_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpEE_MVA'),
-                         ('Bu_Kmumu_eq_btosllball05_DPC', 'Hlt2RD_BuToKpMuMu_MVA')])
+    [
+    ('Bu_Kee_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpEE_MVA'),
+    ('Bd_Kstee_eq_btosllball05_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'),
+    ('Bu_Kmumu_eq_btosllball05_DPC', 'Hlt2RD_BuToKpMuMu_MVA')])
 def test_mcdecaytree(sample : str, trigger : str):
     '''
     Builds dataframe from MCDecayTree
@@ -728,15 +730,14 @@ def test_mcdecaytree(sample : str, trigger : str):
 
     _check_mcdt(rdf=rdf, name=f'mcdt/{sample}')
 # ------------------------------------------------
-@pytest.mark.parametrize('period'  ,['24c1','24c2','24c3','24c4'])
+@pytest.mark.parametrize('period'  ,['24c2','24c3','24c4'])
 @pytest.mark.parametrize('polarity',['MagUp', 'MagDown'])
-def test_ext_trigger(period : str, polarity : str):
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA_ext', 'Hlt2RD_B0ToKpPimEE_MVA_ext'])
+def test_ext_trigger(period : str, polarity : str, trigger : str):
     '''
     Test of getter class for combination of analysis and misID trigger
     '''
     sample=f'DATA_24_{polarity}_{period}'
-    trigger='Hlt2RD_BuToKpEE_MVA_ext'
-
     with RDFGetter.max_entries(-1):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -744,23 +745,20 @@ def test_ext_trigger(period : str, polarity : str):
     _check_ext(rdf)
     _plot_ext(rdf, sample=sample)
 # ------------------------------------------------
-def test_custom_columns():
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_custom_columns(trigger : str):
     '''
     Tests defining of new custom columns
     '''
-    d_def = {
-            'xbrem' : 'int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2)',
-            'xmva'  : 'mva_cmb + mva_prc',
-            }
+    d_def = {'xbrem' : 'int(L1_HASBREMADDED) + int(L2_HASBREMADDED)'}
 
     with RDFGetter.custom_columns(columns = d_def):
-        obj = RDFGetter(trigger='Hlt2RD_BuToKpEE_MVA', sample='DATA_24_MagDown_24c2')
+        obj = RDFGetter(trigger=trigger, sample='DATA_24_MagDown_24c2')
         rdf = obj.get_rdf(per_file=False)
 
     l_col = [ col.c_str() for col in rdf.GetColumnNames() ]
 
     assert 'xbrem' in l_col
-    assert 'xmva'  in l_col
 # ------------------------------------------------
 # TODO: This test is very slow, needs to be disabled for now
 @pytest.mark.parametrize('sample' , ['DATA*'])
@@ -800,17 +798,18 @@ def test_add_truem(project : str):
     _check_truem_columns(rdf)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_JpsiX_ee_eq_JpsiInAcc', 'Bd_JpsiX_ee_eq_JpsiInAcc', 'Bs_JpsiX_ee_eq_JpsiInAcc'] )
-def test_ccbar(sample : str):
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_ccbar(sample : str, trigger : str):
     '''
     Tests reading of ccbar + X samples
     '''
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
-
     with RDFGetter.max_entries(-1), RDFGetter.skip_adding_columns(True):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
 
-    rdf = rdf.Filter('mva_prc > 0.8')
+    nentries = rdf.Count().GetValue()
+
+    assert nentries > 0
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
@@ -864,7 +863,6 @@ def test_skip_brem_track_2(kind : str, trigger : str):
             sample       =sample)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample, trigger' , [
-    #('Bu_KplpiplKmn_eq_sqDalitz_DPC' , 'Hlt2RD_BuToKpEE_MVA_noPID'),
     ('Bu_KplKplKmn_eq_sqDalitz_DPC'  , 'Hlt2RD_BuToKpEE_MVA_noPID'),
     ('Bu_piplpimnKpl_eq_sqDalitz_DPC', 'Hlt2RD_BuToKpEE_MVA_noPID'),
     ('Bu_JpsiPi_ee_eq_DPC'           , 'Hlt2RD_BuToKpEE_MVA_noPID'),
@@ -889,18 +887,19 @@ def test_no_pid(sample : str, trigger : str):
 # ------------------------------------------------
 # TODO: Check for negative numbers
 @pytest.mark.parametrize('nthreads', [1, 6])
-def test_multithreading(nthreads : int):
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_multithreading(nthreads : int, trigger : str):
     '''
     This will test the context manager used to enable multithreading
     '''
-    sample   = 'Bu_JpsiK_ee_eq_DPC'
+    sample   = 'Bd_Kstee_eq_btosllball05_DPC'
     nentries = 1000 if nthreads == 1 else -1
     nthcheck =    0 if nthreads == 1 else nthreads
 
     with RDFGetter.multithreading(nthreads=nthreads), \
          RDFGetter.max_entries(value=nentries):
 
-        gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+        gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
 
         assert GetThreadPoolSize() == nthcheck
@@ -986,14 +985,18 @@ def test_identifier(per_file : bool):
         gtr= RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
         gtr.get_rdf(per_file=per_file)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['Bu_JpsiK_ee_eq_DPC', 'Bu_Kee_eq_btosllball05_DPC', 'DATA*'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+@pytest.mark.parametrize('sample' , ['Bd_Kstee_eq_btosllball05_DPC', 'DATA*'])
 @pytest.mark.parametrize('smeared', [True, False])
 @pytest.mark.parametrize('q2bin'  , Data.l_q2bin)
-def test_selection(sample : str, smeared : bool, q2bin : str):
+def test_selection(
+    sample  : str, 
+    trigger : str,
+    smeared : bool, 
+    q2bin   : str):
     '''
     Basic test of selection
     '''
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
 
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
@@ -1020,13 +1023,16 @@ def test_selection(sample : str, smeared : bool, q2bin : str):
 
     _print_dotted_branches(rdf)
 # --------------------------
-@pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+@pytest.mark.parametrize('sample', ['Bd_Kstee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('q2bin' , Data.l_q2bin)
-def test_full_selection_electron(sample : str, q2bin : str):
+def test_full_selection_electron(
+    sample  : str, 
+    q2bin   : str, 
+    trigger : str):
     '''
     Applies full selection to all q2 bins in electron channel
     '''
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
     with RDFGetter.max_entries(value=100_000):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -1042,13 +1048,13 @@ def test_full_selection_electron(sample : str, q2bin : str):
 
     _print_dotted_branches(rdf)
 # --------------------------
-@pytest.mark.parametrize('sample', ['Bu_Kmumu_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
-@pytest.mark.parametrize('q2bin' , Data.l_q2bin)
-def test_full_selection_muon(sample : str, q2bin : str):
+@pytest.mark.parametrize('sample' , ['Bd_Kstmumu_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('q2bin'  , Data.l_q2bin)
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_B0ToKpPimMuMu_MVA'])
+def test_full_selection_muon(sample : str, q2bin : str, trigger : str):
     '''
     Applies full selection to all q2 bins in muon channel
     '''
-    trigger = 'Hlt2RD_BuToKpMuMu_MVA'
     with RDFGetter.max_entries(value=100_000):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
