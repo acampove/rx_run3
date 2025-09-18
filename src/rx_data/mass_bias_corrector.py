@@ -201,6 +201,22 @@ class MassBiasCorrector:
         df = df.add_suffix(f'_{suffix}')
 
         return df
+    # ----------------------
+    def _get_corrected_df(self) -> pnd.DataFrame:
+        '''
+        Returns
+        -------------
+        Dataframe after correction
+        '''
+        if self._nproc == 1:
+            log.info('Using single process to correct data')
+            return self._df.apply(self._calculate_correction, axis=1)
+
+        log.info(f'Using {self._nproc} processes to correct data')
+        ddf = dd.from_pandas(self._df, npartitions=self._nproc)
+        df  = ddf.map_partitions(lambda x : x.apply(self._calculate_correction, axis=1)).compute()
+
+        return df
     # ------------------------------------------
     def get_df(self, suffix: str|None = None) -> pnd.DataFrame:
         '''
