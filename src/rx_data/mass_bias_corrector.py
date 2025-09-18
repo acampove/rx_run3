@@ -226,10 +226,9 @@ class MassBiasCorrector:
         '''
         log.info('Applying bias correction')
 
-        ddf     = dd.from_pandas(self._df, npartitions=self._nproc)
-        df_corr = ddf.map_partitions(lambda x : x.apply(self._calculate_correction, axis=1)).compute()
-
+        df_corr = self._get_corrected_df()
         df_corr = self._add_suffix(df_corr, suffix)
+
         for variable in ['EVENTNUMBER', 'RUNNUMBER']:
             df_corr[variable] = self._df[variable]
 
