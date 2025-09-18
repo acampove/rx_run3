@@ -154,10 +154,10 @@ class MassBiasCorrector:
         return sr
     # ------------------------------------------
     def _calculate_dira(
-            self,
-            row      : pnd.Series,
-            momentum : v3d,
-            particle : str) -> float:
+        self,
+        row      : pnd.Series,
+        momentum : v3d,
+        particle : str) -> float:
         '''
         Recalculates dira with brem corrected momentum
 
