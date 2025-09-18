@@ -193,6 +193,7 @@ def test_simple(kind : str, trigger : str):
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, f'simple_{trigger}', kind)
 #-----------------------------------------
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('sample', [
     'DATA_24_MagDown_24c2',
     'DATA_24_MagDown_24c3',
@@ -200,8 +201,7 @@ def test_simple(kind : str, trigger : str):
     'DATA_24_MagUp_24c2' ,
     'DATA_24_MagUp_24c3' ,
     'DATA_24_MagUp_24c4' ])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_medium_input(sample : str, trigger : str):
+def test_medium_input(trigger : str, sample : str):
     '''
     Medium input
     '''
@@ -213,7 +213,7 @@ def test_medium_input(sample : str, trigger : str):
     cor     = MassBiasCorrector(
         rdf       = rdf_org, 
         trigger   = trigger,
-        nthreads  = 6, 
+        nthreads  = 13, 
         ecorr_kind= kind)
 
     rdf_cor = cor.get_rdf()
