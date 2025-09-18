@@ -258,18 +258,18 @@ class ElectronBiasCorrector:
         '''
         if self._attr_from_row(row, f'{self._name}_HASBREMADDED'):
             self._brem_status = -1
-            log.info('Electron has already brem, skipping correction')
+            log.debug('Electron has already brem, skipping correction')
             e_corr = self._get_electron(row, kind='')
             return e_corr
 
         brem_energy = self._attr_from_row(row, f'{self._name}_BREMTRACKBASEDENERGY')
         if brem_energy <  self._min_brem_energy:
-            log.info(f'Brem energy is below threshold: {brem_energy:.0f} < {self._min_brem_energy:.0f}')
-            log.info('Skipping correction')
+            log.debug(f'Brem energy is below threshold: {brem_energy:.0f} < {self._min_brem_energy:.0f}')
+            log.debug('Skipping correction')
             self._brem_status = -1
             return None
 
-        log.info('Correcting electron')
+        log.debug('Correcting electron')
         e_corr = self._correct_with_track_brem_1(e_track, row)
 
         return e_corr
@@ -281,7 +281,7 @@ class ElectronBiasCorrector:
         name : Particle name, e.g. L1
         kind : Type of correction, [ecalo_bias, brem_track_1, brem_track_2]
         '''
-        log.info(f'Correcting {name} with {kind}')
+        log.debug(f'Correcting {name} with {kind}')
 
         self._name = name
         e_track    = self._get_electron(row, kind='TRACK_')
