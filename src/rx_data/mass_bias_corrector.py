@@ -14,6 +14,7 @@ from dmu.logging.log_store           import LogStore
 from rx_q2.q2smear_corrector         import Q2SmearCorrector
 
 import rx_data.utilities             as ut
+from rx_common                       import info
 from rx_data.electron_bias_corrector import ElectronBiasCorrector
 
 log=LogStore.add_logger('rx_data:mass_bias_corrector')
@@ -86,19 +87,24 @@ class MassBiasCorrector:
     def __init__(
         self,
         rdf                   : RDataFrame,
+        trigger               : str,
         skip_correction       : bool  = False,
         nthreads              : int   = 1,
         brem_energy_threshold : float = 400,
         ecorr_kind            : str   = 'brem_track_2'):
         '''
-        rdf : ROOT dataframe
-        skip_correction: Will do everything but not correction. Needed to check that only the correction is changing data.
-        nthreads : Number of threads, used by pandarallel
+        Parameters
+        --------------
+        rdf                  : ROOT dataframe
+        trigger              : Hlt2 trigger name
+        skip_correction      : Will do everything but not correction. Needed to check that only the correction is changing data.
+        nthreads             : Number of threads, used by pandarallel
         brem_energy_threshold: Lowest energy that an ECAL cluster needs to have to be considered a photon, used as argument of ElectronBiasCorrector, default 0 (MeV)
-        ecorr_kind : Kind of correction to be added to electrons, [ecalo_bias, brem_track]
+        ecorr_kind           : Kind of correction to be added to electrons, [ecalo_bias, brem_track]
         '''
         self._is_mc           = self._rdf_is_mc(rdf)
         self._df              = ut.df_from_rdf(rdf)
+        self._trigger         = trigger
         self._skip_correction = skip_correction
         self._nthreads        = nthreads
 
