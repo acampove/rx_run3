@@ -52,7 +52,8 @@ class MassBiasCorrector:
         self._df              = ut.df_from_rdf(rdf)
         self._trigger         = trigger
         self._skip_correction = skip_correction
-        self._nthreads        = nthreads
+        self._nproc           = nthreads
+        self._client          = Client(n_workers=nthreads, threads_per_worker=1)
 
         self._ebc        = ElectronBiasCorrector(brem_energy_threshold = brem_energy_threshold)
         self._emass      = 0.511
