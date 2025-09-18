@@ -5,7 +5,6 @@ Module storing MassBiasCorrector class
 from typing import cast
 
 import numpy
-from dask.distributed import Client
 from dask             import dataframe as dd 
 
 import pandas as pnd
@@ -32,7 +31,8 @@ class MassBiasCorrector:
     # ------------------------------------------
     def __init__(
         self,
-        rdf                   : RDataFrame,
+        df                    : pnd.DataFrame,
+        is_mc                 : bool,
         trigger               : str,
         skip_correction       : bool  = False,
         nthreads              : int   = 1,
@@ -48,12 +48,11 @@ class MassBiasCorrector:
         brem_energy_threshold: Lowest energy that an ECAL cluster needs to have to be considered a photon, used as argument of ElectronBiasCorrector, default 0 (MeV)
         ecorr_kind           : Kind of correction to be added to electrons, [ecalo_bias, brem_track]
         '''
-        self._is_mc           = self._rdf_is_mc(rdf)
-        self._df              = ut.df_from_rdf(rdf)
+        self._df              = df
+        self._is_mc           = is_mc 
         self._trigger         = trigger
         self._skip_correction = skip_correction
         self._nproc           = nthreads
-        self._client          = Client(n_workers=nthreads, threads_per_worker=1)
 
         self._ebc        = ElectronBiasCorrector(brem_energy_threshold = brem_energy_threshold)
         self._emass      = 0.511
@@ -64,14 +63,6 @@ class MassBiasCorrector:
 
         self._silence_logger(name = 'rx_data:brem_bias_corrector')
         self._silence_logger(name = 'rx_data:electron_bias_corrector')
-    # ------------------------------------------
-    def _rdf_is_mc(self, rdf : RDataFrame) -> bool:
-        l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
-        for col in l_col:
-            if col.endswith('_TRUEID'):
-                return True
-
-        return False
     # ------------------------------------------
     def _silence_logger(self, name) -> None:
         logger = LogStore.get_logger(name=name)
