@@ -24,7 +24,6 @@ format = "wheel"
 [tool.poetry.dependencies]
 python                      = '>=3.10,<3.13'
 tqdm                        = '>=0.0.0'
-swifter                     = '>=0.0.0'
 dask                        = '>=0.0.0'
 uproot                      = '>=0.0.0'
 tabulate                    = '>=0.0.0'
