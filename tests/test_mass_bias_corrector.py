@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 from ROOT                        import RDataFrame # type: ignore
 from dmu.logging.log_store       import LogStore
 from dmu.plotting.plotter_1d     import Plotter1D as Plotter
+from rx_common                   import info
 from rx_selection                import selection as sel
 from rx_data.rdf_getter          import RDFGetter
 from rx_data.mass_bias_corrector import MassBiasCorrector
@@ -114,8 +115,13 @@ def _get_rdf(
     '''
     Return ROOT dataframe needed for test
     '''
-    if     is_mc and sample is None:
+    project = info.project_from_trigger(trigger=trigger, lower_case=True)
+
+    if     is_mc and sample is None and project == 'rkstar':
         sample = 'Bd_Kstee_eq_btosllball05_DPC'
+
+    if     is_mc and sample is None and project == 'rk':
+        sample = 'Bu_Kee_eq_btosllball05_DPC'
 
     if not is_mc and sample is None:
         sample = 'DATA_24_*'
