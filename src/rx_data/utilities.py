@@ -123,11 +123,25 @@ def df_from_rdf(rdf : RDataFrame) -> pnd.DataFrame:
         ndrp = len(df)
         log.warning(f'Dropping columns with NaNs {ntot} -> {ndrp}')
 
-    return df
+    columns = df.select_dtypes(include=['object']).columns.tolist()
+    if not columns:
+        return df
+
+    for column in columns:
+        log.info(column)
+
+    raise ValueError('Columns with object type')
 # ------------------------------------------
 def _preprocess_rdf(rdf: RDataFrame) -> RDataFrame:
     rdf = _preprocess_lepton(rdf, 'L1')
     rdf = _preprocess_lepton(rdf, 'L2')
+
+    columns = rdf.GetColumnNames()
+    # Hadrons have bool columns that need to be casted as int
+    # Hadrons are needed to build corrected B meson
+    for hadron in ['H', 'H1', 'H2']:
+        if any(column.startswith(f'{hadron}_') for column in columns):
+            rdf = _preprocess_lepton(rdf, hadron)
 
     return rdf
 # ------------------------------------------
