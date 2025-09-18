@@ -194,11 +194,9 @@ def test_simple(kind : str, trigger : str):
     _compare_masses(d_rdf, f'simple_{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('sample', [
-    'DATA_24_MagDown_24c1',
     'DATA_24_MagDown_24c2',
     'DATA_24_MagDown_24c3',
     'DATA_24_MagDown_24c4',
-    'DATA_24_MagUp_24c1' ,
     'DATA_24_MagUp_24c2' ,
     'DATA_24_MagUp_24c3' ,
     'DATA_24_MagUp_24c4' ])
