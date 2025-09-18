@@ -7,7 +7,7 @@ import numpy
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from ROOT                    import RDataFrame, RDF
+from ROOT                    import RDataFrame, RDF # type: ignore
 from dmu.logging.log_store   import LogStore
 from rx_data.rdf_getter      import RDFGetter
 from rx_data.mass_calculator import MassCalculator
