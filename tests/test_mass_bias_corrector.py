@@ -5,6 +5,7 @@ Module used to test bias corrections
 import os
 import copy
 from importlib.resources import files
+from pathlib             import Path
 
 import mplhep
 import pytest
@@ -24,7 +25,8 @@ class Data:
     '''
     Data class
     '''
-    plt_dir    = '/tmp/tests/rx_data/mass_bias_corrector'
+    user       = os.environ['USER']
+    plt_dir    = Path(f'/tmp/{user}/tests/rx_data/mass_bias_corrector')
     nthreads   = 13
     nentries   = -1
 #-----------------------------------------
