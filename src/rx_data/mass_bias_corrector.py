@@ -210,19 +210,14 @@ class MassBiasCorrector:
         '''
         log.info('Applying bias correction')
 
-        df = self._df
-        if self._nthreads > 1:
-            log.warning('Pandarallel disabled')
+        ddf     = dd.from_pandas(self._df, npartitions=self._nproc)
+        df_corr = ddf.map_partitions(lambda x : x.apply(self._calculate_correction, axis=1)).compute()
 
-        df_corr = df.apply(self._calculate_correction, axis=1)
-        df_corr = cast(pnd.DataFrame, df_corr)
         df_corr = self._add_suffix(df_corr, suffix)
         for variable in ['EVENTNUMBER', 'RUNNUMBER']:
-            df_corr[variable] = df[variable]
+            df_corr[variable] = self._df[variable]
 
         df_corr = df_corr.fillna(-1) # For some candidates the B mass after correction becomes NaN
 
-        rdf     = RDF.FromPandas(df_corr)
-
-        return rdf
+        return df_corr 
 # ------------------------------------------
