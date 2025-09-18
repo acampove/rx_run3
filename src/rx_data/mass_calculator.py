@@ -4,7 +4,7 @@ Module containing MassCalculator class
 from typing import cast
 
 import pandas as pnd
-from ROOT                  import RDataFrame, RDF
+from ROOT                  import RDataFrame, RDF # type: ignore
 from particle              import Particle         as part
 from vector                import MomentumObject4D as v4d
 from dmu.generic           import typing_utilities as tut
