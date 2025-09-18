@@ -5,10 +5,12 @@ Module storing MassBiasCorrector class
 from typing import cast
 
 import numpy
+from dask.distributed import Client
+from dask             import dataframe as dd 
+
 import pandas as pnd
 from vector                          import MomentumObject3D as v3d
 from vector                          import MomentumObject4D as v4d
-from pandarallel                     import pandarallel
 from ROOT                            import RDataFrame, RDF # type: ignore
 from dmu.logging.log_store           import LogStore
 from rx_q2.q2smear_corrector         import Q2SmearCorrector
