@@ -191,7 +191,7 @@ def test_simple(kind : str, trigger : str):
     _check_output_columns(rdf_cor)
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, 'simple', kind)
+    _compare_masses(d_rdf, f'simple_{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('sample', [
     'DATA_24_MagDown_24c1',
