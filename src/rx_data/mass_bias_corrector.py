@@ -1,7 +1,7 @@
 '''
 Module storing MassBiasCorrector class
 '''
-# pylint: disable=too-many-return-statements
+
 from typing import cast
 
 import numpy
@@ -20,62 +20,6 @@ from rx_common                       import info
 from rx_data.electron_bias_corrector import ElectronBiasCorrector
 
 log=LogStore.add_logger('rx_data:mass_bias_corrector')
-# ------------------------------------------
-class TypedRow:
-    '''
-    Class meant to wrap rows from pandas dataframes
-    Needed to override [] operator to provide floats
-    This should fix pyright problems
-    '''
-    # ----------------------------------
-    def __init__(self, row : pnd.Series):
-        '''
-        Row pandas dataframe row
-        '''
-        self._row = row
-    # ----------------------------------
-    def __getitem__(self, column : str) -> float|int:
-        '''
-        Interface to __getitem__ from pandas dataframe row
-        that guarantees numeric type as return type
-
-        Parameters
-        -----------
-        column: Name of column
-        '''
-
-        return self._get_data(column)
-    # ----------------------------------
-    def __getattr__(self, column : str) -> float|int:
-        '''
-        Interface to __getattr__ from pandas dataframe row
-        that guarantees numeric type as return type
-
-        Parameters
-        -----------
-        column: Name of column
-        '''
-
-        return self._get_data(column)
-    # ----------------------------------
-    def _get_data(self, column : str)  -> float|int:
-        '''
-        Backend to actually extract data and do checks
-        '''
-        if column not in self._row:
-            log.error(self._row)
-            raise KeyError(f'Cannot find {column} in row above')
-
-        val = self._row[column]
-
-        if isinstance(val, float):
-            return float(val)
-
-        if isinstance(val, int):
-            return int(val)
-
-        this_type = type(val)
-        raise TypeError(f'Unsupported type {this_type} for column {column}')
 # ------------------------------------------
 class MassBiasCorrector:
     '''
