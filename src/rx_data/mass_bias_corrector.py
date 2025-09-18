@@ -56,8 +56,8 @@ class MassBiasCorrector:
         self._skip_correction = skip_correction
         self._nproc           = nthreads
 
-        self._ebc        = ElectronBiasCorrector(brem_energy_threshold = brem_energy_threshold)
-        self._ecorr_kind = ecorr_kind
+        self._ebc             = ElectronBiasCorrector(brem_energy_threshold = brem_energy_threshold)
+        self._ecorr_kind      = ecorr_kind
 
         self._qsq_corr   = Q2SmearCorrector()
 
