@@ -104,6 +104,7 @@ def _check_output_columns(rdf : RDataFrame) -> None:
         log.debug(f'   {colname}')
 #-----------------------------------------
 def _get_rdf(
+    trigger  : str,
     nbrem    : None|int  = None,
     is_inner : None|bool = None,
     npvs     : None|int  = None,
@@ -113,10 +114,8 @@ def _get_rdf(
     '''
     Return ROOT dataframe needed for test
     '''
-    trigger='Hlt2RD_BuToKpEE_MVA'
-
     if     is_mc and sample is None:
-        sample = 'Bu_JpsiK_ee_eq_DPC'
+        sample = 'Bd_Kstee_eq_btosllball05_DPC'
 
     if not is_mc and sample is None:
         sample = 'DATA_24_*'
