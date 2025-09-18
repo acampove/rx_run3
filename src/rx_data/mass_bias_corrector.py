@@ -10,11 +10,9 @@ from dask             import dataframe as dd
 import pandas as pnd
 from vector                          import MomentumObject3D as v3d
 from vector                          import MomentumObject4D as v4d
-from ROOT                            import RDataFrame, RDF # type: ignore
 from dmu.logging.log_store           import LogStore
 from rx_q2.q2smear_corrector         import Q2SmearCorrector
 
-import rx_data.utilities             as ut
 from rx_common                       import info
 from rx_data.electron_bias_corrector import ElectronBiasCorrector
 
@@ -204,7 +202,7 @@ class MassBiasCorrector:
 
         return df
     # ------------------------------------------
-    def get_rdf(self, suffix: str|None = None) -> RDataFrame:
+    def get_rdf(self, suffix: str|None = None) -> pnd.DataFrame:
         '''
         Returns corrected ROOT dataframe
 
