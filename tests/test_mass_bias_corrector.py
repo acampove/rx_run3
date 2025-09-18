@@ -40,7 +40,8 @@ def initialize():
     LogStore.set_level('rx_data:test_mass_bias_corrector', 10)
     LogStore.set_level('rx_data:rdf_getter'              , 10)
 
-    os.makedirs(Data.plt_dir, exist_ok=True)
+    Data.plt_dir.mkdir(parents=True, exist_ok=True)
+
     plt.style.use(mplhep.style.LHCb2)
 #-----------------------------------------
 def _load_conf() -> dict:
