@@ -287,4 +287,4 @@ class MassBiasCorrector:
         rdf     = RDF.FromPandas(df_corr)
 
         return rdf
-# ----------------------------------------tests/test_mass_bias_corrector.py::test_simple[brem_track_2]--
+# ------------------------------------------
