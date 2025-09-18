@@ -202,9 +202,9 @@ class MassBiasCorrector:
 
         return df
     # ------------------------------------------
-    def get_rdf(self, suffix: str|None = None) -> pnd.DataFrame:
+    def get_df(self, suffix: str|None = None) -> pnd.DataFrame:
         '''
-        Returns corrected ROOT dataframe
+        Returns corrected pandas dataframe
 
         mass_name (str) : Name of the column containing the corrected mass, by default B_M
         '''
