@@ -212,7 +212,7 @@ def test_medium_input(trigger : str, sample : str):
     Medium input
     '''
     kind    = 'brem_track_2'
-    nproc   = 5 
+    nproc   = 10
 
     with RDFGetter.max_entries(100_000):
         rdf_org = _get_rdf(sample=sample, trigger=trigger)
@@ -234,7 +234,7 @@ def test_medium_input(trigger : str, sample : str):
         ecorr_kind= kind)
 
     df_cor  = cor.get_df()
-    rdf_cor = RDF.FromNumpy(df_cor)
+    rdf_cor = RDF.FromPandas(df_cor)
 
     _check_output_columns(rdf_cor)
 
