@@ -24,6 +24,14 @@ class Data:
 
     dt_rgx  = r'(data_\d{2}_.*c\d)_(Hlt2RD_.*(?:EE|MuMu|misid|cal|MVA|LL|DD))_?(\d{3}_\d{3}|[a-z0-9]{10})?\.root'
     mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_(\d{3}_\d{3}|\w{10}).root'
+# ------------------------------------------
+def rdf_is_mc(rdf : RDataFrame) -> bool:
+    l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
+    for col in l_col:
+        if col.endswith('_TRUEID'):
+            return True
+
+    return False
 # ---------------------------------
 def info_from_path(
     path             : str|Path,
