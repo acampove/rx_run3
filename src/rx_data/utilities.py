@@ -1,7 +1,6 @@
 '''
 Module with utility functions
 '''
-# pylint: disable=too-many-return-statements
 
 import re
 from dataclasses  import dataclass
