@@ -13,7 +13,7 @@ import pytest
 import yaml
 import matplotlib.pyplot as plt
 
-from ROOT                        import RDataFrame # type: ignore
+from ROOT                        import RDataFrame, RDF # type: ignore
 from dmu.logging.log_store       import LogStore
 from dmu.plotting.plotter_1d     import Plotter1D as Plotter
 from rx_common                   import info
@@ -223,16 +223,18 @@ def test_medium_input(trigger : str, sample : str):
     try:
         _ = get_client()
     except Exception:
-        _ = Client(n_workers=nproc, threads_per_worker=1)
+        if nproc > 1:
+            _ = Client(n_workers=nproc, threads_per_worker=1)
 
-    cor     = MassBiasCorrector(
+    cor   = MassBiasCorrector(
         df        = df_org, 
         is_mc     = is_mc,
         trigger   = trigger,
         nthreads  = nproc, 
         ecorr_kind= kind)
 
-    rdf_cor = cor.get_rdf()
+    df_cor  = cor.get_df()
+    rdf_cor = RDF.FromNumpy(df_cor)
 
     _check_output_columns(rdf_cor)
 
