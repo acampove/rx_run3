@@ -202,22 +202,28 @@ def test_simple(kind : str, trigger : str):
     'DATA_24_MagUp_24c2' ,
     'DATA_24_MagUp_24c3' ,
     'DATA_24_MagUp_24c4' ])
-def test_medium_input(sample : str):
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_medium_input(sample : str, trigger : str):
     '''
     Medium input
     '''
     kind    = 'brem_track_2'
 
     with RDFGetter.max_entries(100_000):
-        rdf_org = _get_rdf(sample=sample)
+        rdf_org = _get_rdf(sample=sample, trigger=trigger)
 
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=6, ecorr_kind=kind)
+    cor     = MassBiasCorrector(
+        rdf       = rdf_org, 
+        trigger   = trigger,
+        nthreads  = 6, 
+        ecorr_kind= kind)
+
     rdf_cor = cor.get_rdf()
 
     _check_output_columns(rdf_cor)
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, f'medium_{sample}', kind)
+    _compare_masses(d_rdf, f'medium_{sample}_{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
 @pytest.mark.parametrize('nbrem'  , [0, 1, 2])
