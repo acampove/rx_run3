@@ -2,7 +2,7 @@
 Module storing MassBiasCorrector class
 '''
 
-from typing import cast
+from typing import cast, Final
 
 import numpy
 from dask             import dataframe as dd 
@@ -17,6 +17,10 @@ from rx_common                       import info
 from rx_data.electron_bias_corrector import ElectronBiasCorrector
 
 log=LogStore.add_logger('rx_data:mass_bias_corrector')
+
+EMASS  :Final[float] = 0.511
+KMASS  :Final[float] = 493.6
+PIMASS :Final[float] = 137.57
 # ------------------------------------------
 class MassBiasCorrector:
     '''
@@ -53,8 +57,6 @@ class MassBiasCorrector:
         self._nproc           = nthreads
 
         self._ebc        = ElectronBiasCorrector(brem_energy_threshold = brem_energy_threshold)
-        self._emass      = 0.511
-        self._kmass      = 493.6
         self._ecorr_kind = ecorr_kind
 
         self._qsq_corr   = Q2SmearCorrector()
