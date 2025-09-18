@@ -60,6 +60,9 @@ class MassBiasCorrector:
         self._ecorr_kind      = ecorr_kind
 
         self._qsq_corr   = Q2SmearCorrector()
+        self._project : Final[str] = info.project_from_trigger(trigger=self._trigger, lower_case=True)
+
+        log.info(f'Using project: {self._project}')
 
         self._silence_logger(name = 'rx_data:brem_bias_corrector')
         self._silence_logger(name = 'rx_data:electron_bias_corrector')
@@ -86,18 +89,17 @@ class MassBiasCorrector:
         return row
     # ------------------------------------------
     def _calculate_variables(self, row : pnd.Series) -> pnd.Series:
-        l1 = v4d(pt=row.L1_PT, phi=row.L1_PHI, eta=row.L1_ETA, m=self._emass)
-        l2 = v4d(pt=row.L2_PT, phi=row.L2_PHI, eta=row.L2_ETA, m=self._emass)
-        project = info.project_from_trigger(trigger=self._trigger, lower_case=True)
+        l1 = v4d(pt=row.L1_PT, phi=row.L1_PHI, eta=row.L1_ETA, m=EMASS)
+        l2 = v4d(pt=row.L2_PT, phi=row.L2_PHI, eta=row.L2_ETA, m=EMASS)
 
-        if   project == 'rk':
-            hd = v4d(pt=row.H_PT  , phi=row.H_PHI  , eta=row.H_ETA  , m=self._kmass)
-        elif project == 'rkst':
-            h1 = v4d(pt=row.H1_PT , phi=row.H2_PHI , eta=row.H2_ETA , m=self._kmass)
-            h2 = v4d(pt=row.H2_PT , phi=row.H2_PHI , eta=row.H2_ETA , m=self._kmass)
+        if   self._project == 'rk':
+            hd = v4d(pt=row.H_PT  , phi=row.H_PHI  , eta=row.H_ETA  , m=KMASS)
+        elif self._project == 'rkst':
+            h1 = v4d(pt=row.H1_PT , phi=row.H1_PHI , eta=row.H1_ETA , m=KMASS)
+            h2 = v4d(pt=row.H2_PT , phi=row.H2_PHI , eta=row.H2_ETA , m=PIMASS)
             hd = h1 + h2
         else:
-            raise ValueError(f'Invalid project: {project}')
+            raise ValueError(f'Invalid project: {self._project}')
 
         jp = l1 + l2
         bp = jp + hd
