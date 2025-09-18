@@ -156,10 +156,19 @@ class MassBiasCorrector:
 
         l1 = v4d(pt=trow.L1_PT, phi=trow.L1_PHI, eta=trow.L1_ETA, m=self._emass)
         l2 = v4d(pt=trow.L2_PT, phi=trow.L2_PHI, eta=trow.L2_ETA, m=self._emass)
-        kp = v4d(pt=trow.H_PT , phi=trow.H_PHI , eta=trow.H_ETA , m=self._kmass)
+        project = info.project_from_trigger(trigger=self._trigger, lower_case=True)
+
+        if   project == 'rk':
+            hd = v4d(pt=trow.H_PT  , phi=trow.H_PHI  , eta=trow.H_ETA  , m=self._kmass)
+        elif project == 'rkst':
+            h1 = v4d(pt=trow.H1_PT , phi=trow.H2_PHI , eta=trow.H2_ETA , m=self._kmass)
+            h2 = v4d(pt=trow.H2_PT , phi=trow.H2_PHI , eta=trow.H2_ETA , m=self._kmass)
+            hd = h1 + h2
+        else:
+            raise ValueError(f'Invalid project: {project}')
 
         jp = l1 + l2
-        bp = jp + kp
+        bp = jp + hd
 
         jp = cast(v4d, jp)
         bp = cast(v4d, bp)
