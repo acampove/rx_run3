@@ -167,13 +167,19 @@ def _get_rdf(
 
     return rdf
 #-----------------------------------------
-@pytest.mark.parametrize('kind', ['brem_track_2'])
-def test_simple(kind : str):
+@pytest.mark.parametrize('kind'   , ['brem_track_2'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_simple(kind : str, trigger : str):
     '''
     Simplest test
     '''
-    rdf_org = _get_rdf()
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=6, ecorr_kind=kind)
+    rdf_org = _get_rdf(trigger=trigger)
+    cor     = MassBiasCorrector(
+        rdf       = rdf_org, 
+        trigger   = trigger,
+        nthreads  = 6, 
+        ecorr_kind= kind)
+
     rdf_cor = cor.get_rdf()
 
     _check_output_columns(rdf_cor)
