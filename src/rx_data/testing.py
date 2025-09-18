@@ -99,7 +99,7 @@ def rdf_from_sample(sample : str, trigger : str) -> RDataFrame:
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
 
-    rdf = _apply_selection(rdf, trigger, sample)
+    rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
 
     nentries = rdf.Count().GetValue()
     if nentries == 0:
