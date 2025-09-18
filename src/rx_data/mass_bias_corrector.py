@@ -100,7 +100,7 @@ class MassBiasCorrector:
         rdf                  : ROOT dataframe
         trigger              : Hlt2 trigger name
         skip_correction      : Will do everything but not correction. Needed to check that only the correction is changing data.
-        nthreads             : Number of threads, used by pandarallel
+        nthreads             : Number of processes to use 
         brem_energy_threshold: Lowest energy that an ECAL cluster needs to have to be considered a photon, used as argument of ElectronBiasCorrector, default 0 (MeV)
         ecorr_kind           : Kind of correction to be added to electrons, [ecalo_bias, brem_track]
         '''
@@ -119,10 +119,6 @@ class MassBiasCorrector:
 
         self._silence_logger(name = 'rx_data:brem_bias_corrector')
         self._silence_logger(name = 'rx_data:electron_bias_corrector')
-
-        if self._nthreads > 1:
-            log.info(f'Using multiprocessing with {self._nthreads} processes')
-            pandarallel.initialize(nb_workers=self._nthreads, progress_bar=True)
     # ------------------------------------------
     def _rdf_is_mc(self, rdf : RDataFrame) -> bool:
         l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
