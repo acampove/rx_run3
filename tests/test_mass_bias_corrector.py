@@ -7,6 +7,7 @@ import copy
 from importlib.resources import files
 from pathlib             import Path
 
+from distributed import Client, get_client
 import mplhep
 import pytest
 import yaml
@@ -17,6 +18,7 @@ from dmu.logging.log_store       import LogStore
 from dmu.plotting.plotter_1d     import Plotter1D as Plotter
 from rx_common                   import info
 from rx_selection                import selection as sel
+from rx_data                     import utilities as ut
 from rx_data.rdf_getter          import RDFGetter
 from rx_data.mass_bias_corrector import MassBiasCorrector
 
@@ -180,8 +182,12 @@ def test_simple(kind : str, trigger : str):
     Simplest test
     '''
     rdf_org = _get_rdf(trigger=trigger)
+    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
+
     cor     = MassBiasCorrector(
-        rdf       = rdf_org, 
+        df        = df_org, 
+        is_mc     = is_mc,
         trigger   = trigger,
         nthreads  = 6, 
         ecorr_kind= kind)
@@ -206,14 +212,24 @@ def test_medium_input(trigger : str, sample : str):
     Medium input
     '''
     kind    = 'brem_track_2'
+    nproc   = 5 
 
     with RDFGetter.max_entries(100_000):
         rdf_org = _get_rdf(sample=sample, trigger=trigger)
 
+    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
+
+    try:
+        _ = get_client()
+    except Exception:
+        _ = Client(n_workers=nproc, threads_per_worker=1)
+
     cor     = MassBiasCorrector(
-        rdf       = rdf_org, 
+        df        = df_org, 
+        is_mc     = is_mc,
         trigger   = trigger,
-        nthreads  = 13, 
+        nthreads  = nproc, 
         ecorr_kind= kind)
 
     rdf_cor = cor.get_rdf()
