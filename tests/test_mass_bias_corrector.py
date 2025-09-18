@@ -227,12 +227,18 @@ def test_medium_input(sample : str, trigger : str):
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
 @pytest.mark.parametrize('nbrem'  , [0, 1, 2])
-def test_nbrem(nbrem : int, kind : str):
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_nbrem(nbrem : int, kind : str, trigger : str):
     '''
     Test splitting by brem
     '''
-    rdf_org = _get_rdf(nbrem=nbrem)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=kind)
+    rdf_org = _get_rdf(nbrem=nbrem, trigger=trigger)
+    cor     = MassBiasCorrector(
+        rdf       = rdf_org, 
+        trigger   = trigger,
+        nthreads  = Data.nthreads, 
+        ecorr_kind= kind)
+
     rdf_cor = cor.get_rdf()
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
