@@ -94,17 +94,15 @@ class MassBiasCorrector:
         return row
     # ------------------------------------------
     def _calculate_variables(self, row : pnd.Series) -> pnd.Series:
-        trow = TypedRow(row=row)
-
-        l1 = v4d(pt=trow.L1_PT, phi=trow.L1_PHI, eta=trow.L1_ETA, m=self._emass)
-        l2 = v4d(pt=trow.L2_PT, phi=trow.L2_PHI, eta=trow.L2_ETA, m=self._emass)
+        l1 = v4d(pt=row.L1_PT, phi=row.L1_PHI, eta=row.L1_ETA, m=self._emass)
+        l2 = v4d(pt=row.L2_PT, phi=row.L2_PHI, eta=row.L2_ETA, m=self._emass)
         project = info.project_from_trigger(trigger=self._trigger, lower_case=True)
 
         if   project == 'rk':
-            hd = v4d(pt=trow.H_PT  , phi=trow.H_PHI  , eta=trow.H_ETA  , m=self._kmass)
+            hd = v4d(pt=row.H_PT  , phi=row.H_PHI  , eta=row.H_ETA  , m=self._kmass)
         elif project == 'rkst':
-            h1 = v4d(pt=trow.H1_PT , phi=trow.H2_PHI , eta=trow.H2_ETA , m=self._kmass)
-            h2 = v4d(pt=trow.H2_PT , phi=trow.H2_PHI , eta=trow.H2_ETA , m=self._kmass)
+            h1 = v4d(pt=row.H1_PT , phi=row.H2_PHI , eta=row.H2_ETA , m=self._kmass)
+            h2 = v4d(pt=row.H2_PT , phi=row.H2_PHI , eta=row.H2_ETA , m=self._kmass)
             hd = h1 + h2
         else:
             raise ValueError(f'Invalid project: {project}')
@@ -169,15 +167,13 @@ class MassBiasCorrector:
         momentum : Brem corrected momentum
         particle : String with name of particle, e.g. B, Jpsi
         '''
-        trow = TypedRow(row=row)
+        pv_x = row[f'{particle}_BPVX']
+        pv_y = row[f'{particle}_BPVY']
+        pv_z = row[f'{particle}_BPVZ']
 
-        pv_x = trow[f'{particle}_BPVX']
-        pv_y = trow[f'{particle}_BPVY']
-        pv_z = trow[f'{particle}_BPVZ']
-
-        sv_x = trow[f'{particle}_END_VX']
-        sv_y = trow[f'{particle}_END_VY']
-        sv_z = trow[f'{particle}_END_VZ']
+        sv_x = row[f'{particle}_END_VX']
+        sv_y = row[f'{particle}_END_VY']
+        sv_z = row[f'{particle}_END_VZ']
 
         pv   = v3d(x=pv_x, y=pv_y, z=pv_z)
         sv   = v3d(x=sv_x, y=sv_y, z=sv_z)
@@ -192,14 +188,9 @@ class MassBiasCorrector:
         if not self._is_mc:
             return reco
 
-        trow    = TypedRow(row)
-        true    = trow[f'{particle}_TRUEM']
-        nbrem   = trow['L1_HASBREMADDED'] + trow['L2_HASBREMADDED']
-        block   = trow['block']
-
-        nbrem   = cast(int, nbrem)
-        block   = cast(int, block)
-
+        true    = row[f'{particle}_TRUEM']
+        nbrem   = row['L1_HASBREMADDED'] + row['L2_HASBREMADDED']
+        block   = row['block']
         smeared = self._qsq_corr.get_mass(nbrem=nbrem, block=block, jpsi_mass_reco=reco, jpsi_mass_true=true)
 
         return smeared
