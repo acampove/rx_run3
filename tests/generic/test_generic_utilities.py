@@ -1,10 +1,10 @@
 '''
 Module with tests for functions in generic/utilities.py
 '''
-import os
 import math
-from typing import Any
-from time   import sleep
+from typing  import Any
+from time    import sleep
+from pathlib import Path
 
 import dmu.generic.utilities as gut
 import pytest
