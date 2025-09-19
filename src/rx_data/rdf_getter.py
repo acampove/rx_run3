@@ -448,7 +448,7 @@ class RDFGetter:
             return {'' : cfg_path}
 
         log.debug('Splitting per file')
-        return RDFGetter.split_per_file(data=d_data, main=self._main_tree)
+        return self._split_per_file(data=d_data, main=self._main_tree)
     # ---------------------------------------------------
     def _get_samples(self) -> dict:
         '''
@@ -855,8 +855,8 @@ class RDFGetter:
         '''
         return self._s_ftree
     # ---------------------------------------------------
-    @staticmethod
-    def split_per_file(
+    def _split_per_file(
+        self,
         data       : dict,
         main       : str) -> dict[str,str]:
         '''
