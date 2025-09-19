@@ -312,7 +312,6 @@ def _get_input_rdf(path : str) -> RDF.RNode|None:
         return None
 
     if Data.nmax is not None:
-        log.warning(f'Limitting dataframe to {Data.nmax} entries')
         rdf=rdf.Range(Data.nmax)
 
     return rdf
@@ -401,6 +400,9 @@ def main():
     log.info('Processing paths')
     if Data.dry:
         log.warning('This is a dry run')
+
+    if isinstance(Data.nmax, int):
+        log.warning(f'Limitting dataframe to {Data.nmax} entries')
 
     for path in tqdm.tqdm(l_path, ascii=' -'):
         log.debug(f'{"":<4}{path}')
