@@ -128,7 +128,7 @@ class RDFGetter:
         self._set_logs()
         self._check_multithreading()
 
-        self._samples = self._get_yaml_paths()
+        self._samples = self._get_json_paths()
     # ---------------------------------------------------
     def _get_main_tree(self) -> str:
         if not hasattr(RDFGetter, '_main_tree'):
@@ -173,12 +173,12 @@ class RDFGetter:
         '''
         LogStore.set_level('rx_data:path_splitter', 30)
     # ---------------------------------------------------
-    def _get_yaml_paths(self) -> dict[str,str]:
+    def _get_json_paths(self) -> dict[str,str]:
         '''
         This function will return a dictionary with:
 
         key  : Name of sample, e.g. main, mva
-        value: Path to YAML file with the directory structure needed to make an RDataFrame
+        value: Path to JSON file with the directory structure needed to make an RDataFrame
         '''
         data_dir     = os.environ['ANADIR']
         ftree_wc     = f'{data_dir}/Data/{self._analysis}/*'
@@ -194,11 +194,11 @@ class RDFGetter:
         log.info(f'{"Friend":<20}{"Version":<20}')
         log.info(40 * '-')
         d_vers_dir   = { ftree_name : self._versioned_from_ftrees(ftree_dir)        for ftree_name, ftree_dir in d_ftree_dir.items() }
-        d_yaml_path  = { ftree_name : self._yaml_path_from_ftree(dir_path=vers_dir) for ftree_name,  vers_dir in d_vers_dir.items()  }
+        d_json_path  = { ftree_name : self._json_path_from_ftree(dir_path=vers_dir) for ftree_name,  vers_dir in d_vers_dir.items()  }
         log.info(40 * '-')
         log.info('')
 
-        return d_yaml_path
+        return d_json_path
     # ---------------------------------------------------
     def _versioned_from_ftrees(self, ftree_dir :  str) -> str:
         '''
@@ -219,7 +219,7 @@ class RDFGetter:
 
         return f'{ftree_dir}/{version}'
     # ---------------------------------------------------
-    def _yaml_path_from_ftree(self, dir_path : str) -> str:
+    def _json_path_from_ftree(self, dir_path : str) -> str:
         '''
         Takes path to directory with ROOT files associated to friend tree
         returns path to YAML file with correctly structured files
@@ -327,7 +327,7 @@ class RDFGetter:
     # ---------------------------------------------------
     def _get_section(
         self,
-        yaml_path : str,
+        json_path : str,
         ftree     : str) -> dict:
         '''
         This method should return the different sections (friend/main tree)
@@ -335,17 +335,16 @@ class RDFGetter:
 
         Parameters:
         --------------------
-        yaml_path : Path to YAML file specifying samples:trigger:files
+        json_path : Path to JSON file specifying samples:trigger:files
         ftree     : Friend tree name, e.g mva, main
         '''
         d_section = {'trees' : [self._tree_name]}
 
-        log.debug(f'Building section from: {yaml_path}')
-        with open(yaml_path, encoding='utf-8') as ifile:
-            d_data = yaml.load(ifile, Loader=yaml.CSafeLoader)
+        log.debug(f'Building section from: {json_path}')
 
+        d_data = gut.load_json(path=json_path)
         if d_data is None:
-            raise ValueError(f'Cannot load {yaml_path}')
+            raise ValueError(f'Cannot load {json_path}')
 
         l_path = []
         nopath = False
@@ -369,10 +368,10 @@ class RDFGetter:
 
             nsamp = len(l_path_sample)
             if nsamp == 0:
-                log.error(f'No paths found for {sample} in {yaml_path} and friend tree {ftree}')
+                log.error(f'No paths found for {sample} in {json_path} and friend tree {ftree}')
                 nopath = True
             else:
-                log.debug(f'Found {nsamp} paths for {sample} in {yaml_path}')
+                log.debug(f'Found {nsamp} paths for {sample} in {json_path}')
 
             l_path += l_path_sample
 
@@ -382,7 +381,7 @@ class RDFGetter:
         if nosamp:
             data = yaml.dump(d_data, sort_keys=False)
             log.error(data)
-            raise ValueError(f'Could not find any sample matching {self._sample} with friend tree {ftree} in {yaml_path}')
+            raise ValueError(f'Could not find any sample matching {self._sample} with friend tree {ftree} in {json_path}')
 
         self._l_path      += l_path
         d_section['files'] = l_path
@@ -460,10 +459,10 @@ class RDFGetter:
         d_data = {'samples' : {}, 'friends' : {}}
 
         log.info('Adding samples')
-        for ftree, yaml_path in self._samples.items():
-            log.debug(f'{"":<4}{ftree:<15}{yaml_path}')
+        for ftree, json_path in self._samples.items():
+            log.debug(f'{"":<4}{ftree:<15}{json_path}')
 
-            d_section = self._get_section(yaml_path=yaml_path, ftree=ftree)
+            d_section = self._get_section(json_path=json_path, ftree=ftree)
             if ftree == self._main_tree:
                 d_data['samples'][ftree] = d_section
             else:
