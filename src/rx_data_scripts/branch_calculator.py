@@ -2,10 +2,6 @@
 Script used to create small trees with extra branches from input trees
 '''
 
-# pylint: disable=line-too-long, import-error
-# pylint: disable=invalid-name
-# pylint: disable=broad-exception-caught
-
 import os
 import glob
 import fnmatch
@@ -14,7 +10,7 @@ from typing      import Union
 
 import tqdm
 import dmu.generic.utilities as gut
-from ROOT                   import RDataFrame, TFileMerger, RDF
+from ROOT                   import RDataFrame, TFileMerger, RDF # type: ignore
 from dmu.logging.log_store  import LogStore
 from dmu.generic            import version_management as vman
 
