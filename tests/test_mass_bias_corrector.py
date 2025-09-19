@@ -120,18 +120,16 @@ def _get_rdf(
     Return ROOT dataframe needed for test
     '''
     project = info.project_from_trigger(trigger=trigger, lower_case=True)
-
-    if     is_mc and sample is None and project == 'rkstar':
-        sample = 'Bd_Kstee_eq_btosllball05_DPC'
-
-    if     is_mc and sample is None and project == 'rk':
-        sample = 'Bu_Kee_eq_btosllball05_DPC'
-
-    if not is_mc and sample is None:
+    if isinstance(sample, str):
+        pass
+    elif not is_mc:
         sample = 'DATA_24_*'
-
-    if sample is None:
-        raise ValueError('Sample not defined')
+    elif   is_mc and project == 'rkst':
+        sample = 'Bd_Kstee_eq_btosllball05_DPC'
+    elif   is_mc and project == 'rk':
+        sample = 'Bu_Kee_eq_btosllball05_DPC'
+    else:
+        raise ValueError(f'Invalid project: {project}')
 
     with RDFGetter.exclude_friends(names=['brem_track_2']):
         gtr = RDFGetter(sample=sample, trigger=trigger)
