@@ -150,7 +150,9 @@ def _get_rdf(
     # We run over 1000 entries to speed up tests
     # Those are from pre-UT data, which the block
     # requirement removes. Need to drop that requirement
-    del d_sel['block']
+    if not is_mc:
+        del d_sel['block']
+
     for name, cut in d_sel.items():
         log.debug(f'{name:<20}{cut}')
         rdf = rdf.Filter(cut, name)
