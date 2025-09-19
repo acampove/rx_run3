@@ -53,7 +53,7 @@ def _parse_args() -> None:
     '''
     parser = argparse.ArgumentParser(description='Script used to create ROOT files with trees with extra branches by picking up inputs from directory and patitioning them')
     parser.add_argument('-k', '--kind', type=str, help='Kind of branch to create', choices=Data.l_kind, required=True)
-    parser.add_argument('-P', '--proj', type=str, help='Project'                 , choices=['rx', 'nopid'], required=True)
+    parser.add_argument('-P', '--proj', type=str, help='Project'                 , choices=['rk', 'rkst', 'rk_nopid', 'rkst_nopid'], required=True)
     parser.add_argument('-v', '--vers', type=str, help='Version of outputs', required=True)
     parser.add_argument('-w', '--wc'  , type=str, help='Wildcard, if passed will be used to match paths')
     parser.add_argument('-n', '--nmax', type=int, help='If used, limit number of entries to process to this value')
