@@ -29,7 +29,7 @@ class Data:
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script meant to steer calculation of friend trees in HTCondor at IHEP')
-    parser.add_argument('-c', '--config' , type=str , help='Name of config file, e.g. nopid', required=True)
+    parser.add_argument('-c', '--config' , type=str , help='Name of config file, e.g. rk_nopid', required=True)
     parser.add_argument('-e', '--exclude', nargs='+', help='List of names of friend trees to exclude', default=[])
     parser.add_argument('-o', '--only'   , type=str , help='Name the the only friend tree')
     parser.add_argument('-w', '--wcard'  , type=str , help='Wildcard to match files', default=Data.wildcard)
@@ -48,7 +48,7 @@ def _initialize() -> None:
     '''
     Initializes the configuration, etc
     '''
-    Data.cfg = gut.load_conf(package='rx_data_data', fpath='friend_trees/nopid.yaml')
+    Data.cfg = gut.load_conf(package='rx_data_data', fpath=f'friend_trees/{Data.cfg_name}.yaml')
 
     os.makedirs(Data.tmp_path, exist_ok=True)
     LogStore.set_level('rx_data:make_friend_trees', Data.log_lvl)
