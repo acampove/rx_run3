@@ -265,6 +265,7 @@ def timeit(f):
 def dump_json(
     data      : dict|str|list|set|tuple|DictConfig|ListConfig,
     path      : str|Path,
+    exists_ok : bool = False,
     sort_keys : bool = False) -> None:
     '''
     Saves data as JSON or YAML, depending on the extension, supported .json, .yaml, .yml
@@ -272,6 +273,7 @@ def dump_json(
     Parameters
     data     : dictionary, list, etc
     path     : Path to output file where to save it
+    exists_ok: If False (default) will raise RunTimeError if file already found
     sort_keys: Will set sort_keys argument of json.dump function
     '''
     if isinstance(data, (DictConfig, ListConfig)):
@@ -281,6 +283,9 @@ def dump_json(
 
     if isinstance(path, str):
         path = Path(path)
+
+    if path.exists() and not exists_ok:
+        raise FileExistsError(f'Path {path} already found')
 
     path.parent.mkdir(exist_ok=True, parents=True)
 
