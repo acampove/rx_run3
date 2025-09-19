@@ -1120,29 +1120,4 @@ class RDFGetter:
                 cls._only_friends = old_val
 
         return _context()
-    # ----------------------
-    @classmethod
-    def identifier(cls, value : str):
-        '''
-        Parameters
-        -------------
-        value: String identifying the process (not instance) using this
-               class. If this manager is not called, the identifier's value 
-               will be the string 'none'
-
-        Returns
-        -------------
-        Context manager
-        '''
-        old_val = cls._identifier
-        cls._identifier = value
-
-        @contextmanager
-        def _context():
-            try:
-                yield
-            finally:
-                cls._identifier = old_val
-
-        return _context()
 # ---------------------------------------------------
