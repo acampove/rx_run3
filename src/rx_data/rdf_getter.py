@@ -4,11 +4,10 @@ Module holding RDFGetter class
 from contextlib import contextmanager
 import os
 import glob
-import json
 import copy
 import pprint
 import fnmatch
-from typing              import Any, overload, Literal
+from typing              import Any, Final, overload, Literal
 
 import yaml
 import dmu.generic.utilities as gut
