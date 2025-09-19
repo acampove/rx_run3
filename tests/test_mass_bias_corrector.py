@@ -334,3 +334,35 @@ def test_add_smearing(kind : str, is_mc : bool):
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor, 'Smeared' : rdf_smr}
     _compare_masses(d_rdf, f'add_smearing_{sample}', kind)
 #-----------------------------------------
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+@pytest.mark.parametrize('is_mc'  , [True, False])
+def test_dask(trigger : str, is_mc : bool):
+    '''
+    Test processing in parallel with Dask client
+    '''
+    kind    = 'brem_track_2'
+    nproc   = 4 
+
+    with RDFGetter.max_entries(10_000):
+        rdf_org = _get_rdf(is_mc=is_mc, trigger=trigger)
+
+    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
+
+    with Client(n_workers=nproc, threads_per_worker=1):
+        cor   = MassBiasCorrector(
+            df        = df_org, 
+            is_mc     = is_mc,
+            trigger   = trigger,
+            nthreads  = nproc, 
+            ecorr_kind= kind)
+
+        df_cor  = cor.get_df()
+
+    rdf_cor = RDF.FromPandas(df_cor)
+
+    _check_output_columns(rdf_cor)
+
+    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+    _compare_masses(d_rdf, f'dask_{is_mc}_{trigger}', kind)
+
