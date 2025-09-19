@@ -119,11 +119,11 @@ def _name_from_raw_name(name : str) -> str:
     return l_name[-1]
 # ------------------------------------------------
 def _check_branches(
-        rdf          : RDataFrame,
-        is_ee        : bool,
-        is_mc        : bool,
-        friends      : bool = True,
-        brem_track_2 : bool = True) -> None:
+    rdf          : RDataFrame,
+    is_ee        : bool,
+    is_mc        : bool,
+    friends      : bool = True,
+    brem_track_2 : bool = True) -> None:
 
     l_name = [ _name_from_raw_name(name=name) for name in rdf.GetColumnNames() ]
 
