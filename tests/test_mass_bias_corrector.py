@@ -205,7 +205,7 @@ def test_simple(kind : str, trigger : str):
     _check_output_columns(rdf_cor)
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, f'simple_{trigger}', kind)
+    _compare_masses(d_rdf, f'simple/{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('sample', [
@@ -243,7 +243,7 @@ def test_medium_input(trigger : str, sample : str):
     _check_output_columns(rdf_cor)
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, f'medium_{sample}_{trigger}', kind)
+    _compare_masses(d_rdf, f'medium_{sample}/{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
 @pytest.mark.parametrize('nbrem'  , [0, 1, 2])
@@ -268,7 +268,7 @@ def test_nbrem(nbrem : int, kind : str, trigger : str):
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
-    _compare_masses(d_rdf, f'nbrem_{nbrem:03}_{trigger}', kind)
+    _compare_masses(d_rdf, f'nbrem_{nbrem:03}/{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
 @pytest.mark.parametrize('is_inner', [True, False])
@@ -293,7 +293,7 @@ def test_isinner(is_inner : bool, kind : str, trigger : str):
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
-    _compare_masses(d_rdf, f'is_inner_{is_inner}_{trigger}', kind)
+    _compare_masses(d_rdf, f'is_inner_{is_inner}/{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('kind', ['brem_track_2'])
@@ -325,7 +325,7 @@ def test_nbrem_npvs(
     rdf_cor = RDF.FromPandas(df_cor)
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
-    _compare_masses(d_rdf, f'brem_npvs_{nbrem}_{npvs}_{trigger}', kind)
+    _compare_masses(d_rdf, f'brem_npvs_{nbrem}_{npvs}/{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
@@ -435,5 +435,5 @@ def test_dask(trigger : str, is_mc : bool):
     _check_output_columns(rdf_cor)
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, f'dask_{is_mc}_{trigger}', kind)
+    _compare_masses(d_rdf, f'dask_{is_mc}/{trigger}', kind)
 
