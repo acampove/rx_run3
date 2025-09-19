@@ -69,9 +69,11 @@ class RDFGetter:
         trigger : str,
         tree    : str = 'DecayTree'):
         '''
-        Sample: Sample's nickname, e.g. DATA_24_MagDown_24c2
-        Trigger: HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA
-        Tree: E.g. DecayTree or MCDecayTree, default DecayTree
+        Parameters
+        ----------------
+        sample : Sample's nickname, e.g. DATA_24_MagDown_24c2
+        trigger: HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA
+        tree   : E.g. DecayTree or MCDecayTree, default DecayTree
         '''
         os.makedirs(RDFGetter._cache_dir, exist_ok=True)
 
