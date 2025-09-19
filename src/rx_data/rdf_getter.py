@@ -232,7 +232,7 @@ class RDFGetter:
         spl  = PathSplitter(paths=l_root_path)
         data = spl.split(nested=True)
 
-        out_path = RDFGetter.get_tmp_path(identifier='tree_structure', data=data)
+        out_path = self._get_tmp_path(identifier='tree_structure', data=data)
         log.debug(f'Saving friend tree structure to {out_path}')
         gut.dump_json(data, out_path)
 
@@ -441,7 +441,7 @@ class RDFGetter:
         log.debug(f'This instance/process ID is: {RDFGetter._identifier}')
         if not per_file:
             log.debug('Not splitting per file')
-            cfg_path = RDFGetter.get_tmp_path(identifier='rdframe_config', data=d_data)
+            cfg_path = self._get_tmp_path(identifier='rdframe_config', data=d_data)
             log.debug(f'Saving config path to {cfg_path}')
             gut.dump_json(path=cfg_path, data=d_data, sort_keys=True)
 
@@ -882,7 +882,7 @@ class RDFGetter:
         d_config   = {}
         for ifile in range(nfiles):
             data_copy, fpath = RDFGetter._remove_all_but(data, ifile, main)
-            config_path      = RDFGetter.get_tmp_path(identifier='rdframe_config', data=data_copy)
+            config_path      = self._get_tmp_path(identifier='rdframe_config', data=data_copy)
             log.debug(f'Saving per-file config path to {config_path}')
             gut.dump_json(data_copy, config_path)
             d_config[fpath]  = config_path 
@@ -912,8 +912,7 @@ class RDFGetter:
 
         return datac, fpath_main
     # ---------------------------------------------------
-    @staticmethod
-    def get_tmp_path(identifier : str, data : dict) -> str:
+    def _get_tmp_path(self, identifier : str, data : dict) -> str:
         '''
         This method creates paths to temporary config files in /tmp.
         Needed to configure creation of dataframes
