@@ -75,6 +75,8 @@ class RDFGetter:
         '''
         os.makedirs(RDFGetter._cache_dir, exist_ok=True)
 
+        log.debug(f'Process identifier: {RDFGetter._identifier}')
+
         self._sample          = sample
         self._trigger         = trigger
         self._analysis        = info.project_from_trigger(trigger=trigger, lower_case=True) 
