@@ -136,7 +136,11 @@ def _get_rdf(
         rdf = gtr.get_rdf(per_file=False)
         rdf = rdf.Define('nbrem', 'int(L1_HASBREMADDED) + int(L2_HASBREMADDED)')
 
-    d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
+    d_sel = sel.selection(
+        trigger = trigger, 
+        q2bin   = 'jpsi', 
+        smeared = False,
+        process = sample)
     d_sel['mass'] = 'B_const_mass_M > 5160'
     d_sel['bdt']  = '(1)'
 
