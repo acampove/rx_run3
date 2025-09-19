@@ -227,20 +227,16 @@ def test_medium_input(trigger : str, sample : str):
     df_org  = ut.df_from_rdf(rdf=rdf_org)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
-    try:
-        _ = get_client()
-    except Exception:
-        if nproc > 1:
-            _ = Client(n_workers=nproc, threads_per_worker=1)
+    with Client(n_workers=nproc):
+        cor   = MassBiasCorrector(
+            df        = df_org, 
+            is_mc     = is_mc,
+            trigger   = trigger,
+            nthreads  = nproc, 
+            ecorr_kind= kind)
 
-    cor   = MassBiasCorrector(
-        df        = df_org, 
-        is_mc     = is_mc,
-        trigger   = trigger,
-        nthreads  = nproc, 
-        ecorr_kind= kind)
+        df_cor  = cor.get_df()
 
-    df_cor  = cor.get_df()
     rdf_cor = RDF.FromPandas(df_cor)
 
     _check_output_columns(rdf_cor)
