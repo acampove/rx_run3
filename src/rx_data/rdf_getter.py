@@ -926,9 +926,12 @@ class RDFGetter:
         ----------------
         Path to JSON file that will be used to dump configuration
         '''
-        val         = hashing.hash_object(obj=data)
-        val         = val[:10]
-        tmp_path    = f'{RDFGetter._cache_dir}/{identifier}_{RDFGetter._identifier}_{val}.json'
+        val      = hashing.hash_object(obj=data)
+        val      = val[:10]
+
+        # Id of process plus instance of class
+        proc_id  = self._identifier + id(self)
+        tmp_path = f'{RDFGetter._cache_dir}/{identifier}_{proc_id}_{val}.json'
 
         log.debug(f'Using config JSON: {tmp_path}')
 
