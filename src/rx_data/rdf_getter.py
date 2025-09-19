@@ -7,6 +7,7 @@ import glob
 import copy
 import pprint
 import fnmatch
+import secrets
 from typing              import Any, Final, overload, Literal
 
 import yaml
@@ -81,12 +82,13 @@ class RDFGetter:
 
         self._sample          = sample
         self._trigger         = trigger
+        self._tree_name       = tree
+
         self._analysis        = info.project_from_trigger(trigger=trigger, lower_case=True) 
         self._samples         : dict[str,str]
         self._l_columns       : list[str]
         self._s_ftree         : set[str] # list of friend trees actually used
 
-        self._tree_name       = tree
         self._cfg : DictConfig= self._load_config()
         self._main_tree       = self._get_main_tree()
         self._l_electron_only = self._cfg['trees']['electron_only']
@@ -931,8 +933,8 @@ class RDFGetter:
         val      = hashing.hash_object(obj=data)
         val      = val[:10]
 
-        # Id of process plus instance of class
-        proc_id  = self._identifier + id(self)
+        # Id of process plus random number 
+        proc_id  = self._identifier + secrets.randbelow(1000_000_000) 
         tmp_path = f'{RDFGetter._cache_dir}/{identifier}_{proc_id}_{val}.json'
 
         log.debug(f'Using config JSON: {tmp_path}')
