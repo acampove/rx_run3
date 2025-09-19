@@ -139,7 +139,7 @@ such that the code will pick it up. `vx` represents a version of the ntuples (e.
 pick up the latest. Then run:
 
 ```bash
-branch_calculator -k swp_jpsi_misid -p  0 40 -b -v v1 -s 10000
+branch_calculator -k swp_jpsi_misid -p  0 40 -b -v v1 -s 10000 -P rk
 ```
 
 which will:
@@ -173,8 +173,8 @@ These trees take time to calculate, therefore one has to send jobs to the cluste
 (LXPLUS HTCondor is not supported). For that do:
 
 ```bash
-make_friend_trees -c nopid -e mva
-make_friend_trees -c nopid -o mva 
+make_friend_trees -c rk_nopid -e mva
+make_friend_trees -c rk_nopid -o mva 
 ```
 
 Where:
