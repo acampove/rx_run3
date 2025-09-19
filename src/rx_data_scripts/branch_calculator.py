@@ -230,10 +230,6 @@ def _process_rdf(
     msc = MisCalculator(rdf=rdf, trigger=trigger)
     rdf = msc.get_rdf()
 
-    # TODO: Remove the SS condition for the SWPCalculator
-    # When the data ntuples with fixed descriptor be ready
-    is_ss = 'SameSign' in trigger
-
     if   Data.kind == 'hop':
         obj = HOPCalculator(rdf=rdf, trigger=trigger)
         rdf = obj.get_rdf(preffix=Data.kind)
@@ -269,6 +265,9 @@ def _process_rdf(
         raise ValueError(f'Invalid kind: {Data.kind}')
 
     return rdf
+    # TODO: Remove the SS condition for the SWPCalculator
+    # When the data ntuples with fixed descriptor be ready
+    is_ss = 'SameSign' in trigger
 # ---------------------------------
 def _split_rdf(rdf : RDataFrame) -> list[RDataFrame]:
     nentries = rdf.Count().GetValue()
