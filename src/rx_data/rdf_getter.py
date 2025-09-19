@@ -708,24 +708,6 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    @staticmethod
-    def add_truem(rdf : RDF.RNode, cfg : DictConfig) -> RDF.RNode:
-        '''
-        Parameters
-        -------------------
-        rdf: ROOT dataframe associated to MC sample
-        cfg: Config with the definitions of branches
-
-        Returns 
-        -------------------
-        Data frame after adding TRUEM branches missing from the AP
-        '''
-        log.info('Adding TRUEM branches')
-
-        rdf = rdf.Define('B_TRUEM', cfg.TRUEM.Bu)
-
-        return rdf
-    # ---------------------------------------------------
     def _rdf_from_conf(self, conf_path : str) -> RDF.RNode:
         '''
         Parameters
@@ -775,6 +757,40 @@ class RDFGetter:
         log.warning(f'Picking up the first {nent} entries')
 
         return rdf
+    # ---------------------------------------------------
+    def _split_per_file(
+        self,
+        data       : dict,
+        main       : str) -> dict[str,str]:
+        '''
+        Parameters
+        --------------------
+        data      : Dictionary representing _spec_ needed to build ROOT dataframe with friend trees
+        main      : Name of the main category, e.g. not the friend trees.
+
+        Returns
+        --------------------
+        Dictionary with the:
+
+        key  : As the ROOT file path in the main category
+        Value: The path to the JSON config file
+        '''
+        try:
+            l_file = data['samples'][main]['files']
+        except KeyError as exc:
+            pprint.pprint(data)
+            raise KeyError('Cannot access list of files from JSON config needed by FromSpec') from exc
+
+        nfiles     = len(l_file)
+        d_config   = {}
+        for ifile in range(nfiles):
+            data_copy, fpath = RDFGetter._remove_all_but(data, ifile, main)
+            config_path      = self._get_tmp_path(identifier='rdframe_config', data=data_copy)
+            log.debug(f'Saving per-file config path to {config_path}')
+            gut.dump_json(data_copy, config_path)
+            d_config[fpath]  = config_path 
+
+        return d_config
     # ----------------------
     @overload
     def get_rdf(self, per_file : Literal[False]) -> RDF.RNode:...
@@ -859,39 +875,23 @@ class RDFGetter:
         '''
         return self._s_ftree
     # ---------------------------------------------------
-    def _split_per_file(
-        self,
-        data       : dict,
-        main       : str) -> dict[str,str]:
+    @staticmethod
+    def add_truem(rdf : RDF.RNode, cfg : DictConfig) -> RDF.RNode:
         '''
         Parameters
-        --------------------
-        data      : Dictionary representing _spec_ needed to build ROOT dataframe with friend trees
-        main      : Name of the main category, e.g. not the friend trees.
+        -------------------
+        rdf: ROOT dataframe associated to MC sample
+        cfg: Config with the definitions of branches
 
-        Returns
-        --------------------
-        Dictionary with the:
-
-        key  : As the ROOT file path in the main category
-        Value: The path to the JSON config file
+        Returns 
+        -------------------
+        Data frame after adding TRUEM branches missing from the AP
         '''
-        try:
-            l_file = data['samples'][main]['files']
-        except KeyError as exc:
-            pprint.pprint(data)
-            raise KeyError('Cannot access list of files from JSON config needed by FromSpec') from exc
+        log.info('Adding TRUEM branches')
 
-        nfiles     = len(l_file)
-        d_config   = {}
-        for ifile in range(nfiles):
-            data_copy, fpath = RDFGetter._remove_all_but(data, ifile, main)
-            config_path      = self._get_tmp_path(identifier='rdframe_config', data=data_copy)
-            log.debug(f'Saving per-file config path to {config_path}')
-            gut.dump_json(data_copy, config_path)
-            d_config[fpath]  = config_path 
+        rdf = rdf.Define('B_TRUEM', cfg.TRUEM.Bu)
 
-        return d_config
+        return rdf
     # ---------------------------------------------------
     @staticmethod
     def _remove_all_but(data : dict, ifile : int, main : str) -> tuple[dict,str]:
