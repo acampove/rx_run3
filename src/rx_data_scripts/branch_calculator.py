@@ -242,8 +242,17 @@ def _process_rdf(
         if skip_correction:
             log.warning('Turning off ecalo_bias correction for MC sample')
 
-        cor = MassBiasCorrector(rdf=rdf, skip_correction=skip_correction, ecorr_kind=Data.kind)
-        rdf = cor.get_rdf(suffix=Data.kind)
+
+        df   = utilities.df_from_rdf(rdf=rdf)
+        is_mc= utilities.rdf_is_mc(rdf=rdf)
+        cor  = MassBiasCorrector(
+            df             = df, 
+            is_mc          = is_mc,
+            skip_correction= skip_correction, 
+            trigger        = trigger,
+            ecorr_kind     = Data.kind)
+        df  = cor.get_df(suffix=Data.kind)
+        rdf = RDF.FromPandas(df)
     elif Data.kind == 'swp_jpsi_misid':
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' :  13, 'L2' :  13}, d_had={'H' :  13})
         rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
