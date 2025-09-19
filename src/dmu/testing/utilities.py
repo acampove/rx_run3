@@ -8,7 +8,7 @@ from typing              import Union
 from dataclasses         import dataclass
 from importlib.resources import files
 
-from ROOT import RDF, TFile, RDataFrame
+from ROOT import RDF, TFile, RDataFrame # type: ignore
 
 import uproot
 import joblib
@@ -63,11 +63,11 @@ def _add_nans(df : pnd.DataFrame, columns : list[str]) -> pnd.DataFrame:
     return df
 # -------------------------------
 def get_rdf(
-        kind              : Union[str,None] = None,
-        repeated          : bool        = False,
-        nentries          : int         = 3_000,
-        use_preffix       : bool        = False,
-        columns_with_nans : list[str]   = None):
+        kind              : str | None      = None,
+        repeated          : bool            = False,
+        nentries          : int             = 3_000,
+        use_preffix       : bool            = False,
+        columns_with_nans : list[str]|None  = None):
     '''
     Return ROOT dataframe with toy data
 
@@ -212,6 +212,7 @@ def build_friend_structure(file_name : str, nentries : int) -> None:
     nentries (int) : Number of entries in file
     '''
     cfg_path = files('dmu_data').joinpath(f'rfile/{file_name}')
+    cfg_path = str(cfg_path)
     with open(cfg_path, encoding='utf=8') as ifile:
         data = yaml.safe_load(ifile)
 
