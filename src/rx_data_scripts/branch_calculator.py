@@ -262,9 +262,42 @@ def _process_rdf(
         raise ValueError(f'Invalid kind: {Data.kind}')
 
     return rdf
+# ----------------------
+def _get_swap_rdf(rdf : RDF.RNode, trigger : str) -> RDF.RNode:
+    '''
+    Parameters
+    -------------
+    rdf    : ROOT dataframe
+    trigger: HLT2 trigger
+
+    Returns
+    -------------
+    ROOT dataframe with the swap masses
+    '''
     # TODO: Remove the SS condition for the SWPCalculator
     # When the data ntuples with fixed descriptor be ready
-    is_ss = 'SameSign' in trigger
+    is_ss   = 'SameSign' in trigger
+    lep_id  = 11 if info.is_ee(trigger=trigger) else 13
+    project = info.project_from_trigger(trigger=trigger)
+
+    # Pion is the one that gets misidentified as electron
+    # pi(-> e/mu) + e/mu combinations
+    kaon_name = 'H' if project == 'rk' else 'H2'
+    if Data.kind == 'swp_jpsi_misid':
+        obj = SWPCalculator(rdf=rdf, d_lep={'L1' : lep_id, 'L2' : lep_id}, d_had={kaon_name : lep_id})
+        rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
+
+        return rdf
+
+    # These are Kpi combinations
+    kaon_name = 'H' if project == 'rk' else 'H1'
+    if Data.kind == 'swp_cascade':
+        obj = SWPCalculator(rdf=rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={kaon_name : 321})
+        rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
+
+        return rdf
+
+    raise ValueError(f'Invalid kind: {Data.kind}')
 # ---------------------------------
 def _split_rdf(rdf : RDataFrame) -> list[RDataFrame]:
     nentries = rdf.Count().GetValue()
