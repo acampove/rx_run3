@@ -7,7 +7,6 @@ import glob
 import json
 import copy
 import pprint
-import hashlib
 import fnmatch
 from typing              import Any, overload, Literal
 
@@ -231,10 +230,8 @@ class RDFGetter:
 
         spl  = PathSplitter(paths=l_root_path)
         data = spl.split(nested=True)
-        val  = hashing.hash_object(data)
-        val  = val[:10] # Ten characters are long enough for a hash
 
-        out_path = f'{RDFGetter._cache_dir}/{val}_{RDFGetter._identifier}.yaml'
+        out_path = RDFGetter.get_tmp_path(identifier='tree_structure', data=data)
         log.debug(f'Saving friend tree structure to {out_path}')
         gut.dump_json(data, out_path)
 
@@ -441,16 +438,16 @@ class RDFGetter:
         '''
         d_data = self._get_samples()
         log.debug(f'This instance/process ID is: {RDFGetter._identifier}')
-
         if not per_file:
             log.debug('Not splitting per file')
-            cfg_path = RDFGetter.get_tmp_path(identifier=f'full_sample_{RDFGetter._identifier}', data=d_data)
+            cfg_path = RDFGetter.get_tmp_path(identifier='rdframe_config', data=d_data)
+            log.debug(f'Saving config path to {cfg_path}')
             gut.dump_json(path=cfg_path, data=d_data, sort_keys=True)
 
             return {'' : cfg_path}
 
         log.debug('Splitting per file')
-        return RDFGetter.split_per_file(data=d_data, main=self._main_tree, identifier=RDFGetter._identifier)
+        return RDFGetter.split_per_file(data=d_data, main=self._main_tree)
     # ---------------------------------------------------
     def _get_samples(self) -> dict:
         '''
@@ -860,14 +857,12 @@ class RDFGetter:
     @staticmethod
     def split_per_file(
         data       : dict,
-        main       : str,
-        identifier : str = '') -> dict[str,str]:
+        main       : str) -> dict[str,str]:
         '''
         Parameters
         --------------------
         data      : Dictionary representing _spec_ needed to build ROOT dataframe with friend trees
         main      : Name of the main category, e.g. not the friend trees.
-        identifier: Can be used to identify this set of config files.
 
         Returns
         --------------------
@@ -886,9 +881,10 @@ class RDFGetter:
         d_config   = {}
         for ifile in range(nfiles):
             data_copy, fpath = RDFGetter._remove_all_but(data, ifile, main)
-            cpath            = RDFGetter.get_tmp_path(identifier=f'{identifier}_{ifile:03}', data=data_copy)
-            gut.dump_json(data_copy, cpath)
-            d_config[fpath]  = cpath
+            config_path      = RDFGetter.get_tmp_path(identifier='rdframe_config', data=data_copy)
+            log.debug(f'Saving per-file config path to {config_path}')
+            gut.dump_json(data_copy, config_path)
+            d_config[fpath]  = config_path 
 
         return d_config
     # ---------------------------------------------------
@@ -930,14 +926,9 @@ class RDFGetter:
         ----------------
         Path to JSON file that will be used to dump configuration
         '''
-        samples_str = json.dumps(data, sort_keys=True)
-        identifier  = f'{samples_str}.{identifier}'
-
-        bidentifier = identifier.encode()
-        hsh         = hashlib.sha256(bidentifier)
-        hsh         = hsh.hexdigest()
-        hsh         = hsh[:10]
-        tmp_path    = f'{RDFGetter._cache_dir}/config_{hsh}.json'
+        val         = hashing.hash_object(obj=data)
+        val         = val[:10]
+        tmp_path    = f'{RDFGetter._cache_dir}/{identifier}_{RDFGetter._identifier}_{val}.json'
 
         log.debug(f'Using config JSON: {tmp_path}')
 
