@@ -33,22 +33,29 @@ def test_timeit():
     fun()
 # -------------------------
 @pytest.mark.parametrize('ext', ['json', 'yaml'])
-def test_dump_json(ext : str):
+def test_dump_json(ext : str, tmp_path : Path):
     '''
     Tests dump_json
     '''
+    this_path = tmp_path/'dump_json'
+    this_path.mkdir(parents=True, exist_ok=True)
+
     l_data = [1,2,3,4]
     d_data = {1 : 'a', 'b' : 2}
-    user   = os.environ['USER']
 
-    gut.dump_json(l_data, f'/tmp/{user}/tests/dmu/generic/list.{ext}')
-    gut.dump_json(d_data, f'/tmp/{user}/tests/dmu/generic/dict.{ext}')
+    gut.dump_json(l_data, this_path/f'list.{ext}')
+    gut.dump_json(d_data, this_path/f'dict.{ext}')
 
     oc_l_data = OmegaConf.create(l_data)
     oc_d_data = OmegaConf.create(d_data)
 
-    gut.dump_json(oc_l_data, f'/tmp/{user}/tests/dmu/generic/oc_list.{ext}')
-    gut.dump_json(oc_d_data, f'/tmp/{user}/tests/dmu/generic/od_dict.{ext}')
+    gut.dump_json(oc_l_data, this_path/f'oc_list.{ext}')
+    gut.dump_json(oc_d_data, this_path/f'od_dict.{ext}')
+
+    with pytest.raises(FileExistsError):
+        gut.dump_json(oc_l_data, this_path/f'oc_list.{ext}')
+
+    gut.dump_json(oc_l_data, this_path/f'oc_list.{ext}', exists_ok=True)
 # -------------------------
 @pytest.mark.parametrize('ext', ['json', 'yaml'])
 def test_load_json(ext : str):
