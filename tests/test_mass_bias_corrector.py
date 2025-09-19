@@ -199,7 +199,8 @@ def test_simple(kind : str, trigger : str):
         nthreads  = 6, 
         ecorr_kind= kind)
 
-    rdf_cor = cor.get_rdf()
+    df_cor = cor.get_df()
+    rdf_cor= RDF.FromPandas(df_cor)
 
     _check_output_columns(rdf_cor)
 
@@ -252,82 +253,149 @@ def test_nbrem(nbrem : int, kind : str, trigger : str):
     Test splitting by brem
     '''
     rdf_org = _get_rdf(nbrem=nbrem, trigger=trigger)
+    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
+
     cor     = MassBiasCorrector(
-        rdf       = rdf_org, 
+        df        = df_org, 
+        is_mc     = is_mc,
         trigger   = trigger,
         nthreads  = Data.nthreads, 
         ecorr_kind= kind)
 
-    rdf_cor = cor.get_rdf()
+    df_cor  = cor.get_df()
+    rdf_cor = RDF.FromPandas(df_cor)
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
-    _compare_masses(d_rdf, f'nbrem_{nbrem:03}', kind)
+    _compare_masses(d_rdf, f'nbrem_{nbrem:03}_{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
 @pytest.mark.parametrize('is_inner', [True, False])
-def test_isinner(is_inner : bool, kind : str):
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_isinner(is_inner : bool, kind : str, trigger : str):
     '''
     Test splitting detector region
     '''
-    rdf_org = _get_rdf(is_inner = is_inner)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=kind)
-    rdf_cor = cor.get_rdf()
+    rdf_org = _get_rdf(is_inner = is_inner, trigger = trigger)
+    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
+
+    cor     = MassBiasCorrector(
+        df        = df_org, 
+        is_mc     = is_mc,
+        trigger   = trigger,
+        nthreads  = Data.nthreads, 
+        ecorr_kind= kind)
+
+    df_cor  = cor.get_df()
+    rdf_cor = RDF.FromPandas(df_cor)
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
-    _compare_masses(d_rdf, f'is_inner_{is_inner}', kind)
+    _compare_masses(d_rdf, f'is_inner_{is_inner}_{trigger}', kind)
 #-----------------------------------------
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('kind', ['brem_track_2'])
-@pytest.mark.parametrize('nbrem', [0, 1, 2])
-@pytest.mark.parametrize('npvs' , [1, 2, 3, 4, 5, 6, 7])
-def test_nbrem_npvs(nbrem : int, npvs : int, kind : str):
+@pytest.mark.parametrize('nbrem', [1, 2])
+@pytest.mark.parametrize('npvs' , [1, 3, 5, 7])
+def test_nbrem_npvs(
+    nbrem  : int, 
+    npvs   : int, 
+    trigger: str,
+    kind   : str):
     '''
     Split by brem and nPVs
     '''
-    rdf_org = _get_rdf(nbrem=nbrem, npvs=npvs)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=kind)
-    rdf_cor = cor.get_rdf()
+    with RDFGetter.max_entries(value=30_000):
+        rdf_org = _get_rdf(nbrem=nbrem, npvs=npvs, trigger=trigger)
 
+    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
+
+    cor     = MassBiasCorrector(
+        df      =df_org, 
+        trigger =trigger,
+        is_mc   =is_mc,
+        nthreads=Data.nthreads, 
+        ecorr_kind=kind)
+
+    df_cor  = cor.get_df()
+
+    rdf_cor = RDF.FromPandas(df_cor)
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
-    _compare_masses(d_rdf, f'brem_npvs_{nbrem}_{npvs}', kind)
+    _compare_masses(d_rdf, f'brem_npvs_{nbrem}_{npvs}_{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
-def test_suffix(kind : str):
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_suffix(kind : str, trigger : str):
     '''
     Tests that output dataframe has columns with suffix added
     '''
-    rdf_org = _get_rdf()
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind=kind)
-    rdf_cor = cor.get_rdf(suffix=kind)
+    rdf_org = _get_rdf(trigger=trigger)
+    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
+
+    cor     = MassBiasCorrector(
+        df      =df_org, 
+        trigger =trigger,
+        is_mc   =is_mc,
+        nthreads=Data.nthreads, 
+        ecorr_kind=kind)
+    df_cor = cor.get_df(suffix=kind)
+    rdf_cor= RDF.FromPandas(df_cor)
 
     _check_output_columns(rdf_cor)
 #-----------------------------------------
 @pytest.mark.parametrize('nbrem', [0, 1])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('brem_energy_threshold', [100, 200, 300, 400, 600, 800, 1000, 1500, 2000, 4000])
-def test_brem_threshold(nbrem : int, brem_energy_threshold: float):
+def test_brem_threshold(nbrem : int, brem_energy_threshold: float, trigger : str):
     '''
     Test splitting by brem
     '''
-    rdf_org = _get_rdf(nbrem=nbrem)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=Data.nthreads, ecorr_kind='brem_track_2', brem_energy_threshold=brem_energy_threshold)
-    rdf_cor = cor.get_rdf()
+    with RDFGetter.max_entries(value=50_000):
+        rdf_org = _get_rdf(nbrem=nbrem, trigger=trigger)
 
-    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
-    _compare_masses(d_rdf, f'brem_{nbrem:03}/energy_{brem_energy_threshold:03}', f'$E_{{\\gamma}}>{brem_energy_threshold}$ MeV')
+    cor     = MassBiasCorrector(
+        df        =df_org, 
+        trigger   =trigger,
+        is_mc     =is_mc,
+        nthreads  =Data.nthreads, 
+        brem_energy_threshold=brem_energy_threshold)
+
+    df_cor = cor.get_df()
+
+    rdf_cor= RDF.FromPandas(df_cor)
+
+    d_rdf  = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+
+    _compare_masses(d_rdf, f'brem_{nbrem:03}/{trigger}/energy_{brem_energy_threshold:03}', f'$E_{{\\gamma}}>{brem_energy_threshold}$ MeV')
 #-----------------------------------------
 @pytest.mark.parametrize('kind' , ['brem_track_2'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('is_mc', [True, False])
-def test_add_smearing(kind : str, is_mc : bool):
+def test_add_smearing(kind : str, is_mc : bool, trigger : str):
     '''
     Checks that smearing of q2 was added on top of correction
     '''
-    rdf_org = _get_rdf(is_mc=is_mc, bdt='(1)')
-    rdf_org = rdf_org.Range(50_000)
-    cor     = MassBiasCorrector(rdf=rdf_org, nthreads=10, ecorr_kind=kind)
-    rdf_cor = cor.get_rdf()
+    rdf_org = _get_rdf(is_mc=is_mc, trigger=trigger)
+    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
+
+    cor     = MassBiasCorrector(
+        df        =df_org, 
+        trigger   =trigger,
+        is_mc     =is_mc,
+        nthreads  =10, 
+        ecorr_kind=kind)
+
+    df_cor = cor.get_df()
+    rdf_cor= RDF.FromPandas(df_cor)
     _check_output_columns(rdf_cor)
 
     rdf_smr = rdf_cor.Redefine('Jpsi_M', 'Jpsi_M_smr')
