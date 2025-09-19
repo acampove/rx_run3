@@ -732,8 +732,10 @@ class RDFGetter:
         if RDFGetter._skip_adding_columns:
             log.warning('Not adding new columns')
             return rdf
-
-        rdf = self._add_columns(rdf=rdf)
+        try:
+            rdf = self._add_columns(rdf=rdf)
+        except Exception as exc:
+            raise ValueError(f'Cannot define columns for: {fpath}') from exc
 
         return rdf
     # ---------------------------------------------------
