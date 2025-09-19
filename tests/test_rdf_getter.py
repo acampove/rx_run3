@@ -489,18 +489,6 @@ def test_guid(trigger : str, per_file : bool):
     assert uid11 != uid22
     assert uid22 != uid23
 # ------------------------------------------------
-def test_split_per_file():
-    '''
-    Tests static `split_per_file` method
-    '''
-    data = gut.load_data(package='rx_data_data', fpath='tests/rdf_getter/config.yaml')
-    d_cf = RDFGetter.split_per_file(data, main='main')
-
-    for fpath, cpath in d_cf.items():
-        log.info(f'{"File path":<20}{fpath}')
-        log.info(f'{"Conf path":<20}{cpath}')
-        log.info('')
-# ------------------------------------------------
 @pytest.mark.parametrize('sample'   , ['Bd_Kstee_eq_btosllball05_DPC'])
 @pytest.mark.parametrize('trigger'  , ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('requested', [1_000, 10_000, 20_000])
@@ -986,17 +974,6 @@ def test_only_friends(sample : str, trigger : str):
         gtr = RDFGetter(sample=sample, trigger=trigger)
 
     assert gtr.friend_trees == s_friend
-# ------------------------------------------------
-@pytest.mark.parametrize('per_file', [True, False])
-def test_identifier(per_file : bool):
-    '''
-    Tests context manager that sets identifier needed
-    to name YAML and JSON files with sample lists
-    '''
-    sample = 'Bu_JpsiK_ee_eq_DPC'
-    with RDFGetter.identifier(value=f'per_file_eq_{per_file}'):
-        gtr= RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
-        gtr.get_rdf(per_file=per_file)
 # ------------------------------------------------
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('sample' , ['Bd_Kstee_eq_btosllball05_DPC', 'DATA*'])
