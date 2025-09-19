@@ -59,8 +59,8 @@ class RDFGetter:
     _d_custom_columns : dict[str,str] = {}
     _allow_multithreading             = False
     _nthreads                         = None
-    _identifier                       = 'none'  # In order to create YAML and JSON files with file lists, this string
-                                                # will be used to identify those files. This is needed to avoide collisions
+    _identifier : Final[int]          = os.getpid()  # In order to create JSON files with file lists, this string
+                                                # will be used to identify those files. This is needed to avoid collisions
                                                 # when sending jobs to clusters with shared file systems
     # ---------------------------------------------------
     def __init__(
