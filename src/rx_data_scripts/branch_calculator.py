@@ -235,7 +235,7 @@ def _process_rdf(
     is_ss = 'SameSign' in trigger
 
     if   Data.kind == 'hop':
-        obj = HOPCalculator(rdf=rdf)
+        obj = HOPCalculator(rdf=rdf, trigger=trigger)
         rdf = obj.get_rdf(preffix=Data.kind)
     elif Data.kind in Data.l_ecorr:
         skip_correction = _is_mc(path) and Data.kind == 'ecalo_bias'
@@ -288,7 +288,7 @@ def _get_input_rdf(path : str) -> RDF.RNode|None:
         s_friend = {'brem_track_2', 'hop'}
 
     with RDFGetter.only_friends(s_friend=s_friend):
-        gtr   = RDFGetter(sample=sample, trigger=trigger, analysis=Data.proj)
+        gtr   = RDFGetter(sample=sample, trigger=trigger)
         d_rdf = gtr.get_rdf(per_file=True)
 
     rdf = d_rdf.get(path)
