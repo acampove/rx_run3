@@ -3,11 +3,13 @@ Module used to test bias corrections
 '''
 
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = '1'
+
 import copy
 from importlib.resources import files
 from pathlib             import Path
 
-from distributed import Client, get_client
+from distributed import Client
 import mplhep
 import pytest
 import yaml
