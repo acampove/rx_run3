@@ -725,6 +725,11 @@ class RDFGetter:
         log.debug(f'Building dataframe from {conf_path} for {fpath}')
         rdf = RDF.Experimental.FromSpec(conf_path)
 
+        nentries = rdf.Count().GetValue()
+        if nentries == 0:
+            log.warning(f'Found empty dataframe for {fpath}')
+            return rdf 
+
         self._l_columns = [ name.c_str() for name in rdf.GetColumnNames() ]
         log.debug(f'Dataframe at: {id(rdf)}')
 
