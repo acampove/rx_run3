@@ -446,8 +446,7 @@ class RDFGetter:
         if not per_file:
             log.debug('Not splitting per file')
             cfg_path = RDFGetter.get_tmp_path(identifier=f'full_sample_{RDFGetter._identifier}', data=d_data)
-            with open(cfg_path, 'w', encoding='utf-8') as ofile:
-                json.dump(d_data, ofile, indent=4, sort_keys=True)
+            gut.dump_json(path=cfg_path, data=d_data, sort_keys=True)
 
             return {'' : cfg_path}
 
