@@ -708,17 +708,21 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def _rdf_from_conf(self, conf_path : str) -> RDF.RNode:
+    def _rdf_from_conf(
+        self, 
+        fpath     : str,
+        conf_path : str) -> RDF.RNode:
         '''
         Parameters
         ------------------
+        fpath    : Path to ROOT file corresponding to main category
         conf_path: Path to JSON file with configuration needed to build dataframe
 
         Returns
         ------------------
         Dataframe after some basic preprocessing
         '''
-        log.debug(f'Building dataframe from {conf_path}')
+        log.debug(f'Building dataframe from {conf_path} for {fpath}')
         rdf = RDF.Experimental.FromSpec(conf_path)
 
         self._l_columns = [ name.c_str() for name in rdf.GetColumnNames() ]
@@ -827,7 +831,7 @@ class RDFGetter:
         d_sample = self._get_paths_to_conf(per_file=per_file)
         if per_file:
             log.info('Building one dataframe per file')
-            self._d_rdf = { fpath : self._rdf_from_conf(conf_path) for fpath, conf_path in d_sample.items() }
+            self._d_rdf = { fpath : self._rdf_from_conf(fpath=fpath, conf_path=conf_path) for fpath, conf_path in d_sample.items() }
 
             return self._d_rdf
 
@@ -838,7 +842,7 @@ class RDFGetter:
         _, conf_path = next(iter(d_sample.items()))
         log.debug(f'Building datarame from file {conf_path}')
 
-        self._rdf = self._rdf_from_conf(conf_path)
+        self._rdf = self._rdf_from_conf(fpath='joint_files', conf_path=conf_path)
 
         return self._rdf
     # ---------------------------------------------------
