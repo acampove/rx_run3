@@ -14,6 +14,7 @@ from ROOT                   import RDataFrame, TFileMerger, RDF # type: ignore
 from dmu.logging.log_store  import LogStore
 from dmu.generic            import version_management as vman
 
+from rx_common                   import info
 from rx_data                     import utilities
 from rx_data.mva_calculator      import MVACalculator
 from rx_data.rdf_getter          import RDFGetter
@@ -249,12 +250,8 @@ def _process_rdf(
             ecorr_kind     = Data.kind)
         df  = cor.get_df(suffix=Data.kind)
         rdf = RDF.FromPandas(df)
-    elif Data.kind == 'swp_jpsi_misid':
-        obj = SWPCalculator(rdf=rdf, d_lep={'L1' :  13, 'L2' :  13}, d_had={'H' :  13})
-        rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
-    elif Data.kind == 'swp_cascade'   :
-        obj = SWPCalculator(rdf=rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={'H' : 321})
-        rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
+    elif Data.kind in ['swp_cascade', 'swp_jpsi_misid']:
+        rdf = _get_swap_rdf(rdf=rdf, trigger=trigger)
     elif Data.kind == 'mva'   :
         obj = MVACalculator(rdf=rdf, sample=sample, trigger=trigger, version=Data.vers)
         rdf = obj.get_rdf()
