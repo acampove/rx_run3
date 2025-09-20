@@ -119,6 +119,7 @@ def test_hadronic_mc(sample : str):
 # ----------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpEE_MVA_misid'])
+# ----------------------
 def test_hadronic_data(sample : str, trigger : str):
     '''
     Will run test where
@@ -137,4 +138,3 @@ def test_hadronic_data(sample : str, trigger : str):
     rdf_ot = cal.get_rdf()
 
     _validate_rdf(rdf_in=rdf_in, rdf_ot=rdf_ot, test='hadronic_data', name=f'{sample}_{trigger}')
-# ----------------------
