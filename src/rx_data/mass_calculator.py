@@ -39,20 +39,22 @@ class MassCalculator:
         -------------
         Row of pandas dataframe with masses
         '''
-        out = pnd.Series({'EVENTNUMBER' : evt, 'RUNNUMBER' : run})
         evt  = tut.numeric_from_series(row, 'EVENTNUMBER',   int)
         run  = tut.numeric_from_series(row, 'RUNNUMBER'  ,   int)
+        data : dict[str,float|int]= {'EVENTNUMBER' : evt, 'RUNNUMBER' : run}
 
-        out.loc['B_Mass_kpipi'] = self._get_hxy_mass(row=row, x=211, y=211)
-        out.loc['B_Mass_kkk'  ] = self._get_hxy_mass(row=row, x=321, y=321)
+        data['B_Mass_hdpipi'] = self._get_hxy_mass(row=row, x=211, y=211)
+        data['B_Mass_hdkk'  ] = self._get_hxy_mass(row=row, x=321, y=321)
 
         if not self._with_validation:
-            return out
+            return pnd.Series(data) 
 
-        out.loc['B_M'         ] = tut.numeric_from_series(row, 'B_M', float)
-        out.loc['B_Mass_check'] = self._get_hxy_mass(row=row, x= 11, y= 11)
+        data['B_M'         ] = tut.numeric_from_series(row, 'B_M', float)
+        data['B_Mass_check'] = self._get_hxy_mass(row=row, x= 11, y= 11)
 
-        return out
+        sr = pnd.Series(data) 
+
+        return sr
     # ----------------------
     def _get_hxy_mass(
         self,
