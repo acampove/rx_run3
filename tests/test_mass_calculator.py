@@ -45,6 +45,19 @@ def _check_entries(rdf_in : RDF.RNode, rdf_ot : RDF.RNode) -> None:
 
     assert nent_in == nent_ot
 # ----------------------
+def _closure_check(df : pnd.DataFrame) -> None:
+    '''
+    Parameters
+    -------------
+    df : Dataframe with arrays with masses
+    '''
+    log.debug('Run closure check')
+
+    arr_mass_def = df['B_M'         ].dropna().to_numpy()
+    arr_mass_cal = df['B_Mass_check'].dropna().to_numpy()
+
+    assert numpy.allclose(arr_mass_def, arr_mass_cal, rtol=0.001)
+# ----------------------
 def _validate_rdf(
     test   : str,
     name   : str,
