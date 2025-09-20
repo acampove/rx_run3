@@ -25,7 +25,7 @@ class Data:
     data_rgx = r'(data_24_mag(?:down|up)_24c\d)_(.*)\.root'
     mc_rgx   = r'mc_mag(?:up|down)_(?:.*_)?\d{8}_(.*)_(Hlt2RD.*)_\w{10}\.root'
 
-    l_electron_samples = ['brem_track_2', 'ecalo_bias']
+    l_electron_samples = ['brem_track_2']
 # ---------------------------------
 def _set_data_dir() -> None:
     if Data.data_dir is not None:
