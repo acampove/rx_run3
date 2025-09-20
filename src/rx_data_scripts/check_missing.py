@@ -6,7 +6,7 @@ import os
 import re
 import glob
 import argparse
-from typing import Union, cast
+from typing import cast
 
 import yaml
 from dmu.generic                    import utilities          as gut
@@ -65,7 +65,7 @@ def _parse_args() -> None:
     Data.skip_sam = args.skip_sam
     Data.log_level= args.log_level
 # ---------------------------------
-def _version_from_path(path : str) -> Union[str,None]:
+def _version_from_path(path : str) -> str|None:
     try:
         version=get_last_version(dir_path=path, version_only=True)
     except ValueError:
@@ -228,7 +228,7 @@ def _should_exist(frn_name : str, sample : dict[str,list[str]]) -> bool:
 def _compare_against_main(
         frn_name : str,
         main_sam : dict[str,dict],
-        frnd_sam : dict[str,dict]) -> Union[dict[list[str]], dict[str]]:
+        frnd_sam : dict[str,dict]) -> dict[str,list[str]|str]:
     '''
     Compares dictionaries associated to main and friend trees
 
