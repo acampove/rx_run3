@@ -251,15 +251,15 @@ class MassCalculator:
         ROOT dataframe with only the new mass columns
         EVENTNUMBER and RUNNUMBER
         '''
+        log.debug('Retrieving dataframe')
         df  = self._get_dataframe()
 
         log.debug('Calculating masses')
         df  = df.apply(self._get_columns, axis=1)
-        df  = cast(pnd.DataFrame, df)
 
         log.debug('Building ROOT dataframe with required information')
-        data= { col_name : df[col_name].to_numpy() for col_name in df.columns }
-        rdf = RDF.FromNumpy(data)
+        rdf = RDF.FromPandas(df)
 
+        log.debug('Returning ROOT dataframe')
         return rdf
 # ---------------------------
