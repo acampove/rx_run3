@@ -126,7 +126,7 @@ class MassCalculator:
         but with the mass hypothesis corresponding to
         '''
         mass     = self._mass_from_pid(pid=pid)
-        particle = self._get_particle(row=row, name=name)
+        particle = self._get_particle(row=row, name=name, pdg_mass=True)
 
         return v4d(pt=particle.pt, eta=particle.eta, phi=particle.phi, mass=mass)
     # ----------------------
@@ -141,8 +141,8 @@ class MassCalculator:
         Four momentum vector of hadronic system
         '''
         b_4d  = self._get_particle(row=row, name= 'B', pdg_mass=False)
-        l1_4d = self._get_particle(row=row, name='L1')
-        l2_4d = self._get_particle(row=row, name='L2')
+        l1_4d = self._get_particle(row=row, name='L1', pdg_mass=True )
+        l2_4d = self._get_particle(row=row, name='L2', pdg_mass=True )
 
         res   = b_4d - l1_4d - l2_4d
         res   = cast(v4d, res)
@@ -153,7 +153,7 @@ class MassCalculator:
         self,
         row      : pnd.Series,
         name     : str,
-        pdg_mass : bool = True) -> v4d:
+        pdg_mass : bool) -> v4d:
         '''
         Parameters
         -------------
