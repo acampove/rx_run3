@@ -72,20 +72,20 @@ def _validate_rdf(
     '''
     _check_entries(rdf_in=rdf_in, rdf_ot=rdf_ot)
 
-    s_col = { name.c_str() for name in rdf_ot.GetColumnNames() }
-    assert s_col == {'EVENTNUMBER', 'RUNNUMBER', 'B_Mass_kkk', 'B_Mass_kpipi', 'B_M', 'B_Mass_check'}
-
-    data = rdf_ot.AsNumpy(['B_M', 'B_Mass_kpipi', 'B_Mass_kkk', 'B_Mass_check'])
+    data = rdf_ot.AsNumpy()
     df   = pnd.DataFrame(data)
 
-    arr_mass_def = df['B_M'         ].dropna().to_numpy()
-    arr_mass_cal = df['B_Mass_check'].dropna().to_numpy()
+    _closure_check(df=df)
 
-    assert numpy.allclose(arr_mass_def, arr_mass_cal, rtol=0.001)
+    assert set(df.columns) == {'EVENTNUMBER', 'RUNNUMBER', 'B_Mass_hdkk', 'B_Mass_hdpipi', 'B_M', 'B_Mass_check'}
 
-    df= df.drop(columns=['B_Mass_check'])
-    df.plot.hist(range=(4500, 6500), bins=100, histtype='step')
-    plt.axvline(x=5280, label='PDG', linestyle=':')
+    plt.hist(df['B_Mass_hdkk'  ], range=(4500, 7000), bins=50, histtype='step', ls='-', label=r'$H_s K^+K^+$')
+    plt.hist(df['B_Mass_hdpipi'], range=(4500, 7000), bins=50, histtype='step', ls='-', label=r'$H_s \pi^+\pi^-$')
+    plt.hist(df['B_Mass_check' ], range=(4500, 7000), bins=50, histtype='step', ls='-', label='Check'   , color='red')
+    plt.hist(df['B_M']          , range=(4500, 7000), bins=50, histtype='step', ls=':', label='Original', color='black')
+
+    plt.legend()
+    plt.axvline(x=5280, label='PDG', linestyle=':', c='black', lw=2)
 
     out_dir = Data.plot_dir/test
     out_dir.mkdir(parents=True, exist_ok=True)
