@@ -21,7 +21,7 @@ class Data:
     '''
     skip_sam : list[str]
     log_level: int
-    data_dir : str = None
+    data_dir : str|None = None
     data_rgx = r'(data_24_mag(?:down|up)_24c\d)_(.*)\.root'
     mc_rgx   = r'mc_mag(?:up|down)_(?:.*_)?\d{8}_(.*)_(Hlt2RD.*)_\w{10}\.root'
 
@@ -134,7 +134,12 @@ def _count_paths(d_data : dict[str, dict]) -> int:
 
     return npath
 # ---------------------------------
-def _find_paths() -> dict[str,set[str]]:
+def _find_paths() -> dict[str,dict[str,dict[str,list[str]]]]:
+    '''
+    Returns
+    -----------------
+    TBD
+    '''
     l_sample = glob.glob(f'{Data.data_dir}/*')
     d_fname  = {}
 
