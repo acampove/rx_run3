@@ -15,6 +15,15 @@ from rx_data.mass_calculator import MassCalculator
 from rx_data                 import testing as tst
 
 log=LogStore.add_logger('rx_data:test_mass_calculator')
+
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('rx_data:test_mass_calculator', 10)
+    LogStore.set_level('rx_data:mass_calculator'     , 10)
 # ----------------------
 class Data:
     '''
