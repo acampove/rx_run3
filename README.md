@@ -19,7 +19,7 @@ Check [this](doc/maintenance.md).
 
 Below are the instructions on how to access data from EOS. 
 
-## Installation
+# Installation
 
 To install this project run:
 
@@ -36,7 +36,7 @@ export ANADIR=/eos/lhcb/wg/RD/RX_run3
 
 preferably in `~/.bashrc`.
 
-## How the the code makes the ROOT dataframes
+# How the the code makes the ROOT dataframes
 
 When creating datframes, the code will:
 
@@ -50,7 +50,7 @@ files and create a `JSON` file
 - Use the `JSON` file to make the ROOT dataframe
 by using `from_spec` RDataFrame's method
 
-## Accessing ntuples
+# Accessing ntuples
 
 Once
 
@@ -80,7 +80,7 @@ In the case of the MVA friend trees the branches added would be `mva.mva_cmb` an
 
 Thus, one can easily extend the ntuples with extra branches without remaking them.
 
-## Checking what samples exist as filtered ntuples in the grid
+# Checking what samples exist as filtered ntuples in the grid
 
 This is useful to avoid filtering the same samples multiple times, which would
 
@@ -103,7 +103,7 @@ This will require access to the user's ganga sandbox through the `GANGADIR` vari
 This should be improved eventually, ideally by integrating the filtering with the
 analysis productions pipeline.
 
-## Checking what samples exist as ntuples in ANADIR (locally)
+# Checking what samples exist as ntuples in ANADIR (locally)
 
 For this run:
 
@@ -145,7 +145,7 @@ which will print something like:
 Where the rows represent samples and the columns represent the friend trees.
 The numbers are the number of ntuples.
 
-## Multithreading
+# Multithreading
 
 Multithreading with ROOT dataframes at the moment is dangerous and should be done only in a few places.
 To turn this on run:
@@ -163,7 +163,7 @@ with RDFGetter.multithreading(nthreads=nthreads):
 - One can use `nthreads=1` to turn off mulithreading
 - Negative or zero threads will raise exception.
 
-## Unique identifiers
+# Unique identifiers
 
 In order to get a string that fully identifies the underlying sample,
 i.e. a hash, do:
@@ -173,7 +173,7 @@ gtr = RDFGetter(sample='DATA_24_Mag*_24c*', trigger='Hlt2RD_BuToKpMuMu_MVA')
 uid = gtr.get_uid()
 ```
 
-## Identifiers for cluster jobs
+# Identifiers for cluster jobs
 
 When sending jobs to a computing cluster, each job will try to read the
 data. Thus, it will create the `JSON` and `YAML` files
@@ -192,7 +192,7 @@ with RDFGetter.identifier(value='job_001'):
 i.e. wrap the code in the `identifier` manager, which will name
 the files based on the job.
 
-## Excluding datasets
+# Excluding datasets
 
 One can also exclude a certain type of friend trees with:
 ```python
@@ -205,7 +205,7 @@ wih RDFGetter.exclude_friends(names=['mva']):
 
 that should leave the MVA branches out of the dataframe.
 
-## Defining custom columns
+# Defining custom columns
 
 Given that this `RDFGetter` can be used across multiple modules, the safest way to
 add extra columns is by specifying their definitions once at the beggining of the
@@ -221,7 +221,7 @@ RDFGetter.custom_columns(columns = d_def)
 If custom columns are defined in more than one place in the code, the function will
 raise an exception, thus ensuring a unique definition for all dataframes.
 
-## Accessing metadata
+# Accessing metadata
 
 Information on the ntuples can be accessed through the `metadata` instance of the `TStringObj` class, which is
 stored in the ROOT files. This information can be dumped in a YAML file for easy access with:
@@ -233,7 +233,7 @@ dump_metadata -f root://x509up_u12477@eoslhcb.cern.ch//eos/lhcb/grid/user/lhcb/u
 
 which will produce `metadata.yaml`.
 
-## Run1/2 samples
+# Run1/2 samples
 
 For now these samples are only in the UCAS cluster and only
 the rare electron signal has been made available through:
