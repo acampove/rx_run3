@@ -6,11 +6,13 @@ import pytest
 import numpy
 import pandas            as pnd
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 from ROOT                    import RDataFrame, RDF # type: ignore
 from dmu.logging.log_store   import LogStore
 from rx_data.rdf_getter      import RDFGetter
 from rx_data.mass_calculator import MassCalculator
+from rx_data                 import testing as tst
 
 log=LogStore.add_logger('rx_data:test_mass_calculator')
 # ----------------------
@@ -19,7 +21,7 @@ class Data:
     Class meant to be used to share attributes
     '''
     user     = os.environ['USER']
-    plot_dir = f'/tmp/{user}/tests/rx_data/mass_calculator'
+    plot_dir = Path(f'/tmp/{user}/tests/rx_data/mass_calculator')
 # ----------------------
 def _validate_rdf(
     test   : str,
@@ -54,11 +56,11 @@ def _validate_rdf(
     df.plot.hist(range=(4500, 6500), bins=100, histtype='step')
     plt.axvline(x=5280, label='PDG', linestyle=':')
 
-    out_dir = f'{Data.plot_dir}/{test}'
-    os.makedirs(out_dir, exist_ok=True)
+    out_dir = Data.plot_dir/test
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     plt.title(f'Sample={name}')
-    plt.savefig(f'{out_dir}/{name}.png')
+    plt.savefig(out_dir/f'{name}.png')
     plt.close()
 # ----------------------
 @pytest.mark.parametrize('sample', [
