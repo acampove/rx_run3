@@ -25,7 +25,7 @@ class Data:
     data_rgx = r'(data_24_mag(?:down|up)_24c\d)_(.*)\.root'
     mc_rgx   = r'mc_mag(?:up|down)_(?:.*_)?\d{8}_(.*)_(Hlt2RD.*)_\w{10}\.root'
 
-    l_electron_samples = ['brem_track_2']
+    l_electron_samples = ['brem_track_2', 'mass']
 # ---------------------------------
 def _set_data_dir() -> None:
     if Data.data_dir is not None:
@@ -101,6 +101,11 @@ def _info_from_fname(fname : str) -> tuple[str,str]:
     return sample, trigger
 # ---------------------------------
 def _fname_to_dict(s_fname : set[str]) -> dict[str,dict[str,list[str]]]:
+    '''
+    Parameters
+    ---------------------
+    s_fname : Set of 
+    '''
     d_data = {}
 
     nipath = len(s_fname)
@@ -145,15 +150,13 @@ def _find_paths() -> dict[str,dict[str,dict[str,list[str]]]]:
 
     l_msg = []
     for sample in l_sample:
-        sample_name = os.path.basename(sample)
-        if sample_name in ['samples'] + Data.skip_sam:
+        name = os.path.basename(sample)
+        if name in ['samples'] + Data.skip_sam:
             continue
 
         version = _version_from_path(path=sample)
         if not version:
             continue
-
-        name = os.path.basename(sample)
 
         log.debug(f'Finding paths for sample: {name}/{version}')
 
@@ -173,6 +176,11 @@ def _find_paths() -> dict[str,dict[str,dict[str,list[str]]]]:
     return d_fname
 # ---------------------------------
 def _get_sample_files(sample : dict[str,list[str]]) -> set[str]:
+    '''
+    Parameters
+    -----------------
+    sample :  
+    '''
     l_path = []
     for paths in sample.values():
         l_path += paths
@@ -181,14 +189,37 @@ def _get_sample_files(sample : dict[str,list[str]]) -> set[str]:
 # ---------------------------------
 def _sample_difference(
         sample_1 : dict[str,list[str]],
-        sample_2 : dict[str,list[str]]) -> list[str]:
+        sample_2 : dict[str,list[str]]) -> dict[str, tuple[int,int]]:
+    '''
+    Parameters
+    --------------------
+    sample_*: Dictionary where:
+        key  : Name of sample
+        Value: List of paths to ROOT files
 
+    1 represents the main tree, 2 represents the friend tree
+
+    Returns
+    --------------------
+    Dictionary where:
+        Key  : Path to ROOT file
+        Value: Tuple with entries in main tree and friend tree
+
+    If the friend tree does not exist, -1, 0
+    If every friend tree exists with the same entries, the output will be empty
+    '''
     s_path_1 = _get_sample_files(sample_1)
     s_path_2 = _get_sample_files(sample_2)
     s_diff   = s_path_1 - s_path_2
-    l_diff   = list(s_diff)
+    d_diff   = { path : (-1,0) for path in s_diff }
 
-    if len(l_diff) != 0:
+    s_comm   = s_path_1 & s_path_2
+    d_stat   = _get_file_stat(
+        common= s_comm, 
+        main  = sample_1.values(), 
+        friend= sample_2.values())
+
+    if len(d_diff) != 0:
         log.debug('Main')
         l_path_1 = sorted(list(s_path_1))
         for path_1 in l_path_1:
@@ -199,14 +230,37 @@ def _sample_difference(
         for path_2 in l_path_2:
             log.debug(path_2)
 
-    return sorted(l_diff)
+    d_diff.update(d_stat)
+
+    return dict(sorted(d_diff.items()))
+# ----------------------
+def _get_file_stat(
+    common : set[str], 
+    main   : set[str], 
+    friend : set[str]) -> dict[str,tuple[int,int]]:
+    '''
+    Parameters
+    -------------
+    common: Set of filenames for files found in main and friend trees
+    main  : Set of paths to main trees
+    friend: Set of paths to friend trees
+
+    Returns
+    -------------
+    Dictionary with:
+        Keys : Path to ROOT file
+        Value: Tuple with entries in main tree and friend tree
+
+    If the number agrees, the file will not be added to the dictionary
+    '''
+    return {}
 # ---------------------------------
-def _is_muon_sample(l_path : list[str]) -> bool:
+def _is_muon_sample(d_path : dict[str, tuple[int,int]]) -> bool:
     '''
     True if ALL paths belong to muon
     '''
     is_muon = True
-    for path in l_path:
+    for path in d_path:
         is_muon = 'MuMu_' in path
 
     return is_muon
@@ -268,16 +322,16 @@ def _compare_against_main(
         f_sample = frnd_sam[sample]
 
         log.debug(f'Sample: {sample}')
-        l_path = _sample_difference(sample_1=m_sample, sample_2=f_sample)
-        npath  = len(l_path)
+        d_path = _sample_difference(sample_1=m_sample, sample_2=f_sample)
+        npath  = len(d_path)
         if npath == 0:
             continue
 
-        if _is_muon_sample(l_path) and frn_name in Data.l_electron_samples:
+        if _is_muon_sample(d_path) and frn_name in Data.l_electron_samples:
             log.debug(f'Skipping {sample} for {frn_name}')
             continue
 
-        d_diff[sample] = l_path
+        d_diff[sample] = d_path
 
     return d_diff
 # ---------------------------------
