@@ -23,6 +23,19 @@ class Data:
     user     = os.environ['USER']
     plot_dir = Path(f'/tmp/{user}/tests/rx_data/mass_calculator')
 # ----------------------
+def _check_entries(rdf_in : RDF.RNode, rdf_ot : RDF.RNode) -> None:
+    '''
+    Parameters
+    -------------
+    rdf_in/ot: Input/Output dataframe
+    '''
+    log.debug('Checking number of entries')
+
+    nent_in = rdf_in.Count().GetValue()
+    nent_ot = rdf_ot.Count().GetValue()
+
+    assert nent_in == nent_ot
+# ----------------------
 def _validate_rdf(
     test   : str,
     name   : str,
@@ -36,10 +49,7 @@ def _validate_rdf(
     rdf_in: Original dataframe
     rdf_ot: DataFrame with EVENTNUMBER, RUNNUMBER and masses
     '''
-    nent_in = rdf_in.Count().GetValue()
-    nent_ot = rdf_ot.Count().GetValue()
-
-    assert nent_in == nent_ot
+    _check_entries(rdf_in=rdf_in, rdf_ot=rdf_ot)
 
     s_col = { name.c_str() for name in rdf_ot.GetColumnNames() }
     assert s_col == {'EVENTNUMBER', 'RUNNUMBER', 'B_Mass_kkk', 'B_Mass_kpipi', 'B_M', 'B_Mass_check'}
