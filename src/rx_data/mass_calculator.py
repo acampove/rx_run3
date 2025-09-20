@@ -39,9 +39,9 @@ class MassCalculator:
         -------------
         Row of pandas dataframe with masses
         '''
-        evt = tut.numeric_from_series(row, 'EVENTNUMBER',   int)
-        run = tut.numeric_from_series(row, 'RUNNUMBER'  ,   int)
         out = pnd.Series({'EVENTNUMBER' : evt, 'RUNNUMBER' : run})
+        evt  = tut.numeric_from_series(row, 'EVENTNUMBER',   int)
+        run  = tut.numeric_from_series(row, 'RUNNUMBER'  ,   int)
 
         out.loc['B_Mass_kpipi'] = self._get_hxy_mass(row=row, x=211, y=211)
         out.loc['B_Mass_kkk'  ] = self._get_hxy_mass(row=row, x=321, y=321)
@@ -69,8 +69,13 @@ class MassCalculator:
         -------------
         Value of mass when leptons get pion, hadron, etc mass hypothesis
         '''
+        log.verbose('')
+        log.verbose(f'Finding B mass for tracks: {x}/{y}')
+
         name_1 = self._column_name_from_pdgid(pid=x, preffix='L1')
         name_2 = self._column_name_from_pdgid(pid=y, preffix='L2')
+
+        log.verbose(f'Will use particles: {name_1}/{name_2}')
 
         had_4d = self._get_hadronic_system_4d(row=row)
         par_1  = self._build_particle(row=row, name=name_1, pid=x)
