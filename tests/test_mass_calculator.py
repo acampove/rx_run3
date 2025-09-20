@@ -12,7 +12,6 @@ from ROOT                    import RDataFrame, RDF # type: ignore
 from dmu.logging.log_store   import LogStore
 from rx_data.rdf_getter      import RDFGetter
 from rx_data.mass_calculator import MassCalculator
-from rx_data                 import testing as tst
 
 log=LogStore.add_logger('rx_data:test_mass_calculator')
 
