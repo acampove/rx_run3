@@ -55,7 +55,7 @@ def _get_data_dir(project : str) -> str:
 # ---------------------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script meant to check for missing friend trees')
-    parser.add_argument('-p', '--project'  , type=str , help='E.g. rx', required=True)
+    parser.add_argument('-p', '--project'  , type=str , help='E.g. rk', choices=['rk', 'rkst', 'rk_nopid', 'rkst_nopid'], required=True)
     parser.add_argument('-s', '--skip_sam' , nargs='+', help='Samples to skip', default=[])
     parser.add_argument('-l', '--log_level', type=int , help='Logging level', default=20, choices=[10, 20, 30])
 
