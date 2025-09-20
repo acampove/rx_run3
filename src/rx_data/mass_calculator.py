@@ -114,29 +114,6 @@ class MassCalculator:
 
         raise ValueError(f'Invalid PID: {pid}')
     # ----------------------
-    def _build_particle(
-        self,
-        row  : pnd.Series,
-        name : str,
-        pid  : int) -> v4d:
-        '''
-        Parameters
-        -------------
-        row  : Pandas series with event information
-        name : Name of particle in original ROOT dataframe, e.g. L1
-        pid  : PDG ID of particle that needs to be built, e.g. 11 for electron
-              Will be used to get mass.
-
-        Returns
-        -------------
-        Particle with the kinematics in the original dataframe
-        but with the mass hypothesis corresponding to
-        '''
-        mass     = self._mass_from_pid(pid=pid)
-        particle = self._get_particle(row=row, name=name, pdg_mass=True)
-
-        return v4d(pt=particle.pt, eta=particle.eta, phi=particle.phi, mass=mass)
-    # ----------------------
     def _get_hadronic_system_4d(self, row : pnd.Series) -> v4d:
         '''
         Parameters
