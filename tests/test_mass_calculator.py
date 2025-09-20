@@ -97,8 +97,7 @@ def test_hadronic_mc(sample : str):
     with RDFGetter.max_entries(value=10_000):
         gtr = RDFGetter(
             sample  = sample,
-            trigger = 'Hlt2RD_BuToKpEE_MVA_noPID',
-            analysis= 'nopid')
+            trigger = 'Hlt2RD_BuToKpEE_MVA_noPID')
         rdf_in = gtr.get_rdf(per_file=False)
 
     cal    = MassCalculator(rdf=rdf_in, with_validation=True)
@@ -119,8 +118,7 @@ def test_hadronic_data(sample : str, trigger : str):
     with RDFGetter.max_entries(value=10_000):
         gtr = RDFGetter(
             sample  = sample,
-            trigger = trigger,
-            analysis= 'rx')
+            trigger = trigger)
         rdf_in = gtr.get_rdf(per_file=False)
 
     cal    = MassCalculator(rdf=rdf_in, with_validation=True)
