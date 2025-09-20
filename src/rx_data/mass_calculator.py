@@ -159,22 +159,36 @@ class MassCalculator:
 
         return v4d(pt=pt, eta=et, phi=ph, mass=mass)
     # ----------------------
-    def _mass_from_pid(self, pid : int) -> float:
+    def _mass_from_pid(self, pid : int|None, name : str, row : pnd.Series) -> float:
         '''
         Parameters
         -------------
-        pid: Particle PDG ID
+        row  : Pandas series with event information
+        name : Name of particle whose 4D vector to extract
+        pid  : PDG ID used to extract particle mass:
+               0   : Use value from {name}_M branch
+               None: Use PDG mass from particle with ID {name}_ID
+               else: If numeric and non-zero, get mass from PDG using this ID
 
         Returns
         -------------
         Mass of particle
         '''
+        # At this point we might have L1_TRACK
+        name = name.replace('TRACK_', '')
+
+        if pid == 0:
+            return tut.numeric_from_series(row, f'{name}_M', float)
+
+        if pid is None:
+            pid = tut.numeric_from_series(row, f'{name}_ID', int)
+
         particle = part.from_pdgid(pid)
         mass     = particle.mass
         if mass is None:
             raise ValueError(f'Cannot find mass of particle with ID: {pid}')
 
-        return mass
+        return mass 
     # ----------------------
     def _is_valid_column(self, name : str) -> bool:
         '''
