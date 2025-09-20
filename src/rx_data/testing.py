@@ -10,6 +10,12 @@ from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_data:testing')
 
+l_trigger_ee  = [
+    'Hlt2RD_BuToKpEE_MVA',
+    'Hlt2RD_BuToKpEE_MVA_misid',
+    'Hlt2RD_B0ToKpPimEE_MVA',
+    'Hlt2RD_B0ToKpPimEE_MVA_misid']
+
 l_prefix_kind = [
     ('Hlt2RD_BuToKpEE'     , 'mc_ee'),
     ('Hlt2RD_BuToKpEE'     , 'dt_ss'),
