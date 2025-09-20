@@ -80,8 +80,8 @@ class MassCalculator:
         log.verbose(f'Will use particles: {name_1}/{name_2}')
 
         had_4d = self._get_hadronic_system_4d(row=row)
-        par_1  = self._build_particle(row=row, name=name_1, pid=x)
-        par_2  = self._build_particle(row=row, name=name_2, pid=y)
+        par_1  = self._get_particle(row=row, name=name_1, pid=x)
+        par_2  = self._get_particle(row=row, name=name_2, pid=y)
 
         candidate = had_4d + par_1 + par_2
         candidate = cast(v4d, candidate)
@@ -124,9 +124,9 @@ class MassCalculator:
         -------------
         Four momentum vector of hadronic system
         '''
-        b_4d  = self._get_particle(row=row, name= 'B', pdg_mass=False)
-        l1_4d = self._get_particle(row=row, name='L1', pdg_mass=True )
-        l2_4d = self._get_particle(row=row, name='L2', pdg_mass=True )
+        b_4d  = self._get_particle(row=row, name= 'B', pid=   0) # mass from B_M
+        l1_4d = self._get_particle(row=row, name='L1', pid=None) # mass from PDG ID, taken from L*_ID
+        l2_4d = self._get_particle(row=row, name='L2', pid=None) # mass from PDG ID, taken from L*_ID
 
         res   = b_4d - l1_4d - l2_4d
         res   = cast(v4d, res)
