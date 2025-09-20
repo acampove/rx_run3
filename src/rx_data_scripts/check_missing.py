@@ -231,9 +231,9 @@ def _should_exist(frn_name : str, sample : dict[str,list[str]]) -> bool:
     return False
 # ---------------------------------
 def _compare_against_main(
-        frn_name : str,
-        main_sam : dict[str,dict],
-        frnd_sam : dict[str,dict]) -> dict[str,list[str]|str]:
+    frn_name : str,
+    main_sam : dict[str,dict],
+    frnd_sam : dict[str,dict]) -> dict[str,list[str]|str]:
     '''
     Compares dictionaries associated to main and friend trees
 
@@ -303,9 +303,9 @@ def main():
         log.info(f'Comparing WRT: {friend}')
         log.debug(30 * '-')
         d_mis[friend] = _compare_against_main(
-                frn_name = friend,
-                main_sam = main_sam,
-                frnd_sam = data)
+            frn_name = friend,
+            main_sam = main_sam,
+            frnd_sam = data)
 
     with open('missing.yaml', 'w', encoding='utf-8') as ofile:
         yaml.dump(d_mis, ofile, Dumper=gut.BlockStyleDumper)
