@@ -251,7 +251,8 @@ class MassCalculator:
         df  = df.apply(self._get_columns, axis=1)
 
         log.debug('Building ROOT dataframe with required information')
-        rdf = RDF.FromPandas(df)
+        data= { name : df[name].to_numpy() for name in df.columns }
+        rdf = RDF.FromNumpy(data)
 
         log.debug('Returning ROOT dataframe')
         return rdf
