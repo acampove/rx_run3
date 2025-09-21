@@ -8,10 +8,12 @@ import numpy
 from dask             import dataframe as dd 
 
 import pandas as pnd
+import vector
 from vector                          import MomentumObject3D as v3d
 from vector                          import MomentumObject4D as v4d
 from dmu.logging.log_store           import LogStore
 from rx_q2.q2smear_corrector         import Q2SmearCorrector
+from dmu.generic                     import typing_utilities as tut
 
 from rx_common                       import info
 from rx_data.electron_bias_corrector import ElectronBiasCorrector
