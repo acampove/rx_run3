@@ -240,5 +240,10 @@ class MassBiasCorrector:
 
         df_corr = df_corr.fillna(-1) # For some candidates the B mass after correction becomes NaN
 
+        in_size = len(df_corr)
+        ot_size = len(self._df)
+        if in_size != ot_size:
+            raise ValueError(f'Sizes of input and output dataframes differ, {in_size} != {ot_size}')
+
         return df_corr 
 # ------------------------------------------
