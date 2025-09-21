@@ -181,3 +181,4 @@ missing.yaml
 prof/
 *.bin
 *.html
+missing*.yaml
