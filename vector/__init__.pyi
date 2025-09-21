@@ -1,0 +1,12 @@
+from vector._methods import Azimuthal as Azimuthal, AzimuthalRhoPhi as AzimuthalRhoPhi, AzimuthalXY as AzimuthalXY, Coordinates as Coordinates, Longitudinal as Longitudinal, LongitudinalEta as LongitudinalEta, LongitudinalTheta as LongitudinalTheta, LongitudinalZ as LongitudinalZ, Lorentz as Lorentz, Momentum as Momentum, Planar as Planar, Spatial as Spatial, Temporal as Temporal, TemporalT as TemporalT, TemporalTau as TemporalTau, Vector as Vector, Vector2D as Vector2D, Vector3D as Vector3D, Vector4D as Vector4D, dim as dim
+from vector._version import version as __version__
+from vector.backends.awkward import VectorAwkward as VectorAwkward, awkward_transform as awkward_transform
+from vector.backends.awkward_constructors import Array as Array, Array as awk, zip as zip
+from vector.backends.numpy import MomentumNumpy2D as MomentumNumpy2D, MomentumNumpy3D as MomentumNumpy3D, MomentumNumpy4D as MomentumNumpy4D, VectorNumpy as VectorNumpy, VectorNumpy2D as VectorNumpy2D, VectorNumpy3D as VectorNumpy3D, VectorNumpy4D as VectorNumpy4D, array as arr, array as array
+from vector.backends.object import MomentumObject2D as MomentumObject2D, MomentumObject3D as MomentumObject3D, MomentumObject4D as MomentumObject4D, VectorObject as VectorObject, VectorObject2D as VectorObject2D, VectorObject3D as VectorObject3D, VectorObject4D as VectorObject4D, obj as obj
+from vector.backends.sympy import MomentumSympy2D as MomentumSympy2D, MomentumSympy3D as MomentumSympy3D, MomentumSympy4D as MomentumSympy4D, VectorSympy as VectorSympy, VectorSympy2D as VectorSympy2D, VectorSympy3D as VectorSympy3D, VectorSympy4D as VectorSympy4D
+
+__all__ = ['Array', 'Azimuthal', 'AzimuthalRhoPhi', 'AzimuthalXY', 'Coordinates', 'Longitudinal', 'LongitudinalEta', 'LongitudinalTheta', 'LongitudinalZ', 'Lorentz', 'Momentum', 'MomentumNumpy2D', 'MomentumNumpy3D', 'MomentumNumpy4D', 'MomentumObject2D', 'MomentumObject3D', 'MomentumObject4D', 'MomentumSympy2D', 'MomentumSympy3D', 'MomentumSympy4D', 'Planar', 'Spatial', 'Temporal', 'TemporalT', 'TemporalTau', 'Vector', 'Vector2D', 'Vector3D', 'Vector4D', 'VectorAwkward', 'VectorNumpy', 'VectorNumpy2D', 'VectorNumpy3D', 'VectorNumpy4D', 'VectorObject', 'VectorObject2D', 'VectorObject3D', 'VectorObject4D', 'VectorSympy', 'VectorSympy2D', 'VectorSympy3D', 'VectorSympy4D', '__version__', 'arr', 'array', 'awk', 'awkward_transform', 'dim', 'obj', 'register_awkward', 'register_numba', 'zip']
+
+def register_numba() -> None: ...
+def register_awkward() -> None: ...
