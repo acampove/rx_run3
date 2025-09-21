@@ -58,11 +58,14 @@ def test_dump_json(ext : str, tmp_path : Path):
     gut.dump_json(oc_l_data, this_path/f'oc_list.{ext}', exists_ok=True)
 # -------------------------
 @pytest.mark.parametrize('ext', ['json', 'yaml'])
-def test_load_json(ext : str):
+def test_load_json(ext : str, tmp_path : Path):
     '''
     Tests load_json
     '''
-    json_path = f'/tmp/tests/dmu/generic/list.{ext}'
+    json_dir = tmp_path/'load_json'
+    json_dir.mkdir(parents=True, exist_ok=True)
+    log.debug(f'Using path: {json_dir}')
+    json_path= json_dir/f'list.{ext}'
 
     l_data_org = [1,2,3,4]
     gut.dump_json(l_data_org, json_path)
