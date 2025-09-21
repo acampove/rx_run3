@@ -41,6 +41,30 @@ class BlockStyleDumper(yaml.SafeDumper):
     '''
     def increase_indent(self, flow=False, indentless=False):
         return super().increase_indent(flow=flow, indentless=False)
+# ------------------------------------
+def object_to_string(obj : Any) -> str:
+    '''
+    Parameters
+    -------------------
+    obj: Python object, e.g. dictionary, it can contain the following objects:
+    - Path (pathlib) 
+    - DictConfig (omegacong)
+
+    Returns
+    -------------------
+    JSON string
+    '''
+    def default_encoder(x):
+        if isinstance(x, DictConfig):
+            return OmegaConf.to_container(cfg=x, resolve=True)
+
+        if isinstance(x, Path):
+            return str(x)
+
+        log.info(x)
+        raise TypeError(f"Unserializable type: {type(x)}")
+
+    return json.dumps(obj, sort_keys=True, default=default_encoder)
 # ---------------------------------
 @contextmanager
 def enforce_schema_validation(value : bool):
