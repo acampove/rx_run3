@@ -5,6 +5,7 @@ Module containing functions used to find latest, next version, etc of a path.
 import glob
 import os
 import re
+from pathlib import Path
 
 from dmu.logging.log_store import LogStore
 
@@ -44,7 +45,7 @@ def _get_numeric_version(version : str) -> tuple[int,int]|None:
 
     return major, minor
 #---------------------------------------
-def get_last_version(dir_path : str, version_only : bool = True) -> str:
+def get_last_version(dir_path : str|Path, version_only : bool = True) -> Path|str:
     r'''
     Parameters
     ---------------------
@@ -57,23 +58,26 @@ def get_last_version(dir_path : str, version_only : bool = True) -> str:
     Returns
     ---------------------
     Either:
-        Latest version, e.g v7, v1.2, v3p2, if version_only is True (default)
-        Or path to latest version, e.g. /path/to/latest/version/v7
+        - Latest version, e.g v7, v1.2, v3p2, if version_only is True (default)
+        - Path to latest version, e.g. /path/to/latest/version/v7
     '''
-    l_path = glob.glob(f'{dir_path}/*')
+    if isinstance(dir_path, str):
+        dir_path = Path(dir_path)
 
-    if len(l_path) == 0:
+    l_path = list(dir_path.glob('*'))
+
+    if not l_path:
         raise ValueError(f'Nothing found in {dir_path}')
 
-    d_dir_num = {}
+    d_dir_num : dict[tuple[int,int],Path] = {}
     for path in l_path:
-        fname = os.path.basename(path)
-        value = _get_numeric_version(fname)
+        value = _get_numeric_version(version=path.name)
+        log.debug(f'Found version {value} from {path}')
         if value is None:
             continue
 
         if value in d_dir_num:
-            raise ValueError(f'Found version for {fname} which collides with existing version')
+            raise ValueError(f'Found version for {path.name} which collides with existing version')
 
         d_dir_num[value] = path
 
@@ -85,9 +89,7 @@ def get_last_version(dir_path : str, version_only : bool = True) -> str:
     if not version_only:
         return path
 
-    version = os.path.basename(path)
-
-    return version
+    return path.name 
 #---------------------------------------
 def get_latest_file(dir_path : str, wc : str) -> str:
     '''Will find latest file in a given directory
