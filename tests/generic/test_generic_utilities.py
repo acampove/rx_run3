@@ -1,8 +1,6 @@
 '''
 Module with tests for functions in generic/utilities.py
 '''
-import math
-from typing  import Any
 from time    import sleep
 from pathlib import Path
 
@@ -41,7 +39,10 @@ def test_dump_json(ext : str, tmp_path : Path):
     this_path.mkdir(parents=True, exist_ok=True)
 
     l_data = [1,2,3,4]
-    d_data = {1 : 'a', 'b' : 2}
+    d_data = {
+        1           : 'a', 
+        'b'         : 2, 
+        'some_path' : this_path}
 
     gut.dump_json(l_data, this_path/f'list.{ext}')
     gut.dump_json(d_data, this_path/f'dict.{ext}')
