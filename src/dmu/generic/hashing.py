@@ -3,29 +3,14 @@ Module with functions needed to provide hashes
 '''
 
 import os
-import json
 import hashlib
 from typing  import Any
-from pathlib import Path
 
 import pandas as pnd
-from omegaconf             import DictConfig, OmegaConf
 from dmu.logging.log_store import LogStore
+from dmu.generic           import utilities as gut
 
 log=LogStore.add_logger('dmu:generic.hashing')
-# ------------------------------------
-def _object_to_string(obj : Any) -> str:
-    def default_encoder(x):
-        if isinstance(x, DictConfig):
-            return OmegaConf.to_container(cfg=x, resolve=True)
-
-        if isinstance(x, Path):
-            return str(x)
-
-        log.info(x)
-        raise TypeError(f"Unserializable type: {type(x)}")
-
-    return json.dumps(obj, sort_keys=True, default=default_encoder)
 # ------------------------------------
 def _dataframe_to_hash(df : pnd.DataFrame) -> str:
     sr_hash = pnd.util.hash_pandas_object(df, index=True)
@@ -47,7 +32,7 @@ def hash_object(obj : Any) -> str:
 
         return value
 
-    string     = _object_to_string(obj=obj)
+    string     = gut.object_to_string(obj=obj)
     string_bin = string.encode('utf-8')
     hsh        = hashlib.sha256(string_bin)
     value      = hsh.hexdigest()
