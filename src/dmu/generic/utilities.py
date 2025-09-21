@@ -42,13 +42,14 @@ class BlockStyleDumper(yaml.SafeDumper):
     def increase_indent(self, flow=False, indentless=False):
         return super().increase_indent(flow=flow, indentless=False)
 # ------------------------------------
-def object_to_string(obj : Any) -> str:
+def object_to_string(obj : Any, sort_keys=False) -> str:
     '''
     Parameters
     -------------------
     obj: Python object, e.g. dictionary, it can contain the following objects:
     - Path (pathlib) 
     - DictConfig (omegacong)
+    sort_keys: If true will sort the keys of all the dictionaries. Not recommended for mixed type keys
 
     Returns
     -------------------
@@ -64,7 +65,12 @@ def object_to_string(obj : Any) -> str:
         log.info(x)
         raise TypeError(f"Unserializable type: {type(x)}")
 
-    return json.dumps(obj, sort_keys=True, default=default_encoder)
+    try:
+        json_string = json.dumps(obj, sort_keys=sort_keys, default=default_encoder)
+    except Exception as exc:
+        raise RuntimeError(f'Cannot covert to JSON string: {obj}') from exc
+
+    return json_string
 # ---------------------------------
 @contextmanager
 def enforce_schema_validation(value : bool):
