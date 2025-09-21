@@ -89,16 +89,35 @@ class MassBiasCorrector:
         row = self._ebc.correct(row, name=name, kind=self._ecorr_kind)
 
         return row
+    # ----------------------
+    def _build_4dvec(self, particle : str, row : pnd.Series, mass : float) -> v4d:
+        '''
+        Parameters
+        -------------
+        particle: Particle name, e.g. L1
+        row     : Pandas series with event information
+        mass    : Mass of particle
+
+        Returns
+        -------------
+        Lorentz vector for particle
+        '''
+        pt = tut.numeric_from_series(row, f'{particle}_PT' , float)
+        eta= tut.numeric_from_series(row, f'{particle}_ETA', float)
+        phi= tut.numeric_from_series(row, f'{particle}_PHI', float)
+
+        return vector.obj(pt=pt, phi=phi, eta=eta, mass=mass)
     # ------------------------------------------
     def _calculate_variables(self, row : pnd.Series) -> pnd.Series:
-        l1 = v4d(pt=row.L1_PT, phi=row.L1_PHI, eta=row.L1_ETA, m=EMASS)
-        l2 = v4d(pt=row.L2_PT, phi=row.L2_PHI, eta=row.L2_ETA, m=EMASS)
+        l1 = self._build_4dvec(particle='L1', row=row, mass=EMASS)
+        l2 = self._build_4dvec(particle='L2', row=row, mass=EMASS)
 
         if   self._project == 'rk':
-            hd = v4d(pt=row.H_PT  , phi=row.H_PHI  , eta=row.H_ETA  , m=KMASS)
+            hd = self._build_4dvec(particle= 'H', row=row, mass=KMASS)
         elif self._project == 'rkst':
-            h1 = v4d(pt=row.H1_PT , phi=row.H1_PHI , eta=row.H1_ETA , m=KMASS)
-            h2 = v4d(pt=row.H2_PT , phi=row.H2_PHI , eta=row.H2_ETA , m=PIMASS)
+            h1 = self._build_4dvec(particle='H1', row=row, mass=KMASS)
+            h2 = self._build_4dvec(particle='H2', row=row, mass=PIMASS)
+
             hd = h1 + h2
         else:
             raise ValueError(f'Invalid project: {self._project}')
