@@ -89,7 +89,12 @@ class BremBiasCorrector:
 
         return brem_corr
     # --------------------------
-    def correct(self, brem : v4d, row : int, col : int, area : float) -> v4d:
+    def correct(
+        self,
+        brem : v4d, 
+        row  : int, 
+        col  : int, 
+        area : int) -> v4d:
         '''
         Takes 4 vector with brem, the row and column locations in ECAL
         Returns corrected photon
