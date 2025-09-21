@@ -18,6 +18,14 @@ class Data:
     '''
     user    = os.environ['USER']
     out_dir = f'/tmp/{user}/tests/version_manager/'
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('dmu:test_version_management', 10)
+    LogStore.set_level('dmu:version_management'     , 10)
 #-----------------------------------------------------------
 def _create_files(nfiles : int) -> str:
     '''
