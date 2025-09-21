@@ -88,20 +88,20 @@ In order to reuse data that is hard to calculate one would need:
 If both are avalable, one can:
 
 ```python
-import dmu.generic.utilities as gut
+from dmu.generic import cache 
 
 def _get_something() -> float:
     # This loads the data, if found 
     hashable = arg1, arg2
 
-    ret = gut.load_cached(hash_obj=hashable, on_fail=-999)
+    ret = cache.load_cached(hash_obj=hashable, on_fail=-999)
     if ret != -999:
         return ret
     
     obj = very_expensive_function(arg1, arg2)
     
     # This saves the data
-    ret = gut.cache_data(obj, hash_obj=hashable)
+    ret = cache.cache_data(obj, hash_obj=hashable)
 
     return ret
 ```
@@ -361,6 +361,18 @@ def fun():
     sleep(3)
 
 fun()
+```
+
+## Python to JSON string
+
+The project contains a wrapper to `json.dumps` 
+that can deal with `PosixPath` and `DictConfig` in the values.
+It can be used as:
+
+```python
+from dmu.generic import utilities as gut
+
+string = gut.object_to_string(obj={1,2,3, Path('/x/y/z')})
 ```
 
 ## JSON/YAML dumper and loader
