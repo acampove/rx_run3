@@ -6,6 +6,7 @@ import glob
 import os
 import re
 from pathlib import Path
+from typing  import Literal, overload
 
 from dmu.logging.log_store import LogStore
 
@@ -45,7 +46,11 @@ def _get_numeric_version(version : str) -> tuple[int,int]|None:
 
     return major, minor
 #---------------------------------------
-def get_last_version(dir_path : str|Path, version_only : bool = True) -> Path|str:
+@overload
+def get_last_version(dir_path: str | Path, version_only: Literal[True ]) ->  str:...
+@overload
+def get_last_version(dir_path: str | Path, version_only: Literal[False]) -> Path:...
+def get_last_version(dir_path: str | Path, version_only: bool = True) -> str | Path:
     r'''
     Parameters
     ---------------------
