@@ -18,8 +18,6 @@ import yaml
 from yaml.constructor      import ConstructorError
 from omegaconf.errors      import ConfigKeyError
 from omegaconf             import ListConfig, OmegaConf, DictConfig, ValidationError
-from dmu.generic           import hashing
-from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 
 TIMER_ON=False
