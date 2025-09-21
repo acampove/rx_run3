@@ -9,7 +9,6 @@ import pytest
 
 from dmu.logging.log_store import LogStore
 from dmu.generic           import caching
-from dmu.generic           import utilities as gut 
 
 log=LogStore.add_logger('dmu:test_caching')
 # ----------------------
@@ -35,9 +34,9 @@ def test_cache_not_found():
     Checks that what will happen when a cached file is not found happens
     '''
     with pytest.raises(FileNotFoundError):
-        ret = gut.load_cached(hash_obj=['something that will never be cached'])
+        ret = caching.load_cached(hash_obj=['something that will never be cached'])
 
-    ret = gut.load_cached(hash_obj=['something that will never be cached'], on_fail=-999)
+    ret = caching.load_cached(hash_obj=['something that will never be cached'], on_fail=-999)
 
     assert ret == -999
 # -------------------------
