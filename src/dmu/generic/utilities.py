@@ -318,12 +318,17 @@ def dump_json(
     path.parent.mkdir(exist_ok=True, parents=True)
 
     with open(path, 'w', encoding='utf-8') as ofile:
+        # These lines should deal with objects like Path or DictConfig
+        # in py_data
+        json_string = object_to_string(obj=py_data)
+        data        = json.loads(json_string)
+
         if path.name.endswith('.json'):
-            json.dump(py_data, ofile, indent=4, sort_keys=sort_keys)
+            json.dump(data, ofile, indent=4, sort_keys=sort_keys)
             return
 
         if path.name.endswith('.yaml') or path.name.endswith('.yml'):
-            yaml.dump(py_data, ofile, Dumper=BlockStyleDumper, sort_keys=sort_keys)
+            yaml.dump(data, ofile, Dumper=BlockStyleDumper, sort_keys=sort_keys)
             return
 
         raise NotImplementedError(f'Cannot deduce format from extension in path: {path}')
