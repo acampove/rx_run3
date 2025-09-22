@@ -3,7 +3,8 @@ Module with class used to swap mass hypotheses
 '''
 import pandas as pnd
 
-from ROOT                  import RDataFrame, RDF
+import vector
+from ROOT                  import RDataFrame, RDF # type: ignore
 from tqdm                  import tqdm
 from particle              import Particle         as part
 from vector                import MomentumObject3D as v3d

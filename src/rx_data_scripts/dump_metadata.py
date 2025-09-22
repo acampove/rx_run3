@@ -5,7 +5,7 @@ import json
 import argparse
 
 import yaml
-from ROOT import TFile
+from ROOT import TFile # type: ignore
 
 # ------------------------------
 class Data:
