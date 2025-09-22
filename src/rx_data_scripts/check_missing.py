@@ -26,6 +26,7 @@ class Data:
     '''
     Used to store shared information 
     '''
+    only_friend     : str|None
     friends_skipped : list[str]
     log_level       : int
     data_dir        : Path
@@ -62,12 +63,14 @@ def _get_data_dir(project : str) -> Path:
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script meant to check for missing friend trees')
     parser.add_argument('-p', '--project'  , type=str , help='E.g. rk', choices=['rk', 'rkst', 'rk_nopid', 'rkst_nopid'], required=True)
+    parser.add_argument('-o', '--only'     , type=str , help='Do only these friend tree, optional') 
     parser.add_argument('-s', '--skip_sam' , nargs='+', help='Samples to skip', default=[])
     parser.add_argument('-l', '--log_level', type=int , help='Logging level', default=20, choices=[10, 20, 30])
 
     args = parser.parse_args()
 
     Data.project         = args.project
+    Data.only_friend     = args.only
     Data.data_dir        = _get_data_dir(project = args.project)
     Data.friends_skipped = args.skip_sam
     Data.log_level       = args.log_level
@@ -170,6 +173,27 @@ def _count_paths(d_data : dict[str, dict]) -> int:
             npath += len(l_path)
 
     return npath
+# ----------------------
+def _skip_friend(fname : str) -> bool:
+    '''
+    Parameters
+    -------------
+    fname: Name of friend tree
+
+    Returns
+    -------------
+    True if meant to be skipped
+    '''
+    if fname == 'main':
+        return False
+
+    if fname in Data.friends_skipped:
+        return True
+
+    if Data.only_friend and fname != Data.only_friend:
+        return True
+
+    return False
 # ---------------------------------
 def _find_paths() -> FileStructure:
     '''
@@ -188,7 +212,7 @@ def _find_paths() -> FileStructure:
 
     l_msg = []
     for friend_path in l_friend:
-        if friend_path.name in ['samples'] + Data.friends_skipped:
+        if _skip_friend(fname=friend_path.name):
             continue
 
         version = _version_from_path(path=friend_path)
