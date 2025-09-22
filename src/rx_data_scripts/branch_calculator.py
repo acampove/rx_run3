@@ -239,8 +239,7 @@ def _process_rdf(
         if skip_correction:
             log.warning('Turning off ecalo_bias correction for MC sample')
 
-
-        df   = utilities.df_from_rdf(rdf=rdf)
+        df   = utilities.df_from_rdf(rdf=rdf, drop_nans=False)
         is_mc= utilities.rdf_is_mc(rdf=rdf)
         cor  = MassBiasCorrector(
             df             = df, 
