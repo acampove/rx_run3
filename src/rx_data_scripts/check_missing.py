@@ -450,7 +450,7 @@ def _delete_files() -> None:
     nbad = len(l_bad)
 
     log.warning(f'Found {nbad}/{ntot} bad files')
-    val = input('Delete files? [y/n]')
+    val = input('Delete files? [y/n]: ')
     if val != 'y':
         return
 
