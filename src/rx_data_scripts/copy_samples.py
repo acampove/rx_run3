@@ -28,6 +28,7 @@ class Data:
     conf  : DictConfig 
     d_data  : dict
     l_source: list[Path]
+    skipped_friend : str|None
 
     out_dir : Path # Path to ana_dir/{kind}/{version}
     pfs_dir = Path(os.environ['PFS_ANADIR'])/'Data'
@@ -49,6 +50,7 @@ def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
     parser.add_argument('-k', '--kind', type=str, help='Type of files', choices=Data.l_kind, required=True)
     parser.add_argument('-p', '--proj', type=str, help='Name of YAML config file, e.g. rk', required=True, choices=['rk', 'rkst'])
+    parser.add_argument('-s', '--skip', type=str, help='Friend tree to skip', choices=Data.l_kind)
     parser.add_argument('-l', '--logl', type=int, help='Logger level', choices=[5, 10, 20, 30], default=20)
     parser.add_argument('-n', '--nprc', type=int, help='Number of process to download with, with zero, will download all files at once', default=1)
     parser.add_argument('-v', '--vers', type=str, help='Version of files, only makes sense if kind is not "all"')
@@ -61,6 +63,7 @@ def _parse_args():
     Data.vers = args.vers
     Data.dry  = args.dry
     Data.nprc = args.nprc
+    Data.skipped_friend = args.skip
 
     LogStore.set_level('rx_data:copy_samples', args.logl)
 # -----------------------------------------
@@ -247,6 +250,9 @@ def main():
         l_kind = [Data.kind]
 
     for kind in l_kind:
+        if kind == Data.skipped_friend:
+            continue
+
         _download_kind(kind)
 
     log.info(f'Copied {Data.copied_files} ({Data.copied_size:.2f} Gb) files in total')
