@@ -120,17 +120,19 @@ def _get_truth(event_type : int|str, trigger : str) -> str:
     raise ValueError(f'Invalid trigger name: {trigger}')
 #-----------------------
 def selection(
-    q2bin    : str,
-    process  : str,
-    trigger  : str,
-    smeared  : bool= True) -> dict[str,str]:
+    q2bin     : str,
+    process   : str,
+    trigger   : str,
+    skip_truth: bool = False,
+    smeared   : bool = True) -> dict[str,str]:
     '''
     Picks up sample name, trigger, etc, returns dictionary with selection
 
-    q2bin    : low, central, jpsi, psi2S or high
-    process  : Nickname for MC sample, starts with "DATA" for data
-    smeared  : If true (default), the selection will use cuts on smeared masses. Only makes sense for electron MC samples
-    trigger  : E.g. Hlt2RD...
+    q2bin     : low, central, jpsi, psi2S or high
+    process   : Nickname for MC sample, starts with "DATA" for data
+    smeared   : If true (default), the selection will use cuts on smeared masses. Only makes sense for electron MC samples
+    trigger   : E.g. Hlt2RD...
+    skip_truth: By default False, if True, it will not include truth matching requirement
     '''
     if 'toy' in process:
         log.warning(f'Process {process} recognized as toy sample, returning empty selection')
@@ -148,6 +150,9 @@ def selection(
         log.debug('Adding cleaning requirement for data')
         d_cut['clean'] = 'dataq == 1'
         d_cut['block'] = 'block >= 1'
+    elif skip_truth:
+        log.warning('Not using truth matching')
+        d_cut['truth'] = '(1)' 
     else:
         log.debug('Adding truth matching requirement for MC')
         d_cut['truth'] = _get_truth(event_type=event_type, trigger=trigger)
