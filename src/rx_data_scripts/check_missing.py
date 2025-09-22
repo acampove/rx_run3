@@ -321,7 +321,7 @@ def _get_stats(main_path : Path, friend_path : Path) -> tuple[int,int]|None:
     nmain = _get_tree_entries(path=  main_path)
     nfrnd = _get_tree_entries(path=friend_path)
 
-    if nmain == nfrnd and nmain > 0:
+    if nmain == nfrnd:
         Data.l_to_be_deleted.append(None)
         return None
 
