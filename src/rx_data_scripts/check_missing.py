@@ -435,6 +435,28 @@ def _compare_against_main(
         d_diff[sample] = d_path
 
     return d_diff
+# ----------------------
+def _delete_files() -> None:
+    '''
+    This should delete corrupted/invalid files
+    '''
+    if all(fpath is None for fpath in Data.l_to_be_deleted):
+        log.info('No invalid files found')
+        return
+
+    l_bad= [ path for path in Data.l_to_be_deleted if path is not None ]
+
+    ntot = len(Data.l_to_be_deleted)
+    nbad = len(l_bad)
+
+    log.warning(f'Found {nbad}/{ntot} bad files')
+    val = input('Delete files? [y/n]')
+    if val != 'y':
+        return
+
+    for path in tqdm.tqdm(l_bad, ascii=' -'):
+        if path.exists():
+            path.unlink()
 # ---------------------------------
 def main():
     '''
@@ -463,6 +485,8 @@ def main():
             frnd_sam = data)
 
     gut.dump_json(data=d_mis, path=f'missing_{Data.project}.yaml', exists_ok=True)
+
+    _delete_files()
 # ---------------------------------
 if __name__ == '__main__':
     main()
