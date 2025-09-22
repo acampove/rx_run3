@@ -136,7 +136,7 @@ def selection(
         log.warning(f'Process {process} recognized as toy sample, returning empty selection')
         return {}
 
-    project  = info.project_from_trigger(trigger=trigger)
+    project  = info.project_from_trigger(trigger=trigger, lower_case=False)
     analysis = info.channel_from_trigger(trigger=trigger)
 
     d_cut : dict[str,str] = {}
