@@ -101,7 +101,9 @@ class SWPCalculator:
         par_id = numeric_from_series(row, f'{name}_ID', int)
         par    = part.from_pdgid(par_id)
         ms     = par.mass
-        vec    = v4d(pt=par_3d.pt, eta=par_3d.eta, phi=par_3d.phi, m=ms)
+        if ms is None:
+            raise ValueError(f'Cannot get mass from particle with PDG ID: {par_id}')
+        vec    = vector.obj(pt=par_3d.pt, phi=par_3d.phi, eta=par_3d.eta, mass=ms)
 
         return vec
     #---------------------------------
