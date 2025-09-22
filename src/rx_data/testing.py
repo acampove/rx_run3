@@ -121,7 +121,6 @@ def _apply_selection(rdf : RDataFrame, trigger : str, sample : str) -> RDataFram
     d_sel['jpsi_misid'] = '(1)'
     d_sel['cascade']    = '(1)'
     d_sel['hop']        = '(1)'
-    d_sel['bdt']        = 'mva_cmb > 0.9'
 
     for cut_name, cut_expr in d_sel.items():
         log.debug(f'{cut_name:<20}{cut_expr}')
