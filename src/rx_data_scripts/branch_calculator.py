@@ -309,7 +309,7 @@ def _split_rdf(rdf : RDataFrame) -> list[RDataFrame]:
 
     return l_rdf
 # ----------------------
-def _get_input_rdf(path : str) -> RDF.RNode|None:
+def _get_input_rdf(path : str) -> RDF.RNode:
     '''
     Parameters
     -------------
@@ -334,11 +334,6 @@ def _get_input_rdf(path : str) -> RDF.RNode|None:
         for path_found in d_rdf:
             log.info(path_found)
         raise ValueError(f'Cannot find dataframe for: {path}')
-
-    nentries = rdf.Count().GetValue()
-    if nentries == 0:
-        log.warning('Found empty file, skipping')
-        return None
 
     if Data.nmax is not None:
         rdf=rdf.Range(Data.nmax)
