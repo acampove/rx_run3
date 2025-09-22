@@ -159,3 +159,16 @@ def test_update_selection():
     assert    isel_001  ==    osel_002
     assert id(isel_001) != id(osel_002)
 # --------------------------
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_no_truth(trigger : str): 
+    '''
+    Test reading the selection
+    '''
+    sample= 'Bd_Kstee_eq_btosllball05_DPC'
+    d_sel = sel.selection(
+        trigger   =trigger, 
+        q2bin     ='central', 
+        skip_truth=True,
+        process   =sample)
+
+    assert d_sel['truth'] == '(1)'
