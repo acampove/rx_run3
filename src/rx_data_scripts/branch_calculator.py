@@ -9,7 +9,7 @@ import argparse
 
 import tqdm
 import dmu.generic.utilities as gut
-from ROOT                   import RDataFrame, TFileMerger, RDF # type: ignore
+from ROOT                   import RDataFrame, TFileMerger, TFile, TTree, RDF # type: ignore
 from dmu.logging.log_store  import LogStore
 from dmu.generic            import version_management as vman
 
@@ -355,7 +355,13 @@ def _create_file(path : str) -> None:
     nentries = rdf.Count().GetValue()
     if nentries == 0:
         log.warning(f'Found empty dataframe for: {path}')
-        rdf.Snapshot(Data.tree_name, out_path)
+        log.info(f'Saving empty output to: {out_path}')
+
+        ofile=TFile(out_path, 'recreate')
+        ttree=TTree('DecayTree', '')
+        ttree.Write()
+        ofile.Close()
+
         return
 
     l_rdf = _split_rdf(rdf=rdf)
