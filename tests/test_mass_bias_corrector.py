@@ -193,6 +193,8 @@ def _check_size(rdf_org : RDF.RNode, rdf_cor : RDF.RNode) -> None:
     ot_size = rdf_cor.Count().GetValue()
 
     assert in_size == ot_size
+
+    log.info(f'Sizes agree at: {in_size}')
 #-----------------------------------------
 @pytest.mark.parametrize('kind'   , ['brem_track_2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
@@ -451,4 +453,4 @@ def test_dask(trigger : str, is_mc : bool):
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, f'dask_{is_mc}/{trigger}', kind)
-
+#-----------------------------------------
