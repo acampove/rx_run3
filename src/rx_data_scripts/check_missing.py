@@ -33,7 +33,8 @@ class Data:
     data_rgx        = r'(data_24_mag(?:down|up)_24c\d)_(.*)\.root'
     mc_rgx          = r'mc_mag(?:up|down)_(?:.*_)?\d{8}_(.*)_(Hlt2RD.*)_\w{10}\.root'
 
-    l_electron_samples = ['brem_track_2', 'mass']
+    l_electron_samples                = ['brem_track_2', 'mass']
+    l_to_be_deleted : list[Path|None] = []
 # ---------------------------------
 def _initialize() -> None:
     '''
@@ -321,7 +322,10 @@ def _get_stats(main_path : Path, friend_path : Path) -> tuple[int,int]|None:
     nfrnd = _get_tree_entries(path=friend_path)
 
     if nmain == nfrnd and nmain > 0:
+        Data.l_to_be_deleted.append(None)
         return None
+
+    Data.l_to_be_deleted.append(friend_path)
 
     return nmain, nfrnd
 # ----------------------
