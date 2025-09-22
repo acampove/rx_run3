@@ -232,6 +232,7 @@ other options are:
 options:
   -h, --help            show this help message and exit
   -p --project E.g. rx 
+  -o --only    Optional, if used, will check only this friend, e.g. mva
   -s SKIP_SAM [SKIP_SAM ...], --skip_sam SKIP_SAM [SKIP_SAM ...]
                         Samples to skip
   -l {10,20,30}, --log_level {10,20,30}
