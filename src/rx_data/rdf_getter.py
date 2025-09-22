@@ -922,7 +922,15 @@ class RDFGetter:
 
         data_frnd = data['friends']
         for kind, data_kind in data_frnd.items():
-            fpath_friend = data_kind['files'][ifile]
+            try:
+                fpath_friend = data_kind['files'][ifile]
+            except IndexError as exc:
+                data_string = yaml.dump(data_kind)
+                log.warning(20 * '-')
+                log.info(data_string)
+                log.warning(20 * '-')
+                raise KeyError(f'Cannot retrieve file at {ifile} for friend {kind}') from exc
+
             datac['friends'][kind]['files'] = [fpath_friend]
 
         return datac, fpath_main
