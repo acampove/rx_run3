@@ -109,6 +109,15 @@ class MassBiasCorrector:
         return vector.obj(pt=pt, phi=phi, eta=eta, mass=mass)
     # ------------------------------------------
     def _calculate_variables(self, row : pnd.Series) -> pnd.Series:
+        '''
+        Parameters
+        ----------------
+        row: Series representing event
+
+        Returns 
+        ----------------
+        Series with recalculated kinematics, after corrections
+        '''
         l1 = self._build_4dvec(particle='L1', row=row, mass=EMASS)
         l2 = self._build_4dvec(particle='L2', row=row, mass=EMASS)
 
