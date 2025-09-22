@@ -24,12 +24,18 @@ class Data:
     '''
     Class used to share attributes
     '''
-    trigger_mm = 'Hlt2RD_BuToKpMuMu_MVA'
-    trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
-    d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
-    ana_dir    = os.environ['ANADIR']
+    trigger_bukee = 'Hlt2RD_BuToKpEE_MVA'
+    trigger_bukmm = 'Hlt2RD_BuToKpMuMu_MVA'
 
-    mplhep.style.use('LHCb2')
+    trigger_bdkee = 'Hlt2RD_B0ToKpPimEE_MVA'
+    trigger_bdkmm = 'Hlt2RD_B0ToKpPimMuMu_MVA'
+
+    l_trigger_bu  = [trigger_bukmm, trigger_bukee, f'{trigger_bukee}_ext', f'{trigger_bukee}_noPID']
+    l_trigger_bd  = [trigger_bdkmm, trigger_bdkee, f'{trigger_bdkee}_ext', f'{trigger_bdkee}_noPID']
+    l_trigger     = l_trigger_bd + l_trigger_bu
+
+    d_reso        = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
+    ana_dir       = os.environ['ANADIR']
 
     q2_bin  : str
     sample  : str
@@ -46,6 +52,11 @@ class Data:
     l_col  = []
 # ---------------------------------
 def _initialize() -> None:
+    '''
+    This should run at the beginning
+    '''
+    mplhep.style.use('LHCb2')
+
     Data.cfg = _get_cfg()
 # ---------------------------------
 def _get_cfg() -> dict:
@@ -118,9 +129,7 @@ def _update_with_block(d_sel : dict[str,str]) -> dict[str,str]:
 # ---------------------------------
 @gut.timeit
 def _get_rdf() -> RDataFrame:
-    analysis = 'nopid' if Data.trigger.endswith('_noPID') else 'rx'
-
-    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger, analysis=analysis)
+    gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
     rdf = gtr.get_rdf(per_file=False)
     rdf = _apply_definitions(rdf)
     d_sel = sel.selection(trigger=Data.trigger, q2bin=Data.q2_bin, process=Data.sample)
@@ -147,7 +156,7 @@ def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to make comparison plots between distributions in the same dataframe')
     parser.add_argument('-q', '--q2bin'  , type=str, help='q2 bin' , choices=['low', 'central', 'jpsi', 'psi2', 'high'], required=True)
     parser.add_argument('-s', '--sample' , type=str, help='Sample' , required=True)
-    parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True, choices=[Data.trigger_mm, Data.trigger_ee, 'Hlt2RD_BuToKpEE_MVA_ext', 'Hlt2RD_BuToKpEE_MVA_noPID'])
+    parser.add_argument('-t', '--trigger', type=str, help='Trigger' , required=True, choices=Data.l_trigger)
     parser.add_argument('-c', '--config' , type=str, help='Configuration', required=True)
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category, 12 = 1 or 2, -1 = all' , choices=[-1, 0, 1, 2, 12], required=True)
