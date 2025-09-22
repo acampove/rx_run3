@@ -214,6 +214,7 @@ def test_simple(kind : str, trigger : str):
     df_cor = cor.get_df()
     rdf_cor= RDF.FromPandas(df_cor)
 
+    _check_size(rdf_org=rdf_org, rdf_cor=rdf_cor)
     _check_output_columns(rdf_cor)
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
@@ -252,6 +253,7 @@ def test_medium_input(trigger : str, sample : str):
 
     rdf_cor = RDF.FromPandas(df_cor)
 
+    _check_size(rdf_org=rdf_org, rdf_cor=rdf_cor)
     _check_output_columns(rdf_cor)
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
@@ -280,6 +282,7 @@ def test_nbrem(nbrem : int, kind : str, trigger : str):
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
+    _check_size(rdf_org=rdf_org, rdf_cor=rdf_cor)
     _compare_masses(d_rdf, f'nbrem_{nbrem:03}/{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
