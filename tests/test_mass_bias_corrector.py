@@ -203,7 +203,7 @@ def test_simple(kind : str, trigger : str):
     Simplest test
     '''
     rdf_org = _get_rdf(trigger=trigger)
-    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
     cor     = MassBiasCorrector(
@@ -240,7 +240,7 @@ def test_medium_input(trigger : str, sample : str):
     with RDFGetter.max_entries(100_000):
         rdf_org = _get_rdf(sample=sample, trigger=trigger)
 
-    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
     with Client(n_workers=nproc):
@@ -269,7 +269,7 @@ def test_nbrem(nbrem : int, kind : str, trigger : str):
     Test splitting by brem
     '''
     rdf_org = _get_rdf(nbrem=nbrem, trigger=trigger)
-    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
     cor     = MassBiasCorrector(
@@ -295,7 +295,7 @@ def test_isinner(is_inner : bool, kind : str, trigger : str):
     Test splitting detector region
     '''
     rdf_org = _get_rdf(is_inner = is_inner, trigger = trigger)
-    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
     cor     = MassBiasCorrector(
@@ -327,7 +327,7 @@ def test_nbrem_npvs(
     with RDFGetter.max_entries(value=30_000):
         rdf_org = _get_rdf(nbrem=nbrem, npvs=npvs, trigger=trigger)
 
-    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
     cor     = MassBiasCorrector(
@@ -351,7 +351,7 @@ def test_suffix(kind : str, trigger : str):
     Tests that output dataframe has columns with suffix added
     '''
     rdf_org = _get_rdf(trigger=trigger)
-    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
     cor     = MassBiasCorrector(
@@ -375,7 +375,7 @@ def test_brem_threshold(nbrem : int, brem_energy_threshold: float, trigger : str
     with RDFGetter.max_entries(value=50_000):
         rdf_org = _get_rdf(nbrem=nbrem, trigger=trigger)
 
-    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
     cor     = MassBiasCorrector(
@@ -401,7 +401,7 @@ def test_add_smearing(kind : str, is_mc : bool, trigger : str):
     Checks that smearing of q2 was added on top of correction
     '''
     rdf_org = _get_rdf(is_mc=is_mc, trigger=trigger)
-    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
     cor     = MassBiasCorrector(
@@ -434,7 +434,7 @@ def test_dask(trigger : str, is_mc : bool):
     with RDFGetter.max_entries(10_000):
         rdf_org = _get_rdf(is_mc=is_mc, trigger=trigger)
 
-    df_org  = ut.df_from_rdf(rdf=rdf_org)
+    df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
     with Client(n_workers=nproc, threads_per_worker=1):
