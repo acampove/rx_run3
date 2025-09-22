@@ -181,6 +181,18 @@ def _get_rdf(
         log.info(f'Found {nentries} entries')
 
     return rdf
+# ----------------------
+def _check_size(rdf_org : RDF.RNode, rdf_cor : RDF.RNode) -> None:
+    '''
+    Parameters
+    -------------
+    rdf_org: Input dataframe, needed to be corrected
+    rdf_cor: Dataframe with corrected data
+    '''
+    in_size = rdf_org.Count().GetValue()
+    ot_size = rdf_cor.Count().GetValue()
+
+    assert in_size == ot_size
 #-----------------------------------------
 @pytest.mark.parametrize('kind'   , ['brem_track_2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
