@@ -4,7 +4,7 @@ Module containing tests for MVACalculator class
 import os
 import pytest
 import matplotlib.pyplot as plt
-from ROOT                         import RDF, RDataFrame
+from ROOT                         import RDF, RDataFrame # type: ignore
 from dmu.logging.log_store        import LogStore
 from rx_data.rdf_getter           import RDFGetter
 from rx_data.mva_calculator       import MVACalculator
@@ -17,7 +17,7 @@ class Data:
     '''
     l_trigger= ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_BuToKpEE_MVA']
     nentries = 30_000
-    version  = 'v7p6'
+    version  = 'v7.7'
     l_mc     = [
         ('Hlt2RD_BuToKpEE_MVA'  , 'Bu_Kee_eq_btosllball05_DPC'  ),
         ('Hlt2RD_BuToKpMuMu_MVA', 'Bu_Kmumu_eq_btosllball05_DPC')]
@@ -64,7 +64,7 @@ def test_data(trigger : str, out_dir : str) -> None:
 
     with RDFGetter.max_entries(value=Data.nentries):
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     cal = MVACalculator(
     rdf     = rdf,
@@ -82,7 +82,7 @@ def test_mc(trigger : str, sample : str, out_dir : str) -> None:
     '''
     with RDFGetter.max_entries(value=Data.nentries):
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     cal = MVACalculator(
     rdf     = rdf,
@@ -117,7 +117,7 @@ def test_nopid(trigger : str, sample : str, out_dir : str) -> None:
     '''
     with RDFGetter.max_entries(value=Data.nentries),\
         RDFGetter.exclude_friends(names=['mva']):
-        gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
+        gtr = RDFGetter(sample=sample, trigger=trigger) 
         rdf = gtr.get_rdf(per_file=False)
 
     cal = MVACalculator(
