@@ -6,8 +6,9 @@ import os
 import glob
 import argparse
 import subprocess
+from pathlib import Path
 
-from ROOT                  import TFileMerger
+from ROOT                  import TFileMerger # type: ignore
 from dmu.logging.log_store import LogStore
 from dmu.generic           import version_management as vmn
 from rx_data.path_splitter import PathSplitter
@@ -19,7 +20,7 @@ class Data:
     Class used to share attributes
     '''
     dry_run      : bool
-    samples_path : str
+    samples_path : str|Path
     proj         : str
     vers         : str|None
     sample_name  : str
