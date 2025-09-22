@@ -6,7 +6,6 @@ import os
 import glob
 import fnmatch
 import argparse
-from typing      import Union
 
 import tqdm
 import dmu.generic.utilities as gut
@@ -207,7 +206,7 @@ def _is_mc(path : str) -> bool:
 # ---------------------------------
 def _process_rdf(
     rdf     : RDataFrame,
-    path    : str) -> Union[RDataFrame,None]:
+    path    : str) -> RDataFrame|None:
     '''
     Takes:
 
