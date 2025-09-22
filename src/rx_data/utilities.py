@@ -104,9 +104,16 @@ def _info_from_data_path(path : Path) -> tuple[str,str]:
 
     return sample, line
 # ---------------------------------
-def df_from_rdf(rdf : RDataFrame) -> pnd.DataFrame:
+def df_from_rdf(rdf : RDataFrame, drop_nans : bool) -> pnd.DataFrame:
     '''
-    Utility method needed to get pandas dataframe from ROOT dataframe
+    Parameters
+    ------------------
+    rdf      : ROOT dataframe
+    drop_nans: If true it will remove events (rows) with NaNs
+
+    Returns
+    ------------------
+    Pandas dataframe with contents of ROOT dataframe
     '''
     rdf    = _preprocess_rdf(rdf)
     l_col  = [ name.c_str() for name in rdf.GetColumnNames() if _pick_column(name.c_str()) ]
@@ -126,7 +133,7 @@ def df_from_rdf(rdf : RDataFrame) -> pnd.DataFrame:
             log.debug(f'{name:<20}{nnan:<20}{perc:<20.2f}')
     log.debug(60 * '-')
 
-    if has_nans:
+    if has_nans and drop_nans:
         df   = df.dropna()
         ndrp = len(df)
         log.warning(f'Dropping columns with NaNs {ntot} -> {ndrp}')
