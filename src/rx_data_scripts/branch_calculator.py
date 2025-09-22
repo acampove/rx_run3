@@ -283,7 +283,7 @@ def _get_swap_rdf(rdf : RDF.RNode, trigger : str) -> RDF.RNode:
 
     # Pion is the one that gets misidentified as electron
     # pi(-> e/mu) + e/mu combinations
-    kaon_name = 'H' if project == 'rk' else 'H2'
+    kaon_name = {'rk' : 'H', 'rkst' : 'H2'}[project]
     if Data.kind == 'swp_jpsi_misid':
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' : lep_id, 'L2' : lep_id}, d_had={kaon_name : lep_id})
         rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
@@ -291,7 +291,7 @@ def _get_swap_rdf(rdf : RDF.RNode, trigger : str) -> RDF.RNode:
         return rdf
 
     # These are Kpi combinations
-    kaon_name = 'H' if project == 'rk' else 'H1'
+    kaon_name = {'rk' : 'H', 'rkst' : 'H1'}[project]
     if Data.kind == 'swp_cascade':
         obj = SWPCalculator(rdf=rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had={kaon_name : 321})
         rdf = obj.get_rdf(preffix=Data.kind, progress_bar=Data.pbar, use_ss=is_ss)
