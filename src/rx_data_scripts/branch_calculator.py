@@ -277,7 +277,9 @@ def _get_swap_rdf(rdf : RDF.RNode, trigger : str) -> RDF.RNode:
     # When the data ntuples with fixed descriptor be ready
     is_ss   = 'SameSign' in trigger
     lep_id  = 11 if info.is_ee(trigger=trigger) else 13
-    project = info.project_from_trigger(trigger=trigger)
+    project = info.project_from_trigger(trigger=trigger, lower_case=True)
+
+    log.info(f'Found project {project} for trigger {trigger}')
 
     # Pion is the one that gets misidentified as electron
     # pi(-> e/mu) + e/mu combinations
