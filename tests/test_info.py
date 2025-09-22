@@ -82,7 +82,7 @@ def test_project_from_trigger(project : str, trigger : str):
     Test for function providing RK/RKst for a given HLT2 trigger
     '''
 
-    assert project == info.project_from_trigger(trigger=trigger)
+    assert project == info.project_from_trigger(trigger=trigger, lower_case=False)
 
     project = project.lower()
 
