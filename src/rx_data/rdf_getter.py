@@ -795,7 +795,7 @@ class RDFGetter:
         nfiles     = len(l_file)
         d_config   = {}
         for ifile in range(nfiles):
-            data_copy, fpath = RDFGetter._remove_all_but(data, ifile, main)
+            data_copy, fpath = self._remove_all_but(data, ifile, main)
             config_path      = self._get_tmp_path(identifier='rdframe_config', data=data_copy)
             log.debug(f'Saving per-file config path to {config_path}')
             gut.dump_json(data_copy, config_path)
@@ -904,8 +904,7 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    @staticmethod
-    def _remove_all_but(data : dict, ifile : int, main : str) -> tuple[dict,str]:
+    def _remove_all_but(self, data : dict, ifile : int, main : str) -> tuple[dict,str]:
         '''
         Will:
 
@@ -929,7 +928,7 @@ class RDFGetter:
                 log.warning(20 * '-')
                 log.info(data_string)
                 log.warning(20 * '-')
-                raise KeyError(f'Cannot retrieve file at {ifile} for friend {kind}') from exc
+                raise KeyError(f'Cannot retrieve file at {ifile} for friend {kind}, sample {self._sample}/{self._trigger}/{self._tree_name}') from exc
 
             datac['friends'][kind]['files'] = [fpath_friend]
 
