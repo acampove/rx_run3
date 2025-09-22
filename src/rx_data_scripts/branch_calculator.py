@@ -352,7 +352,10 @@ def _create_file(path : str) -> None:
         return
 
     rdf   = _get_input_rdf(path=path)
-    if rdf is None:
+    nentries = rdf.Count().GetValue()
+    if nentries == 0:
+        log.warning(f'Found empty dataframe for: {path}')
+        rdf.Snapshot(Data.tree_name, out_path)
         return
 
     l_rdf = _split_rdf(rdf=rdf)
