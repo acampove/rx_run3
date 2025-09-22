@@ -16,9 +16,10 @@ class Data:
     Data class
     '''
     inp_dir : str
-    rgex    : str
+    rgex    : str|None
     remove  : bool
     dry     : bool
+    lvl     : int
 # -----------------------------------
 def _get_paths() -> list[str]:
     if Data.rgex is None:
