@@ -44,12 +44,12 @@ def is_ee(trigger : str) -> bool:
 
     return channel_from_trigger(trigger) == 'EE'
 # ---------------------------------
-def project_from_trigger(trigger : str, lower_case : bool = False) -> str:
+def project_from_trigger(trigger : str, lower_case : bool) -> str:
     '''
     Parameters
     -------------------
     trigger  : HLT2 trigger
-    lowe_case: If True (default False) will return rk, rkst, etc
+    lowe_case: If True will return rk, rkst, etc
 
     Returns
     -------------------
