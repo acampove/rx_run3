@@ -68,9 +68,10 @@ class MVACalculator:
         string defining q2 selection
         '''
         d_sel = sel.selection(
-            trigger=self._trigger,
-            q2bin  =q2bin,
-            process=self._sample)
+            trigger    = self._trigger,
+            q2bin      = q2bin,
+            skip_truth = True,
+            process    = self._sample)
 
         q2_cut = d_sel['q2']
 
