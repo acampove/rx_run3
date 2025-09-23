@@ -7,6 +7,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 
 import subprocess
+from typing import Final
 import yaml
 
 import ap_utilities.decays.utilities as aput
@@ -14,6 +15,8 @@ from ap_utilities.logging.log_store  import LogStore
 from omegaconf                       import DictConfig
 
 log=LogStore.add_logger('ap_utilities:bkk_checker')
+
+FALLBACK : Final[str] = '/tmp/ap_utilities/output'
 # ---------------------------------
 class BkkChecker:
     '''
@@ -41,11 +44,7 @@ class BkkChecker:
         self._l_event_type : list[str] = self._get_event_types()
     # -------------------------
     def _get_out_dir(self) -> str:
-        if 'ANADIR' not in os.environ:
-            ana_dir = '/tmp/ap_utilities/output'
-        else:
-            ana_dir = os.environ['ANADIR']
-
+        ana_dir = os.environ.get('ANADIR', FALLBACK)
         out_dir = f'{ana_dir}/bkk_checker/{self._name}'
         os.makedirs(out_dir, exist_ok=True)
 
