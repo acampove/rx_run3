@@ -6,7 +6,7 @@ readme      = 'README.md'
 dependencies= [
 'apd',
 'PyYAML', 
-'data-manipulation-utilities',
+'data-manipulation-utilities @ git+ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git',
 'omegaconf',
 'logzero'] 
 
