@@ -1,11 +1,31 @@
-import os
-ANADIR = os.environ['ANADIR']
-PLTDIR = f'{ANADIR}/plots'
-
 configfile: 'configs/rx_plots/compare.yaml'
 
+import os
+
+ANADIR = os.environ['ANADIR']
+PLTDIR = f'{ANADIR}/plots/comparison_brem_track_2/brem_track_2'
+
+def _get_plots() -> list[str]:
+    l_plot = []
+    for args in config['args']:
+        sample = args['sample' ]
+        trigger= args['trigger']
+        q2bin  = args['q2bin'  ]
+        for block in [1, 2, 5, 6, 7, 8]:
+            for brem in [1, 2]:
+                plot=f'{PLTDIR}/{sample}/{trigger}/{q2bin}/{brem}_{block}/with_mva/bmass_correction.png'
+                l_plot.append(plot)
+
+    return l_plot
+
+
+rule all:
+    input:
+        l_plot = _get_plots()
 rule compare:
     output: 
-        f'{PLTDIR}/comparison_brem_track_2/brem_track_2/Bd_JpsiKst_ee_eq_DPC/Hlt2RD_B0ToKpPimEE_MVA/jpsi/2_2/with_mva'
+        '{PLTDIR}/{sample}/{trigger}/{q2bin}/{brem}_{block}/with_mva/bmass_correction.png'
     shell:
-        'compare -q jpsi -s 'DATA_24*' -t Hlt2RD_B0ToKpPimEE_MVA -c resolution -b 2 -B 2'
+        '''
+        compare -q {wildcards.q2bin} -s {wildcards.sample} -t {wildcards.trigger} -c resolution -b {wildcards.brem} -B {wildcards.block}
+        '''
