@@ -87,7 +87,7 @@ def _found_type(
     found= False
 
     if 'name' not in df.columns:
-        raise ValueError(f'Cannot find sample name for: {evt_type}/{block}')
+        return False
 
     for name in df['name']:
         if block not in name:
