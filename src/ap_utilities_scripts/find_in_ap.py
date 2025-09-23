@@ -15,6 +15,7 @@ import argparse
 import apd
 import pandas as pnd
 
+from tqdm                     import tqdm
 from apd                      import SampleCollection
 from ap_utilities.bookkeeping import bkk_checker 
 from dmu.logging.log_store    import LogStore
@@ -129,7 +130,7 @@ def main():
         raise RuntimeError('Cannot extract SampleCollection instance')
 
     t_info    = _get_info()
-    l_missing = [ line for etype, block, line in t_info if not _found_type(col=scol, evt_type=etype, block=block) ]
+    l_missing = [ line for etype, block, line in tqdm(t_info, ascii=' -') if not _found_type(col=scol, evt_type=etype, block=block) ]
     l_missing = sorted(l_missing)
 
     total     = len(t_info)
