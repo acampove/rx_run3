@@ -32,7 +32,7 @@ def _list_samples(cfg : Config) -> None:
     -------------
     cfg: Config object
     '''
-    dset = apd.get_analysis_data(working_group='RD', analysis='rd_ap_2024')
+    dset = apd.get_analysis_data(working_group='RD', analysis='rx_2024')
     scol = dset.all_samples()
     if not isinstance(scol, SampleCollection):
         raise RuntimeError('Cannot extract SampleCollection instance')
