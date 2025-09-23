@@ -5,7 +5,13 @@ import os
 ANADIR = os.environ['ANADIR']
 PLTDIR = f'{ANADIR}/plots/comparison_brem_track_2/brem_track_2'
 
+# ---------------------------------
 def _get_plots() -> list[str]:
+    '''
+    Returns
+    ----------
+    List of paths to PNG files needed
+    '''
     l_plot = []
     for args in config['args']:
         sample = args['sample' ]
@@ -17,8 +23,7 @@ def _get_plots() -> list[str]:
                 l_plot.append(plot)
 
     return l_plot
-
-
+# ---------------------------------
 rule all:
     input:
         l_plot = _get_plots()
