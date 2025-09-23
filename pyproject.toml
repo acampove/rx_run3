@@ -1,23 +1,16 @@
 [tool.poetry]
 name        = 'rx_orchestration'
 version     = '0.0.1'
-description = 'A Prefect orchestration project'
+description = 'An orchestration project'
 authors     = ['angel.campoverde@cern.ch']
 readme      = 'README.md'
 license     = 'MIT'
+packages    = []
 
 [tool.poetry.dependencies]
 python      = '^3.12'
-prefect     = '*'
-htcondor    = '*'
-pyyaml      = '*'
+snakemake   = '*'
 
 [build-system]
 requires      = ['poetry-core>=1.6.0']
 build-backend = 'poetry.core.masonry.api'
-
-[[tool.poetry.packages]]
-include = 'flows'
-
-[tool.poetry.scripts]
-plotting_flow = 'flows.plots:plotting_flow'
