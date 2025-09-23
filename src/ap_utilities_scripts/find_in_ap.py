@@ -15,8 +15,9 @@ import argparse
 import apd
 import pandas as pnd
 
-from apd                   import SampleCollection
-from dmu.logging.log_store import LogStore
+from apd                      import SampleCollection
+from ap_utilities.bookkeeping import bkk_checker 
+from dmu.logging.log_store    import LogStore
 
 log=LogStore.add_logger('ap_utilities:find_in_ap')
 # ----------------------
@@ -51,7 +52,7 @@ def _get_info() -> list[tuple[str, str, str]]:
     Key  : EventType
     Value: Line that would go in info.yaml
     '''
-    ana_dir = os.environ['ANADIR']
+    ana_dir = os.environ.get('ANADIR', bkk_checker.FALLBACK)
     path_wc = f'{ana_dir}/bkk_checker/block_*/info.yaml'
     l_path  = glob.glob(path_wc)
     l_path  = sorted(l_path)
