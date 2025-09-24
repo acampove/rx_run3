@@ -81,7 +81,16 @@ class MassBiasCorrector:
 
         LogStore.set_level(name, 50)
     # ------------------------------------------
-    def _correct_electron(self, name : str, row : pnd.Series) -> pnd.Series:
+    def _correct_electron(
+        self, 
+        name : str, 
+        row  : pnd.Series) -> pnd.Series:
+        '''
+        Parameters
+        -------------------
+        name: Name of particle, e.g. L1
+        row : Row in pandas dataframe
+        '''
         if self._skip_correction:
             log.debug('Skipping correction for {name}')
             return row
