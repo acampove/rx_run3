@@ -148,6 +148,11 @@ def _get_rdf() -> RDataFrame:
 
     if 'selection' in Data.cfg:
         d_cut = Data.cfg['selection']
+        # Mass cut on DTF mass is only needed in data
+        # to remove part reco
+        if not Data.sample.startswith('DATA_'):
+            d_cut['mass'] = '(1)'
+
         d_sel.update(d_cut)
         del Data.cfg['selection']
 
