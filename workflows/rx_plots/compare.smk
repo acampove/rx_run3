@@ -22,7 +22,7 @@ def _get_plots() -> list[str]:
                 continue
 
             for brem in [1, 2]:
-                plot=f'{PLTDIR}/{sample}/{trigger}/{q2bin}/{brem}_{block}/drop_mva/bmass_correction.png'
+                plot = f'{PLTDIR}/{sample}/{trigger}/{q2bin}/{brem}_{block}/drop_mva/bmass_correction.png'
                 l_plot.append(plot)
 
     return l_plot
