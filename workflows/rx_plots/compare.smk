@@ -18,11 +18,11 @@ def _get_plots() -> list[str]:
         trigger= args['trigger']
         q2bin  = args['q2bin'  ]
         for block in [12, 5, 6, 78]:
-            if block == 78 and trigger == 'Hlt2RD_B0ToKpPimEE_MVA':
+            if block == 78 and sample == 'Bd_JpsiKst_ee_eq_DPC':
                 continue
 
             for brem in [1, 2]:
-                plot=f'{PLTDIR}/{sample}/{trigger}/{q2bin}/{brem}_{block}/with_mva/bmass_correction.png'
+                plot=f'{PLTDIR}/{sample}/{trigger}/{q2bin}/{brem}_{block}/drop_mva/bmass_correction.png'
                 l_plot.append(plot)
 
     return l_plot
@@ -32,8 +32,8 @@ rule all:
         l_plot = _get_plots()
 rule compare:
     output: 
-        '{PLTDIR}/{sample}/{trigger}/{q2bin}/{brem}_{block}/with_mva/bmass_correction.png'
+        '{PLTDIR}/{sample}/{trigger}/{q2bin}/{brem}_{block}/drop_mva/bmass_correction.png'
     shell:
         '''
-        compare -q {wildcards.q2bin} -s {wildcards.sample} -t {wildcards.trigger} -c resolution -b {wildcards.brem} -B {wildcards.block}
+        compare -q {wildcards.q2bin} -s {wildcards.sample} -t {wildcards.trigger} -c resolution -b {wildcards.brem} -B {wildcards.block} --nomva
         '''
