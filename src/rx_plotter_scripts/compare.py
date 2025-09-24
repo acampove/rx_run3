@@ -87,7 +87,7 @@ def _get_cfg() -> DictConfig:
     run12_key = 'Corrected and L0(nPVs)'
     if not Data.emulate:
         log.info('Not emulating Run1/2 conditions')
-        del Data.cfg['comparison'][run12_key]
+        del cfg['comparison'][run12_key]
     else:
         log.info('Emulating Run1/2 conditions')
 
