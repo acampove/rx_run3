@@ -762,14 +762,16 @@ def test_custom_columns(trigger : str):
     assert 'xbrem' in l_col
 # ------------------------------------------------
 # TODO: This test is very slow, needs to be disabled for now
-@pytest.mark.parametrize('sample' , ['DATA*'])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
-def skip_test_block(sample : str, trigger : str):
+@pytest.mark.parametrize('sample' , ['Bd_JpsiKst_ee_eq_DPC'  ])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_B0ToKpPimEE_MVA'])
+def test_block(sample : str, trigger : str):
     '''
     Test of getter class with check for block assignment
     '''
-    gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf(per_file=False)
+    with RDFGetter.max_entries(value=-1):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf(per_file=False)
+
     rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
     rep.Print()
