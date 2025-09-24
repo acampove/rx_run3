@@ -17,7 +17,7 @@ from dmu.logging.log_store   import LogStore
 from rx_data.rdf_getter      import RDFGetter
 from rx_selection            import selection as sel
 
-log=LogStore.add_logger('rx_selection:compare')
+log=LogStore.add_logger('rx_plots:compare')
 # ---------------------------------
 @dataclass
 class Data:
