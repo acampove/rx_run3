@@ -86,6 +86,8 @@ def _compare_masses(
 
     if not skip_jpsi:
         cfg['plots']['Jpsi_M']['title'] = correction
+    else:
+        del cfg['plots']['Jpsi_M']
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
