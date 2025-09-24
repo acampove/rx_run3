@@ -60,10 +60,9 @@ from rx_data.rdf_getter     import RDFGetter
 # This picks one sample for a given trigger
 # The sample accepts wildcards, e.g. `DATA_24_MagUp_24c*` for all the periods
 gtr = RDFGetter(
-    sample   ='DATA_24_Mag*_24c*',
-    analysis = 'rx',                    # This is the default, could be nopid
+    sample   = 'DATA_24_Mag*_24c*',
     tree     = 'DecayTree'              # This is the default, could be MCDecayTre
-    trigger  ='Hlt2RD_BuToKpMuMu_MVA')
+    trigger  = 'Hlt2RD_BuToKpMuMu_MVA')  # This should allow picking RK, Rkstar or noPID samples
 
 # If False (default) will return a single dataframe for the sample
 rdf = gtr.get_rdf(per_file=False)
@@ -71,6 +70,19 @@ rdf = gtr.get_rdf(per_file=False)
 # If True, will return a dictionary with an entry per file. They key is the full path of the ROOT file
 d_rdf = gtr.get_rdf(per_file=True)
 ```
+
+The supported triggers are:
+
+| Trigger                           | Usage                     |
+|-----------------------------------|---------------------------|
+| **Hlt2RD_BuToKpMuMu_MVA**         | $R_K$ muon samples        |
+| **Hlt2RD_B0ToKpPimMuMu_MVA**      | $R_{K^*}$ muon samples    |
+| **Hlt2RD_BuToKpEE_MVA**           | $R_K$ electron samples    |
+| **Hlt2RD_B0ToKpPimEE_MVA**        | $R_{K^*}$ electron samples|
+| **Hlt2RD_BuToKpMuMu_MVA_noPID**   | $R_K$ muon samples        |
+| **Hlt2RD_B0ToKpPimMuMu_MVA_noPID**| $R_{K^*}$ muon samples    |
+| **Hlt2RD_BuToKpEE_MVA_noPID**     | $R_K$ electron samples    |
+| **Hlt2RD_B0ToKpPimEE_MVA_noPID**  | $R_{K^*}$ electron samples|
 
 The way this class will find the paths to the ntuples is by using the `DATADIR` environment
 variable. This variable will point to a path `$DATADIR/samples/` with the `YAML` files
