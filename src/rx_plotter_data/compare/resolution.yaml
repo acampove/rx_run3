@@ -48,8 +48,6 @@ plots:
     labels     : ['nPVs', 'Normalized']
     name       : npv 
     normalized : true
-style:
-  skip_lines : true
 plugin:
   fwhm:
     bmass:
