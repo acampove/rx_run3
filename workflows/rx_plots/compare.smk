@@ -4,8 +4,7 @@ import os
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
 ANADIR = os.environ['ANADIR']
-PLTDIR = f'{ANADIR}/plots/comparison_brem_track_2/brem_track_2'
-
+PLTDIR = f'{ANADIR}/plots/comparison/brem_track_2'
 # ---------------------------------
 def _get_plots() -> list[str]:
     '''
@@ -18,7 +17,10 @@ def _get_plots() -> list[str]:
         sample = args['sample' ]
         trigger= args['trigger']
         q2bin  = args['q2bin'  ]
-        for block in [1, 2, 5, 6, 7, 8]:
+        for block in [12, 5, 6, 78]:
+            if block == 78 and trigger == 'Hlt2RD_B0ToKpPimEE_MVA':
+                continue
+
             for brem in [1, 2]:
                 plot=f'{PLTDIR}/{sample}/{trigger}/{q2bin}/{brem}_{block}/with_mva/bmass_correction.png'
                 l_plot.append(plot)
