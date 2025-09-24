@@ -246,12 +246,7 @@ def main() -> None:
     _parse_args()
     _initialize()
     with RDFGetter.multithreading(nthreads=Data.nthread):
-        try:
-            d_rdf = _get_inp()
-        except EmptyInput:
-            log.warning('Input is empty, skipping plots')
-            return
-
+        d_rdf = _get_inp()
         _plot(d_rdf)
 # ---------------------------------
 if __name__ == '__main__':
