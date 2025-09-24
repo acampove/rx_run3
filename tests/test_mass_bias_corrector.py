@@ -69,7 +69,11 @@ def _clean_rdf(rdf : RDataFrame, name : str) -> RDataFrame:
 
     return rdf
 #-----------------------------------------
-def _compare_masses(d_rdf : dict[str,RDataFrame], test_name : str, correction : str) -> None:
+def _compare_masses(
+    d_rdf      : dict[str,RDataFrame], 
+    test_name  : str, 
+    correction : str,
+    skip_jpsi  : bool=False) -> None:
     d_rdf = { name : _clean_rdf(rdf, name) for name, rdf in d_rdf.items() }
 
     cfg = _load_conf()
@@ -79,7 +83,9 @@ def _compare_masses(d_rdf : dict[str,RDataFrame], test_name : str, correction : 
     cfg['saving'] = {'plt_dir' : plt_dir}
 
     cfg['plots']['B_M'   ]['title'] = correction
-    cfg['plots']['Jpsi_M']['title'] = correction
+
+    if not skip_jpsi:
+        cfg['plots']['Jpsi_M']['title'] = correction
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
