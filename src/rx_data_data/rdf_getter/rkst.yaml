@@ -3,14 +3,14 @@
 
 # Temporary definitions to be used when testing
 # once friend trees are available, these should be removed
-#temporary_definitions:
+temporary_definitions:
+  mva_cmb                 : '1.0'
+  mva_prc                 : '1.0'
 #  q2_smr                  : q2
 #  Jpsi_Mass               : Jpsi_M
 #  Jpsi_Mass_smr           : Jpsi_M
 #  B_Mass                  : B_M
 #  B_Mass_smr              : B_M
-#  mva_cmb                 : '1.0'
-#  mva_prc                 : '1.0'
 #  B_M_brem_track_2        : B_M
 #  hop_mass                : B_M
 #  hop_alpha               : '1.0'
