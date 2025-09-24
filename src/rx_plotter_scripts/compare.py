@@ -213,8 +213,7 @@ def _parse_args() -> None:
 def _get_out_dir(plt_dir : str) -> str:
     brem, block = _get_brem_block()
 
-    sample  = Data.sample.replace('*', 'p')
-    out_dir = f'{Data.ana_dir}/{plt_dir}/{sample}/{Data.trigger}/{Data.q2_bin}/{brem}_{block}'
+    out_dir = f'{Data.ana_dir}/{plt_dir}/{Data.sample}/{Data.trigger}/{Data.q2_bin}/{brem}_{block}'
     if Data.nomva:
         out_dir = f'{out_dir}/drop_mva'
     else:
