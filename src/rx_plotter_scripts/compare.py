@@ -19,6 +19,15 @@ from rx_selection            import selection as sel
 
 log=LogStore.add_logger('rx_plots:compare')
 # ---------------------------------
+class EmptyInput(Exception):
+    '''
+    Meant to be used when input dataframe is empty
+    but it's not meant to be empty
+    '''
+    def __init__(self, message: str, code: int|None = None):
+        super().__init__(message)
+        self.code = code
+# ---------------------------------
 @dataclass
 class Data:
     '''
@@ -104,7 +113,7 @@ def _check_entries(rdf : RDataFrame) -> None:
     rep = rdf.Report()
     rep.Print()
 
-    raise ValueError('Found zero entries in dataframe')
+    raise EmptyInput('Found zero entries in dataframe')
 # ---------------------------------
 def _update_with_brem(d_sel : dict[str,str]) -> dict[str,str]:
     if Data.brem == -1:
