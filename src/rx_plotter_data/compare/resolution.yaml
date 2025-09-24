@@ -24,11 +24,16 @@ saving:
   plt_dir : plots/comparison/brem_track_2
 plots:
   bmass:
-    binning    : [4200, 6000, 40]
+    binning    : [4500, 6500, 40]
     yscale     : linear
     labels     : ['$M(B^+)$', 'Normalized']
     name       : bmass_correction
     normalized : true
+    vline :
+      x     : 5280
+      label : $B^{+(0)}$
+      ls    : ':'
+      c     : green
   nLongTracks:
     binning    : [0, 400, 20]
     yscale     : linear
@@ -43,8 +48,6 @@ plots:
     labels     : ['nPVs', 'Normalized']
     name       : npv 
     normalized : true
-    styling :          
-      linestyle: '-'
 style:
   skip_lines : true
 plugin:
