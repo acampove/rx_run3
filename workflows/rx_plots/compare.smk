@@ -1,6 +1,7 @@
 configfile: 'configs/rx_plots/compare.yaml'
 
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
 ANADIR = os.environ['ANADIR']
 PLTDIR = f'{ANADIR}/plots/comparison_brem_track_2/brem_track_2'
