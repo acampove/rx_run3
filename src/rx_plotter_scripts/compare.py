@@ -124,7 +124,14 @@ def _update_with_block(d_sel : dict[str,str]) -> dict[str,str]:
         log.info('Not filtering by block')
         return d_sel
 
-    d_sel['block'] = f'block == {Data.block}'
+    if   Data.block == 12: 
+        cut = '(block == 1) || (block == 2)'
+    elif Data.block == 78:
+        cut = '(block == 7) || (block == 8)'
+    else:
+        cut = Data.block
+
+    d_sel['block'] = f'block == {cut}'
 
     return d_sel
 # ---------------------------------
@@ -162,7 +169,7 @@ def _parse_args() -> None:
     parser.add_argument('-x', '--substr' , type=str, help='Substring that must be contained in path, e.g. magup')
     parser.add_argument('-b', '--brem'   , type=int, help='Brem category, 12 = 1 or 2, -1 = all' , choices=[-1, 0, 1, 2, 12], required=True)
     parser.add_argument('-n', '--nthread', type=int, help='Number of threads' , default=Data.nthread)
-    parser.add_argument('-B', '--block'  , type=int, help='Block to which data belongs, -1 will put all the data together', choices=[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8], required=True)
+    parser.add_argument('-B', '--block'  , type=int, help='Block to which data belongs, -1 will put all the data together', choices=[-1, 0, 12, 3, 4, 5, 6, 78], required=True)
     parser.add_argument('-l', '--log_lvl', type=int, help='Logging level', choices=[10, 20, 30, 40], default=20)
     parser.add_argument('-r', '--nomva'  ,           help='If used, it will remove the MVA requirement', action='store_true')
 
