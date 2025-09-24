@@ -460,3 +460,31 @@ def test_dask(trigger : str, is_mc : bool):
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, f'dask_{is_mc}/{trigger}', kind)
 #-----------------------------------------
+@pytest.mark.parametrize('kind'   , ['brem_track_2'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_signal(kind : str, trigger : str):
+    '''
+    Tests for signal
+    '''
+    with RDFGetter.max_entries(value=-1):
+        rdf_org = _get_rdf(trigger=trigger, is_mc=True, q2bin='low')
+
+    df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
+    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
+
+    cor     = MassBiasCorrector(
+        df        = df_org, 
+        is_mc     = is_mc,
+        trigger   = trigger,
+        nthreads  = 10, 
+        ecorr_kind= kind)
+
+    df_cor = cor.get_df()
+    rdf_cor= RDF.FromPandas(df_cor)
+
+    _check_size(rdf_org=rdf_org, rdf_cor=rdf_cor)
+    _check_output_columns(rdf_cor)
+
+    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+    _compare_masses(d_rdf, f'signal/{trigger}', kind, skip_jpsi=True)
+#-----------------------------------------
