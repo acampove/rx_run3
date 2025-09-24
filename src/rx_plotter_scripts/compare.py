@@ -69,6 +69,11 @@ def _initialize() -> None:
     Data.cfg = _get_cfg()
 # ---------------------------------
 def _get_cfg() -> DictConfig: 
+    '''
+    Returns
+    -------------
+    OmegaConf dictionary with configuration
+    '''
     cfg     = gut.load_conf(package='rx_plotter_data', fpath=f'compare/{Data.config}.yaml')
     plt_dir = cfg['saving']['plt_dir']
     cfg['saving']['plt_dir'] = _get_out_dir(plt_dir)
