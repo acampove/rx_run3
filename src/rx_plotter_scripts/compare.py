@@ -53,6 +53,7 @@ class Data:
     brem    : int
     block   : int
     nomva   : bool
+    emulate : bool
     chanel  : str
     cfg     : DictConfig 
     nthread : int = 1
@@ -75,6 +76,15 @@ def _get_cfg() -> DictConfig:
     for d_setting in cfg['plots'].values():
         brem, block        = _get_brem_block()
         d_setting['title'] = f'Brem {brem}; Block {block}; {Data.sample}'
+
+    # If user does not request emulation
+    # Drop these plots
+    run12_key = 'Corrected and L0(nPVs)'
+    if not Data.emulate:
+        log.info('Not emulating Run1/2 conditions')
+        del Data.cfg['comparison'][run12_key]
+    else:
+        log.info('Emulating Run1/2 conditions')
 
     return cfg
 # ---------------------------------
@@ -177,6 +187,8 @@ def _parse_args() -> None:
     parser.add_argument('-B', '--block'  , type=int, help='Block to which data belongs, -1 will put all the data together', choices=[-1, 0, 12, 3, 4, 5, 6, 78], required=True)
     parser.add_argument('-l', '--log_lvl', type=int, help='Logging level', choices=[10, 20, 30, 40], default=20)
     parser.add_argument('-r', '--nomva'  ,           help='If used, it will remove the MVA requirement', action='store_true')
+    parser.add_argument('-e', '--emulate',           help='If used, it will emulate Run1/2 conditions', action='store_true')
+
 
     args = parser.parse_args()
 
@@ -188,6 +200,7 @@ def _parse_args() -> None:
     Data.brem   = args.brem
     Data.block  = args.block
     Data.nomva  = args.nomva
+    Data.emulate= args.emulate
     Data.nthread= args.nthread
 
     LogStore.set_level('rx_plots:compare', args.log_lvl)
