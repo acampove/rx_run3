@@ -5,10 +5,9 @@ Script used to compare variables in the same dataframe
 
 import os
 import argparse
-from importlib.resources import files
 from dataclasses         import dataclass
 
-import yaml
+from omegaconf import DictConfig
 import mplhep
 import dmu.generic.utilities as gut
 from ROOT                    import RDataFrame # type: ignore
@@ -55,7 +54,7 @@ class Data:
     block   : int
     nomva   : bool
     chanel  : str
-    cfg     : dict
+    cfg     : DictConfig 
     nthread : int = 1
 
     l_col  = []
@@ -68,15 +67,8 @@ def _initialize() -> None:
 
     Data.cfg = _get_cfg()
 # ---------------------------------
-def _get_cfg() -> dict:
-    cfg_dir = files('rx_plotter_data').joinpath('compare')
-    cfg_path= f'{cfg_dir}/{Data.config}.yaml'
-    cfg_path= str(cfg_path)
-
-    log.info(f'Picking configuration from: {cfg_path}')
-    with open(cfg_path, encoding='utf=8') as ifile:
-        cfg = yaml.safe_load(ifile)
-
+def _get_cfg() -> DictConfig: 
+    cfg     = gut.load_conf(package='rx_plotter_data', fpath=f'compare/{Data.config}.yaml')
     plt_dir = cfg['saving']['plt_dir']
     cfg['saving']['plt_dir'] = _get_out_dir(plt_dir)
 
