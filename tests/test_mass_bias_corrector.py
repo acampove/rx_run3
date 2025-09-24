@@ -116,6 +116,7 @@ def _check_output_columns(rdf : RDataFrame) -> None:
 #-----------------------------------------
 def _get_rdf(
     trigger  : str,
+    q2bin    : str       = 'jpsi',
     nbrem    : None|int  = None,
     is_inner : None|bool = None,
     npvs     : None|int  = None,
@@ -144,14 +145,13 @@ def _get_rdf(
 
     d_sel = sel.selection(
         trigger = trigger, 
-        q2bin   = 'jpsi', 
+        q2bin   = q2bin, 
         smeared = False,
         process = sample)
-    d_sel['mass'] = 'B_const_mass_M > 5160'
-    d_sel['bdt']  = '(1)'
 
-    if bdt   is not None:
-        d_sel['bdt' ] = bdt
+    # Do not use part reco removal for MC
+    d_sel['mass'] = '(1)' if is_mc       else 'B_const_mass_M > 5160'
+    d_sel['bdt']  = '(1)' if bdt is None else bdt
 
     # We run over 1000 entries to speed up tests
     # Those are from pre-UT data, which the block
