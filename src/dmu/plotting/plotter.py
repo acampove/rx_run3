@@ -40,9 +40,11 @@ class Plotter:
         if not isinstance(d_rdf, dict):
             raise ValueError('Dataframe dictionary not passed')
 
-        self._d_cfg = cfg
-        self._d_rdf : dict[str, RDF.RNode]    = { name : self._preprocess_rdf(rdf=rdf, name=name) for name, rdf in d_rdf.items()}
-        self._d_wgt : dict[str, numpy.ndarray|None] | None
+        if isinstance(cfg, dict):
+            self._cfg = OmegaConf.create(obj=cfg)
+
+        self._d_rdf : dict[str, RDF.RNode]            = { name : self._preprocess_rdf(rdf=rdf, name=name) for name, rdf in d_rdf.items()}
+        self._d_wgt : dict[str, numpy.ndarray] | None = {}
 
         self._title : str = ''
     #-------------------------------------
