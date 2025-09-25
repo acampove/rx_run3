@@ -3,8 +3,10 @@ name         = 'rx_plotter'
 version      = '0.0.0'
 description  = 'Project meant to create simple plots for RX studies' 
 readme       = 'README.md'
-packages     = [{include='rx_plotter', from='src'}]
 include      = ['src/rx_plotter_data/**/*.yaml']
+packages     = [
+{include='rx_plotter'        , from='src'},
+{include='rx_plotter_scripts', from='src'}]
 
 [tool.poetry.dependencies]
 python                     = '>=3.10,<3.13'
