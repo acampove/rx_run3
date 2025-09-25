@@ -13,6 +13,7 @@ path   = "configs/**/*.yaml"
 [tool.poetry.dependencies]
 python                      = '^3.12'
 snakemake                   = '*'
+prefect                     = '*'
 #ap_utilities                = { git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/ap_utilities.git'    , branch='master' }
 #data-manipulation-utilities = { git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/dmu.git'             , branch='master' }
 #ecal_calibration            = { git = 'ssh://git@gitlab.cern.ch:7999/rx_run3/ecal_calibration.git', branch='master' }

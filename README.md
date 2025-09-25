@@ -17,9 +17,19 @@ which should install all the `RX` projects
 
 # Usage
 
+## Snakemake
+
 In the main folder there is a `Snakemake` file and run:
 
 ```bash
 Snakemake -c 8 all
+```
+
+## Prefect
+
+To run the comparisons between original and brem corrected line-shape do:
+
+```bash
+cutflow_wf
 ```
 
