@@ -9,7 +9,7 @@ import mplhep
 import matplotlib.pyplot as plt
 
 from hist                  import Hist
-from ROOT                  import RDataFrame
+from ROOT                  import RDataFrame # type: ignore
 from matplotlib.colors     import LogNorm
 from dmu.logging.log_store import LogStore
 from dmu.plotting.plotter  import Plotter
@@ -35,8 +35,8 @@ class Plotter2D(Plotter):
         self._wgt : numpy.ndarray
     # --------------------------------------------
     def _get_axis(self, var : str):
-        [minx, maxx, nbins] = self._d_cfg['axes'][var]['binning']
-        label               = self._d_cfg['axes'][var][  'label']
+        [minx, maxx, nbins] = self._cfg['axes'][var]['binning']
+        label               = self._cfg['axes'][var][  'label']
 
         axis = hist.axis.Regular(nbins, minx, maxx, name=label, label=label)
 
@@ -86,7 +86,7 @@ class Plotter2D(Plotter):
         '''
 
         fig_size = self._get_fig_size()
-        for [varx, vary, wgt_name, plot_name, use_log] in self._d_cfg['plots_2d']:
+        for [varx, vary, wgt_name, plot_name, use_log] in self._cfg['plots_2d']:
             plt.figure(plot_name, figsize=fig_size)
             self._plot_vars(varx, vary, wgt_name, use_log)
             self._save_plot(plot_name)
