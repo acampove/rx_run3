@@ -25,20 +25,21 @@ def _get_settings() -> list[DictConfig]:
             if block == 78 and sample == 'Bd_JpsiKst_ee_eq_DPC':
                 continue
 
-            cfg            = {}
-            cfg['sample' ] = sample
-            cfg['trigger'] = trigger
-            cfg['q2_bin' ] = q2bin 
-            cfg['config' ] = 'resolution'
-            cfg['substr' ] = None 
-            cfg['brem'   ] = 2
-            cfg['block'  ] = block
-            cfg['nomva'  ] = True
-            cfg['emulate'] = False
+            for brem in [1, 2]:
+                cfg            = {}
+                cfg['sample' ] = sample
+                cfg['trigger'] = trigger
+                cfg['q2_bin' ] = q2bin 
+                cfg['config' ] = 'resolution'
+                cfg['substr' ] = None 
+                cfg['brem'   ] = brem 
+                cfg['block'  ] = block
+                cfg['nomva'  ] = True
+                cfg['emulate'] = False
 
-            cfg = OmegaConf.create(cfg)
+                cfg = OmegaConf.create(cfg)
 
-            l_cfg.append(cfg)
+                l_cfg.append(cfg)
 
     return l_cfg 
 
