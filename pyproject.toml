@@ -25,4 +25,4 @@ requires      = ['poetry-core>=1.6.0']
 build-backend = 'poetry.core.masonry.api'
 
 [tool.poetry.scripts]
-compare_wf = 'workflows.plots.compare:main'
+compare_wf = 'workflows.plots.compare:main_task'
