@@ -6,6 +6,7 @@ import os
 import json
 import math
 
+from matplotlib.figure import Figure
 import numpy
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -249,11 +250,12 @@ class Plotter:
 
         return self._cfg['plots'][var]['name']
     #-------------------------------------
-    def _save_plot(self, var : str) -> Path:
+    def _save_plot(self, var : str, fig : Figure) -> Path:
         '''
         Parameters
         -----------------
-        var (str) : Name of variable, needed for plot name
+        var (str)    : Name of variable, needed for plot name
+        fig (Figure) : Figure where plot is been drawn
 
         Returns
         -----------------
@@ -274,7 +276,7 @@ class Plotter:
         log.info(f'Saving to: {plot_path}')
         plt.tight_layout()
         plt.savefig(plot_path)
-        plt.close(var)
+        plt.close(fig)
 
         return plot_path
     #-------------------------------------
