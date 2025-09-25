@@ -8,9 +8,10 @@ import math
 
 import numpy
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 from ROOT                  import RDF # type: ignore
-from omegaconf             import DictConfig
+from omegaconf             import DictConfig, OmegaConf
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:plotting:Plotter')
