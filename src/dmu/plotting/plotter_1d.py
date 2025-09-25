@@ -35,15 +35,15 @@ class Plotter1D(Plotter):
         super().__init__(d_rdf=d_rdf, cfg=cfg)
     #-------------------------------------
     def _get_labels(self, var : str) -> tuple[str,str]:
-        if 'labels' not in self._d_cfg['plots'][var]:
+        if 'labels' not in self._cfg['plots'][var]:
             return var, 'Entries'
 
-        xname, yname = self._d_cfg['plots'][var]['labels' ]
+        xname, yname = self._cfg['plots'][var]['labels' ]
 
         return xname, yname
     #-------------------------------------
     def _is_normalized(self, var : str) -> bool:
-        d_cfg     = self._d_cfg['plots'][var]
+        d_cfg     = self._cfg['plots'][var]
         normalized=False
         if 'normalized' in d_cfg:
             normalized = d_cfg['normalized']
@@ -51,7 +51,7 @@ class Plotter1D(Plotter):
         return normalized
     #-------------------------------------
     def _get_binning(self, var : str, d_data : dict[str, numpy.ndarray]) -> tuple[float, float, int]:
-        d_cfg  = self._d_cfg['plots'][var]
+        d_cfg  = self._cfg['plots'][var]
         minx, maxx, bins = d_cfg['binning']
         if maxx <= minx + 1e-5:
             log.info(f'Bounds not set for {var}, will calculated them')
@@ -77,14 +77,14 @@ class Plotter1D(Plotter):
         hst    : Histogram, needed to plot extra information
         name   : Name of variable
         '''
-        if 'plugin' not in self._d_cfg:
+        if 'plugin' not in self._cfg:
             log.debug('No plugins found')
             return
 
-        if 'fwhm' in self._d_cfg['plugin']:
-            if varname in self._d_cfg['plugin']['fwhm']:
+        if 'fwhm' in self._cfg['plugin']:
+            if varname in self._cfg['plugin']['fwhm']:
                 log.debug(f'FWHM plugin found for variable {varname}')
-                cfg = self._d_cfg['plugin']['fwhm'][varname]
+                cfg = self._cfg['plugin']['fwhm'][varname]
                 self._run_fwhm(
                     arr_val = arr_val,
                     arr_wgt = arr_wgt,
@@ -93,10 +93,10 @@ class Plotter1D(Plotter):
                     varname = varname,
                     cfg     = cfg)
 
-        if 'stats' in self._d_cfg['plugin']:
-            if varname in self._d_cfg['plugin']['stats']:
+        if 'stats' in self._cfg['plugin']:
+            if varname in self._cfg['plugin']['stats']:
                 log.debug(f'stats plugin found for variable {varname}')
-                cfg = self._d_cfg['plugin']['stats'][varname]
+                cfg = self._cfg['plugin']['stats'][varname]
                 self._run_stats(
                     arr_val = arr_val,
                     arr_wgt = arr_wgt,
@@ -104,11 +104,11 @@ class Plotter1D(Plotter):
                     varname = varname,
                     cfg     = cfg)
 
-        if 'pulls' in self._d_cfg['plugin']:
-            if varname in self._d_cfg['plugin']['pulls']:
+        if 'pulls' in self._cfg['plugin']:
+            if varname in self._cfg['plugin']['pulls']:
                 log.debug(f'pulls plugin found for variable {varname}')
-                cfg = self._d_cfg['plugin']['pulls'][varname]
-                [minx, maxx, _] = self._d_cfg['plots' ][varname]['binning']
+                cfg = self._cfg['plugin']['pulls'][varname]
+                [minx, maxx, _] = self._cfg['plots' ][varname]['binning']
 
                 self._run_pulls(
                     arr_val = arr_val,
@@ -116,10 +116,10 @@ class Plotter1D(Plotter):
                     maxx    = maxx,
                     cfg     = cfg)
 
-        if 'errors' in self._d_cfg['plugin']:
-            if varname in self._d_cfg['plugin']['errors']:
+        if 'errors' in self._cfg['plugin']:
+            if varname in self._cfg['plugin']['errors']:
                 log.debug(f'errors plugin found for variable {varname}')
-                cfg = self._d_cfg['plugin']['errors'][varname]
+                cfg = self._cfg['plugin']['errors'][varname]
 
                 self._run_errors(
                     arr_val = arr_val,
@@ -208,7 +208,7 @@ class Plotter1D(Plotter):
         -------------
         Tuple with the values and weights, but in the plotting range only
         '''
-        [minx, maxx, _] = self._d_cfg['plots'][name]['binning']
+        [minx, maxx, _] = self._cfg['plots'][name]['binning']
 
         flags = (minx < val) & (val < maxx)
         val   = val[flags]
@@ -312,7 +312,7 @@ class Plotter1D(Plotter):
                 raise ValueError(f'Cannot find variable {var} in category {name}') from exc
 
         minx, maxx, bins = self._get_binning(var, d_data)
-        d_wgt            = self._get_weights(var)
+        d_wgt            = self._get_weights(var = var)
 
         l_bc_all = []
         for name, arr_val in d_data.items():
@@ -339,25 +339,25 @@ class Plotter1D(Plotter):
             'histtype'  : 'errorbar',
             'linestyle' : 'none'}
 
-        if 'styling' not in self._d_cfg['plots'][var]:
+        if 'styling' not in self._cfg['plots'][var]:
             log.debug(f'Styling not specified for {var}')
             return style
 
-        if label     not in self._d_cfg['plots'][var]['styling']:
+        if label     not in self._cfg['plots'][var]['styling']:
             log.debug(f'Styling not specified for {var}/{label}')
             return style
 
-        custom_style = self._d_cfg['plots'][var]['styling'][label]
+        custom_style = self._cfg['plots'][var]['styling'][label]
         style.update(custom_style)
         log.debug(f'Using custom styling for {var}/{label}')
 
         return style
     # --------------------------------------------
     def _label_from_name(self, name : str) -> str:
-        if 'stats' not in self._d_cfg:
+        if 'stats' not in self._cfg:
             return name
 
-        d_stat = self._d_cfg['stats']
+        d_stat = self._cfg['stats']
         if 'sumw' not in d_stat:
             return name
 
@@ -384,7 +384,7 @@ class Plotter1D(Plotter):
         --------------
         Array of weights, normalized to 1 or not
         '''
-        cfg_var = self._d_cfg['plots'][var]
+        cfg_var = self._cfg['plots'][var]
         if 'normalized' not in cfg_var:
             log.debug(f'Not normalizing for variable: {var}')
             return arr_wgt
@@ -393,7 +393,7 @@ class Plotter1D(Plotter):
             log.debug(f'Not normalizing for variable: {var}')
             return arr_wgt
 
-        [minx, maxx, nbins] = self._d_cfg['plots'][var]['binning']
+        [minx, maxx, nbins] = self._cfg['plots'][var]['binning']
 
         log.debug(f'Normalizing for variable: {var}')
         bw      = (maxx - minx) / nbins
@@ -403,7 +403,7 @@ class Plotter1D(Plotter):
         return arr_wgt
     # --------------------------------------------
     def _style_plot(self, var : str, max_y : float) -> None:
-        d_cfg  = self._d_cfg['plots'][var]
+        d_cfg  = self._cfg['plots'][var]
         yscale = d_cfg['yscale' ] if 'yscale' in d_cfg else 'linear'
 
         xname, yname = self._get_labels(var)
@@ -430,7 +430,7 @@ class Plotter1D(Plotter):
 
         var (str) : name of variable
         '''
-        var_cfg = self._d_cfg['plots'][var]
+        var_cfg = self._cfg['plots'][var]
         if 'vline' in var_cfg:
             line_cfg = var_cfg['vline']
             plt.axvline(**line_cfg)
@@ -441,7 +441,7 @@ class Plotter1D(Plotter):
         '''
 
         fig_size = self._get_fig_size()
-        for var in self._d_cfg['plots']:
+        for var in self._cfg['plots']:
             self._title = ''
             plt.figure(var, figsize=fig_size)
             max_y = self._plot_var(var)
