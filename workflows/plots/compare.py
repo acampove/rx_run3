@@ -1,19 +1,16 @@
 
 import os
-from pathlib import Path
-from prefect import flow, task
+from pathlib                    import Path
+from prefect                    import flow, task
+from prefect.task_runners       import ProcessPoolTaskRunner 
 
-from dmu.generic                import utilities as gut
 from rx_plotter_scripts.compare import main      as compare 
+from dmu.generic                import utilities as gut
 from omegaconf                  import DictConfig, OmegaConf
-
-# Disable GPU
-os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
 ANADIR = os.environ['ANADIR']
 PLTDIR = Path(ANADIR) / 'plots/comparison/brem_track_2'
 
-@task
 def _get_settings() -> list[DictConfig]:
     """Return all expected plot paths."""
     config = gut.load_conf(package='configs', fpath='rx_plots/compare.yaml')
@@ -46,24 +43,26 @@ def _get_settings() -> list[DictConfig]:
     return l_cfg 
 
 @task
-def run_compare(settings : DictConfig) -> list[Path]:
+def run_compare(cfg : DictConfig) -> Path:
     """Run the `compare` command for one set of wildcards."""
-    cfg = OmegaConf.to_container(settings, resolve=True)
 
-    plot = compare(settings=cfg)
+    plot = PLTDIR/f'{cfg.sample}/{cfg.trigger}/{cfg.q2_bin}/{cfg.brem}_{cfg.block}/drop_mva/npv.png'
+    if plot.exists():
+        return plot 
+
+    settings = OmegaConf.to_container(cfg, resolve=True)
+    if not isinstance(settings, dict):
+        raise ValueError('Invalid settings type')
+
+    compare(settings=settings)
 
     return plot
 
-@flow
-def main():
+@flow(task_runner=ProcessPoolTaskRunner(max_workers=10))
+def main_task():
     l_settings = _get_settings()
-
-    results = []
-    for settings in l_settings:
-        l_path = run_compare.submit(settings=settings)
-        results.append(l_path)
-
-    return results
+    futures    = [run_compare.submit(cfg=settings) for settings in l_settings]
+    _          = [future.result() for future in futures]
 
 if __name__ == "__main__":
-    main()
+    main_task()
