@@ -22,9 +22,9 @@ class Plotter:
     '''
     #-------------------------------------
     def __init__(
-            self,
-            d_rdf: dict|None            =None,
-            cfg  : dict|DictConfig|None =None):
+        self,
+        d_rdf: dict|None            =None,
+        cfg  : dict|DictConfig|None =None):
         '''
         Parameters
         --------------
