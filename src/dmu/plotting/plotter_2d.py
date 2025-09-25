@@ -87,7 +87,7 @@ class Plotter2D(Plotter):
 
         fig_size = self._get_fig_size()
         for [varx, vary, wgt_name, plot_name, use_log] in self._cfg['plots_2d']:
-            plt.figure(plot_name, figsize=fig_size)
+            fig, _= plt.subplots(figsize=fig_size)
             self._plot_vars(varx, vary, wgt_name, use_log)
-            self._save_plot(plot_name)
+            self._save_plot(var=plot_name, fig=fig)
 # --------------------------------------------

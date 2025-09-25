@@ -443,9 +443,9 @@ class Plotter1D(Plotter):
         fig_size = self._get_fig_size()
         for var in self._cfg['plots']:
             self._title = ''
-            plt.figure(var, figsize=fig_size)
+            fig, _= plt.subplots(figsize=fig_size)
             max_y = self._plot_var(var)
             self._style_plot(var, max_y)
             self._plot_lines(var)
-            self._save_plot(var)
+            self._save_plot(var=var, fig=fig)
 # --------------------------------------------
