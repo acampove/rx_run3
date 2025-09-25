@@ -100,7 +100,7 @@ class Plotter:
         log.debug(f'Preprocessing dataframe for {name}')
 
         rdf = self._define_vars(rdf)
-        if 'selection' in self._d_cfg:
+        if 'selection' in self._cfg:
             rdf = self._apply_selection(rdf)
             rdf = self._max_ran_entries(rdf)
 
@@ -110,15 +110,12 @@ class Plotter:
         '''
         Will define extra columns in dataframe and return updated dataframe
         '''
-
-        if 'definitions' not in self._d_cfg:
+        if 'definitions' not in self._cfg:
             log.debug('No definitions section found, returning same RDF')
             return rdf
 
-        d_def = self._d_cfg['definitions']
-
         log.info('Defining extra variables')
-        for name, expr in d_def.items():
+        for name, expr in self._cfg.definitions.items():
             log.debug(f'{name:<30}{expr:<150}')
             rdf = rdf.Define(name, expr)
 
@@ -128,14 +125,12 @@ class Plotter:
         '''
         Will take dataframe, apply selection and return dataframe
         '''
-        if 'cuts' not in self._d_cfg['selection']:
+        if 'cuts' not in self._cfg.selection:
             log.debug('Cuts not found in selection section, not applying any cuts')
             return rdf
 
-        d_cut = self._d_cfg['selection']['cuts']
-
         log.debug('Applying cuts')
-        for name, cut in d_cut.items():
+        for name, cut in self._cfg.selection.cuts.items():
             log.debug(f'{name:<50}{cut:<150}')
             rdf = rdf.Filter(cut, name)
 
@@ -146,12 +141,12 @@ class Plotter:
         Will take dataframe and randomly drop events
         '''
 
-        if 'max_ran_entries' not in self._d_cfg['selection']:
+        if 'max_ran_entries' not in self._cfg['selection']:
             log.debug('Cuts not found in selection section, not applying any cuts')
             return rdf
 
         tot_entries = rdf.Count().GetValue()
-        max_entries = self._d_cfg['selection']['max_ran_entries']
+        max_entries = self._cfg.selection.max_ran_entries
 
         if tot_entries < max_entries:
             log.debug(f'Not dropping dandom entries: {tot_entries} < {max_entries}')
@@ -185,15 +180,13 @@ class Plotter:
         Will read size list from config dictionary if found
         other wise will return None
         '''
-        if 'general' not in self._d_cfg:
+        if 'general' not in self._cfg:
             return None
 
-        if 'size' not in self._d_cfg['general']:
+        if 'size' not in self._cfg.general:
             return None
 
-        fig_size = self._d_cfg['general']['size']
-
-        return fig_size
+        return self._cfg.general.size
     #-------------------------------------
     def _get_weights(self, var) -> dict[str, numpy.ndarray|None]| None:
         d_cfg = self._d_cfg['plots'][var]
