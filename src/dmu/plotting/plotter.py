@@ -42,9 +42,11 @@ class Plotter:
 
         if isinstance(cfg, dict):
             self._cfg = OmegaConf.create(obj=cfg)
+        else:
+            self._cfg = cfg
 
         self._d_rdf : dict[str, RDF.RNode]            = { name : self._preprocess_rdf(rdf=rdf, name=name) for name, rdf in d_rdf.items()}
-        self._d_wgt : dict[str, numpy.ndarray] | None = {}
+        self._d_wgt : dict[str, numpy.ndarray] | None = None
 
         self._title : str = ''
     #-------------------------------------
@@ -188,22 +190,40 @@ class Plotter:
 
         return self._cfg.general.size
     #-------------------------------------
-    def _get_weights(self, var) -> dict[str, numpy.ndarray|None]| None:
-        d_cfg = self._d_cfg['plots'][var]
-        if 'weights' not in d_cfg:
+    def _get_weights(self, var : str) -> dict[str, numpy.ndarray] | None:
+        '''
+        Parameters
+        ----------------
+        var: Variable name
+
+        Returns
+        ----------------
+        Dictionary with weights
+        '''
+        cfg = self._cfg.plots[var]
+        if 'weights' not in cfg:
             return None
 
-        if hasattr(self, '_d_wgt'):
+        # Pick cached weights
+        if self._d_wgt is not None: 
             return self._d_wgt
 
-        wgt_name = d_cfg['weights']
-        d_weight = {sam_name : self._read_weights(wgt_name, rdf) for sam_name, rdf in self._d_rdf.items()}
-
+        d_weight    = {sam_name : self._read_weights(name=cfg.weights, rdf=rdf) for sam_name, rdf in self._d_rdf.items()}
         self._d_wgt = d_weight
 
         return d_weight
     # --------------------------------------------
     def _read_weights(self, name : str, rdf : RDF.RNode) -> numpy.ndarray:
+        '''
+        Parameters
+        -------------------
+        name: Name of column holding weights
+        rdf : ROOT dataframe with weights
+
+        Returns
+        -------------------
+        Numpy array with weights or ones if no weight found
+        '''
         v_col = rdf.GetColumnNames()
         l_col = [ col.c_str() for col in v_col ]
 
@@ -219,38 +239,44 @@ class Plotter:
         return arr_wgt
     #-------------------------------------
     def _get_plot_name(self, var : str) -> str:
-        if 'plots_2d' in self._d_cfg:
+        if 'plots_2d' in self._cfg:
             #For 2D plots the name will always be specified in the config
             return var
 
-        if 'name' not in self._d_cfg['plots'][var]:
+        if 'name' not in self._cfg['plots'][var]:
             # For 1D plots the name can be taken from variable name itself or specified
             return var
 
-        return self._d_cfg['plots'][var]['name']
+        return self._cfg['plots'][var]['name']
     #-------------------------------------
-    def _save_plot(self, var):
+    def _save_plot(self, var : str) -> Path:
         '''
-        Will save to PNG:
-
+        Parameters
+        -----------------
         var (str) : Name of variable, needed for plot name
+
+        Returns
+        -----------------
+        Path to plot
         '''
         d_leg = {}
-        if 'style' in self._d_cfg and 'legend' in self._d_cfg['style']:
-            d_leg = self._d_cfg['style']['legend']
+        if 'style' in self._cfg and 'legend' in self._cfg.style:
+            d_leg = self._cfg.style.legend
 
         plt.legend(**d_leg)
 
-        plt_dir = self._d_cfg['saving']['plt_dir']
-        os.makedirs(plt_dir, exist_ok=True)
+        plt_dir = Path(self._cfg.saving.plt_dir)
+        plt_dir.mkdir(parents=True, exist_ok=True)
 
         name = self._get_plot_name(var)
 
-        plot_path = f'{plt_dir}/{name}.png'
+        plot_path = plt_dir / f'{name}.png'
         log.info(f'Saving to: {plot_path}')
         plt.tight_layout()
         plt.savefig(plot_path)
         plt.close(var)
+
+        return plot_path
     #-------------------------------------
     def _data_to_json(self,
                       data : dict[str,float],
@@ -260,7 +286,7 @@ class Plotter:
         # serializable
         data = { key : float(value)  for key, value in data.items() }
 
-        plt_dir = self._d_cfg['saving']['plt_dir']
+        plt_dir = self._cfg['saving']['plt_dir']
         os.makedirs(plt_dir, exist_ok=True)
 
         name      = name.replace(' ', '_')
