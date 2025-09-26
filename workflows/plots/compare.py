@@ -47,7 +47,7 @@ def _get_settings() -> list[DictConfig]:
 def run_compare(cfg : DictConfig) -> Path:
     """Run the `compare` command for one set of wildcards."""
 
-    plot = PLTDIR/f'{cfg.sample}/{cfg.trigger}/{cfg.q2_bin}/{cfg.brem}_{cfg.block}/drop_mva/npv.png'
+    plot = PLTDIR / f'{cfg.sample}/{cfg.trigger}/{cfg.q2_bin}/{cfg.brem}_{cfg.block}/drop_mva/npv.png'
     if plot.exists():
         return plot 
 
