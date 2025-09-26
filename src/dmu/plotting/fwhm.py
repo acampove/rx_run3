@@ -16,12 +16,14 @@ class FWHM:
     '''
     # -------------------------
     def __init__(self, cfg : dict, val : numpy.ndarray, wgt : numpy.ndarray, maxy : float):
+        log.info('Running FWHM pluggin')
+
         self._cfg     = cfg
         self._arr_val = val
         self._arr_wgt = wgt
         self._maxy    = maxy
     # -------------------------
-    def _normalize_yval(self, arr_pdf_val : numpy.ndarray) -> None:
+    def _normalize_yval(self, arr_pdf_val : numpy.ndarray) -> numpy.ndarray:
         max_pdf_val = numpy.max(arr_pdf_val)
         arr_pdf_val*= self._maxy / max_pdf_val
 
@@ -33,8 +35,8 @@ class FWHM:
         imax = arry[ 0]
         imin = arry[-1]
 
-        x1 = arr_x[imax]
-        x2 = arr_x[imin]
+        x1 : float = arr_x.item(imax)
+        x2 : float = arr_x.item(imin)
 
         if self._cfg['plot']:
             plt.plot([x1, x2], [maxy/2, maxy/2], linestyle=':', linewidth=1, color='k')
@@ -47,17 +49,20 @@ class FWHM:
         '''
         [minx, maxx] = self._cfg['obs']
 
-        log.info('Running FWHM pluggin')
+        log.info('Creating KDE')
         obs = zfit.Space('mass', limits=(minx, maxx))
-        pdf= zfit.pdf.KDE1DimISJ(obs=obs, data=self._arr_val, weights=self._arr_wgt)
+        pdf = zfit.pdf.KDE1DimISJ(obs=obs, data=self._arr_val, weights=self._arr_wgt)
 
+        log.info('Retrieving points from KDE')
         xval = numpy.linspace(minx, maxx, 200)
         yval = pdf.pdf(xval)
         yval = self._normalize_yval(yval)
 
         if self._cfg['plot']:
+            log.info('Plotting KDE')
             plt.plot(xval, yval, linestyle='-', linewidth=2, color='gray')
 
+        log.info('Getting FWHM')
         fwhm = self._get_fwhm(xval, yval)
 
         return fwhm
