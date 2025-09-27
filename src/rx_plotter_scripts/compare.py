@@ -4,14 +4,15 @@ Script used to compare variables in the same dataframe
 # pylint: disable=no-name-in-module, logging-fstring-interpolation, line-too-long
 
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+
 import argparse
 from dataclasses         import dataclass
-from typing  import Any
-from pathlib import Path
+from pathlib             import Path
 
-from omegaconf import DictConfig
 import mplhep
 import dmu.generic.utilities as gut
+from omegaconf               import DictConfig, OmegaConf
 from ROOT                    import RDataFrame # type: ignore
 from dmu.plotting.plotter_1d import Plotter1D
 from dmu.logging.log_store   import LogStore
@@ -341,9 +342,11 @@ def _get_inp(cfg : Config, cfg_plt : DictConfig) -> dict[str,RDataFrame]:
         rdf = _rdf_from_def(rdf=rdf_in, d_def=d_def)
         d_rdf[kind] = rdf
 
+    log.info('Returning dataframe')
+
     return d_rdf
 # ---------------------------------
-def main(settings : dict[str,Any]|None = None) -> list[Path]:
+def main(settings : DictConfig|None = None) -> list[Path]:
     '''
     Parameters
     ------------------
@@ -356,7 +359,11 @@ def main(settings : dict[str,Any]|None = None) -> list[Path]:
     if settings is None:
         cfg = _cfg_from_args()
     else:
-        cfg = Config(**settings)
+        data= OmegaConf.to_container(settings, resolve=True)
+        if not isinstance(data, dict):
+            raise ValueError('Data not a dictionary')
+
+        cfg = Config(**data)
 
     cfg_plt = _get_plot_cfg(cfg=cfg)
     mplhep.style.use('LHCb2')
@@ -365,6 +372,7 @@ def main(settings : dict[str,Any]|None = None) -> list[Path]:
     with RDFGetter.multithreading(nthreads=cfg.nthread):
         d_rdf = _get_inp(cfg=cfg, cfg_plt=cfg_plt)
 
+        log.info('Plotting')
         ptr  = Plotter1D(d_rdf=d_rdf, cfg=cfg_plt)
         path = ptr.run()
 
