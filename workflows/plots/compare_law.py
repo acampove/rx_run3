@@ -64,8 +64,15 @@ class CompareTask(law.Task):
         compare(settings=cfg.args)
 # -------------------------------------
 class WrapCompare(law.WrapperTask):
+    '''
+    This class takes care of steering the workflow
+    '''
     def _get_settings(self) -> list[str]:
-        """Return all expected plot paths."""
+        '''
+        Returns
+        --------------
+        List of JSON strings defining what each job will do
+        '''
         config = gut.load_conf(package='configs', fpath='rx_plots/compare.yaml')
     
         l_cfg = [] 
