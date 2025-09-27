@@ -1,0 +1,20 @@
+args:
+  #- {sample : Bd_Kstee_eq_btosllball05_DPC, trigger : Hlt2RD_B0ToKpPimEE_MVA, q2bin : low    }
+  #- {sample : Bd_Kstee_eq_btosllball05_DPC, trigger : Hlt2RD_B0ToKpPimEE_MVA, q2bin : central}
+  #- {sample : Bd_Kstee_eq_btosllball05_DPC, trigger : Hlt2RD_B0ToKpPimEE_MVA, q2bin : high   }
+  # ------------
+  #- {sample : Bd_JpsiKst_ee_eq_DPC        , trigger : Hlt2RD_B0ToKpPimEE_MVA, q2bin : jpsi   }
+  # ------------
+  - {sample : Bu_Kee_eq_btosllball05_DPC  , trigger : Hlt2RD_BuToKpEE_MVA   , q2bin : low    }
+  - {sample : Bu_Kee_eq_btosllball05_DPC  , trigger : Hlt2RD_BuToKpEE_MVA   , q2bin : central}
+  - {sample : Bu_Kee_eq_btosllball05_DPC  , trigger : Hlt2RD_BuToKpEE_MVA   , q2bin : high   }
+
+  - {sample : Bu_Kmumu_eq_btosllball05_DPC, trigger : Hlt2RD_BuToKpMuMu_MVA , q2bin : low    }
+  - {sample : Bu_Kmumu_eq_btosllball05_DPC, trigger : Hlt2RD_BuToKpMuMu_MVA , q2bin : central}
+  - {sample : Bu_Kmumu_eq_btosllball05_DPC, trigger : Hlt2RD_BuToKpMuMu_MVA , q2bin : high   }
+  # ------------
+  - {sample : Bu_JpsiK_ee_eq_DPC          , trigger : Hlt2RD_BuToKpEE_MVA   , q2bin : jpsi   }
+  - {sample : Bu_JpsiK_mm_eq_DPC          , trigger : Hlt2RD_BuToKpMuMu_MVA , q2bin : jpsi   }
+output:
+  - bmass.png
+  - bmass_brem_track_2.png
