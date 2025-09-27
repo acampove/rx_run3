@@ -84,6 +84,8 @@ class WrapCutflow(law.WrapperTask):
             fname = 'cutflow_os.yaml'
         elif kind in ['ss_shape']:
             fname = 'cutflow_ss.yaml'
+        elif kind in ['bdt']:
+            fname = 'bdt.yaml'
         else:
             raise ValueError(f'Invalid kind of plot: {kind}')
         
@@ -101,7 +103,7 @@ class WrapCutflow(law.WrapperTask):
         '''
     
         l_cfg = [] 
-        for kind in ['cleanup', 'ss_shape']:
+        for kind in ['cleanup', 'ss_shape', 'bdt']:
             config = WrapCutflow._get_config(kind=kind)
     
             for args in config['args']:
