@@ -28,7 +28,7 @@ plots:
   B_M_brem_track_2:
     binning    : [4500, 6000, 30]
     yscale     : 'linear'
-    labels     : ['M${}_{corr}(B^+)$', 'Normalized']
+    labels     : ['$\text{M}_{corr}(B^+)$', 'Normalized']
     title      : ''
     name       : 'bmass_brem_track_2'
     normalized : true
