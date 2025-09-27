@@ -80,7 +80,7 @@ def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
 @gut.timeit
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
     rdf = _apply_definitions(rdf, Data.cfg)
     rdf = _apply_selection(rdf, Data.cfg)
 
