@@ -37,7 +37,7 @@ plots:
     B_Mass:
       binning    : [4500, 7000, 50]
       yscale     : linear
-      labels     : ['$M_{corr}(K^+e^{\pm}e^{\pm})$ MeV', 'Entries/50 MeV']
+      labels     : ['$M_{corr}(K^+\ell^{\pm}\ell^{\pm})$ MeV', 'Entries/50 MeV']
       title      : ''
       name       : bmass_corr
       normalized : False 
@@ -46,7 +46,7 @@ plots:
     Jpsi_Mass:
       binning    : [1000, 3000, 50]
       yscale     : linear
-      labels     : ['$M_{corr}(e^{\pm}e^{\pm})$ MeV', 'Entries/50 MeV']
+      labels     : ['$M_{corr}(\ell^{\pm}\ell^{\pm})$ MeV', 'Entries/50 MeV']
       title      : ''
       name       : jmass_corr
       normalized : False 
