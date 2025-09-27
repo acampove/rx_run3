@@ -13,6 +13,7 @@ from dmu.generic             import naming
 from omegaconf               import DictConfig
 from rx_data.rdf_getter      import RDFGetter
 from rx_selection            import selection
+from rx_common               import info
 
 log=LogStore.add_logger('rx_selection:cutflow')
 # ---------------------------------
@@ -96,10 +97,12 @@ def _parse_args() -> None:
     parser.add_argument('-n', '--nthreads',type=int, help='Number of threads, if using multithreading', default=1)
     args = parser.parse_args()
 
+    project = info.project_from_trigger(trigger=args.trigger, lower_case=True)
+
     Data.q2_bin   = args.q2bin
     Data.sample   = args.sample
     Data.trigger  = args.trigger
-    Data.config   = args.config
+    Data.config   = f'{args.config}_{project}'
     Data.substr   = args.substr
     Data.nthreads = args.nthreads
 # ---------------------------------
