@@ -83,6 +83,7 @@ class WrapCompare(law.WrapperTask):
     
             for block in [12, 5, 6, 78]:
                 if block == 78 and sample == 'Bd_JpsiKst_ee_eq_DPC':
+                    log.warning(f'Skipping blocks 7 and 8 for {sample}')
                     continue
     
                 for brem in [1, 2]:
@@ -96,8 +97,9 @@ class WrapCompare(law.WrapperTask):
                     cfg['block'  ] = block
                     cfg['nomva'  ] = True
                     cfg['emulate'] = False
-    
-                    json_str = json.dumps(cfg) 
+
+                    output   = OmegaConf.to_container(config.output, resolve=True)
+                    json_str = json.dumps({'args' : cfg, 'output' : output}) 
                     l_cfg.append(json_str)
     
         return l_cfg 
