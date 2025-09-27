@@ -33,3 +33,15 @@ To run the comparisons between original and brem corrected line-shape do:
 cutflow_wf
 ```
 
+## L(uigi) A(nalysis) W(orkflow)
+
+All the remaining workfows are implemented with LAW due to its support for HTCondor.
+
+### Plotting
+
+These are workflows associated to the `rx_plots` project.
+
+| Command       | Description                                                                 |
+|---------------|-----------------------------------------------------------------------------|
+| `cutflow_law` | Creates plots for the effect of cuts on different variables                 |
+| `compare_law` | Compares the effect of:<br>• Brem correction on resolution<br>• Smearing MC due to scale and resolution differences with data |
