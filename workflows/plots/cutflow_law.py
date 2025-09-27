@@ -70,21 +70,46 @@ class WrapCutflow(law.WrapperTask):
     '''
     @cache
     @staticmethod
+    # ----------------------
+    def _get_config(kind : str) -> DictConfig:
+        '''
+        Parameters
+        -------------
+        kind: Type of check, e.g. cleanup
+
+        Returns
+        -------------
+        Dictionary with configuration, from YAML file
+        '''
+        if   kind in ['cleanup']:
+            fname = 'cutflow_os.yaml'
+        elif kind in ['ss_shape']:
+            fname = 'cutflow_ss.yaml'
+        else:
+            raise ValueError(f'Invalid kind of plot: {kind}')
+        
+        config = gut.load_conf(package='configs', fpath=f'rx_plots/{fname}')
+
+        return config
+    # ----------------------
+    @cache
+    @staticmethod
     def get_settings() -> list[str]:
         '''
         Returns
         --------------
         List of JSON strings defining what each job will do
         '''
-        config = gut.load_conf(package='configs', fpath='rx_plots/cutflow.yaml')
     
         l_cfg = [] 
-        for args in config['args']:
-            q2bin   = args['q2bin'  ]
-            sample  = args['sample' ]
-            trigger = args['trigger']
+        for kind in ['cleanup', 'ss_shape']:
+            config = WrapCutflow._get_config(kind=kind)
     
-            for kind in ['cleanup']:
+            for args in config['args']:
+                q2bin   = args['q2bin'  ]
+                sample  = args['sample' ]
+                trigger = args['trigger']
+
                 cfg             = {}
                 cfg['q2bin'   ] = q2bin 
                 cfg['sample'  ] = sample
