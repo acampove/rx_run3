@@ -105,7 +105,7 @@ class WrapCutflow(law.WrapperTask):
             yield CutflowTask(config_string = settings)
 # ----------------------
 def main():
-    law.run(argv=['WrapCutflow', '--workers', '12'])
+    law.run(argv=['WrapCutflow', '--workers', '12', '--log-level', 'INFO'])
 # ----------------------
 if __name__ == "__main__":
     main()
