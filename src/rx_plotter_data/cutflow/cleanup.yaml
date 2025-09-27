@@ -54,7 +54,7 @@ plots:
     otk_mas:
         binning    : [2000, 8000, 60]
         yscale     : 'linear'
-        labels     : ['Iso${}_{1Trk}^{Mass}\;[\text{MeV}]$', 'Entries']
+        labels     : ['$\text{Iso}_{1Trk}^{Mass}\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : '1Trk_mas'
         normalized : false
@@ -63,7 +63,7 @@ plots:
     ttk_mas:
         binning    : [2000, 8000, 60]
         yscale     : 'linear'
-        labels     : ['Iso${}_{2Trk}^{Mass}\;[\text{MeV}]$', 'Entries']
+        labels     : ['$\text{Iso}_{2Trk}^{Mass}\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : '2Trk_mas'
         normalized : false
@@ -123,7 +123,7 @@ plots:
     mva_cmb:
         binning    : [0.7, 1.0, 60]
         yscale     : 'linear'
-        labels     : ['MVA${}_{CMB}$', 'Entries']
+        labels     : ['$\text{MVA}_{CMB}$', 'Entries']
         title      : ''
         name       : 'mva_cmb'
         normalized : false
