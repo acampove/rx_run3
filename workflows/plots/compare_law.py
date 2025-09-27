@@ -46,8 +46,8 @@ class CompareTask(law.Task):
         '''
         cfg    = self._get_config()
         ANADIR = os.environ['ANADIR']
-        PLTDIR = Path(ANADIR) / 'plots/comparison/resolution'
-        names  = cfg.output.resolution
+        PLTDIR = Path(ANADIR) / f'plots/comparison/{cfg.args.config}'
+        names  = cfg.output[cfg.args.config]
 
         dir_path = PLTDIR / f'{cfg.args.sample}/{cfg.args.trigger}/{cfg.args.q2_bin}/{cfg.args.brem}_{cfg.args.block}/drop_mva'
 
