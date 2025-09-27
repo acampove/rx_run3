@@ -43,13 +43,7 @@ class CompareTask(law.Task):
 
     def run(self):
         """Run the `compare` command for one set of wildcards."""
-        with gut.silent_import():
-            import tensorflow as tf
-
-            tf.config.threading.set_inter_op_parallelism_threads(1)
-            tf.config.threading.set_intra_op_parallelism_threads(1)
-
-        from rx_plotter_scripts.compare import main      as compare 
+        from rx_plotter_scripts.compare import main as compare 
 
         cfg = self._get_config() 
     
