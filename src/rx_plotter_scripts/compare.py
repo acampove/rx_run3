@@ -80,7 +80,7 @@ def _get_plot_cfg(cfg : Config) -> DictConfig:
     # If user does not request emulation
     # Drop these plots
     run12_key = 'Corrected and L0(nPVs)'
-    if not cfg.emulate:
+    if not cfg.emulate and cfg.config == 'resolution':
         log.info('Not emulating Run1/2 conditions')
         del cfg_plt.comparison[run12_key]
     else:
