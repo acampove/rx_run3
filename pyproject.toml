@@ -27,3 +27,4 @@ build-backend = 'poetry.core.masonry.api'
 
 [tool.poetry.scripts]
 compare_law = 'workflows.plots.compare_law:main_task'
+compare_wf  = 'workflows.plots.compare_law:main'
