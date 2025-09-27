@@ -1,11 +1,8 @@
-
+'''
+This script is meant to run the orchestration of comparison plots with
+Luigi Analysis Workflow
+'''
 import os
-# Force TensorFlow to use single thread to avoid multiprocessing conflicts
-os.environ['TF_NUM_INTRAOP_THREADS'] = '1'
-os.environ['TF_NUM_INTEROP_THREADS'] = '1'
-
-import ROOT
-
 import json
 from pathlib                    import Path
 
@@ -86,8 +83,8 @@ class WrapCompare(law.WrapperTask):
         for settings in l_settings:
             yield CompareTask(config_string = settings)
 
-def main_task():
+def main():
     law.run(argv=['WrapCompare', '--workers', '8'])
 
 if __name__ == "__main__":
-    main_task()
+    main()
