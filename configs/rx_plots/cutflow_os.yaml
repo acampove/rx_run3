@@ -13,13 +13,12 @@ args:
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimEE_MVA, q2bin : jpsi   }
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_MVA   , q2bin : jpsi   }
 output:
-  cleanup:
-    - 1Trk_mas.png
-    - 2Trk_mas.png
-    - bmass_brem_corr.png
-    - bmass_hop.png
-    - bmass.png
-    - mass_cascade.png
-    - mass_jpsi_misid.png
-    - mva_cmb.png
-    - q2.png
+  - 1Trk_mas.png
+  - 2Trk_mas.png
+  - bmass_brem_corr.png
+  - bmass_hop.png
+  - bmass.png
+  - mass_cascade.png
+  - mass_jpsi_misid.png
+  - mva_cmb.png
+  - q2.png

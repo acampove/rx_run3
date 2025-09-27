@@ -5,6 +5,5 @@ args:
   - {sample : 'DATA_24*', trigger : Hlt2RD_B0ToKpPimMuMu_SameSign_MVA, q2bin : central }
   - {sample : 'DATA_24*', trigger : Hlt2RD_BuToKpMuMu_SameSign_MVA   , q2bin : central }
 output:
-  ss_shape:
-    - bmass_corr.png
-    - jmass_corr.png
+  - bmass_corr.png
+  - jmass_corr.png
