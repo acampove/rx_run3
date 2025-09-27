@@ -103,14 +103,17 @@ class WrapCompare(law.WrapperTask):
                     l_cfg.append(json_str)
     
         return l_cfg 
-    
+    # --------------------------
     def requires(self):
+        '''
+        Defines the sets of tasks in the workflow
+        '''
         l_settings = self._get_settings()
         for settings in l_settings:
             yield CompareTask(config_string = settings)
-
+# -------------------------------------
 def main():
     law.run(argv=['WrapCompare', '--workers', '8'])
-
+# -------------------------------------
 if __name__ == "__main__":
     main()
