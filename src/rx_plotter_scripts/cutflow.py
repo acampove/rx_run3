@@ -177,10 +177,12 @@ def _set_config(settings : DictConfig) -> None:
     -------------
     settings: Dictionary with settings needed when used as a module
     '''
+    project = info.project_from_trigger(trigger=settings.trigger, lower_case=True)
+
     Data.q2_bin   = settings.q2bin
     Data.sample   = settings.sample
     Data.trigger  = settings.trigger
-    Data.config   = settings.config
+    Data.config   = f'{settings.config}_{project}'
     Data.substr   = settings.substr
     Data.nthreads = settings.nthreads
 # ---------------------------------
