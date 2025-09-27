@@ -4,18 +4,26 @@ Luigi Analysis Workflow
 '''
 import os
 import json
-from pathlib                    import Path
+from pathlib               import Path
 
 import law
-from law.parameter              import Parameter
-from omegaconf                  import DictConfig, OmegaConf
-from dmu.generic                import utilities as gut
+from law.parameter         import Parameter
+from omegaconf             import DictConfig, OmegaConf
+from dmu.generic           import utilities as gut
+from dmu.logging.log_store import LogStore
 
-
+log=LogStore.add_logger('rx_orchestration:compare_law')
+# -------------------------------------
 class CompareTask(law.Task):
-    config_string : str = Parameter()
-
+    config_string : str = Parameter() # type: ignore
+    # -------------------------------------
     def _get_config(self) -> DictConfig:
+        '''
+        Returns
+        --------------------
+        Transform JSON string `config_string` with configuration to DictConfig
+        and returns it
+        '''
         if hasattr(self, '_cfg'):
             return self._cfg
 
