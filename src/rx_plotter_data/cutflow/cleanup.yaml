@@ -112,7 +112,6 @@ plots:
           <<: *style
     B_Mass:
         binning    : [4500, 6500, 60]
-        #binning    : [5080, 5800, 60]
         yscale     : 'linear'
         labels     : ['$M_{corr}(B^+)\;[\text{MeV}]$', 'Entries']
         title      : ''
