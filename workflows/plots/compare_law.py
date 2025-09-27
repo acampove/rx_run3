@@ -37,15 +37,22 @@ class CompareTask(law.Task):
         self._cfg = cfg
 
         return self._cfg
-
-    def output(self) -> law.LocalFileTarget:
+    # -------------------------------------
+    def output(self) -> list[law.LocalFileTarget]:
+        '''
+        Returns
+        ---------------
+        Name of required output, built from ANADIR and config settings
+        '''
         cfg    = self._get_config()
         ANADIR = os.environ['ANADIR']
-        PLTDIR = Path(ANADIR) / 'plots/comparison/brem_track_2'
-        plot   = PLTDIR / f'{cfg.sample}/{cfg.trigger}/{cfg.q2_bin}/{cfg.brem}_{cfg.block}/drop_mva/npv.png'
+        PLTDIR = Path(ANADIR) / 'plots/comparison/resolution'
+        names  = cfg.output.resolution
 
-        return law.LocalFileTarget(plot)
+        dir_path = PLTDIR / f'{cfg.args.sample}/{cfg.args.trigger}/{cfg.args.q2_bin}/{cfg.args.brem}_{cfg.args.block}/drop_mva'
 
+        return [ law.LocalFileTarget(dir_path / name) for name in names ]
+    # -------------------------------------
     def run(self):
         """Run the `compare` command for one set of wildcards."""
         from rx_plotter_scripts.compare import main as compare 
