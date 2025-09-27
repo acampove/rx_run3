@@ -96,10 +96,6 @@ plots:
         normalized : false
         styling:
           <<: *style
-        vline:
-          x     : 4500
-          c     : gray
-          ls    : ':'
     B_M:
         binning    : [4500, 6500, 60]
         yscale     : 'linear'
