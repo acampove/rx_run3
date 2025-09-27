@@ -10,6 +10,7 @@ from ROOT                    import RDataFrame # type: ignore
 from dmu.plotting.plotter_1d import Plotter1D
 from dmu.logging.log_store   import LogStore
 from dmu.generic             import naming
+from omegaconf               import DictConfig
 from rx_data.rdf_getter      import RDFGetter
 from rx_selection            import selection
 
@@ -167,11 +168,27 @@ def _plot(d_rdf : dict[str,RDataFrame]) -> None:
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
 # ---------------------------------
-def main():
+def _set_config(settings : DictConfig) -> None:
+    '''
+    Parameters
+    -------------
+    settings: Dictionary with settings needed when used as a module
+    '''
+    Data.q2_bin   = settings.q2bin
+    Data.sample   = settings.sample
+    Data.trigger  = settings.trigger
+    Data.config   = settings.config
+    Data.substr   = settings.substr
+    Data.nthreads = settings.nthreads
+# ---------------------------------
+def main(settings : DictConfig|None = None):
     '''
     Script starts here
     '''
-    _parse_args()
+    if settings is None:
+        _parse_args()
+    else:
+        _set_config(settings=settings)
 
     Data.cfg = _get_cfg()
     with RDFGetter.multithreading(nthreads=Data.nthreads),\
