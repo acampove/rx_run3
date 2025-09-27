@@ -1,0 +1,60 @@
+# Config meant to check effect of cuts on combinatorial through SS samples 
+style: &style
+  None:
+    histtype : fill 
+    color    : gray 
+    alpha    : 0.5
+  $M_{DTF}^{J/\psi}$ veto:
+    histtype : step 
+    color    : black 
+    linestyle: '-'
+  $M_{DTF}^{\psi(2S)}$ veto:
+    histtype : step 
+    color    : blue 
+    linestyle: '-'
+general:
+  size : [15, 10]
+selection :
+  bdt        : mva_cmb > 0.8 && mva_prc > 0.8
+  mass       : (1)
+veto : &cuts
+cutflow:
+  low :
+    None           : (1)
+  central:
+    None             : (1)
+    $M_{DTF}^{J/\psi}$ veto   : "TMath::Abs(B_const_mass_M       - 5280) > 200"
+    $M_{DTF}^{\psi(2S)}$ veto : "TMath::Abs(B_const_mass_psi2S_M - 5280) > 100"
+  jpsi:
+    None           : (1)
+  psi2:
+    None           : (1)
+  high:
+    None        : (1)
+saving:
+  plt_dir : cutflow/ss_shape
+plots:
+    B_Mass:
+      binning    : [4500, 7000, 50]
+      yscale     : linear
+      labels     : ['$M_{corr}(K^{*0}(\to K^+\pi^-) e^{\pm}e^{\pm})$ MeV', 'Entries/50 MeV']
+      title      : ''
+      name       : bmass_corr
+      normalized : False 
+      styling:
+        <<: *style
+    Jpsi_Mass:
+      binning    : [1000, 3000, 50]
+      yscale     : linear
+      labels     : ['$M_{corr}(e^{\pm}e^{\pm})$ MeV', 'Entries/50 MeV']
+      title      : ''
+      name       : jmass_corr
+      normalized : False 
+      styling:
+        <<: *style
+plugin:
+  stats:
+    B_Mass:
+      sum  : 'Entries={:.0f}'
+    Jpsi_Mass:
+      sum  : 'Entries={:.0f}'
