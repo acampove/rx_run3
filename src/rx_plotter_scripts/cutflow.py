@@ -162,10 +162,11 @@ def _fix_ranges(cfg : dict) -> dict:
         return cfg
 
     for key in cfg_plt:
-        if not key.startswith('B_M'):
-            continue
+        if key.startswith('B_M'):
+            cfg_plt[key]['binning'] = [5150, 5400, 100]
 
-        cfg_plt[key]['binning'] = [5150, 5400, 100]
+        if key.startswith('Jpsi_M'):
+            cfg_plt[key]['binning'] = [3000, 3200, 100]
 
     return cfg
 # ---------------------------------
