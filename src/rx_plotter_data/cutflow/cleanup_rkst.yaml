@@ -81,7 +81,7 @@ plots:
     swp_jpsi_misid_mass_swp:
         binning    : [1500, 3500, 60]
         yscale     : 'linear'
-        labels     : ['M$(K_{\to\ell},\ell)\;[\text{MeV}]$', 'Entries']
+        labels     : ['M$(\pi_{\to\ell},\ell)\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : 'mass_jpsi_misid'
         normalized : false
