@@ -4,6 +4,7 @@ Script used to orchestrate plots made by the `cutflow` script
 import os
 import json
 from pathlib               import Path
+from functools             import cache
 
 import law
 from law.parameter         import Parameter
@@ -67,7 +68,9 @@ class WrapCutflow(law.WrapperTask):
     '''
     This class takes care of steering the workflow
     '''
-    def _get_settings(self) -> list[str]:
+    @cache
+    @staticmethod
+    def get_settings() -> list[str]:
         '''
         Returns
         --------------
@@ -100,7 +103,7 @@ class WrapCutflow(law.WrapperTask):
         '''
         Defines the sets of tasks in the workflow
         '''
-        l_settings = self._get_settings()
+        l_settings = WrapCutflow.get_settings()
         for settings in l_settings:
             yield CutflowTask(config_string = settings)
 # ----------------------
