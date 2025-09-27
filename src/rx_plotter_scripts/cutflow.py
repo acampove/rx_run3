@@ -125,8 +125,7 @@ def _add_title(cfg : dict) -> dict:
     return cfg
 # ---------------------------------
 def _get_out_dir(plt_dir : str) -> str:
-    sample  = Data.sample.replace('*', 'p')
-    out_dir = f'{Data.ana_dir}/plots/{plt_dir}/{sample}_{Data.trigger}_{Data.q2_bin}'
+    out_dir = f'{Data.ana_dir}/plots/{plt_dir}/{Data.sample}_{Data.trigger}_{Data.q2_bin}'
     if Data.substr is not None:
         out_dir = f'{out_dir}/{Data.substr}'
 
