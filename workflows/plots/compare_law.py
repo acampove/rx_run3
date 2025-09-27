@@ -113,7 +113,7 @@ class WrapCompare(law.WrapperTask):
             yield CompareTask(config_string = settings)
 # -------------------------------------
 def main():
-    law.run(argv=['WrapCompare', '--workers', '8'])
+    law.run(argv=['WrapCompare', '--workers', '12'])
 # -------------------------------------
 if __name__ == "__main__":
     main()
