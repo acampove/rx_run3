@@ -1,0 +1,63 @@
+# Config used to check effect of BDT cut on shape of unconstrained B mass
+# BDT is progressively tightened
+
+styling: &style
+  M(B) > 4500 : 
+    histtype  : fill 
+    linestyle : '-'
+    alpha     : 0.3
+    color     : gray
+  M(B) > 4600 : 
+    histtype  : step
+    linestyle : '-'
+  M(B) > 4700 :
+    histtype  : step
+    linestyle : '-'
+  M(B) > 4800 :
+    histtype  : step
+    linestyle : '-'
+  M(B) > 4900 :
+    histtype  : step
+    linestyle : '-'
+general:
+  size : [15, 10]
+selection :
+  bdt     : (1) 
+cmb : &cuts
+  M(B) > 4500 : B_M > 4500
+  M(B) > 4600 : B_M > 4600
+  M(B) > 4700 : B_M > 4700
+  M(B) > 4800 : B_M > 4800
+  M(B) > 4900 : B_M > 4900
+cutflow:
+  low :
+    <<: *cuts
+  central:
+    <<: *cuts
+  jpsi:
+    <<: *cuts
+  psi2:
+    <<: *cuts
+  high:
+    <<: *cuts
+saving:
+  plt_dir : cutflow/mass_shaping
+plots:
+  Jpsi_M:
+    binning    : [2500, 3700, 100]
+    yscale     : 'linear'
+    labels     : ['$\text{M}(J/\psi)$', 'Normalized']
+    title      : ''
+    name       : 'jmass'
+    normalized : false 
+    styling:
+      <<: *style
+  B_M :
+    binning    : [4500, 6000, 100]
+    yscale     : 'linear'
+    labels     : ['M$(B^0)$', 'Normalized']
+    title      : ''
+    name       : 'bmass'
+    normalized : false 
+    styling:
+      <<: *style
