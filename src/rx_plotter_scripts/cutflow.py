@@ -9,6 +9,7 @@ import dmu.generic.utilities as gut
 from ROOT                    import RDataFrame # type: ignore
 from dmu.plotting.plotter_1d import Plotter1D
 from dmu.logging.log_store   import LogStore
+from dmu.generic             import naming
 from rx_data.rdf_getter      import RDFGetter
 from rx_selection            import selection
 
@@ -46,7 +47,8 @@ def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
 
     d_def = cfg['definitions']
     for name, expr in d_def.items():
-        rdf = rdf.Define(name, expr)
+        name = naming.clean_special_characters(name=name)
+        rdf  = rdf.Define(name, expr)
 
     return rdf
 # ---------------------------------
@@ -62,7 +64,8 @@ def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
     log.info(40 * '-')
     for cut_name, cut_expr in d_sel.items():
         log.info(f'{cut_name:<20}{cut_expr}')
-        rdf = rdf.Filter(cut_expr, cut_name)
+        name = naming.clean_special_characters(name=cut_name)
+        rdf  = rdf.Filter(cut_expr, name)
 
     rep = rdf.Report()
     rep.Print()
@@ -140,6 +143,7 @@ def _get_inp() -> dict[str,RDataFrame]:
     log.info('Applying cutflow')
     for name, cut in d_cut.items():
         log.info(f'{"":<4}{name:<15}{cut}')
+        name        = naming.clean_special_characters(name=name)
         rdf         = rdf.Filter(cut, name)
         d_rdf[name] = rdf
 
