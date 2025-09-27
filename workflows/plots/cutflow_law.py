@@ -48,7 +48,7 @@ class CutflowTask(law.Task):
         PLTDIR = Path(ANADIR) / f'plots/cutflow/{cfg.args.config}'
         names  = cfg.output[cfg.args.config]
 
-        dir_path = PLTDIR / f'{cfg.args.sample}/{cfg.args.trigger}/{cfg.args.q2_bin}'
+        dir_path = PLTDIR / f'{cfg.args.sample}/{cfg.args.trigger}/{cfg.args.q2bin}'
 
         return [ law.LocalFileTarget(dir_path / name) for name in names ]
     # -------------------------------------
