@@ -12,3 +12,11 @@ args:
   # ------------
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimEE_MVA, q2_bin : jpsi   }
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_MVA   , q2_bin : jpsi   }
+output:
+  resolution:
+    - bmass_correction.png
+    - long_tracks.png
+    - npv.png
+  smear:
+    - bmass.png
+    - jmass.png
