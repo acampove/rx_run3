@@ -54,13 +54,15 @@ class CompareTask(law.Task):
         return [ law.LocalFileTarget(dir_path / name) for name in names ]
     # -------------------------------------
     def run(self):
-        """Run the `compare` command for one set of wildcards."""
+        '''
+        Runs comparison
+        '''
         from rx_plotter_scripts.compare import main as compare 
 
         cfg = self._get_config() 
-    
-        compare(settings=cfg)
 
+        compare(settings=cfg.args)
+# -------------------------------------
 class WrapCompare(law.WrapperTask):
     def _get_settings(self) -> list[str]:
         """Return all expected plot paths."""
