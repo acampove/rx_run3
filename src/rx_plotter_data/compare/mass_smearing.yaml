@@ -18,7 +18,7 @@ comparison:
       bmass : B_M_smr_brem_track_2
       jmass : Jpsi_M_smr_brem_track_2
 saving:
-  plt_dir : plots/comparison_smear
+  plt_dir : plots/comparison/smear
 plots:
   bmass:
     binning    : [4500, 6000, 40]
