@@ -158,9 +158,14 @@ def _fix_ranges(cfg : dict) -> dict:
     '''
 
     cfg_plt = cfg['plots']
-    if 'B_M' in cfg_plt and 'MuMu' in Data.trigger:
-        [_, _, nbins] = cfg_plt['B_M']['binning']
-        cfg_plt['B_M']['binning'] = [5150, 5800, nbins]
+    if 'MuMu' not in Data.trigger:
+        return cfg
+
+    for key in cfg_plt:
+        if not key.startswith('B_M'):
+            continue
+
+        cfg_plt[key]['binning'] = [5150, 5400, 100]
 
     return cfg
 # ---------------------------------
