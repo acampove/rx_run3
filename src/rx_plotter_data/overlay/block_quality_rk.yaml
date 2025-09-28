@@ -33,12 +33,30 @@ plots:
     normalized : true
     styling:
       <<: *sty
+  B_Mass:
+    binning    : [4500, 6000, 60]
+    yscale     : 'linear'
+    labels     : ['$\text{M}_{corr}(B^+)$', 'Entries']
+    title      : ''
+    name       : 'bmass_corr'
+    normalized : true
+    styling:
+      <<: *sty
   Jpsi_M:
     binning    : [2500, 3300, 60]
     yscale     : 'linear'
     labels     : ['$\text{M}(J/\psi)$', 'Entries']
     title      : ''
     name       : 'jmass'
+    normalized : true
+    styling:
+      <<: *sty
+  Jpsi_Mass:
+    binning    : [2500, 3300, 60]
+    yscale     : 'linear'
+    labels     : ['$\text{M}_{corr}(J/\psi)$', 'Entries']
+    title      : ''
+    name       : 'jmass_corr'
     normalized : true
     styling:
       <<: *sty
