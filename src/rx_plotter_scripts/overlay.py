@@ -26,7 +26,7 @@ class Data:
     trigger_mm = 'Hlt2RD_BuToKpMuMu_MVA'
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
-    data_dir   = os.environ['ANADIR']
+    ana_dir    = os.environ['ANADIR']
     l_kind     = ['ecal_xy',
                   'brem',
                   'block_no_tail',
@@ -42,10 +42,10 @@ class Data:
     chanel  : str
     config  : str
     sample  : str
-    substr  : str
     trigger : str
     q2_bin  : str
     cfg_dir : str
+    substr  : str|None
     brem    : int|None
     logl    : int
 
@@ -121,20 +121,30 @@ def _parse_args() -> None:
 # ---------------------------------
 def _get_cfg() -> DictConfig:
     cfg = gut.load_conf(package='rx_plotter_data', fpath=f'overlay/{Data.config}.yaml')
+    ini_dir = cfg.saving.plt_dir
+    end_dir = _get_out_dir()
 
-    cfg['saving'] = {'plt_dir' : _get_out_dir() }
+    cfg.saving.plt_dir = f'{Data.ana_dir}/plots/{ini_dir}/{end_dir}'
+    log.info(f'Saving to: {cfg.saving.plt_dir}')
 
     return cfg
 # ---------------------------------
 def _get_out_dir() -> str:
+    '''
+    Returns
+    --------------
+    String defining termination of the path defined in the config
+    '''
     if Data.brem is None:
         brem_name = 'all'
     else:
         brem_name = f'{Data.brem:03}'
 
-    out_dir = f'plots/{Data.config}/{Data.sample}/{Data.trigger}/{Data.q2_bin}/{brem_name}'
-    if Data.substr is not None:
-        out_dir = f'{out_dir}/{Data.substr}'
+    out_dir = f'{Data.sample}/{Data.trigger}/{Data.q2_bin}/{brem_name}'
+    if Data.substr is None:
+        return out_dir
+
+    out_dir = f'{out_dir}/{Data.substr}'
 
     return out_dir
 # ---------------------------------
