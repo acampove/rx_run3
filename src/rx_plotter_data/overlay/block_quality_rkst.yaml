@@ -126,7 +126,7 @@ plots:
   H1_TRACK_GhostProb:
     binning    : [0, 0.3, 60]
     yscale     : 'log'
-    labels     : ['$\text{Ghost}_{K}^{prob}$', 'Entries']
+    labels     : ['$\text{Prob}^{ghost}(K)$', 'Entries']
     title      : ''
     name       : 'k_ghost'
     normalized : true
@@ -135,7 +135,7 @@ plots:
   H2_TRACK_GhostProb:
     binning    : [0, 0.3, 60]
     yscale     : 'log'
-    labels     : ['$\text{Ghost}_{\pi}^{prob}$', 'Entries']
+    labels     : ['$\text{Prob}^{ghost}(\pi)$', 'Entries']
     title      : ''
     name       : 'pi_ghost'
     normalized : true
