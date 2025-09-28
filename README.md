@@ -87,7 +87,7 @@ cutflow -s "DATA*" -t Hlt2RD_BuToKpEE_SameSign_MVA -c vetoes -q high
 For this run:
 
 ```bash
-plot_2d -c mm -q central -c mass_q2
+plot_2d -q central -c mass_q2 -t Hlt2RD_BuToKpEE_MVA
 ```
 
 where:
@@ -95,14 +95,18 @@ where:
 ```
 options:
   -h, --help            show this help message and exit
-  -C {ee,mm}, --chanel {ee,mm}
-                        Channel
   -q {low,central,jpsi,psi2,high}, --q2bin {low,central,jpsi,psi2,high}
                         q2 bin, optional
-  -c {mass_q2,cmb_prc}, --config {mass_q2,cmb_prc}
+  -c CONFIG, --config CONFIG
                         Settings, i.e. mass_q2
+  -s SAMPLE, --sample SAMPLE
+                        Name of sample, can use wildcards
+  -t TRIGGER, --trigger TRIGGER
+                        Name of trigger
   -l {10,20,30}, --loglvl {10,20,30}
                         Log level
+  -n NTHREADS, --nthreads NTHREADS
+                        Number of threads
 ```
 
 This will provide plots showing
