@@ -55,26 +55,13 @@ def _initialize() -> None:
     if Data.nthreads > 1:
         EnableImplicitMT(Data.nthreads)
 
-    cfg_dir = files('rx_plotter_data').joinpath('overlay')
-
     LogStore.set_level('rx_selection:cutflow', Data.logl)
-
-    Data.cfg_dir = cfg_dir
-    log.info(f'Picking configuration from: {Data.cfg_dir}')
-
-    l_yaml  = glob.glob(f'{Data.data_dir}/samples/*.yaml')
-
-    d_sample= { os.path.basename(path).replace('.yaml', '') : path for path in l_yaml }
-    log.info('Using paths:')
-    pprint.pprint(d_sample)
-    RDFGetter.samples = d_sample
 # ---------------------------------
-def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
+def _apply_definitions(rdf : RDataFrame, cfg : DictConfig) -> RDataFrame:
     if 'definitions' not in cfg:
         return rdf
 
-    d_def = cfg['definitions']
-    for name, expr in d_def.items():
+    for name, expr in cfg.definitions.items():
         rdf = rdf.Define(name, expr)
 
     return rdf
@@ -92,7 +79,7 @@ def _filter_by_brem(rdf : RDataFrame) -> RDataFrame:
 def _get_rdf() -> RDataFrame:
     cfg = _get_cfg()
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
     rdf = _apply_definitions(rdf, cfg)
 
     d_sel = sel.selection(trigger=Data.trigger, q2bin=Data.q2_bin, process=Data.sample)
@@ -145,12 +132,8 @@ def _parse_args() -> None:
     Data.brem   = args.brem
     Data.logl   = args.logl
 # ---------------------------------
-def _get_cfg() -> dict:
-    cfg_path= f'{Data.cfg_dir}/{Data.config}.yaml'
-    cfg_path= str(cfg_path)
-
-    with open(cfg_path, encoding='utf=8') as ifile:
-        cfg = yaml.safe_load(ifile)
+def _get_cfg() -> DictConfig:
+    cfg = gut.load_conf(package='rx_plotter_data', fpath=f'overlay/{Data.config}.yaml')
 
     cfg['saving'] = {'plt_dir' : _get_out_dir() }
 
@@ -162,8 +145,7 @@ def _get_out_dir() -> str:
     else:
         brem_name = f'{Data.brem:03}'
 
-    sample  = Data.sample.replace('*', 'p')
-    out_dir = f'plots/{Data.config}/{sample}/{Data.trigger}/{Data.q2_bin}/{brem_name}'
+    out_dir = f'plots/{Data.config}/{Data.sample}/{Data.trigger}/{Data.q2_bin}/{brem_name}'
     if Data.substr is not None:
         out_dir = f'{out_dir}/{Data.substr}'
 
