@@ -43,7 +43,7 @@ plots:
     styling:
       <<: *sty
   Jpsi_M:
-    binning    : [2500, 3300, 60]
+    binning    : [2500, 3400, 60]
     yscale     : 'linear'
     labels     : ['$\text{M}(J/\psi)$', 'Entries']
     title      : ''
@@ -52,7 +52,7 @@ plots:
     styling:
       <<: *sty
   Jpsi_Mass:
-    binning    : [2500, 3300, 60]
+    binning    : [2500, 3400, 60]
     yscale     : 'linear'
     labels     : ['$\text{M}_{corr}(J/\psi)$', 'Entries']
     title      : ''
