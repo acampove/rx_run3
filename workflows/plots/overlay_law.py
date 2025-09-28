@@ -104,20 +104,20 @@ class WrapOverlay(law.WrapperTask):
                 q2bin   = args['q2bin'  ]
                 sample  = args['sample' ]
                 trigger = args['trigger']
+                brem    = args['brem'   ]
 
-                for brem in [1, 2]:
-                    cfg             = {}
-                    cfg['q2bin'   ] = q2bin 
-                    cfg['sample'  ] = sample
-                    cfg['trigger' ] = trigger
-                    cfg['config'  ] = kind 
-                    cfg['substr'  ] = None 
-                    cfg['brem'    ] = brem
-                    cfg['nthreads'] = 1 # Luigi will run in parallel anyway
+                cfg             = {}
+                cfg['q2bin'   ] = q2bin 
+                cfg['sample'  ] = sample
+                cfg['trigger' ] = trigger
+                cfg['config'  ] = kind 
+                cfg['substr'  ] = None 
+                cfg['brem'    ] = brem
+                cfg['nthreads'] = 1 # Luigi will run in parallel anyway
 
-                    output   = OmegaConf.to_container(config.output, resolve=True)
-                    json_str = json.dumps({'args' : cfg, 'output' : output}) 
-                    l_cfg.append(json_str)
+                output   = OmegaConf.to_container(config.output, resolve=True)
+                json_str = json.dumps({'args' : cfg, 'output' : output}) 
+                l_cfg.append(json_str)
     
         return l_cfg 
     # --------------------------
