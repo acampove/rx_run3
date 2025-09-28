@@ -157,11 +157,29 @@ def _get_inp() -> dict[str,RDataFrame]:
 # ---------------------------------
 def _plot(d_rdf : dict[str,RDataFrame]) -> None:
     cfg= _get_cfg()
+    cfg= _fix_ranges(cfg=cfg)
+
     if 'definitions' in cfg:
         del cfg['definitions']
 
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
+# ---------------------------------
+def _fix_ranges(cfg : DictConfig) -> DictConfig:
+    '''
+    Takes configuration and makes sure mass ranges make sense
+    '''
+    if 'MuMu' not in Data.trigger:
+        return cfg
+
+    for key, cfg_plt in cfg.plots.items():
+        if key.startswith('B_M'):
+            cfg_plt.binning = [5150, 5400, 100]
+
+        if key.startswith('Jpsi_M'):
+            cfg_plt.binning = [3000, 3200, 100]
+
+    return cfg
 # ----------------------
 def _initialize_pars(cfg : DictConfig) -> None:
     '''
