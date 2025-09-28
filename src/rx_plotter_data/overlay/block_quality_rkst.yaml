@@ -1,4 +1,4 @@
-styling: &styling
+styling: &sty
   histtype : step
   linestyle: '-'
 general:
@@ -23,7 +23,7 @@ plots:
     name       : 'bmass_dtf'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
   B_M:
     binning    : [4500, 6000, 60]
     yscale     : 'linear'
@@ -32,7 +32,7 @@ plots:
     name       : 'bmass'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
   Jpsi_M:
     binning    : [2500, 3300, 60]
     yscale     : 'linear'
@@ -41,7 +41,7 @@ plots:
     name       : 'jmass'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
   B_ENDVERTEX_CHI2:
     binning    : [0, 20, 60]
     yscale     : 'log'
@@ -50,7 +50,7 @@ plots:
     name       : 'bchi2'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
   mva_cmb:
     binning    : [0, 1, 60]
     yscale     : 'log'
@@ -59,7 +59,7 @@ plots:
     name       : 'mva_cmb'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
   mva_prc:
     binning    : [0, 1, 60]
     yscale     : 'log'
@@ -68,7 +68,7 @@ plots:
     name       : 'mva_prc'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
   L1_PIDe:
     binning    : [1, 10, 60]
     yscale     : 'log'
@@ -77,7 +77,7 @@ plots:
     name       : 'l1_pide'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
   L2_PIDe:
     binning    : [1, 10, 60]
     yscale     : 'log'
@@ -86,7 +86,7 @@ plots:
     name       : 'l2_pide'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
   H1_PID_K:
     binning    : [2, 10, 60]
     yscale     : 'log'
@@ -95,7 +95,7 @@ plots:
     name       : 'k_pidk'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
   H2_PID_K:
     binning    : [2, 10, 60]
     yscale     : 'log'
@@ -104,7 +104,7 @@ plots:
     name       : 'pi_pidk'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
   L1_TRACK_GhostProb:
     binning    : [0, 0.3, 60]
     yscale     : 'log'
@@ -113,7 +113,7 @@ plots:
     name       : 'l1_ghost'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
   L2_TRACK_GhostProb:
     binning    : [0, 0.3, 60]
     yscale     : 'log'
@@ -122,7 +122,7 @@ plots:
     name       : 'l2_ghost'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
   H1_TRACK_GhostProb:
     binning    : [0, 0.3, 60]
     yscale     : 'log'
@@ -131,7 +131,7 @@ plots:
     name       : 'k_ghost'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
   H2_TRACK_GhostProb:
     binning    : [0, 0.3, 60]
     yscale     : 'log'
@@ -140,4 +140,4 @@ plots:
     name       : 'pi_ghost'
     normalized : true
     styling:
-      <<: *style
+      <<: *sty
