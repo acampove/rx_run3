@@ -1,9 +1,8 @@
 general:
-  size : [18, 10]
+  size : [15, 10]
 selection:
-  cuts:
-    mva : mva_cmb > 0.7 && mva_prc > 0.0
-    mas : B_const_mass_M > 5250 && B_const_mass_M < 5300
+  mva : mva_cmb > 0.7 && mva_prc > 0.0
+  mas : B_const_mass_M > 5250 && B_const_mass_M < 5300
 cutflow:
   blocks_12 : block == 1 || block == 2
   blocks_34 : block == 3 || block == 4
@@ -43,56 +42,56 @@ plots:
     mva_cmb:
         binning    : [0, 1, 100]
         yscale     : 'log'
-        labels     : ['MVA${}_{CMB}$', 'Entries']
+        labels     : ['$\text{MVA}_{CMB}$', 'Entries']
         title      : ''
         name       : 'mva_cmb'
         normalized : true
     mva_prc:
         binning    : [0, 1, 100]
         yscale     : 'log'
-        labels     : ['MVA${}_{PRC}$', 'Entries']
+        labels     : ['$\text{MVA}_{PRC}$', 'Entries']
         title      : ''
         name       : 'mva_prc'
         normalized : true
     L1_PIDe:
         binning    : [1, 10, 100]
         yscale     : 'log'
-        labels     : ['PID${}_{L1}$', 'Entries']
+        labels     : ['$\text{PID}_{L1}$', 'Entries']
         title      : ''
         name       : 'l1_pide'
         normalized : true
     L2_PIDe:
         binning    : [1, 10, 100]
         yscale     : 'log'
-        labels     : ['PID${}_{L2}$', 'Entries']
+        labels     : ['$\text{PID}_{L2}$', 'Entries']
         title      : ''
         name       : 'l2_pide'
         normalized : true
     H_PID_K:
         binning    : [2, 10, 100]
         yscale     : 'log'
-        labels     : ['PID${}_{K}$', 'Entries']
+        labels     : ['$\text{PID}_{K}$', 'Entries']
         title      : ''
         name       : 'k_pidk'
         normalized : true
     L1_TRACK_GhostProb:
         binning    : [0, 0.3, 100]
         yscale     : 'log'
-        labels     : ['Ghost${}_{L1}^{prob}$', 'Entries']
+        labels     : ['$\text{Ghost}_{L1}^{prob}$', 'Entries']
         title      : ''
         name       : 'l1_ghost'
         normalized : true
     L2_TRACK_GhostProb:
         binning    : [0, 0.3, 100]
         yscale     : 'log'
-        labels     : ['Ghost${}_{L2}^{prob}$', 'Entries']
+        labels     : ['$\text{Ghost}_{L2}^{prob}$', 'Entries']
         title      : ''
         name       : 'l2_ghost'
         normalized : true
     H_TRACK_GhostProb:
         binning    : [0, 0.3, 100]
         yscale     : 'log'
-        labels     : ['Ghost${}_{K}^{prob}$', 'Entries']
+        labels     : ['$\text{Ghost}_{K}^{prob}$', 'Entries']
         title      : ''
         name       : 'k_ghost'
         normalized : true
