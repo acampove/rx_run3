@@ -1,0 +1,18 @@
+args:
+  - {sample : 'DATA_24*', trigger : Hlt2RD_B0ToKpPimEE_MVA         , q2bin : jpsi   }
+  - {sample : 'DATA_24*', trigger : Hlt2RD_BuToKpEE_MVA            , q2bin : jpsi   }
+  - {sample : 'DATA_24*', trigger : Hlt2RD_B0ToKpPimEE_SameSign_MVA, q2bin : jpsi   }
+  - {sample : 'DATA_24*', trigger : Hlt2RD_BuToKpEE_SameSign_MVA   , q2bin : jpsi   }
+output:
+  - bchi2.png
+  - bmass_dtf.png
+  - bmass.png
+  - jmass.png
+  - k_ghost.png
+  - k_pidk.png
+  - l1_ghost.png
+  - l1_pide.png
+  - l2_ghost.png
+  - l2_pide.png
+  - mva_cmb.png
+  - mva_prc.png
