@@ -95,7 +95,3 @@ plots:
         title      : ''
         name       : 'k_ghost'
         normalized : true
-style:
-  skip_lines : true
-  legend:
-    bbox_to_anchor : [1.40, 1]
