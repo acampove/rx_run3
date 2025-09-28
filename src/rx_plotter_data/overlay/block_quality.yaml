@@ -2,7 +2,6 @@ general:
   size : [15, 10]
 selection:
   bdt : (1)
-  mva : mva_cmb > 0.7 && mva_prc > 0.0
   mas : B_const_mass_M > 5250 && B_const_mass_M < 5300
 cutflow:
   Blocks 1 and 2 : block == 1 || block == 2
@@ -14,84 +13,84 @@ saving:
   plt_dir : overlay/block_quality
 plots:
     B_const_mass_M:
-        binning    : [5000, 5500, 100]
+        binning    : [5000, 5500, 60]
         yscale     : 'linear'
         labels     : ['$\text{M}_\text{DTF}(B^+)$', 'Entries']
         title      : ''
         name       : 'bmass_dtf'
         normalized : true
     B_M:
-        binning    : [4500, 6000, 100]
+        binning    : [4500, 6000, 60]
         yscale     : 'linear'
         labels     : ['$\text{M}(B^+)$', 'Entries']
         title      : ''
         name       : 'bmass'
         normalized : true
     Jpsi_M:
-        binning    : [2500, 3300, 100]
+        binning    : [2500, 3300, 60]
         yscale     : 'linear'
         labels     : ['$\text{M}(J/\psi)$', 'Entries']
         title      : ''
         name       : 'jmass'
         normalized : true
     B_ENDVERTEX_CHI2:
-        binning    : [0, 20, 100]
+        binning    : [0, 20, 60]
         yscale     : 'log'
         labels     : ['$\chi^2_{vtx}$', 'Entries']
         title      : ''
         name       : 'bchi2'
         normalized : true
     mva_cmb:
-        binning    : [0, 1, 100]
+        binning    : [0, 1, 60]
         yscale     : 'log'
         labels     : ['$\text{MVA}_{CMB}$', 'Entries']
         title      : ''
         name       : 'mva_cmb'
         normalized : true
     mva_prc:
-        binning    : [0, 1, 100]
+        binning    : [0, 1, 60]
         yscale     : 'log'
         labels     : ['$\text{MVA}_{PRC}$', 'Entries']
         title      : ''
         name       : 'mva_prc'
         normalized : true
     L1_PIDe:
-        binning    : [1, 10, 100]
+        binning    : [1, 10, 60]
         yscale     : 'log'
         labels     : ['$\text{PID}_{L1}$', 'Entries']
         title      : ''
         name       : 'l1_pide'
         normalized : true
     L2_PIDe:
-        binning    : [1, 10, 100]
+        binning    : [1, 10, 60]
         yscale     : 'log'
         labels     : ['$\text{PID}_{L2}$', 'Entries']
         title      : ''
         name       : 'l2_pide'
         normalized : true
     H_PID_K:
-        binning    : [2, 10, 100]
+        binning    : [2, 10, 60]
         yscale     : 'log'
         labels     : ['$\text{PID}_{K}$', 'Entries']
         title      : ''
         name       : 'k_pidk'
         normalized : true
     L1_TRACK_GhostProb:
-        binning    : [0, 0.3, 100]
+        binning    : [0, 0.3, 60]
         yscale     : 'log'
         labels     : ['$\text{Ghost}_{L1}^{prob}$', 'Entries']
         title      : ''
         name       : 'l1_ghost'
         normalized : true
     L2_TRACK_GhostProb:
-        binning    : [0, 0.3, 100]
+        binning    : [0, 0.3, 60]
         yscale     : 'log'
         labels     : ['$\text{Ghost}_{L2}^{prob}$', 'Entries']
         title      : ''
         name       : 'l2_ghost'
         normalized : true
     H_TRACK_GhostProb:
-        binning    : [0, 0.3, 100]
+        binning    : [0, 0.3, 60]
         yscale     : 'log'
         labels     : ['$\text{Ghost}_{K}^{prob}$', 'Entries']
         title      : ''
