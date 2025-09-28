@@ -12,7 +12,7 @@ from dmu.logging.log_store   import LogStore
 from rx_selection            import selection as sel
 from rx_data.rdf_getter      import RDFGetter
 
-log=LogStore.add_logger('rx_selection:plot_2d')
+log=LogStore.add_logger('rx_plots:plot_2d')
 # ---------------------------------
 class Data:
     '''
