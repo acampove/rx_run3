@@ -1,4 +1,4 @@
-styling: &styling
+styling: &sty
   histtype : step
   linestyle: '-'
 general:
