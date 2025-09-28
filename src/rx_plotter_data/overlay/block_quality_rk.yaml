@@ -93,7 +93,6 @@ plots:
     labels     : ['$\text{PID}_{e}(e^+)$', 'Entries']
     title      : ''
     name       : 'l1_pide'
-    normalized : true
     styling:
       <<: *sty
   L2_PIDe:
@@ -102,11 +101,10 @@ plots:
     labels     : ['$\text{PID}_{e}(e^-)$', 'Entries']
     title      : ''
     name       : 'l2_pide'
-    normalized : true
     styling:
       <<: *sty
   H_PID_K:
-    binning    : [2, 10, 60]
+    binning    : [-5, 20, 60]
     yscale     : 'log'
     labels     : ['$\text{PID}_{K}(K)$', 'Entries']
     title      : ''
