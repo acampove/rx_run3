@@ -87,12 +87,21 @@ plots:
     normalized : true
     styling:
       <<: *style
-  H_PID_K:
+  H1_PID_K:
     binning    : [2, 10, 60]
     yscale     : 'log'
     labels     : ['$\text{PID}_{K}$', 'Entries']
     title      : ''
     name       : 'k_pidk'
+    normalized : true
+    styling:
+      <<: *style
+  H2_PID_K:
+    binning    : [2, 10, 60]
+    yscale     : 'log'
+    labels     : ['$\text{PID}_{\pi}$', 'Entries']
+    title      : ''
+    name       : 'pi_pidk'
     normalized : true
     styling:
       <<: *style
@@ -114,12 +123,21 @@ plots:
     normalized : true
     styling:
       <<: *style
-  H_TRACK_GhostProb:
+  H1_TRACK_GhostProb:
     binning    : [0, 0.3, 60]
     yscale     : 'log'
     labels     : ['$\text{Ghost}_{K}^{prob}$', 'Entries']
     title      : ''
     name       : 'k_ghost'
+    normalized : true
+    styling:
+      <<: *style
+  H2_TRACK_GhostProb:
+    binning    : [0, 0.3, 60]
+    yscale     : 'log'
+    labels     : ['$\text{Ghost}_{\pi}^{prob}$', 'Entries']
+    title      : ''
+    name       : 'pi_ghost'
     normalized : true
     styling:
       <<: *style
