@@ -1,8 +1,12 @@
 args:
-  - {sample : 'DATA_24*', trigger : Hlt2RD_B0ToKpPimEE_MVA  , q2bin : jpsi   }
-  - {sample : 'DATA_24*', trigger : Hlt2RD_B0ToKpPimMuMu_MVA, q2bin : jpsi   }
-  - {sample : 'DATA_24*', trigger : Hlt2RD_BuToKpEE_MVA     , q2bin : jpsi   }
-  - {sample : 'DATA_24*', trigger : Hlt2RD_BuToKpMuMu_MVA   , q2bin : jpsi   }
+  - { sample : 'DATA_24*', trigger : Hlt2RD_B0ToKpPimMuMu_MVA, q2bin : jpsi, brem : 0 }
+  - { sample : 'DATA_24*', trigger : Hlt2RD_BuToKpMuMu_MVA   , q2bin : jpsi, brem : 0 }
+  # -------
+  - { sample : 'DATA_24*', trigger : Hlt2RD_B0ToKpPimEE_MVA  , q2bin : jpsi, brem : 1 }
+  - { sample : 'DATA_24*', trigger : Hlt2RD_BuToKpEE_MVA     , q2bin : jpsi, brem : 1 }
+  # -------
+  - { sample : 'DATA_24*', trigger : Hlt2RD_B0ToKpPimEE_MVA  , q2bin : jpsi, brem : 2 }
+  - { sample : 'DATA_24*', trigger : Hlt2RD_BuToKpEE_MVA     , q2bin : jpsi, brem : 2 }
 output:
   - bchi2.png
   - bmass_dtf.png
