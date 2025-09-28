@@ -124,9 +124,18 @@ plots:
     styling:
       <<: *sty
   H2_PID_K:
-    binning    : [2, 10, 60]
+    binning    : [-10, 10, 60]
     yscale     : 'log'
-    labels     : ['$\text{PID}_{\pi}$', 'Entries']
+    labels     : ['$\text{PID}_{K}(\pi)$', 'Entries']
+    title      : ''
+    name       : 'pi_pidk'
+    normalized : true
+    styling:
+      <<: *sty
+  H2_PROBNN_PI:
+    binning    : [0, 1, 40]
+    yscale     : 'linear'
+    labels     : ['$\text{Prob}_{NN}^{\pi}(\pi)$', 'Entries']
     title      : ''
     name       : 'pi_pidk'
     normalized : true
