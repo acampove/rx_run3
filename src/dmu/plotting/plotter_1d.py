@@ -1,7 +1,6 @@
 '''
 Module containing plotter class
 '''
-# pylint: disable=too-many-positional-arguments, too-many-arguments
 
 import math
 import cppyy
@@ -11,6 +10,7 @@ from omegaconf import DictConfig
 import numpy
 import matplotlib.pyplot as plt
 
+from ROOT                  import RDF # type: ignore
 from scipy.stats           import norm
 from dmu.logging.log_store import LogStore
 from dmu.plotting.plotter  import Plotter
@@ -24,7 +24,7 @@ class Plotter1D(Plotter):
     Class used to plot columns in ROOT dataframes
     '''
     # --------------------------------------------
-    def __init__(self, d_rdf=None, cfg=None):
+    def __init__(self, d_rdf : dict[str, RDF.RNode], cfg : DictConfig):
         '''
         Parameters:
 
