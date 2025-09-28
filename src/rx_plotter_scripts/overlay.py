@@ -51,12 +51,6 @@ class Data:
 
     l_col  = []
 # ---------------------------------
-def _initialize() -> None:
-    if Data.nthreads > 1:
-        EnableImplicitMT(Data.nthreads)
-
-    LogStore.set_level('rx_selection:cutflow', Data.logl)
-# ---------------------------------
 def _apply_definitions(rdf : RDataFrame, cfg : DictConfig) -> RDataFrame:
     if 'definitions' not in cfg:
         return rdf
@@ -168,13 +162,34 @@ def _plot(d_rdf : dict[str,RDataFrame]) -> None:
 
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
+# ----------------------
+def _initialize_pars(cfg : DictConfig) -> None:
+    '''
+    Parameters
+    -------------
+    cfg: User defined config, needed to initialize attributes of Data
+    '''
+    Data.q2_bin = cfg.q2bin
+    Data.sample = cfg.sample
+    Data.trigger= cfg.trigger
+    Data.config = cfg.config
+    Data.substr = cfg.substr
+    Data.brem   = cfg.brem
+    Data.logl   = 20 
 # ---------------------------------
-def main():
+def main(cfg : DictConfig|None = None):
     '''
     Script starts here
     '''
-    _parse_args()
-    _initialize()
+    if cfg is None:
+        _parse_args()
+    else:
+        _initialize_pars(cfg=cfg)
+
+    if Data.nthreads > 1:
+        EnableImplicitMT(Data.nthreads)
+
+    LogStore.set_level('rx_selection:cutflow', Data.logl)
 
     d_rdf = _get_inp()
     _plot(d_rdf)
