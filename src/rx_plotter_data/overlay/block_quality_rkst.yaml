@@ -103,6 +103,7 @@ plots:
     labels     : ['$\text{PID}_{e}(e^+)$', 'Entries']
     title      : ''
     name       : 'l1_pide'
+    normalized : true
     styling:
       <<: *sty
   L2_PIDe:
@@ -111,6 +112,7 @@ plots:
     labels     : ['$\text{PID}_{e}(e^-)$', 'Entries']
     title      : ''
     name       : 'l2_pide'
+    normalized : true
     styling:
       <<: *sty
   H1_PID_K:
