@@ -190,10 +190,12 @@ def _initialize_pars(cfg : DictConfig) -> None:
     -------------
     cfg: User defined config, needed to initialize attributes of Data
     '''
+    project = info.project_from_trigger(trigger=cfg.trigger, lower_case=True)
+
     Data.q2_bin = cfg.q2bin
     Data.sample = cfg.sample
     Data.trigger= cfg.trigger
-    Data.config = cfg.config
+    Data.config = f'{cfg.config}_{project}'
     Data.substr = cfg.substr
     Data.brem   = cfg.brem
     Data.logl   = 20 
