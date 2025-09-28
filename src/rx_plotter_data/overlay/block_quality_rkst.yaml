@@ -4,8 +4,9 @@ styling: &sty
 general:
   size : [15, 10]
 selection:
-  bdt : (1)
-  mas : B_const_mass_M > 5250 && B_const_mass_M < 5300
+  bdt      : (1)
+  kst_mass : (1)
+  mas      : B_const_mass_M > 5250 && B_const_mass_M < 5300
 cutflow:
   Blocks 1 and 2 : block == 1 || block == 2
   Blocks 3 and 4 : block == 3 || block == 4
