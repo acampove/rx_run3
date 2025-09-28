@@ -305,14 +305,7 @@ class Plotter1D(Plotter):
         '''
         # pylint: disable=too-many-locals
 
-        d_data = {}
-        for name, rdf in self._d_rdf.items():
-            try:
-                log.debug(f'Plotting: {var}/{name}')
-                d_data[name] = rdf.AsNumpy([var])[var]
-            except cppyy.gbl.std.runtime_error as exc:
-                raise ValueError(f'Cannot find variable {var} in category {name}') from exc
-
+        d_data           = self._data[var] 
         minx, maxx, bins = self._get_binning(var, d_data)
         d_wgt            = self._get_weights(var = var)
 
