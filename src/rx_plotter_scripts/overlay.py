@@ -142,10 +142,9 @@ def _get_inp() -> dict[str,RDataFrame]:
     cfg   = _get_cfg()
     rdf_in= _get_rdf()
 
-    d_cut = cfg['overlay']
     d_rdf = {}
     log.info('Applying overlay')
-    for name, cut in d_cut.items():
+    for name, cut in cfg.cutflow.items():
         log.info(f'   {name:<20}{cut}')
         rdf = rdf_in.Filter(cut, name)
         d_rdf[name] = rdf
