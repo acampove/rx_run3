@@ -87,7 +87,7 @@ cutflow -s "DATA*" -t Hlt2RD_BuToKpEE_SameSign_MVA -c vetoes -q high
 For this run:
 
 ```bash
-plot_2d -C mm -q central -c mass_q2
+plot_2d -c mm -q central -c mass_q2
 ```
 
 where:
