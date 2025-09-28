@@ -42,7 +42,7 @@ plots:
     normalized : true
     styling:
       <<: *sty
-  Kstar_M:
+  Kst_M:
     binning    : [600, 1200, 80]
     yscale     : 'linear'
     labels     : ['$\text{M}(K^{*0})$', 'Entries']
