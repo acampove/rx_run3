@@ -1,7 +1,7 @@
 # Config used to make 2D plots of mass vs q2
 
 saving:
-    plt_dir : plots/2d/mass_q2
+  plt_dir : plots/2d/mass_q2
 definitions:
   q2_def    : q2 / 1000000 # This will use non-smeared mass when using MC!!!
 selection:
@@ -9,16 +9,21 @@ selection:
     q2  : (1)
     mass: (1)
 general:
-    size : [15, 12]
+  size : [15, 12]
 plots_2d:
-    - [B_Mass, q2_def, null, Bmass_q2_def, true]
+  - [B_Mass, q2_def, null, mass_cor_q2_def, true]
+  - [B_M   , q2_def, null, mass_org_q2_def, true]
 axes:
-    B_Mass:
-        binning : [4500, 7000, 200]
-        label   : '$M_{corr}(B^+)$[MeV]'
-    # --------------------
-    q2_def:
-        binning : [0, 24, 200]
-        label   : '$q^2_{corr}$[$\text{GeV}^2$]'
+  B_M:
+    binning : [4500, 7000, 200]
+    label   : '$M(B^+)$[MeV]'
+  # --------------------
+  B_Mass:
+    binning : [4500, 7000, 200]
+    label   : '$M_{corr}(B^+)$[MeV]'
+  # --------------------
+  q2_def:
+    binning : [0, 24, 200]
+    label   : '$q^2_{corr}$[$\text{GeV}^2$]'
 # --------------------
 
