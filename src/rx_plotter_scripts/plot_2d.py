@@ -12,6 +12,7 @@ from dmu.logging.log_store   import LogStore
 from omegaconf               import DictConfig
 from rx_selection            import selection as sel
 from rx_data.rdf_getter      import RDFGetter
+from rx_common               import info
 
 log=LogStore.add_logger('rx_plots:plot_2d')
 # ---------------------------------
@@ -47,11 +48,13 @@ def _parse_args() -> None:
     parser.add_argument('-n', '--nthreads', type=int, help='Number of threads', default=Data.nthreads)
     args = parser.parse_args()
 
+    project = info.project_from_trigger(trigger=args.trigger, lower_case=True)
+
     Data.sample   = args.sample
-    Data.trigger  = args.trigger
+    Data.trigger  = args.trigger 
     Data.loglvl   = args.loglvl
     Data.q2bin    = args.q2bin
-    Data.config   = args.config
+    Data.config   = f'{args.config}_{project}'
     Data.nthreads = args.nthreads
 # ---------------------------------
 def _override_output(cfg : DictConfig) -> DictConfig:
@@ -82,10 +85,12 @@ def _initialize_settings(cfg : DictConfig) -> None:
     -------------
     cfg: Configuration dictionary passed when this file is treated as a module
     '''
+    project = info.project_from_trigger(trigger=cfg.trigger, lower_case=True)
+
     Data.sample   = cfg.sample
     Data.trigger  = cfg.trigger
     Data.q2bin    = cfg.q2bin
-    Data.config   = cfg.config
+    Data.config   = f'{cfg.config}_{project}'
     Data.loglvl   = 20 
     Data.nthreads = 1 
 # ---------------------------------
