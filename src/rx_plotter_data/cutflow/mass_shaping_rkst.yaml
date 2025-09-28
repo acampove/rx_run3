@@ -23,6 +23,7 @@ general:
   size : [15, 10]
 selection :
   bdt     : (1) 
+  mass    : (1)
 cmb : &cuts
   M(B) > 4500 : B_M > 4500
   M(B) > 4600 : B_M > 4600

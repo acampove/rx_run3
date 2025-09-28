@@ -9,6 +9,7 @@ selection :
   hop        : (1)
   cascade    : (1)
   bdt        : (1) 
+  mass       : (1)
 veto : &cuts
 cutflow:
   low :

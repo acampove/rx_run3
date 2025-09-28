@@ -21,6 +21,7 @@ selection:
   hop       : (1)
   cascade   : (1)
   jpsi_misid: (1)
+  mass      : (1)
 definitions:
   otk_mas : B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
   ttk_mas : B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS

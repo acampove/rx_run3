@@ -29,6 +29,7 @@ general:
   size : [15, 10]
 selection :
   bdt     : (1) 
+  mass      : (1)
 cmb : &cuts
   None      : (1)
   cmb > 0.6 : mva_cmb > 0.6
