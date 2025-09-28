@@ -26,6 +26,7 @@ requires      = ['poetry-core>=1.6.0']
 build-backend = 'poetry.core.masonry.api'
 
 [tool.poetry.scripts]
+compare_prf = 'workflows.plots.compare_prf:main'
 cutflow_law = 'workflows.plots.cutflow_law:main'
 compare_law = 'workflows.plots.compare_law:main'
-compare_prf = 'workflows.plots.compare_prf:main'
+overlay_law = 'workflows.plots.overlay_law:main'
