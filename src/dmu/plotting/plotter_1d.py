@@ -18,6 +18,8 @@ from dmu.plotting.fwhm     import FWHM
 from dmu.generic           import naming
 
 log = LogStore.add_logger('dmu:plotting:Plotter1D')
+
+CategoryData = dict[str, dict[str, numpy.ndarray]]
 # --------------------------------------------
 class Plotter1D(Plotter):
     '''
