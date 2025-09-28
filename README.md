@@ -65,7 +65,7 @@ requirements (HOP, Cascade, $J/\psi$ mis ID veto). Below each config description
 One can use the same command with `block_quality`, e.g:
 
 ```bash
-generic -t Hlt2RD_BuToKpMuMu_MVA -s "DATA*" -c block_quality -q jpsi
+overlay -t Hlt2RD_BuToKpMuMu_MVA -s "DATA*" -c block_quality -q jpsi
 ```
 
 which will make plots showing distributions per block. These distributions pass
