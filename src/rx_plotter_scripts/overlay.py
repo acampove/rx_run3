@@ -14,6 +14,7 @@ from dmu.plotting.plotter_1d import Plotter1D
 from dmu.logging.log_store   import LogStore
 from rx_data.rdf_getter      import RDFGetter
 from rx_selection            import selection as sel
+from rx_common               import info
 
 log=LogStore.add_logger('rx_selection:cutflow')
 # ---------------------------------
@@ -105,10 +106,12 @@ def _parse_args() -> None:
     parser.add_argument('-l', '--logl'   , type=int, help='Log level'    , choices=[10, 20, 30], default=20)
     args = parser.parse_args()
 
+    project = info.project_from_trigger(trigger=args.trigger, lower_case=True)
+
     Data.q2_bin = args.q2bin
     Data.sample = args.sample
     Data.trigger= args.trigger
-    Data.config = args.config
+    Data.config = f'{args.config}_{project}'
     Data.substr = args.substr
     Data.brem   = args.brem
     Data.logl   = args.logl
