@@ -30,7 +30,7 @@ class Data:
     ana_dir : str = os.environ['ANADIR']
 # ---------------------------------
 def _set_logs() -> None:
-    LogStore.set_level('rx_plotter:plot_2d'    , Data.loglvl)
+    LogStore.set_level('rx_plots:plot_2d'      , Data.loglvl)
     LogStore.set_level('rx_selection:selection', Data.loglvl)
     LogStore.set_level('rx_data:rdf_getter'    , Data.loglvl)
     LogStore.set_level('dmu:plotting:Plotter2D', Data.loglvl)
