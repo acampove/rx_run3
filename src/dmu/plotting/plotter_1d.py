@@ -33,8 +33,35 @@ class Plotter1D(Plotter):
         d_rdf (dict): Dictionary mapping the kind of sample with the ROOT dataframe
         cfg   (dict): Dictionary with configuration, e.g. binning, ranges, etc
         '''
-
         super().__init__(d_rdf=d_rdf, cfg=cfg)
+
+        self._data : CategoryData = self._get_data()  
+    # ----------------------
+    def _get_data(self) -> CategoryData:
+        '''
+        Returns
+        -------------
+        Dictionary with:
+        Key  : Category of data to plot
+        Value: Dictionary with:
+            Key  : Variable name
+            Value: Numpy array with values of variable
+        '''
+        variables = list(self._cfg.plots)
+        data : CategoryData = {}
+        for category, rdf in self._d_rdf.items():
+            data[category] = rdf.AsNumpy(variables) 
+
+        # Swap keys, inner is variable, outer is category
+        data_swap : CategoryData = {}
+        for category, d_var in data.items():
+            for variable, array in d_var.items():
+                if variable not in data_swap:
+                    data_swap[variable] = {}
+
+                data_swap[variable][category] = array
+
+        return data_swap
     #-------------------------------------
     def _get_labels(self, var : str) -> tuple[str,str]:
         if 'labels' not in self._cfg['plots'][var]:
