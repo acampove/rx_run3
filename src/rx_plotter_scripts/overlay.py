@@ -3,13 +3,10 @@ Script used to plot overlays
 '''
 # pylint: disable=no-name-in-module, logging-fstring-interpolation
 import os
-import glob
-import pprint
 import argparse
-from importlib.resources import files
 from dataclasses         import dataclass
 
-import yaml
+from omegaconf import DictConfig
 import mplhep
 import dmu.generic.utilities as gut
 from ROOT                    import RDataFrame, EnableImplicitMT # type: ignore
@@ -29,7 +26,7 @@ class Data:
     trigger_mm = 'Hlt2RD_BuToKpMuMu_MVA'
     trigger_ee = 'Hlt2RD_BuToKpEE_MVA'
     d_reso     = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}
-    data_dir   = os.environ['DATADIR']
+    data_dir   = os.environ['ANADIR']
     l_kind     = ['ecal_xy',
                   'brem',
                   'block_no_tail',
@@ -43,11 +40,13 @@ class Data:
     mplhep.style.use('LHCb2')
 
     chanel  : str
+    config  : str
+    sample  : str
     substr  : str
     trigger : str
     q2_bin  : str
     cfg_dir : str
-    brem    : int
+    brem    : int|None
     logl    : int
 
     l_col  = []
