@@ -132,7 +132,7 @@ plots:
       <<: *sty
   H2_PROBNN_PI:
     binning    : [0, 1, 40]
-    yscale     : 'linear'
+    yscale     : 'log'
     labels     : ['$\text{Prob}_{NN}^{\pi}(\pi)$', 'Entries']
     title      : ''
     name       : 'pi_pidk'
