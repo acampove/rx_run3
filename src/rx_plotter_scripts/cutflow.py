@@ -36,30 +36,29 @@ class Data:
     config  : str
     plt_dir : str
     nthreads: int
-    cfg     : dict
+    cfg     : DictConfig 
     d_def   : dict[str,str] = {}
 
     l_ee_trees = ['brem_track_2', 'ecalo_bias']
     l_keep     = []
     l_col      = []
 # ---------------------------------
-def _apply_definitions(rdf : RDataFrame, cfg : dict) -> RDataFrame:
-    if 'definitions' not in cfg:
+def _apply_definitions(rdf : RDataFrame) -> RDataFrame:
+    if 'definitions' not in Data.cfg:
         return rdf
-
-    d_def = cfg['definitions']
-    for name, expr in d_def.items():
+    
+    for name, expr in Data.cfg.definitions.items():
         good_name = naming.clean_special_characters(name=name)
         rdf       = rdf.Define(good_name, expr)
 
     return rdf
 # ---------------------------------
-def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
+def _apply_selection(rdf : RDataFrame) -> RDataFrame:
     d_sel = selection.selection(trigger=Data.trigger, q2bin=Data.q2_bin, process=Data.sample)
 
-    if 'selection' in cfg:
+    if 'selection' in Data.cfg:
         log.debug('Overriding selection')
-        d_sel.update(cfg['selection'])
+        d_sel.update(Data.cfg.selection)
 
     log.info(40 * '-')
     log.info('Applying selection')
@@ -82,8 +81,8 @@ def _apply_selection(rdf : RDataFrame, cfg : dict) -> RDataFrame:
 def _get_rdf() -> RDataFrame:
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
     rdf = gtr.get_rdf(per_file=False)
-    rdf = _apply_definitions(rdf, Data.cfg)
-    rdf = _apply_selection(rdf, Data.cfg)
+    rdf = _apply_definitions(rdf=rdf)
+    rdf = _apply_selection(rdf=rdf)
 
     return rdf
 # ---------------------------------
@@ -106,9 +105,9 @@ def _parse_args() -> None:
     Data.substr   = args.substr
     Data.nthreads = args.nthreads
 # ---------------------------------
-def _get_cfg() -> dict:
-    cfg           = gut.load_data(package='rx_plotter_data', fpath=f'cutflow/{Data.config}.yaml')
-    plt_dir       = cfg['saving']['plt_dir']
+def _get_cfg() -> DictConfig:
+    cfg           = gut.load_conf(package='rx_plotter_data', fpath=f'cutflow/{Data.config}.yaml')
+    plt_dir       = cfg.saving.plt_dir
     cfg['saving'] = {'plt_dir' : _get_out_dir(plt_dir) }
 
     if 'definitions' in cfg:
@@ -119,12 +118,10 @@ def _get_cfg() -> dict:
 
     return cfg
 # ---------------------------------
-def _add_title(cfg : dict) -> dict:
-    d_plot = cfg['plots']
-
+def _add_title(cfg : DictConfig) -> DictConfig:
     title = f'{Data.sample}; {Data.trigger}; {Data.q2_bin}'
-    for cfg_var in d_plot.values():
-        cfg_var['title'] = title
+    for cfg_var in cfg.plots.values():
+        cfg_var.title = title
 
     return cfg
 # ---------------------------------
@@ -152,27 +149,25 @@ def _get_inp() -> dict[str,RDataFrame]:
 
     return d_rdf
 # ---------------------------------
-def _fix_ranges(cfg : dict) -> dict:
+def _fix_ranges(cfg : DictConfig) -> DictConfig:
     '''
     Takes configuration and makes sure mass ranges make sense
     '''
-
-    cfg_plt = cfg['plots']
     if 'MuMu' not in Data.trigger:
         return cfg
 
-    for key in cfg_plt:
+    for key, cfg_plt in cfg.plots.items():
         if key.startswith('B_M'):
-            cfg_plt[key]['binning'] = [5150, 5400, 100]
+            cfg_plt.binning = [5150, 5400, 100]
 
         if key.startswith('Jpsi_M'):
-            cfg_plt[key]['binning'] = [3000, 3200, 100]
+            cfg_plt.binning = [3000, 3200, 100]
 
     return cfg
 # ---------------------------------
 def _plot(d_rdf : dict[str,RDataFrame]) -> None:
     cfg= _get_cfg()
-    cfg= _fix_ranges(cfg)
+    cfg= _fix_ranges(cfg=cfg)
 
     ptr=Plotter1D(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
