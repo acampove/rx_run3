@@ -90,7 +90,7 @@ plots:
   L1_PIDe:
     binning    : [1, 20, 40]
     yscale     : 'log'
-    labels     : ['$\text{PID}_{e^+}$', 'Entries']
+    labels     : ['$\text{PID}_{e}(e^+)$', 'Entries']
     title      : ''
     name       : 'l1_pide'
     normalized : true
@@ -99,7 +99,7 @@ plots:
   L2_PIDe:
     binning    : [1, 20, 40]
     yscale     : 'log'
-    labels     : ['$\text{PID}_{e^-}$', 'Entries']
+    labels     : ['$\text{PID}_{e}(e^-)$', 'Entries']
     title      : ''
     name       : 'l2_pide'
     normalized : true
@@ -108,7 +108,7 @@ plots:
   H_PID_K:
     binning    : [2, 10, 60]
     yscale     : 'log'
-    labels     : ['$\text{PID}_{K}$', 'Entries']
+    labels     : ['$\text{PID}_{K}(K)$', 'Entries']
     title      : ''
     name       : 'k_pidk'
     normalized : true
@@ -117,7 +117,7 @@ plots:
   L1_TRACK_GhostProb:
     binning    : [0, 0.3, 60]
     yscale     : 'log'
-    labels     : ['$\text{Ghost}_{e^+}^{prob}$', 'Entries']
+    labels     : ['$\text{Ghost}^{prob}(e^+)$', 'Entries']
     title      : ''
     name       : 'l1_ghost'
     normalized : true
@@ -126,7 +126,7 @@ plots:
   L2_TRACK_GhostProb:
     binning    : [0, 0.3, 60]
     yscale     : 'log'
-    labels     : ['$\text{Ghost}_{e^-}^{prob}$', 'Entries']
+    labels     : ['$\text{Ghost}^{prob}(e^-)$', 'Entries']
     title      : ''
     name       : 'l2_ghost'
     normalized : true
