@@ -9,6 +9,7 @@ import mplhep
 from dmu.generic             import utilities as gut
 from dmu.plotting.plotter_2d import Plotter2D
 from dmu.logging.log_store   import LogStore
+from omegaconf               import DictConfig
 from rx_selection            import selection as sel
 from rx_data.rdf_getter      import RDFGetter
 
@@ -53,7 +54,7 @@ def _parse_args() -> None:
     Data.config   = args.config
     Data.nthreads = args.nthreads
 # ---------------------------------
-def _override_output(cfg : dict) -> dict:
+def _override_output(cfg : DictConfig) -> DictConfig:
     '''
     Parameters
     ---------------
@@ -66,38 +67,53 @@ def _override_output(cfg : dict) -> dict:
     - Plotting directory overriden
     - Name of output file overriden
     '''
-    sample = Data.sample.replace('*', 'p')
+    plt_dir = cfg.saving.plt_dir
+    cfg['saving']['plt_dir']   = f'{Data.ana_dir}/{plt_dir}/{Data.trigger}/{Data.sample}'
 
-    plt_dir = cfg['saving']['plt_dir']
-    cfg['saving']['plt_dir']   = f'{Data.ana_dir}/{plt_dir}/{Data.trigger}/{sample}'
-
-    for l_setting in cfg['plots_2d']:
-        name = l_setting[3]
+    for l_setting in cfg.plots_2d:
+        name         = l_setting[3]
         l_setting[3] = f'{name}_{Data.q2bin}'
 
     return cfg
+# ----------------------
+def _initialize_settings(cfg : DictConfig) -> None:
+    '''
+    Parameters
+    -------------
+    cfg: Configuration dictionary passed when this file is treated as a module
+    '''
+    Data.sample   = cfg.sample
+    Data.trigger  = cfg.trigger
+    Data.q2bin    = cfg.q2bin
+    Data.config   = cfg.config
+    Data.loglvl   = 20 
+    Data.nthreads = 1 
 # ---------------------------------
-def main():
+def main(cfg : DictConfig|None = None):
     '''
     Script starts here
     '''
-    _parse_args()
+    if cfg is None:
+        _parse_args()
+    else:
+        _initialize_settings(cfg=cfg)
+
     _set_logs()
 
-    cfg   = gut.load_data(package='rx_plotter_data', fpath=f'2d/{Data.config}.yaml')
-    cfg   = _override_output(cfg=cfg)
-    d_cut = cfg['selection']['cuts']
-    d_def = cfg['definitions']
+    cfg_plt = gut.load_conf(package='rx_plotter_data', fpath=f'2d/{Data.config}.yaml')
+    cfg_plt = _override_output(cfg=cfg_plt)
+    d_cut   = cfg_plt['selection']['cuts']
+    d_def   = cfg_plt['definitions']
 
     with RDFGetter.multithreading(nthreads=Data.nthreads), \
         RDFGetter.custom_columns(columns = d_def),\
         sel.custom_selection(d_sel=d_cut):
 
-        del cfg['definitions']
-        del cfg['selection']['cuts']
+        del cfg_plt['definitions']
+        del cfg_plt['selection']['cuts']
 
         gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
         rdf = sel.apply_full_selection(
             process= Data.sample,
@@ -105,7 +121,7 @@ def main():
             q2bin  = Data.q2bin,
             rdf    = rdf)
 
-        ptr=Plotter2D(rdf=rdf, cfg=cfg)
+        ptr=Plotter2D(rdf=rdf, cfg=cfg_plt)
         ptr.run()
 # ---------------------------------
 if __name__ == '__main__':
