@@ -9,6 +9,8 @@ from pathlib             import Path
 
 import tqdm
 import numpy
+import ap_utilities.decays.utilities as aput
+
 from omegaconf                      import DictConfig
 from dmu.generic.version_management import get_last_version
 from dmu.logging.log_store          import LogStore
@@ -73,22 +75,43 @@ def _is_right_trigger(path : Path) -> bool:
 
     return trigger in l_trigger
 # -----------------------------------------
+def _get_total_size(l_path : list[Path]) -> int:
+    '''
+    Parameters
+    -------------
+    l_path: List of paths to ROOT files
+
+    Returns
+    -------------
+    Size in MB
+    '''
+    l_size = [ path.stat().st_size / (1024 * 1024) for path in l_path ]
+    fsize  = sum(l_size)
+
+    return int(fsize)
+# -----------------------------------------
 def _get_source_paths() -> list[Path]:
     d_samp   = Data.conf.samples
     l_source = []
-    log.info(70 * '-')
-    log.info(f'{"Sample":<20}{"Identifier":<30}{"Paths":<20}')
-    log.info(70 * '-')
-    for sample, l_identifier in d_samp.items():
+    log.info(90 * '-')
+    log.info(f'{"Sample":<50}{"Identifier":<25}{"Paths":<10}{"Size [MB]":<20}')
+    log.info(90 * '-')
+    for l_identifier in d_samp.values():
         for identifier in l_identifier:
             identifier    = str(identifier)
             l_source_samp = [ source for source in Data.l_source if identifier in source.name and _is_right_trigger(source) ]
 
             npath     = len(l_source_samp)
-            log.info(f'{sample:<20}{identifier:<30}{npath:<20}')
+            size      = _get_total_size(l_path=l_source_samp)
+            if not identifier.startswith('data'):
+                nickname = aput.read_decay_name(event_type=identifier)
+            else:
+                nickname = 'data' 
+
+            log.info(f'{nickname:<50}{identifier:<25}{npath:<10}{size:<20}')
             l_source += l_source_samp
 
-    log.info(70 * '-')
+    log.info(90 * '-')
 
     nsource = len(l_source)
     if nsource == 0:
