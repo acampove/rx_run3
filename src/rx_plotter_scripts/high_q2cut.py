@@ -8,6 +8,7 @@ from typing import cast
 
 import numpy
 import mplhep
+from omegaconf import DictConfig
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
@@ -282,11 +283,16 @@ def _get_title(brem : str|int) -> str:
 
     return f'Brem = {brem}; {latex}'
 # ---------------------------
-def main():
+def main(cfg : DictConfig|None = None):
     '''
     Start here
     '''
-    _parse_args()
+    if cfg is None:
+        _parse_args()
+    else:
+        Data.sample= Data.d_samples[cfg.sample]
+        Data.run   = cfg.run
+
     _initialize()
 
     rdf = _get_rdf()
