@@ -263,13 +263,10 @@ def _get_out_path(var : str, q2bin : str) -> str:
     -------------
     Path to PNG file where plot should go
     '''
-    cfg = _check_none(obj=Data.cfg, kind='input')
-    [sample, trigger] = cfg.input[f'{Data.analysis}_{Data.channel}']
-
-    out_dir = f'{Data.ana_dir}/plots/efficiencies/differential/q2/{q2bin}'
+    out_dir = f'{Data.ana_dir}/plots/checks/efficiency_vs_q2/{Data.analysis}_{Data.channel}/{q2bin}'
     os.makedirs(out_dir, exist_ok=True)
 
-    out_path = f'{out_dir}/{var}_{sample}_{trigger}.png'
+    out_path = f'{out_dir}/{var}.png'
 
     return out_path
 # ----------------------
@@ -325,11 +322,18 @@ def _set_logs() -> None:
     LogStore.set_level('rx_selection:selection'     , 30)
     LogStore.set_level('rx_data:rdf_getter'         , 30)
 # ----------------------
-def main():
+def main(cfg : DictConfig | None = None) -> None:
     '''
-    Entry point
+    Parameters
+    ------------------
+    cfg: Config storing settings if used as module instead of script 
     '''
-    _parse_args()
+    if cfg is None:
+        _parse_args()
+    else:
+        Data.analysis = cfg.analysis
+        Data.channel  = cfg.channel
+
     _set_logs()
     log.debug('Loading configuration')
     Data.cfg = gut.load_conf(package='rx_plotter_data', fpath='efficiency/vs_q2.yaml')
