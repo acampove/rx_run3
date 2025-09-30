@@ -146,7 +146,19 @@ which will use the config in `no_pid/ee.yaml`.
 To study this run:
 
 ```bash
-high_q2cut
+high_q2cut -r run3 -s bukee
+```
+
+to see the effect on the rare signal for $R_K$ in Run3.
+Other arguments are:
+
+```
+options:
+  -h, --help            show this help message and exit
+  -s {data_ss,buhsee,bdhsee,bshsee,bukee,bukjpee,bukpsee}, --sample {data_ss,buhsee,bdhsee,bshsee,bukee,bukjpee,bukpsee}
+                        MC sample
+  -r {run12,run3}, --run {run12,run3}
+                        Run from which to plot
 ```
 
 ### Efficiencies vs true q2
