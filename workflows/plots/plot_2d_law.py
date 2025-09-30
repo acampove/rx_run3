@@ -17,6 +17,27 @@ log=LogStore.add_logger('rx_orchestration:plot_2d_law')
 class Plot2DTask(law.Task):
     config_string : str = Parameter() # type: ignore
     # -------------------------------------
+    def _get_config(self) -> DictConfig:
+        '''
+        Returns
+        --------------------
+        Transform JSON string `config_string` with configuration to DictConfig
+        and returns it
+        '''
+        if hasattr(self, '_cfg'):
+            return self._cfg
+
+        if not isinstance(self.config_string, str):
+            raise ValueError('Configuration string not a string')
+
+        cfg = OmegaConf.create(self.config_string)
+        if not isinstance(cfg, DictConfig):
+            raise ValueError('cfg not a DictConfig')
+
+        self._cfg = cfg
+
+        return self._cfg
+    # -------------------------------------
     def output(self) -> list[law.LocalFileTarget]:
         '''
         Returns
