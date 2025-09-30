@@ -146,7 +146,7 @@ which will use the config in `no_pid/ee.yaml`.
 To study this run:
 
 ```bash
-high_q2cut -r run3 -s bukee
+high_q2cut -r run3 -s Bu_Kee_eq_btosllball05_DPC
 ```
 
 to see the effect on the rare signal for $R_K$ in Run3.
