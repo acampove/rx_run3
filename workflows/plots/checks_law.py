@@ -46,26 +46,28 @@ class ChecksTask(law.Task):
         ---------------
         Name of required output, built from ANADIR and config settings
         '''
-        cfg      = self._get_config()
-        ANADIR   = os.environ['ANADIR']
-        PLTDIR   = Path(ANADIR) / f'plots/checks/{self.kind}'
+        cfg    = self._get_config()
+        ANADIR = os.environ['ANADIR']
+        PLTDIR = Path(ANADIR) / f'plots/checks/{self.kind}'
+
         if self.kind == 'efficiency_vs_q2':
-            dir_path = PLTDIR / f'{cfg.analysis}_{cfg.channel}'
+            dir_path = PLTDIR / f'{cfg.args.analysis}_{cfg.args.channel}'
         else:
             raise ValueError(f'Invalid kind: {self.kind}')
 
-        return [ law.LocalFileTarget(dir_path / name) for name in cfg.output ]
+        l_output = [ law.LocalFileTarget(dir_path / name) for name in cfg.outputs ]
+
+        return l_output
     # -------------------------------------
     def run(self):
         '''
         Runs comparison
         '''
         os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-        from rx_plotter_scripts.plot_2d import main as plot_2d 
+        from rx_plotter_scripts.efficiency_vs_q2 import main as runner 
 
         cfg = self._get_config() 
-
-        plot_2d(cfg=cfg.args)
+        runner(cfg=cfg.args)
 # -------------------------------------
 class WrapChecks(law.WrapperTask):
     '''
@@ -74,20 +76,23 @@ class WrapChecks(law.WrapperTask):
     # ----------------------
     @cache
     @staticmethod
-    def get_settings() -> list[str]:
+    def get_settings(cfg_full : DictConfig, kind : str) -> list[str]:
         '''
+        Parameters
+        --------------
+        kind: Type of check, e.g. efficiency_vs_q2
+
         Returns
         --------------
         List of JSON strings defining what each job will do
         '''
-        config = gut.load_conf(package='configs', fpath='rx_plots/checks.yaml')
-        l_cfg  = [] 
+        l_cfg    = [] 
+        cfg_kind = cfg_full[kind]
+        outputs  = OmegaConf.to_container(cfg_kind.outputs, resolve=True)
 
-        for kind in ['efficiency_vs_q2']: 
-            cfg_kind = config[kind]
-            output   = OmegaConf.to_container(cfg_kind.output, resolve=True)
-            cfg      = OmegaConf.to_container(cfg_kind.args  , resolve=True)
-            json_str = json.dumps({'args' : cfg, 'output' : output}) 
+        for args in cfg_kind.args:
+            args     = OmegaConf.to_container(args, resolve=True)
+            json_str = json.dumps({'args' : args, 'outputs' : outputs}) 
             l_cfg.append(json_str)
     
         return l_cfg 
@@ -96,15 +101,15 @@ class WrapChecks(law.WrapperTask):
         '''
         Defines the sets of tasks in the workflow
         '''
-        l_settings = WrapChecks.get_settings()
-        for settings in l_settings:
-            yield ChecksTask(config_string = settings)
+        cfg = gut.load_conf(package='configs', fpath='rx_plots/checks.yaml')
+
+        for kind in ['efficiency_vs_q2']: 
+            l_settings = WrapChecks.get_settings(cfg_full=cfg, kind=kind)
+            for settings in l_settings:
+                yield ChecksTask(config_string = settings, kind = kind)
 # ----------------------
 def main():
-    l_settings  = WrapChecks.get_settings()
-    nworkers    = min(8, len(l_settings))
-
-    law.run(argv=['WrapChecks', '--workers', str(nworkers), '--log-level', 'INFO'])
+    law.run(argv=['WrapChecks', '--workers', '8', '--log-level', 'INFO'])
 # ----------------------
 if __name__ == "__main__":
     main()
