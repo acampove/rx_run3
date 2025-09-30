@@ -247,7 +247,7 @@ def _plot_true_q2(brem : int|str, df : pnd.DataFrame) -> None:
     if isinstance(brem, float):
         brem = f'{brem:.0f}'
 
-    plot_path = f'{Data.plt_dir}/true_q2_{Data.run}_{brem}.png'
+    plot_path = f'{Data.plt_dir}/true_q2_{brem}.png'
     log.info(f'Saving to: {plot_path}')
 
     plt.grid()
