@@ -1,4 +1,7 @@
-# Config used to make 2D plots of the momenta of the electrons 
+# If OS candidates pollute SS sample:
+# 
+# - One electron is low quality. This config plots chi2 of one electron vs the other
+# - One electron is high momentum and track is almost straight. This config plots momenta
 
 definitions : 
   ep_mom : L1_P / 1000
