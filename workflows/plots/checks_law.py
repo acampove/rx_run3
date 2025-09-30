@@ -62,7 +62,9 @@ class ChecksTask(law.Task):
             dir_path = PLTDIR / f'{cfg.args.analysis}_{cfg.args.channel}'
         elif self.kind == 'high_q2cut':
             dir_path = PLTDIR / f'{cfg.args.sample}/{cfg.args.run}'
-        elif self.kind in ['validate_nopid', 'leakage']:
+        elif self.kind == 'leakage':
+            dir_path = PLTDIR / f'{cfg.args.sample}_{cfg.args.trigger}'
+        elif self.kind in ['validate_nopid']:
             dir_path = PLTDIR 
         else:
             raise ValueError(f'Invalid kind: {self.kind}')
