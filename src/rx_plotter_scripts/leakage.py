@@ -3,6 +3,7 @@ Script used to study Jpsi leakage in central q2 bin
 '''
 import os
 import mplhep
+from omegaconf import DictConfig
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
@@ -43,7 +44,7 @@ class Data:
 def _initialize():
     ana_dir        = os.environ['ANADIR']
     Data.cache_dir = '/tmp/cache/rx_plots/leakage'
-    Data.plots_dir = f'{ana_dir}/plots/leakage'
+    Data.plots_dir = f'{ana_dir}/plots/checks/leakage'
 
     os.makedirs(Data.cache_dir, exist_ok=True)
     os.makedirs(Data.plots_dir, exist_ok=True)
@@ -120,7 +121,7 @@ def _check_q2_leakage(sample : str, nbrem : int) -> None:
     plt.savefig(plot_path)
     plt.close()
 # --------------------------------
-def main():
+def main(cfg : DictConfig | None = None):
     '''
     Start here
     '''
