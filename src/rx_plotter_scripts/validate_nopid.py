@@ -13,12 +13,14 @@ import argparse
 
 import mplhep
 import matplotlib.pyplot as plt
+
 from ROOT                    import RDataFrame # type: ignore
 from dmu.logging.log_store   import LogStore
 from ap_utilities.decays     import utilities          as aput
 from dmu.plotting.plotter_1d import Plotter1D          as Plotter
 from dmu.generic             import utilities          as gut
 from dmu.generic             import version_management as vmn
+from omegaconf               import DictConfig
 from rx_data.rdf_getter      import RDFGetter
 
 log = LogStore.add_logger('rx_plots:validate_nopid')
@@ -86,8 +88,7 @@ def _load_config(channel : str) -> None:
             package='rx_plotter_data',
             fpath  =f'no_pid/{channel}.yaml')
 
-    plt_dir = f'{Data.ana_dir}/plots/checks/no_pid/{channel}'
-
+    plt_dir = f'{Data.ana_dir}/plots/checks/validate_nopid/{channel}'
     cfg['saving'] = {'plt_dir' : plt_dir}
 
     Data.cfg = cfg
@@ -139,11 +140,13 @@ def _load_samples() -> None:
     l_sample_trigger = [ _get_sample_trigger(fpath=fpath) for fpath in l_fpath ]
     Data.samples     = dict(l_sample_trigger)
 # ----------------------------
-def main():
+def main(cfg : DictConfig | None = None):
     '''
     Start here
     '''
-    _parse_args()
+    if cfg is None:
+        _parse_args()
+
     _load_samples()
 
     for sample, trigger in Data.samples.items():
