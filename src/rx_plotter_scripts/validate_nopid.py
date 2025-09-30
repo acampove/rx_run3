@@ -51,8 +51,8 @@ def _get_rdf(sample : str, trigger : str, has_pid : bool) -> RDataFrame:
         'mva',
         'swp_cascade',
         'swp_jpsi_misid']):
-        gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
-        rdf = gtr.get_rdf()
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf(per_file=False)
         rdf = rdf.Define('weights', weight)
 
     return rdf
