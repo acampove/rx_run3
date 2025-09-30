@@ -5,7 +5,6 @@ import os
 import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
 
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
@@ -90,33 +89,6 @@ def _define_columns(df : pnd.DataFrame) -> pnd.DataFrame:
     df     = df.drop(columns=l_drop)
 
     return df
-# --------------------------------
-def _plot_b_mass(df : pnd.DataFrame, kind : str) -> None:
-    maxq = 6.0
-    if   kind == 'original':
-        df = df[(df.qsq_org  < maxq) & (df.qsq_org  >    1)]
-        df = df[(df.mass_org < 6000) & (df.mass_org > 4500)]
-    elif kind == 'corrected and smeared':
-        df = df[(df.qsq_smr  < maxq) & (df.qsq_smr  >    1)]
-        df = df[(df.mass_smr < 6000) & (df.mass_smr > 4500)]
-    elif kind == 'corrected':
-        df = df[(df.qsq_cor  < maxq) & (df.qsq_cor  >    1)]
-        df = df[(df.mass_cor < 6000) & (df.mass_cor > 4500)]
-    else:
-        raise ValueError
-
-    nentries = len(df)
-
-    plt.hist(df['mass_org'], range=(4000, 5500), bins=30, alpha=0.7      , label='Original'             , color='gray')
-    plt.hist(df['mass_cor'], range=(4000, 5500), bins=30, histtype='step', label='Corrected'            , color='blue')
-    plt.hist(df['mass_smr'], range=(4000, 5500), bins=30, histtype='step', label='Corrected and smeared', color='red')
-    plt.title(f'Entries: {nentries}, Cut on: {kind}')
-    plt.legend()
-    plt.xlabel(r'M$(B^+)$')
-
-    name = kind.replace(' ', '_')
-    plt.savefig(f'{Data.plots_dir}/{name}.png')
-    plt.close()
 # --------------------------------
 def _check_q2_leakage(sample : str, nbrem : int) -> None:
     df = _get_df(sample=sample)
