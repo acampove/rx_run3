@@ -45,7 +45,7 @@ class Data:
 def _initialize():
     ana_dir        = os.environ['ANADIR']
     Data.cache_dir = '/tmp/cache/rx_plots/leakage'
-    Data.plots_dir = f'{ana_dir}/plots/checks/leakage'
+    Data.plots_dir = f'{ana_dir}/plots/checks/leakage/{Data.sample}_{Data.trigger}'
 
     os.makedirs(Data.cache_dir, exist_ok=True)
     os.makedirs(Data.plots_dir, exist_ok=True)
@@ -92,8 +92,8 @@ def _define_columns(df : pnd.DataFrame) -> pnd.DataFrame:
 
     return df
 # --------------------------------
-def _check_q2_leakage(sample : str, nbrem : int) -> None:
-    df = _get_df(sample=sample)
+def _check_q2_leakage(nbrem : int) -> None:
+    df = _get_df(sample=Data.sample)
 
     if nbrem != -1:
         df = df[df['nbrem'] == nbrem]
@@ -106,7 +106,7 @@ def _check_q2_leakage(sample : str, nbrem : int) -> None:
     df['qsq_cor'].plot.hist(bins=60, range=[-3, 22], density=True, label='Corrected', histtype='step', color='blue' )
     df['qsq_smr'].plot.hist(bins=60, range=[-3, 22], density=True, label='Smeared'  , histtype='step', color='red'  )
 
-    latex = Data.d_latex[sample]
+    latex = Data.d_latex[Data.sample]
 
     fig.legend(loc='upper left', bbox_to_anchor=(0.2, 0.9))
     plt.title(f'{latex}; Brem={nbrem_label}')
@@ -116,7 +116,7 @@ def _check_q2_leakage(sample : str, nbrem : int) -> None:
     ax.axvline(x= 6, ls=':', color='green')
     ax.axvline(x=15, ls=':', color='green')
     ax.axvline(x=22, ls=':', color='green')
-    plot_path = f'{Data.plots_dir}/{sample}_{nbrem_label}.png'
+    plot_path = f'{Data.plots_dir}/{nbrem_label}.png'
 
     log.info(f'Saving to:{plot_path}')
     plt.savefig(plot_path)
@@ -135,13 +135,16 @@ def main(cfg : DictConfig | None = None):
     '''
     Start here
     '''
+    if cfg is None:
+        _parse_args()
+    else:
+        Data.sample = cfg.sample
+        Data.trigger= cfg.trigger
+
     _initialize()
 
-    #_compare_mass_cuts()
-    #_check_q2_leakage(sample=Data.jpsi)
     for nbrem in [-1, 0, 1, 2]:
-        _check_q2_leakage(sample=Data.psi2, nbrem = nbrem)
-        _check_q2_leakage(sample=Data.jpsi, nbrem = nbrem)
+        _check_q2_leakage(nbrem = nbrem)
 # --------------------------------
 if __name__ == '__main__':
     main()
