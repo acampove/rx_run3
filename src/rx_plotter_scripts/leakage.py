@@ -59,7 +59,7 @@ def _get_df(sample : str) -> pnd.DataFrame:
         return df
 
     gtr = RDFGetter(sample=sample, trigger=Data.trigger)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
 
     d_sel = sel.selection(trigger=Data.trigger, q2bin=Data.q2bin, process=sample)
     d_sel['q2']   = '(1)'
