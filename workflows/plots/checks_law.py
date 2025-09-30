@@ -50,12 +50,17 @@ class ChecksTask(law.Task):
         ANADIR = os.environ['ANADIR']
         PLTDIR = Path(ANADIR) / f'plots/checks/{self.kind}'
 
-        if self.kind == 'efficiency_vs_q2':
+        if   self.kind == 'efficiency_vs_q2':
             dir_path = PLTDIR / f'{cfg.args.analysis}_{cfg.args.channel}'
+        elif self.kind == 'validate_nopid':
+            dir_path = PLTDIR 
         else:
             raise ValueError(f'Invalid kind: {self.kind}')
 
         l_output = [ law.LocalFileTarget(dir_path / name) for name in cfg.outputs ]
+
+        nout = len(l_output)
+        log.info(f'Using {nout} outputs for {self.kind}')
 
         return l_output
     # -------------------------------------
@@ -64,7 +69,12 @@ class ChecksTask(law.Task):
         Runs comparison
         '''
         os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-        from rx_plotter_scripts.efficiency_vs_q2 import main as runner 
+        if   self.kind == 'efficiency_vs_q2':
+            from rx_plotter_scripts.efficiency_vs_q2 import main as runner 
+        elif self.kind == 'validate_nopid':
+            from rx_plotter_scripts.validate_nopid   import main as runner 
+        else:
+            raise ValueError(f'Invalid kind: {self.kind}')
 
         cfg = self._get_config() 
         runner(cfg=cfg.args)
@@ -103,7 +113,9 @@ class WrapChecks(law.WrapperTask):
         '''
         cfg = gut.load_conf(package='configs', fpath='rx_plots/checks.yaml')
 
-        for kind in ['efficiency_vs_q2']: 
+        log.info(20 * '-')
+        for kind in ['validate_nopid', 'efficiency_vs_q2']: 
+            log.info(f'Running: {kind}')
             l_settings = WrapChecks.get_settings(cfg_full=cfg, kind=kind)
             for settings in l_settings:
                 yield ChecksTask(config_string = settings, kind = kind)
