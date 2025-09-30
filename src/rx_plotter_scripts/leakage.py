@@ -91,24 +91,6 @@ def _define_columns(df : pnd.DataFrame) -> pnd.DataFrame:
 
     return df
 # --------------------------------
-def _overlay_q2(df : pnd.DataFrame) -> None:
-    plt.hist(df['q2'    ], range=[0, 10e6], bins=60, label='original', alpha=0.3)
-    plt.hist(df['q2_smr'], range=[0, 10e6], bins=60, label='smeared' , histtype='step')
-    plt.legend()
-    plt.show()
-# --------------------------------
-def _2d_either_q2(df : pnd.DataFrame) -> None:
-    df = df[(df.qsq < 6) | (df.qsq_smr < 6)]
-    nentries = len(df)
-
-    plt.hist2d(df.qsq, df.qsq_smr, bins=100, cmap='viridis', norm=mcolors.LogNorm())
-
-    plt.title(f'Entries: {nentries}')
-    plt.xlabel('Original')
-    plt.ylabel('Smeared')
-
-    plt.show()
-# --------------------------------
 def _plot_b_mass(df : pnd.DataFrame, kind : str) -> None:
     maxq = 6.0
     if   kind == 'original':
@@ -135,20 +117,6 @@ def _plot_b_mass(df : pnd.DataFrame, kind : str) -> None:
     name = kind.replace(' ', '_')
     plt.savefig(f'{Data.plots_dir}/{name}.png')
     plt.close()
-# --------------------------------
-def _compare_mass_cuts() -> None:
-    df = _get_df(sample=Data.jpsi)
-
-    _plot_b_mass(df=df, kind='original')
-    _plot_b_mass(df=df, kind='corrected')
-    _plot_b_mass(df=df, kind='corrected and smeared')
-# --------------------------------
-def _drop_resonant(df : pnd.DataFrame) -> pnd.DataFrame:
-    fail_org = (df['qsq_org'] >  6) & (df['qsq_org'] < 15)
-    fail_cor = (df['qsq_cor'] >  6) & (df['qsq_cor'] < 15)
-    df       = df[~fail_org | ~fail_cor]
-
-    return df
 # --------------------------------
 def _check_q2_leakage(sample : str, nbrem : int) -> None:
     df = _get_df(sample=sample)
