@@ -18,8 +18,9 @@ log=LogStore.add_logger('rx_orchestration:plot_2d_law')
 
 KIND_TO_MODULE = {
     'efficiency_vs_q2': 'rx_plotter_scripts.efficiency_vs_q2',
-    'validate_nopid':   'rx_plotter_scripts.validate_nopid',
-    'leakage':          'rx_plotter_scripts.leakage',
+    'validate_nopid'  : 'rx_plotter_scripts.validate_nopid',
+    'leakage'         : 'rx_plotter_scripts.leakage',
+    'high_q2cut'      : 'rx_plotter_scripts.high_q2cut',
 }
 # -------------------------------------
 class ChecksTask(law.Task):
@@ -59,6 +60,8 @@ class ChecksTask(law.Task):
 
         if   self.kind == 'efficiency_vs_q2':
             dir_path = PLTDIR / f'{cfg.args.analysis}_{cfg.args.channel}'
+        elif self.kind == 'high_q2cut':
+            dir_path = PLTDIR / f'{cfg.args.sample}/{cfg.args.run}'
         elif self.kind in ['validate_nopid', 'leakage']:
             dir_path = PLTDIR 
         else:
@@ -120,7 +123,11 @@ class WrapChecks(law.WrapperTask):
         cfg = gut.load_conf(package='configs', fpath='rx_plots/checks.yaml')
 
         log.info(20 * '-')
-        for kind in ['efficiency_vs_q2', 'validate_nopid', 'leakage']: 
+        for kind in [
+            'efficiency_vs_q2', 
+            'validate_nopid', 
+            'high_q2cut',
+            'leakage']: 
             log.info(f'Running: {kind}')
             l_settings = WrapChecks.get_settings(cfg_full=cfg, kind=kind)
             for settings in l_settings:
