@@ -1,0 +1,5 @@
+args:
+  - {sample : DATA_24*, trigger : Hlt2RD_BuToKpEE_MVA  , q2bin : jpsi   }
+  - {sample : DATA_24*, trigger : Hlt2RD_BuToKpMuMu_MVA, q2bin : jpsi   }
+output:
+  - Bmass_q2_def_jpsi.png
