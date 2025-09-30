@@ -72,7 +72,7 @@ def _parse_args():
 # ---------------------------
 def _initialize():
     ana_dir = os.environ['ANADIR']
-    plt_dir = f'{ana_dir}/plots/checks/high_q2cut/{Data.sample}'
+    plt_dir = f'{ana_dir}/plots/checks/high_q2cut/{Data.sample}/{Data.run}'
 
     os.makedirs(plt_dir, exist_ok=True)
 
@@ -202,7 +202,7 @@ def _plot_reco_q2(brem : int|str, df : pnd.DataFrame) -> None:
     if isinstance(brem, float):
         brem = f'{brem:.0f}'
 
-    plot_path = f'{Data.plt_dir}/reco_q2_{Data.run}_{brem}.png'
+    plot_path = f'{Data.plt_dir}/reco_q2_{brem}.png'
     log.info(f'Saving to: {plot_path}')
 
     plt.grid()
