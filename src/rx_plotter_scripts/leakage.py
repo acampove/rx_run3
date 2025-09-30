@@ -28,18 +28,19 @@ class Data:
 
     q2bin   = 'central'
     columns = [
-            'nbrem',
-            'B_M',
-            'B_M_brem_track_2',
-            'B_M_smr_brem_track_2',
-            'Jpsi_M',
-            'Jpsi_M_brem_track_2',
-            'Jpsi_M_smr_brem_track_2',
-            ]
+        'nbrem',
+        'B_M',
+        'B_M_brem_track_2',
+        'B_M_smr_brem_track_2',
+        'Jpsi_M',
+        'Jpsi_M_brem_track_2',
+        'Jpsi_M_smr_brem_track_2']
 
     d_latex = {
-            jpsi : r'$B^+\to K^+ J/\psi(\to ee)$',
-            psi2 : r'$B^+\to K^+ \psi(2S)(\to ee)$'}
+        'Bd_JpsiKst_ee_eq_DPC' : r'$B^0\to K^{*0}(\to K^+\pi^-) J/\psi(\to ee)$',
+        'Bd_psi2SKst_ee_eq_DPC': r'$B^0\to K^{*0}(\to K^+\pi^-) \psi(2S)(\to ee)$',
+        'Bu_JpsiK_ee_eq_DPC'   : r'$B^+\to K^+ J/\psi(\to ee)$',
+        'Bu_psi2SK_ee_eq_DPC'  : r'$B^+\to K^+ \psi(2S)(\to ee)$'}
 # --------------------------------
 def _initialize():
     ana_dir        = os.environ['ANADIR']
