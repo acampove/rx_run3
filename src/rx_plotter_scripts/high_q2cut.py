@@ -94,7 +94,7 @@ def _get_rdf() -> RDataFrame:
 # ---------------------------
 def _get_run3_rdf() -> RDataFrame:
     gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
 
     d_sel       = sel.selection(trigger=Data.trigger, q2bin=Data.q2bin, process=Data.sample)
     d_sel['bdt']= '(1)'
