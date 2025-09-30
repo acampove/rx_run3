@@ -23,10 +23,9 @@ class Data:
     cache_dir : str
     plots_dir : str
 
-    jpsi    = 'Bu_JpsiK_ee_eq_DPC'
-    psi2    = 'Bu_psi2SK_ee_eq_DPC'
+    trigger : str
+    sample  : str
 
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
     q2bin   = 'central'
     columns = [
             'nbrem',
