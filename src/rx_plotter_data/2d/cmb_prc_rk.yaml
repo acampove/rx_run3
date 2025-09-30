@@ -9,7 +9,7 @@ plots_2d:
 axes:
     mva_cmb:
         binning : [0.0, 1.0, 100]
-        label   : 'Prob${}_{cmb}$'
+        label   : '$\textit{Prob}_{cmb}$'
     mva_prc:
         binning : [0.0, 1.0, 100]
-        label   : 'Prob${}_{prc}$'
+        label   : '$\textit{Prob}_{prc}$'
