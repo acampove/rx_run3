@@ -54,16 +54,15 @@ validate_nopid:
     - mm/l2_pidmu_Bu_Kmumu_eq_btosllball05_DPC.png
 leakage:
   args:
-    - {'dummy_setting' : 1}
+    - {sample : Bu_JpsiK_ee_eq_DPC   , trigger : Hlt2RD_BuToKpEE_MVA}
+    - {sample : Bu_psi2SK_ee_eq_DPC  , trigger : Hlt2RD_BuToKpEE_MVA}
+    - {sample : Bd_JpsiKst_ee_eq_DPC , trigger : Hlt2RD_B0ToKpPimEE_MVA}
+    - {sample : Bd_psi2SKst_ee_eq_DPC, trigger : Hlt2RD_B0ToKpPimEE_MVA}
   outputs:
-    - Bu_JpsiK_ee_eq_DPC_0.png
-    - Bu_JpsiK_ee_eq_DPC_1.png
-    - Bu_JpsiK_ee_eq_DPC_2.png
-    - Bu_JpsiK_ee_eq_DPC_all.png
-    - Bu_psi2SK_ee_eq_DPC_0.png
-    - Bu_psi2SK_ee_eq_DPC_1.png
-    - Bu_psi2SK_ee_eq_DPC_2.png
-    - Bu_psi2SK_ee_eq_DPC_all.png
+    - 0.png
+    - 1.png
+    - 2.png
+    - all.png
 high_q2cut:
   args:
     - {run : run3, sample : Bu_JpsiX_ee_eq_JpsiInAcc}
