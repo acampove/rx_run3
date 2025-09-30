@@ -3,6 +3,7 @@ Script used to study Jpsi leakage in central q2 bin
 '''
 import os
 import mplhep
+import argparse
 from omegaconf import DictConfig
 import pandas            as pnd
 import matplotlib.pyplot as plt
@@ -120,6 +121,15 @@ def _check_q2_leakage(sample : str, nbrem : int) -> None:
     log.info(f'Saving to:{plot_path}')
     plt.savefig(plot_path)
     plt.close()
+# ----------------------
+def _parse_args() -> None:
+    parser = argparse.ArgumentParser(description='Script used to study leakage from resonant decays into rare regions')
+    parser.add_argument('-s', '--sample' , type=str, help='MC sample, e.g. Bu_JpsiK_ee_eq_DPC')
+    parser.add_argument('-t', '--trigger', type=str, help='HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA')
+    args = parser.parse_args()
+
+    Data.sample = args.sample
+    Data.trigger= args.trigger
 # --------------------------------
 def main(cfg : DictConfig | None = None):
     '''
