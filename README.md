@@ -45,3 +45,4 @@ These are workflows associated to the `rx_plots` project.
 |---------------|-----------------------------------------------------------------------------|
 | `cutflow_law` | Creates plots for the effect of cuts on different variables                 |
 | `compare_law` | Compares the effect of:<br>• Brem correction on resolution<br>• Smearing MC due to scale and resolution differences with data |
+| `plot_2d`     | Plots: <br>• Mass vs $q^2$ for data with and without the brem correction|
