@@ -49,7 +49,7 @@ class Data:
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
     parser.add_argument('-k', '--kind', type=str, help='Type of files', choices=Data.l_kind, required=True)
-    parser.add_argument('-p', '--proj', type=str, help='Name of YAML config file, e.g. rk', required=True, choices=['rk', 'rkst'])
+    parser.add_argument('-p', '--proj', type=str, help='Name of YAML config file, e.g. rk', required=True, choices=['rk', 'rkst', 'rk_nopid', 'rkst_nopid'])
     parser.add_argument('-s', '--skip', type=str, help='Friend tree to skip', choices=Data.l_kind)
     parser.add_argument('-l', '--logl', type=int, help='Logger level', choices=[5, 10, 20, 30], default=20)
     parser.add_argument('-n', '--nprc', type=int, help='Number of process to download with, with zero, will download all files at once', default=1)
