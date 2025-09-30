@@ -3,8 +3,7 @@
 saving:
     plt_dir : plots/2d/ep_em_pide
 selection:
-  cuts:
-    pid_l : (1) 
+  pid_l : (1) 
 general:
     size : [20, 10]
 plots_2d:
@@ -21,7 +20,7 @@ axes:
         label   : '$\Delta LL(e^-)$'
     L1_PROBNN_E:
         binning : [0, 1, 40]
-        label   : 'ProbNNe ${}_(e^+)$'
+        label   : '$\text{ProbNNe}_(e^+)$'
     L2_PROBNN_E:
         binning : [0, 1, 40]
-        label   : 'ProbNNe ${}_(e^-)$'
+        label   : '$\text{ProbNNe}_(e^-)$'
