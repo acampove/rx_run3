@@ -66,7 +66,6 @@ leakage:
     - Bu_psi2SK_ee_eq_DPC_all.png
 high_q2cut:
   args:
-    - {run : run3, sample : DATA*}
     - {run : run3, sample : Bu_JpsiX_ee_eq_JpsiInAcc}
     - {run : run3, sample : Bd_JpsiX_ee_eq_JpsiInAcc}
     - {run : run3, sample : Bs_JpsiX_ee_eq_JpsiInAcc}
