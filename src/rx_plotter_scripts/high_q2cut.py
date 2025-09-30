@@ -73,7 +73,7 @@ def _parse_args():
 # ---------------------------
 def _initialize():
     ana_dir = os.environ['ANADIR']
-    plt_dir = f'{ana_dir}/plots/high_q2/{Data.sample}'
+    plt_dir = f'{ana_dir}/plots/checks/high_q2cut/{Data.sample}'
 
     os.makedirs(plt_dir, exist_ok=True)
 
