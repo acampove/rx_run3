@@ -65,7 +65,7 @@ def _get_rdf(dset : str) -> RDF.RNode:
 
     if   dset == '2024':
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
         rdf = sel.apply_full_selection(rdf=rdf, q2bin='jpsi', process=sample, trigger=trigger)
     elif dset == 'run12':
         gtr = RDFGetter12(
