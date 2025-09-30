@@ -8,7 +8,7 @@ selection:
 plots:
   L1_PID_MU : &lep_pid
     binning : [-15,+15, 30]
-    labels  : ['PID${}_{\mu}(\mu^+)$', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
+    labels  : ['$\text{PID}_{\mu}(\mu^+)$', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
     weights : weights
     name    : l1_pidmu
     styling :
@@ -23,10 +23,10 @@ plots:
   L2_PID_MU:
     <<: *lep_pid
     name    : l2_pidmu
-    labels  : ['PID${}_{\mu}(\mu^-)$', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
+    labels  : ['$\text{PID}_{\mu}(\mu^-)$', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
   K_PID_K   :
     binning : [-15,+15, 30]
-    labels  : ['PID${}_{K}(K^+)$', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
+    labels  : ['$\text{PID}_{K}(K^+)$', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
     weights : weights
     name    : k_pidk
     styling :
