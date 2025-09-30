@@ -71,7 +71,7 @@ def _override_output(cfg : DictConfig) -> DictConfig:
     - Name of output file overriden
     '''
     plt_dir = cfg.saving.plt_dir
-    cfg['saving']['plt_dir']   = f'{Data.ana_dir}/{plt_dir}/{Data.trigger}/{Data.sample}'
+    cfg['saving']['plt_dir']   = f'{Data.ana_dir}/{plt_dir}/{Data.sample}/{Data.trigger}'
 
     for l_setting in cfg.plots_2d:
         name         = l_setting[3]
