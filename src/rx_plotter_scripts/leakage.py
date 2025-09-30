@@ -107,9 +107,9 @@ def _plot_b_mass(df : pnd.DataFrame, kind : str) -> None:
 
     nentries = len(df)
 
-    plt.hist(df['mass_org'], range=[4000, 5500], bins=30, alpha=0.7      , label='Original'             , color='gray')
-    plt.hist(df['mass_cor'], range=[4000, 5500], bins=30, histtype='step', label='Corrected'            , color='blue')
-    plt.hist(df['mass_smr'], range=[4000, 5500], bins=30, histtype='step', label='Corrected and smeared', color='red')
+    plt.hist(df['mass_org'], range=(4000, 5500), bins=30, alpha=0.7      , label='Original'             , color='gray')
+    plt.hist(df['mass_cor'], range=(4000, 5500), bins=30, histtype='step', label='Corrected'            , color='blue')
+    plt.hist(df['mass_smr'], range=(4000, 5500), bins=30, histtype='step', label='Corrected and smeared', color='red')
     plt.title(f'Entries: {nentries}, Cut on: {kind}')
     plt.legend()
     plt.xlabel(r'M$(B^+)$')
@@ -123,8 +123,8 @@ def _check_q2_leakage(sample : str, nbrem : int) -> None:
 
     if nbrem != -1:
         df = df[df['nbrem'] == nbrem]
-    else:
-        nbrem = 'all'
+    
+    nbrem_label = str(nbrem) if nbrem != -1 else 'all'
 
     fig, ax = plt.subplots(figsize=[15,10])
 
@@ -135,14 +135,14 @@ def _check_q2_leakage(sample : str, nbrem : int) -> None:
     latex = Data.d_latex[sample]
 
     fig.legend(loc='upper left', bbox_to_anchor=(0.2, 0.9))
-    plt.title(f'{latex}; Brem={nbrem}')
+    plt.title(f'{latex}; Brem={nbrem_label}')
     ax.set_ylim(top=0.05)
     ax.set_xlabel(r'$q^2$[GeV$/c^2$]')
     ax.set_ylabel('Normalized')
     ax.axvline(x= 6, ls=':', color='green')
     ax.axvline(x=15, ls=':', color='green')
     ax.axvline(x=22, ls=':', color='green')
-    plot_path = f'{Data.plots_dir}/{sample}_{nbrem}.png'
+    plot_path = f'{Data.plots_dir}/{sample}_{nbrem_label}.png'
 
     log.info(f'Saving to:{plot_path}')
     plt.savefig(plot_path)
