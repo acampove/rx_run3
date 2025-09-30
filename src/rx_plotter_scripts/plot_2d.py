@@ -71,7 +71,7 @@ def _override_output(cfg : DictConfig) -> DictConfig:
     - Name of output file overriden
     '''
     plt_dir = cfg.saving.plt_dir
-    cfg['saving']['plt_dir']   = f'{Data.ana_dir}/{plt_dir}/{Data.sample}/{Data.trigger}'
+    cfg.saving.plt_dir = f'{Data.ana_dir}/{plt_dir}/{Data.sample}/{Data.trigger}'
 
     for l_setting in cfg.plots_2d:
         name         = l_setting[3]
@@ -107,15 +107,15 @@ def main(cfg : DictConfig|None = None):
 
     cfg_plt = gut.load_conf(package='rx_plotter_data', fpath=f'2d/{Data.config}.yaml')
     cfg_plt = _override_output(cfg=cfg_plt)
-    d_cut   = cfg_plt['selection']['cuts']
-    d_def   = cfg_plt['definitions']
+    d_cut   = cfg_plt.get('selection', {})
+    d_def   = cfg_plt.get('definitions', {})
 
     with RDFGetter.multithreading(nthreads=Data.nthreads), \
         RDFGetter.custom_columns(columns = d_def),\
         sel.custom_selection(d_sel=d_cut):
 
-        del cfg_plt['definitions']
-        del cfg_plt['selection']['cuts']
+        cfg_plt.pop('definitions', None)
+        cfg_plt.pop('selection', None)
 
         gtr = RDFGetter(sample=Data.sample, trigger=Data.trigger)
         rdf = gtr.get_rdf(per_file=False)
