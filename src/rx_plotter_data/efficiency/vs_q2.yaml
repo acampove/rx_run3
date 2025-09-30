@@ -7,6 +7,12 @@ input:
    rk_mm:
     - Bu_Kmumu_eq_btosllball05_DPC
     - Hlt2RD_BuToKpMuMu_MVA
+   rkst_ee:
+    - Bd_Kstee_eq_btosllball05_DPC
+    - Hlt2RD_B0ToKpPimEE_MVA
+   rkst_mm:
+    - Bd_Kstmumu_eq_btosllball05_DPC
+    - Hlt2RD_B0ToKpPimMuMu_MVA
 hist_conf:
   q2_true:
     name  : q2_true
