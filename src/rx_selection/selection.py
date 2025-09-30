@@ -111,13 +111,15 @@ def _get_truth(event_type : int|str, trigger : str) -> str:
     -----------------
     Truth matching string
     '''
-    if trigger in ['Hlt2RD_B0ToKpPimMuMu_MVA', 'Hlt2RD_B0ToKpPimEE_MVA']:
+    project = info.project_from_trigger(trigger=trigger, lower_case=True)
+
+    if project in ['rkst', 'rkst_nopid']:
         return tm.get_truth(arg=event_type, kind='bdkstll')
 
-    if trigger in ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_BuToKpEE_MVA']:
+    if project in ['rk', 'rk_nopid']:
         return tm.get_truth(arg=event_type, kind='bukll')
 
-    raise ValueError(f'Invalid trigger name: {trigger}')
+    raise ValueError(f'Invalid project {project} for trigger: {trigger}')
 #-----------------------
 def selection(
     q2bin     : str,
