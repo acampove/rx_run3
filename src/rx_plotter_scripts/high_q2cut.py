@@ -29,14 +29,14 @@ class Data:
     run     : str
     trigger : str
 
-    d_samples = {
-            'data_ss' : 'DATA*',
-            'buhsee'  : 'Bu_JpsiX_ee_eq_JpsiInAcc',
-            'bdhsee'  : 'Bd_JpsiX_ee_eq_JpsiInAcc',
-            'bshsee'  : 'Bs_JpsiX_ee_eq_JpsiInAcc',
-            'bukee'   : 'Bu_Kee_eq_btosllball05_DPC',
-            'bukjpee' : 'Bu_JpsiK_ee_eq_DPC',
-            'bukpsee' : 'Bu_psi2SK_ee_eq_DPC'}
+    l_sample = [
+            'DATA*',
+            'Bu_JpsiX_ee_eq_JpsiInAcc',
+            'Bd_JpsiX_ee_eq_JpsiInAcc',
+            'Bs_JpsiX_ee_eq_JpsiInAcc',
+            'Bu_Kee_eq_btosllball05_DPC',
+            'Bu_JpsiK_ee_eq_DPC',
+            'Bu_psi2SK_ee_eq_DPC']
 
     d_latex   = {
             'DATA*'                      : 'SS data',
@@ -63,12 +63,11 @@ class Data:
 # ---------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Used to check efficiency vs q2 for different q2 definitions')
-    parser.add_argument('-s', '--sample', type=str, help='MC sample', required=True, choices=list(Data.d_samples))
+    parser.add_argument('-s', '--sample', type=str, help='MC sample', required=True, choices=Data.l_sample)
     parser.add_argument('-r', '--run'   , type=str, help='Run from which to plot', default='run3', choices=['run12', 'run3'])
     args = parser.parse_args()
 
-    sample     = args.sample
-    Data.sample= Data.d_samples[sample]
+    Data.sample= args.sample 
     Data.run   = args.run
 # ---------------------------
 def _initialize():
@@ -290,7 +289,7 @@ def main(cfg : DictConfig|None = None):
     if cfg is None:
         _parse_args()
     else:
-        Data.sample= Data.d_samples[cfg.sample]
+        Data.sample= cfg.sample
         Data.run   = cfg.run
 
     _initialize()
