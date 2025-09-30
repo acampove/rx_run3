@@ -120,12 +120,13 @@ analysis productions pipeline.
 For this run:
 
 ```bash
-check_local_stats -p rx
+check_local_stats -p rk
 ```
-which will print something like 
-[here](doc/tables/rk.md) for $R_K$ 
-and
-[here](doc/tables/rkst.md) for $R_{K^*}$ 
+
+|                  | With PID                 | Without PID              |
+|------------------|------------------------|-------------------------|
+| **$R_K$**        | [here](doc/tables/rk.md)         | [here](doc/tables/rk_nopid.md)        |
+| **$R_{K^*}$**    | [here](doc/tables/rkst.md)       | [here](doc/tables/rkst_nopid.md)      |
 
 Where the rows represent samples and the columns represent the friend trees.
 The numbers are the number of ntuples.
