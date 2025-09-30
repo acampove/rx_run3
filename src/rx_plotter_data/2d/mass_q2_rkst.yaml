@@ -5,9 +5,8 @@ saving:
 definitions:
   q2_def    : q2 / 1000000 # This will use non-smeared mass when using MC!!!
 selection:
-  cuts:
-    q2  : (1)
-    mass: (1)
+  q2  : (1)
+  mass: (1)
 general:
   size : [15, 12]
 plots_2d:
