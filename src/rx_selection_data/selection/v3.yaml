@@ -53,7 +53,7 @@ mass_mm  : &mass_mm
   psi2   : (B_const_mass_psi2S_M > 5150) && (B_const_mass_psi2S_M < 5850)
   high   : (B_M                  > 5150) && (B_M                  < 5850)
 # --------------------
-RKst:
+RKst: &rkst
   EE:
     ghost     : H1_TRGHOSTPROB < 0.3 && H2_TRGHOSTPROB < 0.3 && L1_TRACK_GhostProb < 0.3 && L2_TRACK_GhostProb< 0.3
     hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
@@ -96,7 +96,7 @@ RKst:
       <<: *q2_common
     mass:
       <<: *mass_mm
-RK:
+RK: &rk
   EE:
     ghost     : H_TRACK_GhostProb<0.3 && L1_TRACK_GhostProb <0.3 && L2_TRACK_GhostProb<0.3
     hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
@@ -143,3 +143,8 @@ RK:
       <<: *q2_common
     mass:
       <<: *mass_mm
+# --------------------
+RKst_noPID:
+  <<: *rkst
+RK_noPID:
+  <<: *rk
