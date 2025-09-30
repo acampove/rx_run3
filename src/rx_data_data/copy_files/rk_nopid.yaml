@@ -12,9 +12,6 @@ samples :
   rk_signal:
     - 12123003 # Kee
     - 12113002 # Kmm
-  rkst_signal:
-    - 11124002 # K*ee
-    - 11114002 # K*mumu
   resonant:
     - 12143001 # Muon Jpsi
     - 12153001 # Electron Jpsi
