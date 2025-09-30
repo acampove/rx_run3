@@ -59,7 +59,7 @@ class ChecksTask(law.Task):
 
         if   self.kind == 'efficiency_vs_q2':
             dir_path = PLTDIR / f'{cfg.args.analysis}_{cfg.args.channel}'
-        elif self.kind == 'validate_nopid':
+        elif self.kind in ['validate_nopid', 'leakage']:
             dir_path = PLTDIR 
         else:
             raise ValueError(f'Invalid kind: {self.kind}')
@@ -120,7 +120,7 @@ class WrapChecks(law.WrapperTask):
         cfg = gut.load_conf(package='configs', fpath='rx_plots/checks.yaml')
 
         log.info(20 * '-')
-        for kind in ['validate_nopid', 'efficiency_vs_q2']: 
+        for kind in ['efficiency_vs_q2', 'validate_nopid', 'leakage']: 
             log.info(f'Running: {kind}')
             l_settings = WrapChecks.get_settings(cfg_full=cfg, kind=kind)
             for settings in l_settings:
