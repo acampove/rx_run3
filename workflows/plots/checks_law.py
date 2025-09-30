@@ -4,6 +4,7 @@ meant to do checks, e.g. efficiency vs q2
 '''
 import os
 import json
+import importlib
 from pathlib               import Path
 from functools             import cache
 
@@ -14,6 +15,12 @@ from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_orchestration:plot_2d_law')
+
+KIND_TO_MODULE = {
+    'efficiency_vs_q2': 'rx_plotter_scripts.efficiency_vs_q2',
+    'validate_nopid':   'rx_plotter_scripts.validate_nopid',
+    'leakage':          'rx_plotter_scripts.leakage',
+}
 # -------------------------------------
 class ChecksTask(law.Task):
     config_string : str = Parameter() # type: ignore
@@ -69,12 +76,11 @@ class ChecksTask(law.Task):
         Runs comparison
         '''
         os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-        if   self.kind == 'efficiency_vs_q2':
-            from rx_plotter_scripts.efficiency_vs_q2 import main as runner 
-        elif self.kind == 'validate_nopid':
-            from rx_plotter_scripts.validate_nopid   import main as runner 
-        else:
+        if self.kind not in KIND_TO_MODULE: 
             raise ValueError(f'Invalid kind: {self.kind}')
+
+        module = importlib.import_module(KIND_TO_MODULE[self.kind])
+        runner = module.main
 
         cfg = self._get_config() 
         runner(cfg=cfg.args)
