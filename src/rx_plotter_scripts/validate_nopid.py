@@ -86,7 +86,7 @@ def _load_config(channel : str) -> None:
             package='rx_plotter_data',
             fpath  =f'no_pid/{channel}.yaml')
 
-    plt_dir = f'{Data.ana_dir}/plots/no_pid/{channel}'
+    plt_dir = f'{Data.ana_dir}/plots/checks/no_pid/{channel}'
 
     cfg['saving'] = {'plt_dir' : plt_dir}
 
@@ -129,7 +129,7 @@ def _load_samples() -> None:
     '''
     This is meant to fill Data.samples
     '''
-    fdir    = f'{Data.ana_dir}/Data/nopid/main'
+    fdir    = f'{Data.ana_dir}/Data/rk_nopid/main'
     dpath   = vmn.get_last_version(dir_path=fdir, version_only=False)
     file_wc = f'{dpath}/*.root'
     l_fpath = glob.glob(file_wc)
