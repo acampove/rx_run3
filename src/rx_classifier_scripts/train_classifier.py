@@ -181,12 +181,9 @@ def _get_rdf(kind : str) -> RDataFrame:
     return rdf
 #---------------------------------
 def _get_sample_rdf(sample : str, trigger : str, kind : str) -> RDataFrame:
-    gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf(per_file=False)
-
-    if Data.max_entries > 0:
-        log.warning(f'Limiting {kind} dataset to {Data.max_entries} entries')
-        rdf = rdf.Range(Data.max_entries)
+    with RDFGetter.max_entries(value = Data.max_entries):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf(per_file=False)
 
     rdf = _apply_selection(rdf, sample, kind)
 
