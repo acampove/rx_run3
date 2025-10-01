@@ -39,11 +39,11 @@ features:
     - min_ll_ipc
     - max_ll_ipc
   central:
-    - b_pt
+    - B_PT 
     - B_IPCHI2_OWNPV
     - B_FDCHI2_OWNPV
     - B_ENDVERTEX_CHI2DOF
-    - b_dira
+    - B_BPVDIRA 
     #
     - Kst_PT
     - Kst_BPVIPCHI2
@@ -51,27 +51,27 @@ features:
     - Kst_END_VCHI2DOF
     - Kst_BPVDIRA
     #
-    - j_pt
+    - Jpsi_PT 
     - Jpsi_IPCHI2_OWNPV
     - Jpsi_FDCHI2_OWNPV
     - Jpsi_END_VCHI2DOF
-    - j_dira
+    - Jpsi_BPVDIRA 
     #
     - min_hh_pt
     - max_hh_pt
     - min_hh_ipc
     - max_hh_ipc
     #
-    - min_ll_pt
-    - max_ll_pt
+    - min_LL_pt
+    - max_LL_pt
     - min_ll_ipc
     - max_ll_ipc
   high:
-    - b_pt
+    - B_PT 
     - B_IPCHI2_OWNPV
     - B_FDCHI2_OWNPV
     - B_ENDVERTEX_CHI2DOF
-    - b_dira
+    - B_BPVDIRA 
     #
     - Kst_PT
     - Kst_BPVIPCHI2
@@ -79,19 +79,19 @@ features:
     - Kst_END_VCHI2DOF
     - Kst_BPVDIRA
     #
-    - j_pt
+    - Jpsi_PT 
     - Jpsi_IPCHI2_OWNPV
     - Jpsi_FDCHI2_OWNPV
     - Jpsi_END_VCHI2DOF
-    - j_dira
+    - Jpsi_BPVDIRA 
     #
     - min_hh_pt
     - max_hh_pt
     - min_hh_ipc
     - max_hh_ipc
     #
-    - min_ll_pt
-    - max_ll_pt
+    - min_LL_pt
+    - max_LL_pt
     - min_ll_ipc
     - max_ll_ipc
 # ----------------------------------
@@ -173,6 +173,13 @@ plotting:
     mask_value : 0
   features:
     plots:
+      B_PT:
+        normalized : true
+        binning : [0, 30000, 100]
+        yscale  : 'log'
+        labels  : ['$p_T^{org}(B^0)$', '']
+        styling :
+          <<: *sty
       b_pt:
         normalized : true
         binning : [0, 30000, 100]
@@ -201,6 +208,13 @@ plotting:
         labels  : ['$\chi^2/dof(B^0)$', '']
         styling :
           <<: *sty
+      B_BPVDIRA:
+        normalized : true
+        binning : [0.9995, 1, 100]
+        yscale  : 'log'
+        labels  : ['$\text{DIRA}^{org}(B^0)$', '']
+        styling :
+          <<: *sty
       b_dira:
         normalized : true
         binning : [0.9995, 1, 100]
@@ -209,6 +223,13 @@ plotting:
         styling :
           <<: *sty
       #
+      Jpsi_PT:
+        normalized : true
+        binning : [0, 20000, 100]
+        yscale  : 'log'
+        labels  : ['$p_T^{org}(J/\psi)$', '']
+        styling :
+          <<: *sty
       j_pt:
         normalized : true
         binning : [0, 20000, 100]
@@ -235,6 +256,13 @@ plotting:
         binning : [0, 10, 100]
         yscale  : 'log'
         labels  : ['$\chi^2/dof(J/\psi)$', '']
+        styling :
+          <<: *sty
+      Jpsi_BPVDIRA:
+        normalized : true
+        binning : [0.99,  1, 100]
+        yscale  : 'log'
+        labels  : ['$\text{DIRA}^{org}(J/\psi)$', '']
         styling :
           <<: *sty
       j_dira:
@@ -281,6 +309,20 @@ plotting:
         styling :
           <<: *sty
       #
+      min_LL_pt:
+        normalized : true
+        binning : [0, 10000, 100]
+        yscale  : 'log'
+        labels  : ['$\min(p_T^{org}(e^+), p_T^{org}(e^-))$', '']
+        styling :
+          <<: *sty
+      max_LL_pt:
+        normalized : true
+        binning : [0, 20000, 100]
+        yscale  : 'log'
+        labels  : ['$\max(p_T^{org}(e^+), p_T^{org}(e^-))$', '']
+        styling :
+          <<: *sty
       min_ll_pt:
         normalized : true
         binning : [0, 10000, 100]
@@ -343,6 +385,13 @@ plotting:
         binning : [4400, 6600, 50]
         yscale  : 'linear'
         labels  : ['$M(B^0)$', '']
+        styling :
+          <<: *sty
+      B_M:
+        normalized : true
+        binning : [4400, 6600, 50]
+        yscale  : 'linear'
+        labels  : ['$M^{org}(B^0)$', '']
         styling :
           <<: *sty
 diagnostics:
