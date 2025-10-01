@@ -21,10 +21,10 @@ where   = ['src']
 
 [project.scripts]
 diagnose_classifier='rx_classifier_scripts.diagnose_classifier:main'
-build_job_script='rx_classifier_scripts.build_job_script:main'
-train_classifier='rx_classifier_scripts.train_classifier:main'
-apply_classifier='rx_classifier_scripts.apply_classifier:main'
-compare_classifier='rx_classifier_scripts.compare_classifier:main'
+build_job_script   ='rx_classifier_scripts.build_job_script:main'
+train_classifier   ='rx_classifier_scripts.train_classifier:main'
+apply_classifier   ='rx_classifier_scripts.apply_classifier:main'
+compare_classifier ='rx_classifier_scripts.compare_classifier:main'
 
 [tool.setuptools.package-data]
 rx_classifier_data=['rx_classifier_data/*/*.yaml']
