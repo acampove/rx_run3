@@ -183,9 +183,8 @@ def _get_rdf(kind : str) -> RDataFrame:
     return rdf
 #---------------------------------
 def _get_sample_rdf(sample : str, trigger : str, kind : str) -> RDataFrame:
-    with RDFGetter.max_entries(value = Data.max_entries):
-        gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf(per_file=False)
+    gtr = RDFGetter(sample=sample, trigger=trigger)
+    rdf = gtr.get_rdf(per_file=False)
 
     rdf = _apply_selection(rdf, sample, kind)
 
@@ -324,15 +323,18 @@ def main(cfg : DictConfig|None = None):
 
     _initialize()
 
-    rdf_sig = _get_rdf(kind='sig')
-    rdf_bkg = _get_rdf(kind='bkg')
+    with RDFGetter.max_entries(value = Data.max_entries),\
+         RDFGetter.multithreading(nthreads=Data.workers):
 
-    trn = TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=Data.cfg_dict)
-    with trn.use(nworkers=Data.workers):
-        trn.run(
-        skip_fit    =Data.plot_only,
-        opt_ntrial  =Data.opt_ntrial,
-        load_trained=Data.load_trained)
+        rdf_sig = _get_rdf(kind='sig')
+        rdf_bkg = _get_rdf(kind='bkg')
+
+        trn = TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=Data.cfg_dict)
+        with trn.use(nworkers=Data.workers):
+            trn.run(
+            skip_fit    =Data.plot_only,
+            opt_ntrial  =Data.opt_ntrial,
+            load_trained=Data.load_trained)
 #---------------------------------
 if __name__ == '__main__':
     main()
