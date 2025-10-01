@@ -20,7 +20,7 @@ features:
     - Kst_PT
     - Kst_BPVIPCHI2
     - Kst_BPVFDCHI2
-    - Kst_ENDVERTEX_CHI2DOF
+    - Kst_END_VCHI2DOF
     - Kst_DIRA
     #
     - j_pt
@@ -48,7 +48,7 @@ features:
     - Kst_PT
     - Kst_BPVIPCHI2
     - Kst_BPVFDCHI2
-    - Kst_ENDVERTEX_CHI2DOF
+    - Kst_END_VCHI2DOF
     - Kst_DIRA
     #
     - j_pt
@@ -76,7 +76,7 @@ features:
     - Kst_PT
     - Kst_BPVIPCHI2
     - Kst_BPVFDCHI2
-    - Kst_ENDVERTEX_CHI2DOF
+    - Kst_END_VCHI2DOF
     - Kst_DIRA
     #
     - j_pt
