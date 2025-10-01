@@ -21,7 +21,7 @@ features:
     - Kst_BPVIPCHI2
     - Kst_BPVFDCHI2
     - Kst_END_VCHI2DOF
-    - Kst_DIRA
+    - Kst_BPVDIRA
     #
     - j_pt
     - Jpsi_IPCHI2_OWNPV
@@ -49,7 +49,7 @@ features:
     - Kst_BPVIPCHI2
     - Kst_BPVFDCHI2
     - Kst_END_VCHI2DOF
-    - Kst_DIRA
+    - Kst_BPVDIRA
     #
     - j_pt
     - Jpsi_IPCHI2_OWNPV
@@ -77,7 +77,7 @@ features:
     - Kst_BPVIPCHI2
     - Kst_BPVFDCHI2
     - Kst_END_VCHI2DOF
-    - Kst_DIRA
+    - Kst_BPVDIRA
     #
     - j_pt
     - Jpsi_IPCHI2_OWNPV
@@ -221,6 +221,13 @@ plotting:
         labels  : ['$IP_{\chi^2}(J/\psi)$', '']
         styling :
           <<: *sty
+      Jpsi_FDCHI2_OWNPV:
+        normalized : true
+        binning : [0, 500, 100]
+        yscale  : 'log'
+        labels  : ['$FD_{\chi^2}(J/\psi)$', '']
+        styling :
+          <<: *sty
       Jpsi_CHI2DOF:
         normalized : true
         binning : [0, 10, 100]
@@ -243,21 +250,28 @@ plotting:
         labels  : ['$p_T(K^{*0})$', '']
         styling :
           <<: *sty
-      Kst_IPCHI2_OWNPV:
+      Kst_BPVIPCHI2:
         normalized : true
         binning : [0, 500, 100]
         yscale  : 'log'
         labels  : ['$IP_{\chi^2}(K^{*0})$', '']
         styling :
           <<: *sty
-      kst_ENDVERTEX_CHI2DOF:
+      Kst_BPVFDCHI2:
+        normalized : true
+        binning : [0, 500, 100]
+        yscale  : 'log'
+        labels  : ['$FD_{\chi^2}(K^{*0})$', '']
+        styling :
+          <<: *sty
+      Kst_ENDVERTEX_CHI2DOF:
         normalized : true
         binning : [0, 10, 100]
         yscale  : 'log'
         labels  : ['$\chi^2/dof(K^{*0})$', '']
         styling :
           <<: *sty
-      Kst_DIRA:
+      Kst_BPVDIRA:
         normalized : true
         binning : [0.99,  1, 100]
         yscale  : 'log'
