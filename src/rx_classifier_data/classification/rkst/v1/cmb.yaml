@@ -18,9 +18,9 @@ features:
     - b_dira
     #
     - Kst_PT
-    - kst_IPCHI2_OWNPV
-    - kst_FDCHI2_OWNPV
-    - kst_ENDVERTEX_CHI2DOF
+    - Kst_IPCHI2_OWNPV
+    - Kst_FDCHI2_OWNPV
+    - Kst_ENDVERTEX_CHI2DOF
     - Kst_DIRA
     #
     - j_pt
@@ -46,9 +46,9 @@ features:
     - b_dira
     #
     - Kst_PT
-    - kst_IPCHI2_OWNPV
-    - kst_FDCHI2_OWNPV
-    - kst_ENDVERTEX_CHI2DOF
+    - Kst_IPCHI2_OWNPV
+    - Kst_FDCHI2_OWNPV
+    - Kst_ENDVERTEX_CHI2DOF
     - Kst_DIRA
     #
     - j_pt
@@ -74,9 +74,9 @@ features:
     - b_dira
     #
     - Kst_PT
-    - kst_IPCHI2_OWNPV
-    - kst_FDCHI2_OWNPV
-    - kst_ENDVERTEX_CHI2DOF
+    - Kst_IPCHI2_OWNPV
+    - Kst_FDCHI2_OWNPV
+    - Kst_ENDVERTEX_CHI2DOF
     - Kst_DIRA
     #
     - j_pt
