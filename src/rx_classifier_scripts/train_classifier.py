@@ -243,23 +243,24 @@ def _get_overriding_selection(kind : str) -> dict[str,str]:
     return d_cut
 #---------------------------------
 def _apply_selection(
-        rdf    : RDataFrame,
-        sample : str,
-        kind   : str):
+    rdf    : RDF.RNode,
+    sample : str,
+    kind   : str) -> RDF.RNode:
     '''
-    Will take ROOT dataframe and kind (bkg or sig)
-    Will load selection from config
-    Will return dataframe after selection
+    Will:
+      - Take ROOT dataframe and kind (bkg or sig)
+      - Load selection from config
+      - Return dataframe after selection
     '''
 
-    log.info('Applying selection')
+    log.info(f'Applying selection to: {sample} ({kind})')
     trigger = Data.cfg_dict['dataset']['samples'][kind]['trigger']
 
     d_sel = sel.selection(trigger=trigger, q2bin=Data.q2bin, process=sample)
     d_cut = _get_overriding_selection(kind=kind)
     d_sel.update(d_cut)
 
-    _save_selection(cuts=d_sel, kind=kind)
+    _save_selection(cuts=d_sel, kind=kind, sample=sample)
 
     for cut_name, cut_expr in d_sel.items():
         log.debug(f'{cut_name:<30}{cut_expr}')
