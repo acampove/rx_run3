@@ -264,7 +264,7 @@ plotting:
         labels  : ['$FD_{\chi^2}(K^{*0})$', '']
         styling :
           <<: *sty
-      Kst_ENDVERTEX_CHI2DOF:
+      Kst_END_VCHI2DOF:
         normalized : true
         binning : [0, 10, 100]
         yscale  : 'log'
