@@ -205,14 +205,24 @@ def _save_cutflow(rdf : RDataFrame, kind : str) -> None:
 
     df.to_json(f'{out_dir}/cutflow_{kind}.json', indent=2)
 #---------------------------------
-def _save_selection(cuts : dict[str,str], kind : str) -> None:
+def _save_selection(
+    cuts  : dict[str,str], 
+    sample: str,
+    kind  : str) -> None:
+    '''
+    Parameters
+    -----------------
+    cuts  : Selection used to create training sample
+    sample: Sample name, e.g. Bu_Kee_eq_btosllball05_DPC
+    kind  : E.g. sig, bkg
+    '''
     log.info(f'Saving selection for: {kind}')
 
     out_dir = Data.cfg_dict['saving']['output']
     out_dir = f'{out_dir}/input'
     os.makedirs(out_dir, exist_ok=True)
 
-    gut.dump_json(cuts, f'{out_dir}/selection_{kind}.yaml')
+    gut.dump_json(cuts, f'{out_dir}/selection_{kind}_{sample}.yaml')
 #---------------------------------
 def _get_overriding_selection(kind : str) -> dict[str,str]:
     '''
