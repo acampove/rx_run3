@@ -1,3 +1,13 @@
+style: &sty
+  Signal:
+    histtype  : step
+    linestyle : '-' 
+    color     : blue 
+  Background:
+    histtype  : step 
+    linestyle : '-' 
+    color     : red
+
 dataset:
   define :
     r : z + x
@@ -42,19 +52,29 @@ plotting:
             binning : [-6, 6, 100]
             yscale  : 'linear'
             labels  : ['$r$', '']
+            styling:
+              <<: *sty
           w :
             binning : [-4, 4, 100]
             yscale  : 'linear'
             labels  : ['$w$', '']
+            styling:
+              <<: *sty
           x :
             binning : [-4, 4, 100]
             yscale  : 'linear'
             labels  : ['$x$', '']
+            styling:
+              <<: *sty
           y :
             binning : [-4, 4, 100]
             yscale  : 'linear'
             labels  : ['$y$', '']
+            styling:
+              <<: *sty
           z :
             binning : [-4, 4, 100]
             yscale  : 'linear'
             labels  : ['$z$', '']
+            styling:
+              <<: *sty
