@@ -107,7 +107,7 @@ dataset :
   selection:
     bkg :
       bdt  : (1)
-      mass : B_Mass > 5500 # This selection will be applied before definitions
+      mass : B_M > 5500 # This selection will be applied before definitions
     sig :                            # Cannot be put in function of aliases
       bdt  : (1)
       mass : (1)
