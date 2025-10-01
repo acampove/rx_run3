@@ -1,3 +1,13 @@
+style: &sty
+  Signal:
+    histtype  : step
+    linestyle : '-' 
+    color     : blue 
+  Background:
+    histtype  : step 
+    linestyle : '-' 
+    color     : red
+
 features:
   low:
     - log_b_pt
@@ -122,14 +132,14 @@ plotting:
         binning : [-20000, 200000, 40]
         labels  : ['$\text{Iso}_{CC}^P(B^+)$MeV', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       iso_cc_ptasy:
         normalized : true
         yscale  : 'linear'
         binning : [-1, +1.2, 40]
         labels  : ['$\text{Iso}_{CC}^{p_T, Asym}(B^+)$MeV', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       # --------------------
       iso_nc_mom:
         normalized : true
@@ -137,14 +147,14 @@ plotting:
         binning : [-20000, 100000, 40]
         labels  : ['$\text{Iso}_{NC}^P(B^+)$MeV', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       iso_nc_ptasy:
         normalized : true
         yscale  : 'linear'
         binning : [-1, +1.2, 40]
         labels  : ['Iso$_{NC}^{p_T, Asym}(B^+)$MeV', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       # --------------------
       iso_one_mass:
         normalized : true
@@ -152,7 +162,7 @@ plotting:
         yscale  : 'linear'
         labels  : ['$\text{Iso}_{mass}^{1Trk}(B^+)$', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       # --------------------
       iso_one_dchi:
         normalized : true
@@ -160,7 +170,7 @@ plotting:
         yscale  : 'linear'
         labels  : ['$\text{Iso}_{\Delta\chi^2}^{1Trk}(B^+)$', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       # --------------------
       log_b_pt  :
         normalized : true
@@ -168,70 +178,70 @@ plotting:
         yscale  : 'linear'
         labels  : ['$\log(p_T)(B^+)$', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       sqrt_ipchi2:
         normalized : true
         yscale  : 'linear'
         binning : [0, 6, 40]
         labels  : ['$\sqrt{IP_{\chi^2}}(B^+)$', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       sqrt_jipchi2:
         normalized : true
         binning : [0, 100, 40]
         yscale  : 'linear'
         labels  : ['$\sqrt{IP_{\chi^2}}(J/\psi)$', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       acos_dira:
         normalized : true
         binning : [0, 0.03, 40]
         yscale  : 'log'
         labels  : ['$\arccos(DIRA)(B^+)$', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       log_h_pt  :
         normalized : true
         binning : [1, 10, 40]
         yscale  : 'linear'
         labels  : ['$\log(p_T)(K^+)$', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       min_ll_ipc:
         normalized : true
         binning : [0, 60, 40]
         yscale  : 'linear'
         labels  : ['$\min(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       B_Mass_smr:
         normalized : true
         binning : [3500, 6500, 50]
         yscale  : 'linear'
         labels  : ['$M(B^+)$', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       hop_mass:
         normalized : true
         binning : [3000, 7000, 60]
         yscale  : 'linear'
         labels  : ['$M_{HOP}(B^+)$', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       swp_cascade_mass_swp:
         normalized : true
         binning : [1700, 3000, 60]
         yscale  : 'linear'
         labels  : ['$M(K,\ell_{\to\pi})$', '']
         styling :
-            linestyle: '-'
+          <<: *sty
       swp_jpsi_misid_mass_swp:
         normalized : true
         binning : [2000, 4000, 60]
         yscale  : 'linear'
         labels  : ['$M(K_{\to\ell},\ell)$', '']
         styling :
-            linestyle: '-'
+          <<: *sty
 diagnostics:
   output      : mva/prc/VERSION/plots/diagnostics
   correlations:
@@ -255,7 +265,7 @@ diagnostics:
             labels     : ['$\text{M}_{corr}(B^+)$', 'Entries']
             normalized : true
             styling :
-              linestyle: '-' # By default there is no line, just pointer
+          <<: *sty
     methods:
       - Pearson
       - Kendall-$\tau$
