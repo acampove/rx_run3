@@ -34,6 +34,7 @@ class Data:
     cfg_dict    : dict
     cfg_name    : str
     version     : str
+    project     : str
     q2bin       : str
     opt_ntrial  : int
     workers     : int
@@ -90,7 +91,7 @@ def _load_config():
     Will load YAML file config
     '''
 
-    cfg_path = files('rx_classifier_data').joinpath(f'classification/{Data.version}/{Data.cfg_name}.yaml')
+    cfg_path = files('rx_classifier_data').joinpath(f'classification/{Data.project}/{Data.version}/{Data.cfg_name}.yaml')
     cfg_path = str(cfg_path)
     if not os.path.isfile(cfg_path):
         raise FileNotFoundError(f'Could not find: {cfg_path}')
@@ -109,6 +110,7 @@ def _parse_args():
     parser = argparse.ArgumentParser(description='Used to train classifier based on config file')
     parser.add_argument('-v', '--version'    , type=str, help='Version of config files', required=True)
     parser.add_argument('-c', '--cfg_name'   , type=str, help='Kind of config file'    , required=True)
+    parser.add_argument('-P', '--project'    , type=str, help='Project, e.g rk'        , required=True, choices=['rk', 'rkst'])
     parser.add_argument('-q', '--q2bin'      , type=str, help='q2bin'                  , required=True, choices=['low', 'central', 'jpsi', 'psi2S', 'high'])
     parser.add_argument('-l', '--log_level'  , type=int, help='Logging level', default=20, choices=[10, 20, 30])
     parser.add_argument('-n', '--opt_ntrial' , type=int, help='Number of tries for hyperparameter optimization', default=0)
@@ -119,6 +121,7 @@ def _parse_args():
     args = parser.parse_args()
 
     Data.version     = args.version
+    Data.project     = args.project
     Data.cfg_name    = args.cfg_name
     Data.workers     = args.workers
     Data.opt_ntrial  = args.opt_ntrial
@@ -275,6 +278,7 @@ def _initialize_args(cfg : DictConfig) -> None:
     cfg: Configuration used when module is imported
     '''
     Data.version     = cfg.version
+    Data.project     = cfg.project
     Data.cfg_name    = cfg.cfg_name
     Data.workers     = cfg.workers
     Data.opt_ntrial  = cfg.opt_ntrial
