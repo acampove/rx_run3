@@ -10,10 +10,12 @@ from   dmu.ml.train_mva      import TrainMva, NoFeatureInfo
 import dmu.testing.utilities as ut
 
 log = LogStore.add_logger('dmu:ml:test_train_mva')
-
 # -------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This will run before any test
+    '''
     LogStore.set_level('dmu:ml:train_mva', 10)
     plt.style.use(mplhep.style.LHCb2)
 # -------------------------------
