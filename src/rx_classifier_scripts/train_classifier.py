@@ -12,9 +12,10 @@ from importlib.resources import files
 import matplotlib.pyplot as plt
 import mplhep
 import yaml
+import ROOT
 
 from omegaconf             import DictConfig
-from ROOT                  import RDataFrame, RDF # type: ignore
+from ROOT                  import RDataFrame, RDF, kWarning # type: ignore
 from rx_selection          import selection as sel
 from rx_data.rdf_getter    import RDFGetter
 
@@ -23,6 +24,7 @@ from dmu.logging.log_store import LogStore
 from dmu.ml.train_mva      import TrainMva
 from dmu.rdataframe        import utilities as rut
 
+ROOT.gErrorIgnoreLevel = kWarning # type: ignore
 log = LogStore.add_logger('rx_classifier:train_classifier')
 #---------------------------------
 class Data:
