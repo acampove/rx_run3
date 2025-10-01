@@ -79,6 +79,7 @@ The config file will specify:
 - What samples to pick for signal and proxy backgrounds, including the selections.
 
 **Note:** By selection, we mean what we add **on top** of the default analysis selection.
+
 # TODO
 
 Some things that can be tried are:
