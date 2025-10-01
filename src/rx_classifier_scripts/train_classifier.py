@@ -1,7 +1,6 @@
 '''
 Script in charge of training classifier
 '''
-# pylint: disable=import-error
 
 import os
 import random
@@ -9,13 +8,12 @@ import shutil
 import argparse
 
 from importlib.resources import files
-from dataclasses         import dataclass
 
 import matplotlib.pyplot as plt
 import mplhep
 import yaml
 
-from ROOT                  import RDataFrame
+from ROOT                  import RDataFrame # type: ignore
 from rx_selection          import selection as sel
 from rx_data.rdf_getter    import RDFGetter
 
@@ -26,7 +24,6 @@ from dmu.rdataframe        import utilities as rut
 
 log = LogStore.add_logger('rx_classifier:train_classifier')
 #---------------------------------
-@dataclass
 class Data:
     '''
     Class meant to hold data to be shared
@@ -180,7 +177,7 @@ def _get_rdf(kind : str) -> RDataFrame:
 #---------------------------------
 def _get_sample_rdf(sample : str, trigger : str, kind : str) -> RDataFrame:
     gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf()
+    rdf = gtr.get_rdf(per_file=False)
 
     if Data.max_entries > 0:
         log.warning(f'Limiting {kind} dataset to {Data.max_entries} entries')
