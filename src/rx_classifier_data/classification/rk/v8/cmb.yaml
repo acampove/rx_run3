@@ -116,7 +116,7 @@ training :
       n_estimators     : 358
       subsample        : 0.7
 saving:
-  output : mva/cmb/VERSION
+  output : mva/rk/cmb/VERSION
 plotting:
   roc :
     min : [0.5, 0.9]
@@ -269,7 +269,7 @@ plotting:
         styling :
           <<: *sty
 diagnostics:
-  output      : mva/cmb/VERSION/plots/diagnostics
+  output      : mva/rk/cmb/VERSION/plots/diagnostics
   correlations:
     target :
       name    : B_Mass
@@ -283,7 +283,7 @@ diagnostics:
         general:
           size : [20, 10]
         saving:
-          plt_dir : mva/cmb/VERSION/plots/diagnostics
+          plt_dir : mva/rk/cmb/VERSION/plots/diagnostics
         plots:
           B_Mass :
             binning    : [4500, 6000, 40]

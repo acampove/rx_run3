@@ -110,7 +110,7 @@ training :
     high :
       n_estimators : 70
 saving:
-  output : mva/prc/VERSION
+  output : mva/rk/prc/VERSION
 plotting:
   roc :
     min : [0.0, 0.0]
@@ -243,7 +243,7 @@ plotting:
         styling :
           <<: *sty
 diagnostics:
-  output      : mva/prc/VERSION/plots/diagnostics
+  output      : mva/rk/prc/VERSION/plots/diagnostics
   correlations:
     target :
       name    : B_Mass_smr
@@ -257,7 +257,7 @@ diagnostics:
         general:
           size : [20, 10]
         saving:
-          plt_dir : mva/prc/VERSION/plots/diagnostics
+          plt_dir : mva/rk/prc/VERSION/plots/diagnostics
         plots:
           B_Mass_smr:
             binning    : [4500, 6000, 40]
