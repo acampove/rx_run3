@@ -1,10 +1,8 @@
 [TOC]
 
-# Classifier
-
 This project is meant to be used to make classifiers for the RX analyses
 
-## Training
+# Training
 
 For that run:
 
@@ -49,7 +47,7 @@ options:
                         trained models, which should exist
 ```
 
-## Output
+# Output
 
 The output of this training are, for each fold:
 
@@ -61,7 +59,7 @@ The output of this training are, for each fold:
 - Plots of the features
 - Covariance matrix
 
-## Performance
+# Performance
 
 In order to compare the performances use:
 
@@ -81,14 +79,14 @@ The config file will specify:
 - What samples to pick for signal and proxy backgrounds, including the selections.
 
 **Note:** By selection, we mean what we add **on top** of the default analysis selection.
-## TODO
+# TODO
 
 Some things that can be tried are:
 
 - The hyper-parameters need to be optimized
 - One could try MLPs or other type of classifiers.
 
-## Getting MVA scores for ntuples 
+# Getting MVA scores for ntuples 
 
 For this run:
 
@@ -133,7 +131,7 @@ apply_classifier -c application.yaml -s DATA_24_MagUp_24c1 -i 2
 
 `-i` can also be used to parametrize jobs in a cluster, like HTCondor.
 
-## Using cluster jobs to apply scores
+# Using cluster jobs to apply scores
 
 Given that there are thousands of files, in around 80 samples, this should be run in a computing cluster.
 The line:
@@ -157,7 +155,7 @@ which can be used to apply the selection in a computing cluster, assuming that:
 - The job runs in a specific virtual environment where `apply_classifier` is available.
 - Each job runs one line
 
-## MVA Optimization
+# MVA Optimization
 
 For this one needs:
 
