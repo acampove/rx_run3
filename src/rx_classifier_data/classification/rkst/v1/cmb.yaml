@@ -175,35 +175,35 @@ plotting:
         normalized : true
         binning : [0, 30000, 100]
         yscale  : 'log'
-        labels  : ['$p_T(B^+)$', '']
+        labels  : ['$p_T(B^0)$', '']
         styling :
           <<: *sty
       B_IPCHI2_OWNPV :
         normalized : true
         binning : [0, 20, 100]
         yscale  : 'log'
-        labels  : ['$IP_{\chi^2}(B^+)$', '']
+        labels  : ['$IP_{\chi^2}(B^0)$', '']
         styling :
           <<: *sty
       B_FDCHI2_OWNPV :
         normalized : true
         binning : [0, 10000, 100]
         yscale  : 'log'
-        labels  : ['$FD_{\chi^2}(B^+)$', '']
+        labels  : ['$FD_{\chi^2}(B^0)$', '']
         styling :
           <<: *sty
       B_ENDVERTEX_CHI2DOF:
         normalized : true
         binning : [0, 9, 100]
         yscale  : 'log'
-        labels  : ['$\chi^2/dof(B^+)$', '']
+        labels  : ['$\chi^2/dof(B^0)$', '']
         styling :
           <<: *sty
       b_dira:
         normalized : true
         binning : [0.9995, 1, 100]
         yscale  : 'log'
-        labels  : ['DIRA$(B^+)$', '']
+        labels  : ['DIRA$(B^0)$', '']
         styling :
           <<: *sty
       #
