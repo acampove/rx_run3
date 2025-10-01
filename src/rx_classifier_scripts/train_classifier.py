@@ -187,11 +187,21 @@ def _get_sample_rdf(sample : str, trigger : str, kind : str) -> RDataFrame:
 
     rdf = _apply_selection(rdf, sample, kind)
 
-    _save_cutflow(rdf=rdf, kind=kind)
+    _save_cutflow(rdf=rdf, kind=kind, sample=sample)
 
     return rdf
 #---------------------------------
-def _save_cutflow(rdf : RDataFrame, kind : str) -> None:
+def _save_cutflow(
+    rdf   : RDF.RNode, 
+    sample: str,
+    kind  : str) -> None:
+    '''
+    Parameters
+    ----------------
+    rdf   : Dataframe needed to get the cutflow from
+    sample: Sample associated to dataframe
+    kind  : E.g. bkg, sig
+    '''
     log.info(f'Saving cutflow for: {kind}')
 
     out_dir = Data.cfg_dict['saving']['output']
@@ -203,7 +213,7 @@ def _save_cutflow(rdf : RDataFrame, kind : str) -> None:
 
     df  = rut.rdf_report_to_df(rep)
 
-    df.to_json(f'{out_dir}/cutflow_{kind}.json', indent=2)
+    df.to_json(f'{out_dir}/cutflow_{kind}_{sample}.json', indent=2)
 #---------------------------------
 def _save_selection(
     cuts  : dict[str,str], 
