@@ -11,11 +11,11 @@ style: &sty
 
 features:
   low:
-    - b_pt
+    - B_PT 
     - B_IPCHI2_OWNPV
     - B_FDCHI2_OWNPV
     - B_ENDVERTEX_CHI2DOF
-    - b_dira
+    - B_BPVDIRA 
     #
     - Kst_PT
     - Kst_BPVIPCHI2
@@ -23,19 +23,19 @@ features:
     - Kst_END_VCHI2DOF
     - Kst_BPVDIRA
     #
-    - j_pt
+    - Jpsi_PT 
     - Jpsi_IPCHI2_OWNPV
     - Jpsi_FDCHI2_OWNPV
     - Jpsi_END_VCHI2DOF
-    - j_dira
+    - Jpsi_BPVDIRA 
     #
     - min_hh_pt
     - max_hh_pt
     - min_hh_ipc
     - max_hh_ipc
     #
-    - min_ll_pt
-    - max_ll_pt
+    - min_LL_pt
+    - max_LL_pt
     - min_ll_ipc
     - max_ll_ipc
   central:
@@ -123,6 +123,8 @@ dataset :
     j_pt       : Jpsi_PT_brem_track_2
     b_dira     : B_DIRA_OWNPV_brem_track_2
     j_dira     : Jpsi_DIRA_OWNPV_brem_track_2
+    min_LL_pt  : TMath::Min(L1_PT              , L2_PT)
+    max_LL_pt  : TMath::Max(L1_PT              , L2_PT)
     min_ll_pt  : TMath::Min(L1_PT_brem_track_2 , L2_PT_brem_track_2)
     max_ll_pt  : TMath::Max(L1_PT_brem_track_2 , L2_PT_brem_track_2)
     min_ll_ipc : TMath::Min(L1_IPCHI2_OWNPV    , L2_IPCHI2_OWNPV)
