@@ -26,7 +26,7 @@ features:
     - j_pt
     - Jpsi_IPCHI2_OWNPV
     - Jpsi_FDCHI2_OWNPV
-    - Jpsi_ENDVERTEX_CHI2DOF
+    - Jpsi_END_VCHI2DOF
     - j_dira
     #
     - min_hh_pt
@@ -54,7 +54,7 @@ features:
     - j_pt
     - Jpsi_IPCHI2_OWNPV
     - Jpsi_FDCHI2_OWNPV
-    - Jpsi_ENDVERTEX_CHI2DOF
+    - Jpsi_END_VCHI2DOF
     - j_dira
     #
     - min_hh_pt
@@ -82,7 +82,7 @@ features:
     - j_pt
     - Jpsi_IPCHI2_OWNPV
     - Jpsi_FDCHI2_OWNPV
-    - Jpsi_ENDVERTEX_CHI2DOF
+    - Jpsi_END_VCHI2DOF
     - j_dira
     #
     - min_hh_pt
@@ -228,7 +228,7 @@ plotting:
         labels  : ['$FD_{\chi^2}(J/\psi)$', '']
         styling :
           <<: *sty
-      Jpsi_CHI2DOF:
+      Jpsi_END_VCHI2DOF:
         normalized : true
         binning : [0, 10, 100]
         yscale  : 'log'
