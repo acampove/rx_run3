@@ -326,9 +326,9 @@ def main(cfg : DictConfig|None = None):
     trn = TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=Data.cfg_dict)
     with trn.use(nworkers=Data.workers):
         trn.run(
-                skip_fit    =Data.plot_only,
-                opt_ntrial  =Data.opt_ntrial,
-                load_trained=Data.load_trained)
+        skip_fit    =Data.plot_only,
+        opt_ntrial  =Data.opt_ntrial,
+        load_trained=Data.load_trained)
 #---------------------------------
 if __name__ == '__main__':
     main()
