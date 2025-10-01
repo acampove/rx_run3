@@ -209,7 +209,7 @@ plotting:
       #
       j_pt:
         normalized : true
-        binning : [0, 30000, 100]
+        binning : [0, 20000, 100]
         yscale  : 'log'
         labels  : ['$p_T(J/\psi)$', '']
         styling :
@@ -223,7 +223,7 @@ plotting:
           <<: *sty
       Jpsi_FDCHI2_OWNPV:
         normalized : true
-        binning : [0, 500, 100]
+        binning : [0, 1000, 100]
         yscale  : 'log'
         labels  : ['$FD_{\chi^2}(J/\psi)$', '']
         styling :
@@ -245,7 +245,7 @@ plotting:
       #
       Kst_PT:
         normalized : true
-        binning : [0, 30000, 100]
+        binning : [0, 20000, 100]
         yscale  : 'log'
         labels  : ['$p_T(K^{*0})$', '']
         styling :
@@ -259,7 +259,7 @@ plotting:
           <<: *sty
       Kst_BPVFDCHI2:
         normalized : true
-        binning : [0, 500, 100]
+        binning : [0, 1000, 100]
         yscale  : 'log'
         labels  : ['$FD_{\chi^2}(K^{*0})$', '']
         styling :
