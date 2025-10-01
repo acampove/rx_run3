@@ -336,6 +336,13 @@ plotting:
         labels  : ['$\max(IP_{\chi^2}(K^+), IP_{\chi^2}(\pi^-))$', '']
         styling :
           <<: *sty
+      B_Mass:
+        normalized : true
+        binning : [4400, 6600, 50]
+        yscale  : 'linear'
+        labels  : ['$M(B^0)$', '']
+        styling :
+          <<: *sty
 diagnostics:
   output      : mva/rkst/cmb/VERSION/plots/diagnostics
   correlations:
