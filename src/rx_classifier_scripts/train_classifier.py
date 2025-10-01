@@ -44,7 +44,8 @@ class Data:
     load_trained: bool
 
     ran_val     = random.randint(10**9, 10**10 - 1)
-    cache_dir   = f'/tmp/rx_classifier/{ran_val}/cache/train_classifier/samples'
+    user        = os.environ['USER']
+    cache_dir   = f'/tmp/{user}/rx_classifier/{ran_val}/cache/train_classifier/samples'
 #---------------------------------
 def _override_path(path : str) -> str:
     if 'VERSION' not in path:
