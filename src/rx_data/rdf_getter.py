@@ -771,7 +771,7 @@ class RDFGetter:
         self._d_info['range'] = nlow, ntot 
         rdf  = rdf.Range(nlow, ntot)
 
-        log.warning(f'Picking up the first {nent} entries')
+        log.warning(f'Picking up range: [{nlow}, {ntot}] ')
 
         return rdf
     # ---------------------------------------------------
