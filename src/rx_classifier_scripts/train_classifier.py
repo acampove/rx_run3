@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import mplhep
 import yaml
 
+from omegaconf             import DictConfig
 from ROOT                  import RDataFrame # type: ignore
 from rx_selection          import selection as sel
 from rx_data.rdf_getter    import RDFGetter
@@ -101,7 +102,7 @@ def _load_config():
 
     Data.cfg_dict = cfg_dict
 #---------------------------------
-def _get_args():
+def _parse_args():
     '''
     Use argparser to put options in Data class
     '''
@@ -266,12 +267,34 @@ def _initialize():
     LogStore.set_level('rx_classifier:train_classifier', Data.log_level)
     LogStore.set_level('dmu:ml:train_mva'              , Data.log_level)
     LogStore.set_level('dmu:plotting:Plotter1D'        , Data.log_level)
+# ----------------------
+def _initialize_args(cfg : DictConfig) -> None:
+    '''
+    Parameters
+    -------------
+    cfg: Configuration used when module is imported
+    '''
+    Data.version     = cfg.version
+    Data.cfg_name    = cfg.cfg_name
+    Data.workers     = cfg.workers
+    Data.opt_ntrial  = cfg.opt_ntrial
+    Data.q2bin       = cfg.q2bin
+    Data.max_entries = cfg.max_entries
+    Data.log_level   = cfg.log_level
+    Data.plot_only   = cfg.plot_only
+    Data.load_trained= cfg.load_trained
 #---------------------------------
-def main():
+def main(cfg : DictConfig|None = None):
     '''
-    Script starts here
+    Parameters
+    --------------
+    cfg: Dictionary with configuration, used when this module is imported
     '''
-    _get_args()
+    if cfg is None:
+        _parse_args()
+    else:
+        _initialize_args(cfg=cfg)
+
     _initialize()
 
     rdf_sig = _get_rdf(kind='sig')
