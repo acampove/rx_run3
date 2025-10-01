@@ -112,6 +112,10 @@ class TrainMva:
         '''
 
         l_extr_col = self._get_extra_columns(rdf, df_feat)
+        if not l_extr_col:
+            log.debug('Not adding extra columns')
+            return self._rdf_from_df(df=df_feat)
+
         if len(l_extr_col) > 20:
             for name in l_extr_col:
                 log.debug(name)
