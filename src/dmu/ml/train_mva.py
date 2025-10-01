@@ -133,7 +133,47 @@ class TrainMva:
 
         df_all = pnd.concat([df_feat, df_extr], axis=1)
 
-        return RDF.FromPandas(df_all)
+        return self._rdf_from_df(df=df_all)
+    # ----------------------
+    def _rdf_from_df(self, df : pnd.DataFrame) -> RDF.RNode:
+        '''
+        Parameters
+        -------------
+        df: Pandas dataframe
+
+        Returns
+        -------------
+        Corresponding ROOT dataframe
+        '''
+
+        data = { name : self._array_from_df(df=df, col_name=name)  for name in df.columns }
+        rdf  = RDF.FromNumpy(data)
+
+        return rdf
+    # ----------------------
+    def _array_from_df(self, df : pnd.DataFrame, col_name : str) -> numpy.ndarray:
+        '''
+        Parameters
+        -------------
+        df: Dataframe
+        col_name: Name of column requested
+
+        Returns
+        -------------
+        Numpy array with column contents
+        '''
+        if col_name not in df.columns:
+            raise ValueError(f'Invalid column {col_name} not found in {df.columns}')
+
+        arr_val = df[col_name].to_numpy()
+
+        try:
+            arr_val = arr_val.astype(float)
+        except Exception as exc:
+            log.error(arr_val[:10])
+            raise ValueError(f'Cannot cast as float column {col_name}') from exc
+
+        return arr_val
     # ---------------------------------------------
     def _pre_process_nans(self, df : pnd.DataFrame) -> pnd.DataFrame:
         if 'dataset' not in self._cfg:
