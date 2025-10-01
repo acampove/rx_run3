@@ -84,8 +84,9 @@ The config file will specify:
 
 Some things that can be tried are:
 
-- The hyper-parameters need to be optimized
-- One could try MLPs or other type of classifiers.
+- Fix overtraining problem
+- Improve way how paths are specified in YAML files
+- Try MLFlow to keep track of plots, etc
 
 # MVA Optimization
 
