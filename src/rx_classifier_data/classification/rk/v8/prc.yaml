@@ -265,7 +265,7 @@ diagnostics:
             labels     : ['$\text{M}_{corr}(B^+)$', 'Entries']
             normalized : true
             styling :
-          <<: *sty
+              <<: *sty
     methods:
       - Pearson
       - Kendall-$\tau$

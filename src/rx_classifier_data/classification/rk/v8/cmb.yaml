@@ -291,7 +291,7 @@ diagnostics:
             labels     : ['M$(B^+)$', 'Entries']
             normalized : true
             styling :
-              linestyle: '-' # By default there is no line, just pointer
+              <<: *sty
     methods:
       - Pearson
       - Kendall-$\tau$
