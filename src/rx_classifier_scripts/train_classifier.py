@@ -14,7 +14,7 @@ import mplhep
 import yaml
 
 from omegaconf             import DictConfig
-from ROOT                  import RDataFrame # type: ignore
+from ROOT                  import RDataFrame, RDF # type: ignore
 from rx_selection          import selection as sel
 from rx_data.rdf_getter    import RDFGetter
 
