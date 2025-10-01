@@ -758,12 +758,18 @@ class RDFGetter:
         if nent < 0:
             return rdf
 
+        ntot = rdf.Count().GetValue()
+        if nent > ntot:
+            log.warning(f'Required number of entries {nent} larger than dataset size {ntot}')
+            return rdf
+
         log.debug(f'Filtering for a range of {nent} entries')
         # Append information on transformations
         # done to dataframe in order to calculate
         # hash properly
-        self._d_info['range'] = 0, nent
-        rdf  = rdf.Range(nent)
+        nlow = ntot - nent
+        self._d_info['range'] = nlow, ntot 
+        rdf  = rdf.Range(nlow, ntot)
 
         log.warning(f'Picking up the first {nent} entries')
 
