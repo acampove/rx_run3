@@ -68,11 +68,12 @@ RKst: &rkst
     pid_pi    : (H2_PROBNN_PI * (1 - H2_PROBNN_P) * (1 - H2_ProbNNk) > 0.1)
     rich      : L1_PPHASRICH && L2_PPHASRICH && H1_PPHASRICH && H2_PPHASRICH
     acceptance: L1_INECAL && L2_INECAL
-    cascade   : (1)
-    jpsi_misid: (1)
-    bdt       : (1)
+    jpsi_misid: swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    cascade   :
+      <<: *cascade_common
     q2:
       <<: *q2_common
+    bdt       : (1)
     mass:
       <<: *mass_ee
   MM:
@@ -89,11 +90,12 @@ RKst: &rkst
     pid_pi    : (H2_PROBNN_PI * (1 - H2_PROBNN_P) * (1 - H2_ProbNNk) > 0.1)
     rich      : L1_PPHASRICH && L2_PPHASRICH && H1_PPHASRICH && H2_PPHASRICH
     acceptance: L1_INMUON && L2_INMUON
-    cascade   : (1)
-    jpsi_misid: (1)
-    bdt       : (1)
+    jpsi_misid: swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    cascade   :
+      <<: *cascade_common
     q2:
       <<: *q2_common
+    bdt       : (1)
     mass:
       <<: *mass_mm
 RK: &rk
