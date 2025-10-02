@@ -80,7 +80,7 @@ def _reformat_config(cfg : dict) -> dict:
     return cfg
 #---------------------------------
 def _reformat_hyperparameters(cfg : dict) -> dict:
-    d_common_hyper = cfg['hyper']
+    d_common_hyper = cfg.get('hyper', {})
     d_q2hyper      = cfg['training']['hyper'][Data.q2bin]
 
     d_common_hyper.update(d_q2hyper)
