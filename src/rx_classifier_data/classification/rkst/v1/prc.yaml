@@ -122,7 +122,7 @@ plotting:
       yoff : -30
       size :  30
   correlation:
-    size       : [20, 15]
+    size       : [25, 15]
     mask_value : 0
   features:
     plots:
