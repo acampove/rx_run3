@@ -385,6 +385,8 @@ class TrainMva:
         out_dir    = self._cfg['saving']['output']
         model_path = f'{out_dir}/model.pkl'
         nfold      = self._cfg['training']['nfold']
+        failed     = False
+
         l_model    = []
         for ifold in range(nfold):
             fold_path = model_path.replace('.pkl', f'_{ifold:03}.pkl')
@@ -393,8 +395,17 @@ class TrainMva:
                 raise FileNotFoundError(f'Missing trained model: {fold_path}')
 
             log.debug(f'Loading model from: {fold_path}')
-            model = joblib.load(fold_path)
+            try:
+                model = joblib.load(fold_path)
+            except ValueError:
+                log.error(f'Cannot load {fold_path}')
+                failed = True
+                continue
+
             l_model.append(model)
+
+        if failed:
+            raise ValueError('Failed to load at least one model')
 
         return l_model
     # ---------------------------------------------
