@@ -15,20 +15,40 @@ args:
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimEE_MVA           , q2bin : jpsi   }
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimEE_SameSign_MVA  , q2bin : jpsi   }
   # ------------
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimMuMu_MVA         , q2bin : low    }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimMuMu_SameSign_MVA, q2bin : low    }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimEE_MVA           , q2bin : low    }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimEE_SameSign_MVA  , q2bin : low    }
+  # ------------
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimMuMu_MVA         , q2bin : central}
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimMuMu_SameSign_MVA, q2bin : central}
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimEE_MVA           , q2bin : central}
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimEE_SameSign_MVA  , q2bin : central}
+  # ------------
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimMuMu_MVA         , q2bin : high   }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimMuMu_SameSign_MVA, q2bin : high   }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimEE_MVA           , q2bin : high   }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimEE_SameSign_MVA  , q2bin : high   }
   # ------------
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpMuMu_MVA            , q2bin : jpsi   }
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpMuMu_SameSign_MVA   , q2bin : jpsi   }
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_MVA              , q2bin : jpsi   }
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_SameSign_MVA     , q2bin : jpsi   }
   # ------------
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpMuMu_MVA            , q2bin : low    }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpMuMu_SameSign_MVA   , q2bin : low    }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_MVA              , q2bin : low    }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_SameSign_MVA     , q2bin : low    }
+  # ------------
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpMuMu_MVA            , q2bin : central}
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpMuMu_SameSign_MVA   , q2bin : central}
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_MVA              , q2bin : central}
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_SameSign_MVA     , q2bin : central}
+  # ------------
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpMuMu_MVA            , q2bin : high   }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpMuMu_SameSign_MVA   , q2bin : high   }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_MVA              , q2bin : high   }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_SameSign_MVA     , q2bin : high   }
 output:
   - 1Trk_mas.png
   - 2Trk_mas.png
