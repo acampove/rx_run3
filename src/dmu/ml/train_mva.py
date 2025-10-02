@@ -830,8 +830,8 @@ class TrainMva:
         df['train']= df['fold'].apply(self._auc_from_json, args=('train',))
 
         ax=None
-        ax=df.plot('fold', 'test' , color='blue', label='Testing sample' , ax=ax)
-        ax=df.plot('fold', 'train', color='red' , label='Training sample', ax=ax)
+        ax=df.plot(x='fold', y='test' , color='blue', label='Testing sample' , ax=ax)
+        ax=df.plot(x='fold', y='train', color='red' , label='Training sample', ax=ax)
         ax.set_ylim(bottom=0.75, top=1.00)
         ax.set_ylabel('AUC')
         ax.set_xlabel('Fold')
