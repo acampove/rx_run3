@@ -79,7 +79,7 @@ plots:
         styling:
           <<: *style
     swp_cascade_mass_swp:
-        binning    : [1000, 3000, 60]
+        binning    : [1600, 2200, 60]
         yscale     : 'linear'
         labels     : ['M$(K,\ell_{\to\pi})\;[\text{MeV}]$', 'Entries']
         title      : ''
@@ -88,7 +88,7 @@ plots:
         styling:
           <<: *style
     swp_jpsi_misid_mass_swp:
-        binning    : [1500, 3500, 60]
+        binning    : [2900, 3300, 60]
         yscale     : 'linear'
         labels     : ['M$(K_{\to\ell},\ell)\;[\text{MeV}]$', 'Entries']
         title      : ''
@@ -107,7 +107,7 @@ plots:
           <<: *style
     B_M:
         binning    : [4500, 6500, 60]
-        yscale     : 'linear'
+        yscale     : 'log'
         labels     : ['$M(B^+)\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : 'bmass'
@@ -116,7 +116,7 @@ plots:
           <<: *style
     B_Mass:
         binning    : [4500, 6500, 60]
-        yscale     : 'linear'
+        yscale     : 'log'
         labels     : ['$M_{corr}(B^+)\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : 'bmass_brem_corr'
