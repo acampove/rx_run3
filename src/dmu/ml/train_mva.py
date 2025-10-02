@@ -616,7 +616,7 @@ class TrainMva:
         arr_seff_target = numpy.array(l_seff_target)
         arr_quantile    = 1 - arr_seff_target
 
-        l_score = numpy.quantile(arr_sprb, arr_quantile)
+        l_score = numpy.quantile(arr_sprb, arr_quantile).tolist()
         l_seff  = []
         l_brej  = []
 
@@ -881,7 +881,7 @@ class TrainMva:
         return self._auc
     # ---------------------------------------------
     @contextmanager
-    def use(self, nworkers : int) -> None:
+    def use(self, nworkers : int):
         '''
         Context manager used to run with a specific configuration
 
