@@ -394,7 +394,7 @@ plotting:
         normalized : true
         binning : [650, 1150, 50]
         yscale  : 'linear'
-        labels  : ['$M^{org}(K^{*0})$', '']
+        labels  : ['$M(K^{*0})$', '']
         styling :
           <<: *sty
 diagnostics:
