@@ -11,9 +11,17 @@ args:
   - {sample : Bu_JpsiK_ee_eq_DPC          , trigger : Hlt2RD_BuToKpEE_MVA            , q2bin : jpsi   }
   # ------------
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimEE_MVA         , q2bin : jpsi   }
-  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_MVA            , q2bin : jpsi   }
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_B0ToKpPimEE_SameSign_MVA, q2bin : jpsi   }
+  # ------------
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpMuMu_MVA          , q2bin : jpsi   }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpMuMu_SameSign_MVA , q2bin : jpsi   }
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_MVA            , q2bin : jpsi   }
   - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_SameSign_MVA   , q2bin : jpsi   }
+  # ------------
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpMuMu_MVA          , q2bin : central}
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpMuMu_SameSign_MVA , q2bin : central}
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_MVA            , q2bin : central}
+  - {sample : 'DATA_24*'                  , trigger : Hlt2RD_BuToKpEE_SameSign_MVA   , q2bin : central}
 output:
   - 1Trk_mas.png
   - 2Trk_mas.png
