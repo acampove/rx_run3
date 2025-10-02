@@ -61,7 +61,7 @@ class TrainMva:
         self._cfg       = cfg
         self._auc       = math.nan # This is where the Area Under the ROC curve for the full sample will be saved
         self._l_ft_name = self._cfg['training']['features']
-        self._pbar      : Optional[tqdm.tqdm]
+        self._pbar : tqdm.tqdm | None = None # Will be set if optimizing hyperparameters
 
         self._rdf_sig_org = sig
         self._rdf_bkg_org = bkg
@@ -797,6 +797,9 @@ class TrainMva:
         plt.close()
     # ---------------------------------------------
     def _update_progress(self, study, _trial):
+        if self._pbar is None:
+            raise ValueError('No progress bar found')
+
         self._pbar.set_postfix({'Best': f'{study.best_value:.4f}' if study.best_value else 'N/A'})
         self._pbar.update(1)
     # ---------------------------------------------
