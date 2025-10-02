@@ -12,22 +12,22 @@ style: &sty
 features:
   low:
     - b_pt
+    - b_dira
     - B_IPCHI2_OWNPV
     - B_FDCHI2_OWNPV
     - B_ENDVERTEX_CHI2DOF
-    - b_dira
     #
     - Kst_PT
+    - Kst_BPVDIRA
     - Kst_BPVIPCHI2
     - Kst_BPVFDCHI2
     - Kst_END_VCHI2DOF
-    - Kst_BPVDIRA
     #
     - j_pt
+    - j_dira
     - Jpsi_IPCHI2_OWNPV
     - Jpsi_FDCHI2_OWNPV
     - Jpsi_END_VCHI2DOF
-    - j_dira
     #
     - min_hh_pt
     - max_hh_pt
