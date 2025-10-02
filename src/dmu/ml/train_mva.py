@@ -1,10 +1,6 @@
 '''
 Module with TrainMva class
 '''
-# pylint: disable = too-many-locals, no-name-in-module
-# pylint: disable = too-many-arguments, too-many-positional-arguments
-# pylint: disable = too-many-instance-attributes
-# pylint: disable = too-many-arguments, too-many-positional-arguments
 
 import os
 import copy
@@ -12,7 +8,7 @@ import json
 import math
 
 from contextlib import contextmanager
-from typing     import Optional, Union
+from typing     import Union
 from functools  import partial
 
 import tqdm
@@ -26,7 +22,7 @@ from sklearn.metrics         import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.ensemble        import GradientBoostingClassifier
 
-from ROOT import RDataFrame, RDF
+from ROOT import RDataFrame, RDF # type: ignore
 
 import dmu.ml.utilities         as ut
 import dmu.pdataframe.utilities as put
