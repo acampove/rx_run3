@@ -27,30 +27,35 @@ definitions:
   ttk_mas : B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
 cutflow:
   low:
-    None          : hop_mass >  0
-    HOP           : hop_mass >  4500
-    Cascade       : swp_cascade_mass_swp    > 1900
-    $J/\psi$ misID: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    None                     : hop_mass >  0
+    HOP                      : hop_mass >  4500
+    Cascade                  : swp_cascade_mass_swp    > 1900
+    $J/\psi$ misID           : swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    $\text{MVA}_{CMB} > 0.3$ : mva_cmb > 0.3
   central:
-    None          : hop_mass >  0
-    HOP           : hop_mass >  4500
-    Cascade       : swp_cascade_mass_swp    > 1900
-    $J/\psi$ misID: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    None                     : hop_mass >  0
+    HOP                      : hop_mass >  4500
+    Cascade                  : swp_cascade_mass_swp    > 1900
+    $J/\psi$ misID           : swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    $\text{MVA}_{CMB} > 0.3$ : mva_cmb > 0.3
   jpsi:
-    None          : hop_mass >  0
-    HOP           : hop_mass >  4500
-    Cascade       : swp_cascade_mass_swp    > 1900
-    $J/\psi$ misID: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    None                     : hop_mass >  0
+    HOP                      : hop_mass >  4500
+    Cascade                  : swp_cascade_mass_swp    > 1900
+    $J/\psi$ misID           : swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    $\text{MVA}_{CMB} > 0.3$ : mva_cmb > 0.3
   psi2S:
-    None          : hop_mass >  0
-    HOP           : hop_mass >  4500
-    Cascade       : swp_cascade_mass_swp    > 1900
-    $J/\psi$ misID: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    None                     : hop_mass >  0
+    HOP                      : hop_mass >  4500
+    Cascade                  : swp_cascade_mass_swp    > 1900
+    $J/\psi$ misID           : swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    $\text{MVA}_{CMB} > 0.3$ : mva_cmb > 0.3
   high:
-    None          : hop_mass >  0
-    HOP           : hop_mass >  3000
-    Cascade       : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp < 1800
-    $J/\psi$ misID: swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    None                     : hop_mass >  0
+    HOP                      : hop_mass >  3000
+    Cascade                  : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp < 1800
+    $J/\psi$ misID           : swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+    $\text{MVA}_{CMB} > 0.3$ : mva_cmb > 0.3
 plots:
     otk_mas:
         binning    : [2000, 8000, 60]
