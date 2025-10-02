@@ -110,6 +110,9 @@ def test_only_diagnostics():
     cfg     = ut.get_config('ml/tests/train_mva_with_diagnostics.yaml')
 
     obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
+    obj.run(load_trained=False)
+
+    obj= TrainMva(sig=rdf_sig, bkg=rdf_bkg, cfg=cfg)
     obj.run(load_trained=True)
 # -------------------------------
 @pytest.mark.parametrize('workers', [1, 10])
