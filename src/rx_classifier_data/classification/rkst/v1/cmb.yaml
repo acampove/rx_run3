@@ -106,11 +106,12 @@ hyper               :
 dataset :
   selection:
     bkg :
-      bdt  : (1)
-      mass : B_M > 5500 # This selection will be applied before definitions
+      bdt      : (1)
+      kst_mass : (1)
+      mass     : B_M > 5500 # This selection will be applied before definitions
     sig :                            # Cannot be put in function of aliases
-      bdt  : (1)
-      mass : (1)
+      bdt      : (1)
+      mass     : (1)
   samples:
     sig :
       sample : Bd_Kstee_eq_btosllball05_DPC # can be a list
@@ -392,6 +393,13 @@ plotting:
         binning : [4400, 6600, 50]
         yscale  : 'linear'
         labels  : ['$M^{org}(B^0)$', '']
+        styling :
+          <<: *sty
+      Kst_M:
+        normalized : true
+        binning : [700, 1100, 50]
+        yscale  : 'linear'
+        labels  : ['$M^{org}(K^{*0})$', '']
         styling :
           <<: *sty
 diagnostics:
