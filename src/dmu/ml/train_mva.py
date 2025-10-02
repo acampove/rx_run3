@@ -293,11 +293,11 @@ class TrainMva:
             self._save_feature_importance(model, ifold)
             self._plot_correlations(arr_itr, ifold)
             self._plot_scores(
-                    ifold  =     ifold,
-                    sig_trn=arr_sig_tr,
-                    sig_tst=arr_sig_ts,
-                    bkg_trn=arr_bkg_tr,
-                    bkg_tst=arr_bkg_ts)
+                ifold  =     ifold,
+                sig_trn=arr_sig_tr,
+                sig_tst=arr_sig_ts,
+                bkg_trn=arr_bkg_tr,
+                bkg_tst=arr_bkg_ts)
 
             xval_ts, yval_ts, _ = TrainMva.plot_roc(arr_lab_ts, arr_all_ts, kind='Test' , ifold=ifold)
             xval_tr, yval_tr, _ = TrainMva.plot_roc(arr_lab_tr, arr_all_tr, kind='Train', ifold=ifold)
@@ -320,10 +320,11 @@ class TrainMva:
         arr_bkg_ts = numpy.concatenate(l_arr_bkg_ts)
 
         xval, yval, self._auc = TrainMva.plot_roc(
-                arr_lab_ts,
-                arr_all_ts,
-                kind ='Test',
-                ifold=-1)
+            arr_lab_ts,
+            arr_all_ts,
+            kind ='Test',
+            ifold=-1)
+
         self._plot_probabilities(xval, yval, arr_all_ts, arr_lab_ts)
         self._save_roc_plot(ifold=-1)
 
@@ -855,10 +856,10 @@ class TrainMva:
         plt.close()
     # ---------------------------------------------
     def run(
-            self,
-            skip_fit     : bool = False,
-            opt_ntrial   : int  =     0,
-            load_trained : bool = False) -> float:
+        self,
+        skip_fit     : bool = False,
+        opt_ntrial   : int  =     0,
+        load_trained : bool = False) -> float:
         '''
         Will do the training
 
