@@ -5,6 +5,9 @@ styling: &style
     histtype : fill 
     linestyle: '-'
     alpha    : 0.3
+  $\text{MVA}_{CMB} > 0.3$ :
+    histtype : step
+    linestyle: '-'
   HOP:
     histtype : step
     linestyle: '-'
