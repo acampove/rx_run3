@@ -124,7 +124,7 @@ class WrapCutflow(law.WrapperTask):
                 output   = OmegaConf.to_container(config.output, resolve=True)
                 json_str = json.dumps({'args' : cfg, 'output' : output}) 
                 l_cfg.append(json_str)
-    
+
         return l_cfg 
     # --------------------------
     def requires(self):
