@@ -565,8 +565,8 @@ class TrainMva:
             ifold   : int,
             sig_tst : NPA,
             bkg_tst : NPA,
-            sig_trn : NPA = None,
-            bkg_trn : NPA = None) -> None:
+            sig_trn : NPA | None = None,
+            bkg_trn : NPA | None = None) -> None:
         '''
         Will plot an array of scores, associated to a given fold
         '''
@@ -903,7 +903,7 @@ class TrainMva:
             arr_bkg_prb : NPA,
             kind        : str,
             ifold       : int,
-            color       : str = None) -> tuple[NPA,NPA, float]:
+            color       : str|None = None) -> tuple[NPA,NPA, float]:
         '''
         Takes arrays of signal and background probabilities
         and plots ROC curve
@@ -945,7 +945,7 @@ class TrainMva:
             l_prb : NPA,
             kind  : str,
             ifold : int,
-            color : str = None) -> tuple[NPA, NPA, float]:
+            color : str|None = None) -> tuple[NPA, NPA, float]:
         '''
         Takes the labels and the probabilities and plots ROC
         curve for given fold
