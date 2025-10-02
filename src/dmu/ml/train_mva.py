@@ -338,11 +338,11 @@ class TrainMva:
             kind  : str,
             xval  : NPA,
             yval  : NPA) -> None:
-        ifold    = 'all' if ifold == -1 else ifold # -1 represents all the testing datasets combined
+        fold_str = 'all' if ifold == -1 else f'{ifold:03}'# -1 represents all the testing datasets combined
         val_dir  = self._cfg['saving']['output']
 
         name     = kind.lower()
-        val_dir  = f'{val_dir}/fold_{ifold:03}'
+        val_dir  = f'{val_dir}/fold_{fold_str}'
         os.makedirs(val_dir, exist_ok=True)
         jsn_path = f'{val_dir}/roc_{name}.json'
 
@@ -350,9 +350,9 @@ class TrainMva:
         df.to_json(jsn_path, indent=2)
     # ---------------------------------------------
     def _save_roc_plot(self, ifold : int) -> None:
-        min_x = 0
-        min_y = 0
-        ifold = 'all' if ifold == -1 else ifold
+        min_x    = 0
+        min_y    = 0
+        fold_str = 'all' if ifold == -1 else f'{ifold:03}' 
 
         if 'min' in self._cfg['plotting']['roc']:
             [min_x, min_y] = self._cfg['plotting']['roc']['min']
@@ -367,7 +367,7 @@ class TrainMva:
         if ifold == 'all':
             plt_dir  = f'{val_dir}/fold_all'
         else:
-            plt_dir  = f'{val_dir}/fold_{ifold:03}'
+            plt_dir  = f'{val_dir}/fold_{fold_str}'
 
         os.makedirs(plt_dir, exist_ok=True)
 
@@ -570,11 +570,11 @@ class TrainMva:
         '''
         Will plot an array of scores, associated to a given fold
         '''
-        ifold = 'all' if ifold == -1 else ifold
+        fold_str = 'all' if ifold == -1 else f'{ifold:03}' 
         log.debug(f'Plotting scores for {ifold} fold')
 
         val_dir  = self._cfg['saving']['output']
-        val_dir  = f'{val_dir}/fold_{ifold:03}'
+        val_dir  = f'{val_dir}/fold_{fold_str}'
         os.makedirs(val_dir, exist_ok=True)
 
         plt.hist(sig_tst, histtype='step', bins=50, range=(0,1), color='b', density=True, label='Signal Test: '     + self._get_nentries(sig_tst))
