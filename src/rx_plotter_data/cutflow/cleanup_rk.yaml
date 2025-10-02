@@ -61,8 +61,8 @@ cutflow:
     $J/\psi$ misID           : swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
 plots:
     otk_mas:
-        binning    : [2000, 8000, 60]
-        yscale     : 'linear'
+        binning    : [4000, 8000, 60]
+        yscale     : 'log'
         labels     : ['$\text{Iso}_{1Trk}^{Mass}\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : '1Trk_mas'
@@ -70,8 +70,8 @@ plots:
         styling:
           <<: *style
     ttk_mas:
-        binning    : [2000, 8000, 60]
-        yscale     : 'linear'
+        binning    : [4000, 8000, 60]
+        yscale     : 'log'
         labels     : ['$\text{Iso}_{2Trk}^{Mass}\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : '2Trk_mas'
