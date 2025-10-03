@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------
 display_help()
 {
-    echo "Utility needed to setup shell environment where to use lhcb CLI utilities"
+    echo "Utility needed to setup shell environment with access to Ganga from python"
     echo ""
     echo "-h: Print this help"
     echo "-g: Ganga version, e.g. 8.7.10, by default LATEST"
