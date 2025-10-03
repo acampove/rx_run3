@@ -2,8 +2,7 @@
 Module containing tests for SampleConfig class
 '''
 import pytest
-from omegaconf import DictConfig, OmegaConf
-
+from omegaconf                  import DictConfig, OmegaConf
 from dmu.logging.log_store      import LogStore
 from ap_utilities.bookkeeping   import sample_config as scf 
 
@@ -17,7 +16,7 @@ def test_simple():
     '''
     Simplest test
     '''
-    obj = scf.SampleConfig(settings='2024', samples='by_priority')
+    obj = scf.SampleConfig(settings='2024_sim10d', samples='by_priority')
     cfg = obj.get_config(categories=[
         'high_priority', 
         'medium_priority', 
