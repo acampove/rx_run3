@@ -16,13 +16,16 @@ class Config:
     '''
     Class used to store configuration
     '''
-    version : Final[str]
+    version    : Final[str]
+    production : Final[str]
 # ----------------------
 def _parse_args() -> Config:
     parser = argparse.ArgumentParser(description='Script needed to parse samples from AP productions')
-    parser.add_argument('-v', '--version' , type=str, help='Version of production', required=True)
+    parser.add_argument('-v', '--version'   , type=str, help='Version of production'           , required=True)
+    parser.add_argument('-p', '--production', type=str, help='Production name, e.g. rd_ap_2024', required=True)
+
     args = parser.parse_args()
-    cfg  = Config(version=args.version)
+    cfg  = Config(version=args.version, production=args.production)
 
     return cfg
 # ----------------------
@@ -32,7 +35,7 @@ def _list_samples(cfg : Config) -> None:
     -------------
     cfg: Config object
     '''
-    dset = apd.get_analysis_data(working_group='RD', analysis='rx_2024')
+    dset = apd.get_analysis_data(working_group='RD', analysis=cfg.production)
     scol = dset.all_samples()
     if not isinstance(scol, SampleCollection):
         raise RuntimeError('Cannot extract SampleCollection instance')

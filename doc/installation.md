@@ -1,6 +1,10 @@
-## Environment and installation
+# Environment and installation
 
-### Without access to DIRAC 
+The following variables _can_ be defined:
+
+`ANADIR`: Where outputs will be saved. If not specified, outputs will go to `/tmp`
+
+## Without access to DIRAC 
 
 One can just:
 
@@ -11,7 +15,7 @@ pip install ap-utilities
 
 But one would not be able to check for samples existence this way.
 
-### With access to DIRAC 
+## With access to DIRAC 
 
 This is needed to run the scripts that check the bookkeeping path for samples existence.
 To run this one has to be in an environment with:
