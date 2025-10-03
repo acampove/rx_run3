@@ -3,10 +3,10 @@ Script used to check which MC samples are found in grid
 '''
 import argparse
 
-from dataclasses                          import dataclass
-from ap_utilities.logging.log_store       import LogStore
-from ap_utilities.bookkeeping.bkk_checker import BkkChecker
-from ap_utilities.bookkeeping             import sample_config as scf 
+from dataclasses                            import dataclass
+from ap_utilities.logging.log_store         import LogStore
+from ap_utilities.bookkeeping.bkk_checker   import BkkChecker
+from ap_utilities.bookkeeping.sample_config import SampleConfig
 
 log=LogStore.add_logger('ap_utilities_scripts:check_samples')
 # --------------------------------
@@ -47,7 +47,7 @@ def main():
     _parse_args()
     _set_logs()
 
-    obj = scf.SampleConfig(settings='2024', samples='by_priority')
+    obj = SampleConfig(settings='2024', samples='by_priority')
     cfg = obj.get_config(categories=[
         'high_priority', 
         'medium_priority', 
