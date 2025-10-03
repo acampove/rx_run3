@@ -7,6 +7,12 @@
 # by adding an `evt_type` dictionary for each block
 # The output should be used by BkkChecker to find the samples in bookkeeping
 
+# evt+std://MC/2024/12153001/Beam6800GeV-2024.W32.34-MagUp-Nu6.3-25ns-Pythia8/Sim10f/HLT2-2024.W31.34/HLT2.DST
+# evt+std://MC/2024/12153001/Beam6800GeV-2024.W35.37-MagUp-Nu6.3-25ns-Pythia8/Sim10f/HLT2-2024.W35.39/HLT2.DST
+# evt+std://MC/2024/12153001/Beam6800GeV-2024.W37.39-MagDown-Nu6.3-25ns-Pythia8/Sim10f/HLT2-2024.W35.39/HLT2.DST
+# evt+std://MC/2024/12153001/Beam6800GeV-2024.W40.41-MagDown-Nu7.6-25ns-Pythia8/Sim10f/HLT2-2024.W40.42/HLT2.DST
+# evt+std://MC/2024/12153001/Beam6800GeV-2024.W41.42-MagUp-Nu7.6-25ns-Pythia8/Sim10f/HLT2-2024.W40.42/HLT2.DST
+
 settings_common: &set
   year      : 2024
   sim_vers  : Sim10f
