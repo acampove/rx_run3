@@ -38,7 +38,7 @@ get_opts()
 # ------------------------------------------------------------------
 make_rcfile()
 {
-    export RCFILE=/tmp/bash_dirac
+    export RCFILE=/tmp/bash_ganga
     LHCBPATH=/cvmfs/lhcb.cern.ch/lib/bin
 
     echo "#!/usr/bin/env bash"                                                                                    > $RCFILE
