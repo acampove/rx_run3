@@ -161,6 +161,14 @@ high_priority:
   12153012  : $B^+ \to \psi(2S)(\to e^+ e^-) K^+$
   11144011  : $B^0 \to \psi(2S)(\to \mu^+ \mu^-) K^{*0}$
   12143020  : $B^+ \to \psi(2S)(\to \mu^+ \mu^-) K^+$
+  # -----------
+  12425000  : $B^+ \to K_1^+(\to K^+ \pi^+ \pi^-)\, e^+ e^-$
+  12425011  : $B^+ \to K_2^+(\to K^+ \pi^+ \pi^-)\, e^+ e^-$
+  11124037  : $B^0 \to K^+ \pi^- e^+ e^-$
+  13124006  : $B_s \to \phi(\to K^+ K^-)\, e^+ e^-$
+  12125000  : $B^+ \to K^+ \pi^+ \pi^-   e^+   e^-$
+  12123445  : $B^+ \to K^{*+}(\to K^+ \pi^0)\, e^+ e^-$
+  12155030  : $B^+ \to \psi(2S)(\to J/\psi(\to e^+ e^-) \pi^+ \pi^-)\, K^+$
 medium_priority:
   12153020  : $B^+ \to J/\psi(\to e^+ e^-) \pi^+$
   12143010  : $B^+ \to J/\psi(\to \mu^+ \mu^-) \pi^+$
@@ -185,9 +193,6 @@ medium_priority:
   11574030  : $B^0 \to D^-(\to K^{*0} \mu^- \nu_\mu)\, \mu^+ \nu_\mu$
   11574090  : $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
   # --------
-  12123445  : $B^+ \to K^{*+}(\to K^+ \pi^0)\, e^+ e^-$
-  13124006  : $B_s \to \phi(\to K^+ K^-)\, e^+ e^-$
-  11124037  : $B^0 \to K^+ \pi^- e^+ e^-$
   11114000  : $B^0 \to K^+ \pi^- \mu^+ \mu^-$
   # --------
   12103017  : $B^+ \to K^+ K^+ K^-$
@@ -206,8 +211,6 @@ medium_priority:
   12145072  : $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
 low_priority:
   12103030  : $B^+ \to K^+ \pi^+ K^-$
-  12425000  : $B^+ \to K_1^+(\to K^+ \pi^+ \pi^-)\, e^+ e^-$
-  12425011  : $B^+ \to K_2^+(\to K^+ \pi^+ \pi^-)\, e^+ e^-$
   15124001  : $\Lambda_b \to \Lambda(1520)(\to p K^-)\, e^+ e^-$
   15114000  : $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
   15114001  : $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
@@ -219,12 +222,10 @@ very_low_priority:
   12873002  : $B^+ \to \bar{D}^0(\to K^+ \pi^-)\, \mu^+ \nu_\mu$
   12155020  : $B^+ \to K^+ \pi^+ \pi^- J/\psi(\to e^+ e^-)$
   12145090  : $B^+ \to K^+ \pi^+ \pi^- J/\psi(\to \mu^+ \mu^-)$
-  12155030  : $B^+ \to \psi(2S)(\to J/\psi(\to e^+ e^-) \pi^+ \pi^-)\, K^+$
   13114006  : $B_s \to \phi(\to K^+ K^-)\, \mu^+ \mu^-$
   12103024  : $B^+ \to K^- \pi^+ \pi^+$
   13154011  : $B_s \to \psi(2S)(\to   e^+   e^-)\, \phi(\to K^+ K^-)$
   13144020  : $B_s \to \psi(2S)(\to \mu^+ \mu^-)\, \phi(\to K^+ K^-)$
-  12125000  : $B^+ \to K^+ \pi^+ \pi^-   e^+   e^-$
   12115020  : $B^+ \to K^+ \pi^+ \pi^- \mu^+ \mu^-$
   12215002  : $B^+ \to K_1 \mu^+ \mu^-$
   12155110  : $B^+ \to \psi(2S)(\to e^+ e^-)\, K^{*+}(\to K^+ \pi^0)$
