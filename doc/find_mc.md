@@ -34,10 +34,17 @@ will contain the mappings with the decay string.
 The samples to be ntupled go to `rd_ap_2024/info.yaml`. To get the contents run:
 
 ```bash
-check_samples -c 2024 -s by_priority -n 6
+check_samples -c 2024_sim10d -s by_priority -n 6 -p high_priority
 ```
 
-which will check for their existence using 6 threads (default is 1). The script will produce:
+which will check for their existence with:
+
+- 6 threads (default is 1). 
+- sim10d samples (can also be sim10f)
+- `high_priority` samples, i.e. the signal samples.
+
+check [this](src/ap_utilities_data/analyses/by_priority.yaml) for the full list
+of analyses sorted by priority. The script will produce:
 
 - `info_SECTION_NAME.yaml`: Where `SECTION_NAME` corresponds to each section above, i.e. `one`, `two`, `three`
 - `validation_SECTION_NAME.yaml`: Which will be needed for validation later.
