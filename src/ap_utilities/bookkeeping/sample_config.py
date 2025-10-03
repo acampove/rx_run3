@@ -11,6 +11,9 @@ log=LogStore.add_logger('ap_utilities:sample_config')
 class SampleConfig:
     '''
     Class meant to provide configuration object needed by BKKChecker
+
+    In practice this config will have the event types (from `analyses/xxx.yaml`)
+    merged with the settings (from `samples/xxx.yaml`)
     '''
     # ----------------------
     def __init__(self, settings : str, samples : str):
