@@ -11,6 +11,7 @@ from ap_utilities.bookkeeping.sample_config import SampleConfig
 
 log=LogStore.add_logger('ap_utilities_scripts:check_samples')
 
+SETTINGS   : Final[list[str]] = ['2024_sim10d', '2024_sim10f']
 PRIORITIES : Final[list[str]] = [
         'high_priority', 
         'medium_priority', 
@@ -31,7 +32,7 @@ class Conf:
 def _parse_args() -> Conf:
     parser = argparse.ArgumentParser(description='Used to filter samples based on what exists in the GRID')
     parser.add_argument('-s', '--samples' , type =str, help='Name of file storing event types, e.g. by_priority', required=True)
-    parser.add_argument('-c', '--config'  , type =str, help='Name of file storing configuration, e.g. 2024', required=True)
+    parser.add_argument('-c', '--config'  , type =str, help='Name of file storing configuration', required=True, choices=SETTINGS)
     parser.add_argument('-n', '--nthread' , type =int, help='Number of threads', default=1)
     parser.add_argument('-l', '--log_lvl' , type =int, help='Logging level', default=20, choices=[10,20,30,40])
     parser.add_argument('-p', '--priority', nargs='+', help='Priority of the samples to check, default all', default=PRIORITIES)
@@ -60,12 +61,12 @@ def main():
     cfg = _parse_args()
     _set_logs(cfg=cfg)
 
-    obj     = SampleConfig(settings='2024', samples='by_priority')
+    obj     = SampleConfig(settings=cfg.config, samples='by_priority')
     sam_cfg = obj.get_config(categories=cfg.priority)
 
     for name, section in sam_cfg.sections.items():
         log.info(f'Processing section: {name}')
-        obj=BkkChecker(name, section)
+        obj=BkkChecker(name=name, cfg=section)
         obj.save(nthreads=cfg.nthread)
 # --------------------------------
 if __name__ == '__main__':
