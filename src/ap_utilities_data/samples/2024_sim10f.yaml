@@ -28,7 +28,6 @@ sections:
       polarity: MagUp
       nu_path : Nu6.3
       ctags   : sim10-2024.Q3.4-v1.3-mu100    
-
   block_2:
     settings:
       <<: *set
