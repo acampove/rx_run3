@@ -1,5 +1,7 @@
 # Finding MC 
 
+The commands below need to be run inside a DIRAC shell.
+
 Two files control the samples used in the analysis:
 
 - `ap_utilities_data/analyses/by_priority.yaml`: Which defines the event types to be used in priority sections.
