@@ -1,0 +1,72 @@
+# This config is used to _describe_ all samples in 2024
+#
+# It describes them by sections, each corresponding to a new block.
+# It will have to be updated once new sim versions are available
+#
+# This file needs to be combined with the contents of `analyses/by_priority.yaml` (which contains the list of event times needed)
+# by adding an `evt_type` dictionary for each block
+# The output should be used by BkkChecker to find the samples in bookkeeping
+
+settings_common: &set
+  year      : 2024
+  sim_vers  : Sim10f
+  generator : Pythia8
+  dtags     : dddb-20240427
+# -------------------------------------------
+sections:
+  block_12:
+    settings:
+      <<: *set
+      block_id: 2024.W31.34
+      hlt_conf: 2024.W31.34
+      polarity: MagUp
+      nu_path : Nu6.3
+      ctags   : sim10-2024.Q3.4-v1.3-mu100    
+#  block_3:
+#    settings:
+#      <<: *set
+#      block_id: 2024.W29.30
+#      hlt_conf: 2024.W29.30
+#      polarity: MagUp
+#      nu_path : Nu6.3
+#      ctags   : sim10-2024.W29.30-v00.00-mu100
+#  block_4:
+#    settings:
+#      <<: *set
+#      block_id: 2024.W25.27
+#      hlt_conf: 2024.W25.27
+#      polarity: MagDown
+#      nu_path : Nu6.3
+#      ctags   : sim10-2024.W25.27-v00.00-md100
+  block_5:
+    settings:
+      <<: *set
+      block_id: 2024.W35.37
+      hlt_conf: 2024.W35.39
+      polarity: MagUp
+      nu_path : Nu6.3
+      ctags   : sim10-2024.W35.37-v00.00-mu100
+  block_6:
+    settings:
+      <<: *set
+      block_id: 2024.W37.39
+      hlt_conf: 2024.W35.39
+      polarity: MagDown
+      nu_path : Nu6.3
+      ctags   : sim10-2024.W37.39-v00.00-md100
+  block_7:
+    settings:
+      <<: *set
+      block_id: 2024.W40.42
+      hlt_conf: 2024.W40.42
+      polarity: MagDown
+      nu_path : Nu7.6
+      ctags   : sim10-2024.W40.42-v00.00-md100
+  block_8:
+    settings:
+      <<: *set
+      block_id: 2024.W40.42
+      hlt_conf: 2024.W40.42
+      polarity: MagUp
+      nu_path : Nu7.6
+      ctags   : sim10-2024.W40.42-v00.00-mu100
