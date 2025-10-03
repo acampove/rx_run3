@@ -36,5 +36,6 @@ samples_to_filter  ='ap_utilities_scripts.samples_to_filter:main'
 
 [tool.setuptools]
 script-files=[
-'src/ap_utilities_scripts/lhcb_shell',
+'src/ap_utilities_scripts/ganga_shell',
+'src/ap_utilities_scripts/dirac_shell',
 ]
