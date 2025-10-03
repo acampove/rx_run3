@@ -20,10 +20,19 @@ settings_common: &set
   dtags     : dddb-20240427
 # -------------------------------------------
 sections:
-  block_12:
+  block_1:
     settings:
       <<: *set
-      block_id: 2024.W31.34
+      block_id: 2024.W31
+      hlt_conf: 2024.W31.34
+      polarity: MagUp
+      nu_path : Nu6.3
+      ctags   : sim10-2024.Q3.4-v1.3-mu100    
+
+  block_2:
+    settings:
+      <<: *set
+      block_id: 2024.W32.34
       hlt_conf: 2024.W31.34
       polarity: MagUp
       nu_path : Nu6.3
@@ -63,7 +72,7 @@ sections:
   block_7:
     settings:
       <<: *set
-      block_id: 2024.W40.42
+      block_id: 2024.W40.41
       hlt_conf: 2024.W40.42
       polarity: MagDown
       nu_path : Nu7.6
@@ -71,7 +80,7 @@ sections:
   block_8:
     settings:
       <<: *set
-      block_id: 2024.W40.42
+      block_id: 2024.W41.42
       hlt_conf: 2024.W40.42
       polarity: MagUp
       nu_path : Nu7.6
