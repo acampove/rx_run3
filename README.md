@@ -34,3 +34,18 @@ apd-list-samples RD rd_ap_2024 --version v1r3788
 ```
 
 but with a cleaner output.
+
+## Accessing alternative shells
+
+- A shell with access to Ganga through python can be created with:
+
+```bash
+ganga_shell
+```
+
+- If the user wants a shell with dirac (i.e. one can do `dirac-bookeeping...`), do:
+
+```bash
+dirac_shell
+```
+
