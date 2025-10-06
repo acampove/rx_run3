@@ -107,7 +107,7 @@ plots:
           <<: *style
     B_M:
         binning    : [4500, 6500, 60]
-        yscale     : 'log'
+        yscale     : log
         labels     : ['$M(B^+)\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : 'bmass'
@@ -116,7 +116,7 @@ plots:
           <<: *style
     B_Mass:
         binning    : [4500, 6500, 60]
-        yscale     : 'log'
+        yscale     : log
         labels     : ['$M_{corr}(B^+)\;[\text{MeV}]$', 'Entries']
         title      : ''
         name       : 'bmass_brem_corr'
