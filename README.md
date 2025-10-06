@@ -423,10 +423,15 @@ import dmu.generic.utilities as gut
 
 data = gut.load_data(package='dmu_data', fpath=f'tests/data.json')
 conf = gut.load_conf(package='dmu_data', fpath=f'tests/config.yaml', resolve_paths=True)
+
+# Or load all the configs using a wildcard
+l_conf = gut.load_conf(package='dmu_data', fwcard=f'tests/*.yaml', resolve_paths=True)
 ```
 
-the former will return a python dictionary, list, etc. 
-The later will return a `DataConf` object from the `omegaconf` project.
+the first one will return a python dictionary, list, etc. 
+The second one will return a `DataConf` object from the `omegaconf` project.
+And the third one will return a list of `DataConf` instances.
+
 Check [this](https://omegaconf.readthedocs.io/en/2.3_branch/index.html) 
 for more information.
 
