@@ -299,6 +299,7 @@ def dump_json(
     Saves data as JSON or YAML, depending on the extension, supported .json, .yaml, .yml
 
     Parameters
+    ----------------
     data     : dictionary, list, etc
     path     : Path to output file where to save it
     exists_ok: If False (default) will raise RunTimeError if file already found
@@ -309,14 +310,7 @@ def dump_json(
     else:
         py_data = data
 
-    if isinstance(path, str):
-        path = Path(path)
-
-    if path.exists() and not exists_ok:
-        raise FileExistsError(f'Path {path} already found')
-
-    path.parent.mkdir(exist_ok=True, parents=True)
-
+    path = _prepare_path(path=path, exists_ok=exists_ok)
     with open(path, 'w', encoding='utf-8') as ofile:
         # These lines should deal with objects like Path or DictConfig
         # in py_data
@@ -332,6 +326,27 @@ def dump_json(
             return
 
         raise NotImplementedError(f'Cannot deduce format from extension in path: {path}')
+# --------------------------------
+def _prepare_path(path : Path|str, exists_ok : bool) -> Path:
+    '''
+    Parameters
+    -------------
+    path: Path to file to text file to produce
+    exists_ok: If False and path exists, will raise exception
+
+    Returns
+    -------------
+    Path to file to be made
+    '''
+    if isinstance(path, str):
+        path = Path(path)
+
+    if path.exists() and not exists_ok:
+        raise FileExistsError(f'Path {path} already found')
+
+    path.parent.mkdir(exist_ok=True, parents=True)
+
+    return path
 # --------------------------------
 def load_json(path : str|Path):
     '''
