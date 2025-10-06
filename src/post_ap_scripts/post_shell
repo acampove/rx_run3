@@ -17,4 +17,4 @@ update_python_path()
 
 update_python_path
 
-lhcb_shell "$@"
+ganga_shell "$@"
