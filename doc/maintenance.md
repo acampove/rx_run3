@@ -1,5 +1,21 @@
 [TOC]
 
+## List LFNs
+
+Do:
+
+```bash
+list_lfns -v v1 v2 v3 -p rx
+```
+
+To create `lfns.txt` with a list of LFNs corresponding to the versions
+shown above for the `rx` project. This list can later be used to remove
+old files from the grid with:
+
+```bash
+dirac-dms-remove-files lfns.txt
+```
+
 ## Listing available triggers
 
 In order to see what triggers are present in the current version of the ntuples do:
