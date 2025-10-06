@@ -109,27 +109,21 @@ def load_data(package : str, fpath : str) -> Any:
 
     return data
 # --------------------------------
-# --------------------------------
-def _load_conf_from_wcard(
-    package       : str, 
-    fwcard        : str, 
-    resolve_paths : bool) -> list[DictConfig]:
+def load_from_wcard(
+    package : str, 
+    fwcard  : str) -> list[ListConfig]:
     '''
-    This function will load a YAML or JSON files from a data package
-    and a wildcard
+    This function will load YAML or JSON files storing lists 
+    by using the package name and a wildcard for the path
 
     Parameters
     ---------------------
     package: Data package, e.g. `dmu_data`
     fwcard : Wildcard representing path with respect to package 
-    resolve_paths: When the config is too complex, instead of including it
-                   in the main YAML file, one includes the path to another
-                   YAML file. Those paths will be replaced by the actual config
-                   when this flag is True
 
     Returns
     ---------------------
-    List of DictConfig class from the OmegaConf package
+    List of ListConfig class from the OmegaConf package
     '''
     wcard = files(package).joinpath(fwcard)
     wcard = str(wcard)
@@ -138,17 +132,12 @@ def _load_conf_from_wcard(
     if not l_path:
         raise ValueError(f'No files found in: {wcard}')
 
-    l_fpath = []
+    l_list = []
     for path in l_path:
-        [_, fpath] = path.split(package)
-        l_fpath.append(fpath[1:])
+        data = OmegaConf.load(path)
+        l_list.append(data)
 
-    l_cfg = []
-    for fpath in l_fpath: 
-        cfg = _load_conf_from_path(package=package, fpath=fpath, resolve_paths=resolve_paths)
-        l_cfg.append(cfg)
-
-    return l_cfg
+    return l_list
 # --------------------------------
 def load_conf(
     package       : str,
