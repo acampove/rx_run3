@@ -375,7 +375,7 @@ from dmu.generic import utilities as gut
 string = gut.object_to_string(obj={1,2,3, Path('/x/y/z')})
 ```
 
-## JSON/YAML dumper and loader
+## JSON/YAML/Text dumper and loader
 
 The following lines will dump data (dictionaries, lists, etc) to a JSON/YAML file and load it back:
 
@@ -384,11 +384,14 @@ import dmu.generic.utilities as gut
 
 data = [1,2,3,4]
 
-gut.dump_json(data, '/tmp/list.json')
+gut.dump_json(data=data, path='/tmp/list.json')
 data = gut.load_json('/tmp/list.json')
+
+# And for plain text
+gut.dump_text(lines=data, path='/tmp/file.txt')
 ```
 
-this will dump to either JSON or YAML files, depending on the extension, extensions allowed are:
+the first one will dump to either JSON or YAML files, depending on the extension, extensions allowed are:
 
 ```
 .json
