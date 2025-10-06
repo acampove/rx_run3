@@ -233,3 +233,15 @@ def test_load_conf_reference() -> None:
 
     log.debug(OmegaConf.to_yaml(cfg))
 # -------------------------
+@pytest.mark.parametrize('ext', ['yaml', 'json'])
+def test_load_conf_fwcard(ext : str):
+    '''
+    Tests loading configs from path with wildcard
+    '''
+    l_cfg = gut.load_conf(
+        package='dmu_data',
+        fwcard =f'tests/generic/load/*.{ext}')
+
+    assert l_cfg[0] == {'a' : 1, 'b' : 2}
+    assert l_cfg[1] == {'a' : ['1', '2', '3'], 'b' : [1,2,3]}
+# -------------------------
