@@ -186,3 +186,4 @@ Local_*_JobDir/
 *.pkl
 *.txt
 ./tmp
+jobs.sh
