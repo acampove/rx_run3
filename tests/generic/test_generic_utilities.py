@@ -126,6 +126,8 @@ def test_silent_import():
     '''
     with gut.silent_import():
         import tensorflow
+
+    tensorflow.version
 # -------------------------
 @pytest.mark.parametrize('ext', ['yaml', 'json'])
 def test_load_data(ext : str):
