@@ -158,10 +158,10 @@ def _fix_ranges(cfg : DictConfig) -> DictConfig:
 
     for key, cfg_plt in cfg.plots.items():
         if key.startswith('B_M'):
-            cfg_plt.binning = [5150, 5400, 100]
+            cfg_plt.binning = [5150, 5400, 50]
 
         if key.startswith('Jpsi_M'):
-            cfg_plt.binning = [3000, 3200, 100]
+            cfg_plt.binning = [3000, 3200, 50]
 
     return cfg
 # ---------------------------------
