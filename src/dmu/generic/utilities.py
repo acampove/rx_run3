@@ -150,10 +150,10 @@ def _load_conf_from_wcard(
 
     return l_cfg
 # --------------------------------
-def _load_conf_from_path(
+def load_conf(
     package       : str,
     fpath         : str,
-    resolve_paths : bool) -> DictConfig:
+    resolve_paths : bool = True) -> DictConfig:
     '''
     This function will load a YAML or JSON file from a data package
 
