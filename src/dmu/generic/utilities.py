@@ -10,7 +10,7 @@ import pickle
 import inspect
 from importlib.resources   import files
 from importlib.util        import find_spec
-from typing                import Callable, Any, cast, overload
+from typing                import Callable, Any, cast
 from functools             import wraps
 from contextlib            import contextmanager
 
@@ -109,54 +109,6 @@ def load_data(package : str, fpath : str) -> Any:
 
     return data
 # --------------------------------
-@overload
-def load_conf(
-    *,
-    package      : str,
-    fpath        : str,
-    fwcard       : None      = None,
-    resolve_paths: bool      = True
-) -> DictConfig: ...
-@overload
-def load_conf(
-    *,
-    package      : str,
-    fpath        : None      = None,
-    fwcard       : str,
-    resolve_paths: bool      = True
-) -> list[DictConfig]: ...
-
-def load_conf(
-    *,
-    package       : str,
-    fpath         : str|None = None,
-    fwcard        : str|None = None,
-    resolve_paths : bool = True) -> DictConfig|list[DictConfig]:
-    '''
-    This function will load a YAML or JSON file from a data package
-
-    Parameters
-    ---------------------
-    package: Data package, e.g. `dmu_data`
-    fpath  : Path to YAML/JSON file, relative to the data package
-    resolve_paths: When the config is too complex, instead of including it
-                   in the main YAML file, one includes the path to another
-                   YAML file. Those paths will be replaced by the actual config
-                   when this flag is True
-
-    Returns
-    ---------------------
-    DictConfig class from the OmegaConf package if fpath is specified
-    List of DictConfig if fwcard is specified
-    '''
-
-    if isinstance(fpath, str) and fwcard is None:
-        return _load_conf_from_path(package=package, fpath=fpath, resolve_paths=resolve_paths)
-
-    if isinstance(fwcard, str) and fpath is None:
-        return _load_conf_from_wcard(package=package, fwcard=fwcard, resolve_paths=resolve_paths)
-
-    raise ValueError(f'Invalid fpath or fwcard arguments: {fpath}/{fwcard}')
 # --------------------------------
 def _load_conf_from_wcard(
     package       : str, 
