@@ -231,7 +231,7 @@ def _load_conf_from_path(
         raise ConstructorError(f'Cannot load {cpath}') from exc
 
     if not isinstance(cfg, DictConfig):
-        raise ValueError('Object in {cpath} is not a dictionary')
+        raise ValueError(f'Object in {cpath} is not a dictionary')
 
     _validate_schema(cfg=cfg, package=package, fpath=fpath)
 
