@@ -129,6 +129,8 @@ def load_conf(
     ---------------------
     DictConfig class from the OmegaConf package
     '''
+    log.debug(f'Loading: {package}:{fpath}')
+
     cpath = files(package).joinpath(fpath)
     cpath = cast(str, cpath)
 
