@@ -422,7 +422,7 @@ one can load these lists as `ListConfig` with:
 ```python
 import dmu.generic.utilities as gut
 
-l_list = gut.load_wcard(package='dmu_data', fpath=f'tests/generic/load/*.yaml')
+l_list = gut.load_from_wcard(package='dmu_data', fpath=f'tests/generic/load/*.yaml')
 ```
 
 ## Load files and configurations from data packages
