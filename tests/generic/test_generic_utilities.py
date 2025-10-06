@@ -18,6 +18,22 @@ def initialize():
     '''
     LogStore.set_level('dmu:generic:utilities'     , 10)    
     LogStore.set_level('dmu:test_generic_utilities', 10)    
+# ----------------------
+def _check_data(path : Path, data : list[str]) -> None:
+    '''
+    Parameters
+    -------------
+    path: Path where data was dumped
+    data: List of lines dumped
+    '''
+    if not path.exists():
+        raise FileNotFoundError(f'Cannot find: {path}')
+
+    with open(path) as ifile:
+        tmp   = ifile.readlines()
+        lines = [ line.strip() for line in tmp ]
+
+    assert lines == data
 # -------------------------
 def test_timeit():
     '''
@@ -57,6 +73,22 @@ def test_dump_json(ext : str, tmp_path : Path):
         gut.dump_json(oc_l_data, this_path/f'oc_list.{ext}')
 
     gut.dump_json(oc_l_data, this_path/f'oc_list.{ext}', exists_ok=True)
+# -------------------------
+def test_dump_text(tmp_path : Path):
+    '''
+    Tests dump_text
+    '''
+    this_path = tmp_path / 'dump_text'
+    this_path.mkdir(parents=True, exist_ok=True)
+
+    list_str = ['1', '2', '3']
+    list_cfg = OmegaConf.create(list_str)
+
+    gut.dump_text(lines=list_str, path=this_path / 'list_str.txt')
+    gut.dump_text(lines=list_cfg, path=this_path / 'list_cfg.txt')
+
+    _check_data(path=this_path / 'list_str.txt', data=list_str)
+    _check_data(path=this_path / 'list_cfg.txt', data=list_str)
 # -------------------------
 @pytest.mark.parametrize('ext', ['json', 'yaml'])
 def test_load_json(ext : str, tmp_path : Path):

@@ -327,6 +327,28 @@ def dump_json(
 
         raise NotImplementedError(f'Cannot deduce format from extension in path: {path}')
 # --------------------------------
+def dump_text(
+    lines     : list[str]|ListConfig,
+    path      : str|Path,
+    exists_ok : bool=False,
+    sort_lines: bool=False) -> None:
+    '''
+    Parameters
+    ----------------
+    lines     : List or ListConfig with lines to write 
+    path      : Path to output file where to save it
+    exists_ok : If False (default) will raise RunTimeError if file already found
+    sort_lines: Will sort lines before saving 
+    '''
+    path = _prepare_path(path=path, exists_ok=exists_ok)
+
+    if sort_lines:
+        lines = sorted(lines)
+
+    data = '\n'.join(lines)
+    with open(path, 'w', encoding='utf-8') as ofile:
+        ofile.write(data)
+# ----------------------
 def _prepare_path(path : Path|str, exists_ok : bool) -> Path:
     '''
     Parameters
