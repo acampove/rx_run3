@@ -110,9 +110,10 @@ def load_data(package : str, fpath : str) -> Any:
     return data
 # --------------------------------
 def load_conf(
+def _load_conf_from_path(
     package       : str,
     fpath         : str,
-    resolve_paths : bool = True) -> DictConfig:
+    resolve_paths : bool) -> DictConfig:
     '''
     This function will load a YAML or JSON file from a data package
 
