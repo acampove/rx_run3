@@ -81,7 +81,7 @@ dataset :
         - Bd_JpsiX_ee_eq_JpsiInAcc
         - Bu_K1ee_eq_DPC
         - Bu_K2stee_Kpipi_eq_mK1430_DPC
-      trigger: Hlt2RD_BuToKpEE_MVA
+      trigger: Hlt2RD_B0ToKpPimEE_MVA
   define :
     mass        : B_M_brem_track_2
     b_dira      : TMath::ACos(B_DIRA_OWNPV_brem_track_2)
