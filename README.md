@@ -98,10 +98,10 @@ The list of branches is:
 
 |Project |   Channel| Link      |
 |--------|----------|-----------|
-| $RK$   | Electron | [link](doc/rk_ee.txt)|
-| $RK$   | Muon     | [link](doc/rk_mm.txt)|
-| $RK^*$ | Electron | [link](doc/rkst_ee.txt)|
-| $RK^*$ | Muon     | [link](doc/rkst_mm.txt)|
+| $RK$   | Electron | [link](doc/branches/rk_ee.txt)|
+| $RK$   | Muon     | [link](doc/branches/rk_mm.txt)|
+| $RK^*$ | Electron | [link](doc/branches/rkst_ee.txt)|
+| $RK^*$ | Muon     | [link](doc/branches/rkst_mm.txt)|
 
 # Checking what samples exist as filtered ntuples in the grid
 
