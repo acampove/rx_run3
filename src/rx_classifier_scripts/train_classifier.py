@@ -153,17 +153,22 @@ def _initialize_args(cfg : DictConfig) -> None:
     Data.load_trained= False 
 #---------------------------------
 def _merge_dataframes(
-        l_rdf : list[RDataFrame],
-        kind  : str) -> RDataFrame:
+    d_rdf : dict[str, RDF.RNode],
+    kind  : str) -> RDataFrame:
     '''
     Takes list of dataframes, one for a different sample, after selection
 
-    l_rdf: List of ROOT dataframes to merge
+    d_rdf: Dictionary mapping sample names to ROOT dataframes to merge
     kind : Type of sample, e.g. sig, bkg
     '''
 
-    for i_rdf, rdf, in enumerate(l_rdf):
-        fpath = f'{Data.cache_dir}/{kind}_{i_rdf:03}.root'
+    for sample, rdf, in d_rdf.items():
+        fpath = f'{Data.cache_dir}/{kind}_{sample}.root'
+        nevt  = rdf.Count().GetValue()
+        if nevt == 0:
+            log.warning(f'Dataset {sample} empty, not saving it')
+            continue
+
         if os.path.isfile(fpath):
             shutil.rmtree(fpath)
 
