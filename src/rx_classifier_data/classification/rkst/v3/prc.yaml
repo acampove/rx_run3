@@ -22,6 +22,8 @@ features:
     - Jpsi_FDCHI2_OWNPV
     #
     - min_hh_pt
+    - iso_cc_mom
+    - iso_nc_mom
     - iso_nc_mult
     - iso_cc_mult
     - iso_one_dchi
@@ -40,6 +42,8 @@ features:
     - Jpsi_FDCHI2_OWNPV
     #
     - min_hh_pt
+    - iso_cc_mom
+    - iso_nc_mom
     - iso_nc_mult
     - iso_cc_mult
     - iso_one_dchi
@@ -58,6 +62,8 @@ features:
     - Jpsi_FDCHI2_OWNPV
     #
     - min_hh_pt
+    - iso_cc_mom
+    - iso_nc_mom
     - iso_nc_mult
     - iso_cc_mult
     - iso_one_dchi
@@ -232,6 +238,21 @@ plotting:
       # --------------------
       # Isolation
       # --------------------
+      iso_cc_mom:
+        normalized : true
+        yscale     : linear
+        binning    : [-20000, 200000, 40]
+        labels     : ['$\text{Iso}_{CC}^P(B^0)$MeV', '']
+        styling    :
+          <<: *sty
+      # --------------------
+      iso_nc_mom:
+        normalized : true
+        yscale     : linear
+        binning    : [-20000, 100000, 40]
+        labels     : ['$\text{Iso}_{NC}^P(B^0)$MeV', '']
+        styling    :
+          <<: *sty
       iso_cc_mult:
         normalized : true
         binning : [0, 20, 20]
