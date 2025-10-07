@@ -72,11 +72,12 @@ features:
 dataset :
   selection:
     bkg :
-      bdt  : (1)
-      mass : (1)
+      kst_mass : (1)
+      bdt      : (1)
+      mass     : (1)
     sig :
-      bdt  : (1)
-      mass : (1)
+      bdt      : (1)
+      mass     : (1)
   samples:
     sig :
       sample : Bd_Kstee_eq_btosllball05_DPC
