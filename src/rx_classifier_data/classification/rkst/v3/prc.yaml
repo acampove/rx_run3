@@ -283,14 +283,6 @@ plotting:
         styling :
           <<: *sty
       # --------------------
-      iso_nc_mult:
-        normalized : true
-        binning : [0, 20, 20]
-        yscale  : 'linear'
-        labels  : ['$\text{Iso}_{NC}^{Mult}(B^0)$', '']
-        styling :
-          <<: *sty
-      # --------------------
       iso_one_mass:
         normalized : true
         binning : [1999, 8000, 40]
