@@ -119,7 +119,7 @@ class WrapCutflow(law.WrapperTask):
                 cfg['trigger' ] = trigger
                 cfg['config'  ] = kind 
                 cfg['substr'  ] = None 
-                cfg['nthreads'] = 1 # Luigi will run in parallel anyway
+                cfg['nthreads'] = 7
 
                 output   = OmegaConf.to_container(config.output, resolve=True)
                 json_str = json.dumps({'args' : cfg, 'output' : output}) 
