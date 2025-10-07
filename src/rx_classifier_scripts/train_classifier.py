@@ -323,6 +323,9 @@ def _check_existing_model() -> None:
     If the output directory contains models, raise exception
     In order not to override already trained models
     '''
+    if Data.plot_only:
+        return
+
     out_dir = Data.cfg_dict['saving']['output']
 
     l_model = glob.glob(f'{out_dir}/model_*.pkl')
