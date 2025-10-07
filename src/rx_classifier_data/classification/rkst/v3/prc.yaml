@@ -89,7 +89,7 @@ dataset :
     # ----------
     iso_cc_mom  : B_HEAD_CC_B_ChargedIso_DR2_0p15_CP
     iso_cc_ptasy: B_HEAD_CC_B_ChargedIso_DR2_0p15_PTASY
-    iso_cc_mult : B_HEAD_CC_B_NeutralIso_DR2_0p15_CMULT
+    iso_cc_mult : B_HEAD_CC_B_ChargedIso_DR2_0p15_CMULT
 
     iso_nc_mom  : B_HEAD_NC_B_NeutralIso_DR2_0p15_CP
     iso_nc_ptasy: B_HEAD_NC_B_NeutralIso_DR2_0p15_PTASY
