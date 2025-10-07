@@ -10,12 +10,12 @@ style: &sty
 features:
   low:
     - sqrt_ipchi2 
-    - B_ENDVERTEX_CHI2DOF
+    #- B_ENDVERTEX_CHI2DOF
     - b_dira
     - b_pt
     #
     - kst_dira 
-    - Kst_END_VCHI2DOF
+    #- Kst_END_VCHI2DOF
     - Kst_BPVIPCHI2
     - Kst_PT
     #
@@ -25,8 +25,8 @@ features:
     #
     - min_hh_pt
     - iso_cc_mom
-    - iso_nc_mom
-    - iso_cc_mult
+    #- iso_nc_mom
+    #- iso_cc_mult
     - iso_one_dchi
     - iso_one_mass
   central:
@@ -118,7 +118,7 @@ dataset :
     iso_one_mass : 2000
     iso_one_dchi : -1
     iso_cc_mom   : -10000
-    iso_nc_mom   : -10000
+    #iso_nc_mom   : -10000
 training :
   nfold    : 10
   rdm_stat : 1
