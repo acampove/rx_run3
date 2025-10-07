@@ -91,6 +91,8 @@ dataset :
   define :
     mass        : B_M_brem_track_2
     b_dira      : TMath::ACos(B_DIRA_OWNPV_brem_track_2)
+    j_dira      : TMath::ACos(Jpsi_DIRA_OWNPV_brem_track_2)
+    kst_dira    : TMath::ACos(Kst_DIRA_OWNPV)
     sqrt_ipchi2 : TMath::Sqrt(B_IPCHI2_OWNPV)
     # ----------
     iso_cc_mom  : B_HEAD_CC_B_ChargedIso_DR2_0p15_CP
@@ -180,7 +182,7 @@ plotting:
       # --------------------
       # Kstar variables
       # --------------------
-      Kst_BPVDIRA:
+      kst_dira:
         normalized : true
         binning : [0, 0.03, 40]
         yscale  : 'log'
@@ -204,14 +206,14 @@ plotting:
       # --------------------
       # Jpsi variables
       # --------------------
-      Jpsi_BPVDIRA:
+      j_dira:
         normalized : true
         binning : [0, 0.03, 40]
         yscale  : 'log'
         labels  : ['$\arccos(DIRA)(J/\psi)$', '']
         styling :
           <<: *sty
-      Jpsi_BPVIPCHI2:
+      Jpsi_IPCHI2_OWNPV:
         normalized : true
         binning : [0, 500, 100]
         yscale  : 'log'
