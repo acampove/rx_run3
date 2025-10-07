@@ -46,12 +46,15 @@ class TrainTask(law.Task):
         Name of required output, built from ANADIR and config settings
         '''
         cfg      = self._get_config()
+        args     = cfg.args
         ANADIR   = os.environ['ANADIR']
-        MVADIR   = Path(ANADIR) / 'mva' / cfg.project / cfg.version / cfg.q2bin
+        MVADIR   = Path(ANADIR) / 'mva' / args.project / args.kind / args.version / args.q2bin
         l_output = [ law.LocalFileTarget(MVADIR / name) for name in cfg.outputs ]
 
         nout = len(l_output)
-        log.info(f'Using {nout} outputs for {self.kind}')
+        log.info(f'Using {nout} outputs')
+        for output in l_output:
+            log.debug(output)
 
         return l_output
     # -------------------------------------
