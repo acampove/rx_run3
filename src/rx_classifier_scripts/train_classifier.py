@@ -189,14 +189,14 @@ def _get_rdf(kind : str) -> RDataFrame:
 
     if isinstance(sample, str):
         rdf   = _get_sample_rdf(sample=sample, trigger=trigger, kind=kind)
-        l_rdf = [rdf]
+        d_rdf = {'all' : rdf} 
     elif isinstance(sample, list):
         log.info(f'Found composed sample: {sample}')
-        l_rdf = [ _get_sample_rdf(sample=sname, trigger=trigger, kind=kind) for sname in sample ]
+        d_rdf = { sname : _get_sample_rdf(sample=sname, trigger=trigger, kind=kind) for sname in sample }
     else:
         raise ValueError(f'Unexpected value of sample: {sample}')
 
-    rdf   = _merge_dataframes(l_rdf=l_rdf, kind=kind)
+    rdf   = _merge_dataframes(d_rdf=d_rdf, kind=kind)
 
     return rdf
 #---------------------------------
