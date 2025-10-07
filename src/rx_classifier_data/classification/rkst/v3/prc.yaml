@@ -26,7 +26,6 @@ features:
     - min_hh_pt
     - iso_cc_mom
     - iso_nc_mom
-    - iso_nc_mult
     - iso_cc_mult
     - iso_one_dchi
     - iso_one_mass
@@ -48,7 +47,6 @@ features:
     - min_hh_pt
     - iso_cc_mom
     - iso_nc_mom
-    - iso_nc_mult
     - iso_cc_mult
     - iso_one_dchi
     - iso_one_mass
@@ -70,7 +68,6 @@ features:
     - min_hh_pt
     - iso_cc_mom
     - iso_nc_mom
-    - iso_nc_mult
     - iso_cc_mult
     - iso_one_dchi
     - iso_one_mass
