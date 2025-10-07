@@ -133,6 +133,24 @@ def _parse_args():
     Data.log_level   = args.log_level
     Data.plot_only   = args.plot_only
     Data.load_trained= args.load_trained
+# ----------------------
+def _initialize_args(cfg : DictConfig) -> None:
+    '''
+    Parameters
+    -------------
+    cfg: Configuration used when module is imported
+    '''
+    Data.cfg_name    = cfg.kind
+    Data.q2bin       = cfg.q2bin
+    Data.project     = cfg.project
+    Data.version     = cfg.version
+
+    Data.workers     = 1 
+    Data.opt_ntrial  = 0 
+    Data.max_entries = -1 
+    Data.log_level   = 20 
+    Data.plot_only   = False 
+    Data.load_trained= False 
 #---------------------------------
 def _merge_dataframes(
         l_rdf : list[RDataFrame],
@@ -292,23 +310,6 @@ def _initialize():
     LogStore.set_level('rx_classifier:train_classifier', Data.log_level)
     LogStore.set_level('dmu:ml:train_mva'              , Data.log_level)
     LogStore.set_level('dmu:plotting:Plotter1D'        , Data.log_level)
-# ----------------------
-def _initialize_args(cfg : DictConfig) -> None:
-    '''
-    Parameters
-    -------------
-    cfg: Configuration used when module is imported
-    '''
-    Data.version     = cfg.version
-    Data.project     = cfg.project
-    Data.cfg_name    = cfg.cfg_name
-    Data.workers     = cfg.workers
-    Data.opt_ntrial  = cfg.opt_ntrial
-    Data.q2bin       = cfg.q2bin
-    Data.max_entries = cfg.max_entries
-    Data.log_level   = cfg.log_level
-    Data.plot_only   = cfg.plot_only
-    Data.load_trained= cfg.load_trained
 #---------------------------------
 def main(cfg : DictConfig|None = None):
     '''
