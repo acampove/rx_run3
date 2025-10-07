@@ -61,8 +61,10 @@ hyper               :
 dataset :
   selection:
     bkg :
+      bdt  : (1)
       mass : (1)
     sig :
+      bdt  : (1)
       mass : (1)
   samples:
     sig :
