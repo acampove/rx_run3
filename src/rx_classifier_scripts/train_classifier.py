@@ -251,9 +251,10 @@ def _save_selection(
     out_dir = f'{out_dir}/input'
     os.makedirs(out_dir, exist_ok=True)
 
-    gut.dump_json(data      = cuts, 
-                  exists_ok = Data.plot_only, # If not training, just plotting, allow overriding this
-                  path      = f'{out_dir}/selection_{kind}_{sample}.yaml')
+    gut.dump_json(
+        data      = cuts, 
+        exists_ok = True,
+        path      = f'{out_dir}/selection_{kind}_{sample}.yaml')
 #---------------------------------
 def _get_overriding_selection(kind : str) -> dict[str,str]:
     '''
