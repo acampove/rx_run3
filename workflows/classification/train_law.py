@@ -3,6 +3,7 @@ This script is meant to steer the classifier
 '''
 import os
 import json
+import argparse
 from functools             import cache
 from pathlib               import Path
 
@@ -102,7 +103,15 @@ class WrapTrain(law.WrapperTask):
         for settings in l_settings:
             yield TrainTask(config_string = settings)
 # ----------------------
+def _parse_args() -> None:
+    parser = argparse.ArgumentParser(description='Script used to steer classifier training')
+    parser.add_argument('-l', '--loglvl' , type=int, help='Logging level', default=20)
+    args = parser.parse_args()
+
+    LogStore.set_level('rx_orchestration:train_law', args.loglvl)
+# ----------------------
 def main():
+    _parse_args()
     law.run(argv=['WrapTrain', '--workers', '8', '--log-level', 'INFO'])
 # ----------------------
 if __name__ == "__main__":
