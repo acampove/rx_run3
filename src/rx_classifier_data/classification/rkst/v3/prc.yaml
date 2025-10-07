@@ -167,7 +167,7 @@ plotting:
           <<: *sty
       B_ENDVERTEX_CHI2DOF:
         normalized : true
-        binning : [0, 9, 100]
+        binning : [0, 9, 40]
         yscale  : 'log'
         labels  : ['$\chi^2/dof(B^0)$', '']
         styling :
@@ -184,21 +184,21 @@ plotting:
       # --------------------
       kst_dira:
         normalized : true
-        binning : [0, 0.03, 40]
+        binning : [0, 0.30, 40]
         yscale  : 'log'
         labels  : ['$\arccos(DIRA)(K^*)$', '']
         styling :
           <<: *sty
       Kst_END_VCHI2DOF:
         normalized : true
-        binning : [0, 9, 100]
+        binning : [0, 9, 40]
         yscale  : 'log'
         labels  : ['$\chi^2/dof(K^*)$', '']
         styling :
           <<: *sty
       Kst_BPVIPCHI2:
         normalized : true
-        binning : [0, 500, 100]
+        binning : [0, 1500, 40]
         yscale  : 'log'
         labels  : ['$IP_{\chi^2}(K^*)$', '']
         styling :
@@ -215,14 +215,14 @@ plotting:
           <<: *sty
       Jpsi_IPCHI2_OWNPV:
         normalized : true
-        binning : [0, 1500, 100]
+        binning : [0, 1500, 40]
         yscale  : 'log'
         labels  : ['$IP_{\chi^2}(J/\psi)$', '']
         styling :
           <<: *sty
       Jpsi_FDCHI2_OWNPV:
         normalized : true
-        binning : [0, 1000, 100]
+        binning : [0, 1000, 40]
         yscale  : 'log'
         labels  : ['$FD_{\chi^2}(J/\psi)$', '']
         styling :
@@ -232,7 +232,7 @@ plotting:
       # --------------------
       min_hh_pt:
         normalized : true
-        binning : [0, 10000, 100]
+        binning : [0, 10000, 40]
         yscale  : 'log'
         labels  : ['$\min(p_T(K^+), p_T(\pi^-))$', '']
         styling :
