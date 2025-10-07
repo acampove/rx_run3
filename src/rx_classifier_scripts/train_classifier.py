@@ -145,7 +145,7 @@ def _initialize_args(cfg : DictConfig) -> None:
     Data.project     = cfg.project
     Data.version     = cfg.version
 
-    Data.workers     = 1 
+    Data.workers     = 5
     Data.opt_ntrial  = 0 
     Data.max_entries = -1 
     Data.log_level   = 20 
