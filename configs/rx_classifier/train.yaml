@@ -1,0 +1,15 @@
+args:
+  - {kind : cmb, q2bin : low    , project : rkst, version : v2}
+  - {kind : cmb, q2bin : central, project : rkst, version : v2}
+  - {kind : cmb, q2bin : high   , project : rkst, version : v2}
+outputs:
+  - model_000.pkl
+  - model_001.pkl
+  - model_002.pkl
+  - model_003.pkl
+  - model_004.pkl
+  - model_005.pkl
+  - model_006.pkl
+  - model_007.pkl
+  - model_008.pkl
+  - model_009.pkl
