@@ -17,7 +17,7 @@ features:
     - Kst_END_VCHI2DOF
     - Kst_BPVIPCHI2
     #
-    - j_dira
+    - Jpsi_BPVDIRA 
     - Jpsi_IPCHI2_OWNPV
     - Jpsi_FDCHI2_OWNPV
     #
@@ -35,7 +35,7 @@ features:
     - Kst_END_VCHI2DOF
     - Kst_BPVIPCHI2
     #
-    - j_dira
+    - Jpsi_BPVDIRA 
     - Jpsi_IPCHI2_OWNPV
     - Jpsi_FDCHI2_OWNPV
     #
@@ -53,7 +53,7 @@ features:
     - Kst_END_VCHI2DOF
     - Kst_BPVIPCHI2
     #
-    - j_dira
+    - Jpsi_BPVDIRA 
     - Jpsi_IPCHI2_OWNPV
     - Jpsi_FDCHI2_OWNPV
     #
