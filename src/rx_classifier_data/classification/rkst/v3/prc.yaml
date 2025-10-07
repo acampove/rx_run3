@@ -95,6 +95,7 @@ dataset :
       trigger: Hlt2RD_B0ToKpPimEE_MVA
   define :
     mass        : B_M_brem_track_2
+    b_pt        : B_PT_brem_track_2
     b_dira      : TMath::ACos(B_DIRA_OWNPV_brem_track_2)
     j_dira      : TMath::ACos(Jpsi_DIRA_OWNPV_brem_track_2)
     kst_dira    : TMath::ACos(Kst_BPVDIRA)
@@ -184,9 +185,23 @@ plotting:
         labels  : ['$\arccos(DIRA)(B^0)$', '']
         styling :
           <<: *sty
+      b_pt:
+        normalized : true
+        binning : [0, 30000, 100]
+        yscale  : 'log'
+        labels  : ['$p_T(B^0)$', '']
+        styling :
+          <<: *sty
       # --------------------
       # Kstar variables
       # --------------------
+      Kst_PT:
+        normalized : true
+        binning : [0, 20000, 50]
+        yscale  : 'linear'
+        labels  : ['$P_T(K^*)$', '']
+        styling :
+          <<: *sty
       kst_dira:
         normalized : true
         binning : [0, 0.30, 40]
