@@ -12,10 +12,12 @@ features:
     - sqrt_ipchi2 
     - B_ENDVERTEX_CHI2DOF
     - b_dira
+    - b_pt
     #
     - kst_dira 
     - Kst_END_VCHI2DOF
     - Kst_BPVIPCHI2
+    - Kst_PT
     #
     - j_dira 
     - Jpsi_IPCHI2_OWNPV
@@ -32,10 +34,12 @@ features:
     - sqrt_ipchi2 
     - B_ENDVERTEX_CHI2DOF
     - b_dira
+    - b_pt
     #
     - kst_dira 
     - Kst_END_VCHI2DOF
     - Kst_BPVIPCHI2
+    - Kst_PT
     #
     - j_dira 
     - Jpsi_IPCHI2_OWNPV
@@ -52,10 +56,12 @@ features:
     - sqrt_ipchi2 
     - B_ENDVERTEX_CHI2DOF
     - b_dira
+    - b_pt
     #
     - kst_dira 
     - Kst_END_VCHI2DOF
     - Kst_BPVIPCHI2
+    - Kst_PT
     #
     - j_dira 
     - Jpsi_IPCHI2_OWNPV
