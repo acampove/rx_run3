@@ -13,11 +13,11 @@ features:
     - B_ENDVERTEX_CHI2DOF
     - b_dira
     #
-    - Kst_BPVDIRA
+    - kst_dira 
     - Kst_END_VCHI2DOF
     - Kst_BPVIPCHI2
     #
-    - Jpsi_BPVDIRA 
+    - j_dira 
     - Jpsi_IPCHI2_OWNPV
     - Jpsi_FDCHI2_OWNPV
     #
@@ -33,11 +33,11 @@ features:
     - B_ENDVERTEX_CHI2DOF
     - b_dira
     #
-    - Kst_BPVDIRA
+    - kst_dira 
     - Kst_END_VCHI2DOF
     - Kst_BPVIPCHI2
     #
-    - Jpsi_BPVDIRA 
+    - j_dira 
     - Jpsi_IPCHI2_OWNPV
     - Jpsi_FDCHI2_OWNPV
     #
@@ -53,11 +53,11 @@ features:
     - B_ENDVERTEX_CHI2DOF
     - b_dira
     #
-    - Kst_BPVDIRA
+    - kst_dira 
     - Kst_END_VCHI2DOF
     - Kst_BPVIPCHI2
     #
-    - Jpsi_BPVDIRA 
+    - j_dira 
     - Jpsi_IPCHI2_OWNPV
     - Jpsi_FDCHI2_OWNPV
     #
