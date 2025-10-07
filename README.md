@@ -92,6 +92,17 @@ In the case of the MVA friend trees the branches added would be `mva.mva_cmb` an
 
 Thus, one can easily extend the ntuples with extra branches without remaking them.
 
+# Branches
+
+The list of branches is:
+
+|Project |   Channel| Link      |
+|--------|----------|-----------|
+| $RK$   | Electron | [link](doc/rk_ee.txt)|
+| $RK$   | Muon     | [link](doc/rk_mm.txt)|
+| $RK^*$ | Electron | [link](doc/rkst_ee.txt)|
+| $RK^*$ | Muon     | [link](doc/rkst_mm.txt)|
+
 # Checking what samples exist as filtered ntuples in the grid
 
 This is useful to avoid filtering the same samples multiple times, which would
