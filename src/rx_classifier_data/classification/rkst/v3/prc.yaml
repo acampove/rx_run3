@@ -75,6 +75,7 @@ features:
 dataset :
   selection:
     bkg :
+      hop      : (1)
       kst_mass : (1)
       bdt      : (1)
       mass     : (1)
