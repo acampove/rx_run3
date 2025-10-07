@@ -71,9 +71,11 @@ RKst: &rkst
     jpsi_misid: swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
     cascade   :
       <<: *cascade_common
+    hop       :
+      <<: *hop_common
+    bdt       : (1)
     q2:
       <<: *q2_common
-    bdt       : (1)
     mass:
       <<: *mass_ee
   MM:
@@ -93,9 +95,11 @@ RKst: &rkst
     jpsi_misid: swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
     cascade   :
       <<: *cascade_common
+    hop       :
+      <<: *hop_common
+    bdt       : (1)
     q2:
       <<: *q2_common
-    bdt       : (1)
     mass:
       <<: *mass_mm
 RK: &rk
