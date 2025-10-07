@@ -42,8 +42,6 @@ features:
     - Kst_PT
     - Kst_BPVIPCHI2
     - Kst_BPVFDCHI2
-    - Kst_END_VCHI2DOF
-    - Kst_BPVDIRA
     #
     - j_pt
     - Jpsi_IPCHI2_OWNPV
@@ -51,13 +49,9 @@ features:
     - Jpsi_END_VCHI2DOF
     - j_dira
     #
-    - min_hh_pt
-    - max_hh_pt
-    - min_hh_ipc
     - max_hh_ipc
     #
     - min_ll_pt
-    - max_ll_pt
     - min_ll_ipc
     - max_ll_ipc
   high:
