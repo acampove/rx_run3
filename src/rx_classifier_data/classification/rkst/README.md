@@ -11,3 +11,7 @@ These are the config files used to train the classifiers for $R_{K^{*0}}$
 # v2
 
 - Kinematics were recalculated with brem correction
+
+# v3
+
+Remove the least important variables
