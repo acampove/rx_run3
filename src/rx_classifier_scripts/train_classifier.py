@@ -3,6 +3,7 @@ Script in charge of training classifier
 '''
 
 import os
+import glob
 import random
 import shutil
 import argparse
@@ -316,6 +317,22 @@ def _initialize():
     LogStore.set_level('rx_classifier:train_classifier', Data.log_level)
     LogStore.set_level('dmu:ml:train_mva'              , Data.log_level)
     LogStore.set_level('dmu:plotting:Plotter1D'        , Data.log_level)
+# ----------------------
+def _check_existing_model() -> None:
+    '''
+    If the output directory contains models, raise exception
+    In order not to override already trained models
+    '''
+    out_dir = Data.cfg_dict['saving']['output']
+
+    l_model = glob.glob(f'{out_dir}/model_*.pkl')
+    if not l_model:
+        return
+
+    for model in l_model:
+        log.info(model)
+
+    raise ValueError('Already found models')
 #---------------------------------
 def main(cfg : DictConfig|None = None):
     '''
@@ -329,6 +346,8 @@ def main(cfg : DictConfig|None = None):
         _initialize_args(cfg=cfg)
 
     _initialize()
+
+    _check_existing_model()
 
     with RDFGetter.max_entries(value = Data.max_entries),\
          RDFGetter.multithreading(nthreads=Data.workers):
