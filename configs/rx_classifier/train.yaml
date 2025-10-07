@@ -1,7 +1,19 @@
 args:
+  - {kind : cmb, q2bin : low    , project : rk  , version : v8}
+  - {kind : cmb, q2bin : central, project : rk  , version : v8}
+  - {kind : cmb, q2bin : high   , project : rk  , version : v8}
+  # -------------------
+  - {kind : prc, q2bin : low    , project : rk  , version : v8}
+  - {kind : prc, q2bin : central, project : rk  , version : v8}
+  - {kind : prc, q2bin : high   , project : rk  , version : v8}
+  # -------------------
   - {kind : cmb, q2bin : low    , project : rkst, version : v3}
   - {kind : cmb, q2bin : central, project : rkst, version : v3}
   - {kind : cmb, q2bin : high   , project : rkst, version : v3}
+  # -------------------
+  - {kind : prc, q2bin : low    , project : rkst, version : v3}
+  - {kind : prc, q2bin : central, project : rkst, version : v3}
+  - {kind : prc, q2bin : high   , project : rkst, version : v3}
 outputs:
   - model_000.pkl
   - model_001.pkl
