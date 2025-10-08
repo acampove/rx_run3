@@ -46,7 +46,10 @@ class SampleConfig:
             all_event_types += list(event_types)
 
         ntypes = len(all_event_types)
-        log.info(f'Found {ntypes} event types')
+        if ntypes == 0:
+            log.warning(f'Found {ntypes} event types')
+        else:
+            log.info(f'Found {ntypes} event types')
 
         for section in self._cfg_set.sections.values():
             section['evt_type'] = all_event_types
