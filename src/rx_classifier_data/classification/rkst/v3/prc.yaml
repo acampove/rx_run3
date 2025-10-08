@@ -131,18 +131,18 @@ training :
       min_samples_leaf  : 17
       n_estimators      : 301
     central :
-      learning_rate     : 0.011
+      learning_rate     : 0.05
       max_depth         : 7
       max_features      : 6
       min_samples_split : 7
-      min_samples_leaf  : 29
+      min_samples_leaf  : 10 
       n_estimators      : 399
     high :
-      learning_rate     : 0.026
-      max_depth         : 8
-      max_features      : 4
-      min_samples_split : 6
-      min_samples_leaf  : 18
+      learning_rate     : 0.05
+      max_depth         : 6
+      max_features      : 8
+      min_samples_split : 13
+      min_samples_leaf  : 13
       n_estimators      : 242
 saving:
   output : mva/rkst/prc/VERSION
