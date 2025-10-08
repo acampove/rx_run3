@@ -31,12 +31,12 @@ features:
     - iso_one_mass
   central:
     - sqrt_ipchi2 
-    - B_ENDVERTEX_CHI2DOF
+    #- B_ENDVERTEX_CHI2DOF
     - b_dira
     - b_pt
     #
     - kst_dira 
-    - Kst_END_VCHI2DOF
+    #- Kst_END_VCHI2DOF
     - Kst_BPVIPCHI2
     - Kst_PT
     #
@@ -47,7 +47,7 @@ features:
     - min_hh_pt
     - iso_cc_mom
     - iso_nc_mom
-    - iso_cc_mult
+    #- iso_cc_mult
     - iso_one_dchi
     - iso_one_mass
   high:
@@ -68,7 +68,7 @@ features:
     - min_hh_pt
     - iso_cc_mom
     - iso_nc_mom
-    - iso_cc_mult
+    #- iso_cc_mult
     - iso_one_dchi
     - iso_one_mass
 # ----------------------------------
