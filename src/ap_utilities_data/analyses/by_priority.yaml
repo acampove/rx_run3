@@ -146,12 +146,16 @@ missing for W40_42_md:
 # These samples are all the samples, sorted by priority
 # Samples in the sorted section might be missing
 # ----------------
-new:
+sim10f:
   13144025 : Bs_JpsiKst_update2012_mm_eq_DPC
   11104000 : Bd_piplpimnKst_eq_sqDalitz_DPC
   12583022 : Bu_D0enu_Kenu_eq_TC
   11584030 : Bd_Dstplenu_eq_PHSP_TC
   12125000 : Bu_Kpipiee_eq_DPC_LSFLAT
+  11154001 : $B^0 \to J/\psi(\to e^+ e^-) K^{*0}$
+  12153001 : $B^+ \to J/\psi(\to e^+ e^-) K^+$
+  11144001 : $B^0 \to J/\psi(\to \mu^+ \mu^-) K^{*0}$
+  12143001 : $B^+ \to J/\psi(\to \mu^+ \mu^-) K^+$ 
 high_priority:
   12123003  : $B^+ \to K^+ e^+ e^-$
   11124002  : $B^0 \to K^{*0} e^+ e^-$
