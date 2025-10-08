@@ -80,20 +80,20 @@ tracks_from_bd    : '{hh_from_bzero} && {lep_from_bzero}'
 # Resonant
 #-------------------------------------------------------------
 # Bd -> Jpsi(ee) Kst(Kpi)
-11154001        : '{lep_are_electrons} && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero}'
-11154002        : '{lep_are_electrons} && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero}'
-jpsi_ee_kstzero : '{lep_are_electrons} && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero}'
+11154001        : '({lep_are_electrons} && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero})'
+11154002        : '({lep_are_electrons} && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero})'
+jpsi_ee_kstzero : '({lep_are_electrons} && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero})'
 
 # Bd -> Jpsi(mm) Kst(Kpi)
-11144001        : '{lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero}'
-11144002        : '{lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero}'
-jpsi_mm_kstzero : '{lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero}'
+11144001        : '({lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero})'
+11144002        : '({lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero})'
+jpsi_mm_kstzero : '({lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero})'
 
 # Bd -> psi2(mm) Kst(Kpi)
-11144011        : '{lep_are_muons}     && {ll_is_psi2} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero}'
+11144011        : '({lep_are_muons}     && {ll_is_psi2} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero})'
 
 # Bd -> psi2(ee) Kst(Kpi)
-11154011        : '{lep_are_electrons} && {ll_is_psi2} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero}'
+11154011        : '({lep_are_electrons} && {ll_is_psi2} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero})'
 #-------------------------------------------------------------
 # Rare
 #-------------------------------------------------------------
