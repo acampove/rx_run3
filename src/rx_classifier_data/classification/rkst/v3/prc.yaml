@@ -317,7 +317,7 @@ plotting:
           <<: *sty
       hop_mass:
         normalized : true
-        binning : [3000, 7000, 60]
+        binning : [2000, 7000, 60]
         yscale  : 'linear'
         labels  : ['$M_{HOP}(B^0)$', '']
         styling :
