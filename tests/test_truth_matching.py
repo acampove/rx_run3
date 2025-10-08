@@ -116,9 +116,8 @@ def test_bdkstee(sample : str):
     Tests truth matching
     '''
     cut = tm.get_truth(sample, kind='bdkstll')
-    return
     trigger = 'Hlt2RD_B0ToKpPimEE_MVA'
-    gtr = RDFGetter(sample=sample, trigger=trigger, analysis='rx')
+    gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
 
     ini = rdf.Count().GetValue()
