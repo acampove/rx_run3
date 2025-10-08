@@ -40,6 +40,9 @@ make_rcfile()
     echo "export PATH+=:$LOCAL_PATH/bin"       >> $RCFILE
     echo "export PYTHONPATH+=:$LIBPATH"        >> $RCFILE
     echo ""                                    >> $RCFILE
+    echo "echo \"-----------------------\""    >> $RCFILE
+    echo "echo \"Installing ap_utilities\""    >> $RCFILE
+    echo "echo \"-----------------------\""    >> $RCFILE
     echo ""                                    >> $RCFILE
     echo "pip install --prefix $LOCAL_PATH . " >> $RCFILE
     echo ""
