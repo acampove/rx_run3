@@ -10,8 +10,20 @@ These are the config files used to train the classifiers for $R_{K^{*0}}$
 
 # v2
 
+Combinatorial and PRec
+
 - Kinematics were recalculated with brem correction
 
 # v3
 
-Remove the least important variables
+PRec:
+
+- Hyperparameters were tuned to reduce overtraining
+- Remove the least important variables
+- Remove Kstar mass cut and BDT
+
+# v4
+
+PRec:
+
+- Add HOP mass cut
