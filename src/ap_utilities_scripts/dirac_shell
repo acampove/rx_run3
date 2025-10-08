@@ -69,18 +69,18 @@ make_rcfile()
 
     export_paths
 
-    echo "#!/usr/bin/env bash"                           > $RCFILE
-    echo ""                                             >> $RCFILE
-    echo "export PS1='\u@\h\$ '"                        >> $RCFILE
-    echo "export PATH+=:$LOCAL_PATH/bin"                >> $RCFILE
-    echo "export PYTHONPATH+=:$LIBPATH"                 >> $RCFILE
-    echo ""                                             >> $RCFILE
-    echo "echo \"-----------------------\""             >> $RCFILE
-    echo "echo \"Installing projects    \""             >> $RCFILE
-    echo "echo \"-----------------------\""             >> $RCFILE
-    echo ""                                             >> $RCFILE
-    echo "pip install --prefix $LOCAL_PATH $APUT_PATH " >> $RCFILE
-    echo "pip install --prefix $LOCAL_PATH  $DMU_PATH " >> $RCFILE
+    echo "#!/usr/bin/env bash"                              > $RCFILE
+    echo ""                                                >> $RCFILE
+    echo "export PS1='\u@\h\$ '"                           >> $RCFILE
+    echo "export PATH+=:$LOCAL_PATH/bin"                   >> $RCFILE
+    echo "export PYTHONPATH+=:$LIBPATH"                    >> $RCFILE
+    echo ""                                                >> $RCFILE
+    echo "echo \"-----------------------\""                >> $RCFILE
+    echo "echo \"Installing projects    \""                >> $RCFILE
+    echo "echo \"-----------------------\""                >> $RCFILE
+    echo ""                                                >> $RCFILE
+    echo "pip install -e --prefix $LOCAL_PATH $APUT_PATH " >> $RCFILE
+    echo "pip install -e --prefix $LOCAL_PATH  $DMU_PATH " >> $RCFILE
     echo ""
     echo "Using rc file:"
     cat $RCFILE
@@ -109,11 +109,11 @@ create_shell()
     lb-dirac bash -c "exec bash --rcfile $RCFILE"
 }
 # ------------------------------------------------------------------
+# This function will setup the LHCb environment
+# ------------------------------------------------------------------
 lhcb_env()
 {
-    # This function will setup the LHCb environment
-
-    LBENV_PATH=/cvmfs/lhcb.cern.ch/lib/LbEnv
+    local LBENV_PATH=/cvmfs/lhcb.cern.ch/lib/LbEnv
 
     if [[ ! -f $LBENV_PATH ]]; then
         echo "Cannot find $LBENV_PATH"
