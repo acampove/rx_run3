@@ -49,6 +49,7 @@ class PathSplitter:
             except ValueError as exc:
                 log.warning(f'Cannot find sample name for lowercase name: {sample}')
                 log.warning(exc)
+                log.warning('')
                 continue
 
             log.debug(f'Using {self._sample_naming} sample_naming for samples')
