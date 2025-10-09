@@ -52,12 +52,6 @@ features:
     - iso_nc_mom
     - iso_nc_ptasy
 # ----------------------------------
-hyper               :
-  loss              : log_loss
-  learning_rate     : 0.10
-  max_depth         : 3
-  min_samples_split : 2
-# ----------------------------------
 dataset :
   selection:
     bkg :
@@ -105,12 +99,26 @@ training :
   rdm_stat : 1
   hyper:
     low :
-      n_estimators : 70
+      learning_rate     : 0.013
+      max_depth         : 12
+      max_features      : 3
+      min_samples_split : 8
+      min_samples_leaf  : 17
+      n_estimators      : 301
     central :
-      n_estimators : 70
-      max_depth    : 4
+      learning_rate     : 0.011
+      max_depth         : 7
+      max_features      : 6
+      min_samples_split : 7
+      min_samples_leaf  : 29
+      n_estimators      : 399
     high :
-      n_estimators : 70
+      learning_rate     : 0.026
+      max_depth         : 8
+      max_features      : 4
+      min_samples_split : 6
+      min_samples_leaf  : 18
+      n_estimators      : 242
 saving:
   output : mva/rk/prc/VERSION
 plotting:
