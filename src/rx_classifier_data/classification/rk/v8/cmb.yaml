@@ -61,14 +61,6 @@ features:
     - H_PT
     - H_IPCHI2_OWNPV
 # ----------------------------------
-hyper               :
-  loss              : log_loss
-  max_features      : sqrt 
-  n_estimators      : 70
-  max_depth         : 3
-  min_samples_split : 2
-  learning_rate     : 0.1
-# ----------------------------------
 dataset :
   selection:
     bkg :
@@ -97,24 +89,27 @@ training :
   nfold    : 10
   rdm_stat : 1
   hyper:
-    low :
-      n_estimators : 70
+    low:
+      learning_rate     : 0.088
+      max_depth         : 6
+      max_features      : 3
+      min_samples_split : 2
+      min_samples_leaf  : 24
+      n_estimators      : 312
     central :
-      learning_rate    : 0.073
-      max_depth        :  7 
-      max_features     :  5 
-      min_samples_split:  8
-      min_samples_leaf : 16
-      n_estimators     : 374 
-      subsample        : 0.7
+      learning_rate     : 0.097
+      max_depth         : 7
+      max_features      : 3
+      min_samples_split : 5
+      min_samples_leaf  : 15
+      n_estimators      : 371
     high :
-      learning_rate    : 0.058
-      max_depth        :  8 
-      max_features     :  8 
-      min_samples_split:  8
-      min_samples_leaf : 18
-      n_estimators     : 358
-      subsample        : 0.7
+      learning_rate     : 0.089
+      max_depth         : 9
+      max_features      : 7
+      min_samples_split : 7
+      min_samples_leaf  : 27
+      n_estimators      : 389
 saving:
   output : mva/rk/cmb/VERSION
 plotting:
