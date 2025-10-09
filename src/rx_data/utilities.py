@@ -99,8 +99,9 @@ def _info_from_data_path(path : Path) -> tuple[str,str]:
     except ValueError as exc:
         raise ValueError(f'Expected three elements in: {mtch.groups()}') from exc
 
-    sample = sample.replace('_turbo_', '_')
-    sample = sample.replace('_full_' , '_')
+    sample = sample.replace('_turbo_rd_', '_')
+    sample = sample.replace('_turbo_'   , '_')
+    sample = sample.replace('_full_'    , '_')
 
     return sample, line
 # ---------------------------------
