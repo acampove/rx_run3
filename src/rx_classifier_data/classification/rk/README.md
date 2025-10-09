@@ -24,8 +24,12 @@ train_cone v4 train_turbo_mva_cmb
 train_cone v4 train_turbo_mva_prc
 ```
 
-- **v5**: Dropped Iso mass variables
-- **v6**: Adding back ISO mass variables in PRec MVA and using new version of code that
+# v5 
+
+Dropped Iso mass variables
+
+# v6
+Adding back ISO mass variables in PRec MVA and using new version of code that
     1. Makes better plots
     2. Adds the ROC curve with the full testing dataset
 
@@ -43,7 +47,12 @@ for high q2.
 | v7p6    | $q^2$          | v7p0 better hyper parameters    |
 | v7p7    | $q^2$          | Trained on electron MC for Prec |
 
-- **v8**: Should be identical to `v7p7` but with fixes needed to deal with 
+# v8
+
+Should be identical to `v7p7` but with 
+
+- Fix $q^2$ range for low bin.
+- Fixes needed to deal with 
 backward compatibility changes. Variable namings changed as:
 
 ```
