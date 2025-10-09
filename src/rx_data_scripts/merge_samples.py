@@ -44,6 +44,7 @@ def _parse_args():
     parser.add_argument('-s', '--samp' , type=str, help='Name of sample to merge, e.g. DATA_24_MagDown_24c3', required=True)
     parser.add_argument('-t', '--trig' , type=str, help='Trigger, e.g Hlt2RD_BuToKpEE_MVA'                  , required=True)
     parser.add_argument('-v', '--vers' , type=str, help='Version of ntuples, default latest')
+    parser.add_argument('-l', '--logl' , type=int, help='Logging level', default = 20)
     parser.add_argument('-d', '--dryr' ,           help='If used, will do dry run'              , action='store_true')
     args = parser.parse_args()
 
@@ -52,6 +53,8 @@ def _parse_args():
     Data.sample_name  = args.samp
     Data.trigger_name = args.trig
     Data.vers         = args.vers
+
+    LogStore.set_level('rx_data:merge_samples', args.logl)
 # --------------------------------------
 def _get_out_dir() -> str:
     config_dir = os.path.dirname(Data.samples_path)
