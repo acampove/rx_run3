@@ -55,6 +55,7 @@ def _parse_args():
     Data.vers         = args.vers
 
     LogStore.set_level('rx_data:merge_samples', args.logl)
+    LogStore.set_level('rx_data:path_splitter', args.logl)
 # --------------------------------------
 def _get_out_dir() -> str:
     config_dir = os.path.dirname(Data.samples_path)
@@ -81,6 +82,8 @@ def _get_paths() -> list[str]:
 # --------------------------------------
 def _get_samples() -> dict:
     l_path = _get_paths()
+
+    log.debug(f'Will split {len(l_path)} paths')
     splt   = PathSplitter(paths=l_path)
     d_path = splt.split(nested=True)
 
