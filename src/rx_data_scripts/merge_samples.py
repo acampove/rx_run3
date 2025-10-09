@@ -74,12 +74,18 @@ def _get_paths() -> list[str]:
     if npath == 0:
         raise ValueError(f'Found no files in {path_wc}')
 
+    if not l_path:
+        raise ValueError(f'No paths found to split in: {path_wc}')
+
     return l_path
 # --------------------------------------
 def _get_samples() -> dict:
     l_path = _get_paths()
     splt   = PathSplitter(paths=l_path)
     d_path = splt.split(nested=True)
+
+    if not d_path:
+        raise ValueError('No paths found after splitting')
 
     return d_path
 # ----------------------------
