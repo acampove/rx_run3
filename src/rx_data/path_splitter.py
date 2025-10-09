@@ -47,6 +47,7 @@ class PathSplitter:
             try:
                 sample = aput.name_from_lower_case(sample)
             except ValueError as exc:
+                log.warning(f'Cannot find sample name for lowercase name: {sample}')
                 log.warning(exc)
                 continue
 
