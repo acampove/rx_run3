@@ -234,8 +234,6 @@ def main():
 
     log.warning(f'PFN to be processed: {norig}')
     log.warning(f'PFN processed: {nproc}')
-
-    raise ValueError('PFNs we not processed correctly')
 # ----------------------
 if __name__ == '__main__':
     main()
