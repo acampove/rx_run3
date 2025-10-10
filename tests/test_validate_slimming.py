@@ -31,3 +31,20 @@ def test_get_pfns_from_apd() -> None:
 
     assert len(s_path) == 1265 
 # ----------------------
+def test_get_processed_pfns() -> None:
+    '''
+    This function will test _load_pfns
+    '''
+    ana_dir = os.environ['ANADIR']
+
+    s_name : set[str] = {
+    f'{ana_dir}/Data/rk/main/v11/mc_magdown_11114002_bd_kstmumu_eq_btosllball05_dpc_Hlt2RD_BuToKpMuMu_MVA_7fb0194eee.root',
+    f'{ana_dir}/Data/rk/main/v11/mc_magdown_11114002_bd_kstmumu_eq_btosllball05_dpc_Hlt2RD_BuToKpMuMu_MVA_73842f5438.root',
+    f'{ana_dir}/Data/rk/main/v11/mc_magdown_11114002_bd_kstmumu_eq_btosllball05_dpc_Hlt2RD_BuToKpMuMu_MVA_cec6d8543e.root'}
+
+    s_path = { Path(name) for name in s_name }
+
+    s_pfn  = vs._get_processed_pfns(paths=s_path)
+
+    assert isinstance(s_pfn, set)
+# ----------------------
