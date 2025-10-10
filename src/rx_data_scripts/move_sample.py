@@ -86,28 +86,35 @@ def _get_paths(cfg : Conf) -> tuple[list[Path], list[Path]]:
 
     return l_fpath, l_dpath
 # ----------------------
-def _setup_dirs(dirs : list[Path], source : str) -> None:
+def _setup_dirs(
+    dirs   : list[Path], 
+    source : str,
+    target : str) -> None:
     '''
     Parameters
     -------------
     dirs  : List of directories in directory structure
     source: Name of source project, e.g. rk
+    target: Name of target project, e.g. rk_old
     '''
     cannot_make = False
     invalid_name= False
 
     for dir in dirs:
-        try:
-            dir.mkdir(parents=True, exist_ok=True)
-        except Exception:
-            log.error(f'Cannot make: {dir}')
-            cannot_make = True
-
         str_dir = str(dir)
         nsource = str_dir.count(f'/{source}/')
         if nsource != 1:
             log.error(f'Not found one and only one occurence of {source} in {str_dir}')
             invalid_name = True
+            continue
+
+        str_dir = str_dir.replace(f'/{source}/', f'/{target}/')
+
+        try:
+            Path(str_dir).mkdir(parents=True, exist_ok=True)
+        except Exception:
+            log.error(f'Cannot make: {str_dir}')
+            cannot_make = True
 
     if cannot_make or invalid_name:
         raise ValueError('Directory checks failed')
@@ -145,7 +152,7 @@ def main():
     cfg                = _get_conf()
     l_fpath, l_dirpath = _get_paths(cfg=cfg)
 
-    _setup_dirs(dirs = l_dirpath, source = cfg.source)
+    _setup_dirs(dirs = l_dirpath, source = cfg.source, target = cfg.target)
     _move_files(files=l_fpath, source = cfg.source, target = cfg.target, dry = cfg.dry)
 # ----------------------
 if __name__ == '__main__':
