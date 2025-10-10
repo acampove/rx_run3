@@ -48,3 +48,10 @@ def test_get_processed_pfns() -> None:
 
     assert isinstance(s_pfn, set)
 # ----------------------
+def test_check_group_size() -> None:
+    l_pfn_good = ['a', 'a', 'b', 'b', 'c', 'c']
+    assert vs._check_group_size(l_pfn = l_pfn_good)
+
+    l_pfn_bad  = ['a', 'b', 'b', 'c', 'c', 'c']
+    assert not vs._check_group_size(l_pfn = l_pfn_bad)
+# ----------------------

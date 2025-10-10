@@ -148,8 +148,9 @@ def _get_processed_pfns(paths : set[Path]) -> set[str]:
     pfns_list = Path(f'/tmp/{hsh}.json')
     if pfns_list.exists():
         log.info(f'Loading cached PFNs from: {pfns_list}')
-        d_data = gut.load_json(pfns_list)
-        l_pfn  = d_data['__set__']
+        l_pfn = gut.load_json(pfns_list)
+
+        _check_group_size(l_pfn=l_pfn)
 
         return set(l_pfn)
 
@@ -158,13 +159,40 @@ def _get_processed_pfns(paths : set[Path]) -> set[str]:
         pfn = _get_pfn_from_path(path)
         l_pfn.append(pfn)
 
-    s_pfn     = set(l_pfn)
     pfns_list = Path(f'/tmp/{hsh}.json')
 
     log.info(f'Caching list of PFNs to: {pfns_list}')
-    gut.dump_json(data=s_pfn, path=pfns_list)
+    gut.dump_json(data=l_pfn, path=pfns_list)
 
-    return s_pfn
+    _check_group_size(l_pfn=l_pfn)
+
+    return set(l_pfn)
+# ----------------------
+def _check_group_size(l_pfn : list[str]) -> bool:
+    '''
+    Parameters
+    -------------
+    l_pfn: List of PFNs collected from slimmed ntuples
+
+    Returns
+    -------------
+    True if check is passed, false otherwise
+    '''
+    d_freq = {}
+    for pfn in l_pfn:
+        if pfn not in d_freq:
+            d_freq[pfn] = 1
+        else:
+            d_freq[pfn]+= 1
+
+    s_freq = set(d_freq.values())
+
+    if len(s_freq) != 1:
+        log.error(f'Not one and only one number of ntuples per PFN: {s_freq}')
+        return False
+    else:
+        log.info(f'All PFNs produced {s_freq} ntuples')
+        return True
 # ----------------------
 def _get_pfn_from_path(path : Path) -> str:
     '''
