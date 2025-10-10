@@ -46,7 +46,7 @@ def _get_conf() -> Conf:
     parser.add_argument('-r', '--regex'  , type=str, help='Regular expression to match files to be moved', required=True)
     parser.add_argument('-d', '--dry'    , action='store_true', help='If used, will do a dry run, e.g. not move files')
     parser.add_argument('-s', '--source' , type=str, help='Name of project to move files from, e.g. rk'  , required=True)
-    parser.add_argument('-t', '--target' , type=str, help='Name of target profject'                      , required=True)
+    parser.add_argument('-t', '--target' , type=str, help='Name of target project'                       , required=True)
     args = parser.parse_args()
 
     return Conf(
