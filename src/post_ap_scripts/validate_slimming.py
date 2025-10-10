@@ -33,7 +33,7 @@ from post_ap.pfn_reader    import PFNReader
 
 log=LogStore.add_logger('post_ap:validate_slimming')
 # ----------------------
-@dataclass
+@dataclass(frozen=True)
 class Conf:
     '''
     Data class meant to contain configuration
