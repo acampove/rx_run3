@@ -29,6 +29,7 @@ filter_ntuples       ='post_ap_scripts.filter_ntuples:main'
 run3_download_ntuples='post_ap_scripts.run3_download_ntuples:main'
 job_filter_dirac     ='post_ap_scripts.job_filter_dirac:main'
 job_filter_ganga     ='post_ap_scripts.job_filter_ganga:main'
+validate_slimming    ='post_ap_scripts.validate_slimming:main'
 
 [tool.setuptools.package-data]
 post_ap_data = ['**/*.json', '**/*.yaml']
