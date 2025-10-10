@@ -413,12 +413,13 @@ def _prepare_path(path : Path|str, exists_ok : bool) -> Path:
 
     return path
 # --------------------------------
-def load_json(path : str|Path):
+def load_json(path : str | Path):
     '''
     Loads data from JSON or YAML, depending on extension of files, supported .json, .yaml, .yml
 
     Parameters
-    path     : Path to outut file where data is saved
+    ------------------
+    path: Path to output file where data is saved
     '''
     if isinstance(path, str):
         path = Path(path)
