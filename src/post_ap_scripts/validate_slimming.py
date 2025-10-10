@@ -144,7 +144,7 @@ def _get_processed_pfns(paths : set[Path]) -> set[str]:
     -------------
     Set of PFNs that were slimmed to make these ROOT files 
     '''
-    hsh       = hashing.hash_object(obj= {str(path) for path in paths})
+    hsh       = hashing.hash_object(obj=paths)
     pfns_list = Path(f'/tmp/{hsh}.json')
     if pfns_list.exists():
         log.info(f'Loading cached PFNs from: {pfns_list}')
