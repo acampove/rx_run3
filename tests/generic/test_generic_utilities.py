@@ -245,3 +245,20 @@ def test_load_from_wcard(ext : str):
     assert l_cfg[0] == {'a' : 1, 'b' : 2}
     assert l_cfg[1] == {'a' : ['1', '2', '3'], 'b' : [1,2,3]}
 # -------------------------
+def test_object_to_string():
+    '''
+    Tests object_to_string
+    '''
+    assert gut.object_to_string(obj=[1,2,3]) == '[1, 2, 3]'
+    assert gut.object_to_string(obj={1,2,3}) == '{"__set__": [1, 2, 3]}'
+
+    data = OmegaConf.create(obj={'a' : 1, 'b' : 2})
+    assert gut.object_to_string(obj=data) == '{"a": 1, "b": 2}'
+
+    path = Path('/a/b/c')
+    val  = gut.object_to_string(obj=[path])
+    assert val == '["/a/b/c"]'
+
+    with pytest.raises(ValueError):
+        gut.object_to_string(obj='name')
+# -------------------------
