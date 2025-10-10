@@ -130,12 +130,12 @@ def _move_files(
         str_target = str_sfile.replace(f'/{source}/', f'/{target}/')
         tfile      = Path(str_target)
 
+        log.debug('')
+        log.debug(sfile)
+        log.debug('--->')
+        log.debug(tfile)
+        log.debug('')
         if not dry:
-            log.debug('')
-            log.debug(sfile)
-            log.debug('--->')
-            log.debug(tfile)
-            log.debug('')
             shutil.move(sfile, tfile)
 # ----------------------
 def main():
