@@ -268,6 +268,18 @@ the output will be `missing.yaml`. This file will tell you:
 
 In this case `missing` is relative to the samples and files in the `main` sample.
 
+## Moving files from one project to another
+
+If one needs to create a new project from an existing one, and put existing files
+in that project, one can:
+
+```bash
+move_sample -r "^data_24.*" -s rk -t rk_old
+```
+
+which will create an `rk_old` project with both main and friend trees of the `rk`
+project and will move all data files to it. Use `-d` for a dry run.
+
 ## Calculating luminosity
 
 For this one would have to use the `get_lumi` script in this project, together
