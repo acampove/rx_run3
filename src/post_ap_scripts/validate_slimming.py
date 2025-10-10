@@ -147,7 +147,11 @@ def _get_processed_pfns(paths : set[Path]) -> set[str]:
     hsh       = hashing.hash_object(obj=paths)
     pfns_list = Path(f'/tmp/{hsh}.json')
     if pfns_list.exists():
-        return gut.load_json(pfns_list)
+        log.info(f'Loading cached PFNs from: {pfns_list}')
+        d_data = gut.load_json(pfns_list)
+        l_pfn  = d_data['__set__']
+
+        return set(l_pfn)
 
     l_pfn = []
     for path in tqdm.tqdm(paths, ascii=' -'):
