@@ -143,6 +143,7 @@ def _move_files(
         log.debug(tfile)
         log.debug('')
         if not dry:
+            tfile.parent.mkdir(parents=True, exist_ok=True)
             shutil.move(sfile, tfile)
 # ----------------------
 def main():
