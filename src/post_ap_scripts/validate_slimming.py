@@ -196,6 +196,15 @@ def main():
     s_pfn_proc = _get_processed_pfns(paths=paths)
     s_pfn_exist= _get_pfns_from_apd(cfg=cfg)
 
+    nproc = len(s_pfn_proc)
+    npath = len(paths)
+
+    if npath % nproc == 0:
+        ntup = npath / nproc
+        log.info(f'Each PFN processed {ntup} paths')
+    else:
+        log.error(f'Number of PFNs, {nproc}, does not divide number of paths {npath}')
+
     if s_pfn_proc == s_pfn_exist:
         npfn = len(s_pfn_exist)
         log.info(f'Validated, found, {npfn} PFNs')
