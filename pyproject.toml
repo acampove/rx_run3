@@ -64,6 +64,7 @@ format-jinja = """
 """
 
 [tool.poetry.scripts]
+move_sample           ='rx_data_scripts.move_sample:main'
 make_friend_trees     ='rx_data_scripts.make_friend_trees:main'
 check_missing         ='rx_data_scripts.check_missing:main'
 check_corrupted       ='rx_data_scripts.check_corrupted:main'
