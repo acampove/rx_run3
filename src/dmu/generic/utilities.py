@@ -56,12 +56,21 @@ def object_to_string(obj : Any, sort_keys=False) -> str:
     -------------------
     JSON string
     '''
+    t_not_allowed = (str)
+    if isinstance(obj, t_not_allowed):
+        this_type = type(obj)
+        raise ValueError(f'Cannot stringify object of type: {this_type}')
+
     def default_encoder(x):
         if isinstance(x, DictConfig):
             return OmegaConf.to_container(cfg=x, resolve=True)
 
         if isinstance(x, Path):
             return str(x)
+
+        if isinstance(x, set):
+            l_data = list(x)
+            return {'__set__' : sorted(l_data) }
 
         log.info(x)
         raise TypeError(f"Unserializable type: {type(x)}")
