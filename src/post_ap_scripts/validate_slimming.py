@@ -25,6 +25,7 @@ from ROOT                  import TFile # type: ignore
 from pathlib               import Path
 from dataclasses           import dataclass
 
+from dmu.generic           import hashing
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 from omegaconf             import DictConfig, OmegaConf
@@ -143,12 +144,21 @@ def _get_processed_pfns(paths : set[Path]) -> set[str]:
     -------------
     Set of PFNs that were slimmed to make these ROOT files 
     '''
+    hsh       = hashing.hash_object(obj=paths)
+    pfns_list = Path(f'/tmp/{hsh}.json')
+    if pfns_list.exists():
+        return gut.load_json(pfns_list)
+
     l_pfn = []
     for path in tqdm.tqdm(paths, ascii=' -'):
         pfn = _get_pfn_from_path(path)
         l_pfn.append(pfn)
 
-    return set(l_pfn)
+    s_pfn     = set(l_pfn)
+    pfns_list = Path(f'/tmp/{hsh}.json')
+    gut.dump_json(data=s_pfn, path=pfns_list)
+
+    return s_pfn
 # ----------------------
 def _get_pfn_from_path(path : Path) -> str:
     '''
