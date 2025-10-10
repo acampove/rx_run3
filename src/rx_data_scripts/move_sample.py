@@ -11,6 +11,7 @@ will:
 - Create the `rk_no_refit` project and move each file there, with the same directory structure
 '''
 import os
+import re
 import shutil
 import textwrap
 import argparse
@@ -70,6 +71,9 @@ def _get_paths(cfg : Conf) -> tuple[list[Path], list[Path]]:
     ana_dir  = Path(os.environ['ANADIR'])
     root_dir = ana_dir / f'Data/{cfg.source}'
     l_fpath  = list(root_dir.rglob('*.root'))
+    pattern  = re.compile(cfg.regex)
+    l_fpath  = [ fpath for fpath in l_fpath if pattern.search(fpath.name)]
+
     l_dpath  = [ dpath for dpath in root_dir.rglob('*') if dpath.is_dir() ]
 
     if not l_fpath:
