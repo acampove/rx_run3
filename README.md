@@ -164,6 +164,20 @@ dump_samples -p rd_ap_2024 -g rd -v v1r2437 -a RK RKst
 Which will dump a `yaml` file with the samples for the `rd_ap_2024` production in the `rd` group and in
 version `v1r2437` used by the `RK` and `RKst` analyses.
 
+## Validation
+
+In order to validate the ntuples slimmed run:
+
+```bash
+validate_slimming -P rk -v v1 -p /path/to/directory/with/slimmed/ntuples 
+```
+
+to validate ntuples produced with `v1.yaml` config from the `rk` project.
+This should check that:
+
+- Every ntuple that was meant to be slimmed, was slimmed.
+- Each ntuple that was meant to be slimmed produced the same number of ntuples.
+
 ## Optional
 
 - In order to improve the ganga experience use: 
