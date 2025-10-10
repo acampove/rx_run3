@@ -160,6 +160,8 @@ def _get_processed_pfns(paths : set[Path]) -> set[str]:
 
     s_pfn     = set(l_pfn)
     pfns_list = Path(f'/tmp/{hsh}.json')
+
+    log.info(f'Caching list of PFNs to: {pfns_list}')
     gut.dump_json(data=s_pfn, path=pfns_list)
 
     return s_pfn
