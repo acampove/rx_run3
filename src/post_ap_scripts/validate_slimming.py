@@ -1,7 +1,23 @@
 '''
 Script used to validate slimmed ntuples
+
+Usage:
+
+validate_slimming -P rk -v v1 -p /path/to/directory/with/ntuples
+
+In the case above, the slimmed ntuples will have been made with a config
+`v1.yaml` associated to project `rk`. The script will check that:
+
+- The number of LFNs to the processed according to:
+
+  - APD, taken from the `v1.yaml` config file through `PFNReader`
+
+  is the same as 
+
+  - The ones that were processed according to the metadata of the ntuples.
 '''
 
+import textwrap
 import argparse
 import tqdm
 import json
@@ -33,7 +49,14 @@ def _get_conf() -> Conf:
     --------------
     Instance of configuration data class, built from arguments
     '''
-    parser = argparse.ArgumentParser(description='Script needed to validate slimming')
+    if not isinstance(__doc__, str):
+        raise ValueError('Missing documentation for module')
+
+    parser = argparse.ArgumentParser(
+        prog           = 'validate_slimming',
+        formatter_class= argparse.RawDescriptionHelpFormatter,
+        description    = textwrap.dedent(__doc__).strip())
+
     parser.add_argument('-P', '--project' , type=str , help='Project, needed to find config', choices=['rk', 'rkst'])
     parser.add_argument('-v', '--version' , type=str , help='Version of LFNs'                       , required=True) 
     parser.add_argument('-p', '--path'    , type=Path, help='Path to directory with slimmed ntuples', required=True) 
