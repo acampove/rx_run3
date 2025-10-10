@@ -259,6 +259,10 @@ def test_object_to_string():
     val  = gut.object_to_string(obj=[path])
     assert val == '["/a/b/c"]'
 
+    path = Path('/a/b/c')
+    val  = gut.object_to_string(obj={path})
+    assert val == '{"__set__": ["/a/b/c"]}'
+
     with pytest.raises(ValueError):
         gut.object_to_string(obj='name')
 # -------------------------
