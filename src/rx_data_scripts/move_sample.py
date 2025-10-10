@@ -47,7 +47,10 @@ def _get_conf() -> Conf:
     parser.add_argument('-d', '--dry'    , action='store_true', help='If used, will do a dry run, e.g. not move files')
     parser.add_argument('-s', '--source' , type=str, help='Name of project to move files from, e.g. rk'  , required=True)
     parser.add_argument('-t', '--target' , type=str, help='Name of target project'                       , required=True)
+    parser.add_argument('-l', '--loglvl' , type=int, help='Logging level'                                , default=20) 
     args = parser.parse_args()
+
+    LogStore.set_level('rx_data:move_sample', args.loglvl)
 
     return Conf(
         regex =args.regex,
