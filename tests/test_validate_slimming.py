@@ -25,3 +25,9 @@ def test_get_pfns_from_apd() -> None:
     '''
     cfg    = vs.Conf(project='rk', version='v1', path=Path('N/A'))
     s_path = vs._get_pfns_from_apd(cfg=cfg)
+
+    nsam   = len(s_path)
+    log.info(f'Found {nsam} samples')
+
+    assert len(s_path) == 1265 
+# ----------------------
