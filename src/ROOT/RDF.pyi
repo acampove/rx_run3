@@ -1,0 +1,7 @@
+from typing import Self
+
+class RNode:
+    def Define(self, name: str, definition: str) -> Self: ...
+    def Redefine(self, name: str, definition: str) -> Self: ...
+
+RDataFrame = RNode
