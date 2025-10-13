@@ -5,7 +5,7 @@ import pandas as pnd
 import numpy
 import tqdm
 
-from ROOT import RDataFrame
+from ROOT.RDF import RNode # type: ignore
 
 import dmu.ml.utilities     as ut
 
@@ -21,7 +21,7 @@ class CVPredict:
     '''
     def __init__(
         self,
-        rdf    : RDataFrame,
+        rdf    : RNode,
         models : list[CVClassifier]):
         '''
         Will take a list of CVClassifier models and a ROOT dataframe
@@ -73,7 +73,7 @@ class CVPredict:
 
         return sorted(l_name)
     # ----------------------------------
-    def _remove_periods(self, rdf : RDataFrame) -> RDataFrame:
+    def _remove_periods(self, rdf : RNode) -> RNode:
         '''
         This will redefine all columns associated to friend trees as:
 
@@ -125,7 +125,7 @@ class CVPredict:
 
         return d_def
     # --------------------------------------------
-    def _define_columns(self, rdf : RDataFrame) -> RDataFrame:
+    def _define_columns(self, rdf : RNode) -> RNode:
         d_def = self._get_definitions()
         if len(d_def) == 0:
             log.info('No definitions found')
