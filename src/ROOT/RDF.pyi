@@ -24,3 +24,6 @@ class RNode:
 class Experimental:
     @staticmethod
     def FromSpec(jsonFile : str) -> RNode: ...
+
+
+def FromNumpy(data : dict[str,numpy.ndarray]) -> RNode: ...
