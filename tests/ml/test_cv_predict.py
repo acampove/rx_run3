@@ -6,8 +6,6 @@ import pytest
 
 import numpy
 
-from ROOT                  import RDataFrame
-
 import dmu.testing.utilities as ut
 from dmu.logging.log_store import LogStore
 from dmu.ml.cv_predict     import CVPredict
@@ -22,7 +20,10 @@ class Data:
     out_dir = '/tmp/tests/dmu/ml/cv_predict'
 #--------------------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This will run before any test
+    '''
     LogStore.set_level('dmu:ml:cv_predict', 10)
     LogStore.set_level('dmu:ml:utilities' , 10)
     LogStore.set_level('dmu:ml:train_mva' , 20)
