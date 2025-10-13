@@ -11,7 +11,7 @@ from contextlib          import contextmanager
 
 import yaml
 import ap_utilities.decays.utilities as aput
-from ROOT                   import RDataFrame # type: ignore
+from ROOT                   import RDataFrame, RDF
 from dmu.generic            import hashing
 from dmu.logging.log_store  import LogStore
 
@@ -338,7 +338,7 @@ def _override_block(
     return new_cut
 #-----------------------
 def apply_full_selection(
-    rdf      : RDataFrame,
+    rdf      : RDF.RNode,
     q2bin    : str,
     process  : str,
     trigger  : str,
