@@ -1,3 +1,3 @@
-from . import RDF
+from .dataframe import RDataFrame
 
-RDataFrame = RDF.RNode
+__all__ = ['RDataFrame']

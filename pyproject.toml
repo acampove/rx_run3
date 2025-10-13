@@ -1,5 +1,5 @@
 [tool.poetry]
-name        = "root-stubs-example"
+name        = "root_stubs"
 version     = "0.1.0"
 description = "Example project using ROOT.RDF stubs with Pyright"
 authors     = ["Angel Campoverde <you@example.com>"]
