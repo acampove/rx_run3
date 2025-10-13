@@ -5,7 +5,7 @@ environment: rx  # Name of conda environment
 versions:
   hop            : v3
   brem_track_2   : v3
-  mva            : v7.7 # This is both the version of the model and the output files
+  mva            : v8 # This is both the version of the model and the output files
   mass           : v1
   swp_cascade    : v3
   swp_jpsi_misid : v3
