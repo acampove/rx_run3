@@ -59,7 +59,6 @@ class CVPredict:
         '''
         l_name = []
         for name in self._rdf.GetColumnNames():
-            name = name.c_str()
             if name.count('.') > 1:
                 raise ValueError(f'Invalid column name {name}')
 
@@ -79,7 +78,7 @@ class CVPredict:
 
         friend_preffix.branch_name -> friend_preffix_branch_name
         '''
-        l_col = [ col.c_str() for col in rdf.GetColumnNames() ]
+        l_col = [ col for col in rdf.GetColumnNames() ]
         l_col = [ col         for col in l_col if '.' in col  ]
 
         if len(l_col) == 0:
