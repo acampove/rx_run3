@@ -5,7 +5,7 @@ environment: rx  # Name of conda environment
 versions:
   hop            : v1
   brem_track_2   : v1
-  mva            : v1
+  mva            : v4
   mass           : v1
   swp_cascade    : v1
   swp_jpsi_misid : v1
