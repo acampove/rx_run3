@@ -564,7 +564,8 @@ class RDFGetter:
             return rdf
 
         if name in self._l_columns:
-            raise ValueError(f'Cannot add {name}={definition}, column already found')
+            log.debug(f'Column {name} already defined, skipping')
+            return rdf
 
         log.debug(f'Defining: {name}={definition}')
         rdf = rdf.Define(name, definition)
