@@ -4,7 +4,7 @@ Module with MisCalculator class
 
 import fnmatch
 
-from ROOT import RDataFrame # type: ignore
+from ROOT import RDF # type: ignore
 from dmu.logging.log_store  import LogStore
 from rx_common              import info
 
@@ -15,7 +15,7 @@ class MisCalculator:
     Class used to add missing variables to ROOT dataframes
     '''
     # -------------
-    def __init__(self, rdf : RDataFrame, trigger : str):
+    def __init__(self, rdf : RDF.RNode, trigger : str):
         '''
         Initializer taking dataframe and trigger, the latter is needed to know mass hypotheses of leptons
         '''
@@ -39,8 +39,8 @@ class MisCalculator:
 
         raise NotImplementedError(f'Cannot recognize trigger {trigger} as electron or muon')
     # -------------
-    def _add_energy(self, rdf : RDataFrame) -> RDataFrame:
-        l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
+    def _add_energy(self, rdf : RDF.RNode) -> RDF.RNode:
+        l_col = [ name for name in rdf.GetColumnNames() ]
 
         if 'L1_PE' not in l_col:
             name = 'L1_P'
@@ -66,7 +66,7 @@ class MisCalculator:
 
         return rdf
     # -------------------------------
-    def get_rdf(self) -> RDataFrame:
+    def get_rdf(self) -> RDF.RNode:
         '''
         Returns dataframe after adding variables
         '''
