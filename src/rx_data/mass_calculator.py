@@ -237,7 +237,7 @@ class MassCalculator:
 
         return df
     # ----------------------
-    def get_rdf(self) -> RDataFrame|RDF.RNode:
+    def get_rdf(self) -> RDF.RNode:
         '''
         Returns
         -------------
