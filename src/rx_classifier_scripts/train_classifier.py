@@ -190,10 +190,10 @@ def _get_rdf(kind : str) -> RDF.RNode:
     '''
     log.info(f'Getting dataframe for {kind}')
 
-    sample  = Data.cfg_dict['dataset']['samples'][kind]['sample']
-    trigger = Data.cfg_dict['dataset']['samples'][kind]['trigger']
+    sample : str = Data.cfg_dict['dataset']['samples'][kind]['sample']
+    trigger: str = Data.cfg_dict['dataset']['samples'][kind]['trigger']
 
-    if isinstance(sample, str):
+    if   isinstance(sample, str):
         rdf   = _get_sample_rdf(sample=sample, trigger=trigger, kind=kind)
         d_rdf = {'all' : rdf} 
     elif isinstance(sample, list):
