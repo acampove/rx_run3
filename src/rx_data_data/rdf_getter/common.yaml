@@ -44,7 +44,6 @@ definitions:
     Jpsi_Mass                    : Jpsi_M # For electrons brem correction makes no sense, so name brem corrected = original
     B_M_brem_track_2             : B_M
     B_PT_brem_track_2            : B_PT
-    B_M_brem_track_2             : B_M
     B_Mass                       : B_M
     nbrem                        : '0'
     L1_PT_brem_track_2           : L1_PT           # These are needed by classifier prediction
