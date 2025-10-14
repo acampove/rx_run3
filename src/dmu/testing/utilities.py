@@ -60,17 +60,19 @@ def _add_nans(df : pnd.DataFrame, columns : list[str]) -> pnd.DataFrame:
     return df
 # -------------------------------
 def get_rdf(
-        kind              : str | None      = None,
-        repeated          : bool            = False,
-        nentries          : int             = 3_000,
-        use_preffix       : bool            = False,
-        columns_with_nans : list[str]|None  = None):
+    kind              : str | None      = None,
+    repeated          : bool            = False,
+    nentries          : int             = 3_000,
+    use_preffix       : bool            = False,
+    dotted            : bool            = False,
+    columns_with_nans : list[str]|None  = None):
     '''
     Return ROOT dataframe with toy data
 
     kind              : sig, bkg or bkg_alt
     repeated          : Will add repeated rows
     nentries          : Number of rows
+    dotted            : Will use columns with dots in name
     columns_with_nans : List of column names in [w, y, z]
     '''
     # Needed for a specific test
@@ -95,6 +97,9 @@ def get_rdf(
     else:
         log.error(f'Invalid kind: {kind}')
         raise ValueError
+
+    if dotted:
+        d_data['y.y'] = d_data.pop('y')
 
     df = pnd.DataFrame(d_data)
 
