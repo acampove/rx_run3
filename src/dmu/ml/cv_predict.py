@@ -59,13 +59,13 @@ class CVPredict:
         List of columns sorted and with friend tree preffixes removed, i.e. hop.hop_mass -> hop_mass
         '''
         l_name = []
-        for name in self._rdf.GetColumnNames():
-            if name.count('.') > 1:
-                raise ValueError(f'Invalid column name {name}')
-
+        for name in rut.columns_from_rdf(rdf=self._rdf):
             if '.' not in name:
                 l_name.append(name)
                 continue
+
+            if name.count('.') > 1:
+                raise ValueError(f'Invalid column name {name}')
 
             [_, name] = name.split('.')
 
