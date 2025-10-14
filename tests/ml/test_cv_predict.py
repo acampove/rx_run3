@@ -46,16 +46,16 @@ def _check_probabilities(arr_prb : numpy.ndarray, has_negative : bool) -> None:
     else:
         assert n_below == 0
 #--------------------------------------------------------------------
-def test_dotted_columns():
+def test_with_friend_trees():
     '''
-    Tests with input data, where columns have dots in names
+    Tests training when a dataframe build with friend trees is used
     '''
     with LogStore.level('dmu:tests:rdf_with_friend', 10):
         rdf_sig    = ut.get_rdf(kind='sig', with_friend=True)
         rdf_bkg    = ut.get_rdf(kind='bkg', with_friend=True)
 
     with LogStore.level('dmu:ml:train_mva', 10):
-        l_model, _ = ut.get_models(rdf_sig, rdf_bkg, name='train_mva_dotted')
+        l_model, _ = ut.get_models(rdf_sig, rdf_bkg, name='train_mva_with_friends')
 
     rdf     = ut.get_rdf(kind='sig', with_friend=True)
     cvp     = CVPredict(models=l_model, rdf=rdf)
