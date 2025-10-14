@@ -155,7 +155,7 @@ def _initialize_args(cfg : DictConfig) -> None:
 #---------------------------------
 def _merge_dataframes(
     d_rdf : dict[str, RDF.RNode],
-    kind  : str) -> RDataFrame:
+    kind  : str) -> RDF.RNode:
     '''
     Takes list of dataframes, one for a different sample, after selection
 
@@ -180,7 +180,7 @@ def _merge_dataframes(
 
     return rdf
 #---------------------------------
-def _get_rdf(kind : str) -> RDataFrame:
+def _get_rdf(kind : str) -> RDF.RNode:
     '''
     Will load and return ROOT dataframe
 
@@ -206,7 +206,7 @@ def _get_rdf(kind : str) -> RDataFrame:
 
     return rdf
 #---------------------------------
-def _get_sample_rdf(sample : str, trigger : str, kind : str) -> RDataFrame:
+def _get_sample_rdf(sample : str, trigger : str, kind : str) -> RDF.RNode:
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
 
