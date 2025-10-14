@@ -196,13 +196,14 @@ These trees take time to calculate, therefore one has to send jobs to the cluste
 (LXPLUS HTCondor is not supported). For that do:
 
 ```bash
-make_friend_trees -c rk_nopid -e mva
-make_friend_trees -c rk_nopid -o mva 
+make_friend_trees -p rk_nopid -e mva -c rk
+make_friend_trees -p rk_nopid -o mva -c rk
 ```
 
 Where:
 
 - `-c` will point the script to the configuration file
+- `-p` Corresponds to the project, e.g. `rk`, `rkst`
 `src/rx_data_data/friend_trees/nopid.yaml`.
 - `-w` Optional, this is a wild card, e.g. `data*.root` will only allow processing of data files
 - `-e` Optional, will tell what trees to exclude.
