@@ -3,7 +3,6 @@ Script used to print statistics on files stored in cluster
 '''
 import os
 import glob
-import math
 import argparse
 from pathlib import Path
 
@@ -46,6 +45,10 @@ def _get_friend_stats(frnd_dir : str, kind : str) -> dict[str,int]:
     for fpath in l_fpath:
         sample, _ = dut.info_from_path(path=fpath)
         sample    = aput.name_from_lower_case(sample)
+        if not sample.startswith('DATA'):
+            event_type= aput.read_event_type(nickname=sample)
+            sample    = f'{sample} ({event_type})'
+
         if sample not in d_sample:
             d_sample[sample] = _stat_from_path(fpath=fpath, kind=kind)
         else:
