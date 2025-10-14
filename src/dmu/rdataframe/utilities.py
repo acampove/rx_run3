@@ -90,10 +90,10 @@ def add_column(rdf : RDataFrame, arr_val : Union[numpy.ndarray,None], name : str
     return rdf
 # ---------------------------------------------------------------------
 def add_column_with_numba(
-        rdf        : RDataFrame,
-        arr_val    : Union[numpy.ndarray,None],
-        name       : str,
-        identifier : str) -> RDataFrame:
+    rdf        : RDataFrame,
+    arr_val    : Union[numpy.ndarray,None],
+    name       : str,
+    identifier : str) -> RDataFrame:
     '''
     Will take a dataframe, an array of numbers and a string
     Will add the array as a colunm to the dataframe
