@@ -148,10 +148,11 @@ def _update_sizes(data : dict[str,dict[str,int]], sizes : dict[str,int]) -> dict
     data dictionary with updated sizes
     '''
     data['Sizes'] = {}
-    for sample, size in sizes.items():
-        data['Sizes'][sample] = size 
-        if not info.is_ee(sample):
-            data['brem_track_2'][sample] = 0
+    for identifier, size in sizes.items():
+        data['Sizes'][identifier] = size 
+        trigger = identifier.split('/')[1]
+        if not info.is_ee(f'Hlt2RD_{trigger}'):
+            data['brem_track_2'][identifier] = 0
 
     return data
 # --------------------------------------
