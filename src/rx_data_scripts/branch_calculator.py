@@ -205,8 +205,8 @@ def _is_mc(path : str) -> bool:
     raise ValueError(f'Cannot determine if MC or data for: {path}')
 # ---------------------------------
 def _process_rdf(
-    rdf     : RDataFrame,
-    path    : str) -> RDataFrame|None:
+    rdf     : RDF.RNode,
+    path    : str) -> RDF.RNode|None:
     '''
     Takes:
 
@@ -252,7 +252,7 @@ def _process_rdf(
         rdf = _get_swap_rdf(rdf=rdf, trigger=trigger)
     elif Data.kind == 'mva'   :
         obj = MVACalculator(rdf=rdf, sample=sample, trigger=trigger, version=Data.vers)
-        rdf = obj.get_rdf()
+        rdf = obj.get_rdf(kind = 'root')
     elif Data.kind == 'mass':
         obj = MassCalculator(rdf=rdf)
         rdf = obj.get_rdf()
