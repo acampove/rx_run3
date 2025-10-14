@@ -52,7 +52,11 @@ class TrainMva:
     # - Hyperparameter optimization methods should go into their own class
     # - Data preprocessing methods might need their own class
     # ---------------------------------------------
-    def __init__(self, bkg : RDataFrame, sig : RDataFrame, cfg : dict):
+    def __init__(
+        self, 
+        bkg : RDF.RNode, 
+        sig : RDF.RNode, 
+        cfg : dict):
         '''
         bkg (ROOT dataframe): Holds real data
         sig (ROOT dataframe): Holds simulation
@@ -83,7 +87,7 @@ class TrainMva:
 
         optuna.logging.set_verbosity(optuna.logging.WARNING)
     # ---------------------------------------------
-    def _get_extra_columns(self, rdf : RDataFrame, df : pnd.DataFrame) -> list[str]:
+    def _get_extra_columns(self, rdf : RDF.RNode, df : pnd.DataFrame) -> list[str]:
         d_plot = self._cfg['plotting']['features']['plots']
         l_expr = list(d_plot)
         l_rdf  = [ name.c_str() for name in rdf.GetColumnNames() ]
@@ -100,7 +104,7 @@ class TrainMva:
 
         return l_extr
     # ---------------------------------------------
-    def _get_rdf(self, rdf : RDataFrame, df_feat : pnd.DataFrame) -> RDataFrame:
+    def _get_rdf(self, rdf : RDF.RNode, df_feat : pnd.DataFrame) -> RDF.RNode:
         '''
         Takes original ROOT dataframe and pre-processed features dataframe
         Adds missing branches to latter and returns expanded ROOT dataframe
@@ -194,8 +198,8 @@ class TrainMva:
     #---------------------------------
     def _add_sample_columns(
             self,
-            rdf  : RDataFrame,
-            kind : str) -> RDataFrame:
+            rdf  : RDF.RNode,
+            kind : str) -> RDF.RNode:
         '''
         This will apply sample specific column definitions
         to the dataframe
@@ -216,7 +220,7 @@ class TrainMva:
 
         return rdf
     # ---------------------------------------------
-    def _preprocess_rdf(self, rdf : RDataFrame, kind : str) -> RDataFrame:
+    def _preprocess_rdf(self, rdf : RDF.RNode, kind : str) -> RDF.RNode:
         rdf = self._add_sample_columns(rdf, kind)
 
         if 'define' not in self._cfg['dataset']:
@@ -239,7 +243,7 @@ class TrainMva:
 
         return rdf
     # ---------------------------------------------
-    def _get_sample_inputs(self, rdf : RDataFrame, label : int) -> tuple[pnd.DataFrame, list[int]]:
+    def _get_sample_inputs(self, rdf : RDF.RNode, label : int) -> tuple[pnd.DataFrame, list[int]]:
         d_ft = rdf.AsNumpy(self._l_ft_name)
         df   = pnd.DataFrame(d_ft)
         df   = self._pre_process_nans(df)
@@ -702,7 +706,7 @@ class TrainMva:
         os.makedirs(val_dir, exist_ok=True)
         put.df_to_tex(df, f'{val_dir}/hyperparameters.tex')
     # ---------------------------------------------
-    def _run_diagnostics(self, models : list[cls], rdf : RDataFrame, name : str) -> None:
+    def _run_diagnostics(self, models : list[cls], rdf : RDF.RNode, name : str) -> None:
         log.info(f'Running diagnostics for sample {name}')
         if 'diagnostics' not in self._cfg:
             log.warning('Diagnostics section not found, not running diagnostics')
