@@ -66,10 +66,10 @@ plotting:
             labels  : ['$x$', '']
             styling:
               <<: *sty
-          y.y :
+          y :
             binning : [-4, 4, 100]
             yscale  : 'linear'
-            labels  : ['$y.y$', '']
+            labels  : ['$y$', '']
             styling:
               <<: *sty
           z :
