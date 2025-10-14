@@ -11,6 +11,7 @@ import dmu.ml.utilities     as ut
 
 from dmu.ml.cv_classifier  import CVClassifier
 from dmu.logging.log_store import LogStore
+from dmu.rdataframe        import utilities as rut
 
 log = LogStore.add_logger('dmu:ml:cv_predict')
 # ---------------------------------------
@@ -78,7 +79,7 @@ class CVPredict:
 
         friend_preffix.branch_name -> friend_preffix_branch_name
         '''
-        l_col = [ col for col in rdf.GetColumnNames() ]
+        l_col = rut.columns_from_rdf(rdf=rdf)
         l_col = [ col for col in l_col if '.' in col  ]
 
         if len(l_col) == 0:
