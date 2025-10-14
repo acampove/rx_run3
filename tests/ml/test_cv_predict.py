@@ -50,12 +50,14 @@ def test_dotted_columns():
     '''
     Tests with input data, where columns have dots in names
     '''
-    rdf_sig    = ut.get_rdf(kind='sig', dotted=True)
-    rdf_bkg    = ut.get_rdf(kind='bkg', dotted=True)
+    with LogStore.level('dmu:tests:rdf_with_friend', 10):
+        rdf_sig    = ut.get_rdf(kind='sig', with_friend=True)
+        rdf_bkg    = ut.get_rdf(kind='bkg', with_friend=True)
+
     with LogStore.level('dmu:ml:train_mva', 10):
         l_model, _ = ut.get_models(rdf_sig, rdf_bkg, name='train_mva_dotted')
 
-    rdf     = ut.get_rdf(kind='sig', dotted=True)
+    rdf     = ut.get_rdf(kind='sig', with_friend=True)
     cvp     = CVPredict(models=l_model, rdf=rdf)
     cvp.predict()
 #--------------------------------------------------------------------
