@@ -47,11 +47,8 @@ def _add_nans(df : pnd.DataFrame, columns : list[str]) -> pnd.DataFrame:
     size = len(df) * 0.2
     size = math.floor(size)
 
-    l_col = df.columns.tolist()
-    if columns is None:
-        l_col_index = range(len(l_col))
-    else:
-        l_col_index = [ l_col.index(column) for column in columns ]
+    l_col       = df.columns.tolist()
+    l_col_index = [ l_col.index(column) for column in columns ]
 
     log.debug(f'Replacing randomly with {size} NaNs')
     for _ in range(size):
