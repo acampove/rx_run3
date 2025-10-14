@@ -4,7 +4,7 @@ Module with class used to swap mass hypotheses
 import pandas as pnd
 
 import vector
-from ROOT                  import RDataFrame, RDF # type: ignore
+from ROOT                  import RDF # type: ignore
 from tqdm                  import tqdm
 from particle              import Particle         as part
 from vector                import MomentumObject3D as v3d
@@ -22,7 +22,7 @@ class SWPCalculator:
     #---------------------------------
     def __init__(
         self,
-        rdf   : RDataFrame,
+        rdf   : RDF.RNode,
         d_lep : dict[str,int],
         d_had : dict[str,int]):
         '''
