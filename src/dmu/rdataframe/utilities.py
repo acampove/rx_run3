@@ -142,7 +142,7 @@ def rdf_report_to_df(rep : RDF.RCutFlowReport) -> pnd.DataFrame:
 
     return df 
 # ---------------------------------------------------------------------
-def random_filter(rdf : RDataFrame, entries : int) -> RDataFrame:
+def random_filter(rdf : RDF.RNode, entries : int) -> RDF.RNode:
     '''
     Filters a dataframe, such that the output has **approximately** `entries` entries
     '''
