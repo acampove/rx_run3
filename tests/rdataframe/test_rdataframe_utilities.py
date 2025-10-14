@@ -14,10 +14,12 @@ import dmu.rdataframe.utilities as ut
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:test:rdataframe:utilities')
-
 # -------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This is called before any test
+    '''
     LogStore.set_level('dmu:rdataframe:utilities', 10)
 # -------------------------------------------------
 @pytest.mark.parametrize('entries', [0, 10])
