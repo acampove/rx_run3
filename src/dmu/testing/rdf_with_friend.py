@@ -4,6 +4,9 @@ from pydantic import BaseModel
 from pathlib  import Path
 from ROOT     import RDF
 
+from dmu.logging.log_store import LogStore
+
+log=LogStore.add_logger('dmu:tests:rdf_with_friend')
 # ----------------------------------
 class Sample(BaseModel):
     trees : list[Path] = []
@@ -44,6 +47,8 @@ def _get_json_path(main : str, friend : str) -> Path:
     return json_path
 # ----------------------------------
 def rdf_with_friend(df : pnd.DataFrame, branch : str) -> RDF.RNode:
+    log.debug(f'Returning dataframe with friend tree for branch {branch}')
+
     path_main, path_friend = _make_files(df=df, branch=branch)
     json_path  = _get_json_path(main=path_main, friend=path_friend)
 
