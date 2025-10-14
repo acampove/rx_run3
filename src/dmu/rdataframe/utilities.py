@@ -91,7 +91,7 @@ def add_column(rdf : RDataFrame, arr_val : Union[numpy.ndarray,None], name : str
 # ---------------------------------------------------------------------
 def add_column_with_numba(
     rdf        : RDataFrame,
-    arr_val    : Union[numpy.ndarray,None],
+    arr_val    : numpy.ndarray,
     name       : str,
     identifier : str) -> RDataFrame:
     '''
