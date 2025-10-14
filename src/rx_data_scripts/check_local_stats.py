@@ -143,14 +143,11 @@ def _update_sizes(data : dict[str,dict[str,int]], sizes : dict[str,int]) -> dict
     -------------
     data dictionary with updated sizes
     '''
+    data['Sizes'] = {}
     for sample, size in sizes.items():
-        if 'Sizes' not in data: 
-            data['Sizes'] = {sample : 0}
-
-        if sample not in data['Sizes']:
-            data['Sizes'][sample] = 0
-
-        data['Sizes'][sample] += size 
+        data['Sizes'][sample] = size 
+        if not info.is_ee(sample):
+            data['brem_track_2'][sample] = 0
 
     return data
 # --------------------------------------
