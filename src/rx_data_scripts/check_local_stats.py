@@ -32,14 +32,15 @@ def _get_friend_stats(frnd_dir : str, kind : str) -> dict[str,int]:
     '''
     Parameters
     --------------------
-    directory with friend tree files
+    frnd_dir: directory with friend tree files
+    kind    : Type of quantity requested for these trees
 
     Returns
     --------------------
     dictionary where:
 
     key  : Name of sample
-    value: Number of files
+    value: Quantity requested 
     '''
     l_fpath = _paths_from_friend_dir(frnd_dir=frnd_dir)
     d_sample= {}
